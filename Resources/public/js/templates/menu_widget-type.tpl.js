@@ -9,7 +9,7 @@ angular.module('portfolioApp').run([
                 '<div class="popover-content">' +
                     '<div class="btn-group-vertical contents" role="buttongroup">' +
                         '<button type="button" class="btn btn-default" data-ng-repeat="widgetType in widgetTypes" data-ng-click="createWidget(widgetType)">' +
-                            '<span class="fa fa-plus"></span>' +
+                            '<span class="fa fa-plus"></span> ' +
                             '{{ widgetType + \'_title\' | trans }}' +
                         '</button>' +
                     '</div>' +
