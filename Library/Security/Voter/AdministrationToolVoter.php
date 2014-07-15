@@ -33,7 +33,7 @@ class AdministrationToolVoter implements VoterInterface
 
     public function vote(TokenInterface $token, $object, array $attributes)
     {
-        if ($object instanceof \Claroline\CoreBundle\Entity\Tool\AdminTool) {
+        if ($object instanceof AdminTool) {
             $roles = $object->getRoles();
             $tokenRoles = $token->getRoles();
 
@@ -46,10 +46,9 @@ class AdministrationToolVoter implements VoterInterface
             }
 
             return VoterInterface::ACCESS_DENIED;
-
-        } else {
-            return VoterInterface::ACCESS_ABSTAIN;
         }
+
+        return VoterInterface::ACCESS_ABSTAIN;
     }
 
     public function supportsAttribute($attribute)
@@ -61,4 +60,4 @@ class AdministrationToolVoter implements VoterInterface
     {
         return true;
     }
-} 
+}

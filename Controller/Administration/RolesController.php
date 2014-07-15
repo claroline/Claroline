@@ -78,7 +78,7 @@ class RolesController extends Controller
     }
 
     /**
-     * @EXT\Route("/roles/tools/index", name="claro_admin_tools_index")
+     * @EXT\Route("/tools/index", name="claro_admin_tools_index")
      * @EXT\Method("GET")
      * @EXT\Template()
      *
@@ -340,4 +340,4 @@ class RolesController extends Controller
 
         throw new AccessDeniedException();
     }
-} 
+}

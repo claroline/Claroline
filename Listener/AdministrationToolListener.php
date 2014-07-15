@@ -182,4 +182,4 @@ class AdministrationToolListener
         $event->setResponse($response);
         $event->stopPropagation();
     }
-} 
+}

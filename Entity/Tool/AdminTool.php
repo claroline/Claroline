@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Entity\Tool;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Claroline\CoreBundle\Entity\Role;
 
@@ -51,6 +52,11 @@ class AdminTool
      * @ORM\JoinColumn(onDelete="CASCADE")
      */
     protected $plugin;
+
+    public function __construct()
+    {
+        $this->roles = new ArrayCollection();
+    }
 
     public function getId()
     {
@@ -103,4 +109,4 @@ class AdminTool
     {
         return $this->plugin;
     }
-} 
+}

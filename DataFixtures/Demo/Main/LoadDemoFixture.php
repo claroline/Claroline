@@ -342,14 +342,14 @@ class LoadDemoFixture extends LoggableFixture implements ContainerAwareInterface
         $roleDemo = new Role();
         $roleDemo->setName('ROLE_ADMIN_DEMO');
         $roleDemo->setTranslationKey('admin_demo');
+        $this->manager->persist($roleDemo);
 
         foreach ($allowedAdminTools as $name) {
             $tool = $this->manager->getRepository('ClarolineCoreBundle:Tool\AdminTool')->findOneByName($name);
             $tool->addRole($roleDemo);
-            $this->manager->persist($roleDemo);
+            $this->manager->persist($tool);
         }
 
-        $this->manager->persist($roleDemo);
         $this->addReference('role/admin_demo', $roleDemo);
         $this->manager->flush();
     }
