@@ -189,7 +189,6 @@ class ExerciseController extends Controller
             array(
                 'workspace'      => $workspace,
                 'entity'         => $exercise,
-                'exoAdmin'       => $exoAdmin,
                 'allowToCompose' => $allowToCompose,
                 'userId'         => $user->getId(),
                 'nbQuestion'     => $nbQuestions['nbq'],
