@@ -222,7 +222,7 @@ class AgendaManager
             $e->setPriority('#01A9DB');
             $this->om->persist($e);
         }
-        
+
         $this->om->endFlushSuite();
 
         return $i;
@@ -231,9 +231,11 @@ class AgendaManager
     public function updateEvent($event, $allDay, $workspace)
     {
         $this->checkUserIsAllowed('agenda', $workspace);
+
         if (!$this->checkUserIsAllowedtoWrite($workspace, $event)) {
             throw new AccessDeniedException();
         }
+
         $event->setAllDay($allDay);
         $this->om->flush();
 
