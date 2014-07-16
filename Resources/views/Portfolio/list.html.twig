@@ -17,6 +17,9 @@
 {% endblock %}
 
 {% block content_body %}
+    <p class="alert alert-warning" role="alert">
+        {{ 'beta_message' | trans({}, 'icap_portfolio') | raw }}
+    </p>
     {% if 0 < pager.nbResults %}
         <table class="table table-hover table_portfolios">
             <colgroup>

@@ -1,3 +1,5 @@
+beta_message: '<span class="fa fa-warning"></span> <strong>Warning</strong> <span class="fa fa-warning"></span><br />Portfolio tool is in bêta version. All you data may be erased in further update.'
+beta_message_public: '<span class="fa fa-warning"></span> <strong>Warning</strong> <span class="fa fa-warning"></span><br />Portfolio tool is in bêta version.'
 datepicker_date_format: 'mm/dd/yyyy'
 date_field_format: 'MM/DD/YYYY'
 no_portfolios_create_one: 'You don''t have any portfolio yet.<br>You can <a href="%newPortfolioUrl%" title="Add a portfolio">create some</a> to show your skills.'
