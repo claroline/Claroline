@@ -14,6 +14,7 @@ portfolioApp
                 }, this);
             },
             edit: function(widget) {
+                widget.copy = angular.copy(widget);
                 if (!widget.isEditing()) {
                     this.loadForm(widget);
                     this.addEditing(widget);
@@ -37,17 +38,23 @@ portfolioApp
                     this.editing.push(widget);
                 }
             },
-            cancelEditing: function(widget) {
+            cancelEditing: function(widget, rollback) {
+                if (rollback) {
+                    angular.copy(widget.copy, widget);
+                }
+
                 widget.setEditMode(false);
 
                 this.editing.remove(widget);
-
                 if (widget.isNew()) {
                     this.widgets.remove(widget);
                 }
             },
             save: function(widget) {
+                delete widget.copy;
+
                 widget.deleteChildren();
+
                 var $this = this;
                 var success = function() {
                     widget.setNewMode(false);

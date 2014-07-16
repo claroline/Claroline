@@ -3,7 +3,6 @@
 portfolioApp
     .controller("widgetsController", ["$scope", "widgetsManager", function($scope, widgetsManager) {
         $scope.edit = function(widget) {
-            widget.copy = angular.copy(widget);
             widgetsManager.edit(widget);
         };
 

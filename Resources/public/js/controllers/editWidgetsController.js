@@ -5,12 +5,10 @@ portfolioApp
         $scope.editedWidgets = widgetsManager.editing;
 
         $scope.cancel = function(widget) {
-            angular.copy(widget.copy, widget)
-            widgetsManager.cancelEditing(widget);
+            widgetsManager.cancelEditing(widget, true);
         };
 
         $scope.save = function(widget) {
-            delete widget.copy;
             return widgetsManager.save(widget);
         };
     }]);
