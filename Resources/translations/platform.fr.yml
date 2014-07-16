@@ -940,7 +940,7 @@ user_limit_too_low: Il y a déjà %total% %role%(s). La limite %newMax% est trop
 limit: Limite
 yes: Oui
 no: Non
-show_profile_for_anonymous: Profil public accessible aux anonyme.
+show_profile_for_anonymous: Profil public accessible aux anonymes
 packages: Paquets
 core_packages: Paquets du noyau
 plugin_packages: Paquets des plugins

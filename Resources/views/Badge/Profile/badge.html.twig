@@ -96,7 +96,11 @@
                                                 {{ validatedLog.url | raw }}
                                             {% else %}
                                                 {% if log.resourceNode != null %}
-                                                    <a href="{{ path('claro_resource_open', {'resourceType': log.resourceType.name, 'action': 'open', 'node': log.resourceNode.id})}}">{{ log.resourceNode.path }}</a>
+                                                    <a href="{{ path('claro_resource_open', {'resourceType': log.resourceType.name, 'action': 'open', 'node': log.resourceNode.id})}}">
+                                                        {{ log.resourceNode.pathForDisplay }}
+                                                    </a>
+                                                {% else %}
+                                                    N/A
                                                 {% endif %}
                                             {% endif %}
                                         </td>

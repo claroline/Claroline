@@ -36,7 +36,9 @@
 
 {% macro displayControls(group) %}
     {% if app.user %}
-        <button class="btn btn-default action-button" data-action="add"><i class="fa fa-plus"></i> {{ 'add'|trans({}, 'platform') }}</button>
+        <button class="btn btn-default action-button table-control" data-action="add" disabled>
+            <i class="fa fa-plus"></i> {{ 'add'|trans({}, 'platform') }}
+        </button>
     {% endif %}
 {% endmacro %}
 

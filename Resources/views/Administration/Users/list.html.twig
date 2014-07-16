@@ -28,14 +28,16 @@
 
 {% macro displayControls() %}
     {% if app.user %}
-        <button class="btn btn-default action-button" data-action="remove">
+        <button class="btn btn-default action-button table-control" data-action="remove" disabled>
             <i class="fa fa-trash-o"></i>
             {{ 'delete'|trans({}, 'platform') }}
         </button>
-        <button class="btn btn-default action-button" data-action="password">
-            <i class="fa fa-refresh"></i>
-            {{ 'reset_password'|trans({}, 'platform') }}
-        </button>
+        {% if is_mailer_available() %}
+            <button class="btn btn-default action-button table-control" data-action="password" disabled>
+                <i class="fa fa-refresh"></i>
+                {{ 'reset_password'|trans({}, 'platform') }}
+            </button>
+        {% endif %}
     {% endif %}
 {% endmacro %}
 
