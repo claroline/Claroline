@@ -524,9 +524,16 @@ class GroupsController extends Controller
                 $users[] = str_getcsv($line, ';');
             }
 
-
-
             if ($validFile && $this->groupManager->validateAddUsersToGroup($users, $group)) {
+
+                $roleUser = $this->roleManager->getRoleByName('ROLE_USER');
+                $max = $roleUser->getMaxUsers();
+                $total = $this->userManager->countUsersByRoleIncludingGroup($roleUser);
+
+                if ($total + count($users) > $max) {
+                    return array('form' => $form->createView(), 'error' => true, 'group' => $group);
+                }
+
                 $this->userManager->importUsers($users);
                 $this->groupManager->importUsers($group, $users);
 
@@ -536,7 +543,7 @@ class GroupsController extends Controller
             }
         }
 
-        return array('form' => $form->createView(), 'group' => $group, 'error_import' => 'fail_add_user_group_message');
+        return array('form' => $form->createView(), 'group' => $group);
     }
 
     private function checkOpen()

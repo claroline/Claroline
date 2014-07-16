@@ -892,3 +892,4 @@ no_action_found: No hay acciones.
 error: Error
 last_manager_error_message: No es posible eliminar todos los administradores.
 remove_workspace_role_warning: ¿Está seguro que desea suprimir este rol? Si este rol está asociado a los usuarios, estos perderán sus derechos de acceso proporcionada por dicho rol.
+edit_rights_success: Modification des droits effectuée avec succès.

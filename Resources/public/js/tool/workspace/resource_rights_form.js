@@ -14,8 +14,8 @@
 
     var simpleRights = window.Claroline.SimpleRights;
     var modal = window.Claroline.Modal;
-    var submitForm = function (formAction, formData) {
-        //change the redirection
+    var submitForm = function (formAction, form) {
+        var formData = new FormData(form);
         $.ajax({
             url: formAction,
             data: formData,
@@ -23,8 +23,12 @@
             processData: false,
             contentType: false,
             success: function () {
-                //window.location.href = Routing.generate('claro_workspace_open_tool',
-                //{'toolName': 'parameters', 'workspaceId': $('#data').attr('data-workspace-id') });
+                var flashbag =
+                   '<div class="alert alert-success">' +
+                   '<a data-dismiss="alert" class="close" href="#" aria-hidden="true">&times;</a>' +
+                   Translator.get('platform:edit_rights_success') +
+                   '</div>';
+                   $('.panel-body').first().prepend(flashbag);
             }
         });
     };
@@ -64,25 +68,22 @@
         e.preventDefault();
         var formAction = $(e.currentTarget).parents('form').first().attr('action');
         var form = document.getElementById('node-rights-form');
-        var formData = new FormData(form);
         e.preventDefault();
-        submitForm(formAction, formData);
+        submitForm(formAction, form);
     });
 
     $('body').on('click', '#submit-right-form-button', function (e) {
         e.preventDefault();
         var formAction = $(e.currentTarget.parentElement.parentElement).attr('action');
         var form = document.getElementById('node-right-form');
-        var formData = new FormData(form);
-        submitForm(formAction, formData);
+        submitForm(formAction, form);
     });
 
     $('body').on('click', '#form-node-creation-rights :submit', function (e) {
         e.preventDefault();
         var formAction = $('#form-node-creation-rights').attr('action');
         var form = document.getElementById('form-node-creation-rights');
-        var formData = new FormData(form);
-        submitForm(formAction, formData);
+        submitForm(formAction, form);
     });
 
     $('.search-role-btn').on('click', function (e) {
