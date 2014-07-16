@@ -1,6 +1,6 @@
 <?php
 
-namespace Icap\PortfolioBundle\Migrations\mysqli;
+namespace Icap\PortfolioBundle\Migrations\drizzle_pdo_mysql;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/07/10 09:41:10
+ * Generation date: 2014/07/16 11:09:13
  */
-class Version20140710094108 extends AbstractMigration
+class Version20140716110911 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -19,11 +19,11 @@ class Version20140710094108 extends AbstractMigration
                 id INT AUTO_INCREMENT NOT NULL, 
                 user_id INT NOT NULL, 
                 portfolio_id INT NOT NULL, 
+                PRIMARY KEY(id), 
                 INDEX IDX_3980F8F8A76ED395 (user_id), 
                 INDEX IDX_3980F8F8B96B5643 (portfolio_id), 
-                UNIQUE INDEX portfolio_users_unique_idx (portfolio_id, user_id), 
-                PRIMARY KEY(id)
-            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
+                UNIQUE INDEX portfolio_users_unique_idx (portfolio_id, user_id)
+            )
         ");
         $this->addSql("
             CREATE TABLE icap__portfolio (
@@ -32,33 +32,33 @@ class Version20140710094108 extends AbstractMigration
                 visibility INT NOT NULL, 
                 disposition INT NOT NULL, 
                 deletedAt DATETIME DEFAULT NULL, 
-                INDEX IDX_8B1895DA76ED395 (user_id), 
-                PRIMARY KEY(id)
-            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
+                PRIMARY KEY(id), 
+                INDEX IDX_8B1895DA76ED395 (user_id)
+            )
         ");
         $this->addSql("
             CREATE TABLE icap__portfolio_groups (
                 id INT AUTO_INCREMENT NOT NULL, 
                 group_id INT NOT NULL, 
                 portfolio_id INT NOT NULL, 
+                PRIMARY KEY(id), 
                 INDEX IDX_9AF01ADFFE54D947 (group_id), 
                 INDEX IDX_9AF01ADFB96B5643 (portfolio_id), 
-                UNIQUE INDEX portfolio_groups_unique_idx (portfolio_id, group_id), 
-                PRIMARY KEY(id)
-            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
+                UNIQUE INDEX portfolio_groups_unique_idx (portfolio_id, group_id)
+            )
         ");
         $this->addSql("
             CREATE TABLE icap__portfolio_abstract_widget (
                 id INT AUTO_INCREMENT NOT NULL, 
                 portfolio_id INT NOT NULL, 
                 col INT DEFAULT 1 NOT NULL, 
-                row INT DEFAULT 1 NOT NULL, 
+                `row` INT DEFAULT 1 NOT NULL, 
                 createdAt DATETIME NOT NULL, 
                 updatedAt DATETIME NOT NULL, 
                 widget_type VARCHAR(255) NOT NULL, 
-                INDEX IDX_3E7AEFBBB96B5643 (portfolio_id), 
-                PRIMARY KEY(id)
-            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
+                PRIMARY KEY(id), 
+                INDEX IDX_3E7AEFBBB96B5643 (portfolio_id)
+            )
         ");
         $this->addSql("
             CREATE TABLE icap__portfolio_widget_formations (
@@ -67,45 +67,46 @@ class Version20140710094108 extends AbstractMigration
                 startDate DATETIME DEFAULT NULL, 
                 endDate DATETIME DEFAULT NULL, 
                 PRIMARY KEY(id)
-            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
+            )
         ");
         $this->addSql("
             CREATE TABLE icap__portfolio_widget_title (
                 id INT NOT NULL, 
                 title VARCHAR(128) NOT NULL, 
                 slug VARCHAR(128) NOT NULL, 
-                UNIQUE INDEX UNIQ_1431A01D989D9B62 (slug), 
-                PRIMARY KEY(id)
-            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
+                PRIMARY KEY(id), 
+                UNIQUE INDEX UNIQ_1431A01D989D9B62 (slug)
+            )
         ");
         $this->addSql("
             CREATE TABLE icap__portfolio_widget_type (
                 id INT AUTO_INCREMENT NOT NULL, 
                 name VARCHAR(255) NOT NULL, 
-                is_unique TINYINT(1) NOT NULL, 
-                is_deletable TINYINT(1) NOT NULL, 
-                UNIQUE INDEX UNIQ_3E00FC8F5E237E06 (name), 
-                PRIMARY KEY(id)
-            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
+                is_unique BOOLEAN NOT NULL, 
+                is_deletable BOOLEAN NOT NULL, 
+                icon VARCHAR(255) DEFAULT NULL, 
+                PRIMARY KEY(id), 
+                UNIQUE INDEX UNIQ_3E00FC8F5E237E06 (name)
+            )
         ");
         $this->addSql("
             CREATE TABLE icap__portfolio_widget_formations_resource (
                 id INT AUTO_INCREMENT NOT NULL, 
                 resource_id INT DEFAULT NULL, 
                 widget_id INT NOT NULL, 
+                PRIMARY KEY(id), 
                 INDEX IDX_23096D5889329D25 (resource_id), 
-                INDEX IDX_23096D58FBE885E2 (widget_id), 
-                PRIMARY KEY(id)
-            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
+                INDEX IDX_23096D58FBE885E2 (widget_id)
+            )
         ");
         $this->addSql("
             CREATE TABLE icap__portfolio_widget_skills_skill (
                 id INT AUTO_INCREMENT NOT NULL, 
                 widget_id INT NOT NULL, 
                 name VARCHAR(255) NOT NULL, 
-                INDEX IDX_98EF40A3FBE885E2 (widget_id), 
-                PRIMARY KEY(id)
-            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
+                PRIMARY KEY(id), 
+                INDEX IDX_98EF40A3FBE885E2 (widget_id)
+            )
         ");
         $this->addSql("
             CREATE TABLE icap__portfolio_widget_user_information (
@@ -113,20 +114,20 @@ class Version20140710094108 extends AbstractMigration
                 city VARCHAR(255) DEFAULT NULL, 
                 birthDate DATETIME DEFAULT NULL, 
                 PRIMARY KEY(id)
-            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
+            )
         ");
         $this->addSql("
             CREATE TABLE icap__portfolio_widget_skills (
                 id INT NOT NULL, 
                 PRIMARY KEY(id)
-            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
+            )
         ");
         $this->addSql("
             CREATE TABLE icap__portfolio_widget_presentation (
                 id INT NOT NULL, 
-                presentation LONGTEXT DEFAULT NULL, 
+                presentation TEXT DEFAULT NULL, 
                 PRIMARY KEY(id)
-            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
+            )
         ");
         $this->addSql("
             ALTER TABLE icap__portfolio_users 

@@ -13,7 +13,7 @@ class WidgetTypeRepository extends EntityRepository
     public function findAllInArray()
     {
         $query = $this->createQueryBuilder('wt')
-            ->select('wt.name', 'wt.isUnique', 'wt.isDeletable');
+            ->select('wt.name', 'wt.isUnique', 'wt.isDeletable', 'wt.icon');
 
         return $query->getQuery()->getArrayResult();
     }

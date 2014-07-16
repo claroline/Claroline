@@ -1,6 +1,6 @@
 <?php
 
-namespace Icap\PortfolioBundle\Migrations\pdo_mysql;
+namespace Icap\PortfolioBundle\Migrations\mysqli;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/07/10 09:41:09
+ * Generation date: 2014/07/16 11:09:12
  */
-class Version20140710094108 extends AbstractMigration
+class Version20140716110911 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -84,6 +84,7 @@ class Version20140710094108 extends AbstractMigration
                 name VARCHAR(255) NOT NULL, 
                 is_unique TINYINT(1) NOT NULL, 
                 is_deletable TINYINT(1) NOT NULL, 
+                icon VARCHAR(255) DEFAULT NULL, 
                 UNIQUE INDEX UNIQ_3E00FC8F5E237E06 (name), 
                 PRIMARY KEY(id)
             ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB

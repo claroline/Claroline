@@ -5,9 +5,9 @@ portfolioApp
         return {
             config: JSON.parse(window.widgetsConfig),
             getTypes: function(excludeTitle) {
-                var types = Object.keys(this.config);
+                var types = angular.copy(this.config);
                 if (excludeTitle) {
-                    types.remove('title');
+                    delete types.title;
                 }
                 return types;
             },

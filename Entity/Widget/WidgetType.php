@@ -20,7 +20,7 @@ class WidgetType
     protected $id;
 
     /**
-     * @ORM\Column(unique=true)
+     * @ORM\Column(type="string", nullable=false, unique=true)
      */
     protected $name;
 
@@ -37,6 +37,11 @@ class WidgetType
      * @ORM\Column(type="boolean", name="is_deletable")
      */
     protected $isDeletable = false;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $icon;
 
     /**
      * @return mixed
@@ -104,5 +109,25 @@ class WidgetType
     public function getIsUnique()
     {
         return $this->isUnique;
+    }
+
+    /**
+     * @param mixed $icon
+     *
+     * @return WidgetType
+     */
+    public function setIcon($icon)
+    {
+        $this->icon = $icon;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIcon()
+    {
+        return $this->icon;
     }
 }

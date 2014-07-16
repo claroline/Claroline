@@ -20,11 +20,11 @@ class LoadRequiredFixturesData extends AbstractFixture
          *   - is_deletable
          */
         $widgetTypes = array(
-            array('title',           true, false),
-            array('userInformation', true, true),
-            array('presentation',    true, true),
-            array('skills',          false, true),
-            array('formations',      false, true)
+            array('title',           true,  false, null),
+            array('userInformation', true,  true,  'info'),
+            array('presentation',    true,  true,  'comment'),
+            array('skills',          false, true,  'bookmark'),
+            array('formations',      false, true,  'graduation-cap')
         );
 
         foreach ($widgetTypes as $widgetType) {
@@ -32,7 +32,8 @@ class LoadRequiredFixturesData extends AbstractFixture
             $entity
                 ->setName($widgetType[0])
                 ->setIsUnique($widgetType[1])
-                ->setIsDeletable($widgetType[2]);
+                ->setIsDeletable($widgetType[2])
+                ->setIcon($widgetType[3]);
 
             $manager->persist($entity);
         }
