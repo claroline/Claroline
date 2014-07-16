@@ -6,7 +6,7 @@ angular.module('ui.datepicker', []).
             link: function($scope, element, attrs, ngModel) {
                 return attrs.$observe('bDatepicker', function(format) {
                     var options = {format: format};
-                    var onShow = {};
+                    var onShow = null;
 
                     if (ngModel) {
                         options.autoclose = true;
