@@ -25,8 +25,8 @@
             success: function(data) {
 
                 var flashbag =
-                    '<div id="custom-flashbag-div" class="alert alert-success">' +
-                    '<a id="flashbag-close-button" class="close" href="#" aria-hidden="true">&times;</a>' +
+                    '<div class="alert alert-success">' +
+                    '<a data-dismiss="alert" class="close" href="#" aria-hidden="true">&times;</a>' +
                     Translator.get('platform:edit_profile_success') +
                     '</div>';
 

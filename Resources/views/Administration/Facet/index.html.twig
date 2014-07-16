@@ -28,7 +28,7 @@
     </div>
     <div class="panel-body">
         <ul class="nav nav-tabs">
-            <li id="general-tab-btn">
+            <li id="general-tab-btn" class="active">
                 <a href="#general-tab" data-toggle="tab">
                     {{ "general"|trans({}, 'platform') }}
                 </a>
@@ -44,7 +44,7 @@
         </ul>
 
         <div id="facet-pane" class="tab-content">
-            <div class="tab-pane" id="general-tab">
+            <div class="tab-pane active" id="general-tab">
                 <div class="panel-heading"></div>
                 <div class="panel-body">
                     <form
@@ -122,7 +122,11 @@
                                 {% endfor %}
                             </tbody>
                         </table>
-                        <button type="submit" class="btn btn-primary">{{ 'edit'|trans({}, 'platform') }}</button>
+                        <button id="edit-general-facet-btn"
+                                type="submit"
+                                class="btn btn-primary">
+                            {{ 'edit'|trans({}, 'platform') }}
+                        </button>
                     </form>
                 </div>
             </div>
