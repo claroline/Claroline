@@ -32,10 +32,12 @@
             <i class="fa fa-trash-o"></i>
             {{ 'delete'|trans({}, 'platform') }}
         </button>
-        <button class="btn btn-default action-button" data-action="password">
-            <i class="fa fa-refresh"></i>
-            {{ 'reset_password'|trans({}, 'platform') }}
-        </button>
+        {% if is_mailer_available() %}
+            <button class="btn btn-default action-button" data-action="password">
+                <i class="fa fa-refresh"></i>
+                {{ 'reset_password'|trans({}, 'platform') }}
+            </button>
+        {% endif %}
     {% endif %}
 {% endmacro %}
 
