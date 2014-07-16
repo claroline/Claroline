@@ -436,7 +436,7 @@ class ScormController extends Controller
             $scoTracking = $this->scormManager
                 ->createScorm2004ScoTracking($user, $scorm2004Sco);
         }
-        $details = is_null($scoTracking->getDetails()) ?
+        $details = !is_null($scoTracking->getDetails()) ?
             $scoTracking->getDetails() :
             array();
 
