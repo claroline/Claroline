@@ -74,16 +74,34 @@ function ClipboardFactory($rootScope, PathFactory) {
          * @param step
          * @returns ClipboardFactory
          */
-        replaceResourcesId: function(step) {
-            if (typeof step.resources !== 'undefined' && step.resources !== null && step.resources.length != 0) {
+        replaceResourcesId: function(step, replacedIds) {
+            if (typeof replacedIds === 'undefined' || null === replacedIds) {
+                var replacedIds = [];
+            }
+
+            if (typeof step.resources !== 'undefined' && step.resources !== null && step.resources.length !== 0) {
                 for (var i = 0; i < step.resources.length; i++) {
+                    var newId = PathFactory.getNextResourceId();
+
+                    // Store ID to update excluded resources
+                    replacedIds[step.resources[i].id] = newId;
+
+                    // Update resource ID
                     step.resources[i].id = PathFactory.getNextResourceId();
+
+                    // Check excluded resources
+                    for (var oldId in replacedIds) {
+                        var pos = step.excludedResources.indexOf(oldId);
+                        if (-1 !== pos) {
+                            step.excludedResources[pos] = replacedIds[oldId];
+                        }
+                    }
                 }
             }
             
-            if (step.children.length != 0) {
+            if (step.children.length !== 0) {
                 for (var j = 0; j < step.children.length; j++) {
-                    this.replaceResourcesId(step.children[j]);
+                    this.replaceResourcesId(step.children[j], replacedIds);
                 }
             }
             
