@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\ScormBundle\Migrations\sqlsrv;
+namespace Claroline\ScormBundle\Migrations\pdo_sqlsrv;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/07/16 03:35:33
+ * Generation date: 2014/07/16 05:09:12
  */
-class Version20140716153531 extends AbstractMigration
+class Version20140716170910 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -43,7 +43,7 @@ class Version20140716153531 extends AbstractMigration
             CREATE TABLE claro_scorm_2004_sco_tracking (
                 id INT IDENTITY NOT NULL, 
                 user_id INT NOT NULL, 
-                scorm_id INT NOT NULL, 
+                sco_id INT NOT NULL, 
                 score_raw INT, 
                 score_min INT, 
                 score_max INT, 
@@ -59,7 +59,7 @@ class Version20140716153531 extends AbstractMigration
             CREATE INDEX IDX_3A61CA76ED395 ON claro_scorm_2004_sco_tracking (user_id)
         ");
         $this->addSql("
-            CREATE INDEX IDX_3A61CD75F22BE ON claro_scorm_2004_sco_tracking (scorm_id)
+            CREATE INDEX IDX_3A61C18A32826 ON claro_scorm_2004_sco_tracking (sco_id)
         ");
         $this->addSql("
             CREATE TABLE claro_scorm_2004_resource (
@@ -93,7 +93,7 @@ class Version20140716153531 extends AbstractMigration
         ");
         $this->addSql("
             ALTER TABLE claro_scorm_2004_sco_tracking 
-            ADD CONSTRAINT FK_3A61CD75F22BE FOREIGN KEY (scorm_id) 
+            ADD CONSTRAINT FK_3A61C18A32826 FOREIGN KEY (sco_id) 
             REFERENCES claro_scorm_2004_sco (id) 
             ON DELETE CASCADE
         ");
@@ -102,6 +102,37 @@ class Version20140716153531 extends AbstractMigration
             ADD CONSTRAINT FK_D16AB015B87FAB32 FOREIGN KEY (resourceNode_id) 
             REFERENCES claro_resource_node (id) 
             ON DELETE CASCADE
+        ");
+        $this->addSql("
+            sp_RENAME 'claro_scorm_12_sco_tracking.scorm_id', 
+            'sco_id', 
+            'COLUMN'
+        ");
+        $this->addSql("
+            ALTER TABLE claro_scorm_12_sco_tracking ALTER COLUMN sco_id INT NOT NULL
+        ");
+        $this->addSql("
+            ALTER TABLE claro_scorm_12_sco_tracking 
+            DROP CONSTRAINT FK_465499F3D75F22BE
+        ");
+        $this->addSql("
+            IF EXISTS (
+                SELECT * 
+                FROM sysobjects 
+                WHERE name = 'IDX_465499F3D75F22BE'
+            ) 
+            ALTER TABLE claro_scorm_12_sco_tracking 
+            DROP CONSTRAINT IDX_465499F3D75F22BE ELSE 
+            DROP INDEX IDX_465499F3D75F22BE ON claro_scorm_12_sco_tracking
+        ");
+        $this->addSql("
+            ALTER TABLE claro_scorm_12_sco_tracking 
+            ADD CONSTRAINT FK_465499F318A32826 FOREIGN KEY (sco_id) 
+            REFERENCES claro_scorm_12_sco (id) 
+            ON DELETE CASCADE
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_465499F318A32826 ON claro_scorm_12_sco_tracking (sco_id)
         ");
     }
 
@@ -113,7 +144,7 @@ class Version20140716153531 extends AbstractMigration
         ");
         $this->addSql("
             ALTER TABLE claro_scorm_2004_sco_tracking 
-            DROP CONSTRAINT FK_3A61CD75F22BE
+            DROP CONSTRAINT FK_3A61C18A32826
         ");
         $this->addSql("
             ALTER TABLE claro_scorm_2004_sco 
@@ -127,6 +158,37 @@ class Version20140716153531 extends AbstractMigration
         ");
         $this->addSql("
             DROP TABLE claro_scorm_2004_resource
+        ");
+        $this->addSql("
+            sp_RENAME 'claro_scorm_12_sco_tracking.sco_id', 
+            'scorm_id', 
+            'COLUMN'
+        ");
+        $this->addSql("
+            ALTER TABLE claro_scorm_12_sco_tracking ALTER COLUMN scorm_id INT NOT NULL
+        ");
+        $this->addSql("
+            ALTER TABLE claro_scorm_12_sco_tracking 
+            DROP CONSTRAINT FK_465499F318A32826
+        ");
+        $this->addSql("
+            IF EXISTS (
+                SELECT * 
+                FROM sysobjects 
+                WHERE name = 'IDX_465499F318A32826'
+            ) 
+            ALTER TABLE claro_scorm_12_sco_tracking 
+            DROP CONSTRAINT IDX_465499F318A32826 ELSE 
+            DROP INDEX IDX_465499F318A32826 ON claro_scorm_12_sco_tracking
+        ");
+        $this->addSql("
+            ALTER TABLE claro_scorm_12_sco_tracking 
+            ADD CONSTRAINT FK_465499F3D75F22BE FOREIGN KEY (scorm_id) 
+            REFERENCES claro_scorm_12_sco (id) 
+            ON DELETE CASCADE
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_465499F3D75F22BE ON claro_scorm_12_sco_tracking (scorm_id)
         ");
     }
 }

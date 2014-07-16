@@ -34,7 +34,7 @@ class Scorm12ScoTracking
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\ScormBundle\Entity\Scorm12Sco")
-     * @ORM\JoinColumn(name="scorm_id", onDelete="CASCADE", nullable=false)
+     * @ORM\JoinColumn(name="sco_id", onDelete="CASCADE", nullable=false)
      */
     protected $sco;
 

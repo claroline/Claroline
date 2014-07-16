@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\ScormBundle\Migrations\oci8;
+namespace Claroline\ScormBundle\Migrations\pdo_oci;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/07/16 03:35:33
+ * Generation date: 2014/07/16 05:09:11
  */
-class Version20140716153531 extends AbstractMigration
+class Version20140716170910 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -71,7 +71,7 @@ class Version20140716153531 extends AbstractMigration
             CREATE TABLE claro_scorm_2004_sco_tracking (
                 id NUMBER(10) NOT NULL, 
                 user_id NUMBER(10) NOT NULL, 
-                scorm_id NUMBER(10) NOT NULL, 
+                sco_id NUMBER(10) NOT NULL, 
                 score_raw NUMBER(10) DEFAULT NULL, 
                 score_min NUMBER(10) DEFAULT NULL, 
                 score_max NUMBER(10) DEFAULT NULL, 
@@ -115,7 +115,7 @@ class Version20140716153531 extends AbstractMigration
             CREATE INDEX IDX_3A61CA76ED395 ON claro_scorm_2004_sco_tracking (user_id)
         ");
         $this->addSql("
-            CREATE INDEX IDX_3A61CD75F22BE ON claro_scorm_2004_sco_tracking (scorm_id)
+            CREATE INDEX IDX_3A61C18A32826 ON claro_scorm_2004_sco_tracking (sco_id)
         ");
         $this->addSql("
             COMMENT ON COLUMN claro_scorm_2004_sco_tracking.details IS '(DC2Type:json_array)'
@@ -179,7 +179,7 @@ class Version20140716153531 extends AbstractMigration
         ");
         $this->addSql("
             ALTER TABLE claro_scorm_2004_sco_tracking 
-            ADD CONSTRAINT FK_3A61CD75F22BE FOREIGN KEY (scorm_id) 
+            ADD CONSTRAINT FK_3A61C18A32826 FOREIGN KEY (sco_id) 
             REFERENCES claro_scorm_2004_sco (id) 
             ON DELETE CASCADE
         ");
@@ -188,6 +188,25 @@ class Version20140716153531 extends AbstractMigration
             ADD CONSTRAINT FK_D16AB015B87FAB32 FOREIGN KEY (resourceNode_id) 
             REFERENCES claro_resource_node (id) 
             ON DELETE CASCADE
+        ");
+        $this->addSql("
+            ALTER TABLE claro_scorm_12_sco_tracking RENAME COLUMN scorm_id TO sco_id
+        ");
+        $this->addSql("
+            ALTER TABLE claro_scorm_12_sco_tracking 
+            DROP CONSTRAINT FK_465499F3D75F22BE
+        ");
+        $this->addSql("
+            DROP INDEX IDX_465499F3D75F22BE
+        ");
+        $this->addSql("
+            ALTER TABLE claro_scorm_12_sco_tracking 
+            ADD CONSTRAINT FK_465499F318A32826 FOREIGN KEY (sco_id) 
+            REFERENCES claro_scorm_12_sco (id) 
+            ON DELETE CASCADE
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_465499F318A32826 ON claro_scorm_12_sco_tracking (sco_id)
         ");
     }
 
@@ -199,7 +218,7 @@ class Version20140716153531 extends AbstractMigration
         ");
         $this->addSql("
             ALTER TABLE claro_scorm_2004_sco_tracking 
-            DROP CONSTRAINT FK_3A61CD75F22BE
+            DROP CONSTRAINT FK_3A61C18A32826
         ");
         $this->addSql("
             ALTER TABLE claro_scorm_2004_sco 
@@ -213,6 +232,25 @@ class Version20140716153531 extends AbstractMigration
         ");
         $this->addSql("
             DROP TABLE claro_scorm_2004_resource
+        ");
+        $this->addSql("
+            ALTER TABLE claro_scorm_12_sco_tracking RENAME COLUMN sco_id TO scorm_id
+        ");
+        $this->addSql("
+            ALTER TABLE claro_scorm_12_sco_tracking 
+            DROP CONSTRAINT FK_465499F318A32826
+        ");
+        $this->addSql("
+            DROP INDEX IDX_465499F318A32826
+        ");
+        $this->addSql("
+            ALTER TABLE claro_scorm_12_sco_tracking 
+            ADD CONSTRAINT FK_465499F3D75F22BE FOREIGN KEY (scorm_id) 
+            REFERENCES claro_scorm_12_sco (id) 
+            ON DELETE CASCADE
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_465499F3D75F22BE ON claro_scorm_12_sco_tracking (scorm_id)
         ");
     }
 }
