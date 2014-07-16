@@ -309,7 +309,7 @@ class Dropzone extends AbstractResource
     public function setForceCommentInCorrection($forceCommentInCorrection)
     {
         if ($this->getAllowCommentInCorrection() == true) {
-            $this->forceCommentInCorrection = $$forceCommentInCorrection;
+            $this->forceCommentInCorrection = $forceCommentInCorrection;
         } else {
             $this->forceCommentInCorrection = false;
         }
