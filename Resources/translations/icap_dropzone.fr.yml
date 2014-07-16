@@ -329,3 +329,4 @@ PeerReview_helper_other_cases: "Dans les autres cas, <b>le gestionnaire de l'év
 PeerReview_helper_unlock_tool: " Note: Un outil permet aussi au gestionnaire de 'débloquer' une copie si celle ci a déjà reçu au minimum 1 correction (qu'il peut ajouter lui même ). Cela permet d'éviter au gestionnaire, par exemple, de créer toutes les corrections attendues (ex 3 )  si une copie n'en a reçue aucune. Il lui suffira d'en créer une puis de débloquer la copie. Cet outil n'est disponible que lorsque l'évaluation est dans la phase 'terminée'."
 Made by: "Rendue par"
 Force comment in correction: "Rendre le commentaire obligatoire"
+Please comment: "Merci de laisser un commentaire"
