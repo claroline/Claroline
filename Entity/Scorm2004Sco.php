@@ -92,6 +92,21 @@ class Scorm2004Sco
      */
     protected $isBlock;
 
+    /**
+     * @ORM\Column(name="max_time_allowed", nullable=true)
+     */
+    protected $maxTimeAllowed;
+
+    /**
+     * @ORM\Column(name="completion_threshold", type="decimal", precision=10, scale=7, nullable=true)
+     */
+    protected $completionThreshold;
+
+    /**
+     * @ORM\Column(name="scaled_passing_score", type="decimal", precision=10, scale=7, nullable=true)
+     */
+    protected $scaledPassingScore;
+
     public function getId()
     {
         return $this->id;
@@ -209,5 +224,35 @@ class Scorm2004Sco
     public function setIsBlock($isBlock)
     {
         $this->isBlock = $isBlock;
+    }
+
+    public function getMaxTimeAllowed()
+    {
+        return $this->maxTimeAllowed;
+    }
+
+    public function setMaxTimeAllowed($maxTimeAllowed)
+    {
+        $this->maxTimeAllowed = $maxTimeAllowed;
+    }
+
+    public function getCompletionThreshold()
+    {
+        return $this->completionThreshold;
+    }
+
+    public function setCompletionThreshold($completionThreshold)
+    {
+        $this->completionThreshold = $completionThreshold;
+    }
+
+    public function getScaledPassingScore()
+    {
+        return $this->scaledPassingScore;
+    }
+
+    public function setScaledPassingScore($scaledPassingScore)
+    {
+        $this->scaledPassingScore = $scaledPassingScore;
     }
 }

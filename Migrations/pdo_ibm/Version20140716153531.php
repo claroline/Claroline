@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/07/08 11:51:03
+ * Generation date: 2014/07/16 03:35:33
  */
-class Version20140708115102 extends AbstractMigration
+class Version20140716153531 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -27,6 +27,9 @@ class Version20140708115102 extends AbstractMigration
                 time_limit_action VARCHAR(255) DEFAULT NULL, 
                 launch_data VARCHAR(4000) DEFAULT NULL, 
                 is_block SMALLINT NOT NULL, 
+                max_time_allowed VARCHAR(255) DEFAULT NULL, 
+                completion_threshold NUMERIC(10, 7) DEFAULT NULL, 
+                scaled_passing_score NUMERIC(10, 7) DEFAULT NULL, 
                 PRIMARY KEY(id)
             )
         ");
@@ -44,17 +47,11 @@ class Version20140708115102 extends AbstractMigration
                 score_raw INTEGER DEFAULT NULL, 
                 score_min INTEGER DEFAULT NULL, 
                 score_max INTEGER DEFAULT NULL, 
-                lesson_status VARCHAR(255) DEFAULT NULL, 
-                session_time INTEGER DEFAULT NULL, 
-                total_time INTEGER DEFAULT NULL, 
-                entry VARCHAR(255) DEFAULT NULL, 
-                suspend_data CLOB(1M) DEFAULT NULL, 
-                credit VARCHAR(255) DEFAULT NULL, 
-                exit_mode VARCHAR(255) DEFAULT NULL, 
-                lesson_location VARCHAR(255) DEFAULT NULL, 
-                lesson_mode VARCHAR(255) DEFAULT NULL, 
-                best_score_raw INTEGER DEFAULT NULL, 
-                best_lesson_status VARCHAR(255) DEFAULT NULL, 
+                score_scaled NUMERIC(10, 7) DEFAULT NULL, 
+                completion_status VARCHAR(255) DEFAULT NULL, 
+                success_status VARCHAR(255) DEFAULT NULL, 
+                total_time VARCHAR(255) DEFAULT NULL, 
+                details CLOB(1M) DEFAULT NULL, 
                 PRIMARY KEY(id)
             )
         ");

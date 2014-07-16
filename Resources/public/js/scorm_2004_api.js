@@ -1,81 +1,63 @@
-var scormDataElement = document.getElementById('twig-scorm-data');
-var scoData = [];
+var scoData = {};
 
-scoData['cmi.comments_from_learner'] = [];
-scoData['cmi.comments_from_learner._children'] = 'comment,location,timestamp';
-//scoData['cmi.comments_from_learner._count'];
-//scoData['cmi.comments_from_learner.n.comment'];
-//scoData['cmi.comments_from_learner.n.location'];
-//scoData['cmi.comments_from_learner.n.timestamp'];
-scoData['cmi.comments_from_lms'] = [];
-scoData['cmi.comments_from_lms._children'] = 'comment,location,timestamp';
-//scoData['cmi.comments_from_lms._count'];
-//scoData['cmi.comments_from_lms.n.comment'];
-//scoData['cmi.comments_from_lms.n.location'];
-//scoData['cmi.comments_from_lms.n.timestamp'];
-scoData['cmi.completion_status'] = 'unknown';
-scoData['cmi.completion_threshold'] = '<adlcp:completionThreshold>';
+if (trackingDetails !== undefined) {
+    scoData = trackingDetails;
+}
+
 scoData['cmi.credit'] = 'credit';
-//scoData['cmi.entry'];
-//scoData['cmi.exit'];
-scoData['cmi.interactions'] = [];
 scoData['cmi.interactions._children'] = 'id,type,objectives,timestamp,correct_responses,weighting,learner_response,result,latency,description';
-//scoData['cmi.interactions._count'];
-//scoData['cmi.interactions.n.id'];
-//scoData['cmi.interactions.n.type'];
-//scoData['cmi.interactions.n.objectives'] = [];
-//scoData['cmi.interactions.n.objectives._count'];
-//scoData['cmi.interactions.n.objectives.n.id'];
-//scoData['cmi.interactions.n.timestamp'];
-//scoData['cmi.interactions.n.correct_responses'] = [];
-//scoData['cmi.interactions.n.correct_responses._count'];
-//scoData['cmi.interactions.n.correct_responses.n.pattern'];
-//scoData['cmi.interactions.n.weighting'];
-//scoData['cmi.interactions.n.learner_response'];
-//scoData['cmi.interactions.n.result'];
-//scoData['cmi.interactions.n.latency'];
-//scoData['cmi.interactions.n.description'];
-scoData['cmi.launch_data'] = scormDataElement.getAttribute('launch-data');
-scoData['cmi.learner_id'] = scormDataElement.getAttribute('learner-id');
-scoData['cmi.learner_name'] = scormDataElement.getAttribute('learner-name');
-scoData['cmi.learner_preference'] = [];
 scoData['cmi.learner_preference._children'] = 'audio_level,language,delivery_speed,audio_captioning';
-//scoData['cmi.learner_preference.audio_level'];
-//scoData['cmi.learner_preference.language'];
-//scoData['cmi.learner_preference.delivery_speed'];
-//scoData['cmi.learner_preference.audio_captioning'];
-scoData['cmi.location'] = '';
-scoData['cmi.max_time_allowed'] = '<imsss:attemptAbsoluteDurationLimit>';
 scoData['cmi.mode'] = 'normal';
-scoData['cmi.objectives'] = [];
 scoData['cmi.objectives._children'] = 'id,score,success_status,completion_status,progress_measure,description';
-//scoData['cmi.objectives._count'];
-//scoData['cmi.objectives.n.id'];
-//scoData['cmi.objectives.n.score'] = [];
-//scoData['cmi.objectives.n.score._children'] = 'scaled,raw,min,max';
-//scoData['cmi.objectives.n.score.scaled'];
-//scoData['cmi.objectives.n.score.raw'];
-//scoData['cmi.objectives.n.score.min'];
-//scoData['cmi.objectives.n.score.max'];
-//scoData['cmi.objectives.n.success_status'];
-//scoData['cmi.objectives.n.completion_status'];
-//scoData['cmi.objectives.n.progress_measure'];
-//scoData['cmi.objectives.n.description'];
-//scoData['cmi.progress_measure'];
-scoData['cmi.scaled_passing_score'] = '<imsss:minNormalizedMeasure>';
-scoData['cmi.score'] = [];
 scoData['cmi.score._children'] = 'scaled,raw,min,max';
-//scoData['cmi.score.scaled'];
-//scoData['cmi.score.raw'];
-//scoData['cmi.score.max'];
-//scoData['cmi.score.min'];
-//scoData['cmi.session_time'];
-//scoData['cmi.success_status'];
-//scoData['cmi.suspend_data'];
-scoData['cmi.time_limit_action'] = '<adlcp:timeLimitAction> or "continue,no message"';
-scoData['cmi.total_time'] = 'total time';
 
-var errorString = [];
+if (scoData['cmi.comments_from_learner'] === undefined) {
+    scoData['cmi.comments_from_learner'] = {};
+    scoData['cmi.comments_from_learner._children'] = 'comment,location,timestamp';
+}
+
+if (scoData['cmi.comments_from_lms'] === undefined) {
+    scoData['cmi.comments_from_lms'] = {};
+    scoData['cmi.comments_from_lms._children'] = 'comment,location,timestamp';
+}
+
+if (scoData['cmi.completion_status'] === undefined) {
+    scoData['cmi.completion_status'] = 'unknown';
+}
+
+if (scoData['cmi.entry'] === undefined) {
+    scoData['cmi.entry'] = '';
+}
+
+if (scoData['cmi.exit'] === undefined) {
+    scoData['cmi.exit'] = '';
+}
+
+if (scoData['cmi.interactions'] === undefined) {
+    scoData['cmi.interactions'] = {};
+}
+
+if (scoData['cmi.location'] === undefined) {
+    scoData['cmi.location'] = '';
+}
+
+if (scoData['cmi.objectives'] === undefined) {
+    scoData['cmi.objectives'] = {};
+}
+
+if (scoData['cmi.success_status'] === undefined) {
+    scoData['cmi.success_status'] = 'unknown';
+}
+
+if (scoData['cmi.time_limit_action'] === undefined) {
+    scoData['cmi.time_limit_action'] = 'continue,no message';
+}
+
+if (scoData['cmi.total_time'] === undefined) {
+    scoData['cmi.total_time'] = 'PT0S';
+}
+
+var errorString = {};
 errorString['0'] = 'No error';
 errorString['101'] = 'General Exception';
 errorString['102'] = 'General Initialization Failure';
@@ -103,12 +85,32 @@ errorString['406'] = 'Data Model Element Type Mismatch';
 errorString['407'] = 'Data Model Element Value Out Of Range';
 errorString['408'] = 'Data Model Dependency Not Established';
 
-var scoId = scormDataElement.getAttribute('sco-id');
+var scoId = document.getElementById('twig-scorm-data').getAttribute('data-sco-id');
 var apiInitialized = false;
 var apiTerminated = false;
 var apiLastError = '0';
 var pattern = '^[-]?[0-9]+([.][0-9]{1,7})?$';
 var regex = new RegExp(pattern);
+
+function commitResult(mode)
+{
+    'use strict';
+    
+    $.ajax({
+        async: false,
+        url: Routing.generate(
+            'claro_scorm_2004_tracking_commit',
+            {'mode': mode, 'scoId': scoId}
+        ),
+        type: 'POST',
+        data: JSON.stringify(scoData),
+        contentType: 'application/json',
+        dataType: 'json',
+        success: function () {
+            console.log('*** Commit Succeded ***');
+        }
+    });
+}
 
 function Initialize(arg)
 {
@@ -171,7 +173,7 @@ function Terminate(arg)
     } else {
         scoData['cmi.entry'] = '';
     }
-//    commitResult('log');
+    commitResult('log');
 
     return 'true';
 }
@@ -284,13 +286,13 @@ function GetValue(arg)
             if (splitted[0] === 'cmi' && splitted[2].trim()) {
             
                 var cmiIndex = 'cmi.' + splitted[1];
-                var nIndex = parseInt(splitted[2]);
+                var nIndex = splitted[2];
                 
                 switch (splitted[1]) {
                     case 'comments_from_learner' :
                     case 'comments_from_lms' :
                     
-                        if (scoData[cmiIndex].length > nIndex) {
+                        if (scoData[cmiIndex][nIndex] !== undefined) {
                             
                             switch (splitted[3]) {
                                 case 'comment':
@@ -336,7 +338,7 @@ function GetValue(arg)
                         
                     case 'interactions' :
                     
-                        if (scoData[cmiIndex].length > nIndex) {
+                        if (scoData[cmiIndex][nIndex] !== undefined) {
                             
                             switch (splitted[3]) {
                                 case 'id':
@@ -366,8 +368,8 @@ function GetValue(arg)
                                         apiLastError = '0';
 
                                         return scoData[cmiIndex][nIndex]['objectives'].length;
-                                    } else if (splitted[4].trim() && scoData[cmiIndex][nIndex]['objectives'].length > splitted[4]) {
-                                        var objectiveIndex = parseInt(splitted[4]);
+                                    } else if (splitted[4].trim() && scoData[cmiIndex][nIndex]['objectives'][splitted[4]] !== undefined) {
+                                        var objectiveIndex = splitted[4];
                                         
                                         if (splitted[5] === 'id') {
                                             
@@ -406,8 +408,8 @@ function GetValue(arg)
                                         apiLastError = '0';
 
                                         return scoData[cmiIndex][nIndex]['correct_responses'].length;
-                                    } else if (splitted[4].trim() && scoData[cmiIndex][nIndex]['correct_responses'].length > splitted[4]) {
-                                        var responseIndex = parseInt(splitted[4]);
+                                    } else if (splitted[4].trim() && scoData[cmiIndex][nIndex]['correct_responses'][splitted[4]] !== undefined) {
+                                        var responseIndex = splitted[4];
                                         
                                         if (splitted[5] === 'pattern') {
                                             
@@ -456,7 +458,7 @@ function GetValue(arg)
                         
                     case 'objectives' :
                     
-                        if (scoData[cmiIndex].length > nIndex) {
+                        if (scoData[cmiIndex][nIndex] !== undefined) {
                             
                             switch (splitted[3]) {
                                 case 'id':
@@ -795,11 +797,11 @@ function SetValue(argName, argValue)
             return 'true';
             
         default:
-            var splitted = arg.split('.');
+            var splitted = argName.split('.');
             
             if (splitted[0] === 'cmi' && splitted[2].trim()) {
                 var cmiIndex = 'cmi.' + splitted[1];
-                var nIndex = parseInt(splitted[2]);
+                var nIndex = splitted[2];
                 
                 switch (splitted[1]) {
                     case 'comments_from_learner' :
@@ -811,7 +813,7 @@ function SetValue(argName, argValue)
                             case 'timestamp':
 
                                 if (scoData[cmiIndex][nIndex] === undefined) {
-                                    scoData[cmiIndex][nIndex] = [];
+                                    scoData[cmiIndex][nIndex] = {};
                                 }
                                 scoData[cmiIndex][nIndex][splitted[3]] = argValue;
                                 apiLastError = '0';
@@ -842,19 +844,20 @@ function SetValue(argName, argValue)
                                     upperCaseType !== 'SEQUENCING' &&
                                     upperCaseType !== 'NUMERIC' &&
                                     upperCaseType !== 'OTHER') {
-
-                                        if (scoData[cmiIndex][nIndex] === undefined) {
-                                            scoData[cmiIndex][nIndex] = [];
-                                        }
-                                        scoData[cmiIndex][nIndex]['type'] = argValue;
-                                        apiLastError = '0';
-
-                                        return 'true';
-                                } else {
+                                
                                     // Data Model Element Type Mismatch
                                     apiLastError = '406';
 
-                                    return 'false';   
+                                    return 'false';
+                                } else {
+                                    
+                                    if (scoData[cmiIndex][nIndex] === undefined) {
+                                        scoData[cmiIndex][nIndex] = {};
+                                    }
+                                    scoData[cmiIndex][nIndex]['type'] = argValue;
+                                    apiLastError = '0';
+
+                                    return 'true';
                                 }
                                 break;
                                 
@@ -864,7 +867,7 @@ function SetValue(argName, argValue)
                                 if (regex.test(argStringValue)) {
 
                                     if (scoData[cmiIndex][nIndex] === undefined) {
-                                        scoData[cmiIndex][nIndex] = [];
+                                        scoData[cmiIndex][nIndex] = {};
                                     }
                                     scoData[cmiIndex][nIndex]['weighting'] = parseFloat(argValue);
                                     apiLastError = '0';
@@ -881,13 +884,13 @@ function SetValue(argName, argValue)
                             case 'result':
                                 var upperCaseResult = argValue.toUpperCase();
                                 
-                                if (upperCaseResult !== 'CORRECT' &&
-                                    upperCaseResult !== 'INCORRECT' &&
-                                    upperCaseResult !== 'UNANTICIPATED' &&
-                                    upperCaseResult !== 'NEUTRAL') {
+                                if (upperCaseResult === 'CORRECT' ||
+                                    upperCaseResult === 'INCORRECT' ||
+                                    upperCaseResult === 'UNANTICIPATED' ||
+                                    upperCaseResult === 'NEUTRAL') {
 
                                         if (scoData[cmiIndex][nIndex] === undefined) {
-                                            scoData[cmiIndex][nIndex] = [];
+                                            scoData[cmiIndex][nIndex] = {};
                                         }
                                         scoData[cmiIndex][nIndex]['result'] = argValue;
                                         apiLastError = '0';
@@ -896,7 +899,7 @@ function SetValue(argName, argValue)
                                 } else if (regex.test('' + argValue)) {
 
                                     if (scoData[cmiIndex][nIndex] === undefined) {
-                                        scoData[cmiIndex][nIndex] = [];
+                                        scoData[cmiIndex][nIndex] = {};
                                     }
                                     scoData[cmiIndex][nIndex]['weighting'] = parseFloat(argValue);
                                     apiLastError = '0';
@@ -917,7 +920,7 @@ function SetValue(argName, argValue)
                             case 'description':
 
                                 if (scoData[cmiIndex][nIndex] === undefined) {
-                                    scoData[cmiIndex][nIndex] = [];
+                                    scoData[cmiIndex][nIndex] = {};
                                 }
                                 scoData[cmiIndex][nIndex][splitted[3]] = argValue;
                                 apiLastError = '0';
@@ -934,16 +937,16 @@ function SetValue(argName, argValue)
                                 } else {
                                     
                                     if (splitted[4].trim()) {
-                                        var objectiveIndex = parseInt(splitted[4]);
+                                        var objectiveIndex = splitted[4];
                                         
                                         if (splitted[5] === 'id') {
                                             
                                             if (scoData[cmiIndex][nIndex]['objectives'] === undefined) {
-                                                scoData[cmiIndex][nIndex]['objectives'] = [];
+                                                scoData[cmiIndex][nIndex]['objectives'] = {};
                                             }
                                             
                                             if (scoData[cmiIndex][nIndex]['objectives'][objectiveIndex] === undefined) {
-                                                scoData[cmiIndex][nIndex]['objectives'][objectiveIndex] = [];
+                                                scoData[cmiIndex][nIndex]['objectives'][objectiveIndex] = {};
                                             }
                                             scoData[cmiIndex][nIndex]['objectives'][objectiveIndex]['id'] = argValue;
                                             apiLastError = '0';
@@ -975,16 +978,16 @@ function SetValue(argName, argValue)
                                 } else {
                                     
                                     if (splitted[4].trim()) {
-                                        var responseIndex = parseInt(splitted[4]);
+                                        var responseIndex = splitted[4];
                                         
                                         if (splitted[5] === 'pattern') {
                                             
                                             if (scoData[cmiIndex][nIndex]['correct_responses'] === undefined) {
-                                                scoData[cmiIndex][nIndex]['correct_responses'] = [];
+                                                scoData[cmiIndex][nIndex]['correct_responses'] = {};
                                             }
                                             
                                             if (scoData[cmiIndex][nIndex]['correct_responses'][responseIndex] === undefined) {
-                                                scoData[cmiIndex][nIndex]['correct_responses'][responseIndex] = [];
+                                                scoData[cmiIndex][nIndex]['correct_responses'][responseIndex] = {};
                                             }
                                             scoData[cmiIndex][nIndex]['correct_responses'][responseIndex]['pattern'] = argValue;
                                             apiLastError = '0';
@@ -1023,16 +1026,16 @@ function SetValue(argName, argValue)
                                 if (upperCaseObjSuccessStatus !== 'PASSED' &&
                                     upperCaseObjSuccessStatus !== 'FAILED' &&
                                     upperCaseObjSuccessStatus !== 'UNKNOWN') {
-
-                                    scoData[cmiIndex][nIndex]['success_status'] = argValue;
-                                    apiLastError = '0';
-
-                                    return 'true';
-                                } else {
+                                
                                     // Data Model Element Type Mismatch
                                     apiLastError = '406';
 
                                     return 'false';
+                                } else {
+                                    scoData[cmiIndex][nIndex]['success_status'] = argValue;
+                                    apiLastError = '0';
+
+                                    return 'true';
                                 }
                                 break;
                                 
@@ -1043,16 +1046,16 @@ function SetValue(argName, argValue)
                                     upperCaseObjCompletionStatus !== 'INCOMPLETE' &&
                                     upperCaseObjCompletionStatus !== 'NOT_ATTEMPTED' &&
                                     upperCaseObjCompletionStatus !== 'UNKNOWN') {
-
-                                    scoData[cmiIndex][nIndex]['completion_status'] = argValue;
-                                    apiLastError = '0';
-
-                                    return 'true';
-                                } else {
+                                
                                     // Data Model Element Type Mismatch
                                     apiLastError = '406';
 
                                     return 'false';
+                                } else {
+                                    scoData[cmiIndex][nIndex]['completion_status'] = argValue;
+                                    apiLastError = '0';
+
+                                    return 'true';
                                 }
                                 break;
                                 
@@ -1298,8 +1301,8 @@ function Commit(arg)
 
         return 'false';
     }
-//    apiLastError = '0';
-//    commitResult('persist');
+    apiLastError = '0';
+    commitResult('persist');
 }
 function APIClass()
 {

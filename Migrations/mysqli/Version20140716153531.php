@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\ScormBundle\Migrations\sqlsrv;
+namespace Claroline\ScormBundle\Migrations\mysqli;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -8,73 +8,59 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/07/08 11:51:03
+ * Generation date: 2014/07/16 03:35:33
  */
-class Version20140708115102 extends AbstractMigration
+class Version20140716153531 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
         $this->addSql("
             CREATE TABLE claro_scorm_2004_sco (
-                id INT IDENTITY NOT NULL, 
+                id INT AUTO_INCREMENT NOT NULL, 
                 scorm_resource_id INT NOT NULL, 
-                sco_parent_id INT, 
-                entry_url NVARCHAR(255), 
-                scorm_identifier NVARCHAR(255) NOT NULL, 
-                title NVARCHAR(200) NOT NULL, 
-                visible BIT NOT NULL, 
-                parameters NVARCHAR(1000), 
-                time_limit_action NVARCHAR(255), 
-                launch_data NVARCHAR(4000), 
-                is_block BIT NOT NULL, 
-                PRIMARY KEY (id)
-            )
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_E88F1DDD167AFF3D ON claro_scorm_2004_sco (scorm_resource_id)
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_E88F1DDD48C689D5 ON claro_scorm_2004_sco (sco_parent_id)
+                sco_parent_id INT DEFAULT NULL, 
+                entry_url VARCHAR(255) DEFAULT NULL, 
+                scorm_identifier VARCHAR(255) NOT NULL, 
+                title VARCHAR(200) NOT NULL, 
+                visible TINYINT(1) NOT NULL, 
+                parameters VARCHAR(1000) DEFAULT NULL, 
+                time_limit_action VARCHAR(255) DEFAULT NULL, 
+                launch_data VARCHAR(4000) DEFAULT NULL, 
+                is_block TINYINT(1) NOT NULL, 
+                max_time_allowed VARCHAR(255) DEFAULT NULL, 
+                completion_threshold NUMERIC(10, 7) DEFAULT NULL, 
+                scaled_passing_score NUMERIC(10, 7) DEFAULT NULL, 
+                INDEX IDX_E88F1DDD167AFF3D (scorm_resource_id), 
+                INDEX IDX_E88F1DDD48C689D5 (sco_parent_id), 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_scorm_2004_sco_tracking (
-                id INT IDENTITY NOT NULL, 
+                id INT AUTO_INCREMENT NOT NULL, 
                 user_id INT NOT NULL, 
                 scorm_id INT NOT NULL, 
-                score_raw INT, 
-                score_min INT, 
-                score_max INT, 
-                lesson_status NVARCHAR(255), 
-                session_time INT, 
-                total_time INT, 
-                entry NVARCHAR(255), 
-                suspend_data VARCHAR(MAX), 
-                credit NVARCHAR(255), 
-                exit_mode NVARCHAR(255), 
-                lesson_location NVARCHAR(255), 
-                lesson_mode NVARCHAR(255), 
-                best_score_raw INT, 
-                best_lesson_status NVARCHAR(255), 
-                PRIMARY KEY (id)
-            )
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_3A61CA76ED395 ON claro_scorm_2004_sco_tracking (user_id)
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_3A61CD75F22BE ON claro_scorm_2004_sco_tracking (scorm_id)
+                score_raw INT DEFAULT NULL, 
+                score_min INT DEFAULT NULL, 
+                score_max INT DEFAULT NULL, 
+                score_scaled NUMERIC(10, 7) DEFAULT NULL, 
+                completion_status VARCHAR(255) DEFAULT NULL, 
+                success_status VARCHAR(255) DEFAULT NULL, 
+                total_time VARCHAR(255) DEFAULT NULL, 
+                details LONGTEXT DEFAULT NULL COMMENT '(DC2Type:json_array)', 
+                INDEX IDX_3A61CA76ED395 (user_id), 
+                INDEX IDX_3A61CD75F22BE (scorm_id), 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_scorm_2004_resource (
-                id INT IDENTITY NOT NULL, 
-                hash_name NVARCHAR(50) NOT NULL, 
-                resourceNode_id INT, 
-                PRIMARY KEY (id)
-            )
-        ");
-        $this->addSql("
-            CREATE UNIQUE INDEX UNIQ_D16AB015B87FAB32 ON claro_scorm_2004_resource (resourceNode_id) 
-            WHERE resourceNode_id IS NOT NULL
+                id INT AUTO_INCREMENT NOT NULL, 
+                hash_name VARCHAR(50) NOT NULL, 
+                resourceNode_id INT DEFAULT NULL, 
+                UNIQUE INDEX UNIQ_D16AB015B87FAB32 (resourceNode_id), 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             ALTER TABLE claro_scorm_2004_sco 
@@ -112,15 +98,15 @@ class Version20140708115102 extends AbstractMigration
     {
         $this->addSql("
             ALTER TABLE claro_scorm_2004_sco 
-            DROP CONSTRAINT FK_E88F1DDD48C689D5
+            DROP FOREIGN KEY FK_E88F1DDD48C689D5
         ");
         $this->addSql("
             ALTER TABLE claro_scorm_2004_sco_tracking 
-            DROP CONSTRAINT FK_3A61CD75F22BE
+            DROP FOREIGN KEY FK_3A61CD75F22BE
         ");
         $this->addSql("
             ALTER TABLE claro_scorm_2004_sco 
-            DROP CONSTRAINT FK_E88F1DDD167AFF3D
+            DROP FOREIGN KEY FK_E88F1DDD167AFF3D
         ");
         $this->addSql("
             DROP TABLE claro_scorm_2004_sco

@@ -608,10 +608,13 @@ class Scorm2004Listener
                     $sco->setLaunchData($item->nodeValue);
                     break;
                 case 'adlcp:completionThreshold':
+                    $sco->setCompletionThreshold($item->nodeName);
                     break;
                 case 'imsss:attemptAbsoluteDurationLimit':
+                    $sco->setMaxTimeAllowed($item->nodeName);
                     break;
                 case 'imsss:minNormalizedMeasure':
+                    $sco->setScaledPassingScore($item->nodeName);
                     break;
             }
             $item = $item->nextSibling;

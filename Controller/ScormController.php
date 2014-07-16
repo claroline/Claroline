@@ -16,13 +16,14 @@ use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\ScormBundle\Entity\Scorm12Resource;
 use Claroline\ScormBundle\Entity\Scorm12Sco;
-use Claroline\ScormBundle\Entity\Scorm12ScoTracking;
 use Claroline\ScormBundle\Entity\Scorm2004Resource;
 use Claroline\ScormBundle\Entity\Scorm2004Sco;
-use Claroline\ScormBundle\Entity\Scorm2004ScoTracking;
 use Claroline\ScormBundle\Event\Log\LogScorm12ResultEvent;
+use Claroline\ScormBundle\Event\Log\LogScorm2004ResultEvent;
+use Claroline\ScormBundle\Manager\ScormManager;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\SecurityContextInterface;
@@ -33,29 +34,32 @@ class ScormController extends Controller
 {
     private $eventDispatcher;
     private $om;
+    private $request;
+    private $scormManager;
     private $securityContext;
-    private $scorm12ScoTrackingRepo;
-    private $userRepo;
 
     /**
      * @DI\InjectParams({
      *     "eventDispatcher"    = @DI\Inject("event_dispatcher"),
      *     "om"                 = @DI\Inject("claroline.persistence.object_manager"),
+     *     "requestStack"       = @DI\Inject("request_stack"),
+     *     "scormManager"       = @DI\Inject("claroline.manager.scorm_manager"),
      *     "securityContext"    = @DI\Inject("security.context")
      * })
      */
     public function __construct(
         EventDispatcherInterface $eventDispatcher,
         ObjectManager $om,
+        RequestStack $requestStack,
+        ScormManager $scormManager,
         SecurityContextInterface $securityContext
     )
     {
         $this->eventDispatcher = $eventDispatcher;
         $this->om = $om;
+        $this->request = $requestStack;
+        $this->scormManager = $scormManager;
         $this->securityContext = $securityContext;
-        $this->scorm12ScoTrackingRepo = $om->getRepository('ClarolineScormBundle:Scorm12ScoTracking');
-        $this->scorm2004ScoTrackingRepo = $om->getRepository('ClarolineScormBundle:Scorm2004ScoTracking');
-        $this->userRepo = $om->getRepository('ClarolineCoreBundle:User');
     }
 
     /**
@@ -83,54 +87,18 @@ class ScormController extends Controller
         $scos = $scorm->getScos();
         $rootScos = array();
 
-        $checkTracking = true;
-        $createTracking = false;
-
         foreach ($scos as $sco) {
+
             if (is_null($sco->getScoParent())) {
                 $rootScos[] = $sco;
             }
 
-            if ($checkTracking) {
-                $scoTracking = $this->scorm12ScoTrackingRepo->findOneBy(
-                    array('user' => $user->getId(), 'sco' => $sco->getId())
-                );
-                $checkTracking = false;
+            $scoTracking = $this->scormManager
+                ->getScorm12ScoTrackingByUserAndSco($user, $sco);
 
-                if (is_null($scoTracking)) {
-                    $createTracking = true;
-                }
+            if (is_null($scoTracking)) {
+                $this->scormManager->createScorm12ScoTracking($user, $sco);
             }
-
-            if ($createTracking) {
-                $scoTracking = new Scorm12ScoTracking();
-                $scoTracking->setUser($user);
-                $scoTracking->setSco($sco);
-                $scoTracking->setScoreRaw(-1);
-                $scoTracking->setScoreMax(-1);
-                $scoTracking->setScoreMin(-1);
-                $scoTracking->setLessonStatus('not attempted');
-                $scoTracking->setSuspendData('');
-                $scoTracking->setEntry('ab-initio');
-                $scoTracking->setLessonLocation('');
-                $scoTracking->setCredit('no-credit');
-                $scoTracking->setTotalTime(0);
-                $scoTracking->setSessionTime(0);
-                $scoTracking->setLessonMode('normal');
-                $scoTracking->setExitMode('');
-                $scoTracking->setBestLessonStatus('not attempted');
-
-                if (is_null($sco->getPrerequisites())) {
-                    $scoTracking->setIsLocked(false);
-                } else {
-                    $scoTracking->setIsLocked(true);
-                }
-                $this->om->persist($scoTracking);
-            }
-        }
-
-        if ($createTracking) {
-            $this->om->flush();
         }
 
         return array(
@@ -183,9 +151,13 @@ class ScormController extends Controller
                 $rootScos[] = $sco;
             }
         }
-        $scoTracking = $this->scorm12ScoTrackingRepo->findOneBy(
-            array('user' => $user->getId(), 'sco' => $scorm12Sco->getId())
-        );
+        $scoTracking = $this->scormManager
+            ->getScorm12ScoTrackingByUserAndSco($user, $scorm12Sco);
+
+        if (is_null($scoTracking)) {
+            $scoTracking = $this->scormManager
+                ->createScorm12ScoTracking($user, $sco);
+        }
 
         return array(
             'resource' => $scorm,
@@ -244,10 +216,13 @@ class ScormController extends Controller
         }
         $sessionTimeInHundredth = $this->convertTimeInHundredth($sessionTime);
 
-        $scoTracking = $this->scorm12ScoTrackingRepo->findOneBy(
-            array('user' => $user->getId(), 'sco' => $scorm12Sco->getId())
-        );
+        $scoTracking = $this->scormManager
+            ->getScorm12ScoTrackingByUserAndSco($user, $scorm12Sco);
 
+        if (is_null($scoTracking)) {
+            $scoTracking = $this->scormManager
+                ->createScorm12ScoTracking($user, $scorm12Sco);
+        }
         $scoTracking->setEntry($entry);
         $scoTracking->setExitMode($exitMode);
         $scoTracking->setLessonLocation($lessonLocation);
@@ -310,9 +285,7 @@ class ScormController extends Controller
                 $bestStatus
             );
         }
-
-        $this->om->persist($scoTracking);
-        $this->om->flush();
+        $this->scormManager->updateScorm12ScoTracking($scoTracking);
 
         return new Response('', '204');
     }
@@ -353,8 +326,11 @@ class ScormController extends Controller
         $details['totalTime'] = $totalTimeInHundredth;
         $details['bestScore'] = $bestScore;
         $details['bestStatus'] = $bestStatus;
-        $details['result'] = $scoreRaw;
-        $details['resultMax'] = $scoreRaw;
+
+        if (!empty($scoreMax) && $scoreMax > 0) {
+            $details['result'] = $scoreRaw;
+            $details['resultMax'] = $scoreMax;
+        }
 
 
         $event = new LogScorm12ResultEvent(
@@ -390,49 +366,16 @@ class ScormController extends Controller
         $scos = $scorm->getScos();
         $rootScos = array();
 
-        $checkTracking = true;
-        $createTracking = false;
-
         foreach ($scos as $sco) {
             if (is_null($sco->getScoParent())) {
                 $rootScos[] = $sco;
             }
+            $scoTracking = $this->scormManager
+                ->getScorm2004ScoTrackingByUserAndSco($user, $sco);
 
-            if ($checkTracking) {
-                $scoTracking = $this->scorm2004ScoTrackingRepo->findOneBy(
-                    array('user' => $user->getId(), 'sco' => $sco->getId())
-                );
-                $checkTracking = false;
-
-                if (is_null($scoTracking)) {
-                    $createTracking = true;
-                }
+            if (is_null($scoTracking)) {
+                $this->scormManager->createScorm2004ScoTracking($user, $sco);
             }
-
-            if ($createTracking) {
-                $scoTracking = new Scorm2004ScoTracking();
-                $scoTracking->setUser($user);
-                $scoTracking->setSco($sco);
-                $scoTracking->setScoreRaw(-1);
-                $scoTracking->setScoreMax(-1);
-                $scoTracking->setScoreMin(-1);
-                $scoTracking->setLessonStatus('not attempted');
-                $scoTracking->setSuspendData('');
-                $scoTracking->setEntry('ab-initio');
-                $scoTracking->setLessonLocation('');
-                $scoTracking->setCredit('no-credit');
-                $scoTracking->setTotalTime(0);
-                $scoTracking->setSessionTime(0);
-                $scoTracking->setLessonMode('normal');
-                $scoTracking->setExitMode('');
-                $scoTracking->setBestLessonStatus('not attempted');
-
-                $this->om->persist($scoTracking);
-            }
-        }
-
-        if ($createTracking) {
-            $this->om->flush();
         }
 
         return array(
@@ -485,9 +428,45 @@ class ScormController extends Controller
                 $rootScos[] = $sco;
             }
         }
-        $scoTracking = $this->scorm2004ScoTrackingRepo->findOneBy(
-            array('user' => $user->getId(), 'sco' => $scorm2004Sco->getId())
-        );
+
+        $scoTracking = $this->scormManager
+            ->getScorm2004ScoTrackingByUserAndSco($user, $scorm2004Sco);
+
+        if (is_null($scoTracking)) {
+            $scoTracking = $this->scormManager
+                ->createScorm2004ScoTracking($user, $scorm2004Sco);
+        }
+        $details = is_null($scoTracking->getDetails()) ?
+            $scoTracking->getDetails() :
+            array();
+
+        $timeLimitAction = $scorm2004Sco->getTimeLimitAction();
+        $totalTime = $scoTracking->getTotalTime();
+        $completionThreshold = $scorm2004Sco->getCompletionThreshold();
+        $maxTimeAllowed = $scorm2004Sco->getMaxTimeAllowed();
+        $scaledPassingScore = $scorm2004Sco->getScaledPassingScore();
+
+        $details['cmi.time_limit_action'] = !is_null($timeLimitAction) ?
+            $timeLimitAction :
+            'continue,no message';
+        $details['cmi.total_time'] = !is_null($totalTime) ?
+            $totalTime :
+            'PT0S';
+        $details['cmi.launch_data'] = $scorm2004Sco->getLaunchData();
+        $details['cmi.learner_id'] = $user->getId();
+        $details['cmi.learner_name'] = $user->getFirstName() .
+            ', ' .
+            $user->getLastName();
+
+        $details['cmi.completion_threshold'] = !is_null($completionThreshold) ?
+            $completionThreshold :
+            '';
+        $details['cmi.max_time_allowed'] = !is_null($maxTimeAllowed) ?
+            $maxTimeAllowed :
+            '';
+        $details['cmi.scaled_passing_score'] = !is_null($scaledPassingScore) ?
+            $scaledPassingScore :
+            '';
 
         return array(
             'resource' => $scorm,
@@ -495,13 +474,168 @@ class ScormController extends Controller
             'currentSco' => $scorm2004Sco,
             'scos' => $rootScos,
             'scoTracking' => $scoTracking,
+            'scoTrackingDetails' => json_encode($details),
             'scormUrl' => $scormPath,
             'workspace' => $scorm->getResourceNode()->getWorkspace()
         );
     }
 
     /**
-     * Convert time (HHHH:MM:SS.hh) to integer (hundredth of second)
+     * @EXT\Route(
+     *     "/scorm/2004/tracking/commit/mode/{mode}/sco/{scoId}",
+     *     name = "claro_scorm_2004_tracking_commit",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter(
+     *      "scorm2004Sco",
+     *      class="ClarolineScormBundle:Scorm2004Sco",
+     *      options={"id" = "scoId", "strictId" = true}
+     * )
+     *
+     * @param string $mode  determines if given datas must be persisted
+     *                      or logged
+     * @param Scorm2004Sco $scorm2004Sco
+     *
+     * @return Response
+     */
+    public function commitScorm2004Tracking(
+        $mode,
+        Scorm2004Sco $scorm2004Sco
+    )
+    {
+        $user = $this->securityContext->getToken()->getUser();
+        $datas = $this->request->getCurrentRequest()->request->all();
+        $learnerId = isset($datas['cmi.learner_id']) ?
+            (int)$datas['cmi.learner_id'] :
+            -1;
+
+        if ($user->getId() !== $learnerId) {
+            throw new AccessDeniedException();
+        }
+
+        $scoTracking = $this->scormManager
+            ->getScorm2004ScoTrackingByUserAndSco($user, $scorm2004Sco);
+
+        if (is_null($scoTracking)) {
+            $scoTracking = $this->scormManager
+                ->createScorm2004ScoTracking($user, $scorm2004Sco);
+        }
+
+        if ($mode === 'log') {
+            $dataSessionTime = isset($datas['cmi.session_time']) ?
+                $this->formatSessionTime($datas['cmi.session_time']) :
+                'PT0S';
+            $completionStatus = isset($datas['cmi.completion_status']) ?
+                $datas['cmi.completion_status'] :
+                'unknown';
+            $successStatus = isset($datas['cmi.success_status']) ?
+                $datas['cmi.success_status'] :
+                'unknown';
+            $scoreRaw = isset($datas['cmi.score.raw']) ?
+                intval($datas['cmi.score.raw'])
+                : null;
+            $scoreMin = isset($datas['cmi.score.min']) ?
+                intval($datas['cmi.score.min'])
+                : null;
+            $scoreMax = isset($datas['cmi.score.max']) ?
+                intval($datas['cmi.score.max'])
+                : null;
+            $scoreScaled = isset($datas['cmi.score.scaled']) ?
+                floatval($datas['cmi.score.scaled'])
+                : null;
+            $bestScore = $scoTracking->getScoreRaw();
+
+            // Computes total time
+            $totalTime = new \DateInterval($scoTracking->getTotalTime());
+            $sessionTime = new \DateInterval($dataSessionTime);
+            $computedTime = new \DateTime();
+            $computedTime->setTimestamp(0);
+            $computedTime->add($totalTime);
+            $computedTime->add($sessionTime);
+            $computedTimeInSecond = $computedTime->getTimestamp();
+            $totalTimeInterval = $this->retrieveIntervalFromSeconds($computedTimeInSecond);
+            $datas['cmi.total_time'] = $totalTimeInterval;
+            $scoTracking->setTotalTime($totalTimeInterval);
+
+            // Update best score if the current score is better than the previous best score
+            if (empty($bestScore) || (!is_null($scoreRaw) && $scoreRaw > $bestScore)) {
+                $scoTracking->setScoreRaw($scoreRaw);
+                $scoTracking->setScoreMin($scoreMin);
+                $scoTracking->setScoreMax($scoreMax);
+                $scoTracking->setScoreScaled($scoreScaled);
+            }
+
+            // Update best success status and completion status
+            $currentCompletionStatus = $scoTracking->getCompletionStatus();
+            $currentSuccessStatus = $scoTracking->getSuccessStatus();
+            $conditionCA = ($currentCompletionStatus === 'unknown') &&
+                ($completionStatus === 'completed' ||
+                $completionStatus === 'incomplete' ||
+                $completionStatus === 'not_attempted');
+            $conditionCB = ($currentCompletionStatus === 'not_attempted') &&
+                ($completionStatus === 'completed' ||
+                $completionStatus === 'incomplete');
+            $conditionCC = ($currentCompletionStatus === 'incomplete') &&
+                ($completionStatus === 'completed');
+            $conditionSA = ($currentSuccessStatus === 'unknown') &&
+                ($successStatus === 'passed' ||
+                $successStatus === 'failed');
+            $conditionSB = ($currentSuccessStatus === 'failed') &&
+                ($successStatus === 'passed');
+
+            if (is_null($currentCompletionStatus) ||
+                $conditionCA || $conditionCB || $conditionCC) {
+
+                $scoTracking->setCompletionStatus($completionStatus);
+            }
+
+            if (is_null($currentSuccessStatus) || $conditionSA || $conditionSB) {
+                $scoTracking->setSuccessStatus($successStatus);
+            }
+
+            $this->logScorm2004ScoResult(
+                $scorm2004Sco,
+                $user,
+                $datas
+            );
+        }
+        $scoTracking->setDetails($datas);
+        $this->scormManager->updateScorm2004ScoTracking($scoTracking);
+
+        return new Response('', '204');
+    }
+
+    /**
+     * Logs given datas as result of a Scorm resource
+     */
+    private function logScorm2004ScoResult(
+        Scorm2004Sco $sco,
+        User $user,
+        array $details
+    )
+    {
+        $scormResource = $sco->getScormResource();
+
+        if (isset($details['cmi.score.max']) &&
+            isset($details['cmi.score.raw']) &&
+            !empty($details['cmi.score.max']) &&
+            !is_null($details['cmi.score.raw']) &&
+            $details['cmi.score.max'] > 0) {
+
+            $details['result'] = $details['cmi.score.raw'];
+            $details['resultMax'] = $details['cmi.score.max'];
+        }
+
+        $event = new LogScorm2004ResultEvent(
+            $scormResource,
+            $user,
+            $details
+        );
+        $this->eventDispatcher->dispatch('log', $event);
+    }
+
+    /**
+     * Converts time (HHHH:MM:SS.hh) to integer (hundredth of second)
      *
      * @param string $time
      */
@@ -522,6 +656,54 @@ class ScormController extends Controller
         $timeInHundredth += intval($timeInArray[0]) * 144000;
 
         return $timeInHundredth;
+    }
+
+    /**
+     * Converts a time in seconds to a DateInterval string
+     *
+     * @param int $seconds
+     */
+    private function retrieveIntervalFromSeconds($seconds)
+    {
+        $result = '';
+        $remainingTime = (int)$seconds;
+
+        if (empty($remainingTime)) {
+            $result .= 'PT0S';
+        } else {
+            $nbDays = (int)($remainingTime / 86400);
+            $remainingTime %= 86400;
+            $nbHours = (int)($remainingTime / 3600);
+            $remainingTime %= 3600;
+            $nbMinutes = (int)($remainingTime / 60);
+            $nbSeconds = $remainingTime % 60;
+            $result .= 'P'.$nbDays.'DT'.$nbHours.'H'.$nbMinutes.'M'.$nbSeconds.'S';
+        }
+
+        return $result;
+    }
+
+    /**
+     * Checks format of given session time interval and tries to fix format if invalid
+     *
+     * @param string $sessionTime
+     */
+    private function formatSessionTime($sessionTime)
+    {
+        $formattedValue = 'PT0S';
+        $generalPattern = '/^P([0-9]+Y)?([0-9]+M)?([0-9]+D)?T([0-9]+H)?([0-9]+M)?([0-9]+S)?$/';
+        $decimalPattern = '/^P([0-9]+Y)?([0-9]+M)?([0-9]+D)?T([0-9]+H)?([0-9]+M)?[0-9]+\.[0-9]{1,2}S$/';
+
+        if ($sessionTime !== 'PT') {
+
+            if (preg_match($generalPattern, $sessionTime)) {
+                $formattedValue = $sessionTime;
+            } elseif (preg_match($decimalPattern, $sessionTime)) {
+                $formattedValue = preg_replace(array('/\.[0-9]+S$/'), array('S'), $sessionTime);
+            }
+        }
+
+        return $formattedValue;
     }
 
     /**

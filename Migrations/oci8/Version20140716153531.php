@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/07/08 11:51:03
+ * Generation date: 2014/07/16 03:35:33
  */
-class Version20140708115102 extends AbstractMigration
+class Version20140716153531 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -27,6 +27,9 @@ class Version20140708115102 extends AbstractMigration
                 time_limit_action VARCHAR2(255) DEFAULT NULL, 
                 launch_data VARCHAR2(4000) DEFAULT NULL, 
                 is_block NUMBER(1) NOT NULL, 
+                max_time_allowed VARCHAR2(255) DEFAULT NULL, 
+                completion_threshold NUMERIC(10, 7) DEFAULT NULL, 
+                scaled_passing_score NUMERIC(10, 7) DEFAULT NULL, 
                 PRIMARY KEY(id)
             )
         ");
@@ -72,17 +75,11 @@ class Version20140708115102 extends AbstractMigration
                 score_raw NUMBER(10) DEFAULT NULL, 
                 score_min NUMBER(10) DEFAULT NULL, 
                 score_max NUMBER(10) DEFAULT NULL, 
-                lesson_status VARCHAR2(255) DEFAULT NULL, 
-                session_time NUMBER(10) DEFAULT NULL, 
-                total_time NUMBER(10) DEFAULT NULL, 
-                entry VARCHAR2(255) DEFAULT NULL, 
-                suspend_data CLOB DEFAULT NULL, 
-                credit VARCHAR2(255) DEFAULT NULL, 
-                exit_mode VARCHAR2(255) DEFAULT NULL, 
-                lesson_location VARCHAR2(255) DEFAULT NULL, 
-                lesson_mode VARCHAR2(255) DEFAULT NULL, 
-                best_score_raw NUMBER(10) DEFAULT NULL, 
-                best_lesson_status VARCHAR2(255) DEFAULT NULL, 
+                score_scaled NUMERIC(10, 7) DEFAULT NULL, 
+                completion_status VARCHAR2(255) DEFAULT NULL, 
+                success_status VARCHAR2(255) DEFAULT NULL, 
+                total_time VARCHAR2(255) DEFAULT NULL, 
+                details CLOB DEFAULT NULL, 
                 PRIMARY KEY(id)
             )
         ");
@@ -119,6 +116,9 @@ class Version20140708115102 extends AbstractMigration
         ");
         $this->addSql("
             CREATE INDEX IDX_3A61CD75F22BE ON claro_scorm_2004_sco_tracking (scorm_id)
+        ");
+        $this->addSql("
+            COMMENT ON COLUMN claro_scorm_2004_sco_tracking.details IS '(DC2Type:json_array)'
         ");
         $this->addSql("
             CREATE TABLE claro_scorm_2004_resource (

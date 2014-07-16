@@ -54,59 +54,29 @@ class Scorm2004ScoTracking
     protected $scoreMax;
 
     /**
-     * @ORM\Column(name="lesson_status", nullable=true)
+     * @ORM\Column(name="score_scaled", type="decimal", precision=10, scale=7, nullable=true)
      */
-    protected $lessonStatus;
+    protected $scoreScaled;
 
     /**
-     * @ORM\Column(name="session_time", type="integer", nullable=true)
+     * @ORM\Column(name="completion_status", nullable=true)
      */
-    protected $sessionTime;
+    protected $completionStatus;
 
     /**
-     * @ORM\Column(name="total_time", type="integer", nullable=true)
+     * @ORM\Column(name="success_status", nullable=true)
+     */
+    protected $successStatus;
+
+    /**
+     * @ORM\Column(name="total_time", nullable=true)
      */
     protected $totalTime;
 
     /**
-     * @ORM\Column(nullable=true)
+     * @ORM\Column(type="json_array", nullable=true)
      */
-    protected $entry;
-
-    /**
-     * @ORM\Column(name="suspend_data", nullable=true, length=4096)
-     */
-    protected $suspendData;
-
-    /**
-     * @ORM\Column(nullable=true)
-     */
-    protected $credit;
-
-    /**
-     * @ORM\Column(name="exit_mode", nullable=true)
-     */
-    protected $exitMode;
-
-    /**
-     * @ORM\Column(name="lesson_location", nullable=true)
-     */
-    protected $lessonLocation;
-
-    /**
-     * @ORM\Column(name="lesson_mode", nullable=true)
-     */
-    protected $lessonMode;
-
-    /**
-     * @ORM\Column(name="best_score_raw", type="integer", nullable=true)
-     */
-    protected $bestScoreRaw;
-
-    /**
-     * @ORM\Column(name="best_lesson_status", nullable=true)
-     */
-    protected $bestLessonStatus;
+    protected $details;
 
     public function getId()
     {
@@ -168,24 +138,14 @@ class Scorm2004ScoTracking
         $this->scoreMax = $scoreMax;
     }
 
-    public function getLessonStatus()
+    public function getScoreScaled()
     {
-        return $this->lessonStatus;
+        return $this->scoreScaled;
     }
 
-    public function setLessonStatus($lessonStatus)
+    public function setScoreScaled($scoreScaled)
     {
-        $this->lessonStatus = $lessonStatus;
-    }
-
-    public function getSessionTime()
-    {
-        return $this->sessionTime;
-    }
-
-    public function setSessionTime($sessionTime)
-    {
-        $this->sessionTime = $sessionTime;
+        $this->scoreScaled = $scoreScaled;
     }
 
     public function getTotalTime()
@@ -198,83 +158,33 @@ class Scorm2004ScoTracking
         $this->totalTime = $totalTime;
     }
 
-    public function getEntry()
+    public function getCompletionStatus()
     {
-        return $this->entry;
+        return $this->completionStatus;
     }
 
-    public function setEntry($entry)
+    public function setCompletionStatus($completionStatus)
     {
-        $this->entry = $entry;
+        $this->completionStatus = $completionStatus;
     }
 
-    public function getSuspendData()
+    public function getSuccessStatus()
     {
-        return $this->suspendData;
+        return $this->successStatus;
     }
 
-    public function setSuspendData($suspendData)
+    public function setSuccessStatus($successStatus)
     {
-        $this->suspendData = $suspendData;
+        $this->successStatus = $successStatus;
     }
 
-    public function getCredit()
+    public function getDetails()
     {
-        return $this->credit;
+        return $this->details;
     }
 
-    public function setCredit($credit)
+    public function setDetails($details)
     {
-        $this->credit = $credit;
-    }
-
-    public function getExitMode()
-    {
-        return $this->exitMode;
-    }
-
-    public function setExitMode($exitMode)
-    {
-        $this->exitMode = $exitMode;
-    }
-
-    public function getLessonLocation()
-    {
-        return $this->lessonLocation;
-    }
-
-    public function setLessonLocation($lessonLocation)
-    {
-        $this->lessonLocation = $lessonLocation;
-    }
-
-    public function getLessonMode()
-    {
-        return $this->lessonMode;
-    }
-
-    public function setLessonMode($lessonMode)
-    {
-        $this->lessonMode = $lessonMode;
-    }
-
-    public function getBestScoreRaw()
-    {
-        return $this->bestScoreRaw;
-    }
-
-    public function getBestLessonStatus()
-    {
-        return $this->bestLessonStatus;
-    }
-
-    public function setBestScoreRaw($bestScoreRaw)
-    {
-        $this->bestScoreRaw = $bestScoreRaw;
-    }
-
-    public function setBestLessonStatus($bestLessonStatus)
-    {
-        $this->bestLessonStatus = $bestLessonStatus;
+        $this->details = $details;
     }
 }

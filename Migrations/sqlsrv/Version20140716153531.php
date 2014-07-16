@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\ScormBundle\Migrations\pdo_sqlsrv;
+namespace Claroline\ScormBundle\Migrations\sqlsrv;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/07/08 11:51:03
+ * Generation date: 2014/07/16 03:35:33
  */
-class Version20140708115102 extends AbstractMigration
+class Version20140716153531 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -27,6 +27,9 @@ class Version20140708115102 extends AbstractMigration
                 time_limit_action NVARCHAR(255), 
                 launch_data NVARCHAR(4000), 
                 is_block BIT NOT NULL, 
+                max_time_allowed NVARCHAR(255), 
+                completion_threshold NUMERIC(10, 7), 
+                scaled_passing_score NUMERIC(10, 7), 
                 PRIMARY KEY (id)
             )
         ");
@@ -44,17 +47,11 @@ class Version20140708115102 extends AbstractMigration
                 score_raw INT, 
                 score_min INT, 
                 score_max INT, 
-                lesson_status NVARCHAR(255), 
-                session_time INT, 
-                total_time INT, 
-                entry NVARCHAR(255), 
-                suspend_data VARCHAR(MAX), 
-                credit NVARCHAR(255), 
-                exit_mode NVARCHAR(255), 
-                lesson_location NVARCHAR(255), 
-                lesson_mode NVARCHAR(255), 
-                best_score_raw INT, 
-                best_lesson_status NVARCHAR(255), 
+                score_scaled NUMERIC(10, 7), 
+                completion_status NVARCHAR(255), 
+                success_status NVARCHAR(255), 
+                total_time NVARCHAR(255), 
+                details VARCHAR(MAX), 
                 PRIMARY KEY (id)
             )
         ");
