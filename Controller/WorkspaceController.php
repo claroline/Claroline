@@ -369,6 +369,9 @@ class WorkspaceController extends Controller
      */
     public function renderToolListAction(Workspace $workspace, $_breadcrumbs)
     {
+        //first we add check if some tools will be missing from the navbar and we add them if necessary
+        $this->toolManager->addMissingWorkspaceTools($workspace);
+
         if ($_breadcrumbs != null) {
             //for manager.js, id = 0 => "no root".
             if ($_breadcrumbs[0] != 0) {
