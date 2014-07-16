@@ -254,8 +254,6 @@ class ToolManager
      */
     public function getWorkspaceToolsConfigurationArray(Workspace $workspace)
     {
-        $this->addMissingWorkspaceTools($workspace);
-
         return $this->getWorkspaceExistingTools($workspace);
     }
 

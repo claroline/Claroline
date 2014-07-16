@@ -23,10 +23,21 @@
             processData: false,
             contentType: false,
             success: function(data) {
+
+                var flashbag =
+                    '<div class="alert alert-success">' +
+                    '<a data-dismiss="alert" class="close" href="#" aria-hidden="true">&times;</a>' +
+                    Translator.get('platform:edit_profile_success') +
+                    '</div>';
+
+                $('.panel-body').first().prepend(flashbag);
+
                 for (var fieldId in data) {
                     var input = $('#field-' + fieldId);
                     input.attr('value', data[fieldId]);
                 }
+
+
             },
             error: function(data) {
                 alert('something went wrong');
