@@ -70,8 +70,12 @@
                     <li>{{ 'phone'|trans({}, 'platform') }}</li>
                 </ul>
             </div>
-            {% if error_import is defined %}
-                <div class="alert alert-danger"> {{ error_import|trans({}, 'platform') }} </div>
+            {% if error is defined %}
+                {% if error %}
+                    <div class="alert alert-danger">
+                        {{'role_limit_reached'|trans({'%translationKey%': 'user'|trans({}, 'platform')}, 'platform') }}
+                    </div>
+                {% endif %}
             {% endif %}
             {{ form_widget(form) }}
         </div>

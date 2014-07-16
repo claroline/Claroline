@@ -29,10 +29,12 @@
     <form role="form" class="form-horizontal" action="{{ path('claro_admin_import_users') }}" method="post" {{ form_enctype(form) }} >
         <div class="panel-body">
             <div>{{ macros.flashBox() }}</div>
-            {% if error %}
-                <div class="alert alert-danger">
-                    {{ 'role_limit_reached'|trans({'%translationKey%': 'user'}, 'platform') }}
-                </div>
+            {% if error is defined %}
+                {% if error %}
+                    <div class="alert alert-danger">
+                        {{ 'role_limit_reached'|trans({'%translationKey%': 'user'|trans({}, 'platform')}, 'platform') }}
+                    </div>
+                {% endif %}
             {% endif %}
             <div class="well">
                 <p>
