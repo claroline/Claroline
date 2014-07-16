@@ -789,27 +789,28 @@ class ResourceController
     }
 
     /**
-     * Render the HTML of embed resource based in his mine type
-     * @EXT\Route("/embed/{node}/{type}/{extension}", name="claro_resource_embed", options={"expose"=true})
+     * @EXT\Route(
+     *     "/embed/{node}/{type}/{extension}/{openInNewTab}",
+     *     name="claro_resource_embed",
+     *     options={"expose"=true},
+     *     defaults={"openInNewTab"="0"}
+     * )
+     *
+     * Renders the HTML needed to embed a resource, based on its mime type.
      */
-    public function embedResourceAction(ResourceNode $node, $type, $extension, $view = 'default')
+    public function embedResourceAction(ResourceNode $node, $type, $extension, $openInNewTab)
     {
-        switch ($type) {
-            case 'video':
-                $view = 'video';
-                break;
-            case 'audio':
-                $view = 'audio';
-                break;
-            case 'image':
-                $view = 'image';
-                break;
-        }
+        $view = in_array($type, array('video', 'audio', 'image')) ? $type : 'default';
 
         return new Response(
             $this->templating->render(
-                "ClarolineCoreBundle:Resource:embed/$view.html.twig",
-                array('node' => $node, 'type' => $type, 'extension' => $extension)
+                "ClarolineCoreBundle:Resource:embed/{$view}.html.twig",
+                array(
+                    'node' => $node,
+                    'type' => $type,
+                    'extension' => $extension,
+                    'openInNewTab' => $openInNewTab !== '0'
+                )
             )
         );
     }
