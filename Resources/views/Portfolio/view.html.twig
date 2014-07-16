@@ -71,40 +71,37 @@
                             </li>
                         </ul>
                     </div>
-                    <div class="no-data" data-ng-show="widgets.length <= 1">
-                        <p class="well">{{ 'no_widget'|trans({}, 'icap_portfolio')|raw }}</p>
-                    </div>
+                    <p class="no-data well" data-ng-show="widgets.length <= 1">{{ 'no_widget'|trans({}, 'icap_portfolio')|raw }}</p>
                 {% else %}
-                    {% if 0 == portfolio.disposition %}
-                        {% for widget in portfolio.widgets if 'title' != widget.widgetType %}
-                            {% include 'IcapPortfolioBundle:templates:widget.html.twig' %}
-                        {% else %}
-                            no widget
-                        {% endfor %}
-                    {% elseif 1 == portfolio.disposition %}
-                        {% for col in cols %}
-                            <ul class="col-md-6 list-unstyled">
-                                {% for widget in portfolio.widgets if 'title' != widget.widgetType and col == widget.column %}
-                                <li>
-                                    {% include 'IcapPortfolioBundle:templates:widget.html.twig' %}
-                                </li>
-                                {% else %}
-                                    <li>no widget</li>
-                                {% endfor %}
-                            </ul>
-                        {% endfor %}
-                    {% elseif 2 == portfolio.disposition %}
-                        {% for col in cols %}
-                            <ul class="col-md-4 list-unstyled">
-                                {% for widget in portfolio.widgets if 'title' != widget.widgetType and col == widget.column %}
-                                <li>
-                                    {% include 'IcapPortfolioBundle:templates:widget.html.twig' %}
-                                </li>
-                                {% else %}
-                                    <li>no widget</li>
-                                {% endfor %}
-                            </ul>
-                        {% endfor %}
+                    {% set widgets = portfolio.widgets %}
+                    {% if 1 < widgets.count %}
+                        {% if 0 == portfolio.disposition %}
+                            {% for widget in widgets if 'title' != widget.widgetType %}
+                                {% include 'IcapPortfolioBundle:templates:widget.html.twig' %}
+                            {% endfor %}
+                        {% elseif 1 == portfolio.disposition %}
+                            {% for col in cols %}
+                                <ul class="col-md-6 list-unstyled">
+                                    {% for widget in widgets if 'title' != widget.widgetType and col == widget.column %}
+                                    <li>
+                                        {% include 'IcapPortfolioBundle:templates:widget.html.twig' %}
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                            {% endfor %}
+                        {% elseif 2 == portfolio.disposition %}
+                            {% for col in cols %}
+                                <ul class="col-md-4 list-unstyled">
+                                    {% for widget in widgets if 'title' != widget.widgetType and col == widget.column %}
+                                    <li>
+                                        {% include 'IcapPortfolioBundle:templates:widget.html.twig' %}
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                            {% endfor %}
+                        {% endif %}
+                    {% else %}
+                        <p class="no-data well">{{ 'portfolio_empty'|trans({}, 'icap_portfolio') }}</p>
                     {% endif %}
                 {% endif %}
                 </div>
