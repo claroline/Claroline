@@ -75,18 +75,37 @@
                         <p class="well">{{ 'no_widget'|trans({}, 'icap_portfolio')|raw }}</p>
                     </div>
                 {% else %}
-                    {% for widget in portfolio.widgets if 'title' != widget.widgetType %}
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                {{ (widget.widgetType ~ '_title') | trans({}, 'icap_portfolio') }}
-                            </div>
-                            <div class="panel-body">
-                                {% include 'IcapPortfolioBundle:templates:' ~ widget.widgetType ~ '.html.twig' with {'widget': widget} only %}
-                            </div>
-                        </div>
-                    {% else %}
-                        no widget
-                    {% endfor %}
+                    {% if 0 == portfolio.disposition %}
+                        {% for widget in portfolio.widgets if 'title' != widget.widgetType %}
+                            {% include 'IcapPortfolioBundle:templates:widget.html.twig' %}
+                        {% else %}
+                            no widget
+                        {% endfor %}
+                    {% elseif 1 == portfolio.disposition %}
+                        {% for col in cols %}
+                            <ul class="col-md-6 list-unstyled">
+                                {% for widget in portfolio.widgets if 'title' != widget.widgetType and col == widget.column %}
+                                <li>
+                                    {% include 'IcapPortfolioBundle:templates:widget.html.twig' %}
+                                </li>
+                                {% else %}
+                                    <li>no widget</li>
+                                {% endfor %}
+                            </ul>
+                        {% endfor %}
+                    {% elseif 2 == portfolio.disposition %}
+                        {% for col in cols %}
+                            <ul class="col-md-4 list-unstyled">
+                                {% for widget in portfolio.widgets if 'title' != widget.widgetType and col == widget.column %}
+                                <li>
+                                    {% include 'IcapPortfolioBundle:templates:widget.html.twig' %}
+                                </li>
+                                {% else %}
+                                    <li>no widget</li>
+                                {% endfor %}
+                            </ul>
+                        {% endfor %}
+                    {% endif %}
                 {% endif %}
                 </div>
             </section>

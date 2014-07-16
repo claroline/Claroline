@@ -1,7 +1,7 @@
-<div data-widget class="panel panel-default">
+<div {% if editMode %}data-widget {% endif %}class="panel panel-default">
     <div class="panel-heading">
-        {% verbatim %}{{ widget.type + '_title'|trans }}{% endverbatim %}
         {% if editMode %}
+            {% verbatim %}{{ widget.type + '_title'|trans }}{% endverbatim %}
             <div class="widget-actions">
                 <button class="widget-action btn btn-sm btn-danger" data-ng-class="{'btn-loading': widget.isDeleting}" data-confirm-click="delete(widget);" data-ng-if="isDeletable(widget) && !widget.isNew()">
                     <span class="loading" data-ng-if="widget.isDeleting"></span>
@@ -19,11 +19,16 @@
                     </ul>
                 </div>
             </div>
+        {% else %}
+            {% set widgetTitleKey = widget.widgetType ~ '_title' %}
+            {{ widgetTitleKey|trans({}, 'icap_portfolio') }}
         {% endif %}
     </div>
     <div class="panel-body">
         {% if editMode %}
             <div data-ng-bind-html="widget.views.view | trustAsHtml"></div>
+        {% else %}
+            {% include 'IcapPortfolioBundle:templates:' ~ widget.widgetType ~ '.html.twig' with {'widget': widget} %}
         {% endif %}
     </div>
 </div>
