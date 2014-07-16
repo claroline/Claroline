@@ -15,11 +15,12 @@
                 {% endif %}
 
                 {% if dropzone.allowCommentInCorrection %}
+
                     {{ form_errors(form) }}
 
                     {% if edit == true %}
                         {% if dropzone.forceCommentInCorrection %}
-                            {% set commentInCorrectionRequired = true %}
+                            {% set commentInCorrectionRequired = 'required' %}
                             <p>{{ 'Please comment'|trans({}, 'icap_dropzone') }}</p>
                         {% else %}
                             <p>{{ 'Would you like to comment?'|trans({}, 'icap_dropzone') }}</p>
@@ -27,12 +28,23 @@
                     {% else %}
                         <h3>{{ 'Comment'|trans({}, 'icap_dropzone') }}</h3>
                     {% endif %}
-                    {% if edit %}
-                        <div class="form-group">
 
-                            {{ form_row(form.comment, {'label_col_size': ' ', 'input_col_size': 'col-md-12', 'label_attr': {'style': 'display:none;'}, 'required':commentInCorrectionRequired}) }}
+
+                    {% if edit %}
+
+                        <div class="form-group ">
+                            <div id="comment_part_div">
+                                {{ form_row(form.comment, {'label_col_size': ' ', 'input_col_size': 'col-md-12', 'label_attr': {'style': 'display:none;' }}
+                                ) }}
+                            </div>
                         </div>
-                {% else %}
+                        <div class="col-md-12">
+                            <div class="required_text" style="display:none;">
+                                <p class="text-danger"><i class="fa fa-asterisk"></i>
+                                    &nbsp;{{ "Ce champ est requis."|trans({},'icap_dropzone') }}</p>
+                            </div>
+                        </div>
+                    {% else %}
                     <div class="well">
                         {{ correction.comment|raw }}
                     </div>
@@ -88,7 +100,39 @@
                 $('#icap_dropzone_correct_comment_form_goBack').val(1);
                 $('#correct-form button[type="submit"]').trigger('click');
             });
+
+            $('#correct-form').submit(function (e) {
+                if ($('#icap_dropzone_correct_comment_form_comment').val() == '') {
+                    e.preventDefault();
+                    setRequireStyle();
+                    console.log(tinymce.get('icap_dropzone_correct_comment_form_comment'));
+                    tinymce.get('icap_dropzone_correct_comment_form_comment').on('keyup', function (e) {
+                        if (tinymce.get('icap_dropzone_correct_comment_form_comment').getContent() != '') {
+                            removeRequiredStyle();
+                        }
+                    });
+                }
+            });
         });
+
+        function removeRequiredStyle() {
+            $('#comment_part_div').removeClass('required');
+            $('.required_text').hide();
+        }
+
+        function setRequireStyle() {
+            $('#comment_part_div').addClass('required');
+            $('.required_text').show();
+        }
     </script>
 
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        #comment_part_div.required .col-md-12 > div {
+            border: 1px solid red;
+        }
+    </style>
 {% endblock %}
