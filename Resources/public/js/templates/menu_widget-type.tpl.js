@@ -4,15 +4,15 @@ angular.module('portfolioApp').run([
     '$templateCache',
     function($templateCache) {
         $templateCache.put('templates/menu_widget-type.tpl.html',
-            '<div class="popover" id="disposition_popover">' +
+            '<div class="popover" id="widget_types_popover">' +
                 '<div class="arrow"></div>' +
                 '<div class="popover-content">' +
-                    '<div class="btn-group-vertical contents" role="buttongroup">' +
-                        '<button type="button" class="btn btn-default" data-ng-repeat="widgetType in widgetTypes" data-ng-click="createWidget(widgetType)">' +
+                    '<ul class="list-inline widget_type_list">' +
+                        '<li class="widget_type" data-ng-repeat="widgetType in widgetTypes" data-ng-click="createWidget(widgetType)">' +
                             '<span class="fa fa-{{ widgetType.icon }}"></span> ' +
-                            '{{ widgetType.name + \'_title\' | trans }}' +
-                        '</button>' +
-                    '</div>' +
+                            '<span>{{ widgetType.name + \'_title\' | trans }}</span>' +
+                        '</li>' +
+                    '</ul>' +
                 '</div>' +
             '</div>');
     }
