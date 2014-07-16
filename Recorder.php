@@ -85,7 +85,7 @@ class Recorder
     {
         if ($this->isClarolinePackage($package)) {
             $bundleFqcn = $this->detector->detectBundle($package->getPrettyName());
-            $this->removableBundles[$package->getPrettyName()][] = $bundleFqcn;
+            $this->removableBundles[$package->getPrettyName()] = $bundleFqcn;
         }
     }
 
