@@ -330,3 +330,4 @@ PeerReview_helper_other_cases: "In the other cases, the evaluation administrator
 PeerReview_helper_unlock_tool: "Note: an unlock tool is available in order to avoid the admin to have to add many correction if a copy need more than one correction. This tool is only available if the dropzone is in peerReview mode and the evaluation status is set to closed."
 Made by: "Made by"
 Force comment in correction: "Force comment in correction"
+Please comment: "Please comment"
