@@ -12,18 +12,6 @@
                 {{ 'registered'|trans({}, 'platform') }} {{ user.getCreationDate()| timeAgo }}
             </p>
         </div>
-        <ul class="nav nav-pills nav-stacked contact_methods">
-            <li>
-                <a href="{{path('claro_mail_form', {'userId':user.getId()})}}">
-                    <i class="icon-envelope"></i> {{ 'send_mail'|trans({}, 'platform') }}
-                </a>
-            </li>
-            <li>
-                <a href="{{path('claro_message_show', {'message': 0})}}?ids[]={{ user.getId() }}">
-                    <i class="icon-comment"></i> {{ 'send_message'|trans({}, 'platform') }}
-                </a>
-            </li>
-        </ul>
     </aside>
     <div class="col-md-6 profile_informations">
         <h2>{{ user.getLastName() ~ ' ' ~ user.getFirstName() }}</h2>
