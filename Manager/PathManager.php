@@ -4,11 +4,10 @@ namespace Innova\PathBundle\Manager;
 
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use Doctrine\Common\Persistence\ObjectManager;
-use Symfony\Component\Security\Core\SecurityContext;
+use Symfony\Component\Security\Core\SecurityContextInterface;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Library\Security\Utilities;
 
-use Symfony\Component\Security\Core\User\UserInterface;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Innova\PathBundle\Entity\Path\Path;
 
@@ -33,36 +32,27 @@ class PathManager
     
     /**
      * Current security context
-     * @var \Symfony\Component\Security\Core\SecurityContext $security
+     * @var \Symfony\Component\Security\Core\SecurityContextInterface $security
      */
     protected $security;
-    
-    /**
-     * Authenticated user
-     * @var \Claroline\CoreBundle\Entity\User $user
-     */
-    protected $user;
 
     /**
      * Class constructor - Inject required services
-     * @param \Doctrine\Common\Persistence\ObjectManager       $objectManager
-     * @param \Symfony\Component\Security\Core\SecurityContext $securityContext
-     * @param \Claroline\CoreBundle\Manager\ResourceManager    $resourceManager
-     * @param \Claroline\CoreBundle\Library\Security\Utilities $utils
+     * @param \Doctrine\Common\Persistence\ObjectManager                $objectManager
+     * @param \Symfony\Component\Security\Core\SecurityContextInterface $securityContext
+     * @param \Claroline\CoreBundle\Manager\ResourceManager             $resourceManager
+     * @param \Claroline\CoreBundle\Library\Security\Utilities          $utils
      */
     public function __construct(
-        ObjectManager   $objectManager, 
-        SecurityContext $securityContext, 
-        ResourceManager $resourceManager,
-        Utilities       $utils)
+        ObjectManager            $objectManager,
+        SecurityContextInterface $securityContext,
+        ResourceManager          $resourceManager,
+        Utilities                $utils)
     {
-        $this->om = $objectManager;
-        $this->security = $securityContext;
+        $this->om              = $objectManager;
+        $this->security        = $securityContext;
         $this->resourceManager = $resourceManager;
-        $this->utils = $utils;
-
-        // Retrieve current user
-        $this->user = $this->security->getToken()->getUser();
+        $this->utils           = $utils;
     }
 
     public function checkAccess($actionName, Path $path)
@@ -150,7 +140,7 @@ class PathManager
 
         // Create a new resource node
         $parent = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findWorkspaceRoot($workspace);
-        $path = $this->resourceManager->create($path, $this->getResourceType(), $this->user, $workspace, $parent, null);
+        $path = $this->resourceManager->create($path, $this->getResourceType(), $this->security->getToken()->getUser(), $workspace, $parent, null);
         
         return $path;
     }

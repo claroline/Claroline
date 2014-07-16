@@ -9,7 +9,7 @@
 
     <div class="panel-body">
         <div ui-tree="treeOptions">
-            <ul class="tree" ui-tree-nodes ng-model="path.steps[0].children" data-nodrop>
+            <ul class="tree" ui-tree-nodes ng-model="path.steps" data-nodrop>
                 <li ui-tree-node data-ng-repeat="step in path.steps" data-ng-include="'{{ asset('bundles/innovapath/angularjs/Step/Partial/tree.html') }}'" onload="isRootNode = ($index == 0)"></li>
             </ul>
         </div>
