@@ -113,14 +113,13 @@
 
         for (var key in parameters.route.action) {
             if (parameters.route.action.hasOwnProperty(key)) {
-                var btnClass = '.' + (
-                        parameters.route.action[key].btn === undefined ? 'action-button' : parameters.route.action[key].btn
-                        );
+                var btnClass = '.' +
+                    (parameters.route.action[key].btn === undefined ? 'action-button' : parameters.route.action[key].btn);
                 $(btnClass).click(function(e) {
                     currentAction = $(e.currentTarget).attr('data-action');
-                    var html = Twig.render(parameters.route.action[currentAction].confirmTemplate,
-                            {'nbItems': $('.chk-item:checked').length}
-                    );
+                    var html = Twig.render(parameters.route.action[currentAction].confirmTemplate, {
+                        'nbItems': $('.chk-item:checked').length
+                    });
                     $('#table-modal .modal-body').html(html);
                     $('#table-modal').modal('show');
                 });
@@ -138,12 +137,12 @@
                 });
                 queryString.ids = array;
                 var route = Routing.generate(
-                        parameters.route.action[currentAction].route,
-                        parameters.route.action[currentAction].parameters
-                        );
+                    parameters.route.action[currentAction].route,
+                    parameters.route.action[currentAction].parameters
+                );
                 var type = parameters.route.action[currentAction].type === undefined ?
-                        'GET' :
-                        parameters.route.action[currentAction].type;
+                    'GET' :
+                    parameters.route.action[currentAction].type;
                 route += '?' + $.param(queryString);
                 $.ajax({
                     url: route,
@@ -154,6 +153,8 @@
                                 $(element).parent().parent().remove();
                             });
                         }
+
+                        $('.table-control').prop('disabled', true);
                     },
                     error: function(xhr) {
                         $('#error-modal').modal('show');
@@ -181,7 +182,7 @@
         // checkboxes click event
         $('.chk-item').on('click', function() {
             $('.table-control').prop('disabled', true);
-            // if at least one checkbox is checked 
+            // if at least one checkbox is checked
             $('.chk-item').each(function() {
                 if ($(this).is(':checked')) {
                     // enable .table-control elements
