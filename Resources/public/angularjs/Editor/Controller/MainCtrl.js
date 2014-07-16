@@ -128,15 +128,13 @@ function MainCtrl($scope, $modal, HistoryFactory, ClipboardFactory, PathFactory,
             // Display confirm modal
             var modalInstance = $modal.open({
                 templateUrl: EditorApp.webDir + 'bundles/innovapath/angularjs/Editor/Partial/confirm-exit.html',
-                controller: 'ConfirmExitModalCtrl'
+                controller: 'ConfirmExitModalCtrl',
+                scope: $scope
             });
 
             modalInstance.result.then(function(method) {
                 if ('save' === method) {
-                    $scope.saveAndClose = true;
-
-                    // Force submit the form
-                    document[EditorApp.formName].submit();
+                    $scope.$emit('saveAndClose');
                 }
                 else if ('discard') {
                     window.location = returnUrl;
@@ -146,4 +144,12 @@ function MainCtrl($scope, $modal, HistoryFactory, ClipboardFactory, PathFactory,
             });
         }
     };
+
+    $scope.$on('saveAndClose', function (event) {
+        $scope.saveAndClose = true;
+        $scope.$apply();
+
+        // Force submit the form
+        document[EditorApp.formName].submit();
+    });
 }
