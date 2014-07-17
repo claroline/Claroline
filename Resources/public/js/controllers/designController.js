@@ -16,7 +16,11 @@ portfolioApp
             }
 
             $scope.changeColumn = function(widget, column) {
+                var widgets = $filter('orderBy')($filter('filter')($scope.widgets, {type: '!title', column: column}), '+row');
+
                 widget.column = column;
+                widget.row    = widgets[widgets.length - 1].row + 1;
+
                 widgetsManager.save(widget);
             };
 

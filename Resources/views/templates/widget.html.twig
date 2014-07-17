@@ -1,7 +1,7 @@
 <div {% if editMode %}data-widget {% endif %}class="panel panel-default">
     <div class="panel-heading">
         {% if editMode %}
-            {% verbatim %}{{ widget.type + '_title'|trans }} {{ widget.row }}{% endverbatim %}
+            {% verbatim %}{{ widget.type + '_title'|trans }}{% endverbatim %}
             <div class="widget-actions">
                 <button class="widget-action btn btn-xs btn-danger" data-ng-class="{'btn-loading': widget.isDeleting}" data-confirm-click="delete(widget);" data-ng-if="isDeletable(widget) && !widget.isNew()">
                     <span class="loading" data-ng-if="widget.isDeleting"></span>
