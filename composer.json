@@ -14,13 +14,10 @@
     ],
     "require": {
         "php": ">=5.4.1",
-        "claroline/core-bundle": "~2.13"
+        "claroline/core-bundle": "~3.0"
     },
     "autoload": {
         "psr-0": { "Claroline\\ScormBundle": "" }
     },
-    "target-dir": "Claroline/ScormBundle",
-    "extra": {
-        "dbVersion": "20130805110551"
-    }
+    "target-dir": "Claroline/ScormBundle"
 }
