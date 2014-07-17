@@ -509,6 +509,29 @@ class CorrectionController extends DropzoneBaseController
             $form->handleRequest($this->getRequest());
             if ($form->isValid()) {
                 $correction = $form->getData();
+
+                if ($dropzone->getForceCommentInCorrection() && $correction->getComment() == '') {
+                    // field is required and not filled
+                    $this
+                        ->getRequest()
+                        ->getSession()
+                        ->getFlashBag()
+                        ->add(
+                            'error',
+                            $this
+                                ->get('translator')
+                                ->trans('The comment field is required please let a comment', array(), 'icap_dropzone')
+                        );
+
+                    return $this->redirect(
+                        $this->generateUrl(
+                            'icap_dropzone_correct_comment',
+                            array(
+                                'resourceId' => $dropzone->getId()
+                            )
+                        )
+                    );
+                }
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($correction);
                 $em->flush();
