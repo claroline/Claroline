@@ -2,8 +2,11 @@ competence_add: Ajouter une compétence
 competence_select: Selection des utilisateurs
 competence_form_name: 'Nom'
 competence_form_description: 'Description'
-competence_code: code
+competence_form_code: code
 competence_form_score: 'Point'
+competence_subscription_management: 'Gestions des inscription aux réferentiels'
+delete_all: Supprimer tous les utilisateurs
 select_competence_for_registration: 'Sélectionner des réferentiels'
 select_users_for_registration_to_workspace: Sélectionner des utilisateurs à inscrire.
+registration_to_competence: Inscription à des référentiels
 users_competences: 'Voir les utilisateurs associés aux réferentiels'

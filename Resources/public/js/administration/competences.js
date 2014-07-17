@@ -164,8 +164,8 @@
             $.ajax({
                 url: route,
                 statusCode: {
-                    200: function (data) {
-                        alert('ok');
+                    200: function () {
+                        document.location.href = Routing.generate('claro_admin_competences_list_users');
                     },
                     type: 'POST'
                 }
@@ -173,6 +173,29 @@
 
         }
     });
-
+    $('.delete-user').click(function(){
+        var nbSubjects = $('.cpt:checked').length;
+        var users = [];
+        $('.cpt:checked').each(function(i,element){
+            users[i] = $(element).attr('data-id');
+        });
+        var parameters = {};
+        parameters.users = users;
+        var competenceRoot = $('#root').attr('data-id');
+        parameters.root = competenceRoot;
+        var route =  Routing.generate('claro_admin_competence_unsubscription_users',{'root': competenceRoot});
+        route += '?' + $.param(parameters);
+        if ( nbSubjects > 0) {
+            $.ajax({
+                url: route,
+                statusCode: {
+                    200: function () {
+                        document.location.href = Routing.generate('claro_admin_competences_list_users');
+                    },
+                    type: 'POST'
+                }
+            });
+        }
+    });
 
 })();

@@ -28,7 +28,7 @@
         <div class="panel-body">
             {{ competences|raw }}
         <div class="panel-footer">
-            <a data-toggle="modal" href="#myModal" class="btn btn-primary">add a competence</a>
+            <a data-toggle="modal" href="#myModal" class="btn btn-primary">{{'competence_add'|trans({},'competence')}}</a>
             <button type="button" class="btn btn-default" id="see" data-id="{{cpt.getId()}}"> <i class="fa fa-eye"></i>{{'see'|trans({}, 'platform') }}</button>
         </div>
     </div>
@@ -38,7 +38,7 @@
 	            <div class="modal-content">
 	                <div class="modal-header">
 	                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-	                    <h4 class="modal-title">Modal title</h4>
+	                    <h4 class="modal-title">{{'competence_add'|trans({},'competence')}} </h4>
 	                </div>
 	                <div class="modal-body">
 	                    <form action="{{ path('claro_admin_competence_add_sub', {competenceId: cpt.getId() }) }}" method="POST" {{ form_enctype(form) }} id="myForm" >

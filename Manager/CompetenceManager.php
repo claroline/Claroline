@@ -39,7 +39,7 @@ class CompetenceManager {
      *     "om"           = @DI\Inject("claroline.persistence.object_manager"),
      *     "security"     = @DI\Inject("security.context"),
      *     "rm"           = @DI\Inject("claroline.manager.role_manager"),
-     *     "router"         = @DI\Inject("router")
+     *     "router"       = @DI\Inject("router")
      * })
      */
     public function __construct(
@@ -230,22 +230,43 @@ class CompetenceManager {
         $this->om->endFlushSuite();
         return true;
     }
-
-    public function unsubscribeUserToCompetences($users , $competences)
+    /**
+     * !!! u can not delete/unsubscribe to a competence if the competence user link exist in an another
+     * Learning outcomes.
+     * @param  array  $users [description]
+     * @return boolean
+     */
+    public function unsubscribeUserToCompetences(array $users, $root)
     {
+        $repoCpt = $this->om->getRepository('ClarolineCoreBundle:Competence\CompetenceHierarchy');
+        $rootsId = $repoCpt->getRootCpt();
         
+        foreach ($users as $user) {
+           $this->om->getRepository('ClarolineCoreBundle:Competence\UserCompetence')
+           ->deleteNodeHiearchy($user, $root);
+        }
+        $this->om->flush();
+        return true;
     }
 
-    public function getCompetencesAssociateUsers()
+    public function getCompetencesAssociateUsers(CompetenceHierarchy $competence = null)
     {
-        $list = $this->om->getRepository('ClarolineCoreBundle:Competence\UserCompetence')->findAll(false, 'competence','asc');
+        $list = is_null($competence) ?
+            $this->om->getRepository('ClarolineCoreBundle:Competence\UserCompetence')
+                ->findAll(false, 'competence','asc') 
+                :
+            $this->om->getRepository('ClarolineCoreBundle:Competence\UserCompetence')
+                ->findHiearchyByNode($competence);
+
         $orderedList = array();
         
         foreach ($list as $cu ) {
             if (!isset($orderedList[$cu->getCompetence()->getName()])) {  
                 $orderedList[$cu->getCompetence()->getName()] = array();  
+                $orderedList[$cu->getCompetence()->getName()]['id'] = $cu->getCompetence()->getId();
+                $orderedList[$cu->getCompetence()->getName()]['users'] = array();
             }
-            $orderedList[$cu->getCompetence()->getName()][] = $cu->getUser()->getuserName();
+            $orderedList[$cu->getCompetence()->getName()]['users'][] = $cu;
         }
         return $orderedList;
     }

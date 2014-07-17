@@ -1,8 +1,10 @@
 competence_add: add a Learning Outcome
 competence_form_name: 'name'
 competence_form_description: 'Description'
-competence_code: code
+competence_form_code: code
 competence_form_score: 'Point'
+competence_subscription_management: 'Competence Subscription Management'
 select_competence_for_registration: 'Select Learning Outcomes'
 select_users_for_registration_to_workspace: 'Select users to subscribe'
+registration_to_competence: Subscription to Learning Outcomes
 users_competences: 'See users associate to a learning Outcomes'

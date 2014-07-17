@@ -11,8 +11,9 @@
 
 namespace Claroline\CoreBundle\Controller\Administration;
 
-use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Competence\CompetenceHierarchy;
+use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Manager\UserManager;
@@ -25,24 +26,26 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
-/**
- * @DI\Tag("security.secure_service")
- * @SEC\PreAuthorize("hasRole('ADMIN')")
- */
 class CompetenceSubscriptionController {
 
 	private $formFactory;
     private $cptmanager;
     private $request;
     private $userManager;
+    private $sc;
+    private $adminTool;
     /**
      * @DI\InjectParams({
      *     "formFactory"        = @DI\Inject("claroline.form.factory"),
      *     "request"            = @DI\Inject("request"),
      *     "router"             = @DI\Inject("router"),
      *     "cptmanager"			= @DI\Inject("claroline.manager.competence_manager"),
-     *     "userManager"        = @DI\Inject("claroline.manager.user_manager")
+     *     "userManager"        = @DI\Inject("claroline.manager.user_manager"),
+     *     "securityContext"    = @DI\Inject("security.context"),
+     *     "toolManager"        = @DI\Inject("claroline.manager.tool_manager")
      * })
      */
     public function __construct(
@@ -50,7 +53,9 @@ class CompetenceSubscriptionController {
         Request $request,
         RouterInterface $router,
         CompetenceManager $cptmanager,
-        UserManager $userManager
+        UserManager $userManager,
+        SecurityContextInterface $securityContext,
+        ToolManager $toolManager
     )
     {
         $this->formFactory = $formFactory;
@@ -58,6 +63,8 @@ class CompetenceSubscriptionController {
         $this->router = $router;
         $this->cptmanager = $cptmanager;
         $this->userManager = $userManager;
+        $this->sc = $securityContext;
+        $this->toolManager = $toolManager->getAdminToolByName('competence_subscription');
     }
 
     /**
@@ -134,15 +141,31 @@ class CompetenceSubscriptionController {
     	return New Response(200);
     }
 
-    public function unsubscriptionUsersAction(array $users, array $competences)
-    {
-    	$this->cptmanager->unsubscribeUserToCompetences($users, $competences);
+    /**
+     * @EXT\Route("/unsubscription/users/{root}",  
+     * name="claro_admin_competence_unsubscription_users",options={"expose"=true})
+     * @EXT\Method("GET")
+     * @EXT\ParamConverter(
+     *     "users",
+     *      class="ClarolineCoreBundle:Competence\UserCompetence",
+     *      options={"multipleIds" = true, "name" = "users"}
+     * )
+     * @EXT\ParamConverter(
+     *     "root",
+     *      class="ClarolineCoreBundle:Competence\CompetenceHierarchy",
+     *      options={"id" = "root", "strictId" = true}
+     * )
+     * @EXT\Template()
+     **/ 
+    public function unsubscriptionUsersAction(array $users,CompetenceHierarchy $root)
+    {        
+    	$this->cptmanager->unsubscribeUserToCompetences($users, $root);
     	return new Response(200);
     }
 
     /**
      * @EXT\Route("/subscription/users/competences",  
-     * name="claro_admin_competences_list_users")
+     * name="claro_admin_competences_list_users",options={"expose"=true})
      * @EXT\Method("GET")
      * @EXT\Template()
      **/ 
@@ -151,6 +174,42 @@ class CompetenceSubscriptionController {
     	$listUsersCompetences =
     	$this->cptmanager->getCompetencesAssociateUsers();
 
-    	return array( 'listUsers' => $listUsersCompetences );
+    	return array('listUsers' => $listUsersCompetences);
+    }
+
+    /**
+     * @EXT\Route("subscription/users/competences/show/{competenceId}",
+     *  name="claro_admin_competences_subscription_details")
+     * @EXT\Method("GET")
+     * @EXT\ParamConverter(
+     *      "competence",
+     *      class="ClarolineCoreBundle:Competence\CompetenceHierarchy",
+     *      options={"id" = "competenceId", "strictId" = true}
+     * )
+     * @EXT\Template()
+     * @param Competence $competence
+     */
+    
+    public function showSubscriptionAction($competence)
+    {
+        $this->checkOpen();
+        $listUsersCompetences =
+        $this->cptmanager->getCompetencesAssociateUsers($competence);
+        $tree =  $this->cptmanager->getHierarchy($competence);
+
+        return array(
+            'listUsers' => $listUsersCompetences,
+            'cpt' => $competence,
+            'tree' => $tree
+        );
+    }
+
+    private function checkOpen()
+    {
+        if ($this->sc->isGranted('OPEN', $this->toolManager)) {
+            return true;
+        }
+
+        throw new AccessDeniedException();
     }
 }
