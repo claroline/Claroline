@@ -13,14 +13,14 @@ namespace Claroline\ScormBundle\Event\Log;
 
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\Log\LogGenericEvent;
-use Claroline\ScormBundle\Entity\Scorm12Resource;
+use Claroline\ScormBundle\Entity\Scorm2004Resource;
 
-class LogScorm12ResultEvent extends LogGenericEvent
+class LogScorm2004ResultEvent extends LogGenericEvent
 {
-    const ACTION = 'resource-scorm_12-sco_result';
+    const ACTION = 'resource-scorm_2004-sco_result';
 
     public function __construct(
-        Scorm12Resource $scormResource,
+        Scorm2004Resource $scormResource,
         User $user,
         array $details
     )

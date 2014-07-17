@@ -14,7 +14,7 @@ namespace Claroline\ScormBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Claroline\ScormBundle\Repository\Scorm12ScoTrackingRepository")
  * @ORM\Table(name="claro_scorm_12_sco_tracking")
  */
 class Scorm12ScoTracking
@@ -34,7 +34,7 @@ class Scorm12ScoTracking
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\ScormBundle\Entity\Scorm12Sco")
-     * @ORM\JoinColumn(name="scorm_id", onDelete="CASCADE", nullable=false)
+     * @ORM\JoinColumn(name="sco_id", onDelete="CASCADE", nullable=false)
      */
     protected $sco;
 
@@ -291,5 +291,40 @@ class Scorm12ScoTracking
     public function setIsLocked($isLocked)
     {
         $this->isLocked = $isLocked;
+    }
+
+    public function getFormattedTotalTime()
+    {
+        $remainingTime = $this->totalTime;
+        $hours = intval($remainingTime / 360000);
+        $remainingTime %= 360000;
+        $minutes = intval($remainingTime / 6000);
+        $remainingTime %= 6000;
+        $seconds = intval($remainingTime / 100);
+        $remainingTime %= 100;
+
+        $formattedTime = '';
+
+        if ($hours < 10) {
+            $formattedTime .= '0';
+        }
+        $formattedTime .= $hours . ':';
+
+        if ($minutes < 10) {
+            $formattedTime .= '0';
+        }
+        $formattedTime .= $minutes . ':';
+
+        if ($seconds < 10) {
+            $formattedTime .= '0';
+        }
+        $formattedTime .= $seconds . '.';
+
+        if ($remainingTime < 10) {
+            $formattedTime .= '0';
+        }
+        $formattedTime .= $remainingTime;
+
+        return $formattedTime;
     }
 }

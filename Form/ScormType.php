@@ -18,7 +18,7 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 
-class Scorm12Type extends AbstractType
+class ScormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -46,7 +46,7 @@ class Scorm12Type extends AbstractType
 
     public function getName()
     {
-        return 'scorm_12_form';
+        return 'scorm_form';
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

@@ -15,36 +15,41 @@
             {% set scoId = sco.getId() %}
             {% set scoTitle = sco.getTitle() %}
             <li>
-                <a href="{{ path('claro_render_scorm_12_sco', {'scoId': scoId}) }}" class="sco-menu-link">
+                <a href="{{ path('claro_render_scorm_2004_sco', {'scoId': scoId}) }}" class="sco-menu-link">
                     {{ scoTitle }}
                 </a>
                 
-                {% set bestLessonStatus = tracking.getBestLessonStatus() %}
-                {% if bestLessonStatus == 'passed' or
-                    bestLessonStatus == 'completed' or
-                    bestLessonStatus == 'browsed' or
-                    bestLessonStatus == 'failed' or
-                    bestLessonStatus == 'incomplete'
+                {% set completionStatus = tracking.getCompletionStatus() %}
+                {% set successStatus = tracking.getSuccessStatus() %}
+                {% if completionStatus == 'incomplete' or
+                    completionStatus == 'completed' or
+                    successStatus == 'failed' or
+                    successStatus == 'passed'
                 %}
-                    {% set bestScoreRaw = tracking.getBestScoreRaw() %}
+                    {% if successStatus is not null %}
+                        {% set status = successStatus %}
+                    {% else %}
+                        {% set status = completionStatus %}
+                    {% endif %}
+                    {% set scoreRaw = tracking.getScoreRaw() %}
                     {% set scoreMax = tracking.getScoreMax() %}
-                    {% if (scoreMax is not null) and (bestScoreRaw is not null) and (scoreMax > 0) %}
-                        {% set bestScore = bestScoreRaw ~ ' / ' ~ scoreMax %}
+                    {% if (scoreMax is not null) and (scoreRaw is not null) and (scoreMax > 0) %}
+                        {% set score = scoreRaw ~ ' / ' ~ scoreMax %}
                     {% endif %}
                     &nbsp;
-                    {% if bestLessonStatus == 'failed' or bestLessonStatus == 'incomplete' %}
+                    {% if status == 'failed' or status == 'incomplete' %}
                         <i class="fa fa-exclamation-triangle pointer-hand check-status-btn"
                             style="color: #E60000"
                             data-container="#scorm-menu"
                             data-toggle="tooltip"
                             data-placement="top"
-                            data-title="{{ bestLessonStatus|trans({}, 'scorm') }}"
+                            data-title="{{ status|trans({}, 'scorm') }}"
                             data-sco-title="{{ scoTitle }}"
-                            data-best-lesson-status="{{ bestLessonStatus|trans({}, 'scorm') }}"
+                            data-status="{{ status|trans({}, 'scorm') }}"
                             data-total-time="{{ tracking.getFormattedTotalTime() }}"
                             
-                            {% if bestScore is defined %}
-                                data-best-score="{{ bestScore }}"
+                            {% if score is defined %}
+                                data-score="{{ score }}"
                             {% endif %}
                         ></i>
                     {% else %}
@@ -53,13 +58,13 @@
                             data-container="#scorm-menu"
                             data-toggle="tooltip"
                             data-placement="top"
-                            data-title="{{ bestLessonStatus|trans({}, 'scorm') }}"
+                            data-title="{{ status|trans({}, 'scorm') }}"
                             data-sco-title="{{ scoTitle }}"
-                            data-best-lesson-status="{{ bestLessonStatus|trans({}, 'scorm') }}"
+                            data-status="{{ status|trans({}, 'scorm') }}"
                             data-total-time="{{ tracking.getFormattedTotalTime() }}"
                             
-                            {% if bestScore is defined %}
-                                data-best-score="{{ bestScore }}"
+                            {% if score is defined %}
+                                data-score="{{ score }}"
                             {% endif %}
                         ></i>
                     {% endif %}
@@ -126,5 +131,5 @@
 
 {% block javascripts %}
     {{ parent() }}
-    <script src="{{ asset('bundles/clarolinescorm/js/scorm12.js') }}"></script>
+    <script src="{{ asset('bundles/clarolinescorm/js/scorm2004.js') }}"></script>
 {% endblock %}
