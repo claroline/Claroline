@@ -8,7 +8,7 @@
                 {% set level = 4 %}
                 {% set fontsize = (section.level<8)?21 - section.level:14 %}
             {% endif %}
-            <li id="section-{{section.id}}" class="{{ visibleClass }}">
+            <li id="section-{{section.id}}" class="{{ visibleClass }} section-title">
                 <div class="{{level>2?"subsection-header":"page-header"}}" >
                     <h{{level}} {{ fontsize!=0?"style=font-size:" ~ fontsize ~ "px;":"" }}>
                         {{section.activeContribution.title}}
