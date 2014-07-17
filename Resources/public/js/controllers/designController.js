@@ -15,11 +15,30 @@ portfolioApp
                 }
             }
 
-            $scope.changeColumn = function($event, widget, column) {
-                $event.preventDefault();
-                $event.stopPropagation();
-
+            $scope.changeColumn = function(widget, column) {
                 widget.column = column;
+                widgetsManager.save(widget);
+            };
+
+            $scope.increaseRow = function(widget) {
+                var newRow     = widget.row + 1;
+                var nextWidget = $filter('filter')($scope.widgets, {type: '!title', column: widget.column, row: newRow});
+
+                nextWidget[0].row--;
+                widget.row++;
+
+                widgetsManager.save(nextWidget[0]);
+                widgetsManager.save(widget);
+            };
+
+            $scope.decreaseRow = function(widget) {
+                var newRow         = widget.row - 1;
+                var previousWidget = $filter('filter')($scope.widgets, {type: '!title', column: widget.column, row: newRow});
+
+                previousWidget[0].row++;
+                widget.row--;
+
+                widgetsManager.save(previousWidget[0]);
                 widgetsManager.save(widget);
             };
 

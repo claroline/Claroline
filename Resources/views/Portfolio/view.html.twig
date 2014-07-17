@@ -54,19 +54,19 @@
                 {% endif %}
                 <div class="main-content col-md-8{% if false == editMode %} col-md-offset-2{% endif %}">
                 {% if editMode %}
-                    <div data-ng-repeat="widget in widgets | filter:{type: '!title'}" data-ng-if="0 == portfolio.disposition">
+                    <div data-ng-repeat="widget in widgets | filter:{type: '!title'} | orderBy:widget.row" data-ng-if="0 == portfolio.disposition">
                         {% include 'IcapPortfolioBundle:templates:widget.html.twig' %}
                     </div>
                     <div data-ng-if="1 == portfolio.disposition">
                         <ul class="col-md-6 list-unstyled" data-ng-repeat="col in cols">
-                            <li data-ng-repeat="widget in widgets | filter:{type: '!title', column: col}">
+                            <li data-ng-repeat="widget in widgets | filter:{type: '!title', column: col} | orderBy:'+row'">
                                 {% include 'IcapPortfolioBundle:templates:widget.html.twig' %}
                             </li>
                         </ul>
                     </div>
                     <div data-ng-if="2 == portfolio.disposition">
                         <ul class="col-md-4 list-unstyled" data-ng-repeat="col in cols">
-                            <li data-ng-repeat="widget in widgets | filter:{type: '!title', column: col}">
+                            <li data-ng-repeat="widget in widgets | filter:{type: '!title', column: col} | orderBy:widget.row">
                                 {% include 'IcapPortfolioBundle:templates:widget.html.twig' %}
                             </li>
                         </ul>
