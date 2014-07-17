@@ -107,14 +107,8 @@ class Installer
         $installer->setLogger(function ($message) use ($output) {
             $output->writeln($message);
         });
-
-        if (file_exists($opFile = $this->appDir . '/config/operations.xml')) {
-            $output->writeln('Installing the platform from operation file...');
-            $installer->installFromOperationFile();
-        } else {
-            $output->writeln('Installing the platform from kernel...');
-            $installer->installFromKernel(false);
-        }
+        $output->writeln('Installing the platform from kernel...');
+        $installer->installFromKernel(false);
     }
 
     private function createAdminUser(ContainerInterface $container, OutputInterface $output)
