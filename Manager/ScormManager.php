@@ -14,8 +14,10 @@ namespace Claroline\ScormBundle\Manager;
 
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Persistence\ObjectManager;
+use Claroline\ScormBundle\Entity\Scorm12Resource;
 use Claroline\ScormBundle\Entity\Scorm12Sco;
 use Claroline\ScormBundle\Entity\Scorm12ScoTracking;
+use Claroline\ScormBundle\Entity\Scorm2004Resource;
 use Claroline\ScormBundle\Entity\Scorm2004Sco;
 use Claroline\ScormBundle\Entity\Scorm2004ScoTracking;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -119,6 +121,15 @@ class ScormManager
      * Access to Scorm12ScoTrackingRepository methods *
      **************************************************/
 
+    public function getAllScorm12ScoTrackingsByUserAndResource(
+        User $user,
+        Scorm12Resource $resource
+    )
+    {
+        return $this->scorm12ScoTrackingRepo
+            ->findAllTrackingsByUserAndResource($user, $resource);
+    }
+
     public function getScorm12ScoTrackingByUserAndSco(
         User $user,
         Scorm12Sco $sco
@@ -143,6 +154,15 @@ class ScormManager
     /****************************************************
      * Access to Scorm2004ScoTrackingRepository methods *
      ****************************************************/
+
+    public function getAllScorm2004ScoTrackingsByUserAndResource(
+        User $user,
+        Scorm2004Resource $resource
+    )
+    {
+        return $this->scorm2004ScoTrackingRepo
+            ->findAllTrackingsByUserAndResource($user, $resource);
+    }
 
     public function getScorm2004ScoTrackingByUserAndSco(
         User $user,

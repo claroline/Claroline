@@ -83,9 +83,16 @@ class ScormController extends Controller
     {
         $this->checkAccess('OPEN', $scorm);
         $user = $this->securityContext->getToken()->getUser();
-
-        $scos = $scorm->getScos();
         $rootScos = array();
+        $trackings = array();
+        $scos = $scorm->getScos();
+
+        $scosTracking = $this->scormManager
+            ->getAllScorm12ScoTrackingsByUserAndResource($user, $scorm);
+
+        foreach ($scosTracking as $tracking) {
+            $trackings[$tracking->getSco()->getId()] = $tracking;
+        }
 
         foreach ($scos as $sco) {
 
@@ -93,11 +100,9 @@ class ScormController extends Controller
                 $rootScos[] = $sco;
             }
 
-            $scoTracking = $this->scormManager
-                ->getScorm12ScoTrackingByUserAndSco($user, $sco);
-
-            if (is_null($scoTracking)) {
-                $this->scormManager->createScorm12ScoTracking($user, $sco);
+            if (!isset($trackings[$sco->getId()])) {
+                $trackings[$sco->getId()] = $this->scormManager
+                    ->createScorm12ScoTracking($user, $sco);
             }
         }
 
@@ -105,7 +110,8 @@ class ScormController extends Controller
             'resource' => $scorm,
             '_resource' => $scorm,
             'scos' => $rootScos,
-            'workspace' => $scorm->getResourceNode()->getWorkspace()
+            'workspace' => $scorm->getResourceNode()->getWorkspace(),
+            'trackings' => $trackings
         );
     }
 
@@ -362,19 +368,26 @@ class ScormController extends Controller
     {
         $this->checkScorm2004ResourceAccess('OPEN', $scorm);
         $user = $this->securityContext->getToken()->getUser();
-
-        $scos = $scorm->getScos();
         $rootScos = array();
+        $trackings = array();
+        $scos = $scorm->getScos();
+
+        $scosTracking = $this->scormManager
+            ->getAllScorm2004ScoTrackingsByUserAndResource($user, $scorm);
+
+        foreach ($scosTracking as $tracking) {
+            $trackings[$tracking->getSco()->getId()] = $tracking;
+        }
 
         foreach ($scos as $sco) {
+
             if (is_null($sco->getScoParent())) {
                 $rootScos[] = $sco;
             }
-            $scoTracking = $this->scormManager
-                ->getScorm2004ScoTrackingByUserAndSco($user, $sco);
 
-            if (is_null($scoTracking)) {
-                $this->scormManager->createScorm2004ScoTracking($user, $sco);
+            if (!isset($trackings[$sco->getId()])) {
+                $trackings[$sco->getId()] = $this->scormManager
+                    ->createScorm2004ScoTracking($user, $sco);
             }
         }
 
@@ -382,7 +395,8 @@ class ScormController extends Controller
             'resource' => $scorm,
             '_resource' => $scorm,
             'scos' => $rootScos,
-            'workspace' => $scorm->getResourceNode()->getWorkspace()
+            'workspace' => $scorm->getResourceNode()->getWorkspace(),
+            'trackings' => $trackings
         );
     }
 
@@ -653,7 +667,7 @@ class ScormController extends Controller
         }
         $timeInHundredth += intval($timeInArraySec[0]) * 100;
         $timeInHundredth += intval($timeInArray[1]) * 6000;
-        $timeInHundredth += intval($timeInArray[0]) * 144000;
+        $timeInHundredth += intval($timeInArray[0]) * 360000;
 
         return $timeInHundredth;
     }

@@ -14,7 +14,7 @@ namespace Claroline\ScormBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Claroline\ScormBundle\Repository\Scorm2004ScoTrackingRepository")
  * @ORM\Table(name="claro_scorm_2004_sco_tracking")
  */
 class Scorm2004ScoTracking
@@ -186,5 +186,43 @@ class Scorm2004ScoTracking
     public function setDetails($details)
     {
         $this->details = $details;
+    }
+
+    public function getFormattedTotalTime()
+    {
+        $pattern = '/^P([0-9]+Y)?([0-9]+M)?([0-9]+D)?T([0-9]+H)?([0-9]+M)?([0-9]+S)?$/';
+        $formattedTime = '';
+
+        if (!empty($this->totalTime) && $this->totalTime !== 'PT' && preg_match($pattern, $this->totalTime)) {
+            $interval = new \DateInterval($this->totalTime);
+            $time = new \DateTime();
+            $time->setTimestamp(0);
+            $time->add($interval);
+            $timeInSecond = $time->getTimestamp();
+
+            $hours = intval($timeInSecond / 3600);
+            $timeInSecond %= 3600;
+            $minutes = intval($timeInSecond / 60);
+            $timeInSecond %= 60;
+
+            if ($hours < 10) {
+                $formattedTime .= '0';
+            }
+            $formattedTime .= $hours . ':';
+
+            if ($minutes < 10) {
+                $formattedTime .= '0';
+            }
+            $formattedTime .= $minutes . ':';
+
+            if ($timeInSecond < 10) {
+                $formattedTime .= '0';
+            }
+            $formattedTime .= $timeInSecond;
+        } else {
+            $formattedTime .= '00:00:00';
+        }
+
+        return $formattedTime;
     }
 }
