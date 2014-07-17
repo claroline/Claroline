@@ -330,3 +330,5 @@ PeerReview_helper_unlock_tool: " Note: Un outil permet aussi au gestionnaire de 
 Made by: "Rendue par"
 Force comment in correction: "Rendre le commentaire obligatoire"
 Please comment: "Merci de laisser un commentaire"
+This field is required.: "Ce champs est requis."
+The comment field is required please let a comment: "Le champ commentaire est requis, merci de bien vouloir laisser un commentaire."
