@@ -62,6 +62,14 @@ class Controller extends BaseController
     }
 
     /**
+     * @return \Icap\PortfolioBundle\Manager\PortfolioDispositionManager
+     */
+    public function getPortfolioDispositionManager()
+    {
+        return $this->get('icap_portfolio.manager.portfolio_disposition');
+    }
+
+    /**
      * @return \Icap\PortfolioBundle\Manager\WidgetsManager
      */
     public function getWidgetsManager()

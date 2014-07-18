@@ -82,7 +82,7 @@
                         {% elseif 1 == portfolio.disposition %}
                             {% for col in cols %}
                                 <ul class="col-md-6 list-unstyled">
-                                    {% for widget in widgets if 'title' != widget.widgetType and col == widget.column %}
+                                    {% for widget in widgets if 'title' != widget.widgetType and col == widget.column  %}
                                     <li>
                                         {% include 'IcapPortfolioBundle:templates:widget.html.twig' %}
                                     </li>

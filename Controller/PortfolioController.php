@@ -169,17 +169,9 @@ class PortfolioController extends Controller
         );
 
         if (!$editMode) {
-            $cols = array();
-            switch($portfolio->getDisposition()) {
-                case 1:
-                    $cols = [1, 2];
-                    break;
-                case 2:
-                    $cols = [1, 2, 3];
-                    break;
-            }
-            $responseParameters['cols'] = $cols;
+            $responseParameters['cols'] = $this->getPortfolioDispositionManager()->getColumnsForDisposition($portfolio->getDisposition());
         }
+
         $response            = new Response($this->renderView('IcapPortfolioBundle:Portfolio:view.html.twig', $responseParameters));
         $portfolioVisibility = $portfolio->getVisibility();
 
