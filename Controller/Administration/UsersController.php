@@ -280,8 +280,6 @@ class UsersController extends Controller
         $pager = $search === '' ?
             $this->userManager->getAllUsers($page, $max, $order, $direction):
             $this->userManager->getUsersByName($search, $page, $max, $order, $direction);
-        
-        $direction = $direction === 'DESC' ? 'ASC' : 'DESC';
 
         return array('pager' => $pager, 'search' => $search, 'max' => $max, 'order' => $order, 'direction' => $direction);
     }

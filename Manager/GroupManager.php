@@ -325,7 +325,6 @@ class GroupManager
      */
     public function getGroups($page, $max = 50, $orderedBy = 'id', $order = null)
     {
-        $order = $order === 'DESC' ? 'DESC' : 'ASC';
         $query = $this->groupRepo->findAll(false, $orderedBy, $order);
 
         return $this->pagerFactory->createPager($query, $page, $max);
