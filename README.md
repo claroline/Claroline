@@ -62,17 +62,16 @@ Project setup
     - *templates*
     - *test*
     - *web/uploads*
-    - *web/themes*
-    - *web/thumbnails*
 - Run the following commands:
     - `$ composer require composer/composer dev-master`
     - `$ composer require claroline/bundle-recorder "~3.0"`
     - `$ cp composer.json.dist composer.json`
-    - `$ composer update --prefer-source` 
-       (at this point, you can ignore the following error: 
-       *Class Claroline\CoreBundle\Library\Maintenance\MaintenanceHandler is 
-       not autoloadable, can not call pre-update-cmd script*)
+    - `$ composer update --prefer-source` (*) 
     - `$ php app/console claroline:update`
+
+(*) Note: at this point, you can ignore the following error:
+    *Class Claroline\CoreBundle\Library\Maintenance\MaintenanceHandler is
+    not autoloadable, can not call pre-update-cmd script*
 
 You can then create a first admin user with:
 
