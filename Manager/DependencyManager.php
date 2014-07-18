@@ -314,20 +314,20 @@ class DependencyManager {
         $preferDist = $this->env === 'dev' ? false: true;
         $devMode = $this->env === 'dev' ? true: false;
 
-//        try {
-//            $install->setDryRun($dryRun)
-//                ->setVerbose(true)
-//                ->setPreferSource($preferSource)
-//                ->setPreferDist($preferDist)
-//                ->setDevMode($devMode)
-//                ->setRunScripts(true)
-//                ->setOptimizeAutoloader(true)
-//                ->setUpdate(true);
-//
-//            $install->run();
-//        } catch (\Exception $e) {
-//            file_put_contents($this->composerLogFile, "Composer Exception : {$e->getMessage()}\n", FILE_APPEND);
-//        }
+        try {
+            $install->setDryRun($dryRun)
+                ->setVerbose(true)
+                ->setPreferSource($preferSource)
+                ->setPreferDist($preferDist)
+                ->setDevMode($devMode)
+                ->setRunScripts(true)
+                ->setOptimizeAutoloader(true)
+                ->setUpdate(true);
+
+            $install->run();
+        } catch (\Exception $e) {
+            file_put_contents($this->composerLogFile, "Composer Exception : {$e->getMessage()}\n", FILE_APPEND);
+        }
 
         try {
             $this->updater->run(new ArgvInput(array()), new StreamOutput(fopen($this->composerLogFile, 'a')));
