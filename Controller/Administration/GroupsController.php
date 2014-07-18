@@ -169,7 +169,6 @@ class GroupsController extends Controller
         $pager = $search === '' ?
             $this->groupManager->getGroups($page, $max, $order, $direction) :
             $this->groupManager->getGroupsByName($search, $page, $max, $order, $direction);
-        $direction = $direction === 'DESC' ? 'ASC' : 'DESC';
 
         return array('pager' => $pager, 'search' => $search, 'max' => $max, 'order' => $order, 'direction' => $direction);
     }

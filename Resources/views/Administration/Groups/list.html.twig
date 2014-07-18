@@ -36,10 +36,16 @@
 {% endmacro %}
 
 {% macro sortUrl(max, search, order, direction) %}
-    {% if search == '' %}
-        {{ path('claro_admin_group_list', {'max': max, 'order': order, 'direction': direction}) }}
+    {% if direction == 'ASC' %}
+        {% set newDirection = 'DESC' %}
     {% else %}
-        {{ path('claro_admin_group_list_search', {'search': search, 'max': max, 'order': order, 'direction': direction}) }}
+        {% set newDirection = 'ASC' %}
+    {% endif %}
+
+    {% if search == '' %}
+        {{ path('claro_admin_group_list', {'max': max, 'order': order, 'direction': newDirection}) }}
+    {% else %}
+        {{ path('claro_admin_group_list_search', {'search': search, 'max': max, 'order': order, 'direction': newDirection}) }}
     {% endif %}
 {% endmacro %}
 
