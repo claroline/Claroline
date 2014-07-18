@@ -1,5 +1,5 @@
-beta_message: '<span class="fa fa-warning"></span> <strong>Attention</strong> <span class="fa fa-warning"></span><br />L''outil portfolio est en en version bêta. Vos données sont suceptibles d''être supprimés lors de futures mises à jour.'
-beta_message_public: '<span class="fa fa-warning"></span> <strong>Attention</strong> <span class="fa fa-warning"></span><br />L''outil portfolio est en en version bêta.'
+beta_message: '<span class="fa fa-warning"></span> <strong>Attention</strong> <span class="fa fa-warning"></span><br />L''outil portfolio est en version bêta. Vos données sont suceptibles d''être supprimés lors de futures mises à jour.'
+beta_message_public: '<span class="fa fa-warning"></span> <strong>Attention</strong> <span class="fa fa-warning"></span><br />L''outil portfolio est en version bêta.'
 datepicker_date_format: 'dd/mm/yyyy'
 date_field_format: 'DD/MM/YYYY'
 no_portfolios_create_one: 'Vous n''avez aucun portfolio pour le moment.<br>Vous pouvez <a href="%newPortfolioUrl%" title="Ajouter un portfolio">en créer</a> pour montrer vos compétences.'
