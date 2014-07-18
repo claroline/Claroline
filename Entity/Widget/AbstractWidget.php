@@ -154,7 +154,7 @@ abstract class AbstractWidget
     }
 
     /**
-     * @return null
+     * @return string
      */
     public function getWidgetType()
     {
