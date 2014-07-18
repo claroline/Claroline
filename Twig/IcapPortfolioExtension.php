@@ -20,11 +20,30 @@ class IcapPortfolioExtension extends \Twig_Extension
     {
         return array(
             'visibilityLabel'  => new \Twig_Filter_Method($this, 'getVisibilityLabel'),
+            'orderByRow'       => new \Twig_Filter_Method($this, 'getOrder')
         );
     }
 
     public function getVisibilityLabel($visibility)
     {
         return Portfolio::getVisibilityLabels()[$visibility];
+    }
+
+    /**
+     * @param \Icap\PortfolioBundle\Entity\Widget\AbstractWidget[]$widgets
+     *
+     * @return mixed
+     */
+    public function getOrder($widgets)
+    {
+        $orderedWidgets = array();
+
+        foreach ($widgets as $widget) {
+            $orderedWidgets[$widget->getColumn() . $widget->getRow()] = $widget;
+        }
+
+        ksort($orderedWidgets);
+
+        return $orderedWidgets;
     }
 }

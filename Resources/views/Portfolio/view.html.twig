@@ -76,13 +76,13 @@
                     {% set widgets = portfolio.widgets %}
                     {% if 1 < widgets.count %}
                         {% if 0 == portfolio.disposition %}
-                            {% for widget in widgets if 'title' != widget.widgetType %}
+                            {% for widget in widgets | orderByRow if 'title' != widget.widgetType %}
                                 {% include 'IcapPortfolioBundle:templates:widget.html.twig' %}
                             {% endfor %}
                         {% elseif 1 == portfolio.disposition %}
                             {% for col in cols %}
                                 <ul class="col-md-6 list-unstyled">
-                                    {% for widget in widgets if 'title' != widget.widgetType and col == widget.column  %}
+                                    {% for widget in widgets | orderByRow if 'title' != widget.widgetType and col == widget.column  %}
                                     <li>
                                         {% include 'IcapPortfolioBundle:templates:widget.html.twig' %}
                                     </li>
@@ -92,7 +92,7 @@
                         {% elseif 2 == portfolio.disposition %}
                             {% for col in cols %}
                                 <ul class="col-md-4 list-unstyled">
-                                    {% for widget in widgets if 'title' != widget.widgetType and col == widget.column %}
+                                    {% for widget in widgets | orderByRow if 'title' != widget.widgetType and col == widget.column %}
                                     <li>
                                         {% include 'IcapPortfolioBundle:templates:widget.html.twig' %}
                                     </li>
