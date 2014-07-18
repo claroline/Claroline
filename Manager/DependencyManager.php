@@ -127,7 +127,7 @@ class DependencyManager {
     {
         foreach ($this->getAllInstalled() as $package) {
             if ($package->getName() === $name || $package->getPrettyName() === $name) {
-               return $package;
+                return $package;
             }
         }
 
@@ -296,6 +296,7 @@ class DependencyManager {
      */
     public function upgrade()
     {
+        unlink($this->composerLogFile);
         MaintenanceHandler::enableMaintenance();
 
         //get the list of upgradable packages from the cache
@@ -313,22 +314,30 @@ class DependencyManager {
         $preferDist = $this->env === 'dev' ? false: true;
         $devMode = $this->env === 'dev' ? true: false;
 
-        $install->setDryRun($dryRun)
-            ->setVerbose(true)
-            ->setPreferSource($preferSource)
-            ->setPreferDist($preferDist)
-            ->setDevMode($devMode)
-            ->setRunScripts(true)
-            ->setOptimizeAutoloader(true)
-            ->setUpdate(true);
+//        try {
+//            $install->setDryRun($dryRun)
+//                ->setVerbose(true)
+//                ->setPreferSource($preferSource)
+//                ->setPreferDist($preferDist)
+//                ->setDevMode($devMode)
+//                ->setRunScripts(true)
+//                ->setOptimizeAutoloader(true)
+//                ->setUpdate(true);
+//
+//            $install->run();
+//        } catch (\Exception $e) {
+//            file_put_contents($this->composerLogFile, "Composer Exception : {$e->getMessage()}\n", FILE_APPEND);
+//        }
 
-        $install->run();
-
-        //this should disable the maintenance mode aswell
-        $this->updater->run(new ArgvInput(array()), new StreamOutput(fopen($this->composerLogFile, 'a')));
+        try {
+            $this->updater->run(new ArgvInput(array()), new StreamOutput(fopen($this->composerLogFile, 'a')));
+        } catch (\Exception $e) {
+            file_put_contents($this->composerLogFile, "Runtime Exception : {$e->getMessage()}\n", FILE_APPEND);
+        }
 
         //remove the old cache file
         $this->iniFileManager->remove($this->lastTagsFile);
+        file_put_contents($this->composerLogFile, "\nDone.", FILE_APPEND);
     }
 
     /**
