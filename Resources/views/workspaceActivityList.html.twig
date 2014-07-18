@@ -25,31 +25,33 @@
         <h3 class="panel-title">{{ 'claroline_activity_tool'|trans({}, 'tools') }}</h3>
     </div>
 
-    {% if resourceInfos|length > 0 %}
-        <table class="table table-striped">
-        <thead>
-            <tr>
-                <th nowrap scope="col">{{ 'activity'|trans({}, 'tools') }}</th>
-                <th nowrap scope="col">{{ 'start_date'|trans({}, 'tools') }}</th>
-                <th nowrap scope="col">{{ 'end_date'|trans({}, 'tools') }}</th>
-                <th nowrap scope="col">{{ 'status'|trans({}, 'platform') }}</th>
-            </tr>
-        </thead>
+    <div class="panel-body">
+        {% if resourceInfos|length > 0 %}
+            <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th nowrap scope="col">{{ 'activity'|trans({}, 'tools') }}</th>
+                    <th nowrap scope="col">{{ 'start_date'|trans({}, 'tools') }}</th>
+                    <th nowrap scope="col">{{ 'end_date'|trans({}, 'tools') }}</th>
+                    <th nowrap scope="col">{{ 'status'|trans({}, 'platform') }}</th>
+                </tr>
+            </thead>
 
-        <tbody>
-            {% for resInfo in resourceInfos %}
-            <tr>
-                <td>
-                    <a href="{{ path('claro_resource_open', {'node': resInfo.id, 'resourceType': 'activity'}) }}">
-                        {{ resInfo.name }}
-                    </a>
-                </td>
-                <td>{{ activityInfos[resInfo['id']]['startDate'] }}</td>
-                <td>{{ activityInfos[resInfo['id']]['endDate'] }}</td>
-                <td>{{ activityInfos[resInfo['id']]['status']|trans({}, 'platform') }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    {% endif %}
+            <tbody>
+                {% for resInfo in resourceInfos %}
+                <tr>
+                    <td>
+                        <a href="{{ path('claro_resource_open', {'node': resInfo.id, 'resourceType': 'activity'}) }}">
+                            {{ resInfo.name }}
+                        </a>
+                    </td>
+                    <td>{{ activityInfos[resInfo['id']]['startDate'] }}</td>
+                    <td>{{ activityInfos[resInfo['id']]['endDate'] }}</td>
+                    <td>{{ activityInfos[resInfo['id']]['status']|trans({}, 'platform') }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% endif %}
+    </div>
 {% endblock %}
