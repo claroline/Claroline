@@ -139,7 +139,8 @@ class WidgetsManager
             $originalChildren->add($child);
         }
 
-        $originalRow = $widget->getRow();
+        $originalColumn = $widget->getColumn();
+        $originalRow    = $widget->getRow();
 
         $data = array();
 
@@ -148,6 +149,7 @@ class WidgetsManager
 
         if ($form->isValid()) {
             $newChildren = $widget->getChildren();
+            $newColumn   = $widget->getColumn();
             $newRow      = $widget->getRow();
 
             foreach ($originalChildren as $child) {
@@ -156,7 +158,18 @@ class WidgetsManager
                 }
             }
 
-            if ($originalRow != $newRow) {
+            if ($originalColumn != $newColumn) {
+                $existedWidgetParameters = array(
+                    'portfolio' => $widget->getPortfolio(),
+                    'column'    => $widget->getColumn(),
+                    'row'       => $widget->getRow()
+                );
+
+                /** @var AbstractWidget $replacedWidget */
+                $maxRow = $this->entityManager->getRepository('IcapPortfolioBundle:Widget\AbstractWidget')->findMaxRow($widget->getPortfolio(), $widget->getColumn());
+                $widget->setRow($maxRow['maxRow'] + 1);
+            }
+            else if ($originalRow != $newRow) {
                 $replacedWidgetParameters = array(
                     'portfolio' => $widget->getPortfolio(),
                     'column'    => $widget->getColumn(),

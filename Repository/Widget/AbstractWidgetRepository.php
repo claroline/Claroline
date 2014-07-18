@@ -26,4 +26,24 @@ class AbstractWidgetRepository extends EntityRepository
 
         return $executeQuery ? $query->getQuery()->getOneOrNullResult(): $query->getQuery();
     }
+
+    /**
+     * @param Portfolio $portfolio
+     * @param integer   $column
+     * @param bool      $executeQuery
+     *
+     * @return Query|integer
+     */
+    public function findMaxRow(Portfolio $portfolio, $column, $executeQuery = true)
+    {
+        $query = $this->createQueryBuilder('w')
+            ->select('MAX(w.row) as maxRow')
+            ->andWhere('w.portfolio = :portfolio')
+            ->andWhere('w.column = :column')
+            ->setParameter('portfolio', $portfolio)
+            ->setParameter('column', $column)
+        ;
+
+        return $executeQuery ? $query->getQuery()->getOneOrNullResult(): $query->getQuery();
+    }
 }
