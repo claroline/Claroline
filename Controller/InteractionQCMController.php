@@ -15,67 +15,6 @@ use UJM\ExoBundle\Form\InteractionQCMHandler;
  */
 class InteractionQCMController extends Controller
 {
-    /**
-     * Lists all InteractionQCM entities.
-     *
-     */
-    public function indexAction()
-    {
-        $em = $this->getDoctrine()->getManager();
-
-        $entities = $em->getRepository('UJMExoBundle:InteractionQCM')->findAll();
-
-        return $this->render(
-            'UJMExoBundle:InteractionQCM:index.html.twig', array(
-            'entities' => $entities
-            )
-        );
-    }
-
-    /**
-     * Finds and displays a InteractionQCM entity.
-     *
-     */
-    public function showAction($id)
-    {
-        $em = $this->getDoctrine()->getManager();
-
-        $entity = $em->getRepository('UJMExoBundle:InteractionQCM')->find($id);
-
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find InteractionQCM entity.');
-        }
-
-        $deleteForm = $this->createDeleteForm($id);
-
-        return $this->render(
-            'UJMExoBundle:InteractionQCM:show.html.twig', array(
-            'entity'      => $entity,
-            'delete_form' => $deleteForm->createView(),
-            )
-        );
-    }
-
-    /**
-     * Displays a form to create a new InteractionQCM entity.
-     *
-     */
-    public function newAction()
-    {
-        $entity = new InteractionQCM($this->container->get('security.context')->getToken()->getUser());
-        $form   = $this->createForm(
-            new InteractionQCMType(
-                $this->container->get('security.context')->getToken()->getUser()
-            ), $entity
-        );
-
-        return $this->render(
-            'UJMExoBundle:InteractionQCM:new.html.twig', array(
-            'entity' => $entity,
-            'form'   => $form->createView(),
-            )
-        );
-    }
 
     /**
      * Creates a new InteractionQCM entity.
@@ -213,10 +152,6 @@ class InteractionQCMController extends Controller
      */
     public function deleteAction($id, $pageNow)
     {
-        $form = $this->createDeleteForm($id);
-        $request = $this->getRequest();
-
-        $form->handleRequest($request);
 
         $em = $this->getDoctrine()->getManager();
         $entity = $em->getRepository('UJMExoBundle:InteractionQCM')->find($id);
@@ -258,10 +193,4 @@ class InteractionQCMController extends Controller
         return $this->render('UJMExoBundle:InteractionQCM:qcmOverview.html.twig', $vars);
     }
 
-    private function createDeleteForm($id)
-    {
-        return $this->createFormBuilder(array('id' => $id))
-            ->add('id', 'hidden')
-            ->getForm();
-    }
 }

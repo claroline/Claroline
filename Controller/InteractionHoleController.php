@@ -15,43 +15,6 @@ use UJM\ExoBundle\Form\InteractionHoleHandler;
 */
 class InteractionHoleController extends Controller
 {
-    /**
-    * Lists all InteractionHole entities.
-    *
-    */
-    public function indexAction()
-    {
-        $em = $this->getDoctrine()->getEntityManager();
-
-        $entities = $em->getRepository('UJMExoBundle:InteractionHole')->findAll();
-
-        return $this->render('UJMExoBundle:InteractionHole:index.html.twig', array(
-                             'entities' => $entities
-                             ));
-    }
-
-    /**
-    * Finds and displays a InteractionHole entity.
-    *
-    */
-    public function showAction($id)
-    {
-        $em = $this->getDoctrine()->getEntityManager();
-
-        $entity = $em->getRepository('UJMExoBundle:InteractionHole')->find($id);
-
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find InteractionHole entity.');
-        }
-
-        $deleteForm = $this->createDeleteForm($id);
-
-        return $this->render('UJMExoBundle:InteractionHole:show.html.twig', array(
-                             'entity' => $entity,
-                             'delete_form' => $deleteForm->createView(),
-                             ));
-    }
-
 
     /**
     * Creates a new InteractionHole entity.
@@ -199,11 +162,6 @@ class InteractionHoleController extends Controller
     */
     public function deleteAction($id, $pageNow)
     {
-        $form = $this->createDeleteForm($id);
-        $request = $this->getRequest();
-
-        $form->handleRequest($request);
-
         $em = $this->getDoctrine()->getManager();
         $entity = $em->getRepository('UJMExoBundle:InteractionHole')->find($id);
 
@@ -244,11 +202,4 @@ class InteractionHoleController extends Controller
         return $this->render('UJMExoBundle:InteractionHole:holeOverview.html.twig', $vars);
     }
 
-    private function createDeleteForm($id)
-    {
-        return $this->createFormBuilder(array('id' => $id))
-                    ->add('id', 'hidden')
-                    ->getForm()
-        ;
-    }
 }

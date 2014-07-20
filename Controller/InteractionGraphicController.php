@@ -17,64 +17,6 @@ class InteractionGraphicController extends Controller
 {
 
     /**
-     * Lists all InteractionGraphic entities.
-     *
-     */
-    public function indexAction()
-    {
-        $em = $this->getDoctrine()->getManager();
-
-        $entities = $em->getRepository('UJMExoBundle:InteractionGraphic')->findAll();
-
-        return $this->render(
-            'UJMExoBundle:InteractionGraphic:index.html.twig', array(
-            'entities' => $entities
-            )
-        );
-    }
-
-    /**
-     * Finds and displays a InteractionGraphic entity.
-     *
-     */
-    public function showAction($id)
-    {
-        $em = $this->getDoctrine()->getManager();
-
-        $entity = $em->getRepository('UJMExoBundle:InteractionGraphic')->find($id);
-
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find InteractionGraphic entity.');
-        }
-
-        $deleteForm = $this->createDeleteForm($id);
-
-        return $this->render(
-            'UJMExoBundle:InteractionGraphic:show.html.twig', array(
-            'entity' => $entity,
-            'delete_form' => $deleteForm->createView(),
-            )
-        );
-    }
-
-    /**
-     * Displays a form to create a new InteractionGraphic entity.
-     *
-     */
-    /*public function newAction()
-    {
-        $entity = new InteractionGraphic();
-        $form = $this->createForm(new InteractionGraphicType(), $entity);
-
-        return $this->render(
-            'UJMExoBundle:InteractionGraphic:new.html.twig', array(
-            'entity' => $entity,
-            'form' => $form->createView()
-            )
-        );
-    }*/
-
-    /**
      * Creates a new InteractionGraphic entity.
      *
      */
@@ -148,46 +90,6 @@ class InteractionGraphicController extends Controller
     }
 
     /**
-     * Displays a form to edit an existing InteractionGraphic entity.
-     *
-     */
-    public function editAction($id)
-    {
-        $user  = $this->container->get('security.context')->getToken()->getUser();
-        $em    = $this->getDoctrine()->getManager();
-        $catID = -1;
-        $docID = -1;
-
-        $entity = $em->getRepository('UJMExoBundle:InteractionGraphic')->find($id);
-
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find InteractionGraphic entity.');
-        }
-
-        if ($user->getId() != $entity->getInteraction()->getQuestion()->getUser()->getId()) {
-            $catID = $entity->getInteraction()->getQuestion()->getCategory()->getId();
-            $docID = $entity->getDocument()->getId();
-        }
-
-        $editForm = $this->createForm(
-            new InteractionGraphicType(
-                $this->container->get('security.context')->getToken()->getUser(),
-                $catID, $docID
-            ), $entity
-        );
-
-        $deleteForm = $this->createDeleteForm($id);
-
-        return $this->render(
-            'UJMExoBundle:InteractionGraphic:edit.html.twig', array(
-            'entity' => $entity,
-            'edit_form' => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
-            )
-        );
-    }
-
-    /**
      * Edits an existing InteractionGraphic entity.
      *
      */
@@ -256,11 +158,6 @@ class InteractionGraphicController extends Controller
      */
     public function deleteAction($id, $pageNow)
     {
-        $form = $this->createDeleteForm($id);
-        $request = $this->getRequest();
-
-        $form->handleRequest($request);
-
         $em = $this->getDoctrine()->getManager();
         $interactionGraphic = $em->getRepository('UJMExoBundle:InteractionGraphic')->find($id);
         $coords = $em->getRepository('UJMExoBundle:Coords')->findBy(array('interactionGraphic' => $id));
@@ -354,10 +251,4 @@ class InteractionGraphicController extends Controller
         return $this->render('UJMExoBundle:InteractionGraphic:graphicOverview.html.twig', $vars);
     }
 
-    private function createDeleteForm($id)
-    {
-        return $this->createFormBuilder(array('id' => $id))
-            ->add('id', 'hidden')
-            ->getForm();
-    }
 }
