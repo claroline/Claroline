@@ -19,6 +19,9 @@ class InteractionGraphicController extends Controller
     /**
      * Creates a new InteractionGraphic entity.
      *
+     * @access public
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function createAction()
     {
@@ -92,6 +95,11 @@ class InteractionGraphicController extends Controller
     /**
      * Edits an existing InteractionGraphic entity.
      *
+     * @access public
+     *
+     * @param integer $id id of InteractionGraphic
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function updateAction($id)
     {
@@ -155,6 +163,12 @@ class InteractionGraphicController extends Controller
     /**
      * Deletes a InteractionGraphic entity.
      *
+     * @access public
+     *
+     * @param integer $id id of InteractionGraphic
+     * @param intger $pageNow for pagination, actual page
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function deleteAction($id, $pageNow)
     {
@@ -184,6 +198,9 @@ class InteractionGraphicController extends Controller
     /**
      * Display the twig view to add a new picture to the user's document.
      *
+     * @access public
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function savePicAction()
     {
@@ -193,6 +210,9 @@ class InteractionGraphicController extends Controller
     /**
      * Get the adress of the selected picture in order to display it.
      *
+     * @access public
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function displayPicAction()
     {
@@ -223,6 +243,9 @@ class InteractionGraphicController extends Controller
     /**
      * Fired when compose an exercise
      *
+     * @access public
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function responseGraphicAction()
     {

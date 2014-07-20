@@ -20,6 +20,9 @@ class InteractionOpenController extends Controller
     /**
      * Creates a new InteractionOpen entity.
      *
+     * @access public
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function createAction()
     {
@@ -90,6 +93,11 @@ class InteractionOpenController extends Controller
     /**
      * Edits an existing InteractionOpen entity.
      *
+     * @access public
+     *
+     * @param integer $id id of InteractionOpen
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function updateAction($id)
     {
@@ -151,6 +159,12 @@ class InteractionOpenController extends Controller
     /**
      * Deletes a InteractionOpen entity.
      *
+     * @access public
+     *
+     * @param integer $id id of InteractionOpen
+     * @param intger $pageNow for pagination, actual page
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function deleteAction($id, $pageNow)
     {
@@ -171,6 +185,9 @@ class InteractionOpenController extends Controller
     /**
      * To test the open question by the teacher
      *
+     * @access public
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function responseOpenAction()
     {

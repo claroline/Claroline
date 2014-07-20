@@ -19,6 +19,9 @@ class InteractionQCMController extends Controller
     /**
      * Creates a new InteractionQCM entity.
      *
+     * @access public
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function createAction()
     {
@@ -89,6 +92,11 @@ class InteractionQCMController extends Controller
     /**
      * Edits an existing InteractionQCM entity.
      *
+     * @access public
+     *
+     * @param integer $id id of InteractionQCM
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function updateAction($id)
     {
@@ -149,6 +157,12 @@ class InteractionQCMController extends Controller
     /**
      * Deletes a InteractionQCM entity.
      *
+     * @access public
+     *
+     * @param integer $id id of InteractionQCM
+     * @param intger $pageNow for pagination, actual page
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function deleteAction($id, $pageNow)
     {
@@ -169,6 +183,9 @@ class InteractionQCMController extends Controller
     /**
      * To test the QCM by the teacher
      *
+     * @access public
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function responseQcmAction()
     {

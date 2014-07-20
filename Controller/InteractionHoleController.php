@@ -17,9 +17,12 @@ class InteractionHoleController extends Controller
 {
 
     /**
-    * Creates a new InteractionHole entity.
-    *
-    */
+     * Creates a new InteractionHole entity.
+     *
+     * @access public
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function createAction()
     {
         $interHole  = new InteractionHole();
@@ -90,9 +93,14 @@ class InteractionHoleController extends Controller
     }
 
     /**
-    * Edits an existing InteractionHole entity.
-    *
-    */
+     * Edits an existing InteractionHole entity.
+     *
+     * @access public
+     *
+     * @param integer $id id of InteractionHole
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function updateAction($id)
     {
         $exoID = $this->container->get('request')->request->get('exercise');
@@ -157,9 +165,15 @@ class InteractionHoleController extends Controller
     }
 
     /**
-    * Deletes a InteractionHole entity.
-    *
-    */
+     * Deletes a InteractionHole entity.
+     *
+     * @access public
+     *
+     * @param integer $id id of InteractionHole
+     * @param intger $pageNow for pagination, actual page
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function deleteAction($id, $pageNow)
     {
         $em = $this->getDoctrine()->getManager();
@@ -178,6 +192,9 @@ class InteractionHoleController extends Controller
     /**
      * To test the question with holes by the teacher
      *
+     * @access public
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function responseHoleAction()
     {
