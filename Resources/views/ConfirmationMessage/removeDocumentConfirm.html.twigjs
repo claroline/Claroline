@@ -1,0 +1,5 @@
+{% twig_js name="removeDocumentConfirm" %}
+
+{# no transchoice filter in twigjs... #}
+
+{{ 'warning'|trans({}, 'messages') }}
