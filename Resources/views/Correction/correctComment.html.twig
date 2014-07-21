@@ -101,7 +101,7 @@
                 $('#correct-form button[type="submit"]').trigger('click');
             });
 
-            {% if dropzone.forceCommentInCorrection  == true %}
+            {% if dropzone.forceCommentInCorrection  == true and not admin %}
             $('#correct-form').submit(function (e) {
                 if ($('#icap_dropzone_correct_comment_form_comment').val() == '') {
                     e.preventDefault();
