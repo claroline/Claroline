@@ -110,7 +110,7 @@
                         </a>
 
                         <a class="btn btn-default" data-toggle="tooltip" title="{{ 'delete' | trans }}"
-                           href="{{ path('ujm_document_del', { 'label': myDoc.label }) }}"
+                           href="{{ path('ujm_document_del', { 'idDoc': myDoc.id }) }}"
                            onclick="return confirm('{{ 'warning' | trans }} ?');">
                             <i class="fa fa-trash-o"></i>
                         </a>
