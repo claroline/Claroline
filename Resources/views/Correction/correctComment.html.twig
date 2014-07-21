@@ -101,7 +101,7 @@
                 $('#correct-form button[type="submit"]').trigger('click');
             });
 
-            {% if commentInCorrectionRequired == true %}
+            {% if dropzone.forceCommentInCorrection  == true %}
             $('#correct-form').submit(function (e) {
                 if ($('#icap_dropzone_correct_comment_form_comment').val() == '') {
                     e.preventDefault();
