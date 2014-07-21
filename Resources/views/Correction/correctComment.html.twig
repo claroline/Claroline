@@ -1,9 +1,9 @@
 {% extends "IcapDropzoneBundle:Correction:correct.html.twig" %}
-
+{% set  commentInCorrectionRequired  = false %}
 {% form_theme form "IcapDropzoneBundle::form_theme_bootstrap3.html.twig" %}
 
 {% block dropzone_correct_content %}
-    {% set  commentInCorrectionRequired  = false %}
+
     <div class="container">
         <div class="row">
             <form id="correct-form" method="POST" action="{% if edit == false %}#{% elseif admin == true %}{{ path('icap_dropzone_drops_detail_correction_comment', {'resourceId': dropzone.id, 'state' : edit ? 'edit' : 'show', 'correctionId': correction.id}) }}{% else %}{{ path('icap_dropzone_correct_comment', {'resourceId': dropzone.id}) }}{% endif %}" class="form-horizontal">
@@ -101,6 +101,7 @@
                 $('#correct-form button[type="submit"]').trigger('click');
             });
 
+            {% if commentInCorrectionRequired == true %}
             $('#correct-form').submit(function (e) {
                 if ($('#icap_dropzone_correct_comment_form_comment').val() == '') {
                     e.preventDefault();
@@ -113,6 +114,7 @@
                     });
                 }
             });
+            {% endif %}
         });
 
         function removeRequiredStyle() {
