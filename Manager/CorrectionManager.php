@@ -12,7 +12,6 @@ use JMS\DiExtraBundle\Annotation as DI;
 /**
  * @DI\Service("icap.manager.correction_manager")
  */
-
 class CorrectionManager
 {
     private $container;
@@ -43,7 +42,6 @@ class CorrectionManager
      */
     public function calculateCorrectionTotalGrade(Dropzone $dropzone, Correction $correction)
     {
-        $correction->setTotalGrade(null);
 
         $nbCriteria = count($dropzone->getPeerReviewCriteria());
         $maxGrade = $dropzone->getTotalCriteriaColumn() - 1;
