@@ -19,6 +19,18 @@ class ExerciseHandler
     protected $user;
     protected $action;
 
+    /**
+     * Constructor
+     *
+     * @access public
+     *
+     * @param \Symfony\Component\Form\Form $form for an exercise
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param Doctrine EntityManager $em
+     * @param \Claroline\CoreBundle\Entity\User $user
+     * @param String $action
+     *
+     */
     public function __construct(Form $form, Request $request, EntityManager $em, User $user, $action)
     {
         $this->form    = $form;
@@ -28,6 +40,13 @@ class ExerciseHandler
         $this->action  = $action;
     }
 
+    /**
+     * Verify if the form Exercise is valid and call the method to create an Exercise
+     *
+     * @access public
+     *
+     * Return boolean
+     */
     public function process()
     {
         if ($this->request->getMethod() == 'POST') {
@@ -43,6 +62,13 @@ class ExerciseHandler
         return false;
     }
 
+    /**
+     * Create an Exercise
+     *
+     * @access private
+     *
+     * @param \UJM\ExoBundle\Entity\Exercise $exercise exercise to create
+     */
     private function onSuccess(Exercise $exercise)
     {
         // \ pour instancier un objet du namespace global et non pas de l'actuel

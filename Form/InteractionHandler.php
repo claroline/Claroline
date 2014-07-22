@@ -20,6 +20,19 @@ abstract class InteractionHandler
     protected $exercise;
     protected $isClone = FALSE;
 
+    /**
+     * Constructor
+     *
+     * @access public
+     *
+     * @param \Symfony\Component\Form\Form $form for an Interaction
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param Doctrine EntityManager $em
+     * @param \UJM\ExoBundle\Services\classes\exerciseServices $exoServ
+     * @param \Claroline\CoreBundle\Entity\User $user
+     * @param integer $exercise $exercise id Exercise if the Interaction is created or modified since an exercise if since the bank $exercise=-1
+     *
+     */
     public function __construct(Form $form = NULL, Request $request = NULL, EntityManager $em, $exoServ, User $user, $exercise=-1)
     {
         $this->form     = $form;
@@ -30,12 +43,46 @@ abstract class InteractionHandler
         $this->exercise = $exercise;
     }
 
+    /**
+     * abstract method to valid the form of an Interaction and call the method to create an Interaction
+     *
+     * @access public
+     */
     abstract public function processAdd();
+
+    /**
+     * abstract method to create an Interaction
+     *
+     * @param object type of InteractionQCM or InteractionGraphic or .... $interaction
+     *
+     * @access protected
+     */
     abstract protected function onSuccessAdd($interaction);
 
+    /**
+     * abstract method to valid the form of an Interaction and call the method to edit an Interaction
+     *
+     * @access public
+     *
+     * @param object type of InteractionQCM or InteractionGraphic or .... $interaction
+     */
     abstract public function processUpdate($interaction);
+
+    /**
+     * abstract method to edit an Interaction
+     *
+     * @access protected
+     */
     abstract protected function onSuccessUpdate();
 
+    /**
+     * To persit hints of an Interaction
+     *
+     * @access protected
+     *
+     * @param object type of InteractionQCM or InteractionGraphic or .... $inter
+     *
+     */
     protected function persistHints($inter) {
         foreach ($inter->getInteraction()->getHints() as $hint) {
             $hint->setPenalty(ltrim($hint->getPenalty(), '-'));
@@ -45,6 +92,15 @@ abstract class InteractionHandler
         }
     }
 
+    /**
+     * To modify hints of an Interaction
+     *
+     * @access protected
+     *
+     * @param object type of InteractionQCM or InteractionGraphic or .... $inter
+     * @param Collection of \UJM\ExoBundle\Entity\Hint $originalHints
+     *
+     */
     protected function modifyHints($inter, $originalHints) {
 
         // filter $originalHints to contain hint no longer present
@@ -73,6 +129,14 @@ abstract class InteractionHandler
         }
     }
 
+    /**
+     * Add the Interaction in the exercise if created since an exercise
+     *
+     * @access protected
+     *
+     * @param object type of InteractionQCM or InteractionGraphic or .... $inter
+     *
+     */
     protected function addAnExericse($inter) {
         if ($this->exercise != -1) {
             $exercise = $this->em->getRepository('UJMExoBundle:Exercise')->find($this->exercise);
@@ -83,6 +147,14 @@ abstract class InteractionHandler
         }
     }
 
+    /**
+     * Duplicate the Interaction during the creation
+     *
+     * @access protected
+     *
+     * @param object type of InteractionQCM or InteractionGraphic or .... $inter
+     *
+     */
     protected function duplicateInter($inter) {
         $request = $this->request;
         if ($this->isClone === FALSE && $request->request->get('nbq') > 0)
@@ -95,6 +167,14 @@ abstract class InteractionHandler
         }
     }
 
+    /**
+     * To limit the number of the clone 10 max
+     *
+     * @access protected
+     *
+     * Return boolean
+     *
+     */
     protected function validateNbClone() {
 
         $int =  $this->request->request->get('nbq');
@@ -109,6 +189,14 @@ abstract class InteractionHandler
         }
     }
 
+    /**
+     * Duplicate once
+     *
+     * @access protected
+     *
+     * @param object type of InteractionQCM or InteractionGraphic or .... $inter
+     *
+     */
     public function singleDuplicateInter($inter) {
         $copy = clone $inter;
         $title = $copy->getInteraction()->getQuestion()->getTitle();

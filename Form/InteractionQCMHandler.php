@@ -7,6 +7,12 @@ use UJM\ExoBundle\Entity\InteractionQCM;
 class InteractionQCMHandler extends \UJM\ExoBundle\Form\InteractionHandler
 {
 
+    /**
+     * Implements the abstract method
+     *
+     * @access public
+     *
+     */
     public function processAdd()
     {
         if ( $this->request->getMethod() == 'POST' ) {
@@ -26,6 +32,13 @@ class InteractionQCMHandler extends \UJM\ExoBundle\Form\InteractionHandler
         return false;
     }
 
+    /**
+     * Implements the abstract method
+     *
+     * @access protected
+     *
+     * @param \UJM\ExoBundle\Entity\InteractionQCM $interQCM
+     */
     protected function onSuccessAdd($interQCM)
     {
 
@@ -64,6 +77,15 @@ class InteractionQCMHandler extends \UJM\ExoBundle\Form\InteractionHandler
 
     }
 
+    /**
+     * Implements the abstract method
+     *
+     * @access public
+     *
+     * @param \UJM\ExoBundle\Entity\InteractionQCM $originalInterQCM
+     *
+     * Return boolean
+     */
     public function processUpdate($originalInterQCM)
     {
         $originalChoices = array();
@@ -90,6 +112,12 @@ class InteractionQCMHandler extends \UJM\ExoBundle\Form\InteractionHandler
         return false;
     }
 
+    /**
+     * Implements the abstract method
+     *
+     * @access protected
+     *
+     */
     protected function onSuccessUpdate()
     {
         $arg_list = func_get_args();

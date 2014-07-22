@@ -9,10 +9,24 @@ class InteractionHoleHandler extends \UJM\ExoBundle\Form\InteractionHandler{
 
     protected $validator;
 
+    /**
+     * To validate wordResponse of the InteractionHole
+     *
+     * @access public
+     *
+     * @param Validator $validator
+     *
+     */
     public function setValidator($validator) {
         $this->validator = $validator;
     }
 
+    /**
+     * Implements the abstract method
+     *
+     * @access public
+     *
+     */
     public function processAdd()
     {
         if ( $this->request->getMethod() == 'POST' ) {
@@ -42,6 +56,13 @@ class InteractionHoleHandler extends \UJM\ExoBundle\Form\InteractionHandler{
         return false;
     }
 
+    /**
+     * Implements the abstract method
+     *
+     * @access protected
+     *
+     * @param \UJM\ExoBundle\Entity\InteractionHole $interHole
+     */
     protected function onSuccessAdd($interHole)
     {
         // to avoid bug with code tinymce
@@ -76,6 +97,15 @@ class InteractionHoleHandler extends \UJM\ExoBundle\Form\InteractionHandler{
         $this->duplicateInter($interHole);
     }
 
+    /**
+     * Implements the abstract method
+     *
+     * @access public
+     *
+     * @param \UJM\ExoBundle\Entity\InteractionHole $originalInterHole
+     *
+     * Return boolean
+     */
     public function processUpdate($originalInterHole)
     {
         $originalHoles = array();
@@ -111,6 +141,12 @@ class InteractionHoleHandler extends \UJM\ExoBundle\Form\InteractionHandler{
         return false;
     }
 
+    /**
+     * Implements the abstract method
+     *
+     * @access protected
+     *
+     */
     protected function onSuccessUpdate()
     {
         $arg_list = func_get_args();
@@ -166,6 +202,15 @@ class InteractionHoleHandler extends \UJM\ExoBundle\Form\InteractionHandler{
         $this->htmlWithoutValue($interHole);
     }
 
+    /**
+     * To delete keywords during the update of interactionHole
+     *
+     * @access private
+     *
+     * @param \UJM\ExoBundle\Entity\Hole $hole
+     * @param Collection of \UJM\ExoBundle\Entity\Hole $originalHoles
+     *
+     */
     private function delKeyWord($hole, $originalHoles)
     {
         $wordResponses = $hole->getWordResponses()->toArray();
@@ -200,6 +245,14 @@ class InteractionHoleHandler extends \UJM\ExoBundle\Form\InteractionHandler{
         }
     }
 
+    /**
+     * To generate the html (text with hole) without value
+     *
+     * @access private
+     *
+     * @param \UJM\ExoBundle\Entity\InteractionHole $interHole
+     *
+     */
     private function htmlWithoutValue($interHole)
     {
         //id hole in html = $hole->getPosition()

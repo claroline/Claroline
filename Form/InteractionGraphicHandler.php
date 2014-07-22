@@ -8,6 +8,13 @@ use UJM\ExoBundle\Entity\Coords;
 class InteractionGraphicHandler extends \UJM\ExoBundle\Form\InteractionHandler
 {
 
+    /**
+     * Implements the abstract method
+     *
+     * @access public
+     *
+     * Return boolean
+     */
     public function processAdd()
     {
         if ($this->request->getMethod() == 'POST') {
@@ -27,6 +34,13 @@ class InteractionGraphicHandler extends \UJM\ExoBundle\Form\InteractionHandler
         return false;
     }
 
+    /**
+     * Implements the abstract method
+     *
+     * @access protected
+     *
+     * @param \UJM\ExoBundle\Entity\InteractionGraphic $interGraph
+     */
     protected function onSuccessAdd($interGraph)
     {
         $interGraph->getInteraction()->getQuestion()->setDateCreate(new \Datetime()); // Set Creation Date to today
@@ -72,6 +86,15 @@ class InteractionGraphicHandler extends \UJM\ExoBundle\Form\InteractionHandler
         $this->duplicateInter($interGraph);
     }
 
+    /**
+     * Implements the abstract method
+     *
+     * @access public
+     *
+     * @param \UJM\ExoBundle\Entity\InteractionGraphic $interGraph
+     *
+     * Return boolean
+     */
     public function processUpdate($originalInterGraphic)
     {
         $originalHints = array();
@@ -93,6 +116,12 @@ class InteractionGraphicHandler extends \UJM\ExoBundle\Form\InteractionHandler
         return false;
     }
 
+    /**
+     * Implements the abstract method
+     *
+     * @access protected
+     *
+     */
     protected function onSuccessUpdate()
     {
         $arg_list = func_get_args();
@@ -130,9 +159,16 @@ class InteractionGraphicHandler extends \UJM\ExoBundle\Form\InteractionHandler
 
     }
 
-        /**
+    /**
      * Persist coordonates of the answer zones into the database.
      *
+     * @access private
+     *
+     * @param array $coord coords of good responses
+     * @param \UJM\ExoBundle\Entity\InteractionGraphic $interGraph
+     * @param integer $lengthCoord number of good coords
+     *
+     * @return array
      */
     private function persitNewCoords($coord, $interGraph, $lengthCoord)
     {
@@ -174,9 +210,14 @@ class InteractionGraphicHandler extends \UJM\ExoBundle\Form\InteractionHandler
         return $result;
     }
 
-        /**
+    /**
      * Get the shape of the answer zone
      *
+     * @access private
+     *
+     * @param String route of response zone
+     *
+     * @return String shape of response zone
      */
     private function getShape($url)
     {
@@ -194,6 +235,11 @@ class InteractionGraphicHandler extends \UJM\ExoBundle\Form\InteractionHandler
     /**
      * Get the color of the answer zone
      *
+     * @access private
+     *
+     * @param String route of response zone
+     *
+     * @return String color of response zone
      */
     private function getColor($url)
     {

@@ -7,6 +7,12 @@ use UJM\ExoBundle\Entity\InteractionOpen;
 class InteractionOpenHandler extends \UJM\ExoBundle\Form\InteractionHandler
 {
 
+     /**
+     * Implements the abstract method
+     *
+     * @access public
+     *
+     */
     public function processAdd()
     {
         if ( $this->request->getMethod() == 'POST' ) {
@@ -26,6 +32,13 @@ class InteractionOpenHandler extends \UJM\ExoBundle\Form\InteractionHandler
         return false;
     }
 
+    /**
+     * Implements the abstract method
+     *
+     * @access protected
+     *
+     * @param \UJM\ExoBundle\Entity\InteractionOpen $interOpen
+     */
     protected function onSuccessAdd($interOpen)
     {
         $interOpen->getInteraction()->getQuestion()->setDateCreate(new \Datetime());
@@ -46,6 +59,15 @@ class InteractionOpenHandler extends \UJM\ExoBundle\Form\InteractionHandler
 
     }
 
+    /**
+     * Implements the abstract method
+     *
+     * @access public
+     *
+     * @param \UJM\ExoBundle\Entity\InteractionOpen $originalInterOpen
+     *
+     * Return boolean
+     */
     public function processUpdate($originalInterOpen)
     {
         $originalHints = array();
@@ -67,6 +89,12 @@ class InteractionOpenHandler extends \UJM\ExoBundle\Form\InteractionHandler
         return false;
     }
 
+    /**
+     * Implements the abstract method
+     *
+     * @access protected
+     *
+     */
     protected function onSuccessUpdate()
     {
         $arg_list = func_get_args();
