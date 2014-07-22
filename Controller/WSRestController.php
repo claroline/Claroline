@@ -19,8 +19,16 @@ class WSRestController extends Controller
 {
 
     /**
-     * To add a document with the plugin advimage with tinyMCEBundle
+     * To add a document
      *
+     * @access public
+     *
+     * @param boolean $redirection Add document on create/edit graphic question or Add document on manage documents
+     * @param integer $pageToGo for the pagination
+     * @param integer $maxPage for the pagination
+     * @param integer $nbItem for the pagination
+     * 
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function postDocumentAddAction($redirection, $pageToGo, $maxPage, $nbItem)
     {
@@ -123,6 +131,13 @@ class WSRestController extends Controller
         }
     }
 
+    /**
+     * to control if the document's name already exist
+     *
+     * @access public
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function nameAlreadyExistAction()
     {
         $request = $this->container->get('request');

@@ -934,11 +934,7 @@ class QuestionController extends Controller
      *
      * @access public
      *
-     * @param string $label label of document
-     * @param integer $pageNow actual page for the pagination
-     * @param integer $maxpage number max questions per page
-     * @param integer $nbItem number of question
-     * @param integer $lastPage number of last page
+     * @param integer $idDoc id Document 
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
