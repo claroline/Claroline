@@ -60,7 +60,7 @@ class DependencyManager {
      *      "cacheDir"        = @DI\Inject("%claroline.cache_dir%"),
      *      "env"             = @DI\Inject("%kernel.environment%"),
      *      "updater"         = @DI\Inject("claroline.command.update_command"),
-     *      "rootDir"         = @DI\Inject("%kernel.root_dir%")
+     *      "rootDir"         = @DI\Inject("%kernel.root_dir%"),
      *      "om"              = @DI\Inject("claroline.persistence.object_manager")
      * })
      */
@@ -72,7 +72,7 @@ class DependencyManager {
         $cacheDir,
         $env,
         PlatformUpdateCommand $updater,
-        $rootDir
+        $rootDir,
         ObjectManager $om
     )
     {
