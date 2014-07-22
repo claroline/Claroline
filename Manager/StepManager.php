@@ -15,7 +15,7 @@ use Symfony\Component\Security\Core\SecurityContextInterface;
 class StepManager
 {
     /**
-     * 
+     *
      * @var \Doctrine\Common\Persistence\ObjectManager $om
      */
     protected $om;
@@ -47,7 +47,7 @@ class StepManager
         $this->security        = $security;
         $this->resourceManager = $resourceManager;
     }
-    
+
     /**
      * Create a new step from JSON structure
      * @param  \Innova\PathBundle\Entity\Path\Path $path          Parent path of the step
@@ -60,10 +60,10 @@ class StepManager
     public function create(Path $path, $level = 0, Step $parent = null, $order = 0, \stdClass $stepStructure)
     {
         $step = new Step();
-        
+
         return $this->edit($path, $level, $parent, $order, $stepStructure, $step);
     }
-    
+
     /**
      * Update an existing step from JSON structure
      * @param  \Innova\PathBundle\Entity\Path\Path $path          Parent path of the step
@@ -84,11 +84,11 @@ class StepManager
 
         $this->updateParameters($step, $stepStructure);
         $this->updateActivity($step, $stepStructure);
-        
+
         // Save modifications
         $this->om->persist($step);
         $this->om->flush();
-        
+
         return $step;
     }
 
@@ -129,7 +129,7 @@ class StepManager
         $activity->setName($name);
         $activity->setTitle($name);
 
-        $description = !empty($stepStructure->description) ? $stepStructure->description : null;
+        $description = $stepStructure->description ?: ' ';
         $activity->setDescription($description);
 
         // Link resource if needed
@@ -251,7 +251,7 @@ class StepManager
 
         $json = json_encode($json);
         $path->setStructure($json);
-       
+
         $this->om->persist($path);
         $this->om->persist($step);
         $this->om->flush();

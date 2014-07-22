@@ -29,7 +29,7 @@ class PathManager
      * @var \Claroline\CoreBundle\Manager\ResourceManager
      */
     protected $resourceManager;
-    
+
     /**
      * Current security context
      * @var \Symfony\Component\Security\Core\SecurityContextInterface $security
@@ -55,15 +55,22 @@ class PathManager
         $this->utils           = $utils;
     }
 
-    public function checkAccess($actionName, Path $path)
+    public function checkAccess($actionName, Path $path, Workspace $workspace = null)
     {
-        if (false === $this->isAllow($actionName, $path)) {
+        if (false === $this->isAllow($actionName, $path, $workspace)) {
             throw new AccessDeniedException();
         }
     }
 
-    public function isAllow($actionName, Path $path)
+    public function isAllow($actionName, Path $path, Workspace $workspace = null)
     {
+        if ($workspace && $actionName === 'CREATE') {
+            $toolRepo = $this->om->getRepository('ClarolineCoreBundle:Role');
+            $managerRole = $toolRepo->findManagerRole($workspace);
+
+            return $this->security->isGranted($managerRole->getName());
+        }
+
         $collection = new ResourceCollection(array ($path->getResourceNode()));
 
         return $this->security->isGranted($actionName, $collection);
@@ -77,7 +84,7 @@ class PathManager
     {
         return $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneByName('innova_path');
     }
-    
+
     /**
      * Get a workspace from id
      * @param  integer $workspaceId
@@ -118,7 +125,7 @@ class PathManager
 
         return $paths;
     }
-    
+
     /**
      * Create a new path
      * @param  \Innova\PathBundle\Entity\Path\Path $path
@@ -133,7 +140,7 @@ class PathManager
             // Initialize path structure
             $path->initializeStructure();
         }
-        
+
         // Persist Path
         $this->om->persist($path);
         $this->om->flush();
@@ -141,10 +148,10 @@ class PathManager
         // Create a new resource node
         $parent = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findWorkspaceRoot($workspace);
         $path = $this->resourceManager->create($path, $this->getResourceType(), $this->security->getToken()->getUser(), $workspace, $parent, null);
-        
+
         return $path;
     }
-    
+
     /**
      * Edit existing path
      * @param  \Innova\PathBundle\Entity\Path\Path $path
@@ -162,7 +169,7 @@ class PathManager
         // Set path as modified (= need publishing to be able to play path with new modifs)
         $path->setModified(true);
         $this->om->persist($path);
-        
+
         // Update resource node if needed
         $resourceNode = $path->getResourceNode();
         if ($path->getName() !== $resourceNode->getName()) {
@@ -170,12 +177,12 @@ class PathManager
             $resourceNode->setName($path->getName());
             $this->om->persist($resourceNode);
         }
-        
+
         $this->om->flush();
-        
+
         return $path;
     }
-    
+
     /**
      * Delete path
      * @param  \Innova\PathBundle\Entity\Path\Path $path
@@ -187,7 +194,7 @@ class PathManager
         // User can delete current path
         $this->om->remove($path->getResourceNode());
         $this->om->flush();
-        
+
         return $this;
     }
 }
