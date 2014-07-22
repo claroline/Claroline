@@ -14,14 +14,14 @@ namespace Claroline\CoreBundle\Manager;
 use Claroline\CoreBundle\Library\Composer\FileIO;
 use Claroline\CoreBundle\Library\Maintenance\MaintenanceHandler;
 use Claroline\CoreBundle\Command\PlatformUpdateCommand;
-use Composer\Composer;
+use Claroline\CoreBundle\Persistence\ObjectManager;
+use Composer\Package\CompletePackage;
 use JMS\DiExtraBundle\Annotation as DI;
 use Composer\Package\CompletePackageInterface;
 use Composer\IO\NullIO;
 use Composer\Config;
 use Composer\Installer;
 use Composer\Factory;
-use Composer\Util\RemoteFilesystem;
 use Composer\Repository\InstalledFilesystemRepository;
 use Composer\Repository\CompositeRepository;
 use Composer\Json\JsonFile;
@@ -44,6 +44,7 @@ class DependencyManager {
     private $cacheDir;
     private $env;
     private $updater;
+    private $om;
     private $projectComposerJson;
     private $rootDir;
 
@@ -60,6 +61,7 @@ class DependencyManager {
      *      "env"             = @DI\Inject("%kernel.environment%"),
      *      "updater"         = @DI\Inject("claroline.command.update_command"),
      *      "rootDir"         = @DI\Inject("%kernel.root_dir%")
+     *      "om"              = @DI\Inject("claroline.persistence.object_manager")
      * })
      */
     public function __construct(
@@ -71,6 +73,7 @@ class DependencyManager {
         $env,
         PlatformUpdateCommand $updater,
         $rootDir
+        ObjectManager $om
     )
     {
         $this->vendorDir = $vendorDir;
@@ -87,6 +90,7 @@ class DependencyManager {
         $this->env = $env;
         $this->updater = $updater;
         $this->rootDir = $rootDir;
+        $this->om = $om;
     }
 
     /**
@@ -111,7 +115,6 @@ class DependencyManager {
         $packages = [];
 
         foreach ($this->getAllInstalled() as $package) {
-
             if ($package->getType() === $type) {
                 $packages[] = $package;
             }
@@ -168,6 +171,67 @@ class DependencyManager {
             $this->getInstalledByType(self::CLAROLINE_CORE_TYPE),
             $this->getInstalledByType(self::CLAROLINE_PLUGIN_TYPE)
         );
+    }
+
+    /**
+     * Returns the list of installed plugin packages, with extra information
+     * relative to their options. Local packages (i.e. not manager by composer)
+     * are also included in the list.
+     *
+     * @return CompletePackageInterface[]
+     */
+    public function getPluginList()
+    {
+        $repoPackages = $this->getInstalledByType(self::CLAROLINE_PLUGIN_TYPE);
+        $registeredPlugins = $this->om->getRepository('ClarolineCoreBundle:Plugin')->findAll();
+        $packages = [];
+
+        foreach ($registeredPlugins as $plugin) {
+            $targetPackage = null;
+            $isInRepo = true;
+
+            // looks for the corresponding package
+            foreach ($repoPackages as $package) {
+                $packageParts = explode('/', $package->getName());
+                $bundleParts = explode('-', $packageParts[1]);
+                $vendorName = $packageParts[0];
+                $bundleName = '';
+
+                foreach ($bundleParts as $part) {
+                    $bundleName .= $part;
+                }
+
+                if (strtoupper($plugin->getVendorName()) === strtoupper($vendorName)
+                    && strtoupper($plugin->getBundleName()) === strtoupper($bundleName)) {
+                    $targetPackage = $package;
+                    break;
+                }
+            }
+
+            // builds a "fake" package if the plugin is not managed by composer
+            if (!$targetPackage) {
+                $isInRepo = false;
+                $vendorName = strtolower($plugin->getVendorName());
+                $bundleParts = preg_split('/(?=[A-Z])/', $plugin->getBundleName());
+                array_shift($bundleParts);
+                $bundleName = strtolower(implode('-', $bundleParts));
+                $targetPackage = new CompletePackage(
+                    "{$vendorName}/{$bundleName}",
+                    '9999999-dev',
+                    'unknown / local'
+                );
+            }
+
+            // adds plugin options info in the "extra" attribute
+            $extra = $targetPackage->getExtra();
+            $extra['is_in_repo'] = $isInRepo;
+            $extra['has_options'] = $plugin->hasOptions();
+            $extra['plugin_short_name'] = $plugin->getShortName();
+            $targetPackage->setExtra($extra);
+            $packages[] = $targetPackage;
+        }
+
+        return $packages;
     }
 
     /**
@@ -317,16 +381,16 @@ class DependencyManager {
         $continue = true;
 
         try {
-//            $install->setDryRun(false)
-//                ->setVerbose(true)
-//                ->setPreferSource(false)
-//                ->setPreferDist(true)
-//                ->setDevMode(false)
-//                ->setRunScripts(true)
-//                ->setOptimizeAutoloader(true)
-//                ->setUpdate(true);
-//
-//            $install->run();
+            $install->setDryRun($this->env === 'dev')
+                ->setVerbose($this->env === 'dev')
+                ->setPreferSource($this->env === 'dev')
+                ->setPreferDist($this->env !== 'dev')
+                ->setDevMode($this->env === 'dev')
+                ->setRunScripts(true)
+                ->setOptimizeAutoloader(true)
+                ->setUpdate(true);
+
+            $install->run();
         } catch (\Exception $e) {
             file_put_contents($this->composerLogFile, "[Claroline updater Exception]: {$e->getMessage()}\n", FILE_APPEND);
             $continue = false;

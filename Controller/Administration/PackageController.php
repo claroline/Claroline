@@ -74,7 +74,7 @@ class PackageController extends Controller
     {
         $this->checkOpen();
         $corePackages = $this->dm->getInstalledByType(DependencyManager::CLAROLINE_CORE_TYPE);
-        $pluginPackages = $this->dm->getInstalledByType(DependencyManager::CLAROLINE_PLUGIN_TYPE);
+        $pluginPackages = $this->dm->getPluginList();
         $upgradablePackages = $this->dm->getUpgradeablePackages();
         $ds = DIRECTORY_SEPARATOR;
 
@@ -114,7 +114,8 @@ class PackageController extends Controller
      *     name="claro_admin_update_packages",
      *     options={"expose"=true}
      * )
-     * @param $package
+     * @param $ref
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
     public function updatePackageAction($ref)
     {
@@ -159,6 +160,21 @@ class PackageController extends Controller
         $this->dm->removeUpdateLog();
 
         return new JsonResponse();
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/plugin/parameters/{pluginShortName}",
+     *     name="claro_admin_plugin_parameters"
+     * )
+     */
+    public function pluginParametersAction($pluginShortName)
+    {
+        $this->checkOpen();
+        $eventName = "plugin_options_{$pluginShortName}";
+        $event = $this->eventDispatcher->dispatch($eventName, 'PluginOptions', array());
+
+        return $event->getResponse();
     }
 
     private function checkOpen()
