@@ -561,7 +561,12 @@ class ScormController extends Controller
 
             // Computes total time
             $totalTime = new \DateInterval($scoTracking->getTotalTime());
-            $sessionTime = new \DateInterval($dataSessionTime);
+
+            try {
+                $sessionTime = new \DateInterval($dataSessionTime);
+            } catch (\Exception $e) {
+                 $sessionTime = new \DateInterval('PT0S');
+            }
             $computedTime = new \DateTime();
             $computedTime->setTimestamp(0);
             $computedTime->add($totalTime);
