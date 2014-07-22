@@ -73,7 +73,7 @@ class PackageController extends Controller
     {
         $this->checkOpen();
         $corePackages = $this->dm->getInstalledByType(DependencyManager::CLAROLINE_CORE_TYPE);
-        $pluginPackages = $this->dm->getInstalledByType(DependencyManager::CLAROLINE_PLUGIN_TYPE);
+        $pluginPackages = $this->dm->getPluginList();
         $upgradablePackages = $this->dm->getUpgradeablePackages();
 
         //the current ip must be whitelisted so it can access the upgrade.html.php script
@@ -112,7 +112,8 @@ class PackageController extends Controller
      *     name="claro_admin_update_packages",
      *     options={"expose"=true}
      * )
-     * @param $package
+     * @param $ref
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
     public function updatePackageAction($ref)
     {
@@ -142,6 +143,21 @@ class PackageController extends Controller
         $res = $this->dm->upgrade();
 
         return new JsonResponse();
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/plugin/parameters/{pluginShortName}",
+     *     name="claro_admin_plugin_parameters"
+     * )
+     */
+    public function pluginParametersAction($pluginShortName)
+    {
+        $this->checkOpen();
+        $eventName = "plugin_options_{$pluginShortName}";
+        $event = $this->eventDispatcher->dispatch($eventName, 'PluginOptions', array());
+
+        return $event->getResponse();
     }
 
     private function checkOpen()

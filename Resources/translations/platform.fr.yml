@@ -816,6 +816,7 @@ unregistered_groups: 'Groupes non enregistrés'
 unregistered_users: 'Utilisateurs non enregistrés'
 unwritable_file_exception: 'Vous n''avez pas la permission d''écrire dans le fichier %path%.'
 up: Monter
+update_available: Mise à jour disponible
 upload: Téléchargement
 upload_denied: 'Vous n''avez pas la permission de créer une ressource à cet endroit'
 upload_fail: 'Echec du téléchargement'
@@ -950,7 +951,7 @@ no: Non
 actualize: Actualiser
 upgrade: Mettre à jour
 packages_upgrade_info_message: Attention, ceci est la page de gestion de mises à jour.
-package_upgrade_all_warning: Attention, ceci mettra à jour tous les paquets de la plateforme. Cette opération ne peut-être annulée. Il est conseillé d'effectuer une sauvegarde des fichiers ainsi que de la base de données avant d'effectuer cette opération.
+package_upgrade_all_warning: Attention, ceci mettra à jour tous les paquets de la plateforme. Cette opération ne peut être annulée. Il est conseillé d'effectuer une sauvegarde des fichiers ainsi que de la base de données avant d'effectuer cette opération.
 profile_management: Gestion du profil
 visible_facet_form_explanation: Le champ "Visible" permet de spécifier si l'élément doit être visible ou non par l'utilisateur.
 editable_facet_form_explanation: Le champ "Modifiable" permet de spécifier si l'élément doit être modifiable ou non par l'utilisateur.

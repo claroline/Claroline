@@ -811,6 +811,7 @@ unregistered_groups: 'Unregistered groups'
 unregistered_users: 'Unregistered users'
 unwritable_file_exception: 'The file %path% is not writable.'
 up: Up
+update_available: Update available
 upload: upload
 upload_denied: 'Permission denied'
 upload_fail: 'Upload failed'
