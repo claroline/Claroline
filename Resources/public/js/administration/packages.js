@@ -94,8 +94,10 @@
             Translator.get('platform:upgrade'),
             '<div class="alert alert-warning">' + Translator.get('platform:package_upgrade_all_warning') + '</div>'
         ).on('click', 'button.btn', function(event) {
+            var upgradeRoute = btn.attr('href');
+            $.ajax({url: Routing.generate('claro_admin_packages_log_remove'), 'async': false});
             $.ajax({url: btn.attr('href')});
-            window.location = btn.attr('data-upgrade-page');
+            window.location = btn.attr('data-upgrade-page') + '?_locale=' + Translator.locale || Translator.fallback;
         });
     });
 })();

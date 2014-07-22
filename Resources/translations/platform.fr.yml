@@ -970,3 +970,8 @@ error: Erreur
 last_manager_error_message: Vous ne pouvez pas retirer tout les gestionnaires.
 remove_workspace_role_warning: Êtes-vous sûr de vouloir supprimer ce rôle ? Si ce rôle est associé à des utilisateurs, ces utilisateurs perdront leurs droits d'accès fournit par ce rôle.
 edit_rights_success: Modification des droits effecetuée avec succès.
+maintenance: Maintenance
+start_maintenance: Lancer le mode maintenance
+end_maintenance: Terminer le mode maintenance
+maintenance_mode_enabled: Le mode maintenance est activé
+maintenance_mode_message: L'accès à la plateforme est désactivé pour les utilisateurs. Vous pouvez le réactiver dans la section maintenance des paramètres de l'administration.

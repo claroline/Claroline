@@ -45,6 +45,7 @@ class DependencyManager {
     private $env;
     private $updater;
     private $projectComposerJson;
+    private $rootDir;
 
     const CLAROLINE_CORE_TYPE = 'claroline-core';
     const CLAROLINE_PLUGIN_TYPE = 'claroline-plugin';
@@ -57,7 +58,8 @@ class DependencyManager {
      *      "iniFileManager"  = @DI\Inject("claroline.manager.ini_file_manager"),
      *      "cacheDir"        = @DI\Inject("%claroline.cache_dir%"),
      *      "env"             = @DI\Inject("%kernel.environment%"),
-     *      "updater"         = @DI\Inject("claroline.command.update_command")
+     *      "updater"         = @DI\Inject("claroline.command.update_command"),
+     *      "rootDir"         = @DI\Inject("%kernel.root_dir%")
      * })
      */
     public function __construct(
@@ -67,7 +69,8 @@ class DependencyManager {
         $composerLogFile,
         $cacheDir,
         $env,
-        PlatformUpdateCommand $updater
+        PlatformUpdateCommand $updater,
+        $rootDir
     )
     {
         $this->vendorDir = $vendorDir;
@@ -83,6 +86,7 @@ class DependencyManager {
         $this->cacheDir = $cacheDir;
         $this->env = $env;
         $this->updater = $updater;
+        $this->rootDir = $rootDir;
     }
 
     /**
@@ -296,48 +300,57 @@ class DependencyManager {
      */
     public function upgrade()
     {
-        unlink($this->composerLogFile);
+        $this->removeUpdateLog();
         MaintenanceHandler::enableMaintenance();
 
+        ini_set('max_execution_time', 1800);
+        ini_set('memory_limit', '512M');
         //get the list of upgradable packages from the cache
         $pkgList = $this->getUpgradableFromCache();
         $this->updateRequirements('>=', $pkgList);
-
         $ds = DIRECTORY_SEPARATOR;
         $factory = new Factory();
         $io = new FileIO($this->composerLogFile);
         putenv("COMPOSER_HOME={$this->vendorDir}{$ds}composer");
         $composer = $factory->createComposer($io, "{$this->vendorDir}{$ds}..{$ds}composer.json", false);
         $install = Installer::create($io, $composer);
-        $dryRun = $this->env === 'dev' ? true: false;
-        $preferSource = $this->env === 'dev' ? true: false;
-        $preferDist = $this->env === 'dev' ? false: true;
-        $devMode = $this->env === 'dev' ? true: false;
+        $continue = true;
 
         try {
-            $install->setDryRun($dryRun)
-                ->setVerbose(true)
-                ->setPreferSource($preferSource)
-                ->setPreferDist($preferDist)
-                ->setDevMode($devMode)
-                ->setRunScripts(true)
-                ->setOptimizeAutoloader(true)
-                ->setUpdate(true);
-
-            $install->run();
+//            $install->setDryRun(false)
+//                ->setVerbose(true)
+//                ->setPreferSource(false)
+//                ->setPreferDist(true)
+//                ->setDevMode(false)
+//                ->setRunScripts(true)
+//                ->setOptimizeAutoloader(true)
+//                ->setUpdate(true);
+//
+//            $install->run();
         } catch (\Exception $e) {
-            file_put_contents($this->composerLogFile, "Composer Exception : {$e->getMessage()}\n", FILE_APPEND);
+            file_put_contents($this->composerLogFile, "[Claroline updater Exception]: {$e->getMessage()}\n", FILE_APPEND);
+            $continue = false;
         }
 
-        try {
-            $this->updater->run(new ArgvInput(array()), new StreamOutput(fopen($this->composerLogFile, 'a')));
-        } catch (\Exception $e) {
-            file_put_contents($this->composerLogFile, "Runtime Exception : {$e->getMessage()}\n", FILE_APPEND);
-        }
+        if ($continue) {
+            try {
+                $this->updater->run(new ArgvInput(array()), new StreamOutput(fopen($this->composerLogFile, 'a')));
+            } catch (\Exception $e) {
+                file_put_contents($this->composerLogFile, "[Claroline updater Exception]: {$e->getMessage()}\n", FILE_APPEND);
+                $continue = false;
+            }
 
-        //remove the old cache file
-        $this->iniFileManager->remove($this->lastTagsFile);
-        file_put_contents($this->composerLogFile, "\nDone.", FILE_APPEND);
+            if ($continue) {
+                //remove the old cache file
+                $this->iniFileManager->remove($this->lastTagsFile);
+                file_put_contents($this->composerLogFile, "\nDone.", FILE_APPEND);
+            }
+        }
+    }
+
+    public function removeUpdateLog()
+    {
+        @unlink($this->composerLogFile);
     }
 
     /**
@@ -361,7 +374,8 @@ class DependencyManager {
             }
         };
 
-        file_put_contents($this->projectComposerJson . '.old', json_encode($data, JSON_PRETTY_PRINT));
+        $ds = DIRECTORY_SEPARATOR;
+        file_put_contents($this->rootDir . "{$ds}config{$ds}composer.json.old", json_encode($data, JSON_PRETTY_PRINT));
         file_put_contents($this->projectComposerJson, json_encode($new, JSON_PRETTY_PRINT));
     }
 

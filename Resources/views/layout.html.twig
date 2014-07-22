@@ -73,6 +73,21 @@
         <div class="please-wait">
             <h4><span class="label label-warning"> {{ 'please_wait'|trans({}, 'platform') }} </span></h4>
         </div>
+        {% if is_maintenance_enabled() %}
+            <div class="alert-update-mode">
+                <h4 class="label label-danger">
+                    {{ 'maintenance_mode_enabled'|trans({}, 'platform') }}
+                    <i
+                            class="fa fa-question-circle pointer-hand maintenance-popover"
+                            data-container=".alert-update-mode"
+                            data-toggle="popover"
+                            data-placement="bottom"
+                            data-content="{{ 'maintenance_mode_message'|trans({}, 'platform') }}"
+                            >
+                    </i>
+                </h4>
+            </div>
+        {% endif %}
         <div class="hidden-xs">
             <div class="hide">
                 <div id="left-bar" class="sidebar">
@@ -252,27 +267,30 @@
         });
     </script>
     {% if is_facebook_available() %}
-    <script>
-        (function(d, s, id){
-            var js, fjs = d.getElementsByTagName(s)[0];
-            if (d.getElementById(id)) {return;}
-            js = d.createElement(s); js.id = id;
-            js.src = "//connect.facebook.net/fr_FR/all.js";
-            fjs.parentNode.insertBefore(js, fjs);
-        }(document, 'script', 'facebook-jssdk'));
-        window.fbAsyncInit = function() {
-            // init the FB JS SDK
-            FB.init({
-                appId      : '{{ get_facebook_app_id() }}',        // App ID from the app dashboard
-                status     : true,                                 // Check Facebook Login status
-                xfbml      : true,
-                cookie     : true
-            });
-            $('.facebook-connect').removeClass('hide');
-            $('#btn-logout').on('click', function() {
-                FB.logout(function(respose){});
-            })
-        };
-    </script>
+        <script>
+            (function(d, s, id){
+                var js, fjs = d.getElementsByTagName(s)[0];
+                if (d.getElementById(id)) {return;}
+                js = d.createElement(s); js.id = id;
+                js.src = "//connect.facebook.net/fr_FR/all.js";
+                fjs.parentNode.insertBefore(js, fjs);
+            }(document, 'script', 'facebook-jssdk'));
+            window.fbAsyncInit = function() {
+                // init the FB JS SDK
+                FB.init({
+                    appId      : '{{ get_facebook_app_id() }}',        // App ID from the app dashboard
+                    status     : true,                                 // Check Facebook Login status
+                    xfbml      : true,
+                    cookie     : true
+                });
+                $('.facebook-connect').removeClass('hide');
+                $('#btn-logout').on('click', function() {
+                    FB.logout(function(respose){});
+                })
+            };
+        </script>
     {% endif %}
+    <script type="text/javascript">
+        $('.maintenance-popover').popover();
+    </script>
 {% endblock %}

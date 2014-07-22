@@ -27,6 +27,11 @@ class MaintenanceHandler
         }
     }
 
+    public static function isMaintenanceEnabled()
+    {
+        return file_exists(self::getFlagPath());
+    }
+
     private static function getFlagPath()
     {
         return __DIR__ . '/../../../../../../../app/config/.update';

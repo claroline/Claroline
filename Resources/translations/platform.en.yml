@@ -963,3 +963,8 @@ error: Error
 last_manager_error_message: You can't remove every manager.
 remove_workspace_role_warning: Do you really want to remove this role ? If the role is still associated to users, these users will lose their permissions granted by this role.
 edit_rights_success: Rights were successfully changed.
+maintenance: Maintenance
+start_maintenance: Start maintenance mode
+end_maintenance: End maintenance mode
+maintenance_mode_enabled: Maintenance mode is activated
+maintenance_mode_message: The platform access is disabled. You can activate it in the maintenance section of administration parameters.
