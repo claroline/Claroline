@@ -6,7 +6,7 @@
         {{
             macros.breadcrumbs([
                 {
-                    'icon': 'icon-briefcase',
+                    'icon': 'fa fa-briefcase',
                     'name': 'desktop'|trans({}, 'platform'),
                     'href': path('claro_desktop_open')
                 },
@@ -36,23 +36,23 @@
     </div>
     <div class="panel-body">
         <a class="btn btn-primary" href="{{ path('ujm_question_new') }}">
-            <i class="icon-plus"></i> {{ 'create a new entry' | trans }}
+            <i class="fa fa-plus"></i> {{ 'create a new entry' | trans }}
         </a>
         <a class="btn btn-primary" href="{{ path('ujm_question_manage_doc') }}">
-            <i class="icon-file"></i> {{ 'manageImg' | trans }}
+            <i class="fa fa-file"></i> {{ 'manageImg' | trans }}
         </a>
         <a class="btn btn-primary" href="{{ path('ujm_question_search_question') }}">
-            <i class="icon-question"></i> {{ 'searchQuestion' | trans }}
+            <i class="fa fa-question"></i> {{ 'searchQuestion' | trans }}
         </a>
 
         {% if QuestionsExo == 'false' %}
             {% if (pagerMy.getNbResults > pagerMy.maxPerPage or pagerShared.getNbResults > pagerShared.maxPerPage) and displayAll == 0 %}
                 <a class="btn btn-primary" href="{{ path('ujm_question_index', { 'displayAll': 1 }) }} ">
-                    <i class="icon-plus-sign"></i> {{ 'display all on this page' | trans }}
+                    <i class="fa fa-plus-circle"></i> {{ 'display all on this page' | trans }}
                 </a>
             {% elseif displayAll == 1 %}
                 <a class="btn btn-primary" href="{{ path('ujm_question_index') }}">
-                    <i class="icon-minus-sign"></i> {{ 'display pagination' | trans }}
+                    <i class="fa fa-minus-circle"></i> {{ 'display pagination' | trans }}
                 </a>
             {% endif %}
         {% endif %}
@@ -76,10 +76,10 @@
                 <span class="input-group-btn">
                     <button class="btn btn-default" type="button" id="SubmitBriefSearch"
                         onClick="briefSearchSubmit();">
-                    <i class="icon-search"></i></button>
+                    <i class="fa fa-search"></i></button>
                     <a class="btn btn-default" data-toggle="tooltip" title="Recherche par type"
                        accesskey=""href="#" onclick="showInfos();event.preventDefault();">
-                        <i class="icon-question"></i>
+                        <i class="fa fa-question"></i>
                     </a>
                 </span>
             </div>

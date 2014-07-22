@@ -18,11 +18,11 @@
 
         {% if exoID == -1 %}
             <a href="{{ path('ujm_question_index') }}" class="btn btn-primary">
-                <i class="icon-arrow-left"></i> {{ 'back' | trans }}
+                <i class="fa fa-arrow-left"></i> {{ 'back' | trans }}
             </a>
         {% else %}
             <a class="btn btn-primary" href="{{ path('ujm_exercise_import_question', { 'exoID':  exoID }) }}">
-                <i class="icon-arrow-left"></i> {{ 'back' | trans }}
+                <i class="fa fa-arrow-left"></i> {{ 'back' | trans }}
             </a>
         {% endif %}
     </div>
@@ -75,7 +75,7 @@
                             <span class="input-group-btn">
                                 <button class="btn btn-default" type="button" id="SubmitSearchQuestion"
                                     onClick="searchQuestion('{{ path('ujm_question_searchQuestion') }}', 1, {{ exoID}});">
-                                <i class="icon-search"></i></button>
+                                <i class="fa fa-search"></i></button>
                             </span>
                         </div>
                     </div>

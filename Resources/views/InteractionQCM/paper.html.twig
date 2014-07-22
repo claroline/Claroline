@@ -6,7 +6,7 @@
         {{
             macros.breadcrumbs([
                 {
-                    'icon': 'icon-briefcase',
+                    'icon': 'fa fa-briefcase',
                     'name': 'desktop'|trans({}, 'platform'),
                     'href': path('claro_desktop_open')
                 },
@@ -45,11 +45,11 @@
     <div class="panel-body">
         {% if exoID == -1 %}
             <a class="btn btn-primary" href="{{ path('ujm_question_index') }}">
-                <i class="icon-arrow-left"></i> {{ 'back' | trans }}
+                <i class="fa fa-arrow-left"></i> {{ 'back' | trans }}
             </a>
         {% else %}
             <a class="btn btn-primary" href="{{ path('ujm_exercise_questions', { 'id': exoID }) }}">
-                <i class="icon-arrow-left"></i> {{ 'back' | trans }}
+                <i class="fa fa-arrow-left"></i> {{ 'back' | trans }}
             </a>
         {% endif %}
     </div>

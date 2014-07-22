@@ -2,10 +2,10 @@
 function AddDocument() {
     if ($('#AddDocuments').css("display") == "none") {
         $('#AddDocuments').css({"display" : "inline-block"});
-        $('#icon').attr('class', 'icon-minus');
+        $('#icon').attr('class', 'fa fa-minus');
     } else {
         $('#AddDocuments').css({"display" : "none"});
-        $('#icon').attr('class', 'icon-plus');
+        $('#icon').attr('class', 'fa fa-plus');
     }
 }
 

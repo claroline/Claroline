@@ -42,7 +42,7 @@ function submitForm(numQuestionToDisplayed, interactionType) {
     $('#formResponse').submit();
 }
 
-function finish(interactionType, alert) {
+function finish(interactionType) {
     validate = true;
     interType = interactionType;
     $('#numQuestionToDisplayed').val('finish');
@@ -51,9 +51,7 @@ function finish(interactionType, alert) {
         recordGraph();
     }
 
-    if (confirm(alert)) {
-        $('#formResponse').submit();
-    }
+    $('#confirm-finish-exercise').modal('show');
 }
 
 function interupt(interactionType) {

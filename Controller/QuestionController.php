@@ -897,6 +897,18 @@ class QuestionController extends Controller
 
         $listDoc = $repository->findBy(array('user' => $user->getId()));
 
+        foreach ($listDoc as $doc) {
+            $interGraph = $this->getDoctrine()
+                               ->getManager()
+                               ->getRepository('UJMExoBundle:InteractionGraphic')
+                               ->findOneBy(array('document' => $doc->getId()));
+            if ($interGraph) {
+                $allowToDel[$doc->getId()] = FALSE;
+            } else {
+                $allowToDel[$doc->getId()] = TRUE;
+            }
+        }
+        
         // Pagination of the documents
         $max = 10; // Max questions displayed per page
 
@@ -910,8 +922,9 @@ class QuestionController extends Controller
         return $this->render(
             'UJMExoBundle:Document:manageImg.html.twig',
             array(
-                'listDoc' => $listDocPager,
-                'pagerDoc' => $pagerDoc
+                'listDoc'     => $listDocPager,
+                'pagerDoc'    => $pagerDoc,
+                'allowToDel' => $allowToDel
             )
         );
     }
@@ -929,111 +942,27 @@ class QuestionController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function deleteDocAction($label, $pageNow, $maxPage, $nbItem, $lastPage)
+    public function deleteDocAction($idDoc)
     {
-        $dontdisplay = 0;
-
-        $userId = $this->container->get('security.context')->getToken()->getUser()->getId();
 
         $repositoryDoc = $this->getDoctrine()
             ->getManager()
             ->getRepository('UJMExoBundle:Document');
 
-        $listDoc = $repositoryDoc->findByLabel($label, $userId, 0);
+        $doc = $repositoryDoc->find($idDoc);
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('UJMExoBundle:InteractionGraphic')->findBy(array('document' => $listDoc));
+        $interGraph = $em->getRepository('UJMExoBundle:InteractionGraphic')->findBy(array('document' => $doc));
 
-        if (!$entity) {
+        if (count($interGraph) == 0) {
 
-            $em->remove($listDoc[0]);
+            $em->remove($doc);
             $em->flush();
 
-            $repository = $this->getDoctrine()
-                ->getManager()
-                ->getRepository('UJMExoBundle:Document');
-
-            $listDoc = $repository->findBy(array('user' => $userId));
-
-            if ($nbItem != 1) {
-                // If delete last item of page, display the previous one
-                $rest = $nbItem % $maxPage;
-
-                if ($rest == 1 && $pageNow == $lastPage) {
-                    $pageNow -= 1;
-                }
-            }
-
-            $pagination = $this->pagination($listDoc, $maxPage, $pageNow);
-
-            $listDocPager = $pagination[0];
-            $pagerDoc = $pagination[1];
-
-            return $this->render(
-                'UJMExoBundle:Document:manageImg.html.twig',
-                array(
-                    'listDoc' => $listDocPager,
-                    'pagerDoc' => $pagerDoc,
-                )
-            );
-
-        } else {
-
-            $questionWithResponse = array();
-            $linkPaper = array();
-
-            $request = $this->container->get('request');
-            $max = 10;
-            $page = $request->query->get('page', 1);
-            $show = $request->query->get('show', 0);
-
-            $end = count($entity);
-
-            for ($i = 0; $i < $end; $i++) {
-
-                $response = $em->getRepository('UJMExoBundle:Response')->findBy(
-                    array('interaction' => $entity[$i]->getInteraction()->getId())
-                );
-                $paper = $em->getRepository('UJMExoBundle:ExerciseQuestion')->findBy(
-                    array('question' => $entity[$i]->getInteraction()->getQuestion()->getId())
-                );
-            }
-
-            if (count($response) > 0) {
-                $questionWithResponse[$entity[$i]->getInteraction()->getId()] = 1;
-                $dontdisplay = 1;
-            } else {
-                $questionWithResponse[$entity[$i]->getInteraction()->getId()] = 0;
-            }
-
-            if (count($paper) > 0) {
-                $linkPaper[] = 1;
-            } else {
-                $linkPaper[] = 0;
-            }
-
-            $pagination = $this->pagination($entity, $max, $page);
-
-            $entities = $pagination[0];
-            $pagerDelDoc = $pagination[1];
-
-            return $this->render(
-                'UJMExoBundle:Document:safeDelete.html.twig',
-                array(
-                    'listGraph' => $entities,
-                    'label' => $label,
-                    'questionWithResponse' => $questionWithResponse,
-                    'linkpaper' => $linkPaper,
-                    'dontdisplay' => $dontdisplay,
-                    'pagerDelDoc' => $pagerDelDoc,
-                    'pageNow' => $pageNow,
-                    'maxPage' => $maxPage,
-                    'nbItem' => $nbItem,
-                    'show' => $show
-                )
-            );
         }
+        
+        return new \Symfony\Component\HttpFoundation\Response('Document delete');
     }
 
     /**

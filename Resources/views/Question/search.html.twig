@@ -13,22 +13,22 @@
                         <th class="classic" onclick="SortQuestions('pseudo', 'user-table');"
                             onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
                             onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
-                            <i class="icon-chevron-up" id="upSps"  style="display: none;"></i>
-                            <i class="icon-chevron-down" id="downSps"  style="display: none;"></i>
+                            <i class="fa fa-chevron-up" id="upSps"  style="display: none;"></i>
+                            <i class="fa fa-chevron-down" id="downSps"  style="display: none;"></i>
                             {{ 'username'|trans({}, 'platform') }}
                         </th>
                         <th class="classic" onclick="SortQuestions('name', 'user-table');"
                             onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
                             onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
-                            <i class="icon-chevron-up" id="upSn"  style="display: none;"></i>
-                            <i class="icon-chevron-down" id="downSn"  style="display: none;"></i>
+                            <i class="fa fa-chevron-up" id="upSn"  style="display: none;"></i>
+                            <i class="fa fa-chevron-down" id="downSn"  style="display: none;"></i>
                             {{ 'last_name'|trans({}, 'platform') }}
                         </th>
                         <th class="classic" onclick="SortQuestions('fname', 'user-table');"
                             onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
                             onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
-                            <i class="icon-chevron-up" id="upSp"  style="display: none;"></i>
-                            <i class="icon-chevron-down" id="downSp"  style="display: none;"></i>
+                            <i class="fa fa-chevron-up" id="upSp"  style="display: none;"></i>
+                            <i class="fa fa-chevron-down" id="downSp"  style="display: none;"></i>
                             {{ 'first_name'|trans({}, 'platform') }}
                         </th>
                         <th class="classic">{{ 'allow to edit'|trans}}</th>
@@ -43,7 +43,7 @@
                         <td class="classic"><input id="allowToEditQ_{{ user.id }}" type="checkbox" /></td>
                         <td class="classic">
                             <a href="#" onclick="shareQuestionUser('{{ path('ujm_question_shareQuestionUser') }}','{{ user.id }}'
-                            ,'{{ 'already' | trans }} ...','{{ 'self' | trans }} ...');"><i class="icon-share"></i>
+                            ,'{{ 'already' | trans }} ...','{{ 'self' | trans }} ...');"><i class="fa fa-share-square-o"></i>
                             </a>
                         </td>
                     </tr>

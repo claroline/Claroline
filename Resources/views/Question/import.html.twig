@@ -25,26 +25,26 @@
     </div>
     <div class="panel-body">
         <a class="btn btn-primary" href="{{ path('ujm_exercise_questions', { 'id':  exoID }) }}">
-            <i class="icon-arrow-left"></i> {{ 'back' | trans }}
+            <i class="fa fa-arrow-left"></i> {{ 'back' | trans }}
         </a>
         <a class="btn btn-primary" href="{{ path('ujm_question_new', { 'exoID': exoID }) }}">
-            <i class="icon-plus"></i> {{ 'create a new entry' | trans }}
+            <i class="fa fa-plus"></i> {{ 'create a new entry' | trans }}
         </a>
         <a class="btn btn-primary" href="{{ path('ujm_question_search_question', { 'exoID': exoID }) }}">
-            <i class="icon-question"></i> {{ 'searchQuestion' | trans }}
+            <i class="fa fa-question"></i> {{ 'searchQuestion' | trans }}
         </a>
         <a class="btn btn-primary" href="#" onclick="importQuestion('{{ path('ujm_exercise_validate_import') }}',
             {{ exoID }}, {{ pageToGo }}, '{{ 'nothingToImport' | trans }}');event.preventDefault();">
-                <i class="icon-download"></i> {{ 'import' | trans }}
+                <i class="fa fa-arrow-circle-o-down"></i> {{ 'import' | trans }}
         </a>
         {% if QuestionsExo == 'false' %}
             {% if (pagerMy.getNbResults > pagerMy.maxPerPage or pagerShared.getNbResults > pagerShared.maxPerPage) and displayAll == 0 %}
                 <a class="btn btn-primary" href="{{ path('ujm_exercise_import_question', { 'exoID': exoID, 'displayAll': 1 }) }} ">
-                    <i class="icon-plus-sign"></i> {{ 'display all on this page' | trans }}
+                    <i class="fa fa-plus-circle"></i> {{ 'display all on this page' | trans }}
                 </a>
             {% elseif displayAll == 1 %}
                 <a class="btn btn-primary" href="{{ path('ujm_exercise_import_question', { 'exoID': exoID }) }}">
-                    <i class="icon-minus-sign"></i> {{ 'display pagination' | trans }}
+                    <i class="fa fa-minus-circle"></i> {{ 'display pagination' | trans }}
                 </a>
             {% endif %}
         {% endif %}
@@ -66,10 +66,10 @@
                 <span class="input-group-btn">
                     <button class="btn btn-default" type="button" id="SubmitBriefSearch"
                         onClick="briefSearchSubmit();">
-                    <i class="icon-search"></i></button>
+                    <i class="fa fa-search"></i></button>
                     <a class="btn btn-default" data-toggle="tooltip" title="Recherche par type"
                        accesskey=""href="#" onclick="showInfos();event.preventDefault();">
-                        <i class="icon-question"></i>
+                        <i class="fa fa-question"></i>
                     </a>
                 </span>
             </div>

@@ -26,11 +26,11 @@
 
     <div class="panel-body">
         <a href="{{ path('ujm_exercise_open', { 'exerciseId': exoID }) }}" class="btn btn-primary">
-            <i class="icon-arrow-left"></i> {{ 'back' | trans }}
+            <i class="fa fa-arrow-left"></i> {{ 'back' | trans }}
         </a>
         {% if retryButton and nbUserPaper == 0 and nbQuestions > 0 %}
             <a class="btn btn-primary" href="{{ path('ujm_exercise_paper', { 'id': exoID }) }}">
-                <i class="icon-check"></i> {{ 'compose' | trans }}
+                <i class="fa fa-check-square-o"></i> {{ 'compose' | trans }}
             </a>
         {% endif %}
         {% if isAdmin %}
@@ -45,7 +45,7 @@
             {% if _resource.published == FALSE %}
                 <a href="{{ path('ujm_exercise_delete_all_paper', { 'id': exoID }) }}"
                    class="btn btn-primary">
-                    <i class="icon-trash"></i> {{ 'delete papers' | trans }}
+                    <i class="fa fa-trash-o"></i> {{ 'delete papers' | trans }}
                 </a>
             {% endif %}
         {% endif %}
@@ -60,15 +60,15 @@
                 <span class="input-group-btn">
                     <button class="btn btn-default" type="button" id="searchPaperUser"
                         onClick="searchUserPaper('{{ path('ujm_paper_searchUserPaper') }}', {{exoID}});">
-                <i class="icon-search"></i></button>
+                <i class="fa fa-search"></i></button>
                 </span>
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 <a class="btn btn-primary" href="{{ path('ujm_paper_list', { 'exoID': papers[0].exercise.id }) }}">
-                    <i class="icon-repeat"></i> {{ 'reset' | trans }}
+                    <i class="fa fa-repeat"></i> {{ 'reset' | trans }}
                </a>
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 <a class="btn btn-primary" href="{{ path('ujm_paper_list', { 'exoID': papers[0].exercise.id, 'all': 1 }) }}">
-                    <i class="icon-list"></i> {{ 'displayAllList' | trans }}
+                    <i class="fa fa-list"></i> {{ 'displayAllList' | trans }}
                 </a>
             </div>
 
@@ -81,7 +81,7 @@
                 {% if retryButton %} :
                     <div style="float:right;">
                         <a class="btn btn-primary" href="{{ path('ujm_exercise_paper', { 'id': exoID }) }}">
-                            <i class="icon-check"></i> {{ 'start again' | trans }}
+                            <i class="fa fa-check-square-o"></i> {{ 'start again' | trans }}
                         </a>
                     </div>
                     {% else %}.

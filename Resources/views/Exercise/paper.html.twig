@@ -184,17 +184,17 @@
             {% if numQ != 1 %}
                 <li>
                     <a href="#" onClick="submitForm(1, '{{ interactionType }}');">
-                        <i class="icon-chevron-left"></i><i class="icon-chevron-left"></i>
+                        <i class="fa fa-chevron-left"></i><i class="fa fa-chevron-left"></i>
                     </a>
                 </li>
                 <li>
                     <a href="#" onClick="submitForm({{ numQ-1 }}, '{{ interactionType }}');">
-                        <i class="icon-chevron-left"></i>
+                        <i class="fa fa-chevron-left"></i>
                     </a>
                 </li>
             {% else %}
-                <li class="disabled"><a href="#"><i class="icon-chevron-left"></i><i class="icon-chevron-left"></i></a></li>
-                <li class="disabled"><a href="#"><i class="icon-chevron-left"></i></a></li>
+                <li class="disabled"><a href="#"><i class="fa fa-chevron-left"></i><i class="fa fa-chevron-left"></i></a></li>
+                <li class="disabled"><a href="#"><i class="fa fa-chevron-left"></i></a></li>
             {% endif %}
 
             {% for interactionID in tabOrderInter %}
@@ -210,17 +210,17 @@
             {% if numQ != indexMax %}
                 <li>
                     <a href="#" onClick="submitForm({{ numQ+1 }}, '{{ interactionType }}');">
-                        <i class="icon-chevron-right"></i>
+                        <i class="fa fa-chevron-right"></i>
                     </a>
                 </li>
                 <li>
                     <a href="#" onClick="submitForm({{ indexMax }}, '{{ interactionType }}');">
-                        <i class="icon-chevron-right"></i><i class="icon-chevron-right"></i>
+                        <i class="fa fa-chevron-right"></i><i class="fa fa-chevron-right"></i>
                     </a>
                 </li>
             {% else %}
-                <li class="disabled"><a href="#"><i class="icon-chevron-right"></i></a></li>
-                <li class="disabled"><a href="#"><i class="icon-chevron-right"></i><i class="icon-chevron-right"></i></a></li>
+                <li class="disabled"><a href="#"><i class="fa fa-chevron-right"></i></a></li>
+                <li class="disabled"><a href="#"><i class="fa fa-chevron-right"></i><i class="fa fa-chevron-right"></i></a></li>
             {% endif %}
 
             {% if dispButtonInterrupt %}
@@ -250,16 +250,16 @@
 
             {% if numQ == indexMax and numQ == 1 %}
                 <li>
-                    <input type="button" value="{{ "finish" | trans }}" onClick="finish('{{ interactionType }}', '{{ 'alert ending' | trans }}');"
+                    <input type="button" value="{{ "finish" | trans }}" onClick="finish('{{ interactionType }}');"
                         class="btn btn-primary"/>
                 </li>
             {% else %}
 
                 {% if numQ == 1 %}
-                    <li class="disabled"><a href="#" onclick="event.preventDefault();"><i class="icon-chevron-left"></i> &nbsp; {{ 'previous' | trans }}</a></li>
+                    <li class="disabled"><a href="#" onclick="event.preventDefault();"><i class="fa fa-chevron-left"></i> &nbsp; {{ 'previous' | trans }}</a></li>
                     <li>
                         <a href="#" onClick="submitForm({{ numQ+1 }}, '{{ interactionType }}');">
-                            {{ 'next' | trans }} &nbsp; <i class="icon-chevron-right"></i>
+                            {{ 'next' | trans }} &nbsp; <i class="fa fa-chevron-right"></i>
                         </a>
                     </li>
                 {% endif %}
@@ -267,13 +267,13 @@
                 {% if numQ == indexMax %}
                     <li>
                         <a href="#" onClick="submitForm({{ numQ-1 }}, '{{ interactionType }}');">
-                            <i class="icon-chevron-left"></i> &nbsp; {{ 'previous' | trans }}
+                            <i class="fa fa-chevron-left"></i> &nbsp; {{ 'previous' | trans }}
                         </a>
                     </li>
-                    <li class="disabled"><a href="#" onclick="event.preventDefault();">{{ 'next' | trans }} &nbsp; <i class="icon-chevron-right"></i></a></li>
+                    <li class="disabled"><a href="#" onclick="event.preventDefault();">{{ 'next' | trans }} &nbsp; <i class="fa fa-chevron-right"></i></a></li>
                     <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>
                     <li>
-                        <input type="button" value="{{ "finish" | trans }}" onClick="finish('{{ interactionType }}', '{{ 'alert ending' | trans }}');"
+                        <input type="button" value="{{ "finish" | trans }}" onClick="finish('{{ interactionType }}');"
                             class="btn btn-primary"/>
                     </li>
                 {% endif %}
@@ -281,12 +281,12 @@
                 {% if numQ != indexMax and numQ != 1 %}
                     <li>
                         <a href="#" onClick="submitForm({{ numQ-1 }}, '{{ interactionType }}');">
-                            <i class="icon-chevron-left"></i> &nbsp; {{ 'previous' | trans }}
+                            <i class="fa fa-chevron-left"></i> &nbsp; {{ 'previous' | trans }}
                         </a>
                     </li>
                     <li>
                         <a href="#" onClick="submitForm({{ numQ+1 }}, '{{ interactionType }}');">
-                            {{ 'next' | trans }} &nbsp; <i class="icon-chevron-right"></i>
+                            {{ 'next' | trans }} &nbsp; <i class="fa fa-chevron-right"></i>
                         </a>
                     </li>
                 {% endif %}
@@ -312,25 +312,27 @@
 {% endblock %}
 
 {% block javascripts %}
-    
+
     <script type="text/javascript">
         //$(document).ready(function() {
             $('#Qnumber option[value="' + {{ numQ }} + '"]').attr('selected', 'selected');
         //});
     </script>
-    
+
     {{ parent() }}
-    
+
     <script type="text/javascript">
         var mssg             = "{{ "exercise alert break" | trans }}";
         var allowToInterrupt = "{{ dispButtonInterrupt }}";
         var interType        = "{{ interactionType }}";
-    </script>    
-    
+    </script>
+
     {% if interactionType == 'InteractionGraphic' %}
         <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2/jquery-ui-1.9.2.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/ext/jquery-ui-touch-punch.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/graphicdisplay.js') }}"></script>
     {% endif %}
+
+    {% include "UJMExoBundle:Partial:modal/confirmFinishExercise.html.twig" %}
 
 {% endblock %}
