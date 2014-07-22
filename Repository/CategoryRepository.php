@@ -15,6 +15,11 @@ class CategoryRepository extends EntityRepository
     /**
      * Category by user
      *
+     * @access public
+     *
+     * @param integer id User
+     *
+     * Return queryBuilder
      */
     public function getUserCategory($uid)
     {

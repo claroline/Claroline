@@ -12,6 +12,17 @@ use Doctrine\ORM\EntityRepository;
  */
 class DocumentRepository extends EntityRepository
 {
+    /**
+     * Search user's documents by type and by label
+     *
+     * @access public
+     *
+     * @param String $type type of document
+     * @param integer $userID id User
+     * @param String $searchLabel  label of document
+     *
+     * Return array[Document]
+     */
     public function findByType($type, $userID, $searchLabel)
     {
         if ($type == 'image') {
@@ -41,6 +52,17 @@ class DocumentRepository extends EntityRepository
         return $query->getResult();
     }
 
+    /**
+     * Search user's documents by type and by label
+     *
+     * @access public
+     *
+     * @param String $labelToFind label of document
+     * @param integer $userID id User
+     * @param boolean $strict  for a strict search or no
+     *
+     * Return array[Document]
+     */
     public function findByLabel($labelToFind, $userId, $strict)
     {
         $dql = 'SELECT d FROM UJM\ExoBundle\Entity\Document d

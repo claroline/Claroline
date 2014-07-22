@@ -12,6 +12,17 @@ use Doctrine\ORM\EntityRepository;
  */
 class ExerciseRepository extends EntityRepository
 {
+
+    /**
+     * Scores of an exercise
+     *
+     * @access public
+     *
+     * @param integer $exoId id Exercise
+     * @param String $order to order result
+     *
+     * Return array
+     */
     public function getExerciseMarks($exoId, $order = '')
     {
         if ($order != '') {
@@ -26,6 +37,15 @@ class ExerciseRepository extends EntityRepository
         return $query->getResult();
     }
 
+    /**
+     * Exercises created by an user
+     *
+     * @access public
+     *
+     * @param integer $userID id User
+     *
+     * Return array
+     */
     public function getExerciceByUser($userID)
     {
         $dql = 'SELECT e.id, e.title
@@ -37,6 +57,15 @@ class ExerciseRepository extends EntityRepository
         return $query->getResult();
     }
 
+    /**
+     * List of exercises of workspaces where the user has the admin role
+     *
+     * @access public
+     *
+     * @param integer $userID id User
+     *
+     * Return array
+     */
     public function getExerciseAdmin($userID)
     {
         $exercises = array();

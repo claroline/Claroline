@@ -12,6 +12,15 @@ use Doctrine\ORM\EntityRepository;
  */
 class InteractionGraphicRepository extends EntityRepository
 {
+    /**
+     * Get InteractionGraphic linked with an interaction
+     *
+     * @access public
+     *
+     * @param integer $interactionId id Interaction
+     *
+     * Return array[InteractionGraphic]
+     */
     public function getInteractionGraphic($interactionId)
     {
         $qb = $this->createQueryBuilder('igraph');

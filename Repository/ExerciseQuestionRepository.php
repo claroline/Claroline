@@ -15,6 +15,11 @@ class ExerciseQuestionRepository extends EntityRepository
     /**
      * Exercises use the question
      *
+     * @access public
+     *
+     * @param integer $questionId id Question
+     *
+     * Return array[ExerciseQuestion]
      */
     public function getExercises($questionId)
     {
@@ -28,6 +33,11 @@ class ExerciseQuestionRepository extends EntityRepository
     /**
      * Number of question for an exercise
      *
+     * @access public
+     *
+     * @param integer $exoId if Exercise
+     *
+     * Return aintger
      */
     public function getCountQuestion($exoId)
     {

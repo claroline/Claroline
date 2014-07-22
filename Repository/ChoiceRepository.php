@@ -15,6 +15,11 @@ class ChoiceRepository extends EntityRepository
     /**
      * right choice for an QCM interaction
      *
+     * @access public
+     *
+     * @param  integer  $interactionId id InteractionQCM
+     *
+     * Return array[Choice]
      */
     public function getRightChoice($interactionId)
     {

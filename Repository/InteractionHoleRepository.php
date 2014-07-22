@@ -13,8 +13,13 @@ use Doctrine\ORM\EntityRepository;
 class InteractionHoleRepository extends EntityRepository
 {
     /**
-     * InteractionHole by Interaction
+     * Get InteractionHole linked with an interaction
      *
+     * @access public
+     *
+     * @param integer $interactionId id Interaction
+     *
+     * Return array[InteractionHole]
      */
     public function getInteractionHole($interactionId)
     {
@@ -24,5 +29,5 @@ class InteractionHoleRepository extends EntityRepository
 
         return $qb->getQuery()->getResult();
     }
-    
+
 }

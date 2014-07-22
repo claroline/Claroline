@@ -14,8 +14,13 @@ class InteractionQCMRepository extends EntityRepository
 {
 
     /**
-     * InteractionQCM by Interaction
+     * Get InteractionQCM linked with an interaction
      *
+     * @access public
+     *
+     * @param integer $interactionId id Interaction
+     *
+     * Return array[InteractionQCM]
      */
     public function getInteractionQCM($interactionId)
     {

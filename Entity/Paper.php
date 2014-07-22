@@ -43,7 +43,7 @@ class Paper
     private $end;
 
     /**
-     * @var integer $ordreQuestion
+     * @var text $ordreQuestion
      *
      * @ORM\Column(name="ordre_question", type="text", nullable=true)
      */
@@ -153,7 +153,7 @@ class Paper
     /**
      * Set ordreQuestion
      *
-     * @param integer $ordreQuestion
+     * @param text $ordreQuestion
      */
     public function setOrdreQuestion($ordreQuestion)
     {
@@ -163,7 +163,7 @@ class Paper
     /**
      * Get ordreQuestion
      *
-     * @return integer
+     * @return text
      */
     public function getOrdreQuestion()
     {
