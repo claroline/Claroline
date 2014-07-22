@@ -55,25 +55,25 @@ class EditorController
      * @var \Symfony\Component\Routing\RouterInterface $router
      */
     protected $router;
-    
+
     /**
      * Form factory
      * @var \Symfony\Component\Form\FormFactoryInterface $formFactory
      */
     protected $formFactory;
-    
+
     /**
      * Session
      * @var \Symfony\Component\HttpFoundation\Session\SessionInterface
      */
     protected $session;
-    
+
     /**
      * Translator engine
      * @var \Symfony\Component\Translation\TranslatorInterface
      */
     protected $translator;
-    
+
     /**
      * Path form handler
      * @var \Innova\PathBundle\Form\Handler\PathHandler
@@ -136,11 +136,11 @@ class EditorController
     public function newAction(Workspace $workspace)
     {
         $path = Path::initialize();
-        $this->pathManager->checkAccess('CREATE', $path);
+        $this->pathManager->checkAccess('CREATE', $path, $workspace);
 
         return $this->renderEditor($workspace, $path);
     }
-    
+
     /**
      * Edit an existing path
      * @Route(

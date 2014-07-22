@@ -49,16 +49,16 @@ class ToolListener
         $content = $this->templating->render(
             'InnovaPathBundle::index.html.twig',
             array (
-                'canCreate' => $this->pathManager->isAllow('CREATE', new Path()),
+                'canCreate' => $this->pathManager->isAllow('CREATE', new Path(), $event->getWorkspace()),
                 'workspace' => $event->getWorkspace(),
                 'paths' => $paths,
             )
         );
-        
+
         // Send content to display to dispatcher through event
         $event->setContent($content);
         $event->stopPropagation();
-        
+
         return $this;
     }
 }
