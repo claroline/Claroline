@@ -27,6 +27,7 @@ use Claroline\CoreBundle\Manager\MailManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\TermsOfServiceManager;
 use Claroline\CoreBundle\Manager\ToolManager;
+use Claroline\CoreBundle\Manager\IPWhiteListManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use JMS\SecurityExtraBundle\Annotation as SEC;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
@@ -122,7 +123,7 @@ class ParametersController extends Controller
         $this->toolManager        = $toolManager;
         $this->paramAdminTool     = $this->toolManager->getAdminToolByName('platform_parameters');
         $this->router             = $router;
-        $this->ipwml              = $ipwlm;
+        $this->ipwlm              = $ipwlm;
     }
 
     /**

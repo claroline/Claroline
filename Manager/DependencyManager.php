@@ -368,7 +368,6 @@ class DependencyManager {
         MaintenanceHandler::enableMaintenance();
 
         ini_set('max_execution_time', 1800);
-        //this is dangerous but we'll live it that way for now
         ini_set('memory_limit', '-1');
         //get the list of upgradable packages from the cache
         $pkgList = $this->getUpgradableFromCache();
@@ -378,7 +377,6 @@ class DependencyManager {
         $io = new FileIO($this->composerLogFile);
         putenv("COMPOSER_HOME={$this->vendorDir}{$ds}composer");
         $composer = $factory->createComposer($io, "{$this->vendorDir}{$ds}..{$ds}composer.json", false);
-        $config = $composer->getConfig();
         //this is the default github token. An other way to do it must be found sooner or later.
         $config->merge(array('github-oauth' => array('github.com' => '5d86c61eec8089d2dd22aebb79c37bebe4b6f86e')));
         $install = Installer::create($io, $composer);
