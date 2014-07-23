@@ -54,7 +54,7 @@
                             {% set backUserId = -1 %}
                         {% endif %}
                         {% if  correction.drop is defined and correction.drop != null %}
-                            <a href="{{ path('icap_dropzone_drops_detail_correction_standard', {'resourceId': dropzone.id, 'correctionId': correction.id,'state':'show', 'backUserId':backUserId}) }}"
+                            <a href="{{ path('icap_dropzone_drops_detail_correction', {'resourceId': dropzone.id, 'correctionId': correction.id,'state':'show', 'backUserId':backUserId}) }}"
                                class="" data-toggle="tooltip"
                                data-original-title="{{ 'See correction'|trans({},'icap_dropzone') }}">
 
