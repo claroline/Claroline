@@ -893,3 +893,8 @@ error: Error
 last_manager_error_message: No es posible eliminar todos los administradores.
 remove_workspace_role_warning: ¿Está seguro que desea suprimir este rol? Si este rol está asociado a los usuarios, estos perderán sus derechos de acceso proporcionada por dicho rol.
 edit_rights_success: La modificación de los derechos de acceso a sido realizada con éxito
+maintenance: mantenimiento
+start_maintenance: Lanzar el modo de mantenimiento
+end_maintenance: Terminar el modo de mantenimiento
+maintenance_mode_enabled: El modo mantenimiento esta activo
+maintenance_mode_message: El acceso a la plataforma está desactivado para los usuarios. Usted puede volver a activarlo en la sección de mantenimiento de los parámetros de la administración.
