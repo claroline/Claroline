@@ -37,8 +37,8 @@
             </div>
         {% endif %}
         <div class="container">
-            <div class="row">
-                <div class="col-md-9">
+        <div class="row align-with-panel">
+            <div class="col-md-9">
                     <a href="{{ path('icap_dropzone_edit_add_criterion', {'resourceId': dropzone.id, 'page': pager.currentPage}) }}"
                        class="btn btn-primary add-criterion-button disabled-during-edition"><span
                                 class="fa fa-plus "> {{ 'Add a criterion'|trans({}, 'icap_dropzone') }}</span></a>
@@ -51,10 +51,18 @@
 
                 <div class="col-md-3 add-remove-column" {% if pager.nbResults == 0 %}style="display: none;"{% endif %}>
                     <div class="form-group column-input">
-                        {{ form_row(form.totalCriteriaColumn, {'type': 'number', 'label_col_size': 'col-md-3', 'input_col_size': 'col-md-9', 'label_attr': {'style': 'font-weight: normal;'}, 'attr': {'class': 'form-control', 'style': 'width: 60px;'}}) }}
+                        {{ form_row(form.totalCriteriaColumn, {'type': 'number', 'label_col_size': 'col-md-6', 'input_col_size': 'col-md-6', 'label_attr': {'style': 'font-weight: normal;'}, 'attr': {'class': 'form-control', 'style': 'width: 60px;' }}
+                        ) }}
                     </div>
 
-                    <div class="row column-input-js" style="display: none;">
+                    <div class="column-input-js center-div" style="display: none;">
+                        <div class="btn-group">
+                            <a href="#" class="remove-column btn btn-primary"><span class="fa fa-minus"></span> </a>
+                            <span class="btn btn-default disabled fake-button">{{ 'Change scale'|trans({}, 'icap_dropzone') }}</span>
+                            <a href="#" class="add-column btn btn-primary"><span class="fa fa-plus"></span> </a>
+                        </div>
+                    </div>
+                    {#<div class="row column-input-js" style="display: none;">
                         <label class="col-md-12 control-label pull-right" style="text-align: center;">
                             <div>{{ 'Change scale'|trans({}, 'icap_dropzone') }}</div>
                             <span>
@@ -63,11 +71,12 @@
                             </span>
 
                         </label>
-                    </div>
+                    </div>#}
                 </div>
             </div>
+        <div class="spacer10"></div>
 
-            {% if pager.haveToPaginate %}
+        {% if pager.haveToPaginate %}
                 <div class="row">
                     {{
                     pagerfanta(
@@ -85,7 +94,50 @@
 
             {% if pager %}
                 {% for criterion in pager.currentPageResults %}
-                    <hr/>
+                    {% set criterionNumber = (((pager.currentPage-1) * pager.maxPerPage) + loop.index) %}
+                    <div id="criterion-{{ criterion.id }}" class="criterion-row">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <h5 class="panel-title">
+                                            #{{ criterionNumber }} {{ 'Criteria'|trans({},'icap_dropzone') }} {{ criterionNumber }} </h5>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="btn-group pull-right btn-group-xs">
+                                            <a href="{{ path('icap_dropzone_edit_add_criterion', {'resourceId': dropzone.id, 'page': pager.currentPage, 'criterionId': criterion.id}) }}"
+                                               class="btn btn-default btn-sm edit-criterion-button disabled-during-edition"
+                                               data-criterion="criterion-{{ criterion.id }}"><span
+                                                        class="fa fa-edit"></span> {{ 'dropzone_edit'|trans({}, 'icap_dropzone') }}
+                                            </a>
+                                            <a href="{{ path('icap_dropzone_edit_delete_criterion', {'resourceId': dropzone.id, 'page': pager.currentPage, 'criterionId': criterion.id, 'number': criterionNumber}) }}"
+                                               class="btn btn-danger disabled-during-edition btn-sm launch-modal delete-criteria-button"><span
+                                                        class="fa fa-trash-o"></span> {{ 'Delete'|trans({}, 'icap_dropzone') }}
+                                            </a>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="panel-body">
+                                <div class="criterion-show">
+                                    <div class="row">
+                                        <div class="col-md-9">
+                                            {{ criterion.instruction|raw }}
+                                        </div>
+                                        <div class="col-md-3 criteria-radio-container ">
+                                            <span class="column-container">
+                                                {% for i in 1..dropzone.totalCriteriaColumn %}
+                                                    <input type="radio" disabled/>
+                                                {% endfor %}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {#<hr/>
                     <div id="criterion-{{ criterion.id }}" class="criterion-row">
                         {% set criterionNumber = (((pager.currentPage-1) * pager.maxPerPage) + loop.index) %}
                         <h4>#{{ criterionNumber }}</h4>
@@ -130,7 +182,7 @@
                             </div>
                         </div>
                         <div class="criterion-edit well" style="display: none;"></div>
-                    </div>
+                    </div>#}
                 {% endfor %}
             {% endif %}
 
@@ -259,9 +311,9 @@
 {% block stylesheets %}
     {{ parent() }}
     <style>
-        .row {
-            padding-top: 10px;
-        }
+        /*.row {
+            border:1px solid red;
+        }*/
         .column-container-div {
             text-align: center;
         }
@@ -271,6 +323,45 @@
             margin-top: 0px;
         }
 
+        .panel-heading {
+            padding: 10px;
+        }
+
+        .panel-body {
+            padding: 10px;
+        }
+
+        .criteria-radio-container {
+            text-align: center;
+        }
+
+        .btn.disabled.fake-button {
+            opacity: 1;
+        }
+
+        .align-with-panel {
+            padding-left: 10px;
+            padding-right: 10px;
+        }
+
+        .spacer10 {
+            height: 10px;
+            width: 100%;
+            font-size: 0;
+            margin: 0;
+            padding: 0;
+            border: 0;
+            display: block;
+        }
+
+        .center-div {
+            margin: auto;
+            text-align: center;
+        }
+
+        /*.test {
+            background-color:blue;
+        }*/
     </style>
 {% endblock %}
 
