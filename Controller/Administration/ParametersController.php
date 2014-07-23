@@ -27,6 +27,7 @@ use Claroline\CoreBundle\Manager\MailManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\TermsOfServiceManager;
 use Claroline\CoreBundle\Manager\ToolManager;
+use Claroline\CoreBundle\Manager\IPWhiteListManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use JMS\SecurityExtraBundle\Annotation as SEC;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
@@ -80,7 +81,8 @@ class ParametersController extends Controller
      *     "hwiManager"         = @DI\Inject("claroline.manager.hwi_manager"),
      *     "toolManager"        = @DI\Inject("claroline.manager.tool_manager"),
      *     "sc"                 = @DI\Inject("security.context"),
-     *     "router"             = @DI\Inject("router")
+     *     "router"             = @DI\Inject("router"),
+     *     "ipwlm"              = @DI\Inject("claroline.manager.ip_white_list_manager")
      * })
      */
     public function __construct(
@@ -99,7 +101,8 @@ class ParametersController extends Controller
         HwiManager $hwiManager,
         ToolManager $toolManager,
         SecurityContextInterface $sc,
-        RouterInterface $router
+        RouterInterface $router,
+        IPWhiteListManager $ipwlm
     )
     {
         $this->configHandler      = $configHandler;
@@ -119,6 +122,7 @@ class ParametersController extends Controller
         $this->toolManager        = $toolManager;
         $this->paramAdminTool     = $this->toolManager->getAdminToolByName('platform_parameters');
         $this->router             = $router;
+        $this->ipwlm              = $ipwlm;
     }
 
     /**
@@ -755,6 +759,10 @@ class ParametersController extends Controller
      */
     public function maintenancePageAction()
     {
+        $this->checkOpen();
+        //the current ip must be whitelisted so it can access the plateforme under maintenance.
+        $this->ipwlm->addIP($_SERVER['REMOTE_ADDR']);
+
         return array();
     }
 
@@ -765,6 +773,7 @@ class ParametersController extends Controller
      */
     public function startMaintenanceAction()
     {
+        $this->checkOpen();
         MaintenanceHandler::enableMaintenance();
 
         return new RedirectResponse($this->router->generate('claro_admin_parameters_index'));
@@ -777,6 +786,7 @@ class ParametersController extends Controller
      */
     public function endMaintenanceAction()
     {
+        $this->checkOpen();
         MaintenanceHandler::disableMaintenance();
 
         return new RedirectResponse($this->router->generate('claro_admin_parameters_index'));
