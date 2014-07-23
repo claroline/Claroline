@@ -177,13 +177,13 @@ class AgendaManager
      */
     public function importEvents(UploadedFile $file, $workspace)
     {
-        $ical = new \ICal($file->getPathName());
+        $ical = new \ICal($file->getPathname());
         $events = $ical->events();
         //$this->om->startFlushSuite();
         $tabs = [];
 
         foreach ($events as $i => $event) {
-            $e = $this->om->factory('Claroline\CoreBundle\Entity\Event');
+            $e = new Event();
             $e->setTitle($event['SUMMARY']);
             $e->setStart($ical->iCalDateToUnixTimestamp($event['DTSTART']));
             $e->setEnd($ical->iCalDateToUnixTimestamp($event['DTEND']));

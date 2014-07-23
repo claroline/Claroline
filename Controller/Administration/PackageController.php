@@ -16,6 +16,7 @@ use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CoreBundle\Manager\DependencyManager;
 use Claroline\CoreBundle\Manager\IPWhiteListManager;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -37,7 +38,7 @@ class PackageController extends Controller
      *      "toolManager"     = @DI\Inject("claroline.manager.tool_manager"),
      *      "dm"              = @DI\Inject("claroline.manager.dependency_manager"),
      *      "sc"              = @DI\Inject("security.context"),
-     *      "ipwlm"           = @DI\Inject("claroline.manager.ip_white_list_manager")
+     *      "ipwlm"           = @DI\Inject("claroline.manager.ip_white_list_manager"),
      * })
      */
     public function __construct(
@@ -73,8 +74,9 @@ class PackageController extends Controller
     {
         $this->checkOpen();
         $corePackages = $this->dm->getInstalledByType(DependencyManager::CLAROLINE_CORE_TYPE);
-        $pluginPackages = $this->dm->getInstalledByType(DependencyManager::CLAROLINE_PLUGIN_TYPE);
+        $pluginPackages = $this->dm->getPluginList();
         $upgradablePackages = $this->dm->getUpgradeablePackages();
+        $ds = DIRECTORY_SEPARATOR;
 
         //the current ip must be whitelisted so it can access the upgrade.html.php script
         $this->ipwlm->addIP($_SERVER['REMOTE_ADDR']);
@@ -112,7 +114,8 @@ class PackageController extends Controller
      *     name="claro_admin_update_packages",
      *     options={"expose"=true}
      * )
-     * @param $package
+     * @param $ref
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
     public function updatePackageAction($ref)
     {
@@ -142,6 +145,36 @@ class PackageController extends Controller
         $res = $this->dm->upgrade();
 
         return new JsonResponse();
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/remove/logs",
+     *     name="claro_admin_packages_log_remove",
+     *     options={"expose"=true}
+     * )
+     */
+    public function removeLogs()
+    {
+        $this->checkOpen();
+        $this->dm->removeUpdateLog();
+
+        return new JsonResponse();
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/plugin/parameters/{pluginShortName}",
+     *     name="claro_admin_plugin_parameters"
+     * )
+     */
+    public function pluginParametersAction($pluginShortName)
+    {
+        $this->checkOpen();
+        $eventName = "plugin_options_{$pluginShortName}";
+        $event = $this->eventDispatcher->dispatch($eventName, 'PluginOptions', array());
+
+        return $event->getResponse();
     }
 
     private function checkOpen()

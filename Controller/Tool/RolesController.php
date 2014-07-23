@@ -313,8 +313,6 @@ class RolesController extends Controller
             $this->userManager->getAllUsers($page, $max, $order, $direction):
             $this->userManager->getUsersByName($search, $page, $max, $order, $direction);
 
-        $direction = $direction === 'DESC' ? 'ASC' : 'DESC';
-
         return array(
             'workspace' => $workspace,
             'pager' => $pager,
@@ -482,8 +480,6 @@ class RolesController extends Controller
             $this->userManager->getByRolesIncludingGroups($wsRoles, $page, $max, $order, $direction):
             $this->userManager->getByRolesAndNameIncludingGroups($wsRoles, $search, $page, $max, $order, $direction);
 
-        $direction = $direction === 'DESC' ? 'ASC' : 'DESC';
-
         return array(
             'workspace' => $workspace,
             'pager' => $pager,
@@ -532,8 +528,6 @@ class RolesController extends Controller
             $pager = $this->groupManager->getGroupsByRoles($wsRoles, $page, $max, $order, $direction):
             $pager = $this->groupManager->getGroupsByRolesAndName($wsRoles, $search, $page, $max, $order, $direction);
 
-        $direction = $direction === 'DESC' ? 'ASC' : 'DESC';
-
         return array(
             'workspace' => $workspace,
             'pager' => $pager,
@@ -547,15 +541,15 @@ class RolesController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/{workspace}/groups/{group}/page/{page}/search/{search}/{max}/order/{order}",
+     *     "/{workspace}/groups/{group}/page/{page}/search/{search}/{max}/order/{order}/direction/{direction}",
      *     name="claro_workspace_users_of_group_search",
-     *     defaults={"page"=1, "max"=50, "order"="id"},
+     *     defaults={"page"=1, "max"=50, "order"="id", "direction"="ASC"},
      *     options = {"expose"=true}
      * )
      * @EXT\Route(
-     *     "/{workspace}/groups/{group}/page/{page}/{max}/order/{order}",
+     *     "/{workspace}/groups/{group}/page/{page}/{max}/order/{order}/direction/{direction}",
      *     name="claro_workspace_users_of_group",
-     *     defaults={"page"=1, "max"=50, "search"="", "order"="id"},
+     *     defaults={"page"=1, "max"=50, "search"="", "order"="id", "direction"="ASC"},
      *     options = {"expose"=true}
      * )
      * @EXT\Method("GET")
@@ -572,7 +566,8 @@ class RolesController extends Controller
         $page,
         $search,
         $max,
-        $order
+        $order,
+        $direction
     )
     {
         $this->checkAccess($workspace);

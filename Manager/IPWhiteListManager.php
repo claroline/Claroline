@@ -43,6 +43,10 @@ class IPWhiteListManager
 
     public function getIPs()
     {
+        if (!file_exists($this->ipFile)) {
+            touch($this->ipFile);
+        }
+
         return file($this->ipFile, FILE_IGNORE_NEW_LINES);
     }
 

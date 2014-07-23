@@ -451,7 +451,7 @@ class FacetController extends Controller
         $this->checkOpen();
         $configs = array();
 
-        foreach ($this->request->request as $key => $value) {
+        foreach ($this->request->request->all() as $key => $value) {
             $arr = explode('-role-', $key);
             $roleId = (int) $arr[1];
             $configs[$roleId][$arr[0]] = true;
@@ -468,7 +468,7 @@ class FacetController extends Controller
             );
         }
 
-        return new Response('succes', 204);
+        return new JsonResponse($this->request->request->all(), 200);
     }
 
     private function checkOpen()

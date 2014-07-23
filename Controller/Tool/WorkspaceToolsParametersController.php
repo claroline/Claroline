@@ -19,6 +19,8 @@ use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CoreBundle\Manager\RoleManager;
+use Claroline\CoreBundle\Manager\RightsManager;
+use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
@@ -28,28 +30,36 @@ class WorkspaceToolsParametersController extends AbstractParametersController
 {
     private $toolManager;
     private $roleManager;
+    private $rightsManager;
+    private $resourceManager;
     private $formFactory;
     private $request;
 
     /**
      * @DI\InjectParams({
-     *     "toolManager" = @DI\Inject("claroline.manager.tool_manager"),
-     *     "roleManager" = @DI\Inject("claroline.manager.role_manager"),
-     *     "formFactory" = @DI\Inject("claroline.form.factory"),
-     *     "request"     = @DI\Inject("request")
+     *     "toolManager"     = @DI\Inject("claroline.manager.tool_manager"),
+     *     "roleManager"     = @DI\Inject("claroline.manager.role_manager"),
+     *     "rightsManager"   = @DI\Inject("claroline.manager.rights_manager"),
+     *     "resourceManager" = @DI\Inject("claroline.manager.resource_manager"),
+     *     "formFactory"     = @DI\Inject("claroline.form.factory"),
+     *     "request"         = @DI\Inject("request")
      * })
      */
     public function __construct(
         ToolManager $toolManager,
         RoleManager $roleManager,
+        RightsManager $rightsManager,
+        ResourceManager $resourceManager,
         FormFactory $formFactory,
         Request $request
     )
     {
-        $this->toolManager = $toolManager;
-        $this->roleManager = $roleManager;
-        $this->formFactory = $formFactory;
-        $this->request = $request;
+        $this->toolManager     = $toolManager;
+        $this->roleManager     = $roleManager;
+        $this->rightsManager   = $rightsManager;
+        $this->resourceManager = $resourceManager;
+        $this->formFactory     = $formFactory;
+        $this->request         = $request;
     }
     /**
      * @EXT\Route(
@@ -155,9 +165,18 @@ class WorkspaceToolsParametersController extends AbstractParametersController
     public function addRoleToTool(Tool $tool, Role $role, Workspace $workspace)
     {
         $this->checkAccess($workspace);
+        //if resource manager, we must also grant the access to the workspace root
+        if ($tool->getName() === 'resource_manager') {
+            $root = $this->resourceManager->getWorkspaceRoot($workspace);
+            $rights = $this->rightsManager->getOneByRoleAndResource($role, $root);
+            //grant the open right
+            $mask = $rights->getMask() | 1;
+            $this->rightsManager->editPerms($mask, $role, $root);
+        }
+
         $this->toolManager->addRole($tool, $role, $workspace);
 
-        return new Response('success', 204);
+        return new Response('success', 200);
     }
 
     /**

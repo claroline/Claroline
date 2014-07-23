@@ -93,7 +93,6 @@ class UserRepository extends EntityRepository implements UserProviderInterface
     public function findAll($executeQuery = true, $orderedBy = 'id', $order = null)
     {
         if (!$executeQuery) {
-            $order = $order === 'DESC' ? 'DESC' : 'ASC';
             $dql = "
                 SELECT u, pws, g, r, rws from Claroline\CoreBundle\Entity\User u
                 LEFT JOIN u.personalWorkspace pws
@@ -152,7 +151,6 @@ class UserRepository extends EntityRepository implements UserProviderInterface
      */
     public function findByName($search, $executeQuery = true, $orderedBy = 'id', $order = null)
     {
-        $order = $order === 'DESC' ? 'DESC' : 'ASC';
         $upperSearch = strtoupper($search);
         $upperSearch = trim($upperSearch);
         $upperSearch = preg_replace('/\s+/', ' ', $upperSearch);
@@ -186,14 +184,14 @@ class UserRepository extends EntityRepository implements UserProviderInterface
      *
      * @return User[]|Query
      */
-    public function findByGroup(Group $group, $executeQuery = true, $orderedBy = 'id')
+    public function findByGroup(Group $group, $executeQuery = true, $orderedBy = 'id', $order = null)
     {
         $dql = "
             SELECT DISTINCT u FROM Claroline\CoreBundle\Entity\User u
             JOIN u.groups g
             WHERE g.id = :groupId
             AND u.isEnabled = true
-            ORDER BY u.{$orderedBy}
+            ORDER BY u.{$orderedBy} {$order}
         ";
         $query = $this->_em->createQuery($dql);
         $query->setParameter('groupId', $group->getId());
@@ -570,7 +568,6 @@ class UserRepository extends EntityRepository implements UserProviderInterface
      */
     public function findByRolesIncludingGroups(array $roles, $getQuery = false, $orderedBy = 'id', $order)
     {
-        $order = $order === 'DESC' ? 'DESC' : 'ASC';
         $dql = "
             SELECT u, r1, g, r2, ws From Claroline\CoreBundle\Entity\User u
             LEFT JOIN u.roles r1
@@ -655,7 +652,6 @@ class UserRepository extends EntityRepository implements UserProviderInterface
      */
     public function findByRolesAndNameIncludingGroups(array $roles, $name, $getQuery = false, $orderedBy = 'id', $order = null)
     {
-        $order = $order === 'DESC' ? 'DESC' : 'ASC';
         $search = strtoupper($name);
         $dql = "
             SELECT u, ur, g, gr FROM Claroline\CoreBundle\Entity\User u

@@ -17,6 +17,7 @@ use Claroline\CoreBundle\Library\Configuration\UnwritableException;
 use Claroline\CoreBundle\Library\Installation\Refresher;
 use Claroline\CoreBundle\Library\Installation\Settings\MailingChecker;
 use Claroline\CoreBundle\Library\Installation\Settings\MailingSettings;
+use Claroline\CoreBundle\Library\Maintenance\MaintenanceHandler;
 use Claroline\CoreBundle\Library\Session\DatabaseSessionValidator;
 use Claroline\CoreBundle\Manager\CacheManager;
 use Claroline\CoreBundle\Manager\ContentManager;
@@ -35,8 +36,10 @@ use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Routing\RouterInterface;
 
 /**
  * Controller of the platform parameters section.
@@ -58,6 +61,8 @@ class ParametersController extends Controller
     private $sc;
     private $toolManager;
     private $paramAdminTool;
+    private $router;
+    private $ipwlm;
 
     /**
      * @DI\InjectParams({
@@ -75,7 +80,9 @@ class ParametersController extends Controller
      *     "refresher"          = @DI\Inject("claroline.installation.refresher"),
      *     "hwiManager"         = @DI\Inject("claroline.manager.hwi_manager"),
      *     "toolManager"        = @DI\Inject("claroline.manager.tool_manager"),
-     *     "sc"                 = @DI\Inject("security.context")
+     *     "sc"                 = @DI\Inject("security.context"),
+     *     "router"             = @DI\Inject("router"),
+     *     "ipwlm"              = @DI\Inject("claroline.manager.ip_white_list_manager")
      * })
      */
     public function __construct(
@@ -93,7 +100,9 @@ class ParametersController extends Controller
         Refresher $refresher,
         HwiManager $hwiManager,
         ToolManager $toolManager,
-        SecurityContextInterface $sc
+        SecurityContextInterface $sc,
+        RouterInterface $router,
+        IPWhiteListManager $ipwlm
     )
     {
         $this->configHandler      = $configHandler;
@@ -112,6 +121,8 @@ class ParametersController extends Controller
         $this->sc                 = $sc;
         $this->toolManager        = $toolManager;
         $this->paramAdminTool     = $this->toolManager->getAdminToolByName('platform_parameters');
+        $this->router             = $router;
+        $this->ipwml              = $ipwlm;
     }
 
     /**
@@ -738,6 +749,47 @@ class ParametersController extends Controller
         }
 
         return array('form' => $form->createView());
+    }
+
+    /**
+     * @EXT\Route("/maintenance", name="claro_admin_parameters_maintenance")
+     * @EXT\Template("ClarolineCoreBundle:Administration\Parameters:maintenance.html.twig")
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function maintenancePageAction()
+    {
+        $this->checkOpen();
+        //the current ip must be whitelisted so it can access the the plateform when it's under maintenance
+        $this->ipwlm->addIP($_SERVER['REMOTE_ADDR']);
+
+        return array();
+    }
+
+    /**
+     * @EXT\Route("/maintenance/start", name="claro_admin_parameters_start_maintenance")
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function startMaintenanceAction()
+    {
+        $this->checkOpen();
+        MaintenanceHandler::enableMaintenance();
+
+        return new RedirectResponse($this->router->generate('claro_admin_parameters_index'));
+    }
+
+    /**
+     * @EXT\Route("/maintenance/end", name="claro_admin_parameters_end_maintenance")
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function endMaintenanceAction()
+    {
+        $this->checkOpen();
+        MaintenanceHandler::disableMaintenance();
+
+        return new RedirectResponse($this->router->generate('claro_admin_parameters_index'));
     }
 
     /**

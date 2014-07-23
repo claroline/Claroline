@@ -27,7 +27,7 @@
 {% endmacro %}
 {% macro displayControls() %}
     {% if app.user %}
-        <button class="btn btn-default action-button" data-action="remove">
+        <button class="btn btn-default action-button table-control" data-action="remove" disabled>
             <i class="fa fa-trash-o"></i>
             {{ 'delete'|trans({}, 'platform') }}
         </button>
@@ -38,8 +38,14 @@
     {% endif %}
 {% endmacro %}
 {% macro sortUrl(max, search, order, direction) %}
+    {% if direction == 'ASC' %}
+        {% set newDirection = 'DESC' %}
+    {% else %}
+        {% set newDirection = 'ASC' %}
+    {% endif %}
+
     {% if search == '' %}
-        {{ path('claro_admin_workspaces_management', {'max': max, 'order': order , 'direction': direction}) }}
+        {{ path('claro_admin_workspaces_management', {'max': max, 'order': order , 'direction': newDirection}) }}
     {% else %}
         {{ path('claro_admin_workspaces_management_search', {'search': search, 'max': max, 'order': order}) }}
     {% endif %}
@@ -121,8 +127,8 @@
                         <th><a href="{{ sortUrl(max, search, 'name', direction) }}">{{ 'name'|trans({}, 'platform') }} </a></th>
                         <th><a href="{{ sortUrl(max, search, 'code', direction) }}"> {{ 'code'|trans({}, 'platform') }} </a></th>
                         <th><a href="{{ sortUrl(max, search, 'creator', direction) }}"> {{ 'creator'|trans({}, 'platform') }} </a></th>
-                        <th><a href="{{ sortUrl(max, search, 'visibility', direction) }}"> {{ 'visibility'|trans({}, 'platform') }} </a></th>
-                        <th><a href="{{ sortUrl(max, search, 'displayble', direction) }}"> {{ 'public_registration'|trans({}, 'platform') }} </a></th>
+                        <th><a href="{{ sortUrl(max, search, 'displayable', direction) }}"> {{ 'visibility'|trans({}, 'platform') }} </a></th>
+                        <th><a href="{{ sortUrl(max, search, 'selfRegistration', direction) }}"> {{ 'public_registration'|trans({}, 'platform') }} </a></th>
                         <th>{{ 'edit'|trans({}, 'platform') }}</th>
                         <th>date </th>
                     </tr>

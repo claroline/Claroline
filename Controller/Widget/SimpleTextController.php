@@ -70,7 +70,7 @@ class SimpleTextController extends Controller
                 }
             }
 
-            return $$this->render(
+            return $this->render(
                 'ClarolineCoreBundle:Widget:config_simple_text_form.html.twig',
                 array(
                     'form' => $errorForm->createView(),

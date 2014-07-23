@@ -103,8 +103,7 @@
                     {% for workspace in workspaces %}
                     {% set workspaceId = workspace.getId() %}
                         <a  class="list-group-item" class="row-workspace row-workspace-id-{{ workspaceId }}"
-                            {% set granted = is_granted('home', workspace) %}
-                            {% if granted == true %}
+                            {% if has_access_to_workspace(workspace.getId()) %}
                                 href="{{ path('claro_workspace_open',
                                 {'workspaceId': workspaceId, 'toolName': 'home'}) }}"
                                 id="link-home-{{ workspaceId }}"

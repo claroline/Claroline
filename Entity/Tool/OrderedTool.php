@@ -70,9 +70,14 @@ class OrderedTool
     protected $order;
 
     /**
-     * @Orm\Column()
+     * @ORM\Column()
      */
     protected $name;
+
+    /**
+     * @ORM\Column(name="is_visible_in_desktop", type="boolean")
+     */
+    protected $isVisibleInDesktop = false;
 
     /**
      * @ORM\ManyToMany(
@@ -166,5 +171,15 @@ class OrderedTool
     public function getUser()
     {
         return $this->user;
+    }
+
+    public function isVisibleInDesktop()
+    {
+        return $this->isVisibleInDesktop;
+    }
+
+    public function setVisibleInDesktop($isVisible)
+    {
+        $this->isVisibleInDesktop = $isVisible;
     }
 }

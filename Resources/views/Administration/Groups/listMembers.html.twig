@@ -47,8 +47,9 @@
                        id="link-send-message" href="{{ path('claro_message_form_for_group', {'group': group.getId()}) }}">
                         <i class="fa fa-envelope"></i> {{ 'send_message'|trans({}, 'platform') }}
                     </a>
-                    <button class="btn btn-default action-button"
-                            data-action="remove">
+                    <button class="btn btn-default action-button table-control"
+                            data-action="remove"
+                            disabled>
                         <i class="fa fa-trash-o"></i> {{ 'delete'|trans({}, 'platform') }}
                     </button>
                     <a class="btn btn-default"
