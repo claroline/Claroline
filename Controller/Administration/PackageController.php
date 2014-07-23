@@ -38,7 +38,7 @@ class PackageController extends Controller
      *      "toolManager"     = @DI\Inject("claroline.manager.tool_manager"),
      *      "dm"              = @DI\Inject("claroline.manager.dependency_manager"),
      *      "sc"              = @DI\Inject("security.context"),
-     *      "ipwlm"           = @DI\Inject("claroline.manager.ip_white_list_manager"),
+     *      "ipwlm"           = @DI\Inject("claroline.manager.ip_white_list_manager")
      * })
      */
     public function __construct(
