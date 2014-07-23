@@ -1159,13 +1159,14 @@ class CorrectionController extends DropzoneBaseController
                 'correction' => $correction,
             ));
         } else {
+
+            $this->setCorrectionValidationAction($dropzone, $correction, 'yes', "default");
             return $this->redirect(
                 $this->generateUrl(
-                    'icap_dropzone_drops_detail_correction_validation',
+                    'icap_dropzone_drops_detail',
                     array(
                         'resourceId' => $dropzone->getId(),
-                        'correctionId' => $correction->getDrop()->getId(),
-                        'value' => 'yes'
+                        'dropId' => $correction->getDrop()->getId(),
                     )
                 )
             );
@@ -1203,6 +1204,7 @@ class CorrectionController extends DropzoneBaseController
         } else {
             $correction->setValid(false);
         }
+
 
         $em->persist($correction);
         $em->flush();
