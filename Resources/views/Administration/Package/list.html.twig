@@ -64,6 +64,9 @@
            class="btn btn-primary"
            id="upgrade-packages-btn"
            data-upgrade-page="{{ asset('upgrade/upgrade.html.php') }}"
+           {% if upgradablePackages|length == 0 %}
+                disabled
+           {% endif %}
         >
             {{ 'upgrade'|trans({}, 'platform') }}
         </button>
