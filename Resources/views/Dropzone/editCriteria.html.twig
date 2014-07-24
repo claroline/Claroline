@@ -96,7 +96,7 @@
                 {% for criterion in pager.currentPageResults %}
                     {% set criterionNumber = (((pager.currentPage-1) * pager.maxPerPage) + loop.index) %}
                     <div id="criterion-{{ criterion.id }}" class="criterion-row">
-                        <div class="panel panel-default">
+                        <div class="panel panel-criteria">
                             <div class="panel-heading">
                                 <div class="row">
                                     <div class="col-md-6">
@@ -119,8 +119,8 @@
 
                                 </div>
                             </div>
-                            <div class="panel-body">
-                                <div class="criterion-show">
+                            <div class="panel-body ">
+                            <div class="criterion-show">
                                     <div class="row">
                                         <div class="col-md-9">
                                             {{ criterion.instruction|raw }}
@@ -370,6 +370,15 @@
         .center-div {
             margin: auto;
             text-align: center;
+        }
+
+        .panel-criteria > .panel-heading {
+            background-color: #E0E0E0;
+            border-color: #E0E0E0;
+        }
+
+        .panel-criteria {
+            border-color: #E0E0E0;
         }
 
         /*.test {
