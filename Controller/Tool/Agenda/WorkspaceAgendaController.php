@@ -90,20 +90,6 @@ class WorkspaceAgendaController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/move",
-     *     name="claro_workspace_agenda_move"
-     * )
-     */
-    public function moveAction()
-    {
-        $postData = $this->request->request->all();
-        $data = $this->agendaManager->moveEvent($postData['id'], $postData['dayDelta'], $postData['minuteDelta']);
-
-        return new JsonResponse($data, 200);
-    }
-
-    /**
-     * @EXT\Route(
      *     "/{workspace}/tasks",
      *     name="claro_workspace_agenda_tasks"
      * )
@@ -122,35 +108,6 @@ class WorkspaceAgendaController extends Controller
         }
 
         return array('events' => $arEvents);
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/{workspace}/export",
-     *     name="claro_workspace_agenda_export"
-     * )
-     * @EXT\Method({"GET","POST"})
-     * @param Workspace $workspace
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function exportsEventIcsAction(Workspace $workspace)
-    {
-        $file =  $this->agendaManager->export($workspace->getId());
-        $response = new StreamedResponse();
-
-        $response->setCallBack(
-            function () use ($file) {
-                readfile($file);
-            }
-        );
-        $date = new \DateTime();
-        $response->headers->set('Content-Transfer-Encoding', 'octet-stream');
-        $response->headers->set('Content-Type', 'application/force-download');
-        $response->headers->set('Content-Disposition', 'attachment; filename='.$workspaceId->getName().'.ics');
-        $response->headers->set('Content-Type', ' text/calendar');
-        $response->headers->set('Connection', 'close');
-
-        return $response;
     }
 
     /**

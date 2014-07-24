@@ -234,45 +234,44 @@ class AgendaManager
         return $data;
     }
 
-    public function moveEvent($id, $dayDelta, $minuteDelta)
+    public function updateEndDate(Event $event, $dayDelta = 0, $minDelta = 0)
     {
-        $repository = $this->om->getRepository('ClarolineCoreBundle:Event');
-        $event = $repository->find($id);
-        // if is null = desktop event
-        if (!is_null($event->getWorkspace())) {
-            $this->checkUserIsAllowed('agenda', $event->getWorkspace());
-
-            if (!$this->checkUserIsAllowedtoWrite($event->getWorkspace())) {
-                throw new AccessDeniedException();
-            }
-        }
-
-        // timestamp 1h = 3600
-        $newStartDate = strtotime(
-            $dayDelta . ' day ' . $minuteDelta . ' minute',
-            $event->getStart()->getTimestamp()
-        );
-        $dateStart = new \DateTime(date('d-m-Y H:i', $newStartDate));
-        $event->setStart($dateStart);
-        $newEndDate = strtotime(
-            $dayDelta . ' day ' . $minuteDelta . ' minute',
-            $event->getEnd()->getTimestamp()
-        );
-        $dateEnd = new \DateTime(date('d-m-Y H:i', $newEndDate));
-        $event->setStart($dateStart);
-        $event->setEnd($dateEnd);
+        $event->setEnd($event->getEnd()->getTimeStamp() + $this->toSeconds($dayDelta, $minDelta));
         $this->om->flush();
+    }
 
-        $data = array(
+    public function updateStartDate(Event $event, $dayDelta = 0, $minDelta = 0)
+    {
+        $event->setStart($event->getStart()->getTimeStamp() + $this->toSeconds($dayDelta, $minDelta));
+        $this->om->flush();
+    }
+
+    public function moveEvent(Event $event, $dayDelta, $minuteDelta)
+    {
+        $this->updateStartDate($event, $dayDelta, $minuteDelta);
+        $this->updateEndDate($event, $dayDelta, $minuteDelta);
+    }
+
+    /**
+     * @param Event $event
+     * @return array
+     */
+    public function toArray(Event $event)
+    {
+        $start = is_null($event->getStart())? null : $event->getStart()->getTimestamp();
+        $end = is_null($event->getEnd())? null : $event->getEnd()->getTimestamp();
+
+        return array(
             'id' => $event->getId(),
             'title' => $event->getTitle(),
+            'start' => $start,
+            'end' => $end,
+            'color' => $event->getPriority(),
             'allDay' => $event->getAllDay(),
-            'start' => $event->getStart()->getTimestamp(),
-            'end' => $event->getEnd()->getTimestamp(),
-            'color' => $event->getPriority()
+            'owner' => $event->getUser()->getUsername(),
+            'description' => $event->getDescription(),
+            'editable' => true //for now, only true
         );
-
-        return $data;
     }
 
     private function checkUserIsAllowedtoWrite(Workspace $workspace, Event $event = null)
@@ -332,25 +331,8 @@ class AgendaManager
         }
     }
 
-    /**
-     * @param Event $event
-     * @return array
-     */
-    public function toArray(Event $event)
+    private function toSeconds($days = 0, $mins = 0)
     {
-        $start = is_null($event->getStart())? null : $event->getStart()->getTimestamp();
-        $end = is_null($event->getEnd())? null : $event->getEnd()->getTimestamp();
-
-        return array(
-            'id' => $event->getId(),
-            'title' => $event->getTitle(),
-            'start' => $start,
-            'end' => $end,
-            'color' => $event->getPriority(),
-            'allDay' => $event->getAllDay(),
-            'owner' => $event->getUser()->getUsername(),
-            'description' => $event->getDescription(),
-            'editable' => true //for now, only true
-        );
+        return $days * 3600 * 24 + $mins * 60;
     }
 }

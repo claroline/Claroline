@@ -13,6 +13,7 @@ namespace Claroline\CoreBundle\Controller\Tool\Agenda;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -71,12 +72,9 @@ class DesktopAgendaController extends Controller
      */
     public function desktopShowAction()
     {
-        $data = $this->agendaManager->desktopEvents();   
-        return new Response(
-            json_encode($data),
-            200,
-            array('Content-Type' => 'application/json')
-        );
+        $data = $this->agendaManager->desktopEvents();
+
+        return new JsonResponse($data);
     }
 
     /**
@@ -104,65 +102,6 @@ class DesktopAgendaController extends Controller
     }
 
     /**
-     * @Route(
-     *     "/delete",
-     *     name="claro_desktop_agenda_delete"
-     * )
-     * @EXT\Method("POST")
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function deleteAction()
-    {
-        $postData = $this->request->request->all();
-        if ($this->agendaManager->deleteEvent($postData['id'])) {    
-            return new Response(
-                json_encode(array('greeting' => 'delete')),
-                200,
-                array('Content-Type' => 'application/json')
-            );
-        }
-
-        return new Response(
-                json_encode(array('greeting' => 'fail')),
-                400,
-                array('Content-Type' => 'application/json')
-            );
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/update",
-     *     name="claro_desktop_agenda_update"
-     * )
-     * @EXT\Method("POST")
-     *
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function updateAction()
-    {
-        $postData = $this->request->request->all();
-        $event = $this->om->getRepository('ClarolineCoreBundle:Event')->find($postData['id']);
-        $form = $this->formFactory->create(FormFactory::TYPE_AGENDA, array(), $event);
-        $form->handleRequest($this->request);
-        if ($form->isValid()) {
-            $event->setAllDay($postData['agenda_form']['allDay']);
-            $this->om->flush();
-
-            return new Response('', 204);
-        }
-
-        return new Response(
-            json_encode(
-                array('dates are not valids')
-            ),
-            400,
-            array('Content-Type' => 'application/json')
-        );
-    }
-
-    /**
      * @EXT\Route(
      *     "/tasks",
      *     name="claro_desktop_agenda_tasks"
@@ -175,7 +114,7 @@ class DesktopAgendaController extends Controller
         $usr = $this->get('security.context')->getToken()->getUser();
         $listEvents = $this->om->getRepository('ClarolineCoreBundle:Event')->findDesktop($usr, true);
 
-        return  array('listEvents' => $listEvents );
+        return array('listEvents' => $listEvents );
     }
 
     /**
@@ -194,33 +133,5 @@ class DesktopAgendaController extends Controller
         $listEvents = $em->getRepository('ClarolineCoreBundle:Event')->findByUserWithoutAllDay($usr, 5, $order);
 
         return array('listEvents' => array_merge($listEvents, $listEventsDesktop));
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/export",
-     *     name="claro_desktop_agenda_export"
-     * )
-     * @EXT\Method({"GET"})
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function exportsEventIcsAction()
-    {
-        $file =  $this->agendaManager->export();
-        $response = new StreamedResponse();
-
-        $response->setCallBack(
-            function () use ($file) {
-                readfile($file);
-            }
-        );
-        $date = new \DateTime();
-        $response->headers->set('Content-Transfer-Encoding', 'octet-stream');
-        $response->headers->set('Content-Type', 'application/force-download');
-        $response->headers->set('Content-Disposition', 'attachment; filename= '.$date->getTimestamp().'desktop_events.ics');
-        $response->headers->set('Content-Type', ' text/calendar');
-        $response->headers->set('Connection', 'close');
-
-        return $response;
     }
 }

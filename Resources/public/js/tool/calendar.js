@@ -23,6 +23,11 @@
     ) {
         context = context || 'desktop';
         workspaceId = workspaceId || null;
+        calendar.flashbag =
+            '<div class="alert alert-success">' +
+                '<a data-dismiss="alert" class="close" href="#" aria-hidden="true">&times;</a>' +
+                Translator.get('platform:edit_event_success') +
+            '</div>';
 
         //initialize route & url depending on the context
         if (context !== 'desktop') {
@@ -107,7 +112,7 @@
             allDaySlot: false,
             lazyFetching : false,
             eventDrop: function (event, dayDelta, minuteDelta) {
-                dropEvent(event, dayDelta, minuteDelta);
+                move(event, dayDelta, minuteDelta);
             },
             dayClick: renderAddEventForm,
             eventClick:  function (event) {
@@ -136,7 +141,7 @@
                 });
             },
             eventResize: function (event, dayDelta, minuteDelta) {
-
+                resize(event, dayDelta, minuteDelta);
             }
         });
     };
@@ -203,11 +208,45 @@
         updateCalendarItem(event);
     }
 
-    var removeEvent = function(event, item, data) {
+    var removeEvent = function (event, item, data) {
         hidePopovers();
         //Remove from the calendar if it exists.
         $('#calendar').fullCalendar('removeEvents', data.id);
         //Remove from the task bar if it exists.
         $('#li-task-' + data.id).hide();
+    }
+
+    /**
+     * If action = 'move': the event will be moved
+     * If action = 'resize': the event will be resized
+     *
+     * @param event
+     * @param dayDelta
+     * @param minuteDelta
+     * @param action
+     */
+    var resizeOrMove = function (event, dayDelta, minuteDelta, action) {
+        var route = action === 'move' ? 'claro_workspace_agenda_move': 'claro_workspace_agenda_resize';
+
+        $.ajax({
+            'url': Routing.generate(route, {'event': event.id, 'day': dayDelta, 'minute': minuteDelta}),
+            'type': 'POST',
+            'success': function () {
+                $('.panel-body').first().prepend(calendar.flashbag);
+            },
+            'error': function () {
+                //do more error handling here
+                alert('error');
+                updateCalendarItem(event);
+            }
+        });
+    }
+
+    var move = function (event, dayDelta, minuteDelta) {
+        resizeOrMove(event, dayDelta, minuteDelta, 'move');
+    }
+
+    var resize = function (event, dayDelta, minuteDelta) {
+        resizeOrMove(event, dayDelta, minuteDelta, 'resize');
     }
 }) ();

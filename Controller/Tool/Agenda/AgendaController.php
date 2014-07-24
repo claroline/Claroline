@@ -113,7 +113,6 @@ class AgendaController extends Controller
         );
     }
 
-
     /**
      * @EXT\Route(
      *     "/{event}/delete",
@@ -130,5 +129,80 @@ class AgendaController extends Controller
         $removed = $this->agendaManager->deleteEvent($event);
 
         return new JsonResponse($removed, 200);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/resize/event/{event}/day/{day}/minute/{minute}",
+     *     name="claro_workspace_agenda_resize",
+     *     options = {"expose"=true}
+     * )
+     */
+    public function resizeAction(Event $event, $day, $minute)
+    {
+        $data = $this->agendaManager->updateEndDate($event, $day, $minute);
+
+        return new JsonResponse($data, 200);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/move/event/{event}/day/{day}/minute/{minute}",
+     *     name="claro_workspace_agenda_move",
+     *     options = {"expose"=true}
+     * )
+     */
+    public function moveAction(Event $event, $day, $minute)
+    {
+        $data = $this->agendaManager->moveEvent($event, $day, $minute);
+
+        return new JsonResponse($data, 200);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/workspace/{workspace}/export",
+     *     name="claro_workspace_agenda_export"
+     * )
+     * @EXT\Method({"GET","POST"})
+     * @param Workspace $workspace
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function exportWorkspaceEventIcsAction(Workspace $workspace)
+    {
+        return $this->exportEvent($workspace->getId());
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/desktop/export",
+     *     name="claro_desktop_agenda_export"
+     * )
+     * @EXT\Method({"GET"})
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function exportDesktopEventIcsAction()
+    {
+        return $this->exportEvent();
+    }
+
+    private function exportEvent($workspaceId = null)
+    {
+        $file =  $this->agendaManager->export();
+        $response = new StreamedResponse();
+
+        $response->setCallBack(
+            function () use ($file) {
+                readfile($file);
+            }
+        );
+        $date = new \DateTime();
+        $response->headers->set('Content-Transfer-Encoding', 'octet-stream');
+        $response->headers->set('Content-Type', 'application/force-download');
+        $response->headers->set('Content-Disposition', 'attachment; filename='.$workspaceId->getName().'.ics');
+        $response->headers->set('Content-Type', ' text/calendar');
+        $response->headers->set('Connection', 'close');
+
+        return $response;
     }
 } 
