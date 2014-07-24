@@ -26,50 +26,11 @@
 
         //initialize route & url depending on the context
         if (context !== 'desktop') {
-            var addUrl = Routing.generate('claro_workspace_agenda_add_event_form', {workspace: workspaceId});
-            //var showUrl = Routing.generate('claro_workspace_agenda_show', {'workspace': workspaceId});
+            calendar.addUrl = Routing.generate('claro_workspace_agenda_add_event_form', {'workspace': workspaceId});
+            calendar.showUrl = Routing.generate('claro_workspace_agenda_show', {'workspace': workspaceId});
         } else {
             var addRoute = 'some route i still habe to do';
             var showUrl = 'some other route';
-        }
-
-        var addEventToCalendar = function (event) {
-            $('#calendar').fullCalendar(
-                'renderEvent',
-                {
-                    id: event.id,
-                    title: event.title,
-                    start: event.start,
-                    end: event.end,
-                    allDay: event.allDay,
-                    color: event.color,
-                    description : event.description
-                }
-            );
-        };
-
-        var addTaskToCalendar = function (event) {
-
-        }
-
-        var addItemsToCalendar = function (events) {
-            for (var i = 0; i < events.length; i++) {
-                events[i].allDay ? addEventToCalendar(events[i]): addTaskToCalendar(events[i]);
-            }
-        }
-
-        var updateCalendarEvent = function (event) {
-
-        }
-
-        var updateCalendarTask = function (event) {
-
-        }
-
-        var updateCalendarItems = function (events) {
-            for (var i = 0; i < events.length; i++) {
-                events[i].allDay ? updateCalendarEvent(events[i]): updateCalendarTask(events[i]);
-            }
         }
 
         $('#import-ics-btn').on('click', function (event) {
@@ -84,36 +45,26 @@
 
         $('body').on('click', '.delete-event', function (event) {
             event.preventDefault();
-            hidePopovers();
-            $.ajax({
-                url: $(event.currentTarget).attr('href'),
-                success: function(event) {
-                    hidePopovers();
-                    $('#calendar').fullCalendar('removeEvents', event.id);
-                }
-            });
+
+            window.Claroline.Modal.confirmRequest(
+                $(event.currentTarget).attr('href'),
+                removeEvent,
+                undefined,
+                Translator.get('platform:remove_event'),
+                Translator.get('platform:remove_event_confirm')
+            );
         });
 
-        var renderAddEventForm = function (date) {
-            var dateVal = $.fullCalendar.formatDate(
-                date,
-                Translator.get('platform:date_agenda_display_format')
-            );
-
-            var postRenderAddEventAction = function(html) {
-                $('#agenda_form_start').val(dateVal);
-                $('#agenda_form_end').val(dateVal);
-
-                //add js to hide date if task.
-            }
-
+        //popover edit button: trigger the edit form
+        $('body').on('click', '.edit-event-link', function(event) {
+            event.preventDefault();
             window.Claroline.Modal.displayForm(
-                addUrl,
-                addItemsToCalendar,
-                postRenderAddEventAction,
+                $(event.currentTarget).attr('href'),
+                updateCalendarItemCallback,
+                function() {},
                 'form-event'
             );
-        };
+        });
 
         //INITIALIZE CALENDAR
         $('#calendar').fullCalendar({
@@ -145,7 +96,8 @@
             dayNames: [ t('sunday'),t('monday'), t('tuesday'), t('wednesday'), t('thursday'), t('friday'), t('saturday')],
             dayNamesShort: [ t('sun'), t('mon'), t('tue'), t('wed'), t('thu'), t('fri'), t('sat')],
             editable: true,
-            events: $('a#link').attr('href'),
+            //This is the url wich will get the events from ajax the 1st time the calendar is launched
+            events: calendar.showUrl,
             axisFormat: 'HH:mm',
             timeFormat: 'H(:mm)',
             agenda: 'h:mm{ - h:mm}',
@@ -189,19 +141,73 @@
         });
     };
 
-    //popover edit button: trigger the edit form
-    $('body').on('click', '.edit-event-link', function(event) {
-        event.preventDefault();
-        window.Claroline.Modal.displayForm(
-            $(event.currentTarget).attr('href'),
-            hidePopovers,
-            function() {},
-            'form-event'
-        );
-    });
-
     var hidePopovers = function() {
         $('.fc-event').popover('hide');
     }
 
+    var renderAddEventForm = function (date) {
+        var dateVal = $.fullCalendar.formatDate(
+            date,
+            Translator.get('platform:date_agenda_display_format')
+        );
+
+        var postRenderAddEventAction = function(html) {
+            $('#agenda_form_start').val(dateVal);
+            $('#agenda_form_end').val(dateVal);
+
+            //add js to hide date if task.
+        }
+
+        window.Claroline.Modal.displayForm(
+            calendar.addUrl,
+            addItemsToCalendar,
+            postRenderAddEventAction,
+            'form-event'
+        );
+    };
+
+    var addEventToCalendar = function (event) {
+        $('#calendar').fullCalendar(
+            'renderEvent',
+            {
+                id: event.id,
+                title: event.title,
+                start: event.start,
+                end: event.end,
+                allDay: event.allDay,
+                color: event.color,
+                description : event.description
+            }
+        );
+    };
+
+    var addTaskToCalendar = function (event) {
+        var html = Twig.render(Task, {'event': event});
+        $('#tasks-list').append(html);
+    }
+
+    var addItemsToCalendar = function (events) {
+        for (var i = 0; i < events.length; i++) {
+            events[i].allDay ? addTaskToCalendar(events[i]):  addEventToCalendar(events[i]);
+        }
+    }
+
+    var updateCalendarItem = function (event) {
+        console.debug(event);
+        removeEvent(undefined, undefined, event);
+        addItemsToCalendar(new Array(event));
+    }
+
+    var updateCalendarItemCallback = function (event) {
+        hidePopovers();
+        updateCalendarItem(event);
+    }
+
+    var removeEvent = function(event, item, data) {
+        hidePopovers();
+        //Remove from the calendar if it exists.
+        $('#calendar').fullCalendar('removeEvents', data.id);
+        //Remove from the task bar if it exists.
+        $('#li-task-' + data.id).hide();
+    }
 }) ();

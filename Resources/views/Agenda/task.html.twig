@@ -1,5 +1,23 @@
 {% twig_js name="Task" %}
 
-<div>
+<li id="li-task-{{ event.id }}" class="list-group-item">
+    <button type="button" class="delete-event close" data-event-id="{{event.id}}">&times;</button>
+    <strong data-event-title="{{event.title}}"> {{ event.title }}</strong>
 
-</div>
+    {% if event.description is not empty %}
+        <span>{{ event.description | raw }}</span>
+    {% endif %}
+
+    <div class="text-muted">
+        <span data-event-start="{{ event.start }}"> {{ event.start }}</span>
+    </div>
+
+    <div>
+        <a href="{{ path('claro_agenda_update_event_form', {'event': event.id}) }}"
+           class="edit-event-link"
+           role="button"
+        >
+            {{ 'edit'|trans({}, 'platform') }}
+        </a>
+    </div>
+</li>

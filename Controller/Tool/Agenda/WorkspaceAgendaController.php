@@ -72,7 +72,8 @@ class WorkspaceAgendaController extends Controller
     /**
      * @EXT\Route(
      *     "/{workspace}/show",
-     *     name="claro_workspace_agenda_show"
+     *     name="claro_workspace_agenda_show",
+     *     options = {"expose"=true}
      * )
      * @EXT\Method({"GET","POST"})
      *
@@ -109,13 +110,18 @@ class WorkspaceAgendaController extends Controller
      * @EXT\Method({"GET","POST"})
      * @param Workspace $workspace
      *
-     * @EXT\Template("ClarolineCoreBundle:Tool\\desktop\\agenda:tasks.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\agenda:tasks.html.twig")
      */
     public function tasksAction(Workspace $workspace)
     {
-        $listEvents = $this->om->getRepository('ClarolineCoreBundle:Event')->findByWorkspaceId($workspace->getId(), true);
+        $events = $this->om->getRepository('ClarolineCoreBundle:Event')->findByWorkspaceId($workspace->getId(), true);
+        $arEvents = [];
 
-        return  array('listEvents' => $listEvents );
+        foreach ($events as $event) {
+            $arEvents[] = $this->agendaManager->toArray($event);
+        }
+
+        return array('events' => $arEvents);
     }
 
     /**
@@ -233,7 +239,7 @@ class WorkspaceAgendaController extends Controller
             $event = $form->getData();
             $data = $this->agendaManager->addEvent($event, $workspace);
 
-            return new JsonResponse($data, 200);
+            return new JsonResponse(array($data), 200);
         }
 
         return array(

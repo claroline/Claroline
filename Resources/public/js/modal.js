@@ -173,6 +173,44 @@
         });
     }
 
+    /**
+     * Displays a confirmation message in a modal.
+     * The successHandler will take these parameters (
+     *      event,
+     *      successParameter,
+     *      data (the data wich are returned by the ajax request)
+     * )
+     * @param url the url wich is going to be confirmed
+     * @param successHandler a sucessHandler
+     * @param successParameter a parameter required by the request handler
+     * @param body the modal body
+     * @param header the modal header
+     */
+    modal.confirmRequest = function (url, successHandler, successParameter, body, header) {
+        var html = Twig.render(
+            ModalWindow,
+            {'confirmFooter': true, 'modalId': 'confirm-modal', 'body': body, 'header': header}
+        );
+
+        $('body').append(html);
+        //display validation modal
+        $('#confirm-modal').modal('show');
+        //destroy the modal when hidden
+        $('#confirm-modal').on('hidden.bs.modal', function () {
+            $(this).remove();
+        });
+
+        $('#confirm-ok').on('click', function(event) {
+            $.ajax({
+                url: url,
+                success: function(data) {
+                    successHandler(event, successParameter, data);
+                    $('#confirm-modal').modal('hide');
+                }
+            });
+        });
+    }
+
     function submitForm (html, successHandler, formId) {
         var form = $(html).find('form');
         var url = form.attr('action');

@@ -117,7 +117,8 @@ class AgendaController extends Controller
     /**
      * @EXT\Route(
      *     "/{event}/delete",
-     *     name="claro_agenda_delete_event"
+     *     name="claro_agenda_delete_event",
+     *     options = {"expose"=true}
      * )
      *
      * @param Event $event

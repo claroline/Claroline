@@ -336,7 +336,7 @@ class AgendaManager
      * @param Event $event
      * @return array
      */
-    private function toArray(Event $event)
+    public function toArray(Event $event)
     {
         $start = is_null($event->getStart())? null : $event->getStart()->getTimestamp();
         $end = is_null($event->getEnd())? null : $event->getEnd()->getTimestamp();
