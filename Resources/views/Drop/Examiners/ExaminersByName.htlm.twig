@@ -1,4 +1,8 @@
 {% extends "IcapDropzoneBundle:Drop:dropsByBase.html.twig" %}
+
+{% block  drops_examiners_active %} active {% endblock %}
+{% block drops_examiners_link %} # {% endblock %}
+
 {% block resourceBreadcrumb %}
     <li><a href="{{ path('icap_dropzone_edit_common',{'resourceId':dropzone.id}) }}"><span
                     class="fa fa-list"></span>  {{ dropzone.resourceNode.name }}</a></li>
@@ -6,28 +10,7 @@
         {{ 'Examiners'|trans({}, 'icap_dropzone') }}
     </li>
 {% endblock %}
-{% block dropzone_content_drops_by_navbar %}
-    <ul class="nav navbar-nav">
-        <li>
-            <a href="{{ path('icap_dropzone_drops_by_default', {'resourceId': dropzone.id}) }}">
-                {{ 'Copies evaluation finished'|trans({}, 'icap_dropzone') }} <span
-                        class="badge">{{ nbDropCorrected }}</span>
-            </a>
-        </li>
-        <li>
-            <a href="{{ path('icap_dropzone_drops_awaiting', {'resourceId': dropzone.id}) }}">
-                {{ 'Copies being evaluated'|trans({}, 'icap_dropzone') }} <span
-                        class="badge">{{ nbDrop - nbDropCorrected }}</span>
-            </a>
-        </li>
-        <li class="active">
-            <a href='{{ path('icap_dropzone_examiners', {'resourceId': dropzone.id}) }}'>
-                {{ 'Examiners'|trans({}, 'icap_dropzone') }}
-            </a>
-        </li>
-    </ul>
 
-{% endblock %}
 {% block dropzone_content_drops_by_beforeTitle %}
     {% include 'IcapDropzoneBundle:Drop:peerReviewHelper.html.twig' %}
 {% endblock %}

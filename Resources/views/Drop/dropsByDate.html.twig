@@ -1,8 +1,10 @@
 {% extends "IcapDropzoneBundle:Drop:dropsByBase.html.twig" %}
 
-{% block dropzone_content_drops_by_date %}  
-            <a href="#" class="btn btn-default btn-xs active">{{ 'Sort by date'|trans({}, 'icap_dropzone') }}</a>
-{% endblock %}
+{% block  drops_completed_active %} active {% endblock %}
+{% block drops_completed_link %} # {% endblock %}
+
+
+{% block dropzone_content_drops_by_date_active %}active{% endblock %}
 
 {% block dropzone_content_drops_by_paginate_part %}
         {% if pager.haveToPaginate %}

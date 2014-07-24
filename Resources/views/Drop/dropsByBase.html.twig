@@ -1,46 +1,26 @@
 {% extends "IcapDropzoneBundle:Drop:drops.html.twig" %}
 
 {% block dropzone_content_drops %}
-    <div class="navbar navbar-default" role="navigation">
-        <div class="collapse navbar-collapse navbar-ex1-collapse">
-            {% block dropzone_content_drops_by_navbar %}
-            <ul class="nav navbar-nav">
-                <li class="active">
-                    <a href="{{ path('icap_dropzone_drops_by_default', {'resourceId': dropzone.id}) }}">
-                        {{ 'Copies evaluation finished'|trans({}, 'icap_dropzone') }} <span class="badge">{{ nbDropCorrected }}</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ path('icap_dropzone_drops_awaiting', {'resourceId': dropzone.id}) }}">
-                        {{ 'Copies being evaluated'|trans({}, 'icap_dropzone') }} <span class="badge">{{ nbDrop - nbDropCorrected }}</span>
-                    </a>
-                </li>
-                {% if dropzone.peerReview %}
-                <li>
-                    <a href='{{ path('icap_dropzone_examiners', {'resourceId': dropzone.id}) }}'>
-                        {{ 'Examiners'|trans({}, 'icap_dropzone') }}
-                    </a>
-                </li>
-                {% endif %}
-            </ul>
-            {% endblock %}
-        </div>
-    </div>
+
     <div class="btn-group pull-right">
         {% block dropzone_content_drops_by_default %}
             <a href="{{ path('icap_dropzone_drops_by_default', {'resourceId': dropzone.id}) }}"
-               class="btn btn-default btn-xs" data-toggle="tooltip" title=""
+               class="btn btn-default btn-xs {% block dropzone_content_drops_by_default_active %}{% endblock %}"
+               data-toggle="tooltip" title=""
                data-original-title="{{ 'Sorted by date with reported drops first'|trans({}, 'icap_dropzone') }}">{{ 'default sort'|trans({}, 'icap_dropzone') }}</a>
         {% endblock %}
         {% block dropzone_content_drops_by_user %}
-            <a href="{{ path('icap_dropzone_drops_by_user', {'resourceId': dropzone.id}) }}" class="btn btn-default btn-xs">{{ 'Sort by user'|trans({}, 'icap_dropzone') }}</a>
+            <a href="{{ path('icap_dropzone_drops_by_user', {'resourceId': dropzone.id}) }}"
+               class="btn btn-default btn-xs {% block dropzone_content_drops_by_user_active %}{% endblock %}">{{ 'Sort by user'|trans({}, 'icap_dropzone') }}</a>
         {% endblock %}
-        {% block dropzone_content_drops_by_date %}  
-            <a href="{{ path('icap_dropzone_drops_by_date', {'resourceId': dropzone.id}) }}" class="btn btn-default btn-xs">{{ 'Sort by date'|trans({}, 'icap_dropzone') }}</a>
+        {% block dropzone_content_drops_by_date %}
+            <a href="{{ path('icap_dropzone_drops_by_date', {'resourceId': dropzone.id}) }}"
+               class="btn btn-default btn-xs {% block dropzone_content_drops_by_date_active %}{% endblock %}">{{ 'Sort by date'|trans({}, 'icap_dropzone') }}</a>
         {% endblock %}
         {% block dropzone_content_drops_by_reported %}
             <a href="{{ path('icap_dropzone_drops_by_report', {'resourceId': dropzone.id}) }}"
-               class="btn btn-default btn-xs" data-toggle="tooltip" title=""
+               class="btn btn-default btn-xs {% block dropzone_content_drops_by_reported_active %}{% endblock %}"
+               data-toggle="tooltip" title=""
                data-original-title="{{ 'only reported drops'|trans({}, 'icap_dropzone') }}">{{ 'sort by reported'|trans({}, 'icap_dropzone') }}</a>
         {% endblock %}
     </div>
