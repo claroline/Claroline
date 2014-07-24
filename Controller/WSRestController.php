@@ -36,7 +36,7 @@ class WSRestController extends Controller
         // Login allow to link a doc and a user
         // check also login matches to the connected user
 
-        if ($this->get('security.context')->isGranted('ROLE_WS_CREATOR')) {
+        if ($this->get('security.context')->isGranted('ROLE_USER')) {
             $userDir = './uploads/ujmexo/users_documents/'.$this->container->get('security.context')
                 ->getToken()->getUser()->getUsername();
 
