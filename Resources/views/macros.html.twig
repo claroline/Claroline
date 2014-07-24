@@ -134,7 +134,7 @@
             <div class="panel-heading">
                 <h5 class="panel-title">
                     {% set extra = package.getExtra() %}
-                    <a class="panel-toggle package-element {% if extra['is_in_repo'] is defined and extra['is_in_repo'] == true %}composer{% endif %}"
+                    <a class="panel-toggle package-element {% if extra['is_in_repo'] is defined and extra['is_in_repo'] or package.getType() == 'claroline-core' %}composer{% endif %}"
                        data-toggle="collapse"
                        data-parent="#accordion-{{ package.getDistReference() }}"
                        href="#collapse-inner-{{ package.getDistReference() }}"

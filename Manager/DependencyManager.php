@@ -378,6 +378,7 @@ class DependencyManager {
         putenv("COMPOSER_HOME={$this->vendorDir}{$ds}composer");
         $composer = $factory->createComposer($io, "{$this->vendorDir}{$ds}..{$ds}composer.json", false);
         //this is the default github token. An other way to do it must be found sooner or later.
+        $config = $composer->getConfig();
         $config->merge(array('github-oauth' => array('github.com' => '5d86c61eec8089d2dd22aebb79c37bebe4b6f86e')));
         $install = Installer::create($io, $composer);
         $continue = true;
@@ -434,7 +435,10 @@ class DependencyManager {
             foreach ($this->getAllInstalled() as $package) {
                 foreach ($toUpdate as $ppn) {
                     if ($package->getPrettyName() === $prettyName && $prettyName == $ppn) {
-                        $new->require->$prettyName = $operator . $package->getPrettyVersion();
+                        $versions = explode(',', $package->getPrettyVersion());
+                        if ($package->getPrettyVersion() !== 'dev-master') {
+                            $new->require->$prettyName = $operator . $versions[0];
+                        }
                     }
                 }
             }

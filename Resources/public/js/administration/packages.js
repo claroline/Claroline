@@ -83,6 +83,7 @@
                 + "</span>";
             var parent = $("#accordion-" + data['distRef'] + ' h5');
             parent.append(html);
+            $('#upgrade-packages-btn').removeAttr('disabled');
         }
     }
 
