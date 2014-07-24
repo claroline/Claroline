@@ -12,6 +12,16 @@ use Doctrine\ORM\EntityRepository;
  */
 class ShareRepository extends EntityRepository
 {
+    /**
+     * Allow to know if a question is shared with an user
+     *
+     * @access public
+     *
+     * @param integer $user id User
+     * @param integer $question id Question
+     *
+     * Return array[Share]
+     */
     public function getControlSharedQuestion($user, $question)
     {
         $qb = $this->createQueryBuilder('s');
@@ -22,6 +32,17 @@ class ShareRepository extends EntityRepository
         return $qb->getQuery()->getResult();
     }
 
+    /**
+     * Get the shared questions in the import view of an exercise
+     *
+     * @access public
+     *
+     * @param integer $exoId id Exercise
+     * @param integer $uid id User
+     * @param Doectrine EntityManager $am
+     *
+     * Return array[Share]
+     */
     public function getUserInteractionSharedImport($exoId, $uid, $em)
     {
 
@@ -49,6 +70,16 @@ class ShareRepository extends EntityRepository
         return $qb->getQuery()->getResult();
     }
 
+    /**
+     * Search shared questions by category
+     *
+     * @access public
+     *
+     * @param integer $userId id User
+     * @param String $whatToFind string to find
+     *
+     * Return array[Share]
+     */
     public function findByCategoryShared($userId, $whatToFind)
     {
         $dql = 'SELECT s FROM UJM\ExoBundle\Entity\Share s JOIN s.question q JOIN q.category c
@@ -62,6 +93,16 @@ class ShareRepository extends EntityRepository
         return $query->getResult();
     }
 
+    /**
+     * Search shared questions by title
+     *
+     * @access public
+     *
+     * @param integer $userId id User
+     * @param String $whatToFind string to find
+     *
+     * Return array[Share]
+     */
     public function findByTitleShared($userId, $whatToFind)
     {
         $dql = 'SELECT s FROM UJM\ExoBundle\Entity\Share s JOIN s.question q
@@ -75,6 +116,16 @@ class ShareRepository extends EntityRepository
         return $query->getResult();
     }
 
+    /**
+     * Search shared questions by type
+     *
+     * @access public
+     *
+     * @param integer $userId id User
+     * @param String $whatToFind string to find
+     *
+     * Return array[Share]
+     */
     public function findByTypeShared($userId, $whatToFind)
     {
         $dql = 'SELECT s FROM UJM\ExoBundle\Entity\Share s, UJM\ExoBundle\Entity\Interaction i
@@ -89,6 +140,16 @@ class ShareRepository extends EntityRepository
         return $query->getResult();
     }
 
+    /**
+     * Search shared questions by contain
+     *
+     * @access public
+     *
+     * @param integer $userId id User
+     * @param String $whatToFind string to find
+     *
+     * Return array[Share]
+     */
     public function findByContainShared($userId, $whatToFind)
     {
          $dql = 'SELECT s FROM UJM\ExoBundle\Entity\Share s, UJM\ExoBundle\Entity\Interaction i
@@ -103,6 +164,16 @@ class ShareRepository extends EntityRepository
         return $query->getResult();
     }
 
+    /**
+     * Search shared questions
+     *
+     * @access public
+     *
+     * @param integer $userId id User
+     * @param String $whatToFind string to find
+     *
+     * Return array[Share]
+     */
     public function findByAllShared($userId, $whatToFind)
     {
         $dql = 'SELECT s FROM UJM\ExoBundle\Entity\Share s, UJM\ExoBundle\Entity\Interaction i,

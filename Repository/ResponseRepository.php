@@ -13,8 +13,14 @@ use Doctrine\ORM\EntityRepository;
 class ResponseRepository extends EntityRepository
 {
     /**
-     * Allow to know if exists already a response for a question of a student's paper
+     * Allow to know if exists already a response for a question of a user's paper
      *
+     * @access public
+     *
+     * @param integer $paperID id Paper
+     * @param integer $interactionID id Interaction
+     *
+     * Return array[Response]
      */
     public function getAlreadyResponded($paperID, $interactionID)
     {
@@ -28,8 +34,14 @@ class ResponseRepository extends EntityRepository
     }
 
     /**
-     * Send the reponses for a paper
+     * Get the reponses for a paper and an user
      *
+     * @access public
+     *
+     * @param integer $uid id User
+     * @param integer $paperID id paper
+     *
+     * Return array[Response]
      */
     public function getPaperResponses($uid, $paperID)
     {
@@ -43,8 +55,14 @@ class ResponseRepository extends EntityRepository
     }
 
     /**
-     * Send the reponses for an exercise and an interaction with count
+     * Get the score for an exercise and an interaction with count
      *
+     * @access public
+     *
+     * @param integer $exoId id Exercise
+     * @param integer $interId id Interaction
+     *
+     * Return array[Response]
      */
     public function getExerciseInterResponsesWithCount($exoId, $interId)
     {
@@ -58,8 +76,14 @@ class ResponseRepository extends EntityRepository
     }
 
     /**
-     * Send the reponses for an exercise and an interaction
+     * Send the score for an exercise and an interaction
      *
+     * @access public
+     *
+     * @param integer $exoId id Exercise
+     * @param integer $interId id Interaction
+     *
+     * Return array[Response]
      */
     public function getExerciseInterResponses($exoId, $interId)
     {

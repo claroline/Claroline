@@ -16,6 +16,12 @@ class LinkHintPaperRepository extends EntityRepository
     /**
      * Allow to know if a hint is viewed in an assessment
      *
+     * @access public
+     *
+     * @param integer $hintID id Hint
+     * @param integer $paperID id Paper
+     *
+     * Return array[LinkHintPaper]
      */
     public function getLHP($hintID, $paperID)
     {
@@ -29,8 +35,13 @@ class LinkHintPaperRepository extends EntityRepository
     }
 
     /**
-     * Return hint viewed for a paper
+     * Get hint viewed for a paper
      *
+     * @access public
+     *
+     * @param integer $paperID id Paper
+     *
+     * Return array[LinkHintPaper]
      */
     public function getHintViewed($paperID)
     {

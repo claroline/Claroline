@@ -12,24 +12,17 @@ use Doctrine\ORM\EntityRepository;
  */
 class SubscriptionRepository extends EntityRepository
 {
-    /**
-     * Exercises by user
-     *
-     */
-    public function getExercisesUser($user)
-    {
-        $qb = $this->createQueryBuilder('s')
-            ->where('s.user = :user')
-            ->setParameter('user', $user)
-            ->join('s.exercise', 'e')
-            ->addSelect('e');
-
-        return $qb->getQuery()->getResult();
-    }
 
     /**
-     * Allow to know if the User is enrolled to this Exercise
+     * Allow to know if the User is recorded in Subscription
+     * old entity, will be delete in the futur
      *
+     * @access public
+     *
+     * @param integer $user id User
+     * @param integer $exercise id Exercise
+     *
+     * Return array[Subscription]
      */
     public function getControlExerciseEnroll($user, $exercise)
     {

@@ -142,6 +142,8 @@ class InteractionRepository extends EntityRepository
     /**
      * To import exercise's questions in an other exercise
      *
+     * @access public
+     *
      * @param Doctrine EntityManager $em
      * @param integer $exoSearch id of exercise selected in the filter
      * @param integer $exoImport id of exercise in which one I want to import questions
@@ -186,6 +188,8 @@ class InteractionRepository extends EntityRepository
     /**
      * Interactions linked to the paper
      *
+     * @access public
+     *
      * @param Doctrine EntityManager $em
      * @param String $ids list of id of Interaction of the paper
      *
@@ -211,6 +215,8 @@ class InteractionRepository extends EntityRepository
 
     /**
      * To import user's questions in an exercise
+     *
+     * @access public
      *
      * @param Doctrine EntityManager $em
      * @param integer $uid id of User
@@ -263,6 +269,8 @@ class InteractionRepository extends EntityRepository
     /**
      * To import model's user in an exercise
      *
+     * @access public
+     *
      * @param Doctrine EntityManager $em
      * @param integer $uid id of User
      * @param integer $exoId id of exercise
@@ -302,6 +310,8 @@ class InteractionRepository extends EntityRepository
     /**
      * Search interactions of one user by type
      *
+     * @access public
+     *
      * @param integer $userId id of User
      * @param string $whatToFind the type to find
      *
@@ -323,6 +333,8 @@ class InteractionRepository extends EntityRepository
     /**
      * Search interactions of one user by contain
      *
+     * @access public
+     *
      * @param integer $userId id of User
      * @param string $whatToFind the contain to find
      *
@@ -343,6 +355,8 @@ class InteractionRepository extends EntityRepository
 
     /**
      * Search interactions of one user by all criteria
+     *
+     * @access public
      *
      * @param integer $userId id of User
      * @param string $whatToFind parameter to find

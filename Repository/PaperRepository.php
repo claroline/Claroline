@@ -13,8 +13,14 @@ use Doctrine\ORM\EntityRepository;
 class PaperRepository extends EntityRepository
 {
     /**
-     * Returns a student's Paper which is not finished
+     * Get a student's Paper which is not finished
      *
+     * @access public
+     *
+     * @param integer $userID id User
+     * @param integer $exerciseID id Exercise
+     *
+     * Return array[Paper]
      */
     public function getPaper($userID, $exerciseID)
     {
@@ -29,8 +35,15 @@ class PaperRepository extends EntityRepository
     }
 
     /**
-     * Returns the user's papers for an exercise
+     * Get the user's papers for an exercise
      *
+     * @access public
+     *
+     * @param integer $userID id User
+     * @param integer $exerciseID id Exercise
+     * @param boolean $finished to return or no the papers no finished
+     *
+     * Return array[Paper]
      */
     public function getExerciseUserPapers($userID, $exerciseID, $finished = false)
     {
@@ -40,7 +53,7 @@ class PaperRepository extends EntityRepository
             ->where($qb->expr()->in('u.id', $userID))
             ->andWhere($qb->expr()->in('e.id', $exerciseID))
             ->orderBy('p.id', 'ASC');
-        
+
         if ($finished === true) {
             $qb->andWhere('p.end is NOT NULL');
         }
@@ -49,8 +62,13 @@ class PaperRepository extends EntityRepository
     }
 
     /**
-     * Returns all papers for an exercise
+     * Get all papers for an exercise
      *
+     * @access public
+     *
+     * @param integer $exerciseID id Exercise
+     *
+     * Return array[Paper]
      */
     public function getExerciseAllPapers($exerciseID)
     {
@@ -64,10 +82,15 @@ class PaperRepository extends EntityRepository
 
         return $qb->getQuery()->getResult();
     }
-    
+
     /**
      * Returns all papers for an exercise for CSV export
      *
+     * @access public
+     *
+     * @param integer $exerciseID id Exercise
+     *
+     * Return array[Paper]
      */
     public function getExerciseAllPapersIterator($exerciseID)
     {
@@ -82,6 +105,15 @@ class PaperRepository extends EntityRepository
         return $qb->getQuery()->iterate();
     }
 
+    /**
+     * Returns all papers of all exercise for an user
+     *
+     * @access public
+     *
+     * @param integer $userID id User
+     *
+     * Return array[Paper]
+     */
     public function getPaperUser($userID)
     {
         $dql = 'SELECT p FROM UJM\ExoBundle\Entity\Paper p
@@ -92,22 +124,27 @@ class PaperRepository extends EntityRepository
 
         return $query->getResult();
     }
-    
+
     /**
      * Returns number of papers for an exercise
      *
+     * @access public
+     *
+     * @param integer $exerciseID id Exercise
+     *
+     * Return integer
      */
     public function countPapers($exerciseID)
     {
         $qb = $this->createQueryBuilder('p');
-        
+
         $nbPapers = $qb->select('COUNT(p)')
                        ->join('p.exercise', 'e')
                        ->join('p.user', 'u')
                        ->where($qb->expr()->in('e.id', $exerciseID))
                        ->getQuery()
                        ->getSingleScalarResult();
-        
+
         return $nbPapers;
     }
 }

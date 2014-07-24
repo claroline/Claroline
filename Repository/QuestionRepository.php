@@ -13,8 +13,13 @@ use Doctrine\ORM\EntityRepository;
 class QuestionRepository extends EntityRepository
 {
     /**
-     * teatcher's Questions
+     * Get user's Questions
      *
+     * @access public
+     *
+     * @param integer $userId id User
+     *
+     * Return array[Question]
      */
     public function getQuestionsUser($userId)
     {
@@ -28,6 +33,12 @@ class QuestionRepository extends EntityRepository
     /**
      * Allow to know if the User is the owner of this Question
      *
+     * @access public
+     *
+     * @param integer $user id User
+     * @param integer $question id Question
+     *
+     * Return array[Question]
      */
     public function getControlOwnerQuestion($user, $question)
     {
@@ -39,6 +50,16 @@ class QuestionRepository extends EntityRepository
         return $qb->getQuery()->getResult();
     }
 
+    /**
+     * Search question by category
+     *
+     * @access public
+     *
+     * @param integer $userId id User
+     * @param String $whatToFind string to find
+     *
+     * Return array[Question]
+     */
     public function findByCategory($userId, $whatToFind)
     {
         $dql = 'SELECT q FROM UJM\ExoBundle\Entity\Question q JOIN q.category c
@@ -52,6 +73,16 @@ class QuestionRepository extends EntityRepository
         return $query->getResult();
     }
 
+    /**
+     * Search question
+     *
+     * @access public
+     *
+     * @param integer $userId id User
+     * @param String $whatToFind string to find
+     *
+     * Return array[Question]
+     */
     public function findByTitle($userId, $whatToFind)
     {
         $dql = 'SELECT q FROM UJM\ExoBundle\Entity\Question q
