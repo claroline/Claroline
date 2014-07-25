@@ -90,15 +90,15 @@ class LocaleManager
         $locales = $this->getAvailableLocales();
 
         if (isset($locales[$locale]) and ($user = $this->getCurrentUser())) {
-
             $this->userManager->setLocale($user, $locale);
         }
     }
 
     /**
-     * This methond returns the user locale and store it in session, if there is no user this method return default
+     * This method returns the user locale and store it in session, if there is no user this method return default
      * language or the browser language if it is present in translations.
      *
+     * @param \Symfony\Component\HttpFoundation\Request $request
      * @return string The locale string as en, fr, es, etc.
      */
     public function getUserLocale(Request $request)
@@ -110,6 +110,8 @@ class LocaleManager
             $locale = $request->attributes->get('_locale');
         } elseif (($user = $this->getCurrentUser()) &&  $user->getLocale()) {
             $locale = $user->getLocale();
+        } elseif ($sessionLocale = $request->getSession()->get('_locale')) {
+            $locale = $sessionLocale;
         } elseif (count($preferred) > 0 && isset($locales[$preferred[0]])) {
             $locale = $preferred[0];
         } else {
