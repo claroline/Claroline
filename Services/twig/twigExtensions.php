@@ -12,17 +12,40 @@ class TwigExtensions extends \Twig_Extension
     protected $doctrine;
     protected $exerciseSer;
 
+    /**
+     * Constructor
+     *
+     * @access public
+     *
+     * @param \Doctrine\Bundle\DoctrineBundle\Registry $doctrine Dependency Injection
+     * @param \UJM\ExoBundle\Services\classes\exerciseServices $exerciseSer Dependency Injection
+     *
+     */
     public function __construct(Registry $doctrine, exerciseServices $exerciseSer)
     {
         $this->doctrine  = $doctrine;
         $this->exerciseSer = $exerciseSer;
     }
 
+    /**
+     * Get name
+     *
+     * @access public
+     *
+     * Return String
+     */
     public function getName()
     {
         return "twigExtensions";
     }
 
+    /**
+     * Get functions
+     *
+     * @access public
+     *
+     * Return array
+     */
     public function getFunctions()
     {
 
@@ -36,12 +59,32 @@ class TwigExtensions extends \Twig_Extension
 
     }
 
+    /**
+     * preg_match for twig
+     *
+     * @access public
+     *
+     * @param mixed $patern cast into string
+     * @param mixed $str cast into string
+     *
+     * Return integer
+     */
     public function regexTwig($pattern, $str)
     {
-        //return int
+
         return preg_match((string) $pattern, (string) $str);
     }
 
+    /**
+     * Get the InteractionX (InteractionQCM or InteractionGraphic or ...) and the score max of the interaction
+     *
+     * @access public
+     *
+     * @param integer $interId id InteractionX
+     * @param String $typeInter type of interaction (QCM, graphic, ...)
+     *
+     * Return array
+     */
     public function getInterTwig($interId, $typeInter)
     {
         //$em = $this->doctrine->getManager();
@@ -88,6 +131,15 @@ class TwigExtensions extends \Twig_Extension
         return $inter;
     }
 
+    /**
+     * Get the coords of response zones of an InteractionGraphic
+     *
+     * @access public
+     *
+     * @param integer $interGraphId id InteractionGraphic
+     *
+     * Return array[Coords]
+     */
     public function getCoordsGraphTwig($interGraphId)
     {
         $coords = $this->doctrine
@@ -98,11 +150,33 @@ class TwigExtensions extends \Twig_Extension
         return $coords;
     }
 
+    /**
+     * To round up and down a score
+     *
+     * @access public
+     *
+     * @param float $markToBeAdjusted
+     *
+     * Return float
+     */
     public function roundUpOrDown($markToBeAdjusted)
     {
+
         return $this->exerciseSer->roundUpDown($markToBeAdjusted);
     }
 
+    /**
+     * Cet rights for a question and an user, this method is used in the views with a table of questions
+     *
+     * @access public
+     *
+     * @param String $questionsList the type of the list (share, import, my, exoList)
+     * @param boolean $shareRight if the user can be edit a shared question
+     * @param integer $actionQ info right about a question
+     * @param boolean $qexoEdit if the user can edit a question in an exercise
+     *
+     * Return array
+     */
     public function getQuestionRights($questionsList, $shareRight, $actionQ, $qexoEdit)
     {
 
@@ -175,21 +249,57 @@ class TwigExtensions extends \Twig_Extension
 
     }
 
+    /**
+     * Get score max possible for a QCM
+     *
+     * @access public
+     *
+     * @param \UJM\ExoBundle\Entity\Paper\InteractionQCM $interQCM
+     *
+     * Return float
+     */
     private function getQCMScoreMax($interQCM)
     {
         return $this->exerciseSer->qcmMaxScore($interQCM);
     }
 
+    /**
+     * Get score max possible for an open question
+     *
+     * @access public
+     *
+     * @param \UJM\ExoBundle\Entity\Paper\InteractionOpen $interOpen
+     *
+     * Return float
+     */
     private function getOpenScoreMax($interOpen)
     {
         return $this->exerciseSer->openMaxScore($interOpen);
     }
 
+    /**
+     * Get score max possible for a question with holes
+     *
+     * @access public
+     *
+     * @param \UJM\ExoBundle\Entity\Paper\InteractionHole $interHole
+     *
+     * Return float
+     */
     private function getHoleScoreMax($interHole)
     {
         return $this->exerciseSer->holeMaxScore($interHole);
     }
 
+    /**
+     * Get score max possible for a graphic question
+     *
+     * @access public
+     *
+     * @param \UJM\ExoBundle\Entity\Paper\InteractionGraphic $interG
+     *
+     * Return float
+     */
     private function getGraphicScoreMax($interG)
     {
         return $this->exerciseSer->graphicMaxScore($interG);
