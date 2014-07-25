@@ -8,9 +8,11 @@
 <div>{{ 'agenda_form_end'|trans({}, 'agenda') }}: {{ event.endFormatted }}</div>
 <div>{{ 'agenda_form_author'|trans({}, 'agenda') }}: {{ event.owner }}</div>
 
+{% if event.workspace != null %}
+<div>{{ 'workspace'|trans({}, 'platform') }}: {{ event.workspace }}</div>
+{% endif %}
 {% if event.description is defined and event.description != null %}
 <div>
     {{ 'description'|trans({}, 'platform') }}: {{ event.description|raw }}
 </div>
-
 {% endif %}

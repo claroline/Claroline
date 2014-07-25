@@ -102,13 +102,8 @@ class WorkspaceAgendaController extends Controller
     public function tasksAction(Workspace $workspace)
     {
         $events = $this->om->getRepository('ClarolineCoreBundle:Event')->findByWorkspaceId($workspace->getId(), true);
-        $arEvents = [];
 
-        foreach ($events as $event) {
-            $arEvents[] = $this->agendaManager->toArray($event);
-        }
-
-        return array('events' => $arEvents);
+        return array('events' => $this->agendaManager->convertEventsToArray($events));
     }
 
     /**

@@ -71,6 +71,16 @@
             );
         });
 
+        $('.filter').click(function () {
+            var workspaceIds = [];
+
+            $('.filter:checkbox:checked').each(function () {
+                workspaceIds.push(parseInt($(this).val()));
+            });
+
+            filterCalendarItems(workspaceIds);
+        });
+
         //INITIALIZE CALENDAR
         $('#calendar').fullCalendar({
             header: {
@@ -120,6 +130,9 @@
             },
             //renders the popover for an event
             eventRender: function (event, element) {
+                //event are unfiltered by default
+                event.visible = event.visible === undefined ? true: event.visible;
+                if (!event.visible) return false;
                 renderEvent(event, element);
             },
             eventResize: function (event, dayDelta, minuteDelta) {
@@ -128,14 +141,12 @@
         });
     };
 
-    var hidePopovers = function() {
+    var hidePopovers = function () {
         $('.fc-event').popover('hide');
     }
 
     //@todo move this on the eventClick event ?
-    var renderEvent = function(event, element) {
-        if (event.visible == false) return false;
-
+    var renderEvent = function (event, element) {
         event['startFormatted'] = $.fullCalendar.formatDate(
             event.start,
             Translator.get('platform:date_agenda_display_format')
@@ -144,9 +155,7 @@
             event.end,
             Translator.get('platform:date_agenda_display_format')
         );
-
         var eventContent = Twig.render(EventContent, {'event': event});
-
         element.popover({
             title: event.title + '<button type="button" class="pop-close close" data-dismiss="popover" aria-hidden="true">&times;</button>',
             content: eventContent,
@@ -161,7 +170,7 @@
             Translator.get('platform:date_agenda_display_format')
         );
 
-        var postRenderAddEventAction = function(html) {
+        var postRenderAddEventAction = function (html) {
             $('#agenda_form_start').val(dateVal);
             $('#agenda_form_end').val(dateVal);
 
@@ -203,7 +212,6 @@
     }
 
     var updateCalendarItem = function (event) {
-        console.debug(event);
         removeEvent(undefined, undefined, event);
         addItemsToCalendar(new Array(event));
     }
@@ -254,5 +262,55 @@
 
     var resize = function (event, dayDelta, minuteDelta) {
         resizeOrMove(event, dayDelta, minuteDelta, 'resize');
+    }
+
+    var filterEvents = function (workspaceIds) {
+        var numberOfChecked = $('.filter:checkbox:checked').length;
+        var totalCheckboxes = $('.filter:checkbox').length;
+        //if all checkboxes or none checkboxes are checked display all events
+        if ((totalCheckboxes - numberOfChecked === 0) || (numberOfChecked === 0)) {
+            $('#calendar').fullCalendar('clientEvents', function (eventObject) {
+                eventObject.visible = true;
+            });
+        } else {
+            for (var i = 0; i < workspaceIds.length; i++) {
+                $('#calendar').fullCalendar('clientEvents', function (eventObject) {
+                    //check for workspace
+                    eventObject.visible = ($.inArray(eventObject.workspace_id, workspaceIds) >= 0) ? true: false;
+                    //check for desktop
+                    if (($.inArray(0, workspaceIds) >= 0) && eventObject.workspace_id === null) {
+                        eventObject.visible = true;
+                    }
+                });
+            }
+        }
+        $('#calendar').fullCalendar('rerenderEvents');
+    }
+
+    var filterTasks = function (workspaceIds) {
+        var numberOfChecked = $('.filter:checkbox:checked').length;
+        var totalCheckboxes = $('.filter:checkbox').length;
+
+        if ((totalCheckboxes - numberOfChecked === 0) || (numberOfChecked === 0)) {
+            $('.task-item').each(function () {
+                $(this).show();
+            });
+        } else {
+            //hide what's needed
+            console.debug(workspaceIds);
+            $('.task-item').each(function() {
+                if ($.inArray(parseInt($(this).attr('data-workspace-id')), workspaceIds) < 0) $(this).hide();
+            });
+        }
+    }
+
+    /**
+     * Filter by workspace ids.
+     * The id "0" is an exception for the desktop
+     * @param selected
+     */
+    var filterCalendarItems = function (workspaceIds) {
+        filterEvents(workspaceIds);
+        filterTasks(workspaceIds);
     }
 }) ();

@@ -38,20 +38,26 @@
                     </a>
                 </div>
 
-                {% if cours | length > 1 %}
-                <div class="panel panel-default">
-                    <div data-toggle="collapse" data-target="#panel-owners" class="panel-heading">{{'filter_ws'|trans({}, 'agenda')}}</div>
-                    <div id="panel-owners" class="panel-body list-group in" style="padding:0">
-                        <div id="selectWorkspace">
-                            {% for i, c in cours %}
-                                <li class="list-group-item">
-                                    <input id="ws-{{ i }}" type="checkbox" name="{{ c }}"  class="filter" />
-                                    <label for="ws-{{ i }}">{{ c }}</label>
-                                </li>
-                            {% endfor %}
+                {% if filters | length > 1 %}
+                    <div class="panel panel-default">
+                        <div data-toggle="collapse" data-target="#panel-owners" class="panel-heading">{{'filter_ws'|trans({}, 'agenda')}}</div>
+                        <div id="panel-owners" class="panel-body list-group in" style="padding:0">
+                            <div id="selectWorkspace">
+                                {% for wsId, filterName in filters %}
+                                    <li class="list-group-item">
+                                        <input
+                                            id="ws-{{ wsId }}"
+                                            type="checkbox"
+                                            name="{{ filterName}}"
+                                            class="filter"
+                                            value="{{ wsId }}"
+                                        />
+                                        <label for="ws-{{ wsId }}">{{ filterName }}</label>
+                                    </li>
+                                {% endfor %}
+                            </div>
                         </div>
                     </div>
-                </div>
                 {% endif %}
 
                 <div class="panel panel-default">

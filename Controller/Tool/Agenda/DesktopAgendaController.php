@@ -78,7 +78,7 @@ class DesktopAgendaController extends Controller
      */
     public function desktopShowAction()
     {
-        $data = $this->agendaManager->desktopEvents();
+        $data = $this->agendaManager->desktopEvents($this->get('security.context')->getToken()->getUser());
 
         return new JsonResponse($data);
     }
@@ -142,9 +142,8 @@ class DesktopAgendaController extends Controller
     public function tasksAction()
     {
         $usr = $this->get('security.context')->getToken()->getUser();
-        $events = $this->om->getRepository('ClarolineCoreBundle:Event')->findDesktop($usr, true);
+        $events = $this->agendaManager->desktopEvents($usr, true);
 
-        $events = array();
         return array('events' => $events);
     }
 

@@ -12,6 +12,7 @@
 namespace Claroline\CoreBundle\Manager;
 
 use Claroline\CoreBundle\Entity\Event;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -89,13 +90,12 @@ class AgendaManager
         return $removed;
     }
 
-    public function desktopEvents(){
-        $usr = $this->security->getToken()->getUser();
-        $listEvents = $this->om->getRepository('ClarolineCoreBundle:Event')->findByUser($usr, 0);
-        $desktopEvents = $this->om->getRepository('ClarolineCoreBundle:Event')->findDesktop($usr, 0);
-        $data = array_merge($this->convertEventsToArray($listEvents), $this->convertEventsToArray($desktopEvents));
+    public function desktopEvents(User $usr, $allDay = false)
+    {
+        $listEvents = $this->om->getRepository('ClarolineCoreBundle:Event')->findByUser($usr, $allDay);
+        $desktopEvents = $this->om->getRepository('ClarolineCoreBundle:Event')->findDesktop($usr, $allDay);
 
-        return $data;
+        return array_merge($this->convertEventsToArray($listEvents), $this->convertEventsToArray($desktopEvents));
     }
 
     /**
@@ -214,10 +214,10 @@ class AgendaManager
         return $this->toArray($event);
     }
 
-    public function displayEvents(Workspace $workspace)
+    public function displayEvents(Workspace $workspace, $allDay = false)
     {
         $events = $this->om->getRepository('ClarolineCoreBundle:Event')
-            ->findbyWorkspaceId($workspace->getId(), false);
+            ->findbyWorkspaceId($workspace->getId(), $allDay);
 
         return $this->convertEventsToArray($events);
     }
@@ -260,7 +260,8 @@ class AgendaManager
             'description' => $event->getDescription(),
             'editable' => $this->security->isGranted('EDIT', $event),
             'deletable' => $this->security->isGranted('DELETE', $event),
-            'workspace' => $event->getWorkspace() ? $event->getWorkspace()->getId(): null
+            'workspace_id' => $event->getWorkspace() ? $event->getWorkspace()->getId(): null,
+            'workspace_name' => $event->getWorkspace() ? $event->getWorkspace()->getName(): null
         );
     }
 

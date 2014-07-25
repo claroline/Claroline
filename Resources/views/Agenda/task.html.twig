@@ -1,7 +1,16 @@
 {% twig_js name="Task" %}
 
-<li id="li-task-{{ event.id }}" class="list-group-item">
-    <button type="button" class="delete-event close" data-event-id="{{event.id}}">&times;</button>
+<li
+    id="li-task-{{ event.id }}"
+    class="list-group-item task-item"
+    data-task-id="{{ event.id }}"
+    {% if event.workspace_id != null %}
+        data-workspace-id="{{ event.workspace_id }}"
+    {% else %}
+        data-workspace-id="0"
+    {% endif %}
+>
+    <a href="{{ path('claro_agenda_delete_event', {'event': event.id}) }}" class="delete-event close">&times;</a>
     <strong data-event-title="{{event.title}}"> {{ event.title }}</strong>
 
     {% if event.description is not empty %}
