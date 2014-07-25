@@ -63,6 +63,9 @@ use UJM\ExoBundle\Form\InteractionHoleType;
 use UJM\ExoBundle\Entity\Interaction;
 use UJM\ExoBundle\Entity\Share;
 
+use UJM\ExoBundle\Entity\InteractionMatching;
+use UJM\ExoBundle\Form\InteractionMatchingType;
+
 use UJM\ExoBundle\Entity\Response;
 use UJM\ExoBundle\Form\ResponseType;
 
@@ -824,6 +827,27 @@ class QuestionController extends Controller
                         'exoID'    => $exoID,
                         'entity'   => $entity,
                         'typeOpen' => json_encode($typeOpen),
+                        'form'     => $form->createView()
+                        )
+                    );
+                }
+                
+                if ($valType == 5) {
+                    $entity = new InteractionMatching();
+                    $form   = $this->createForm(
+                        new InteractionMatchingType(
+                            $this->container->get('security.context')
+                                ->getToken()->getUser()
+                        ), $entity
+                    );
+
+                    $typeMatching = $services->getTypeMatching();
+
+                    return $this->container->get('templating')->renderResponse(
+                        'UJMExoBundle:InteractionMatching:new.html.twig', array(
+                        'exoID'    => $exoID,
+                        'entity'   => $entity,
+                        'typeMatching' => json_encode($typeMatching),
                         'form'     => $form->createView()
                         )
                     );

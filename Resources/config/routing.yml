@@ -22,6 +22,10 @@ admin_interaction_qcm:
     resource: "routing/admin/interactionQCM.yml"
     prefix:   /admin/interactionqcm
 
+admin_interaction_matching:
+    resource: "routing/admin/interactionMatching.yml"
+    prefix:   /admin/interactionmatching
+
 admin_paper:
     resource: "routing/admin/paper.yml"
     prefix:   /admin/paper    

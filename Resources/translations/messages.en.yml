@@ -227,6 +227,8 @@ manageImg: Manage my documents
 mark: Mark
 mark this question: Marked this question
 markTooBigest: The mark must be less than or equal to
+matching: Association
+matching creation: Creation of a question of type association
 maximum number of tries: Maximum number of tries
 meaningMeasureDifficulty: If the measure is hight, the question is easy ; In return, if the measure is low, the question is difficult
 model: Model

@@ -3,6 +3,7 @@
 namespace UJM\ExoBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * UJM\ExoBundle\Entity\InteractionMatching
@@ -43,12 +44,12 @@ class InteractionMatching
     private $typeMatching;
 
     /**
-     * Constructs a new instance of choices
+     * Constructs a new instance of label and proposal
      */
     public function __construct()
     {
-        $this->choices   = new \Doctrine\Common\Collections\ArrayCollection;
-        $this->proposals = new \Doctrine\Common\Collections\ArrayCollection;
+        $this->labels   = new ArrayCollection;
+        $this->proposals = new ArrayCollection;
     }
 
     /**
@@ -81,11 +82,6 @@ class InteractionMatching
         $this->typeMatching = $typeMatching;
     }
 
-    /**
-     * Get labels
-     *
-     * @return Doctrine Collection of labels
-     */
     public function getLabels()
     {
         return $this->labels;

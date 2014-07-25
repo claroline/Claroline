@@ -1047,6 +1047,21 @@ class exerciseServices
 
         return $typeOpen;
     }
+    
+    public function getTypeMatching()
+    {
+        $em = $this->doctrine->getManager();
+
+        $typeMatching = array();
+        $types = $em->getRepository('UJMExoBundle:TypeMatching')
+                    ->findAll();
+
+        foreach ($types as $type) {
+            $typeQCM[$type->getId()] = $type->getCode();
+        }
+
+        return $typeQCM;
+    }
 
     private function getPenalty($interaction, $paperID)
     {
