@@ -211,8 +211,7 @@ class QuestionController extends Controller
                 ->getExerciseInteraction($em, $idExo, 0);
         }
 
-        $allActions = $services->getActionsAllQuestions($listQExo, $uid, $actionQ,
-            $questionWithResponse, $alreadyShared, $sharedWithMe, $shareRight, $em);
+        $allActions = $services->getActionsAllQuestions($listQExo, $uid, $em);
 
         $actionQ = $allActions[0];
         $questionWithResponse = $allActions[1];
@@ -1901,8 +1900,7 @@ class QuestionController extends Controller
                 ->findOneBy(array('question' => $sharedQuestion[$i]->getQuestion()->getId()));
         }
 
-        $allActions = $services->getActionsAllQuestions($listInteractions, $user->getId(), $actionQ,
-            $questionWithResponse, $alreadyShared, $sharedWithMe, $shareRight, $em);
+        $allActions = $services->getActionsAllQuestions($listInteractions, $user->getId(), $em);
 
         $actionQ = $allActions[0];
         $questionWithResponse = $allActions[1];

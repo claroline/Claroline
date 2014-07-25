@@ -473,8 +473,7 @@ class ExerciseController extends Controller
                         ->getExerciseInteractionImport($em, $idExo, $exoID);
                 }
 
-                $allActions = $services->getActionsAllQuestions($listQExo, $uid, $actionQ,
-                    $questionWithResponse, $alreadyShared, $sharedWithMe, $shareRight, $em);
+                $allActions = $services->getActionsAllQuestions($listQExo, $uid, $em);
 
                 $actionQ = $allActions[0];
                 $questionWithResponse = $allActions[1];
