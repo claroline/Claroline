@@ -1057,10 +1057,10 @@ class exerciseServices
                     ->findAll();
 
         foreach ($types as $type) {
-            $typeQCM[$type->getId()] = $type->getCode();
+            $typeMatching[$type->getId()] = $type->getCode();
         }
 
-        return $typeQCM;
+        return $typeMatching;
     }
 
     private function getPenalty($interaction, $paperID)
