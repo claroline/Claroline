@@ -21,6 +21,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Symfony\Component\Translation\Translator;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Claroline\CoreBundle\Library\Security\Utilities;
 
 /**
  * @DI\Service("claroline.manager.agenda_manager")
@@ -31,14 +32,16 @@ class AgendaManager
     private $security;
     private $rm;
     private $translator;
+    private $su;
 
     /**
      * @DI\InjectParams({
      *     "om"           = @DI\Inject("claroline.persistence.object_manager"),
      *     "rootDir"      = @DI\Inject("%kernel.root_dir%"),
      *     "security"     = @DI\Inject("security.context"),
-     *     "rm"           =  @DI\Inject("claroline.manager.role_manager"),
-     *     "translator"   = @DI\Inject("translator")
+     *     "rm"           = @DI\Inject("claroline.manager.role_manager"),
+     *     "translator"   = @DI\Inject("translator"),
+     *     "su"           = @DI\Inject("claroline.security.utilities")
      * })
      */
     public function __construct(
@@ -46,7 +49,8 @@ class AgendaManager
         $rootDir,
         SecurityContextInterface $security,
         RoleManager $rm,
-        Translator $translator
+        Translator $translator,
+        Utilities $su
     )
     {
         $this->rootDir = $rootDir;
@@ -54,6 +58,7 @@ class AgendaManager
         $this->security = $security;
         $this->rm = $rm;
         $this->translator = $translator;
+        $this->su = $su;
     }
 
     public function addEvent(Event $event, $workspace = null)
@@ -63,7 +68,7 @@ class AgendaManager
         $this->om->persist($event);
 
         if ($event->getRecurring() > 0) {
-            $this->calculRecurrency($event);
+            $this->addRecurrentEvents($event);
         }
 
         $this->om->flush();
@@ -211,27 +216,10 @@ class AgendaManager
 
     public function displayEvents(Workspace $workspace)
     {
-        $listEvents = $this->om->getRepository('ClarolineCoreBundle:Event')
+        $events = $this->om->getRepository('ClarolineCoreBundle:Event')
             ->findbyWorkspaceId($workspace->getId(), false);
-        $data = array();
 
-        foreach ($listEvents as $key => $object) {
-            $data[$key]['id'] = $object->getId();
-            $data[$key]['title'] = $object->getTitle();
-            $data[$key]['allDay'] = $object->getAllDay();
-            $data[$key]['start'] = $object->getStart()->getTimestamp();
-            $data[$key]['end'] = $object->getEnd()->getTimestamp();
-            $data[$key]['color'] = $object->getPriority();
-            $data[$key]['description'] = $object->getDescription();
-            $data[$key]['owner'] = $object->getUser()->getUsername();
-
-            if ($data[$key]['owner'] === $this->security->getToken()->getUser()->getUsername()) {
-                $data[$key]['editable'] = true;
-            } else {
-                $data[$key]['editable'] = $role;
-            }
-        }
-        return $data;
+        return $this->convertEventsToArray($events);
     }
 
     public function updateEndDate(Event $event, $dayDelta = 0, $minDelta = 0)
@@ -270,65 +258,38 @@ class AgendaManager
             'allDay' => $event->getAllDay(),
             'owner' => $event->getUser()->getUsername(),
             'description' => $event->getDescription(),
-            'editable' => true //for now, only true
+            'editable' => $this->security->isGranted('EDIT', $event),
+            'deletable' => $this->security->isGranted('DELETE', $event),
+            'workspace' => $event->getWorkspace() ? $event->getWorkspace()->getId(): null
         );
     }
 
-    private function checkUserIsAllowedtoWrite(Workspace $workspace, Event $event = null)
-    {
-        $usr = $this->security->getToken()->getUser();
-        $rm = $this->rm->getManagerRole($workspace);
-        $ru = $this->rm->getWorkspaceRolesForUser($usr, $workspace);
-
-        if (!is_null($event)) {
-            if ($event->getUser()->getUsername() === $usr->getUsername()) {
-                return true;
-            }
-        }
-
-        foreach ($ru as $role) {
-            if ($role->getTranslationKey() === $rm->getTranslationKey()) {
-                return true;
-            }
-
-            return false;
-        }
-    }
-
-    private function checkUserIsAllowed($permission, Workspace $workspace)
-    {
-        if (!$this->security->isGranted($permission, $workspace)) {
-            throw new AccessDeniedException();
-        }
-    }
-
-    private function convertEventsToArray($listEvents)
+    public function convertEventsToArray(array $events)
     {
         $data = array();
 
-        foreach ($listEvents as $event) {
+        foreach ($events as $event) {
             $data[] = $this->toArray($event);
         }
 
         return $data;
     }
 
-    private function calculRecurrency(Event $event)
+    private function addRecurrentEvents(Event $event, $day = 1, $minutes = 0)
     {
-        $listEvents = array();
+        $events = array();
 
-        // it calculs by weeks for now
         for ($i = 1; $i <= $event->getRecurring(); $i++) {
-            $temp = clone $event;
-            $newStartDate = $temp->getStart()->getTimestamp() + (3600 * 24 * $i);
-            $temp->setStart(new \DateTime(date('d-m-Y H:i', $newStartDate)));
-            $newEndDate = $temp->getEnd()->getTimestamp() + (3600 * 24 * $i);
-            $temp->setEnd(new \DateTime(date('d-m-Y H:i', $newEndDate)));
-            $listEvents[$i] = $temp;
-            $this->om->persist($listEvents[$i]);
-
-            return $listEvents;
+            $recEvent = clone $event;
+            $recEvent->setStart($event->getStart()->getTimeStamp() + $this->toSeconds($day, $minutes) * $i);
+            $recEvent->setEnd($event->getStart()->getTimeStamp() + $this->toSeconds($day, $minutes) * $i);
+            $events[] = $recEvent;
+            $this->om->persist($recEvent);
         }
+
+        $this->om->flush();
+
+        return $this->convertEventsToArray($events);
     }
 
     private function toSeconds($days = 0, $mins = 0)

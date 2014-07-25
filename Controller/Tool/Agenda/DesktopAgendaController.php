@@ -25,6 +25,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Translation\Translator;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+use Symfony\Component\Routing\RouterInterface;
 
 /**
  * Controller of the Agenda
@@ -37,6 +38,7 @@ class DesktopAgendaController extends Controller
     private $request;
     private $translator;
     private $agendaManager;
+    private $router;
 
     /**
      * @DI\InjectParams({
@@ -45,7 +47,8 @@ class DesktopAgendaController extends Controller
      *     "om"                 = @DI\Inject("claroline.persistence.object_manager"),
      *     "request"            = @DI\Inject("request"),
      *     "translator"         = @DI\Inject("translator"),
-     *     "agendaManager"      = @DI\Inject("claroline.manager.agenda_manager")
+     *     "agendaManager"      = @DI\Inject("claroline.manager.agenda_manager"),
+     *     "router"             = @DI\Inject("router")
      * })
      */
     public function __construct(
@@ -54,7 +57,8 @@ class DesktopAgendaController extends Controller
         ObjectManager $om,
         Request $request,
         Translator $translator,
-        AgendaManager $agendaManager
+        AgendaManager $agendaManager,
+        RouterInterface $router
     )
     {
         $this->security = $security;
@@ -63,11 +67,13 @@ class DesktopAgendaController extends Controller
         $this->request = $request;
         $this->translator = $translator;
         $this->agendaManager = $agendaManager;
+        $this->router = $router;
     }
     /**
      * @Route(
-     *     "/show/",
-     *     name="claro_desktop_agenda_show"
+     *     "/show",
+     *     name="claro_desktop_agenda_show",
+     *     options = {"expose"=true}
      * )
      */
     public function desktopShowAction()
@@ -78,27 +84,50 @@ class DesktopAgendaController extends Controller
     }
 
     /**
+     * @EXT\Route(
+     *     "/add/event/form",
+     *     name="claro_desktop_agenda_add_event_form",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\Template("ClarolineCoreBundle:Agenda:addEventModalForm.html.twig")
+     *
+     * @param Workspace $workspace
+     * @return array
+     */
+    public function addEventModalFormAction()
+    {
+        $form = $this->formFactory->create(FormFactory::TYPE_AGENDA);
+
+        return array(
+            'form' => $form->createView(),
+            'action' => $this->router->generate('claro_desktop_agenda_add')
+        );
+    }
+
+    /**
      * @Route(
-     *     "/add/",
+     *     "/add",
      *     name="claro_desktop_agenda_add"
      * )
+     *
+     * @EXT\Template("ClarolineCoreBundle:Agenda:addEventModalForm.html.twig")
     */
     public function addEvent()
     {
-        $event = new Event();
-        $form = $this->formFactory->create(FormFactory::TYPE_AGENDA, array(), $event);
+        $form = $this->formFactory->create(FormFactory::TYPE_AGENDA);
         $form->handleRequest($this->request);
+
         if ($form->isValid()) {
-            $json = $this->agendaManager->addEvent($event, null);
+            $event = $form->getData();
+            $data = $this->agendaManager->addEvent($event, null);
 
-            return new Response(
-                json_encode($json['message']),
-                $json['code'],
-                array('Content-Type' => 'application/json')
-            );
-        } 
+            return new JsonResponse(array($data), 200);
+        }
 
-        return new Response('Dates are not valids', 422);
+        return array(
+            'form' => $form->createView(),
+            'action' => $this->router->generate('claro_desktop_agenda_add_event_form', array())
+        );
     }
 
     /**
@@ -107,14 +136,16 @@ class DesktopAgendaController extends Controller
      *     name="claro_desktop_agenda_tasks"
      * )
      * @EXT\Method({"GET"})
-     * @EXT\Template("ClarolineCoreBundle:Tool\\desktop\\agenda:tasks.html.twig")
+     *
+     * @EXT\Template("ClarolineCoreBundle:Agenda:tasks.html.twig")
      */
     public function tasksAction()
     {
         $usr = $this->get('security.context')->getToken()->getUser();
-        $listEvents = $this->om->getRepository('ClarolineCoreBundle:Event')->findDesktop($usr, true);
+        $events = $this->om->getRepository('ClarolineCoreBundle:Event')->findDesktop($usr, true);
 
-        return array('listEvents' => $listEvents );
+        $events = array();
+        return array('events' => $events);
     }
 
     /**

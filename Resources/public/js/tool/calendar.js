@@ -34,8 +34,8 @@
             calendar.addUrl = Routing.generate('claro_workspace_agenda_add_event_form', {'workspace': workspaceId});
             calendar.showUrl = Routing.generate('claro_workspace_agenda_show', {'workspace': workspaceId});
         } else {
-            var addRoute = 'some route i still habe to do';
-            var showUrl = 'some other route';
+            calendar.addUrl = Routing.generate('claro_desktop_agenda_add_event_form');
+            calendar.showUrl = Routing.generate('claro_desktop_agenda_show');
         }
 
         $('#import-ics-btn').on('click', function (event) {
@@ -120,25 +120,7 @@
             },
             //renders the popover for an event
             eventRender: function (event, element) {
-                if (event.visible == false) return false;
-
-                event['startFormatted'] = $.fullCalendar.formatDate(
-                    event.start,
-                    Translator.get('platform:date_agenda_display_format')
-                );
-                event['endFormatted'] = $.fullCalendar.formatDate(
-                    event.end,
-                    Translator.get('platform:date_agenda_display_format')
-                );
-
-                var eventContent = Twig.render(EventContent, {'event': event});
-
-                element.popover({
-                    title: event.title + '<button type="button" class="pop-close close" data-dismiss="popover" aria-hidden="true">&times;</button>',
-                    content: eventContent,
-                    html: true,
-                    container: 'body'
-                });
+                renderEvent(event, element);
             },
             eventResize: function (event, dayDelta, minuteDelta) {
                 resize(event, dayDelta, minuteDelta);
@@ -148,6 +130,29 @@
 
     var hidePopovers = function() {
         $('.fc-event').popover('hide');
+    }
+
+    //@todo move this on the eventClick event ?
+    var renderEvent = function(event, element) {
+        if (event.visible == false) return false;
+
+        event['startFormatted'] = $.fullCalendar.formatDate(
+            event.start,
+            Translator.get('platform:date_agenda_display_format')
+        );
+        event['endFormatted'] = $.fullCalendar.formatDate(
+            event.end,
+            Translator.get('platform:date_agenda_display_format')
+        );
+
+        var eventContent = Twig.render(EventContent, {'event': event});
+
+        element.popover({
+            title: event.title + '<button type="button" class="pop-close close" data-dismiss="popover" aria-hidden="true">&times;</button>',
+            content: eventContent,
+            html: true,
+            container: 'body'
+        });
     }
 
     var renderAddEventForm = function (date) {
@@ -206,6 +211,7 @@
     var updateCalendarItemCallback = function (event) {
         hidePopovers();
         updateCalendarItem(event);
+        $('.panel-body').first().prepend(calendar.flashbag);
     }
 
     var removeEvent = function (event, item, data) {

@@ -130,7 +130,7 @@ class Event
             } elseif (is_int($start)) {
                 $this->start = $start;
             } else {
-                throw new \Exception('Not an integer or date.');
+                throw new \Exception('Not an integer nor date.');
             }
         }
     }
@@ -155,7 +155,7 @@ class Event
             } elseif (is_int($end)) {
                 $this->end = $end;
             } else {
-                throw new \Exception('Not an integer or date.');
+                throw new \Exception('Not an integer nor date.');
             }
         }
     }
@@ -175,7 +175,7 @@ class Event
         return $this->workspace;
     }
 
-    public function setWorkspace(Workspace $workspace)
+    public function setWorkspace($workspace = null)
     {
         $this->workspace = $workspace;
     }

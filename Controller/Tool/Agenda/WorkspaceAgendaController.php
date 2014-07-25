@@ -94,9 +94,10 @@ class WorkspaceAgendaController extends Controller
      *     name="claro_workspace_agenda_tasks"
      * )
      * @EXT\Method({"GET","POST"})
+     *
      * @param Workspace $workspace
      *
-     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\agenda:tasks.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:Agenda:tasks.html.twig")
      */
     public function tasksAction(Workspace $workspace)
     {
