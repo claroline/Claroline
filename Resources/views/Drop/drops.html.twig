@@ -25,6 +25,26 @@
 
         {% endif %}
         {{ macros.flashBox() }}
+        <ul class="nav nav-tabs  margin-bottom-md margin-top-md">
+            <li class="hometab-element {% block drops_completed_active %}{% endblock %}">
+                <a href="{% block drops_completed_link %}{{ path('icap_dropzone_drops_by_default', {'resourceId': dropzone.id}) }} {% endblock %}">
+                    {{ 'Copies evaluation finished'|trans({}, 'icap_dropzone') }} <span
+                            class="badge">{{ nbDropCorrected }}</span>
+                </a>
+            </li>
+            <li class="hometab-element {% block drops_awaiting_active %}{% endblock %}">
+                <a href="{% block drops_awaiting_link %}{{ path('icap_dropzone_drops_awaiting', {'resourceId': dropzone.id}) }} {% endblock %}">
+                    {{ 'Copies being evaluated'|trans({}, 'icap_dropzone') }} <span
+                            class="badge">{{ nbDrop - nbDropCorrected }}</span>
+                </a>
+            </li>
+            <li class="hometab-element {% block drops_examiners_active %}{% endblock %}">
+                <a href="{% block drops_examiners_link %}{{ path('icap_dropzone_examiners', {'resourceId': dropzone.id}) }} {% endblock %}">
+                    {{ 'Examiners'|trans({}, 'icap_dropzone') }}
+                </a>
+            </li>
+        </ul>
+
 
         {% block dropzone_content_drops %}
         {% endblock %}

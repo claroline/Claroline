@@ -258,6 +258,7 @@ class DropController extends DropzoneBaseController
         $adapter = new DoctrineORMAdapter($dropsQuery);
         $pager = new Pagerfanta($adapter);
         $pager->setMaxPerPage(DropzoneBaseController::DROP_PER_PAGE);
+        $countUnterminatedDrops = $dropRepo->countUnterminatedDropsByDropzone($dropzone->getId());
         try {
             $pager->setCurrentPage($page);
         } catch (NotValidCurrentPageException $e) {
@@ -280,7 +281,8 @@ class DropController extends DropzoneBaseController
             'workspace' => $dropzone->getResourceNode()->getWorkspace(),
             '_resource' => $dropzone,
             'dropzone' => $dropzone,
-            'pager' => $pager
+            'pager' => $pager,
+            'unterminated_drops' => $countUnterminatedDrops,
         ));
     }
 
@@ -313,6 +315,8 @@ class DropController extends DropzoneBaseController
         $adapter = new DoctrineORMAdapter($dropsQuery);
         $pager = new Pagerfanta($adapter);
         $pager->setMaxPerPage(DropzoneBaseController::DROP_PER_PAGE);
+        $countUnterminatedDrops = $dropRepo->countUnterminatedDropsByDropzone($dropzone->getId());
+
         try {
             $pager->setCurrentPage($page);
         } catch (NotValidCurrentPageException $e) {
@@ -335,7 +339,8 @@ class DropController extends DropzoneBaseController
             'workspace' => $dropzone->getResourceNode()->getWorkspace(),
             '_resource' => $dropzone,
             'dropzone' => $dropzone,
-            'pager' => $pager
+            'pager' => $pager,
+            'unterminated_drops' => $countUnterminatedDrops,
         ));
     }
 
@@ -362,6 +367,7 @@ class DropController extends DropzoneBaseController
 
         $dropRepo = $this->getDoctrine()->getManager()->getRepository('IcapDropzoneBundle:Drop');
         $dropsQuery = $dropRepo->getDropsFullyCorrectedOrderByDropDateQuery($dropzone);
+        $countUnterminatedDrops = $dropRepo->countUnterminatedDropsByDropzone($dropzone->getId());
 
         $adapter = new DoctrineORMAdapter($dropsQuery);
         $pager = new Pagerfanta($adapter);
@@ -388,7 +394,8 @@ class DropController extends DropzoneBaseController
             'workspace' => $dropzone->getResourceNode()->getWorkspace(),
             '_resource' => $dropzone,
             'dropzone' => $dropzone,
-            'pager' => $pager
+            'pager' => $pager,
+            'unterminated_drops' => $countUnterminatedDrops,
         ));
     }
 

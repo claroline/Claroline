@@ -2,6 +2,9 @@
 
 {% form_theme form "ClarolineCoreBundle:Form:date_time_picker.html.twig" %}
 {% form_theme form "IcapDropzoneBundle::form_theme_bootstrap3.html.twig" %}
+{% block dropzone_edit_navTabs_param_link %}
+    #
+{% endblock %}
 {% block drop_zone_content_edit %}
     {#<div class="navbar navbar-default peer-review-options" role="navigation" {% if not dropzone.peerReview %}style="display: none;"{% endif %}>#}
         {#<div class="collapse navbar-collapse navbar-ex1-collapse">#}
