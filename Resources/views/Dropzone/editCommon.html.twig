@@ -159,7 +159,8 @@
 
             <a href="#" class="btn btn-primary peer-review-options save-button" {% if dropzone.peerReview %}style="display: none;"{% endif %}>{{ 'Save'|trans({}, 'icap_dropzone') }}</a>
 
-            <button type= "submit" class="btn btn-primary submit_button">{% if dropzone.peerReview %}{{ 'Save and continue'|trans({}, 'icap_dropzone') }}{% else %}{{ 'Save and finished'|trans({}, 'icap_dropzone') }}{% endif %}</button>
+            <button id="submitAndGotoCriteriaButton" type="submit"
+                    class="btn btn-primary submit_button">{% if dropzone.peerReview %}{{ 'Save and continue'|trans({}, 'icap_dropzone') }}{% else %}{{ 'Save and finished'|trans({}, 'icap_dropzone') }}{% endif %}</button>
         </div>
         {{ form_rest(form) }}
     </form>
@@ -306,7 +307,11 @@
             {
                 manageCorrectionDeny();
             });
-            //manageCorrectionDeny(); // not needed anymore ( normaly called at line 194 => dependancy cascading of enablePeerReviewOptions method
+
+            $('#editCriteriaLink').click(function (e) {
+                e.preventDefault();
+                $('#submitAndGotoCriteriaButton').trigger('click');
+            });
         });
 
         function manageCorrectionDeny()
