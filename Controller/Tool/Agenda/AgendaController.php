@@ -22,6 +22,8 @@ use Claroline\CoreBundle\Manager\AgendaManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Routing\RouterInterface;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 /**
  * Controller of the Agenda
@@ -71,6 +73,7 @@ class AgendaController extends Controller
      */
     public function updateEventModalFormAction(Event $event)
     {
+        $this->checkPermission($event);
         $form = $this->formFactory->create(FormFactory::TYPE_AGENDA, array(), $event);
 
         return array(
@@ -95,6 +98,7 @@ class AgendaController extends Controller
      */
     public function updateAction(Event $event)
     {
+        $this->checkPermission($event);
         $form = $this->formFactory->create(FormFactory::TYPE_AGENDA, array(), $event);
         $form->handleRequest($this->request);
 
@@ -126,6 +130,7 @@ class AgendaController extends Controller
      */
     public function deleteAction(Event $event)
     {
+        $this->checkPermission($event);
         $removed = $this->agendaManager->deleteEvent($event);
 
         return new JsonResponse($removed, 200);
@@ -140,6 +145,7 @@ class AgendaController extends Controller
      */
     public function resizeAction(Event $event, $day, $minute)
     {
+        $this->checkPermission($event);
         $data = $this->agendaManager->updateEndDate($event, $day, $minute);
 
         return new JsonResponse($data, 200);
@@ -154,6 +160,7 @@ class AgendaController extends Controller
      */
     public function moveAction(Event $event, $day, $minute)
     {
+        $this->checkPermission($event);
         $data = $this->agendaManager->moveEvent($event, $day, $minute);
 
         return new JsonResponse($data, 200);
@@ -170,7 +177,12 @@ class AgendaController extends Controller
      */
     public function exportWorkspaceEventIcsAction(Workspace $workspace)
     {
-        return $this->exportEvent($workspace->getId());
+        //if you can open the tool, you can export
+        if (!$this->security->isGranted('agenda', $workspace)) {
+            throw new AccessDeniedException("The event cannot be updated");
+        }
+
+        return $this->exportEvent($workspace);
     }
 
     /**
@@ -186,7 +198,7 @@ class AgendaController extends Controller
         return $this->exportEvent();
     }
 
-    private function exportEvent($workspaceId = null)
+    private function exportEvent($workspace = null)
     {
         $file =  $this->agendaManager->export();
         $response = new StreamedResponse();
@@ -199,10 +211,17 @@ class AgendaController extends Controller
         $date = new \DateTime();
         $response->headers->set('Content-Transfer-Encoding', 'octet-stream');
         $response->headers->set('Content-Type', 'application/force-download');
-        $response->headers->set('Content-Disposition', 'attachment; filename='.$workspaceId->getName().'.ics');
+        $response->headers->set('Content-Disposition', 'attachment; filename='. $workspace->getName().'.ics');
         $response->headers->set('Content-Type', ' text/calendar');
         $response->headers->set('Connection', 'close');
 
         return $response;
+    }
+
+    private function checkPermission(Event $event)
+    {
+        if (!$this->sc->isGranted('EDIT', $event)) {
+            throw new AccessDeniedException("The event cannot be updated");
+        }
     }
 } 

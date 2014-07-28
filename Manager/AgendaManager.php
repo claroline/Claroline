@@ -66,16 +66,7 @@ class AgendaManager
     {
         $event->setWorkspace($workspace);
         $event->setUser($this->security->getToken()->getUser());
-
-        //task don't have start nor ending
-        if ($event->getAllDay()) {
-            $event->setStart(null);
-            $event->setEnd(null);
-        } else {
-            //hourse must be added
-            $event->setStart($event->getStart()->getTimestamp() + $event->getStartHours());
-            $event->setEnd($event->getEnd()->getTimestamp() + $event->getEndHours());
-        }
+        $this->setEventDate($event);
         $this->om->persist($event);
 
         if ($event->getRecurring() > 0) {
@@ -218,16 +209,7 @@ class AgendaManager
 
     public function updateEvent(Event $event)
     {
-        //task don't have start nor ending
-        if ($event->getAllDay()) {
-            $event->setStart(null);
-            $event->setEnd(null);
-        } else {
-            //hourse must be added
-            $event->setStart($event->getStart()->getTimestamp() + $event->getStartHours());
-            $event->setEnd($event->getEnd()->getTimestamp() + $event->getEndHours());
-        }
-
+        $this->setEventDate($event);
         $this->om->flush();
 
         return $this->toArray($event);
@@ -319,5 +301,19 @@ class AgendaManager
     private function toSeconds($days = 0, $mins = 0)
     {
         return $days * 3600 * 24 + $mins * 60;
+    }
+
+    private function setEventDate(Event $event)
+    {
+        //task don't have start nor ending
+        if ($event->getAllDay()) {
+            $event->setStart(null);
+            $event->setEnd(null);
+        } else {
+//            throw new \Exception($event->getStartHours());
+            //hours must be added
+            $event->setStart($event->getStart()->getTimestamp() + $event->getStartHours());
+            $event->setEnd($event->getEnd()->getTimestamp() + $event->getEndHours());
+        }
     }
 }

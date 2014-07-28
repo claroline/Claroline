@@ -243,6 +243,7 @@ class Event
     //returns a timestamp for the form
     public function getStartHours()
     {
+        return $this->startHours;
         return $this->updateStartHours ?
             $this->startHours:
             $this->getStart() ? (int) $this->getStart()->format('H') * 3600: null;
@@ -257,6 +258,7 @@ class Event
     //returns a timestam for the form
     public function getEndHours()
     {
+        return $this->endHours;
         return $this->updateEndHours ?
             $this->endHours:
             $this->getEnd() ? (int) $this->getEnd()->format('H') * 3600: null;

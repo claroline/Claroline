@@ -190,7 +190,12 @@
                 end: event.end,
                 allDay: event.allDay,
                 color: event.color,
-                description : event.description
+                description : event.description,
+                deletable: event.deletable,
+                editable: event.editable,
+                endFormatted: event.endFormatted,
+                startFormatted: event.startFormatted,
+                owner: event.owner
             }
         );
     };
