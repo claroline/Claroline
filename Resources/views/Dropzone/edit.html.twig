@@ -30,7 +30,7 @@
             {% block dropzone_edit_navTabs_criteria_block %}
                 <!-- class "peer-review-options" make this tab hidden when peerReview is not activated.  -->
                 <li class="hometab-element peer-review-options {% block dropzone_edit_navTabs_criteria_element_class %} {% endblock %}">
-                    <a href="
+                    <a id="editCriteriaLink" href="
                     {% block dropzone_edit_navTabs_criteria_element_link %}
                         {{ path('icap_dropzone_edit_criteria',{'resourceId':dropzone.id}) }}
                     {% endblock %}" class="hometab-link">
