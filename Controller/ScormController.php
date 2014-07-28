@@ -67,7 +67,6 @@ class ScormController extends Controller
      *     "/render/scorm/12/{scormId}",
      *     name = "claro_render_scorm_12_resource"
      * )
-     * @EXT\Method("GET")
      * @EXT\ParamConverter(
      *      "scorm",
      *      class="ClarolineScormBundle:Scorm12Resource",
@@ -120,7 +119,6 @@ class ScormController extends Controller
      *     "/scorm/12/render/sco/{scoId}",
      *     name = "claro_render_scorm_12_sco"
      * )
-     * @EXT\Method("GET")
      * @EXT\ParamConverter(
      *      "scorm12Sco",
      *      class="ClarolineScormBundle:Scorm12Sco",
@@ -352,7 +350,6 @@ class ScormController extends Controller
      *     "/render/scorm/2004/{scormId}",
      *     name = "claro_render_scorm_2004_resource"
      * )
-     * @EXT\Method("GET")
      * @EXT\ParamConverter(
      *      "scorm",
      *      class="ClarolineScormBundle:Scorm2004Resource",
@@ -405,7 +402,6 @@ class ScormController extends Controller
      *     "/scorm/2004/render/sco/{scoId}",
      *     name = "claro_render_scorm_2004_sco"
      * )
-     * @EXT\Method("GET")
      * @EXT\ParamConverter(
      *      "scorm2004Sco",
      *      class="ClarolineScormBundle:Scorm2004Sco",
@@ -561,7 +557,12 @@ class ScormController extends Controller
 
             // Computes total time
             $totalTime = new \DateInterval($scoTracking->getTotalTime());
-            $sessionTime = new \DateInterval($dataSessionTime);
+
+            try {
+                $sessionTime = new \DateInterval($dataSessionTime);
+            } catch (\Exception $e) {
+                 $sessionTime = new \DateInterval('PT0S');
+            }
             $computedTime = new \DateTime();
             $computedTime->setTimestamp(0);
             $computedTime->add($totalTime);
