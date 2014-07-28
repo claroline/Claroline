@@ -1,0 +1,23 @@
+{
+    "name": "claroline/survey-bundle",
+    "description": "Claroline survey plugin",
+    "keywords": ["Claroline", "Plugin", "Survey"],
+    "homepage": "http://www.claroline.net",
+    "type": "claroline-plugin",
+    "license": "GPL-3.0+",
+    "authors": [
+        {
+            "name": "Claroline development team",
+            "email": "dev@claroline.net",
+            "homepage": "http://github.com/claroline"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.1",
+        "claroline/core-bundle": "~3.0"
+    },
+    "autoload": {
+        "psr-0": { "Claroline\\SurveyBundle": "" }
+    },
+    "target-dir": "Claroline/SurveyBundle"
+}
