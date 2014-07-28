@@ -43,7 +43,7 @@
             window.Claroline.Modal.displayForm(
                 $(event.target).attr('href'),
                 addItemsToCalendar,
-                function(){},
+                function (){},
                 'ics-import-form'
             );
         });
@@ -55,8 +55,8 @@
                 $(event.currentTarget).attr('href'),
                 removeEvent,
                 undefined,
-                Translator.get('platform:remove_event'),
-                Translator.get('platform:remove_event_confirm')
+                Translator.get('platform:remove_event_confirm'),
+                Translator.get('platform:remove_event')
             );
         });
 
@@ -66,7 +66,7 @@
             window.Claroline.Modal.displayForm(
                 $(event.currentTarget).attr('href'),
                 updateCalendarItemCallback,
-                function() {},
+                function () {$('#agenda_form_allDay').is(':checked') ? hideFormDates(): showFormDates();},
                 'form-event'
             );
         });
@@ -79,6 +79,11 @@
             });
 
             filterCalendarItems(workspaceIds);
+        });
+
+        //hide the dates if it's a task.
+        $('body').on('click', '#agenda_form_allDay', function() {
+            $('#agenda_form_allDay').is(':checked') ? hideFormDates(): showFormDates();
         });
 
         //INITIALIZE CALENDAR
@@ -147,14 +152,6 @@
 
     //@todo move this on the eventClick event ?
     var renderEvent = function (event, element) {
-        event['startFormatted'] = $.fullCalendar.formatDate(
-            event.start,
-            Translator.get('platform:date_agenda_display_format')
-        );
-        event['endFormatted'] = $.fullCalendar.formatDate(
-            event.end,
-            Translator.get('platform:date_agenda_display_format')
-        );
         var eventContent = Twig.render(EventContent, {'event': event});
         element.popover({
             title: event.title + '<button type="button" class="pop-close close" data-dismiss="popover" aria-hidden="true">&times;</button>',
@@ -173,8 +170,6 @@
         var postRenderAddEventAction = function (html) {
             $('#agenda_form_start').val(dateVal);
             $('#agenda_form_end').val(dateVal);
-
-            //add js to hide date if task.
         }
 
         window.Claroline.Modal.displayForm(
@@ -297,11 +292,24 @@
             });
         } else {
             //hide what's needed
-            console.debug(workspaceIds);
             $('.task-item').each(function() {
                 if ($.inArray(parseInt($(this).attr('data-workspace-id')), workspaceIds) < 0) $(this).hide();
             });
         }
+    }
+
+    var hideFormDates = function() {
+        $('#agenda_form_end').parent().parent().hide();
+        $('#agenda_form_endHours_hour').parent().parent().parent().hide();
+        $('#agenda_form_start').parent().parent().hide();
+        $('#agenda_form_startHours_hour').parent().parent().parent().hide();
+    }
+
+    var showFormDates = function() {
+        $('#agenda_form_end').parent().parent().show();
+        $('#agenda_form_endHours_hour').parent().parent().parent().show();
+        $('#agenda_form_start').parent().parent().show();
+        $('#agenda_form_startHours_hour').parent().parent().parent().show();
     }
 
     /**

@@ -68,7 +68,7 @@ class Event
     private $user;
 
     /**
-     * @ORM\Column(name="allday", type="boolean", nullable=true)
+     * @ORM\Column(name="allday", type="boolean")
      */
     private $allDay = false;
 
@@ -89,6 +89,8 @@ class Event
     private $recurring;
     private $startHours;
     private $endHours;
+    private $updateStartHours = false;
+    private $updateEndHours = false;
 
     public function __construct()
     {
@@ -113,8 +115,7 @@ class Event
     public function getStart()
     {
         if (is_null($this->start)) {
-            return $this->start;
-
+            return null;
         } else {
             $date = date('d-m-Y H:i', $this->start);
 
@@ -132,13 +133,15 @@ class Event
             } else {
                 throw new \Exception('Not an integer nor date.');
             }
+        } else {
+            $this->start = null;
         }
     }
 
     public function getEnd()
     {
         if (is_null($this->end)) {
-            return $this->end;
+            return null;
 
         } else {
             $date = date('d-m-Y H:i', $this->end);
@@ -151,12 +154,14 @@ class Event
     {
         if (!is_null($end)) {
             if ($end instanceof \Datetime) {
-                $this->end = $end-> getTimestamp();
+                $this->end = $end->getTimestamp();
             } elseif (is_int($end)) {
                 $this->end = $end;
             } else {
                 throw new \Exception('Not an integer nor date.');
             }
+        } else {
+            $this->end = null;
         }
     }
 
@@ -235,23 +240,31 @@ class Event
         $this->recurring = $recurring;
     }
 
+    //returns a timestamp for the form
     public function getStartHours()
     {
-        return $this->startHours;
+        return $this->updateStartHours ?
+            $this->startHours:
+            $this->getStart() ? (int) $this->getStart()->format('H') * 3600: null;
     }
 
     public function setStartHours($startHours)
     {
         $this->startHours = $startHours;
+        $this->updateStartHours = true;
     }
 
+    //returns a timestam for the form
     public function getEndHours()
     {
-        return $this->endHours;
+        return $this->updateEndHours ?
+            $this->endHours:
+            $this->getEnd() ? (int) $this->getEnd()->format('H') * 3600: null;
     }
 
     public function setEndHours($endHours)
     {
         $this->endHours = $endHours;
+        $this->updateEndHours = true;
     }
 }

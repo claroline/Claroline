@@ -17,10 +17,6 @@
         <span>{{ event.description | raw }}</span>
     {% endif %}
 
-    <div class="text-muted">
-        <span data-event-start="{{ event.start }}"> {{ event.start }}</span>
-    </div>
-
     <div>
         <a href="{{ path('claro_agenda_update_event_form', {'event': event.id}) }}"
            class="edit-event-link"

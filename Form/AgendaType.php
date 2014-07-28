@@ -46,8 +46,13 @@ class AgendaType extends AbstractType
             )
             ->add(
                 'startHours',
-                'text',
-                array('attr' => array('class' => 'hours'))
+                'time',
+                array(
+                    'attr' => array('class' => 'hours'),
+                    'input' => 'timestamp',
+                    'widget' => 'choice',
+                    'with_minutes' => false
+                )
             )
             ->add(
                 'end',
@@ -62,8 +67,13 @@ class AgendaType extends AbstractType
             )
             ->add(
                 'endHours',
-                'text',
-                array('attr' => array('class' => 'hours'))
+                'time',
+                array(
+                    'attr' => array('class' => 'hours'),
+                    'input' => 'timestamp',
+                    'widget' => 'choice',
+                    'with_minutes' => false
+                )
             )
             ->add('allDay', 'checkbox')
             ->add('description', 'tinymce')

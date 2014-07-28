@@ -66,6 +66,16 @@ class AgendaManager
     {
         $event->setWorkspace($workspace);
         $event->setUser($this->security->getToken()->getUser());
+
+        //task don't have start nor ending
+        if ($event->getAllDay()) {
+            $event->setStart(null);
+            $event->setEnd(null);
+        } else {
+            //hourse must be added
+            $event->setStart($event->getStart()->getTimestamp() + $event->getStartHours());
+            $event->setEnd($event->getEnd()->getTimestamp() + $event->getEndHours());
+        }
         $this->om->persist($event);
 
         if ($event->getRecurring() > 0) {
@@ -208,7 +218,16 @@ class AgendaManager
 
     public function updateEvent(Event $event)
     {
-        $this->om->persist($event);
+        //task don't have start nor ending
+        if ($event->getAllDay()) {
+            $event->setStart(null);
+            $event->setEnd(null);
+        } else {
+            //hourse must be added
+            $event->setStart($event->getStart()->getTimestamp() + $event->getStartHours());
+            $event->setEnd($event->getEnd()->getTimestamp() + $event->getEndHours());
+        }
+
         $this->om->flush();
 
         return $this->toArray($event);
@@ -261,7 +280,11 @@ class AgendaManager
             'editable' => $this->security->isGranted('EDIT', $event),
             'deletable' => $this->security->isGranted('DELETE', $event),
             'workspace_id' => $event->getWorkspace() ? $event->getWorkspace()->getId(): null,
-            'workspace_name' => $event->getWorkspace() ? $event->getWorkspace()->getName(): null
+            'workspace_name' => $event->getWorkspace() ? $event->getWorkspace()->getName(): null,
+            'startFormatted' => date($this->translator->trans('date_range.format.with_hours', array(), 'platform'), $start),
+            'endFormatted' => date($this->translator->trans('date_range.format.with_hours', array(), 'platform'), $end),
+            'endHours' => $event->getEndHours(),
+            'startHours' => $event->getStartHours()
         );
     }
 

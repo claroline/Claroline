@@ -239,6 +239,7 @@ date_range.custom_range: 'Custom range'
 date_range.day_names: '["Su","Mo","Tu","We","Th","Fr","Sa"]'
 date_range.first_day: '0'
 date_range.format: m/d/Y
+date_range.format.with_hours: m/d/Y H:i:s
 date_range.from: From
 date_range.js_format: MM/dd/yyyy
 date_range.last_month: 'Last month'
@@ -970,3 +971,7 @@ start_maintenance: Start maintenance mode
 end_maintenance: End maintenance mode
 maintenance_mode_enabled: Maintenance mode is activated
 maintenance_mode_message: The platform access is disabled. You can activate it in the maintenance section of administration parameters.
+update_event: Update an event
+remove_event_confirm: Are you sure you want to remove this event ?
+remove_event: Remove an event
+edit_event_success: The event was updated successfully.
