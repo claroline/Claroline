@@ -4,7 +4,7 @@ plugin:
   resources:
     - class: Claroline\SurveyBundle\Entity\Survey
       name: claroline_survey
-#      icon: res_survey.png
+      icon: res_survey.png
 #      activity_rules:
 #        - action: resource-read
 #        - action: resource-claroline_survey-answer
