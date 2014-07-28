@@ -83,7 +83,7 @@ class WorkspaceAgendaController extends Controller
      */
     public function showAction(Workspace $workspace)
     {
-        $this->checkAccess();
+        $this->checkAccess($workspace);
         $data = $this->agendaManager->displayEvents($workspace);
 
         return new JsonResponse($data, 200);
@@ -102,7 +102,7 @@ class WorkspaceAgendaController extends Controller
      */
     public function tasksAction(Workspace $workspace)
     {
-        $this->checkAccess();
+        $this->checkAccess($workspace);
         $events = $this->om->getRepository('ClarolineCoreBundle:Event')->findByWorkspaceId($workspace->getId(), true);
 
         return array('events' => $this->agendaManager->convertEventsToArray($events));
@@ -119,7 +119,7 @@ class WorkspaceAgendaController extends Controller
      */
     public function importEventsModalForm(Workspace $workspace)
     {
-        $this->checkAccess();
+        $this->checkAccess($workspace);
         $form = $this->formFactory->create(FormFactory::TYPE_AGENDA_IMPORTER);
 
         return array('form' => $form->createView(), 'workspace' => $workspace);
@@ -137,7 +137,7 @@ class WorkspaceAgendaController extends Controller
      */
     public function importsEventsIcsAction(Workspace $workspace)
     {
-        $this->checkAccess();
+        $this->checkAccess($workspace);
         $form = $this->formFactory->create(FormFactory::TYPE_AGENDA_IMPORTER);
         $form->handleRequest($this->request);
         $listEvents = array();
@@ -164,7 +164,7 @@ class WorkspaceAgendaController extends Controller
      */
     public function addEventModalFormAction(Workspace $workspace)
     {
-        $this->checkAccess();
+        $this->checkAccess($workspace);
         $form = $this->formFactory->create(FormFactory::TYPE_AGENDA);
 
         return array(
@@ -190,7 +190,7 @@ class WorkspaceAgendaController extends Controller
      */
     public function addEventAction(Workspace $workspace)
     {
-        $this->checkAccess();
+        $this->checkAccess($workspace);
         $form = $this->formFactory->create(FormFactory::TYPE_AGENDA);
         $form->handleRequest($this->request);
 
@@ -211,7 +211,7 @@ class WorkspaceAgendaController extends Controller
     }
 
     //checks the access of the agenda tool
-    private function checkAccess()
+    private function checkAccess($workspace)
     {
         if (!$this->security->isGranted('agenda', $workspace)) {
             throw new AccessDeniedException("The event cannot be updated");
