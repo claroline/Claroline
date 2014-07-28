@@ -12,6 +12,7 @@
 namespace Claroline\CoreBundle\Library\Installation\Updater;
 
 use Claroline\CoreBundle\Entity\Tool\AdminTool;
+use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -76,6 +77,24 @@ class Updater030100
             $competenceSubscription->setName('competence_subscription');
             $competenceSubscription->setClass('code-fork');
             $this->om->persist($competenceSubscription);
+        }
+
+        $existingTool = $this->om->getRepository('ClarolineCoreBundle:Tool\Tool')
+            ->findOneBy(array('name' => 'learning_profil'));
+
+        if (!$existingTool) {
+            $wsTool = new Tool();
+            $wsTool->setName('learning_profil');
+            $wsTool->setClass('graduation-cap');
+            $wsTool->setIsWorkspaceRequired(true);
+            $wsTool->setIsDesktopRequired(false);
+            $wsTool->setDisplayableInWorkspace(true);
+            $wsTool->setDisplayableInDesktop(false);
+            $wsTool->setExportable(false);
+            $wsTool->setIsConfigurableInWorkspace(false);
+            $wsTool->setIsConfigurableInDesktop(false);
+
+            $this->om->persist($wsTool);
         }
         
         $this->om->flush();

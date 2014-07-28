@@ -46,13 +46,18 @@ class UserCompetenceRepository extends EntityRepository
 		$query->setParameter('root',$competence->getRoot());
 		return $query->getResult();
 	}
-
-	public function findCompetenceUser($competenceUser)
+	// get all the user who are in a learning outcomes 
+	public function findByCompetence($competenceUser)
 	{
 		$dql="
-			SELECT cu FROM ClarolineCoreBundle:Competence\UserCompetence cu
-			WHERE 
+			SELECT DISTINCT u FROM ClarolineCoreBundle:User u WHERE EXISTS (
+				SELECT cu FROM ClarolineCoreBundle:Competence\UserCompetence cu
+				WHERE cu.competence = :competence AND cu.user = u
+			)
 		";
+		$query = $this->_em->createQuery($dql);
+		$query->setParameter('competence', $competenceUser->getCompetence());
+		return $query->getResult();
 	}
 
 	public function deleteNodeHiearchy(UserCompetence $userCompetence, CompetenceHierarchy $root)
@@ -74,6 +79,19 @@ class UserCompetenceRepository extends EntityRepository
 		$query = $this->_em->createQuery($dql);
 		$query->setParameter('user',$userCompetence->getUser());
 		$query->setParameter('root',$root->getRoot());
+		return $query->getResult();
+	}
+
+	public function findByWorkspace($workspace, $user)
+	{
+		$dql = "
+		SELECT cu FROM ClarolineCoreBundle:Competence\UserCompetence cu
+		WHERE  cu.user = :user 
+		";
+		$query = $this->_em->createQuery($dql);
+		//$query->setParameter('workspace', $workspace);
+		$query->setParameter('user', $user);
+
 		return $query->getResult();
 	}
 }

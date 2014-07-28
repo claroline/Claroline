@@ -185,7 +185,7 @@ class LoadDemoFixture extends LoggableFixture implements ContainerAwareInterface
     private function addUsersToWorkspace(Workspace $workspace, User $excludedUser)
     {
         $roleManager = $this->container->get('claroline.manager.role_manager');
-        $users = $this->manager->getRepository('ClarolineCoreBundle:User')->findAllExcept($excludedUser);
+        $users = $this->manager->getRepository('ClarolineCoreBundle:User')->findAllExcept(array($excludedUser));
         $groups = $this->manager->getRepository('ClarolineCoreBundle:Group')->findAll();
         $userKeys = array_rand($users, self::USER_PER_WORKSPACE);
         $groupsKey = array_rand($groups, self::GROUP_PER_WORKSPACE);

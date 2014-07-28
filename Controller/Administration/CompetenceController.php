@@ -11,8 +11,6 @@
 
 namespace Claroline\CoreBundle\Controller\Administration;
 
-use Claroline\CoreBundle\Entity\Group;
-use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Manager\GroupManager;
@@ -62,7 +60,7 @@ class CompetenceController {
      /**
      * @EXT\Route("/show", name="claro_admin_competences", options={"expose"=true})
      * @EXT\Method("GET")
-     * @EXT\Template("ClarolineCoreBundle:Administration:competences.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:Administration\competence:competences.html.twig")
      *
      * Displays the group creation form.
      *
@@ -88,7 +86,7 @@ class CompetenceController {
      *      options={"id" = "competenceId", "strictId" = true}
      * )
      * @param Competence $competence
-     * @EXT\Template("ClarolineCoreBundle:Administration:competenceReferential.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:Administration\competence:competenceReferential.html.twig")
      *
      * Show all the hiearchy from a competence
      *
@@ -121,7 +119,7 @@ class CompetenceController {
      /**
      * @EXT\Route("/new", name="claro_admin_competence_form")
      * @EXT\Method("GET")
-     * @EXT\Template("ClarolineCoreBundle:Administration:competenceForm.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:Administration\competence:competenceForm.html.twig")
      *
      * Displays the group creation form.
      *
@@ -140,7 +138,7 @@ class CompetenceController {
      /**
      * @EXT\Route("/add", name="claro_admin_competence_add")
      * @EXT\Method("POST")
-     * @EXT\Template("ClarolineCoreBundle:Administration:competenceForm.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:Administration\competence:competenceForm.html.twig")
      *
      * Displays the group creation form.
      *
@@ -184,7 +182,7 @@ class CompetenceController {
      *      options={"id" = "competenceId", "strictId" = true}
      * )
      * @param Competence $competence
-     * @EXT\Template("ClarolineCoreBundle:Administration:competenceForm.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:Administration\competence:competenceForm.html.twig")
      *
      * Add a sub competence
      *
@@ -221,7 +219,7 @@ class CompetenceController {
      *      options={"id" = "competenceId", "strictId" = true}
      * )
      * @param Competence $competence
-     * @EXT\Template("ClarolineCoreBundle:Administration:competenceForm.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:Administration\competence:competenceForm.html.twig")
      *
      * Add a sub competence
      *
@@ -277,7 +275,7 @@ class CompetenceController {
      *      class="ClarolineCoreBundle:Competence\CompetenceHierarchy",
      *      options={"id" = "competenceId", "strictId" = true}
      * )
-     * @EXT\Template("ClarolineCoreBundle:Administration:competenceMoveForm.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:Administration\competence:competenceMoveForm.html.twig")
      * @param Competence $competence
      *
      * move a competence
@@ -305,7 +303,7 @@ class CompetenceController {
      *      class="ClarolineCoreBundle:Competence\CompetenceHierarchy",
      *      options={"id" = "parentId", "strictId" = true}
      * )
-     * @EXT\Template("ClarolineCoreBundle:Administration:competenceMoveForm.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:Administration\competence:competenceMoveForm.html.twig")
      * @param Competence $competences
      *
      * move a competence
@@ -348,5 +346,12 @@ class CompetenceController {
         	200,
         	array('Content-Type' => 'application/json')
         );
+    }
+
+    private function checkUserIsAllowed($permission, Workspace $workspace)
+    {
+        if (!$this->security->isGranted($permission, $workspace)) {
+            throw new AccessDeniedException();
+        }
     }
 } 

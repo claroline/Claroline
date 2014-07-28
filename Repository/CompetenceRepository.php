@@ -98,4 +98,17 @@ class CompetenceRepository extends NestedTreeRepository {
 
         return $query->getResult();
     }
+
+    public function findByWorkspace($workspace)
+    {
+        $dql = "
+        SELECT c FROM ClarolineCoreBundle:Competence\Competence c
+        WHERE c.workspace = :workspace 
+        ";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('workspace', $workspace);
+
+        return $query->getResult();
+    }
+    
 } 

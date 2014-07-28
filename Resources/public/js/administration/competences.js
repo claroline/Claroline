@@ -9,6 +9,13 @@
 
 (function () {
     'use strict';
+    window.Competence = window.Competence || {};
+    var competence = window.Claroline.Competence = {};
+    var context ;
+    competence.initialize = function (context2) {
+        context = context2 || 'desktop';
+    }
+
     $('#link').click(function(){
         var data = new FormData($('#myForm')[0]);
         var parameters = {};
@@ -33,11 +40,6 @@
             'success': function (data, textStatus, xhr) {
                 if (xhr.status === 200) {
                     window.location.replace(Routing.generate('claro_admin_competences'));
-                }
-            },
-            'error': function ( xhr, textStatus) {
-                if (xhr.status === 400) {//bad request
-                    alert('BUG');
                 }
             }
         });
@@ -112,7 +114,13 @@
                 i++;
         	});
         	parameters.competences = competences;
-	    	var route  = Routing.generate('claro_admin_competence_subcription_users_form');
+            if (context === 'workspace') {
+                var route = Routing.generate(
+                    'claro_workspace_competence_subcription_users_form',{'workspaceId':$('#workspace').attr('data-workspace')}
+                    );
+            } else {
+    	    	var route  = Routing.generate('claro_admin_competence_subcription_users_form');
+            }
 	    	document.location.href = route+'?'+$.param(parameters);
         } else {
         	alert('no checkboxes selected');
@@ -150,9 +158,16 @@
             parameters.subjectIds = subjects;
 
             if (subjectType === 'user') {
-                route = Routing.generate(
-                    'claro_admin_competence_subcription_users'
-                );
+                if (context === 'workspace') {
+                    route = Routing.generate(
+                        'claro_workspace_competence_subcription_users',{'workspaceId': $('#workspace').attr('data-workspace')}
+                    ); 
+                    
+                } else {
+                    route = Routing.generate(
+                        'claro_workspace_admin_subcription_users'
+                    );
+                }
             }
             else {
                 route = Routing.generate(
@@ -165,12 +180,15 @@
                 url: route,
                 statusCode: {
                     200: function () {
-                        document.location.href = Routing.generate('claro_admin_competences_list_users');
+                        if (context === 'workspace') {
+                            document.location.href = Routing.generate('claro_workspace_competences_list_users',{'workspaceId': $('#workspace').attr('data-workspace')});
+                        } else {
+                           document.location.href = Routing.generate('claro_admin_competences_list_users');
+                        }
                     },
                     type: 'POST'
                 }
             });
-
         }
     });
     $('.delete-user').click(function(){
@@ -197,5 +215,4 @@
             });
         }
     });
-
 })();

@@ -111,7 +111,18 @@ class CompetenceSubscriptionController {
      **/ 
     public function subscriptionAction(array $competences)
     {
-    	$pager = $this->userManager->getAllUsers(1);
+        $users = array();
+        foreach ($competences as $c) {
+            $users = array_merge($users,$this->cptmanager->getUserByCompetenceRoot($c));
+        }
+        
+        if (count($users)) 
+        {    
+    	   $pager = $this->userManager->getAllUsersExcept(1, 20, 'id', null, $users);
+        } else {
+            $pager = $this->userManager->getAllUsers(1);
+        }
+
     	return array(
     		'competences' => $competences,
     		'users' => $pager,

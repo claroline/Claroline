@@ -398,6 +398,20 @@ class UserManager
     }
 
     /**
+     * @param integer $page
+     * @param integer $max
+     * @param string  $orderedBy
+     * @param string  $order
+     *
+     * @return \Pagerfanta\Pagerfanta;
+     */
+    public function getAllUsersExcept($page, $max = 20, $orderedBy = 'id', $order = null, array $users )
+    {
+        $query = $this->userRepo->findAllExcept($users);
+        return $this->pagerFactory->createPagerFromArray($query, $page, $max);
+    }
+
+    /**
      * @param string  $search
      * @param integer $page
      * @param integer $max

@@ -15,6 +15,8 @@ use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Entity\Competence\Competence;
 use Claroline\CoreBundle\Entity\Competence\CompetenceHierarchy;
 use Claroline\CoreBundle\Entity\Competence\UserCompetence;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Claroline\CoreBundle\Repository\CompetenceRepository;
@@ -33,6 +35,8 @@ class CompetenceManager {
     private $security;
     private $rm;
     private $router;
+    private $repoCptH;
+    private $repoCptUser;
 
     /**
      * @DI\InjectParams({
@@ -53,6 +57,8 @@ class CompetenceManager {
         $this->security = $security;
         $this->rm = $rm;
         $this->router = $router;
+        $this->repoCptH = $om->getRepository('ClarolineCoreBundle:Competence\CompetenceHierarchy');
+        $this->repoCptUser = $om->getRepository('ClarolineCoreBundle:Competence\UserCompetence');
     }
 
     /**
@@ -60,8 +66,7 @@ class CompetenceManager {
      */
     public function getTransversalCompetences()
     {
-       $repo = $this->om->getRepository('ClarolineCoreBundle:Competence\CompetenceHierarchy');
-       return $repo->getRootCpt();
+       return $this->repoCptH->getRootCpt();
     }
 
     public function getHierarchyNameNoHtml(CompetenceHierarchy $competence)
@@ -105,6 +110,7 @@ class CompetenceManager {
     {
         if(!is_null($workspace)) {
             $this->checkUserIsAllowed('ROLE_ADMIN', $workspace);
+            $competence->setWorkspace($workspace);
         }
         $isPlatform = is_null($workspace) ? true : false;
         $competence->setIsplatform($isPlatform);
@@ -125,11 +131,14 @@ class CompetenceManager {
      * @param null $workspace
      * @return bool
      */
-    public function addSub(CompetenceHierarchy $competence,Competence $subCompetence, $workspace = null)
+    public function addSub(CompetenceHierarchy $parent,Competence $subCompetence, $workspace = null)
     {    		
     	if($c = $this->add($subCompetence)) {  
-    		$c->setParent($competence);
+    		$c->setParent($parent);
     		$this->om->flush();
+            if (count($users = $this->getUserByCompetenceRoot($parent))> 0) {
+                $this->subscribeUserToCompetences($users,array($parent));
+            }
     		return true;
     	}
     }
@@ -207,16 +216,17 @@ class CompetenceManager {
         $exclude = $repo->excludeHierarchyNode($competence);
         return $exclude;
     }
+    
     /**
      * [subscribeUserToCompetences description]
      * @param  $users       
      * @param  $competences
      * @return boolean             
      */
-    public function subscribeUserToCompetences($users, $competences)
+    public function subscribeUserToCompetences(array $users,array $competences)
     {
         $this->om->startFlushSuite();
-        $tab = $this->subscribeUsersToChildren($competences);
+        $tab = $this->getChildrenCompetence($competences);
         foreach ($users as $u) {
 
             foreach ($tab as $cpt) {
@@ -238,12 +248,10 @@ class CompetenceManager {
      */
     public function unsubscribeUserToCompetences(array $users, $root)
     {
-        $repoCpt = $this->om->getRepository('ClarolineCoreBundle:Competence\CompetenceHierarchy');
-        $rootsId = $repoCpt->getRootCpt();
+        $rootsId = $this->repoCptUser->getRootCpt();
         
         foreach ($users as $user) {
-           $this->om->getRepository('ClarolineCoreBundle:Competence\UserCompetence')
-           ->deleteNodeHiearchy($user, $root);
+           $this->repoCptUser->deleteNodeHiearchy($user, $root);
         }
         $this->om->flush();
         return true;
@@ -252,11 +260,9 @@ class CompetenceManager {
     public function getCompetencesAssociateUsers(CompetenceHierarchy $competence = null)
     {
         $list = is_null($competence) ?
-            $this->om->getRepository('ClarolineCoreBundle:Competence\UserCompetence')
-                ->findAll(false, 'competence','asc') 
+            $this->repoCptUser->findAll(false, 'competence','asc') 
                 :
-            $this->om->getRepository('ClarolineCoreBundle:Competence\UserCompetence')
-                ->findHiearchyByNode($competence);
+            $this->repoCptUser->findHiearchyByNode($competence);
 
         $orderedList = array();
         
@@ -271,17 +277,34 @@ class CompetenceManager {
         return $orderedList;
     }
 
-    private function subscribeUsersToChildren( array $roots)
+    public function getUserByCompetenceRoot(CompetenceHierarchy $node)
     {
-        $repo = $this->om->getRepository('ClarolineCoreBundle:Competence\CompetenceHierarchy');
-        $listCompetences = $repo->findFullHiearchyById($roots);
+        $result = $this->repoCptUser->findByCompetence($node);
+        $result = count($result) > 0 ? $result : array();
+        
+        return $result;
+    }
+
+    public function getUserCompetenceByWorkspace(Workspace $workspace, User $user)
+    {
+        return $this->repoCptUser->findByWorkspace($workspace, $user);
+    }
+
+    public function getCompetenceByWorkspace(Workspace $workspace)
+    {
+        return $this->repoCptH->findByWorkspace($workspace);
+    }
+
+    private function getChildrenCompetence(array $roots)
+    {
+        $listCompetences = $this->repoCptH->findFullHiearchyById($roots);
         if(count($listCompetences) > 0) {
             return $listCompetences;
         }
         return array();
     }
 
-    private function checkUserIsAllowed($permission, AbstractWorkspace $workspace)
+    private function checkUserIsAllowed($permission, Workspace $workspace)
     {
         if (!$this->security->isGranted($permission, $workspace)) {
             throw new AccessDeniedException();
