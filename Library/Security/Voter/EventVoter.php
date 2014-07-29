@@ -13,6 +13,8 @@ namespace Claroline\CoreBundle\Library\Security\Voter;
 
 use Claroline\CoreBundle\Entity\Event;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
 /**
  * This voter is involved in access decisions for facets
@@ -45,7 +47,7 @@ class EventVoter
     public function vote(TokenInterface $token, $object, array $attributes)
     {
         if ($object instanceof Event) {
-            return $this->event($object, $token, $attributes[0]);
+            return $this->eventVote($object, $token, $attributes[0]);
         }
 
         return VoterInterface::ACCESS_ABSTAIN;
@@ -53,12 +55,13 @@ class EventVoter
 
     private function eventVote(Event $event, TokenInterface $token, $action)
     {
+        $security = $this->container->get('security.context');
         if (strtolower($action) === 'edit' || strtolower($action) === 'delete') {
             $isManager = $event->getWorkspace() ?
-                $this->container->get('security.context')->isGranted('ROLE_WS_MANAGER_' . $event->getWorkspace()->getGuid()):
+                $security->isGranted('ROLE_WS_MANAGER_' . $event->getWorkspace()->getGuid()):
                 false;
 
-            $isCreator = $this->security->getToken()->getUser()->getUsername() ===  $event->getUser()->getUsername();
+            $isCreator = $security->getToken()->getUser()->getUsername() ===  $event->getUser()->getUsername();
 
             return ($isManager | $isCreator) ? VoterInterface::ACCESS_GRANTED: VoterInterface::ACCESS_DENIED;
         }
