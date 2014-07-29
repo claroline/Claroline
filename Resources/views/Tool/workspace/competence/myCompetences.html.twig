@@ -8,7 +8,7 @@
             [
                 {
                     'name': 'registration_to_competence'|trans({}, 'competence'),
-                    'href': path('claro_workspace_roles', {'workspace': workspace.getId()})
+                    'href': path('claro_workspace_competences', {'workspaceId': workspace.getId()})
                 },
             ]
         )
@@ -16,13 +16,13 @@
 {% endblock %}
 {% block section_content %}
     <div class="panel-heading">
-        <h3 class="panel-title">{{ 'users_competences'|trans({}, 'competence') }}</h3>
+        <h3 class="panel-title">{{ 'learning_profil'|trans({}, 'platform') }}</h3>
     </div>
         <div class="panel-body">
         <ul class="nav nav-tabs margin-bottom-md">
             <li class="active"><a href="{{ path('claro_workspace_competence_users', {'workspaceId': workspace.getId()}) }}"> {{'my_competences'|trans({}, 'platform') }} </a> </li>
             <li > <a href="{{ path('claro_workspace_competences_subscription_lists', {'workspaceId': workspace.getId() }) }}"> {{'subscription'|trans({}, 'platform') }} </a> </li>
-            <li> <a href="{{ path('claro_workspace_roles', {'workspace': workspace.getId()} ) }}">{{ 'competence'|trans({}, 'competence') }}</a> </li>
+            <li> <a href="{{ path('claro_workspace_competences', {'workspaceId': workspace.getId()} ) }}">{{ 'competence'|trans({}, 'competence') }}</a> </li>
             <li> <a href="{{path('claro_workspace_competences_list_users',{'workspaceId':workspace.getId()}) }}">
                 {{ 'users'|trans({},'platform') }}
             </a> </li>

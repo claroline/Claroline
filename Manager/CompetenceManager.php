@@ -64,9 +64,13 @@ class CompetenceManager {
     /**
      * @return Get all the root competence whas no parent and no workspace
      */
-    public function getTransversalCompetences()
+    public function getTransversalCompetences(Workspace $workspace = null)
     {
-       return $this->repoCptH->getRootCpt();
+        if( is_null($workspace)) {  
+            return $this->repoCptH->getRootCpt($workspace);
+        }
+
+        return $this->repoCptH->getRootCptWithWorkspace($workspace);
     }
 
     public function getHierarchyNameNoHtml(CompetenceHierarchy $competence)

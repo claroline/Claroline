@@ -62,7 +62,7 @@ class CompetenceController {
      * @EXT\Method("GET")
      * @EXT\Template("ClarolineCoreBundle:Administration\competence:competences.html.twig")
      *
-     * Displays the group creation form.
+     * Displays the competences root.
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */

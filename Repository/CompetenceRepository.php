@@ -13,6 +13,7 @@ namespace Claroline\CoreBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use Claroline\CoreBundle\Entity\Competence\Competence;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\Competence\CompetenceHierarchy;
 use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
 
@@ -41,7 +42,7 @@ class CompetenceRepository extends NestedTreeRepository {
         return $query->getResult();
     }
 
-    public function getRootCpt($sortByField = NULL, $direction = 'asc')
+    public function getRootCpt()
     {
     	$dql = "
     	SELECT c.name as name , ch.id as id 
@@ -54,6 +55,26 @@ class CompetenceRepository extends NestedTreeRepository {
     	$query = $this->_em->createQuery($dql);
 
     	return $query->getResult();
+    }
+
+    public function getRootCptWithWorkspace(Workspace $workspace)
+    {
+        $dql = "
+        SELECT DISTINCT c.name as name , ch.id as id 
+        FROM Claroline\CoreBundle\Entity\Competence\Competence c,
+             Claroline\CoreBundle\Entity\Competence\CompetenceHierarchy ch
+        WHERE ( c.workspace = :workspace OR c.workspace is NULL ) 
+        AND EXISTS
+            (
+                SELECT cpth FROM Claroline\CoreBundle\Entity\Competence\CompetenceHierarchy cpth
+                WHERE ch.parent IS NULL 
+                )
+        AND c.id = ch.competence
+        ";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('workspace', $workspace);
+        
+        return $query->getResult();
     }
 
     public function findHiearchyNameById(CompetenceHierarchy $competence)

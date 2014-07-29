@@ -66,6 +66,33 @@ class CompetenceToolController extends Controller
     }
 
      /**
+     * @EXT\Route("/{workspaceId}/show", name="claro_workspace_competences", options={"expose"=true})
+     * @EXT\Method("GET")
+     * @EXT\ParamConverter(
+     *      "workspace",
+     *      class="ClarolineCoreBundle:Workspace\Workspace",
+     *      options={"id" = "workspaceId", "strictId" = true}
+     * ) 
+     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\competence:competences.html.twig")
+     *
+     * Displays the competences root.
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function competenceShowAction($workspace)
+    {
+    	$this->checkOpen();
+    	$competences = $this->cptmanager->getTransversalCompetences($workspace);
+    	$form = $this->formFactory->create(FormFactory::TYPE_COMPETENCE);
+
+    	return array(
+    		'cpt' => $competences,
+    		'form' => $form->createView(),
+    		'workspace' => $workspace
+    	);
+    }
+
+     /**
      * @EXT\Route("/add/{workspace}", name="claro_workspace_competence_add")
      * @EXT\Method("POST")
      * @EXT\ParamConverter(
