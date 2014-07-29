@@ -220,7 +220,7 @@ class AgendaController extends Controller
 
     private function checkPermission(Event $event)
     {
-        if (!$this->sc->isGranted('EDIT', $event)) {
+        if (!$this->security->isGranted('EDIT', $event)) {
             throw new AccessDeniedException("The event cannot be updated");
         }
     }

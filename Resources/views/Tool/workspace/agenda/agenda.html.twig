@@ -5,20 +5,20 @@
 {% set calendarPath = 'bundles/frontend/jquery/plugin/calendar/' %}
 
 {% block stylesheets %}
-{{ parent() }}
-<link rel='stylesheet' type='text/css' href='{{ asset(calendarPath ~ 'css/fullcalendar.css') }}'/>
-<link rel='stylesheet' type='text/css' href='{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2.custom/css/ui-lightness/jquery-ui-1.9.2.custom.css') }}'/>
-<link rel='stylesheet' type='text/css' href='{{ asset(calendarPath ~ 'css/fullcalendar.print.css') }}' media='print' />
-<link rel='stylesheet'type='text/css' href='{{ asset('bundles/frontend/jquery/plugin/datepicker/css/datepicker.css') }}' />
+    {{ parent() }}
+    <link rel='stylesheet' type='text/css' href='{{ asset(calendarPath ~ 'css/fullcalendar.css') }}'/>
+    <link rel='stylesheet' type='text/css' href='{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2.custom/css/ui-lightness/jquery-ui-1.9.2.custom.css') }}'/>
+    <link rel='stylesheet' type='text/css' href='{{ asset(calendarPath ~ 'css/fullcalendar.print.css') }}' media='print' />
+    <link rel='stylesheet'type='text/css' href='{{ asset('bundles/frontend/jquery/plugin/datepicker/css/datepicker.css') }}' />
 {% endblock %}
 {% block breadcrumb %}
     {{
         macros.workspaceBreadcrumbs(
-            workspace,
+        workspace,
             [
                 {
-                    'name': 'agenda'|trans({}, 'tools'),
-                    'href': ''
+                'name': 'agenda'|trans({}, 'tools'),
+                'href': ''
                 }
             ]
         )
@@ -40,7 +40,7 @@
                     <a id="import-ics-btn" href="{{ path('claro_workspace_agenda_import_form', {'workspace': workspace.getId()}) }}"
                        class="btn btn-default btn-xs"
                        role="button"
-                    >
+                            >
                         {{ 'import_agenda_file_file'|trans({}, 'agenda') }}
                     </a>
                 </div>
@@ -65,19 +65,19 @@
 {% endblock %}
 
 {% block javascripts %}
-{{ parent() }}
-<script type='text/javascript' src='{{ asset(calendarPath ~ 'js/fullcalendar.js') }}' ></script>
-<script type='text/javascript'src='{{ asset('bundles/clarolinecore/js/tool/calendar.js') }}'></script>
-<script type='text/javascript'src='{{ asset('bundles/frontend/date.js') }}'></script>
-<script type='text/javascript'>
+    {{ parent() }}
+    <script type='text/javascript' src='{{ asset(calendarPath ~ 'js/fullcalendar.js') }}' ></script>
+    <script type='text/javascript'src='{{ asset('bundles/clarolinecore/js/tool/calendar.js') }}'></script>
+    <script type='text/javascript'src='{{ asset('bundles/frontend/date.js') }}'></script>
+    <script type='text/javascript'>
 
-$(function () {
-    Claroline.Calendar.initialize('workspace', {{ workspace.getId() }});
-});
+        $(function () {
+            Claroline.Calendar.initialize('workspace', {{ workspace.getId() }});
+        });
 
-</script>
-<script type="text/javascript" src="{{ url('bazinga_exposetranslation_js', { 'domain_name': 'agenda' }) }}"></script>
-<script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/tool/calendarDatePicker.js') }}"> </script>
-<script type="text/javascript" src="{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2/components/jquery.ui.draggable.min.js') }}"> </script>
-<script type="text/javascript" src="{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2/components/jquery.ui.resizable.min.js') }}"> </script>
+    </script>
+    <script type="text/javascript" src="{{ url('bazinga_exposetranslation_js', { 'domain_name': 'agenda' }) }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/tool/calendarDatePicker.js') }}"> </script>
+    <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2/components/jquery.ui.draggable.min.js') }}"> </script>
+    <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2/components/jquery.ui.resizable.min.js') }}"> </script>
 {% endblock javascripts %}

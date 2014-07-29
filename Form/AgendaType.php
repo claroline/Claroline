@@ -34,14 +34,14 @@ class AgendaType extends AbstractType
         $builder
             ->add('title', 'text', array('required' => true))
             ->add(
-                'start',
-                'datepicker',
-                array(
-                    'required'  => false,
-                    'widget'    => 'single_text',
-                    'format'    => 'dd-MM-yyyy',
-                    'attr'      => $attr,
-                    'autoclose' => true
+            'start',
+            'datepicker',
+            array(
+                'required'  => false,
+                'widget'    => 'single_text',
+                'format'    => 'dd-MM-yyyy',
+                'attr'      => $attr,
+                'autoclose' => true
                 )
             )
             ->add(
@@ -63,7 +63,7 @@ class AgendaType extends AbstractType
                     'format'    => 'dd-MM-yyyy',
                     'attr'      => $attr,
                     'autoclose' => true
-               )
+                )
             )
             ->add(
                 'endHours',

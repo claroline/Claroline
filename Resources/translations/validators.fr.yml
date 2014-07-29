@@ -1,3 +1,4 @@
+invalid_date_range: La date de fin ne peut précéder la date de début.
 'Each row requires at least 5 parameters.': 'Chaque ligne nécessite au moins 5 paramètres (séparés par des points-virgules).'
 'The code {{ code }} is already assigned to another workspace.': 'Le code {{ code }} est déjà attribué à un autre espace d''activités.'
 'The name {{ name }} is already in use.': 'Le nom {{ name }} est déjà utilisé.'

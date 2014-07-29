@@ -16,10 +16,12 @@ use Claroline\CoreBundle\Entity\User;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Claroline\CoreBundle\Validator\Constraints\DateRange;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\EventRepository")
  * @ORM\Table(name="claro_event")
+ * @DateRange()
  */
 class Event
 {
@@ -91,6 +93,7 @@ class Event
     private $endHours;
     private $updateStartHours = false;
     private $updateEndHours = false;
+    private $daterange;
 
     public function __construct()
     {
@@ -268,5 +271,15 @@ class Event
     {
         $this->endHours = $endHours;
         $this->updateEndHours = true;
+    }
+
+    public function setDateRange($daterage)
+    {
+        $this->daterange = $daterange;
+    }
+
+    public function getDateRange()
+    {
+        return $this->daterange;
     }
 }
