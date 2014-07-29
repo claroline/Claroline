@@ -25,7 +25,8 @@
         context = context || 'desktop';
         workspaceId = workspaceId || null;
         //the creation is enabled by default
-        calendar.create = canCreate || true;
+        calendar.canCreate = canCreate || true;
+        console.debug(calendar.canCreate);
         calendar.flashbag =
             '<div class="alert alert-success">' +
                 '<a data-dismiss="alert" class="close" href="#" aria-hidden="true">&times;</a>' +

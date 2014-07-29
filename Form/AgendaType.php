@@ -50,8 +50,7 @@ class AgendaType extends AbstractType
                 array(
                     'attr' => array('class' => 'hours'),
                     'input' => 'timestamp',
-                    'widget' => 'choice',
-                    'with_minutes' => false
+                    'widget' => 'single_text'
                 )
             )
             ->add(
@@ -71,8 +70,7 @@ class AgendaType extends AbstractType
                 array(
                     'attr' => array('class' => 'hours'),
                     'input' => 'timestamp',
-                    'widget' => 'choice',
-                    'with_minutes' => false
+                    'widget' => 'single_text'
                 )
             )
             ->add('allDay', 'checkbox')

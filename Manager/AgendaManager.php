@@ -310,10 +310,14 @@ class AgendaManager
             $event->setStart(null);
             $event->setEnd(null);
         } else {
-//            throw new \Exception($event->getStartHours());
-            //hours must be added
-            $event->setStart($event->getStart()->getTimestamp() + $event->getStartHours());
-            $event->setEnd($event->getEnd()->getTimestamp() + $event->getEndHours());
+            //we get the hours value directly from the property wich has been setted by the form.
+            //That way we can use the getter to return the number of hours wich is deduced from the timestamp stored
+            //in database.
+
+//            throw new \Exception($event->startHours);
+
+            $event->setStart($event->getStart()->getTimestamp() + $event->startHours);
+            $event->setEnd($event->getEnd()->getTimestamp() + $event->endHours);
         }
     }
 }

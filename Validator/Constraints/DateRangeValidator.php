@@ -23,8 +23,8 @@ class DateRangeValidator extends ConstraintValidator
     public function validate($object, Constraint $constraint)
     {
         if (!$object->getAllDay()) {
-            if ($object->getStart()->getTimeStamp() + $object->getStartHours() >
-                $object->getEnd()->getTimeStamp()  + $object->getEndHours()
+            if ($object->getStart()->getTimeStamp() + $object->startHours >
+                $object->getEnd()->getTimeStamp()  + $object->endHours
             ) {
                 $this->context->addViolation($constraint->message);
             }

@@ -89,10 +89,11 @@ class Event
      */
     private $priority;
     private $recurring;
-    private $startHours;
-    private $endHours;
-    private $updateStartHours = false;
-    private $updateEndHours = false;
+    //public because of the symfony2 form does't use the appropriate setter and we need that value.
+    //@see AgendaManager::setEventDate
+    public $startHours;
+    public $endHours;
+
     private $daterange;
 
     public function __construct()
@@ -246,31 +247,23 @@ class Event
     //returns a timestamp for the form
     public function getStartHours()
     {
-        return $this->startHours;
-        return $this->updateStartHours ?
-            $this->startHours:
-            $this->getStart() ? (int) $this->getStart()->format('H') * 3600: null;
+        return $this->getStart() ? (int) $this->getStart()->format('H') * 3600: null;
     }
 
     public function setStartHours($startHours)
     {
         $this->startHours = $startHours;
-        $this->updateStartHours = true;
     }
 
-    //returns a timestam for the form
+    //returns a timestamp for the form
     public function getEndHours()
     {
-        return $this->endHours;
-        return $this->updateEndHours ?
-            $this->endHours:
-            $this->getEnd() ? (int) $this->getEnd()->format('H') * 3600: null;
+        return $this->getEnd() ? (int) $this->getEnd()->format('H') * 3600: null;
     }
 
     public function setEndHours($endHours)
     {
         $this->endHours = $endHours;
-        $this->updateEndHours = true;
     }
 
     public function setDateRange($daterage)
