@@ -20,5 +20,31 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Survey extends AbstractResource
 {
+    /**
+     * @ORM\ManyToOne(
+     *     targetEntity="Claroline\SurveyBundle\Entity\QuestionType"
+     * )
+     * @ORM\JoinColumn(
+     *     name="question_type_id",
+     *     nullable=false,
+     *     onDelete="CASCADE"
+     * )
+     */
+    protected $questionType;
 
+    /**
+     * @param QuestionType $questionType
+     */
+    public function setQuestionType(QuestionType $questionType)
+    {
+        $this->questionType = $questionType;
+    }
+
+    /**
+     * @return QuestionType
+     */
+    public function getQuestionType()
+    {
+        return $this->questionType;
+    }
 }

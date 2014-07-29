@@ -27,6 +27,15 @@ class SurveyType extends AbstractType
                 'constraints' => new NotBlank(),
                 'label' => 'name'
             )
+        )->add(
+            'questionType',
+            'entity',
+            array(
+                'mapped' => true,
+                'class' => 'Claroline\SurveyBundle\Entity\QuestionType',
+                'property' => 'name',
+                'label' => 'type'
+            )
         );
     }
 
@@ -37,6 +46,6 @@ class SurveyType extends AbstractType
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults(array('translation_domain' => 'platform'));
+        $resolver->setDefaults(array('translation_domain' => 'survey'));
     }
 }

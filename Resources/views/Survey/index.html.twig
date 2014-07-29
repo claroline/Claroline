@@ -15,8 +15,6 @@
         <h3 class="panel-title">{{ _resource.getResourceNode().getName() }}</h3>
     </div>
     <div class="panel-body">
-        <div class="navbar row">
-            SURVEY INDEX
-        </div>
+        {{ _resource.getQuestionType().getName()|trans({}, 'survey') }}
     </div>
 {% endblock %}
