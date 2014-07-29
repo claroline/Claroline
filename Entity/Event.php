@@ -70,7 +70,7 @@ class Event
     private $user;
 
     /**
-     * @ORM\Column(name="allday", type="boolean")
+     * @ORM\Column(name="allday", type="boolean", nullable=true)
      */
     private $allDay = false;
 
