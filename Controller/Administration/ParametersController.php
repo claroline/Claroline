@@ -63,6 +63,7 @@ class ParametersController extends Controller
     private $toolManager;
     private $paramAdminTool;
     private $router;
+    private $ipwlm;
 
     /**
      * @DI\InjectParams({
@@ -764,7 +765,7 @@ class ParametersController extends Controller
     public function maintenancePageAction()
     {
         $this->checkOpen();
-        //the current ip must be whitelisted so it can access the plateforme under maintenance.
+        //the current ip must be whitelisted so it can access the the plateform when it's under maintenance
         $this->ipwlm->addIP($_SERVER['REMOTE_ADDR']);
 
         return array();

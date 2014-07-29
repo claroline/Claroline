@@ -229,6 +229,7 @@ database_connection_failed: 'La connexion à la base de données à échoué.'
 date: Date
 date_form_datepicker_format: dd-mm-yyyy
 date_form_datepicker_php: d-m-Y
+date_agenda_display_format: dd-MM-yyyy
 date_form_format: dd/MM/yyyy
 date_form_placeholder: jj/mm/aaaa
 date_format: d/m/Y
@@ -238,6 +239,7 @@ date_range.custom_range: 'Plage personnalisée'
 date_range.day_names: '["Di","Lu","Ma","Me","Je","Ve","Sa"]'
 date_range.first_day: '1'
 date_range.format: d/m/Y
+date_range.format.with_hours: d/m/Y H:i:s
 date_range.from: De
 date_range.js_format: dd/MM/yyyy
 date_range.last_month: 'Mois précédent'
@@ -976,3 +978,7 @@ start_maintenance: Lancer le mode maintenance
 end_maintenance: Terminer le mode maintenance
 maintenance_mode_enabled: Le mode maintenance est activé
 maintenance_mode_message: L'accès à la plateforme est désactivé pour les utilisateurs. Vous pouvez le réactiver dans la section maintenance des paramètres de l'administration.
+update_event: Mettre à jour un événement
+remove_event_confirm: Êtes-vous sûr de vouloir supprimer cet événement ?
+remove_event: Supprimer un événement
+edit_event_success: Événement mis à jour avec succès.

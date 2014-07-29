@@ -427,7 +427,7 @@ class WorkspaceController extends Controller
      *
      * Opens a tool.
      *
-     * @param string            $toolName
+     * @param string    $toolName
      * @param Workspace $workspace
      *
      * @return Response

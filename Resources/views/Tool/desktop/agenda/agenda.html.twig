@@ -38,28 +38,32 @@
                     </a>
                 </div>
 
-                {% if cours | length > 1 %}
-                <div class="panel panel-default">
-                    <div data-toggle="collapse" data-target="#panel-owners" class="panel-heading">{{'filter_ws'|trans({}, 'agenda')}}</div>
-                    <div id="panel-owners" class="panel-body list-group in" style="padding:0">
-                        <div id="selectWorkspace">
-                            {% for i, c in cours %}
-                                <li class="list-group-item">
-                                    <input id="ws-{{ i }}" type="checkbox" name="{{ c }}"  class="filter" />
-                                    <label for="ws-{{ i }}">{{ c }}</label>
-                                </li>
-                            {% endfor %}
+                {% if filters | length > 1 %}
+                    <div class="panel panel-default">
+                        <div data-toggle="collapse" data-target="#panel-owners" class="panel-heading">{{'filter_ws'|trans({}, 'agenda')}}</div>
+                        <div id="panel-owners" class="panel-body list-group in" style="padding:0">
+                            <div id="selectWorkspace">
+                                {% for wsId, filterName in filters %}
+                                    <li class="list-group-item">
+                                        <input
+                                            id="ws-{{ wsId }}"
+                                            type="checkbox"
+                                            name="{{ filterName}}"
+                                            class="filter"
+                                            value="{{ wsId }}"
+                                        />
+                                        <label for="ws-{{ wsId }}">{{ filterName }}</label>
+                                    </li>
+                                {% endfor %}
+                            </div>
                         </div>
                     </div>
-                </div>
                 {% endif %}
 
                 <div class="panel panel-default">
                     <div class="panel-heading">{{'tasks'|trans({}, 'agenda')}}</div>
-                    <div class="panel-body list-group" style="padding:0">
-                        <div id="tasks">
-                            {% include('ClarolineCoreBundle:Tool\\desktop\\agenda:tasks.html.twig') %}
-                        </div>
+                    <div id="tasks" class="panel-body list-group" style="padding:0">
+                        {% render controller('ClarolineCoreBundle:Tool\\Agenda\\DesktopAgenda:tasks') %}
                     </div>
                 </div>
 
@@ -72,33 +76,6 @@
                     </div>
                 </div>
 
-            </div>
-        </div>
-    </div>
-
-    <div id="myModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="agendaModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 id="agendaModalLabel"> {{ 'add_event'|trans({}, 'agenda') }}</h4>
-                </div>
-                <div class="modal-body">
-                    <form method="post" action="{{ path('claro_desktop_agenda_add') }}" id="myForm" {{ form_enctype(form) }} role="form">
-                        {{ form_widget(form) }}
-                    </form>
-                    <a href="{{ path('claro_desktop_agenda_show') }}" id="link"></a>
-                    <a href="{{ path('claro_workspace_agenda_move') }}" id="move"></a>
-                    <a href="{{ path('claro_desktop_agenda_delete') }}" id="delete"></a>
-                    <a href="{{ path('claro_desktop_agenda_update') }}" id="update"></a>
-                    <a href="{{ path('claro_desktop_agenda_tasks') }}" id="taska"></a>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-default" data-dismiss="modal">{{'cancel'|trans({}, 'agenda') }}</button>
-                    <button class="btn btn-primary" id="save">{{ 'add_event'|trans({}, 'agenda') }}</button>
-                    <button class="btn btn-info" id="updateBtn" > {{ 'update'|trans({}, 'agenda') }}</button>
-                    <button class="btn btn-primary" id="deleteBtn" >{{ 'delete'|trans({}, 'platform') }}</button>
-                </div>
             </div>
         </div>
     </div>

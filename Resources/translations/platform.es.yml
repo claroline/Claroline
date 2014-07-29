@@ -221,6 +221,7 @@ date_form_datepicker_format: dd-mm-yyyy
 date_form_datepicker_php: m-d-Y
 date_form_format: 'dd/MM/yyyy'
 date_form_placeholder: dd/mm/aaaa
+date_agenda_display_format: MM-dd-yyyy
 date_format: 'd/m/Y'
 date_range.apply: 'Aplicar'
 date_range.clear: 'Reinicializar'
@@ -228,6 +229,7 @@ date_range.custom_range: 'Rango personalizado'
 date_range.day_names: '["Do","Lu","Ma","Mi","Ju","Vi","Sa"]'
 date_range.first_day: '0'
 date_range.format: 'm/d/Y'
+date_range.format.with_hours: m/d/Y H:i:s
 date_range.from: 'de'
 date_range.js_format: 'dd/MM/yyyy'
 date_range.last_month: 'Último mes'
@@ -898,3 +900,7 @@ start_maintenance: Lanzar el modo de mantenimiento
 end_maintenance: Terminar el modo de mantenimiento
 maintenance_mode_enabled: El modo mantenimiento esta activo
 maintenance_mode_message: El acceso a la plataforma está desactivado para los usuarios. Usted puede volver a activarlo en la sección de mantenimiento de los parámetros de la administración.
+update_event: Actualizar un evento
+remove_event_confirm: ¿Está seguro que desea eliminar este evento?
+remove_event: Eliminar un evento
+edit_event_success: Evento actualizado correctamente

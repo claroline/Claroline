@@ -20,12 +20,11 @@ use Doctrine\ORM\EntityManager;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
- * This voter is involved in access decisions for
+ * This voter is involved in access decisions for facets
  *
  * @DI\Service
  * @DI\Tag("security.voter")
  */
-
 class FacetVoter
 {
     private $em;
@@ -52,8 +51,6 @@ class FacetVoter
      */
     public function vote(TokenInterface $token, $object, array $attributes)
     {
-        $validAttributes = array('open', 'edit');
-
         if ($object instanceof FieldFacet) {
             return $this->fieldFacetVote($object, $token, $attributes[0]);
         }
