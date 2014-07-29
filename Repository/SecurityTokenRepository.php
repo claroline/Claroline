@@ -15,7 +15,7 @@ use Doctrine\ORM\EntityRepository;
 
 class SecurityTokenRepository extends EntityRepository
 {
-    public function findAllTokens($order = 'tokenName', $direction = 'ASC')
+    public function findAllTokens($order = 'clientName', $direction = 'ASC')
     {
         $dql = "
             SELECT st
@@ -24,6 +24,23 @@ class SecurityTokenRepository extends EntityRepository
         ";
 
         $query = $this->_em->createQuery($dql);
+
         return $query->getResult();
+    }
+
+    public function findSecurityTokenByTokenAndIp($token, $ip)
+    {
+        $dql = "
+            SELECT st
+            FROM Claroline\CoreBundle\Entity\SecurityToken st
+            WHERE st.token = :token
+            AND st.clientIp = :ip
+        ";
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('token', $token);
+        $query->setParameter('ip', $ip);
+
+        return $query->getOneOrNullResult();
     }
 }

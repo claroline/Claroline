@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Migrations\oci8;
+namespace Claroline\CoreBundle\Migrations\pdo_oci;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -8,18 +8,18 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/07/24 03:37:58
+ * Generation date: 2014/07/29 09:07:56
  */
-class Version20140724153755 extends AbstractMigration
+class Version20140729090754 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
         $this->addSql("
             CREATE TABLE claro_security_token (
                 id NUMBER(10) NOT NULL, 
-                token_name VARCHAR2(255) NOT NULL, 
+                client_name VARCHAR2(255) NOT NULL, 
                 token VARCHAR2(255) NOT NULL, 
-                ip_address VARCHAR2(255) NOT NULL, 
+                client_ip VARCHAR2(255) NOT NULL, 
                 PRIMARY KEY(id)
             )
         ");
@@ -52,7 +52,7 @@ class Version20140724153755 extends AbstractMigration
             FROM DUAL; END LOOP; END IF; END;
         ");
         $this->addSql("
-            CREATE UNIQUE INDEX UNIQ_B3A67A403C274B64 ON claro_security_token (token_name)
+            CREATE UNIQUE INDEX UNIQ_B3A67A408FBFBD64 ON claro_security_token (client_name)
         ");
     }
 

@@ -22,12 +22,12 @@ class SecurityTokenType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add(
-            'tokenName',
+            'clientName',
             'text',
             array()
         );
         $builder->add(
-            'ipAddress',
+            'clientIp',
             'text',
             array()
         );

@@ -806,7 +806,7 @@ class ParametersController extends Controller
      * @EXT\Route(
      *     "/security/token/order/{order}/direction/{direction}",
      *     name="claro_admin_security_token_list",
-     *     defaults={"order"="tokenName","direction"="ASC"},
+     *     defaults={"order"="clientName","direction"="ASC"},
      * )
      * @EXT\Template(
      *     "ClarolineCoreBundle:Administration\Parameters:securityTokenList.html.twig"

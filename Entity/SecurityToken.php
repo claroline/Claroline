@@ -18,7 +18,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\SecurityTokenRepository")
  * @ORM\Table(name="claro_security_token")
- * @DoctrineAssert\UniqueEntity("tokenName")
+ * @DoctrineAssert\UniqueEntity("clientName")
  */
 class SecurityToken
 {
@@ -30,10 +30,10 @@ class SecurityToken
     protected $id;
 
     /**
-     * @ORM\Column(name="token_name", unique=true)
+     * @ORM\Column(name="client_name", unique=true)
      * @Assert\NotBlank()
      */
-    protected $tokenName;
+    protected $clientName;
     
     /**
      * @ORM\Column()
@@ -42,14 +42,14 @@ class SecurityToken
     protected $token;
 
     /**
-     * @ORM\Column(name="ip_address")
+     * @ORM\Column(name="client_ip")
      * @Assert\NotBlank()
      * @Assert\Regex(
      *      pattern="/^[0-9]{1,3}[.][0-9]{1,3}[.][0-9]{1,3}[.][0-9]{1,3}([:][0-9]+)?$/",
      *      message="invalid_ip_address_format"
      * )
      */
-    protected $ipAddress;
+    protected $clientIp;
 
     public function getId()
     {
@@ -61,14 +61,14 @@ class SecurityToken
         $this->id = $id;
     }
 
-    public function getTokenName()
+    public function getClientName()
     {
-        return $this->tokenName;
+        return $this->clientName;
     }
 
-    public function setTokenName($tokenName)
+    public function setClientName($clientName)
     {
-        $this->tokenName = $tokenName;
+        $this->clientName = $clientName;
     }
 
     public function getToken()
@@ -81,13 +81,13 @@ class SecurityToken
         $this->token = $token;
     }
 
-    public function getIpAddress()
+    public function getClientIp()
     {
-        return $this->ipAddress;
+        return $this->clientIp;
     }
 
-    public function setIpAddress($ipAddress)
+    public function setClientIp($clientIp)
     {
-        $this->ipAddress = $ipAddress;
+        $this->clientIp = $clientIp;
     }
 }

@@ -54,8 +54,14 @@ class SecurityTokenManager
      *  SecurityTokenRepository access methods  *
      ********************************************/
 
-    public function getAllTokens($order = 'tokenName', $direction = 'ASC')
+    public function getAllTokens($order = 'clientName', $direction = 'ASC')
     {
         return $this->securityTokenRepo->findAllTokens($order, $direction);
+    }
+
+    public function getSecurityTokenByTokenAndIp($token, $ip)
+    {
+        return $this->securityTokenRepo
+            ->findSecurityTokenByTokenAndIp($token, $ip);
     }
 }

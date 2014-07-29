@@ -56,8 +56,8 @@
 
                     {% for token in tokens %}
                     <tr>
-                        <td>{{ token.getTokenName() }}</td>
-                        <td>{{ token.getIpAddress() }}</td>
+                        <td>{{ token.getClientName() }}</td>
+                        <td>{{ token.getClientIp() }}</td>
                         <td>{{ token.getToken() }}</td>
                         <td>
                             <a href="{{ path('claro_admin_security_token_edit_form', {'tokenId': token.getId()}) }}"
