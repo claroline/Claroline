@@ -41,8 +41,24 @@ class ActionConstraint extends AbstractConstraint
      */
     public function getQuery(QueryBuilder $queryBuilder)
     {
-        return $queryBuilder
+        $action = $this->getRule()->getAction();
+        $foundType = preg_match('/\[\[(.*)\]\]/', $action, $matches);
+
+        if ($foundType) {
+            $type = $matches[1];
+            $parts = explode(']]', $action);
+            $action = ($foundType) ? $parts[1]: $action;
+
+            return $queryBuilder
+                ->join('l.resourceType', 'rt')
                 ->andWhere('l.action = :action')
-                ->setParameter('action', $this->getRule()->getAction());
+                ->andWhere('rt.name = :type')
+                ->setParameter('action', $action)
+                ->setParameter('type', $type);
+        } else {
+            return $queryBuilder
+                ->andWhere('l.action = :action')
+                ->setParameter('action', $action);
+        }
     }
 }

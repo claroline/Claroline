@@ -448,9 +448,9 @@ class UserManager
      *
      * @return \Pagerfanta\Pagerfanta;
      */
-    public function getUsersByGroup(Group $group, $page, $max = 20, $orderedBy = 'id')
+    public function getUsersByGroup(Group $group, $page, $max = 20, $orderedBy = 'id', $order = null)
     {
-        $query = $this->userRepo->findByGroup($group, false, $orderedBy);
+        $query = $this->userRepo->findByGroup($group, false, $orderedBy, $order);
 
         return $this->pagerFactory->createPager($query, $page, $max);
     }

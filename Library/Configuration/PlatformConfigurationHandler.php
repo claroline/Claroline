@@ -192,4 +192,9 @@ class PlatformConfigurationHandler
             );
         }
     }
+
+    public function getDefaultParameters()
+    {
+        return $this->defaultParameters;
+    }
 }

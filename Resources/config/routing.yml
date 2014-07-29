@@ -99,7 +99,7 @@ claro_desktop:
     type: annotation
 
 claro_desktop_tool_agenda:
-    resource: "@ClarolineCoreBundle/Controller/Tool/DesktopAgendaController.php"
+    resource: "@ClarolineCoreBundle/Controller/Tool/Agenda/DesktopAgendaController.php"
     prefix: desktop/tool/agenda
     type: annotation
 
@@ -134,8 +134,13 @@ claro_workspace_tool_tools_properties:
     type: annotation
 
 claro_workspace_tool_agenda:
-    resource: "@ClarolineCoreBundle/Controller/Tool/WorkspaceAgendaController.php"
+    resource: "@ClarolineCoreBundle/Controller/Tool/Agenda/WorkspaceAgendaController.php"
     prefix: workspaces/tool/agenda
+    type: annotation
+
+claro_tool_agenda:
+    resource: "@ClarolineCoreBundle/Controller/Tool/Agenda/AgendaController.php"
+    prefix: tool/agenda
     type: annotation
 
 claro_workspace_roles:

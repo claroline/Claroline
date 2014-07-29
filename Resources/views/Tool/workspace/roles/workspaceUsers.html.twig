@@ -49,10 +49,16 @@
 {% endblock %}
 
 {% macro sortUrl(max, search, order, workspaceId, direction) %}
-    {% if search == '' %}
-        {{ path('claro_workspace_registered_user_list', {'workspace': workspaceId, 'max': max, 'order': order, 'direction':direction }) }}
+    {% if direction == 'ASC' %}
+        {% set newDirection = 'DESC' %}
     {% else %}
-        {{ path('claro_workspace_registered_user_list_search', {'search': search, 'workspace': workspaceId, 'max': max, 'order': order, 'direction':direction}) }}
+        {% set newDirection = 'ASC' %}
+    {% endif %}
+
+    {% if search == '' %}
+        {{ path('claro_workspace_registered_user_list', {'workspace': workspaceId, 'max': max, 'order': order, 'direction':newDirection }) }}
+    {% else %}
+        {{ path('claro_workspace_registered_user_list_search', {'search': search, 'workspace': workspaceId, 'max': max, 'order': order, 'direction':newDirection}) }}
     {% endif %}
 {% endmacro %}
 
@@ -122,7 +128,7 @@
                             <td>{{ user.getFirstName() }}</td>
                             <td>{{ user.getMail() }}</td>
                             <td>
-                                {% for role in user.getEntityRoles() %}
+                                {% for role in user.getEntityRoles(false) %}
                                     {% if role.getWorkspace() == workspace %}
                                         <span class="label label-success" id="label-{{ role.getId () }}-{{ user.getId()}}">
                                                 {{ role.getTranslationKey()|trans({}, 'platform') }}

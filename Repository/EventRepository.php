@@ -64,7 +64,7 @@ class EventRepository extends EntityRepository
         return $query->getResult();
     }
 
-    public function findByWorkspaceId($workspaceId,$allDay, $limit = null)
+    public function findByWorkspaceId($workspaceId, $allDay, $limit = null)
     {
         $dql = "
             SELECT e

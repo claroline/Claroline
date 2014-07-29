@@ -15,7 +15,7 @@ registration_to_workspace: Inscription à des espaces d'activités
 platform_plugins: Plugins de la plateforme
 home_tabs: Onglets de la page d'accueil
 desktop_tools: Outils du bureau
-platform_logs: Suivi plateforme
-platform_analytics: Statistique plateforme
-roles_management: Gestion des roles
+platform_logs: Suivi de la plateforme
+platform_analytics: Statistiques de la plateforme
+roles_management: Gestion des rôles
 platform_packages: Paquets de la plateforme

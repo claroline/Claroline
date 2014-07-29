@@ -1,10 +1,25 @@
 {% extends 'ClarolineCoreBundle:Tool/workspace/analytics:analyticsTabs.html.twig' %}
 
+{% block breadcrumb %}
+    {{
+        macros.workspaceBreadcrumbs(
+            workspace,
+            [
+                {
+                    'name': 'dashboard'|trans({}, 'platform'),
+                    'href': path('claro_workspace_analytics_resources', { 'workspaceId': workspace.getId() })
+                },
+                {
+                    'name': 'activities'|trans({}, 'platform'),
+                    'href': ''
+                }
+            ]
+        )
+    }}
+{% endblock %}
+
 {% block analytics %}
     <div id="activities-evaluations">
-        <h2>{{ 'workspace_activities_tracking'|trans({}, 'platform') }}</h2>
-        <br>
-
         {% if activities|length > 0 %}
             <div class="table-responsive">
                 <table class="table">
@@ -53,7 +68,7 @@
                 </table>
             </div>
         {% else %}
-            {{ 'no_activity'|trans({}, 'platform') }}
+            {{ 'no_activity_in_workspace'|trans({}, 'platform') }}
         {% endif %}
     </div>
 {% endblock %}

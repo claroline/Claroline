@@ -221,6 +221,7 @@ date_form_datepicker_format: dd-mm-yyyy
 date_form_datepicker_php: m-d-Y
 date_form_format: 'dd/MM/yyyy'
 date_form_placeholder: dd/mm/aaaa
+date_agenda_display_format: MM-dd-yyyy
 date_format: 'd/m/Y'
 date_range.apply: 'Aplicar'
 date_range.clear: 'Reinicializar'
@@ -228,6 +229,7 @@ date_range.custom_range: 'Rango personalizado'
 date_range.day_names: '["Do","Lu","Ma","Mi","Ju","Vi","Sa"]'
 date_range.first_day: '0'
 date_range.format: 'm/d/Y'
+date_range.format.with_hours: m/d/Y H:i:s
 date_range.from: 'de'
 date_range.js_format: 'dd/MM/yyyy'
 date_range.last_month: 'Último mes'
@@ -469,7 +471,7 @@ new_password: Nueva contraseña
 new_role_message: 'Usted a recivido el rol %name%'
 new_role_message_object: 'Sus derechos de acceso en la plataforma han cambiado'
 no: 'No'
-no_activity: 'No hay actividad'
+no_activity_in_workspace: 'No hay actividad'
 no_category: 'No hay categorías'
 no_email: 'No se ha encontrado el correo electrónico, comprube la ortografía'
 no_group: 'No hay grupos'
@@ -804,7 +806,6 @@ will display the username: 'va a mostrar el nombre de usuario'
 workspace.create: 'Crear un espacio de trabajo'
 workspace.name_not_blank: 'El nombre del espacio de trabajo es obligatorio.'
 workspace: 'Espacio de trabajo'
-workspace_activities_tracking: 'Seguimiento de las actividades en el espacio de trabajo'
 workspace_administration: 'Administración'
 workspace_classification: 'Clasificación de espacio de trabajo'
 workspace_delete: 'Suprimir el espacio de trabajo'
@@ -893,3 +894,13 @@ no_action_found: No hay acciones.
 error: Error
 last_manager_error_message: No es posible eliminar todos los administradores.
 remove_workspace_role_warning: ¿Está seguro que desea suprimir este rol? Si este rol está asociado a los usuarios, estos perderán sus derechos de acceso proporcionada por dicho rol.
+edit_rights_success: La modificación de los derechos de acceso a sido realizada con éxito
+maintenance: mantenimiento
+start_maintenance: Lanzar el modo de mantenimiento
+end_maintenance: Terminar el modo de mantenimiento
+maintenance_mode_enabled: El modo mantenimiento esta activo
+maintenance_mode_message: El acceso a la plataforma está desactivado para los usuarios. Usted puede volver a activarlo en la sección de mantenimiento de los parámetros de la administración.
+update_event: Actualizar un evento
+remove_event_confirm: ¿Está seguro que desea eliminar este evento?
+remove_event: Eliminar un evento
+edit_event_success: Evento actualizado correctamente

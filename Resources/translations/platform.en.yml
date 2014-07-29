@@ -230,6 +230,7 @@ database_connection_failed: 'Database connection failed.'
 date: Date
 date_form_datepicker_format: mm-dd-yyyy
 date_form_datepicker_php: m-d-Y
+date_agenda_display_format: MM-dd-yyyy
 date_form_format: MM/dd/yyyy
 date_form_placeholder: mm/dd/yyyy
 date_format: m/d/Y
@@ -239,6 +240,7 @@ date_range.custom_range: 'Custom range'
 date_range.day_names: '["Su","Mo","Tu","We","Th","Fr","Sa"]'
 date_range.first_day: '0'
 date_range.format: m/d/Y
+date_range.format.with_hours: m/d/Y H:i:s
 date_range.from: From
 date_range.js_format: MM/dd/yyyy
 date_range.last_month: 'Last month'
@@ -503,12 +505,13 @@ new_password: New password
 new_role_message: 'You received the role %name%'
 new_role_message_object: 'Your permissions on the platform have changed'
 no: no
-no_activity: 'There is no activity'
+no_activity_in_workspace: There are currently no activities in this workspace.
 no_category: 'There is no category'
 no_email: 'No email found, check the spelling'
 no_group: 'No group'
 no_home_tab: 'There is no Home tab'
 no_message: 'No message'
+no_resources_in_workspace: There are currently no resources in this workspace.
 no_role_selected_message: 'No role selected.'
 no_search_results: 'Your search hasn''t returned any result.'
 no_tag: 'There is no tag'
@@ -811,6 +814,7 @@ unregistered_groups: 'Unregistered groups'
 unregistered_users: 'Unregistered users'
 unwritable_file_exception: 'The file %path% is not writable.'
 up: Up
+update_available: Update available
 upload: upload
 upload_denied: 'Permission denied'
 upload_fail: 'Upload failed'
@@ -862,7 +866,6 @@ will display the username: 'will display the username'
 workspace.create: 'Create a new workspace'
 workspace.name_not_blank: 'The workspace''s name is required.'
 workspace: Workspace
-workspace_activities_tracking: 'Workspace activities tracking'
 workspace_administration: Administration
 workspace_classification: 'Workspace classification'
 workspace_delete: 'Delete the workspace'
@@ -963,3 +966,15 @@ no_action_found: No action found.
 error: Error
 last_manager_error_message: You can't remove every manager.
 remove_workspace_role_warning: Do you really want to remove this role ? If the role is still associated to users, these users will lose their permissions granted by this role.
+
+remove_workspace_role_warning: Do you really want to remove this role ? If the role is still associated to users, these users will lose their permissions granted by this role.
+edit_rights_success: Rights were successfully changed.
+maintenance: Maintenance
+start_maintenance: Start maintenance mode
+end_maintenance: End maintenance mode
+maintenance_mode_enabled: Maintenance mode is activated
+maintenance_mode_message: The platform access is disabled. You can activate it in the maintenance section of administration parameters.
+update_event: Update an event
+remove_event_confirm: Are you sure you want to remove this event ?
+remove_event: Remove an event
+edit_event_success: The event was updated successfully.

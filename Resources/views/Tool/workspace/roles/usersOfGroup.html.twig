@@ -27,12 +27,18 @@
 {% endmacro %}
 
 {% macro sortUrl(max, search, groupId, workspaceId, order, direction) %}
+    {% if direction == 'ASC' %}
+        {% set newDirection = 'DESC' %}
+    {% else %}
+        {% set newDirection = 'ASC' %}
+    {% endif %}
+
     {% if search == '' %}
         {{ path('claro_workspace_users_of_group',
-        {'workspace': workspaceId, 'group': groupId, 'max': max, 'order': order, 'direction':direction}) }}
+        {'workspace': workspaceId, 'group': groupId, 'max': max, 'order': order, 'direction':newDirection}) }}
     {% else %}
         {{ path('claro_workspace_users_of_group_search',
-        {'search': search, 'workspace': workspaceId, 'group': groupId, 'max': max, 'order': order, 'direction':direction}) }}
+        {'search': search, 'workspace': workspaceId, 'group': groupId, 'max': max, 'order': order, 'direction':newDirection}) }}
     {% endif %}
 {% endmacro %}
 
@@ -102,7 +108,7 @@
 
             <div class="row">
                 <div class="col-md-8">
-                    {{ renderPager(search, workspace.getId(), group, pager, max, order) }}
+                    {{ renderPager(search, workspace.getId(), group, pager, max, order, direction) }}
                 </div>
                 <div class="col-md-4">
                     {{ maxResultsSelectBox(max, "$('#search-button').trigger('click');") }}

@@ -2,20 +2,6 @@
 
 {% block title %}{{ parent() ~ ' - ' ~ "analytics" | trans({}, "tools") }}{% endblock %}
 
-{% block breadcrumb %}
-    {{
-        macros.workspaceBreadcrumbs(
-            workspace,
-            [
-                {
-                    'name': 'analytics'|trans({}, 'platform'),
-                    'href': ''
-                }
-            ]
-        )
-    }}
-{% endblock %}
-
 {% block section_content %}
     <div class="panel-body">
         <ul class="nav nav-tabs">

@@ -37,31 +37,41 @@ class AgendaType extends AbstractType
                 'start',
                 'datepicker',
                 array(
-                    'required'      => false,
-                    'widget'        => 'single_text',
-                    'format'        => 'dd-MM-yyyy HH:mm',
-                    'attr'          => $attr,
+                    'required'  => false,
+                    'widget'    => 'single_text',
+                    'format'    => 'dd-MM-yyyy',
+                    'attr'      => $attr,
+                    'autoclose' => true
+                    )
                 )
-            )
             ->add(
                 'startHours',
-                'text',
-                array('attr' => array('class' => 'hours'))
+                'time',
+                array(
+                    'attr' => array('class' => 'hours'),
+                    'input' => 'timestamp',
+                    'widget' => 'single_text'
+                )
             )
             ->add(
                 'end',
                 'datepicker',
                 array(
-                    'required'      => false,
-                    'widget'        => 'single_text',
-                    'format'        => 'dd-MM-yyyy HH:mm',
-                    'attr'          => $attr,
-               )
+                    'required'  => false,
+                    'widget'    => 'single_text',
+                    'format'    => 'dd-MM-yyyy',
+                    'attr'      => $attr,
+                    'autoclose' => true
+                )
             )
             ->add(
                 'endHours',
-                'text',
-                array('attr' => array('class' => 'hours'))
+                'time',
+                array(
+                    'attr' => array('class' => 'hours'),
+                    'input' => 'timestamp',
+                    'widget' => 'single_text'
+                )
             )
             ->add('allDay', 'checkbox')
             ->add('description', 'tinymce')

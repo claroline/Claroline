@@ -82,6 +82,10 @@
             var fieldFacetId = $($(event.currentTarget)[0].parentElement).attr('data-field-facet-id');
             var url = Routing.generate('claro_admin_field_role_form', {'field': fieldFacetId});
             displayForm(url, 'form-field-roles', function(){});
+        }).
+        on('click', '#edit-general-facet-btn', function(event){
+            event.preventDefault();
+            submitForm('form-facet-general', submitGeneralForm);
         });
 
     /*******************/
@@ -159,7 +163,7 @@
                     $('#confirm-modal').modal('hide');
                 }
             });
-        })
+        });
     }
 
     /*************/
@@ -203,5 +207,15 @@
 
     var editField = function(data, textStatus, jqXHR) {
         $('#field-' + data['id']).html(Twig.render(FieldElementInnerHtml, {'field': data}));
+    }
+
+    var submitGeneralForm = function(data, textStatus, jqXHR) {
+        var flashbag =
+            '<div class="alert alert-success">' +
+            '<a data-dismiss="alert" class="close" href="#" aria-hidden="true">&times;</a>' +
+            Translator.get('platform:edit_profile_success') +
+            '</div>';
+
+        $('.panel-body').first().prepend(flashbag);
     }
 })();

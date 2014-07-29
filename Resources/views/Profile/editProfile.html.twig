@@ -25,8 +25,8 @@
 {% endblock %}
 {% block javascripts %}
     {{ parent() }}
-    //disable unavailable checkboxes.
     <script>
+        //disable unavailable checkboxes
         {% for role in unavailableRoles %}
             $('#profile_form_platformRoles_' + {{ role.getId() }}).attr('disabled', true);
         {% endfor %}

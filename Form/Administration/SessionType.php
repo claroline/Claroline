@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Form\Administration;
 
+use Claroline\CoreBundle\Library\Configuration\PlatformConfiguration;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
@@ -20,10 +21,12 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 class SessionType extends AbstractType
 {
     private $sessionType;
+    private $config;
 
-    public function __construct($sessionType = 'native')
+    public function __construct($sessionType = 'native', PlatformConfiguration $config = null)
     {
         $this->sessionType = $sessionType;
+        $this->config = $config;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -38,7 +41,8 @@ class SessionType extends AbstractType
                         'claro_pdo' => 'database',
                         'pdo' => 'external_pdo_database'
                     ),
-                    'label' => 'storage_type'
+                    'label' => 'storage_type',
+                    'data' => $this->sessionType
                 )
             );
 
@@ -49,8 +53,9 @@ class SessionType extends AbstractType
                 array(
                     'label' => 'DSN',
                     'required' => false,
-                    'constraints' => $this->notBlankIfPdo(),
-                    'theme_options' => $this->hiddenIfPdo()
+                    'constraints' => $this->notBlankIfExternal(),
+                    'theme_options' => $this->hiddenIfNotExternal(),
+                    'data' => $this->getConfigValue('sessionDbDsn')
                 )
             )
             ->add(
@@ -59,8 +64,9 @@ class SessionType extends AbstractType
                 array(
                     'label' => 'user',
                     'required' => false,
-                    'constraints' => $this->notBlankIfPdo(),
-                    'theme_options' => $this->hiddenIfPdo()
+                    'constraints' => $this->notBlankIfExternal(),
+                    'theme_options' => $this->hiddenIfNotExternal(),
+                    'data' => $this->getConfigValue('sessionDbUser')
                 )
             )
             ->add(
@@ -69,7 +75,8 @@ class SessionType extends AbstractType
                 array(
                     'label' => 'password',
                     'required' => false,
-                    'theme_options' => $this->hiddenIfPdo()
+                    'theme_options' => $this->hiddenIfNotExternal(),
+                    'data' => $this->getConfigValue('sessionDbPassword')
                 )
             )
             ->add(
@@ -78,8 +85,9 @@ class SessionType extends AbstractType
                 array(
                     'label' => 'db_table',
                     'required' => false,
-                    'constraints' => $this->notBlankIfPdo(),
-                    'theme_options' => $this->hiddenIfPdo()
+                    'constraints' => $this->notBlankIfExternal(),
+                    'theme_options' => $this->hiddenIfNotExternal(),
+                    'data' => $this->getConfigValue('sessionDbTable')
                 )
             )
             ->add(
@@ -88,8 +96,9 @@ class SessionType extends AbstractType
                 array(
                     'label' => 'id_col',
                     'required' => false,
-                    'constraints' => $this->notBlankIfPdo(),
-                    'theme_options' => $this->hiddenIfPdo()
+                    'constraints' => $this->notBlankIfExternal(),
+                    'theme_options' => $this->hiddenIfNotExternal(),
+                    'data' => $this->getConfigValue('sessionDbIdCol')
                 )
             )
             ->add(
@@ -98,8 +107,9 @@ class SessionType extends AbstractType
                 array(
                     'label' => 'data_col',
                     'required' => false,
-                    'constraints' => $this->notBlankIfPdo(),
-                    'theme_options' => $this->hiddenIfPdo()
+                    'constraints' => $this->notBlankIfExternal(),
+                    'theme_options' => $this->hiddenIfNotExternal(),
+                    'data' => $this->getConfigValue('sessionDbDataCol')
                 )
             )
             ->add(
@@ -108,8 +118,9 @@ class SessionType extends AbstractType
                 array(
                     'label' => 'time_col',
                     'required' => false,
-                    'constraints' => $this->notBlankIfPdo(),
-                    'theme_options' => $this->hiddenIfPdo()
+                    'constraints' => $this->notBlankIfExternal(),
+                    'theme_options' => $this->hiddenIfNotExternal(),
+                    'data' => $this->getConfigValue('sessionDbTimeCol')
                 )
             );
 
@@ -119,7 +130,8 @@ class SessionType extends AbstractType
             array(
                 'required' => true,
                 'label' => 'cookie_lifetime',
-                'constraints' => new GreaterThanOrEqual(array('value' => 60))
+                'constraints' => new GreaterThanOrEqual(array('value' => 60)),
+                'data' => $this->getConfigValue('cookieLifetime')
             )
         );
     }
@@ -134,7 +146,7 @@ class SessionType extends AbstractType
         $resolver->setDefaults(array('translation_domain' => 'platform'));
     }
 
-    private function notBlankIfPdo()
+    private function notBlankIfExternal()
     {
         if ($this->sessionType === 'pdo') {
             return new NotBlank();
@@ -143,12 +155,21 @@ class SessionType extends AbstractType
         return array();
     }
 
-    private function hiddenIfPdo()
+    private function hiddenIfNotExternal()
     {
-        if ($this->sessionType === 'pdo') {
+        if ($this->sessionType !== 'pdo') {
             return array('display_row' => false);
         }
 
         return array();
+    }
+
+    private function getConfigValue($parameter)
+    {
+        if ($this->config) {
+            $method = 'get' . ucfirst($parameter);
+
+            return $this->config->{$method}();
+        }
     }
 }

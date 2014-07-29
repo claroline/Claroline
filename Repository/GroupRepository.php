@@ -211,14 +211,12 @@ class GroupRepository extends EntityRepository
      */
     public function findAll($executeQuery = true, $orderedBy = 'id', $order = null)
     {
-        $order = $order === 'DESC' ? 'DESC' : 'ASC';
         if (!$executeQuery) {
             return $this->_em->createQuery(
                 "SELECT g, r, ws FROM Claroline\CoreBundle\Entity\Group g
                  LEFT JOIN g.roles r
                  LEFT JOIN r.workspace ws
-                 ORDER BY g.{$orderedBy} "
-                 .$order
+                 ORDER BY g.{$orderedBy} {$order}"
             );
         }
 
@@ -264,7 +262,6 @@ class GroupRepository extends EntityRepository
      */
     public function findByName($search, $executeQuery = true, $orderedBy = 'id', $order = null)
     {
-        $order = $order === 'DESC' ? 'DESC' : 'ASC';
         $dql = "
             SELECT g, r, ws
             FROM Claroline\CoreBundle\Entity\Group g
@@ -323,7 +320,6 @@ class GroupRepository extends EntityRepository
 
     public function findByRoles(array $roles, $getQuery = false, $orderedBy = 'id', $order = null)
     {
-        $order = $order === 'DESC' ? 'DESC' : 'ASC';
         $dql = "
             SELECT u, ws, r FROM Claroline\CoreBundle\Entity\Group u
             JOIN u.roles r

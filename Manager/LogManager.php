@@ -342,6 +342,7 @@ class LogManager
             $actionString = preg_replace('/\[\[([^\]]+)\]\]/', '', $action);
             $actionString = trim($actionString);
         }
+
         $query = $repository->findFilteredLogsQuery(
             $actionString,
             $range,

@@ -10,9 +10,9 @@
 (function () {
     'use strict';
 
-    var packageElements = $('.package-element');
+    var packageElements = $('.package-element.composer');
 
-    $('#update-packages-btn').on('click', function (event) {
+    $('#update-packages-btn').on('click', function () {
         var countPackages = packageElements.length;
         var addProgress = Math.round(100 / countPackages);
         var modulo = 100 % countPackages;
@@ -38,7 +38,7 @@
             $(this).remove();
         });
 
-        packageElements.each(function(index, value) {
+        packageElements.each(function(index) {
             var distRef = ($(this).attr('data-package-dist-reference'));
             var route = Routing.generate('claro_admin_update_packages', {'ref': distRef});
 
@@ -79,10 +79,11 @@
 
         if (window.Claroline.Utilities.versionCompare(currentVersion, data['tag'], '<')) {
             var html = "<span class='badge pull-right alert-danger badge-new-version'>"
-                + Translator.get('platform:new')
+                + Translator.get('platform:update_available')
                 + "</span>";
             var parent = $("#accordion-" + data['distRef'] + ' h5');
             parent.append(html);
+            $('#upgrade-packages-btn').removeAttr('disabled');
         }
     }
 
@@ -94,8 +95,10 @@
             Translator.get('platform:upgrade'),
             '<div class="alert alert-warning">' + Translator.get('platform:package_upgrade_all_warning') + '</div>'
         ).on('click', 'button.btn', function(event) {
+            var upgradeRoute = btn.attr('href');
+            $.ajax({url: Routing.generate('claro_admin_packages_log_remove'), 'async': false});
             $.ajax({url: btn.attr('href')});
-            window.location = btn.attr('data-upgrade-page');
+            window.location = btn.attr('data-upgrade-page') + '?_locale=' + Translator.locale || Translator.fallback;
         });
     });
 })();

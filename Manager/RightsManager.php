@@ -118,7 +118,7 @@ class RightsManager
         $permissions,
         Role $role,
         ResourceNode $node,
-        $isRecursive
+        $isRecursive = false
     )
     {
         //Bugfix: If the flushSuite is uncommented, doctrine returns an error

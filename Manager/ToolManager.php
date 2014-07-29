@@ -240,7 +240,7 @@ class ToolManager
             $tool->setVisible(false);
         }
 
-        $this->addMissingDesktopTools($user, $undisplayedTools, count($desktopTools));
+        $this->addMissingDesktopTools($user, $undisplayedTools, count($desktopTools) + 1);
 
         return $this->utilities->arrayFill($orderedToolList, $undisplayedTools);
     }
@@ -254,8 +254,6 @@ class ToolManager
      */
     public function getWorkspaceToolsConfigurationArray(Workspace $workspace)
     {
-        $this->addMissingWorkspaceTools($workspace);
-
         return $this->getWorkspaceExistingTools($workspace);
     }
 
