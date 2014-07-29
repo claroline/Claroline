@@ -23,6 +23,28 @@ class DateRangeValidator extends ConstraintValidator
     public function validate($object, Constraint $constraint)
     {
         if (!$object->getAllDay()) {
+
+            //check if the startHours and endHours are valid
+            if ($object->startHours === null) {
+                $this->context->addViolation('valid_start_hour_required');
+            }
+
+            if ($object->endHours === null) {
+                $this->context->addViolation('valid_end_hour_required');
+            }
+
+            if ($object->getStart() === null) {
+                $this->context->addViolation('valid_start_date_required');
+            }
+
+            if ($object->getEnd() === null) {
+                $this->context->addViolation('valid_end_date_required');
+            }
+
+            if ($object->endHours === null || $object->startHours === null) {
+                return;
+            }
+
             if ($object->getStart()->getTimeStamp() + $object->startHours >
                 $object->getEnd()->getTimeStamp()  + $object->endHours
             ) {
