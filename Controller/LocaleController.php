@@ -16,7 +16,9 @@ use JMS\DiExtraBundle\Annotation\Inject;
 use JMS\DiExtraBundle\Annotation\InjectParams;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\SecurityContextInterface;
 
 /**
  * @TODO doc
@@ -24,15 +26,18 @@ use Symfony\Component\HttpFoundation\Response;
 class LocaleController
 {
     private $localeManager;
+    private $securityContext;
 
     /**
      * @InjectParams({
-     *     "localeManager"  = @Inject("claroline.common.locale_manager")
+     *     "localeManager"      = @Inject("claroline.common.locale_manager"),
+     *     "securityContext"    = @Inject("security.context")
      * })
      */
-    public function __construct(LocaleManager $localeManager)
+    public function __construct(LocaleManager $localeManager, SecurityContextInterface $securityContext)
     {
         $this->localeManager = $localeManager;
+        $this->securityContext = $securityContext;
     }
 
     /**
@@ -52,14 +57,20 @@ class LocaleController
     /**
      * Change locale
      *
-     * @Route("/locale/change/{_locale}", name="claroline_locale_change", options = {"expose" = true})
+     * @Route("/locale/change/{locale}", name="claroline_locale_change", options = {"expose" = true})
      *
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param $locale
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function changeLocale($_locale)
+    public function changeLocale(Request $request, $locale)
     {
-        $this->localeManager->setUserLocale($_locale);
+        if (($token = $this->securityContext->getToken()) && $token->getUser() !== 'anon.') {
+            $this->localeManager->setUserLocale($locale);
+        } else {
+            $request->getSession()->set('_locale', $locale);
+        }
 
-        return new Response(200);
+        return new Response('Locale changed to ' . $locale, 200);
     }
 }

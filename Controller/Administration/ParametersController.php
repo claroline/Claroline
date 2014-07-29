@@ -612,7 +612,9 @@ class ParametersController extends Controller
         $this->checkOpen();
 
         $config = $this->configHandler->getPlatformConfig();
-        $form = $this->formFactory->create(new AdminForm\SessionType(), $config);
+        $form = $this->formFactory->create(
+            new AdminForm\SessionType($config->getSessionStorageType(), $config)
+        );
 
         return array('form' => $form->createView());
     }
@@ -628,12 +630,14 @@ class ParametersController extends Controller
     {
         $this->checkOpen();
 
-        $platformConfig = $this->configHandler->getPlatformConfig();
+        $formData = $this->request->request->get('platform_session_form', array());
+        $storageType = isset($formData['session_storage_type']) ?
+            $formData['session_storage_type'] :
+            $this->configHandler->getParameter('session_storage_type');
         $form = $this->formFactory->create(
-            new AdminForm\SessionType($this->configHandler->getParameter('session_storage_type')),
-            $platformConfig
+            new AdminForm\SessionType($storageType),
+            $this->configHandler->getPlatformConfig()
         );
-
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
