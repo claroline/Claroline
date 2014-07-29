@@ -247,7 +247,11 @@ class Event
     //returns a timestamp for the form
     public function getStartHours()
     {
-        return $this->getStart() ? (int) $this->getStart()->format('H') * 3600: null;
+        //For some reason, symfony2 always substract 3600. Timestamp for hours 0 = -3600 wich is weird.
+        //This couldn't be fixed be setting the timezone in the form field.
+        return $this->getStart() ?
+            (int) $this->getStart()->format('H') * 3600 + (int) $this->getStart()->format('i') * 60 - 3600:
+            null;
     }
 
     public function setStartHours($startHours)
@@ -258,7 +262,11 @@ class Event
     //returns a timestamp for the form
     public function getEndHours()
     {
-        return $this->getEnd() ? (int) $this->getEnd()->format('H') * 3600: null;
+        //For some reason, symfony2 always substract 3600. Timestamp for hours 0 = -3600 wich is weird.
+        //This couldn't be fixed be setting the timezone in the form field.
+        return $this->getEnd() ?
+            (int) $this->getEnd()->format('H') * 3600 + (int) $this->getEnd()->format('i') * 60 - 3600:
+            null;
     }
 
     public function setEndHours($endHours)

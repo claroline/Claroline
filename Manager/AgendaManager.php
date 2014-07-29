@@ -303,6 +303,12 @@ class AgendaManager
         return $days * 3600 * 24 + $mins * 60;
     }
 
+    /**
+     * Set the event date.
+     * Only use this method for events created or updated through AgendaType
+     *
+     * @param Event $event
+     */
     private function setEventDate(Event $event)
     {
         //task don't have start nor ending
@@ -312,12 +318,10 @@ class AgendaManager
         } else {
             //we get the hours value directly from the property wich has been setted by the form.
             //That way we can use the getter to return the number of hours wich is deduced from the timestamp stored
-            //in database.
-
-//            throw new \Exception($event->startHours);
-
-            $event->setStart($event->getStart()->getTimestamp() + $event->startHours);
-            $event->setEnd($event->getEnd()->getTimestamp() + $event->endHours);
+            //For some reason, symfony2 always substract 3600. Timestamp for hours 0 = -3600 wich is weird.
+            //This couldn't be fixed be setting the timezone in the form field.
+            $event->setStart($event->getStart()->getTimestamp() + $event->startHours + 3600);
+            $event->setEnd($event->getEnd()->getTimestamp() + $event->endHours + 3600);
         }
     }
 }
