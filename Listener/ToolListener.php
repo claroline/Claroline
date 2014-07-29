@@ -217,6 +217,7 @@ class ToolListener
         $listEventsDesktop = $em->getRepository('ClarolineCoreBundle:Event')->findDesktop($usr, true);
         $listEvents = $em->getRepository('ClarolineCoreBundle:Event')->findByUser($usr, false);
         $workspaces = array();
+        $filters = array();
 
         foreach ($listEvents as $event) {
             $filters[$event->getWorkspace()->getId()] = $event->getWorkspace()->getName();
