@@ -311,16 +311,16 @@
 
     var hideFormDates = function() {
         $('#agenda_form_end').parent().parent().hide();
-        $('#agenda_form_endHours_hour').parent().parent().parent().hide();
+        $('#agenda_form_endHours').parent().parent().hide();
         $('#agenda_form_start').parent().parent().hide();
-        $('#agenda_form_startHours_hour').parent().parent().parent().hide();
+        $('#agenda_form_startHours').parent().parent().hide();
     }
 
     var showFormDates = function() {
         $('#agenda_form_end').parent().parent().show();
-        $('#agenda_form_endHours_hour').parent().parent().parent().show();
+        $('#agenda_form_endHours').parent().parent().show();
         $('#agenda_form_start').parent().parent().show();
-        $('#agenda_form_startHours_hour').parent().parent().parent().show();
+        $('#agenda_form_startHours').parent().parent().show();
     }
 
     /**

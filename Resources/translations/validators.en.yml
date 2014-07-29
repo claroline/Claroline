@@ -1,4 +1,8 @@
 invalid_date_range: 'The end date cannot happend before the beginning'
+valid_start_hour_required: A valid start hour is required.
+valid_end_hour_required: A valid end hour is required.
+valid_start_date_required: A valid start date is required.
+valid_end_date_required: A valid end date is required.
 'Each row requires at least 5 parameters.': 'Each row requires at least 5 parameters (separated by semicolons).'
 'The code {{ code }} is already assigned to another workspace.': 'The code {{ code }} is already assigned to another workspace.'
 'The name {{ name }} is already in use.': 'The name {{ name }} is already in use.'
