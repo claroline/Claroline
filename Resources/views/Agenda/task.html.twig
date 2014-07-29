@@ -10,7 +10,9 @@
         data-workspace-id="0"
     {% endif %}
 >
-    <a href="{{ path('claro_agenda_delete_event', {'event': event.id}) }}" class="delete-event close">&times;</a>
+    {% if event.deletable %}
+        <a href="{{ path('claro_agenda_delete_event', {'event': event.id}) }}" class="delete-event close">&times;</a>
+    {% endif %}
     <strong data-event-title="{{event.title}}"> {{ event.title }}</strong>
 
     {% if event.description is not empty %}
@@ -22,7 +24,9 @@
            class="edit-event-link"
            role="button"
         >
-            {{ 'edit'|trans({}, 'platform') }}
+            {% if event.editable %}
+                {{ 'edit'|trans({}, 'platform') }}
+            {% endif %}
         </a>
     </div>
 </li>

@@ -19,10 +19,13 @@
 
     calendar.initialize = function (
         context,
-        workspaceId
+        workspaceId,
+        canCreate
     ) {
         context = context || 'desktop';
         workspaceId = workspaceId || null;
+        //the creation is enabled by default
+        calendar.create = canCreate || true;
         calendar.flashbag =
             '<div class="alert alert-success">' +
                 '<a data-dismiss="alert" class="close" href="#" aria-hidden="true">&times;</a>' +
@@ -43,7 +46,7 @@
             window.Claroline.Modal.displayForm(
                 $(event.target).attr('href'),
                 addItemsToCalendar,
-                function (){},
+                function () {},
                 'ics-import-form'
             );
         });
@@ -162,22 +165,24 @@
     }
 
     var renderAddEventForm = function (date) {
-        var dateVal = $.fullCalendar.formatDate(
-            date,
-            Translator.get('platform:date_agenda_display_format')
-        );
+        if (calendar.canCreate) {
+            var dateVal = $.fullCalendar.formatDate(
+                date,
+                Translator.get('platform:date_agenda_display_format')
+            );
 
-        var postRenderAddEventAction = function (html) {
-            $('#agenda_form_start').val(dateVal);
-            $('#agenda_form_end').val(dateVal);
+            var postRenderAddEventAction = function (html) {
+                $('#agenda_form_start').val(dateVal);
+                $('#agenda_form_end').val(dateVal);
+            }
+
+            window.Claroline.Modal.displayForm(
+                calendar.addUrl,
+                addItemsToCalendar,
+                postRenderAddEventAction,
+                'form-event'
+            );
         }
-
-        window.Claroline.Modal.displayForm(
-            calendar.addUrl,
-            addItemsToCalendar,
-            postRenderAddEventAction,
-            'form-event'
-        );
     };
 
     var addEventToCalendar = function (event) {

@@ -70,11 +70,9 @@
     <script type='text/javascript'src='{{ asset('bundles/clarolinecore/js/tool/calendar.js') }}'></script>
     <script type='text/javascript'src='{{ asset('bundles/frontend/date.js') }}'></script>
     <script type='text/javascript'>
-
         $(function () {
-            Claroline.Calendar.initialize('workspace', {{ workspace.getId() }});
+            Claroline.Calendar.initialize('workspace', {{ workspace.getId() }}, {{ canCreate }});
         });
-
     </script>
     <script type="text/javascript" src="{{ url('bazinga_exposetranslation_js', { 'domain_name': 'agenda' }) }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/tool/calendarDatePicker.js') }}"> </script>

@@ -175,29 +175,14 @@ class ToolListener
     public function workspaceAgenda($workspaceId)
     {
         $em = $this->container->get('doctrine.orm.entity_manager');
-        $workspace = $this->workspaceManager->getWorkspaceById($workspaceId);
         $listEvents = $em->getRepository('ClarolineCoreBundle:Event')->findByWorkspaceId($workspaceId, true);
-        $usr = $this->container->get('security.context')->getToken()->getUser();
-        $owners = $em->getRepository('ClarolineCoreBundle:Event')->findByUserWithoutAllDay($usr, 0);
-        $owner = array();
-
-        foreach ($owners as $o) {
-            $temp = $o->getUser()->getUserName();
-            $owner[] = $temp;
-        }
-
-        $owners = array_unique($owner);
-
-        if ($usr === 'anon.') {
-            return $this->templating->render(
-                'ClarolineCoreBundle:Tool/workspace/agenda:agenda_read_only.html.twig',
-                array('workspace' => $workspace, 'listEvents' => $listEvents, 'owners' => $owners)
-            );
-        }
 
         return $this->templating->render(
             'ClarolineCoreBundle:Tool/workspace/agenda:agenda.html.twig',
-            array('workspace' => $workspace, 'owners' => $owners)
+            array(
+                'workspace' => $workspace = $this->workspaceManager->getWorkspaceById($workspaceId),
+                'canCreate' => $this->container->get('security.context')->getToken()->getUser() === 'anon.' ? 'false': 'true'
+            )
         );
     }
 
