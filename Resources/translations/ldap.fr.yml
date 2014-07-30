@@ -1,3 +1,14 @@
+Add server: Ajouter un serveur
+Allow account creation at the first login: Permettre la création de compte lors de la première connexion
+Groups settings: Réglages des groupes
 LDAP settings: Paramètres LDAP
+Save settings: Enregistrer les paramètres
+Servers settings: Réglages des serveurs
+There are no configured servers: Il n'y a pas de serveurs configurés
+Users and groups settings: Réglages d'utilisateurs et groupes
+Users and groups: Utilisateurs et groupes
+Users settings: Réglages d'utilisateurs
+ldap_already_exists: Il existe déjà un serveur avec ce nom
+ldap_cant_connect: Impossible de se connecter au serveur
 ldap_error_conexion: Impossible de se connecter au serveur LDAP
 ldap_user_class: Classe d'utilisateur

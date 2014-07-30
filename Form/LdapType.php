@@ -14,14 +14,22 @@ namespace Claroline\LdapBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 class LdapType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('host', 'text', array('label' => 'platform_parameters_form_host'))
-            ->add('port', 'text', array('label' => 'platform_parameters_form_port'))
-            ->add('dn', 'text', array('label' => 'distinguished_name'));
+        $builder->add(
+            'host',
+            'text',
+            array(
+                'label' => 'platform_parameters_form_host',
+                'constraints' => array(new NotBlank())
+            )
+        )
+        ->add('port', 'number', array('label' => 'platform_parameters_form_port'))
+        ->add('dn', 'text', array('label' => 'distinguished_name'));
     }
 
     public function getName()

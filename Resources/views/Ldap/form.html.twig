@@ -1,45 +1,21 @@
-{% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
-
-{% block title %}{{ parent() ~ ' - LDAP settings' | trans({}, 'ldap') | striptags | raw }}{% endblock %}
-
-{% block breadcrumb %}
-    {{
-        macros.breadcrumbs([
-            {
-                'icon': 'icon-cog',
-                'name': 'administration' | trans({}, 'platform'),
-                'href': path('claro_admin_index')
-            },
-            {
-                'name': 'parameters' | trans({}, 'platform'),
-                'href': path('claro_admin_index')
-            },
-            {
-                'name': 'LDAP' | trans({}, 'platform'),
-                'href': path('claro_admin_ldap')
-            },
-            {
-                'name': 'LDAP settings' | trans({}, 'ldap'),
-                'href': ''
-            }
-        ])
-    }}
-{% endblock %}
-
-{% block section_content %}
-    <div class="panel-heading">
-        <h3 class="panel-title">{{ 'LDAP settings'|trans({}, 'ldap') }}</h3>
+{% set action = path('claro_admin_ldap_form') %}
+{% if host is defined and not host is empty %}
+    {% set action = path('claro_admin_ldap_form', {'host': host}) %}
+{% endif %}
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            <h4 class="modal-title">{{ 'LDAP settings'|trans({}, 'ldap') }}</h4>
+        </div>
+        <form class="form-horizontal" action="{{ action }}" method="post" {{ form_enctype(form) }} id="form_settings">
+            <div class="modal-body">
+                {{ form_widget(form) }}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">{{ 'cancel'|trans({}, 'platform') }}</button>
+                <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
+            </div>
+        </form>
     </div>
-    {{ macros.flashBox() }}
-    <form class="form-horizontal" action="{{ path('claro_admin_ldap_form') }}" method="post" {{ form_enctype(form) }} id="form_settings">
-        <div class="panel-body">
-            {{ form_widget(form) }}
-        </div>
-        <div class="panel-footer">
-            <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
-            <a href="{{ path('claro_admin_index') }}">
-                <button type="button" class="btn btn-default">{{ 'cancel'|trans({}, 'platform') }}</button>
-            </a>
-        </div>
-    </form>
-{% endblock %}
+</div>

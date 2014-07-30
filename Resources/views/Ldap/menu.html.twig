@@ -6,7 +6,7 @@
     {{
         macros.breadcrumbs([
             {
-                'icon': 'icon-cog',
+                'icon': 'fa fa-cog',
                 'name': 'administration'|trans({}, 'platform'),
                 'href': path('claro_admin_parameters_index')
             },
@@ -24,14 +24,14 @@
 
 {% block section_content %}
     <div class="panel-heading">
-        <h3 class="panel-title">{{ 'LDAP' | trans({}, 'ldap') }}</h3>
+        <h3 class="panel-title">{{ 'LDAP settings' | trans({}, 'ldap') }}</h3>
     </div>
     <div class="list-group">
-        <a class="list-group-item" href="{{ path('claro_admin_ldap_form') }}">
-            {{ 'settings' | trans({}, 'platform') }}
+        <a class="list-group-item" href="{{ path('claro_admin_ldap_settings') }}">
+            {{ 'Servers settings' | trans({}, 'ldap') }}
         </a>
-        <a class="list-group-item" href="{{ path('claro_admin_ldap_import_users') }}">
-            {{ 'import_users' | trans({}, 'platform') }}
+        <a class="list-group-item" href="{{ path('claro_admin_ldap_servers') }}">
+            {{ 'Users and groups settings' | trans({}, 'ldap') }}
         </a>
     </div>
 {% endblock %}

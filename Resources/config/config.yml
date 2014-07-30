@@ -2,5 +2,5 @@ plugin:
     has_options: false
 
     admin_tools:
-        - name: 'ldap'
-          class: 'icon-hdd'
+        - name: 'LDAP'
+          class: 'database'
