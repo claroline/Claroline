@@ -158,6 +158,11 @@ class OrderedTool
         $this->roles->removeElement($role);
     }
 
+    public function resetRoles()
+    {
+        $this->roles = new ArrayCollection();
+    }
+
     public function getRoles()
     {
         return $this->roles;

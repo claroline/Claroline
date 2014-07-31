@@ -420,7 +420,7 @@ class ToolManager
      * @param \Claroline\CoreBundle\Entity\User                        $user
      * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
      */
-    public function move(Tool $tool, $position, User $user = null, Workspace $workspace = null)
+    public function switchToolPosition(Tool $tool, $position, User $user = null, Workspace $workspace = null)
     {
          $movingTool = $this->orderedToolRepo
              ->findOneBy(array('user' => $user, 'tool' => $tool, 'workspace' => $workspace));
@@ -434,6 +434,41 @@ class ToolManager
          $this->om->persist($switchTool);
          $this->om->persist($movingTool);
          $this->om->flush();
+    }
+
+    /**
+     * Sets a tool position.
+     *
+     * @param Tool      $tool
+     * @param           $position
+     * @param User      $user
+     * @param Workspace $workspace
+     */
+    public function setToolPosition(Tool $tool, $position, User $user = null, Workspace $workspace = null)
+    {
+        $movingTool = $this->orderedToolRepo
+            ->findOneBy(array('user' => $user, 'tool' => $tool, 'workspace' => $workspace));
+        $movingTool->setOrder($position);
+        $this->om->persist($movingTool);
+        $this->om->flush();
+    }
+
+    /**
+     * Resets the tool visibility
+     *
+     * @param User $user
+     * @param Workspace $workspace
+     */
+    public function resetToolsVisiblity(User $user = null, Workspace $workspace = null)
+    {
+        $orderedTools = $this->orderedToolRepo->findBy(array('user' => $user, 'workspace' => $workspace));
+
+        foreach ($orderedTools as $orderedTool) {
+            $orderedTool->resetRoles();
+            $this->om->persist($orderedTool);
+        }
+
+        $this->om->flush();
     }
 
     /**
@@ -612,6 +647,11 @@ class ToolManager
     public function getAdminToolsByRoles(array $roles)
     {
         return $this->om->getRepository('Claroline\CoreBundle\Entity\Tool\AdminTool')->findByRoles($roles);
+    }
+
+    public function getToolById($id)
+    {
+        return $this->om->getRepository('ClarolineCoreBundle:Tool\Tool')->find($id);
     }
 
     private function addMissingDesktopTools(User $user, array $missingTools, $startPosition)

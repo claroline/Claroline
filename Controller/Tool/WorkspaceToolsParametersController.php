@@ -12,6 +12,7 @@
 namespace Claroline\CoreBundle\Controller\Tool;
 
 use Symfony\Component\HttpFoundation\Response;
+use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Controller\Tool\AbstractParametersController;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\Tool\Tool;
@@ -34,6 +35,7 @@ class WorkspaceToolsParametersController extends AbstractParametersController
     private $resourceManager;
     private $formFactory;
     private $request;
+    private $objectManager;
 
     /**
      * @DI\InjectParams({
@@ -42,7 +44,8 @@ class WorkspaceToolsParametersController extends AbstractParametersController
      *     "rightsManager"   = @DI\Inject("claroline.manager.rights_manager"),
      *     "resourceManager" = @DI\Inject("claroline.manager.resource_manager"),
      *     "formFactory"     = @DI\Inject("claroline.form.factory"),
-     *     "request"         = @DI\Inject("request")
+     *     "request"         = @DI\Inject("request"),
+     *     "om"              = @DI\Inject("claroline.persistence.object_manager")
      * })
      */
     public function __construct(
@@ -51,7 +54,8 @@ class WorkspaceToolsParametersController extends AbstractParametersController
         RightsManager $rightsManager,
         ResourceManager $resourceManager,
         FormFactory $formFactory,
-        Request $request
+        Request $request,
+        ObjectManager $om
     )
     {
         $this->toolManager     = $toolManager;
@@ -60,19 +64,15 @@ class WorkspaceToolsParametersController extends AbstractParametersController
         $this->resourceManager = $resourceManager;
         $this->formFactory     = $formFactory;
         $this->request         = $request;
+        $this->om              = $om;
     }
     /**
      * @EXT\Route(
-     *     "/{workspaceId}/tools",
+     *     "/{workspace}/tools",
      *     name="claro_workspace_tools_roles"
      * )
      * @EXT\Method("GET")
      * @EXT\Template("ClarolineCoreBundle:Tool\workspace\parameters:toolRoles.html.twig")
-     * @EXT\ParamConverter(
-     *      "workspace",
-     *      class="ClarolineCoreBundle:Workspace\Workspace",
-     *      options={"id" = "workspaceId", "strictId" = true}
-     * )
      *
      * @param Workspace $workspace
      * @return array
@@ -90,127 +90,45 @@ class WorkspaceToolsParametersController extends AbstractParametersController
 
     /**
      * @EXT\Route(
-     *     "/remove/tool/{toolId}/workspace/{workspaceId}/role/{roleId}",
-     *     name="claro_tool_workspace_remove",
+     *     "/{workspace}/tools/edit",
+     *     name="claro_workspace_tools_roles_edit",
      *     options={"expose"=true}
      * )
      * @EXT\Method("POST")
-     * @EXT\ParamConverter(
-     *      "workspace",
-     *      class="ClarolineCoreBundle:Workspace\Workspace",
-     *      options={"id" = "workspaceId", "strictId" = true}
-     * )
-     * @EXT\ParamConverter(
-     *     "role",
-     *     class="ClarolineCoreBundle:Role",
-     *     options={"id" = "roleId", "strictId" = true}
-     * )
-     * @EXT\ParamConverter(
-     *     "tool",
-     *     class="ClarolineCoreBundle:Tool\Tool",
-     *     options={"id" = "toolId", "strictId" = true}
-     * )
-     *
-     * Remove a tool from a role in a workspace.
-     *
-     * @param Tool              $tool
-     * @param Role              $role
-     * @param Workspace $workspace
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     *
-     * @throws \Exception
      */
-    public function removeRoleFromTool(Tool $tool, Role $role, Workspace $workspace)
+    public function editToolsRolesAction(Workspace $workspace)
     {
         $this->checkAccess($workspace);
-        $this->toolManager->removeRole($tool, $role, $workspace);
-
-        return new Response('success', 204);
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/add/tool/{toolId}/workspace/{workspaceId}/role/{roleId}",
-     *     name="claro_tool_workspace_add",
-     *     options={"expose"=true}
-     * )
-     * @EXT\Method("POST")
-     * @EXT\ParamConverter(
-     *      "workspace",
-     *      class="ClarolineCoreBundle:Workspace\Workspace",
-     *      options={"id" = "workspaceId", "strictId" = true}
-     * )
-     * @EXT\ParamConverter(
-     *     "role",
-     *     class="ClarolineCoreBundle:Role",
-     *     options={"id" = "roleId", "strictId" = true}
-     * )
-     * @EXT\ParamConverter(
-     *     "tool",
-     *     class="ClarolineCoreBundle:Tool\Tool",
-     *     options={"id" = "toolId", "strictId" = true}
-     * )
-     *
-     * Adds a tool to a role in a workspace.
-     *
-     * @param Tool              $tool
-     * @param Role              $role
-     * @param Workspace $workspace
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     *
-     * @throws \Exception
-     */
-    public function addRoleToTool(Tool $tool, Role $role, Workspace $workspace)
-    {
-        $this->checkAccess($workspace);
-        //if resource manager, we must also grant the access to the workspace root
-        if ($tool->getName() === 'resource_manager') {
-            $root = $this->resourceManager->getWorkspaceRoot($workspace);
-            $rights = $this->rightsManager->getOneByRoleAndResource($role, $root);
-            //grant the open right
-            $mask = $rights->getMask() | 1;
-            $this->rightsManager->editPerms($mask, $role, $root);
+        $parameters = $this->request->request->all();
+        $this->om->startFlushSuite();
+        //moving tools;
+        foreach ($parameters as $parameter => $value) {
+            if (strpos($parameter, 'tool-') === 0) {
+                $toolId = (int) str_replace('tool-', '', $parameter);
+                $tool = $this->toolManager->getToolById($toolId);
+                $this->toolManager->setToolPosition($tool, $value, null, $workspace);
+            }
         }
 
-        $this->toolManager->addRole($tool, $role, $workspace);
+        //reset the visiblity for every tool
+        $this->toolManager->resetToolsVisiblity(null, $workspace);
 
-        return new Response('success', 200);
-    }
+        //set tool visibility
+        foreach ($parameters as $parameter => $value) {
+            if (strpos($parameter, 'chk-') === 0) {
+                //regex are evil
+                $matches = array();
+                preg_match('/tool-(.*?)-/', $parameter, $matches);
+                $tool = $this->toolManager->getToolById((int) $matches[1]);
+                preg_match('/role-(.*)/', $parameter, $matches);
+                $role = $this->roleManager->getRole($matches[1]);
+                $this->toolManager->addRole($tool, $role, $workspace);
+            }
+        }
 
-    /**
-     * @EXT\Route(
-     *     "/move/tool/{toolId}/position/{position}/workspace/{workspaceId}",
-     *     name="claro_tool_workspace_move",
-     *     options={"expose"=true}
-     * )
-     * @EXT\Method("POST")
-     * @EXT\ParamConverter(
-     *      "workspace",
-     *      class="ClarolineCoreBundle:Workspace\Workspace",
-     *      options={"id" = "workspaceId", "strictId" = true}
-     * )
-     * @EXT\ParamConverter(
-     *     "tool",
-     *     class="ClarolineCoreBundle:Tool\Tool",
-     *     options={"id" = "toolId", "strictId" = true}
-     * )
-     *
-     * This method switch the position of a tool with an other one.
-     *
-     * @param Tool              $tool
-     * @param integer           $position
-     * @param Workspace $workspace
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function move(Tool $tool, $position, Workspace $workspace)
-    {
-        $this->checkAccess($workspace);
-        $this->toolManager->move($tool, $position, null, $workspace);
+        $this->om->endFlushSuite();
 
-        return new Response('success');
+        return new Response();
     }
 
     /**
