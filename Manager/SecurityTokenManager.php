@@ -59,9 +59,13 @@ class SecurityTokenManager
         return $this->securityTokenRepo->findAllTokens($order, $direction);
     }
 
-    public function getSecurityTokenByTokenAndIp($token, $ip)
+    public function getSecurityTokenByClientNameAndTokenAndIp(
+        $clientName,
+        $token,
+        $ip
+    )
     {
         return $this->securityTokenRepo
-            ->findSecurityTokenByTokenAndIp($token, $ip);
+            ->findSecurityTokenByClientNameAndTokenAndIp($clientName, $token, $ip);
     }
 }

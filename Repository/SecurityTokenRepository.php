@@ -28,16 +28,22 @@ class SecurityTokenRepository extends EntityRepository
         return $query->getResult();
     }
 
-    public function findSecurityTokenByTokenAndIp($token, $ip)
+    public function findSecurityTokenByClientNameAndTokenAndIp(
+        $clientName,
+        $token,
+        $ip
+    )
     {
         $dql = "
             SELECT st
             FROM Claroline\CoreBundle\Entity\SecurityToken st
-            WHERE st.token = :token
+            WHERE st.clientName = :clientName
+            AND st.token = :token
             AND st.clientIp = :ip
         ";
 
         $query = $this->_em->createQuery($dql);
+        $query->setParameter('clientName', $clientName);
         $query->setParameter('token', $token);
         $query->setParameter('ip', $ip);
 

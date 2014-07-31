@@ -772,4 +772,34 @@ class RoleManager
         $this->om->persist($role);
         $this->om->flush();
     }
+
+    /**
+     * @param string $workspaceCode
+     * @param string $translationKey
+     * @param bool $executeQuery
+     */
+    public function getRoleByWorkspaceCodeAndTranslationKey(
+        $workspaceCode,
+        $translationKey,
+        $executeQuery = true
+    )
+    {
+        return $this->roleRepo->findRoleByWorkspaceCodeAndTranslationKey(
+            $workspaceCode,
+            $translationKey,
+            $executeQuery
+        );
+    }
+
+    /**
+     * Returns all non-platform roles of a user.
+     *
+     * @param User $user The subject of the role
+     *
+     * @return array[Role]|query
+     */
+    public function getNonPlatformRolesForUser(User $user, $executeQuery = true)
+    {
+        return $this->roleRepo->findNonPlatformRolesForUser($user, $executeQuery);
+    }
 }
