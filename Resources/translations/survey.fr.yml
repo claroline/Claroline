@@ -1,3 +1,5 @@
 choice: Choix multiples
 name: Nom
+open-ended: Question ouverte
+question_body: Question
 type: Type

@@ -1,3 +1,5 @@
 choice: Multiple choice
 name: Name
+open-ended: Open-ended
+question_body: Question
 type: Type

@@ -1,20 +1,21 @@
-{% from _self import renderPager %}
-
-{% set layout = "ClarolineCoreBundle:Workspace:layout.html.twig" %}
+{% set layout = 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
 
 {% if isDesktop() %}
-    {% set layout = "ClarolineCoreBundle:Desktop:layout.html.twig" %}
+    {% set layout = 'ClarolineCoreBundle:Desktop:layout.html.twig' %}
 {% endif %}
+
+{% set _resource = survey %}
 
 {% extends layout %}
 
-{% block title %}{{ _resource.getResourceNode().getName() ~ ' - ' ~ parent() | striptags | raw  }}{% endblock %}
+{% block title %}{{ survey.getResourceNode().getName() ~ ' - ' ~ parent() | striptags | raw  }}{% endblock %}
 
 {% block section_content %}
     <div class="panel-heading">
-        <h3 class="panel-title">{{ _resource.getResourceNode().getName() }}</h3>
+        <h3 class="panel-title">{{ survey.getResourceNode().getName() }}</h3>
     </div>
     <div class="panel-body">
-        {{ _resource.getQuestionType().getName()|trans({}, 'survey') }}
+        {{ macros.flashBox() }}
+        {% block panel_content %}{% endblock %}
     </div>
 {% endblock %}

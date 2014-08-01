@@ -16,33 +16,18 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
-class SurveyType extends AbstractType
+abstract class AbstractQuestionType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add(
-            'name',
-            'text',
+            'body',
+            'tinymce',
             array(
                 'constraints' => new NotBlank(),
-                'label' => 'name'
-            )
-        )->add(
-            'questionType',
-            'choice',
-            array(
-                'choices' => array(
-                    'choice' => 'choice',
-                    'open-ended' => 'open-ended'
-                ),
-                'label' => 'type'
+                'label' => 'question_body'
             )
         );
-    }
-
-    public function getName()
-    {
-        return 'survey_form';
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

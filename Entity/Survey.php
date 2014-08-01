@@ -21,30 +21,65 @@ use Doctrine\ORM\Mapping as ORM;
 class Survey extends AbstractResource
 {
     /**
-     * @ORM\ManyToOne(
-     *     targetEntity="Claroline\SurveyBundle\Entity\QuestionType"
-     * )
-     * @ORM\JoinColumn(
-     *     name="question_type_id",
-     *     nullable=false,
-     *     onDelete="CASCADE"
-     * )
+     * @ORM\Column(name="question_type")
      */
-    protected $questionType;
+    private $questionType;
 
     /**
-     * @param QuestionType $questionType
+     * @ORM\Column(type="boolean")
      */
-    public function setQuestionType(QuestionType $questionType)
+    private $isPublished = false;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $isClosed = false;
+
+    /**
+     * @param string
+     */
+    public function setQuestionType($questionType)
     {
         $this->questionType = $questionType;
     }
 
     /**
-     * @return QuestionType
+     * @return string
      */
     public function getQuestionType()
     {
         return $this->questionType;
+    }
+
+    /**
+     * @param boolean $isClosed
+     */
+    public function setIsClosed($isClosed)
+    {
+        $this->isClosed = $isClosed;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isClosed()
+    {
+        return $this->isClosed;
+    }
+
+    /**
+     * @param boolean $isPublished
+     */
+    public function setIsPublished($isPublished)
+    {
+        $this->isPublished = $isPublished;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isPublished()
+    {
+        return $this->isPublished;
     }
 }
