@@ -31,6 +31,8 @@
             }
         });
 
+        var redirect = $(this).attr('href');
+
         $.ajax({
             url: url,
             data: formData,
@@ -38,7 +40,7 @@
             processData: false,
             contentType: false,
             success: function(data, textStatus, jqXHR) {
-                //do some smart things
+                window.location = redirect;
             }
         });
     });

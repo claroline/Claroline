@@ -82,10 +82,14 @@
                             {% endfor %}
                         </tbody>
                     </table>
-                <button id="edit-tools-btn" class="btn btn-primary">
+                <button id="edit-tools-btn" class="btn btn-primary" href="{{ path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': 'parameters'}) }}">
                     {{ 'edit'|trans({}, 'platform') }}
                 </button>
-                <div class="btn btn-default">{{ 'cancel'|trans({}, 'platform') }}</div>
+                <a class="btn btn-default"
+                     href="{{ path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': 'parameters'}) }}"
+                >
+                    {{ 'cancel'|trans({}, 'platform') }}
+                </a>
             </div>
         </form>
     </div>

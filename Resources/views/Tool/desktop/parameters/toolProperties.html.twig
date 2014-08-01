@@ -7,10 +7,6 @@
         macros.desktopBreadcrumbs([
             {
                 'name': 'parameters'|trans({}, 'platform'),
-                'href': path('claro_desktop_open_tool', {'toolName': 'parameters'})
-            },
-            {
-                'name': 'tools'|trans({}, 'platform'),
                 'href': ''
             }
         ])
@@ -55,12 +51,12 @@
                     </tbody>
                 </table>
             </div>
-            <button id="edit-tools-btn" class="btn btn-primary">
+            <button id="edit-tools-btn" href="{{ path('claro_desktop_open') }}" class="btn btn-primary">
                 {{ 'edit'|trans({}, 'platform') }}
             </button>
-            <div class="btn btn-default">
+            <a class="btn btn-default" href="{{ path('claro_desktop_open') }}">
                 {{ 'cancel'|trans({}, 'platform') }}
-            </div>
+            </a>
         </form>
     </div>
 {% endblock %}
