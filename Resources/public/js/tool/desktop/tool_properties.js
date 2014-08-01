@@ -10,43 +10,6 @@
 (function () {
     'use strict';
 
-    var stackedRequests = 0;
-
-    $.ajaxSetup({
-        beforeSend: function () {
-            stackedRequests++;
-            $('.please-wait').show();
-        },
-        complete: function () {
-            stackedRequests--;
-            if (stackedRequests === 0) {
-                $('.please-wait').hide();
-            }
-        }
-    });
-
-    $('.chk-tool-visible').on('change', function (e) {
-        var toolId = $(e.target.parentElement.parentElement).attr('data-tool-id'),
-            rowIndex = e.target.parentElement.parentElement.rowIndex,
-            rows = $('#tool-table tr'),
-            isCurrentRowChecked = rows.eq(rowIndex)[0].children[1].children[0].checked,
-            route = '';
-
-        if (isCurrentRowChecked) {
-            route = Routing.generate(
-                'claro_tool_desktop_add',
-                { 'tool': toolId, 'position': rowIndex }
-            );
-        } else {
-            route = Routing.generate(
-                'claro_tool_desktop_remove',
-                { 'tool': toolId }
-            );
-        }
-
-        $.ajax({url: route, type: 'POST'});
-    });
-
     $('.fa-arrow-circle-up').on('click', function (e) {
         var rowIndex = e.target.parentElement.parentElement.rowIndex;
         moveRowUp(rowIndex);
@@ -57,50 +20,47 @@
         moveRowDown(rowIndex);
     });
 
-	function moveRowUp(index) {
-        var rows = $('#tool-table tr'),
-            toolId;
+    $('#edit-tools-btn').on('click', function (e) {
+        e.preventDefault();
+        var formData = new FormData(document.getElementById('desktop-tool-form'));
+        var url = $('#desktop-tool-form').attr('action');
+
+        $('#tool-table tr').each(function (index) {
+            if ($(this).attr('data-tool-id')) {
+                formData.append('tool-' + $(this).attr('data-tool-id'), index);
+            }
+        });
+
+        $.ajax({
+            url: url,
+            data: formData,
+            type: 'POST',
+            processData: false,
+            contentType: false,
+            success: function(data, textStatus, jqXHR) {
+                //do some smart things
+            }
+        });
+    });
+
+    function moveRowUp(index) {
+        var rows = $('#tool-table tr');
+        var size = rows.length;
 
         if (index !== 1) {
-            rows.eq(index).insertBefore(rows.eq(index - 1));
-            var isCurrentRowChecked = rows.eq(index)[0].children[1].children[0].checked;
-            if (isCurrentRowChecked) {
-                toolId = $(rows.eq(index)[0]).attr('data-tool-id');
-                index = index - 1;
-            } else {
-                toolId = $(rows.eq(index - 1)[0]).attr('data-tool-id');
-            }
-            var route = Routing.generate(
-                'claro_tool_desktop_move',
-                { 'tool': toolId, 'position': index }
-            );
-            $.ajax({url: route, type: 'POST'});
+            rows.eq(index).insertAfter(rows.eq(index - 2));
             setOrderingIconsState();
         }
-	}
+    }
 
     function moveRowDown(index) {
-        var rows = $('#tool-table tr'),
-            size = rows.length,
-            toolId;
-        rows.eq(index).insertAfter(rows.eq(index + 1));
-
+        var rows = $('#tool-table tr');
+        var size = rows.length;
 
         if (index !== size) {
-            var isCurrentRowChecked = rows.eq(index)[0].children[1].children[0].checked;
-            if (isCurrentRowChecked) {
-                toolId = $(rows.eq(index)[0]).attr('data-tool-id');
-                index = index + 1;
-            } else {
-                toolId = $(rows.eq(index + 1)[0]).attr('data-tool-id');
-            }
+            rows.eq(index).insertAfter(rows.eq(index + 1));
+            setOrderingIconsState();
         }
-        var route = Routing.generate(
-            'claro_tool_desktop_move',
-            { 'tool': toolId, 'position': index }
-        );
-        $.ajax({url: route, type: 'POST'});
-        setOrderingIconsState();
     }
 
     function setOrderingIconsState() {

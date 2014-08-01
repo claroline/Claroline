@@ -466,6 +466,11 @@ class ToolManager
 
         foreach ($orderedTools as $orderedTool) {
             $orderedTool->resetRoles();
+
+            if ($user && $orderedTool->getTool()->getName() !== 'parameters') {
+                $orderedTool->setVisibleInDesktop(false);
+            }
+
             $this->om->persist($orderedTool);
         }
 
@@ -513,6 +518,20 @@ class ToolManager
     {
         //no implementation yet
         return true;
+    }
+
+    /**
+     * Sets a tool visible for a user in the desktop.
+     *
+     * @param Tool $tool
+     * @param User $user
+     */
+    public function setDesktopToolVisible(Tool $tool, User $user)
+    {
+        $orderedTool = $this->orderedToolRepo->findOneBy(array('user' => $user, 'tool' => $tool));
+        $orderedTool->setVisibleInDesktop(true);
+        $this->om->persist($orderedTool);
+        $this->om->flush();
     }
 
     /**

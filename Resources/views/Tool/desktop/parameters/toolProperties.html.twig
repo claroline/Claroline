@@ -22,7 +22,7 @@
         <h3 class="panel-title">{{ 'tool_parameters'|trans({}, 'platform') }}</h3>
     </div>
     <div class="panel-body">
-        <div class="table-responsive">
+        <form id="desktop-tool-form" action="{{ path('claro_desktop_tools_roles_edit') }}">
             <div class="table-responsive">
                 <table id="tool-table"  class="table table-striped table-bordered table-condensed">
                     <thead>
@@ -37,11 +37,14 @@
                             <tr class='row-tool-config' data-tool-id={{ tool.getId () }}>
                                 <td>{{ tool.getName()|lower|trans({}, 'tools') }} </td>
                                 <td>
-                                    <input type="checkbox"
-                                    class="chk-tool-visible"
-                                    value="1"
-                                    {% if tool.isDesktopRequired() or tool.getName() == 'parameters' %} disabled {% endif %}
-                                    {% if tool.isVisible() %} checked {% endif %}/>
+                                    <input
+                                        type="checkbox"
+                                        class="chk-tool-visible"
+                                        value="1"
+                                        name="chk-tool-{{ tool.getId() }}"
+                                        {% if tool.isDesktopRequired() or tool.getName() == 'parameters' %} disabled {% endif %}
+                                        {% if tool.isVisible() %} checked {% endif %}
+                                    />
                                 </td>
                                 <td>
                                     <span class="fa fa-arrow-circle-up ordering-icon up{% if loop.first %} disabled{% endif %}" style="cursor: pointer;" ></span>
@@ -52,7 +55,13 @@
                     </tbody>
                 </table>
             </div>
-        </div>
+            <button id="edit-tools-btn" class="btn btn-primary">
+                {{ 'edit'|trans({}, 'platform') }}
+            </button>
+            <div class="btn btn-default">
+                {{ 'cancel'|trans({}, 'platform') }}
+            </div>
+        </form>
     </div>
 {% endblock %}
 {% block javascripts %}

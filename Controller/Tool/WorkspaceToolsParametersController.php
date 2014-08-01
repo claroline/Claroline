@@ -12,7 +12,8 @@
 namespace Claroline\CoreBundle\Controller\Tool;
 
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\JsonResponse; use Claroline\CoreBundle\Persistence\ObjectManager;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Controller\Tool\AbstractParametersController;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\Tool\Tool;
