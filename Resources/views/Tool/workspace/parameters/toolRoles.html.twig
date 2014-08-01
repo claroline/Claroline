@@ -44,11 +44,15 @@
                                 <tr data-tool-id="{{ toolPermission['tool'].getId() }}">
                                     <td>
                                         <a href="{{ path('claro_workspace_order_tool_edit_form',
-                                                    {'workspaceId': workspace.getId(),
-                                                    'toolId': toolPermission['tool'].getId()}) }}">
+                                            {'workspace': workspace.getId(),
+                                            'tool': toolPermission['tool'].getId()}) }}"
+                                           class="show-tool-edit-form"
+                                        >
                                             <i class="fa fa-pencil"></i>
                                         </a>
-                                        {{ toolPermission['displayedName']|trans({}, 'tools') }}
+                                        <span id="tool-{{ toolPermission['tool'].getId() }}-name">
+                                            {{ toolPermission['displayedName']|trans({}, 'tools') }}
+                                        </span>
                                         <small><em>({{ toolPermission['tool'].getName()|trans({}, 'tools') }})</em></small>
                                     </td>
                                     {% for key, isVisible in toolPermission['visibility'] %}

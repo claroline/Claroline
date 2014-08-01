@@ -10,6 +10,16 @@
 (function () {
     'use strict';
 
+    $('.show-tool-edit-form').on('click', function (e) {
+        e.preventDefault();
+        window.Claroline.Modal.displayForm(
+            $(this).attr('href'),
+            editName,
+            function() {},
+            'edit-tool-name'
+        );
+    });
+
     $('.fa-arrow-circle-down').on('click', function (e) {
         var rowIndex = e.target.parentElement.parentElement.rowIndex;
         moveRowDown(rowIndex);
@@ -74,6 +84,10 @@
         downIcons.each(function (index, icon) {
             $(icon)[index === downLength - 1 ? 'addClass' : 'removeClass']('disabled');
         });
+    }
+
+    var editName = function(tool) {
+        $('#tool-' + tool.tool_id + '-name').html(tool.name);
     }
 })();
 

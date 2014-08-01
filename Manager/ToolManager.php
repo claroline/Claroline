@@ -298,7 +298,8 @@ class ToolManager
                     'visibility' => $roleVisibility,
                     'position' => $orderedTool->getOrder(),
                     'workspace' => $workspace,
-                    'displayedName' => $orderedTool->getName()
+                    'displayedName' => $orderedTool->getName(),
+                    'orderTool' => $orderedTool
                 );
             }
         }
@@ -311,10 +312,10 @@ class ToolManager
      * Returns an array formatted like this:
      *
      * array(
-     *     'tool' => $tool,
-     *     'workspace' => $workspace,
-     *     'visibility' => array($roleId => $bool),
-     *     'position' => ...
+     *     'tool'          => $tool,
+     *     'workspace'     => $workspace,
+     *     'visibility'    => array($roleId => $bool),
+     *     'position'      => ...
      *     'displayedName' => ...
      * )
      *
@@ -456,7 +457,7 @@ class ToolManager
     /**
      * Resets the tool visibility
      *
-     * @param User $user
+     * @param User      $user
      * @param Workspace $workspace
      */
     public function resetToolsVisiblity(User $user = null, Workspace $workspace = null)

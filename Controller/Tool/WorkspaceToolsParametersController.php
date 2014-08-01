@@ -12,7 +12,7 @@
 namespace Claroline\CoreBundle\Controller\Tool;
 
 use Symfony\Component\HttpFoundation\Response;
-use Claroline\CoreBundle\Persistence\ObjectManager;
+use Symfony\Component\HttpFoundation\JsonResponse; use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Controller\Tool\AbstractParametersController;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\Tool\Tool;
@@ -133,23 +133,12 @@ class WorkspaceToolsParametersController extends AbstractParametersController
 
     /**
      * @EXT\Route(
-     *     "/{workspaceId}/tools/{toolId}/editform",
+     *     "/{workspace}/tools/{tool}/editform",
      *     name="claro_workspace_order_tool_edit_form"
      * )
      * @EXT\Method("GET")
      *
-     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\parameters:workspaceOrderToolEdit.html.twig")
-     *
-     * @EXT\ParamConverter(
-     *      "workspace",
-     *      class="ClarolineCoreBundle:Workspace\Workspace",
-     *      options={"id" = "workspaceId", "strictId" = true}
-     * )
-     * @EXT\ParamConverter(
-     *      "tool",
-     *      class="ClarolineCoreBundle:Tool\Tool",
-     *      options={"id" = "toolId", "strictId" = true}
-     * )
+     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\parameters:toolNameModalForm.html.twig")
      *
      * @param Workspace $workspace
      * @param Tool              $tool
@@ -170,50 +159,38 @@ class WorkspaceToolsParametersController extends AbstractParametersController
 
     /**
      * @EXT\Route(
-     *     "/{workspaceId}/tools/{workspaceOrderToolId}/edit",
+     *     "/{workspace}/tools/{workspaceOrderTool}/edit",
      *     name="claro_workspace_order_tool_edit"
      * )
      * @EXT\Method("POST")
      *
      * @EXT\Template("ClarolineCoreBundle:Tool\workspace\parameters:workspaceOrderToolEdit.html.twig")
      *
-     * @EXT\ParamConverter(
-     *      "workspace",
-     *      class="ClarolineCoreBundle:Workspace\Workspace",
-     *      options={"id" = "workspaceId", "strictId" = true}
-     * )
-     * @EXT\ParamConverter(
-     *      "ot",
-     *      class="ClarolineCoreBundle:Tool\OrderedTool",
-     *      options={"id" = "workspaceOrderToolId", "strictId" = true}
-     * )
-     *
      * @param Workspace $workspace
      * @param OrderedTool       $ot
      *
      * @return Response
      */
-    public function workspaceOrderToolEditAction(Workspace $workspace, OrderedTool $ot)
+    public function workspaceOrderToolEditAction(Workspace $workspace, OrderedTool $workspaceOrderTool)
     {
         $this->checkAccess($workspace);
-        $form = $this->formFactory->create(FormFactory::TYPE_ORDERED_TOOL, array(), $ot);
+        $form = $this->formFactory->create(FormFactory::TYPE_ORDERED_TOOL, array(), $workspaceOrderTool);
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
             $this->toolManager->editOrderedTool($form->getData());
 
-            return $this->redirect(
-                $this->generateUrl(
-                    'claro_workspace_tools_roles',
-                    array('workspaceId' => $workspace->getId())
-                )
-            );
+            return new JsonResponse(array(
+                'tool_id' => $workspaceOrderTool->getTool()->getId(),
+                'ordered_tool_id' => $workspaceOrderTool->getId(),
+                'name' => $workspaceOrderTool->getName()
+            ));
         }
 
         return array(
             'form' => $form->createView(),
             'workspace' => $workspace,
-            'wot' => $ot
+            'wot' => $workspaceOrderTool
         );
     }
 }
