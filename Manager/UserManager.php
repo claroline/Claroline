@@ -129,6 +129,20 @@ class UserManager
     }
 
     /**
+     * Persist a user.
+     *
+     * @param User $user
+     * @return User
+     */
+    public function persistUser(User $user)
+    {
+        $this->objectManager->persist($user);
+        $this->objectManager->flush();
+
+        return $user;
+    }
+
+    /**
      * Rename a user.
      *
      * @param User $user
@@ -714,6 +728,16 @@ class UserManager
     public function getResetPasswordHash($resetPassword)
     {
         return $this->userRepo->findOneByResetPasswordHash($resetPassword);
+    }
+    
+    /**
+     * @param integer $userId
+     *
+     * @return User|null
+     */
+    public function getEnabledUserById($userId)
+    {
+        return $this->userRepo->findEnabledUserById($userId);
     }
 
     /**
