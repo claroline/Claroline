@@ -206,6 +206,7 @@ create_new_home_tab: 'Create new tab'
 create_new_tag: 'Create new tag'
 create_new_user_account: 'New user account for ClarolineConnect'
 create_role: Create role
+create_security_token: 'Create a security token'
 create_subcategory: 'Create a subcategory'
 create_user: 'Create user'
 create_widget_instance: 'Create a widget'
@@ -299,6 +300,7 @@ edit_profile_success: 'The profile has been edited with success.'
 edit_public_profile: 'Edit public profil'
 edit_public_profile_preferences_error: 'An error occured while editing your public profile preferences.'
 edit_public_profile_preferences_success: 'Your public profile preferences edited with success.'
+edit_security_token: 'Edit security token'
 edit_your_profile_error: 'An error occured while editing your profile.'
 edit_your_profile_success: 'Your profile has been edited with success.'
 editable: Editable
@@ -344,6 +346,7 @@ from: From
 from_message: From
 general: General
 general_parameters: 'General parameters'
+generate_token: 'Generate a random token'
 generate_url: 'Public URL Subscription '
 generate_url_subscription: 'Subscription to a workspace for a user'
 generate_url_subscription_anonyme: 'Subscription to a workspace for a anonymous'
@@ -401,6 +404,7 @@ invalid_email: 'This email address is not valid'
 invalid_encryption: 'Invalid authentication mode'
 invalid_transport: 'Invalid transport'
 invalid_url: 'This url is not valid'
+ip_address: 'IP address'
 is_already_in_category: 'is already in category'
 is_mail_displayed: 'Display email?'
 jqplot_date_output_format: '%m/%d/%Y'
@@ -682,6 +686,13 @@ search: Search
 search_group: 'Search for a group'
 search_user: 'Search for an user'
 search_workspace: 'Search for a workspace'
+security_token_delete_confirm_message: 'Do you really want to delete this security token ?'
+security_token_delete_confirm_title: 'Delete security token'
+security_token_form_clientIp: 'Client IP address'
+security_token_form_clientName: 'Client name'
+security_token_form_token: 'Token'
+security_token_list: 'Security token list'
+security_tokens_management: 'Security tokens management'
 see: See
 see_more: 'See more'
 see_public_profile: 'See my public profile'
@@ -764,6 +775,7 @@ to_message: To
 to_platform_users: 'to platform users'
 to_workspace_members: 'to the members of this workspace'
 today: Today
+token: Token
 tool: Tool
 tool_form_displayName: 'Displayed tool name'
 tool_form_name: 'tool name'
@@ -955,7 +967,7 @@ remove_role: Role suppression.
 initialize: Initialize
 user_limit_success_update: The user limit by role has been successfully updated.
 role_name_changed_success: The role name has been successfully updated.
-packages_upgrade_info_message: Warning: this page allows you to update the platform.
+packages_upgrade_info_message: Warning, this page allows you to update the platform.
 package_upgrade_all_warning: Warning, this will update all packages on the platform. This operation can not be canceled. It is recommended to make a backup of the files and the database before performing this operation.
 no_group: There is no group.
 successfull_workspace_creation: The workspace %name% has been created successfully
