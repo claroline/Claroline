@@ -1,3 +1,8 @@
+invalid_date_range: La date de fin ne peut précéder la date de début.
+valid_start_hour_required: Une heure de début valide est requise.
+valid_end_hour_required: Une heure de fin valide est requise.
+valid_start_date_required: Une date de début valide est requise.
+valid_end_date_required: Une date de fin valide est requise.
 'Each row requires at least 5 parameters.': 'Chaque ligne nécessite au moins 5 paramètres (séparés par des points-virgules).'
 'The code {{ code }} is already assigned to another workspace.': 'Le code {{ code }} est déjà attribué à un autre espace d''activités.'
 'The name {{ name }} is already in use.': 'Le nom {{ name }} est déjà utilisé.'

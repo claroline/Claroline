@@ -229,6 +229,7 @@ database_connection_failed: 'La connexion à la base de données à échoué.'
 date: Date
 date_form_datepicker_format: dd-mm-yyyy
 date_form_datepicker_php: d-m-Y
+date_agenda_display_format: dd-MM-yyyy
 date_form_format: dd/MM/yyyy
 date_form_placeholder: jj/mm/aaaa
 date_format: d/m/Y
@@ -238,6 +239,7 @@ date_range.custom_range: 'Plage personnalisée'
 date_range.day_names: '["Di","Lu","Ma","Me","Je","Ve","Sa"]'
 date_range.first_day: '1'
 date_range.format: d/m/Y
+date_range.format.with_hours: d/m/Y H:i:s
 date_range.from: De
 date_range.js_format: dd/MM/yyyy
 date_range.last_month: 'Mois précédent'
@@ -816,6 +818,7 @@ unregistered_groups: 'Groupes non enregistrés'
 unregistered_users: 'Utilisateurs non enregistrés'
 unwritable_file_exception: 'Vous n''avez pas la permission d''écrire dans le fichier %path%.'
 up: Monter
+update_available: Mise à jour disponible
 upload: Téléchargement
 upload_denied: 'Vous n''avez pas la permission de créer une ressource à cet endroit'
 upload_fail: 'Echec du téléchargement'
@@ -950,7 +953,7 @@ no: Non
 actualize: Actualiser
 upgrade: Mettre à jour
 packages_upgrade_info_message: Attention, ceci est la page de gestion de mises à jour.
-package_upgrade_all_warning: Attention, ceci mettra à jour tous les paquets de la plateforme. Cette opération ne peut-être annulée. Il est conseillé d'effectuer une sauvegarde des fichiers ainsi que de la base de données avant d'effectuer cette opération.
+package_upgrade_all_warning: Attention, ceci mettra à jour tous les paquets de la plateforme. Cette opération ne peut être annulée. Il est conseillé d'effectuer une sauvegarde des fichiers ainsi que de la base de données avant d'effectuer cette opération.
 profile_management: Gestion du profil
 visible_facet_form_explanation: Le champ "Visible" permet de spécifier si l'élément doit être visible ou non par l'utilisateur.
 editable_facet_form_explanation: Le champ "Modifiable" permet de spécifier si l'élément doit être modifiable ou non par l'utilisateur.
@@ -970,3 +973,12 @@ error: Erreur
 last_manager_error_message: Vous ne pouvez pas retirer tout les gestionnaires.
 remove_workspace_role_warning: Êtes-vous sûr de vouloir supprimer ce rôle ? Si ce rôle est associé à des utilisateurs, ces utilisateurs perdront leurs droits d'accès fournit par ce rôle.
 edit_rights_success: Modification des droits effecetuée avec succès.
+maintenance: Maintenance
+start_maintenance: Lancer le mode maintenance
+end_maintenance: Terminer le mode maintenance
+maintenance_mode_enabled: Le mode maintenance est activé
+maintenance_mode_message: L'accès à la plateforme est désactivé pour les utilisateurs. Vous pouvez le réactiver dans la section maintenance des paramètres de l'administration.
+update_event: Mettre à jour un événement
+remove_event_confirm: Êtes-vous sûr de vouloir supprimer cet événement ?
+remove_event: Supprimer un événement
+edit_event_success: Événement mis à jour avec succès.

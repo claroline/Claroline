@@ -17,7 +17,7 @@
         if (!$(this).parents('.modal').get(0)) {
             modal.fromRoute('claroline_locale_select');
         } else {
-            $.ajax(routing.generate('claroline_locale_change', {'_locale': $(this).html().toLowerCase()}))
+            $.ajax(routing.generate('claroline_locale_change', {'locale': $(this).html().toLowerCase()}))
             .done(function () {
                 // window.location.reload() does not work with post request;
                 var form = document.createElement('form');

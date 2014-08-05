@@ -175,41 +175,15 @@ class ToolListener
     public function workspaceAgenda($workspaceId)
     {
         $em = $this->container->get('doctrine.orm.entity_manager');
-        $workspace = $this->workspaceManager->getWorkspaceById($workspaceId);
-        $form = $this->formFactory->create(FormFactory::TYPE_AGENDA);
-        $file = $this->formFactory->create(FormFactory::TYPE_AGENDA_IMPORTER);
         $listEvents = $em->getRepository('ClarolineCoreBundle:Event')->findByWorkspaceId($workspaceId, true);
-        $usr = $this->container->get('security.context')->getToken()->getUser();
-        $owners = $em->getRepository('ClarolineCoreBundle:Event')->findByUserWithoutAllDay($usr, 0);
-        $owner = array();
-        foreach ($owners as $o) {
-            $temp = $o->getUser()->getUserName();
-            $owner[] = $temp;
-        }
-        $owners = array_unique($owner);
-
-        if ($usr === 'anon.') {
-            return $this->templating->render(
-                'ClarolineCoreBundle:Tool/workspace/agenda:agenda_read_only.html.twig',
-                array(
-                    'workspace' => $workspace,
-                    'form' => $form->createView(),
-                    'listEvents' => $listEvents,
-                    'owners' => $owners
-                )
-            );
-        }
 
         return $this->templating->render(
             'ClarolineCoreBundle:Tool/workspace/agenda:agenda.html.twig',
             array(
-                'workspace' => $workspace,
-                'form' => $form->createView(),
-                'file' => $file->createView(),
-                'owners' => $owners
+                'workspace' => $workspace = $this->workspaceManager->getWorkspaceById($workspaceId),
+                'canCreate' => $this->container->get('security.context')->getToken()->getUser() === 'anon.' ? 'false': 'true'
             )
         );
-
     }
 
     public function workspaceLogs($workspaceId)
@@ -238,31 +212,26 @@ class ToolListener
 
     public function desktopAgenda()
     {
-        $event = new Event();
-        $form = $this->formFactory->create(FormFactory::TYPE_AGENDA, array(), $event);
-        $em = $this->container-> get('doctrine.orm.entity_manager');
+        $em = $this->container->get('doctrine.orm.entity_manager');
         $usr = $this->container->get('security.context')->getToken()->getUser();
         $listEventsDesktop = $em->getRepository('ClarolineCoreBundle:Event')->findDesktop($usr, true);
         $listEvents = $em->getRepository('ClarolineCoreBundle:Event')->findByUser($usr, false);
-        $cours = array();
-        $translator = $this->container->get('translator');
+        $workspaces = array();
+        $filters = array();
 
         foreach ($listEvents as $event) {
-
-            $temp = $event->getWorkspace()->getName();
-            $cours[] = $temp;
+            $filters[$event->getWorkspace()->getId()] = $event->getWorkspace()->getName();
         }
-        if (count($listEventsDesktop) > 0) {
 
-            $cours[] = $translator->trans('desktop', array(), 'platform');
+        if (count($listEventsDesktop) > 0) {
+            $filters[0] = $this->container->get('translator')->trans('desktop', array(), 'platform');
         }
 
         return $this->templating->render(
             'ClarolineCoreBundle:Tool/desktop/agenda:agenda.html.twig',
             array(
-                'form' => $form->createView(),
                 'listEvents' => $listEventsDesktop,
-                'cours' => array_unique($cours)
+                'filters' => $filters
             )
         );
     }

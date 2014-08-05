@@ -13,3 +13,8 @@ password_mismatch: 'Las contraseña no coinciden'
 port_error: El puerto debe ser un número
 role_already_exists: El rol ya existe.
 special_char_not_allowed: 'Los caracteres especiales no están permitidos (los caracteres permitidos son: a-z, A-Z, 0-9, _ y .)'
+invalid_date_range: La fecha de finalización no puede preceder a la fecha de inicio.
+valid_start_hour_required: Se requiere una tempo de inicio válida.
+valid_end_hour_required: Se requiere una tempo de finalización válida.
+valid_start_date_required: Se requiere una fecha de inicio válida.
+valid_end_date_required: Se requiere una fecha de finalización válida.

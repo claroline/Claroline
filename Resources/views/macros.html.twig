@@ -133,7 +133,8 @@
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h5 class="panel-title">
-                    <a class="panel-toggle package-element"
+                    {% set extra = package.getExtra() %}
+                    <a class="panel-toggle package-element {% if extra['is_in_repo'] is defined and extra['is_in_repo'] or package.getType() == 'claroline-core' %}composer{% endif %}"
                        data-toggle="collapse"
                        data-parent="#accordion-{{ package.getDistReference() }}"
                        href="#collapse-inner-{{ package.getDistReference() }}"
@@ -144,18 +145,25 @@
                     </a>
                     <span class="badge alert-info">{{ version }}</span>
 
-                    {% for upgradablePackage in upgradablePackages %}
-                        {% if
-                            upgradablePackage['package'].getPrettyName() == package.getPrettyName()
-                        %}
-                            {% if version_compare(version, upgradablePackage['tag'], '<') %}
-                                <span class="badge pull-right alert-danger badge-new-version">
-                                    {#{{ upgradablePackage['tag'] }}#}
-                                    {{ 'new'|trans({}, 'platform') }}
-                                </span>
+                    <span class="pull-right">
+                        {% for upgradablePackage in upgradablePackages %}
+                            {% if
+                                upgradablePackage['package'].getPrettyName() == package.getPrettyName()
+                            %}
+                                {% if version_compare(version, upgradablePackage['tag'], '<') %}
+                                    <span class="badge alert-danger badge-new-version">
+                                        {{ 'update_available'|trans({}, 'platform') }}
+                                    </span>
+                                {% endif %}
                             {% endif %}
+                        {% endfor %}
+
+                        {% if extra['has_options'] is defined and extra['has_options'] == true %}
+                            <a href="{{ path('claro_admin_plugin_parameters', {'pluginShortName': extra['plugin_short_name']}) }}">
+                                <i class="fa fa-cog"></i>
+                            </a>
                         {% endif %}
-                    {% endfor %}
+                    </span>
                 </h5>
             </div>
             <div id="collapse-inner-{{ package.getDistReference() }}" class="panel panel-body collapse">

@@ -1,0 +1,40 @@
+{% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
+
+{% block title %}{{ parent() ~ ' - ' ~ 'mail' | trans({}, 'platform') | striptags | raw }}{% endblock %}
+
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'fa fa-cog',
+                'name': 'administration'|trans({}, 'platform'),
+                'href': path('claro_admin_parameters_index')
+            },
+            {
+                'name': 'parameters'|trans({}, 'platform'),
+                'href': path('claro_admin_parameters_index')
+            },
+            {
+                'name': 'maintenance'|trans({}, 'platform'),
+                'href': ''
+            }
+        ])
+    }}
+{% endblock %}
+
+{% block section_content %}
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ 'maintenance'|trans({}, 'platform') }}</h3>
+    </div>
+    <div class="panel-body">
+        {% if not is_maintenance_enabled() %}
+            <a class="btn btn-primary" href="{{ path('claro_admin_parameters_start_maintenance') }}">
+                {{ 'start_maintenance'|trans({}, 'platform') }}
+            </a>
+        {% else %}
+            <a class="btn btn-primary" href="{{ path('claro_admin_parameters_end_maintenance') }}">
+                {{ 'end_maintenance'|trans({}, 'platform') }}
+            </a>
+        {% endif %}
+    </div>
+{% endblock %}

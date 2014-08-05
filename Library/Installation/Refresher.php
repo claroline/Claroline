@@ -61,7 +61,7 @@ class Refresher
         $webDir = "{$this->container->get('kernel')->getRootDir()}/../web";
         $args = array('target' => $webDir);
 
-        if (function_exists('symlink')) {
+        if (function_exists('symlink') && strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN') {
             $args['--symlink'] = true;
         }
 

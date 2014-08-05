@@ -14,14 +14,14 @@ namespace Claroline\CoreBundle\Manager;
 use Claroline\CoreBundle\Library\Composer\FileIO;
 use Claroline\CoreBundle\Library\Maintenance\MaintenanceHandler;
 use Claroline\CoreBundle\Command\PlatformUpdateCommand;
-use Composer\Composer;
+use Claroline\CoreBundle\Persistence\ObjectManager;
+use Composer\Package\CompletePackage;
 use JMS\DiExtraBundle\Annotation as DI;
 use Composer\Package\CompletePackageInterface;
 use Composer\IO\NullIO;
 use Composer\Config;
 use Composer\Installer;
 use Composer\Factory;
-use Composer\Util\RemoteFilesystem;
 use Composer\Repository\InstalledFilesystemRepository;
 use Composer\Repository\CompositeRepository;
 use Composer\Json\JsonFile;
@@ -44,7 +44,9 @@ class DependencyManager {
     private $cacheDir;
     private $env;
     private $updater;
+    private $om;
     private $projectComposerJson;
+    private $rootDir;
 
     const CLAROLINE_CORE_TYPE = 'claroline-core';
     const CLAROLINE_PLUGIN_TYPE = 'claroline-plugin';
@@ -57,7 +59,9 @@ class DependencyManager {
      *      "iniFileManager"  = @DI\Inject("claroline.manager.ini_file_manager"),
      *      "cacheDir"        = @DI\Inject("%claroline.cache_dir%"),
      *      "env"             = @DI\Inject("%kernel.environment%"),
-     *      "updater"         = @DI\Inject("claroline.command.update_command")
+     *      "updater"         = @DI\Inject("claroline.command.update_command"),
+     *      "rootDir"         = @DI\Inject("%kernel.root_dir%"),
+     *      "om"              = @DI\Inject("claroline.persistence.object_manager")
      * })
      */
     public function __construct(
@@ -67,7 +71,9 @@ class DependencyManager {
         $composerLogFile,
         $cacheDir,
         $env,
-        PlatformUpdateCommand $updater
+        PlatformUpdateCommand $updater,
+        $rootDir,
+        ObjectManager $om
     )
     {
         $this->vendorDir = $vendorDir;
@@ -83,6 +89,8 @@ class DependencyManager {
         $this->cacheDir = $cacheDir;
         $this->env = $env;
         $this->updater = $updater;
+        $this->rootDir = $rootDir;
+        $this->om = $om;
     }
 
     /**
@@ -107,7 +115,6 @@ class DependencyManager {
         $packages = [];
 
         foreach ($this->getAllInstalled() as $package) {
-
             if ($package->getType() === $type) {
                 $packages[] = $package;
             }
@@ -164,6 +171,67 @@ class DependencyManager {
             $this->getInstalledByType(self::CLAROLINE_CORE_TYPE),
             $this->getInstalledByType(self::CLAROLINE_PLUGIN_TYPE)
         );
+    }
+
+    /**
+     * Returns the list of installed plugin packages, with extra information
+     * relative to their options. Local packages (i.e. not manager by composer)
+     * are also included in the list.
+     *
+     * @return CompletePackageInterface[]
+     */
+    public function getPluginList()
+    {
+        $repoPackages = $this->getInstalledByType(self::CLAROLINE_PLUGIN_TYPE);
+        $registeredPlugins = $this->om->getRepository('ClarolineCoreBundle:Plugin')->findAll();
+        $packages = [];
+
+        foreach ($registeredPlugins as $plugin) {
+            $targetPackage = null;
+            $isInRepo = true;
+
+            // looks for the corresponding package
+            foreach ($repoPackages as $package) {
+                $packageParts = explode('/', $package->getName());
+                $bundleParts = explode('-', $packageParts[1]);
+                $vendorName = $packageParts[0];
+                $bundleName = '';
+
+                foreach ($bundleParts as $part) {
+                    $bundleName .= $part;
+                }
+
+                if (strtoupper($plugin->getVendorName()) === strtoupper($vendorName)
+                    && strtoupper($plugin->getBundleName()) === strtoupper($bundleName)) {
+                    $targetPackage = $package;
+                    break;
+                }
+            }
+
+            // builds a "fake" package if the plugin is not managed by composer
+            if (!$targetPackage) {
+                $isInRepo = false;
+                $vendorName = strtolower($plugin->getVendorName());
+                $bundleParts = preg_split('/(?=[A-Z])/', $plugin->getBundleName());
+                array_shift($bundleParts);
+                $bundleName = strtolower(implode('-', $bundleParts));
+                $targetPackage = new CompletePackage(
+                    "{$vendorName}/{$bundleName}",
+                    '9999999-dev',
+                    'unknown / local'
+                );
+            }
+
+            // adds plugin options info in the "extra" attribute
+            $extra = $targetPackage->getExtra();
+            $extra['is_in_repo'] = $isInRepo;
+            $extra['has_options'] = $plugin->hasOptions();
+            $extra['plugin_short_name'] = $plugin->getShortName();
+            $targetPackage->setExtra($extra);
+            $packages[] = $targetPackage;
+        }
+
+        return $packages;
     }
 
     /**
@@ -296,48 +364,60 @@ class DependencyManager {
      */
     public function upgrade()
     {
-        unlink($this->composerLogFile);
+        $this->removeUpdateLog();
         MaintenanceHandler::enableMaintenance();
 
+        ini_set('max_execution_time', 1800);
+        ini_set('memory_limit', '-1');
         //get the list of upgradable packages from the cache
         $pkgList = $this->getUpgradableFromCache();
         $this->updateRequirements('>=', $pkgList);
-
         $ds = DIRECTORY_SEPARATOR;
         $factory = new Factory();
         $io = new FileIO($this->composerLogFile);
         putenv("COMPOSER_HOME={$this->vendorDir}{$ds}composer");
         $composer = $factory->createComposer($io, "{$this->vendorDir}{$ds}..{$ds}composer.json", false);
+        //this is the default github token. An other way to do it must be found sooner or later.
+        $config = $composer->getConfig();
+        $config->merge(array('github-oauth' => array('github.com' => '5d86c61eec8089d2dd22aebb79c37bebe4b6f86e')));
         $install = Installer::create($io, $composer);
-        $dryRun = $this->env === 'dev' ? true: false;
-        $preferSource = $this->env === 'dev' ? true: false;
-        $preferDist = $this->env === 'dev' ? false: true;
-        $devMode = $this->env === 'dev' ? true: false;
+        $continue = true;
 
         try {
-            $install->setDryRun($dryRun)
-                ->setVerbose(true)
-                ->setPreferSource($preferSource)
-                ->setPreferDist($preferDist)
-                ->setDevMode($devMode)
+            $install->setDryRun($this->env === 'dev')
+                ->setVerbose($this->env === 'dev')
+                ->setPreferSource($this->env === 'dev')
+                ->setPreferDist($this->env !== 'dev')
+                ->setDevMode($this->env === 'dev')
                 ->setRunScripts(true)
                 ->setOptimizeAutoloader(true)
                 ->setUpdate(true);
 
             $install->run();
         } catch (\Exception $e) {
-            file_put_contents($this->composerLogFile, "Composer Exception : {$e->getMessage()}\n", FILE_APPEND);
+            file_put_contents($this->composerLogFile, "[Claroline updater Exception]: {$e->getMessage()}\n", FILE_APPEND);
+            $continue = false;
         }
 
-        try {
-            $this->updater->run(new ArgvInput(array()), new StreamOutput(fopen($this->composerLogFile, 'a')));
-        } catch (\Exception $e) {
-            file_put_contents($this->composerLogFile, "Runtime Exception : {$e->getMessage()}\n", FILE_APPEND);
-        }
+        if ($continue) {
+            try {
+                $this->updater->run(new ArgvInput(array()), new StreamOutput(fopen($this->composerLogFile, 'a')));
+            } catch (\Exception $e) {
+                file_put_contents($this->composerLogFile, "[Claroline updater Exception]: {$e->getMessage()}\n", FILE_APPEND);
+                $continue = false;
+            }
 
-        //remove the old cache file
-        $this->iniFileManager->remove($this->lastTagsFile);
-        file_put_contents($this->composerLogFile, "\nDone.", FILE_APPEND);
+            if ($continue) {
+                //remove the old cache file
+                $this->iniFileManager->remove($this->lastTagsFile);
+                file_put_contents($this->composerLogFile, "\nDone.", FILE_APPEND);
+            }
+        }
+    }
+
+    public function removeUpdateLog()
+    {
+        @unlink($this->composerLogFile);
     }
 
     /**
@@ -355,13 +435,17 @@ class DependencyManager {
             foreach ($this->getAllInstalled() as $package) {
                 foreach ($toUpdate as $ppn) {
                     if ($package->getPrettyName() === $prettyName && $prettyName == $ppn) {
-                        $new->require->$prettyName = $operator . $package->getPrettyVersion();
+                        $versions = explode(',', $package->getPrettyVersion());
+                        if ($package->getPrettyVersion() !== 'dev-master') {
+                            $new->require->$prettyName = $operator . $versions[0];
+                        }
                     }
                 }
             }
         };
 
-        file_put_contents($this->projectComposerJson . '.old', json_encode($data, JSON_PRETTY_PRINT));
+        $ds = DIRECTORY_SEPARATOR;
+        file_put_contents($this->rootDir . "{$ds}config{$ds}composer.json.old", json_encode($data, JSON_PRETTY_PRINT));
         file_put_contents($this->projectComposerJson, json_encode($new, JSON_PRETTY_PRINT));
     }
 

@@ -298,10 +298,12 @@ class WorkspaceRepository extends EntityRepository
         $dql = "
             SELECT DISTINCT w AS workspace, MAX(l.dateLog) AS max_date
             FROM Claroline\CoreBundle\Entity\Workspace\Workspace w
+            JOIN w.roles r
             INNER JOIN Claroline\CoreBundle\Entity\Log\Log l WITH l.workspace = w
             JOIN l.doer u
             WHERE l.action = 'workspace-tool-read'
             AND u.id = :userId
+            AND r.name IN (:roles)
             GROUP BY w.id
             ORDER BY max_date DESC
         ";
@@ -309,6 +311,7 @@ class WorkspaceRepository extends EntityRepository
         $query = $this->_em->createQuery($dql);
         $query->setMaxResults($max);
         $query->setParameter('userId', $user->getId());
+        $query->setParameter('roles', $roles);
 
         return $query->getResult();
     }

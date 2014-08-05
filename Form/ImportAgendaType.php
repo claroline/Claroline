@@ -16,6 +16,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Claroline\CoreBundle\Validator\Constraints\IcsFile;
 
 class ImportAgendaType extends AbstractType
 {
@@ -29,7 +30,8 @@ class ImportAgendaType extends AbstractType
                 'mapped' => false,
                 'constraints' => array(
                     new NotBlank(),
-                    new File()
+                    new File(),
+                    new IcsFile()
                 )
            )
         );

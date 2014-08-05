@@ -158,6 +158,99 @@
         modal.fromUrl(routing.generate(route, variables), action);
     };
 
+
+    /**
+     * Displays a form in a modal. The form requires all the modals divs and layout because it's pretty much impossible
+     * to render something pretty otherwise as the form will usually include the class modal-body for datas and
+     * modal-footer for submissions/cancelation.
+     * The modal root element must contain the class "modal-dialog"
+     *
+     * It assumes the route for the form submission returns:
+     * - a json response when successfull
+     * - the form rendered with its errors when an error occured
+     *
+     * @param url The route of the controller rendering the form
+     * @param successHandler A successHandler
+     * @param formRenderHandler an action wich is done after the form is rendered the first time
+     * @param formId the form id
+     */
+    modal.displayForm = function (url, successHandler, formRenderHandler, formId) {
+        $.ajax({
+            url: url,
+            success: function (data) {
+                modal.hide();
+                modal.create(data).on('click', 'button.btn', function (event) {
+                    event.preventDefault();
+                    modal.submitForm(data, successHandler, formId);
+                });
+                formRenderHandler(data);
+            }
+        });
+    };
+
+    /**
+     * Displays a confirmation message in a modal.
+     * The successHandler will take these parameters (
+     *      event,
+     *      successParameter,
+     *      data (the data wich are returned by the ajax request)
+     * )
+     * @param url the url wich is going to be confirmed
+     * @param successHandler a sucessHandler
+     * @param successParameter a parameter required by the request handler
+     * @param body the modal body
+     * @param header the modal header
+     */
+    modal.confirmRequest = function (url, successHandler, successParameter, body, header) {
+        var html = Twig.render(
+            ModalWindow,
+            {'confirmFooter': true, 'modalId': 'confirm-modal', 'body': body, 'header': header}
+        );
+
+        $('body').append(html);
+        //display validation modal
+        $('#confirm-modal').modal('show');
+        //destroy the modal when hidden
+        $('#confirm-modal').on('hidden.bs.modal', function () {
+            $(this).remove();
+        });
+
+        $('#confirm-ok').on('click', function (event) {
+            $.ajax({
+                url: url,
+                success: function (data) {
+                    successHandler(event, successParameter, data);
+                    $('#confirm-modal').modal('hide');
+                }
+            });
+        });
+    };
+
+    modal.submitForm = function (html, successHandler, formId)
+    {
+        var form = $(html).find('form');
+        var url = form.attr('action');
+        //  var formData = new FormData(form[0]);
+        var formData = new FormData(document.getElementById(formId));
+
+        $.ajax({
+            url: url,
+            data: formData,
+            type: 'POST',
+            processData: false,
+            contentType: false,
+            success: function (data, textStatus, jqXHR) {
+                if (jqXHR.getResponseHeader('Content-Type') === 'application/json') {
+                    $('.modal').modal('hide');
+                    successHandler(data, textStatus, jqXHR);
+                } else {
+                    //how do I find the root element of html ? It would be better to not have to use this class.
+                    $('.modal-dialog').replaceWith(data);
+                }
+            }
+        });
+    };
+
     /** events **/
 
     $('body').on({
