@@ -30,10 +30,6 @@
         if (index >= 0) {
             var previousModal = modal.modalStack[index];
 
-            if (previousModal.get(0) === $(element).get(0)) {
-                return;
-            }
-
             if (!previousModal.hasClass('fullscreen')) {
                 previousModal.addClass('parent-hide');
             }
@@ -200,21 +196,20 @@
      * @param url The route of the controller rendering the form
      * @param successHandler A successHandler
      * @param formRenderHandler an action wich is done after the form is rendered the first time
-     * @param formId the form id
      */
-    modal.displayForm = function (url, successHandler, formRenderHandler, formId) {
-        $.ajax({
-            url: url,
-            success: function (data) {
-                modal.hide();
-                var modalElement = modal.create(data);
+    modal.displayForm = function (url, successHandler, formRenderHandler) {
+        $.ajax(url)
+        .success(function (data) {
+            var modalElement = modal.create(data);
 
-                modalElement.on('click', 'button.btn', function (event) {
-                    event.preventDefault();
-                    modal.submitForm(modalElement, successHandler);
-                });
-                formRenderHandler(data);
-            }
+            modalElement.on('click', 'button.btn', function (event) {
+                event.preventDefault();
+                modal.submitForm(modalElement, successHandler);
+            });
+            formRenderHandler(data);
+        })
+        .error(function () {
+            modal.error();
         });
     };
 
