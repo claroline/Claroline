@@ -143,7 +143,9 @@
         $.ajax(home.path + 'resource/embed/' + nodeId + '/' + mimeType + '/' + openInNewTab)
             .done(function (data) {
                 tinymce.activeEditor.insertContent(data);
-                tinymce.claroline.editorChange(tinymce.activeEditor);
+                if (!tinymce.activeEditor.plugins.fullscreen.isFullscreen()) {
+                    tinymce.claroline.editorChange(tinymce.activeEditor);
+                }
             })
             .error(function () {
                 modal.error();
