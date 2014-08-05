@@ -14,37 +14,51 @@
     var translator = window.Translator;
     var routing = window.Routing;
     var common = window.Claroline.Common;
-    var modal = window.Claroline.Modal = {};
-    var modalStack = [];
+    var modal = window.Claroline.Modal = {
+        modalStack: []
+    };
 
     /**
-     * Handles nested modals.
+     * Push a modal element and his backdrop in a stack
+     *
+     * @param element The modal html element
      */
-    $('body').on({
-        'show.bs.modal': function () {
-            var stackLength = modalStack.length;
+    modal.push = function (element)
+    {
+        var index = modal.modalStack.length - 1;
 
-            if (stackLength > 0) {
-                var previousModal = modalStack[stackLength - 1];
+        if (index >= 0) {
+            var previousModal = modal.modalStack[index];
 
-                if (previousModal.get(0) === $(this).get(0)) {
-                    return;
-                }
+            if (previousModal.get(0) === $(element).get(0)) {
+                return;
+            }
 
+            if (!previousModal.hasClass('fullscreen')) {
                 previousModal.addClass('parent-hide');
             }
-
-            modalStack.push($(this));
-        },
-        'hide.bs.modal': function () {
-            modalStack.pop();
-            var stackLength = modalStack.length;
-
-            if (stackLength > 0) {
-                modalStack[stackLength - 1].removeClass('parent-hide');
-            }
         }
-    }, '.modal');
+
+        modal.modalStack.push($(element));
+
+        $('.modal-backdrop:not(.parent-hide)').addClass('parent-hide');
+    };
+
+    /**
+     * Pop a modal element and his backdrop in a stack
+     */
+    modal.pop = function ()
+    {
+        modal.modalStack.pop();
+
+        var index = modal.modalStack.length - 1;
+
+        if (index >= 0) {
+            modal.modalStack[index].removeClass('parent-hide');
+
+            $('.modal-backdrop.parent-hide').removeClass('parent-hide');
+        }
+    };
 
     /**
      * Hide all open modals.
@@ -143,5 +157,16 @@
     {
         modal.fromUrl(routing.generate(route, variables), action);
     };
+
+    /** events **/
+
+    $('body').on({
+        'show.bs.modal': function () {
+            modal.push(this);
+        },
+        'hide.bs.modal': function () {
+            modal.pop();
+        }
+    }, '.modal');
 
 }());
