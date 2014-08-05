@@ -264,11 +264,15 @@
     /** events **/
 
     $('body').on({
-        'show.bs.modal': function () {
-            modal.push(this);
+        'show.bs.modal': function (event) {
+            if (event.hasOwnProperty('namespace') && event.namespace === 'bs.modal') {
+                modal.push(this);
+            }
         },
-        'hide.bs.modal': function () {
-            modal.pop();
+        'hide.bs.modal': function (event) {
+            if (event.hasOwnProperty('namespace') && event.namespace === 'bs.modal') {
+                modal.pop();
+            }
         }
     }, '.modal');
 
