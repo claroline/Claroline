@@ -68,6 +68,14 @@ class Workspace
 
     /**
      * @ORM\OneToMany(
+     *     targetEntity="Claroline\CoreBundle\Entity\Model\Model",
+     *     mappedBy="workspace"
+     * )
+     */
+    protected $models;
+
+    /**
+     * @ORM\OneToMany(
      *     targetEntity="Claroline\CoreBundle\Entity\Event",
      *     mappedBy="workspace",
      *     cascade={"persist"}

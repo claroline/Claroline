@@ -62,10 +62,23 @@ class Group extends AbstractRoleSubject implements OrderableInterface
      */
     protected $roles;
 
+    /**
+     * @var Model[]|ArrayCollection
+     *
+     * @ORM\ManyToMany(
+     *     targetEntity="Claroline\CoreBundle\Entity\Model\Model",
+     *     inversedBy="groups",
+     *     fetch="EXTRA_LAZY"
+     * )
+     * @ORM\JoinTable(name="claro_group_model")
+     */
+    protected $models;
+
     public function __construct()
     {
         parent::__construct();
-        $this->users = new ArrayCollection();
+        $this->users  = new ArrayCollection();
+        $this->models = new ArrayCollection();
     }
 
     public function getId()

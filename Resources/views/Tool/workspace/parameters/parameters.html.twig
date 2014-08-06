@@ -27,6 +27,9 @@
         <a class="list-group-item" href="{{ path('claro_workspace_tools_roles', {'workspaceId': workspace.getId()}) }}">
             {{ 'tools'|trans({}, 'platform') }}
         </a>
+        <a class="list-group-item" href="{{ path('claro_workspace_model_index', {'workspace': workspace.getId()}) }}">
+            {{ 'models'|trans({}, 'platform') }}
+        </a>
         {% for tool in tools %}
             <a class="list-group-item" href="{{ path('claro_workspace_tool_config', {'tool': tool.getId(), 'workspace': workspace.getId()}) }}">
                 {{ tool.getName()|trans({}, 'tools') }}

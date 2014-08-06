@@ -28,6 +28,7 @@ use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Claroline\CoreBundle\Manager\WorkspaceTagManager;
 use Claroline\CoreBundle\Manager\LocaleManager;
 use Claroline\CoreBundle\Manager\UserManager;
+use Claroline\CoreBundle\Manager\GroupManager;
 use Claroline\CoreBundle\Manager\TermsOfServiceManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
@@ -45,6 +46,7 @@ class WorkspaceParametersController extends Controller
     private $userManager;
     private $tosManager;
     private $utilities;
+    private $groupManager;
 
     /**
      * @DI\InjectParams({
@@ -56,8 +58,9 @@ class WorkspaceParametersController extends Controller
      *     "router"              = @DI\Inject("router"),
      *     "localeManager"       = @DI\Inject("claroline.common.locale_manager"),
      *     "userManager"         = @DI\Inject("claroline.manager.user_manager"),
+     *     "groupManager"         = @DI\Inject("claroline.manager.group_manager"),
      *     "tosManager"          = @DI\Inject("claroline.common.terms_of_service_manager"),
-     *      "utilities"          = @DI\Inject("claroline.utilities.misc")
+     *     "utilities"          = @DI\Inject("claroline.utilities.misc")
      * })
      */
     public function __construct(
@@ -70,6 +73,7 @@ class WorkspaceParametersController extends Controller
         Request $request,
         LocaleManager $localeManager,
         UserManager $userManager,
+        GroupManager $groupManager,
         TermsOfServiceManager $tosManager,
         ClaroUtilities $utilities
     )
@@ -83,6 +87,7 @@ class WorkspaceParametersController extends Controller
         $this->request = $request;
         $this->localeManager = $localeManager;
         $this->userManager = $userManager;
+        $this->groupManager = $groupManager;
         $this->tosManager = $tosManager;
         $this->utilities = $utilities;
     }
