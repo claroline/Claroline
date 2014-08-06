@@ -14,37 +14,47 @@
     var translator = window.Translator;
     var routing = window.Routing;
     var common = window.Claroline.Common;
-    var modal = window.Claroline.Modal = {};
-    var modalStack = [];
+    var modal = window.Claroline.Modal = {
+        modalStack: []
+    };
 
     /**
-     * Handles nested modals.
+     * Push a modal element and his backdrop in a stack
+     *
+     * @param element The modal html element
      */
-    $('body').on({
-        'show.bs.modal': function () {
-            var stackLength = modalStack.length;
+    modal.push = function (element)
+    {
+        var index = modal.modalStack.length - 1;
 
-            if (stackLength > 0) {
-                var previousModal = modalStack[stackLength - 1];
+        if (index >= 0) {
+            var previousModal = modal.modalStack[index];
 
-                if (previousModal.get(0) === $(this).get(0)) {
-                    return;
-                }
-
+            if (!previousModal.hasClass('fullscreen')) {
                 previousModal.addClass('parent-hide');
             }
-
-            modalStack.push($(this));
-        },
-        'hide.bs.modal': function () {
-            modalStack.pop();
-            var stackLength = modalStack.length;
-
-            if (stackLength > 0) {
-                modalStack[stackLength - 1].removeClass('parent-hide');
-            }
         }
-    }, '.modal');
+
+        modal.modalStack.push($(element));
+
+        $('.modal-backdrop:not(.parent-hide)').addClass('parent-hide');
+    };
+
+    /**
+     * Pop a modal element and his backdrop in a stack
+     */
+    modal.pop = function ()
+    {
+        modal.modalStack.pop();
+
+        var index = modal.modalStack.length - 1;
+
+        if (index >= 0) {
+            modal.modalStack[index].removeClass('parent-hide');
+
+            $('.modal-backdrop.parent-hide').removeClass('parent-hide');
+        }
+    };
 
     /**
      * Hide all open modals.
@@ -83,13 +93,26 @@
     };
 
     /**
+     * Create a default modal footer.
+     */
+    modal.defaultFooter = function ()
+    {
+        return common.createElement('button', 'btn btn-primary')
+            .html(translator.get('home:Ok'))
+            .attr('data-dismiss', 'modal');
+    };
+
+    /**
      * This function show a complete modal with given title and content.
      *
      * @param title The title of the modal.
      * @param content The content of the modal.
+     * @param footer The footer of the modal, if footer is not defined a default footer will be used.
      */
-    modal.simpleContainer = function (title, content)
+    modal.simpleContainer = function (title, content, footer)
     {
+        footer = typeof(footer) !== 'undefined' ? footer : modal.defaultFooter();
+
         return modal.create(
             common.createElement('div', 'modal-dialog').html(
                 common.createElement('div', 'modal-content').append(
@@ -98,14 +121,29 @@
                     .append(common.createElement('h4', 'modal-title').html(title))
                 )
                 .append(common.createElement('div', 'modal-body').html(content))
-                .append(common.createElement('div', 'modal-footer').html(
-                    common.createElement('button', 'btn btn-primary')
-                    .html(translator.get('home:Ok'))
-                    .attr('data-dismiss', 'modal')
-                    )
-                )
+                .append(common.createElement('div', 'modal-footer').html(footer))
             )
         );
+    };
+
+     /**
+     * This function show a confirm modal with given title and content.
+     *
+     * @param title The title of the modal.
+     * @param content The content of the modal.
+     */
+    modal.confirmContainer = function (title, content)
+    {
+        var footer = common.createElement('div').append(
+            common.createElement('button', 'btn btn-default')
+            .html(translator.get('platform:cancel'))
+            .attr('data-dismiss', 'modal')
+        ).append(
+            common.createElement('button', 'btn btn-primary').html(translator.get('home:Ok'))
+            .attr('data-dismiss', 'modal')
+        );
+
+        return modal.simpleContainer(title, content, footer);
     };
 
     /**
@@ -144,6 +182,7 @@
         modal.fromUrl(routing.generate(route, variables), action);
     };
 
+
     /**
      * Displays a form in a modal. The form requires all the modals divs and layout because it's pretty much impossible
      * to render something pretty otherwise as the form will usually include the class modal-body for datas and
@@ -157,21 +196,22 @@
      * @param url The route of the controller rendering the form
      * @param successHandler A successHandler
      * @param formRenderHandler an action wich is done after the form is rendered the first time
-     * @param formId the form id
      */
-    modal.displayForm = function (url, successHandler, formRenderHandler, formId) {
-        $.ajax({
-            url: url,
-            success: function(data, textStatus, jqXHR) {
-                modal.hide();
-                modal.create(data).on('click', 'button.btn', function(event) {
-                    event.preventDefault();
-                    submitForm(data, successHandler, formId);
-                });
-                formRenderHandler(data);
-            }
+    modal.displayForm = function (url, successHandler, formRenderHandler) {
+        $.ajax(url)
+        .success(function (data) {
+            var modalElement = modal.create(data);
+
+            modalElement.on('click', 'button.btn', function (event) {
+                event.preventDefault();
+                modal.submitForm(modalElement, successHandler);
+            });
+            formRenderHandler(data);
+        })
+        .error(function () {
+            modal.error();
         });
-    }
+    };
 
     /**
      * Displays a confirmation message in a modal.
@@ -183,55 +223,57 @@
      * @param url the url wich is going to be confirmed
      * @param successHandler a sucessHandler
      * @param successParameter a parameter required by the request handler
-     * @param body the modal body
-     * @param header the modal header
+     * @param content the modal body
+     * @param title the modal header
      */
-    modal.confirmRequest = function (url, successHandler, successParameter, body, header) {
-        var html = Twig.render(
-            ModalWindow,
-            {'confirmFooter': true, 'modalId': 'confirm-modal', 'body': body, 'header': header}
-        );
-
-        $('body').append(html);
-        //display validation modal
-        $('#confirm-modal').modal('show');
-        //destroy the modal when hidden
-        $('#confirm-modal').on('hidden.bs.modal', function () {
-            $(this).remove();
-        });
-
-        $('#confirm-ok').on('click', function(event) {
-            $.ajax({
-                url: url,
-                success: function(data) {
-                    successHandler(event, successParameter, data);
-                    $('#confirm-modal').modal('hide');
-                }
+    modal.confirmRequest = function (url, successHandler, successParameter, content, title) {
+        modal.confirmContainer(title, content).on('click', '.btn-primary', function (event) {
+            $.ajax(url)
+            .success(function (data) {
+                successHandler(event, successParameter, data);
+            })
+            .error(function () {
+                modal.error();
             });
         });
-    }
+    };
 
-    function submitForm (html, successHandler, formId) {
-        var form = $(html).find('form');
+    /**
+     * This method is triggered when submit a form inside a modal created with modal.displayForm()
+     */
+    modal.submitForm = function (modalElement, callBack)
+    {
+        var form = $('form', modalElement);
         var url = form.attr('action');
-//        var formData = new FormData(form[0]);
-        var formData = new FormData(document.getElementById(formId));
+        var formData = form.serializeArray();
 
-        $.ajax({
-            url: url,
-            data: formData,
-            type: 'POST',
-            processData: false,
-            contentType: false,
-            success: function(data, textStatus, jqXHR) {
-                if (jqXHR.getResponseHeader('Content-Type') === 'application/json') {
-                    $('.modal').modal('hide');
-                    successHandler(data, textStatus, jqXHR);
-                } else {
-                    //how do I find the root element of html ? It would be better to not have to use this class.
-                    $('.modal-dialog').replaceWith(data);
-                }
+        $.post(url, formData)
+        .success(function (data, textStatus, jqXHR) {
+            if (jqXHR.getResponseHeader('Content-Type') === 'application/json') {
+                modalElement.modal('hide');
+                callBack(data, textStatus, jqXHR);
+            } else {
+                $('.modal-dialog', modalElement).replaceWith(data);
             }
+        })
+        .error(function () {
+            modal.error();
         });
-    }
+    };
+
+    /** events **/
+
+    $('body').on({
+        'show.bs.modal': function (event) {
+            if (event.hasOwnProperty('namespace') && event.namespace === 'bs.modal') {
+                modal.push(this);
+            }
+        },
+        'hide.bs.modal': function (event) {
+            if (event.hasOwnProperty('namespace') && event.namespace === 'bs.modal') {
+                modal.pop();
+            }
+        }
+    }, '.modal');
+
 }());
