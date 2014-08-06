@@ -30,6 +30,16 @@ $('body').on('click', '.delete-model-link', function (event) {
     );
 });
 
+$('body').on('click', '.rename-model-link', function (event) {
+    event.preventDefault();
+    window.Claroline.Modal.displayForm(
+        $(event.target).attr('href'),
+        editModel,
+        function () {},
+        'model-form'
+    );
+});
+
 var addModel = function (model) {
     var html = Twig.render(ModelRow, {'model': model});
     $('#table-model-body').append(html);
@@ -38,4 +48,8 @@ var addModel = function (model) {
 var removeModel = function (event, args, model) {
     console.debug(model.id);
     $('#model-' + model.id).remove();
+}
+
+var editModel = function (model) {
+    $('#model-' + model.id +  ' td:first-child').html(model.name);
 }

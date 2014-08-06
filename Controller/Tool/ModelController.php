@@ -101,11 +101,10 @@ class ModelController extends Controller
     {
         $this->checkAccess($workspace);
         $form = $this->formFactory->create(new ModelType(), new Model());
-        $action = $this->router->generate('claro_workspace_model_modal_create', array('workspace' => $workspace->getId()));
+        $action = $this->router->generate('claro_workspace_model_create', array('workspace' => $workspace->getId()));
 
         return array(
             'form' => $form->createView(),
-            'workspace' => $workspace,
             'action' => $action
         );
     }
@@ -115,7 +114,7 @@ class ModelController extends Controller
      *
      * @EXT\Route(
      *     "/workspace/{workspace}/model/create",
-     *     name="claro_workspace_model_modal_create"
+     *     name="claro_workspace_model_create"
      * )
      */
     public function createModelAction(Workspace $workspace)
@@ -135,13 +134,12 @@ class ModelController extends Controller
             );
         }
 
-        $action = $this->router->generate('claro_workspace_model_modal_create', array('workspace' => $workspace->getId()));
+        $action = $this->router->generate('claro_workspace_model_create', array('workspace' => $workspace->getId()));
 
         return $this->render(
             'ClarolineCoreBundle:Tool\workspace\parameters\model:modelModalForm.html.twig',
             array(
                 'form' => $form->createView(),
-                'workspace' => $workspace,
                 'action' => $action
             )
         );
@@ -158,6 +156,7 @@ class ModelController extends Controller
      */
     public function deleteModelAction(Model $model)
     {
+        $this->checkAccess($model->getWorkspace());
         $workspace = $model->getWorkspace();
         $id = $model->getId();
         $this->modelManager->delete($model);
@@ -165,14 +164,57 @@ class ModelController extends Controller
         return new JsonResponse(array('id' => $id));
     }
 
-    public function renameModelFormAction(Model $model)
+    /**
+     * @param Workspace $workspace
+     *
+     * @EXT\Route(
+     *     "/{model}/rename/form",
+     *     name="claro_workspace_model_rename_form"
+     * )
+     *
+     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\parameters\model:modelModalForm.html.twig")
+     */
+    public function renameModelModalFormAction(Model $model)
     {
+        $this->checkAccess($model->getWorkspace());
+        $form = $this->formFactory->create(new ModelType(), $model);
+        $action = $this->router->generate('claro_workspace_model_rename', array('model' => $model->getId()));
 
+        return array('form' => $form->createView(), 'action' => $action);
     }
 
-    public function renameModel(Model $model)
+    /**
+     * @param Workspace $workspace
+     *
+     * @EXT\Route(
+     *     "/{model}/rename",
+     *     name="claro_workspace_model_rename"
+     * )
+     */
+    public function renameModelAction(Model $model)
     {
+        $this->checkAccess($model->getWorkspace());
+        $oldName = $model->getName();
+        $form = $this->formFactory->create(new ModelType(), $model);
+        $form->handleRequest($this->request);
 
+        if ($form->isValid()) {
+            $model = $this->modelManager->edit($model, $form->get('name')->getData());
+
+            return new JsonResponse(
+                array(
+                    'id' => $model->getId(),
+                    'name' => $model->getName()
+                )
+            );
+        }
+
+        $action = $this->router->generate('claro_workspace_model_rename', array('model' => $model->getId()));
+
+        return $this->render(
+            'ClarolineCoreBundle:Tool\workspace\parameters\model:modelModalForm.html.twig',
+            array('form' => $form->createView(), 'action' => $action)
+        );
     }
 
     /**

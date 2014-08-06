@@ -2,7 +2,7 @@
 
 <tr id="model-{{ model.id }}">
     <td> {{ model.name }}</td>
-    <td> <a href="#"> {{ 'rename'|trans({}, 'platform') }} </a></td>
+    <td> <a class="rename-model-link" href="{{ path('claro_workspace_model_rename_form', {'model': model.id}) }}"> {{ 'rename'|trans({}, 'platform') }} </a></td>
     <td> <a href="#"> {{ 'configure'|trans({}, 'platform') }} </a></td>
     <td> <a class="delete-model-link" href="{{ path('claro_model_delete', {'model': model.id}) }}"> {{ 'delete'|trans({}, 'platform') }}</a></td>
 </tr>

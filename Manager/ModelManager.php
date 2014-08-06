@@ -53,6 +53,15 @@ class ModelManager
         return $model;
     }
 
+    public function edit(Model $model, $name)
+    {
+        $model->setName($name);
+        $this->om->persist($model);
+        $this->om->flush();
+
+        return $model;
+    }
+
     public function delete(Model $model)
     {
         $this->om->remove($model);
@@ -64,12 +73,22 @@ class ModelManager
         return $this->modelRepository->findByWorkspace($workspace);
     }
 
-    public function addResource(Model $model, ResourceNode $node, $isLink)
+    public function addResourcesNode(Model $model, array $nodes)
     {
 
     }
 
-    public function removeResource(Model $model, ResourceNode $node)
+    public function addHomeTabs(Model $model, array $tabs)
+    {
+
+    }
+
+    public function addResourceNode(Model $model, ResourceNode $node, $isLink)
+    {
+
+    }
+
+    public function removeResourceNode(Model $model, ResourceNode $node)
     {
 
     }
