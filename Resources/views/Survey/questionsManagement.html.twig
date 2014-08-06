@@ -1,0 +1,86 @@
+{% macro sortUrl(surveyId, orderedBy, order) %}
+    {% if order == 'ASC' %}
+        {% set newOrder = 'DESC' %}
+    {% else %}
+        {% set newOrder = 'ASC' %}
+    {% endif %}
+
+    {{ path('claro_survey_questions_management', {'survey': surveyId, 'orderedBy': orderedBy, 'order': newOrder }) }}
+{% endmacro %}
+
+{% from _self import sortUrl %}
+
+{% set layout = 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
+
+{% if isDesktop() %}
+    {% set layout = 'ClarolineCoreBundle:Desktop:layout.html.twig' %}
+{% endif %}
+
+{% set _resource = survey %}
+{% set surveyId = survey.getId() %}
+
+{% extends layout %}
+
+{% block title %}
+    {{ survey.getResourceNode().getName() ~ ' - ' | striptags | raw ~ 'questions_management'|trans({}, 'survey') }}
+{% endblock %}
+
+{% block resourceBreadcrumb %}
+    <li>
+        <a href="{{ path('claro_resource_open', { 'resourceType': _resource.getResourceNode().getResourceType().getName(), 'node': _resource.getResourceNode().getId() }) }}">
+            {{ _resource.getResourceNode().getName() }}
+        </a>
+    </li>
+    <li class="active">{{ 'questions_management' | trans({}, 'survey') }}</li>
+{% endblock %}
+
+{% block section_content %}
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ 'questions_management'|trans({}, 'survey') }}</h3>
+    </div>
+    <div class="panel-body">
+        {% if questions|length > 0 %}
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover text-center">
+                    <tr>
+                        <th class="text-center">
+                            <a href="{{ sortUrl(surveyId, 'title', order) }}">
+                                {{ 'title'|trans({}, 'survey') }}
+                            </a>
+                        </th>
+                        <th class="text-center">
+                            <a href="{{ sortUrl(surveyId, 'type', order) }}">
+                                {{ 'type'|trans({}, 'survey') }}
+                            </a>
+                        </th>
+                    </tr>
+                    
+                    {% for question in questions %}
+                        <tr>
+                            <td>{{ question.getTitle() }}</td>
+                            <td>{{ question.getType().getName()|trans({}, 'survey') }}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        {% else %}
+            <div class="alert alert-warning" role="alert">
+                {{ 'no_question'|trans({}, 'survey') }}
+            </div>
+        {% endif %}
+    </div>
+    <div class="panel-footer">
+        <a href="{{ path('claro_survey_index', {'survey': surveyId}) }}"
+            class="btn btn-primary"
+        >
+            <i class="fa fa-arrow-left"></i>
+            {{ 'return'|trans({}, 'survey') }}
+        </a>
+        <a href="{{ path('claro_survey_question_create_form', {'survey': surveyId}) }}"
+            class="btn btn-primary"
+        >
+            <i class="fa fa-plus-circle"></i>
+            {{ 'create_question'|trans({}, 'survey') }}
+        </a>
+    </div>
+{% endblock %}

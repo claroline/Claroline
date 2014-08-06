@@ -9,35 +9,25 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\SurveyBundle\Entity\MultipleChoice;
+namespace Claroline\SurveyBundle\Entity;
 
-use Claroline\SurveyBundle\Entity\AbstractQuestion;
-use Doctrine\Common\Collections\ArrayCollection;
+use Claroline\SurveyBundle\Entity\AbstractTypedQuestion;
+//use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="claro_survey_multiple_choice_question")
  */
-class Question extends AbstractQuestion
+class MultipleChoiceQuestion extends AbstractTypedQuestion
 {
     /**
      * @ORM\OneToMany(
-     *     targetEntity="Claroline\SurveyBundle\Entity\MultipleChoice\Choice",
+     *     targetEntity="Claroline\SurveyBundle\Entity\Choice",
      *     mappedBy="question"
      * )
      */
     private $choices;
-
-    public function __construct()
-    {
-        $this->choices = new ArrayCollection();
-    }
-
-    public function addChoice(Choice $choice)
-    {
-        $this->choices->add($choice);
-    }
 
     public function getChoices()
     {

@@ -1,0 +1,65 @@
+{% set layout = 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
+
+{% if isDesktop() %}
+    {% set layout = 'ClarolineCoreBundle:Desktop:layout.html.twig' %}
+{% endif %}
+
+{% set _resource = survey %}
+{% set surveyId = survey.getId() %}
+
+{% extends layout %}
+
+{% block title %}
+    {{ survey.getResourceNode().getName() ~ ' - ' | striptags | raw ~ 'question_creation'|trans({}, 'survey') }}
+{% endblock %}
+
+{% block resourceBreadcrumb %}
+    <li>
+        <a href="{{ path(
+            'claro_resource_open',
+            {
+                'resourceType': _resource.getResourceNode().getResourceType().getName(),
+                'node': _resource.getResourceNode().getId()
+            }
+        ) }}">
+            {{ _resource.getResourceNode().getName() }}
+        </a>
+    </li>
+    <li>
+        <a href="{{ path(
+            'claro_survey_questions_management',
+            {'survey': surveyId, 'orderedBy': 'title', 'order': 'ASC'}
+        ) }}">
+            {{ 'questions_management'|trans({}, 'survey') }}
+        </a>
+    </li>
+    <li class="active">{{ 'question_creation' | trans({}, 'survey') }}</li>
+{% endblock %}
+
+{% block section_content %}
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ 'question_creation'|trans({}, 'survey') }}</h3>
+    </div>
+    <form role="form"
+        class="form-horizontal"
+        action="{{ path('claro_survey_question_create', {'survey': surveyId}) }}"
+        method="post"
+        {{ form_enctype(form) }}
+        id="form_settings"
+        novalidate
+    >
+        <div class="panel-body">
+            {{ form_widget(form) }}
+        </div>
+        <br>
+        <div class="panel-footer">
+            <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
+            <a href="{{ path(
+                'claro_survey_questions_management',
+                {'survey': surveyId, 'orderedBy': 'title', 'order': 'ASC'}
+            ) }}">
+                <button type="button" class="btn btn-default">{{ 'cancel'|trans({}, 'platform') }}</button>
+            </a>
+        </div>
+    </form>
+{% endblock %}

@@ -1,5 +1,29 @@
-choice: Multiple choice
+allow_edition_after_submission: 'Allow edition after submission'
+closed: Closed
+create_question: 'Create a question'
+display_survey: 'Display survey'
+edit_parameters: 'Edit parameters'
+edit_survey: 'Edit survey'
+edition: Edition
+end_date: 'End date'
+multiple_choice: 'Multiple choice'
 name: Name
-open-ended: Open-ended
-question_body: Question
+open_ended: 'Open-ended'
+published: Published
+question_creation: 'Question creation'
+question_form_question: 'Question'
+question_form_title: 'Title'
+question_form_type: 'Type'
+questions_management: 'Questions management'
+return: Return
+show_result_to_users: 'Show result to users'
+start_date: 'Starting date'
+status: Status
+survey_edition_form_allowAnswerEdition: 'Allow edition after submission'
+survey_edition_form_endDate: 'End date'
+survey_edition_form_hasPublicResult: 'Show result to users'
+survey_edition_form_startDate: 'Starting date'
+survey_parameters_edition: 'Survey parameters edition'
+title: Title
 type: Type
+unpublished: Unpublished

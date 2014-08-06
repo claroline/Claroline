@@ -8,14 +8,100 @@
 
 {% extends layout %}
 
-{% block title %}{{ survey.getResourceNode().getName() ~ ' - ' ~ parent() | striptags | raw  }}{% endblock %}
+{% block title %}
+    {{ survey.getResourceNode().getName() | striptags | raw  }}
+{% endblock %}
 
 {% block section_content %}
     <div class="panel-heading">
         <h3 class="panel-title">{{ survey.getResourceNode().getName() }}</h3>
     </div>
     <div class="panel-body">
-        {{ macros.flashBox() }}
-        {% block panel_content %}{% endblock %}
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover text-center">
+                <tr>
+                    <th>{{ 'status'|trans({}, 'survey') }}</th>
+                    <td>
+                        {% if not survey.isPublished() and not survey.isClosed() %}
+                            {{ 'unpublished'|trans({}, 'survey') }}
+                        {% elseif survey.isClosed() %}
+                            {{ 'closed'|trans({}, 'survey') }}
+                        {% else %}
+                            {{ 'published'|trans({}, 'survey') }}
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <th>{{ 'start_date'|trans({}, 'survey') }}</th>
+                    <td>
+                    {% if survey.getStartDate() is not null %}
+                        {{ survey.getStartDate()|intl_date_format }}
+                    {% else %}
+                        -
+                    {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <th>{{ 'end_date'|trans({}, 'survey') }}</th>
+                    <td>
+                    {% if survey.getEndDate() is not null %}
+                        {{ survey.getEndDate()|intl_date_format }}
+                    {% else %}
+                        -
+                    {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <th>{{ 'show_result_to_users'|trans({}, 'survey') }}</th>
+                    <td>
+                    {% if survey.getHasPublicResult() %}
+                        <i class="fa fa-check-circle"></i>
+                    {% else %}
+                        <i class="fa fa-times-circle"></i>
+                    {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <th>{{ 'allow_edition_after_submission'|trans({}, 'survey') }}</th>
+                    <td>
+                    {% if survey.getAllowAnswerEdition() %}
+                        <i class="fa fa-check-circle"></i>
+                    {% else %}
+                        <i class="fa fa-times-circle"></i>
+                    {% endif %}
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div class="panel-footer">
+        <a href="{{ path('claro_survey_edit_form', {'survey': survey.getId()}) }}"
+            class="btn btn-primary"
+        >
+            <i class="fa fa-eye"></i>
+            {{ 'display_survey'|trans({}, 'survey') }}
+        </a>
+        <a href="{{ path('claro_survey_edit_form', {'survey': survey.getId()}) }}"
+            class="btn btn-primary"
+        >
+            <i class="fa fa-list"></i>
+            {{ 'edit_survey'|trans({}, 'survey') }}
+        </a>
+        <a href="{{ path('claro_survey_edit_form', {'survey': survey.getId()}) }}"
+            class="btn btn-primary"
+        >
+            <i class="fa fa-pencil"></i>
+            {{ 'edit_parameters'|trans({}, 'survey') }}
+        </a>
+        <a href="{{
+            path(
+                'claro_survey_questions_management',
+                {'survey': survey.getId(), 'orderedBy': 'title', 'order': 'ASC'}
+            ) }}"
+            class="btn btn-primary"
+        >
+            <i class="fa fa-question"></i>
+            {{ 'questions_management'|trans({}, 'survey') }}
+        </a>
     </div>
 {% endblock %}

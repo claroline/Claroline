@@ -16,23 +16,32 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
-class SurveyType extends AbstractType
+class QuestionType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add(
-            'name',
-            'text',
+            'title',
+            'text'
+        );
+        $builder->add(
+            'question',
+            'tinymce'
+        );
+        $builder->add(
+            'type',
+            'entity',
             array(
-                'constraints' => new NotBlank(),
-                'label' => 'name'
+                'class' => 'ClarolineSurveyBundle:QuestionType',
+                'property' => 'name',
+                'required' => true
             )
         );
     }
 
     public function getName()
     {
-        return 'survey_form';
+        return 'question_form';
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

@@ -16,18 +16,43 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
-abstract class AbstractQuestionType extends AbstractType
+class SurveyEditionType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add(
-            'body',
-            'tinymce',
+            'startDate',
+            'date',
             array(
-                'constraints' => new NotBlank(),
-                'label' => 'question_body'
+                'required' => false,
+                'widget' => 'single_text',
+                'format' => 'yyyy-MM-dd'
             )
         );
+        $builder->add(
+            'endDate',
+            'date',
+            array(
+                'required' => false,
+                'widget' => 'single_text',
+                'format' => 'yyyy-MM-dd'
+            )
+        );
+        $builder->add(
+            'hasPublicResult',
+            'checkbox',
+            array('required' => true)
+        );
+        $builder->add(
+            'allowAnswerEdition',
+            'checkbox',
+            array('required' => true)
+        );
+    }
+
+    public function getName()
+    {
+        return 'survey_edition_form';
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

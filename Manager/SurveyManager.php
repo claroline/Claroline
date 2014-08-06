@@ -11,7 +11,11 @@
 
 namespace Claroline\SurveyBundle\Manager;
 
-use Claroline\SurveyBundle\QuestionTypeHandler\AbstractQuestionTypeHandler;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Persistence\ObjectManager;
+use Claroline\SurveyBundle\Entity\Question;
+use Claroline\SurveyBundle\Entity\Survey;
+//use Claroline\SurveyBundle\QuestionTypeHandler\AbstractQuestionTypeHandler;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -19,19 +23,65 @@ use JMS\DiExtraBundle\Annotation as DI;
  */
 class SurveyManager
 {
-    private $handlers;
-
-    public function addQuestionTypeHandler(AbstractQuestionTypeHandler $handler)
+//    private $handlers;
+    private $om;
+    private $questionRepo;
+    
+    /**
+     * @DI\InjectParams({
+     *     "om" = @DI\Inject("claroline.persistence.object_manager")
+     * })
+     */
+    public function __construct(ObjectManager $om)
     {
-        $this->handlers[$handler->getSupportedType()] = $handler;
+        $this->om = $om;
+        $this->questionRepo = $om->getRepository('ClarolineSurveyBundle:Question');
     }
 
-    public function getQuestionTypeHandlerFor($type)
+    public function persistSurvey(Survey $survey)
     {
-        if (isset($this->handlers[$type])) {
-            return $this->handlers[$type];
-        }
+        $this->om->persist($survey);
+        $this->om->flush();
+    }
 
-        throw new \Exception("No handler registered for type '{$type}'");
+    public function persistQuestion(Question $question)
+    {
+        $this->om->persist($question);
+        $this->om->flush();
+    }
+
+
+//    public function addQuestionTypeHandler(AbstractQuestionTypeHandler $handler)
+//    {
+//        $this->handlers[$handler->getSupportedType()] = $handler;
+//    }
+
+//    public function getQuestionTypeHandlerFor($type)
+//    {
+//        if (isset($this->handlers[$type])) {
+//            return $this->handlers[$type];
+//        }
+//
+//        throw new \Exception("No handler registered for type '{$type}'");
+//    }
+
+
+    /****************************************
+     * Access to QuestionRepository methods *
+     ****************************************/
+
+    public function getQuestionsByWorkspace(
+        Workspace $workspace,
+        $orderedBy = 'title',
+        $order = 'ASC',
+        $executeQuery = true
+    )
+    {
+        return $this->questionRepo->findQuestionsByWorkspace(
+            $workspace,
+            $orderedBy,
+            $order,
+            $executeQuery
+        );
     }
 }

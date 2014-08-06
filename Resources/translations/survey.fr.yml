@@ -1,5 +1,29 @@
-choice: Choix multiples
+allow_edition_after_submission: 'Authoriser la modification de la réponse'
+closed: Fermé
+create_question: 'Créer une question'
+display_survey: 'Afficher le sondage'
+edit_parameters: 'Modifier les paramètres'
+edit_survey: 'Modifier le sondage'
+edition: Modification
+end_date: 'Date de fin'
+multiple_choice: 'Choix multiple'
 name: Nom
-open-ended: Question ouverte
-question_body: Question
+open_ended: 'Ouverte'
+published: Publié
+question_creation: 'Création d''une question'
+question_form_question: 'Question'
+question_form_title: 'Titre'
+question_form_type: 'Type'
+questions_management: 'Gestion des questions'
+return: Retour
+show_result_to_users: 'Afficher le résultat aux utilisateurs'
+start_date: 'Date de début'
+status: Statut
+survey_edition_form_allowAnswerEdition: 'Authoriser la modification de la réponse'
+survey_edition_form_endDate: 'Date de fin'
+survey_edition_form_hasPublicResult: 'Afficher le résultat aux utilisateurs'
+survey_edition_form_startDate: 'Date de début'
+survey_parameters_edition: 'Modification des paramètres du sondage'
+title: Titre
 type: Type
+unpublished: 'Non publié'

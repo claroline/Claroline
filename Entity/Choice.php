@@ -9,13 +9,13 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\SurveyBundle\Entity\MultipleChoice;
+namespace Claroline\SurveyBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="claro_survey_multiple_choice_choice")
+ * @ORM\Table(name="claro_survey_choice")
  */
 class Choice
 {
@@ -33,15 +33,11 @@ class Choice
 
     /**
      * @ORM\ManyToOne(
-     *     targetEntity="Claroline\SurveyBundle\Entity\MultipleChoice\Question"
+     *     targetEntity="Claroline\SurveyBundle\Entity\MultipleChoiceQuestion"
      * )
-     * @ORM\JoinColumn(
-     *     name="question_id",
-     *     nullable=false,
-     *     onDelete="CASCADE"
-     * )
+     * @ORM\JoinColumn(name="choice_question_id", nullable=false, onDelete="CASCADE")
      */
-    private $question;
+    private $choiceQuestion;
 
     /**
      * @return integer
@@ -65,5 +61,21 @@ class Choice
     public function getContent()
     {
         return $this->content;
+    }
+
+    /**
+     * @return MultipleChoiceQuestion
+     */
+    public function getChoiceQuestion()
+    {
+        return $this->choiceQuestion;
+    }
+
+    /**
+     * @param MultipleChoiceQuestion $choiceQuestion
+     */
+    public function setChoiceQuestion($choiceQuestion)
+    {
+        $this->choiceQuestion = $choiceQuestion;
     }
 }
