@@ -796,10 +796,17 @@ div.pagination {
     max-width: 100%;
 }
 
-
 /********/
 /* MISC */
 /********/
+
+.alert-default {
+    background: @gray-lighter;
+    border: 1px solid lighten(@gray, 50%);
+    &, a {
+        color: @gray;
+    }
+}
 
 .margin {
     &-none { margin: 0 0 0 0 }
@@ -1078,7 +1085,6 @@ form .global-error {
         bottom: 10px;
     }
 
-
     img {
         padding: 0 0 10px 0;
         max-width: 100%;
@@ -1256,7 +1262,6 @@ form .global-error {
     .border-bottom-radius(@input-border-radius);
     border: 1px solid @input-border;
 }
-
 
 .mce-edit-area.mce-container.mce-panel.mce-stack-layout-item {
     .border-top-radius(0);
