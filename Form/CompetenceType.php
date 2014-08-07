@@ -24,7 +24,7 @@ class CompetenceType extends AbstractType
         	->add('name', 'text', array('constraints' => new NotBlank()))
             ->add('code','text', array('constraints' => new NotBlank()))
             ->add('description', 'tinymce')
-            ->add('score', 'text');
+            ->add('score', 'text', array('constraints' => new NotBlank()));
     }
 
     public function getName()

@@ -17,14 +17,7 @@
 {% endblock %}
 {% block section_content %}
     <div class="panel-heading">
-        <ul class="nav nav-tabs margin-bottom-md">
-            <li><a href="{{ path('claro_workspace_competence_users', {'workspaceId': workspace.getId()}) }}"> {{'my_competences'|trans({}, 'platform') }} </a> </li>
-            <li class="active"> <a href="{{ path('claro_workspace_competences_subscription_lists', {'workspaceId': workspace.getId() }) }}"> {{'subscription'|trans({}, 'platform') }} </a> </li>
-            <li> <a href="{{ path('claro_workspace_roles', {'workspace': workspace.getId()} ) }}">{{ 'competence'|trans({}, 'platform') }}</a> </li>
-            <li> <a href="{{path('claro_workspace_competences_list_users',{'workspaceId':workspace.getId()}) }}">
-                {{ 'users'|trans({},'platform') }}
-            </a> </li>
-        </ul>
+        {% render controller("ClarolineCoreBundle:Tool\\CompetenceTool:menuTab",{"workspace":workspace.getId()}) %}
         <h3 class="panel-title" id="workspace" data-workspace="{{workspace.getId()}}">{{ 'registration_to_workspaces'|trans({}, 'platform') }}</h3>
     </div>
     <div class="panel-body" id="workspace-list-div">
@@ -66,7 +59,7 @@
             </thead>
             {% for c in cpt %}
             <tr>
-                <td> <a href="{{path('claro_admin_competence_show_referential',{'competenceId':c.id})}}">
+                <td> <a href="{{path('claro_admin_competence_show_referential',{'competence':c.id})}}">
                      {{c.name}}
                     </a> 
                 </td> 

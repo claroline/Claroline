@@ -16,7 +16,40 @@
         context = context2 || 'desktop';
     }
 
-    $('#link').click(function(){
+    //in template competence.html.twig
+    $('body').on('click', '#show-add-form', function() {
+        window.Claroline.Modal.displayForm(
+            Routing.generate('claro_admin_competence_form'),
+            addCompetenceLink,
+            function() {},
+            'competence-create-form'
+        );
+    });
+
+    //in template competenceReferential.html.twig
+    $('body').on('click', '#show-referential-comptence-form', function(event) {
+        event.preventDefault();
+        window.Claroline.Modal.displayForm(
+            $(this).attr('href'),
+            addCompetenceHierachyLink,
+            function() {},
+            'competence-create-form'
+        );
+    })
+
+    $('body').on('click', '.delete-competence', function(event) {
+        event.preventDefault();
+        var element = $(this).parent();
+        window.Claroline.Modal.confirmRequest(
+            $(event.currentTarget).attr('href'),
+            removeEvent,
+            element,
+            Translator.get('platform:remove_competence_confirm'),
+            Translator.get('platform:remove_competence')
+        );
+    });
+
+    $('#move').click(function(){
         var data = new FormData($('#myForm')[0]);
         var parameters = {};
         var competences = [];
@@ -45,50 +78,19 @@
         });
     });
 
-	$('#save').click(function () {
-        $('#save').attr('disabled', 'disabled');
-        var url = $('#myForm').attr('action');
-        var route;
+    $('#link_node').click(function () {
+        var parameters = {};
+        var id = $('.id').attr('data-root');
+        parameters.competenceId = id;
+        var route = Routing.generate('claro_admin_competences_link', {'competenceId':id });
         $.ajax({
-            'url': url,
+            'url':route+'?'+$.param(parameters),
             'type': 'POST',
-            'data':  new FormData($('#myForm')[0]),
-            'processData': false,
-            'contentType': false,
-            'success': function (data, textStatus, xhr) {
-                if (xhr.status === 200) {
-                    $('#myModal').modal('hide');
-                    $('#save').removeAttr('disabled');
-                    route = Routing.generate('claro_admin_competence_show_referential',{'competenceId': data.id});
-                    $('.nav-stacked').append('<li class=""><a href="'+route+'">'+data.name+'</a></li>');;
-                }
-            },
-            'error': function ( xhr, textStatus) {
-                if (xhr.status === 400) {//bad request
-                    alert(Translator.get('agenda' + ':' + 'date_invalid'));
-                    $('#save').removeAttr('disabled');
-                } 
+            'data': {'competenceId':id },
+            'success': function(data) {
             }
         });
     });
-	$('#see').click(function () {
-		var parameters = {};
-		var id = $('#see').attr('data-id');
-		parameters.competenceId = id;
-		var route = Routing.generate('claro_admin_competence_full_hierarchy', {'competenceId':id });
-		
-		$.ajax( {
-			'url':route+'?'+$.param(parameters),
-			'type': 'POST',
-			'data': {'competenceId':id },
-			'success': function(data) {
-			   if($('#tree .panel-body').empty())
-			   {
-					$('#tree .panel-body').append(data.tree);
-			   }
-			}
-		});
-	});
 	/***************************** competences subscription **************************************/
 
     $('#chkAll').click(function(event) {  //on click 
@@ -165,7 +167,7 @@
                     
                 } else {
                     route = Routing.generate(
-                        'claro_workspace_admin_subcription_users'
+                        'claro_admin_competence_subcription_users'
                     );
                 }
             }
@@ -201,7 +203,7 @@
         parameters.users = users;
         var competenceRoot = $('#root').attr('data-id');
         parameters.root = competenceRoot;
-        var route =  Routing.generate('claro_admin_competence_unsubscription_users',{'root': competenceRoot});
+        var route =  Routing.generate('claro_admin_competences_link',{'competence': competenceRoot});
         route += '?' + $.param(parameters);
         if ( nbSubjects > 0) {
             $.ajax({
@@ -215,4 +217,18 @@
             });
         }
     });
+
+    var addCompetenceLink = function(competence) {
+        var html = Twig.render(CompetenceItem, {'competence': competence});
+        $('#ul-competence').append(html);
+    }
+
+    var addCompetenceHierachyLink = function(competence) {
+        var html = Twig.render(CompetenceNodeItem,{'root': competence})
+    }
+
+    var removeEvent = function(competence, element) {
+        var html = Twig.render(CompetenceItem, {'competence': competence});
+        $(element).remove();
+    }
 })();

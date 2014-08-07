@@ -12,7 +12,7 @@
 namespace Claroline\CoreBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
-use Claroline\CoreBundle\Entity\Competence\CompetenceHierarchy;
+use Claroline\CoreBundle\Entity\Competence\CompetenceNode;
 use Claroline\CoreBundle\Entity\Competence\UserCompetence;
 
 
@@ -30,7 +30,7 @@ class UserCompetenceRepository extends EntityRepository
 		return $query->getResult();
 	}
 
-	public function findHiearchyByNode(CompetenceHierarchy $competence)
+	public function findHiearchyByNode(CompetenceNode $competence)
 	{
 		$dql = "
         SELECT DISTINCT cu
@@ -38,7 +38,7 @@ class UserCompetenceRepository extends EntityRepository
         JOIN cu.competence c
         WHERE EXISTS
             (
-                SELECT ch FROM Claroline\CoreBundle\Entity\Competence\CompetenceHierarchy ch
+                SELECT ch FROM Claroline\CoreBundle\Entity\Competence\CompetenceNode ch
                 WHERE ch.root = :root AND ch.competence = c AND ch.parent IS NULL
             )
 		";
@@ -60,7 +60,7 @@ class UserCompetenceRepository extends EntityRepository
 		return $query->getResult();
 	}
 
-	public function deleteNodeHiearchy(UserCompetence $userCompetence, CompetenceHierarchy $root)
+	public function deleteNodeHiearchy(UserCompetence $userCompetence, CompetenceNode $root)
 	{
 		$dql="
 		DELETE ClarolineCoreBundle:Competence\UserCompetence cu 
@@ -69,7 +69,7 @@ class UserCompetenceRepository extends EntityRepository
                 SELECT DISTINCT c FROM ClarolineCoreBundle:Competence\Competence c
                 WHERE EXISTS
                 (
-                	SELECT ch FROM ClarolineCoreBundle:Competence\CompetenceHierarchy ch 
+                	SELECT ch FROM ClarolineCoreBundle:Competence\CompetenceNode ch 
                 	WHERE ch.competence = c 
                 	AND ch.root = :root
                 )

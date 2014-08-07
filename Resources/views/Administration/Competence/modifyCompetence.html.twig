@@ -27,11 +27,12 @@
     </div>
 </form>
 {% if cpt is defined %}
-  <a href="{{path('claro_admin_competence_delete', {competenceId:cpt.getId()  })}}" class="btn btn-primary">{{ 'delete'|trans({}, 'platform') }}</a>
-  <a href="{{path('claro_admin_competence_move_form', {competenceId:cpt.getId()})}}" class="btn btn-primary">{{ 'move'|trans({}, 'platform') }}</a>
+  <a href="{{path('claro_admin_competence_delete', {competence:cpt.getId()  })}}" class="btn btn-primary">{{ 'delete'|trans({}, 'platform') }}</a>
+  <a href="{{path('claro_admin_competence_move_form', {competence:cpt.getId()})}}" class="btn btn-primary">{{ 'move'|trans({}, 'platform') }}</a>
 {% endif %}
   <a href={{path('claro_admin_competences')}} class="btn btn-primary">{{ 'back'|trans({}, 'platform') }}</a>
   <a data-toggle="modal" href="#myModal" class="btn btn-primary">{{'add'|trans({},'platform')}}</a>
+    <a href={{path('claro_admin_competences_link_form',{competence:cpt.getId()})}} class="btn btn-primary">{{ 'link'|trans({}, 'platform') }}</a>
 </div>
     <!-- Modal -->
     <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">

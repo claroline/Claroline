@@ -12,9 +12,8 @@
 namespace Claroline\CoreBundle\Controller\Administration;
 
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Competence\CompetenceHierarchy;
+use Claroline\CoreBundle\Entity\Competence\CompetenceNode;
 use Claroline\CoreBundle\Manager\ToolManager;
-use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Manager\CompetenceManager;
@@ -103,7 +102,7 @@ class CompetenceSubscriptionController {
      * @EXT\Method("GET")
      * @EXT\ParamConverter(
      *     "competences",
-     *      class="ClarolineCoreBundle:Competence\CompetenceHierarchy",
+     *      class="ClarolineCoreBundle:Competence\CompetenceNode",
      *      options={"multipleIds" = true, "name" = "competences"}
      * )
      * 
@@ -136,7 +135,7 @@ class CompetenceSubscriptionController {
      * @EXT\Method("GET")
      * @EXT\ParamConverter(
      *     "competences",
-     *      class="ClarolineCoreBundle:Competence\CompetenceHierarchy",
+     *      class="ClarolineCoreBundle:Competence\CompetenceNode",
      *      options={"multipleIds" = true, "name" = "competences"}
      * )
      * @EXT\ParamConverter(
@@ -163,12 +162,12 @@ class CompetenceSubscriptionController {
      * )
      * @EXT\ParamConverter(
      *     "root",
-     *      class="ClarolineCoreBundle:Competence\CompetenceHierarchy",
+     *      class="ClarolineCoreBundle:Competence\CompetenceNode",
      *      options={"id" = "root", "strictId" = true}
      * )
      * @EXT\Template()
      **/ 
-    public function unsubscriptionUsersAction(array $users,CompetenceHierarchy $root)
+    public function unsubscriptionUsersAction(array $users,CompetenceNode $root)
     {        
     	$this->cptmanager->unsubscribeUserToCompetences($users, $root);
     	return new Response(200);
@@ -194,7 +193,7 @@ class CompetenceSubscriptionController {
      * @EXT\Method("GET")
      * @EXT\ParamConverter(
      *      "competence",
-     *      class="ClarolineCoreBundle:Competence\CompetenceHierarchy",
+     *      class="ClarolineCoreBundle:Competence\CompetenceNode",
      *      options={"id" = "competenceId", "strictId" = true}
      * )
      * @EXT\Template()

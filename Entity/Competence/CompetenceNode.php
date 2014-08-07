@@ -26,7 +26,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * )
  * @Gedmo\Tree(type="nested")
  */
-Class CompetenceHierarchy {
+Class CompetenceNode {
 
 	/**
      * @ORM\Column(type="integer")
@@ -47,7 +47,7 @@ Class CompetenceHierarchy {
     /**
      * @Gedmo\TreeParent
      * @ORM\ManyToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\Competence\CompetenceHierarchy"
+     *     targetEntity="Claroline\CoreBundle\Entity\Competence\CompetenceNode"
      * )
      * 
      * @ORM\JoinColumn(nullable=true, onDelete="CASCADE")

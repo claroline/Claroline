@@ -65,6 +65,16 @@ class CompetenceToolController extends Controller
         $this->toolManager = $toolManager->getOneToolByName('learning_profil');
     }
 
+    /**
+     * @EXT\Route("/{workspace}/menutab", name="claro_workspace_menu_tab")
+     * @EXT\Method("GET")
+     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\competence:menuTab.html.twig")
+     */
+    public function menuTabAction(Workspace $workspace)
+    {
+        return array('workspace' => $workspace);
+    }
+
      /**
      * @EXT\Route("/{workspaceId}/show", name="claro_workspace_competences", options={"expose"=true})
      * @EXT\Method("GET")

@@ -13,7 +13,7 @@ namespace Claroline\CoreBundle\Manager;
 
 use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
 use Claroline\CoreBundle\Entity\Competence\Competence;
-use Claroline\CoreBundle\Entity\Competence\CompetenceHierarchy;
+use Claroline\CoreBundle\Entity\Competence\CompetenceNode;
 use Claroline\CoreBundle\Entity\Competence\UserCompetence;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\User;
@@ -57,7 +57,7 @@ class CompetenceManager {
         $this->security = $security;
         $this->rm = $rm;
         $this->router = $router;
-        $this->repoCptH = $om->getRepository('ClarolineCoreBundle:Competence\CompetenceHierarchy');
+        $this->repoCptH = $om->getRepository('ClarolineCoreBundle:Competence\CompetenceNode');
         $this->repoCptUser = $om->getRepository('ClarolineCoreBundle:Competence\UserCompetence');
     }
 
@@ -73,15 +73,15 @@ class CompetenceManager {
         return $this->repoCptH->getRootCptWithWorkspace($workspace);
     }
 
-    public function getHierarchyNameNoHtml(CompetenceHierarchy $competence)
+    public function getHierarchyNameNoHtml(CompetenceNode $competence)
     {
-    	$repo = $this->om->getRepository('ClarolineCoreBundle:Competence\CompetenceHierarchy');
+    	$repo = $this->om->getRepository('ClarolineCoreBundle:Competence\CompetenceNode');
         $listCompetences = $repo->findHiearchyNameById($competence);
         return ($listCompetences);	
     }
-    public function getHierarchyName(CompetenceHierarchy $competence)
+    public function getHierarchyName(CompetenceNode $competence)
     {
-        $repo = $this->om->getRepository('ClarolineCoreBundle:Competence\CompetenceHierarchy');
+        $repo = $this->om->getRepository('ClarolineCoreBundle:Competence\CompetenceNode');
         $listCompetences = $repo->findHiearchyNameById($competence);
         $competences = array();
 
@@ -110,17 +110,17 @@ class CompetenceManager {
         return $htmlTree;
     }
 
-    public function add(Competence $competence, $workspace = null)
+    public function add(Competence $competence,Workspace $workspace = null)
     {
         if(!is_null($workspace)) {
-            $this->checkUserIsAllowed('ROLE_ADMIN', $workspace);
+            $this->checkUserIsAllowed($this->rm->getManagerRole($workspace), $workspace);
             $competence->setWorkspace($workspace);
         }
         $isPlatform = is_null($workspace) ? true : false;
         $competence->setIsplatform($isPlatform);
         $this->om->persist($competence);
         $this->om->flush();
-        $cptHierarchy = new CompetenceHierarchy();
+        $cptHierarchy = new CompetenceNode();
 		$cptHierarchy->setCompetence($competence);
 		$cptHierarchy->setCptRoot($cptHierarchy);
 		$this->om->persist($cptHierarchy);
@@ -135,7 +135,7 @@ class CompetenceManager {
      * @param null $workspace
      * @return bool
      */
-    public function addSub(CompetenceHierarchy $parent,Competence $subCompetence, $workspace = null)
+    public function addSub(CompetenceNode $parent,Competence $subCompetence, $workspace = null)
     {    		
     	if($c = $this->add($subCompetence)) {  
     		$c->setParent($parent);
@@ -147,32 +147,29 @@ class CompetenceManager {
     	}
     }
 
-    public function delete(CompetenceHierarchy $competence)
+    public function delete(CompetenceNode $competence)
     {
     	if (!$this->security->isGranted('ROLE_ADMIN')) {
             throw new AccessDeniedException();
         }
         $c = $competence->getCompetence(); 
-        $repo = $this->om->getRepository('Claroline\CoreBundle\Entity\Competence\CompetenceHierarchy');
-        $repo->removeFromTree($competence);
+        $this->repoCptH->removeFromTree($competence);
         $this->om->remove($c);
-        $this->om->clear();
         $this->om->flush();
         return true;
     }
 
-    public function updateCompetence(CompetenceHierarchy $competence)
+    public function updateCompetence(CompetenceNode $competence)
     {
     	$this->om->flush();
     	return true;
     }
 
-    public function move(array $competences, CompetenceHierarchy $parent)
+    public function move(array $competences, CompetenceNode $parent)
     {
     	$this->om->startFlushSuite();
     	foreach ($competences as $c) {
-	    	$repo = $this->om->getRepository('Claroline\CoreBundle\Entity\Competence\CompetenceHierarchy');
-	    	$repo->persistAsLastChildOf($c, $parent);
+	    	$this->repoCptH->persistAsNextSibling($c, $parent);
 			$this->om->flush();
     	}
     	$this->om->endFlushSuite();
@@ -180,32 +177,45 @@ class CompetenceManager {
 		return true;
     }
 
-    public function getHierarchy(CompetenceHierarchy $competence)
+    public function link(CompetenceNode $parent, CompetenceNode $cptNode)
     {
-    	$repo = $this->om->getRepository('ClarolineCoreBundle:Competence\CompetenceHierarchy');
-        $listCompetences = $repo->findHiearchyById($competence);
+        $cptHierarchy = $this->add($cptNode->getCompetence());
+        if ( $this->isParent($cptNode, $parent)) {
+            return false;
+        }
+        $this->repoCptH->persistAsLastChildOf($cptHierarchy, $parent);
+        
+        $this->repoCptH->verify();
+        $this->om->flush();
+        return true;
+    }
+
+    public function getHierarchy(CompetenceNode $competence)
+    {
+        $listCompetences = $this->repoCptH->findHiearchyById($competence);
         $competences = array();
 
         foreach ($listCompetences as $c) {
         	$competences[$c['id']]['name'] = $c['name'];
         	$competences[$c['id']]['description'] = $c['description'];
         	$competences[$c['id']]['score'] = $c['score'];
+            $competences[$c['id']]['code'] = $c['code'];
         }
 
         $options = array(
             'decorate' => true,
             'rootOpen' => '<ul>',
             'rootClose' => '</ul>',
-            'childOpen' => '<li>',
-            'childClose' => '</li>',
+            'childOpen' => '<li> <div>',
+            'childClose' => '</div></li>',
             'nodeDecorator' => function($node) use (&$competences) {
                 return $competences[$node['id']]['name']
-                .'('.$competences[$node['id']]['score'].')'
-                .'<div class="">'.
+                .'('.$competences[$node['id']]['score'].') <br />'
+                .$competences[$node['id']]['code'].'<div class="">'.
                 $competences[$node['id']]['description'].'</div>';
             }
         );
-        $htmlTree = $repo->childrenHierarchy(
+        $htmlTree = $this->repoCptH->childrenHierarchy(
             $competence, /* starting from root nodes */
             false, /* true: load all children, false: only direct */
             $options,
@@ -214,9 +224,9 @@ class CompetenceManager {
         return $htmlTree;
     }
 
-    public function getExcludeHiearchy(CompetenceHierarchy $competence)
+    public function getExcludeHiearchy(CompetenceNode $competence)
     {
-        $repo = $this->om->getRepository('ClarolineCoreBundle:Competence\CompetenceHierarchy');
+        $repo = $this->om->getRepository('ClarolineCoreBundle:Competence\CompetenceNode');
         $exclude = $repo->excludeHierarchyNode($competence);
         return $exclude;
     }
@@ -261,7 +271,7 @@ class CompetenceManager {
         return true;
     }
 
-    public function getCompetencesAssociateUsers(CompetenceHierarchy $competence = null)
+    public function getCompetencesAssociateUsers(CompetenceNode $competence = null)
     {
         $list = is_null($competence) ?
             $this->repoCptUser->findAll(false, 'competence','asc') 
@@ -281,7 +291,7 @@ class CompetenceManager {
         return $orderedList;
     }
 
-    public function getUserByCompetenceRoot(CompetenceHierarchy $node)
+    public function getUserByCompetenceRoot(CompetenceNode $node)
     {
         $result = $this->repoCptUser->findByCompetence($node);
         $result = count($result) > 0 ? $result : array();
@@ -313,5 +323,16 @@ class CompetenceManager {
         if (!$this->security->isGranted($permission, $workspace)) {
             throw new AccessDeniedException();
         }
+    }
+    /**
+     * Test if the node A ( link node) is not a parent of node B
+     * To understand it correctly , please read Nested Tree therory.
+     */
+    private function isParent(CompetenceNode $nodeA , CompetenceNode $nodeB)
+    {
+        if($nodeA->getLft() > $nodeB->getLft() && $nodeA->getRgt() < $nodeB->getRgt() ) {
+            return true;
+        }
+        return false ;
     }
 } 

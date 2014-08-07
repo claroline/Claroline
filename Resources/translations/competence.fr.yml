@@ -4,6 +4,7 @@ competence_form_name: 'Nom'
 competence_form_description: 'Description'
 competence_form_code: code
 competence_form_score: 'Point'
+competence_link: 'Lier une compétence dans un autre référentiel'
 competence_subscription_management: 'Gestions des inscription aux réferentiels'
 delete_all: Supprimer tous les utilisateurs
 select_competence_for_registration: 'Sélectionner des réferentiels'
