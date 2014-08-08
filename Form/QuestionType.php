@@ -30,12 +30,19 @@ class QuestionType extends AbstractType
         );
         $builder->add(
             'type',
-            'entity',
+            'choice',
             array(
-                'class' => 'ClarolineSurveyBundle:QuestionType',
-                'property' => 'name',
+                'choices' => array(
+                    'open_ended' => 'open_ended',
+                    'multiple_choice' => 'multiple_choice'
+                ),
                 'required' => true
             )
+        );
+        $builder->add(
+            'commentAllowed',
+            'checkbox',
+            array('required' => true)
         );
     }
 

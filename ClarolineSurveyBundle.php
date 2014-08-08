@@ -24,9 +24,4 @@ class ClarolineSurveyBundle extends PluginBundle
 
         return $config->addRoutingResource(__DIR__ . '/Resources/config/routing.yml', null, 'survey');
     }
-
-    public function getRequiredFixturesDirectory($environment)
-    {
-        return 'DataFixtures/Required';
-    }
 }

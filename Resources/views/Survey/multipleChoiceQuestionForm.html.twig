@@ -1,0 +1,43 @@
+<hr>
+<div class="panel">
+    <div class="panel-heading">
+        <h3>{{ 'choices_management'|trans({}, 'survey') }}</h3>
+    </div>
+    <div class="panel-body">
+        <div class="form-group row">
+            <label class="control-label col-md-3 required">
+                {{ 'allow_multiple_response'|trans({}, 'survey') }}
+            </label>
+            <div class="col-md-9">
+                <input type="checkbox" name="allow-multiple-response"
+                    {% if allowMultipleResponse %}
+                        checked="checked"
+                    {% endif %}
+                >
+            </div>
+        </div>
+        <br>
+
+        <div class="table-responsive">
+            <table id="choices-table"  class="table">
+            {% set choiceIndex = 0 %}
+            {% for choice in choices %}
+                <tr id="choice-row-{{ choiceIndex }}">
+                    <td>
+                        <input type="text" name="choice[{{ choiceIndex }}]" value="{{ choice.getContent() }}">
+                    </td>
+                    <td>
+                        <i class="btn btn-danger fa fa-trash-o delete-choice-btn" data-choice-id="{{ choiceIndex }}"></i>
+                    </td>
+                </tr>
+                {% set choiceIndex = choiceIndex + 1 %}
+            {% endfor %}
+            </table>
+            <div id="choice-index-block" data-current-choice-index="{{ choiceIndex }}"></div>
+        </div>
+        <span id="add-choice-btn" class="btn btn-primary">
+            <i class="fa fa-plus-circle"></i>
+            {{ 'add_choice'|trans({}, 'survey') }}
+        </span>
+    </div>
+</div>

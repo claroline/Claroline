@@ -11,18 +11,24 @@
 
 namespace Claroline\SurveyBundle\Repository;
 
+use Claroline\SurveyBundle\Entity\MultipleChoiceQuestion;
 use Doctrine\ORM\EntityRepository;
 
-class QuestionTypeRepository extends EntityRepository
+class ChoiceRepository extends EntityRepository
 {
-    public function findAllQuestionTypes($executeQuery)
+    public function findChoiceByQuestion(
+        MultipleChoiceQuestion $question,
+        $executeQuery = true
+    )
     {
-        $dql = "
-            SELECT qt
-            FROM Claroline\SurveyBundle\Entity\QuestionType qt
-            ORDER BY qt.name ASC
-        ";
+        $dql = '
+            SELECT c
+            FROM Claroline\SurveyBundle\Entity\Choice c
+            WHERE c.choiceQuestion = :question
+            ORDER BY c.id ASC
+        ';
         $query = $this->_em->createQuery($dql);
+        $query->setParameter('question', $question);
 
         return $executeQuery ? $query->getResult() : $query;
     }

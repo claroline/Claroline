@@ -1,3 +1,4 @@
+actions: Actions
 allow_edition_after_submission: 'Authoriser la modification de la réponse'
 closed: Fermé
 create_question: 'Créer une question'
@@ -8,12 +9,17 @@ edition: Modification
 end_date: 'Date de fin'
 multiple_choice: 'Choix multiple'
 name: Nom
+no_question: 'Aucune question'
 open_ended: 'Ouverte'
 published: Publié
 question_creation: 'Création d''une question'
+question_delete_confirm_message: 'Êtes-vous sûr de vouloir supprimer cette question ?'
+question_delete_confirm_title: 'Suppression de la question'
+question_edition: 'Modification de la question'
+question_form_commentAllowed: 'Avec commentaire'
 question_form_question: 'Question'
 question_form_title: 'Titre'
-question_form_type: 'Type'
+question_form_type: 'Type de question'
 questions_management: 'Gestion des questions'
 return: Retour
 show_result_to_users: 'Afficher le résultat aux utilisateurs'

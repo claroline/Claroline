@@ -20,11 +20,11 @@ use Claroline\SurveyBundle\Manager\SurveyManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\Form\FormFactory;
-//use Symfony\Component\Form\FormView;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
-//use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\SecurityContextInterface;
@@ -35,8 +35,8 @@ class SurveyController extends Controller
     private $request;
     private $router;
     private $security;
-//    private $session;
     private $surveyManager;
+    private $templating;
 
     /**
      * @DI\InjectParams({
@@ -44,7 +44,8 @@ class SurveyController extends Controller
      *     "requestStack"  = @DI\Inject("request_stack"),
      *     "router"        = @DI\Inject("router"),
      *     "security"      = @DI\Inject("security.context"),
-     *     "surveyManager" = @DI\Inject("claroline.manager.survey_manager")
+     *     "surveyManager" = @DI\Inject("claroline.manager.survey_manager"),
+     *     "templating"    = @DI\Inject("templating")
      * })
      */
     public function __construct(
@@ -52,16 +53,16 @@ class SurveyController extends Controller
         RequestStack $requestStack,
         UrlGeneratorInterface $router,
         SecurityContextInterface $security,
-//        SessionInterface $session,
-        SurveyManager $surveyManager
+        SurveyManager $surveyManager,
+        TwigEngine $templating
     )
     {
         $this->formFactory = $formFactory;
         $this->request = $requestStack;
         $this->router = $router;
         $this->security = $security;
-//        $this->session = $session;
         $this->surveyManager = $surveyManager;
+        $this->templating = $templating;
     }
 
     /**
@@ -76,24 +77,8 @@ class SurveyController extends Controller
      */
     public function indexAction(Survey $survey)
     {
-        $this->checkRight($survey, 'OPEN');
-        $canEdit = $this->hasRight($survey, 'EDIT');
-//        $handler = $this->getHandler($survey);
-
-//        if (!$survey->isPublished()) {
-//
-//            if ($canEdit) {
-//
-//                return $this->redirectTo('question_creation_form', $survey);
-//            } elseif ($canEdit) {
-//
-//                return $this->redirectTo('question_edition_form', $survey);
-//            }
-//        } elseif (!$survey->isClosed()) {
-//
-//        } else {
-//
-//        }
+        $this->checkSurveyRight($survey, 'OPEN');
+//        $canEdit = $this->hasSurveyRight($survey, 'EDIT');
 
         return array('survey' => $survey);
     }
@@ -109,7 +94,7 @@ class SurveyController extends Controller
      */
     public function surveyEditFormAction(Survey $survey)
     {
-        $this->checkRight($survey, 'EDIT');
+        $this->checkSurveyRight($survey, 'EDIT');
         $form = $this->formFactory->create(
             new SurveyEditionType(),
             $survey
@@ -134,7 +119,7 @@ class SurveyController extends Controller
      */
     public function surveyEditAction(Survey $survey)
     {
-        $this->checkRight($survey, 'EDIT');
+        $this->checkSurveyRight($survey, 'EDIT');
         $form = $this->formFactory->create(
             new SurveyEditionType(),
             $survey
@@ -170,7 +155,7 @@ class SurveyController extends Controller
      */
     public function questionsManagementAction(Survey $survey, $orderedBy, $order)
     {
-        $this->checkRight($survey, 'EDIT');
+        $this->checkSurveyRight($survey, 'EDIT');
         $questions = $this->surveyManager->getQuestionsByWorkspace(
             $survey->getResourceNode()->getWorkspace(),
             $orderedBy,
@@ -196,7 +181,7 @@ class SurveyController extends Controller
      */
     public function questionCreateFormAction(Survey $survey)
     {
-        $this->checkRight($survey, 'EDIT');
+        $this->checkSurveyRight($survey, 'EDIT');
         $form = $this->formFactory->create(
             new QuestionType(),
             new Question()
@@ -221,7 +206,7 @@ class SurveyController extends Controller
      */
     public function questionCreateAction(Survey $survey)
     {
-        $this->checkRight($survey, 'EDIT');
+        $this->checkSurveyRight($survey, 'EDIT');
         $question  = new Question();
         $form = $this->formFactory->create(
             new QuestionType(),
@@ -251,113 +236,202 @@ class SurveyController extends Controller
         );
     }
 
-//    /**
-//     * @EXT\Route(
-//     *     "/{survey}/question",
-//     *     name="claro_survey_question_creation_form"
-//     * )
-//     * @EXT\Method("GET")
-//     * @EXT\Template("ClarolineSurveyBundle:Survey:questionForm.html.twig")
-//     *
-//     * @param Survey $survey
-//     * @return array
-//     */
-//    public function questionCreationFormAction(Survey $survey)
-//    {
-//        $this->checkRight($survey, 'EDIT');
-//        $form = $this->getHandler($survey)->getCreationForm($survey);
-//
-//        return array(
-//            'survey' => $survey,
-//            'form' => $form,
-//            'action' => 'create'
-//        );
-//    }
+    /**
+     * @EXT\Route(
+     *     "/survey/{survey}/question/{question}/edit/form",
+     *     name="claro_survey_question_edit_form"
+     * )
+     * @EXT\Template()
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function questionEditFormAction(Question $question, Survey $survey)
+    {
+        $this->checkQuestionRight($survey, $question, 'EDIT');
+        $form = $this->formFactory->create(
+            new QuestionType(),
+            $question
+        );
 
-//    /**
-//     * @EXT\Route(
-//     *     "/{survey}/question",
-//     *     name="claro_survey_create_question"
-//     * )
-//     * @EXT\Method("POST")
-//     *
-//     * @param Survey $survey
-//     * @param \Symfony\Component\HttpFoundation\Request $request
-//     * @return Response
-//     */
-//    public function createQuestionAction(Survey $survey, Request $request)
-//    {
-//        $this->checkRight($survey, 'EDIT');
-//        $result = $this->getHandler($survey)->createQuestion($survey, $request);
-//
-//        if ($result instanceof FormView) {
-//
-//            return $this->render(
-//                'ClarolineSurveyBundle:Survey:questionForm.html.twig',
-//                array('survey' => $survey, 'form' => $result, 'action' => 'create')
-//            );
-//        }
-//
-//        $this->session->getFlashBag()->add('success', 'Question created');
-//
-//        return $this->redirectTo('question_edition_form', $survey);
-//    }
+        return array(
+            'form' => $form->createView(),
+            'question' => $question,
+            'survey' => $survey
+        );
+    }
 
-//    /**
-//     * @EXT\Route(
-//     *     "/{survey}/question/edit",
-//     *     name="claro_survey_question_edition_form"
-//     * )
-//     * @EXT\Method("GET")
-//     * @EXT\Template("ClarolineSurveyBundle:Survey:questionForm.html.twig")
-//     *
-//     * @param Survey $survey
-//     * @return array
-//     */
-//    public function questionEditionFormAction(Survey $survey)
-//    {
-//        $this->checkRight($survey, 'EDIT');
-//        $handler = $this->getHandler($survey);
-//        $form = $handler->getEditionForm($handler->getQuestion($survey));
-//
-//        return array(
-//            'survey' => $survey,
-//            'form' => $form,
-//            'action' => 'edit'
-//        );
-//    }
+    /**
+     * @EXT\Route(
+     *     "/survey/{survey}/question/{question}/edit",
+     *     name="claro_survey_question_edit"
+     * )
+     * @EXT\Template(
+     *     "ClarolineSurveyBundle:Survey:questionEditForm.html.twig"
+     * )
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function questionEditAction(Question $question, Survey $survey)
+    {
+        $this->checkQuestionRight($survey, $question, 'EDIT');
+        $form = $this->formFactory->create(
+            new QuestionType(),
+            $question
+        );
+        $form->handleRequest($this->request->getCurrentRequest());
 
-//    /**
-//     * @EXT\Route(
-//     *     "/{survey}/question/edit",
-//     *     name="claro_survey_edit_question"
-//     * )
-//     * @EXT\Method("POST")
-//     * @EXT\Template("ClarolineSurveyBundle:Survey:questionForm.html.twig")
-//     *
-//     * @param Survey $survey
-//     * @param \Symfony\Component\HttpFoundation\Request $request
-//     * @return array
-//     */
-//    public function editQuestionAction(Survey $survey, Request $request)
-//    {
-//        $this->checkRight($survey, 'EDIT');
-//        $result = $this->getHandler($survey)->editQuestion($survey, $request);
-//
-//        if ($result instanceof FormView) {
-//
-//            return $this->render(
-//                'ClarolineSurveyBundle:Survey:questionForm.html.twig',
-//                array('survey' => $survey, 'form' => $result, 'action' => 'edit')
-//            );
-//        }
-//
-//        $this->session->getFlashBag()->add('success', 'Changes saved');
-//
-//        return $this->redirectTo('question_edition_form', $survey);
-//    }
+        if ($form->isValid()) {
+            $question->setWorkspace($survey->getResourceNode()->getWorkspace());
+            $this->surveyManager->persistQuestion($question);
+            $questionType = $question->getType();
 
-    private function checkRight(Survey $survey, $right)
+            switch ($questionType) {
+
+                case 'multiple_choice':
+                    $postDatas = $this->request->getCurrentRequest()->request->all();
+                    $this->updateMultipleChoiceQuestion($question, $postDatas);
+                    break;
+                case 'open-ended':
+                default:
+                    break;
+            }
+
+            return new RedirectResponse(
+                $this->router->generate(
+                    'claro_survey_questions_management',
+                    array(
+                        'survey' => $survey->getId(),
+                        'orderedBy' => 'title',
+                        'order' => 'ASC'
+                    )
+                )
+            );
+        }
+
+        return array(
+            'form' => $form->createView(),
+            'question' => $question,
+            'survey' => $survey
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/survey/{survey}/question/{question}/delete",
+     *     name="claro_survey_question_delete",
+     *     options={"expose"=true}
+     * )
+     * @EXT\Template(
+     *     "ClarolineSurveyBundle:Survey:questionsManagement.html.twig"
+     * )
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function questionDeleteAction(Question $question, Survey $survey)
+    {
+        $this->checkQuestionRight($survey, $question, 'EDIT');
+        $this->surveyManager->deleteQuestion($question);
+
+        return new RedirectResponse(
+            $this->router->generate(
+                'claro_survey_questions_management',
+                array(
+                    'survey' => $survey->getId(),
+                    'orderedBy' => 'title',
+                    'order' => 'ASC'
+                )
+            )
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/survey/{survey}/question/{question}/type/{questionType}/display/form",
+     *     name="claro_survey_display_typed_question_form",
+     *     options={"expose"=true}
+     * )
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function displayTypedQuestionFormAction(
+        Question $question,
+        Survey $survey,
+        $questionType
+    )
+    {
+        $this->checkQuestionRight($survey, $question, 'EDIT');
+
+        switch ($questionType) {
+
+            case 'multiple_choice':
+
+                return $this->multipleChoiceQuestionForm(
+                    $question,
+                    $survey
+                );
+            case 'open_ended':
+            default:
+                break;
+        }
+    }
+
+    private function multipleChoiceQuestionForm(
+        Question $question,
+        Survey $survey
+    )
+    {
+        $multipleChoiceQuestion = $this->surveyManager
+            ->getMultipleChoiceQuestionByQuestion($question);
+        $choices = array();
+        $allowMultipleResponse = false;
+
+        if (!is_null($multipleChoiceQuestion)) {
+            $choices = $multipleChoiceQuestion->getChoices();
+            $allowMultipleResponse =
+                $multipleChoiceQuestion->getAllowMultipleResponse();
+        }
+
+        return new Response(
+            $this->templating->render(
+                "ClarolineSurveyBundle:Survey:multipleChoiceQuestionForm.html.twig",
+                array(
+                    'survey' => $survey,
+                    'choices' => $choices,
+                    'allowMultipleResponse' => $allowMultipleResponse
+                )
+            )
+        );
+    }
+
+    private function updateMultipleChoiceQuestion(
+        Question $question,
+        array $datas
+    )
+    {
+        $multipleResponse = isset($datas['allow-multiple-response']) &&
+            ($datas['allow-multiple-response'] === 'on');
+        $choices = isset($datas['choice']) ?
+            $datas['choice'] :
+            array();
+
+        $multipleChoiceQuestion = $this->surveyManager
+            ->getMultipleChoiceQuestionByQuestion($question);
+
+        if (is_null($multipleChoiceQuestion)) {
+            $this->surveyManager->createMultipleChoiceQuestion(
+                $question,
+                $choices,
+                $multipleResponse
+            );
+        } else {
+            $this->surveyManager->updateQuestionChoices(
+                $multipleChoiceQuestion,
+                $choices,
+                $multipleResponse
+            );
+        }
+    }
+
+    private function checkSurveyRight(Survey $survey, $right)
     {
         $collection = new ResourceCollection(array($survey->getResourceNode()));
 
@@ -367,27 +441,22 @@ class SurveyController extends Controller
         }
     }
 
-    private function hasRight(Survey $survey, $right)
+    private function hasSurveyRight(Survey $survey, $right)
     {
         $collection = new ResourceCollection(array($survey->getResourceNode()));
 
         return $this->security->isGranted($right, $collection);
     }
 
-//    private function getHandler(Survey $survey)
-//    {
-//        return $this->manager->getQuestionTypeHandlerFor(
-//            $survey->getQuestionType()
-//        );
-//    }
+    private function checkQuestionRight(Survey $survey, Question $question, $right)
+    {
+        $this->checkSurveyRight($survey, $right);
+        $surveyWorkspaceId = $survey->getResourceNode()->getWorkspace()->getId();
+        $questionWorkspaceId = $question->getWorkspace()->getId();
 
-//    private function redirectTo($route, Survey $survey)
-//    {
-//        $url = $this->router->generate(
-//            "claro_survey_{$route}",
-//            array('survey' => $survey->getId())
-//        );
-//
-//        return new RedirectResponse($url);
-//    }
+        if ($surveyWorkspaceId !== $questionWorkspaceId) {
+
+            throw new AccessDeniedException();
+        }
+    }
 }

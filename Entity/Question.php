@@ -12,7 +12,6 @@
 namespace Claroline\SurveyBundle\Entity;
 
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\SurveyBundle\Entity\QuestionType;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -45,10 +44,7 @@ class Question
     protected $question;
 
     /**
-     * @ORM\ManyToOne(
-     *     targetEntity="Claroline\SurveyBundle\Entity\QuestionType"
-     * )
-     * @ORM\JoinColumn(name="type_id", onDelete="CASCADE", nullable=false)
+     * @ORM\Column(name="question_type")
      */
     protected $type;
 
@@ -59,6 +55,11 @@ class Question
      * @ORM\JoinColumn(name="workspace_id", onDelete="CASCADE", nullable=false)
      */
     protected $workspace;
+
+    /**
+     * @ORM\Column(name="comment_allowed", type="boolean")
+     */
+    protected $commentAllowed;
 
     public function setId($id)
     {
@@ -85,7 +86,7 @@ class Question
         return $this->type;
     }
 
-    public function setType(QuestionType $type)
+    public function setType($type)
     {
         $this->type = $type;
     }
@@ -108,5 +109,15 @@ class Question
     public function setTitle($title)
     {
         $this->title = $title;
+    }
+
+    public function isCommentAllowed()
+    {
+        return $this->commentAllowed;
+    }
+
+    public function setCommentAllowed($commentAllowed)
+    {
+        $this->commentAllowed = $commentAllowed;
     }
 }

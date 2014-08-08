@@ -13,7 +13,9 @@ namespace Claroline\SurveyBundle\Manager;
 
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Persistence\ObjectManager;
+use Claroline\SurveyBundle\Entity\Choice;
 use Claroline\SurveyBundle\Entity\Question;
+use Claroline\SurveyBundle\Entity\MultipleChoiceQuestion;
 use Claroline\SurveyBundle\Entity\Survey;
 //use Claroline\SurveyBundle\QuestionTypeHandler\AbstractQuestionTypeHandler;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -25,6 +27,8 @@ class SurveyManager
 {
 //    private $handlers;
     private $om;
+    private $choiceRepo;
+    private $multipleChoiceQuestionRepo;
     private $questionRepo;
     
     /**
@@ -35,7 +39,12 @@ class SurveyManager
     public function __construct(ObjectManager $om)
     {
         $this->om = $om;
-        $this->questionRepo = $om->getRepository('ClarolineSurveyBundle:Question');
+        $this->choiceRepo =
+            $om->getRepository('ClarolineSurveyBundle:Choice');
+        $this->multipleChoiceQuestionRepo =
+            $om->getRepository('ClarolineSurveyBundle:MultipleChoiceQuestion');
+        $this->questionRepo =
+            $om->getRepository('ClarolineSurveyBundle:Question');
     }
 
     public function persistSurvey(Survey $survey)
@@ -50,20 +59,55 @@ class SurveyManager
         $this->om->flush();
     }
 
+    public function deleteQuestion(Question $question)
+    {
+        $this->om->remove($question);
+        $this->om->flush();
+    }
 
-//    public function addQuestionTypeHandler(AbstractQuestionTypeHandler $handler)
-//    {
-//        $this->handlers[$handler->getSupportedType()] = $handler;
-//    }
+    public function createMultipleChoiceQuestion(
+        Question $question,
+        array $choices,
+        $multipleResponse
+    )
+    {
+        $multipleChoiceQuestion = new MultipleChoiceQuestion();
+        $multipleChoiceQuestion->setQuestion($question);
+        $multipleChoiceQuestion->setAllowMultipleResponse($multipleResponse);
+        $this->om->persist($multipleChoiceQuestion);
 
-//    public function getQuestionTypeHandlerFor($type)
-//    {
-//        if (isset($this->handlers[$type])) {
-//            return $this->handlers[$type];
-//        }
-//
-//        throw new \Exception("No handler registered for type '{$type}'");
-//    }
+        foreach ($choices as $choice) {
+            $newChoice = new Choice();
+            $newChoice->setChoiceQuestion($multipleChoiceQuestion);
+            $newChoice->setContent($choice);
+            $this->om->persist($newChoice);
+        }
+        $this->om->flush();
+    }
+
+    public function updateQuestionChoices(
+        MultipleChoiceQuestion $multipleChoiceQuestion,
+        array $newChoices,
+        $multipleResponse
+    )
+    {
+        $multipleChoiceQuestion->setAllowMultipleResponse($multipleResponse);
+        $this->om->persist($multipleChoiceQuestion);
+
+        $oldChoices = $multipleChoiceQuestion->getChoices();
+
+        foreach ($oldChoices as $oldChoice) {
+            $this->om->remove($oldChoice);
+        }
+
+        foreach ($newChoices as $newChoice) {
+            $choice = new Choice();
+            $choice->setChoiceQuestion($multipleChoiceQuestion);
+            $choice->setContent($newChoice);
+            $this->om->persist($choice);
+        }
+        $this->om->flush();
+    }
 
 
     /****************************************
@@ -83,5 +127,35 @@ class SurveyManager
             $order,
             $executeQuery
         );
+    }
+
+
+    /**************************************
+     * Access to ChoiceRepository methods *
+     **************************************/
+
+    public function getChoiceByQuestion(
+        MultipleChoiceQuestion $question,
+        $executeQuery = true
+    )
+    {
+        return $this->choiceRepo->findChoiceByQuestion(
+            $question,
+            $executeQuery
+        );
+    }
+
+
+    /******************************************************
+     * Access to MultipleChoiceQuestionRepository methods *
+     ******************************************************/
+
+    public function getMultipleChoiceQuestionByQuestion(
+        Question $question,
+        $executeQuery = true
+    )
+    {
+        return $this->multipleChoiceQuestionRepo
+            ->findMultipleChoiceQuestionByQuestion($question, $executeQuery);
     }
 }

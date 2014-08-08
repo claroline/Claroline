@@ -1,3 +1,4 @@
+actions: Actions
 allow_edition_after_submission: 'Allow edition after submission'
 closed: Closed
 create_question: 'Create a question'
@@ -8,12 +9,17 @@ edition: Edition
 end_date: 'End date'
 multiple_choice: 'Multiple choice'
 name: Name
+no_question: 'No question'
 open_ended: 'Open-ended'
 published: Published
 question_creation: 'Question creation'
+question_delete_confirm_message: 'Do you really want to delete this question ?'
+question_delete_confirm_title: 'Delete question'
+question_edition: 'Question edition'
+question_form_commentAllowed: 'With comment'
 question_form_question: 'Question'
 question_form_title: 'Title'
-question_form_type: 'Type'
+question_form_type: 'Question type'
 questions_management: 'Questions management'
 return: Return
 show_result_to_users: 'Show result to users'

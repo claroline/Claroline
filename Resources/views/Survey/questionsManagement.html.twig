@@ -53,12 +53,35 @@
                                 {{ 'type'|trans({}, 'survey') }}
                             </a>
                         </th>
+                        <th class="text-center">
+                            {{ 'actions'|trans({}, 'survey') }}
+                        </th>
                     </tr>
                     
                     {% for question in questions %}
                         <tr>
-                            <td>{{ question.getTitle() }}</td>
-                            <td>{{ question.getType().getName()|trans({}, 'survey') }}</td>
+                            <td>
+                                {{ question.getTitle() }}
+                            </td>
+                            <td>
+                                {{ question.getType()|trans({}, 'survey') }}
+                            </td>
+                            <td>
+                                <a href="{{ path(
+                                        'claro_survey_question_edit_form',
+                                        {'question': question.getId(), 'survey': surveyId}
+                                    ) }}"
+                                    class="btn btn-default"
+                                >
+                                    <i class="fa fa-edit"></i>
+                                </a>
+                                <span class="btn btn-default delete-question-btn"
+                                      data-question-id="{{ question.getId() }}"
+                                      data-survey-id="{{ survey.getId() }}"
+                                >
+                                    <i class="fa fa-trash-o"></i>
+                                </span>
+                            </td>
                         </tr>
                     {% endfor %}
                 </table>
@@ -83,4 +106,40 @@
             {{ 'create_question'|trans({}, 'survey') }}
         </a>
     </div>
+    
+    <div id="delete-question-validation-box" class="modal fade" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h3>{{ 'question_delete_confirm_title'|trans({}, 'survey') }}</h3>
+                </div>
+                <div class="modal-body">
+                    <p>{{ 'question_delete_confirm_message'|trans({}, 'survey') }}</p>
+                </div>
+                <div class="modal-footer">
+                    <input type="button"
+                           id="delete-question-confirm-ok"
+                           class="btn btn-primary"
+                           value="{{ 'ok'|trans({}, 'platform') }}"
+                    />
+                    <input type="button"
+                           class="btn btn-default"
+                           data-dismiss="modal"
+                           value="{{ 'cancel'|trans({}, 'platform') }}"
+                    />
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script
+        src='{{ asset('bundles/clarolinesurvey/js/questionsManagement.js') }}'
+        type="text/javascript">
+    </script>
 {% endblock %}

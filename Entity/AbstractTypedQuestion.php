@@ -11,6 +11,7 @@
 
 namespace Claroline\SurveyBundle\Entity;
 
+use Claroline\SurveyBundle\Entity\Question;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -29,7 +30,7 @@ abstract class AbstractTypedQuestion
      * @ORM\OneToOne(
      *     targetEntity="Claroline\SurveyBundle\Entity\Question"
      * )
-     * @ORM\JoinColumn(name="question_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="question_id", onDelete="CASCADE", referencedColumnName="id")
      */
     protected $question;
 
@@ -48,7 +49,7 @@ abstract class AbstractTypedQuestion
         return $this->question;
     }
 
-    public function setQuestion($question)
+    public function setQuestion(Question $question)
     {
         $this->question = $question;
     }

@@ -11,10 +11,11 @@
 
 namespace Claroline\SurveyBundle\Entity;
 
+use Claroline\SurveyBundle\Entity\MultipleChoiceQuestion;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Claroline\SurveyBundle\Repository\ChoiceRepository")
  * @ORM\Table(name="claro_survey_choice")
  */
 class Choice
@@ -24,20 +25,21 @@ class Choice
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    private $id;
+    protected $id;
 
     /**
      * @ORM\Column(type="text")
      */
-    private $content;
+    protected $content;
 
     /**
      * @ORM\ManyToOne(
-     *     targetEntity="Claroline\SurveyBundle\Entity\MultipleChoiceQuestion"
+     *     targetEntity="Claroline\SurveyBundle\Entity\MultipleChoiceQuestion",
+     *     inversedBy="choices"
      * )
      * @ORM\JoinColumn(name="choice_question_id", nullable=false, onDelete="CASCADE")
      */
-    private $choiceQuestion;
+    protected $choiceQuestion;
 
     /**
      * @return integer
@@ -74,7 +76,7 @@ class Choice
     /**
      * @param MultipleChoiceQuestion $choiceQuestion
      */
-    public function setChoiceQuestion($choiceQuestion)
+    public function setChoiceQuestion(MultipleChoiceQuestion $choiceQuestion)
     {
         $this->choiceQuestion = $choiceQuestion;
     }
