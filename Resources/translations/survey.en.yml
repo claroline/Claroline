@@ -1,5 +1,8 @@
 actions: Actions
+add_choice: 'Add a choice'
 allow_edition_after_submission: 'Allow edition after submission'
+allow_multiple_response: 'Multiple response'
+choices_management: 'Choices management'
 closed: Closed
 create_question: 'Create a question'
 display_survey: 'Display survey'

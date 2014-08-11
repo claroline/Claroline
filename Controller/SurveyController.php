@@ -217,6 +217,18 @@ class SurveyController extends Controller
         if ($form->isValid()) {
             $question->setWorkspace($survey->getResourceNode()->getWorkspace());
             $this->surveyManager->persistQuestion($question);
+            $questionType = $question->getType();
+
+            switch ($questionType) {
+
+                case 'multiple_choice':
+                    $postDatas = $this->request->getCurrentRequest()->request->all();
+                    $this->updateMultipleChoiceQuestion($question, $postDatas);
+                    break;
+                case 'open-ended':
+                default:
+                    break;
+            }
 
             return new RedirectResponse(
                 $this->router->generate(
@@ -346,13 +358,39 @@ class SurveyController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/survey/{survey}/question/{question}/type/{questionType}/display/form",
-     *     name="claro_survey_display_typed_question_form",
+     *     "/survey/{survey}/type/{questionType}/create/form",
+     *     name="claro_survey_typed_question_create_form",
      *     options={"expose"=true}
      * )
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function displayTypedQuestionFormAction(
+    public function typedQuestionCreateFormAction(
+        Survey $survey,
+        $questionType
+    )
+    {
+        $this->checkSurveyRight($survey, 'EDIT');
+
+        switch ($questionType) {
+
+            case 'multiple_choice':
+
+                return $this->multipleChoiceQuestionForm($survey);
+            case 'open_ended':
+            default:
+                break;
+        }
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/survey/{survey}/question/{question}/type/{questionType}/edit/form",
+     *     name="claro_survey_typed_question_edit_form",
+     *     options={"expose"=true}
+     * )
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function typedQuestionEditFormAction(
         Question $question,
         Survey $survey,
         $questionType
@@ -365,8 +403,8 @@ class SurveyController extends Controller
             case 'multiple_choice':
 
                 return $this->multipleChoiceQuestionForm(
-                    $question,
-                    $survey
+                    $survey,
+                    $question
                 );
             case 'open_ended':
             default:
@@ -375,12 +413,13 @@ class SurveyController extends Controller
     }
 
     private function multipleChoiceQuestionForm(
-        Question $question,
-        Survey $survey
+        Survey $survey,
+        Question $question = null
     )
     {
-        $multipleChoiceQuestion = $this->surveyManager
-            ->getMultipleChoiceQuestionByQuestion($question);
+        $multipleChoiceQuestion = is_null($question) ?
+            null :
+            $this->surveyManager->getMultipleChoiceQuestionByQuestion($question);
         $choices = array();
         $allowMultipleResponse = false;
 

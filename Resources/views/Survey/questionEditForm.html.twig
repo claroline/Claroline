@@ -41,18 +41,19 @@
         <h3 class="panel-title">{{ 'question_edition'|trans({}, 'survey') }}</h3>
     </div>
     <form role="form"
-        class="form-horizontal"
-        action="{{ path('claro_survey_question_edit', {'question': question.getId(), 'survey': surveyId}) }}"
-        method="post"
-        {{ form_enctype(form) }}
-        id="form_settings"
-        novalidate
+          class="form-horizontal"
+          action="{{ path('claro_survey_question_edit', {'question': question.getId(), 'survey': surveyId}) }}"
+          method="post"
+          {{ form_enctype(form) }}
+          id="form_settings"
+          novalidate
     >
         <div class="panel-body">
             {{ form_widget(form) }}
             <div id="typed-question-form-block" class="hidden">
             </div>
             <div id="question-form-datas-block"
+                 data-form-type="edit"
                  data-survey-id="{{ survey.getId() }}"
                  data-question-id="{{ question.getId() }}"
             >
@@ -60,12 +61,16 @@
         </div>
         <br>
         <div class="panel-footer">
-            <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
+            <button type="submit" class="btn btn-primary">
+                {{ 'ok'|trans({}, 'platform') }}
+            </button>
             <a href="{{ path(
                 'claro_survey_questions_management',
                 {'survey': surveyId, 'orderedBy': 'title', 'order': 'ASC'}
             ) }}">
-                <button type="button" class="btn btn-default">{{ 'cancel'|trans({}, 'platform') }}</button>
+                <button type="button" class="btn btn-default">
+                    {{ 'cancel'|trans({}, 'platform') }}
+                </button>
             </a>
         </div>
     </form>
