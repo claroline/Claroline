@@ -23,6 +23,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Claroline\CoreBundle\Entity\AbstractRoleSubject;
 use Claroline\CoreBundle\Entity\Role;
+use Claroline\CoreBundle\Entity\Model\Model;
 use Claroline\CoreBundle\Validator\Constraints as ClaroAssert;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -1026,5 +1027,17 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     public function getInitDate()
     {
         return $this->initDate;
+    }
+
+    public function addModel(Model $model)
+    {
+        if (!$this->models->contains($model)) {
+            $this->models->add($model);
+        }
+    }
+
+    public function removeModel(Model $model)
+    {
+        $this->models->removeElement($model);
     }
 }

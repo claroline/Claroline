@@ -1,0 +1,8 @@
+{% twig_js name="UserModelRow" %}
+
+<tr id="user-{{ user.id }}">
+    <td> {{ user.username }}</td>
+    <td> <a class="delete-user" href="{{ path('ws_model_remove_user', {'model': model.id, 'user': user.id}) }}">
+        {{ 'delete'|trans({}, 'platform') }}
+    </a></td>
+</tr>

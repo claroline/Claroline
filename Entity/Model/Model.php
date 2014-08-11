@@ -108,12 +108,12 @@ class Model
 
     public function addUser(User $user)
     {
-        $this->users->add($user);
+        $user->addModel($this);
     }
 
     public function addGroup(Group $group)
     {
-        $this->groups->add($group);
+        $group->addModel($this);
     }
 
     public function setWorkspace(Workspace $workspace)

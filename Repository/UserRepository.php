@@ -21,6 +21,7 @@ use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Group;
+use Claroline\CoreBundle\Entity\Model\Model;
 use Doctrine\ORM\Query;
 
 class UserRepository extends EntityRepository implements UserProviderInterface
@@ -893,5 +894,46 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         $query->setParameter('groupName', $group->getName());
 
         return $query->getSingleScalarResult();
+    }
+
+    /**
+     * @todo Make the correct sql request
+     * @param Model $model
+     * @param bool $executeQuery
+     * @return array|Query
+     */
+    public function findUsersNotSharingModel(Model $model, $executeQuery = true)
+    {
+        $dql = '
+            SELECT u FROM Claroline\CoreBundle\Entity\User u
+        ';
+
+        $query = $this->_em->createQuery($dql);
+
+        return $executeQuery ? $query->getResult(): $query;
+    }
+
+    /**
+     * @todo Make the correct sql request
+     * @param Model $model
+     * @param $search
+     * @param bool $executeQuery
+     * @return array|Query
+     */
+    public function findUsersNotSharingModelBySearch(Model $model, $search, $executeQuery = true)
+    {
+        $search = strtoupper($search);
+
+        $dql = '
+            SELECT u FROM Claroline\CoreBundle\Entity\User u
+            WHERE UPPER(u.lastName) LIKE :search
+            OR UPPER(u.firstName) LIKE :search
+            OR UPPER(u.username) LIKE :search
+        ';
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('search', "%$search%");
+
+        return $executeQuery ? $query->getResult(): $query;
     }
 }

@@ -13,6 +13,7 @@ namespace Claroline\CoreBundle\Manager;
 
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Entity\Model\Model;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Repository\GroupRepository;
@@ -453,6 +454,30 @@ class GroupManager
         }
 
         return array();
+    }
+
+    /**
+     * Returns users who don't have access to the model $model
+     *
+     * @param Model $model
+     */
+    public function getUsersNotSharingModel(Model $model, $page = 1, $max = 20)
+    {
+        $res = $this->groupRepo->findGroupsNotSharingModel($model, false);
+
+        return $this->pagerFactory->createPager($res, $page, $max);
+    }
+
+    /**
+     * Returns users who don't have access to the model $model
+     *
+     * @param Model $model
+     */
+    public function getUsersNotSharingModelBySearch(Model $model, $page = 1, $search, $max = 20)
+    {
+        $res = $this->groupRepo->findGroupsNotSharingModelBySearch($model, $search, false);
+
+        return $this->pagerFactory->createPager($res, $page, $max);
     }
 
     /**

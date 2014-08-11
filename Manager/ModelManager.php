@@ -104,24 +104,54 @@ class ModelManager
     }
     //sharing
 
-    public function addUserShare(Model $model, User $user)
+    public function addUser(Model $model, User $user)
     {
-
+        $model->addUser($user);
+        $this->om->persist($model);
+        $this->om->flush();
     }
 
-    public function removeUsersShare(Model $model, User $user)
+    public function addGroup(Model $model, Group $group)
     {
-
+        $model->addGroup($group);
+        $this->om->persist($model);
+        $this->om->flush();
     }
 
-    public function addGroupShare(Model $model, Group $group)
+    public function removeGroup(Model $model, Group $group)
     {
-
+        $group->removeModel($model);
+        $this->om->persist($model);
+        $this->om->flush();
     }
 
-    public function removeGroupsShare(Model $model, Group $group)
+    public function removeUser(Model $model, User $user)
     {
+        $user->removeModel($model);
+        $this->om->persist($model);
+        $this->om->flush();
+    }
 
+    public function addUsers(Model $model, array $users)
+    {
+        $this->om->startFlushSuite();
+
+        foreach ($users as $user) {
+            $this->addUser($model, $user);
+        }
+
+        $this->om->endFlushSuite();
+    }
+
+    public function addGroups(Model $model, array $groups)
+    {
+        $this->om->startFlushSuite();
+
+        foreach ($groups as $group) {
+            $this->addGroup($model, $group);
+        }
+
+        $this->om->endFlushSuite();
     }
 
     public function toArray(Model $model)

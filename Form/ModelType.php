@@ -23,10 +23,7 @@ class ModelType extends AbstractType
         $builder->add(
             'name',
             'text',
-            array(
-                'constraints' => new NotBlank(),
-                'label' => 'name'
-            )
+            array('label' => 'name')
         );
     }
 

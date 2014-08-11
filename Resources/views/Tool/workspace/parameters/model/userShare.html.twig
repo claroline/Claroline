@@ -1,10 +1,14 @@
-{% macro renderPager(search, pager) %}
+{% macro renderPager(search, pager, model) %}
     {% if search == '' %}
         {{
             pagerfanta(
                 pager,
                 'twitter_bootstrap_translated',
-                {}
+                {
+                    'proximity' : 1,
+                    'routeName': 'ws_share_user_list',
+                    'routeParams': {'model': model.getId()}
+                }
             )
         }}
     {% else %}
@@ -12,7 +16,11 @@
             pagerfanta(
                 pager,
                 'twitter_bootstrap_translated',
-                {}
+                {
+                    'proximity' : 1,
+                    'routeName': 'ws_share_user_list_search',
+                    'routeParams': {'search': search, 'model': model.getId()}
+                }
             )
         }}
     {% endif %}
@@ -29,33 +37,44 @@
     </div>
 {% endif %}
 
-{% if users is empty %}
-    {{ 'no_user'|trans({}, 'platform') }}
-{% else %}
-    {% set nbPages = users.getNbPages() %}
-    <div id="users-list-page" class="users-list-page">
+<div class="input-group margin-md">
+    <input
+        class="form-control"
+        type="text"
+        id="search-users-txt"
+        placeholder="{{ 'search'|trans({}, 'platform') }}"
+        value="{{ search }}"
+    >
+    <span class="input-group-btn">
+        <button class="filter btn btn-default" type="button" id="search-users">
+            <i class="fa fa-search"></i>
+        </button>
+    </span>
+</div>
 
-        {% if nbPages > 1 %}
-            {{ renderPager(search, users) }}
-        {% endif %}
-        <div class="table-responsive">
-            <table class="table table-bordered">
+{% set nbPages = users.getNbPages() %}
+<div id="users-list-page" class="users-list-page">
+
+    {% if nbPages > 1 %}
+        {{ renderPager(search, users, model) }}
+    {% endif %}
+    <div class="table-responsive">
+        <table class="table table-bordered">
+            <tr>
+                <th>{{ 'first_name'|trans({}, 'platform') }}</th>
+                <th>{{ 'last_name'|trans({}, 'platform') }}</th>
+                <th></th>
+            </tr>
+            {% for user in users %}
                 <tr>
-                    <th>{{ 'first_name'|trans({}, 'platform') }}</th>
-                    <th>{{ 'last_name'|trans({}, 'platform') }}</th>
-                    <th></th>
+                    <td>{{ user.getFirstName() }}</td>
+                    <td>{{ user.getLastName() }}</td>
+                    <td><input type="checkbox" class="user-chk" user-id="{{ user.getId() }}"></td>
                 </tr>
-                {% for user in users %}
-                    <tr>
-                        <td>{{ user.getFirstName() }}</td>
-                        <td>{{ user.getLastName() }}</td>
-                        <td><input type="checkbox" class="user-chk" contact-id="{{ user.getId() }}"></td>
-                    </tr>
-                {% endfor %}
-            </table>
-        </div>
-        {% if nbPages > 1 %}
-            {{ renderPager(search, users) }}
-        {% endif %}
+            {% endfor %}
+        </table>
     </div>
-{% endif %}
+    {% if nbPages > 1 %}
+        {{ renderPager(search, users, model) }}
+    {% endif %}
+</div>

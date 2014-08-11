@@ -1,0 +1,37 @@
+{% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
+
+{% block title %}{{ parent() ~ ' - configure' | trans({}, "platform") | striptags | raw }}{% endblock %}
+
+{% block breadcrumb %}
+    {{
+        macros.workspaceBreadcrumbs(
+            model.getWorkspace(),
+            [
+                {
+                    'name': 'parameters'|trans({}, 'platform'),
+                    'href': path('claro_workspace_open_tool', {'workspaceId': model.getWorkspace().getId(), 'toolName': 'parameters'})
+                },
+                {
+                    'name': 'models'|trans({}, 'platform'),
+                    'href': path('claro_workspace_model_index', {'workspace': model.getWorkspace().getId()})
+                },
+                {
+                    'name': model.getName(),
+                    'href': ''
+                }
+            ]
+        )
+    }}
+{% endblock %}
+
+{% block section_content %}
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ model.getName() }}</h3>
+    </div>
+    <div class="panel-body">
+        <a href="{{ path('claro_workspace_model_share_user_list', {'model': model.getId()}) }}"> {{ 'share'|trans({}, 'platform') }}</a>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+{% endblock %}

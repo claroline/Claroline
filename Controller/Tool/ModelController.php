@@ -23,6 +23,8 @@ use Claroline\CoreBundle\Manager\ModelManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\Model\Model;
+use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Form\ModelType;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -169,7 +171,8 @@ class ModelController extends Controller
      *
      * @EXT\Route(
      *     "/{model}/rename/form",
-     *     name="claro_workspace_model_rename_form"
+     *     name="claro_workspace_model_rename_form",
+     *     options = {"expose"=true}
      * )
      *
      * @EXT\Template("ClarolineCoreBundle:Tool\workspace\parameters\model:modelModalForm.html.twig")
@@ -188,7 +191,8 @@ class ModelController extends Controller
      *
      * @EXT\Route(
      *     "/{model}/rename",
-     *     name="claro_workspace_model_rename"
+     *     name="claro_workspace_model_rename",
+     *     options = {"expose"=true}
      * )
      */
     public function renameModelAction(Model $model)
@@ -218,35 +222,53 @@ class ModelController extends Controller
     }
 
     /**
+     * @param Workspace $workspace
+     *
+     * @EXT\Route(
+     *     "/{model}/configure",
+     *     name="claro_workspace_model_configure"
+     * )
+     *
+     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\parameters\model:configure.html.twig")
+     */
+    public function configureModelAction(Model $model)
+    {
+        return array('model' => $model);
+    }
+
+    /**
      * @param Model $model
      *
      * @EXT\Route(
      *     "/model/{model}/share/index",
-     *     name="claro_workspace_model_share_index"
+     *     name="claro_workspace_model_share_user_list"
      * )
      *
      * @EXT\Template("ClarolineCoreBundle:Tool\workspace\parameters\model:indexShare.html.twig")
      */
-    public function shareAsModelIndex(Model $model)
+    public function shareModelUserListAction(Model $model)
     {
-        $this->checkAccess($workspace);
+        $this->checkAccess($model->getWorkspace());
 
-        return array('workspace' => $workspace);
+        return array(
+            'model' => $model,
+            'workspace' => $model->getWorkspace()
+        );
     }
 
     /**
      * @EXT\Route(
-     *     "/workspace/share/users/page/{page}",
+     *     "/{model}/workspace/share/users/page/{page}",
      *     name="ws_share_user_list",
      *     options={"expose"=true},
      *     defaults={"page"=1, "search"=""}
      * )
      * @EXT\Method("GET")
      * @EXT\Route(
-     *     "/workspace/share/users/page/{page}/search/{search}",
+     *     "/{model}/workspace/share/users/page/{page}/search/{search}",
      *     name="ws_share_user_list_search",
      *     options={"expose"=true},
-     *     defaults={"page"=1}
+     *     defaults={"page"=1, "search"=""}
      * )
      * @EXT\Method("GET")
      * @EXT\Template("ClarolineCoreBundle:Tool\workspace\parameters\model:userShare.html.twig")
@@ -259,33 +281,32 @@ class ModelController extends Controller
      *
      * @return Response
      */
-    public function userListAction($page, $search)
+    public function userListAction(Model $model, $page, $search)
     {
         $trimmedSearch = trim($search);
 
         if ($trimmedSearch === '') {
-            $users = $this->userManager->getAllUsers($page, 10);
+            $users = $this->userManager->getUsersNotSharingModel($model, $page, 10);
         } else {
-            $users = $this->userManager
-                ->getAllUsersBySearch($page, $trimmedSearch, 10);
+            $users = $this->userManager->getUsersNotSharingModelBySearch($model, $trimmedSearch, $page, 10);
         }
 
-        return array('users' => $users, 'search' => $search);
+        return array('users' => $users, 'search' => $search, 'model' => $model);
     }
 
     /**
      * @EXT\Route(
-     *     "/workspace/share/groups/page/{page}",
+     *     "/{model}/workspace/share/groups/page/{page}",
      *     name="ws_share_group_list",
      *     options={"expose"=true},
      *     defaults={"page"=1, "search"=""}
      * )
      * @EXT\Method("GET")
      * @EXT\Route(
-     *     "/workspace/share/groups/page/{page}/search/{search}",
+     *     "/{model}/workspace/share/groups/page/{page}/search/{search}",
      *     name="ws_share_group_list_search",
      *     options={"expose"=true},
-     *     defaults={"page"=1}
+     *     defaults={"page"=1, "search"=""}
      * )
      * @EXT\Method("GET")
      * @EXT\Template("ClarolineCoreBundle:Tool\workspace\parameters\model:groupShare.html.twig")
@@ -299,33 +320,102 @@ class ModelController extends Controller
      *
      * @return Response
      */
-    public function groupListAction($page, $search)
+    public function groupListAction(Model $model, $page, $search)
     {
         $trimmedSearch = trim($search);
 
         if ($trimmedSearch === '') {
-            $groups = $this->groupManager->getAllGroups($page, 10);
+            $groups = $this->groupManager->getUsersNotSharingModel($model, $page, 10);
         } else {
-            $groups = $this->groupManager
-                ->getAllGroupsBySearch($page, $trimmedSearch, 10);
+            $groups = $this->groupManager->getUsersNotSharingModelBySearch($model, $page, $trimmedSearch, 10);
         }
 
-        return array('groups' => $groups, 'search' => $search);
+        return array('groups' => $groups, 'search' => $search, 'model' => $model);
     }
 
-    public function shareWithUsersAction()
+    /**
+     * @EXT\Route(
+     *     "/{model}/share/users/add",
+     *     name="ws_share_users_add",
+     *     options={"expose"=true}
+     * )
+     *
+     * @EXT\ParamConverter(
+     *     "users",
+     *     class="ClarolineCoreBundle:User",
+     *     options={"multipleIds"=true, "name"="userIds"}
+     * )
+     */
+    public function shareUsersAction(Model $model, array $users)
     {
+        $this->checkAccess($model->getWorkspace());
+        $this->modelManager->addUsers($model, $users);
+        $data = [];
 
+        foreach ($users as $user) {
+            $data['users'][] = array('id' => $user->getId(), 'username' => $user->getUsername());
+        }
+
+        $data['model']['id'] = $model->getId();
+
+        return new JsonResponse($data);
     }
 
-    public function shareWithGroupsAction()
+    /**
+     * @EXT\Route(
+     *     "/{model}/share/groups/add",
+     *     name="ws_share_groups_add",
+     *     options={"expose"=true}
+     * )
+     *
+     * @EXT\ParamConverter(
+     *     "groups",
+     *     class="ClarolineCoreBundle:Group",
+     *     options={"multipleIds"=true, "name"="groupIds"}
+     * )
+     */
+    public function shareGroupsAction(Model $model, array $groups)
     {
+        $this->checkAccess($model->getWorkspace());
+        $this->modelManager->addGroups($model, $groups);
 
+        foreach ($groups as $group) {
+            $data['groups'][] = array('id' => $group->getId(), 'name' => $group->getName());
+        }
+
+        $data['model']['id'] = $model->getId();
+
+        return new JsonResponse($data);
     }
 
-    public function removeModelSharing()
+    /**
+     * @EXT\Route(
+     *     "/{model}/group/{group}/remove",
+     *     name="ws_model_remove_group",
+     *     options={"expose"=true}
+     * )
+     */
+    public function removeModeGroup(Model $model, Group $group)
     {
+        $this->checkAccess($model->getWorkspace());
+        $this->modelManager->removeGroup($model, $group);
 
+        return new JsonResponse(array('id' => $group->getId()));
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/{model}/user/{user}/remove",
+     *     name="ws_model_remove_user",
+     *     options={"expose"=true}
+     * )
+     */
+    public function removeModelUser(Model $model, User $user)
+    {
+        $this->checkAccess($model->getWorkspace());
+        $this->modelManager->removeUser($model, $user);
+
+        return new JsonResponse(array('id' => $user->getId()));
     }
 
     private function checkAccess(Workspace $workspace)
