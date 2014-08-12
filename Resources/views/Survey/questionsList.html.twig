@@ -1,0 +1,38 @@
+{% if questions|length == 0 %}
+    <div class="alert alert-warning" role="alert">
+        {{ 'no_question'|trans({}, 'survey') }}
+    </div>
+{% else %}
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover text-center">
+            <tr>
+                <th class="text-center">
+                    {{ 'title'|trans({}, 'survey') }}
+                </th>
+                <th class="text-center">
+                    {{ 'type'|trans({}, 'survey') }}
+                </th>
+                <th>
+                </th>
+            </tr>
+
+            {% for question in questions %}
+                <tr>
+                    <td>
+                        {{ question.getTitle() }}
+                    </td>
+                    <td>
+                        {{ question.getType()|trans({}, 'survey') }}
+                    </td>
+                    <td>
+                        <a href="{{ path('claro_survey_add_question', {'survey': survey.getId(), 'question': question.getId()}) }}"
+                           class="btn btn-primary"
+                        >
+                            {{ 'add'|trans({}, 'platform') }}
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+{% endif %}

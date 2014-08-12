@@ -74,4 +74,58 @@
             </table>
         </div>
     </div>
+    <div class="panel-footer">
+        <span class="btn btn-primary view-survey-btn"
+              data-survey-id="{{ survey.getId() }}"
+        >
+            <i class="fa fa-eye"></i>
+            {{ 'display_survey'|trans({}, 'survey') }}
+        </span>
+        <a href="{{ path('claro_survey_management', {'survey': survey.getId()}) }}"
+            class="btn btn-primary"
+        >
+            <i class="fa fa-list"></i>
+            {{ 'edit_survey'|trans({}, 'survey') }}
+        </a>
+        <a href="{{ path('claro_survey_parameters_edit_form', {'survey': survey.getId()}) }}"
+            class="btn btn-primary"
+        >
+            <i class="fa fa-pencil"></i>
+            {{ 'edit_parameters'|trans({}, 'survey') }}
+        </a>
+        <a href="{{
+            path(
+                'claro_survey_questions_management',
+                {'survey': survey.getId(), 'orderedBy': 'title', 'order': 'ASC'}
+            ) }}"
+            class="btn btn-primary"
+        >
+            <i class="fa fa-question"></i>
+            {{ 'questions_management'|trans({}, 'survey') }}
+        </a>
+    </div>
+
+    <div id="view-survey-box" class="modal fade" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div id="view-survey-body" class="modal-body">
+                </div>
+                <div class="modal-footer">
+                    <input type="button"
+                           class="btn btn-default"
+                           data-dismiss="modal"
+                           value="{{ 'close'|trans({}, 'platform') }}"
+                    />
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script
+        src='{{ asset('bundles/clarolinesurvey/js/surveyEditionMainMenu.js') }}'
+        type="text/javascript">
+    </script>
 {% endblock %}

@@ -25,14 +25,27 @@
             {{ _resource.getResourceNode().getName() }}
         </a>
     </li>
-    <li>
-        <a href="{{ path(
-            'claro_survey_questions_management',
-            {'survey': surveyId, 'orderedBy': 'title', 'order': 'ASC'}
-        ) }}">
-            {{ 'questions_management'|trans({}, 'survey') }}
-        </a>
-    </li>
+    
+    {% if source == 'survey' %}
+        <li>
+            <a href="{{ path(
+                'claro_survey_management',
+                {'survey': surveyId}
+            ) }}">
+                {{ 'survey_edition'|trans({}, 'survey') }}
+            </a>
+        </li>
+    
+    {% else %}
+        <li>
+            <a href="{{ path(
+                'claro_survey_questions_management',
+                {'survey': surveyId, 'orderedBy': 'title', 'order': 'ASC'}
+            ) }}">
+                {{ 'questions_management'|trans({}, 'survey') }}
+            </a>
+        </li>
+    {% endif %}
     <li class="active">{{ 'question_edition' | trans({}, 'survey') }}</li>
 {% endblock %}
 
@@ -42,7 +55,7 @@
     </div>
     <form role="form"
           class="form-horizontal"
-          action="{{ path('claro_survey_question_edit', {'question': question.getId(), 'survey': surveyId}) }}"
+          action="{{ path('claro_survey_question_edit', {'question': question.getId(), 'survey': surveyId, 'source': source}) }}"
           method="post"
           {{ form_enctype(form) }}
           id="form_settings"
@@ -64,10 +77,23 @@
             <button type="submit" class="btn btn-primary">
                 {{ 'ok'|trans({}, 'platform') }}
             </button>
-            <a href="{{ path(
-                'claro_survey_questions_management',
-                {'survey': surveyId, 'orderedBy': 'title', 'order': 'ASC'}
-            ) }}">
+            
+            {% if source == 'survey' %}
+                {%
+                    set cancelPath = path(
+                        'claro_survey_management',
+                        {'survey': surveyId}
+                    )
+                %}
+            {% else %}
+                {%
+                    set cancelPath = path(
+                        'claro_survey_questions_management',
+                        {'survey': surveyId, 'orderedBy': 'title', 'order': 'ASC'}
+                    )
+                %}
+            {% endif %}
+            <a href="{{ cancelPath }}">
                 <button type="button" class="btn btn-default">
                     {{ 'cancel'|trans({}, 'platform') }}
                 </button>

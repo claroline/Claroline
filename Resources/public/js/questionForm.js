@@ -44,7 +44,7 @@
                 url: route,
                 type: 'GET',
                 success: function (datas) {
-                    $('#typed-question-form-block').html(datas);
+                    $('#typed-question-form-block').html('<hr>' + datas);
                     choiceId = parseInt($('#choice-index-block').data('current-choice-index'));
                 }
             });

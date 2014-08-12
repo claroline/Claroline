@@ -34,4 +34,26 @@ class QuestionRepository extends EntityRepository
 
         return $executeQuery ? $query->getResult() : $query;
     }
+
+    public function findQuestionsByWorkspaceWithExclusions(
+        Workspace $workspace,
+        array $exclusions,
+        $orderedBy = 'title',
+        $order = 'ASC',
+        $executeQuery = true
+    )
+    {
+        $dql = "
+            SELECT q
+            FROM Claroline\SurveyBundle\Entity\Question q
+            WHERE q.workspace = :workspace
+            AND q.id NOT IN (:exclusions)
+            ORDER BY q.{$orderedBy} {$order}
+        ";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('workspace', $workspace);
+        $query->setParameter('exclusions', $exclusions);
+
+        return $executeQuery ? $query->getResult() : $query;
+    }
 }

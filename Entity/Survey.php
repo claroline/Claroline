@@ -12,7 +12,6 @@
 namespace Claroline\SurveyBundle\Entity;
 
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
-use Claroline\SurveyBundle\Entity\Question;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -32,16 +31,12 @@ class Survey extends AbstractResource
     /**
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\ManyToMany(
-     *     targetEntity="Claroline\SurveyBundle\Entity\Question"
-     * )
-     * @ORM\JoinTable(
-     *     name="claro_survey_questions_relation",
-     *     joinColumns={@ORM\JoinColumn(name="survey_id", referencedColumnName="id")},
-     *     inverseJoinColumns={@ORM\JoinColumn(name="question_id", referencedColumnName="id")}
+     * @ORM\OneToMany(
+     *     targetEntity="Claroline\SurveyBundle\Entity\SurveyQuestionRelation",
+     *     mappedBy="survey"
      * )
      */
-    protected $questions;
+    protected $questionRelations;
 
     /**
      * @ORM\Column(type="boolean")
@@ -75,7 +70,7 @@ class Survey extends AbstractResource
 
     public function __construct()
     {
-        $this->questions = new ArrayCollection();
+        $this->questionRelations = new ArrayCollection();
     }
 
     public function setId($id)
@@ -184,24 +179,13 @@ class Survey extends AbstractResource
         $this->endDate = $endDate;
     }
 
-    /**
-     * @return \Doctrine\Common\Collections\ArrayCollection
-     */
-    public function getQuestions()
+    public function getQuestionRelations()
     {
-        return $this->questions;
+        return $this->questionRelations;
     }
 
-    /**
-     * @param \Claroline\SurveyBundle\Entity\Question $question
-     * @return \Claroline\SurveyBundle\Entity\Survey
-     */
-    public function addQuestion(Question $question)
+    public function setQuestionRelations(ArrayCollection $questionRelations)
     {
-        if (!$this->questions->contains($question)) {
-            $this->questions->add($question);
-        }
-
-        return $this;
+        $this->questionRelations = $questionRelations;
     }
 }

@@ -1,0 +1,138 @@
+{% set layout = 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
+
+{% if isDesktop() %}
+    {% set layout = 'ClarolineCoreBundle:Desktop:layout.html.twig' %}
+{% endif %}
+
+{% set _resource = survey %}
+{% set surveyId = survey.getId() %}
+
+{% extends layout %}
+
+{% block title %}
+    {{ survey.getResourceNode().getName() ~ ' - ' | striptags | raw ~ 'survey_edition'|trans({}, 'survey') }}
+{% endblock %}
+
+{% block resourceBreadcrumb %}
+    <li>
+        <a href="{{ path('claro_resource_open', { 'resourceType': _resource.getResourceNode().getResourceType().getName(), 'node': _resource.getResourceNode().getId() }) }}">
+            {{ _resource.getResourceNode().getName() }}
+        </a>
+    </li>
+    <li class="active">{{ 'survey_edition' | trans({}, 'survey') }}</li>
+{% endblock %}
+    
+{% block section_content %}
+    <div id="survey-data-element" data-survey-id="{{ surveyId }}">
+    </div>
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ survey.getResourceNode().getName() }} - {{ 'edition'|trans({}, 'survey') }}</h3>
+    </div>
+    <div class="panel-body">
+        <div>
+            <a href="{{ path('claro_survey_index', {'survey': surveyId}) }}"
+               class="btn btn-primary"
+            >
+                <i class="fa fa-arrow-left"></i>
+                {{ 'return'|trans({}, 'survey') }}
+            </a>
+            <a href="{{ path('claro_survey_question_create_form', {'survey': surveyId, 'source': 'survey'}) }}"
+               class="btn btn-primary"
+            >
+                <i class="fa fa-plus-circle"></i>
+                {{ 'create_question'|trans({}, 'survey') }}
+            </a>
+            <span id="add-question-btn" class="btn btn-primary">
+                <i class="fa fa-search"></i>
+                {{ 'add_question'|trans({}, 'survey') }}
+            </span>
+        </div>
+        <hr>
+        
+        {% if questionRelations|length == 0 %}
+            <div class="alert alert-danger" role="alert">
+                {{ 'no_question'|trans({}, 'survey') }}
+            </div>
+        {% else %}
+            <table class="table table-responsive table-bordered">
+                
+            {% for relation in questionRelations %}
+                {% set question = relation.getQuestion() %}
+                <tr>
+                    <td>
+                        <b>
+                            [{{ question.getType()|trans({}, 'survey') }}]
+                            {{ question.getTitle() }}
+                        </b>
+                        {{ question.getQuestion()|raw }}
+                    </td>
+                    <td>
+                        <span class="btn btn-default view-question-btn" data-question-id="{{ question.getId() }}">
+                            <i class="fa fa-eye"></i>
+                        </span>
+                        <a href="{{ path(
+                                'claro_survey_question_edit_form',
+                                {'question': question.getId(), 'survey': surveyId, 'source': 'survey'}
+                            ) }}"
+                            class="btn btn-default"
+                        >
+                            <i class="fa fa-edit"></i>
+                        </a>
+                        <a href="{{ path('claro_survey_remove_question', {'survey': surveyId, 'question': question.getId()}) }}"
+                           class="btn btn-danger"
+                        >
+                            <i class="fa fa-trash-o"></i>
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </table>
+        {% endif %}
+    </div>
+    
+    <div id="add-question-box" class="modal fade" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h3>{{ 'add_question_box_title'|trans({}, 'survey') }}</h3>
+                </div>
+                <div id="add-question-body" class="modal-body">
+                </div>
+                <div class="modal-footer">
+                    <input type="button"
+                           class="btn btn-default"
+                           data-dismiss="modal"
+                           value="{{ 'close'|trans({}, 'platform') }}"
+                    />
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="view-question-box" class="modal fade" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div id="view-question-body" class="modal-body">
+                </div>
+                <div class="modal-footer">
+                    <input type="button"
+                           class="btn btn-default"
+                           data-dismiss="modal"
+                           value="{{ 'close'|trans({}, 'platform') }}"
+                    />
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script
+        src='{{ asset('bundles/clarolinesurvey/js/surveyManagement.js') }}'
+        type="text/javascript">
+    </script>
+{% endblock %}

@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/08/08 03:15:43
+ * Generation date: 2014/08/12 04:23:13
  */
-class Version20140808151542 extends AbstractMigration
+class Version20140812162311 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -59,19 +59,6 @@ class Version20140808151542 extends AbstractMigration
             CREATE UNIQUE INDEX UNIQ_11B27D4BB87FAB32 ON claro_survey_resource (resourceNode_id)
         ");
         $this->addSql("
-            CREATE TABLE claro_survey_questions_relation (
-                survey_id NUMBER(10) NOT NULL, 
-                question_id NUMBER(10) NOT NULL, 
-                PRIMARY KEY(survey_id, question_id)
-            )
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_C764C91BB3FE509D ON claro_survey_questions_relation (survey_id)
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_C764C91B1E27F6BF ON claro_survey_questions_relation (question_id)
-        ");
-        $this->addSql("
             CREATE TABLE claro_survey_choice (
                 id NUMBER(10) NOT NULL, 
                 choice_question_id NUMBER(10) NOT NULL, 
@@ -109,6 +96,55 @@ class Version20140808151542 extends AbstractMigration
         ");
         $this->addSql("
             CREATE INDEX IDX_C49D43FEA46B3B4F ON claro_survey_choice (choice_question_id)
+        ");
+        $this->addSql("
+            CREATE TABLE claro_survey_question_relation (
+                id NUMBER(10) NOT NULL, 
+                survey_id NUMBER(10) NOT NULL, 
+                question_id NUMBER(10) NOT NULL, 
+                question_order NUMBER(10) NOT NULL, 
+                PRIMARY KEY(id)
+            )
+        ");
+        $this->addSql("
+            DECLARE constraints_Count NUMBER; BEGIN 
+            SELECT COUNT(CONSTRAINT_NAME) INTO constraints_Count 
+            FROM USER_CONSTRAINTS 
+            WHERE TABLE_NAME = 'CLARO_SURVEY_QUESTION_RELATION' 
+            AND CONSTRAINT_TYPE = 'P'; IF constraints_Count = 0 
+            OR constraints_Count = '' THEN EXECUTE IMMEDIATE 'ALTER TABLE CLARO_SURVEY_QUESTION_RELATION ADD CONSTRAINT CLARO_SURVEY_QUESTION_RELATION_AI_PK PRIMARY KEY (ID)'; END IF; END;
+        ");
+        $this->addSql("
+            CREATE SEQUENCE CLARO_SURVEY_QUESTION_RELATION_ID_SEQ START WITH 1 MINVALUE 1 INCREMENT BY 1
+        ");
+        $this->addSql("
+            CREATE TRIGGER CLARO_SURVEY_QUESTION_RELATION_AI_PK BEFORE INSERT ON CLARO_SURVEY_QUESTION_RELATION FOR EACH ROW DECLARE last_Sequence NUMBER; last_InsertID NUMBER; BEGIN 
+            SELECT CLARO_SURVEY_QUESTION_RELATION_ID_SEQ.NEXTVAL INTO : NEW.ID 
+            FROM DUAL; IF (
+                : NEW.ID IS NULL 
+                OR : NEW.ID = 0
+            ) THEN 
+            SELECT CLARO_SURVEY_QUESTION_RELATION_ID_SEQ.NEXTVAL INTO : NEW.ID 
+            FROM DUAL; ELSE 
+            SELECT NVL(Last_Number, 0) INTO last_Sequence 
+            FROM User_Sequences 
+            WHERE Sequence_Name = 'CLARO_SURVEY_QUESTION_RELATION_ID_SEQ'; 
+            SELECT : NEW.ID INTO last_InsertID 
+            FROM DUAL; WHILE (last_InsertID > last_Sequence) LOOP 
+            SELECT CLARO_SURVEY_QUESTION_RELATION_ID_SEQ.NEXTVAL INTO last_Sequence 
+            FROM DUAL; END LOOP; END IF; END;
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_953FEEA4B3FE509D ON claro_survey_question_relation (survey_id)
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_953FEEA41E27F6BF ON claro_survey_question_relation (question_id)
+        ");
+        $this->addSql("
+            CREATE UNIQUE INDEX survey_unique_survey_question_relation ON claro_survey_question_relation (survey_id, question_id)
+        ");
+        $this->addSql("
+            CREATE UNIQUE INDEX survey_unique_question_order ON claro_survey_question_relation (survey_id, question_order)
         ");
         $this->addSql("
             CREATE TABLE claro_survey_question (
@@ -198,19 +234,21 @@ class Version20140808151542 extends AbstractMigration
             ON DELETE CASCADE
         ");
         $this->addSql("
-            ALTER TABLE claro_survey_questions_relation 
-            ADD CONSTRAINT FK_C764C91BB3FE509D FOREIGN KEY (survey_id) 
-            REFERENCES claro_survey_resource (id)
-        ");
-        $this->addSql("
-            ALTER TABLE claro_survey_questions_relation 
-            ADD CONSTRAINT FK_C764C91B1E27F6BF FOREIGN KEY (question_id) 
-            REFERENCES claro_survey_question (id)
-        ");
-        $this->addSql("
             ALTER TABLE claro_survey_choice 
             ADD CONSTRAINT FK_C49D43FEA46B3B4F FOREIGN KEY (choice_question_id) 
             REFERENCES claro_survey_multiple_choice_question (id) 
+            ON DELETE CASCADE
+        ");
+        $this->addSql("
+            ALTER TABLE claro_survey_question_relation 
+            ADD CONSTRAINT FK_953FEEA4B3FE509D FOREIGN KEY (survey_id) 
+            REFERENCES claro_survey_resource (id) 
+            ON DELETE CASCADE
+        ");
+        $this->addSql("
+            ALTER TABLE claro_survey_question_relation 
+            ADD CONSTRAINT FK_953FEEA41E27F6BF FOREIGN KEY (question_id) 
+            REFERENCES claro_survey_question (id) 
             ON DELETE CASCADE
         ");
         $this->addSql("
@@ -230,12 +268,12 @@ class Version20140808151542 extends AbstractMigration
     public function down(Schema $schema)
     {
         $this->addSql("
-            ALTER TABLE claro_survey_questions_relation 
-            DROP CONSTRAINT FK_C764C91BB3FE509D
+            ALTER TABLE claro_survey_question_relation 
+            DROP CONSTRAINT FK_953FEEA4B3FE509D
         ");
         $this->addSql("
-            ALTER TABLE claro_survey_questions_relation 
-            DROP CONSTRAINT FK_C764C91B1E27F6BF
+            ALTER TABLE claro_survey_question_relation 
+            DROP CONSTRAINT FK_953FEEA41E27F6BF
         ");
         $this->addSql("
             ALTER TABLE claro_survey_multiple_choice_question 
@@ -249,10 +287,10 @@ class Version20140808151542 extends AbstractMigration
             DROP TABLE claro_survey_resource
         ");
         $this->addSql("
-            DROP TABLE claro_survey_questions_relation
+            DROP TABLE claro_survey_choice
         ");
         $this->addSql("
-            DROP TABLE claro_survey_choice
+            DROP TABLE claro_survey_question_relation
         ");
         $this->addSql("
             DROP TABLE claro_survey_question

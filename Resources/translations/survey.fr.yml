@@ -1,9 +1,12 @@
 actions: Actions
 add_choice: 'Ajouter un choix'
+add_question: 'Ajouter une question'
+add_question_box_title: 'Ajouter une question au sondage'
 allow_edition_after_submission: 'Authoriser la modification de la réponse'
 allow_multiple_response: 'Réponses multiples'
 choices_management: 'Gestion des choix'
 closed: Fermé
+comment: Commentaire
 create_question: 'Créer une question'
 display_survey: 'Afficher le sondage'
 edit_parameters: 'Modifier les paramètres'
@@ -12,8 +15,10 @@ edition: Modification
 end_date: 'Date de fin'
 multiple_choice: 'Choix multiple'
 name: Nom
+no_choice_warning: 'Attention! Il n''y a aucun choix.'
 no_question: 'Aucune question'
 open_ended: 'Ouverte'
+parameters_edition: 'Modification des paramètres'
 published: Publié
 question_creation: 'Création d''une question'
 question_delete_confirm_message: 'Êtes-vous sûr de vouloir supprimer cette question ?'
@@ -28,6 +33,7 @@ return: Retour
 show_result_to_users: 'Afficher le résultat aux utilisateurs'
 start_date: 'Date de début'
 status: Statut
+survey_edition: 'Modification du sondage'
 survey_edition_form_allowAnswerEdition: 'Authoriser la modification de la réponse'
 survey_edition_form_endDate: 'Date de fin'
 survey_edition_form_hasPublicResult: 'Afficher le résultat aux utilisateurs'

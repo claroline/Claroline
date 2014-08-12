@@ -9,7 +9,7 @@
 {% extends layout %}
 
 {% block title %}
-    {{ survey.getResourceNode().getName() ~ ' - ' | striptags | raw ~ 'edition'|trans({}, 'survey') }}
+    {{ survey.getResourceNode().getName() ~ ' - ' | striptags | raw ~ 'parameters_edition'|trans({}, 'survey') }}
 {% endblock %}
 
 {% block resourceBreadcrumb %}
@@ -18,7 +18,7 @@
             {{ _resource.getResourceNode().getName() }}
         </a>
     </li>
-    <li class="active">{{ 'edition' | trans({}, 'survey') }}</li>
+    <li class="active">{{ 'parameters_edition' | trans({}, 'survey') }}</li>
 {% endblock %}
 
 {% block section_content %}
@@ -27,7 +27,7 @@
     </div>
     <form role="form"
         class="form-horizontal"
-        action="{{ path('claro_survey_edit', {'survey': survey.getId()}) }}"
+        action="{{ path('claro_survey_parameters_edit', {'survey': survey.getId()}) }}"
         method="post"
         {{ form_enctype(form) }}
         id="form_settings"

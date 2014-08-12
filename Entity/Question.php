@@ -16,9 +16,6 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\MappedSuperclass
- */
-/**
  * @ORM\Entity(repositoryClass="Claroline\SurveyBundle\Repository\QuestionRepository")
  * @ORM\Table(name="claro_survey_question")
  */

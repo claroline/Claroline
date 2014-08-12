@@ -70,7 +70,7 @@ class SurveyController extends Controller
      *     "/{survey}",
      *     name="claro_survey_index"
      * )
-     * @EXT\Template
+     * @EXT\Template()
      *
      * @param Survey $survey
      * @return array
@@ -78,21 +78,31 @@ class SurveyController extends Controller
     public function indexAction(Survey $survey)
     {
         $this->checkSurveyRight($survey, 'OPEN');
-//        $canEdit = $this->hasSurveyRight($survey, 'EDIT');
+        $canEdit = $this->hasSurveyRight($survey, 'EDIT');
+
+        if ($canEdit) {
+
+            return new Response(
+                $this->templating->render(
+                    "ClarolineSurveyBundle:Survey:surveyEditionMainMenu.html.twig",
+                    array('survey' => $survey)
+                )
+            );
+        }
 
         return array('survey' => $survey);
     }
 
     /**
      * @EXT\Route(
-     *     "/survey/{survey}/edit/form",
-     *     name="claro_survey_edit_form"
+     *     "/survey/{survey}/parameters/edit/form",
+     *     name="claro_survey_parameters_edit_form"
      * )
      * @EXT\Template()
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function surveyEditFormAction(Survey $survey)
+    public function surveyParametersEditFormAction(Survey $survey)
     {
         $this->checkSurveyRight($survey, 'EDIT');
         $form = $this->formFactory->create(
@@ -108,16 +118,16 @@ class SurveyController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/survey/{survey}/edit",
-     *     name="claro_survey_edit"
+     *     "/survey/{survey}/parameters/edit",
+     *     name="claro_survey_parameters_edit"
      * )
      * @EXT\Template(
-     *     "ClarolineSurveyBundle:Survey:surveyEditForm.html.twig"
+     *     "ClarolineSurveyBundle:Survey:surveyParametersEditForm.html.twig"
      * )
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function surveyEditAction(Survey $survey)
+    public function surveyParametersEditAction(Survey $survey)
     {
         $this->checkSurveyRight($survey, 'EDIT');
         $form = $this->formFactory->create(
@@ -145,9 +155,57 @@ class SurveyController extends Controller
 
     /**
      * @EXT\Route(
+     *     "/survey/{survey}/management",
+     *     name="claro_survey_management"
+     * )
+     * @EXT\Template()
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function surveyManagementAction(Survey $survey)
+    {
+        $this->checkSurveyRight($survey, 'EDIT');
+        $questionRelations = $survey->getQuestionRelations();
+
+        return array(
+            'survey' => $survey,
+            'questionRelations' => $questionRelations
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/survey/{survey}/display",
+     *     name="claro_survey_display",
+     *     options={"expose"=true}
+     * )
+     * @EXT\Template()
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function surveyDisplayAction(Survey $survey)
+    {
+        $this->checkSurveyRight($survey, 'EDIT');
+        $questionViews = array();
+
+        foreach ($survey->getQuestionRelations() as $relation) {
+            $question = $relation->getQuestion();
+            $questionViews[] =
+                $this->typedQuestionDisplayAction($survey, $question)->getContent();
+        }
+
+        return array(
+            'survey' => $survey,
+            'questionRelations' => $survey->getQuestionRelations(),
+            'questionViews' => $questionViews
+        );
+    }
+
+    /**
+     * @EXT\Route(
      *     "/survey/{survey}/questions/management/ordered/by/{orderedBy}/order/{order}",
      *     name="claro_survey_questions_management",
-     *     defaults={"ordered"="title","order"="ASC"},
+     *     defaults={"ordered"="title","order"="ASC"}
      * )
      * @EXT\Template()
      *
@@ -172,14 +230,48 @@ class SurveyController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/survey/{survey}/question/create/form",
-     *     name="claro_survey_question_create_form"
+     *     "/survey/{survey}/questions/list",
+     *     name="claro_survey_questions_list",
+     *     options={"expose"=true}
      * )
      * @EXT\Template()
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function questionCreateFormAction(Survey $survey)
+    public function questionsListAction(Survey $survey)
+    {
+        $this->checkSurveyRight($survey, 'EDIT');
+        $relations = $survey->getQuestionRelations();
+        $exclusions = array();
+
+        foreach ($relations as $relation) {
+            $exclusions[] = $relation->getQuestion()->getId();
+        }
+
+        $questions = $this->surveyManager->getAvailableQuestions(
+            $survey->getResourceNode()->getWorkspace(),
+            $exclusions,
+            'title',
+            'ASC'
+        );
+
+        return array(
+            'survey' => $survey,
+            'questions' => $questions
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/survey/{survey}/question/create/form/source/{source}",
+     *     name="claro_survey_question_create_form",
+     *     defaults={"source"="question"}
+     * )
+     * @EXT\Template()
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function questionCreateFormAction(Survey $survey, $source)
     {
         $this->checkSurveyRight($survey, 'EDIT');
         $form = $this->formFactory->create(
@@ -189,14 +281,16 @@ class SurveyController extends Controller
 
         return array(
             'form' => $form->createView(),
-            'survey' => $survey
+            'survey' => $survey,
+            'source' => $source
         );
     }
 
     /**
      * @EXT\Route(
-     *     "/survey/{survey}/question/create",
-     *     name="claro_survey_question_create"
+     *     "/survey/{survey}/question/create/source/{source}",
+     *     name="claro_survey_question_create",
+     *     defaults={"source"="question"}
      * )
      * @EXT\Template(
      *     "ClarolineSurveyBundle:Survey:questionCreateForm.html.twig"
@@ -204,7 +298,7 @@ class SurveyController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function questionCreateAction(Survey $survey)
+    public function questionCreateAction(Survey $survey, $source)
     {
         $this->checkSurveyRight($survey, 'EDIT');
         $question  = new Question();
@@ -230,34 +324,53 @@ class SurveyController extends Controller
                     break;
             }
 
-            return new RedirectResponse(
-                $this->router->generate(
-                    'claro_survey_questions_management',
-                    array(
-                        'survey' => $survey->getId(),
-                        'orderedBy' => 'title',
-                        'order' => 'ASC'
+            if ($source === 'survey') {
+                $this->surveyManager
+                    ->createSurveyQuestionRelation($survey, $question);
+
+                return new RedirectResponse(
+                    $this->router->generate(
+                        'claro_survey_management',
+                        array('survey' => $survey->getId())
                     )
-                )
-            );
+                );
+            } else {
+
+                return new RedirectResponse(
+                    $this->router->generate(
+                        'claro_survey_questions_management',
+                        array(
+                            'survey' => $survey->getId(),
+                            'orderedBy' => 'title',
+                            'order' => 'ASC'
+                        )
+                    )
+                );
+            }
         }
 
         return array(
             'form' => $form->createView(),
-            'survey' => $survey
+            'survey' => $survey,
+            'source' => $source
         );
     }
 
     /**
      * @EXT\Route(
-     *     "/survey/{survey}/question/{question}/edit/form",
-     *     name="claro_survey_question_edit_form"
+     *     "/survey/{survey}/question/{question}/edit/form/source/{source}",
+     *     name="claro_survey_question_edit_form",
+     *     defaults={"source"="question"}
      * )
      * @EXT\Template()
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function questionEditFormAction(Question $question, Survey $survey)
+    public function questionEditFormAction(
+        Question $question,
+        Survey $survey,
+        $source
+    )
     {
         $this->checkQuestionRight($survey, $question, 'EDIT');
         $form = $this->formFactory->create(
@@ -268,14 +381,16 @@ class SurveyController extends Controller
         return array(
             'form' => $form->createView(),
             'question' => $question,
-            'survey' => $survey
+            'survey' => $survey,
+            'source' => $source
         );
     }
 
     /**
      * @EXT\Route(
-     *     "/survey/{survey}/question/{question}/edit",
-     *     name="claro_survey_question_edit"
+     *     "/survey/{survey}/question/{question}/edit/source/{source}",
+     *     name="claro_survey_question_edit",
+     *     defaults={"source"="question"}
      * )
      * @EXT\Template(
      *     "ClarolineSurveyBundle:Survey:questionEditForm.html.twig"
@@ -283,7 +398,11 @@ class SurveyController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function questionEditAction(Question $question, Survey $survey)
+    public function questionEditAction(
+        Question $question,
+        Survey $survey,
+        $source
+    )
     {
         $this->checkQuestionRight($survey, $question, 'EDIT');
         $form = $this->formFactory->create(
@@ -308,22 +427,34 @@ class SurveyController extends Controller
                     break;
             }
 
-            return new RedirectResponse(
-                $this->router->generate(
-                    'claro_survey_questions_management',
-                    array(
-                        'survey' => $survey->getId(),
-                        'orderedBy' => 'title',
-                        'order' => 'ASC'
+            if ($source === 'survey') {
+
+                return new RedirectResponse(
+                    $this->router->generate(
+                        'claro_survey_management',
+                        array('survey' => $survey->getId())
                     )
-                )
-            );
+                );
+            } else {
+
+                return new RedirectResponse(
+                    $this->router->generate(
+                        'claro_survey_questions_management',
+                        array(
+                            'survey' => $survey->getId(),
+                            'orderedBy' => 'title',
+                            'order' => 'ASC'
+                        )
+                    )
+                );
+                }
         }
 
         return array(
             'form' => $form->createView(),
             'question' => $question,
-            'survey' => $survey
+            'survey' => $survey,
+            'source' => $source
         );
     }
 
@@ -354,6 +485,79 @@ class SurveyController extends Controller
                 )
             )
         );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/survey/{survey}/add/question/{question}",
+     *     name="claro_survey_add_question",
+     *     options={"expose"=true}
+     * )
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function surveyAddQuestionAction(Survey $survey, Question $question)
+    {
+        $this->checkQuestionRight($survey, $question, 'EDIT');
+        $this->surveyManager->createSurveyQuestionRelation($survey, $question);
+
+        return new RedirectResponse(
+            $this->router->generate(
+                'claro_survey_management',
+                array('survey' => $survey->getId())
+            )
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/survey/{survey}/remove/question/{question}",
+     *     name="claro_survey_remove_question",
+     *     options={"expose"=true}
+     * )
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function surveyRemoveQuestionAction(Survey $survey, Question $question)
+    {
+        $this->checkQuestionRight($survey, $question, 'EDIT');
+        $this->surveyManager->deleteSurveyQuestionRelation($survey, $question);
+
+        return new RedirectResponse(
+            $this->router->generate(
+                'claro_survey_management',
+                array('survey' => $survey->getId())
+            )
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/survey/{survey}/typed/question/{question}/display",
+     *     name="claro_survey_typed_question_display",
+     *     options={"expose"=true}
+     * )
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function typedQuestionDisplayAction(Survey $survey, Question $question)
+    {
+        $this->checkQuestionRight($survey, $question, 'EDIT');
+        $questionType = $question->getType();
+
+        switch ($questionType) {
+
+            case 'multiple_choice' :
+
+                return $this->displayMultipleChoiceQuestion($question);
+            case 'open_ended':
+
+                return $this->displayOpenEndedQuestion($question);
+            default:
+                break;
+        }
+
+        return new Response();
     }
 
     /**
@@ -437,6 +641,42 @@ class SurveyController extends Controller
                     'choices' => $choices,
                     'allowMultipleResponse' => $allowMultipleResponse
                 )
+            )
+        );
+    }
+
+    private function displayMultipleChoiceQuestion(Question $question)
+    {
+        $multipleChoiceQuestion = $this->surveyManager
+            ->getMultipleChoiceQuestionByQuestion($question);
+
+        if (is_null($multipleChoiceQuestion)) {
+
+            throw new \Exception('Cannot find multiple choice question');
+        }
+
+        $choices = $multipleChoiceQuestion->getChoices();
+        $allowMultipleResponse =
+            $multipleChoiceQuestion->getAllowMultipleResponse();
+
+        return new Response(
+            $this->templating->render(
+                "ClarolineSurveyBundle:Survey:displayMultipleChoiceQuestion.html.twig",
+                array(
+                    'question' => $question,
+                    'choices' => $choices,
+                    'allowMultipleResponse' => $allowMultipleResponse
+                )
+            )
+        );
+    }
+
+    private function displayOpenEndedQuestion(Question $question)
+    {
+        return new Response(
+            $this->templating->render(
+                "ClarolineSurveyBundle:Survey:displayOpenEndedQuestion.html.twig",
+                array('question' => $question)
             )
         );
     }

@@ -1,0 +1,13 @@
+<h1>{{ survey.getResourceNode.getName() }}</h1>
+
+{% if questionRelations|length == 0 %}
+    <div class="alert alert-danger" role="alert">
+        {{ 'no_question'|trans({}, 'survey') }}
+    </div>
+{% else %}
+
+    {% for view in questionViews %}
+        <hr>
+        {{ view|raw }}
+    {% endfor %}
+{% endif %}

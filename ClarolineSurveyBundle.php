@@ -13,8 +13,6 @@ namespace Claroline\SurveyBundle;
 
 use Claroline\CoreBundle\Library\PluginBundle;
 use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
-use Claroline\SurveyBundle\DependencyInjection\QuestionTypeHandlerPass;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 class ClarolineSurveyBundle extends PluginBundle
 {

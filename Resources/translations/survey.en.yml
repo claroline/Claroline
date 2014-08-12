@@ -1,9 +1,12 @@
 actions: Actions
 add_choice: 'Add a choice'
+add_question: 'Add a question'
+add_question_box_title: 'Add a question to survey'
 allow_edition_after_submission: 'Allow edition after submission'
 allow_multiple_response: 'Multiple response'
 choices_management: 'Choices management'
 closed: Closed
+comment: Comment
 create_question: 'Create a question'
 display_survey: 'Display survey'
 edit_parameters: 'Edit parameters'
@@ -12,8 +15,10 @@ edition: Edition
 end_date: 'End date'
 multiple_choice: 'Multiple choice'
 name: Name
+no_choice_warning: 'Warning! There is no choice.'
 no_question: 'No question'
 open_ended: 'Open-ended'
+parameters_edition: 'Parameters edition'
 published: Published
 question_creation: 'Question creation'
 question_delete_confirm_message: 'Do you really want to delete this question ?'
@@ -28,6 +33,7 @@ return: Return
 show_result_to_users: 'Show result to users'
 start_date: 'Starting date'
 status: Status
+survey_edition: 'Survey edition'
 survey_edition_form_allowAnswerEdition: 'Allow edition after submission'
 survey_edition_form_endDate: 'End date'
 survey_edition_form_hasPublicResult: 'Show result to users'

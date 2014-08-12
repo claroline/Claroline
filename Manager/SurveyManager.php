@@ -17,6 +17,7 @@ use Claroline\SurveyBundle\Entity\Choice;
 use Claroline\SurveyBundle\Entity\Question;
 use Claroline\SurveyBundle\Entity\MultipleChoiceQuestion;
 use Claroline\SurveyBundle\Entity\Survey;
+use Claroline\SurveyBundle\Entity\SurveyQuestionRelation;
 //use Claroline\SurveyBundle\QuestionTypeHandler\AbstractQuestionTypeHandler;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -25,10 +26,10 @@ use JMS\DiExtraBundle\Annotation as DI;
  */
 class SurveyManager
 {
-//    private $handlers;
     private $om;
     private $choiceRepo;
     private $multipleChoiceQuestionRepo;
+    private $surveyQuestionRelationRepo;
     private $questionRepo;
     
     /**
@@ -43,6 +44,8 @@ class SurveyManager
             $om->getRepository('ClarolineSurveyBundle:Choice');
         $this->multipleChoiceQuestionRepo =
             $om->getRepository('ClarolineSurveyBundle:MultipleChoiceQuestion');
+        $this->surveyQuestionRelationRepo =
+            $om->getRepository('ClarolineSurveyBundle:SurveyQuestionRelation');
         $this->questionRepo =
             $om->getRepository('ClarolineSurveyBundle:Question');
     }
@@ -109,6 +112,67 @@ class SurveyManager
         $this->om->flush();
     }
 
+    public function createSurveyQuestionRelation(
+        Survey $survey,
+        Question $question
+    )
+    {
+        $relation = new SurveyQuestionRelation();
+        $relation->setSurvey($survey);
+        $relation->setQuestion($question);
+        $orderMaxTab = $this->getSurveyLastQuestionOrder($survey);
+        $orderMax = $orderMaxTab['order_max'];
+
+        if (is_null($orderMax)) {
+            $orderMax = 0;
+        }
+        $orderMax++;
+        $relation->setQuestionOrder($orderMax);
+
+        $this->om->persist($relation);
+        $this->om->flush();
+    }
+
+    public function deleteSurveyQuestionRelation(
+        Survey $survey,
+        Question $question
+    )
+    {
+        $relation = $this->getRelationBySurveyAndQuestion($survey, $question);
+
+        if (!is_null($relation)) {
+            $this->om->remove($relation);
+            $this->om->flush();
+        }
+    }
+
+    public function getAvailableQuestions(
+        Workspace $workspace,
+        array $exclusions,
+        $orderedBy = 'title',
+        $order = 'ASC',
+        $executeQuery = true
+    )
+    {
+        if (count($exclusions) === 0) {
+
+            return $this->getQuestionsByWorkspace(
+                $workspace,
+                $orderedBy,
+                $order,
+                $executeQuery
+            );
+        } else {
+
+            return $this->getQuestionsByWorkspaceWithExclusions(
+                $workspace,
+                $exclusions,
+                $orderedBy,
+                $order,
+                $executeQuery
+            );
+        }
+    }
 
     /****************************************
      * Access to QuestionRepository methods *
@@ -129,6 +193,22 @@ class SurveyManager
         );
     }
 
+    public function getQuestionsByWorkspaceWithExclusions(
+        Workspace $workspace,
+        array $exclusions,
+        $orderedBy = 'title',
+        $order = 'ASC',
+        $executeQuery = true
+    )
+    {
+        return $this->questionRepo->findQuestionsByWorkspaceWithExclusions(
+            $workspace,
+            $exclusions,
+            $orderedBy,
+            $order,
+            $executeQuery
+        );
+    }
 
     /**************************************
      * Access to ChoiceRepository methods *
@@ -157,5 +237,32 @@ class SurveyManager
     {
         return $this->multipleChoiceQuestionRepo
             ->findMultipleChoiceQuestionByQuestion($question, $executeQuery);
+    }
+
+
+    /******************************************************
+     * Access to SurveyQuestionRelationRepository methods *
+     ******************************************************/
+
+    public function getRelationBySurveyAndQuestion(
+        Survey $survey,
+        Question $question,
+        $executeQuery = true
+    )
+    {
+        return $this->surveyQuestionRelationRepo->findRelationBySurveyAndQuestion(
+            $survey,
+            $question,
+            $executeQuery
+        );
+    }
+
+    public function getSurveyLastQuestionOrder(
+        Survey $survey,
+        $executeQuery = true
+    )
+    {
+        return $this->surveyQuestionRelationRepo
+            ->findSurveyLastQuestionOrder($survey, $executeQuery);
     }
 }

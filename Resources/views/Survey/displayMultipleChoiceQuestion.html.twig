@@ -1,0 +1,39 @@
+{% if allowMultipleResponse %}
+    {% set choiceType = "checkbox" %}
+{% else %}
+    {% set choiceType = "radio" %}
+{% endif %}
+
+<div>
+    <h3>{{ question.getQuestion()|raw }}</h3>
+    <div id="question-body" style="padding-left: 50px">
+        {% if choices|length == 0 %}
+            <div class="alert alert-danger" role="alert">
+                {{ 'no_choice_warning'|trans({}, 'survey') }}
+            </div>
+        {% else %}
+            {% for choice in choices %}
+                {% set choiceContent = choice.getContent() %}
+                <div class="{{ choiceType }}">
+                    <label>
+                    <input type="{{ choiceType }}" name="{{ question.getTitle() }}">
+                    
+                    {% if choiceContent is defined and choiceContent is not empty %}
+                        {{ choiceContent|raw }}
+                    {% else %}
+                        <input type="text" name="{{ question.getTitle() }}">
+                    {% endif %}
+                    </label>
+                </div>
+            {% endfor %} 
+        {% endif %}
+        
+        {% if question.isCommentAllowed() %}
+            <br>
+            <div>
+                <label>{{ 'comment'|trans({}, 'survey') }}</label>
+                <textarea rows="4"></textarea>
+            </div>
+        {% endif %}
+    </div>
+</div>

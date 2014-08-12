@@ -18,6 +18,7 @@ use Claroline\CoreBundle\Event\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\OpenResourceEvent;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\SurveyBundle\Entity\Survey;
+use Claroline\SurveyBundle\Entity\SurveyQuestionRelation;
 use Claroline\SurveyBundle\Form\SurveyType;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bundle\TwigBundle\TwigEngine;
@@ -132,8 +133,25 @@ class SurveyListener
      */
     public function onCopy(CopyResourceEvent $event)
     {
+        $survey = $event->getResource();
         $copy = new Survey();
+        $copy->setPublished($survey->isPublished());
+        $copy->setClosed($survey->isClosed());
+        $copy->setHasPublicResult($survey->getHasPublicResult());
+        $copy->setAllowAnswerEdition($survey->getAllowAnswerEdition());
+        $copy->setStartDate($survey->getStartDate());
+        $copy->setEndDate($survey->getEndDate());
         $this->om->persist($copy);
+        $relations = $survey->getQuestionRelations();
+
+        foreach ($relations as $relation) {
+            $newRelation = new SurveyQuestionRelation();
+            $newRelation->setSurvey($copy);
+            $newRelation->setQuestion($relation->getQuestion());
+            $newRelation->setQuestionOrder($relation->getQuestionOrder());
+            $this->om->persist($newRelation);
+        }
+
         $event->setCopy($copy);
         $event->stopPropagation();
     }
