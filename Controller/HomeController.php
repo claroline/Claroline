@@ -240,50 +240,6 @@ class HomeController
     }
 
     /**
-     * Render the HTML of the content.
-     *
-     * @return array
-     */
-    public function renderContent($layout)
-    {
-        $tmp = ' '; // void in case of not yet content
-
-        if (isset($layout['content']) and isset($layout['type']) and is_array($layout['content'])) {
-            foreach ($layout['content'] as $content) {
-                $tmp .= $this->render(
-                    'ClarolineCoreBundle:Home/types:'.$content['type'].'.html.twig', $content, true
-                )->getContent();
-            }
-        }
-
-        $layout['content'] = $tmp;
-
-        return $layout;
-    }
-
-    /**
-     * Render the HTML of the regions.
-     *
-     * @return string
-     */
-    public function renderRegions($regions)
-    {
-        $tmp = array();
-
-        foreach ($regions as $name => $region) {
-            $tmp[$name] = '';
-
-            foreach ($region as $variables) {
-                $tmp[$name] .= $this->render(
-                    'ClarolineCoreBundle:Home/types:'.$variables['type'].'.html.twig', $variables, true
-                )->getContent();
-            }
-        }
-
-        return $tmp;
-    }
-
-    /**
      * Create new content by POST method. This is used by ajax.
      * The response is the id of the new content in success, otherwise the response is the false word in a string.
      *
@@ -488,6 +444,88 @@ class HomeController
         }
 
         return new Response('false'); //in case is not valid URL
+    }
+
+    /**
+     * Menu settings
+     *
+     * @Route("/content/menu/settings/{content}", name="claroline_content_menu_settings")
+     * @Secure(roles="ROLE_ADMIN")
+     *
+     * @ParamConverter("content", class = "ClarolineCoreBundle:Content", options = {"id" = "content"})
+     *
+     * @Template("ClarolineCoreBundle:Home:menuSettings.html.twig")
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function menuSettingsAction($content)
+    {
+        return array(
+            'content' => $content,
+            'menu' => $this->manager->getContentByType('menu', $content->getId()),
+            'parameters' => $this->manager->getHomeParameters()
+        );
+    }
+
+    /**
+     * Save the menu settings
+     *
+     * @param mainMenu The id of the menu
+     * @param footerLogin A Boolean that determine if there is the login button in the footer
+     * @param footerWorkspaces A Boolean that determine if there is the workspace button in the footer
+     * @param headerLocale A boolean that determine if there is a locale button in the header
+     *
+     * @Secure(roles="ROLE_ADMIN")
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function saveMenuSettingsAction($mainMenu, $footerLogin, $footerWorkspaces, $headerLocale)
+    {
+        $this->manager->saveMenuSettings($mainMenu, $footerLogin, $footerWorkspaces, $headerLocale);
+    }
+
+    /**
+     * Render the HTML of the content.
+     *
+     * @return array
+     */
+    public function renderContent($layout)
+    {
+        $tmp = ' '; // void in case of not yet content
+
+        if (isset($layout['content']) and isset($layout['type']) and is_array($layout['content'])) {
+            foreach ($layout['content'] as $content) {
+                $tmp .= $this->render(
+                    'ClarolineCoreBundle:Home/types:'.$content['type'].'.html.twig', $content, true
+                )->getContent();
+            }
+        }
+
+        $layout['content'] = $tmp;
+
+        return $layout;
+    }
+
+    /**
+     * Render the HTML of the regions.
+     *
+     * @return string
+     */
+    public function renderRegions($regions)
+    {
+        $tmp = array();
+
+        foreach ($regions as $name => $region) {
+            $tmp[$name] = '';
+
+            foreach ($region as $variables) {
+                $tmp[$name] .= $this->render(
+                    'ClarolineCoreBundle:Home/types:'.$variables['type'].'.html.twig', $variables, true
+                )->getContent();
+            }
+        }
+
+        return $tmp;
     }
 
     /**
