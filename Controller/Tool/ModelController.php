@@ -233,7 +233,10 @@ class ModelController extends Controller
      */
     public function configureModelAction(Model $model)
     {
-        return array('model' => $model);
+        $copied = array();
+        $links = array();
+
+        return array('model' => $model, 'copied' => $copied, 'links' => $links);
     }
 
     /**

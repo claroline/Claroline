@@ -11,13 +11,14 @@
 
 namespace Claroline\CoreBundle\Manager;
 
+use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Group;
+use Claroline\CoreBundle\Entity\Model\ResourceModel;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Entity\Model\Model;
 use Claroline\CoreBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Entity\Resource\ResourceNode;
-use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Group;
 
 /**
  * @DI\Service("claroline.manager.model_manager")
@@ -152,6 +153,28 @@ class ModelManager
         }
 
         $this->om->endFlushSuite();
+    }
+
+    public function addResourceNodes(Modle $model, array $resourceNodes, $isCopy)
+    {
+        $this->om->startFlushSuite();
+
+        foreach ($resourceNodes as $resourceNode) {
+            $this->addResourceNode($model, $resourceNode);
+        }
+
+        $this->om->endFlushSuite();
+    }
+
+    public function addResourceNode(Model $model, ResourceNode $resourceNode, $isCopy)
+    {
+        $resourceModel = new ResourceModel();
+//        $model->
+    }
+
+    public function removeResourceNode(Model $model, ResourceNode $resourceNode)
+    {
+
     }
 
     public function toArray(Model $model)
