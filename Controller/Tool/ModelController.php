@@ -45,13 +45,13 @@ class ModelController extends Controller
 
     /**
      * @DI\InjectParams({
-     *     "router"        = @DI\Inject("router"),
-     *     "security"      = @DI\Inject("security.context"),
-     *     "userManager"   = @DI\Inject("claroline.manager.user_manager"),
-     *     "groupManager"  = @DI\Inject("claroline.manager.group_manager"),
-     *     "modelManager"  = @DI\Inject("claroline.manager.model_manager"),
-     *     "homeTabManager = @DI\Inject("claroline.manager.home_tab_manager")
-     *     "formFactory"   = @DI\Inject("form.factory")
+     *     "router"         = @DI\Inject("router"),
+     *     "security"       = @DI\Inject("security.context"),
+     *     "userManager"    = @DI\Inject("claroline.manager.user_manager"),
+     *     "groupManager"   = @DI\Inject("claroline.manager.group_manager"),
+     *     "modelManager"   = @DI\Inject("claroline.manager.model_manager"),
+     *     "homeTabManager" = @DI\Inject("claroline.manager.home_tab_manager"),
+     *     "formFactory"    = @DI\Inject("form.factory")
      * })
      */
     public function __construct(
@@ -442,7 +442,7 @@ class ModelController extends Controller
     public function addNodesCopyAction(Model $model, array $resourceNodes)
     {
         $this->checkAccess($model->getWorkspace());
-        $this->modelManager->addResourceNodes($model, $resourceNodes, true)
+        $this->modelManager->addResourceNodes($model, $resourceNodes, true);
 
         return new JsonResponse();
     }
@@ -463,7 +463,7 @@ class ModelController extends Controller
     public function addNodeLinkAction(Model $model)
     {
         $this->checkAccess($model->getWorkspace());
-        $this->modelManager->addResourceNodes($model, $resourceNodes, true)
+        $this->modelManager->addResourceNodes($model, $resourceNodes, true);
 
         return new JsonResponse();
     }

@@ -138,7 +138,7 @@ class ModelManager
     public function addResourceNode(Model $model, ResourceNode $resourceNode, $isCopy)
     {
         $resourceModel = new ResourceModel();
-        $resourceModel->setModel($model),
+        $resourceModel->setModel($model);
         $resourceModel->setResourceNode($resourceNode);
         $resourceModel->setIsCopy($isCopy);
         $this->om->persist($resourceModel);
