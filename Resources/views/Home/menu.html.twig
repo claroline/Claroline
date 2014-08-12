@@ -5,16 +5,49 @@
         </button>
         <ul class="dropdown-menu pull-right" role="menu">
             {% if father is defined and father is not empty  %}
-                <li role="presentation"><a role="menuitem" class="content-edit"><i class="fa fa-pencil-square-o"></i> {{ "Edit" | trans({}, 'home') }}</a></li>
-                <li role="presentation"><a role="menuitem" class="content-delete"><i class="fa fa-trash-o"></i> {{ "Delete" | trans({}, 'home') }}</a></li>
+                <li role="presentation">
+                    <a role="menuitem" class="content-edit">
+                        <i class="fa fa-pencil-square-o"></i> {{ "Edit" | trans({}, 'home') }}
+                    </a>
+                </li>
+                <li role="presentation">
+                    <a role="menuitem" class="content-delete">
+                        <i class="fa fa-trash-o"></i> {{ "Delete" | trans({}, 'home') }}
+                    </a>
+                </li>
             {% else %}
                 {% if region is not defined or (region is defined and region is empty) %}
-                    {% if type is defined %}<li><a class="content-size"><i class="fa fa-arrows-h"></i> {{ "Size" | trans({}, 'home') }}</a></li>{% endif %}
-                    <li><a class="content-edit"><i class="fa fa-pencil"></i> {{ "Edit" | trans({}, 'home') }}</a></li>
+                    {% if type is defined %}
+                        <li>
+                            <a class="content-size">
+                                <i class="fa fa-arrows-h"></i> {{ "Size" | trans({}, 'home') }}
+                            </a>
+                        </li>
+                    {% endif %}
+                    <li>
+                        <a class="content-edit">
+                            <i class="fa fa-pencil"></i> {{ "Edit" | trans({}, 'home') }}
+                        </a>
+                    </li>
                 {% endif %}
-                <li role="presentation"><a role="menuitem" class="content-delete"><i class="fa fa-trash-o"></i> {{ "Delete" | trans({}, 'home') }}</a></li>
+                <li role="presentation">
+                    <a role="menuitem" class="content-delete">
+                        <i class="fa fa-trash-o"></i> {{ "Delete" | trans({}, 'home') }}
+                    </a>
+                </li>
                 {% if type != "home" %}
-                    <li role="presentation"><a role="menuitem" class="content-region"><i class="fa fa-th-large"></i> {{ "Region" | trans({}, 'home') }}</a></li>
+                    <li role="presentation">
+                        <a role="menuitem" class="content-region">
+                            <i class="fa fa-th-large"></i> {{ "Region" | trans({}, 'home') }}
+                        </a>
+                    </li>
+                {% endif %}
+                {% if type == "menu" %}
+                    <li role="presentation">
+                        <a role="menuitem" href="{{ path('claroline_content_menu_settings', {'content': id}) }}">
+                            <i class="fa fa-cog"></i> {{ "settings" | trans({}, 'platform') }}
+                        </a>
+                    </li>
                 {% endif %}
             {% endif %}
         </ul>

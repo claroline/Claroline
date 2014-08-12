@@ -27,9 +27,8 @@
                 home.changeSize(size, id, type, content);
             });
         });
-    });
-
-    $('body').on('click', '.content-region', function (event) {
+    })
+    .on('click', '.content-region', function (event) {
         var id = $(event.target).parents('.content-element').data('id');
 
         modal.fromRoute('claroline_content_region', {'content': id}, function (element) {
@@ -39,9 +38,8 @@
                 home.changeRegion(name, id);
             });
         });
-    });
-
-    $('body').on('click', '.content-delete', function (event) {
+    })
+    .on('click', '.content-delete', function (event) {
         var content = $(event.target).parents('.content-element').first();
 
         modal.fromRoute('claro_content_confirm', null, function (element) {
@@ -49,9 +47,8 @@
                 home.deleteContent(content);
             });
         });
-    });
-
-    $('body').on('click', '.type-delete', function (event) {
+    })
+    .on('click', '.type-delete', function (event) {
         var type = $(event.target).parents('.alert');
 
         modal.fromRoute('claro_content_confirm', null, function (element) {
@@ -59,9 +56,8 @@
                 home.deleteContent(type, true);
             });
         });
-    });
-
-    $('body').on('click', '.create-type', function (event) {
+    })
+    .on('click', '.create-type', function (event) {
         var typeCreator = $(event.target).parents('.creator').get(0);
         var name = $('input', typeCreator);
 
@@ -86,9 +82,8 @@
                 }
             });
         }
-    });
-
-    $('body').on('click', '.content-edit', function (event) {
+    })
+    .on('click', '.content-edit', function (event) {
         var element = $(event.target).parents('.content-element').get(0);
         var id = $(element).data('id');
         var type = $(element).data('type');
@@ -111,23 +106,19 @@
                 modal.error();
             });
         }
-    });
-
-
-    $('body').on('click', '.creator-button', function (event) {
+    })
+    .on('click', '.creator-button', function (event) {
         home.creator(event.target);
-    });
-
-    $('body').on('click', '.creator .edit-button', function (event) {
+    })
+    .on('click', '.creator .edit-button', function (event) {
         var element = $(event.target).parents('.creator').get(0);
         var id = $(element).data('id');
 
         if (element && id) {
             home.creator(event.target, id, true);
         }
-    });
-
-    $('body').on('click', '.creator .cancel-button', function (event) {
+    })
+    .on('click', '.creator .cancel-button', function (event) {
         var element = $(event.target).parents('.creator').get(0);
         var id = $(element).data('id');
         var type = $(element).data('type');
@@ -150,9 +141,8 @@
                 modal.error();
             });
         }
-    });
-
-    $('body').on('click', '.creator .addlink', function () {
+    })
+    .on('click', '.creator .addlink', function () {
         var creator = $(event.target).parents('.creator').get(0);
 
         modal.fromRoute('claro_content_link', null, function (element) {
