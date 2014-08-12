@@ -20,6 +20,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Manager\GroupManager;
 use Claroline\CoreBundle\Manager\ModelManager;
+use Claroline\CoreBundle\Manager\HomeTabManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\Model\Model;
@@ -40,15 +41,17 @@ class ModelController extends Controller
     private $modelManager;
     private $formFactory;
     private $router;
+    private $homeTabManager;
 
     /**
      * @DI\InjectParams({
-     *     "router"       = @DI\Inject("router"),
-     *     "security"     = @DI\Inject("security.context"),
-     *     "userManager"  = @DI\Inject("claroline.manager.user_manager"),
-     *     "groupManager" = @DI\Inject("claroline.manager.group_manager"),
-     *     "modelManager" = @DI\Inject("claroline.manager.model_manager"),
-     *     "formFactory"  = @DI\Inject("form.factory")
+     *     "router"        = @DI\Inject("router"),
+     *     "security"      = @DI\Inject("security.context"),
+     *     "userManager"   = @DI\Inject("claroline.manager.user_manager"),
+     *     "groupManager"  = @DI\Inject("claroline.manager.group_manager"),
+     *     "modelManager"  = @DI\Inject("claroline.manager.model_manager"),
+     *     "homeTabManager = @DI\Inject("claroline.manager.home_tab_manager")
+     *     "formFactory"   = @DI\Inject("form.factory")
      * })
      */
     public function __construct(
@@ -58,17 +61,19 @@ class ModelController extends Controller
         UserManager $userManager,
         GroupManager $groupManager,
         FormFactoryInterface $formFactory,
-        ModelManager $modelManager
+        ModelManager $modelManager,
+        HomeTabManager $homeTabManager
     )
     {
-        $this->router       = $router;
-        $this->security     = $security;
-        $this->formFactory  = $formFactory;
-        $this->request      = $request;
-        $this->userManager  = $userManager;
-        $this->groupManager = $groupManager;
-        $this->modelManager = $modelManager;
-        $this->formFactory  = $formFactory;
+        $this->router         = $router;
+        $this->security       = $security;
+        $this->formFactory    = $formFactory;
+        $this->request        = $request;
+        $this->userManager    = $userManager;
+        $this->groupManager   = $groupManager;
+        $this->modelManager   = $modelManager;
+        $this->formFactory    = $formFactory;
+        $this->homeTabManager = $homeTabManager;
     }
 
     /**
@@ -398,7 +403,7 @@ class ModelController extends Controller
      *     options={"expose"=true}
      * )
      */
-    public function removeModeGroup(Model $model, Group $group)
+    public function removeModeGroupAction(Model $model, Group $group)
     {
         $this->checkAccess($model->getWorkspace());
         $this->modelManager->removeGroup($model, $group);
@@ -413,12 +418,89 @@ class ModelController extends Controller
      *     options={"expose"=true}
      * )
      */
-    public function removeModelUser(Model $model, User $user)
+    public function removeModelUserAction(Model $model, User $user)
     {
         $this->checkAccess($model->getWorkspace());
         $this->modelManager->removeUser($model, $user);
 
         return new JsonResponse(array('id' => $user->getId()));
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/{model}/resource/copy/add",
+     *     name="ws_model_resource_copy_add",
+     *     options={"expose"=true}
+     * )
+     *
+     * @EXT\ParamConverter(
+     *     "resourceNodes",
+     *     class="ClarolineCoreBundle:Resource\ResourceNode",
+     *     options={"multipleIds"=true, "name"="nodeIds"}
+     * )
+     */
+    public function addNodesCopyAction(Model $model, array $resourceNodes)
+    {
+        $this->checkAccess($model->getWorkspace());
+        $this->modelManager->addResourceNodes($model, $resourceNodes, true)
+
+        return new JsonResponse();
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/{model}/resource/link/add",
+     *     name="ws_model_resource_link_add",
+     *     options={"expose"=true}
+     * )
+     *
+     * @EXT\ParamConverter(
+     *     "resourceNodes",
+     *     class="ClarolineCoreBundle:Resource\ResourceNode",
+     *     options={"multipleIds"=true, "name"="nodeIds"}
+     * )
+     */
+    public function addNodeLinkAction(Model $model)
+    {
+        $this->checkAccess($model->getWorkspace());
+        $this->modelManager->addResourceNodes($model, $resourceNodes, true)
+
+        return new JsonResponse();
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/remove/resource/{resourceModel}",
+     *     name="ws_model_resource_remove",
+     *     options={"expose"=true}
+     * )
+     *
+     * @param ResourceModel $resourceModel
+     * @return JsonResponse
+     */
+    public function removeResourceModelAction(ResourceModel $resourceModel)
+    {
+        $this->checkAccess($resourceModel->getModel());
+        $this->modelManager->removeResourceModel($resourceModel);
+
+        return new JsonResponse();
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/{model}/homeTabs/list",
+     *     name="ws_model_homeTabs_list",
+     *     options={"expose"=true}
+     * )
+     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\parameters\model:homeTabsList.html.twig")
+     * @param Model $model
+     */
+    public function listHomeTabsAction(Model $model)
+    {
+        $this->checkAccess($model);
+        $homeTabs = $this->homeTabManager->getWorkspaceHomeTabConfigsByWorkspace($model->getWorkspace());
+
+        return new JsonResponse();
     }
 
     private function checkAccess(Workspace $workspace)

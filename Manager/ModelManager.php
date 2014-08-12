@@ -13,11 +13,11 @@ namespace Claroline\CoreBundle\Manager;
 
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Group;
+use Claroline\CoreBundle\Entity\Model\Model;
 use Claroline\CoreBundle\Entity\Model\ResourceModel;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use JMS\DiExtraBundle\Annotation as DI;
-use Claroline\CoreBundle\Entity\Model\Model;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 
 /**
@@ -73,37 +73,6 @@ class ModelManager
     {
         return $this->modelRepository->findByWorkspace($workspace);
     }
-
-    public function addResourcesNode(Model $model, array $nodes)
-    {
-
-    }
-
-    public function addHomeTabs(Model $model, array $tabs)
-    {
-
-    }
-
-    public function addResourceNode(Model $model, ResourceNode $node, $isLink)
-    {
-
-    }
-
-    public function removeResourceNode(Model $model, ResourceNode $node)
-    {
-
-    }
-
-    public function addHomeTab(Model $model, HomeTab $homeTab)
-    {
-
-    }
-
-    public function removeHomeTab(Model $model, HomeTab $homeTab)
-    {
-
-    }
-    //sharing
 
     public function addUser(Model $model, User $user)
     {
@@ -169,12 +138,42 @@ class ModelManager
     public function addResourceNode(Model $model, ResourceNode $resourceNode, $isCopy)
     {
         $resourceModel = new ResourceModel();
-//        $model->
+        $resourceModel->setModel($model),
+        $resourceModel->setResourceNode($resourceNode);
+        $resourceModel->setIsCopy($isCopy);
+        $this->om->persist($resourceModel);
+        $this->om->flush();
     }
 
-    public function removeResourceNode(Model $model, ResourceNode $resourceNode)
+    public function removeResourceModel(ResourceModel $resourceModel)
     {
+        $this->om->remove($resourceModel);
+        $this->ol->flush();
+    }
 
+    public function addHomeTabs(Model $model, array $homeTabs)
+    {
+        $this->om->startFlushSuite();
+
+        foreach ($homeTabs as $homeTab) {
+            $this->addHomeTab($model, $homeTab);
+        }
+
+        $this->om->endFlushSuite();
+    }
+
+    public function addHomeTab(Model $model, HomeTab $homeTab)
+    {
+        $model->addHomeTab($homeTab);
+        $this->om->persist($model);
+        $this->om->flush();
+    }
+
+    public function removeHomeTab(Model $model, HomeTab $homeTab)
+    {
+        $model->removeHomeTab($homeTab);
+        $this->om->persist($model);
+        $this->om->flush();
     }
 
     public function toArray(Model $model)

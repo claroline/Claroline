@@ -131,9 +131,14 @@ class Model
         return $this->resourcesModel;
     }
 
-    public function addHomeTabs(HomeTab $homeTabs)
+    public function addHomeTab(HomeTab $homeTab)
     {
         $this->homeTabs->add($homeTabs);
+    }
+
+    public function removeHomeTab(HomeTab $homeTab)
+    {
+        $this->homeTabs->removeElement($homeTab);
     }
 
     public function getHomeTabs()
