@@ -5,7 +5,11 @@ add_question_box_title: 'Ajouter une question au sondage'
 allow_edition_after_submission: 'Authoriser la modification de la réponse'
 allow_multiple_response: 'Réponses multiples'
 choices_management: 'Gestion des choix'
+close: Fermer
 closed: Fermé
+closed_user_message: 'Le sondage est clôturé.'
+closing_date: 'Date de clôture'
+closing_date_next: 'Prochaine date de clôture'
 comment: Commentaire
 create_question: 'Créer une question'
 display_survey: 'Afficher le sondage'
@@ -19,7 +23,11 @@ no_choice_warning: 'Attention! Il n''y a aucun choix.'
 no_question: 'Aucune question'
 open_ended: 'Ouverte'
 parameters_edition: 'Modification des paramètres'
+publication_date: 'Date de publication'
+publication_date_next: 'Prochaine date de publication'
+publish: Publier
 published: Publié
+published_user_message: 'Le sondage est ouvert.'
 question_creation: 'Création d''une question'
 question_delete_confirm_message: 'Êtes-vous sûr de vouloir supprimer cette question ?'
 question_delete_confirm_title: 'Suppression de la question'
@@ -42,3 +50,4 @@ survey_parameters_edition: 'Modification des paramètres du sondage'
 title: Titre
 type: Type
 unpublished: 'Non publié'
+unpublished_user_message: 'Le sondage n''est pas encore publié.'

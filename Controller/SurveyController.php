@@ -79,18 +79,25 @@ class SurveyController extends Controller
     {
         $this->checkSurveyRight($survey, 'OPEN');
         $canEdit = $this->hasSurveyRight($survey, 'EDIT');
+        $this->surveyManager->updateSurveyStatus($survey);
+        $status = $this->computeStatus($survey);
 
         if ($canEdit) {
 
             return new Response(
                 $this->templating->render(
                     "ClarolineSurveyBundle:Survey:surveyEditionMainMenu.html.twig",
-                    array('survey' => $survey)
+                    array('survey' => $survey, 'status' => $status)
                 )
             );
         }
+        $currentDate = new \DateTime();
 
-        return array('survey' => $survey);
+        return array(
+            'survey' => $survey,
+            'status' => $status,
+            'currentDate' => $currentDate
+        );
     }
 
     /**
@@ -198,6 +205,57 @@ class SurveyController extends Controller
             'survey' => $survey,
             'questionRelations' => $survey->getQuestionRelations(),
             'questionViews' => $questionViews
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/survey/{survey}/publish",
+     *     name="claro_survey_publish"
+     * )
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function surveyPublishAction(Survey $survey)
+    {
+        $this->checkSurveyRight($survey, 'EDIT');
+
+        if (!$survey->isPublished() || $survey->isClosed()) {
+            $survey->setClosed(false);
+            $survey->setPublished(true);
+            $this->surveyManager->persistSurvey($survey);
+        }
+
+        return new RedirectResponse(
+            $this->router->generate(
+                'claro_survey_index',
+                array('survey' => $survey->getId())
+            )
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/survey/{survey}/close",
+     *     name="claro_survey_close"
+     * )
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function surveyCloseAction(Survey $survey)
+    {
+        $this->checkSurveyRight($survey, 'EDIT');
+
+        if (!$survey->isClosed()) {
+            $survey->setClosed(true);
+            $this->surveyManager->persistSurvey($survey);
+        }
+
+        return new RedirectResponse(
+            $this->router->generate(
+                'claro_survey_index',
+                array('survey' => $survey->getId())
+            )
         );
     }
 
@@ -708,6 +766,19 @@ class SurveyController extends Controller
                 $multipleResponse
             );
         }
+    }
+
+    private function computeStatus(Survey $survey)
+    {
+        $status = 'unpublished';
+
+        if ($survey->isPublished() && !$survey->isClosed()) {
+            $status = 'published';
+        } elseif ($survey->isClosed()) {
+            $status = 'closed';
+        }
+
+        return $status;
     }
 
     private function checkSurveyRight(Survey $survey, $right)

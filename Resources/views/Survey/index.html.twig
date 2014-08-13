@@ -5,6 +5,8 @@
 {% endif %}
 
 {% set _resource = survey %}
+{% set startDate = survey.getStartDate() %}
+{% set endDate = survey.getEndDate() %}
 
 {% extends layout %}
 
@@ -17,61 +19,45 @@
         <h3 class="panel-title">{{ survey.getResourceNode().getName() }}</h3>
     </div>
     <div class="panel-body">
-        <div class="table-responsive">
-            <table class="table table-bordered table-hover text-center">
-                <tr>
-                    <th>{{ 'status'|trans({}, 'survey') }}</th>
-                    <td>
-                        {% if not survey.isPublished() and not survey.isClosed() %}
-                            {{ 'unpublished'|trans({}, 'survey') }}
-                        {% elseif survey.isClosed() %}
-                            {{ 'closed'|trans({}, 'survey') }}
-                        {% else %}
-                            {{ 'published'|trans({}, 'survey') }}
-                        {% endif %}
-                    </td>
-                </tr>
-                <tr>
-                    <th>{{ 'start_date'|trans({}, 'survey') }}</th>
-                    <td>
-                    {% if survey.getStartDate() is not null %}
-                        {{ survey.getStartDate()|intl_date_format }}
-                    {% else %}
-                        -
+        {% if status == 'unpublished' %}
+            <div class="alert alert-warning" role="alert">
+                {{ 'unpublished_user_message'|trans({}, 'survey') }}
+                
+                {% if startDate is not empty %}
+                    <br>
+                    <b>{{ 'publication_date'|trans({}, 'survey') }} :</b>
+                    {{ startDate|intl_date_format }}
+                    
+                    {% if endDate is not empty %}
+                        <br>
+                        <b>{{ 'closing_date'|trans({}, 'survey') }} :</b>
+                        {{ endDate|intl_date_format }}
                     {% endif %}
-                    </td>
-                </tr>
-                <tr>
-                    <th>{{ 'end_date'|trans({}, 'survey') }}</th>
-                    <td>
-                    {% if survey.getEndDate() is not null %}
-                        {{ survey.getEndDate()|intl_date_format }}
-                    {% else %}
-                        -
-                    {% endif %}
-                    </td>
-                </tr>
-                <tr>
-                    <th>{{ 'show_result_to_users'|trans({}, 'survey') }}</th>
-                    <td>
-                    {% if survey.getHasPublicResult() %}
-                        <i class="fa fa-check-circle"></i>
-                    {% else %}
-                        <i class="fa fa-times-circle"></i>
-                    {% endif %}
-                    </td>
-                </tr>
-                <tr>
-                    <th>{{ 'allow_edition_after_submission'|trans({}, 'survey') }}</th>
-                    <td>
-                    {% if survey.getAllowAnswerEdition() %}
-                        <i class="fa fa-check-circle"></i>
-                    {% else %}
-                        <i class="fa fa-times-circle"></i>
-                    {% endif %}
-                    </td>
-                </tr>
-            </table>
-        </div>
+                {% endif %}
+            </div>
+        {% elseif status == 'published' %}
+            <div class="alert alert-info" role="alert">
+                {{ 'published_user_message'|trans({}, 'survey') }}
+                
+                {% if endDate is not empty %}
+                    <br>
+                    <b>{{ 'closing_date'|trans({}, 'survey') }} :</b>
+                    {{ endDate|intl_date_format }}
+                {% endif %}
+            </div>
+        {% elseif status == 'closed' %}
+            <div class="alert alert-danger" role="alert">
+                {{ 'closed_user_message'|trans({}, 'survey') }}
+                
+                {% if startDate is not empty and endDate is not empty and currentDate < startDate and currentDate < endDate %}
+                    <br>
+                    <b>{{ 'publication_date_next'|trans({}, 'survey') }} :</b>
+                    {{ startDate|intl_date_format }}
+                    <br>
+                    <b>{{ 'closing_date_next'|trans({}, 'survey') }} :</b>
+                    {{ endDate|intl_date_format }}
+                {% endif %}
+            </div>
+        {% endif %}
     </div>
 {% endblock %}

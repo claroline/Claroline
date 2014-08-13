@@ -174,6 +174,52 @@ class SurveyManager
         }
     }
 
+    public function updateSurveyStatus(Survey $survey)
+    {
+        $startDate = $survey->getStartDate();
+        $endDate = $survey->getEndDate();
+        $flush = false;
+
+        if (!is_null($startDate) || !is_null($endDate)) {
+            $now = new \DateTime();
+
+            if ((!is_null($startDate) && !is_null($endDate) &&
+                $now > $startDate && $now < $endDate) &&
+                ($survey->isClosed() || !$survey->isPublished())) {
+
+                $survey->setPublished(true);
+                $survey->setClosed(false);
+                $this->om->persist($survey);
+                $flush = true;
+            } else {
+
+                if (!$survey->isPublished() &&
+                    !$survey->isClosed() &&
+                    !is_null($startDate) &&
+                    $now > $startDate) {
+
+                    $survey->setPublished(true);
+                    $this->om->persist($survey);
+                    $flush = true;
+                }
+
+                if (!$survey->isClosed() &&
+                    !is_null($endDate) &&
+                    $now > $endDate) {
+
+                    $survey->setClosed(true);
+                    $this->om->persist($survey);
+                    $flush = true;
+                }
+            }
+
+            if ($flush) {
+                $this->om->flush();
+            }
+        }
+    }
+
+
     /****************************************
      * Access to QuestionRepository methods *
      ****************************************/
