@@ -16,12 +16,14 @@
                 {% set choiceContent = choice.getContent() %}
                 <div class="{{ choiceType }}">
                     <label>
-                    <input type="{{ choiceType }}" name="{{ question.getTitle() }}">
+                    <input type="{{ choiceType }}"
+                           name="{% if choiceType == 'radio' %}{{ question.getId() }}[choice]{% else %}{{ question.getId() }}[{{ choice.getId() }}]{% endif %}"
+                           value="{{ choice.getId() }}">
                     
                     {% if choiceContent is defined and choiceContent is not empty %}
                         {{ choiceContent|raw }}
                     {% else %}
-                        <input type="text" name="{{ question.getTitle() }}">
+                        <input type="text" name="other[{{ choice.getId() }}][answer]">
                     {% endif %}
                     </label>
                 </div>
@@ -32,7 +34,7 @@
             <br>
             <div>
                 <label>{{ 'comment'|trans({}, 'survey') }}</label>
-                <textarea rows="4"></textarea>
+                <textarea rows="4" name="{{ question.getId() }}[comment]"></textarea>
             </div>
         {% endif %}
     </div>

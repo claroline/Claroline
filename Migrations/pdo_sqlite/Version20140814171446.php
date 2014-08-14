@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/08/12 04:23:12
+ * Generation date: 2014/08/14 05:14:47
  */
-class Version20140812162311 extends AbstractMigration
+class Version20140814171446 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -29,6 +29,58 @@ class Version20140812162311 extends AbstractMigration
         ");
         $this->addSql("
             CREATE UNIQUE INDEX UNIQ_11B27D4BB87FAB32 ON claro_survey_resource (resourceNode_id)
+        ");
+        $this->addSql("
+            CREATE TABLE claro_survey_open_ended_question_answer (
+                id INTEGER NOT NULL, 
+                question_answer_id INTEGER NOT NULL, 
+                answer_content CLOB DEFAULT NULL, 
+                PRIMARY KEY(id)
+            )
+        ");
+        $this->addSql("
+            CREATE UNIQUE INDEX UNIQ_F2616BBEA3E60C9C ON claro_survey_open_ended_question_answer (question_answer_id)
+        ");
+        $this->addSql("
+            CREATE TABLE claro_survey_multiple_choice_question_answer (
+                id INTEGER NOT NULL, 
+                question_answer_id INTEGER NOT NULL, 
+                choice_id INTEGER NOT NULL, 
+                PRIMARY KEY(id)
+            )
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_FDB8AF37A3E60C9C ON claro_survey_multiple_choice_question_answer (question_answer_id)
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_FDB8AF37998666D1 ON claro_survey_multiple_choice_question_answer (choice_id)
+        ");
+        $this->addSql("
+            CREATE TABLE claro_survey_question_answer (
+                id INTEGER NOT NULL, 
+                answer_survey_id INTEGER NOT NULL, 
+                question_id INTEGER NOT NULL, 
+                answer_comment CLOB DEFAULT NULL, 
+                PRIMARY KEY(id)
+            )
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_9F5D3C468E018F4B ON claro_survey_question_answer (answer_survey_id)
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_9F5D3C461E27F6BF ON claro_survey_question_answer (question_id)
+        ");
+        $this->addSql("
+            CREATE TABLE claro_survey_answer (
+                id INTEGER NOT NULL, 
+                answer_date DATETIME NOT NULL, 
+                nb_answers INTEGER NOT NULL, 
+                survey_id INTEGER NOT NULL, 
+                PRIMARY KEY(id)
+            )
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_DFEB5349B3FE509D ON claro_survey_answer (survey_id)
         ");
         $this->addSql("
             CREATE TABLE claro_survey_choice (
@@ -93,6 +145,18 @@ class Version20140812162311 extends AbstractMigration
     {
         $this->addSql("
             DROP TABLE claro_survey_resource
+        ");
+        $this->addSql("
+            DROP TABLE claro_survey_open_ended_question_answer
+        ");
+        $this->addSql("
+            DROP TABLE claro_survey_multiple_choice_question_answer
+        ");
+        $this->addSql("
+            DROP TABLE claro_survey_question_answer
+        ");
+        $this->addSql("
+            DROP TABLE claro_survey_answer
         ");
         $this->addSql("
             DROP TABLE claro_survey_choice

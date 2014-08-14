@@ -16,6 +16,19 @@ use Doctrine\ORM\EntityRepository;
 
 class QuestionRepository extends EntityRepository
 {
+    public function findQuestionById($questionId, $executeQuery = true)
+    {
+        $dql = "
+            SELECT q
+            FROM Claroline\SurveyBundle\Entity\Question q
+            WHERE q.id = :id
+        ";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('id', $questionId);
+
+        return $executeQuery ? $query->getOneOrNullResult() : $query;
+    }
+
     public function findQuestionsByWorkspace(
         Workspace $workspace,
         $orderedBy = 'title',

@@ -59,5 +59,17 @@
                 {% endif %}
             </div>
         {% endif %}
+        
+        {% if status == 'published' %}
+            <hr>
+            <a href="{{ path('claro_survey_answer_form', {'survey': survey.getId()}) }}" class="btn btn-primary">
+                {{ 'answer_to_survey'|trans({}, 'survey') }}
+            </a>
+        {% elseif status == 'closed' and survey.getHasPublicResult() %}
+            <hr>
+            <a href="" class="btn btn-primary">
+                {{ 'view_survey_results'|trans({}, 'survey') }}
+            </a>
+        {% endif %}
     </div>
 {% endblock %}

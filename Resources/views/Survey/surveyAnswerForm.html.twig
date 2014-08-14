@@ -1,0 +1,65 @@
+{% set layout = 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
+
+{% if isDesktop() %}
+    {% set layout = 'ClarolineCoreBundle:Desktop:layout.html.twig' %}
+{% endif %}
+
+{% set _resource = survey %}
+{% set surveyId = survey.getId() %}
+
+{% extends layout %}
+
+{% block title %}
+    {{ survey.getResourceNode().getName() ~ ' - '  | striptags | raw ~ 'survey_answer'|trans({}, 'survey') }}
+{% endblock %}
+
+{% block resourceBreadcrumb %}
+    <li>
+        <a href="{{ path(
+            'claro_resource_open',
+            {
+                'resourceType': _resource.getResourceNode().getResourceType().getName(),
+                'node': _resource.getResourceNode().getId()
+            }
+        ) }}">
+            {{ _resource.getResourceNode().getName() }}
+        </a>
+    </li>
+    <li class="active">{{ 'survey_answer' | trans({}, 'survey') }}</li>
+{% endblock %}
+
+{% block section_content %}
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ survey.getResourceNode().getName() }}</h3>
+    </div>
+    <form role="form"
+          class="form-horizontal"
+          action="{{ path('claro_survey_answer', {'survey': surveyId}) }}"
+          method="post"
+          id="form_settings"
+          novalidate
+    >
+        <div class="panel-body">
+            {% for view in questionViews %}
+                {{ view|raw }}
+                
+                {% if not loop.last %}
+                    <br>
+                    <hr>
+                    <br>
+                {% endif %}
+            {% endfor %}
+        </div>
+        <br>
+        <div class="panel-footer">
+            <button type="submit" class="btn btn-primary">
+                {{ 'ok'|trans({}, 'platform') }}
+            </button>
+            <a href="{{ path('claro_survey_index', {'survey': surveyId}) }}">
+                <button type="button" class="btn btn-default">
+                    {{ 'cancel'|trans({}, 'platform') }}
+                </button>
+            </a>
+        </div>
+    </form>
+{% endblock %}

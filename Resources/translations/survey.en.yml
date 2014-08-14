@@ -4,6 +4,7 @@ add_question: 'Add a question'
 add_question_box_title: 'Add a question to survey'
 allow_edition_after_submission: 'Allow edition after submission'
 allow_multiple_response: 'Multiple response'
+answer_to_survey: 'Answer to survey'
 choices_management: 'Choices management'
 close: Close
 closed: Closed
@@ -41,6 +42,7 @@ return: Return
 show_result_to_users: 'Show result to users'
 start_date: 'Starting date'
 status: Status
+survey_answer: Answer
 survey_edition: 'Survey edition'
 survey_edition_form_allowAnswerEdition: 'Allow edition after submission'
 survey_edition_form_endDate: 'End date'
@@ -51,3 +53,4 @@ title: Title
 type: Type
 unpublished: Unpublished
 unpublished_user_message: 'The survey is not published yet.'
+view_survey_results: 'View survey results'

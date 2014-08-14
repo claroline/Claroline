@@ -11,14 +11,18 @@
 
 namespace Claroline\SurveyBundle\Manager;
 
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Persistence\ObjectManager;
+use Claroline\SurveyBundle\Entity\Answer\MultipleChoiceQuestionAnswer;
+use Claroline\SurveyBundle\Entity\Answer\OpenEndedQuestionAnswer;
+use Claroline\SurveyBundle\Entity\Answer\QuestionAnswer;
+use Claroline\SurveyBundle\Entity\Answer\SurveyAnswer;
 use Claroline\SurveyBundle\Entity\Choice;
 use Claroline\SurveyBundle\Entity\Question;
 use Claroline\SurveyBundle\Entity\MultipleChoiceQuestion;
 use Claroline\SurveyBundle\Entity\Survey;
 use Claroline\SurveyBundle\Entity\SurveyQuestionRelation;
-//use Claroline\SurveyBundle\QuestionTypeHandler\AbstractQuestionTypeHandler;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -29,7 +33,9 @@ class SurveyManager
     private $om;
     private $choiceRepo;
     private $multipleChoiceQuestionRepo;
+    private $surveyAnswerRepo;
     private $surveyQuestionRelationRepo;
+    private $questionAnswerRepo;
     private $questionRepo;
     
     /**
@@ -44,8 +50,12 @@ class SurveyManager
             $om->getRepository('ClarolineSurveyBundle:Choice');
         $this->multipleChoiceQuestionRepo =
             $om->getRepository('ClarolineSurveyBundle:MultipleChoiceQuestion');
+        $this->surveyAnswerRepo =
+            $om->getRepository('ClarolineSurveyBundle:Answer\SurveyAnswer');
         $this->surveyQuestionRelationRepo =
             $om->getRepository('ClarolineSurveyBundle:SurveyQuestionRelation');
+        $this->questionAnswerRepo =
+            $om->getRepository('ClarolineSurveyBundle:Answer\QuestionAnswer');
         $this->questionRepo =
             $om->getRepository('ClarolineSurveyBundle:Question');
     }
@@ -219,10 +229,43 @@ class SurveyManager
         }
     }
 
+    public function persistSurveyAnswer(SurveyAnswer $surveyAnswer)
+    {
+        $this->om->persist($surveyAnswer);
+        $this->om->flush();
+    }
+
+    public function persistQuestionAnswer(QuestionAnswer $questionAnswer)
+    {
+        $this->om->persist($questionAnswer);
+        $this->om->flush();
+    }
+
+    public function persistOpenEndedQuestionAnswer(
+        OpenEndedQuestionAnswer $openEndedAnswer
+    )
+    {
+        $this->om->persist($openEndedAnswer);
+        $this->om->flush();
+    }
+
+    public function persistMultipleChoiceQuestionAnswer(
+        MultipleChoiceQuestionAnswer $choiceAnswer
+    )
+    {
+        $this->om->persist($choiceAnswer);
+        $this->om->flush();
+    }
+
 
     /****************************************
      * Access to QuestionRepository methods *
      ****************************************/
+
+    public function getQuestionById($questionId, $executeQuery = true)
+    {
+        return $this->questionRepo->findQuestionById($questionId, $executeQuery);
+    }
 
     public function getQuestionsByWorkspace(
         Workspace $workspace,
@@ -260,12 +303,17 @@ class SurveyManager
      * Access to ChoiceRepository methods *
      **************************************/
 
-    public function getChoiceByQuestion(
+    public function getChoiceById($choiceId)
+    {
+        return $this->choiceRepo->findOneById($choiceId);
+    }
+
+    public function getChoicesByQuestion(
         MultipleChoiceQuestion $question,
         $executeQuery = true
     )
     {
-        return $this->choiceRepo->findChoiceByQuestion(
+        return $this->choiceRepo->findChoicesByQuestion(
             $question,
             $executeQuery
         );
@@ -310,5 +358,41 @@ class SurveyManager
     {
         return $this->surveyQuestionRelationRepo
             ->findSurveyLastQuestionOrder($survey, $executeQuery);
+    }
+
+
+    /********************************************
+     * Access to SurveyAnswerRepository methods *
+     ********************************************/
+
+    public function getSurveyAnswerBySurveyAndUser(
+        Survey $survey,
+        User $user,
+        $executeQuery = true
+    )
+    {
+        return $this->surveyAnswerRepo->findSurveyAnswerBySurveyAndUser(
+            $survey,
+            $user,
+            $executeQuery
+        );
+    }
+
+
+    /**********************************************
+     * Access to QuestionAnswerRepository methods *
+     **********************************************/
+
+    public function getQuestionAnswerBySurveyAnswerAndQuestion(
+        SurveyAnswer $surveyAnswer,
+        Question $question,
+        $executeQuery = true
+    )
+    {
+        return $this->questionAnswerRepo->findQuestionAnswerBySurveyAnswerAndQuestion(
+            $surveyAnswer,
+            $question,
+            $executeQuery
+        );
     }
 }

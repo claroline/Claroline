@@ -68,9 +68,20 @@ class Survey extends AbstractResource
      */
     protected $endDate;
 
+    /**
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(
+     *     targetEntity="Claroline\SurveyBundle\Entity\Answer\SurveyAnswer",
+     *     mappedBy="survey"
+     * )
+     */
+    protected $answers;
+
     public function __construct()
     {
         $this->questionRelations = new ArrayCollection();
+        $this->answers = new ArrayCollection();
     }
 
     public function setId($id)
@@ -187,5 +198,15 @@ class Survey extends AbstractResource
     public function setQuestionRelations(ArrayCollection $questionRelations)
     {
         $this->questionRelations = $questionRelations;
+    }
+
+    public function getAnswers()
+    {
+        return $this->answers;
+    }
+
+    public function setAnswers(ArrayCollection $answers)
+    {
+        $this->answers = $answers;
     }
 }

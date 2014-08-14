@@ -20,7 +20,7 @@ class SurveyQuestionRelationRepository extends EntityRepository
     public function findRelationBySurveyAndQuestion(
         Survey $survey,
         Question $question,
-        $executeQuery
+        $executeQuery = true
     )
     {
         $dql = "
@@ -36,7 +36,10 @@ class SurveyQuestionRelationRepository extends EntityRepository
         return $executeQuery ? $query->getOneOrNullResult() : $query;
     }
 
-    public function findSurveyLastQuestionOrder(Survey $survey, $executeQuery)
+    public function findSurveyLastQuestionOrder(
+        Survey $survey,
+        $executeQuery = true
+    )
     {
         $dql = "
             SELECT MAX(sqr.questionOrder) AS order_max

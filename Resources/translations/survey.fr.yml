@@ -4,6 +4,7 @@ add_question: 'Ajouter une question'
 add_question_box_title: 'Ajouter une question au sondage'
 allow_edition_after_submission: 'Authoriser la modification de la réponse'
 allow_multiple_response: 'Réponses multiples'
+answer_to_survey: 'Répondre au sondage'
 choices_management: 'Gestion des choix'
 close: Fermer
 closed: Fermé
@@ -41,6 +42,7 @@ return: Retour
 show_result_to_users: 'Afficher le résultat aux utilisateurs'
 start_date: 'Date de début'
 status: Statut
+survey_answer: Réponse
 survey_edition: 'Modification du sondage'
 survey_edition_form_allowAnswerEdition: 'Authoriser la modification de la réponse'
 survey_edition_form_endDate: 'Date de fin'
@@ -51,3 +53,4 @@ title: Titre
 type: Type
 unpublished: 'Non publié'
 unpublished_user_message: 'Le sondage n''est pas encore publié.'
+view_survey_results: 'Voir les résultats du sondage'

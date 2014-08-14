@@ -16,7 +16,7 @@ use Doctrine\ORM\EntityRepository;
 
 class ChoiceRepository extends EntityRepository
 {
-    public function findChoiceByQuestion(
+    public function findChoicesByQuestion(
         MultipleChoiceQuestion $question,
         $executeQuery = true
     )

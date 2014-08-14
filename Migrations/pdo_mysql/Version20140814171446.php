@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\SurveyBundle\Migrations\mysqli;
+namespace Claroline\SurveyBundle\Migrations\pdo_mysql;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/08/12 04:23:13
+ * Generation date: 2014/08/14 05:14:47
  */
-class Version20140812162311 extends AbstractMigration
+class Version20140814171446 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -25,6 +25,46 @@ class Version20140812162311 extends AbstractMigration
                 end_date DATETIME DEFAULT NULL, 
                 resourceNode_id INT DEFAULT NULL, 
                 UNIQUE INDEX UNIQ_11B27D4BB87FAB32 (resourceNode_id), 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
+        ");
+        $this->addSql("
+            CREATE TABLE claro_survey_open_ended_question_answer (
+                id INT AUTO_INCREMENT NOT NULL, 
+                question_answer_id INT NOT NULL, 
+                answer_content LONGTEXT DEFAULT NULL, 
+                UNIQUE INDEX UNIQ_F2616BBEA3E60C9C (question_answer_id), 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
+        ");
+        $this->addSql("
+            CREATE TABLE claro_survey_multiple_choice_question_answer (
+                id INT AUTO_INCREMENT NOT NULL, 
+                question_answer_id INT NOT NULL, 
+                choice_id INT NOT NULL, 
+                INDEX IDX_FDB8AF37A3E60C9C (question_answer_id), 
+                INDEX IDX_FDB8AF37998666D1 (choice_id), 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
+        ");
+        $this->addSql("
+            CREATE TABLE claro_survey_question_answer (
+                id INT AUTO_INCREMENT NOT NULL, 
+                answer_survey_id INT NOT NULL, 
+                question_id INT NOT NULL, 
+                answer_comment LONGTEXT DEFAULT NULL, 
+                INDEX IDX_9F5D3C468E018F4B (answer_survey_id), 
+                INDEX IDX_9F5D3C461E27F6BF (question_id), 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
+        ");
+        $this->addSql("
+            CREATE TABLE claro_survey_answer (
+                id INT AUTO_INCREMENT NOT NULL, 
+                answer_date DATETIME NOT NULL, 
+                nb_answers INT NOT NULL, 
+                survey_id INT NOT NULL, 
+                INDEX IDX_DFEB5349B3FE509D (survey_id), 
                 PRIMARY KEY(id)
             ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
@@ -78,6 +118,36 @@ class Version20140812162311 extends AbstractMigration
             ON DELETE CASCADE
         ");
         $this->addSql("
+            ALTER TABLE claro_survey_open_ended_question_answer 
+            ADD CONSTRAINT FK_F2616BBEA3E60C9C FOREIGN KEY (question_answer_id) 
+            REFERENCES claro_survey_question_answer (id) 
+            ON DELETE CASCADE
+        ");
+        $this->addSql("
+            ALTER TABLE claro_survey_multiple_choice_question_answer 
+            ADD CONSTRAINT FK_FDB8AF37A3E60C9C FOREIGN KEY (question_answer_id) 
+            REFERENCES claro_survey_question_answer (id) 
+            ON DELETE CASCADE
+        ");
+        $this->addSql("
+            ALTER TABLE claro_survey_multiple_choice_question_answer 
+            ADD CONSTRAINT FK_FDB8AF37998666D1 FOREIGN KEY (choice_id) 
+            REFERENCES claro_survey_choice (id) 
+            ON DELETE CASCADE
+        ");
+        $this->addSql("
+            ALTER TABLE claro_survey_question_answer 
+            ADD CONSTRAINT FK_9F5D3C468E018F4B FOREIGN KEY (answer_survey_id) 
+            REFERENCES claro_survey_answer (id) 
+            ON DELETE CASCADE
+        ");
+        $this->addSql("
+            ALTER TABLE claro_survey_question_answer 
+            ADD CONSTRAINT FK_9F5D3C461E27F6BF FOREIGN KEY (question_id) 
+            REFERENCES claro_survey_question (id) 
+            ON DELETE CASCADE
+        ");
+        $this->addSql("
             ALTER TABLE claro_survey_choice 
             ADD CONSTRAINT FK_C49D43FEA46B3B4F FOREIGN KEY (choice_question_id) 
             REFERENCES claro_survey_multiple_choice_question (id) 
@@ -116,6 +186,26 @@ class Version20140812162311 extends AbstractMigration
             DROP FOREIGN KEY FK_953FEEA4B3FE509D
         ");
         $this->addSql("
+            ALTER TABLE claro_survey_open_ended_question_answer 
+            DROP FOREIGN KEY FK_F2616BBEA3E60C9C
+        ");
+        $this->addSql("
+            ALTER TABLE claro_survey_multiple_choice_question_answer 
+            DROP FOREIGN KEY FK_FDB8AF37A3E60C9C
+        ");
+        $this->addSql("
+            ALTER TABLE claro_survey_question_answer 
+            DROP FOREIGN KEY FK_9F5D3C468E018F4B
+        ");
+        $this->addSql("
+            ALTER TABLE claro_survey_multiple_choice_question_answer 
+            DROP FOREIGN KEY FK_FDB8AF37998666D1
+        ");
+        $this->addSql("
+            ALTER TABLE claro_survey_question_answer 
+            DROP FOREIGN KEY FK_9F5D3C461E27F6BF
+        ");
+        $this->addSql("
             ALTER TABLE claro_survey_question_relation 
             DROP FOREIGN KEY FK_953FEEA41E27F6BF
         ");
@@ -129,6 +219,18 @@ class Version20140812162311 extends AbstractMigration
         ");
         $this->addSql("
             DROP TABLE claro_survey_resource
+        ");
+        $this->addSql("
+            DROP TABLE claro_survey_open_ended_question_answer
+        ");
+        $this->addSql("
+            DROP TABLE claro_survey_multiple_choice_question_answer
+        ");
+        $this->addSql("
+            DROP TABLE claro_survey_question_answer
+        ");
+        $this->addSql("
+            DROP TABLE claro_survey_answer
         ");
         $this->addSql("
             DROP TABLE claro_survey_choice

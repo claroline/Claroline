@@ -14,7 +14,13 @@
 
 {% block resourceBreadcrumb %}
     <li>
-        <a href="{{ path('claro_resource_open', { 'resourceType': _resource.getResourceNode().getResourceType().getName(), 'node': _resource.getResourceNode().getId() }) }}">
+        <a href="{{ path(
+            'claro_resource_open',
+            {
+                'resourceType': _resource.getResourceNode().getResourceType().getName(),
+                'node': _resource.getResourceNode().getId()
+            }
+        ) }}">
             {{ _resource.getResourceNode().getName() }}
         </a>
     </li>

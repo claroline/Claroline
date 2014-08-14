@@ -5,6 +5,9 @@
 {% endif %}
 
 {% set _resource = survey %}
+{% set surveyId = survey.getId() %}
+{% set startDate = survey.getStartDate() %}
+{% set endDate = survey.getEndDate() %}
 
 {% extends layout %}
 
@@ -25,8 +28,6 @@
                         {{ status|trans({}, 'survey') }}
                     </td>
                     
-                    {% set startDate = survey.getStartDate() %}
-                    {% set endDate = survey.getEndDate() %}
                     {% set publishDisabled = (status == 'unpublished' and startDate is not empty) or
                         (status == 'closed' and endDate is not empty)
                     %}
@@ -34,7 +35,7 @@
                     
                     {% if status == 'unpublished' or status == 'closed' %}
                         <td style="vertical-align: middle">
-                            <a href="{{ path('claro_survey_publish', {'survey': survey.getId()}) }}"
+                            <a href="{{ path('claro_survey_publish', {'survey': surveyId}) }}"
                                class="btn btn-success {% if (publishDisabled) %}disabled{% endif %}"
                             >
                                 <i class="fa fa-check-circle"></i>
@@ -43,7 +44,7 @@
                         </td>
                     {% else %}
                         <td style="vertical-align: middle">
-                            <a href="{{ path('claro_survey_close', {'survey': survey.getId()}) }}"
+                            <a href="{{ path('claro_survey_close', {'survey': surveyId}) }}"
                                class="btn btn-danger {% if (closeDisabled) %}disabled{% endif %}"
                             >
                                 <i class="fa fa-times-circle"></i>
@@ -55,8 +56,8 @@
                 <tr>
                     <th>{{ 'start_date'|trans({}, 'survey') }}</th>
                     <td colspan="2">
-                    {% if survey.getStartDate() is not null %}
-                        {{ survey.getStartDate()|intl_date_format }}
+                    {% if startDate is not null %}
+                        {{ startDate|intl_date_format }}
                     {% else %}
                         -
                     {% endif %}
@@ -65,8 +66,8 @@
                 <tr>
                     <th>{{ 'end_date'|trans({}, 'survey') }}</th>
                     <td colspan="2">
-                    {% if survey.getEndDate() is not null %}
-                        {{ survey.getEndDate()|intl_date_format }}
+                    {% if endDate is not null %}
+                        {{ endDate|intl_date_format }}
                     {% else %}
                         -
                     {% endif %}
@@ -97,18 +98,18 @@
     </div>
     <div class="panel-footer">
         <span class="btn btn-primary view-survey-btn"
-              data-survey-id="{{ survey.getId() }}"
+              data-survey-id="{{ surveyId }}"
         >
             <i class="fa fa-eye"></i>
             {{ 'display_survey'|trans({}, 'survey') }}
         </span>
-        <a href="{{ path('claro_survey_management', {'survey': survey.getId()}) }}"
+        <a href="{{ path('claro_survey_management', {'survey': surveyId}) }}"
             class="btn btn-primary"
         >
             <i class="fa fa-list"></i>
             {{ 'edit_survey'|trans({}, 'survey') }}
         </a>
-        <a href="{{ path('claro_survey_parameters_edit_form', {'survey': survey.getId()}) }}"
+        <a href="{{ path('claro_survey_parameters_edit_form', {'survey': surveyId}) }}"
             class="btn btn-primary"
         >
             <i class="fa fa-pencil"></i>
@@ -117,13 +118,18 @@
         <a href="{{
             path(
                 'claro_survey_questions_management',
-                {'survey': survey.getId(), 'orderedBy': 'title', 'order': 'ASC'}
+                {'survey': surveyId, 'orderedBy': 'title', 'order': 'ASC'}
             ) }}"
             class="btn btn-primary"
         >
             <i class="fa fa-question"></i>
             {{ 'questions_management'|trans({}, 'survey') }}
         </a>
+        {% if status == 'published' %}
+            <a href="{{ path('claro_survey_answer_form', {'survey': surveyId}) }}" class="btn btn-primary">
+                {{ 'answer_to_survey'|trans({}, 'survey') }}
+            </a>
+        {% endif %}
     </div>
 
     <div id="view-survey-box" class="modal fade" role="dialog" aria-hidden="true">
