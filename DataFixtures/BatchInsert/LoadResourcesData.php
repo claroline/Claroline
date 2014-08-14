@@ -16,6 +16,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Claroline\CoreBundle\Library\Fixtures\LoggableFixture;
 use Claroline\CoreBundle\Entity\Resource\File;
 use Claroline\CoreBundle\Entity\Resource\Directory;
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManager;
@@ -68,10 +69,11 @@ class LoadResourcesData extends LoggableFixture implements ContainerAwareInterfa
         $this->log("Total resources: ". $this->numberRoots * ($numTot * $this->numberFiles + $numTot));
 
         $this->user = $this->findJohnDoe($manager);
+        $this->pws = $this->user->getPersonalWorkspace();
 
-        $count = $manager->getRepository('ClarolineCoreBundle:Resource\AbstractResource')->count();
+        $count = $this->container->get('claroline.persistence.object_manager')->count('ClarolineCoreBundle:Resource\ResourceNode');
         $this->suffixName = $count;
-        $count = $manager->getRepository('ClarolineCoreBundle:Workspace\Workspace')->count();
+        $count = $this->container->get('claroline.persistence.object_manager')->count('ClarolineCoreBundle:Workspace\Workspace');
         $maxWsId = $count;
 
         $start = time();
@@ -100,7 +102,7 @@ class LoadResourcesData extends LoggableFixture implements ContainerAwareInterfa
 
     }
 
-    private function generateItems(EntityManager $em, $maxDepth, $curDepth, $directoryCount, $fileCount, $parent)
+    private function generateItems(EntityManager $em, $maxDepth, $curDepth, $directoryCount, $fileCount, ResourceNode $parent)
     {
         $curDepth++;
 
@@ -127,6 +129,7 @@ class LoadResourcesData extends LoggableFixture implements ContainerAwareInterfa
                     $this->userRootDirectory = $em->merge($this->userRootDirectory);
                     $this->user = $em->merge($this->user);
                     $parent = $em->merge($parent);
+                    $this->pws = $em->merge($this->pws);
                 }
             }
         }
@@ -134,22 +137,25 @@ class LoadResourcesData extends LoggableFixture implements ContainerAwareInterfa
         $this->log(" [UOW size: " . $em->getUnitOfWork()->size() . "]");
     }
 
-    private function addDirectory(Directory $parent, User $user)
+    private function addDirectory(ResourceNode $parent, User $user)
     {
+        $dirType = $this->container->get('claroline.persistence.object_manager')
+            ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')->findOneByName('directory');
         $this->suffixName++;
         $name = 'dir_'.$this->suffixName;
         $dir = new Directory();
         $dir->setName($name);
         $this->log('create '.$name);
-        $dir = $this->container->get('claroline.resource.manager')
-            ->create($dir, $parent->getId(), 'directory', $user, null, false, true);
+        $dir = $this->container->get('claroline.manager.resource_manager')->create($dir, $dirType, $user, $this->pws,$parent);
         $this->totalResources++;
 
-        return $dir;
+        return $dir->getResourceNode();
     }
 
-    private function addFile(Directory $parent, User $user)
+    private function addFile(ResourceNode $parent, User $user)
     {
+        $fileType = $this->container->get('claroline.persistence.object_manager')
+            ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')->findOneByName('file');
         $this->suffixName++;
         $name = 'file_'.$this->suffixName.'.txt';
         $file = new File();
@@ -159,8 +165,8 @@ class LoadResourcesData extends LoggableFixture implements ContainerAwareInterfa
         $file->setMimeType('text/plain');
         $file->setSize(0);
         $this->log('create '.$name);
-        $file = $this->container->get('claroline.resource.manager')
-            ->create($file, $parent->getId(), 'file', $user, null, false, false);
+        $file = $this->container->get('claroline.manager.resource_manager')
+            ->create($file, $fileType, $user, $this->pws, $parent);
         $this->totalResources++;
 
         return $file;
