@@ -1,5 +1,33 @@
 {% extends 'ClarolineCoreBundle::layout.html.twig' %}
 
+{% if config.getParameter('name') != "" %}
+    {% set pagetitle = config.getParameter('name') %}
+{% else %}
+    {% set pagetitle = 'Claroline Connect' %}
+{% endif %}
+
+{% block title %}{{ pagetitle ~ ' - ' ~ 'Menu settings' | trans({}, 'home') }}{% endblock %}
+
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'fa fa-home',
+                'name': 'home'|trans({}, 'platform'),
+                'href': path('claro_index')
+            },
+            {
+                'name': 'Menus'|trans({}, 'home'),
+                'href': path('claro_get_content_by_type', {'type': 'menu'})
+            },
+            {
+                'name': 'Menu settings' | trans({}, 'home'),
+                'href': ''
+            }
+        ])
+    }}
+{% endblock %}
+
 {% block leftbar %}
     {% if is_granted('ROLE_ADMIN') %}
         <div class="list-group menu">
@@ -30,25 +58,29 @@
             <h3 class="panel-title">{{ 'Menu settings' | trans({}, 'home')  }} ({{ content.title }})</h3>
         </div>
         <div class="panel-body">
-            <div>
-                <input id="mainMenu" type="checkbox"{% if parameters is defined and parameters.homeMenu %} checked="checked"{% endif %}>
-                &nbsp;<label for="mainMenu">{{ 'Set this menu as header menu in the home page' | trans({}, 'home') }}</label>
+            <div class="hide">
+                <input id="homeMenu" data-id="{{ content.getId() }}"
+                    {% if parameters is defined and parameters.homeMenu %}data-menu="{{ parameters.homeMenu }}"{% endif %}
+                    type="checkbox"{% if parameters is defined and parameters.homeMenu == content.getId() %} checked="checked"{% endif %}
+                >
+                <label for="homeMenu">{{ 'Set this menu as header menu in the home page' | trans({}, 'home') }}</label>
+                <i>({{ 'For not logged users' | trans({}, 'home') }})</i>
             </div>
             <div class="gui-options hide">
                 <hr>
                 <h4 class="text-muted">{{ 'When header menu is available' | trans({}, 'home') }}</h4>
                 <br>
                 <div>
-                    <input id="preview-login" type="checkbox"{% if parameters is defined and parameters.footerLogin %} checked="checked"{% endif %}>
-                    &nbsp;<label for="connection">{{ 'Show the connection button at the footer of home page' | trans({}, 'home') }}</label>
+                    <input id="preview-login" type="checkbox"{% if parameters is defined and parameters.footerLogin  and parameters.homeMenu == content.getId() %} checked="checked"{% endif %}>
+                    &nbsp;<label for="preview-login">{{ 'Show the connection button at the footer of home page' | trans({}, 'home') }}</label>
                 </div>
                 <div>
-                    <input id="preview-workspaces" type="checkbox"{% if parameters is defined and parameters.footerWorkspaces %} checked="checked"{% endif %}>
-                    &nbsp;<label for="workspace">{{ 'Show the workspace menu at the footer of home page' | trans({}, 'home') }}</label>
+                    <input id="preview-workspaces" type="checkbox"{% if parameters is defined and parameters.footerWorkspaces and parameters.homeMenu == content.getId() %} checked="checked"{% endif %}>
+                    &nbsp;<label for="preview-workspaces">{{ 'Show the workspace menu at the footer of home page' | trans({}, 'home') }}</label>
                 </div>
                 <div>
-                    <input id="preview-locale" type="checkbox"{% if parameters is defined and parameters.headerLocale %} checked="checked"{% endif %}>
-                    &nbsp;<label for="locale">{{ 'Show the language button in the header menu' | trans({}, 'home') }}</label>
+                    <input id="preview-locale" type="checkbox"{% if parameters is defined and parameters.headerLocale and parameters.homeMenu == content.getId() %} checked="checked"{% endif %}>
+                    &nbsp;<label for="preview-locale">{{ 'Show the language button in the header menu' | trans({}, 'home') }}</label>
                 </div>
             </div>
             <div class="gui-preview hide">
@@ -98,20 +130,17 @@
                         <p class="preview-workspaces hide navbar-text">
                             <a href="{{ path("claro_workspace_list") }}"><i class="fa fa-book"></i> {{ "workspaces" | trans({}, "platform") }}</a> &nbsp;&nbsp;&nbsp;&nbsp;
                         </p>
+                        <p class="localeFooter navbar-text navbar-right">
+                            <span class="locale-select label label-default">{{ app.request.locale | upper }}</span>
+                        </p>
                         {% if config.getParameter('footer') != '' %}
-                            <p class="navbar-text">
-                                {{ config.getParameter('footer') }}&nbsp;&nbsp;&nbsp;&nbsp;
-                            </p>
-                            <p class="navbar-text navbar-right">
-                                Powered by <a href="http://www.claroline.net">Claroline</a>
-                                <span class="localeFooter locale-select label label-default">{{ app.request.locale | upper }}</span>
-                            </p>
-                        {% else %}
-                            <p class="navbar-text navbar-right">
-                                Powered by <a href="http://www.claroline.net">Claroline</a>
-                                <span class="localeFooter locale-select label label-default">{{ app.request.locale | upper }}</span>
+                            <p class="navbar-text" id="footerMessage">
+                                {{ config.getParameter('footer') }}
                             </p>
                         {% endif %}
+                        <p class="navbar-text poweredBy">
+                            {{ 'Powered by' | trans({}, 'platform') }} <a href="http://www.claroline.net">Claroline</a>
+                        </p>
                     </div>
                 </div>
             </div>
