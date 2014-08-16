@@ -188,8 +188,8 @@ class ResourceController
     {
         //in order to remember for later. To keep links breadcrumb working we'll need to do something like this
         //if we don't want to change to much code
-        $_SESSION['current_node'] = $node;
-
+        $this->request->getSession()->set('current_resource_node', $node);
+    
         $collection = new ResourceCollection(array($node));
         //If it's a link, the resource will be its target.
         $node = $this->getRealTarget($node);
@@ -678,13 +678,13 @@ class ResourceController
         //the signature method can change aswell
         //this method obviously has to change
         //this trick will never work with shortcuts to directory
-        $node = $_SESSION['current_node'];
+        $node = $this->request->getSession()->get('current_resource_node');
         $workspace = $node->getWorkspace();
         $ancestors = $this->resourceManager->getAncestors($node);
 
         return array(
             'ancestors' => $ancestors,
-            'workspaceId' => $workspace->getId()
+            'workspaceId' => $workspace->getId(),
         );
         //the following code is useless and can be removed
 
