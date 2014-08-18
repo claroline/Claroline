@@ -207,6 +207,7 @@ create_new_home_tab: 'Créer un nouvel onglet'
 create_new_tag: 'Créer un nouveau Tag'
 create_new_user_account: 'Creation de votre compte ClarolineConnect'
 create_role: Créer un rôle
+create_security_token: 'Créer un jeton d''authentification'
 create_subcategory: 'Créer une sous-catégorie'
 create_user: 'Créer un utilisateur'
 create_widget_instance: 'Créer un nouveau Widget'
@@ -302,6 +303,7 @@ edit_profile_success: 'Modification du profil effectué avec succès.'
 edit_public_profile: 'Modifier le profil public'
 edit_public_profile_preferences_error: 'Une erreur est survenue lors de la modification des préférences de votre profil public.'
 edit_public_profile_preferences_success: 'Préférences de votre profil public modifiées avec succès.'
+edit_security_token: 'Modification du jeton d''authentification'
 edit_your_profile_error: 'Une erreur est survenue pendant la modification de votre profil.'
 edit_your_profile_success: 'Modification de votre profil effectué avec succès.'
 editable: Modifiable
@@ -348,6 +350,7 @@ from: Depuis
 from_message: De
 general: Général
 general_parameters: 'Paramètres généraux'
+generate_token: 'Générer un token aléatoire'
 generate_url: 'Inscription publique'
 generate_url_subscription: 'Inscription à l''espace d''activité par un utilisateur'
 generate_url_subscription_anonyme: 'Inscription à l''espace d''activité par un anonyme'
@@ -405,6 +408,7 @@ invalid_email: 'Cette adresse email n''est pas valide'
 invalid_encryption: 'Mode d''authentification non valide'
 invalid_transport: 'Transport non valide'
 invalid_url: 'Cette url n''est pas valide'
+ip_address: 'Adresse IP'
 is_already_in_category: 'est déjà dans la catégorie'
 is_mail_displayed: 'Afficher l''email ?'
 jqplot_date_output_format: '%d-%m-%Y'
@@ -690,6 +694,13 @@ search: Rechercher
 search_group: 'Rechercher un groupe'
 search_user: 'Rechercher un utilisateur'
 search_workspace: 'Rechercher un espace d''activités'
+security_token_delete_confirm_message: 'Êtes-vous sûr de vouloir supprimer ce jeton d''authentification ?'
+security_token_delete_confirm_title: 'Suppression du jeton d''authentification'
+security_token_form_clientIp: 'Adresse IP du client'
+security_token_form_clientName: 'Nom du client'
+security_token_form_token: 'Token'
+security_token_list: 'Liste des jetons d''authentification'
+security_tokens_management: 'Gestion des jetons d''authentification'
 see: Voir
 see_more: 'Voir plus'
 see_public_profile: 'Voir mon profil public'
@@ -771,6 +782,7 @@ to_message: À
 to_platform_users: 'aux utilisateurs de la plateforme'
 to_workspace_members: 'aux membres de cet espace'
 today: 'Aujourd''hui'
+token: Token
 tool: Outil
 tool_form_displayName: 'Nom affiché'
 tool_form_name: Nom

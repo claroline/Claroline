@@ -150,7 +150,7 @@ class RoleRepository extends EntityRepository
     /**
      * Returns the roles of a user in a workspace.
      *
-     * @param User              $user      The subject of the role
+     * @param User      $user      The subject of the role
      * @param Workspace $workspace The workspace the role should be bound to
      *
      * @return null|Role
@@ -349,5 +349,50 @@ class RoleRepository extends EntityRepository
         $query->setParameter('resourceNode', $resourceNode);
 
         return $executeQuery ? $query->getResult(): $query;
+    }
+
+    public function findRoleByWorkspaceCodeAndTranslationKey(
+        $workspaceCode,
+        $translationKey,
+        $executeQuery = true
+    )
+    {
+        $dql = '
+            SELECT r
+            FROM Claroline\CoreBundle\Entity\Role r
+            INNER JOIN r.workspace w
+            WHERE w.code = :code
+            AND r.translationKey = :key
+        ';
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('code', $workspaceCode);
+        $query->setParameter('key', $translationKey);
+
+        return $executeQuery ? $query->getOneOrNullResult() : $query;
+    }
+
+    /**
+     * Returns all non-platform roles of a user.
+     *
+     * @param User $user The subject of the role
+     *
+     * @return array[Role]|query
+     */
+    public function findNonPlatformRolesForUser(User $user, $executeQuery = true)
+    {
+        $dql = '
+            SELECT r
+            FROM Claroline\CoreBundle\Entity\Role r
+            JOIN r.workspace w
+            JOIN r.users u
+            WHERE w.creator != :user
+            AND u = :user
+        ';
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('user', $user);
+
+        return $executeQuery ? $query->getResult() : $query;
     }
 }
