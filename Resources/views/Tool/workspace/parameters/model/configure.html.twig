@@ -32,19 +32,22 @@
         <a class="btn btn-primary" href="{{ path('claro_workspace_model_share_user_list', {'model': model.getId()}) }}"> {{ 'share'|trans({}, 'platform') }}</a>
         <button id="add-resnode-copy" class="btn btn-primary">{{ 'copy'|trans({}, 'platform') }}</button>
         <button id="add-resnode-link" class="btn btn-primary">{{ 'link'|trans({}, 'platform') }}</button>
-        <button id="add-tab"      class="btn btn-primary">{{ 'tab'|trans({}, 'platform') }}</button>
+        <button id="add-tab" href="{{ path('ws_model_homeTabs_list', {'model': model.getId()}) }}" class="btn btn-primary">{{ 'tab'|trans({}, 'platform') }}</button>
 
-        <ul class="list-group list-resnode-copy">
+        <div> {{ 'copies'|trans({}, 'platform') }}</div>
+        <ul class="list-group" id="list-resnode-copy">
             {% for copy in copied %}
-                {% include "ClarolineCoreBundle:Tool\\workspace\\parameters\\model:resourceElement.html.twig" with {'resourceNode': copied} %}
+                {% include "ClarolineCoreBundle:Tool\\workspace\\parameters\\model:resourceElement.html.twig" with {'name': copy.getResourceNode().getName(), 'resourceModelId': copy.getId()} %}
             {% endfor %}
         </ul>
         <hr/>
-        <ul class="list-group list-resnode-link">
+        <div> {{ 'links'|trans({}, 'platform') }}</div>
+        <ul class="list-group" id="list-resnode-link">
             {% for link in links %}
-                {% include "ClarolineCoreBundle:Tool\\workspace\\parameters\\model:resourceElement.html.twig" with {'resourceNode': link} %}
+                {% include "ClarolineCoreBundle:Tool\\workspace\\parameters\\model:resourceElement.html.twig" with {'name': link.getResourceNode().getName(), 'resourceModelId': link.getId()} %}
             {% endfor %}
         </ul>
+        <div id="data" data-root-id="{{ rootId }}" data-model-id="{{ model.getId() }}"></div>
     </div>
 {% endblock %}
 

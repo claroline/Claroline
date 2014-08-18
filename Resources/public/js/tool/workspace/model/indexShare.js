@@ -47,8 +47,8 @@ $('body').on('click', '.delete-user', function (event) {
         $(event.currentTarget).attr('href'),
         removeTableRow,
         'user',
-        Translator.get('platform:remove_user_confirm'),
-        Translator.get('platform:remove_user')
+        Translator.get('platform:remove_user_from_model_confirm'),
+        Translator.get('platform:remove_user_from_model')
     );
 });
 
@@ -58,8 +58,8 @@ $('body').on('click', '.delete-group', function (event) {
         $(event.currentTarget).attr('href'),
         removeTableRow,
         'group',
-        Translator.get('platform:remove_group_confirm'),
-        Translator.get('platform:remove_group')
+        Translator.get('platform:remove_group_from_model_confirm'),
+        Translator.get('platform:remove_group_from_model')
     );
 });
 
@@ -128,7 +128,6 @@ function addGroups()
     var queryString = {};
     queryString.groupIds = typeMap['group'];
     var route = Routing.generate('ws_share_groups_add', {'model': modelId})
-    route += '?' + $.param(queryString);
 
     $.ajax({
         url: route,

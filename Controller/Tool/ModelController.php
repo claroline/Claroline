@@ -20,10 +20,12 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Manager\GroupManager;
 use Claroline\CoreBundle\Manager\ModelManager;
+use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Manager\HomeTabManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\Model\Model;
+use Claroline\CoreBundle\Entity\Model\ResourceModel;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Form\ModelType;
@@ -39,19 +41,21 @@ class ModelController extends Controller
     private $userManager;
     private $groupManager;
     private $modelManager;
+    private $resourceManager;
     private $formFactory;
     private $router;
     private $homeTabManager;
 
     /**
      * @DI\InjectParams({
-     *     "router"         = @DI\Inject("router"),
-     *     "security"       = @DI\Inject("security.context"),
-     *     "userManager"    = @DI\Inject("claroline.manager.user_manager"),
-     *     "groupManager"   = @DI\Inject("claroline.manager.group_manager"),
-     *     "modelManager"   = @DI\Inject("claroline.manager.model_manager"),
-     *     "homeTabManager" = @DI\Inject("claroline.manager.home_tab_manager"),
-     *     "formFactory"    = @DI\Inject("form.factory")
+     *     "router"          = @DI\Inject("router"),
+     *     "security"        = @DI\Inject("security.context"),
+     *     "userManager"     = @DI\Inject("claroline.manager.user_manager"),
+     *     "groupManager"    = @DI\Inject("claroline.manager.group_manager"),
+     *     "modelManager"    = @DI\Inject("claroline.manager.model_manager"),
+     *     "resourceManager"  = @DI\Inject("claroline.manager.resource_manager"),
+     *     "homeTabManager"  = @DI\Inject("claroline.manager.home_tab_manager"),
+     *     "formFactory"     = @DI\Inject("form.factory")
      * })
      */
     public function __construct(
@@ -62,18 +66,20 @@ class ModelController extends Controller
         GroupManager $groupManager,
         FormFactoryInterface $formFactory,
         ModelManager $modelManager,
-        HomeTabManager $homeTabManager
+        HomeTabManager $homeTabManager,
+        ResourceManager $resourceManager
     )
     {
-        $this->router         = $router;
-        $this->security       = $security;
-        $this->formFactory    = $formFactory;
-        $this->request        = $request;
-        $this->userManager    = $userManager;
-        $this->groupManager   = $groupManager;
-        $this->modelManager   = $modelManager;
-        $this->formFactory    = $formFactory;
-        $this->homeTabManager = $homeTabManager;
+        $this->router          = $router;
+        $this->security        = $security;
+        $this->formFactory     = $formFactory;
+        $this->request         = $request;
+        $this->userManager     = $userManager;
+        $this->groupManager    = $groupManager;
+        $this->modelManager    = $modelManager;
+        $this->formFactory     = $formFactory;
+        $this->homeTabManager  = $homeTabManager;
+        $this->resourceManager = $resourceManager;
     }
 
     /**
@@ -112,7 +118,8 @@ class ModelController extends Controller
 
         return array(
             'form' => $form->createView(),
-            'action' => $action
+            'action' => $action,
+            'title' => 'create_model'
         );
     }
 
@@ -147,7 +154,8 @@ class ModelController extends Controller
             'ClarolineCoreBundle:Tool\workspace\parameters\model:modelModalForm.html.twig',
             array(
                 'form' => $form->createView(),
-                'action' => $action
+                'action' => $action,
+                'title' => 'create_model'
             )
         );
     }
@@ -188,7 +196,7 @@ class ModelController extends Controller
         $form = $this->formFactory->create(new ModelType(), $model);
         $action = $this->router->generate('claro_workspace_model_rename', array('model' => $model->getId()));
 
-        return array('form' => $form->createView(), 'action' => $action);
+        return array('form' => $form->createView(), 'action' => $action, 'title' => 'rename');
     }
 
     /**
@@ -222,7 +230,7 @@ class ModelController extends Controller
 
         return $this->render(
             'ClarolineCoreBundle:Tool\workspace\parameters\model:modelModalForm.html.twig',
-            array('form' => $form->createView(), 'action' => $action)
+            array('form' => $form->createView(), 'action' => $action, 'title' => 'rename')
         );
     }
 
@@ -231,17 +239,30 @@ class ModelController extends Controller
      *
      * @EXT\Route(
      *     "/{model}/configure",
-     *     name="claro_workspace_model_configure"
+     *     name="claro_workspace_model_configure",
+     *     options = {"expose"=true}
      * )
      *
      * @EXT\Template("ClarolineCoreBundle:Tool\workspace\parameters\model:configure.html.twig")
      */
     public function configureModelAction(Model $model)
     {
-        $copied = array();
-        $links = array();
+        $resourceModels = $model->getResourceModel();
+        $copied = [];
+        $links = [];
 
-        return array('model' => $model, 'copied' => $copied, 'links' => $links);
+        foreach ($resourceModels as $resourceModel) {
+            $resourceModel->isCopy() ? $copied[] = $resourceModel: $links[] = $resourceModel;
+        }
+
+        $root = $this->resourceManager->getWorkspaceRoot($model->getWorkspace());
+
+        return array(
+            'model'  => $model,
+            'copied' => $copied,
+            'links'  => $links,
+            'rootId' => $root->getId()
+        );
     }
 
     /**
@@ -338,7 +359,11 @@ class ModelController extends Controller
             $groups = $this->groupManager->getUsersNotSharingModelBySearch($model, $page, $trimmedSearch, 10);
         }
 
-        return array('groups' => $groups, 'search' => $search, 'model' => $model);
+        return array(
+            'groups' => $groups,
+            'search' => $search,
+            'model' => $model
+        );
     }
 
     /**
@@ -442,9 +467,17 @@ class ModelController extends Controller
     public function addNodesCopyAction(Model $model, array $resourceNodes)
     {
         $this->checkAccess($model->getWorkspace());
-        $this->modelManager->addResourceNodes($model, $resourceNodes, true);
+        $resourceModels = $this->modelManager->addResourceNodes($model, $resourceNodes, true);
+        $data = [];
 
-        return new JsonResponse();
+        foreach ($resourceModels as $resourceModel) {
+            $data[] = array(
+                'resourceModelId' => $resourceModel->getId(),
+                'name' => $resourceModel->getResourceNode()->getName()
+            );
+        }
+
+        return new JsonResponse($data);
     }
 
     /**
@@ -460,12 +493,20 @@ class ModelController extends Controller
      *     options={"multipleIds"=true, "name"="nodeIds"}
      * )
      */
-    public function addNodeLinkAction(Model $model)
+    public function addNodeLinkAction(Model $model, array $resourceNodes)
     {
         $this->checkAccess($model->getWorkspace());
-        $this->modelManager->addResourceNodes($model, $resourceNodes, true);
+        $resourceModels = $this->modelManager->addResourceNodes($model, $resourceNodes, false);
+        $data = [];
 
-        return new JsonResponse();
+        foreach ($resourceModels as $resourceModel) {
+            $data[] = array(
+                'resourceModelId' => $resourceModel->getId(),
+                'name' => $resourceModel->getResourceNode()->getName()
+            );
+        }
+
+        return new JsonResponse($data);
     }
 
     /**
@@ -480,7 +521,7 @@ class ModelController extends Controller
      */
     public function removeResourceModelAction(ResourceModel $resourceModel)
     {
-        $this->checkAccess($resourceModel->getModel());
+        $this->checkAccess($resourceModel->getModel()->getWorkspace());
         $this->modelManager->removeResourceModel($resourceModel);
 
         return new JsonResponse();
@@ -497,10 +538,10 @@ class ModelController extends Controller
      */
     public function listHomeTabsAction(Model $model)
     {
-        $this->checkAccess($model);
-        $homeTabs = $this->homeTabManager->getWorkspaceHomeTabConfigsByWorkspace($model->getWorkspace());
+        $this->checkAccess($model->getWorkspace());
+        $homeTabsConfig = $this->homeTabManager->getWorkspaceHomeTabConfigsByWorkspace($model->getWorkspace());
 
-        return new JsonResponse();
+        return array('homeTabsConfig' => $homeTabsConfig);
     }
 
     private function checkAccess(Workspace $workspace)

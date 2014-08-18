@@ -124,15 +124,18 @@ class ModelManager
         $this->om->endFlushSuite();
     }
 
-    public function addResourceNodes(Modle $model, array $resourceNodes, $isCopy)
+    public function addResourceNodes(Model $model, array $resourceNodes, $isCopy)
     {
         $this->om->startFlushSuite();
+        $resourceModels = [];
 
         foreach ($resourceNodes as $resourceNode) {
-            $this->addResourceNode($model, $resourceNode);
+            $resourceModels[] = $this->addResourceNode($model, $resourceNode, $isCopy);
         }
 
         $this->om->endFlushSuite();
+
+        return $resourceModels;
     }
 
     public function addResourceNode(Model $model, ResourceNode $resourceNode, $isCopy)
@@ -143,12 +146,14 @@ class ModelManager
         $resourceModel->setIsCopy($isCopy);
         $this->om->persist($resourceModel);
         $this->om->flush();
+
+        return $resourceModel;
     }
 
     public function removeResourceModel(ResourceModel $resourceModel)
     {
         $this->om->remove($resourceModel);
-        $this->ol->flush();
+        $this->om->flush();
     }
 
     public function addHomeTabs(Model $model, array $homeTabs)

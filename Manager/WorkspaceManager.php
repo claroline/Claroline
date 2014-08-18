@@ -267,6 +267,7 @@ class WorkspaceManager
                 $this->resourceManager->delete($node);
             }
         }
+
         $this->om->remove($workspace);
         $this->om->flush();
     }
