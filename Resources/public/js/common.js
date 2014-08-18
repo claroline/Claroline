@@ -68,6 +68,16 @@
     };
 
     /**
+     * If has namespace
+     */
+    common.hasNamespace = function (element, namespace)
+    {
+        if (element.hasOwnProperty('namespace') && element.namespace === namespace) {
+            return true;
+        }
+    };
+
+    /**
      * jQuery Upload HTML5
      *
      * example:
