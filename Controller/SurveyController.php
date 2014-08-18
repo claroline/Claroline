@@ -87,10 +87,6 @@ class SurveyController extends Controller
         $canEdit = $this->hasSurveyRight($survey, 'EDIT');
         $this->surveyManager->updateSurveyStatus($survey);
         $status = $this->computeStatus($survey);
-        $surveyAnswer = $this->surveyManager
-            ->getSurveyAnswerBySurveyAndUser($survey, $user);
-        $canAnswer = is_null($surveyAnswer) || $survey->getAllowAnswerEdition();
-        $hasAnswer = !is_null($surveyAnswer);
 
         if ($canEdit) {
 
@@ -99,9 +95,7 @@ class SurveyController extends Controller
                     "ClarolineSurveyBundle:Survey:surveyEditionMainMenu.html.twig",
                     array(
                         'survey' => $survey,
-                        'status' => $status,
-                        'canAnswer' => $canAnswer,
-                        'hasAnswer' => $hasAnswer
+                        'status' => $status
                     )
                 )
             );
@@ -111,9 +105,7 @@ class SurveyController extends Controller
         return array(
             'survey' => $survey,
             'status' => $status,
-            'currentDate' => $currentDate,
-            'canAnswer' => $canAnswer,
-            'hasAnswer' => $hasAnswer
+            'currentDate' => $currentDate
         );
     }
 
@@ -701,6 +693,7 @@ class SurveyController extends Controller
         $surveyAnswer = $this->surveyManager
             ->getSurveyAnswerBySurveyAndUser($survey, $user);
         $answersDatas = array();
+        $canEdit = is_null($surveyAnswer) || $survey->getAllowAnswerEdition();
 
         if (!is_null($surveyAnswer)) {
             $questionsAnswers = $surveyAnswer->getQuestionsAnswers();
@@ -747,15 +740,19 @@ class SurveyController extends Controller
             $questionAnswer = isset($answersDatas[$question->getId()]) ?
                 $answersDatas[$question->getId()] :
                 array();
-            $questionViews[] =
-                $this->displayTypedQuestion($survey, $question, $questionAnswer)
-                    ->getContent();
+            $questionViews[] = $this->displayTypedQuestion(
+                $survey,
+                $question,
+                $questionAnswer,
+                $canEdit
+            )->getContent();
         }
 
         return array(
             'survey' => $survey,
             'questionRelations' => $survey->getQuestionRelations(),
-            'questionViews' => $questionViews
+            'questionViews' => $questionViews,
+            'canEdit' => $canEdit
         );
     }
 
@@ -958,7 +955,8 @@ class SurveyController extends Controller
     private function displayTypedQuestion(
         Survey $survey,
         Question $question,
-        array $answers
+        array $answers,
+        $canEdit = true
     )
     {
         $this->checkQuestionRight($survey, $question, 'OPEN');
@@ -968,10 +966,18 @@ class SurveyController extends Controller
 
             case 'multiple_choice' :
 
-                return $this->displayMultipleChoiceQuestion($question, $answers);
+                return $this->displayMultipleChoiceQuestion(
+                    $question,
+                    $answers,
+                    $canEdit
+                );
             case 'open_ended':
 
-                return $this->displayOpenEndedQuestion($question, $answers);
+                return $this->displayOpenEndedQuestion(
+                    $question,
+                    $answers,
+                    $canEdit
+                );
             default:
                 break;
         }
@@ -1011,7 +1017,7 @@ class SurveyController extends Controller
     private function displayMultipleChoiceQuestion(
         Question $question,
         array $answers = null,
-        $canEdit = false
+        $canEdit = true
     )
     {
         $multipleChoiceQuestion = $this->surveyManager
@@ -1045,7 +1051,7 @@ class SurveyController extends Controller
     private function displayOpenEndedQuestion(
         Question $question,
         array $answers = null,
-        $canEdit = false
+        $canEdit = true
     )
     {
         $answersDatas = is_null($answers) ? array() : $answers;

@@ -20,12 +20,16 @@
                            name="{% if choiceType == 'radio' %}{{ question.getId() }}[choice]{% else %}{{ question.getId() }}[{{ choice.getId() }}]{% endif %}"
                            value="{{ choice.getId() }}"
                         {% if answers[choice.getId()] is defined %}checked{% endif %}
+                        {% if not canEdit %}disabled{% endif %}
                     >
                     
                     {% if choiceContent is defined and choiceContent is not empty %}
                         {{ choiceContent|raw }}
                     {% else %}
-                        <input type="text" name="other[{{ choice.getId() }}][answer]">
+                        <input type="text"
+                               name="other[{{ choice.getId() }}][answer]"
+                               {% if not canEdit %}disabled{% endif %}
+                        >
                     {% endif %}
                     </label>
                 </div>
@@ -36,7 +40,10 @@
             <br>
             <div>
                 <label>{{ 'comment'|trans({}, 'survey') }}</label>
-                <textarea rows="4" name="{{ question.getId() }}[comment]">{% if answers['comment'] is defined %}{{ answers['comment'] }}{% endif %}</textarea>
+                <textarea rows="4"
+                          name="{{ question.getId() }}[comment]"
+                          {% if not canEdit %}disabled{% endif %}
+                >{% if answers['comment'] is defined %}{{ answers['comment'] }}{% endif %}</textarea>
             </div>
         {% endif %}
     </div>

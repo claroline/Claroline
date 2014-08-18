@@ -52,7 +52,7 @@
         </div>
         <br>
         <div class="panel-footer">
-            <button type="submit" class="btn btn-primary">
+            <button type="submit" class="btn btn-primary" {% if not canEdit %}disabled{% endif %}>
                 {{ 'ok'|trans({}, 'platform') }}
             </button>
             <a href="{{ path('claro_survey_index', {'survey': surveyId}) }}">
