@@ -16,7 +16,7 @@ use Claroline\SurveyBundle\Entity\Choice;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Claroline\SurveyBundle\Repository\Answer\MultipleChoiceQuestionAnswerRepository")
  * @ORM\Table(name="claro_survey_multiple_choice_question_answer")
  */
 class MultipleChoiceQuestionAnswer

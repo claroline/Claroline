@@ -75,24 +75,34 @@ class SurveyController extends Controller
      *     "/{survey}",
      *     name="claro_survey_index"
      * )
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      * @EXT\Template()
      *
      * @param Survey $survey
      * @return array
      */
-    public function indexAction(Survey $survey)
+    public function indexAction(Survey $survey, User $user)
     {
         $this->checkSurveyRight($survey, 'OPEN');
         $canEdit = $this->hasSurveyRight($survey, 'EDIT');
         $this->surveyManager->updateSurveyStatus($survey);
         $status = $this->computeStatus($survey);
+        $surveyAnswer = $this->surveyManager
+            ->getSurveyAnswerBySurveyAndUser($survey, $user);
+        $canAnswer = is_null($surveyAnswer) || $survey->getAllowAnswerEdition();
+        $hasAnswer = !is_null($surveyAnswer);
 
         if ($canEdit) {
 
             return new Response(
                 $this->templating->render(
                     "ClarolineSurveyBundle:Survey:surveyEditionMainMenu.html.twig",
-                    array('survey' => $survey, 'status' => $status)
+                    array(
+                        'survey' => $survey,
+                        'status' => $status,
+                        'canAnswer' => $canAnswer,
+                        'hasAnswer' => $hasAnswer
+                    )
                 )
             );
         }
@@ -101,7 +111,9 @@ class SurveyController extends Controller
         return array(
             'survey' => $survey,
             'status' => $status,
-            'currentDate' => $currentDate
+            'currentDate' => $currentDate,
+            'canAnswer' => $canAnswer,
+            'hasAnswer' => $hasAnswer
         );
     }
 
@@ -676,19 +688,68 @@ class SurveyController extends Controller
      *     "/survey/{survey}/answer/form",
      *     name="claro_survey_answer_form"
      * )
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      * @EXT\Template()
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function surveyAnswerFormAction(Survey $survey)
+    public function surveyAnswerFormAction(Survey $survey, User $user)
     {
         $this->checkSurveyRight($survey, 'OPEN');
         $questionViews = array();
 
+        $surveyAnswer = $this->surveyManager
+            ->getSurveyAnswerBySurveyAndUser($survey, $user);
+        $answersDatas = array();
+
+        if (!is_null($surveyAnswer)) {
+            $questionsAnswers = $surveyAnswer->getQuestionsAnswers();
+            
+            foreach ($questionsAnswers as $questionAnswer) {
+                $question = $questionAnswer->getQuestion();
+                $questionId = $question->getId();
+                $answersDatas[$questionId] = array();
+
+                if (!is_null($questionAnswer->getComment())) {
+                    $answersDatas[$questionId]['comment'] = $questionAnswer->getComment();
+                }
+
+                if ($question->getType() === 'open_ended') {
+                    $openEndedAnswer = $this->surveyManager
+                        ->getOpenEndedAnswerByUserAndSurveyAndQuestion(
+                            $user,
+                            $survey,
+                            $question
+                        );
+
+                    if (!is_null($openEndedAnswer)) {
+                        $answersDatas[$questionId]['answer'] =
+                            $openEndedAnswer->getContent();
+                    }
+                } elseif ($question->getType() === 'multiple_choice') {
+                    $choiceAnswers = $this->surveyManager
+                        ->getMultipleChoiceAnswersByUserAndSurveyAndQuestion(
+                            $user,
+                            $survey,
+                            $question
+                        );
+
+                    foreach ($choiceAnswers as $choiceAnswer) {
+                        $choiceId = $choiceAnswer->getChoice()->getId();
+                        $answersDatas[$questionId][$choiceId] = $choiceId;
+                    }
+                }
+            }
+        }
+
         foreach ($survey->getQuestionRelations() as $relation) {
             $question = $relation->getQuestion();
+            $questionAnswer = isset($answersDatas[$question->getId()]) ?
+                $answersDatas[$question->getId()] :
+                array();
             $questionViews[] =
-                $this->typedQuestionDisplayAction($survey, $question)->getContent();
+                $this->displayTypedQuestion($survey, $question, $questionAnswer)
+                    ->getContent();
         }
 
         return array(
@@ -713,7 +774,6 @@ class SurveyController extends Controller
         $this->checkSurveyRight($survey, 'OPEN');
 
         $postDatas = $this->request->getCurrentRequest()->request->all();
-//        throw new \Exception(var_dump($postDatas));
 
         $surveyAnswer = $this->surveyManager
             ->getSurveyAnswerBySurveyAndUser($survey, $user);
@@ -764,38 +824,111 @@ class SurveyController extends Controller
                         $multipleChoiceQuestion = $this->surveyManager
                             ->getMultipleChoiceQuestionByQuestion($question);
 
-                        if ($multipleChoiceQuestion->getAllowMultipleResponse()) {
+                        if (!is_null($multipleChoiceQuestion)) {
 
-                            foreach($questionResponse as $choiceId => $response) {
+                            if ($multipleChoiceQuestion->getAllowMultipleResponse()) {
 
-                                if ($choiceId !== 'comment') {
-                                    $choice = $this->surveyManager->getChoiceById($choiceId);
-                                    $choiceAnswer = new MultipleChoiceQuestionAnswer();
-                                    $choiceAnswer->setQuestionAnswer($questionAnswer);
-                                    $choiceAnswer->setChoice($choice);
-                                    $this->surveyManager
-                                        ->persistMultipleChoiceQuestionAnswer($choiceAnswer);
+                                foreach($questionResponse as $choiceId => $response) {
+
+                                    if ($choiceId !== 'comment') {
+                                        $choice = $this->surveyManager->getChoiceById($choiceId);
+                                        $choiceAnswer = new MultipleChoiceQuestionAnswer();
+                                        $choiceAnswer->setQuestionAnswer($questionAnswer);
+                                        $choiceAnswer->setChoice($choice);
+                                        $this->surveyManager
+                                            ->persistMultipleChoiceQuestionAnswer($choiceAnswer);
+                                    }
                                 }
-                            }
-                        } elseif (!$multipleChoiceQuestion->getAllowMultipleResponse() &&
-                            isset($questionResponse['choice']) &&
-                            !empty($questionResponse['choice'])) {
+                            } elseif (!$multipleChoiceQuestion->getAllowMultipleResponse() &&
+                                isset($questionResponse['choice']) &&
+                                !empty($questionResponse['choice'])) {
 
-                            $choiceId = (int)$questionResponse['choice'];
-                            $choice = $this->surveyManager->getChoiceById($choiceId);
-                            $choiceAnswer = new MultipleChoiceQuestionAnswer();
-                            $choiceAnswer->setQuestionAnswer($questionAnswer);
-                            $choiceAnswer->setChoice($choice);
-                            $this->surveyManager
-                                ->persistMultipleChoiceQuestionAnswer($choiceAnswer);
+                                $choiceId = (int)$questionResponse['choice'];
+                                $choice = $this->surveyManager->getChoiceById($choiceId);
+                                $choiceAnswer = new MultipleChoiceQuestionAnswer();
+                                $choiceAnswer->setQuestionAnswer($questionAnswer);
+                                $choiceAnswer->setChoice($choice);
+                                $this->surveyManager
+                                    ->persistMultipleChoiceQuestionAnswer($choiceAnswer);
+                            }
                         }
                     }
 
-                } elseif (isset($questionResponse['comment']) &&
-                    !empty($questionResponse['comment'])) {
+                } elseif ($survey->getAllowAnswerEdition()) {
+                    $questionAnswer = $this->surveyManager
+                        ->getQuestionAnswerBySurveyAnswerAndQuestion(
+                            $surveyAnswer,
+                            $question
+                        );
 
-                    $questionAnswer->setComment($questionResponse['comment']);
-                    $this->surveyManager->persistQuestionAnswer($questionAnswer);
+                    if (is_null($questionAnswer)) {
+                        $questionAnswer = new QuestionAnswer();
+                        $questionAnswer->setSurveyAnswer($surveyAnswer);
+                        $questionAnswer->setQuestion($question);
+                        $this->surveyManager->persistQuestionAnswer($questionAnswer);
+                    }
+
+                    if (isset($questionResponse['comment']) &&
+                        !empty($questionResponse['comment'])) {
+
+                        $questionAnswer->setComment($questionResponse['comment']);
+                        $this->surveyManager->persistQuestionAnswer($questionAnswer);
+                    }
+
+                    if ($questionType === 'open_ended' &&
+                        isset($questionResponse['answer']) &&
+                        !empty($questionResponse['answer'])) {
+
+                        $openEndedAnswer = $this->surveyManager
+                            ->getOpenEndedAnswerByQuestionAnswer($questionAnswer);
+
+                        if (is_null($openEndedAnswer)) {
+                            $openEndedAnswer = new OpenEndedQuestionAnswer();
+                            $openEndedAnswer->setQuestionAnswer($questionAnswer);
+                        }
+                        $openEndedAnswer->setContent($questionResponse['answer']);
+                        $this->surveyManager
+                            ->persistOpenEndedQuestionAnswer($openEndedAnswer);
+
+                    } elseif ($questionType === 'multiple_choice') {
+                        $multipleChoiceQuestion = $this->surveyManager
+                            ->getMultipleChoiceQuestionByQuestion($question);
+
+                        if (!is_null($multipleChoiceQuestion)) {
+
+                            if ($multipleChoiceQuestion->getAllowMultipleResponse()) {
+
+                                $this->surveyManager
+                                    ->deleteMultipleChoiceAnswersByQuestionAnswer($questionAnswer);
+
+                                foreach($questionResponse as $choiceId => $response) {
+
+                                    if ($choiceId !== 'comment') {
+                                        $choice = $this->surveyManager->getChoiceById($choiceId);
+                                        $choiceAnswer = new MultipleChoiceQuestionAnswer();
+                                        $choiceAnswer->setQuestionAnswer($questionAnswer);
+                                        $choiceAnswer->setChoice($choice);
+                                        $this->surveyManager
+                                            ->persistMultipleChoiceQuestionAnswer($choiceAnswer);
+                                    }
+                                }
+                            } elseif (!$multipleChoiceQuestion->getAllowMultipleResponse() &&
+                                isset($questionResponse['choice']) &&
+                                !empty($questionResponse['choice'])) {
+
+                                $this->surveyManager
+                                    ->deleteMultipleChoiceAnswersByQuestionAnswer($questionAnswer);
+
+                                $choiceId = (int)$questionResponse['choice'];
+                                $choice = $this->surveyManager->getChoiceById($choiceId);
+                                $choiceAnswer = new MultipleChoiceQuestionAnswer();
+                                $choiceAnswer->setQuestionAnswer($questionAnswer);
+                                $choiceAnswer->setChoice($choice);
+                                $this->surveyManager
+                                    ->persistMultipleChoiceQuestionAnswer($choiceAnswer);
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -807,19 +940,43 @@ class SurveyController extends Controller
             )
         );
 
-        $questionViews = array();
+//        $questionViews = array();
+//
+//        foreach ($survey->getQuestionRelations() as $relation) {
+//            $question = $relation->getQuestion();
+//            $questionViews[] =
+//                $this->typedQuestionDisplayAction($survey, $question)->getContent();
+//        }
+//
+//        return array(
+//            'survey' => $survey,
+//            'questionRelations' => $survey->getQuestionRelations(),
+//            'questionViews' => $questionViews
+//        );
+    }
 
-        foreach ($survey->getQuestionRelations() as $relation) {
-            $question = $relation->getQuestion();
-            $questionViews[] =
-                $this->typedQuestionDisplayAction($survey, $question)->getContent();
+    private function displayTypedQuestion(
+        Survey $survey,
+        Question $question,
+        array $answers
+    )
+    {
+        $this->checkQuestionRight($survey, $question, 'OPEN');
+        $questionType = $question->getType();
+
+        switch ($questionType) {
+
+            case 'multiple_choice' :
+
+                return $this->displayMultipleChoiceQuestion($question, $answers);
+            case 'open_ended':
+
+                return $this->displayOpenEndedQuestion($question, $answers);
+            default:
+                break;
         }
 
-        return array(
-            'survey' => $survey,
-            'questionRelations' => $survey->getQuestionRelations(),
-            'questionViews' => $questionViews
-        );
+        return new Response();
     }
 
     private function multipleChoiceQuestionForm(
@@ -851,7 +1008,11 @@ class SurveyController extends Controller
         );
     }
 
-    private function displayMultipleChoiceQuestion(Question $question)
+    private function displayMultipleChoiceQuestion(
+        Question $question,
+        array $answers = null,
+        $canEdit = false
+    )
     {
         $multipleChoiceQuestion = $this->surveyManager
             ->getMultipleChoiceQuestionByQuestion($question);
@@ -865,24 +1026,38 @@ class SurveyController extends Controller
         $allowMultipleResponse =
             $multipleChoiceQuestion->getAllowMultipleResponse();
 
+        $answersDatas = is_null($answers) ? array() : $answers;
+
         return new Response(
             $this->templating->render(
                 "ClarolineSurveyBundle:Survey:displayMultipleChoiceQuestion.html.twig",
                 array(
                     'question' => $question,
                     'choices' => $choices,
-                    'allowMultipleResponse' => $allowMultipleResponse
+                    'allowMultipleResponse' => $allowMultipleResponse,
+                    'answers' => $answersDatas,
+                    'canEdit' => $canEdit
                 )
             )
         );
     }
 
-    private function displayOpenEndedQuestion(Question $question)
+    private function displayOpenEndedQuestion(
+        Question $question,
+        array $answers = null,
+        $canEdit = false
+    )
     {
+        $answersDatas = is_null($answers) ? array() : $answers;
+
         return new Response(
             $this->templating->render(
                 "ClarolineSurveyBundle:Survey:displayOpenEndedQuestion.html.twig",
-                array('question' => $question)
+                array(
+                    'question' => $question,
+                    'answers' => $answersDatas,
+                    'canEdit' => $canEdit
+                )
             )
         );
     }

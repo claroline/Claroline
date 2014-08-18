@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/08/14 05:14:47
+ * Generation date: 2014/08/18 03:27:56
  */
-class Version20140814171446 extends AbstractMigration
+class Version20140818152754 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -185,9 +185,10 @@ class Version20140814171446 extends AbstractMigration
         $this->addSql("
             CREATE TABLE claro_survey_answer (
                 id NUMBER(10) NOT NULL, 
+                survey_id NUMBER(10) NOT NULL, 
+                user_id NUMBER(10) NOT NULL, 
                 answer_date TIMESTAMP(0) NOT NULL, 
                 nb_answers NUMBER(10) NOT NULL, 
-                survey_id NUMBER(10) NOT NULL, 
                 PRIMARY KEY(id)
             )
         ");
@@ -221,6 +222,9 @@ class Version20140814171446 extends AbstractMigration
         ");
         $this->addSql("
             CREATE INDEX IDX_DFEB5349B3FE509D ON claro_survey_answer (survey_id)
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_DFEB5349A76ED395 ON claro_survey_answer (user_id)
         ");
         $this->addSql("
             CREATE TABLE claro_survey_choice (
@@ -428,6 +432,18 @@ class Version20140814171446 extends AbstractMigration
             ON DELETE CASCADE
         ");
         $this->addSql("
+            ALTER TABLE claro_survey_answer 
+            ADD CONSTRAINT FK_DFEB5349B3FE509D FOREIGN KEY (survey_id) 
+            REFERENCES claro_survey_resource (id) 
+            ON DELETE CASCADE
+        ");
+        $this->addSql("
+            ALTER TABLE claro_survey_answer 
+            ADD CONSTRAINT FK_DFEB5349A76ED395 FOREIGN KEY (user_id) 
+            REFERENCES claro_user (id) 
+            ON DELETE CASCADE
+        ");
+        $this->addSql("
             ALTER TABLE claro_survey_choice 
             ADD CONSTRAINT FK_C49D43FEA46B3B4F FOREIGN KEY (choice_question_id) 
             REFERENCES claro_survey_multiple_choice_question (id) 
@@ -461,6 +477,10 @@ class Version20140814171446 extends AbstractMigration
 
     public function down(Schema $schema)
     {
+        $this->addSql("
+            ALTER TABLE claro_survey_answer 
+            DROP CONSTRAINT FK_DFEB5349B3FE509D
+        ");
         $this->addSql("
             ALTER TABLE claro_survey_question_relation 
             DROP CONSTRAINT FK_953FEEA4B3FE509D

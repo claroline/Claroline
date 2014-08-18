@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/08/14 05:14:47
+ * Generation date: 2014/08/18 03:27:56
  */
-class Version20140814171446 extends AbstractMigration
+class Version20140818152754 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -73,14 +73,18 @@ class Version20140814171446 extends AbstractMigration
         $this->addSql("
             CREATE TABLE claro_survey_answer (
                 id INTEGER NOT NULL, 
+                survey_id INTEGER NOT NULL, 
+                user_id INTEGER NOT NULL, 
                 answer_date DATETIME NOT NULL, 
                 nb_answers INTEGER NOT NULL, 
-                survey_id INTEGER NOT NULL, 
                 PRIMARY KEY(id)
             )
         ");
         $this->addSql("
             CREATE INDEX IDX_DFEB5349B3FE509D ON claro_survey_answer (survey_id)
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_DFEB5349A76ED395 ON claro_survey_answer (user_id)
         ");
         $this->addSql("
             CREATE TABLE claro_survey_choice (

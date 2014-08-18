@@ -125,8 +125,9 @@
             <i class="fa fa-question"></i>
             {{ 'questions_management'|trans({}, 'survey') }}
         </a>
-        {% if status == 'published' %}
+        {% if status == 'published' and canAnswer %}
             <a href="{{ path('claro_survey_answer_form', {'survey': surveyId}) }}" class="btn btn-primary">
+                <i class="fa fa-check-square-o"></i>
                 {{ 'answer_to_survey'|trans({}, 'survey') }}
             </a>
         {% endif %}

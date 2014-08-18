@@ -18,7 +18,9 @@
                     <label>
                     <input type="{{ choiceType }}"
                            name="{% if choiceType == 'radio' %}{{ question.getId() }}[choice]{% else %}{{ question.getId() }}[{{ choice.getId() }}]{% endif %}"
-                           value="{{ choice.getId() }}">
+                           value="{{ choice.getId() }}"
+                        {% if answers[choice.getId()] is defined %}checked{% endif %}
+                    >
                     
                     {% if choiceContent is defined and choiceContent is not empty %}
                         {{ choiceContent|raw }}
@@ -34,7 +36,7 @@
             <br>
             <div>
                 <label>{{ 'comment'|trans({}, 'survey') }}</label>
-                <textarea rows="4" name="{{ question.getId() }}[comment]"></textarea>
+                <textarea rows="4" name="{{ question.getId() }}[comment]">{% if answers['comment'] is defined %}{{ answers['comment'] }}{% endif %}</textarea>
             </div>
         {% endif %}
     </div>

@@ -15,7 +15,7 @@ use Claroline\SurveyBundle\Entity\Answer\QuestionAnswer;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Claroline\SurveyBundle\Repository\Answer\OpenEndedQuestionAnswerRepository")
  * @ORM\Table(name="claro_survey_open_ended_question_answer")
  */
 class OpenEndedQuestionAnswer

@@ -60,13 +60,28 @@
             </div>
         {% endif %}
         
-        {% if status == 'published' %}
+        {% if hasAnswer %}
             <hr>
+            <span class="btn btn-primary view-survey-btn"
+                  data-survey-id="{{ survey.getId() }}"
+            >
+                <i class="fa fa-eye"></i>
+                {{ 'display_survey'|trans({}, 'survey') }}
+            </span>
+        {% endif %}
+        
+        {% if status == 'published' and canAnswer %}
+            {% if not hasAnswer %}
+                <hr>
+            {% endif %}
             <a href="{{ path('claro_survey_answer_form', {'survey': survey.getId()}) }}" class="btn btn-primary">
+                <i class="fa fa-check-square-o"></i>
                 {{ 'answer_to_survey'|trans({}, 'survey') }}
             </a>
         {% elseif status == 'closed' and survey.getHasPublicResult() %}
-            <hr>
+            {% if not hasAnswer %}
+                <hr>
+            {% endif %}
             <a href="" class="btn btn-primary">
                 {{ 'view_survey_results'|trans({}, 'survey') }}
             </a>

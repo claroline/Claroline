@@ -32,7 +32,9 @@ class SurveyManager
 {
     private $om;
     private $choiceRepo;
+    private $multipleChoiceQuestionAnswerRepo;
     private $multipleChoiceQuestionRepo;
+    private $openEndedQuestionAnswerRepo;
     private $surveyAnswerRepo;
     private $surveyQuestionRelationRepo;
     private $questionAnswerRepo;
@@ -48,8 +50,12 @@ class SurveyManager
         $this->om = $om;
         $this->choiceRepo =
             $om->getRepository('ClarolineSurveyBundle:Choice');
+        $this->multipleChoiceQuestionAnswerRepo =
+            $om->getRepository('ClarolineSurveyBundle:Answer\MultipleChoiceQuestionAnswer');
         $this->multipleChoiceQuestionRepo =
             $om->getRepository('ClarolineSurveyBundle:MultipleChoiceQuestion');
+        $this->openEndedQuestionAnswerRepo =
+            $om->getRepository('ClarolineSurveyBundle:Answer\OpenEndedQuestionAnswer');
         $this->surveyAnswerRepo =
             $om->getRepository('ClarolineSurveyBundle:Answer\SurveyAnswer');
         $this->surveyQuestionRelationRepo =
@@ -394,5 +400,69 @@ class SurveyManager
             $question,
             $executeQuery
         );
+    }
+
+
+    /*******************************************************
+     * Access to OpenEndedQuestionAnswerRepository methods *
+     *******************************************************/
+
+    public function getOpenEndedAnswerByQuestionAnswer(
+        QuestionAnswer $questionAnswer,
+        $executeQuery = true
+    )
+    {
+        return $this->openEndedQuestionAnswerRepo->findOpenEndedAnswerByQuestionAnswer(
+            $questionAnswer,
+            $executeQuery
+        );
+    }
+
+    public function getOpenEndedAnswerByUserAndSurveyAndQuestion(
+        User $user,
+        Survey $survey,
+        Question $question,
+        $executeQuery = true
+    )
+    {
+        return $this->openEndedQuestionAnswerRepo->findAnswerByUserAndSurveyAndQuestion(
+            $user,
+            $survey,
+            $question,
+            $executeQuery
+        );
+    }
+
+
+    /************************************************************
+     * Access to MultipleChoiceQuestionAnswerRepository methods *
+     ************************************************************/
+
+    public function deleteMultipleChoiceAnswersByQuestionAnswer(
+        QuestionAnswer $questionAnswer,
+        $executeQuery = true
+    )
+    {
+        return $this->multipleChoiceQuestionAnswerRepo
+            ->deleteMultipleChoiceAnswersByQuestionAnswer(
+                $questionAnswer,
+                $executeQuery
+            );
+    }
+
+    public function getMultipleChoiceAnswersByUserAndSurveyAndQuestion(
+        User $user,
+        Survey $survey,
+        Question $question,
+        $executeQuery = true
+    )
+    {
+        return $this->multipleChoiceQuestionAnswerRepo
+            ->findAnswersByUserAndSurveyAndQuestion(
+                $user,
+                $survey,
+                $question,
+                $executeQuery
+            );
     }
 }
