@@ -12,13 +12,17 @@
             {{ _resource.getResourceNode().getName() }}
         </a>
     </li>
-    <li class="active">{{ 'results' | trans({}, 'survey') }}</li>
+    <li class="active">{{ 'results'| trans({}, 'survey') }}</li>
     <li class="active">{{ currentQuestion.getTitle() }}</li>
 {% endblock %}
 
 {% block question_results %}
     <div>
         <h3>{{ currentQuestion.getQuestion()|raw }}</h3>
+        <div>
+            <label>{{ 'question_form_type'| trans({}, 'survey') }} :</label>
+            {{ currentQuestion.getType()| trans({}, 'survey') }}
+        </div>
         <br>
         {{ results|raw }}
     </div>
