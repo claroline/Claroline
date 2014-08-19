@@ -490,7 +490,7 @@ class HomeManager
     }
 
     /**
-     * Get home papameters
+     * Get the home parameters
      */
     public function getHomeParameters()
     {
@@ -499,6 +499,21 @@ class HomeManager
             'footerLogin' => $this->configHandler->getParameter('footer_login'),
             'footerWorkspaces' => $this->configHandler->getParameter('footer_workspaces'),
             'headerLocale' => $this->configHandler->getParameter('header_locale')
+        );
+    }
+
+    /**
+     * Save the home parameters
+     */
+    public function saveHomeParameters($homeMenu, $footerLogin, $footerWorkspaces, $headerLocale)
+    {
+        $this->configHandler->setParameters(
+            array(
+                'home_menu' => is_numeric($homeMenu) ? intval($homeMenu) : null,
+                'footer_login' => ($footerLogin === 'true'),
+            'footer_workspaces' => ($footerWorkspaces === 'true'),
+                'header_locale' => ($headerLocale === 'true')
+            )
         );
     }
 }

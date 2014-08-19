@@ -10,40 +10,86 @@
 (function () {
     'use strict';
 
-    //var home = window.Claroline.Home;
-    //var modal = window.Claroline.Modal;
+    var routing = window.Routing;
+    var modal = window.Claroline.Modal;
+    var common = window.Claroline.Common;
 
-    function previewToggle(element, condition)
+    function saveSettings(data)
     {
-        if (condition) {
-            element.removeClass('hide');
+        $.ajax(routing.generate('claroline_content_menu_save_settings', data))
+        .success(function () {
+            window.location.href = routing.generate('claro_get_content_by_type', {'type': 'menu'});
+        })
+        .error(function () {
+            modal.error();
+        });
+    }
+
+    function checkPoweredBy()
+    {
+        if ($('#preview-login').prop('checked') ||
+            $('#preview-workspaces').prop('checked') ||
+            $('#footerMessage').get(0) !== undefined
+        ) {
+            common.toggle($('.poweredBy'), false, 'navbar-right');
         } else {
-            element.addClass('hide');
+            common.toggle($('.poweredBy'), true, 'navbar-right');
         }
     }
 
-    $('body').on('change', '#mainMenu', function () {
-        previewToggle($('.gui-options'), $(this).prop('checked'));
-        previewToggle($('.gui-preview'), $(this).prop('checked'));
-        previewToggle($('.panel-footer .btn-primary'), $(this).prop('checked'));
+    function checkAll()
+    {
+        var menu = $('#homeMenu').data('menu') !== undefined ? $('#homeMenu').data('menu') : null;
+        var homeMenu = $('#homeMenu').data('id') !== undefined ? $('#homeMenu').data('id') : null;
+        var activeButton = homeMenu === menu ? true : $('#homeMenu').prop('checked');
+
+        common.toggle($('.gui-options'), $('#homeMenu').prop('checked'));
+        common.toggle($('.gui-preview'), $('#homeMenu').prop('checked'));
+        common.toggle($('.panel-footer .btn-primary'), activeButton);
+        common.toggle($('.preview-login'), $('#preview-login').prop('checked'));
+        common.toggle($('.preview-workspaces'), $('#preview-workspaces').prop('checked'));
+        common.toggle($('.localeHeader'), $('#preview-locale').prop('checked'));
+        common.toggle($('.localeFooter'), !$('#preview-locale').prop('checked'));
+
+        checkPoweredBy();
+    }
+
+    $('body').on('change', '#homeMenu', function () {
+        checkAll();
     })
     .on('change', '#preview-login', function () {
-        previewToggle($('.preview-login'), $(this).prop('checked'));
+        common.toggle($('.preview-login'), $(this).prop('checked'));
+        checkPoweredBy();
     })
     .on('change', '#preview-workspaces', function () {
-        previewToggle($('.preview-workspaces'), $(this).prop('checked'));
+        common.toggle($('.preview-workspaces'), $(this).prop('checked'));
+        checkPoweredBy();
     })
     .on('change', '#preview-locale', function () {
-        previewToggle($('.localeHeader'), $(this).prop('checked'));
-        previewToggle($('.localeFooter'), !$(this).prop('checked'));
+        common.toggle($('.localeHeader'), $(this).prop('checked'));
+        common.toggle($('.localeFooter'), !$(this).prop('checked'));
     })
     .on('click', '.save-menu-settings', function () {
-        var mainMenu = $('#mainMenu').prop('checked');
-        var footerLogin = $('#preview-login').prop('checked');
-        var footerWorkspaces = $('#preview-workspaces').prop('checked');
-        var headerLocale = $('#preview-locale').prop('checked');
+        var menu = $('#homeMenu').data('menu') !== undefined ? $('#homeMenu').data('menu') : null;
+        var homeMenu = $('#homeMenu').data('id') !== undefined ? $('#homeMenu').data('id') : null;
+        var footerLogin = $('#preview-login').prop('checked').toString();
+        var footerWorkspaces = $('#preview-workspaces').prop('checked').toString();
+        var headerLocale = $('#preview-locale').prop('checked').toString();
 
-        console.log(mainMenu, footerLogin, footerWorkspaces, headerLocale);
+        if (menu !== null && homeMenu === menu && !$('#homeMenu').prop('checked')) {
+            saveSettings(
+                {'menu': 'null', 'login': footerLogin, 'workspaces': footerWorkspaces, 'locale': headerLocale}
+            );
+        } else if ($('#homeMenu').prop('checked')) {
+            saveSettings(
+                {'menu': homeMenu, 'login': footerLogin, 'workspaces': footerWorkspaces, 'locale': headerLocale}
+            );
+        }
+    });
+
+    $(document).ready(function () {
+        $('#homeMenu').parent().removeClass('hide');
+        checkAll();
     });
 
 }());

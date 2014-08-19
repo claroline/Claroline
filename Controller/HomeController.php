@@ -80,8 +80,8 @@ class HomeController
     /**
      * Render the home page of the platform
      *
-     * @Route("/type/{type}", name="claro_get_content_by_type")
-     * @Route("/", name="claro_index", defaults={"type" = "home"})
+     * @Route("/type/{type}", name="claro_get_content_by_type", options = {"expose" = true})
+     * @Route("/", name="claro_index", defaults={"type" = "home"}, options = {"expose" = true})
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -470,18 +470,30 @@ class HomeController
     /**
      * Save the menu settings
      *
-     * @param mainMenu The id of the menu
-     * @param footerLogin A Boolean that determine if there is the login button in the footer
-     * @param footerWorkspaces A Boolean that determine if there is the workspace button in the footer
-     * @param headerLocale A boolean that determine if there is a locale button in the header
+     * @Route(
+     *     "/content/menu/save/settings/{menu}/{login}/{workspaces}/{locale}",
+     *     name="claroline_content_menu_save_settings",
+     *     options = {"expose" = true}
+     * )
+     *
+     * @param menu The id of the menu
+     * @param login A Boolean that determine if there is the login button in the footer
+     * @param workspaces A Boolean that determine if there is the workspace button in the footer
+     * @param locale A boolean that determine if there is a locale button in the header
      *
      * @Secure(roles="ROLE_ADMIN")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function saveMenuSettingsAction($mainMenu, $footerLogin, $footerWorkspaces, $headerLocale)
+    public function saveMenuSettingsAction($menu, $login, $workspaces, $locale)
     {
-        $this->manager->saveMenuSettings($mainMenu, $footerLogin, $footerWorkspaces, $headerLocale);
+        try {
+            $this->manager->saveHomeParameters($menu, $login, $workspaces, $locale);
+
+            return new Response('true');
+        } catch (\Exeption $e) {
+            return new Response('false');
+        }
     }
 
     /**
