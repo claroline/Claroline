@@ -69,18 +69,7 @@ class Content2Type
      */
     public function __construct(Content2Type $first = null)
     {
-        // the size may vary between 1 and 12 and corresponds to
-        // bootstrap container col classes
-        $this->size = 'content-12';
-
-        if ($first) {
-            $first->setBack($this);
-            $this->next = $first;
-            $this->back = null;
-        } else {
-            $this->next = null;
-            $this->back = null;
-        }
+        $this->setFirst($first);
     }
 
     /**
@@ -96,7 +85,7 @@ class Content2Type
     /**
      * Set size
      *
-     * @param  string       $size
+     * @param string $size
      * @return Content2Type
      */
     public function setSize($size)
@@ -219,6 +208,25 @@ class Content2Type
 
         if ($this->getNext()) {
             $this->getNext()->setBack($this->getBack());
+        }
+    }
+
+    /**
+     *
+     */
+    public function setFirst(Content2Type $first = null)
+    {
+        // the size may vary between 1 and 12 and corresponds to
+        // bootstrap container col classes
+        $this->setSize('content-12');
+
+        if ($first) {
+            $first->setBack($this);
+            $this->next = $first;
+            $this->back = null;
+        } else {
+            $this->next = null;
+            $this->back = null;
         }
     }
 }
