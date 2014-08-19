@@ -1,3 +1,19 @@
+{% macro renderPager(pager, surveyId, questionId, max) %}
+    {{
+        pagerfanta(
+            pager,
+            'twitter_bootstrap_translated',
+            {
+                'proximity' : 1,
+                'routeName': 'claro_survey_results_show',
+                'routeParams': {'survey': surveyId, 'question': questionId, 'max': max}
+            }
+        )
+    }}
+{% endmacro %}
+
+{% from _self import renderPager %}
+
 <div>
     <div>
         <label>{{ 'number_of_respondents'|trans({}, 'survey') }} :</label>
@@ -5,6 +21,9 @@
     </div>
     {% if answers|length > 0 %}
         <br>
+        {% if answers.getNbPages() > 1 %}
+            {{ renderPager(answers, survey.getId(), question.getId(), max) }}
+        {% endif %}
         <ul class="list-group">
             {% for answer in answers %}
                 <li class="list-group-item">
@@ -12,5 +31,8 @@
                 </li>
             {% endfor %}
         </ul>
+        {% if answers.getNbPages() > 1 %}
+            {{ renderPager(answers, survey.getId(), question.getId(), max) }}
+        {% endif %}
     {% endif %}
 </div>

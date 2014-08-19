@@ -13,6 +13,7 @@ namespace Claroline\SurveyBundle\Manager;
 
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Pager\PagerFactory;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\SurveyBundle\Entity\Answer\MultipleChoiceQuestionAnswer;
 use Claroline\SurveyBundle\Entity\Answer\OpenEndedQuestionAnswer;
@@ -35,6 +36,7 @@ class SurveyManager
     private $multipleChoiceQuestionAnswerRepo;
     private $multipleChoiceQuestionRepo;
     private $openEndedQuestionAnswerRepo;
+    private $pagerFactory;
     private $surveyAnswerRepo;
     private $surveyQuestionRelationRepo;
     private $questionAnswerRepo;
@@ -42,12 +44,14 @@ class SurveyManager
     
     /**
      * @DI\InjectParams({
-     *     "om" = @DI\Inject("claroline.persistence.object_manager")
+     *     "om"           = @DI\Inject("claroline.persistence.object_manager"),
+     *     "pagerFactory" = @DI\Inject("claroline.pager.pager_factory")
      * })
      */
-    public function __construct(ObjectManager $om)
+    public function __construct(ObjectManager $om, PagerFactory $pagerFactory)
     {
         $this->om = $om;
+        $this->pagerFactory = $pagerFactory;
         $this->choiceRepo =
             $om->getRepository('ClarolineSurveyBundle:Choice');
         $this->multipleChoiceQuestionAnswerRepo =
@@ -449,14 +453,23 @@ class SurveyManager
     public function getOpenEndedAnswersBySurveyAndQuestion(
         Survey $survey,
         Question $question,
+        $page = 1,
+        $max = 20,
         $executeQuery = true
     )
     {
-        return $this->openEndedQuestionAnswerRepo->findAnswersBySurveyAndQuestion(
+        $answers = $this->openEndedQuestionAnswerRepo->findAnswersBySurveyAndQuestion(
             $survey,
             $question,
             $executeQuery
         );
+//        return $this->openEndedQuestionAnswerRepo->findAnswersBySurveyAndQuestion(
+//            $survey,
+//            $question,
+//            $executeQuery
+//        );
+
+        return $this->pagerFactory->createPagerFromArray($answers, $page, $max);
     }
 
 

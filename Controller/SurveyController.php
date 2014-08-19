@@ -963,8 +963,9 @@ class SurveyController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/survey/{survey}/results/show/question/{question}",
-     *     name="claro_survey_results_show"
+     *     "/survey/{survey}/results/show/question/{question}/page/{page}/max/{max}",
+     *     name="claro_survey_results_show",
+     *     defaults={"page"=1, "max"=20}
      * )
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      * @EXT\Template()
@@ -973,7 +974,9 @@ class SurveyController extends Controller
      */
     public function surveyResultsShowAction(
         Survey $survey,
-        Question $question
+        Question $question,
+        $page = 1,
+        $max = 20
     )
     {
         $canEdit = $this->hasSurveyRight($survey, 'EDIT');
@@ -989,7 +992,8 @@ class SurveyController extends Controller
             $questions[] = $relation->getQuestion();
         }
 
-        $results = $this->showTypedQuestionResults($survey, $question)->getContent();
+        $results = $this->showTypedQuestionResults($survey, $question, $page, $max)
+            ->getContent();
 
         return array(
             'survey' => $survey,
@@ -999,7 +1003,12 @@ class SurveyController extends Controller
         );
     }
 
-    private function showTypedQuestionResults(Survey $survey, Question $question)
+    private function showTypedQuestionResults(
+        Survey $survey,
+        Question $question,
+        $page = 1,
+        $max = 20
+    )
     {
         $questionType = $question->getType();
 
@@ -1015,7 +1024,9 @@ class SurveyController extends Controller
 
                 return $this->showOpenEndedQuestionResults(
                     $survey,
-                    $question
+                    $question,
+                    $page,
+                    $max
                 );
             default:
                 break;
@@ -1063,16 +1074,27 @@ class SurveyController extends Controller
 
     private function showOpenEndedQuestionResults(
         Survey $survey,
-        Question $question
+        Question $question,
+        $page = 1,
+        $max = 20
     )
     {
-        $answers = $this->surveyManager
-            ->getOpenEndedAnswersBySurveyAndQuestion($survey, $question);
+        $answers = $this->surveyManager->getOpenEndedAnswersBySurveyAndQuestion(
+            $survey,
+            $question,
+            $page,
+            $max
+        );
 
         return new Response(
             $this->templating->render(
                 "ClarolineSurveyBundle:Survey:showOpenEndedQuestionResults.html.twig",
-                array('answers' => $answers)
+                array(
+                    'survey' => $survey,
+                    'question' => $question,
+                    'answers' => $answers,
+                    'max' => $max
+                )
             )
         );
     }
