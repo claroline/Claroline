@@ -186,6 +186,10 @@ class ResourceController
      */
     public function openAction(ResourceNode $node, $resourceType)
     {
+        //in order to remember for later. To keep links breadcrumb working we'll need to do something like this
+        //if we don't want to change to much code
+        $this->request->getSession()->set('current_resource_node', $node);
+    
         $collection = new ResourceCollection(array($node));
         //If it's a link, the resource will be its target.
         $node = $this->getRealTarget($node);
@@ -671,6 +675,19 @@ class ResourceController
      */
     public function renderBreadcrumbsAction(ResourceNode $node, array $_breadcrumbs)
     {
+        //the signature method can change aswell
+        //this method obviously has to change
+        //this trick will never work with shortcuts to directory
+        $node = $this->request->getSession()->get('current_resource_node');
+        $workspace = $node->getWorkspace();
+        $ancestors = $this->resourceManager->getAncestors($node);
+
+        return array(
+            'ancestors' => $ancestors,
+            'workspaceId' => $workspace->getId(),
+        );
+        //the following code is useless and can be removed
+
         $breadcrumbsAncestors = array();
 
         if (count($_breadcrumbs) > 0) {
@@ -701,7 +718,9 @@ class ResourceController
             'ancestors' => $breadcrumbsAncestors,
             'workspaceId' => $workspace->getId()
         );
+    
     }
+
 
     /**
      * @EXT\Route(
