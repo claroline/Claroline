@@ -54,9 +54,3 @@ services:
             pathManager:     @innova_path.manager.path
             resourceManager: @claroline.manager.resource_manager
         scope: request
-
-    # Paths Widget Controller
-    innova_path.controller.path_widget:
-        class: %innova_path.controller.path_widget.class%
-        arguments:
-            pathManager: @innova_path.manager.path

@@ -3,11 +3,11 @@
 namespace Innova\PathBundle\Controller;
 
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Innova\PathBundle\Manager\PathManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 /**
  * WidgetController
@@ -18,22 +18,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
  *      service = "innova_path.controller.path_widget"
  * )
  */
-class WidgetController
+class WidgetController extends Controller
 {
-    /**
-     * Path manager
-     * @var \Innova\PathBundle\Manager\PathManager
-     */
-    private $pathManager;
-
-    /**
-     * @param \Innova\PathBundle\Manager\PathManager $pathManager
-     */
-    public function __construct(PathManager $pathManager)
-    {
-        $this->pathManager = $pathManager;
-    }
-
     /**
      * Renders all paths from a workspace
      * @param Workspace $workspace
@@ -54,7 +40,7 @@ class WidgetController
      */
     public function pathsWorkspaceWidgetAction(Workspace $workspace)
     {
-        $paths = $this->pathManager->findAccessibleByUser($workspace);
+        $paths = $this->container->get('innova_path.manager.path')->findAccessibleByUser($workspace);
 
         return array (
             'widgetType' => 'workspace',
@@ -75,7 +61,7 @@ class WidgetController
      */
     public function myPathsWidgetAction()
     {
-        $paths = $this->pathManager->findAccessibleByUser();
+        $paths = $this->container->get('innova_path.manager.path')->findAccessibleByUser();
 
         return array (
             'widgetType' => 'desktop',
