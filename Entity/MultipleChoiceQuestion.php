@@ -30,11 +30,6 @@ class MultipleChoiceQuestion extends AbstractTypedQuestion
     protected $choices;
 
     /**
-     * @ORM\Column(name="allow_multiple_response", type="boolean", nullable=true)
-     */
-    protected $allowMultipleResponse;
-
-    /**
      * Class constructor
      */
     public function __construct()
@@ -46,15 +41,5 @@ class MultipleChoiceQuestion extends AbstractTypedQuestion
     public function getChoices()
     {
         return $this->choices;
-    }
-
-    public function getAllowMultipleResponse()
-    {
-        return $this->allowMultipleResponse;
-    }
-
-    public function setAllowMultipleResponse($allowMultipleResponse)
-    {
-        $this->allowMultipleResponse = $allowMultipleResponse;
     }
 }

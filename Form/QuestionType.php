@@ -33,7 +33,8 @@ class QuestionType extends AbstractType
             array(
                 'choices' => array(
                     'open_ended' => 'open_ended',
-                    'multiple_choice' => 'multiple_choice'
+                    'multiple_choice_single' => 'multiple_choice_single_answer',
+                    'multiple_choice_multiple' => 'multiple_choice_multiple_answers'
                 ),
                 'required' => true
             )

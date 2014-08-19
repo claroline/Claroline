@@ -19,7 +19,10 @@ edit_parameters: 'Edit parameters'
 edit_survey: 'Edit survey'
 edition: Edition
 end_date: 'End date'
-multiple_choice: 'Multiple choice'
+multiple_choice_multiple: 'Multiple choice (Multiple answers)'
+multiple_choice_multiple_answers: 'Multiple choice (Multiple answers)'
+multiple_choice_single: 'Multiple choice (Unique answer)'
+multiple_choice_single_answer: 'Multiple choice (Unique answer)'
 name: Name
 no_choice_warning: 'Warning! There is no choice.'
 no_question: 'No question'

@@ -90,13 +90,11 @@ class SurveyManager
 
     public function createMultipleChoiceQuestion(
         Question $question,
-        array $choices,
-        $multipleResponse
+        array $choices
     )
     {
         $multipleChoiceQuestion = new MultipleChoiceQuestion();
         $multipleChoiceQuestion->setQuestion($question);
-        $multipleChoiceQuestion->setAllowMultipleResponse($multipleResponse);
         $this->om->persist($multipleChoiceQuestion);
 
         foreach ($choices as $choice) {
@@ -110,11 +108,9 @@ class SurveyManager
 
     public function updateQuestionChoices(
         MultipleChoiceQuestion $multipleChoiceQuestion,
-        array $newChoices,
-        $multipleResponse
+        array $newChoices
     )
     {
-        $multipleChoiceQuestion->setAllowMultipleResponse($multipleResponse);
         $this->om->persist($multipleChoiceQuestion);
 
         $oldChoices = $multipleChoiceQuestion->getChoices();

@@ -382,7 +382,8 @@ class SurveyController extends Controller
 
             switch ($questionType) {
 
-                case 'multiple_choice':
+                case 'multiple_choice_single':
+                case 'multiple_choice_multiple':
                     $postDatas = $this->request->getCurrentRequest()->request->all();
                     $this->updateMultipleChoiceQuestion($question, $postDatas);
                     break;
@@ -483,7 +484,8 @@ class SurveyController extends Controller
 
             switch ($questionType) {
 
-                case 'multiple_choice':
+                case 'multiple_choice_single':
+                case 'multiple_choice_multiple':
                     $postDatas = $this->request->getCurrentRequest()->request->all();
                     $this->updateMultipleChoiceQuestion($question, $postDatas);
                     break;
@@ -610,7 +612,8 @@ class SurveyController extends Controller
 
         switch ($questionType) {
 
-            case 'multiple_choice' :
+            case 'multiple_choice_single' :
+            case 'multiple_choice_multiple' :
 
                 return $this->displayMultipleChoiceQuestion($question);
             case 'open_ended':
@@ -640,7 +643,8 @@ class SurveyController extends Controller
 
         switch ($questionType) {
 
-            case 'multiple_choice':
+            case 'multiple_choice_single':
+            case 'multiple_choice_multiple':
 
                 return $this->multipleChoiceQuestionForm($survey);
             case 'open_ended':
@@ -667,7 +671,8 @@ class SurveyController extends Controller
 
         switch ($questionType) {
 
-            case 'multiple_choice':
+            case 'multiple_choice_single':
+            case 'multiple_choice_multiple':
 
                 return $this->multipleChoiceQuestionForm(
                     $survey,
@@ -725,7 +730,9 @@ class SurveyController extends Controller
                         $answersDatas[$questionId]['answer'] =
                             $openEndedAnswer->getContent();
                     }
-                } elseif ($question->getType() === 'multiple_choice') {
+                } elseif ($question->getType() === 'multiple_choice_single' ||
+                        $question->getType() === 'multiple_choice_single') {
+
                     $choiceAnswers = $this->surveyManager
                         ->getMultipleChoiceAnswersByUserAndSurveyAndQuestion(
                             $user,
@@ -825,13 +832,15 @@ class SurveyController extends Controller
                             $this->surveyManager
                                 ->persistOpenEndedQuestionAnswer($openEndedAnswer);
 
-                        } elseif ($questionType === 'multiple_choice') {
+                        } elseif ($questionType === 'multiple_choice_single' ||
+                                $questionType === 'multiple_choice_multiple') {
+
                             $multipleChoiceQuestion = $this->surveyManager
                                 ->getMultipleChoiceQuestionByQuestion($question);
 
                             if (!is_null($multipleChoiceQuestion)) {
 
-                                if ($multipleChoiceQuestion->getAllowMultipleResponse()) {
+                                if ($questionType === 'multiple_choice_multiple') {
 
                                     foreach($questionResponse as $choiceId => $response) {
 
@@ -844,7 +853,7 @@ class SurveyController extends Controller
                                                 ->persistMultipleChoiceQuestionAnswer($choiceAnswer);
                                         }
                                     }
-                                } elseif (!$multipleChoiceQuestion->getAllowMultipleResponse() &&
+                                } elseif ($questionType === 'multiple_choice_single' &&
                                     isset($questionResponse['choice']) &&
                                     !empty($questionResponse['choice'])) {
 
@@ -895,13 +904,15 @@ class SurveyController extends Controller
                             $this->surveyManager
                                 ->persistOpenEndedQuestionAnswer($openEndedAnswer);
 
-                        } elseif ($questionType === 'multiple_choice') {
+                        } elseif ($questionType === 'multiple_choice_single' ||
+                                $questionType === 'multiple_choice_multiple') {
+
                             $multipleChoiceQuestion = $this->surveyManager
                                 ->getMultipleChoiceQuestionByQuestion($question);
 
                             if (!is_null($multipleChoiceQuestion)) {
 
-                                if ($multipleChoiceQuestion->getAllowMultipleResponse()) {
+                                if ($questionType === 'multiple_choice_multiple') {
 
                                     $this->surveyManager
                                         ->deleteMultipleChoiceAnswersByQuestionAnswer($questionAnswer);
@@ -917,7 +928,7 @@ class SurveyController extends Controller
                                                 ->persistMultipleChoiceQuestionAnswer($choiceAnswer);
                                         }
                                     }
-                                } elseif (!$multipleChoiceQuestion->getAllowMultipleResponse() &&
+                                } elseif ($questionType === 'multiple_choice_single' &&
                                     isset($questionResponse['choice']) &&
                                     !empty($questionResponse['choice'])) {
 
@@ -1014,7 +1025,8 @@ class SurveyController extends Controller
 
         switch ($questionType) {
 
-            case 'multiple_choice' :
+            case 'multiple_choice_single' :
+            case 'multiple_choice_multiple' :
 
                 return $this->showMultipleChoiceQuestionResults(
                     $survey,
@@ -1111,7 +1123,8 @@ class SurveyController extends Controller
 
         switch ($questionType) {
 
-            case 'multiple_choice' :
+            case 'multiple_choice_single' :
+            case 'multiple_choice_multiple' :
 
                 return $this->displayMultipleChoiceQuestion(
                     $question,
@@ -1141,12 +1154,9 @@ class SurveyController extends Controller
             null :
             $this->surveyManager->getMultipleChoiceQuestionByQuestion($question);
         $choices = array();
-        $allowMultipleResponse = false;
 
         if (!is_null($multipleChoiceQuestion)) {
             $choices = $multipleChoiceQuestion->getChoices();
-            $allowMultipleResponse =
-                $multipleChoiceQuestion->getAllowMultipleResponse();
         }
 
         return new Response(
@@ -1154,8 +1164,7 @@ class SurveyController extends Controller
                 "ClarolineSurveyBundle:Survey:multipleChoiceQuestionForm.html.twig",
                 array(
                     'survey' => $survey,
-                    'choices' => $choices,
-                    'allowMultipleResponse' => $allowMultipleResponse
+                    'choices' => $choices
                 )
             )
         );
@@ -1176,9 +1185,6 @@ class SurveyController extends Controller
         }
 
         $choices = $multipleChoiceQuestion->getChoices();
-        $allowMultipleResponse =
-            $multipleChoiceQuestion->getAllowMultipleResponse();
-
         $answersDatas = is_null($answers) ? array() : $answers;
 
         return new Response(
@@ -1187,7 +1193,6 @@ class SurveyController extends Controller
                 array(
                     'question' => $question,
                     'choices' => $choices,
-                    'allowMultipleResponse' => $allowMultipleResponse,
                     'answers' => $answersDatas,
                     'canEdit' => $canEdit
                 )
@@ -1220,8 +1225,6 @@ class SurveyController extends Controller
         array $datas
     )
     {
-        $multipleResponse = isset($datas['allow-multiple-response']) &&
-            ($datas['allow-multiple-response'] === 'on');
         $choices = isset($datas['choice']) ?
             $datas['choice'] :
             array();
@@ -1232,14 +1235,12 @@ class SurveyController extends Controller
         if (is_null($multipleChoiceQuestion)) {
             $this->surveyManager->createMultipleChoiceQuestion(
                 $question,
-                $choices,
-                $multipleResponse
+                $choices
             );
         } else {
             $this->surveyManager->updateQuestionChoices(
                 $multipleChoiceQuestion,
-                $choices,
-                $multipleResponse
+                $choices
             );
         }
     }

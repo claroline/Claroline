@@ -22,13 +22,15 @@
     {
         var questionType = $('#question_form_type').val();
         
-        if (questionType === 'multiple_choice') {
+        if (questionType === 'multiple_choice_single' ||
+            questionType === 'multiple_choice_multiple') {
+        
             var route = (formType === 'create') ?
                 Routing.generate(
                     'claro_survey_typed_question_create_form',
                     {
                         'survey': surveyId,
-                        'questionType': 'multiple_choice'
+                        'questionType': questionType
                     }
                 ) :
                 Routing.generate(
@@ -36,7 +38,7 @@
                     {
                         'survey': surveyId,
                         'question': questionId,
-                        'questionType': 'multiple_choice'
+                        'questionType': questionType
                     }
                 );
             

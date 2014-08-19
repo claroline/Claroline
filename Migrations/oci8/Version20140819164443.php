@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\SurveyBundle\Migrations\pdo_oci;
+namespace Claroline\SurveyBundle\Migrations\oci8;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/08/18 03:27:56
+ * Generation date: 2014/08/19 04:44:44
  */
-class Version20140818152754 extends AbstractMigration
+class Version20140819164443 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -360,7 +360,6 @@ class Version20140818152754 extends AbstractMigration
             CREATE TABLE claro_survey_multiple_choice_question (
                 id NUMBER(10) NOT NULL, 
                 question_id NUMBER(10) DEFAULT NULL, 
-                allow_multiple_response NUMBER(1) DEFAULT NULL, 
                 PRIMARY KEY(id)
             )
         ");

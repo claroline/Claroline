@@ -1,4 +1,4 @@
-{% if allowMultipleResponse %}
+{% if question.getType() == 'multiple_choice_multiple' %}
     {% set choiceType = "checkbox" %}
 {% else %}
     {% set choiceType = "radio" %}

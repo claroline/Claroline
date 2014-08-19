@@ -3,20 +3,6 @@
         <h3>{{ 'choices_management'|trans({}, 'survey') }}</h3>
     </div>
     <div class="panel-body">
-        <div class="form-group row">
-            <label class="control-label col-md-3 required">
-                {{ 'allow_multiple_response'|trans({}, 'survey') }}
-            </label>
-            <div class="col-md-9">
-                <input type="checkbox" name="allow-multiple-response"
-                    {% if allowMultipleResponse %}
-                        checked="checked"
-                    {% endif %}
-                >
-            </div>
-        </div>
-        <br>
-
         <div class="table-responsive">
             <table id="choices-table"  class="table table-bordered" style="text-align: center">
                 
