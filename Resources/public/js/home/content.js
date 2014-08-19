@@ -13,6 +13,7 @@
     var home = window.Claroline.Home;
     var modal = window.Claroline.Modal;
     var tinymce = window.tinymce;
+    var routing = window.Routing;
 
     $('body').on('click', '.content-size', function (event) {
         var content = $(event.target).parents('.content-element').get(0);
@@ -162,6 +163,33 @@
                 } else {
                     $('.form-group', element).addClass('has-error');
                 }
+            });
+        });
+    })
+    .on('click', '.send-content', function (event) {
+        var id = $(event.target).parents('.content-element').data('id');
+        var type = $(event.target).parents('.content-element').data('type');
+        var content = $(event.target).parents('.content-element').first();
+
+        modal.fromRoute('claroline_move_content_form', {'currentType': type}, function (element) {
+            element.on('change', 'select', function () {
+                var page = $(this).val();
+
+                $.ajax(routing.generate('claroline_move_content', {'content': id, 'type': type, 'page': page}))
+                .success(function (data) {
+                    if (data === 'true') {
+                        $(element).modal('hide');
+                        content.hide('slow', function () {
+                            $(this).remove();
+                            $('.contents').trigger('ContentModified');
+                        });
+                    } else {
+                        modal.error();
+                    }
+                })
+                .error(function () {
+                    modal.error();
+                });
             });
         });
     });

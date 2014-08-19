@@ -143,6 +143,47 @@ class HomeController
     }
 
     /**
+     * Render the "move a content" form.
+     *
+     * @Route("/move/content/{currentType}", name="claroline_move_content_form", options = {"expose" = true})
+     * @Secure(roles="ROLE_ADMIN")
+     *
+     * @Template("ClarolineCoreBundle:Home:move.html.twig")
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function moveContentFormAction($currentType)
+    {
+        return array('currentType' => $currentType, 'pages' => $this->manager->getTypes());
+    }
+
+    /**
+     * Render the "move a content" form.
+     *
+     * @Route("/move/content/{content}/{type}/{page}", name="claroline_move_content", options = {"expose" = true})
+     *
+     * @Secure(roles="ROLE_ADMIN")
+     *
+     * @Template("ClarolineCoreBundle:Home:move.html.twig")
+     *
+     * @ParamConverter("content", class = "ClarolineCoreBundle:Content", options = {"id" = "content"})
+     * @ParamConverter("type", class = "ClarolineCoreBundle:home\Type", options = {"mapping" : {"type": "name"}})
+     * @ParamConverter("page", class = "ClarolineCoreBundle:home\Type", options = {"mapping" : {"page": "name"}})
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function moveContentAction($content, $type, $page)
+    {
+        try {
+            $this->manager->moveContent($content, $type, $page);
+
+            return new Response('true');
+        } catch (\Exeption $e) {
+            return new Response('false'); //useful in ajax
+        }
+     }
+
+    /**
      * Render the page of the creator box.
      *
      * @Route("/content/creator/{type}/{id}/{father}", name="claroline_content_creator", defaults={"father" = null})

@@ -319,6 +319,26 @@ class HomeManager
     }
 
     /**
+     * Move a content from a type to another
+     *
+     * @param content The content to move
+     * @param page The page type where move the content
+     *
+     * @return This function doesn't return anything.
+     */
+    public function moveContent($content, $type, $page)
+    {
+        $contenType = $this->contentType->findOneBy(array('type' => $type, 'content' => $content));
+
+        $contenType->detach();
+        $contenType->setType($page);
+        $contenType->setFirst($this->contentType->findOneBy(array('type' => $page, 'next' => null)));
+
+        $this->manager->persist($contenType);
+        $this->manager->flush();
+    }
+
+    /**
      * Delete a content and his childs.
      *
      * @return This function doesn't return anything.

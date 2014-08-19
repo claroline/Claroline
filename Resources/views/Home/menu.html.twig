@@ -49,6 +49,13 @@
                         </a>
                     </li>
                 {% endif %}
+                {% if type != "menu" %}
+                    <li role="presentation">
+                        <a role="menuitem" class="send-content">
+                            <i class="fa fa-send"></i> {{ "move" | trans({}, 'platform') }}
+                        </a>
+                    </li>
+                {% endif %}
             {% endif %}
         </ul>
     </div>
