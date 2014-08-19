@@ -58,4 +58,25 @@ class OpenEndedQuestionAnswerRepository extends EntityRepository
 
         return $executeQuery ? $query->getOneOrNullResult() : $query;
     }
+
+    public function findAnswersBySurveyAndQuestion(
+        Survey $survey,
+        Question $question,
+        $executeQuery = true
+    )
+    {
+        $dql = "
+            SELECT oeqa
+            FROM Claroline\SurveyBundle\Entity\Answer\OpenEndedQuestionAnswer oeqa
+            JOIN oeqa.questionAnswer qa
+            JOIN qa.surveyAnswer sa
+            WHERE sa.survey = :survey
+            AND qa.question = :question
+        ";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('survey', $survey);
+        $query->setParameter('question', $question);
+
+        return $executeQuery ? $query->getResult() : $query;
+    }
 }

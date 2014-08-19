@@ -97,20 +97,20 @@
         </div>
     </div>
     <div class="panel-footer">
-        <span class="btn btn-primary view-survey-btn"
+        <span class="btn btn-primary view-survey-btn margin-bottom-md"
               data-survey-id="{{ surveyId }}"
         >
             <i class="fa fa-eye"></i>
             {{ 'display_survey'|trans({}, 'survey') }}
         </span>
         <a href="{{ path('claro_survey_management', {'survey': surveyId}) }}"
-            class="btn btn-primary"
+            class="btn btn-primary margin-bottom-md"
         >
             <i class="fa fa-list"></i>
             {{ 'edit_survey'|trans({}, 'survey') }}
         </a>
         <a href="{{ path('claro_survey_parameters_edit_form', {'survey': surveyId}) }}"
-            class="btn btn-primary"
+            class="btn btn-primary margin-bottom-md"
         >
             <i class="fa fa-pencil"></i>
             {{ 'edit_parameters'|trans({}, 'survey') }}
@@ -120,16 +120,28 @@
                 'claro_survey_questions_management',
                 {'survey': surveyId, 'orderedBy': 'title', 'order': 'ASC'}
             ) }}"
-            class="btn btn-primary"
+            class="btn btn-primary margin-bottom-md"
         >
             <i class="fa fa-question"></i>
             {{ 'questions_management'|trans({}, 'survey') }}
         </a>
-        {% if status == 'published' %}
-            <a href="{{ path('claro_survey_answer_form', {'survey': surveyId}) }}" class="btn btn-primary">
+        {% if status == 'published' or status == 'closed' %}
+            <a href="{{ path('claro_survey_answer_form', {'survey': surveyId}) }}" class="btn btn-primary margin-bottom-md">
                 <i class="fa fa-check-square-o"></i>
                 {{ 'answer_to_survey'|trans({}, 'survey') }}
             </a>
+            
+            {% set questionsRelations = survey.getQuestionRelations() %}
+        
+            {% if questionsRelations|length > 0 %}
+                {% set question = questionsRelations[0].getQuestion() %}
+                <a href="{{ path('claro_survey_results_show', {'survey': surveyId, 'question': question.getId()}) }}"
+                   class="btn btn-primary margin-bottom-md"
+                >
+                    <i class="fa fa-bar-chart-o"></i>
+                    {{ 'view_survey_results'|trans({}, 'survey') }}
+                </a>
+            {% endif %}
         {% endif %}
     </div>
 

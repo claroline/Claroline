@@ -5,6 +5,7 @@ add_question_box_title: 'Add a question to survey'
 allow_edition_after_submission: 'Allow edition after submission'
 allow_multiple_response: 'Multiple response'
 answer_to_survey: 'Answer to survey'
+choice: Choice
 choices_management: 'Choices management'
 close: Close
 closed: Closed
@@ -22,6 +23,8 @@ multiple_choice: 'Multiple choice'
 name: Name
 no_choice_warning: 'Warning! There is no choice.'
 no_question: 'No question'
+number_of_respondents: 'Number of respondents'
+number_of_responses: 'Number of responses'
 open_ended: 'Open-ended'
 parameters_edition: 'Parameters edition'
 publication_date: 'Publication date'
@@ -38,6 +41,7 @@ question_form_question: 'Question'
 question_form_title: 'Title'
 question_form_type: 'Question type'
 questions_management: 'Questions management'
+results: Results
 return: Return
 show_result_to_users: 'Show result to users'
 start_date: 'Starting date'
@@ -49,6 +53,7 @@ survey_edition_form_endDate: 'End date'
 survey_edition_form_hasPublicResult: 'Show result to users'
 survey_edition_form_startDate: 'Starting date'
 survey_parameters_edition: 'Survey parameters edition'
+survey_results: 'Survey results'
 title: Title
 type: Type
 unpublished: Unpublished

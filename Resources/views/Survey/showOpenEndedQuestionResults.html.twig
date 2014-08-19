@@ -1,0 +1,16 @@
+<div>
+    <div>
+        <label>{{ 'number_of_respondents'|trans({}, 'survey') }} :</label>
+        <span>{{ answers|length }}</span>
+    </div>
+    {% if answers|length > 0 %}
+        <br>
+        <ul class="list-group">
+            {% for answer in answers %}
+                <li class="list-group-item">
+                    {{ answer.getContent()|raw }}
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+</div>

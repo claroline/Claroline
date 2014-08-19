@@ -1,0 +1,30 @@
+<div>
+    <div>
+        <label>{{ 'number_of_respondents'|trans({}, 'survey') }} :</label>
+        <span>{{ nbRespondents }}</span>
+    </div>
+
+    {% if choices|length > 0 %}
+        <br>
+        <table class="table table-responsive text-center">
+            <tr>
+                <th class="text-center">{{ 'choice'|trans({}, 'survey') }}</th>
+                <th class="text-center">{{ 'number_of_responses'|trans({}, 'survey') }}</th>
+            </tr>
+
+            {% for choice in choices %}
+                {% set choiceId = choice.getId() %}
+                <tr>
+                    <td>{{ choice.getContent()|raw }}</td>
+                    <td>
+                        {% if choicesCount[choiceId] is defined %}
+                            {{ choicesCount[choiceId] }}
+                        {% else %}
+                            0
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    {% endif %}
+</div>

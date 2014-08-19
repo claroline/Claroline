@@ -13,6 +13,7 @@ namespace Claroline\SurveyBundle\Repository\Answer;
 
 use Claroline\SurveyBundle\Entity\Answer\SurveyAnswer;
 use Claroline\SurveyBundle\Entity\Question;
+use Claroline\SurveyBundle\Entity\Survey;
 use Doctrine\ORM\EntityRepository;
 
 class QuestionAnswerRepository extends EntityRepository
@@ -31,6 +32,26 @@ class QuestionAnswerRepository extends EntityRepository
         ";
         $query = $this->_em->createQuery($dql);
         $query->setParameter('surveyAnswer', $surveyAnswer);
+        $query->setParameter('question', $question);
+
+        return $executeQuery ? $query->getOneOrNullResult() : $query;
+    }
+
+    public function countAnswersBySurveyAndQuestion(
+        Survey $survey,
+        Question $question,
+        $executeQuery = true
+    )
+    {
+        $dql = "
+            SELECT COUNT(qa) AS nb_answers
+            FROM Claroline\SurveyBundle\Entity\Answer\QuestionAnswer qa
+            JOIN qa.surveyAnswer sa
+            WHERE sa.survey = :survey
+            AND qa.question = :question
+        ";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('survey', $survey);
         $query->setParameter('question', $question);
 
         return $executeQuery ? $query->getOneOrNullResult() : $query;

@@ -11,20 +11,21 @@
 
 namespace Claroline\SurveyBundle\Repository;
 
-use Claroline\SurveyBundle\Entity\MultipleChoiceQuestion;
+use Claroline\SurveyBundle\Entity\Question;
 use Doctrine\ORM\EntityRepository;
 
 class ChoiceRepository extends EntityRepository
 {
     public function findChoicesByQuestion(
-        MultipleChoiceQuestion $question,
+        Question $question,
         $executeQuery = true
     )
     {
         $dql = '
             SELECT c
             FROM Claroline\SurveyBundle\Entity\Choice c
-            WHERE c.choiceQuestion = :question
+            JOIN c.choiceQuestion cq
+            WHERE cq.question = :question
             ORDER BY c.id ASC
         ';
         $query = $this->_em->createQuery($dql);

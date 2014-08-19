@@ -5,6 +5,7 @@
 {% endif %}
 
 {% set _resource = survey %}
+{% set surveyId = survey.getId() %}
 {% set startDate = survey.getStartDate() %}
 {% set endDate = survey.getEndDate() %}
 
@@ -60,17 +61,28 @@
             </div>
         {% endif %}
                 
-        {% if status == 'published' %}
+        {% if status == 'published' or  status == 'closed' %}
             <hr>
-            <a href="{{ path('claro_survey_answer_form', {'survey': survey.getId()}) }}" class="btn btn-primary">
+            <a href="{{ path('claro_survey_answer_form', {'survey': surveyId}) }}"
+               class="btn btn-primary margin-bottom-md"
+            >
                 <i class="fa fa-check-square-o"></i>
                 {{ 'answer_to_survey'|trans({}, 'survey') }}
             </a>
-        {% elseif status == 'closed' and survey.getHasPublicResult() %}
-            <hr>
-            <a href="" class="btn btn-primary">
-                {{ 'view_survey_results'|trans({}, 'survey') }}
-            </a>
+            
+            {% if hasAnswered and survey.getHasPublicResult() %}  
+                {% set questionsRelations = survey.getQuestionRelations() %}
+
+                {% if questionsRelations|length > 0 %}
+                    {% set question = questionsRelations[0].getQuestion() %}
+                    <a href="{{ path('claro_survey_results_show', {'survey': surveyId, 'question': question.getId()}) }}"
+                       class="btn btn-primary margin-bottom-md"
+                    >
+                        <i class="fa fa-bar-chart-o"></i>
+                        {{ 'view_survey_results'|trans({}, 'survey') }}
+                    </a>
+                {% endif %}
+            {% endif %}
         {% endif %}
     </div>
 {% endblock %}

@@ -41,13 +41,13 @@
     <div class="panel-body">
         <div>
             <a href="{{ path('claro_survey_index', {'survey': surveyId}) }}"
-               class="btn btn-primary"
+               class="btn btn-primary margin-bottom-md"
             >
                 <i class="fa fa-arrow-left"></i>
                 {{ 'return'|trans({}, 'survey') }}
             </a>
             <a href="{{ path('claro_survey_question_create_form', {'survey': surveyId}) }}"
-               class="btn btn-primary"
+               class="btn btn-primary margin-bottom-md"
             >
                 <i class="fa fa-plus-circle"></i>
                 {{ 'create_question'|trans({}, 'survey') }}

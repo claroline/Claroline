@@ -1,0 +1,25 @@
+{% extends 'ClarolineSurveyBundle:Survey:surveyResultsTabs.html.twig' %}
+
+{% block resourceBreadcrumb %}
+    <li>
+        <a href="{{ path(
+            'claro_resource_open',
+            {
+                'resourceType': _resource.getResourceNode().getResourceType().getName(),
+                'node': _resource.getResourceNode().getId()
+            }
+        ) }}">
+            {{ _resource.getResourceNode().getName() }}
+        </a>
+    </li>
+    <li class="active">{{ 'results' | trans({}, 'survey') }}</li>
+    <li class="active">{{ currentQuestion.getTitle() }}</li>
+{% endblock %}
+
+{% block question_results %}
+    <div>
+        <h3>{{ currentQuestion.getQuestion()|raw }}</h3>
+        <br>
+        {{ results|raw }}
+    </div>
+{% endblock %}

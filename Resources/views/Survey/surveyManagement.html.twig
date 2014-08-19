@@ -31,18 +31,18 @@
     <div class="panel-body">
         <div>
             <a href="{{ path('claro_survey_index', {'survey': surveyId}) }}"
-               class="btn btn-primary"
+               class="btn btn-primary margin-bottom-md"
             >
                 <i class="fa fa-arrow-left"></i>
                 {{ 'return'|trans({}, 'survey') }}
             </a>
             <a href="{{ path('claro_survey_question_create_form', {'survey': surveyId, 'source': 'survey'}) }}"
-               class="btn btn-primary"
+               class="btn btn-primary margin-bottom-md"
             >
                 <i class="fa fa-plus-circle"></i>
                 {{ 'create_question'|trans({}, 'survey') }}
             </a>
-            <span id="add-question-btn" class="btn btn-primary">
+            <span id="add-question-btn" class="btn btn-primary margin-bottom-md">
                 <i class="fa fa-search"></i>
                 {{ 'add_question'|trans({}, 'survey') }}
             </span>
@@ -54,39 +54,43 @@
                 {{ 'no_question'|trans({}, 'survey') }}
             </div>
         {% else %}
-            <table class="table table-responsive table-bordered">
-                
-            {% for relation in questionRelations %}
-                {% set question = relation.getQuestion() %}
-                <tr>
-                    <td>
-                        <b>
-                            [{{ question.getType()|trans({}, 'survey') }}]
-                            {{ question.getTitle() }}
-                        </b>
-                        {{ question.getQuestion()|raw }}
-                    </td>
-                    <td>
-                        <span class="btn btn-default view-question-btn" data-question-id="{{ question.getId() }}">
-                            <i class="fa fa-eye"></i>
-                        </span>
-                        <a href="{{ path(
-                                'claro_survey_question_edit_form',
-                                {'question': question.getId(), 'survey': surveyId, 'source': 'survey'}
-                            ) }}"
-                            class="btn btn-default"
-                        >
-                            <i class="fa fa-edit"></i>
-                        </a>
-                        <a href="{{ path('claro_survey_remove_question', {'survey': surveyId, 'question': question.getId()}) }}"
-                           class="btn btn-danger"
-                        >
-                            <i class="fa fa-trash-o"></i>
-                        </a>
-                    </td>
-                </tr>
-            {% endfor %}
-            </table>
+            <div class="table-responsive">
+                <table class="table table-bordered">
+
+                {% for relation in questionRelations %}
+                    {% set question = relation.getQuestion() %}
+                    <tr>
+                        <td>
+                            <b>
+                                [{{ question.getType()|trans({}, 'survey') }}]
+                                {{ question.getTitle() }}
+                            </b>
+                            {{ question.getQuestion()|raw }}
+                        </td>
+                        <td>
+                            <span class="btn btn-default view-question-btn"
+                                  data-question-id="{{ question.getId() }}"
+                            >
+                                <i class="fa fa-eye"></i>
+                            </span>
+                            <a href="{{ path(
+                                    'claro_survey_question_edit_form',
+                                    {'question': question.getId(), 'survey': surveyId, 'source': 'survey'}
+                                ) }}"
+                                class="btn btn-default"
+                            >
+                                <i class="fa fa-edit"></i>
+                            </a>
+                            <a href="{{ path('claro_survey_remove_question', {'survey': surveyId, 'question': question.getId()}) }}"
+                               class="btn btn-danger"
+                            >
+                                <i class="fa fa-trash-o"></i>
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </table>
+            </div>
         {% endif %}
     </div>
     

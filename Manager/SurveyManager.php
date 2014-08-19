@@ -315,7 +315,7 @@ class SurveyManager
     }
 
     public function getChoicesByQuestion(
-        MultipleChoiceQuestion $question,
+        Question $question,
         $executeQuery = true
     )
     {
@@ -402,6 +402,19 @@ class SurveyManager
         );
     }
 
+    public function countQuestionAnswersBySurveyAndQuestion(
+        Survey $survey,
+        Question $question,
+        $executeQuery = true
+    )
+    {
+        return $this->questionAnswerRepo->countAnswersBySurveyAndQuestion(
+            $survey,
+            $question,
+            $executeQuery
+        );
+    }
+
 
     /*******************************************************
      * Access to OpenEndedQuestionAnswerRepository methods *
@@ -427,6 +440,19 @@ class SurveyManager
     {
         return $this->openEndedQuestionAnswerRepo->findAnswerByUserAndSurveyAndQuestion(
             $user,
+            $survey,
+            $question,
+            $executeQuery
+        );
+    }
+    
+    public function getOpenEndedAnswersBySurveyAndQuestion(
+        Survey $survey,
+        Question $question,
+        $executeQuery = true
+    )
+    {
+        return $this->openEndedQuestionAnswerRepo->findAnswersBySurveyAndQuestion(
             $survey,
             $question,
             $executeQuery
@@ -464,5 +490,19 @@ class SurveyManager
                 $question,
                 $executeQuery
             );
+    }
+
+    public function countMultipleChoiceAnswersBySurveyAndChoice(
+        Survey $survey,
+        Choice $choice,
+        $executeQuery = true
+    )
+    {
+        return $this->multipleChoiceQuestionAnswerRepo->countAnswersBySurveyAndChoice(
+            $survey,
+            $choice,
+            $executeQuery
+        );
+
     }
 }

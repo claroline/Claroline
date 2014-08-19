@@ -12,6 +12,7 @@
 namespace Claroline\SurveyBundle\Repository\Answer;
 
 use Claroline\CoreBundle\Entity\User;
+use Claroline\SurveyBundle\Entity\Choice;
 use Claroline\SurveyBundle\Entity\Question;
 use Claroline\SurveyBundle\Entity\Survey;
 use Claroline\SurveyBundle\Entity\Answer\QuestionAnswer;
@@ -56,5 +57,26 @@ class MultipleChoiceQuestionAnswerRepository extends EntityRepository
         $query->setParameter('question', $question);
 
         return $executeQuery ? $query->getResult() : $query;
+    }
+
+    public function countAnswersBySurveyAndChoice(
+        Survey $survey,
+        Choice $choice,
+        $executeQuery = true
+    )
+    {
+        $dql = "
+            SELECT COUNT(mcqa) AS nb_answers
+            FROM Claroline\SurveyBundle\Entity\Answer\MultipleChoiceQuestionAnswer mcqa
+            JOIN mcqa.questionAnswer qa
+            JOIN qa.surveyAnswer sa
+            WHERE sa.survey = :survey
+            AND mcqa.choice = :choice
+        ";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('survey', $survey);
+        $query->setParameter('choice', $choice);
+
+        return $executeQuery ? $query->getOneOrNullResult() : $query;
     }
 }

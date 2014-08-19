@@ -5,6 +5,7 @@ add_question_box_title: 'Ajouter une question au sondage'
 allow_edition_after_submission: 'Authoriser la modification de la réponse'
 allow_multiple_response: 'Réponses multiples'
 answer_to_survey: 'Répondre au sondage'
+choice: Choix
 choices_management: 'Gestion des choix'
 close: Fermer
 closed: Fermé
@@ -22,6 +23,8 @@ multiple_choice: 'Choix multiple'
 name: Nom
 no_choice_warning: 'Attention! Il n''y a aucun choix.'
 no_question: 'Aucune question'
+number_of_respondents: 'Nombre de personnes ayant répondu'
+number_of_responses: 'Nombre de réponses'
 open_ended: 'Ouverte'
 parameters_edition: 'Modification des paramètres'
 publication_date: 'Date de publication'
@@ -38,6 +41,7 @@ question_form_question: 'Question'
 question_form_title: 'Titre'
 question_form_type: 'Type de question'
 questions_management: 'Gestion des questions'
+results: Résultats
 return: Retour
 show_result_to_users: 'Afficher le résultat aux utilisateurs'
 start_date: 'Date de début'
@@ -49,6 +53,7 @@ survey_edition_form_endDate: 'Date de fin'
 survey_edition_form_hasPublicResult: 'Afficher le résultat aux utilisateurs'
 survey_edition_form_startDate: 'Date de début'
 survey_parameters_edition: 'Modification des paramètres du sondage'
+survey_results: 'Résultats du sondage'
 title: Titre
 type: Type
 unpublished: 'Non publié'
