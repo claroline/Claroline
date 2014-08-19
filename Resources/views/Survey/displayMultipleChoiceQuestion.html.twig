@@ -7,6 +7,7 @@
 <div>
     <h3>{{ question.getQuestion()|raw }}</h3>
     <div id="question-body" style="padding-left: 50px">
+        
         {% if choices|length == 0 %}
             <div class="alert alert-danger" role="alert">
                 {{ 'no_choice_warning'|trans({}, 'survey') }}
@@ -22,15 +23,7 @@
                         {% if answers[choice.getId()] is defined %}checked{% endif %}
                         {% if not canEdit %}disabled{% endif %}
                     >
-                    
-                    {% if choiceContent is defined and choiceContent is not empty %}
-                        {{ choiceContent|raw }}
-                    {% else %}
-                        <input type="text"
-                               name="other[{{ choice.getId() }}][answer]"
-                               {% if not canEdit %}disabled{% endif %}
-                        >
-                    {% endif %}
+                    {{ choiceContent|raw }}
                     </label>
                 </div>
             {% endfor %} 

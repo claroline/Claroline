@@ -98,10 +98,13 @@ class SurveyManager
         $this->om->persist($multipleChoiceQuestion);
 
         foreach ($choices as $choice) {
-            $newChoice = new Choice();
-            $newChoice->setChoiceQuestion($multipleChoiceQuestion);
-            $newChoice->setContent($choice);
-            $this->om->persist($newChoice);
+
+            if (!empty($choice)) {
+                $newChoice = new Choice();
+                $newChoice->setChoiceQuestion($multipleChoiceQuestion);
+                $newChoice->setContent($choice);
+                $this->om->persist($newChoice);
+            }
         }
         $this->om->flush();
     }
@@ -120,10 +123,13 @@ class SurveyManager
         }
 
         foreach ($newChoices as $newChoice) {
-            $choice = new Choice();
-            $choice->setChoiceQuestion($multipleChoiceQuestion);
-            $choice->setContent($newChoice);
-            $this->om->persist($choice);
+
+            if (!empty($newChoice)) {
+                $choice = new Choice();
+                $choice->setChoiceQuestion($multipleChoiceQuestion);
+                $choice->setContent($newChoice);
+                $this->om->persist($choice);
+            }
         }
         $this->om->flush();
     }
