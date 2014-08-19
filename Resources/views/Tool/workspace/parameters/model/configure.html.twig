@@ -1,0 +1,57 @@
+{% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
+
+{% block title %}{{ parent() ~ ' - configure' | trans({}, "platform") | striptags | raw }}{% endblock %}
+
+{% block breadcrumb %}
+    {{
+        macros.workspaceBreadcrumbs(
+            model.getWorkspace(),
+            [
+                {
+                    'name': 'parameters'|trans({}, 'platform'),
+                    'href': path('claro_workspace_open_tool', {'workspaceId': model.getWorkspace().getId(), 'toolName': 'parameters'})
+                },
+                {
+                    'name': 'models'|trans({}, 'platform'),
+                    'href': path('claro_workspace_model_index', {'workspace': model.getWorkspace().getId()})
+                },
+                {
+                    'name': model.getName(),
+                    'href': ''
+                }
+            ]
+        )
+    }}
+{% endblock %}
+
+{% block section_content %}
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ model.getName() }}</h3>
+    </div>
+    <div class="panel-body">
+        <a class="btn btn-primary" href="{{ path('claro_workspace_model_share_user_list', {'model': model.getId()}) }}"> {{ 'share'|trans({}, 'platform') }}</a>
+        <button id="add-resnode-copy" class="btn btn-primary">{{ 'copy'|trans({}, 'platform') }}</button>
+        <button id="add-resnode-link" class="btn btn-primary">{{ 'link'|trans({}, 'platform') }}</button>
+        <button id="add-tab" href="{{ path('ws_model_homeTabs_list', {'model': model.getId()}) }}" class="btn btn-primary">{{ 'tab'|trans({}, 'platform') }}</button>
+
+        <div> {{ 'copies'|trans({}, 'platform') }}</div>
+        <ul class="list-group" id="list-resnode-copy">
+            {% for copy in copied %}
+                {% include "ClarolineCoreBundle:Tool\\workspace\\parameters\\model:resourceElement.html.twig" with {'name': copy.getResourceNode().getName(), 'resourceModelId': copy.getId()} %}
+            {% endfor %}
+        </ul>
+        <hr/>
+        <div> {{ 'links'|trans({}, 'platform') }}</div>
+        <ul class="list-group" id="list-resnode-link">
+            {% for link in links %}
+                {% include "ClarolineCoreBundle:Tool\\workspace\\parameters\\model:resourceElement.html.twig" with {'name': link.getResourceNode().getName(), 'resourceModelId': link.getId()} %}
+            {% endfor %}
+        </ul>
+        <div id="data" data-root-id="{{ rootId }}" data-model-id="{{ model.getId() }}"></div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src='{{ asset('bundles/clarolinecore/js/tool/workspace/model/configure.js') }}' type="text/javascript"></script>
+{% endblock %}

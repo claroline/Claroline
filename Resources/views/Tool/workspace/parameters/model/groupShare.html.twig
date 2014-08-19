@@ -1,0 +1,82 @@
+{% macro renderPager(model, search, pager) %}
+    {% if search == '' %}
+        {{
+            pagerfanta(
+                pager,
+                'twitter_bootstrap_translated',
+                {
+                    'proximity' : 1,
+                    'routeName': 'ws_share_group_list',
+                    'routeParams': {'model': model.getId()}
+                }
+            )
+        }}
+    {% else %}
+        {{
+            pagerfanta(
+                pager,
+                'twitter_bootstrap_translated',
+                {
+                    'proximity' : 1,
+                    'routeName': 'ws_share_group_list_search',
+                    'routeParams': {'search': search, 'model': model.getId()}
+                }
+            )
+        }}
+    {% endif %}
+{% endmacro %}
+
+{% from _self import renderPager %}
+
+{% if search is not empty %}
+    <div>
+        <small>
+            * {{ 'results_for_search_on'|trans({}, 'platform') }}
+            "{{ search }}"
+        </small>
+    </div>
+{% endif %}
+
+<div class="input-group margin-md">
+    <input
+        class="form-control"
+        type="text"
+        id="search-groups-txt"
+        placeholder="{{ 'search'|trans({}, 'platform') }}"
+        value="{{ search }}"
+    >
+    <span class="input-group-btn">
+        <button class="filter btn btn-default" type="button" id="search-groups">
+            <i class="fa fa-search"></i>
+        </button>
+    </span>
+</div>
+
+{% if groups is empty %}
+    {{ 'no_group'|trans({}, 'platform') }}
+{% else %}
+    {% set nbPages = groups.getNbPages() %}
+    <div id="groups-list-page" class="groups-list-page">
+
+        {% if nbPages > 1 %}
+            {{ renderPager(search, groups) }}
+        {% endif %}
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <tr>
+                    <th>{{ 'name'|trans({}, 'platform') }}</th>
+                    <th></th>
+                </tr>
+                {% for group in groups %}
+                    <tr>
+                        <td>{{ group.getName() }}</td>
+                        <td><input type="checkbox" class="group-chk" group-id="{{ group.getId() }}"></td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+        {% if nbPages > 1 %}
+            {{ renderPager(model, search, users) }}
+        {% endif %}
+    </div>
+{% endif %}

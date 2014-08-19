@@ -1,0 +1,14 @@
+<div class="table-responsive">
+    <table class="table table-bordered">
+        <tr>
+            <th>{{ 'name'|trans({}, 'platform') }}</th>
+            <th></th>
+        </tr>
+        {% for homeTabConfig in homeTabsConfig %}
+            <tr>
+                <td>{{ homeTabConfig.getHomeTab().getName() }}</td>
+                <td><input type="checkbox" class="hometab-chk" value="{{ homeTabConfig.getHomeTab().getName() }}"></td>
+            </tr>
+        {% endfor %}
+    </table>
+</div>

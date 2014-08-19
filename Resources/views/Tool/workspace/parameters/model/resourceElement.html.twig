@@ -1,0 +1,12 @@
+{% twig_js name="ModelResource" %}
+
+<li class="list-group-item">
+    {{ name }}
+    <a
+        class="delete-resourceModel close"
+        href="{{ path('ws_model_resource_remove', {'resourceModel': resourceModelId}) }}"
+        aria-hidden="true"
+    >
+    &times;
+    </a>
+</li>
