@@ -125,21 +125,65 @@ class HomeController
      * @Route("/types", name="claroline_types_manager")
      * @Secure(roles="ROLE_ADMIN")
      *
-     * @Template("ClarolineCoreBundle:Home:home.html.twig")
-     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function typesAction()
     {
         $types = $this->manager->getTypes();
 
-        return array(
-            'region' => $this->renderRegions($this->manager->getRegionContents()),
-            'content' => $this->render(
-                'ClarolineCoreBundle:Home:types.html.twig',
-                array('types' => $types)
-            )->getContent()
+        $response = $this->render(
+            'ClarolineCoreBundle:Home:home.html.twig',
+            array(
+                'region' => $this->renderRegions($this->manager->getRegionContents()),
+                'content' => $this->render(
+                    'ClarolineCoreBundle:Home:types.html.twig',
+                    array('types' => $types)
+                )->getContent()
+            )
         );
+        $response->headers->addCacheControlDirective('no-cache', true);
+        $response->headers->addCacheControlDirective('max-age', 0);
+        $response->headers->addCacheControlDirective('must-revalidate', true);
+        $response->headers->addCacheControlDirective('no-store', true);
+        $response->headers->addCacheControlDirective('expires', '-1');
+
+        return $response;
+    }
+
+    /**
+     * Rename a content form
+     *
+     * @Route("/rename/type/{type}", name="claro_content_rename_type_form", options = {"expose" = true})
+     * @Secure(roles="ROLE_ADMIN")
+     *
+     * @Template("ClarolineCoreBundle:Home:rename.html.twig")
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function renameContentFormAction($type)
+    {
+        return array('type' => $type);
+    }
+
+    /**
+     * Rename a content form
+     *
+     * @Route("/rename/type/{type}/{name}", name="claro_content_rename_type", options = {"expose" = true})
+     * @Secure(roles="ROLE_ADMIN")
+     *
+     * @ParamConverter("type", class = "ClarolineCoreBundle:home\Type", options = {"mapping" : {"type": "name"}})
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function renameContentAction($type, $name)
+    {
+        try {
+            $this->manager->renameType($type, $name);
+
+            return new Response('true');
+        } catch (\Exeption $e) {
+            return new Response('false'); //useful in ajax
+        }
     }
 
     /**
@@ -384,7 +428,7 @@ class HomeController
     /**
      * Verify if a type exist.
      *
-     * @Route("/content/typeexist/{name}", name="claroline_content_typeexist")
+     * @Route("/content/typeexist/{name}", name="claroline_content_type_exist", options = {"expose" = true})
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
