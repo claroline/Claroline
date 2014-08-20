@@ -13,6 +13,7 @@ namespace Claroline\CoreBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Claroline\CoreBundle\Event\StrictDispatcher;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -23,6 +24,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Translation\TranslatorInterface;
+use Claroline\CoreBundle\Entity\Model\Model;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceTag;
@@ -288,6 +290,13 @@ class WorkspaceController extends Controller
         $ds = DIRECTORY_SEPARATOR;
 
         if ($form->isValid()) {
+            $model = $form->get('model')->getData();
+
+            if (!is_null($model)) {
+
+                return $this->createWorkspaceFromModel($model, $form);
+            }
+
             $config = Configuration::fromTemplate(
                 $this->templateDir . $ds . $form->get('template')->getData()->getHash()
             );
@@ -1120,6 +1129,49 @@ class WorkspaceController extends Controller
         }
 
         return new Response('error', 400);
+    }
+
+    private function createWorkspaceFromModel(Model $model, FormInterface $form)
+    {
+        $workspace = $model->getWorkspace();
+        $resourceModels = $model->getResourceModel();
+        $homeTabs = $model->getHomeTabs();
+
+        $config = new Configuration('', false);
+        $config->setWorkspaceName($form->get('name')->getData());
+        $config->setWorkspaceCode($form->get('code')->getData());
+        $config->setDisplayable($form->get('displayable')->getData());
+        $config->setSelfRegistration($form->get('selfRegistration')->getData());
+        $config->setSelfUnregistration($form->get('selfUnregistration')->getData());
+        $config->setWorkspaceDescription($form->get('description')->getData());
+
+        // Duplicate roles
+        $workspaceRoles = array();
+        $roles = $workspace->getRoles();
+        $unusedRolePartName = '_' . $workspace->getGuid();
+
+        foreach ($roles as $role) {
+            $roleName = str_replace($unusedRolePartName, '', $role->getName());
+
+            if ($roleName !== 'ROLE_WS_MANAGER') {
+                $workspaceRoles[$roleName] = $role->getTranslationKey();
+            }
+        }
+        $config->setRoles($workspaceRoles);
+
+        // Duplicate tools
+        $toolsPerms = array();
+        $toolsConfigs = array();
+        $orderedTools = $workspace->getOrderedTools();
+
+        foreach ($orderedTools as $orderedTool) {
+            $toolsPerms[] = $orderedTool->getName();
+        }
+
+        throw new \Exception(var_dump($toolsPerms));
+        throw new \Exception(var_dump($config));
+
+        return new Response('workspace created');
     }
 
     private function assertIsGranted($attributes, $object = null)

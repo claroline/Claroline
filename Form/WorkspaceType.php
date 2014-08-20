@@ -41,7 +41,16 @@ class WorkspaceType extends AbstractType
                 )
             )->add('displayable', 'checkbox', array('required' => false))
             ->add('selfRegistration', 'checkbox', array('required' => false))
-            ->add('selfUnregistration', 'checkbox', array('required' => false));
+            ->add('selfUnregistration', 'checkbox', array('required' => false))
+            ->add(
+                'model',
+                'entity',
+                array(
+                    'class' => 'ClarolineCoreBundle:Model\Model',
+                    'property' => 'name',
+                    'required' => false
+                )
+            );
     }
 
     public function getName()
