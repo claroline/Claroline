@@ -90,6 +90,7 @@ class HomeController
         $response = $this->render(
             'ClarolineCoreBundle:Home:home.html.twig',
             array(
+                'type' => $type,
                 'region' => $this->renderRegions($this->manager->getRegionContents()),
                 'content' => $this->typeAction($type)->getContent()
             )
@@ -134,6 +135,7 @@ class HomeController
         $response = $this->render(
             'ClarolineCoreBundle:Home:home.html.twig',
             array(
+                'type' => '_pages',
                 'region' => $this->renderRegions($this->manager->getRegionContents()),
                 'content' => $this->render(
                     'ClarolineCoreBundle:Home:types.html.twig',
