@@ -361,11 +361,25 @@ class HomeManager
     /**
      * Create a type.
      *
-     * @return This function doesn't return anything.
+     * @return Type
      */
     public function createType($name)
     {
         $type = new Type($name);
+        $this->manager->persist($type);
+        $this->manager->flush();
+
+        return $type;
+    }
+
+    /**
+     * Rename a type
+     *
+     * @return Type
+     */
+    public function renameType($type, $name)
+    {
+        $type->setName($name);
         $this->manager->persist($type);
         $this->manager->flush();
 

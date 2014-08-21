@@ -1,5 +1,21 @@
 {% extends 'ClarolineCoreBundle::layout.html.twig' %}
 
+{% if config.getParameter('name') != "" %}
+    {% set pagetitle = config.getParameter('name') %}
+{% else %}
+    {% set pagetitle = 'Claroline Connect' %}
+{% endif %}
+
+{% block title %}
+    {% if  type is defined and type == 'menu' %}
+        {{ pagetitle ~ ' - ' ~ 'Menu' | trans({}, 'home') }}
+    {% elseif type is defined and type == '_pages' %}
+        {{ pagetitle ~ ' - ' ~ 'Content pages' | trans({}, 'home') }}
+    {% else %}
+        {{ parent() }}
+    {% endif %}
+{% endblock %}
+
 {% block leftbar %}
     {% if is_granted('ROLE_ADMIN') %}
         <div class="list-group menu">
