@@ -45,7 +45,7 @@ class LoadUsersData extends LoggableFixture implements ContainerAwareInterface
     public function load(ObjectManager $manager)
     {
         $start = time();
-        $countUser = $manager->getRepository('ClarolineCoreBundle:User')->count();
+        $countUser = $this->container->get('claroline.persistence.object_manager')->count('Claroline\CoreBundle\Entity\User');
 
         for ($i = 0; $i < $this->numberUsers; $i++) {
             $totalUsers = $countUser + $i;

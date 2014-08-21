@@ -52,6 +52,10 @@ class PlatformConfiguration
     private $usernameRegex;
     private $usernameErrorMessage;
     private $anonymousPublicProfile;
+    private $homeMenu;
+    private $footerLogin;
+    private $footerWorkspaces;
+    private $headerLocale;
 
     /**
      * @param mixed $sessionDbDataCol
@@ -505,5 +509,45 @@ class PlatformConfiguration
     public function getAnonymousPublicProfile()
     {
         return $this->anonymousPublicProfile;
+    }
+
+    public function setHomeMenu($id)
+    {
+        $this->homeMenu = $id;
+    }
+
+    public function getHomeMenu()
+    {
+        return $this->homeMenu;
+    }
+
+    public function setFooterLogin($boolean)
+    {
+        $this->footerLogin = $boolean;
+    }
+
+    public function getFooterLogin()
+    {
+        return $this->footerLogin;
+    }
+
+    public function setFooterWorkspaces($boolean)
+    {
+        $this->footerWorkspaces = $boolean;
+    }
+
+    public function getFooterWorkspaces()
+    {
+        return $this->footerWorkspaces;
+    }
+
+    public function setHeaderLocale($boolean)
+    {
+        $this->headerLocale = $boolean;
+    }
+
+    public function getHeaderLocale()
+    {
+        return $this->headerLocale;
     }
 }

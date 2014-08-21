@@ -19,8 +19,9 @@
                 <ul class="breadcrumb">
                     <li><a href="{{ path('claro_workspace_list') }}"><i class="fa fa-book"></i> {{ 'workspaces'|trans({}, 'platform') }}</a></li>
                     <li>
-                        <a href="{{ path('claro_workspace_open_tool', {'toolName': 'home', 'workspaceId': _resource.getResourceNode().getWorkspace().getId() }) }}">
-                            {{ _resource.getResourceNode().getWorkspace().getName() ~ ' (' ~ _resource.getResourceNode().getWorkspace().getCode() ~ ') ' }}
+                        {% set workspace = app.session.get('current_resource_node').getWorkspace() %}
+                        <a href="{{ path('claro_workspace_open_tool', {'toolName': 'home', 'workspaceId': workspace.getId() }) }}">
+                            {{ workspace.getName() ~ ' (' ~ workspace.getCode() ~ ') ' }}
                         </a>
                     </li>
                     {% render controller("ClarolineCoreBundle:Resource:renderBreadcrumbs",
@@ -36,7 +37,8 @@
 {% endblock %}
 {% block leftbar %}
     {% if _resource is defined %}
-        {% set workspace = _resource.getResourceNode().getWorkspace() %}
+        {# {% set workspace = _resource.getResourceNode().getWorkspace() %} #}
+        {% set workspace = app.session.get('current_resource_node').getWorkspace() %}
     {% endif %}
     {% if not is_path_mode and workspace is defined %}
 

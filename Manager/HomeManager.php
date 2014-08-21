@@ -45,16 +45,26 @@ class HomeManager
      *     "contentManager" = @Inject("claroline.manager.content_manager"),
      *     "manager"        = @Inject("doctrine"),
      *     "persistence"    = @Inject("claroline.persistence.object_manager"),
-     *     "formFactory"    = @Inject("form.factory")
+     *     "formFactory"    = @Inject("form.factory"),
+     *     "configHandler"  = @Inject("claroline.config.platform_config_handler")
      * })
      */
-    public function __construct($graph, $homeService, $manager, $contentManager, $persistence, $formFactory)
+    public function __construct(
+        $graph,
+        $homeService,
+        $manager,
+        $contentManager,
+        $persistence,
+        $formFactory,
+        $configHandler
+    )
     {
         $this->graph = $graph;
         $this->manager = $persistence;
         $this->contentManager = $contentManager;
         $this->homeService = $homeService;
         $this->formFactory = $formFactory;
+        $this->configHandler = $configHandler;
         $this->type = $manager->getRepository('ClarolineCoreBundle:Home\Type');
         $this->region = $manager->getRepository('ClarolineCoreBundle:Home\Region');
         $this->content = $manager->getRepository('ClarolineCoreBundle:Content');
@@ -112,7 +122,7 @@ class HomeManager
      * Get Content by type.
      * This method return a string with the content on success or null if the type does not exist.
      *
-     * @return string
+     * @return array
      */
     public function getContentByType($type, $father = null, $region = null)
     {
@@ -309,6 +319,26 @@ class HomeManager
     }
 
     /**
+     * Move a content from a type to another
+     *
+     * @param content The content to move
+     * @param page The page type where move the content
+     *
+     * @return This function doesn't return anything.
+     */
+    public function moveContent($content, $type, $page)
+    {
+        $contenType = $this->contentType->findOneBy(array('type' => $type, 'content' => $content));
+
+        $contenType->detach();
+        $contenType->setType($page);
+        $contenType->setFirst($this->contentType->findOneBy(array('type' => $page, 'next' => null)));
+
+        $this->manager->persist($contenType);
+        $this->manager->flush();
+    }
+
+    /**
      * Delete a content and his childs.
      *
      * @return This function doesn't return anything.
@@ -331,11 +361,25 @@ class HomeManager
     /**
      * Create a type.
      *
-     * @return This function doesn't return anything.
+     * @return Type
      */
     public function createType($name)
     {
         $type = new Type($name);
+        $this->manager->persist($type);
+        $this->manager->flush();
+
+        return $type;
+    }
+
+    /**
+     * Rename a type
+     *
+     * @return Type
+     */
+    public function renameType($type, $name)
+    {
+        $type->setName($name);
         $this->manager->persist($type);
         $this->manager->flush();
 
@@ -477,5 +521,33 @@ class HomeManager
     public function isValidUrl($url)
     {
         return (filter_var($url, FILTER_VALIDATE_URL) !== false);
+    }
+
+    /**
+     * Get the home parameters
+     */
+    public function getHomeParameters()
+    {
+        return array(
+            'homeMenu' => $this->configHandler->getParameter('home_menu'),
+            'footerLogin' => $this->configHandler->getParameter('footer_login'),
+            'footerWorkspaces' => $this->configHandler->getParameter('footer_workspaces'),
+            'headerLocale' => $this->configHandler->getParameter('header_locale')
+        );
+    }
+
+    /**
+     * Save the home parameters
+     */
+    public function saveHomeParameters($homeMenu, $footerLogin, $footerWorkspaces, $headerLocale)
+    {
+        $this->configHandler->setParameters(
+            array(
+                'home_menu' => is_numeric($homeMenu) ? intval($homeMenu) : null,
+                'footer_login' => ($footerLogin === 'true'),
+            'footer_workspaces' => ($footerWorkspaces === 'true'),
+                'header_locale' => ($headerLocale === 'true')
+            )
+        );
     }
 }

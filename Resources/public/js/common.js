@@ -68,6 +68,34 @@
     };
 
     /**
+     * If has namespace
+     */
+    common.hasNamespace = function (element, namespace)
+    {
+        if (element.hasOwnProperty('namespace') && element.namespace === namespace) {
+            return true;
+        }
+    };
+
+    /**
+     * Toogle the css class name of a HTML element
+     *
+     * @param element The HTML element
+     * @param condition A boolean
+     * @param className The class name, if this value is undefined 'hide' will be used
+     */
+    common.toggle = function (element, condition, className)
+    {
+        className = className !== undefined ? className : 'hide';
+
+        if (condition) {
+            element.removeClass(className);
+        } else {
+            element.addClass(className);
+        }
+    };
+
+    /**
      * jQuery Upload HTML5
      *
      * example:

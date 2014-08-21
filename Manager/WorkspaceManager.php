@@ -710,7 +710,9 @@ class WorkspaceManager
      */
     public function getLatestWorkspacesByUser(User $user, array $roles, $max = 5)
     {
-        return $this->workspaceRepo->findLatestWorkspacesByUser($user, $roles, $max);
+        return count($roles) > 0 ?
+            $this->workspaceRepo->findLatestWorkspacesByUser($user, $roles, $max) :
+            array();
     }
 
     /**

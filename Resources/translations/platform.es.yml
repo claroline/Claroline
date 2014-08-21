@@ -25,6 +25,7 @@ Overview of all recent activities in %workspaceName%: 'Resumen de todas las acti
 Overview of recent activities in %workspaceName%: 'Resumen de las actividades recientes en %workspaceName%'
 Overview of recent activities of your workspaces: 'Resumen de todas las actividades recientes de su espacio e trabajo'
 Paste here the meta tag provides by Google Webmaster: 'Pegue aquí la meta etiqueta proporcionada por Google Webmaster'
+Powered by: Desarrollado por
 See all: 'Ver totdos'
 Select a Language: 'Seleccione un idioma'
 Show actions: 'Ver las acciones'
@@ -64,9 +65,9 @@ activity_form_name: 'Nombre'
 activity_parameters_form_evaluation_type: 'Tipo de evaluación'
 activity_parameters_form_max_attempts: 'Numero de intentos permitidos'
 activity_parameters_form_max_duration: 'Tiempo limite establecido (en segundo)'
-activity_parameters_form_withTutor: Tutelado
 activity_parameters_form_where: Lugar de aprendizaje
 activity_parameters_form_who: Modo de trabajo
+activity_parameters_form_withTutor: Tutelado
 activity_past_evaluation_form_comment: Comentario
 activity_past_evaluation_form_date: Fecha
 activity_past_evaluation_form_numScore: Puntaje
@@ -96,6 +97,7 @@ activity_where_classroom: Aula
 activity_who_collaborative: Colaboración
 activity_who_individual: Individual
 activity_who_mixed: Mezclado
+actualize: Actualizar
 add: 'Agregar'
 add_category: 'Agregar categoría'
 add_field_to_facet: Agregar un campo a una faceta
@@ -186,6 +188,7 @@ connections: 'Conexiones'
 cookie_lifetime: 'Duración de la cookie'
 copiable: 'Copiable'
 copy: 'Copiar'
+core_packages: Core packages
 create: 'Crear'
 create_category: 'Crear una categoría'
 create_facet: Crear una faceta
@@ -218,6 +221,7 @@ data_col: 'Identificador de la columna en la base de datos'
 database: 'Base de datos'
 database_connection_failed: 'Error en la conexión a la base de datos.'
 date: 'Fecha'
+date_agenda_display_format: MM-dd-yyyy
 date_form_datepicker_format: dd-mm-yyyy
 date_form_datepicker_php: m-d-Y
 date_form_format: 'dd/MM/yyyy'
@@ -228,6 +232,7 @@ date_range.clear: 'Reinicializar'
 date_range.custom_range: 'Rango personalizado'
 date_range.day_names: '["Do","Lu","Ma","Mi","Ju","Vi","Sa"]'
 date_range.first_day: '0'
+date_range.format.with_hours: m/d/Y H:i:s
 date_range.format: 'm/d/Y'
 date_range.from: 'de'
 date_range.js_format: 'dd/MM/yyyy'
@@ -276,20 +281,25 @@ drop_file: 'Arrastre el archivo'
 dsn: dsn
 duration: Duración
 edit: 'Editar'
+edit_event_success: Evento actualizado correctamente
 edit_facet: Editar faceta
 edit_field: Editar campo
+edit_rights_success: La modificación de los derechos de acceso a sido realizada con éxito
 edit_security_token: 'Editar el token de seguridad'
 editable: 'Editable'
+editable_facet_form_explanation: El campo "Editable" permite de especificar si el elemento debe ser visible o no por el usuario.
 email: 'Correo electrónico'
 email_form_mail: 'Ingrese su correo electrónico'
 email_found_at: 'El coreo electrónico %email% fue encontrado en la linea: %lines%'
 empty_file: 'Archivo vacío'
 end_date: 'Fecha de cierre'
+end_maintenance: Terminar el modo de mantenimiento
 enter_tag_name_message: 'Por favor ingrese el nombre de la etiqueta'
 entries_per_day: 'Entradas por día'
-evaluation: Evaluación
+error: Error
 evaluation-automatic: Automático
 evaluation-manual: Manual
+evaluation: Evaluación
 evaluation_edition: Evaluación
 evaluation_type: 'Tipo de evaluación'
 export: 'Exportar'
@@ -322,6 +332,7 @@ from: 'De'
 from_message: 'De'
 general: 'General'
 general_parameters: 'Parámetros generales'
+general_tab_form_explanation: Este formulario permite especificar que información se ve por rol en el perfil público.
 generate_token: 'Generar un token aleatorio'
 generate_url: 'Dirección de subscripción publica'
 generate_url_subscription: 'Subscripción de un usuario a un espacio de trabajo'
@@ -369,6 +380,7 @@ import_users: 'Importar usuarios'
 incomplete: Incompleto
 individual: Individual
 informations: 'Informaciones'
+initialize: Inicializar
 inscription_mail: 'Inscripción de correo electrónico'
 instructions: 'Instrucciones'
 internal_error: 'Error interno del servidor. Por favor, póngase en contacto con el administrador.'
@@ -386,10 +398,12 @@ keep_me_logged_in: 'Mantenerme conectado'
 lastName: 'Apellido'
 last_30_days_activity: 'Actividad de los últimos 30 días'
 last_attempt_date: 'Fecha del último intento'
+last_manager_error_message: No es posible eliminar todos los administradores.
 last_name: 'Apellido'
 layout: 'disposición'
 leave_this_page: 'Si usted cierra esta página, usted puede perder los cambios.'
 left: 'Izquierda'
+limit: Límite
 line_number: 'Linea %line%:'
 line_per_page: 'Resultados por página'
 link: 'Enlace'
@@ -416,6 +430,9 @@ mail_message: 'Usted recibido este mensaje porque usted pidió una nueva contras
 mail_not_available: La función de correo electrónico no está disponible.
 mail_not_exist: 'Este correo electrónico no existe'
 mail_sent: 'Un correo electrónico ha sido enviado, Por favor compruebe su bandeja de entrada y o en el Spam'
+maintenance: mantenimiento
+maintenance_mode_enabled: El modo mantenimiento esta activo
+maintenance_mode_message: El acceso a la plataforma está desactivado para los usuarios. Usted puede volver a activarlo en la sección de mantenimiento de los parámetros de la administración.
 manage_rights: 'Administrar los derechos'
 manage_tools: Gestión de las herramientas
 manager: 'Administrar'
@@ -466,6 +483,7 @@ my_resources: 'Mis recursos'
 my_workspace: 'Mi espacio de trabajo'
 my_workspaces: 'Mis espacios de trabajo'
 name: 'Nombre'
+name_required: nombre obligatorio
 new: 'Nuevo'
 new_message: 'Nuevo mensaje'
 new_message_alert: 'Usted tiene %count% nuevo(s) mensaje(s)'
@@ -473,10 +491,13 @@ new_password: Nueva contraseña
 new_role_message: 'Usted a recivido el rol %name%'
 new_role_message_object: 'Sus derechos de acceso en la plataforma han cambiado'
 no: 'No'
+no: No
+no_action_found: No hay acciones.
 no_activity_in_workspace: 'No hay actividad'
 no_category: 'No hay categorías'
 no_email: 'No se ha encontrado el correo electrónico, comprube la ortografía'
 no_group: 'No hay grupos'
+no_group: No hay grupo.
 no_home_tab: 'No hay pestañas'
 no_message: 'No hay mensajes'
 no_search_results: 'Su búsqueda no ha producido ningún resultado.'
@@ -509,6 +530,9 @@ organize_private_tags: 'Organizar etiquetas privadas'
 over_max_length: 'Este valor es muy largo'
 owner: 'Propietario'
 owner_s: 'Propietario(s)'
+package_upgrade_all_warning: Advertencia, esto actualizará todos los paquetes de la plataforma. Esta operación no puede ser cancelada. Se recomienda  hacer una copia de seguridad de los archivos y de la base de datos antes de realizar esta operación.
+packages: Packages
+packages_upgrade_info_message: Advertencia, esta es la página de administración de las actualizaciones.
 parameters: 'Parámetros'
 passed: Logrado
 passing_score: 'Puntaje para aprobar'
@@ -550,9 +574,11 @@ platform_plugins: 'Plugins de la plataforma'
 platform_role: 'Roles de la plataforma'
 platform_widgets: 'Widgets de la plataforma'
 please_wait: 'Por favor espere...'
+plugin_packages: Plugin packages
 position: 'posición'
 positive_number_expected: 'Este valor debería ser un número positivo'
 private: 'Privado'
+profile_management: Gestión de perfiles
 properties: 'propiedades'
 public: 'Publico'
 public_registration: 'Inscripción publica'
@@ -569,6 +595,8 @@ registered_users: 'Usuarios inscritos'
 registration: 'Inscripción'
 registration_to_workspaces: 'Inscripción a un espacio de trabajo'
 remove: Retirar
+remove_event: Eliminar un evento
+remove_event_confirm: ¿Está seguro que desea eliminar este evento?
 remove_facet: Eliminar una faceta
 remove_facet_confirm: ¿Esta seguro que desea suprimir la faceta %name%?
 remove_field: Eliminar una campo
@@ -577,6 +605,8 @@ remove_group_confirm_message: '¿Esta seguro que desea suprimir este grupo?'
 remove_group_s_confirm_message: '¿Esta seguro que desea suprimir estos %count% grupos?'
 remove_message_confirm_message: '¿Esta seguro que desea suprimir este mensaje?'
 remove_message_s_confirm_message: '¿Esta seguro que desea suprimir estos %count% mensajes?'
+remove_role: Eliminiar un rol.
+remove_role_confirm:  ¿Esta seguro que desea suprimir el rol %name%?
 remove_subcategory: 'Suprimir subcategoría'
 remove_user_confirm_message: '¿Esta seguro que desea suprimir este usuario?'
 remove_user_s_confirm_message: '¿Esta seguro que desea suprimir estos %count% usuarios?'
@@ -584,6 +614,7 @@ remove_workspace_confirm_workspace: '¿Esta seguro que desea suprimir este espac
 remove_workspace_from_category_confirm_message: '¿Esta seguro que desea retirar este espacio de trabajo de la categoría?'
 remove_workspace_from_category_confirm_title: 'Suprimir espacio de trabajo de una categoría'
 remove_workspace_from_selection: 'eliminar espacio de trabajo de la selección'
+remove_workspace_role_warning: ¿Está seguro que desea suprimir este rol? Si este rol está asociado a los usuarios, estos perderán sus derechos de acceso proporcionada por dicho rol.
 remove_workspaces_confirm_workspaces: '¿Esta seguro que desea suprimir estos %count% espacios de trabajo?'
 rename: 'Renombrar'
 rename_category: 'Renombrar categoría'
@@ -630,8 +661,12 @@ role: 'Rol'
 role_creation: 'Rol de creación'
 role_edition: 'Rol de edición'
 role_limit_reached: Ha llegado al limite de usuarios de tipo %translationKey%.
+role_list: Lista de roles
+role_name_changed_success: El nombre del rola ha sido actualizado con éxito.
 role_name_type_form_translationKey: 'Nombre'
 roles: 'Roles'
+roles_facet_form_explanation: Este formulario permite especificar que roles pueden ver la faceta en el perfil público.
+roles_fields_form_explanation: Este formulario permite especificar que roles pueden ver y editar el campo en el perfil público.
 roles_management: 'Gestión de roles'
 save: 'Guardar'
 save_as_template: 'Guardar como una plantilla'
@@ -687,8 +722,10 @@ show_as: 'Mostrar como'
 show_as_admin: 'Mostrar como administrador'
 show_as_user: 'Mostrar como usuario'
 show_profile: 'Mostrar perfil'
+show_profile_for_anonymous: Profil public access for anonymous.
 simple: 'Simple'
 start_date: 'Fecha de inicio'
+start_maintenance: Lanzar el modo de mantenimiento
 status: Estado
 storage_type: 'Tipo de almacenamiento'
 subcategories: 'subcategorías'
@@ -697,6 +734,7 @@ subscribe_selected_groups: 'Inscribir los grupos seleccionados'
 subscribe_selected_users: 'Inscribir los usuarios seleccionados'
 subscribe_users: 'Inscribir usuarios'
 success_rate: 'Tasa de aprobación'
+successfull_workspace_creation: El espacio de trabajo %nombre% ha sido creado con éxito.
 support_email: 'Correo electrónico de soporte'
 switch: 'Switch'
 tag: 'Etiqueta'
@@ -769,6 +807,8 @@ unregistered_groups: 'Grupos no inscritos'
 unregistered_users: 'Usuarios no inscritos'
 unwritable_file_exception: 'Nose puede escribir en el archivo %path%.'
 up: 'Arriva'
+update_event: Actualizar un evento
+upgrade: Modernización
 upload: 'Subir'
 upload_denied: 'Permiso denegado'
 upload_fail: 'Subir un archivo'
@@ -777,6 +817,8 @@ user: 'Usuario'
 user_accounts: 'Cuentas de usuario'
 user_creation: 'Creación de un usuario'
 user_limit_reached: Ha llegado al limite de creación de usuarios.
+user_limit_success_update: El número máximo de usuarios por rol ha sido actualizado con éxito.
+user_limit_too_low: Ya hay %total% %role%(s). El limite %newMax% es muy bajo.
 user_parameters: 'Parámetros del usuario'
 user_removed: 'Usuario suprimido'
 username: 'Nombre de usuario'
@@ -798,6 +840,7 @@ view_category_hierarchy: 'Mostrar la jerarquía de la categoría'
 views: 'Mostrar'
 visibility: 'visibilidad'
 visible: 'Visible'
+visible_facet_form_explanation: El campo "Visible" permite de especificar si el elemento debe ser visible o no por el usuario.
 visitor: 'Visitante'
 warning_user_impersonation: 'Usted esta conectado como %user%.'
 warning_workspace_impersonation: 'Usted esta conectado como %role% del espacio de trabajo %workspace%.'
@@ -862,51 +905,6 @@ workspaces_per_page: 'Espacios de trabajo por página'
 ws_creator: 'Creador de espacios de trabajo'
 ws_most_viewed: 'Espacio de trabajo mas visto'
 yes: 'Si'
+yes: Sí
 yesterday_activity: 'Actividades de ayer'
 your_username: 'Su nombre de usuario es '
-closed_account: Cuenta cerrada.
-role_list: Lista de roles
-unavailable_role: El rol %translationKey% no es utilizable
-fail_add_user_group_message: Estos usuarios no han podido ser agregados al grupo (control del límite usuarios por función).
-unavailable_platform: La plataforma no está disponible.
-account_duration_label: Duración de la vida de una cuentas (días)
-platform_init_date: Fecha de activación de la plataforma
-platform_expiration_date: Fecha de vencimiento de la plataforma
-role_limit_reached: Ha llegado al limite de usuarios de tipo %translationKey%.
-user_limit_reached: Ha llegado al limite de creación de usuarios.
-user_limit_too_low: Ya hay %total% %role%(s). El limite %newMax% es muy bajo.
-limit: Límite
-packages: Packages
-core_packages: Core packages
-plugin_packages: Plugin packages
-yes: Sí
-no: No
-actualize: Actualizar
-upgrade: Modernización
-show_profile_for_anonymous: Profil public access for anonymous.
-profile_management: Gestión de perfiles
-visible_facet_form_explanation: El campo "Visible" permite de especificar si el elemento debe ser visible o no por el usuario.
-editable_facet_form_explanation: El campo "Editable" permite de especificar si el elemento debe ser visible o no por el usuario.
-roles_facet_form_explanation: Este formulario permite especificar que roles pueden ver la faceta en el perfil público.
-roles_fields_form_explanation: Este formulario permite especificar que roles pueden ver y editar el campo en el perfil público.
-general_tab_form_explanation: Este formulario permite especificar que información se ve por rol en el perfil público.
-name_required: nombre obligatorio
-remove_role_confirm:  ¿Esta seguro que desea suprimir el rol %name%?
-remove_role: Eliminiar un rol.
-initialize: Inicializar
-user_limit_success_update: El número máximo de usuarios por rol ha sido actualizado con éxito.
-role_name_changed_success: El nombre del rola ha sido actualizado con éxito.
-packages_upgrade_info_message: Advertencia, esta es la página de administración de las actualizaciones.
-package_upgrade_all_warning: Advertencia, esto actualizará todos los paquetes de la plataforma. Esta operación no puede ser cancelada. Se recomienda  hacer una copia de seguridad de los archivos y de la base de datos antes de realizar esta operación.
-no_group: No hay grupo.
-successfull_workspace_creation: El espacio de trabajo %nombre% ha sido creado con éxito.
-no_action_found: No hay acciones.
-error: Error
-last_manager_error_message: No es posible eliminar todos los administradores.
-remove_workspace_role_warning: ¿Está seguro que desea suprimir este rol? Si este rol está asociado a los usuarios, estos perderán sus derechos de acceso proporcionada por dicho rol.
-edit_rights_success: La modificación de los derechos de acceso a sido realizada con éxito
-maintenance: mantenimiento
-start_maintenance: Lanzar el modo de mantenimiento
-end_maintenance: Terminar el modo de mantenimiento
-maintenance_mode_enabled: El modo mantenimiento esta activo
-maintenance_mode_message: El acceso a la plataforma está desactivado para los usuarios. Usted puede volver a activarlo en la sección de mantenimiento de los parámetros de la administración.
