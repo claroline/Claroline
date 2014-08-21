@@ -8,7 +8,7 @@
             [
                 {
                     'name': 'registration_to_competence'|trans({}, 'competence'),
-                    'href': path('claro_workspace_competences', {'workspaceId': workspace.getId()})
+                    'href': path('claro_workspace_competences', {'workspace': workspace.getId()})
                 },
             ]
         )
@@ -23,7 +23,7 @@
             <div class="table-responsive">
                 <table class="table table-striped table-bordered table-condensed">
                 <thead>
-                    <th> {{'my_competences'|trans({},'platform') }} </th>
+                    <th> {{'my_competences'|trans({},'competence') }} </th>
                     <th> {{'score'|trans({},'platform') }} </th>
                 </thead>
                 {% for u in list %}

@@ -11,7 +11,9 @@
 
 namespace Claroline\CoreBundle\Controller\Tool;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Entity\Competence\CompetenceNode;
 use Claroline\CoreBundle\Manager\userManager;
+use Claroline\CoreBundle\Manager\RoleManager;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\SecurityContextInterface;
@@ -34,6 +36,7 @@ class CompetenceToolController extends Controller
 	private $sc;
 	private $userManager;
 	private $toolManager;
+    private $rm;
 	/**
 	 * @DI\InjectParams({
 	 * "securityContext"    = @DI\Inject("security.context"),
@@ -42,7 +45,8 @@ class CompetenceToolController extends Controller
      * "router"         	= @DI\Inject("router"),
      * "cptmanager"			= @DI\Inject("claroline.manager.competence_manager"),
      * "userManager"		= @DI\Inject("claroline.manager.user_manager"),
-     * "toolManager"		= @DI\Inject("claroline.manager.tool_manager")
+     * "toolManager"		= @DI\Inject("claroline.manager.tool_manager"),
+     * "rm"                 = @DI\Inject("claroline.manager.role_manager")
 	 * 	})
 	 */
 	
@@ -53,7 +57,8 @@ class CompetenceToolController extends Controller
         CompetenceManager $cptmanager,
         SecurityContextInterface $securityContext,
         userManager $userManager,
-        toolManager $toolManager
+        toolManager $toolManager,
+        RoleManager $rm
     )
     {
         $this->formFactory = $formFactory;
@@ -63,6 +68,7 @@ class CompetenceToolController extends Controller
         $this->sc = $securityContext;
         $this->userManager = $userManager;
         $this->toolManager = $toolManager->getOneToolByName('learning_profil');
+        $this->rm = $rm;
     }
 
     /**
@@ -76,20 +82,14 @@ class CompetenceToolController extends Controller
     }
 
      /**
-     * @EXT\Route("/{workspaceId}/show", name="claro_workspace_competences", options={"expose"=true})
+     * @EXT\Route("/{workspace}/show", name="claro_workspace_competences", options={"expose"=true})
      * @EXT\Method("GET")
-     * @EXT\ParamConverter(
-     *      "workspace",
-     *      class="ClarolineCoreBundle:Workspace\Workspace",
-     *      options={"id" = "workspaceId", "strictId" = true}
-     * ) 
      * @EXT\Template("ClarolineCoreBundle:Tool\workspace\competence:competences.html.twig")
      *
      * Displays the competences root.
      *
-     * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function competenceShowAction($workspace)
+    public function competenceShowAction(Workspace $workspace)
     {
     	$this->checkOpen();
     	$competences = $this->cptmanager->getTransversalCompetences($workspace);
@@ -102,19 +102,30 @@ class CompetenceToolController extends Controller
     	);
     }
 
+    /**
+     * @EXT\Route("/form/{workspace}", name="claro_workspace_competence_form", options={"expose"=true})
+     * @EXT\Method("GET")
+     * @EXT\Template("ClarolineCoreBundle:Administration\Competence:competenceModalForm.html.twig")
+     */
+    public function addCompetenceModalForm(Workspace $workspace)
+    {
+        $this->checkUserIsAllowed($this->rm->getManagerRole($workspace), $workspace);
+        $form = $this->formFactory->create(FormFactory::TYPE_COMPETENCE);
+
+        return array(
+            'form' => $form->createView(),
+            'action' => $this->router->generate('claro_workspace_competence_add', array('workspace' => $workspace->getId()))
+        );
+    }
+
      /**
      * @EXT\Route("/add/{workspace}", name="claro_workspace_competence_add")
      * @EXT\Method("POST")
-     * @EXT\ParamConverter(
-     *      "workspace",
-     *      class="ClarolineCoreBundle:Workspace\Workspace",
-     *      options={"id" = "workspaceId", "strictId" = true}
-     * )
      * Add a learning Outcome.
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function competenceAction($workspace)
+    public function addCompetenceAction(Workspace $workspace)
     {
         $form = $this->formFactory->create(FormFactory::TYPE_COMPETENCE, array());
         $form->handleRequest($this->request);
@@ -128,10 +139,7 @@ class CompetenceToolController extends Controller
             			'name' => $competence->getCompetence()->getName()
             		)
                 );
-            } else {
-            	throw new Exception("no written", 1);
-            	
-            }
+            } 
         } 
         return array(
         	'form' => $form->createView(),
@@ -140,18 +148,13 @@ class CompetenceToolController extends Controller
     }
 
     /**
-     * @EXT\Route("/list/{workspaceId}",  
+     * @EXT\Route("/list/{workspace}",  
      * name="claro_workspace_competence_users",options={"expose"=true})
      * @EXT\Method("GET")
-     * @EXT\ParamConverter(
-     *      "workspace",
-     *      class="ClarolineCoreBundle:Workspace\Workspace",
-     *      options={"id" = "workspaceId", "strictId" = true}
-     * )
      * 
      * @EXT\Template("ClarolineCoreBundle:Tool\workspace\competence:myCompetences.html.twig")
      **/ 
-    public function listMyCompetencesAction($workspace)
+    public function listMyCompetencesAction(Workspace $workspace)
     {
     	$this->checkOpen();
     	$user = $this->sc->getToken()->getUser();
@@ -165,45 +168,79 @@ class CompetenceToolController extends Controller
     }
 
     /**
-     * @EXT\Route("/{workspaceId}/show/referential/{competenceId}", name="claro_workspace_competence_show_referential",options={"expose"=true})
-     * @EXT\Method({"GET","POST"})
-     * @EXT\ParamConverter(
-     *      "competence",
-     *      class="ClarolineCoreBundle:Competence\CompetenceHierarchy",
-     *      options={"id" = "competenceId", "strictId" = true}
-     * )
-     * @EXT\ParamConverter(
-     *      "workspace",
-     *      class="ClarolineCoreBundle:Workspace\Workspace",
-     *      options={"id" = "workspaceId", "strictId" = true}
-     * )
-     * 
-     * @param Competence $competence
+     * @EXT\Route("/{workspace}/show/referential/{competence}", name="claro_workspace_competence_show_referential",options={"expose"=true})
      * @EXT\Template("ClarolineCoreBundle:Tool\workspace\competence:competenceReferential.html.twig")
      *
      * Show all the hiearchy from a competence
      *
      */
-    public function competenceShowHierarchy($competence)
+    public function competenceReferentialAction(Workspace $workspace, CompetenceNode $competence)
     {
-    	$form = $this->formFactory->create(FormFactory::TYPE_COMPETENCE);
-        $form->handleRequest($this->request);
+        $this->checkOpen();
         $competences = $this->cptmanager->getHierarchyName($competence);
-
-        if ($form->isValid()) {        	
-	        $subCpt = $form->getData();
-
-	        if($this->cptmanager->addSub($competence, $subCpt)) {
-        	    return new RedirectResponse(
-                $this->router->generate('claro_admin_competences')
-	        	);
-        	} 
-        }  
            
         return array(
-        	'form' => $form->createView(),
-        	'competences' => $competences,
-            'cpt' => $competence
+            'competences' => $competences,
+            'cpt' => $competence,
+            'tree' => $this->cptmanager->getHierarchy($competence),
+            'workspace' => $workspace
+        );
+    }
+
+    /**
+     * @EXT\Route("/{workspace}/competence/{competence}/hierarchy/form", name="claro_workspace_competence_hierarchy_form", options={"expose"=true})
+     * @EXT\Method("GET")
+     * @EXT\Template("ClarolineCoreBundle:Administration\Competence:competenceModalForm.html.twig")
+     * 
+     * @param  Competence $competence 
+     * @return              
+     */
+    public function formCompetenceNodeAction(Workspace $workspace, CompetenceNode $competence)
+    {
+        $this->checkOpen();
+        $form = $this->formFactory->create(FormFactory::TYPE_COMPETENCE);
+
+        return array(
+            'form' => $form->createView(),
+            'action' => $this
+                ->router
+                ->generate(
+                    'claro_workspace_competence_hierarchy_add', 
+                    array(
+                        'competence' => $competence->getId(),
+                        'workspace' => $workspace->getId()
+                )
+            )
+        );
+    }
+
+    /**
+     * @EXT\Route("/{workspace}/competence/{competence}/hierarchy/add", name="claro_workspace_competence_hierarchy_add", options={"expose"=true})
+     * @EXT\Method("POST")
+     * @EXT\Template("ClarolineCoreBundle:Administration\Competence:competenceModalForm.html.twig")
+     */
+    public function addCompetenceNode(Workspace $workspace, CompetenceNode $competence)
+    {
+        $form = $this->formFactory->create(FormFactory::TYPE_COMPETENCE);
+        $form->handleRequest($this->request);
+
+        if ($form->isValid()) {            
+            $subCpt = $form->getData();
+            $this->cptmanager->addSub($competence, $subCpt);
+            $users = $this->userManager->getUsersByWorkspaces(array($workspace),1,20,false);
+            $this->cptmanager->subscribeUserToCompetences($users,array($subCpt));
+            return new JsonResponse(array());
+        }  
+
+        return array(
+            'form' => $form->createView(),
+            'action' => $this
+                ->router
+                ->generate(
+                    'claro_workspace_competence_hierarchy_add', 
+                    array('competence' => $competence->getId()
+                )
+            )
         );
     }
 
@@ -238,7 +275,7 @@ class CompetenceToolController extends Controller
      * @EXT\Method("GET")
      * @EXT\ParamConverter(
      *      "competence",
-     *      class="ClarolineCoreBundle:Competence\CompetenceHierarchy",
+     *      class="ClarolineCoreBundle:Competence\CompetenceNode",
      *      options={"id" = "competenceId", "strictId" = true}
      * )
      * @EXT\Template("ClarolineCoreBundle:Tool\workspace\competence:showSubscription.html.twig")
@@ -266,7 +303,7 @@ class CompetenceToolController extends Controller
      * @EXT\Method("GET")
      * @EXT\ParamConverter(
      *     "competences",
-     *      class="ClarolineCoreBundle:Competence\CompetenceHierarchy",
+     *      class="ClarolineCoreBundle:Competence\CompetenceNode",
      *      options={"multipleIds" = true, "name" = "competences"}
      * )
      * @EXT\ParamConverter(
@@ -304,7 +341,7 @@ class CompetenceToolController extends Controller
      * @EXT\Method("GET")
      * @EXT\ParamConverter(
      *     "competences",
-     *      class="ClarolineCoreBundle:Competence\CompetenceHierarchy",
+     *      class="ClarolineCoreBundle:Competence\CompetenceNode",
      *      options={"multipleIds" = true, "name" = "competences"}
      * )
      * @EXT\ParamConverter(
@@ -355,6 +392,13 @@ class CompetenceToolController extends Controller
         }
 
         throw new AccessDeniedException();
+    }
+
+    private function checkUserIsAllowed($permission, Workspace $workspace)
+    {
+        if (!$this->security->isGranted($permission, $workspace)) {
+            throw new AccessDeniedException();
+        }
     }
 
 }

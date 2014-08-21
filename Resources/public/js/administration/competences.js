@@ -17,9 +17,9 @@
     }
 
     //in template competence.html.twig
-    $('body').on('click', '#show-add-form', function() {
+    $('body').on('click', '#show-add-form', function(event) {
         window.Claroline.Modal.displayForm(
-            Routing.generate('claro_admin_competence_form'),
+            $(event.currentTarget).attr('data-href'),
             addCompetenceLink,
             function() {},
             'competence-create-form'
@@ -29,6 +29,7 @@
     //in template competenceReferential.html.twig
     $('body').on('click', '#show-referential-comptence-form', function(event) {
         event.preventDefault();
+        console.debug($(this).attr('href'));
         window.Claroline.Modal.displayForm(
             $(this).attr('href'),
             addCompetenceHierachyLink,
@@ -44,8 +45,8 @@
             $(event.currentTarget).attr('href'),
             removeEvent,
             element,
-            Translator.get('platform:remove_competence_confirm'),
-            Translator.get('platform:remove_competence')
+            Translator.get('competence:remove_competence_confirm'),
+            Translator.get('competence:remove_competence')
         );
     });
 

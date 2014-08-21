@@ -245,7 +245,7 @@ class ToolListener
     {
         $params = array(
             '_controller' => 'ClarolineCoreBundle:Tool\CompetenceTool:listMyCompetences',
-            'workspaceId' => $event->getWorkspace()->getId()
+            'workspace' => $event->getWorkspace()->getId()
         );
 
         $subRequest = $this->container->get('request')->duplicate(array(), null, $params);

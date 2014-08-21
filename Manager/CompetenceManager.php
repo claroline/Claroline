@@ -22,7 +22,6 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Claroline\CoreBundle\Repository\CompetenceRepository;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Config\Definition\Exception\Exception;
-use Symfony\Component\Security\Core\SecurityContextInterface;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
@@ -32,8 +31,6 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 class CompetenceManager {
 
     private $om;
-    private $security;
-    private $rm;
     private $router;
     private $repoCptH;
     private $repoCptUser;
@@ -41,21 +38,15 @@ class CompetenceManager {
     /**
      * @DI\InjectParams({
      *     "om"           = @DI\Inject("claroline.persistence.object_manager"),
-     *     "security"     = @DI\Inject("security.context"),
-     *     "rm"           = @DI\Inject("claroline.manager.role_manager"),
      *     "router"       = @DI\Inject("router")
      * })
      */
     public function __construct(
         ObjectManager $om,
-        SecurityContextInterface $security,
-        RoleManager $rm,
         UrlGeneratorInterface $router
     )
     {
         $this->om = $om;
-        $this->security = $security;
-        $this->rm = $rm;
         $this->router = $router;
         $this->repoCptH = $om->getRepository('ClarolineCoreBundle:Competence\CompetenceNode');
         $this->repoCptUser = $om->getRepository('ClarolineCoreBundle:Competence\UserCompetence');
@@ -112,10 +103,7 @@ class CompetenceManager {
 
     public function add(Competence $competence,Workspace $workspace = null)
     {
-        if(!is_null($workspace)) {
-            $this->checkUserIsAllowed($this->rm->getManagerRole($workspace), $workspace);
-            $competence->setWorkspace($workspace);
-        }
+
         $isPlatform = is_null($workspace) ? true : false;
         $competence->setIsplatform($isPlatform);
         $this->om->persist($competence);
@@ -149,9 +137,6 @@ class CompetenceManager {
 
     public function delete(CompetenceNode $competence)
     {
-    	if (!$this->security->isGranted('ROLE_ADMIN')) {
-            throw new AccessDeniedException();
-        }
         $c = $competence->getCompetence(); 
         $this->repoCptH->removeFromTree($competence);
         $this->om->remove($c);
@@ -237,7 +222,7 @@ class CompetenceManager {
      * @param  $competences
      * @return boolean             
      */
-    public function subscribeUserToCompetences(array $users,array $competences)
+    public function subscribeUserToCompetencesRoot(array $users,array $competences)
     {
         $this->om->startFlushSuite();
         $tab = $this->getChildrenCompetence($competences);
@@ -246,6 +231,23 @@ class CompetenceManager {
             foreach ($tab as $cpt) {
                 $cptUser = new UserCompetence();
                 $cptUser->setCompetence($cpt);
+                $cptUser->setUser($u);
+                $cptUser->setScore(0);
+                $this->om->persist($cptUser);
+            }
+        }
+        $this->om->endFlushSuite();
+        return true;
+    }
+
+    public function subscribeUserToCompetences(array $users,array $competences)
+    {
+        $this->om->startFlushSuite();
+        foreach ($users as $u) {
+
+            foreach ($competences as $cptNode) {
+                $cptUser = new UserCompetence();
+                $cptUser->setCompetence($cptNode);
                 $cptUser->setUser($u);
                 $cptUser->setScore(0);
                 $this->om->persist($cptUser);
@@ -318,12 +320,6 @@ class CompetenceManager {
         return array();
     }
 
-    private function checkUserIsAllowed($permission, Workspace $workspace)
-    {
-        if (!$this->security->isGranted($permission, $workspace)) {
-            throw new AccessDeniedException();
-        }
-    }
     /**
      * Test if the node A ( link node) is not a parent of node B
      * To understand it correctly , please read Nested Tree therory.

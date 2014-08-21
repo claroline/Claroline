@@ -7,7 +7,9 @@ competence_form_score: 'Point'
 competence_link: 'Lier une compétence dans un autre référentiel'
 competence_subscription_management: 'Gestions des inscription aux réferentiels'
 delete_all: Supprimer tous les utilisateurs
+my_competences: Mes réferentiels de compétences.
 select_competence_for_registration: 'Sélectionner des réferentiels'
 select_users_for_registration_to_workspace: Sélectionner des utilisateurs à inscrire.
 registration_to_competence: Inscription à des référentiels
+remove_competence_confirm: Êtes vous sûr de vouloir supprimer ce réferentiel ?
 users_competences: 'Voir les utilisateurs associés aux réferentiels'

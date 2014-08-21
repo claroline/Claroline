@@ -513,11 +513,17 @@ class UserManager
      *
      * @return \Pagerfanta\Pagerfanta
      */
-    public function getUsersByWorkspaces(array $workspaces, $page, $max = 20)
+    public function getUsersByWorkspaces(array $workspaces, $page, $max = 20, $withPager = true)
     {
-        $query = $this->userRepo->findUsersByWorkspaces($workspaces, false);
+        if ($withPager) {
+            $query = $this->userRepo->findUsersByWorkspaces($workspaces, false);
+            
+            return $this->pagerFactory->createPager($query, $page, $max);
+        } else {
+            return  $this->userRepo->findUsersByWorkspaces($workspaces);
+ 
+        }
 
-        return $this->pagerFactory->createPager($query, $page, $max);
     }
 
     /**
