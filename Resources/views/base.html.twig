@@ -34,7 +34,7 @@
         <title>{% spaceless %}
             {% block title %}
                 {{ pagetitle | striptags | raw }}
-                {% if not description is empty %}
+                {% if not description is empty and description.content != "" %}
                     - {{ description.content | striptags | raw }}
                 {% endif %}
             {% endblock %}

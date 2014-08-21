@@ -26,6 +26,7 @@ Overview of all recent activities in %workspaceName%: 'Overview of all recent ac
 Overview of recent activities in %workspaceName%: 'Overview of recent activities in %workspaceName%'
 Overview of recent activities of your workspaces: 'Overview of recent activities of your workspaces'
 Paste here the meta tag provides by Google Webmaster: 'Paste here the meta tag provides by Google Webmaster'
+Powered by: Powered by
 See all: 'See all'
 Select a Language: 'Select a language'
 Show actions: 'Show actions'
@@ -70,9 +71,9 @@ activity_form_name: Name
 activity_parameters_form_evaluation_type: 'Evaluation type'
 activity_parameters_form_max_attempts: 'Number of allowed attempts'
 activity_parameters_form_max_duration: 'Allowed time limit (in second)'
-activity_parameters_form_withTutor: Tutored
 activity_parameters_form_where: Learning place
 activity_parameters_form_who: Working mode
+activity_parameters_form_withTutor: Tutored
 activity_past_evaluation_form_comment: Comment
 activity_past_evaluation_form_date: Date
 activity_past_evaluation_form_numScore: Score
@@ -102,6 +103,7 @@ activity_where_classroom: Classroom
 activity_who_collaborative: Collaborative
 activity_who_individual: Individual
 activity_who_mixed: Mixed
+actualize: Actualize
 add: Add
 add_category: 'Add category'
 add_field_to_facet: Add field to facet
@@ -196,6 +198,7 @@ connections: Connections
 cookie_lifetime: 'Cookie lifetime'
 copiable: Copiable
 copy: Copy
+core_packages: Core packages
 create: Create
 create_category: 'Create a category'
 create_facet: Create a facet
@@ -228,6 +231,7 @@ data_col: 'Database id column'
 database: Database
 database_connection_failed: 'Database connection failed.'
 date: Date
+date_agenda_display_format: MM-dd-yyyy
 date_form_datepicker_format: mm-dd-yyyy
 date_form_datepicker_php: m-d-Y
 date_form_format: MM/dd/yyyy
@@ -238,6 +242,7 @@ date_range.clear: Clear
 date_range.custom_range: 'Custom range'
 date_range.day_names: '["Su","Mo","Tu","We","Th","Fr","Sa"]'
 date_range.first_day: '0'
+date_range.format.with_hours: m/d/Y H:i:s
 date_range.format: m/d/Y
 date_range.from: From
 date_range.js_format: MM/dd/yyyy
@@ -286,6 +291,7 @@ drop_file: 'Drop the file'
 dsn: dsn
 duration: Duration
 edit: Edit
+edit_event_success: The event was updated successfully.
 edit_facet: Edit a facet
 edit_field: Edit a field
 edit_password: 'Edit your password'
@@ -300,20 +306,24 @@ edit_profile_success: 'The profile has been edited with success.'
 edit_public_profile: 'Edit public profil'
 edit_public_profile_preferences_error: 'An error occured while editing your public profile preferences.'
 edit_public_profile_preferences_success: 'Your public profile preferences edited with success.'
+edit_rights_success: Rights were successfully changed.
 edit_security_token: 'Edit security token'
 edit_your_profile_error: 'An error occured while editing your profile.'
 edit_your_profile_success: 'Your profile has been edited with success.'
 editable: Editable
+editable_facet_form_explanation: The field "Editable" allows you to set the element as visible or not for the user.
 email: 'Email adress'
 email_form_mail: 'Enter your email'
 email_found_at: 'The email %email% was found at lines: %lines%'
 empty_file: 'Empty file'
 end_date: 'End date'
+end_maintenance: End maintenance mode
 enter_tag_name_message: 'Please enter a tag name'
 entries_per_day: 'Entries per day'
-evaluation: Evaluation
+error: Error
 evaluation-automatic: Automatic
 evaluation-manual: Manual
+evaluation: Evaluation
 evaluation_edition: Evaluation
 evaluation_type: 'Evaluation type'
 export: Export
@@ -346,6 +356,7 @@ from: From
 from_message: From
 general: General
 general_parameters: 'General parameters'
+general_tab_form_explanation: This form allows you to set wich datas are seen by role in the public profile.
 generate_token: 'Generate a random token'
 generate_url: 'Public URL Subscription '
 generate_url_subscription: 'Subscription to a workspace for a user'
@@ -394,6 +405,7 @@ import_users: 'Import users'
 incomplete: Incomplete
 individual: Individual
 informations: Informations
+initialize: Initialize
 inscription_mail: 'Inscription mail'
 instructions: Instructions
 internal_error: 'Internal server error. Please contact the administrator.'
@@ -412,10 +424,12 @@ keep_me_logged_in: 'Keep me logged in'
 lastName: 'Last name'
 last_30_days_activity: 'Activity over the last 30 days'
 last_attempt_date: 'Last attempt'
+last_manager_error_message: You can't remove every manager.
 last_name: 'Last name'
 layout: Layout
 leave_this_page: 'If you leave this page you may lose your changes.'
 left: Left
+limit: Limit
 line_number: 'Line %line%:'
 line_per_page: 'Results per page'
 link: Link
@@ -443,6 +457,9 @@ mail_message: 'You received this message because you asked for a new password. P
 mail_not_available: The mail function is not available.
 mail_not_exist: 'This mail does not exist'
 mail_sent: A email has been sent to your address. Check your inbox mail and your spam box.
+maintenance: Maintenance
+maintenance_mode_enabled: Maintenance mode is activated
+maintenance_mode_message: The platform access is disabled. You can activate it in the maintenance section of administration parameters.
 make_my_public_profil_visible: 'Make my public profile visible'
 make_public_profile_visible_to_everybody: 'to <strong>everybody</strong>'
 make_public_profile_visible_to_nobody: 'to <strong>nobody</strong>'
@@ -499,19 +516,24 @@ my_resources: 'My resources'
 my_workspace: 'My workspace'
 my_workspaces: 'My workspaces'
 name: Name
+name_required: Name required
 new: New
 new_message: 'New message'
 new_message_alert: 'You have %count% new message(s)'
 new_password: New password
 new_role_message: 'You received the role %name%'
 new_role_message_object: 'Your permissions on the platform have changed'
+no: No
 no: no
+no_action_found: No action found.
 no_activity_in_workspace: There are currently no activities in this workspace.
 no_category: 'There is no category'
 no_email: 'No email found, check the spelling'
 no_group: 'No group'
+no_group: There is no group.
 no_home_tab: 'There is no Home tab'
 no_message: 'No message'
+no_package_description: No package description.
 no_resources_in_workspace: There are currently no resources in this workspace.
 no_role_selected_message: 'No role selected.'
 no_search_results: 'Your search hasn''t returned any result.'
@@ -543,6 +565,9 @@ organize_private_tags: 'Organize private tags'
 over_max_length: 'This value is too long'
 owner: Owner
 owner_s: Owner(s)
+package_upgrade_all_warning: Warning, this will update all packages on the platform. This operation can not be canceled. It is recommended to make a backup of the files and the database before performing this operation.
+packages: Packages
+packages_upgrade_info_message: Warning, this page allows you to update the platform.
 parameters: Parameters
 passed: Passed
 passing_score: 'Passing score'
@@ -584,10 +609,12 @@ platform_plugins: 'Platform plugins'
 platform_role: 'Platform role'
 platform_widgets: 'Platform widgets'
 please_wait: 'Please wait...'
+plugin_packages: Plugin packages
 position: Position
 positive_number_expected: 'This value should be a positive number'
 private: Private
 profil_edition: 'User profile edition'
+profile_management: Profile Management
 properties: Properties
 public: Public
 public_profile: 'Public profile'
@@ -613,6 +640,8 @@ registered_users: 'Registered users'
 registration: Registration
 registration_to_workspaces: 'Registration to workspaces'
 remove: Remove
+remove_event: Remove an event
+remove_event_confirm: Are you sure you want to remove this event ?
 remove_facet: Remove a facet
 remove_facet_confirm: Do you really want to remove the facet %name% ?
 remove_field: Remove a field
@@ -621,6 +650,8 @@ remove_group_confirm_message: 'Are you sure you want to delete this group?'
 remove_group_s_confirm_message: 'Are you sure you want to delete these %count% groups?'
 remove_message_confirm_message: 'Are you sure you want to delete this message?'
 remove_message_s_confirm_message: 'Are you sure you want to delete these %count% messages?'
+remove_role: Role suppression.
+remove_role_confirm: Do you really want to remove the role %name% ?
 remove_subcategory: 'Remove subcategory'
 remove_user_confirm_message: 'Are you sure you want to delete this user?'
 remove_user_s_confirm_message: 'Are you sure you want to delete these %count% users?'
@@ -628,6 +659,7 @@ remove_workspace_confirm_workspace: 'Are you sure you want to delete this worksp
 remove_workspace_from_category_confirm_message: 'Are you sure you want to remove the workspace from this category?'
 remove_workspace_from_category_confirm_title: 'Remove workspace from category'
 remove_workspace_from_selection: 'Remove workspace from selection'
+remove_workspace_role_warning: Do you really want to remove this role ? If the role is still associated to users, these users will lose their permissions granted by this role.
 remove_workspaces_confirm_workspaces: 'Are you sure you want to delete these %count% workspaces?'
 rename: Rename
 rename_category: 'Rename category'
@@ -675,8 +707,12 @@ role: Role
 role_creation: 'Role creation'
 role_edition: 'Role edition'
 role_limit_reached: The limit of %translationKey% has been reached.
+role_list: Role list
+role_name_changed_success: The role name has been successfully updated.
 role_name_type_form_translationKey: Name
 roles: Roles
+roles_facet_form_explanation: This form allows you to set wich roles can see the facet in the public profile.
+roles_fields_form_explanation: This form allows you to set wich roles can see and edit the field in the public profile.
 roles_management: 'Roles management'
 save: Save
 save_as_template: 'Save as template'
@@ -734,8 +770,10 @@ show_as: 'Show as'
 show_as_admin: 'Show as admin'
 show_as_user: 'Show as user'
 show_profile: 'Show profile'
+show_profile_for_anonymous: Profil public access for anonymous.
 simple: Simple
 start_date: 'Start date'
+start_maintenance: Start maintenance mode
 status: Status
 steal_session: 'Steal the session'
 storage_type: 'Storage type'
@@ -745,6 +783,7 @@ subscribe_selected_groups: 'Subscribe selected groups'
 subscribe_selected_users: 'Subscribe selected users'
 subscribe_users: 'Subscribe users'
 success_rate: 'Success rate'
+successfull_workspace_creation: The workspace %name% has been created successfully
 support_email: 'Support email'
 switch: Switch
 tag: Tag
@@ -824,6 +863,8 @@ unregistered_users: 'Unregistered users'
 unwritable_file_exception: 'The file %path% is not writable.'
 up: Up
 update_available: Update available
+update_event: Update an event
+upgrade: Upgrade
 upload: upload
 upload_denied: 'Permission denied'
 upload_fail: 'Upload failed'
@@ -832,6 +873,8 @@ user: User
 user_accounts: 'User accounts'
 user_creation: 'User creation'
 user_limit_reached: The user limit has been reached.
+user_limit_success_update: The user limit by role has been successfully updated.
+user_limit_too_low: There is already %total% %role%(s). The limit %newMax% is too low.
 user_parameters: 'User parameters'
 user_picker: 'User picker'
 user_profile: 'User profile'
@@ -857,6 +900,7 @@ view_category_hierarchy: 'View category hierarchy'
 views: Views
 visibility: Visibility
 visible: Visible
+visible_facet_form_explanation: The field "Visible" allows you to set the element as visible or not for the user.
 visitor: Visitor
 warning_user_impersonation: 'You are connected as %user%.'
 warning_workspace_impersonation: 'You are connected as %role% from the workspace %workspace%.'
@@ -928,56 +972,8 @@ workspaces_per_page: 'Workspace per page'
 wrong_captcha : 'The code does not match the picture'
 ws_creator: 'Workspace creator'
 ws_most_viewed: 'Most viewed workspaces'
+yes: Yes
 yes: yes
 yesterday_activity: 'Yesterday''s activity'
 your_current_url: 'Your current URL'
 your_username: 'Your username is '
-closed_account: Closed account
-role_list: Role list
-unavailable_role: The role %translationKey% is not available
-fail_add_user_group_message: These users couldn't be added to this group (check the max amount of users by role).
-unavailable_platform: The platform is unavailable
-account_duration_label: Account lifetime (days)
-platform_init_date: Platform activation date
-platform_expiration_date: Platform expiration date
-role_limit_reached: The limit of %translationKey% has been reached.
-user_limit_reached: The user limit has been reached.
-user_limit_too_low: There is already %total% %role%(s). The limit %newMax% is too low.
-limit: Limit
-yes: Yes
-no: No
-show_profile_for_anonymous: Profil public access for anonymous.
-packages: Packages
-core_packages: Core packages
-plugin_packages: Plugin packages
-no_package_description: No package description.
-yes: Yes
-no: No
-actualize: Actualize
-upgrade: Upgrade
-profile_management: Profile Management
-visible_facet_form_explanation: The field "Visible" allows you to set the element as visible or not for the user.
-editable_facet_form_explanation: The field "Editable" allows you to set the element as visible or not for the user.
-roles_facet_form_explanation: This form allows you to set wich roles can see the facet in the public profile.
-roles_fields_form_explanation: This form allows you to set wich roles can see and edit the field in the public profile.
-general_tab_form_explanation: This form allows you to set wich datas are seen by role in the public profile.
-name_required: Name required
-remove_role_confirm: Do you really want to remove the role %name% ?
-remove_role: Role suppression.
-initialize: Initialize
-user_limit_success_update: The user limit by role has been successfully updated.
-role_name_changed_success: The role name has been successfully updated.
-packages_upgrade_info_message: Warning, this page allows you to update the platform.
-package_upgrade_all_warning: Warning, this will update all packages on the platform. This operation can not be canceled. It is recommended to make a backup of the files and the database before performing this operation.
-no_group: There is no group.
-successfull_workspace_creation: The workspace %name% has been created successfully
-no_action_found: No action found.
-error: Error
-last_manager_error_message: You can't remove every manager.
-remove_workspace_role_warning: Do you really want to remove this role ? If the role is still associated to users, these users will lose their permissions granted by this role.
-edit_rights_success: Rights were successfully changed.
-maintenance: Maintenance
-start_maintenance: Start maintenance mode
-end_maintenance: End maintenance mode
-maintenance_mode_enabled: Maintenance mode is activated
-maintenance_mode_message: The platform access is disabled. You can activate it in the maintenance section of administration parameters.

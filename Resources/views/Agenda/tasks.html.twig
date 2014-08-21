@@ -1,0 +1,5 @@
+<ul id="tasks-list">
+    {% for event in events %}
+        {% include "ClarolineCoreBundle:Agenda:task.html.twig" with {'event': event} %}
+    {% endfor %}
+</ul>
