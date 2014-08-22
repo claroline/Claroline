@@ -22,7 +22,8 @@ use Claroline\CoreBundle\Manager\CompetenceManager;
 use Claroline\CoreBundle\Manager\toolManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
-use Claroline\CoreBundle\Form\Factory\FormFactory;
+use Claroline\CoreBundle\Form\CompetenceType;
+use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -40,7 +41,7 @@ class CompetenceToolController extends Controller
 	/**
 	 * @DI\InjectParams({
 	 * "securityContext"    = @DI\Inject("security.context"),
-	 * "formFactory"        = @DI\Inject("claroline.form.factory"),
+	 * "formFactory"        = @DI\Inject("form.factory"),
      * "request"            = @DI\Inject("request"),
      * "router"         	= @DI\Inject("router"),
      * "cptmanager"			= @DI\Inject("claroline.manager.competence_manager"),
@@ -51,7 +52,7 @@ class CompetenceToolController extends Controller
 	 */
 	
 	public function __construct(
-        FormFactory $formFactory,
+        FormFactoryInterface $formFactory,
         Request $request,
         RouterInterface $router,
         CompetenceManager $cptmanager,
@@ -93,7 +94,7 @@ class CompetenceToolController extends Controller
     {
     	$this->checkOpen();
     	$competences = $this->cptmanager->getTransversalCompetences($workspace);
-    	$form = $this->formFactory->create(FormFactory::TYPE_COMPETENCE);
+    	$form = $this->formFactory->create(new CompetenceType());
 
     	return array(
     		'cpt' => $competences,
@@ -110,7 +111,7 @@ class CompetenceToolController extends Controller
     public function addCompetenceModalForm(Workspace $workspace)
     {
         $this->checkUserIsAllowed($this->rm->getManagerRole($workspace), $workspace);
-        $form = $this->formFactory->create(FormFactory::TYPE_COMPETENCE);
+        $form = $this->formFactory->create(new CompetenceType());
 
         return array(
             'form' => $form->createView(),
@@ -127,7 +128,7 @@ class CompetenceToolController extends Controller
      */
     public function addCompetenceAction(Workspace $workspace)
     {
-        $form = $this->formFactory->create(FormFactory::TYPE_COMPETENCE, array());
+        $form = $this->formFactory->create(new CompetenceType());
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
@@ -159,7 +160,7 @@ class CompetenceToolController extends Controller
     	$this->checkOpen();
     	$user = $this->sc->getToken()->getUser();
     	$listCompetence = $this->cptmanager->getUserCompetenceByWorkspace($workspace, $user);
-    	$form = $this->formFactory->create(FormFactory::TYPE_COMPETENCE);
+    	$form = $this->formFactory->create(new CompetenceType());
     	return array(
     		'list' => $listCompetence,
     		'workspace' => $workspace,
@@ -198,7 +199,7 @@ class CompetenceToolController extends Controller
     public function formCompetenceNodeAction(Workspace $workspace, CompetenceNode $competence)
     {
         $this->checkOpen();
-        $form = $this->formFactory->create(FormFactory::TYPE_COMPETENCE);
+        $form = $this->formFactory->create(new CompetenceType());
 
         return array(
             'form' => $form->createView(),
@@ -221,7 +222,7 @@ class CompetenceToolController extends Controller
      */
     public function addCompetenceNode(Workspace $workspace, CompetenceNode $competence)
     {
-        $form = $this->formFactory->create(FormFactory::TYPE_COMPETENCE);
+        $form = $this->formFactory->create(new CompetenceType());
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {            

@@ -30,7 +30,6 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class CompetenceSubscriptionController {
 
-	private $formFactory;
     private $cptmanager;
     private $request;
     private $userManager;
@@ -38,7 +37,6 @@ class CompetenceSubscriptionController {
     private $adminTool;
     /**
      * @DI\InjectParams({
-     *     "formFactory"        = @DI\Inject("claroline.form.factory"),
      *     "request"            = @DI\Inject("request"),
      *     "router"             = @DI\Inject("router"),
      *     "cptmanager"			= @DI\Inject("claroline.manager.competence_manager"),
@@ -48,7 +46,6 @@ class CompetenceSubscriptionController {
      * })
      */
     public function __construct(
-        FormFactory $formFactory,
         Request $request,
         RouterInterface $router,
         CompetenceManager $cptmanager,
@@ -57,7 +54,6 @@ class CompetenceSubscriptionController {
         ToolManager $toolManager
     )
     {
-        $this->formFactory = $formFactory;
         $this->request = $request;
         $this->router = $router;
         $this->cptmanager = $cptmanager;
@@ -102,7 +98,7 @@ class CompetenceSubscriptionController {
      * @EXT\Method("GET")
      * @EXT\ParamConverter(
      *     "competences",
-     *      class="ClarolineCoreBundle:Competence\CompetenceNode",
+     *      class="ClarolineCoreBundle:Competence\Competence",
      *      options={"multipleIds" = true, "name" = "competences"}
      * )
      * 
@@ -135,7 +131,7 @@ class CompetenceSubscriptionController {
      * @EXT\Method("GET")
      * @EXT\ParamConverter(
      *     "competences",
-     *      class="ClarolineCoreBundle:Competence\CompetenceNode",
+     *      class="ClarolineCoreBundle:Competence\Competence",
      *      options={"multipleIds" = true, "name" = "competences"}
      * )
      * @EXT\ParamConverter(

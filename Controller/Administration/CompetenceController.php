@@ -12,9 +12,9 @@
 namespace Claroline\CoreBundle\Controller\Administration;
 
 use Claroline\CoreBundle\Event\StrictDispatcher;
-use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Entity\Competence\Competence;
 use Claroline\CoreBundle\Entity\Competence\CompetenceNode;
+use Claroline\CoreBundle\Form\CompetenceType;
 use Claroline\CoreBundle\Manager\CompetenceManager;
 use Claroline\CoreBundle\Manager\ToolManager;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -25,6 +25,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Form\FormFactoryInterface;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -39,7 +40,7 @@ class CompetenceController {
     private $sc;
     /**
      * @DI\InjectParams({
-     *     "formFactory"        = @DI\Inject("claroline.form.factory"),
+     *     "formFactory"        = @DI\Inject("form.factory"),
      *     "request"            = @DI\Inject("request"),
      *     "router"             = @DI\Inject("router"),
      *     "cptmanager"			= @DI\Inject("claroline.manager.competence_manager"),
@@ -49,7 +50,7 @@ class CompetenceController {
      * })
      */
     public function __construct(
-        FormFactory $formFactory,
+        FormFactoryInterface $formFactory,
         Request $request,
         RouterInterface $router,
         CompetenceManager $cptmanager,
@@ -90,7 +91,7 @@ class CompetenceController {
     public function addCompetenceModalForm()
     {
         $this->checkOpen();
-        $form = $this->formFactory->create(FormFactory::TYPE_COMPETENCE);
+        $form = $this->formFactory->create(new CompetenceType());
 
         return array(
             'form' => $form->createView(),
@@ -128,7 +129,7 @@ class CompetenceController {
     public function formCompetenceNodeAction(CompetenceNode $competence)
     {
         $this->checkOpen();
-        $form = $this->formFactory->create(FormFactory::TYPE_COMPETENCE);
+        $form = $this->formFactory->create(new CompetenceType());
 
         return array(
             'form' => $form->createView(),
@@ -149,7 +150,7 @@ class CompetenceController {
      */
     public function addCompetenceNode(CompetenceNode $competence)
     {
-        $form = $this->formFactory->create(FormFactory::TYPE_COMPETENCE);
+        $form = $this->formFactory->create(new CompetenceType());
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {            
@@ -182,7 +183,7 @@ class CompetenceController {
      */
     public function addCompetenceAction()
     {
-        $form = $this->formFactory->create(FormFactory::TYPE_COMPETENCE);
+        $form = $this->formFactory->create(new CompetenceType());
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
@@ -219,7 +220,7 @@ class CompetenceController {
     public function subCompetenceAction($competence)
     {
         $this->checkOpen();
-        $form = $this->formFactory->create(FormFactory::TYPE_COMPETENCE);
+        $form = $this->formFactory->create(new CompetenceType());
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {        	
@@ -254,8 +255,8 @@ class CompetenceController {
      */
     public function modifyCompetenceAction($competence)
     {
-	 	$form = $this->formFactory->create(FormFactory::TYPE_COMPETENCE, array(), $competence->getCompetence());
-        $addForm = $this->formFactory->create(FormFactory::TYPE_COMPETENCE, array());
+	 	$form = $this->formFactory->create(new CompetenceType(), array(), $competence->getCompetence());
+        $addForm = $this->formFactory->create(new CompetenceType());
         $form->handleRequest($this->request);
         if ($form->isValid()) {
          	$this->cptmanager->updateCompetence($competence);
