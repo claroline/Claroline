@@ -29,6 +29,11 @@ class Survey extends AbstractResource
     protected $id;
 
     /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    protected $description;
+
+    /**
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
      * @ORM\OneToMany(
@@ -92,6 +97,16 @@ class Survey extends AbstractResource
     public function getId()
     {
         return $this->id;
+    }
+
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    public function setDescription($description)
+    {
+        $this->description = $description;
     }
 
     /**

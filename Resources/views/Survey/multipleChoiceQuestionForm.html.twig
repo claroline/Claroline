@@ -3,6 +3,20 @@
         <h3>{{ 'choices_management'|trans({}, 'survey') }}</h3>
     </div>
     <div class="panel-body">
+        <div class="form-group row">
+            <label class="control-label col-md-3 required" for="choice-display-form-type">
+                {{ 'choice_display'|trans({}, 'survey') }}
+            </label>
+            <div class="col-md-3">
+                <select id="choice-display-form-type" class="form-control" name="choice-display">
+                    <option value="vertical">{{ 'vertical'|trans({}, 'survey') }}</option>
+                    <option value="horizontal" {% if horizontal %}selected="selected"{% endif %}>
+                        {{ 'horizontal'|trans({}, 'survey') }}
+                    </option>
+                </select>
+            </div>
+        </div>
+        <br>
         <div class="table-responsive">
             <table id="choices-table"  class="table table-bordered" style="text-align: center">
                 

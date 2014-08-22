@@ -1158,12 +1158,14 @@ class SurveyController extends Controller
         if (!is_null($multipleChoiceQuestion)) {
             $choices = $multipleChoiceQuestion->getChoices();
         }
+        $horizontal = $multipleChoiceQuestion->getHorizontal();
 
         return new Response(
             $this->templating->render(
                 "ClarolineSurveyBundle:Survey:multipleChoiceQuestionForm.html.twig",
                 array(
                     'survey' => $survey,
+                    'horizontal' => $horizontal,
                     'choices' => $choices
                 )
             )
@@ -1194,7 +1196,8 @@ class SurveyController extends Controller
                     'question' => $question,
                     'choices' => $choices,
                     'answers' => $answersDatas,
-                    'canEdit' => $canEdit
+                    'canEdit' => $canEdit,
+                    'horizontal' => $multipleChoiceQuestion->getHorizontal()
                 )
             )
         );
@@ -1225,6 +1228,8 @@ class SurveyController extends Controller
         array $datas
     )
     {
+        $horizontal = isset($datas['choice-display']) &&
+            ($datas['choice-display'] === 'horizontal');
         $choices = isset($datas['choice']) ?
             $datas['choice'] :
             array();
@@ -1235,11 +1240,13 @@ class SurveyController extends Controller
         if (is_null($multipleChoiceQuestion)) {
             $this->surveyManager->createMultipleChoiceQuestion(
                 $question,
+                $horizontal,
                 $choices
             );
         } else {
             $this->surveyManager->updateQuestionChoices(
                 $multipleChoiceQuestion,
+                $horizontal,
                 $choices
             );
         }

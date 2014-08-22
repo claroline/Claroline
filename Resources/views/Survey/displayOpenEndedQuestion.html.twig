@@ -9,7 +9,13 @@
         {% if question.isCommentAllowed() %}
             <br>
             <div>
-                <label>{{ 'comment'|trans({}, 'survey') }}</label>
+                <label>
+                    {% if question.getCommentLabel() is empty %}
+                        {{ 'comment'|trans({}, 'survey') }}
+                    {% else %}
+                        {{ question.getCommentLabel() }}
+                    {% endif %}
+                </label>
                 <textarea rows="4"
                           name="{{ question.getId() }}[comment]"
                           {% if not canEdit %}disabled{% endif %}

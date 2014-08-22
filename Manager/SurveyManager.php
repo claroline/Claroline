@@ -90,11 +90,13 @@ class SurveyManager
 
     public function createMultipleChoiceQuestion(
         Question $question,
+        $horizontal,
         array $choices
     )
     {
         $multipleChoiceQuestion = new MultipleChoiceQuestion();
         $multipleChoiceQuestion->setQuestion($question);
+        $multipleChoiceQuestion->setHorizontal($horizontal);
         $this->om->persist($multipleChoiceQuestion);
 
         foreach ($choices as $choice) {
@@ -111,9 +113,11 @@ class SurveyManager
 
     public function updateQuestionChoices(
         MultipleChoiceQuestion $multipleChoiceQuestion,
+        $horizontal,
         array $newChoices
     )
     {
+        $multipleChoiceQuestion->setHorizontal($horizontal);
         $this->om->persist($multipleChoiceQuestion);
 
         $oldChoices = $multipleChoiceQuestion->getChoices();

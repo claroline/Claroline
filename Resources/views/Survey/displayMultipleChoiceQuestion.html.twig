@@ -13,26 +13,63 @@
                 {{ 'no_choice_warning'|trans({}, 'survey') }}
             </div>
         {% else %}
-            {% for choice in choices %}
-                {% set choiceContent = choice.getContent() %}
-                <div class="{{ choiceType }}">
-                    <label>
-                    <input type="{{ choiceType }}"
-                           name="{% if choiceType == 'radio' %}{{ question.getId() }}[choice]{% else %}{{ question.getId() }}[{{ choice.getId() }}]{% endif %}"
-                           value="{{ choice.getId() }}"
-                        {% if answers[choice.getId()] is defined %}checked{% endif %}
-                        {% if not canEdit %}disabled{% endif %}
-                    >
-                    {{ choiceContent|raw }}
-                    </label>
-                </div>
-            {% endfor %} 
+        
+            {% if horizontal %}
+            <div class="table-responsive">
+                <table class="table table-borderless table-condensed text-center">
+                    <tr>
+                        {% for choice in choices %}
+                            <td>
+                                <input type="{{ choiceType }}" id="question-{{question.getId()}}-choice-{{choice.getId()}}"
+                                       name="{% if choiceType == 'radio' %}{{ question.getId() }}[choice]{% else %}{{ question.getId() }}[{{ choice.getId() }}]{% endif %}"
+                                       value="{{ choice.getId() }}"
+                                    {% if answers[choice.getId()] is defined %}checked{% endif %}
+                                    {% if not canEdit %}disabled{% endif %}
+                                >
+                            </td>
+                        {% endfor %}
+                    </tr>
+                    <tr>
+                        {% for choice in choices %}
+                            {% set choiceContent = choice.getContent() %}
+                            <td>
+                                <label class="no-wrap" for="question-{{question.getId()}}-choice-{{choice.getId()}}">
+                                    {{ choiceContent|raw }}
+                                </label>
+                            </td>
+                        {% endfor %}
+                    </tr>
+                </table>
+            </div>
+            {% else %}
+        
+                {% for choice in choices %}
+                    {% set choiceContent = choice.getContent() %}
+                    <div class="{{ choiceType }}">
+                        <label>
+                            <input type="{{ choiceType }}"
+                                   name="{% if choiceType == 'radio' %}{{ question.getId() }}[choice]{% else %}{{ question.getId() }}[{{ choice.getId() }}]{% endif %}"
+                                   value="{{ choice.getId() }}"
+                                {% if answers[choice.getId()] is defined %}checked{% endif %}
+                                {% if not canEdit %}disabled{% endif %}
+                            >
+                            {{ choiceContent|raw }}
+                        </label>
+                    </div>
+                {% endfor %} 
+            {% endif %}  
         {% endif %}
         
         {% if question.isCommentAllowed() %}
             <br>
             <div>
-                <label>{{ 'comment'|trans({}, 'survey') }}</label>
+                <label>
+                    {% if question.getCommentLabel() is empty %}
+                        {{ 'comment'|trans({}, 'survey') }}
+                    {% else %}
+                        {{ question.getCommentLabel() }}
+                    {% endif %}
+                </label>
                 <textarea rows="4"
                           name="{{ question.getId() }}[comment]"
                           {% if not canEdit %}disabled{% endif %}

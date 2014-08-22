@@ -28,6 +28,10 @@ class SurveyType extends AbstractType
                 'label' => 'name'
             )
         );
+        $builder->add(
+            'description',
+            'tinymce'
+        );
     }
 
     public function getName()

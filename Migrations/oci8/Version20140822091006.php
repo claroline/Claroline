@@ -8,15 +8,16 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/08/19 04:44:44
+ * Generation date: 2014/08/22 09:10:08
  */
-class Version20140819164443 extends AbstractMigration
+class Version20140822091006 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
         $this->addSql("
             CREATE TABLE claro_survey_resource (
                 id NUMBER(10) NOT NULL, 
+                description CLOB DEFAULT NULL, 
                 published NUMBER(1) NOT NULL, 
                 closed NUMBER(1) NOT NULL, 
                 has_public_result NUMBER(1) NOT NULL, 
@@ -271,6 +272,7 @@ class Version20140819164443 extends AbstractMigration
                 survey_id NUMBER(10) NOT NULL, 
                 question_id NUMBER(10) NOT NULL, 
                 question_order NUMBER(10) NOT NULL, 
+                mandatory NUMBER(1) NOT NULL, 
                 PRIMARY KEY(id)
             )
         ");
@@ -322,6 +324,7 @@ class Version20140819164443 extends AbstractMigration
                 question CLOB NOT NULL, 
                 question_type VARCHAR2(255) NOT NULL, 
                 comment_allowed NUMBER(1) NOT NULL, 
+                comment_label VARCHAR2(255) DEFAULT NULL, 
                 PRIMARY KEY(id)
             )
         ");
@@ -360,6 +363,7 @@ class Version20140819164443 extends AbstractMigration
             CREATE TABLE claro_survey_multiple_choice_question (
                 id NUMBER(10) NOT NULL, 
                 question_id NUMBER(10) DEFAULT NULL, 
+                horizontal NUMBER(1) NOT NULL, 
                 PRIMARY KEY(id)
             )
         ");

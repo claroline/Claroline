@@ -20,6 +20,10 @@ class SurveyEditionType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add(
+            'description',
+            'tinymce'
+        );
+        $builder->add(
             'startDate',
             'date',
             array(

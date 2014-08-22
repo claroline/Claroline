@@ -44,6 +44,11 @@ class QuestionType extends AbstractType
             'checkbox',
             array('required' => true)
         );
+        $builder->add(
+            'commentLabel',
+            'text',
+            array('required' => false)
+        );
     }
 
     public function getName()

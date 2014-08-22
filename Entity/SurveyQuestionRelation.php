@@ -60,6 +60,11 @@ class SurveyQuestionRelation
      */
     protected $questionOrder;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    protected $mandatory;
+
     public function getId()
     {
         return $this->id;
@@ -98,5 +103,15 @@ class SurveyQuestionRelation
     public function setQuestionOrder($questionOrder)
     {
         $this->questionOrder = $questionOrder;
+    }
+
+    public function getMandatory()
+    {
+        return $this->mandatory;
+    }
+
+    public function setMandatory($mandatory)
+    {
+        $this->mandatory = $mandatory;
     }
 }

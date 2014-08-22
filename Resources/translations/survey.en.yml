@@ -6,6 +6,7 @@ allow_edition_after_submission: 'Allow edition after submission'
 allow_multiple_response: 'Multiple response'
 answer_to_survey: 'Answer to survey'
 choice: Choice
+choice_display: 'Choice display'
 choices_management: 'Choices management'
 close: Close
 closed: Closed
@@ -14,11 +15,13 @@ closing_date: 'Closing date'
 closing_date_next: 'Next closing date'
 comment: Comment
 create_question: 'Create a question'
+description: Description
 display_survey: 'Display survey'
 edit_parameters: 'Edit parameters'
 edit_survey: 'Edit survey'
 edition: Edition
 end_date: 'End date'
+horizontal: Horizontal
 multiple_choice_multiple: 'Multiple choice (Multiple answers)'
 multiple_choice_multiple_answers: 'Multiple choice (Multiple answers)'
 multiple_choice_single: 'Multiple choice (Unique answer)'
@@ -40,6 +43,8 @@ question_delete_confirm_message: 'Do you really want to delete this question ?'
 question_delete_confirm_title: 'Delete question'
 question_edition: 'Question edition'
 question_form_commentAllowed: 'With comment'
+question_form_commentLabel: 'Comment label'
+question_form_mandatory: 'Required answer'
 question_form_question: 'Question'
 question_form_title: 'Title'
 question_form_type: 'Question type'
@@ -52,13 +57,16 @@ status: Status
 survey_answer: Answer
 survey_edition: 'Survey edition'
 survey_edition_form_allowAnswerEdition: 'Allow edition after submission'
+survey_edition_form_description: Description
 survey_edition_form_endDate: 'End date'
 survey_edition_form_hasPublicResult: 'Show result to users'
 survey_edition_form_startDate: 'Starting date'
+survey_form_description: Description
 survey_parameters_edition: 'Survey parameters edition'
 survey_results: 'Survey results'
 title: Title
 type: Type
 unpublished: Unpublished
 unpublished_user_message: 'The survey is not published yet.'
+vertical: Vertical
 view_survey_results: 'View survey results'

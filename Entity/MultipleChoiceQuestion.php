@@ -30,16 +30,31 @@ class MultipleChoiceQuestion extends AbstractTypedQuestion
     protected $choices;
 
     /**
+     * @ORM\Column(type="boolean")
+     */
+    protected $horizontal;
+
+    /**
      * Class constructor
      */
     public function __construct()
     {
         $this->choices = new ArrayCollection();
-        $this->allowMultipleResponse = false;
+        $this->horizontal = false;
     }
 
     public function getChoices()
     {
         return $this->choices;
+    }
+
+    public function getHorizontal()
+    {
+        return $this->horizontal;
+    }
+
+    public function setHorizontal($horizontal)
+    {
+        $this->horizontal = $horizontal;
     }
 }

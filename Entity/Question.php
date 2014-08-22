@@ -58,6 +58,11 @@ class Question
      */
     protected $commentAllowed;
 
+    /**
+     * @ORM\Column(name="comment_label", nullable=true)
+     */
+    protected $commentLabel;
+
     public function setId($id)
     {
         $this->id = $id;
@@ -116,5 +121,15 @@ class Question
     public function setCommentAllowed($commentAllowed)
     {
         $this->commentAllowed = $commentAllowed;
+    }
+
+    public function getCommentLabel()
+    {
+        return $this->commentLabel;
+    }
+
+    public function setCommentLabel($commentLabel)
+    {
+        $this->commentLabel = $commentLabel;
     }
 }

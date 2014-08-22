@@ -54,6 +54,10 @@
                     {% endif %}
                 </tr>
                 <tr>
+                    <th>{{ 'description'|trans({}, 'survey') }}</th>
+                    <td colspan="2">{{ survey.getDescription()|raw }}</td>
+                </tr>
+                <tr>
                     <th>{{ 'start_date'|trans({}, 'survey') }}</th>
                     <td colspan="2">
                     {% if startDate is not null %}

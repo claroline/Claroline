@@ -57,6 +57,22 @@
             $('#typed-question-form-block').hide('slow');
         }
     }
+    
+    function enableCommentLabel()
+    {
+        var commentChk = $('#question_form_commentAllowed').is(':checked');
+        var commentLabelElement = $('#question_form_commentLabel').parents('.form-group');
+        
+        if (commentChk) {
+            commentLabelElement.show('slow');
+        } else {
+            commentLabelElement.hide('slow');
+        }
+    }
+
+    $('#question_form_commentAllowed').on('change', function () {
+        enableCommentLabel();
+    });
 
     $('#question_form_type').on('change', function () {
         enableTypedQuestionConfiguration();
@@ -82,5 +98,6 @@
         $('#choice-row-' + dataChoiceId).remove();
     });
     
+    enableCommentLabel();
     enableTypedQuestionConfiguration();
 })();
