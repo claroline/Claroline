@@ -40,13 +40,24 @@
           novalidate
     >
         <div class="panel-body">
-            {% for view in questionViews %}
-                {{ view|raw }}
+            {% for relation in questionRelations %}
+                {% set relationId = relation.getId() %}
+                {% set questionId = relation.getQuestion().getId() %}
                 
-                {% if not loop.last %}
-                    <br>
-                    <hr>
-                    <br>
+                {% if relation.getMandatory() and errors[questionId] is defined %}
+                    <div class="alert alert-danger">
+                        {{ 'an_answer_is_required'|trans({}, 'survey') }}
+                    </div>
+                {% endif %}
+            
+                {% if questionViews[relationId] is defined %}
+                    {{ questionViews[relationId]|raw }}
+            
+                    {% if not loop.last %}
+                        <br>
+                        <hr>
+                        <br>
+                    {% endif %}
                 {% endif %}
             {% endfor %}
         </div>

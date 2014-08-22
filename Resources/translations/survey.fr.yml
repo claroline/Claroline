@@ -4,6 +4,7 @@ add_question: 'Ajouter une question'
 add_question_box_title: 'Ajouter une question au sondage'
 allow_edition_after_submission: 'Authoriser la modification de la réponse'
 allow_multiple_response: 'Réponses multiples'
+an_answer_is_required: 'Une réponse est requise'
 answer_to_survey: 'Répondre au sondage'
 choice: Choix
 choice_display: 'Affichage des choix'

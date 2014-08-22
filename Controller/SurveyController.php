@@ -723,6 +723,7 @@ class SurveyController extends Controller
         $this->checkSurveyRight($survey, 'OPEN');
         $status = $this->computeStatus($survey);
         $questionViews = array();
+        $errors = array();
 
         $surveyAnswer = $this->surveyManager
             ->getSurveyAnswerBySurveyAndUser($survey, $user);
@@ -777,7 +778,7 @@ class SurveyController extends Controller
             $questionAnswer = isset($answersDatas[$question->getId()]) ?
                 $answersDatas[$question->getId()] :
                 array();
-            $questionViews[] = $this->displayTypedQuestion(
+            $questionViews[$relation->getId()] = $this->displayTypedQuestion(
                 $survey,
                 $question,
                 $questionAnswer,
@@ -789,7 +790,8 @@ class SurveyController extends Controller
             'survey' => $survey,
             'questionRelations' => $survey->getQuestionRelations(),
             'questionViews' => $questionViews,
-            'canEdit' => $canEdit
+            'canEdit' => $canEdit,
+            'errors' => $errors
         );
     }
 
@@ -810,6 +812,60 @@ class SurveyController extends Controller
 
         if ($status === 'published') {
             $postDatas = $this->request->getCurrentRequest()->request->all();
+            $errors = $this->validateSurveyAnswer($survey, $postDatas);
+
+            if (count($errors) > 0) {
+                $surveyAnswer = $this->surveyManager
+                    ->getSurveyAnswerBySurveyAndUser($survey, $user);
+                $canEdit = is_null($surveyAnswer) ||
+                    $survey->getAllowAnswerEdition();
+                $answersDatas = array();
+
+                foreach ($postDatas as $questionId => $questionDatas) {
+
+                    if (isset($questionDatas['comment'])) {
+                        $answersDatas[$questionId]['comment'] = $questionDatas['comment'];
+                    }
+
+                    if (isset($questionDatas['answer']) &&
+                        !empty($questionDatas['answer'])) {
+
+                        $answersDatas[$questionId]['answer'] = $questionDatas['answer'];
+                    }
+
+                    if (isset($questionDatas['choice']) &&
+                        !empty($questionDatas['choice'])) {
+
+                        $choiceId = $questionDatas['choice'];
+                        $answersDatas[$questionId][$choiceId] = $choiceId;
+                    }
+
+                    foreach ($questionDatas as $key => $value) {
+
+                        if (is_int($key)) {
+                            $answersDatas[$questionId][$key] = $value;
+                        }
+                    }
+                }
+
+                foreach ($survey->getQuestionRelations() as $relation) {
+                    $question = $relation->getQuestion();
+                    $questionViews[$relation->getId()] = $this->displayTypedQuestion(
+                        $survey,
+                        $question,
+                        $answersDatas[$question->getId()],
+                        $canEdit
+                    )->getContent();
+                }
+
+                return array(
+                    'survey' => $survey,
+                    'questionRelations' => $survey->getQuestionRelations(),
+                    'questionViews' => $questionViews,
+                    'canEdit' => $canEdit,
+                    'errors' => $errors
+                );
+            }
 
             $surveyAnswer = $this->surveyManager
                 ->getSurveyAnswerBySurveyAndUser($survey, $user);
@@ -980,20 +1036,6 @@ class SurveyController extends Controller
                 array('survey' => $survey->getId())
             )
         );
-
-//        $questionViews = array();
-//
-//        foreach ($survey->getQuestionRelations() as $relation) {
-//            $question = $relation->getQuestion();
-//            $questionViews[] =
-//                $this->typedQuestionDisplayAction($survey, $question)->getContent();
-//        }
-//
-//        return array(
-//            'survey' => $survey,
-//            'questionRelations' => $survey->getQuestionRelations(),
-//            'questionViews' => $questionViews
-//        );
     }
 
     /**
@@ -1288,6 +1330,56 @@ class SurveyController extends Controller
         }
 
         return $status;
+    }
+
+    private function validateSurveyAnswer(Survey $survey, array $datas)
+    {
+        $relations = $survey->getQuestionRelations();
+        $errors = array();
+
+        foreach ($relations as $relation) {
+
+            if ($relation->getMandatory()) {
+                $question = $relation->getQuestion();
+                $questionId = $question->getId();
+                $type = $question->getType();
+
+                switch ($type) {
+
+                    case 'open_ended':
+
+                        if (!isset($datas[$questionId]) ||
+                            !isset($datas[$questionId]['answer']) ||
+                            empty($datas[$questionId]['answer'])) {
+
+                            $errors[$questionId] = $questionId;
+                        }
+                        break;
+                    case 'multiple_choice_single':
+
+                        if (!isset($datas[$questionId]) ||
+                            !isset($datas[$questionId]['choice']) ||
+                            empty($datas[$questionId]['choice'])) {
+
+                            $errors[$questionId] = $questionId;
+                        }
+                        break;
+                    case 'multiple_choice_multiple':
+
+                        if (!isset($datas[$questionId]) ||
+                            count($datas[$questionId]) === 0 ||
+                            (count($datas[$questionId]) === 1 && isset($datas[$questionId]['comment']))) {
+
+                            $errors[$questionId] = $questionId;
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+
+        return $errors;
     }
 
     private function checkSurveyRight(Survey $survey, $right)

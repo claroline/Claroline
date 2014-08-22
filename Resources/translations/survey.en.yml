@@ -4,6 +4,7 @@ add_question: 'Add a question'
 add_question_box_title: 'Add a question to survey'
 allow_edition_after_submission: 'Allow edition after submission'
 allow_multiple_response: 'Multiple response'
+an_answer_is_required: 'An answer is required'
 answer_to_survey: 'Answer to survey'
 choice: Choice
 choice_display: 'Choice display'
