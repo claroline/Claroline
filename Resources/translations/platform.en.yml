@@ -191,6 +191,7 @@ collaborative: Collaborative
 collaborator: Collaborator
 comment: Comment
 communication: Communication
+competence_referencial: Learning outcomes
 completed: Completed
 configuration: Configuration
 configure: Configure
@@ -973,7 +974,6 @@ wrong_captcha : 'The code does not match the picture'
 ws_creator: 'Workspace creator'
 ws_most_viewed: 'Most viewed workspaces'
 yes: Yes
-yes: yes
 yesterday_activity: 'Yesterday''s activity'
 your_current_url: 'Your current URL'
 your_username: 'Your username is '

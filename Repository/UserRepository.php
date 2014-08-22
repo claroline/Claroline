@@ -417,15 +417,15 @@ class UserRepository extends EntityRepository implements UserProviderInterface
      *
      * @return User[]
      */
-    public function findAllExcept(User $excludedUser)
+    public function findAllExcept(array $excludedUser)
     {
         $dql = '
             SELECT u FROM Claroline\CoreBundle\Entity\User u
-            WHERE u.id <> :userId
+            WHERE u NOT IN (:userIds)
             AND u.isEnabled = true
         ';
         $query = $this->_em->createQuery($dql);
-        $query->setParameter('userId', $excludedUser->getId());
+        $query->setParameter('userIds', $excludedUser);
 
         return $query->getResult();
     }

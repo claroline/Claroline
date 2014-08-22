@@ -31,6 +31,7 @@ use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Manager\GroupManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Manager\RightsManager;
+use Claroline\CoreBundle\Manager\CompetenceManager;
 use Claroline\CoreBundle\Manager\Exception\LastManagerDeleteException;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -46,6 +47,7 @@ class RolesController extends Controller
     private $router;
     private $request;
     private $translator;
+    private $cptManager;
 
     /**
      * @DI\InjectParams({
@@ -58,7 +60,8 @@ class RolesController extends Controller
      *     "formFactory"      = @DI\Inject("claroline.form.factory"),
      *     "router"           = @DI\Inject("router"),
      *     "request"          = @DI\Inject("request"),
-     *     "translator"       = @DI\Inject("translator")
+     *     "translator"       = @DI\Inject("translator"),
+     *     "cptManager"       =@DI\Inject("claroline.manager.competence_manager")
      * })
      */
     public function __construct(
@@ -71,7 +74,8 @@ class RolesController extends Controller
         FormFactory $formFactory,
         UrlGeneratorInterface $router,
         Request $request,
-        TranslatorInterface $translator
+        TranslatorInterface $translator,
+        CompetenceManager $cptManager
     )
     {
         $this->roleManager = $roleManager;
@@ -84,6 +88,7 @@ class RolesController extends Controller
         $this->router = $router;
         $this->request = $request;
         $this->translator = $translator;
+        $this->cptManager = $cptManager;
     }
     /**
      * @EXT\Route(
@@ -395,7 +400,8 @@ class RolesController extends Controller
     {
         $this->checkAccess($workspace);
         $this->roleManager->associateRolesToSubjects($users, $roles, true);
-
+        $listCptNodes = $this->cptManager->getCompetenceByWorkspace($workspace);
+        $this->cptManager->subscribeUserToCompetences($users,$listCptNodes);
         return new Response('success');
     }
 

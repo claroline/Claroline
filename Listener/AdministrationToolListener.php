@@ -175,6 +175,28 @@ class AdministrationToolListener
         $this->redirect($params, $event);
     }
 
+    /**
+     * @DI\Observe("administration_tool_competence_referencial")
+     *
+     * @param OpenAdministrationToolEvent $event
+     */
+    public function onOpenAdministrationCompetences(OpenAdministrationToolEvent $event)
+    {
+        $params = array();
+        $params['_controller'] = 'ClarolineCoreBundle:Administration\Competence:competences';
+        $this->redirect($params, $event);
+    }
+
+    /**
+     * @DI\Observe("administration_tool_competence_subscription")
+     * @param OpenAdministrationToolEvent $event
+     */
+    public function onOpenSubscriptionCompetence(OpenAdministrationToolEvent $event)
+    {
+        $params = array();
+        $params['_controller'] = 'ClarolineCoreBundle:Administration\CompetenceSubscription:menu';
+        $this->redirect($params, $event);
+    }
     private function redirect($params, $event)
     {
         $subRequest = $this->request->duplicate(array(), null, $params);
