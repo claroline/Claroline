@@ -332,7 +332,7 @@ class HomeManager
 
         $contenType->detach();
         $contenType->setType($page);
-        $contenType->setFirst($this->contentType->findOneBy(array('type' => $page, 'next' => null)));
+        $contenType->setFirst($this->contentType->findOneBy(array('type' => $page, 'back' => null)));
 
         $this->manager->persist($contenType);
         $this->manager->flush();
