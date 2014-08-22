@@ -66,6 +66,7 @@ class ParametersController extends Controller
     private $paramAdminTool;
     private $router;
     private $tokenManager;
+    private $ipwlm;
 
     /**
      * @DI\InjectParams({

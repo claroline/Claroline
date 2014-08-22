@@ -26,6 +26,7 @@ use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\DiExtraBundle\Annotation as DI;
+use Claroline\CoreBundle\Manager\HomeManager;
 
 /**
  * Actions of this controller are not routed. They're intended to be rendered
@@ -53,7 +54,8 @@ class LayoutController extends Controller
      *     "utils"              = @DI\Inject("claroline.security.utilities"),
      *     "translator"         = @DI\Inject("translator"),
      *     "configHandler"      = @DI\Inject("claroline.config.platform_config_handler"),
-     *     "toolManager"       = @DI\Inject("claroline.manager.tool_manager")
+     *     "toolManager"        = @DI\Inject("claroline.manager.tool_manager"),
+     *     "homeManager"        = @DI\Inject("claroline.manager.home_manager")
      * })
      */
     public function __construct(
@@ -65,7 +67,8 @@ class LayoutController extends Controller
         SecurityContextInterface $security,
         Utilities $utils,
         Translator $translator,
-        PlatformConfigurationHandler $configHandler
+        PlatformConfigurationHandler $configHandler,
+        HomeManager $homeManager
     )
     {
         $this->messageManager = $messageManager;
@@ -77,6 +80,7 @@ class LayoutController extends Controller
         $this->utils = $utils;
         $this->translator = $translator;
         $this->configHandler = $configHandler;
+        $this->homeManager = $homeManager;
     }
 
     /**
@@ -100,7 +104,12 @@ class LayoutController extends Controller
      */
     public function footerAction()
     {
-        return array();
+        return array(
+            'footerMessage' => $this->configHandler->getParameter('footer'),
+            'footerLogin' => $this->configHandler->getParameter('footer_login'),
+            'footerWorkspaces' => $this->configHandler->getParameter('footer_workspaces'),
+            'headerLocale' => $this->configHandler->getParameter('header_locale')
+        );
     }
 
     /**
@@ -134,6 +143,11 @@ class LayoutController extends Controller
         $workspaces = null;
         $personalWs = null;
         $countUnviewedNotifications = 0;
+        $homeMenu = $this->configHandler->getParameter('home_menu');
+
+        if (is_numeric($homeMenu)) {
+            $homeMenu = $this->homeManager->getContentByType('menu', $homeMenu);
+        }
 
         if ($token) {
             $user = $token->getUser();
@@ -176,7 +190,9 @@ class LayoutController extends Controller
             'isInAWorkspace' => $workspace !== null,
             'currentWorkspace' => $workspace,
             'countUnviewedNotifications' => $countUnviewedNotifications,
-            'canAdministrate' => $canAdministrate
+            'canAdministrate' => $canAdministrate,
+            'headerLocale' => $this->configHandler->getParameter('header_locale'),
+            'homeMenu' => $homeMenu
         );
     }
 

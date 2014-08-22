@@ -511,9 +511,9 @@ class PlatformConfiguration
         return $this->anonymousPublicProfile;
     }
 
-    public function setHomeMenu($content)
+    public function setHomeMenu($id)
     {
-        $this->homeMenu = $content->getId();
+        $this->homeMenu = $id;
     }
 
     public function getHomeMenu()

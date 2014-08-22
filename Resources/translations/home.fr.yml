@@ -22,12 +22,14 @@ Delete: Effacer
 Edit: Editer
 Error: Erreur
 Footer: 'Pied de page'
+For not logged users: Pour les utilisateurs non connectés
 Header: Entête
 Left: 'À gauche'
 Link address: 'Adresse du lien'
 Link title: 'Titre du lien'
 Menu settings: Réglages du menu
 Menu title: 'Titre du menu'
+Move content: Déplacer le contenu
 New content page: 'Nouvelle page de contenu'
 Note that you can add a link simply by pasting it on the content body: 'Notez que vous pouvez rajouter un lien simplement en le collant sur le corps du contenu'
 Ok: OK
@@ -37,6 +39,7 @@ Please try again later or check your internet connection: 'Veuillez réessayer p
 Preview: Aperçu
 Region: Zone
 Right: 'À droite'
+Select a page: Sélectionnez une page
 Set this menu as header menu in the home page: Choisir ce menu en tant que le menu d'en-tête dans la page d'accueil
 Show the connection button at the footer of home page: Afficher le bouton de connexion en bas de page dans la page d'accueil
 Show the language button in the header menu: Afficher le bouton de langue dans le menu d'en-tête

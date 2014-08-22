@@ -319,6 +319,26 @@ class HomeManager
     }
 
     /**
+     * Move a content from a type to another
+     *
+     * @param content The content to move
+     * @param page The page type where move the content
+     *
+     * @return This function doesn't return anything.
+     */
+    public function moveContent($content, $type, $page)
+    {
+        $contenType = $this->contentType->findOneBy(array('type' => $type, 'content' => $content));
+
+        $contenType->detach();
+        $contenType->setType($page);
+        $contenType->setFirst($this->contentType->findOneBy(array('type' => $page, 'next' => null)));
+
+        $this->manager->persist($contenType);
+        $this->manager->flush();
+    }
+
+    /**
      * Delete a content and his childs.
      *
      * @return This function doesn't return anything.
@@ -341,11 +361,25 @@ class HomeManager
     /**
      * Create a type.
      *
-     * @return This function doesn't return anything.
+     * @return Type
      */
     public function createType($name)
     {
         $type = new Type($name);
+        $this->manager->persist($type);
+        $this->manager->flush();
+
+        return $type;
+    }
+
+    /**
+     * Rename a type
+     *
+     * @return Type
+     */
+    public function renameType($type, $name)
+    {
+        $type->setName($name);
         $this->manager->persist($type);
         $this->manager->flush();
 
@@ -490,7 +524,7 @@ class HomeManager
     }
 
     /**
-     * Get home papameters
+     * Get the home parameters
      */
     public function getHomeParameters()
     {
@@ -499,6 +533,21 @@ class HomeManager
             'footerLogin' => $this->configHandler->getParameter('footer_login'),
             'footerWorkspaces' => $this->configHandler->getParameter('footer_workspaces'),
             'headerLocale' => $this->configHandler->getParameter('header_locale')
+        );
+    }
+
+    /**
+     * Save the home parameters
+     */
+    public function saveHomeParameters($homeMenu, $footerLogin, $footerWorkspaces, $headerLocale)
+    {
+        $this->configHandler->setParameters(
+            array(
+                'home_menu' => is_numeric($homeMenu) ? intval($homeMenu) : null,
+                'footer_login' => ($footerLogin === 'true'),
+            'footer_workspaces' => ($footerWorkspaces === 'true'),
+                'header_locale' => ($headerLocale === 'true')
+            )
         );
     }
 }

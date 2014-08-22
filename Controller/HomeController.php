@@ -80,8 +80,8 @@ class HomeController
     /**
      * Render the home page of the platform
      *
-     * @Route("/type/{type}", name="claro_get_content_by_type")
-     * @Route("/", name="claro_index", defaults={"type" = "home"})
+     * @Route("/type/{type}", name="claro_get_content_by_type", options = {"expose" = true})
+     * @Route("/", name="claro_index", defaults={"type" = "home"}, options = {"expose" = true})
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -90,6 +90,7 @@ class HomeController
         $response = $this->render(
             'ClarolineCoreBundle:Home:home.html.twig',
             array(
+                'type' => $type,
                 'region' => $this->renderRegions($this->manager->getRegionContents()),
                 'content' => $this->typeAction($type)->getContent()
             )
@@ -125,22 +126,108 @@ class HomeController
      * @Route("/types", name="claroline_types_manager")
      * @Secure(roles="ROLE_ADMIN")
      *
-     * @Template("ClarolineCoreBundle:Home:home.html.twig")
-     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function typesAction()
     {
         $types = $this->manager->getTypes();
 
-        return array(
-            'region' => $this->renderRegions($this->manager->getRegionContents()),
-            'content' => $this->render(
-                'ClarolineCoreBundle:Home:types.html.twig',
-                array('types' => $types)
-            )->getContent()
+        $response = $this->render(
+            'ClarolineCoreBundle:Home:home.html.twig',
+            array(
+                'type' => '_pages',
+                'region' => $this->renderRegions($this->manager->getRegionContents()),
+                'content' => $this->render(
+                    'ClarolineCoreBundle:Home:types.html.twig',
+                    array('types' => $types)
+                )->getContent()
+            )
         );
+        $response->headers->addCacheControlDirective('no-cache', true);
+        $response->headers->addCacheControlDirective('max-age', 0);
+        $response->headers->addCacheControlDirective('must-revalidate', true);
+        $response->headers->addCacheControlDirective('no-store', true);
+        $response->headers->addCacheControlDirective('expires', '-1');
+
+        return $response;
     }
+
+    /**
+     * Rename a content form
+     *
+     * @Route("/rename/type/{type}", name="claro_content_rename_type_form", options = {"expose" = true})
+     * @Secure(roles="ROLE_ADMIN")
+     *
+     * @Template("ClarolineCoreBundle:Home:rename.html.twig")
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function renameContentFormAction($type)
+    {
+        return array('type' => $type);
+    }
+
+    /**
+     * Rename a content form
+     *
+     * @Route("/rename/type/{type}/{name}", name="claro_content_rename_type", options = {"expose" = true})
+     * @Secure(roles="ROLE_ADMIN")
+     *
+     * @ParamConverter("type", class = "ClarolineCoreBundle:home\Type", options = {"mapping" : {"type": "name"}})
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function renameContentAction($type, $name)
+    {
+        try {
+            $this->manager->renameType($type, $name);
+
+            return new Response('true');
+        } catch (\Exeption $e) {
+            return new Response('false'); //useful in ajax
+        }
+    }
+
+    /**
+     * Render the "move a content" form.
+     *
+     * @Route("/move/content/{currentType}", name="claroline_move_content_form", options = {"expose" = true})
+     * @Secure(roles="ROLE_ADMIN")
+     *
+     * @Template("ClarolineCoreBundle:Home:move.html.twig")
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function moveContentFormAction($currentType)
+    {
+        return array('currentType' => $currentType, 'pages' => $this->manager->getTypes());
+    }
+
+    /**
+     * Render the "move a content" form.
+     *
+     * @Route("/move/content/{content}/{type}/{page}", name="claroline_move_content", options = {"expose" = true})
+     *
+     * @Secure(roles="ROLE_ADMIN")
+     *
+     * @Template("ClarolineCoreBundle:Home:move.html.twig")
+     *
+     * @ParamConverter("content", class = "ClarolineCoreBundle:Content", options = {"id" = "content"})
+     * @ParamConverter("type", class = "ClarolineCoreBundle:home\Type", options = {"mapping" : {"type": "name"}})
+     * @ParamConverter("page", class = "ClarolineCoreBundle:home\Type", options = {"mapping" : {"page": "name"}})
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function moveContentAction($content, $type, $page)
+    {
+        try {
+            $this->manager->moveContent($content, $type, $page);
+
+            return new Response('true');
+        } catch (\Exeption $e) {
+            return new Response('false'); //useful in ajax
+        }
+     }
 
     /**
      * Render the page of the creator box.
@@ -343,7 +430,7 @@ class HomeController
     /**
      * Verify if a type exist.
      *
-     * @Route("/content/typeexist/{name}", name="claroline_content_typeexist")
+     * @Route("/content/typeexist/{name}", name="claroline_content_type_exist", options = {"expose" = true})
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -470,18 +557,30 @@ class HomeController
     /**
      * Save the menu settings
      *
-     * @param mainMenu The id of the menu
-     * @param footerLogin A Boolean that determine if there is the login button in the footer
-     * @param footerWorkspaces A Boolean that determine if there is the workspace button in the footer
-     * @param headerLocale A boolean that determine if there is a locale button in the header
+     * @Route(
+     *     "/content/menu/save/settings/{menu}/{login}/{workspaces}/{locale}",
+     *     name="claroline_content_menu_save_settings",
+     *     options = {"expose" = true}
+     * )
+     *
+     * @param menu The id of the menu
+     * @param login A Boolean that determine if there is the login button in the footer
+     * @param workspaces A Boolean that determine if there is the workspace button in the footer
+     * @param locale A boolean that determine if there is a locale button in the header
      *
      * @Secure(roles="ROLE_ADMIN")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function saveMenuSettingsAction($mainMenu, $footerLogin, $footerWorkspaces, $headerLocale)
+    public function saveMenuSettingsAction($menu, $login, $workspaces, $locale)
     {
-        $this->manager->saveMenuSettings($mainMenu, $footerLogin, $footerWorkspaces, $headerLocale);
+        try {
+            $this->manager->saveHomeParameters($menu, $login, $workspaces, $locale);
+
+            return new Response('true');
+        } catch (\Exeption $e) {
+            return new Response('false');
+        }
     }
 
     /**
