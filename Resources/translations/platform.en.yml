@@ -974,63 +974,6 @@ wrong_captcha : 'The code does not match the picture'
 ws_creator: 'Workspace creator'
 ws_most_viewed: 'Most viewed workspaces'
 yes: Yes
-yes: yes
 yesterday_activity: 'Yesterday''s activity'
 your_current_url: 'Your current URL'
 your_username: 'Your username is '
-<<<<<<< HEAD
-closed_account: Closed account
-role_list: Role list
-unavailable_role: The role %translationKey% is not available
-fail_add_user_group_message: These users couldn't be added to this group (check the max amount of users by role).
-unavailable_platform: The platform is unavailable
-account_duration_label: Account lifetime (days)
-platform_init_date: Platform activation date
-platform_expiration_date: Platform expiration date
-role_limit_reached: The limit of %translationKey% has been reached.
-user_limit_reached: The user limit has been reached.
-user_limit_too_low: There is already %total% %role%(s). The limit %newMax% is too low.
-limit: Limit
-yes: Yes
-no: No
-show_profile_for_anonymous: Profil public access for anonymous.
-packages: Packages
-core_packages: Core packages
-plugin_packages: Plugin packages
-no_package_description: No package description.
-yes: Yes
-no: No
-actualize: Actualize
-upgrade: Upgrade
-profile_management: Profile Management
-visible_facet_form_explanation: The field "Visible" allows you to set the element as visible or not for the user.
-editable_facet_form_explanation: The field "Editable" allows you to set the element as visible or not for the user.
-roles_facet_form_explanation: This form allows you to set wich roles can see the facet in the public profile.
-roles_fields_form_explanation: This form allows you to set wich roles can see and edit the field in the public profile.
-general_tab_form_explanation: This form allows you to set wich datas are seen by role in the public profile.
-name_required: Name required
-remove_role_confirm: Do you really want to remove the role %name% ?
-remove_role: Role suppression.
-initialize: Initialize
-user_limit_success_update: The user limit by role has been successfully updated.
-role_name_changed_success: The role name has been successfully updated.
-packages_upgrade_info_message: Warning, this page allows you to update the platform.
-package_upgrade_all_warning: Warning, this will update all packages on the platform. This operation can not be canceled. It is recommended to make a backup of the files and the database before performing this operation.
-no_group: There is no group.
-successfull_workspace_creation: The workspace %name% has been created successfully
-no_action_found: No action found.
-error: Error
-last_manager_error_message: You can't remove every manager.
-remove_workspace_role_warning: Do you really want to remove this role ? If the role is still associated to users, these users will lose their permissions granted by this role.
-
-remove_workspace_role_warning: Do you really want to remove this role ? If the role is still associated to users, these users will lose their permissions granted by this role.
-edit_rights_success: Rights were successfully changed.
-maintenance: Maintenance
-start_maintenance: Start maintenance mode
-end_maintenance: End maintenance mode
-maintenance_mode_enabled: Maintenance mode is activated
-maintenance_mode_message: The platform access is disabled. You can activate it in the maintenance section of administration parameters.
-update_event: Update an event
-remove_event_confirm: Are you sure you want to remove this event ?
-remove_event: Remove an event
-edit_event_success: The event was updated successfully.
