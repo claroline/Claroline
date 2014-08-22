@@ -49,4 +49,37 @@
             }
         });
     });
+    
+    $('.edit-mandatory-btn').on('click', function () {
+        var mandatoryBtn = $(this);
+        var relationId = parseInt(mandatoryBtn.data('relation-id'));
+        
+        $.ajax({
+            url: Routing.generate(
+                'claro_survey_question_relation_mandatory_switch',
+                {
+                    'relation': relationId
+                }
+            ),
+            type: 'GET',
+            success: function (datas) {
+                
+                if (datas === 'mandatory') {
+                    mandatoryBtn.removeClass('btn-default');
+                    mandatoryBtn.addClass('btn-success');
+                    mandatoryBtn.attr(
+                        'data-original-title',
+                        Translator.get('survey:mandatory_answer_message')
+                    );
+                } else {
+                    mandatoryBtn.removeClass('btn-success');
+                    mandatoryBtn.addClass('btn-default');
+                    mandatoryBtn.attr(
+                        'data-original-title',
+                        Translator.get('survey:not_mandatory_answer_message')
+                    );
+                }
+            }
+        });
+    });
 })();

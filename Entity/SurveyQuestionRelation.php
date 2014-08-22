@@ -63,7 +63,7 @@ class SurveyQuestionRelation
     /**
      * @ORM\Column(type="boolean")
      */
-    protected $mandatory;
+    protected $mandatory = false;
 
     public function getId()
     {
@@ -113,5 +113,10 @@ class SurveyQuestionRelation
     public function setMandatory($mandatory)
     {
         $this->mandatory = $mandatory;
+    }
+
+    public function switchMandatory()
+    {
+        $this->mandatory = !$this->mandatory;
     }
 }

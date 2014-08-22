@@ -18,10 +18,12 @@ create_question: 'Create a question'
 description: Description
 display_survey: 'Display survey'
 edit_parameters: 'Edit parameters'
+edit_question_btn_explanation: 'Edit question'
 edit_survey: 'Edit survey'
 edition: Edition
 end_date: 'End date'
 horizontal: Horizontal
+mandatory_answer_message: 'An answer is required'
 multiple_choice_multiple: 'Multiple choice (Multiple answers)'
 multiple_choice_multiple_answers: 'Multiple choice (Multiple answers)'
 multiple_choice_single: 'Multiple choice (Unique answer)'
@@ -29,6 +31,7 @@ multiple_choice_single_answer: 'Multiple choice (Unique answer)'
 name: Name
 no_choice_warning: 'Warning! There is no choice.'
 no_question: 'No question'
+not_mandatory_answer_message: 'An answer is not required'
 number_of_respondents: 'Number of respondents'
 number_of_responses: 'Number of responses'
 open_ended: 'Open-ended'
@@ -49,6 +52,7 @@ question_form_question: 'Question'
 question_form_title: 'Title'
 question_form_type: 'Question type'
 questions_management: 'Questions management'
+remove_question_btn_explanation: 'Remove question from survey'
 results: Results
 return: Return
 show_result_to_users: 'Show result to users'
@@ -69,4 +73,5 @@ type: Type
 unpublished: Unpublished
 unpublished_user_message: 'The survey is not published yet.'
 vertical: Vertical
+view_question_btn_explanation: 'View question'
 view_survey_results: 'View survey results'

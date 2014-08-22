@@ -19,6 +19,7 @@ use Claroline\SurveyBundle\Entity\Answer\QuestionAnswer;
 use Claroline\SurveyBundle\Entity\Answer\SurveyAnswer;
 use Claroline\SurveyBundle\Entity\Question;
 use Claroline\SurveyBundle\Entity\Survey;
+use Claroline\SurveyBundle\Entity\SurveyQuestionRelation;
 use Claroline\SurveyBundle\Form\QuestionType;
 use Claroline\SurveyBundle\Form\SurveyEditionType;
 use Claroline\SurveyBundle\Manager\SurveyManager;
@@ -686,6 +687,29 @@ class SurveyController extends Controller
 
     /**
      * @EXT\Route(
+     *     "/survey/question/relation/{relation}/switch",
+     *     name="claro_survey_question_relation_mandatory_switch",
+     *     options={"expose"=true}
+     * )
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function surveyQuestionRelationMandatorySwitchAction(
+        SurveyQuestionRelation $relation
+    )
+    {
+        $survey = $relation->getSurvey();
+        $this->checkSurveyRight($survey, 'EDIT');
+
+        $relation->switchMandatory();
+        $this->surveyManager->persistSurveyQuestionRelation($relation);
+        $data = $relation->getMandatory() ? 'mandatory' : 'not_mandatory';
+
+        return new Response($data, 200);
+    }
+
+    /**
+     * @EXT\Route(
      *     "/survey/{survey}/answer/form",
      *     name="claro_survey_answer_form"
      * )
@@ -1154,11 +1178,12 @@ class SurveyController extends Controller
             null :
             $this->surveyManager->getMultipleChoiceQuestionByQuestion($question);
         $choices = array();
+        $horizontal = false;
 
         if (!is_null($multipleChoiceQuestion)) {
             $choices = $multipleChoiceQuestion->getChoices();
+            $horizontal = $multipleChoiceQuestion->getHorizontal();
         }
-        $horizontal = $multipleChoiceQuestion->getHorizontal();
 
         return new Response(
             $this->templating->render(

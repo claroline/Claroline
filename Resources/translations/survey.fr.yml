@@ -18,10 +18,12 @@ create_question: 'Créer une question'
 description: Description
 display_survey: 'Afficher le sondage'
 edit_parameters: 'Modifier les paramètres'
+edit_question_btn_explanation: 'Modifier la question'
 edit_survey: 'Modifier le sondage'
 edition: Modification
 end_date: 'Date de fin'
 horizontal: Horizontal
+mandatory_answer_message: 'Une réponse est requise'
 multiple_choice_multiple: 'Choix multiple (Réponses multiples)'
 multiple_choice_multiple_answers: 'Choix multiple (Réponses multiples)'
 multiple_choice_single: 'Choix multiple (Réponse unique)'
@@ -29,6 +31,7 @@ multiple_choice_single_answer: 'Choix multiple (Réponse unique)'
 name: Nom
 no_choice_warning: 'Attention! Il n''y a aucun choix.'
 no_question: 'Aucune question'
+not_mandatory_answer_message: 'Une réponse n''est pas requise'
 number_of_respondents: 'Nombre de personnes ayant répondu'
 number_of_responses: 'Nombre de réponses'
 open_ended: 'Ouverte'
@@ -49,6 +52,7 @@ question_form_question: 'Question'
 question_form_title: 'Titre'
 question_form_type: 'Type de question'
 questions_management: 'Gestion des questions'
+remove_question_btn_explanation: 'Retirer la question du sondage'
 results: Résultats
 return: Retour
 show_result_to_users: 'Afficher le résultat aux utilisateurs'
@@ -69,4 +73,5 @@ type: Type
 unpublished: 'Non publié'
 unpublished_user_message: 'Le sondage n''est pas encore publié.'
 vertical: Vertical
+view_question_btn_explanation: 'Aperçu de la question'
 view_survey_results: 'Voir les résultats du sondage'

@@ -70,19 +70,36 @@
                         <td>
                             <span class="btn btn-default view-question-btn"
                                   data-question-id="{{ question.getId() }}"
+                                  data-toggle="tooltip"
+                                  data-placement="top"
+                                  title="{{ 'view_question_btn_explanation'|trans({}, 'survey') }}"
                             >
                                 <i class="fa fa-eye"></i>
+                            </span>
+                            <span class="btn edit-mandatory-btn {% if relation.getMandatory %}btn-success{% else %}btn-default{% endif %}"
+                                  data-relation-id="{{ relation.getId() }}"
+                                  data-toggle="tooltip"
+                                  data-placement="top"
+                                  title="{% if relation.getMandatory() %}{{ 'mandatory_answer_message'|trans({}, 'survey') }}{% else %}{{ 'not_mandatory_answer_message'|trans({}, 'survey') }}{% endif %}"
+                            >
+                                <i class="fa fa-exclamation"></i>
                             </span>
                             <a href="{{ path(
                                     'claro_survey_question_edit_form',
                                     {'question': question.getId(), 'survey': surveyId, 'source': 'survey'}
                                 ) }}"
                                 class="btn btn-default"
+                                data-toggle="tooltip"
+                                data-placement="top"
+                                title="{{ 'edit_question_btn_explanation'|trans({}, 'survey') }}"
                             >
                                 <i class="fa fa-edit"></i>
                             </a>
                             <a href="{{ path('claro_survey_remove_question', {'survey': surveyId, 'question': question.getId()}) }}"
                                class="btn btn-danger"
+                               data-toggle="tooltip"
+                               data-placement="top"
+                               title="{{ 'remove_question_btn_explanation'|trans({}, 'survey') }}"
                             >
                                 <i class="fa fa-trash-o"></i>
                             </a>
@@ -135,6 +152,7 @@
 
 {% block javascripts %}
     {{ parent() }}
+    <script type="text/javascript" src="{{ url('bazinga_exposetranslation_js', { 'domain_name': 'survey' }) }}"></script>
     <script
         src='{{ asset('bundles/clarolinesurvey/js/surveyManagement.js') }}'
         type="text/javascript">

@@ -159,6 +159,12 @@ class SurveyManager
         $this->om->flush();
     }
 
+    public function persistSurveyQuestionRelation(SurveyQuestionRelation $relation)
+    {
+        $this->om->persist($relation);
+        $this->om->flush();
+    }
+
     public function deleteSurveyQuestionRelation(
         Survey $survey,
         Question $question
