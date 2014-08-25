@@ -15,7 +15,7 @@ class Version20140723101818 extends AbstractMigration
     public function up(Schema $schema)
     {
         $this->addSql("
-            CREATE TABLE ujm_propsal (
+            CREATE TABLE ujm_proposal (
                 id INTEGER NOT NULL, 
                 interaction_matching_id INTEGER DEFAULT NULL, 
                 value CLOB NOT NULL, 
@@ -23,7 +23,7 @@ class Version20140723101818 extends AbstractMigration
             )
         ");
         $this->addSql("
-            CREATE INDEX IDX_B797C100FAB79C10 ON ujm_propsal (interaction_matching_id)
+            CREATE INDEX IDX_B797C100FAB79C10 ON ujm_proposal (interaction_matching_id)
         ");
         $this->addSql("
             CREATE TABLE ujm_interaction_matching (
@@ -67,7 +67,7 @@ class Version20140723101818 extends AbstractMigration
     public function down(Schema $schema)
     {
         $this->addSql("
-            DROP TABLE ujm_propsal
+            DROP TABLE ujm_proposal
         ");
         $this->addSql("
             DROP TABLE ujm_interaction_matching

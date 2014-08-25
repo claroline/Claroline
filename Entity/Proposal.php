@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * UJM\ExoBundle\Entity\Proposal
  *
  * @ORM\Entity(repositoryClass="UJM\ExoBundle\Repository\ProposalRepository")
- * @ORM\Table(name="ujm_propsal")
+ * @ORM\Table(name="ujm_proposal")
  */
 class Proposal
 {

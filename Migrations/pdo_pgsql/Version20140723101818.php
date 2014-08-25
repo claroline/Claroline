@@ -15,7 +15,7 @@ class Version20140723101818 extends AbstractMigration
     public function up(Schema $schema)
     {
         $this->addSql("
-            CREATE TABLE ujm_propsal (
+            CREATE TABLE ujm_proposal (
                 id SERIAL NOT NULL, 
                 interaction_matching_id INT DEFAULT NULL, 
                 value TEXT NOT NULL, 
@@ -23,7 +23,7 @@ class Version20140723101818 extends AbstractMigration
             )
         ");
         $this->addSql("
-            CREATE INDEX IDX_B797C100FAB79C10 ON ujm_propsal (interaction_matching_id)
+            CREATE INDEX IDX_B797C100FAB79C10 ON ujm_proposal (interaction_matching_id)
         ");
         $this->addSql("
             CREATE TABLE ujm_interaction_matching (
@@ -63,7 +63,7 @@ class Version20140723101818 extends AbstractMigration
             CREATE UNIQUE INDEX UNIQ_45333F9A77153098 ON ujm_type_matching (code)
         ");
         $this->addSql("
-            ALTER TABLE ujm_propsal 
+            ALTER TABLE ujm_proposal 
             ADD CONSTRAINT FK_B797C100FAB79C10 FOREIGN KEY (interaction_matching_id) 
             REFERENCES ujm_interaction_matching (id) NOT DEFERRABLE INITIALLY IMMEDIATE
         ");
@@ -87,7 +87,7 @@ class Version20140723101818 extends AbstractMigration
     public function down(Schema $schema)
     {
         $this->addSql("
-            ALTER TABLE ujm_propsal 
+            ALTER TABLE ujm_proposal 
             DROP CONSTRAINT FK_B797C100FAB79C10
         ");
         $this->addSql("
@@ -99,7 +99,7 @@ class Version20140723101818 extends AbstractMigration
             DROP CONSTRAINT FK_AC9801C7F881A129
         ");
         $this->addSql("
-            DROP TABLE ujm_propsal
+            DROP TABLE ujm_proposal
         ");
         $this->addSql("
             DROP TABLE ujm_interaction_matching

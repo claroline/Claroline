@@ -15,7 +15,7 @@ class Version20140723101818 extends AbstractMigration
     public function up(Schema $schema)
     {
         $this->addSql("
-            CREATE TABLE ujm_propsal (
+            CREATE TABLE ujm_proposal (
                 id INT AUTO_INCREMENT NOT NULL, 
                 interaction_matching_id INT DEFAULT NULL, 
                 `value` TEXT NOT NULL, 
@@ -53,7 +53,7 @@ class Version20140723101818 extends AbstractMigration
             )
         ");
         $this->addSql("
-            ALTER TABLE ujm_propsal 
+            ALTER TABLE ujm_proposal 
             ADD CONSTRAINT FK_B797C100FAB79C10 FOREIGN KEY (interaction_matching_id) 
             REFERENCES ujm_interaction_matching (id)
         ");
@@ -77,7 +77,7 @@ class Version20140723101818 extends AbstractMigration
     public function down(Schema $schema)
     {
         $this->addSql("
-            ALTER TABLE ujm_propsal 
+            ALTER TABLE ujm_proposal 
             DROP FOREIGN KEY FK_B797C100FAB79C10
         ");
         $this->addSql("
@@ -89,7 +89,7 @@ class Version20140723101818 extends AbstractMigration
             DROP FOREIGN KEY FK_AC9801C7F881A129
         ");
         $this->addSql("
-            DROP TABLE ujm_propsal
+            DROP TABLE ujm_proposal
         ");
         $this->addSql("
             DROP TABLE ujm_interaction_matching
