@@ -66,7 +66,7 @@
                     </div>
                     <div data-ng-if="2 == portfolio.disposition">
                         <ul class="col-md-4 list-unstyled" data-ng-repeat="col in cols">
-                            <li data-ng-repeat="widget in widgets | filter:{type: '!title', column: col} | orderBy:widget.row">
+                            <li data-ng-repeat="widget in widgets | filter:{type: '!title', column: col} | orderBy:'+row'">
                                 {% include 'IcapPortfolioBundle:templates:widget.html.twig' %}
                             </li>
                         </ul>
