@@ -53,8 +53,6 @@ class ProfileController extends Controller
                 $translator = $this->get('translator');
 
                 try {
-                    throw new \Exception();
-
                     $entityManager = $this->getDoctrine()->getManager();
                     $badge = $form->get('badge')->getData();
 
