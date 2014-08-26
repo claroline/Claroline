@@ -89,6 +89,7 @@ class HomeManager
         } else {
             $contentType = $this->contentType->findOneBy(array('content' => $content, 'type' => $type));
             $array['size'] = $contentType->getSize();
+            $array['collapse'] = $contentType->isCollapse();
         }
 
         $array['content'] = $content;
@@ -148,6 +149,7 @@ class HomeManager
                     $variables['content'] = $first->getContent();
                     $variables['size'] = $first->getSize();
                     $variables['type'] = $type->getName();
+                    $variables['collapse'] = $first->isCollapse();
                     $variables = $this->homeService->isDefinedPush($variables, 'father', $father, 'getId');
                     $variables = $this->homeService->isDefinedPush($variables, 'region', $region);
                     $array[] = $variables;
@@ -504,9 +506,9 @@ class HomeManager
      *
      * @return array
      */
-    public function getMenu($id, $size, $type, $father = null, $region = null)
+    public function getMenu($id, $size, $type, $father = null, $region = null, $collapse = false)
     {
-        $variables = array('id' => $id, 'size' => $size, 'type' => $type, 'region' => $region);
+        $variables = array('id' => $id, 'size' => $size, 'type' => $type, 'region' => $region, 'collapse' => $collapse);
 
         return $this->homeService->isDefinedPush($variables, 'father', $father);
     }
@@ -549,5 +551,17 @@ class HomeManager
                 'header_locale' => ($headerLocale === 'true')
             )
         );
+    }
+
+    /**
+     * Update the collapse attribute of a content.
+     */
+    public function collapse($content, $type)
+    {
+        $contentType = $this->contentType->findOneBy(array('content' => $content, 'type' => $type));
+
+        $contentType->setCollapse(!$contentType->isCollapse());
+        $this->manager->persist($contentType);
+        $this->manager->flush();
     }
 }
