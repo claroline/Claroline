@@ -31,7 +31,7 @@ class Activity extends AbstractResource
 
     /**
      * @Assert\NotBlank()
-     * @ORM\Column(name="description")
+     * @ORM\Column(name="description", type="text")
      */
     protected $description;
 
