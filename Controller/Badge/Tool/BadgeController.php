@@ -27,6 +27,7 @@ class BadgeController extends Controller
         $workspaceBadges = $this->getDoctrine()->getManager()->getRepository('ClarolineCoreBundle:Badge\Badge')->findByWorkspace($workspace);
 
         $ownedBadges      = array();
+        $finishedBadges   = array();
         $inProgressBadges = array();
         $availableBadges  = array();
         $displayedBadges  = array();
@@ -44,8 +45,12 @@ class BadgeController extends Controller
                 $nbBadgeRules      = count($workspaceBadge->getRules());
                 $validatedRules    = $badgeRuleValidator->validate($workspaceBadge, $loggedUser);
 
-                if(0 < $nbBadgeRules && 0 < $validatedRules['validRules'] && $nbBadgeRules >= $validatedRules['validRules']) {
-                    $inProgressBadges[] = $workspaceBadge;
+                if(0 < $nbBadgeRules && 0 < $validatedRules['validRules']) {
+                    if ($validatedRules['validRules'] >= $nbBadgeRules) {
+                        $finishedBadges[] = $workspaceBadge;
+                    } else {
+                        $inProgressBadges[] = $workspaceBadge;
+                    }
                 }
                 else {
                     $availableBadges[] = $workspaceBadge;
@@ -59,6 +64,13 @@ class BadgeController extends Controller
             $displayedBadges[] = array(
                 'type'  => 'owned',
                 'badge' => $ownedBadge
+            );
+        }
+
+        foreach ($finishedBadges as $finishedBadge) {
+            $displayedBadges[] = array(
+                'type'  => 'finished',
+                'badge' => $finishedBadge
             );
         }
 
