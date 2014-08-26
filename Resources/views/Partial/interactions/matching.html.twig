@@ -1,13 +1,19 @@
 <div>
-    <div>
-        {{ form_row(form.typeMatching) }}
-         <div id="labelError"></div>
-         <div id="tablelabel"></div>
-         {{ form_row(form.labels) | replace({"col-md-3": "col-md-12"}) | raw }}
-         {{ form_errors(form.labels) }}
-         <div id="proposalError"></div>
-         <div id="tableproposal"></div>
-         {{ form_row(form.proposals) | replace({"col-md-3": "col-md-12"}) | raw }}
-         {{ form_errors(form.proposals) }}
-    </div>
+    {{ form_row(form.typeMatching) }}
+        <table>
+            <tr>
+                <th>
+                    <div id="labelError"></div>
+                    <div id="tableLabel"></div>
+                    {{ form_row(form.labels) | replace({"col-md-3": "col-md-12"}) | raw }}
+                    {{ form_errors(form.labels) }}
+                </th>
+                <th>
+                    <div id="proposalError"></div>
+                    <div id="tableProposal"></div>
+                    {{ form_row(form.proposals) | replace({"col-md-3": "col-md-12"}) | raw }}
+                    {{ form_errors(form.proposals) }}
+                </th>
+            </tr>
+        </table>
 </div>

@@ -40,6 +40,7 @@ add: Ajouter
 add a new picture: Ajouter une nouvelle image
 addChoice: Ajouter un choix
 addDoc: Ajouter un document
+addProposal: Ajouter une proposition
 add hint: Ajouter un indice
 add user: Ajouter un utilisateur
 administration: Administration
@@ -461,6 +462,9 @@ Inter_Hole.orthography: Autoriser les fautes d'orthographe
 Inter_Hole.score: Point
 Inter_Hole.size: Taille
 
+Label.value : Valeur
+Label.scoreRight: Score de la question
+
 LockAttempte.date: Date
 
 Multiple response: Réponse multiples
@@ -470,6 +474,8 @@ Never: jamais
 Planning.end_time: Date de fin
 Planning.start_time: Date de début
 Points: Points
+
+Proposal.value: Réponse
 
 Question_creation: Création d'une question
 Question.description: Description de la question (facultatif)
@@ -482,6 +488,8 @@ Response.mark: Note
 Response.reponse: Réponse
 
 Subscription.admin: Donner les droits de gestionnaire (exercice)
+
+TypeMatching.value: Type de question associative
 
 TypeOpenQuestion.value: Type de la question
 
@@ -501,6 +509,8 @@ ujm_exobundle_interactiongraphictype_document: Documents
 ujm_exobundle_interactiongraphictype_interaction_hints: Indices
 ujm_exobundle_interactionopentype_interaction: Question ouverte
 ujm_exobundle_interactionopentype_interaction_hints: Indices
+ujm_exobundle_interactionmatchingtype_proposals: Réponse
+ujm_exobundle_interactionmatchingtype_labels: Question
 ujm_exobundle_interactionopentype_wordResponses: Mots clés
 ujm_exobundle_interactionqcmtype_choices: Choix
 ujm_exobundle_interactionqcmtype_interaction: QCM

@@ -12,14 +12,12 @@ class LabelType extends AbstractType
     {
         $builder
             ->add(
-                'value', 'checkbox', array(
+                'value', 'tinymce', array(
                     'required' => false, 'label' => ' '
                 ))
             ->add(
-                'scoreRightResponse', 'checkbox', array(
-                    'required' => false, 'label' => ' '
-                )
-            );
+                'scoreRight', 'text', array(
+                    'required' => false, 'label' => ' ', 'attr' => array('style' => 'width:35px; text-align: end;')));
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
@@ -27,13 +25,11 @@ class LabelType extends AbstractType
         $resolver->setDefaults(
             array(
                 'data_class' => 'UJM\ExoBundle\Entity\Label',
-            )
-        );
+            ));
     }
 
     public function getName()
     {
         return 'ujm_exobundle_labeltype';
     }
-
 }

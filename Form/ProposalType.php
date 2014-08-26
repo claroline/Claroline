@@ -12,10 +12,9 @@ class ProposalType extends AbstractType
     {
         $builder
             ->add(
-                'value', 'checkbox', array(
+                'value', 'tinymce', array(
                     'required' => false, 'label' => ' '
-                )
-            );
+                ));
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
@@ -23,13 +22,11 @@ class ProposalType extends AbstractType
         $resolver->setDefaults(
             array(
                 'data_class' => 'UJM\ExoBundle\Entity\Proposal',
-            )
-        );
+            ));
     }
 
     public function getName()
     {
         return 'ujm_exobundle_proposaltype';
     }
-
 }

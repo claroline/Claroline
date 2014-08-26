@@ -164,7 +164,7 @@ function addChoice(container, deleteChoice) {
         .replace('<a class="btn btn-danger remove" href="#">Delete</a>', '')
     );
 
-    // Add tne button to delete a choice
+    // Add the button to delete a choice
     addDelete(contain, deleteChoice);
 
     // Add the modified dataprototype to the page

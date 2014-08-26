@@ -18,17 +18,15 @@ class InteractionMatchingType extends AbstractType
         $this->user  = $user;
         $this->catID = $catID;
     }
-    
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        
         $builder
             ->add(
                 'interaction', new InteractionType(
                     $this->user, $this->catID
                 )
             );
-        
         $builder
             ->add(
                 'typeMatching', 'entity', array(
@@ -36,7 +34,6 @@ class InteractionMatchingType extends AbstractType
                     'label' => 'TypeMatching.value'
                 )
             );
-        
         $builder
             ->add(
                 'labels', 'collection', array(
@@ -46,7 +43,6 @@ class InteractionMatchingType extends AbstractType
                     'allow_delete' => true
                 )
             );
-        
         $builder
             ->add(
                 'proposals', 'collection', array(
@@ -56,10 +52,8 @@ class InteractionMatchingType extends AbstractType
                     'allow_delete' => true
                 )
             );
-        
-        
     }
-    
+
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(
@@ -69,7 +63,7 @@ class InteractionMatchingType extends AbstractType
             )
         );
     }
-    
+
     public function getName()
     {
         return 'ujm_exobundle_interactionmatchingtype';
