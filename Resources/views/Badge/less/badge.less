@@ -13,9 +13,21 @@
 .badge_list {
     .badge_container {
         margin: 5px 0 0 5px;
+        .dropdown {
+            width: 150px;
+            .badge_menu_link {
+                .badge_name {
+                    display:       inline-block;
+                    width:         100px;
+                    white-space:   nowrap;
+                    overflow:      hidden;
+                    text-overflow: ellipsis;
+                }
+            }
+        }
         .thumbnail {
-            width:           150px;
-            height:          110px;
+            width:  150px;
+            height: 110px;
             .badge_name {
                 color:           #333333;
                 white-space:     nowrap;
