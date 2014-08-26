@@ -1,40 +1,5 @@
 <?php
 
-/**
-* ExoOnLine
-* Copyright or © or Copr. Université Jean Monnet (France), 2012
-* dsi.dev@univ-st-etienne.fr
-*
-* This software is a computer program whose purpose is to [describe
-* functionalities and technical features of your software].
-*
-* This software is governed by the CeCILL license under French law and
-* abiding by the rules of distribution of free software. You can use,
-* modify and/ or redistribute the software under the terms of the CeCILL
-* license as circulated by CEA, CNRS and INRIA at the following URL
-* "http://www.cecill.info".
-*
-* As a counterpart to the access to the source code and rights to copy,
-* modify and redistribute granted by the license, users are provided only
-* with a limited warranty and the software's author, the holder of the
-* economic rights, and the successive licensors have only limited
-* liability.
-*
-* In this respect, the user's attention is drawn to the risks associated
-* with loading, using, modifying and/or developing or reproducing the
-* software by the user in light of its specific status of free software,
-* that may mean that it is complicated to manipulate, and that also
-* therefore means that it is reserved for developers and experienced
-* professionals having in-depth computer knowledge. Users are therefore
-* encouraged to load and test the software's suitability as regards their
-* requirements in conditions enabling the security of their systems and/or
-* data to be ensured and, more generally, to use and operate it in the
-* same conditions as regards security.
-*
-* The fact that you are presently reading this means that you have had
-* knowledge of the CeCILL license and that you accept its terms.
-*/
-
 namespace UJM\ExoBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -50,48 +15,14 @@ use UJM\ExoBundle\Form\InteractionHoleHandler;
 */
 class InteractionHoleController extends Controller
 {
-    /**
-    * Lists all InteractionHole entities.
-    *
-    */
-    public function indexAction()
-    {
-        $em = $this->getDoctrine()->getEntityManager();
-
-        $entities = $em->getRepository('UJMExoBundle:InteractionHole')->findAll();
-
-        return $this->render('UJMExoBundle:InteractionHole:index.html.twig', array(
-                             'entities' => $entities
-                             ));
-    }
 
     /**
-    * Finds and displays a InteractionHole entity.
-    *
-    */
-    public function showAction($id)
-    {
-        $em = $this->getDoctrine()->getEntityManager();
-
-        $entity = $em->getRepository('UJMExoBundle:InteractionHole')->find($id);
-
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find InteractionHole entity.');
-        }
-
-        $deleteForm = $this->createDeleteForm($id);
-
-        return $this->render('UJMExoBundle:InteractionHole:show.html.twig', array(
-                             'entity' => $entity,
-                             'delete_form' => $deleteForm->createView(),
-                             ));
-    }
-
-
-    /**
-    * Creates a new InteractionHole entity.
-    *
-    */
+     * Creates a new InteractionHole entity.
+     *
+     * @access public
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function createAction()
     {
         $interHole  = new InteractionHole();
@@ -162,9 +93,14 @@ class InteractionHoleController extends Controller
     }
 
     /**
-    * Edits an existing InteractionHole entity.
-    *
-    */
+     * Edits an existing InteractionHole entity.
+     *
+     * @access public
+     *
+     * @param integer $id id of InteractionHole
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function updateAction($id)
     {
         $exoID = $this->container->get('request')->request->get('exercise');
@@ -229,16 +165,17 @@ class InteractionHoleController extends Controller
     }
 
     /**
-    * Deletes a InteractionHole entity.
-    *
-    */
+     * Deletes a InteractionHole entity.
+     *
+     * @access public
+     *
+     * @param integer $id id of InteractionHole
+     * @param intger $pageNow for pagination, actual page
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function deleteAction($id, $pageNow)
     {
-        $form = $this->createDeleteForm($id);
-        $request = $this->getRequest();
-
-        $form->handleRequest($request);
-
         $em = $this->getDoctrine()->getManager();
         $entity = $em->getRepository('UJMExoBundle:InteractionHole')->find($id);
 
@@ -255,6 +192,9 @@ class InteractionHoleController extends Controller
     /**
      * To test the question with holes by the teacher
      *
+     * @access public
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function responseHoleAction()
     {
@@ -279,11 +219,4 @@ class InteractionHoleController extends Controller
         return $this->render('UJMExoBundle:InteractionHole:holeOverview.html.twig', $vars);
     }
 
-    private function createDeleteForm($id)
-    {
-        return $this->createFormBuilder(array('id' => $id))
-                    ->add('id', 'hidden')
-                    ->getForm()
-        ;
-    }
 }

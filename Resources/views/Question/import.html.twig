@@ -1,38 +1,3 @@
-{#
- # ExoOnLine
- # Copyright or © or Copr. Université Jean Monnet (France), 2012
- # dsi.dev@univ-st-etienne.fr
- #
- # This software is a computer program whose purpose is to [describe
- # functionalities and technical features of your software].
- #
- # This software is governed by the CeCILL license under French law and
- # abiding by the rules of distribution of free software.  You can  use,
- # modify and/ or redistribute the software under the terms of the CeCILL
- # license as circulated by CEA, CNRS and INRIA at the following URL
- # "http://www.cecill.info".
- #
- # As a counterpart to the access to the source code and  rights to copy,
- # modify and redistribute granted by the license, users are provided only
- # with a limited warranty  and the software's author,  the holder of the
- # economic rights,  and the successive licensors  have only  limited
- # liability.
- #
- # In this respect, the user's attention is drawn to the risks associated
- # with loading,  using,  modifying and/or developing or reproducing the
- # software by the user in light of its specific status of free software,
- # that may mean  that it is complicated to manipulate,  and  that  also
- # therefore means  that it is reserved for developers  and  experienced
- # professionals having in-depth computer knowledge. Users are therefore
- # encouraged to load and test the software's suitability as regards their
- # requirements in conditions enabling the security of their systems and/or
- # data to be ensured and,  more generally, to use and operate it in the
- # same conditions as regards security.
- #
- # The fact that you are presently reading this means that you have had
- # knowledge of the CeCILL license and that you accept its terms.
-#}
-
 {% set layout = "ClarolineCoreBundle:Workspace:layout.html.twig" %}
 
 {% if isDesktop() %}
@@ -130,70 +95,8 @@
             {% if QuestionsExo == 'false' %}
                 <h3 class="panel-title">{{ "my questions"|trans }} : </h3><br/>
                 {% if interactions is not empty %}
-                    <table class="table table-striped table-bordered table-condensed" id="QuestionArrayMy">
-                        <thead>
-                            <tr style="background-color: lightsteelblue;">
-                                <th class="classic" onclick="SortQuestions('Category', 'QuestionArrayMy');"
-                                    onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
-                                    onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
-                                    <i class="fa fa-chevron-up" id="upC"  style="display: none;"></i>
-                                    <i class="fa fa-chevron-down" id="downC"  style="display: none;"></i>
-                                    {{ 'category' | trans }}
-                                </th>
-                                <th class="classic" onclick="SortQuestions('Title', 'QuestionArrayMy');"
-                                    onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
-                                    onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
-                                    <i class="fa fa-chevron-up" id="upTi"  style="display: none;"></i>
-                                    <i class="fa fa-chevron-down" id="downTi"  style="display: none;"></i>
-                                    {{ 'title' | trans }}
-                                </th>
-                                <th class="classic" onclick="SortQuestions('Type', 'QuestionArrayMy');"
-                                    onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
-                                    onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
-                                    <i class="fa fa-chevron-up" id="upTy"  style="display: none;"></i>
-                                    <i class="fa fa-chevron-down" id="downTy"  style="display: none;"></i>
-                                    {{ 'type' | trans }}
-                                </th>
-                                <th class="classic" onclick="SortQuestions('Invite', 'QuestionArrayMy');"
-                                    onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
-                                    onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
-                                    <i class="fa fa-chevron-up" id="upI"  style="display: none;"></i>
-                                    <i class="fa fa-chevron-down" id="downI"  style="display: none;"></i>
-                                    {{ 'question' | trans }}
-                                </th>
-                                <th class="classic">{{ 'import' | trans }}</th>
-                                <th class="classic">{{ 'action' | trans }}</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        {% for interaction in interactions %}
-                            <tr>
-                                <td class="classic">{{ interaction.question.category.value }}</td>
-                                <td class="classic">
-                                    <a href="{{ path('ujm_question_show', { 'id': interaction.question.id }) }}">
-                                        {{ interaction.question.title }}
-                                    </a>
-                                </td>
-                                <td class="classic">{{ interaction.type|trans }}</td>
-                                <td class="classic">{{ interaction.invite|raw }}</td>
-                                <td class="classic">
-                                    <ul class="list-unstyled">
-                                        <li>
-                                            <input type="checkbox" name ="my"
-                                                   disabled="disabled"
-                                                   value="{{ interaction.question.id }}" onclick="addQuestionInOrder($(this).val());">
-                                        </li>
-                                    </ul>
-                                </td>
-                                <td>
-                                    <a class="btn btn-default" data-toggle="tooltip" title="{{ 'duplicate' | trans }}" href="{{ path('ujm_question_duplicate', { 'interID': interaction.id, 'exoID': exoID }) }}">
-                                        <i class="fa fa-repeat"></i>
-                                    </a>
-                                </td>
-                            </tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
+                    {% set questionsList = 'importMy' %}
+                    {% include "UJMExoBundle:Partial:question/questionsList.html.twig" %}
 
                     <div>
                         {% if pagerMy.haveToPaginate %}
@@ -211,75 +114,9 @@
                 <hr/>
                 <h3 class="panel-title">{{ 'my shared questions' | trans }} : </h3><br/>
                 {% if sharedWithMe is not empty %}
-                    <table class="table table-striped table-bordered table-condensed" id="QuestionArrayShared">
-                        <thead>
-                            <tr style="background-color: lightsteelblue;">
-                                <th class="classic" onclick="SortQuestions('Category', 'QuestionArrayShared');"
-                                    onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
-                                    onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
-                                    <i class="fa fa-chevron-up" id="upCs"  style="display: none;"></i>
-                                    <i class="fa fa-chevron-down" id="downCs"  style="display: none;"></i>
-                                    {{ 'category' | trans }}
-                                </th>
-                                <th class="classic" onclick="SortQuestions('Title', 'QuestionArrayShared');"
-                                    onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
-                                    onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
-                                    <i class="fa fa-chevron-up" id="upTis"  style="display: none;"></i>
-                                    <i class="fa fa-chevron-down" id="downTis"  style="display: none;"></i>
-                                    {{ 'title' | trans }}
-                                </th>
-                                <th class="classic" onclick="SortQuestions('Type', 'QuestionArrayShared');"
-                                    onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
-                                    onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
-                                    <i class="fa fa-chevron-up" id="upTys"  style="display: none;"></i>
-                                    <i class="fa fa-chevron-down" id="downTys"  style="display: none;"></i>
-                                    {{ 'type' | trans }}
-                                </th>
-                                <th class="classic" onclick="SortQuestions('Invite', 'QuestionArrayShared');"
-                                    onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
-                                    onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
-                                    <i class="fa fa-chevron-up" id="upIs"  style="display: none;"></i>
-                                    <i class="fa fa-chevron-down" id="downIs"  style="display: none;"></i>
-                                    {{ 'question' | trans }}
-                                </th>
-                                <th class="classic">{{ 'shared by' | trans }}</th>
-                                <th class="classic">{{ 'import' | trans }}</th>
-                                <th class="classic">{{ 'action' | trans }}</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        {% set i = 0 %}
-                        {% for myQShare in sharedWithMe %}
-                            <tr>
-                                <td class="classic">{{ myQShare.question.category.value }}</td>
-                                <td class="classic">
-                                    <a href="{{ path('ujm_question_show', { 'id': myQShare.question.id }) }}">
-                                        {{ myQShare.question.title }}
-                                    </a>
-                                </td>
-                                <td class="classic">{{ myQShare.type|trans }}</td>
-                                <td class="classic">{{ myQShare.invite|raw }}</td>
-                                <td class="classic">
-                                    {{ myQShare.question.user.firstName }} {{ myQShare.question.user.lastName }}
-                                </td>
-                                <td class="classic">
-                                    <ul class="list-unstyled">
-                                        <li>
-                                            <input type="checkbox" name ="shared"
-                                                   value="{{ myQShare.question.id }}" onclick="addQuestionInOrder($(this).val());">
-                                        </li>
-                                    </ul>
-                                </td>
-                                <td>
-                                    <a class="btn btn-default" data-toggle="tooltip" title="{{ 'duplicate' | trans }}" href="{{ path('ujm_question_duplicate', { 'interID': myQShare.id, 'exoID': exoID }) }}">
-                                        <i class="fa fa-repeat"></i>
-                                    </a>
-                                </td>
-                            </tr>
-                            {% set i = i + 1 %}
-                        {% endfor %}
-                        </tbody>
-                    </table>
+                    {% set questionsList = 'importShare' %}
+                    {% set interactions = sharedWithMe %}
+                    {% include "UJMExoBundle:Partial:question/questionsList.html.twig" %}
 
                     <div>
                         {% if pagerShared.haveToPaginate %}
@@ -301,88 +138,9 @@
                         <h3 class="panel-title">{{ 'exercice linked Question' | trans }}</h3>
                     </div>
                     <div class="panel-body">
-                        {% if listQExo is not empty %}
-                            <table class="table table-striped table-bordered table-condensed" id="QuestionArray">
-                                <thead>
-                                    <tr style="background-color: lightsteelblue;">
-                                        <th class="classic" onclick="SortQuestions('Category', 'QuestionArray');"
-                                            onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
-                                            onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
-                                            <i class="fa fa-chevron-up" id="upC"  style="display: none;"></i>
-                                            <i class="fa fa-chevron-down" id="downC"  style="display: none;"></i>
-                                            {{ 'category' | trans }}
-                                        </th>
-                                        <th class="classic" onclick="SortQuestions('Title', 'QuestionArray');"
-                                            onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
-                                            onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
-                                            <i class="fa fa-chevron-up" id="upTi"  style="display: none;"></i>
-                                            <i class="fa fa-chevron-down" id="downTi"  style="display: none;"></i>
-                                            {{ 'title' | trans }}
-                                        </th>
-                                        <th class="classic" onclick="SortQuestions('Type', 'QuestionArray');"
-                                            onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
-                                            onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
-                                            <i class="fa fa-chevron-up" id="upTy"  style="display: none;"></i>
-                                            <i class="fa fa-chevron-down" id="downTy"  style="display: none;"></i>
-                                            {{ 'type' | trans }}
-                                        </th>
-                                        <th class="classic" onclick="SortQuestions('Invite', 'QuestionArray')"
-                                            onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
-                                            onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
-                                            <i class="fa fa-chevron-up" id="upI"  style="display: none;"></i>
-                                            <i class="fa fa-chevron-down" id="downI"  style="display: none;"></i>
-                                            {{ 'question' | trans }}
-                                        </th>
-                                        <th class="classic">{{ 'shared by' | trans }}</th>
-                                        <th class="classic">{{ 'import' | trans }}</th>
-                                        <th class="classic">{{ 'action' | trans }}</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                {% for interactionExo in listQExo %}
-                                    <tr>
-                                        <td class="classic">{{ interactionExo.question.category.value }}</td>
-                                        <td class="classic"><a href="{{ path('ujm_question_show', { 'id': interactionExo.question.id }) }}">{{ interactionExo.question.title }}</a></td>
-                                        <td class="classic">{{ interactionExo.type|trans }}</td>
-                                        <td class="classic">{{ interactionExo.invite|raw }}</td>
-
-                                        {% if actionQ[interactionExo.question.id] == 1 %} <!-- my question -->
-                                            <td style="text-align: center;">-</td>
-                                            <td class="classic">
-                                                <ul class="list-unstyled">
-                                                    <li>
-                                                        <input type="checkbox" name ="shared"
-                                                               value="{{ interactionExo.question.id }}" onclick="addQuestionInOrder($(this).val());">
-                                                    </li>
-                                                </ul>
-                                            </td>
-
-                                        {% elseif actionQ[interactionExo.question.id] == 2 %} <!-- shared question -->
-                                            <td class="classic">
-                                                {{ interactionExo.question.user.firstName }} {{ interactionExo.question.user.lastName }}
-                                            </td>
-                                            <td class="classic">
-                                                <ul class="list-unstyled">
-                                                    <li>
-                                                        <input type="checkbox" name ="shared"
-                                                               value="{{ interactionExo.question.id }}" onclick="addQuestionInOrder($(this).val());">
-                                                    </li>
-                                                </ul>
-                                            </td>
-                                        {% else %}
-                                            <td class="classic" colspan="2">
-                                                {{ 'noRights' | trans }}
-                                            </td>
-                                        {% endif %}
-                                        <td>
-                                            <a class="btn btn-default" data-toggle="tooltip" title="{{ 'duplicate' | trans }}" href="{{ path('ujm_question_duplicate', { 'interID': interactionExo.id, 'exoID': exoID }) }}">
-                                                <i class="fa fa-repeat"></i>
-                                            </a>
-                                        </td>
-                                    </tr>
-                                {% endfor %}
-                                </tbody>
-                            </table>
+                        {% if interactions is not empty %}
+                            {% set questionsList = 'importExoList' %}
+                            {% include "UJMExoBundle:Partial:question/questionsList.html.twig" %}
                         {% else %}
                             <div class="alert alert-info">{{ 'noQuestionFound'|trans }} ...</div>
                         {% endif %}

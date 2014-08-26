@@ -1,40 +1,5 @@
 <?php
 
-/**
- * ExoOnLine
- * Copyright or © or Copr. Université Jean Monnet (France), 2012
- * dsi.dev@univ-st-etienne.fr
- *
- * This software is a computer program whose purpose is to [describe
- * functionalities and technical features of your software].
- *
- * This software is governed by the CeCILL license under French law and
- * abiding by the rules of distribution of free software.  You can  use,
- * modify and/ or redistribute the software under the terms of the CeCILL
- * license as circulated by CEA, CNRS and INRIA at the following URL
- * "http://www.cecill.info".
- *
- * As a counterpart to the access to the source code and  rights to copy,
- * modify and redistribute granted by the license, users are provided only
- * with a limited warranty  and the software's author,  the holder of the
- * economic rights,  and the successive licensors  have only  limited
- * liability.
- *
- * In this respect, the user's attention is drawn to the risks associated
- * with loading,  using,  modifying and/or developing or reproducing the
- * software by the user in light of its specific status of free software,
- * that may mean  that it is complicated to manipulate,  and  that  also
- * therefore means  that it is reserved for developers  and  experienced
- * professionals having in-depth computer knowledge. Users are therefore
- * encouraged to load and test the software's suitability as regards their
- * requirements in conditions enabling the security of their systems and/or
- * data to be ensured and,  more generally, to use and operate it in the
- * same conditions as regards security.
- *
- * The fact that you are presently reading this means that you have had
- * knowledge of the CeCILL license and that you accept its terms.
-*/
-
 namespace UJM\ExoBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -66,6 +31,11 @@ class ExerciseController extends Controller
     /**
      * Displays a form to edit an existing Exercise entity.
      *
+     * @access public
+     *
+     * @param integer $id id of exercise
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function editAction($id)
     {
@@ -102,6 +72,11 @@ class ExerciseController extends Controller
     /**
      * Edits an existing Exercise entity.
      *
+     * @access public
+     *
+     * @param integer $id id of exercise
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function updateAction($id)
     {
@@ -144,6 +119,11 @@ class ExerciseController extends Controller
     /**
      * Finds and displays a Exercise entity if the User is enrolled.
      *
+     * @access public
+     *
+     * @param integer $exerciseId id of exercise
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function openAction($exerciseId)
     {
@@ -203,6 +183,9 @@ class ExerciseController extends Controller
     /**
      * Publish an exercise
      *
+     * @access public
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function publishAction()
     {
@@ -239,6 +222,9 @@ class ExerciseController extends Controller
     /**
      * Unpublish an exercise
      *
+     * @access public
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function unpublishAction()
     {
@@ -271,6 +257,11 @@ class ExerciseController extends Controller
     /**
      * Delete all papers of this exercise
      *
+     * @access public
+     *
+     * @param integer $id id of exercise
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function deleteAllPapersAction($id)
     {
@@ -300,6 +291,15 @@ class ExerciseController extends Controller
     /**
      * Finds and displays a Question entity to this Exercise.
      *
+     * @access public
+     *
+     * @param integer $id id of exercise
+     * @param integer $pageNow actual page for the pagination
+     * @param string $categoryToFind used for pagination (for example after creating a question, go back to page contaning this question)
+     * @param string $titleToFind used for pagination (for example after creating a question, go back to page contaning this question)
+     * @param boolean $displayAll to use pagination or not
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function showQuestionsAction($id, $pageNow, $categoryToFind, $titleToFind, $displayAll)
     {
@@ -399,6 +399,17 @@ class ExerciseController extends Controller
     /**
     *To import in this Exercise a Question of the User's bank.
     *
+    * @access public
+    *
+    * @param integer $exoID id of exercise
+    * @param integer $pageGoNow page going for the pagination
+    * @param integer $maxpage number max questions per page
+    * @param integer $nbItem number of question
+    * @param boolean $displayAll to use pagination or not
+    * @param integer $idExo id exercise selected in the filter, -1 if not selection
+    * @param boolean $QuestionsExo if filter by exercise is used
+    *
+    * @return \Symfony\Component\HttpFoundation\Response
     */
     public function importQuestionAction($exoID, $pageGoNow, $maxPage, $nbItem, $displayAll, $idExo = -1, $QuestionsExo = 'false')
     {
@@ -462,8 +473,7 @@ class ExerciseController extends Controller
                         ->getExerciseInteractionImport($em, $idExo, $exoID);
                 }
 
-                $allActions = $services->getActionsAllQuestions($listQExo, $uid, $actionQ,
-                    $questionWithResponse, $alreadyShared, $sharedWithMe, $shareRight, $em);
+                $allActions = $services->getActionsAllQuestions($listQExo, $uid, $em);
 
                 $actionQ = $allActions[0];
                 $questionWithResponse = $allActions[1];
@@ -534,9 +544,9 @@ class ExerciseController extends Controller
                 $vars['sharedWithMe'] = $sharedWithMePager;
                 $vars['pageToGo']     = $pageGoNow;
             } else {
-                $vars['listQExo'] = $listQExo;
-                $vars['actionQ']  = $actionQ;
-                $vars['pageToGo'] = 1;
+                $vars['interactions'] = $listQExo;
+                $vars['actionQ']      = $actionQ;
+                $vars['pageToGo']     = 1;
             }
             $vars['questionWithResponse'] = $questionWithResponse;
             $vars['alreadyShared']        = $alreadyShared;
@@ -558,6 +568,9 @@ class ExerciseController extends Controller
     /**
      * To record the question's import.
      *
+     * @access public
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function importValidateAction()
     {
@@ -607,6 +620,16 @@ class ExerciseController extends Controller
     /**
      * Delete the Question of the exercise.
      *
+     * @access public
+     *
+     * @param integer $exoID id of exercise
+     * @param integer $qid id of question to delete
+     * @param integer $pageNow actual page for the pagination
+     * @param integer $maxpage number max questions per page
+     * @param integer $nbItem number of question
+     * @param integer $lastPage number of last page
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function deleteQuestionAction($exoID, $qid, $pageNow, $maxPage, $nbItem, $lastPage)
     {
@@ -646,6 +669,11 @@ class ExerciseController extends Controller
     /**
      * To create a paper in order to take an assessment
      *
+     * @access public
+     *
+     * @param integer $id id of exercise
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function exercisePaperAction($id)
     {
@@ -748,6 +776,12 @@ class ExerciseController extends Controller
     /**
      * To create new paper
      *
+     * @access private
+     *
+     * @param integer $id id of exercise
+     * @param \UJM\ExoBundle\Entity\Exercise $exercise
+     *
+     * @return array
      */
     private function prepareInteractionsPaper($id, $exercise)
     {
@@ -779,6 +813,11 @@ class ExerciseController extends Controller
     /**
      * To navigate in the Questions of the assessment
      *
+     * @access public
+     *
+     * @param Request $request
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function exercisePaperNavAction(Request $request)
     {
@@ -872,6 +911,9 @@ class ExerciseController extends Controller
     /**
      * To change the order of the questions into an exercise
      *
+     * @access public
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function changeQuestionOrderAction()
     {
@@ -915,6 +957,12 @@ class ExerciseController extends Controller
     /**
      * To display the docimology's histogramms
      *
+     * @access public
+     *
+     * @param integer $exerciseId exercise id
+     * @param integer $nbPapers number of papers to this exercise
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function docimologyAction($exerciseId, $nbPapers)
     {
@@ -968,8 +1016,15 @@ class ExerciseController extends Controller
     }
 
     /**
+     * Docimology
      * To have the status of an answer
      *
+     * @access private
+     *
+     * @param array $responses result of getExerciseInterResponsesWithCount (ResponseRepository)
+     * @param float $scoreMax score max possible for a question
+     *
+     * @return array
      */
     private function responseStatus($responses, $scoreMax)
     {
@@ -993,8 +1048,20 @@ class ExerciseController extends Controller
     }
 
     /**
+     * For the navigation in a paper
      * Finds and displays the question selectionned by the User in an assesment
      *
+     * @access private
+     *
+     * @param integer $numQuestionToDisplayed position of the question in the paper
+     * @param \UJM\ExoBundle\Entity\Interaction $interactionToDisplay interaction (question) to displayed
+     * @param String $typeInterToDisplayed
+     * @param boolean $dispButtonInterrupt to display or no the button "Interrupt"
+     * @param integer $maxAttempsAllowed the number of max attemps allowed for the exercise
+     * @param Claroline workspace $workspace
+     * @param \UJM\ExoBundle\Entity\Paper $paper current paper
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     private function displayQuestion(
         $numQuestionToDisplayed, $interactionToDisplay,
@@ -1119,6 +1186,11 @@ class ExerciseController extends Controller
     /**
      * To finish an assessment
      *
+     * @access private
+     *
+     * @param Symfony\Component\HttpFoundation\Session\SessionInterface  $session
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     private function finishExercise(SessionInterface $session)
     {
@@ -1141,6 +1213,11 @@ class ExerciseController extends Controller
     /**
      * To force finish an assessment
      *
+     * @access private
+     *
+     * @param \UJM\ExoBundle\Entity\Paper $paperToClose
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     private function forceFinishExercise($paperToClose)
     {
@@ -1161,6 +1238,9 @@ class ExerciseController extends Controller
     /**
      * To interupt an assessment
      *
+     * @access private
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     private function interuptExercise()
     {
@@ -1178,6 +1258,11 @@ class ExerciseController extends Controller
     /**
      * To check the right to open exo or not
      *
+     * @access private
+     *
+     * @param \UJM\ExoBundle\Entity\Exercise $exo
+     *
+     * @return exception
      */
     private function checkAccess($exo)
     {
@@ -1189,8 +1274,14 @@ class ExerciseController extends Controller
     }
 
     /**
+     * Docimology
      * To draw histogram of marks
      *
+     * @access private
+     *
+     * @param integer $exerciseId
+     *
+     * @return array
      */
     private function histoMark($exerciseId)
     {
@@ -1238,8 +1329,16 @@ class ExerciseController extends Controller
     }
 
     /**
+     * Docimology
      * To draw histogram of success
      *
+     * @access private
+     *
+     * @param integer $exerciseId
+     * @param doctrine collection $eqs questions linked with the exercise
+     * @param doctrine collection $papers papers linked with the exercise
+     *
+     * @return array
      */
     private function histoSuccess($exerciseId, $eqs, $papers)
     {
@@ -1309,8 +1408,16 @@ class ExerciseController extends Controller
     }
 
     /**
+     * Docimology
      * To draw histogram of discrimination
      *
+     * @access private
+     *
+     * @param integer $exerciseId
+     * @param doctrine collection $eqs questions linked with the exercise
+     * @param doctrine collection $papers papers linked with the exercise
+     *
+     * @return array
      */
     private function histoDiscrimination($exerciseId, $eqs, $papers)
     {
@@ -1429,11 +1536,16 @@ class ExerciseController extends Controller
         return sqrt(array_sum(array_map(array($this, "sd_square"), $array, array_fill(0, count($array), (array_sum($array) / count($array))))) / (count($array) - 1));
     }
 
-    /**
+   /**
+     * Docimology
+     * To draw histogram of difficulty
      *
-     * @param type $exerciseId
-     * @param type $eqs
-     * @return type
+     * @access private
+     *
+     * @param integer $exerciseId
+     * @param doctrine collection $eqs questions linked with the exercise
+     *
+     * @return string
      */
     private function histoMeasureOfDifficulty($exerciseId, $eqs)
     {
@@ -1464,8 +1576,17 @@ class ExerciseController extends Controller
     }
 
     /**
+     * Docimology
      * To get the number of answers with the 'correct' status
      *
+     * @access private
+     *
+     * @param integer $exerciseId
+     * @param doctrine collection $eqs questions linked with the exercise
+     * @param Doctrine Entity manager $em
+     * @param ujm.exercise_services $exerciseSer
+     *
+     * @return array
      */
     private function getCorrectAnswer($exerciseId, $eq, $em, $exerciseSer)
     {
@@ -1514,6 +1635,15 @@ class ExerciseController extends Controller
     /**
      * To paginate two tables on one page
      *
+     * @access private
+     *
+     * @param Doctrine Collection of \UJM\ExoBundle\Entity\Interaction $entityToPaginateOne
+     * @param Doctrine Collection of \UJM\ExoBundle\Entity\Interaction $entityToPaginateTwo
+     * @param integer $max number max items per page
+     * @param integer $pageOne set current page for the first pagination
+     * @param integer $pageTwo set current page for the second pagination
+     *
+     * @return array
      */
     private function doublePagination($entityToPaginateOne, $entityToPaginateTwo, $max, $pageOne, $pageTwo)
     {
@@ -1550,6 +1680,14 @@ class ExerciseController extends Controller
     /**
      * To paginate table
      *
+     * @access private
+     *
+     * @param Doctrine Collection of \UJM\ExoBundle\Entity\Interaction $entityToPaginate
+     * @param integer $max number max items per page
+     * @param integer $page set current page for the pagination
+     * @param integer $pageNow is the current page
+     *
+     * @return array
      */
     private function paginationWithIf($entityToPaginate, $max, $page, $pageNow)
     {
@@ -1578,6 +1716,15 @@ class ExerciseController extends Controller
         return $pagination;
     }
 
+    /**
+     * To delete all papers (Allow if the exercise is not published)
+     *
+     * @access private
+     *
+     * @param integer $id id of exercise
+     * @param Doctrine Entity Manager $em
+     *
+     */
     private function deletePapers($id, $em) {
 
         $papers = $em->getRepository('UJMExoBundle:Paper')

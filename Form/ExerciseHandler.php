@@ -1,40 +1,5 @@
 <?php
 
-/**
- * ExoOnLine
- * Copyright or © or Copr. Université Jean Monnet (France), 2012
- * dsi.dev@univ-st-etienne.fr
- *
- * This software is a computer program whose purpose is to [describe
- * functionalities and technical features of your software].
- *
- * This software is governed by the CeCILL license under French law and
- * abiding by the rules of distribution of free software.  You can  use,
- * modify and/ or redistribute the software under the terms of the CeCILL
- * license as circulated by CEA, CNRS and INRIA at the following URL
- * "http://www.cecill.info".
- *
- * As a counterpart to the access to the source code and  rights to copy,
- * modify and redistribute granted by the license, users are provided only
- * with a limited warranty  and the software's author,  the holder of the
- * economic rights,  and the successive licensors  have only  limited
- * liability.
- *
- * In this respect, the user's attention is drawn to the risks associated
- * with loading,  using,  modifying and/or developing or reproducing the
- * software by the user in light of its specific status of free software,
- * that may mean  that it is complicated to manipulate,  and  that  also
- * therefore means  that it is reserved for developers  and  experienced
- * professionals having in-depth computer knowledge. Users are therefore
- * encouraged to load and test the software's suitability as regards their
- * requirements in conditions enabling the security of their systems and/or
- * data to be ensured and,  more generally, to use and operate it in the
- * same conditions as regards security.
- *
- * The fact that you are presently reading this means that you have had
- * knowledge of the CeCILL license and that you accept its terms.
-*/
-
 namespace UJM\ExoBundle\Form;
 
 use Symfony\Component\Form\Form;
@@ -54,6 +19,18 @@ class ExerciseHandler
     protected $user;
     protected $action;
 
+    /**
+     * Constructor
+     *
+     * @access public
+     *
+     * @param \Symfony\Component\Form\Form $form for an exercise
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param Doctrine EntityManager $em
+     * @param \Claroline\CoreBundle\Entity\User $user
+     * @param String $action
+     *
+     */
     public function __construct(Form $form, Request $request, EntityManager $em, User $user, $action)
     {
         $this->form    = $form;
@@ -63,6 +40,13 @@ class ExerciseHandler
         $this->action  = $action;
     }
 
+    /**
+     * Verify if the form Exercise is valid and call the method to create an Exercise
+     *
+     * @access public
+     *
+     * Return boolean
+     */
     public function process()
     {
         if ($this->request->getMethod() == 'POST') {
@@ -78,6 +62,13 @@ class ExerciseHandler
         return false;
     }
 
+    /**
+     * Create an Exercise
+     *
+     * @access private
+     *
+     * @param \UJM\ExoBundle\Entity\Exercise $exercise exercise to create
+     */
     private function onSuccess(Exercise $exercise)
     {
         // \ pour instancier un objet du namespace global et non pas de l'actuel

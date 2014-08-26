@@ -1,40 +1,5 @@
 <?php
 
-/**
- * ExoOnLine
- * Copyright or © or Copr. Université Jean Monnet (France), 2012
- * dsi.dev@univ-st-etienne.fr
- *
- * This software is a computer program whose purpose is to [describe
- * functionalities and technical features of your software].
- *
- * This software is governed by the CeCILL license under French law and
- * abiding by the rules of distribution of free software.  You can  use,
- * modify and/ or redistribute the software under the terms of the CeCILL
- * license as circulated by CEA, CNRS and INRIA at the following URL
- * "http://www.cecill.info".
- *
- * As a counterpart to the access to the source code and  rights to copy,
- * modify and redistribute granted by the license, users are provided only
- * with a limited warranty  and the software's author,  the holder of the
- * economic rights,  and the successive licensors  have only  limited
- * liability.
- *
- * In this respect, the user's attention is drawn to the risks associated
- * with loading,  using,  modifying and/or developing or reproducing the
- * software by the user in light of its specific status of free software,
- * that may mean  that it is complicated to manipulate,  and  that  also
- * therefore means  that it is reserved for developers  and  experienced
- * professionals having in-depth computer knowledge. Users are therefore
- * encouraged to load and test the software's suitability as regards their
- * requirements in conditions enabling the security of their systems and/or
- * data to be ensured and,  more generally, to use and operate it in the
- * same conditions as regards security.
- *
- * The fact that you are presently reading this means that you have had
- * knowledge of the CeCILL license and that you accept its terms.
-*/
-
 namespace UJM\ExoBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -60,6 +25,13 @@ class PaperController extends Controller
     /**
      * Lists all Paper entities.
      *
+     * @access public
+     *
+     * @param integer $exoID id of exercise
+     * @param integer $page for the pagination, page destination
+     * @param boolean $all for use or not use the pagination
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function indexAction($exoID, $page, $all)
     {
@@ -75,7 +47,7 @@ class PaperController extends Controller
         $em = $this->getDoctrine()->getManager();
         $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($exoID);
         $workspace = $exercise->getResourceNode()->getWorkspace();
-        
+
         $exoAdmin = $exerciseSer->isExerciseAdmin($exercise);
 
         $this->checkAccess($exercise);
@@ -171,6 +143,12 @@ class PaperController extends Controller
     /**
      * Finds and displays a Paper entity.
      *
+     * @access public
+     *
+     * @param integer $id id of paper
+     * @param integer $p to chose the elements to display (marks, question correction ...)
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function showAction($id, $p = -2)
     {
@@ -249,28 +227,16 @@ class PaperController extends Controller
         );
     }
 
-    public function deleteAction($id)
-    {
-        $form = $this->createDeleteForm($id);
-        $request = $this->getRequest();
-
-        $form->handleRequest($request);
-
-        if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('UJMExoBundle:Paper')->find($id);
-
-            if (!$entity) {
-                throw $this->createNotFoundException('Unable to find Paper entity.');
-            }
-
-            $em->remove($entity);
-            $em->flush();
-        }
-
-        return $this->redirect($this->generateUrl('paper'));
-    }
-
+    /**
+     * To display the modal to mark an open question
+     *
+     * @access public
+     *
+     * @param integer $respid id of reponse
+     * @param integer $maxScore score maximun for the open question
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function markedOpenAction($respid, $maxScore)
     {
         return $this->render(
@@ -282,6 +248,15 @@ class PaperController extends Controller
         );
     }
 
+    /**
+     * To record the score for a response of an open question
+     *
+     * @access public
+     *
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function markedOpenRecordAction(Request $request)
     {
         if ($request->isXmlHttpRequest()) {
@@ -302,14 +277,21 @@ class PaperController extends Controller
         }
     }
 
+    /**
+     * To search paper
+     *
+     * @access public
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function searchUserPaperAction()
     {
         $user = $this->container->get('security.context')->getToken()->getUser();
-        
+
         $papersOneUser   = array();
         $papersUser      = array();
         $arrayMarkPapers = array();
-        
+
         $display = 'none';
 
         $request = $this->get('request');
@@ -340,11 +322,11 @@ class PaperController extends Controller
         foreach ($papersUser as $p) {
             $arrayMarkPapers[$p->getId()] = $this->container->get('ujm.exercise_services')->getInfosPaper($p);
         }
-        
+
         if(count($papersUser) > 0) {
             $display = $this->ctrlDisplayPaper($user, $papersUser[0]);
         }
-        
+
         $divResultSearch = $this->render(
             'UJMExoBundle:Paper:userPaper.html.twig', array(
                 'papers'          => $papersUser,
@@ -371,6 +353,11 @@ class PaperController extends Controller
     /**
      * To export results in CSV
      *
+     * @access public
+     *
+     * @param integer $exerciseId id of exercise
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function exportResCSVAction($exerciseId)
     {
@@ -420,13 +407,15 @@ class PaperController extends Controller
         }
     }
 
-    private function createDeleteForm($id)
-    {
-        return $this->createFormBuilder(array('id' => $id))
-                    ->add('id', 'hidden')
-                    ->getForm();
-    }
-
+    /**
+     * To check the right to open exo or not
+     *
+     * @access private
+     *
+     * @param \UJM\ExoBundle\Entity\Exercise $exo
+     *
+     * @return exception
+     */
     private function checkAccess($exo)
     {
         $collection = new ResourceCollection(array($exo->getResourceNode()));
@@ -436,6 +425,16 @@ class PaperController extends Controller
         }
     }
 
+    /**
+     * To control if the user is allowed to display the paper
+     *
+     * @access private
+     *
+     * @param \Claroline\CoreBundle\Entity\User $user user connected
+     * @param \UJM\ExoBundle\Entity\Paper $paper paper to display
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     private function ctrlDisplayPaper($user, $paper)
     {
         $display = 'none';

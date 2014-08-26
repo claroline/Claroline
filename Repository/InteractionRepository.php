@@ -1,40 +1,5 @@
 <?php
 
-/**
- * ExoOnLine
- * Copyright or © or Copr. Université Jean Monnet (France), 2012
- * dsi.dev@univ-st-etienne.fr
- *
- * This software is a computer program whose purpose is to [describe
- * functionalities and technical features of your software].
- *
- * This software is governed by the CeCILL license under French law and
- * abiding by the rules of distribution of free software.  You can  use,
- * modify and/ or redistribute the software under the terms of the CeCILL
- * license as circulated by CEA, CNRS and INRIA at the following URL
- * "http://www.cecill.info".
- *
- * As a counterpart to the access to the source code and  rights to copy,
- * modify and redistribute granted by the license, users are provided only
- * with a limited warranty  and the software's author,  the holder of the
- * economic rights,  and the successive licensors  have only  limited
- * liability.
- *
- * In this respect, the user's attention is drawn to the risks associated
- * with loading,  using,  modifying and/or developing or reproducing the
- * software by the user in light of its specific status of free software,
- * that may mean  that it is complicated to manipulate,  and  that  also
- * therefore means  that it is reserved for developers  and  experienced
- * professionals having in-depth computer knowledge. Users are therefore
- * encouraged to load and test the software's suitability as regards their
- * requirements in conditions enabling the security of their systems and/or
- * data to be ensured and,  more generally, to use and operate it in the
- * same conditions as regards security.
- *
- * The fact that you are presently reading this means that you have had
- * knowledge of the CeCILL license and that you accept its terms.
- */
-
 namespace UJM\ExoBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
@@ -49,8 +14,13 @@ class InteractionRepository extends EntityRepository
 {
 
     /**
-     * Interactions by Question
+     * Get Interaction linked with a question
      *
+     * @access public
+     *
+     * @param integer $questionId id Question
+     *
+     * Return array[Interaction]
      */
     public function getInteraction($questionId)
     {
@@ -63,8 +33,13 @@ class InteractionRepository extends EntityRepository
     }
 
     /**
-     * Interactions by teacher's Questions
+     * Get Interactions of an user
      *
+     * @access public
+     *
+     * @param integer $uid id User
+     *
+     * Return array[Interaction]
      */
     public function getUserInteraction($uid)
     {
@@ -81,8 +56,13 @@ class InteractionRepository extends EntityRepository
     }
 
     /**
-     * Model of an user
+     * Get models of an user
      *
+     * @access public
+     *
+     * @param integer $uid id User
+     *
+     * Return array[Interaction]
      */
     public function getUserModel($uid)
     {
@@ -100,8 +80,16 @@ class InteractionRepository extends EntityRepository
     }
 
     /**
-     * Interactions by Exercise's Questions
+     * Get Interaction of an exercise or for a paper
      *
+     * @access public
+     *
+     * @param Doctrine Entity Manager $em
+     * @param intger $exoId id Exercise
+     * @param boolean $shuffle if for paper
+     * @param integer $nbQuestions if for paper
+     *
+     * Return array[Interaction]
      */
     public function getExerciseInteraction($em, $exoId, $shuffle, $nbQuestions = 0)
     {
@@ -152,7 +140,15 @@ class InteractionRepository extends EntityRepository
     }
 
     /**
-     * Interactions by Exercise's Questions for the import
+     * To import exercise's questions in an other exercise
+     *
+     * @access public
+     *
+     * @param Doctrine EntityManager $em
+     * @param integer $exoSearch id of exercise selected in the filter
+     * @param integer $exoImport id of exercise in which one I want to import questions
+     *
+     * Return array[Interaction]
      *
      */
     public function getExerciseInteractionImport($em, $exoSearch, $exoImport){
@@ -190,8 +186,14 @@ class InteractionRepository extends EntityRepository
     }
 
     /**
-     * Interactions for a paper
+     * Interactions linked to the paper
      *
+     * @access public
+     *
+     * @param Doctrine EntityManager $em
+     * @param String $ids list of id of Interaction of the paper
+     *
+     * Return array[Interaction]
      */
     public function getPaperInteraction($em, $ids)
     {
@@ -212,8 +214,15 @@ class InteractionRepository extends EntityRepository
     }
 
     /**
-     * Interactions by Questions that an teatcher can import in an Exercise
+     * To import user's questions in an exercise
      *
+     * @access public
+     *
+     * @param Doctrine EntityManager $em
+     * @param integer $uid id of User
+     * @param integer $exoId id of exercise
+     *
+     * Return array[Interaction]
      */
     public function getUserInteractionImport($em, $uid, $exoId)
     {
@@ -258,8 +267,15 @@ class InteractionRepository extends EntityRepository
     }
 
     /**
-     * Model of an user for the import
+     * To import model's user in an exercise
      *
+     * @access public
+     *
+     * @param Doctrine EntityManager $em
+     * @param integer $uid id of User
+     * @param integer $exoId id of exercise
+     *
+     * Return array[Interaction]
      */
     public function getUserModelImport($em, $uid, $exoId)
     {
@@ -291,6 +307,16 @@ class InteractionRepository extends EntityRepository
         return $qb->getQuery()->getResult();
     }
 
+    /**
+     * Search interactions of one user by type
+     *
+     * @access public
+     *
+     * @param integer $userId id of User
+     * @param string $whatToFind the type to find
+     *
+     * Return array[Interaction]
+     */
     public function findByType($userId, $whatToFind)
     {
         $dql = 'SELECT i FROM UJM\ExoBundle\Entity\Interaction i JOIN i.question q
@@ -304,6 +330,16 @@ class InteractionRepository extends EntityRepository
         return $query->getResult();
     }
 
+    /**
+     * Search interactions of one user by contain
+     *
+     * @access public
+     *
+     * @param integer $userId id of User
+     * @param string $whatToFind the contain to find
+     *
+     * Return array[Interaction]
+     */
     public function findByContain($userId, $whatToFind)
     {
         $dql = 'SELECT i FROM UJM\ExoBundle\Entity\Interaction i JOIN i.question q
@@ -317,6 +353,18 @@ class InteractionRepository extends EntityRepository
         return $query->getResult();
     }
 
+    /**
+     * Search interactions of one user by all criteria
+     *
+     * @access public
+     *
+     * @param integer $userId id of User
+     * @param string $whatToFind parameter to find
+     * @param boolean $searchToImport if the search is realized from the exercise import and if the interaction can be imported
+     * @param integer $exoID id Exercise if user is in an exercise
+     *
+     * Return array[Interaction]
+     */
     public function findByAll($userId, $whatToFind, $searchToImport = FALSE, $exoID = -1)
     {
         $dql = 'SELECT i FROM UJM\ExoBundle\Entity\Interaction i JOIN i.question q JOIN q.category c

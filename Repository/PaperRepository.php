@@ -1,40 +1,5 @@
 <?php
 
-/**
- * ExoOnLine
- * Copyright or © or Copr. Université Jean Monnet (France), 2012
- * dsi.dev@univ-st-etienne.fr
- *
- * This software is a computer program whose purpose is to [describe
- * functionalities and technical features of your software].
- *
- * This software is governed by the CeCILL license under French law and
- * abiding by the rules of distribution of free software.  You can  use,
- * modify and/ or redistribute the software under the terms of the CeCILL
- * license as circulated by CEA, CNRS and INRIA at the following URL
- * "http://www.cecill.info".
- *
- * As a counterpart to the access to the source code and  rights to copy,
- * modify and redistribute granted by the license, users are provided only
- * with a limited warranty  and the software's author,  the holder of the
- * economic rights,  and the successive licensors  have only  limited
- * liability.
- *
- * In this respect, the user's attention is drawn to the risks associated
- * with loading,  using,  modifying and/or developing or reproducing the
- * software by the user in light of its specific status of free software,
- * that may mean  that it is complicated to manipulate,  and  that  also
- * therefore means  that it is reserved for developers  and  experienced
- * professionals having in-depth computer knowledge. Users are therefore
- * encouraged to load and test the software's suitability as regards their
- * requirements in conditions enabling the security of their systems and/or
- * data to be ensured and,  more generally, to use and operate it in the
- * same conditions as regards security.
- *
- * The fact that you are presently reading this means that you have had
- * knowledge of the CeCILL license and that you accept its terms.
- */
-
 namespace UJM\ExoBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
@@ -48,8 +13,14 @@ use Doctrine\ORM\EntityRepository;
 class PaperRepository extends EntityRepository
 {
     /**
-     * Returns a student's Paper which is not finished
+     * Get a student's Paper which is not finished
      *
+     * @access public
+     *
+     * @param integer $userID id User
+     * @param integer $exerciseID id Exercise
+     *
+     * Return array[Paper]
      */
     public function getPaper($userID, $exerciseID)
     {
@@ -64,8 +35,15 @@ class PaperRepository extends EntityRepository
     }
 
     /**
-     * Returns the user's papers for an exercise
+     * Get the user's papers for an exercise
      *
+     * @access public
+     *
+     * @param integer $userID id User
+     * @param integer $exerciseID id Exercise
+     * @param boolean $finished to return or no the papers no finished
+     *
+     * Return array[Paper]
      */
     public function getExerciseUserPapers($userID, $exerciseID, $finished = false)
     {
@@ -75,7 +53,7 @@ class PaperRepository extends EntityRepository
             ->where($qb->expr()->in('u.id', $userID))
             ->andWhere($qb->expr()->in('e.id', $exerciseID))
             ->orderBy('p.id', 'ASC');
-        
+
         if ($finished === true) {
             $qb->andWhere('p.end is NOT NULL');
         }
@@ -84,8 +62,13 @@ class PaperRepository extends EntityRepository
     }
 
     /**
-     * Returns all papers for an exercise
+     * Get all papers for an exercise
      *
+     * @access public
+     *
+     * @param integer $exerciseID id Exercise
+     *
+     * Return array[Paper]
      */
     public function getExerciseAllPapers($exerciseID)
     {
@@ -99,10 +82,15 @@ class PaperRepository extends EntityRepository
 
         return $qb->getQuery()->getResult();
     }
-    
+
     /**
      * Returns all papers for an exercise for CSV export
      *
+     * @access public
+     *
+     * @param integer $exerciseID id Exercise
+     *
+     * Return array[Paper]
      */
     public function getExerciseAllPapersIterator($exerciseID)
     {
@@ -117,6 +105,15 @@ class PaperRepository extends EntityRepository
         return $qb->getQuery()->iterate();
     }
 
+    /**
+     * Returns all papers of all exercise for an user
+     *
+     * @access public
+     *
+     * @param integer $userID id User
+     *
+     * Return array[Paper]
+     */
     public function getPaperUser($userID)
     {
         $dql = 'SELECT p FROM UJM\ExoBundle\Entity\Paper p
@@ -127,22 +124,27 @@ class PaperRepository extends EntityRepository
 
         return $query->getResult();
     }
-    
+
     /**
      * Returns number of papers for an exercise
      *
+     * @access public
+     *
+     * @param integer $exerciseID id Exercise
+     *
+     * Return integer
      */
     public function countPapers($exerciseID)
     {
         $qb = $this->createQueryBuilder('p');
-        
+
         $nbPapers = $qb->select('COUNT(p)')
                        ->join('p.exercise', 'e')
                        ->join('p.user', 'u')
                        ->where($qb->expr()->in('e.id', $exerciseID))
                        ->getQuery()
                        ->getSingleScalarResult();
-        
+
         return $nbPapers;
     }
 }

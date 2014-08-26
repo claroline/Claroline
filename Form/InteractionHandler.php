@@ -1,40 +1,5 @@
 <?php
 
-/**
- * ExoOnLine
- * Copyright or © or Copr. Université Jean Monnet (France), 2012
- * dsi.dev@univ-st-etienne.fr
- *
- * This software is a computer program whose purpose is to [describe
- * functionalities and technical features of your software].
- *
- * This software is governed by the CeCILL license under French law and
- * abiding by the rules of distribution of free software.  You can  use,
- * modify and/ or redistribute the software under the terms of the CeCILL
- * license as circulated by CEA, CNRS and INRIA at the following URL
- * "http://www.cecill.info".
- *
- * As a counterpart to the access to the source code and  rights to copy,
- * modify and redistribute granted by the license, users are provided only
- * with a limited warranty  and the software's author,  the holder of the
- * economic rights,  and the successive licensors  have only  limited
- * liability.
- *
- * In this respect, the user's attention is drawn to the risks associated
- * with loading,  using,  modifying and/or developing or reproducing the
- * software by the user in light of its specific status of free software,
- * that may mean  that it is complicated to manipulate,  and  that  also
- * therefore means  that it is reserved for developers  and  experienced
- * professionals having in-depth computer knowledge. Users are therefore
- * encouraged to load and test the software's suitability as regards their
- * requirements in conditions enabling the security of their systems and/or
- * data to be ensured and,  more generally, to use and operate it in the
- * same conditions as regards security.
- *
- * The fact that you are presently reading this means that you have had
- * knowledge of the CeCILL license and that you accept its terms.
-*/
-
 namespace UJM\ExoBundle\Form;
 
 use Symfony\Component\Form\Form;
@@ -55,6 +20,19 @@ abstract class InteractionHandler
     protected $exercise;
     protected $isClone = FALSE;
 
+    /**
+     * Constructor
+     *
+     * @access public
+     *
+     * @param \Symfony\Component\Form\Form $form for an Interaction
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param Doctrine EntityManager $em
+     * @param \UJM\ExoBundle\Services\classes\exerciseServices $exoServ
+     * @param \Claroline\CoreBundle\Entity\User $user
+     * @param integer $exercise $exercise id Exercise if the Interaction is created or modified since an exercise if since the bank $exercise=-1
+     *
+     */
     public function __construct(Form $form = NULL, Request $request = NULL, EntityManager $em, $exoServ, User $user, $exercise=-1)
     {
         $this->form     = $form;
@@ -65,12 +43,46 @@ abstract class InteractionHandler
         $this->exercise = $exercise;
     }
 
+    /**
+     * abstract method to valid the form of an Interaction and call the method to create an Interaction
+     *
+     * @access public
+     */
     abstract public function processAdd();
+
+    /**
+     * abstract method to create an Interaction
+     *
+     * @param object type of InteractionQCM or InteractionGraphic or .... $interaction
+     *
+     * @access protected
+     */
     abstract protected function onSuccessAdd($interaction);
 
+    /**
+     * abstract method to valid the form of an Interaction and call the method to edit an Interaction
+     *
+     * @access public
+     *
+     * @param object type of InteractionQCM or InteractionGraphic or .... $interaction
+     */
     abstract public function processUpdate($interaction);
+
+    /**
+     * abstract method to edit an Interaction
+     *
+     * @access protected
+     */
     abstract protected function onSuccessUpdate();
 
+    /**
+     * To persit hints of an Interaction
+     *
+     * @access protected
+     *
+     * @param object type of InteractionQCM or InteractionGraphic or .... $inter
+     *
+     */
     protected function persistHints($inter) {
         foreach ($inter->getInteraction()->getHints() as $hint) {
             $hint->setPenalty(ltrim($hint->getPenalty(), '-'));
@@ -80,6 +92,15 @@ abstract class InteractionHandler
         }
     }
 
+    /**
+     * To modify hints of an Interaction
+     *
+     * @access protected
+     *
+     * @param object type of InteractionQCM or InteractionGraphic or .... $inter
+     * @param Collection of \UJM\ExoBundle\Entity\Hint $originalHints
+     *
+     */
     protected function modifyHints($inter, $originalHints) {
 
         // filter $originalHints to contain hint no longer present
@@ -108,6 +129,14 @@ abstract class InteractionHandler
         }
     }
 
+    /**
+     * Add the Interaction in the exercise if created since an exercise
+     *
+     * @access protected
+     *
+     * @param object type of InteractionQCM or InteractionGraphic or .... $inter
+     *
+     */
     protected function addAnExericse($inter) {
         if ($this->exercise != -1) {
             $exercise = $this->em->getRepository('UJMExoBundle:Exercise')->find($this->exercise);
@@ -118,6 +147,14 @@ abstract class InteractionHandler
         }
     }
 
+    /**
+     * Duplicate the Interaction during the creation
+     *
+     * @access protected
+     *
+     * @param object type of InteractionQCM or InteractionGraphic or .... $inter
+     *
+     */
     protected function duplicateInter($inter) {
         $request = $this->request;
         if ($this->isClone === FALSE && $request->request->get('nbq') > 0)
@@ -130,6 +167,14 @@ abstract class InteractionHandler
         }
     }
 
+    /**
+     * To limit the number of the clone 10 max
+     *
+     * @access protected
+     *
+     * Return boolean
+     *
+     */
     protected function validateNbClone() {
 
         $int =  $this->request->request->get('nbq');
@@ -144,6 +189,14 @@ abstract class InteractionHandler
         }
     }
 
+    /**
+     * Duplicate once
+     *
+     * @access protected
+     *
+     * @param object type of InteractionQCM or InteractionGraphic or .... $inter
+     *
+     */
     public function singleDuplicateInter($inter) {
         $copy = clone $inter;
         $title = $copy->getInteraction()->getQuestion()->getTitle();

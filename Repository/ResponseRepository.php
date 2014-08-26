@@ -1,40 +1,5 @@
 <?php
 
-/**
- * ExoOnLine
- * Copyright or © or Copr. Université Jean Monnet (France), 2012
- * dsi.dev@univ-st-etienne.fr
- *
- * This software is a computer program whose purpose is to [describe
- * functionalities and technical features of your software].
- *
- * This software is governed by the CeCILL license under French law and
- * abiding by the rules of distribution of free software.  You can  use,
- * modify and/ or redistribute the software under the terms of the CeCILL
- * license as circulated by CEA, CNRS and INRIA at the following URL
- * "http://www.cecill.info".
- *
- * As a counterpart to the access to the source code and  rights to copy,
- * modify and redistribute granted by the license, users are provided only
- * with a limited warranty  and the software's author,  the holder of the
- * economic rights,  and the successive licensors  have only  limited
- * liability.
- *
- * In this respect, the user's attention is drawn to the risks associated
- * with loading,  using,  modifying and/or developing or reproducing the
- * software by the user in light of its specific status of free software,
- * that may mean  that it is complicated to manipulate,  and  that  also
- * therefore means  that it is reserved for developers  and  experienced
- * professionals having in-depth computer knowledge. Users are therefore
- * encouraged to load and test the software's suitability as regards their
- * requirements in conditions enabling the security of their systems and/or
- * data to be ensured and,  more generally, to use and operate it in the
- * same conditions as regards security.
- *
- * The fact that you are presently reading this means that you have had
- * knowledge of the CeCILL license and that you accept its terms.
- */
-
 namespace UJM\ExoBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
@@ -48,8 +13,14 @@ use Doctrine\ORM\EntityRepository;
 class ResponseRepository extends EntityRepository
 {
     /**
-     * Allow to know if exists already a response for a question of a student's paper
+     * Allow to know if exists already a response for a question of a user's paper
      *
+     * @access public
+     *
+     * @param integer $paperID id Paper
+     * @param integer $interactionID id Interaction
+     *
+     * Return array[Response]
      */
     public function getAlreadyResponded($paperID, $interactionID)
     {
@@ -63,8 +34,14 @@ class ResponseRepository extends EntityRepository
     }
 
     /**
-     * Send the reponses for a paper
+     * Get the reponses for a paper and an user
      *
+     * @access public
+     *
+     * @param integer $uid id User
+     * @param integer $paperID id paper
+     *
+     * Return array[Response]
      */
     public function getPaperResponses($uid, $paperID)
     {
@@ -78,8 +55,14 @@ class ResponseRepository extends EntityRepository
     }
 
     /**
-     * Send the reponses for an exercise and an interaction with count
+     * Get the score for an exercise and an interaction with count
      *
+     * @access public
+     *
+     * @param integer $exoId id Exercise
+     * @param integer $interId id Interaction
+     *
+     * Return array[Response]
      */
     public function getExerciseInterResponsesWithCount($exoId, $interId)
     {
@@ -93,8 +76,14 @@ class ResponseRepository extends EntityRepository
     }
 
     /**
-     * Send the reponses for an exercise and an interaction
+     * Send the score for an exercise and an interaction
      *
+     * @access public
+     *
+     * @param integer $exoId id Exercise
+     * @param integer $interId id Interaction
+     *
+     * Return array[Response]
      */
     public function getExerciseInterResponses($exoId, $interId)
     {

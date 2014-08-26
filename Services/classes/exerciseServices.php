@@ -1,45 +1,5 @@
 <?php
 
-/**
- * ExoOnLine
- * Copyright or © or Copr. Université Jean Monnet (France), 2012
- * dsi.dev@univ-st-etienne.fr
- *
- * This software is a computer program whose purpose is to [describe
- * functionalities and technical features of your software].
- *
- * This software is governed by the CeCILL license under French law and
- * abiding by the rules of distribution of free software.  You can  use,
- * modify and/ or redistribute the software under the terms of the CeCILL
- * license as circulated by CEA, CNRS and INRIA at the following URL
- * "http://www.cecill.info".
- *
- * As a counterpart to the access to the source code and  rights to copy,
- * modify and redistribute granted by the license, users are provided only
- * with a limited warranty  and the software's author,  the holder of the
- * economic rights,  and the successive licensors  have only  limited
- * liability.
- *
- * In this respect, the user's attention is drawn to the risks associated
- * with loading,  using,  modifying and/or developing or reproducing the
- * software by the user in light of its specific status of free software,
- * that may mean  that it is complicated to manipulate,  and  that  also
- * therefore means  that it is reserved for developers  and  experienced
- * professionals having in-depth computer knowledge. Users are therefore
- * encouraged to load and test the software's suitability as regards their
- * requirements in conditions enabling the security of their systems and/or
- * data to be ensured and,  more generally, to use and operate it in the
- * same conditions as regards security.
- *
- * The fact that you are presently reading this means that you have had
- * knowledge of the CeCILL license and that you accept its terms.
-*/
-
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 namespace UJM\ExoBundle\Services\classes;
 
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
@@ -69,6 +29,16 @@ class exerciseServices
     /** @var \Symfony\Component\EventDispatcher\EventDispatcherInterface */
     protected $eventDispatcher;
 
+    /**
+     * Constructor
+     *
+     * @access public
+     *
+     * @param \Doctrine\Bundle\DoctrineBundle\Registry $doctrine Dependency Injection
+     * @param \Symfony\Component\Security\Core\SecurityContextInterface $securityContext Dependency Injection
+     * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $eventDispatcher Dependency Injection
+     *
+     */
     public function __construct(Registry $doctrine, SecurityContextInterface $securityContext, EventDispatcherInterface $eventDispatcher)
     {
         $this->doctrine        = $doctrine;
@@ -76,6 +46,13 @@ class exerciseServices
         $this->eventDispatcher = $eventDispatcher;
     }
 
+    /**
+     * Get IP client
+     *
+     * @access public
+     *
+     * Return IP Client
+     */
     public function getIP()
     {
         if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
@@ -89,6 +66,16 @@ class exerciseServices
         return $ip;
     }
 
+    /**
+     * To process the user's response for an QCM and a paper(or a test)
+     *
+     * @access public
+     *
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param integer $paperID id Paper or 0 if it's just a question test and not a paper
+     *
+     * Return array
+     */
     public function responseQCM($request, $paperID = 0)
     {
         $res = array();
@@ -144,6 +131,18 @@ class exerciseServices
 
     }
 
+    /**
+     * To calculate the score for a QCM
+     *
+     * @access public
+     *
+     * @param \UJM\ExoBundle\Entity\InteractionQCM $interQCM
+     * @param array[integer] $response array of id Choice selected
+     * @param array[Choice] $allChoices choices linked at the QCM
+     * @param float $penality penalty if the user showed hints
+     *
+     * Return string userScore/scoreMax
+     */
     public function qcmMark(\UJM\ExoBundle\Entity\InteractionQCM $interQCM, array $response, $allChoices, $penality)
     {
         $score = 0;
@@ -198,8 +197,15 @@ class exerciseServices
     }
 
     /**
-     * Return the number of papers for an exercise and foran user
+     * Return the number of papers for an exercise and for an user
      *
+     * @access public
+     *
+     * @param integer $uid id User
+     * @param integer $exoId id Exercise
+     * @param boolean $finished to count or no paper n o finished
+     *
+     * Return integer
      */
     public function getNbPaper($uid, $exoID, $finished = false)
     {
@@ -211,6 +217,16 @@ class exerciseServices
         return count($papers);
     }
 
+    /**
+     * To process the user's response for graphic question and a paper(or a test)
+     *
+     * @access public
+     *
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param integer $paperID id Paper or 0 if it's just a question test and not a paper
+     *
+     * Return array
+     */
     public function responseGraphic($request, $paperID = 0)
     {
         $answers = $request->request->get('answers'); // Answer of the student
@@ -306,6 +322,16 @@ class exerciseServices
         return $res;
     }
 
+    /**
+     * To process the user's response for a open question and a paper(or a test)
+     *
+     * @access public
+     *
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param integer $paperID id Paper or 0 if it's just a question test and not a paper
+     *
+     * Return array
+     */
     public function responseOpen($request, $paperID = 0)
     {
         $res = array();
@@ -359,6 +385,16 @@ class exerciseServices
         return $res;
     }
 
+    /**
+     * To process the user's response for an question with holes and a paper(or a test)
+     *
+     * @access public
+     *
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param integer $paperID id Paper or 0 if it's just a question test and not a paper
+     *
+     * Return array
+     */
     public function responseHole($request, $paperID = 0)
     {
         $em = $this->doctrine->getManager();
@@ -419,6 +455,17 @@ class exerciseServices
         return $res;
     }
 
+    /**
+     * To calculate the score for a question with holes
+     *
+     * @access public
+     *
+     * @param \UJM\ExoBundle\Entity\Paper\InteractionHole $interHole
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param float $penality penalty if the user showed hints
+     *
+     * Return string userScore/scoreMax
+     */
     public function holeMark($interHole, $request, $penalty)
     {
         $em = $this->doctrine->getManager();
@@ -452,6 +499,15 @@ class exerciseServices
 
     }
 
+    /**
+     * Get max score possible for a question with holes
+     *
+     * @access public
+     *
+     * @param \UJM\ExoBundle\Entity\Paper\InteractionHole $interHole
+     *
+     * Return float
+     */
     public function holeMaxScore($interHole) {
         $scoreMax = 0;
         foreach ($interHole->getHoles() as $hole) {
@@ -467,7 +523,17 @@ class exerciseServices
         return $scoreMax;
     }
 
-    // Check if the suggested answer zone isn't already right in order not to have points twice
+    /**
+     * Graphic question : Check if the suggested answer zone isn't already right in order not to have points twice
+     *
+     * @access public
+     *
+     * @param String $coor coords of one right answer
+     * @param array $verif list of the student's placed answers zone
+     * @param integer $z number of rights placed answers by the user
+     *
+     * Return boolean
+     */
     public function alreadyDone($coor, $verif, $z)
     {
         $resu = true;
@@ -485,6 +551,15 @@ class exerciseServices
         return $resu;
     }
 
+    /**
+     * Get max score possible for an exercise
+     *
+     * @access public
+     *
+     * @param integer $exoID id Exercise
+     *
+     * Return float
+     */
     public function getExerciseTotalScore($exoID)
     {
         $exoTotalScore = 0;
@@ -537,6 +612,15 @@ class exerciseServices
         return $exoTotalScore;
     }
 
+    /**
+     * Get total score for an paper
+     *
+     * @access public
+     *
+     * @param integer $paperID id Paper
+     *
+     * Return float
+     */
     public function getExercisePaperTotalScore($paperID)
     {
         $exercisePaperTotalScore = 0;
@@ -589,6 +673,15 @@ class exerciseServices
         return $exercisePaperTotalScore;
     }
 
+    /**
+     * Get score max possible for a QCM
+     *
+     * @access public
+     *
+     * @param \UJM\ExoBundle\Entity\Paper\InteractionQCM $interQCM
+     *
+     * Return float
+     */
     public function qcmMaxScore($interQCM)
     {
         $scoreMax = 0;
@@ -611,6 +704,15 @@ class exerciseServices
         return $scoreMax;
     }
 
+    /**
+     * Get score max possible for a graphic question
+     *
+     * @access public
+     *
+     * @param \UJM\ExoBundle\Entity\Paper\InteractionGraphic $interGraphic
+     *
+     * Return float
+     */
     public function graphicMaxScore($interGraphic)
     {
         $scoreMax = 0;
@@ -632,6 +734,15 @@ class exerciseServices
         return $scoreMax;
     }
 
+    /**
+     * Get score max possible for a open question
+     *
+     * @access public
+     *
+     * @param \UJM\ExoBundle\Entity\Paper\InteractionOpen $interOpen
+     *
+     * Return float
+     */
     public function openMaxScore($interOpen)
     {
         $scoreMax = 0;
@@ -648,6 +759,15 @@ class exerciseServices
         return $scoreMax;
     }
 
+    /**
+     * To link a question with an exercise
+     *
+     * @access public
+     *
+     * @param integer $exercise id Exercise
+     * @param InteractionQCM or InteractionGraphic or ... $interX
+     *
+     */
     public function setExerciseQuestion($exercise, $interX)
     {
         $exo = $this->doctrine->getManager()->getRepository('UJMExoBundle:Exercise')->find($exercise);
@@ -665,8 +785,13 @@ class exerciseServices
     }
 
     /**
-     * Round up or down parameter's value
+     * To round up and down a score
      *
+     * @access public
+     *
+     * @param float $toBeAdjusted
+     *
+     * Return float
      */
     public function roundUpDown($toBeAdjusted)
     {
@@ -674,8 +799,13 @@ class exerciseServices
     }
 
     /**
-     * To control the subscription
+     * To know if an user is the creator of an exercise
      *
+     * @access public
+     *
+     * @param \UJM\ExoBundle\Entity\Paper\Exercise $exercise
+     *
+     * Return boolean
      */
     public function isExerciseAdmin($exercise)
     {
@@ -698,6 +828,15 @@ class exerciseServices
         }
     }
 
+    /**
+     * Get informations about a paper response, maxExoScore, scorePaper, scoreTemp (all questions marked or no)
+     *
+     * @access public
+     *
+     * @param \UJM\ExoBundle\Entity\Paper\paper $paper
+     *
+     * Return array
+     */
     public function getInfosPaper($paper)
     {
         $infosPaper = array();
@@ -740,6 +879,16 @@ class exerciseServices
         return $infosPaper;
     }
 
+    /**
+     * For all papers for an user and an exercise get scorePaper, maxExoScore, scoreTemp (all questions marked or no)
+     *
+     * @access public
+     *
+     * @param integer $userId id User
+     * @param integer $exoId id Exercise
+     *
+     * Return array
+     */
     public function getScoresUser($userId, $exoId)
     {
         $tabScoresUser = array();
@@ -765,6 +914,11 @@ class exerciseServices
     /**
      * To control the User's rights to this shared question
      *
+     * @access public
+     *
+     * @param integer $questionID id Question
+     *
+     * Return array
      */
     public function controlUserSharedQuestion($questionID)
     {
@@ -778,6 +932,14 @@ class exerciseServices
         return $questions;
     }
 
+    /**
+     * Trigger an event to log informations after to execute an exercise if the score is not temporary
+     *
+     * @access public
+     *
+     * @param \UJM\ExoBundle\Entity\Paper\paper $paper
+     *
+     */
     public function manageEndOfExercise(Paper $paper)
     {
         $paperInfos = $this->getInfosPaper($paper);
@@ -788,6 +950,13 @@ class exerciseServices
         }
     }
 
+    /**
+     * Get information if the categories are linked with question, allow to know if a category can be deleted or no
+     *
+     * @access public
+     *
+     * Return array[boolean]
+     */
     public function getLinkedCategories()
     {
         $linkedCategory = array();
@@ -815,8 +984,15 @@ class exerciseServices
     }
 
     /**
-     * To control the max attemps
+     * To control the max attemps, allow to know if an user can again execute an exercise
      *
+     * @access public
+     *
+     * @param \UJM\ExoBundle\Entity\Exercise $exercise
+     * @param \UJM\ExoBundle\Entity\User $user
+     * @param boolean $exoAdmin
+     *
+     * Return boolean
      */
     public function controlMaxAttemps($exercise, $user, $exoAdmin)
     {
@@ -833,6 +1009,12 @@ class exerciseServices
     /**
      * The user must be registered (and the dates must be good or the user must to be admin for the exercise)
      *
+     * @access public
+     *
+     * @param boolean $exoAdmin
+     * @param \UJM\ExoBundle\Entity\Exercise $exercise
+     *
+     * Return boolean
      */
     public function controlDate($exoAdmin, $exercise)
     {
@@ -851,6 +1033,12 @@ class exerciseServices
     /**
      *
      * to return badges linked with the exercise
+     *
+     * @access public
+     *
+     * @param integer $resourceId id Claroline Resource
+     *
+     * Return array[\Claroline\CoreBundle\Entity\Badge\Badge]
      */
     public function getBadgeLinked($resourceId)
     {
@@ -890,7 +1078,15 @@ class exerciseServices
 
     /**
      *
-     * to return infos badges fon an exercise and an user
+     * to return infos badges for an exercise and an user
+     *
+     * @access public
+     *
+     * @param integer $userId id User
+     * @param integer $resourceId id Claroline Resource
+     * @param String $locale given by container->getParameter('locale') FR, EN ....
+     *
+     * Return array[\Claroline\CoreBundle\Entity\Badge\Badge]
      */
     public function badgesInfoUser($userId, $resourceId, $locale)
     {
@@ -932,10 +1128,26 @@ class exerciseServices
         return $badgesInfoUser;
     }
 
-    public function getActionsAllQuestions($listInteractions, $userID, $actionQ,
-        $questionWithResponse, $alreadyShared, $sharedWithMe, $shareRight, $em)
+    /**
+     *
+     * Call after applied a filter in a questions list to know the actions allowed for each interaction
+     *
+     * @access public
+     *
+     * @param Collection of \UJM\ExoBundle\Entity\Interaction $listInteractions
+     * @param integer $userID id User
+     * @param Doctrine EntityManager $em
+     *
+     * Return array
+     */
+    public function getActionsAllQuestions($listInteractions, $userID, $em)
     {
-        $allActions = array();
+        $allActions           = array();
+        $actionQ              = array();
+        $questionWithResponse = array();
+        $alreadyShared        = array();
+        $sharedWithMe         = array();
+        $shareRight           = array();
 
         foreach ($listInteractions as $interaction) {
                 if ($interaction->getQuestion()->getUser()->getId() == $userID) {
@@ -970,6 +1182,16 @@ class exerciseServices
         return $allActions;
     }
 
+    /**
+     * For an interaction know if it's linked with response and if it's shared
+     *
+     * @access public
+     *
+     * @param Doctrine EntityManager $em
+     * @param \UJM\ExoBundle\Entity\Interaction $interaction
+     *
+     * Return array
+     */
     public function getActionInteraction($em, $interaction)
     {
         $response = $em->getRepository('UJMExoBundle:Response')
@@ -994,6 +1216,16 @@ class exerciseServices
         return $actions;
     }
 
+    /**
+     * For an shared interaction whith me, know if it's linked with response and if I can modify it
+     *
+     * @access public
+     *
+     * @param Doctrine EntityManager $em
+     * @param \UJM\ExoBundle\Entity\Share $shared
+     *
+     * Return array
+     */
     public function getActionShared($em, $shared)
     {
         $inter = $em->getRepository('UJMExoBundle:Interaction')
@@ -1018,6 +1250,13 @@ class exerciseServices
         return $actionsS;
     }
 
+    /**
+     * Get the types of QCM, Multiple response, unique response
+     *
+     * @access public
+     *
+     * Return array
+     */
     public function getTypeQCM()
     {
         $em = $this->doctrine->getManager();
@@ -1033,6 +1272,13 @@ class exerciseServices
         return $typeQCM;
     }
 
+    /**
+     * Get the types of open question long, short, numeric, one word
+     *
+     * @access public
+     *
+     * Return array
+     */
     public function getTypeOpen()
     {
         $em = $this->doctrine->getManager();
@@ -1063,6 +1309,16 @@ class exerciseServices
         return $typeMatching;
     }
 
+    /**
+     * Get penalty for an interaction and a paper
+     *
+     * @access private
+     *
+     * @param \UJM\ExoBundle\Entity\Interaction $interaction
+     * @param integer $paperID id Paper
+     *
+     * Return array
+     */
     private function getPenalty($interaction, $paperID)
     {
         $penalty = 0;
@@ -1089,6 +1345,16 @@ class exerciseServices
         return $penalty;
     }
 
+    /**
+     * Get interactions in order for a paper
+     *
+     * @access private
+     *
+     * @param Collection of \UJM\ExoBundle\Entity\Interaction $interactions
+     * @param String $order
+     *
+     * Return array[Interaction]
+     */
     private function orderInteractions($interactions, $order)
     {
         $inter = array();
@@ -1108,6 +1374,16 @@ class exerciseServices
         return $inter;
     }
 
+    /**
+     * Get responses in order for a paper
+     *
+     * @access private
+     *
+     * @param Collection of \UJM\ExoBundle\Entity\Response $responses
+     * @param String $order
+     *
+     * Return array[Interaction]
+     */
     private function orderResponses($responses, $order)
     {
         $resp = array();

@@ -1,40 +1,5 @@
 <?php
 
-/**
- * ExoOnLine
- * Copyright or © or Copr. Université Jean Monnet (France), 2012
- * dsi.dev@univ-st-etienne.fr
- *
- * This software is a computer program whose purpose is to [describe
- * functionalities and technical features of your software].
- *
- * This software is governed by the CeCILL license under French law and
- * abiding by the rules of distribution of free software.  You can  use,
- * modify and/ or redistribute the software under the terms of the CeCILL
- * license as circulated by CEA, CNRS and INRIA at the following URL
- * "http://www.cecill.info".
- *
- * As a counterpart to the access to the source code and  rights to copy,
- * modify and redistribute granted by the license, users are provided only
- * with a limited warranty  and the software's author,  the holder of the
- * economic rights,  and the successive licensors  have only  limited
- * liability.
- *
- * In this respect, the user's attention is drawn to the risks associated
- * with loading,  using,  modifying and/or developing or reproducing the
- * software by the user in light of its specific status of free software,
- * that may mean  that it is complicated to manipulate,  and  that  also
- * therefore means  that it is reserved for developers  and  experienced
- * professionals having in-depth computer knowledge. Users are therefore
- * encouraged to load and test the software's suitability as regards their
- * requirements in conditions enabling the security of their systems and/or
- * data to be ensured and,  more generally, to use and operate it in the
- * same conditions as regards security.
- *
- * The fact that you are presently reading this means that you have had
- * knowledge of the CeCILL license and that you accept its terms.
-*/
-
 namespace UJM\ExoBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -76,10 +41,20 @@ use UJM\ExoBundle\Repository\InteractionGraphicRepository;
  */
 class QuestionController extends Controller
 {
-    /**
-     * Lists the User's Question entities.
-     *
-     */
+     /**
+      * Lists the User's Question entities.
+      *
+      * @access public
+      *
+      * @param integer $pageNow for the pagination : actual page of my questions list
+      * @param integer $pageNowShared for the pagination : actual page of my shared questions list
+      * @param string $categoryToFind used for pagination (for example after creating a question, go back to page contaning this question)
+      * @param string $titleToFind used for pagination (for example after creating a question, go back to page contaning this question)
+      * @param integer $id resource id if the bank has acceded by an exercise
+      * @param  boolean $displayAll to use pagination or not
+      *
+      * @return \Symfony\Component\HttpFoundation\Response
+      */
     public function indexAction($pageNow = 0, $pageNowShared = 0, $categoryToFind = '', $titleToFind = '', $resourceId = -1, $displayAll = 0)
     {
         if(base64_decode($categoryToFind)) {
@@ -204,6 +179,11 @@ class QuestionController extends Controller
     /**
      * To filter question by exercise
      *
+     * @access public
+     *
+     * @param integer $idExo id of exercise selected in the list to filter questions
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function bankFilterAction($idExo = -1)
     {
@@ -234,8 +214,7 @@ class QuestionController extends Controller
                 ->getExerciseInteraction($em, $idExo, 0);
         }
 
-        $allActions = $services->getActionsAllQuestions($listQExo, $uid, $actionQ,
-            $questionWithResponse, $alreadyShared, $sharedWithMe, $shareRight, $em);
+        $allActions = $services->getActionsAllQuestions($listQExo, $uid, $em);
 
         $actionQ = $allActions[0];
         $questionWithResponse = $allActions[1];
@@ -248,7 +227,7 @@ class QuestionController extends Controller
                         ->getRepository('UJMExoBundle:Exercise')
                         ->getExerciseAdmin($uid);
 
-        $vars['listQExo']             = $listQExo;
+        $vars['interactions']         = $listQExo;
         $vars['actionQ']              = $actionQ;
         $vars['questionWithResponse'] = $questionWithResponse;
         $vars['alreadyShared']        = $alreadyShared;
@@ -264,6 +243,12 @@ class QuestionController extends Controller
     /**
      * Finds and displays a Question entity.
      *
+     * @access public
+     *
+     * @param integer $id id Interaction
+     * @param integer $exoID id Exercise if the user is in an exercise, -1 if the user is in the question bank
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function showAction($id, $exoID)
     {
@@ -373,6 +358,11 @@ class QuestionController extends Controller
     /**
      * Displays a form to create a new Question entity with interaction.
      *
+     * @access public
+     *
+     * @param integer $exoID id Exercise if the user is in an exercise, -1 if the user is in the question bank
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function newAction($exoID)
     {
@@ -394,6 +384,9 @@ class QuestionController extends Controller
     /**
      * Creates a new Question entity.
      *
+     * @access public
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function createAction()
     {
@@ -422,6 +415,13 @@ class QuestionController extends Controller
     /**
      * Displays a form to edit an existing Question entity.
      *
+     * @access public
+     *
+     * @param integer $id id Interaction
+     * @param integer $exoID id Exercise if the user is in an exercise, -1 if the user is in the question bank
+     * @param \Symfony\Component\Form\FormBuilder $form if form is not valid (see the methods update in InteractionGraphicContoller, InteractionQCMConteroller ...)
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function editAction($id, $exoID, $form = null)
     {
@@ -475,13 +475,11 @@ class QuestionController extends Controller
                     } else {
                         $editForm = $form;
                     }
-                    $deleteForm = $this->createDeleteForm($interactionQCM[0]->getId());
 
                     $typeQCM = $services->getTypeQCM();
 
                     $variables['entity']         = $interactionQCM[0];
                     $variables['edit_form']      = $editForm->createView();
-                    $variables['delete_form']    = $deleteForm->createView();
                     $variables['nbResponses']    = $nbResponses;
                     $variables['linkedCategory'] = $linkedCategory;
                     $variables['typeQCM'       ] = json_encode($typeQCM);
@@ -517,11 +515,8 @@ class QuestionController extends Controller
                         ), $interactionGraph[0]
                     );
 
-                    $deleteForm = $this->createDeleteForm($interactionGraph[0]->getId());
-
                     $variables['entity']         = $interactionGraph[0];
                     $variables['edit_form']      = $editForm->createView();
-                    $variables['delete_form']    = $deleteForm->createView();
                     $variables['nbResponses']    = $nbResponses;
                     $variables['linkedCategory'] = $linkedCategory;
                     $variables['position']       = $position;
@@ -546,13 +541,11 @@ class QuestionController extends Controller
                                 ->getToken()->getUser(), $catID
                         ), $interactionHole[0]
                     );
-                    $deleteForm = $this->createDeleteForm($interactionHole[0]->getId());
 
                     return $this->render(
                         'UJMExoBundle:InteractionHole:edit.html.twig', array(
                         'entity'      => $interactionHole[0],
                         'edit_form'   => $editForm->createView(),
-                        'delete_form' => $deleteForm->createView(),
                         'nbResponses' => $nbResponses,
                         'linkedCategory' => $linkedCategory,
                         'exoID' => $exoID
@@ -572,7 +565,6 @@ class QuestionController extends Controller
                                 ->getToken()->getUser(), $catID
                         ), $interactionOpen[0]
                     );
-                    $deleteForm = $this->createDeleteForm($interactionOpen[0]->getId());
 
                     if ($exoID != -1) {
                         $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($exoID);
@@ -583,7 +575,6 @@ class QuestionController extends Controller
 
                     $variables['entity']         = $interactionOpen[0];
                     $variables['edit_form']      = $editForm->createView();
-                    $variables['delete_form']    = $deleteForm->createView();
                     $variables['nbResponses']    = $nbResponses;
                     $variables['linkedCategory'] = $linkedCategory;
                     $variables['typeOpen']       = json_encode($typeOpen);
@@ -604,45 +595,17 @@ class QuestionController extends Controller
     }
 
     /**
-     * Edits an existing Question entity.
-     *
-     */
-    public function updateAction($id)
-    {
-        $em = $this->getDoctrine()->getManager();
-
-        $entity = $em->getRepository('UJMExoBundle:Question')->find($id);
-
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Question entity.');
-        }
-
-        $editForm   = $this->createForm(new QuestionType(), $entity);
-        $deleteForm = $this->createDeleteForm($id);
-
-        $request = $this->getRequest();
-
-        $editForm->handleRequest($request);
-
-        if ($editForm->isValid()) {
-            $em->persist($entity);
-            $em->flush();
-
-            return $this->redirect($this->generateUrl('question_edit', array('id' => $id)));
-        }
-
-        return $this->render(
-            'UJMExoBundle:Question:edit.html.twig', array(
-            'entity'      => $entity,
-            'edit_form'   => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
-            )
-        );
-    }
-
-    /**
      * Deletes a Question entity.
      *
+     * @access public
+     *
+     * @param integer $id id Interaction
+     * @param integer $pageNow actual page for the pagination
+     * @param integer $maxpage number max questions per page
+     * @param integer $nbItem number of question
+     * @param integer $lastPage number of last page
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function deleteAction($id, $pageNow, $maxPage, $nbItem, $lastPage)
     {
@@ -737,6 +700,9 @@ class QuestionController extends Controller
     /**
      * Displays the rigth form when a teatcher wants to create a new Question (JS)
      *
+     * @access public
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function choixFormTypeAction()
     {
@@ -859,6 +825,11 @@ class QuestionController extends Controller
     /**
      * To share Question
      *
+     * @access public
+     *
+     * @param integer $questionID id of question
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function shareAction($questionID)
     {
@@ -872,6 +843,9 @@ class QuestionController extends Controller
     /**
      * To search Question
      *
+     * @access public
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function searchAction()
     {
@@ -931,6 +905,9 @@ class QuestionController extends Controller
     /**
      * To manage the User's documents
      *
+     * @access public
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function manageDocAction()
     {
@@ -978,6 +955,11 @@ class QuestionController extends Controller
     /**
      * To delete a User's document
      *
+     * @access public
+     *
+     * @param integer $idDoc id Document 
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function deleteDocAction($idDoc)
     {
@@ -1005,6 +987,9 @@ class QuestionController extends Controller
     /**
      * To delete a User's document linked to questions but not to paper
      *
+     * @param string $label label of document
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function deletelinkedDocAction($label)
     {
@@ -1047,6 +1032,11 @@ class QuestionController extends Controller
     /**
      * To display the modal which allow to change the label of a document
      *
+     * @access public
+     *
+     * @param integer $id id of exercise
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function changeDocumentNameAction()
     {
@@ -1060,6 +1050,11 @@ class QuestionController extends Controller
     /**
      * To change the label of a document
      *
+     * @access public
+     *
+     * @param integer $id id of exercise
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function updateNameAction()
     {
@@ -1081,6 +1076,11 @@ class QuestionController extends Controller
     /**
      * To sort document by type
      *
+     * @access public
+     *
+     * @param integer $id id of exercise
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function sortDocumentsAction()
     {
@@ -1143,6 +1143,11 @@ class QuestionController extends Controller
     /**
      * To search document with a defined label
      *
+     * @access public
+     *
+     * @param integer $id id of exercise
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function searchDocAction()
     {
@@ -1201,6 +1206,9 @@ class QuestionController extends Controller
     /**
      * To share question with other users
      *
+     * @access public
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function shareQuestionUserAction()
     {
@@ -1237,6 +1245,12 @@ class QuestionController extends Controller
     /**
      * If question already shared with a given user
      *
+     * @access public
+     *
+     * @param \UJM\ExoBundle\Entity\Share $toShare
+     * @param Doctrine Entity Manager $em
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function alreadySharedAction($toShare, $em)
     {
@@ -1264,6 +1278,11 @@ class QuestionController extends Controller
     /**
      * Display form to search questions
      *
+     * @access public
+     *
+     * @param integer $exoID id of exercise
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function searchQuestionAction($exoID)
     {
@@ -1276,6 +1295,9 @@ class QuestionController extends Controller
     /**
      * Display the questions matching to the research
      *
+     * @access public
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function searchQuestionTypeAction()
     {
@@ -1793,6 +1815,17 @@ class QuestionController extends Controller
 
     /**
      * To delete the shared question of user's questions bank
+     *
+     * @access public
+     *
+     * @param integer $qid id Question
+     * @param integer $uid id User, user connected
+     * @param integer $pageNow actual page for the pagination
+     * @param integer $maxpage number max questions per page
+     * @param integer $nbItem number of question
+     * @param integer $lastPage number of last page
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function deleteSharedQuestionAction($qid, $uid, $pageNow, $maxPage, $nbItem, $lastPage)
     {
@@ -1819,6 +1852,11 @@ class QuestionController extends Controller
     /**
      * To see with which person the user has shared his question
      *
+     * @access public
+     *
+     * @param integer $id id of question
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function seeSharedWithAction($id)
     {
@@ -1842,6 +1880,9 @@ class QuestionController extends Controller
     /**
      * To search questions brief in the question bank
      *
+     * @access public
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function briefSearchAction ()
     {
@@ -1883,8 +1924,7 @@ class QuestionController extends Controller
                 ->findOneBy(array('question' => $sharedQuestion[$i]->getQuestion()->getId()));
         }
 
-        $allActions = $services->getActionsAllQuestions($listInteractions, $user->getId(), $actionQ,
-            $questionWithResponse, $alreadyShared, $sharedWithMe, $shareRight, $em);
+        $allActions = $services->getActionsAllQuestions($listInteractions, $user->getId(), $em);
 
         $actionQ = $allActions[0];
         $questionWithResponse = $allActions[1];
@@ -1897,7 +1937,7 @@ class QuestionController extends Controller
                     ->getRepository('UJMExoBundle:Exercise')
                     ->getExerciseAdmin($user->getId());
 
-        $vars['listQExo']             = $listInteractions;
+        $vars['interactions']         = $listInteractions;
         $vars['actionQ']              = $actionQ;
         $vars['questionWithResponse'] = $questionWithResponse;
         $vars['alreadyShared']        = $alreadyShared;
@@ -1929,6 +1969,12 @@ class QuestionController extends Controller
     /**
      * To duplicate a question
      *
+     * @access public
+     *
+     * @param integer $interID id Interaction
+     * @param integer $exoID id Exercise if the user is in an exercise, -1 if the user is in the question bank
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function duplicateAction ($interID, $exoID)
     {
@@ -2039,16 +2085,14 @@ class QuestionController extends Controller
 
     }
 
-    private function createDeleteForm($id)
-    {
-        return $this->createFormBuilder(array('id' => $id))
-            ->add('id', 'hidden')
-            ->getForm();
-    }
-
     /**
      * To control the User's rights to this question
      *
+     * @access private
+     *
+     * @param integer $questionID id Question
+     *
+     * @return Doctrine Query Result
      */
     private function controlUserQuestion($questionID)
     {
@@ -2065,6 +2109,13 @@ class QuestionController extends Controller
     /**
      * To paginate table
      *
+     * @access private
+     *
+     * @param Doctrine Collection $entityToPaginate
+     * @param integer $max number max items by page
+     * @param integer $page number of actual page
+     *
+     * @return array
      */
     private function pagination($entityToPaginate, $max, $page)
     {
@@ -2089,6 +2140,17 @@ class QuestionController extends Controller
     /**
      * To paginate two tables on one page
      *
+     * @access public
+     *
+     * @param Doctrine Collection of \UJM\ExoBundle\Entity\Interaction $entityToPaginateOne
+     * @param Doctrine Collection of \UJM\ExoBundle\Entity\Interaction $entityToPaginateTwo
+     * @param integer $max number max items per page
+     * @param integer $pageOne set new page for the first pagination
+     * @param integer $pageTwo set new page for the second pagination
+     * @param integer $pageNowOne set current page for the first pagination
+     * @param integer $pageNowTwo set current page for the second pagination
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     private function doublePaginationWithIf($entityToPaginateOne, $entityToPaginateTwo, $max, $pageOne, $pageTwo, $pageNowOne, $pageNowTwo)
     {
