@@ -536,4 +536,15 @@ class SurveyManager
         );
 
     }
+
+    public function getMultipleChoiceAnswersByChoice(
+        Choice $choice,
+        $executeQuery = true
+    )
+    {
+        return $this->multipleChoiceQuestionAnswerRepo->findAnswersByChoice(
+            $choice,
+            $executeQuery
+        );
+    }
 }

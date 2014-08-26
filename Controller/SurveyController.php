@@ -1150,7 +1150,11 @@ class SurveyController extends Controller
     {
         $choices = $this->surveyManager->getChoicesByQuestion($question);
         $choicesCount = array();
+        $choicesRatio = array();
         $nbRespondents = 0;
+        $nbChoiceAnswers = 0;
+        $otherAnswers = array();
+        $otherChoice = null;
 
         $respondents = $this->surveyManager
             ->countQuestionAnswersBySurveyAndQuestion($survey, $question);
@@ -1164,7 +1168,25 @@ class SurveyController extends Controller
 
                 if (!is_null($count)) {
                     $choicesCount[$choice->getId()] = $count['nb_answers'];
+                    $nbChoiceAnswers += $choicesCount[$choice->getId()];
+
+                    if ($choice->isOther() && $choicesCount[$choice->getId()] > 0) {
+                        $otherChoice = $choice;
+                        $answers = $this->surveyManager
+                            ->getMultipleChoiceAnswersByChoice($choice);
+
+                        foreach ($answers as $answer) {
+                            $otherAnswers[] = $answer->getContent();
+                        }
+                    }
                 }
+            }
+
+            foreach ($choicesCount as $choiceId => $nbAbswers) {
+                $choicesRatio[$choiceId] = round(
+                    ($nbAbswers / $nbChoiceAnswers) * 100,
+                    2
+                );
             }
         }
 
@@ -1174,7 +1196,10 @@ class SurveyController extends Controller
                 array(
                     'choices' => $choices,
                     'choicesCount' => $choicesCount,
-                    'nbRespondents' => $nbRespondents
+                    'nbRespondents' => $nbRespondents,
+                    'choicesRatio' => $choicesRatio,
+                    'otherAnswers' => $otherAnswers,
+                    'otherChoice' => $otherChoice
                 )
             )
         );

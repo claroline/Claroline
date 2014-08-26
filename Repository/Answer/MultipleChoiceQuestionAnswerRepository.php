@@ -79,4 +79,20 @@ class MultipleChoiceQuestionAnswerRepository extends EntityRepository
 
         return $executeQuery ? $query->getOneOrNullResult() : $query;
     }
+
+    public function findAnswersByChoice(
+        Choice $choice,
+        $executeQuery = true
+    )
+    {
+        $dql = "
+            SELECT mcqa
+            FROM Claroline\SurveyBundle\Entity\Answer\MultipleChoiceQuestionAnswer mcqa
+            WHERE mcqa.choice = :choice
+        ";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('choice', $choice);
+
+        return $executeQuery ? $query->getResult() : $query;
+    }
 }

@@ -10,6 +10,7 @@
             <tr>
                 <th class="text-center">{{ 'choice'|trans({}, 'survey') }}</th>
                 <th class="text-center">{{ 'number_of_responses'|trans({}, 'survey') }}</th>
+                <th class="text-center">{{ 'ratio'|trans({}, 'survey') }}</th>
             </tr>
 
             {% for choice in choices %}
@@ -19,12 +20,67 @@
                     <td>
                         {% if choicesCount[choiceId] is defined %}
                             {{ choicesCount[choiceId] }}
+                        
+                            {% if choice.isOther() and choicesCount[choiceId] > 0 %}
+                                &nbsp;
+                                <i id="show-other-answers-btn"
+                                   class="fa fa-file-text-o pointer-hand">
+                                </i>
+                            {% endif %}
                         {% else %}
                             0
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if choicesRatio[choiceId] is defined %}
+                            {{ choicesRatio[choiceId] }} %
+                        {% else %}
+                            0 %
                         {% endif %}
                     </td>
                 </tr>
             {% endfor %}
         </table>
+        
+        {% if otherChoice is not empty %}
+            <div id="view-other-box" class="modal fade" role="dialog" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                &times;
+                            </button>
+                            <h3>{{ otherChoice.getContent() }}</h3>
+                        </div>
+                        <div id="view-other-body" class="modal-body">
+                            
+                            {% if otherAnswers|length > 0 %}
+                                <ul class="list-group">
+                                    {% for otherAnswer in otherAnswers %}
+                                        <li class="list-group-item">
+                                            {{ otherAnswer }}
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        </div>
+                        <div class="modal-footer">
+                            <input type="button"
+                                   class="btn btn-default"
+                                   data-dismiss="modal"
+                                   value="{{ 'close'|trans({}, 'platform') }}"
+                            />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
     {% endif %}
 </div>
+
+{% block javascripts %}
+    <script
+        src='{{ asset('bundles/clarolinesurvey/js/showMultipleChoiceQuestionResults.js') }}'
+        type="text/javascript">
+    </script>
+{% endblock %}

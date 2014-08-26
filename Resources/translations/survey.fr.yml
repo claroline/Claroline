@@ -55,6 +55,7 @@ question_form_question: 'Question'
 question_form_title: 'Titre'
 question_form_type: 'Type de question'
 questions_management: 'Gestion des questions'
+ratio: Ratio
 remove_question_btn_explanation: 'Retirer la question du sondage'
 results: Résultats
 return: Retour
