@@ -69,9 +69,25 @@
             commentLabelElement.hide('slow');
         }
     }
+    
+    function enableChoiceOtherLabel()
+    {
+        var choiceOtherChk = $('#choice-other-chk').is(':checked');
+        var choiceOtherElement = $('#choice-other-label-element');
+        
+        if (choiceOtherChk) {
+            choiceOtherElement.show('slow');
+        } else {
+            choiceOtherElement.hide('slow');
+        }
+    }
 
     $('#question_form_commentAllowed').on('change', function () {
         enableCommentLabel();
+    });
+    
+    $('#typed-question-form-block').on('change', '#choice-other-chk', function () {
+        enableChoiceOtherLabel();
     });
 
     $('#question_form_type').on('change', function () {
@@ -98,6 +114,9 @@
         $('#choice-row-' + dataChoiceId).remove();
     });
     
-    enableCommentLabel();
-    enableTypedQuestionConfiguration();
+    $(document).ready(function () {
+        enableCommentLabel();
+        enableTypedQuestionConfiguration();
+        setTimeout(enableChoiceOtherLabel, 500);
+    });
 })();

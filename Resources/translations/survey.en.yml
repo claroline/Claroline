@@ -1,5 +1,6 @@
 actions: Actions
 add_choice: 'Add a choice'
+add_choice_other: 'Add a choice "Other"'
 add_question: 'Add a question'
 add_question_box_title: 'Add a question to survey'
 allow_edition_after_submission: 'Allow edition after submission'
@@ -24,6 +25,7 @@ edit_survey: 'Edit survey'
 edition: Edition
 end_date: 'End date'
 horizontal: Horizontal
+label_for_choice_other: 'Label for choice "Other"'
 mandatory_answer_message: 'An answer is required'
 multiple_choice_multiple: 'Multiple choice (Multiple answers)'
 multiple_choice_multiple_answers: 'Multiple choice (Multiple answers)'

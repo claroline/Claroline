@@ -44,6 +44,11 @@ class MultipleChoiceQuestionAnswer
      */
     protected $choice;
 
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    protected $content;
+
     public function getId()
     {
         return $this->id;
@@ -72,5 +77,15 @@ class MultipleChoiceQuestionAnswer
     public function setChoice(Choice $choice)
     {
         $this->choice = $choice;
+    }
+
+    public function getContent()
+    {
+        return $this->content;
+    }
+
+    public function setContent($content)
+    {
+        $this->content = $content;
     }
 }

@@ -16,7 +16,8 @@
                         {{ question.getCommentLabel() }}
                     {% endif %}
                 </label>
-                <textarea rows="4"
+                <textarea class="form-control"
+                          rows="4"
                           name="{{ question.getId() }}[comment]"
                           {% if not canEdit %}disabled{% endif %}
                 >{% if answers['comment'] is defined %}{{ answers['comment'] }}{% endif %}</textarea>

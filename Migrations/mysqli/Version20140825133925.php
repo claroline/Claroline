@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\SurveyBundle\Migrations\pdo_mysql;
+namespace Claroline\SurveyBundle\Migrations\mysqli;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/08/22 09:10:08
+ * Generation date: 2014/08/25 01:39:28
  */
-class Version20140822091006 extends AbstractMigration
+class Version20140825133925 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -43,6 +43,7 @@ class Version20140822091006 extends AbstractMigration
                 id INT AUTO_INCREMENT NOT NULL, 
                 question_answer_id INT NOT NULL, 
                 choice_id INT NOT NULL, 
+                content LONGTEXT DEFAULT NULL, 
                 INDEX IDX_FDB8AF37A3E60C9C (question_answer_id), 
                 INDEX IDX_FDB8AF37998666D1 (choice_id), 
                 PRIMARY KEY(id)
@@ -76,6 +77,7 @@ class Version20140822091006 extends AbstractMigration
                 id INT AUTO_INCREMENT NOT NULL, 
                 choice_question_id INT NOT NULL, 
                 content LONGTEXT NOT NULL, 
+                other TINYINT(1) NOT NULL, 
                 INDEX IDX_C49D43FEA46B3B4F (choice_question_id), 
                 PRIMARY KEY(id)
             ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB

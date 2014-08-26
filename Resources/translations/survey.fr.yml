@@ -1,5 +1,6 @@
 actions: Actions
 add_choice: 'Ajouter un choix'
+add_choice_other: 'Ajouter un choix "Autre"'
 add_question: 'Ajouter une question'
 add_question_box_title: 'Ajouter une question au sondage'
 allow_edition_after_submission: 'Authoriser la modification de la réponse'
@@ -24,6 +25,7 @@ edit_survey: 'Modifier le sondage'
 edition: Modification
 end_date: 'Date de fin'
 horizontal: Horizontal
+label_for_choice_other: 'Libellé du choix "Autre"'
 mandatory_answer_message: 'Une réponse est requise'
 multiple_choice_multiple: 'Choix multiple (Réponses multiples)'
 multiple_choice_multiple_answers: 'Choix multiple (Réponses multiples)'

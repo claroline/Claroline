@@ -17,6 +17,7 @@ use Claroline\SurveyBundle\Entity\Answer\MultipleChoiceQuestionAnswer;
 use Claroline\SurveyBundle\Entity\Answer\OpenEndedQuestionAnswer;
 use Claroline\SurveyBundle\Entity\Answer\QuestionAnswer;
 use Claroline\SurveyBundle\Entity\Answer\SurveyAnswer;
+use Claroline\SurveyBundle\Entity\Choice;
 use Claroline\SurveyBundle\Entity\Question;
 use Claroline\SurveyBundle\Entity\Survey;
 use Claroline\SurveyBundle\Entity\SurveyQuestionRelation;
@@ -756,7 +757,7 @@ class SurveyController extends Controller
                             $openEndedAnswer->getContent();
                     }
                 } elseif ($question->getType() === 'multiple_choice_single' ||
-                        $question->getType() === 'multiple_choice_single') {
+                        $question->getType() === 'multiple_choice_multiple') {
 
                     $choiceAnswers = $this->surveyManager
                         ->getMultipleChoiceAnswersByUserAndSurveyAndQuestion(
@@ -768,6 +769,11 @@ class SurveyController extends Controller
                     foreach ($choiceAnswers as $choiceAnswer) {
                         $choiceId = $choiceAnswer->getChoice()->getId();
                         $answersDatas[$questionId][$choiceId] = $choiceId;
+                        
+                        if ($choiceAnswer->getChoice()->isOther()) {
+                            $answersDatas[$questionId]['other'] =
+                                $choiceAnswer->getContent();
+                        }
                     }
                 }
             }
@@ -840,6 +846,10 @@ class SurveyController extends Controller
                         $answersDatas[$questionId][$choiceId] = $choiceId;
                     }
 
+                    if (isset($questionDatas['other'])) {
+                        $answersDatas[$questionId]['other'] = $questionDatas['other'];
+                    }
+
                     foreach ($questionDatas as $key => $value) {
 
                         if (is_int($key)) {
@@ -850,10 +860,14 @@ class SurveyController extends Controller
 
                 foreach ($survey->getQuestionRelations() as $relation) {
                     $question = $relation->getQuestion();
+                    $answerData = isset($answersDatas[$question->getId()]) ?
+                        $answersDatas[$question->getId()] :
+                        array();
+
                     $questionViews[$relation->getId()] = $this->displayTypedQuestion(
                         $survey,
                         $question,
-                        $answersDatas[$question->getId()],
+                        $answerData,
                         $canEdit
                     )->getContent();
                 }
@@ -924,11 +938,15 @@ class SurveyController extends Controller
 
                                     foreach($questionResponse as $choiceId => $response) {
 
-                                        if ($choiceId !== 'comment') {
+                                        if ($choiceId !== 'comment' && $choiceId !== 'other') {
                                             $choice = $this->surveyManager->getChoiceById($choiceId);
                                             $choiceAnswer = new MultipleChoiceQuestionAnswer();
                                             $choiceAnswer->setQuestionAnswer($questionAnswer);
                                             $choiceAnswer->setChoice($choice);
+
+                                            if ($choice->isOther() && isset($questionResponse['other'])) {
+                                                $choiceAnswer->setContent($questionResponse['other']);
+                                            }
                                             $this->surveyManager
                                                 ->persistMultipleChoiceQuestionAnswer($choiceAnswer);
                                         }
@@ -942,6 +960,10 @@ class SurveyController extends Controller
                                     $choiceAnswer = new MultipleChoiceQuestionAnswer();
                                     $choiceAnswer->setQuestionAnswer($questionAnswer);
                                     $choiceAnswer->setChoice($choice);
+
+                                    if ($choice->isOther() && isset($questionResponse['other'])) {
+                                        $choiceAnswer->setContent($questionResponse['other']);
+                                    }
                                     $this->surveyManager
                                         ->persistMultipleChoiceQuestionAnswer($choiceAnswer);
                                 }
@@ -999,11 +1021,15 @@ class SurveyController extends Controller
 
                                     foreach($questionResponse as $choiceId => $response) {
 
-                                        if ($choiceId !== 'comment') {
+                                        if ($choiceId !== 'comment' && $choiceId !== 'other') {
                                             $choice = $this->surveyManager->getChoiceById($choiceId);
                                             $choiceAnswer = new MultipleChoiceQuestionAnswer();
                                             $choiceAnswer->setQuestionAnswer($questionAnswer);
                                             $choiceAnswer->setChoice($choice);
+
+                                            if ($choice->isOther() && isset($questionResponse['other'])) {
+                                                $choiceAnswer->setContent($questionResponse['other']);
+                                            }
                                             $this->surveyManager
                                                 ->persistMultipleChoiceQuestionAnswer($choiceAnswer);
                                         }
@@ -1020,6 +1046,10 @@ class SurveyController extends Controller
                                     $choiceAnswer = new MultipleChoiceQuestionAnswer();
                                     $choiceAnswer->setQuestionAnswer($questionAnswer);
                                     $choiceAnswer->setChoice($choice);
+
+                                    if ($choice->isOther() && isset($questionResponse['other'])) {
+                                        $choiceAnswer->setContent($questionResponse['other']);
+                                    }
                                     $this->surveyManager
                                         ->persistMultipleChoiceQuestionAnswer($choiceAnswer);
                                 }
@@ -1300,6 +1330,11 @@ class SurveyController extends Controller
         $choices = isset($datas['choice']) ?
             $datas['choice'] :
             array();
+        $hasChoiceOther = isset($datas['choice-other']['other']) &&
+            $datas['choice-other']['other'] === 'other';
+
+//        throw new \Exception(var_dump($hasChoiceOther));
+//        throw new \Exception(var_dump($datas['choice-other']));
 
         $multipleChoiceQuestion = $this->surveyManager
             ->getMultipleChoiceQuestionByQuestion($question);
@@ -1316,6 +1351,17 @@ class SurveyController extends Controller
                 $horizontal,
                 $choices
             );
+        }
+
+        if ($hasChoiceOther &&
+            isset($datas['choice-other']['content']) &&
+            !empty($datas['choice-other']['content'])) {
+
+            $otherChoice = new Choice();
+            $otherChoice->setChoiceQuestion($multipleChoiceQuestion);
+            $otherChoice->setOther(true);
+            $otherChoice->setContent($datas['choice-other']['content']);
+            $this->surveyManager->persistChoice($otherChoice);
         }
     }
 
@@ -1368,8 +1414,20 @@ class SurveyController extends Controller
 
                         if (!isset($datas[$questionId]) ||
                             count($datas[$questionId]) === 0 ||
-                            (count($datas[$questionId]) === 1 && isset($datas[$questionId]['comment']))) {
-
+                            (
+                                count($datas[$questionId]) === 1 &&
+                                isset($datas[$questionId]['comment'])
+                            ) ||
+                            (
+                                count($datas[$questionId]) === 1 &&
+                                isset($datas[$questionId]['other'])
+                            ) ||
+                            (
+                                count($datas[$questionId]) === 2 &&
+                                isset($datas[$questionId]['comment']) &&
+                                isset($datas[$questionId]['other'])
+                            )
+                        ) {
                             $errors[$questionId] = $questionId;
                         }
                         break;

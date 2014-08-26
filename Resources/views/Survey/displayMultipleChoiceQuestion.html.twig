@@ -54,7 +54,17 @@
                                 {% if not canEdit %}disabled{% endif %}
                             >
                             {{ choiceContent|raw }}
+                            
                         </label>
+                        
+                        {% if choice.isOther() %}
+                            <div>
+                                <input class="form-control"
+                                       type="text"
+                                       name="{{ question.getId() }}[other]"
+                                       {% if answers['other'] is defined %}value="{{answers['other']}}"{% endif %}>
+                            </div>
+                        {% endif %}
                     </div>
                 {% endfor %} 
             {% endif %}  
@@ -70,7 +80,8 @@
                         {{ question.getCommentLabel() }}
                     {% endif %}
                 </label>
-                <textarea rows="4"
+                <textarea class="form-control"
+                          rows="4"
                           name="{{ question.getId() }}[comment]"
                           {% if not canEdit %}disabled{% endif %}
                 >{% if answers['comment'] is defined %}{{ answers['comment'] }}{% endif %}</textarea>

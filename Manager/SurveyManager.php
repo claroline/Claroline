@@ -88,6 +88,12 @@ class SurveyManager
         $this->om->flush();
     }
 
+    public function persistChoice(Choice $choice)
+    {
+        $this->om->persist($choice);
+        $this->om->flush();
+    }
+
     public function createMultipleChoiceQuestion(
         Question $question,
         $horizontal,

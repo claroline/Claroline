@@ -42,6 +42,11 @@ class Choice
     protected $choiceQuestion;
 
     /**
+     * @ORM\Column(type="boolean")
+     */
+    protected $other = false;
+
+    /**
      * @return integer
      */
     public function getId()
@@ -79,5 +84,21 @@ class Choice
     public function setChoiceQuestion(MultipleChoiceQuestion $choiceQuestion)
     {
         $this->choiceQuestion = $choiceQuestion;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isOther()
+    {
+        return $this->other;
+    }
+
+    /**
+     * @param boolean $other
+     */
+    public function setOther($other)
+    {
+        $this->other = $other;
     }
 }

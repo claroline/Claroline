@@ -36,26 +36,58 @@
                 {% set choiceIndex = 1 %}
             {% else %}
                 {% set choiceIndex = 0 %}
+                {% set choiceOtherContent = '' %}
                 
                 {% for choice in choices %}
-                    <tr id="choice-row-{{ choiceIndex }}">
-                        <td>
-                            <textarea class="claroline-tiny-mce" name="choice[{{ choiceIndex }}]">
-                                {{ choice.getContent() }}
-                            </textarea>
-                        </td>
-                        <td style="vertical-align: middle">
-                            <span class="btn btn-danger delete-choice-btn" data-choice-id="{{ choiceIndex }}">
-                                {{ 'delete'|trans({}, 'platform') }}
-                            </span>
-                        </td>
-                    </tr>
-                    {% set choiceIndex = choiceIndex + 1 %}
+                    {% if not choice.isOther() %}
+                        <tr id="choice-row-{{ choiceIndex }}">
+                            <td>
+                                <textarea class="claroline-tiny-mce" name="choice[{{ choiceIndex }}]">
+                                    {{ choice.getContent() }}
+                                </textarea>
+                            </td>
+                            <td style="vertical-align: middle">
+                                <span class="btn btn-danger delete-choice-btn" data-choice-id="{{ choiceIndex }}">
+                                    {{ 'delete'|trans({}, 'platform') }}
+                                </span>
+                            </td>
+                        </tr>
+                        {% set choiceIndex = choiceIndex + 1 %}
+                    {% else %}
+                        {% set choiceOtherContent = choice.getContent() %}
+                    {% endif %}
                 {% endfor %}
             {% endif %}
             </table>
             <div id="choice-index-block" data-current-choice-index="{{ choiceIndex }}"></div>
         </div>
+        <div class="form-group row">
+            <label class="control-label col-md-3 required" for="choice-other-chk">
+                {{ 'add_choice_other'|trans({}, 'survey') }}
+            </label>
+            <div class="col-md-3">
+                <input type="checkbox"
+                       id="choice-other-chk"
+                       name="choice-other[other]"
+                       value='other'
+                       {% if choiceOtherContent is not empty %}checked{% endif %}
+                >
+            </div>
+        </div>
+        <div class="form-group row" id="choice-other-label-element">
+            <label class="control-label col-md-3 required" for="choice-other-label">
+                {{ 'label_for_choice_other'|trans({}, 'survey') }}
+            </label>
+            <div class="col-md-9">
+                <input type="text"
+                       id="choice-other-label"
+                       class="form-control"
+                       name="choice-other[content]"
+                       {% if choiceOtherContent is not empty %}value="{{choiceOtherContent}}"{% endif %}
+                >
+            </div>
+        </div>
+        <br>
         <span id="add-choice-btn" class="btn btn-primary">
             <i class="fa fa-plus-circle"></i>
             {{ 'add_choice'|trans({}, 'survey') }}
