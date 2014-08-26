@@ -1,0 +1,13 @@
+{% extends 'ClarolineCoreBundle::layout.html.twig' %}
+
+{% block layout %}
+    {% block admin_bar %}
+
+    {% endblock %}
+
+    {% block content_container %}
+        <div class="row content">
+            {% block content %}{% endblock %}
+        </div>
+    {% endblock %}
+{% endblock %}

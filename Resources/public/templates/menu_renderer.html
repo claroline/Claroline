@@ -1,0 +1,4 @@
+<span id="{{data.id}}">{{data.label}}</span>
+<ul ng-if="data.hasChildren">
+    <li ng-repeat="data in data.children" ng-include="'menu_renderer.html'"></li>
+</ul>

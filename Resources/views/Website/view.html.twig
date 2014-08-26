@@ -1,0 +1,342 @@
+{% extends 'IcapWebsiteBundle::layout.html.twig' %}
+
+{% block content %}
+    <div class="website-container" ng-app="websiteApp">
+    <div class="website-body" ng-controller="initController">
+
+        <div class="panel admin-bar">
+            <div class="admin-tab-options">
+                <div class="general-options" ng-class="{'selected':optionsWindow=='general'}" ng-click="optionsWindow='general'"><span class="option-text"><i class="fa fa-th-large"></i> General</span> <span class="icon-bg"></span></div>
+                <div class="menu-options" ng-class="{'selected':optionsWindow=='menu'}" ng-click="optionsWindow='menu'"><span class="option-text"><i class="fa fa-list"></i> Menu</span> <span class="icon-bg"></span></div>
+                <div class="banner-options" ng-class="{'selected':optionsWindow=='banner'}" ng-click="optionsWindow='banner'"><span class="option-text"><i class="fa fa-angle-up"></i> Banner</span> <span class="icon-bg"></span></div>
+                <div class="footer-options" ng-class="{'selected':optionsWindow=='footer'}" ng-click="optionsWindow='footer'"><span class="option-text"><i class="fa fa-angle-down"></i> Footer</span> <span class="icon-bg"></span></div>
+            </div>
+            <div class="admin-tabs">
+                <div class="general-options" ng-show="optionsWindow=='general'">
+                    <div class="float-left">
+                        <div>
+                            <input type="checkbox" name="has-banner" id="has-banner" ng-model="options.banner"/>
+                            <label for="has-banner">Banner</label>
+                        </div>
+                        <div>
+                            <input type="checkbox" name="has-footer" id="has-footer" ng-model="options.footer"/>
+                            <label for="has-footer">Footer</label>
+                        </div>
+                    </div>
+                    <div class="float-left">
+                        <label for="bg-color">Background color</label>
+                        <input class="color" id="bg-color" ng-model="options.background.color"/>
+                    </div>
+                    <div class="float-left">
+                        <label for="bg-image">Background image</label>
+                        <input id="bg-image" type="file" ng-file-select image-src-variable="options.background.tmpImage" >
+                    </div>
+                    <div class="float-left">
+                        <div>
+                            <div>Background Repeat</div>
+                            <label>No</label>
+                            <input type="radio" name="bg-repeat" ng-model="options.background.repeat" value="no-repeat">
+                            <label>x</label>
+                            <input type="radio" name="bg-repeat" ng-model="options.background.repeat" value="repeat-x">
+                            <label>y</label>
+                            <input type="radio" name="bg-repeat" ng-model="options.background.repeat" value="repeat-y">
+                            <label>xy</label>
+                            <input type="radio" name="bg-repeat" ng-model="options.background.repeat" value="repeat">
+                        </div>
+                        <div>
+                            <div>Background position</div>
+                            <div>
+                                <input type="radio" name="bg-position" ng-model="options.background.position" value="left top">
+                                <input type="radio" name="bg-position" ng-model="options.background.position" value="center top">
+                                <input type="radio" name="bg-position" ng-model="options.background.position" value="right top">
+                            </div>
+                            <div>
+                                <input type="radio" name="bg-position" ng-model="options.background.position" value="left center">
+                                <input type="radio" name="bg-position" ng-model="options.background.position" value="center center">
+                                <input type="radio" name="bg-position" ng-model="options.background.position" value="right center">
+                            </div>
+                            <div>
+                                <input type="radio" name="bg-position" ng-model="options.background.position" value="left bottom">
+                                <input type="radio" name="bg-position" ng-model="options.background.position" value="center bottom">
+                                <input type="radio" name="bg-position" ng-model="options.background.position" value="right bottom">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="menu-options" ng-show="optionsWindow=='menu'">
+                    <div class="float-left">
+                        <div>
+                            <input type="radio" name="menu-orientation" id="menu-horizontal-orientation" value="horizontal" ng-model="options.menuOrientation"/>
+                            <label for="menu-horizontal-orientation">Horizontal</label>
+                        </div>
+                        <div>
+                            <input type="radio" name="menu-orientation" id="menu-vertical-orientation" value="vertical" ng-model="options.menuOrientation"/>
+                            <label for="menu-vertical-orientation">Vertical</label>
+                        </div>
+                        <div ng-show="options.menuOrientation=='vertical'">
+                            <label for="menu-width">Width</label>
+                            <input type="number" id="menu-width" max="200" min="50" ng-model="options.menuVerticalWidth"/> px
+                        </div>
+                    </div>
+                    <div class="float-left">
+                        <div>
+                            <label for="menu-bg-color">Background color</label>
+                            <input class="color" id="menu-bg-color" ng-model="options.menuBgColor"/>
+                        </div>
+                        <div>
+                            <label for="menu-hover-color">Hover color</label>
+                            <input class="color" id="menu-hover-color" ng-model="options.menuHoverColor"/>
+                        </div>
+                        <div>
+                            <label for="menu-section-color">Section color</label>
+                            <input class="color" id="menu-section-color" ng-model="options.menuSectionColor"/>
+                        </div>
+                    </div>
+                    <div class="float-left">
+                        <div>
+                            <label for="menu-font-color">Font color</label>
+                            <input class="color" id="menu-font-color" ng-model="options.menuFontColor"/>
+                        </div>
+                        <div>
+                            <label for="menu-font-size">Font size</label>
+                            <input type="number" id="menu-font-size" max="20" min="10" ng-model="options.menuFontSize"/> px
+                        </div>
+                        <div>
+                            <label for="menu-font-family">Font family</label>
+                            <select id="menu-font-family" ng-model="options.menuFontFamily">
+                                <option value="inherit">Default</option>
+                                <option value="Arial, Tahoma, Helvetica, FreeSans, sans-serif">Arial</option>
+                                <option value="'Courier New', Courier, FreeMono, monospace">Courier</option>
+                                <option value="Georgia, Utopia, 'Palatino Linotype', Palatino, serif">Georgia</option>
+                                <option value="Impact, sans-serif">Impact</option>
+                                <option value="'Times New Roman', Times, FreeSerif, serif">Times New Roman</option>
+                                <option value="'Trebuchet MS', Trebuchet, sans-serif">Trebuchet</option>
+                                <option value="Verdana, Geneva, sans-serif">Verdana</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="banner-options" ng-show="optionsWindow=='banner'">
+                    <div class="float-left">
+                        <div>
+                            <label for="banner-bg-color">Background color</label>
+                            <input class="color" id="banner-bg-color" ng-model="options.bannerBackground.color"/>
+                        </div>
+                        <div class="float-left">
+                            <label for="banner-bg-image">Background image</label>
+                            <input id="banner-bg-image" type="file" ng-file-select image-src-variable="options.bannerBackground.tmpImage" >
+                        </div>
+                    </div>
+                    <div class="float-left">
+                        <div>
+                            <div>Background Repeat</div>
+                            <label>No</label>
+                            <input type="radio" name="banner-bg-repeat" ng-model="options.bannerBackground.repeat" value="no-repeat">
+                            <label>x</label>
+                            <input type="radio" name="banner-bg-repeat" ng-model="options.bannerBackground.repeat" value="repeat-x">
+                            <label>y</label>
+                            <input type="radio" name="banner-bg-repeat" ng-model="options.bannerBackground.repeat" value="repeat-y">
+                            <label>xy</label>
+                            <input type="radio" name="banner-bg-repeat" ng-model="options.bannerBackground.repeat" value="repeat">
+                        </div>
+                        <div>
+                            <div>Background position</div>
+                            <div>
+                                <input type="radio" name="banner-bg-position" ng-model="options.bannerBackground.position" value="left top">
+                                <input type="radio" name="banner-bg-position" ng-model="options.bannerBackground.position" value="center top">
+                                <input type="radio" name="banner-bg-position" ng-model="options.bannerBackground.position" value="right top">
+                            </div>
+                            <div>
+                                <input type="radio" name="banner-bg-position" ng-model="options.bannerBackground.position" value="left center">
+                                <input type="radio" name="banner-bg-position" ng-model="options.bannerBackground.position" value="center center">
+                                <input type="radio" name="banner-bg-position" ng-model="options.bannerBackground.position" value="right center">
+                            </div>
+                            <div>
+                                <input type="radio" name="banner-bg-position" ng-model="options.bannerBackground.position" value="left bottom">
+                                <input type="radio" name="banner-bg-position" ng-model="options.bannerBackground.position" value="center bottom">
+                                <input type="radio" name="banner-bg-position" ng-model="options.bannerBackground.position" value="right bottom">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="float-left">
+                        <label for="banner-height">Height</label>
+                        <input type="number" id="banner-height" max="200" ng-model="options.bannerHeight"/> px
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="footer-options" ng-show="optionsWindow=='footer'">
+                    <div class="float-left">
+                        <div>
+                            <label for="footer-bg-color">Background color</label>
+                            <input class="color" id="footer-bg-color" ng-model="options.footerBackground.color"/>
+                        </div>
+                        <div>
+                            <label for="footer-bg-image">Background image</label>
+                            <input id="footer-bg-image" type="file" ng-file-select image-src-variable="options.footerBackground.tmpImage" >
+                        </div>
+                    </div>
+                    <div class="float-left">
+                        <div>
+                            <div>Background Repeat</div>
+                            <label>No</label>
+                            <input type="radio" name="footer-bg-repeat" ng-model="options.footerBackground.repeat" value="no-repeat">
+                            <label>x</label>
+                            <input type="radio" name="footer-bg-repeat" ng-model="options.footerBackground.repeat" value="repeat-x">
+                            <label>y</label>
+                            <input type="radio" name="footer-bg-repeat" ng-model="options.footerBackground.repeat" value="repeat-y">
+                            <label>xy</label>
+                            <input type="radio" name="footer-bg-repeat" ng-model="options.footerBackground.repeat" value="repeat">
+                        </div>
+                        <div>
+                            <div>Background position</div>
+                            <div>
+                                <input type="radio" name="footer-bg-position" ng-model="options.footerBackground.position" value="left top">
+                                <input type="radio" name="footer-bg-position" ng-model="options.footerBackground.position" value="center top">
+                                <input type="radio" name="footer-bg-position" ng-model="options.footerBackground.position" value="right top">
+                            </div>
+                            <div>
+                                <input type="radio" name="footer-bg-position" ng-model="options.footerBackground.position" value="left center">
+                                <input type="radio" name="footer-bg-position" ng-model="options.footerBackground.position" value="center center">
+                                <input type="radio" name="footer-bg-position" ng-model="options.footerBackground.position" value="right center">
+                            </div>
+                            <div>
+                                <input type="radio" name="footer-bg-position" ng-model="options.footerBackground.position" value="left bottom">
+                                <input type="radio" name="footer-bg-position" ng-model="options.footerBackground.position" value="center bottom">
+                                <input type="radio" name="footer-bg-position" ng-model="options.footerBackground.position" value="right bottom">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="float-left">
+                        <label for="footer-height">Height</label>
+                        <input type="number" id="footer-height" max="200" ng-model="options.footerHeight"/> px
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="banner resizeable-bottom" ng-style="bannerStyle()" ng-show="options.banner" ng-click="optionsWindow='banner'">
+            <div>Banner {{ '{{options.bannerHeight}}'}}px</div>
+        </div>
+        <div class="horizontal-resizer" resizer-bottom resizer resizer-max="200" ng-style="bannerResizerStyle()" resizer-min="0" resizer-variable="options.bannerHeight" ng-show="options.banner">
+            <div class="resizer-box-left"></div>
+            <div class="resizer-box-center"></div>
+            <div class="resizer-box-right"></div>
+        </div>
+        <div class="website-container" ng-style="containerStyle()" ng-show="contentTab=='view'">
+
+            <div class="horizontal-menu" ng-show="options.menuOrientation=='horizontal'" ng-style="menuHorizontalStyle()" ng-click="optionsWindow='menu'">Horizontal menu</div>
+            <div class="container-content" >
+                <div class="vertical-menu resizeable-right float-left" ng-show="options.menuOrientation=='vertical'" ng-click="optionsWindow='menu'" ng-style="menuVerticalStyle()">
+                    <button class="btn btn-primary btn-xs" ng-click="contentTab='edit'">Add new item</button>
+                    <ul>
+                        <li ng-repeat='data in menu.root.children' ng-include="'{{ asset('bundles/icapwebsite/templates/menu_renderer.html') }}'">
+                        </li>
+                    </ul>
+                </div>
+                <div class="vertical-resizer float-left" ng-show="options.menuOrientation=='vertical'" ng-mousedown="optionsWindow='menu'" resizer-right resizer ng-style="menuResizerStyle()" resizer-max="200" resizer-min="50" resizer-variable="options.menuVerticalWidth">
+                    <div class="resizer-box-top"></div>
+                    <div class="resizer-box-middle"></div>
+                    <div class="resizer-box-bottom"></div>
+                </div>
+                <div class="content" change-height change-height-variable="contentHeight" ng-style="{'margin-left':((options.menuOrientation=='vertical')?(options.menuVerticalWidth+15):0)+'px'}">
+                    <div>
+                        content {{ '{{contentHeight}}' }} It is! It's the city of New New York! Strictly speaking, it's the fifteenth New York since the original, so that makes it New-New-New-New-New-New-New-New-
+                        New-New-New-New-New-New-New New York. Oh my word! Shall we ask for a better quality of door so we can escape? I can't stand burnt toast. I loathe bus stations. Terrible places.
+                        Full of lost luggage and lost soulsds. Don't you think she looks tired? You'll never understand. I want to see the universe, not to rule it. Rest is for the weary, sleep is for
+                        the dead. I feel like a hungry man eager for the feast! Well, my Doctorate is purely honorary and Harry is only qualified to work on sailors. Good grief.... It's a Stegosaurus!
+                        I'm Dr. James McCrimmon from the township of Balamory. I just have one question... do you know how to fly this thing? Jamie, remind me to give you a lesson in tying knots,
+                        sometime. Eh? Doctor who? What's he talking about...? Logic, my dear Zoe, merely enables one to be wrong with authority. You may disguise your features but you can never
+                        disguise your intent. You don't understand so you find excuses. How can you miss me? I'm easy to find. I'm the guy with two hearts, remember? My ship...my TARDIS...
+                        Nine hundred years of time and space, and I've never been slapped by someone's mother. Kidneys! I have kidneys. And I don't like the colour. You're a clumsy,
+                        ham fisted idiot! If you could touch the alien sand and hear the cries of strange birds, and watch them wheel in another sky, would that satisfy you?
+                        We're trying to defeat the Daleks, not start a jumble sale! Sorry, must dash! Renewed? Have I? That's it, I've been renewed. It's part of the TARDIS. Without it
+                        I couldn't survive. <br/><br/>Americium bismuth californium cobalt copernicium einsteinium fluorine hassium holmium hydrogen iridium livermorium meitnerium
+                        nobelium osmium platinum protactinium radium roentgenium ruthenium seaborgium selenium thulium ununoctium ununseptium zinc. Boron carbon cobalt dubnium
+                        dysprosium europium gadolinium hafnium indium lutetium nobelium silicon strontium tantalum technetium thulium tin vanadium zirconium. Antimony bromine
+                        dysprosium gold iridium lutetium neodymium nickel phosphorus potassium radon technetium thallium thorium tungsten ununoctium ununtrium uranium xenon yttrium.
+                        Cerium copernicium curium germanium hafnium helium iridium neodymium nickel oxygen praseodymium rhenium roentgenium selenium silicon tantalum technetium zirconium.
+                        Barium beryllium bismuth hydrogen indium lithium magnesium meitnerium mercury nitrogen oxygen ruthenium seaborgium tantalum technetium terbium thallium thorium ununseptium.
+                        Berkelium caesium copper fermium gallium helium indium krypton ruthenium titanium ununtrium uranium vanadium zinc. Actinium barium cadmium californium cerium chromium
+                        copernicium dubnium europium krypton meitnerium nickel nitrogen nobelium phosphorus potassium radon ruthenium rutherfordium scandium silicon thulium ununpentium
+                        uranium xenon yttrium. Aluminium antimony cobalt copper gadolinium krypton lanthanum lead meitnerium tantalum thorium ununtrium. Beryllium caesium chromium copper
+                        flerovium lutetium molybdenum plutonium promethium samarium scandium silver technetium xenon ytterbium yttrium. Astatine bromine cadmium caesium flerovium
+                        fluorine gadolinium holmium lead magnesium molybdenum nickel platinum praseodymium samarium thallium titanium ununpentium vanadium. Aluminium
+                        americium argon arsenic berkelium beryllium boron bromine calcium californium dysprosium erbium gadolinium krypton manganese mendelevium neptunium
+                        phosphorus plutonium radium rutherfordium scandium seaborgium tellurium zinc. Astatine calcium dysprosium europium fluorine francium germanium gold lutetium
+                        meitnerium mendelevium mercury neptunium osmium plutonium polonium promethium radium radon ruthenium rutherfordium technetium tin vanadium xenon zirconium.
+                        Actinium aluminium americium bismuth chlorine curium dubnium einsteinium europium fermium gallium holmium lithium livermorium meitnerium mercury neon niobium
+                        oxygen potassium promethium radium ruthenium selenium sulfur tin zinc.
+                    </div>
+                </div>
+                <div class="clear"></div>
+            </div>
+        </div>
+        <!-- CONTENT EDITOR -->
+        <div class="edit-content-container" ng-show="contentTab=='edit'">
+            <div class="edit-menu-container float-left">
+                <button class="btn btn-primary btn-xs" ng-click="menu.root.appendEmptyChild()"><span class="fa fa-plus"></span></button> Site pages
+                <!--<ul id="edit-menu" class="edit-menu" sortable="sortOptions" ng-model="menu.root.children">
+                    <li ng-repeat='data in menu.root.children' sortable-item ng-include="'menu_edit_renderer.html'" ></li>
+                </ul> -->
+                <div ui-tree id="tree-root">
+                    <ul id="edit-menu" class="edit-menu" ui-tree-nodes="" ng-model="menu.root.children">
+                        <li ng-repeat="node in menu.root.children" ui-tree-node ui-tree-handle ng-include="'{{ asset('bundles/icapwebsite/templates/nodes_renderer.html') }}'"></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="edit-page-container">
+                <label>Label</label>
+                <input type="text" ng-model="menu.currentNode.label" />
+                <button ng-click="addNewMenuItem()">Create item</button>
+            </div>
+            <div class="clear"></div>
+        </div>
+        <!-- END OF CONTENT EDITOR -->
+        <div class="footer resizeable-bottom" ng-style="footerStyle()" ng-show="options.footer" ng-click="optionsWindow='footer'">
+            <div>Footer {{ '{{options.footerHeight}}' }}px</div>
+        </div>
+        <div class="horizontal-resizer" ng-style="footerResizerStyle()" resizer-bottom resizer resizer-max="200" resizer-min="0" resizer-variable="options.footerHeight" ng-show="options.footer">
+            <div class="resizer-box-left"></div>
+            <div class="resizer-box-center"></div>
+            <div class="resizer-box-right"></div>
+        </div>
+    </div>
+    </div>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('bundles/icapwebsite/css/angular-ui-tree.min.css') }}" screen="media" />
+    {% stylesheets debug=false filter='lessphp, cssmin' output='css/icapwebsite/style-edit.css'
+    "@IcapWebsiteBundle/Resources/views/less/edit.less"
+    %}
+    <link rel="stylesheet" href="{{ asset_url }}" screen="media" />
+    {% endstylesheets %}
+
+{% endblock %}
+
+
+{% block javascripts %}
+    {% javascripts debug=false filter='jsmin' output='js/website/angular.js'
+    '@IcapWebsiteBundle/Resources/public/js/vendor/angular/angular.min.js'
+    '@IcapWebsiteBundle/Resources/public/js/vendor/angular/angular-resource.min.js'
+    '@IcapWebsiteBundle/Resources/public/js/vendor/angular/angular-route.min.js'
+    '@IcapWebsiteBundle/Resources/public/js/vendor/angular/angular-touch.min.js'
+    %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
+    <script type="text/javascript" src="{{ asset('bundles/icapwebsite/js/vendor/jscolor/jscolor.js') }}"></script>
+
+    <script type="text/javascript" src="{{ asset('bundles/icapwebsite/js/vendor/angular-ui/ui-tinymce/tinymce.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/icapwebsite/js/vendor/angular-ui/ui-tree/angular-ui-tree.js') }}"></script>
+
+    <script type="text/javascript" src="{{ asset('bundles/icapwebsite/js/utilities.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/icapwebsite/js/resizer.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/icapwebsite/js/uploader.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/icapwebsite/js/tree.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/icapwebsite/js/app.js') }}"></script>
+{% endblock %}
