@@ -139,6 +139,32 @@ class PortfolioController extends Controller
     }
 
     /**
+     * @Route("/evaluators/{id}", name="icap_portfolio_manage_evaluators", requirements={"id" = "\d+"})
+     *
+     * @ParamConverter("loggedUser", options={"authenticatedUser" = true})
+     * @Template()
+     */
+    public function manageEvaluatorsAction(User $loggedUser, Portfolio $portfolio)
+    {
+        try {
+            if ($this->getPortfolioFormHandler()->handleVisibility($portfolio)) {
+                $this->getSessionFlashbag()->add('success', $this->getTranslator()->trans('portfolio_evaluators_update_success_message', array(), 'icap_portfolio'));
+
+                return $this->redirect($this->generateUrl('icap_portfolio_list'));
+            }
+        } catch (\Exception $exception) {
+            $this->getSessionFlashbag()->add('error', $this->getTranslator()->trans('portfolio_evaluators_update_error_message', array(), 'icap_portfolio'));
+
+            return $this->redirect($this->generateUrl('icap_portfolio_list'));
+        }
+
+        return array(
+            'form'      => $this->getPortfolioFormHandler()->getEvaluatorsForm($portfolio)->createView(),
+            'portfolio' => $portfolio
+        );
+    }
+
+    /**
      * @Route("/{portfolioSlug}", name="icap_portfolio_view")
      */
     public function viewAction($portfolioSlug)

@@ -74,6 +74,16 @@ class PortfolioHandler
     }
 
     /**
+     * @param \Icap\PortfolioBundle\Entity\Portfolio $portfolio
+     *
+     * @return \Symfony\Component\Form\Form|FormInterface
+     */
+    public function getEvaluatorsForm(Portfolio $portfolio)
+    {
+        return $this->formFactory->create('icap_portfolio_evaluators_form', $portfolio);
+    }
+
+    /**
      * @param  Portfolio $portfolio
      *
      * @return bool True on successfull processing, false otherwise
