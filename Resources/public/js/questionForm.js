@@ -51,7 +51,8 @@
                 }
             });
             $('#typed-question-form-block').show('slow', function () {
-                $(this).removeClass('hidden')
+                $(this).removeClass('hidden');
+                enableChoiceOtherLabel();
             });
         } else {
             $('#typed-question-form-block').hide('slow');
@@ -117,6 +118,6 @@
     $(document).ready(function () {
         enableCommentLabel();
         enableTypedQuestionConfiguration();
-        setTimeout(enableChoiceOtherLabel, 500);
+        enableChoiceOtherLabel();
     });
 })();

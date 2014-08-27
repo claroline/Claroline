@@ -19,6 +19,7 @@
         <br>
         <div class="table-responsive">
             <table id="choices-table"  class="table table-bordered" style="text-align: center">
+            {% set choiceOtherContent = '' %}
                 
             {% if choices|length == 0 %}
                 <tr id="choice-row-0">
@@ -36,7 +37,6 @@
                 {% set choiceIndex = 1 %}
             {% else %}
                 {% set choiceIndex = 0 %}
-                {% set choiceOtherContent = '' %}
                 
                 {% for choice in choices %}
                     {% if not choice.isOther() %}
