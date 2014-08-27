@@ -107,8 +107,9 @@ class StepManager
                 // Load activity from DB
                 $activity = $this->om->getRepository('ClarolineCoreBundle:Resource\Activity')->findOneById($stepStructure->activityId);
                 if (empty($activity)) {
-                    // Can't find Activity
-                    throw new \LogicException('Unable to find Activity referenced by ID : ' . $stepStructure->activityId);
+                    // Can't find Activity => create a new one
+                    $newActivity = true;
+                    $activity = new Activity();
                 }
             }
             else {
