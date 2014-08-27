@@ -30,7 +30,7 @@
                         <h3 class="panel-title">
                             {{ badge.name }}
                             {% if 'inprogress' == badgeType %}<small class="pull-right">{{ 'badge_awarding_in_progress'|trans({}, 'badge') }}</small>{% endif %}
-                            {% if 'finished' == badgeType %}<a href="" class="pull-right"><small>{{ 'badge_awarding_finished'|trans({}, 'badge') }}</small></a>{% endif %}
+                            {% if 'finished' == badgeType %}<a href="{{ path('claro_workspace_tool_claim_badge', {'workspaceId': workspace.id, 'badge_id': badge.id}) }}" class="pull-right"><small>{{ 'badge_awarding_finished'|trans({}, 'badge') }}</small></a>{% endif %}
                         </h3>
                     </div>
                     <div class="panel-body">

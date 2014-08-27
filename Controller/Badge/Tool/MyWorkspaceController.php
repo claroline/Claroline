@@ -12,6 +12,7 @@
 namespace Claroline\CoreBundle\Controller\Badge\Tool;
 
 use Claroline\CoreBundle\Entity\Badge\Badge;
+use Claroline\CoreBundle\Entity\Badge\BadgeClaim;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\Badge\BadgeCreateValidationLinkEvent;
@@ -53,11 +54,17 @@ class MyWorkspaceController extends Controller
     }
 
     /**
-     * @Route("/my_badges/claim/{id}", name="claro_workspace_tool_claim_badge")
+     * @Route("/my_badges/claim/{badge_id}", name="claro_workspace_tool_claim_badge")
+     * @ParamConverter(
+     *     "workspace",
+     *     class="ClarolineCoreBundle:Workspace\Workspace",
+     *     options={"id" = "workspaceId"}
+     * )
      * @ParamConverter("user", options={"authenticatedUser" = true})
+     * @ParamConverter("badge", class="ClarolineCoreBundle:Badge\Badge", options={"id" = "badge_id"})
      * @Template()
      */
-    public function claimAction(Request $request, User $user, Badge $badge)
+    public function claimAction(Workspace $workspace, User $user, Badge $badge)
     {
         $badgeClaim = new BadgeClaim();
         $badgeClaim->setUser($user);
@@ -75,7 +82,7 @@ class MyWorkspaceController extends Controller
             $flashBag->add('error', $translator->trans($exception->getMessage(), array(), 'badge'));
         }
 
-        return $this->redirect($this->generateUrl('claro_workspace_tool_my_badges'));
+        return $this->redirect($this->generateUrl('claro_workspace_tool_my_badges', array('workspaceId' => $workspace->getId())));
     }
 
     /**
