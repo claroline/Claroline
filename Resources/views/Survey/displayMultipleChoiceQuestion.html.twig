@@ -15,32 +15,66 @@
         {% else %}
         
             {% if horizontal %}
-            <div class="table-responsive">
-                <table class="table table-borderless table-condensed text-center">
-                    <tr>
-                        {% for choice in choices %}
-                            <td>
-                                <input type="{{ choiceType }}" id="question-{{question.getId()}}-choice-{{choice.getId()}}"
-                                       name="{% if choiceType == 'radio' %}{{ question.getId() }}[choice]{% else %}{{ question.getId() }}[{{ choice.getId() }}]{% endif %}"
-                                       value="{{ choice.getId() }}"
-                                    {% if answers[choice.getId()] is defined %}checked{% endif %}
-                                    {% if not canEdit %}disabled{% endif %}
-                                >
-                            </td>
-                        {% endfor %}
-                    </tr>
-                    <tr>
-                        {% for choice in choices %}
-                            {% set choiceContent = choice.getContent() %}
-                            <td>
-                                <label class="no-wrap" for="question-{{question.getId()}}-choice-{{choice.getId()}}">
-                                    {{ choiceContent|raw }}
-                                </label>
-                            </td>
-                        {% endfor %}
-                    </tr>
-                </table>
-            </div>
+                {% set otherChoice = '' %}
+        
+                <div class="table-responsive">
+                    <table class="table table-borderless table-condensed text-center">
+                        <tr>
+                            {% for choice in choices %}
+                                {% if not choice.isOther() %}
+                                    <td>
+                                        <input type="{{ choiceType }}" id="question-{{question.getId()}}-choice-{{choice.getId()}}"
+                                               name="{% if choiceType == 'radio' %}{{ question.getId() }}[choice]{% else %}{{ question.getId() }}[{{ choice.getId() }}]{% endif %}"
+                                               value="{{ choice.getId() }}"
+                                            {% if answers[choice.getId()] is defined %}checked{% endif %}
+                                            {% if not canEdit %}disabled{% endif %}
+                                        >
+                                    </td>
+                                {% endif %}
+                            {% endfor %}
+                        </tr>
+                        <tr>
+                            {% for choice in choices %}
+                                {% if choice.isOther() %}
+                                    {% set otherChoice = choice %}
+                                {% else %}
+                                    {% set choiceContent = choice.getContent() %}
+                                    <td>
+                                        <label class="no-wrap" for="question-{{question.getId()}}-choice-{{choice.getId()}}">
+                                            {{ choiceContent|raw }}
+                                        </label>
+                                    </td>
+                                {% endif %}
+                            {% endfor %}
+                        </tr>
+                        
+                        {% if otherChoice is not empty %}
+                            <tr>
+                                <td>
+                                    <input type="{{ choiceType }}" id="question-{{question.getId()}}-choice-{{otherChoice.getId()}}"
+                                           name="{% if choiceType == 'radio' %}{{ question.getId() }}[choice]{% else %}{{ question.getId() }}[{{ otherChoice.getId() }}]{% endif %}"
+                                           value="{{ otherChoice.getId() }}"
+                                           {% if answers[otherChoice.getId()] is defined %}checked{% endif %}
+                                           {% if not canEdit %}disabled{% endif %}
+                                    >
+                                </td>
+                                <td colspan="{{ choices|length - 1 }}">
+                                    <input class="form-control"
+                                           type="text"
+                                           name="{{ question.getId() }}[other]"
+                                           {% if answers['other'] is defined %}value="{{answers['other']}}"{% endif %}>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label class="no-wrap" for="question-{{question.getId()}}-choice-{{otherChoice.getId()}}">
+                                        {{ otherChoice.getContent() }}
+                                    </label>
+                                </td>
+                            </tr>
+                        {% endif %}
+                    </table>
+                </div>
             {% else %}
         
                 {% for choice in choices %}

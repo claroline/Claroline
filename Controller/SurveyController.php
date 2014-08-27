@@ -1262,10 +1262,12 @@ class SurveyController extends Controller
             }
 
             foreach ($choicesCount as $choiceId => $nbAbswers) {
-                $choicesRatio[$choiceId] = round(
-                    ($nbAbswers / $nbChoiceAnswers) * 100,
-                    2
-                );
+                $choicesRatio[$choiceId] = ($nbChoiceAnswers > 0) ?
+                    round(
+                        ($nbAbswers / $nbChoiceAnswers) * 100,
+                        2
+                    ) :
+                    0;
             }
         }
 
