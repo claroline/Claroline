@@ -68,8 +68,14 @@ class BadgeController extends Controller
         }
 
         foreach ($finishedBadges as $finishedBadge) {
+            $badgeType = 'finished';
+
+            if($loggedUser->hasClaimedFor($finishedBadge)) {
+                $badgeType = 'claimed';
+            }
+
             $displayedBadges[] = array(
-                'type'  => 'finished',
+                'type'  => $badgeType,
                 'badge' => $finishedBadge
             );
         }
