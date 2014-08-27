@@ -53,6 +53,32 @@ class MyWorkspaceController extends Controller
     }
 
     /**
+     * @Route("/my_badges/claim/{id}", name="claro_workspace_tool_claim_badge")
+     * @ParamConverter("user", options={"authenticatedUser" = true})
+     * @Template()
+     */
+    public function claimAction(Request $request, User $user, Badge $badge)
+    {
+        $badgeClaim = new BadgeClaim();
+        $badgeClaim->setUser($user);
+
+        try {
+            $flashBag   = $this->get('session')->getFlashBag();
+            $translator = $this->get('translator');
+
+            /** @var \Claroline\CoreBundle\Manager\BadgeManager $badgeManager */
+            $badgeManager = $this->get('claroline.manager.badge');
+            $badgeManager->makeClaim($badge, $user);
+
+            $flashBag->add('success', $translator->trans('badge_claim_success_message', array(), 'badge'));
+        } catch (\Exception $exception) {
+            $flashBag->add('error', $translator->trans($exception->getMessage(), array(), 'badge'));
+        }
+
+        return $this->redirect($this->generateUrl('claro_workspace_tool_my_badges'));
+    }
+
+    /**
      * @Route("/my_badge/{slug}", name="claro_workspace_tool_view_my_badge")
      * @ParamConverter(
      *     "workspace",
