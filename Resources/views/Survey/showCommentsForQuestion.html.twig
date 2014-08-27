@@ -1,0 +1,47 @@
+{% macro renderPager(pager, surveyId, questionId, max) %}
+    {{
+        pagerfanta(
+            pager,
+            'twitter_bootstrap_translated',
+            {
+                'proximity' : 1,
+                'routeName': 'claro_survey_results_show_comments',
+                'routeParams': {'survey': surveyId, 'question': questionId, 'max': max}
+            }
+        )
+    }}
+{% endmacro %}
+
+{% from _self import renderPager %}
+
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                &times;
+            </button>
+            <h3>{{ question.getCommentLabel() }}</h3>
+        </div>
+        <div class="modal-body">
+            
+            {% if comments.getNbPages() > 1 %}
+                {{ renderPager(comments, survey.getId(), question.getId(), max) }}
+            {% endif %}
+            <ul class="list-group">
+                {% for comment in comments %}
+                    <li class="list-group-item">
+                        {{ comment['comment'] }}
+                    </li>
+                {% endfor %}
+            </ul>
+            {% if comments.getNbPages() > 1 %}
+                {{ renderPager(comments, survey.getId(), question.getId(), max) }}
+            {% endif %}
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-default" data-dismiss="modal">
+                {{ "Close" | trans({}, "survey") }}
+            </button>
+        </div>
+    </div>
+</div>

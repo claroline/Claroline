@@ -1,0 +1,52 @@
+{% macro renderPager(pager, surveyId, questionId, choiceId, max) %}
+    {{
+        pagerfanta(
+            pager,
+            'twitter_bootstrap_translated',
+            {
+                'proximity' : 1,
+                'routeName': 'claro_survey_results_show_other_answers',
+                'routeParams': {
+                    'survey': surveyId,
+                    'question': questionId,
+                    'choice': choiceId,
+                    'max': max
+                }
+            }
+        )
+    }}
+{% endmacro %}
+
+{% from _self import renderPager %}
+
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                &times;
+            </button>
+            <h3>{{ choice.getContent() }}</h3>
+        </div>
+        <div class="modal-body">
+            
+            {% if answers.getNbPages() > 1 %}
+                {{ renderPager(answers, survey.getId(), question.getId(), choice.getId(), otherMax) }}
+            {% endif %}
+            <ul class="list-group">
+                {% for answer in answers %}
+                    <li class="list-group-item">
+                        {{ answer.getContent() }}
+                    </li>
+                {% endfor %}
+            </ul>
+            {% if answers.getNbPages() > 1 %}
+                {{ renderPager(answers, survey.getId(), question.getId(), choice.getId(), otherMax) }}
+            {% endif %}
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-default" data-dismiss="modal">
+                {{ "Close" | trans({}, "survey") }}
+            </button>
+        </div>
+    </div>
+</div>

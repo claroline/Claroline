@@ -56,4 +56,25 @@ class QuestionAnswerRepository extends EntityRepository
 
         return $executeQuery ? $query->getOneOrNullResult() : $query;
     }
+
+    public function findCommentsBySurveyAndQuestion(
+        Survey $survey,
+        Question $question,
+        $executeQuery = true
+    )
+    {
+        $dql = "
+            SELECT qa.comment AS comment
+            FROM Claroline\SurveyBundle\Entity\Answer\QuestionAnswer qa
+            JOIN qa.surveyAnswer sa
+            WHERE sa.survey = :survey
+            AND qa.question = :question
+            AND qa.comment IS NOT NULL
+        ";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('survey', $survey);
+        $query->setParameter('question', $question);
+
+        return $executeQuery ? $query->getResult() : $query;
+    }
 }

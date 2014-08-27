@@ -1101,12 +1101,97 @@ class SurveyController extends Controller
 
         $results = $this->showTypedQuestionResults($survey, $question, $page, $max)
             ->getContent();
+        $comments = $this->surveyManager->getCommentsFromQuestionBySurveyAndQuestion(
+            $survey,
+            $question
+        );
 
         return array(
             'survey' => $survey,
             'questions' => $questions,
             'currentQuestion' => $question,
-            'results' => $results
+            'results' => $results,
+            'nbComments' => count($comments),
+            'max' => $max
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/survey/{survey}/results/show/question/{question}/comments/page/{page}/max/{max}",
+     *     name="claro_survey_results_show_comments",
+     *     defaults={"page"=1, "max"=20},
+     *     options={"expose"=true}
+     * )
+     * @EXT\Template()
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function showCommentsForQuestionAction(
+        Survey $survey,
+        Question $question,
+        $page = 1,
+        $max = 20
+    )
+    {
+        $canEdit = $this->hasSurveyRight($survey, 'EDIT');
+
+        if (!$canEdit && !$survey->getHasPublicResult()) {
+
+            throw new AccessDeniedException();
+        }
+        $comments = $this->surveyManager->getCommentsFromQuestionBySurveyAndQuestion(
+            $survey,
+            $question,
+            $page,
+            $max
+        );
+
+        return array(
+            'survey' => $survey,
+            'question' => $question,
+            'max' => $max,
+            'comments' => $comments
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/survey/{survey}/results/show/question/{question}/choice/{choice}/other/page/{page}/max/{max}",
+     *     name="claro_survey_results_show_other_answers",
+     *     defaults={"page"=1, "max"=20},
+     *     options={"expose"=true}
+     * )
+     * @EXT\Template()
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function showOtherAnswersForChoiceAction(
+        Survey $survey,
+        Question $question,
+        Choice $choice,
+        $page = 1,
+        $max = 20
+    )
+    {
+        $canEdit = $this->hasSurveyRight($survey, 'EDIT');
+
+        if (!$canEdit && !$survey->getHasPublicResult()) {
+
+            throw new AccessDeniedException();
+        }
+        $answers = $this->surveyManager->getMultipleChoiceAnswersByChoice(
+            $choice,
+            $page,
+            $max
+        );
+
+        return array(
+            'survey' => $survey,
+            'question' => $question,
+            'choice' => $choice,
+            'otherMax' => $max,
+            'answers' => $answers
         );
     }
 
@@ -1145,7 +1230,8 @@ class SurveyController extends Controller
 
     private function showMultipleChoiceQuestionResults(
         Survey $survey,
-        Question $question
+        Question $question,
+        $otherMax = 20
     )
     {
         $choices = $this->surveyManager->getChoicesByQuestion($question);
@@ -1153,7 +1239,6 @@ class SurveyController extends Controller
         $choicesRatio = array();
         $nbRespondents = 0;
         $nbChoiceAnswers = 0;
-        $otherAnswers = array();
         $otherChoice = null;
 
         $respondents = $this->surveyManager
@@ -1172,12 +1257,6 @@ class SurveyController extends Controller
 
                     if ($choice->isOther() && $choicesCount[$choice->getId()] > 0) {
                         $otherChoice = $choice;
-                        $answers = $this->surveyManager
-                            ->getMultipleChoiceAnswersByChoice($choice);
-
-                        foreach ($answers as $answer) {
-                            $otherAnswers[] = $answer->getContent();
-                        }
                     }
                 }
             }
@@ -1194,12 +1273,14 @@ class SurveyController extends Controller
             $this->templating->render(
                 "ClarolineSurveyBundle:Survey:showMultipleChoiceQuestionResults.html.twig",
                 array(
+                    'survey' => $survey,
+                    'question' => $question,
                     'choices' => $choices,
                     'choicesCount' => $choicesCount,
                     'nbRespondents' => $nbRespondents,
                     'choicesRatio' => $choicesRatio,
-                    'otherAnswers' => $otherAnswers,
-                    'otherChoice' => $otherChoice
+                    'otherChoice' => $otherChoice,
+                    'otherMax' => $otherMax
                 )
             )
         );

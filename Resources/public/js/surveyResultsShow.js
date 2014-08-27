@@ -9,7 +9,7 @@
 
 (function () {
     'use strict';
-    
+
     function getPage(tab)
     {
         var page = 1;
@@ -26,16 +26,15 @@
         return page;
     }
     
-    $('#show-other-answers-btn').on('click', function () {
+    $('#view-comments-btn').on('click', function () {
         var modal = window.Claroline.Modal;
         var surveyId = $(this).data('survey-id');
         var questionId = $(this).data('question-id');
-        var choiceId = $(this).data('choice-id');
-        var max = $(this).data('other-max');
+        var max = $(this).data('max');
         
         modal.fromRoute(
-            'claro_survey_results_show_other_answers',
-            {'survey': surveyId, 'question': questionId, 'choice': choiceId, 'max': max},
+            'claro_survey_results_show_comments',
+            {'survey': surveyId, 'question': questionId, 'max': max},
             function (element) {
                 element.on('click', 'a', function (event) {
                     event.preventDefault();
@@ -48,14 +47,8 @@
                     
                     $.ajax({
                         url: Routing.generate(
-                            'claro_survey_results_show_other_answers',
-                            {
-                                'survey': surveyId,
-                                'question': questionId,
-                                'choice': choiceId,
-                                'page': page,
-                                'max': max
-                            }
+                            'claro_survey_results_show_comments',
+                            {'survey': surveyId, 'question': questionId, 'page': page, 'max': max}
                         ),
                         type: 'GET',
                         success: function (result) {

@@ -23,7 +23,35 @@
             <label>{{ 'question_form_type'| trans({}, 'survey') }} :</label>
             {{ currentQuestion.getType()| trans({}, 'survey') }}
         </div>
+        
+        {% if nbComments > 0 %}
+            {% if currentQuestion.getCommentLabel() is not empty %}
+                {% set commentLabel = currentQuestion.getCommentLabel() %}
+            {% else %}
+                {% set commentLabel = 'comment'|trans({}, 'survey') %}
+            {% endif %}
+            <br>
+            <div>
+                <label>{{ commentLabel }} :</label>
+                {{ nbComments }}
+                &nbsp;
+                <i class="fa fa-comment-o pointer-hand"
+                   id="view-comments-btn"
+                   data-survey-id="{{ survey.getId() }}"
+                   data-question-id="{{ currentQuestion.getId() }}"
+                   data-max="{{ max }}"
+                ></i>
+            </div>
+        {% endif %}
         <br>
         {{ results|raw }}
     </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script
+        src='{{ asset('bundles/clarolinesurvey/js/surveyResultsShow.js') }}'
+        type="text/javascript">
+    </script>
 {% endblock %}

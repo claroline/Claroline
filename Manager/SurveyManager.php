@@ -437,6 +437,23 @@ class SurveyManager
         );
     }
 
+    public function getCommentsFromQuestionBySurveyAndQuestion(
+        Survey $survey,
+        Question $question,
+        $page = 1,
+        $max = 20,
+        $executeQuery = true
+    )
+    {
+        $comments = $this->questionAnswerRepo->findCommentsBySurveyAndQuestion(
+            $survey,
+            $question,
+            $executeQuery
+        );
+
+        return $this->pagerFactory->createPagerFromArray($comments, $page, $max);
+    }
+
 
     /*******************************************************
      * Access to OpenEndedQuestionAnswerRepository methods *
@@ -481,11 +498,6 @@ class SurveyManager
             $question,
             $executeQuery
         );
-//        return $this->openEndedQuestionAnswerRepo->findAnswersBySurveyAndQuestion(
-//            $survey,
-//            $question,
-//            $executeQuery
-//        );
 
         return $this->pagerFactory->createPagerFromArray($answers, $page, $max);
     }
@@ -539,12 +551,16 @@ class SurveyManager
 
     public function getMultipleChoiceAnswersByChoice(
         Choice $choice,
+        $page,
+        $max,
         $executeQuery = true
     )
     {
-        return $this->multipleChoiceQuestionAnswerRepo->findAnswersByChoice(
+        $answers = $this->multipleChoiceQuestionAnswerRepo->findAnswersByChoice(
             $choice,
             $executeQuery
         );
+
+        return $this->pagerFactory->createPagerFromArray($answers, $page, $max);
     }
 }

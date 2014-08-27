@@ -24,7 +24,12 @@
                             {% if choice.isOther() and choicesCount[choiceId] > 0 %}
                                 &nbsp;
                                 <i id="show-other-answers-btn"
-                                   class="fa fa-file-text-o pointer-hand">
+                                   class="fa fa-file-text-o pointer-hand"
+                                   data-survey-id="{{ survey.getId() }}"
+                                   data-question-id="{{ question.getId() }}"
+                                   data-choice-id="{{ choice.getId() }}"
+                                   data-other-max="{{ otherMax }}"
+                                >
                                 </i>
                             {% endif %}
                         {% else %}
@@ -41,40 +46,6 @@
                 </tr>
             {% endfor %}
         </table>
-        
-        {% if otherChoice is not empty %}
-            <div id="view-other-box" class="modal fade" role="dialog" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                                &times;
-                            </button>
-                            <h3>{{ otherChoice.getContent() }}</h3>
-                        </div>
-                        <div id="view-other-body" class="modal-body">
-                            
-                            {% if otherAnswers|length > 0 %}
-                                <ul class="list-group">
-                                    {% for otherAnswer in otherAnswers %}
-                                        <li class="list-group-item">
-                                            {{ otherAnswer }}
-                                        </li>
-                                    {% endfor %}
-                                </ul>
-                            {% endif %}
-                        </div>
-                        <div class="modal-footer">
-                            <input type="button"
-                                   class="btn btn-default"
-                                   data-dismiss="modal"
-                                   value="{{ 'close'|trans({}, 'platform') }}"
-                            />
-                        </div>
-                    </div>
-                </div>
-            </div>
-        {% endif %}
     {% endif %}
 </div>
 
