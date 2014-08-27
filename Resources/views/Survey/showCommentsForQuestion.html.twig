@@ -20,7 +20,13 @@
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
                 &times;
             </button>
-            <h3>{{ question.getCommentLabel() }}</h3>
+            <h3>
+            {% if question.getCommentLabel() is not empty %}
+                {{ question.getCommentLabel() }}
+            {% else %}
+                {{ 'comment'| trans({}, 'survey') }}
+            {% endif %}
+            </h3>
         </div>
         <div class="modal-body">
             
@@ -40,7 +46,7 @@
         </div>
         <div class="modal-footer">
             <button class="btn btn-default" data-dismiss="modal">
-                {{ "Close" | trans({}, "survey") }}
+                {{ 'Close'| trans({}, 'survey') }}
             </button>
         </div>
     </div>
