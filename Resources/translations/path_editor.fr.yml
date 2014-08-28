@@ -80,7 +80,7 @@ step_delete_title: <span class="trash-o"></span> Suppression de l'étape : <stro
 step_delete_children_title: <span class="trash-o"></span> Suppression des enfants de l'étape : <strong>&lt;%stepName%&gt;</strong>
 select_image_title: Sélectionner une image pour l'étape
 step_edit: Modifier l'étape
-step_add_child: Ajouter un enfant
+step_add_child: Ajouter une étape
 step_copy: Copier
 step_paste: Coller
 step_to_template: Sauvegarder comme modèle

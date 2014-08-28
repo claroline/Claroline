@@ -78,7 +78,7 @@ step_delete_title: <span class="trash-o"></span> Delete step : <strong>&lt;%step
 step_delete_children_title: <span class="trash-o"></span> Delete children of step : <strong>&lt;%stepName%&gt;</strong>
 select_image_title: Select step image
 step_edit: Edit step
-step_add_child: Add a child
+step_add_child: Add a step
 step_copy: Copy
 step_paste: Paste
 step_to_template: Save as template
