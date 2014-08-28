@@ -149,7 +149,9 @@ class HomeManager
                     $variables['content'] = $first->getContent();
                     $variables['size'] = $first->getSize();
                     $variables['type'] = $type->getName();
-                    $variables['collapse'] = $first->isCollapse();
+                    if (!$father) {
+                        $variables['collapse'] = $first->isCollapse();
+                    }
                     $variables = $this->homeService->isDefinedPush($variables, 'father', $father, 'getId');
                     $variables = $this->homeService->isDefinedPush($variables, 'region', $region);
                     $array[] = $variables;
