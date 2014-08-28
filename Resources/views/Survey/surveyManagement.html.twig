@@ -47,7 +47,12 @@
                 {{ 'add_question'|trans({}, 'survey') }}
             </span>
         </div>
-        <hr>
+        
+        {% if survey.getDescription() is not empty %}
+            <div class="well well-sm">
+                {{ survey.getDescription()|raw }}
+            </div>
+        {% endif %}
         
         {% if questionRelations|length == 0 %}
             <div class="alert alert-danger" role="alert">
