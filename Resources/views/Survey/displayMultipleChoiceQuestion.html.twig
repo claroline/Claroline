@@ -95,6 +95,7 @@
                                 <input class="form-control"
                                        type="text"
                                        name="{{ question.getId() }}[other]"
+                                       {% if not canEdit %}disabled{% endif %}
                                        {% if answers['other'] is defined %}value="{{answers['other']}}"{% endif %}>
                             </div>
                         {% endif %}
