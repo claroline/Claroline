@@ -10,32 +10,64 @@
 {% extends layout %}
 
 {% block title %}
-    {{ survey.getResourceNode().getName() ~ ' - ' | striptags | raw ~ 'survey_edition'|trans({}, 'survey') }}
+    {{ survey.getResourceNode().getName() | striptags | raw }}
 {% endblock %}
 
 {% block resourceBreadcrumb %}
-    <li>
-        <a href="{{ path('claro_resource_open', { 'resourceType': _resource.getResourceNode().getResourceType().getName(), 'node': _resource.getResourceNode().getId() }) }}">
-            {{ _resource.getResourceNode().getName() }}
-        </a>
-    </li>
-    <li class="active">{{ 'survey_edition' | trans({}, 'survey') }}</li>
+    <li class="active">{{ _resource.getResourceNode().getName() }}</li>
 {% endblock %}
     
 {% block section_content %}
     <div id="survey-data-element" data-survey-id="{{ surveyId }}">
     </div>
     <div class="panel-heading">
-        <h3 class="panel-title">{{ survey.getResourceNode().getName() }} - {{ 'edition'|trans({}, 'survey') }}</h3>
+        <h3 class="panel-title">
+            {{ survey.getResourceNode().getName() }}
+            <div class="dropdown pull-right">
+                <i class="fa fa-cog pull-right pointer-hand dropdown-toggle"
+                   id="dropdownMenu1"
+                   data-toggle="dropdown"
+                ></i>
+                <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                    <li role="presentation">
+                        <a role="menuitem"
+                           tabindex="-1"
+                           href="{{ path('claro_survey_parameters', {'survey': surveyId}) }}"
+                        >
+                            <i class="fa fa-cogs"></i>
+                            {{ 'parameters'|trans({}, 'survey') }}
+                        </a>
+                    </li>
+                    <li role="presentation">
+                        <a role="menuitem"
+                           tabindex="-1"
+                           href="{{ path('claro_survey_questions_management', {'survey': surveyId, 'orderedBy': 'title', 'order': 'ASC'}) }}"
+                        >
+                            <i class="fa fa-question"></i>
+                            {{ 'questions_management'|trans({}, 'survey') }}
+                        </a>
+                    </li>
+                    
+                    {% if status == 'published' or status == 'closed' %}
+                        {% if questionRelations|length > 0 %}
+                            {% set question = questionRelations[0].getQuestion() %}
+                            <li role="presentation" class="divider"></li>
+                            <li role="presentation">
+                                <a role="menuitem" tabindex="-1"
+                                   href="{{ path('claro_survey_results_show', {'survey': surveyId, 'question': question.getId()}) }}"
+                                >
+                                    <i class="fa fa-bar-chart-o"></i>
+                                    {{ 'view_survey_results'|trans({}, 'survey') }}
+                                </a>
+                            </li>
+                        {% endif %}
+                    {% endif %}
+                </ul>
+            </div>
+        </h3>
     </div>
     <div class="panel-body">
         <div>
-            <a href="{{ path('claro_survey_index', {'survey': surveyId}) }}"
-               class="btn btn-primary margin-bottom-md"
-            >
-                <i class="fa fa-arrow-left"></i>
-                {{ 'return'|trans({}, 'survey') }}
-            </a>
             <a href="{{ path('claro_survey_question_create_form', {'survey': surveyId, 'source': 'survey'}) }}"
                class="btn btn-primary margin-bottom-md"
             >
@@ -46,6 +78,21 @@
                 <i class="fa fa-search"></i>
                 {{ 'add_question'|trans({}, 'survey') }}
             </span>
+            <span class="btn btn-primary view-survey-btn margin-bottom-md"
+                  data-survey-id="{{ surveyId }}"
+            >
+                <i class="fa fa-eye"></i>
+                {{ 'display_survey'|trans({}, 'survey') }}
+            </span>
+            
+            {% if status == 'published' or status == 'closed' %}
+                <a href="{{ path('claro_survey_answer_form', {'survey': surveyId}) }}"
+                   class="btn btn-success margin-bottom-md"
+                >
+                    <i class="fa fa-check-square-o"></i>
+                    {{ 'answer_to_survey'|trans({}, 'survey') }}
+                </a>
+            {% endif %}
         </div>
         
         {% if survey.getDescription() is not empty %}
@@ -142,6 +189,22 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div id="view-question-body" class="modal-body">
+                </div>
+                <div class="modal-footer">
+                    <input type="button"
+                           class="btn btn-default"
+                           data-dismiss="modal"
+                           value="{{ 'close'|trans({}, 'platform') }}"
+                    />
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="view-survey-box" class="modal fade" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div id="view-survey-body" class="modal-body">
                 </div>
                 <div class="modal-footer">
                     <input type="button"

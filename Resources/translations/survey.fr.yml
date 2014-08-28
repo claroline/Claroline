@@ -44,6 +44,7 @@ not_mandatory_answer_message: 'Une réponse n''est pas requise'
 number_of_respondents: 'Nombre de personnes ayant répondu'
 number_of_responses: 'Nombre de réponses'
 open_ended: 'Ouverte'
+parameters: Paramètres
 parameters_edition: 'Modification des paramètres'
 publication_date: 'Date de publication'
 publication_date_next: 'Prochaine date de publication'
@@ -76,6 +77,7 @@ survey_edition_form_endDate: 'Date de fin'
 survey_edition_form_hasPublicResult: 'Afficher le résultat aux utilisateurs'
 survey_edition_form_startDate: 'Date de début'
 survey_form_description: Description
+survey_parameters: 'Paramètres du sondage'
 survey_parameters_edition: 'Modification des paramètres du sondage'
 survey_results: 'Résultats du sondage'
 title: Titre

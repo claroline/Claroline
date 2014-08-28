@@ -15,28 +15,12 @@
 
 {% block resourceBreadcrumb %}
     <li>
-        <a href="{{ path(
-            'claro_resource_open',
-            {
-                'resourceType': _resource.getResourceNode().getResourceType().getName(),
-                'node': _resource.getResourceNode().getId()
-            }
-        ) }}">
+        <a href="{{ path('claro_survey_index', {'survey': surveyId}) }}">
             {{ _resource.getResourceNode().getName() }}
         </a>
     </li>
     
-    {% if source == 'survey' %}
-        <li>
-            <a href="{{ path(
-                'claro_survey_management',
-                {'survey': surveyId}
-            ) }}">
-                {{ 'survey_edition'|trans({}, 'survey') }}
-            </a>
-        </li>
-    
-    {% else %}
+    {% if source != 'survey' %}
         <li>
             <a href="{{ path(
                 'claro_survey_questions_management',

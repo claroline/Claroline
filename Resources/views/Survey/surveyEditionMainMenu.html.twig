@@ -12,14 +12,40 @@
 {% extends layout %}
 
 {% block title %}
-    {{ survey.getResourceNode().getName() | striptags | raw  }}
+    {{ survey.getResourceNode().getName() | striptags | raw ~ ' - ' ~ 'parameters'|trans({}, 'survey') }}
+{% endblock %}
+
+{% block resourceBreadcrumb %}
+    <li>
+        <a href="{{ path('claro_survey_index', {'survey': surveyId}) }}">
+            {{ _resource.getResourceNode().getName() }}
+        </a>
+    </li>
+    <li class="active">{{ 'parameters' | trans({}, 'survey') }}</li>
 {% endblock %}
 
 {% block section_content %}
     <div class="panel-heading">
-        <h3 class="panel-title">{{ survey.getResourceNode().getName() }}</h3>
+        <h3 class="panel-title">
+            {{ 'survey_parameters'|trans({}, 'survey') }}
+        </h3>
     </div>
     <div class="panel-body">
+        <div>
+            <a href="{{ path('claro_survey_index', {'survey': surveyId}) }}"
+               class="btn btn-primary margin-bottom-md"
+            >
+                <i class="fa fa-arrow-left"></i>
+                {{ 'return'|trans({}, 'survey') }}
+            </a>
+            <a href="{{ path('claro_survey_parameters_edit_form', {'survey': surveyId}) }}"
+                class="btn btn-primary margin-bottom-md"
+            >
+                <i class="fa fa-pencil"></i>
+                {{ 'edit_parameters'|trans({}, 'survey') }}
+            </a>
+        </div>
+        <hr>
         <div class="table-responsive">
             <table class="table table-bordered table-hover text-center">
                 <tr>
@@ -100,76 +126,4 @@
             </table>
         </div>
     </div>
-    <div class="panel-footer">
-        <span class="btn btn-primary view-survey-btn margin-bottom-md"
-              data-survey-id="{{ surveyId }}"
-        >
-            <i class="fa fa-eye"></i>
-            {{ 'display_survey'|trans({}, 'survey') }}
-        </span>
-        <a href="{{ path('claro_survey_management', {'survey': surveyId}) }}"
-            class="btn btn-primary margin-bottom-md"
-        >
-            <i class="fa fa-list"></i>
-            {{ 'edit_survey'|trans({}, 'survey') }}
-        </a>
-        <a href="{{ path('claro_survey_parameters_edit_form', {'survey': surveyId}) }}"
-            class="btn btn-primary margin-bottom-md"
-        >
-            <i class="fa fa-pencil"></i>
-            {{ 'edit_parameters'|trans({}, 'survey') }}
-        </a>
-        <a href="{{
-            path(
-                'claro_survey_questions_management',
-                {'survey': surveyId, 'orderedBy': 'title', 'order': 'ASC'}
-            ) }}"
-            class="btn btn-primary margin-bottom-md"
-        >
-            <i class="fa fa-question"></i>
-            {{ 'questions_management'|trans({}, 'survey') }}
-        </a>
-        {% if status == 'published' or status == 'closed' %}
-            <a href="{{ path('claro_survey_answer_form', {'survey': surveyId}) }}" class="btn btn-primary margin-bottom-md">
-                <i class="fa fa-check-square-o"></i>
-                {{ 'answer_to_survey'|trans({}, 'survey') }}
-            </a>
-            
-            {% set questionsRelations = survey.getQuestionRelations() %}
-        
-            {% if questionsRelations|length > 0 %}
-                {% set question = questionsRelations[0].getQuestion() %}
-                <a href="{{ path('claro_survey_results_show', {'survey': surveyId, 'question': question.getId()}) }}"
-                   class="btn btn-primary margin-bottom-md"
-                >
-                    <i class="fa fa-bar-chart-o"></i>
-                    {{ 'view_survey_results'|trans({}, 'survey') }}
-                </a>
-            {% endif %}
-        {% endif %}
-    </div>
-
-    <div id="view-survey-box" class="modal fade" role="dialog" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div id="view-survey-body" class="modal-body">
-                </div>
-                <div class="modal-footer">
-                    <input type="button"
-                           class="btn btn-default"
-                           data-dismiss="modal"
-                           value="{{ 'close'|trans({}, 'platform') }}"
-                    />
-                </div>
-            </div>
-        </div>
-    </div>
-{% endblock %}
-
-{% block javascripts %}
-    {{ parent() }}
-    <script
-        src='{{ asset('bundles/clarolinesurvey/js/surveyEditionMainMenu.js') }}'
-        type="text/javascript">
-    </script>
 {% endblock %}

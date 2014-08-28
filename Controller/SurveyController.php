@@ -98,9 +98,10 @@ class SurveyController extends Controller
 
             return new Response(
                 $this->templating->render(
-                    "ClarolineSurveyBundle:Survey:surveyEditionMainMenu.html.twig",
+                    "ClarolineSurveyBundle:Survey:surveyManagement.html.twig",
                     array(
                         'survey' => $survey,
+                        'questionRelations' => $survey->getQuestionRelations(),
                         'status' => $status
                     )
                 )
@@ -113,6 +114,28 @@ class SurveyController extends Controller
             'status' => $status,
             'currentDate' => $currentDate,
             'hasAnswered' => $hasAnswered
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/survey/{survey}/parameters",
+     *     name="claro_survey_parameters"
+     * )
+     * @EXT\Template()
+     *
+     * @param Survey $survey
+     * @return array
+     */
+    public function surveyEditionMainMenuAction(Survey $survey)
+    {
+        $this->checkSurveyRight($survey, 'EDIT');
+        $this->surveyManager->updateSurveyStatus($survey);
+        $status = $this->computeStatus($survey);
+
+        return array(
+            'survey' => $survey,
+            'status' => $status
         );
     }
 
@@ -162,7 +185,7 @@ class SurveyController extends Controller
 
             return new RedirectResponse(
                 $this->router->generate(
-                    'claro_survey_index',
+                    'claro_survey_parameters',
                     array('survey' => $survey->getId())
                 )
             );
@@ -187,10 +210,12 @@ class SurveyController extends Controller
     {
         $this->checkSurveyRight($survey, 'EDIT');
         $questionRelations = $survey->getQuestionRelations();
+        $status = $this->computeStatus($survey);
 
         return array(
             'survey' => $survey,
-            'questionRelations' => $questionRelations
+            'questionRelations' => $questionRelations,
+            'status' => $status
         );
     }
 
@@ -242,7 +267,7 @@ class SurveyController extends Controller
 
         return new RedirectResponse(
             $this->router->generate(
-                'claro_survey_index',
+                'claro_survey_parameters',
                 array('survey' => $survey->getId())
             )
         );
@@ -267,7 +292,7 @@ class SurveyController extends Controller
 
         return new RedirectResponse(
             $this->router->generate(
-                'claro_survey_index',
+                'claro_survey_parameters',
                 array('survey' => $survey->getId())
             )
         );

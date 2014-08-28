@@ -5,6 +5,7 @@
 {% endif %}
 
 {% set _resource = survey %}
+{% set surveyId = survey.getId() %}
 
 {% extends layout %}
 
@@ -14,14 +15,13 @@
 
 {% block resourceBreadcrumb %}
     <li>
-        <a href="{{ path(
-            'claro_resource_open',
-            {
-                'resourceType': _resource.getResourceNode().getResourceType().getName(),
-                'node': _resource.getResourceNode().getId()
-            }
-        ) }}">
+        <a href="{{ path('claro_survey_index', {'survey': surveyId}) }}">
             {{ _resource.getResourceNode().getName() }}
+        </a>
+    </li>
+    <li>
+        <a href="{{ path('claro_survey_parameters', {'survey': surveyId}) }}">
+            {{ 'parameters' | trans({}, 'survey') }}
         </a>
     </li>
     <li class="active">{{ 'parameters_edition' | trans({}, 'survey') }}</li>
@@ -44,9 +44,13 @@
         </div>
         <br>
         <div class="panel-footer">
-            <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
-            <a href="{{ path('claro_survey_index', {'survey': survey.getId()}) }}">
-                <button type="button" class="btn btn-default">{{ 'cancel'|trans({}, 'platform') }}</button>
+            <button type="submit" class="btn btn-primary">
+                {{ 'ok'|trans({}, 'platform') }}
+            </button>
+            <a href="{{ path('claro_survey_parameters', {'survey': surveyId}) }}">
+                <button type="button" class="btn btn-default">
+                    {{ 'cancel'|trans({}, 'platform') }}
+                </button>
             </a>
         </div>
     </form>

@@ -82,4 +82,20 @@
             }
         });
     });
+    
+    $('.view-survey-btn').on('click', function () {
+        var surveyId = $(this).data('survey-id');
+        
+        $.ajax({
+            url: Routing.generate(
+                'claro_survey_display',
+                {'survey': surveyId}
+            ),
+            type: 'GET',
+            success: function (datas) {
+                $('#view-survey-body').html(datas);
+                $('#view-survey-box').modal('show');
+            }
+        });
+    });
 })();

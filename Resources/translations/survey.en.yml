@@ -44,6 +44,7 @@ not_mandatory_answer_message: 'An answer is not required'
 number_of_respondents: 'Number of respondents'
 number_of_responses: 'Number of responses'
 open_ended: 'Open-ended'
+parameters: Parameters
 parameters_edition: 'Parameters edition'
 publication_date: 'Publication date'
 publication_date_next: 'Next publication date'
@@ -76,6 +77,7 @@ survey_edition_form_endDate: 'End date'
 survey_edition_form_hasPublicResult: 'Show result to users'
 survey_edition_form_startDate: 'Starting date'
 survey_form_description: Description
+survey_parameters: 'Survey parameters'
 survey_parameters_edition: 'Survey parameters edition'
 survey_results: 'Survey results'
 title: Title
