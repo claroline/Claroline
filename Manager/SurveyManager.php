@@ -346,6 +346,13 @@ class SurveyManager
         $this->om->flush();
     }
 
+    public function deleteQuestionModel(QuestionModel $model)
+    {
+        $this->om->remove($model);
+        $this->om->flush();
+    }
+
+
     /****************************************
      * Access to QuestionRepository methods *
      ****************************************/
@@ -631,11 +638,15 @@ class SurveyManager
 
     public function getQuestionModelsByWorkspace(
         Workspace $workspace,
+        $orderedBy = 'title',
+        $order = 'ASC',
         $executeQuery = true
     )
     {
         return $this->questionModelRepo->findModelsByWorkspace(
             $workspace,
+            $orderedBy,
+            $order,
             $executeQuery
         );
     }

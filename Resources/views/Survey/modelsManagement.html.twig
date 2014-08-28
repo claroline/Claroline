@@ -1,0 +1,137 @@
+{% macro sortUrl(surveyId, orderedBy, order) %}
+    {% if order == 'ASC' %}
+        {% set newOrder = 'DESC' %}
+    {% else %}
+        {% set newOrder = 'ASC' %}
+    {% endif %}
+
+    {{ path('claro_survey_models_management', {'survey': surveyId, 'orderedBy': orderedBy, 'order': newOrder }) }}
+{% endmacro %}
+
+{% from _self import sortUrl %}
+
+{% set layout = 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
+
+{% if isDesktop() %}
+    {% set layout = 'ClarolineCoreBundle:Desktop:layout.html.twig' %}
+{% endif %}
+
+{% set _resource = survey %}
+{% set surveyId = survey.getId() %}
+
+{% extends layout %}
+
+{% block title %}
+    {{ survey.getResourceNode().getName() ~ ' - ' | striptags | raw ~ 'models_management'|trans({}, 'survey') }}
+{% endblock %}
+
+{% block resourceBreadcrumb %}
+    <li>
+        <a href="{{ path('claro_resource_open', { 'resourceType': _resource.getResourceNode().getResourceType().getName(), 'node': _resource.getResourceNode().getId() }) }}">
+            {{ _resource.getResourceNode().getName() }}
+        </a>
+    </li>
+    <li>
+        <a href="{{ path('claro_survey_questions_management', {'survey': surveyId, 'orderedBy': 'title', 'order': 'ASC' }) }}">
+            {{ 'questions_management' | trans({}, 'survey') }}
+        </a>
+    </li>
+    <li class="active">{{ 'models_management' | trans({}, 'survey') }}</li>
+{% endblock %}
+
+{% block section_content %}
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ 'models_management'|trans({}, 'survey') }}</h3>
+    </div>
+    <div class="panel-body">
+        <div>
+            <a href="{{ path('claro_survey_questions_management', {'survey': surveyId, 'orderedBy': 'title', 'order': 'ASC' }) }}"
+               class="btn btn-primary margin-bottom-md"
+            >
+                <i class="fa fa-arrow-left"></i>
+                {{ 'return'|trans({}, 'survey') }}
+            </a>
+        </div>
+        <hr>
+        {% if models|length > 0 %}
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover text-center">
+                    <tr>
+                        <th class="text-center">
+                            <a href="{{ sortUrl(surveyId, 'title', order) }}">
+                                {{ 'name'|trans({}, 'survey') }}
+                            </a>
+                        </th>
+                        <th class="text-center">
+                            <a href="{{ sortUrl(surveyId, 'questionType', order) }}">
+                                {{ 'type'|trans({}, 'survey') }}
+                            </a>
+                        </th>
+                        <th class="text-center">
+                            {{ 'delete'|trans({}, 'survey') }}
+                        </th>
+                    </tr>
+                    
+                    {% for model in models %}
+                        <tr>
+                            <td>
+                                {{ model.getTitle() }}
+                            </td>
+                            <td>
+                                {{ model.getQuestionType()|trans({}, 'survey') }}
+                            </td>
+                            <td>
+                                <span class="btn btn-danger delete-model-btn"
+                                      data-model-id="{{ model.getId() }}"
+                                      data-survey-id="{{ survey.getId() }}"
+                                >
+                                    <i class="fa fa-trash-o"></i>
+                                </span>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        {% else %}
+            <div class="alert alert-warning" role="alert">
+                {{ 'no_model'|trans({}, 'survey') }}
+            </div>
+        {% endif %}
+    </div>
+    
+    <div id="delete-model-validation-box" class="modal fade" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h3>{{ 'model_delete_confirm_title'|trans({}, 'survey') }}</h3>
+                </div>
+                <div class="modal-body">
+                    <p>{{ 'model_delete_confirm_message'|trans({}, 'survey') }}</p>
+                </div>
+                <div class="modal-footer">
+                    <input type="button"
+                           id="delete-model-confirm-ok"
+                           class="btn btn-primary"
+                           value="{{ 'ok'|trans({}, 'platform') }}"
+                    />
+                    <input type="button"
+                           class="btn btn-default"
+                           data-dismiss="modal"
+                           value="{{ 'cancel'|trans({}, 'platform') }}"
+                    />
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script
+        src='{{ asset('bundles/clarolinesurvey/js/modelsManagement.js') }}'
+        type="text/javascript">
+    </script>
+{% endblock %}

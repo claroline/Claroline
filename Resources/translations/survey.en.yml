@@ -29,12 +29,16 @@ horizontal: Horizontal
 label_for_choice_other: 'Label for choice "Other"'
 mandatory_answer_message: 'An answer is required'
 model: Model
+model_delete_confirm_message: 'Do you really want to delete this model ?'
+model_delete_confirm_title: 'Delete model'
+models_management: 'Models management'
 multiple_choice_multiple: 'Multiple choice (Multiple answers)'
 multiple_choice_multiple_answers: 'Multiple choice (Multiple answers)'
 multiple_choice_single: 'Multiple choice (Unique answer)'
 multiple_choice_single_answer: 'Multiple choice (Unique answer)'
 name: Name
 no_choice_warning: 'Warning! There is no choice.'
+no_model: 'No model'
 no_question: 'No question'
 not_mandatory_answer_message: 'An answer is not required'
 number_of_respondents: 'Number of respondents'

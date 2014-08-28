@@ -18,6 +18,8 @@ class QuestionModelRepository extends EntityRepository
 {
     public function findModelsByWorkspace(
         Workspace $workspace,
+        $orderedBy = 'title',
+        $order = 'ASC',
         $executeQuery = true
     )
     {
@@ -25,12 +27,11 @@ class QuestionModelRepository extends EntityRepository
             SELECT qm
             FROM Claroline\SurveyBundle\Entity\QuestionModel qm
             WHERE qm.workspace = :workspace
-            ORDER BY qm.title ASC
+            ORDER BY qm.{$orderedBy} {$order}
         ";
         $query = $this->_em->createQuery($dql);
         $query->setParameter('workspace', $workspace);
 
         return $executeQuery ? $query->getResult() : $query;
     }
-
 }

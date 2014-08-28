@@ -52,6 +52,12 @@
                 <i class="fa fa-plus-circle"></i>
                 {{ 'create_question'|trans({}, 'survey') }}
             </a>
+            <a href="{{ path('claro_survey_models_management', {'survey': surveyId, 'orderedBy': 'title', 'order': 'ASC'}) }}"
+               class="btn btn-primary margin-bottom-md"
+            >
+                <i class="fa fa-plus-circle"></i>
+                {{ 'models_management'|trans({}, 'survey') }}
+            </a>
         </div>
         <hr>
         {% if questions|length > 0 %}

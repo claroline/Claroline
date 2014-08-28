@@ -302,6 +302,71 @@ class SurveyController extends Controller
 
     /**
      * @EXT\Route(
+     *     "/survey/{survey}/models/management/ordered/by/{orderedBy}/order/{order}",
+     *     name="claro_survey_models_management",
+     *     defaults={"ordered"="title","order"="ASC"}
+     * )
+     * @EXT\Template()
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function modelsManagementAction(Survey $survey, $orderedBy, $order)
+    {
+        $this->checkSurveyRight($survey, 'EDIT');
+        $models = $this->surveyManager->getQuestionModelsByWorkspace(
+            $survey->getResourceNode()->getWorkspace(),
+            $orderedBy,
+            $order
+        );
+
+        return array(
+            'survey' => $survey,
+            'models' => $models,
+            'orderedBy' => $orderedBy,
+            'order' => $order
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/survey/{survey}/model/{model}/delete",
+     *     name="claro_survey_model_delete",
+     *     options={"expose"=true}
+     * )
+     * @EXT\Template("ClarolineSurveyBundle:Survey:modelsManagement.html.twig")
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function modelDeleteAction(QuestionModel $model, Survey $survey)
+    {
+        $canEdit = $this->hasSurveyRight($survey, 'EDIT');
+        $workspaceIdA = $survey->getResourceNode()->getWorkspace()->getId();
+        $workspaceIdB = $model->getWorkspace()->getId();
+
+        if (!$canEdit || ($workspaceIdA !== $workspaceIdB)) {
+
+            throw new AccessDeniedException();
+        }
+        $this->surveyManager->deleteQuestionModel($model);
+        $models = $this->surveyManager->getQuestionModelsByWorkspace(
+            $survey->getResourceNode()->getWorkspace()
+        );
+
+        return new RedirectResponse(
+            $this->router->generate(
+                'claro_survey_models_management',
+                array(
+                    'survey' => $survey->getId(),
+                    'models' => $models,
+                    'orderedBy' => 'title',
+                    'order' => 'ASC'
+                )
+            )
+        );
+    }
+
+    /**
+     * @EXT\Route(
      *     "/survey/{survey}/questions/list",
      *     name="claro_survey_questions_list",
      *     options={"expose"=true}

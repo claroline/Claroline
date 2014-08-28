@@ -29,12 +29,16 @@ horizontal: Horizontal
 label_for_choice_other: 'Libellé du choix "Autre"'
 mandatory_answer_message: 'Une réponse est requise'
 model: Modèle
+model_delete_confirm_message: 'Êtes-vous sûr de vouloir supprimer ce modèle ?'
+model_delete_confirm_title: 'Suppression du modèle'
+models_management: 'Gestion des modèles'
 multiple_choice_multiple: 'Choix multiple (Réponses multiples)'
 multiple_choice_multiple_answers: 'Choix multiple (Réponses multiples)'
 multiple_choice_single: 'Choix multiple (Réponse unique)'
 multiple_choice_single_answer: 'Choix multiple (Réponse unique)'
 name: Nom
 no_choice_warning: 'Attention! Il n''y a aucun choix.'
+no_model: 'Aucun modèle'
 no_question: 'Aucune question'
 not_mandatory_answer_message: 'Une réponse n''est pas requise'
 number_of_respondents: 'Nombre de personnes ayant répondu'
