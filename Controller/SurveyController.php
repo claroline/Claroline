@@ -19,6 +19,7 @@ use Claroline\SurveyBundle\Entity\Answer\QuestionAnswer;
 use Claroline\SurveyBundle\Entity\Answer\SurveyAnswer;
 use Claroline\SurveyBundle\Entity\Choice;
 use Claroline\SurveyBundle\Entity\Question;
+use Claroline\SurveyBundle\Entity\QuestionModel;
 use Claroline\SurveyBundle\Entity\Survey;
 use Claroline\SurveyBundle\Entity\SurveyQuestionRelation;
 use Claroline\SurveyBundle\Form\QuestionType;
@@ -349,11 +350,15 @@ class SurveyController extends Controller
             new QuestionType(),
             new Question()
         );
+        $models = $this->surveyManager->getQuestionModelsByWorkspace(
+            $survey->getResourceNode()->getWorkspace()
+        );
 
         return array(
             'form' => $form->createView(),
             'survey' => $survey,
-            'source' => $source
+            'source' => $source,
+            'models' => $models
         );
     }
 
@@ -387,7 +392,12 @@ class SurveyController extends Controller
                 case 'multiple_choice_single':
                 case 'multiple_choice_multiple':
                     $postDatas = $this->request->getCurrentRequest()->request->all();
+
                     $this->updateMultipleChoiceQuestion($question, $postDatas);
+
+                    if (isset($postDatas['model'])) {
+                        $this->surveyManager->createQuestionModel($question);
+                    }
                     break;
                 case 'open-ended':
                 default:
@@ -418,11 +428,15 @@ class SurveyController extends Controller
                 );
             }
         }
+        $models = $this->surveyManager->getQuestionModelsByWorkspace(
+            $survey->getResourceNode()->getWorkspace()
+        );
 
         return array(
             'form' => $form->createView(),
             'survey' => $survey,
-            'source' => $source
+            'source' => $source,
+            'models' => $models
         );
     }
 
@@ -447,12 +461,16 @@ class SurveyController extends Controller
             new QuestionType(),
             $question
         );
+        $models = $this->surveyManager->getQuestionModelsByWorkspace(
+            $survey->getResourceNode()->getWorkspace()
+        );
 
         return array(
             'form' => $form->createView(),
             'question' => $question,
             'survey' => $survey,
-            'source' => $source
+            'source' => $source,
+            'models' => $models
         );
     }
 
@@ -490,6 +508,10 @@ class SurveyController extends Controller
                 case 'multiple_choice_multiple':
                     $postDatas = $this->request->getCurrentRequest()->request->all();
                     $this->updateMultipleChoiceQuestion($question, $postDatas);
+
+                    if (isset($postDatas['model'])) {
+                        $this->surveyManager->createQuestionModel($question);
+                    }
                     break;
                 case 'open-ended':
                 default:
@@ -518,12 +540,16 @@ class SurveyController extends Controller
                 );
                 }
         }
+        $models = $this->surveyManager->getQuestionModelsByWorkspace(
+            $survey->getResourceNode()->getWorkspace()
+        );
 
         return array(
             'form' => $form->createView(),
             'question' => $question,
             'survey' => $survey,
-            'source' => $source
+            'source' => $source,
+            'models' => $models
         );
     }
 
@@ -1195,6 +1221,29 @@ class SurveyController extends Controller
         );
     }
 
+    /**
+     * @EXT\Route(
+     *     "/survey/{survey}/model/{model}/details/retrieve",
+     *     name="claro_survey_retrieve_model_details",
+     *     options={"expose"=true}
+     * )
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function retrieveModelDetailsAction(Survey $survey, QuestionModel $model)
+    {
+        $canEdit = $this->hasSurveyRight($survey, 'EDIT');
+        $workspaceIdA = $survey->getResourceNode()->getWorkspace()->getId();
+        $workspaceIdB = $model->getWorkspace()->getId();
+
+        if (!$canEdit || ($workspaceIdA !== $workspaceIdB)) {
+
+            throw new AccessDeniedException();
+        }
+
+        return new Response(json_encode($model->getDetails()), 200);
+    }
+
     private function showTypedQuestionResults(
         Survey $survey,
         Question $question,
@@ -1441,18 +1490,16 @@ class SurveyController extends Controller
         $hasChoiceOther = isset($datas['choice-other']['other']) &&
             $datas['choice-other']['other'] === 'other';
 
-//        throw new \Exception(var_dump($hasChoiceOther));
-//        throw new \Exception(var_dump($datas['choice-other']));
-
         $multipleChoiceQuestion = $this->surveyManager
             ->getMultipleChoiceQuestionByQuestion($question);
 
         if (is_null($multipleChoiceQuestion)) {
-            $this->surveyManager->createMultipleChoiceQuestion(
-                $question,
-                $horizontal,
-                $choices
-            );
+            $multipleChoiceQuestion = $this->surveyManager
+                ->createMultipleChoiceQuestion(
+                    $question,
+                    $horizontal,
+                    $choices
+                );
         } else {
             $this->surveyManager->updateQuestionChoices(
                 $multipleChoiceQuestion,

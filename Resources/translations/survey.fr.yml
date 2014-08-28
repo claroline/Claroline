@@ -16,6 +16,7 @@ closed_user_message: 'Le sondage est clôturé.'
 closing_date: 'Date de clôture'
 closing_date_next: 'Prochaine date de clôture'
 comment: Commentaire
+create_model_from_question: 'Créer un modèle à partir de la question'
 create_question: 'Créer une question'
 description: Description
 display_survey: 'Afficher le sondage'
@@ -27,6 +28,7 @@ end_date: 'Date de fin'
 horizontal: Horizontal
 label_for_choice_other: 'Libellé du choix "Autre"'
 mandatory_answer_message: 'Une réponse est requise'
+model: Modèle
 multiple_choice_multiple: 'Choix multiple (Réponses multiples)'
 multiple_choice_multiple_answers: 'Choix multiple (Réponses multiples)'
 multiple_choice_single: 'Choix multiple (Réponse unique)'

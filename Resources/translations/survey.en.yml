@@ -16,6 +16,7 @@ closed_user_message: 'The survey is closed.'
 closing_date: 'Closing date'
 closing_date_next: 'Next closing date'
 comment: Comment
+create_model_from_question: 'Create a model from question'
 create_question: 'Create a question'
 description: Description
 display_survey: 'Display survey'
@@ -27,6 +28,7 @@ end_date: 'End date'
 horizontal: Horizontal
 label_for_choice_other: 'Label for choice "Other"'
 mandatory_answer_message: 'An answer is required'
+model: Model
 multiple_choice_multiple: 'Multiple choice (Multiple answers)'
 multiple_choice_multiple_answers: 'Multiple choice (Multiple answers)'
 multiple_choice_single: 'Multiple choice (Unique answer)'

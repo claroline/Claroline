@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/08/25 01:39:27
+ * Generation date: 2014/08/28 02:27:39
  */
-class Version20140825133925 extends AbstractMigration
+class Version20140828142738 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -123,6 +123,19 @@ class Version20140825133925 extends AbstractMigration
             CREATE UNIQUE INDEX survey_unique_question_order ON claro_survey_question_relation (survey_id, question_order)
         ");
         $this->addSql("
+            CREATE TABLE claro_survey_question_model (
+                id INTEGER NOT NULL, 
+                workspace_id INTEGER NOT NULL, 
+                title CLOB NOT NULL, 
+                question_type VARCHAR(255) NOT NULL, 
+                details CLOB DEFAULT NULL, 
+                PRIMARY KEY(id)
+            )
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_88BF64F482D40A1F ON claro_survey_question_model (workspace_id)
+        ");
+        $this->addSql("
             CREATE TABLE claro_survey_question (
                 id INTEGER NOT NULL, 
                 workspace_id INTEGER NOT NULL, 
@@ -172,6 +185,9 @@ class Version20140825133925 extends AbstractMigration
         ");
         $this->addSql("
             DROP TABLE claro_survey_question_relation
+        ");
+        $this->addSql("
+            DROP TABLE claro_survey_question_model
         ");
         $this->addSql("
             DROP TABLE claro_survey_question

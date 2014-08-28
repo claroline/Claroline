@@ -21,6 +21,7 @@ use Claroline\SurveyBundle\Entity\Answer\QuestionAnswer;
 use Claroline\SurveyBundle\Entity\Answer\SurveyAnswer;
 use Claroline\SurveyBundle\Entity\Choice;
 use Claroline\SurveyBundle\Entity\Question;
+use Claroline\SurveyBundle\Entity\QuestionModel;
 use Claroline\SurveyBundle\Entity\MultipleChoiceQuestion;
 use Claroline\SurveyBundle\Entity\Survey;
 use Claroline\SurveyBundle\Entity\SurveyQuestionRelation;
@@ -40,6 +41,7 @@ class SurveyManager
     private $surveyAnswerRepo;
     private $surveyQuestionRelationRepo;
     private $questionAnswerRepo;
+    private $questionModelRepo;
     private $questionRepo;
     
     /**
@@ -66,6 +68,8 @@ class SurveyManager
             $om->getRepository('ClarolineSurveyBundle:SurveyQuestionRelation');
         $this->questionAnswerRepo =
             $om->getRepository('ClarolineSurveyBundle:Answer\QuestionAnswer');
+        $this->questionModelRepo =
+            $om->getRepository('ClarolineSurveyBundle:QuestionModel');
         $this->questionRepo =
             $om->getRepository('ClarolineSurveyBundle:Question');
     }
@@ -115,6 +119,8 @@ class SurveyManager
             }
         }
         $this->om->flush();
+
+        return $multipleChoiceQuestion;
     }
 
     public function updateQuestionChoices(
@@ -285,6 +291,60 @@ class SurveyManager
         $this->om->flush();
     }
 
+    public function createQuestionModel(Question $question)
+    {
+        $questionType = $question->getType();
+
+        $model = new QuestionModel();
+        $model->setTitle($question->getTitle());
+        $model->setQuestionType($questionType);
+        $model->setWorkspace($question->getWorkspace());
+        $details = array();
+
+        switch ($questionType) {
+
+            case 'multiple_choice_single':
+            case 'multiple_choice_multiple':
+                $choiceQuestion =
+                    $this->getMultipleChoiceQuestionByQuestion($question);
+                $details['questionType'] = $questionType;
+
+                if ($question->isCommentAllowed()) {
+                    $details['withComment'] = 'comment';
+                    $details['commentLabel'] = $question->getCommentLabel();
+                } else {
+                    $details['withComment'] = 'no-comment';
+                }
+                
+                $horizontal = !is_null($choiceQuestion) &&
+                    $choiceQuestion->getHorizontal();
+                $details['choiceDisplay'] = $horizontal ?
+                    'horizontal' :
+                    'vertical';
+                $details['choices'] = array();
+
+                if (!is_null($choiceQuestion)) {
+                    $choices = $this->getChoicesByQuestion($question);
+
+                    foreach ($choices as $choice) {
+                        $choiceDetails = array();
+                        $choiceDetails['other'] = $choice->isOther() ?
+                            'other' :
+                            'not-other';
+                        $choiceDetails['content'] = $choice->getContent();
+                        $details['choices'][] = $choiceDetails;
+                    }
+                }
+                break;
+            case 'open-ended':
+            default:
+                break;
+        }
+        $model->setDetails($details);
+
+        $this->om->persist($model);
+        $this->om->flush();
+    }
 
     /****************************************
      * Access to QuestionRepository methods *
@@ -562,5 +622,21 @@ class SurveyManager
         );
 
         return $this->pagerFactory->createPagerFromArray($answers, $page, $max);
+    }
+
+
+    /*********************************************
+     * Access to QuestionModelRepository methods *
+     *********************************************/
+
+    public function getQuestionModelsByWorkspace(
+        Workspace $workspace,
+        $executeQuery = true
+    )
+    {
+        return $this->questionModelRepo->findModelsByWorkspace(
+            $workspace,
+            $executeQuery
+        );
     }
 }

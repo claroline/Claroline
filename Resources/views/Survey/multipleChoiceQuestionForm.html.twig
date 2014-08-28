@@ -92,5 +92,19 @@
             <i class="fa fa-plus-circle"></i>
             {{ 'add_choice'|trans({}, 'survey') }}
         </span>
+        
+        <hr>
+        <div class="form-group row">
+            <label class="control-label col-md-3 required" for="create-model-chk">
+                {{ 'create_model_from_question'|trans({}, 'survey') }}
+            </label>
+            <div class="col-md-3">
+                <input type="checkbox"
+                       id="create-model-chk"
+                       name="model"
+                       value='model'
+                >
+            </div>
+        </div>
     </div>
 </div>

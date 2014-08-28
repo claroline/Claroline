@@ -63,6 +63,23 @@
     >
         <div class="panel-body">
             {{ form_widget(form) }}
+            
+            <div class="form-group row">
+                <label class="control-label col-md-3" for="form-model">
+                    {{ 'model'|trans({}, 'survey') }}
+                </label>
+                <div class="col-md-9">
+                    <select id="form-model" class="form-control">
+                        <option value="none"></option>
+                        
+                        {% for model in models %}
+                            <option value="{{ model.getId() }}">
+                                {{ model.getTitle() }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
             <div id="typed-question-form-block" class="hidden">
             </div>
             <div id="question-form-datas-block"

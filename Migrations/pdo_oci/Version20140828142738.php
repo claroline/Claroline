@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\SurveyBundle\Migrations\oci8;
+namespace Claroline\SurveyBundle\Migrations\pdo_oci;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/08/25 01:39:27
+ * Generation date: 2014/08/28 02:27:39
  */
-class Version20140825133925 extends AbstractMigration
+class Version20140828142738 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -319,6 +319,50 @@ class Version20140825133925 extends AbstractMigration
             CREATE UNIQUE INDEX survey_unique_question_order ON claro_survey_question_relation (survey_id, question_order)
         ");
         $this->addSql("
+            CREATE TABLE claro_survey_question_model (
+                id NUMBER(10) NOT NULL, 
+                workspace_id NUMBER(10) NOT NULL, 
+                title CLOB NOT NULL, 
+                question_type VARCHAR2(255) NOT NULL, 
+                details CLOB DEFAULT NULL, 
+                PRIMARY KEY(id)
+            )
+        ");
+        $this->addSql("
+            DECLARE constraints_Count NUMBER; BEGIN 
+            SELECT COUNT(CONSTRAINT_NAME) INTO constraints_Count 
+            FROM USER_CONSTRAINTS 
+            WHERE TABLE_NAME = 'CLARO_SURVEY_QUESTION_MODEL' 
+            AND CONSTRAINT_TYPE = 'P'; IF constraints_Count = 0 
+            OR constraints_Count = '' THEN EXECUTE IMMEDIATE 'ALTER TABLE CLARO_SURVEY_QUESTION_MODEL ADD CONSTRAINT CLARO_SURVEY_QUESTION_MODEL_AI_PK PRIMARY KEY (ID)'; END IF; END;
+        ");
+        $this->addSql("
+            CREATE SEQUENCE CLARO_SURVEY_QUESTION_MODEL_ID_SEQ START WITH 1 MINVALUE 1 INCREMENT BY 1
+        ");
+        $this->addSql("
+            CREATE TRIGGER CLARO_SURVEY_QUESTION_MODEL_AI_PK BEFORE INSERT ON CLARO_SURVEY_QUESTION_MODEL FOR EACH ROW DECLARE last_Sequence NUMBER; last_InsertID NUMBER; BEGIN 
+            SELECT CLARO_SURVEY_QUESTION_MODEL_ID_SEQ.NEXTVAL INTO : NEW.ID 
+            FROM DUAL; IF (
+                : NEW.ID IS NULL 
+                OR : NEW.ID = 0
+            ) THEN 
+            SELECT CLARO_SURVEY_QUESTION_MODEL_ID_SEQ.NEXTVAL INTO : NEW.ID 
+            FROM DUAL; ELSE 
+            SELECT NVL(Last_Number, 0) INTO last_Sequence 
+            FROM User_Sequences 
+            WHERE Sequence_Name = 'CLARO_SURVEY_QUESTION_MODEL_ID_SEQ'; 
+            SELECT : NEW.ID INTO last_InsertID 
+            FROM DUAL; WHILE (last_InsertID > last_Sequence) LOOP 
+            SELECT CLARO_SURVEY_QUESTION_MODEL_ID_SEQ.NEXTVAL INTO last_Sequence 
+            FROM DUAL; END LOOP; END IF; END;
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_88BF64F482D40A1F ON claro_survey_question_model (workspace_id)
+        ");
+        $this->addSql("
+            COMMENT ON COLUMN claro_survey_question_model.details IS '(DC2Type:json_array)'
+        ");
+        $this->addSql("
             CREATE TABLE claro_survey_question (
                 id NUMBER(10) NOT NULL, 
                 workspace_id NUMBER(10) NOT NULL, 
@@ -467,6 +511,12 @@ class Version20140825133925 extends AbstractMigration
             ON DELETE CASCADE
         ");
         $this->addSql("
+            ALTER TABLE claro_survey_question_model 
+            ADD CONSTRAINT FK_88BF64F482D40A1F FOREIGN KEY (workspace_id) 
+            REFERENCES claro_workspace (id) 
+            ON DELETE CASCADE
+        ");
+        $this->addSql("
             ALTER TABLE claro_survey_question 
             ADD CONSTRAINT FK_1BD4C01382D40A1F FOREIGN KEY (workspace_id) 
             REFERENCES claro_workspace (id) 
@@ -542,6 +592,9 @@ class Version20140825133925 extends AbstractMigration
         ");
         $this->addSql("
             DROP TABLE claro_survey_question_relation
+        ");
+        $this->addSql("
+            DROP TABLE claro_survey_question_model
         ");
         $this->addSql("
             DROP TABLE claro_survey_question
