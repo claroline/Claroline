@@ -578,6 +578,7 @@ password_mismatch: 'Les mots de passe ne correspondent pas.'
 password_ok: 'Votre mot de passe a été modifié. Vous pouvez maintenant vous connecter.'
 paste: Coller
 path: Emplacement
+pending: En attente
 permissions: Permissions
 personal_workspace: 'Espace personnel - '
 phone: Téléphone

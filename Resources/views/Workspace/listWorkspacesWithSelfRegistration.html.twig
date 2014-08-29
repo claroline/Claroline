@@ -1,4 +1,4 @@
-{% macro showTag(tagsList, tagWorkspaces, hierarchy, index, displayable) %}
+{% macro showTag(tagsList, tagWorkspaces, hierarchy, index, displayable, listworkspacePending) %}
 
     {% for tag in tagsList %}
         {% set workspaceTagId = tag.getId() %}
@@ -18,8 +18,8 @@
                 </div>
                 <div id="collapse-{{ currentIndex }}" class="panel-body collapse">
 
-                    {% if hierarchy[workspaceTagId]|length > 0 %}
-                        {{ _self.showTag(hierarchy[workspaceTagId], tagWorkspaces, hierarchy, currentIndex, displayable) }}
+                    {% if hierarchy[workspaceTagId] is defined and hierarchy[workspaceTagId]|length > 0 %}
+                        {{ _self.showTag(hierarchy[workspaceTagId], tagWorkspaces, hierarchy, currentIndex, displayable, listworkspacePending) }}
                     {% endif %}
 
                     {% if tagWorkspaces[workspaceTagId] is defined %}
@@ -89,7 +89,7 @@
             </div>
         {% endif %}
 
-        {{ showTag(rootTags, tagWorkspaces, hierarchy,"0", displayable) }}
+        {{ showTag(rootTags, tagWorkspaces, hierarchy,"0", displayable, listworkspacePending) }}
     </div>
 
     <div id="twig-self-registration-user-id" data-user-id="{{ user.getId() }}">

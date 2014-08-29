@@ -25,6 +25,7 @@ use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Role;
+use Claroline\CoreBundle\Entity\Workspace\WorkspaceRegistrationQueue;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\UserManager;
@@ -32,6 +33,7 @@ use Claroline\CoreBundle\Manager\GroupManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Manager\RightsManager;
 use Claroline\CoreBundle\Manager\CompetenceManager;
+use Claroline\CoreBundle\Manager\workspaceUserQueueManager;
 use Claroline\CoreBundle\Manager\Exception\LastManagerDeleteException;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -48,6 +50,7 @@ class RolesController extends Controller
     private $request;
     private $translator;
     private $cptManager;
+    private $wksUqmanager;
 
     /**
      * @DI\InjectParams({
@@ -61,7 +64,8 @@ class RolesController extends Controller
      *     "router"           = @DI\Inject("router"),
      *     "request"          = @DI\Inject("request"),
      *     "translator"       = @DI\Inject("translator"),
-     *     "cptManager"       =@DI\Inject("claroline.manager.competence_manager")
+     *     "cptManager"       = @DI\Inject("claroline.manager.competence_manager"),
+     *     "wksUqmanager"     = @DI\Inject("claroline.manager.workspace_user_queue_manager"),
      * })
      */
     public function __construct(
@@ -75,7 +79,8 @@ class RolesController extends Controller
         UrlGeneratorInterface $router,
         Request $request,
         TranslatorInterface $translator,
-        CompetenceManager $cptManager
+        CompetenceManager $cptManager,
+        workspaceUserQueueManager $wksUqmanager
     )
     {
         $this->roleManager = $roleManager;
@@ -89,6 +94,7 @@ class RolesController extends Controller
         $this->request = $request;
         $this->translator = $translator;
         $this->cptManager = $cptManager;
+        $this->wksUqmanager = $wksUqmanager;
     }
     /**
      * @EXT\Route(
@@ -663,6 +669,37 @@ class RolesController extends Controller
         }
 
         return new Response($names, 200);
+    }
+
+    /**
+     * @EXT\Route("/users/pending/{workspace}",
+     *     name="claro_users_pending"
+     * )
+     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\roles:workspaceusersPending.html.twig")
+     */
+    public function pendingUsersAction(Workspace $workspace)
+    {
+        $this->checkAccess($workspace);
+        return array(
+            'workspace' => $workspace,
+            'pager' => $this->wksUqmanager->getAll($workspace)
+        );
+    }
+
+    /**
+     * @EXT\Route("/users/pending/validation/{workspace}/{wksqueue}",
+     *     name="claro_users_pending_validation"
+     * )
+     */
+    public function pendingUsersValidationAction(WorkspaceRegistrationQueue $wksqueue, Workspace $workspace)
+    {
+        $this->wksUqmanager->validateRegistration($wksqueue, $workspace);
+        $route = $this->router->generate(
+                'claro_users_pending',
+                array('workspace' => $workspace->getId())
+            );
+
+            return new RedirectResponse($route);
     }
 
     private function checkAccess(Workspace $workspace)
