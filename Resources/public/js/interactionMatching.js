@@ -67,7 +67,7 @@ function addLabel(container, deletechoice, table, codeContainer){
     var uniqLabelId = false;
     var indexLabel = $('#newTableLabel').find('tr:not(:first)').length;
     while (uniqLabelId == false) {
-        if ($('#ujm_exobundle_interactionmatchingtype_labels_' + indexLabel + '_scoreRight').length){
+        if ($('#ujm_exobundle_interactionmatchingtype_labels_' + indexLabel + '_scoreRightResponse').length){
                 indexLabel++;
             } else{
                 uniqLabelId = true;
@@ -86,6 +86,18 @@ function addLabel(container, deletechoice, table, codeContainer){
         fillLabelArray();
     });
 
+    // Add correspondence
+    $('#newTableLabel').find('tr:last').append('<td class="classic"></td>');
+    $('#newTableLabel').find('td:last').append('<select id="' + indexLabel + '_correspondence" multiple></select>');
+    $('#newTableProposal').find('tbody').find('tr').each( function() {
+        rowInd = this.rowIndex;
+        
+        $("#" + indexLabel + "_correspondence").append($('<option>', {
+                                                        value: rowInd,
+                                                        text:  rowInd
+                                                    }));
+    });
+    
     // Add the delete button
     $('#newTableLabel').find('tr:last').append('<td class="classic"></td>');
     $('#newTableLabel').find('td:last').append(contain.find('a:contains("' + deletechoice + '")'));
@@ -118,7 +130,7 @@ function addProposal(container, deletechoice, table, codeContainer){
     container.find('.row').each(function () {
         fillProposalArray();
     });
-
+    
     // Add the delete button
     $('#newTableProposal').find('tr:last').append('<td class="classic"></td>');
     $('#newTableProposal').find('td:last').append(contain.find('a:contains("' + deletechoice + '")'));
