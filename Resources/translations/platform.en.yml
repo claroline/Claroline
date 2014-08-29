@@ -577,6 +577,7 @@ password_mismatch: 'Passwords mismatch'
 password_ok: 'Your password has been changed, you can login now'
 paste: Paste
 path: Path
+pending: 'Pending'
 permissions: Permissions
 personal_workspace: 'Personal workspace - '
 phone: Phone
