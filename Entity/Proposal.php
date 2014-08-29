@@ -33,6 +33,12 @@ class Proposal
      * @ORM\JoinColumn(name="interaction_matching_id", referencedColumnName="id")
      */
     private $interactionMatching;
+    
+    /**
+     * @ORM\ManyToOne(targetEntity="UJM\ExoBundle\Entity\Label")
+     * @ORM\JoinColumn(name="label_id", referencedColumnName="id")
+     */
+    private $associatedLabel;
 
     /**
      * Get id
@@ -81,5 +87,24 @@ class Proposal
     public function setInteractionMatching(\UJM\ExoBundle\Entity\InteractionMatching $interactionMatching)
     {
         $this->interactionMatching = $interactionMatching;
+    }
+    
+    /**
+     * Get InteractionMatching
+     *
+     * @return Label
+     */
+    public function getAssociatedLabel()
+    {
+        return $this->associatedLabel;
+    }
+
+    /**
+     * Set Label
+     *
+     */
+    public function setAssociatedLabel(\UJM\ExoBundle\Entity\Label $label)
+    {
+        $this->associatedLabel = $label;
     }
 }
