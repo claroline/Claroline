@@ -66,6 +66,13 @@
             </div>
         </h3>
     </div>
+    
+    {% if status == 'unpublished' %}
+        <br>
+        <div class="alert alert-info">
+            {{ 'how_to_publish_message'|trans({}, 'survey') }}
+        </div>
+    {% endif %}
     <div class="panel-body">
         <div>
             <a href="{{ path('claro_survey_question_create_form', {'survey': surveyId, 'source': 'survey'}) }}"

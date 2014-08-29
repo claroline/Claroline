@@ -26,6 +26,7 @@ edit_survey: 'Edit survey'
 edition: Edition
 end_date: 'End date'
 horizontal: Horizontal
+how_to_publish_message: 'The survey is not published yet. Nobody can answer it. You can publish it in <Parameters>.'
 label_for_choice_other: 'Label for choice "Other"'
 mandatory_answer_message: 'An answer is required'
 model: Model

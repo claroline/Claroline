@@ -26,6 +26,7 @@ edit_survey: 'Modifier le sondage'
 edition: Modification
 end_date: 'Date de fin'
 horizontal: Horizontal
+how_to_publish_message: 'Le sondage n''est pas encore publié. Personne ne peut y répondre. Vous pouvez le publier <Paramètres>.'
 label_for_choice_other: 'Libellé du choix "Autre"'
 mandatory_answer_message: 'Une réponse est requise'
 model: Modèle
