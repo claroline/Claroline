@@ -366,15 +366,19 @@ class SurveyManager
         Workspace $workspace,
         $orderedBy = 'title',
         $order = 'ASC',
+        $page = 1,
+        $max = 20,
         $executeQuery = true
     )
     {
-        return $this->questionRepo->findQuestionsByWorkspace(
+        $questions = $this->questionRepo->findQuestionsByWorkspace(
             $workspace,
             $orderedBy,
             $order,
             $executeQuery
         );
+
+        return $this->pagerFactory->createPagerFromArray($questions, $page, $max);
     }
 
     public function getQuestionsByWorkspaceWithExclusions(

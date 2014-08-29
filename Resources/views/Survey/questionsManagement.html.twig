@@ -1,3 +1,22 @@
+{% macro renderPager(pager, surveyId, orderedBy, order, max) %}
+    {{
+        pagerfanta(
+            pager,
+            'twitter_bootstrap_translated',
+            {
+                'proximity' : 1,
+                'routeName': 'claro_survey_questions_management',
+                'routeParams': {
+                    'survey': surveyId,
+                    'orderedBy': orderedBy,
+                    'order': order,
+                    'max': max
+                }
+            }
+        )
+    }}
+{% endmacro %}
+
 {% macro sortUrl(surveyId, orderedBy, order) %}
     {% if order == 'ASC' %}
         {% set newOrder = 'DESC' %}
@@ -8,6 +27,7 @@
     {{ path('claro_survey_questions_management', {'survey': surveyId, 'orderedBy': orderedBy, 'order': newOrder }) }}
 {% endmacro %}
 
+{% from _self import renderPager %}
 {% from _self import sortUrl %}
 
 {% set layout = 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
@@ -113,6 +133,10 @@
                     {% endfor %}
                 </table>
             </div>
+        
+            {% if questions.getNbPages() > 1 %}
+                {{ renderPager(questions, survey.getId(), orderedBy, order, max) }}
+            {% endif %}
         {% else %}
             <div class="alert alert-warning" role="alert">
                 {{ 'no_question'|trans({}, 'survey') }}

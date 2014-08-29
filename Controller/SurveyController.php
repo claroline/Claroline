@@ -300,28 +300,37 @@ class SurveyController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/survey/{survey}/questions/management/ordered/by/{orderedBy}/order/{order}",
+     *     "/survey/{survey}/questions/management/ordered/by/{orderedBy}/order/{order}/page/{page}/max/{max}",
      *     name="claro_survey_questions_management",
-     *     defaults={"ordered"="title","order"="ASC"}
+     *     defaults={"ordered"="title","order"="ASC","page"=1,"max"=20}
      * )
      * @EXT\Template()
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function questionsManagementAction(Survey $survey, $orderedBy, $order)
+    public function questionsManagementAction(
+        Survey $survey,
+        $orderedBy,
+        $order,
+        $page = 1,
+        $max = 20
+    )
     {
         $this->checkSurveyRight($survey, 'EDIT');
         $questions = $this->surveyManager->getQuestionsByWorkspace(
             $survey->getResourceNode()->getWorkspace(),
             $orderedBy,
-            $order
+            $order,
+            $page,
+            20
         );
 
         return array(
             'survey' => $survey,
             'questions' => $questions,
             'orderedBy' => $orderedBy,
-            'order' => $order
+            'order' => $order,
+            'max' => $max
         );
     }
 
