@@ -195,6 +195,8 @@ class SurveyManager
         array $exclusions,
         $orderedBy = 'title',
         $order = 'ASC',
+        $page = 1,
+        $max = 20,
         $executeQuery = true
     )
     {
@@ -204,6 +206,8 @@ class SurveyManager
                 $workspace,
                 $orderedBy,
                 $order,
+                $page,
+                $max,
                 $executeQuery
             );
         } else {
@@ -213,6 +217,8 @@ class SurveyManager
                 $exclusions,
                 $orderedBy,
                 $order,
+                $page,
+                $max,
                 $executeQuery
             );
         }
@@ -386,16 +392,20 @@ class SurveyManager
         array $exclusions,
         $orderedBy = 'title',
         $order = 'ASC',
+        $page = 1,
+        $max = 20,
         $executeQuery = true
     )
     {
-        return $this->questionRepo->findQuestionsByWorkspaceWithExclusions(
+        $questions = $this->questionRepo->findQuestionsByWorkspaceWithExclusions(
             $workspace,
             $exclusions,
             $orderedBy,
             $order,
             $executeQuery
         );
+
+        return $this->pagerFactory->createPagerFromArray($questions, $page, $max);
     }
 
     /**************************************

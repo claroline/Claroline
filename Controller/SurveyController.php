@@ -401,15 +401,22 @@ class SurveyController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/survey/{survey}/questions/list",
+     *     "/survey/{survey}/questions/list/ordered/by/{orderedBy}/order/{order}/page/{page}/max/{max}",
      *     name="claro_survey_questions_list",
+     *     defaults={"ordered"="title","order"="ASC","page"=1,"max"=20},
      *     options={"expose"=true}
      * )
      * @EXT\Template()
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function questionsListAction(Survey $survey)
+    public function questionsListAction(
+        Survey $survey,
+        $orderedBy = 'title',
+        $order = 'ASC',
+        $page = 1,
+        $max = 20
+    )
     {
         $this->checkSurveyRight($survey, 'EDIT');
         $relations = $survey->getQuestionRelations();
@@ -422,13 +429,18 @@ class SurveyController extends Controller
         $questions = $this->surveyManager->getAvailableQuestions(
             $survey->getResourceNode()->getWorkspace(),
             $exclusions,
-            'title',
-            'ASC'
+            $orderedBy,
+            $order,
+            $page,
+            $max
         );
 
         return array(
             'survey' => $survey,
-            'questions' => $questions
+            'questions' => $questions,
+            'orderedBy' => $orderedBy,
+            'order' => $order,
+            'max' => $max
         );
     }
 

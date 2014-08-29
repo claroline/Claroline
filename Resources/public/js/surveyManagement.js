@@ -11,6 +11,64 @@
     'use strict';
     
     var surveyId = parseInt($('#survey-data-element').data('survey-id'));
+    var orderedBy = 'title';
+    var order = 'ASC';
+    var page = 1;
+    var max = 20;
+    
+    function initParams(tab)
+    {
+        var orderedByFound = false;
+        var orderFound = false;
+        var pageFound = false;
+
+        for (var i = 0; i < tab.length; i++) {
+            
+            switch (tab[i]) {
+                
+                case 'ordered':
+                    
+                    if (tab[i + 1] === 'by' &&
+                        (tab[i + 2] === 'title' || tab[i + 2] === 'type')) {
+                    
+                        orderedBy = tab[i + 2];
+                        orderedByFound = true;
+                        i = i + 2;
+                    }
+                    break;
+                case 'order':
+                    
+                    if (orderedByFound &&
+                        (tab[i + 1] === 'ASC' || tab[i + 1] === 'DESC')) {
+                    
+                        order = tab[i + 1];
+                        orderFound = true;
+                        i++;
+                    }
+                    break;
+                case 'page':
+                    
+                    if (orderFound && tab[i + 1] !== undefined) {
+                    
+                        page = tab[i + 1];
+                        pageFound = true;
+                        i++;
+                    }
+                    break;
+                case 'max':
+                    
+                    if (pageFound && tab[i + 1] !== undefined) {
+                    
+                        max = tab[i + 1];
+                        i++;
+                    }
+                    break;
+                default:
+                    break;
+                    
+            }
+        }
+    }
     
     $('#add-question-btn').on('click', function () {
         
@@ -95,6 +153,33 @@
             success: function (datas) {
                 $('#view-survey-body').html(datas);
                 $('#view-survey-box').modal('show');
+            }
+        });
+    });
+
+    $('#add-question-box').on('click', 'a:not(.add-question-btn)', function (event) {
+        event.preventDefault();
+        event.stopPropagation();
+        
+        var url = $(this).attr('href');
+        var urlTab = url.split('/');
+        initParams(urlTab);
+        
+        $.ajax({
+            url: Routing.generate(
+                'claro_survey_questions_list',
+                {
+                    'survey': surveyId,
+                    'orderedBy': orderedBy,
+                    'order': order,
+                    'page': page,
+                    'max': max
+                }
+            ),
+            type: 'GET',
+            async: false,
+            success: function (result) {
+                $('#add-question-body').html(result);
             }
         });
     });
