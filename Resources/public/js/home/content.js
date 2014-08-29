@@ -247,6 +247,14 @@
                 });
             });
         });
+    }).on('click', '.collapse-content', function () {
+        var element = $(event.target).parents('.content-element').get(0);
+        var id = $(element).data('id');
+        var type = $(element).data('type');
+
+        if (id && element) {
+            home.collapse(element, id, type);
+        }
     });
 
     $('.contents').sortable({

@@ -13,6 +13,7 @@
     window.Claroline.Home = {};
     var home = window.Claroline.Home;
     var modal = window.Claroline.Modal;
+    var routing = window.Routing;
 
     home.path = $('#homePath').html(); //global
     home.locale = $('#homeLocale').html(); //global
@@ -140,6 +141,21 @@
     };
 
     /**
+     * Reload a content
+     */
+    home.reloadContent = function (element, id, type) {
+        $.ajax(routing.generate('claroline_get_content_by_id_and_type', {'content': id, 'type': type}))
+        .done(function (data) {
+            console.log(data);
+            $(element).replaceWith(data);
+            $('.contents').trigger('ContentModified');
+        })
+        .error(function () {
+            modal.error();
+        });
+    };
+
+    /**
      * Delete a content or a content type.
      *
      * @param element The HTML elementof a content.
@@ -238,6 +254,24 @@
                 modal.error();
             });
         }
+    };
+
+    /**
+     * Update collapse attribute of a content
+     */
+    home.collapse = function (element, id, type)
+    {
+        $.ajax(routing.generate('claroline_content_collapse', {'content': id, 'type': type}))
+        .done(function (data) {
+            if (data === 'true') {
+                home.reloadContent(element, id, type);
+            } else {
+                modal.error();
+            }
+        })
+        .error(function () {
+            modal.error();
+        });
     };
 
     /**

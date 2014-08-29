@@ -30,11 +30,6 @@
                         </a>
                     </li>
                 {% endif %}
-                <li role="presentation">
-                    <a role="menuitem" class="content-delete">
-                        <i class="fa fa-fw fa-trash-o"></i> {{ "Delete" | trans({}, 'home') }}
-                    </a>
-                </li>
                 {% if type != "home" %}
                     <li role="presentation">
                         <a role="menuitem" class="content-region">
@@ -42,17 +37,28 @@
                         </a>
                     </li>
                 {% endif %}
+                {% if type != "menu" %}
+                    <li role="presentation">
+                        <a role="menuitem" class="collapse-content">
+                            <i class="fa fa-fw fa-sort"></i> {{ "Collapse" | trans({}, 'home') }}
+                            {% if collapse %}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-fw fa-check"></i>{% endif %}
+                        </a>
+                    </li>
+                    <li role="presentation">
+                        <a role="menuitem" class="send-content">
+                            <i class="fa fa-fw fa-send"></i> {{ "move" | trans({}, 'platform') }}
+                        </a>
+                    </li>
+                {% endif %}
+                <li role="presentation">
+                    <a role="menuitem" class="content-delete">
+                        <i class="fa fa-fw fa-trash-o"></i> {{ "Delete" | trans({}, 'home') }}
+                    </a>
+                </li>
                 {% if type == "menu" %}
                     <li role="presentation">
                         <a role="menuitem" href="{{ path('claroline_content_menu_settings', {'content': id}) }}">
                             <i class="fa fa-fw fa-cog"></i> {{ "settings" | trans({}, 'platform') }}
-                        </a>
-                    </li>
-                {% endif %}
-                {% if type != "menu" %}
-                    <li role="presentation">
-                        <a role="menuitem" class="send-content">
-                            <i class="fa fa-fw fa-send"></i> {{ "move" | trans({}, 'platform') }}
                         </a>
                     </li>
                 {% endif %}

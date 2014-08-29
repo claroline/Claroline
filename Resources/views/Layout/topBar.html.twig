@@ -30,7 +30,13 @@
                     {% endif %}
                     <ul class="nav navbar-nav navbar-right">
                         {% for item in homeMenu %}
-                            <li><a href="{{ item.content.getContent() | homeLink }}">{{ item.content.getTitle() }}</a></li>
+                            {% if item.content.title is defined %}
+                                <li>
+                                    <a{% if item.content.content is defined %} href="{{ item.content.content | homeLink }}"{% endif %}>
+                                        {{ item.content.getTitle() }}
+                                    </a>
+                                </li>
+                            {% endif %}
                         {% endfor %}
                     </ul>
                 {% else %}

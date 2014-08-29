@@ -57,8 +57,10 @@
         "claroline/front-end-bundle": "~2.0",
         "claroline/migration-bundle": "~1.0",
         "icap/notification-bundle": "~1.0",
+        "icap/portfolio-bundle": "v0.1.1",
         "johngrogg/ics-parser": "dev-master",
-        "gregwar/captcha-bundle": "dev-master"
+        "gregwar/captcha-bundle": "dev-master",
+        "innova/angular-ui-translation-bundle": "2.0.0"
     },
     "require-dev": {
         "mockery/mockery": "dev-master@dev",

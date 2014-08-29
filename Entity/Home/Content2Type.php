@@ -51,6 +51,13 @@ class Content2Type
     private $size;
 
     /**
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean")
+     */
+    private $collapse;
+
+    /**
     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Home\Content2Type")
     * @ORM\JoinColumn(onDelete="CASCADE")
     */
@@ -103,6 +110,29 @@ class Content2Type
     public function getSize()
     {
         return $this->size;
+    }
+
+    /**
+     * Set collapse
+     *
+     * @param boolean $collapse
+     * @return Content2Type
+     */
+    public function setCollapse($collapse)
+    {
+        $this->collapse = $collapse;
+
+        return $this;
+    }
+
+    /**
+     * Get collapse
+     *
+     * @return boolean
+     */
+    public function isCollapse()
+    {
+        return $this->collapse;
     }
 
     /**
@@ -219,6 +249,7 @@ class Content2Type
         // the size may vary between 1 and 12 and corresponds to
         // bootstrap container col classes
         $this->setSize('content-12');
+        $this->setCollapse(false);
 
         if ($first) {
             $first->setBack($this);
