@@ -2,18 +2,18 @@
     {{ form_row(form.typeMatching) }}
         <table>
             <tr>
-                <th>
+                <td>
                     <div id="labelError"></div>
                     <div id="tableLabel"></div>
                     {{ form_row(form.labels) | replace({"col-md-3": "col-md-12"}) | raw }}
                     {{ form_errors(form.labels) }}
-                </th>
-                <th>
+                </td>
+                <td>
                     <div id="proposalError"></div>
                     <div id="tableProposal"></div>
                     {{ form_row(form.proposals) | replace({"col-md-3": "col-md-12"}) | raw }}
                     {{ form_errors(form.proposals) }}
-                </th>
+                </td>
             </tr>
         </table>
 </div>

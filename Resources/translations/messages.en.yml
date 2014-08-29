@@ -97,6 +97,7 @@ correct: Correct
 correction: Correction
 correction date: Correction date
 course_name: Course name
+correspondence: correspondence
 create: Create
 create a new category: Create a new category
 create a new entry: Create a new question
@@ -108,10 +109,12 @@ date: Date
 delDocQuestion: Delete this document and all the linked questions
 delete: Delete
 delete document: Deletion of document
+deleteLabel: Delete the choice
 delete hole: Delete the hole
 delete of my bank: Delete of my bank
 delete of my exercise: Delete of my exercise
 delete papers: Delete the papers
+deleteProposal: Supprimer la proposition
 description: Description
 displayAllList: Display the whole list
 display all on this page: Display all on this page
@@ -243,6 +246,8 @@ my shared questions: Questions which was shared with me
 nameUser2Shared: Name of user to share the question
 nb_hole: It must have at least one hole
 nbr_choices: The number of choices must be greater than two
+nb_label: You must have minimum the same number of choices for proposals
+nb_proposal: It must have two choices of proposal
 need Correction: The red questions need correction
 never: Never
 newCategoryName: New name of the category
@@ -270,6 +275,7 @@ notEnoughtPapers: To display docimology, it must have at least 12 papers
 not yet mark: Not yet mark
 noUserFound: No user found
 nQuestion: Question n°
+numberProposal: Number of the proposal
 number of papers: Number of papers
 number of questions: Number of questions
 number of questions to draw: Number of questions to draw

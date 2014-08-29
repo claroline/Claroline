@@ -6,7 +6,7 @@
         <h3 class="panel-title">{{ 'matching creation' | trans }}</h3>
     </div>
 
-    <form onsubmit="return check_form('{{ 'nbr_choices' | trans }}', '{{ 'answer_coched' | trans }}', '{{ 'label_empty' | trans }}', '{{ 'point_answers' | trans }}', '{{ 'point_answer' | trans }}', '{{ 'invite_question' | trans }}');"
+    <form onsubmit="return check_form('{{ 'nb_proposal' | trans }}', '{{ 'nb_label' | trans }}');"
           action="{{ path('ujm_interactionmatching_create') }}" method="post" {{ form_enctype(form) }}>
 
         <div class="panel-body">
@@ -32,12 +32,12 @@
 {# functions javascript #}
 {% if error is defined %}
     <script type="text/javascript">
-        creationMatchingEdit('{{ 'addChoice' | trans }}', '{{ 'addProposal' | trans }}', '{{ 'delete' | trans }}', '{{ 'Label.value' | trans }}', '{{ 'Label.scoreRight' | trans }}', '{{ 'Proposal.value' | trans }}', '{{ typeMatching|raw }}');
+        creationMatchingEdit('{{ 'addChoice' | trans }}', '{{ 'addProposal' | trans }}', '{{ 'delete' | trans }}', '{{ 'Label.value' | trans }}', '{{ 'Label.scoreRight' | trans }}', '{{ 'Proposal.value' | trans }}', '{{ 'numberProposal'| trans }}', '{{ 'correspondence' | trans }}', '{{ 'deleteLabel' | trans }}', '{{ 'deleteProposal' | trans }}', '{{ typeMatching|raw }}');
         newHintEdit('{{ 'hint' | trans }}', '{{ 'penalty' | trans }}', '{{ 'add hint' | trans }}', '{{ 'delete' | trans }}');
     </script>
 {% else %}
     <script type="text/javascript">
-        creationMatching('{{ 'addChoice' | trans }}', '{{ 'addProposal' | trans }}', '{{ 'delete' | trans }}', '{{ 'Label.value' | trans }}', '{{ 'Label.scoreRight' | trans }}', '{{ 'Proposal.value' | trans }}', '{{ typeMatching|raw }}');
+        creationMatching('{{ 'addChoice' | trans }}', '{{ 'addProposal' | trans }}', '{{ 'delete' | trans }}', '{{ 'Label.value' | trans }}', '{{ 'Label.scoreRight' | trans }}', '{{ 'Proposal.value' | trans }}', '{{ 'numberProposal'| trans }}', '{{ 'correspondence' | trans }}', '{{ 'deleteLabel' | trans }}', '{{ 'deleteProposal' | trans }}', '{{ typeMatching|raw }}');
         newHint('{{ 'hint' | trans }}', '{{ 'penalty' | trans }}', '{{ 'add hint' | trans }}', '{{ 'delete' | trans }}');
     </script>
 {% endif %}

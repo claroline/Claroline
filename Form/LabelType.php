@@ -17,7 +17,15 @@ class LabelType extends AbstractType
                 ))
             ->add(
                 'scoreRight', 'text', array(
-                    'required' => false, 'label' => ' ', 'attr' => array('style' => 'width:35px; text-align: end;')));
+                    'required' => false, 'label' => ' ', 'attr' => array('style' => 'width:35px; text-align: end;'
+                  )))
+            ->add(
+                'correspondence', 'choice', array(
+                    'choices'  => array(
+                      '1' => '1'
+                    ),
+                    'required' => false, 'label' => ' '
+                ));
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

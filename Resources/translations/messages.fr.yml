@@ -97,6 +97,7 @@ correct: Correcte
 correction: Correction
 correction date: Date de la correction
 course_name: Nom du Cours
+correspondence: correspondance
 create: Créer
 create a new category: Créer une nouvelle catégorie
 create a new entry: Créer une nouvelle question
@@ -108,10 +109,12 @@ date: Date
 delDocQuestion: Supprimer ce document ainsi que toutes les questions qui y sont liées
 delete: Supprimer
 delete document: Suppression de document
+deleteLabel: Supprimer le choix
 delete hole: Supprimer le blanc
 delete of my bank: Supprimer de ma banque
 delete of my exercise: Supprimer de mon exercice
 delete papers: Supprimer les copies
+deleteProposal: Supprimer la proposition
 description: Description
 displayAllList: Afficher la liste complète
 display all on this page: Tout afficher sur cette page
@@ -243,6 +246,8 @@ my shared questions: Questions qui m'ont été partagées
 nameUser2Shared: Nom de l'utilisateur avec qui partager la question
 nb_hole: Il doit y avoir au moins un trou
 nbr_choices: Le nombre de choix doit être supérieur à deux
+nb_label: Il faut avoir au minimun le même nombre de choix que de propositions
+nb_proposal: Il foit y avoir au moins deux propositions
 need Correction: Les questions en rouge nécessitent une correction
 never: Jamais
 newCategoryName: Nouveau nom de la catégorie
@@ -270,6 +275,7 @@ notEnoughtPapers: Pour afficher la docimologie, il doit y avoir au moins 12 copi
 not yet mark: Pas encore noté
 noUserFound: Pas d'utilisateur trouvé
 nQuestion: Question n°
+numberProposal: Numéro de la proposition
 number of papers: Nombre de copies
 number of questions: Nombre de questions
 number of questions to draw: Nombre de questions à tirer

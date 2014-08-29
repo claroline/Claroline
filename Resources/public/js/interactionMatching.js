@@ -1,49 +1,50 @@
 var containerLabel = $('div#ujm_exobundle_interactionmatchingtype_labels'); // Div which contain the dataprototype of labels
 var containerProposal = $('div#ujm_exobundle_interactionmatchingtype_proposals');
 
-var tableLabels = $('#tableLabel'); // div which contain the choices array
+var tableLabels = $('#tableLabel'); // div which contain the labels array
 var tableProposals = $('#tableProposal');
 
 var typeMatching;
 
 // Question creation
-function creationMatching(addchoice, addProposal, deletechoice, LabelValue, ScoreRight, ProposalValue, tMatching){
+function creationMatching(addchoice, addproposal, deletechoice, LabelValue, ScoreRight, ProposalValue, numberProposal, correspondence, deleteLabel, deleteProposal, tMatching){
 
     //initialisation of variables
-    var indexLabel; // number of choices
+    var indexLabel; // number of label
     var indexProposal;
     var codeContainerLabel = 0; // to differentiate containers
     var codeContainerProposal = 1;
-    
+
     typeMatching = JSON.parse(tMatching);
-    
-    tableCreation(containerProposal, tableProposals, addProposal, deletechoice, LabelValue, ScoreRight, ProposalValue, 0, codeContainerProposal);    
-    tableCreation(containerLabel, tableLabels, addchoice, deletechoice, LabelValue, ScoreRight, ProposalValue, 0, codeContainerLabel);
-    
-    // Number of choice initially
-    indexLabel = containerLabel.find(':input').length;    
+
+    tableCreationLabel(containerLabel, tableLabels, addchoice, deletechoice, LabelValue, ScoreRight, 0, codeContainerLabel, deleteLabel, correspondence);
+    tableCreationProposal(containerProposal, tableProposals, addproposal, deletechoice, ProposalValue, 0, codeContainerProposal, deleteProposal, numberProposal);
+
+    // Number of label initially
+    indexLabel = containerLabel.find(':input').length;
     indexProposal = containerProposal.find(':input').length;
     
-    // If no choice exist, add two choices by default in the container Label
+    // If no label exist, add two labels by default in the container Label
     if (indexLabel == 0) {
-        addChoice(containerLabel, deletechoice, tableLabels, codeContainerLabel);
+        addLabel(containerLabel, deletechoice, tableLabels, codeContainerLabel);
         $('#newTableLabel').find('tbody').append('<tr></tr>');
-        addChoice(containerLabel, deletechoice, tableLabels, codeContainerLabel);
-    // If choice already exist, add button to delete it
+        addLabel(containerLabel, deletechoice, tableLabels, codeContainerLabel);
+    // If label already exist, add button to delete it
     } else {
         tableLabels.children('tr').each(function() {
             adddelete($(this), deletechoice, codeContainerLabel);
         });
     }
-    // If no choice exist, add two choices by default in the container Proposal
+    
+    // If no label exist, add two labels by default in the container Label
     if (indexProposal == 0) {
-        addChoice(containerProposal, deletechoice, tableProposals, codeContainerProposal);
+        addProposal(containerProposal, deletechoice, tableProposals, codeContainerProposal);
         $('#newTableProposal').find('tbody').append('<tr></tr>');
-        addChoice(containerProposal, deletechoice, tableProposals, codeContainerProposal);
-        // If choice already exist, add button to delete it
+        addProposal(containerProposal, deletechoice, tableProposals, codeContainerProposal);
+    // If label already exist, add button to delete it
     } else {
         tableProposals.children('tr').each(function() {
-        adddelete($(this), deletechoice, codeContainerProposal);
+            adddelete($(this), deletechoice, codeContainerProposal);
         });
     }
 }
@@ -52,102 +53,122 @@ function creationMatching(addchoice, addProposal, deletechoice, LabelValue, Scor
 function creationMatchingEdit(){
 }
 
-function addChoice(container, deletechoice, table, codeContainer){
+function addLabel(container, deletechoice, table, codeContainer){
     var contain;
-    var uniqChoiceId = false;
-    var indexProposal = $('#newTableProposal').find('tr:not(:first)').length;
+    var uniqLabelId = false;
     var indexLabel = $('#newTableLabel').find('tr:not(:first)').length;
-    while (uniqChoiceId == false) {
-        if (codeContainer == 0){
-            if ($('#ujm_exobundle_interactionmatchingtype_labels_' + indexLabel + '_value').lenght){
+    while (uniqLabelId == false) {
+        if ($('#ujm_exobundle_interactionmatchingtype_labels_' + indexLabel + '_scoreRight').length){
                 indexLabel++;
             } else{
-                uniqChoiceId = true;
+                uniqLabelId = true;
             }
             // Change the "name" by the index and delete the symfony delete form button
             contain = $(container.attr('data-prototype').replace(/__name__label__/g, 'Choice n°' + (indexLabel))
                 .replace(/__name__/g, indexLabel)
                 .replace('<a class="btn btn-danger remove" href="#">Delete</a>', '')
             );
-        } else {
-            if ($('#ujm_exobundle_interactionmatchingtype_proposals_' + indexProposal + '_value').lenght){
+    }
+
+    adddelete(contain, deletechoice, codeContainer);
+    container.append(contain);
+
+    container.find('.row').each(function () {
+        fillLabelArray();
+    });
+
+    // Add the delete button
+    $('#newTableLabel').find('tr:last').append('<td class="classic"></td>');
+    $('#newTableLabel').find('td:last').append(contain.find('a:contains("' + deletechoice + '")'));
+
+    // Remove the useless fileds form
+    container.remove();
+    table.next().remove();
+}
+
+function addProposal(container, deletechoice, table, codeContainer){
+    var contain;
+    var uniqProposalId = false;
+    var indexProposal = $('#newTableProposal').find('tr:not(:first)').length;
+    while (uniqProposalId == false) {
+        if ($('#ujm_exobundle_interactionmatchingtype_proposals_' + indexProposal + '_value').length){
                 indexProposal++;
             } else{
-                uniqChoiceId = true;
+                uniqProposalId = true;
             }
             // Change the "name" by the index and delete the symfony delete form button
             contain = $(container.attr('data-prototype').replace(/__name__label__/g, 'Choice n°' + (indexProposal))
                 .replace(/__name__/g, indexProposal)
                 .replace('<a class="btn btn-danger remove" href="#">Delete</a>', '')
             );
-            
-        }
     }
 
-    // Add the button to delete a choice
     adddelete(contain, deletechoice, codeContainer);
     container.append(contain);
-    // Get the form field to fill rows of the choices' table
+
     container.find('.row').each(function () {
-        if (codeContainer == 0){
-            fillChoicesArrayLabel();
-        }else{
-            fillChoicesArrayProposal();
-        }
-        
+        fillProposalArray();
     });
-    
-    // Add the delete button each row of table
-    if (codeContainer ==0)
-    {
-        $('#newTableLabel').find('tr:last').append('<td class="classic"></td>');
-        $('#newTableLabel').find('td:last').append(contain.find('a:contains("' + deletechoice + '")'));
-    } else {
-        $('#newTableProposal').find('tr:last').append('<td class="classic"></td>');
-        $('#newTableProposal').find('td:last').append(contain.find('a:contains("' + deletechoice + '")'));
-    }
-    
+
+    // Add the delete button
+    $('#newTableProposal').find('tr:last').append('<td class="classic"></td>');
+    $('#newTableProposal').find('td:last').append(contain.find('a:contains("' + deletechoice + '")'));
+
     // Remove the useless fileds form
     container.remove();
     table.next().remove();
 }
 
 //check if the form is valid
-function check_form(){
-//    if (($('#newTableLabel').find('tr:not(:first)').length) < 2) {
-//            alert(nbrChoices);
-//            return false;
-//    }
+function check_form(nbrProposals, nbrLabels){
 //    if (($('#newTableProposal').find('tr:not(:first)').length) < 2) {
-//            alert(nbrChoices);
 //            return false;
 //    }
+//    
+//    if (($('#newTableProposal').find('tr:not(:first)').length) < ($('#newTableLabel').find('tr:not(:first)').length)) {
+//            return false;
+//    }
+    
+//    while(containerLabel.find(':input').length)
+//    {
+////        "ujm_exobundle_interactionmatchingtype_labels_1_correspondence"
+//        if($()) {
+//            
+//        }
+//    }
+    
 }
 
-function fillChoicesArrayLabel() {
+function fillLabelArray() {
 
     // Add the field of type textarea
     if (containerLabel.find('.row').find('textarea').length) {
         $('#newTableLabel').find('tr:last').append('<td class="classic"></td>');
         $('#newTableLabel').find('td:last').append(containerLabel.find('.row').find('textarea'));
     }
-    
-//     Add the field of type input
+
+    // Add the field of type input
     if (containerLabel.find('.row').find('input').length) {
         $('#newTableLabel').find('tr:last').append('<td class="classic"></td>');
         $('#newTableLabel').find('td:last').append(containerLabel.find('.row').find('input'));
     }
+
+    // Add the field of type select
+    if (containerLabel.find('.row').find('select').length) {
+        $('#newTableLabel').find('tr:last').append('<td class="classic"></td>');
+        $('#newTableLabel').find('td:last').append(containerLabel.find('.row').find('select'));
+    }
 }
 
-function fillChoicesArrayProposal() {
+function fillProposalArray() {
 
     // Add the field of type textarea
     if (containerProposal.find('.row').find('textarea').length) {
         $('#newTableProposal').find('tr:last').append('<td class="classic"></td>');
         $('#newTableProposal').find('td:last').append(containerProposal.find('.row').find('textarea'));
     }
-    
-//     Add the field of type input
+
+    // Add the field of type input
     if (containerProposal.find('.row').find('input').length) {
         $('#newTableProposal').find('tr:last').append('<td class="classic"></td>');
         $('#newTableProposal').find('td:last').append(containerProposal.find('.row').find('input'));
@@ -156,18 +177,17 @@ function fillChoicesArrayProposal() {
 
 function adddelete(tr, deletechoice, codeContainer){
     var delLink;
-    // Create the button to delete a choice
+    // Create the button to delete a row
     if(codeContainer == 0){
         delLink = $('<a href="newTableLabel" class="btn btn-danger">' + deletechoice + '</a>');
     } else {
         delLink = $('<a href="newTableProposal" class="btn btn-danger">' + deletechoice + '</a>');
     }
-    
+
     // Add the button to the row
     tr.append(delLink);
-    
-    
-    // When click, delete the matching choice's row in the table
+
+    // When click, delete the row in the table
     delLink.click(function(e) {
         $(this).parent('td').parent('tr').remove();
         e.preventDefault();
@@ -175,36 +195,46 @@ function adddelete(tr, deletechoice, codeContainer){
     });
 }
 
-function tableCreation(container, table, button, deletechoice, LabelValue, ScoreRight, ProposalValue, nbResponses, codeContainer){
+function tableCreationLabel(container, table, button, deletechoice, LabelValue, ScoreRight, nbResponses, codeContainer, supp, correspondence){
     if (nbResponses == 0) {
         // Creation of the table
-        if (codeContainer == 0){
-            table.append('<table id="newTableLabel" class="table table-striped table-bordered table-condensed"><thead><tr style="background-color: lightsteelblue;"><th class="classic">'+LabelValue+'</th><th class="classic">'+ScoreRight+'</th><th class="classic">'+deletechoice+' le choix</th></tr></thead><tbody><tr></tr></tbody></table>');
-        } else {
-            table.append('<table id="newTableProposal" class="table table-striped table-bordered table-condensed"><thead><tr style="background-color: lightsteelblue;"><th class="classic">'+ProposalValue+'</th><th class="classic">'+ProposalValue+'</th><th class="classic">'+deletechoice+' la proposition</th></tr></thead><tbody><tr></tr></tbody></table>');
-        }
+        table.append('<table id="newTableLabel" class="table table-striped table-bordered table-condensed"><thead><tr style="background-color: lightsteelblue;"><th class="classic">'+LabelValue+'</th><th class="classic">'+ScoreRight+'</th><th class="classic">'+correspondence+'</th><th class="classic">'+supp+'</th></tr></thead><tbody><tr></tr></tbody></table>');
 
         // Creation of the button add
-        var add = $('<a href="#" id="add_choice" class="btn btn-primary"><i class="fa fa-plus"></i>&nbsp;'+button+'</a>');
-        
+        var add = $('<a href="#" id="add_label" class="btn btn-primary"><i class="fa fa-plus"></i>&nbsp;'+button+'</a>');
+
         // Add the button add
         table.append(add);
         add.click(function (e) {
-            if(codeContainer == 0){
-                $('#newTableLabel').find('tbody').append('<tr></tr>');
-            } else{
-                $('#newTableProposal').find('tbody').append('<tr></tr>');
-            }
-            addChoice(container, deletechoice, table, codeContainer);
+            $('#newTableLabel').find('tbody').append('<tr></tr>');
+            addLabel(container, deletechoice, table, codeContainer);
             e.preventDefault(); // prevent add # in the url
             return false;
         });
     } else {
         // Add the structure of the table
-        if (codeContainer == 0){
-            table.append('<table id="newTableLabel" class="table table-striped table-bordered table-condensed"><thead><tr style="background-color: lightsteelblue;"><th class="classic">'+LabelValue+'</th><th class="classic">'+ScoreRight+'</th><th class="classic">'+deletechoice+' le choix</th></tr></thead><tbody><tr></tr></tbody></table>');
-        } else {
-            table.append('<table id="newTableProposal" class="table table-striped table-bordered table-condensed"><thead><tr style="background-color: lightsteelblue;"><th class="classic">'+ProposalValue+'</th><th class="classic">'+deletechoice+' la proposition</th></tr></thead><tbody><tr></tr></tbody></table>');
-        }
+            table.append('<table id="newTableLabel" class="table table-striped table-bordered table-condensed"><thead><tr style="background-color: lightsteelblue;"><th class="classic">'+LabelValue+'</th><th class="classic">'+ScoreRight+'</th><th class="classic">'+correspondence+'</th><th class="classic">'+supp+'</th></tr></thead><tbody><tr></tr></tbody></table>');
+    }
+}
+
+function tableCreationProposal(container, table, button, deletechoice, ProposalValue, nbResponses, codeContainer, supp, correspondence){
+    if (nbResponses == 0) {
+        // Creation of the table
+        table.append('<table id="newTableProposal" class="table table-striped table-bordered table-condensed"><thead><tr style="background-color: lightsteelblue;"><th class="classic">'+correspondence+'</th><th class="classic">'+ProposalValue+'</th><th class="classic">'+supp+'</th></tr></thead><tbody><tr></tr></tbody></table>');
+
+        // Creation of the button add
+        var add = $('<a href="#" id="add_proposal" class="btn btn-primary"><i class="fa fa-plus"></i>&nbsp;'+button+'</a>');
+
+        // Add the button add
+        table.append(add);
+        add.click(function (e) {
+            $('#newTableProposal').find('tbody').append('<tr></tr>');
+            addProposal(container, deletechoice, table, codeContainer);
+            e.preventDefault(); // prevent add # in the url
+            return false;
+        });
+    } else {
+        // Add the structure of the table
+        table.append('<table id="newTableProposal" class="table table-striped table-bordered table-condensed"><thead><tr style="background-color: lightsteelblue;"><th class="classic">'+correspondence+'</th><th class="classic">'+ProposalValue+'</th><th class="classic">'+supp+'</th></tr></thead><tbody><tr></tr></tbody></table>');
     }
 }
