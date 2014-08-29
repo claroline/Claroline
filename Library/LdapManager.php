@@ -172,6 +172,21 @@ class LdapManager
     }
 
     /**
+     * Save the LDAP mapping settings
+     *
+     * @param host The host name of LDAP server
+     * @param settings The settings array containing mapping
+     *
+     * @return boolean
+     */
+    public function saveSettings($settings)
+    {
+        if (isset($settings['host']) and isset($this->config['servers'][$settings['host']])) {
+            return $this->saveConfig(array_merge($this->config['servers'][$settings['host']], $settings));
+        }
+    }
+
+    /**
      * Save the LDAP configuration in a .yml file.
      *
      * @param server An array containing LDAP informations as host, port or dn

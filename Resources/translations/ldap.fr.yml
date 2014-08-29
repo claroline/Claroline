@@ -11,4 +11,5 @@ Users settings: Réglages d'utilisateurs
 ldap_already_exists: Il existe déjà un serveur avec ce nom
 ldap_cant_connect: Impossible de se connecter au serveur
 ldap_error_conexion: Impossible de se connecter au serveur LDAP
+ldap_save_settings_error: Afin d'enregistrer les paramètres, vous devez fournir le nom d'utilisateur, nom, prénom, e-mail et mot de passe
 ldap_user_class: Classe d'utilisateur

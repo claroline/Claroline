@@ -162,7 +162,7 @@ class LdapController extends Controller
     }
 
     /**
-     * @Route("/config/menu", name="claro_admin_ldap_servers")
+     * @Route("/config/menu", name="claro_admin_ldap_servers", options = {"expose"=true})
      * @Template
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -185,10 +185,12 @@ class LdapController extends Controller
         $this->checkOpen();
 
         $classes = array();
+        $users = array();
+        $server = $this->ldap->get($host);
 
-        if ($this->ldap->connect($this->ldap->get($host))) {
+        if ($this->ldap->connect($server)) {
 
-            if ($search = $this->ldap->search($this->ldap->get($host), '(&(objectClass=*))', array('objectclass'))) {
+            if ($search = $this->ldap->search($server, '(&(objectClass=*))', array('objectclass'))) {
                 $entries = $this->ldap->getEntries($search);
                 foreach ($entries as $objectClass) {
                     if (isset($objectClass['objectclass'])) {
@@ -198,12 +200,73 @@ class LdapController extends Controller
                 }
             }
 
+            if (isset($server['objectClass']) and
+                $search = $this->ldap->search($server, '(&(objectClass=' . $server['objectClass'] . '))')
+            ) {
+                $users = $this->ldap->getEntries($search);
+            }
+
             $this->ldap->close();
 
-            return array('host' => $host, 'classes' => array_unique($classes));
+            return array(
+                'server' => $server,
+                'users' => $users,
+                'usersJSON' => json_encode($users),
+                'classes' => array_unique($classes)
+            );
         }
 
         return array('error' => true);
+    }
+
+    /**
+     * @Route("/config/groups/{host}", name="claro_admin_ldap_groups", requirements = {"host"=".+"})
+     * @Template
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function groupsAction($host)
+    {
+        $this->checkOpen();
+
+        //$classes = array();
+        $groups = array();
+        $server = $this->ldap->get($host);
+
+        if ($this->ldap->connect($server)) {
+
+            if ($search = $this->ldap->search(
+                $server, '(&(objectClass=person))'
+            )) {
+                $groups = $this->ldap->getEntries($search);
+            }
+
+            throw new \Exception(var_dump($groups));
+
+            $this->ldap->close();
+
+            return array(
+                'server' => $server,
+                'groups' => $groups,
+                'groupJSON' => json_encode($groups),
+            );
+        }
+
+        return array('error' => true);
+    }
+
+     /**
+     * @Route("/config/save/settings", name="claro_admin_ldap_save_settings", options = {"expose"=true})
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function saveSettingsAction()
+    {
+        if ($this->ldap->saveSettings($this->request->request->all())) {
+            return new Response('true');
+        }
+
+        return new Response('false');
     }
 
     /**

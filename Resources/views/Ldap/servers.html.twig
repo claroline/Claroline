@@ -44,7 +44,7 @@
             {% for server in servers %}
                 <div class="list-group-item clearfix">
                     {{ server.host }}
-                    <a class="badge" href="{{ path('claro_admin_ldap_users', {'host': server.host }) }}">
+                    <a class="badge" href="{{ path('claro_admin_ldap_groups', {'host': server.host }) }}">
                         <i class="fa fa-group"></i> {{ 'Groups settings' | trans({}, 'ldap') }}
                     </a>
                     <a class="badge" href="{{ path('claro_admin_ldap_users', {'host': server.host }) }}">

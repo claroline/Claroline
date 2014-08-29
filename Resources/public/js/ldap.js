@@ -23,6 +23,7 @@
     };
 
     var routing = window.Routing;
+    var translator = window.Translator;
     var modal = window.Claroline.Modal;
     var common = window.Claroline.Common;
     var ldap = window.Claroline.LDAP;
@@ -73,7 +74,6 @@
         var attributes = ldap.getAttributes();
         for (var attribute in attributes) {
             if (attributes.hasOwnProperty(attribute)) {
-                console.log(attributes[attribute], ldap[attributes[attribute]]);
                 ldap.setAttribute(attributes[attribute], null);
             }
         }
@@ -91,8 +91,7 @@
         if (ldap.users.hasOwnProperty(1) && ldap.users[1].hasOwnProperty('count')) {
             for (var i = 1; i < 6; i++) {
                 for (var name in attributes) {
-                    if (attributes.hasOwnProperty(name) &&
-                        ldap.users.hasOwnProperty(i) &&
+                    if (attributes.hasOwnProperty(name) && ldap.users.hasOwnProperty(i) &&
                         ldap.users[i].hasOwnProperty(ldap[attributes[name]])
                     ) {
                         $('#ldapPreview #user' + i + ' .' + attributes[name]).html(
@@ -104,6 +103,26 @@
                 }
             }
         }
+    };
+
+    /**
+     * This method save the mapping settings of a LDAP server
+     *
+     * @param settings An array with the mapping settings (form serialized)
+     */
+    ldap.saveSettings = function (settings)
+    {
+        $.post(routing.generate('claro_admin_ldap_save_settings'), settings)
+        .done(function (data) {
+            if (data === 'true') {
+                window.location.href = routing.generate('claro_admin_ldap_servers');
+            } else {
+                modal.error();
+            }
+        })
+        .error(function () {
+            modal.error();
+        });
     };
 
     /**
@@ -176,9 +195,11 @@
         });
     };
 
+    /** events **/
+
     $('body').on('change', '#ldapObjectClass', function () {
         var element = this;
-        var host = $(element).data('host');
+        var host = $('#ldapHost').val();
 
         ldap.reset();
 
@@ -196,20 +217,21 @@
         ldap.setAttribute($(this).attr('id'), this.value);
         ldap.showPreview();
     }).on('click', '#ldapFooter .btn-primary', function () {
+        var form = $('#ldapForm').serializeArray();
 
-        var options = ldap.getAttributes();
-        var values = [];
-
-        for (var option in options) {
-            if (options.hasOwnProperty(option)) {
-                values[options[option]] = $('#ldapAttributes #' + options[option]).val();
-                if (values[options[option]]) {
-                    console.log(values[options[option]]);
-                }
-            }
+        if (form[2].value !== '' &&
+            form[3].value !== '' &&
+            form[4].value !== '' &&
+            form[5].value !== '' &&
+            form[6].value !== ''
+        ) {
+            ldap.saveSettings(form);
+        } else {
+            modal.simpleContainer(
+                translator.get('ldap:Users settings'),
+                translator.get('ldap:ldap_save_settings_error')
+            );
         }
-
-        console.log(values);
     })
     .on('click', '.ldap-settings .btn-primary', function () {
         ldap.addServer(this);
