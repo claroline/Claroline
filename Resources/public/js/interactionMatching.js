@@ -39,7 +39,7 @@ function creationMatching(addchoice, addproposal, deletechoice, LabelValue, Scor
     // If no label exist, add two labels by default in the container Label
     if (indexProposal == 0) {
         addProposal(containerProposal, deletechoice, tableProposals, codeContainerProposal);
-        $('#newTableProposal').find('tbody').append('<tr></tr>');
+        $('#newTableProposal').find('tbody').append('<tr><td></td></tr>');
         addProposal(containerProposal, deletechoice, tableProposals, codeContainerProposal);
     // If label already exist, add button to delete it
     } else {
@@ -117,6 +117,8 @@ function addProposal(container, deletechoice, table, codeContainer){
     // Remove the useless fileds form
     container.remove();
     table.next().remove();
+    
+    addRemoveRowTableProposal();
 }
 
 //check if the form is valid
@@ -168,11 +170,6 @@ function fillProposalArray() {
         $('#newTableProposal').find('td:last').append(containerProposal.find('.row').find('textarea'));
     }
 
-    // Add the field of type input
-    if (containerProposal.find('.row').find('input').length) {
-        $('#newTableProposal').find('tr:last').append('<td class="classic"></td>');
-        $('#newTableProposal').find('td:last').append(containerProposal.find('.row').find('input'));
-    }
 }
 
 function adddelete(tr, deletechoice, codeContainer){
@@ -190,6 +187,9 @@ function adddelete(tr, deletechoice, codeContainer){
     // When click, delete the row in the table
     delLink.click(function(e) {
         $(this).parent('td').parent('tr').remove();
+        
+        addRemoveRowTableProposal();
+        
         e.preventDefault();
         return false;
     });
@@ -220,7 +220,7 @@ function tableCreationLabel(container, table, button, deletechoice, LabelValue, 
 function tableCreationProposal(container, table, button, deletechoice, ProposalValue, nbResponses, codeContainer, supp, correspondence){
     if (nbResponses == 0) {
         // Creation of the table
-        table.append('<table id="newTableProposal" class="table table-striped table-bordered table-condensed"><thead><tr style="background-color: lightsteelblue;"><th class="classic">'+correspondence+'</th><th class="classic">'+ProposalValue+'</th><th class="classic">'+supp+'</th></tr></thead><tbody><tr></tr></tbody></table>');
+        table.append('<table id="newTableProposal" class="table table-striped table-bordered table-condensed"><thead><tr style="background-color: lightsteelblue;"><th class="classic">'+correspondence+'</th><th class="classic">'+ProposalValue+'</th><th class="classic">'+supp+'</th></tr></thead><tbody><tr><td></td></tr></tbody></table>');
 
         // Creation of the button add
         var add = $('<a href="#" id="add_proposal" class="btn btn-primary"><i class="fa fa-plus"></i>&nbsp;'+button+'</a>');
@@ -228,7 +228,7 @@ function tableCreationProposal(container, table, button, deletechoice, ProposalV
         // Add the button add
         table.append(add);
         add.click(function (e) {
-            $('#newTableProposal').find('tbody').append('<tr></tr>');
+            $('#newTableProposal').find('tbody').append('<tr><td></td></tr>');
             addProposal(container, deletechoice, table, codeContainer);
             e.preventDefault(); // prevent add # in the url
             return false;
@@ -237,4 +237,27 @@ function tableCreationProposal(container, table, button, deletechoice, ProposalV
         // Add the structure of the table
         table.append('<table id="newTableProposal" class="table table-striped table-bordered table-condensed"><thead><tr style="background-color: lightsteelblue;"><th class="classic">'+correspondence+'</th><th class="classic">'+ProposalValue+'</th><th class="classic">'+supp+'</th></tr></thead><tbody><tr></tr></tbody></table>');
     }
+}
+
+function addRemoveRowTableProposal () {
+    
+    var rowInd;
+    
+    $("*[id$='_correspondence']").each( function() {
+        $(this).find('option').remove();
+    });
+    
+    $('#newTableProposal').find('tbody').find('tr').each( function() {
+        rowInd = this.rowIndex;
+        $(this).find('td:first').children().remove();
+        $(this).find('td:first').append('<span>' + rowInd + '</span>');
+        
+        $("*[id$='_correspondence']").each( function() {
+            $(this).append($('<option>', {
+                            value: rowInd,
+                            text:  rowInd
+                        }));
+        });
+        
+    });
 }

@@ -14,10 +14,6 @@ class ProposalType extends AbstractType
             ->add(
                 'value', 'tinymce', array(
                     'required' => false, 'label' => ' '
-                ))
-            ->add(
-                'rightScore', 'text', array(
-                    'required' => false, 'label' => ' '
                 ));
     }
 
