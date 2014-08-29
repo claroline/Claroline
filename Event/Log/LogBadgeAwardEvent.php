@@ -30,7 +30,11 @@ class LogBadgeAwardEvent extends LogGenericEvent
                     'firstName' => $receiver->getFirstName()
                 )
             ),
-            $receiver
+            $receiver,
+            null,
+            null,
+            null,
+            $badge->getWorkspace()
         );
     }
 
