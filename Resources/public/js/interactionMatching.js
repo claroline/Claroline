@@ -16,6 +16,15 @@ function creationMatching(addchoice, addproposal, deletechoice, LabelValue, Scor
     var codeContainerProposal = 1;
 
     typeMatching = JSON.parse(tMatching);
+    
+    //in the first time
+    $('#ujm_exobundle_interactionmatchingtype_typeMatching').children('option').each(function() {
+         if (typeMatching[$(this).val()] == 2) {
+             $(this).prop('selected', true);
+         } else {
+             $(this).attr('disabled', 'disabled');
+         }
+     });
 
     tableCreationLabel(containerLabel, tableLabels, addchoice, deletechoice, LabelValue, ScoreRight, 0, codeContainerLabel, deleteLabel, correspondence);
     tableCreationProposal(containerProposal, tableProposals, addproposal, deletechoice, ProposalValue, 0, codeContainerProposal, deleteProposal, numberProposal);
