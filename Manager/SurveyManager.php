@@ -358,6 +358,18 @@ class SurveyManager
         $this->om->flush();
     }
 
+    public function updateQuestionOrder(
+        Survey $survey,
+        SurveyQuestionRelation $relation,
+        $questionOrder
+    )
+    {
+        $this->updateQuestionOrderBySurvey($survey, $questionOrder);
+        $relation->setQuestionOrder($questionOrder);
+        $this->om->persist($relation);
+        $this->om->flush();
+    }
+
 
     /****************************************
      * Access to QuestionRepository methods *
@@ -467,6 +479,19 @@ class SurveyManager
     {
         return $this->surveyQuestionRelationRepo
             ->findSurveyLastQuestionOrder($survey, $executeQuery);
+    }
+
+    public function updateQuestionOrderBySurvey(
+        Survey $survey,
+        $questionOrder,
+        $executeQuery = true
+    )
+    {
+        return $this->surveyQuestionRelationRepo->updateQuestionOrderBySurvey(
+            $survey,
+            $questionOrder,
+            $executeQuery
+        );
     }
 
 

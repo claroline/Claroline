@@ -21,10 +21,6 @@ use Doctrine\ORM\Mapping as ORM;
  *         @ORM\UniqueConstraint(
  *             name="survey_unique_survey_question_relation",
  *             columns={"survey_id", "question_id"}
- *         ),
- *         @ORM\UniqueConstraint(
- *             name="survey_unique_question_order",
- *             columns={"survey_id", "question_order"}
  *         )
  *     }
  * )

@@ -1355,6 +1355,43 @@ class SurveyController extends Controller
         return new Response(json_encode($model->getDetails()), 200);
     }
 
+    /**
+     * @EXT\Route(
+     *     "/survey/{survey}/question/order/update/relation/{relation}/with/{otherRelation}/mode/{mode}",
+     *     name="claro_survey_update_question_order",
+     *     options={"expose"=true}
+     * )
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function updateQuestionOrderAction(
+        Survey $survey,
+        SurveyQuestionRelation $relation,
+        SurveyQuestionRelation $otherRelation,
+        $mode
+    )
+    {
+        $this->checkSurveyRight($survey, 'EDIT');
+
+        if ($relation->getSurvey()->getId() === $survey->getId() &&
+            $otherRelation->getSurvey()->getId() === $survey->getId()) {
+            $newOrder = $otherRelation->getQuestionOrder();
+
+            if ($mode === 'next') {
+                $this->surveyManager
+                    ->updateQuestionOrder($survey, $relation, $newOrder);
+            } else {
+                $relation->setQuestionOrder($newOrder + 1);
+                $this->surveyManager->persistSurveyQuestionRelation($relation);
+            }
+
+            return new Response('success', 204);
+        } else {
+
+            return new Response('Forbidden', 403);
+        }
+    }
+
     private function showTypedQuestionResults(
         Survey $survey,
         Question $question,

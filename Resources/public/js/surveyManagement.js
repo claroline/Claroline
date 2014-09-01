@@ -183,4 +183,45 @@
             }
         });
     });
+
+    $('#question-table').sortable({
+        items: 'tr',
+        cursor: 'move'
+    });
+
+    $('#question-table').on('sortupdate', function (event, ui) {
+        
+        if (this === ui.item.parents('#question-table')[0]) {
+            var relationId = $(ui.item).data('question-relation-id');
+            var otherRelationId = $(ui.item).next().data('question-relation-id');
+            var mode = 'previous';
+            var execute = false;
+            
+            if (otherRelationId !== undefined) {
+                mode = 'next';
+                execute = true;
+            } else {
+                otherRelationId = $(ui.item).prev().data('question-relation-id');
+                
+                if (otherRelationId !== undefined) {
+                    execute = true;
+                }
+            }
+            
+            if (execute) {
+                $.ajax({
+                    url: Routing.generate(
+                        'claro_survey_update_question_order',
+                        {
+                            'survey': surveyId,
+                            'relation': relationId,
+                            'otherRelation': otherRelationId,
+                            'mode': mode
+                        }
+                    ),
+                    type: 'POST'
+                });
+            }
+        }
+    });
 })();

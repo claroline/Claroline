@@ -51,4 +51,23 @@ class SurveyQuestionRelationRepository extends EntityRepository
 
         return $executeQuery ? $query->getSingleResult() : $query;
     }
+
+    public function updateQuestionOrderBySurvey(
+        Survey $survey,
+        $questionOrder,
+        $executeQuery = true
+    )
+    {
+        $dql = "
+            UPDATE Claroline\SurveyBundle\Entity\SurveyQuestionRelation sqr
+            SET sqr.questionOrder = sqr.questionOrder + 1
+            WHERE sqr.survey = :survey
+            AND sqr.questionOrder >= :questionOrder
+        ";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('survey', $survey);
+        $query->setParameter('questionOrder', $questionOrder);
+
+        return $executeQuery ? $query->execute() : $query;
+    }
 }
