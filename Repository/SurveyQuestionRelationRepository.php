@@ -17,6 +17,20 @@ use Doctrine\ORM\EntityRepository;
 
 class SurveyQuestionRelationRepository extends EntityRepository
 {
+    public function findRelationsBySurvey(Survey $survey, $executeQuery = true)
+    {
+        $dql = "
+            SELECT sqr
+            FROM Claroline\SurveyBundle\Entity\SurveyQuestionRelation sqr
+            WHERE sqr.survey = :survey
+            ORDER BY sqr.questionOrder ASC
+        ";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('survey', $survey);
+
+        return $executeQuery ? $query->getResult() : $query;
+    }
+
     public function findRelationBySurveyAndQuestion(
         Survey $survey,
         Question $question,
@@ -50,5 +64,24 @@ class SurveyQuestionRelationRepository extends EntityRepository
         $query->setParameter('survey', $survey);
 
         return $executeQuery ? $query->getSingleResult() : $query;
+    }
+
+    public function updateQuestionOrderBySurvey(
+        Survey $survey,
+        $questionOrder,
+        $executeQuery = true
+    )
+    {
+        $dql = "
+            UPDATE Claroline\SurveyBundle\Entity\SurveyQuestionRelation sqr
+            SET sqr.questionOrder = sqr.questionOrder + 1
+            WHERE sqr.survey = :survey
+            AND sqr.questionOrder >= :questionOrder
+        ";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('survey', $survey);
+        $query->setParameter('questionOrder', $questionOrder);
+
+        return $executeQuery ? $query->execute() : $query;
     }
 }

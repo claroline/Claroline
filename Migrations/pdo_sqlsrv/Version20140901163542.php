@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\SurveyBundle\Migrations\sqlsrv;
+namespace Claroline\SurveyBundle\Migrations\pdo_sqlsrv;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/08/28 02:27:40
+ * Generation date: 2014/09/01 04:35:44
  */
-class Version20140828142738 extends AbstractMigration
+class Version20140901163542 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -122,11 +122,6 @@ class Version20140828142738 extends AbstractMigration
             CREATE UNIQUE INDEX survey_unique_survey_question_relation ON claro_survey_question_relation (survey_id, question_id) 
             WHERE survey_id IS NOT NULL 
             AND question_id IS NOT NULL
-        ");
-        $this->addSql("
-            CREATE UNIQUE INDEX survey_unique_question_order ON claro_survey_question_relation (survey_id, question_order) 
-            WHERE survey_id IS NOT NULL 
-            AND question_order IS NOT NULL
         ");
         $this->addSql("
             CREATE TABLE claro_survey_question_model (

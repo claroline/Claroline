@@ -114,11 +114,11 @@
             </div>
         {% else %}
             <div class="table-responsive">
-                <table class="table table-bordered">
+                <table class="table table-bordered" id="question-table">
 
                 {% for relation in questionRelations %}
                     {% set question = relation.getQuestion() %}
-                    <tr>
+                    <tr data-question-relation-id="{{ relation.getId() }}">
                         <td>
                             <b>
                                 [{{ question.getType()|trans({}, 'survey') }}]
