@@ -459,6 +459,15 @@ class SurveyManager
      * Access to SurveyQuestionRelationRepository methods *
      ******************************************************/
 
+    public function getQuestionRelationsBySurvey(
+        Survey $survey,
+        $executeQuery = true
+    )
+    {
+        return $this->surveyQuestionRelationRepo
+            ->findRelationsBySurvey($survey, $executeQuery);
+    }
+
     public function getRelationBySurveyAndQuestion(
         Survey $survey,
         Question $question,

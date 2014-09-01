@@ -96,14 +96,10 @@ class SurveyController extends Controller
 
         if ($canEdit) {
 
-            return new Response(
-                $this->templating->render(
-                    "ClarolineSurveyBundle:Survey:surveyManagement.html.twig",
-                    array(
-                        'survey' => $survey,
-                        'questionRelations' => $survey->getQuestionRelations(),
-                        'status' => $status
-                    )
+            return new RedirectResponse(
+                $this->router->generate(
+                    'claro_survey_management',
+                    array('survey' => $survey->getId())
                 )
             );
         }
@@ -209,7 +205,8 @@ class SurveyController extends Controller
     public function surveyManagementAction(Survey $survey)
     {
         $this->checkSurveyRight($survey, 'EDIT');
-        $questionRelations = $survey->getQuestionRelations();
+        $questionRelations = $this->surveyManager
+            ->getQuestionRelationsBySurvey($survey);
         $status = $this->computeStatus($survey);
 
         return array(
@@ -233,8 +230,10 @@ class SurveyController extends Controller
     {
         $this->checkSurveyRight($survey, 'EDIT');
         $questionViews = array();
+        $questionRelations = $this->surveyManager
+            ->getQuestionRelationsBySurvey($survey);
 
-        foreach ($survey->getQuestionRelations() as $relation) {
+        foreach ($questionRelations as $relation) {
             $question = $relation->getQuestion();
             $questionViews[] =
                 $this->typedQuestionDisplayAction($survey, $question)->getContent();
@@ -242,7 +241,7 @@ class SurveyController extends Controller
 
         return array(
             'survey' => $survey,
-            'questionRelations' => $survey->getQuestionRelations(),
+            'questionRelations' => $questionRelations,
             'questionViews' => $questionViews
         );
     }
@@ -915,8 +914,10 @@ class SurveyController extends Controller
                 }
             }
         }
+        $questionRelations = $this->surveyManager
+            ->getQuestionRelationsBySurvey($survey);
 
-        foreach ($survey->getQuestionRelations() as $relation) {
+        foreach ($questionRelations as $relation) {
             $question = $relation->getQuestion();
             $questionAnswer = isset($answersDatas[$question->getId()]) ?
                 $answersDatas[$question->getId()] :
@@ -931,7 +932,7 @@ class SurveyController extends Controller
 
         return array(
             'survey' => $survey,
-            'questionRelations' => $survey->getQuestionRelations(),
+            'questionRelations' => $questionRelations,
             'questionViews' => $questionViews,
             'canEdit' => $canEdit,
             'errors' => $errors
@@ -994,8 +995,10 @@ class SurveyController extends Controller
                         }
                     }
                 }
+                $questionRelations = $this->surveyManager
+                    ->getQuestionRelationsBySurvey($survey);
 
-                foreach ($survey->getQuestionRelations() as $relation) {
+                foreach ($questionRelations as $relation) {
                     $question = $relation->getQuestion();
                     $answerData = isset($answersDatas[$question->getId()]) ?
                         $answersDatas[$question->getId()] :
@@ -1011,7 +1014,7 @@ class SurveyController extends Controller
 
                 return array(
                     'survey' => $survey,
-                    'questionRelations' => $survey->getQuestionRelations(),
+                    'questionRelations' => $questionRelations,
                     'questionViews' => $questionViews,
                     'canEdit' => $canEdit,
                     'errors' => $errors
@@ -1229,7 +1232,8 @@ class SurveyController extends Controller
 
             throw new AccessDeniedException();
         }
-        $questionRelations = $survey->getQuestionRelations();
+        $questionRelations = $this->surveyManager
+            ->getQuestionRelationsBySurvey($survey);
         $questions = array();
 
         foreach ($questionRelations as $relation) {
