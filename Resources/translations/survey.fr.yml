@@ -1,5 +1,90 @@
-choice: Choix multiples
+actions: Actions
+add_choice: 'Ajouter un choix'
+add_choice_other: 'Ajouter un choix "Autre"'
+add_question: 'Ajouter une question'
+add_question_box_title: 'Ajouter une question au sondage'
+allow_edition_after_submission: 'Authoriser la modification de la réponse'
+allow_multiple_response: 'Réponses multiples'
+an_answer_is_required: 'Une réponse est requise'
+answer_to_survey: 'Répondre au sondage'
+choice: Choix
+choice_display: 'Affichage des choix'
+choices_management: 'Gestion des choix'
+close: Fermer
+closed: Fermé
+closed_user_message: 'Le sondage est clôturé.'
+closing_date: 'Date de clôture'
+closing_date_next: 'Prochaine date de clôture'
+comment: Commentaire
+create_model_from_question: 'Créer un modèle à partir de la question'
+create_question: 'Créer une question'
+description: Description
+display_survey: 'Afficher le sondage'
+edit_parameters: 'Modifier les paramètres'
+edit_question_btn_explanation: 'Modifier la question'
+edit_survey: 'Modifier le sondage'
+edition: Modification
+end_date: 'Date de fin'
+horizontal: Horizontal
+how_to_publish_message: 'Le sondage n''est pas encore publié. Personne ne peut y répondre. Vous pouvez le publier dans <Paramètres>.'
+label_for_choice_other: 'Libellé du choix "Autre"'
+mandatory_answer_message: 'Une réponse est requise'
+model: Modèle
+model_delete_confirm_message: 'Êtes-vous sûr de vouloir supprimer ce modèle ?'
+model_delete_confirm_title: 'Suppression du modèle'
+models_management: 'Gestion des modèles'
+multiple_choice_multiple: 'Choix multiple (Réponses multiples)'
+multiple_choice_multiple_answers: 'Choix multiple (Réponses multiples)'
+multiple_choice_single: 'Choix multiple (Réponse unique)'
+multiple_choice_single_answer: 'Choix multiple (Réponse unique)'
 name: Nom
-open-ended: Question ouverte
-question_body: Question
+no_choice_warning: 'Attention! Il n''y a aucun choix.'
+no_model: 'Aucun modèle'
+no_question: 'Aucune question'
+not_mandatory_answer_message: 'Une réponse n''est pas requise'
+number_of_respondents: 'Nombre de personnes ayant répondu'
+number_of_responses: 'Nombre de réponses'
+open_ended: 'Ouverte'
+parameters: Paramètres
+parameters_edition: 'Modification des paramètres'
+publication_date: 'Date de publication'
+publication_date_next: 'Prochaine date de publication'
+publish: Publier
+published: Publié
+published_user_message: 'Le sondage est ouvert.'
+question_creation: 'Création d''une question'
+question_delete_confirm_message: 'Êtes-vous sûr de vouloir supprimer cette question ?'
+question_delete_confirm_title: 'Suppression de la question'
+question_edition: 'Modification de la question'
+question_form_commentAllowed: 'Avec commentaire'
+question_form_commentLabel: 'Libellé du commentaire'
+question_form_mandatory: 'Réponse requise'
+question_form_question: 'Question'
+question_form_title: 'Titre'
+question_form_type: 'Type de question'
+questions_management: 'Gestion des questions'
+ratio: Ratio
+remove_question_btn_explanation: 'Retirer la question du sondage'
+results: Résultats
+return: Retour
+show_result_to_users: 'Afficher le résultat aux utilisateurs'
+start_date: 'Date de début'
+status: Statut
+survey_answer: Réponse
+survey_edition: 'Modification du sondage'
+survey_edition_form_allowAnswerEdition: 'Authoriser la modification de la réponse'
+survey_edition_form_description: Description
+survey_edition_form_endDate: 'Date de fin'
+survey_edition_form_hasPublicResult: 'Afficher le résultat aux utilisateurs'
+survey_edition_form_startDate: 'Date de début'
+survey_form_description: Description
+survey_parameters: 'Paramètres du sondage'
+survey_parameters_edition: 'Modification des paramètres du sondage'
+survey_results: 'Résultats du sondage'
+title: Titre
 type: Type
+unpublished: 'Non publié'
+unpublished_user_message: 'Le sondage n''est pas encore publié.'
+vertical: Vertical
+view_question_btn_explanation: 'Aperçu de la question'
+view_survey_results: 'Voir les résultats du sondage'

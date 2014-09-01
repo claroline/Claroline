@@ -1,0 +1,129 @@
+{% set layout = 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
+
+{% if isDesktop() %}
+    {% set layout = 'ClarolineCoreBundle:Desktop:layout.html.twig' %}
+{% endif %}
+
+{% set _resource = survey %}
+{% set surveyId = survey.getId() %}
+{% set startDate = survey.getStartDate() %}
+{% set endDate = survey.getEndDate() %}
+
+{% extends layout %}
+
+{% block title %}
+    {{ survey.getResourceNode().getName() | striptags | raw ~ ' - ' ~ 'parameters'|trans({}, 'survey') }}
+{% endblock %}
+
+{% block resourceBreadcrumb %}
+    <li>
+        <a href="{{ path('claro_survey_index', {'survey': surveyId}) }}">
+            {{ _resource.getResourceNode().getName() }}
+        </a>
+    </li>
+    <li class="active">{{ 'parameters' | trans({}, 'survey') }}</li>
+{% endblock %}
+
+{% block section_content %}
+    <div class="panel-heading">
+        <h3 class="panel-title">
+            {{ 'survey_parameters'|trans({}, 'survey') }}
+        </h3>
+    </div>
+    <div class="panel-body">
+        <div>
+            <a href="{{ path('claro_survey_index', {'survey': surveyId}) }}"
+               class="btn btn-primary margin-bottom-md"
+            >
+                <i class="fa fa-arrow-left"></i>
+                {{ 'return'|trans({}, 'survey') }}
+            </a>
+            <a href="{{ path('claro_survey_parameters_edit_form', {'survey': surveyId}) }}"
+                class="btn btn-primary margin-bottom-md"
+            >
+                <i class="fa fa-pencil"></i>
+                {{ 'edit_parameters'|trans({}, 'survey') }}
+            </a>
+        </div>
+        <hr>
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover text-center">
+                <tr>
+                    <th>{{ 'status'|trans({}, 'survey') }}</th>
+                    <td style="vertical-align: middle">
+                        {{ status|trans({}, 'survey') }}
+                    </td>
+                    
+                    {% set publishDisabled = (status == 'unpublished' and startDate is not empty) or
+                        (status == 'closed' and endDate is not empty)
+                    %}
+                    {% set closeDisabled = (status == 'published' and endDate is not empty) %}
+                    
+                    {% if status == 'unpublished' or status == 'closed' %}
+                        <td style="vertical-align: middle">
+                            <a href="{{ path('claro_survey_publish', {'survey': surveyId}) }}"
+                               class="btn btn-success {% if (publishDisabled) %}disabled{% endif %}"
+                            >
+                                <i class="fa fa-check-circle"></i>
+                                {{ 'publish'|trans({}, 'survey') }}
+                            </a>
+                        </td>
+                    {% else %}
+                        <td style="vertical-align: middle">
+                            <a href="{{ path('claro_survey_close', {'survey': surveyId}) }}"
+                               class="btn btn-danger {% if (closeDisabled) %}disabled{% endif %}"
+                            >
+                                <i class="fa fa-times-circle"></i>
+                                {{ 'close'|trans({}, 'survey') }}
+                            </a>
+                        </td>
+                    {% endif %}
+                </tr>
+                <tr>
+                    <th>{{ 'description'|trans({}, 'survey') }}</th>
+                    <td colspan="2">{{ survey.getDescription()|raw }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'start_date'|trans({}, 'survey') }}</th>
+                    <td colspan="2">
+                    {% if startDate is not null %}
+                        {{ startDate|intl_date_format }}
+                    {% else %}
+                        -
+                    {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <th>{{ 'end_date'|trans({}, 'survey') }}</th>
+                    <td colspan="2">
+                    {% if endDate is not null %}
+                        {{ endDate|intl_date_format }}
+                    {% else %}
+                        -
+                    {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <th>{{ 'show_result_to_users'|trans({}, 'survey') }}</th>
+                    <td colspan="2">
+                    {% if survey.getHasPublicResult() %}
+                        <i class="fa fa-check-circle"></i>
+                    {% else %}
+                        <i class="fa fa-times-circle"></i>
+                    {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <th>{{ 'allow_edition_after_submission'|trans({}, 'survey') }}</th>
+                    <td colspan="2">
+                    {% if survey.getAllowAnswerEdition() %}
+                        <i class="fa fa-check-circle"></i>
+                    {% else %}
+                        <i class="fa fa-times-circle"></i>
+                    {% endif %}
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+{% endblock %}

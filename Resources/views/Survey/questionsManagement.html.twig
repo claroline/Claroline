@@ -1,0 +1,198 @@
+{% macro renderPager(pager, surveyId, orderedBy, order, max) %}
+    {{
+        pagerfanta(
+            pager,
+            'twitter_bootstrap_translated',
+            {
+                'proximity' : 1,
+                'routeName': 'claro_survey_questions_management',
+                'routeParams': {
+                    'survey': surveyId,
+                    'orderedBy': orderedBy,
+                    'order': order,
+                    'max': max
+                }
+            }
+        )
+    }}
+{% endmacro %}
+
+{% macro sortUrl(surveyId, orderedBy, order) %}
+    {% if order == 'ASC' %}
+        {% set newOrder = 'DESC' %}
+    {% else %}
+        {% set newOrder = 'ASC' %}
+    {% endif %}
+
+    {{ path('claro_survey_questions_management', {'survey': surveyId, 'orderedBy': orderedBy, 'order': newOrder }) }}
+{% endmacro %}
+
+{% from _self import renderPager %}
+{% from _self import sortUrl %}
+
+{% set layout = 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
+
+{% if isDesktop() %}
+    {% set layout = 'ClarolineCoreBundle:Desktop:layout.html.twig' %}
+{% endif %}
+
+{% set _resource = survey %}
+{% set surveyId = survey.getId() %}
+
+{% extends layout %}
+
+{% block title %}
+    {{ survey.getResourceNode().getName() ~ ' - ' | striptags | raw ~ 'questions_management'|trans({}, 'survey') }}
+{% endblock %}
+
+{% block resourceBreadcrumb %}
+    <li>
+        <a href="{{ path('claro_survey_index', {'survey': surveyId}) }}">
+            {{ _resource.getResourceNode().getName() }}
+        </a>
+    </li>
+    <li class="active">{{ 'questions_management' | trans({}, 'survey') }}</li>
+{% endblock %}
+
+{% block section_content %}
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ 'questions_management'|trans({}, 'survey') }}</h3>
+    </div>
+    <div class="panel-body">
+        <div>
+            <a href="{{ path('claro_survey_index', {'survey': surveyId}) }}"
+               class="btn btn-primary margin-bottom-md"
+            >
+                <i class="fa fa-arrow-left"></i>
+                {{ 'return'|trans({}, 'survey') }}
+            </a>
+            <a href="{{ path('claro_survey_question_create_form', {'survey': surveyId}) }}"
+               class="btn btn-primary margin-bottom-md"
+            >
+                <i class="fa fa-plus-circle"></i>
+                {{ 'create_question'|trans({}, 'survey') }}
+            </a>
+            <a href="{{ path('claro_survey_models_management', {'survey': surveyId, 'orderedBy': 'title', 'order': 'ASC'}) }}"
+               class="btn btn-primary margin-bottom-md"
+            >
+                <i class="fa fa-copy"></i>
+                {{ 'models_management'|trans({}, 'survey') }}
+            </a>
+        </div>
+        <hr>
+        {% if questions|length > 0 %}
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover text-center">
+                    <tr>
+                        <th class="text-center">
+                            <a href="{{ sortUrl(surveyId, 'title', order) }}">
+                                {{ 'title'|trans({}, 'survey') }}
+                            </a>
+                        </th>
+                        <th class="text-center">
+                            <a href="{{ sortUrl(surveyId, 'type', order) }}">
+                                {{ 'type'|trans({}, 'survey') }}
+                            </a>
+                        </th>
+                        <th class="text-center">
+                            {{ 'actions'|trans({}, 'survey') }}
+                        </th>
+                    </tr>
+                    
+                    {% for question in questions %}
+                        <tr>
+                            <td>
+                                {{ question.getTitle() }}
+                            </td>
+                            <td>
+                                {{ question.getType()|trans({}, 'survey') }}
+                            </td>
+                            <td>
+                                <span class="btn btn-default view-question-btn"
+                                      data-question-id="{{ question.getId() }}"
+                                      data-survey-id="{{ survey.getId() }}"
+                                >
+                                    <i class="fa fa-eye"></i>
+                                </span>
+                                <a href="{{ path(
+                                        'claro_survey_question_edit_form',
+                                        {'question': question.getId(), 'survey': surveyId}
+                                    ) }}"
+                                    class="btn btn-default"
+                                >
+                                    <i class="fa fa-edit"></i>
+                                </a>
+                                <span class="btn btn-danger delete-question-btn"
+                                      data-question-id="{{ question.getId() }}"
+                                      data-survey-id="{{ survey.getId() }}"
+                                >
+                                    <i class="fa fa-trash-o"></i>
+                                </span>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        
+            {% if questions.getNbPages() > 1 %}
+                {{ renderPager(questions, survey.getId(), orderedBy, order, max) }}
+            {% endif %}
+        {% else %}
+            <div class="alert alert-warning" role="alert">
+                {{ 'no_question'|trans({}, 'survey') }}
+            </div>
+        {% endif %}
+    </div>
+    
+    <div id="view-question-box" class="modal fade" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div id="view-question-body" class="modal-body">
+                </div>
+                <div class="modal-footer">
+                    <input type="button"
+                           class="btn btn-default"
+                           data-dismiss="modal"
+                           value="{{ 'close'|trans({}, 'platform') }}"
+                    />
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="delete-question-validation-box" class="modal fade" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h3>{{ 'question_delete_confirm_title'|trans({}, 'survey') }}</h3>
+                </div>
+                <div class="modal-body">
+                    <p>{{ 'question_delete_confirm_message'|trans({}, 'survey') }}</p>
+                </div>
+                <div class="modal-footer">
+                    <input type="button"
+                           id="delete-question-confirm-ok"
+                           class="btn btn-primary"
+                           value="{{ 'ok'|trans({}, 'platform') }}"
+                    />
+                    <input type="button"
+                           class="btn btn-default"
+                           data-dismiss="modal"
+                           value="{{ 'cancel'|trans({}, 'platform') }}"
+                    />
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script
+        src='{{ asset('bundles/clarolinesurvey/js/questionsManagement.js') }}'
+        type="text/javascript">
+    </script>
+{% endblock %}

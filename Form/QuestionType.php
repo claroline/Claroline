@@ -14,29 +14,46 @@ namespace Claroline\SurveyBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Symfony\Component\Validator\Constraints\NotBlank;
 
-class SurveyType extends AbstractType
+class QuestionType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add(
-            'name',
-            'text',
+            'title',
+            'text'
+        );
+        $builder->add(
+            'question',
+            'tinymce'
+        );
+        $builder->add(
+            'type',
+            'choice',
             array(
-                'constraints' => new NotBlank(),
-                'label' => 'name'
+                'choices' => array(
+                    'open_ended' => 'open_ended',
+                    'multiple_choice_single' => 'multiple_choice_single_answer',
+                    'multiple_choice_multiple' => 'multiple_choice_multiple_answers'
+                ),
+                'required' => true
             )
         );
         $builder->add(
-            'description',
-            'tinymce'
+            'commentAllowed',
+            'checkbox',
+            array('required' => true)
+        );
+        $builder->add(
+            'commentLabel',
+            'text',
+            array('required' => false)
         );
     }
 
     public function getName()
     {
-        return 'survey_form';
+        return 'question_form';
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

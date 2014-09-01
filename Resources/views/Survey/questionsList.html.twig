@@ -1,0 +1,79 @@
+{% macro renderPager(pager, surveyId, orderedBy, order, max) %}
+    {{
+        pagerfanta(
+            pager,
+            'twitter_bootstrap_translated',
+            {
+                'proximity' : 1,
+                'routeName': 'claro_survey_questions_list',
+                'routeParams': {
+                    'survey': surveyId,
+                    'orderedBy': orderedBy,
+                    'order': order,
+                    'max': max
+                }
+            }
+        )
+    }}
+{% endmacro %}
+
+{% macro sortUrl(surveyId, orderedBy, order) %}
+    {% if order == 'ASC' %}
+        {% set newOrder = 'DESC' %}
+    {% else %}
+        {% set newOrder = 'ASC' %}
+    {% endif %}
+
+    {{ path('claro_survey_questions_list', {'survey': surveyId, 'orderedBy': orderedBy, 'order': newOrder }) }}
+{% endmacro %}
+
+{% from _self import renderPager %}
+{% from _self import sortUrl %}
+{% set surveyId = survey.getId() %}
+
+{% if questions|length == 0 %}
+    <div class="alert alert-warning" role="alert">
+        {{ 'no_question'|trans({}, 'survey') }}
+    </div>
+{% else %}
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover text-center">
+            <tr>
+                <th class="text-center">
+                    <a href="{{ sortUrl(surveyId, 'title', order) }}">
+                        {{ 'title'|trans({}, 'survey') }}
+                    </a>
+                </th>
+                <th class="text-center">
+                    <a href="{{ sortUrl(surveyId, 'type', order) }}">
+                        {{ 'type'|trans({}, 'survey') }}
+                    </a>
+                </th>
+                <th>
+                </th>
+            </tr>
+
+            {% for question in questions %}
+                <tr>
+                    <td>
+                        {{ question.getTitle() }}
+                    </td>
+                    <td>
+                        {{ question.getType()|trans({}, 'survey') }}
+                    </td>
+                    <td>
+                        <a href="{{ path('claro_survey_add_question', {'survey': surveyId, 'question': question.getId()}) }}"
+                           class="btn btn-primary add-question-btn"
+                        >
+                            {{ 'add'|trans({}, 'platform') }}
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+    {% if questions.getNbPages() > 1 %}
+        {{ renderPager(questions, surveyId, orderedBy, order, max) }}
+    {% endif %}
+{% endif %}

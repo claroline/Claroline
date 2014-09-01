@@ -1,5 +1,90 @@
-choice: Multiple choice
+actions: Actions
+add_choice: 'Add a choice'
+add_choice_other: 'Add a choice "Other"'
+add_question: 'Add a question'
+add_question_box_title: 'Add a question to survey'
+allow_edition_after_submission: 'Allow edition after submission'
+allow_multiple_response: 'Multiple response'
+an_answer_is_required: 'An answer is required'
+answer_to_survey: 'Answer to survey'
+choice: Choice
+choice_display: 'Choice display'
+choices_management: 'Choices management'
+close: Close
+closed: Closed
+closed_user_message: 'The survey is closed.'
+closing_date: 'Closing date'
+closing_date_next: 'Next closing date'
+comment: Comment
+create_model_from_question: 'Create a model from question'
+create_question: 'Create a question'
+description: Description
+display_survey: 'Display survey'
+edit_parameters: 'Edit parameters'
+edit_question_btn_explanation: 'Edit question'
+edit_survey: 'Edit survey'
+edition: Edition
+end_date: 'End date'
+horizontal: Horizontal
+how_to_publish_message: 'The survey is not published yet. Nobody can answer it. You can publish it in <Parameters>.'
+label_for_choice_other: 'Label for choice "Other"'
+mandatory_answer_message: 'An answer is required'
+model: Model
+model_delete_confirm_message: 'Do you really want to delete this model ?'
+model_delete_confirm_title: 'Delete model'
+models_management: 'Models management'
+multiple_choice_multiple: 'Multiple choice (Multiple answers)'
+multiple_choice_multiple_answers: 'Multiple choice (Multiple answers)'
+multiple_choice_single: 'Multiple choice (Unique answer)'
+multiple_choice_single_answer: 'Multiple choice (Unique answer)'
 name: Name
-open-ended: Open-ended
-question_body: Question
+no_choice_warning: 'Warning! There is no choice.'
+no_model: 'No model'
+no_question: 'No question'
+not_mandatory_answer_message: 'An answer is not required'
+number_of_respondents: 'Number of respondents'
+number_of_responses: 'Number of responses'
+open_ended: 'Open-ended'
+parameters: Parameters
+parameters_edition: 'Parameters edition'
+publication_date: 'Publication date'
+publication_date_next: 'Next publication date'
+publish: Publish
+published: Published
+published_user_message: 'The survey is published.'
+question_creation: 'Question creation'
+question_delete_confirm_message: 'Do you really want to delete this question ?'
+question_delete_confirm_title: 'Delete question'
+question_edition: 'Question edition'
+question_form_commentAllowed: 'With comment'
+question_form_commentLabel: 'Comment label'
+question_form_mandatory: 'Required answer'
+question_form_question: 'Question'
+question_form_title: 'Title'
+question_form_type: 'Question type'
+questions_management: 'Questions management'
+ratio: Ratio
+remove_question_btn_explanation: 'Remove question from survey'
+results: Results
+return: Return
+show_result_to_users: 'Show result to users'
+start_date: 'Starting date'
+status: Status
+survey_answer: Answer
+survey_edition: 'Survey edition'
+survey_edition_form_allowAnswerEdition: 'Allow edition after submission'
+survey_edition_form_description: Description
+survey_edition_form_endDate: 'End date'
+survey_edition_form_hasPublicResult: 'Show result to users'
+survey_edition_form_startDate: 'Starting date'
+survey_form_description: Description
+survey_parameters: 'Survey parameters'
+survey_parameters_edition: 'Survey parameters edition'
+survey_results: 'Survey results'
+title: Title
 type: Type
+unpublished: Unpublished
+unpublished_user_message: 'The survey is not published yet.'
+vertical: Vertical
+view_question_btn_explanation: 'View question'
+view_survey_results: 'View survey results'

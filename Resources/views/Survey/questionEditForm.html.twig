@@ -1,0 +1,112 @@
+{% set layout = 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
+
+{% if isDesktop() %}
+    {% set layout = 'ClarolineCoreBundle:Desktop:layout.html.twig' %}
+{% endif %}
+
+{% set _resource = survey %}
+{% set surveyId = survey.getId() %}
+
+{% extends layout %}
+
+{% block title %}
+    {{ survey.getResourceNode().getName() ~ ' - ' | striptags | raw ~ 'question_edition'|trans({}, 'survey') }}
+{% endblock %}
+
+{% block resourceBreadcrumb %}
+    <li>
+        <a href="{{ path('claro_survey_index', {'survey': surveyId}) }}">
+            {{ _resource.getResourceNode().getName() }}
+        </a>
+    </li>
+    
+    {% if source != 'survey' %}
+        <li>
+            <a href="{{ path(
+                'claro_survey_questions_management',
+                {'survey': surveyId, 'orderedBy': 'title', 'order': 'ASC'}
+            ) }}">
+                {{ 'questions_management'|trans({}, 'survey') }}
+            </a>
+        </li>
+    {% endif %}
+    <li class="active">{{ 'question_edition' | trans({}, 'survey') }}</li>
+{% endblock %}
+
+{% block section_content %}
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ 'question_edition'|trans({}, 'survey') }}</h3>
+    </div>
+    <form role="form"
+          class="form-horizontal"
+          action="{{ path('claro_survey_question_edit', {'question': question.getId(), 'survey': surveyId, 'source': source}) }}"
+          method="post"
+          {{ form_enctype(form) }}
+          id="form_settings"
+          novalidate
+    >
+        <div class="panel-body">
+            {{ form_widget(form) }}
+            
+            <div class="form-group row">
+                <label class="control-label col-md-3" for="form-model">
+                    {{ 'model'|trans({}, 'survey') }}
+                </label>
+                <div class="col-md-9">
+                    <select id="form-model" class="form-control">
+                        <option value="none"></option>
+                        
+                        {% for model in models %}
+                            <option value="{{ model.getId() }}">
+                                {{ model.getTitle() }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div id="typed-question-form-block" class="hidden">
+            </div>
+            <div id="question-form-datas-block"
+                 data-form-type="edit"
+                 data-survey-id="{{ survey.getId() }}"
+                 data-question-id="{{ question.getId() }}"
+            >
+            </div>
+        </div>
+        <br>
+        <div class="panel-footer">
+            <button type="submit" class="btn btn-primary">
+                {{ 'ok'|trans({}, 'platform') }}
+            </button>
+            
+            {% if source == 'survey' %}
+                {%
+                    set cancelPath = path(
+                        'claro_survey_management',
+                        {'survey': surveyId}
+                    )
+                %}
+            {% else %}
+                {%
+                    set cancelPath = path(
+                        'claro_survey_questions_management',
+                        {'survey': surveyId, 'orderedBy': 'title', 'order': 'ASC'}
+                    )
+                %}
+            {% endif %}
+            <a href="{{ cancelPath }}">
+                <button type="button" class="btn btn-default">
+                    {{ 'cancel'|trans({}, 'platform') }}
+                </button>
+            </a>
+        </div>
+    </form>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script
+        src='{{ asset('bundles/clarolinesurvey/js/questionForm.js') }}'
+        type="text/javascript">
+    </script>
+{% endblock %}

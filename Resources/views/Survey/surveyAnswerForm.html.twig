@@ -1,0 +1,79 @@
+{% set layout = 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
+
+{% if isDesktop() %}
+    {% set layout = 'ClarolineCoreBundle:Desktop:layout.html.twig' %}
+{% endif %}
+
+{% set _resource = survey %}
+{% set surveyId = survey.getId() %}
+
+{% extends layout %}
+
+{% block title %}
+    {{ survey.getResourceNode().getName() ~ ' - '  | striptags | raw ~ 'survey_answer'|trans({}, 'survey') }}
+{% endblock %}
+
+{% block resourceBreadcrumb %}
+    <li>
+        <a href="{{ path('claro_survey_index', {'survey': surveyId}) }}">
+            {{ _resource.getResourceNode().getName() }}
+        </a>
+    </li>
+    <li class="active">{{ 'survey_answer' | trans({}, 'survey') }}</li>
+{% endblock %}
+
+{% block section_content %}
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ survey.getResourceNode().getName() }}</h3>
+    </div>
+    
+    <form role="form"
+          class="form-horizontal"
+          action="{{ path('claro_survey_answer', {'survey': surveyId}) }}"
+          method="post"
+          id="form_settings"
+          novalidate
+    >
+        <div class="panel-body">
+            
+            {% if survey.getDescription() is not empty %}
+                <br>
+                <div class="well well-sm">
+                    {{ survey.getDescription()|raw }}
+                </div>
+            {% endif %}
+            
+            {% for relation in questionRelations %}
+                {% set relationId = relation.getId() %}
+                {% set questionId = relation.getQuestion().getId() %}
+                
+                {% if relation.getMandatory() and errors[questionId] is defined %}
+                    <div class="alert alert-danger">
+                        {{ 'an_answer_is_required'|trans({}, 'survey') }}
+                    </div>
+                {% endif %}
+            
+                {% if questionViews[relationId] is defined %}
+                    {{ questionViews[relationId]|raw }}
+            
+                    {% if not loop.last %}
+                        <br>
+                        <hr>
+                        <br>
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+        </div>
+        <br>
+        <div class="panel-footer">
+            <button type="submit" class="btn btn-primary" {% if not canEdit %}disabled{% endif %}>
+                {{ 'ok'|trans({}, 'platform') }}
+            </button>
+            <a href="{{ path('claro_survey_index', {'survey': surveyId}) }}">
+                <button type="button" class="btn btn-default">
+                    {{ 'cancel'|trans({}, 'platform') }}
+                </button>
+            </a>
+        </div>
+    </form>
+{% endblock %}

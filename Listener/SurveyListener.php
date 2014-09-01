@@ -16,25 +16,50 @@ use Claroline\CoreBundle\Event\CreateFormResourceEvent;
 use Claroline\CoreBundle\Event\CreateResourceEvent;
 use Claroline\CoreBundle\Event\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\OpenResourceEvent;
+use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\SurveyBundle\Entity\Survey;
+use Claroline\SurveyBundle\Entity\SurveyQuestionRelation;
 use Claroline\SurveyBundle\Form\SurveyType;
 use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Bundle\TwigBundle\TwigEngine;
+use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * @DI\Service
  */
 class SurveyListener
 {
-    private $container;
+    private $formFactory;
+    private $om;
+    private $request;
+    private $router;
+    private $templating;
 
     /**
-     * @DI\InjectParams({"container" = @DI\Inject("service_container")})
+     * @DI\InjectParams({
+     *     "formFactory"        = @DI\Inject("form.factory"),
+     *     "om"                 = @DI\Inject("claroline.persistence.object_manager"),
+     *     "requestStack"       = @DI\Inject("request_stack"),
+     *     "router"             = @DI\Inject("router"),
+     *     "templating"         = @DI\Inject("templating")
+     * })
      */
-    public function __construct(ContainerInterface $container)
+    public function __construct(
+        FormFactory $formFactory,
+        ObjectManager $om,
+        RequestStack $requestStack,
+        UrlGeneratorInterface $router,
+        TwigEngine $templating
+    )
     {
-        $this->container = $container;
+        $this->formFactory = $formFactory;
+        $this->om = $om;
+        $this->request = $requestStack->getCurrentRequest();
+        $this->router = $router;
+        $this->templating = $templating;
     }
 
     /**
@@ -44,8 +69,8 @@ class SurveyListener
      */
     public function onCreationForm(CreateFormResourceEvent $event)
     {
-        $form = $this->container->get('form.factory')->create(new SurveyType(), new Survey());
-        $content = $this->container->get('templating')->render(
+        $form = $this->formFactory->create(new SurveyType(), new Survey());
+        $content = $this->templating->render(
             'ClarolineCoreBundle:Resource:createForm.html.twig',
             array(
                 'form' => $form->createView(),
@@ -63,21 +88,19 @@ class SurveyListener
      */
     public function onCreate(CreateResourceEvent $event)
     {
-        $request = $this->container->get('request');
-        $form = $this->container->get('form.factory')->create(new SurveyType(), new Survey());
-        $form->handleRequest($request);
+        $form = $this->formFactory->create(new SurveyType(), new Survey());
+        $form->handleRequest($this->request);
 
         if ($form->isValid()) {
             $survey = $form->getData();
-            $om = $this->container->get('claroline.persistence.object_manager');
-            $om->persist($survey);
+            $this->om->persist($survey);
             $event->setResources(array($survey));
             $event->stopPropagation();
 
             return;
         }
 
-        $content = $this->container->get('templating')->render(
+        $content = $this->templating->render(
             'ClarolineCoreBundle:Resource:createForm.html.twig',
             array(
                 'form' => $form->createView(),
@@ -95,12 +118,10 @@ class SurveyListener
      */
     public function onOpen(OpenResourceEvent $event)
     {
-        $route = $this->container
-            ->get('router')
-            ->generate(
-                'claro_survey_index',
-                array('survey' => $event->getResource()->getId())
-            );
+        $route = $this->router->generate(
+            'claro_survey_index',
+            array('survey' => $event->getResource()->getId())
+        );
         $event->setResponse(new RedirectResponse($route));
         $event->stopPropagation();
     }
@@ -112,8 +133,25 @@ class SurveyListener
      */
     public function onCopy(CopyResourceEvent $event)
     {
+        $survey = $event->getResource();
         $copy = new Survey();
-        $this->container->get('claroline.persistence.object_manager')->persist($copy);
+        $copy->setPublished($survey->isPublished());
+        $copy->setClosed($survey->isClosed());
+        $copy->setHasPublicResult($survey->getHasPublicResult());
+        $copy->setAllowAnswerEdition($survey->getAllowAnswerEdition());
+        $copy->setStartDate($survey->getStartDate());
+        $copy->setEndDate($survey->getEndDate());
+        $this->om->persist($copy);
+        $relations = $survey->getQuestionRelations();
+
+        foreach ($relations as $relation) {
+            $newRelation = new SurveyQuestionRelation();
+            $newRelation->setSurvey($copy);
+            $newRelation->setQuestion($relation->getQuestion());
+            $newRelation->setQuestionOrder($relation->getQuestionOrder());
+            $this->om->persist($newRelation);
+        }
+
         $event->setCopy($copy);
         $event->stopPropagation();
     }
@@ -125,8 +163,7 @@ class SurveyListener
      */
     public function onDelete(DeleteResourceEvent $event)
     {
-        $this->container->get('claroline.persistence.object_manager')
-            ->remove($event->getResource());
+        $this->om->remove($event->getResource());
         $event->stopPropagation();
     }
 }

@@ -1,0 +1,36 @@
+{% set layout = 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
+
+{% if isDesktop() %}
+    {% set layout = 'ClarolineCoreBundle:Desktop:layout.html.twig' %}
+{% endif %}
+
+{% set _resource = survey %}
+{% set surveyId = survey.getId() %}
+
+{% extends layout %}
+
+{% block title %}
+    {{ survey.getResourceNode().getName() ~ ' - '  | striptags | raw ~ 'survey_results'|trans({}, 'survey') }}
+{% endblock %}
+
+{% block section_content %}
+    <div class="panel-body">
+        
+        {% if questions|length > 0 %}
+        <ul class="nav nav-tabs">
+            
+            {% for question in questions %}
+                <li {% if currentQuestion is defined and currentQuestion.getId() == question.getId() %}class="active"{% endif %}>
+                    <a href="{{ path('claro_survey_results_show', {'survey': survey.getId(), 'question': question.getId()}) }}">
+                        {{ question.getTitle() }}
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        <br>
+
+        {% block question_results %}{% endblock %}
+
+    </div>
+{% endblock %}
