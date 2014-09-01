@@ -15,7 +15,7 @@
         $('.read-more .text-gradient').removeClass('hide');
 
         $('.read-more').parent().each(function () {
-            if ($(this).outerHeight(true) >= 180) {
+            if ($(this).outerHeight(true) >= 330) {
                 $('.show-more', this).removeClass('hide');
             } else {
                 $('.text-gradient', this).addClass('hide');
