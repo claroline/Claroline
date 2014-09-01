@@ -60,8 +60,8 @@ $(function(){
     // Display or not badge field form in edit form
     $(".action_panel select[id$='_action_']", ".rules").each(function(index){
         toggleDisplayBadgeField($(this));
-        ZenstruckFormHelper.initSelect2Helper();
     });
+    ZenstruckFormHelper.initSelect2Helper();
 
     function toggleDisplayBadgeField(badgeFieldForm)
     {
@@ -102,8 +102,9 @@ $(function(){
         var newTabContent = tabContentPrototype.replace(/__name__/g, tabIndex);
 
         $(".rules").append(newTabContent);
-
-        ZenstruckFormHelper.initSelect2Helper();
+        $('.zenstruck-ajax-entity', newTabContent).each(function() {
+            ZenstruckFormHelper._select2($('#' + $(this).attr('id')));
+        });
     }
 
     function format(state) {
