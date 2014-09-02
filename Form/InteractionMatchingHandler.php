@@ -105,8 +105,12 @@ class InteractionMatchingHandler extends InteractionHandler
 
             if ( $this->form->isValid() ) {
                 $this->onSuccessUpdate($this->form->getData(), $originalLabel, $originalProposal, $originalHints);
+                
+                return TRUE;
             }
         }
+        
+        return FALSE;
     }
 
     /**
@@ -123,10 +127,10 @@ class InteractionMatchingHandler extends InteractionHandler
         $originalProposals = $arg_list[2];
         $originalHints = $arg_list[3];
 
-        // filter $originalLabels to contain choice no longer present
+        // filter $originalLabels to contain label no longer present
         foreach ($interMatching->getLabels() as $label) {
             foreach ($originalLabels as $key => $toDel) {
-                if ($toDel->getId() == $choice->getId()) {
+                if ($toDel->getId() == $label->getId()) {
                     unset($originalLabels[$key]);
                 }
             }
@@ -139,12 +143,12 @@ class InteractionMatchingHandler extends InteractionHandler
             }
         }
 
-        // remove the relationship between the choice and the interactionmatching
+        // remove the relationship between the label and the interactionmatching
         foreach ($originalLabels as $label) {
-            // remove the choice from the interactionmatching
+            // remove the label from the interactionmatching
             $interMatching->getLabels()->removeElement($label);
 
-            // if you wanted to delete the Choice entirely, you can also do that
+            // if you wanted to delete the Label entirely, you can also do that
             $this->em->remove($label);
         }
         foreach ($originalProposals as $proposal) {
@@ -161,11 +165,11 @@ class InteractionMatchingHandler extends InteractionHandler
 
         // Persist all Labels od interactionMatching
         foreach ($interMatching->getLabels() as $label) {
-            $interMatching->addChoice($label);
+            $interMatching->addLabel($label);
             $this->em->persist($label);
         }
         foreach ($interMatching->getProposals() as $proposal) {
-            $interMatching->addChoice($proposal);
+            $interMatching->addProposal($proposal);
             $this->em->persist($proposal);
         }
 

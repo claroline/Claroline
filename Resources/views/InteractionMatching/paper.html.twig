@@ -1,0 +1,98 @@
+{% set layout = "ClarolineCoreBundle:Workspace:layout.html.twig" %}
+
+{% if isDesktop() %}
+    {% set layout = "ClarolineCoreBundle:Desktop:layout.html.twig" %}
+    {% block breadcrumb %}
+        {{
+            macros.breadcrumbs([
+                {
+                    'icon': 'fa fa-briefcase',
+                    'name': 'desktop'|trans({}, 'platform'),
+                    'href': path('claro_desktop_open')
+                },
+                {
+                    'name': 'bank of questions' | trans,
+                    'href': path('ujm_question_index')
+                },
+                {
+                    'name': 'question' | trans,
+                    'href': ''
+                }
+            ])
+        }}
+    {% endblock %}
+{% else %}
+    {% block resourceBreadcrumb %}
+        <li><a href="{{ path('claro_resource_open', { 'resourceType': _resource.resourceNode.resourceType.name(), 'node': _resource.resourceNode.id }) }}">{{ _resource.getResourceNode().getName() }}</a></li>
+        <li class="active">{{ 'bank of questions' | trans }}</li>
+    {% endblock %}
+{% endif %}
+
+{% extends layout %}
+        
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{ asset('bundles/ujmexo/css/tableLayout.css') }}" type="text/css" rel="stylesheet"/>
+{% endblock %}
+
+{% block title %} {{ 'paper' | trans }} {{ 'question' | trans }} {% endblock %}
+
+{% block section_content %}
+
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ interactionToDisplayed.interaction.question.title }}</h3>
+    </div>
+    <div class="panel-body">
+        {% if exoID == -1 %}
+            <a class="btn btn-primary" href="{{ path('ujm_question_index') }}">
+                <i class="fa fa-arrow-left"></i> {{ 'back' | trans }}
+            </a>
+        {% else %}
+            <a class="btn btn-primary" href="{{ path('ujm_exercise_questions', { 'id': exoID }) }}">
+                <i class="fa fa-arrow-left"></i> {{ 'back' | trans }}
+            </a>
+        {% endif %}
+    </div>
+
+    <div class="list-group">
+        <div class="list-group-item">
+
+            {% include "UJMExoBundle:Partial:interactionPaper.html.twig" %}
+
+            <form action="{{ path('ujm_interactionmatching_response') }}" method="post" {{ form_enctype(form) }}>
+                {{ form_widget(form) }}
+
+                <table class="table-striped" cellspacing="5" cellpadding="2" border="0">
+                    <th>
+                    {% for label in interactionToDisplayed.labels %}
+                        {% for proposal in interactionToDisplayed.proposals %}
+                        <tr>
+                            <td>{{ label.value | raw }}</td><td>{{ proposal.value | raw }}</td>
+                        </tr>
+                    {% endfor %}
+                        {% endfor %}
+                    </th>
+                </table>
+                        
+                        
+
+                {% if interactionToDisplayed.interaction.hints is not empty %}
+                    {% set tryInteraction = interactionToDisplayed %}
+                    {% include "UJMExoBundle:Partial:hintTryInteraction.html.twig" %}
+                {% endif %}
+
+                <div class="panel-footer">
+                    <input type="hidden" name="testMatching" value="testMatching" />
+                    <input type="hidden" name="interactionMatchingToValidated" value="{{ interactionToDisplayed.id }}" />
+                    <input type="hidden" name="exoID" value="{{ exoID }}" />
+                    <button type="submit" id="submit_response" class="btn btn-primary">{{ 'validate' | trans }}</button>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/paper.js') }}"></script>
+{% endblock %}

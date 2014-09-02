@@ -25,11 +25,11 @@ use UJM\ExoBundle\Form\InteractionOpenType;
 use UJM\ExoBundle\Entity\InteractionHole;
 use UJM\ExoBundle\Form\InteractionHoleType;
 
-use UJM\ExoBundle\Entity\Interaction;
-use UJM\ExoBundle\Entity\Share;
-
 use UJM\ExoBundle\Entity\InteractionMatching;
 use UJM\ExoBundle\Form\InteractionMatchingType;
+
+use UJM\ExoBundle\Entity\Interaction;
+use UJM\ExoBundle\Entity\Share;
 
 use UJM\ExoBundle\Entity\Response;
 use UJM\ExoBundle\Form\ResponseType;
@@ -348,7 +348,21 @@ class QuestionController extends Controller
                     $vars['exoID']           = $exoID;
 
                     return $this->render('UJMExoBundle:InteractionOpen:paper.html.twig', $vars);
-
+                    
+                case "InteractionMatching":
+                    $response = new Response();
+                    $interactionMatching = $this->getDoctrine()
+                            ->getManager()
+                            ->getRepository('UJMExoBundle:InteractionMatching')
+                            ->getInteractionMatching($interaction->getId());
+                    
+                    $form = $this->createForm(new ResponseType(), $response);
+                    
+                    $vars['interactionToDisplayed'] = $interactionMatching[0];
+                    $vars['form'] = $form->createView();
+                    $vars['exoID'] = $exoID;
+                    
+                    return $this->render('UJMExoBundle:InteractionMatching:paper.html.twig', $vars);
             }
         } else {
             return $this->redirect($this->generateUrl('ujm_question_index'));
