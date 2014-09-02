@@ -116,6 +116,7 @@
         {{ topbar.item({'name':'my_agenda', 'href':path('claro_desktop_open_tool', {'toolName': 'agenda' }), 'icon':'calendar'}) }}
         {{ topbar.item({'name':'my_resources', 'href':path('claro_desktop_open_tool', {'toolName': 'resource_manager'}) ~ '#resources/0', 'icon':'folder'}) }}
         {{ topbar.item({'name':'my_badges', 'href':path('claro_profile_view_badges'), 'icon':'trophy'}) }}
+        {{ topbar.item({'name':'my_portfolios', 'href':path('icap_portfolio_list'), 'icon':'list-alt'}) }}
         <li role="presentation" class="divider"></li>
         {% if isImpersonated %}
             {% set logoutPath = path('claro_desktop_open', {'_switch': '_exit'}) %}

@@ -125,13 +125,19 @@ class UsersController extends Controller
 
         foreach ($roles as $role) {
             $isAvailable = $this->roleManager->validateRoleInsert(new User(), $role);
+
             if (!$isAvailable) {
                 $unavailableRoles[] = $role;
             }
         }
 
         $form = $this->formFactory->create(
-            FormFactory::TYPE_USER_FULL, array(array($roleUser), $this->localeManager->getAvailableLocales(), $isAdmin)
+            FormFactory::TYPE_USER_FULL,
+            array(
+                array($roleUser),
+                $this->localeManager->getAvailableLocales(),
+                $isAdmin
+            )
         );
 
         $error = null;
@@ -162,9 +168,16 @@ class UsersController extends Controller
     public function createAction(User $currentUser)
     {
         $this->checkOpen();
+        $roleUser = $this->roleManager->getRoleByName('ROLE_USER');
+        $isAdmin = ($this->sc->isGranted('ROLE_ADMIN')) ? true: false;
 
         $form = $this->formFactory->create(
-            FormFactory::TYPE_USER_FULL, array(array(), $this->localeManager->getAvailableLocales())
+            FormFactory::TYPE_USER_FULL,
+            array(
+                array($roleUser),
+                $this->localeManager->getAvailableLocales(),
+                $isAdmin
+            )
         );
         $form->handleRequest($this->request);
 
@@ -172,12 +185,12 @@ class UsersController extends Controller
 
         foreach ($form->get('platformRoles')->getData() as $role) {
             $isAvailable = $this->roleManager->validateRoleInsert(new User(), $role);
+
             if (!$isAvailable) {
                 $unavailableRoles[] = $role;
             }
         }
 
-        $roleUser = $this->roleManager->getRoleByName('ROLE_USER');
         $isAvailable = $this->roleManager->validateRoleInsert(new User(), $roleUser);
 
         if (!$isAvailable) {
@@ -185,6 +198,7 @@ class UsersController extends Controller
         }
 
         $unavailableRoles = array_unique($unavailableRoles);
+
 
         if ($form->isValid() && count($unavailableRoles) === 0) {
             $user = $form->getData();

@@ -7,10 +7,10 @@
         <div class="modal-body">
             <div class="row">
                 <div class="col-sm-4">
-                    <label>{{ "Select a page" | trans({}, "home") }}</label>
+                    <label for="pages">{{ "Select a page" | trans({}, "home") }}</label>
                 </div>
                 <div class="col-sm-8">
-                    <select class="form-control">
+                    <select id="pages" class="form-control">
                         <option></option>
                         {% for page in pages%}
                             {% if page.getName != 'menu' and page.getName != currentType %}

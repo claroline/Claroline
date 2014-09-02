@@ -43,158 +43,146 @@ class AdditionalInstaller extends BaseInstaller
 
         $this->setLocale();
 
-        if (version_compare($currentVersion, '2.0', '<') && version_compare($targetVersion, '2.0', '>=') ) {
-            $updater020000 = new Updater\Updater020000($this->container);
-            $updater020000->setLogger($this->logger);
-            $updater020000->preUpdate();
-        }
-
-        if (version_compare($currentVersion, '2.9.0', '<') ) {
-            $updater020900 = new Updater\Updater020900($this->container);
-            $updater020900->setLogger($this->logger);
-            $updater020900->preUpdate();
-        }
-
-        if (version_compare($currentVersion, '3.0.0', '<')) {
-            $updater030000 = new Updater\Updater030000($this->container);
-            $updater030000->setLogger($this->logger);
-            $updater030000->preUpdate();
+        switch (true) {
+            case version_compare($currentVersion, '2.0', '<') && version_compare($targetVersion, '2.0', '>='):
+                $updater = new Updater\Updater020000($this->container);
+                $updater->setLogger($this->logger);
+                $updater->preUpdate();
+                break;
+            case version_compare($currentVersion, '2.9.0', '<'):
+                $updater = new Updater\Updater020900($this->container);
+                $updater->setLogger($this->logger);
+                $updater->preUpdate();
+                break;
+            case version_compare($currentVersion, '3.0.0', '<'):
+                $updater = new Updater\Updater030000($this->container);
+                $updater->setLogger($this->logger);
+                $updater->preUpdate();
+                break;
         }
     }
 
     public function postUpdate($currentVersion, $targetVersion)
     {
         $this->setLocale();
-
-        if (version_compare($currentVersion, '2.0', '<')  && version_compare($targetVersion, '2.0', '>=') ) {
-            $updater020000 = new Updater\Updater020000($this->container);
-            $updater020000->setLogger($this->logger);
-            $updater020000->postUpdate();
-        }
-
-        if (version_compare($currentVersion, '2.1.2', '<')) {
-            $updater020102 = new Updater\Updater020102($this->container);
-            $updater020102->setLogger($this->logger);
-            $updater020102->postUpdate();
-        }
-
-        if (version_compare($currentVersion, '2.1.5', '<')) {
-            $this->log('Creating acl tables if not present...');
-            $command = new InitAclCommand();
-            $command->setContainer($this->container);
-            $command->run(new ArrayInput(array()), new NullOutput());
-        }
-
-        if (version_compare($currentVersion, '2.2.0', '<')) {
-            $updater020200 = new Updater\Updater020200($this->container);
-            $updater020200->setLogger($this->logger);
-            $updater020200->postUpdate();
-        }
-
-        if (version_compare($currentVersion, '2.3.1', '<')) {
-            $updater020301 = new Updater\Updater020301($this->container);
-            $updater020301->setLogger($this->logger);
-            $updater020301->postUpdate();
-        }
-
-        if (version_compare($currentVersion, '2.3.4', '<')) {
-            $updater020304 = new Updater\Updater020304($this->container);
-            $updater020304->setLogger($this->logger);
-            $updater020304->postUpdate();
-        }
-
-        if (version_compare($currentVersion, '2.5.0', '<')) {
-            $updater020500 = new Updater\Updater020500($this->container);
-            $updater020500->setLogger($this->logger);
-            $updater020500->postUpdate();
-        }
-
-        if (version_compare($currentVersion, '2.8.0', '<')) {
-            $updater020800 = new Updater\Updater020800($this->container);
-            $updater020800->setLogger($this->logger);
-            $updater020800->postUpdate();
-        }
-
-        if (version_compare($currentVersion, '2.9.0', '<')) {
-            $updater020900 = new Updater\Updater020900($this->container);
-            $updater020900->setLogger($this->logger);
-            $updater020900->postUpdate();
-        }
-
-        if (version_compare($currentVersion, '2.10.0', '<')) {
-            $updater021000 = new Updater\Updater021000($this->container);
-            $updater021000->setLogger($this->logger);
-            $updater021000->postUpdate();
-        }
-
-        if (version_compare($currentVersion, '2.11.0', '<')) {
-            $this->buildDefaultTemplate();
-            $updater021000 = new Updater\Updater021100($this->container);
-            $updater021000->setLogger($this->logger);
-            $updater021000->postUpdate();
-        }
-
-        if (version_compare($currentVersion, '2.12.0', '<')) {
-            $this->buildDefaultTemplate();
-            $updater021200 = new Updater\Updater021200($this->container);
-            $updater021200->setLogger($this->logger);
-            $updater021200->postUpdate();
-        }
-
-        if (version_compare($currentVersion, '2.12.1', '<')) {
-            $this->buildDefaultTemplate();
-            $updater021200 = new Updater\Updater021201($this->container);
-            $updater021200->setLogger($this->logger);
-            $updater021200->postUpdate();
-        }
-
-        if (version_compare($currentVersion, '2.14.0', '<')) {
-            $this->buildDefaultTemplate();
-            $updater021400 = new Updater\Updater021400($this->container);
-            $updater021400->setLogger($this->logger);
-            $updater021400->postUpdate();
-        }
-
-        if (version_compare($currentVersion, '2.14.1', '<')) {
-            $this->buildDefaultTemplate();
-            $updater021401 = new Updater\Updater021401($this->container);
-            $updater021401->setLogger($this->logger);
-            $updater021401->postUpdate();
-        }
-
-        if (version_compare($currentVersion, '2.16.0', '<')) {
-            $this->buildDefaultTemplate();
-            $updater021600 = new Updater\Updater021600($this->container);
-            $updater021600->setLogger($this->logger);
-            $updater021600->postUpdate();
-        }
-
-        if (version_compare($currentVersion, '2.16.2', '<')) {
-            $this->buildDefaultTemplate();
-            $updater021601 = new Updater\Updater021602($this->container);
-            $updater021601->setLogger($this->logger);
-            $updater021601->postUpdate();
-        }
-
-        if (version_compare($currentVersion, '2.16.4', '<')) {
-            $this->buildDefaultTemplate();
-            $updater021601 = new Updater\Updater021604($this->container);
-            $updater021601->setLogger($this->logger);
-            $updater021601->postUpdate();
-        }
-
-        if (version_compare($currentVersion, '3.0.0', '<')) {
-            $this->buildDefaultTemplate();
-            $updater030000 = new Updater\Updater030000($this->container);
-            $updater030000->setLogger($this->logger);
-            $updater030000->postUpdate();
-        }
-
-        if (version_compare($currentVersion, '3.1.0', '<')) {
-            $this->buildDefaultTemplate();
-            $updater030100 = new Updater\Updater030100($this->container);
-            $updater030100->setLogger($this->logger);
-            $updater030100->postUpdate();
+        switch (true) {
+            case version_compare($currentVersion, '2.0', '<')  && version_compare($targetVersion, '2.0', '>='):
+                $updater = new Updater\Updater020000($this->container);
+                $updater->setLogger($this->logger);
+                $updater->postUpdate();
+                break;
+            case version_compare($currentVersion, '2.1.2', '<'):
+                $updater = new Updater\Updater020102($this->container);
+                $updater->setLogger($this->logger);
+                $updater->postUpdate();
+                break;
+            case version_compare($currentVersion, '2.1.5', '<'):
+                $this->log('Creating acl tables if not present...');
+                $command = new InitAclCommand();
+                $command->setContainer($this->container);
+                $command->run(new ArrayInput(array(), new NullOutput()));
+                break;
+            case version_compare($currentVersion, '2.2.0', '<'):
+                $updater = new Updater\Updater020200($this->container);
+                $updater->setLogger($this->logger);
+                $updater->postUpdate();
+                break;
+            case version_compare($currentVersion, '2.3.1', '<'):
+                $updater = new Updater\Updater020301($this->container);
+                $updater->setLogger($this->logger);
+                $updater->postUpdate();
+                break;
+            case version_compare($currentVersion, '2.3.4', '<'):
+                $updater = new Updater\Updater020304($this->container);
+                $updater->setLogger($this->logger);
+                $updater->postUpdate();
+                break;
+            case version_compare($currentVersion, '2.5.0', '<'):
+                $updater = new Updater\Updater020500($this->container);
+                $updater->setLogger($this->logger);
+                $updater->postUpdate();
+                break;
+            case version_compare($currentVersion, '2.8.0', '<'):
+                $updater = new Updater\Updater020800($this->container);
+                $updater->setLogger($this->logger);
+                $updater->postUpdate();
+                break;
+            case version_compare($currentVersion, '2.9.0', '<'):
+                $updater = new Updater\Updater020900($this->container);
+                $updater->setLogger($this->logger);
+                $updater->postUpdate();
+                break;
+            case version_compare($currentVersion, '2.10.0', '<'):
+                $updater = new Updater\Updater021000($this->container);
+                $updater->setLogger($this->logger);
+                $updater->postUpdate();
+                break;
+            case version_compare($currentVersion, '2.11.0', '<'):
+                $this->buildDefaultTemplate();
+                $updater = new Updater\Updater021100($this->container);
+                $updater->setLogger($this->logger);
+                $updater->postUpdate();
+                break;
+            case version_compare($currentVersion, '2.12.0', '<'):
+                $this->buildDefaultTemplate();
+                $updater = new Updater\Updater021200($this->container);
+                $updater->setLogger($this->logger);
+                $updater->postUpdate();
+                break;
+            case version_compare($currentVersion, '2.12.1', '<'):
+                $this->buildDefaultTemplate();
+                $updater = new Updater\Updater021201($this->container);
+                $updater->setLogger($this->logger);
+                $updater->postUpdate();
+                break;
+            case version_compare($currentVersion, '2.14.0', '<'):
+                $this->buildDefaultTemplate();
+                $updater = new Updater\Updater021400($this->container);
+                $updater->setLogger($this->logger);
+                $updater->postUpdate();
+                break;
+            case version_compare($currentVersion, '2.14.1', '<'):
+                $this->buildDefaultTemplate();
+                $updater = new Updater\Updater021401($this->container);
+                $updater->setLogger($this->logger);
+                $updater->postUpdate();
+                break;
+            case version_compare($currentVersion, '2.16.0', '<'):
+                $this->buildDefaultTemplate();
+                $updater = new Updater\Updater021600($this->container);
+                $updater->setLogger($this->logger);
+                $updater->postUpdate();
+                break;
+            case version_compare($currentVersion, '2.16.2', '<'):
+                $this->buildDefaultTemplate();
+                $updater = new Updater\Updater021602($this->container);
+                $updater->setLogger($this->logger);
+                $updater->postUpdate();
+                break;
+            case version_compare($currentVersion, '2.16.4', '<'):
+                $this->buildDefaultTemplate();
+                $updater = new Updater\Updater021604($this->container);
+                $updater->setLogger($this->logger);
+                $updater->postUpdate();
+                break;
+            case version_compare($currentVersion, '3.0.0', '<'):
+                $this->buildDefaultTemplate();
+                $updater = new Updater\Updater030000($this->container);
+                $updater->setLogger($this->logger);
+                $updater->postUpdate();
+                break;
+            case version_compare($currentVersion, '3.1.0', '<'):
+                $this->buildDefaultTemplate();
+                $updater = new Updater\Updater030100($this->container);
+                $updater->setLogger($this->logger);
+                $updater->postUpdate();
+                break;
+            case version_compare($currentVersion, '3.2.0', '<'):
+                $this->buildDefaultTemplate();
+                $updater = new Updater\Updater032000($this->container);
+                $updater->setLogger($this->logger);
+                $updater->postUpdate();
+                break;
         }
     }
 
