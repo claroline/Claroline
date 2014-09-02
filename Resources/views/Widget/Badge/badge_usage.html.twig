@@ -6,7 +6,7 @@
     {% endstylesheets %}
 {% endblock %}
 
-<p>Derniers badges attribués :</p>
+<p>{{ 'last_awarded_badges'|trans({}, 'badge') }} :</p>
 <ul class="media-list list-inline">
     {% for userBadge in lastAwardedBadges %}
         <li class="media">
@@ -24,7 +24,7 @@
     {% endfor %}
 </ul>
 
-<p>Badge les plus attribués :</p>
+<p>{{ 'most_awarded_badges'|trans({}, 'badge') }} :</p>
 <ul class="media-list list-inline">
     <li class="media">
         <a class="pull-left" href="#">
