@@ -40,6 +40,7 @@ class QuestionRepository extends EntityRepository
             SELECT q
             FROM Claroline\SurveyBundle\Entity\Question q
             WHERE q.workspace = :workspace
+            AND q.type != 'title'
             ORDER BY q.{$orderedBy} {$order}
         ";
         $query = $this->_em->createQuery($dql);
@@ -60,6 +61,7 @@ class QuestionRepository extends EntityRepository
             SELECT q
             FROM Claroline\SurveyBundle\Entity\Question q
             WHERE q.workspace = :workspace
+            AND q.type != 'title'
             AND q.id NOT IN (:exclusions)
             ORDER BY q.{$orderedBy} {$order}
         ";

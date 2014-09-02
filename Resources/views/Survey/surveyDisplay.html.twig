@@ -1,7 +1,7 @@
 <h1>{{ survey.getResourceNode.getName() }}</h1>
+<hr>
 
 {% if survey.getDescription() is not empty %}
-    <br>
     <div class="well well-sm">
         {{ survey.getDescription()|raw }}
     </div>
