@@ -207,6 +207,7 @@ InteractionGraphic: Graphique
 InteractionHole: Blanc
 InteractionOpen: Ouverte
 InteractionQCM: QCM
+#InteractionMatching: A relier/ panier
 
 # K
 key word: Mot clé

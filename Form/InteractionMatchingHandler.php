@@ -25,8 +25,12 @@ class InteractionMatchingHandler extends InteractionHandler
 
             if ( $this->form->isValid() ) {
                 $this->onSuccessAdd($this->form->getData());
+                
+                return true;
             }
         }
+        
+        return false;
     }
 
     /**
@@ -39,7 +43,7 @@ class InteractionMatchingHandler extends InteractionHandler
      */
     protected function onSuccessAdd($interMatching)
     {
-        
+
         // to instantiate an object of the global namespace, and not of the current
         $interMatching->getInteraction()->getQuestion()->setDateCreate(new \Datetime());
         $interMatching->getInteraction()->getQuestion()->setUser($this->user);
@@ -50,22 +54,14 @@ class InteractionMatchingHandler extends InteractionHandler
         $this->em->persist($interMatching->getInteraction());
 
         // Persist all labels of interactionMatching.
-        $ord = 1;
         foreach ($interMatching->getLabels() as $label) {
-            $label->setOrdre($ord);
-            //$interMatching->addChoice($choice);
             $label->setInteractionMatching($interMatching);
             $this->em->persist($label);
-            $ord = $ord + 1;
         }
-        
-        $ord = 1;
+
         foreach ($interMatching->getProposals() as $proposal) {
-            $proposal->setOrdre($ord);
-            //$interMatching->addChoice($choice);
             $proposal->setInteractionMatching($interMatching);
             $this->em->persist($proposal);
-            $ord = $ord + 1;
         }
 
         $this->persistHints($interMatching);
@@ -75,7 +71,7 @@ class InteractionMatchingHandler extends InteractionHandler
         $this->addAnExericse($interMatching);
 
         $this->duplicateInter($interMatching);
-        
+
     }
 
     /**
@@ -92,7 +88,7 @@ class InteractionMatchingHandler extends InteractionHandler
         $originalLabel = array();
         $originalProposal = array();
         $originalHints = array();
-        
+
         //create an array of currente Label of the database
         foreach ( $originalInterMatching->getLabels() as $label ) {
             $originalLabel[] = $label;
@@ -103,10 +99,10 @@ class InteractionMatchingHandler extends InteractionHandler
         foreach ( $originalInterMatching->getInteraction()->getHints() as $hints ) {
             $originalHints[] = $hints;
         }
-        
+
         if ( $this->request->getMethod()  == 'POST' ) {
             $this->form->HandlerRequest($this->request);
-            
+
             if ( $this->form->isValid() ) {
                 $this->onSuccessUpdate($this->form->getData(), $originalLabel, $originalProposal, $originalHints);
             }

@@ -5,7 +5,7 @@ ujm_interactionmatching_create:
     
 ujm_interactionmatching_response:
     pattern: /testMatching
-    defaults: { _controller: "UJMExoBundle:InteractionMatching:responseQcm" }
+    defaults: { _controller: "UJMExoBundle:InteractionMatching:responseMatching" }
     requirements: { _method: post }
 
 ujm_interactionmatching_update:

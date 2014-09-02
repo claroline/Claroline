@@ -27,7 +27,7 @@ class InteractionMatchingController extends Controller
     {
         $services = $this->container->get('ujm.exercise_services');
         $interMatching = new InteractionMatching();
-        $form      = $this->createForm(
+        $form = $this->createForm(
             new InteractionMatchingType(
                 $this->container->get('security.context')->getToken()->getUser()
             ), $interMatching

@@ -66,93 +66,7 @@ class exerciseServices
         return $ip;
     }
 
-    /**
-     * To process the user's response for a matching and a paper (or a test)
-     *
-     * @access public
-     *
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     * @param integer $paperID id Paper or 0 if it's just a question test and not a paper
-     *
-     * Return array
-     */
-    public function responseMatching($request, $paperID = 0)
-    {
-        $res = array();
-        $interactionMatchingId = $request->request->get('interactionMatchingToValidated');
-        $response = array();
-        
-        $em = $this->doctrine->getManager();
-        $interMatching = $em->getRepository('UJMExoBundle:InteractionMatching')->find($interactionMatchingId);
-        
-        if ($interMatching->getTypeMatching()->getCode() == 2 ) {
-            $response[] = $request->request->get('choice');
-        } else {
-            if ($request->request->get('choice') != null) {
-                $response = $request->request->get('choice');
-            }
-        }
-        
-        $allLabels = $interMatching->getLabels();
-        $allProposals = $interMatching->getProposals();
-        
-        $penalty = 0;
-        
-        $session = $request->getSession();
-        
-        if ( $paperID == 0 ) {
-            if ($session->get('penalties')) {
-                foreach ($session->get('penalties') as $penal) {
-                    $penalty += $penal;
-                }
-            }
-            $session->remove('penalties');
-        } else {
-            $penalty = $this->getPenalty($interMatching->getInteraction(), $paperID);
-        }
-        $score = $this->matchingMark();
-        
-        $responseID = '';
-        
-        foreach ($response as $res) {
-            if ( $res != null ) {
-                $responseID .= $res.';';
-            }
-        }
-        
-        $res = array(
-          'score'    => $score,
-          'penalty'  => $penalty,
-          'interQCM' => $interMatching,
-          'response' => $responseID
-        );
-        
-        return $res;
-    }
-    
-    /**
-     * To calculate the score for a matching question
-     *
-     * @access public
-     *
-     * @param \UJM\ExoBundle\Entity\InteractionMatching $interMatching
-     * @param array[integer] $response array of id Choice selected
-     * @param array[Label] $allLabels
-     * @param array[Proposal] $allProposals
-     * @param float $penality penalty if the user showed hints
-     *
-     * Return string userScore/scoreMax
-     */
-    public function matchingMark(\UJM\ExoBundle\Entity\InteractionMatching $interMatching, array $response, $allLabels, $allProposals, $penalty)
-    {
-        $score = 0;
-//        $scoreMax = $this->
-        if ($score < 0) {
-            $score = 0;
-        }
-        
-    }
-    
+
     /**
      * To process the user's response for an QCM and a paper (or a test)
      *
@@ -610,6 +524,109 @@ class exerciseServices
         return $scoreMax;
     }
 
+
+    /**
+     * To process the user's response for a matching and a paper (or a test)
+     *
+     * @access public
+     *
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param integer $paperID id Paper or 0 if it's just a question test and not a paper
+     *
+     * Return array
+     */
+    public function responseMatching($request, $paperID = 0)
+    {
+        $res = array();
+        $interactionMatchingId = $request->request->get('interactionMatchingToValidated');
+        $response = array();
+
+        $em = $this->doctrine->getManager();
+        $interMatching = $em->getRepository('UJMExoBundle:InteractionMatching')->find($interactionMatchingId);
+
+        if ($interMatching->getTypeMatching()->getCode() == 2 ) {
+            $response[] = $request->request->get('proposal');
+        } else {
+            if ($request->request->get('proposal') != null) {
+                $response = $request->request->get('proposal');
+            }
+        }
+
+        $allLabels = $interMatching->getLabels();
+        $allProposals = $interMatching->getProposals();
+
+        $penalty = 0;
+
+        $session = $request->getSession();
+
+        if ( $paperID == 0 ) {
+            if ($session->get('penalties')) {
+                foreach ($session->get('penalties') as $penal) {
+                    $penalty += $penal;
+                }
+            }
+            $session->remove('penalties');
+        } else {
+            $penalty = $this->getPenalty($interMatching->getInteraction(), $paperID);
+        }
+        $score = $this->matchingMark($interMatching, $response, $allLabels, $allProposals, $penalty);
+
+        $responseID = '';
+
+        foreach ($response as $res) {
+            if ( $res != null ) {
+                $responseID .= $res.';';
+            }
+        }
+
+        $res = array(
+          'score'    => $score,
+          'penalty'  => $penalty,
+          'interQCM' => $interMatching,
+          'response' => $responseID
+        );
+
+        return $res;
+    }
+
+
+    /**
+     * To calculate the score for a matching question
+     *
+     * @access public
+     *
+     * @param \UJM\ExoBundle\Entity\InteractionMatching $interMatching
+     * @param array[integer] $response array of id Label selected
+     * @param array[Label] $allLabels
+     * @param array[Proposal] $allProposals
+     * @param float $penality penalty if the user showed hints
+     *
+     * Return string userScore/scoreMax
+     */
+    public function matchingMark(\UJM\ExoBundle\Entity\InteractionMatching $interMatching, array $response, $allLabels, $allProposals, $penalty)
+    {
+        $scoretmp = 0;
+        $scoreMax = $this->matchingMaxScore($interMatching);
+
+        foreach($response as $res) {
+//            foreach($allProposals->getAssociatedLabel() != null as $rightresponse) {
+            foreach($allProposals as $test) {
+                if($test->getAssociatedLabel() != null) {
+                    if( $res == $test->getAssociatedLabel()) {
+                        $scoretmp = $allLabels->getScoreRightResponse() + $scoretmp;
+                    }
+                }
+            }
+        }
+        $score = $scoretmp - $penalty;
+        if ($score < 0) {
+            $score = 0;
+        }
+        
+        return $score;
+    }
+
+
     /**
      * Graphic question : Check if the suggested answer zone isn't already right in order not to have points twice
      *
@@ -843,6 +860,21 @@ class exerciseServices
             $scoreMax = $interOpen->getScoreMaxLongResp();
         }
 
+        return $scoreMax;
+    }
+
+    /**
+     * Get score max possible for a matching question
+     *
+     * @access public
+     *
+     * @param \UJM\ExoBundle\Entity\Paper\InteractionMatching $interMatching
+     *
+     * Return float
+     */
+    public function matchingMaxScore($interMatching)
+    {
+        $scoreMax = 0;
         return $scoreMax;
     }
 
