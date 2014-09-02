@@ -66,11 +66,25 @@ class MyWorkspacesWidgetController extends Controller
     public function displayMyWorkspacesWidgetAction($mode, User $user)
     {
         $workspaces = array();
+        $retrieveWorkspaces = true;
+
+        if ($mode === 0) {
+            $workspaces = $this->workspaceManager
+                ->getFavouriteWorkspacesByUser($user);
+
+            if (count($workspaces) > 0) {
+                $mode = 1;
+                $retrieveWorkspaces = false;
+            }
+        }
 
         switch ($mode) {
             case 1:
-                $workspaces = $this->workspaceManager
-                    ->getFavouriteWorkspacesByUser($user);
+
+                if ($retrieveWorkspaces) {
+                    $workspaces = $this->workspaceManager
+                        ->getFavouriteWorkspacesByUser($user);
+                }
                 break;
             default:
                 $token = $this->securityContext->getToken();
