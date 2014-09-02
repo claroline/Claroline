@@ -16,7 +16,7 @@ function creationMatching(addchoice, addproposal, deletechoice, LabelValue, Scor
     var codeContainerProposal = 1;
 
     typeMatching = JSON.parse(tMatching);
-    
+
     //in the first time
     $('#ujm_exobundle_interactionmatchingtype_typeMatching').children('option').each(function() {
          if (typeMatching[$(this).val()] == 2) {
@@ -32,7 +32,7 @@ function creationMatching(addchoice, addproposal, deletechoice, LabelValue, Scor
     // Number of label initially
     indexLabel = containerLabel.find(':input').length;
     indexProposal = containerProposal.find(':input').length;
-    
+
     // If no label exist, add two labels by default in the container Label
     if (indexLabel == 0) {
         addLabel(containerLabel, deletechoice, tableLabels, codeContainerLabel);
@@ -44,7 +44,7 @@ function creationMatching(addchoice, addproposal, deletechoice, LabelValue, Scor
             adddelete($(this), deletechoice, codeContainerLabel);
         });
     }
-    
+
     // If no label exist, add two labels by default in the container Label
     if (indexProposal == 0) {
         addProposal(containerProposal, deletechoice, tableProposals, codeContainerProposal);
@@ -88,16 +88,19 @@ function addLabel(container, deletechoice, table, codeContainer){
 
     // Add correspondence
     $('#newTableLabel').find('tr:last').append('<td class="classic"></td>');
-    $('#newTableLabel').find('td:last').append('<select id="' + indexLabel + '_correspondence" multiple></select>');
+    $('#newTableLabel').find('td:last').append('<select id="' + $('#newTableLabel').find('tr:not(:first)').length + '_correspondence" \n\
+                                                name="' + $('#newTableLabel').find('tr:not(:first)').length + '_correspondence[]" \n\
+                                                multiple></select>');
+
     $('#newTableProposal').find('tbody').find('tr').each( function() {
         rowInd = this.rowIndex;
-        
-        $("#" + indexLabel + "_correspondence").append($('<option>', {
+
+        $("#" + $('#newTableLabel').find('tr:not(:first)').length + "_correspondence").append($('<option>', {
                                                         value: rowInd,
                                                         text:  rowInd
                                                     }));
     });
-    
+
     // Add the delete button
     $('#newTableLabel').find('tr:last').append('<td class="classic"></td>');
     $('#newTableLabel').find('td:last').append(contain.find('a:contains("' + deletechoice + '")'));
@@ -130,7 +133,7 @@ function addProposal(container, deletechoice, table, codeContainer){
     container.find('.row').each(function () {
         fillProposalArray();
     });
-    
+
     // Add the delete button
     $('#newTableProposal').find('tr:last').append('<td class="classic"></td>');
     $('#newTableProposal').find('td:last').append(contain.find('a:contains("' + deletechoice + '")'));
@@ -138,7 +141,7 @@ function addProposal(container, deletechoice, table, codeContainer){
     // Remove the useless fileds form
     container.remove();
     table.next().remove();
-    
+
     addRemoveRowTableProposal();
 }
 
@@ -147,19 +150,19 @@ function check_form(nbrProposals, nbrLabels){
 //    if (($('#newTableProposal').find('tr:not(:first)').length) < 2) {
 //            return false;
 //    }
-//    
+//
 //    if (($('#newTableProposal').find('tr:not(:first)').length) < ($('#newTableLabel').find('tr:not(:first)').length)) {
 //            return false;
 //    }
-    
+
 //    while(containerLabel.find(':input').length)
 //    {
 ////        "ujm_exobundle_interactionmatchingtype_labels_1_correspondence"
 //        if($()) {
-//            
+//
 //        }
 //    }
-    
+
 }
 
 function fillLabelArray() {
@@ -208,9 +211,10 @@ function adddelete(tr, deletechoice, codeContainer){
     // When click, delete the row in the table
     delLink.click(function(e) {
         $(this).parent('td').parent('tr').remove();
-        
+
         addRemoveRowTableProposal();
-        
+        removeRowTableLabel();
+
         e.preventDefault();
         return false;
     });
@@ -261,24 +265,33 @@ function tableCreationProposal(container, table, button, deletechoice, ProposalV
 }
 
 function addRemoveRowTableProposal () {
-    
+
     var rowInd;
-    
+
     $("*[id$='_correspondence']").each( function() {
         $(this).find('option').remove();
     });
-    
+
     $('#newTableProposal').find('tbody').find('tr').each( function() {
         rowInd = this.rowIndex;
         $(this).find('td:first').children().remove();
         $(this).find('td:first').append('<span>' + rowInd + '</span>');
-        
+
         $("*[id$='_correspondence']").each( function() {
             $(this).append($('<option>', {
                             value: rowInd,
                             text:  rowInd
                         }));
         });
-        
+
+    });
+}
+
+function removeRowTableLabel() {
+    var ind = 1;
+    $("*[id$='_correspondence']").each( function() {
+         $(this).attr("id", ind + "_correspondence");
+         $(this).attr("name", ind + "_correspondence[]");
+         ind++;
     });
 }
