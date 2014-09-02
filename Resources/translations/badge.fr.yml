@@ -180,3 +180,4 @@ badge_edit_create_new_version: "<strong>Attention!!!</strong> Ce badge a déjà 
 consult_my_badge_details: 'Consulter mon badge en détails'
 badge_award_form_comment: 'Commentaire'
 comment: 'Commentaire'
+badge_usage_widget_form_number_awarded_badge: 'Badges attribués à afficher'

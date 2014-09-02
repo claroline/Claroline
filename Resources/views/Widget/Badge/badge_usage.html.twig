@@ -1,0 +1,105 @@
+{% block stylesheets %}
+    {% stylesheets debug=false filter="lessphp, cssmin"  output="css/clarolinecore/badge.css"
+      "@ClarolineCoreBundle/Resources/views/Badge/less/badge.less"
+    %}
+        <link rel="stylesheet" href="{{ asset_url }}" screen="media" />
+    {% endstylesheets %}
+{% endblock %}
+
+<p>Derniers badges attribués :</p>
+<ul class="media-list list-inline">
+    <li class="media">
+        <a class="pull-left" href="#">
+            <img class="media-object badge_image" alt="Badge de test" src="http://localhost/claroline/uploads/badges/r2d2-64.png">
+        </a>
+
+        <div class="media-body">
+            <h4 class="media-heading"><a href="{{ path('claro_view_badge', {'slug': 'badge-de-test-1'}) }}" title="Badge de test">Badge de test</a></h4>
+            <p>Atrribué à <a href="" title="John Doe">John Doe</a> par <a href="" title="John Doe">John Doe</a></p>
+        </div>
+    </li>
+    <li class="media">
+        <a class="pull-left" href="#">
+            <img class="media-object badge_image" alt="Badge de test" src="http://localhost/claroline/uploads/badges/html5_logo.png">
+        </a>
+
+        <div class="media-body">
+            <h4 class="media-heading"><a href="{{ path('claro_view_badge', {'slug': 'badge-de-test-1'}) }}" title="Badge de test">Badge de test</a></h4>
+            <p>Atrribué à <a href="" title="John Doe">John Doe</a> par <a href="" title="John Doe">John Doe</a></p>
+        </div>
+    </li>
+    <li class="media">
+        <a class="pull-left" href="#">
+            <img class="media-object badge_image" alt="Badge de test" src="http://localhost/claroline/uploads/badges/r2d2-64.png">
+        </a>
+
+        <div class="media-body">
+            <h4 class="media-heading"><a href="{{ path('claro_view_badge', {'slug': 'badge-de-test-1'}) }}" title="Badge de test">Badge de test</a></h4>
+            <p>Atrribué à <a href="" title="John Doe">John Doe</a> par <a href="" title="John Doe">John Doe</a></p>
+        </div>
+    </li>
+    <li class="media">
+        <a class="pull-left" href="#">
+            <img class="media-object badge_image" alt="Badge de test" src="http://localhost/claroline/uploads/badges/r2d2-64.png">
+        </a>
+
+        <div class="media-body">
+            <h4 class="media-heading"><a href="{{ path('claro_view_badge', {'slug': 'badge-de-test-1'}) }}" title="Badge de test">Badge de test</a></h4>
+            <p>Atrribué à <a href="" title="John Doe">John Doe</a> par <a href="" title="John Doe">John Doe</a></p>
+        </div>
+    </li>
+    <li class="media">
+        <a class="pull-left" href="#">
+            <img class="media-object badge_image" alt="Badge de test" src="http://localhost/claroline/uploads/badges/spacewolveswallpaper1.jpg">
+        </a>
+
+        <div class="media-body">
+            <h4 class="media-heading"><a href="{{ path('claro_view_badge', {'slug': 'badge-de-test-1'}) }}" title="Badge de test">Badge de test</a></h4>
+            <p>Atrribué à <a href="" title="John Doe">John Doe</a> par <a href="" title="John Doe">John Doe</a></p>
+        </div>
+    </li>
+    <li class="media">
+        <a class="pull-left" href="#">
+            <img class="media-object badge_image" alt="Badge de test" src="http://localhost/claroline/uploads/badges/html5_logo.png">
+        </a>
+
+        <div class="media-body">
+            <h4 class="media-heading"><a href="{{ path('claro_view_badge', {'slug': 'badge-de-test-1'}) }}" title="Badge de test">Badge de test</a></h4>
+            <p>Atrribué à <a href="" title="John Doe">John Doe</a> par <a href="" title="John Doe">John Doe</a></p>
+        </div>
+    </li>
+</ul>
+
+<p>Badge les plus attribués :</p>
+<ul class="media-list list-inline">
+    <li class="media">
+        <a class="pull-left" href="#">
+            <img class="media-object badge_image" alt="Badge de test" src="http://localhost/claroline/uploads/badges/r2d2-64.png">
+        </a>
+
+        <div class="media-body">
+            <h4 class="media-heading"><a href="{{ path('claro_view_badge', {'slug': 'badge-de-test-1'}) }}" title="Badge de test">Badge de test</a></h4>
+            <p>Atrribué 16 fois</p>
+        </div>
+    </li>
+    <li class="media">
+        <a class="pull-left" href="#">
+            <img class="media-object badge_image" alt="Badge de test" src="http://localhost/claroline/uploads/badges/html5_logo.png">
+        </a>
+
+        <div class="media-body">
+            <h4 class="media-heading"><a href="{{ path('claro_view_badge', {'slug': 'badge-de-test-1'}) }}" title="Badge de test">Badge de test</a></h4>
+            <p>Atrribué 12 fois</p>
+        </div>
+    </li>
+    <li class="media">
+        <a class="pull-left" href="#">
+            <img class="media-object badge_image" alt="Badge de test" src="http://localhost/claroline/uploads/badges/spacewolveswallpaper1.jpg">
+        </a>
+
+        <div class="media-body">
+            <h4 class="media-heading"><a href="{{ path('claro_view_badge', {'slug': 'badge-de-test-1'}) }}" title="Badge de test">Badge de test</a></h4>
+            <p>Atrribué 8 fois</p>
+        </div>
+    </li>
+</ul>
