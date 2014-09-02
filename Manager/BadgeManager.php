@@ -208,4 +208,19 @@ class BadgeManager
 
         return $lastAwardedBadges;
     }
+
+    /**
+     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
+     * @param int                                              $limit
+     *
+     * @return Badge[]
+     */
+    public function getWorkspaceMostAwardedBadges(Workspace $workspace, $limit = 10)
+    {
+        /** @var \Claroline\CoreBundle\Repository\Badge\UserBadgeRepository $userBadgeRepository */
+        $userBadgeRepository = $this->entityManager->getRepository('ClarolineCoreBundle:Badge\UserBadge');
+        $lastAwardedBadges   = $userBadgeRepository->findWorkspaceMostAwardedBadges($workspace, $limit);
+
+        return $lastAwardedBadges;
+    }
 }

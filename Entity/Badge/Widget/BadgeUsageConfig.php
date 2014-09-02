@@ -29,7 +29,13 @@ class BadgeUsageConfig
      * @var integer
      * @ORM\Column(type="smallint")
      */
-    protected $numberAwardedBadge;
+    protected $numberLastAwardedBadge;
+
+    /**
+     * @var integer
+     * @ORM\Column(type="smallint")
+     */
+    protected $numberMostAwardedBadge;
 
     /**
      * @return mixed
@@ -60,13 +66,13 @@ class BadgeUsageConfig
     }
 
     /**
-     * @param mixed $numberAwardedBadge
+     * @param mixed $numberLastAwardedBadge
      *
      * @return BadgeUsageConfig
      */
-    public function setNumberAwardedBadge($numberAwardedBadge)
+    public function setNumberLastAwardedBadge($numberLastAwardedBadge)
     {
-        $this->numberAwardedBadge = $numberAwardedBadge;
+        $this->numberLastAwardedBadge = $numberLastAwardedBadge;
 
         return $this;
     }
@@ -74,9 +80,29 @@ class BadgeUsageConfig
     /**
      * @return mixed
      */
-    public function getNumberAwardedBadge()
+    public function getNumberLastAwardedBadge()
     {
-        return $this->numberAwardedBadge;
+        return $this->numberLastAwardedBadge;
+    }
+
+    /**
+     * @param int $numberMostAwardedBadge
+     *
+     * @return BadgeUsageConfig
+     */
+    public function setNumberMostAwardedBadge($numberMostAwardedBadge)
+    {
+        $this->numberMostAwardedBadge = $numberMostAwardedBadge;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getNumberMostAwardedBadge()
+    {
+        return $this->numberMostAwardedBadge;
     }
 }
  

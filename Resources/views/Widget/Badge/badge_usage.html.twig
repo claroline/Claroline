@@ -20,40 +20,24 @@
             </div>
         </li>
     {% else %}
-        <li>{{ 'no_workspace_badge'|trans({}, 'badge') }}</li>
+        <li>{{ 'no_badges'|trans({}, 'badge') }}</li>
     {% endfor %}
 </ul>
 
 <p>{{ 'most_awarded_badges'|trans({}, 'badge') }} :</p>
 <ul class="media-list list-inline">
+    {% for userBadge in mostAwardedBadges %}
     <li class="media">
         <a class="pull-left" href="#">
-            <img class="media-object badge_image" alt="Badge de test" src="http://localhost/claroline/uploads/badges/r2d2-64.png">
+            <img class="media-object badge_image" src="{{ asset(userBadge.0.badge.webPath) }}" alt="{{ userBadge.0.badge.name }}">
         </a>
 
         <div class="media-body">
-            <h4 class="media-heading"><a href="{{ path('claro_view_badge', {'slug': 'badge-de-test-1'}) }}" title="Badge de test">Badge de test</a></h4>
-            <p>Atrribué 16 fois</p>
+            <h4 class="media-heading"><a href="{{ path('claro_view_badge', {'slug': userBadge.0.badge.slug}) }}" title="{{ userBadge.0.badge.name }}">{{ userBadge.0.badge.name }}</a></h4>
+            <p>{{ 'badge_awarded_nb_times'|trans({'%nbTimes%': userBadge.awardedNumber}, 'badge') }}</p>
         </div>
     </li>
-    <li class="media">
-        <a class="pull-left" href="#">
-            <img class="media-object badge_image" alt="Badge de test" src="http://localhost/claroline/uploads/badges/html5_logo.png">
-        </a>
-
-        <div class="media-body">
-            <h4 class="media-heading"><a href="{{ path('claro_view_badge', {'slug': 'badge-de-test-1'}) }}" title="Badge de test">Badge de test</a></h4>
-            <p>Atrribué 12 fois</p>
-        </div>
-    </li>
-    <li class="media">
-        <a class="pull-left" href="#">
-            <img class="media-object badge_image" alt="Badge de test" src="http://localhost/claroline/uploads/badges/spacewolveswallpaper1.jpg">
-        </a>
-
-        <div class="media-body">
-            <h4 class="media-heading"><a href="{{ path('claro_view_badge', {'slug': 'badge-de-test-1'}) }}" title="Badge de test">Badge de test</a></h4>
-            <p>Atrribué 8 fois</p>
-        </div>
-    </li>
+    {% else %}
+        <li>{{ 'no_badges'|trans({}, 'badge') }}</li>
+    {% endfor %}
 </ul>

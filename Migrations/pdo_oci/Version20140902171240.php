@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Migrations\oci8;
+namespace Claroline\CoreBundle\Migrations\pdo_oci;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -8,16 +8,17 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/09/02 01:53:48
+ * Generation date: 2014/09/02 05:12:42
  */
-class Version20140902135346 extends AbstractMigration
+class Version20140902171240 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
         $this->addSql("
             CREATE TABLE claro_widget_badge_usage_config (
                 id NUMBER(10) NOT NULL, 
-                numberAwardedBadge NUMBER(5) NOT NULL, 
+                numberLastAwardedBadge NUMBER(5) NOT NULL, 
+                numberMostAwardedBadge NUMBER(5) NOT NULL, 
                 widgetInstance_id NUMBER(10) DEFAULT NULL, 
                 PRIMARY KEY(id)
             )

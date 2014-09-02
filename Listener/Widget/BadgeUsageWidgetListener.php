@@ -58,12 +58,14 @@ class BadgeUsageWidgetListener
     {
         $widgetInstance    = $event->getInstance();
         $badgeWidgetConfig = $this->badgeWidgetManager->getBadgeUsageConfigForInstance($widgetInstance);
-        $lastAwardedBadges = $this->badgeManager->getWorkspaceLastAwardedBadges($widgetInstance->getWorkspace(), $badgeWidgetConfig->getNumberAwardedBadge());
+        $lastAwardedBadges = $this->badgeManager->getWorkspaceLastAwardedBadges($widgetInstance->getWorkspace(), $badgeWidgetConfig->getNumberLastAwardedBadge());
+        $mostAwardedBadges = $this->badgeManager->getWorkspaceMostAwardedBadges($widgetInstance->getWorkspace(), $badgeWidgetConfig->getNumberMostAwardedBadge());
 
         $content = $this->templating->render(
             'ClarolineCoreBundle:Widget:Badge\badge_usage.html.twig',
             array(
-                'lastAwardedBadges' => $lastAwardedBadges
+                'lastAwardedBadges' => $lastAwardedBadges,
+                'mostAwardedBadges' => $mostAwardedBadges
             )
         );
         $event->setContent($content);
