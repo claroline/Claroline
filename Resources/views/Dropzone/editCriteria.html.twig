@@ -50,7 +50,7 @@
     {% endif %}
     <div class="container">
     <div class="row align-with-panel">
-        <div class="col-md-9">
+        <div class="col-md-8">
             <a href="{{ path('icap_dropzone_edit_add_criterion', {'resourceId': dropzone.id, 'page': pager.currentPage}) }}"
                class="btn btn-primary add-criterion-button disabled-during-edition"><span
                         class="fa fa-plus "> {{ 'Add a criterion'|trans({}, 'icap_dropzone') }}</span></a>
@@ -61,7 +61,7 @@
                          class="glyphicon icon-repeat"> {{ 'Recalculate all grade'|trans({}, 'icap_dropzone') }}</span></a>#}
         </div>
 
-        <div class="col-md-3 add-remove-column" {% if pager.nbResults == 0 %}style="display: none;"{% endif %}>
+        <div class="col-md-4 add-remove-column" {% if pager.nbResults == 0 %}style="display: none;"{% endif %}>
             <div class="form-group column-input">
                 {{ form_row(form.totalCriteriaColumn, {'type': 'number', 'label_col_size': 'col-md-6', 'input_col_size': 'col-md-6', 'label_attr': {'style': 'font-weight: normal;'}, 'attr': {'class': 'form-control', 'style': 'width: 60px;' }}
                 ) }}

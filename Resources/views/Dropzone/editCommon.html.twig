@@ -113,32 +113,35 @@
         </label>
 
         <div id="planning_dates">
-            <div class="form-group">
-                <div class="col-md-offset-2">
-                    {{ form_row(form.startAllowDrop, {'label_attr': {'class': 'control-label', 'style': 'font-weight: normal;'}}) }}
+            <div class="row form-group">
+                <div class="col-md-offset-2 col-xs-offset-2 col-sm-offset-1">
+                    {{ form_row(form.startAllowDrop, {'label_attr': {'class': 'control-label col-xs-offset-2 col-xs-12 col-sm-2', 'style': 'font-weight: normal;' }}
+                    ) }}
                 </div>
             </div>
-            <div class="form-group">
-                <div class="col-md-offset-2">
-                    {{ form_row(form.endAllowDrop, {'label_attr': {'class': 'control-label', 'style': 'font-weight: normal;'}}) }}
+            <div class="  form-group">
+                <div class="col-md-offset-2 col-xs-offset-2 col-sm-offset-1">
+                    {{ form_row(form.endAllowDrop, {'label_attr': {'class': 'control-label col-xs-offset-2 col-xs-12 col-sm-2', 'style': 'font-weight: normal;' }}
+                    ) }}
                 </div>
             </div>
-            <div class="form-group">
-                <div class="col-md-offset-2">
-                    {{ form_row(form.autoCloseOpenedDropsWhenTimeIsUp,{'label_attr': {'class': 'control-label  popoverItem', 'style': 'font-weight: normal;',
+            <div class=" row form-group">
+                <div class="col-md-offset-2 ">
+                    {{ form_row(form.autoCloseOpenedDropsWhenTimeIsUp,{'label_attr': {'class': 'control-label  popoverItem ', 'style': 'font-weight: normal;',
                     'data-toggle':'popover','data-placement':'top','data-content': 'dropzone_startedNotValidatedYet_infos'|trans({}, 'icap_dropzone')|raw }}
                     ) }}
 
                 </div>
             </div>
-            <div class="form-group">
-                <div class="col-md-offset-2 peer-review-options">
-                    {{ form_row(form.startReview, {'label_attr': {'class': 'control-label', 'style': 'font-weight: normal;'}}) }}
+            <div class=" row form-group">
+                <div class="col-md-offset-2 col-xs-offset-2 col-sm-offset-1  peer-review-options">
+                    {{ form_row(form.startReview, {'label_attr': {'class': 'control-label col-xs-offset-2 col-xs-12 col-sm-2', 'style': 'font-weight: normal;' }}
+                    ) }}
                 </div>
             </div>
-            <div class="form-group">
-                <div class="col-md-offset-2 peer-review-options">
-                    {{ form_row(form.endReview, {'label_attr': {'class': 'control-label', 'style': 'font-weight: normal;'} } ) }}
+            <div class="  form-group">
+                <div class="col-md-offset-2 col-xs-offset-2 col-sm-offset-1 peer-review-options">
+                    {{ form_row(form.endReview, {'label_attr': {'class': 'control-label col-xs-offset-2  col-xs-12 col-sm-2', 'style': 'font-weight: normal;'} } ) }}
                 </div>
             </div>
 
