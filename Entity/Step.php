@@ -28,7 +28,7 @@ class Step
      * @var \Claroline\CoreBundle\Entity\Resource\Activity
      *
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\Activity", cascade={"persist"})
-     * @ORM\JoinColumn(name="activity_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="activity_id", referencedColumnName="id", onDelete="SET NULL")
      */
     protected $activity;
 
