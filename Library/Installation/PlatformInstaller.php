@@ -95,12 +95,19 @@ class PlatformInstaller
     public function installFromKernel($withOptionalFixtures = true)
     {
         $this->launchPreInstallActions();
+        //The core bundle must be installed first
+        $coreBundle = $this->kernel->getBundle('ClarolineCoreBundle');
+        $bundles = $this->kernel->getBundles();
+        $this->baseInstaller->install($coreBundle, !$withOptionalFixtures);
 
-        foreach ($this->kernel->getBundles() as $bundle) {
-            if ($bundle instanceof PluginBundle) {
-                $this->pluginInstaller->install($bundle);
-            } elseif ($bundle instanceof InstallableInterface) {
-                $this->baseInstaller->install($bundle, !$withOptionalFixtures);
+        foreach ($bundles as $bundle) {
+            //we obviously can't install the core bundle twice.
+            if ($bundle !== $coreBundle) {
+                if ($bundle instanceof PluginBundle) {
+                    $this->pluginInstaller->install($bundle);
+                } elseif ($bundle instanceof InstallableInterface) {
+                    $this->baseInstaller->install($bundle, !$withOptionalFixtures);
+                }
             }
         }
     }
