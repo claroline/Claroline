@@ -25,11 +25,11 @@ class InteractionMatchingHandler extends InteractionHandler
 
             if ( $this->form->isValid() ) {
                 $this->onSuccessAdd($this->form->getData());
-                
+
                 return true;
             }
         }
-        
+
         return false;
     }
 
@@ -43,6 +43,8 @@ class InteractionMatchingHandler extends InteractionHandler
      */
     protected function onSuccessAdd($interMatching)
     {
+        $indLabel = 1;
+        $proposals = $interMatching->getProposals();
 
         // to instantiate an object of the global namespace, and not of the current
         $interMatching->getInteraction()->getQuestion()->setDateCreate(new \Datetime());
@@ -57,9 +59,17 @@ class InteractionMatchingHandler extends InteractionHandler
         foreach ($interMatching->getLabels() as $label) {
             $label->setInteractionMatching($interMatching);
             $this->em->persist($label);
+
+            if(count($this->request->get($indLabel.'_correspondence')) > 0 ) {
+                foreach($this->request->get($indLabel.'_correspondence') as $indProposal) {
+                    $proposals[$indProposal]->setAssociatedLabel($label);
+                }
+            }
+
+            $indLabel++;
         }
 
-        foreach ($interMatching->getProposals() as $proposal) {
+        foreach ($proposals as $proposal) {
             $proposal->setInteractionMatching($interMatching);
             $this->em->persist($proposal);
         }

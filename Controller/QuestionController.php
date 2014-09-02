@@ -705,6 +705,19 @@ class QuestionController extends Controller
                             'pageNow' => $pageNow
                         )
                     );
+                    
+                case "InteractionMatching":
+                    $interactionMatching = $this->getDoctrine()
+                    ->getManager()
+                    ->getRepository('UJMExoBundle:InteractionMatching')
+                    ->getInteractionMatching($interaction->getId());
+
+                    return $this->forward(
+                        'UJMExoBundle:InteractionMatching:delete', array(
+                            'id' => $interactionMatching[0]->getId(),
+                            'pageNow' => $pageNow
+                        )
+                    );
 
                     break;
             }

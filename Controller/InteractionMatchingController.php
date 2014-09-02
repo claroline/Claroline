@@ -172,7 +172,7 @@ class InteractionMatchingController extends Controller
         }
         
         $em->remove($entity);
-        $em->flush;
+        $em->flush();
         
         return $this->redirect($this->generateUrl('ujm_question_index', array('pageNow' => $pageNow)));
     }

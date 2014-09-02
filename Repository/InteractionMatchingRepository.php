@@ -12,5 +12,23 @@ use Doctrine\ORM\EntityRepository;
  */
 class InteractionMatchingRepository extends EntityRepository
 {
+    
+    /**
+     * Get InteractionMatching linked with an interaction
+     *
+     * @access public
+     *
+     * @param integer $interactionId id Interaction
+     *
+     * Return array[InteractionMatching]
+     */
+    public function getInteractionMatching($interactionId)
+    {
+        $qb = $this->createQueryBuilder('im');
+        $qb->join('im.interaction', 'i')
+            ->where($qb->expr()->in('i.id', $interactionId));
+
+        return $qb->getQuery()->getResult();
+    }
 
 }
