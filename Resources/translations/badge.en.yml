@@ -30,6 +30,7 @@ badge_awarded_count_message: '%awaredBadge% badge awarding made with success.|%a
 badge_awarded_on_by: 'Badge awarded on %awardingDate% by %awardingIssuer%'
 badge_awarded_on: 'Badge awarded on %awardingDate%'
 badge_awarded_to: 'Badge awarded to'
+badge_awarded_to_full: 'Awarded to <a href="%userUrl%" title="%user%">%user%</a> by <a href="%issuerUrl%" title="%issuer%">%issuer%</a>'
 badge_awarding_rules_not_respected: 'Badge awarding rules not followed'
 badge_awarding_some_rules_respected: '%nbvalidRules% badge awarding rules respected in %nbRules%'
 badge_awarding_in_progress: 'In progress'

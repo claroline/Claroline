@@ -13,6 +13,7 @@ namespace Claroline\CoreBundle\Repository\Badge;
 
 use Claroline\CoreBundle\Entity\Badge\Badge;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\ORM\EntityRepository;
 
 class UserBadgeRepository extends EntityRepository
@@ -48,5 +49,30 @@ class UserBadgeRepository extends EntityRepository
             ->setParameter('userId', $user->getId());
 
         return $executeQuery ? $query->getResult(): $query;
+    }
+
+    /**
+     * @param Workspace $workspace
+     * @param int       $limit
+     *
+     * @return Badge[]
+     */
+    public function findWorkspaceLastAwardedBadges(Workspace $workspace, $limit = 10)
+    {
+        $query = $this->getEntityManager()
+            ->createQuery(
+                'SELECT ub, b, bt
+                FROM ClarolineCoreBundle:Badge\UserBadge ub
+                JOIN ub.badge b
+                JOIN b.translations bt
+                WHERE b.workspace = :workspaceId
+                ORDER BY ub.issuedAt'
+            )
+            ->setParameter('workspaceId', $workspace->getId());
+
+        return $query
+                ->setFirstResult(0)
+                ->setMaxResults(10)
+                ->getResult();
     }
 }

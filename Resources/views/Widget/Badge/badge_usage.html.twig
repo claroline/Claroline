@@ -8,66 +8,20 @@
 
 <p>Derniers badges attribués :</p>
 <ul class="media-list list-inline">
-    <li class="media">
-        <a class="pull-left" href="#">
-            <img class="media-object badge_image" alt="Badge de test" src="http://localhost/claroline/uploads/badges/r2d2-64.png">
-        </a>
+    {% for userBadge in lastAwardedBadges %}
+        <li class="media">
+            <a class="pull-left" href="{{ path('claro_view_badge', {'slug': userBadge.badge.slug}) }}" title="{{ userBadge.badge.name }}">
+                <img class="media-object badge_image" src="{{ asset(userBadge.badge.webPath) }}" alt="{{ userBadge.badge.name }}">
+            </a>
 
-        <div class="media-body">
-            <h4 class="media-heading"><a href="{{ path('claro_view_badge', {'slug': 'badge-de-test-1'}) }}" title="Badge de test">Badge de test</a></h4>
-            <p>Atrribué à <a href="" title="John Doe">John Doe</a> par <a href="" title="John Doe">John Doe</a></p>
-        </div>
-    </li>
-    <li class="media">
-        <a class="pull-left" href="#">
-            <img class="media-object badge_image" alt="Badge de test" src="http://localhost/claroline/uploads/badges/html5_logo.png">
-        </a>
-
-        <div class="media-body">
-            <h4 class="media-heading"><a href="{{ path('claro_view_badge', {'slug': 'badge-de-test-1'}) }}" title="Badge de test">Badge de test</a></h4>
-            <p>Atrribué à <a href="" title="John Doe">John Doe</a> par <a href="" title="John Doe">John Doe</a></p>
-        </div>
-    </li>
-    <li class="media">
-        <a class="pull-left" href="#">
-            <img class="media-object badge_image" alt="Badge de test" src="http://localhost/claroline/uploads/badges/r2d2-64.png">
-        </a>
-
-        <div class="media-body">
-            <h4 class="media-heading"><a href="{{ path('claro_view_badge', {'slug': 'badge-de-test-1'}) }}" title="Badge de test">Badge de test</a></h4>
-            <p>Atrribué à <a href="" title="John Doe">John Doe</a> par <a href="" title="John Doe">John Doe</a></p>
-        </div>
-    </li>
-    <li class="media">
-        <a class="pull-left" href="#">
-            <img class="media-object badge_image" alt="Badge de test" src="http://localhost/claroline/uploads/badges/r2d2-64.png">
-        </a>
-
-        <div class="media-body">
-            <h4 class="media-heading"><a href="{{ path('claro_view_badge', {'slug': 'badge-de-test-1'}) }}" title="Badge de test">Badge de test</a></h4>
-            <p>Atrribué à <a href="" title="John Doe">John Doe</a> par <a href="" title="John Doe">John Doe</a></p>
-        </div>
-    </li>
-    <li class="media">
-        <a class="pull-left" href="#">
-            <img class="media-object badge_image" alt="Badge de test" src="http://localhost/claroline/uploads/badges/spacewolveswallpaper1.jpg">
-        </a>
-
-        <div class="media-body">
-            <h4 class="media-heading"><a href="{{ path('claro_view_badge', {'slug': 'badge-de-test-1'}) }}" title="Badge de test">Badge de test</a></h4>
-            <p>Atrribué à <a href="" title="John Doe">John Doe</a> par <a href="" title="John Doe">John Doe</a></p>
-        </div>
-    </li>
-    <li class="media">
-        <a class="pull-left" href="#">
-            <img class="media-object badge_image" alt="Badge de test" src="http://localhost/claroline/uploads/badges/html5_logo.png">
-        </a>
-
-        <div class="media-body">
-            <h4 class="media-heading"><a href="{{ path('claro_view_badge', {'slug': 'badge-de-test-1'}) }}" title="Badge de test">Badge de test</a></h4>
-            <p>Atrribué à <a href="" title="John Doe">John Doe</a> par <a href="" title="John Doe">John Doe</a></p>
-        </div>
-    </li>
+            <div class="media-body">
+                <h4 class="media-heading"><a href="{{ path('claro_view_badge', {'slug': userBadge.badge.slug}) }}" title="{{ userBadge.badge.name }}">{{ userBadge.badge.name }}</a></h4>
+                <p>{{ 'badge_awarded_to_full' | trans({'%userUrl%': path('claro_public_profile_view', {'publicUrl': userBadge.user.publicUrl}), '%user%': userBadge.user.lastName ~ ' ' ~ userBadge.user.firstName, '%issuerUrl%': path('claro_public_profile_view', {'publicUrl': userBadge.issuer.publicUrl}), '%issuer%': userBadge.user.lastName ~ ' ' ~ userBadge.user.firstName}, 'badge') | raw }}</p>
+            </div>
+        </li>
+    {% else %}
+        <li>{{ 'no_workspace_badge'|trans({}, 'badge') }}</li>
+    {% endfor %}
 </ul>
 
 <p>Badge les plus attribués :</p>

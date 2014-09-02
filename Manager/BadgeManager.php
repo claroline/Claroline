@@ -15,6 +15,7 @@ use Claroline\CoreBundle\Entity\Badge\Badge;
 use Claroline\CoreBundle\Entity\Badge\BadgeRule;
 use Claroline\CoreBundle\Entity\Badge\UserBadge;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\Log\LogBadgeAwardEvent;
 use Claroline\CoreBundle\Event\Log\LogGenericEvent;
 use Doctrine\ORM\EntityManager;
@@ -32,7 +33,9 @@ class BadgeManager
      */
     protected $entityManager;
 
-    /** @var \Symfony\Component\EventDispatcher\EventDispatcherInterface */
+    /**
+     * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
+     */
     protected $eventDispatcher;
 
     /**
@@ -189,5 +192,20 @@ class BadgeManager
         }
 
         return $isRulesChanged;
+    }
+
+    /**
+     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
+     * @param int                                              $limit
+     *
+     * @return Badge[]
+     */
+    public function getWorkspaceLastAwardedBadges(Workspace $workspace, $limit = 10)
+    {
+        /** @var \Claroline\CoreBundle\Repository\Badge\UserBadgeRepository $userBadgeRepository */
+        $userBadgeRepository = $this->entityManager->getRepository('ClarolineCoreBundle:Badge\UserBadge');
+        $lastAwardedBadges   = $userBadgeRepository->findWorkspaceLastAwardedBadges($workspace, $limit);
+
+        return $lastAwardedBadges;
     }
 }

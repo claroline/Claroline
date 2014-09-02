@@ -4,6 +4,8 @@ namespace Claroline\CoreBundle\Listener\Widget;
 
 use Claroline\CoreBundle\Event\ConfigureWidgetEvent;
 use Claroline\CoreBundle\Event\DisplayWidgetEvent;
+use Claroline\CoreBundle\Manager\BadgeManager;
+use Claroline\CoreBundle\Manager\BadgeWidgetManager;
 use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Security\Core\SecurityContextInterface;
@@ -20,20 +22,31 @@ class BadgeUsageWidgetListener
     private $templating;
 
     /**
-     * @var FormInterface
+     * @var \Symfony\Component\Form\FormInterface
      */
     private $badgeUsageForm;
 
     /**
+     * @var \Claroline\CoreBundle\Manager\BadgeManager
+     */
+    private $badgeManager;
+
+    private $badgeWidgetManager;
+
+    /**
      * @DI\InjectParams({
-     *     "templating"     = @DI\Inject("templating"),
-     *     "badgeUsageForm" = @DI\Inject("claroline.widget.form.badge_usage")
+     *     "templating"         = @DI\Inject("templating"),
+     *     "badgeUsageForm"     = @DI\Inject("claroline.widget.form.badge_usage"),
+     *     "badgeManager"       = @DI\Inject("claroline.manager.badge"),
+     *     "badgeWidgetManager" = @DI\Inject("claroline.manager.badge_widget")
      * })
      */
-    public function __construct(TwigEngine $templating, FormInterface $badgeUsageForm)
+    public function __construct(TwigEngine $templating, FormInterface $badgeUsageForm, BadgeManager $badgeManager, BadgeWidgetManager $badgeWidgetManager)
     {
-        $this->templating     = $templating;
-        $this->badgeUsageForm = $badgeUsageForm;
+        $this->templating         = $templating;
+        $this->badgeUsageForm     = $badgeUsageForm;
+        $this->badgeManager       = $badgeManager;
+        $this->badgeWidgetManager = $badgeWidgetManager;
     }
 
     /**
@@ -43,9 +56,15 @@ class BadgeUsageWidgetListener
      */
     public function onDisplay(DisplayWidgetEvent $event)
     {
+        $widgetInstance    =  $event->getInstance();
+        $badgeWidgetConfig = $this->badgeWidgetManager->getBadgeUsageConfigForInstance($widgetInstance);
+        $lastAwardedBadges = $this->badgeManager->getWorkspaceLastAwardedBadges($widgetInstance->getWorkspace(), $badgeWidgetConfig->getNumberAwardedBadge());
+
         $content = $this->templating->render(
             'ClarolineCoreBundle:Widget:Badge\badge_usage.html.twig',
-            array()
+            array(
+                'lastAwardedBadges' => $lastAwardedBadges
+            )
         );
         $event->setContent($content);
         $event->stopPropagation();
