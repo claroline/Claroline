@@ -66,7 +66,7 @@ class UserBadgeRepository extends EntityRepository
                 JOIN ub.badge b
                 JOIN b.translations bt
                 WHERE b.workspace = :workspaceId
-                ORDER BY ub.issuedAt'
+                ORDER BY ub.issuedAt DESC'
             )
             ->setParameter('workspaceId', $workspace->getId());
 
