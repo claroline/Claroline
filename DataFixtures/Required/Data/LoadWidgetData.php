@@ -33,7 +33,7 @@ class LoadWidgetData implements RequiredFixture
             array('simple_text', true, true, true),
             array('my_workspaces', false, true, false),
             array('agenda', false, true, true),
-            array('badge_usage', false, false, true)
+            array('badge_usage', true, false, true)
         );
 
         foreach ($items as $item) {

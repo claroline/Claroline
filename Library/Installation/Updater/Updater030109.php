@@ -41,7 +41,7 @@ class Updater030109
                 $this->log('Creating workspace badge widget...');
                 $widget = new Widget();
                 $widget->setName($widgetKey);
-                $widget->setConfigurable(false);
+                $widget->setConfigurable(true);
                 $widget->setIcon('fake/icon/path');
                 $widget->setPlugin(null);
                 $widget->setExportable(false);
