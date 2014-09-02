@@ -14,7 +14,7 @@ use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Table(name="claro_resource_model")
+ * @ORM\Table(name="claro_workspace_model_resource")
  * @ORM\Entity()
  */
 class ResourceModel

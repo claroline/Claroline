@@ -71,7 +71,7 @@ class Group extends AbstractRoleSubject implements OrderableInterface
      *     inversedBy="groups",
      *     fetch="EXTRA_LAZY"
      * )
-     * @ORM\JoinTable(name="claro_group_model")
+     * @ORM\JoinTable(name="claro_workspace_model_group")
      */
     protected $models;
 

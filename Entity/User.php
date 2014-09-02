@@ -309,7 +309,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
      *     inversedBy="users",
      *     fetch="EXTRA_LAZY"
      * )
-     * @ORM\JoinTable(name="claro_user_model")
+     * @ORM\JoinTable(name="claro_workspace_model_user")
      */
     protected $models;
 

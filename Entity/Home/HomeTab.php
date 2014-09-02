@@ -61,7 +61,7 @@ class HomeTab
      *     targetEntity="Claroline\CoreBundle\Entity\Model\Model",
      *     inversedBy="homeTabs",
      * )
-     * @ORM\JoinTable(name="claro_group_home_tab")
+     * @ORM\JoinTable(name="claro_workspace_model_home_tab")
      */
     protected $models;
 

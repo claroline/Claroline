@@ -19,7 +19,7 @@ use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\Home\HomeTab;
 
 /**
- * @ORM\Table(name="claro_model")
+ * @ORM\Table(name="claro_workspace_model")
  * @ORM\Entity()
  */
 class Model
