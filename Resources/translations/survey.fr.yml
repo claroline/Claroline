@@ -12,16 +12,20 @@ choice_display: 'Affichage des choix'
 choices_management: 'Gestion des choix'
 close: Fermer
 closed: Fermé
+closed_survey_message: 'Le sondage est fermé. Plus personne ne peut y répondre.'
 closed_user_message: 'Le sondage est clôturé.'
 closing_date: 'Date de clôture'
 closing_date_next: 'Prochaine date de clôture'
 comment: Commentaire
 create_model_from_question: 'Créer un modèle à partir de la question'
 create_question: 'Créer une question'
+create_title: 'Créer un titre'
+delete_question_title_btn_explanation: 'Supprimer le titre'
 description: Description
 display_survey: 'Afficher le sondage'
 edit_parameters: 'Modifier les paramètres'
 edit_question_btn_explanation: 'Modifier la question'
+edit_question_title_btn_explanation: 'Modifier le titre'
 edit_survey: 'Modifier le sondage'
 edition: Modification
 end_date: 'Date de fin'
@@ -51,6 +55,7 @@ publication_date: 'Date de publication'
 publication_date_next: 'Prochaine date de publication'
 publish: Publier
 published: Publié
+published_survey_message: 'Le sondage est publié.'
 published_user_message: 'Le sondage est ouvert.'
 question_creation: 'Création d''une question'
 question_delete_confirm_message: 'Êtes-vous sûr de vouloir supprimer cette question ?'
@@ -62,6 +67,7 @@ question_form_mandatory: 'Réponse requise'
 question_form_question: 'Question'
 question_form_title: 'Titre'
 question_form_type: 'Type de question'
+question_title_form_question: Titre
 questions_management: 'Gestion des questions'
 ratio: Ratio
 remove_question_btn_explanation: 'Retirer la question du sondage'
@@ -82,6 +88,8 @@ survey_parameters: 'Paramètres du sondage'
 survey_parameters_edition: 'Modification des paramètres du sondage'
 survey_results: 'Résultats du sondage'
 title: Titre
+title_creation: 'Création d''un titre'
+title_edition: 'Modification du titre'
 type: Type
 unpublished: 'Non publié'
 unpublished_user_message: 'Le sondage n''est pas encore publié.'

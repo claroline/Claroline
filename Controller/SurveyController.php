@@ -22,6 +22,7 @@ use Claroline\SurveyBundle\Entity\Question;
 use Claroline\SurveyBundle\Entity\QuestionModel;
 use Claroline\SurveyBundle\Entity\Survey;
 use Claroline\SurveyBundle\Entity\SurveyQuestionRelation;
+use Claroline\SurveyBundle\Form\QuestionTitleType;
 use Claroline\SurveyBundle\Form\QuestionType;
 use Claroline\SurveyBundle\Form\SurveyEditionType;
 use Claroline\SurveyBundle\Manager\SurveyManager;
@@ -208,11 +209,22 @@ class SurveyController extends Controller
         $questionRelations = $this->surveyManager
             ->getQuestionRelationsBySurvey($survey);
         $status = $this->computeStatus($survey);
+        $questionResult = null;
+
+        foreach ($questionRelations as $relation) {
+            $question = $relation->getQuestion();
+
+            if ($question->getType() !== 'title') {
+                $questionResult = $question;
+                break;
+            }
+        }
 
         return array(
             'survey' => $survey,
             'questionRelations' => $questionRelations,
-            'status' => $status
+            'status' => $status,
+            'questionResult' => $questionResult
         );
     }
 
@@ -235,8 +247,16 @@ class SurveyController extends Controller
 
         foreach ($questionRelations as $relation) {
             $question = $relation->getQuestion();
-            $questionViews[] =
-                $this->typedQuestionDisplayAction($survey, $question)->getContent();
+
+            if ($question->getType() !== 'title') {
+                $questionViews[] =
+                    $this->typedQuestionDisplayAction($survey, $question)->getContent();
+            } else {
+                $questionViews[] = $this->templating->render(
+                    "ClarolineSurveyBundle:Survey:titleQuestionDisplay.html.twig",
+                    array('question' => $question)
+                );
+            }
         }
 
         return array(
@@ -692,6 +712,154 @@ class SurveyController extends Controller
 
     /**
      * @EXT\Route(
+     *     "/survey/{survey}/question/title/create/form",
+     *     name="claro_survey_question_title_create_form"
+     * )
+     * @EXT\Template()
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function questionTitleCreateFormAction(Survey $survey)
+    {
+        $this->checkSurveyRight($survey, 'EDIT');
+        $form = $this->formFactory->create(
+            new QuestionTitleType(),
+            new Question()
+        );
+
+        return array(
+            'form' => $form->createView(),
+            'survey' => $survey
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/survey/{survey}/question/title/create",
+     *     name="claro_survey_question_title_create"
+     * )
+     * @EXT\Template("ClarolineSurveyBundle:Survey:questionTitleCreateForm.html.twig")
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function questionTitleCreateAction(Survey $survey)
+    {
+        $this->checkSurveyRight($survey, 'EDIT');
+        $question  = new Question();
+        $question->setTitle('TITLE');
+        $form = $this->formFactory->create(
+            new QuestionTitleType(),
+            $question
+        );
+        $form->handleRequest($this->request->getCurrentRequest());
+
+        if ($form->isValid()) {
+            $question->setType('title');
+            $question->setWorkspace($survey->getResourceNode()->getWorkspace());
+            $question->setCommentAllowed(false);
+            $this->surveyManager->persistQuestion($question);
+            $this->surveyManager
+                ->createSurveyQuestionRelation($survey, $question);
+
+            return new RedirectResponse(
+                $this->router->generate(
+                    'claro_survey_management',
+                    array('survey' => $survey->getId())
+                )
+            );
+        }
+
+        return array(
+            'form' => $form->createView(),
+            'survey' => $survey
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/survey/{survey}/question/{question}/title/edit/form",
+     *     name="claro_survey_question_title_edit_form"
+     * )
+     * @EXT\Template()
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function questionTitleEditFormAction(Question $question, Survey $survey)
+    {
+        $this->checkQuestionRight($survey, $question, 'EDIT');
+        $form = $this->formFactory->create(
+            new QuestionTitleType(),
+            $question
+        );
+
+        return array(
+            'form' => $form->createView(),
+            'question' => $question,
+            'survey' => $survey
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/survey/{survey}/question/{question}/title/edit",
+     *     name="claro_survey_question_title_edit"
+     * )
+     * @EXT\Template("ClarolineSurveyBundle:Survey:questionTitleEditForm.html.twig")
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function questionTitleEditAction(Question $question, Survey $survey)
+    {
+        $this->checkQuestionRight($survey, $question, 'EDIT');
+        $form = $this->formFactory->create(
+            new QuestionTitleType(),
+            $question
+        );
+        $form->handleRequest($this->request->getCurrentRequest());
+
+        if ($form->isValid()) {
+            $this->surveyManager->persistQuestion($question);
+
+            return new RedirectResponse(
+                $this->router->generate(
+                    'claro_survey_management',
+                    array('survey' => $survey->getId())
+                )
+            );
+        }
+
+        return array(
+            'form' => $form->createView(),
+            'question' => $question,
+            'survey' => $survey
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/survey/{survey}/question/{question}/title/delete",
+     *     name="claro_survey_question_title_delete"
+     * )
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function questionTitleDeleteAction(Question $question, Survey $survey)
+    {
+        $this->checkQuestionRight($survey, $question, 'EDIT');
+
+        if ($question->getType() === 'title') {
+            $this->surveyManager->deleteQuestion($question);
+        }
+
+        return new RedirectResponse(
+            $this->router->generate(
+                'claro_survey_management',
+                array('survey' => $survey->getId())
+            )
+        );
+    }
+
+    /**
+     * @EXT\Route(
      *     "/survey/{survey}/add/question/{question}",
      *     name="claro_survey_add_question",
      *     options={"expose"=true}
@@ -919,15 +1087,23 @@ class SurveyController extends Controller
 
         foreach ($questionRelations as $relation) {
             $question = $relation->getQuestion();
-            $questionAnswer = isset($answersDatas[$question->getId()]) ?
-                $answersDatas[$question->getId()] :
-                array();
-            $questionViews[$relation->getId()] = $this->displayTypedQuestion(
-                $survey,
-                $question,
-                $questionAnswer,
-                $canEdit
-            )->getContent();
+
+            if ($question->getType() !== 'title') {
+                $questionAnswer = isset($answersDatas[$question->getId()]) ?
+                    $answersDatas[$question->getId()] :
+                    array();
+                $questionViews[$relation->getId()] = $this->displayTypedQuestion(
+                    $survey,
+                    $question,
+                    $questionAnswer,
+                    $canEdit
+                )->getContent();
+            } else {
+                $questionViews[$relation->getId()] = $this->templating->render(
+                    "ClarolineSurveyBundle:Survey:titleQuestionDisplay.html.twig",
+                    array('question' => $question)
+                );
+            }
         }
 
         return array(
@@ -1000,16 +1176,24 @@ class SurveyController extends Controller
 
                 foreach ($questionRelations as $relation) {
                     $question = $relation->getQuestion();
-                    $answerData = isset($answersDatas[$question->getId()]) ?
-                        $answersDatas[$question->getId()] :
-                        array();
 
-                    $questionViews[$relation->getId()] = $this->displayTypedQuestion(
-                        $survey,
-                        $question,
-                        $answerData,
-                        $canEdit
-                    )->getContent();
+                    if ($question->getType() !== 'title') {
+                        $answerData = isset($answersDatas[$question->getId()]) ?
+                            $answersDatas[$question->getId()] :
+                            array();
+
+                        $questionViews[$relation->getId()] = $this->displayTypedQuestion(
+                            $survey,
+                            $question,
+                            $answerData,
+                            $canEdit
+                        )->getContent();
+                    } else {
+                        $questionViews[$relation->getId()] = $this->templating->render(
+                            "ClarolineSurveyBundle:Survey:titleQuestionDisplay.html.twig",
+                            array('question' => $question)
+                        );
+                    }
                 }
 
                 return array(
@@ -1237,7 +1421,11 @@ class SurveyController extends Controller
         $questions = array();
 
         foreach ($questionRelations as $relation) {
-            $questions[] = $relation->getQuestion();
+            $relationQuestion = $relation->getQuestion();
+
+            if ($relationQuestion->getType() !== 'title') {
+                $questions[] = $relation->getQuestion();
+            }
         }
 
         $results = $this->showTypedQuestionResults($survey, $question, $page, $max)

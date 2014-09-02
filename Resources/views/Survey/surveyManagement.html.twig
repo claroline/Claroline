@@ -49,12 +49,11 @@
                     </li>
                     
                     {% if status == 'published' or status == 'closed' %}
-                        {% if questionRelations|length > 0 %}
-                            {% set question = questionRelations[0].getQuestion() %}
+                        {% if questionResult is not empty %}
                             <li role="presentation" class="divider"></li>
                             <li role="presentation">
                                 <a role="menuitem" tabindex="-1"
-                                   href="{{ path('claro_survey_results_show', {'survey': surveyId, 'question': question.getId()}) }}"
+                                   href="{{ path('claro_survey_results_show', {'survey': surveyId, 'question': questionResult.getId()}) }}"
                                 >
                                     <i class="fa fa-bar-chart-o"></i>
                                     {{ 'view_survey_results'|trans({}, 'survey') }}
@@ -72,6 +71,16 @@
         <div class="alert alert-info">
             {{ 'how_to_publish_message'|trans({}, 'survey') }}
         </div>
+    {% elseif status == 'published' %}
+        <br>
+        <div class="alert alert-success">
+            {{ 'published_survey_message'|trans({}, 'survey') }}
+        </div>
+    {% else %}
+        <br>
+        <div class="alert alert-danger">
+            {{ 'closed_survey_message'|trans({}, 'survey') }}
+        </div>
     {% endif %}
     <div class="panel-body">
         <div>
@@ -85,6 +94,12 @@
                 <i class="fa fa-search"></i>
                 {{ 'add_question'|trans({}, 'survey') }}
             </span>
+            <a href="{{ path('claro_survey_question_title_create_form', {'survey': surveyId}) }}"
+               class="btn btn-primary margin-bottom-md"
+            >
+                <i class="fa fa-navicon"></i>
+                {{ 'create_title'|trans({}, 'survey') }}
+            </a>
             <span class="btn btn-primary view-survey-btn margin-bottom-md"
                   data-survey-id="{{ surveyId }}"
             >
@@ -118,50 +133,77 @@
 
                 {% for relation in questionRelations %}
                     {% set question = relation.getQuestion() %}
+                    {% set questionType = question.getType() %}
                     <tr data-question-relation-id="{{ relation.getId() }}">
                         <td>
                             <b>
-                                [{{ question.getType()|trans({}, 'survey') }}]
-                                {{ question.getTitle() }}
+                                [{{ questionType|trans({}, 'survey') }}]
+                                
+                                {% if questionType != 'title' %}
+                                    {{ question.getTitle() }}
+                                {% endif %}
                             </b>
                             {{ question.getQuestion()|raw }}
                         </td>
                         <td>
-                            <span class="btn btn-default view-question-btn"
-                                  data-question-id="{{ question.getId() }}"
-                                  data-toggle="tooltip"
-                                  data-placement="top"
-                                  title="{{ 'view_question_btn_explanation'|trans({}, 'survey') }}"
-                            >
-                                <i class="fa fa-eye"></i>
-                            </span>
-                            <span class="btn edit-mandatory-btn {% if relation.getMandatory %}btn-success{% else %}btn-default{% endif %}"
-                                  data-relation-id="{{ relation.getId() }}"
-                                  data-toggle="tooltip"
-                                  data-placement="top"
-                                  title="{% if relation.getMandatory() %}{{ 'mandatory_answer_message'|trans({}, 'survey') }}{% else %}{{ 'not_mandatory_answer_message'|trans({}, 'survey') }}{% endif %}"
-                            >
-                                <i class="fa fa-exclamation"></i>
-                            </span>
-                            <a href="{{ path(
-                                    'claro_survey_question_edit_form',
-                                    {'question': question.getId(), 'survey': surveyId, 'source': 'survey'}
-                                ) }}"
-                                class="btn btn-default"
-                                data-toggle="tooltip"
-                                data-placement="top"
-                                title="{{ 'edit_question_btn_explanation'|trans({}, 'survey') }}"
-                            >
-                                <i class="fa fa-edit"></i>
-                            </a>
-                            <a href="{{ path('claro_survey_remove_question', {'survey': surveyId, 'question': question.getId()}) }}"
-                               class="btn btn-danger"
-                               data-toggle="tooltip"
-                               data-placement="top"
-                               title="{{ 'remove_question_btn_explanation'|trans({}, 'survey') }}"
-                            >
-                                <i class="fa fa-trash-o"></i>
-                            </a>
+                            
+                            {% if questionType != 'title' %}
+                                <span class="btn btn-default view-question-btn"
+                                      data-question-id="{{ question.getId() }}"
+                                      data-toggle="tooltip"
+                                      data-placement="top"
+                                      title="{{ 'view_question_btn_explanation'|trans({}, 'survey') }}"
+                                >
+                                    <i class="fa fa-eye"></i>
+                                </span>
+                                <span class="btn edit-mandatory-btn {% if relation.getMandatory %}btn-success{% else %}btn-default{% endif %}"
+                                      data-relation-id="{{ relation.getId() }}"
+                                      data-toggle="tooltip"
+                                      data-placement="top"
+                                      title="{% if relation.getMandatory() %}{{ 'mandatory_answer_message'|trans({}, 'survey') }}{% else %}{{ 'not_mandatory_answer_message'|trans({}, 'survey') }}{% endif %}"
+                                >
+                                    <i class="fa fa-exclamation"></i>
+                                </span>
+                                <a href="{{ path(
+                                        'claro_survey_question_edit_form',
+                                        {'question': question.getId(), 'survey': surveyId, 'source': 'survey'}
+                                    ) }}"
+                                    class="btn btn-default"
+                                    data-toggle="tooltip"
+                                    data-placement="top"
+                                    title="{{ 'edit_question_btn_explanation'|trans({}, 'survey') }}"
+                                >
+                                    <i class="fa fa-edit"></i>
+                                </a>
+                                <a href="{{ path('claro_survey_remove_question', {'survey': surveyId, 'question': question.getId()}) }}"
+                                   class="btn btn-danger"
+                                   data-toggle="tooltip"
+                                   data-placement="top"
+                                   title="{{ 'remove_question_btn_explanation'|trans({}, 'survey') }}"
+                                >
+                                    <i class="fa fa-trash-o"></i>
+                                </a>
+                            {% else %}
+                                <a href="{{ path(
+                                        'claro_survey_question_title_edit_form',
+                                        {'question': question.getId(), 'survey': surveyId}
+                                    ) }}"
+                                    class="btn btn-default"
+                                    data-toggle="tooltip"
+                                    data-placement="top"
+                                    title="{{ 'edit_question_title_btn_explanation'|trans({}, 'survey') }}"
+                                >
+                                    <i class="fa fa-edit"></i>
+                                </a>
+                                <a href="{{ path('claro_survey_question_title_delete', {'survey': surveyId, 'question': question.getId()}) }}"
+                                   class="btn btn-danger"
+                                   data-toggle="tooltip"
+                                   data-placement="top"
+                                   title="{{ 'delete_question_title_btn_explanation'|trans({}, 'survey') }}"
+                                >
+                                    <i class="fa fa-trash-o"></i>
+                                </a>
+                            {% endif %}
                         </td>
                     </tr>
                 {% endfor %}
@@ -222,7 +264,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div>  
 {% endblock %}
 
 {% block javascripts %}
