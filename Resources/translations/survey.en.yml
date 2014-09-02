@@ -12,6 +12,7 @@ choice_display: 'Choice display'
 choices_management: 'Choices management'
 close: Close
 closed: Closed
+closed_survey_message: 'The survey is closed. Nobody can answer it anymore.'
 closed_user_message: 'The survey is closed.'
 closing_date: 'Closing date'
 closing_date_next: 'Next closing date'
@@ -51,6 +52,7 @@ publication_date: 'Publication date'
 publication_date_next: 'Next publication date'
 publish: Publish
 published: Published
+published_survey_message: 'The survey is published.'
 published_user_message: 'The survey is published.'
 question_creation: 'Question creation'
 question_delete_confirm_message: 'Do you really want to delete this question ?'

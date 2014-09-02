@@ -12,6 +12,7 @@ choice_display: 'Affichage des choix'
 choices_management: 'Gestion des choix'
 close: Fermer
 closed: Fermé
+closed_survey_message: 'Le sondage est fermé. Plus personne ne peut y répondre.'
 closed_user_message: 'Le sondage est clôturé.'
 closing_date: 'Date de clôture'
 closing_date_next: 'Prochaine date de clôture'
@@ -51,6 +52,7 @@ publication_date: 'Date de publication'
 publication_date_next: 'Prochaine date de publication'
 publish: Publier
 published: Publié
+published_survey_message: 'Le sondage est publié.'
 published_user_message: 'Le sondage est ouvert.'
 question_creation: 'Création d''une question'
 question_delete_confirm_message: 'Êtes-vous sûr de vouloir supprimer cette question ?'

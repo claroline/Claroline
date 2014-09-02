@@ -72,6 +72,16 @@
         <div class="alert alert-info">
             {{ 'how_to_publish_message'|trans({}, 'survey') }}
         </div>
+    {% elseif status == 'published' %}
+        <br>
+        <div class="alert alert-success">
+            {{ 'published_survey_message'|trans({}, 'survey') }}
+        </div>
+    {% else %}
+        <br>
+        <div class="alert alert-danger">
+            {{ 'closed_survey_message'|trans({}, 'survey') }}
+        </div>
     {% endif %}
     <div class="panel-body">
         <div>
