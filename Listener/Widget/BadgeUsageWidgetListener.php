@@ -56,7 +56,7 @@ class BadgeUsageWidgetListener
      */
     public function onDisplay(DisplayWidgetEvent $event)
     {
-        $widgetInstance    =  $event->getInstance();
+        $widgetInstance    = $event->getInstance();
         $badgeWidgetConfig = $this->badgeWidgetManager->getBadgeUsageConfigForInstance($widgetInstance);
         $lastAwardedBadges = $this->badgeManager->getWorkspaceLastAwardedBadges($widgetInstance->getWorkspace(), $badgeWidgetConfig->getNumberAwardedBadge());
 
@@ -77,6 +77,9 @@ class BadgeUsageWidgetListener
      */
     public function onConfig(ConfigureWidgetEvent $event)
     {
+        $badgeWidgetConfig = $this->badgeWidgetManager->getBadgeUsageConfigForInstance($event->getInstance());
+        $this->badgeUsageForm->setData($badgeWidgetConfig);
+
         $content = $this->templating->render(
             'ClarolineCoreBundle:Widget:Badge\badge_usage_config.html.twig',
             array(
