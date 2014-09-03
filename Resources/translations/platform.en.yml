@@ -191,6 +191,8 @@ collaborative: Collaborative
 collaborator: Collaborator
 comment: Comment
 communication: Communication
+competence: Competence
+competences: Competences
 competence_referencial: Learning outcomes
 completed: Completed
 configuration: Configuration
@@ -428,6 +430,7 @@ last_attempt_date: 'Last attempt'
 last_manager_error_message: You can't remove every manager.
 last_name: 'Last name'
 layout: Layout
+learning_profil: Learning profile
 leave_this_page: 'If you leave this page you may lose your changes.'
 left: Left
 limit: Limit
@@ -724,6 +727,7 @@ search: Search
 search_group: 'Search for a group'
 search_user: 'Search for an user'
 search_workspace: 'Search for a workspace'
+security_token: Security Token
 security_token_delete_confirm_message: 'Do you really want to delete this security token ?'
 security_token_delete_confirm_title: 'Delete security token'
 security_token_form_clientIp: 'Client IP address'
@@ -784,6 +788,7 @@ subscribe_groups: 'Subscribe groups'
 subscribe_selected_groups: 'Subscribe selected groups'
 subscribe_selected_users: 'Subscribe selected users'
 subscribe_users: 'Subscribe users'
+subscription: Subscription
 success_rate: 'Success rate'
 successfull_workspace_creation: The workspace %name% has been created successfully
 support_email: 'Support email'

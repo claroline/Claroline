@@ -11,31 +11,30 @@
 
 namespace Claroline\CoreBundle\Library\Installation\Updater;
 
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Claroline\CoreBundle\Entity\Tool\AdminTool;
 use Claroline\CoreBundle\Entity\Tool\Tool;
-use Claroline\CoreBundle\Persistence\ObjectManager;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
-class Updater30200 
+class Updater030200
 {
-	private $container;
-    private $om;
-    private $logger
+    private $configHandler;
+    private $logger;
 
-	public function __construct(ContainerInterface $container)
+    public function __construct(ContainerInterface $container)
     {
-        $this->container = $container;
-        $this->om = $this->container->get('doctrine.orm.entity_manager');
+        $this->configHandler = $container->get('claroline.config.platform_config_handler');
+        $this->om = $container->get('doctrine.orm.entity_manager');
     }
 
     public function postUpdate()
     {
-        $this->updateCompetenceTools();  
+        $this->usernameRegexUpdate();
+        $this->updateCompetenceTools();
     }
 
-	private function updateCompetenceTools()
+    private function updateCompetenceTools()
     {
-    	$this->log('Creating admin referential competence tools...');
+        $this->log('Creating admin referential competence tools...');
         $existingTool = $this->om->getRepository('ClarolineCoreBundle:Tool\AdminTool')->findByName('competence_referencial');
 
         if (count($existingTool) === 0) {
@@ -46,7 +45,7 @@ class Updater30200
         }
 
         $existingTool = $this->om->getRepository('ClarolineCoreBundle:Tool\AdminTool')->findByName('competence_subscription');
-        if (count($existingTool) === 0) {    
+        if (count($existingTool) === 0) {
             $competenceSubscription = new AdminTool();
             $competenceSubscription->setName('competence_subscription');
             $competenceSubscription->setClass('code-fork');
@@ -70,7 +69,7 @@ class Updater30200
 
             $this->om->persist($wsTool);
         }
-        
+
         $this->om->flush();
         $this->log('competence tools created ...');
     }
@@ -85,5 +84,11 @@ class Updater30200
         if ($log = $this->logger) {
             $log('    ' . $message);
         }
+    }
+
+    private function usernameRegexUpdate()
+    {
+        $this->log('Updating user name regex...');
+        $this->configHandler->setParameter('username_regex', '/^[a-zA-Z0-9@_\.]*$/');
     }
 }
