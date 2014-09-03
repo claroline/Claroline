@@ -15,7 +15,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityRepository;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\Role;
-use Claroline\CoreBundle\Entity\Model\Model;
+use Claroline\CoreBundle\Entity\Model\WorkspaceModel;
 
 class GroupRepository extends EntityRepository
 {
@@ -462,11 +462,11 @@ class GroupRepository extends EntityRepository
 
     /**
      * @todo Make the correct sql request
-     * @param Model $model
+     * @param WorkspaceModel $model
      * @param bool $executeQuery
      * @return array|\Doctrine\ORM\Query
      */
-    public function findGroupsNotSharingModel(Model $model, $executeQuery = true)
+    public function findGroupsNotSharingModel(WorkspaceModel $model, $executeQuery = true)
     {
         $dql = 'SELECT g FROM Claroline\CoreBundle\Entity\Group g';
         $query = $this->_em->createQuery($dql);
@@ -476,12 +476,12 @@ class GroupRepository extends EntityRepository
 
     /**
      * @todo Make the correct sql request
-     * @param Model $model
+     * @param WorkspaceModel $model
      * @param $search
      * @param bool $executeQuery
      * @return array|\Doctrine\ORM\Query
      */
-    public function findGroupsNotSharingModelBySearch(Model $model, $search, $executeQuery = true)
+    public function findGroupsNotSharingModelBySearch(WorkspaceModel $model, $search, $executeQuery = true)
     {
         echo $search;
         $search = strtoupper($search);

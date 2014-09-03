@@ -11,75 +11,75 @@
 
 namespace Claroline\CoreBundle\Controller\Tool;
 
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
-use Symfony\Component\Security\Core\SecurityContextInterface;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
-use Claroline\CoreBundle\Manager\UserManager;
-use Claroline\CoreBundle\Manager\GroupManager;
-use Claroline\CoreBundle\Manager\ModelManager;
-use Claroline\CoreBundle\Manager\ResourceManager;
-use Claroline\CoreBundle\Manager\HomeTabManager;
 use JMS\DiExtraBundle\Annotation as DI;
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CoreBundle\Entity\Model\Model;
+use Claroline\CoreBundle\Entity\Group;
+use Claroline\CoreBundle\Entity\Model\WorkspaceModel;
 use Claroline\CoreBundle\Entity\Model\ResourceModel;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Group;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Form\ModelType;
+use Claroline\CoreBundle\Manager\GroupManager;
+use Claroline\CoreBundle\Manager\HomeTabManager;
+use Claroline\CoreBundle\Manager\ModelManager;
+use Claroline\CoreBundle\Manager\ResourceManager;
+use Claroline\CoreBundle\Manager\UserManager;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Security\Core\SecurityContextInterface;
 
 class ModelController extends Controller
 {
-    private $workspaceManager;
-    private $security;
-    private $request;
-    private $userManager;
-    private $groupManager;
-    private $modelManager;
-    private $resourceManager;
     private $formFactory;
-    private $router;
+    private $groupManager;
     private $homeTabManager;
+    private $modelManager;
+    private $request;
+    private $resourceManager;
+    private $router;
+    private $security;
+    private $userManager;
 
     /**
      * @DI\InjectParams({
+     *     "formFactory"     = @DI\Inject("form.factory"),
+     *     "groupManager"    = @DI\Inject("claroline.manager.group_manager"),
+     *     "homeTabManager"  = @DI\Inject("claroline.manager.home_tab_manager"),
+     *     "modelManager"    = @DI\Inject("claroline.manager.model_manager"),
+     *     "request"         = @DI\Inject("request"),
+     *     "resourceManager" = @DI\Inject("claroline.manager.resource_manager"),
      *     "router"          = @DI\Inject("router"),
      *     "security"        = @DI\Inject("security.context"),
-     *     "userManager"     = @DI\Inject("claroline.manager.user_manager"),
-     *     "groupManager"    = @DI\Inject("claroline.manager.group_manager"),
-     *     "modelManager"    = @DI\Inject("claroline.manager.model_manager"),
-     *     "resourceManager"  = @DI\Inject("claroline.manager.resource_manager"),
-     *     "homeTabManager"  = @DI\Inject("claroline.manager.home_tab_manager"),
-     *     "formFactory"     = @DI\Inject("form.factory")
+     *     "userManager"     = @DI\Inject("claroline.manager.user_manager")
      * })
      */
     public function __construct(
+        FormFactoryInterface $formFactory,
+        GroupManager $groupManager,
+        HomeTabManager $homeTabManager,
+        ModelManager $modelManager,
+        Request $request,
+        ResourceManager $resourceManager,
         RouterInterface $router,
         SecurityContextInterface $security,
-        Request $request,
-        UserManager $userManager,
-        GroupManager $groupManager,
-        FormFactoryInterface $formFactory,
-        ModelManager $modelManager,
-        HomeTabManager $homeTabManager,
-        ResourceManager $resourceManager
+        UserManager $userManager
     )
     {
+        $this->formFactory     = $formFactory;
+        $this->groupManager    = $groupManager;
+        $this->homeTabManager  = $homeTabManager;
+        $this->modelManager    = $modelManager;
+        $this->request         = $request;
+        $this->resourceManager = $resourceManager;
         $this->router          = $router;
         $this->security        = $security;
-        $this->formFactory     = $formFactory;
-        $this->request         = $request;
         $this->userManager     = $userManager;
-        $this->groupManager    = $groupManager;
-        $this->modelManager    = $modelManager;
-        $this->formFactory     = $formFactory;
-        $this->homeTabManager  = $homeTabManager;
-        $this->resourceManager = $resourceManager;
     }
 
     /**
@@ -113,7 +113,7 @@ class ModelController extends Controller
     public function showModelModalFormAction(Workspace $workspace)
     {
         $this->checkAccess($workspace);
-        $form = $this->formFactory->create(new ModelType(), new Model());
+        $form = $this->formFactory->create(new ModelType(), new WorkspaceModel());
         $action = $this->router->generate('claro_workspace_model_create', array('workspace' => $workspace->getId()));
 
         return array(
@@ -134,7 +134,7 @@ class ModelController extends Controller
     public function createModelAction(Workspace $workspace)
     {
         $this->checkAccess($workspace);
-        $form = $this->formFactory->create(new ModelType(), new Model());
+        $form = $this->formFactory->create(new ModelType(), new WorkspaceModel());
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
@@ -169,10 +169,9 @@ class ModelController extends Controller
      *     options = {"expose"=true}
      * )
      */
-    public function deleteModelAction(Model $model)
+    public function deleteModelAction(WorkspaceModel $model)
     {
         $this->checkAccess($model->getWorkspace());
-        $workspace = $model->getWorkspace();
         $id = $model->getId();
         $this->modelManager->delete($model);
 
@@ -190,7 +189,7 @@ class ModelController extends Controller
      *
      * @EXT\Template("ClarolineCoreBundle:Tool\workspace\parameters\model:modelModalForm.html.twig")
      */
-    public function renameModelModalFormAction(Model $model)
+    public function renameModelModalFormAction(WorkspaceModel $model)
     {
         $this->checkAccess($model->getWorkspace());
         $form = $this->formFactory->create(new ModelType(), $model);
@@ -208,7 +207,7 @@ class ModelController extends Controller
      *     options = {"expose"=true}
      * )
      */
-    public function renameModelAction(Model $model)
+    public function renameModelAction(WorkspaceModel $model)
     {
         $this->checkAccess($model->getWorkspace());
         $oldName = $model->getName();
@@ -245,7 +244,7 @@ class ModelController extends Controller
      *
      * @EXT\Template("ClarolineCoreBundle:Tool\workspace\parameters\model:configure.html.twig")
      */
-    public function configureModelAction(Model $model)
+    public function configureModelAction(WorkspaceModel $model)
     {
         $resourceModels = $model->getResourceModel();
         $copied = [];
@@ -261,12 +260,13 @@ class ModelController extends Controller
             'model'  => $model,
             'copied' => $copied,
             'links'  => $links,
-            'rootId' => $root->getId()
+            'rootId' => $root->getId(),
+            'workspace' => $model->getWorkspace()
         );
     }
 
     /**
-     * @param Model $model
+     * @param WorkspaceModel $model
      *
      * @EXT\Route(
      *     "/model/{model}/share/index",
@@ -275,7 +275,7 @@ class ModelController extends Controller
      *
      * @EXT\Template("ClarolineCoreBundle:Tool\workspace\parameters\model:indexShare.html.twig")
      */
-    public function shareModelUserListAction(Model $model)
+    public function shareModelUserListAction(WorkspaceModel $model)
     {
         $this->checkAccess($model->getWorkspace());
 
@@ -310,7 +310,7 @@ class ModelController extends Controller
      *
      * @return Response
      */
-    public function userListAction(Model $model, $page, $search)
+    public function userListAction(WorkspaceModel $model, $page, $search)
     {
         $trimmedSearch = trim($search);
 
@@ -349,7 +349,7 @@ class ModelController extends Controller
      *
      * @return Response
      */
-    public function groupListAction(Model $model, $page, $search)
+    public function groupListAction(WorkspaceModel $model, $page, $search)
     {
         $trimmedSearch = trim($search);
 
@@ -379,7 +379,7 @@ class ModelController extends Controller
      *     options={"multipleIds"=true, "name"="userIds"}
      * )
      */
-    public function shareUsersAction(Model $model, array $users)
+    public function shareUsersAction(WorkspaceModel $model, array $users)
     {
         $this->checkAccess($model->getWorkspace());
         $this->modelManager->addUsers($model, $users);
@@ -407,7 +407,7 @@ class ModelController extends Controller
      *     options={"multipleIds"=true, "name"="groupIds"}
      * )
      */
-    public function shareGroupsAction(Model $model, array $groups)
+    public function shareGroupsAction(WorkspaceModel $model, array $groups)
     {
         $this->checkAccess($model->getWorkspace());
         $this->modelManager->addGroups($model, $groups);
@@ -428,7 +428,7 @@ class ModelController extends Controller
      *     options={"expose"=true}
      * )
      */
-    public function removeModeGroupAction(Model $model, Group $group)
+    public function removeModeGroupAction(WorkspaceModel $model, Group $group)
     {
         $this->checkAccess($model->getWorkspace());
         $this->modelManager->removeGroup($model, $group);
@@ -443,7 +443,7 @@ class ModelController extends Controller
      *     options={"expose"=true}
      * )
      */
-    public function removeModelUserAction(Model $model, User $user)
+    public function removeModelUserAction(WorkspaceModel $model, User $user)
     {
         $this->checkAccess($model->getWorkspace());
         $this->modelManager->removeUser($model, $user);
@@ -464,7 +464,7 @@ class ModelController extends Controller
      *     options={"multipleIds"=true, "name"="nodeIds"}
      * )
      */
-    public function addNodesCopyAction(Model $model, array $resourceNodes)
+    public function addNodesCopyAction(WorkspaceModel $model, array $resourceNodes)
     {
         $this->checkAccess($model->getWorkspace());
         $resourceModels = $this->modelManager->addResourceNodes($model, $resourceNodes, true);
@@ -493,7 +493,7 @@ class ModelController extends Controller
      *     options={"multipleIds"=true, "name"="nodeIds"}
      * )
      */
-    public function addNodeLinkAction(Model $model, array $resourceNodes)
+    public function addNodeLinkAction(WorkspaceModel $model, array $resourceNodes)
     {
         $this->checkAccess($model->getWorkspace());
         $resourceModels = $this->modelManager->addResourceNodes($model, $resourceNodes, false);
@@ -534,14 +534,46 @@ class ModelController extends Controller
      *     options={"expose"=true}
      * )
      * @EXT\Template("ClarolineCoreBundle:Tool\workspace\parameters\model:homeTabsList.html.twig")
-     * @param Model $model
+     * @param WorkspaceModel $model
      */
-    public function listHomeTabsAction(Model $model)
+    public function listHomeTabsAction(WorkspaceModel $model)
     {
         $this->checkAccess($model->getWorkspace());
-        $homeTabsConfig = $this->homeTabManager->getWorkspaceHomeTabConfigsByWorkspace($model->getWorkspace());
+        $homeTabIds = array();
+        $homeTabs = $model->getHomeTabs();
 
-        return array('homeTabsConfig' => $homeTabsConfig);
+        foreach ($homeTabs as $homeTab) {
+            $homeTabIds[$homeTab->getId()] = $homeTab->getId();
+        }
+        $homeTabsConfig = $this->homeTabManager
+            ->getWorkspaceHomeTabConfigsByWorkspace($model->getWorkspace());
+
+        return array(
+            'homeTabsConfig' => $homeTabsConfig,
+            'homeTabIds' => $homeTabIds
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/{model}/homeTabs/link",
+     *     name="ws_model_homeTabs_model_link",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter(
+     *     "homeTabs",
+     *      class="ClarolineCoreBundle:Home\HomeTab",
+     *      options={"multipleIds" = true}
+     * )
+     * @param WorkspaceModel $model
+     * @param HomeTab[] $homeTabs
+     */
+    public function linkHomeTabsToModelAction(WorkspaceModel $model, array $homeTabs)
+    {
+        $this->checkAccess($model->getWorkspace());
+        $this->modelManager->updateHomeTabs($model, $homeTabs);
+
+        return new Response('success', 204);
     }
 
     private function checkAccess(Workspace $workspace)

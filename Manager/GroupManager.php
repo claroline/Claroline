@@ -13,7 +13,7 @@ namespace Claroline\CoreBundle\Manager;
 
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CoreBundle\Entity\Model\Model;
+use Claroline\CoreBundle\Entity\Model\WorkspaceModel;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Repository\GroupRepository;
@@ -459,9 +459,9 @@ class GroupManager
     /**
      * Returns users who don't have access to the model $model
      *
-     * @param Model $model
+     * @param WorkspaceModel $model
      */
-    public function getUsersNotSharingModel(Model $model, $page = 1, $max = 20)
+    public function getUsersNotSharingModel(WorkspaceModel $model, $page = 1, $max = 20)
     {
         $res = $this->groupRepo->findGroupsNotSharingModel($model, false);
 
@@ -471,9 +471,9 @@ class GroupManager
     /**
      * Returns users who don't have access to the model $model
      *
-     * @param Model $model
+     * @param WorkspaceModel $model
      */
-    public function getUsersNotSharingModelBySearch(Model $model, $page = 1, $search, $max = 20)
+    public function getUsersNotSharingModelBySearch(WorkspaceModel $model, $page = 1, $search, $max = 20)
     {
         $res = $this->groupRepo->findGroupsNotSharingModelBySearch($model, $search, false);
 

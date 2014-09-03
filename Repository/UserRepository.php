@@ -21,7 +21,7 @@ use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Group;
-use Claroline\CoreBundle\Entity\Model\Model;
+use Claroline\CoreBundle\Entity\Model\WorkspaceModel;
 use Doctrine\ORM\Query;
 
 class UserRepository extends EntityRepository implements UserProviderInterface
@@ -898,11 +898,11 @@ class UserRepository extends EntityRepository implements UserProviderInterface
 
     /**
      * @todo Make the correct sql request
-     * @param Model $model
+     * @param WorkspaceModel $model
      * @param bool $executeQuery
      * @return array|Query
      */
-    public function findUsersNotSharingModel(Model $model, $executeQuery = true)
+    public function findUsersNotSharingModel(WorkspaceModel $model, $executeQuery = true)
     {
         $dql = '
             SELECT u FROM Claroline\CoreBundle\Entity\User u
@@ -915,12 +915,12 @@ class UserRepository extends EntityRepository implements UserProviderInterface
 
     /**
      * @todo Make the correct sql request
-     * @param Model $model
+     * @param WorkspaceModel $model
      * @param $search
      * @param bool $executeQuery
      * @return array|Query
      */
-    public function findUsersNotSharingModelBySearch(Model $model, $search, $executeQuery = true)
+    public function findUsersNotSharingModelBySearch(WorkspaceModel $model, $search, $executeQuery = true)
     {
         $search = strtoupper($search);
 

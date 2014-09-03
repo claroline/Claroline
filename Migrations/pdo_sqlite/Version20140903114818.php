@@ -8,37 +8,37 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/09/02 04:21:35
+ * Generation date: 2014/09/03 11:48:21
  */
-class Version20140902162133 extends AbstractMigration
+class Version20140903114818 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
         $this->addSql("
             CREATE TABLE claro_workspace_model_user (
                 user_id INTEGER NOT NULL, 
-                model_id INTEGER NOT NULL, 
-                PRIMARY KEY(user_id, model_id)
+                workspacemodel_id INTEGER NOT NULL, 
+                PRIMARY KEY(user_id, workspacemodel_id)
             )
         ");
         $this->addSql("
             CREATE INDEX IDX_5318388FA76ED395 ON claro_workspace_model_user (user_id)
         ");
         $this->addSql("
-            CREATE INDEX IDX_5318388F7975B7E7 ON claro_workspace_model_user (model_id)
+            CREATE INDEX IDX_5318388FD500BD91 ON claro_workspace_model_user (workspacemodel_id)
         ");
         $this->addSql("
             CREATE TABLE claro_workspace_model_group (
                 group_id INTEGER NOT NULL, 
-                model_id INTEGER NOT NULL, 
-                PRIMARY KEY(group_id, model_id)
+                workspacemodel_id INTEGER NOT NULL, 
+                PRIMARY KEY(group_id, workspacemodel_id)
             )
         ");
         $this->addSql("
             CREATE INDEX IDX_1F19A8AEFE54D947 ON claro_workspace_model_group (group_id)
         ");
         $this->addSql("
-            CREATE INDEX IDX_1F19A8AE7975B7E7 ON claro_workspace_model_group (model_id)
+            CREATE INDEX IDX_1F19A8AED500BD91 ON claro_workspace_model_group (workspacemodel_id)
         ");
         $this->addSql("
             CREATE TABLE claro_workspace_model (
@@ -53,28 +53,28 @@ class Version20140902162133 extends AbstractMigration
         ");
         $this->addSql("
             CREATE TABLE claro_workspace_model_home_tab (
+                workspacemodel_id INTEGER NOT NULL, 
                 hometab_id INTEGER NOT NULL, 
-                model_id INTEGER NOT NULL, 
-                PRIMARY KEY(hometab_id, model_id)
+                PRIMARY KEY(workspacemodel_id, hometab_id)
             )
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_A8E0CB1BD500BD91 ON claro_workspace_model_home_tab (workspacemodel_id)
         ");
         $this->addSql("
             CREATE INDEX IDX_A8E0CB1BCCE862F ON claro_workspace_model_home_tab (hometab_id)
         ");
         $this->addSql("
-            CREATE INDEX IDX_A8E0CB1B7975B7E7 ON claro_workspace_model_home_tab (model_id)
-        ");
-        $this->addSql("
             CREATE TABLE claro_workspace_model_resource (
                 id INTEGER NOT NULL, 
+                resource_node_id INTEGER NOT NULL, 
                 model_id INTEGER NOT NULL, 
                 isCopy BOOLEAN NOT NULL, 
-                resourceNode_id INTEGER NOT NULL, 
                 PRIMARY KEY(id)
             )
         ");
         $this->addSql("
-            CREATE INDEX IDX_F5D70635B87FAB32 ON claro_workspace_model_resource (resourceNode_id)
+            CREATE INDEX IDX_F5D706351BAD783F ON claro_workspace_model_resource (resource_node_id)
         ");
         $this->addSql("
             CREATE INDEX IDX_F5D706357975B7E7 ON claro_workspace_model_resource (model_id)

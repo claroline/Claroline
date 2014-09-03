@@ -8,37 +8,37 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/09/02 04:21:35
+ * Generation date: 2014/09/03 11:48:22
  */
-class Version20140902162133 extends AbstractMigration
+class Version20140903114818 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
         $this->addSql("
             CREATE TABLE claro_workspace_model_user (
                 user_id NUMBER(10) NOT NULL, 
-                model_id NUMBER(10) NOT NULL, 
-                PRIMARY KEY(user_id, model_id)
+                workspacemodel_id NUMBER(10) NOT NULL, 
+                PRIMARY KEY(user_id, workspacemodel_id)
             )
         ");
         $this->addSql("
             CREATE INDEX IDX_5318388FA76ED395 ON claro_workspace_model_user (user_id)
         ");
         $this->addSql("
-            CREATE INDEX IDX_5318388F7975B7E7 ON claro_workspace_model_user (model_id)
+            CREATE INDEX IDX_5318388FD500BD91 ON claro_workspace_model_user (workspacemodel_id)
         ");
         $this->addSql("
             CREATE TABLE claro_workspace_model_group (
                 group_id NUMBER(10) NOT NULL, 
-                model_id NUMBER(10) NOT NULL, 
-                PRIMARY KEY(group_id, model_id)
+                workspacemodel_id NUMBER(10) NOT NULL, 
+                PRIMARY KEY(group_id, workspacemodel_id)
             )
         ");
         $this->addSql("
             CREATE INDEX IDX_1F19A8AEFE54D947 ON claro_workspace_model_group (group_id)
         ");
         $this->addSql("
-            CREATE INDEX IDX_1F19A8AE7975B7E7 ON claro_workspace_model_group (model_id)
+            CREATE INDEX IDX_1F19A8AED500BD91 ON claro_workspace_model_group (workspacemodel_id)
         ");
         $this->addSql("
             CREATE TABLE claro_workspace_model (
@@ -81,23 +81,23 @@ class Version20140902162133 extends AbstractMigration
         ");
         $this->addSql("
             CREATE TABLE claro_workspace_model_home_tab (
+                workspacemodel_id NUMBER(10) NOT NULL, 
                 hometab_id NUMBER(10) NOT NULL, 
-                model_id NUMBER(10) NOT NULL, 
-                PRIMARY KEY(hometab_id, model_id)
+                PRIMARY KEY(workspacemodel_id, hometab_id)
             )
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_A8E0CB1BD500BD91 ON claro_workspace_model_home_tab (workspacemodel_id)
         ");
         $this->addSql("
             CREATE INDEX IDX_A8E0CB1BCCE862F ON claro_workspace_model_home_tab (hometab_id)
         ");
         $this->addSql("
-            CREATE INDEX IDX_A8E0CB1B7975B7E7 ON claro_workspace_model_home_tab (model_id)
-        ");
-        $this->addSql("
             CREATE TABLE claro_workspace_model_resource (
                 id NUMBER(10) NOT NULL, 
+                resource_node_id NUMBER(10) NOT NULL, 
                 model_id NUMBER(10) NOT NULL, 
                 isCopy NUMBER(1) NOT NULL, 
-                resourceNode_id NUMBER(10) NOT NULL, 
                 PRIMARY KEY(id)
             )
         ");
@@ -130,7 +130,7 @@ class Version20140902162133 extends AbstractMigration
             FROM DUAL; END LOOP; END IF; END;
         ");
         $this->addSql("
-            CREATE INDEX IDX_F5D70635B87FAB32 ON claro_workspace_model_resource (resourceNode_id)
+            CREATE INDEX IDX_F5D706351BAD783F ON claro_workspace_model_resource (resource_node_id)
         ");
         $this->addSql("
             CREATE INDEX IDX_F5D706357975B7E7 ON claro_workspace_model_resource (model_id)
@@ -143,7 +143,7 @@ class Version20140902162133 extends AbstractMigration
         ");
         $this->addSql("
             ALTER TABLE claro_workspace_model_user 
-            ADD CONSTRAINT FK_5318388F7975B7E7 FOREIGN KEY (model_id) 
+            ADD CONSTRAINT FK_5318388FD500BD91 FOREIGN KEY (workspacemodel_id) 
             REFERENCES claro_workspace_model (id) 
             ON DELETE CASCADE
         ");
@@ -155,7 +155,7 @@ class Version20140902162133 extends AbstractMigration
         ");
         $this->addSql("
             ALTER TABLE claro_workspace_model_group 
-            ADD CONSTRAINT FK_1F19A8AE7975B7E7 FOREIGN KEY (model_id) 
+            ADD CONSTRAINT FK_1F19A8AED500BD91 FOREIGN KEY (workspacemodel_id) 
             REFERENCES claro_workspace_model (id) 
             ON DELETE CASCADE
         ");
@@ -167,19 +167,19 @@ class Version20140902162133 extends AbstractMigration
         ");
         $this->addSql("
             ALTER TABLE claro_workspace_model_home_tab 
+            ADD CONSTRAINT FK_A8E0CB1BD500BD91 FOREIGN KEY (workspacemodel_id) 
+            REFERENCES claro_workspace_model (id) 
+            ON DELETE CASCADE
+        ");
+        $this->addSql("
+            ALTER TABLE claro_workspace_model_home_tab 
             ADD CONSTRAINT FK_A8E0CB1BCCE862F FOREIGN KEY (hometab_id) 
             REFERENCES claro_home_tab (id) 
             ON DELETE CASCADE
         ");
         $this->addSql("
-            ALTER TABLE claro_workspace_model_home_tab 
-            ADD CONSTRAINT FK_A8E0CB1B7975B7E7 FOREIGN KEY (model_id) 
-            REFERENCES claro_workspace_model (id) 
-            ON DELETE CASCADE
-        ");
-        $this->addSql("
             ALTER TABLE claro_workspace_model_resource 
-            ADD CONSTRAINT FK_F5D70635B87FAB32 FOREIGN KEY (resourceNode_id) 
+            ADD CONSTRAINT FK_F5D706351BAD783F FOREIGN KEY (resource_node_id) 
             REFERENCES claro_resource_node (id) 
             ON DELETE CASCADE
         ");
@@ -195,15 +195,15 @@ class Version20140902162133 extends AbstractMigration
     {
         $this->addSql("
             ALTER TABLE claro_workspace_model_user 
-            DROP CONSTRAINT FK_5318388F7975B7E7
+            DROP CONSTRAINT FK_5318388FD500BD91
         ");
         $this->addSql("
             ALTER TABLE claro_workspace_model_group 
-            DROP CONSTRAINT FK_1F19A8AE7975B7E7
+            DROP CONSTRAINT FK_1F19A8AED500BD91
         ");
         $this->addSql("
             ALTER TABLE claro_workspace_model_home_tab 
-            DROP CONSTRAINT FK_A8E0CB1B7975B7E7
+            DROP CONSTRAINT FK_A8E0CB1BD500BD91
         ");
         $this->addSql("
             ALTER TABLE claro_workspace_model_resource 

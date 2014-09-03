@@ -11,14 +11,15 @@
 
 namespace Claroline\CoreBundle\Manager;
 
-use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Group;
-use Claroline\CoreBundle\Entity\Model\Model;
+use Claroline\CoreBundle\Entity\Home\HomeTab;
+use Claroline\CoreBundle\Entity\Model\WorkspaceModel;
 use Claroline\CoreBundle\Entity\Model\ResourceModel;
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
-use JMS\DiExtraBundle\Annotation as DI;
+use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Persistence\ObjectManager;
+use JMS\DiExtraBundle\Annotation as DI;
 
 /**
  * @DI\Service("claroline.manager.model_manager")
@@ -40,12 +41,12 @@ class ModelManager
     )
     {
         $this->om = $om;
-        $this->modelRepository = $this->om->getRepository('ClarolineCoreBundle:Model\Model');
+        $this->modelRepository = $this->om->getRepository('ClarolineCoreBundle:Model\WorkspaceModel');
     }
 
     public function create($name, Workspace $workspace)
     {
-        $model = new Model();
+        $model = new WorkspaceModel();
         $model->setName($name);
         $model->setWorkspace($workspace);
         $this->om->persist($model);
@@ -54,7 +55,7 @@ class ModelManager
         return $model;
     }
 
-    public function edit(Model $model, $name)
+    public function edit(WorkspaceModel $model, $name)
     {
         $model->setName($name);
         $this->om->persist($model);
@@ -63,7 +64,7 @@ class ModelManager
         return $model;
     }
 
-    public function delete(Model $model)
+    public function delete(WorkspaceModel $model)
     {
         $this->om->remove($model);
         $this->om->flush();
@@ -74,35 +75,35 @@ class ModelManager
         return $this->modelRepository->findByWorkspace($workspace);
     }
 
-    public function addUser(Model $model, User $user)
+    public function addUser(WorkspaceModel $model, User $user)
     {
         $model->addUser($user);
         $this->om->persist($model);
         $this->om->flush();
     }
 
-    public function addGroup(Model $model, Group $group)
+    public function addGroup(WorkspaceModel $model, Group $group)
     {
         $model->addGroup($group);
         $this->om->persist($model);
         $this->om->flush();
     }
 
-    public function removeGroup(Model $model, Group $group)
+    public function removeGroup(WorkspaceModel $model, Group $group)
     {
         $group->removeModel($model);
         $this->om->persist($model);
         $this->om->flush();
     }
 
-    public function removeUser(Model $model, User $user)
+    public function removeUser(WorkspaceModel $model, User $user)
     {
         $user->removeModel($model);
         $this->om->persist($model);
         $this->om->flush();
     }
 
-    public function addUsers(Model $model, array $users)
+    public function addUsers(WorkspaceModel $model, array $users)
     {
         $this->om->startFlushSuite();
 
@@ -113,7 +114,7 @@ class ModelManager
         $this->om->endFlushSuite();
     }
 
-    public function addGroups(Model $model, array $groups)
+    public function addGroups(WorkspaceModel $model, array $groups)
     {
         $this->om->startFlushSuite();
 
@@ -124,7 +125,7 @@ class ModelManager
         $this->om->endFlushSuite();
     }
 
-    public function addResourceNodes(Model $model, array $resourceNodes, $isCopy)
+    public function addResourceNodes(WorkspaceModel $model, array $resourceNodes, $isCopy)
     {
         $this->om->startFlushSuite();
         $resourceModels = [];
@@ -138,7 +139,7 @@ class ModelManager
         return $resourceModels;
     }
 
-    public function addResourceNode(Model $model, ResourceNode $resourceNode, $isCopy)
+    public function addResourceNode(WorkspaceModel $model, ResourceNode $resourceNode, $isCopy)
     {
         $resourceModel = new ResourceModel();
         $resourceModel->setModel($model);
@@ -156,7 +157,7 @@ class ModelManager
         $this->om->flush();
     }
 
-    public function addHomeTabs(Model $model, array $homeTabs)
+    public function addHomeTabs(WorkspaceModel $model, array $homeTabs)
     {
         $this->om->startFlushSuite();
 
@@ -167,21 +168,39 @@ class ModelManager
         $this->om->endFlushSuite();
     }
 
-    public function addHomeTab(Model $model, HomeTab $homeTab)
+    public function addHomeTab(WorkspaceModel $model, HomeTab $homeTab)
     {
         $model->addHomeTab($homeTab);
         $this->om->persist($model);
         $this->om->flush();
     }
 
-    public function removeHomeTab(Model $model, HomeTab $homeTab)
+    public function removeHomeTab(WorkspaceModel $model, HomeTab $homeTab)
     {
         $model->removeHomeTab($homeTab);
         $this->om->persist($model);
         $this->om->flush();
     }
 
-    public function toArray(Model $model)
+    public function updateHomeTabs(WorkspaceModel $model, array $homeTabs)
+    {
+        $this->om->startFlushSuite();
+        $oldHomeTabs = $model->getHomeTabs();
+
+        foreach ($oldHomeTabs as $oldHomeTab) {
+            $search = array_search($oldHomeTab, $homeTabs, true);
+
+            if ($search !== false) {
+                unset($homeTabs[$search]);
+            } else {
+                $this->removeHomeTab($model, $oldHomeTab);
+            }
+        }
+        $this->addHomeTabs($model, $homeTabs);
+        $this->om->endFlushSuite();
+    }
+
+    public function toArray(WorkspaceModel $model)
     {
         $array = [];
         $array['name'] = $model->getName();

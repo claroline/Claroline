@@ -11,9 +11,10 @@
 
 namespace Claroline\CoreBundle\Form;
 
+use Claroline\CoreBundle\Validator\Constraints\WorkspaceUniqueCode;
+use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Claroline\CoreBundle\Validator\Constraints\WorkspaceUniqueCode;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class WorkspaceType extends AbstractType
@@ -41,16 +42,31 @@ class WorkspaceType extends AbstractType
                 )
             )->add('displayable', 'checkbox', array('required' => false))
             ->add('selfRegistration', 'checkbox', array('required' => false))
-            ->add('selfUnregistration', 'checkbox', array('required' => false))
-            ->add(
-                'model',
-                'entity',
-                array(
-                    'class' => 'ClarolineCoreBundle:Model\Model',
-                    'property' => 'name',
-                    'required' => false
-                )
-            );
+            ->add('selfUnregistration', 'checkbox', array('required' => false));
+//            ->add(
+//                'model',
+//                'entity',
+//                array(
+//                    'class' => 'ClarolineCoreBundle:Model\WorkspaceModel',
+//                    'property' => 'name',
+//                    'required' => false
+//                )
+//            );
+//            ->add(
+//                'model',
+//                'entity',
+//                array(
+//                    'class' => 'ClarolineCoreBundle:Model\WorkspaceModel',
+//                    'query_builder' => function (EntityRepository $er) {
+//
+//                        return $er->createQueryBuilder('m')
+//                            ->
+//                            ->orderBy('m.name', 'ASC');
+//                    },
+//                    'property' => 'name',
+//                    'required' => false
+//                )
+//            );
     }
 
     public function getName()

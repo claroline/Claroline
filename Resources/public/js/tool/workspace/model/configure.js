@@ -87,7 +87,27 @@ $('#add-tab').on('click', function (event) {
     $.ajax({
         url: url,
         success: function (data) {
-            window.Claroline.Modal.confirmContainer(Translator.get('platform:add_tab'), data);
+            window.Claroline.Modal.confirmContainer(Translator.get('platform:add_tab'), data)
+                .on('click', '.btn-primary', function () {
+                    var parameters = {};
+                    var array = [];
+                    var i = 0;
+                    $('.hometab-chk:checked').each(function (index, element) {
+
+                        if (array.indexOf(element.value) === -1) {
+                            array[i] = element.value;
+                            i++;
+                        }
+                    });
+                    parameters.ids = array;
+                    route = Routing.generate('ws_model_homeTabs_model_link', {'model': modelId});
+                    route += '?' + $.param(parameters);
+                    
+                    $.ajax({
+                        url: route,
+                        type: 'GET'
+                    });
+                });
         },
         type: 'GET'
     });

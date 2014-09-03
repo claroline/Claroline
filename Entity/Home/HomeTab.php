@@ -54,17 +54,6 @@ class HomeTab
      */
     protected $workspace;
 
-    /**
-     * @var Model[]|ArrayCollection
-     *
-     * @ORM\ManyToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Model\Model",
-     *     inversedBy="homeTabs",
-     * )
-     * @ORM\JoinTable(name="claro_workspace_model_home_tab")
-     */
-    protected $models;
-
     public function getId()
     {
         return $this->id;

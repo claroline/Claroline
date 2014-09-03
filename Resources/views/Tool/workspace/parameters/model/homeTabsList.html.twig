@@ -5,9 +5,17 @@
             <th></th>
         </tr>
         {% for homeTabConfig in homeTabsConfig %}
+            {% set homeTab = homeTabConfig.getHomeTab() %}
+            {% set homeTabId = homeTab.getId() %}
             <tr>
-                <td>{{ homeTabConfig.getHomeTab().getName() }}</td>
-                <td><input type="checkbox" class="hometab-chk" value="{{ homeTabConfig.getHomeTab().getName() }}"></td>
+                <td>{{ homeTab.getName() }}</td>
+                <td>
+                    <input type="checkbox"
+                           class="hometab-chk"
+                           value="{{ homeTabId }}"
+                           {% if homeTabIds[homeTabId] is defined %}checked{% endif %}
+                    >
+                </td>
             </tr>
         {% endfor %}
     </table>

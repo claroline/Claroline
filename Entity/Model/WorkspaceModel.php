@@ -10,19 +10,19 @@
 
 namespace Claroline\CoreBundle\Entity\Model;
 
-use Symfony\Component\Validator\Constraints as Assert;
+use Claroline\CoreBundle\Entity\Group;
+use Claroline\CoreBundle\Entity\Home\HomeTab;
+use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Group;
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CoreBundle\Entity\Home\HomeTab;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Table(name="claro_workspace_model")
  * @ORM\Entity()
  */
-class Model
+class WorkspaceModel
 {
     /**
      * @ORM\Column(type="integer")
@@ -72,9 +72,9 @@ class Model
 
     /**
      * @ORM\ManyToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Home\HomeTab",
-     *     mappedBy="models"
+     *     targetEntity="Claroline\CoreBundle\Entity\Home\HomeTab"
      * )
+     * @ORM\JoinTable(name="claro_workspace_model_home_tab")
      */
     protected $homeTabs;
 
@@ -133,7 +133,7 @@ class Model
 
     public function addHomeTab(HomeTab $homeTab)
     {
-        $this->homeTabs->add($homeTabs);
+        $this->homeTabs->add($homeTab);
     }
 
     public function removeHomeTab(HomeTab $homeTab)

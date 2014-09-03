@@ -17,7 +17,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Claroline\CoreBundle\Entity\AbstractRoleSubject;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Model\Model;
+use Claroline\CoreBundle\Entity\Model\WorkspaceModel;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\GroupRepository")
@@ -64,10 +64,10 @@ class Group extends AbstractRoleSubject implements OrderableInterface
     protected $roles;
 
     /**
-     * @var Model[]|ArrayCollection
+     * @var WorkspaceModel[]|ArrayCollection
      *
      * @ORM\ManyToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Model\Model",
+     *     targetEntity="Claroline\CoreBundle\Entity\Model\WorkspaceModel",
      *     inversedBy="groups",
      *     fetch="EXTRA_LAZY"
      * )
@@ -197,14 +197,14 @@ class Group extends AbstractRoleSubject implements OrderableInterface
         return array('name', 'id');
     }
 
-    public function addModel(Model $model)
+    public function addModel(WorkspaceModel $model)
     {
         if (!$this->models->contains($model)) {
             $this->models->add($model);
         }
     }
 
-    public function removeModel(Model $model)
+    public function removeModel(WorkspaceModel $model)
     {
         $this->models->removeElement($model);
     }

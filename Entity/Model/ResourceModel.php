@@ -34,20 +34,19 @@ class ResourceModel
     /**
      * @ORM\ManyToOne(
      *     targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode",
-     *     inversedBy="resourcesModel",
      *     cascade={"persist"}
      * )
-     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
+     * @ORM\JoinColumn(name="resource_node_id", nullable=false, onDelete="CASCADE")
      */
     protected $resourceNode;
 
     /**
      * @ORM\ManyToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\Model\Model",
+     *     targetEntity="Claroline\CoreBundle\Entity\Model\WorkspaceModel",
      *     inversedBy="resourcesModel",
      *     cascade={"persist"}
      * )
-     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
+     * @ORM\JoinColumn(name="model_id", nullable=false, onDelete="CASCADE")
      */
     protected $model;
 
@@ -76,7 +75,7 @@ class ResourceModel
         return $this->resourceNode;
     }
 
-    public function setModel(Model $model)
+    public function setModel(WorkspaceModel $model)
     {
         $this->model = $model;
     }

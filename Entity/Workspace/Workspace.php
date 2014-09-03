@@ -68,7 +68,7 @@ class Workspace
 
     /**
      * @ORM\OneToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Model\Model",
+     *     targetEntity="Claroline\CoreBundle\Entity\Model\WorkspaceModel",
      *     mappedBy="workspace"
      * )
      */

@@ -24,7 +24,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Translation\TranslatorInterface;
-use Claroline\CoreBundle\Entity\Model\Model;
+use Claroline\CoreBundle\Entity\Model\WorkspaceModel;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceTag;
@@ -1131,7 +1131,7 @@ class WorkspaceController extends Controller
         return new Response('error', 400);
     }
 
-    private function createWorkspaceFromModel(Model $model, FormInterface $form)
+    private function createWorkspaceFromModel(WorkspaceModel $model, FormInterface $form)
     {
         $workspace = $model->getWorkspace();
         $resourceModels = $model->getResourceModel();

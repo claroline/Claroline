@@ -194,14 +194,6 @@ class ResourceNode
      */
     protected $accessibleUntil;
 
-    /**
-     * @ORM\OneToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Model\ResourceModel",
-     *     mappedBy="resourceNode"
-     * )
-     */
-    protected $resourcesModel;
-
     private $pathForCreationLog = '';
 
     public function __construct()
