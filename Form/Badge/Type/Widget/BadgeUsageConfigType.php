@@ -23,7 +23,13 @@ class BadgeUsageConfigType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('number_awarded_badge', 'integer');
+        $builder
+            ->add('number_last_awarded_badge', 'integer', array(
+                'theme_options' => array('control_width' => 'col-md-2')
+            ))
+            ->add('number_most_awarded_badge', 'integer', array(
+                'theme_options' => array('control_width' => 'col-md-2')
+            ));
     }
 
     public function getName()

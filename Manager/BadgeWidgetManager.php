@@ -69,7 +69,9 @@ class BadgeWidgetManager
     private function getDefaultBadgeUsageConfig()
     {
         $defaultBadgeUsageConfig = new BadgeUsageConfig();
-        $defaultBadgeUsageConfig->setNumberLastAwardedBadge(10);
+        $defaultBadgeUsageConfig
+            ->setNumberLastAwardedBadge(10)
+            ->setNumberMostAwardedBadge(3);
 
         return $defaultBadgeUsageConfig;
     }
