@@ -27,5 +27,18 @@
 {% endblock %}
 
 {% block section_body %}
-    <p>Under construction</p>
+    <ul class="list-inline badge_general_statistics">
+        <li>
+            <p><span>{{ statistics.totalBadges }}</span> badges</p>
+        </li>
+        <li>
+            <p><span>{{ statistics.totalAwarding }}</span> attributions</p>
+        </li>
+        <li>
+            <p><span>{{ statistics.totalBadgeAwarded }}</span> badges attribués</p>
+        </li>
+        <li>
+            <p><span>{{ statistics.totalBadgeNotAwarded }}</span> badges non-attribués</p>
+        </li>
+    </ul>
 {% endblock %}
