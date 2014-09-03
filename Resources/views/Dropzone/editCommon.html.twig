@@ -158,7 +158,8 @@
             </div>
         </div>
         <div class="btn-group pull-right">
-            <a href="{{ path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': 'resource_manager'}) }}" class="btn btn-default">{{ 'Cancel'|trans({}, 'icap_dropzone') }}</a>
+            <a href="{{ path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': 'resource_manager'}) }}"
+               class="btn btn-default ">{{ 'Cancel'|trans({}, 'icap_dropzone') }}</a>
 
             <a href="#" class="btn btn-primary peer-review-options save-button" {% if dropzone.peerReview %}style="display: none;"{% endif %}>{{ 'Save'|trans({}, 'icap_dropzone') }}</a>
 
@@ -237,9 +238,9 @@
                 enablePeerReviewOptions(true);
             });
 
-            manageSuccessFailMessagesVisibility( $('#icap_dropzone_common_form_displayNotationMessageToLearners'));
-            $('#icap_dropzone_common_form_displayNotationMessageToLearners').change(function()
-            {
+            var $displayNotationToLearner = $('#icap_dropzone_common_form_displayNotationMessageToLearners');
+            manageSuccessFailMessagesVisibility($displayNotationToLearner);
+            $displayNotationToLearner.change(function () {
                 manageSuccessFailMessagesVisibility($(this));
             });
 
@@ -263,8 +264,9 @@
                     $('#icap_dropzone_common_form_manualState_2').parent().hide();
                     $('#icap_dropzone_common_form_manualState_3').parent().hide();
 
-                    if ($('#icap_dropzone_common_form_expectedTotalCorrection').val() < 1 || $('#icap_dropzone_common_form_expectedTotalCorrection').val() > 10) {
-                        $('#icap_dropzone_common_form_expectedTotalCorrection').val(3);
+                    var $expectedTotalCorrection = $('#icap_dropzone_common_form_expectedTotalCorrection');
+                    if ($expectedTotalCorrection.val() < 1 || $expectedTotalCorrection.val() > 10) {
+                        $expectedTotalCorrection.val(3);
                     }
                     $('#icap_dropzone_common_form_endReview_date').val(null);
                     $('#icap_dropzone_common_form_endReview_time').val(null);
@@ -277,25 +279,30 @@
 
                 }
                 manageCorrectionVisibility(peerReviewEnabled);
-            }
+            };
 
             enablePeerReviewOptions({{ dropzone.peerReview }});
 
             var manualPlanning = function () {
-                $('#planning_dates').addClass('text-muted');
-                $('#planning_dates input').prop('disabled', true);
 
-                $('#planning_manual').removeClass('text-muted');
-                $('#planning_manual input').prop('disabled', false);
-            }
+                var $planning_dates = $('#planning_dates');
+                $planning_dates.addClass('text-muted');
+                $planning_dates.find('input').prop('disabled', true);
+
+                var $planning_manual = $('#planning_manual');
+                $planning_manual.removeClass('text-muted');
+                $planning_manual.find('input').prop('disabled', false);
+            };
 
             var datesPlanning = function () {
-                $('#planning_manual').addClass('text-muted');
-                $('#planning_manual input').prop('disabled', true);
+                var $planning_manual = $('#planning_manual');
+                $planning_manual.addClass('text-muted');
+                $planning_manual.find('input').prop('disabled', true);
 
-                $('#planning_dates').removeClass('text-muted');
-                $('#planning_dates input').prop('disabled', false);
-            }
+                var $planning_dates = $('#planning_dates');
+                $planning_dates.removeClass('text-muted');
+                $planning_dates.find('input').prop('disabled', false);
+            };
 
             $('#icap_dropzone_common_form_manualPlanning_0').on('click', manualPlanning);
             $('#icap_dropzone_common_form_manualPlanning_1').on('click', datesPlanning);
