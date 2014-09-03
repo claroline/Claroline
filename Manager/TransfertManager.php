@@ -14,6 +14,7 @@ namespace Claroline\CoreBundle\Manager;
 use Claroline\CoreBundle\Library\Transfert\Importer;
 use Claroline\CoreBundle\Library\Transfert\Resolver;
 use Claroline\CoreBundle\Library\Transfert\ManifestConfiguration;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\Common\Collections\ArrayCollection;
 use Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders\GroupsConfigurationBuilder;
 use Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders\RolesConfigurationBuilder;
@@ -29,6 +30,9 @@ class TransfertManager
     private $listImporters;
     private $rootPath;
 
+    /**
+     *
+     */
     public function __construct()
     {
         $this->listImporters = new ArrayCollection();
@@ -103,6 +107,19 @@ class TransfertManager
         }
 
         return null;
+    }
+
+    public function export(Workspace $workspace)
+    {
+        foreach ($this->listImporters as $importer) {
+            $importer->setListImporters($this->listImporters);
+        }
+
+        $data = [];
+        $data['roles'] = $this->getImporterByName('roles')->export($workspace);
+        $data['tools'] = $this->getImporterByName('tools')->export($workspace);
+        var_dump($data);
+        throw new \Exception();
     }
 
     /**

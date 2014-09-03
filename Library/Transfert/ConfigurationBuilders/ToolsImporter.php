@@ -12,6 +12,8 @@
 namespace Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders;
 
 use Claroline\CoreBundle\Library\Transfert\Importer;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Library\Transfert\ExportNotImplementedException;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\Definition\Processor;
@@ -117,6 +119,43 @@ class ToolsImporter extends Importer implements ConfigurationInterface
     public function getName()
     {
         return 'tools';
+    }
+
+    public function export(Workspace $workspace)
+    {
+        $data = [];
+        $workspaceTools = $workspace->getOrderedTools();
+        $i = 0;
+
+        foreach ($workspaceTools as $workspaceTool) {
+            $roles = array();
+
+            foreach ($workspaceTool->getRoles() as $role) {
+                $roles[] = array('name' => $role->getName());
+            }
+
+            $tool = array(
+                'type'        => $workspaceTool->getTool()->getName(),
+                'translation' => $workspaceTool->getTool()->getDisplayName(),
+                'roles'       => $roles
+            );
+
+            try {
+                $importer = $this->getImporterByName($workspaceTool->getTool()->getName());
+
+                if ($importer) {
+                    $tool['data'] = $importer->export($workspace);
+                }
+
+            } catch (ExportNotImplementedException $e) {
+                //well it didn't go so well
+            }
+
+            $data[$i] = array('tool' => $tool);
+            $i++;
+        }
+
+        return $data;
     }
 
     public static function roleNameExists($v, $roles)

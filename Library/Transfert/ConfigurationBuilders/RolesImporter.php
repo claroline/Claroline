@@ -17,6 +17,7 @@ use Claroline\CoreBundle\Library\Transfert\Importer;
 use Symfony\Component\Config\Definition\Processor;
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 
 /**
  * @DI\Service("claroline.importer.role_importer")
@@ -119,5 +120,20 @@ class RolesImporter extends Importer implements ConfigurationInterface
         }
 
         return false;
+    }
+
+    public function export(Workspace $workspace)
+    {
+        $data = [];
+
+        foreach ($workspace->getRoles() as $role) {
+            $data[] = array(
+                'name' => $role->getName(),
+                'translation' => $role->getTranslationKey(),
+                'is_base_role' => false
+            );
+        }
+
+        return $data;
     }
 }
