@@ -150,7 +150,7 @@ class CompetenceController {
      */
     public function addCompetenceNode(CompetenceNode $competence)
     {
-        $form = $this->formFactory->create(new CompetenceType());
+        $form = $this->formFactory->create(new CompetenceType(), new Competence());
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {            
@@ -183,7 +183,7 @@ class CompetenceController {
      */
     public function addCompetenceAction()
     {
-        $form = $this->formFactory->create(new CompetenceType());
+        $form = $this->formFactory->create(new CompetenceType(), new Competence());
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
@@ -255,9 +255,10 @@ class CompetenceController {
      */
     public function modifyCompetenceAction($competence)
     {
-	 	$form = $this->formFactory->create(new CompetenceType(), array(), $competence->getCompetence());
+	 	$form = $this->formFactory->create(new CompetenceType(), $competence->getCompetence());
         $addForm = $this->formFactory->create(new CompetenceType());
         $form->handleRequest($this->request);
+
         if ($form->isValid()) {
          	$this->cptmanager->updateCompetence($competence);
         }

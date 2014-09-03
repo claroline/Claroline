@@ -101,9 +101,8 @@ class CompetenceManager {
         return $htmlTree;
     }
 
-    public function add(Competence $competence,Workspace $workspace = null)
+    public function add(Competence $competence, Workspace $workspace = null)
     {
-
         $isPlatform = is_null($workspace) ? true : false;
         $competence->setIsplatform($isPlatform);
         $this->om->persist($competence);
@@ -123,14 +122,16 @@ class CompetenceManager {
      * @param null $workspace
      * @return bool
      */
-    public function addSub(CompetenceNode $parent,Competence $subCompetence, $workspace = null)
+    public function addSub(CompetenceNode $parent, Competence $subCompetence, $workspace = null)
     {    		
     	if($c = $this->add($subCompetence)) {  
     		$c->setParent($parent);
     		$this->om->flush();
-            if (count($users = $this->getUserByCompetenceRoot($parent))> 0) {
-                $this->subscribeUserToCompetences($users,array($parent));
+
+            if (count($users = $this->getUserByCompetenceRoot($parent->getCompetence())) > 0) {
+                $this->subscribeUserToCompetences($users, array($parent->getCompetence()));
             }
+
     		return true;
     	}
     }
@@ -240,19 +241,23 @@ class CompetenceManager {
         return true;
     }
 
-    public function subscribeUserToCompetences(array $users,array $competences)
+    public function subscribeUserToCompetences(array $users, array $competences)
     {
         $this->om->startFlushSuite();
-        foreach ($users as $u) {
 
-            foreach ($competences as $cptNode) {
+        //@todo FIX ME THIS 
+        /*
+        foreach ($users as $u) {
+            foreach ($competences as $competence) {
                 $cptUser = new UserCompetence();
-                $cptUser->setCompetence($cptNode);
+                $cptUser->setCompetence($competence);
                 $cptUser->setUser($u);
                 $cptUser->setScore(0);
                 $this->om->persist($cptUser);
             }
         }
+        */
+
         $this->om->endFlushSuite();
         return true;
     }
@@ -293,9 +298,9 @@ class CompetenceManager {
         return $orderedList;
     }
 
-    public function getUserByCompetenceRoot(CompetenceNode $node)
+    public function getUserByCompetenceRoot(Competence $competence)
     {
-        $result = $this->repoCptUser->findByCompetence($node);
+        $result = $this->repoCptUser->findByCompetence($competence);
         $result = count($result) > 0 ? $result : array();
         
         return $result;
