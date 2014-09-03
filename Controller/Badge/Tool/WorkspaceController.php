@@ -53,18 +53,19 @@ class WorkspaceController extends Controller
         $this->checkUserIsAllowed($workspace);
 
         $parameters = array(
-            'badgePage'    => $badgePage,
-            'claimPage'    => $claimPage,
-            'workspace'    => $workspace,
-            'add_link'     => 'claro_workspace_tool_badges_add',
-            'edit_link'    => array(
+            'badgePage'        => $badgePage,
+            'claimPage'        => $claimPage,
+            'workspace'        => $workspace,
+            'add_link'         => 'claro_workspace_tool_badges_add',
+            'edit_link'        => array(
                 'url'    => 'claro_workspace_tool_badges_edit',
                 'suffix' => '#!edit'
             ),
-            'delete_link'  => 'claro_workspace_tool_badges_delete',
-            'view_link'    => 'claro_workspace_tool_badges_edit',
-            'current_link' => 'claro_workspace_tool_badges',
-            'claim_link'   => 'claro_workspace_tool_manage_claim',
+            'delete_link'      => 'claro_workspace_tool_badges_delete',
+            'view_link'        => 'claro_workspace_tool_badges_edit',
+            'current_link'     => 'claro_workspace_tool_badges',
+            'claim_link'       => 'claro_workspace_tool_manage_claim',
+            'statistics_link'  => 'claro_workspace_tool_badges_statistics',
             'route_parameters' => array(
                 'workspaceId' => $workspace->getId()
             ),
@@ -412,6 +413,24 @@ class WorkspaceController extends Controller
 
         return $this->redirect(
             $this->generateUrl('claro_workspace_tool_badges', array('workspaceId' => $workspace->getId()))
+        );
+    }
+
+    /**
+     * @Route("/statistics", name="claro_workspace_tool_badges_statistics")
+     * @ParamConverter(
+     *     "workspace",
+     *     class="ClarolineCoreBundle:Workspace\Workspace",
+     *     options={"id" = "workspaceId"}
+     * )
+     * @Template()
+     */
+    public function statisticsAction(Request $request, Workspace $workspace)
+    {
+        $this->checkUserIsAllowed($workspace);
+
+        return array(
+            'workspace' => $workspace
         );
     }
 

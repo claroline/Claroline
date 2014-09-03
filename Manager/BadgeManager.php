@@ -57,7 +57,7 @@ class BadgeManager
      *
      * @return int
      */
-    public function addBadgeToUsers(Badge $badge, $users, $comment, $issuer = null)
+    public function addBadgeToUsers(Badge $badge, $users, $comment = null, $issuer = null)
     {
         $addedBadge = 0;
 

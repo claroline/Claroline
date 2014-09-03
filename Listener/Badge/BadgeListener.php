@@ -153,19 +153,20 @@ class BadgeListener
     private function badgesManagement(Workspace $workspace)
     {
         $parameters = array(
-            'badgePage'    => 1,
-            'claimPage'    => 1,
-            'workspace'    => $workspace,
-            'add_link'     => 'claro_workspace_tool_badges_add',
-            'edit_link'    => array(
+            'badgePage'        => 1,
+            'claimPage'        => 1,
+            'workspace'        => $workspace,
+            'add_link'         => 'claro_workspace_tool_badges_add',
+            'edit_link'        => array(
                 'url'    => 'claro_workspace_tool_badges_edit',
                 'suffix' => '#!edit'
             ),
-            'delete_link'  => 'claro_workspace_tool_badges_delete',
-            'view_link'    => 'claro_workspace_tool_badges_edit',
-            'current_link' => 'claro_workspace_tool_badges',
-            'claim_link'   => 'claro_workspace_tool_manage_claim',
-            'claim_link'   => 'claro_workspace_tool_manage_claim',
+            'delete_link'      => 'claro_workspace_tool_badges_delete',
+            'view_link'        => 'claro_workspace_tool_badges_edit',
+            'current_link'     => 'claro_workspace_tool_badges',
+            'claim_link'       => 'claro_workspace_tool_manage_claim',
+            'claim_link'       => 'claro_workspace_tool_manage_claim',
+            'statistics_link'  => 'claro_workspace_tool_badges_statistics',
             'route_parameters' => array(
                 'workspaceId' => $workspace->getId()
             ),

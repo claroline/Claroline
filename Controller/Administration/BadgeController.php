@@ -63,6 +63,7 @@ class BadgeController extends Controller
             'view_link'        => 'claro_admin_badges_edit',
             'current_link'     => 'claro_admin_badges',
             'claim_link'       => 'claro_admin_manage_claim',
+            'statistics_link'  => 'claro_admin_badges_statistics',
             'route_parameters' => array()
         );
 
@@ -360,6 +361,17 @@ class BadgeController extends Controller
         }
 
         return $this->redirect($this->generateUrl('claro_admin_badges'));
+    }
+
+    /**
+     * @Route("/statistics", name="claro_admin_badges_statistics")
+     * @Template()
+     */
+    public function statisticsAction(Request $request)
+    {
+        $this->checkOpen();
+
+        return array();
     }
 
     private function checkOpen()
