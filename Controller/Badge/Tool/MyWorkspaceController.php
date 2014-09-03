@@ -12,6 +12,7 @@
 namespace Claroline\CoreBundle\Controller\Badge\Tool;
 
 use Claroline\CoreBundle\Entity\Badge\Badge;
+use Claroline\CoreBundle\Entity\Badge\BadgeClaim;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\Badge\BadgeCreateValidationLinkEvent;
@@ -50,6 +51,38 @@ class MyWorkspaceController extends Controller
             'user'       => $loggedUser,
             'badgePage'  => $badgePage
         );
+    }
+
+    /**
+     * @Route("/my_badges/claim/{badge_id}", name="claro_workspace_tool_claim_badge")
+     * @ParamConverter(
+     *     "workspace",
+     *     class="ClarolineCoreBundle:Workspace\Workspace",
+     *     options={"id" = "workspaceId"}
+     * )
+     * @ParamConverter("user", options={"authenticatedUser" = true})
+     * @ParamConverter("badge", class="ClarolineCoreBundle:Badge\Badge", options={"id" = "badge_id"})
+     * @Template()
+     */
+    public function claimAction(Workspace $workspace, User $user, Badge $badge)
+    {
+        $badgeClaim = new BadgeClaim();
+        $badgeClaim->setUser($user);
+
+        try {
+            $flashBag   = $this->get('session')->getFlashBag();
+            $translator = $this->get('translator');
+
+            /** @var \Claroline\CoreBundle\Manager\BadgeManager $badgeManager */
+            $badgeManager = $this->get('claroline.manager.badge');
+            $badgeManager->makeClaim($badge, $user);
+
+            $flashBag->add('success', $translator->trans('badge_claim_success_message', array(), 'badge'));
+        } catch (\Exception $exception) {
+            $flashBag->add('error', $translator->trans($exception->getMessage(), array(), 'badge'));
+        }
+
+        return $this->redirect($this->generateUrl('claro_workspace_tool_my_badges', array('workspaceId' => $workspace->getId())));
     }
 
     /**
