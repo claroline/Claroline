@@ -62,6 +62,7 @@ class UserPasswordEncoder implements EventSubscriber
             if ($eventArgs->hasChangedField('password')) {
                 $password = $this->encodePassword($user);
                 $eventArgs->setNewValue('password', $password);
+                $user->setPassword($password);
             }
         }
     }

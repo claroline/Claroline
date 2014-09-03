@@ -182,6 +182,8 @@ collaborative: Colaboración
 collaborator: 'Colaborador'
 comments: Comentarios
 communication: 'Comunicación'
+competence: Competencia
+competences: Competencias
 completed: Completado
 configuration: 'Configuración'
 configure: 'Configurar'
@@ -200,6 +202,7 @@ create_new_home_tab: 'Crear una pestaña'
 create_new_tag: 'Crear una etiqueta'
 create_new_user_account: 'Nuevo usuario'
 create_role: Crear un rol
+create_security_token: 'Crear un token de seguridad '
 create_subcategory: 'Crear una subcategoría'
 create_user: 'Crear un usuario'
 create_widget_instance: 'Crear un widget'
@@ -285,6 +288,7 @@ edit_event_success: Evento actualizado correctamente
 edit_facet: Editar faceta
 edit_field: Editar campo
 edit_rights_success: La modificación de los derechos de acceso a sido realizada con éxito
+edit_security_token: 'Editar el token de seguridad'
 editable: 'Editable'
 editable_facet_form_explanation: El campo "Editable" permite de especificar si el elemento debe ser visible o no por el usuario.
 email: 'Correo electrónico'
@@ -332,6 +336,7 @@ from_message: 'De'
 general: 'General'
 general_parameters: 'Parámetros generales'
 general_tab_form_explanation: Este formulario permite especificar que información se ve por rol en el perfil público.
+generate_token: 'Generar un token aleatorio'
 generate_url: 'Dirección de subscripción publica'
 generate_url_subscription: 'Subscripción de un usuario a un espacio de trabajo'
 generate_url_subscription_anonyme: 'Subscripción de un anónimo a un espacio de trabajo'
@@ -389,6 +394,7 @@ invalid_email: 'Este correo electrónico no es valido'
 invalid_encryption: 'Modo de autenticación no válido'
 invalid_transport: 'Transporte no válido'
 invalid_url: 'Esta URL no es válida'
+ip_address: 'Dirección IP'
 is_already_in_category: 'ya está en la categoría'
 jqplot_date_output_format: '%m/%d/%Y'
 keep_me_logged_in: 'Mantenerme conectado'
@@ -398,6 +404,7 @@ last_attempt_date: 'Fecha del último intento'
 last_manager_error_message: No es posible eliminar todos los administradores.
 last_name: 'Apellido'
 layout: 'disposición'
+learning_profil: Perfil de aprendizaje
 leave_this_page: 'Si usted cierra esta página, usted puede perder los cambios.'
 left: 'Izquierda'
 limit: Límite
@@ -673,6 +680,14 @@ search: 'Buscar'
 search_group: 'Buscar un grupo'
 search_user: 'Buscar un usuario'
 search_workspace: 'Buscar un espacio de trabajo'
+security_token: Token de seguridad
+security_token_delete_confirm_message: '¿Realmente desea eliminar este token de seguridad? '
+security_token_delete_confirm_title: 'Eliminar token de seguridad'
+security_token_form_clientIp: 'Dirección IP del cliente '
+security_token_form_clientName: 'Nombre del cliente '
+security_token_form_token: Token
+security_token_list: 'Lista de tokens de seguridad '
+security_tokens_management: 'Gestión de tokens de seguridad'
 see: 'Ver'
 see_more: 'Ver más'
 select all: 'Seleccionar todo'
@@ -723,6 +738,7 @@ subscribe_groups: 'Inscribir grupos'
 subscribe_selected_groups: 'Inscribir los grupos seleccionados'
 subscribe_selected_users: 'Inscribir los usuarios seleccionados'
 subscribe_users: 'Inscribir usuarios'
+subscription: Inscripción
 success_rate: 'Tasa de aprobación'
 successfull_workspace_creation: El espacio de trabajo %nombre% ha sido creado con éxito.
 support_email: 'Correo electrónico de soporte'
@@ -755,6 +771,7 @@ to_message: 'A'
 to_platform_users: 'A usuarios de la plataforma'
 to_workspace_members: 'A miembros de este espacio de trabajo'
 today: 'Hoy'
+token: Token
 tool: 'Herramienta'
 tool_form_displayName: 'Nombre que se muestra de la herramienta'
 tool_form_name: 'Nombre de la herramienta'

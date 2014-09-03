@@ -43,6 +43,7 @@ class WorkspaceTagManager
     private $workspaceManager;
     private $om;
     private $pagerFactory;
+    private $workspaceQueueRepo;
 
     /**
      * Constructor.
@@ -65,6 +66,7 @@ class WorkspaceTagManager
         $this->relTagRepo = $om->getRepository('ClarolineCoreBundle:Workspace\RelWorkspaceTag');
         $this->tagHierarchyRepo = $om->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTagHierarchy');
         $this->workspaceRepo = $om->getRepository('ClarolineCoreBundle:Workspace\Workspace');
+        $this->workspaceQueueRepo = $om->getRepository('ClarolineCoreBundle:Workspace\WorkspaceRegistrationQueue');
         $this->roleManager = $roleManager;
         $this->workspaceManager = $workspaceManager;
         $this->om = $om;
@@ -556,6 +558,11 @@ class WorkspaceTagManager
      */
     public function getDatasForSelfRegistrationWorkspaceList(User $user)
     {
+        $workspaceQueue =  $this->workspaceQueueRepo->findByUser($user);
+        $listworkspacePending = array();
+        foreach ($workspaceQueue as $w ) {
+            $listworkspacePending[$w->getWorkspace()->getId()] = $w->getWorkspace()->getId();
+        }
         $workspaces = $this->workspaceRepo->findWorkspacesWithSelfRegistration($user);
         $tags = $this->getNonEmptyAdminTags();
 
@@ -617,7 +624,8 @@ class WorkspaceTagManager
             'tagWorkspaces' => $tagWorkspacePager,
             'hierarchy' => $hierarchy,
             'rootTags' => $rootTags,
-            'displayable' => $displayable
+            'displayable' => $displayable,
+            'listworkspacePending' => $listworkspacePending
         );
     }
 
