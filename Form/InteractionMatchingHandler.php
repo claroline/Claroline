@@ -60,9 +60,11 @@ class InteractionMatchingHandler extends InteractionHandler
             $label->setInteractionMatching($interMatching);
             $this->em->persist($label);
 
-            if(count($this->request->get($indLabel.'_correspondence')) > 0 ) {
-                foreach($this->request->get($indLabel.'_correspondence') as $indProposal) {
-                    $proposals[$indProposal]->setAssociatedLabel($label);
+            if ($this->isClone === FALSE) {
+                if(count($this->request->get($indLabel.'_correspondence')) > 0 ) {
+                    foreach($this->request->get($indLabel.'_correspondence') as $indProposal) {
+                        $proposals[$indProposal]->setAssociatedLabel($label);
+                    }
                 }
             }
 
@@ -115,11 +117,11 @@ class InteractionMatchingHandler extends InteractionHandler
 
             if ( $this->form->isValid() ) {
                 $this->onSuccessUpdate($this->form->getData(), $originalLabel, $originalProposal, $originalHints);
-                
+
                 return TRUE;
             }
         }
-        
+
         return FALSE;
     }
 

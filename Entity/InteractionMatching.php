@@ -128,5 +128,40 @@ class InteractionMatching
      *
      */
     public function __clone() {
+        if ($this->id) {
+            $this->id = null;
+
+            $newLinkLabelProposal = array();
+
+            $this->interaction = clone $this->interaction;
+
+            $newLabels = new \Doctrine\Common\Collections\ArrayCollection;
+            $newProposals = new \Doctrine\Common\Collections\ArrayCollection;
+
+            foreach ($this->labels as $label) {
+                $newLabel = clone $label;
+                $newLabel->setInteractionMatching($this);
+                $newLabels->add($newLabel);
+
+                $newLinkLabelProposal[$label->getId()] = $newLabel;
+            }
+            $this->labels = $newLabels;
+
+            foreach ($this->proposals as $proposal) {
+                $newProposal = clone $proposal;
+                $newProposal->setInteractionMatching($this);
+
+                if ($proposal->getAssociatedLabel() != null) {
+                    $assocLabel = $proposal->getAssociatedLabel();
+                    $newProposal->setAssociatedLabel(
+                            $newLinkLabelProposal[$assocLabel->getId()]
+                            );
+                }
+
+                $newProposals->add($newProposal);
+            }
+            $this->proposals = $newProposals;
+
+        }
     }
 }

@@ -348,20 +348,20 @@ class QuestionController extends Controller
                     $vars['exoID']           = $exoID;
 
                     return $this->render('UJMExoBundle:InteractionOpen:paper.html.twig', $vars);
-                    
+
                 case "InteractionMatching":
                     $response = new Response();
                     $interactionMatching = $this->getDoctrine()
                             ->getManager()
                             ->getRepository('UJMExoBundle:InteractionMatching')
                             ->getInteractionMatching($interaction->getId());
-                    
+
                     $form = $this->createForm(new ResponseType(), $response);
-                    
+
                     $vars['interactionToDisplayed'] = $interactionMatching[0];
                     $vars['form'] = $form->createView();
                     $vars['exoID'] = $exoID;
-                    
+
                     return $this->render('UJMExoBundle:InteractionMatching:paper.html.twig', $vars);
             }
         } else {
@@ -705,7 +705,7 @@ class QuestionController extends Controller
                             'pageNow' => $pageNow
                         )
                     );
-                    
+
                 case "InteractionMatching":
                     $interactionMatching = $this->getDoctrine()
                     ->getManager()
@@ -824,7 +824,7 @@ class QuestionController extends Controller
                         )
                     );
                 }
-                
+
                 if ($valType == 5) {
                     $entity = new InteractionMatching();
                     $form   = $this->createForm(
@@ -958,7 +958,7 @@ class QuestionController extends Controller
                 $allowToDel[$doc->getId()] = TRUE;
             }
         }
-        
+
         // Pagination of the documents
         $max = 10; // Max questions displayed per page
 
@@ -984,7 +984,7 @@ class QuestionController extends Controller
      *
      * @access public
      *
-     * @param integer $idDoc id Document 
+     * @param integer $idDoc id Document
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -1007,7 +1007,7 @@ class QuestionController extends Controller
             $em->flush();
 
         }
-        
+
         return new \Symfony\Component\HttpFoundation\Response('Document delete');
     }
 
@@ -2080,6 +2080,20 @@ class QuestionController extends Controller
                     ->getInteractionOpen($interaction->getId());
 
                     $interXHandler = new \UJM\ExoBundle\Form\InteractionOpenHandler(
+                        NULL , NULL, $this->getDoctrine()->getManager(),
+                        $this->container->get('ujm.exercise_services'),
+                        $this->container->get('security.context')->getToken()->getUser(), $exoID
+                    );
+
+                    break;
+
+                case "InteractionMatching":
+                    $interactionX = $this->getDoctrine()
+                    ->getManager()
+                    ->getRepository('UJMExoBundle:InteractionMatching')
+                    ->getInteractionMatching($interaction->getId());
+
+                    $interXHandler = new \UJM\ExoBundle\Form\InteractionMatchingHandler(
                         NULL , NULL, $this->getDoctrine()->getManager(),
                         $this->container->get('ujm.exercise_services'),
                         $this->container->get('security.context')->getToken()->getUser(), $exoID
