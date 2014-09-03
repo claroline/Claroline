@@ -264,7 +264,8 @@ class WorkspaceController extends Controller
     public function creationFormAction()
     {
         $this->assertIsGranted('ROLE_WS_CREATOR');
-        $form = $this->formFactory->create(FormFactory::TYPE_WORKSPACE);
+        $user = $this->security->getToken()->getUser();
+        $form = $this->formFactory->create(FormFactory::TYPE_WORKSPACE, array($user));
 
         return array('form' => $form->createView());
     }
@@ -285,7 +286,8 @@ class WorkspaceController extends Controller
     public function createAction()
     {
         $this->assertIsGranted('ROLE_WS_CREATOR');
-        $form = $this->formFactory->create(FormFactory::TYPE_WORKSPACE);
+        $user = $this->security->getToken()->getUser();
+        $form = $this->formFactory->create(FormFactory::TYPE_WORKSPACE, array($user));
         $form->handleRequest($this->request);
         $ds = DIRECTORY_SEPARATOR;
 
@@ -1165,8 +1167,23 @@ class WorkspaceController extends Controller
         $orderedTools = $workspace->getOrderedTools();
 
         foreach ($orderedTools as $orderedTool) {
-            $toolsPerms[] = $orderedTool->getName();
+            $toolName = $orderedTool->getTool()->getName();
+            $orderedToolName = $orderedTool->getName();
+
+            if (!isset($toolsPerms[$toolName])) {
+                $toolsPerms[$toolName] = array();
+            }
+            $toolRoleNames = array();
+            $toolRoles = $orderedTool->getRoles();
+
+            foreach ($toolRoles as $toolRole) {
+                $toolRoleNames[] =
+                    str_replace($unusedRolePartName, '', $toolRole->getName());
+            }
+            $toolsPerms[$toolName]['perms'] = $toolRoleNames;
+            $toolsPerms[$toolName]['name'] = $orderedToolName;
         }
+        $config->setToolsPermissions($toolsPerms);
 
         throw new \Exception(var_dump($toolsPerms));
         throw new \Exception(var_dump($config));

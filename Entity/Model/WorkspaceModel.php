@@ -20,7 +20,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Table(name="claro_workspace_model")
- * @ORM\Entity()
+ * @ORM\Entity
  */
 class WorkspaceModel
 {

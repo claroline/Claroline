@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Form;
 
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Validator\Constraints\WorkspaceUniqueCode;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\AbstractType;
@@ -19,8 +20,17 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class WorkspaceType extends AbstractType
 {
+    private $user;
+
+    public function __construct(User $user)
+    {
+        $this->user = $user;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $user = $this->user;
+
         $builder
             ->add('name', 'text')
             ->add(
@@ -42,31 +52,24 @@ class WorkspaceType extends AbstractType
                 )
             )->add('displayable', 'checkbox', array('required' => false))
             ->add('selfRegistration', 'checkbox', array('required' => false))
-            ->add('selfUnregistration', 'checkbox', array('required' => false));
-//            ->add(
-//                'model',
-//                'entity',
-//                array(
-//                    'class' => 'ClarolineCoreBundle:Model\WorkspaceModel',
-//                    'property' => 'name',
-//                    'required' => false
-//                )
-//            );
-//            ->add(
-//                'model',
-//                'entity',
-//                array(
-//                    'class' => 'ClarolineCoreBundle:Model\WorkspaceModel',
-//                    'query_builder' => function (EntityRepository $er) {
-//
-//                        return $er->createQueryBuilder('m')
-//                            ->
-//                            ->orderBy('m.name', 'ASC');
-//                    },
-//                    'property' => 'name',
-//                    'required' => false
-//                )
-//            );
+            ->add('selfUnregistration', 'checkbox', array('required' => false))
+            ->add(
+                'model',
+                'entity',
+                array(
+                    'class' => 'ClarolineCoreBundle:Model\WorkspaceModel',
+                    'query_builder' => function (EntityRepository $er) use ($user) {
+
+                        return $er->createQueryBuilder('wm')
+                            ->join('wm.users', 'u')
+                            ->where('u.id = :userId')
+                            ->setParameter('userId', $user->getId())
+                            ->orderBy('wm.name', 'ASC');
+                    },
+                    'property' => 'name',
+                    'required' => false
+                )
+            );
     }
 
     public function getName()
