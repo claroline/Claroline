@@ -45,10 +45,10 @@
                 <div class="list-group-item clearfix">
                     {{ server.host }}
                     <a class="badge" href="{{ path('claro_admin_ldap_groups', {'host': server.host }) }}">
-                        <i class="fa fa-group"></i> {{ 'Groups settings' | trans({}, 'ldap') }}
+                        <i class="fa fa-group"></i> {{ 'groups_settings' | trans({}, 'ldap') }}
                     </a>
                     <a class="badge" href="{{ path('claro_admin_ldap_users', {'host': server.host }) }}">
-                        <i class="fa fa-user"></i> {{ 'Users settings' | trans({}, 'ldap') }}
+                        <i class="fa fa-user"></i> {{ 'users_settings' | trans({}, 'ldap') }}
                     </a>
                 </div>
             {% endfor %}

@@ -203,6 +203,65 @@ class LdapManager
     }
 
     /**
+     * Get LDAP opbject classes
+     *
+     * @param server An array containing LDAP informations as host, port or dn
+     *
+     */
+    public function getClasses($server)
+    {
+        $classes = array();
+
+        if ($search = $this->search($server, '(&(objectClass=*))', array('objectclass'))) {
+            $entries = $this->getEntries($search);
+            foreach ($entries as $objectClass) {
+                if (isset($objectClass['objectclass'])) {
+                    unset($objectClass['objectclass']['count']);
+                    $classes = array_merge($classes, $objectClass['objectclass']);
+                }
+            }
+        }
+
+        return array_unique($classes);
+    }
+
+    /**
+     * Get list of LDAP users
+     *
+     * @param server An array containing LDAP informations as host, port or dn
+     */
+    public function getUsers($server)
+    {
+        $users = array();
+
+        if (isset($server['objectClass']) and
+            $search = $this->search($server, '(&(objectClass=' . $server['objectClass'] . '))')
+        ) {
+            $users = $this->getEntries($search);
+        }
+
+        return $users;
+    }
+
+    /**
+     * Get list of LDAP users
+     *
+     * @param server An array containing LDAP informations as host, port or dn
+     */
+    public function getGroups($server)
+    {
+        $groups = array();
+
+        if (isset($server['group']) and
+            $search = $this->search($server, '(&(objectClass=' . $server['group'] . '))')
+        ) {
+            $groups = $this->getEntries($search);
+        }
+
+        return $groups;
+    }
+
+    /**
      * Return the LDAP configurations.
      *
      * @return Array

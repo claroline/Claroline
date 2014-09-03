@@ -73,11 +73,11 @@
                         <label for="ldapObjectClass">{{ 'ldap_user_class' | trans({}, 'ldap') }}:</label>
                     </div>
                     <div class="col-sm-9">
-                        <select class="form-control" name="objectClass" id="ldapObjectClass">
+                        <select class="form-control" name="objectClass" id="ldapObjectClass" data-type="users">
                             <option></option>
                             {% for objectClass in classes %}
                                 <option
-                                    {% if server is defined and not server is empty and server['objectClass'] == objectClass %}selected="selected"{% endif %}
+                                    {% if server is defined and not server is empty and server['objectClass'] is defined and server['objectClass'] == objectClass %}selected="selected"{% endif %}
                                 >
                                     {{ objectClass }}
                                 </option>
@@ -85,7 +85,7 @@
                         </select>
                     </div>
                 </div>
-                <div{% if not users is defined and users is empty %} class="hide"{% endif %} id="ldapAttributes">
+                <div{% if users is defined and users is empty %} class="hide"{% endif %} id="ldapAttributes">
                     {{ select.row('userName', 'username', users, server) }}
                     {{ select.row('firstName', 'firstName', users, server) }}
                     {{ select.row('lastName', 'lastName', users, server) }}
@@ -107,7 +107,7 @@
                             <th>{{ 'Language' | trans({}, 'platform') }}</th>
                         </tr>
                         {% for i in 1..5 %}
-                            <tr id="user{{ i }}">
+                            <tr id="users{{ i }}">
                                 <td class="userName"></td>
                                 <td class="firstName"></td>
                                 <td class="lastName"></td>
@@ -122,7 +122,7 @@
             {% endif %}
         </form>
     </div>
-    <div class="panel-footer text-right{% if not users is defined and users is empty %} hide{% endif %}" id='ldapFooter'>
+    <div class="panel-footer text-right{% if users is defined and users is empty %} hide{% endif %}" id='ldapFooter'>
         <a class="btn btn-default" href="{{ path('claro_admin_ldap') }}">{{ 'cancel' | trans({}, 'platform') }}</a>
         <a class="btn btn-primary"><i class='fa fa-check'></i> {{ 'Save settings' | trans({}, 'ldap') }}</a>
     </div>
@@ -139,7 +139,7 @@
 
                 var ldap = window.Claroline.LDAP;
 
-                ldap.setAttribute('users', {{ usersJSON | raw }});
+                ldap.setAttribute('entries', {{ usersJSON | raw }});
                 {% if server.userName is defined and not server.userName is empty %}ldap.setAttribute('userName', '{{ server.userName }}');{% endif %}
                 {% if server.firstName is defined and not server.firstName is empty %}ldap.setAttribute('firstName', '{{ server.firstName }}');{% endif %}
                 {% if server.lastName is defined and not server.lastName is empty %}ldap.setAttribute('lastName', '{{ server.lastName }}');{% endif %}

@@ -12,7 +12,7 @@
 
     window.Claroline = window.Claroline || {};
     window.Claroline.LDAP = {
-        'users': null,
+        'entries': null,
         'userName': null,
         'firstName': null,
         'lastName': null,
@@ -42,8 +42,12 @@
     /**
      * Return a list of LDAP object attributes
      */
-    ldap.getAttributes = function () {
-        return ['userName', 'firstName', 'lastName', 'email', 'password', 'code', 'locale'];
+    ldap.getAttributes = function (type) {
+        if (type === 'users') {
+            return ['userName', 'firstName', 'lastName', 'email', 'password', 'code', 'locale'];
+        }
+
+        return ['groupName', 'groupCode'];
     };
 
     /**
@@ -51,12 +55,12 @@
      */
     ldap.fillSelect = function ()
     {
-        if (ldap.users.hasOwnProperty(1) && ldap.users[1].hasOwnProperty('count')) {
+        if (ldap.entries.hasOwnProperty(1) && ldap.entries[1].hasOwnProperty('count')) {
             var select = $(document.createElement('select'));
             select.append($(document.createElement('option')));
 
-            for (var i = 0; i < ldap.users[1].count; i++) {
-                select.append($(document.createElement('option')).html(ldap.users[1][i]));
+            for (var i = 0; i < ldap.entries[1].count; i++) {
+                select.append($(document.createElement('option')).html(ldap.entries[1][i]));
             }
 
             $('#ldapAttributes').removeClass('hide');
@@ -71,7 +75,9 @@
     {
         $('#ldapAttributes, #ldapPreview, #ldapFooter').addClass('hide');
         $('#ldapPreview td').html('');
-        var attributes = ldap.getAttributes();
+
+        var type = $('#ldapObjectClass').data('type');
+        var attributes = ldap.getAttributes(type);
         for (var attribute in attributes) {
             if (attributes.hasOwnProperty(attribute)) {
                 ldap.setAttribute(attributes[attribute], null);
@@ -80,25 +86,26 @@
     };
 
     /**
-     * This method show a preview of a list of users when the attributes changes.
+     * This method show a preview of a list of users or groups when the attributes changes.
      */
     ldap.showPreview = function ()
     {
-        var attributes = ldap.getAttributes();
+        var type = $('#ldapObjectClass').data('type');
+        var attributes = ldap.getAttributes(type);
 
         $('#ldapPreview, #ldapFooter').removeClass('hide');
 
-        if (ldap.users.hasOwnProperty(1) && ldap.users[1].hasOwnProperty('count')) {
+        if (ldap.entries.hasOwnProperty(1) && ldap.entries[1].hasOwnProperty('count')) {
             for (var i = 1; i < 6; i++) {
                 for (var name in attributes) {
-                    if (attributes.hasOwnProperty(name) && ldap.users.hasOwnProperty(i) &&
-                        ldap.users[i].hasOwnProperty(ldap[attributes[name]])
+                    if (attributes.hasOwnProperty(name) && ldap.entries.hasOwnProperty(i) &&
+                        ldap.entries[i].hasOwnProperty(ldap[attributes[name]])
                     ) {
-                        $('#ldapPreview #user' + i + ' .' + attributes[name]).html(
-                            ldap.users[i][ldap[attributes[name]]][0]
+                        $('#ldapPreview #' + type + i + ' .' + attributes[name]).html(
+                            ldap.entries[i][ldap[attributes[name]]][0]
                         );
                     } else if (ldap[attributes[name]] === '') {
-                        $('#ldapPreview #user' + i + ' .' + attributes[name]).html('');
+                        $('#ldapPreview #' + type + i + ' .' + attributes[name]).html('');
                     }
                 }
             }
@@ -195,6 +202,22 @@
         });
     };
 
+    /**
+     * Check if can save LDAP configuration
+     */
+    ldap.canSave = function (form, x, y)
+    {
+        var tmp = true;
+
+        for (var i = x; i <= y; i++) {
+            if (!form.hasOwnProperty(i) || form[i].value === '') {
+                tmp = false;
+            }
+        }
+
+        return tmp;
+    };
+
     /** events **/
 
     $('body').on('change', '#ldapObjectClass', function () {
@@ -204,9 +227,9 @@
         ldap.reset();
 
         if (element.value !== undefined && element.value !== '') {
-            $.ajax(routing.generate('claro_admin_ldap_get_users', {'objectClass': element.value, 'host': host}))
+            $.ajax(routing.generate('claro_admin_ldap_get_entries', {'objectClass': element.value, 'host': host}))
             .done(function (data) {
-                ldap.setAttribute('users', $.parseJSON(data));
+                ldap.setAttribute('entries', $.parseJSON(data));
                 ldap.fillSelect();
             })
             .error(function () {
@@ -218,18 +241,14 @@
         ldap.showPreview();
     }).on('click', '#ldapFooter .btn-primary', function () {
         var form = $('#ldapForm').serializeArray();
+        var type = $('#ldapObjectClass').data('type');
 
-        if (form[2].value !== '' &&
-            form[3].value !== '' &&
-            form[4].value !== '' &&
-            form[5].value !== '' &&
-            form[6].value !== ''
-        ) {
+        if (ldap.canSave(form, 2, type === 'users' ? 6 : 3)) {
             ldap.saveSettings(form);
         } else {
             modal.simpleContainer(
-                translator.get('ldap:Users settings'),
-                translator.get('ldap:ldap_save_settings_error')
+                translator.get('ldap:' + type + '_settings'),
+                translator.get('ldap:ldap_save_' + type + '_settings_error')
             );
         }
     })

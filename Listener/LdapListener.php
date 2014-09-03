@@ -21,7 +21,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
- *  @Service()
+ * @Service()
  */
 class LdapListener
 {
@@ -41,7 +41,7 @@ class LdapListener
     }
 
     /**
-     * @Observe("administration_tool_ldap")
+     * @Observe("administration_tool_LDAP")
      *
      * @param GetResponseEvent $event
      */

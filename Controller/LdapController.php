@@ -184,35 +184,20 @@ class LdapController extends Controller
     {
         $this->checkOpen();
 
-        $classes = array();
         $users = array();
         $server = $this->ldap->get($host);
 
         if ($this->ldap->connect($server)) {
 
-            if ($search = $this->ldap->search($server, '(&(objectClass=*))', array('objectclass'))) {
-                $entries = $this->ldap->getEntries($search);
-                foreach ($entries as $objectClass) {
-                    if (isset($objectClass['objectclass'])) {
-                        unset($objectClass['objectclass']['count']);
-                        $classes = array_merge($classes, $objectClass['objectclass']);
-                    }
-                }
-            }
-
-            if (isset($server['objectClass']) and
-                $search = $this->ldap->search($server, '(&(objectClass=' . $server['objectClass'] . '))')
-            ) {
-                $users = $this->ldap->getEntries($search);
-            }
-
+            $classes = $this->ldap->getClasses($server);
+            $users = $this->ldap->getUsers($server);
             $this->ldap->close();
 
             return array(
                 'server' => $server,
                 'users' => $users,
                 'usersJSON' => json_encode($users),
-                'classes' => array_unique($classes)
+                'classes' => $classes
             );
         }
 
@@ -229,26 +214,19 @@ class LdapController extends Controller
     {
         $this->checkOpen();
 
-        //$classes = array();
-        $groups = array();
         $server = $this->ldap->get($host);
 
         if ($this->ldap->connect($server)) {
 
-            if ($search = $this->ldap->search(
-                $server, '(&(objectClass=person))'
-            )) {
-                $groups = $this->ldap->getEntries($search);
-            }
-
-            throw new \Exception(var_dump($groups));
-
+            $classes = $this->ldap->getClasses($server);
+            $groups = $this->ldap->getGroups($server);
             $this->ldap->close();
 
             return array(
                 'server' => $server,
                 'groups' => $groups,
-                'groupJSON' => json_encode($groups),
+                'groupsJSON' => json_encode($groups),
+                'classes' => $classes
             );
         }
 
@@ -272,28 +250,28 @@ class LdapController extends Controller
     /**
      * @Route(
      *     "/get/users/{objectClass}/{host}",
-     *     name="claro_admin_ldap_get_users",
+     *     name="claro_admin_ldap_get_entries",
      *     options = {"expose"=true},
      *     requirements = {"host"=".+"}
      * )
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function getUsersAction($objectClass, $host)
+    public function getEntriesAction($objectClass, $host)
     {
         $this->checkOpen();
 
-        $users = array();
+        $entries = array();
 
         if ($this->ldap->connect($this->ldap->get($host))) {
             if ($search = $this->ldap->search($this->ldap->get($host), '(&(objectClass=' . $objectClass . '))')) {
-                $users = $this->ldap->getEntries($search);
+                $entries = $this->ldap->getEntries($search);
             }
 
             $this->ldap->close();
         }
 
-        return new Response(json_encode($users));
+        return new Response(json_encode($entries));
     }
 
     /**

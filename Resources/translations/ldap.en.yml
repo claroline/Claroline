@@ -1,15 +1,17 @@
 Add server: Add server
 Allow account creation at the firs login: Allow account creation at the firs login
-Groups settings: Groups settings
 LDAP settings: LDAP settings
 Save settings: Save settings
 Servers settings: Servers settings
 There are no configured servers: There are no configured servers
 Users and groups settings: Users and groups settings
 Users and groups: Users and groups
-Users settings: Users settings
+groups_settings: Groups settings
 ldap_already_exists: There is already a server with this name
 ldap_cant_connect: Unable to connect to server
 ldap_error_conexion: Could not connect to LDAP server
-ldap_save_settings_error: In order to save the settings, you must provide the username, name, last name, email and password
+ldap_group_class: Group class
+ldap_save_groups_settings_error: In order to save the settings, you must provide the name and the code
+ldap_save_users_settings_error: In order to save the settings, you must provide the username, name, last name, email and password
 ldap_user_class: User class
+users_settings: Users settings
