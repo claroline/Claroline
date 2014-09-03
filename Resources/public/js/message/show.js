@@ -127,7 +127,7 @@
                 url: route,
                 statusCode: {
                     200: function (datas) {
-                        var currentValue = $('#message_form_to').attr('value');
+                        var currentValue = $('#message_form_to').val();
 
                         if (currentValue === undefined) {
                             currentValue = '';
@@ -145,7 +145,7 @@
 
     function updateContactInput()
     {
-        $('#message_form_to').attr('value', '');
+        $('#message_form_to').val('');
         getUsersFromInput('claro_usernames_from_users', users, 'userIds');
         getUsersFromInput('claro_names_from_groups', groups, 'groupIds');
         getUsersFromInput('claro_names_from_workspaces', workspaces, 'workspaceIds');

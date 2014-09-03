@@ -10,6 +10,19 @@
 (function () {
     'use strict';
 
+    function menuHighlightMode()
+    {
+        var mode = $('#mode-element').data('mode');
+        
+        if (mode === 1) {
+            $('#all-my-workspaces-btn').removeClass('active');
+            $('#favourite-workspaces-btn').addClass('active');
+        } else {
+            $('#favourite-workspaces-btn').removeClass('active');
+            $('#all-my-workspaces-btn').addClass('active');
+        }
+    }
+
     $('#all-my-workspaces-btn').on('click', function (e) {
         e.stopImmediatePropagation();
         e.preventDefault();
@@ -46,5 +59,9 @@
                 }
             });
         }
+    });
+    
+    $(document).ready(function () {
+        menuHighlightMode();
     });
 })();
