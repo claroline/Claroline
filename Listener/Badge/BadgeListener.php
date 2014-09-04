@@ -155,6 +155,7 @@ class BadgeListener
         $parameters = array(
             'badgePage'    => 1,
             'claimPage'    => 1,
+            'userPage'    => 1,
             'workspace'    => $workspace,
             'add_link'     => 'claro_workspace_tool_badges_add',
             'edit_link'    => array(
