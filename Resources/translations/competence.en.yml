@@ -10,5 +10,6 @@ my_competences: My learning Outcomes
 select_competence_for_registration: 'Select Learning Outcomes'
 select_users_for_registration_to_workspace: 'Select users to subscribe'
 registration_to_competence: Subscription to Learning Outcomes
-remove_competence_confirm: Are you sure to delete this referential ?
+remove_competence_comfirm: Are you sure to delete this referential ?
+remove_competence: Remove a referential ?
 users_competences: 'See users associate to a learning Outcomes'

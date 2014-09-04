@@ -11,5 +11,6 @@ my_competences: Mes réferentiels de compétences.
 select_competence_for_registration: 'Sélectionner des réferentiels'
 select_users_for_registration_to_workspace: Sélectionner des utilisateurs à inscrire.
 registration_to_competence: Inscription à des référentiels
-remove_competence_confirm: Êtes vous sûr de vouloir supprimer ce réferentiel ?
+remove_competence_comfirm: Êtes vous sûr de vouloir supprimer ce réferentiel ?
+remove_competence: Supprimer un réferentiel ?
 users_competences: 'Voir les utilisateurs associés aux réferentiels'

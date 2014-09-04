@@ -175,4 +175,6 @@ badge_edit_create_new_version: "<strong>Warning!!!</strong> This badge has alrea
 consult_my_badge_details: 'View my details badge'
 badge_award_form_comment: 'Comment'
 comment: 'Comment'
-awarded_badges: 'Awarded badges'
+awarded_badges: 'Awarded badges'comment: 'Comment'
+badge_awarding_finished: 'Rules respected, claim the badge'
+badge_claimed: 'Badge claimed'

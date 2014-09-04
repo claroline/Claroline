@@ -14,6 +14,7 @@ namespace Claroline\CoreBundle\Repository;
 use Doctrine\ORM\EntityRepository;
 use Claroline\CoreBundle\Entity\Competence\CompetenceNode;
 use Claroline\CoreBundle\Entity\Competence\UserCompetence;
+use Claroline\CoreBundle\Entity\Competence\Competence;
 
 
 class UserCompetenceRepository extends EntityRepository
@@ -47,7 +48,7 @@ class UserCompetenceRepository extends EntityRepository
 		return $query->getResult();
 	}
 	// get all the user who are in a learning outcomes 
-	public function findByCompetence($competenceUser)
+	public function findByCompetence(Competence $competenceUser)
 	{
 		$dql="
 			SELECT DISTINCT u FROM ClarolineCoreBundle:User u WHERE EXISTS (
@@ -56,7 +57,7 @@ class UserCompetenceRepository extends EntityRepository
 			)
 		";
 		$query = $this->_em->createQuery($dql);
-		$query->setParameter('competence', $competenceUser->getCompetence());
+		$query->setParameter('competence', $competenceUser);
 		return $query->getResult();
 	}
 

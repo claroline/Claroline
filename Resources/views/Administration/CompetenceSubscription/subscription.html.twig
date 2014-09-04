@@ -58,8 +58,8 @@
     </div>
     <div class="panel-body" id="registration-list-div" subject-type="user">
         <ul class="list-group">
-            {% for c in competences %}
-                <li class="list-group-item cpt-users" value="{{c.getId()}}"> {{c.getCompetence().getName() }} </li>
+            {% for competence in competences %}
+                <li class="list-group-item cpt-users" value="{{competence.getId()}}"> {{ competence.getName() }} </li>
             {% endfor %} 
         </ul>
 

@@ -180,4 +180,6 @@ badge_edit_create_new_version: "<strong>Attention!!!</strong> Ce badge a déjà 
 consult_my_badge_details: 'Consulter mon badge en détails'
 badge_award_form_comment: 'Commentaire'
 comment: 'Commentaire'
-awarded_badges: 'Badges attribués'
+awarded_badges: 'Badges attribués'comment: 'Commentaire'
+badge_awarding_finished: 'Règles respectées, réclamer le badge'
+badge_claimed: 'Badge réclamé'
