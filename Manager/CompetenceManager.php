@@ -245,7 +245,7 @@ class CompetenceManager {
     {
         $this->om->startFlushSuite();
 
-        //@todo FIX ME THIS 
+        //@todo FIX ME THIS
         /*
         foreach ($users as $u) {
             foreach ($competences as $competence) {
