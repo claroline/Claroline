@@ -12,6 +12,7 @@
 namespace Claroline\CoreBundle\Manager;
 
 use Claroline\CoreBundle\Entity\Badge\Badge;
+use Claroline\CoreBundle\Entity\Badge\BadgeClaim;
 use Claroline\CoreBundle\Entity\Badge\BadgeRule;
 use Claroline\CoreBundle\Entity\Badge\UserBadge;
 use Claroline\CoreBundle\Entity\User;
@@ -60,7 +61,7 @@ class BadgeManager
      *
      * @return int
      */
-    public function addBadgeToUsers(Badge $badge, $users, $comment, $issuer = null)
+    public function addBadgeToUsers(Badge $badge, $users, $comment = null, $issuer = null)
     {
         $addedBadge = 0;
 
@@ -192,6 +193,27 @@ class BadgeManager
         }
 
         return $isRulesChanged;
+    }
+
+    public function makeClaim(Badge $badge, User $user)
+    {
+        if ($user->hasBadge($badge)) {
+            throw new \Exception('badge_already_award_message');
+        } elseif ($user->hasClaimedFor($badge)) {
+            throw new \Exception('badge_already_claim_message');
+        }
+
+        $badgeClaim = new BadgeClaim();
+        $badgeClaim
+            ->setUser($user)
+            ->setBadge($badge);
+
+        try {
+            $this->entityManager->persist($badgeClaim);
+            $this->entityManager->flush();
+        } catch(\Exception $exception){
+            throw new \Exception('badge_claim_error_message', 0, $exception);
+        }
     }
 
     /**

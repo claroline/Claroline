@@ -54,7 +54,6 @@
 
         $('body').on('click', '.delete-event', function (event) {
             event.preventDefault();
-
             window.Claroline.Modal.confirmRequest(
                 $(event.currentTarget).attr('href'),
                 removeEvent,

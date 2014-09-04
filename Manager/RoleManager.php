@@ -21,6 +21,7 @@ use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Facet\FieldFacet;
 use Claroline\CoreBundle\Manager\Exception\LastManagerDeleteException;
 use Claroline\CoreBundle\Manager\Exception\RoleReadOnlyException;
+use Claroline\CoreBundle\Manager\CompetenceManager;
 use Claroline\CoreBundle\Repository\RoleRepository;
 use Claroline\CoreBundle\Repository\UserRepository;
 use Claroline\CoreBundle\Repository\GroupRepository;
@@ -49,6 +50,7 @@ class RoleManager
     private $messageManager;
     private $container;
     private $translator;
+    private $cptManager;
 
     /**
      * Constructor.
@@ -58,7 +60,9 @@ class RoleManager
      *     "dispatcher"     = @DI\Inject("claroline.event.event_dispatcher"),
      *     "messageManager" = @DI\Inject("claroline.manager.message_manager"),
      *     "container"      = @DI\Inject("service_container"),
-     *     "translator"     = @DI\Inject("translator")
+     *     "translator"     = @DI\Inject("translator"),
+     *     "cptManager"     = @DI\Inject("claroline.manager.competence_manager")
+     *     
      * })
      */
     public function __construct(
@@ -66,7 +70,8 @@ class RoleManager
         StrictDispatcher $dispatcher,
         MessageManager $messageManager,
         Container $container,
-        Translator $translator
+        Translator $translator,
+        CompetenceManager $cptManager
     )
     {
         $this->roleRepo = $om->getRepository('ClarolineCoreBundle:Role');
@@ -77,6 +82,7 @@ class RoleManager
         $this->messageManager = $messageManager;
         $this->container = $container;
         $this->translator = $translator;
+        $this->cptManager = $cptManager;
     }
 
     /**
@@ -771,5 +777,35 @@ class RoleManager
         $role->setMaxUsers($role->getMaxUsers() + $limit);
         $this->om->persist($role);
         $this->om->flush();
+    }
+
+    /**
+     * @param string $workspaceCode
+     * @param string $translationKey
+     * @param bool $executeQuery
+     */
+    public function getRoleByWorkspaceCodeAndTranslationKey(
+        $workspaceCode,
+        $translationKey,
+        $executeQuery = true
+    )
+    {
+        return $this->roleRepo->findRoleByWorkspaceCodeAndTranslationKey(
+            $workspaceCode,
+            $translationKey,
+            $executeQuery
+        );
+    }
+
+    /**
+     * Returns all non-platform roles of a user.
+     *
+     * @param User $user The subject of the role
+     *
+     * @return array[Role]|query
+     */
+    public function getNonPlatformRolesForUser(User $user, $executeQuery = true)
+    {
+        return $this->roleRepo->findNonPlatformRolesForUser($user, $executeQuery);
     }
 }

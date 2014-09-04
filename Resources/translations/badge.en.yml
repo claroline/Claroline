@@ -181,3 +181,5 @@ badge_usage_widget_form_number_most_awarded_badge: 'Badges to display in the lad
 last_awarded_badges: 'Last awarded badges'
 ladder_awarded_badges: 'Awarded badges ladder'
 badge_awarded_nb_times: 'Awarded %nbTimes% times'
+badge_awarding_finished: 'Rules respected, claim the badge'
+badge_claimed: 'Badge claimed'

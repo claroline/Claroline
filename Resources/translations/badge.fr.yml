@@ -186,3 +186,5 @@ badge_usage_widget_form_number_most_awarded_badge: 'Badges à afficher pour le c
 last_awarded_badges: 'Derniers badges attribués'
 ladder_awarded_badges: 'Classement d''attribution des badges'
 badge_awarded_nb_times: 'Atrribué %nbTimes% fois'
+badge_awarding_finished: 'Règles respectées, réclamer le badge'
+badge_claimed: 'Badge réclamé'
