@@ -19,7 +19,7 @@ use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CoreBundle\Manager\RoleManager;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 
@@ -138,7 +138,7 @@ class ToolsImporter extends Importer implements ConfigurationInterface
         }
     }
 
-    public function import(array $tools, AbstractWorkspace $workspace, array $entityRoles, Directory $root)
+    public function import(array $tools, Workspace $workspace, array $entityRoles, Directory $root)
     {
         $position = 1;
 

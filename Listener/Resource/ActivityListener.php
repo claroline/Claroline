@@ -146,38 +146,15 @@ class ActivityListener
      */
     public function onCopy(CopyResourceEvent $event)
     {
-<<<<<<< HEAD
-        $em = $this->container->get('doctrine.orm.entity_manager');
-        $resource = $event->getResource();
-        $copy = new Activity();
-        $copy->setInstructions($resource->getInstructions());
-        $resourceActivities = $resource->getResourceActivities();
-
-        foreach ($resourceActivities as $resourceActivity) {
-            $ra = new ResourceActivity();
-            $ra->setResourceNode($resourceActivity->getResourceNode());
-            $ra->setSequenceOrder($resourceActivity->getSequenceOrder());
-            $ra->setActivity($copy);
-            $em->persist($ra);
-        }
-
-        $em->persist($copy);
-        $event->setCopy($copy);
-=======
         $activity = $this->activityManager->copyActivity($event->getResource());
 
         $this->persistence->persist($activity);
         $event->setCopy($activity);
->>>>>>> 8dfaea7b8280c7aa33b22d01e8ebc880c74c27f2
         $event->stopPropagation();
     }
 
     /**
-<<<<<<< HEAD
-     * @DI\Observe("open_activity")
-=======
      * @Observe("open_activity")
->>>>>>> 8dfaea7b8280c7aa33b22d01e8ebc880c74c27f2
      *
      * @param OpenResourceEvent $event
      */

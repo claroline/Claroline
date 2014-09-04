@@ -19,7 +19,7 @@ use Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders\RolesConfigurat
 use Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders\ToolsConfigurationBuilder;
 use Symfony\Component\Config\Definition\Dumper\YamlReferenceDumper;
 use JMS\DiExtraBundle\Annotation as DI;
-use Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Workspace\Configuration;
@@ -146,7 +146,7 @@ class TransfertManager
             $this->validate($data, false);
         }
 
-        $workspace = new SimpleWorkspace();
+        $workspace = new Workspace();
         $workspace->setName($configuration->getWorkspaceName());
         $workspace->setCode($configuration->getWorkspaceCode());
         $workspace->setDescription($configuration->getWorkspaceDescription());
@@ -270,7 +270,7 @@ class TransfertManager
         }
     }
 
-    private function setWorkspaceForImporter(SimpleWorkspace $workspace)
+    private function setWorkspaceForImporter(Workspace $workspace)
     {
         foreach ($this->listImporters as $importer) {
             $importer->setWorkspace($workspace);

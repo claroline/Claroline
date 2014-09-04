@@ -33,9 +33,6 @@ class WorkspaceType extends AbstractType
                     'tinymce',
                 array('required' => false)
             );
-        } else {
-            $builder->add('description', 'tinymce', array('required' => false));
-        }
         $builder->add(
             'file',
             'file',

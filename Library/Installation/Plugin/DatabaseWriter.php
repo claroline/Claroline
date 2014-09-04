@@ -496,10 +496,6 @@ class DatabaseWriter
     {
         $toolEntity = new Tool();
         $this->persistTool($tool, $pluginEntity, $toolEntity);
-
-        if ($tool['is_displayable_in_workspace'] && $this->modifyTemplate) {
-            $this->templateBuilder->addTool($tool['name'], $tool['name']);
-        }
     }
 
     private function persistTool($tool, $pluginEntity, $toolEntity)

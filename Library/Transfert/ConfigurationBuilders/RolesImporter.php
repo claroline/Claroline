@@ -18,7 +18,7 @@ use Symfony\Component\Config\Definition\Processor;
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Manager\RoleManager;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 
 /**
  * @DI\Service("claroline.importer.role_importer")
@@ -126,7 +126,7 @@ class RolesImporter extends Importer implements ConfigurationInterface
         return false;
     }
 
-    public function import(array $roles, AbstractWorkspace $workspace)
+    public function import(array $roles, Workspace $workspace)
     {
         $entityRoles = array();
 

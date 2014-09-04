@@ -15,11 +15,8 @@ use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\File\File as SfFile;
 use Symfony\Component\HttpFoundation\Response;
-<<<<<<< HEAD
-=======
 use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesser;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
->>>>>>> 8dfaea7b8280c7aa33b22d01e8ebc880c74c27f2
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Entity\Resource\File;
 use Claroline\CoreBundle\Entity\Resource\Directory;
@@ -31,13 +28,9 @@ use Claroline\CoreBundle\Event\CreateResourceEvent;
 use Claroline\CoreBundle\Event\OpenResourceEvent;
 use Claroline\CoreBundle\Event\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\DownloadResourceEvent;
-<<<<<<< HEAD
-
-=======
 use Claroline\CoreBundle\Event\CustomActionResourceEvent;
 use Claroline\CoreBundle\Event\ExportResourceTemplateEvent;
 use Claroline\CoreBundle\Event\ImportResourceTemplateEvent;
->>>>>>> 8dfaea7b8280c7aa33b22d01e8ebc880c74c27f2
 
 /**
  * @DI\Service("claroline.listener.file_listener")
@@ -240,8 +233,6 @@ class FileListener implements ContainerAwareInterface
     }
 
     /**
-<<<<<<< HEAD
-=======
      * @DI\Observe("update_file_file")
      *
      * @param CustomActionResourceEvent $event
@@ -262,6 +253,7 @@ class FileListener implements ContainerAwareInterface
 
     /**
      * @DI\Observe("resource_file_to_template")
+     * @todo is this still used ?
      *
      * @param ExportResourceTemplateEvent $event
      */
@@ -301,7 +293,6 @@ class FileListener implements ContainerAwareInterface
     }
 
     /**
->>>>>>> 8dfaea7b8280c7aa33b22d01e8ebc880c74c27f2
      * Copies a file (no persistence).
      *
      * @param File $resource
