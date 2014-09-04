@@ -19,3 +19,7 @@
         {% include 'ClarolineCoreBundle:Badge\\Template:list_users.html.twig'%}
     </div>
 </div>
+
+{% block javascripts %}
+<script type="text/javascript" src='{{ asset('bundles/clarolinecore/js/badge/list.js') }}'></script>
+{% endblock %}
