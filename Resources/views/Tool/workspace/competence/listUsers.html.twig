@@ -1,0 +1,45 @@
+{% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
+
+{% block title %}{{ parent() ~ ' - ' ~ "competence" | trans({}, "tools") | striptags | raw }}{% endblock %}
+{% block breadcrumb %}
+        {{
+        macros.workspaceBreadcrumbs(
+            workspace,
+            [
+                {
+                    'name': 'users_competences'|trans({}, 'competence'),
+                    'href': path('claro_workspace_competences_list_users', {'workspaceId': workspace.getId()})
+                }  
+            ]
+        )
+    }}
+{% endblock %}
+{% block section_content %}
+    <div class="panel-heading">
+    {% render controller("ClarolineCoreBundle:Tool\\CompetenceTool:menuTab",{"workspace":workspace.getId()}) %}
+        <h3 class="panel-title">{{ 'users_competences'|trans({}, 'competence') }}</h3>
+    </div>
+    {% for key,uc in listUsers %}
+        <div class="panel-body">
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered table-condensed">
+                <thead>
+                    <th>
+                    {{ key }}
+                    <th> <input type="checkbox" name="all" class="chkAll"> </th>
+                </thead>
+                {% for u in uc.users %}
+                    <tr>
+                        <td> {{u.getUser().getUserName()}}</td> 
+                        <td class="right"> <input type="checkbox" name="cpt" class="cpt"  /></td>
+                    </tr>
+                    {% endfor %}
+                {% endfor %}
+                </table>
+             </div>
+        </div>
+{% endblock %}
+{% block javascripts %}
+ {{ parent() }}
+	<script type='text/javascript'src='{{ asset('bundles/clarolinecore/js/administration/competences.js') }}'></script>
+{% endblock %}

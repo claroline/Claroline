@@ -129,6 +129,20 @@ class UserManager
     }
 
     /**
+     * Persist a user.
+     *
+     * @param User $user
+     * @return User
+     */
+    public function persistUser(User $user)
+    {
+        $this->objectManager->persist($user);
+        $this->objectManager->flush();
+
+        return $user;
+    }
+
+    /**
      * Rename a user.
      *
      * @param User $user
@@ -398,6 +412,20 @@ class UserManager
     }
 
     /**
+     * @param integer $page
+     * @param integer $max
+     * @param string  $orderedBy
+     * @param string  $order
+     *
+     * @return \Pagerfanta\Pagerfanta;
+     */
+    public function getAllUsersExcept($page, $max = 20, $orderedBy = 'id', $order = null, array $users )
+    {
+        $query = $this->userRepo->findAllExcept($users);
+        return $this->pagerFactory->createPagerFromArray($query, $page, $max);
+    }
+
+    /**
      * @param string  $search
      * @param integer $page
      * @param integer $max
@@ -485,11 +513,17 @@ class UserManager
      *
      * @return \Pagerfanta\Pagerfanta
      */
-    public function getUsersByWorkspaces(array $workspaces, $page, $max = 20)
+    public function getUsersByWorkspaces(array $workspaces, $page, $max = 20, $withPager = true)
     {
-        $query = $this->userRepo->findUsersByWorkspaces($workspaces, false);
+        if ($withPager) {
+            $query = $this->userRepo->findUsersByWorkspaces($workspaces, false);
+            
+            return $this->pagerFactory->createPager($query, $page, $max);
+        } else {
+            return  $this->userRepo->findUsersByWorkspaces($workspaces);
+ 
+        }
 
-        return $this->pagerFactory->createPager($query, $page, $max);
     }
 
     /**
@@ -714,6 +748,16 @@ class UserManager
     public function getResetPasswordHash($resetPassword)
     {
         return $this->userRepo->findOneByResetPasswordHash($resetPassword);
+    }
+    
+    /**
+     * @param integer $userId
+     *
+     * @return User|null
+     */
+    public function getEnabledUserById($userId)
+    {
+        return $this->userRepo->findEnabledUserById($userId);
     }
 
     /**

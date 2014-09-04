@@ -660,21 +660,10 @@ class WorkspaceController extends Controller
     /**
      * @todo Security context verification.
      * @EXT\Route(
-     *     "/{workspaceId}/add/user/{userId}",
+     *     "/{workspace}/add/user/{user}",
      *     name="claro_workspace_add_user",
      *     options={"expose"=true},
      *     requirements={"workspaceId"="^(?=.*[1-9].*$)\d*$"}
-     * )
-     * @EXT\Method({"POST", "GET"})
-     * @EXT\ParamConverter(
-     *      "workspace",
-     *      class="ClarolineCoreBundle:Workspace\Workspace",
-     *      options={"id" = "workspaceId", "strictId" = true}
-     * )
-     * @EXT\ParamConverter(
-     *      "user",
-     *      class="ClarolineCoreBundle:User",
-     *      options={"id" = "userId", "strictId" = true}
      * )
      *
      * Adds a user to a workspace.
@@ -689,6 +678,29 @@ class WorkspaceController extends Controller
         $this->workspaceManager->addUserAction($workspace, $user);
 
         return new JsonResponse($this->userManager->convertUsersToArray(array($user)));
+    }
+
+    /**
+     * @todo Security context verification.
+     * @EXT\Route(
+     *     "/{workspace}/add/user/{user}/queue",
+     *     name="claro_workspace_add_user_queue",
+     *     options={"expose"=true},
+     *     requirements={"workspaceId"="^(?=.*[1-9].*$)\d*$"}
+     * )
+     *
+     * Adds a user to a workspace.
+     *
+     * @param Workspace $workspace
+     * @param User              $user
+     *
+     * @return Response
+     */
+    public function addUserQueueAction(Workspace $workspace, User $user)
+    {
+        $this->workspaceManager->addUserQueue($workspace, $user);
+
+        return new JsonResponse(array('true'));
     }
 
     /** @EXT\Route(

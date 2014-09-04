@@ -189,6 +189,8 @@
         "@ClarolineCoreBundle/Resources/views/Administration/Roles/renderRoleRow.html.twig"
         "@ClarolineCoreBundle/Resources/views/Agenda/eventContent.html.twig"
         "@ClarolineCoreBundle/Resources/views/Agenda/task.html.twig"
+        "@ClarolineCoreBundle/Resources/views/Administration/Competence/competenceItem.html.twig"
+        "@ClarolineCoreBundle/Resources/views/Administration/Competence/competenceNodeItem.html.twig"
         %}<script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
     {% javascripts debug=false filter='jsmin' output='vendor/jquery/ui/jqueryui.js'
@@ -204,6 +206,7 @@
     <script type="text/javascript" src="{{ url('bazinga_exposetranslation_js', { 'domain_name': 'platform' }) }}"></script>
     <script type="text/javascript" src="{{ url('bazinga_exposetranslation_js', { 'domain_name': 'resource' }) }}"></script>
     <script type="text/javascript" src="{{ url('bazinga_exposetranslation_js', { 'domain_name': 'badge' }) }}"></script>
+    <script type="text/javascript" src="{{ url('bazinga_exposetranslation_js', { 'domain_name': 'competence' }) }}"></script>
     <script type="text/javascript" src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/datepicker/js/bootstrap-datepicker.js') }}"></script>
     {% if 'en' != app.request.locale %}

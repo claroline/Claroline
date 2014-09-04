@@ -1,0 +1,8 @@
+{% twig_js name="CompetenceItem" %}
+
+<li class="roots" data-id="{{competence.id}}">
+	<a href="{{path('claro_admin_competence_show_referential',{'competence':competence.id})}}">
+	 {{competence.name}}
+	</a>|
+	  <a href="{{path('claro_admin_competence_delete', {'competence':competence.id })}}" class="btn btn-default btn-sm delete-competence"><i class="fa fa-trash-o"></i> {{ 'delete'|trans({}, 'platform') }}</a> 
+</li>

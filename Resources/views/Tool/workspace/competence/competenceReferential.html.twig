@@ -1,0 +1,53 @@
+{% extends "ClarolineCoreBundle:Workspace:layout.html.twig" %}
+{% block title %}{{ 'competence' | trans({}, 'platform') | striptags | raw }}{% endblock %}
+{% block breadcrumb %}
+    {{
+        macros.workspaceBreadcrumbs(
+            workspace,
+            [
+                {
+                    'name': 'competence_referencial'|trans({}, 'platform'),
+                    'href': path('claro_workspace_competence_show_referential', {'workspace': workspace.getId(), 'competence':cpt.getId()})
+                }  
+            ]
+        )
+    }}
+{% endblock %}
+{% block content %}
+<div class="panel panel-default">
+    <div class="panel-heading">
+        {% render controller("ClarolineCoreBundle:Tool\\CompetenceTool:menuTab",{"workspace":workspace.getId()}) %}
+        <h3 class="panel-title">{{ "competence_referencial" | trans({}, "platform" )}}: {{cpt.getCompetence.getName() }}</h3>
+        <span data-id="{{cpt.getId() }}"></span>
+    </div>
+    <div class="panel-body">
+      <div class="panel-body">
+        {% include "ClarolineCoreBundle:Administration\\Competence:competenceNodeItem.html.twig" with {'competence': cpt.getId()} %}
+        <div class="panel-footer">
+            <a 
+            id="show-referential-comptence-form" 
+            class="btn btn-primary"
+            href="{{path('claro_workspace_competence_hierarchy_form', {'competence': cpt.getId(), 'workspace':workspace.getId()})}}"
+            >{{'competence_add'|trans({},'competence')}}
+        </a>
+    </div>
+    </div
+    <div id="tree">
+       <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title" > structure </h3> 
+      </div>
+      <div class="panel-body">
+
+      </div>
+      <div class="panel-footer">
+
+      </div>
+  </div>
+</div>
+
+{% endblock %}
+{% block javascripts %}
+{{ parent() }}
+<script type='text/javascript'src='{{ asset('bundles/clarolinecore/js/administration/competences.js') }}'></script>
+{% endblock %}

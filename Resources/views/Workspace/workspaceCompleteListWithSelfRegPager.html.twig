@@ -24,14 +24,20 @@
         <i class="fa fa-book"></i>
         {{ workspace.getName() }}
         <span><small>({{ workspace.getCode() }})</small></span>
-
-        <span class="pull-right pointer-hand label label-primary register-user-to-workspace register-button-{{ workspace.getId() }}"
-            data-workspace-id="{{ workspace.getId() }}"
-            data-workspace-name="{{ workspace.getName() }}"
-            data-workspace-code="{{ workspace.getCode() }}">
-            <i class="fa fa-plus-circle"></i>
-            {{ 'register'|trans({}, 'platform') }}
-        </span>
+        {% if listworkspacePending[workspace.getId()] is defined  %}
+            <span class="pull-right pointer-hand label label-success">
+                <i class="fa fa-share-square-o"></i>
+                {{ 'pending'|trans({}, 'platform') }}
+            </span>
+        {% else %}
+            <span class="pull-right pointer-hand label label-primary register-user-to-workspace register-button-{{ workspace.getId() }}"
+                data-workspace-id="{{ workspace.getId() }}"
+                data-workspace-name="{{ workspace.getName() }}"
+                data-workspace-code="{{ workspace.getCode() }}">
+                <i class="fa fa-plus-circle"></i>
+                {{ 'register'|trans({}, 'platform') }}
+            </span>
+        {% endif %}
     </div>
 {% endfor %}
 
