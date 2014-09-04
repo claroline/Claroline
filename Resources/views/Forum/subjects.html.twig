@@ -38,7 +38,7 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    <link rel='stylesheet' type='text/css' href='{{ asset('bundles/clarolineforum/css/subjects.css')}}'>
+    <link rel='stylesheet' type='text/css' href='{{ asset('bundles/clarolineforum/css/forum.css')}}'>
 {% endblock %}
 
 {% block section_content %}
@@ -49,11 +49,11 @@
         <div class="navbar row">
             <div class="col-md-9">
                 <a class="btn btn-default" href="{{ path('claro_forum_categories', { 'forum': category.getForum().getId() }) }}">
-                    <i class="icon-chevron-left"></i> {{ 'back_to_categories'|trans({}, 'forum') }}
+                    <i class="fa fa-chevron-left"></i> {{ 'forum_back_to_categories'|trans({}, 'forum') }}
                 </a>
                 {% if canCreateSubject %}
                     <a class="btn btn-primary" href="{{ _path('claro_forum_form_subject_creation', {'category': category.getId()}) }}">
-                        <i class="icon-plus"></i> {{ 'new_subject'|trans({}, 'forum') }}
+                        <i class="fa fa-plus"></i> {{ 'new_subject'|trans({}, 'forum') }}
                     </a>
                 {% endif %}
             </div>
@@ -87,16 +87,25 @@
                             {% if isModerator %}
                                 {% if subject['isSticked'] == true %}
                                     <a href="{{ path('claro_subject_unstick', {'subject': subject['id']}) }}">
-                                        <i class="icon-pushpin"></i> {{ 'unstick' | trans({}, 'forum') }}
+                                        <i class="fa fa-unlink"></i> {{ 'unstick' | trans({}, 'forum') }}
                                     </a>
                                 {% else %}
                                     <a href="{{ path('claro_subject_stick', {'subject': subject['id']}) }}">
-                                        <i class="icon-pushpin"></i> {{ 'stick' | trans({}, 'forum') }}
+                                        <i class="fa fa-paperclip"></i> {{ 'stick' | trans({}, 'forum') }}
+                                    </a>
+                                {% endif %}
+                                {% if subject['is_closed'] == true %}
+									<a href="{{ path('claro_subject_open', {'subject': subject['id']}) }}">
+                                        <i class="fa fa-eye-slash"></i> {{ 'open' | trans({}, 'platform') }}
+                                    </a>
+                                {% else %}
+                                    <a href="{{ path('claro_subject_close', {'subject': subject['id']}) }}">
+                                        <i class="fa fa-eye"></i> {{ 'close' | trans({}, 'platform') }}
                                     </a>
                                 {% endif %}
                             {% else %}
                                 {% if subject['isSticked'] == true %}
-                                    <i class="icon-pushpin"></i> {{ 'stuck' | trans({}, 'forum') }}
+                                    <i class="fa fa-paperclip"></i> {{ 'stuck' | trans({}, 'forum') }}
                                 {% endif %}
                             {% endif %}
                         </td>
@@ -108,7 +117,7 @@
                             </a>
                             {% if isModerator or app.user.id == subject['subject_creator_id'] %}
                                 <a class="pull-right" href="{{ path('claro_forum_edit_subject_form', {'subjectId': subject['id'] }) }}">
-                                    <i class="icon-pencil"></i> {{ 'edit' | trans({}, 'platform') }}
+                                    <i class="fa fa-pencil"></i> {{ 'edit' | trans({}, 'platform') }}
                                 </a>
                            {% endif %}
                             <br>
@@ -148,7 +157,7 @@
                             </td>
                             <td>
                                 <a id="delete-subject" href="{{ _path('claro_forum_delete_subject', {'subject': subject['id']}) }}">
-                                    <i class="icon-trash"></i> {{ 'delete' | trans({}, 'platform') }}
+                                    <i class="fa fa-trash-o"></i> {{ 'delete' | trans({}, 'platform') }}
                                 </a>
                             </td>
                         {% endif %}

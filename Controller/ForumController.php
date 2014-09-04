@@ -19,8 +19,9 @@ use Claroline\ForumBundle\Form\SubjectType;
 use Claroline\ForumBundle\Form\CategoryType;
 use Claroline\ForumBundle\Form\EditTitleType;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\ForumBundle\Manager\Manager;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -29,12 +30,27 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use JMS\DiExtraBundle\Annotation as DI;
 
 /**
  * ForumController
  */
 class ForumController extends Controller
 {
+	private $manager;
+    /**
+     * Constructor.
+     *
+     * @DI\InjectParams({
+     *     "manager"        = @DI\Inject("claroline.manager.forum_manager")
+     * })
+     */
+    public function __construct(
+        Manager $manager
+    )
+    {
+        $this->manager = $manager;
+    }
     /**
      * @Route(
      *     "/{forum}/category",
@@ -60,7 +76,7 @@ class ForumController extends Controller
             '_resource' => $forum,
             'isModerator' => $isModerator,
             'categories' => $categories,
-            'hasSubscribed' => $this->get('claroline.manager.forum_manager')->hasSubscribed($user, $forum),
+            'hasSubscribed' => $this->manager->hasSubscribed($user, $forum),
         );
     }
 
@@ -81,7 +97,7 @@ class ForumController extends Controller
     {
         $forum = $category->getForum();
         $this->checkAccess($forum);
-        $pager = $this->get('claroline.manager.forum_manager')->getSubjectsPager($category, $page, $max);
+        $pager = $this->manager->getSubjectsPager($category, $page, $max);
         $collection = new ResourceCollection(array($forum->getResourceNode()));
         $sc = $this->get('security.context');
         $canCreateSubject = $sc->isGranted('post', $collection);
@@ -170,7 +186,7 @@ class ForumController extends Controller
 
         if ($form->isValid()) {
             $category = $form->getData();
-            $this->get('claroline.manager.forum_manager')->createCategory($forum, $category->getName());
+            $this->manager->createCategory($forum, $category->getName());
         }
 
         return new RedirectResponse(
@@ -187,6 +203,9 @@ class ForumController extends Controller
      * )
      * @Template("ClarolineForumBundle:Forum:subjectForm.html.twig")
      * @param Category $category
+     * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
+     * @throws \Exception
+     * @return array|\Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function createSubjectAction(Category $category)
     {
@@ -206,7 +225,7 @@ class ForumController extends Controller
             $subject->setCreator($user);
             //instantiation of the new resources
             $subject->setCategory($category);
-            $this->get('claroline.manager.forum_manager')->createSubject($subject);
+            $this->manager->createSubject($subject);
             $dataMessage = $form->get('message')->getData();
 
             if ($dataMessage['content'] !== null) {
@@ -214,7 +233,7 @@ class ForumController extends Controller
                 $message->setContent($dataMessage['content']);
                 $message->setCreator($user);
                 $message->setSubject($subject);
-                $this->get('claroline.manager.forum_manager')->createMessage($message);
+                $this->manager->createMessage($message, $subject);
 
                 return new RedirectResponse(
                     $this->generateUrl('claro_forum_subjects', array('category' => $category->getId()))
@@ -222,7 +241,6 @@ class ForumController extends Controller
             }
         }
 
-        throw new \Exception($form->getErrorsAsString());
         $form->get('message')->addError(
             new FormError($this->get('translator')->trans('field_content_required', array(), 'forum'))
         );
@@ -251,7 +269,7 @@ class ForumController extends Controller
         $forum = $subject->getCategory()->getForum();
         $this->checkAccess($forum);
         $isModerator = $this->get('security.context')->isGranted('moderate', new ResourceCollection(array($forum->getResourceNode())));
-        $pager = $this->get('claroline.manager.forum_manager')->getMessagesPager($subject, $page, $max);
+        $pager = $this->manager->getMessagesPager($subject, $page, $max);
         $collection = new ResourceCollection(array($forum->getResourceNode()));
         $canAnswer = $this->get('security.context')->isGranted('post', $collection);
         $form = $this->get('form.factory')->create(new MessageType());
@@ -280,20 +298,11 @@ class ForumController extends Controller
     {
         $form = $this->container->get('form.factory')->create(new MessageType, new Message());
         $form->handleRequest($this->get('request'));
-        $manager = $this->get('claroline.manager.forum_manager');
-        $forum = $subject->getCategory()->getForum();
-        $collection = new ResourceCollection(array($forum->getResourceNode()));
 
-        if (!$this->get('security.context')->isGranted('post', $collection)) {
-            throw new AccessDeniedHttpException($collection->getErrorsForDisplay());
-        }
 
         if ($form->isValid()) {
             $message = $form->getData();
-            $user = $this->get('security.context')->getToken()->getUser();
-            $message->setCreator($user);
-            $message->setSubject($subject);
-            $manager->createMessage($message);
+            $this->manager->createMessage($message, $subject);
         }
 
         return new RedirectResponse(
@@ -356,7 +365,7 @@ class ForumController extends Controller
 
         if ($form->isValid()) {
             $newContent = $form->get('content')->getData();
-            $this->get('claroline.manager.forum_manager')->editMessage($message, $oldContent, $newContent);
+            $this->manager->editMessage($message, $oldContent, $newContent);
 
             return new RedirectResponse(
                 $this->generateUrl('claro_forum_messages', array('subject' => $subject->getId()))
@@ -422,7 +431,7 @@ class ForumController extends Controller
 
         if ($form->isValid()) {
             $newName = $form->get('name')->getData();
-            $this->get('claroline.manager.forum_manager')->editCategory($category, $oldName, $newName);
+            $this->manager->editCategory($category, $oldName, $newName);
 
             return new RedirectResponse(
                 $this->generateUrl('claro_forum_categories', array('forum' => $category->getForum()->getId()))
@@ -445,7 +454,7 @@ class ForumController extends Controller
 
         if ($sc->isGranted('moderate', new ResourceCollection(array($category->getForum()->getResourceNode())))) {
 
-            $this->get('claroline.manager.forum_manager')->deleteCategory($category);
+            $this->manager->deleteCategory($category);
 
             return new RedirectResponse(
                 $this->generateUrl('claro_forum_categories', array('forum' => $forum->getId()))
@@ -469,7 +478,7 @@ class ForumController extends Controller
      */
     public function searchAction(Forum $forum, $page, $search)
     {
-        $pager = $this->get('claroline.manager.forum_manager')->searchPager($forum, $search, $page);
+        $pager = $this->manager->searchPager($forum, $search, $page);
 
         return array('pager' => $pager, '_resource' => $forum, 'search' => $search, 'page' => $page);
     }
@@ -536,7 +545,7 @@ class ForumController extends Controller
 
         if ($form->isValid()) {
             $newTitle = $form->get('title')->getData();
-            $this->get('claroline.manager.forum_manager')->editSubject($subject, $oldTitle, $newTitle);
+            $this->manager->editSubject($subject, $oldTitle, $newTitle);
 
             return new RedirectResponse(
                 $this->generateUrl('claro_forum_subjects', array('category' => $subject->getCategory()->getId()))
@@ -564,7 +573,7 @@ class ForumController extends Controller
         $sc = $this->get('security.context');
 
         if ($sc->isGranted('moderate', new ResourceCollection(array($message->getSubject()->getCategory()->getForum()->getResourceNode())))) {
-            $this->get('claroline.manager.forum_manager')->deleteMessage($message);
+            $this->manager->deleteMessage($message);
 
             return new RedirectResponse(
                 $this->generateUrl('claro_forum_messages', array('subject' => $message->getSubject()->getId()))
@@ -586,8 +595,7 @@ class ForumController extends Controller
      */
     public function subscribeAction(Forum $forum, User $user)
     {
-        $manager = $this->get('claroline.manager.forum_manager');
-        $manager->subscribe($forum, $user);
+        $this->manager->subscribe($forum, $user);
 
         return new RedirectResponse(
             $this->generateUrl('claro_forum_categories', array('forum' => $forum->getId()))
@@ -606,8 +614,7 @@ class ForumController extends Controller
      */
     public function unsubscribeAction(Forum $forum, User $user)
     {
-        $manager = $this->get('claroline.manager.forum_manager');
-        $manager->unsubscribe($forum, $user);
+        $this->manager->unsubscribe($forum, $user);
 
         return new RedirectResponse(
             $this->generateUrl('claro_forum_categories', array('forum' => $forum->getId()))
@@ -628,7 +635,7 @@ class ForumController extends Controller
 
         if ($sc->isGranted('moderate', new ResourceCollection(array($subject->getCategory()->getForum()->getResourceNode())))) {
 
-            $this->get('claroline.manager.forum_manager')->deleteSubject($subject);
+            $this->manager->deleteSubject($subject);
 
             return new RedirectResponse(
                 $this->generateUrl('claro_forum_subjects', array('category' => $subject->getCategory()->getId()))
@@ -667,7 +674,7 @@ class ForumController extends Controller
      * @EXT\Method("GET")
      * @EXT\ParamConverter(
      *      "workspace",
-     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      class="ClarolineCoreBundle:Workspace\Workspace",
      *      options={"id" = "workspaceId", "strictId" = true}
      * )
      *
@@ -675,9 +682,10 @@ class ForumController extends Controller
      *
      * Renders last messages from the forums' workspace
      *
-     * @param AbstractWorkspace $workspace
+     * @param Workspace $workspace
+     * @return array
      */
-    public function forumsWorkspaceWidgetAction(AbstractWorkspace $workspace)
+    public function forumsWorkspaceWidgetAction(Workspace $workspace)
     {
         $sc = $this->get('security.context');
         $user = $sc->getToken()->getUser();
@@ -770,7 +778,7 @@ class ForumController extends Controller
         $category = $subject->getCategory();
         $forum = $category->getForum();
         $this->checkAccess($forum);
-        $pager = $this->get('claroline.manager.forum_manager')->getSubjectsPager($category, $page);
+        $pager = $this->manager->getSubjectsPager($category, $page);
 
         return array(
             '_resource' => $forum,
@@ -796,8 +804,7 @@ class ForumController extends Controller
     {
         $forum = $newSubject->getCategory()->getForum();
         $this->checkAccess($forum);
-        $manager = $this->get('claroline.manager.forum_manager');
-        $manager->moveMessage($message, $newSubject);
+        $this->manager->moveMessage($message, $newSubject);
 
         return new RedirectResponse(
             $this->generateUrl('claro_forum_subjects', array('category' => $newSubject->getCategory()->getId()))
@@ -819,8 +826,7 @@ class ForumController extends Controller
     {
         $forum = $newCategory->getForum();
         $this->checkAccess($forum);
-        $manager = $this->get('claroline.manager.forum_manager');
-        $manager->moveSubject($subject, $newCategory);
+        $this->manager->moveSubject($subject, $newCategory);
 
         return new RedirectResponse(
             $this->generateUrl('claro_forum_categories', array('forum' => $forum->getId()))
@@ -841,8 +847,7 @@ class ForumController extends Controller
     {
         $forum = $subject->getCategory()->getForum();
         $this->checkAccess($forum);
-        $manager = $this->get('claroline.manager.forum_manager');
-        $manager->stickSubject($subject);
+        $this->manager->stickSubject($subject);
 
         return new RedirectResponse(
             $this->generateUrl('claro_forum_subjects', array('category' => $subject->getCategory()->getId()))
@@ -863,11 +868,131 @@ class ForumController extends Controller
     {
         $forum = $subject->getCategory()->getForum();
         $this->checkAccess($forum);
-        $manager = $this->get('claroline.manager.forum_manager');
-        $manager->unstickSubject($subject);
+        $this->manager->unstickSubject($subject);
 
         return new RedirectResponse(
             $this->generateUrl('claro_forum_subjects', array('category' => $subject->getCategory()->getId()))
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/close/subject/{subject}",
+     *     name="claro_subject_close",
+     *     options={"expose"=true}
+     * )
+     * @EXT\Method("GET")
+     *
+     * @param Subject $subject
+     */
+    public function closeSubjectAction(Subject $subject)
+    {
+        $forum = $subject->getCategory()->getForum();
+        $this->checkAccess($forum);
+        $this->manager->closeSubject($subject);
+
+        return new RedirectResponse(
+            $this->generateUrl('claro_forum_subjects', array('category' => $subject->getCategory()->getId()))
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/open/subject/{subject}",
+     *     name="claro_subject_open",
+     *     options={"expose"=true}
+     * )
+     * @EXT\Method("GET")
+     *
+     * @param Subject $subject
+     */
+    public function openSubjectAction(Subject $subject)
+    {
+        $forum = $subject->getCategory()->getForum();
+        $this->checkAccess($forum);
+        $this->manager->openSubject($subject);
+
+        return new RedirectResponse(
+            $this->generateUrl('claro_forum_subjects', array('category' => $subject->getCategory()->getId()))
+        );
+    }
+
+    /**
+     * @Route(
+     *     "/reply/message/{message}",
+     *     name="claro_forum_reply_message_form"
+     * )
+     *
+     * @Template("ClarolineForumBundle:Forum:replyMessageForm.html.twig")
+     * @param Message $message
+     */
+    public function replyMessageAction(Message $message)
+    {
+        $subject = $message->getSubject();
+        $forum = $subject->getCategory()->getForum();
+        $form = $this->container->get('form.factory')->create(new MessageType, new Message());
+        $form->handleRequest($this->get('request'));
+
+        if ($form->isValid()) {
+            $newMsg = $form->getData();
+            $this->manager->replyMessage($newMsg, $message);
+
+            return new RedirectResponse(
+                $this->generateUrl('claro_forum_messages', array('subject' => $subject->getId()))
+            );
+        }
+
+        return array(
+            'subject' => $subject,
+            'form' => $form->createView(),
+            'message' => $message,
+            '_resource' => $forum
+        );
+    }
+
+    /**
+     * @Route(
+     *     "/{forum}/notifications/activate",
+     *     name="claro_forum_activate_global_notifications"
+     * )
+     *
+     * @param Forum $forum
+     */
+    public function activateGlobalNotificationsAction(Forum $forum)
+    {
+        $collection = new ResourceCollection(array($forum->getResourceNode()));
+
+        if (!$this->get('security.context')->isGranted('MODERATE', $collection)) {
+            throw new AccessDeniedHttpException($collection->getErrorsForDisplay());
+        }
+
+        $this->manager->activateGlobalNotifications($forum);
+
+        return new RedirectResponse(
+            $this->generateUrl('claro_forum_categories', array('forum' => $forum->getId()))
+        );
+    }
+
+    /**
+     * @Route(
+     *     "/{forum}/notifications/disable",
+     *     name="claro_forum_disable_global_notifications"
+     * )
+     *
+     * @param Forum $forum
+     */
+    public function disableGlobalNotificationsAction(Forum $forum)
+    {
+        $collection = new ResourceCollection(array($forum->getResourceNode()));
+
+        if (!$this->get('security.context')->isGranted('MODERATE', $collection)) {
+            throw new AccessDeniedHttpException($collection->getErrorsForDisplay());
+        }
+
+        $this->manager->disableGlobalNotifications($forum);
+
+        return new RedirectResponse(
+            $this->generateUrl('claro_forum_categories', array('forum' => $forum->getId()))
         );
     }
 }
