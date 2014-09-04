@@ -99,7 +99,7 @@ claro_desktop:
     type: annotation
 
 claro_desktop_tool_agenda:
-    resource: "@ClarolineCoreBundle/Controller/Tool/DesktopAgendaController.php"
+    resource: "@ClarolineCoreBundle/Controller/Tool/Agenda/DesktopAgendaController.php"
     prefix: desktop/tool/agenda
     type: annotation
 
@@ -134,13 +134,23 @@ claro_workspace_tool_tools_properties:
     type: annotation
 
 claro_workspace_tool_agenda:
-    resource: "@ClarolineCoreBundle/Controller/Tool/WorkspaceAgendaController.php"
+    resource: "@ClarolineCoreBundle/Controller/Tool/Agenda/WorkspaceAgendaController.php"
     prefix: workspaces/tool/agenda
+    type: annotation
+
+claro_tool_agenda:
+    resource: "@ClarolineCoreBundle/Controller/Tool/Agenda/AgendaController.php"
+    prefix: tool/agenda
     type: annotation
 
 claro_workspace_roles:
     resource: "@ClarolineCoreBundle/Controller/Tool/RolesController.php"
     prefix: workspaces/tools/roles/
+    type: annotation
+
+claro_workspace_analytics:
+    prefix: workspace/analytics
+    resource: "@ClarolineCoreBundle/Controller/WorkspaceAnalyticsController.php"
     type: annotation
 
 claro_admin:
@@ -172,10 +182,6 @@ claro_resource_rights:
     resource: "@ClarolineCoreBundle/Controller/ResourceRightsController.php"
     prefix: resource
     type: annotation
-claro_resource_type:
-    resource: "@ClarolineCoreBundle/Controller/ResourceTypeController.php"
-    prefix: resource
-    type: annotation
 
 claro_tool_resoure_manager:
     resource: "@ClarolineCoreBundle/Controller/Tool/ResourceManagerController.php"
@@ -204,8 +210,15 @@ claro_message:
 
 claro_activity:
     resource: "@ClarolineCoreBundle/Controller/ActivityController.php"
-    prefix: activity
+    prefix: activity/
     type: annotation
+
+claro_activity_remove_resource_confirm:
+    pattern: /activity/remove
+    options: { expose: true }
+    defaults:
+        _controller: FrameworkBundle:Template:template
+        template: 'ClarolineCoreBundle:Activity:remove.html.twig'
 
 fos_js_routing:
     resource: "@FOSJsRoutingBundle/Resources/config/routing/routing.xml"
@@ -259,6 +272,19 @@ claro_admin_groups:
     resource: "@ClarolineCoreBundle/Controller/Administration/GroupsController.php"
     type: annotation
 
+claro_admin_competence:
+    prefix: admin/competence
+    resource: "@ClarolineCoreBundle/Controller/Administration/CompetenceController.php"
+    type: annotation
+
+claro_admin_competence_subscription:
+    prefix: admin/competence/subscription
+    resource: "@ClarolineCoreBundle/Controller/Administration/CompetenceSubscriptionController.php"
+    type: annotation
+claro_workspace_competence:
+    prefix: workspace/competence
+    type: annotation
+    resource: "@ClarolineCoreBundle/Controller/Tool/CompetenceToolController.php"
 claro_admin_logs:
     prefix: admin/logs
     resource: "@ClarolineCoreBundle/Controller/Administration/LogsController.php"
@@ -274,10 +300,16 @@ claro_admin_workspace_registration:
     resource: "@ClarolineCoreBundle/Controller/Administration/WorkspaceRegistrationController.php"
     type: annotation
 
-claro_admin_plugins:
-    resource: "@ClarolineCoreBundle/Controller/Administration/PluginsController.php"
-    prefix: admin/plugins
+claro_admin_package:
+    resource: "@ClarolineCoreBundle/Controller/Administration/PackageController.php"
+    prefix: admin/package
+    type: annotation
+
+claro_admin_facet:
+    resource: "@ClarolineCoreBundle/Controller/Administration/FacetController.php"
+    prefix: admin/facet
     type: annotation
 
 claro_badge:
     resource: "@ClarolineCoreBundle/Controller/Badge"
+

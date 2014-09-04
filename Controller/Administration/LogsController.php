@@ -35,7 +35,7 @@ class LogsController extends Controller
      *
      * @EXT\Template()
      *
-     * Displays logs list using filter parameteres and page number
+     * Displays logs list using filter parameters and page number
      *
      * @param $page int The requested page number.
      *

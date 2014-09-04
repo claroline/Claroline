@@ -1,4 +1,4 @@
-{% macro showTag(tagsList, tagWorkspaces, hierarchy, index, displayable) %}
+{% macro showTag(tagsList, tagWorkspaces, hierarchy, index, displayable, listworkspacePending) %}
 
     {% for tag in tagsList %}
         {% set workspaceTagId = tag.getId() %}
@@ -11,15 +11,15 @@
                         data-toggle="collapse"
                         href="#collapse-{{ currentIndex }}"
                     >
-                        <i class="icon-align-justify"></i>
+                        <i class="fa fa-align-justify"></i>
                         {{ tag.getName() }}
-                        <i class="icon-chevron-down pull-right"></i>
+                        <i class="fa fa-chevron-down pull-right"></i>
                     </a>
                 </div>
                 <div id="collapse-{{ currentIndex }}" class="panel-body collapse">
 
-                    {% if hierarchy[workspaceTagId]|length > 0 %}
-                        {{ _self.showTag(hierarchy[workspaceTagId], tagWorkspaces, hierarchy, currentIndex, displayable) }}
+                    {% if hierarchy[workspaceTagId] is defined and hierarchy[workspaceTagId]|length > 0 %}
+                        {{ _self.showTag(hierarchy[workspaceTagId], tagWorkspaces, hierarchy, currentIndex, displayable, listworkspacePending) }}
                     {% endif %}
 
                     {% if tagWorkspaces[workspaceTagId] is defined %}
@@ -49,7 +49,7 @@
     {{
         macros.breadcrumbs([
             {
-                'icon': 'icon-book',
+                'icon': 'fa fa-book',
                 'name': 'workspaces'|trans({}, 'platform'),
                 'href': path('claro_workspace_list')
             },
@@ -78,9 +78,9 @@
                         data-parent="#accordion-all"
                         href="#collapse-all"
                     >
-                        <i class="icon-align-justify"></i>
+                        <i class="fa fa-align-justify"></i>
                         {{ 'all_available_workspaces'|trans({}, 'platform') }}
-                        <i class="icon-chevron-down pull-right"></i>
+                        <i class="fa fa-chevron-down pull-right"></i>
                     </a>
                 </div>
                 <div id="collapse-all" class="panel-body collapse {% if tags|length == 0 %}in{% endif %}">
@@ -89,7 +89,7 @@
             </div>
         {% endif %}
 
-        {{ showTag(rootTags, tagWorkspaces, hierarchy,"0", displayable) }}
+        {{ showTag(rootTags, tagWorkspaces, hierarchy,"0", displayable, listworkspacePending) }}
     </div>
 
     <div id="twig-self-registration-user-id" data-user-id="{{ user.getId() }}">

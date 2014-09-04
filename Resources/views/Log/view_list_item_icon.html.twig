@@ -1,19 +1,19 @@
-{% set icon_class = 'icon-file' %}
+{% set icon_class = 'fa fa-file' %}
 
 {% if 'workspace_' in log.getAction() %}
-    {% set icon_class = 'icon-book' %}
+    {% set icon_class = 'fa fa-book' %}
 {% endif %}
 
 {% if 'user_' in log.getAction() %}
-    {% set icon_class = 'icon-user' %}
+    {% set icon_class = 'fa fa-user' %}
 {% endif %}
 
 {% if 'group_' in log.getAction() %}
-    {% set icon_class = 'icon-group' %}
+    {% set icon_class = 'fa fa-users' %}
 {% endif %}
 
 {% if 'ws_role_' in log.getAction() %}
-    {% set icon_class = 'icon-circle-blank' %}
+    {% set icon_class = 'fa fa-circle-o' %}
 {% endif %}
 
 <i class='{{icon_class}}'></i>

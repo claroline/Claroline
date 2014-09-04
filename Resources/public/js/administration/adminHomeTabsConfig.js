@@ -183,12 +183,12 @@
             success: function () {
                 if (newVisible === 'visible') {
                     visibilityBtn.attr('visiblility-value', 'visible')
-                    visibilityBtn.removeClass('icon-eye-close');
-                    visibilityBtn.addClass('icon-eye-open');
+                    visibilityBtn.removeClass('fa-eye-slash');
+                    visibilityBtn.addClass('fa-eye');
                 } else {
                     visibilityBtn.attr('visiblility-value', 'invisible')
-                    visibilityBtn.removeClass('icon-eye-open');
-                    visibilityBtn.addClass('icon-eye-close');
+                    visibilityBtn.removeClass('fa-eye');
+                    visibilityBtn.addClass('fa-eye-slash');
                 }
             }
         });
@@ -214,12 +214,12 @@
             success: function () {
                 if (newLocked === 'locked') {
                     lockBtn.attr('lock-value', 'locked')
-                    lockBtn.removeClass('icon-unlock');
-                    lockBtn.addClass('icon-lock');
+                    lockBtn.removeClass('fa-unlock');
+                    lockBtn.addClass('fa-lock');
                 } else {
                     lockBtn.attr('lock-value', 'unlocked')
-                    lockBtn.removeClass('icon-lock');
-                    lockBtn.addClass('icon-unlock');
+                    lockBtn.removeClass('fa-lock');
+                    lockBtn.addClass('fa-unlock');
                 }
             }
         });
@@ -512,12 +512,12 @@
             success: function () {
                 if (newVisible === 'visible') {
                     visibilityBtn.attr('visiblility-value', 'visible')
-                    visibilityBtn.removeClass('icon-eye-close');
-                    visibilityBtn.addClass('icon-eye-open');
+                    visibilityBtn.removeClass('fa-eye-slash');
+                    visibilityBtn.addClass('fa-eye');
                 } else {
                     visibilityBtn.attr('visiblility-value', 'invisible')
-                    visibilityBtn.removeClass('icon-eye-open');
-                    visibilityBtn.addClass('icon-eye-close');
+                    visibilityBtn.removeClass('fa-eye');
+                    visibilityBtn.addClass('fa-eye-slash');
                 }
             }
         });
@@ -540,12 +540,12 @@
             success: function () {
                 if (newLocked === 'locked') {
                     lockBtn.attr('lock-value', 'locked')
-                    lockBtn.removeClass('icon-unlock');
-                    lockBtn.addClass('icon-lock');
+                    lockBtn.removeClass('fa-unlock');
+                    lockBtn.addClass('fa-lock');
                 } else {
                     lockBtn.attr('lock-value', 'unlocked')
-                    lockBtn.removeClass('icon-lock');
-                    lockBtn.addClass('icon-unlock');
+                    lockBtn.removeClass('fa-lock');
+                    lockBtn.addClass('fa-unlock');
                 }
             }
         });

@@ -1,0 +1,23 @@
+{% set user = pastEvaluation.getUser() %}
+
+<form id="activity-past-evaluation-edit-form"
+    role="form"
+    action="{{ path(
+        'claro_activity_past_evaluation_edit',
+        {'pastEvaluationId': pastEvaluation.getId() })
+    }}"
+    method="POST"
+    data-user-id="{{ user.getId() }}"
+>
+    <div class="panel-heading">
+        <h3>
+            {{ 'attempt' | trans({}, 'platform') }}
+            [ {{ user.getFirstName() }}
+            {{ user.getLastName() }} ]
+        </h3>
+    </div>
+    <hr>
+    <div class="panel-body">
+        {{ form_widget(form) }}
+    </div>
+</form>

@@ -24,6 +24,7 @@ use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\MaskManager;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Symfony\Component\Translation\Translator;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * @DI\Service("claroline.manager.rights_manager")
@@ -48,6 +49,7 @@ class RightsManager
     private $dispatcher;
     /** @var RoleManager */
     private $roleManager;
+    private $container;
 
     /**
      * Constructor.
@@ -57,7 +59,8 @@ class RightsManager
      *     "om"          = @DI\Inject("claroline.persistence.object_manager"),
      *     "dispatcher"  = @DI\Inject("claroline.event.event_dispatcher"),
      *     "roleManager" = @DI\Inject("claroline.manager.role_manager"),
-     *     "maskManager" = @DI\Inject("claroline.manager.mask_manager")
+     *     "maskManager" = @DI\Inject("claroline.manager.mask_manager"),
+     *     "container"   = @DI\Inject("service_container")
      * })
      */
     public function __construct(
@@ -65,7 +68,8 @@ class RightsManager
         ObjectManager $om,
         StrictDispatcher $dispatcher,
         RoleManager $roleManager,
-        MaskManager $maskManager
+        MaskManager $maskManager,
+        ContainerInterface $container
     )
     {
         $this->rightsRepo = $om->getRepository('ClarolineCoreBundle:Resource\ResourceRights');
@@ -77,6 +81,7 @@ class RightsManager
         $this->dispatcher = $dispatcher;
         $this->roleManager = $roleManager;
         $this->maskManager = $maskManager;
+        $this->container = $container;
     }
 
     /**
@@ -113,7 +118,7 @@ class RightsManager
         $permissions,
         Role $role,
         ResourceNode $node,
-        $isRecursive
+        $isRecursive = false
     )
     {
         //Bugfix: If the flushSuite is uncommented, doctrine returns an error
@@ -142,6 +147,12 @@ class RightsManager
 
             $this->om->persist($toUpdate);
             $this->logChangeSet($toUpdate);
+        }
+
+        //exception for activities
+        if ($node->getResourceType()->getName() === 'activity') {
+            $resource = $this->container->get('claroline.manager.resource_manager')->getResourceFromNode($node);
+            $this->container->get('claroline.manager.activity_manager')->initializePermissions($resource);
         }
 
         //$this->om->endFlushSuite();
@@ -199,9 +210,12 @@ class RightsManager
             $new->setMask($originalRight->getMask());
             $new->setCreatableResourceTypes($originalRight->getCreatableResourceTypes()->toArray());
             $this->om->persist($new);
+            $node->addRight($new);
         }
 
         $this->om->endFlushSuite();
+
+        return $node;
     }
 
     /**
@@ -478,5 +492,31 @@ class RightsManager
         }
 
         return $perms;
+    }
+
+    /**
+     * Initialize the default permissions for a role list.
+     * Directories are excluded.
+     *
+     * @param ResourceNode[] $nodes
+     * @param Role[] $roles
+     */
+    public function initializePermissions(array $nodes, array $roles)
+    {
+        $this->om->startFlushSuite();
+
+        foreach ($nodes as $node) {
+            foreach ($roles as $role) {
+                $type = $node->getResourceType();
+                $this->editPerms(
+                    $type->getDefaultMask(),
+                    $role,
+                    $node,
+                    false
+                );
+            }
+        }
+
+        $this->om->endFlushSuite();
     }
 }

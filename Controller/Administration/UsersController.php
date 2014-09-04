@@ -98,8 +98,12 @@ class UsersController extends Controller
     public function indexAction()
     {
         $this->checkOpen();
+        $canUserBeCreated = $this->roleManager->validateRoleInsert(
+            new User(),
+            $this->roleManager->getRoleByName('ROLE_USER')
+        );
 
-        return array();
+        return array('canUserBeCreated' => $canUserBeCreated);
     }
 
     /**
@@ -114,9 +118,26 @@ class UsersController extends Controller
     public function userCreationFormAction()
     {
         $this->checkOpen();
-        $role = $this->roleManager->getRoleByName('ROLE_USER');
+        $roleUser = $this->roleManager->getRoleByName('ROLE_USER');
+        $isAdmin = ($this->sc->isGranted('ROLE_ADMIN')) ? true: false;
+        $roles = $this->roleManager->getAllPlatformRoles();
+        $unavailableRoles = [];
+
+        foreach ($roles as $role) {
+            $isAvailable = $this->roleManager->validateRoleInsert(new User(), $role);
+
+            if (!$isAvailable) {
+                $unavailableRoles[] = $role;
+            }
+        }
+
         $form = $this->formFactory->create(
-            FormFactory::TYPE_USER_FULL, array(array($role), $this->localeManager->getAvailableLocales())
+            FormFactory::TYPE_USER_FULL,
+            array(
+                array($roleUser),
+                $this->localeManager->getAvailableLocales(),
+                $isAdmin
+            )
         );
 
         $error = null;
@@ -127,7 +148,8 @@ class UsersController extends Controller
 
         return array(
             'form_complete_user' => $form->createView(),
-            'error' => $error
+            'error' => $error,
+            'unavailableRoles' => $unavailableRoles
         );
     }
 
@@ -146,14 +168,39 @@ class UsersController extends Controller
     public function createAction(User $currentUser)
     {
         $this->checkOpen();
+        $roleUser = $this->roleManager->getRoleByName('ROLE_USER');
+        $isAdmin = ($this->sc->isGranted('ROLE_ADMIN')) ? true: false;
 
-        $roles = $this->roleManager->getPlatformRoles($currentUser);
         $form = $this->formFactory->create(
-            FormFactory::TYPE_USER_FULL, array($roles, $this->localeManager->getAvailableLocales())
+            FormFactory::TYPE_USER_FULL,
+            array(
+                array($roleUser),
+                $this->localeManager->getAvailableLocales(),
+                $isAdmin
+            )
         );
         $form->handleRequest($this->request);
 
-        if ($form->isValid()) {
+        $unavailableRoles = [];
+
+        foreach ($form->get('platformRoles')->getData() as $role) {
+            $isAvailable = $this->roleManager->validateRoleInsert(new User(), $role);
+
+            if (!$isAvailable) {
+                $unavailableRoles[] = $role;
+            }
+        }
+
+        $isAvailable = $this->roleManager->validateRoleInsert(new User(), $roleUser);
+
+        if (!$isAvailable) {
+            $unavailableRoles[] = $roleUser;
+        }
+
+        $unavailableRoles = array_unique($unavailableRoles);
+
+
+        if ($form->isValid() && count($unavailableRoles) === 0) {
             $user = $form->getData();
             $newRoles = $form->get('platformRoles')->getData();
             $this->userManager->insertUserWithRoles($user, $newRoles);
@@ -169,7 +216,8 @@ class UsersController extends Controller
 
         return array(
             'form_complete_user' => $form->createView(),
-            'error' => $error
+            'error' => $error,
+            'unavailableRoles' => $unavailableRoles
         );
     }
 
@@ -190,6 +238,7 @@ class UsersController extends Controller
      *
      * @param User[] $users
      *
+     * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function deleteAction(array $users)
@@ -197,6 +246,10 @@ class UsersController extends Controller
         $this->checkOpen();
 
         foreach ($users as $user) {
+            if (!$this->sc->isGranted('ROLE_ADMIN') && $user->hasRole('ROLE_ADMIN')) {
+                throw new AccessDeniedException();
+            }
+
             $this->userManager->deleteUser($user);
             $this->eventDispatcher->dispatch('log', 'Log\LogUserDelete', array($user));
         }
@@ -241,8 +294,6 @@ class UsersController extends Controller
         $pager = $search === '' ?
             $this->userManager->getAllUsers($page, $max, $order, $direction):
             $this->userManager->getUsersByName($search, $page, $max, $order, $direction);
-        
-        $direction = $direction === 'DESC' ? 'ASC' : 'DESC';
 
         return array('pager' => $pager, 'search' => $search, 'max' => $max, 'order' => $order, 'direction' => $direction);
     }
@@ -293,7 +344,7 @@ class UsersController extends Controller
         $this->checkOpen();
         $form = $this->formFactory->create(FormFactory::TYPE_USER_IMPORT);
 
-        return array('form' => $form->createView());
+        return array('form' => $form->createView(), 'error' => null);
     }
 
     /**
@@ -339,6 +390,14 @@ class UsersController extends Controller
 
             foreach ($lines as $line) {
                 $users[] = str_getcsv($line, ';');
+            }
+
+            $roleUser = $this->roleManager->getRoleByName('ROLE_USER');
+            $max = $roleUser->getMaxUsers();
+            $total = $this->userManager->countUsersByRoleIncludingGroup($roleUser);
+
+            if ($total + count($users) > $max) {
+                return array('form' => $form->createView(), 'error' => 'role_user unavailable');
             }
 
             $this->userManager->importUsers($users);

@@ -46,6 +46,16 @@ class PlatformConfiguration
     private $facebookClientSecret;
     private $facebookClientActive;
     private $formCaptcha;
+    private $platformLimitDate;
+    private $platformInitDate;
+    private $accountDuration;
+    private $usernameRegex;
+    private $usernameErrorMessage;
+    private $anonymousPublicProfile;
+    private $homeMenu;
+    private $footerLogin;
+    private $footerWorkspaces;
+    private $headerLocale;
 
     /**
      * @param mixed $sessionDbDataCol
@@ -449,5 +459,95 @@ class PlatformConfiguration
     public function getFormCaptcha()
     {
         return $this->formCaptcha;
+    }
+
+    public function setPlatformLimitDate($platformLimitDate)
+    {
+        $this->platformLimitDate = $platformLimitDate;
+    }
+
+    public function getPlatformLimitDate()
+    {
+        return $this->platformLimitDate;
+    }
+
+    public function setPlatformInitDate($platformInitDate)
+    {
+        $this->platformInitDate = $platformInitDate;
+    }
+
+    public function getPlatformInitDate()
+    {
+        return $this->platformInitDate;
+    }
+
+    public function setAccountDuration($accountDuration)
+    {
+        $this->accountDuration = $accountDuration;
+    }
+
+    public function getAccountDuration()
+    {
+        return $this->accountDuration;
+    }
+
+    public function setUsernameRegex($regex)
+    {
+        $this->regex = $regex;
+    }
+
+    public function getUsernameRegex()
+    {
+        return $this->regex;
+    }
+
+    public function setAnonymousPublicProfile($boolean)
+    {
+        $this->anonymousPublicProfile = $boolean;
+    }
+
+    public function getAnonymousPublicProfile()
+    {
+        return $this->anonymousPublicProfile;
+    }
+
+    public function setHomeMenu($id)
+    {
+        $this->homeMenu = $id;
+    }
+
+    public function getHomeMenu()
+    {
+        return $this->homeMenu;
+    }
+
+    public function setFooterLogin($boolean)
+    {
+        $this->footerLogin = $boolean;
+    }
+
+    public function getFooterLogin()
+    {
+        return $this->footerLogin;
+    }
+
+    public function setFooterWorkspaces($boolean)
+    {
+        $this->footerWorkspaces = $boolean;
+    }
+
+    public function getFooterWorkspaces()
+    {
+        return $this->footerWorkspaces;
+    }
+
+    public function setHeaderLocale($boolean)
+    {
+        $this->headerLocale = $boolean;
+    }
+
+    public function getHeaderLocale()
+    {
+        return $this->headerLocale;
     }
 }

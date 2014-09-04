@@ -99,14 +99,14 @@ class AdministrationToolListener
     }
 
     /**
-     * @DI\Observe("administration_tool_platform_plugins")
+     * @DI\Observe("administration_tool_platform_packages")
      *
      * @param OpenAdministrationToolEvent $event
      */
-    public function onOpenPlatformPlugins(OpenAdministrationToolEvent $event)
+    public function onOpenPlatformPackages(OpenAdministrationToolEvent $event)
     {
         $params = array();
-        $params['_controller'] = 'ClarolineCoreBundle:Administration\Plugins:pluginList';
+        $params['_controller'] = 'ClarolineCoreBundle:Administration\Package:list';
         $this->redirect($params, $event);
     }
 
@@ -175,6 +175,28 @@ class AdministrationToolListener
         $this->redirect($params, $event);
     }
 
+    /**
+     * @DI\Observe("administration_tool_competence_referencial")
+     *
+     * @param OpenAdministrationToolEvent $event
+     */
+    public function onOpenAdministrationCompetences(OpenAdministrationToolEvent $event)
+    {
+        $params = array();
+        $params['_controller'] = 'ClarolineCoreBundle:Administration\Competence:competences';
+        $this->redirect($params, $event);
+    }
+
+    /**
+     * @DI\Observe("administration_tool_competence_subscription")
+     * @param OpenAdministrationToolEvent $event
+     */
+    public function onOpenSubscriptionCompetence(OpenAdministrationToolEvent $event)
+    {
+        $params = array();
+        $params['_controller'] = 'ClarolineCoreBundle:Administration\CompetenceSubscription:menu';
+        $this->redirect($params, $event);
+    }
     private function redirect($params, $event)
     {
         $subRequest = $this->request->duplicate(array(), null, $params);
@@ -182,4 +204,4 @@ class AdministrationToolListener
         $event->setResponse($response);
         $event->stopPropagation();
     }
-} 
+}

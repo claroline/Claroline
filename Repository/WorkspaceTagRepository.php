@@ -56,7 +56,7 @@ class WorkspaceTagRepository extends EntityRepository
             SELECT DISTINCT t
             FROM Claroline\CoreBundle\Entity\Workspace\RelWorkspaceTag rwt
             INNER JOIN Claroline\CoreBundle\Entity\Workspace\WorkspaceTag t WITH t = rwt.tag
-            INNER JOIN Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace w WITH w = rwt.workspace
+            INNER JOIN Claroline\CoreBundle\Entity\Workspace\Workspace w WITH w = rwt.workspace
             WHERE t.user IS NULL
             AND (
         ';

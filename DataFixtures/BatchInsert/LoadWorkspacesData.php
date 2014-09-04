@@ -46,7 +46,7 @@ class LoadWorkspacesData extends LoggableFixture implements ContainerAwareInterf
     public function load(ObjectManager $manager)
     {
         $workspaceManager = $this->container->get('claroline.manager.workspace_manager');
-        $count = $manager->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->count();
+        $count = $manager->getRepository('ClarolineCoreBundle:Workspace\Workspace')->count();
         $totalWorkspaces = $count + 1;
         $admin = $this->findJohnDoe($manager);
         $personalWsTemplateFile = $this->container->getParameter('claroline.param.templates_directory')."default.zip";
@@ -54,10 +54,9 @@ class LoadWorkspacesData extends LoggableFixture implements ContainerAwareInterf
         $start = time();
 
         for ($j = 0, $i = 0; $i < $this->numberWorkspaces; $i++, $totalWorkspaces++) {
-            $manfatoryFieldValue = "ws_batch" . $totalWorkspaces;
-            $config->setWorkspaceName($manfatoryFieldValue);
-            $config->setWorkspaceCode($manfatoryFieldValue);
-            $config->setWorkspaceType(Configuration::TYPE_SIMPLE);
+            $mandatoryFieldValue = "ws_batch" . $totalWorkspaces;
+            $config->setWorkspaceName($mandatoryFieldValue);
+            $config->setWorkspaceCode($mandatoryFieldValue);
             $workspaceManager->create($config, $admin);
 
             if (($i % self::BATCH_SIZE) === 0) {

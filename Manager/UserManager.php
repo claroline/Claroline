@@ -14,8 +14,7 @@ namespace Claroline\CoreBundle\Manager;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\UserPublicProfilePreferences;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Security\PlatformRoles;
@@ -27,10 +26,12 @@ use Claroline\CoreBundle\Persistence\ObjectManager;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\DiExtraBundle\Annotation as DI;
+use Claroline\CoreBundle\Manager\Exception\AddRoleException;
 use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Translation\Translator;
 use Symfony\Component\Validator\ValidatorInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * @DI\Service("claroline.manager.user_manager")
@@ -51,6 +52,7 @@ class UserManager
     private $workspaceManager;
     private $uploadsDirectory;
     private $transfertManager;
+    private $container;
 
     /**
      * Constructor.
@@ -68,7 +70,8 @@ class UserManager
      *     "validator"              = @DI\Inject("validator"),
      *     "workspaceManager"       = @DI\Inject("claroline.manager.workspace_manager"),
      *     "uploadsDirectory"       = @DI\Inject("%claroline.param.uploads_directory%"),
-     *     "transfertManager"       = @DI\Inject("claroline.manager.transfert_manager")
+     *     "transfertManager"       = @DI\Inject("claroline.manager.transfert_manager"),
+     *     "container"              = @DI\Inject("service_container")
      * })
      */
     public function __construct(
@@ -84,7 +87,8 @@ class UserManager
         ValidatorInterface $validator,
         WorkspaceManager $workspaceManager,
         TransfertManager $transfertManager,
-        $uploadsDirectory
+        $uploadsDirectory,
+        ContainerInterface $container
     )
     {
         $this->userRepo               = $objectManager->getRepository('ClarolineCoreBundle:User');
@@ -101,6 +105,7 @@ class UserManager
         $this->validator              = $validator;
         $this->uploadsDirectory       = $uploadsDirectory;
         $this->transfertManager       = $transfertManager;
+        $this->container              = $container;
     }
 
     /**
@@ -115,11 +120,7 @@ class UserManager
     {
         $this->objectManager->startFlushSuite();
         $this->setPersonalWorkspace($user);
-
-        $user
-            ->setPublicUrl($this->generatePublicUrl($user))
-            ->setPublicProfilePreferences(new UserPublicProfilePreferences());
-
+        $user->setPublicUrl($this->generatePublicUrl($user));
         $this->toolManager->addRequiredToolsToUser($user);
         $this->roleManager->setRoleToRoleSubject($user, PlatformRoles::USER);
         $this->objectManager->persist($user);
@@ -129,6 +130,20 @@ class UserManager
         if ($this->mailManager->isMailerAvailable()) {
             $this->mailManager->sendCreationMessage($user);
         }
+
+        return $user;
+    }
+
+    /**
+     * Persist a user.
+     *
+     * @param User $user
+     * @return User
+     */
+    public function persistUser(User $user)
+    {
+        $this->objectManager->persist($user);
+        $this->objectManager->flush();
 
         return $user;
     }
@@ -163,6 +178,10 @@ class UserManager
      */
     public function deleteUser(User $user)
     {
+        if ($this->container->get('security.context')->getToken()->getUser()->getId() === $user->getId()) {
+            throw new \Exception('A user cannot delete himself');
+        }
+
         //soft delete~
         $user->setMail('mail#' . $user->getId());
         $user->setFirstName('firstname#' . $user->getId());
@@ -178,7 +197,6 @@ class UserManager
 
         if ($ws) {
             $ws->setCode($ws->getCode() . '#deleted_user#' . $user->getId());
-            $ws->setPublic(false);
             $ws->setDisplayable(false);
             $this->objectManager->persist($ws);
         }
@@ -217,13 +235,21 @@ class UserManager
      * This user will have the additional roles $roles.
      * These roles must already exists.
      *
-     * @param \Claroline\CoreBundle\Entity\User            $user
+     * @param \Claroline\CoreBundle\Entity\User $user
      * @param \Doctrine\Common\Collections\ArrayCollection $roles
      */
     public function insertUserWithRoles(User $user, ArrayCollection $roles)
     {
         $this->objectManager->startFlushSuite();
         $this->createUser($user);
+        foreach ($roles as $role) {
+            $validated = $this->roleManager->validateRoleInsert($user, $role);
+
+            if (!$validated) {
+                throw new Exception\AddRoleException();
+            }
+        }
+
         $this->roleManager->associateRoles($user, $roles);
         $this->objectManager->endFlushSuite();
     }
@@ -245,6 +271,14 @@ class UserManager
      */
     public function importUsers(array $users)
     {
+        $roleUser = $this->roleManager->getRoleByName('ROLE_USER');
+        $max = $roleUser->getMaxUsers();
+        $total = $this->countUsersByRoleIncludingGroup($roleUser);
+
+        if ($total + count($users) > $max) {
+            throw new AddRoleException();
+        }
+
         $lg = $this->platformConfigHandler->getParameter('locale_language');
         $this->objectManager->startFlushSuite();
 
@@ -280,7 +314,6 @@ class UserManager
     public function setPersonalWorkspace(User $user)
     {
         $config = Configuration::fromTemplate($this->personalWsTemplateFile);
-        $config->setWorkspaceType(Configuration::TYPE_SIMPLE);
         $locale = $this->platformConfigHandler->getParameter('locale_language');
         $this->translator->setLocale($locale);
         $personalWorkspaceName = $this->translator->trans('personal_workspace', array(), 'platform') . $user->getUsername();
@@ -298,11 +331,10 @@ class UserManager
      * @param \Claroline\CoreBundle\Entity\User $user
      * @param ArrayCollection                   $roles
      */
-    public function setPlatformRoles(User $user, ArrayCollection $roles)
+    public function setPlatformRoles(User $user, $roles)
     {
-        $user->setPlatformRoles($roles);
-        $this->objectManager->persist($user);
-        $this->objectManager->flush();
+        $this->roleManager->resetRoles($user);
+        $this->roleManager->associateRoles($user, $roles);
     }
 
     /**
@@ -371,46 +403,6 @@ class UserManager
     }
 
     /**
-     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
-     * @param \Claroline\CoreBundle\Entity\Role                        $role
-     *
-     * @return User[]
-     */
-    public function getUserByWorkspaceAndRole(AbstractWorkspace $workspace, Role $role)
-    {
-        return $this->userRepo->findByWorkspaceAndRole($workspace, $role);
-    }
-
-    /**
-     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
-     * @param string                                                   $search
-     * @param integer                                                  $page
-     * @param integer                                                  $max
-     *
-     * @return \Pagerfanta\Pagerfanta;
-     */
-    public function getWorkspaceOutsidersByName(AbstractWorkspace $workspace, $search, $page, $max = 20)
-    {
-        $query = $this->userRepo->findWorkspaceOutsidersByName($workspace, $search, false);
-
-        return $this->pagerFactory->createPager($query, $page, $max);
-    }
-
-    /**
-     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
-     * @param integer                                                  $page
-     * @param integer                                                  $max
-     *
-     * @return \Pagerfanta\Pagerfanta;
-     */
-    public function getWorkspaceOutsiders(AbstractWorkspace $workspace, $page, $max = 20)
-    {
-        $query = $this->userRepo->findWorkspaceOutsiders($workspace, false);
-
-        return $this->pagerFactory->createPager($query, $page, $max);
-    }
-
-    /**
      * @param integer $page
      * @param integer $max
      * @param string  $orderedBy
@@ -423,6 +415,20 @@ class UserManager
         $query = $this->userRepo->findAll(false, $orderedBy, $order);
 
         return $this->pagerFactory->createPager($query, $page, $max);
+    }
+
+    /**
+     * @param integer $page
+     * @param integer $max
+     * @param string  $orderedBy
+     * @param string  $order
+     *
+     * @return \Pagerfanta\Pagerfanta;
+     */
+    public function getAllUsersExcept($page, $max = 20, $orderedBy = 'id', $order = null, array $users )
+    {
+        $query = $this->userRepo->findAllExcept($users);
+        return $this->pagerFactory->createPagerFromArray($query, $page, $max);
     }
 
     /**
@@ -462,9 +468,9 @@ class UserManager
      *
      * @return \Pagerfanta\Pagerfanta;
      */
-    public function getUsersByGroup(Group $group, $page, $max = 20, $orderedBy = 'id')
+    public function getUsersByGroup(Group $group, $page, $max = 20, $orderedBy = 'id', $order = null)
     {
-        $query = $this->userRepo->findByGroup($group, false, $orderedBy);
+        $query = $this->userRepo->findByGroup($group, false, $orderedBy, $order);
 
         return $this->pagerFactory->createPager($query, $page, $max);
     }
@@ -480,11 +486,11 @@ class UserManager
     }
 
     /**
-     * @param AbstractWorkspace $workspace
+     * @param Workspace $workspace
      *
      * @return User[]
      */
-    public function getByWorkspaceWithUsersFromGroup(AbstractWorkspace $workspace)
+    public function getByWorkspaceWithUsersFromGroup(Workspace $workspace)
     {
         return $this->userRepo->findByWorkspaceWithUsersFromGroup($workspace);
     }
@@ -507,35 +513,27 @@ class UserManager
     }
 
     /**
-     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
-     * @param integer                                                  $page
-     * @param integer                                                  $max
-     *
-     * @return \Pagerfanta\Pagerfanta
-     */
-    public function getUsersByWorkspace(AbstractWorkspace $workspace, $page, $max = 20)
-    {
-        $query = $this->userRepo->findByWorkspace($workspace, false);
-
-        return $this->pagerFactory->createPager($query, $page, $max);
-    }
-
-    /**
-     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace[] $workspaces
+     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace[] $workspaces
      * @param integer                                                    $page
      * @param integer                                                    $max
      *
      * @return \Pagerfanta\Pagerfanta
      */
-    public function getUsersByWorkspaces(array $workspaces, $page, $max = 20)
+    public function getUsersByWorkspaces(array $workspaces, $page, $max = 20, $withPager = true)
     {
-        $query = $this->userRepo->findUsersByWorkspaces($workspaces, false);
+        if ($withPager) {
+            $query = $this->userRepo->findUsersByWorkspaces($workspaces, false);
+            
+            return $this->pagerFactory->createPager($query, $page, $max);
+        } else {
+            return  $this->userRepo->findUsersByWorkspaces($workspaces);
+ 
+        }
 
-        return $this->pagerFactory->createPager($query, $page, $max);
     }
 
     /**
-     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace[] $workspaces
+     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace[] $workspaces
      * @param integer                                                    $page
      * @param string                                                     $search
      * @param integer                                                    $max
@@ -556,29 +554,14 @@ class UserManager
     }
 
     /**
-     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
      * @param string                                                   $search
      * @param integer                                                  $page
      * @param integer                                                  $max
      *
      * @return \Pagerfanta\Pagerfanta
      */
-    public function getUsersByWorkspaceAndName(AbstractWorkspace $workspace, $search, $page, $max = 20)
-    {
-        $query = $this->userRepo->findByWorkspaceAndName($workspace, $search, false);
-
-        return $this->pagerFactory->createPager($query, $page, $max);
-    }
-
-    /**
-     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
-     * @param string                                                   $search
-     * @param integer                                                  $page
-     * @param integer                                                  $max
-     *
-     * @return \Pagerfanta\Pagerfanta
-     */
-    public function getAllUsersByWorkspaceAndName(AbstractWorkspace $workspace, $search, $page, $max = 20)
+    public function getAllUsersByWorkspaceAndName(Workspace $workspace, $search, $page, $max = 20)
     {
         $query = $this->userRepo->findAllByWorkspaceAndName($workspace, $search, false);
 
@@ -614,26 +597,6 @@ class UserManager
         $query = $this->userRepo->findGroupOutsidersByName($group, $search, false, $orderedBy);
 
         return $this->pagerFactory->createPager($query, $page, $max);
-    }
-
-    /**
-     * @param \Claroline\CoreBundle\Entity\User $excludedUser
-     *
-     * @return User[]
-     */
-    public function getAllUsersExcept(User $excludedUser)
-    {
-        return $this->userRepo->findAllExcept($excludedUser);
-    }
-
-    /**
-     * @param string[] $usernames
-     *
-     * @return User[]
-     */
-    public function getUsersByUsernames(array $usernames)
-    {
-        return $this->userRepo->findByUsernames($usernames);
     }
 
     /**
@@ -706,11 +669,12 @@ class UserManager
     }
 
     /**
-     * @param Role[]  $roles
+     * @param Role[] $roles
      * @param integer $page
      * @param integer $max
-     * @param string  $orderedBy
+     * @param string $orderedBy
      *
+     * @param null $order
      * @return \Pagerfanta\Pagerfanta
      */
     public function getByRolesIncludingGroups(array $roles, $page = 1, $max = 20, $orderedBy = 'id', $order= null)
@@ -718,6 +682,26 @@ class UserManager
         $res = $this->userRepo->findByRolesIncludingGroups($roles, true, $orderedBy, $order);
 
         return $this->pagerFactory->createPager($res, $page, $max);
+    }
+
+    /**
+     * @param Role[]  $roles
+     * @param integer $page
+     * @param integer $max
+     *
+     * @return \Pagerfanta\Pagerfanta
+     */
+    public function getUsersByRolesIncludingGroups(
+        array $roles,
+        $page = 1,
+        $max = 20,
+        $executeQuery = true
+    )
+    {
+        $users = $this->userRepo
+            ->findUsersByRolesIncludingGroups($roles, $executeQuery);
+
+        return $this->pagerFactory->createPagerFromArray($users, $page, $max);
     }
 
     /**
@@ -751,54 +735,6 @@ class UserManager
     }
 
     /**
-     * @param Role[]                                                   $roles
-     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
-     * @param integer                                                  $page
-     * @param integer                                                  $max
-     *
-     * @return \Pagerfanta\Pagerfanta
-     */
-    public function getOutsidersByWorkspaceRoles(array $roles, AbstractWorkspace $workspace, $page = 1, $max = 20)
-    {
-        $res = $this->userRepo->findOutsidersByWorkspaceRoles($roles, $workspace, true);
-
-        return $this->pagerFactory->createPager($res, $page, $max);
-    }
-
-    /**
-     * @param Role[]  $roles
-     * @param string  $name
-     * @param integer $page
-     * @param integer $max
-     *
-     * @return \Pagerfanta\Pagerfanta
-     */
-    public function getUsersByRolesAndName(array $roles, $name, $page = 1, $max  = 20)
-    {
-        $res = $this->userRepo->findByRolesAndName($roles, $name, true);
-
-        return $this->pagerFactory->createPager($res, $page, $max);
-    }
-
-    /**
-     * @param Role[]                                                   $roles
-     * @param string                                                   $name
-     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
-     * @param integer                                                  $page
-     * @param integer                                                  $max
-     *
-     * @return \Pagerfanta\Pagerfanta| \Doctrine\ORM\Query
-     */
-    public function getOutsidersByWorkspaceRolesAndName(
-        array $roles, $name, AbstractWorkspace $workspace, $page = 1, $max = 20
-    )
-    {
-        $res = $this->userRepo->findOutsidersByWorkspaceRolesAndName($roles, $name, $workspace, true);
-
-        return ($page !== 0) ? $this->pagerFactory->createPager($res, $page, $max): $res;
-    }
-
-    /**
      * @param string $email
      *
      * @return User
@@ -818,6 +754,16 @@ class UserManager
     public function getResetPasswordHash($resetPassword)
     {
         return $this->userRepo->findOneByResetPasswordHash($resetPassword);
+    }
+    
+    /**
+     * @param integer $userId
+     *
+     * @return User|null
+     */
+    public function getEnabledUserById($userId)
+    {
+        return $this->userRepo->findEnabledUserById($userId);
     }
 
     /**
@@ -854,7 +800,7 @@ class UserManager
         $this->objectManager->persist($user);
         $this->objectManager->flush();
     }
-    
+
     public function toArrayForPicker($users)
     {
         $resultArray = array();
@@ -882,7 +828,8 @@ class UserManager
      */
     public function generatePublicUrl(User $user, $try = 0)
     {
-        $publicUrl = strtolower(sprintf('%s.%s', $user->getFirstName(), $user->getLastName()));
+        $publicUrl = $user->getFirstName() . '.' . $user->getLastName();
+        $publicUrl = strtolower(str_replace(' ', '-', $publicUrl));
 
         if (0 < $try) {
             $publicUrl .= $try;
@@ -896,19 +843,28 @@ class UserManager
         return $publicUrl;
     }
 
-    /**
-     * @return UserPublicProfilePreferences
-     */
-    public function getUserPublicProfilePreferencesForAdmin()
+    public function countUsersByRoleIncludingGroup(Role $role)
     {
-        $userPublicProfilePreferences = new UserPublicProfilePreferences();
-        $userPublicProfilePreferences
-            ->setSharePolicy(UserPublicProfilePreferences::SHARE_POLICY_EVERYBODY)
-            ->setAllowMailSending(true)
-            ->setAllowMessageSending(true)
-            ->setDisplayEmail(true)
-            ->setDisplayPhoneNumber(true);
+        return $this->objectManager->getRepository('ClarolineCoreBundle:User')->countUsersByRoleIncludingGroup($role);
+    }
 
-        return $userPublicProfilePreferences;
+    public function countUsersOfGroup(Group $group)
+    {
+        return $this->userRepo->countUsersOfGroup($group);
+    }
+
+    public function setUserInitDate(User $user)
+    {
+        $accountDuration = $this->platformConfigHandler->getParameter('account_duration');
+        $expirationDate = new \DateTime();
+
+        ($accountDuration === null) ?
+            $expirationDate->setDate(2100, 1, 1):
+            $expirationDate->add(new \DateInterval('P' . $accountDuration . 'D'));
+
+        $user->setExpirationDate($expirationDate);
+        $user->setInitDate(new \DateTime());
+        $this->objectManager->persist($user);
+        $this->objectManager->flush();
     }
 }

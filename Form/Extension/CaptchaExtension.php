@@ -29,13 +29,17 @@ class CaptchaExtension extends AbstractTypeExtension
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        if (array_key_exists('no_captcha', $options) && $options['no_captcha'] === true) {
+            return;
+        }
+
         //if the captcha option is activated
         $ch = $this->container->get('claroline.config.platform_config_handler');
 
         if ($ch->getParameter('form_captcha')) {
+            $securityToken = $this->container->get('security.context')->getToken();
 
-        //add captcha if anon.
-            if ($this->container->get('security.context')->getToken()->getUser() === 'anon.') {
+            if (null !== $securityToken && $securityToken->getUser() === 'anon.') {
                 $builder->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event) {
                     $form = $event->getForm();
                     $data = $event->getData();

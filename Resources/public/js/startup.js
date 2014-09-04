@@ -67,8 +67,6 @@
     });
 
     $(document).ajaxError(function (event, jqXHR) {
-        console.debug(jqXHR.getResponseHeader('XXX-Claroline'));
-        console.debug(jqXHR);
         if (jqXHR.status === 403 && jqXHR.getResponseHeader('XXX-Claroline') !== 'insufficient-permissions') {
             ajaxAuthenticationErrorHandler(jqXHR.responseText);
         } else if (jqXHR.status === 500 || jqXHR.status === 422 || jqXHR.status === 403) {
@@ -83,7 +81,7 @@
 
     // Required for variables translations (the language can't be known at the compile time)
     Twig.setFilter('trans', function (name, parameters, domain) {
-        return translator.get(domain + ':' + name);
+        return translator.get(domain + ':' + name) == domain + ':' + name ? name: translator.get(domain + ':' + name);
     });
 
     // Without the next lines, the fixed top bar overlays content

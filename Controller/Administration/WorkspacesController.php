@@ -58,7 +58,7 @@ class WorkspacesController extends Controller
         $this->eventDispatcher    = $eventDispatcher;
         $this->sc                 = $sc;
         $this->toolManager        = $toolManager;
-        $this->workspaceAdminTool = $this->toolManager->getAdminToolByName('platform_parameters');
+        $this->workspaceAdminTool = $this->toolManager->getAdminToolByName('workspace_management');
     }
 
     /**
@@ -92,7 +92,6 @@ class WorkspacesController extends Controller
         $pager = $search === '' ?
             $this->workspaceManager->findAllWorkspaces($page, $max, $order, $direction) :
             $this->workspaceManager->getWorkspaceByName($search, $page, $max, $order);
-        $direction = $direction === 'DESC' ? 'ASC' : 'DESC';
 
         return array('pager' => $pager, 'search' => $search, 'max' => $max, 'order' => $order, 'direction' => $direction );
     }
@@ -152,7 +151,7 @@ class WorkspacesController extends Controller
      * @EXT\Method("DELETE")
      * @EXT\ParamConverter(
      *     "workspaces",
-     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      class="ClarolineCoreBundle:Workspace\Workspace",
      *      options={"multipleIds" = true}
      * )
      *

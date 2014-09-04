@@ -10,46 +10,44 @@ Add Pictures: 'Ajouter des photos'
 Add a link here: 'Ajouter un lien ici'
 Add a link: 'Ajouter un lien'
 An error occurred: 'Une erreur s''est produite'
-Are you sure you want to delete this content?: 'Êtes-vous sûr de vouloir supprimer ce contenu?'
-Content Administration: 'Administration du contenu'
-Content pages: 'pages de contenu'
-Content regions: 'Zones de contenu'
-Create a content: 'Créer un contenu'
-Link address: 'Adresse du lien'
-Link title: 'Titre du lien'
-Menu title: 'Titre du menu'
-New content page: 'Nouvelle page de contenu'
-Note that you can add a link simply by pasting on the content body: 'Notez que vous pouvez rajouter un lien simplement en le collant sur le corps du contenu'
-Optional title: 'Titre facultatif'
-Please try again later or check your internet connection: 'Veuillez réessayer plus tard ou vérifiez votre connexion Internet'
-Size of content: 'Taille du contenu'
-This action is irreversible: 'Cette action est irréversible'
-You can add interactive contents as videos or presentations from websites as: 'Vous pouvez rajouter des contenus interactifs tels que des vidéos ou des présentations à partir de sites comme'
+Are you sure you want to delete this content?: 'Êtes-vous sûr de vouloir supprimer ce contenu ?'
 Cancel: Annuler
-Content: Contenu
+Collapse: Accordéon
 Content Administration: 'Administration du contenu'
 Content pages: 'Pages de contenu'
 Content regions: 'Zones de contenu'
-Create: Créer
+Content: Contenu
 Create a content: 'Créer un contenu'
+Create: Créer
 Delete: Effacer
 Edit: Editer
 Error: Erreur
 Footer: 'Pied de page'
+For not logged users: Pour les utilisateurs non connectés
 Header: Entête
 Left: 'À gauche'
 Link address: 'Adresse du lien'
 Link title: 'Titre du lien'
+Menu settings: Réglages du menu
 Menu title: 'Titre du menu'
+Move content: Déplacer le contenu
 New content page: 'Nouvelle page de contenu'
-Note that you can add a link simply by pasting on the content body: 'Notez que vous pouvez rajouter un lien simplement en le collant sur le corps du contenu'
+Note that you can add a link simply by pasting it on the content body: 'Notez que vous pouvez rajouter un lien simplement en le collant sur le corps du contenu'
 Ok: OK
 Optional title: 'Titre facultatif'
 Pages: Pages
-Please try again later or check your internet connection: 'Veuillez réessayer plus tard ou vérifier votre connexion Internet'
+Please try again later or check your internet connection: 'Veuillez réessayer plus tard ou vérifiez votre connexion Internet'
+Preview: Aperçu
+Read more: Lire la suite
 Region: Zone
 Right: 'À droite'
-Size: Taille
+Select a page: Sélectionnez une page
+Set this menu as header menu in the home page: Choisir ce menu en tant que le menu d'en-tête dans la page d'accueil
+Show the connection button at the footer of home page: Afficher le bouton de connexion en bas de page dans la page d'accueil
+Show the language button in the header menu: Afficher le bouton de langue dans le menu d'en-tête
+Show the workspace menu at the footer of home page: Afficher le menu de l'espace de travail en bas de page dans la page d'accueil
 Size of content: 'Taille du contenu'
+Size: Taille
 This action is irreversible: 'Cette action est irréversible'
-You can add interactive contents as videos or presentations from websites as: 'Vous pouvez rajouter des contenus interactifs tels que des vidéos ou des présentations à partir de sites comme'
+When header menu is available: Lorsque le menu principal est disponible
+You can add interactive content such as videos or presentations from websites like: 'Vous pouvez rajouter des contenus interactifs tels que des vidéos ou des présentations à partir de sites comme'

@@ -12,13 +12,13 @@
 namespace Claroline\CoreBundle\Controller\Badge\Tool;
 
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\Badge\Badge;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class BadgeController extends Controller
 {
-    public function myWorkspaceBadgeAction(AbstractWorkspace $workspace, User $loggedUser, $badgePage)
+    public function myWorkspaceBadgeAction(Workspace $workspace, User $loggedUser, $badgePage)
     {
         /** @var \Claroline\CoreBundle\Rule\Validator $badgeRuleValidator */
         $badgeRuleValidator = $this->get("claroline.rule.validator");
@@ -27,6 +27,7 @@ class BadgeController extends Controller
         $workspaceBadges = $this->getDoctrine()->getManager()->getRepository('ClarolineCoreBundle:Badge\Badge')->findByWorkspace($workspace);
 
         $ownedBadges      = array();
+        $finishedBadges   = array();
         $inProgressBadges = array();
         $availableBadges  = array();
         $displayedBadges  = array();
@@ -44,8 +45,12 @@ class BadgeController extends Controller
                 $nbBadgeRules      = count($workspaceBadge->getRules());
                 $validatedRules    = $badgeRuleValidator->validate($workspaceBadge, $loggedUser);
 
-                if(0 < $nbBadgeRules && 0 < $validatedRules['validRules'] && $nbBadgeRules >= $validatedRules['validRules']) {
-                    $inProgressBadges[] = $workspaceBadge;
+                if(0 < $nbBadgeRules && 0 < $validatedRules['validRules']) {
+                    if ($validatedRules['validRules'] >= $nbBadgeRules) {
+                        $finishedBadges[] = $workspaceBadge;
+                    } else {
+                        $inProgressBadges[] = $workspaceBadge;
+                    }
                 }
                 else {
                     $availableBadges[] = $workspaceBadge;
@@ -59,6 +64,19 @@ class BadgeController extends Controller
             $displayedBadges[] = array(
                 'type'  => 'owned',
                 'badge' => $ownedBadge
+            );
+        }
+
+        foreach ($finishedBadges as $finishedBadge) {
+            $badgeType = 'finished';
+
+            if($loggedUser->hasClaimedFor($finishedBadge)) {
+                $badgeType = 'claimed';
+            }
+
+            $displayedBadges[] = array(
+                'type'  => $badgeType,
+                'badge' => $finishedBadge
             );
         }
 

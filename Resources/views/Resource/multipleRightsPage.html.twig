@@ -10,9 +10,9 @@
                 <div class="panel-heading">
                     <h3 class="panel-title">
                         <a data-toggle="collapse" href="#collapse-{{ currentIndex }}">
-                            <i class="icon-align-justify"></i>
+                            <i class="fa fa-align-justify"></i>
                             {{ tag.getName() }}
-                            <i class="icon-chevron-down pull-right"></i>
+                            <i class="fa fa-chevron-down pull-right"></i>
                         </a>
                     </h3>
                 </div>
@@ -22,29 +22,31 @@
                             {{ _self.showTag(hierarchy[tag.getId()], tagWorkspaces, hierarchy, currentIndex, displayable, workspaceRoles, resource) }}
                         {% endif %}
                     {% endif %}
-                    {% for relWorkspaceTag in tagWorkspaces[tag.id] %}
-                        <div class="panel panel-default">
-                            {% set workspace = relWorkspaceTag.getWorkspace() %}
-                            <div class="panel-heading">
-                                <a data-toggle="collapse" href="#collapse-{{ currentIndex }}-{{ workspace.getCode() }}">
-                                    <h3 class="panel-title">
-                                        {{ workspace.getName() }}
-                                        <span class="workspace-code">({{ workspace.getCode() }})</span>
-                                    </h3>
-                                </a>
+                    {% if tagWorkspaces[tag.getId()] is defined %}
+                        {% for relWorkspaceTag in tagWorkspaces[tag.getId()] %}
+                            <div class="panel panel-default">
+                                {% set workspace = relWorkspaceTag.getWorkspace() %}
+                                <div class="panel-heading">
+                                    <a data-toggle="collapse" href="#collapse-{{ currentIndex }}-{{ workspace.getCode() }}">
+                                        <h3 class="panel-title">
+                                            {{ workspace.getName() }}
+                                            <span class="workspace-code">({{ workspace.getCode() }})</span>
+                                        </h3>
+                                    </a>
+                                </div>
+                                <div id="collapse-{{ currentIndex }}-{{ workspace.getCode() }}" class="list-group collapse">
+                                    {% for role in workspaceRoles[workspace.getCode()] %}
+                                        {% if role.getName() != 'ROLE_WS_MANAGER_' ~ workspace.getGuid() %}
+                                            <a class="workspace-role-item list-group-item"
+                                               href="{{ path('claro_resource_right_form', {'node':resource.id, 'role':role.id}) }}">
+                                                {{ role.getTranslationKey() }}
+                                            </a>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
                             </div>
-                            <div id="collapse-{{ currentIndex }}-{{ workspace.getCode() }}" class="list-group collapse">
-                                {% for role in workspaceRoles[workspace.getCode()] %}
-                                    {% if role.getName() != 'ROLE_WS_MANAGER_' ~ workspace.getGuid() %}
-                                        <a class="workspace-role-item list-group-item"
-                                           href="{{ path('claro_resource_right_form', {'node':resource.id, 'role':role.id}) }}">
-                                            {{ role.getTranslationKey() }}
-                                        </a>
-                                    {% endif %}
-                                {% endfor %}
-                            </div>
-                        </div>
-                    {% endfor %}
+                        {% endfor %}
+                    {% endif %}
                 </div>
             </div>
         {% endif %}
@@ -98,10 +100,6 @@
                             <tr>
                                 <td><label for="everyone">{{ 'to_everyone' | trans({}, 'platform')}}</label></td>
                                 <td><input id="everyone" type="checkbox"></td>
-                            </tr>
-                            <tr>
-                                <td><label for="anonymous">{{ 'to_anonymous' | trans({}, 'platform')}}</label></td>
-                                <td><input id="anonymous" type="checkbox"></td>
                             </tr>
                             <tr>
                                 <td><label for="workspace">{{ 'to_workspace_members' | trans({}, 'platform')}}</label></td>
@@ -169,7 +167,7 @@
                                                 <a data-resource-id="{{ resource.getId() }}"
                                                    class="res-creation-options"
                                                    href="{{ path('claro_resource_right_creation_form', {'node': resourceRight.getResourceNode().getId(), 'role': resourceRight.getRole().getId() }) }}">
-                                                   <i class="icon-cog"></i> {{ 'options'|trans({}, 'platform') }}
+                                                   <i class="fa fa-cog"></i> {{ 'options'|trans({}, 'platform') }}
                                                 </a>
                                             </td>
                                         {% endif %}
@@ -193,9 +191,9 @@
                         <div class="panel-heading">
                             <a data-toggle="collapse" data-parent="#accordion-all" href="#collapse-all">
                                 <h3 class="panel-title">
-                                    <i class="icon-align-justify"></i>
+                                    <i class="fa fa-align-justify"></i>
                                     {{ 'all_workspaces'|trans({}, 'platform') }}
-                                    <i class="icon-chevron-down pull-right"></i>
+                                    <i class="fa fa-chevron-down pull-right"></i>
                                 </h3>
                             </a>
                         </div>
@@ -212,19 +210,22 @@
                                     </div>
                                     <div id="collapse-all-{{ workspace.getCode() }}" class="list-group collapse">
                                         {% for role in workspaceRoles[workspace.getCode()] %}
-                                            <a class="workspace-role-item list-group-item"
-                                               href="{{ path('claro_resource_right_form', {'node':resource.id, 'role':role.id}) }}">
-                                                {{ role.getTranslationKey()|trans({}, 'platform') }}
-                                            </a>
+
+                                            {% if 'ROLE_WS_MANAGER' in role.getName() != 1 %}
+                                                <a class="workspace-role-item list-group-item"
+                                                   href="{{ path('claro_resource_right_form', {'node':resource.id, 'role':role.id}) }}">
+                                                    {{ role.getTranslationKey()|trans({}, 'platform') }}
+                                                </a>
+                                            {% endif %}
                                         {% endfor %}
                                     </div>
                                 </div>
                             {% endfor %}
-                            <div id="form-rights-tag-wrapper"></div>
                         </div>
                     </div>
                     {{ showTag(rootTags, tagWorkspaces, hierarchy, "0", displayable, workspaceRoles, resource) }}
                 </div>
+                <div id="form-rights-tag-wrapper"></div>
             </div>
         </div>
     </form>

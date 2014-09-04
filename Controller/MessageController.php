@@ -24,7 +24,7 @@ use JMS\SecurityExtraBundle\Annotation as SEC;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Message;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Library\Security\Utilities;
 use Claroline\CoreBundle\Manager\GroupManager;
@@ -122,11 +122,11 @@ class MessageController
      *
      * Displays the message form with the "to" field filled with users of a workspace.
      *
-     * @param AbstractWorkspace $workspace
+     * @param Workspace $workspace
      *
      * @return Response
      */
-    public function formForWorkspaceAction(AbstractWorkspace $workspace)
+    public function formForWorkspaceAction(Workspace $workspace)
     {
         $url = $this->router->generate('claro_message_show', array('message' => 0))
             . '?wsIds[]=' . $workspace->getId();
@@ -297,7 +297,7 @@ class MessageController
      * )
      * @EXT\ParamConverter(
      *      "workspaces",
-     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      class="ClarolineCoreBundle:Workspace\Workspace",
      *      options={"multipleIds" = true, "name"="wsIds"}
      * )
      * @EXT\ParamConverter(
@@ -583,6 +583,7 @@ class MessageController
                     );
                 }
             }
+
             // get groups in which user is subscribed
             $userGroups = $user->getGroups();
             $userGroupsFinal = array();
@@ -600,6 +601,7 @@ class MessageController
                     }
                 }
             }
+
             // merge the 2 groups array
             foreach ($userGroupsFinal as $userGroupFinal) {
                 if (!in_array($userGroupFinal, $groups)) {
@@ -607,7 +609,7 @@ class MessageController
                 }
             }
 
-            $this->pagerFactory->createPagerFromArray($groups, $page);
+            $groups = $this->pagerFactory->createPagerFromArray($groups, $page);
         }
 
         return array('groups' => $groups, 'search' => $search);
@@ -659,31 +661,34 @@ class MessageController
         $names = explode(';', $receiverString);
         $usernames = array();
         $groupNames = array();
+        $workspaceCodes = array();
 
         foreach ($names as $name) {
             if (substr($name, 0, 1) === '{') {
                 $groupNames[] = trim($name, '{}');
+            } elseif (substr($name, 0, 1) === '[') {
+                $workspaceCodes[] = trim($name, '[]');
             } else {
                 $usernames[] = $name;
             }
         }
 
-        $groups = $this->groupManager->getGroupsByNames($groupNames);
-
-        foreach ($groups as $group) {
-            $users = $this->userManager->getUsersByGroupWithoutPager($group);
-
-            foreach ($users as $user) {
-                $usernames[] = $user->getUsername();
-            }
+        if (in_array($user->getUsername(), $usernames)) {
+            return true;
         }
 
-        foreach ($usernames as $username) {
-            if (strtolower($user->getUsername()) === strtolower($username)) {
+        foreach ($user->getGroups() as $group) {
+            if (in_array($group->getName(), $groupNames)) {
                 return true;
             }
         }
 
-        throw new AccessDeniedException("This isn't your message");
+        foreach ($this->workspaceManager->getWorkspacesByUser($user) as $workspace) {
+            if (in_array($workspace->getCode(), $workspaceCodes)) {
+                return true;
+            }
+        }
+
+        throw new AccessDeniedException();
     }
 }

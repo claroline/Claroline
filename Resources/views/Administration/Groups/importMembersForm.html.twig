@@ -6,7 +6,7 @@
     {{
         macros.breadcrumbs([
             {
-                'icon': 'icon-cog',
+                'icon': 'fa fa-cog',
                 'name': 'administration'|trans({}, 'platform'),
                 'href': path('claro_admin_index')
             },
@@ -70,7 +70,13 @@
                     <li>{{ 'phone'|trans({}, 'platform') }}</li>
                 </ul>
             </div>
-
+            {% if error is defined %}
+                {% if error %}
+                    <div class="alert alert-danger">
+                        {{'role_limit_reached'|trans({'%translationKey%': 'user'|trans({}, 'platform')}, 'platform') }}
+                    </div>
+                {% endif %}
+            {% endif %}
             {{ form_widget(form) }}
         </div>
         <div class="panel-footer">

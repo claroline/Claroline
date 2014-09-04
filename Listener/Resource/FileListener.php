@@ -15,6 +15,11 @@ use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\File\File as SfFile;
 use Symfony\Component\HttpFoundation\Response;
+<<<<<<< HEAD
+=======
+use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesser;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
+>>>>>>> 8dfaea7b8280c7aa33b22d01e8ebc880c74c27f2
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Entity\Resource\File;
 use Claroline\CoreBundle\Entity\Resource\Directory;
@@ -26,7 +31,13 @@ use Claroline\CoreBundle\Event\CreateResourceEvent;
 use Claroline\CoreBundle\Event\OpenResourceEvent;
 use Claroline\CoreBundle\Event\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\DownloadResourceEvent;
+<<<<<<< HEAD
 
+=======
+use Claroline\CoreBundle\Event\CustomActionResourceEvent;
+use Claroline\CoreBundle\Event\ExportResourceTemplateEvent;
+use Claroline\CoreBundle\Event\ImportResourceTemplateEvent;
+>>>>>>> 8dfaea7b8280c7aa33b22d01e8ebc880c74c27f2
 
 /**
  * @DI\Service("claroline.listener.file_listener")
@@ -37,6 +48,8 @@ class FileListener implements ContainerAwareInterface
     private $resourceManager;
     private $om;
     private $sc;
+    private $request;
+    private $httpKernel;
 
     /**
      * @DI\InjectParams({
@@ -51,6 +64,8 @@ class FileListener implements ContainerAwareInterface
         $this->resourceManager = $container->get('claroline.manager.resource_manager');
         $this->om = $container->get('claroline.persistence.object_manager');
         $this->sc = $container->get('security.context');
+        $this->request = $container->get('request_stack');
+        $this->httpKernel = $container->get('httpKernel');
     }
 
     /**
@@ -225,6 +240,68 @@ class FileListener implements ContainerAwareInterface
     }
 
     /**
+<<<<<<< HEAD
+=======
+     * @DI\Observe("update_file_file")
+     *
+     * @param CustomActionResourceEvent $event
+     */
+    public function onUpdateFile(CustomActionResourceEvent $event)
+    {
+        if (!$this->request) {
+            throw new NoHttpRequestException();
+        }
+
+        $params = array();
+        $params['_controller'] = 'ClarolineCoreBundle:File:updateFileForm';
+        $params['file'] = $event->getResource()->getId();
+        $subRequest = $this->request->getCurrentRequest()->duplicate(array(), null, $params);
+        $response = $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
+        $event->setResponse($response);
+    }
+
+    /**
+     * @DI\Observe("resource_file_to_template")
+     *
+     * @param ExportResourceTemplateEvent $event
+     */
+    public function onExportTemplate(ExportResourceTemplateEvent $event)
+    {
+        $resource = $event->getResource();
+        $hash = $resource->getHashName();
+        //@todo: remove this line without breaking everything ('type' is set by the tool listener).
+        $config['type'] = 'file';
+        $filePath = $this->container->getParameter('claroline.param.files_directory') . DIRECTORY_SEPARATOR . $hash;
+        $event->setFiles(array(array('archive_path' => $hash, 'original_path' => $filePath)));
+        $event->setConfig($config);
+        $event->stopPropagation();
+    }
+
+    /**
+     * @DI\Observe("resource_file_from_template")
+     *
+     * @param ImportResourceTemplateEvent $event
+     */
+    public function onImportTemplate(ImportResourceTemplateEvent $event)
+    {
+        $ds = DIRECTORY_SEPARATOR;
+        $files = $event->getFiles();
+        $file = new File();
+        $extension = pathinfo($files[0], PATHINFO_EXTENSION);
+        $hashName = $this->container->get('claroline.utilities.misc')->generateGuid() . "." . $extension;
+        $physicalPath = $this->container->getParameter('claroline.param.files_directory') . $ds . $hashName;
+        rename($files[0], $physicalPath);
+        $size = filesize($physicalPath);
+        $file->setSize($size);
+        $file->setHashName($hashName);
+        $guesser = MimeTypeGuesser::getInstance();
+        $file->setMimeType($guesser->guess($physicalPath));
+        $event->setResource($file);
+        $event->stopPropagation();
+    }
+
+    /**
+>>>>>>> 8dfaea7b8280c7aa33b22d01e8ebc880c74c27f2
      * Copies a file (no persistence).
      *
      * @param File $resource

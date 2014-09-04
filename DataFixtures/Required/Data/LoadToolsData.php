@@ -20,15 +20,16 @@ class LoadToolsData implements RequiredFixture
     public function load(ObjectManager $manager)
     {
         $tools = array(
-            array('home', 'icon-home', false, false, true, true, true, false, false, false, true),
-            array('parameters', 'icon-cog', false, false, true, true, false, false, false, true, true),
-            array('resource_manager', 'icon-folder-open', false, false, true, true, true, true, false, false, true),
-            array('agenda', 'icon-calendar', false, false, true, true, false, false, false, false, true),
-            array('logs', 'icon-list', false, false, true, false, false, false, false, false, true),
-            array('analytics', 'icon-bar-chart', false, false, true, false, false, false, false, false, true),
-            array('users', 'icon-user', true, false, true, false, false, false, false, false, true),
-            array('badges', 'icon-trophy', false, false, true, false, false, false, false, false, true),
-            array('my_badges', 'icon-trophy', false, false, true, false, false, false, false, false, true)
+            array('home', 'home', false, false, true, true, true, false, false, false, false),
+            array('parameters', 'cog', false, false, true, true, false, false, false, true, true),
+            array('resource_manager', 'folder-open', false, false, true, true, true, true, false, false, false),
+            array('agenda', 'calendar', false, false, true, true, false, false, false, false, false),
+            array('logs', 'list', false, false, true, false, false, false, false, false, true),
+            array('analytics', 'bar-chart-o', false, false, true, false, false, false, false, false, true),
+            array('users', 'user', true, false, true, false, false, false, false, false, true),
+            array('badges', 'trophy', false, false, true, false, false, false, false, false, true),
+            array('my_badges', 'trophy', false, false, true, false, false, false, false, false, true),
+            array('learning_profil', 'graduation-cap', true, false, true, false, false, false, false, false, true),
         );
 
         foreach ($tools as $tool) {

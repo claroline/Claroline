@@ -11,31 +11,42 @@ Add a link here: 'Agregar un enlace aquí'
 Add a link: 'Agregar un enlace'
 An error occurred: 'Ha ocurrido un error'
 Are you sure you want to delete this content?: '¿Esta seguro que desea suprimir este contenido?'
+Cancel: 'Anular'
 Content Administration: 'Administración de contenidos'
 Content pages: 'Páginas de contenido'
 Content regions: 'Regiones de contenido'
-Create a content: 'Crear un contenido'
-Link address: 'Dirección del enlace'
-Link title: 'Título del enlace'
-Menu title: 'Título del menú'
-New content page: 'Nueva página de contenido'
-Note that you can add a link simply by pasting on the content body: 'Tenga en cuenta que puede añadir un enlace con solamente copiarlo y pegarlo en el editor'
-Optional title: 'Título opcional'
-Please try again later or check your internet connection: 'Por favor, inténtelo de nuevo más tarde o compruebe la conexión a Internet'
-Size of content: 'Tamaño del contenido'
-This action is irreversible: 'Esta acción es irreversible'
-You can add interactive contents as videos or presentations from websites as: 'Usted puede agregar contenidos interactivos como vídeos o presentaciones de los sitios web como'
-Cancel: 'Anular'
 Content: 'Contenido'
+Create a content: 'Crear un contenido'
 Create: 'Crear'
 Delete: 'Suprimir'
 Edit: 'Editar'
 Error: 'Error'
 Footer: 'Pie de página'
+For not logged users: Para los usuarios no conectados
 Header: 'Encabezado'
 Left: 'Izquierda'
+Link address: 'Dirección del enlace'
+Link title: 'Título del enlace'
+Menu settings: Configuración del menú
+Menu title: 'Título del menú'
+Move content: Mover el contenido
+New content page: 'Nueva página de contenido'
+Note that you can add a link simply by pasting it on the content body: 'Tenga en cuenta que puede añadir un enlace con solamente copiarlo y pegarlo en el editor'
 Ok: Ok
+Optional title: 'Título opcional'
 Pages: 'Páginas'
+Please try again later or check your internet connection: 'Por favor, inténtelo de nuevo más tarde o compruebe la conexión a Internet'
+Preview: Vista previa
+Read more: Más información
 Region: 'Región'
 Right: 'Derecha'
+Select a page: Seleccione una página
+Set this menu as header menu in the home page: Establezca este menú como menú del encabezado en la página de inicio
+Show the connection button at the footer of home page: Mostrar el botón de conexión en el pie de página de la página de inicio
+Show the language button in the header menu: Mostrar el botón de idioma en el menú de la cabecera
+Show the workspace menu at the footer of home page: Mostrar el menú del espacio de trabajo en el pie de página de la página de inicio
+Size of content: 'Tamaño del contenido'
 Size: 'Tamaño'
+This action is irreversible: 'Esta acción es irreversible'
+When header menu is available: Cuando el menú de cabecera está disponible
+You can add interactive content such as videos or presentations from websites like: 'Usted puede agregar contenidos interactivos como vídeos o presentaciones de los sitios web como'

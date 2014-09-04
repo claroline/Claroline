@@ -1,4 +1,5 @@
 agenda: Calendar
+analytics: Dashboard
 badges: Badges
 my_badges: My badges
 home: Home
@@ -17,3 +18,7 @@ desktop_tools: Desktop tools
 platform_logs: Platform logs
 platform_analytics: Platform analytics
 roles_management: Roles management
+platform_packages: Platform packages
+learning_profil: Learning profile (dev)
+competence_referencial: Competency referential (dev)
+competence_subscription: Competency subscription (dev)

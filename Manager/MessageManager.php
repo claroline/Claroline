@@ -11,7 +11,7 @@
 
 namespace Claroline\CoreBundle\Manager;
 
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Group;
@@ -57,7 +57,7 @@ class MessageManager
         $this->groupRepo = $om->getRepository('ClarolineCoreBundle:Group');
         $this->userRepo = $om->getRepository('ClarolineCoreBundle:User');
         $this->messageRepo = $om->getRepository('ClarolineCoreBundle:Message');
-        $this->workspaceRepo = $om->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace');
+        $this->workspaceRepo = $om->getRepository('ClarolineCoreBundle:Workspace\Workspace');
         $this->userMessageRepo = $om->getRepository('ClarolineCoreBundle:UserMessage');
         $this->pagerFactory = $pagerFactory;
         $this->mailManager = $mailManager;

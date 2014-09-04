@@ -23,22 +23,41 @@ class ResultConstraint extends AbstractConstraint
     {
         $isValid               = true;
         $resultComparisonTypes = Rule::getResultComparisonTypes();
+        $nbOccurence           = $this->getRule()->getOccurrence();
+        $nbValidatedLogs       = 0;
+        $ruleResult = $this->getRule()->getResult();
+        $ruleResultMax = $this->getRule()->getResultMax();
 
-        if (0 === count($this->getAssociatedLogs())) {
-            $isValid = false;
-        } else {
-            foreach ($this->getAssociatedLogs() as $associatedLog) {
-                $associatedLogDetails = $associatedLog->getDetails();
+        foreach ($this->getAssociatedLogs() as $associatedLog) {
+            $associatedLogDetails = $associatedLog->getDetails();
 
-                if (isset($associatedLogDetails['result'])) {
-                    $isValid = $isValid && version_compare($associatedLogDetails['result'], $this->getRule()->getResult(), $resultComparisonTypes[$this->getRule()->getResultComparison()]);
-                } else {
-                    $isValid = false;
-                }
+            $logResult = isset($associatedLogDetails['result']) ?
+                $associatedLogDetails['result'] :
+                null;
+            $logResultMax = isset($associatedLogDetails['resultMax']) ?
+                $associatedLogDetails['resultMax'] :
+                null;
+
+            $realResults = $this->computeRealResults(
+                $ruleResult,
+                $ruleResultMax,
+                $logResult,
+                $logResultMax
+            );
+
+            if (!is_null($realResults['log']) &&
+                !is_null($realResults['rule']) &&
+                version_compare(
+                    $realResults['log'],
+                    $realResults['rule'],
+                    $resultComparisonTypes[$this->getRule()->getResultComparison()]
+                )
+            ) {
+                $nbValidatedLogs++;
             }
         }
 
-        return $isValid;
+        return $nbValidatedLogs >= $nbOccurence;
     }
 
     /**
@@ -55,5 +74,36 @@ class ResultConstraint extends AbstractConstraint
     public function getQuery(QueryBuilder $queryBuilder)
     {
         return $queryBuilder;
+    }
+
+    private function computeRealResults(
+        $ruleScore,
+        $ruleScoreMax,
+        $score,
+        $scoreMax
+    )
+    {
+        $realResults = array('rule' => null, 'log' => null);
+
+        if (!is_null($ruleScore) && !is_null($score)) {
+
+            if (empty($ruleScoreMax) || empty($scoreMax)) {
+                $realResults['rule'] = $ruleScore;
+                $realResults['log'] = $score;
+            } else {
+                $realRuleScore = number_format(
+                    round($ruleScore / $ruleScoreMax, 2),
+                    2
+                );
+                $realScore = number_format(
+                    round($score / $scoreMax, 2),
+                    2
+                );
+                $realResults['rule'] = $realRuleScore;
+                $realResults['log'] = $realScore;
+            }
+        }
+
+        return $realResults;
     }
 }

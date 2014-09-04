@@ -11,7 +11,7 @@
 
 namespace Claroline\CoreBundle\Library\Security\Voter;
 
-use Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
@@ -161,7 +161,7 @@ class ResourceVoterTest extends MockeryTestCase
         $type = 'validType';
         $node = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceNode');
         $token = $this->mock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
-        $workspace = new SimpleWorkspace();
+        $workspace = new Workspace();
 
         $node->shouldReceive('getPathForDisplay')->andReturn('path');
         $this->translator->shouldReceive('trans')->andReturn('whatever');
@@ -185,7 +185,7 @@ class ResourceVoterTest extends MockeryTestCase
         $deleteErrors
     )
     {
-        $workspace = new SimpleWorkspace();
+        $workspace = new Workspace();
         $resourceType = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceType');
         $resourceType->shouldReceive('getName')->andReturn('type');
         $parent = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceNode');
@@ -214,7 +214,7 @@ class ResourceVoterTest extends MockeryTestCase
         $copyErrors
     )
     {
-        $workspace = new SimpleWorkspace();
+        $workspace = new Workspace();
         $resourceType = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceType');
         $resourceType->shouldReceive('getName')->andReturn('type');
         $parent = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceNode');
@@ -323,8 +323,8 @@ class ResourceVoterTest extends MockeryTestCase
 
     public function checkActionProvider()
     {
-        $firstWorkspace = new SimpleWorkspace();
-        $secondWorkspace = new SimpleWorkspace();
+        $firstWorkspace = new Workspace();
+        $secondWorkspace = new Workspace();
         $firstUser = new User();
         $secondUser = new User();
         $decoder = $this->mock('Claroline\CoreBundle\Entity\Resource\MaskDecoder');

@@ -151,9 +151,13 @@ class ResourceController
                         $parent
                     );
 
-                    $nodesArray[] = $this->resourceManager->toArray($createdResource->getResourceNode(), $this->sc->getToken());
+                    $nodesArray[] = $this->resourceManager->toArray(
+                        $createdResource->getResourceNode(), $this->sc->getToken()
+                    );
                 } else {
-                    $nodesArray[] = $this->resourceManager->toArray($resource->getResourceNode(), $this->sc->getToken());
+                    $nodesArray[] = $this->resourceManager->toArray(
+                        $resource->getResourceNode(), $this->sc->getToken()
+                    );
                 }
             }
 
@@ -182,6 +186,10 @@ class ResourceController
      */
     public function openAction(ResourceNode $node, $resourceType)
     {
+        //in order to remember for later. To keep links breadcrumb working we'll need to do something like this
+        //if we don't want to change to much code
+        $this->request->getSession()->set('current_resource_node', $node);
+    
         $collection = new ResourceCollection(array($node));
         //If it's a link, the resource will be its target.
         $node = $this->getRealTarget($node);
@@ -391,7 +399,7 @@ class ResourceController
 
         $response->headers->set('Content-Transfer-Encoding', 'octet-stream');
         $response->headers->set('Content-Type', 'application/force-download');
-        $response->headers->set('Content-Disposition', 'attachment; filename=' . $fileName);
+        $response->headers->set('Content-Disposition', 'attachment; filename=' . urlencode($fileName));
         $response->headers->set('Content-Type', $mimeType);
         $response->headers->set('Connection', 'close');
 
@@ -425,7 +433,7 @@ class ResourceController
      *
      * @return \Symfony\Component\HttpFoundation\Response
      *
-     * @throws Exception if the id doesnt't match any existing directory
+     * @throws Exception if the id doesn't match any existing directory
      */
     public function openDirectoryAction(ResourceNode $node = null)
     {
@@ -484,8 +492,15 @@ class ResourceController
             $this->dispatcher->dispatch('log', 'Log\LogResourceRead', array($node));
         }
 
+        $directoryId = $node ? $node->getId() : '0';
+
+        if ($this->request->query->has('keep-id')) {
+            $this->request->getSession()->set('pickerDirectoryId', $directoryId);
+        }
+
         $jsonResponse = new JsonResponse(
             array(
+                'id' => $directoryId,
                 'path' => $path,
                 'creatableTypes' => $creatableTypes,
                 'nodes' => $nodesWithCreatorPerms,
@@ -537,9 +552,10 @@ class ResourceController
         }
 
         foreach ($nodes as $node) {
-            //$resource = $this->resourceManager->getResourceFromNode($node);
-            $newNodes[] = $this->resourceManager
-                ->toArray($this->resourceManager->copy($node, $parent, $user)->getResourceNode(), $this->sc->getToken());
+            $newNodes[] = $this->resourceManager->toArray(
+                $this->resourceManager->copy($node, $parent, $user)->getResourceNode(),
+                $this->sc->getToken()
+            );
         }
 
         return new JsonResponse($newNodes);
@@ -567,14 +583,20 @@ class ResourceController
     public function filterAction(ResourceNode $node = null)
     {
         $criteria = $this->resourceManager->buildSearchArray($this->request->query->all());
-        $criteria['roots'] = isset($criteria['roots']) ? $criteria['roots'] : array();
+        $criteria['roots'] = $node ? array($node->getPath()) : array();
         $path = $node ? $this->resourceManager->getAncestors($node): array();
         $userRoles = $this->roleManager->getStringRolesFromToken($this->sc->getToken());
 
-        //by criteria recursive => infinte loop
+        //by criteria recursive => infinite loop
         $resources = $this->resourceManager->getByCriteria($criteria, $userRoles, true);
 
-        return new JsonResponse(array('nodes' => $resources, 'path' => $path));
+        return new JsonResponse(
+            array(
+                'id' => $node ? $node->getId() : '0',
+                'nodes' => $resources,
+                'path' => $path
+            )
+        );
     }
 
     /**
@@ -653,6 +675,19 @@ class ResourceController
      */
     public function renderBreadcrumbsAction(ResourceNode $node, array $_breadcrumbs)
     {
+        //the signature method can change aswell
+        //this method obviously has to change
+        //this trick will never work with shortcuts to directory
+        $node = $this->request->getSession()->get('current_resource_node');
+        $workspace = $node->getWorkspace();
+        $ancestors = $this->resourceManager->getAncestors($node);
+
+        return array(
+            'ancestors' => $ancestors,
+            'workspaceId' => $workspace->getId(),
+        );
+        //the following code is useless and can be removed
+
         $breadcrumbsAncestors = array();
 
         if (count($_breadcrumbs) > 0) {
@@ -683,7 +718,9 @@ class ResourceController
             'ancestors' => $breadcrumbsAncestors,
             'workspaceId' => $workspace->getId()
         );
+    
     }
+
 
     /**
      * @EXT\Route(
@@ -754,36 +791,45 @@ class ResourceController
     }
 
     /**
-     * @EXT\Route("/init", name="claro_resource_init")
-     * @EXT\Template("ClarolineCoreBundle:Resource:init.html.twig")
+     * @EXT\Route(
+     *     "/manager_parameters",
+     *     name="claro_resource_manager_parameters",
+     *     options={"expose"=true}
+     * )
      */
-    public function initAction()
+    public function managerParametersAction()
     {
-        return array('resourceTypes' => $this->resourceManager->getAllResourceTypes());
+        $json = $this->templating->render(
+            'ClarolineCoreBundle:Resource:managerParameters.json.twig',
+            array('resourceTypes' => $this->resourceManager->getAllResourceTypes())
+        );
+
+        return new Response($json, 200, array('Content-Type' => 'application/json'));
     }
 
     /**
-     * Render the HTML of embed resource based in his mine type
-     * @EXT\Route("/embed/{node}/{type}/{extension}", name="claro_resource_embed")
+     * @EXT\Route(
+     *     "/embed/{node}/{type}/{extension}/{openInNewTab}",
+     *     name="claro_resource_embed",
+     *     options={"expose"=true},
+     *     defaults={"openInNewTab"="0"}
+     * )
+     *
+     * Renders the HTML needed to embed a resource, based on its mime type.
      */
-    public function embedResource(ResourceNode $node, $type, $extension, $view = 'default')
+    public function embedResourceAction(ResourceNode $node, $type, $extension, $openInNewTab)
     {
-        switch ($type) {
-            case 'video':
-                $view = 'video';
-                break;
-            case 'audio':
-                $view = 'audio';
-                break;
-            case 'image':
-                $view = 'image';
-                break;
-        }
+        $view = in_array($type, array('video', 'audio', 'image')) ? $type : 'default';
 
         return new Response(
             $this->templating->render(
-                "ClarolineCoreBundle:Resource:embed/$view.html.twig",
-                array('node' => $node, 'type' => $type, 'extension' => $extension)
+                "ClarolineCoreBundle:Resource:embed/{$view}.html.twig",
+                array(
+                    'node' => $node,
+                    'type' => $type,
+                    'extension' => $extension,
+                    'openInNewTab' => $openInNewTab !== '0'
+                )
             )
         );
     }

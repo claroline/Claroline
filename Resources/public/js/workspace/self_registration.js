@@ -88,8 +88,8 @@
 
     $('#registration-confirm-ok').click(function () {
         var confirmRegistrationRoute = Routing.generate(
-            'claro_workspace_add_user',
-            {'workspaceId': workspaceId, 'userId': twigUserId}
+            'claro_workspace_add_user_queue',
+            {'workspace': workspaceId, 'user': twigUserId}
         );
 
         var visitWorkspaceRoute = Routing.generate(
@@ -97,7 +97,7 @@
             {'workspaceId': workspaceId, 'toolName': 'home'}
         );
 
-        var registeredText = Translator.get('platform' + ':' + 'registered');
+        var registeredText = Translator.get('platform' + ':' + 'pending');
 
         $.ajax({
             url: confirmRegistrationRoute,
@@ -105,7 +105,7 @@
             success: function () {
                 $(registerButtonClass).each(function () {
                     $(this).empty();
-                    $(this).html("<a class='visit-workspace' href="+visitWorkspaceRoute+">"+registeredText+"<i class='icon-share'></i></a>");
+                    $(this).html("<span>"+registeredText+"<i class='fa fa-share-square-o'></i></span>");
                     $(this).attr('class', 'pull-right label label-success');
                 });
             }

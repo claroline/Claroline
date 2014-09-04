@@ -1,20 +1,66 @@
 {% if is_granted('ROLE_ADMIN') %}
     <div class="content-menu float-right-top">
         <button type="button" class="btn btn-link" data-toggle="dropdown">
-            <i class="icon-chevron-down"></i>
+            <i class="fa fa-fw fa-chevron-down"></i>
         </button>
         <ul class="dropdown-menu pull-right" role="menu">
             {% if father is defined and father is not empty  %}
-                <li role="presentation"><a role="menuitem" class="content-edit"><i class="icon-edit"></i> {{ "Edit" | trans({}, 'home') }}</a></li>
-                <li role="presentation"><a role="menuitem" class="content-delete"><i class="icon-trash"></i> {{ "Delete" | trans({}, 'home') }}</a></li>
+                <li role="presentation">
+                    <a role="menuitem" class="content-edit">
+                        <i class="fa fa-fw fa-pencil-square-o"></i> {{ "Edit" | trans({}, 'home') }}
+                    </a>
+                </li>
+                <li role="presentation">
+                    <a role="menuitem" class="content-delete">
+                        <i class="fa fa-fw fa-trash-o"></i> {{ "Delete" | trans({}, 'home') }}
+                    </a>
+                </li>
             {% else %}
                 {% if region is not defined or (region is defined and region is empty) %}
-                    {% if type is defined %}<li><a class="content-size"><i class="icon-resize-horizontal"></i> {{ "Size" | trans({}, 'home') }}</a></li>{% endif %}
-                    <li><a class="content-edit"><i class="icon-edit"></i> {{ "Edit" | trans({}, 'home') }}</a></li>
+                    {% if type is defined %}
+                        <li>
+                            <a class="content-size">
+                                <i class="fa fa-fw fa-arrows-h"></i> {{ "Size" | trans({}, 'home') }}
+                            </a>
+                        </li>
+                    {% endif %}
+                    <li>
+                        <a class="content-edit">
+                            <i class="fa fa-fw fa-pencil"></i> {{ "Edit" | trans({}, 'home') }}
+                        </a>
+                    </li>
                 {% endif %}
-                <li role="presentation"><a role="menuitem" class="content-delete"><i class="icon-trash"></i> {{ "Delete" | trans({}, 'home') }}</a></li>
                 {% if type != "home" %}
-                    <li role="presentation"><a role="menuitem" class="content-region"><i class="icon-th-large"></i> {{ "Region" | trans({}, 'home') }}</a></li>
+                    <li role="presentation">
+                        <a role="menuitem" class="content-region">
+                            <i class="fa fa-fw fa-th-large"></i> {{ "Region" | trans({}, 'home') }}
+                        </a>
+                    </li>
+                {% endif %}
+                {% if type != "menu" %}
+                    <li role="presentation">
+                        <a role="menuitem" class="collapse-content">
+                            <i class="fa fa-fw fa-sort"></i> {{ "Collapse" | trans({}, 'home') }}
+                            {% if collapse %}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-fw fa-check"></i>{% endif %}
+                        </a>
+                    </li>
+                    <li role="presentation">
+                        <a role="menuitem" class="send-content">
+                            <i class="fa fa-fw fa-send"></i> {{ "move" | trans({}, 'platform') }}
+                        </a>
+                    </li>
+                {% endif %}
+                <li role="presentation">
+                    <a role="menuitem" class="content-delete">
+                        <i class="fa fa-fw fa-trash-o"></i> {{ "Delete" | trans({}, 'home') }}
+                    </a>
+                </li>
+                {% if type == "menu" %}
+                    <li role="presentation">
+                        <a role="menuitem" href="{{ path('claroline_content_menu_settings', {'content': id}) }}">
+                            <i class="fa fa-fw fa-cog"></i> {{ "settings" | trans({}, 'platform') }}
+                        </a>
+                    </li>
                 {% endif %}
             {% endif %}
         </ul>

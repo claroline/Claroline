@@ -12,7 +12,10 @@
 
     var home = window.Claroline.Home;
     var modal = window.Claroline.Modal;
+    var common = window.Claroline.Common;
     var tinymce = window.tinymce;
+    var routing = window.Routing;
+    var translator = window.Translator;
 
     $('body').on('click', '.content-size', function (event) {
         var content = $(event.target).parents('.content-element').get(0);
@@ -27,9 +30,8 @@
                 home.changeSize(size, id, type, content);
             });
         });
-    });
-
-    $('body').on('click', '.content-region', function (event) {
+    })
+    .on('click', '.content-region', function (event) {
         var id = $(event.target).parents('.content-element').data('id');
 
         modal.fromRoute('claroline_content_region', {'content': id}, function (element) {
@@ -39,9 +41,8 @@
                 home.changeRegion(name, id);
             });
         });
-    });
-
-    $('body').on('click', '.content-delete', function (event) {
+    })
+    .on('click', '.content-delete', function (event) {
         var content = $(event.target).parents('.content-element').first();
 
         modal.fromRoute('claro_content_confirm', null, function (element) {
@@ -49,9 +50,8 @@
                 home.deleteContent(content);
             });
         });
-    });
-
-    $('body').on('click', '.type-delete', function (event) {
+    })
+    .on('click', '.type-delete', function (event) {
         var type = $(event.target).parents('.alert');
 
         modal.fromRoute('claro_content_confirm', null, function (element) {
@@ -59,14 +59,63 @@
                 home.deleteContent(type, true);
             });
         });
-    });
+    })
+    .on('click', '.type-rename', function (event) {
+        var type = $(event.target).parents('.alert').data('name');
+        var link = $(event.target).parents('.alert').find('strong a');
 
-    $('body').on('click', '.create-type', function (event) {
+        modal.fromRoute('claro_content_rename_type_form', {'type': type}, function (element) {
+            element.on('click', '.btn-primary', function () {
+                var name = $('input', element).val();
+
+                $('input', element).parent().removeClass('has-error').find('.help-block').remove();
+
+                if (name === '') {
+                    $('input', element).parent().addClass('has-error').append(
+                        common.createElement('div', 'help-block field-error').html(
+                            translator.get('platform:name_required')
+                        )
+                    );
+                } else {
+                    if (type !== name) {
+                        $.ajax(routing.generate('claroline_content_type_exist', {'name': name}))
+                        .done(function (data) {
+                            if (data === 'false') {
+                                $.ajax(routing.generate('claro_content_rename_type', {'type': type, 'name': name}))
+                                .done(function (data) {
+                                    if (data === 'true') {
+                                        link.html(name).attr(
+                                            'href', routing.generate('claro_get_content_by_type', {'type': name})
+                                        );
+                                        $(element).modal('hide');
+                                    } else {
+                                        modal.error();
+                                    }
+                                })
+                                .error(function () {
+                                    modal.error();
+                                });
+                            } else {
+                                $('input', element).parent().addClass('has-error').append(
+                                    common.createElement('div', 'help-block field-error').html(
+                                        translator.get('home:A page of contents with this name already exist')
+                                    )
+                                );
+                            }
+                        });
+                    } else {
+                        $(element).modal('hide');
+                    }
+                }
+            });
+        });
+    })
+    .on('click', '.create-type', function (event) {
         var typeCreator = $(event.target).parents('.creator').get(0);
         var name = $('input', typeCreator);
 
         if (typeCreator && name.val()) {
-            $.ajax(home.path + 'content/typeexist/' + name.val())
+            $.ajax(routing.generate('claroline_content_type_exist', {'name': name.val()}))
             .done(function (data) {
                 if (data === 'false') {
                     $.ajax(home.path + 'content/createtype/' + name.val())
@@ -82,13 +131,15 @@
                         modal.error();
                     });
                 } else {
-                    modal.error();
+                    modal.simpleContainer(
+                        translator.get('home:New content page'),
+                        translator.get('home:A page of contents with this name already exist')
+                    );
                 }
             });
         }
-    });
-
-    $('body').on('click', '.content-edit', function (event) {
+    })
+    .on('click', '.content-edit', function (event) {
         var element = $(event.target).parents('.content-element').get(0);
         var id = $(element).data('id');
         var type = $(element).data('type');
@@ -111,23 +162,19 @@
                 modal.error();
             });
         }
-    });
-
-
-    $('body').on('click', '.creator-button', function (event) {
+    })
+    .on('click', '.creator-button', function (event) {
         home.creator(event.target);
-    });
-
-    $('body').on('click', '.creator .edit-button', function (event) {
+    })
+    .on('click', '.creator .edit-button', function (event) {
         var element = $(event.target).parents('.creator').get(0);
         var id = $(element).data('id');
 
         if (element && id) {
             home.creator(event.target, id, true);
         }
-    });
-
-    $('body').on('click', '.creator .cancel-button', function (event) {
+    })
+    .on('click', '.creator .cancel-button', function (event) {
         var element = $(event.target).parents('.creator').get(0);
         var id = $(element).data('id');
         var type = $(element).data('type');
@@ -150,9 +197,8 @@
                 modal.error();
             });
         }
-    });
-
-    $('body').on('click', '.creator .addlink', function () {
+    })
+    .on('click', '.creator .addlink', function () {
         var creator = $(event.target).parents('.creator').get(0);
 
         modal.fromRoute('claro_content_link', null, function (element) {
@@ -174,6 +220,41 @@
                 }
             });
         });
+    })
+    .on('click', '.send-content', function (event) {
+        var id = $(event.target).parents('.content-element').data('id');
+        var type = $(event.target).parents('.content-element').data('type');
+        var content = $(event.target).parents('.content-element').first();
+
+        modal.fromRoute('claroline_move_content_form', {'currentType': type}, function (element) {
+            element.on('change', 'select', function () {
+                var page = $(this).val();
+
+                $.ajax(routing.generate('claroline_move_content', {'content': id, 'type': type, 'page': page}))
+                .success(function (data) {
+                    if (data === 'true') {
+                        $(element).modal('hide');
+                        content.hide('slow', function () {
+                            $(this).remove();
+                            $('.contents').trigger('ContentModified');
+                        });
+                    } else {
+                        modal.error();
+                    }
+                })
+                .error(function () {
+                    modal.error();
+                });
+            });
+        });
+    }).on('click', '.collapse-content', function () {
+        var element = $(event.target).parents('.content-element').get(0);
+        var id = $(element).data('id');
+        var type = $(element).data('type');
+
+        if (id && element) {
+            home.collapse(element, id, type);
+        }
     });
 
     $('.contents').sortable({

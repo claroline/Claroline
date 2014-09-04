@@ -12,6 +12,7 @@
 namespace Claroline\CoreBundle\DataFixtures\Required\Data;
 
 use Claroline\CoreBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Entity\Activity\ActivityRuleAction;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\Resource\MaskDecoder;
 use Claroline\CoreBundle\Entity\Resource\MenuAction;
@@ -70,11 +71,35 @@ class LoadResourceTypeData implements RequiredFixture
         $activityMenu->setIsForm(false);
         $manager->persist($activityMenu);
 
+        $updateFile = new MenuAction();
+        $updateFile->setName('update_file');
+        $updateFile->setAsync(true);
+        $updateFile->setIsCustom(true);
+        $updateFile->setIsForm(false);
+        $updateFile->setResourceType($types['file']);
+        //8 is default for edit
+        $updateFile->setValue(8);
+        $manager->persist($updateFile);
+
         $updateTextDecoder = new MaskDecoder();
         $updateTextDecoder->setValue(pow(2, 6));
         $updateTextDecoder->setName('write');
         $updateTextDecoder->setResourceType($types['text']);
         $manager->persist($updateTextDecoder);
+
+        $fileAction = new ActivityRuleAction();
+        $fileAction->setAction('resource-read');
+        $fileAction->setResourceType($types['file']);
+        $manager->persist($fileAction);
+
+        $textAction = new ActivityRuleAction();
+        $textAction->setAction('resource-read');
+        $textAction->setResourceType($types['text']);
+        $manager->persist($textAction);
+
+        $badgeAwardAction = new ActivityRuleAction();
+        $badgeAwardAction->setAction('badge-awarding');
+        $manager->persist($badgeAwardAction);
     }
 
     public function setContainer($container)

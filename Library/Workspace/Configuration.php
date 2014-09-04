@@ -17,10 +17,6 @@ use Claroline\CoreBundle\Entity\User;
 
 class Configuration
 {
-    const TYPE_SIMPLE = 'Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace';
-    const TYPE_AGGREGATOR = 'Claroline\CoreBundle\Entity\Workspace\AggregatorWorkspace';
-
-    private $workspaceType;
     private $workspaceName;
     private $workspaceCode;
     private $workspaceDescription;
@@ -34,7 +30,6 @@ class Configuration
     public function __construct($path)
     {
         $this->templateFile = $path;
-        $this->workspaceType = self::TYPE_SIMPLE;
 
         //Default.zip is the template used for creating users.
         //Therefore we don't want to extract it every time.
@@ -111,10 +106,6 @@ class Configuration
 
     public function check()
     {
-        if ($this->workspaceType != self::TYPE_SIMPLE && $this->workspaceType != self::TYPE_AGGREGATOR) {
-            throw new RuntimeException("Unknown workspace type '{$this->workspaceType}'");
-        }
-
         if (!is_string($this->workspaceName) || 0 === strlen($this->workspaceName)) {
             throw new RuntimeException('Workspace name must be a non empty string');
         }

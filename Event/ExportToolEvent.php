@@ -11,7 +11,7 @@
 
 namespace Claroline\CoreBundle\Event;
 
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Symfony\Component\EventDispatcher\Event;
 
 class ExportToolEvent extends Event
@@ -20,7 +20,7 @@ class ExportToolEvent extends Event
     private $workspace;
     private $files;
 
-    public function __construct(AbstractWorkspace $workspace)
+    public function __construct(Workspace $workspace)
     {
         $this->workspace = $workspace;
         $this->config = null;

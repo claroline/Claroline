@@ -11,71 +11,83 @@
 
 namespace Claroline\CoreBundle\DataFixtures\Optional;
 
+use Claroline\CoreBundle\Entity\Resource\Activity;
+use Claroline\CoreBundle\Entity\Activity\ActivityParameters;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\DataFixtures\AbstractFixture;
-use Claroline\CoreBundle\Entity\Resource\Activity;
-use Claroline\CoreBundle\Entity\Resource\ResourceActivity;
+use Doctrine\Common\Persistence\ObjectManager;
 
 class LoadActivityData extends AbstractFixture implements ContainerAwareInterface
 {
     private $name;
-    private $parent;
+    private $primaryResource;
+    private $secondaryResources;
+    private $description;
     private $creator;
-    private $resources;
+    private $parent;
 
-    /**
-     * Constructor.
-     *
-     * @param string $name      The activity name
-     * @param string $parent    The parent reference(without 'directory/')
-     * @param type   $creator   The creator reference(without 'user/')
-     * @param array  $resources an array of resource ids.
-     */
-    public function __construct($name, $parent, $creator, array $resources)
+    public function __construct(
+        $name,
+        $description,
+        array $secondaryResources,
+        $creator,
+        $parent,
+        $primaryResource = null
+    )
     {
-        $this->name = $name;
-        $this->parent = $parent;
         $this->creator = $creator;
-        $this->resources = $resources;
+        $this->parent = $parent;
+        $this->name = $name;
+        $this->description = $description;
+        $this->primaryResource = $primaryResource;
+        $this->secondaryResources = $secondaryResources;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function setContainer(ContainerInterface $container = null)
     {
         $this->container = $container;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function load(ObjectManager $manager)
     {
+        $activityManager = $this->container->get('claroline.manager.activity_manager');
+        $resourceManager = $this->container->get('claroline.manager.resource_manager');
+
         $activity = new Activity();
         $activity->setName($this->name);
-        $activity->setInstructions(
-            $this->container
-                ->get('claroline.utilities.lipsum_generator')
-                ->generateLipsum(100, true, 255)
-        );
-        $activity = $this->container
-            ->get('claroline.manager.resource_manager')
-            ->create(
-                $activity,
-                $manager->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneByName('activity'),
-                $this->getReference('user/'.$this->creator),
-                $this->getReference('directory/'.$this->parent)->getWorkspace(),
-                $this->getReference('directory/'.$this->parent)
-            );
+        $activity->setTitle($this->name);
+        $activity->setDescription($this->description);
 
-        for ($i = 0, $count = count($this->resources), $order = 1; $i < $count; $i++, $order++) {
-                $resource = $manager->getRepository('ClarolineCoreBundle:Resource\ResourceNode')
-                    ->find($this->resources[$i]);
-                $rs = new ResourceActivity;
-                $rs->setActivity($activity);
-                $rs->setResourceNode($resource);
-                $rs->setSequenceOrder($order);
-                $manager->persist($rs);
+        if ($this->primaryResource !== null) {
+            $activity->setPrimaryResource($this->getReference($this->primaryResource)->getResourceNode());
         }
 
-        $manager->flush();
-        $this->addReference('activity/'.$this->name, $activity);
+        $activityParameters = new ActivityParameters();
+        $activityParameters->setActivity($activity);
+        $activity->setParameters($activityParameters);
+
+        $parent = $this->getReference('directory/' . $this->parent);
+        $workspace = $parent->getWorkspace();
+        $resourceType = $manager->getRepository('ClarolineCoreBundle:Resource\ResourceType')
+            ->findOneByName('activity');
+
+        $resourceManager->create(
+            $activity,
+            $resourceType,
+            $this->getReference('user/' . $this->creator),
+            $workspace,
+            $parent
+        );
+
+        foreach ($this->secondaryResources as $secondaryResource) {
+            $activityManager->addResource($activity, $this->getReference($secondaryResource)->getResourceNode());
+        }
     }
-}
+} 

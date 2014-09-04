@@ -46,7 +46,9 @@ class LogWorkspaceRoleChangeRightEvent extends LogGenericEvent implements Mandat
             ),
             'resource' => array(
                 'name' => $resource->getName(),
-                'path' => $resource->getPathForDisplay()
+                'path' => $resource->getPathForDisplay(),
+                'id' => $resource->getId(),
+                'resourceType' => $resource->getResourceType()->getName()
             )
         );
 
@@ -66,7 +68,7 @@ class LogWorkspaceRoleChangeRightEvent extends LogGenericEvent implements Mandat
      */
     public static function getRestriction()
     {
-        return array(self::DISPLAYED_WORKSPACE);
+        return null;
     }
 
     /**

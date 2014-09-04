@@ -21,6 +21,7 @@ use Claroline\CoreBundle\Manager\ToolManager;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use Claroline\CoreBundle\Persistence\ObjectManager;
 
 /**
  * @todo if user has ROLE_ANONYMOUS, a 403 should be returned (otherise he'll get a 500)
@@ -30,26 +31,30 @@ class DesktopParametersController extends Controller
     private $request;
     private $router;
     private $toolManager;
+    private $om;
 
     /**
      * @DI\InjectParams({
      *     "request"      = @DI\Inject("request"),
      *     "urlGenerator" = @DI\Inject("router"),
      *     "toolManager"  = @DI\Inject("claroline.manager.tool_manager"),
-     *     "ed"           = @DI\Inject("claroline.event.event_dispatcher")
+     *     "ed"           = @DI\Inject("claroline.event.event_dispatcher"),
+     *     "om"           = @DI\Inject("claroline.persistence.object_manager")
      * })
      */
     public function __construct(
         Request $request,
         UrlGeneratorInterface $router,
         ToolManager $toolManager,
-        StrictDispatcher $ed
+        StrictDispatcher $ed,
+        ObjectManager $om
     )
     {
         $this->request = $request;
         $this->router = $router;
         $this->toolManager = $toolManager;
         $this->ed = $ed;
+        $this->om = $om;
     }
 
     /**
@@ -73,76 +78,46 @@ class DesktopParametersController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/remove/tool/{tool}",
-     *     name="claro_tool_desktop_remove",
+     *     "/tools/edit",
+     *     name="claro_desktop_tools_roles_edit",
      *     options={"expose"=true}
      * )
-     * @EXT\Method("POST")
-     * @EXT\ParamConverter("tool", class="ClarolineCoreBundle:Tool\Tool", options={"id"="tool", "strictId"=true})
      * @EXT\ParamConverter("user", options={"authenticatedUser"=true})
-     *
-     * Remove a tool from the desktop.
-     *
-     * @param Tool $tool
+     * @EXT\Method("POST")
      *
      * @param \Claroline\CoreBundle\Entity\User $user
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
-    public function desktopRemoveToolAction(Tool $tool, User $user)
+    public function editToolsRolesAction(User $user)
     {
-        $this->toolManager->removeDesktopTool($tool, $user);
+        $parameters = $this->request->request->all();
+        $this->om->startFlushSuite();
+        //moving tools;
+        foreach ($parameters as $parameter => $value) {
+            if (strpos($parameter, 'tool-') === 0) {
+                $toolId = (int) str_replace('tool-', '', $parameter);
+                $tool = $this->toolManager->getToolById($toolId);
+                $this->toolManager->setToolPosition($tool, $value, $user);
+            }
+        }
 
-        return new Response('success', 204);
-    }
+        //reset the visiblity for every tool
+        $this->toolManager->resetToolsVisiblity($user, null);
 
-    /**
-     * @EXT\Route(
-     *     "/add/tool/{tool}/position/{position}",
-     *     name="claro_tool_desktop_add",
-     *     options={"expose"=true}
-     * )
-     * @EXT\Method("POST")
-     * @EXT\ParamConverter("user", options={"authenticatedUser"=true})
-     *
-     * Add a tool to the desktop.
-     *
-     * @param Tool                              $tool
-     * @param integer                           $position
-     * @param \Claroline\CoreBundle\Entity\User $user
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     *
-     */
-    public function desktopAddToolAction(Tool $tool, $position, User $user)
-    {
-        $this->toolManager->addDesktopTool($tool, $user, $position, $tool->getName());
+        //set tool visibility
+        foreach ($parameters as $parameter => $value) {
+            if (strpos($parameter, 'chk-') === 0) {
+                //regex are evil
+                $matches = array();
+                preg_match('/tool-(.*)/', $parameter, $matches);
+                $tool = $this->toolManager->getToolById((int) $matches[1]);
+                $this->toolManager->setDesktopToolVisible($tool, $user);
+            }
+        }
 
-        return new Response('success', 204);
-    }
+        $this->om->endFlushSuite();
 
-    /**
-     * @EXT\Route(
-     *     "/move/tool/{tool}/position/{position}",
-     *     name="claro_tool_desktop_move",
-     *     options={"expose"=true}
-     * )
-     * @EXT\Method("POST")
-     * @EXT\ParamConverter("user", options={"authenticatedUser"=true})
-     *
-     * This method switch the position of a tool with an other one.
-     *
-     * @param Tool    $tool
-     * @param integer $position
-     * @param User    $user
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function desktopMoveToolAction(Tool $tool, $position, User $user)
-    {
-        $this->toolManager->move($tool, $position, $user, null);
-
-        return new Response('success', 204);
+        return new Response();
     }
 
     /**
@@ -153,7 +128,6 @@ class DesktopParametersController extends Controller
      * @EXT\Method("GET")
      *
      * @param Tool $tool
-     *
      * @return Response
      */
     public function openDesktopToolConfig(Tool $tool)

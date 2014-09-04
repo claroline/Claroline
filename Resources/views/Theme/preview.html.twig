@@ -3,41 +3,14 @@
 {% if theme is defined %}
 
     {% block stylesheets %}
-
         <link rel="stylesheet" href="{{ asset('') ~ 'themes/' ~ theme.getName() | lower | replace({ ' ': '-' }) ~ '/bootstrap.css' }}" screen="media" />
-
-        {% stylesheets debug=false filter='lessphp, cssmin'  output='vendor/fortawesome/font-awesome/css/font-awesome.css'
-        '../vendor/fortawesome/font-awesome/less/font-awesome.less'
-        %}
-            <link rel="stylesheet" href="{{ asset_url }}" screen="media" />
-        {% endstylesheets %}
-
-        {% image debug=false output='vendor/fortawesome/font-awesome/font/FontAwesome.otf'
-            '../vendor/fortawesome/font-awesome/font/FontAwesome.otf' %}
-        {% endimage %}
-
-        {% image debug=false output='vendor/fortawesome/font-awesome/font/fontawesome-webfont.eot'
-            '../vendor/fortawesome/font-awesome/font/fontawesome-webfont.eot' %}
-        {% endimage %}
-
-        {% image debug=false output='vendor/fortawesome/font-awesome/font/fontawesome-webfont.svg'
-            '../vendor/fortawesome/font-awesome/font/fontawesome-webfont.svg' %}
-        {% endimage %}
-
-        {% image debug=false output='vendor/fortawesome/font-awesome/font/fontawesome-webfont.ttf'
-            '../vendor/fortawesome/font-awesome/font/fontawesome-webfont.ttf' %}
-        {% endimage %}
-
-        {% image debug=false output='vendor/fortawesome/font-awesome/font/fontawesome-webfont.woff'
-            '../vendor/fortawesome/font-awesome/font/fontawesome-webfont.woff' %}
-        {% endimage %}
-
+        <link rel="stylesheet" href="{{ asset('vendor/fortawesome/font-awesome/css/font-awesome.css') }}" screen="media" />
     {% endblock %}
     {% block breadcrumb %}
         {{
             macros.breadcrumbs([
                 {
-                    'icon': 'icon-cog',
+                    'icon': 'fa fa-cog',
                     'name': 'administration'|trans({}, 'platform'),
                     'href': path('claro_admin_index')
                 },
@@ -70,7 +43,7 @@
         </div>
         <div class="panel-body">
             <a class="btn btn-primary" href="{{ path('claroline_admin_theme_edit', {'id': theme.getId()}) }}">
-                <i class="icon-reply"></i> {{ 'Back to the edition page' | trans({}, 'theme') }}
+                <i class="fa fa-reply"></i> {{ 'Back to the edition page' | trans({}, 'theme') }}
             </a>
             <hr>
             <h3>{{ 'Example content' | trans({}, 'theme') }}:</h3>
@@ -78,17 +51,17 @@
             <div class="bs-example">
               <div class="btn-toolbar">
                 <div class="btn-group">
-                  <button type="button" class="btn btn-default"><span class="icon-align-left"></span></button>
-                  <button type="button" class="btn btn-default"><span class="icon-align-center"></span></button>
-                  <button type="button" class="btn btn-default"><span class="icon-align-right"></span></button>
-                  <button type="button" class="btn btn-default"><span class="icon-align-justify"></span></button>
+                  <button type="button" class="btn btn-default"><span class="fa fa-align-left"></span></button>
+                  <button type="button" class="btn btn-default"><span class="fa fa-align-center"></span></button>
+                  <button type="button" class="btn btn-default"><span class="fa fa-align-right"></span></button>
+                  <button type="button" class="btn btn-default"><span class="fa fa-align-justify"></span></button>
                 </div>
               </div>
               <div class="btn-toolbar">
-                <button type="button" class="btn btn-default btn-lg"><span class="icon-star"></span> Star</button>
-                <button type="button" class="btn btn-default"><span class="icon-star"></span> Star</button>
-                <button type="button" class="btn btn-default btn-sm"><span class="icon-star"></span> Star</button>
-                <button type="button" class="btn btn-default btn-xs"><span class="icon-star"></span> Star</button>
+                <button type="button" class="btn btn-default btn-lg"><span class="fa fa-star"></span> Star</button>
+                <button type="button" class="btn btn-default"><span class="fa fa-star"></span> Star</button>
+                <button type="button" class="btn btn-default btn-sm"><span class="fa fa-star"></span> Star</button>
+                <button type="button" class="btn btn-default btn-xs"><span class="fa fa-star"></span> Star</button>
               </div>
             </div>
 

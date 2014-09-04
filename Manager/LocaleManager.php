@@ -17,6 +17,7 @@ use JMS\DiExtraBundle\Annotation\Inject;
 use JMS\DiExtraBundle\Annotation\InjectParams;
 use JMS\DiExtraBundle\Annotation\Service;
 use Symfony\Component\Finder\Finder;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 
 /**
@@ -89,28 +90,32 @@ class LocaleManager
         $locales = $this->getAvailableLocales();
 
         if (isset($locales[$locale]) and ($user = $this->getCurrentUser())) {
-
             $this->userManager->setLocale($user, $locale);
         }
     }
 
     /**
-     * This methond returns the user locale and store it in session, if there is no user this method return default
+     * This method returns the user locale and store it in session, if there is no user this method return default
      * language or the browser language if it is present in translations.
      *
+     * @param \Symfony\Component\HttpFoundation\Request $request
      * @return string The locale string as en, fr, es, etc.
      */
-    public function getUserLocale($request)
+    public function getUserLocale(Request $request)
     {
         $locales = $this->getAvailableLocales();
-        $locale = $this->defaultLocale;
         $preferred = explode('_', $request->getPreferredLanguage());
 
-        switch (true) {
-            case ($locale = $request->attributes->get('_locale')): break;
-            case (($user = $this->getCurrentUser()) and ($locale = $user->getLocale()) !== ''): break;
-            case ($locale = $request->getSession()->get('_locale')): break;
-            case (isset($preferred[0]) and isset($locales[$preferred[0]]) and ($locale = $preferred[0])): break;
+        if ($request->attributes->get('_locale')) {
+            $locale = $request->attributes->get('_locale');
+        } elseif (($user = $this->getCurrentUser()) &&  $user->getLocale()) {
+            $locale = $user->getLocale();
+        } elseif ($sessionLocale = $request->getSession()->get('_locale')) {
+            $locale = $sessionLocale;
+        } elseif (count($preferred) > 0 && isset($locales[$preferred[0]])) {
+            $locale = $preferred[0];
+        } else {
+            $locale = $this->defaultLocale;
         }
 
         $request->getSession()->set('_locale', $locale);

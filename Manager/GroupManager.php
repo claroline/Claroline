@@ -12,8 +12,9 @@
 namespace Claroline\CoreBundle\Manager;
 
 use Claroline\CoreBundle\Entity\Group;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\StrictDispatcher;
+use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Repository\GroupRepository;
 use Claroline\CoreBundle\Repository\UserRepository;
 use Claroline\CoreBundle\Pager\PagerFactory;
@@ -34,6 +35,7 @@ class GroupManager
     private $pagerFactory;
     private $translator;
     private $eventDispatcher;
+    private $roleManager;
 
     /**
      * Constructor.
@@ -42,14 +44,16 @@ class GroupManager
      *     "om"              = @DI\Inject("claroline.persistence.object_manager"),
      *     "pagerFactory"    = @DI\Inject("claroline.pager.pager_factory"),
      *     "translator"      = @DI\Inject("translator"),
-     *     "eventDispatcher" = @DI\Inject("claroline.event.event_dispatcher")
+     *     "eventDispatcher" = @DI\Inject("claroline.event.event_dispatcher"),
+     *     "roleManager"     = @DI\Inject("claroline.manager.role_manager")
      * })
      */
     public function __construct(
         ObjectManager $om,
         PagerFactory $pagerFactory,
         Translator $translator,
-        StrictDispatcher $eventDispatcher
+        StrictDispatcher $eventDispatcher,
+        RoleManager $roleManager
     )
     {
         $this->om = $om;
@@ -58,6 +62,7 @@ class GroupManager
         $this->pagerFactory = $pagerFactory;
         $this->translator = $translator;
         $this->eventDispatcher = $eventDispatcher;
+        $this->roleManager = $roleManager;
     }
 
     /**
@@ -86,18 +91,27 @@ class GroupManager
      * @todo what does this method do ?
      *
      * @param \Claroline\CoreBundle\Entity\Group $group
-     * @param string                             $oldPlatformRoleTransactionKey
+     * @param Role[] $oldRoles
      */
-    public function updateGroup(Group $group, $oldPlatformRoleTransactionKey)
+    public function updateGroup(Group $group, array $oldRoles)
     {
         $unitOfWork = $this->om->getUnitOfWork();
         $unitOfWork->computeChangeSets();
         $changeSet = $unitOfWork->getEntityChangeSet($group);
-        $newPlatformRoleTransactionKey = $group->getPlatformRole()->getTranslationKey();
+        $newRoles = $group->getPlatformRoles();
+        $oldRolesTranslationKeys = array();
 
-        if ($oldPlatformRoleTransactionKey !== $newPlatformRoleTransactionKey) {
-            $changeSet['platformRole'] = array($oldPlatformRoleTransactionKey, $newPlatformRoleTransactionKey);
+        foreach ($oldRoles as $oldRole) {
+            $oldRolesTranslationKeys[] = $oldRole->getTranslationKey();
         }
+
+        $newRolesTransactionKey = array();
+
+        foreach ($newRoles as $newRole) {
+            $newRolesTransactionKeys[] = $newRole->getTranslationKey();
+        }
+
+        $changeSet['platformRole'] = array($oldRolesTranslationKeys, $newRolesTransactionKey);
         $this->eventDispatcher->dispatch('log', 'Log\LogGroupUpdate', array($group, $changeSet));
 
         $this->om->persist($group);
@@ -112,6 +126,10 @@ class GroupManager
      */
     public function addUsersToGroup(Group $group, array $users)
     {
+        if(!$this->validateAddUsersToGroup($users, $group)) {
+            throw new Exception\AddRoleException();
+        }
+
         foreach ($users as $user) {
             if (!$group->containsUser($user)) {
                 $group->addUser($user);
@@ -216,12 +234,13 @@ class GroupManager
     }
 
     /**
-     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
-     * @param integer                                                  $page
+     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
+     * @param integer $page
+     * @param integer $max
      *
      * @return \PagerFanta\PagerFanta
      */
-    public function getWorkspaceOutsiders(AbstractWorkspace $workspace, $page, $max = 50)
+    public function getWorkspaceOutsiders(Workspace $workspace, $page, $max = 50)
     {
         $query = $this->groupRepo->findWorkspaceOutsiders($workspace, false);
 
@@ -229,13 +248,14 @@ class GroupManager
     }
 
     /**
-     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
-     * @param string                                                   $search
-     * @param integer                                                  $page
+     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
+     * @param string $search
+     * @param integer $page
+     * @param int $max
      *
      * @return \PagerFanta\PagerFanta
      */
-    public function getWorkspaceOutsidersByName(AbstractWorkspace $workspace, $search, $page, $max = 50)
+    public function getWorkspaceOutsidersByName(Workspace $workspace, $search, $page, $max = 50)
     {
         $query = $this->groupRepo->findWorkspaceOutsidersByName($workspace, $search, false);
 
@@ -243,12 +263,13 @@ class GroupManager
     }
 
     /**
-     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
-     * @param integer                                                  $page
+     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
+     * @param integer $page
+     * @param int $max
      *
      * @return \PagerFanta\PagerFanta
      */
-    public function getGroupsByWorkspace(AbstractWorkspace $workspace, $page, $max = 50)
+    public function getGroupsByWorkspace(Workspace $workspace, $page, $max = 50)
     {
         $query = $this->groupRepo->findByWorkspace($workspace, false);
 
@@ -256,7 +277,7 @@ class GroupManager
     }
 
     /**
-     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace[] $workspaces
+     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace[] $workspaces
      *
      * @return Group[]
      */
@@ -266,7 +287,7 @@ class GroupManager
     }
 
     /**
-     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace[] $workspaces
+     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace[] $workspaces
      * @param string                                                     $search
      *
      * @return Group[]
@@ -280,13 +301,14 @@ class GroupManager
     }
 
     /**
-     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
-     * @param string                                                   $search
-     * @param integer                                                  $page
+     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
+     * @param string $search
+     * @param integer $page
+     * @param int $max
      *
      * @return \PagerFanta\PagerFanta
      */
-    public function getGroupsByWorkspaceAndName(AbstractWorkspace $workspace, $search, $page, $max = 50)
+    public function getGroupsByWorkspaceAndName(Workspace $workspace, $search, $page, $max = 50)
     {
         $query = $this->groupRepo->findByWorkspaceAndName($workspace, $search, false);
 
@@ -303,7 +325,6 @@ class GroupManager
      */
     public function getGroups($page, $max = 50, $orderedBy = 'id', $order = null)
     {
-        $order = $order === 'DESC' ? 'DESC' : 'ASC';
         $query = $this->groupRepo->findAll(false, $orderedBy, $order);
 
         return $this->pagerFactory->createPager($query, $page, $max);
@@ -326,7 +347,10 @@ class GroupManager
 
     /**
      * @param \Claroline\CoreBundle\Entity\Role[] $roles
-     * @param integer                             $page
+     * @param integer $page
+     * @param int $max
+     * @param string $orderedBy
+     * @param null $order
      *
      * @return \PagerFanta\PagerFanta
      */
@@ -339,12 +363,13 @@ class GroupManager
 
     /**
      * @param \Claroline\CoreBundle\Entity\Role[]                      $roles
-     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
-     * @param integer                                                  $page
+     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
+     * @param integer $page
+     * @param int $max
      *
      * @return \PagerFanta\PagerFanta
      */
-    public function getOutsidersByWorkspaceRoles(array $roles, AbstractWorkspace $workspace, $page = 1, $max = 50)
+    public function getOutsidersByWorkspaceRoles(array $roles, Workspace $workspace, $page = 1, $max = 50)
     {
         $query = $this->groupRepo->findOutsidersByWorkspaceRoles($roles, $workspace, true);
 
@@ -353,8 +378,10 @@ class GroupManager
 
     /**
      * @param \Claroline\CoreBundle\Entity\Role[] $roles
-     * @param string                              $name
-     * @param integer                             $page
+     * @param string $name
+     * @param integer $page
+     * @param int $max
+     * @param string $orderedBy
      *
      * @return \PagerFanta\PagerFanta
      */
@@ -368,15 +395,16 @@ class GroupManager
     /**
      * @param \Claroline\CoreBundle\Entity\Role[]                      $roles
      * @param string                                                   $name
-     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
-     * @param integer                                                  $page
+     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
+     * @param integer $page
+     * @param int $max
      *
      * @return \PagerFanta\PagerFanta
      */
     public function getOutsidersByWorkspaceRolesAndName(
         array $roles,
         $name,
-        AbstractWorkspace $workspace,
+        Workspace $workspace,
         $page = 1,
         $max = 50
     )
@@ -388,6 +416,7 @@ class GroupManager
 
     /**
      * @param integer $page
+     * @param int $max
      *
      * @return \PagerFanta\PagerFanta
      */
@@ -400,7 +429,8 @@ class GroupManager
 
     /**
      * @param integer $page
-     * @param string  $search
+     * @param string $search
+     * @param int $max
      *
      * @return \PagerFanta\PagerFanta
      */
@@ -423,5 +453,39 @@ class GroupManager
         }
 
         return array();
+    }
+
+    /**
+     * Sets an array of platform role to a group.
+     *
+     * @param \Claroline\CoreBundle\Entity\Group $group
+     * @param array                              $roles
+     */
+    public function setPlatformRoles(Group $group, $roles)
+    {
+        foreach ($group->getPlatformRoles() as $role) {
+            $group->removeRole($role);
+        }
+
+        $this->om->persist($group);
+        $this->roleManager->associateRoles($group, $roles);
+        $this->om->flush();
+    }
+
+    public function validateAddUsersToGroup(array $users, Group $group)
+    {
+        $countToRegister = count($users);
+        $roles = $group->getPlatformRoles();
+
+        foreach ($roles as $role) {
+            $max = $role->getMaxUsers();
+            $countRegistered = $this->om->getRepository('ClarolineCoreBundle:User')->countUsersByRoleIncludingGroup($role);
+
+            if ($max < $countRegistered + $countToRegister) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

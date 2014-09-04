@@ -15,13 +15,37 @@
         event.preventDefault();
 
         if (!$(event.target).hasClass('disabled')) {
-            $.ajax({
-                url: $(event.target).attr('href'),
-                type: 'GET',
-                success: function () {
-                    $(event.target).parent().parent().remove();
+            //show alert modal
+            var html = Twig.render(
+                ModalWindow,
+                {
+                    'confirmFooter': true,
+                    'modalId': 'confirm-modal',
+                    'body': Translator.get('platform:remove_workspace_role_warning'),
+                    'header': Translator.get('platform:remove_role')
                 }
+            );
+
+            $('body').append(html);
+            //display validation modal
+            $('#confirm-modal').modal('show');
+            //destroy the modal when hidden
+            $('#confirm-modal').on('hidden.bs.modal', function () {
+                $(this).remove();
             });
+
+            var url = $(event.target).attr('href');
+            var saveEvent = event;
+
+            $('#confirm-ok').on('click', function(event) {
+                $.ajax({
+                    url: url,
+                    success: function(data) {
+                        $(saveEvent.target).parent().parent().remove();
+                        $('#confirm-modal').modal('hide');
+                    }
+                });
+            })
         }
     });
 })();

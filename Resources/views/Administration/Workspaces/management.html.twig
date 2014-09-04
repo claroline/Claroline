@@ -27,12 +27,12 @@
 {% endmacro %}
 {% macro displayControls() %}
     {% if app.user %}
-        <button class="btn btn-default action-button" data-action="remove">
-            <i class="icon-trash"></i>
+        <button class="btn btn-default action-button table-control" data-action="remove" disabled>
+            <i class="fa fa-trash-o"></i>
             {{ 'delete'|trans({}, 'platform') }}
         </button>
         <a href="{{ path('claro_workspace_creation_form') }}" class="btn btn-default action-button" role="button">
-            <i class="icon-pencil"></i>
+            <i class="fa fa-pencil"></i>
             {{ 'create'|trans({}, 'platform') }}
         </a>
         <a href="{{ path('claro_admin_import_form') }}" class="btn btn-default action-button">
@@ -42,8 +42,14 @@
     {% endif %}
 {% endmacro %}
 {% macro sortUrl(max, search, order, direction) %}
+    {% if direction == 'ASC' %}
+        {% set newDirection = 'DESC' %}
+    {% else %}
+        {% set newDirection = 'ASC' %}
+    {% endif %}
+
     {% if search == '' %}
-        {{ path('claro_admin_workspaces_management', {'max': max, 'order': order , 'direction': direction}) }}
+        {{ path('claro_admin_workspaces_management', {'max': max, 'order': order , 'direction': newDirection}) }}
     {% else %}
         {{ path('claro_admin_workspaces_management_search', {'search': search, 'max': max, 'order': order}) }}
     {% endif %}
@@ -61,7 +67,7 @@
     {{
         macros.breadcrumbs([
             {
-                'icon': 'icon-cog',
+                'icon': 'fa fa-cog',
                 'name': 'administration'|trans({}, 'platform'),
                 'href': path('claro_admin_parameters_index')
             },
@@ -90,7 +96,7 @@
                     <input class="form-control" type="text" id="search-items-txt" placeholder="{{ 'search'|trans({}, 'platform') }}" value={{search}}>
                     <span class="input-group-btn">
                         <button class="filter btn btn-default" type="button" id="search-button">
-                            <i class="icon-search"></i>
+                            <i class="fa fa-search"></i>
                         </button>
                     </span>
                 </div>
@@ -125,8 +131,8 @@
                         <th><a href="{{ sortUrl(max, search, 'name', direction) }}">{{ 'name'|trans({}, 'platform') }} </a></th>
                         <th><a href="{{ sortUrl(max, search, 'code', direction) }}"> {{ 'code'|trans({}, 'platform') }} </a></th>
                         <th><a href="{{ sortUrl(max, search, 'creator', direction) }}"> {{ 'creator'|trans({}, 'platform') }} </a></th>
-                        <th><a href="{{ sortUrl(max, search, 'visibility', direction) }}"> {{ 'visibility'|trans({}, 'platform') }} </a></th>
-                        <th><a href="{{ sortUrl(max, search, 'displayble', direction) }}"> {{ 'public_registration'|trans({}, 'platform') }} </a></th>
+                        <th><a href="{{ sortUrl(max, search, 'displayable', direction) }}"> {{ 'visibility'|trans({}, 'platform') }} </a></th>
+                        <th><a href="{{ sortUrl(max, search, 'selfRegistration', direction) }}"> {{ 'public_registration'|trans({}, 'platform') }} </a></th>
                         <th>{{ 'edit'|trans({}, 'platform') }}</th>
                         <th>date </th>
                     </tr>
@@ -149,14 +155,14 @@
                                    id="{{ w.getId() }}"
                                    class="visible center"
                                    data-visible="1">
-                                    <i class="icon-eye-open"></i>
+                                    <i class="fa fa-eye"></i>
                                 </a>
                             {% else %}
                                 <a href="{{ path('claro_admin_workspaces_management_visibility') }}"
                                    id="{{ w.getId() }}"
                                    class="visible"
                                    data-visible="0">
-                                    <i class="icon-eye-close"></i>
+                                    <i class="fa fa-eye-slash"></i>
                                 </a>
                             {% endif %}
                         </td>
@@ -166,20 +172,20 @@
                                    id="{{ w.getId() }}"
                                    class="registration"
                                    data-registration="unlock">
-                                    <i class="icon-unlock"></i>
+                                    <i class="fa fa-unlock"></i>
                                 </a>
                             {% else %}
                                 <a href="{{ path('claro_admin_workspaces_management_registration') }}"
                                    id="{{ w.getId() }}"
                                    class="registration"
                                    data-registration="lock">
-                                    <i class="icon-lock"></i>
+                                    <i class="fa fa-lock"></i>
                                 </a>
                             {% endif %}
                         </td>
                         <td class="center-text">
                             <a href="{{ path('claro_workspace_edit_form', {'workspace':w.getId() }) }}">
-                                <i class="icon-pencil"></i>
+                                <i class="fa fa-pencil"></i>
                             </a>
                         </td>
                         <td>
@@ -247,12 +253,12 @@
                 },
                 'success': function (data) {
                     if (visible === '1') {
-                        $(icon[0]).removeClass('icon-eye-open');
-                        $(icon[0]).addClass('icon-eye-close');
+                        $(icon[0]).removeClass('fa fa-eye');
+                        $(icon[0]).addClass('fa fa-eye-slash');
                         $(e.currentTarget).attr('data-visible','0');
                     } else {
-                        $(icon[0]).removeClass('icon-eye-close');
-                        $(icon[0]).addClass('icon-eye-open');
+                        $(icon[0]).removeClass('fa fa-eye-slash');
+                        $(icon[0]).addClass('fa fa-eye');
                         $(e.currentTarget).attr('data-visible', '1');
                     }
 
@@ -275,12 +281,12 @@
                 },
                 'success': function (data) {
                     if (previousRegistrationStatus === 'unlock') {
-                        $(icon[0]).removeClass('icon-unlock');
-                        $(icon[0]).addClass('icon-lock');
+                        $(icon[0]).removeClass('fa fa-unlock');
+                        $(icon[0]).addClass('fa fa-lock');
                         $(e.currentTarget).attr('data-registration','lock');
                     } else {
-                        $(icon[0]).removeClass('icon-lock');
-                        $(icon[0]).addClass('icon-unlock');
+                        $(icon[0]).removeClass('fa fa-lock');
+                        $(icon[0]).addClass('fa fa-unlock');
                         $(e.currentTarget).attr('data-registration', 'unlock');
                     }
                 }

@@ -13,7 +13,7 @@ namespace Claroline\CoreBundle\Entity\Tool;
 
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Role;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
@@ -46,7 +46,7 @@ class OrderedTool
 
     /**
      * @ORM\ManyToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace",
+     *     targetEntity="Claroline\CoreBundle\Entity\Workspace\Workspace",
      *     cascade={"persist"},
      *     inversedBy="orderedTools"
      * )
@@ -70,9 +70,14 @@ class OrderedTool
     protected $order;
 
     /**
-     * @Orm\Column()
+     * @ORM\Column()
      */
     protected $name;
+
+    /**
+     * @ORM\Column(name="is_visible_in_desktop", type="boolean")
+     */
+    protected $isVisibleInDesktop = false;
 
     /**
      * @ORM\ManyToMany(
@@ -103,7 +108,7 @@ class OrderedTool
         return $this->id;
     }
 
-    public function setWorkspace(AbstractWorkspace $ws = null)
+    public function setWorkspace(Workspace $ws = null)
     {
         $this->workspace = $ws;
     }
@@ -153,6 +158,11 @@ class OrderedTool
         $this->roles->removeElement($role);
     }
 
+    public function resetRoles()
+    {
+        $this->roles = new ArrayCollection();
+    }
+
     public function getRoles()
     {
         return $this->roles;
@@ -166,5 +176,15 @@ class OrderedTool
     public function getUser()
     {
         return $this->user;
+    }
+
+    public function isVisibleInDesktop()
+    {
+        return $this->isVisibleInDesktop;
+    }
+
+    public function setVisibleInDesktop($isVisible)
+    {
+        $this->isVisibleInDesktop = $isVisible;
     }
 }

@@ -34,6 +34,7 @@ class ResourceTypeRepository extends EntityRepository
     /**
      * Returns the number of existing resources for each resource type.
      *
+     * @param null $workspace
      * @return array
      */
     public function countResourcesByType($workspace = null)
@@ -48,7 +49,7 @@ class ResourceTypeRepository extends EntityRepository
             ->orderBy('total', 'DESC');
 
         if (!empty($workspace)) {
-            $qb->leftJoin('Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace', 'ws', 'WITH', 'ws = rs.workspace')
+            $qb->leftJoin('Claroline\CoreBundle\Entity\Workspace\Workspace', 'ws', 'WITH', 'ws = rs.workspace')
                 ->andWhere('ws = :workspace')
                 ->setParameter('workspace', $workspace);
         }
@@ -68,6 +69,22 @@ class ResourceTypeRepository extends EntityRepository
           LEFT JOIN rt.actions ma';
 
         $query = $this->_em->createQuery($dql);
+
+        return $query->getResult();
+    }
+
+    /**
+     * @param array $excludedTypeNames
+     * @return array
+     */
+    public function findTypeNamesNotIn(array $excludedTypeNames)
+    {
+        $dql = '
+            SELECT t.name FROM Claroline\CoreBundle\Entity\Resource\ResourceType t
+            WHERE t.name NOT IN (:types)
+        ';
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('types', $excludedTypeNames);
 
         return $query->getResult();
     }

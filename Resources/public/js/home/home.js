@@ -13,11 +13,11 @@
     window.Claroline.Home = {};
     var home = window.Claroline.Home;
     var modal = window.Claroline.Modal;
+    var routing = window.Routing;
 
     home.path = $('#homePath').html(); //global
     home.locale = $('#homeLocale').html(); //global
     home.asset = $('#homeAsset').html(); //global
-
 
     if (!home.path) {
         home.path = './';
@@ -141,6 +141,21 @@
     };
 
     /**
+     * Reload a content
+     */
+    home.reloadContent = function (element, id, type) {
+        $.ajax(routing.generate('claroline_get_content_by_id_and_type', {'content': id, 'type': type}))
+        .done(function (data) {
+            console.log(data);
+            $(element).replaceWith(data);
+            $('.contents').trigger('ContentModified');
+        })
+        .error(function () {
+            modal.error();
+        });
+    };
+
+    /**
      * Delete a content or a content type.
      *
      * @param element The HTML elementof a content.
@@ -242,6 +257,24 @@
     };
 
     /**
+     * Update collapse attribute of a content
+     */
+    home.collapse = function (element, id, type)
+    {
+        $.ajax(routing.generate('claroline_content_collapse', {'content': id, 'type': type}))
+        .done(function (data) {
+            if (data === 'true') {
+                home.reloadContent(element, id, type);
+            } else {
+                modal.error();
+            }
+        })
+        .error(function () {
+            modal.error();
+        });
+    };
+
+    /**
      * Get content from a external url and put it in a creator of contents.
      *
      * @param url The url of a webpage.
@@ -272,50 +305,6 @@
             if (data.trim() !== 'false') {
                 action(data);
             }
-        });
-    };
-
-    /**
-     * jQuery Upload HTML5
-     *
-     * example:
-     *
-     * $('input').upload(
-     *     home.path + 'resource/create/file/' + workspace,
-     *     function (res) {
-     *         console.log('done', res);
-     *     },
-     *     function (progress) {
-     *         $('.progress-bar').css('width', Math.round((progress.loaded * 100) / progress.totalSize) + '%')
-     *     }
-     * );
-     *
-     */
-    $.fn.upload = function (remote, successFn, progressFn) {
-        return this.each(function () {
-
-            var formData = new FormData($(this).parents('form').get(0));
-
-            $.ajax({
-                url: remote,
-                type: 'POST',
-                xhr: function () {
-                    var myXhr = $.ajaxSettings.xhr();
-                    if (myXhr.upload && progressFn) {
-                        myXhr.upload.addEventListener('progress', progressFn, false);
-                    }
-                    return myXhr;
-                },
-                data: formData,
-                cache: false,
-                contentType: false,
-                processData: false,
-                complete : function (res) {
-                    if (successFn) {
-                        successFn(res);
-                    }
-                }
-            });
         });
     };
 

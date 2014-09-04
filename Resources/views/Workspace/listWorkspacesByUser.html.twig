@@ -8,9 +8,9 @@
                 data-toggle="collapse"
                 href="#collapse-{{ currentIndex }}"
             >
-                <i class="icon-align-justify"></i>
+                <i class="fa fa-align-justify"></i>
                 {{ tag.getName() }}
-                <i class="icon-chevron-down pull-right"></i>
+                <i class="fa fa-chevron-down pull-right"></i>
             </a>
         </div>
         <div id="collapse-{{ currentIndex }}" class="panel-body collapse">
@@ -28,15 +28,15 @@
                         id="link-home-{{ workspaceId }}"
                     {% endif %}
                 >
-                    <i class="icon-book"></i>
+                    <i class="fa fa-book"></i>
                     {{ workspace.getName() }}
                     <span><small>({{ workspace.getCode() }})</small></span>
                     <span class="favourite-workspace-btn pull-right" workspace-id="{{ workspaceId }}">
                         <i class="favourite-workspace-icon-{{ workspaceId }}
                             {% if favourites[workspaceId] is defined %}
-                                icon-star
+                                fa fa-star
                             {% else %}
-                                icon-star-empty
+                                fa fa-star-o
                             {% endif %}"
                        ></i>
                     </span>
@@ -58,7 +58,7 @@
     {{
         macros.breadcrumbs([
             {
-                'icon': 'icon-book',
+                'icon': 'fa fa-book',
                 'name': 'workspaces'|trans({}, 'platform'),
                 'href': path('claro_workspace_list')
             },
@@ -94,32 +94,32 @@
                         data-parent="#accordion-all"
                         href="#collapse-all"
                     >
-                        <i class="icon-align-justify"></i>
+                        <i class="fa fa-align-justify"></i>
                         {{ 'all_my_workspaces'|trans({}, 'platform') }}
-                        <i class="icon-chevron-down pull-right"></i>
+                        <i class="fa fa-chevron-down pull-right"></i>
                     </a>
                 </div>
                 <div id="collapse-all" class="list-group collapse {% if tags|length == 0 %}in{% endif %}">
                     {% for workspace in workspaces %}
                     {% set workspaceId = workspace.getId() %}
                         <a  class="list-group-item" class="row-workspace row-workspace-id-{{ workspaceId }}"
-                            {% set granted = is_granted('home', workspace) %}
-                            {% if granted == true %}
+                            {% if has_access_to_workspace(workspace.getId()) %}
                                 href="{{ path('claro_workspace_open',
                                 {'workspaceId': workspaceId, 'toolName': 'home'}) }}"
                                 id="link-home-{{ workspaceId }}"
                             {% endif %}
                         >
-                            <i class="icon-book"></i>
+                            <i class="fa fa-book"></i>
                             {{ workspace.getName() }}
                             <span><small>({{ workspace.getCode() }})</small></span>
                             <span class="favourite-workspace-btn pull-right" workspace-id="{{ workspaceId }}">
                                 <i class="favourite-workspace-icon-{{ workspaceId }}
                                     {% if favourites[workspaceId] is defined %}
-                                        icon-star
+                                        fa fa-star
                                     {% else %}
-                                        icon-star-empty
+                                        fa fa-star-o
                                     {% endif %}"
+                                   style="color:gold; font-size:175%"
                                ></i>
                             </span>
                         </a>

@@ -17,7 +17,7 @@ use Gedmo\Tree\Entity\Repository\MaterializedPathRepository;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Repository\Exception\UnknownFilterException;
 
@@ -30,11 +30,11 @@ class ResourceNodeRepository extends MaterializedPathRepository
     /**
      * Returns the root directory of a workspace.
      *
-     * @param AbstractWorkspace $workspace
+     * @param Workspace $workspace
      *
      * @return ResourceNode
      */
-    public function findWorkspaceRoot(AbstractWorkspace $workspace)
+    public function findWorkspaceRoot(Workspace $workspace)
     {
         $builder = new ResourceQueryBuilder();
         $builder->selectAsEntity()
@@ -116,8 +116,7 @@ class ResourceNodeRepository extends MaterializedPathRepository
         } else {
             $builder->selectAsArray(true)
                 ->whereParentIs($parent)
-                ->whereCanOpen()
-                ->whereRoleIn($roles);
+                ->whereHasRoleIn($roles);
 
             $query = $this->_em->createQuery($builder->getDql());
             $query->setParameters($builder->getParameters());
@@ -180,8 +179,7 @@ class ResourceNodeRepository extends MaterializedPathRepository
         $builder = new ResourceQueryBuilder();
         $dql = $builder->selectAsArray()
             ->whereParentIsNull()
-            ->whereRoleIn($roles)
-            ->whereCanOpen()
+            ->whereHasRoleIn($roles)
             ->orderByName()
             ->getDql();
 
@@ -237,15 +235,15 @@ class ResourceNodeRepository extends MaterializedPathRepository
 
         if ($isRecursive) {
             $shortcuts = $this->findRecursiveDirectoryShortcuts($criteria, $roles);
-            $additionnalRoots = array();
+            $additionalRoots = array();
 
             foreach ($shortcuts as $shortcut) {
-                $additionnalRoots[] = $shortcut['target_path'];
+                $additionalRoots[] = $shortcut['target_path'];
             }
 
             $baseRoots = (count($criteria['roots']) > 0) ?
                 $criteria['roots']: array();
-            $finalRoots = array_merge($additionnalRoots, $baseRoots);
+            $finalRoots = array_merge($additionalRoots, $baseRoots);
             $criteria['roots'] = $finalRoots;
         }
 
@@ -349,8 +347,7 @@ class ResourceNodeRepository extends MaterializedPathRepository
             $dql = $builder->selectAsEntity(false, 'Claroline\CoreBundle\Entity\Resource\File')
                 ->whereParentIs($parent)
                 ->whereMimeTypeIs('%'.$mimeType.'%')
-                ->whereRoleIn($roles)
-                ->whereCanOpen()
+                ->whereHasRoleIn($roles)
                 ->getDql();
         } else {
             $dql = $builder->selectAsEntity(false, 'Claroline\CoreBundle\Entity\Resource\File')
@@ -367,7 +364,7 @@ class ResourceNodeRepository extends MaterializedPathRepository
         return $resources;
     }
 
-    public function findByWorkspaceAndResourceType(AbstractWorkspace $workspace, ResourceType $resourceType)
+    public function findByWorkspaceAndResourceType(Workspace $workspace, ResourceType $resourceType)
     {
         $qb = $this->createQueryBuilder('resourceNode');
         $qb->select('resourceNode')
@@ -437,8 +434,7 @@ class ResourceNodeRepository extends MaterializedPathRepository
     private function addFilters(ResourceQueryBuilder $builder,  array $criteria, array $roles = null)
     {
         if ($roles) {
-            $builder->whereRoleIn($roles)
-                ->whereCanOpen();
+            $builder->whereHasRoleIn($roles);
         }
 
         $filterMethodMap = array(

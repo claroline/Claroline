@@ -15,8 +15,10 @@ use Claroline\CoreBundle\DataFixtures\Demo\LoadContentData;
 use Claroline\CoreBundle\DataFixtures\Demo\LoadRegionData;
 use Claroline\CoreBundle\DataFixtures\Demo\LoadTypeData;
 use Claroline\CoreBundle\Library\Fixtures\LoggableFixture;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Role;
+use Claroline\CoreBundle\DataFixtures\Optional\LoadActivityData;
 use Claroline\CoreBundle\DataFixtures\Optional\LoadUserData;
 use Claroline\CoreBundle\DataFixtures\Optional\LoadGroupData;
 use Claroline\CoreBundle\DataFixtures\Optional\LoadDirectoryData;
@@ -24,7 +26,6 @@ use Claroline\CoreBundle\DataFixtures\Optional\LoadFileData;
 use Claroline\CoreBundle\DataFixtures\Optional\LoadTextData;
 use Claroline\CoreBundle\DataFixtures\Optional\LoadWorkspaceData;
 use Claroline\CoreBundle\DataFixtures\Optional\LoadMessagesData;
-use Claroline\CoreBundle\DataFixtures\Optional\LoadActivityData;
 use Claroline\CoreBundle\DataFixtures\Optional\LoadShortcutData;
 use Claroline\ForumBundle\DataFixtures\Demo\LoadForumData;
 use Doctrine\Common\DataFixtures\ReferenceRepository;
@@ -48,7 +49,7 @@ class LoadDemoFixture extends LoggableFixture implements ContainerAwareInterface
     public function __construct()
     {
         $ds = DIRECTORY_SEPARATOR;
-        $this->filepath = __DIR__. "{$ds}files{$ds}";
+        $this->filepath = __DIR__ . "{$ds}..{$ds}files{$ds}";
     }
 
     public function setContainer(ContainerInterface $container = null)
@@ -61,16 +62,14 @@ class LoadDemoFixture extends LoggableFixture implements ContainerAwareInterface
         $start = time();
 
         $this->initialize($manager);
-
         $this->createUsers();
         $this->createGroups();
         $this->createWorkspaces();
         $this->createFilesAndDirectories();
-        $this->createActivities();
         $this->createShortcuts();
         $this->createMessages();
         $this->createHomepage();
-
+        $this->createActivities();
         $this->loadPluginFixtures();
 
         $end = time();
@@ -182,10 +181,10 @@ class LoadDemoFixture extends LoggableFixture implements ContainerAwareInterface
         $this->addUsersToWorkspace($this->getReference('workspace/Cours 4'), $jane);
     }
 
-    private function addUsersToWorkspace(AbstractWorkspace $workspace, User $excludedUser)
+    private function addUsersToWorkspace(Workspace $workspace, User $excludedUser)
     {
         $roleManager = $this->container->get('claroline.manager.role_manager');
-        $users = $this->manager->getRepository('ClarolineCoreBundle:User')->findAllExcept($excludedUser);
+        $users = $this->manager->getRepository('ClarolineCoreBundle:User')->findAllExcept(array($excludedUser));
         $groups = $this->manager->getRepository('ClarolineCoreBundle:Group')->findAll();
         $userKeys = array_rand($users, self::USER_PER_WORKSPACE);
         $groupsKey = array_rand($groups, self::GROUP_PER_WORKSPACE);
@@ -224,7 +223,6 @@ class LoadDemoFixture extends LoggableFixture implements ContainerAwareInterface
                     'Cours 3/Groupe 2',
                     'Cours 3/Groupe 3',
                     'Jane Doe/Images et vidéos',
-                    'Jane Doe/Docs/Activities'
                 )
             )
         );
@@ -249,7 +247,7 @@ class LoadDemoFixture extends LoggableFixture implements ContainerAwareInterface
         $this->loadFixture(
             new LoadFileData(
                 'Jane Doe',
-                'Docs',
+                'Documents',
                 array(
                     $this->filepath.'lorem.pdf',
                     $this->filepath.'sample.pdf',
@@ -269,61 +267,10 @@ class LoadDemoFixture extends LoggableFixture implements ContainerAwareInterface
         );
     }
 
-    private function createActivities()
-    {
-        $this->loadFixture(
-            new LoadActivityData(
-                'Chapitre 1',
-                'Activities',
-                'Jane Doe',
-                array(
-                    $this->getReference('file/video.mp4')->getResourceNode()->getId(),
-                    $this->getReference('file/wallpaper.jpg')->getResourceNode()->getId()
-                )
-            )
-        );
-        $this->loadFixture(
-            new LoadActivityData(
-                'Chapitre 2',
-                'Activities',
-                'Jane Doe',
-                array(
-                    $this->getReference('file/lorem.pdf')->getResourceNode()->getId(),
-                    $this->getReference('file/symfony.pdf')->getResourceNode()->getId()
-                )
-            )
-        );
-        $this->loadFixture(
-            new LoadActivityData(
-                'Activité',
-                'Jane Doe',
-                'Jane Doe',
-                array(
-                    $this->getReference('activity/Chapitre 1')->getResourceNode()->getId(),
-                    $this->getReference('activity/Chapitre 2')->getResourceNode()->getId()
-                )
-            )
-        );
-    }
-
     private function createShortcuts()
     {
         $collaboratorRole = $this->manager->getRepository('ClarolineCoreBundle:Role')
             ->findCollaboratorRole($this->getReference('user/Jane Doe')->getPersonalWorkspace());
-        $this->loadFixture(
-            new LoadShortcutData(
-                $this->getReference('directory/Docs'),
-                'Activities',
-                'Jane Doe'
-            )
-        );
-        $this->loadFixture(
-            new LoadShortcutData(
-                $this->getReference('directory/Premier semestre'),
-                'Activities',
-                'Jane Doe'
-            )
-        );
         $this->loadFixture(
             new LoadShortcutData(
                 $this->getReference('directory/Travaux'),
@@ -342,7 +289,7 @@ class LoadDemoFixture extends LoggableFixture implements ContainerAwareInterface
         $rightsManager->create(
             $permissions,
             $collaboratorRole,
-            $this->getReference('directory/Docs'),
+            $this->getReference('directory/Documents'),
             true
         );
         $rightsManager->create(
@@ -376,6 +323,23 @@ class LoadDemoFixture extends LoggableFixture implements ContainerAwareInterface
         $this->loadFixture(new LoadTypeData());
         $this->loadFixture(new LoadContentData());
         $this->loadFixture(new LoadRegionData());
+    }
+
+    private function createActivities()
+    {
+        $this->loadFixture(
+            new LoadActivityData(
+                'Activité 1',
+                "Description de l'activité",
+                array(
+                    'file/wallpaper.jpg',
+                    'file/video.mp4'
+                ),
+                'Jane Doe',
+                'Premier semestre',
+                'file/lorem.pdf'
+            )
+        );
     }
 
     private function loadPluginFixtures()

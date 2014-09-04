@@ -24,7 +24,7 @@ use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Translation\TranslatorInterface;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceTag;
 use Claroline\CoreBundle\Library\Workspace\Configuration;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
@@ -291,25 +291,26 @@ class WorkspaceController extends Controller
 
         if ($form->isValid()) {
 
-            $type = $form->get('type')->getData() == 'simple' ?
-                Configuration::TYPE_SIMPLE :
-                Configuration::TYPE_AGGREGATOR;
             $template =  $form->get('file')->getData() ?
                 $form->get('file')->getData()->getPathname():
                 $this->container->getParameter('claroline.param.templates_directory') . $ds . 'default.zip';
             $config = Configuration::fromTemplate($template);
-            $config->setWorkspaceType($type);
             $config->setWorkspaceName($form->get('name')->getData());
             $config->setWorkspaceCode($form->get('code')->getData());
             $config->setDisplayable($form->get('displayable')->getData());
             $config->setSelfRegistration($form->get('selfRegistration')->getData());
-            $config->setSelfUnregistration($form->get('selfUnregistration')->getData());            
+            $config->setSelfUnregistration($form->get('selfUnregistration')->getData());
             $config->setWorkspaceDescription($form->get('description')->getData());
-            
+
             $user = $this->security->getToken()->getUser();
             $this->workspaceManager->create($config, $user);
             $this->tokenUpdater->update($this->security->getToken());
             $route = $this->router->generate('claro_workspace_list');
+            $msg = $this->get('translator')->trans(
+                'successfull_workspace_creation',
+                array('%name%' => $form->get('name')->getData()), 'platform'
+            );
+            $this->get('request')->getSession()->getFlashBag()->add('success', $msg);
 
             return new RedirectResponse($route);
         }
@@ -327,15 +328,15 @@ class WorkspaceController extends Controller
      * @EXT\Method("DELETE")
      * @EXT\ParamConverter(
      *      "workspace",
-     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      class="ClarolineCoreBundle:Workspace\Workspace",
      *      options={"id" = "workspaceId", "strictId" = true}
      * )
      *
-     * @param AbstractWorkspace $workspace
+     * @param Workspace $workspace
      *
      * @return Response
      */
-    public function deleteAction(AbstractWorkspace $workspace)
+    public function deleteAction(Workspace $workspace)
     {
         $this->assertIsGranted('DELETE', $workspace);
         $this->eventDispatcher->dispatch(
@@ -349,8 +350,8 @@ class WorkspaceController extends Controller
 
         $sessionFlashBag = $this->session->getFlashBag();
         $sessionFlashBag->add('success', $this->translator->trans(
-            'workspace_delete_success_message', 
-            array('%workspaceName%' => $workspace->getName()), 
+            'workspace_delete_success_message',
+            array('%workspaceName%' => $workspace->getName()),
             'platform'
             )
         );
@@ -363,15 +364,18 @@ class WorkspaceController extends Controller
      *
      * Renders the left tool bar. Not routed.
      *
-     * @param AbstractWorkspace $workspace
+     * @param Workspace $workspace
      * @param integer[] $_breadcrumbs
      *
      * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
      *
      * @return array
      */
-    public function renderToolListAction(AbstractWorkspace $workspace, $_breadcrumbs)
+    public function renderToolListAction(Workspace $workspace, $_breadcrumbs)
     {
+        //first we add check if some tools will be missing from the navbar and we add them if necessary
+        $this->toolManager->addMissingWorkspaceTools($workspace);
+
         if ($_breadcrumbs != null) {
             //for manager.js, id = 0 => "no root".
             if ($_breadcrumbs[0] != 0) {
@@ -406,6 +410,7 @@ class WorkspaceController extends Controller
         }
 
         return array(
+            'hasManagerAccess' => $hasManagerAccess,
             'orderedTools' => $orderedTools,
             'workspace' => $workspace
         );
@@ -417,21 +422,21 @@ class WorkspaceController extends Controller
      *     name="claro_workspace_open_tool",
      *     options={"expose"=true}
      * )
-     * @EXT\Method("GET")
+     *
      * @EXT\ParamConverter(
      *      "workspace",
-     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      class="ClarolineCoreBundle:Workspace\Workspace",
      *      options={"id" = "workspaceId", "strictId" = true}
      * )
      *
      * Opens a tool.
      *
-     * @param string            $toolName
-     * @param AbstractWorkspace $workspace
+     * @param string    $toolName
+     * @param Workspace $workspace
      *
      * @return Response
      */
-    public function openToolAction($toolName, AbstractWorkspace $workspace)
+    public function openToolAction($toolName, Workspace $workspace)
     {
         $this->assertIsGranted($toolName, $workspace);
 
@@ -465,7 +470,7 @@ class WorkspaceController extends Controller
      *
      * @EXT\ParamConverter(
      *      "workspace",
-     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      class="ClarolineCoreBundle:Workspace\Workspace",
      *      options={"id" = "workspaceId", "strictId" = true}
      * )
      *
@@ -473,7 +478,7 @@ class WorkspaceController extends Controller
      *
      * Display visible registered widgets.
      *
-     * @param AbstractWorkspace $workspace
+     * @param Workspace $workspace
      * @param integer           $homeTabId
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -481,7 +486,7 @@ class WorkspaceController extends Controller
      * @todo Reduce the number of sql queries for this action (-> dql)
      */
     public function widgetsWithoutConfigAction(
-        AbstractWorkspace $workspace,
+        Workspace $workspace,
         $homeTabId
     )
     {
@@ -524,7 +529,7 @@ class WorkspaceController extends Controller
      *
      * @EXT\ParamConverter(
      *      "workspace",
-     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      class="ClarolineCoreBundle:Workspace\Workspace",
      *      options={"id" = "workspaceId", "strictId" = true}
      * )
      *
@@ -532,14 +537,14 @@ class WorkspaceController extends Controller
      *
      * Display registered widgets.
      *
-     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
      * @param integer $homeTabId
      *
      * @return \Symfony\Component\HttpFoundation\Response
      *
      * @todo Reduce the number of sql queries for this action (-> dql)
      */
-    public function widgetsWithConfigAction(AbstractWorkspace $workspace, $homeTabId)
+    public function widgetsWithConfigAction(Workspace $workspace, $homeTabId)
     {
         $this->checkWorkspaceManagerAccess($workspace);
 
@@ -594,61 +599,42 @@ class WorkspaceController extends Controller
     /**
      * @EXT\Route(
      *     "/{workspaceId}/open",
-     *     name="claro_workspace_open"
+     *     name="claro_workspace_open",
+     *     options={"expose"=true}
      * )
      * @EXT\Method("GET")
      * @EXT\ParamConverter(
      *      "workspace",
-     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      class="ClarolineCoreBundle:Workspace\Workspace",
      *      options={"id" = "workspaceId", "strictId" = true}
      * )
      *
      * Open the first tool of a workspace.
      *
-     * @param AbstractWorkspace $workspace
+     * @param Workspace $workspace
      * @throws AccessDeniedException
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function openAction(AbstractWorkspace $workspace)
+    public function openAction(Workspace $workspace)
     {
         if ($this->security->isGranted('OPEN', $workspace)) {
+            $roles = $this->utils->getRoles($this->security->getToken());
+            $tools = $this->toolManager->getDisplayedByRolesAndWorkspace($roles, $workspace);
 
-            //get every roles of the user in the current $workspace
-            $foundRoles = array();
-            $roles = $this->roleManager->getRolesByWorkspace($workspace);
+            if (count($tools) > 0) {
+                $route = $this->router->generate(
+                    'claro_workspace_open_tool',
+                    array(
+                        'workspaceId' => $workspace->getId(),
+                        'toolName' => $tools[0]->getName()
+                    )
+                );
 
-            foreach ($roles as $wsRole) {
-                foreach ($this->security->getToken()->getRoles() as $userRole) {
-                    if ($userRole->getRole() === $wsRole->getName()) {
-                        $foundRoles[] = $wsRole;
-                    }
-                }
+                return new RedirectResponse($route);
             }
-
-            if (count($foundRoles) > 0) {
-                $openableTools = $this->toolManager->getDisplayedByRolesAndWorkspace($foundRoles, $workspace);
-
-                if (count($openableTools) > 0) {
-                    $openedTool = $openableTools[0];
-                } else {
-                    $openedTool = $this->toolManager->getOneToolByName('home');
-                }
-
-            } else {
-                //this should be the 1st tool of the workspace tool list.
-                //@todo see the above comment
-                $openedTool = $this->toolManager->getOneToolByName('home');
-            }
-
-            $route = $this->router->generate(
-                'claro_workspace_open_tool',
-                array('workspaceId' => $workspace->getId(), 'toolName' => $openedTool->getName())
-            );
-
-            return new RedirectResponse($route);
         }
 
-        throw new AccessDeniedException("Access denied");
+        throw new AccessDeniedException();
     }
 
     /**
@@ -678,35 +664,47 @@ class WorkspaceController extends Controller
     /**
      * @todo Security context verification.
      * @EXT\Route(
-     *     "/{workspaceId}/add/user/{userId}",
+     *     "/{workspace}/add/user/{user}",
      *     name="claro_workspace_add_user",
      *     options={"expose"=true},
      *     requirements={"workspaceId"="^(?=.*[1-9].*$)\d*$"}
      * )
-     * @EXT\Method({"POST", "GET"})
-     * @EXT\ParamConverter(
-     *      "workspace",
-     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
-     *      options={"id" = "workspaceId", "strictId" = true}
-     * )
-     * @EXT\ParamConverter(
-     *      "user",
-     *      class="ClarolineCoreBundle:User",
-     *      options={"id" = "userId", "strictId" = true}
-     * )
      *
      * Adds a user to a workspace.
      *
-     * @param AbstractWorkspace $workspace
+     * @param Workspace $workspace
      * @param User              $user
      *
      * @return Response
      */
-    public function addUserAction(AbstractWorkspace $workspace, User $user)
+    public function addUserAction(Workspace $workspace, User $user)
     {
         $this->workspaceManager->addUserAction($workspace, $user);
 
         return new JsonResponse($this->userManager->convertUsersToArray(array($user)));
+    }
+
+    /**
+     * @todo Security context verification.
+     * @EXT\Route(
+     *     "/{workspace}/add/user/{user}/queue",
+     *     name="claro_workspace_add_user_queue",
+     *     options={"expose"=true},
+     *     requirements={"workspaceId"="^(?=.*[1-9].*$)\d*$"}
+     * )
+     *
+     * Adds a user to a workspace.
+     *
+     * @param Workspace $workspace
+     * @param User              $user
+     *
+     * @return Response
+     */
+    public function addUserQueueAction(Workspace $workspace, User $user)
+    {
+        $this->workspaceManager->addUserQueue($workspace, $user);
+
+        return new JsonResponse(array('true'));
     }
 
     /** @EXT\Route(
@@ -837,7 +835,7 @@ class WorkspaceController extends Controller
      * @EXT\Method({"DELETE", "GET"})
      * @EXT\ParamConverter(
      *      "workspace",
-     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      class="ClarolineCoreBundle:Workspace\Workspace",
      *      options={"id" = "workspaceId", "strictId" = true}
      * )
      * @EXT\ParamConverter(
@@ -848,12 +846,12 @@ class WorkspaceController extends Controller
      *
      * Removes an user from a workspace.
      *
-     * @param AbstractWorkspace                 $workspace
+     * @param Workspace                 $workspace
      * @param \Claroline\CoreBundle\Entity\User $user
      *
      * @return Response
      */
-    public function removeUserAction(AbstractWorkspace $workspace, User $user)
+    public function removeUserAction(Workspace $workspace, User $user)
     {
         try {
             $roles = $this->roleManager->getRolesByWorkspace($workspace);
@@ -974,7 +972,7 @@ class WorkspaceController extends Controller
      * )
      * @EXT\ParamConverter(
      *      "workspace",
-     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      class="ClarolineCoreBundle:Workspace\Workspace",
      *      options={"id" = "workspaceId", "strictId" = true}
      * )
      *
@@ -982,13 +980,13 @@ class WorkspaceController extends Controller
      *
      * Displays the workspace home tab without config.
      *
-     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
      * @param integer $tabId
      *
      * @return array
      */
     public function displayWorkspaceHomeTabsActionWithoutConfig(
-        AbstractWorkspace $workspace,
+        Workspace $workspace,
         $tabId
     )
     {
@@ -1029,7 +1027,7 @@ class WorkspaceController extends Controller
      * )
      * @EXT\ParamConverter(
      *      "workspace",
-     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      class="ClarolineCoreBundle:Workspace\Workspace",
      *      options={"id" = "workspaceId", "strictId" = true}
      * )
      *
@@ -1037,13 +1035,13 @@ class WorkspaceController extends Controller
      *
      * Displays the workspace home tab.
      *
-     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
      * @param integer $tabId
      *
      * @return array
      */
     public function displayWorkspaceHomeTabsActionWithConfig(
-        AbstractWorkspace $workspace,
+        Workspace $workspace,
         $tabId
     )
     {
@@ -1093,17 +1091,17 @@ class WorkspaceController extends Controller
      * @EXT\Method("POST")
      * @EXT\ParamConverter(
      *      "workspace",
-     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      class="ClarolineCoreBundle:Workspace\Workspace",
      *      options={"id" = "workspaceId", "strictId" = true}
      * )
      *
      * Adds a workspace to the favourite list.
      *
-     * @param AbstractWorkspace $workspace
+     * @param Workspace $workspace
      *
      * @return Response
      */
-    public function updateWorkspaceFavourite(AbstractWorkspace $workspace)
+    public function updateWorkspaceFavourite(Workspace $workspace)
     {
         $this->assertIsGranted('ROLE_USER');
         $token = $this->security->getToken();
@@ -1147,7 +1145,7 @@ class WorkspaceController extends Controller
         }
     }
 
-    private function checkWorkspaceManagerAccess(AbstractWorkspace $workspace)
+    private function checkWorkspaceManagerAccess(Workspace $workspace)
     {
         $role = $this->roleManager->getManagerRole($workspace);
 

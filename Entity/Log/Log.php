@@ -16,7 +16,7 @@ use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
@@ -112,7 +112,7 @@ class Log
     protected $owner;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace")
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Workspace\Workspace")
      * @ORM\JoinColumn(onDelete="SET NULL")
      */
     protected $workspace;
@@ -476,10 +476,10 @@ class Log
     /**
      * Set workspace
      *
-     * @param  AbstractWorkspace $workspace
+     * @param  Workspace $workspace
      * @return Log
      */
-    public function setWorkspace(AbstractWorkspace $workspace = null)
+    public function setWorkspace(Workspace $workspace = null)
     {
         $this->workspace = $workspace;
 
@@ -489,7 +489,7 @@ class Log
     /**
      * Get workspace
      *
-     * @return AbstractWorkspace
+     * @return Workspace
      */
     public function getWorkspace()
     {

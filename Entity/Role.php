@@ -19,7 +19,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Claroline\CoreBundle\Library\Security\PlatformRoles;
 use Claroline\CoreBundle\Entity\Resource\ResourceRights;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\RoleRepository")
@@ -48,6 +48,7 @@ class Role implements RoleInterface
 
     /**
      * @ORM\Column(name="translation_key")
+     * @Assert\NotBlank()
      */
     protected $translationKey;
 
@@ -66,11 +67,43 @@ class Role implements RoleInterface
 
     /**
      * @ORM\ManyToMany(
+     *     targetEntity="Claroline\CoreBundle\Entity\Facet\Facet",
+     *     mappedBy="roles"
+     * )
+     */
+    protected $facets;
+
+    /**
+     * @ORM\OneToMany(
+     *     targetEntity="Claroline\CoreBundle\Entity\Facet\FieldFacetRole",
+     *     mappedBy="role"
+     * )
+     */
+    protected $fieldFacetsRole;
+
+    /**
+     * @ORM\OneToMany(
+     *     targetEntity="Claroline\CoreBundle\Entity\Facet\GeneralFacetPreference",
+     *     mappedBy="role"
+     * )
+     */
+    protected $generalFacetPreference;
+
+    /**
+     * @ORM\ManyToMany(
      *     targetEntity="Claroline\CoreBundle\Entity\Tool\OrderedTool",
      *     mappedBy="roles"
      * )
      */
     protected $orderedTools;
+
+    /**
+     * @ORM\ManyToMany(
+     *     targetEntity="Claroline\CoreBundle\Entity\Tool\AdminTool",
+     *     mappedBy="roles"
+     * )
+     */
+    protected $adminTools;
 
     /**
      * @ORM\ManyToMany(
@@ -95,18 +128,25 @@ class Role implements RoleInterface
 
     /**
      * @ORM\ManyToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace",
+     *     targetEntity="Claroline\CoreBundle\Entity\Workspace\Workspace",
      *     inversedBy="roles"
      * )
      * @ORM\JoinColumn(onDelete="CASCADE")
      */
     protected $workspace;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    protected $maxUsers;
+
     public function __construct()
     {
-        $this->users           = new ArrayCollection();
-        $this->resourceContext = new ArrayCollection();
-        $this->groups          = new ArrayCollection();
+        $this->users            = new ArrayCollection();
+        $this->resourceContext  = new ArrayCollection();
+        $this->groups           = new ArrayCollection();
+        $this->facets           = new ArrayCollection();
+        $this->fieldFacetsRoles = new ArrayCollection();
     }
 
     public function getId()
@@ -226,7 +266,7 @@ class Role implements RoleInterface
         return $this->resourceRights;
     }
 
-    public function setWorkspace(AbstractWorkspace $ws = null)
+    public function setWorkspace(Workspace $ws = null)
     {
         $this->workspace = $ws;
     }
@@ -234,5 +274,16 @@ class Role implements RoleInterface
     public function getWorkspace()
     {
         return $this->workspace;
+    }
+
+    public function setMaxUsers($maxUsers)
+    {
+        $this->maxUsers = $maxUsers;
+    }
+
+    public function getMaxUsers()
+    {
+        //2147483647 is the maximium integer in the database field.
+        return ($this->maxUsers === null) ? 2147483647: $this->maxUsers;
     }
 }

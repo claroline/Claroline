@@ -13,7 +13,7 @@ namespace Claroline\CoreBundle\Repository;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityRepository;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\Role;
 
 class GroupRepository extends EntityRepository
@@ -21,12 +21,12 @@ class GroupRepository extends EntityRepository
     /**
      * Returns the groups which are not member of a workspace.
      *
-     * @param AbstractWorkspace $workspace
+     * @param Workspace $workspace
      * @param boolean           $executeQuery
      *
      * @return array[Group]|Query
      */
-    public function findWorkspaceOutsiders(AbstractWorkspace $workspace, $executeQuery = true)
+    public function findWorkspaceOutsiders(Workspace $workspace, $executeQuery = true)
     {
         $dql = '
             SELECT g, r FROM Claroline\CoreBundle\Entity\Group g
@@ -52,13 +52,13 @@ class GroupRepository extends EntityRepository
      * Returns the groups which are not member of a workspace, filtered by a search on
      * their name.
      *
-     * @param AbstractWorkspace $workspace
+     * @param Workspace $workspace
      * @param string            $search
      * @param boolean           $executeQuery
      *
      * @return array[Group]|Query
      */
-    public function findWorkspaceOutsidersByName(AbstractWorkspace $workspace, $search, $executeQuery = true)
+    public function findWorkspaceOutsidersByName(Workspace $workspace, $search, $executeQuery = true)
     {
         $dql = '
             SELECT g, r FROM Claroline\CoreBundle\Entity\Group g
@@ -86,12 +86,12 @@ class GroupRepository extends EntityRepository
     /**
      * Returns the groups which are member of a workspace.
      *
-     * @param AbstractWorkspace $workspace
+     * @param Workspace $workspace
      * @param boolean           $executeQuery
      *
      * @return array[Group]|Query
      */
-    public function findByWorkspace(AbstractWorkspace $workspace, $executeQuery = true)
+    public function findByWorkspace(Workspace $workspace, $executeQuery = true)
     {
         $dql = '
             SELECT g, wr
@@ -170,13 +170,13 @@ class GroupRepository extends EntityRepository
      * Returns the groups which are member of a workspace, filtered by a search on
      * their name.
      *
-     * @param AbstractWorkspace $workspace
+     * @param Workspace $workspace
      * @param string            $search
      * @param boolean           $executeQuery
      *
      * @return array[Group]|Query
      */
-    public function findByWorkspaceAndName(AbstractWorkspace $workspace, $search, $executeQuery = true)
+    public function findByWorkspaceAndName(Workspace $workspace, $search, $executeQuery = true)
     {
         $dql = '
             SELECT g, r FROM Claroline\CoreBundle\Entity\Group g
@@ -211,14 +211,12 @@ class GroupRepository extends EntityRepository
      */
     public function findAll($executeQuery = true, $orderedBy = 'id', $order = null)
     {
-        $order = $order === 'DESC' ? 'DESC' : 'ASC';
         if (!$executeQuery) {
             return $this->_em->createQuery(
                 "SELECT g, r, ws FROM Claroline\CoreBundle\Entity\Group g
                  LEFT JOIN g.roles r
                  LEFT JOIN r.workspace ws
-                 ORDER BY g.{$orderedBy} "
-                 .$order
+                 ORDER BY g.{$orderedBy} {$order}"
             );
         }
 
@@ -264,7 +262,6 @@ class GroupRepository extends EntityRepository
      */
     public function findByName($search, $executeQuery = true, $orderedBy = 'id', $order = null)
     {
-        $order = $order === 'DESC' ? 'DESC' : 'ASC';
         $dql = "
             SELECT g, r, ws
             FROM Claroline\CoreBundle\Entity\Group g
@@ -323,7 +320,6 @@ class GroupRepository extends EntityRepository
 
     public function findByRoles(array $roles, $getQuery = false, $orderedBy = 'id', $order = null)
     {
-        $order = $order === 'DESC' ? 'DESC' : 'ASC';
         $dql = "
             SELECT u, ws, r FROM Claroline\CoreBundle\Entity\Group u
             JOIN u.roles r
@@ -361,7 +357,7 @@ class GroupRepository extends EntityRepository
      * This method should be renamed.
      * Find groups who are outside the workspace and users whose role are in $roles.
      */
-    public function findOutsidersByWorkspaceRoles(array $roles, AbstractWorkspace $workspace, $getQuery = false)
+    public function findOutsidersByWorkspaceRoles(array $roles, Workspace $workspace, $getQuery = false)
     {
         //feel free to make this request easier if you can
 
@@ -395,7 +391,7 @@ class GroupRepository extends EntityRepository
     public function findOutsidersByWorkspaceRolesAndName(
         array $roles,
         $name,
-        AbstractWorkspace $workspace,
+        Workspace $workspace,
         $getQuery = false
     )
     {

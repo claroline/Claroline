@@ -107,10 +107,4 @@ class WorkspacePropertiesImporter extends Importer implements ConfigurationInter
 
         return true;
     }
-
-    public function import($properties)
-    {
-
-        //
-    }
 }

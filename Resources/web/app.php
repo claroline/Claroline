@@ -28,6 +28,6 @@ if (!$maintenanceMode || $authorized) {
     $kernel->handle($request)->send();
     //$kernel->terminate($request, $response);
 } else {
-    $url = $_SERVER['HTTP_HOST'] . $_SERVER['SCRIPT_NAME'] . '/../maintenance.html';
+    $url = $_SERVER['HTTP_HOST'] . $_SERVER['SCRIPT_NAME'] . '/../maintenance.html.php';
     header("Location: http://{$url}");
 }

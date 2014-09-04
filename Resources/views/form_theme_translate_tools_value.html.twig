@@ -1,0 +1,6 @@
+{% block form_widget_simple %}
+    {% spaceless %}
+        {% set type = type|default('text') %}
+        <input type="{{ type }}" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value|trans({}, 'tools') }}" {% endif %}/>
+    {% endspaceless %}
+{% endblock form_widget_simple %}

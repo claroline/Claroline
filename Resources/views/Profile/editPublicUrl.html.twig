@@ -6,7 +6,7 @@
     {{ macros.flashBox() }}
     <div class="panel panel-default panel-user">
         <div class="panel-heading relative">
-            <a href="{{ path('claro_profile_view') }}" title="{{ 'back_to_profile'|trans({}, 'platform') }}" class="pull-right"><span class="icon-reply"></span> {{ 'back_to_profile'|trans({}, 'platform') }}</a>
+            <a href="{{ path('claro_profile_view') }}" title="{{ 'back_to_profile'|trans({}, 'platform') }}" class="pull-right"><span class="fa fa-reply"></span> {{ 'back_to_profile'|trans({}, 'platform') }}</a>
             <h3 class="panel-title">
                 {{ 'tune_your_public_profile_url'|trans({}, 'platform') }}
             </h3>
@@ -29,8 +29,8 @@
                         <input type="hidden" value="{{ currentPublicUrl }}" id="current_public_profile_url">
                         <div class="feedback">
                             <img src="{{ asset('bundles/clarolinecore/images/loading.gif') }}" alt="Loading" class="loading hidden">
-                            <span class="icon-ok"></span>
-                            <span class="icon-remove hidden"></span>
+                            <span class="fa fa-check"></span>
+                            <span class="fa fa-times hidden"></span>
                         </div>
                         <small class="help-block">
                             {{ 'public_url_help'|trans({}, 'platform') }}

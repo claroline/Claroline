@@ -18,20 +18,42 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class GroupSettingsType extends GroupType
 {
+    private $isAdmin;
+    private $roles;
+
+    public function __construct($isAdmin, array $roles)
+    {
+        $this->isAdmin = $isAdmin;
+        $this->roles = $roles;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         parent::buildForm($builder, $options);
+        $isAdmin = $this->isAdmin;
         $builder->add(
-            'platformRole', 'entity', array(
+            'platformRoles',
+            'entity',
+            array(
+                'label' => 'roles',
                 'class' => 'Claroline\CoreBundle\Entity\Role',
-                'expanded' => false,
-                'multiple' => false,
+                'data' => $this->roles,
+                'mapped' => false,
+                'expanded' => true,
+                'multiple' => true,
                 'property' => 'translationKey',
                 'disabled' => false,
-                'query_builder' => function (\Doctrine\ORM\EntityRepository $er) {
-                    return $er->createQueryBuilder('r')
-                            ->where("r.type != " . Role::WS_ROLE)
-                            ->andWhere("r.name != 'ROLE_ANONYMOUS'");
+                'query_builder' => function (\Doctrine\ORM\EntityRepository $er) use ($isAdmin){
+                    $query = $er->createQueryBuilder('r')
+                        ->where("r.type != " . Role::WS_ROLE)
+                        ->andWhere("r.name != 'ROLE_ANONYMOUS'")
+                        ->andWhere("r.name != 'ROLE_USER'");
+
+                    if (!$isAdmin) {
+                        $query->andWhere("r.name != 'ROLE_ADMIN'");
+                    }
+
+                    return $query;
                 }
             )
         );

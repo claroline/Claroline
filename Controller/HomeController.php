@@ -59,7 +59,8 @@ class HomeController
      *     "/content/{content}/{type}/{father}",
      *     requirements={"content" = "\d+"},
      *     name="claroline_get_content_by_id_and_type",
-     *     defaults={"type" = "home", "father" = null}
+     *     defaults={"type" = "home", "father" = null},
+     *     options = {"expose" = true}
      * )
      *
      * @ParamConverter("content", class = "ClarolineCoreBundle:Content", options = {"id" = "content"})
@@ -80,8 +81,8 @@ class HomeController
     /**
      * Render the home page of the platform
      *
-     * @Route("/type/{type}", name="claro_get_content_by_type")
-     * @Route("/", name="claro_index", defaults={"type" = "home"})
+     * @Route("/type/{type}", name="claro_get_content_by_type", options = {"expose" = true})
+     * @Route("/", name="claro_index", defaults={"type" = "home"}, options = {"expose" = true})
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -90,6 +91,7 @@ class HomeController
         $response = $this->render(
             'ClarolineCoreBundle:Home:home.html.twig',
             array(
+                'type' => $type,
                 'region' => $this->renderRegions($this->manager->getRegionContents()),
                 'content' => $this->typeAction($type)->getContent()
             )
@@ -125,22 +127,108 @@ class HomeController
      * @Route("/types", name="claroline_types_manager")
      * @Secure(roles="ROLE_ADMIN")
      *
-     * @Template("ClarolineCoreBundle:Home:home.html.twig")
-     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function typesAction()
     {
         $types = $this->manager->getTypes();
 
-        return array(
-            'region' => $this->renderRegions($this->manager->getRegionContents()),
-            'content' => $this->render(
-                'ClarolineCoreBundle:Home:types.html.twig',
-                array('types' => $types)
-            )->getContent()
+        $response = $this->render(
+            'ClarolineCoreBundle:Home:home.html.twig',
+            array(
+                'type' => '_pages',
+                'region' => $this->renderRegions($this->manager->getRegionContents()),
+                'content' => $this->render(
+                    'ClarolineCoreBundle:Home:types.html.twig',
+                    array('types' => $types)
+                )->getContent()
+            )
         );
+        $response->headers->addCacheControlDirective('no-cache', true);
+        $response->headers->addCacheControlDirective('max-age', 0);
+        $response->headers->addCacheControlDirective('must-revalidate', true);
+        $response->headers->addCacheControlDirective('no-store', true);
+        $response->headers->addCacheControlDirective('expires', '-1');
+
+        return $response;
     }
+
+    /**
+     * Rename a content form
+     *
+     * @Route("/rename/type/{type}", name="claro_content_rename_type_form", options = {"expose" = true})
+     * @Secure(roles="ROLE_ADMIN")
+     *
+     * @Template("ClarolineCoreBundle:Home:rename.html.twig")
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function renameContentFormAction($type)
+    {
+        return array('type' => $type);
+    }
+
+    /**
+     * Rename a content form
+     *
+     * @Route("/rename/type/{type}/{name}", name="claro_content_rename_type", options = {"expose" = true})
+     * @Secure(roles="ROLE_ADMIN")
+     *
+     * @ParamConverter("type", class = "ClarolineCoreBundle:home\Type", options = {"mapping" : {"type": "name"}})
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function renameContentAction($type, $name)
+    {
+        try {
+            $this->manager->renameType($type, $name);
+
+            return new Response('true');
+        } catch (\Exeption $e) {
+            return new Response('false'); //useful in ajax
+        }
+    }
+
+    /**
+     * Render the "move a content" form.
+     *
+     * @Route("/move/content/{currentType}", name="claroline_move_content_form", options = {"expose" = true})
+     * @Secure(roles="ROLE_ADMIN")
+     *
+     * @Template("ClarolineCoreBundle:Home:move.html.twig")
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function moveContentFormAction($currentType)
+    {
+        return array('currentType' => $currentType, 'pages' => $this->manager->getTypes());
+    }
+
+    /**
+     * Render the "move a content" form.
+     *
+     * @Route("/move/content/{content}/{type}/{page}", name="claroline_move_content", options = {"expose" = true})
+     *
+     * @Secure(roles="ROLE_ADMIN")
+     *
+     * @Template("ClarolineCoreBundle:Home:move.html.twig")
+     *
+     * @ParamConverter("content", class = "ClarolineCoreBundle:Content", options = {"id" = "content"})
+     * @ParamConverter("type", class = "ClarolineCoreBundle:home\Type", options = {"mapping" : {"type": "name"}})
+     * @ParamConverter("page", class = "ClarolineCoreBundle:home\Type", options = {"mapping" : {"page": "name"}})
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function moveContentAction($content, $type, $page)
+    {
+        try {
+            $this->manager->moveContent($content, $type, $page);
+
+            return new Response('true');
+        } catch (\Exeption $e) {
+            return new Response('false'); //useful in ajax
+        }
+     }
 
     /**
      * Render the page of the creator box.
@@ -176,9 +264,9 @@ class HomeController
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function menuAction($id, $size, $type, $father = null, $region = null)
+    public function menuAction($id, $size, $type, $father = null, $region = null, $collapse = null)
     {
-        return $this->manager->getMenu($id, $size, $type, $father, $region);
+        return $this->manager->getMenu($id, $size, $type, $father, $region, $collapse);
     }
 
     /**
@@ -237,50 +325,6 @@ class HomeController
     public function regionAction(Content $content)
     {
         return array('id' => $content->getId(), 'region' => $this->manager->getRegion($content));
-    }
-
-    /**
-     * Render the HTML of the content.
-     *
-     * @return array
-     */
-    public function renderContent($layout)
-    {
-        $tmp = ' '; // void in case of not yet content
-
-        if (isset($layout['content']) and isset($layout['type']) and is_array($layout['content'])) {
-            foreach ($layout['content'] as $content) {
-                $tmp .= $this->render(
-                    'ClarolineCoreBundle:Home/types:'.$content['type'].'.html.twig', $content, true
-                )->getContent();
-            }
-        }
-
-        $layout['content'] = $tmp;
-
-        return $layout;
-    }
-
-    /**
-     * Render the HTML of the regions.
-     *
-     * @return string
-     */
-    public function renderRegions($regions)
-    {
-        $tmp = array();
-
-        foreach ($regions as $name => $region) {
-            $tmp[$name] = '';
-
-            foreach ($region as $variables) {
-                $tmp[$name] .= $this->render(
-                    'ClarolineCoreBundle:Home/types:'.$variables['type'].'.html.twig', $variables, true
-                )->getContent();
-            }
-        }
-
-        return $tmp;
     }
 
     /**
@@ -387,7 +431,7 @@ class HomeController
     /**
      * Verify if a type exist.
      *
-     * @Route("/content/typeexist/{name}", name="claroline_content_typeexist")
+     * @Route("/content/typeexist/{name}", name="claroline_content_type_exist", options = {"expose" = true})
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -466,6 +510,33 @@ class HomeController
     }
 
     /**
+     * Update the collapse attribute of a content
+     *
+     * @Route(
+     *     "/content/collapse/{content}/{type}",
+     *     name="claroline_content_collapse",
+     *     options = {"expose" = true}
+     * )
+     *
+     * @Secure(roles="ROLE_ADMIN")
+     *
+     * @ParamConverter("content", class = "ClarolineCoreBundle:Content", options = {"id" = "content"})
+     * @ParamConverter("type", class = "ClarolineCoreBundle:Home\Type", options = {"mapping" : {"type": "name"}})
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function collapseAction($content, $type)
+    {
+        try {
+            $this->manager->collapse($content, $type);
+
+            return new Response('true');
+        } catch (\Exeption $e) {
+            return new Response('false');
+        }
+    }
+
+    /**
      * Check if a string is a valid URL
      *
      * @Route("/cangeneratecontent", name="claroline_can_generate_content")
@@ -488,6 +559,100 @@ class HomeController
         }
 
         return new Response('false'); //in case is not valid URL
+    }
+
+    /**
+     * Menu settings
+     *
+     * @Route("/content/menu/settings/{content}", name="claroline_content_menu_settings")
+     * @Secure(roles="ROLE_ADMIN")
+     *
+     * @ParamConverter("content", class = "ClarolineCoreBundle:Content", options = {"id" = "content"})
+     *
+     * @Template("ClarolineCoreBundle:Home:menuSettings.html.twig")
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function menuSettingsAction($content)
+    {
+        return array(
+            'content' => $content,
+            'menu' => $this->manager->getContentByType('menu', $content->getId()),
+            'parameters' => $this->manager->getHomeParameters()
+        );
+    }
+
+    /**
+     * Save the menu settings
+     *
+     * @Route(
+     *     "/content/menu/save/settings/{menu}/{login}/{workspaces}/{locale}",
+     *     name="claroline_content_menu_save_settings",
+     *     options = {"expose" = true}
+     * )
+     *
+     * @param menu The id of the menu
+     * @param login A Boolean that determine if there is the login button in the footer
+     * @param workspaces A Boolean that determine if there is the workspace button in the footer
+     * @param locale A boolean that determine if there is a locale button in the header
+     *
+     * @Secure(roles="ROLE_ADMIN")
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function saveMenuSettingsAction($menu, $login, $workspaces, $locale)
+    {
+        try {
+            $this->manager->saveHomeParameters($menu, $login, $workspaces, $locale);
+
+            return new Response('true');
+        } catch (\Exeption $e) {
+            return new Response('false');
+        }
+    }
+
+    /**
+     * Render the HTML of the content.
+     *
+     * @return array
+     */
+    public function renderContent($layout)
+    {
+        $tmp = ' '; // void in case of not yet content
+
+        if (isset($layout['content']) and isset($layout['type']) and is_array($layout['content'])) {
+            foreach ($layout['content'] as $content) {
+                $tmp .= $this->render(
+                    'ClarolineCoreBundle:Home/types:'.$content['type'].'.html.twig', $content, true
+                )->getContent();
+            }
+        }
+
+        $layout['content'] = $tmp;
+
+        return $layout;
+    }
+
+    /**
+     * Render the HTML of the regions.
+     *
+     * @return string
+     */
+    public function renderRegions($regions)
+    {
+        $tmp = array();
+
+        foreach ($regions as $name => $region) {
+            $tmp[$name] = '';
+
+            foreach ($region as $variables) {
+                $tmp[$name] .= $this->render(
+                    'ClarolineCoreBundle:Home/types:'.$variables['type'].'.html.twig', $variables, true
+                )->getContent();
+            }
+        }
+
+        return $tmp;
     }
 
     /**

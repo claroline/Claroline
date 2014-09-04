@@ -57,7 +57,16 @@ class PlatformConfigurationHandler
         'facebook_client_id' => null,
         'facebook_client_secret' => null,
         'facebook_client_active' => null,
-        'form_captcha' => true
+        'form_captcha' => true,
+        'platform_limit_date' => 1559350861,//1 june 2019
+        'platform_init_date' => 1388534461, //1 june 2014
+        'account_duration' => null,
+        'username_regex' => '/^[a-zA-Z0-9@_\.]*$/',
+        'anonymous_public_profile' => false,
+        'home_menu' => null,
+        'footer_login' => false,
+        'footer_workspaces' => false,
+        'header_locale' => false
     );
 
     /**
@@ -145,6 +154,15 @@ class PlatformConfigurationHandler
         $config->setFacebookClientSecret($this->parameters['facebook_client_secret']);
         $config->setFacebookClientActive($this->parameters['facebook_client_active']);
         $config->setFormCaptcha($this->parameters['form_captcha']);
+        $config->setAccountDuration($this->parameters['account_duration']); //days
+        $config->setPlatformLimitDate($this->parameters['platform_limit_date']);
+        $config->setPlatformInitDate($this->parameters['platform_init_date']);
+        $config->setUsernameRegex($this->parameters['username_regex']);
+        $config->setAnonymousPublicProfile($this->parameters['anonymous_public_profile']);
+        $config->setHomeMenu($this->parameters['home_menu']);
+        $config->setFooterLogin($this->parameters['footer_login']);
+        $config->setFooterWorkspaces($this->parameters['footer_workspaces']);
+        $config->setHeaderLocale($this->parameters['header_locale']);
 
         return $config;
     }
@@ -181,5 +199,10 @@ class PlatformConfigurationHandler
                 "'{$parameter}' is not a parameter of the current platform configuration."
             );
         }
+    }
+
+    public function getDefaultParameters()
+    {
+        return $this->defaultParameters;
     }
 }

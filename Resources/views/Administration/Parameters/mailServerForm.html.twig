@@ -6,7 +6,7 @@
     {{
         macros.breadcrumbs([
             {
-                'icon': 'icon-cog',
+                'icon': 'fa fa-cog',
                 'name': 'administration'|trans({}, 'platform'),
                 'href': path('claro_admin_index')
             },
@@ -38,6 +38,9 @@
         </div>
         <div class="panel-footer">
             <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
+            <a href="{{ path('claro_admin_reset_mail_server') }}">
+                <button type="button" class="btn btn-primary">{{ 'reset'|trans({}, 'platform') }}</button>
+            </a>
             <a href="{{ path('claro_admin_index') }}">
                 <button type="button" class="btn btn-default">{{ 'cancel'|trans({}, 'platform') }}</button>
             </a>

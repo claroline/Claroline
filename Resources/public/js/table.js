@@ -10,8 +10,9 @@
 /* global createValidationBox */
 /* global ModalWindow */
 /* global ValidationFooter */
+/* global ErrorFooter */
 
-(function () {
+(function() {
     'use strict';
 
     window.Claroline = window.Claroline || {};
@@ -52,14 +53,18 @@
      *
      * You can add a <select> whose id is "max-select". This will send the "max" parameter to the request.
      */
-    table.initialize = function (parameters) {
+    table.initialize = function(parameters) {
         var currentAction = '';
         createValidationBox();
+        createErrorBox();
 
-        $('#search-button').click(function () {
+        // disable all elements with table-control class
+        $('.table-control').prop('disabled', true);
+
+        $('#search-button').click(function() {
             var search = document.getElementById('search-items-txt') ?
-                document.getElementById('search-items-txt').value :
-                '';
+                    document.getElementById('search-items-txt').value :
+                    '';
             var route;
 
             var max = findMaxPerPage();
@@ -83,11 +88,11 @@
             window.location.href = route;
         });
 
-        $('#search-items-txt').keypress(function (e) {
+        $('#search-items-txt').keypress(function(e) {
 
             var max = findMaxPerPage();
             if (max) {
-               parameters.route.search.parameters.max = parameters.route.normal.parameters.max = max;
+                parameters.route.search.parameters.max = parameters.route.normal.parameters.max = max;
             }
 
             if (e.keyCode === 13) {
@@ -108,26 +113,25 @@
 
         for (var key in parameters.route.action) {
             if (parameters.route.action.hasOwnProperty(key)) {
-                var btnClass = '.' + (
-                    parameters.route.action[key].btn === undefined ? 'action-button': parameters.route.action[key].btn
-                );
-                $(btnClass).click(function (e) {
+                var btnClass = '.' +
+                    (parameters.route.action[key].btn === undefined ? 'action-button' : parameters.route.action[key].btn);
+                $(btnClass).click(function(e) {
                     currentAction = $(e.currentTarget).attr('data-action');
-                    var html = Twig.render(parameters.route.action[currentAction].confirmTemplate,
-                        {'nbItems': $('.chk-item:checked').length}
-                    );
+                    var html = Twig.render(parameters.route.action[currentAction].confirmTemplate, {
+                        'nbItems': $('.chk-item:checked').length
+                    });
                     $('#table-modal .modal-body').html(html);
                     $('#table-modal').modal('show');
                 });
             }
         }
 
-        $('#modal-valid-button').on('click', function () {
+        $('#modal-valid-button').on('click', function() {
             if (currentAction) {
                 var queryString = {};
                 var i = 0;
                 var array = [];
-                $('.chk-item:checked').each(function (index, element) {
+                $('.chk-item:checked').each(function(index, element) {
                     array[i] = element.value;
                     i++;
                 });
@@ -136,19 +140,25 @@
                     parameters.route.action[currentAction].route,
                     parameters.route.action[currentAction].parameters
                 );
-                var type =  parameters.route.action[currentAction].type === undefined ?
-                    'GET':
+                var type = parameters.route.action[currentAction].type === undefined ?
+                    'GET' :
                     parameters.route.action[currentAction].type;
                 route += '?' + $.param(queryString);
                 $.ajax({
                     url: route,
                     type: type,
-                    success: function () {
+                    success: function() {
                         if (parameters.route.action[currentAction].delete) {
-                            $('.chk-item:checked').each(function (index, element) {
+                            $('.chk-item:checked').each(function(index, element) {
                                 $(element).parent().parent().remove();
                             });
                         }
+
+                        $('.table-control').prop('disabled', true);
+                    },
+                    error: function(xhr) {
+                        $('#error-modal').modal('show');
+                        $('#error-modal .modal-body').html(xhr.responseText);
                     }
                 });
                 $('#table-modal').modal('hide');
@@ -156,20 +166,45 @@
             }
         });
 
-        $('#check-all-items').click(function () {
+        $('#check-all-items').click(function() {
             if ($('#check-all-items').is(':checked')) {
-                $('.chk-item').attr('checked', true);
+                $('.chk-item').prop('checked', true);
+                // enable .table-control elements
+                $('.table-control').prop('disabled', false);
             }
             else {
-                $('.chk-item').attr('checked', false);
+                $('.chk-item').prop('checked', false);
+                 // disable .table-control elements
+                $('.table-control').prop('disabled', true);
             }
+        });
+
+        // checkboxes click event
+        $('.chk-item').on('click', function() {
+            $('.table-control').prop('disabled', true);
+            // if at least one checkbox is checked
+            $('.chk-item').each(function() {
+                if ($(this).is(':checked')) {
+                    // enable .table-control elements
+                    $('.table-control').prop('disabled', false);
+                    return true;
+                }
+            });
         });
     };
 
+    function createErrorBox() {
+        var html = Twig.render(
+                ModalWindow,
+                {'footer': Twig.render(ErrorFooter), 'isHidden': true, 'modalId': 'error-modal', 'body': ''}
+        );
+        $('body').append(html);
+    }
+
     function createValidationBox() {
         var html = Twig.render(
-            ModalWindow,
-            {'footer': Twig.render(ValidationFooter), 'isHidden': true, 'modalId': 'table-modal', 'body': ''}
+                ModalWindow,
+                {'footer': Twig.render(ValidationFooter), 'isHidden': true, 'modalId': 'table-modal', 'body': ''}
         );
         $('body').append(html);
     }

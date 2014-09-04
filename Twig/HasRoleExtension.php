@@ -44,9 +44,11 @@ class HasRoleExtension extends \Twig_Extension
 
     public function hasRole($role)
     {
-        foreach ($this->securityContext->getToken()->getRoles() as $tokenRole) {
-            if ($tokenRole->getRole() === $role) {
-                return true;
+        if ($token = $this->securityContext->getToken()) {
+            foreach ($token->getRoles() as $tokenRole) {
+                if ($tokenRole->getRole() === $role) {
+                    return true;
+                }
             }
         }
 
@@ -55,9 +57,11 @@ class HasRoleExtension extends \Twig_Extension
 
     public function isImpersonated()
     {
-        foreach ($this->securityContext->getToken()->getRoles() as $role) {
-            if ($role instanceof \Symfony\Component\Security\Core\Role\SwitchUserRole) {
-                return true;
+        if ($token = $this->securityContext->getToken()) {
+            foreach ($token->getRoles() as $role) {
+                if ($role instanceof \Symfony\Component\Security\Core\Role\SwitchUserRole) {
+                    return true;
+                }
             }
         }
 

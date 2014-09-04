@@ -16,7 +16,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Translation\Translator;
 use Symfony\Component\Security\Core\SecurityContextInterface;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Security\Utilities;
 use Claroline\CoreBundle\Manager\MessageManager;
@@ -25,6 +26,7 @@ use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\DiExtraBundle\Annotation as DI;
+use Claroline\CoreBundle\Manager\HomeManager;
 
 /**
  * Actions of this controller are not routed. They're intended to be rendered
@@ -52,7 +54,8 @@ class LayoutController extends Controller
      *     "utils"              = @DI\Inject("claroline.security.utilities"),
      *     "translator"         = @DI\Inject("translator"),
      *     "configHandler"      = @DI\Inject("claroline.config.platform_config_handler"),
-     *     "toolManager"       = @DI\Inject("claroline.manager.tool_manager")
+     *     "toolManager"        = @DI\Inject("claroline.manager.tool_manager"),
+     *     "homeManager"        = @DI\Inject("claroline.manager.home_manager")
      * })
      */
     public function __construct(
@@ -64,7 +67,8 @@ class LayoutController extends Controller
         SecurityContextInterface $security,
         Utilities $utils,
         Translator $translator,
-        PlatformConfigurationHandler $configHandler
+        PlatformConfigurationHandler $configHandler,
+        HomeManager $homeManager
     )
     {
         $this->messageManager = $messageManager;
@@ -76,6 +80,7 @@ class LayoutController extends Controller
         $this->utils = $utils;
         $this->translator = $translator;
         $this->configHandler = $configHandler;
+        $this->homeManager = $homeManager;
     }
 
     /**
@@ -99,13 +104,18 @@ class LayoutController extends Controller
      */
     public function footerAction()
     {
-        return array();
+        return array(
+            'footerMessage' => $this->configHandler->getParameter('footer'),
+            'footerLogin' => $this->configHandler->getParameter('footer_login'),
+            'footerWorkspaces' => $this->configHandler->getParameter('footer_workspaces'),
+            'headerLocale' => $this->configHandler->getParameter('header_locale')
+        );
     }
 
     /**
      * @EXT\ParamConverter(
      *      "workspace",
-     *      class="ClarolineCoreBundle:Workspace\AbstractWorkspace",
+     *      class="ClarolineCoreBundle:Workspace\Workspace",
      *      options={"id" = "workspaceId", "strictId" = true}
      * )
      * @EXT\Template()
@@ -114,44 +124,55 @@ class LayoutController extends Controller
      * (anonymous/logged, profile, etc.) and the platform options (e.g. self-
      * registration allowed/prohibited).
      *
+     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function topBarAction(AbstractWorkspace $workspace = null)
+    public function topBarAction(Workspace $workspace = null)
     {
-        $tools = $this->toolManager->getAdminToolsByRoles($this->security->getToken()->getRoles());
-        $canAdministrate = count($tools) > 0 ? true: false;
+        if ($token = $this->security->getToken()) {
+            $tools = $this->toolManager->getAdminToolsByRoles($token->getRoles());
+        } else {
+            $tools = array();
+        }
+
+        $canAdministrate = count($tools) > 0;
         $isLogged = false;
         $countUnreadMessages = 0;
         $registerTarget = null;
         $loginTarget = null;
         $workspaces = null;
         $personalWs = null;
-        $isInAWorkspace = false;
         $countUnviewedNotifications = 0;
+        $homeMenu = $this->configHandler->getParameter('home_menu');
 
-        $token = $this->security->getToken();
-        $user = $token->getUser();
-        $roles = $this->utils->getRoles($token);
-
-        if (!is_null($workspace)) {
-            $isInAWorkspace = true;
+        if (is_numeric($homeMenu)) {
+            $homeMenu = $this->homeManager->getContentByType('menu', $homeMenu);
         }
 
-        if (!in_array('ROLE_ANONYMOUS', $roles)) {
-            $isLogged = true;
+        if ($token) {
+            $user = $token->getUser();
+            $roles = $this->utils->getRoles($token);
+        } else {
+            $roles = array('ROLE_ANONYMOUS');
         }
 
-        if ($isLogged) {
-            $isLogged = true;
+        if ($isLogged = !in_array('ROLE_ANONYMOUS', $roles)) {
+            $tools = $this->toolManager->getAdminToolsByRoles($token->getRoles());
+            $canAdministrate = count($tools) > 0;
             $countUnreadMessages = $this->messageManager->getNbUnreadMessages($user);
             $personalWs = $user->getPersonalWorkspace();
             $workspaces = $this->findWorkspacesFromLogs();
-            $countUnviewedNotifications = $this->get('icap.notification.manager')->
-                countUnviewedNotifications($user->getId());
+            $countUnviewedNotifications = $this->get('icap.notification.manager')
+                ->countUnviewedNotifications($user->getId());
         } else {
             $workspaces = $this->workspaceManager->getWorkspacesByAnonymous();
 
-            if (true === $this->configHandler->getParameter('allow_self_registration')) {
+            if (true === $this->configHandler->getParameter('allow_self_registration') &&
+                $this->roleManager->validateRoleInsert(
+                    new User(),
+                    $this->roleManager->getRoleByName('ROLE_USER')
+                )
+            ) {
                 $registerTarget = 'claro_registration_user_registration_form';
             }
 
@@ -166,10 +187,12 @@ class LayoutController extends Controller
             'workspaces' => $workspaces,
             'personalWs' => $personalWs,
             "isImpersonated" => $this->isImpersonated(),
-            'isInAWorkspace' => $isInAWorkspace,
+            'isInAWorkspace' => $workspace !== null,
             'currentWorkspace' => $workspace,
             'countUnviewedNotifications' => $countUnviewedNotifications,
-            'canAdministrate' => $canAdministrate
+            'canAdministrate' => $canAdministrate,
+            'headerLocale' => $this->configHandler->getParameter('header_locale'),
+            'homeMenu' => $homeMenu
         );
     }
 
@@ -226,9 +249,11 @@ class LayoutController extends Controller
 
     private function isImpersonated()
     {
-        foreach ($this->security->getToken()->getRoles() as $role) {
-            if ($role instanceof \Symfony\Component\Security\Core\Role\SwitchUserRole) {
-                return true;
+        if ($token = $this->security->getToken()) {
+            foreach ($token->getRoles() as $role) {
+                if ($role instanceof \Symfony\Component\Security\Core\Role\SwitchUserRole) {
+                    return true;
+                }
             }
         }
 

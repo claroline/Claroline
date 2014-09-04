@@ -20,37 +20,22 @@ class WorkspaceType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('name', 'text', array('required' => true));
-        $builder->add(
-            'code',
-            'text',
-            array(
-                'required' => true,
-                'constraints' => array(new WorkspaceUniqueCode())
-                )
-        );
-        if (isset($options['theme_options']['tinymce']) and !$options['theme_options']['tinymce']) {
-            $builder->add(
+        $builder
+            ->add('name', 'text')
+            ->add(
+                'code',
+                'text',
+                array('constraints' => array(new WorkspaceUniqueCode()))
+            )->add(
                 'description',
-                'textarea', 
+                isset($options['theme_options']['tinymce']) && !$options['theme_options']['tinymce'] ?
+                    'textarea' :
+                    'tinymce',
                 array('required' => false)
             );
         } else {
             $builder->add('description', 'tinymce', array('required' => false));
         }
-        $builder->add(
-            'type',
-            'choice',
-            array(
-                'choices' => array(
-                    'simple' => 'Simple',
-                    'aggregator' => 'Aggregator',
-                ),
-                'multiple' => false,
-                'required' => true
-            )
-        );
-
         $builder->add(
             'file',
             'file',
@@ -79,11 +64,6 @@ class WorkspaceType extends AbstractType
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver
-        ->setDefaults(
-            array(
-                'translation_domain' => 'platform'
-                )
-        );
+        $resolver->setDefaults(array('translation_domain' => 'platform'));
     }
 }

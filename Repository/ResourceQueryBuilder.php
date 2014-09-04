@@ -15,7 +15,7 @@ use Symfony\Component\Security\Core\Role\RoleInterface;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Repository\Exception\MissingSelectClauseException;
 
 /**
@@ -33,6 +33,7 @@ class ResourceQueryBuilder
     private $parameters = array();
     private $fromClause;
     private $joinRelativesClause;
+    private $leftJoinRoles = false;
 
     public function __construct()
     {
@@ -92,7 +93,7 @@ class ResourceQueryBuilder
             "    resourceType.name as type,{$eol}" .
             "    previous.id as previous_id,{$eol}" .
             "    next.id as next_id,{$eol}" .
-            "    icon.relativeUrl as large_icon,{$eol}".
+            "    icon.relativeUrl as large_icon,{$eol}" .
             "    node.mimeType as mime_type";
 
         if ($withMaxPermissions) {
@@ -109,11 +110,11 @@ class ResourceQueryBuilder
     /**
      * Filters nodes belonging to a given workspace.
      *
-     * @param AbstractWorkspace $workspace
+     * @param Workspace $workspace
      *
      * @return ResourceQueryBuilder
      */
-    public function whereInWorkspace(AbstractWorkspace $workspace)
+    public function whereInWorkspace(Workspace $workspace)
     {
         $this->addWhereClause('node.workspace = :workspace_id');
         $this->parameters[':workspace_id'] = $workspace->getId();
@@ -210,7 +211,7 @@ class ResourceQueryBuilder
         $clause =
             "node.workspace IN{$eol}" .
             "({$eol}" .
-            "    SELECT aw FROM Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace aw{$eol}" .
+            "    SELECT aw FROM Claroline\CoreBundle\Entity\Workspace\Workspace aw{$eol}" .
             "    JOIN aw.roles r{$eol}" .
             "    WHERE r IN (SELECT r2 FROM Claroline\CoreBundle\Entity\Role r2 {$eol}".
             "       LEFT JOIN r2.users u {$eol}" .
@@ -268,7 +269,7 @@ class ResourceQueryBuilder
             for ($i = 0; $i < $count; $i++) {
                 $clause .= $i > 0 ? '    OR ' : '    ';
                 $clause .= "node.path LIKE :root_{$i}{$eol}";
-                $this->parameters[":root_{$i}"] = "{$roots[$i]}%";
+                $this->parameters[":root_{$i}"] = "{$roots[$i]}_%";
             }
 
             $this->addWhereClause($clause . ')');
@@ -441,6 +442,10 @@ class ResourceQueryBuilder
 
         $eol = PHP_EOL;
         $joinRelatives = $this->joinSingleRelatives ? $this->joinRelativesClause: '';
+        $joinRoles = $this->leftJoinRoles ?
+            "LEFT JOIN node.workspace workspace{$eol}" .
+            "LEFT JOIN workspace.roles role{$eol}" :
+            '';
         $joinRights = $this->leftJoinRights ?
             "LEFT JOIN node.rights rights{$eol}" .
             "JOIN rights.role rightRole{$eol}" :
@@ -449,6 +454,7 @@ class ResourceQueryBuilder
             $this->selectClause .
             $this->fromClause.
             $joinRelatives .
+            $joinRoles .
             $joinRights .
             $this->whereClause .
             $this->orderClause .
@@ -479,5 +485,79 @@ class ResourceQueryBuilder
         } else {
             $this->whereClause = $this->whereClause . "AND {$clause}" . PHP_EOL;
         }
+    }
+
+    /**
+     * Filters nodes that are bound to any of the given roles.
+     *
+     * @param array[string|RoleInterface] $roles
+     *
+     * @return \Claroline\CoreBundle\Repository\ResourceQueryBuilder
+     */
+    public function whereHasRoleIn(array $roles)
+    {
+        $managerRoles = array();
+        $otherRoles = array();
+
+        foreach ($roles as $role) {
+            $roleName = $role instanceof RoleInterface ? $role->getRole() : $role;
+
+            if (preg_match('/^ROLE_WS_MANAGER_/', $roleName)) {
+                $managerRoles[] = $roleName;
+            } else {
+                $otherRoles[] = $roleName;
+            }
+        }
+
+        $eol = PHP_EOL;
+        $currentDate = new \DateTime();
+
+        if (count($otherRoles) > 0 && count($managerRoles) === 0) {
+            $this->leftJoinRights = true;
+            $clause = "{$eol}({$eol}";
+            $clause .= "rightRole.name IN (:roles){$eol}";
+            $this->parameters[":roles"] = $otherRoles;
+            $clause .= "AND{$eol}BIT_AND(rights.mask, 1) = 1{$eol}";
+            $clause .= "AND{$eol}({$eol}";
+            $clause .= "node.accessibleFrom IS NULL{$eol}";
+            $clause .= "OR{$eol}";
+            $clause .= "node.accessibleFrom <= :currentdate{$eol}";
+            $clause .= "){$eol}AND{$eol}({$eol}";
+            $clause .= "node.accessibleUntil IS NULL{$eol}";
+            $clause .= "OR{$eol}";
+            $clause .= "node.accessibleUntil >= :currentdate{$eol}";
+            $clause .= "){$eol})";
+            $this->parameters[':currentdate'] = $currentDate->format('Y-m-d H:i:s');
+            $this->addWhereClause($clause);
+        } elseif (count($otherRoles) === 0 && count($managerRoles) > 0) {
+            $this->leftJoinRoles = true;
+            $clause = "{$eol}({$eol}";
+            $clause .= "role.name IN (:roles){$eol}";
+            $this->parameters[":roles"] = $managerRoles;
+            $this->addWhereClause($clause . ')');
+        } elseif (count($otherRoles) > 0 && count($managerRoles) > 0) {
+            $this->leftJoinRoles = true;
+            $this->leftJoinRights = true;
+            $clause = "{$eol}({$eol}({$eol}";
+            $clause .= "rightRole.name IN (:otherroles){$eol}";
+            $this->parameters[":otherroles"] = $otherRoles;
+            $clause .= "AND{$eol}BIT_AND(rights.mask, 1) = 1{$eol}";
+            $clause .= "AND{$eol}({$eol}";
+            $clause .= "node.accessibleFrom IS NULL{$eol}";
+            $clause .= "OR{$eol}";
+            $clause .= "node.accessibleFrom <= :currentdate{$eol}";
+            $clause .= "){$eol}AND{$eol}({$eol}";
+            $clause .= "node.accessibleUntil IS NULL{$eol}";
+            $clause .= "OR{$eol}";
+            $clause .= "node.accessibleUntil >= :currentdate{$eol}";
+            $clause .= "){$eol}){$eol}";
+            $this->parameters[':currentdate'] = $currentDate->format('Y-m-d H:i:s');
+            $clause .= "OR{$eol}";
+            $clause .= "role.name IN (:managerroles){$eol}";
+            $this->parameters[":managerroles"] = $managerRoles;
+            $this->addWhereClause($clause . ")");
+        }
+
+        return $this;
     }
 }

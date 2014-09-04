@@ -27,10 +27,16 @@
 {% endmacro %}
 
 {% macro sortUrl(max, search, order, workspaceId, direction) %}
-    {% if search == '' %}
-        {{ path('claro_workspace_unregistered_user_list', {'workspace': workspaceId, 'max': max, 'order': order, 'direction': direction}) }}
+    {% if direction == 'ASC' %}
+        {% set newDirection = 'DESC' %}
     {% else %}
-        {{ path('claro_workspace_unregistered_user_list_search', {'search': search, 'workspace': workspaceId, 'max': max, 'order': order, 'direction':direction}) }}
+        {% set newDirection = 'ASC' %}
+    {% endif %}
+
+    {% if search == '' %}
+        {{ path('claro_workspace_unregistered_user_list', {'workspace': workspaceId, 'max': max, 'order': order, 'direction': newDirection}) }}
+    {% else %}
+        {{ path('claro_workspace_unregistered_user_list_search', {'search': search, 'workspace': workspaceId, 'max': max, 'order': order, 'direction':newDirection}) }}
     {% endif %}
 {% endmacro %}
 
@@ -100,7 +106,7 @@
                             </ul>
                         </div>
                         <button id="add-role-button" class="btn btn-default">
-                            <i class="icon-plus"></i> {{ 'add'|trans({}, 'platform' ) }}
+                            <i class="fa fa-plus"></i> {{ 'add'|trans({}, 'platform' ) }}
                         </button>
                     </div>
                 </div>
@@ -109,7 +115,7 @@
                         <input class="form-control" type="text" id="search-items-txt"  placeholder="{{ 'search'|trans({}, 'platform') }}" value="{{ search }}">
                         <span class="input-group-btn">
                             <button class="filter btn btn-default" type="button" id="search-button">
-                                <i class="icon-search"></i>
+                                <i class="fa fa-search"></i>
                             </button>
                         </span>
                     </div>

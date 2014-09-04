@@ -14,7 +14,7 @@ namespace Claroline\CoreBundle\Event\Log;
 use Symfony\Component\EventDispatcher\Event;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Role;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\User;
 
 abstract class LogGenericEvent extends Event implements RestrictionnableInterface
@@ -54,7 +54,7 @@ abstract class LogGenericEvent extends Event implements RestrictionnableInterfac
         $receiverGroup = null,
         ResourceNode $resource = null,
         Role $role = null,
-        AbstractWorkspace $workspace = null,
+        Workspace $workspace = null,
         User $owner = null,
         $toolName = null,
         $isWorkspaceEnterEvent = false
@@ -71,7 +71,7 @@ abstract class LogGenericEvent extends Event implements RestrictionnableInterfac
         $this->toolName               = $toolName;
         $this->isWorkspaceEnterEvent  = $isWorkspaceEnterEvent;
 
-        $this->setVisibiltyFromRestriction();
+        $this->setVisibilityFromRestriction();
     }
 
     /**
@@ -149,10 +149,19 @@ abstract class LogGenericEvent extends Event implements RestrictionnableInterfac
     /**
      * @return LogGenericEvent
      */
-    public function setVisibiltyFromRestriction()
+    public function setVisibilityFromRestriction()
     {
-        $this->isDisplayedInAdmin     = in_array(self::DISPLAYED_ADMIN, $this->getRestriction());
-        $this->isDisplayedInWorkspace = in_array(self::DISPLAYED_WORKSPACE, $this->getRestriction());
+        $this->isDisplayedInAdmin = true;
+        $this->isDisplayedInWorkspace = true;
+
+        // only take admin restriction into account
+        // TODO: refactor the log system to reflect that change (i.e. events are
+        // displayable everywhere, unless they're marked as "admin" events)
+        if (($restrictions = $this->getRestriction())
+            && count($restrictions) === 1
+            && $restrictions[0] === self::DISPLAYED_ADMIN) {
+          $this->isDisplayedInWorkspace = false;
+        }
 
         return $this;
     }
@@ -209,31 +218,6 @@ abstract class LogGenericEvent extends Event implements RestrictionnableInterfac
         $this->isDisplayedInWorkspace = $isDisplayedInWorkspace;
 
         return $this;
-    }
-
-    /**
-     * @param string $restriction
-     *
-     * @throws \InvalidArgumentException
-     *
-     * @return bool
-     */
-    public function isDisplayedByRestriction($restriction)
-    {
-        $isDisplayedByRestriction = false;
-
-        switch ($restriction) {
-            case self::DISPLAYED_ADMIN:
-                $isDisplayedByRestriction = $this->getIsDisplayedInAdmin();
-                break;
-            case self::DISPLAYED_WORKSPACE:
-                $isDisplayedByRestriction = $this->getIsDisplayedInWorkspace();
-                break;
-            default:
-                throw new \InvalidArgumentException(sprintf("Unknown displaying restriction '%s'.", $restriction));
-        }
-
-        return $isDisplayedByRestriction;
     }
 
     /**

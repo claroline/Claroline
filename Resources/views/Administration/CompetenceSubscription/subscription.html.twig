@@ -1,0 +1,120 @@
+{% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
+
+{% block title %}{{ parent() ~ ' - ' ~ '' | trans({}, 'platform') | striptags | raw }}
+{% endblock %}
+{% macro renderPager(pager, search) %}
+    {% if search == '' %}
+    {{
+        pagerfanta(
+            pager,
+            'twitter_bootstrap_translated',
+            {
+                'proximity' : 1,
+                'routeName': 'claro_users_list_registration_pager'
+            }
+        )
+    }}
+    {% else %}
+        {{
+            pagerfanta(
+                pager,
+                'twitter_bootstrap_translated',
+                {
+                    'proximity' : 1,
+                    'routeName': 'claro_users_list_registration_pager_search',
+                    'routeParams': {'search': search}
+                }
+            )
+        }}
+    {% endif %}
+{% endmacro %}
+
+{% from _self import renderPager %}
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'fa fa-cog',
+                'name': 'administration'|trans({}, 'platform'),
+                'href': path('claro_admin_index')
+            },
+            {
+                'name': 'registration_to_competence'|trans({}, 'competence'),
+                'href': ''
+            },
+            {
+                'name': 'users'|trans({}, 'platform'),
+                'href': ''
+            }
+        ])
+    }}
+{% endblock %}
+{% block section_content %}
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <div class="panel-title">
+            <h4>  {{ 'select_users_for_registration_to_workspace'|trans({},'competence')}}  </h4>
+        </div>
+    </div>
+    <div class="panel-body" id="registration-list-div" subject-type="user">
+        <ul class="list-group">
+            {% for competence in competences %}
+                <li class="list-group-item cpt-users" value="{{competence.getId()}}"> {{ competence.getName() }} </li>
+            {% endfor %} 
+        </ul>
+
+        {% from _self import renderPager %}
+
+        <button class="btn btn-default subscribe-subjects-button" >
+            <i class="fa fa-pencil"></i>
+            {{ 'subscribe_selected_users'|trans({}, 'platform') }}
+        </button>
+        <div id="user-list-pager-block">
+            {{ renderPager(users, search) }}
+        </div>
+        <div class="table-responsive">
+            <table id="user-table" class="table table-striped table-bordered table-condensed">
+                <thead>
+                    <tr>
+                        <th>{{ 'first_name'|trans({}, 'platform') }}</th>
+                        <th>{{ 'last_name'|trans({}, 'platform') }}</th>
+                        <th>{{ 'username'|trans({}, 'platform') }}</th>
+                        <th>{{ 'mail'|trans({}, 'platform') }}</th>
+                        <th>{{ 'administrative_code'|trans({}, 'platform') }}</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="user-table-body">
+                    {% for user in users.currentPageResults() %}
+                    <tr id="{{ user.getId() }}" class="row-user">
+                        <td>{{ user.getFirstName() }}</td>
+                        <td>{{ user.getLastName() }}</td>
+                        <td>{{ user.getusername() }}</td>
+                        <td>{{ user.getMail() }}</td>
+                        <td>{{ user.getAdministrativeCode() }}</td>
+                        <td>
+                            <input type="checkbox" value="{{ user.getId() }}" class="chk-subject" align="center">
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+    {% if search != '' %}
+    <p>
+        <small>
+            * {{ 'results_for_search_on'|trans({}, 'platform') }} "{{ search }}"
+        </small>
+    </p>
+    {% endif %}
+
+    {{ renderPager(users, search) }}
+</div>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script type='text/javascript'src='{{ asset('bundles/clarolinecore/js/administration/competences.js') }}'></script>
+
+{% endblock %}

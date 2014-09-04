@@ -8,20 +8,20 @@
         <div class="row badges_rules" {{ block('widget_container_attributes') }}>
             <p class="row">{{ form_label(form) }}</p>
             {{ form_errors(form) }}
-            {% set tabPrototype = '<li id="tabrule__name__"><a href="#rule__name__" data-toggle="tab">' ~ "rule"|trans ~ ' __indexname__ <span class="btn btn-sm btn-danger icon-trash delete_rule delete_rule_no_confirm pull-right" data-id-tab="rule__name__" style="display: none;"></span></a></li>' %}
+            {% set tabPrototype = '<li id="tabrule__name__"><a href="#rule__name__" data-toggle="tab">' ~ "rule"|trans ~ ' __indexname__ <span class="btn btn-sm btn-danger fa fa-trash-o delete_rule delete_rule_no_confirm pull-right" data-id-tab="rule__name__" style="display: none;"></span></a></li>' %}
             <ul class="nav nav-tabs nav-stacked col-md-2" id="ruleTabs" data-tab-prototype="{{ tabPrototype|e }}">
                 {% for rows in form %}
                     {% set loopIndex = loop.index - 1 %}
                     <li id="tabrule{{ loopIndex }}">
                         <a href="#rule{{ loopIndex }}" data-toggle="tab">{{ 'rule'|trans }} {{ loopIndex + 1 }}
                             {% if allow_delete %}
-                            <span class="btn btn-sm btn-danger icon-trash delete_rule delete_rule_confirm pull-right" data-id-tab="rule{{ loopIndex }}" data-confirm-title="{{ 'badge_rule_delete_confirm_title'|trans }}" data-confirm-message="{{ 'badge_rule_delete_confirm_message'|trans }}" data-confirm-ok="{{ 'delete'|trans({}, 'platform') }}" data-confirm-cancel="{{ 'cancel'|trans({}, 'platform') }}" data-confirm-style="danger"></span>
+                            <span class="btn btn-sm btn-danger fa fa-trash-o delete_rule delete_rule_confirm pull-right" data-id-tab="rule{{ loopIndex }}" data-confirm-title="{{ 'badge_rule_delete_confirm_title'|trans }}" data-confirm-message="{{ 'badge_rule_delete_confirm_message'|trans }}" data-confirm-ok="{{ 'delete'|trans({}, 'platform') }}" data-confirm-cancel="{{ 'cancel'|trans({}, 'platform') }}" data-confirm-style="danger"></span>
                             {% endif %}
                         </a>
                     </li>
                 {% endfor %}
                 {% if allow_add %}
-                <li id="add_rule"><a href="#"><span class="icon-plus"></span>{{ 'add_rule'|trans }}</a></li>
+                <li id="add_rule"><a href="#"><span class="fa fa-plus"></span>{{ 'add_rule'|trans }}</a></li>
                 {% endif %}
             </ul>
             <div class="tab-content rules col-md-10">
@@ -84,7 +84,7 @@
                                 <div class="panel-heading">
                                     <h4 class="panel-title">
                                         <a data-toggle="collapse" data-parent="#advancedOptionsAccordion{{ loopIndex }}" href="#advancedOptions{{ loopIndex }}">
-                                            <span class="icon-gear"></span> {{ 'badge_form_advance_options'|trans }}
+                                            <span class="fa fa-gear"></span> {{ 'badge_form_advance_options'|trans }}
                                         </a>
                                     </h4>
                                 </div>
@@ -140,7 +140,7 @@
                 <div class="col-md-5">
                     <div class="checkbox" style="margin-left: 20px;">
                         <label>
-                            <input type="checkbox">{{ 'badge_form_user_target_of_action'|trans }}<strong> *</strong>
+                            {{ form_widget(rows.children.isUserReceiver) }}{{ 'badge_form_user_target_of_action'|trans }}<strong> *</strong>
                         </label>
                     </div>
                 </div>
@@ -180,7 +180,7 @@
                     <div class="panel-heading">
                         <h4 class="panel-title">
                             <a data-toggle="collapse" data-parent="#advancedOptionsAccordion__name__" href="#advancedOptions__name__">
-                                <span class="icon-gear"></span> {{ 'badge_form_advance_options'|trans }}
+                                <span class="fa fa-gear"></span> {{ 'badge_form_advance_options'|trans }}
                             </a>
                         </h4>
                     </div>

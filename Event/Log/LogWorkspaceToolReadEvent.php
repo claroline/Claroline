@@ -47,6 +47,6 @@ class LogWorkspaceToolReadEvent extends LogGenericEvent implements LogNotRepeata
      */
     public static function getRestriction()
     {
-        return array(self::DISPLAYED_WORKSPACE);
+        return null;
     }
 }

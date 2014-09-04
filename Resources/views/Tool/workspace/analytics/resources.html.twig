@@ -1,0 +1,59 @@
+{% extends 'ClarolineCoreBundle:Tool/workspace/analytics:analyticsTabs.html.twig' %}
+
+{% block breadcrumb %}
+    {{
+        macros.workspaceBreadcrumbs(
+            workspace,
+            [
+                {
+                    'name': 'dashboard'|trans({}, 'platform'),
+                    'href': path('claro_workspace_analytics_resources', { 'workspaceId': workspace.getId() })
+                },
+                {
+                    'name': 'resources'|trans({}, 'platform'),
+                    'href': ''
+                }
+            ]
+        )
+    }}
+{% endblock %}
+
+{% block analytics %}
+    <div class="logs-container">
+        {% if 0 < resourceCount|length %}
+            <link rel="stylesheet" href="{{ asset('bundles/clarolinecore/css/common/jqplot/jquery.jqplot.css') }}" type="text/css" />
+            <!--[if lt IE 9]><script language="javascript" type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/excanvas.min.js') }}"></script><![endif]-->
+            <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/jquery.jqplot.min.js') }}"></script>
+            <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/plugins/jqplot.cursor.min.js') }}"></script>
+            <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/plugins/jqplot.highlighter.min.js') }}"></script>
+            <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/plugins/jqplot.canvasTextRenderer.min.js') }}"></script>
+            <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/plugins/jqplot.dateAxisRenderer.min.js') }}"></script>
+            <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/plugins/jqplot.canvasAxisTickRenderer.min.js') }}"></script>
+            <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/plugins/jqplot.canvasAxisLabelRenderer.min.js') }}"></script>
+
+            <div class="row">
+                <div class="col-md-6">
+                    {% include 'ClarolineCoreBundle:Log:resource_by_type_chart.html.twig' with {'filesImported' : true, 'resourceCount' : resourceCount, 'chartHeight' : 400, 'numberRows' : 4} %}
+                </div>
+                <div class="col-md-6">
+                    <div id="analytics-resources-list" class="panel panel-default">
+                        <div class="panel-heading">
+                            <i class="fa fa-list"></i>
+                            {{'resources_usage_list'|trans({}, 'platform')}}
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-condensed">
+                                <tr><th>{{'resource'|trans({}, 'platform')}}</th><th>#</th></tr>
+                                {% for resource in resourceCount %}
+                                    <tr><td>{{resource.name|trans({}, 'resource')}}</td><td>{{resource.total}}</td></tr>
+                                {% endfor %}
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            {{ 'no_resources_in_workspace'|trans({}, 'platform') }}
+        {% endif %}
+    </div>
+{% endblock %}

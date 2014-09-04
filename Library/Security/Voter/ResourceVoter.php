@@ -13,7 +13,7 @@ namespace Claroline\CoreBundle\Library\Security\Voter;
 
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
-use Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Symfony\Component\Translation\Translator;
 use Claroline\CoreBundle\Manager\MaskManager;
 use Claroline\CoreBundle\Library\Security\Utilities;
@@ -178,7 +178,8 @@ class ResourceVoter implements VoterInterface
             }
         }
 
-        if ($timesCreator == count($nodes)) {
+        //but it only work if he's not usurpating a workspace role to see if everything is good
+        if ($timesCreator == count($nodes) && !$this->isUsurpatingWorkspaceRole($token)) {
             return array();
         }
 
@@ -187,18 +188,28 @@ class ResourceVoter implements VoterInterface
         $action = strtolower($action);
 
         foreach ($nodes as $node) {
-            $mask = $this->repository->findMaximumRights($this->ut->getRoles($token), $node);
-            $type = $node->getResourceType();
-            $decoder = $this->maskManager->getDecoder($type, $action);
+            $accessibleFrom = $node->getAccessibleFrom();
+            $accessibleUntil = $node->getAccessibleUntil();
+            $currentDate = new \DateTime();
 
-            //gotta check
-            if (!$decoder) {
-                return array('The permission ' . $action . ' does not exists for the type ' . $type->getName());
-            }
+            if ((is_null($accessibleFrom) || $currentDate >= $accessibleFrom)
+                && (is_null($accessibleUntil) || $currentDate <= $accessibleUntil)) {
 
-            $grant = $decoder ? $mask & $decoder->getValue(): 0;
+                $mask = $this->repository->findMaximumRights($this->ut->getRoles($token), $node);
+                $type = $node->getResourceType();
+                $decoder = $this->maskManager->getDecoder($type, $action);
 
-            if ($decoder && $grant === 0) {
+                //gotta check
+                if (!$decoder) {
+                    return array('The permission ' . $action . ' does not exists for the type ' . $type->getName());
+                }
+
+                $grant = $decoder ? $mask & $decoder->getValue(): 0;
+
+                if ($decoder && $grant === 0) {
+                    $errors[] = $this->getRoleActionDeniedMessage($action, $node->getPathForDisplay());
+                }
+            } else {
                 $errors[] = $this->getRoleActionDeniedMessage($action, $node->getPathForDisplay());
             }
         }
@@ -213,7 +224,7 @@ class ResourceVoter implements VoterInterface
      * @param $type
      * @param ResourceNode $node
      * @param TokenInterface $token
-     * @param \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace $workspace
+     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
      *
      * @return array
      */
@@ -221,7 +232,7 @@ class ResourceVoter implements VoterInterface
         $type,
         ResourceNode $node,
         TokenInterface $token,
-        AbstractWorkspace $workspace
+        Workspace $workspace
     )
     {
         $errors = array();
@@ -319,10 +330,21 @@ class ResourceVoter implements VoterInterface
             );
     }
 
-    public function isWorkspaceManager(AbstractWorkspace $workspace, TokenInterface $token)
+    public function isWorkspaceManager(Workspace $workspace, TokenInterface $token)
     {
         $managerRoleName = 'ROLE_WS_MANAGER_' . $workspace->getGuid();
 
         return in_array($managerRoleName, $this->ut->getRoles($token)) ? true: false;
+    }
+
+    public function isUsurpatingWorkspaceRole(TokenInterface $token)
+    {
+        foreach ($token->getRoles() as $role) {
+            if ($role->getRole() === 'ROLE_USURPATE_WORKSPACE_ROLE') {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

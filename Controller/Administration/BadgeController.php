@@ -365,7 +365,7 @@ class BadgeController extends Controller
     private function checkOpen()
     {
         $badgeAdminTool = $this->container->get('claroline.manager.tool_manager')
-            ->getAdminToolByName('platform_parameters');
+            ->getAdminToolByName('badges_management');
 
         if ($this->container->get('security.context')->isGranted('OPEN', $badgeAdminTool)) {
             return true;
