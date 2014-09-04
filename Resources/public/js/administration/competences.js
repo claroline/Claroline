@@ -45,7 +45,7 @@
             $(event.currentTarget).attr('href'),
             removeEvent,
             element,
-            Translator.get('competence:remove_competence_confirm'),
+            Translator.get('competence:remove_competence_comfirm'),
             Translator.get('competence:remove_competence')
         );
     });

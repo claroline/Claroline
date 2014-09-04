@@ -21,10 +21,10 @@ class CompetenceType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-        	->add('name', 'text', array('constraints' => new NotBlank()))
-            ->add('code','text', array('constraints' => new NotBlank()))
-            ->add('description', 'tinymce')
-            ->add('score', 'text', array('constraints' => new NotBlank()));
+        	->add('name', 'text', array('constraints' => new NotBlank(), 'label' => 'name'))
+            ->add('code', 'text', array('constraints' => new NotBlank(), 'label' => 'code'))
+            ->add('description', 'tinymce', array('label' => 'description'))
+            ->add('score', 'text', array('constraints' => new NotBlank(), 'label' => 'score'));
     }
 
     public function getName()
@@ -34,6 +34,6 @@ class CompetenceType extends AbstractType
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults(array('translation_domain' => 'competence'));
+        $resolver->setDefaults(array('translation_domain' => 'platform'));
     }
 } 
