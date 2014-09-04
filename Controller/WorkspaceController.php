@@ -1138,6 +1138,18 @@ class WorkspaceController extends Controller
         return new Response('error', 400);
     }
 
+    /**
+     * @EXT\Route(
+     *     "/{workspace}/export",
+     *     name="claro_workspace_export",
+     *     options={"expose"=true}
+     * )
+     */
+    public function exportAction(Workspace $workspace)
+    {
+        $this->container->get('claroline.manager.transfert_manager')->export($workspace);
+    }
+
     private function assertIsGranted($attributes, $object = null)
     {
         if (false === $this->security->isGranted($attributes, $object)) {

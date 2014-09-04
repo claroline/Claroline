@@ -151,4 +151,19 @@ class RolesImporter extends Importer implements ConfigurationInterface
 
         return $entityRoles;
     }
+
+    public function export(Workspace $workspace)
+    {
+        $data = [];
+
+        foreach ($workspace->getRoles() as $role) {
+            $data[] = array(
+                'name' => $role->getName(),
+                'translation' => $role->getTranslationKey(),
+                'is_base_role' => false
+            );
+        }
+
+        return $data;
+    }
 }

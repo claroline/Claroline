@@ -252,6 +252,19 @@ class TransfertManager
         return null;
     }
 
+    public function export(Workspace $workspace)
+    {
+        foreach ($this->listImporters as $importer) {
+            $importer->setListImporters($this->listImporters);
+        }
+
+        $data = [];
+        $data['roles'] = $this->getImporterByName('roles')->export($workspace);
+        $data['tools'] = $this->getImporterByName('tools')->export($workspace);
+        var_dump($data);
+        throw new \Exception();
+    }
+
     /**
      * Inject the rootPath
      *

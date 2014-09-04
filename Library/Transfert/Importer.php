@@ -1,9 +1,19 @@
 <?php
 
+/*
+ * This file is part of the Claroline Connect package.
+ *
+ * (c) Claroline Consortium <consortium@claroline.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Claroline\CoreBundle\Library\Transfert;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 
 abstract class Importer
 {
@@ -43,6 +53,11 @@ abstract class Importer
     public function getConfiguration()
     {
         return $this->configuration;
+    }
+
+    public function export(Workspace $workspace)
+    {
+        throw new ExportNotImplementedException('The export is not implemented');
     }
 
     protected function getImporterByName($name)
