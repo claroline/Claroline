@@ -242,6 +242,26 @@ class Dropzone extends AbstractResource
      */
     protected $notifyOnDrop = false;
 
+    /**
+     * @var Event
+     * Event for Workspace Agenda linked to DROP phase
+     *
+     * @ORM\OneToOne(
+     *    targetEntity="Claroline\CoreBundle\Entity\Event")
+     * @ORM\JoinColumn(name="event_agenda_drop")
+     * )
+     */
+    protected $eventDrop = null;
+
+    /**
+     * @var Event
+     * Event for Workspace Agenda linked to Correction phase.
+     *
+     * @ORM\OneToOne(
+     *    targetEntity="Claroline\CoreBundle\Entity\Event")
+     * @ORM\JoinColumn(name="event_agenda_correction")
+     */
+    protected $eventCorrection = null;
 
     public function __construct()
     {
