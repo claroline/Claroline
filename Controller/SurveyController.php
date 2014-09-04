@@ -22,6 +22,7 @@ use Claroline\SurveyBundle\Entity\Question;
 use Claroline\SurveyBundle\Entity\QuestionModel;
 use Claroline\SurveyBundle\Entity\Survey;
 use Claroline\SurveyBundle\Entity\SurveyQuestionRelation;
+use Claroline\SurveyBundle\Event\Log\LogSurveyAnswer;
 use Claroline\SurveyBundle\Form\QuestionTitleType;
 use Claroline\SurveyBundle\Form\QuestionType;
 use Claroline\SurveyBundle\Form\SurveyEditionType;
@@ -30,6 +31,7 @@ use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Bundle\TwigBundle\TwigEngine;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -40,6 +42,7 @@ use Symfony\Component\Security\Core\SecurityContextInterface;
 
 class SurveyController extends Controller
 {
+    private $eventDispatcher;
     private $formFactory;
     private $request;
     private $router;
@@ -49,15 +52,17 @@ class SurveyController extends Controller
 
     /**
      * @DI\InjectParams({
-     *     "formFactory"   = @DI\Inject("form.factory"),
-     *     "requestStack"  = @DI\Inject("request_stack"),
-     *     "router"        = @DI\Inject("router"),
-     *     "security"      = @DI\Inject("security.context"),
-     *     "surveyManager" = @DI\Inject("claroline.manager.survey_manager"),
-     *     "templating"    = @DI\Inject("templating")
+     *     "eventDispatcher" = @DI\Inject("event_dispatcher"),
+     *     "formFactory"     = @DI\Inject("form.factory"),
+     *     "requestStack"    = @DI\Inject("request_stack"),
+     *     "router"          = @DI\Inject("router"),
+     *     "security"        = @DI\Inject("security.context"),
+     *     "surveyManager"   = @DI\Inject("claroline.manager.survey_manager"),
+     *     "templating"      = @DI\Inject("templating")
      * })
      */
     public function __construct(
+        EventDispatcherInterface $eventDispatcher,
         FormFactory $formFactory,
         RequestStack $requestStack,
         UrlGeneratorInterface $router,
@@ -66,6 +71,7 @@ class SurveyController extends Controller
         TwigEngine $templating
     )
     {
+        $this->eventDispatcher = $eventDispatcher;
         $this->formFactory = $formFactory;
         $this->request = $requestStack;
         $this->router = $router;
@@ -1382,6 +1388,12 @@ class SurveyController extends Controller
                     }
                 }
             }
+
+            $event = new LogSurveyAnswer(
+                $survey,
+                $user
+            );
+            $this->eventDispatcher->dispatch('log', $event);
         }
 
         return new RedirectResponse(

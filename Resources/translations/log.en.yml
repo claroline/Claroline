@@ -1,0 +1,4 @@
+log_resource-claroline_survey-answer_filter: 'Answer the survey'
+log_resource-claroline_survey-answer_sentence: 'has answered the survey'
+log_resource-claroline_survey-answer_shortname: 'Answering survey'
+log_resource-claroline_survey-answer_title: 'Survey answer'
