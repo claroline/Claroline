@@ -272,6 +272,19 @@ claro_admin_groups:
     resource: "@ClarolineCoreBundle/Controller/Administration/GroupsController.php"
     type: annotation
 
+claro_admin_competence:
+    prefix: admin/competence
+    resource: "@ClarolineCoreBundle/Controller/Administration/CompetenceController.php"
+    type: annotation
+
+claro_admin_competence_subscription:
+    prefix: admin/competence/subscription
+    resource: "@ClarolineCoreBundle/Controller/Administration/CompetenceSubscriptionController.php"
+    type: annotation
+claro_workspace_competence:
+    prefix: workspace/competence
+    type: annotation
+    resource: "@ClarolineCoreBundle/Controller/Tool/CompetenceToolController.php"
 claro_admin_logs:
     prefix: admin/logs
     resource: "@ClarolineCoreBundle/Controller/Administration/LogsController.php"
@@ -299,3 +312,4 @@ claro_admin_facet:
 
 claro_badge:
     resource: "@ClarolineCoreBundle/Controller/Badge"
+

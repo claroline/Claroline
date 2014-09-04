@@ -57,22 +57,17 @@ class ProfileController extends Controller
                     $badge = $form->get('badge')->getData();
 
                     if (null !== $badge) {
-                        if ($user->hasBadge($badge)) {
-                            $flashBag->add('error', $translator->trans('badge_already_award_message', array(), 'badge'));
-                        } elseif ($user->hasClaimedFor($badge)) {
-                            $flashBag->add('error', $translator->trans('badge_already_claim_message', array(), 'badge'));
-                        } else {
-                            $badgeClaim->setBadge($badge);
-                            $entityManager->persist($badgeClaim);
-                            $entityManager->flush();
-                            $flashBag->add('success', $translator->trans('badge_claim_success_message', array(), 'badge'));
-                        }
+                        /** @var \Claroline\CoreBundle\Manager\BadgeManager $badgeManager */
+                        $badgeManager = $this->get('claroline.manager.badge');
+                        $badgeManager->makeClaim($badge, $user);
+
+                        $flashBag->add('success', $translator->trans('badge_claim_success_message', array(), 'badge'));
                     }
                     else {
                         $flashBag->add('warning', $translator->trans('badge_claim_nothing_selected_warning_message', array(), 'badge'));
                     }
                 } catch (\Exception $exception) {
-                    $flashBag->add('error', $translator->trans('badge_claim_error_message', array(), 'badge'));
+                    $flashBag->add('error', $translator->trans($exception->getMessage(), array(), 'badge'));
                 }
 
                 return $this->redirect($this->generateUrl('claro_profile_view_badges'));

@@ -14,6 +14,7 @@ namespace Claroline\CoreBundle\Manager;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceFavourite;
+use Claroline\CoreBundle\Entity\Workspace\WorkspaceRegistrationQueue;
 use Claroline\CoreBundle\Library\Security\Utilities;
 use Claroline\CoreBundle\Manager\HomeTabManager;
 use Claroline\CoreBundle\Manager\RoleManager;
@@ -866,6 +867,16 @@ class WorkspaceManager
         return (count($user) === 1) ? $user[0]: null;
     }
 
+    public function addUserQueue(Workspace $workspace, User $user)
+    {
+        $wksrq = new WorkspaceRegistrationQueue();
+        $wksrq->setUser($user);
+        $role = $this->roleManager->getCollaboratorRole($workspace);
+        $wksrq->setRole($role);
+        $wksrq->setWorkspace($workspace);
+        $this->om->persist($wksrq);
+        $this->om->flush();
+    }
     /**
      * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
      * @param \Claroline\CoreBundle\Entity\User $user

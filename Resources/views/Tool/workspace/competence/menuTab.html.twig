@@ -1,0 +1,15 @@
+<ul class="nav nav-tabs margin-bottom-md">
+    <li class="active"><a href="{{ path('claro_workspace_competence_users', {'workspace': workspace.getId()}) }}">
+     	{{'my_competences'|trans({}, 'competence') }}
+     	 </a> 
+    </li>
+    <li > 
+    <a href="{{ path('claro_workspace_competences_subscription_lists', {'workspaceId': workspace.getId() }) }}">
+     {{'subscription'|trans({}, 'platform') }} 
+    </a> </li>
+    <li> <a href="{{ path('claro_workspace_competences', {'workspace': workspace.getId()} ) }}">{{ 'competence'|trans({}, 'platform') }}</a> </li>
+    <li> 
+    <a href="{{path('claro_workspace_competences_list_users',{'workspaceId':workspace.getId()}) }}">
+        {{ 'users'|trans({},'platform') }}
+    </a> </li>
+  </ul>

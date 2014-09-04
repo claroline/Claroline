@@ -191,6 +191,9 @@ collaborative: Collaborative
 collaborator: Collaborator
 comment: Comment
 communication: Communication
+competence: Competence
+competences: Competences
+competence_referencial: Learning outcomes
 completed: Completed
 configuration: Configuration
 configure: Configure
@@ -209,6 +212,7 @@ create_new_home_tab: 'Create new tab'
 create_new_tag: 'Create new tag'
 create_new_user_account: 'New user account for ClarolineConnect'
 create_role: Create role
+create_security_token: 'Create a security token'
 create_subcategory: 'Create a subcategory'
 create_user: 'Create user'
 create_widget_instance: 'Create a widget'
@@ -306,6 +310,7 @@ edit_public_profile: 'Edit public profil'
 edit_public_profile_preferences_error: 'An error occured while editing your public profile preferences.'
 edit_public_profile_preferences_success: 'Your public profile preferences edited with success.'
 edit_rights_success: Rights were successfully changed.
+edit_security_token: 'Edit security token'
 edit_your_profile_error: 'An error occured while editing your profile.'
 edit_your_profile_success: 'Your profile has been edited with success.'
 editable: Editable
@@ -355,6 +360,7 @@ from_message: From
 general: General
 general_parameters: 'General parameters'
 general_tab_form_explanation: This form allows you to set wich datas are seen by role in the public profile.
+generate_token: 'Generate a random token'
 generate_url: 'Public URL Subscription '
 generate_url_subscription: 'Subscription to a workspace for a user'
 generate_url_subscription_anonyme: 'Subscription to a workspace for a anonymous'
@@ -413,6 +419,7 @@ invalid_email: 'This email address is not valid'
 invalid_encryption: 'Invalid authentication mode'
 invalid_transport: 'Invalid transport'
 invalid_url: 'This url is not valid'
+ip_address: 'IP address'
 is_already_in_category: 'is already in category'
 is_mail_displayed: 'Display email?'
 jqplot_date_output_format: '%m/%d/%Y'
@@ -423,6 +430,7 @@ last_attempt_date: 'Last attempt'
 last_manager_error_message: You can't remove every manager.
 last_name: 'Last name'
 layout: Layout
+learning_profil: Learning profile
 leave_this_page: 'If you leave this page you may lose your changes.'
 left: Left
 limit: Limit
@@ -572,6 +580,7 @@ password_mismatch: 'Passwords mismatch'
 password_ok: 'Your password has been changed, you can login now'
 paste: Paste
 path: Path
+pending: 'Pending'
 permissions: Permissions
 personal_workspace: 'Personal workspace - '
 phone: Phone
@@ -718,6 +727,14 @@ search: Search
 search_group: 'Search for a group'
 search_user: 'Search for an user'
 search_workspace: 'Search for a workspace'
+security_token: Security Token
+security_token_delete_confirm_message: 'Do you really want to delete this security token ?'
+security_token_delete_confirm_title: 'Delete security token'
+security_token_form_clientIp: 'Client IP address'
+security_token_form_clientName: 'Client name'
+security_token_form_token: 'Token'
+security_token_list: 'Security token list'
+security_tokens_management: 'Security tokens management'
 see: See
 see_more: 'See more'
 see_public_profile: 'See my public profile'
@@ -771,6 +788,7 @@ subscribe_groups: 'Subscribe groups'
 subscribe_selected_groups: 'Subscribe selected groups'
 subscribe_selected_users: 'Subscribe selected users'
 subscribe_users: 'Subscribe users'
+subscription: Subscription
 success_rate: 'Success rate'
 successfull_workspace_creation: The workspace %name% has been created successfully
 support_email: 'Support email'
@@ -803,6 +821,7 @@ to_message: To
 to_platform_users: 'to platform users'
 to_workspace_members: 'to the members of this workspace'
 today: Today
+token: Token
 tool: Tool
 tool_form_displayName: 'Displayed tool name'
 tool_form_name: 'tool name'
@@ -961,7 +980,6 @@ wrong_captcha : 'The code does not match the picture'
 ws_creator: 'Workspace creator'
 ws_most_viewed: 'Most viewed workspaces'
 yes: Yes
-yes: yes
 yesterday_activity: 'Yesterday''s activity'
 your_current_url: 'Your current URL'
 your_username: 'Your username is '

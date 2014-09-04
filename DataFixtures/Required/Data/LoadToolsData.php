@@ -28,7 +28,8 @@ class LoadToolsData implements RequiredFixture
             array('analytics', 'bar-chart-o', false, false, true, false, false, false, false, false, true),
             array('users', 'user', true, false, true, false, false, false, false, false, true),
             array('badges', 'trophy', false, false, true, false, false, false, false, false, true),
-            array('my_badges', 'trophy', false, false, true, false, false, false, false, false, true)
+            array('my_badges', 'trophy', false, false, true, false, false, false, false, false, true),
+            array('learning_profil', 'graduation-cap', true, false, true, false, false, false, false, false, true),
         );
 
         foreach ($tools as $tool) {
