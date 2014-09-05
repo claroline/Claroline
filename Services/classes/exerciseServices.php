@@ -537,23 +537,11 @@ class exerciseServices
      */
     public function responseMatching($request, $paperID = 0)
     {
-        $res = array();
         $interactionMatchingId = $request->request->get('interactionMatchingToValidated');
-        $response = array();
+        $response = $request->request->get('jsonResponse');
 
         $em = $this->doctrine->getManager();
         $interMatching = $em->getRepository('UJMExoBundle:InteractionMatching')->find($interactionMatchingId);
-
-        if ($interMatching->getTypeMatching()->getCode() == 2 ) {
-            $response[] = $request->request->get('proposal');
-        } else {
-            if ($request->request->get('proposal') != null) {
-                $response = $request->request->get('proposal');
-            }
-        }
-
-        $allLabels = $interMatching->getLabels();
-        $allProposals = $interMatching->getProposals();
 
         $penalty = 0;
 
@@ -569,21 +557,13 @@ class exerciseServices
         } else {
             $penalty = $this->getPenalty($interMatching->getInteraction(), $paperID);
         }
-        $score = $this->matchingMark($interMatching, $response, $allLabels, $allProposals, $penalty);
-
-        $responseID = '';
-
-        foreach ($response as $res) {
-            if ( $res != null ) {
-                $responseID .= $res.';';
-            }
-        }
+        $score = $this->matchingMark($interMatching, $response, $penalty);
 
         $res = array(
           'score'    => $score,
           'penalty'  => $penalty,
           'interMatching' => $interMatching,
-          'response' => $responseID
+          'response' => $response
         );
 
         return $res;
@@ -603,26 +583,65 @@ class exerciseServices
      *
      * Return string userScore/scoreMax
      */
-    public function matchingMark(\UJM\ExoBundle\Entity\InteractionMatching $interMatching, array $response, $allLabels, $allProposals, $penalty)
+    public function matchingMark(\UJM\ExoBundle\Entity\InteractionMatching $interMatching, $response, $penalty)
     {
         $scoretmp = 0;
         $scoreMax = $this->matchingMaxScore($interMatching);
+        $tabResponse = explode(';', substr($response, 0, -1));
+        $tabResponseIndex = array();
+        $tabRightResponse = array();
 
-        foreach($response as $res) {
-//            foreach($allProposals->getAssociatedLabel() != null as $rightresponse) {
-            foreach($allProposals as $test) {
-                if($test->getAssociatedLabel() != null) {
-                    if( $res == $test->getAssociatedLabel()) {
-                        $scoretmp = $allLabels->getScoreRightResponse() + $scoretmp;
-                    }
-                }
+        //array of responses of user indexed by labelId
+        foreach ($tabResponse as $rep) {
+            $tabTmp = explode('-', $rep);
+            if (isset($tabResponseIndex[$tabTmp[1]])) {
+                $tabResponseIndex[$tabTmp[1]] .= '-' . $tabTmp[0];
+            } else {
+                $tabResponseIndex[$tabTmp[1]] = $tabTmp[0];
             }
         }
+
+        //array of rights responses indexed by labelId
+        foreach ($interMatching->getProposals() as $proposal) {
+            $index = $proposal->getAssociatedLabel()->getId();
+            if (isset($tabRightResponse[$index])) {
+                $tabRightResponse[$index] .= '-' . $proposal->getId();
+            } else {
+                $tabRightResponse[$index] = $proposal->getId();
+            }
+        }
+
+        //add in $tabRightResponse label empty
+        foreach ($interMatching->getLabels() as $label) {
+            if (!isset($tabRightResponse[$label->getId()])) {
+                $tabRightResponse[$label->getId()] = null;
+            }
+        }
+
+        foreach ($tabRightResponse as $labelId => $value) {
+            if ( isset($tabResponseIndex[$labelId]) && $tabRightResponse[$labelId] != null
+                    && ($tabRightResponse[$labelId] == $tabResponseIndex[$labelId]) ) {
+                $label = $this->doctrine
+                              ->getManager()
+                              ->getRepository('UJMExoBundle:Label')
+                              ->find($labelId);
+                $scoretmp += $label->getScoreRightResponse();
+            }
+            if ($tabRightResponse[$labelId] == null && !isset($tabResponseIndex[$labelId])) {
+                $label = $this->doctrine
+                              ->getManager()
+                              ->getRepository('UJMExoBundle:Label')
+                              ->find($labelId);
+                $scoretmp += $label->getScoreRightResponse();
+            }
+        }
+
         $score = $scoretmp - $penalty;
         if ($score < 0) {
             $score = 0;
         }
-        
+        $score .= '/'.$scoreMax;
+
         return $score;
     }
 
@@ -875,6 +894,10 @@ class exerciseServices
     public function matchingMaxScore($interMatching)
     {
         $scoreMax = 0;
+        foreach ($interMatching->getLabels() as $label) {
+            $scoreMax += $label->getScoreRightResponse();
+        }
+
         return $scoreMax;
     }
 

@@ -188,9 +188,7 @@ class InteractionMatchingController extends Controller
     {
         $vars = array();
         $request = $this->get('request');
-        $postVal = $req = $request->request->all();
-
-        echo 'Response user : ' . $postVal['jsonResponse'];die();
+        $postVal = $request->request->all();
 
         if ($postVal['exoID'] != -1) {
             $exercise = $this->getDoctrine()->getManager()->getRepository('UJMExoBundle:Exercise')->find($postVal['exoID']);
