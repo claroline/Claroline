@@ -27,3 +27,39 @@
         <li class="active">{{ 'bank of questions' | trans }}</li>
     {% endblock %}
 {% endif %}
+
+{% extends layout %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{ asset('bundles/ujmexo/css/tableLayout.css') }}" type="text/css" rel="stylesheet"/>
+{% endblock %}
+
+{% block title %} {{ 'correction' | trans }} {% endblock %}
+
+{% block section_content %}
+
+    {#{{ interMatching.sortChoices() }}#}
+
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ 'correction' | trans }}</h3>
+    </div>
+
+    <div class="panel-body">
+        {% if exoID == -1 %}
+            <a href="{{ path('ujm_question_index') }}" class="btn btn-primary">
+                <i class="fa fa-arrow-left"></i> {{ 'back to the list' | trans }}
+            </a>
+        {% else %}
+            <a class="btn btn-primary" href="{{ path('ujm_exercise_questions', { 'id': exoID }) }}">
+                <i class="fa fa-arrow-left"></i> {{ 'back' | trans }}
+            </a>
+        {% endif %}
+    </div>
+
+    {% set inter = interMatching %}
+    {% include "UJMExoBundle:Partial:correction/matching.html.twig" %}
+    <hr/>
+    {% include "UJMExoBundle:Partial:correction/overviewScore.html.twig" %}
+
+{% endblock %}

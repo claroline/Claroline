@@ -32,7 +32,7 @@
         
 {% block stylesheets %}
     {{ parent() }}
-    <link href="{{ asset('bundles/ujmexo/css/tableLayout.css') }}" type="text/css" rel="stylesheet"/>
+    <link href="{{ asset('bundles/ujmexo/css/matchingOverview.css') }}" type="text/css" rel="stylesheet"/>
 {% endblock %}
 
 {% block title %} {{ 'paper' | trans }} {{ 'question' | trans }} {% endblock %}
@@ -61,26 +61,39 @@
 
             <form action="{{ path('ujm_interactionmatching_response') }}" method="post" {{ form_enctype(form) }}>
                 {{ form_widget(form) }}
-
-                <table class="table-striped" cellspacing="5" cellpadding="2" border="0">
-                    <th>
-                    {% for label in interactionToDisplayed.labels %}
-                        {% for proposal in interactionToDisplayed.proposals %}
-                        <tr>
-                            <td>{{ label.value | raw }}</td><td>{{ proposal.value | raw }}</td>
-                        </tr>
-                    {% endfor %}
-                        {% endfor %}
-                    </th>
+                
+                <table>
+                    <tr>
+                        <td>
+                            {% set i = 0 %}
+                            {% for label in interactionToDisplayed.labels %}
+                                <div id="droppable{{ i }}" class="droppable">
+                                    <ul>
+                                        <li style='list-style-type:none;'>{{ label.value | raw }}</li>
+                                    </ul>
+                                </div>
+                                {% set i= i+ 1 %}
+                            {% endfor %}
+                        </td>
+                        <td>
+                            {% set j = 0 %}
+                            {% for proposal in interactionToDisplayed.proposals %}
+                                <div class="origin">
+                                    <ul>
+                                        <li id="draggable{{ j }}" class="draggable" style='list-style-type:none;'> {{ proposal.value | raw }} </li>
+                                    </ul>
+                                </div>
+                                {% set j = j + 1 %}
+                            {% endfor%}
+                        </td>
+                    </tr>
                 </table>
-                        
-                        
 
                 {% if interactionToDisplayed.interaction.hints is not empty %}
                     {% set tryInteraction = interactionToDisplayed %}
                     {% include "UJMExoBundle:Partial:hintTryInteraction.html.twig" %}
                 {% endif %}
-
+                
                 <div class="panel-footer">
                     <input type="hidden" name="testMatching" value="testMatching" />
                     <input type="hidden" name="interactionMatchingToValidated" value="{{ interactionToDisplayed.id }}" />
@@ -95,4 +108,7 @@
 {% block javascripts %}
     {{ parent() }}
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/paper.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2/jquery-ui-1.9.2.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/ext/jquery-ui-touch-punch.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/matchingdisplay.js') }}"></script>
 {% endblock %}

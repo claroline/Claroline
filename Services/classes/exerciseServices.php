@@ -538,53 +538,53 @@ class exerciseServices
     public function responseMatching($request, $paperID = 0)
     {
         $res = array();
-//        $interactionMatchingId = $request->request->get('interactionMatchingToValidated');
-//        $response = array();
-//
-//        $em = $this->doctrine->getManager();
-//        $interMatching = $em->getRepository('UJMExoBundle:InteractionMatching')->find($interactionMatchingId);
-//
-//        if ($interMatching->getTypeMatching()->getCode() == 2 ) {
-//            $response[] = $request->request->get('proposal');
-//        } else {
-//            if ($request->request->get('proposal') != null) {
-//                $response = $request->request->get('proposal');
-//            }
-//        }
-//
-//        $allLabels = $interMatching->getLabels();
-//        $allProposals = $interMatching->getProposals();
-//
-//        $penalty = 0;
-//
-//        $session = $request->getSession();
-//
-//        if ( $paperID == 0 ) {
-//            if ($session->get('penalties')) {
-//                foreach ($session->get('penalties') as $penal) {
-//                    $penalty += $penal;
-//                }
-//            }
-//            $session->remove('penalties');
-//        } else {
-//            $penalty = $this->getPenalty($interMatching->getInteraction(), $paperID);
-//        }
-//        $score = $this->matchingMark($interMatching, $response, $allLabels, $allProposals, $penalty);
-//
-//        $responseID = '';
-//
-//        foreach ($response as $res) {
-//            if ( $res != null ) {
-//                $responseID .= $res.';';
-//            }
-//        }
-//
-//        $res = array(
-//          'score'    => $score,
-//          'penalty'  => $penalty,
-//          'interQCM' => $interMatching,
-//          'response' => $responseID
-//        );
+        $interactionMatchingId = $request->request->get('interactionMatchingToValidated');
+        $response = array();
+
+        $em = $this->doctrine->getManager();
+        $interMatching = $em->getRepository('UJMExoBundle:InteractionMatching')->find($interactionMatchingId);
+
+        if ($interMatching->getTypeMatching()->getCode() == 2 ) {
+            $response[] = $request->request->get('proposal');
+        } else {
+            if ($request->request->get('proposal') != null) {
+                $response = $request->request->get('proposal');
+            }
+        }
+
+        $allLabels = $interMatching->getLabels();
+        $allProposals = $interMatching->getProposals();
+
+        $penalty = 0;
+
+        $session = $request->getSession();
+
+        if ( $paperID == 0 ) {
+            if ($session->get('penalties')) {
+                foreach ($session->get('penalties') as $penal) {
+                    $penalty += $penal;
+                }
+            }
+            $session->remove('penalties');
+        } else {
+            $penalty = $this->getPenalty($interMatching->getInteraction(), $paperID);
+        }
+        $score = $this->matchingMark($interMatching, $response, $allLabels, $allProposals, $penalty);
+
+        $responseID = '';
+
+        foreach ($response as $res) {
+            if ( $res != null ) {
+                $responseID .= $res.';';
+            }
+        }
+
+        $res = array(
+          'score'    => $score,
+          'penalty'  => $penalty,
+          'interMatching' => $interMatching,
+          'response' => $responseID
+        );
 
         return $res;
     }
