@@ -54,7 +54,7 @@ class Post extends Statusable
     /**
      * @var \Datetime $modificationDate
      *
-     * @Gedmo\Timestampable(on="update")
+     * @Gedmo\Timestampable(on="change", field={"title", "content"})
      * @ORM\Column(type="datetime", name="modification_date")
      */
     protected $modificationDate;
@@ -67,6 +67,13 @@ class Post extends Statusable
      * @Gedmo\Timestampable(on="change", field="status", value="1")
      */
     protected $publicationDate;
+
+    /**
+     * @var int $viewCounter
+     *
+     * @ORM\Column(type="integer")
+     */
+    protected $viewCounter;
 
     /**
      * @var Comment
@@ -452,12 +459,38 @@ class Post extends Statusable
 
         $currentTimestamp = time();
 
-        if ($isStatusPublished && (null !== $this->publicationDate && $currentTimestamp >= $this->publicationDate->getTimestamp(
-                        ))
-        ) {
+        if ($isStatusPublished && (null !== $this->publicationDate && $currentTimestamp >= $this->publicationDate->getTimestamp())) {
             return true;
         }
 
         return false;
+    }
+
+    /**
+     * @param int $viewCounter
+     *
+     * @return Post
+     */
+    public function setViewCounter($viewCounter)
+    {
+        $this->viewCounter = $viewCounter;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getViewCounter()
+    {
+        return $this->viewCounter;
+    }
+
+    /**
+     * @return Post
+     */
+    public function increaseViewCounter()
+    {
+        return $this->setViewCounter(++$this->viewCounter);
     }
 }

@@ -37,6 +37,23 @@ class PostController extends Controller
 
         $this->dispatchPostReadEvent($post);
 
+        /** @var \Symfony\Component\HttpFoundation\Session\Session $session */
+        $session                       = $request->getSession();
+        $sessionViewCounterKey         = 'blog_post_view_counter_' . $post->getId();
+        $now                           = time();
+        $notRepeatableLogTimeInSeconds = $this->container->getParameter(
+            'non_repeatable_log_time_in_seconds'
+        );
+
+        if ($now >= ($session->get($sessionViewCounterKey, $now) + $notRepeatableLogTimeInSeconds)) {
+            $post->increaseViewCounter();
+            $session->set($sessionViewCounterKey, $now);
+
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($post);
+            $entityManager->flush();
+        }
+
         $commentStatus = Comment::STATUS_UNPUBLISHED;
         if ($blog->isAutoPublishComment()) {
             $commentStatus = Comment::STATUS_PUBLISHED;
@@ -59,7 +76,6 @@ class PostController extends Controller
                 if ($form->isValid()) {
                     $translator = $this->get('translator');
                     $flashBag = $this->get('session')->getFlashBag();
-                    $entityManager = $this->getDoctrine()->getManager();
 
                     try {
                         $entityManager->persist($comment);

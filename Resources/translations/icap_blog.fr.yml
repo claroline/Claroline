@@ -94,3 +94,4 @@ read_more: "Voir plus"
 modified_at: "Modifié le"
 classic: "Classique"
 3D: "Sphère 3D <span>(* Non compatible avec IE<9)</span>"
+view: '%viewCounter% vue | %viewCounter% vues'

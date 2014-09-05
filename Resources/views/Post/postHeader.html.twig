@@ -34,7 +34,10 @@
         {% set authorPicture = author.picture %}
         <li>{% if authorPicture is null %}<span class="fa fa-user"></span>{% else %}<img src="{{ asset('uploads/pictures/') ~ authorPicture }}" alt="{{ author.firstname ~ ' ' ~ author.lastname }}" class="img-rounded user_picture">{% endif %}&nbsp;<small><a href="{{ path('icap_blog_view_filter', {'blogId': _resource.id, 'filter': author.username}) }}" rel="author" title="{{ author.firstname ~ ' ' ~ author.lastname }}">{{ author.firstname ~ ' ' ~ author.lastname }}</a></small></li>
         {% if null != post.publicationDate %}
-        <li><span class="fa fa-calendar"></span> <small><time>{{ post.publicationDate|date('date_format'|trans({}, 'platform')) }}</time></small></li>
+            <li><span class="fa fa-calendar"></span> <small><time>{{ post.publicationDate|date('date_format'|trans({}, 'platform')) }}</time></small></li>
+        {% endif %}
+        {% if 0 < post.viewCounter %}
+            <li><span class="fa fa-eye"></span> <small>{{ 'view'|transchoice(post.viewCounter, {'%viewCounter%': post.viewCounter}, 'icap_blog') }}</small></li>
         {% endif %}
     </ul>
 </header>
