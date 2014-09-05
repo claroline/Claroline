@@ -94,3 +94,4 @@ read_more: "View more"
 modified_at: "Modified at"
 classic: "Classic"
 3D: "3D sphere <span>(* Not compatible with IE<9)</span>"
+view: '%viewCounter% view | %viewCounter% views'

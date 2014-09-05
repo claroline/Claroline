@@ -37,6 +37,11 @@ class PostController extends Controller
 
         $this->dispatchPostReadEvent($post);
 
+        $post->increaseViewCounter();
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->persist($post);
+        $entityManager->flush();
+
         $commentStatus = Comment::STATUS_UNPUBLISHED;
         if ($blog->isAutoPublishComment()) {
             $commentStatus = Comment::STATUS_PUBLISHED;
@@ -59,7 +64,6 @@ class PostController extends Controller
                 if ($form->isValid()) {
                     $translator = $this->get('translator');
                     $flashBag = $this->get('session')->getFlashBag();
-                    $entityManager = $this->getDoctrine()->getManager();
 
                     try {
                         $entityManager->persist($comment);

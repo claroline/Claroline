@@ -69,6 +69,13 @@ class Post extends Statusable
     protected $publicationDate;
 
     /**
+     * @var int $viewCounter
+     *
+     * @ORM\Column(type="integer")
+     */
+    protected $viewCounter;
+
+    /**
      * @var Comment
      *
      * @ORM\OneToMany(targetEntity="Comment", mappedBy="post", cascade={"remove"})
@@ -452,12 +459,38 @@ class Post extends Statusable
 
         $currentTimestamp = time();
 
-        if ($isStatusPublished && (null !== $this->publicationDate && $currentTimestamp >= $this->publicationDate->getTimestamp(
-                        ))
-        ) {
+        if ($isStatusPublished && (null !== $this->publicationDate && $currentTimestamp >= $this->publicationDate->getTimestamp())) {
             return true;
         }
 
         return false;
+    }
+
+    /**
+     * @param int $viewCounter
+     *
+     * @return Post
+     */
+    public function setViewCounter($viewCounter)
+    {
+        $this->viewCounter = $viewCounter;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getViewCounter()
+    {
+        return $this->viewCounter;
+    }
+
+    /**
+     * @return Post
+     */
+    public function increaseViewCounter()
+    {
+        return $this->setViewCounter(++$this->viewCounter);
     }
 }
