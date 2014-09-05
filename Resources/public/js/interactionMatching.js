@@ -6,14 +6,18 @@ var tableProposals = $('#tableProposal');
 
 var typeMatching;
 
+var advEditionLang;
+
 // Question creation
-function creationMatching(addchoice, addproposal, deletechoice, LabelValue, ScoreRight, ProposalValue, numberProposal, correspondence, deleteLabel, deleteProposal, tMatching){
+function creationMatching(addchoice, addproposal, deletechoice, LabelValue, ScoreRight, ProposalValue, numberProposal, correspondence, deleteLabel, deleteProposal, tMatching, advEdition){
 
     //initialisation of variables
     var indexLabel; // number of label
     var indexProposal;
     var codeContainerLabel = 0; // to differentiate containers
     var codeContainerProposal = 1;
+
+    advEditionLang = advEdition;
 
     typeMatching = JSON.parse(tMatching);
 
@@ -168,15 +172,19 @@ function check_form(nbrProposals, nbrLabels){
 function fillLabelArray() {
 
     // Add the field of type textarea
-    if (containerLabel.find('.row').find('textarea').length) {
+    if (containerLabel.find('.row').find('input').length) {
+        idLabelVal = containerLabel.find('.row').find('.labelVal').attr("id");
         $('#newTableLabel').find('tr:last').append('<td class="classic"></td>');
-        $('#newTableLabel').find('td:last').append(containerLabel.find('.row').find('textarea'));
+        $('#newTableLabel').find('td:last').append(containerLabel.find('.row').find('.labelVal'));
+        $('#newTableLabel').find('td:last').append('<span><a href="#" id="adve_'+idLabelVal+'">'+advEditionLang+'</a></span>');
+
+        advLabelVal(idLabelVal);
     }
 
     // Add the field of type input
     if (containerLabel.find('.row').find('input').length) {
         $('#newTableLabel').find('tr:last').append('<td class="classic"></td>');
-        $('#newTableLabel').find('td:last').append(containerLabel.find('.row').find('input'));
+        $('#newTableLabel').find('td:last').append(containerLabel.find('.row').find('.labelScore'));
     }
 
     // Add the field of type select
@@ -186,14 +194,50 @@ function fillLabelArray() {
     }
 }
 
+function advLabelVal(idLabelVal) {
+    $("#adve_"+idLabelVal).click(function(e) {
+            if ($("#"+idLabelVal).hasClass("claroline-tiny-mce hide")) {
+//                $("#"+idLabelVal).removeClass("claroline-tiny-mce");
+//                $("#"+idLabelVal).removeClass("hide");
+//                $("#"+idLabelVal).removeData("data-theme");
+
+            } else {
+                $("#"+idLabelVal).addClass("claroline-tiny-mce hide");
+                $("#"+idLabelVal).data("data-theme","advanced");
+            }
+
+            e.preventDefault();
+            return false;
+        });
+}
+
 function fillProposalArray() {
 
     // Add the field of type textarea
     if (containerProposal.find('.row').find('textarea').length) {
+        idProposalVal = containerProposal.find('.row').find('textarea').attr("id");
         $('#newTableProposal').find('tr:last').append('<td class="classic"></td>');
         $('#newTableProposal').find('td:last').append(containerProposal.find('.row').find('textarea'));
+        $('#newTableProposal').find('td:last').append('<span><a href="#" id="adve_'+idProposalVal+'">'+advEditionLang+'</a></span>');
+        
+        advProposalVal(idProposalVal);
     }
 
+}
+
+function advProposalVal(idProposalVal) {
+    $("#adve_"+idProposalVal).click(function(e) {
+            if ($("#"+idProposalVal).hasClass("claroline-tiny-mce hide")) {
+                //todo
+
+            } else {
+                $("#"+idProposalVal).addClass("claroline-tiny-mce hide");
+                $("#"+idProposalVal).data("data-theme","advanced");
+            }
+
+            e.preventDefault();
+            return false;
+        });
 }
 
 function adddelete(tr, deletechoice, codeContainer){

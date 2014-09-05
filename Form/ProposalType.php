@@ -12,7 +12,7 @@ class ProposalType extends AbstractType
     {
         $builder
             ->add(
-                'value', 'tinymce', array(
+                'value', 'textarea', array(
                     'required' => false, 'label' => ' '
                 ));
     }
