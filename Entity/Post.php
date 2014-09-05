@@ -54,7 +54,7 @@ class Post extends Statusable
     /**
      * @var \Datetime $modificationDate
      *
-     * @Gedmo\Timestampable(on="update")
+     * @Gedmo\Timestampable(on="change", field={"title", "content"})
      * @ORM\Column(type="datetime", name="modification_date")
      */
     protected $modificationDate;
