@@ -88,7 +88,7 @@ class DropzoneController extends DropzoneBaseController
             if (!$dropzone->getManualPlanning()) {
 
                 // var_dump($this->getRequest()->request->all());
-                //$form_array= $this->getRequest()->request->get('icap_dropzone_common_form');
+                $form_array = $this->getRequest()->request->get('icap_dropzone_common_form');
                 // reconstruction of datetimes.
 
                 if (array_key_exists('startAllowDrop', $form_array)) {
