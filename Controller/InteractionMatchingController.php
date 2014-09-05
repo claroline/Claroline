@@ -32,9 +32,9 @@ class InteractionMatchingController extends Controller
                 $this->container->get('security.context')->getToken()->getUser()
             ), $interMatching
         );
-        
+
         $exoID = $this->container->get('request')->request->get('exercise');
-        
+
         $formHandler = new InteractionMatchingHandler(
                 $form, $this->get('request'), $this->getDoctrine()->getManager(),
                 $this->container->get('ujm.exercise_services'),
@@ -44,7 +44,7 @@ class InteractionMatchingController extends Controller
         if ( $matchingHandler === TRUE ) {
             $categoryToFind = $interMatching->getInteraction()->getQuestion()->getCategory();
             $titleToFind = $interMatching->getInteraction()->getQuestion()->getTitle();
-            
+
             if ($exoID == -1) {
                 return $this->redirect(
                     $this->generateUrl('ujm_question_index', array(
@@ -59,13 +59,13 @@ class InteractionMatchingController extends Controller
                 );
             }
         }
-        
+
         if ($matchingHandler == 'infoDuplicateQuestion') {
             $form->addError(new FormError(
                     $this->get('translator')->trans('infoDuplicateQuestion')
                     ));
         }
-        
+
         $typeMatching = $services->getTypeMatching();
         $formWithError = $this->render(
             'UJMExoBundle:InteractionMatching:new.html.twig', array(
@@ -86,7 +86,7 @@ class InteractionMatchingController extends Controller
             'linkedCategory' =>  $this->container->get('ujm.exercise_services')->getLinkedCategories()
             )
         );
-        
+
     }
 
     /**
@@ -103,19 +103,19 @@ class InteractionMatchingController extends Controller
         $exoID = $this->container->get('request')->request->get('exercice');
         $user = $this->container->get('security.context')->getToken()->getUser();
         $catID = -1;
-        
+
         $em = $this->getdoctrine()->getManager();
-        
+
         $interMatching = $em->getRepository('UJMExoBundle:InteractionMatching')->find($id);
-        
+
         if (!$interMatching) {
             throw $this->createNotFoundException('Enable to find InteractionMatching entity.');
         }
-        
+
         if ( $user->getId() != $interMatching->getInteraction()->getQuestion()->getUser()->getId() ) {
             $catID = $interMatching->getInteraction()->getQuestion()->getUser()->getId();
         }
-        
+
         $editForm = $this->createForm(
             new InteractionMatchingType(
                 $this->container->get('security.context')->getToken()->getUser(),
@@ -127,7 +127,7 @@ class InteractionMatchingController extends Controller
             $this->container->get('ujm.exercise_services'),
             $this->container->get('security.context')->getToken()->getUser()
         );
-        
+
         if ( $formHandler->processUpdate($interMatching) ) {
             if ( $exoID == -1 ) {
                 return $this->redirect($this->generateUrl('ujm_question_index'));
@@ -142,7 +142,7 @@ class InteractionMatchingController extends Controller
                 );
             }
         }
-        
+
         return $this->forward(
             'UJMExoBundle:Question:edit', array(
                 'exoID' => $exoID,
@@ -166,14 +166,14 @@ class InteractionMatchingController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $entity = $em->getRepository('UJMExoBundle:InteractionMatching')->find($id);
-        
+
         if ( !$entity ) {
             throw $this->createNotFoundException('Enable to find InteractionMatching entity.');
         }
-        
+
         $em->remove($entity);
         $em->flush();
-        
+
         return $this->redirect($this->generateUrl('ujm_question_index', array('pageNow' => $pageNow)));
     }
 
@@ -189,7 +189,9 @@ class InteractionMatchingController extends Controller
         $vars = array();
         $request = $this->get('request');
         $postVal = $req = $request->request->all();
-        
+
+        echo 'Response user : ' . $postVal['jsonResponse'];die();
+
         if ($postVal['exoID'] != -1) {
             $exercise = $this->getDoctrine()->getManager()->getRepository('UJMExoBundle:Exercise')->find($postVal['exoID']);
             $vars['_resource'] = $exercise;

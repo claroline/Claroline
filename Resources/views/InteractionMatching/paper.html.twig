@@ -65,25 +65,21 @@
                 <table>
                     <tr>
                         <td>
-                            {% set i = 0 %}
                             {% for label in interactionToDisplayed.labels %}
-                                <div id="droppable{{ i }}" class="droppable">
+                                <div id="droppable_{{ label.id }}" class="droppable">
                                     <ul>
                                         <li style='list-style-type:none;'>{{ label.value | raw }}</li>
                                     </ul>
                                 </div>
-                                {% set i= i+ 1 %}
                             {% endfor %}
                         </td>
                         <td>
-                            {% set j = 0 %}
                             {% for proposal in interactionToDisplayed.proposals %}
-                                <div class="origin">
+                                <div id="div_{{ proposal.id }}" class="origin">
                                     <ul>
-                                        <li id="draggable{{ j }}" class="draggable" style='list-style-type:none;'> {{ proposal.value | raw }} </li>
+                                        <li id="draggable_{{ proposal.id }}" class="draggable" style='list-style-type:none;'> {{ proposal.value | raw }} </li>
                                     </ul>
                                 </div>
-                                {% set j = j + 1 %}
                             {% endfor%}
                         </td>
                     </tr>
@@ -98,6 +94,7 @@
                     <input type="hidden" name="testMatching" value="testMatching" />
                     <input type="hidden" name="interactionMatchingToValidated" value="{{ interactionToDisplayed.id }}" />
                     <input type="hidden" name="exoID" value="{{ exoID }}" />
+                    <input type="hidden" id="jsonResponse" name ="jsonResponse" />
                     <button type="submit" id="submit_response" class="btn btn-primary">{{ 'validate' | trans }}</button>
                 </div>
             </form>
