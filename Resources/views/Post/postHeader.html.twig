@@ -37,7 +37,7 @@
             <li><span class="fa fa-calendar"></span> <small><time>{{ post.publicationDate|date('date_format'|trans({}, 'platform')) }}</time></small></li>
         {% endif %}
         {% if 0 < post.viewCounter %}
-            <li>{{ 'view'|transchoice(post.viewCounter, {'%viewCounter%': post.viewCounter}, 'icap_blog') }}</li>
+            <li><span class="fa fa-eye"></span> <small>{{ 'view'|transchoice(post.viewCounter, {'%viewCounter%': post.viewCounter}, 'icap_blog') }}</small></li>
         {% endif %}
     </ul>
 </header>
