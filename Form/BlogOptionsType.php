@@ -26,6 +26,9 @@ class BlogOptionsType extends AbstractType
             ->add('display_title', 'checkbox', array(
                 'required' => false,
             ))
+            ->add('display_post_view_counter', 'checkbox', array(
+                'required' => false,
+            ))
             ->add('post_per_page', 'choice', array(
                 'choices'       => array("5" => 5, "10" => 10, "20" => 20),
                 'required'      => false,

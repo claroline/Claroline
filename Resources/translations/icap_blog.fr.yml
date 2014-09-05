@@ -95,3 +95,4 @@ modified_at: "Modifié le"
 classic: "Classique"
 3D: "Sphère 3D <span>(* Non compatible avec IE<9)</span>"
 view: '%viewCounter% vue | %viewCounter% vues'
+icap_blog_options_form_display_post_view_counter: 'Affichage du nombre de vue par article ?'

@@ -81,6 +81,13 @@ class BlogOptions
     protected $bannerActivate = true;
 
     /**
+     * @var bool
+     *
+     * @ORM\Column(type="boolean", name="display_post_view_counter", options={"default": 1})
+     */
+    protected $displayPostViewCounter = true;
+
+    /**
      * @var string
      *
      * @ORM\Column(type="string", name="banner_background_color")
@@ -452,6 +459,26 @@ class BlogOptions
     public function getTagCloud()
     {
         return $this->tagCloud;
+    }
+
+    /**
+     * @param boolean $displayPostViewCounter
+     *
+     * @return BlogOptions
+     */
+    public function setDisplayPostViewCounter($displayPostViewCounter)
+    {
+        $this->displayPostViewCounter = $displayPostViewCounter;
+
+        return $this;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getDisplayPostViewCounter()
+    {
+        return $this->displayPostViewCounter;
     }
 
     /**

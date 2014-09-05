@@ -120,6 +120,14 @@ class Blog extends AbstractResource
     }
 
     /**
+     * @return bool
+     */
+    public function displayPostViewCounter()
+    {
+        return $this->getOptions()->getDisplayPostViewCounter();
+    }
+
+    /**
      * @return array|\Claroline\CoreBundle\Entity\User[]
      */
     public function getAuthors()
