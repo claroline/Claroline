@@ -15,6 +15,7 @@ use Claroline\CoreBundle\Entity\Home\HomeTab;
 use Claroline\CoreBundle\Entity\Home\HomeTabConfig;
 use Claroline\CoreBundle\Entity\Widget\WidgetHomeTabConfig;
 use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
@@ -182,6 +183,37 @@ class HomeImporter extends Importer implements ConfigurationInterface, RichTextI
 
             $homeTabOrder++;
         }
+    }
+
+    public function export(Workspace $workspace)
+    {
+        $homeTabs = $this->container->get('claroline.manager.home_tab_manager')
+            ->getWorkspaceHomeTabConfigsByWorkspace($workspace);
+        $tabs = [];
+
+        foreach ($homeTabs as $homeTab) {
+            $widgets = [];
+            $widgetConfigs = $this->container->get('claroline.manager.home_tab_manager')
+                ->getWidgetConfigsByWorkspace($homeTab->getHomeTab(), $workspace);
+
+            foreach ($widgets as $widget) {
+                $data = [];
+                //export the widget content here
+                $widgetData = array('widget' => array(
+                    'name' => $widgetConfig->getWidgetInstance()->getName(),
+                    'type' => $widgetConfig->getWidgetInstance()->getWidget()->getName(),
+                    'data' => $data
+                ));
+                $widgets[] = $widgetData;
+            }
+
+            $tabs[] = array('tab' => array(
+                'name' => $homeTab->getHomeTab()->getName(),
+                'widgets' => $widgets
+            ));
+        }
+
+        return $tabs;
     }
 
     public function format($data)

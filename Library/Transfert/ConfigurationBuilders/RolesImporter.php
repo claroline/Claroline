@@ -158,7 +158,7 @@ class RolesImporter extends Importer implements ConfigurationInterface
 
         foreach ($workspace->getRoles() as $role) {
             $data[] = array(
-                'name' => $role->getName(),
+                'name' => $this->roleManager->getWorkspaceRoleBaseName($role),
                 'translation' => $role->getTranslationKey(),
                 'is_base_role' => false
             );

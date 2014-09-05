@@ -19,8 +19,10 @@ use Claroline\CoreBundle\Library\Transfert\Importer;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Claroline\CoreBundle\Manager\RightsManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
+use Claroline\CoreBundle\Manager\MaskManager;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\Directory;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 
 /**
  * @DI\Service("claroline.tool.resource_manager_importer")
@@ -32,6 +34,7 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
     private $data;
     private $rightManager;
     private $resourceManager;
+    private $maskManager;
     private $availableParents;
     private $om;
     private $availableCreators;
@@ -39,18 +42,21 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
     /**
      * @DI\InjectParams({
      *     "rightManager"    = @DI\Inject("claroline.manager.rights_manager"),
+     *     "maskManager"    = @DI\Inject("claroline.manager.mask_manager"),
      *     "resourceManager" = @DI\Inject("claroline.manager.resource_manager"),
      *     "om"              = @DI\Inject("claroline.persistence.object_manager")
      * })
      */
     public function __construct(
         RightsManager $rightManager,
+        MaskManager $maskManager,
         ResourceManager $resourceManager,
         ObjectManager $om
     )
     {
         $this->rightManager = $rightManager;
         $this->resourceManager = $resourceManager;
+        $this->maskManager = $maskManager;
         $this->om = $om;
     }
 
@@ -249,6 +255,14 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
                 }
             }
         }*/
+    }
+
+    public function export(Workspace $workspace)
+    {
+        //first we get the root
+        $root = $this->resourceManager->getWorkspaceRoot($workspace);
+        $rootRights = $root->getRights();
+        $perms = $this->getPermsArray($root);
     }
 
     public function getName()
@@ -489,7 +503,8 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
         return $this->data;
     }
 
-    private function getCreationRightsArray ($rights) {
+    private function getCreationRightsArray ($rights)
+    {
         $creations = array();
 
         if ($rights !== null) {
@@ -501,5 +516,15 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
         }
 
         return $creations;
+    }
+
+    private function getPermsArray(ResourceNode $node)
+    {
+        $rights = $node->getRights();
+        $roles = [];
+
+        foreach ($rights as $right) {
+//            $perms = $this->r
+        }
     }
 } 

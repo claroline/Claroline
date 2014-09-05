@@ -263,6 +263,8 @@ class TransfertManager
         $data['tools'] = $this->getImporterByName('tools')->export($workspace);
         var_dump($data);
         throw new \Exception();
+
+        return $data;
     }
 
     /**

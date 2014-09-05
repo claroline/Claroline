@@ -796,4 +796,9 @@ class RoleManager
     {
         return $this->roleRepo->findNonPlatformRolesForUser($user, $executeQuery);
     }
+
+    public function getWorkspaceRoleBaseName(Role $role)
+    {
+        return $role->getName();
+    }
 }
