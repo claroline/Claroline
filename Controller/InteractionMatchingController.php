@@ -198,11 +198,12 @@ class InteractionMatchingController extends Controller
         $exerciseSer = $this->container->get('ujm.exercise_services');
         $res = $exerciseSer->responseMatching($request);
 
-        $vars['score']    = $res['score'];
-        $vars['penalty']  = $res['penalty'];
-        $vars['interMatching'] = $res['interMatching'];
-        $vars['response'] = $res['response'];
-        $vars['exoID']    = $postVal['exoID'];
+        $vars['score']            = $res['score'];
+        $vars['penalty']          = $res['penalty'];
+        $vars['interMatching']    = $res['interMatching'];
+        $vars['tabRightResponse'] = $res['tabRightResponse'];
+        $vars['tabResponseIndex'] = $res['tabResponseIndex'];
+        $vars['exoID']            = $postVal['exoID'];
 
         return $this->render('UJMExoBundle:InteractionMatching:matchingOverview.html.twig', $vars);
     }

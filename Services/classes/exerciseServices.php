@@ -557,36 +557,40 @@ class exerciseServices
         } else {
             $penalty = $this->getPenalty($interMatching->getInteraction(), $paperID);
         }
-        $score = $this->matchingMark($interMatching, $response, $penalty);
+
+        $tabsResponses = $this->initTabResponseMatching($response, $interMatching);
+        $tabRightResponse = $tabsResponses[1];
+        $tabResponseIndex = $tabsResponses[0];
+
+        $score = $this->matchingMark($interMatching, $penalty, $tabRightResponse, $tabResponseIndex);
 
         $res = array(
-          'score'    => $score,
-          'penalty'  => $penalty,
-          'interMatching' => $interMatching,
-          'response' => $response
+          'score'            => $score,
+          'penalty'          => $penalty,
+          'interMatching'    => $interMatching,
+          'tabRightResponse' => $tabRightResponse,
+          'tabResponseIndex' => $tabResponseIndex
         );
 
         return $res;
     }
 
-
     /**
-     * To calculate the score for a matching question
+     * For the correction of a matching question :
+     * init array of responses of user indexed by labelId
+     * init array of rights responses indexed by labelId
      *
      * @access public
      *
-     * @param \UJM\ExoBundle\Entity\InteractionMatching $interMatching
-     * @param array[integer] $response array of id Label selected
-     * @param array[Label] $allLabels
-     * @param array[Proposal] $allProposals
-     * @param float $penality penalty if the user showed hints
+     * @param String $response
+     * @param \UJM\ExoBundle\Entity\Paper\InteractionMatching $interMatching
      *
-     * Return string userScore/scoreMax
+     * Return array of arrays
      */
-    public function matchingMark(\UJM\ExoBundle\Entity\InteractionMatching $interMatching, $response, $penalty)
-    {
-        $scoretmp = 0;
-        $scoreMax = $this->matchingMaxScore($interMatching);
+    function initTabResponseMatching($response, $interMatching) {
+
+        $tabsResponses = array();
+
         $tabResponse = explode(';', substr($response, 0, -1));
         $tabResponseIndex = array();
         $tabRightResponse = array();
@@ -617,6 +621,32 @@ class exerciseServices
                 $tabRightResponse[$label->getId()] = null;
             }
         }
+
+
+        $tabsResponses[0] = $tabResponseIndex;
+        $tabsResponses[1] = $tabRightResponse;
+
+        return $tabsResponses;
+
+    }
+
+
+    /**
+     * To calculate the score for a matching question
+     *
+     * @access public
+     *
+     * @param \UJM\ExoBundle\Entity\InteractionMatching $interMatching
+     * @param float $penality penalty if the user showed hints
+     * @param array $tabRightResponse
+     * @param array $tabResponseIndex
+     *
+     * Return string userScore/scoreMax
+     */
+    public function matchingMark(\UJM\ExoBundle\Entity\InteractionMatching $interMatching, $penalty, $tabRightResponse, $tabResponseIndex)
+    {
+        $scoretmp = 0;
+        $scoreMax = $this->matchingMaxScore($interMatching);
 
         foreach ($tabRightResponse as $labelId => $value) {
             if ( isset($tabResponseIndex[$labelId]) && $tabRightResponse[$labelId] != null

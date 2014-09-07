@@ -1,15 +1,11 @@
 {% include "UJMExoBundle:Partial:correction/interaction.html.twig" %}
 <table border="1" class="table table-striped table-bordered table-condensed">
     <tr>
-        <th class="classic"> {{ 'label' | trans }}</th>
         <th class="classic">{{ 'expected answer' | trans }}</th>
         <th class="classic">{{ 'your answer' | trans }}</th>
     </tr>
     {% for label in inter.labels %}
     <tr>
-        <th>
-            {{ label.value | raw }}
-        </th>
         <th>
             {% for proposal in inter.proposals %}
                 {% if "label.id" == "proposal.associatedLabel" %}
