@@ -1,0 +1,19 @@
+.labelMatch{
+    border: 1px solid black;
+    margin: 5px;
+}
+
+.associatedProposal{
+    border: 1px dashed black;
+}
+
+.rightResponse{
+    border: 1px solid green;
+    margin: 5px;
+}
+
+.falseResponse{
+    border: 1px solid red;
+    margin: 5px;
+}
+

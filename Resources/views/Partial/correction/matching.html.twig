@@ -4,30 +4,46 @@
         <th class="classic">{{ 'expected answer' | trans }}</th>
         <th class="classic">{{ 'your answer' | trans }}</th>
     </tr>
+
     {% for label in inter.labels %}
-    <tr>
-        <th>
-            {% for proposal in inter.proposals %}
-                {% if "label.id" == "proposal.associatedLabel" %}
-                    {{ proposal.value | raw }}
+        <tr>
+            <td>
+                <div class="labelMatch">
+                    {{ label.value | raw }}
+                    {% for proposal in inter.proposals %}
+                        {% if proposal.associatedLabel.id == label.id %}
+                            <div class="associatedProposal">
+                                {{ proposal.value | raw }}
+                            </div>
+                        {% endif %}
+                    {% endfor%}
+                </div>
+            </td>
+            <td>
+                {% if (tabResponseIndex[label.id] is not defined and tabRightResponse[label.id] == null) or tabRightResponse[label.id] == tabResponseIndex[label.id] %}
+                    <div class="rightResponse">
+                        {{ label.value | raw }}
+                        {% for proposal in inter.proposals %}
+                            {% if proposal.associatedLabel.id == label.id %}
+                                <div class="associatedProposal">
+                                    {{ proposal.value | raw }}
+                                </div>
+                            {% endif %}
+                        {% endfor%}
+                    </div>
+                {% else %}
+                    <div class="falseResponse">
+                        {{ label.value | raw }}
+                        {% set responses = explodeString('-', tabResponseIndex[label.id]) %}
+                        {% for response in responses %}
+                            {% set proposal = getProposal(response) %}
+                            <div class="associatedProposal">
+                                {{ proposal.value | raw }}
+                            </div>
+                        {% endfor %}
+                    </div>
                 {% endif %}
-            {% endfor %}
-        </th>
-        <th>
-           
-        </th>
-    </tr>
-    {% endfor%}
-    {% for proposal in inter.proposals %}
-        {% if proposal.associatedLabel == null %}
-            <th></th>
-            <th>
-                {{ proposal.value | raw }}
-            </th>
-            <th>
-                
-            </th>
-        {% endif %}
-            
+            </td>
+        </tr>
     {% endfor%}
 </table>

@@ -55,6 +55,8 @@ class TwigExtensions extends \Twig_Extension
             'getCoordsGraphTwig'   => new \Twig_Function_Method($this, 'getCoordsGraphTwig'),
             'roundUpOrDown'        => new \Twig_Function_Method($this, 'roundUpOrDown'),
             'getQuestionRights'    => new \Twig_Function_Method($this, 'getQuestionRights'),
+            'getProposal'          => new \Twig_Function_Method($this, 'getProposal'),
+            'explodeString'        => new \Twig_Function_Method($this, 'explodeString'),
         );
 
     }
@@ -163,6 +165,42 @@ class TwigExtensions extends \Twig_Extension
     {
 
         return $this->exerciseSer->roundUpDown($markToBeAdjusted);
+    }
+
+    /**
+     * Get a proposal entity
+     *
+     * @access public
+     *
+     * @param integer
+     *
+     * Return \UJM\ExoBundle\Entity\Proposal $proposal
+     *
+     */
+    public function getProposal($id)
+    {
+        $proposal = $this->doctrine
+                         ->getManager()
+                         ->getRepository('UJMExoBundle:Proposal')
+                         ->find($id);
+
+        return $proposal;
+    }
+
+    /**
+     * To explode a string
+     *
+     * @access public
+     *
+     * @param string $lim the boundary string
+     * @param string $str The input string
+     *
+     * Return array
+     *
+     */
+    public function explodeString($lim, $str) {
+
+        return explode($lim, $str);
     }
 
     /**
