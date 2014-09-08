@@ -11,6 +11,7 @@ use Icap\DropzoneBundle\Form\DropzoneCommonType;
 use Icap\DropzoneBundle\Form\DropzoneCriteriaType;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Exception\NotValidCurrentPageException;
+use Claroline\CoreBundle\Entity\Event;
 use Pagerfanta\Pagerfanta;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -36,10 +37,18 @@ class DropzoneController extends DropzoneBaseController
      *      name="icap_dropzone_edit_common",
      *      requirements={"resourceId" = "\d+"}
      * )
+     * @ParamConverter("user", options={
+     *      "authenticatedUser" = true,
+     *      "messageEnabled" = true,
+     *      "messageTranslationKey" = "Participate in an evaluation requires authentication. Please login.",
+     *      "messageTranslationDomain" = "icap_dropzone"
+     * })
      * @ParamConverter("dropzone", class="IcapDropzoneBundle:Dropzone", options={"id" = "resourceId"})
      * @Template()
+     *
+     * User is needed for Agenda Event
      */
-    public function editCommonAction(Dropzone $dropzone)
+    public function editCommonAction(Dropzone $dropzone, $user)
     {
         $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
         $this->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
@@ -123,6 +132,54 @@ class DropzoneController extends DropzoneBaseController
                     }
                 }
 
+                $AgendaManager = $this->get('claroline.manager.agenda_manager');
+                $workspace = $dropzone->getResourceNode()->getWorkspace();
+                //Set the Agenda Drop Events.
+                if ($dropzone->getStartAllowDrop() != NULL && $dropzone->getEndAllowDrop() != NULL) {
+
+                    //if event already exist
+                    if ($dropzone->getEventDrop() != null) {
+
+
+                        // update event
+                        $eventDrop = $dropzone->getEventDrop();
+                        $eventDrop->setStart($dropzone->getStartAllowDrop());
+                        $eventDrop->setEnd($dropzone->getEndAllowDrop());
+
+                        $AgendaManager->updateEvent($eventDrop);
+
+                    } else {
+                        //if event doesn't exist
+                        // create event
+                        $eventDrop = $this->createAgendaEventDrop($dropzone->getStartAllowDrop(), $dropzone->getEndAllowDrop(), $user, 'drop');
+                        // event creation + link to workspace
+                        $AgendaManager->addEvent($eventDrop, $workspace);
+                        // link btween the event and the dropzone
+                        $dropzone->setEventDrop($eventDrop);
+                    }
+
+                }
+
+                //Set the Agenda Review Events.
+                if ($dropzone->getStartReview() != NULL && $dropzone->getEndReview() != NULL) {
+
+                    // if event is already linked.
+                    if ($dropzone->getEventCorrection() != null) {
+                        //update event
+                        $eventCorrection = $dropzone->getEventCorrection();
+                        $eventCorrection->setStart($dropzone->getStartReview());
+                        $eventCorrection->setEnd($dropzone->getEndReview());
+                        $AgendaManager->updateEvent($eventCorrection);
+                    } else {
+                        //create event
+                        $eventReview = $this->createAgendaEventDrop($dropzone->getStartReview(), $dropzone->getEndReview(), $user, 'correction');
+
+                        $AgendaManager->addEvent($eventReview, $workspace);
+                        $dropzone->setEventCorrection($eventReview);
+
+                    }
+                }
+
                 //$dropzone->setStartAllowDrop()
                 /*var_dump( $test_date);
                 var_dump($form_array);
@@ -161,6 +218,22 @@ class DropzoneController extends DropzoneBaseController
                         $form->get('endAllowDrop')->addError(new FormError('Must be before end peer review'));
                     }
                 }
+            } else {
+                // if manual mode, we delete agenda events related to
+                $AgendaManager = $this->get('claroline.manager.agenda_manager');
+                if ($dropzone->getEventDrop() != null) {
+
+                    $AgendaManager->deleteEvent($dropzone->getEventDrop());
+
+                }
+
+                if ($dropzone->getEventCorrection() != null) {
+                    $AgendaManager->deleteEvent($dropzone->getEventCorrection());
+                }
+                $em = $this->getDoctrine()->getManager();
+                $em->flush();
+
+
             }
 
 
@@ -200,6 +273,7 @@ class DropzoneController extends DropzoneBaseController
                 $unitOfWork->computeChangeSets();
                 $changeSet = $unitOfWork->getEntityChangeSet($dropzone);
 
+                $em = $this->getDoctrine()->getManager();
                 $em->persist($dropzone);
                 $em->flush();
 
@@ -464,6 +538,24 @@ class DropzoneController extends DropzoneBaseController
 
         $d = DateTime::createFromFormat($format, $date);
         return $d && $d->format($format) == $date;
+    }
+
+
+    private function createAgendaEventDrop($startDate, $endDate, $user, $type = "drop")
+    {
+        $event = new Event();
+        $event->setStart($startDate);
+        $event->setEnd($endDate);
+        $event->setUser($user);
+        if ($type == 'drop') {
+            $event->setTitle('Evaluation opening');
+        } else {
+            $event->setTitle('Evaluation Corrections');
+        }
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($event);
+        $em->flush();
+        return $event;
     }
 
 }

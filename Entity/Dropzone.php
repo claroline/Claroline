@@ -248,7 +248,7 @@ class Dropzone extends AbstractResource
      *
      * @ORM\OneToOne(
      *    targetEntity="Claroline\CoreBundle\Entity\Event")
-     * @ORM\JoinColumn(name="event_agenda_drop")
+     * @ORM\JoinColumn(name="event_agenda_drop",onDelete="SET NULL")
      * )
      */
     protected $eventDrop = null;
@@ -259,7 +259,7 @@ class Dropzone extends AbstractResource
      *
      * @ORM\OneToOne(
      *    targetEntity="Claroline\CoreBundle\Entity\Event")
-     * @ORM\JoinColumn(name="event_agenda_correction")
+     * @ORM\JoinColumn(name="event_agenda_correction",onDelete="SET NULL")
      */
     protected $eventCorrection = null;
 
@@ -268,6 +268,39 @@ class Dropzone extends AbstractResource
         $this->drops = new ArrayCollection();
         $this->peerReviewCriteria = new ArrayCollection();
     }
+
+    /**
+     * @param \Claroline\CoreBundle\Entity\Event; $eventCorrection
+     */
+    public function setEventCorrection($eventCorrection)
+    {
+        $this->eventCorrection = $eventCorrection;
+    }
+
+    /**
+     * @return \Claroline\CoreBundle\Entity\Event;
+     */
+    public function getEventCorrection()
+    {
+        return $this->eventCorrection;
+    }
+
+    /**
+     * @param Claroline\CoreBundle\Entity\Event; $eventDrop
+     */
+    public function setEventDrop($eventDrop)
+    {
+        $this->eventDrop = $eventDrop;
+    }
+
+    /**
+     * @return \Claroline\CoreBundle\Entity\Event;
+     */
+    public function getEventDrop()
+    {
+        return $this->eventDrop;
+    }
+
 
     /**
      * @param mixed $editionState
