@@ -15,12 +15,24 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Regex;
 
 class LdapType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add(
+            'name',
+            'text',
+            array(
+                'label' => 'name',
+                'constraints' => array(
+                    new NotBlank(),
+                    new regex('/^[\w ]*$/')
+                )
+            )
+        )
+        ->add(
             'host',
             'text',
             array(
@@ -29,7 +41,9 @@ class LdapType extends AbstractType
             )
         )
         ->add('port', 'number', array('label' => 'platform_parameters_form_port'))
-        ->add('dn', 'text', array('label' => 'distinguished_name'));
+        ->add('dn', 'text', array('label' => 'distinguished_name'))
+        ->add('user', 'text', array('label' => 'username'))
+        ->add('password', 'password', array('label' => 'password'));
     }
 
     public function getName()

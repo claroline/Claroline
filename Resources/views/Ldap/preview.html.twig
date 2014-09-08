@@ -1,0 +1,69 @@
+{% macro td(users, server, index, id) %}
+    <td>
+        {% if server[id] is defined and server[id] != '' and users[index] is defined and users[index][server[id]] is defined %}
+            {{ users[index][server[id]][0] }}
+        {% endif %}
+    </td>
+{% endmacro %}
+
+{% import _self as item %}
+
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">
+                <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+            </button>
+            <h4 class="modal-title">{{ 'Export LDAP users' | trans({}, 'ldap') }}</h4>
+        </div>
+        <div class="modal-body">
+            {% if error is defined %}
+                <div class="alert alert-danger">
+                    <i class="fa fa-warning"></i> {{ 'ldap_error_conexion' | trans({}, 'ldap') }}
+                </div>
+                <a class="btn btn-primary" href="{{ path('claro_admin_ldap_settings') }}" class="alert-link">
+                    <i class="fa fa-wrench"></i> {{ 'LDAP settings' | trans({}, 'ldap')}}
+                </a>
+            {% elseif not mapping %}
+                <div class="alert alert-danger">
+                    <i class="fa fa-warning"></i> {{ 'There is not users settings' | trans({}, 'ldap') }}
+                </div>
+                <a class="btn btn-primary" href="{{ path('claro_admin_ldap_servers') }}" class="alert-link">
+                    <i class="fa fa-wrench"></i> {{ 'Users and groups settings' | trans({}, 'ldap')}}
+                </a>
+            {% else %}
+                <div class="table-responsive" id="ldapPreview">
+                    <p class='text-muted'><i class="fa fa-eye"></i> {{ 'Preview' | trans({}, 'theme') }}</p>
+                    <table class="table table-bordered">
+                        <tr>
+                            <th>{{ 'username' | trans({}, 'platform') }}</th>
+                            <th>{{ 'firstName' | trans({}, 'platform') }}</th>
+                            <th>{{ 'lastName' | trans({}, 'platform') }}</th>
+                            <th>{{ 'email' | trans({}, 'platform') }}</th>
+                            <th>{{ 'password' | trans({}, 'platform') }}</th>
+                            <th>{{ 'administrative_code' | trans({}, 'platform') }}</th>
+                            <th>{{ 'Language' | trans({}, 'platform') }}</th>
+                        </tr>
+                        {% for i in 1..5 %}
+                            <tr id="users{{ i }}">
+                                {{ item.td(users, server, i, 'userName') }}
+                                {{ item.td(users, server, i, 'firstName') }}
+                                {{ item.td(users, server, i, 'lastName') }}
+                                {{ item.td(users, server, i, 'email') }}
+                                {{ item.td(users, server, i, 'password') }}
+                                {{ item.td(users, server, i, 'code') }}
+                                {{ item.td(users, server, i, 'locale') }}
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            {% endif %}
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">{{ 'cancel' | trans({}, 'platform')}}</button>
+            {% if not error is defined and mapping %}
+                <button type="button" class="btn btn-primary"><i class="fa fa-download"></i> {{ type }}</button>
+            {% endif %}
+        </div>
+    </div>
+</div>

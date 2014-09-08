@@ -1,6 +1,6 @@
 {% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
 
-{% block title %}{{ parent() ~ ' - ' ~ 'Users and groups settings' | trans({}, 'ldap') | striptags | raw }}{% endblock %}
+{% block title %}{{ parent() ~ ' - ' ~ 'Export LDAP users' | trans({}, 'ldap') | striptags | raw }}{% endblock %}
 
 {% block breadcrumb %}
     {{
@@ -19,7 +19,7 @@
                 'href': path('claro_admin_ldap')
             },
             {
-                'name': 'Users and groups'|trans({}, 'ldap'),
+                'name': 'export'|trans({}, 'platform'),
                 'href': ''
             }
         ])
@@ -28,7 +28,7 @@
 
 {% block section_content %}
     <div class="panel-heading">
-        <h3 class="panel-title">{{ 'Users and groups settings' | trans({}, 'ldap') }}</h3>
+        <h3 class="panel-title">{{ 'Export LDAP users' | trans({}, 'ldap') }}</h3>
     </div>
     {% if servers is empty %}
         <div class="panel-body">
@@ -40,18 +40,30 @@
             </a>
         </div>
     {% else %}
-        <div class="list-group">
+        <div class="list-group ldap-export">
             {% for server in servers %}
-                <div class="list-group-item clearfix">
+                <div class="list-group-item clearfix" data-name="{{ server.name }}">
                     {{ server.name }} <span class="text-muted">({{ server.host }})</span>
-                    <a class="badge" href="{{ path('claro_admin_ldap_groups', {'name': server.name }) }}">
-                        <i class="fa fa-group"></i> {{ 'groups_settings' | trans({}, 'ldap') }}
+                    <a class="badge" data-type="XML">
+                        <i class="fa fa-download"></i> {{ 'XML' | trans({}, 'ldap') }}
                     </a>
-                    <a class="badge" href="{{ path('claro_admin_ldap_users', {'name': server.name }) }}">
-                        <i class="fa fa-user"></i> {{ 'users_settings' | trans({}, 'ldap') }}
+                    <a class="badge" data-type="JSON">
+                        <i class="fa fa-download"></i> {{ 'JSON' | trans({}, 'ldap') }}
+                    </a>
+                    <a class="badge" data-type="YML">
+                        <i class="fa fa-download"></i> {{ 'YML' | trans({}, 'ldap') }}
+                    </a>
+                    <a class="badge" data-type="CSV">
+                        <i class="fa fa-download"></i> {{ 'CSV' | trans({}, 'ldap') }}
                     </a>
                 </div>
             {% endfor %}
         </div>
     {% endif %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ url('bazinga_exposetranslation_js', { 'domain_name': 'ldap' }) }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/clarolineldap/js/ldap.js') }}"></script>
 {% endblock %}

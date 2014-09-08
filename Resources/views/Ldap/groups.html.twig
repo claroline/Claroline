@@ -59,7 +59,7 @@
     </div>
     <div class="panel-body">
         <form id='ldapForm'>
-            <input type="hidden" name="host" id="ldapHost" value="{{ server.host }}">
+            <input type="hidden" name="name" value="{{ server.name }}">
             {% if error is defined %}
                 <div class="alert alert-danger">
                     <i class="fa fa-warning"></i> {{ 'ldap_error_conexion' | trans({}, 'ldap') }}
@@ -73,7 +73,7 @@
                         <label for="ldapObjectClass">{{ 'ldap_group_class' | trans({}, 'ldap') }}:</label>
                     </div>
                     <div class="col-sm-9">
-                        <select class="form-control" name="group" id="ldapObjectClass" data-type="groups">
+                        <select class="form-control" name="group" id="ldapObjectClass" data-type="groups" data-name="{{ server.name }}">
                             <option></option>
                             {% for objectClass in classes %}
                                 <option

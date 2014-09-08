@@ -1,6 +1,6 @@
 {% set action = path('claro_admin_ldap_form') %}
-{% if host is defined and not host is empty %}
-    {% set action = path('claro_admin_ldap_form', {'host': host}) %}
+{% if name is defined and not name is empty %}
+    {% set action = path('claro_admin_ldap_form', {'name': name}) %}
 {% endif %}
 <div class="modal-dialog">
     <div class="modal-content">

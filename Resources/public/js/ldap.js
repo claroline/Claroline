@@ -135,9 +135,9 @@
     /**
     * Create or edit ldap server settings
     */
-    ldap.addServer = function (element, currentHost)
+    ldap.updateServer = function (element, currentName)
     {
-        var routeVars =  typeof(currentHost) !== 'undefined' ? {'host': currentHost} : null;
+        var routeVars =  typeof(currentName) !== 'undefined' ? {'name': currentName} : null;
 
         modal.fromRoute('claro_admin_ldap_form', routeVars, function (modalElement) {
             modalElement.on('click', '.btn-primary', function (event) {
@@ -145,27 +145,27 @@
 
                 var action = $('form', modalElement).attr('action');
                 var form = $('form', modalElement).serializeArray();
-                var host = form[0].value;
+                var name = form[0].value;
 
                 if (action && form) {
                     $.post(action, form)
                     .done(function (data) {
                         if (data === 'true' && routeVars) {
                             modal.hide();
-                            if (currentHost !== host) {
-                                $(element).text(host);
+                            if (currentName !== name) {
+                                $(element).text(name);
                             }
                         } else if (data === 'true') {
                             $('.ldap-settings .clearfix').append(
                                 common.createElement('div', 'content-6 alert alert-default').append(
                                     common.createElement('button', 'close')
                                     .attr('type', 'button')
-                                    .data('host', host)
+                                    .data('name', name)
                                     .html('&times;')
                                 )
                                 .append(
                                     common.createElement('a', 'pointer-hand alert-link').append(
-                                        common.createElement('strong').html(host)
+                                        common.createElement('strong').html(name)
                                     )
                                 )
                             );
@@ -183,11 +183,11 @@
      * Delete server settings
      *
      * @param element The HTML object to remove after the delete
-     * @param host The host name of the LDAP server
+     * @param name The name of the LDAP server
      */
-    ldap.deleteServer = function (element, host)
+    ldap.deleteServer = function (element, name)
     {
-        $.ajax(routing.generate('claro_admin_ldap_delete', {'host': host}))
+        $.ajax(routing.generate('claro_admin_ldap_delete', {'name': name}))
         .done(function (data) {
             if (data === 'true') {
                 $(element).hide('slow', function () {
@@ -222,12 +222,12 @@
 
     $('body').on('change', '#ldapObjectClass', function () {
         var element = this;
-        var host = $('#ldapHost').val();
+        var name = $(element).data('name');
 
         ldap.reset();
 
         if (element.value !== undefined && element.value !== '') {
-            $.ajax(routing.generate('claro_admin_ldap_get_entries', {'objectClass': element.value, 'host': host}))
+            $.ajax(routing.generate('claro_admin_ldap_get_entries', {'objectClass': element.value, 'name': name}))
             .done(function (data) {
                 ldap.setAttribute('entries', $.parseJSON(data));
                 ldap.fillSelect();
@@ -236,10 +236,12 @@
                 modal.error();
             });
         }
-    }).on('change', '#ldapAttributes select', function () {
+    })
+    .on('change', '#ldapAttributes select', function () {
         ldap.setAttribute($(this).attr('id'), this.value);
         ldap.showPreview();
-    }).on('click', '#ldapFooter .btn-primary', function () {
+    })
+    .on('click', '#ldapFooter .btn-primary', function () {
         var form = $('#ldapForm').serializeArray();
         var type = $('#ldapObjectClass').data('type');
 
@@ -253,31 +255,46 @@
         }
     })
     .on('click', '.ldap-settings .btn-primary', function () {
-        ldap.addServer(this);
-    }).on('click', '.ldap-settings .alert.alert-default > .alert-link', function () {
-        var host = $(this).text();
+        ldap.updateServer(this);
+    })
+    .on('click', '.ldap-settings .alert.alert-default > .alert-link', function () {
+        var name = $(this).text();
 
-        if (host) {
-            ldap.addServer(this, host);
+        if (name) {
+            ldap.updateServer(this, name);
         }
     })
     .on('click', '.ldap-settings .alert.alert-default > .close', function () {
-        var host = $(this).data('host');
+        var name = $(this).data('name');
         var element = $(this).parents('.alert').first();
 
-        if (host) {
+        if (name) {
             modal.fromRoute('claro_content_confirm', null, function (modalElement) {
                 modalElement.on('click', '.btn.delete', function () {
-                    ldap.deleteServer(element, host);
+                    ldap.deleteServer(element, name);
                 });
             });
         }
-    }).on('change', '#userCreation', function () {
+    })
+    .on('change', '#userCreation', function () {
         $.ajax(
             routing.generate(
                 'claro_admin_ldap_check_user_creation', {'state': $(this).prop('checked').toString()}
             )
         );
+    })
+    .on('click', '.ldap-export .list-group-item .badge', function () {
+        var type = $(this).data('type');
+        var name = $(this).parents('.list-group-item').first().data('name');
+
+        modal.fromRoute('claro_admin_ldap_export_preview', {'type': type, 'name': name}, function (element) {
+            element.on('click', '.modal-footer .btn-primary', function () {
+                $(element).modal('hide');
+                window.location.href = routing.generate(
+                    'claro_admin_ldap_export_export_file', {'type': type.toLowerCase(), 'name': name}
+                );
+            });
+        });
     });
 
 }());

@@ -1,9 +1,11 @@
 Add server: Add server
 Allow account creation at the firs login: Allow account creation at the firs login
+Export LDAP users: Export LDAP users
 LDAP settings: LDAP settings
 Save settings: Save settings
 Servers settings: Servers settings
 There are no configured servers: There are no configured servers
+There is not users settings: There is not users settings
 Users and groups settings: Users and groups settings
 Users and groups: Users and groups
 groups_settings: Groups settings

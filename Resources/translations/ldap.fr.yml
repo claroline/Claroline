@@ -1,9 +1,11 @@
 Add server: Ajouter un serveur
 Allow account creation at the first login: Permettre la création de compte lors de la première connexion
+Export LDAP users: Exporter les utilisateurs LDAP
 LDAP settings: Paramètres LDAP
 Save settings: Enregistrer les paramètres
 Servers settings: Réglages des serveurs
 There are no configured servers: Il n'y a pas de serveurs configurés
+There is not users settings: Il n'y a pas les paramètres des utilisateurs
 Users and groups settings: Réglages d'utilisateurs et groupes
 Users and groups: Utilisateurs et groupes
 groups_settings: Réglages des groupes

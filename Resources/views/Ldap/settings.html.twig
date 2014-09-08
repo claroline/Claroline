@@ -37,8 +37,8 @@
         <div class="clearfix">
             {% for server in servers %}
                 <div class="content-6 alert alert-default">
-                    <button type="button" class="close" data-host="{{ server.host }}">&times;</button>
-                    <a class="pointer-hand alert-link"><strong>{{ server.host }}</strong></a>
+                    <button type="button" class="close" data-name="{{ server.name }}">&times;</button>
+                    <a class="pointer-hand alert-link"><strong>{{ server.name }}</strong></a>
                 </div>
             {% endfor %}
         </div>

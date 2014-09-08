@@ -96,33 +96,33 @@ class LdapManager
     }
 
     /**
-     * Get a LDAP server configuration by his host name.
+     * Get a LDAP server configuration by his name.
      *
-     * @param host The host name of the server.
+     * @param name The name of server.
      *
      * @return An array containing LDAP informations as host, port or dn
      */
-    public function get($host = null)
+    public function get($name = null)
     {
-        if ($host and isset($this->config['servers'][$host])) {
-            return $this->config['servers'][$host];
+        if ($name and isset($this->config['servers'][$name])) {
+            return $this->config['servers'][$name];
         }
     }
 
     /**
-     * Test if a given host exist in LDAP configuration.
+     * Test if a given server name exist in LDAP configuration.
      *
-     * @param host The given host name
+     * @param name The name of the server
      * @param data An array containing LDAP informations as host, port or dn
      *
      * @return boolean
      */
-    public function exists($host, $data)
+    public function exists($name, $data)
     {
         $servers = isset($this->config['servers']) ? $this->config['servers'] : null;
 
-        if ((!$host or ($host and $host !== $data['host'])) and
-            isset($data['host']) and isset($servers[$data['host']])
+        if ((!$name or ($name and $name !== $data['name'])) and
+            isset($data['name']) and isset($servers[$data['name']])
         ) {
             return true;
         }
@@ -145,27 +145,27 @@ class LdapManager
     /**
      * Delete a server configuration if the newest one replace it.
      *
-     * @param host The host name
+     * @param name The name of the server
      * @param data An array containing LDAP informations as host, port or dn
      */
-    public function deleteIfReplace($host, $data)
+    public function deleteIfReplace($name, $data)
     {
-        if ($host and isset($data['host']) and $host !== $data['host']) {
-            $this->deleteServer($host);
+        if ($name and isset($data['name']) and $name !== $data['name']) {
+            $this->deleteServer($name);
         }
     }
 
     /**
      * Delete a server configuration.
      *
-     * @param host A host name.
+     * @param name The name of the server.
      *
      * @return boolean
      */
-    public function deleteServer($host)
+    public function deleteServer($name)
     {
-        if (isset($this->config['servers']) and isset($this->config['servers'][$host])) {
-            unset($this->config['servers'][$host]);
+        if (isset($this->config['servers']) and isset($this->config['servers'][$name])) {
+            unset($this->config['servers'][$name]);
 
             return $this->saveConfig();
         }
@@ -174,15 +174,14 @@ class LdapManager
     /**
      * Save the LDAP mapping settings
      *
-     * @param host The host name of LDAP server
      * @param settings The settings array containing mapping
      *
      * @return boolean
      */
     public function saveSettings($settings)
     {
-        if (isset($settings['host']) and isset($this->config['servers'][$settings['host']])) {
-            return $this->saveConfig(array_merge($this->config['servers'][$settings['host']], $settings));
+        if (isset($settings['name']) and isset($this->config['servers'][$settings['name']])) {
+            return $this->saveConfig(array_merge($this->config['servers'][$settings['name']], $settings));
         }
     }
 
@@ -195,8 +194,8 @@ class LdapManager
      */
     public function saveConfig($server = null)
     {
-        if (is_array($server) and isset($server['host'])) {
-            $this->config['servers'][$server['host']] = $server;
+        if (is_array($server) and isset($server['name'])) {
+            $this->config['servers'][$server['name']] = $server;
         }
 
         return file_put_contents($this->path, $this->dumper->dump($this->config));
@@ -206,7 +205,6 @@ class LdapManager
      * Get LDAP opbject classes
      *
      * @param server An array containing LDAP informations as host, port or dn
-     *
      */
     public function getClasses($server)
     {
@@ -269,6 +267,20 @@ class LdapManager
     public function getConfig()
     {
         return $this->config;
+    }
+
+    /**
+     * Check if the users settings (mapping) are defined.
+     */
+    public function userMapping($server)
+    {
+        foreach (['userName', 'firstName', 'lastName', 'email', 'password'] as $field) {
+            if (!(isset($server[$field]) and $server[$field] !== '')) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**
