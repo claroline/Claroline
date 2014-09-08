@@ -166,15 +166,14 @@ class BlogController extends Controller
     /**
      * @Route("/configure/{blogId}", name="icap_blog_configure", requirements={"blogId" = "\d+"})
      * @ParamConverter("blog", class="IcapBlogBundle:Blog", options={"id" = "blogId"})
+     * @ParamConverter("user", options={"authenticatedUser" = true})
      * @Template()
      */
-    public function configureAction(Request $request, Blog $blog)
+    public function configureAction(Request $request, Blog $blog, User $user)
     {
         $this->checkAccess("EDIT", $blog);
 
         $blogOptions = $blog->getOptions();
-
-        $user = $this->get('security.context')->getToken()->getUser();
 
         $form = $this->createForm(new BlogOptionsType(), $blogOptions);
 
@@ -255,9 +254,10 @@ class BlogController extends Controller
     /**
      * @Route("/edit/{blogId}", name="icap_blog_edit_infos", requirements={"blogId" = "\d+"})
      * @ParamConverter("blog", class="IcapBlogBundle:Blog", options={"id" = "blogId"})
+     * @ParamConverter("user", options={"authenticatedUser" = true})
      * @Template()
      */
-    public function editAction(Request $request, Blog $blog)
+    public function editAction(Request $request, Blog $blog, User $user)
     {
         $this->checkAccess("EDIT", $blog);
 
@@ -293,7 +293,8 @@ class BlogController extends Controller
             '_resource'  => $blog,
             'bannerForm' => $this->getBannerForm($blog->getOptions()),
             'form'       => $form->createView(),
-            'archives'   => $this->getArchiveDatas($blog)
+            'archives'   => $this->getArchiveDatas($blog),
+            'user'       => $user,
         );
     }
 
