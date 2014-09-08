@@ -68,16 +68,9 @@ class NotificationManager
             $userIds = array_diff($userIds, $excludeUserIds);
         }
 
-        $token = $this->security->getToken();
-
-        if ($token) {
-            //Remove logged user
-            $loggedUser = $token->getUser();
-            if (is_a($loggedUser, 'Claroline\CoreBundle\Entity\User')) {
-                if (!empty($loggedUser)) {
-                    array_push($removeUserIds, $loggedUser->getId());
-                }
-            }
+        $doer = $notifiable->getDoer();
+        if (!empty($doer) && is_a($doer, 'Claroline\CoreBundle\Entity\User')) {
+            array_push($removeUserIds, $doer->getId());
         }
 
         $userIds = array_diff($userIds, $removeUserIds);
