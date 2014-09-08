@@ -11,7 +11,6 @@
 
 namespace Claroline\CoreBundle\Controller\Administration;
 
-use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Entity\Competence\Competence;
 use Claroline\CoreBundle\Entity\Competence\CompetenceNode;
 use Claroline\CoreBundle\Form\CompetenceType;
@@ -19,10 +18,8 @@ use Claroline\CoreBundle\Manager\CompetenceManager;
 use Claroline\CoreBundle\Manager\ToolManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Form\FormFactoryInterface;
@@ -30,20 +27,21 @@ use Claroline\CoreBundle\Persistence\ObjectManager;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
-class CompetenceController {
-
+class CompetenceController
+{
     private $formFactory;
-    private $cptmanager;
+    private $competenceManager;
     private $request;
     private $om;
-    private $toolManager;
+    private $adminTool;
     private $sc;
+
     /**
      * @DI\InjectParams({
      *     "formFactory"        = @DI\Inject("form.factory"),
      *     "request"            = @DI\Inject("request"),
      *     "router"             = @DI\Inject("router"),
-     *     "cptmanager"			= @DI\Inject("claroline.manager.competence_manager"),
+     *     "competenceManager"  = @DI\Inject("claroline.manager.competence_manager"),
      *     "om"                 = @DI\Inject("claroline.persistence.object_manager"),
      *     "toolManager"        = @DI\Inject("claroline.manager.tool_manager"),
      *     "sc"                 = @DI\Inject("security.context")
@@ -53,7 +51,7 @@ class CompetenceController {
         FormFactoryInterface $formFactory,
         Request $request,
         RouterInterface $router,
-        CompetenceManager $cptmanager,
+        CompetenceManager $competenceManager,
         ObjectManager $om,
         ToolManager $toolManager,
         SecurityContextInterface $sc
@@ -62,118 +60,113 @@ class CompetenceController {
         $this->formFactory = $formFactory;
         $this->request = $request;
         $this->router = $router;
-        $this->cptmanager = $cptmanager;
+        $this->competenceManager = $competenceManager;
         $this->om = $om;
-        $this->toolManager = $toolManager->getAdminToolByName('competence_referencial');
+        $this->adminTool = $toolManager->getAdminToolByName('competence_referencial');
         $this->sc = $sc;
     }
 
      /**
-     * @EXT\Route("/show", name="claro_admin_competences", options={"expose"=true})
-     * @EXT\Method("GET")
-     * @EXT\Template("ClarolineCoreBundle:Administration\Competence:competences.html.twig")
-     *
-     * Displays the competences root.
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function competencesAction()
+      * @EXT\Route(
+      *     "/admin/learning/outcomes/list",
+      *     name="claro_admin_learning_outcomes_list",
+      *    options={"expose"=true}
+      * )
+      * @EXT\Template()
+      *
+      * Displays list of learning outcomes
+      *
+      * @return \Symfony\Component\HttpFoundation\Response
+      */
+    public function adminLearningOutcomesListAction()
     {
         $this->checkOpen();
-     	return array('cpt' => $this->cptmanager->getTransversalCompetences());
+        $learningOutcomes = $this->competenceManager->getRootCompetenceNodes();
+
+     	return array('learningOutcomes' => $learningOutcomes);
     }
 
     /**
-     * @EXT\Route("/form", name="claro_admin_competence_form", options={"expose"=true})
-     * @EXT\Method("GET")
-     * @EXT\Template("ClarolineCoreBundle:Administration\Competence:competenceModalForm.html.twig")
-     */
-    public function addCompetenceModalForm()
-    {
-        $this->checkOpen();
-        $form = $this->formFactory->create(new CompetenceType());
-
-        return array(
-            'form' => $form->createView(),
-            'action' => $this->router->generate('claro_admin_competence_add', array())
-        );
-    }
-
-    /**
-     * @EXT\Route("/show/referential/{competence}", name="claro_admin_competence_show_referential",options={"expose"=true})
-     * @EXT\Template("ClarolineCoreBundle:Administration\Competence:competenceReferential.html.twig")
+     * @EXT\Route(
+     *     "/show/learning/outcomes/{competenceNode}",
+     *     name="claro_show_admin_learning_outcomes",
+     *     options={"expose"=true}
+     * )
+     * @EXT\Template()
      *
      * Show all the hiearchy from a competence
      *
      */
-    public function competenceReferentialAction(CompetenceNode $competence)
+    public function showAdminLearningOutcomesAction(CompetenceNode $competenceNode)
     {
         $this->checkOpen();
-        $competences = $this->cptmanager->getHierarchyName($competence);
-           
+        $competenceHierarchy = $this->competenceManager
+            ->getHierarchyByCompetenceNode($competenceNode);
+
         return array(
-        	'competences' => $competences,
-            'cpt' => $competence,
-            'tree' => $this->cptmanager->getHierarchy($competence)
+            'competenceHierarchy' => $competenceHierarchy,
+            'competenceNode' => $competenceNode
+//            'tree' => $this->competenceManager->getHierarchy($competenceNode)
         );
     }
 
     /**
-     * @EXT\Route("/competence/{competence}/hierarchy/form", name="claro_admin_competence_hierarchy_form", options={"expose"=true})
-     * @EXT\Method("GET")
-     * @EXT\Template("ClarolineCoreBundle:Administration\Competence:competenceModalForm.html.twig")
-     * 
-     * @param  Competence $competence 
-     * @return              
+     * @EXT\Route(
+     *     "/admin/competences/management/ordered/by/{orderedBy}/order/{order}/page/{page}/max/{max}",
+     *     name="claro_admin_competences_management",
+     *     defaults={"ordered"="name","order"="ASC","page"=1,"max"=20}
+     * )
+     * @EXT\Template("ClarolineCoreBundle:Administration\Competence:adminCompetencesManagement.html.twig")
+     *
+     * Show all admin competences
+     *
      */
-    public function formCompetenceNodeAction(CompetenceNode $competence)
+    public function adminCompetencesManagementAction(
+        $orderedBy,
+        $order,
+        $page = 1,
+        $max = 20
+    )
+    {
+        $this->checkOpen();
+        $competences = $this->competenceManager
+            ->getAdminCompetences($orderedBy, $order, $page, $max);
+
+        return array(
+            'competences' => $competences,
+            'orderedBy' => $orderedBy,
+            'order' => $order,
+            'max' => $max
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "admin/learning/outcomes/create/form",
+     *     name="claro_admin_learning_outcomes_create_form",
+     *     options={"expose"=true}
+     * )
+     * @EXT\Template("ClarolineCoreBundle:Administration\Competence:competenceModalForm.html.twig")
+     */
+    public function adminLearningOutcomesCreateForm()
     {
         $this->checkOpen();
         $form = $this->formFactory->create(new CompetenceType());
 
         return array(
             'form' => $form->createView(),
-            'action' => $this
-                ->router
-                ->generate(
-                    'claro_admin_competence_hierarchy_add', 
-                    array('competence' => $competence->getId()
-                )
+            'action' => $this->router->generate(
+                'claro_admin_learning_outcomes_create',
+                array()
             )
         );
     }
 
     /**
-     * @EXT\Route("/competence/{competence}/hierarchy/add", name="claro_admin_competence_hierarchy_add", options={"expose"=true})
-     * @EXT\Method("POST")
-     * @EXT\Template("ClarolineCoreBundle:Administration\Competence:competenceModalForm.html.twig")
-     */
-    public function addCompetenceNode(CompetenceNode $competence)
-    {
-        $form = $this->formFactory->create(new CompetenceType(), new Competence());
-        $form->handleRequest($this->request);
-
-        if ($form->isValid()) {            
-            $subCpt = $form->getData();
-            $this->cptmanager->addSub($competence, $subCpt);
-
-            return new JsonResponse(array());
-        }  
-
-        return array(
-            'form' => $form->createView(),
-            'action' => $this
-                ->router
-                ->generate(
-                    'claro_admin_competence_hierarchy_add', 
-                    array('competence' => $competence->getId()
-                )
-            )
-        );
-    }
-
-     /**
-     * @EXT\Route("/add", name="claro_admin_competence_add")
+     * @EXT\Route(
+     *     "admin/learning/outcomes/create",
+     *     name="claro_admin_learning_outcomes_create"
+     * )
      * @EXT\Method("POST")
      * @EXT\Template("ClarolineCoreBundle:Administration\Competence:competenceModalForm.html.twig")
      *
@@ -181,213 +174,521 @@ class CompetenceController {
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function addCompetenceAction()
+    public function createAdminLearningOutcomesAction()
     {
-        $form = $this->formFactory->create(new CompetenceType(), new Competence());
+        $competence = new Competence();
+        $form = $this->formFactory->create(new CompetenceType(), $competence);
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
-            $competence = $form->getData();
-            $competence = $this->cptmanager->add($competence);
+            $competence->setIsPlatform(true);
+            $this->competenceManager->persistCompetence($competence);
+            $node = $this->competenceManager->createCompetenceNode($competence);
 
-            return new JsonResponse(array(
-                    'id' => $competence->getId(),
-                    'name' => $competence->getCompetence()->getName()
+            return new JsonResponse(
+                array(
+                    'id' => $node->getId(),
+                    'competence' => array('name' => $node->getCompetence()->getName())
                 )
             );
-        } 
-
-        return array(
-            'form' => $form->createView(),
-            'action' => $this->router->generate('claro_admin_competence_add', array())
-        );
-    }
-
-    /**
-     * @EXT\Route("/addsubcpt/{competenceId}", name="claro_admin_competence_add_sub", options={"expose"=true})
-     * @EXT\Method({"GET","POST"})
-     * @EXT\ParamConverter(
-     *      "competence",
-     *      class="ClarolineCoreBundle:Competence\CompetenceNode",
-     *      options={"id" = "competenceId", "strictId" = true}
-     * )
-     * @param Competence $competence
-     * @EXT\Template("ClarolineCoreBundle:Administration\Competence:competenceForm.html.twig")
-     *
-     * Add a sub competence
-     *
-     */
-    public function subCompetenceAction($competence)
-    {
-        $this->checkOpen();
-        $form = $this->formFactory->create(new CompetenceType());
-        $form->handleRequest($this->request);
-
-        if ($form->isValid()) {        	
-            $subCpt = $form->getData();
-            if($this->cptmanager->addSub($competence, $subCpt)) {
-            	    return new RedirectResponse(
-                    $this->router->generate('claro_admin_competences')
-                );
-            } 
-         }  
-           
-        return array(
-        	'form' => $form->createView(),
-        	'cpt' => $competence,
-        	'route' => 'claro_admin_competence_add_sub'
-        );
-    }
-
-    /**
-     * @EXT\Route("/modify/{competenceId}", name="claro_admin_competence_modify")
-     * @EXT\Method({"GET","POST"})
-     * @EXT\ParamConverter(
-     *      "competence",
-     *      class="ClarolineCoreBundle:Competence\CompetenceNode",
-     *      options={"id" = "competenceId", "strictId" = true}
-     * )
-     * @param Competence $competence
-     * @EXT\Template()
-     *
-     * Add a sub competence
-     *
-     */
-    public function modifyCompetenceAction($competence)
-    {
-	 	$form = $this->formFactory->create(new CompetenceType(), $competence->getCompetence());
-        $addForm = $this->formFactory->create(new CompetenceType());
-        $form->handleRequest($this->request);
-
-        if ($form->isValid()) {
-         	$this->cptmanager->updateCompetence($competence);
         }
 
         return array(
-        	'form' => $form->createView(),
-        	'cpt' => $competence,
-        	'route' => 'claro_admin_competence_modify',
-            'addForm' => $addForm->createView()
+            'form' => $form->createView(),
+            'action' => $this->router->generate(
+                'claro_admin_learning_outcomes_create',
+                array()
+            )
         );
     }
 
     /**
-     * @EXT\Route("/delete/{competence}", name="claro_admin_competence_delete", options={"expose"=true})
-     * @EXT\Method("GET")
+     * @EXT\Route(
+     *     "/admin/competence/{competence}/edit/form",
+     *     name="claro_admin_competence_edit_form",
+     *     options={"expose"=true}
+     * )
+     * @EXT\Template()
      *
+     * @param Competence $competence
+     *
+     * Edit a competence
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function adminCompetenceEditFormAction(Competence $competence)
+    {
+        $this->checkOpen();
+        $form = $this->formFactory->create(
+            new CompetenceType(),
+            $competence
+        );
+
+        return array(
+            'form' => $form->createView(),
+            'competence' => $competence
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/admin/competence/{competence}/edit",
+     *     name="claro_admin_competence_edit",
+     *     options={"expose"=true}
+     * )
+     * @EXT\Template("ClarolineCoreBundle:Administration\Competence:adminCompetenceEditForm.html.twig")
+     *
+     * @param Competence $competence
+     *
+     * Edit a competence
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function adminCompetenceEditAction(Competence $competence)
+    {
+        $this->checkOpen();
+        $form = $this->formFactory->create(
+            new CompetenceType(),
+            $competence
+        );
+        $form->handleRequest($this->request);
+
+        if ($form->isValid()) {
+            $this->competenceManager->persistCompetence($competence);
+
+            return new JsonResponse('success', 200);
+        }
+
+        return array(
+            'form' => $form->createView(),
+            'competence' => $competence
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/admin/competence/create/form",
+     *     name="claro_admin_competence_create_form",
+     *     options={"expose"=true}
+     * )
+     * @EXT\Template()
+     *
+     * Creates a competence
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function adminCompetenceCreateFormAction()
+    {
+        $this->checkOpen();
+        $competence = new Competence();
+        $form = $this->formFactory->create(
+            new CompetenceType(),
+            $competence
+        );
+
+        return array('form' => $form->createView());
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/admin/competence/create",
+     *     name="claro_admin_competence_create",
+     *     options={"expose"=true}
+     * )
+     * @EXT\Template("ClarolineCoreBundle:Administration\Competence:adminCompetenceCreateForm.html.twig")
+     *
+     * Creates a competence
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function adminCompetenceCreateAction()
+    {
+        $this->checkOpen();
+        $competence = new Competence();
+        $form = $this->formFactory->create(
+            new CompetenceType(),
+            $competence
+        );
+        $form->handleRequest($this->request);
+
+        if ($form->isValid()) {
+            $competence->setIsPlatform(true);
+            $this->competenceManager->persistCompetence($competence);
+
+            return new JsonResponse('success', 200);
+        }
+
+        return array('form' => $form->createView());
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/delete/admin/competence/{competence}",
+     *     name="claro_admin_competence_delete",
+     *     options={"expose"=true}
+     * )
      * @param Competence $competence
      *
      * Delete a competence
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function deleteCompetenceAction(CompetenceNode $competence)
+    public function deleteAdminCompetenceAction(Competence $competence)
     {
-        $id =$competence->getId();
-    	$this->cptmanager->delete($competence);
+        $this->competenceManager->deleteCompetence($competence);
 
-        return new JsonResponse(array('id' => $id));
+        return new JsonResponse('success', 200);
     }
 
     /**
-     * @EXT\Route("/move/{competence}", name="claro_admin_competence_move_form")
-     * @EXT\Method("GET")
-     * @EXT\Template()
-     * @param Competence $competence
+     * @EXT\Route(
+     *     "/competence/node/{parent}/sub/competence/create/form",
+     *     name="claro_admin_sub_competence_create_form",
+     *     options={"expose"=true}
+     * )
+     * @EXT\Template("ClarolineCoreBundle:Administration\Competence:competenceModalForm.html.twig")
      *
-     * move a competence 
-     *
+     * @param  Competence $competence
+     * @return
      */
-    public function competenceMoveFormAction(CompetenceNode $competence)
+    public function adminSubCompetenceCreateFormAction(CompetenceNode $parent)
     {
-    	$competences = $this->cptmanager->getHierarchyNameNoHtml($competence);
+        $this->checkOpen();
+        $form = $this->formFactory->create(new CompetenceType());
+
         return array(
-        	'cpt' => $competence,
-        	'competences' => $competences
+            'form' => $form->createView(),
+            'action' => $this->router->generate(
+                'claro_admin_sub_competence_create',
+                array('parent' => $parent->getId())
+            )
+        );
+    }
+    /**
+     * @EXT\Route(
+     *     "/competence/node/{parent}/sub/competence/create",
+     *     name="claro_admin_sub_competence_create",
+     *     options={"expose"=true}
+     * )
+     * @EXT\Template("ClarolineCoreBundle:Administration\Competence:competenceModalForm.html.twig")
+     *
+     * @param  Competence $competence
+     * @return
+     */
+    public function adminSubCompetenceCreateAction(CompetenceNode $parent)
+    {
+        $this->checkOpen();
+        $competence = new Competence();
+        $form = $this->formFactory->create(new CompetenceType(), $competence);
+        $form->handleRequest($this->request);
+
+        if ($form->isValid()) {
+            $competence->setIsPlatform(true);
+            $this->competenceManager->persistCompetence($competence);
+            $this->competenceManager->createCompetenceNode($competence, $parent);
+
+            return new JsonResponse('success', 200);
+        }
+
+        return array(
+            'form' => $form->createView(),
+            'action' => $this->router->generate(
+                'claro_admin_sub_competence_create',
+                array('parent' => $parent->getId())
+            )
         );
     }
 
     /**
-     * @EXT\Route("/move/{parent}/add", name="claro_admin_competence_move",options={"expose"=true})
-     * @EXT\Method("POST")
-     * @EXT\ParamConverter(
-     *     "competences",
-     *      class="ClarolineCoreBundle:Competence\CompetenceNode",
-     *      options={"multipleIds" = true, "name" = "competences"}
+     * @EXT\Route(
+     *     "/delete/admin/competence/node/{competenceNode}",
+     *     name="claro_admin_competence_node_delete",
+     *     options={"expose"=true}
      * )
-     * @EXT\Template("ClarolineCoreBundle:Administration\Competence:competenceMoveForm.html.twig")
-     * @param Competence $competences
+     * @param CompetenceNode $referential
      *
-     * move a competence
+     * Delete a competence
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function moveCompetenceAction(array $competences,CompetenceNode $parent)
-    {	
-    	if($this->cptmanager->move($competences,$parent)) {
-    	   return new Response(200);
-    	}
+    public function deleteAdminCompetenceNodeAction(CompetenceNode $competenceNode)
+    {
+        $this->competenceManager->deleteCompetenceNode($competenceNode);
+
+        return new JsonResponse('success', 200);
     }
+
     /**
-     * @EXT\Route("/link/form/{competence}/", name="claro_admin_competences_link_form")
+     * @EXT\Route(
+     *     "/admin/competence/node/{parent}/sub/competence/link/form",
+     *     name="claro_admin_sub_competence_link_form",
+     *     options={"expose"=true}
+     * )
      * @Ext\Template()
      */
-    public function competenceLinkFormAction(CompetenceNode $competence) 
+    public function adminSubCompetenceLinkFormAction(CompetenceNode $parent)
     {
+        $linkableCompetences = $this->competenceManager
+            ->getLinkableCompetences($parent);
+
         return array(
-            'competences' => $this->cptmanager->getExcludeHiearchy($competence),
-            'cpt' => $competence
-        );
-    }
-    /**
-     * @EXT\Route("/link/{parent}/", name="claro_admin_competences_link",options={"expose"=true})
-     * @EXT\Method("POST")
-     * @EXT\Template("ClarolineCoreBundle:Administration\Competence:competenceReferential.html.twig")
-     */
-    public function competenceLinkAction(CompetenceNode $parent)
-    {        
-        $competenceId = $this->request->request->get('competence');
-        $competence = $this->om->getRepository('ClarolineCoreBundle:Competence\CompetenceNode')->findOneById($competenceId);
-        $this->cptmanager->link($competence, $parent);
-        $competences = $this->cptmanager->getHierarchyName($competence);
-           
-        return array(
-            'competences' => $competences,
-            'cpt' => $parent
+            'linkableCompetences' => $linkableCompetences,
+            'parent' => $parent
         );
     }
 
-     /**
-     * @EXT\Route("/get/{competenceId}", name="claro_admin_competence_full_hierarchy",options={"expose"=true})
-     * @EXT\Method("POST")
-     * @EXT\ParamConverter(
-     *      "competence",
-     *      class="ClarolineCoreBundle:Competence\CompetenceNode",
-     *      options={"id" = "competenceId", "strictId" = true}
+    /**
+     * @EXT\Route(
+     *     "/admin/competence/node/{parent}/sub/competence/{competence}/link",
+     *     name="claro_admin_sub_competence_link",
+     *     options={"expose"=true}
      * )
-     * @param Competence $competences
-     *
-     * get the html structure of the hole Learning outcome
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function getFullCompetenceNodeAction($competence)
+    public function adminSubCompetenceLinkAction(
+        CompetenceNode $parent,
+        Competence $competence
+    )
     {
-    	$tree = $this->cptmanager->getHierarchy($competence);
-    	return new Response(
-        	json_encode(
-        		array(
-        			'tree' => $tree
-        		)
-        	),
-        	200,
-        	array('Content-Type' => 'application/json')
+        $this->competenceManager->createCompetenceNode($competence, $parent);
+        $root = $this->competenceManager->getCompetenceNodeById($parent->getRoot());
+
+        return new RedirectResponse(
+            $this->router->generate(
+                'claro_show_admin_learning_outcomes',
+                array('competenceNode' => $root->getId())
+            )
         );
     }
+
+    /**********************************************************************
+     **********************************************************************
+     **                                                                  **
+     **     The code below has to be checked and removed if useless.     **
+     **                                                                  **
+     **********************************************************************
+     **********************************************************************/
+
+//
+//    /**
+//     * @EXT\Route("/form", name="claro_admin_competence_form", options={"expose"=true})
+//     * @EXT\Method("GET")
+//     * @EXT\Template("ClarolineCoreBundle:Administration\Competence:competenceModalForm.html.twig")
+//     */
+//    public function addCompetenceModalForm()
+//    {
+//        $this->checkOpen();
+//        $form = $this->formFactory->create(new CompetenceType());
+//
+//        return array(
+//            'form' => $form->createView(),
+//            'action' => $this->router->generate('claro_admin_competence_add', array())
+//        );
+//    }
+//
+//    /**
+//     * @EXT\Route("/competence/{competence}/hierarchy/form", name="claro_admin_competence_hierarchy_form", options={"expose"=true})
+//     * @EXT\Method("GET")
+//     * @EXT\Template("ClarolineCoreBundle:Administration\Competence:competenceModalForm.html.twig")
+//     *
+//     * @param  Competence $competence
+//     * @return
+//     */
+//    public function formCompetenceNodeAction(CompetenceNode $competence)
+//    {
+//        $this->checkOpen();
+//        $form = $this->formFactory->create(new CompetenceType());
+//
+//        return array(
+//            'form' => $form->createView(),
+//            'action' => $this
+//                ->router
+//                ->generate(
+//                    'claro_admin_competence_hierarchy_add',
+//                    array('competence' => $competence->getId()
+//                )
+//            )
+//        );
+//    }
+//
+//    /**
+//     * @EXT\Route("/competence/{competence}/hierarchy/add", name="claro_admin_competence_hierarchy_add", options={"expose"=true})
+//     * @EXT\Method("POST")
+//     * @EXT\Template("ClarolineCoreBundle:Administration\Competence:competenceModalForm.html.twig")
+//     */
+//    public function addCompetenceNode(CompetenceNode $competence)
+//    {
+//        $form = $this->formFactory->create(new CompetenceType(), new Competence());
+//        $form->handleRequest($this->request);
+//
+//        if ($form->isValid()) {
+//            $subCpt = $form->getData();
+//            $this->competenceManager->addSub($competence, $subCpt);
+//
+//            return new JsonResponse(array());
+//        }
+//
+//        return array(
+//            'form' => $form->createView(),
+//            'action' => $this
+//                ->router
+//                ->generate(
+//                    'claro_admin_competence_hierarchy_add',
+//                    array('competence' => $competence->getId()
+//                )
+//            )
+//        );
+//    }
+//
+//
+//    /**
+//     * @EXT\Route("/addsubcpt/{competenceId}", name="claro_admin_competence_add_sub", options={"expose"=true})
+//     * @EXT\Method({"GET","POST"})
+//     * @EXT\ParamConverter(
+//     *      "competence",
+//     *      class="ClarolineCoreBundle:Competence\CompetenceNode",
+//     *      options={"id" = "competenceId", "strictId" = true}
+//     * )
+//     * @param Competence $competence
+//     * @EXT\Template("ClarolineCoreBundle:Administration\Competence:competenceForm.html.twig")
+//     *
+//     * Add a sub competence
+//     *
+//     */
+//    public function subCompetenceAction($competence)
+//    {
+//        $this->checkOpen();
+//        $form = $this->formFactory->create(new CompetenceType());
+//        $form->handleRequest($this->request);
+//
+//        if ($form->isValid()) {
+//            $subCpt = $form->getData();
+//            if($this->competenceManager->addSub($competence, $subCpt)) {
+//            	    return new RedirectResponse(
+//                    $this->router->generate('claro_admin_competences')
+//                );
+//            }
+//         }
+//
+//        return array(
+//        	'form' => $form->createView(),
+//        	'cpt' => $competence,
+//        	'route' => 'claro_admin_competence_add_sub'
+//        );
+//    }
+//
+//    /**
+//     * @EXT\Route("
+//     *     /modify/{competenceNode}",
+//     *     name="claro_admin_competence_modify"
+//     * )
+//     * @EXT\Method({"GET","POST"})
+//     * @param Competence $competence
+//     * @EXT\Template()
+//     *
+//     * Add a sub competence
+//     *
+//     */
+//    public function modifyCompetenceAction(CompetenceNode $competenceNode)
+//    {
+//        $form = $this->formFactory->create(
+//            new CompetenceType(),
+//            $competenceNode->getCompetence()
+//        );
+//        $addForm = $this->formFactory->create(new CompetenceType());
+//        $form->handleRequest($this->request);
+//
+//        if ($form->isValid()) {
+//         	$this->competenceManager->updateCompetence($competenceNode);
+//        }
+//
+//        return array(
+//            'form' => $form->createView(),
+//            'competenceNode' => $competenceNode,
+//            'route' => 'claro_admin_competence_modify',
+//            'addForm' => $addForm->createView()
+//        );
+//    }
+//
+//
+//    /**
+//     * @EXT\Route(
+//     *     "/move/{competenceNode}",
+//     *     name="claro_admin_competence_move_form"
+//     * )
+//     * @EXT\Template()
+//     * @param Competence $competence
+//     *
+//     * move a competence
+//     *
+//     */
+//    public function competenceMoveFormAction(CompetenceNode $competenceNode)
+//    {
+//    	$competenceHierarchy = $this->competenceManager
+//            ->getHierarchyNameNoHtml($competenceNode);
+//        return array(
+//        	'competenceNode' => $competenceNode,
+//        	'competenceHierarchy' => $competenceHierarchy
+//        );
+//    }
+//
+//    /**
+//     * @EXT\Route(
+//     *     "/move/{parent}/add",
+//     *     name="claro_admin_competence_move",
+//     *     options={"expose"=true}
+//     * )
+//     * @EXT\Method("POST")
+//     * @EXT\ParamConverter(
+//     *     "competences",
+//     *      class="ClarolineCoreBundle:Competence\CompetenceNode",
+//     *      options={"multipleIds" = true, "name" = "competences"}
+//     * )
+//     * @param Competence $competences
+//     *
+//     * move a competence
+//     *
+//     * @return \Symfony\Component\HttpFoundation\Response
+//     */
+//    public function moveCompetenceAction(array $competences, CompetenceNode $parent)
+//    {
+//    	if ($this->competenceManager->move($competences,$parent)) {
+//
+//    	   return new Response(200);
+//    	}
+//    }
+
+//
+//     /**
+//     * @EXT\Route("/get/{competenceId}", name="claro_admin_competence_full_hierarchy",options={"expose"=true})
+//     * @EXT\Method("POST")
+//     * @EXT\ParamConverter(
+//     *      "competence",
+//     *      class="ClarolineCoreBundle:Competence\CompetenceNode",
+//     *      options={"id" = "competenceId", "strictId" = true}
+//     * )
+//     * @param Competence $competences
+//     *
+//     * get the html structure of the hole Learning outcome
+//     *
+//     * @return \Symfony\Component\HttpFoundation\Response
+//     */
+//    public function getFullCompetenceNodeAction($competence)
+//    {
+//    	$tree = $this->competenceManager->getHierarchy($competence);
+//    	return new Response(
+//        	json_encode(
+//        		array(
+//        			'tree' => $tree
+//        		)
+//        	),
+//        	200,
+//        	array('Content-Type' => 'application/json')
+//        );
+//    }
 
     private function checkOpen()
     {
-        if ($this->sc->isGranted('OPEN', $this->toolManager)) {
+        if ($this->sc->isGranted('OPEN', $this->adminTool)) {
             return true;
         }
 

@@ -178,7 +178,7 @@ class CompetenceToolController extends Controller
     public function competenceReferentialAction(Workspace $workspace, CompetenceNode $competence)
     {
         $this->checkOpen();
-        $competences = $this->cptmanager->getHierarchyName($competence);
+        $competences = $this->cptmanager->getHierarchyByCompetenceNode($competence);
            
         return array(
             'competences' => $competences,

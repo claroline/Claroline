@@ -11,124 +11,100 @@
 
 namespace Claroline\CoreBundle\Repository;
 
-use Doctrine\ORM\EntityRepository;
-use Claroline\CoreBundle\Entity\Competence\Competence;
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\Competence\CompetenceNode;
-use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
+//use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Doctrine\ORM\EntityRepository;
 
-class CompetenceRepository extends NestedTreeRepository {
-
-    public function excludeHierarchyNode(CompetenceNode $cpt)
+class CompetenceRepository extends EntityRepository
+{
+    public function findLinkableCompetences(CompetenceNode $competenceNode)
     {
-        $dql = "
-        SELECT c.name as name , cp.id as id 
-        FROM Claroline\CoreBundle\Entity\Competence\Competence c,
-        	 Claroline\CoreBundle\Entity\Competence\CompetenceNode cp
-        WHERE 
-        	c.id = cp.competence
-        	AND cp.id NOT IN (
-        		SELECT cpt
-        		FROM Claroline\CoreBundle\Entity\Competence\CompetenceNode cpt
-         		WHERE cpt.lft <= :lft
-        		AND cpt.root = :root
-        	)
-        ";
-
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('lft', $cpt->getLft());
-        $query->setParameter('root',$cpt->getRoot());
-
-        return $query->getResult();
-    }
-
-    public function getRootCpt()
-    {
-    	$dql = "
-    	SELECT c.name as name , ch.id as id 
-        FROM Claroline\CoreBundle\Entity\Competence\Competence c,
-        	 Claroline\CoreBundle\Entity\Competence\CompetenceNode ch
-        WHERE
-        	c.id = ch.competence
-        	AND ch.parent IS NULL
-        ";
-    	$query = $this->_em->createQuery($dql);
-
-    	return $query->getResult();
-    }
-
-    public function getRootCptWithWorkspace(Workspace $workspace)
-    {
-        $dql = "
-        SELECT DISTINCT c.name as name , ch.id as id 
-        FROM Claroline\CoreBundle\Entity\Competence\Competence c,
-             Claroline\CoreBundle\Entity\Competence\CompetenceNode ch
-        WHERE ( c.workspace = :workspace OR c.workspace is NULL ) 
-        AND EXISTS
-            (
-                SELECT cpth FROM Claroline\CoreBundle\Entity\Competence\CompetenceNode cpth
-                WHERE ch.parent IS NULL 
+        $dql = '
+            SELECT DISTINCT c
+            FROM Claroline\CoreBundle\Entity\Competence\Competence c
+            WHERE NOT EXISTS (
+                SELECT cn
+                FROM Claroline\CoreBundle\Entity\Competence\CompetenceNode cn
+                WHERE cn.competence = c
+                AND cn.root = :root
+                AND (
+                    (cn.lft <= :lft AND cn.rgt >= :rgt)
+                    OR
+                    (cn.lft >= :lft AND cn.rgt <= :rgt)
                 )
-        AND c.id = ch.competence
-        ";
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('workspace', $workspace);
-        
-        return $query->getResult();
-    }
-
-    public function findHiearchyNameById(CompetenceNode $competence)
-    {
-        $dql = "
-    	SELECT c.name as name , ch.id as id
-        FROM Claroline\CoreBundle\Entity\Competence\CompetenceNode ch
-        JOIN ch.competence c WHERE ch.root = :root
-        ";
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('root',$competence->getRoot());
-
-        return $query->getResult();
-    }
-
-    public function findHiearchyById(CompetenceNode $competence)
-    {
-        $dql = "
-    	SELECT c.name as name, c.description, c.score as score,c.code as code, ch.id as id
-        FROM Claroline\CoreBundle\Entity\Competence\CompetenceNode ch
-        JOIN ch.competence c WHERE ch.root = :root
-        ";
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('root',$competence->getRoot());
-
-        return $query->getResult();
-    }
-
-    public function findFullHiearchyById(array $roots)
-    {
-        $dql = "
-        SELECT DISTINCT c
-        FROM Claroline\CoreBundle\Entity\Competence\Competence c
-        WHERE EXISTS
-            (
-                SELECT ch FROM Claroline\CoreBundle\Entity\Competence\CompetenceNode ch
-                WHERE ch.root IN (:roots) AND ch.competence = c 
             )
-        ";
+        ';
+
         $query = $this->_em->createQuery($dql);
-        $query->setParameter('roots', $roots);
+        $query->setParameter('lft', $competenceNode->getLft());
+        $query->setParameter('rgt', $competenceNode->getRgt());
+        $query->setParameter('root', $competenceNode->getRoot());
 
         return $query->getResult();
     }
 
-    public function findByWorkspace($workspace)
+    public function findAdminCompetences($orderedBy = 'name', $order = 'ASC')
     {
         $dql = "
-        SELECT c FROM ClarolineCoreBundle:Competence\Competence c
-        WHERE c.workspace = :workspace 
+            SELECT c
+            FROM Claroline\CoreBundle\Entity\Competence\Competence c
+            WHERE c.isPlatform = true
+            AND c.workspace IS NULL
+            ORDER BY c.{$orderedBy} {$order}
         ";
+
         $query = $this->_em->createQuery($dql);
-        $query->setParameter('workspace', $workspace);
 
         return $query->getResult();
-    }    
+    }
+
+//    public function getRootCptWithWorkspace(Workspace $workspace)
+//    {
+//        $dql = "
+//        SELECT DISTINCT c.name as name , ch.id as id
+//        FROM Claroline\CoreBundle\Entity\Competence\Competence c,
+//             Claroline\CoreBundle\Entity\Competence\CompetenceNode ch
+//        WHERE ( c.workspace = :workspace OR c.workspace is NULL )
+//        AND EXISTS
+//            (
+//                SELECT cpth FROM Claroline\CoreBundle\Entity\Competence\CompetenceNode cpth
+//                WHERE ch.parent IS NULL
+//                )
+//        AND c.id = ch.competence
+//        ";
+//        $query = $this->_em->createQuery($dql);
+//        $query->setParameter('workspace', $workspace);
+//
+//        return $query->getResult();
+//    }
+//
+//    public function findFullHiearchyById(array $roots)
+//    {
+//        $dql = "
+//        SELECT DISTINCT c
+//        FROM Claroline\CoreBundle\Entity\Competence\Competence c
+//        WHERE EXISTS
+//            (
+//                SELECT ch FROM Claroline\CoreBundle\Entity\Competence\CompetenceNode ch
+//                WHERE ch.root IN (:roots) AND ch.competence = c
+//            )
+//        ";
+//        $query = $this->_em->createQuery($dql);
+//        $query->setParameter('roots', $roots);
+//
+//        return $query->getResult();
+//    }
+//
+//    public function findCompetencesByWorkspace(Workspace $workspace)
+//    {
+//        $dql = '
+//            SELECT c
+//            FROM ClarolineCoreBundle:Competence\Competence c
+//            WHERE c.workspace = :workspace
+//        ';
+//        $query = $this->_em->createQuery($dql);
+//        $query->setParameter('workspace', $workspace);
+//
+//        return $query->getResult();
+//    }
 } 

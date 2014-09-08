@@ -11,6 +11,8 @@
 
 namespace Claroline\CoreBundle\Entity\Competence;
 
+use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Competence\Competence;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -73,7 +75,7 @@ class UserCompetence {
     /**
      * @param mixed $competence
      */
-    public function setCompetence($competence)
+    public function setCompetence(Competence $competence)
     {
         $this->competence = $competence;
     }
@@ -89,7 +91,7 @@ class UserCompetence {
     /**
      * @param mixed $user
      */
-    public function setUser($user)
+    public function setUser(User $user)
     {
         $this->user = $user;
     }

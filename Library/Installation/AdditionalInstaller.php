@@ -183,6 +183,12 @@ class AdditionalInstaller extends BaseInstaller
                 $updater->setLogger($this->logger);
                 $updater->postUpdate();
                 break;
+            case version_compare($currentVersion, '3.2.1', '<'):
+                $this->buildDefaultTemplate();
+                $updater = new Updater\Updater030201($this->container);
+                $updater->setLogger($this->logger);
+                $updater->postUpdate();
+                break;
         }
     }
 

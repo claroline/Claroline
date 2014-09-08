@@ -183,7 +183,7 @@ class AdministrationToolListener
     public function onOpenAdministrationCompetences(OpenAdministrationToolEvent $event)
     {
         $params = array();
-        $params['_controller'] = 'ClarolineCoreBundle:Administration\Competence:competences';
+        $params['_controller'] = 'ClarolineCoreBundle:Administration\Competence:adminLearningOutcomesList';
         $this->redirect($params, $event);
     }
 
