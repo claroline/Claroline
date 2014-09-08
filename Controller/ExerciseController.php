@@ -865,6 +865,10 @@ class ExerciseController extends Controller
             case "InteractionOpen":
                 $res = $exerciseSer->responseOpen($request, $session->get('paper'));
                 break;
+
+            case "InteractionMatching":
+                $res = $exerciseSer->responseMatching($request, $session->get('paper'));
+                break;
         }
 
         if (count($response) == 0) {
@@ -1158,6 +1162,26 @@ class ExerciseController extends Controller
 
                 if (count($responseGiven) > 0) {
                     $responseGiven = $responseGiven[0]->getResponse();
+                } else {
+                    $responseGiven = '';
+                }
+
+                break;
+
+            case "InteractionMatching":
+
+                $interactionToDisplayed = $this->getDoctrine()
+                    ->getManager()
+                    ->getRepository('UJMExoBundle:InteractionMatching')
+                    ->getInteractionMatching($interactionToDisplay->getId());
+
+                $responseMatch = $this->getDoctrine()
+                                      ->getManager()
+                                      ->getRepository('UJMExoBundle:Response')
+                                      ->getAlreadyResponded($session->get('paper'), $interactionToDisplay->getId());
+
+                if (count($responseMatch) > 0) {
+                    $responseGiven = $this->container->get('ujm.exercise_services')->getTabResponseIndex($responseMatch[0]->getResponse());
                 } else {
                     $responseGiven = '';
                 }
