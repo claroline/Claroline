@@ -151,7 +151,7 @@ class DropzoneController extends DropzoneBaseController
                     } else {
                         //if event doesn't exist
                         // create event
-                        $eventDrop = $this->createAgendaEventDrop($dropzone->getStartAllowDrop(), $dropzone->getEndAllowDrop(), $user, 'drop');
+                        $eventDrop = $this->createAgendaEventDrop($dropzone->getStartAllowDrop(), $dropzone->getEndAllowDrop(), $user, $dropzone, 'drop');
                         // event creation + link to workspace
                         $AgendaManager->addEvent($eventDrop, $workspace);
                         // link btween the event and the dropzone
@@ -172,7 +172,7 @@ class DropzoneController extends DropzoneBaseController
                         $AgendaManager->updateEvent($eventCorrection);
                     } else {
                         //create event
-                        $eventReview = $this->createAgendaEventDrop($dropzone->getStartReview(), $dropzone->getEndReview(), $user, 'correction');
+                        $eventReview = $this->createAgendaEventDrop($dropzone->getStartReview(), $dropzone->getEndReview(), $user, $dropzone, 'correction');
 
                         $AgendaManager->addEvent($eventReview, $workspace);
                         $dropzone->setEventCorrection($eventReview);
@@ -541,16 +541,26 @@ class DropzoneController extends DropzoneBaseController
     }
 
 
-    private function createAgendaEventDrop($startDate, $endDate, $user, $type = "drop")
+    private function createAgendaEventDrop($startDate, $endDate, $user, Dropzone $dropzone, $type = "drop")
     {
         $event = new Event();
         $event->setStart($startDate);
         $event->setEnd($endDate);
         $event->setUser($user);
+
+        $dropzoneName = $dropzone->getResourceNode()->getName();
         if ($type == 'drop') {
-            $event->setTitle('Evaluation opening');
+            $title = $this->get('translator')->trans('Deposit phase of the %dropzonename% evaluation', array('%dropzonename%' => $dropzoneName), 'icap_dropzone');
+            $desc = $this->get('translator')->trans('Evaluation %dropzonename% opening', array('%dropzonename%' => $dropzoneName), 'icap_dropzone');
+
+            $event->setTitle($title);
+            $event->setDescription($desc);
         } else {
-            $event->setTitle('Evaluation Corrections');
+            $title = $this->get('translator')->trans('Peer Review is starting in %dropzonename% evaluation', array('%dropzonename%' => $dropzoneName), 'icap_dropzone');
+            $desc = $this->get('translator')->trans('Peer Review is starting in %dropzonename% evaluation', array('%dropzonename%' => $dropzoneName), 'icap_dropzone');
+
+            $event->setTitle($title);
+            $event->setDescription($desc);
         }
         $em = $this->getDoctrine()->getManager();
         $em->persist($event);

@@ -247,7 +247,7 @@ class Dropzone extends AbstractResource
      * Event for Workspace Agenda linked to DROP phase
      *
      * @ORM\OneToOne(
-     *    targetEntity="Claroline\CoreBundle\Entity\Event")
+     *    targetEntity="Claroline\CoreBundle\Entity\Event",cascade={"persist"})
      * @ORM\JoinColumn(name="event_agenda_drop",onDelete="SET NULL")
      * )
      */
@@ -258,7 +258,7 @@ class Dropzone extends AbstractResource
      * Event for Workspace Agenda linked to Correction phase.
      *
      * @ORM\OneToOne(
-     *    targetEntity="Claroline\CoreBundle\Entity\Event")
+     *    targetEntity="Claroline\CoreBundle\Entity\Event",cascade={"persist"})
      * @ORM\JoinColumn(name="event_agenda_correction",onDelete="SET NULL")
      */
     protected $eventCorrection = null;
