@@ -836,6 +836,14 @@ class exerciseServices
                                       ->getInteractionOpen($interaction->getId());
                     $exercisePaperTotalScore += $this->openMaxScore($interOpen[0]);
                     break;
+                
+                case "InteractionMatching":
+                    $interMatching = $this->doctrine
+                                      ->getManager()
+                                      ->getRepository('UJMExoBundle:InteractionMatching')
+                                      ->getInteractionMatching($interaction->getId());
+                    $exercisePaperTotalScore += $this->matchingMaxScore($interMatching[0]);
+                    break;
             }
         }
 
