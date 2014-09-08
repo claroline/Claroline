@@ -46,16 +46,16 @@ class Post extends Statusable
     /**
      * @var \Datetime $creationDate
      *
-     * @Gedmo\Timestampable(on="create")
      * @ORM\Column(type="datetime", name="creation_date")
+     * @Gedmo\Timestampable(on="create")
      */
     protected $creationDate;
 
     /**
      * @var \Datetime $modificationDate
      *
+     * @ORM\Column(type="datetime", name="modification_date", nullable=true)
      * @Gedmo\Timestampable(on="change", field={"title", "content"})
-     * @ORM\Column(type="datetime", name="modification_date")
      */
     protected $modificationDate;
 
@@ -71,9 +71,9 @@ class Post extends Statusable
     /**
      * @var int $viewCounter
      *
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", options={"default": "0"})
      */
-    protected $viewCounter;
+    protected $viewCounter = 0;
 
     /**
      * @var Comment
