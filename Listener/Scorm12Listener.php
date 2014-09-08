@@ -282,8 +282,9 @@ class Scorm12Listener
     private function isScormArchive(UploadedFile $file)
     {
         $zip = new \ZipArchive();
-        $isScormArchive = $file->getClientMimeType() === 'application/zip'
-            && $zip->open($file)
+        $openValue = $zip->open($file);
+
+        $isScormArchive = ($openValue === true)
             && $zip->getStream("imsmanifest.xml");
 
         if (!$isScormArchive) {
