@@ -70,125 +70,103 @@ class AdditionalInstaller extends BaseInstaller
                 $updater = new Updater\Updater020000($this->container);
                 $updater->setLogger($this->logger);
                 $updater->postUpdate();
-                break;
             case version_compare($currentVersion, '2.1.2', '<'):
                 $updater = new Updater\Updater020102($this->container);
                 $updater->setLogger($this->logger);
                 $updater->postUpdate();
-                break;
             case version_compare($currentVersion, '2.1.5', '<'):
                 $this->log('Creating acl tables if not present...');
                 $command = new InitAclCommand();
                 $command->setContainer($this->container);
                 $command->run(new ArrayInput(array(), new NullOutput()));
-                break;
             case version_compare($currentVersion, '2.2.0', '<'):
                 $updater = new Updater\Updater020200($this->container);
                 $updater->setLogger($this->logger);
                 $updater->postUpdate();
-                break;
             case version_compare($currentVersion, '2.3.1', '<'):
                 $updater = new Updater\Updater020301($this->container);
                 $updater->setLogger($this->logger);
                 $updater->postUpdate();
-                break;
             case version_compare($currentVersion, '2.3.4', '<'):
                 $updater = new Updater\Updater020304($this->container);
                 $updater->setLogger($this->logger);
                 $updater->postUpdate();
-                break;
             case version_compare($currentVersion, '2.5.0', '<'):
                 $updater = new Updater\Updater020500($this->container);
                 $updater->setLogger($this->logger);
                 $updater->postUpdate();
-                break;
             case version_compare($currentVersion, '2.8.0', '<'):
                 $updater = new Updater\Updater020800($this->container);
                 $updater->setLogger($this->logger);
                 $updater->postUpdate();
-                break;
             case version_compare($currentVersion, '2.9.0', '<'):
                 $updater = new Updater\Updater020900($this->container);
                 $updater->setLogger($this->logger);
                 $updater->postUpdate();
-                break;
             case version_compare($currentVersion, '2.10.0', '<'):
                 $updater = new Updater\Updater021000($this->container);
                 $updater->setLogger($this->logger);
                 $updater->postUpdate();
-                break;
             case version_compare($currentVersion, '2.11.0', '<'):
                 $this->buildDefaultTemplate();
                 $updater = new Updater\Updater021100($this->container);
                 $updater->setLogger($this->logger);
                 $updater->postUpdate();
-                break;
             case version_compare($currentVersion, '2.12.0', '<'):
                 $this->buildDefaultTemplate();
                 $updater = new Updater\Updater021200($this->container);
                 $updater->setLogger($this->logger);
-                $updater->postUpdate();
                 break;
             case version_compare($currentVersion, '2.12.1', '<'):
                 $this->buildDefaultTemplate();
                 $updater = new Updater\Updater021201($this->container);
                 $updater->setLogger($this->logger);
                 $updater->postUpdate();
-                break;
             case version_compare($currentVersion, '2.14.0', '<'):
                 $this->buildDefaultTemplate();
                 $updater = new Updater\Updater021400($this->container);
                 $updater->setLogger($this->logger);
                 $updater->postUpdate();
-                break;
             case version_compare($currentVersion, '2.14.1', '<'):
                 $this->buildDefaultTemplate();
                 $updater = new Updater\Updater021401($this->container);
                 $updater->setLogger($this->logger);
                 $updater->postUpdate();
-                break;
             case version_compare($currentVersion, '2.16.0', '<'):
                 $this->buildDefaultTemplate();
                 $updater = new Updater\Updater021600($this->container);
                 $updater->setLogger($this->logger);
                 $updater->postUpdate();
-                break;
             case version_compare($currentVersion, '2.16.2', '<'):
                 $this->buildDefaultTemplate();
                 $updater = new Updater\Updater021602($this->container);
                 $updater->setLogger($this->logger);
                 $updater->postUpdate();
-                break;
             case version_compare($currentVersion, '2.16.4', '<'):
                 $this->buildDefaultTemplate();
                 $updater = new Updater\Updater021604($this->container);
                 $updater->setLogger($this->logger);
                 $updater->postUpdate();
-                break;
             case version_compare($currentVersion, '3.0.0', '<'):
                 $this->buildDefaultTemplate();
                 $updater = new Updater\Updater030000($this->container);
                 $updater->setLogger($this->logger);
                 $updater->postUpdate();
-                break;
             case version_compare($currentVersion, '3.1.0', '<'):
                 $this->buildDefaultTemplate();
                 $updater = new Updater\Updater030100($this->container);
                 $updater->setLogger($this->logger);
                 $updater->postUpdate();
-                break;
             case version_compare($currentVersion, '3.2.0', '<'):
                 $this->buildDefaultTemplate();
                 $updater = new Updater\Updater030200($this->container);
                 $updater->setLogger($this->logger);
                 $updater->postUpdate();
-                break;
             case version_compare($currentVersion, '3.2.1', '<'):
                 $this->buildDefaultTemplate();
                 $updater = new Updater\Updater030201($this->container);
                 $updater->setLogger($this->logger);
                 $updater->postUpdate();
-                break;
         }
     }
 
