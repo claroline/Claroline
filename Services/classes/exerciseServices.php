@@ -598,10 +598,12 @@ class exerciseServices
         //array of responses of user indexed by labelId
         foreach ($tabResponse as $rep) {
             $tabTmp = explode('-', $rep);
-            if (isset($tabResponseIndex[$tabTmp[1]])) {
-                $tabResponseIndex[$tabTmp[1]] .= '-' . $tabTmp[0];
-            } else {
-                $tabResponseIndex[$tabTmp[1]] = $tabTmp[0];
+            if (count($tabTmp) > 1) {
+                if (isset($tabResponseIndex[$tabTmp[1]])) {
+                    $tabResponseIndex[$tabTmp[1]] .= '-' . $tabTmp[0];
+                } else {
+                    $tabResponseIndex[$tabTmp[1]] = $tabTmp[0];
+                }
             }
         }
 
