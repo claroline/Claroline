@@ -36,10 +36,12 @@
                         {{ label.value | raw }}
                         {% set responses = explodeString('-', tabResponseIndex[label.id]) %}
                         {% for response in responses %}
-                            {% set proposal = getProposal(response) %}
-                            <div class="associatedProposal">
-                                {{ proposal.value | raw }}
-                            </div>
+                            {% if (response != null) %}
+                                {% set proposal = getProposal(response) %}
+                                <div class="associatedProposal">
+                                    {{ proposal.value | raw }}
+                                </div>
+                            {% endif %}
                         {% endfor %}
                     </div>
                 {% endif %}

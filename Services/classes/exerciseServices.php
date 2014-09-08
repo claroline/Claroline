@@ -622,6 +622,13 @@ class exerciseServices
             }
         }
 
+        //add in $tabResponseIndex label empty
+        foreach ($interMatching->getLabels() as $label) {
+            if (!isset($tabResponseIndex[$label->getId()])) {
+                $tabResponseIndex[$label->getId()] = null;
+            }
+        }
+
 
         $tabsResponses[0] = $tabResponseIndex;
         $tabsResponses[1] = $tabRightResponse;
