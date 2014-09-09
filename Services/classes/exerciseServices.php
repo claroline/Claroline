@@ -569,7 +569,8 @@ class exerciseServices
           'penalty'          => $penalty,
           'interMatching'    => $interMatching,
           'tabRightResponse' => $tabRightResponse,
-          'tabResponseIndex' => $tabResponseIndex
+          'tabResponseIndex' => $tabResponseIndex,
+          'response'         => $response
         );
 
         return $res;
@@ -591,21 +592,8 @@ class exerciseServices
 
         $tabsResponses = array();
 
-        $tabResponse = explode(';', substr($response, 0, -1));
-        $tabResponseIndex = array();
+        $tabResponseIndex = $this->getTabResponseIndex($response);
         $tabRightResponse = array();
-
-        //array of responses of user indexed by labelId
-        foreach ($tabResponse as $rep) {
-            $tabTmp = explode('-', $rep);
-            if (count($tabTmp) > 1) {
-                if (isset($tabResponseIndex[$tabTmp[1]])) {
-                    $tabResponseIndex[$tabTmp[1]] .= '-' . $tabTmp[0];
-                } else {
-                    $tabResponseIndex[$tabTmp[1]] = $tabTmp[0];
-                }
-            }
-        }
 
         //array of rights responses indexed by labelId
         foreach ($interMatching->getProposals() as $proposal) {
@@ -637,6 +625,25 @@ class exerciseServices
 
         return $tabsResponses;
 
+    }
+
+    public function getTabResponseIndex($response) {
+        $tabResponse = explode(';', substr($response, 0, -1));
+        $tabResponseIndex = array();
+
+        //array of responses of user indexed by labelId
+        foreach ($tabResponse as $rep) {
+            $tabTmp = explode('-', $rep);
+            if (count($tabTmp) > 1) {
+                if (isset($tabResponseIndex[$tabTmp[1]])) {
+                    $tabResponseIndex[$tabTmp[1]] .= '-' . $tabTmp[0];
+                } else {
+                    $tabResponseIndex[$tabTmp[1]] = $tabTmp[0];
+                }
+            }
+        }
+
+        return $tabResponseIndex;
     }
 
 
@@ -828,6 +835,14 @@ class exerciseServices
                                       ->getRepository('UJMExoBundle:InteractionOpen')
                                       ->getInteractionOpen($interaction->getId());
                     $exercisePaperTotalScore += $this->openMaxScore($interOpen[0]);
+                    break;
+                
+                case "InteractionMatching":
+                    $interMatching = $this->doctrine
+                                      ->getManager()
+                                      ->getRepository('UJMExoBundle:InteractionMatching')
+                                      ->getInteractionMatching($interaction->getId());
+                    $exercisePaperTotalScore += $this->matchingMaxScore($interMatching[0]);
                     break;
             }
         }
