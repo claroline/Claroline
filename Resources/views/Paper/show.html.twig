@@ -9,6 +9,7 @@
 {% block stylesheets %}
     {{ parent() }}
     <link href="{{ asset('bundles/ujmexo/css/tableLayout.css') }}" type="text/css" rel="stylesheet"/>
+    <link href="{{ asset('bundles/ujmexo/css/matchingCorrection.css') }}" type="text/css" rel="stylesheet"/>
 {% endblock %}
 
 {% block title %} {{ 'correction' | trans }} {% endblock %}
@@ -164,6 +165,25 @@
                                 >{{ 'mark this question' | trans }}</a>
                             {% endif %}
                         {% endif %}
+
+                    {% endif %}
+                </div>
+            {#--------------------------------------------------- Matching ----------------------------------------------------#}
+
+            {% elseif(interactions[p].type == 'InteractionMatching') %}
+
+                {% set interInfo = getInterTwig(interactions[p].id, 'InteractionMatching') %}
+                {% set inter =  interInfo['question'] %}
+                {% set tabsResponses = initTabResponseMatching(responses[p].response, inter) %}
+                {% set tabResponseIndex = tabsResponses[0] %}
+                {% set tabRightResponse = tabsResponses[1] %}
+
+                <div class="panel-body">
+
+                    {% if (display == 'all') %}
+
+                        {% include "UJMExoBundle:Partial:correction/matching.html.twig" %}
+                        {% include "UJMExoBundle:Partial:correction/interactionScore.html.twig" %}
 
                     {% endif %}
                 </div>
@@ -393,7 +413,7 @@
             {% endif %}
         </ul>
 
-        {% if (display == 'all') %}
+        {#% if (display == 'all') %}
             <div>
                 (
                 <h6 style="color: black; display: inline;">{{ 'question graphic' | trans }}</h6>,
@@ -402,7 +422,7 @@
                 <h6 style="color: blue; display: inline;">{{ 'question hole' | trans }}</h6>
                 ).
             </div>
-        {% endif %}
+        {% endif %#}
     </div>
 {% endblock %}
 

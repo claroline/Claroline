@@ -50,13 +50,14 @@ class TwigExtensions extends \Twig_Extension
     {
 
         return array(
-            'regexTwig'            => new \Twig_Function_Method($this, 'regexTwig'),
-            'getInterTwig'         => new \Twig_Function_Method($this, 'getInterTwig'),
-            'getCoordsGraphTwig'   => new \Twig_Function_Method($this, 'getCoordsGraphTwig'),
-            'roundUpOrDown'        => new \Twig_Function_Method($this, 'roundUpOrDown'),
-            'getQuestionRights'    => new \Twig_Function_Method($this, 'getQuestionRights'),
-            'getProposal'          => new \Twig_Function_Method($this, 'getProposal'),
-            'explodeString'        => new \Twig_Function_Method($this, 'explodeString'),
+            'regexTwig'               => new \Twig_Function_Method($this, 'regexTwig'),
+            'getInterTwig'            => new \Twig_Function_Method($this, 'getInterTwig'),
+            'getCoordsGraphTwig'      => new \Twig_Function_Method($this, 'getCoordsGraphTwig'),
+            'roundUpOrDown'           => new \Twig_Function_Method($this, 'roundUpOrDown'),
+            'getQuestionRights'       => new \Twig_Function_Method($this, 'getQuestionRights'),
+            'getProposal'             => new \Twig_Function_Method($this, 'getProposal'),
+            'explodeString'           => new \Twig_Function_Method($this, 'explodeString'),
+            'initTabResponseMatching' => new \Twig_Function_Method($this, 'initTabResponseMatching'),
         );
 
     }
@@ -128,6 +129,17 @@ class TwigExtensions extends \Twig_Extension
                 $inter['question'] = $interOpen[0];
                 $inter['maxScore'] = $this->getOpenScoreMax($interOpen[0]);
             break;
+
+            case "InteractionMatching":
+                $interMatching = $this->doctrine
+                               ->getManager()
+                               ->getRepository('UJMExoBundle:InteractionMatching')
+                               ->getInteractionMatching($interId);
+
+                $inter['question'] = $interMatching[0];
+                $inter['maxScore'] = $this->getMatchingScoreMax($interMatching[0]);
+
+            break;
         }
 
         return $inter;
@@ -185,6 +197,24 @@ class TwigExtensions extends \Twig_Extension
                          ->find($id);
 
         return $proposal;
+    }
+
+    /**
+     * For the correction of a matching question :
+     * init array of responses of user indexed by labelId
+     * init array of rights responses indexed by labelId
+     *
+     * @access public
+     *
+     * @param String $response
+     * @param \UJM\ExoBundle\Entity\Paper\InteractionMatching $interMatching
+     *
+     * Return array of arrays
+     */
+    public function initTabResponseMatching($response, $interMatching)
+    {
+
+        return $this->exerciseSer->initTabResponseMatching($response, $interMatching);
     }
 
     /**
@@ -341,5 +371,19 @@ class TwigExtensions extends \Twig_Extension
     private function getGraphicScoreMax($interG)
     {
         return $this->exerciseSer->graphicMaxScore($interG);
+    }
+
+    /**
+     * Get score max possible for a matching question
+     *
+     * @access public
+     *
+     * @param \UJM\ExoBundle\Entity\Paper\InteractionMatching $interMatching
+     *
+     * Return float
+     */
+    private function getMatchingScoreMax($interMatching)
+    {
+        return $this->exerciseSer->matchingMaxScore($interMatching);
     }
 }
