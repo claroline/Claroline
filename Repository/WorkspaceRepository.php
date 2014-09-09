@@ -444,8 +444,7 @@ class WorkspaceRepository extends EntityRepository
     {
         $dql = "
             SELECT DISTINCT w FROM Claroline\CoreBundle\Entity\Workspace\Workspace w
-            JOIN w.orderedTools ot
-            JOIN ot.roles r
+            JOIN w.roles r
             WHERE w.selfUnregistration = true
             AND r.name IN (:roles)
             ORDER BY w.name
