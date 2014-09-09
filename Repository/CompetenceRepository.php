@@ -12,17 +12,19 @@
 namespace Claroline\CoreBundle\Repository;
 
 use Claroline\CoreBundle\Entity\Competence\CompetenceNode;
-//use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\ORM\EntityRepository;
 
 class CompetenceRepository extends EntityRepository
 {
-    public function findLinkableCompetences(CompetenceNode $competenceNode)
+    public function findLinkableAdminCompetences(CompetenceNode $competenceNode)
     {
         $dql = '
             SELECT DISTINCT c
             FROM Claroline\CoreBundle\Entity\Competence\Competence c
-            WHERE NOT EXISTS (
+            WHERE c.isPlatform = true
+            AND c.workspace IS NULL
+            AND NOT EXISTS (
                 SELECT cn
                 FROM Claroline\CoreBundle\Entity\Competence\CompetenceNode cn
                 WHERE cn.competence = c
@@ -43,6 +45,38 @@ class CompetenceRepository extends EntityRepository
         return $query->getResult();
     }
 
+    public function findLinkableWorkspaceCompetences(
+        Workspace $workspace,
+        CompetenceNode $competenceNode
+    )
+    {
+        $dql = '
+            SELECT DISTINCT c
+            FROM Claroline\CoreBundle\Entity\Competence\Competence c
+            WHERE c.isPlatform = false
+            AND c.workspace = :workspace
+            AND NOT EXISTS (
+                SELECT cn
+                FROM Claroline\CoreBundle\Entity\Competence\CompetenceNode cn
+                WHERE cn.competence = c
+                AND cn.root = :root
+                AND (
+                    (cn.lft <= :lft AND cn.rgt >= :rgt)
+                    OR
+                    (cn.lft >= :lft AND cn.rgt <= :rgt)
+                )
+            )
+        ';
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('workspace', $workspace);
+        $query->setParameter('lft', $competenceNode->getLft());
+        $query->setParameter('rgt', $competenceNode->getRgt());
+        $query->setParameter('root', $competenceNode->getRoot());
+
+        return $query->getResult();
+    }
+
     public function findAdminCompetences($orderedBy = 'name', $order = 'ASC')
     {
         $dql = "
@@ -54,6 +88,26 @@ class CompetenceRepository extends EntityRepository
         ";
 
         $query = $this->_em->createQuery($dql);
+
+        return $query->getResult();
+    }
+
+    public function findWorkspaceCompetences(
+        Workspace $workspace,
+        $orderedBy = 'name',
+        $order = 'ASC'
+    )
+    {
+        $dql = "
+            SELECT c
+            FROM Claroline\CoreBundle\Entity\Competence\Competence c
+            WHERE c.isPlatform = false
+            AND c.workspace = :workspace
+            ORDER BY c.{$orderedBy} {$order}
+        ";
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('workspace', $workspace);
 
         return $query->getResult();
     }

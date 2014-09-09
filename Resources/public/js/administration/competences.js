@@ -20,9 +20,13 @@
         );
     });
     
-    $('body').on('click', '.competence-edit-btn', function(event) {
-        event.preventDefault();
-        var route = $(this).attr('href');
+    $('.competence-view-btn').on('click', function() {
+        var competenceId = $(this).data('competence-id');
+        var route = Routing.generate(
+            'claro_admin_competence_view',
+            {'competence': competenceId}
+        );
+        
         window.Claroline.Modal.displayForm(
             route,
             refreshPage,
@@ -30,9 +34,26 @@
         );
     });
     
-    $('body').on('click', '.add-sub-competence-btn', function(event) {
-        event.preventDefault();
-        var route = $(this).attr('href');
+    $('.competence-edit-btn').on('click', function() {
+        var competenceId = $(this).data('competence-id');
+        var route = Routing.generate(
+            'claro_admin_competence_edit_form',
+            {'competence': competenceId}
+        );
+        
+        window.Claroline.Modal.displayForm(
+            route,
+            refreshPage,
+            function() {}
+        );
+    });
+    
+    $('.add-sub-competence-btn').on('click', function() {
+        var competenceNodeId = $(this).data('competence-node-id');
+        var route = Routing.generate(
+            'claro_admin_sub_competence_create_form',
+            {'parent': competenceNodeId}
+        );
         window.Claroline.Modal.displayForm(
             route,
             refreshPage,
@@ -40,15 +61,34 @@
         );
     });
 
-    $('body').on('click', '.link-sub-competence-btn', function(event) {
-        event.preventDefault();
-        var route = $(this).attr('href');
+    $('.link-sub-competence-btn').on('click', function() {
+        var competenceNodeId = $(this).data('competence-node-id');
+        var route = Routing.generate(
+            'claro_admin_sub_competence_link_form',
+            {'parent': competenceNodeId}
+        );
         window.Claroline.Modal.displayForm(
             route,
             refreshPage,
             function() {}
         );
     });
+    
+    $('.remove-competence-node').on('click', function() {
+        var competenceNodeId = $(this).data('competence-node-id');
+        var route = Routing.generate(
+            'claro_admin_competence_node_delete',
+            {'competenceNode': competenceNodeId}
+        );
+        window.Claroline.Modal.confirmRequest(
+            route,
+            refreshPage,
+            null,
+            Translator.get('platform:remove_sub_competence_comfirm_message'),
+            Translator.get('platform:remove_sub_competence')
+        );
+    });
+    
 //    //in template competenceReferential.html.twig
 //    $('body').on('click', '#show-referential-comptence-form', function(event) {
 //        event.preventDefault();
@@ -73,18 +113,18 @@
         );
     });
 
-    $('body').on('click', '.remove-competence-node', function(event) {
-        event.preventDefault();
-        var element = $(this).parent();
-        var route = $(this).attr('href');
-        window.Claroline.Modal.confirmRequest(
-            route,
-            refreshPage,
-            element,
-            Translator.get('platform:remove_sub_competence_comfirm_message'),
-            Translator.get('platform:remove_sub_competence')
-        );
-    });
+//    $('body').on('click', '.remove-competence-node', function(event) {
+//        event.preventDefault();
+//        var element = $(this).parent();
+//        var route = $(this).attr('href');
+//        window.Claroline.Modal.confirmRequest(
+//            route,
+//            refreshPage,
+//            element,
+//            Translator.get('platform:remove_sub_competence_comfirm_message'),
+//            Translator.get('platform:remove_sub_competence')
+//        );
+//    });
 
 //    $('#move').click(function(){
 //        var data = new FormData($('#myForm')[0]);
@@ -269,6 +309,7 @@
     }
     
     var refreshPage = function () {
+        window.tinymce.claroline.disableBeforeUnload = true;
         window.location.reload();
     }
 })();

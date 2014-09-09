@@ -122,8 +122,8 @@ class CompetenceController
      *
      */
     public function adminCompetencesManagementAction(
-        $orderedBy,
-        $order,
+        $orderedBy = 'name',
+        $order = 'ASC',
         $page = 1,
         $max = 20
     )
@@ -176,6 +176,7 @@ class CompetenceController
      */
     public function createAdminLearningOutcomesAction()
     {
+        $this->checkOpen();
         $competence = new Competence();
         $form = $this->formFactory->create(new CompetenceType(), $competence);
         $form->handleRequest($this->request);
@@ -335,6 +336,7 @@ class CompetenceController
      */
     public function deleteAdminCompetenceAction(Competence $competence)
     {
+        $this->checkOpen();
         $this->competenceManager->deleteCompetence($competence);
 
         return new JsonResponse('success', 200);
@@ -348,7 +350,7 @@ class CompetenceController
      * )
      * @EXT\Template("ClarolineCoreBundle:Administration\Competence:competenceModalForm.html.twig")
      *
-     * @param  Competence $competence
+     * @param  CompetenceNode $parent
      * @return
      */
     public function adminSubCompetenceCreateFormAction(CompetenceNode $parent)
@@ -372,7 +374,7 @@ class CompetenceController
      * )
      * @EXT\Template("ClarolineCoreBundle:Administration\Competence:competenceModalForm.html.twig")
      *
-     * @param  Competence $competence
+     * @param  CompetenceNode $parent
      * @return
      */
     public function adminSubCompetenceCreateAction(CompetenceNode $parent)
@@ -405,7 +407,7 @@ class CompetenceController
      *     name="claro_admin_competence_node_delete",
      *     options={"expose"=true}
      * )
-     * @param CompetenceNode $referential
+     * @param CompetenceNode $competenceNode
      *
      * Delete a competence
      *
@@ -413,6 +415,7 @@ class CompetenceController
      */
     public function deleteAdminCompetenceNodeAction(CompetenceNode $competenceNode)
     {
+        $this->checkOpen();
         $this->competenceManager->deleteCompetenceNode($competenceNode);
 
         return new JsonResponse('success', 200);
@@ -428,8 +431,9 @@ class CompetenceController
      */
     public function adminSubCompetenceLinkFormAction(CompetenceNode $parent)
     {
+        $this->checkOpen();
         $linkableCompetences = $this->competenceManager
-            ->getLinkableCompetences($parent);
+            ->getLinkableAdminCompetences($parent);
 
         return array(
             'linkableCompetences' => $linkableCompetences,
@@ -449,6 +453,7 @@ class CompetenceController
         Competence $competence
     )
     {
+        $this->checkOpen();
         $this->competenceManager->createCompetenceNode($competence, $parent);
         $root = $this->competenceManager->getCompetenceNodeById($parent->getRoot());
 
@@ -459,6 +464,22 @@ class CompetenceController
             )
         );
     }
+
+    /**
+     * @EXT\Route(
+     *     "/admin/competence/{competence}/view",
+     *     name="claro_admin_competence_view",
+     *     options={"expose"=true}
+     * )
+     * @Ext\Template()
+     */
+    public function adminCompetenceViewAction(Competence $competence)
+    {
+        $this->checkOpen();
+
+        return array('competence' => $competence);
+    }
+
 
     /**********************************************************************
      **********************************************************************

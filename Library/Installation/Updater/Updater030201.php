@@ -27,7 +27,7 @@ class Updater030201
     public function postUpdate()
     {
         $this->removeUnimplementedTools();
-//        $this->createWorkspaceLearningOutcomesTool();
+        $this->createWorkspaceLearningOutcomesTool();
 
         $this->em->flush();
     }
@@ -68,7 +68,7 @@ class Updater030201
     private function createWorkspaceLearningOutcomesTool()
     {
         $this->log('Creating workspace learning outcomes tool...');
-        $learningOutcomesTool = $this->om->getRepository('ClarolineCoreBundle:Tool\Tool')
+        $learningOutcomesTool = $this->em->getRepository('ClarolineCoreBundle:Tool\Tool')
             ->findOneBy(array('name' => 'learning_outcomes'));
 
         if (!$learningOutcomesTool) {

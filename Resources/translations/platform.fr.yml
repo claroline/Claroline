@@ -281,6 +281,8 @@ delete_category_confirm_title: 'Suppression d''une catégorie'
 delete_competence: 'Suppression d''une compétence'
 delete_competence_confirm_message: 'Voulez-vous vraiment supprimer cette compétence ?'
 delete_home_tab: 'Supprimer l''onglet'
+delete_learning_outcomes: 'Suppression d''un référentiel de compétences'
+delete_learning_outcomes_confirm_message: 'Voulez-vous vraiment supprimer ce référentiel de compétences?'
 description: 'Description'
 desktop: Bureau
 desktop_home_tab_creation: 'Création d''un onglet pour le bureau'
@@ -442,6 +444,7 @@ last_manager_error_message: Vous ne pouvez pas retirer tout les gestionnaires.
 last_name: Nom
 layout: Layout
 learning_outcomes: 'Référentiel de compétences'
+learning_outcomes_creation: 'Création d''un référentiel de compétences'
 learning_profil: Profile d'apprentissage
 leave_this_page: 'Si vous quittez cette page, vous risquez de perdre vos modifications.'
 left: Gauche
@@ -548,6 +551,7 @@ no_email: 'Ce mail ne correspond pas a un utilisateur inscrit'
 no_group: 'Aucun groupe'
 no_group: Il n'y a aucun groupe.
 no_home_tab: 'Il n''y a aucun onglet'
+no_learning_outcomes: 'Aucun référentiel de compétences'
 no_message: 'Aucun message'
 no_package_description: Aucune description du paquet.
 no_resources_in_workspace: Cet espace ne contient actuellement aucune ressource.

@@ -281,6 +281,8 @@ delete_category_confirm_title: 'Category deletion'
 delete_competence: 'Delete competence'
 delete_competence_confirm_message: 'Do you really want to delete this competence ?'
 delete_home_tab: 'Delete tab'
+delete_learning_outcomes: 'Delete learning outcomes'
+delete_learning_outcomes_confirm_message: 'Do you really want to delete this learning outcomes ?'
 description: 'Description'
 desktop: Desktop
 desktop_home_tab_creation: 'Desktop Home tab creation'
@@ -441,6 +443,7 @@ last_manager_error_message: You can't remove every manager.
 last_name: 'Last name'
 layout: Layout
 learning_outcomes: 'Learning outcomes'
+learning_outcomes_creation: 'Learning outcomes creation'
 learning_profil: Learning profile
 leave_this_page: 'If you leave this page you may lose your changes.'
 left: Left
@@ -548,6 +551,7 @@ no_email: 'No email found, check the spelling'
 no_group: 'No group'
 no_group: There is no group.
 no_home_tab: 'There is no Home tab'
+no_learning_outcomes: 'No learning outcomes'
 no_message: 'No message'
 no_package_description: No package description.
 no_resources_in_workspace: There are currently no resources in this workspace.

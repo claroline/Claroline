@@ -13,6 +13,7 @@ namespace Claroline\CoreBundle\Repository;
 
 use Claroline\CoreBundle\Entity\Competence\Competence;
 use Claroline\CoreBundle\Entity\Competence\CompetenceNode;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
 
 class CompetenceNodeRepository extends NestedTreeRepository
@@ -35,8 +36,9 @@ class CompetenceNodeRepository extends NestedTreeRepository
     public function findHierarchyByCompetenceNode(CompetenceNode $competenceNode)
     {
         $dql = '
-            SELECT cn
+            SELECT cn, c
             FROM Claroline\CoreBundle\Entity\Competence\CompetenceNode cn
+            JOIN cn.competence c
             WHERE cn.root = :root
         ';
         $query = $this->_em->createQuery($dql);
@@ -74,6 +76,22 @@ class CompetenceNodeRepository extends NestedTreeRepository
         $query->setParameter('rgt', $node->getRgt());
 
         return $query->getResult();
+    }
+
+    public function findWorkspaceRootCompetenceNodes(Workspace $workspace)
+    {
+    	$dql = '
+            SELECT cn, c
+            FROM Claroline\CoreBundle\Entity\Competence\CompetenceNode cn
+            JOIN cn.competence c
+            WHERE cn.parent IS NULL
+            AND c.isPlatform = false
+            AND c.workspace = :workspace
+        ';
+    	$query = $this->_em->createQuery($dql);
+        $query->setParameter('workspace', $workspace);
+
+    	return $query->getResult();
     }
 
 //    public function findHiearchyById(CompetenceNode $competenceNode)

@@ -59,7 +59,9 @@ class CompetenceManager
         $this->userCptRepo = $om->getRepository('ClarolineCoreBundle:Competence\UserCompetence');
     }
 
-    public function getHierarchyByCompetenceNode(CompetenceNode $competenceNode)
+    public function getHierarchyByCompetenceNode(
+        CompetenceNode $competenceNode
+    )
     {
         $cptNodes = $this->cptNodeRepo
             ->findHierarchyByCompetenceNode($competenceNode);
@@ -84,59 +86,49 @@ class CompetenceManager
             'childClose' => '</li>',
             'nodeDecorator' => function($node) use (&$competences) {
 
-                $returnValue = '<a href="#">'
+                $returnValue = '<a href="#" class="competence-view-btn" data-competence-id="'
+                    . $competences[$node['id']]['competenceId']
+                    . '">'
                     . $competences[$node['id']]['name']
                     . '</a>'
-                    . '<a href="'
-                    . $this->router->generate(
-                        'claro_admin_competence_edit_form',
-                        array('competence' => $competences[$node['id']]['competenceId'])
-                    )
-                    . '" class="btn btn-default btn-sm competence-edit-btn margin-left-sm" title="'
+                    . '<span class="btn btn-default btn-sm competence-edit-btn margin-left-sm" title="'
                     . $this->translator->trans(
                         'edit_competence',
                         array(),
                         'platform'
                     )
-                    . '" data-toggle="tooltip" data-placement="top"><i class="fa fa-edit"></i></a>'
-                    . '<a href="'
-                    . $this->router->generate(
-                        'claro_admin_sub_competence_create_form',
-                        array('parent' => $node['id'])
-                    )
-                    . '" class="btn btn-default btn-sm add-sub-competence-btn margin-left-sm" title="'
+                    . '" data-toggle="tooltip" data-placement="top" data-competence-id="'
+                    . $competences[$node['id']]['competenceId']
+                    . '"><i class="fa fa-edit"></i></span>'
+                    . '<span class="btn btn-default btn-sm add-sub-competence-btn margin-left-sm" title="'
                     . $this->translator->trans(
                         'create_sub_competence',
                         array(),
                         'platform'
                     )
-                    . '" data-toggle="tooltip" data-placement="top"><i class="fa fa-plus"></i></a>'
-                    . '<a href="'
-                    . $this->router->generate(
-                        'claro_admin_sub_competence_link_form',
-                        array('parent' => $node['id'])
-                    )
-                    . '" class="btn btn-default btn-sm link-sub-competence-btn margin-left-sm" title="'
+                    . '" data-toggle="tooltip" data-placement="top" data-competence-node-id="'
+                    . $node['id']
+                    . '"><i class="fa fa-plus"></i></span>'
+                    . '<span class="btn btn-default btn-sm link-sub-competence-btn margin-left-sm" title="'
                     . $this->translator->trans(
                         'add_sub_competence',
                         array(),
                         'platform'
                     )
-                    . '" data-toggle="tooltip" data-placement="top"><i class="fa fa-search"></i></a>';
+                    . '" data-toggle="tooltip" data-placement="top" data-competence-node-id="'
+                    . $node['id']
+                    . '"><i class="fa fa-search"></i></span>';
 
                 if (!$competences[$node['id']]['root']) {
-                    $returnValue .= '<a href="'
-                        . $this->router->generate(
-                            'claro_admin_competence_node_delete',
-                            array('competenceNode' => $node['id'])
-                        )
-                        . '" class="btn btn-danger btn-sm remove-competence-node margin-left-sm" title="'
+                    $returnValue .= '<span class="btn btn-danger btn-sm remove-competence-node margin-left-sm" title="'
                         . $this->translator->trans(
                             'remove_competence',
                             array(),
                             'platform'
                         )
-                        . '" data-toggle="tooltip" data-placement="top"><i class="fa fa-trash-o"></i></a>';
+                        . '" data-toggle="tooltip" data-placement="top" data-competence-node-id="'
+                        . $node['id']
+                        . '"><i class="fa fa-trash-o"></i></span>';
                 }
 
                 return $returnValue;
@@ -451,9 +443,18 @@ class CompetenceManager
      * Access to CompetenceRepository methods *
      ******************************************/
 
-    public function getLinkableCompetences(CompetenceNode $competence)
+    public function getLinkableAdminCompetences(CompetenceNode $competenceNode)
     {
-        return $this->cptRepo->findLinkableCompetences($competence);
+        return $this->cptRepo->findLinkableAdminCompetences($competenceNode);
+    }
+
+    public function getLinkableWorkspaceCompetences(
+        Workspace $workspace,
+        CompetenceNode $competenceNode
+    )
+    {
+        return $this->cptRepo
+            ->findLinkableWorkspaceCompetences($workspace, $competenceNode);
     }
 
     public function getCompetenceById($competenceId)
@@ -473,6 +474,20 @@ class CompetenceManager
         return $this->pagerFactory->createPagerFromArray($sompetences, $page, $max);
     }
 
+    public function getWorkspaceCompetences(
+        Workspace $workspace,
+        $orderedBy = 'name',
+        $order = 'ASC',
+        $page = 1,
+        $max = 20
+    )
+    {
+        $sompetences = $this->cptRepo
+            ->findWorkspaceCompetences($workspace, $orderedBy, $order);
+
+        return $this->pagerFactory->createPagerFromArray($sompetences, $page, $max);
+    }
+
 
     /**********************************************
      * Access to CompetenceNodeRepository methods *
@@ -488,7 +503,7 @@ class CompetenceManager
             return $this->cptNodeRepo->findAdminRootCompetenceNodes();
         } else {
 
-            return $this->cptNodeRepo->getRootCptWithWorkspace($workspace);
+            return $this->cptNodeRepo->findWorkspaceRootCompetenceNodes($workspace);
         }
     }
 

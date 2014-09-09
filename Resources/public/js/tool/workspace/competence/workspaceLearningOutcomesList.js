@@ -10,33 +10,35 @@
 (function () {
     'use strict';
     
-    $('#create-admin-competence-btn').on('click', function () {
+    var workspaceId = $('#workspace-data-element').data('workspace-id');
+    
+    $('#create-learning-outcomes-btn').on('click', function () {
         window.Claroline.Modal.displayForm(
-            Routing.generate('claro_admin_competence_create'),
+            Routing.generate('claro_workspace_learning_outcomes_create_form', {'workspace': workspaceId}),
             refreshPage,
             function() {}
         );
     });
     
-    $('.edit-admin-competence-btn').on('click', function () {
+    $('.edit-learning-outcomes-btn').on('click', function () {
         var competenceId = $(this).data('competence-id');
         
         window.Claroline.Modal.displayForm(
-            Routing.generate('claro_admin_competence_edit', {'competence': competenceId}),
+            Routing.generate('claro_workspace_competence_edit_form', {'workspace': workspaceId, 'competence': competenceId}),
             refreshPage,
             function() {}
         );
     });
     
-    $('.delete-admin-competence-btn').on('click', function () {
-        var competenceId = $(this).data('competence-id');
+    $('.delete-learning-outcomes-btn').on('click', function () {
+        var competenceNodeId = $(this).data('competence-node-id');
         
         window.Claroline.Modal.confirmRequest(
-            Routing.generate('claro_admin_competence_delete', {'competence': competenceId}),
+            Routing.generate('claro_workspace_competence_node_delete', {'workspace': workspaceId, 'competenceNode': competenceNodeId}),
             refreshPage,
             null,
-            Translator.get('platform:delete_competence_confirm_message'),
-            Translator.get('platform:delete_competence')
+            Translator.get('platform:delete_learning_outcomes_confirm_message'),
+            Translator.get('platform:delete_learning_outcomes')
         );
     });
     

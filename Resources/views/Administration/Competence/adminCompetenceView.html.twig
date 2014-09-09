@@ -1,0 +1,31 @@
+<div id="modal-view-competence" class="modal-dialog" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-content">
+        <div class="modal-body">
+            <div class="table-responsive">
+                <table class="table">
+                    <tr>
+                        <th>{{ 'name'|trans({}, 'platform') }}</th>
+                        <td>{{ competence.getName() }}</td>
+                    </tr>
+                    <tr>
+                        <th>{{ 'code'|trans({}, 'platform') }}</th>
+                        <td>{{ competence.getCode() }}</td>
+                    </tr>
+                    <tr>
+                        <th>{{ 'description'|trans({}, 'platform') }}</th>
+                        <td>{{ competence.getDescription()|raw }}</td>
+                    </tr>
+                    <tr>
+                        <th>{{ 'score'|trans({}, 'platform') }}</th>
+                        <td>{{ competence.getScore() }}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <span class="btn btn-default" data-dismiss="modal">
+                {{ 'close'|trans({},'platform') }}
+            </span>
+        </div>
+    </div>
+</div>
