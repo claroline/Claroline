@@ -597,11 +597,14 @@ class exerciseServices
 
         //array of rights responses indexed by labelId
         foreach ($interMatching->getProposals() as $proposal) {
-            $index = $proposal->getAssociatedLabel()->getId();
-            if (isset($tabRightResponse[$index])) {
-                $tabRightResponse[$index] .= '-' . $proposal->getId();
-            } else {
-                $tabRightResponse[$index] = $proposal->getId();
+            $associateLabel = $proposal->getAssociatedLabel();
+            if ($associateLabel != null) {
+                $index = $associateLabel->getId();
+                if (isset($tabRightResponse[$index])) {
+                    $tabRightResponse[$index] .= '-' . $proposal->getId();
+                } else {
+                    $tabRightResponse[$index] = $proposal->getId();
+                }
             }
         }
 
@@ -836,7 +839,7 @@ class exerciseServices
                                       ->getInteractionOpen($interaction->getId());
                     $exercisePaperTotalScore += $this->openMaxScore($interOpen[0]);
                     break;
-                
+
                 case "InteractionMatching":
                     $interMatching = $this->doctrine
                                       ->getManager()
