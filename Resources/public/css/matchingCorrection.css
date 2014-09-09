@@ -1,19 +1,24 @@
 .labelMatch{
+    padding: 10px;
     border: 1px solid black;
     margin: 5px;
 }
 
 .associatedProposal{
-    border: 1px dashed black;
+    padding: 5px;
+    border: 1px black;
+    border-style: dotted none none none;
 }
 
 .rightResponse{
-    border: 1px solid green;
+    padding: 10px;
+    border: 2px solid green;
     margin: 5px;
 }
 
 .falseResponse{
-    border: 1px solid red;
+    padding: 10px;
+    border: 2px solid red;
     margin: 5px;
 }
 

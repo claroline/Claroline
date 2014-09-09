@@ -65,22 +65,22 @@
                 <table>
                     <tr>
                         <td>
-                            {% for label in interactionToDisplayed.labels %}
-                                <div id="droppable_{{ label.id }}" class="droppable">
-                                    <ul>
-                                        <li style='list-style-type:none;'>{{ label.value | raw }}</li>
-                                    </ul>
-                                </div>
-                            {% endfor %}
-                        </td>
-                        <td>
                             {% for proposal in interactionToDisplayed.proposals %}
                                 <div id="div_{{ proposal.id }}" class="origin">
                                     <ul>
-                                        <li id="draggable_{{ proposal.id }}" class="draggable" style='list-style-type:none;'> {{ proposal.value | raw }} </li>
+                                        <li id="draggable_{{ proposal.id }}" class="draggable lidraggable"> {{ proposal.value | raw }} </li>
                                     </ul>
                                 </div>
                             {% endfor%}
+                        </td>
+                        <td>
+                            {% for label in interactionToDisplayed.labels %}
+                                <div id="droppable_{{ label.id }}" class="droppable">
+                                    <ul>
+                                        <li class="lidroppable">{{ label.value | raw }}</li>
+                                    </ul>
+                                </div>
+                            {% endfor %}
                         </td>
                     </tr>
                 </table>

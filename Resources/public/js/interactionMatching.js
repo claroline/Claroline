@@ -1,8 +1,8 @@
+var containerProposal = $('div#ujm_exobundle_interactionmatchingtype_proposals'); // Div which contain the dataprototype of proposals
 var containerLabel = $('div#ujm_exobundle_interactionmatchingtype_labels'); // Div which contain the dataprototype of labels
-var containerProposal = $('div#ujm_exobundle_interactionmatchingtype_proposals');
 
+var tableProposals = $('#tableProposal'); // div which contain the proposals array
 var tableLabels = $('#tableLabel'); // div which contain the labels array
-var tableProposals = $('#tableProposal');
 
 var typeMatching;
 
@@ -12,10 +12,10 @@ var advEditionLang;
 function creationMatching(addchoice, addproposal, deletechoice, LabelValue, ScoreRight, ProposalValue, numberProposal, correspondence, deleteLabel, deleteProposal, tMatching, advEdition){
 
     //initialisation of variables
-    var indexLabel; // number of label
     var indexProposal;
-    var codeContainerLabel = 0; // to differentiate containers
+    var indexLabel; // number of label
     var codeContainerProposal = 1;
+    var codeContainerLabel = 0; // to differentiate containers
 
     advEditionLang = advEdition;
 
@@ -29,14 +29,27 @@ function creationMatching(addchoice, addproposal, deletechoice, LabelValue, Scor
              $(this).attr('disabled', 'disabled');
          }
      });
-
+     
+     tableCreationProposal(containerProposal, tableProposals, addproposal, deletechoice, ProposalValue, 0, codeContainerProposal, deleteProposal, numberProposal);
     tableCreationLabel(containerLabel, tableLabels, addchoice, deletechoice, LabelValue, ScoreRight, 0, codeContainerLabel, deleteLabel, correspondence);
-    tableCreationProposal(containerProposal, tableProposals, addproposal, deletechoice, ProposalValue, 0, codeContainerProposal, deleteProposal, numberProposal);
+    
 
     // Number of label initially
-    indexLabel = containerLabel.find(':input').length;
     indexProposal = containerProposal.find(':input').length;
-
+    indexLabel = containerLabel.find(':input').length;
+    
+    // If no proposal exist, add two labels by default in the container Label
+    if (indexProposal == 0) {
+        addProposal(containerProposal, deletechoice, tableProposals, codeContainerProposal);
+        $('#newTableProposal').find('tbody').append('<tr><td></td></tr>');
+        addProposal(containerProposal, deletechoice, tableProposals, codeContainerProposal);
+    // If label already exist, add button to delete it
+    } else {
+        tableProposals.children('tr').each(function() {
+            adddelete($(this), deletechoice, codeContainerProposal);
+        });
+    }
+    
     // If no label exist, add two labels by default in the container Label
     if (indexLabel == 0) {
         addLabel(containerLabel, deletechoice, tableLabels, codeContainerLabel);
@@ -49,17 +62,7 @@ function creationMatching(addchoice, addproposal, deletechoice, LabelValue, Scor
         });
     }
 
-    // If no label exist, add two labels by default in the container Label
-    if (indexProposal == 0) {
-        addProposal(containerProposal, deletechoice, tableProposals, codeContainerProposal);
-        $('#newTableProposal').find('tbody').append('<tr><td></td></tr>');
-        addProposal(containerProposal, deletechoice, tableProposals, codeContainerProposal);
-    // If label already exist, add button to delete it
-    } else {
-        tableProposals.children('tr').each(function() {
-            adddelete($(this), deletechoice, codeContainerProposal);
-        });
-    }
+    
 }
 
 // Question edition
@@ -150,22 +153,15 @@ function addProposal(container, deletechoice, table, codeContainer){
 }
 
 //check if the form is valid
-function check_form(nbrProposals, nbrLabels){
-//    if (($('#newTableProposal').find('tr:not(:first)').length) < 2) {
+function check_form(nbrProposals, nbrLabels) {
+    for ( i = 0; i < $('#newTableLabel').find('tr:last') ; i++)
+    {
+        
+//        if ($('#ujm_exobundle_interactionmatchingtype_labels_'+ i +'_value').val() == '') {
+//            alert("coucou c'est moi");
 //            return false;
-//    }
-//
-//    if (($('#newTableProposal').find('tr:not(:first)').length) < ($('#newTableLabel').find('tr:not(:first)').length)) {
-//            return false;
-//    }
-
-//    while(containerLabel.find(':input').length)
-//    {
-////        "ujm_exobundle_interactionmatchingtype_labels_1_correspondence"
-//        if($()) {
-//
 //        }
-//    }
+    }
 
 }
 
