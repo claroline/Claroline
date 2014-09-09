@@ -12,7 +12,7 @@
                     <div class="rightResponse" align="center">
                         {{ label.value | raw }}
                         {% for proposal in inter.proposals %}
-                            {% if proposal.associatedLabel.id == label.id %}
+                            {% if proposal.associatedLabel != null and proposal.associatedLabel.id == label.id %}
                                 <div class="associatedProposal" align="center">
                                     {{ proposal.value | raw }}
                                 </div>
