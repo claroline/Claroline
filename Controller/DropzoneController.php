@@ -221,17 +221,23 @@ class DropzoneController extends DropzoneBaseController
             } else {
                 // if manual mode, we delete agenda events related to
                 $AgendaManager = $this->get('claroline.manager.agenda_manager');
-                if ($dropzone->getEventDrop() != null) {
 
-                    $AgendaManager->deleteEvent($dropzone->getEventDrop());
+
+                if ($dropzone->getEventDrop() != null) {
+                    $event = $dropzone->getEventDrop();
+                    $AgendaManager->deleteEvent($event);
+                    $dropzone->setEventDrop(NULL);
+
 
                 }
 
                 if ($dropzone->getEventCorrection() != null) {
-                    $AgendaManager->deleteEvent($dropzone->getEventCorrection());
+                    $event = $dropzone->getEventCorrection();
+                    $AgendaManager->deleteEvent($event);
+                    $dropzone->setEventCorrection(NULL);
+
+
                 }
-                $em = $this->getDoctrine()->getManager();
-                $em->flush();
 
 
             }
