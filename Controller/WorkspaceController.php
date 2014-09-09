@@ -16,6 +16,7 @@ use Claroline\CoreBundle\Event\StrictDispatcher;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
@@ -1147,7 +1148,25 @@ class WorkspaceController extends Controller
      */
     public function exportAction(Workspace $workspace)
     {
-        $this->container->get('claroline.manager.transfert_manager')->export($workspace);
+        $archive = $this->container->get('claroline.manager.transfert_manager')->export($workspace);
+
+        $fileName = $workspace->getCode();
+        $mimeType = 'application/zip';
+        $response = new StreamedResponse();
+
+        $response->setCallBack(
+            function () use ($archive) {
+                readfile($archive);
+            }
+        );
+
+        $response->headers->set('Content-Transfer-Encoding', 'octet-stream');
+        $response->headers->set('Content-Type', 'application/force-download');
+        $response->headers->set('Content-Disposition', 'attachment; filename=' . urlencode($fileName));
+        $response->headers->set('Content-Type', $mimeType);
+        $response->headers->set('Connection', 'close');
+
+        return $response;
     }
 
     private function assertIsGranted($attributes, $object = null)

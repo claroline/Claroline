@@ -19,9 +19,11 @@ use Claroline\CoreBundle\Library\Transfert\Importer;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Claroline\CoreBundle\Manager\RightsManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
+use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\MaskManager;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\Directory;
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 
 /**
@@ -34,6 +36,7 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
     private $data;
     private $rightManager;
     private $resourceManager;
+    private $roleManager;
     private $maskManager;
     private $availableParents;
     private $om;
@@ -42,8 +45,9 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
     /**
      * @DI\InjectParams({
      *     "rightManager"    = @DI\Inject("claroline.manager.rights_manager"),
-     *     "maskManager"    = @DI\Inject("claroline.manager.mask_manager"),
+     *     "maskManager"     = @DI\Inject("claroline.manager.mask_manager"),
      *     "resourceManager" = @DI\Inject("claroline.manager.resource_manager"),
+     *     "roleManager"     = @DI\Inject("claroline.manager.role_manager"),
      *     "om"              = @DI\Inject("claroline.persistence.object_manager")
      * })
      */
@@ -51,12 +55,14 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
         RightsManager $rightManager,
         MaskManager $maskManager,
         ResourceManager $resourceManager,
+        RoleManager $roleManager,
         ObjectManager $om
     )
     {
-        $this->rightManager = $rightManager;
+        $this->rightManager    = $rightManager;
         $this->resourceManager = $resourceManager;
-        $this->maskManager = $maskManager;
+        $this->maskManager     = $maskManager;
+        $this->roleManager     = $roleManager;
         $this->om = $om;
     }
 
@@ -148,13 +154,28 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
                         $this->getCreationRightsArray($role['role']['rights']['create']):
                         array();
 
-                    $this->rightManager->create(
-                        $role['role']['rights'],
-                        $entityRoles[$role['role']['name']],
-                        $directoryEntity->getResourceNode(),
-                        false,
-                        $creations
-                    );
+                    $uow = $this->om->getUnitOfWork();
+                    $map = $uow->getIdentityMap();
+
+                    //if the resourceRight was created
+                    $found = false;
+                    $createdRights = null;
+
+                    foreach ($map['Claroline\CoreBundle\Entity\Resource\ResourceRights'] as $unflushed) {
+                        $createdRights = $unflushed->getRole()->getName() === $entityRoles[$role['role']['name']]->getName() ?
+                            $unflushed: null;
+                    }
+
+                    if ($createdRights !== null) {
+                        echo 'create ' . $entityRoles[$role['role']['name']]->getName();
+                        $this->rightManager->create(
+                            $role['role']['rights'],
+                            $entityRoles[$role['role']['name']],
+                            $directoryEntity->getResourceNode(),
+                            false,
+                            $creations
+                        );
+                    }
                 }
             }
 
@@ -228,17 +249,37 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
                 $this->getCreationRightsArray($role['role']['rights']['create']):
                 array();
 
-            $this->rightManager->create(
-                $role['role']['rights'],
-                $entityRoles[$role['role']['name']],
-                $root->getResourceNode(),
-                false,
-                $creations
-            );
+            //if it's not a base role already set at the resource creation, it must be created,
+            //otherwise it should be edited
+            //for now only ROLE_USER and ROLE_ANONYMOUS are created by default
+
+            if ($entityRoles[$role['role']['name']]->getName() !== 'ROLE_USER'
+                && $entityRoles[$role['role']['name']]->getName() !== 'ROLE_ANONYMOUS') {
+                $this->rightManager->create(
+                    $role['role']['rights'],
+                    $entityRoles[$role['role']['name']],
+                    $root->getResourceNode(),
+                    false,
+                    $creations
+                );
+            } else {
+                $this->rightManager->editPerms(
+                    $role['role']['rights'],
+                    $entityRoles[$role['role']['name']],
+                    $root->getResourceNode(),
+                    false
+                );
+                $this->rightManager->editCreationRights(
+                    $creations,
+                    $entityRoles[$role['role']['name']],
+                    $root->getResourceNode(),
+                    false
+                );
+            }
         }
 
         //We need to force the flush in order to add the rich text.
-        $this->om->forceFlush();
+        //$this->om->forceFlush();
 
         /*************/
         /* RICH TEXT */
@@ -259,10 +300,30 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
 
     public function export(Workspace $workspace)
     {
+        $data = [];
         //first we get the root
         $root = $this->resourceManager->getWorkspaceRoot($workspace);
         $rootRights = $root->getRights();
-        $perms = $this->getPermsArray($root);
+        $data['root'] = array(
+            'uid'   => $root->getId(),
+            'roles' => $this->getPermsArray($root)
+        );
+        $directory = $this->resourceManager->getResourceTypeByName('directory');
+        $resourceNodes = $this->resourceManager->getByWorkspaceAndResourceType($workspace, $directory);
+
+        foreach ($resourceNodes as $resourceNode) {
+            if ($resourceNode->getParent() !== null) {
+                $data['directories'][] = array('directory' => array(
+                    'name'    => $resourceNode->getName(),
+                    'creator' => null,
+                    'parent'  => $resourceNode->getParent()->getId(),
+                    'uid'     => $resourceNode->getId(),
+                    'roles'   => $this->getPermsArray($resourceNode)
+                ));
+            }
+        }
+
+        return $data;
     }
 
     public function getName()
@@ -282,6 +343,15 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
             }
         }
 
+        $existingBaseRoles = $this->roleManager->getAllPlatformRoles();
+
+        //adding platform roles
+        foreach ($existingBaseRoles as $existingBaseRole) {
+            $availableRoleName[] = $existingBaseRole->getName();
+        }
+
+        //adding ROLE_ANONYMOUS
+        $availableRoleName[] = 'ROLE_ANONYMOUS';
         $this->availableParents = [];
 
         if (isset($data['data']['directories'])) {
@@ -524,7 +594,20 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
         $roles = [];
 
         foreach ($rights as $right) {
-//            $perms = $this->r
+            $perms = $this->maskManager->decodeMask($right->getMask(), $node->getResourceType());
+
+            //we only keep workspace in the current workspace and platform roles
+            if ($right->getRole()->getWorkspace() === $node->getWorkspace() || $right->getRole()->getWorkspace() === null) {
+                //creation rights are missing here but w/e
+                $roles[] = array(
+                    'role' => array(
+                        'name' => $this->roleManager->getWorkspaceRoleBaseName($right->getRole()),
+                        'rights' => $perms,
+                    )
+                );
+            }
         }
+
+        return $roles;
     }
 } 

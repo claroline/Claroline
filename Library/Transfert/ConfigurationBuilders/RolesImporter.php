@@ -68,7 +68,7 @@ class RolesImporter extends Importer implements ConfigurationInterface
                                         );
                                     }
                                 )
-                                ->thenInvalid("The name w/e already exists")
+                                ->thenInvalid("The name %s already exists")
                                 ->end()
                             ->end()
                             ->scalarNode('translation')->info('The displayed role name')->example('student')->isRequired()->end()
@@ -110,8 +110,8 @@ class RolesImporter extends Importer implements ConfigurationInterface
     public static function nameAlreadyExists($v)
     {
         $roles = self::getData();
-
         $found = false;
+
         foreach ($roles as $el) {
             foreach ($el as $role) {
                 if ($role['role']['name'] === $v) {
@@ -157,11 +157,13 @@ class RolesImporter extends Importer implements ConfigurationInterface
         $data = [];
 
         foreach ($workspace->getRoles() as $role) {
-            $data[] = array(
-                'name' => $this->roleManager->getWorkspaceRoleBaseName($role),
-                'translation' => $role->getTranslationKey(),
-                'is_base_role' => false
-            );
+            if ($role !== $this->roleManager->getManagerRole($workspace)) {
+                $data[] = array('role' => array(
+                    'name' => $this->roleManager->getWorkspaceRoleBaseName($role),
+                    'translation' => $role->getTranslationKey(),
+                    'is_base_role' => false
+                ));
+            }
         }
 
         return $data;

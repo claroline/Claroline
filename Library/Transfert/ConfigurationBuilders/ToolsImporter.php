@@ -128,7 +128,7 @@ class ToolsImporter extends Importer implements ConfigurationInterface
         foreach ($data['tools'] as $tool) {
             $importer = $this->getImporterByName($tool['tool']['type']);
 
-            if (!$importer) {
+            if (!$importer && isset($tool['tool']['data'])) {
                 throw new InvalidConfigurationException('The importer ' . $tool['tool']['type'] . ' does not exist');
             }
 
@@ -181,7 +181,7 @@ class ToolsImporter extends Importer implements ConfigurationInterface
             $roles = array();
 
             foreach ($workspaceTool->getRoles() as $role) {
-                $roles[] = array('name' => $role->getName());
+                $roles[] = array('name' => $this->roleManager->getWorkspaceRoleBaseName($role));
             }
 
             $tool = array(

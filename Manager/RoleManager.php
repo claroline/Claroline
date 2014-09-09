@@ -799,6 +799,10 @@ class RoleManager
 
     public function getWorkspaceRoleBaseName(Role $role)
     {
+        if ($role->getWorkspace()) {
+            return substr($role->getName(), 0, strrpos($role->getName(), '_'));
+        }
+
         return $role->getName();
     }
 }

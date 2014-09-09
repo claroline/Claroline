@@ -73,7 +73,7 @@ class ObjectManager extends ObjectManagerDecorator
     }
 
     /**
-     * @{inheritDoc]
+     * @inheritDoc
      *
      * This operation has no effect if one or more flush suite is active.
      */
@@ -171,7 +171,7 @@ class ObjectManager extends ObjectManagerDecorator
      * Returns the unit of work.
      *
      * @todo remove this method if possible
-     *
+     * @inheritDoc
      * @throws UnsupportedMethodException if the method is not supported by
      *                                    the underlying object manager
      */

@@ -24,6 +24,7 @@ use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Workspace\Configuration;
 use Claroline\CoreBundle\Library\Transfert\RichTextInterface;
+use Symfony\Component\Yaml\Yaml;
 
 /**
  * @DI\Service("claroline.manager.transfert_manager")
@@ -188,6 +189,8 @@ class TransfertManager
 
         $entityRoles['ROLE_ANONYMOUS'] = $this->om
             ->getRepository('ClarolineCoreBundle:Role')->findOneByName('ROLE_ANONYMOUS');
+        $entityRoles['ROLE_USER'] = $this->om
+            ->getRepository('ClarolineCoreBundle:Role')->findOneByName('ROLE_USER');
 
         if ($importUsers) {
             if (isset($data['members']['users'])) {
@@ -207,6 +210,9 @@ class TransfertManager
             null,
             array()
         );
+
+        //required for roles
+        $this->om->forceFlush();
 
         $tools = $this->getImporterByName('tools')
             ->import($data['tools'], $workspace, $entityRoles, $root);
@@ -261,10 +267,28 @@ class TransfertManager
         $data = [];
         $data['roles'] = $this->getImporterByName('roles')->export($workspace);
         $data['tools'] = $this->getImporterByName('tools')->export($workspace);
-        var_dump($data);
-        throw new \Exception();
 
-        return $data;
+        //generate the archive in a temp dir
+        $content = Yaml::dump($data, 10);
+        //zip and returns the archive
+        $archDir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . uniqid();
+        $archPath = $archDir . DIRECTORY_SEPARATOR . 'archive.zip';
+        mkdir($archDir);
+        $manifestPath = $archDir . DIRECTORY_SEPARATOR . 'manifest.yml';
+        file_put_contents($manifestPath, $content);
+
+        $archive = new \ZipArchive();
+
+        $success = $archive->open($archPath, \ZipArchive::CREATE);
+
+        if ($success === true) {
+            $archive->addFile($manifestPath, 'manifest.yml');
+            $archive->close();
+        } else {
+            throw new \Exception('Unable to create archive . ' . $archPath . ' (error ' . $success . ')');
+        }
+
+        return $archPath;
     }
 
     /**
