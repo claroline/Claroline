@@ -185,7 +185,7 @@ class HomeImporter extends Importer implements ConfigurationInterface, RichTextI
         }
     }
 
-    public function export(Workspace $workspace)
+    public function export(Workspace $workspace, array &$files)
     {
         $homeTabs = $this->container->get('claroline.manager.home_tab_manager')
             ->getWorkspaceHomeTabConfigsByWorkspace($workspace);

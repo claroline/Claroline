@@ -152,7 +152,7 @@ class RolesImporter extends Importer implements ConfigurationInterface
         return $entityRoles;
     }
 
-    public function export(Workspace $workspace)
+    public function export(Workspace $workspace, array &$files)
     {
         $data = [];
 

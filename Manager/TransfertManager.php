@@ -237,7 +237,7 @@ class TransfertManager
         */
 
         //add missing tools for workspace
-        $this->container->get('claroline.manager.tool_manager')->addMissingWorkspaceTools($workspace);
+        //$this->container->get('claroline.manager.tool_manager')->addMissingWorkspaceTools($workspace);
 
         return $workspace;
     }
@@ -265,8 +265,9 @@ class TransfertManager
         }
 
         $data = [];
-        $data['roles'] = $this->getImporterByName('roles')->export($workspace);
-        $data['tools'] = $this->getImporterByName('tools')->export($workspace);
+        $files = [];
+        $data['roles'] = $this->getImporterByName('roles')->export($workspace, $files);
+        $data['tools'] = $this->getImporterByName('tools')->export($workspace, $files);
 
         //generate the archive in a temp dir
         $content = Yaml::dump($data, 10);

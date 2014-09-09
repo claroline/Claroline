@@ -149,7 +149,9 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
                 );
 
                 //add the missing roles
+
                 foreach ($directory['directory']['roles'] as $role) {
+
                      $creations = (isset($role['role']['rights']['create'])) ?
                         $this->getCreationRightsArray($role['role']['rights']['create']):
                         array();
@@ -162,12 +164,13 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
                     $createdRights = null;
 
                     foreach ($map['Claroline\CoreBundle\Entity\Resource\ResourceRights'] as $unflushed) {
-                        $createdRights = $unflushed->getRole()->getName() === $entityRoles[$role['role']['name']]->getName() ?
+                        $createdRights = $unflushed->getRole()->getName() === $role['role']['name'] ?
                             $unflushed: null;
+                        break;
                     }
 
-                    if ($createdRights !== null) {
-                        echo 'create ' . $entityRoles[$role['role']['name']]->getName();
+                    //There is no ResourceRight in the IdentityMap so we must create it
+                    if ($createdRights === null) {
                         $this->rightManager->create(
                             $role['role']['rights'],
                             $entityRoles[$role['role']['name']],
@@ -175,8 +178,15 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
                             false,
                             $creations
                         );
+                    //We use the ResourceRight from the IdentityMap
+                    } else {
+                        $createdRights->setMask($this->maskManager->encodeMask(
+                            $role['role']['rights'],
+                            $createdRights->getResourceNode()->getResourceType())
+                        );
                     }
                 }
+
             }
 
             //set the correct parent
@@ -252,6 +262,7 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
             //if it's not a base role already set at the resource creation, it must be created,
             //otherwise it should be edited
             //for now only ROLE_USER and ROLE_ANONYMOUS are created by default
+            //@todo use the IdentityMap from the UnitOfWork
 
             if ($entityRoles[$role['role']['name']]->getName() !== 'ROLE_USER'
                 && $entityRoles[$role['role']['name']]->getName() !== 'ROLE_ANONYMOUS') {
@@ -298,7 +309,7 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
         }*/
     }
 
-    public function export(Workspace $workspace)
+    public function export(Workspace $workspace, array &$files)
     {
         $data = [];
         //first we get the root
@@ -320,6 +331,26 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
                     'uid'     => $resourceNode->getId(),
                     'roles'   => $this->getPermsArray($resourceNode)
                 ));
+            }
+        }
+
+        foreach ($resourceNodes as $resourceNode) {
+            if ($resourceNode->getParent() !== null) {
+                $children = $resourceNode->getChildren();
+
+                foreach ($children as $child) {
+                    if ($child->getResourceType()->getName() !== 'directory') {
+                        $childData = null;
+                        $data['items'][] = array('item' => array(
+                            'name' => $child->getName(),
+                            'creator' => null,
+                            'parent' => $resourceNode->getId(),
+                            'type' => $child->getResourceType()->getName(),
+                            'roles' => $this->getPermsArray($child),
+                            'data' => $childData
+                        ));
+                    }
+                }
             }
         }
 
@@ -609,5 +640,11 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
         }
 
         return $roles;
+    }
+
+    //@todo implements a method wich will lopp through the IdentityMap to find existing ResourceRights
+    private function setPermissions()
+    {
+        //
     }
 } 
