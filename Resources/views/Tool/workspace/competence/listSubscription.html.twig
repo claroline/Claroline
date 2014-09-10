@@ -59,7 +59,7 @@
             </thead>
             {% for c in cpt %}
             <tr>
-                <td> <a href="{{path('claro_admin_competence_show_referential',{'competence':c.id})}}">
+                <td> <a href="{{path('claro_admin_competence_show_referential', {'competenceNode': c.id})}}">
                      {{c.name}}
                     </a> 
                 </td> 

@@ -1,0 +1,140 @@
+{% macro renderPager(pager, workspaceId, orderedBy, order, max) %}
+    {{
+        pagerfanta(
+            pager,
+            'twitter_bootstrap_translated',
+            {
+                'proximity' : 1,
+                'routeName': 'claro_workspace_competences_management',
+                'routeParams': {
+                    'workspace': workspaceId,
+                    'orderedBy': orderedBy,
+                    'order': order,
+                    'max': max
+                }
+            }
+        )
+    }}
+{% endmacro %}
+
+{% macro sortUrl(workspaceId, orderedBy, order) %}
+    {% if order == 'ASC' %}
+        {% set newOrder = 'DESC' %}
+    {% else %}
+        {% set newOrder = 'ASC' %}
+    {% endif %}
+
+    {{ path('claro_workspace_competences_management', {'workspace': workspaceId, 'orderedBy': orderedBy, 'order': newOrder }) }}
+{% endmacro %}
+
+{% from _self import renderPager %}
+{% from _self import sortUrl %}
+
+{% extends "ClarolineCoreBundle:Workspace:layout.html.twig" %}
+
+{% set workspaceId = workspace.getId() %}
+
+{% block title %}
+    {{ 'learning_outcomes' | trans({}, 'platform') | striptags | raw }}
+{% endblock %}
+
+{% block breadcrumb %}
+    {{
+        macros.workspaceBreadcrumbs(
+            workspace,
+            [
+                {
+                    'name': 'learning_outcomes'|trans({}, 'platform'),
+                    'href': path('claro_workspace_learning_outcomes_list', {'workspace': workspaceId})
+                },
+                {
+                    'name': 'competences_management'|trans({}, 'platform'),
+                    'href': ''
+                }
+            ]
+        )
+    }}
+{% endblock %}
+
+{% block content %}
+    <div id="workspace-data-element" data-workspace-id="{{ workspaceId }}">
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">{{ 'competences_management'|trans({}, 'platform' )}}</h3>
+        </div>
+        <div class="panel-body">
+            
+            {% if competences|length == 0 %}
+                <div class="alert alert-danger">
+                    {{ 'no_competence'|trans({}, 'platform' )}}
+                </div>
+            {% else %}
+                <div class="table-responsive">
+                    <table class="table">
+                        <tr>
+                            <th>
+                                <a href="{{ sortUrl(workspaceId, 'name', order) }}">
+                                    {{ 'name'|trans({}, 'platform') }}
+                                </a>
+                            </th>
+                            <th>
+                                <a href="{{ sortUrl(workspaceId, 'code', order) }}">
+                                    {{ 'code'|trans({}, 'platform') }}
+                                </a>
+                            </th>
+                            <th>
+                                <a href="{{ sortUrl(workspaceId, 'score', order) }}">
+                                    {{ 'score'|trans({}, 'platform') }}
+                                </a>
+                            </th>
+                            <th>
+                                {{ 'actions'|trans({}, 'platform') }}
+                            </th>
+                        </tr>
+                        
+                        {% for competence in competences %}
+                            <tr>
+                                <td>{{ competence.getName() }}</td>
+                                <td>{{ competence.getCode() }}</td>
+                                <td>{{ competence.getScore() }}</td>
+                                <td>
+                                    <span class="btn btn-default edit-workspace-competence-btn"
+                                          data-competence-id="{{ competence.getId() }}"
+                                    >
+                                        <i class="fa fa-edit"></i>
+                                    </span>
+                                    <span class="btn btn-danger delete-workspace-competence-btn"
+                                          data-competence-id="{{ competence.getId() }}"
+                                    >
+                                        <i class="fa fa-trash-o"></i>
+                                    </span>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+        
+                {% if competences.getNbPages() > 1 %}
+                    {{ renderPager(competences, workspaceId, orderedBy, order, max) }}
+                {% endif %}
+            {% endif %}
+        </div>
+        <div class="panel-footer">
+            <a href="{{ path('claro_workspace_learning_outcomes_list', {'workspace': workspaceId}) }}" class="btn btn-primary">
+                <i class="fa fa-arrow-left"></i>
+                {{ 'back'|trans({},'platform') }}
+            </a>
+            <span id="create-workspace-competence-btn" class="btn btn-primary">
+                <i class="fa fa-plus-circle"></i>
+                {{ 'create_competence'|trans({},'platform') }}
+            </span>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type='text/javascript'src='{{ asset('bundles/clarolinecore/js/tool/workspace/competence/workspaceCompetencesManagement.js') }}'></script>
+{% endblock %}

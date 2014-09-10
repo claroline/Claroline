@@ -1,0 +1,88 @@
+{% extends "ClarolineCoreBundle:Workspace:layout.html.twig" %}
+
+{% block title %}
+    {{ 'learning_outcomes' | trans({}, 'platform') | striptags | raw }}
+{% endblock %}
+
+{% block breadcrumb %}
+    {{
+        macros.workspaceBreadcrumbs(
+            workspace,
+            [
+                {
+                    'name': 'learning_outcomes'|trans({}, 'platform'),
+                    'href': ''
+                }
+            ]
+        )
+    }}
+{% endblock %}
+
+{% block content %}
+    <div id="workspace-data-element" data-workspace-id="{{ workspace.getId() }}">
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">
+                {{ 'learning_outcomes'|trans({}, 'platform' )}}
+            </h3>
+        </div>
+        <div class="panel-body">
+            
+            {% if learningOutcomes|length == 0 %}
+                <div class="alert alert-danger">
+                    {{ 'no_learning_outcomes'|trans({}, 'platform' ) }}
+                </div>
+            {% else %}
+                <div class="table-responsive">
+                    <table class="table">
+                        <tr>
+                            <th>{{ 'name'|trans({}, 'platform' ) }}</th>
+                            <th>{{ 'actions'|trans({}, 'platform' ) }}</th>
+                        </tr>
+                        
+                        {% for lo in learningOutcomes %}
+                            <tr>
+                                <td>
+                                    <a href="{{ path('claro_workspace_learning_outcomes_show', {'workspace': workspace.getId(), 'competenceNode': lo.getId()}) }}">
+                                        {{ lo.getCompetence().getName() }}
+                                    </a>
+                                </td>
+                                <td>
+                                    <span class="btn btn-default edit-learning-outcomes-btn"
+                                          data-competence-id="{{ lo.getCompetence().getId() }}"
+                                    >
+                                        <i class="fa fa-edit"></i>
+                                        {{ 'edit'|trans({}, 'platform' ) }}
+                                    </span>
+                                    <span class="btn btn-danger delete-learning-outcomes-btn"
+                                          data-competence-node-id="{{ lo.getId() }}"
+                                    >
+                                        <i class="fa fa-trash-o"></i>
+                                        {{ 'delete'|trans({}, 'platform' ) }}
+                                    </span>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            {% endif %}
+        </div>
+        <div class="panel-footer">
+            <span id="create-learning-outcomes-btn" class="btn btn-primary">
+                {{ 'create_learning_outcomes'|trans({},'platform') }}
+            </span>
+            <a href="{{ path('claro_workspace_competences_management', {'workspace': workspace.getId()}) }}"
+               class="btn btn-primary"
+            >
+                {{ 'competences_management'|trans({},'platform') }}
+            </a>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type='text/javascript'src='{{ asset('bundles/clarolinecore/js/tool/workspace/competence/workspaceLearningOutcomesList.js') }}'></script>
+{% endblock %}
