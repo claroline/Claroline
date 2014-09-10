@@ -451,7 +451,9 @@ left: Gauche
 limit: Limite
 line_number: 'Ligne %line%:'
 line_per_page: 'Résultats par page'
+linkable_competences: 'Compétences liables'
 link: Lien
+link_competence: 'Lier'
 link_outdated: 'le lien n''est plus valide'
 link_workspace: 'Lier un espace d''activités'
 list_groups: 'Lister les groupes'

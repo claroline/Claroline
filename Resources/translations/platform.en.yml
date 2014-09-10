@@ -450,7 +450,9 @@ left: Left
 limit: Limit
 line_number: 'Line %line%:'
 line_per_page: 'Results per page'
+linkable_competences: 'Linkable competences'
 link: Link
+link_competence: 'Link'
 link_outdated: 'link is no more valid'
 link_workspace: 'Link workspace'
 list_groups: 'List groups'

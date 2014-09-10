@@ -1,0 +1,56 @@
+<a href="#" class="competence-view-btn" data-competence-id="{{ competences[node['id']]['competenceId'] }}">
+    {{ competences[node['id']]['name'] }}
+</a>
+<span class="dropdown">
+    <i class="fa fa-cog pointer-hand dropdown-toggle"
+       id="dropdownMenu-{{ node['id'] }}"
+       data-toggle="dropdown"
+    ></i>
+    <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu-{{ node['id'] }}" style="white-space: nowrap">
+        <li role="presentation">
+            <a role="menuitem"
+               tabindex="-1"
+               class="pointer-hand competence-edit-btn"
+               data-competence-id="{{ competences[node['id']]['competenceId'] }}"
+            >
+                <i class="fa fa-edit"></i>
+                {{ 'edit_competence'|trans({}, 'platform') }}
+            </a>
+        </li>
+        <li role="presentation" class="divider"></li>
+        <li role="presentation">
+            <a role="menuitem"
+               tabindex="-1"
+               class="pointer-hand add-sub-competence-btn"
+               data-competence-node-id="{{ node['id'] }}"
+            >
+                <i class="fa fa-plus"></i>
+                {{ 'create_sub_competence'|trans({}, 'platform') }}
+            </a>
+        </li>
+        <li role="presentation">
+            <a role="menuitem"
+               tabindex="-1"
+               class="pointer-hand link-sub-competence-btn"
+               data-competence-node-id="{{ node['id'] }}"
+            >
+                <i class="fa fa-search"></i>
+                {{ 'add_sub_competence'|trans({}, 'platform') }}
+            </a>
+        </li>
+        
+        {% if competences[node['id']]['root'] is empty %}
+            <li role="presentation" class="divider"></li>
+            <li role="presentation">
+                <a role="menuitem"
+                   tabindex="-1"
+                   class="pointer-hand remove-competence-node-btn"
+                   data-competence-node-id="{{ node['id'] }}"
+                >
+                    <i class="fa fa-trash-o"></i>
+                    {{ 'remove_competence'|trans({}, 'platform') }}
+                </a>
+            </li>
+        {% endif %}
+    </ul>
+</span>

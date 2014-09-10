@@ -19,6 +19,7 @@ use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Pager\PagerFactory;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -30,6 +31,7 @@ class CompetenceManager
     private $om;
     private $pagerFactory;
     private $router;
+    private $templating;
     private $translator;
     private $cptNodeRepo;
     private $cptRepo;
@@ -40,6 +42,7 @@ class CompetenceManager
      *     "om"           = @DI\Inject("claroline.persistence.object_manager"),
      *     "pagerFactory" = @DI\Inject("claroline.pager.pager_factory"),
      *     "router"       = @DI\Inject("router"),
+     *     "templating"   = @DI\Inject("templating"),
      *     "translator"   = @DI\Inject("translator")
      * })
      */
@@ -47,12 +50,14 @@ class CompetenceManager
         ObjectManager $om,
         PagerFactory $pagerFactory,
         UrlGeneratorInterface $router,
+        TwigEngine $templating,
         TranslatorInterface $translator
     )
     {
         $this->om = $om;
         $this->pagerFactory = $pagerFactory;
         $this->router = $router;
+        $this->templating = $templating;
         $this->translator = $translator;
         $this->cptNodeRepo = $om->getRepository('ClarolineCoreBundle:Competence\CompetenceNode');
         $this->cptRepo = $om->getRepository('ClarolineCoreBundle:Competence\Competence');
@@ -86,52 +91,10 @@ class CompetenceManager
             'childClose' => '</li>',
             'nodeDecorator' => function($node) use (&$competences) {
 
-                $returnValue = '<a href="#" class="competence-view-btn" data-competence-id="'
-                    . $competences[$node['id']]['competenceId']
-                    . '">'
-                    . $competences[$node['id']]['name']
-                    . '</a>'
-                    . '<span class="btn btn-default btn-sm competence-edit-btn margin-left-sm" title="'
-                    . $this->translator->trans(
-                        'edit_competence',
-                        array(),
-                        'platform'
-                    )
-                    . '" data-toggle="tooltip" data-placement="top" data-competence-id="'
-                    . $competences[$node['id']]['competenceId']
-                    . '"><i class="fa fa-edit"></i></span>'
-                    . '<span class="btn btn-default btn-sm add-sub-competence-btn margin-left-sm" title="'
-                    . $this->translator->trans(
-                        'create_sub_competence',
-                        array(),
-                        'platform'
-                    )
-                    . '" data-toggle="tooltip" data-placement="top" data-competence-node-id="'
-                    . $node['id']
-                    . '"><i class="fa fa-plus"></i></span>'
-                    . '<span class="btn btn-default btn-sm link-sub-competence-btn margin-left-sm" title="'
-                    . $this->translator->trans(
-                        'add_sub_competence',
-                        array(),
-                        'platform'
-                    )
-                    . '" data-toggle="tooltip" data-placement="top" data-competence-node-id="'
-                    . $node['id']
-                    . '"><i class="fa fa-search"></i></span>';
-
-                if (!$competences[$node['id']]['root']) {
-                    $returnValue .= '<span class="btn btn-danger btn-sm remove-competence-node margin-left-sm" title="'
-                        . $this->translator->trans(
-                            'remove_competence',
-                            array(),
-                            'platform'
-                        )
-                        . '" data-toggle="tooltip" data-placement="top" data-competence-node-id="'
-                        . $node['id']
-                        . '"><i class="fa fa-trash-o"></i></span>';
-                }
-
-                return $returnValue;
+                return $this->templating->render(
+                    'ClarolineCoreBundle:Tool\workspace\competence:competenceNodeHierarchyDisplay.html.twig',
+                    array('node' => $node, 'competences' => $competences)
+                );
             }
         );
         $htmlTree = $this->cptNodeRepo->childrenHierarchy(

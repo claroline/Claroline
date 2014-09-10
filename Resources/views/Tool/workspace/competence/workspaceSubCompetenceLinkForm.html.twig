@@ -5,7 +5,7 @@
                 &times;
             </button>
             <h3 class="modal-title">
-                {{ 'link_competence'|trans({},'competence') }}
+                {{ 'linkable_competences'|trans({},'platform') }}
             </h3>
         </div>
         <div class="modal-body">
@@ -15,7 +15,7 @@
                 <div class="table-responsive">
                     <table class="table">
                         <tr>
-                            <th>{{ 'competence'|trans({}, 'platform') }}</th>
+                            <th>{{ 'name'|trans({}, 'platform') }}</th>
                             <th></th>
                         </tr>
 
@@ -26,7 +26,7 @@
                                     <a href="{{ path('claro_workspace_sub_competence_link', {'workspace': workspace.getId(), 'parent': parent.getId(), 'competence': competence.getId()}) }}"
                                        class="btn btn-primary"
                                     >
-                                        {{ 'link'|trans({}, 'platform') }}
+                                        {{ 'link_competence'|trans({}, 'platform') }}
                                     </a>
                                 </td>
                             </tr>

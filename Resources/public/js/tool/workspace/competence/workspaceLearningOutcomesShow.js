@@ -66,7 +66,7 @@
         );
     });
     
-    $('.remove-competence-node').on('click', function() {
+    $('.remove-competence-node-btn').on('click', function() {
         var competenceNodeId = $(this).data('competence-node-id');
         var route = Routing.generate(
             'claro_workspace_competence_node_delete',
