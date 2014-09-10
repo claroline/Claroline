@@ -150,6 +150,7 @@ apply: Appliquer
 at_least_one_category_has_to_be_selected: 'Au moins une catégorie doit être selectionnée'
 attempt: Tentative
 attempts: Tentatives
+authentication: Authentification
 automatic: Automatique
 available_widgets: 'Widgets disponibles'
 available_workspaces: 'Espaces d''activités disponibles'
@@ -192,8 +193,8 @@ collaborator: Collaborateur
 comment: Commentaire
 communication: Communication
 competence: Compétence
-competences: Compétences
 competence_referencial: Réferenciel de compétences
+competences: Compétences
 completed: Terminé
 configuration: Configuration
 configure: Configurer

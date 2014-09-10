@@ -150,6 +150,7 @@ apply: Apply
 at_least_one_category_has_to_be_selected: 'At least one category has to be selected'
 attempt: Attempt
 attempts: Attempts
+authentication: Authentication
 automatic: Automatic
 available_widgets: 'Available widgets'
 available_workspaces: 'Available workspaces'
@@ -192,8 +193,8 @@ collaborator: Collaborator
 comment: Comment
 communication: Communication
 competence: Competence
-competences: Competences
 competence_referencial: Learning outcomes
+competences: Competences
 completed: Completed
 configuration: Configuration
 configure: Configure

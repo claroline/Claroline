@@ -25,6 +25,7 @@ class ProfileType extends AbstractType
     private $isAdmin;
     private $isGrantedUserAdministration;
     private $langs;
+    private $authenticationDrivers;
 
     /**
      * Constructor.
@@ -33,7 +34,9 @@ class ProfileType extends AbstractType
      * @param boolean  $isAdmin
      * @param string[] $langs
      */
-    public function __construct(array $platformRoles, $isAdmin, $isGrantedUserAdministration, array $langs)
+    public function __construct(
+        array $platformRoles, $isAdmin, $isGrantedUserAdministration, array $langs, $authenticationDrivers = null
+    )
     {
         $this->platformRoles = new ArrayCollection($platformRoles);
         $this->isAdmin = $isAdmin;
@@ -44,6 +47,8 @@ class ProfileType extends AbstractType
         } else {
             $this->langs = array('en' => 'en', 'fr' => 'fr');
         }
+
+        $this->authenticationDrivers = $authenticationDrivers;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -61,7 +66,16 @@ class ProfileType extends AbstractType
             )
             ->add('mail', 'email', array('required' => false, 'label' => 'email'))
             ->add('phone', 'text', array('required' => false, 'label' => 'phone'))
-            ->add('locale', 'choice', array('choices' => $this->langs, 'required' => false, 'label' => 'Language'));
+            ->add('locale', 'choice', array('choices' => $this->langs, 'required' => false, 'label' => 'Language'))
+            ->add(
+                'authentication',
+                'choice',
+                array(
+                    'choices' => $this->authenticationDrivers,
+                    'required' => false,
+                    'label' => 'authentication'
+                )
+            );
 
         if ($this->isAdmin || $this->isGrantedUserAdministration) {
             $isAdmin = $this->isAdmin;
