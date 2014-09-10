@@ -229,8 +229,6 @@ class WorkspaceManager
     }
 
     /**
-<<<<<<< HEAD
-=======
      * Creates a workspace template.
      *
      * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
@@ -376,7 +374,6 @@ class WorkspaceManager
     }
 
     /**
->>>>>>> 8dfaea7b8280c7aa33b22d01e8ebc880c74c27f2
      * Appends a role list to a right array.
      *
      * @param array $rights
