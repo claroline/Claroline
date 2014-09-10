@@ -50,7 +50,7 @@ abstract class AbstractRoleSubject
 
     /**
      * Returns the subject's roles as an ArrayCollection of Role objects.
-
+     *
      * @return ArrayCollection[Role]
      */
     public function getEntityRoles()

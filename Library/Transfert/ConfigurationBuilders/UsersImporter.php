@@ -27,15 +27,19 @@ class UsersImporter extends Importer implements ConfigurationInterface
 {
     private static $data;
     private $om;
+    private $userManager;
+    private $container;
 
     /**
      * @DI\InjectParams({
-     *     "om"      = @DI\Inject("claroline.persistence.object_manager")
+     *     "om"        = @DI\Inject("claroline.persistence.object_manager"),
+     *     "container" = @DI\Inject("service_container")
      * })
      */
-    public function __construct(ObjectManager $om)
+    public function __construct(ObjectManager $om, $container)
     {
-        $this->om = $om;
+        $this->om        = $om;
+        $this->container = $container;
     }
 
     public function  getConfigTreeBuilder()
@@ -47,7 +51,6 @@ class UsersImporter extends Importer implements ConfigurationInterface
         return $treeBuilder;
     }
 
-    //@todo include owner in the verification if this section exists
     public function addUsersSection($rootNode)
     {
          $usernames = array();
@@ -56,21 +59,6 @@ class UsersImporter extends Importer implements ConfigurationInterface
         {
             $usernames[] = $username['username'];
         }
-
-        $emails = array();
-
-        foreach($this->om->getRepository('Claroline\CoreBundle\Entity\User')->findEmails() as $mail)
-        {
-            $emails[] = $mail['mail'];
-        }
-
-        $codes = array();
-
-        foreach($this->om->getRepository('Claroline\CoreBundle\Entity\User')->findCodes() as $code)
-        {
-            $codes[] = $code['code'];
-        }
-
 
         $configuration = $this->getConfiguration();
         $availableRoleName = array();
@@ -81,112 +69,34 @@ class UsersImporter extends Importer implements ConfigurationInterface
             }
         }
 
-        $owner = null;
+        //add platform roles
+        $existingRoles = $this->om->getRepository('ClarolineCoreBundle:Role')->findAllPlatformRoles();
 
-       if (isset($configuration['members']['owner']['username'])) {
-            $owner = $configuration['members']['owner']['username'];
-       }
+        foreach($existingRoles as $existingRole) {
+            $availableRoleName[] = $existingRole->getName();
+        }
+
+        //ROLE_ANONYMOUS can be selected
+        $availableRoleName[] = 'ROLE_ANONYMOUS';
+        //ROLE_WS_MANAGER is created automatically
+        $availableRoleName[] = 'ROLE_WS_MANAGER';
 
         $rootNode
             ->prototype('array')
                 ->children()
                     ->arrayNode('user')
                         ->children()
-                            ->scalarNode('first_name')->example('Jane')->isRequired()->end()
-                            ->scalarNode('last_name')->example('Doe')->isRequired()->end()
                             ->scalarNode('username')->example('janedoe')->isRequired()
                                 ->validate()
                                     ->ifTrue(
                                         function ($v) use ($usernames) {
                                             return call_user_func_array(
-                                                __CLASS__ . '::usernameAlreadyExistsInDatabase',
+                                                __CLASS__ . '::usernameMissingInDatabase',
                                                 array($v, $usernames)
                                             );
                                         }
                                     )
-                                    ->thenInvalid("The username %s already exists in the database")
-                                ->end()
-                                ->validate()
-                                    ->ifTrue(
-                                        function ($v) use ($usernames) {
-                                            return call_user_func_array(
-                                                __CLASS__ . '::usernameAlreadyExistsInConfig',
-                                                array($v, $usernames)
-                                            );
-                                        }
-                                    )
-                                    ->thenInvalid("The username %s already exists in the configuration")
-                                ->end()
-                                ->validate()
-                                    ->ifTrue(
-                                        function ($v) use ($owner) {
-                                            return call_user_func_array(
-                                                __CLASS__ . '::ownerAlreadyExists',
-                                                array($v, $owner)
-                                            );
-                                        }
-                                    )
-                                    ->thenInvalid("The owner %s already exists in the configuration")
-                                ->end()
-                            ->end()
-                            ->scalarNode('password')->example('noidea')->isRequired()->end()
-                            ->scalarNode('mail')->example('jdoe@gmail.com')->isRequired()
-                                ->validate()
-                                    ->ifTrue(
-                                        function ($v) use ($emails) {
-                                            return call_user_func_array(
-                                                __CLASS__ . '::emailAlreadyExistsInDatabase',
-                                                array($v, $emails)
-                                            );
-                                        }
-                                    )
-                                    ->thenInvalid("The email %s already exists")
-                                ->end()
-                                ->validate()
-                                    ->ifTrue(
-                                        function ($v) use ($emails) {
-                                            return call_user_func_array(
-                                                __CLASS__ . '::emailsAlreadyExistsInConfig',
-                                                array($v, $emails)
-                                            );
-                                        }
-                                    )
-                                    ->thenInvalid("The email %s already exists in the configuration")
-                                ->end()
-                                ->validate()
-                                    ->ifTrue(
-                                        function ($v) use ($emails) {
-                                            return call_user_func_array(
-                                                __CLASS__ . '::emailIsValid',
-                                                array($v, $emails)
-                                            );
-                                        }
-                                    )
-                                    ->thenInvalid("The email %s is invalid")
-                                ->end()
-                            ->end()
-                            ->scalarNode('code')->example('usr#1234569789')->isRequired()
-                                ->validate()
-                                    ->ifTrue(
-                                        function ($v) use ($codes) {
-                                            return call_user_func_array(
-                                                __CLASS__ . '::codeAlreadyExistsInDatabase',
-                                                array($v, $codes)
-                                            );
-                                        }
-                                    )
-                                    ->thenInvalid("The code %s already exists")
-                                ->end()
-                                ->validate()
-                                    ->ifTrue(
-                                        function ($v) use ($codes) {
-                                            return call_user_func_array(
-                                                __CLASS__ . '::codeAlreadyExistsInConfig',
-                                                array($v, $codes)
-                                            );
-                                        }
-                                    )
-                                    ->thenInvalid("The code %s already exists")
+                                    ->thenInvalid("The username %s does not exists")
                                 ->end()
                             ->end()
                             ->arrayNode('roles')
@@ -231,82 +141,28 @@ class UsersImporter extends Importer implements ConfigurationInterface
         $configuration = $processor->processConfiguration($this, $data);
     }
 
-    public static function usernameAlreadyExistsInDatabase($v, $usernames)
+    public function import(array $data, array $entityRoles)
     {
-        return in_array($v, $usernames);
-    }
+        $this->om->startFlushSuite();
 
-    public static function usernameAlreadyExistsInConfig($v)
-    {
-        $users = self::getData();
+        foreach ($data as $user) {
+            $userEntities = $this->om->getRepository('ClarolineCoreBundle:User')
+                ->findBy(array('username' => $user['user']['username']));
 
-        $found = false;
-
-        foreach ($users as $el) {
-            foreach ($el as $user) {
-                if ($user['user']['username'] === $v) {
-                    if ($found) {
-                        return true;
-                    }
-                    $found = true;
+            if (isset($user['user']['roles']) && count($userEntities) === 1) {
+                foreach ($user['user']['roles'] as $role) {
+                    $userEntities[0]->addRole($entityRoles[$role['name']]);
                 }
+                $this->om->persist($userEntities[0]);
             }
         }
 
-        return false;
+        $this->om->endFlushSuite();
     }
 
-    public static function emailsAlreadyExistsInConfig($v)
+    public static function usernameMissingInDatabase($v, $usernames)
     {
-        $users = self::getData();
-        $found = false;
-
-        foreach ($users as $el) {
-            foreach ($el as $user) {
-                if ($user['user']['mail'] === $v) {
-                    if ($found) {
-                        return true;
-                    }
-                    $found = true;
-                }
-            }
-        }
-
-        return false;
-    }
-
-    public static function codeAlreadyExistsInConfig($v)
-    {
-        $users = self::getData();
-        $found = false;
-
-        foreach ($users as $el) {
-            foreach ($el as $user) {
-                if ($user['user']['code'] === $v) {
-                    if ($found) {
-                        return true;
-                    }
-                    $found = true;
-                }
-            }
-        }
-
-        return false;
-    }
-
-    public static function emailAlreadyExistsInDatabase($v, $mails)
-    {
-        return in_array($v, $mails);
-    }
-
-    public static function emailIsValid($v)
-    {
-        return !filter_var($v, FILTER_VALIDATE_EMAIL);
-    }
-
-    public static function codeAlreadyExistsInDatabase($v, $code)
-    {
-        return in_array($v, $code);
+        return self::isStrict() ? !in_array($v, $usernames): false;
     }
 
     private static function setData($data)

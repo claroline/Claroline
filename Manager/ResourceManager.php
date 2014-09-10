@@ -401,9 +401,9 @@ class ResourceManager
         if (count($rights) === 0 && $parent !== null) {
             $node = $this->rightsManager->copy($parent, $node);
         } else {
-            if (count($rights) === 0) {
-                throw new RightsException('Rights must be specified if there is no parent');
-            }
+//            if (count($rights) === 0) {
+//                throw new RightsException('Rights must be specified if there is no parent');
+//            }
             $this->createRights($node, $rights);
         }
 

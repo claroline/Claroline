@@ -20,6 +20,8 @@ use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Security\PlatformRoles;
 use Claroline\CoreBundle\Library\Workspace\Configuration;
+use Claroline\CoreBundle\Manager\MailManager;
+use Claroline\CoreBundle\Manager\TransfertManager;
 use Claroline\CoreBundle\Pager\PagerFactory;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -50,6 +52,7 @@ class UserManager
     private $validator;
     private $workspaceManager;
     private $uploadsDirectory;
+    private $transfertManager;
     private $container;
 
     /**
@@ -68,6 +71,7 @@ class UserManager
      *     "validator"              = @DI\Inject("validator"),
      *     "workspaceManager"       = @DI\Inject("claroline.manager.workspace_manager"),
      *     "uploadsDirectory"       = @DI\Inject("%claroline.param.uploads_directory%"),
+     *     "transfertManager"       = @DI\Inject("claroline.manager.transfert_manager"),
      *     "container"              = @DI\Inject("service_container")
      * })
      */
@@ -83,6 +87,7 @@ class UserManager
         Translator $translator,
         ValidatorInterface $validator,
         WorkspaceManager $workspaceManager,
+        TransfertManager $transfertManager,
         $uploadsDirectory,
         ContainerInterface $container
     )
@@ -100,6 +105,7 @@ class UserManager
         $this->mailManager            = $mailManager;
         $this->validator              = $validator;
         $this->uploadsDirectory       = $uploadsDirectory;
+        $this->transfertManager       = $transfertManager;
         $this->container              = $container;
     }
 
@@ -125,6 +131,20 @@ class UserManager
         if ($this->mailManager->isMailerAvailable()) {
             $this->mailManager->sendCreationMessage($user);
         }
+
+        return $user;
+    }
+
+    /**
+     * Persist a user.
+     *
+     * @param User $user
+     * @return User
+     */
+    public function persistUser(User $user)
+    {
+        $this->objectManager->persist($user);
+        $this->objectManager->flush();
 
         return $user;
     }
@@ -300,7 +320,7 @@ class UserManager
         $personalWorkspaceName = $this->translator->trans('personal_workspace', array(), 'platform') . $user->getUsername();
         $config->setWorkspaceName($personalWorkspaceName);
         $config->setWorkspaceCode($user->getUsername());
-        $workspace = $this->workspaceManager->create($config, $user);
+        $workspace = $this->transfertManager->createWorkspace($config, $user, true);
         $user->setPersonalWorkspace($workspace);
         $this->objectManager->persist($user);
         $this->objectManager->flush();
@@ -399,6 +419,20 @@ class UserManager
     }
 
     /**
+     * @param integer $page
+     * @param integer $max
+     * @param string  $orderedBy
+     * @param string  $order
+     *
+     * @return \Pagerfanta\Pagerfanta;
+     */
+    public function getAllUsersExcept($page, $max = 20, $orderedBy = 'id', $order = null, array $users )
+    {
+        $query = $this->userRepo->findAllExcept($users);
+        return $this->pagerFactory->createPagerFromArray($query, $page, $max);
+    }
+
+    /**
      * @param string  $search
      * @param integer $page
      * @param integer $max
@@ -486,11 +520,17 @@ class UserManager
      *
      * @return \Pagerfanta\Pagerfanta
      */
-    public function getUsersByWorkspaces(array $workspaces, $page, $max = 20)
+    public function getUsersByWorkspaces(array $workspaces, $page, $max = 20, $withPager = true)
     {
-        $query = $this->userRepo->findUsersByWorkspaces($workspaces, false);
+        if ($withPager) {
+            $query = $this->userRepo->findUsersByWorkspaces($workspaces, false);
+            
+            return $this->pagerFactory->createPager($query, $page, $max);
+        } else {
+            return  $this->userRepo->findUsersByWorkspaces($workspaces);
+ 
+        }
 
-        return $this->pagerFactory->createPager($query, $page, $max);
     }
 
     /**
@@ -739,6 +779,16 @@ class UserManager
     public function getResetPasswordHash($resetPassword)
     {
         return $this->userRepo->findOneByResetPasswordHash($resetPassword);
+    }
+    
+    /**
+     * @param integer $userId
+     *
+     * @return User|null
+     */
+    public function getEnabledUserById($userId)
+    {
+        return $this->userRepo->findEnabledUserById($userId);
     }
 
     /**

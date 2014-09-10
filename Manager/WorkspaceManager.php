@@ -14,6 +14,7 @@ namespace Claroline\CoreBundle\Manager;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceFavourite;
+use Claroline\CoreBundle\Entity\Workspace\WorkspaceRegistrationQueue;
 use Claroline\CoreBundle\Library\Security\Utilities;
 use Claroline\CoreBundle\Manager\HomeTabManager;
 use Claroline\CoreBundle\Manager\RoleManager;
@@ -82,6 +83,7 @@ class WorkspaceManager
     private $pagerFactory;
     private $workspaceFavouriteRepo;
     private $container;
+    private $trans;
 
     /**
      * Constructor.
@@ -158,85 +160,17 @@ class WorkspaceManager
     /**
      * Creates a workspace.
      *
-     * @param \Claroline\CoreBundle\Library\Workspace\Configuration $config
+     * @param \Claroline\CoreBundle\Library\Workspace\Configuration $configuration
      * @param \Claroline\CoreBundle\Entity\User                     $manager
+     * @param bool                                                  $createUsers
+     * @param bool                                                  $importUsers
      *
-     * @return \Claroline\CoreBundle\Entity\Workspace\Workspace
-     *
-     * @throws UnknownToolException
+     * @return \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace
      */
-    public function create(Configuration $config, User $manager)
+    public function create(Configuration $configuration, User $manager, $createUsers = false, $importUsers = false)
     {
-        $config->check();
-        $this->om->startFlushSuite();
-        $workspace = $this->om->factory('Claroline\CoreBundle\Entity\Workspace\Workspace');
-        $workspace->setCreator($manager);
-        $workspace->setName($config->getWorkspaceName());
-        $workspace->setCode($config->getWorkspaceCode());
-        $workspace->setDescription($config->getWorkspaceDescription());
-        $workspace->setGuid($this->ut->generateGuid());
-        $workspace->setDisplayable($config->isDisplayable());
-        $workspace->setSelfRegistration($config->getSelfRegistration());
-        $workspace->setSelfUnregistration($config->getSelfUnregistration());
-        $date = new \Datetime(date('d-m-Y H:i'));
-        $workspace->setCreationDate($date->getTimestamp());
-        $baseRoles = $this->roleManager->initWorkspaceBaseRole($config->getRoles(), $workspace);
-        $baseRoles['ROLE_ANONYMOUS'] = $this->roleRepo->findOneBy(array('name' => 'ROLE_ANONYMOUS'));
-        $this->roleManager->associateRole($manager, $baseRoles['ROLE_WS_MANAGER']);
-        $dir = $this->om->factory('Claroline\CoreBundle\Entity\Resource\Directory');
-        $dir->setName($workspace->getName());
-        $rights = $config->getPermsRootConfiguration();
-        $preparedRights = $this->prepareRightsArray($rights, $baseRoles);
-        $root = $this->resourceManager->create(
-            $dir,
-            $this->resourceTypeRepo->findOneByName('directory'),
-            $manager,
-            $workspace,
-            null,
-            null,
-            $preparedRights
-        );
-
-        $toolsConfig = $config->getToolsConfiguration();
-        $toolsPermissions = $config->getToolsPermissions();
-
-        $position = 1;
-
-        foreach ($toolsPermissions as $toolName => $perms) {
-            $rolesToAdd = array();
-
-            foreach ($perms['perms'] as $role) {
-                $rolesToAdd[] = $baseRoles[$role];
-            }
-
-            $confTool = isset($toolsConfig[$toolName]) ?  $toolsConfig[$toolName] : array();
-
-            $tool = $this->toolManager->getOneToolByName($toolName);
-
-            if ($tool === null) {
-                throw new UnknownToolException("The tool {$toolName} does'nt exists.");
-            }
-
-            $this->toolManager->import(
-                $confTool,
-                $rolesToAdd,
-                $baseRoles,
-                $perms['name'],
-                $workspace,
-                $root,
-                $tool,
-                $manager,
-                $position,
-                $config->getArchive()
-            );
-            $position++;
-        }
-
-        $this->dispatcher->dispatch('log', 'Log\LogWorkspaceCreate', array($workspace));
-        $this->om->persist($workspace);
-        $this->om->endFlushSuite();
-
-        $this->homeTabManager->generateCopyOfAdminWorkspaceHomeTabs($workspace);
+        $transfertManager = $this->container->get('claroline.manager.transfert_manager');
+        $workspace = $transfertManager->createWorkspace($configuration, $manager, $createUsers, $importUsers);
 
         return $workspace;
     }
@@ -295,6 +229,8 @@ class WorkspaceManager
     }
 
     /**
+<<<<<<< HEAD
+=======
      * Creates a workspace template.
      *
      * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
@@ -440,6 +376,7 @@ class WorkspaceManager
     }
 
     /**
+>>>>>>> 8dfaea7b8280c7aa33b22d01e8ebc880c74c27f2
      * Appends a role list to a right array.
      *
      * @param array $rights
@@ -867,6 +804,16 @@ class WorkspaceManager
         return (count($user) === 1) ? $user[0]: null;
     }
 
+    public function addUserQueue(Workspace $workspace, User $user)
+    {
+        $wksrq = new WorkspaceRegistrationQueue();
+        $wksrq->setUser($user);
+        $role = $this->roleManager->getCollaboratorRole($workspace);
+        $wksrq->setRole($role);
+        $wksrq->setWorkspace($workspace);
+        $this->om->persist($wksrq);
+        $this->om->flush();
+    }
     /**
      * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
      * @param \Claroline\CoreBundle\Entity\User $user

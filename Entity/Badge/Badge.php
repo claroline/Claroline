@@ -152,7 +152,7 @@ class Badge extends Rulable
      * @var Workspace
      *
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Workspace\Workspace")
-     * @ORM\JoinColumn(name="workspace_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="workspace_id", referencedColumnName="id", onDelete="CASCADE")
      */
     protected $workspace;
 

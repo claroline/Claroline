@@ -26,7 +26,6 @@ class GroupsImporter extends Importer implements ConfigurationInterface
 {
     private static $data;
     private $om;
-    private $merger;
 
     /**
      * @DI\InjectParams({
@@ -151,7 +150,7 @@ class GroupsImporter extends Importer implements ConfigurationInterface
     }
 
     /**
-     * Validate the workspace properties.
+     * Validate the group section.
      *
      * @param array $data
      */

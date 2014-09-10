@@ -1,0 +1,61 @@
+{% extends "ClarolineCoreBundle:Workspace:layout.html.twig" %}
+
+{% block title %}{{ parent() ~ ' - ' ~ '' | trans({}, 'platform') | striptags | raw }}{% endblock %}
+
+{% block breadcrumb %}
+{{
+    macros.breadcrumbs([
+    {
+    'icon': 'fa fa-cog',
+    'name': 'administration'|trans({}, 'platform'),
+    'href': path('claro_admin_index')
+},
+{
+    'name': 'competence_subscription_management'|trans({},'competence'),
+    'href': path('claro_admin_competences_subscription_menu')
+},
+{
+    'name': 'users_competences'|trans({}, 'competence'),
+    'href': path('claro_admin_competences_list_users')
+}
+])
+}}
+{% endblock %}
+{% block section_content %}
+<div class="panel-heading">
+    <h3 class="panel-title">{{ 'users_competences'|trans({}, 'competence') }}</h3>
+</div>
+<div class="panel-body" id="root" data-id="{{cpt.getRoot()}}">
+     {{ tree|raw }}
+    {% for key,uc in listUsers %}
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered table-condensed">
+            <thead>
+                <th><a href="{{ path('claro_admin_competences_subscription_details',{competenceId:uc.id}) }}"> 
+                    {{ key }} </a>
+                <th>  <input type="checkbox" class="checkAll" />  </th>
+                </thead>
+                {% for u in uc.users %}
+                <tr>
+                    <td> {{u.getuser().getLastName() }} {{ u.getUser().getFirstName()}}</td> 
+                    <td> <input type="checkbox" data-id={{u.getId()}} class="cpt"> </td> 
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+        {% endfor %}
+        <button class="btn btn-default delete-user" >
+            <i class="fa fa-pencil"></i>
+            {{ 'delete'|trans({}, 'platform') }}
+        </button>
+    </div>
+    {% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script type='text/javascript'src='{{ asset('bundles/clarolinecore/js/administration/competences.js') }}'></script>
+    <script type='text/javascript'>
+        $(function () {
+            Claroline.Competence.initialize('workspace');
+        });
+</script>
+{% endblock %}

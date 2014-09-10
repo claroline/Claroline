@@ -93,7 +93,7 @@ abstract class Rule
     protected $resource;
 
     /**
-     * @var string
+     * @var integer
      *
      * @ORM\Column(type="smallint", nullable=false)
      * @Expose

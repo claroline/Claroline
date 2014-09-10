@@ -85,10 +85,6 @@ class DatabaseWriter
      */
     public function insert(PluginBundle $plugin, array $pluginConfiguration)
     {
-        if ($this->modifyTemplate) {
-            $this->templateBuilder = TemplateBuilder::fromTemplate("{$this->templateDir}default.zip");
-        }
-
         $pluginEntity = new Plugin();
         $pluginEntity->setVendorName($plugin->getVendorName());
         $pluginEntity->setBundleName($plugin->getBundleName());
@@ -107,10 +103,6 @@ class DatabaseWriter
         $this->em->persist($pluginEntity);
         $this->persistConfiguration($pluginConfiguration, $pluginEntity, $plugin);
         $this->em->flush();
-
-        if ($this->modifyTemplate) {
-            $this->templateBuilder->write();
-        }
     }
 
     public function update(PluginBundle $plugin, array $pluginConfiguration)
@@ -146,10 +138,6 @@ class DatabaseWriter
         $this->em->persist($pluginEntity);
         $this->updateConfiguration($pluginConfiguration, $pluginEntity, $plugin);
         $this->em->flush();
-
-        if ($this->modifyTemplate) {
-            $this->templateBuilder->write();
-        }
     }
 
     /**
@@ -189,13 +177,6 @@ class DatabaseWriter
             $widgets = $this->em
                 ->getRepository('ClarolineCoreBundle:Widget\Widget')
                 ->findByPlugin($plugin->getGeneratedId());
-
-            foreach ($widgets as $widget) {
-                $this->templateBuilder->removeWidget($widget->getName());
-            }
-
-            $config = $this->templateBuilder->getConfig();
-            $this->templateBuilder->write();
         }
 
         // deletion of other plugin db dependencies is made via a cascade mechanism
@@ -284,9 +265,7 @@ class DatabaseWriter
         }
 
         $this->updateCustomAction($resource['actions'], $resourceType);
-
         $this->updateIcons($resource, $resourceType, $plugin);
-
         $this->updateActivityRules($resource['activity_rules'], $resourceType);
 
         if (!$isExistResourceType && $this->modifyTemplate) {
@@ -469,12 +448,6 @@ class DatabaseWriter
         $this->persistIcons($resource, $resourceType, $plugin);
         $this->persistActivityRules($resource['activity_rules'], $resourceType);
 
-        //create default mask
-
-        if ($this->modifyTemplate) {
-            $this->templateBuilder->addResourceType($resource['name'], 'ROLE_WS_MANAGER');
-        }
-
         return $resourceType;
     }
 
@@ -517,20 +490,12 @@ class DatabaseWriter
         }
 
         $this->em->persist($widgetEntity);
-
-        if ($this->modifyTemplate) {
-            $this->templateBuilder->addWidget($widget['name']);
-        }
     }
 
     private function createTool($tool, $pluginEntity)
     {
         $toolEntity = new Tool();
         $this->persistTool($tool, $pluginEntity, $toolEntity);
-
-        if ($tool['is_displayable_in_workspace'] && $this->modifyTemplate) {
-            $this->templateBuilder->addTool($tool['name'], $tool['name']);
-        }
     }
 
     private function persistTool($tool, $pluginEntity, $toolEntity)

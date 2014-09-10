@@ -33,7 +33,6 @@ class AdditionalInstaller extends BaseInstaller
     public function preInstall()
     {
         $this->setLocale();
-        $this->buildDefaultTemplate();
     }
 
     public function preUpdate($currentVersion, $targetVersion)
@@ -179,7 +178,7 @@ class AdditionalInstaller extends BaseInstaller
                 break;
             case version_compare($currentVersion, '3.2.0', '<'):
                 $this->buildDefaultTemplate();
-                $updater = new Updater\Updater032000($this->container);
+                $updater = new Updater\Updater030200($this->container);
                 $updater->setLogger($this->logger);
                 $updater->postUpdate();
                 break;
@@ -192,12 +191,5 @@ class AdditionalInstaller extends BaseInstaller
         $locale = $ch->getParameter('locale_language');
         $translator = $this->container->get('translator');
         $translator->setLocale($locale);
-    }
-
-    private function buildDefaultTemplate()
-    {
-        $this->log('Creating default workspace template...');
-        $defaultTemplatePath = $this->container->getParameter('kernel.root_dir') . '/../templates/default.zip';
-        TemplateBuilder::buildDefault($defaultTemplatePath);
     }
 }

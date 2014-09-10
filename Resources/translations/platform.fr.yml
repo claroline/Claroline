@@ -191,6 +191,9 @@ collaborative: Collaboratif
 collaborator: Collaborateur
 comment: Commentaire
 communication: Communication
+competence: Compétence
+competences: Compétences
+competence_referencial: Réferenciel de compétences
 completed: Terminé
 configuration: Configuration
 configure: Configurer
@@ -209,6 +212,7 @@ create_new_home_tab: 'Créer un nouvel onglet'
 create_new_tag: 'Créer un nouveau Tag'
 create_new_user_account: 'Creation de votre compte ClarolineConnect'
 create_role: Créer un rôle
+create_security_token: 'Créer un jeton d''authentification'
 create_subcategory: 'Créer une sous-catégorie'
 create_user: 'Créer un utilisateur'
 create_widget_instance: 'Créer un nouveau Widget'
@@ -306,6 +310,7 @@ edit_public_profile: 'Modifier le profil public'
 edit_public_profile_preferences_error: 'Une erreur est survenue lors de la modification des préférences de votre profil public.'
 edit_public_profile_preferences_success: 'Préférences de votre profil public modifiées avec succès.'
 edit_rights_success: Modification des droits effecetuée avec succès.
+edit_security_token: 'Modification du jeton d''authentification'
 edit_your_profile_error: 'Une erreur est survenue pendant la modification de votre profil.'
 edit_your_profile_success: 'Modification de votre profil effectué avec succès.'
 editable: Modifiable
@@ -356,6 +361,7 @@ from_message: De
 general: Général
 general_parameters: 'Paramètres généraux'
 general_tab_form_explanation: Ce formulaire vous permet de spécifier quels sont les informations vues par rôle dans le profile public.
+generate_token: 'Générer un token aléatoire'
 generate_url: 'Inscription publique'
 generate_url_subscription: 'Inscription à l''espace d''activité par un utilisateur'
 generate_url_subscription_anonyme: 'Inscription à l''espace d''activité par un anonyme'
@@ -414,6 +420,7 @@ invalid_email: 'Cette adresse email n''est pas valide'
 invalid_encryption: 'Mode d''authentification non valide'
 invalid_transport: 'Transport non valide'
 invalid_url: 'Cette url n''est pas valide'
+ip_address: 'Adresse IP'
 is_already_in_category: 'est déjà dans la catégorie'
 is_mail_displayed: 'Afficher l''email ?'
 jqplot_date_output_format: '%d-%m-%Y'
@@ -424,6 +431,7 @@ last_attempt_date: 'Date de la dernière tentative'
 last_manager_error_message: Vous ne pouvez pas retirer tout les gestionnaires.
 last_name: Nom
 layout: Layout
+learning_profil: Profile d'apprentissage
 leave_this_page: 'Si vous quittez cette page, vous risquez de perdre vos modifications.'
 left: Gauche
 limit: Limite
@@ -573,6 +581,7 @@ password_mismatch: 'Les mots de passe ne correspondent pas.'
 password_ok: 'Votre mot de passe a été modifié. Vous pouvez maintenant vous connecter.'
 paste: Coller
 path: Emplacement
+pending: En attente
 permissions: Permissions
 personal_workspace: 'Espace personnel - '
 phone: Téléphone
@@ -721,6 +730,14 @@ search: Rechercher
 search_group: 'Rechercher un groupe'
 search_user: 'Rechercher un utilisateur'
 search_workspace: 'Rechercher un espace d''activités'
+security_token: Jeton de d'authentification
+security_token_delete_confirm_message: 'Êtes-vous sûr de vouloir supprimer ce jeton d''authentification ?'
+security_token_delete_confirm_title: 'Suppression du jeton d''authentification'
+security_token_form_clientIp: 'Adresse IP du client'
+security_token_form_clientName: 'Nom du client'
+security_token_form_token: 'Token'
+security_token_list: 'Liste des jetons d''authentification'
+security_tokens_management: 'Gestion des jetons d''authentification'
 see: Voir
 see_more: 'Voir plus'
 see_public_profile: 'Voir mon profil public'
@@ -773,6 +790,7 @@ subscribe_groups: 'Inscrire des groupes'
 subscribe_selected_groups: 'Inscrire les groupes sélectionnés'
 subscribe_selected_users: 'Inscrire les utilisateurs sélectionnés'
 subscribe_users: 'Inscrire des utilisateurs'
+subscription: Inscription
 success_rate: 'Taux de réussite'
 successfull_workspace_creation: L'espace d'activité %name% a été créé avec succès.
 support_email: 'Email du support'
@@ -805,6 +823,7 @@ to_message: À
 to_platform_users: 'aux utilisateurs de la plateforme'
 to_workspace_members: 'aux membres de cet espace'
 today: 'Aujourd''hui'
+token: Token
 tool: Outil
 tool_form_displayName: 'Nom affiché'
 tool_form_name: Nom
@@ -965,7 +984,6 @@ wrong_captcha : 'Le code ne correspond pas avec l''image indiquée'
 ws_creator: 'Créateur d''espaces'
 ws_most_viewed: 'Espaces d''activités les plus consultés'
 yes: Oui
-yes: oui
 yesterday_activity: 'Activité de la veille'
 your_current_url: 'Votre URL actuelle'
 your_username: 'Votre nom d''utilisateur est '
@@ -1031,3 +1049,5 @@ remove_user_from_model: Retirer un utilisateur
 remove_user_from_model_confirm: Êtes-vous sûr de vouloir retirer l'utilisateur %name% ?
 remove_group_from_model: Retirer un groupe
 remove_group_from_model_confirm: Êtes-vous sûr de vouloir retirer le groupe %groupe% ?
+workspace_import: Importer un espace d'activité
+create_users: Créer les utilisateurs

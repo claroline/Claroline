@@ -153,13 +153,16 @@
             <form role="form" action="{{ path('claro_admin_badges_edit', {'slug': badge.slug}) }}#!edit" method="post" id="editBadgeForm" class="form-horizontal" {{ form_enctype(form) }} novalidate>
                 {{ form_errors(form) }}
                 <div class="row badges_infos">
-                    <div class="col-md-2{% if form.file.vars.errors|length > 0 %} has-error{% endif %}">
+                    <div class="col-md-2{% if form.file.vars.errors|length > 0 %} has-error{% endif %} text-center">
                         <button type="button" id="change_image" class="btn btn-xs btn-default">
                             <span class="fa fa-pencil-square-o">{{ 'badge_form_change_image'|trans }}</span>
                         </button>
                         <a href="#" class="thumbnail upload_image_placeholder">
                             <img src="{{ asset(badge.webPath) }}" id="current_image" class="badge_image" />
                         </a>
+                        <div class="help-block badge_help">
+                            <span class="image_help">64px * 64px min., 256kb max.</span>
+                        </div>
                         {{ form_widget(form.file) }}
                         {{ form_errors(form.file) }}
                     </div>
@@ -261,7 +264,7 @@
                     {% else %}
                     <button type="submit" class="btn btn-primary">{{ 'edit'|trans({}, 'platform') }}</button>
                     {% endif %}
-                    <a href="{{ path('claro_admin_badges') }}" title="{{ 'cancel'|trans({}, 'platform') }}" class="btn btn-danger">{{ 'cancel'|trans({}, 'platform') }}</a>
+                    <a href="{{ path('claro_admin_badges') }}" title="{{ 'cancel'|trans({}, 'platform') }}" class="btn btn-default">{{ 'cancel'|trans({}, 'platform') }}</a>
                 </div>
             </form>
         </div>

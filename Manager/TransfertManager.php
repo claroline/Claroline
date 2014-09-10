@@ -12,7 +12,6 @@
 namespace Claroline\CoreBundle\Manager;
 
 use Claroline\CoreBundle\Library\Transfert\Importer;
-use Claroline\CoreBundle\Library\Transfert\Resolver;
 use Claroline\CoreBundle\Library\Transfert\ManifestConfiguration;
 use Doctrine\Common\Collections\ArrayCollection;
 use Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders\GroupsConfigurationBuilder;
@@ -20,6 +19,11 @@ use Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders\RolesConfigurat
 use Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders\ToolsConfigurationBuilder;
 use Symfony\Component\Config\Definition\Dumper\YamlReferenceDumper;
 use JMS\DiExtraBundle\Annotation as DI;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Entity\Resource\Directory;
+use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Library\Workspace\Configuration;
+use Claroline\CoreBundle\Library\Transfert\RichTextInterface;
 
 /**
  * @DI\Service("claroline.manager.transfert_manager")
@@ -28,10 +32,20 @@ class TransfertManager
 {
     private $listImporters;
     private $rootPath;
+    private $om;
+    private $container;
 
-    public function __construct()
+    /**
+     * @DI\InjectParams({
+     *     "om"        = @DI\Inject("claroline.persistence.object_manager"),
+     *     "container" = @DI\Inject("service_container")
+     * })
+     */
+    public function __construct($om, $container)
     {
         $this->listImporters = new ArrayCollection();
+        $this->om = $om;
+        $this->container = $container;
     }
 
     public function addImporter(Importer $importer)
@@ -41,52 +55,185 @@ class TransfertManager
 
     /**
      * Import a workspace
-     *
-     * @param $path
      */
-    public function validate($path)
+    public function validate(array $data, $validateProperties = true)
     {
-        $resolver = new Resolver($path);
-        $data = $resolver->resolve();
-        $this->setRootPath($path);
-        $this->setImporters($path, $data);
-        $usersImporter  = $this->getImporterByName('user');
         $groupsImporter = $this->getImporterByName('groups');
         $rolesImporter  = $this->getImporterByName('roles');
         $toolsImporter  = $this->getImporterByName('tools');
-        $ownerImporter  = $this->getImporterByName('owner');
+        $importer = $this->getImporterByName('workspace_properties');
+        $usersImporter  = $this->getImporterByName('user');
 
-        try {
-            //owner
-            if (isset($data['members']['owner'])) {
-                $owner['owner'] = $data['members']['owner'];
-                $ownerImporter->validate($owner);
+        //properties
+        if ($validateProperties) {
+            if (isset($data['properties'])) {
+                $properties['properties'] = $data['properties'];
+                $importer->validate($properties);
             }
-
-            //properties
-            $properties['properties'] = $data['properties'];
-            $importer = $this->getImporterByName('workspace_properties');
-            $importer->validate($properties);
-
-            $roles['roles'] = $data['roles'];
-            $users['users'] = $data['members']['users'];
-            $groups['users'] = $data['members']['groups'];
-            $tools['tools'] = $data['tools'];
-            $rolesImporter->validate($roles);
-            $usersImporter->validate($users);
-            $groupsImporter->validate($groups);
-            $toolsImporter->validate($tools);
-
-        } catch (\Exception $e) {
-            var_dump(get_class($e));
-            var_dump(array($e->getMessage())) ;
         }
+
+        if (isset($data['members']['users'])) {
+            $users['users'] = $data['members']['users'];
+            $usersImporter->validate($users);
+        }
+
+        if (isset($data['roles'])) {
+            $roles['roles'] = $data['roles'];
+            $rolesImporter->validate($roles);
+        }
+
+        if (isset($data['members']['groups'])) {
+            $groups['users'] = $data['members']['groups'];
+            $groupsImporter->validate($groups);
+        }
+
+        if (isset ($data['tools'])) {
+            $tools['tools'] = $data['tools'];
+            $toolsImporter->validate($tools);
+        }
+
     }
 
-    public function import($path)
+    public function import(
+        Configuration $configuration,
+        $isStrict = false
+    )
     {
-        $this->validate($path);
-        //do other things
+        $data = $configuration->getData();
+        $owner = $this->container->get('security.context')->getToken()->getUser();
+        $configuration->setOwner($owner);
+        $this->setImporters($configuration, $data, $isStrict);
+        $this->validate($data);
+
+        //initialize the configuration
+        $configuration->setWorkspaceName($data['properties']['name']);
+        $configuration->setWorkspaceCode($data['properties']['code']);
+        $configuration->setDisplayable($data['properties']['visible']);
+        $configuration->setSelfRegistration($data['properties']['self_registration']);
+        $configuration->setSelfUnregistration($data['properties']['self_unregistration']);
+
+        $this->createWorkspace($configuration, $owner, true, $isStrict, true);
+    }
+
+    /**
+     * @param Configuration $configuration
+     * @param User $owner
+     * @param bool $isValidated
+     * @param bool $isStrict
+     * @param bool $importUsers
+     *
+     * @throws InvalidConfigurationException
+     * @return SimpleWorkbolspace
+     *
+     * The template doesn't need to be validated anymore if
+     *  - it comes from the self::import() function
+     *  - we want to create a user from the default template (it should work no matter what)
+     */
+    public function createWorkspace(
+        Configuration $configuration,
+        User $owner,
+        $isValidated = false,
+        $isStrict = true,
+        $importUsers = false
+    )
+    {
+        $configuration->setOwner($owner);
+        $data = $configuration->getData();
+        $this->om->startFlushSuite();
+        $this->setImporters($configuration, $data, $isStrict);
+
+        if (!$isValidated) {
+            $this->validate($data, false);
+        }
+
+        $workspace = new Workspace();
+        $workspace->setName($configuration->getWorkspaceName());
+        $workspace->setCode($configuration->getWorkspaceCode());
+        $workspace->setDescription($configuration->getWorkspaceDescription());
+        $workspace->setGuid($this->container->get('claroline.utilities.misc')->generateGuid());
+        $workspace->setDisplayable($configuration->isDisplayable());
+        $workspace->setSelfRegistration($configuration->getSelfRegistration());
+        $workspace->setSelfUnregistration($configuration->getSelfUnregistration());
+        $date = new \Datetime(date('d-m-Y H:i'));
+        $workspace->setCreationDate($date->getTimestamp());
+
+        $this->setWorkspaceForImporter($workspace);
+
+        if ($owner) {
+            $workspace->setCreator($owner);
+        }
+
+        $this->om->persist($workspace);
+        $this->om->flush();
+
+        //load roles
+        $entityRoles = $this->getImporterByName('roles')->import($data['roles'], $workspace);
+        //The manager role is required for every workspace
+        $entityRoles['ROLE_WS_MANAGER'] = $this->container->get('claroline.manager.role_manager')->createWorkspaceRole(
+            "ROLE_WS_MANAGER_{$workspace->getGuid()}",
+            'manager',
+            $workspace,
+            true
+        );
+
+        $owner->addRole($entityRoles['ROLE_WS_MANAGER']);
+        $this->om->persist($owner);
+
+        //add base roles to the role array
+        $pfRoles = $this->om->getRepository('ClarolineCoreBundle:Role')->findAllPlatformRoles();
+
+        foreach ($pfRoles as $pfRole) {
+            $entityRoles[$pfRole->getName()] = $pfRole;
+        }
+
+        $entityRoles['ROLE_ANONYMOUS'] = $this->om
+            ->getRepository('ClarolineCoreBundle:Role')->findOneByName('ROLE_ANONYMOUS');
+
+        if ($importUsers) {
+            if (isset($data['members']['users'])) {
+                $this->getImporterByName('user')->import($data['members']['users'], $entityRoles);
+            }
+        }
+
+        $dir = new Directory();
+        $dir->setName($workspace->getName());
+
+        $root = $this->container->get('claroline.manager.resource_manager')->create(
+            $dir,
+            $this->om->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')->findOneByName('directory'),
+            $owner,
+            $workspace,
+            null,
+            null,
+            array()
+        );
+
+        $tools = $this->getImporterByName('tools')
+            ->import($data['tools'], $workspace, $entityRoles, $root);
+        $this->om->endFlushSuite();
+
+        //now we have to parse everything in case there is a rich text
+        //rich texts must be located in the tools section
+
+        /*
+        foreach ($data['tools'] as $tool) {
+            $importer = $this->getImporterByName($tool['tool']['type']);
+
+            if (!$importer) {
+                throw new InvalidConfigurationException('The importer ' . $tool['tool']['type'] . ' does not exist');
+            }
+
+            if (isset($tool['tool']['data']) && $importer instanceof RichTextInterface) {
+                $data['data'] = $tool['tool']['data'];
+                $importer->format($data);
+            }
+        }
+        */
+
+        //add missing tools for workspace
+        $this->container->get('claroline.manager.tool_manager')->addMissingWorkspaceTools($workspace);
+
+        return $workspace;
     }
 
     private function setRootPath($rootPath)
@@ -108,14 +255,25 @@ class TransfertManager
     /**
      * Inject the rootPath
      *
-     * @param $rootPath
-     * @param $configuration
+     * @param \Claroline\CoreBundle\Library\Workspace\Configuration $configuration
+     * @param array $data
+     * @param $isStrict
      */
-    private function setImporters($rootPath, $configuration)
+    private function setImporters(Configuration $configuration, array $data, $isStrict)
     {
         foreach ($this->listImporters as $importer) {
-            $importer->setRootPath($rootPath);
-            $importer->setConfiguration($configuration);
+            $importer->setRootPath($configuration->getExtractPath());
+            $importer->setOwner($configuration->getOwner());
+            $importer->setConfiguration($data);
+            $importer->setListImporters($this->listImporters);
+            $importer->setStrict($isStrict);
+        }
+    }
+
+    private function setWorkspaceForImporter(Workspace $workspace)
+    {
+        foreach ($this->listImporters as $importer) {
+            $importer->setWorkspace($workspace);
         }
     }
 
@@ -130,6 +288,7 @@ class TransfertManager
         $string .= $dumper->dump($this->getImporterByName('groups'));
         $string .= $dumper->dump($this->getImporterByName('roles'));
         $string .= $dumper->dump($this->getImporterByName('tools'));
+        $string .= $dumper->dump($this->getImporterByName('forum'));
 
         return $string;
     }

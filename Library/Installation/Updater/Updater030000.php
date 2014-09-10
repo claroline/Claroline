@@ -37,7 +37,6 @@ class Updater030000
     {
         $this->updateActivityRuleAction();
         $this->updateActivityIcon();
-        $this->updateTools();
         $this->removePublicProfilePreference();
         $this->updateAdminPluginTool();
         $this->cleanWeb();

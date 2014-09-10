@@ -11,19 +11,35 @@
 
 namespace Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders\Tools\Widgets;
 
+use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 use Claroline\CoreBundle\Library\Transfert\Importer;
+use Claroline\CoreBundle\Library\Transfert\RichTextInterface;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\Processor;
+use Claroline\CoreBundle\Entity\Widget\SimpleTextConfig;
 use JMS\DiExtraBundle\Annotation as DI;
+use Claroline\CoreBundle\Persistence\ObjectManager;
 
 /**
  * @DI\Service("claroline.widget.text_importer")
  * @DI\Tag("claroline.importer")
  */
-class TextImporter extends Importer implements ConfigurationInterface
+class TextImporter extends Importer implements ConfigurationInterface, RichTextInterface
 {
-    private $result;
+    private $om;
+    private $container;
+    /**
+     * @DI\InjectParams({
+     *      "om"        = @DI\Inject("claroline.persistence.object_manager"),
+     *      "container" = @DI\Inject("service_container")
+     * })
+     */
+    public function __construct(ObjectManager $om, $container)
+    {
+        $this->om = $om;
+        $this->container = $container;
+    }
 
     public function  getConfigTreeBuilder()
     {
@@ -45,9 +61,16 @@ class TextImporter extends Importer implements ConfigurationInterface
         $this->result = $processor->processConfiguration($this, $data);
     }
 
-    public function import(array $array)
+    public function import(array $data, WidgetInstance $widgetInstance)
     {
-
+        $widgetText = new SimpleTextConfig();
+        $content = file_get_contents(
+            $this->getRootPath() . DIRECTORY_SEPARATOR . $data[0]['content']
+        );
+        $widgetText->setContent($content);
+        $widgetText->setWidgetInstance($widgetInstance);
+        $this->om->persist($widgetText);
+        $this->om->flush();
     }
 
     public function getName()
@@ -64,5 +87,10 @@ class TextImporter extends Importer implements ConfigurationInterface
                     ->scalarNode('content')->isRequired()->end()
                 ->end()
             ->end();
+    }
+
+    public function format($data)
+    {
+
     }
 } 
