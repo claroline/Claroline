@@ -11,6 +11,7 @@ use Icap\DropzoneBundle\Form\DropzoneCommonType;
 use Icap\DropzoneBundle\Form\DropzoneCriteriaType;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Exception\NotValidCurrentPageException;
+use Claroline\CoreBundle\Entity\Event;
 use Pagerfanta\Pagerfanta;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -36,10 +37,18 @@ class DropzoneController extends DropzoneBaseController
      *      name="icap_dropzone_edit_common",
      *      requirements={"resourceId" = "\d+"}
      * )
+     * @ParamConverter("user", options={
+     *      "authenticatedUser" = true,
+     *      "messageEnabled" = true,
+     *      "messageTranslationKey" = "Participate in an evaluation requires authentication. Please login.",
+     *      "messageTranslationDomain" = "icap_dropzone"
+     * })
      * @ParamConverter("dropzone", class="IcapDropzoneBundle:Dropzone", options={"id" = "resourceId"})
      * @Template()
+     *
+     * User is needed for Agenda Event
      */
-    public function editCommonAction(Dropzone $dropzone)
+    public function editCommonAction(Dropzone $dropzone, $user)
     {
         $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
         $this->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
@@ -88,7 +97,7 @@ class DropzoneController extends DropzoneBaseController
             if (!$dropzone->getManualPlanning()) {
 
                 // var_dump($this->getRequest()->request->all());
-                //$form_array= $this->getRequest()->request->get('icap_dropzone_common_form');
+                $form_array = $this->getRequest()->request->get('icap_dropzone_common_form');
                 // reconstruction of datetimes.
 
                 if (array_key_exists('startAllowDrop', $form_array)) {
@@ -120,6 +129,54 @@ class DropzoneController extends DropzoneBaseController
                     if ($this->validateDate($dateStr)) {
                         $endAllowDrop = new DateTime(implode(' ', $form_array['endAllowDrop']));
                         $dropzone->setEndAllowDrop($endAllowDrop);
+                    }
+                }
+
+                $AgendaManager = $this->get('claroline.manager.agenda_manager');
+                $workspace = $dropzone->getResourceNode()->getWorkspace();
+                //Set the Agenda Drop Events.
+                if ($dropzone->getStartAllowDrop() != NULL && $dropzone->getEndAllowDrop() != NULL) {
+
+                    //if event already exist
+                    if ($dropzone->getEventDrop() != null) {
+
+
+                        // update event
+                        $eventDrop = $dropzone->getEventDrop();
+                        $eventDrop->setStart($dropzone->getStartAllowDrop());
+                        $eventDrop->setEnd($dropzone->getEndAllowDrop());
+
+                        $AgendaManager->updateEvent($eventDrop);
+
+                    } else {
+                        //if event doesn't exist
+                        // create event
+                        $eventDrop = $this->createAgendaEventDrop($dropzone->getStartAllowDrop(), $dropzone->getEndAllowDrop(), $user, $dropzone, 'drop');
+                        // event creation + link to workspace
+                        $AgendaManager->addEvent($eventDrop, $workspace);
+                        // link btween the event and the dropzone
+                        $dropzone->setEventDrop($eventDrop);
+                    }
+
+                }
+
+                //Set the Agenda Review Events.
+                if ($dropzone->getStartReview() != NULL && $dropzone->getEndReview() != NULL) {
+
+                    // if event is already linked.
+                    if ($dropzone->getEventCorrection() != null) {
+                        //update event
+                        $eventCorrection = $dropzone->getEventCorrection();
+                        $eventCorrection->setStart($dropzone->getStartReview());
+                        $eventCorrection->setEnd($dropzone->getEndReview());
+                        $AgendaManager->updateEvent($eventCorrection);
+                    } else {
+                        //create event
+                        $eventReview = $this->createAgendaEventDrop($dropzone->getStartReview(), $dropzone->getEndReview(), $user, $dropzone, 'correction');
+
+                        $AgendaManager->addEvent($eventReview, $workspace);
+                        $dropzone->setEventCorrection($eventReview);
+
                     }
                 }
 
@@ -161,6 +218,28 @@ class DropzoneController extends DropzoneBaseController
                         $form->get('endAllowDrop')->addError(new FormError('Must be before end peer review'));
                     }
                 }
+            } else {
+                // if manual mode, we delete agenda events related to
+                $AgendaManager = $this->get('claroline.manager.agenda_manager');
+
+
+                if ($dropzone->getEventDrop() != null) {
+                    $event = $dropzone->getEventDrop();
+                    $AgendaManager->deleteEvent($event);
+                    $dropzone->setEventDrop(NULL);
+
+
+                }
+
+                if ($dropzone->getEventCorrection() != null) {
+                    $event = $dropzone->getEventCorrection();
+                    $AgendaManager->deleteEvent($event);
+                    $dropzone->setEventCorrection(NULL);
+
+
+                }
+
+
             }
 
 
@@ -200,6 +279,7 @@ class DropzoneController extends DropzoneBaseController
                 $unitOfWork->computeChangeSets();
                 $changeSet = $unitOfWork->getEntityChangeSet($dropzone);
 
+                $em = $this->getDoctrine()->getManager();
                 $em->persist($dropzone);
                 $em->flush();
 
@@ -464,6 +544,34 @@ class DropzoneController extends DropzoneBaseController
 
         $d = DateTime::createFromFormat($format, $date);
         return $d && $d->format($format) == $date;
+    }
+
+
+    private function createAgendaEventDrop($startDate, $endDate, $user, Dropzone $dropzone, $type = "drop")
+    {
+        $event = new Event();
+        $event->setStart($startDate);
+        $event->setEnd($endDate);
+        $event->setUser($user);
+
+        $dropzoneName = $dropzone->getResourceNode()->getName();
+        if ($type == 'drop') {
+            $title = $this->get('translator')->trans('Deposit phase of the %dropzonename% evaluation', array('%dropzonename%' => $dropzoneName), 'icap_dropzone');
+            $desc = $this->get('translator')->trans('Evaluation %dropzonename% opening', array('%dropzonename%' => $dropzoneName), 'icap_dropzone');
+
+            $event->setTitle($title);
+            $event->setDescription($desc);
+        } else {
+            $title = $this->get('translator')->trans('Peer Review is starting in %dropzonename% evaluation', array('%dropzonename%' => $dropzoneName), 'icap_dropzone');
+            $desc = $this->get('translator')->trans('Peer Review is starting in %dropzonename% evaluation', array('%dropzonename%' => $dropzoneName), 'icap_dropzone');
+
+            $event->setTitle($title);
+            $event->setDescription($desc);
+        }
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($event);
+        $em->flush();
+        return $event;
     }
 
 }
