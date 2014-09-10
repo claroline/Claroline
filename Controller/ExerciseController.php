@@ -1651,6 +1651,13 @@ class ExerciseController extends Controller
                 $scoreMax = $exerciseSer->openMaxScore($interOpen[0]);
                 $responsesTab = $this->responseStatus($responses, $scoreMax);
                 break;
+
+            case "InteractionMatching":
+                $interMatching = $em->getRepository('UJMExoBundle:InteractionMatching')
+                                   ->getInteractionMatching($interaction->getId());
+                $scoreMax = $exerciseSer->matchingMaxScore($interMatching[0]);
+                $responsesTab = $this->responseStatus($responses, $scoreMax);
+                break;
         }
 
         return $responsesTab;

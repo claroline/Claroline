@@ -776,6 +776,13 @@ class exerciseServices
                                       ->getInteractionHole($interaction->getId());
                     $scoreMax = $this->holeMaxScore($interHole[0]);
                     break;
+                case 'InteractionMatching':
+                    $interMatching = $this->doctrine
+                                      ->getManager()
+                                      ->getRepository('UJMExoBundle:InteractionMatching')
+                                      ->getInteractionMatching($interaction->getId());
+                    $scoreMax = $this->matchingMaxScore($interMatching[0]);
+                    break;
             }
 
             $exoTotalScore += $scoreMax;
