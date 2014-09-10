@@ -25,6 +25,7 @@ use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Entity\Role;
 
 /**
  * @DI\Service("claroline.tool.resource_manager_importer")
@@ -149,41 +150,9 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
                 );
 
                 //add the missing roles
-
                 foreach ($directory['directory']['roles'] as $role) {
-
-                    $creations = (isset($role['role']['rights']['create'])) ?
-                        $this->getCreationRightsArray($role['role']['rights']['create']):
-                        array();
-
-                    $uow = $this->om->getUnitOfWork();
-                    $map = $uow->getIdentityMap();
-
-                    //if the resourceRight was created
-                    $createdRights = null;
-
-                    foreach ($map['Claroline\CoreBundle\Entity\Resource\ResourceRights'] as $unflushed) {
-                        if ($unflushed->getRole()->getName() === $role['role']['name']) $createdRights = $unflushed;
-                    }
-
-                    //There is no ResourceRight in the IdentityMap so we must create it
-                    if ($createdRights === null) {
-                        $this->rightManager->create(
-                            $role['role']['rights'],
-                            $entityRoles[$role['role']['name']],
-                            $directoryEntity->getResourceNode(),
-                            false,
-                            $creations
-                        );
-                    //We use the ResourceRight from the IdentityMap
-                    } else {
-                        $createdRights->setMask($this->maskManager->encodeMask(
-                            $role['role']['rights'],
-                            $createdRights->getResourceNode()->getResourceType())
-                        );
-                    }
+                    $this->setPermissions($role, $entityRoles[$role['role']['name']], $directoryEntity);
                 }
-
             }
 
             //set the correct parent
@@ -229,16 +198,11 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
 
                 $entity->getResourceNode()->setParent($directories[$item['item']['parent']]->getResourceNode());
                 $this->om->persist($entity);
+
                 //add the missing roles
                 if (isset($item['item']['roles'])) {
                     foreach ($item['item']['roles'] as $role) {
-                        $this->rightManager->create(
-                            $role['role']['rights'],
-                            $entityRoles[$role['role']['name']],
-                            $entity->getResourceNode(),
-                            false,
-                            array()
-                        );
+                        $this->setPermissions($role, $entityRoles[$role['role']['name']], $entity);
                     }
                 }
 
@@ -252,38 +216,7 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
 
         //add the missing roles
         foreach ($data['data']['root']['roles'] as $role) {
-            $creations = (isset($role['role']['rights']['create'])) ?
-                $this->getCreationRightsArray($role['role']['rights']['create']):
-                array();
-
-            //if it's not a base role already set at the resource creation, it must be created,
-            //otherwise it should be edited
-            //for now only ROLE_USER and ROLE_ANONYMOUS are created by default
-            //@todo use the IdentityMap from the UnitOfWork
-
-            if ($entityRoles[$role['role']['name']]->getName() !== 'ROLE_USER'
-                && $entityRoles[$role['role']['name']]->getName() !== 'ROLE_ANONYMOUS') {
-                $this->rightManager->create(
-                    $role['role']['rights'],
-                    $entityRoles[$role['role']['name']],
-                    $root->getResourceNode(),
-                    false,
-                    $creations
-                );
-            } else {
-                $this->rightManager->editPerms(
-                    $role['role']['rights'],
-                    $entityRoles[$role['role']['name']],
-                    $root->getResourceNode(),
-                    false
-                );
-                $this->rightManager->editCreationRights(
-                    $creations,
-                    $entityRoles[$role['role']['name']],
-                    $root->getResourceNode(),
-                    false
-                );
-            }
+            $this->setPermissions($role, $entityRoles[$role['role']['name']], $root);
         }
 
         //We need to force the flush in order to add the rich text.
@@ -354,12 +287,13 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
                         }
 
                         $data['items'][] = array('item' => array(
-                            'name' => $child->getName(),
+                            'name'    => $child->getName(),
                             'creator' => null,
-                            'parent' => $resourceNode->getId(),
-                            'type' => $child->getResourceType()->getName(),
-                            'roles' => $this->getPermsArray($child),
-                            'data' => $childData
+                            'parent'  => $resourceNode->getId(),
+                            'type'    => $child->getResourceType()->getName(),
+                            'roles'   => $this->getPermsArray($child),
+                            'uid'     => $child->getId(),
+                            'data'    => $childData
                         ));
                     }
                 }
@@ -654,9 +588,37 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
         return $roles;
     }
 
-    //@todo implements a method wich will lopp through the IdentityMap to find existing ResourceRights
-    private function setPermissions()
+    private function setPermissions(array $role, Role $entityRole, $resourceEntity)
     {
-        //
+        $creations = (isset($role['role']['rights']['create'])) ?
+            $this->getCreationRightsArray($role['role']['rights']['create']):
+            array();
+
+        $uow = $this->om->getUnitOfWork();
+        $map = $uow->getIdentityMap();
+
+        //if the resourceRight was created
+        $createdRights = null;
+
+        foreach ($map['Claroline\CoreBundle\Entity\Resource\ResourceRights'] as $unflushed) {
+            if ($unflushed->getRole()->getName() === $role['role']['name']) $createdRights = $unflushed;
+        }
+
+        //There is no ResourceRight in the IdentityMap so we must create it
+        if ($createdRights === null) {
+            $this->rightManager->create(
+                $role['role']['rights'],
+                $entityRole,
+                $resourceEntity->getResourceNode(),
+                false,
+                $creations
+            );
+            //We use the ResourceRight from the IdentityMap
+        } else {
+            $createdRights->setMask($this->maskManager->encodeMask(
+                    $role['role']['rights'],
+                    $createdRights->getResourceNode()->getResourceType())
+            );
+        }
     }
 } 

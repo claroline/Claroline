@@ -18,6 +18,7 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\Processor;
 use Claroline\CoreBundle\Entity\Widget\SimpleTextConfig;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 
@@ -87,6 +88,19 @@ class TextImporter extends Importer implements ConfigurationInterface, RichTextI
                     ->scalarNode('content')->isRequired()->end()
                 ->end()
             ->end();
+    }
+
+    public function export(Workspace $workspace, array &$files, $object)
+    {
+        $txtConfig = $this->container->get('claroline.manager.simple_text_manager')->getTextConfig($object);
+        $tmpPath = sys_get_temp_dir() . DIRECTORY_SEPARATOR . uniqid();
+        file_put_contents($tmpPath, $txtConfig->getContent());
+        $archPath = 'widgets/text/' . uniqid() . '.txt';
+        //create file
+        $data = array(array('locale' => 'fr', 'content' => $archPath));
+        $files[$archPath] = $tmpPath;
+
+        return $data;
     }
 
     public function format($data)

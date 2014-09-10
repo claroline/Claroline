@@ -196,8 +196,18 @@ class HomeImporter extends Importer implements ConfigurationInterface, RichTextI
             $widgetConfigs = $this->container->get('claroline.manager.home_tab_manager')
                 ->getWidgetConfigsByWorkspace($homeTab->getHomeTab(), $workspace);
 
-            foreach ($widgets as $widget) {
+            foreach ($widgetConfigs as $widgetConfig) {
                 $data = [];
+                try {
+                    $importer = $this->getImporterByName($widgetConfig->getWidgetInstance()->getWidget()->getName());
+
+                    if ($importer) {
+                        $data = $importer->export($workspace, $files, $widgetConfig->getWidgetInstance());
+                    }
+
+                } catch (ExportNotImplementedException $e) {
+                    //well it didn't go so well
+                }
                 //export the widget content here
                 $widgetData = array('widget' => array(
                     'name' => $widgetConfig->getWidgetInstance()->getName(),

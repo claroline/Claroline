@@ -284,7 +284,7 @@ class TransfertManager
             $archive->addFile($manifestPath, 'manifest.yml');
 
             foreach ($files as $uid => $file) {
-                $archive->addFile($uid, $file);
+                $archive->addFile($file, $uid);
             }
 
             $archive->close();

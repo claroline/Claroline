@@ -60,7 +60,7 @@ class TextImporter extends Importer implements ConfigurationInterface
 
     public function import(array $array)
     {
-        $user = new User();
+
     }
 
     public function getName()
