@@ -48,17 +48,14 @@ class AdditionalInstaller extends BaseInstaller
                 $updater = new Updater\Updater020000($this->container);
                 $updater->setLogger($this->logger);
                 $updater->preUpdate();
-                break;
             case version_compare($currentVersion, '2.9.0', '<'):
                 $updater = new Updater\Updater020900($this->container);
                 $updater->setLogger($this->logger);
                 $updater->preUpdate();
-                break;
             case version_compare($currentVersion, '3.0.0', '<'):
                 $updater = new Updater\Updater030000($this->container);
                 $updater->setLogger($this->logger);
                 $updater->preUpdate();
-                break;
         }
     }
 
@@ -116,7 +113,7 @@ class AdditionalInstaller extends BaseInstaller
                 $this->buildDefaultTemplate();
                 $updater = new Updater\Updater021200($this->container);
                 $updater->setLogger($this->logger);
-                break;
+                $updater->postUpdate();
             case version_compare($currentVersion, '2.12.1', '<'):
                 $this->buildDefaultTemplate();
                 $updater = new Updater\Updater021201($this->container);
