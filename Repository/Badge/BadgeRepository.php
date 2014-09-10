@@ -257,4 +257,22 @@ class BadgeRepository extends EntityRepository
 
         return $executeQuery ? $query->getResult(): $query;
     }
+
+    /**
+     * @param Workspace $workspace
+     *
+     * @return integer
+     */
+    public function countByWorkspace(Workspace $workspace)
+    {
+        $query = $this->getEntityManager()
+            ->createQuery(
+                'SELECT COUNT(b.id)
+                FROM ClarolineCoreBundle:Badge\Badge b
+                WHERE b.workspace = :workspaceId'
+            )
+            ->setParameter('workspaceId', $workspace->getId());
+
+        return $query->getSingleScalarResult();
+    }
 }
