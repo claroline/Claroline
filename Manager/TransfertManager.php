@@ -266,8 +266,8 @@ class TransfertManager
 
         $data = [];
         $files = [];
-        $data['roles'] = $this->getImporterByName('roles')->export($workspace, $files);
-        $data['tools'] = $this->getImporterByName('tools')->export($workspace, $files);
+        $data['roles'] = $this->getImporterByName('roles')->export($workspace, $files, null);
+        $data['tools'] = $this->getImporterByName('tools')->export($workspace, $files, null);
 
         //generate the archive in a temp dir
         $content = Yaml::dump($data, 10);
@@ -277,13 +277,16 @@ class TransfertManager
         mkdir($archDir);
         $manifestPath = $archDir . DIRECTORY_SEPARATOR . 'manifest.yml';
         file_put_contents($manifestPath, $content);
-
         $archive = new \ZipArchive();
-
         $success = $archive->open($archPath, \ZipArchive::CREATE);
 
         if ($success === true) {
             $archive->addFile($manifestPath, 'manifest.yml');
+
+            foreach ($files as $uid => $file) {
+                $archive->addFile($uid, $file);
+            }
+
             $archive->close();
         } else {
             throw new \Exception('Unable to create archive . ' . $archPath . ' (error ' . $success . ')');

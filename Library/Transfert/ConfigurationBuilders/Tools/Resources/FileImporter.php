@@ -17,6 +17,7 @@ use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\HttpFoundation\File\File as SfFile;
 use Claroline\CoreBundle\Entity\Resource\File;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 
 /**
  * @DI\Service("claroline.tool.resources.file_importer")
@@ -96,6 +97,20 @@ class FileImporter extends Importer implements ConfigurationInterface
                 $file, $tmpFile,  $name, $item['file']['mime_type']
             );
         }
+    }
+
+    public function export(Workspace $workspace, array &$files, $object)
+    {
+        $hash = $object->getHashName();
+        $uid = uniqid();
+        $files[$uid] = $this->container
+            ->getParameter('claroline.param.files_directory') . DIRECTORY_SEPARATOR . $hash;
+        $data = array('file' => array(
+            'path' => $uid,
+            'mime_type' =>  $object->getResourceNode()->getMimeType()
+        ));
+
+        return $data;
     }
 
     public function getName()

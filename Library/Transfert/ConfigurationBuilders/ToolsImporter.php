@@ -171,7 +171,7 @@ class ToolsImporter extends Importer implements ConfigurationInterface
         return 'tools';
     }
 
-    public function export(Workspace $workspace, array &$files)
+    public function export(Workspace $workspace, array &$files, $object)
     {
         $data = [];
         $workspaceTools = $workspace->getOrderedTools();
@@ -194,7 +194,7 @@ class ToolsImporter extends Importer implements ConfigurationInterface
                 $importer = $this->getImporterByName($workspaceTool->getTool()->getName());
 
                 if ($importer) {
-                    $tool['data'] = $importer->export($workspace);
+                    $tool['data'] = $importer->export($workspace, $files, null);
                 }
 
             } catch (ExportNotImplementedException $e) {

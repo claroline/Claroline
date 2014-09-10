@@ -152,7 +152,7 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
 
                 foreach ($directory['directory']['roles'] as $role) {
 
-                     $creations = (isset($role['role']['rights']['create'])) ?
+                    $creations = (isset($role['role']['rights']['create'])) ?
                         $this->getCreationRightsArray($role['role']['rights']['create']):
                         array();
 
@@ -160,13 +160,10 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
                     $map = $uow->getIdentityMap();
 
                     //if the resourceRight was created
-                    $found = false;
                     $createdRights = null;
 
                     foreach ($map['Claroline\CoreBundle\Entity\Resource\ResourceRights'] as $unflushed) {
-                        $createdRights = $unflushed->getRole()->getName() === $role['role']['name'] ?
-                            $unflushed: null;
-                        break;
+                        if ($unflushed->getRole()->getName() === $role['role']['name']) $createdRights = $unflushed;
                     }
 
                     //There is no ResourceRight in the IdentityMap so we must create it
@@ -309,7 +306,7 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
         }*/
     }
 
-    public function export(Workspace $workspace, array &$files)
+    public function export(Workspace $workspace, array &$files, $object)
     {
         $data = [];
         //first we get the root
@@ -339,8 +336,23 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
                 $children = $resourceNode->getChildren();
 
                 foreach ($children as $child) {
+
                     if ($child->getResourceType()->getName() !== 'directory') {
-                        $childData = null;
+                        try {
+                            $importer = $this->getImporterByName($child->getResourceType()->getName());
+
+                            if ($importer) {
+                                $childData = $importer->export(
+                                    $workspace,
+                                    $files,
+                                    $this->resourceManager->getResourceFromNode($child)
+                                );
+                            }
+
+                        } catch (ExportNotImplementedException $e) {
+                            //well it didn't go so well
+                        }
+
                         $data['items'][] = array('item' => array(
                             'name' => $child->getName(),
                             'creator' => null,

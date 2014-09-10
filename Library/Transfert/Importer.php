@@ -55,7 +55,13 @@ abstract class Importer
         return $this->configuration;
     }
 
-    public function export(Workspace $workspace, array &$files)
+    /**
+     * @param Workspace $workspace
+     * @param array $files
+     * @param mixed $object
+     * @throws ExportNotImplementedException
+     */
+    public function export(Workspace $workspace, array &$files, $object)
     {
         throw new ExportNotImplementedException('The export is not implemented');
     }
