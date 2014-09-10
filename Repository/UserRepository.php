@@ -413,7 +413,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
     /**
      * Returns all the users except a given one.
      *
-     * @param User $excludedUser
+     * @param array $excludedUser
      *
      * @return User[]
      */
