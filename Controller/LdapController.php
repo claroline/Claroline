@@ -13,19 +13,19 @@ namespace Claroline\LdapBundle\Controller;
 
 use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\LdapBundle\Form\LdapType;
-use Claroline\LdapBundle\Library\LdapManager;
+use Claroline\LdapBundle\Manager\LdapManager;
 use JMS\DiExtraBundle\Annotation\Inject;
 use JMS\DiExtraBundle\Annotation\InjectParams;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\Form\FormFactory;
+use Symfony\Bundle\FrameworkBundle\Translation\Translator;
 use Symfony\Component\Form\FormError;
+use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\SecurityContextInterface;
-use Symfony\Bundle\FrameworkBundle\Translation\Translator;
 use Symfony\Component\Templating\EngineInterface;
 
 /**
@@ -41,7 +41,7 @@ class LdapController extends Controller
 
     /**
      * @InjectParams({
-     *     "ldap"               = @Inject("claroline.ldap_bundle.library.ldap_manager"),
+     *     "ldap"               = @Inject("claroline.ldap_bundle.manager.ldap_manager"),
      *     "request"            = @Inject("request_stack"),
      *     "formFactory"        = @Inject("form.factory"),
      *     "toolManager"        = @Inject("claroline.manager.tool_manager"),

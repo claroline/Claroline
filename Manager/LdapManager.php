@@ -9,11 +9,10 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\LdapBundle\Library;
+namespace Claroline\LdapBundle\Manager;
 
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
-use JMS\DiExtraBundle\Annotation\Inject;
-use JMS\DiExtraBundle\Annotation\InjectParams;
+
 use JMS\DiExtraBundle\Annotation\Service;
 use Symfony\Component\Yaml\Dumper;
 use Symfony\Component\Yaml\Parser;
@@ -28,12 +27,9 @@ class LdapManager
     private $config;
     private $connect;
 
-    /**
-     * @InjectParams()
-     */
     public function __construct()
     {
-        $this->path = __DIR__ . '/../../../../../../app/config/ldap.yml';
+        $this->path = __DIR__ . '/../../../../../../app/config/Authentication/claroline.ldap.yml';
         $this->yml = new Parser();
         $this->dumper = new Dumper();
         $this->config = $this->parseYml();
@@ -46,7 +42,7 @@ class LdapManager
      *
      * @return boolean
      */
-    public function connect($server)
+    public function connect($server, $user = null, $password = null)
     {
         if ($server and isset($server['host'])) {
             if (isset($server['port']) and is_long($server['port'])) {
@@ -55,7 +51,9 @@ class LdapManager
                 $this->connect = ldap_connect($server['host']);
             }
 
-            if ($this->connect) {
+            if ($this->connect and $user and $password) {
+                return @ldap_bind($this->connect, $user, $password);
+            } else if ($this->connect) {
                 return @ldap_bind($this->connect);
             }
         }
@@ -270,6 +268,22 @@ class LdapManager
     }
 
     /**
+     * Return a list of available servers
+     */
+    public function getServers()
+    {
+        $servers = array();
+
+        if (isset($this->config['servers']) and is_array($this->config['servers'])) {
+            foreach ($this->config['servers'] as $server) {
+                $servers[] = $server['name'];
+            }
+        }
+
+        return $servers;
+    }
+
+    /**
      * Check if the users settings (mapping) are defined.
      */
     public function userMapping($server)
@@ -295,5 +309,19 @@ class LdapManager
         }
 
         return $this->yml->parse(file_get_contents($this->path));
+    }
+
+    /**
+     * Authenticate ldap user
+     *
+     * @param name The name of the server.
+     *
+     * @return boolean
+     */
+    public function authenticate($name, $user, $password)
+    {
+        if ($this->connect($this->get($name), $user, $password)) {
+            return true;
+        }
     }
 }
