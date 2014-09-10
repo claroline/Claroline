@@ -242,12 +242,65 @@ class Dropzone extends AbstractResource
      */
     protected $notifyOnDrop = false;
 
+    /**
+     * @var Event
+     * Event for Workspace Agenda linked to DROP phase
+     *
+     * @ORM\OneToOne(
+     *    targetEntity="Claroline\CoreBundle\Entity\Event",cascade={"remove"})
+     * @ORM\JoinColumn(name="event_agenda_drop",onDelete="SET NULL")
+     * )
+     */
+    protected $eventDrop = null;
+
+    /**
+     * @var Event
+     * Event for Workspace Agenda linked to Correction phase.
+     *
+     * @ORM\OneToOne(
+     *    targetEntity="Claroline\CoreBundle\Entity\Event",cascade={"remove"})
+     * @ORM\JoinColumn(name="event_agenda_correction",onDelete="SET NULL")
+     */
+    protected $eventCorrection = null;
 
     public function __construct()
     {
         $this->drops = new ArrayCollection();
         $this->peerReviewCriteria = new ArrayCollection();
     }
+
+    /**
+     * @param \Claroline\CoreBundle\Entity\Event; $eventCorrection
+     */
+    public function setEventCorrection($eventCorrection)
+    {
+        $this->eventCorrection = $eventCorrection;
+    }
+
+    /**
+     * @return \Claroline\CoreBundle\Entity\Event;
+     */
+    public function getEventCorrection()
+    {
+        return $this->eventCorrection;
+    }
+
+    /**
+     * @param Claroline\CoreBundle\Entity\Event; $eventDrop
+     */
+    public function setEventDrop($eventDrop)
+    {
+        $this->eventDrop = $eventDrop;
+    }
+
+    /**
+     * @return \Claroline\CoreBundle\Entity\Event;
+     */
+    public function getEventDrop()
+    {
+        return $this->eventDrop;
+    }
+
 
     /**
      * @param mixed $editionState
