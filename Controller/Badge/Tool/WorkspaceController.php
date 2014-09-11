@@ -36,10 +36,10 @@ class WorkspaceController extends Controller
 {
     /**
      * @Route(
-     *     "/{badgePage}/{claimPage}",
+     *     "/{badgePage}/{claimPage}/{userPage}",
      *     name="claro_workspace_tool_badges",
-     *     requirements={"badgePage" = "\d+", "claimPage" = "\d+"},
-     *     defaults={"badgePage" = 1, "claimPage" = 1}
+     *     requirements={"badgePage" = "\d+", "claimPage" = "\d+", "userPage" = "\d+"},
+     *     defaults={"badgePage" = 1, "claimPage" = 1, "userPage" = 1}
      * )
      * @ParamConverter(
      *     "workspace",
@@ -48,16 +48,17 @@ class WorkspaceController extends Controller
      * )
      * @Template
      */
-    public function listAction(Workspace $workspace, $badgePage, $claimPage)
+    public function listAction(Workspace $workspace, $badgePage, $claimPage, $userPage)
     {
         $this->checkUserIsAllowed($workspace);
 
         $parameters = array(
-            'badgePage'        => $badgePage,
-            'claimPage'        => $claimPage,
-            'workspace'        => $workspace,
-            'add_link'         => 'claro_workspace_tool_badges_add',
-            'edit_link'        => array(
+            'badgePage'    => $badgePage,
+            'claimPage'    => $claimPage,
+            'userPage'    => $userPage,
+            'workspace'    => $workspace,
+            'add_link'     => 'claro_workspace_tool_badges_add',
+            'edit_link'    => array(
                 'url'    => 'claro_workspace_tool_badges_edit',
                 'suffix' => '#!edit'
             ),

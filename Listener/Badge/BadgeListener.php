@@ -153,11 +153,12 @@ class BadgeListener
     private function badgesManagement(Workspace $workspace)
     {
         $parameters = array(
-            'badgePage'        => 1,
-            'claimPage'        => 1,
-            'workspace'        => $workspace,
-            'add_link'         => 'claro_workspace_tool_badges_add',
-            'edit_link'        => array(
+            'badgePage'    => 1,
+            'claimPage'    => 1,
+            'userPage'    => 1,
+            'workspace'    => $workspace,
+            'add_link'     => 'claro_workspace_tool_badges_add',
+            'edit_link'    => array(
                 'url'    => 'claro_workspace_tool_badges_edit',
                 'suffix' => '#!edit'
             ),

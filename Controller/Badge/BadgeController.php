@@ -25,7 +25,6 @@ class BadgeController extends Controller
 
         /** @var \Claroline\CoreBundle\Repository\Badge\BadgeRepository $badgeRepository */
         $badgeRepository = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Badge\Badge');
-
         /** @var QueryBuilder $badgeQueryBuilder */
         $badgeQueryBuilder = $badgeRepository->findOrderedByName(
             $platformConfigHandler->getParameter('locale_language'),
@@ -43,20 +42,29 @@ class BadgeController extends Controller
             $badgeClaimsWorkspace = null;
         }
 
-        $badgeClaimQuery = $this->getDoctrine()
-            ->getRepository('ClarolineCoreBundle:Badge\BadgeClaim')
-            ->findByWorkspace($badgeClaimsWorkspace, false);
+        /** @var \Claroline\CoreBundle\Repository\Badge\BadgeClaimRepository $badgeClaimRepository */
+        $badgeClaimRepository = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Badge\BadgeClaim');
+        /** @var Query $badgeClaimQuery */
+        $badgeClaimQuery      = $badgeClaimRepository->findByWorkspace($badgeClaimsWorkspace, false);
+
+        /** @var \Claroline\CoreBundle\Repository\UserRepository $userRepository */
+        $userRepository = $this->getDoctrine()->getRepository('ClarolineCoreBundle:User');
+        /** @var Query $userQuery */
+        $userQuery = $userRepository->findUsersWithBadgesByWorkspace($badgeClaimsWorkspace, false);
 
         $pagerFactory       = $this->get('claroline.pager.pager_factory');
         $badgePager         = $pagerFactory->createPager($badgeQueryBuilder->getQuery(), $parameters['badgePage'], 10);
         $claimPager         = $pagerFactory->createPager($badgeClaimQuery, $parameters['claimPage'], 10);
+        $userPager          = $pagerFactory->createPager($userQuery, $parameters['userPage'], 10);
         $badgeRuleValidator = $this->get("claroline.rule.validator");
+
 
         return $this->render(
             'ClarolineCoreBundle:Badge:Template/list.html.twig',
             array(
                 'badgePager'       => $badgePager,
                 'claimPager'       => $claimPager,
+                'userPager'        => $userPager,
                 'parameters'       => $parameters,
                 'badgeRuleChecker' => $badgeRuleValidator
             )
