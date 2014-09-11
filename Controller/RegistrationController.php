@@ -11,23 +11,23 @@
 
 namespace Claroline\CoreBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
-use Symfony\Component\HttpFoundation\Request;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Form\BaseProfileType;
-use Claroline\CoreBundle\Library\Security\PlatformRoles;
-use Claroline\CoreBundle\Manager\UserManager;
-use Claroline\CoreBundle\Manager\RoleManager;
-use Claroline\CoreBundle\Library\HttpFoundation\XmlResponse;
-use Symfony\Component\HttpFoundation\Response;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
-use Symfony\Component\Validator\ValidatorInterface;
+use Claroline\CoreBundle\Library\HttpFoundation\XmlResponse;
+use Claroline\CoreBundle\Library\Security\PlatformRoles;
+use Claroline\CoreBundle\Manager\RoleManager;
+use Claroline\CoreBundle\Manager\UserManager;
+use JMS\DiExtraBundle\Annotation as DI;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\Validator\ValidatorInterface;
 
 /**
  * Controller for user self-registration. Access to this functionality requires

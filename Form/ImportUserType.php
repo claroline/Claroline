@@ -20,6 +20,13 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class ImportUserType extends AbstractType
 {
+    private $authenticationDrivers;
+
+    public function __construct($authenticationDrivers = null)
+    {
+        $this->authenticationDrivers = $authenticationDrivers;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add(
@@ -33,7 +40,17 @@ class ImportUserType extends AbstractType
                     new File(),
                     new CsvUser()
                 )
-           )
+            )
+        )
+        ->add(
+            'authentication',
+            'choice',
+            array(
+                'choices' => $this->authenticationDrivers,
+                'mapped' => false,
+                'required' => false,
+                'label' => 'authentication'
+            )
         );
     }
 

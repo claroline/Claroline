@@ -13,6 +13,7 @@ namespace Claroline\CoreBundle\Repository\Badge;
 
 use Claroline\CoreBundle\Entity\Badge\Badge;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\ORM\EntityRepository;
 
 class UserBadgeRepository extends EntityRepository
@@ -48,5 +49,43 @@ class UserBadgeRepository extends EntityRepository
             ->setParameter('userId', $user->getId());
 
         return $executeQuery ? $query->getResult(): $query;
+    }
+
+    /**
+     * @param Workspace $workspace
+     *
+     * @return integer
+     */
+    public function countAwardingByWorkspace(Workspace $workspace)
+    {
+        $query = $this->getEntityManager()
+            ->createQuery(
+                'SELECT COUNT(ub.id)
+                FROM ClarolineCoreBundle:Badge\UserBadge ub
+                JOIN ub.badge b
+                WHERE b.workspace = :workspaceId'
+            )
+            ->setParameter('workspaceId', $workspace->getId());
+
+        return $query->getSingleScalarResult();
+    }
+
+    /**
+     * @param Workspace $workspace
+     *
+     * @return integer
+     */
+    public function countAwardedBadgeByWorkspace(Workspace $workspace)
+    {
+        $query = $this->getEntityManager()
+            ->createQuery(
+                'SELECT COUNT(DISTINCT b.id)
+                FROM ClarolineCoreBundle:Badge\UserBadge ub
+                JOIN ub.badge b
+                WHERE b.workspace = :workspaceId'
+            )
+            ->setParameter('workspaceId', $workspace->getId());
+
+        return $query->getSingleScalarResult();
     }
 }

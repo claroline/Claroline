@@ -675,10 +675,10 @@ class ResourceController
      */
     public function renderBreadcrumbsAction(ResourceNode $node, array $_breadcrumbs)
     {
-        //the signature method can change aswell
-        //this method obviously has to change
         //this trick will never work with shortcuts to directory
-        $node = $this->request->getSession()->get('current_resource_node');
+        //we don't support directory links anymore
+        $nodeFromSession = $this->request->getSession()->get('current_resource_node');
+        $node = $nodeFromSession !== null ? $nodeFromSession: $node;
         $workspace = $node->getWorkspace();
         $ancestors = $this->resourceManager->getAncestors($node);
 
@@ -686,39 +686,6 @@ class ResourceController
             'ancestors' => $ancestors,
             'workspaceId' => $workspace->getId(),
         );
-        //the following code is useless and can be removed
-
-        $breadcrumbsAncestors = array();
-
-        if (count($_breadcrumbs) > 0) {
-            $breadcrumbsAncestors = $this->resourceManager->getByIds($_breadcrumbs);
-            $breadcrumbsAncestors[] = $node;
-            $root = $breadcrumbsAncestors[0];
-            $workspace = $root->getWorkspace();
-        }
-
-        //this condition is wrong
-        if (count($breadcrumbsAncestors) === 0) {
-            $_breadcrumbs = array();
-            $ancestors = $this->resourceManager->getAncestors($node);
-            $workspace = $node->getWorkspace();
-
-            foreach ($ancestors as $ancestor) {
-                $_breadcrumbs[] = $ancestor['id'];
-            }
-
-            $breadcrumbsAncestors = $this->resourceManager->getByIds($_breadcrumbs);
-        }
-
-        if (!$this->resourceManager->areAncestorsDirectory($breadcrumbsAncestors)) {
-            throw new \Exception('Breadcrumbs invalid');
-        };
-
-        return array(
-            'ancestors' => $breadcrumbsAncestors,
-            'workspaceId' => $workspace->getId()
-        );
-    
     }
 
 

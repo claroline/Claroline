@@ -11,14 +11,15 @@
 
 namespace Claroline\CoreBundle\Entity\Competence;
 
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\CompetenceRepository")
  * @ORM\Table(name="claro_competence")
  */
-Class Competence  {
-    
+Class Competence
+{    
     /**
      * @ORM\Column(type="integer")
      * @ORM\Id
@@ -29,7 +30,7 @@ Class Competence  {
     /**
      * @ORM\Column()
      */
-	private $name;
+    private $name;
 
     /**
      * @ORM\Column(type="text", nullable=true)
@@ -54,7 +55,7 @@ Class Competence  {
     /**
      * @ORM\Column(type="boolean", nullable=true)
      */
-	private $isPlatform;
+    private $isPlatform;
 
     /**
      * @ORM\Column(type="string")
@@ -116,7 +117,7 @@ Class Competence  {
     /**
      * @param mixed $workspace
      */
-    public function setWorkspace($workspace)
+    public function setWorkspace(Workspace $workspace)
     {
         $this->workspace = $workspace;
     }
