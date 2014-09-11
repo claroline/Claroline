@@ -169,6 +169,7 @@ class ResourceManager
             $node->setAccessibleFrom($parent->getAccessibleFrom());
             $node->setAccessibleUntil($parent->getAccessibleUntil());
         }
+
         $resource->setResourceNode($node);
         $this->setRights($node, $parent, $rights);
         $this->om->persist($node);
@@ -211,6 +212,11 @@ class ResourceManager
     public function getUniqueName(ResourceNode $node, ResourceNode $parent = null, $isCopy = false)
     {
         $candidateName = $node->getName();
+
+        //if the parent is null, then it's a workspace root and the name is always correct
+        //otherwise we fetch each workspace root with the findBy and the UnitOfWork won't be happy...
+        if (!$parent) return $candidateName;
+
         $parent = $parent ?: $node->getParent();
         $sameLevelNodes = $parent ?
             $parent->getChildren() :
