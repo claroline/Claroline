@@ -966,12 +966,14 @@ workspace_edit_form_description: Description
 workspace_edit_form_displayable: Visible dans la liste des espaces
 workspace_edit_form_name: Nom
 workspace_edit_form_number : Nombre de personnes inscrites
+workspace_edit_form_registrationValidation : 'Validation de l''inscription'
 workspace_edit_form_selfRegistration: 'Inscription publique'
 workspace_edit_form_selfUnregistration: 'Désinscription publique'
 workspace_form_code: Code
 workspace_form_description: Description
 workspace_form_displayable: Public
 workspace_form_name: Nom
+workspace_form_registrationValidation : 'Validation de l''inscription'
 workspace_form_selfRegistration: 'Inscription publique'
 workspace_form_selfUnregistration: 'Désinscription publique'
 workspace_form_template: Modèle

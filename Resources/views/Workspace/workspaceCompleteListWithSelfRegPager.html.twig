@@ -33,7 +33,9 @@
             <span class="pull-right pointer-hand label label-primary register-user-to-workspace register-button-{{ workspace.getId() }}"
                 data-workspace-id="{{ workspace.getId() }}"
                 data-workspace-name="{{ workspace.getName() }}"
-                data-workspace-code="{{ workspace.getCode() }}">
+                data-workspace-code="{{ workspace.getCode() }}"
+                data-workspace-validation="{% if workspace.getRegistrationValidation() %}validation{% else %}no-validation{% endif %}"
+            >
                 <i class="fa fa-plus-circle"></i>
                 {{ 'register'|trans({}, 'platform') }}
             </span>
