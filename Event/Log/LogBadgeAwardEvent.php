@@ -12,6 +12,7 @@
 namespace Claroline\CoreBundle\Event\Log;
 
 use Claroline\CoreBundle\Entity\Badge\Badge;
+use Claroline\CoreBundle\Entity\User;
 use Icap\NotificationBundle\Entity\NotifiableInterface;
 
 class LogBadgeAwardEvent extends LogGenericEvent implements NotifiableInterface
@@ -23,7 +24,11 @@ class LogBadgeAwardEvent extends LogGenericEvent implements NotifiableInterface
      */
     private $badge;
 
-    public function __construct(Badge $badge, $receiver)
+    /**
+     * @param Badge $badge
+     * @param User  $receiver
+     */
+    public function __construct(Badge $badge, User $receiver)
     {
         $this->badge = $badge;
 
