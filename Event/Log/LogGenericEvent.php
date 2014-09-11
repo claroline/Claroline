@@ -22,6 +22,8 @@ abstract class LogGenericEvent extends Event implements RestrictionnableInterfac
     const DISPLAYED_ADMIN     = 'admin';
     const DISPLAYED_WORKSPACE = 'workspace';
 
+    const PLATFORM_EVENT_TYPE = 'platform';
+
     protected $action;
 
     protected $details;

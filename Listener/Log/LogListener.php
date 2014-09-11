@@ -87,7 +87,11 @@ class LogListener
                 $doerSessionId = $request->getSession()->getId();
                 $doerIp = $request->getClientIp();
             }
-        } else {
+        } elseif (LogGenericEvent::PLATFORM_EVENT_TYPE === $event->getDoer()) {
+            $doer = null;
+            $doerType = Log::doerTypePlatform;
+        }
+        else {
             $doer = $event->getDoer();
             $doerType = Log::doerTypeUser;
         }
