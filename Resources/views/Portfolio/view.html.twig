@@ -17,19 +17,17 @@
                     <h1 id="username">{{ portfolio.user.firstName ~ ' ' ~ portfolio.user.lastName }}</h1>
 
                     <div data-ng-repeat="widget in widgets | filter:{type: 'title'}" data-ng-show="widgets.length > 0">
-                        <div data-widget>
-                            <div class="portfolio-title-container">
-                                {% if editMode %}
-                                    <div class="widget-actions">
-                                        <button class="widget-action btn btn-sm btn-primary" data-ng-click="edit(widget);" data-ng-if="!widget.isEditing()">
-                                            <span class="fa fa-pencil"></span>
-                                        </button>
-                                    </div>
-                                    <div data-ng-bind-html="widget.views.view | trustAsHtml"></div>
-                                {% else %}
-                                    {% include 'IcapPortfolioBundle:templates:title.html.twig' with {'widget': titleWidget} only %}
-                                {% endif %}
-                            </div>
+                        <div class="portfolio-title-container" data-widget>
+                            {% if editMode %}
+                                <div class="widget-actions">
+                                    <button class="widget-action btn btn-sm btn-primary" data-ng-click="edit(widget);" data-ng-if="!widget.isEditing()">
+                                        <span class="fa fa-pencil"></span>
+                                    </button>
+                                </div>
+                                <div data-ng-bind-html="widget.views.view | trustAsHtml"></div>
+                            {% else %}
+                                {% include 'IcapPortfolioBundle:templates:title.html.twig' with {'widget': titleWidget} only %}
+                            {% endif %}
                         </div>
                     </div>
                 </div>
