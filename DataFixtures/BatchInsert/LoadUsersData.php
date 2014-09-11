@@ -59,7 +59,7 @@ class LoadUsersData extends LoggableFixture implements ContainerAwareInterface
             );
         }
 
-        $this->container->get('claroline.manager.user_manager')->importUsers($users);
+        $this->container->get('claroline.manager.user_manager')->importUsers($users, false);
         $end = time();
         $duration = $this->container->get('claroline.utilities.misc')->timeElapsed($end - $start);
         $this->log("Time elapsed for the user creation: " . $duration);

@@ -402,6 +402,7 @@ class UsersController extends Controller
         if ($form->isValid()) {
             $file = $form->get('file')->getData();
             $authentication = $form->get('authentication')->getData();
+            $sendMail = $form->get('sendMail')->getData();
             $lines = str_getcsv(file_get_contents($file), PHP_EOL);
 
             foreach ($lines as $line) {
@@ -416,7 +417,7 @@ class UsersController extends Controller
                 return array('form' => $form->createView(), 'error' => 'role_user unavailable');
             }
 
-            $this->userManager->importUsers($users, $authentication);
+            $this->userManager->importUsers($users, $authentication, $sendMail);
 
             return new RedirectResponse($this->router->generate('claro_admin_user_list'));
         }

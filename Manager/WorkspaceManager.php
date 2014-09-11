@@ -168,7 +168,7 @@ class WorkspaceManager
      */
     public function create(Configuration $config, User $manager)
     {
-        $config->check();
+//        $config->check();
         $this->om->startFlushSuite();
         $workspace = $this->om->factory('Claroline\CoreBundle\Entity\Workspace\Workspace');
         $workspace->setCreator($manager);

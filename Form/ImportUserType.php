@@ -51,6 +51,14 @@ class ImportUserType extends AbstractType
                 'required' => false,
                 'label' => 'authentication'
             )
+        )
+        ->add(
+            'sendMail',
+            'checkbox',
+            array(
+                'label' => 'send_mail',
+                'required' => false
+            )
         );
     }
 
