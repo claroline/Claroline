@@ -12,6 +12,7 @@
 namespace Claroline\CoreBundle\Library\Installation\Updater;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Claroline\CoreBundle\Entity\Tool\Tool;
 
 class Updater030300
 {
@@ -21,11 +22,16 @@ class Updater030300
     public function __construct(ContainerInterface $container)
     {
         $this->em = $container->get('doctrine.orm.entity_manager');
+        $this->container = $container;
     }
 
     public function postUpdate()
     {
         $this->createBadgeUsageWidget();
+        $this->removeUnimplementedTools();
+        $this->createWorkspaceLearningOutcomesTool();
+        $this->createAuthenticationDirectory();
+        $this->em->flush();
     }
 
     private function createBadgeUsageWidget()
@@ -52,6 +58,59 @@ class Updater030300
             }
         } catch (MappingException $e) {
             $this->log('A MappingException has been thrown while trying to get Widget repository');
+        }
+    }
+
+    private function removeUnimplementedTools()
+    {
+        $this->log('Deleting admin competences subscription tool...');
+        $adminCompetencesSubscriptionTool = $this->em
+            ->getRepository('ClarolineCoreBundle:Tool\AdminTool')
+            ->findOneByName('competence_subscription');
+
+        if ($adminCompetencesSubscriptionTool) {
+            $this->em->remove($adminCompetencesSubscriptionTool);
+        }
+
+        $this->log('Deleting learning profile tool...');
+        $learningProfileTool = $this->em
+            ->getRepository('ClarolineCoreBundle:Tool\Tool')
+            ->findOneByName('learning_profil');
+
+        if ($learningProfileTool) {
+            $this->em->remove($learningProfileTool);
+        }
+    }
+
+    private function createWorkspaceLearningOutcomesTool()
+    {
+        $this->log('Creating workspace learning outcomes tool...');
+        $learningOutcomesTool = $this->em->getRepository('ClarolineCoreBundle:Tool\Tool')
+            ->findOneBy(array('name' => 'learning_outcomes'));
+
+        if (!$learningOutcomesTool) {
+            $wsTool = new Tool();
+            $wsTool->setName('learning_outcomes');
+            $wsTool->setClass('graduation-cap');
+            $wsTool->setIsWorkspaceRequired(true);
+            $wsTool->setIsDesktopRequired(false);
+            $wsTool->setDisplayableInWorkspace(true);
+            $wsTool->setDisplayableInDesktop(false);
+            $wsTool->setExportable(false);
+            $wsTool->setIsConfigurableInWorkspace(false);
+            $wsTool->setIsConfigurableInDesktop(false);
+
+            $this->em->persist($wsTool);
+        }
+    }
+
+    private function createAuthenticationDirectory()
+    {
+        $authDir = $this->container->getParameter('claroline.param.authentication_directory');
+
+        if (!file_exists($authDir)) {
+            $this->log('Creating authentication directory');
+            mkdir($authDir);
         }
     }
 
