@@ -8,12 +8,24 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/09/09 09:22:12
+ * Generation date: 2014/09/11 11:04:57
  */
-class Version20140909092210 extends AbstractMigration
+class Version20140911110455 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
+        $this->addSql("
+            CREATE TABLE claro_widget_badge_usage_config (
+                id INTEGER NOT NULL, 
+                numberLastAwardedBadge INTEGER NOT NULL, 
+                numberMostAwardedBadge INTEGER NOT NULL, 
+                widgetInstance_id INTEGER DEFAULT NULL, 
+                PRIMARY KEY(id)
+            )
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_9A2EA78BAB7B5A55 ON claro_widget_badge_usage_config (widgetInstance_id)
+        ");
         $this->addSql("
             ALTER TABLE claro_user 
             ADD COLUMN authentication VARCHAR(255) DEFAULT NULL
@@ -22,6 +34,9 @@ class Version20140909092210 extends AbstractMigration
 
     public function down(Schema $schema)
     {
+        $this->addSql("
+            DROP TABLE claro_widget_badge_usage_config
+        ");
         $this->addSql("
             DROP INDEX UNIQ_EB8D2852F85E0677
         ");

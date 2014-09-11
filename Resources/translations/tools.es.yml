@@ -17,6 +17,6 @@ desktop_tools: Herramientas del escritorio
 platform_logs: Registros de la plataforma
 platform_analytics: Análisis de la plataforma
 roles_management: Gestión de roles
-learning_profil: Perfil de aprendizaje (dev)
-competence_referencial: Referencial de competencia (dev)
-competence_subscription: Inscribir competencia (dev)
+learning_profil: Perfil de aprendizaje
+competence_referencial: Referencial de competencia
+competence_subscription: Inscribir competencia

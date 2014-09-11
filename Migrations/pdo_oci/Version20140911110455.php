@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/09/02 05:12:42
+ * Generation date: 2014/09/11 11:04:57
  */
-class Version20140902171240 extends AbstractMigration
+class Version20140911110455 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -60,12 +60,22 @@ class Version20140902171240 extends AbstractMigration
             REFERENCES claro_widget_instance (id) 
             ON DELETE CASCADE
         ");
+        $this->addSql("
+            ALTER TABLE claro_user 
+            ADD (
+                authentication VARCHAR2(255) DEFAULT NULL
+            )
+        ");
     }
 
     public function down(Schema $schema)
     {
         $this->addSql("
             DROP TABLE claro_widget_badge_usage_config
+        ");
+        $this->addSql("
+            ALTER TABLE claro_user 
+            DROP (authentication)
         ");
     }
 }
