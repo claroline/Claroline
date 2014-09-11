@@ -21,10 +21,35 @@ class CompetenceType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-        	->add('name', 'text', array('constraints' => new NotBlank(), 'label' => 'name'))
-            ->add('code', 'text', array('constraints' => new NotBlank(), 'label' => 'code'))
-            ->add('description', 'tinymce', array('label' => 'description'))
-            ->add('score', 'text', array('constraints' => new NotBlank(), 'label' => 'score'));
+            ->add(
+                'name',
+                'text',
+                array(
+                    'constraints' => new NotBlank(),
+                    'label' => 'name'
+                )
+            )
+            ->add(
+                'code',
+                'text',
+                array(
+                    'constraints' => new NotBlank(),
+                    'label' => 'code'
+                )
+            )
+            ->add(
+                'description',
+                'tinymce',
+                array('label' => 'description')
+            )
+            ->add(
+                'score',
+                'text',
+                array(
+                    'constraints' => new NotBlank(),
+                    'label' => 'score'
+                )
+            );
     }
 
     public function getName()

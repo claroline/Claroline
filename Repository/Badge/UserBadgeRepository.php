@@ -53,6 +53,44 @@ class UserBadgeRepository extends EntityRepository
 
     /**
      * @param Workspace $workspace
+     *
+     * @return integer
+     */
+    public function countAwardingByWorkspace(Workspace $workspace)
+    {
+        $query = $this->getEntityManager()
+            ->createQuery(
+                'SELECT COUNT(ub.id)
+                FROM ClarolineCoreBundle:Badge\UserBadge ub
+                JOIN ub.badge b
+                WHERE b.workspace = :workspaceId'
+            )
+            ->setParameter('workspaceId', $workspace->getId());
+
+        return $query->getSingleScalarResult();
+    }
+
+    /**
+     * @param Workspace $workspace
+     *
+     * @return integer
+     */
+    public function countAwardedBadgeByWorkspace(Workspace $workspace)
+    {
+        $query = $this->getEntityManager()
+            ->createQuery(
+                'SELECT COUNT(DISTINCT b.id)
+                FROM ClarolineCoreBundle:Badge\UserBadge ub
+                JOIN ub.badge b
+                WHERE b.workspace = :workspaceId'
+            )
+            ->setParameter('workspaceId', $workspace->getId());
+
+        return $query->getSingleScalarResult();
+    }
+
+    /**
+     * @param Workspace $workspace
      * @param int       $limit
      *
      * @return Badge[]

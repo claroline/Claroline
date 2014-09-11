@@ -263,7 +263,7 @@ class UserManager
      *
      * @return array
      */
-    public function importUsers(array $users)
+    public function importUsers(array $users, $authentication = null)
     {
         $roleUser = $this->roleManager->getRoleByName('ROLE_USER');
         $max = $roleUser->getMaxUsers();
@@ -282,8 +282,8 @@ class UserManager
             $username = $user[2];
             $pwd = $user[3];
             $email = $user[4];
-            $code = isset($user[5])? $user[5] : null;
-            $phone = isset($user[6])? $user[6] : null;
+            $code = isset($user[5]) ? $user[5] : null;
+            $phone = isset($user[6]) ? $user[6] : null;
 
             $newUser = $this->objectManager->factory('Claroline\CoreBundle\Entity\User');
             $newUser->setFirstName($firstName);
@@ -294,6 +294,7 @@ class UserManager
             $newUser->setAdministrativeCode($code);
             $newUser->setPhone($phone);
             $newUser->setLocale($lg);
+            $newUser->setAuthentication($authentication);
             $this->createUser($newUser);
         }
 
@@ -517,11 +518,11 @@ class UserManager
     {
         if ($withPager) {
             $query = $this->userRepo->findUsersByWorkspaces($workspaces, false);
-            
+
             return $this->pagerFactory->createPager($query, $page, $max);
         } else {
             return  $this->userRepo->findUsersByWorkspaces($workspaces);
- 
+
         }
 
     }
@@ -749,7 +750,7 @@ class UserManager
     {
         return $this->userRepo->findOneByResetPasswordHash($resetPassword);
     }
-    
+
     /**
      * @param integer $userId
      *

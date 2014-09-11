@@ -146,7 +146,7 @@
                     <tbody id="user-table-body">
                         {% for user in pager.currentPageResults %}
                             <tr id="row-{{ user.id }}" class="row-user" data-user-id="{{ user.getId() }}">
-                                <td> <input class="chk-user chk-item" type="checkbox" value="{{ user.getId() }}"> </input></td>
+                                <td> <input class="chk-user chk-item" type="checkbox" value="{{ user.getId() }}"></td>
                                 <td>
                                     <a href="{{ path('claro_public_profile_view', {'publicUrl': user.getPublicUrl()}) }}"> {{user.getUsername()}}</a>
                                 </td>
