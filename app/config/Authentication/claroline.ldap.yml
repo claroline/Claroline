@@ -1,0 +1,1 @@
+{ servers: { TOTO: { host: 'ldaps://tet.univ-st-etienne.fr', port: 636, dn: 'dc=univ-st-etienne,dc=fr', group: ujmGroup, groupName: cn, groupCode: cn, objectClass: person, userName: displayname, firstName: employeetype, lastName: ujmchartestatus, email: givenname, password: null, code: '', locale: '', name: TOTO, user: null } }, userCreation: true }
