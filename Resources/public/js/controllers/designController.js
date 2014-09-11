@@ -61,7 +61,6 @@ portfolioApp
                     }
 
                     if (oldValue != newValue) {
-                        console.log('pouet');
                         switch(newValue) {
                             case 1:
                                 var widgetsToUpdate = $filter('filter')($scope.widgets, {type: '!title', column: 3});
@@ -73,7 +72,6 @@ portfolioApp
                                 break;
                             default:
                                 var widgetsToUpdate = $filter('filter')($scope.widgets, {type: '!title', column: '!3'});
-                                console.log(widgetsToUpdate);
                                 angular.forEach(widgetsToUpdate, function(widget, key) {
                                     widget.column = 1;
                                     widget.row    = (key + 1);
