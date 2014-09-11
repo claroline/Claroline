@@ -11,6 +11,8 @@
 
 namespace Claroline\CoreBundle\Manager;
 
+use Claroline\CoreBundle\Entity\Resource\Directory;
+use Claroline\CoreBundle\Entity\Resource\ResourceRights;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceFavourite;
@@ -811,6 +813,7 @@ class WorkspaceManager
         $this->om->persist($wksrq);
         $this->om->flush();
     }
+
     /**
      * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
      * @param \Claroline\CoreBundle\Entity\User $user
@@ -835,6 +838,136 @@ class WorkspaceManager
         $this->container->get('security.context')->setToken($token);
 
         return $user;
+    }
+
+    /**
+     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $source
+     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
+     */
+    public function duplicateWorkspaceRoles(Workspace $source, Workspace $workspace)
+    {
+        $guid = $workspace->getGuid();
+        $roles = $source->getRoles();
+        $unusedRolePartName = '_' . $source->getGuid();
+
+        $this->om->startFlushSuite();
+
+        foreach ($roles as $role) {
+            $roleName = str_replace($unusedRolePartName, '', $role->getName());
+
+            $this->roleManager->createWorkspaceRole(
+                $roleName . '_' . $guid,
+                $role->getTranslationKey(),
+                $workspace,
+                $role->isReadOnly()
+            );
+        }
+        $this->om->endFlushSuite();
+    }
+
+    /**
+     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $source
+     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
+     */
+    public function duplicateOrderedTools(Workspace $source, Workspace $workspace)
+    {
+        $orderedTools = $source->getOrderedTools();
+        $workspaceRoles = array();
+        $wRoles = $this->roleManager->getRolesByWorkspace($workspace);
+
+        foreach ($wRoles as $wRole) {
+            $workspaceRoles[$wRole->getTranslationKey()] = $wRole;
+        }
+
+        $this->om->startFlushSuite();
+
+        foreach ($orderedTools as $orderedTool) {
+            $workspaceOrderedTool = $this->toolManager->addWorkspaceTool(
+                $orderedTool->getTool(),
+                $orderedTool->getOrder(),
+                $orderedTool->getName(),
+                $workspace
+            );
+
+            $roles = $orderedTool->getRoles();
+
+            foreach ($roles as $role) {
+
+                if ($role->getType() === 1) {
+                    $this->toolManager->addRoleToOrderedTool(
+                        $workspaceOrderedTool,
+                        $role
+                    );
+                } else {
+                    $key = $role->getTranslationKey();
+
+                    if (isset($workspaceRoles[$key]) && !empty($workspaceRoles[$key])) {
+                        $this->toolManager->addRoleToOrderedTool(
+                            $workspaceOrderedTool,
+                            $workspaceRoles[$key]
+                        );
+                    }
+                }
+            }
+        }
+        $this->om->endFlushSuite();
+    }
+
+    /**
+     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $source
+     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
+     * @param \Claroline\CoreBundle\Entity\User $user
+     */
+    public function duplicateRootDirectory(
+        Workspace $source,
+        Workspace $workspace,
+        User $user
+    )
+    {
+        $rootDirectory = new Directory();
+        $rootDirectory->setName($workspace->getName());
+        $directoryType = $this->resourceManager->getResourceTypeByName('directory');
+        $this->resourceManager->create(
+            $rootDirectory,
+            $directoryType,
+            $user,
+            $workspace,
+            null,
+            null,
+            array()
+        );
+//        $workspaceRoles = array();
+//        $wRoles = $this->roleManager->getRolesByWorkspace($workspace);
+//
+//        foreach ($wRoles as $wRole) {
+//            $workspaceRoles[$wRole->getTranslationKey()] = $wRole;
+//        }
+
+//        $root = $this->resourceManager->getWorkspaceRoot($source);
+//        $rights = $root->getRights();
+//
+//        foreach ($rights as $right) {
+//            $newRight = new ResourceRights();
+//            $newRight->setResourceNode($rootDirectory->getResourceNode());
+//            $newRight->setMask($right->getMask());
+//            $newRight->setCreatableResourceTypes(
+//                $right->getCreatableResourceTypes()->toArray()
+//            );
+//
+//            $role = $right->getRole();
+//
+//            if ($role->getType() === 1) {
+//                $newRight->setRole($role);
+//            } else {
+//                $key = $role->getTranslationKey();
+//
+//                if (isset($workspaceRoles[$key]) && !empty($workspaceRoles[$key])) {
+//                    $newRight->setRole($workspaceRoles[$key]);
+//                }
+//            }
+//            $this->om->persist($newRight);
+//        }
+//        $this->om->flush();
     }
 
     /**

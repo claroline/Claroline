@@ -41,26 +41,19 @@
                     {% endfor %}
                 </tbody>
             </table>
-            <a class="btn btn-primary create-modal-form"
-               href="{{ path('claro_workspace_model_modal_form', {'workspace': workspace.getId()}) }}"
-                    >
-                {{ 'create_model'|trans({}, 'platform') }}
-            </a>
         </div>
         {% if models|length == 0 %}
             <div style="text-align: center;">
                 <p>{{ 'no_model'|trans({}, 'platform') }}</p>
-                <p>
-                    <a class="btn btn-primary create-modal-form"
-                       href="{{ path('claro_workspace_model_modal_form', {'workspace': workspace.getId()}) }}"
-                    >
-                        {{ 'create_model'|trans({}, 'platform') }}
-                    </a>
-                </p>
             </div>
         {% endif %}
     </div>
     <div class="panel-footer">
+        <a class="btn btn-primary create-modal-form"
+           href="{{ path('claro_workspace_model_modal_form', {'workspace': workspace.getId()}) }}"
+        >
+            {{ 'create_model'|trans({}, 'platform') }}
+        </a>
     </div>
 {% endblock %}
 

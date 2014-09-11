@@ -537,6 +537,7 @@ no_group: 'Aucun groupe'
 no_group: Il n'y a aucun groupe.
 no_home_tab: 'Il n''y a aucun onglet'
 no_message: 'Aucun message'
+no_model: 'Aucun modèle'
 no_package_description: Aucune description du paquet.
 no_resources_in_workspace: Cet espace ne contient actuellement aucune ressource.
 no_role_selected_message: 'Aucun role sélectionné.'

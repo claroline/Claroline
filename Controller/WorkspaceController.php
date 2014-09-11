@@ -298,22 +298,22 @@ class WorkspaceController extends Controller
 
             if (!is_null($model)) {
 
-                return $this->createWorkspaceFromModel($model, $form);
+                $this->createWorkspaceFromModel($model, $form);
+            } else {
+                $config = Configuration::fromTemplate(
+                    $this->templateDir . $ds . $form->get('template')->getData()->getHash()
+                );
+                $config->setWorkspaceName($form->get('name')->getData());
+                $config->setWorkspaceCode($form->get('code')->getData());
+                $config->setDisplayable($form->get('displayable')->getData());
+                $config->setSelfRegistration($form->get('selfRegistration')->getData());
+                $config->setSelfUnregistration($form->get('selfUnregistration')->getData());
+                $config->setWorkspaceDescription($form->get('description')->getData());
+
+                $user = $this->security->getToken()->getUser();
+                $this->workspaceManager->create($config, $user);
+                $this->tokenUpdater->update($this->security->getToken());
             }
-
-            $config = Configuration::fromTemplate(
-                $this->templateDir . $ds . $form->get('template')->getData()->getHash()
-            );
-            $config->setWorkspaceName($form->get('name')->getData());
-            $config->setWorkspaceCode($form->get('code')->getData());
-            $config->setDisplayable($form->get('displayable')->getData());
-            $config->setSelfRegistration($form->get('selfRegistration')->getData());
-            $config->setSelfUnregistration($form->get('selfUnregistration')->getData());
-            $config->setWorkspaceDescription($form->get('description')->getData());
-
-            $user = $this->security->getToken()->getUser();
-            $this->workspaceManager->create($config, $user);
-            $this->tokenUpdater->update($this->security->getToken());
             $route = $this->router->generate('claro_workspace_list');
             $msg = $this->get('translator')->trans(
                 'successfull_workspace_creation',
@@ -1149,60 +1149,32 @@ class WorkspaceController extends Controller
 
     private function createWorkspaceFromModel(WorkspaceModel $model, FormInterface $form)
     {
-        $workspace = $model->getWorkspace();
+        $user = $this->security->getToken()->getUser();
+        $modelWorkspace = $model->getWorkspace();
         $resourceModels = $model->getResourceModel();
         $homeTabs = $model->getHomeTabs();
 
-        $config = new Configuration('', false);
-        $config->setWorkspaceName($form->get('name')->getData());
-        $config->setWorkspaceCode($form->get('code')->getData());
-        $config->setDisplayable($form->get('displayable')->getData());
-        $config->setSelfRegistration($form->get('selfRegistration')->getData());
-        $config->setSelfUnregistration($form->get('selfUnregistration')->getData());
-        $config->setWorkspaceDescription($form->get('description')->getData());
+        $workspace = new Workspace();
+        $workspace->setName($form->get('name')->getData());
+        $workspace->setCode($form->get('code')->getData());
+        $workspace->setDescription($form->get('description')->getData());
+        $workspace->setDisplayable($form->get('displayable')->getData());
+        $workspace->setSelfRegistration($form->get('selfRegistration')->getData());
+        $workspace->setSelfUnregistration($form->get('selfUnregistration')->getData());
 
-        // Duplicate roles
-        $workspaceRoles = array();
-        $roles = $workspace->getRoles();
-        $unusedRolePartName = '_' . $workspace->getGuid();
+        $guid = $this->container->get('claroline.utilities.misc')->generateGuid();
+        $workspace->setGuid($guid);
+        $date = new \Datetime(date('d-m-Y H:i'));
+        $workspace->setCreationDate($date->getTimestamp());
+        $workspace->setCreator($user);
 
-        foreach ($roles as $role) {
-            $roleName = str_replace($unusedRolePartName, '', $role->getName());
-
-            if ($roleName !== 'ROLE_WS_MANAGER') {
-                $workspaceRoles[$roleName] = $role->getTranslationKey();
-            }
-        }
-        $config->setRoles($workspaceRoles);
-
-        // Duplicate tools
-        $toolsPerms = array();
-        $toolsConfigs = array();
-        $orderedTools = $workspace->getOrderedTools();
-
-        foreach ($orderedTools as $orderedTool) {
-            $toolName = $orderedTool->getTool()->getName();
-            $orderedToolName = $orderedTool->getName();
-
-            if (!isset($toolsPerms[$toolName])) {
-                $toolsPerms[$toolName] = array();
-            }
-            $toolRoleNames = array();
-            $toolRoles = $orderedTool->getRoles();
-
-            foreach ($toolRoles as $toolRole) {
-                $toolRoleNames[] =
-                    str_replace($unusedRolePartName, '', $toolRole->getName());
-            }
-            $toolsPerms[$toolName]['perms'] = $toolRoleNames;
-            $toolsPerms[$toolName]['name'] = $orderedToolName;
-        }
-        $config->setToolsPermissions($toolsPerms);
-
-        throw new \Exception(var_dump($toolsPerms));
-        throw new \Exception(var_dump($config));
-
-        return new Response('workspace created');
+        $this->workspaceManager->createWorkspace($workspace);
+        $this->workspaceManager
+            ->duplicateWorkspaceRoles($modelWorkspace, $workspace);
+        $this->workspaceManager
+            ->duplicateOrderedTools($modelWorkspace, $workspace);
+        $this->workspaceManager
+            ->duplicateRootDirectory($modelWorkspace, $workspace, $user);
     }
 
     private function assertIsGranted($attributes, $object = null)
