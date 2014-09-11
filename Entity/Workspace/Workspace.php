@@ -120,6 +120,11 @@ class Workspace
     protected $selfRegistration = false;
 
     /**
+     * @ORM\Column(name="registration_validation", type="boolean")
+     */
+    protected $registrationValidation = false;
+
+    /**
      * @ORM\Column(name="self_unregistration", type="boolean")
      */
     protected $selfUnregistration = false;
@@ -248,6 +253,16 @@ class Workspace
     public function getSelfRegistration()
     {
         return $this->selfRegistration;
+    }
+
+    public function getRegistrationValidation()
+    {
+        return $this->registrationValidation;
+    }
+
+    public function setRegistrationValidation($registrationValidation)
+    {
+        $this->registrationValidation = $registrationValidation;
     }
 
     public function setSelfUnregistration($selfUnregistration)

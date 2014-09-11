@@ -52,6 +52,7 @@ class WorkspaceType extends AbstractType
                 )
             )->add('displayable', 'checkbox', array('required' => false))
             ->add('selfRegistration', 'checkbox', array('required' => false))
+            ->add('registrationValidation', 'checkbox', array('required' => false))
             ->add('selfUnregistration', 'checkbox', array('required' => false))
             ->add(
                 'model',

@@ -962,12 +962,14 @@ workspace_edit_form_description: Description
 workspace_edit_form_displayable: Displayable
 workspace_edit_form_name: Name
 workspace_edit_form_number : Number of subscriber(s)
+workspace_edit_form_registrationValidation : 'Registration validation'
 workspace_edit_form_selfRegistration: 'Public registration'
 workspace_edit_form_selfUnregistration: 'Public unregistration'
 workspace_form_code: Code
 workspace_form_description: Description
 workspace_form_displayable: Public
 workspace_form_name: Name
+workspace_form_registrationValidation : 'Registration validation'
 workspace_form_selfRegistration: 'Public registration'
 workspace_form_selfUnregistration: 'Public unregistration'
 workspace_form_template: Template

@@ -198,8 +198,8 @@ claro_text:
     prefix: text
     type: annotation
 
-claro_simple_text_widget:
-    resource: "@ClarolineCoreBundle/Controller/Widget/SimpleTextController.php"
+claro_widget:
+    resource: "@ClarolineCoreBundle/Controller/Widget"
     prefix: widget
     type: annotation
 
@@ -240,11 +240,6 @@ claro_user:
 
 claro_admin_badge:
     resource: "@ClarolineCoreBundle/Controller/Administration/BadgeController.php"
-    type: annotation
-
-claro_workspaces_widget:
-    resource: "@ClarolineCoreBundle/Controller/Widget/MyWorkspacesWidgetController.php"
-    prefix: widget
     type: annotation
 
 claro_oauth:

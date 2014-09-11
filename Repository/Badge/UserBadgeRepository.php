@@ -88,4 +88,51 @@ class UserBadgeRepository extends EntityRepository
 
         return $query->getSingleScalarResult();
     }
+
+    /**
+     * @param Workspace $workspace
+     * @param int       $limit
+     *
+     * @return Badge[]
+     */
+    public function findWorkspaceLastAwardedBadges(Workspace $workspace, $limit = 10)
+    {
+        $query = $this->getEntityManager()
+            ->createQuery(
+                'SELECT ub, b
+                FROM ClarolineCoreBundle:Badge\UserBadge ub
+                JOIN ub.badge b
+                WHERE b.workspace = :workspaceId
+                ORDER BY ub.issuedAt DESC'
+            )
+            ->setParameter('workspaceId', $workspace->getId());
+
+        return $query
+                ->setMaxResults($limit)
+                ->getResult();
+    }
+
+    /**
+     * @param Workspace $workspace
+     * @param int       $limit
+     *
+     * @return Badge[]
+     */
+    public function findWorkspaceMostAwardedBadges(Workspace $workspace, $limit = 10)
+    {
+        $query = $this->getEntityManager()
+            ->createQuery(
+                'SELECT ub, b, COUNT(ub) AS awardedNumber
+                FROM ClarolineCoreBundle:Badge\UserBadge ub
+                JOIN ub.badge b
+                WHERE b.workspace = :workspaceId
+                GROUP BY ub.badge
+                ORDER BY awardedNumber DESC'
+            )
+            ->setParameter('workspaceId', $workspace->getId());
+
+        return $query
+                ->setMaxResults($limit)
+                ->getResult();
+    }
 }

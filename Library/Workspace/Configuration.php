@@ -22,6 +22,7 @@ class Configuration
     private $workspaceDescription;
     private $displayable = false;
     private $selfRegistration = false;
+    private $registrationValidation = false;
     private $selfUnregistration = false;
     private $templateFile;
     private $extractPath;
@@ -181,7 +182,21 @@ class Configuration
         return $this->extractPath;
     }
 
+<<<<<<< HEAD
     public function setOwner(User $owner)
+=======
+    public function getRegistrationValidation()
+    {
+        return $this->registrationValidation;
+    }
+
+    public function setRegistrationValidation($registrationValidation)
+    {
+        $this->registrationValidation = $registrationValidation;
+    }
+
+    public function setSelfUnregistration($selfUnregistration)
+>>>>>>> 95801e3d48fdf66301b140da2ffc66c6054469ac
     {
         $this->owner = $owner;
     }
