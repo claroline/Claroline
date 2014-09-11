@@ -16,12 +16,14 @@
                     <table class="table">
                         <tr>
                             <th>{{ 'name'|trans({}, 'platform') }}</th>
+                            <th>{{ 'code'|trans({}, 'platform') }}</th>
                             <th></th>
                         </tr>
 
                         {% for competence in linkableCompetences %}
                             <tr>
                                 <td>{{ competence.getName() }}</td>
+                                <td>{{ competence.getCode() }}</td>
                                 <td>
                                     <a href="{{ path('claro_admin_sub_competence_link', {'parent': parent.getId(), 'competence': competence.getId()}) }}"
                                        class="btn btn-primary"
