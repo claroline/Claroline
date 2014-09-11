@@ -22,6 +22,7 @@ class Configuration
     private $workspaceDescription;
     private $displayable = false;
     private $selfRegistration = false;
+    private $registrationValidation = false;
     private $selfUnregistration = false;
     /**
      * If you want to use the role_anonymous from the platform, use
@@ -169,6 +170,16 @@ class Configuration
     public function getSelfRegistration()
     {
         return $this->selfRegistration;
+    }
+
+    public function getRegistrationValidation()
+    {
+        return $this->registrationValidation;
+    }
+
+    public function setRegistrationValidation($registrationValidation)
+    {
+        $this->registrationValidation = $registrationValidation;
     }
 
     public function setSelfUnregistration($selfUnregistration)

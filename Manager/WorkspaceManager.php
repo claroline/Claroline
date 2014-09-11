@@ -178,6 +178,7 @@ class WorkspaceManager
         $workspace->setGuid($this->ut->generateGuid());
         $workspace->setDisplayable($config->isDisplayable());
         $workspace->setSelfRegistration($config->getSelfRegistration());
+        $workspace->setRegistrationValidation($config->getRegistrationValidation());
         $workspace->setSelfUnregistration($config->getSelfUnregistration());
         $date = new \Datetime(date('d-m-Y H:i'));
         $workspace->setCreationDate($date->getTimestamp());
