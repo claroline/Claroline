@@ -72,7 +72,7 @@ class Authenticator
             } else {
                 return false;
             }
-        }**/
+        } **/
 
         if ($user->getPassword() === $encodedPass) {
             $token = new UsernamePasswordToken($user, $password, $providerKey, $user->getRoles());

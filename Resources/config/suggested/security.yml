@@ -35,10 +35,15 @@ security:
 
         main:
             pattern: ^/
-            form_login:
+            simple_form:
+                authenticator: claroline.core_bundle.library.security.external_authenticator
                 check_path: /login_check
-                success_handler: claroline.authentication_handler
-                failure_handler: claroline.security.ajax_authentication_failure_handler
+                #success_handler: claroline.authentication_handler
+                #failure_handler: claroline.security.ajax_authentication_failure_handler
+            #form_login:
+            #    check_path: /login_check
+            #    success_handler: claroline.authentication_handler
+            #    failure_handler: claroline.security.ajax_authentication_failure_handler
             anonymous: ~
             logout: true
             switch_user: { role: ROLE_ADMIN, parameter: _switch }
@@ -55,6 +60,7 @@ security:
                 use_forward: false
                 oauth_user_provider:
                     service: claroline.facebook_provider
+
     acl:
         connection: default
         voter:
