@@ -16,6 +16,8 @@ use Claroline\CoreBundle\Entity\Home\HomeTabConfig;
 use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Entity\Resource\ResourceRights;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Widget\WidgetHomeTabConfig;
+use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceFavourite;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceRegistrationQueue;
@@ -985,11 +987,13 @@ class WorkspaceManager
 
         foreach ($homeTabConfigs as $homeTabConfig) {
             $homeTab = $homeTabConfig->getHomeTab();
+            $widgetHomeTabConfigs = $homeTab->getWidgetHomeTabConfigs();
+
             $newHomeTab = new HomeTab();
             $newHomeTab->setType('workspace');
             $newHomeTab->setWorkspace($workspace);
             $newHomeTab->setName($homeTab->getName());
-            $this->homeTabManager->insertHomeTab($newHomeTab);
+            $this->om->persist($newHomeTab);
 
             $newHomeTabConfig = new HomeTabConfig();
             $newHomeTabConfig->setHomeTab($newHomeTab);
@@ -998,8 +1002,30 @@ class WorkspaceManager
             $newHomeTabConfig->setLocked($homeTabConfig->isVisible());
             $newHomeTabConfig->setLocked($homeTabConfig->isLocked());
             $newHomeTabConfig->setTabOrder($order);
-            $this->homeTabManager->insertHomeTabConfig($newHomeTabConfig);
+            $this->om->persist($newHomeTabConfig);
             $order++;
+
+            foreach ($widgetHomeTabConfigs as $widgetConfig) {
+                $widgetInstance = $widgetConfig->getWidgetInstance();
+
+                $newWidgetInstance = new WidgetInstance();
+                $newWidgetInstance->setIsAdmin(false);
+                $newWidgetInstance->setIsDesktop(false);
+                $newWidgetInstance->setWorkspace($workspace);
+                $newWidgetInstance->setWidget($widgetInstance->getWidget());
+                $newWidgetInstance->setName($widgetInstance->getName());
+                $this->om->persist($newWidgetInstance);
+
+                $newWidgetConfig = new WidgetHomeTabConfig();
+                $newWidgetConfig->setType('workspace');
+                $newWidgetConfig->setWorkspace($workspace);
+                $newWidgetConfig->setHomeTab($newHomeTab);
+                $newWidgetConfig->setWidgetInstance($newWidgetInstance);
+                $newWidgetConfig->setVisible($widgetConfig->isVisible());
+                $newWidgetConfig->setLocked($widgetConfig->isLocked());
+                $newWidgetConfig->setWidgetOrder($widgetConfig->getWidgetOrder());
+                $this->om->persist($newWidgetConfig);
+            }
         }
         $this->om->endFlushSuite();
     }

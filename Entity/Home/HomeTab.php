@@ -54,6 +54,14 @@ class HomeTab
      */
     protected $workspace;
 
+    /**
+     * @ORM\OneToMany(
+     *     targetEntity="Claroline\CoreBundle\Entity\Widget\WidgetHomeTabConfig",
+     *     mappedBy="homeTab"
+     * )
+     */
+    protected $widgetHomeTabConfigs;
+
     public function getId()
     {
         return $this->id;
@@ -102,5 +110,10 @@ class HomeTab
     public function setWorkspace(Workspace $workspace)
     {
         $this->workspace = $workspace;
+    }
+
+    public function getWidgetHomeTabConfigs()
+    {
+        return $this->widgetHomeTabConfigs;
     }
 }
