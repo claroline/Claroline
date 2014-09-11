@@ -182,9 +182,6 @@ class Configuration
         return $this->extractPath;
     }
 
-<<<<<<< HEAD
-    public function setOwner(User $owner)
-=======
     public function getRegistrationValidation()
     {
         return $this->registrationValidation;
@@ -195,8 +192,7 @@ class Configuration
         $this->registrationValidation = $registrationValidation;
     }
 
-    public function setSelfUnregistration($selfUnregistration)
->>>>>>> 95801e3d48fdf66301b140da2ffc66c6054469ac
+    public function setOwner(User $owner)
     {
         $this->owner = $owner;
     }
