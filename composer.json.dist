@@ -8,7 +8,7 @@
         "php": ">=5.4.1",
         "sensio/distribution-bundle": "~2.3.4",
         "claroline/bundle-recorder": "~3.0",
-        "claroline/core-bundle": ">=3.0.0, <3.2.0",
+        "claroline/core-bundle": "~3.0.0",
         "claroline/web-installer": ">=1.0.12,<2.0",
         "claroline/activity-tool-bundle": "~2.0",
         "claroline/announcement-bundle": "~3.1",
