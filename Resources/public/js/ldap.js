@@ -17,7 +17,6 @@
         'firstName': null,
         'lastName': null,
         'email': null,
-        'password': null,
         'code': null,
         'locale': null
     };
@@ -44,7 +43,7 @@
      */
     ldap.getAttributes = function (type) {
         if (type === 'users') {
-            return ['userName', 'firstName', 'lastName', 'email', 'password', 'code', 'locale'];
+            return ['userName', 'firstName', 'lastName', 'email', 'code', 'locale'];
         }
 
         return ['groupName', 'groupCode'];

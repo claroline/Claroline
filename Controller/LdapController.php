@@ -117,7 +117,10 @@ class LdapController extends Controller
             if ($this->ldap->exists($name, $data)) {
                 $form->addError(new FormError($this->translator->trans('ldap_already_exists', array(), 'ldap')));
             } else {
-                if (!$this->ldap->connect($data)) {
+                $user = isset($data['user']) ? $data['user'] : null;
+                $password = isset($data['password']) ? $data['user'] : null;
+
+                if (!$this->ldap->connect($data, $user, $password)) {
                     $form->addError(new FormError($this->translator->trans('ldap_cant_connect', array(), 'ldap')));
                 } else {
                     $this->ldap->saveConfig($data);
@@ -190,8 +193,10 @@ class LdapController extends Controller
 
         $users = array();
         $server = $this->ldap->get($name);
+        $user = isset($server['user']) ? $server['user'] : null;
+        $password = isset($server['password']) ? $server['user'] : null;
 
-        if ($this->ldap->connect($server)) {
+        if ($this->ldap->connect($server, $user, $password)) {
 
             $classes = $this->ldap->getClasses($server);
             $users = $this->ldap->getUsers($server);
@@ -219,8 +224,10 @@ class LdapController extends Controller
         $this->checkOpen();
 
         $server = $this->ldap->get($name);
+        $user = isset($server['user']) ? $server['user'] : null;
+        $password = isset($server['password']) ? $server['user'] : null;
 
-        if ($this->ldap->connect($server)) {
+        if ($this->ldap->connect($server, $user, $password)) {
 
             $classes = $this->ldap->getClasses($server);
             $groups = $this->ldap->getGroups($server);
@@ -262,8 +269,10 @@ class LdapController extends Controller
 
         $users = array();
         $server = $this->ldap->get($name);
+        $user = isset($server['user']) ? $server['user'] : null;
+        $password = isset($server['password']) ? $server['user'] : null;
 
-        if ($this->ldap->connect($server)) {
+        if ($this->ldap->connect($server, $user, $password)) {
 
             $users = $this->ldap->getUsers($server);
             $this->ldap->close();
@@ -291,8 +300,10 @@ class LdapController extends Controller
 
         $users = array();
         $server = $this->ldap->get($name);
+        $user = isset($server['user']) ? $server['user'] : null;
+        $password = isset($server['password']) ? $server['user'] : null;
 
-        if ($this->ldap->userMapping($server) and $this->ldap->connect($server)) {
+        if ($this->ldap->userMapping($server) and $this->ldap->connect($server, $user, $password)) {
 
             $users = $this->ldap->getUsers($server);
             $this->ldap->close();
@@ -340,8 +351,11 @@ class LdapController extends Controller
         $this->checkOpen();
 
         $entries = array();
+        $server = $this->ldap->get($name);
+        $user = isset($server['user']) ? $server['user'] : null;
+        $password = isset($server['password']) ? $server['user'] : null;
 
-        if ($this->ldap->connect($this->ldap->get($name))) {
+        if ($this->ldap->connect($server, $user, $password)) {
             if ($search = $this->ldap->search($this->ldap->get($name), '(&(objectClass=' . $objectClass . '))')) {
                 $entries = $this->ldap->getEntries($search);
             }

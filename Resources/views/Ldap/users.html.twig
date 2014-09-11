@@ -90,7 +90,6 @@
                     {{ select.row('firstName', 'firstName', users, server) }}
                     {{ select.row('lastName', 'lastName', users, server) }}
                     {{ select.row('email', 'email', users, server) }}
-                    {{ select.row('password', 'password', users, server) }}
                     {{ select.row('code', 'administrative_code', users, server) }}
                     {{ select.row('locale', 'Language', users, server) }}
                 </div>
@@ -102,7 +101,6 @@
                             <th>{{ 'firstName' | trans({}, 'platform') }}</th>
                             <th>{{ 'lastName' | trans({}, 'platform') }}</th>
                             <th>{{ 'email' | trans({}, 'platform') }}</th>
-                            <th>{{ 'password' | trans({}, 'platform') }}</th>
                             <th>{{ 'administrative_code' | trans({}, 'platform') }}</th>
                             <th>{{ 'Language' | trans({}, 'platform') }}</th>
                         </tr>
@@ -112,7 +110,6 @@
                                 <td class="firstName"></td>
                                 <td class="lastName"></td>
                                 <td class="email"></td>
-                                <td class="password"></td>
                                 <td class="code"></td>
                                 <td class="locale"></td>
                             </tr>
@@ -144,7 +141,6 @@
                 {% if server.firstName is defined and not server.firstName is empty %}ldap.setAttribute('firstName', '{{ server.firstName }}');{% endif %}
                 {% if server.lastName is defined and not server.lastName is empty %}ldap.setAttribute('lastName', '{{ server.lastName }}');{% endif %}
                 {% if server.email is defined and not server.email is empty %}ldap.setAttribute('email', '{{ server.email }}');{% endif %}
-                {% if server.password is defined and not server.password is empty %}ldap.setAttribute('password', '{{ server.password }}');{% endif %}
                 {% if server.code is defined and not server.code is empty %}ldap.setAttribute('code', '{{ server.code }}');{% endif %}
                 {% if server.locale is defined and not server.locale is empty %}ldap.setAttribute('locale', '{{ server.locale }}');{% endif %}
                 ldap.showPreview();
