@@ -90,8 +90,7 @@ class LogListener
         } elseif (LogGenericEvent::PLATFORM_EVENT_TYPE === $event->getDoer()) {
             $doer = null;
             $doerType = Log::doerTypePlatform;
-        }
-        else {
+        } else {
             $doer = $event->getDoer();
             $doerType = Log::doerTypeUser;
         }
