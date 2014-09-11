@@ -11,7 +11,6 @@
 
 namespace Claroline\CoreBundle\Library\Security;
 
-use Claroline\CoreBundle\Manager\AuthenticationManager;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
@@ -25,27 +24,19 @@ class Authenticator
 {
     private $sc;
     private $encodeFactory;
-    private $authenticationManager;
 
     /**
      * @DI\InjectParams({
      *     "om"                     = @DI\Inject("claroline.persistence.object_manager"),
      *     "sc"                     = @DI\Inject("security.context"),
-     *     "encodeFactory"          = @DI\Inject("security.encoder_factory"),
-     *     "authenticationManager"  = @DI\Inject("claroline.common.authentication_manager")
+     *     "encodeFactory"          = @DI\Inject("security.encoder_factory")
      * })
      */
-    public function __construct(
-        ObjectManager $om,
-        SecurityContextInterface $sc,
-        EncoderFactoryInterface $encodeFactory,
-        AuthenticationManager $authenticationManager
-    )
+    public function __construct(ObjectManager $om, SecurityContextInterface $sc, EncoderFactoryInterface $encodeFactory)
     {
         $this->userRepo = $om->getRepository('ClarolineCoreBundle:User');
         $this->sc = $sc;
         $this->encodeFactory = $encodeFactory;
-        $this->authenticationManager = $authenticationManager;
     }
 
     public function authenticate($username, $password)
@@ -59,20 +50,6 @@ class Authenticator
         $providerKey = 'main';
         $encoder = $this->encodeFactory->getEncoder($user);
         $encodedPass = $encoder->encodePassword($password, $user->getSalt());
-
-        /** external authentication
-        throw new \Exception(var_dump($user->getAuthentication()));
-        if ($user->getAuthentication() !== '') {
-            throw new \Exception(var_dump('test'));
-            if ($this->authenticationManager->authenticate($user->getAuthentication(), $username, $password)) {
-                $token = new UsernamePasswordToken($user, $password, $providerKey, $user->getRoles());
-                $this->sc->setToken($token);
-
-                return true;
-            } else {
-                return false;
-            }
-        } **/
 
         if ($user->getPassword() === $encodedPass) {
             $token = new UsernamePasswordToken($user, $password, $providerKey, $user->getRoles());
