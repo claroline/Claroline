@@ -28,8 +28,12 @@ class LogBadgeAwardEvent extends LogGenericEvent implements NotifiableInterface
      * @param Badge $badge
      * @param User  $receiver
      */
-    public function __construct(Badge $badge, User $receiver)
+    public function __construct(Badge $badge, User $receiver, $doer)
     {
+        if (null === $doer) {
+            $this->doer = LogGenericEvent::PLATFORM_EVENT_TYPE;
+        }
+
         $this->badge = $badge;
 
         parent::__construct(

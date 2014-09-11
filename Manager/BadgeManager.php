@@ -111,7 +111,7 @@ class BadgeManager
                 $this->entityManager->persist($badge);
                 $this->entityManager->flush();
 
-                $this->dispatchBadgeAwardingEvent($badge, $user);
+                $this->dispatchBadgeAwardingEvent($badge, $user, $issuer);
             } catch(\Exception $exception) {
                 throw $exception;
             }
@@ -122,13 +122,15 @@ class BadgeManager
 
     /**
      * @param \Claroline\CoreBundle\Entity\Badge\Badge $badge
-     * @param \Claroline\CoreBundle\Entity\User        $user
+     * @param \Claroline\CoreBundle\Entity\User        $receiver
+     *
+     * @param \Claroline\CoreBundle\Entity\User|null   $doer
      *
      * @return Controller
      */
-    protected function dispatchBadgeAwardingEvent(Badge $badge, User $user)
+    protected function dispatchBadgeAwardingEvent(Badge $badge, User $receiver, $doer = null)
     {
-        $event = new LogBadgeAwardEvent($badge, $user);
+        $event = new LogBadgeAwardEvent($badge, $receiver, $doer);
 
         $this->dispatch($event);
     }
