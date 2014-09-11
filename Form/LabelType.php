@@ -13,11 +13,11 @@ class LabelType extends AbstractType
         $builder
             ->add(
                 'value', 'textarea', array(
-                    'required' => false, 'label' => ' ', 'attr' => array('class' => 'labelVal')
+                    'label' => ' ', 'attr' => array('class' => 'labelVal')
                 ))
             ->add(
                 'scoreRightResponse', 'text', array(
-                    'required' => false, 'label' => ' ', 'attr' => array('style' => 'width:35px; text-align: end;','class' => 'labelScore'
+                    'label' => ' ', 'attr' => array('style' => 'width:35px; text-align: end;','class' => 'labelScore'
                   )));
     }
 

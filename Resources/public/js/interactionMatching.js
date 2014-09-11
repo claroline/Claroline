@@ -7,9 +7,10 @@ var tableLabels = $('#tableLabel'); // div which contain the labels array
 var typeMatching;
 
 var advEditionLang;
+var correspEmptyLang;
 
 // Question creation
-function creationMatching(addchoice, addproposal, deletechoice, LabelValue, ScoreRight, ProposalValue, numberProposal, correspondence, deleteLabel, deleteProposal, tMatching, advEdition){
+function creationMatching(addchoice, addproposal, deletechoice, LabelValue, ScoreRight, ProposalValue, numberProposal, correspondence, deleteLabel, deleteProposal, tMatching, advEdition, correspEmpty){
 
     //initialisation of variables
     var indexProposal;
@@ -18,6 +19,7 @@ function creationMatching(addchoice, addproposal, deletechoice, LabelValue, Scor
     var codeContainerLabel = 0; // to differentiate containers
 
     advEditionLang = advEdition;
+    correspEmptyLang = correspEmpty;
 
     typeMatching = JSON.parse(tMatching);
 
@@ -29,15 +31,15 @@ function creationMatching(addchoice, addproposal, deletechoice, LabelValue, Scor
              $(this).attr('disabled', 'disabled');
          }
      });
-     
+
      tableCreationProposal(containerProposal, tableProposals, addproposal, deletechoice, ProposalValue, 0, codeContainerProposal, deleteProposal, numberProposal);
     tableCreationLabel(containerLabel, tableLabels, addchoice, deletechoice, LabelValue, ScoreRight, 0, codeContainerLabel, deleteLabel, correspondence);
-    
+
 
     // Number of label initially
     indexProposal = containerProposal.find(':input').length;
     indexLabel = containerLabel.find(':input').length;
-    
+
     // If no proposal exist, add two labels by default in the container Label
     if (indexProposal == 0) {
         addProposal(containerProposal, deletechoice, tableProposals, codeContainerProposal);
@@ -49,7 +51,7 @@ function creationMatching(addchoice, addproposal, deletechoice, LabelValue, Scor
             adddelete($(this), deletechoice, codeContainerProposal);
         });
     }
-    
+
     // If no label exist, add two labels by default in the container Label
     if (indexLabel == 0) {
         addLabel(containerLabel, deletechoice, tableLabels, codeContainerLabel);
@@ -62,7 +64,7 @@ function creationMatching(addchoice, addproposal, deletechoice, LabelValue, Scor
         });
     }
 
-    
+
 }
 
 // Question edition
@@ -154,15 +156,18 @@ function addProposal(container, deletechoice, table, codeContainer){
 
 //check if the form is valid
 function check_form(nbrProposals, nbrLabels) {
-    for ( i = 0; i < $('#newTableLabel').find('tr:last') ; i++)
-    {
-        
-//        if ($('#ujm_exobundle_interactionmatchingtype_labels_'+ i +'_value').val() == '') {
-//            alert("coucou c'est moi");
-//            return false;
-//        }
-    }
+    var correspondence = false;
 
+    $("*[id$='_correspondence']").each( function() {
+        if ($("option:selected", this).length > 0) {
+            correspondence = true;
+        }
+    });
+
+    if (correspondence == false) {
+
+        return confirm(correspEmptyLang);
+    }
 }
 
 function fillLabelArray() {
@@ -215,7 +220,7 @@ function fillProposalArray() {
         $('#newTableProposal').find('tr:last').append('<td class="classic"></td>');
         $('#newTableProposal').find('td:last').append(containerProposal.find('.row').find('textarea'));
         $('#newTableProposal').find('td:last').append('<span><a href="#" id="adve_'+idProposalVal+'">'+advEditionLang+'</a></span>');
-        
+
         advProposalVal(idProposalVal);
     }
 

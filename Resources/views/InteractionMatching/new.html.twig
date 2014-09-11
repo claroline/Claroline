@@ -18,7 +18,7 @@
         </div>
         <div class="panel-footer">
             <input type="hidden" name="exercise" value="{{ exoID }}" />
-            <button type="submit" id="button_submit" class="btn btn-primary" onclick="setOrder();">{{ 'create' | trans }}</button>
+            <button type="submit" id="button_submit" class="btn btn-primary" >{{ 'create' | trans }}</button>
         </div>
     </form>
 </div>
@@ -32,12 +32,12 @@
 {# functions javascript #}
 {% if error is defined %}
     <script type="text/javascript">
-        creationMatchingEdit('{{ 'addChoice' | trans }}', '{{ 'addProposal' | trans }}', '{{ 'delete' | trans }}', '{{ 'Label.value' | trans }}', '{{ 'Label.scoreRight' | trans }}', '{{ 'Proposal.value' | trans }}', '{{ 'numberProposal'| trans }}', '{{ 'correspondence' | trans }}', '{{ 'deleteLabel' | trans }}', '{{ 'deleteProposal' | trans }}', '{{ typeMatching|raw }}', '{{ 'advanced edition' | trans }}');
+        creationMatchingEdit('{{ 'addChoice' | trans }}', '{{ 'addProposal' | trans }}', '{{ 'delete' | trans }}', '{{ 'Label.value' | trans }}', '{{ 'Label.scoreRight' | trans }}', '{{ 'Proposal.value' | trans }}', '{{ 'numberProposal'| trans }}', '{{ 'correspondence' | trans }}', '{{ 'deleteLabel' | trans }}', '{{ 'deleteProposal' | trans }}', '{{ typeMatching|raw }}', '{{ 'advanced edition' | trans }}', '{{ 'correspondence empty' | trans }}');
         newHintEdit('{{ 'hint' | trans }}', '{{ 'penalty' | trans }}', '{{ 'add hint' | trans }}', '{{ 'delete' | trans }}');
     </script>
 {% else %}
     <script type="text/javascript">
-        creationMatching('{{ 'addChoice' | trans }}', '{{ 'addProposal' | trans }}', '{{ 'delete' | trans }}', '{{ 'Label.value' | trans }}', '{{ 'Label.scoreRight' | trans }}', '{{ 'Proposal.value' | trans }}', '{{ 'numberProposal'| trans }}', '{{ 'correspondence' | trans }}', '{{ 'deleteLabel' | trans }}', '{{ 'deleteProposal' | trans }}', '{{ typeMatching|raw }}', '{{ 'advanced edition' | trans }}');
+        creationMatching('{{ 'addChoice' | trans }}', '{{ 'addProposal' | trans }}', '{{ 'delete' | trans }}', '{{ 'Label.value' | trans }}', '{{ 'Label.scoreRight' | trans }}', '{{ 'Proposal.value' | trans }}', '{{ 'numberProposal'| trans }}', '{{ 'correspondence' | trans }}', '{{ 'deleteLabel' | trans }}', '{{ 'deleteProposal' | trans }}', '{{ typeMatching|raw }}', '{{ 'advanced edition' | trans }}', '{{ 'correspondence empty' | trans }}');
         newHint('{{ 'hint' | trans }}', '{{ 'penalty' | trans }}', '{{ 'add hint' | trans }}', '{{ 'delete' | trans }}');
     </script>
 {% endif %}
