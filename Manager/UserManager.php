@@ -306,7 +306,6 @@ class UserManager
             $this->createUser($newUser, $sendMail);
             if ($logger) $logger(" [UOW size: " . $this->objectManager->getUnitOfWork()->size() . "]");
             if ($logger) $logger(" User $j ($username) being created");
-            $this->objectManager->forceFlush();
             $i++;
             $j++;
 
