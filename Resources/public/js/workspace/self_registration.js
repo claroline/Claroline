@@ -74,6 +74,7 @@
 
     var twigUserId = document.getElementById('twig-self-registration-user-id').getAttribute('data-user-id');
     var workspaceId;
+    var registrationValidation;
     var registerButtonClass;
 
     $('body').on('click', '.register-user-to-workspace', function (e) {
@@ -82,35 +83,41 @@
         registerButtonClass = '.register-button-' + workspaceId;
         var workspaceName = $(this).attr('data-workspace-name');
         var workspaceCode = $(this).attr('data-workspace-code');
+        registrationValidation = $(this).attr('data-workspace-validation');
         $('#registration-confirm-message').html(workspaceName + ' [' + workspaceCode + ']');
         $('#confirm-registration-validation-box').modal('show');
     });
 
     $('#registration-confirm-ok').click(function () {
-        var confirmRegistrationRoute = Routing.generate(
-            'claro_workspace_add_user_queue',
-            {'workspace': workspaceId, 'user': twigUserId}
-        );
-
-        var visitWorkspaceRoute = Routing.generate(
-            'claro_workspace_open_tool',
-            {'workspaceId': workspaceId, 'toolName': 'home'}
-        );
-
-        var registeredText = Translator.get('platform' + ':' + 'pending');
+        var resultText;
+        var registrationRoute;
+        
+        if (registrationValidation === 'validation') {
+            registrationRoute = Routing.generate(
+                'claro_workspace_add_user_queue',
+                {'workspace': workspaceId, 'user': twigUserId}
+            );
+            resultText = Translator.get('platform' + ':' + 'pending');
+        } else {
+            registrationRoute = Routing.generate(
+                'claro_workspace_add_user',
+                {'workspace': workspaceId, 'user': twigUserId}
+            );
+            resultText = Translator.get('platform' + ':' + 'registered');
+        }
 
         $.ajax({
-            url: confirmRegistrationRoute,
+            url: registrationRoute,
             type: 'POST',
             success: function () {
                 $(registerButtonClass).each(function () {
                     $(this).empty();
-                    $(this).html("<span>"+registeredText+"<i class='fa fa-share-square-o'></i></span>");
+                    $(this).html('<span><i class="fa fa-share-square-o"></i> ' + resultText + '</span>');
                     $(this).attr('class', 'pull-right label label-success');
                 });
+                $('#confirm-registration-validation-box').modal('hide');
+                $('#registration-confirm-message').empty();
             }
         });
-        $('#confirm-registration-validation-box').modal('hide');
-        $('#registration-confirm-message').empty();
     });
 })();
