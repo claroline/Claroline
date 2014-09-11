@@ -31,6 +31,7 @@ class Updater030300
         $this->removeUnimplementedTools();
         $this->createWorkspaceLearningOutcomesTool();
         $this->createAuthenticationDirectory();
+        $this->usernameRegexUpdate();
         $this->em->flush();
     }
 
@@ -124,5 +125,11 @@ class Updater030300
         if ($log = $this->logger) {
             $log('    ' . $message);
         }
+    }
+
+    private function usernameRegexUpdate()
+    {
+        $this->log('Updating user name regex...');
+        $this->configHandler->setParameter('username_regex', '/^[a-zA-Z0-9@\-_\.]*$/');
     }
 }
