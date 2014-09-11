@@ -7,7 +7,6 @@ app/build/*
 app/bootstrap*
 app/cache/*
 app/config/.update
-app/config/Authentication/*
 app/config/bundles.ini
 app/config/ips
 app/config/is_installed.php
