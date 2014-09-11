@@ -271,7 +271,6 @@ class UserManager
      */
     public function importUsers(array $users, $authentication = null, $sendMail = true, $logger = null)
     {
-        //@todo use a logger instead of echo
         $roleUser = $this->roleManager->getRoleByName('ROLE_USER');
         $max = $roleUser->getMaxUsers();
         $total = $this->countUsersByRoleIncludingGroup($roleUser);
