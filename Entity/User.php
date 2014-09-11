@@ -313,7 +313,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
      */
     protected $models;
 
-    /*
+    /**
      * @var string
      *
      * @ORM\Column(nullable=true)
