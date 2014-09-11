@@ -319,7 +319,8 @@ class WorkspaceController extends Controller
 
             $msg = $this->get('translator')->trans(
                 'successfull_workspace_creation',
-                array('%name%' => $form->get('name')->getData()), 'platform'
+                array('%name%' => $form->get('name')->getData()),
+                'platform'
             );
             $this->get('request')->getSession()->getFlashBag()->add('success', $msg);
 
