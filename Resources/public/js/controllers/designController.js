@@ -47,8 +47,6 @@ portfolioApp
 
             $scope.$watch('portfolio.disposition', function(newValue, oldValue) {
                 if (newValue !== undefined) {
-                    console.log(newValue);
-                    console.log(oldValue);
 
                     switch(newValue) {
                         case 1:
