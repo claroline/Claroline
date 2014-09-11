@@ -11,6 +11,8 @@
 
 namespace Claroline\CoreBundle\Manager;
 
+use Claroline\CoreBundle\Entity\Home\HomeTab;
+use Claroline\CoreBundle\Entity\Home\HomeTabConfig;
 use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Entity\Resource\ResourceRights;
 use Claroline\CoreBundle\Entity\User;
@@ -968,6 +970,38 @@ class WorkspaceManager
 //            $this->om->persist($newRight);
 //        }
 //        $this->om->flush();
+    }
+
+    public function duplicateHomeTabs(
+        Workspace $source,
+        Workspace $workspace,
+        array $homeTabs
+    )
+    {
+        $this->om->startFlushSuite();
+        $homeTabConfigs = $this->homeTabManager
+            ->getHomeTabConfigsByWorkspaceAndHomeTabs($source, $homeTabs);
+        $order = 1;
+
+        foreach ($homeTabConfigs as $homeTabConfig) {
+            $homeTab = $homeTabConfig->getHomeTab();
+            $newHomeTab = new HomeTab();
+            $newHomeTab->setType('workspace');
+            $newHomeTab->setWorkspace($workspace);
+            $newHomeTab->setName($homeTab->getName());
+            $this->homeTabManager->insertHomeTab($newHomeTab);
+
+            $newHomeTabConfig = new HomeTabConfig();
+            $newHomeTabConfig->setHomeTab($newHomeTab);
+            $newHomeTabConfig->setWorkspace($workspace);
+            $newHomeTabConfig->setType('workspace');
+            $newHomeTabConfig->setLocked($homeTabConfig->isVisible());
+            $newHomeTabConfig->setLocked($homeTabConfig->isLocked());
+            $newHomeTabConfig->setTabOrder($order);
+            $this->homeTabManager->insertHomeTabConfig($newHomeTabConfig);
+            $order++;
+        }
+        $this->om->endFlushSuite();
     }
 
     /**

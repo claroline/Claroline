@@ -1178,6 +1178,9 @@ class WorkspaceController extends Controller
             ->duplicateOrderedTools($modelWorkspace, $workspace);
         $this->workspaceManager
             ->duplicateRootDirectory($modelWorkspace, $workspace, $user);
+        $this->workspaceManager
+            ->duplicateHomeTabs($modelWorkspace, $workspace, $homeTabs->toArray());
+
     }
 
     private function assertIsGranted($attributes, $object = null)
