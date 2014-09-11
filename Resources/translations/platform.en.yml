@@ -151,6 +151,7 @@ apply: Apply
 at_least_one_category_has_to_be_selected: 'At least one category has to be selected'
 attempt: Attempt
 attempts: Attempts
+authentication: Authentication
 automatic: Automatic
 available_widgets: 'Available widgets'
 available_workspaces: 'Available workspaces'
@@ -450,11 +451,11 @@ left: Left
 limit: Limit
 line_number: 'Line %line%:'
 line_per_page: 'Results per page'
-linkable_competences: 'Linkable competences'
 link: Link
 link_competence: 'Link'
 link_outdated: 'link is no more valid'
 link_workspace: 'Link workspace'
+linkable_competences: 'Linkable competences'
 list_groups: 'List groups'
 list_role: Role list
 list_users: 'List users'

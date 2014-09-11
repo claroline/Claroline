@@ -151,6 +151,7 @@ apply: Appliquer
 at_least_one_category_has_to_be_selected: 'Au moins une catégorie doit être selectionnée'
 attempt: Tentative
 attempts: Tentatives
+authentication: Authentification
 automatic: Automatique
 available_widgets: 'Widgets disponibles'
 available_workspaces: 'Espaces d''activités disponibles'
@@ -195,6 +196,7 @@ communication: Communication
 competence: Compétence
 competence_creation: 'Création d''une compétence'
 competence_edition: 'Modification de la compétence'
+competence_referencial: Réferenciel de compétences
 competence_referencial: Référentiel de compétences
 competences: Compétences
 competences_management: 'Gestion des compétences'
@@ -451,11 +453,11 @@ left: Gauche
 limit: Limite
 line_number: 'Ligne %line%:'
 line_per_page: 'Résultats par page'
-linkable_competences: 'Compétences liables'
 link: Lien
 link_competence: 'Lier'
 link_outdated: 'le lien n''est plus valide'
 link_workspace: 'Lier un espace d''activités'
+linkable_competences: 'Compétences liables'
 list_groups: 'Lister les groupes'
 list_users: 'Lister les utilisateurs'
 list_workspaces: 'Tous les espaces d''activités'
