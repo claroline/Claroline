@@ -11,27 +11,27 @@
 
 namespace Claroline\CoreBundle\Controller\Tool;
 
-use Claroline\CoreBundle\Event\StrictDispatcher;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Security\Core\SecurityContextInterface;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\Tool\Tool;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
+use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
+use Claroline\CoreBundle\Manager\GroupManager;
+use Claroline\CoreBundle\Manager\LocaleManager;
+use Claroline\CoreBundle\Manager\TermsOfServiceManager;
+use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Claroline\CoreBundle\Manager\WorkspaceTagManager;
-use Claroline\CoreBundle\Manager\LocaleManager;
-use Claroline\CoreBundle\Manager\UserManager;
-use Claroline\CoreBundle\Manager\GroupManager;
-use Claroline\CoreBundle\Manager\TermsOfServiceManager;
 use JMS\DiExtraBundle\Annotation as DI;
-use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Security\Core\SecurityContextInterface;
 
 class WorkspaceParametersController extends Controller
 {
@@ -58,9 +58,9 @@ class WorkspaceParametersController extends Controller
      *     "router"              = @DI\Inject("router"),
      *     "localeManager"       = @DI\Inject("claroline.common.locale_manager"),
      *     "userManager"         = @DI\Inject("claroline.manager.user_manager"),
-     *     "groupManager"         = @DI\Inject("claroline.manager.group_manager"),
+     *     "groupManager"        = @DI\Inject("claroline.manager.group_manager"),
      *     "tosManager"          = @DI\Inject("claroline.common.terms_of_service_manager"),
-     *     "utilities"          = @DI\Inject("claroline.utilities.misc")
+     *     "utilities"           = @DI\Inject("claroline.utilities.misc")
      * })
      */
     public function __construct(
@@ -169,12 +169,14 @@ class WorkspaceParametersController extends Controller
     {
         $user = $this->security->getToken()->getUser();
         $this->checkAccess($workspace);
-        $username = is_null( $workspace->getCreator()) ? '' : $workspace->getCreator()->getUsername();
-        $creationDate = is_null(
-                            $workspace->getCreationDate()) ?
-                            null : $this->utilities->intlDateFormat($workspace->getCreationDate());
+        $username = is_null($workspace->getCreator()) ? '' : $workspace->getCreator()->getUsername();
+        $creationDate = is_null($workspace->getCreationDate()) ? null : $this->utilities->intlDateFormat(
+            $workspace->getCreationDate()
+        );
         $count = $this->workspaceManager->countUsers($workspace->getId());
-        $form = $this->formFactory->create(FormFactory::TYPE_WORKSPACE_EDIT, array($username, $creationDate, $count), $workspace);
+        $form = $this->formFactory->create(
+            FormFactory::TYPE_WORKSPACE_EDIT, array($username, $creationDate, $count), $workspace
+        );
 
         if ($workspace->getSelfRegistration()) {
             $url = $this->router->generate(
@@ -304,7 +306,9 @@ class WorkspaceParametersController extends Controller
         $this->workspaceManager->addUserAction($workspace, $user);
 
         return $this->redirect(
-            $this->generateUrl('claro_workspace_open_tool', array('workspaceId' => $workspace->getId(), 'toolName' => 'home'))
+            $this->generateUrl(
+                'claro_workspace_open_tool', array('workspaceId' => $workspace->getId(), 'toolName' => 'home')
+            )
         );
     }
 
@@ -337,8 +341,12 @@ class WorkspaceParametersController extends Controller
             $user = $form->getData();
             $this->userManager->createUser($user);
             $this->workspaceManager->addUserAction($workspace, $user);
+
             return $this->redirect(
-                $this->generateUrl('claro_workspace_open_tool', array('workspaceId' => $workspace->getId(), 'toolName' => 'home')));
+                $this->generateUrl(
+                    'claro_workspace_open_tool', array('workspaceId' => $workspace->getId(), 'toolName' => 'home')
+                )
+            );
         }
 
         return array(

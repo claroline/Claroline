@@ -414,7 +414,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
     /**
      * Returns all the users except a given one.
      *
-     * @param User $excludedUser
+     * @param array $excludedUser
      *
      * @return User[]
      */
@@ -950,5 +950,37 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         $query->setParameter('userId', $userId);
 
         return $query->getOneOrNullResult();
+    }
+
+    /**
+     * Returns the users who are members of one of the given workspaces
+     *
+     * @param Workspace $workspace
+     * @param boolean $executeQuery
+     *
+     * @internal param array $workspaces
+     * @return User[]|Query
+     */
+    public function findUsersWithBadgesByWorkspace($workspace, $executeQuery = true)
+    {
+        $queryBuilder = $this->createQueryBuilder('u')
+            ->select('DISTINCT u, ub, b')
+            ->join('u.roles', 'r')
+            ->leftJoin('u.userBadges', 'ub')
+            ->leftJoin('ub.badge', 'b')
+            ->andWhere('u.isEnabled = true')
+            ->orderBy('u.id');
+
+        if (null === $workspace) {
+            $queryBuilder->andWhere('r.workspace IS NULL');
+        }
+        else {
+            $queryBuilder
+                ->leftJoin('r.workspace', 'w')
+                ->andWhere('r.workspace = :workspace')
+                ->setParameter('workspace', $workspace);
+        }
+
+        return $executeQuery ? $queryBuilder->getQuery()->getResult(): $queryBuilder->getQuery();
     }
 }

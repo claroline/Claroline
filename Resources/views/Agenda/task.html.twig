@@ -1,6 +1,6 @@
 {% twig_js name="Task" %}
 
-<li
+<div
     id="li-task-{{ event.id }}"
     class="list-group-item task-item"
     data-task-id="{{ event.id }}"
@@ -16,7 +16,7 @@
     <strong data-event-title="{{event.title}}"> {{ event.title }}</strong>
 
     {% if event.description is not empty %}
-        <span>{{ event.description | raw }}</span>
+        <div style="max-height: 150px; overflow-y: auto;">{{ event.description | raw }}</div>
     {% endif %}
 
     <div>
@@ -29,4 +29,4 @@
             {% endif %}
         </a>
     </div>
-</li>
+</div>

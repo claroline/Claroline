@@ -313,6 +313,13 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
      */
     protected $models;
 
+    /*
+     * @var string
+     *
+     * @ORM\Column(nullable=true)
+     */
+    protected $authentication;
+
     public function __construct()
     {
         parent::__construct();
@@ -908,7 +915,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
         /** @var \DateTime */
         $expDate = $this->getExpirationDate();
 
-        return ($this->getExpirationDate() >= new \DateTime()) ? true: false;
+        return ($this->getExpirationDate() >= new \DateTime()) ? true : false;
     }
 
     public function isAccountNonLocked()
@@ -1006,7 +1013,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
 
     public function getExpirationDate()
     {
-        return $this->expirationDate !== null ? $this->expirationDate: new \DateTime(2100-01-01);
+        return $this->expirationDate !== null ? $this->expirationDate : new \DateTime('2100-01-01');
     }
 
     public function getFieldsFacetValue()
@@ -1039,5 +1046,15 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     public function removeModel(WorkspaceModel $model)
     {
         $this->models->removeElement($model);
+    }
+
+    public function setAuthentication($authentication)
+    {
+        $this->authentication = $authentication;
+    }
+
+    public function getAuthentication()
+    {
+        return $this->authentication;
     }
 }

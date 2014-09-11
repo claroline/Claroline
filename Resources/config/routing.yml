@@ -241,7 +241,6 @@ claro_user:
 claro_admin_badge:
     resource: "@ClarolineCoreBundle/Controller/Administration/BadgeController.php"
     type: annotation
-    prefix: admin/badge
 
 claro_workspaces_widget:
     resource: "@ClarolineCoreBundle/Controller/Widget/MyWorkspacesWidgetController.php"

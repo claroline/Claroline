@@ -79,8 +79,6 @@ class AdministrationToolListener
     public function onOpenBadgesManagement(OpenAdministrationToolEvent $event)
     {
         $params = array();
-        $params['badgePage'] = 1;
-        $params['claimPage'] = 1;
         $params['_controller'] = 'ClarolineCoreBundle:Administration/Badge:list';
         $this->redirect($params, $event);
     }
@@ -183,7 +181,7 @@ class AdministrationToolListener
     public function onOpenAdministrationCompetences(OpenAdministrationToolEvent $event)
     {
         $params = array();
-        $params['_controller'] = 'ClarolineCoreBundle:Administration\Competence:competences';
+        $params['_controller'] = 'ClarolineCoreBundle:Administration\Competence:adminLearningOutcomesList';
         $this->redirect($params, $event);
     }
 
