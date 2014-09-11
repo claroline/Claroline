@@ -118,7 +118,7 @@ class LdapController extends Controller
                 $form->addError(new FormError($this->translator->trans('ldap_already_exists', array(), 'ldap')));
             } else {
                 $user = isset($data['user']) ? $data['user'] : null;
-                $password = isset($data['password']) ? $data['user'] : null;
+                $password = isset($data['password']) ? $data['password'] : null;
 
                 if (!$this->ldap->connect($data, $user, $password)) {
                     $form->addError(new FormError($this->translator->trans('ldap_cant_connect', array(), 'ldap')));
@@ -194,7 +194,7 @@ class LdapController extends Controller
         $users = array();
         $server = $this->ldap->get($name);
         $user = isset($server['user']) ? $server['user'] : null;
-        $password = isset($server['password']) ? $server['user'] : null;
+        $password = isset($server['password']) ? $server['password'] : null;
 
         if ($this->ldap->connect($server, $user, $password)) {
 
@@ -225,7 +225,7 @@ class LdapController extends Controller
 
         $server = $this->ldap->get($name);
         $user = isset($server['user']) ? $server['user'] : null;
-        $password = isset($server['password']) ? $server['user'] : null;
+        $password = isset($server['password']) ? $server['password'] : null;
 
         if ($this->ldap->connect($server, $user, $password)) {
 
@@ -270,7 +270,7 @@ class LdapController extends Controller
         $users = array();
         $server = $this->ldap->get($name);
         $user = isset($server['user']) ? $server['user'] : null;
-        $password = isset($server['password']) ? $server['user'] : null;
+        $password = isset($server['password']) ? $server['password'] : null;
 
         if ($this->ldap->connect($server, $user, $password)) {
 
@@ -301,7 +301,7 @@ class LdapController extends Controller
         $users = array();
         $server = $this->ldap->get($name);
         $user = isset($server['user']) ? $server['user'] : null;
-        $password = isset($server['password']) ? $server['user'] : null;
+        $password = isset($server['password']) ? $server['password'] : null;
 
         if ($this->ldap->userMapping($server) and $this->ldap->connect($server, $user, $password)) {
 
@@ -353,7 +353,7 @@ class LdapController extends Controller
         $entries = array();
         $server = $this->ldap->get($name);
         $user = isset($server['user']) ? $server['user'] : null;
-        $password = isset($server['password']) ? $server['user'] : null;
+        $password = isset($server['password']) ? $server['password'] : null;
 
         if ($this->ldap->connect($server, $user, $password)) {
             if ($search = $this->ldap->search($this->ldap->get($name), '(&(objectClass=' . $objectClass . '))')) {
