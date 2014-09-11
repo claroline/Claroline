@@ -45,19 +45,21 @@ class GroupsController extends Controller
     private $sc;
     private $userAdminTool;
     private $translator;
+    private $authenticationManager;
 
     /**
      * @DI\InjectParams({
-     *     "userManager"        = @DI\Inject("claroline.manager.user_manager"),
-     *     "roleManager"        = @DI\Inject("claroline.manager.role_manager"),
-     *     "groupManager"       = @DI\Inject("claroline.manager.group_manager"),
-     *     "eventDispatcher"    = @DI\Inject("claroline.event.event_dispatcher"),
-     *     "formFactory"        = @DI\Inject("claroline.form.factory"),
-     *     "request"            = @DI\Inject("request"),
-     *     "router"             = @DI\Inject("router"),
-     *     "toolManager"        = @DI\Inject("claroline.manager.tool_manager"),
-     *     "sc"                 = @DI\Inject("security.context"),
-     *     "translator"         = @DI\Inject("translator")
+     *     "userManager"            = @DI\Inject("claroline.manager.user_manager"),
+     *     "roleManager"            = @DI\Inject("claroline.manager.role_manager"),
+     *     "groupManager"           = @DI\Inject("claroline.manager.group_manager"),
+     *     "eventDispatcher"        = @DI\Inject("claroline.event.event_dispatcher"),
+     *     "formFactory"            = @DI\Inject("claroline.form.factory"),
+     *     "request"                = @DI\Inject("request"),
+     *     "router"                 = @DI\Inject("router"),
+     *     "toolManager"            = @DI\Inject("claroline.manager.tool_manager"),
+     *     "sc"                     = @DI\Inject("security.context"),
+     *     "translator"             = @DI\Inject("translator"),
+     *     "authenticationManager"  = @DI\Inject("claroline.common.authentication_manager")
      * })
      */
     public function __construct(
@@ -70,20 +72,22 @@ class GroupsController extends Controller
         RouterInterface $router,
         SecurityContextInterface $sc,
         ToolManager $toolManager,
-        Translator $translator
+        Translator $translator,
+        AuthenticationManager $authenticationManager
     )
     {
-        $this->userManager     = $userManager;
-        $this->roleManager     = $roleManager;
-        $this->groupManager    = $groupManager;
+        $this->userManager = $userManager;
+        $this->roleManager = $roleManager;
+        $this->groupManager = $groupManager;
         $this->eventDispatcher = $eventDispatcher;
-        $this->formFactory     = $formFactory;
-        $this->request         = $request;
-        $this->router          = $router;
-        $this->toolManager     = $toolManager;
-        $this->userAdminTool   = $this->toolManager->getAdminToolByName('user_management');
-        $this->sc              = $sc;
-        $this->translator      = $translator;
+        $this->formFactory = $formFactory;
+        $this->request = $request;
+        $this->router = $router;
+        $this->toolManager = $toolManager;
+        $this->userAdminTool = $this->toolManager->getAdminToolByName('user_management');
+        $this->sc = $sc;
+        $this->translator = $translator;
+        $this->authenticationManager = $authenticationManager;
     }
 
     /**
@@ -489,7 +493,9 @@ class GroupsController extends Controller
     public function importMembersFormAction(Group $group)
     {
         $this->checkOpen();
-        $form = $this->formFactory->create(FormFactory::TYPE_USER_IMPORT);
+        $form = $this->formFactory->create(
+            FormFactory::TYPE_USER_IMPORT, array($this->authenticationManager->getDrivers())
+        );
 
         return array('form' => $form->createView(), 'group' => $group);
     }
@@ -512,7 +518,9 @@ class GroupsController extends Controller
     {
         $this->checkOpen();
         $validFile = true;
-        $form = $this->formFactory->create(FormFactory::TYPE_USER_IMPORT);
+        $form = $this->formFactory->create(
+            FormFactory::TYPE_USER_IMPORT, array($this->authenticationManager->getDrivers())
+        );
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
