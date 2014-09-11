@@ -199,6 +199,7 @@ import: Importer
 import questions: Importer des questions
 infoSearchType: Si vous voulez faire une recherche par type, vous devez utiliser les mots clés suivants
 instruction add hole : Pour créer un trou, selectionnez le texte à trouer dans l'éditeur "Texte à trous", puis cliquer sur le bouton "Créer un blanc".
+instruction matching: Pour définir vos correspondances, choisissez dans la colonne "Correspondance" le numéro d'une ou plusieurs propositions à associer.
 interactionGraphic creation: Création d'une question Graphique
 interactionGraphic Edition: Edition d'une question Graphique
 interactionOpen creation: Création d'une question Ouverte
