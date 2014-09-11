@@ -39,21 +39,22 @@ class BadgeController extends Controller
 {
     /**
      * @Route(
-     *     "/{badgePage}/{claimPage}",
+     *     "/{badgePage}/{claimPage}/{userPage}",
      *     name="claro_admin_badges",
-     *     requirements={"badgePage" = "\d+", "claimPage" = "\d+"},
-     *     defaults={"badgePage" = 1, "claimPage" = 1}
+     *     requirements={"badgePage" = "\d+", "userPage" = "\d+", "claimPage" = "\d+"},
+     *     defaults={"badgePage" = 1, "claimPage" = 1, "userPage" = 1}
      * )
      *
      * @Template
      */
-    public function listAction($badgePage, $claimPage)
+    public function listAction($badgePage = 1, $claimPage = 1, $userPage = 1)
     {
         $this->checkOpen();
 
         $parameters = array(
             'badgePage'        => $badgePage,
             'claimPage'        => $claimPage,
+            'userPage'         => $userPage,
             'add_link'         => 'claro_admin_badges_add',
             'edit_link'        => array(
                 'url'    => 'claro_admin_badges_edit',
