@@ -19,6 +19,7 @@ platform_logs: Suivi de la plateforme
 platform_analytics: Statistiques de la plateforme
 roles_management: Gestion des rôles
 platform_packages: Paquets de la plateforme
+learning_outcomes: 'Référentiel de compétences'
 learning_profil: Profil d'apprentissage (dev)
 competence_referencial: Référentiel de compétence (dev)
 competence_subscription: Inscription aux compétences (dev)

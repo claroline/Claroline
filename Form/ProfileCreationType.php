@@ -22,6 +22,7 @@ class ProfileCreationType extends AbstractType
     private $platformRoles;
     private $langs;
     private $isAdmin;
+    private $authenticationDrivers;
 
      /**
       * Constructor.
@@ -30,7 +31,7 @@ class ProfileCreationType extends AbstractType
       * @param array   $langs
       * @param boolean $isAdmin
       */
-    public function __construct(array $platformRoles, array $langs, $isAdmin = false)
+    public function __construct(array $platformRoles, array $langs, $isAdmin = false, $authenticationDrivers = null)
     {
         $this->platformRoles = new ArrayCollection($platformRoles);
 
@@ -41,6 +42,7 @@ class ProfileCreationType extends AbstractType
         }
 
         $this->isAdmin = $isAdmin;
+        $this->authenticationDrivers = $authenticationDrivers;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -59,8 +61,8 @@ class ProfileCreationType extends AbstractType
                         'type' => 'password',
                         'first_options' => array('label' => 'password'),
                         'second_options' => array('label' => 'verification')
-                        )
                     )
+                )
                 ->add(
                     'administrativeCode',
                     'text',
@@ -71,6 +73,15 @@ class ProfileCreationType extends AbstractType
                 ->add('mail', 'email', array('required' => true, 'label' => 'email'))
                 ->add('phone', 'text', array('required' => false, 'label' => 'phone'))
                 ->add('locale', 'choice', array('choices' => $this->langs, 'required' => false, 'label' => 'Language'))
+                ->add(
+                    'authentication',
+                    'choice',
+                    array(
+                        'choices' => $this->authenticationDrivers,
+                        'required' => false,
+                        'label' => 'authentication'
+                    )
+                )
                 ->add(
                     'platformRoles',
                     'entity',

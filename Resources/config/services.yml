@@ -42,6 +42,11 @@ services:
         factory_method: createNamed
         factory_service: form.factory
         arguments: ["badge_form", "badge_form_workspace"]
+    claroline.widget.form.badge_usage:
+        class: Symfony\Component\Form\Form
+        factory_method: createNamed
+        factory_service: form.factory
+        arguments: ["badge_usage_widget_form", "badge_usage_widget_config"]
 
     # form handler
     claroline.form_handler.badge:

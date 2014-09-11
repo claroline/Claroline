@@ -1,0 +1,46 @@
+<div id="modal-link-competence-form" class="modal-dialog" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                &times;
+            </button>
+            <h3 class="modal-title">
+                {{ 'linkable_competences'|trans({},'platform') }}
+            </h3>
+        </div>
+        <div class="modal-body">
+            {% if linkableCompetences|length == 0 %}
+                <div class="alert alert-danger">{{ 'no_competence'|trans({}, 'platform') }}</div>
+            {% else %}
+                <div class="table-responsive">
+                    <table class="table">
+                        <tr>
+                            <th>{{ 'name'|trans({}, 'platform') }}</th>
+                            <th>{{ 'code'|trans({}, 'platform') }}</th>
+                            <th></th>
+                        </tr>
+
+                        {% for competence in linkableCompetences %}
+                            <tr>
+                                <td>{{ competence.getName() }}</td>
+                                <td>{{ competence.getCode() }}</td>
+                                <td>
+                                    <a href="{{ path('claro_workspace_sub_competence_link', {'workspace': workspace.getId(), 'parent': parent.getId(), 'competence': competence.getId()}) }}"
+                                       class="btn btn-primary"
+                                    >
+                                        {{ 'link_competence'|trans({}, 'platform') }}
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            {% endif %}
+        </div>
+        <div class="modal-footer">
+            <span class="btn btn-default" data-dismiss="modal">
+                {{ 'close'|trans({},'platform') }}
+            </span>
+        </div>
+    </div>
+</div>
