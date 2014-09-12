@@ -353,9 +353,7 @@ class UsersController extends Controller
     public function importFormAction()
     {
         $this->checkOpen();
-        $form = $this->formFactory->create(
-            FormFactory::TYPE_USER_IMPORT, array($this->authenticationManager->getDrivers())
-        );
+        $form = $this->formFactory->create(FormFactory::TYPE_USER_IMPORT, array());
 
         return array('form' => $form->createView(), 'error' => null);
     }
@@ -394,14 +392,11 @@ class UsersController extends Controller
     public function importAction()
     {
         $this->checkOpen();
-        $form = $this->formFactory->create(
-            FormFactory::TYPE_USER_IMPORT, array($this->authenticationManager->getDrivers())
-        );
+        $form = $this->formFactory->create(FormFactory::TYPE_USER_IMPORT, array());
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
             $file = $form->get('file')->getData();
-            $authentication = $form->get('authentication')->getData();
             $sendMail = $form->get('sendMail')->getData();
             $lines = str_getcsv(file_get_contents($file), PHP_EOL);
 
@@ -417,7 +412,7 @@ class UsersController extends Controller
                 return array('form' => $form->createView(), 'error' => 'role_user unavailable');
             }
 
-            $this->userManager->importUsers($users, $authentication, $sendMail);
+            $this->userManager->importUsers($users, $sendMail);
 
             return new RedirectResponse($this->router->generate('claro_admin_user_list'));
         }

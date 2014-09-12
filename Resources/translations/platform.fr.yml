@@ -152,6 +152,8 @@ at_least_one_category_has_to_be_selected: 'Au moins une catégorie doit être se
 attempt: Tentative
 attempts: Tentatives
 authentication: Authentification
+authentication_invalid: La source d'authentification %authentication% de la ligne %line% n'est pas valide.
+authentication_source: Source d'authentification
 automatic: Automatique
 available_widgets: 'Widgets disponibles'
 available_workspaces: 'Espaces d''activités disponibles'
