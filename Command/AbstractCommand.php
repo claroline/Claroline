@@ -61,6 +61,10 @@ abstract class AbstractCommand extends ContainerAwareCommand
             false
         );
 
-        return end($bundles);
+        foreach ($bundles as $bundle) {
+            if ($bundle->getName() == $bundleName) {
+                return $bundle;
+            }
+        }
     }
 }
