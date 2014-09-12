@@ -13,6 +13,7 @@ namespace Claroline\CoreBundle\Library\Installation\Updater;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Claroline\CoreBundle\Entity\Tool\Tool;
+use Claroline\CoreBundle\Entity\Widget\Widget;
 
 class Updater030300
 {
