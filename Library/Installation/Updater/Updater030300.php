@@ -18,10 +18,12 @@ class Updater030300
 {
     private $em;
     private $logger;
+    private $configHandler;
 
     public function __construct(ContainerInterface $container)
     {
         $this->em = $container->get('doctrine.orm.entity_manager');
+        $this->configHandler = $container->get('claroline.config.platform_config_handler');
         $this->container = $container;
     }
 
