@@ -191,4 +191,14 @@ class Configuration
     {
         return $this->owner;
     }
+
+    public function getRegistrationValidation()
+    {
+        return $this->registrationValidation;
+    }
+
+    public function setRegistrationValidation($registrationValidation)
+    {
+        $this->registrationValidation = $registrationValidation;
+    }
 }
