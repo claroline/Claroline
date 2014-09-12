@@ -134,8 +134,9 @@ class WorkspaceController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/",
+     *     "/search/{search}",
      *     name="claro_workspace_list",
+     *     defaults={"search"=""},
      *     options={"expose"=true}
      * )
      * @EXT\Method("GET")
@@ -146,11 +147,11 @@ class WorkspaceController extends Controller
      *
      * @param $currentUser
      */
-    public function listAction($currentUser)
+    public function listAction($currentUser, $search = '')
     {
-        $user = $currentUser instanceof User ? $currentUser : null;
+//        $user = $currentUser instanceof User ? $currentUser : null;
 
-        return $this->tagManager->getDatasForWorkspaceList(false, $user);
+        return $this->tagManager->getDatasForWorkspaceList(false, $search);
     }
 
     /**
@@ -193,8 +194,9 @@ class WorkspaceController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/displayable/selfregistration",
+     *     "/displayable/selfregistration/search/{search}",
      *     name="claro_list_workspaces_with_self_registration",
+     *     defaults={"search"=""},
      *     options={"expose"=true}
      * )
      * @EXT\Method("GET")
@@ -205,12 +207,13 @@ class WorkspaceController extends Controller
      *
      * @return Response
      */
-    public function listWorkspacesWithSelfRegistrationAction()
+    public function listWorkspacesWithSelfRegistrationAction($search = '')
     {
         $this->assertIsGranted('ROLE_USER');
         $user = $this->security->getToken()->getUser();
 
-        return $this->tagManager->getDatasForSelfRegistrationWorkspaceList($user);
+        return $this->tagManager
+            ->getDatasForSelfRegistrationWorkspaceList($user, $search);
     }
 
     /**
