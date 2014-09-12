@@ -23,7 +23,7 @@ class LogRoleSubscribeEvent extends LogGenericEvent implements NotifiableInterfa
     const ACTION_WORKSPACE_USER = 'workspace-role-subscribe_user';
     const ACTION_WORKSPACE_GROUP = 'workspace-role-subscribe_group';
     protected $receiver = null;
-    protected  $receiverGroup = null;
+    protected $receiverGroup = null;
     protected $role = null;
     protected $details;
 

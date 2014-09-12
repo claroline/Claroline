@@ -14,6 +14,7 @@ namespace Claroline\CoreBundle\Controller\Administration;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
+use Claroline\CoreBundle\Manager\AuthenticationManager;
 use Claroline\CoreBundle\Manager\LocaleManager;
 use Claroline\CoreBundle\Manager\MailManager;
 use Claroline\CoreBundle\Manager\RoleManager;
@@ -47,17 +48,18 @@ class UsersController extends Controller
 
     /**
      * @DI\InjectParams({
-     *     "userManager"        = @DI\Inject("claroline.manager.user_manager"),
-     *     "workspaceManager"   = @DI\Inject("claroline.manager.workspace_manager"),
-     *     "roleManager"        = @DI\Inject("claroline.manager.role_manager"),
-     *     "eventDispatcher"    = @DI\Inject("claroline.event.event_dispatcher"),
-     *     "formFactory"        = @DI\Inject("claroline.form.factory"),
-     *     "request"            = @DI\Inject("request"),
-     *     "mailManager"        = @DI\Inject("claroline.manager.mail_manager"),
-     *     "localeManager"      = @DI\Inject("claroline.common.locale_manager"),
-     *     "router"             = @DI\Inject("router"),
-     *     "sc"                 = @DI\Inject("security.context"),
-     *     "toolManager"        = @DI\Inject("claroline.manager.tool_manager")
+     *     "userManager"            = @DI\Inject("claroline.manager.user_manager"),
+     *     "workspaceManager"       = @DI\Inject("claroline.manager.workspace_manager"),
+     *     "roleManager"            = @DI\Inject("claroline.manager.role_manager"),
+     *     "eventDispatcher"        = @DI\Inject("claroline.event.event_dispatcher"),
+     *     "formFactory"            = @DI\Inject("claroline.form.factory"),
+     *     "request"                = @DI\Inject("request"),
+     *     "mailManager"            = @DI\Inject("claroline.manager.mail_manager"),
+     *     "localeManager"          = @DI\Inject("claroline.common.locale_manager"),
+     *     "router"                 = @DI\Inject("router"),
+     *     "sc"                     = @DI\Inject("security.context"),
+     *     "toolManager"            = @DI\Inject("claroline.manager.tool_manager"),
+     *     "authenticationManager"  = @DI\Inject("claroline.common.authentication_manager")
      * })
      */
     public function __construct(
@@ -71,21 +73,23 @@ class UsersController extends Controller
         LocaleManager $localeManager,
         RouterInterface $router,
         SecurityContextInterface $sc,
-        ToolManager $toolManager
+        ToolManager $toolManager,
+        AuthenticationManager $authenticationManager
     )
     {
-        $this->userManager      = $userManager;
-        $this->roleManager      = $roleManager;
-        $this->eventDispatcher  = $eventDispatcher;
-        $this->formFactory      = $formFactory;
-        $this->request          = $request;
-        $this->mailManager      = $mailManager;
-        $this->localeManager    = $localeManager;
-        $this->router           = $router;
+        $this->userManager = $userManager;
+        $this->roleManager = $roleManager;
+        $this->eventDispatcher = $eventDispatcher;
+        $this->formFactory = $formFactory;
+        $this->request = $request;
+        $this->mailManager = $mailManager;
+        $this->localeManager = $localeManager;
+        $this->router = $router;
         $this->workspaceManager = $workspaceManager;
-        $this->sc               = $sc;
-        $this->toolManager      = $toolManager;
-        $this->userAdminTool    = $this->toolManager->getAdminToolByName('user_management');
+        $this->sc = $sc;
+        $this->toolManager = $toolManager;
+        $this->userAdminTool = $this->toolManager->getAdminToolByName('user_management');
+        $this->authenticationManager = $authenticationManager;
     }
 
     /**
@@ -119,7 +123,7 @@ class UsersController extends Controller
     {
         $this->checkOpen();
         $roleUser = $this->roleManager->getRoleByName('ROLE_USER');
-        $isAdmin = ($this->sc->isGranted('ROLE_ADMIN')) ? true: false;
+        $isAdmin = ($this->sc->isGranted('ROLE_ADMIN')) ? true : false;
         $roles = $this->roleManager->getAllPlatformRoles();
         $unavailableRoles = [];
 
@@ -136,7 +140,8 @@ class UsersController extends Controller
             array(
                 array($roleUser),
                 $this->localeManager->getAvailableLocales(),
-                $isAdmin
+                $isAdmin,
+                $this->authenticationManager->getDrivers()
             )
         );
 
@@ -169,14 +174,15 @@ class UsersController extends Controller
     {
         $this->checkOpen();
         $roleUser = $this->roleManager->getRoleByName('ROLE_USER');
-        $isAdmin = ($this->sc->isGranted('ROLE_ADMIN')) ? true: false;
+        $isAdmin = ($this->sc->isGranted('ROLE_ADMIN')) ? true : false;
 
         $form = $this->formFactory->create(
             FormFactory::TYPE_USER_FULL,
             array(
                 array($roleUser),
                 $this->localeManager->getAvailableLocales(),
-                $isAdmin
+                $isAdmin,
+                $this->authenticationManager->getDrivers()
             )
         );
         $form->handleRequest($this->request);
@@ -198,7 +204,6 @@ class UsersController extends Controller
         }
 
         $unavailableRoles = array_unique($unavailableRoles);
-
 
         if ($form->isValid() && count($unavailableRoles) === 0) {
             $user = $form->getData();
@@ -292,10 +297,16 @@ class UsersController extends Controller
     {
         $this->checkOpen();
         $pager = $search === '' ?
-            $this->userManager->getAllUsers($page, $max, $order, $direction):
+            $this->userManager->getAllUsers($page, $max, $order, $direction) :
             $this->userManager->getUsersByName($search, $page, $max, $order, $direction);
 
-        return array('pager' => $pager, 'search' => $search, 'max' => $max, 'order' => $order, 'direction' => $direction);
+        return array(
+            'pager' => $pager,
+            'search' => $search,
+            'max' => $max,
+            'order' => $order,
+            'direction' => $direction
+        );
     }
 
     /**
@@ -326,7 +337,7 @@ class UsersController extends Controller
     {
         $this->checkOpen();
         $pager = $search === '' ?
-            $this->userManager->getAllUsers($page):
+            $this->userManager->getAllUsers($page) :
             $this->userManager->getUsersByName($search, $page);
 
         return array('pager' => $pager, 'search' => $search);
@@ -342,7 +353,7 @@ class UsersController extends Controller
     public function importFormAction()
     {
         $this->checkOpen();
-        $form = $this->formFactory->create(FormFactory::TYPE_USER_IMPORT);
+        $form = $this->formFactory->create(FormFactory::TYPE_USER_IMPORT, array());
 
         return array('form' => $form->createView(), 'error' => null);
     }
@@ -381,11 +392,12 @@ class UsersController extends Controller
     public function importAction()
     {
         $this->checkOpen();
-        $form = $this->formFactory->create(FormFactory::TYPE_USER_IMPORT);
+        $form = $this->formFactory->create(FormFactory::TYPE_USER_IMPORT, array());
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
             $file = $form->get('file')->getData();
+            $sendMail = $form->get('sendMail')->getData();
             $lines = str_getcsv(file_get_contents($file), PHP_EOL);
 
             foreach ($lines as $line) {
@@ -400,7 +412,7 @@ class UsersController extends Controller
                 return array('form' => $form->createView(), 'error' => 'role_user unavailable');
             }
 
-            $this->userManager->importUsers($users);
+            $this->userManager->importUsers($users, $sendMail);
 
             return new RedirectResponse($this->router->generate('claro_admin_user_list'));
         }

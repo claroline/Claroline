@@ -3,3 +3,4 @@ workspace-role-subscribe_group: 'vous a attribué le rôle ''%role%'' dans l''es
 workspace-role-subscribe_user: 'vous a attribué le rôle ''%role%'' dans l''espace d''activités %workspace%'
 role-subscribe_group: 'vous a attribué le rôle ''%role%'''
 role-subscribe_user: 'vous a attribué le rôle ''%role%'''
+badge-awarding: 'vous a attribué le badge %badge%'

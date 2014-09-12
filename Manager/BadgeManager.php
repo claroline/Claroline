@@ -16,6 +16,7 @@ use Claroline\CoreBundle\Entity\Badge\BadgeClaim;
 use Claroline\CoreBundle\Entity\Badge\BadgeRule;
 use Claroline\CoreBundle\Entity\Badge\UserBadge;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\Log\LogBadgeAwardEvent;
 use Claroline\CoreBundle\Event\Log\LogGenericEvent;
 use Doctrine\ORM\EntityManager;
@@ -33,7 +34,9 @@ class BadgeManager
      */
     protected $entityManager;
 
-    /** @var \Symfony\Component\EventDispatcher\EventDispatcherInterface */
+    /**
+     * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
+     */
     protected $eventDispatcher;
 
     /**
@@ -108,7 +111,7 @@ class BadgeManager
                 $this->entityManager->persist($badge);
                 $this->entityManager->flush();
 
-                $this->dispatchBadgeAwardingEvent($badge, $user);
+                $this->dispatchBadgeAwardingEvent($badge, $user, $issuer);
             } catch(\Exception $exception) {
                 throw $exception;
             }
@@ -119,13 +122,15 @@ class BadgeManager
 
     /**
      * @param \Claroline\CoreBundle\Entity\Badge\Badge $badge
-     * @param \Claroline\CoreBundle\Entity\User        $user
+     * @param \Claroline\CoreBundle\Entity\User        $receiver
+     *
+     * @param \Claroline\CoreBundle\Entity\User|null   $doer
      *
      * @return Controller
      */
-    protected function dispatchBadgeAwardingEvent(Badge $badge, User $user)
+    protected function dispatchBadgeAwardingEvent(Badge $badge, User $receiver, $doer = null)
     {
-        $event = new LogBadgeAwardEvent($badge, $user);
+        $event = new LogBadgeAwardEvent($badge, $receiver, $doer);
 
         $this->dispatch($event);
     }
@@ -211,5 +216,35 @@ class BadgeManager
         } catch(\Exception $exception){
             throw new \Exception('badge_claim_error_message', 0, $exception);
         }
+    }
+
+    /**
+     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
+     * @param int                                              $limit
+     *
+     * @return Badge[]
+     */
+    public function getWorkspaceLastAwardedBadges(Workspace $workspace, $limit = 10)
+    {
+        /** @var \Claroline\CoreBundle\Repository\Badge\UserBadgeRepository $userBadgeRepository */
+        $userBadgeRepository = $this->entityManager->getRepository('ClarolineCoreBundle:Badge\UserBadge');
+        $lastAwardedBadges   = $userBadgeRepository->findWorkspaceLastAwardedBadges($workspace, $limit);
+
+        return $lastAwardedBadges;
+    }
+
+    /**
+     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
+     * @param int                                              $limit
+     *
+     * @return Badge[]
+     */
+    public function getWorkspaceMostAwardedBadges(Workspace $workspace, $limit = 10)
+    {
+        /** @var \Claroline\CoreBundle\Repository\Badge\UserBadgeRepository $userBadgeRepository */
+        $userBadgeRepository = $this->entityManager->getRepository('ClarolineCoreBundle:Badge\UserBadge');
+        $lastAwardedBadges   = $userBadgeRepository->findWorkspaceMostAwardedBadges($workspace, $limit);
+
+        return $lastAwardedBadges;
     }
 }

@@ -54,6 +54,7 @@
             }
         },
         dispatchMainEvent: function (eventName, directoryId, parameters) {
+
             var event = {
                 nodeId: directoryId,
                 view: 'main',

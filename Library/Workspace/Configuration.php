@@ -22,6 +22,7 @@ class Configuration
     private $workspaceDescription;
     private $displayable = false;
     private $selfRegistration = false;
+    private $registrationValidation = false;
     private $selfUnregistration = false;
     private $templateFile;
     private $extractPath;

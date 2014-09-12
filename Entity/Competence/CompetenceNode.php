@@ -11,11 +11,13 @@
 
 namespace Claroline\CoreBundle\Entity\Competence;
 
+use Claroline\CoreBundle\Entity\Competence\Competence;
+use Claroline\CoreBundle\Entity\Competence\CompetenceNode;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
- * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\CompetenceRepository")
+ * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\CompetenceNodeRepository")
  * @ORM\Table(name="claro_competence_hierarchy",
  *     uniqueConstraints={
  *         @ORM\UniqueConstraint(
@@ -26,9 +28,9 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * )
  * @Gedmo\Tree(type="nested")
  */
-Class CompetenceNode {
-
-	/**
+Class CompetenceNode
+{
+    /**
      * @ORM\Column(type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
@@ -97,7 +99,7 @@ Class CompetenceNode {
     /**
      * @param mixed $competence
      */
-    public function setCompetence($competence)
+    public function setCompetence(Competence $competence)
     {
         $this->competence = $competence;
     }
@@ -113,7 +115,7 @@ Class CompetenceNode {
     /**
      * @param mixed $parent
      */
-    public function setParent($parent)
+    public function setParent(CompetenceNode $parent)
     {
         $this->parent = $parent;
     }
@@ -142,21 +144,21 @@ Class CompetenceNode {
         return $this->root;
     }
 
-    /**
-     * @param mixed $cptRoot
-     */
-    public function setCptRoot($cptRoot)
-    {
-        $this->cptRoot = $cptRoot;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCptRoot()
-    {
-        return $this->cptRoot;
-    }
+//    /**
+//     * @param mixed $cptRoot
+//     */
+//    public function setCptRoot($cptRoot)
+//    {
+//        $this->cptRoot = $cptRoot;
+//    }
+//
+//    /**
+//     * @return mixed
+//     */
+//    public function getCptRoot()
+//    {
+//        return $this->cptRoot;
+//    }
 
     /**
      * @param mixed $lft
@@ -207,8 +209,7 @@ Class CompetenceNode {
     }
 
     public function __toString()
-{
-    return $this->competence->getName();
-}
-
+    {
+        return $this->competence->getName();
+    }
 }

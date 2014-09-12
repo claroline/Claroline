@@ -33,7 +33,15 @@ class ImportUserType extends AbstractType
                     new File(),
                     new CsvUser()
                 )
-           )
+            )
+        )
+        ->add(
+            'sendMail',
+            'checkbox',
+            array(
+                'label' => 'send_mail',
+                'required' => false
+            )
         );
     }
 

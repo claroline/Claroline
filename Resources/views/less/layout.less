@@ -318,7 +318,7 @@ body.iframe {
             right:0;
         }
 
-        li:not(:last-child) a {
+        li:not(:last-child) > a {
             border-right:1px solid darken(@navbar-inverse-bg, 5%) !important;
         }
     }
@@ -901,7 +901,7 @@ form .global-error {
 
 .content-scroll {
     width: 100%;
-    height: 150px;
+    height: 400px;
     border: 1px solid @input-border;
     .border-top-radius(@border-radius-base);
     .border-bottom-radius(@border-radius-base);

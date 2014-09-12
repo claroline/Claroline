@@ -300,13 +300,14 @@ class WorkspaceController extends Controller
             $config->setWorkspaceCode($form->get('code')->getData());
             $config->setDisplayable($form->get('displayable')->getData());
             $config->setSelfRegistration($form->get('selfRegistration')->getData());
+            $config->setRegistrationValidation($form->get('registrationValidation')->getData());
             $config->setSelfUnregistration($form->get('selfUnregistration')->getData());
             $config->setWorkspaceDescription($form->get('description')->getData());
 
             $user = $this->security->getToken()->getUser();
             $this->workspaceManager->create($config, $user);
             $this->tokenUpdater->update($this->security->getToken());
-            $route = $this->router->generate('claro_workspace_list');
+            $route = $this->router->generate('claro_workspace_by_user');
             $msg = $this->get('translator')->trans(
                 'successfull_workspace_creation',
                 array('%name%' => $form->get('name')->getData()), 'platform'

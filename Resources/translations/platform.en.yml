@@ -113,6 +113,7 @@ add_groups: 'Add groups'
 add_resource: 'Add resource'
 add_role: 'Add role'
 add_roles_confirm_message: 'Do you want to add the following roles to the %count% selected elements'
+add_sub_competence: 'Add a sub-competence'
 add_subcategory: 'Add a subcategory'
 add_tag: 'Add tag'
 add_tag_to_workspace: 'Add tag to workspace'
@@ -150,6 +151,9 @@ apply: Apply
 at_least_one_category_has_to_be_selected: 'At least one category has to be selected'
 attempt: Attempt
 attempts: Attempts
+authentication: Authentication
+authentication_invalid: The authentication source %authentication% from the line %line% is invalid.
+authentication_source: Authentication source
 automatic: Automatic
 available_widgets: 'Available widgets'
 available_workspaces: 'Available workspaces'
@@ -192,8 +196,11 @@ collaborator: Collaborator
 comment: Comment
 communication: Communication
 competence: Competence
-competences: Competences
+competence_creation: 'Competence creation'
+competence_edition: 'Competence edition'
 competence_referencial: Learning outcomes
+competences: Competences
+competences_management: 'Competences management'
 completed: Completed
 configuration: Configuration
 configure: Configure
@@ -204,15 +211,18 @@ copy: Copy
 core_packages: Core packages
 create: Create
 create_category: 'Create a category'
+create_competence: 'Create a competence'
 create_facet: Create a facet
 create_field: Create a field
 create_group: 'Create group'
+create_learning_outcomes: 'Create a learning outcomes'
 create_new_admin_tag: 'Create new admin tag'
 create_new_home_tab: 'Create new tab'
 create_new_tag: 'Create new tag'
 create_new_user_account: 'New user account for ClarolineConnect'
 create_role: Create role
 create_security_token: 'Create a security token'
+create_sub_competence: 'Create a sub-competence'
 create_subcategory: 'Create a subcategory'
 create_user: 'Create user'
 create_widget_instance: 'Create a widget'
@@ -271,7 +281,11 @@ delete: Delete
 delete_category: 'Delete category'
 delete_category_confirm_message: 'Do you really want to delete this category?'
 delete_category_confirm_title: 'Category deletion'
+delete_competence: 'Delete competence'
+delete_competence_confirm_message: 'Do you really want to delete this competence ?'
 delete_home_tab: 'Delete tab'
+delete_learning_outcomes: 'Delete learning outcomes'
+delete_learning_outcomes_confirm_message: 'Do you really want to delete this learning outcomes ?'
 description: 'Description'
 desktop: Desktop
 desktop_home_tab_creation: 'Desktop Home tab creation'
@@ -294,6 +308,7 @@ drop_file: 'Drop the file'
 dsn: dsn
 duration: Duration
 edit: Edit
+edit_competence: 'Edit competence'
 edit_event_success: The event was updated successfully.
 edit_facet: Edit a facet
 edit_field: Edit a field
@@ -430,6 +445,8 @@ last_attempt_date: 'Last attempt'
 last_manager_error_message: You can't remove every manager.
 last_name: 'Last name'
 layout: Layout
+learning_outcomes: 'Learning outcomes'
+learning_outcomes_creation: 'Learning outcomes creation'
 learning_profil: Learning profile
 leave_this_page: 'If you leave this page you may lose your changes.'
 left: Left
@@ -437,8 +454,10 @@ limit: Limit
 line_number: 'Line %line%:'
 line_per_page: 'Results per page'
 link: Link
+link_competence: 'Link'
 link_outdated: 'link is no more valid'
 link_workspace: 'Link workspace'
+linkable_competences: 'Linkable competences'
 list_groups: 'List groups'
 list_role: Role list
 list_users: 'List users'
@@ -532,10 +551,12 @@ no: no
 no_action_found: No action found.
 no_activity_in_workspace: There are currently no activities in this workspace.
 no_category: 'There is no category'
+no_competence: 'No competence'
 no_email: 'No email found, check the spelling'
 no_group: 'No group'
 no_group: There is no group.
 no_home_tab: 'There is no Home tab'
+no_learning_outcomes: 'No learning outcomes'
 no_message: 'No message'
 no_package_description: No package description.
 no_resources_in_workspace: There are currently no resources in this workspace.
@@ -645,6 +666,7 @@ registered_users: 'Registered users'
 registration: Registration
 registration_to_workspaces: 'Registration to workspaces'
 remove: Remove
+remove_competence: 'Remove competence'
 remove_event: Remove an event
 remove_event_confirm: Are you sure you want to remove this event ?
 remove_facet: Remove a facet
@@ -657,6 +679,8 @@ remove_message_confirm_message: 'Are you sure you want to delete this message?'
 remove_message_s_confirm_message: 'Are you sure you want to delete these %count% messages?'
 remove_role: Role suppression.
 remove_role_confirm: Do you really want to remove the role %name% ?
+remove_sub_competence: 'Remove competence from learning outcomes'
+remove_sub_competence_comfirm_message: 'Are you sure you want to remove this competence from this learning outcomes ?'
 remove_subcategory: 'Remove subcategory'
 remove_user_confirm_message: 'Are you sure you want to delete this user?'
 remove_user_s_confirm_message: 'Are you sure you want to delete these %count% users?'
@@ -939,12 +963,14 @@ workspace_edit_form_description: Description
 workspace_edit_form_displayable: Displayable
 workspace_edit_form_name: Name
 workspace_edit_form_number : Number of subscriber(s)
+workspace_edit_form_registrationValidation : 'Registration validation'
 workspace_edit_form_selfRegistration: 'Public registration'
 workspace_edit_form_selfUnregistration: 'Public unregistration'
 workspace_form_code: Code
 workspace_form_description: Description
 workspace_form_displayable: Public
 workspace_form_name: Name
+workspace_form_registrationValidation : 'Registration validation'
 workspace_form_selfRegistration: 'Public registration'
 workspace_form_selfUnregistration: 'Public unregistration'
 workspace_form_template: Template

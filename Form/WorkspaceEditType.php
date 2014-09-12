@@ -62,6 +62,7 @@ class WorkspaceEditType extends AbstractType
         }
         $builder->add('displayable', 'checkbox', array('required' => false));
         $builder->add('selfRegistration', 'checkbox', array('required' => false));
+        $builder->add('registrationValidation', 'checkbox', array('required' => false));
         $builder->add('selfUnregistration', 'checkbox', array('required' => false));
         $builder->add('number', 'text', array('disabled' => 'disabled', 'data' => $this->number, 'mapped' => false));
     }
