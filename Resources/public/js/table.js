@@ -168,12 +168,16 @@
 
         $('#check-all-items').click(function() {
             if ($('#check-all-items').is(':checked')) {
-                $('.chk-item').prop('checked', true);
+                $.each($('.chk-item'), function(index, el) {
+                    if (!$(el).is(':disabled')) $(el).prop('checked', true);
+                });
                 // enable .table-control elements
                 $('.table-control').prop('disabled', false);
             }
             else {
-                $('.chk-item').prop('checked', false);
+                $.each($('.chk-item'), function(index, el) {
+                    if (!$(el).is(':disabled')) $(el).prop('checked', false);
+                });
                  // disable .table-control elements
                 $('.table-control').prop('disabled', true);
             }
