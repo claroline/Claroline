@@ -407,7 +407,7 @@ class FileListener implements ContainerAwareInterface
     private function uploadFile(\DirectoryIterator $file, ResourceNode $parent, array $perms)
     {
         $entityFile = new File();
-        $fileName = $file->getFilename();
+        $fileName = utf8_encode($file->getFilename());
         $size = @filesize($file);
         $extension = pathinfo($fileName, PATHINFO_EXTENSION);
         $mimeType = $this->container->get('claroline.utilities.mime_type_guesser')->guess($extension);
