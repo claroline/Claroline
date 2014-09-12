@@ -221,7 +221,7 @@ class FileListener implements ContainerAwareInterface
                 );
                 $response->headers->set(
                     'Content-Disposition',
-                    'attachment; filename=file.'.pathinfo($item, PATHINFO_EXTENSION)
+                    'attachment; filename=' . $resource->getResourceNode()->getName()
                 );
                 $response->headers->set(
                     'Content-Type',
