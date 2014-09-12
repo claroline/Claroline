@@ -152,6 +152,8 @@ at_least_one_category_has_to_be_selected: 'At least one category has to be selec
 attempt: Attempt
 attempts: Attempts
 authentication: Authentication
+authentication_invalid: The authentication source %authentication% from the line %line% is invalid.
+authentication_source: Authentication source
 automatic: Automatic
 available_widgets: 'Available widgets'
 available_workspaces: 'Available workspaces'

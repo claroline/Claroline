@@ -137,6 +137,16 @@
     };
 
     /**
+     * Returns a manager
+     *
+     * @param name  string
+     * @returns object
+     */
+    manager.get = function(name) {
+        return views[name];
+    }
+
+    /**
      * Opens or closes a picker by its name.
      *
      * @param name      string  Name of the picker

@@ -17,6 +17,7 @@ use Claroline\CoreBundle\Entity\User;
 use Symfony\Component\Validator\ValidatorInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 use JMS\DiExtraBundle\Annotation as DI;
+use Claroline\CoreBundle\Manager\AuthenticationManager;
 
 /**
  * @DI\Validator("csv_user_validator")
@@ -28,19 +29,26 @@ class CsvUserValidator extends ConstraintValidator
 
     /**
      * @DI\InjectParams({
-     *     "validator" = @DI\Inject("validator"),
-     *     "trans"     = @DI\Inject("translator"),
+     *     "validator"             = @DI\Inject("validator"),
+     *     "trans"                 = @DI\Inject("translator"),
+     *     "authenticationManager" = @DI\Inject("claroline.common.authentication_manager"),
      * })
      */
-    public function __construct(ValidatorInterface $validator, TranslatorInterface $translator)
+    public function __construct(
+        ValidatorInterface $validator,
+        TranslatorInterface $translator,
+        AuthenticationManager $authenticationManager
+    )
     {
         $this->validator = $validator;
         $this->translator = $translator;
+        $this->authenticationManager = $authenticationManager;
     }
 
     public function validate($value, Constraint $constraint)
     {
         $lines = str_getcsv(file_get_contents($value), PHP_EOL);
+        $authDrivers = $this->authenticationManager->getDrivers();
 
         foreach ($lines as $line) {
             $linesTab = explode(';', $line);
@@ -63,8 +71,24 @@ class CsvUserValidator extends ConstraintValidator
             $username = $user[2];
             $pwd = $user[3];
             $email = $user[4];
-            $code = isset($user[5])? $user[5] : null;
-            $phone = isset($user[6])? $user[6] : null;
+
+            if (isset($user[5])) {
+                $code = trim($user[5]) === '' ? null: $user[5];
+            } else {
+                $code = null;
+            }
+
+            if (isset($user[6])) {
+                $phone = trim($user[6]) === '' ? null: $user[6];
+            } else {
+                $phone = null;
+            }
+
+            if (isset($user[7])) {
+                $authentication = trim($user[7]) === '' ? null: $user[7];
+            } else {
+                $authentication = null;
+            }
 
             (!array_key_exists($email, $mails)) ?
                 $mails[$email] = array($i + 1):
@@ -82,6 +106,18 @@ class CsvUserValidator extends ConstraintValidator
             $newUser->setAdministrativeCode($code);
             $newUser->setPhone($phone);
             $errors = $this->validator->validate($newUser, array('registration', 'Default'));
+
+            if ($authentication) {
+                if (!in_array($authentication, $authDrivers)) {
+                    $msg = $this->translator->trans(
+                            'authentication_invalid',
+                            array('%authentication%' => $authentication, '%line%' => $i + 1),
+                            'platform'
+                        ) . ' ';
+
+                    $this->context->addViolation($msg);
+                }
+            }
 
             foreach ($errors as $error) {
                 $this->context->addViolation(
