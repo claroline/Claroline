@@ -416,6 +416,41 @@ class WorkspaceRepository extends EntityRepository
     }
 
     /**
+     * Returns the workspaces which are visible for an authenticated user and allow
+     * self-registration (user's workspaces are excluded).
+     *
+     * @param User $user
+     *
+     * @return array[Workspace]
+     */
+    public function findWorkspacesWithSelfRegistrationBySearch(User $user, $search)
+    {
+        $dql = '
+            SELECT w
+            FROM Claroline\CoreBundle\Entity\Workspace\Workspace w
+            WHERE w.displayable = true
+            AND w.selfRegistration = true
+            AND (
+                UPPER(w.name) LIKE :search
+                OR UPPER(w.code) LIKE :search
+            )
+            AND w.id NOT IN (
+                SELECT w2.id FROM Claroline\CoreBundle\Entity\Workspace\Workspace w2
+                JOIN w2.roles r
+                JOIN r.users u
+                WHERE u.id = :userId
+            )
+            ORDER BY w.name
+        ';
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('userId', $user->getId());
+        $search = strtoupper($search);
+        $query->setParameter('search', "%{$search}%");
+
+        return $query->getResult();
+    }
+
+    /**
      * Returns the workspaces which are visible for each user
      * and where name or code contains $search param.
      *
