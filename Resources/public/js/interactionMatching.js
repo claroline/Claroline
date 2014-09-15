@@ -90,13 +90,12 @@ function creationMatchingEdit(addchoice, addproposal, deletechoice, LabelValue, 
 
     containerProposal.children().first().children('div').each(function() {
 
-        $('#newTableProposal').find('tbody').append('<tr></tr>');
+        $('#newTableProposal').find('tbody').append('<tr><td></td></tr>');
 
-        addRemoveRowTableProposal();
         $(this).find('.row').each(function() {
-
+            
             fillProposalArray($(this));
-
+            addRemoveRowTableProposal();
             // Add the form errors
             $('#proposalError').append($(this).find('span'));
         });
@@ -107,6 +106,9 @@ function creationMatchingEdit(addchoice, addproposal, deletechoice, LabelValue, 
             $('#newTableProposal').find('tr:last').append('<td class="classic"></td>');
             adddelete($('#newTableProposal').find('td:last'), deleteProposal);
         }
+//        if(first('tr') == null){
+//            
+//        }
     });
 
     containerProposal.remove();
