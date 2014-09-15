@@ -83,7 +83,8 @@
 
         _upload: function (file) {
             if (file) {
-                var currentDirectoryId = Claroline.ResourceManager.Controller.views.main.currentDirectory.id;
+                var manager = Claroline.ResourceManager.get('main');
+                var currentDirectoryId = manager.parameters.directoryId;
 
                 file.xhr = FileAPI.upload({
                     url: Routing.generate('claro_file_upload_with_ajax', {'parent': currentDirectoryId}),
@@ -117,7 +118,14 @@
 
                         if (xhr.status === 200) {
                             var jsonResponse = $.parseJSON(xhr.response);
-                            Claroline.ResourceManager.Controller.views.main.subViews.nodes.addThumbnails(jsonResponse);
+
+                            var event = {
+                                nodeId: currentDirectoryId,
+                                view: 'main',
+                                fromRouter: true
+                            };
+
+                            manager.dispatcher.trigger('open-directory', event)
                         } else {
                             if (xhr.status === 403) {
                                 showErrorMessage(Translator.get('platform:upload_denied'));

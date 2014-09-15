@@ -406,8 +406,7 @@ class RolesController extends Controller
     {
         $this->checkAccess($workspace);
         $this->roleManager->associateRolesToSubjects($users, $roles, true);
-        $listCptNodes = $this->cptManager->getCompetenceByWorkspace($workspace);
-        $this->cptManager->subscribeUserToCompetences($users,$listCptNodes);
+
         return new Response('success');
     }
 

@@ -39,6 +39,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class UserManager
 {
+    const MAX_USER_BATCH_SIZE = 20;
+
     private $platformConfigHandler;
     private $strictEventDispatcher;
     private $mailManager;
@@ -114,10 +116,11 @@ class UserManager
      * Its basic properties (name, username,... ) must already be set.
      *
      * @param \Claroline\CoreBundle\Entity\User $user
+     * @param boolean                           $sendMail do we need to mail the new user ?
      *
      * @return \Claroline\CoreBundle\Entity\User
      */
-    public function createUser(User $user)
+    public function createUser(User $user, $sendMail = true)
     {
         $this->objectManager->startFlushSuite();
         $this->setPersonalWorkspace($user);
@@ -128,7 +131,7 @@ class UserManager
         $this->strictEventDispatcher->dispatch('log', 'Log\LogUserCreate', array($user));
         $this->objectManager->endFlushSuite();
 
-        if ($this->mailManager->isMailerAvailable()) {
+        if ($this->mailManager->isMailerAvailable() && $sendMail) {
             $this->mailManager->sendCreationMessage($user);
         }
 
@@ -266,11 +269,14 @@ class UserManager
      *     array(firstname3, lastname3, username3, pwd3, email3, code3, phone3),
      * )
      *
-     * @param array $users
+     * @param array    $users
+     * @param string   $authentication an authentication source
+     * @param boolean  $mail           do the users need to be mailed
+     * @param \Closure $logger         an anonymous function allowing to log actions
      *
      * @return array
      */
-    public function importUsers(array $users, $authentication = null)
+    public function importUsers(array $users, $sendMail = true, $logger = null)
     {
         $roleUser = $this->roleManager->getRoleByName('ROLE_USER');
         $max = $roleUser->getMaxUsers();
@@ -282,6 +288,8 @@ class UserManager
 
         $lg = $this->platformConfigHandler->getParameter('locale_language');
         $this->objectManager->startFlushSuite();
+        $i = 1;
+        $j = 0;
 
         foreach ($users as $user) {
             $firstName = $user[0];
@@ -289,10 +297,26 @@ class UserManager
             $username = $user[2];
             $pwd = $user[3];
             $email = $user[4];
-            $code = isset($user[5]) ? $user[5] : null;
-            $phone = isset($user[6]) ? $user[6] : null;
 
-            $newUser = $this->objectManager->factory('Claroline\CoreBundle\Entity\User');
+            if (isset($user[5])) {
+                $code = trim($user[5]) === '' ? null: $user[5];
+            } else {
+                $code = null;
+            }
+
+            if (isset($user[6])) {
+                $phone = trim($user[6]) === '' ? null: $user[6];
+            } else {
+                $phone = null;
+            }
+
+            if (isset($user[7])) {
+                $authentication = trim($user[7]) === '' ? null: $user[7];
+            } else {
+                $authentication = null;
+            }
+
+            $newUser = new User();
             $newUser->setFirstName($firstName);
             $newUser->setLastName($lastName);
             $newUser->setUsername($username);
@@ -302,7 +326,20 @@ class UserManager
             $newUser->setPhone($phone);
             $newUser->setLocale($lg);
             $newUser->setAuthentication($authentication);
-            $this->createUser($newUser);
+            $this->createUser($newUser, $sendMail);
+            if ($logger) $logger(" [UOW size: " . $this->objectManager->getUnitOfWork()->size() . "]");
+            if ($logger) $logger(" User $j ($username) being created");
+            $i++;
+            $j++;
+
+            if ($i % self::MAX_USER_BATCH_SIZE === 0) {
+                if ($logger) $logger(" [UOW size: " . $this->objectManager->getUnitOfWork()->size() . "]");
+                $i = 0;
+                $this->objectManager->endFlushSuite();
+                if ($logger) $logger(" flushing users...");
+                $this->objectManager->clear();
+                $this->objectManager->startFlushSuite();
+            }
         }
 
         $this->objectManager->endFlushSuite();

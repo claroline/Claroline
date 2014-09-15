@@ -66,8 +66,32 @@
     <div class="panel-heading">
         <h3 class="panel-title">{{ 'register_to_a_public_workspace'|trans({}, 'platform') }}</h3>
     </div>
+    
     <div id="workspace-list-div" class="panel-body">
-
+        
+        {% if search != '' %}
+            <div class="alert alert-info">
+                {{ 'results_for_search_on'|trans({}, 'platform') }} :
+                "{{ search }}"
+            </div>
+        {% endif %}
+        <div class="row">
+            <div class="input-group col-md-4 pull-right">
+                <input class="form-control"
+                       type="text"
+                       id="search-workspace-input"
+                       placeholder="{{ 'search'|trans({}, 'platform') }}"
+                       value={{search}}
+                >
+                <span class="input-group-btn">
+                    <button class="filter btn btn-default" type="button" id="search-workspace-btn">
+                        <i class="fa fa-search"></i>
+                    </button>
+                </span>
+            </div>
+        </div>
+        <br>
+        
         {% if workspaces is empty %}
             {{ 'public_workspace_empty' | trans({}, 'platform') }}
         {% else %}

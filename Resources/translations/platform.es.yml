@@ -145,6 +145,8 @@ at_least_one_category_has_to_be_selected: 'Debe seleccionar al menos una categor
 attempt: Intento
 attempts: Intentos
 authentication: Autenticación
+authentication_invalid: El origen de autentificación %authentication% de la linea %line% no es valido
+authentication_source: origen de autentificación
 automatic: Automático
 available_widgets: 'Widgets disponibles'
 available_workspaces: 'Espacios de trabajo disponibles'

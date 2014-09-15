@@ -20,13 +20,6 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class ImportUserType extends AbstractType
 {
-    private $authenticationDrivers;
-
-    public function __construct($authenticationDrivers = null)
-    {
-        $this->authenticationDrivers = $authenticationDrivers;
-    }
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add(
@@ -43,13 +36,11 @@ class ImportUserType extends AbstractType
             )
         )
         ->add(
-            'authentication',
-            'choice',
+            'sendMail',
+            'checkbox',
             array(
-                'choices' => $this->authenticationDrivers,
-                'mapped' => false,
-                'required' => false,
-                'label' => 'authentication'
+                'label' => 'send_mail',
+                'required' => false
             )
         );
     }
