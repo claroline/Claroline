@@ -74,6 +74,7 @@ function creationMatchingEdit(addchoice, addproposal, deletechoice, LabelValue, 
     typeMatching = JSON.parse(tMatching);
 
     advEditionLang = advEdition;
+    correspEmptyLang = correspEmpty;
 
     //in the first time
     $('#ujm_exobundle_interactionmatchingtype_typeMatching').children('option').each(function() {
@@ -99,7 +100,7 @@ function creationMatchingEdit(addchoice, addproposal, deletechoice, LabelValue, 
             // Add the form errors
             $('#proposalError').append($(this).find('span'));
         });
-
+        
         if (nbResponses == 0) {
 
             // Add the delete button
