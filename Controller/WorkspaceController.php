@@ -1189,8 +1189,16 @@ class WorkspaceController extends Controller
         foreach ($widgetConfigErrors as $widgetConfigError) {
             $widgetName = $widgetConfigError['widget'];
             $widgetInstanceName = $widgetConfigError['widgetInstance'];
+            $msg = '[' .
+                $this->translator->trans($widgetName, array(), 'widget') .
+                '] ' .
+                $this->translator->trans(
+                    'widget_configuration_copy_warning',
+                    array('%widgetInstanceName%' => $widgetInstanceName),
+                    'widget'
+                );
 
-            $flashBag->add('error', $widgetName . ' - ' . $widgetInstanceName);
+            $flashBag->add('error', $msg);
         }
     }
 

@@ -162,22 +162,22 @@ class LogWidgetListener
     /**
      * @DI\Observe("copy_widget_config_core_resource_logger")
      *
-     * @param ConfigureWidgetEvent $event
+     * @param CopyWidgetConfigurationEvent $event
      */
     public function onCopyWidgetConfiguration(CopyWidgetConfigurationEvent $event)
     {
         $source = $event->getWidgetInstance();
         $copy = $event->getWidgetInstanceCopy();
 
-        $logWidgetConfig = $this->logManager->getLogConfig($source);
+        $widgetConfig = $this->logManager->getLogConfig($source);
 
-        if (!is_null($logWidgetConfig)) {
-            $logWidgetConfigCopy = new LogWidgetConfig();
-            $logWidgetConfigCopy->setWidgetInstance($copy);
-            $logWidgetConfigCopy->setAmount($logWidgetConfig->getAmount());
-            $logWidgetConfigCopy->setRestrictions($logWidgetConfig->getRestrictions());
+        if (!is_null($widgetConfig)) {
+            $widgetConfigCopy = new LogWidgetConfig();
+            $widgetConfigCopy->setWidgetInstance($copy);
+            $widgetConfigCopy->setAmount($widgetConfig->getAmount());
+            $widgetConfigCopy->setRestrictions($widgetConfig->getRestrictions());
 
-            $this->om->persist($logWidgetConfigCopy);
+            $this->om->persist($widgetConfigCopy);
             $this->om->flush();
         }
         $event->validateCopy();
