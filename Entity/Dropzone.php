@@ -777,7 +777,8 @@ class Dropzone extends AbstractResource
         } else {
             $now = new \DateTime();
 
-            return $now->getTimestamp() < $this->startAllowDrop->getTimestamp() and $now->getTimestamp() < $this->startReview->getTimestamp();
+
+            return $now->getTimestamp() < $this->getStartAllowDrop()->getTimestamp() && ($this->getStartReview() == null || $now->getTimestamp() < $this->getStartReview()->getTimestamp());
         }
     }
 
