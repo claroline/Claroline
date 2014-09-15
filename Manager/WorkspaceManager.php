@@ -21,31 +21,30 @@ use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceFavourite;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceRegistrationQueue;
+use Claroline\CoreBundle\Event\NotPopulatedEventException;
+use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Library\Security\Utilities;
+use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
+use Claroline\CoreBundle\Library\Workspace\Configuration;
 use Claroline\CoreBundle\Manager\HomeTabManager;
-use Claroline\CoreBundle\Manager\RoleManager;
-use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Manager\MaskManager;
-use Claroline\CoreBundle\Repository\ResourceNodeRepository;
+use Claroline\CoreBundle\Manager\ResourceManager;
+use Claroline\CoreBundle\Manager\RoleManager;
+use Claroline\CoreBundle\Pager\PagerFactory;
+use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Repository\OrderedToolRepository;
+use Claroline\CoreBundle\Repository\ResourceNodeRepository;
 use Claroline\CoreBundle\Repository\ResourceRightsRepository;
 use Claroline\CoreBundle\Repository\ResourceTypeRepository;
 use Claroline\CoreBundle\Repository\RoleRepository;
 use Claroline\CoreBundle\Repository\WorkspaceRepository;
 use Claroline\CoreBundle\Repository\UserRepository;
-use Claroline\CoreBundle\Library\Workspace\Configuration;
-use Claroline\CoreBundle\Event\StrictDispatcher;
-use Claroline\CoreBundle\Pager\PagerFactory;
-use Claroline\CoreBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
-use Claroline\CoreBundle\Manager\Exception\UnknownToolException;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Yaml\Yaml;
-use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
-use Symfony\Component\Security\Core\SecurityContextInterface;
-use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\Yaml\Yaml;
 
 /**
  * @DI\Service("claroline.manager.workspace_manager")
@@ -89,7 +88,6 @@ class WorkspaceManager
     private $pagerFactory;
     private $workspaceFavouriteRepo;
     private $container;
-    private $trans;
 
     /**
      * Constructor.
@@ -984,6 +982,7 @@ class WorkspaceManager
         $homeTabConfigs = $this->homeTabManager
             ->getHomeTabConfigsByWorkspaceAndHomeTabs($source, $homeTabs);
         $order = 1;
+        $widgetCongigErrors = array();
 
         foreach ($homeTabConfigs as $homeTabConfig) {
             $homeTab = $homeTabConfig->getHomeTab();
@@ -1007,12 +1006,13 @@ class WorkspaceManager
 
             foreach ($widgetHomeTabConfigs as $widgetConfig) {
                 $widgetInstance = $widgetConfig->getWidgetInstance();
+                $widget = $widgetInstance->getWidget();
 
                 $newWidgetInstance = new WidgetInstance();
                 $newWidgetInstance->setIsAdmin(false);
                 $newWidgetInstance->setIsDesktop(false);
                 $newWidgetInstance->setWorkspace($workspace);
-                $newWidgetInstance->setWidget($widgetInstance->getWidget());
+                $newWidgetInstance->setWidget($widget);
                 $newWidgetInstance->setName($widgetInstance->getName());
                 $this->om->persist($newWidgetInstance);
 
@@ -1025,9 +1025,28 @@ class WorkspaceManager
                 $newWidgetConfig->setLocked($widgetConfig->isLocked());
                 $newWidgetConfig->setWidgetOrder($widgetConfig->getWidgetOrder());
                 $this->om->persist($newWidgetConfig);
+
+                if ($widget->isConfigurable()) {
+
+                    try {
+                        $this->dispatcher->dispatch(
+                            'copy_widget_config_' . $widget->getName(),
+                            'CopyWidgetConfiguration',
+                            array($widgetInstance, $newWidgetInstance, $workspace)
+                        );
+                    } catch (NotPopulatedEventException $e) {
+                        $widgetCongigErrors[] = array(
+                            'widget' => $widget->getName(),
+                            'widgetInstance' => $widgetInstance->getName(),
+                            'error' => $e->getMessage()
+                        );
+                    }
+                }
             }
         }
         $this->om->endFlushSuite();
+
+        return $widgetCongigErrors;
     }
 
     /**

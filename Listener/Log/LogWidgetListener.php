@@ -20,6 +20,8 @@ use Claroline\CoreBundle\Form\Log\LogDesktopWidgetConfigType;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Claroline\CoreBundle\Entity\Log\LogWidgetConfig;
 use Claroline\CoreBundle\Event\ConfigureWidgetEvent;
+use Claroline\CoreBundle\Event\CopyWidgetConfigurationEvent;
+use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -44,12 +46,18 @@ class LogWidgetListener
     private $logWorkspaceWidgetConfigForm;
 
     /**
+     * @var \Claroline\CoreBundle\Persistence\ObjectManager
+     */
+    private $om;
+
+    /**
      * @DI\InjectParams({
      *     "logManager"                   = @DI\Inject("claroline.log.manager"),
      *     "workspaceManager"             = @DI\Inject("claroline.manager.workspace_manager"),
      *     "twig"                         = @DI\Inject("templating"),
      *     "formFactory"                  = @DI\Inject("form.factory"),
-     *     "logWorkspaceWidgetConfigForm" = @DI\Inject("claroline.form.logWorkspaceWidgetConfig")
+     *     "logWorkspaceWidgetConfigForm" = @DI\Inject("claroline.form.logWorkspaceWidgetConfig"),
+     *     "om"                           = @DI\Inject("claroline.persistence.object_manager")
      * })
      */
     public function __construct(
@@ -57,7 +65,8 @@ class LogWidgetListener
         WorkspaceManager $workspaceManager,
         TwigEngine $twig,
         FormFactory $formFactory,
-        LogWorkspaceWidgetConfigType $logWorkspaceWidgetConfigForm
+        LogWorkspaceWidgetConfigType $logWorkspaceWidgetConfigForm,
+        ObjectManager $om
     )
     {
         $this->logManager                   = $logManager;
@@ -65,6 +74,7 @@ class LogWidgetListener
         $this->twig                         = $twig;
         $this->formFactory                  = $formFactory;
         $this->logWorkspaceWidgetConfigForm = $logWorkspaceWidgetConfigForm;
+        $this->om                           = $om;
     }
 
     /**
@@ -147,5 +157,30 @@ class LogWidgetListener
         }
 
         $event->setContent($content);
+    }
+
+    /**
+     * @DI\Observe("copy_widget_config_core_resource_logger")
+     *
+     * @param ConfigureWidgetEvent $event
+     */
+    public function onCopyWidgetConfiguration(CopyWidgetConfigurationEvent $event)
+    {
+        $source = $event->getWidgetInstance();
+        $copy = $event->getWidgetInstanceCopy();
+
+        $logWidgetConfig = $this->logManager->getLogConfig($source);
+
+        if (!is_null($logWidgetConfig)) {
+            $logWidgetConfigCopy = new LogWidgetConfig();
+            $logWidgetConfigCopy->setWidgetInstance($copy);
+            $logWidgetConfigCopy->setAmount($logWidgetConfig->getAmount());
+            $logWidgetConfigCopy->setRestrictions($logWidgetConfig->getRestrictions());
+
+            $this->om->persist($logWidgetConfigCopy);
+            $this->om->flush();
+        }
+        $event->validateCopy();
+        $event->stopPropagation();
     }
 }

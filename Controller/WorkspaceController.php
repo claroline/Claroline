@@ -1181,9 +1181,17 @@ class WorkspaceController extends Controller
             ->duplicateOrderedTools($modelWorkspace, $workspace);
         $this->workspaceManager
             ->duplicateRootDirectory($modelWorkspace, $workspace, $user);
-        $this->workspaceManager
+        $widgetConfigErrors = $this->workspaceManager
             ->duplicateHomeTabs($modelWorkspace, $workspace, $homeTabs->toArray());
 
+        $flashBag = $this->session->getFlashBag();
+
+        foreach ($widgetConfigErrors as $widgetConfigError) {
+            $widgetName = $widgetConfigError['widget'];
+            $widgetInstanceName = $widgetConfigError['widgetInstance'];
+
+            $flashBag->add('error', $widgetName . ' - ' . $widgetInstanceName);
+        }
     }
 
     private function assertIsGranted($attributes, $object = null)
