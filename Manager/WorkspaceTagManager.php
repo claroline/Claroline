@@ -412,9 +412,14 @@ class WorkspaceTagManager
         return $this->tagHierarchyRepo->findBy(array('tag' => $tag));
     }
 
-    public function getDatasForWorkspaceList($withRoles = true)
+    public function getDatasForWorkspaceList($withRoles = true, $search = '')
     {
-        $workspaces = $this->workspaceRepo->findDisplayableWorkspaces();
+        if (empty($search)) {
+            $workspaces = $this->workspaceRepo->findDisplayableWorkspaces();
+        } else {
+            $workspaces = $this->workspaceRepo
+                ->findDisplayableWorkspacesBySearch($search);
+        }
         $tags = $this->getNonEmptyAdminTags();
         $relTagWorkspace = $this->getTagRelationsByAdmin();
         $tagWorkspaces = array();
@@ -489,7 +494,8 @@ class WorkspaceTagManager
             'hierarchy' => $hierarchy,
             'rootTags' => $rootTags,
             'displayable' => $displayable,
-            'workspaceRoles' => $workspaceRoles
+            'workspaceRoles' => $workspaceRoles,
+            'search' => $search
         );
     }
 
@@ -556,14 +562,21 @@ class WorkspaceTagManager
      * Returns all datas necessary to display the list of all workspaces visible for all users
      * that are open for self-registration.
      */
-    public function getDatasForSelfRegistrationWorkspaceList(User $user)
+    public function getDatasForSelfRegistrationWorkspaceList(User $user, $search = '')
     {
         $workspaceQueue =  $this->workspaceQueueRepo->findByUser($user);
         $listworkspacePending = array();
+
         foreach ($workspaceQueue as $w ) {
             $listworkspacePending[$w->getWorkspace()->getId()] = $w->getWorkspace()->getId();
         }
-        $workspaces = $this->workspaceRepo->findWorkspacesWithSelfRegistration($user);
+
+        if (empty($search)) {
+            $workspaces = $this->workspaceRepo->findWorkspacesWithSelfRegistration($user);
+        } else {
+             $workspaces = $this->workspaceRepo
+                 ->findWorkspacesWithSelfRegistrationBySearch($user, $search);
+        }
         $tags = $this->getNonEmptyAdminTags();
 
         try {
@@ -625,7 +638,8 @@ class WorkspaceTagManager
             'hierarchy' => $hierarchy,
             'rootTags' => $rootTags,
             'displayable' => $displayable,
-            'listworkspacePending' => $listworkspacePending
+            'listworkspacePending' => $listworkspacePending,
+            'search' => $search
         );
     }
 
