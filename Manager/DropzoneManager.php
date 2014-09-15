@@ -204,13 +204,20 @@ class DropzoneManager
                     $currentState++;
                 }
 
+
                 if ($drop->countFinishedCorrections() >= $expectedCorrections) {
                     $currentState++;
+
                     if ($allow_user_to_not_have_expected_corrections) {
                         $currentState++;
                     }
                 } else if ($drop->isUnlockedDrop()) {
                     $currentState++;
+                }
+
+                // admin case ( can correct more than expected )
+                if ($currentState >= count($states)) {
+                    $currentState = count($states) - 1;
                 }
 
 
