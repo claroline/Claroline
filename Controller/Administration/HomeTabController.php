@@ -71,7 +71,6 @@ class HomeTabController extends Controller
      *     name="claro_admin_home_tabs_configuration_menu",
      *     options = {"expose"=true}
      * )
-     * @EXT\Method("GET")
      * @EXT\Template("ClarolineCoreBundle:Administration\HomeTab:adminHomeTabsConfigMenu.html.twig")
      *
      * Displays the homeTabs configuration menu.
@@ -89,7 +88,6 @@ class HomeTabController extends Controller
      *     name="claro_admin_desktop_home_tabs_configuration",
      *     options = {"expose"=true}
      * )
-     * @EXT\Method("GET")
      * @EXT\Template("ClarolineCoreBundle:Administration\HomeTab:adminDesktopHomeTabsConfig.html.twig")
      *
      * Displays the admin homeTabs configuration page.
@@ -151,7 +149,6 @@ class HomeTabController extends Controller
      *     name="claro_admin_workspace_home_tabs_configuration",
      *     options = {"expose"=true}
      * )
-     * @EXT\Method("GET")
      * @EXT\Template("ClarolineCoreBundle:Administration\HomeTab:adminWorkspaceHomeTabsConfig.html.twig")
      *
      * Displays the admin homeTabs configuration page.
@@ -213,7 +210,6 @@ class HomeTabController extends Controller
      *     name="claro_admin_home_tab_create_form",
      *     options = {"expose"=true}
      * )
-     * @EXT\Method("GET")
      * @EXT\Template("ClarolineCoreBundle:Administration\HomeTab:adminHomeTabCreateForm.html.twig")
      *
      * Displays the admin homeTab form.
@@ -297,7 +293,6 @@ class HomeTabController extends Controller
      *     name="claro_admin_home_tab_edit_form",
      *     options = {"expose"=true}
      * )
-     * @EXT\Method("GET")
      * @EXT\ParamConverter(
      *     "homeTab",
      *     class="ClarolineCoreBundle:Home\HomeTab",
@@ -599,7 +594,6 @@ class HomeTabController extends Controller
      *     name="claro_admin_widget_instance_create_form",
      *     options = {"expose"=true}
      * )
-     * @EXT\Method("GET")
      * @EXT\Template("ClarolineCoreBundle:Administration\HomeTab:adminWidgetInstanceCreateForm.html.twig")
      *
      * Displays the widget instance form.
@@ -945,7 +939,6 @@ class HomeTabController extends Controller
      *     name="claro_admin_widget_configuration",
      *     options={"expose"=true}
      * )
-     * @EXT\Method("GET")
      *
      * Asks a widget to render its configuration page.
      *

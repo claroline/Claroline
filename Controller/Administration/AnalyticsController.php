@@ -73,8 +73,6 @@ class AnalyticsController extends Controller
      *     name="claro_admin_analytics_show"
      * )
      *
-     * @EXT\Method("GET")
-     *
      * @EXT\Template("ClarolineCoreBundle:Administration\Analytics:analytics.html.twig")
      *
      * Displays platform analytics home page
@@ -107,8 +105,6 @@ class AnalyticsController extends Controller
      *     "/analytics/connections",
      *     name="claro_admin_analytics_connections"
      * )
-     *
-     * @EXT\Method({"GET", "POST"})
      *
      * @EXT\Template("ClarolineCoreBundle:Administration\Analytics:analytics_connections.html.twig")
      *
@@ -159,8 +155,6 @@ class AnalyticsController extends Controller
      *     name="claro_admin_analytics_resources"
      * )
      *
-     * @EXT\Method("GET")
-     *
      * @EXT\Template("ClarolineCoreBundle:Administration\Analytics:analytics_resources.html.twig")
      *
      * Displays platform analytics resources page
@@ -190,8 +184,6 @@ class AnalyticsController extends Controller
      *     name="claro_admin_analytics_top",
      *     defaults={"topType" = "top_users_connections"}
      * )
-     *
-     * @EXT\Method({"GET", "POST"})
      *
      * @EXT\Template("ClarolineCoreBundle:Administration\Analytics:analytics_top.html.twig")
      *
@@ -240,4 +232,4 @@ class AnalyticsController extends Controller
 
         throw new AccessDeniedException();
     }
-} 
+}

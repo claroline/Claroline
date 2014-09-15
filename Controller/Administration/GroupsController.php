@@ -93,7 +93,6 @@ class GroupsController extends Controller
 
     /**
      * @EXT\Route("/new", name="claro_admin_group_creation_form")
-     * @EXT\Method("GET")
      * @EXT\Template
      *
      * Displays the group creation form.
@@ -143,14 +142,12 @@ class GroupsController extends Controller
      *     options={"expose"=true},
      *     defaults={"page"=1, "search"="", "max"=50, "order"="id", "direction"="ASC"}
      * )
-     * @EXT\Method("GET")
      * @EXT\Route(
      *     "/page/{page}/search/{search}/max/{max}/order/{order}/direction/{direction}",
      *     name="claro_admin_group_list_search",
      *     defaults={"page"=1, "max"=50, "order"="id", "direction"="ASC"},
      *     options = {"expose"=true}
      * )
-     * @EXT\Method("GET")
      * @EXT\Template()
      * @EXT\ParamConverter(
      *     "order",
@@ -216,14 +213,12 @@ class GroupsController extends Controller
      *     options={"expose"=true},
      *     defaults={"page"=1, "search"="", "max"=50, "order"="id"}
      * )
-     * @EXT\Method("GET")
      * @EXT\Route(
      *     "/{groupId}/users/page/{page}/search/{search}/max/{max}/{order}",
      *     name="claro_admin_user_of_group_list_search",
      *     options={"expose"=true},
      *     defaults={"page"=1, "max"=50, "order"="id"}
      * )
-     * @EXT\Method("GET")
      * @EXT\ParamConverter(
      *      "group",
      *      class="ClarolineCoreBundle:Group",
@@ -264,14 +259,12 @@ class GroupsController extends Controller
      *     options={"expose"=true},
      *     defaults={"page"=1, "search"="", "max"=50, "order"="id"}
      * )
-     * @EXT\Method("GET")
      * @EXT\Route(
      *     "/{groupId}/add-users/page/{page}/search/{search}/max/{max}/order/{order}",
      *     name="claro_admin_outside_of_group_user_list_search",
      *     options={"expose"=true},
      *     defaults={"page"=1, "max"=50, "order"="id"}
      * )
-     * @EXT\Method("GET")
      * @EXT\ParamConverter(
      *      "group",
      *      class="ClarolineCoreBundle:Group",
@@ -392,7 +385,6 @@ class GroupsController extends Controller
      *     name="claro_admin_group_settings_form",
      *     requirements={"groupId"="^(?=.*[1-9].*$)\d*$"}
      * )
-     * @EXT\Method("GET")
      * @EXT\ParamConverter(
      *      "group",
      *      class="ClarolineCoreBundle:Group",
@@ -479,7 +471,6 @@ class GroupsController extends Controller
 
     /**
      * @EXT\Route("/{groupId}/import", name="claro_admin_import_users_into_group_form")
-     * @EXT\Method("GET")
      * @EXT\ParamConverter(
      *      "group",
      *      class="ClarolineCoreBundle:Group",

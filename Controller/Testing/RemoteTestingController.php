@@ -29,7 +29,6 @@ class RemoteTestingController extends Controller
      *     "/reinstall",
      *     name="claro_test_reinstall",
      * )
-     * @EXT\Method("GET")
      *
      * @return Response
      */

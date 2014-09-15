@@ -94,7 +94,6 @@ class UsersController extends Controller
 
     /**
      * @EXT\Route("/menu", name="claro_admin_users_management")
-     * @EXT\Method("GET")
      * @EXT\Template
      *
      * @return Response
@@ -112,7 +111,6 @@ class UsersController extends Controller
 
     /**
      * @EXT\Route("/new", name="claro_admin_user_creation_form")
-     * @EXT\Method("GET")
      * @EXT\Template
      *
      * Displays the user creation form.
@@ -269,7 +267,6 @@ class UsersController extends Controller
      *     defaults={"page"=1, "search"="", "max"=50, "order"="id","direction"="ASC"},
      *     options = {"expose"=true}
      * )
-     * @EXT\Method("GET")
      * @EXT\Route(
      *     "/users/page/{page}/search/{search}/max/{max}/order/{order}/direction/{direction}",
      *     name="claro_admin_user_list_search",
@@ -316,14 +313,12 @@ class UsersController extends Controller
      *     defaults={"page"=1, "search"=""},
      *     options = {"expose"=true}
      * )
-     * @EXT\Method("GET")
      * @EXT\Route(
      *     "/page/{page}/pic/search/{search}",
      *     name="claro_admin_user_list_search_pics",
      *     defaults={"page"=1},
      *     options = {"expose"=true}
      * )
-     * @EXT\Method("GET")
      * @EXT\Template
      *
      * Displays the platform user list.
@@ -345,7 +340,6 @@ class UsersController extends Controller
 
     /**
      * @EXT\Route("/import", name="claro_admin_import_users_form")
-     * @EXT\Method("GET")
      * @EXT\Template
      *
      * @return Response
@@ -367,7 +361,6 @@ class UsersController extends Controller
      *     defaults={"page"=1, "max"=50},
      *     options={"expose"=true}
      * )
-     * @EXT\Method("GET")
      * @EXT\Template
      *
      * @param User    $user

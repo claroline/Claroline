@@ -75,7 +75,6 @@ class WorkspaceAgendaController extends Controller
      *     name="claro_workspace_agenda_show",
      *     options = {"expose"=true}
      * )
-     * @EXT\Method({"GET","POST"})
      *
      * @param Workspace $workspace
      *
@@ -94,7 +93,6 @@ class WorkspaceAgendaController extends Controller
      *     "/{workspace}/tasks",
      *     name="claro_workspace_agenda_tasks"
      * )
-     * @EXT\Method({"GET","POST"})
      *
      * @param Workspace $workspace
      *
@@ -140,7 +138,6 @@ class WorkspaceAgendaController extends Controller
         $this->checkAccess($workspace);
         $form = $this->formFactory->create(FormFactory::TYPE_AGENDA_IMPORTER);
         $form->handleRequest($this->request);
-        $listEvents = array();
 
         if ($form->isValid()) {
             $events = $this->agendaManager->importEvents($form->get('file')->getData(), $workspace);

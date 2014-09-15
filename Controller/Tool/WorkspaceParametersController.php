@@ -92,7 +92,6 @@ class WorkspaceParametersController extends Controller
      *     "/{workspace}/form/export",
      *     name="claro_workspace_export_form"
      * )
-     * @EXT\Method("GET")
      *
      * @EXT\Template("ClarolineCoreBundle:Tool\workspace\parameters:template.html.twig")
      *
@@ -152,7 +151,6 @@ class WorkspaceParametersController extends Controller
      *     "/{workspace}/editform",
      *     name="claro_workspace_edit_form"
      * )
-     * @EXT\Method("GET")
      *
      * @EXT\Template("ClarolineCoreBundle:Tool\workspace\parameters:workspaceEdit.html.twig")
      *
@@ -274,7 +272,6 @@ class WorkspaceParametersController extends Controller
      *     "/{workspace}/subscription/url/generate",
      *     name="claro_workspace_subscription_url_generate"
      * )
-     * @EXT\Method("GET")
      *
      * @EXT\Template("ClarolineCoreBundle:Tool\workspace\parameters:generate_url_subscription.html.twig")
      *
@@ -312,7 +309,6 @@ class WorkspaceParametersController extends Controller
      *     "/{workspace}/subscription/url/generate/anonymous",
      *     name="claro_workspace_subscription_url_generate_anonymous"
      * )
-     * @EXT\Method({"GET","POST"})
      *
      * @EXT\Template("ClarolineCoreBundle:Tool\workspace\parameters:generate_url_subscription_anonymous.html.twig")
      *
