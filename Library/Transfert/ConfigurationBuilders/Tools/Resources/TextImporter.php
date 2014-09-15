@@ -16,6 +16,7 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use JMS\DiExtraBundle\Annotation as DI;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 
 /**
  * @DI\Service("claroline.tool.resources.text_importer")
@@ -23,6 +24,20 @@ use JMS\DiExtraBundle\Annotation as DI;
  */
 class TextImporter extends Importer implements ConfigurationInterface
 {
+    private $container;
+    private $om;
+
+    /**
+     * @DI\InjectParams({
+     *     "container" = @DI\Inject("service_container")
+     * })
+     */
+    public function __construct($container)
+    {
+        $this->container = $container;
+        $om = $this->container->get('claroline.persistence.object_manager');
+    }
+
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
@@ -39,7 +54,7 @@ class TextImporter extends Importer implements ConfigurationInterface
                 ->arrayNode('text')
                     ->prototype('array')
                         ->children()
-                            ->scalarNode('content')->isRequired()->end()
+                            ->scalarNode('path')->isRequired()->end()
                         ->end()
                     ->end()
                 ->end()
@@ -61,6 +76,14 @@ class TextImporter extends Importer implements ConfigurationInterface
     public function import(array $array)
     {
 
+    }
+
+    public function export(Workspace $workspace, array &$files, $object)
+    {
+        $content = $this->om->getRepository('Claroline\CoreBundle\Entity\Revision')
+            ->getLastRevision($object)->getContent();
+
+        var_dump($content);
     }
 
     public function getName()
