@@ -27,6 +27,12 @@ $(function() {
                 if (idProposal) {
                     responses[idProposal] = idLabel;
                 }
+                if(ui.draggable.width() > $(this).width()) {
+                    $(this).width(ui.draggable.width() * 1.5);
+                }
+                if(ui.draggable.height() > $(this).height()) {
+                    $(this).height(ui.draggable.height() * 1.5);
+                }
             },
             out: function(event, ui) {
                 idProposal = ui.draggable.attr("id");
