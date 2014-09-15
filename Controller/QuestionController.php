@@ -601,6 +601,41 @@ class QuestionController extends Controller
 
                     return $this->render('UJMExoBundle:InteractionOpen:edit.html.twig', $variables);
 
+                case "InteractionMatching":
+                    
+                    $interactionMatching = $this->getDoctrine()
+                        ->getManager()
+                        ->getRepository('UJMExoBundle:InteractionMatching')
+                        ->getInteractionMatching($interaction->getId());
+                    
+                    $editForm = $this->createForm(
+                        new InteractionMatchingType(
+                            $this->container->get('security.context')
+                                ->getToken()->getUser(),$catID
+                        ), $interactionMatching[0]
+                    );
+                    
+                    if ($exoID != -1) {
+                       $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($exoID);
+                       $variable['_resource'] = $exercise;
+                    }
+                    
+                    $typeMatching = $services->getTypeMatching();
+
+                    $variables['entity']         = $interactionMatching[0];
+                    $variables['edit_form']      = $editForm->createView();
+                    $variables['nbResponses']    = $nbResponses;
+                    $variables['linkedCategory'] = $linkedCategory;
+                    $variables['typeMatching']       = json_encode($typeMatching);
+                    $variables['exoID']          = $exoID;
+
+                    if ($exoID != -1) {
+                        $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($exoID);
+                        $variables['_resource'] = $exercise;
+                    }
+
+                    return $this->render('UJMExoBundle:InteractionMatching:edit.html.twig', $variables);
+
                     break;
             }
         } else {

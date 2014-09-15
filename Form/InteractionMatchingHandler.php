@@ -113,7 +113,7 @@ class InteractionMatchingHandler extends InteractionHandler
         }
 
         if ( $this->request->getMethod()  == 'POST' ) {
-            $this->form->HandlerRequest($this->request);
+            $this->form->handleRequest($this->request);
 
             if ( $this->form->isValid() ) {
                 $this->onSuccessUpdate($this->form->getData(), $originalLabel, $originalProposal, $originalHints);

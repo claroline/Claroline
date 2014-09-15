@@ -33,7 +33,7 @@
 {# functions javascript #}
 {% if error is defined %}
     <script type="text/javascript">
-        creationMatchingEdit('{{ 'addChoice' | trans }}', '{{ 'addProposal' | trans }}', '{{ 'delete' | trans }}', '{{ 'Label.value' | trans }}', '{{ 'Label.scoreRight' | trans }}', '{{ 'Proposal.value' | trans }}', '{{ 'numberProposal'| trans }}', '{{ 'correspondence' | trans }}', '{{ 'deleteLabel' | trans }}', '{{ 'deleteProposal' | trans }}', '{{ typeMatching|raw }}', '{{ 'advanced edition' | trans }}', '{{ 'correspondence empty' | trans }}');
+        creationMatchingEdit('{{ 'addChoice' | trans }}', '{{ 'addProposal' | trans }}', '{{ 'delete' | trans }}', '{{ 'Label.value' | trans }}', '{{ 'Label.scoreRight' | trans }}', '{{ 'Proposal.value' | trans }}', '{{ 'numberProposal'| trans }}', '{{ 'correspondence' | trans }}', '{{ 'deleteLabel' | trans }}', '{{ 'deleteProposal' | trans }}', '{{ typeMatching|raw }}', '{{ 'advanced edition' | trans }}', '{{ 'correspondence empty' | trans }}', {{ nbResponses }});
         newHintEdit('{{ 'hint' | trans }}', '{{ 'penalty' | trans }}', '{{ 'add hint' | trans }}', '{{ 'delete' | trans }}');
     </script>
 {% else %}
