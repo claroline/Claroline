@@ -31,9 +31,9 @@
         <h3 class="panel-title">{{ 'Servers settings'|trans({}, 'ldap') }}</h3>
     </div>
     <div class="panel-body ldap-settings">
-        <label>{{ 'Allow account creation at the first login' | trans({}, 'ldap') }}</label>
+        {#<label>{{ 'Allow account creation at the first login' | trans({}, 'ldap') }}</label>
         <input type="checkbox" id="userCreation"{% if userCreation %} checked="checked"{% endif%}>
-        <hr>
+        <hr>#}
         <div class="clearfix">
             {% for server in servers %}
                 <div class="content-6 alert alert-default">
