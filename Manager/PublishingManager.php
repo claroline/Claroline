@@ -362,7 +362,7 @@ class PublishingManager
             }
 
             // Get Inherited Resources Nodes
-            $inheritedResources = $step->getInheritedResources;
+            $inheritedResources = $step->getInheritedResources();
             if (!empty($inheritedResources)) {
                 foreach ($inheritedResources as $inherited) {
                     $nodes[] = $inherited->getResourceNode();
