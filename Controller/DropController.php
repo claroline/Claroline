@@ -602,7 +602,9 @@ class DropController extends DropzoneBaseController
             ->getRepository('IcapDropzoneBundle:Correction')
             ->countFinished($dropzone, $user);
 
-        if ($dropzone->getDiplayCorrectionsToLearners() && $drop->countFinishedCorrections() >= $dropzone->getExpectedTotalCorrection() && $dropzone->getExpectedTotalCorrection() <= $nbCorrections) {
+        if ($dropzone->getDiplayCorrectionsToLearners() && $drop->countFinishedCorrections() >= $dropzone->getExpectedTotalCorrection() &&
+            $dropzone->getExpectedTotalCorrection() <= $nbCorrections || ($dropzone->isFinished() && $dropzone->getDiplayCorrectionsToLearners())
+        ) {
             $showCorrections = true;
         }
 
