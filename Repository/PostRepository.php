@@ -198,7 +198,8 @@ class PostRepository extends EntityRepository
 
         if (null !== $tag) {
             $query
-                ->andWhere('tags.id = :tagId')
+                ->join('post.tags', 'pt')
+                ->andWhere('pt.id = :tagId')
                 ->setParameter('tagId', $tag->getId())
             ;
         } elseif (null !== $author) {
