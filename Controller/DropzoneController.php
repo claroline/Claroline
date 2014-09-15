@@ -98,125 +98,131 @@ class DropzoneController extends DropzoneBaseController
 
                 // var_dump($this->getRequest()->request->all());
                 $form_array = $this->getRequest()->request->get('icap_dropzone_common_form');
-                // reconstruction of datetimes.
 
-                if (array_key_exists('startAllowDrop', $form_array)) {
-                    $dateStr = implode(' ', $form_array['startAllowDrop']);
-                    if ($this->validateDate($dateStr)) {
-                        $startAllowDrop = new DateTime($dateStr);
-                        $dropzone->setStartAllowDrop($startAllowDrop);
-                    }
-                }
+                if (is_array($form_array)) {
+                    // reconstruction of datetimes.
 
-                if (array_key_exists('endAllowDrop', $form_array)) {
-                    $dateStr = implode(' ', $form_array['endAllowDrop']);
-                    if ($this->validateDate($dateStr)) {
-                        $endAllowDrop = new DateTime($dateStr);
-                        $dropzone->setEndAllowDrop($endAllowDrop);
-                    }
-                }
-
-                if (array_key_exists('endReview', $form_array)) {
-                    $dateStr = implode(' ', $form_array['endReview']);
-                    if ($this->validateDate($dateStr)) {
-                        $endReview = new DateTime(implode(' ', $form_array['endReview']));
-                        $dropzone->setEndReview($endReview);
-                    }
-                }
-
-                if (array_key_exists('endAllowDrop', $form_array)) {
-                    $dateStr = implode(' ', $form_array['endAllowDrop']);
-                    if ($this->validateDate($dateStr)) {
-                        $endAllowDrop = new DateTime(implode(' ', $form_array['endAllowDrop']));
-                        $dropzone->setEndAllowDrop($endAllowDrop);
-                    }
-                }
-
-                $AgendaManager = $this->get('claroline.manager.agenda_manager');
-                $workspace = $dropzone->getResourceNode()->getWorkspace();
-                //Set the Agenda Drop Events.
-                if ($dropzone->getStartAllowDrop() != NULL && $dropzone->getEndAllowDrop() != NULL) {
-
-                    //if event already exist
-                    if ($dropzone->getEventDrop() != null) {
-
-
-                        // update event
-                        $eventDrop = $dropzone->getEventDrop();
-                        $eventDrop->setStart($dropzone->getStartAllowDrop());
-                        $eventDrop->setEnd($dropzone->getEndAllowDrop());
-
-                        $AgendaManager->updateEvent($eventDrop);
-
-                    } else {
-                        //if event doesn't exist
-                        // create event
-                        $eventDrop = $this->createAgendaEventDrop($dropzone->getStartAllowDrop(), $dropzone->getEndAllowDrop(), $user, $dropzone, 'drop');
-                        // event creation + link to workspace
-                        $AgendaManager->addEvent($eventDrop, $workspace);
-                        // link btween the event and the dropzone
-                        $dropzone->setEventDrop($eventDrop);
+                    if (array_key_exists('startAllowDrop', $form_array)) {
+                        $dateStr = implode(' ', $form_array['startAllowDrop']);
+                        if ($this->validateDate($dateStr)) {
+                            $startAllowDrop = new DateTime($dateStr);
+                            $dropzone->setStartAllowDrop($startAllowDrop);
+                        }
                     }
 
-                }
+                    if (array_key_exists('endAllowDrop', $form_array)) {
+                        $dateStr = implode(' ', $form_array['endAllowDrop']);
+                        if ($this->validateDate($dateStr)) {
+                            $endAllowDrop = new DateTime($dateStr);
+                            $dropzone->setEndAllowDrop($endAllowDrop);
+                        }
+                    }
 
-                //Set the Agenda Review Events.
-                if ($dropzone->getStartReview() != NULL && $dropzone->getEndReview() != NULL) {
+                    if (array_key_exists('endReview', $form_array)) {
+                        $dateStr = implode(' ', $form_array['endReview']);
+                        if ($this->validateDate($dateStr)) {
+                            $endReview = new DateTime(implode(' ', $form_array['endReview']));
+                            $dropzone->setEndReview($endReview);
+                        }
+                    }
 
-                    // if event is already linked.
-                    if ($dropzone->getEventCorrection() != null) {
-                        //update event
-                        $eventCorrection = $dropzone->getEventCorrection();
-                        $eventCorrection->setStart($dropzone->getStartReview());
-                        $eventCorrection->setEnd($dropzone->getEndReview());
-                        $AgendaManager->updateEvent($eventCorrection);
-                    } else {
-                        //create event
-                        $eventReview = $this->createAgendaEventDrop($dropzone->getStartReview(), $dropzone->getEndReview(), $user, $dropzone, 'correction');
+                    if (array_key_exists('endAllowDrop', $form_array)) {
+                        $dateStr = implode(' ', $form_array['endAllowDrop']);
+                        if ($this->validateDate($dateStr)) {
+                            $endAllowDrop = new DateTime(implode(' ', $form_array['endAllowDrop']));
+                            $dropzone->setEndAllowDrop($endAllowDrop);
+                        }
+                    }
 
-                        $AgendaManager->addEvent($eventReview, $workspace);
-                        $dropzone->setEventCorrection($eventReview);
+                    $AgendaManager = $this->get('claroline.manager.agenda_manager');
+                    $workspace = $dropzone->getResourceNode()->getWorkspace();
+                    //Set the Agenda Drop Events.
+                    if ($dropzone->getStartAllowDrop() != NULL && $dropzone->getEndAllowDrop() != NULL) {
+
+                        //if event already exist
+                        if ($dropzone->getEventDrop() != null) {
+
+
+                            // update event
+                            $eventDrop = $dropzone->getEventDrop();
+                            $eventDrop->setStart($dropzone->getStartAllowDrop());
+                            $eventDrop->setEnd($dropzone->getEndAllowDrop());
+
+                            $AgendaManager->updateEvent($eventDrop);
+
+                        } else {
+                            //if event doesn't exist
+                            // create event
+                            $eventDrop = $this->createAgendaEventDrop($dropzone->getStartAllowDrop(), $dropzone->getEndAllowDrop(), $user, $dropzone, 'drop');
+                            // event creation + link to workspace
+                            $AgendaManager->addEvent($eventDrop, $workspace);
+                            // link btween the event and the dropzone
+                            $dropzone->setEventDrop($eventDrop);
+                        }
 
                     }
-                }
 
-                //$dropzone->setStartAllowDrop()
-                /*var_dump( $test_date);
-                var_dump($form_array);
-                die;
-                */
-                if ($dropzone->getStartAllowDrop() == null) {
-                    $form->get('startAllowDrop')->addError(new FormError('Choose a date'));
-                }
-                if ($dropzone->getEndAllowDrop() == null) {
-                    $form->get('endAllowDrop')->addError(new FormError('Choose a date'));
-                }
-                if ($dropzone->getPeerReview() && $dropzone->getEndReview() == null) {
-                    $form->get('endReview')->addError(new FormError('Choose a date'));
-                }
-                if ($dropzone->getStartAllowDrop() != null && $dropzone->getEndAllowDrop() != null) {
-                    if ($dropzone->getStartAllowDrop()->getTimestamp() > $dropzone->getEndAllowDrop()->getTimestamp()) {
-                        $form->get('startAllowDrop')->addError(new FormError('Must be before end allow drop'));
-                        $form->get('endAllowDrop')->addError(new FormError('Must be after start allow drop'));
+                    //Set the Agenda Review Events.
+                    if ($dropzone->getStartReview() != NULL && $dropzone->getEndReview() != NULL) {
+
+                        // if event is already linked.
+                        if ($dropzone->getEventCorrection() != null) {
+                            //update event
+                            $eventCorrection = $dropzone->getEventCorrection();
+                            $eventCorrection->setStart($dropzone->getStartReview());
+                            $eventCorrection->setEnd($dropzone->getEndReview());
+                            $AgendaManager->updateEvent($eventCorrection);
+                        } else {
+                            //create event
+                            $eventReview = $this->createAgendaEventDrop($dropzone->getStartReview(), $dropzone->getEndReview(), $user, $dropzone, 'correction');
+
+                            $AgendaManager->addEvent($eventReview, $workspace);
+                            $dropzone->setEventCorrection($eventReview);
+
+                        }
                     }
-                }
-                if ($dropzone->getStartReview() != null && $dropzone->getEndReview() != null) {
-                    if ($dropzone->getStartReview()->getTimestamp() > $dropzone->getEndReview()->getTimestamp()) {
-                        $form->get('startReview')->addError(new FormError('Must be before end peer review'));
-                        $form->get('endReview')->addError(new FormError('Must be after start peer review'));
+
+                    //$dropzone->setStartAllowDrop()
+                    /*var_dump( $test_date);
+                    var_dump($form_array);
+                    die;
+                    */
+                    if ($dropzone->getStartAllowDrop() == null) {
+                        $form->get('startAllowDrop')->addError(new FormError('Choose a date'));
                     }
-                }
-                if ($dropzone->getStartAllowDrop() != null && $dropzone->getStartReview() != null) {
-                    if ($dropzone->getStartAllowDrop()->getTimestamp() > $dropzone->getStartReview()->getTimestamp()) {
-                        $form->get('startReview')->addError(new FormError('Must be after start allow drop'));
-                        $form->get('startAllowDrop')->addError(new FormError('Must be before start peer review'));
+                    if ($dropzone->getEndAllowDrop() == null) {
+                        $form->get('endAllowDrop')->addError(new FormError('Choose a date'));
                     }
-                }
-                if ($dropzone->getEndAllowDrop() != null && $dropzone->getEndReview() != null) {
-                    if ($dropzone->getEndAllowDrop()->getTimestamp() > $dropzone->getEndReview()->getTimestamp()) {
-                        $form->get('endReview')->addError(new FormError('Must be after end allow drop'));
-                        $form->get('endAllowDrop')->addError(new FormError('Must be before end peer review'));
+                    if ($dropzone->getPeerReview() && $dropzone->getEndReview() == null) {
+                        $form->get('endReview')->addError(new FormError('Choose a date'));
                     }
+                    if ($dropzone->getStartAllowDrop() != null && $dropzone->getEndAllowDrop() != null) {
+                        if ($dropzone->getStartAllowDrop()->getTimestamp() > $dropzone->getEndAllowDrop()->getTimestamp()) {
+                            $form->get('startAllowDrop')->addError(new FormError('Must be before end allow drop'));
+                            $form->get('endAllowDrop')->addError(new FormError('Must be after start allow drop'));
+                        }
+                    }
+                    if ($dropzone->getStartReview() != null && $dropzone->getEndReview() != null) {
+                        if ($dropzone->getStartReview()->getTimestamp() > $dropzone->getEndReview()->getTimestamp()) {
+                            $form->get('startReview')->addError(new FormError('Must be before end peer review'));
+                            $form->get('endReview')->addError(new FormError('Must be after start peer review'));
+                        }
+                    }
+                    if ($dropzone->getStartAllowDrop() != null && $dropzone->getStartReview() != null) {
+                        if ($dropzone->getStartAllowDrop()->getTimestamp() > $dropzone->getStartReview()->getTimestamp()) {
+                            $form->get('startReview')->addError(new FormError('Must be after start allow drop'));
+                            $form->get('startAllowDrop')->addError(new FormError('Must be before start peer review'));
+                        }
+                    }
+                    if ($dropzone->getEndAllowDrop() != null && $dropzone->getEndReview() != null) {
+                        if ($dropzone->getEndAllowDrop()->getTimestamp() > $dropzone->getEndReview()->getTimestamp()) {
+                            $form->get('endReview')->addError(new FormError('Must be after end allow drop'));
+                            $form->get('endAllowDrop')->addError(new FormError('Must be before end peer review'));
+                        }
+                    }
+                } else {
+                    //$form_array is not an array
+                    $form->get('ManualPlanning')->addError(new FormError(''));
                 }
             } else {
                 // if manual mode, we delete agenda events related to
