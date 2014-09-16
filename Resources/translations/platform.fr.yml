@@ -79,9 +79,9 @@ activity_past_evaluation_form_date: Date
 activity_past_evaluation_form_numScore: Score
 activity_past_evaluation_form_score: Evaluation
 activity_past_evaluation_form_status: Statut
-activity_remove_primary_resource: Enlever la resource primaire
+activity_remove_primary_resource: Enlever la ressource primaire
 activity_resource_not_allowed: Vous ne pouvez pas ajouter une ressource de ce type
-activity_resource_remove: Êtes-vous sûr de vouloir enlever cette ressource de l'activite?
+activity_resource_remove: Êtes-vous sûr de vouloir enlever cette ressource de l'activité?
 activity_rule_action_none: Aucune
 activity_rule_configuration_for_auto_evaluation: 'Configuration de la règle pour l''évaluation automatique'
 activity_rule_form_action: Action
@@ -444,7 +444,7 @@ keep_me_logged_in: 'Se souvenir de moi'
 lastName: Nom
 last_30_days_activity: 'Activités des 30 derniers jours'
 last_attempt_date: 'Date de la dernière tentative'
-last_manager_error_message: Vous ne pouvez pas retirer tout les gestionnaires.
+last_manager_error_message: Vous ne pouvez pas retirer tous les gestionnaires.
 last_name: Nom
 layout: Layout
 learning_outcomes: 'Référentiel de compétences'
@@ -741,7 +741,6 @@ role_edition: 'Modification d''un rôle'
 role_limit_reached: La limite d'utilisateur de type %translationKey% a été atteinte.
 role_limit_reached: La limite d'utilisateurs de type %translationKey% a été atteinte.
 role_list: Liste des roles
-role_list: Liste des rôles
 role_name_changed_success: Le nom du rôle a été mis à jour avec succès.
 role_name_type_form_translationKey: Nom
 roles: Rôles
@@ -818,7 +817,7 @@ subscribe_selected_users: 'Inscrire les utilisateurs sélectionnés'
 subscribe_users: 'Inscrire des utilisateurs'
 subscription: Inscription
 success_rate: 'Taux de réussite'
-successfull_workspace_creation: L'espace d'activité %name% a été créé avec succès.
+successfull_workspace_creation: L'espace d'activités %name% a été créé avec succès.
 support_email: 'Email du support'
 switch: Echanger
 tag: Tag
@@ -836,7 +835,7 @@ text_form_content: Contenu
 text_form_name: Nom
 text_form_shareType: Redistribution
 text_form_text: Texte
-the_following_users_were_not_imported: 'Les utilisateurs suivant n''ont pas pu être importés:'
+the_following_users_were_not_imported: 'Les utilisateurs suivants n''ont pas pu être importés:'
 the_workspace: 'L''espace d''activités'
 this_page_requires_authentication: 'Cette page requiert une authentification. Veuillez vous identifier.'
 time_col: 'Colonne des durées'
