@@ -65,9 +65,12 @@ class TextImporter extends Importer implements ConfigurationInterface, RichTextI
     public function import(array $data, WidgetInstance $widgetInstance)
     {
         $widgetText = new SimpleTextConfig();
-        $content = file_get_contents(
-            $this->getRootPath() . DIRECTORY_SEPARATOR . $data[0]['content']
-        );
+        $content = '';
+
+        if ($data[0]['content']) {
+            $content = file_get_contents($this->getRootPath() . DIRECTORY_SEPARATOR . $data[0]['content']);
+        }
+
         $widgetText->setContent($content);
         $widgetText->setWidgetInstance($widgetInstance);
         $this->om->persist($widgetText);
@@ -107,4 +110,4 @@ class TextImporter extends Importer implements ConfigurationInterface, RichTextI
     {
 
     }
-} 
+}

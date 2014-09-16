@@ -55,17 +55,6 @@ abstract class Importer
         return $this->configuration;
     }
 
-    /**
-     * @param Workspace $workspace
-     * @param array $files
-     * @param mixed $object
-     * @throws ExportNotImplementedException
-     */
-    public function export(Workspace $workspace, array &$files, $object)
-    {
-        throw new ExportNotImplementedException('The export is not implemented');
-    }
-
     protected function getImporterByName($name)
     {
         foreach ($this->listImporters as $importer) {
@@ -140,4 +129,11 @@ abstract class Importer
     abstract function getName();
 
     abstract function validate(array $data);
+
+    /**
+     * @param Workspace $workspace
+     * @param array $files
+     * @param mixed $object
+     */
+     abstract function export(Workspace $workspace, array &$files, $object);
 } 

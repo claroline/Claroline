@@ -83,11 +83,11 @@ class TextImporter extends Importer implements ConfigurationInterface
         $content = $this->om->getRepository('Claroline\CoreBundle\Entity\Revision')
             ->getLastRevision($object)->getContent();
 
-        var_dump($content);
+        return array();
     }
 
     public function getName()
     {
-        return 'text_importer';
+        return 'text';
     }
 } 

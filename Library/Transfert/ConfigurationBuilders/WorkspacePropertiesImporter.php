@@ -17,7 +17,7 @@ use Claroline\CoreBundle\Library\Transfert\Importer;
 use Symfony\Component\Config\Definition\Processor;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
-use Claroline\CoreBundle\Entity\Workspace\SimpleWorkspace;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 
 /**
  * @DI\Service("claroline.importer.properties_importer")
@@ -106,5 +106,10 @@ class WorkspacePropertiesImporter extends Importer implements ConfigurationInter
             ->findOneByUsername($owner);
 
         return true;
+    }
+
+    public function export(Workspace $workspace, array &$files, $object)
+    {
+        return array();
     }
 }

@@ -265,37 +265,29 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
         }
 
         foreach ($resourceNodes as $resourceNode) {
-            if ($resourceNode->getParent() !== null) {
-                $children = $resourceNode->getChildren();
+            $children = $resourceNode->getChildren();
 
-                foreach ($children as $child) {
+            foreach ($children as $child) {
+                if ($child->getResourceType()->getName() !== 'directory') {
+                    $importer = $this->getImporterByName($child->getResourceType()->getName());
 
-                    if ($child->getResourceType()->getName() !== 'directory') {
-                        try {
-                            $importer = $this->getImporterByName($child->getResourceType()->getName());
-
-                            if ($importer) {
-                                $childData = $importer->export(
-                                    $workspace,
-                                    $files,
-                                    $this->resourceManager->getResourceFromNode($child)
-                                );
-                            }
-
-                        } catch (ExportNotImplementedException $e) {
-                            //well it didn't go so well
-                        }
-
-                        $data['items'][] = array('item' => array(
-                            'name'    => $child->getName(),
-                            'creator' => null,
-                            'parent'  => $resourceNode->getId(),
-                            'type'    => $child->getResourceType()->getName(),
-                            'roles'   => $this->getPermsArray($child),
-                            'uid'     => $child->getId(),
-                            'data'    => $childData
-                        ));
+                    if ($importer) {
+                        $childData = $importer->export(
+                            $workspace,
+                            $files,
+                            $this->resourceManager->getResourceFromNode($child)
+                        );
                     }
+
+                    $data['items'][] = array('item' => array(
+                        'name'    => $child->getName(),
+                        'creator' => null,
+                        'parent'  => $resourceNode->getId(),
+                        'type'    => $child->getResourceType()->getName(),
+                        'roles'   => $this->getPermsArray($child),
+                        'uid'     => $child->getId(),
+                        'data'    => $childData
+                    ));
                 }
             }
         }

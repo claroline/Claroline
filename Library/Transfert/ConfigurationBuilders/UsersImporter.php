@@ -18,6 +18,7 @@ use Symfony\Component\Config\Definition\Processor;
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Library\Transfert\Merger;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 
 /**
  * @DI\Service("claroline.importer.users_importer")
@@ -183,5 +184,10 @@ class UsersImporter extends Importer implements ConfigurationInterface
     public static function ownerAlreadyExists($v, $owner)
     {
         return $owner === $v ? true: false;
+    }
+
+    public function export(Workspace $workspace, array &$files, $object)
+    {
+        return array();
     }
 }

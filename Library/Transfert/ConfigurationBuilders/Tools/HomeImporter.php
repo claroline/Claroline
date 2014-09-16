@@ -198,16 +198,12 @@ class HomeImporter extends Importer implements ConfigurationInterface, RichTextI
 
             foreach ($widgetConfigs as $widgetConfig) {
                 $data = [];
-                try {
-                    $importer = $this->getImporterByName($widgetConfig->getWidgetInstance()->getWidget()->getName());
+                $importer = $this->getImporterByName($widgetConfig->getWidgetInstance()->getWidget()->getName());
 
-                    if ($importer) {
-                        $data = $importer->export($workspace, $files, $widgetConfig->getWidgetInstance());
-                    }
-
-                } catch (ExportNotImplementedException $e) {
-                    //well it didn't go so well
+                if ($importer) {
+                    $data = $importer->export($workspace, $files, $widgetConfig->getWidgetInstance());
                 }
+
                 //export the widget content here
                 $widgetData = array('widget' => array(
                     'name' => $widgetConfig->getWidgetInstance()->getName(),

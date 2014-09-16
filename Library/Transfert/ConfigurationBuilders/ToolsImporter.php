@@ -190,15 +190,10 @@ class ToolsImporter extends Importer implements ConfigurationInterface
                 'roles'       => $roles
             );
 
-            try {
-                $importer = $this->getImporterByName($workspaceTool->getTool()->getName());
+            $importer = $this->getImporterByName($workspaceTool->getTool()->getName());
 
-                if ($importer) {
-                    $tool['data'] = $importer->export($workspace, $files, null);
-                }
-
-            } catch (ExportNotImplementedException $e) {
-                //well it didn't go so well
+            if ($importer) {
+                $tool['data'] = $importer->export($workspace, $files, null);
             }
 
             $data[$i] = array('tool' => $tool);
