@@ -186,7 +186,12 @@
                 url: route,
                 type: 'DELETE',
                 success: function() {
-                    target.parent().parent().parent().remove();
+                    console.log(target.parents('td').first().find('span').length);
+                    if (target.parents('td').first().find('span').length === 1) {
+                        target.parents('tr').first().remove();
+                    } else {
+                        target.parent().remove();
+                    }
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
                     window.Claroline.Modal.hide();
