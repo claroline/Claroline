@@ -519,4 +519,22 @@ class RightsManager
 
         $this->om->endFlushSuite();
     }
+
+    public function getRightsFromIdentityMap($roleName, ResourceNode $resourceNode)
+    {
+        $map = $this->om->getUnitOfWork()->getIdentityMap();
+        $result = null;
+
+        foreach ($map['Claroline\CoreBundle\Entity\Resource\ResourceRights'] as $right) {
+
+            if ($right->getRole()->getName() === $roleName &&
+                $right->getResourceNode() === $resourceNode) {
+
+                $result = $right;
+                break;
+            }
+        }
+
+        return $result;
+    }
 }

@@ -28,7 +28,8 @@ use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
 use Claroline\CoreBundle\Library\Workspace\Configuration;
 use Claroline\CoreBundle\Manager\HomeTabManager;
 use Claroline\CoreBundle\Manager\MaskManager;
-use Claroline\CoreBundle\Manager\ResourceManager;
+use Claroline\CoreBundle\Manager\ResourceManager;;
+use Claroline\CoreBundle\Manager\RightsManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Pager\PagerFactory;
 use Claroline\CoreBundle\Persistence\ObjectManager;
@@ -88,6 +89,7 @@ class WorkspaceManager
     private $pagerFactory;
     private $workspaceFavouriteRepo;
     private $container;
+    private $rightsManager;
 
     /**
      * Constructor.
@@ -104,7 +106,8 @@ class WorkspaceManager
      *     "sut"             = @DI\Inject("claroline.security.utilities"),
      *     "templateDir"     = @DI\Inject("%claroline.param.templates_directory%"),
      *     "pagerFactory"    = @DI\Inject("claroline.pager.pager_factory"),
-     *     "container"       = @DI\Inject("service_container")
+     *     "container"       = @DI\Inject("service_container"),
+     *     "rightsManager"   = @DI\Inject("claroline.manager.rights_manager")
      * })
      */
     public function __construct(
@@ -119,7 +122,8 @@ class WorkspaceManager
         Utilities $sut,
         $templateDir,
         PagerFactory $pagerFactory,
-        ContainerInterface $container
+        ContainerInterface $container,
+        RightsManager $rightsManager
     )
     {
         $this->homeTabManager = $homeTabManager;
@@ -143,6 +147,7 @@ class WorkspaceManager
         $this->workspaceFavouriteRepo = $om->getRepository('ClarolineCoreBundle:Workspace\WorkspaceFavourite');
         $this->pagerFactory = $pagerFactory;
         $this->container = $container;
+        $this->rightsManager = $rightsManager;
     }
 
     /**
@@ -829,7 +834,11 @@ class WorkspaceManager
      * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $source
      * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
      */
-    public function duplicateWorkspaceRoles(Workspace $source, Workspace $workspace)
+    public function duplicateWorkspaceRoles(
+        Workspace $source,
+        Workspace $workspace,
+        User $user
+    )
     {
         $guid = $workspace->getGuid();
         $roles = $source->getRoles();
@@ -840,12 +849,17 @@ class WorkspaceManager
         foreach ($roles as $role) {
             $roleName = str_replace($unusedRolePartName, '', $role->getName());
 
-            $this->roleManager->createWorkspaceRole(
+            $createdRole = $this->roleManager->createWorkspaceRole(
                 $roleName . '_' . $guid,
                 $role->getTranslationKey(),
                 $workspace,
                 $role->isReadOnly()
             );
+
+            if ($roleName === 'ROLE_WS_MANAGER') {
+                $user->addRole($createdRole);
+                $this->om->persist($user);
+            }
         }
         $this->om->endFlushSuite();
     }
@@ -932,19 +946,20 @@ class WorkspaceManager
         $root = $this->resourceManager->getWorkspaceRoot($source);
         $rights = $root->getRights();
 
-//        $errors = array();
-//        foreach ($rights as $right) {
-//            $errors[] = array(
-//                'resourceNode' => $right->getResourceNode()->getId(),
-//                'mask' => $right->getMask(),
-//                'role' => $right->getRole()->getTranslationKey()
-//            );
-//        }
-//        throw new \Exception(var_dump($errors));
         foreach ($rights as $right) {
             $role = $right->getRole();
-            
-            if ($role->getType() !== 1) {
+
+            if ($role->getType() === 1) {
+                $newRight = $this->rightsManager->getRightsFromIdentityMap(
+                    $role->getName(),
+                    $resource->getResourceNode()
+                );
+                $newRight->setMask($right->getMask());
+                $newRight->setCreatableResourceTypes(
+                    $right->getCreatableResourceTypes()->toArray()
+                );
+
+            } else {
                 $newRight = new ResourceRights();
                 $newRight->setResourceNode($resource->getResourceNode());
                 $newRight->setMask($right->getMask());
@@ -964,28 +979,6 @@ class WorkspaceManager
                 $this->om->persist($newRight);
             }
         }
-
-//        foreach ($rights as $right) {
-//            $newRight = new ResourceRights();
-//            $newRight->setResourceNode($resource->getResourceNode());
-//            $newRight->setMask($right->getMask());
-////            $newRight->setCreatableResourceTypes(
-////                $right->getCreatableResourceTypes()->toArray()
-////            );
-//
-//            $role = $right->getRole();
-//
-//            if ($role->getType() === 1) {
-//                $newRight->setRole($role);
-//            } else {
-//                $key = $role->getTranslationKey();
-//
-//                if (isset($workspaceRoles[$key]) && !empty($workspaceRoles[$key])) {
-//                    $newRight->setRole($workspaceRoles[$key]);
-//                }
-//            }
-//            $this->om->persist($newRight);
-//        }
         $this->om->flush();
 
         return $resource;

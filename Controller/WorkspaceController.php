@@ -316,8 +316,8 @@ class WorkspaceController extends Controller
 
                 $user = $this->security->getToken()->getUser();
                 $this->workspaceManager->create($config, $user);
-                $this->tokenUpdater->update($this->security->getToken());
             }
+            $this->tokenUpdater->update($this->security->getToken());
             $route = $this->router->generate('claro_workspace_by_user');
 
             $msg = $this->get('translator')->trans(
@@ -1176,7 +1176,7 @@ class WorkspaceController extends Controller
 
         $this->workspaceManager->createWorkspace($workspace);
         $this->workspaceManager
-            ->duplicateWorkspaceRoles($modelWorkspace, $workspace);
+            ->duplicateWorkspaceRoles($modelWorkspace, $workspace, $user);
         $this->workspaceManager
             ->duplicateOrderedTools($modelWorkspace, $workspace);
         $rootDirectory = $this->workspaceManager
