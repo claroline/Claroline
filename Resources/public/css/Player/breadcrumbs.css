@@ -152,3 +152,10 @@
 .path-player .breadcrumbs ul > li.ghost:hover {
     opacity:1;   
 }
+
+
+/* CHROME HACK FOR OUTLINED BUTTON WHEN FOCUSED */
+.btn:focus {
+    outline: none;
+}
+
