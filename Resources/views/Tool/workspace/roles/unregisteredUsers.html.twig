@@ -154,18 +154,20 @@
                                 <td>{{ user.getFirstName() }}</td>
                                 <td>{{ user.getMail() }}</td>
                                 <td>
-                                    {% for role in user.getEntityRoles() %}
+                                    {% for role in user.getEntityRoles(false) %}
                                         {% if role.getWorkspace() == workspace %}
-                                            <span class="label label-success" id="label-{{ role.getId () }}-{{ user.getId()}}">
+                                            <span class="label label-success" id="label-{{ role.getId() }}-{{ user.getId()}}">
                                                 {{ role.getTranslationKey()|trans({}, 'platform') }}
                                             </span>
                                         {% endif %}
                                     {% endfor %}
+                                    
                                     {% set groups = user.getGroups() %}
-                                        {% for group in groups %}
+                                    
+                                    {% for group in groups %}
                                         {% for role in group.getEntityRoles() %}
                                             {% if role.getWorkspace() == workspace %}
-                                                <span title="{{ group.getName() }}" class="label label-default" id="label-{{ role.getId () }}-{{ user.getId()}}">
+                                                <span title="{{ group.getName() }}" class="label label-default" id="label-{{ role.getId() }}-{{ user.getId()}}">
                                                     {{ role.getTranslationKey()|trans({}, 'platform') }}
                                                 </span>
                                             {% endif %}
