@@ -126,7 +126,7 @@ class WorkspaceModel
         $this->resourcesModel = $resourceModel;
     }
 
-    public function getResourceModel()
+    public function getResourcesModel()
     {
         return $this->resourcesModel;
     }

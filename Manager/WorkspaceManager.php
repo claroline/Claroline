@@ -912,7 +912,7 @@ class WorkspaceManager
         $rootDirectory = new Directory();
         $rootDirectory->setName($workspace->getName());
         $directoryType = $this->resourceManager->getResourceTypeByName('directory');
-        $this->resourceManager->create(
+        $resource = $this->resourceManager->create(
             $rootDirectory,
             $directoryType,
             $user,
@@ -921,23 +921,57 @@ class WorkspaceManager
             null,
             array()
         );
-//        $workspaceRoles = array();
-//        $wRoles = $this->roleManager->getRolesByWorkspace($workspace);
-//
-//        foreach ($wRoles as $wRole) {
-//            $workspaceRoles[$wRole->getTranslationKey()] = $wRole;
-//        }
 
-//        $root = $this->resourceManager->getWorkspaceRoot($source);
-//        $rights = $root->getRights();
-//
+        $workspaceRoles = array();
+        $wRoles = $this->roleManager->getRolesByWorkspace($workspace);
+
+        foreach ($wRoles as $wRole) {
+            $workspaceRoles[$wRole->getTranslationKey()] = $wRole;
+        }
+
+        $root = $this->resourceManager->getWorkspaceRoot($source);
+        $rights = $root->getRights();
+
+//        $errors = array();
+//        foreach ($rights as $right) {
+//            $errors[] = array(
+//                'resourceNode' => $right->getResourceNode()->getId(),
+//                'mask' => $right->getMask(),
+//                'role' => $right->getRole()->getTranslationKey()
+//            );
+//        }
+//        throw new \Exception(var_dump($errors));
+        foreach ($rights as $right) {
+            $role = $right->getRole();
+            
+            if ($role->getType() !== 1) {
+                $newRight = new ResourceRights();
+                $newRight->setResourceNode($resource->getResourceNode());
+                $newRight->setMask($right->getMask());
+                $newRight->setCreatableResourceTypes(
+                    $right->getCreatableResourceTypes()->toArray()
+                );
+
+                if ($role->getWorkspace() === $source) {
+                    $key = $role->getTranslationKey();
+
+                    if (isset($workspaceRoles[$key]) && !empty($workspaceRoles[$key])) {
+                        $newRight->setRole($workspaceRoles[$key]);
+                    }
+                } else {
+                    $newRight->setRole($role);
+                }
+                $this->om->persist($newRight);
+            }
+        }
+
 //        foreach ($rights as $right) {
 //            $newRight = new ResourceRights();
-//            $newRight->setResourceNode($rootDirectory->getResourceNode());
+//            $newRight->setResourceNode($resource->getResourceNode());
 //            $newRight->setMask($right->getMask());
-//            $newRight->setCreatableResourceTypes(
-//                $right->getCreatableResourceTypes()->toArray()
-//            );
+////            $newRight->setCreatableResourceTypes(
+////                $right->getCreatableResourceTypes()->toArray()
+////            );
 //
 //            $role = $right->getRole();
 //
@@ -952,7 +986,9 @@ class WorkspaceManager
 //            }
 //            $this->om->persist($newRight);
 //        }
-//        $this->om->flush();
+        $this->om->flush();
+
+        return $resource;
     }
 
     public function duplicateHomeTabs(
@@ -1030,6 +1066,11 @@ class WorkspaceManager
         $this->om->endFlushSuite();
 
         return $widgetCongigErrors;
+    }
+
+    public function duplicateResources()
+    {
+        
     }
 
     /**

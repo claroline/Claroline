@@ -1157,7 +1157,7 @@ class WorkspaceController extends Controller
     {
         $user = $this->security->getToken()->getUser();
         $modelWorkspace = $model->getWorkspace();
-        $resourceModels = $model->getResourceModel();
+        $resourcesModels = $model->getResourcesModel();
         $homeTabs = $model->getHomeTabs();
 
         $workspace = new Workspace();
@@ -1179,7 +1179,7 @@ class WorkspaceController extends Controller
             ->duplicateWorkspaceRoles($modelWorkspace, $workspace);
         $this->workspaceManager
             ->duplicateOrderedTools($modelWorkspace, $workspace);
-        $this->workspaceManager
+        $rootDirectory = $this->workspaceManager
             ->duplicateRootDirectory($modelWorkspace, $workspace, $user);
         $widgetConfigErrors = $this->workspaceManager
             ->duplicateHomeTabs($modelWorkspace, $workspace, $homeTabs->toArray());
@@ -1200,6 +1200,9 @@ class WorkspaceController extends Controller
 
             $flashBag->add('error', $msg);
         }
+
+        $this->workspaceManager
+            ->duplicateResources($resourcesModels, $rootDirectory);
     }
 
     private function assertIsGranted($attributes, $object = null)
