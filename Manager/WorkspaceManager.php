@@ -1032,7 +1032,7 @@ class WorkspaceManager
                         $this->dispatcher->dispatch(
                             'copy_widget_config_' . $widget->getName(),
                             'CopyWidgetConfiguration',
-                            array($widgetInstance, $newWidgetInstance, $workspace)
+                            array($widgetInstance, $newWidgetInstance)
                         );
                     } catch (NotPopulatedEventException $e) {
                         $widgetCongigErrors[] = array(
