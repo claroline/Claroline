@@ -1,10 +1,10 @@
 {% for tool in tools %}
-<a class="list-group-item{{ path('claro_desktop_open_tool', {'toolName': tool.getName() }) | compareRoute(" active") | raw }}"
-    href="{{ path('claro_desktop_open_tool', {'toolName': tool.getName() }) }}"
+<li class="{{ path('claro_desktop_open_tool', {'toolName': tool.getName() }) | compareRoute(" active") | raw }}">
+<a href="{{ path('claro_desktop_open_tool', {'toolName': tool.getName() }) }}"
     id="{{ tool.getName() }}-link"
     data-original-title="{{ tool.getName()|trans({}, 'tools') }}"
-    >
+    title="{{ tool.getDisplayName()|trans({}, 'tools') }}" data-toggle="tooltip" data-placement="bottom">
     <i class="fa fa-{{ tool.getClass() }}"></i>
-    <span>{{ tool.getDisplayName()|trans({}, 'tools') }}</span>
 </a>
+</li>
 {% endfor %}
