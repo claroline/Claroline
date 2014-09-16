@@ -424,7 +424,7 @@
             editable: true,
             events: $('a#link').attr('href'),
             axisFormat: 'HH:mm',
-            timeFormat: 'H(:mm)',
+            timeFormat: 'H:mm',
             agenda: 'h:mm{ - h:mm}',
             '': 'h:mm{ - h:mm}',
             minTime: 0,
