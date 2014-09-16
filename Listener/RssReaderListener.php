@@ -11,15 +11,17 @@
 
 namespace Claroline\RssReaderBundle\Listener;
 
-use Claroline\CoreBundle\Event\DisplayWidgetEvent;
 use Claroline\CoreBundle\Event\ConfigureWidgetEvent;
-use Claroline\RssReaderBundle\Form\ConfigType;
-use Symfony\Bundle\TwigBundle\TwigEngine;
-use Claroline\RssReaderBundle\Library\RssManager;
-use Symfony\Component\Form\FormFactory;
-use Claroline\RssReaderBundle\Library\ReaderProvider;
-use JMS\DiExtraBundle\Annotation as DI;
+use Claroline\CoreBundle\Event\CopyWidgetConfigurationEvent;
+use Claroline\CoreBundle\Event\DisplayWidgetEvent;
+use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\RssReaderBundle\Entity\Config;
+use Claroline\RssReaderBundle\Form\ConfigType;
+use Claroline\RssReaderBundle\Library\ReaderProvider;
+use Claroline\RssReaderBundle\Library\RssManager;
+use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Bundle\TwigBundle\TwigEngine;
+use Symfony\Component\Form\FormFactory;
 
 
 /**
@@ -31,26 +33,30 @@ class RssReaderListener
     private $formFactory;
     private $templating;
     private $rssReader;
+    private $om;
 
     /**
      * @DI\InjectParams({
-     *      "rssManager" = @DI\Inject("claroline.manager.rss_manager"),
-     *      "formFactory"       = @DI\Inject("form.factory"),
-     *      "templating"        = @DI\Inject("templating"),
-     *      "rssReader"         = @DI\Inject("claroline.rss_reader.provider")
+     *      "rssManager"  = @DI\Inject("claroline.manager.rss_manager"),
+     *      "formFactory" = @DI\Inject("form.factory"),
+     *      "templating"  = @DI\Inject("templating"),
+     *      "rssReader"   = @DI\Inject("claroline.rss_reader.provider"),
+     *      "om"          = @DI\Inject("claroline.persistence.object_manager")
      * })
      */
     public function __construct(
         RssManager $rssManager,
         FormFactory $formFactory,
         TwigEngine $templating,
-        ReaderProvider $rssReader
+        ReaderProvider $rssReader,
+        ObjectManager $om
     )
     {
         $this->rssManager = $rssManager;
         $this->formFactory = $formFactory;
         $this->templating = $templating;
         $this->rssReader = $rssReader;
+        $this->om = $om;
     }
 
     /**
@@ -117,5 +123,29 @@ class RssReaderListener
             'ClarolineRssReaderBundle::rss.html.twig',
             array('rss' => $items, 'widgetId' => $widgetId)
         );
+    }
+
+    /**
+     * @DI\Observe("copy_widget_config_claroline_rssreader")
+     *
+     * @param CopyWidgetConfigurationEvent $event
+     */
+    public function onCopyWidgetConfiguration(CopyWidgetConfigurationEvent $event)
+    {
+        $source = $event->getWidgetInstance();
+        $copy = $event->getWidgetInstanceCopy();
+
+        $widgetConfig = $this->rssManager->getConfig($source);
+
+        if (!is_null($widgetConfig)) {
+            $widgetConfigCopy = new Config();
+            $widgetConfigCopy->setWidgetInstance($copy);
+            $widgetConfigCopy->setUrl($widgetConfig->getUrl());
+
+            $this->om->persist($widgetConfigCopy);
+            $this->om->flush();
+        }
+        $event->validateCopy();
+        $event->stopPropagation();
     }
 }
