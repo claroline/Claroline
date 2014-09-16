@@ -825,6 +825,7 @@ url_invalid: 'El código no es correcto, no intente cambiar la URL'
 user: 'Usuario'
 user_accounts: 'Cuentas de usuario'
 user_creation: 'Creación de un usuario'
+user_creation_success: El usuario se ha creado con éxito
 user_limit_reached: Ha llegado al limite de creación de usuarios.
 user_limit_success_update: El número máximo de usuarios por rol ha sido actualizado con éxito.
 user_limit_too_low: Ya hay %total% %role%(s). El limite %newMax% es muy bajo.
