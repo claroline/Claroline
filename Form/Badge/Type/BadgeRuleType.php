@@ -85,14 +85,7 @@ class BadgeRuleType extends AbstractType
                     )
                 )
             )
-            ->add('badge', 'zenstruck_ajax_entity', array(
-                'attr'           => array('class' => 'fullwidth'),
-                'placeholder'    => $this->translator->trans('badge_form_badge_selection', array(), 'badge'),
-                'class'          => 'ClarolineCoreBundle:Badge\Badge',
-                'use_controller' => true,
-                'property'       => sprintf("%sName", $locale),
-                'repo_method'    => sprintf('findByName%sForAjax', ucfirst($locale))
-            ))
+            ->add('badge', 'badgepicker')
             ->add(
                 'resultComparison',
                 'choice',

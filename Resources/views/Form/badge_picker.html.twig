@@ -1,0 +1,33 @@
+{% extends 'ClarolineCoreBundle::form_theme.html.twig' %}
+
+{% block badgepicker_widget %}
+    {% spaceless %}
+        <div class="badge_picker">
+            {% if multiple %}
+                {{ block('choice_widget') }}
+            {% else %}
+                <input type="hidden" id="{{ id }}" name="{{ full_name }}" {% if value is not empty %}value="{{ value.id }}" {% endif %}class="badge-picker">
+
+                <div class="input-group selected-field{% if value is empty %} hide{% endif %}">
+                    <p class="form-control badge_selection_field" data-title="{% if value is not empty %}{{ value.text }}{% endif %}"
+                        data-container="body" data-toggle="popover" data-placement="top"
+                        data-content="{% if value is not empty %}{{ value.description }}{% endif %}">
+                        {% if value is not empty %}<span class="badge_text">{{ value.text }}</span>{% endif %}
+                        {% if value is not empty %}<img src="{{ asset(value.icon) }}" alt="{{ value.text }}" class="badge_image" />{% endif %}
+                    </p>
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-default" title="{{ 'browse_badges'|trans({}, 'badge') }}" data-toggle="tooltip"><i class="fa fa-folder-open"></i></button>
+                    </span>
+                </div>
+                <div class="input-group select-field{% if value is not empty %} hide{% endif %}">
+                    <p class="form-control" disabled="disabled">
+                        {{ 'select_badge'|trans({}, 'badge') }}
+                    </p>
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-default" title="{{ 'browse_badges'|trans({}, 'badge') }}" data-toggle="tooltip"><i class="fa fa-folder-open"></i></button>
+                    </span>
+                </div>
+            {% endif %}
+        </div>
+    {% endspaceless %}
+{% endblock %}

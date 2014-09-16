@@ -54,6 +54,19 @@ class BadgeManager
     }
 
     /**
+     * @param integer $id
+     *
+     * @return Badge
+     */
+    public function getById($id)
+    {
+        /** @var \Claroline\CoreBundle\Entity\Badge\Badge $badge */
+        $badge = $this->entityManager->getRepository('ClarolineCoreBundle:Badge\Badge')->find($id);
+
+        return $badge;
+    }
+
+    /**
      * @param Badge  $badge
      * @param User[] $users
      * @param string $comment
