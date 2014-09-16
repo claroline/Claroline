@@ -907,6 +907,7 @@ url_invalid: 'Le code n''est pas correct, n''essayez pas de changer l''adresse'
 user: Utilisateur
 user_accounts: 'Comptes utilisateur'
 user_creation: 'Création d''un utilisateur'
+user_creation_success: Le compte utilisateur a été créé avec succès.
 user_limit_reached: La limite de création d'utilisateur a été atteinte.
 user_limit_reached: La limite de création d'utilisateurs a été atteinte.
 user_limit_success_update: La limite d'utilisateur par rôle a été mise à jour avec succès.

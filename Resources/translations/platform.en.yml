@@ -904,6 +904,7 @@ url_invalid: 'the code is not correct, do no try to change the url'
 user: User
 user_accounts: 'User accounts'
 user_creation: 'User creation'
+user_creation_success: The user account has been successfully created.
 user_limit_reached: The user limit has been reached.
 user_limit_success_update: The user limit by role has been successfully updated.
 user_limit_too_low: There is already %total% %role%(s). The limit %newMax% is too low.
