@@ -589,13 +589,10 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
         $uow = $this->om->getUnitOfWork();
         $map = $uow->getIdentityMap();
 
-        //if the resourceRight was created
-        $createdRights = null;
-
-        foreach ($map['Claroline\CoreBundle\Entity\Resource\ResourceRights'] as $unflushed) {
-            if ($unflushed->getRole()->getName() === $role['role']['name']) $createdRights = $unflushed;
-        }
-
+        $createdRights = $this->rightManager->getRightsFromIdentityMap(
+            $role['role']['name'],
+            $resourceEntity->getResourceNode()
+        );
         //There is no ResourceRight in the IdentityMap so we must create it
         if ($createdRights === null) {
             $this->rightManager->create(

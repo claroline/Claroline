@@ -65,6 +65,7 @@ class FacetController extends Controller
         $this->formFactory   = $formFactory;
         $this->request       = $request;
         $this->roleManager   = $roleManager;
+        $this->router        = $router;
     }
 
     /**

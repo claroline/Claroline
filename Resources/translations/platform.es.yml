@@ -918,7 +918,6 @@ yes: 'Si'
 yes: Sí
 yesterday_activity: 'Actividades de ayer'
 your_username: 'Su nombre de usuario es '
-<<<<<<< HEAD
 display_captcha: 'Monstrar captcha a los anonimos'
 email: 'Correo electrónico'
 description: 'Descripción'
@@ -929,5 +928,3 @@ create_role: Crear un rol
 uncompress_file: Descomprimir el archivo si es posible
 workspace_import: Importar de un espacio de trabajo
 create_users: Crear el usarios
-=======
->>>>>>> fe6b7c0c7d867ba0d9b7aa8d28ffad06eb15c5c2

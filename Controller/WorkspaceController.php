@@ -13,6 +13,7 @@ namespace Claroline\CoreBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Claroline\CoreBundle\Event\StrictDispatcher;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -24,6 +25,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Translation\TranslatorInterface;
+use Claroline\CoreBundle\Entity\Model\WorkspaceModel;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceTag;
@@ -268,7 +270,8 @@ class WorkspaceController extends Controller
     public function creationFormAction()
     {
         $this->assertIsGranted('ROLE_WS_CREATOR');
-        $form = $this->formFactory->create(FormFactory::TYPE_WORKSPACE);
+        $user = $this->security->getToken()->getUser();
+        $form = $this->formFactory->create(FormFactory::TYPE_WORKSPACE, array($user));
 
         return array('form' => $form->createView());
     }
@@ -289,31 +292,39 @@ class WorkspaceController extends Controller
     public function createAction()
     {
         $this->assertIsGranted('ROLE_WS_CREATOR');
-        $form = $this->formFactory->create(FormFactory::TYPE_WORKSPACE);
+        $user = $this->security->getToken()->getUser();
+        $form = $this->formFactory->create(FormFactory::TYPE_WORKSPACE, array($user));
         $form->handleRequest($this->request);
         $ds = DIRECTORY_SEPARATOR;
 
         if ($form->isValid()) {
+            $model = $form->get('model')->getData();
 
-            $template =  $form->get('file')->getData() ?
-                $form->get('file')->getData()->getPathname():
-                $this->container->getParameter('claroline.param.templates_directory') . $ds . 'default.zip';
-            $config = Configuration::fromTemplate($template);
-            $config->setWorkspaceName($form->get('name')->getData());
-            $config->setWorkspaceCode($form->get('code')->getData());
-            $config->setDisplayable($form->get('displayable')->getData());
-            $config->setSelfRegistration($form->get('selfRegistration')->getData());
-            $config->setRegistrationValidation($form->get('registrationValidation')->getData());
-            $config->setSelfUnregistration($form->get('selfUnregistration')->getData());
-            $config->setWorkspaceDescription($form->get('description')->getData());
+            if (!is_null($model)) {
 
-            $user = $this->security->getToken()->getUser();
-            $this->workspaceManager->create($config, $user);
+                $this->createWorkspaceFromModel($model, $form);
+            } else {
+                $config = Configuration::fromTemplate(
+                    $this->templateDir . $ds . $form->get('template')->getData()->getHash()
+                );
+                $config->setWorkspaceName($form->get('name')->getData());
+                $config->setWorkspaceCode($form->get('code')->getData());
+                $config->setDisplayable($form->get('displayable')->getData());
+                $config->setSelfRegistration($form->get('selfRegistration')->getData());
+                $config->setRegistrationValidation($form->get('registrationValidation')->getData());
+                $config->setSelfUnregistration($form->get('selfUnregistration')->getData());
+                $config->setWorkspaceDescription($form->get('description')->getData());
+
+                $user = $this->security->getToken()->getUser();
+                $this->workspaceManager->create($config, $user);
+            }
             $this->tokenUpdater->update($this->security->getToken());
             $route = $this->router->generate('claro_workspace_by_user');
+
             $msg = $this->get('translator')->trans(
                 'successfull_workspace_creation',
-                array('%name%' => $form->get('name')->getData()), 'platform'
+                array('%name%' => $form->get('name')->getData()),
+                'platform'
             );
             $this->get('request')->getSession()->getFlashBag()->add('success', $msg);
 
@@ -1171,6 +1182,58 @@ class WorkspaceController extends Controller
         $response->headers->set('Connection', 'close');
 
         return $response;
+    }
+
+    private function createWorkspaceFromModel(WorkspaceModel $model, FormInterface $form)
+    {
+        $user = $this->security->getToken()->getUser();
+        $modelWorkspace = $model->getWorkspace();
+        $resourcesModels = $model->getResourcesModel();
+        $homeTabs = $model->getHomeTabs();
+
+        $workspace = new Workspace();
+        $workspace->setName($form->get('name')->getData());
+        $workspace->setCode($form->get('code')->getData());
+        $workspace->setDescription($form->get('description')->getData());
+        $workspace->setDisplayable($form->get('displayable')->getData());
+        $workspace->setSelfRegistration($form->get('selfRegistration')->getData());
+        $workspace->setSelfUnregistration($form->get('selfUnregistration')->getData());
+
+        $guid = $this->container->get('claroline.utilities.misc')->generateGuid();
+        $workspace->setGuid($guid);
+        $date = new \Datetime(date('d-m-Y H:i'));
+        $workspace->setCreationDate($date->getTimestamp());
+        $workspace->setCreator($user);
+
+        $this->workspaceManager->createWorkspace($workspace);
+        $this->workspaceManager
+            ->duplicateWorkspaceRoles($modelWorkspace, $workspace, $user);
+        $this->workspaceManager
+            ->duplicateOrderedTools($modelWorkspace, $workspace);
+        $rootDirectory = $this->workspaceManager
+            ->duplicateRootDirectory($modelWorkspace, $workspace, $user);
+        $widgetConfigErrors = $this->workspaceManager
+            ->duplicateHomeTabs($modelWorkspace, $workspace, $homeTabs->toArray());
+
+        $flashBag = $this->session->getFlashBag();
+
+        foreach ($widgetConfigErrors as $widgetConfigError) {
+            $widgetName = $widgetConfigError['widget'];
+            $widgetInstanceName = $widgetConfigError['widgetInstance'];
+            $msg = '[' .
+                $this->translator->trans($widgetName, array(), 'widget') .
+                '] ' .
+                $this->translator->trans(
+                    'widget_configuration_copy_warning',
+                    array('%widgetInstanceName%' => $widgetInstanceName),
+                    'widget'
+                );
+
+            $flashBag->add('error', $msg);
+        }
+
+        $this->workspaceManager
+            ->duplicateResources($resourcesModels, $rootDirectory);
     }
 
     private function assertIsGranted($attributes, $object = null)

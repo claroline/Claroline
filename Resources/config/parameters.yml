@@ -7,6 +7,7 @@ parameters:
     claroline.param.thumbnails_directory: "%claroline.param.web_dir%/thumbnails"
     claroline.param.uploads_directory : "%claroline.param.web_dir%/uploads"
     claroline.param.templates_directory: "%kernel.root_dir%/../templates/"
+    claroline.param.default_template: "%kernel.root_dir%/../vendor/claroline/core-bundle/Claroline/CoreBundle/Resources/template/default.zip"
     claroline.param.authentication_directory: "%kernel.root_dir%/config/Authentication"
     claroline.param.platform_config_handler_class: Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler
     claroline.param.platform_options_file: %kernel.root_dir%/config/platform_options.yml

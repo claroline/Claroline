@@ -11,15 +11,26 @@
 
 namespace Claroline\CoreBundle\Form;
 
+use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Validator\Constraints\WorkspaceUniqueCode;
+use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Claroline\CoreBundle\Validator\Constraints\WorkspaceUniqueCode;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class WorkspaceType extends AbstractType
 {
+    private $user;
+
+    public function __construct(User $user)
+    {
+        $this->user = $user;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $user = $this->user;
+
         $builder
             ->add('name', 'text')
             ->add(
@@ -32,20 +43,34 @@ class WorkspaceType extends AbstractType
                     'textarea' :
                     'tinymce',
                 array('required' => false)
+            )->add(
+                'template',
+                'entity',
+                array(
+                    'class' => 'ClarolineCoreBundle:Workspace\Template',
+                    'property' => 'name'
+                )
+            )->add('displayable', 'checkbox', array('required' => false))
+            ->add('selfRegistration', 'checkbox', array('required' => false))
+            ->add('registrationValidation', 'checkbox', array('required' => false))
+            ->add('selfUnregistration', 'checkbox', array('required' => false))
+            ->add(
+                'model',
+                'entity',
+                array(
+                    'class' => 'ClarolineCoreBundle:Model\WorkspaceModel',
+                    'query_builder' => function (EntityRepository $er) use ($user) {
+
+                        return $er->createQueryBuilder('wm')
+                            ->join('wm.users', 'u')
+                            ->where('u.id = :userId')
+                            ->setParameter('userId', $user->getId())
+                            ->orderBy('wm.name', 'ASC');
+                    },
+                    'property' => 'name',
+                    'required' => false
+                )
             );
-        $builder->add(
-            'file',
-            'file',
-            array(
-                'label' => 'template',
-                'mapped' => false,
-                'required' => false
-            )
-        );
-        $builder->add('displayable', 'checkbox', array('required' => false));
-        $builder->add('selfRegistration', 'checkbox', array('required' => false));
-        $builder->add('registrationValidation', 'checkbox', array('required' => false));
-        $builder->add('selfUnregistration','checkbox', array('required' => false));
     }
 
     public function getName()
