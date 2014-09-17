@@ -1187,8 +1187,8 @@ class WorkspaceController extends Controller
         $flashBag = $this->session->getFlashBag();
 
         foreach ($widgetConfigErrors as $widgetConfigError) {
-            $widgetName = $widgetConfigError['widget'];
-            $widgetInstanceName = $widgetConfigError['widgetInstance'];
+            $widgetName = $widgetConfigError['widgetName'];
+            $widgetInstanceName = $widgetConfigError['widgetInstanceName'];
             $msg = '[' .
                 $this->translator->trans($widgetName, array(), 'widget') .
                 '] ' .
@@ -1197,12 +1197,35 @@ class WorkspaceController extends Controller
                     array('%widgetInstanceName%' => $widgetInstanceName),
                     'widget'
                 );
-
             $flashBag->add('error', $msg);
         }
 
-        $this->workspaceManager
-            ->duplicateResources($resourcesModels, $rootDirectory);
+        $resourcesErrors = $this->workspaceManager->duplicateResources(
+            $resourcesModels->toArray(),
+            $rootDirectory,
+            $modelWorkspace,
+            $workspace,
+            $user
+        );
+
+        foreach ($resourcesErrors as $resourceError) {
+            $resourceName = $resourceError['resourceName'];
+            $resourceType = $resourceError['resourceType'];
+            $isCopy = $resourceError['type'] === 'copy';
+
+            $msg = '[' .
+                $this->translator->trans($resourceType, array(), 'resource') .
+                '] ';
+
+            if ($isCopy) {
+                $msg .= $this->translator->trans(
+                    'resource_copy_warning',
+                    array('%resourceName%' => $resourceName),
+                    'resource'
+                );
+            }
+            $flashBag->add('error', $msg);
+        }
     }
 
     private function assertIsGranted($attributes, $object = null)

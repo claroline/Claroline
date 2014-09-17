@@ -840,11 +840,11 @@ class WorkspaceManager
         User $user
     )
     {
+        $this->om->startFlushSuite();
+
         $guid = $workspace->getGuid();
         $roles = $source->getRoles();
         $unusedRolePartName = '_' . $source->getGuid();
-
-        $this->om->startFlushSuite();
 
         foreach ($roles as $role) {
             $roleName = str_replace($unusedRolePartName, '', $role->getName());
@@ -870,15 +870,10 @@ class WorkspaceManager
      */
     public function duplicateOrderedTools(Workspace $source, Workspace $workspace)
     {
-        $orderedTools = $source->getOrderedTools();
-        $workspaceRoles = array();
-        $wRoles = $this->roleManager->getRolesByWorkspace($workspace);
-
-        foreach ($wRoles as $wRole) {
-            $workspaceRoles[$wRole->getTranslationKey()] = $wRole;
-        }
-
         $this->om->startFlushSuite();
+
+        $orderedTools = $source->getOrderedTools();
+        $workspaceRoles = $this->getArrayRolesByWorkspace($workspace);
 
         foreach ($orderedTools as $orderedTool) {
             $workspaceOrderedTool = $this->toolManager->addWorkspaceTool(
@@ -936,13 +931,7 @@ class WorkspaceManager
             array()
         );
 
-        $workspaceRoles = array();
-        $wRoles = $this->roleManager->getRolesByWorkspace($workspace);
-
-        foreach ($wRoles as $wRole) {
-            $workspaceRoles[$wRole->getTranslationKey()] = $wRole;
-        }
-
+        $workspaceRoles = $this->getArrayRolesByWorkspace($workspace);
         $root = $this->resourceManager->getWorkspaceRoot($source);
         $rights = $root->getRights();
 
@@ -954,18 +943,9 @@ class WorkspaceManager
                     $role->getName(),
                     $resource->getResourceNode()
                 );
-                $newRight->setMask($right->getMask());
-                $newRight->setCreatableResourceTypes(
-                    $right->getCreatableResourceTypes()->toArray()
-                );
-
             } else {
                 $newRight = new ResourceRights();
                 $newRight->setResourceNode($resource->getResourceNode());
-                $newRight->setMask($right->getMask());
-                $newRight->setCreatableResourceTypes(
-                    $right->getCreatableResourceTypes()->toArray()
-                );
 
                 if ($role->getWorkspace() === $source) {
                     $key = $role->getTranslationKey();
@@ -976,8 +956,12 @@ class WorkspaceManager
                 } else {
                     $newRight->setRole($role);
                 }
-                $this->om->persist($newRight);
             }
+            $newRight->setMask($right->getMask());
+            $newRight->setCreatableResourceTypes(
+                $right->getCreatableResourceTypes()->toArray()
+            );
+            $this->om->persist($newRight);
         }
         $this->om->flush();
 
@@ -991,6 +975,7 @@ class WorkspaceManager
     )
     {
         $this->om->startFlushSuite();
+
         $homeTabConfigs = $this->homeTabManager
             ->getHomeTabConfigsByWorkspaceAndHomeTabs($source, $homeTabs);
         $order = 1;
@@ -1048,8 +1033,8 @@ class WorkspaceManager
                         );
                     } catch (NotPopulatedEventException $e) {
                         $widgetCongigErrors[] = array(
-                            'widget' => $widget->getName(),
-                            'widgetInstance' => $widgetInstance->getName(),
+                            'widgetName' => $widget->getName(),
+                            'widgetInstanceName' => $widgetInstance->getName(),
                             'error' => $e->getMessage()
                         );
                     }
@@ -1061,9 +1046,86 @@ class WorkspaceManager
         return $widgetCongigErrors;
     }
 
-    public function duplicateResources()
+    public function duplicateResources(
+        array $resourcesModels,
+        Directory $rootDirectory,
+        Workspace $source,
+        Workspace $workspace,
+        User $user
+    )
     {
-        
+        $this->om->startFlushSuite();
+
+        $copies = array();
+        $resourcesErrors = array();
+        $workspaceRoles = $this->getArrayRolesByWorkspace($workspace);
+
+        foreach ($resourcesModels as $resourceModel) {
+
+            if ($resourceModel->isCopy()) {
+                $resourceNode = $resourceModel->getResourceNode();
+
+                try {
+                    $copy = $this->resourceManager->copy(
+                        $resourceNode,
+                        $rootDirectory->getResourceNode(),
+                        $user,
+                        false
+                    );
+                    $copies[] = $copy;
+                } catch (NotPopulatedEventException $e) {
+                    $resourcesErrors[] = array(
+                        'resourceName' => $resourceNode->getName(),
+                        'resourceType' => $resourceNode->getResourceType()->getName(),
+                        'type' => 'copy',
+                        'error' => $e->getMessage()
+                    );
+                    continue;
+                }
+
+                /*** Copy rights ***/
+
+                $rights = $resourceNode->getRights();
+
+                foreach ($rights as $right) {
+                    $role = $right->getRole();
+                    $key = $role->getTranslationKey();
+
+                    $newRight = new ResourceRights();
+                    $newRight->setResourceNode($copy->getResourceNode());
+                    $newRight->setMask($right->getMask());
+                    $newRight->setCreatableResourceTypes($right->getCreatableResourceTypes()->toArray());
+
+                    if ($role->getWorkspace() === $source &&
+                        isset($workspaceRoles[$key]) &&
+                        !empty($workspaceRoles[$key])) {
+                        
+                        $newRight->setRole($workspaceRoles[$key]);
+                    } else {
+                        $newRight->setRole($role);
+                    }
+                    $this->om->persist($newRight);
+                }
+            }
+        }
+
+        /*** Sets previous and next for each copied resource ***/
+
+        for ($i = 0; $i < count($copies); $i++) {
+
+            if (isset($copies[$i]) && isset($copies[$i + 1])) {
+                $node = $copies[$i]->getResourceNode();
+                $nextNode = $copies[$i + 1]->getResourceNode();
+                $node->setNext($nextNode);
+                $nextNode->setPrevious($node);
+                $this->om->persist($node);
+                $this->om->persist($nextNode);
+            }
+        }
+
+        $this->om->endFlushSuite();
+
+        return $resourcesErrors;
     }
 
     /**
@@ -1098,5 +1160,17 @@ class WorkspaceManager
     public function countUsers($workspaceId)
     {
         return $this->workspaceRepo->countUsers($workspaceId);
+    }
+
+    private function getArrayRolesByWorkspace(Workspace $workspace)
+    {
+        $workspaceRoles = array();
+        $wRoles = $this->roleManager->getRolesByWorkspace($workspace);
+
+        foreach ($wRoles as $wRole) {
+            $workspaceRoles[$wRole->getTranslationKey()] = $wRole;
+        }
+
+        return $workspaceRoles;
     }
 }
