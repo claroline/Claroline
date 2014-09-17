@@ -14,7 +14,13 @@
                         {% for proposal in inter.proposals %}
                             {% if proposal.associatedLabel != null and proposal.associatedLabel.id == label.id %}
                                 <div class="associatedProposal" align="center">
-                                    {{ proposal.value | raw }}
+                                    <table>
+                                        <tr>
+                                            <td style='border: 1px solid #ddd;'>
+                                                {{ proposal.value | raw }}
+                                            </td>
+                                        </tr>
+                                    </table>
                                 </div>
                             {% endif %}
                         {% endfor%}
@@ -27,7 +33,13 @@
                             {% if (response != null) %}
                                 {% set proposal = getProposal(response) %}
                                 <div class="associatedProposal" align="center">
-                                    {{ proposal.value | raw }}
+                                    <table>
+                                        <tr>
+                                            <td style='border: 1px solid #ddd;'>
+                                                {{ proposal.value | raw }}
+                                            </td>
+                                        </tr>
+                                    </table>
                                 </div>
                             {% endif %}
                         {% endfor %}

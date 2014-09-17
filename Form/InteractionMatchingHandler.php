@@ -174,14 +174,26 @@ class InteractionMatchingHandler extends InteractionHandler
 
             $this->em->remove($proposal);
         }
-
+        
+        //add correspondence
+//        foreach ($interMatching->getLabels() as $label) {
+//            $proposals = $this->em->getRepository('UJMExoBundle:Proposal')
+//                 ->findBy(array('associatedLabel' => $label));
+//            foreach( $proposals as $proposal){
+//                if($proposals == $label){
+//                    
+//                }
+//            }
+//        }
+        
+        
         $this->modifyHints($interMatching, $originalHints);
 
         $this->em->persist($interMatching);
         $this->em->persist($interMatching->getInteraction()->getQuestion());
         $this->em->persist($interMatching->getInteraction());
 
-        // Persist all Labels od interactionMatching
+        // Persist all Labels of interactionMatching
         foreach ($interMatching->getLabels() as $label) {
             $interMatching->addLabel($label);
             $this->em->persist($label);

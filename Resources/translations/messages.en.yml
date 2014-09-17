@@ -208,6 +208,7 @@ inValidMark: Invalid score
 # I Intraction type (data in the DB)
 InteractionGraphic: Graphic
 InteractionHole: Hole
+InteractionMatching: Association
 InteractionOpen: Open
 InteractionQCM: QCM
 #InteractionMatching: To drag/ To bind

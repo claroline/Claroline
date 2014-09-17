@@ -208,6 +208,7 @@ inValidMark: Note invalide
 # I Intraction type (data in the DB)
 InteractionGraphic: Graphique
 InteractionHole: Blanc
+InteractionMatching: Association
 InteractionOpen: Ouverte
 InteractionQCM: QCM
 #InteractionMatching: A relier/ panier
