@@ -10,7 +10,11 @@
 
                 <div class="input-group select-field">
                     <p class="form-control{% if value is not empty %} hide{% endif %}" disabled="disabled">
+                        {% if multiple %}
+                        {{ 'select_badges'|trans({}, 'badge') }}
+                        {% else %}
                         {{ 'select_badge'|trans({}, 'badge') }}
+                        {% endif %}
                     </p>
                     <p class="form-control badge_selection_field{% if value is empty %} hide{% endif %}" data-title="{% if value is not empty %}{{ value.text }}{% endif %}"
                         data-container="body" data-toggle="popover" data-placement="top"
@@ -21,10 +25,24 @@
                         {% endif %}
                     </p>
                     <span class="input-group-btn">
-                        <button type="button" class="btn btn-default" title="{{ 'browse_badges'|trans({}, 'badge') }}" data-toggle="tooltip"><i class="fa fa-folder-open"></i></button>
+                        <button type="button" class="btn btn-default" id="badgepicker_{{ id }}" title="{{ 'browse_badges'|trans({}, 'badge') }}" data-toggle="tooltip"><i class="fa fa-folder-open"></i></button>
                     </span>
                 </div>
             {% endif %}
         </div>
+
+        <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/badge/badge_picker.js') }}"></script>
+        <script type="text/javascript">
+            $(function(){
+                $("#badgepicker_{{ id }}").click(function() {
+                    var url = "{{ path('claro_badge_list', {'mode': constant('Claroline\\CoreBundle\\Manager\\BadgeManager::BADGE_PICKER_MODE_PLATFORM')}) }}";
+                    var callback = function (modaleElement) {
+                        console.log(modaleElement);
+                        console.log('pouet');
+                    };
+                    window.Claroline.BadgePicker.openBadgePicker(url, callback);
+                });
+            });
+        </script>
     {% endspaceless %}
 {% endblock %}

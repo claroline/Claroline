@@ -11,10 +11,18 @@
 
 namespace Claroline\CoreBundle\Controller\Badge;
 
+use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Rule\Validator;
 use Claroline\CoreBundle\Entity\Badge\Badge;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Component\HttpFoundation\ParameterBag;
+use Symfony\Component\HttpFoundation\Request;
 
 class BadgeController extends Controller
 {
@@ -68,6 +76,35 @@ class BadgeController extends Controller
                 'parameters'       => $parameters,
                 'badgeRuleChecker' => $badgeRuleValidator
             )
+        );
+    }
+
+    /**
+     * @Route("/badges/{mode}/{workspace}", name="claro_badge_list", defaults={"worksapce" = null}, options={"expose": true})
+     * @Method({"GET"})
+     * @ParamConverter("user", options={"authenticatedUser" = true})
+     * @Template()
+     */
+    public function badgeListAction(Request $request, User $user, $mode, Workspace $workspace = null)
+    {
+        /** @var \Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler $platformConfigHandler */
+        $platformConfigHandler = $this->get('claroline.config.platform_config_handler');
+
+        /** @var \CLaroline\CoreBundle\Manager\BadgeManager $badgeManager */
+        $badgeManager = $this->get('claroline.manager.badge');
+
+        $parameters = array(
+            'locale'    => $platformConfigHandler->getParameter('locale_language'),
+            'mode'      => $mode,
+            'user'      => $user,
+            'workspace' => $workspace
+        );
+
+        $badges = $badgeManager->getForBadgePicker($parameters);
+
+
+        return array(
+            'badges' => $badges
         );
     }
 }

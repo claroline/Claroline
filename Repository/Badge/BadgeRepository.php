@@ -275,4 +275,45 @@ class BadgeRepository extends EntityRepository
 
         return $query->getSingleScalarResult();
     }
+
+    /**
+     * @param QueryBuilder $queryBuilder
+     * @param string       $rootAlias
+     * @param string       $locale
+     *
+     * @internal param bool $executeQuery
+     *
+     * @return QueryBuilder|array
+     */
+    public function orderByName(QueryBuilder $queryBuilder, $rootAlias, $locale)
+    {
+        $queryBuilder
+            ->join(sprintf("%s.translations", $rootAlias), 'bt')
+            ->andWhere('bt.locale = :locale')
+            ->orderBy('bt.name', 'ASC')
+            ->setParameter('locale', $locale);
+
+        return $queryBuilder;
+    }
+
+    /**
+     * @param QueryBuilder   $queryBuilder
+     * @param string         $rootAlias
+     * @param Workspace|null $workspace
+     *
+     * @return QueryBuilder
+     */
+    public function filterByWorkspace(QueryBuilder $queryBuilder, $rootAlias, $workspace)
+    {
+        if (null === $workspace) {
+            $queryBuilder->andWhere(sprintf("%s.workspace IS NULL", $rootAlias));
+        }
+        else {
+            $queryBuilder
+                ->andWhere(sprintf("%s.workspace = :workspace", $rootAlias))
+                ->setParameter('workspace', $workspace);
+        }
+
+        return $queryBuilder;
+    }
 }
