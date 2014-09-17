@@ -593,6 +593,33 @@ class exerciseServices
         $tabsResponses = array();
 
         $tabResponseIndex = $this->getTabResponseIndex($response);
+        $tabRightResponse = $this->initTabRightResponse($interMatching);
+
+        //add in $tabResponseIndex label empty
+        foreach ($interMatching->getLabels() as $label) {
+            if (!isset($tabResponseIndex[$label->getId()])) {
+                $tabResponseIndex[$label->getId()] = null;
+            }
+        }
+
+
+        $tabsResponses[0] = $tabResponseIndex;
+        $tabsResponses[1] = $tabRightResponse;
+
+        return $tabsResponses;
+
+    }
+
+     /**
+     * init array of rights responses indexed by labelId
+     *
+     * @access public
+     *
+     * @param \UJM\ExoBundle\Entity\Paper\InteractionMatching $interMatching
+     *
+     * Return array
+     */
+    function initTabRightResponse($interMatching) {
         $tabRightResponse = array();
 
         //array of rights responses indexed by labelId
@@ -615,19 +642,7 @@ class exerciseServices
             }
         }
 
-        //add in $tabResponseIndex label empty
-        foreach ($interMatching->getLabels() as $label) {
-            if (!isset($tabResponseIndex[$label->getId()])) {
-                $tabResponseIndex[$label->getId()] = null;
-            }
-        }
-
-
-        $tabsResponses[0] = $tabResponseIndex;
-        $tabsResponses[1] = $tabRightResponse;
-
-        return $tabsResponses;
-
+        return $tabRightResponse;
     }
 
     public function getTabResponseIndex($response) {

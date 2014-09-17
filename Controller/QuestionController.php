@@ -602,24 +602,44 @@ class QuestionController extends Controller
                     return $this->render('UJMExoBundle:InteractionOpen:edit.html.twig', $variables);
 
                 case "InteractionMatching":
-                    
+
                     $interactionMatching = $this->getDoctrine()
                         ->getManager()
                         ->getRepository('UJMExoBundle:InteractionMatching')
                         ->getInteractionMatching($interaction->getId());
-                    
+
+                    $correspondence = $services->initTabRightResponse($interactionMatching[0]);
+                    foreach ($correspondence as $key => $corresp) {
+                        $correspondence[$key] = explode('-', $corresp);
+                    }
+                    $tableLabel =  array();
+                    $tableProposal = array();
+
+                    $ind = 1;
+
+                    foreach($interactionMatching[0]->getLabels() as $label){
+                        $tableLabel[$ind] = $label->getId();
+                        $ind++;
+                    }
+
+                    $ind = 1;
+                    foreach($interactionMatching[0]->getProposals() as $proposal){
+                        $tableProposal[$proposal->getId()] = $ind;
+                        $ind++;
+                    }
+
                     $editForm = $this->createForm(
                         new InteractionMatchingType(
                             $this->container->get('security.context')
                                 ->getToken()->getUser(),$catID
                         ), $interactionMatching[0]
                     );
-                    
+
                     if ($exoID != -1) {
                        $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($exoID);
                        $variable['_resource'] = $exercise;
                     }
-                    
+
                     $typeMatching = $services->getTypeMatching();
 
                     $variables['entity']         = $interactionMatching[0];
@@ -628,6 +648,9 @@ class QuestionController extends Controller
                     $variables['linkedCategory'] = $linkedCategory;
                     $variables['typeMatching']       = json_encode($typeMatching);
                     $variables['exoID']          = $exoID;
+                    $variables['correspondence']  = json_encode($correspondence);
+                    $variables['tableLabel']     = json_encode($tableLabel);
+                    $variables['tableProposal']  = json_encode($tableProposal);
 
                     if ($exoID != -1) {
                         $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($exoID);

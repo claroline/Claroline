@@ -75,9 +75,8 @@
         $(document).ready(function() {
             creationMatchingEdit('{{ 'addChoice' | trans }}', '{{ 'addProposal' | trans }}', '{{ 'delete' | trans }}', '{{ 'Label.value' | trans }}', 
             '{{ 'Label.scoreRight' | trans }}', '{{ 'Proposal.value' | trans }}', '{{ 'numberProposal'| trans }}', '{{ 'correspondence' | trans }}', '{{ 'deleteLabel' | trans }}', 
-            '{{ 'deleteProposal' | trans }}',  '{{ typeMatching | raw }}', '{{ 'advanced edition' | trans }}', '{{ 'correspondence empty' | trans }}', {{ nbResponses }});
+            '{{ 'deleteProposal' | trans }}',  '{{ typeMatching | raw }}', '{{ 'advanced edition' | trans }}', '{{ 'correspondence empty' | trans }}', {{ nbResponses }}, '{{ correspondence }}', '{{ tableLabel }}', '{{ tableProposal }}');
             newHint('{{ 'hint' | trans }}', '{{ 'penalty' | trans }}', '{{ 'add hint' | trans }}', '{{ 'delete' | trans }}');
         });
-{#        '{{ typeMatching | raw }}',#}
     </script>
 {% endblock %}

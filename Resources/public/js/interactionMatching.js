@@ -13,7 +13,7 @@ var codeContainerProposal = 1; // to differentiate containers
 var codeContainerLabel = 0;
 
 // Question creation
-function creationMatching(addchoice, addproposal, deletechoice, LabelValue, ScoreRight, ProposalValue, numberProposal, correspondence, deleteLabel, deleteProposal, tMatching, advEdition, correspEmpty){
+function creationMatching(addchoice, addproposal, deletechoice, LabelValue, ScoreRight, ProposalValue, numberProposal, correspondence, deleteLabel, deleteProposal, tMatching, advEdition, correspEmpty, valueCorrespondence){
 
     //initialisation of variables
     var indexProposal;
@@ -69,9 +69,13 @@ function creationMatching(addchoice, addproposal, deletechoice, LabelValue, Scor
 }
 
 // Question edition
-function creationMatchingEdit(addchoice, addproposal, deletechoice, LabelValue, ScoreRight, ProposalValue, numberProposal, correspondence, deleteLabel, deleteProposal, tMatching, advEdition, correspEmpty, nbResponses) {
+function creationMatchingEdit(addchoice, addproposal, deletechoice, LabelValue, ScoreRight, ProposalValue, numberProposal, correspondence, deleteLabel, deleteProposal, tMatching, advEdition, correspEmpty, nbResponses, valueCorrespondence, tableLabel, tableProposal) {
 
     typeMatching = JSON.parse(tMatching);
+    var valueCorres = JSON.parse(valueCorrespondence.replace(/&quot;/ig,'"'));
+    var labels = JSON.parse(tableLabel.replace(/&quot;/ig,'"'));
+    var proposals = JSON.parse(tableProposal.replace(/&quot;/ig,'"'));
+    var ind = 1;
 
     advEditionLang = advEdition;
     correspEmptyLang = correspEmpty;
@@ -89,13 +93,12 @@ function creationMatchingEdit(addchoice, addproposal, deletechoice, LabelValue, 
     tableCreationLabel(containerLabel, tableLabels, addchoice, deletechoice, LabelValue, ScoreRight, nbResponses, codeContainerLabel, deleteLabel, correspondence);
 
     containerProposal.children().first().children('div').each(function() {
-
-        $('#newTableProposal').find('tbody').append('<tr><td></td></tr>');
-
+        
         $(this).find('.row').each(function() {
             
             fillProposalArray($(this));
             addRemoveRowTableProposal();
+
             // Add the form errors
             $('#proposalError').append($(this).find('span'));
         });
@@ -104,18 +107,17 @@ function creationMatchingEdit(addchoice, addproposal, deletechoice, LabelValue, 
 
             // Add the delete button
             $('#newTableProposal').find('tr:last').append('<td class="classic"></td>');
-            adddelete($('#newTableProposal').find('td:last'), deleteProposal);
+            adddelete($('#newTableProposal').find('td:last'), deletechoice);
         }
-//        if(first('tr') == null){
-//            
-//        }
+        
+        $('#newTableProposal').find('tbody').append('<tr><td></td></tr>');
     });
+    $('#newTableProposal').find('tr').last().remove();
 
     containerProposal.remove();
     tableProposals.next().remove();
 
     containerLabel.children().first().children('div').each(function() {
-        $('#newTableLabel').find('tbody').append('<tr></tr>');
 
         $(this).find('.row').each(function() {
 
@@ -131,9 +133,20 @@ function creationMatchingEdit(addchoice, addproposal, deletechoice, LabelValue, 
         if (nbResponses == 0) {
             // Add the delete button
             $('#newTableLabel').find('tr:last').append('<td class="classic"></td>');
-            adddelete($('#newTableLabel').find('td:last'), deleteLabel);
+            adddelete($('#newTableLabel').find('td:last'), deletechoice);
         }
+        
+        $('#newTableLabel').find('tbody').append('<tr></tr>');
+        
+        idlabel = labels[ind];//alert(idlabel);
+        idproposals = valueCorres[idlabel];
+        $.each( idproposals, function(key, val){//alert(proposals[val]);
+            $('#' + ind + '_correspondence option[value="' + proposals[val] + '"]').prop('selected', true);
+        });
+        
+        ind++;
     });
+    $('#newTableLabel').find('tr').last().remove();
     containerLabel.remove();
     tableLabels.next().remove();
 }
