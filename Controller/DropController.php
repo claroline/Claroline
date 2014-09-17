@@ -226,6 +226,43 @@ class DropController extends DropzoneBaseController
 
     /**
      * @Route(
+     *      "/{resourceId}/unlock/{userId}",
+     *      name="icap_dropzone_unlock_user",
+     *      requirements={"resourceId" = "\d+", "userId" = "\d+"}
+     * )
+     * @ParamConverter("dropzone",class="IcapDropzoneBundle:Dropzone", options={"id" = "resourceId"})
+     *
+     * @param \Icap\DropzoneBundle\Entity\Dropzone $dropzone
+     * @param $userId
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @internal param $user
+     * @internal param $userId
+     */
+    public function unlockUser(Dropzone $dropzone, $userId)
+    {
+        $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
+        $this->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
+        $dropRepo = $this->getDoctrine()->getManager()->getRepository('IcapDropzoneBundle:Drop');
+        $drop = $dropRepo->getDropByUser($dropzone->getId(), $userId);
+        if ($drop != null) {
+            $drop->setUnlockedUser(true);
+        }
+        $em = $this->getDoctrine()->getManager();
+        $em->merge($drop);
+        $em->flush();
+
+        return $this->redirect(
+            $this->generateUrl(
+                'icap_dropzone_examiners',
+                array(
+                    'resourceId' => $dropzone->getId()
+                )
+            )
+        );
+    }
+
+    /**
+     * @Route(
      *      "/{resourceId}/drops",
      *      name="icap_dropzone_drops",
      *      requirements={"resourceId" = "\d+"},
@@ -603,7 +640,7 @@ class DropController extends DropzoneBaseController
             ->countFinished($dropzone, $user);
 
         if ($dropzone->getDiplayCorrectionsToLearners() && $drop->countFinishedCorrections() >= $dropzone->getExpectedTotalCorrection() &&
-            $dropzone->getExpectedTotalCorrection() <= $nbCorrections || ($dropzone->isFinished() && $dropzone->getDiplayCorrectionsToLearners())
+            $dropzone->getExpectedTotalCorrection() <= $nbCorrections || ($dropzone->isFinished() && $dropzone->getDiplayCorrectionsToLearners() or $drop->getUnlockedUser())
         ) {
             $showCorrections = true;
         }
