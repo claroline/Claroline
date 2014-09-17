@@ -196,15 +196,23 @@
      * @param url The route of the controller rendering the form
      * @param successHandler A successHandler
      * @param formRenderHandler an action wich is done after the form is rendered the first time
+     * @param submit Determine if the form will be submit if user valid the form, if not the successHandler is
+     *      executed without ajax request on action's form. Nothing will happen if no successHandler is defined
      */
-    modal.displayForm = function (url, successHandler, formRenderHandler) {
+    modal.displayForm = function (url, successHandler, formRenderHandler, submit) {
+        var isFormSubmittable = (typeof submit !== 'undefined') ? submit : true;
+
         $.ajax(url)
         .success(function (data) {
             var modalElement = modal.create(data);
 
             modalElement.on('click', 'button.btn', function (event) {
                 event.preventDefault();
-                modal.submitForm(modalElement, successHandler);
+                if (isFormSubmittable) {
+                    modal.submitForm(modalElement, successHandler);
+                } else {
+                    successHandler(modalElement);
+                }
             });
             formRenderHandler(data);
         })
