@@ -157,6 +157,12 @@ class InteractionMatchingHandler extends InteractionHandler
 
         // remove the relationship between the label and the interactionmatching
         foreach ($originalLabels as $label) {
+            $proposals = $this->em->getRepository('UJMExoBundle:Proposal')
+                     ->findBy(array('associatedLabel' => $label));
+            foreach($proposals as $proposal) {
+                $proposal->removeAssociatedLabel();
+                $this->em->persist($proposal);
+            }
             // remove the label from the interactionmatching
             $interMatching->getLabels()->removeElement($label);
 

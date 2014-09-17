@@ -107,4 +107,14 @@ class Proposal
     {
         $this->associatedLabel = $label;
     }
+    
+    /**
+     * Remove Label
+     *
+     */
+    public function removeAssociatedLabel()
+    {
+        $this->associatedLabel = NULL;
+    }
+    
 }
