@@ -1,13 +1,17 @@
-<div class='modal-dialog'>
+<div class="modal-dialog badge_picker_modal">
     <form novalidate="novalidate" action="" id="resource-rename-form" class="modal-content">
         <div class='modal-header'>
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
             <h4 class="modal-title">{{ 'badge_selection' | trans({}, 'badge') }}</h4>
         </div>
         <div class='modal-body'>
-            <ul class="list-inline">
+            <ul class="list-inline badge_picker_list">
                 {% for badge in badges %}
-                <li><img src="{{ asset(badge.webPath) }}" alt="{{ badge.name }}" class="badge_image" />{{ badge.name }}</li>
+                <li class="badge_picker_item">
+                    <input type="checkbox" name="badge_{{ badge.id }}" value="{{ badge.id }}" class="hidden" />
+                    <img src="{{ asset(badge.webPath) }}" alt="{{ badge.name }}" class="badge_image" />
+                    <span>{{ badge.name }}</span>
+                </li>
                 {% else %}
                 <li>{{ 'no_badge_to_select'|trans({}, 'badge') }}</li>
                 {% endfor %}
@@ -15,7 +19,31 @@
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">{{ 'cancel'|trans({}, 'platform') }}</button>
-            <button type="button" class="btn btn-primary form-valid-button" disabled="disabled">{{ 'select'|trans({}, 'badge') }}</button>
+            <button type="button" class="btn btn-primary form_valid_button" disabled="disabled">{{ 'select'|trans({}, 'badge') }}</button>
         </div>
     </form>
 </div>
+
+<script type="text/javascript">
+    $(function(){
+        var modalElement = $(".badge_picker_modal");
+        var validButton  = $(".form_valid_button");
+
+        $(".badge_picker_item").click(function (event) {
+            $(this).toggleClass('selected');
+            var checkbox = $('input[type=checkbox]', this);
+            checkbox.prop('checked', !checkbox.prop('checked'));
+            checkValidButton();
+        });
+
+        function checkValidButton() {
+            var selectedBadges = $("input[type=checkbox]:checked", modalElement);
+            if (0 < selectedBadges.length) {
+                validButton.prop('disabled', false);
+            }
+            else {
+                validButton.prop('disabled', true);
+            }
+        }
+    });
+</script>

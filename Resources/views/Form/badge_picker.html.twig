@@ -36,9 +36,12 @@
             $(function(){
                 $("#badgepicker_{{ id }}").click(function() {
                     var url = "{{ path('claro_badge_picker', {'mode': constant('Claroline\\CoreBundle\\Manager\\BadgeManager::BADGE_PICKER_MODE_PLATFORM')}) }}";
-                    var callback = function (modaleElement) {
-                        console.log(modaleElement);
-                        console.log('pouet');
+                    var callback = function (modalElement) {
+                        var selectedBadges = $("input[type=checkbox]:checked", modalElement);
+                        selectedBadges.each(function(index) {
+                            console.log($(selectedBadges[index]));
+                        });
+                        modalElement.modal('hide');
                     };
                     window.Claroline.BadgePicker.openBadgePicker(url, callback);
                 });
