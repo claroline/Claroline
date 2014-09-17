@@ -35,7 +35,7 @@
         <script type="text/javascript">
             $(function(){
                 $("#badgepicker_{{ id }}").click(function() {
-                    var url = "{{ path('claro_badge_list', {'mode': constant('Claroline\\CoreBundle\\Manager\\BadgeManager::BADGE_PICKER_MODE_PLATFORM')}) }}";
+                    var url = "{{ path('claro_badge_picker', {'mode': constant('Claroline\\CoreBundle\\Manager\\BadgeManager::BADGE_PICKER_MODE_PLATFORM')}) }}";
                     var callback = function (modaleElement) {
                         console.log(modaleElement);
                         console.log('pouet');

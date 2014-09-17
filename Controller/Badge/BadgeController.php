@@ -80,12 +80,12 @@ class BadgeController extends Controller
     }
 
     /**
-     * @Route("/badges/{mode}/{workspace}", name="claro_badge_list", defaults={"worksapce" = null}, options={"expose": true})
+     * @Route("/badges/{mode}/{workspace}", name="claro_badge_picker", defaults={"worksapce" = null}, options={"expose": true})
      * @Method({"GET"})
      * @ParamConverter("user", options={"authenticatedUser" = true})
      * @Template()
      */
-    public function badgeListAction(Request $request, User $user, $mode, Workspace $workspace = null)
+    public function badgePickerAction(Request $request, User $user, $mode, Workspace $workspace = null)
     {
         /** @var \Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler $platformConfigHandler */
         $platformConfigHandler = $this->get('claroline.config.platform_config_handler');
