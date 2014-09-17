@@ -11,14 +11,17 @@
 
 namespace Claroline\AnnouncementBundle\Listener;
 
+use Claroline\AnnouncementBundle\Entity\Announcement;
 use Claroline\AnnouncementBundle\Entity\AnnouncementAggregate;
 use Claroline\CoreBundle\Event\CreateFormResourceEvent;
+use Claroline\CoreBundle\Event\CopyResourceEvent;
 use Claroline\CoreBundle\Event\CreateResourceEvent;
 use Claroline\CoreBundle\Event\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\OpenResourceEvent;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Listener\NoHttpRequestException;
 use Claroline\CoreBundle\Manager\ResourceManager;
+use Claroline\CoreBundle\Persistence\ObjectManager;
 use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -31,6 +34,7 @@ use JMS\DiExtraBundle\Annotation as DI;
 class AnnouncementListener
 {
     private $formFactory;
+    private $om;
     private $request;
     private $resourceManager;
     private $router;
@@ -39,6 +43,7 @@ class AnnouncementListener
     /**
      * @DI\InjectParams({
      *     "formFactory"        = @DI\Inject("claroline.form.factory"),
+     *     "om"                 = @DI\Inject("claroline.persistence.object_manager"),
      *     "requestStack"       = @DI\Inject("request_stack"),
      *     "resourceManager"    = @DI\Inject("claroline.manager.resource_manager"),
      *     "router"             = @DI\Inject("router"),
@@ -47,6 +52,7 @@ class AnnouncementListener
      */
     public function __construct(
         FormFactory $formFactory,
+        ObjectManager $om,
         RequestStack $requestStack,
         ResourceManager $resourceManager,
         TwigEngine $templating,
@@ -54,6 +60,7 @@ class AnnouncementListener
     )
     {
         $this->formFactory = $formFactory;
+        $this->om = $om;
         $this->request = $requestStack->getCurrentRequest();
         $this->resourceManager = $resourceManager;
         $this->router = $router;
@@ -144,6 +151,37 @@ class AnnouncementListener
             array('aggregateId' => $event->getResource()->getId())
         );
         $event->setResponse(new RedirectResponse($route));
+        $event->stopPropagation();
+    }
+
+    /**
+     * @DI\Observe("copy_claroline_announcement_aggregate")
+     *
+     * @param CopyResourceEvent $event
+     */
+    public function onCopy(CopyResourceEvent $event)
+    {
+        $aggregate = $event->getResource();
+        $copy = new AnnouncementAggregate();
+        $this->om->persist($copy);
+        $announcements = $aggregate->getAnnouncements();
+
+        foreach ($announcements as $announcement) {
+            $newAnnouncement = new Announcement();
+            $newAnnouncement->setAggregate($copy);
+            $newAnnouncement->setAnnouncer($announcement->getAnnouncer());
+            $newAnnouncement->setContent($announcement->getContent());
+            $newAnnouncement->setCreationDate($announcement->getCreationDate());
+            $newAnnouncement->setCreator($announcement->getCreator());
+            $newAnnouncement->setPublicationDate($announcement->getPublicationDate());
+            $newAnnouncement->setTitle($announcement->getTitle());
+            $newAnnouncement->setVisible($announcement->isVisible());
+            $newAnnouncement->setVisibleFrom($announcement->getVisibleFrom());
+            $newAnnouncement->setVisibleUntil($announcement->getVisibleUntil());
+            $this->om->persist($newAnnouncement);
+        }
+
+        $event->setCopy($copy);
         $event->stopPropagation();
     }
 }
