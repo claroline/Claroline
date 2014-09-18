@@ -85,7 +85,7 @@ function creationQCMEdit(expectedAnswer, response, point, comment, positionForce
             fillChoicesArray($(this));
 
             // Add the form errors
-            $('#choiceError').append($(this).find('span'));
+            $('#choiceError').append($(this).find('.field-error'));
         });
 
         if (nbResponses == 0) {

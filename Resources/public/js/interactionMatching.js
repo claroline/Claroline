@@ -14,7 +14,7 @@ var codeContainerProposal = 1; // to differentiate containers
 var codeContainerLabel = 0;
 
 // Question creation
-function creationMatching(addchoice, addproposal, deletechoice, LabelValue, ScoreRight, ProposalValue, numberProposal, correspondence, deleteLabel, deleteProposal, tMatching, advEdition, correspEmpty, valueCorrespondence, correspondenceError){
+function creationMatching(addchoice, addproposal, deletechoice, LabelValue, ScoreRight, ProposalValue, numberProposal, correspondence, deleteLabel, deleteProposal, tMatching, advEdition, correspEmpty, correspondenceError){
 
     //initialisation of variables
     var indexProposal;
@@ -127,7 +127,7 @@ function creationMatchingEdit(addchoice, addproposal, deletechoice, LabelValue, 
             fillLabelArray($(this));
 
             // Add the form errors
-            $('#labelError').append($(this).find('span'));
+            $('#labelError').append($(this).find('.field-error'));
         });
 
         // add correspondence
@@ -141,11 +141,13 @@ function creationMatchingEdit(addchoice, addproposal, deletechoice, LabelValue, 
         
         $('#newTableLabel').find('tbody').append('<tr></tr>');
         
-        idlabel = labels[ind];//alert(idlabel);
-        idproposals = valueCorres[idlabel];
-        $.each( idproposals, function(key, val){//alert(proposals[val]);
-            $('#' + ind + '_correspondence option[value="' + proposals[val] + '"]').prop('selected', true);
-        });
+        if (typeof labels[ind] !== 'undefined') {
+            idlabel = labels[ind];
+            idproposals = valueCorres[idlabel];
+            $.each( idproposals, function(key, val){//alert(proposals[val]);
+                $('#' + ind + '_correspondence option[value="' + proposals[val] + '"]').prop('selected', true);
+            });
+        }
         
         ind++;
     });
