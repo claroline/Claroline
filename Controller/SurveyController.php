@@ -36,6 +36,7 @@ use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\SecurityContextInterface;
@@ -54,6 +55,7 @@ class SurveyController extends Controller
      * @DI\InjectParams({
      *     "eventDispatcher" = @DI\Inject("event_dispatcher"),
      *     "formFactory"     = @DI\Inject("form.factory"),
+     *     "httpKernel"      = @DI\Inject("http_kernel"),
      *     "requestStack"    = @DI\Inject("request_stack"),
      *     "router"          = @DI\Inject("router"),
      *     "security"        = @DI\Inject("security.context"),
@@ -64,6 +66,7 @@ class SurveyController extends Controller
     public function __construct(
         EventDispatcherInterface $eventDispatcher,
         FormFactory $formFactory,
+        HttpKernelInterface $httpKernel,
         RequestStack $requestStack,
         UrlGeneratorInterface $router,
         SecurityContextInterface $security,
@@ -73,6 +76,7 @@ class SurveyController extends Controller
     {
         $this->eventDispatcher = $eventDispatcher;
         $this->formFactory = $formFactory;
+        $this->httpKernel = $httpKernel;
         $this->request = $requestStack;
         $this->router = $router;
         $this->security = $security;
@@ -102,13 +106,16 @@ class SurveyController extends Controller
         $hasAnswered = !is_null($surveyAnswer);
 
         if ($canEdit) {
+            $params = array();
+            $params['_controller'] = 'ClarolineSurveyBundle:Survey:surveyManagement';
+            $params['survey'] = $survey;
+            $subRequest = $this->request
+                ->getCurrentRequest()
+                ->duplicate(array(), null, $params);
+            $response = $this->httpKernel
+                ->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
 
-            return new RedirectResponse(
-                $this->router->generate(
-                    'claro_survey_management',
-                    array('survey' => $survey->getId())
-                )
-            );
+            return $response;
         }
         $currentDate = new \DateTime();
 

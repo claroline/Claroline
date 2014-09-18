@@ -25,6 +25,7 @@ use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
@@ -33,6 +34,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 class SurveyListener
 {
     private $formFactory;
+    private $httpKernel;
     private $om;
     private $request;
     private $router;
@@ -41,6 +43,7 @@ class SurveyListener
     /**
      * @DI\InjectParams({
      *     "formFactory"        = @DI\Inject("form.factory"),
+     *     "httpKernel"         = @DI\Inject("http_kernel"),
      *     "om"                 = @DI\Inject("claroline.persistence.object_manager"),
      *     "requestStack"       = @DI\Inject("request_stack"),
      *     "router"             = @DI\Inject("router"),
@@ -49,6 +52,7 @@ class SurveyListener
      */
     public function __construct(
         FormFactory $formFactory,
+        HttpKernelInterface $httpKernel,
         ObjectManager $om,
         RequestStack $requestStack,
         UrlGeneratorInterface $router,
@@ -56,6 +60,7 @@ class SurveyListener
     )
     {
         $this->formFactory = $formFactory;
+        $this->httpKernel = $httpKernel;
         $this->om = $om;
         $this->request = $requestStack->getCurrentRequest();
         $this->router = $router;
@@ -118,11 +123,13 @@ class SurveyListener
      */
     public function onOpen(OpenResourceEvent $event)
     {
-        $route = $this->router->generate(
-            'claro_survey_index',
-            array('survey' => $event->getResource()->getId())
-        );
-        $event->setResponse(new RedirectResponse($route));
+        $params = array();
+        $params['_controller'] = 'ClarolineSurveyBundle:Survey:index';
+        $params['survey'] = $event->getResource()->getId();
+        $subRequest = $this->request->duplicate(array(), null, $params);
+        $response = $this->httpKernel
+            ->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
+        $event->setResponse($response);
         $event->stopPropagation();
     }
 
