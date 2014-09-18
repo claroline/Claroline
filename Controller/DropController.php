@@ -263,6 +263,46 @@ class DropController extends DropzoneBaseController
 
     /**
      * @Route(
+     *      "/{resourceId}/unlock/all",
+     *      name="icap_dropzone_unlock_all_user",
+     *      requirements={"resourceId" = "\d+"}
+     * )
+     * @ParamConverter("dropzone",class="IcapDropzoneBundle:Dropzone", options={"id" = "resourceId"})
+     *
+     * @param \Icap\DropzoneBundle\Entity\Dropzone $dropzone
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @internal param $user
+     * @internal param $userId
+     */
+    public function unlockUsers(Dropzone $dropzone)
+    {
+        $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
+        $this->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
+
+        $dropRepo = $this->getDoctrine()->getManager()->getRepository('IcapDropzoneBundle:Drop');
+        $drops = $dropRepo->findBy(array('dropzone' => $dropzone->getId(), 'unlockedUser' => 0));
+
+
+        foreach ($drops as $drop) {
+            $drop->setUnlockedUser(true);
+        }
+        $em = $this->getDoctrine()->getManager();
+        $em->flush();
+
+        return $this->redirect(
+            $this->generateUrl(
+                'icap_dropzone_examiners',
+                array(
+                    'resourceId' => $dropzone->getId()
+                )
+            )
+        );
+    }
+
+
+    /**
+     * @Route(
      *      "/{resourceId}/drops",
      *      name="icap_dropzone_drops",
      *      requirements={"resourceId" = "\d+"},
