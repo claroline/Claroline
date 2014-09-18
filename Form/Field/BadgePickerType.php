@@ -71,6 +71,11 @@ class BadgePickerType extends AbstractType
         );
     }
 
+    public function getParent()
+    {
+        return 'text';
+    }
+
     public function getName()
     {
         return 'badgepicker';
