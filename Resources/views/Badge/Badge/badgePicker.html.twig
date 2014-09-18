@@ -7,8 +7,9 @@
         <div class='modal-body'>
             <ul class="list-inline badge_picker_list" data-multiple="{{ multiple }}">
                 {% for badge in badges %}
-                <li class="badge_picker_item">
-                    <input type="checkbox" name="badge_{{ badge.id }}" value="{{ badge.id }}" class="hidden" />
+                    {% set isSelected = (value == badge.id) %}
+                <li class="badge_picker_item{% if isSelected %} selected{% endif %}">
+                    <input type="checkbox" name="badge_{{ badge.id }}" value="{{ badge.id }}"{% if isSelected %} checked="checked"{% endif %} class="hidden" />
                     <img src="{{ asset(badge.webPath) }}" alt="{{ badge.name }}" class="badge_image" />
                     <span>{{ badge.name }}</span>
                 </li>
@@ -46,7 +47,12 @@
 
         function manageMultipleSelection(badge) {
             if (!multipleSelection && !$(badge).hasClass('selected')) {
-                $(".badge_picker_item.selected", modalElement).removeClass('selected');
+                var selectedBadges = $(".badge_picker_item.selected", modalElement);
+
+                var checkboxes = $('input[type=checkbox]', modalElement);
+                checkboxes.prop('checked', false);
+
+                selectedBadges.removeClass('selected');
             }
         }
 
@@ -55,5 +61,7 @@
             var checkbox = $('input[type=checkbox]', badge);
             checkbox.prop('checked', !checkbox.prop('checked'));
         }
+
+        checkValidButton();
     });
 </script>

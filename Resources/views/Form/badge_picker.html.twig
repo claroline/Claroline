@@ -45,7 +45,8 @@
                     };
                     var badgePickerSettings = {
                         mode: "{{ mode }}",
-                        multiple: {{ multiple|default('false') }}
+                        multiple: {{ multiple|default('false') }},
+                        value: {{ value.id|default("null") }}
                     };
                     window.Claroline.BadgePicker.configureBadgePicker(badgePickerSettings);
                     window.Claroline.BadgePicker.openBadgePicker(url, callback);

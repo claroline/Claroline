@@ -108,7 +108,8 @@ class BadgeController extends Controller
 
         return array(
             'badges'   => $badges,
-            'multiple' => $requestParameters->get('multiple', true)
+            'multiple' => $requestParameters->get('multiple', true),
+            'value'    => $requestParameters->get('value', null)
         );
     }
 }
