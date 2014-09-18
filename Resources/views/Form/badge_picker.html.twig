@@ -35,14 +35,14 @@
         <script type="text/javascript">
             $(function(){
                 $("#badgepicker_{{ id }}").click(function() {
-                    var url = "{{ path('claro_badge_picker') }}";
+                    {% if false == multiple %}
+                    var hiddenInputField = $("#{{ id }}");
                     var callback = function (modalElement) {
                         var selectedBadges = $("input[type=checkbox]:checked", modalElement);
-                        selectedBadges.each(function(index) {
-                            console.log($(selectedBadges[index]));
-                        });
-                        modalElement.modal('hide');
+                        hiddenInputField.val($(selectedBadges[0]).val());
                     };
+                    {% endif %}
+                    var url = "{{ path('claro_badge_picker') }}";
                     var badgePickerSettings = {
                         mode: "{{ mode }}",
                         multiple: {{ multiple|default('false') }},
