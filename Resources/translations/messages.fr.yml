@@ -101,6 +101,7 @@ correction date: Date de la correction
 course_name: Nom du Cours
 correspondence: correspondance
 correspondence empty: Vous avez réalisé aucune correspondance !
+correspondenceError: Vous ne pouvez pas associer une même proposition avec plusieurs labels !
 create: Créer
 create a new category: Créer une nouvelle catégorie
 create a new entry: Créer une nouvelle question

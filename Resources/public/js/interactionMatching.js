@@ -8,12 +8,13 @@ var typeMatching;
 
 var advEditionLang;
 var correspEmptyLang;
+var correspErrorLang;
 
 var codeContainerProposal = 1; // to differentiate containers
 var codeContainerLabel = 0;
 
 // Question creation
-function creationMatching(addchoice, addproposal, deletechoice, LabelValue, ScoreRight, ProposalValue, numberProposal, correspondence, deleteLabel, deleteProposal, tMatching, advEdition, correspEmpty, valueCorrespondence){
+function creationMatching(addchoice, addproposal, deletechoice, LabelValue, ScoreRight, ProposalValue, numberProposal, correspondence, deleteLabel, deleteProposal, tMatching, advEdition, correspEmpty, valueCorrespondence, correspondenceError){
 
     //initialisation of variables
     var indexProposal;
@@ -21,6 +22,7 @@ function creationMatching(addchoice, addproposal, deletechoice, LabelValue, Scor
     
     advEditionLang = advEdition;
     correspEmptyLang = correspEmpty;
+    correspErrorLang = correspondenceError;
 
     typeMatching = JSON.parse(tMatching);
 
@@ -69,7 +71,7 @@ function creationMatching(addchoice, addproposal, deletechoice, LabelValue, Scor
 }
 
 // Question edition
-function creationMatchingEdit(addchoice, addproposal, deletechoice, LabelValue, ScoreRight, ProposalValue, numberProposal, correspondence, deleteLabel, deleteProposal, tMatching, advEdition, correspEmpty, nbResponses, valueCorrespondence, tableLabel, tableProposal) {
+function creationMatchingEdit(addchoice, addproposal, deletechoice, LabelValue, ScoreRight, ProposalValue, numberProposal, correspondence, deleteLabel, deleteProposal, tMatching, advEdition, correspEmpty, nbResponses, valueCorrespondence, tableLabel, tableProposal, correspondenceError) {
 
     typeMatching = JSON.parse(tMatching);
     var valueCorres = JSON.parse(valueCorrespondence.replace(/&quot;/ig,'"'));
@@ -79,6 +81,7 @@ function creationMatchingEdit(addchoice, addproposal, deletechoice, LabelValue, 
 
     advEditionLang = advEdition;
     correspEmptyLang = correspEmpty;
+    correspErrorLang = correspondenceError;
 
     //in the first time
     $('#ujm_exobundle_interactionmatchingtype_typeMatching').children('option').each(function() {
@@ -225,13 +228,30 @@ function addProposal(container, deletechoice, table, codeContainer){
 //check if the form is valid
 function check_form(nbrProposals, nbrLabels) {
     var correspondence = false;
+    var proposalSelected = [];
+    var singleProposal = true;
 
     $("*[id$='_correspondence']").each( function() {
         if ($("option:selected", this).length > 0) {
             correspondence = true;
+            $("option:selected", this).each( function () {
+                //alert($(this).val());
+                //si dans tableau return false + mmsg si non ajout dans tableau
+                if (proposalSelected[$(this).val()]) {
+                    alert(correspErrorLang);
+                    singleProposal = false;
+                } else {
+                    proposalSelected[$(this).val()] = true;
+                }
+            });
         }
     });
 
+    if (singleProposal == false) {
+        
+        return false;
+    }
+    
     if (correspondence == false) {
 
         return confirm(correspEmptyLang);
