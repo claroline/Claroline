@@ -43,17 +43,7 @@ class WorkspaceType extends AbstractType
                     'textarea' :
                     'tinymce',
                 array('required' => false)
-            )->add(
-                'template',
-                'entity',
-                array(
-                    'class' => 'ClarolineCoreBundle:Workspace\Template',
-                    'property' => 'name'
-                )
-            )->add('displayable', 'checkbox', array('required' => false))
-            ->add('selfRegistration', 'checkbox', array('required' => false))
-            ->add('registrationValidation', 'checkbox', array('required' => false))
-            ->add('selfUnregistration', 'checkbox', array('required' => false))
+            )
             ->add(
                 'model',
                 'entity',
@@ -70,7 +60,11 @@ class WorkspaceType extends AbstractType
                     'property' => 'name',
                     'required' => false
                 )
-            );
+            )
+            ->add('displayable', 'checkbox', array('required' => false))
+            ->add('selfRegistration', 'checkbox', array('required' => false))
+            ->add('registrationValidation', 'checkbox', array('required' => false))
+            ->add('selfUnregistration', 'checkbox', array('required' => false));
     }
 
     public function getName()

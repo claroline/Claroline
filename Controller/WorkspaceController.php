@@ -309,7 +309,7 @@ class WorkspaceController extends Controller
                 $this->createWorkspaceFromModel($model, $form);
             } else {
                 $config = Configuration::fromTemplate(
-                    $this->templateDir . $ds . $form->get('template')->getData()->getHash()
+                    $this->templateDir . $ds . 'default.zip'
                 );
                 $config->setWorkspaceName($form->get('name')->getData());
                 $config->setWorkspaceCode($form->get('code')->getData());
