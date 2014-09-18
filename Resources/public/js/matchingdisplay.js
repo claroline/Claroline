@@ -1,6 +1,13 @@
 var responses = [];
 
 $(function() {
+    
+    if($(".draggable").width() > $(".droppable").width()) {
+        var $widthDraggable = $(".draggable").width();
+        var $widthDroppable = $widthDraggable;
+        $(".droppable").width($widthDroppable * 1.5);
+    }
+    
     $(".draggable").each(function() {
         $(this).draggable({
             cursor: 'move',
