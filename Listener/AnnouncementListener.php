@@ -24,7 +24,7 @@ use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -34,6 +34,7 @@ use JMS\DiExtraBundle\Annotation as DI;
 class AnnouncementListener
 {
     private $formFactory;
+    private $httpKernel;
     private $om;
     private $request;
     private $resourceManager;
@@ -43,6 +44,7 @@ class AnnouncementListener
     /**
      * @DI\InjectParams({
      *     "formFactory"        = @DI\Inject("claroline.form.factory"),
+     *     "httpKernel"         = @DI\Inject("http_kernel"),
      *     "om"                 = @DI\Inject("claroline.persistence.object_manager"),
      *     "requestStack"       = @DI\Inject("request_stack"),
      *     "resourceManager"    = @DI\Inject("claroline.manager.resource_manager"),
@@ -52,6 +54,7 @@ class AnnouncementListener
      */
     public function __construct(
         FormFactory $formFactory,
+        HttpKernelInterface $httpKernel,
         ObjectManager $om,
         RequestStack $requestStack,
         ResourceManager $resourceManager,
@@ -60,6 +63,7 @@ class AnnouncementListener
     )
     {
         $this->formFactory = $formFactory;
+        $this->httpKernel = $httpKernel;
         $this->om = $om;
         $this->request = $requestStack->getCurrentRequest();
         $this->resourceManager = $resourceManager;
@@ -146,11 +150,13 @@ class AnnouncementListener
      */
     public function onOpen(OpenResourceEvent $event)
     {
-        $route = $this->router->generate(
-            'claro_announcements_list',
-            array('aggregateId' => $event->getResource()->getId())
-        );
-        $event->setResponse(new RedirectResponse($route));
+        $params = array();
+        $params['_controller'] = 'ClarolineAnnouncementBundle:Announcement:announcementsList';
+        $params['aggregateId'] = $event->getResource()->getId();
+        $subRequest = $this->request->duplicate(array(), null, $params);
+        $response = $this->httpKernel
+            ->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
+        $event->setResponse($response);
         $event->stopPropagation();
     }
 

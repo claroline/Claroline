@@ -96,7 +96,7 @@ class AnnouncementController extends Controller
      * @param $page
      * @return Response
      */
-    public function announcementsListAction(AnnouncementAggregate $aggregate, $page)
+    public function announcementsListAction(AnnouncementAggregate $aggregate, $page = 1)
     {
         $collection = new ResourceCollection(array($aggregate->getResourceNode()));
 
