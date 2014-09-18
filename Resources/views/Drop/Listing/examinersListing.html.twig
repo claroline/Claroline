@@ -33,7 +33,7 @@
                         {{ user.lastName|upper }} {{ user.firstName|capitalize }}</a>
                 </td>
 
-                <td class="{% if unlockedUser == 1 %}
+                <td class="{% if unlockedUser == 1 and  needCorrection == 1 %}
                                info
                            {% elseif needCorrection == 1 %}
                                warning
@@ -41,7 +41,7 @@
                     {{ attribute(usersAndCorrectionCount, user.id).correction_count }}
                 </td>
 
-                <td class="{% if unlockedUser == 1 %}
+                <td class="{% if unlockedUser == 1 and  needCorrection == 1 %}
                                info"
                     {% elseif needCorrection == 1 %}
                     warning
