@@ -11,25 +11,17 @@
 
 namespace Claroline\CoreBundle\Manager;
 
-use Claroline\CoreBundle\Entity\Home\HomeTab;
-use Claroline\CoreBundle\Entity\Home\HomeTabConfig;
-use Claroline\CoreBundle\Entity\Resource\Directory;
-use Claroline\CoreBundle\Entity\Resource\ResourceRights;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Widget\WidgetHomeTabConfig;
-use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceFavourite;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceRegistrationQueue;
-use Claroline\CoreBundle\Event\NotPopulatedEventException;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Library\Security\Utilities;
 use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
 use Claroline\CoreBundle\Library\Workspace\Configuration;
 use Claroline\CoreBundle\Manager\HomeTabManager;
 use Claroline\CoreBundle\Manager\MaskManager;
-use Claroline\CoreBundle\Manager\ResourceManager;;
-use Claroline\CoreBundle\Manager\RightsManager;
+use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Pager\PagerFactory;
 use Claroline\CoreBundle\Persistence\ObjectManager;
@@ -44,7 +36,6 @@ use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
-use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Yaml\Yaml;
 
 /**
@@ -74,8 +65,6 @@ class WorkspaceManager
     private $userRepo;
     /** @var WorkspaceRepository */
     private $workspaceRepo;
-    /** @var ToolManager */
-    private $toolManager;
     /** @var StrictDispatcher */
     private $dispatcher;
     /** @var ObjectManager */
@@ -89,7 +78,6 @@ class WorkspaceManager
     private $pagerFactory;
     private $workspaceFavouriteRepo;
     private $container;
-    private $rightsManager;
 
     /**
      * Constructor.
@@ -99,15 +87,13 @@ class WorkspaceManager
      *     "roleManager"     = @DI\Inject("claroline.manager.role_manager"),
      *     "maskManager"     = @DI\Inject("claroline.manager.mask_manager"),
      *     "resourceManager" = @DI\Inject("claroline.manager.resource_manager"),
-     *     "toolManager"     = @DI\Inject("claroline.manager.tool_manager"),
      *     "dispatcher"      = @DI\Inject("claroline.event.event_dispatcher"),
      *     "om"              = @DI\Inject("claroline.persistence.object_manager"),
      *     "ut"              = @DI\Inject("claroline.utilities.misc"),
      *     "sut"             = @DI\Inject("claroline.security.utilities"),
      *     "templateDir"     = @DI\Inject("%claroline.param.templates_directory%"),
      *     "pagerFactory"    = @DI\Inject("claroline.pager.pager_factory"),
-     *     "container"       = @DI\Inject("service_container"),
-     *     "rightsManager"   = @DI\Inject("claroline.manager.rights_manager")
+     *     "container"       = @DI\Inject("service_container")
      * })
      */
     public function __construct(
@@ -115,22 +101,19 @@ class WorkspaceManager
         RoleManager $roleManager,
         MaskManager $maskManager,
         ResourceManager $resourceManager,
-        ToolManager $toolManager,
         StrictDispatcher $dispatcher,
         ObjectManager $om,
         ClaroUtilities $ut,
         Utilities $sut,
         $templateDir,
         PagerFactory $pagerFactory,
-        ContainerInterface $container,
-        RightsManager $rightsManager
+        ContainerInterface $container
     )
     {
         $this->homeTabManager = $homeTabManager;
         $this->maskManager = $maskManager;
         $this->roleManager = $roleManager;
         $this->resourceManager = $resourceManager;
-        $this->toolManager = $toolManager;
         $this->ut = $ut;
         $this->sut = $sut;
         $this->om = $om;
@@ -147,7 +130,6 @@ class WorkspaceManager
         $this->workspaceFavouriteRepo = $om->getRepository('ClarolineCoreBundle:Workspace\WorkspaceFavourite');
         $this->pagerFactory = $pagerFactory;
         $this->container = $container;
-        $this->rightsManager = $rightsManager;
     }
 
     /**
@@ -683,242 +665,6 @@ class WorkspaceManager
         $this->container->get('security.context')->setToken($token);
 
         return $user;
-    }
-
-    /**
-     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $source
-     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
-     */
-    public function duplicateWorkspaceRoles(
-        Workspace $source,
-        Workspace $workspace,
-        User $user
-    )
-    {
-        $guid = $workspace->getGuid();
-        $roles = $source->getRoles();
-        $unusedRolePartName = '_' . $source->getGuid();
-
-        $this->om->startFlushSuite();
-
-        foreach ($roles as $role) {
-            $roleName = str_replace($unusedRolePartName, '', $role->getName());
-
-            $createdRole = $this->roleManager->createWorkspaceRole(
-                $roleName . '_' . $guid,
-                $role->getTranslationKey(),
-                $workspace,
-                $role->isReadOnly()
-            );
-
-            if ($roleName === 'ROLE_WS_MANAGER') {
-                $user->addRole($createdRole);
-                $this->om->persist($user);
-            }
-        }
-        $this->om->endFlushSuite();
-    }
-
-    /**
-     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $source
-     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
-     */
-    public function duplicateOrderedTools(Workspace $source, Workspace $workspace)
-    {
-        $orderedTools = $source->getOrderedTools();
-        $workspaceRoles = array();
-        $wRoles = $this->roleManager->getRolesByWorkspace($workspace);
-
-        foreach ($wRoles as $wRole) {
-            $workspaceRoles[$wRole->getTranslationKey()] = $wRole;
-        }
-
-        $this->om->startFlushSuite();
-
-        foreach ($orderedTools as $orderedTool) {
-            $workspaceOrderedTool = $this->toolManager->addWorkspaceTool(
-                $orderedTool->getTool(),
-                $orderedTool->getOrder(),
-                $orderedTool->getName(),
-                $workspace
-            );
-
-            $roles = $orderedTool->getRoles();
-
-            foreach ($roles as $role) {
-
-                if ($role->getType() === 1) {
-                    $this->toolManager->addRoleToOrderedTool(
-                        $workspaceOrderedTool,
-                        $role
-                    );
-                } else {
-                    $key = $role->getTranslationKey();
-
-                    if (isset($workspaceRoles[$key]) && !empty($workspaceRoles[$key])) {
-                        $this->toolManager->addRoleToOrderedTool(
-                            $workspaceOrderedTool,
-                            $workspaceRoles[$key]
-                        );
-                    }
-                }
-            }
-        }
-        $this->om->endFlushSuite();
-    }
-
-    /**
-     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $source
-     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
-     * @param \Claroline\CoreBundle\Entity\User $user
-     */
-    public function duplicateRootDirectory(
-        Workspace $source,
-        Workspace $workspace,
-        User $user
-    )
-    {
-        $rootDirectory = new Directory();
-        $rootDirectory->setName($workspace->getName());
-        $directoryType = $this->resourceManager->getResourceTypeByName('directory');
-        $resource = $this->resourceManager->create(
-            $rootDirectory,
-            $directoryType,
-            $user,
-            $workspace,
-            null,
-            null,
-            array()
-        );
-
-        $workspaceRoles = array();
-        $wRoles = $this->roleManager->getRolesByWorkspace($workspace);
-
-        foreach ($wRoles as $wRole) {
-            $workspaceRoles[$wRole->getTranslationKey()] = $wRole;
-        }
-
-        $root = $this->resourceManager->getWorkspaceRoot($source);
-        $rights = $root->getRights();
-
-        foreach ($rights as $right) {
-            $role = $right->getRole();
-
-            if ($role->getType() === 1) {
-                $newRight = $this->rightsManager->getRightsFromIdentityMap(
-                    $role->getName(),
-                    $resource->getResourceNode()
-                );
-                $newRight->setMask($right->getMask());
-                $newRight->setCreatableResourceTypes(
-                    $right->getCreatableResourceTypes()->toArray()
-                );
-
-            } else {
-                $newRight = new ResourceRights();
-                $newRight->setResourceNode($resource->getResourceNode());
-                $newRight->setMask($right->getMask());
-                $newRight->setCreatableResourceTypes(
-                    $right->getCreatableResourceTypes()->toArray()
-                );
-
-                if ($role->getWorkspace() === $source) {
-                    $key = $role->getTranslationKey();
-
-                    if (isset($workspaceRoles[$key]) && !empty($workspaceRoles[$key])) {
-                        $newRight->setRole($workspaceRoles[$key]);
-                    }
-                } else {
-                    $newRight->setRole($role);
-                }
-                $this->om->persist($newRight);
-            }
-        }
-        $this->om->flush();
-
-        return $resource;
-    }
-
-    public function duplicateHomeTabs(
-        Workspace $source,
-        Workspace $workspace,
-        array $homeTabs
-    )
-    {
-        $this->om->startFlushSuite();
-        $homeTabConfigs = $this->homeTabManager
-            ->getHomeTabConfigsByWorkspaceAndHomeTabs($source, $homeTabs);
-        $order = 1;
-        $widgetCongigErrors = array();
-
-        foreach ($homeTabConfigs as $homeTabConfig) {
-            $homeTab = $homeTabConfig->getHomeTab();
-            $widgetHomeTabConfigs = $homeTab->getWidgetHomeTabConfigs();
-
-            $newHomeTab = new HomeTab();
-            $newHomeTab->setType('workspace');
-            $newHomeTab->setWorkspace($workspace);
-            $newHomeTab->setName($homeTab->getName());
-            $this->om->persist($newHomeTab);
-
-            $newHomeTabConfig = new HomeTabConfig();
-            $newHomeTabConfig->setHomeTab($newHomeTab);
-            $newHomeTabConfig->setWorkspace($workspace);
-            $newHomeTabConfig->setType('workspace');
-            $newHomeTabConfig->setLocked($homeTabConfig->isVisible());
-            $newHomeTabConfig->setLocked($homeTabConfig->isLocked());
-            $newHomeTabConfig->setTabOrder($order);
-            $this->om->persist($newHomeTabConfig);
-            $order++;
-
-            foreach ($widgetHomeTabConfigs as $widgetConfig) {
-                $widgetInstance = $widgetConfig->getWidgetInstance();
-                $widget = $widgetInstance->getWidget();
-
-                $newWidgetInstance = new WidgetInstance();
-                $newWidgetInstance->setIsAdmin(false);
-                $newWidgetInstance->setIsDesktop(false);
-                $newWidgetInstance->setWorkspace($workspace);
-                $newWidgetInstance->setWidget($widget);
-                $newWidgetInstance->setName($widgetInstance->getName());
-                $this->om->persist($newWidgetInstance);
-
-                $newWidgetConfig = new WidgetHomeTabConfig();
-                $newWidgetConfig->setType('workspace');
-                $newWidgetConfig->setWorkspace($workspace);
-                $newWidgetConfig->setHomeTab($newHomeTab);
-                $newWidgetConfig->setWidgetInstance($newWidgetInstance);
-                $newWidgetConfig->setVisible($widgetConfig->isVisible());
-                $newWidgetConfig->setLocked($widgetConfig->isLocked());
-                $newWidgetConfig->setWidgetOrder($widgetConfig->getWidgetOrder());
-                $this->om->persist($newWidgetConfig);
-
-                if ($widget->isConfigurable()) {
-
-                    try {
-                        $this->dispatcher->dispatch(
-                            'copy_widget_config_' . $widget->getName(),
-                            'CopyWidgetConfiguration',
-                            array($widgetInstance, $newWidgetInstance)
-                        );
-                    } catch (NotPopulatedEventException $e) {
-                        $widgetCongigErrors[] = array(
-                            'widget' => $widget->getName(),
-                            'widgetInstance' => $widgetInstance->getName(),
-                            'error' => $e->getMessage()
-                        );
-                    }
-                }
-            }
-        }
-        $this->om->endFlushSuite();
-
-        return $widgetCongigErrors;
-    }
-
-    public function duplicateResources()
-    {
-        
     }
 
     /**

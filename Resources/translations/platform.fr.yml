@@ -975,11 +975,11 @@ workspace_edit_form_selfUnregistration: 'Désinscription publique'
 workspace_form_code: Code
 workspace_form_description: Description
 workspace_form_displayable: Public
+workspace_form_model: Modèle
 workspace_form_name: Nom
 workspace_form_registrationValidation : 'Validation de l''inscription'
 workspace_form_selfRegistration: 'Inscription publique'
 workspace_form_selfUnregistration: 'Désinscription publique'
-workspace_form_template: Modèle
 workspace_form_type: Type
 workspace_home_tab_creation: 'Création d''un onglet pour les espaces d''activités'
 workspace_home_tab_edition: 'Edition de l''onglet pour les espaces d''activités'

@@ -971,11 +971,11 @@ workspace_edit_form_selfUnregistration: 'Public unregistration'
 workspace_form_code: Code
 workspace_form_description: Description
 workspace_form_displayable: Public
+workspace_form_model: Template
 workspace_form_name: Name
 workspace_form_registrationValidation : 'Registration validation'
 workspace_form_selfRegistration: 'Public registration'
 workspace_form_selfUnregistration: 'Public unregistration'
-workspace_form_template: Template
 workspace_form_type: Type
 workspace_home_tab_creation: 'Workspace Home tab creation'
 workspace_home_tab_edition: 'Workspace Home tab edition'
