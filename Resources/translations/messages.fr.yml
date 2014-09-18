@@ -39,6 +39,7 @@ actions: Actions
 add: Ajouter
 add a new picture: Ajouter une nouvelle image
 addChoice: Ajouter un choix
+addLabel: Ajouter un label
 addDoc: Ajouter un document
 addProposal: Ajouter une proposition
 add hint: Ajouter un indice
@@ -111,7 +112,7 @@ date: Date
 delDocQuestion: Supprimer ce document ainsi que toutes les questions qui y sont liées
 delete: Supprimer
 delete document: Suppression de document
-deleteLabel: Supprimer le choix
+deleteLabel: Supprimer le label
 delete hole: Supprimer le blanc
 delete of my bank: Supprimer de ma banque
 delete of my exercise: Supprimer de mon exercice

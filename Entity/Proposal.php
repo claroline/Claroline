@@ -33,7 +33,7 @@ class Proposal
      * @ORM\JoinColumn(name="interaction_matching_id", referencedColumnName="id")
      */
     private $interactionMatching;
-    
+
     /**
      * @ORM\ManyToOne(targetEntity="UJM\ExoBundle\Entity\Label")
      * @ORM\JoinColumn(name="label_id", referencedColumnName="id")
@@ -88,7 +88,7 @@ class Proposal
     {
         $this->interactionMatching = $interactionMatching;
     }
-    
+
     /**
      * Get InteractionMatching
      *
@@ -107,7 +107,7 @@ class Proposal
     {
         $this->associatedLabel = $label;
     }
-    
+
     /**
      * Remove Label
      *
@@ -116,5 +116,5 @@ class Proposal
     {
         $this->associatedLabel = NULL;
     }
-    
+
 }

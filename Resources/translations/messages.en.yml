@@ -40,6 +40,7 @@ add: Add
 add a new picture: Add a new picture
 addChoice: Add a choice
 addDoc: Add a document
+addLabel: Add a label
 addProposal: Add a proposal
 add hint: Add hint
 add user: Add user
@@ -111,7 +112,7 @@ date: Date
 delDocQuestion: Delete this document and all the linked questions
 delete: Delete
 delete document: Deletion of document
-deleteLabel: Delete the choice
+deleteLabel: Delete the label
 delete hole: Delete the hole
 delete of my bank: Delete of my bank
 delete of my exercise: Delete of my exercise
