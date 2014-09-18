@@ -277,15 +277,47 @@ class DropController extends DropzoneBaseController
      */
     public function unlockUsers(Dropzone $dropzone)
     {
+        return $this->unlockOrLockUsers($dropzone, true);
+    }
+
+
+    /**
+     * @Route(
+     *      "/{resourceId}/unlock/cancel",
+     *      name="icap_dropzone_unlock_cancel",
+     *      requirements={"resourceId" = "\d+"}
+     * )
+     * @ParamConverter("dropzone",class="IcapDropzoneBundle:Dropzone", options={"id" = "resourceId"})
+     *
+     * @param \Icap\DropzoneBundle\Entity\Dropzone $dropzone
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @internal param $user
+     * @internal param $userId
+     */
+    public function unlockUsersCancel(Dropzone $dropzone)
+    {
+        return $this->unlockOrLockUsers($dropzone, false);
+    }
+
+
+    /**
+     *  Factorised function for lock & unlock users in a dropzone.
+     * @param Dropzone $dropzone
+     * @param bool $unlock
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    private function unlockOrLockUsers(Dropzone $dropzone, $unlock = true)
+    {
         $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
         $this->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
 
         $dropRepo = $this->getDoctrine()->getManager()->getRepository('IcapDropzoneBundle:Drop');
-        $drops = $dropRepo->findBy(array('dropzone' => $dropzone->getId(), 'unlockedUser' => 0));
+        $drops = $dropRepo->findBy(array('dropzone' => $dropzone->getId(), 'unlockedUser' => !$unlock));
 
 
         foreach ($drops as $drop) {
-            $drop->setUnlockedUser(true);
+            $drop->setUnlockedUser($unlock);
         }
         $em = $this->getDoctrine()->getManager();
         $em->flush();
