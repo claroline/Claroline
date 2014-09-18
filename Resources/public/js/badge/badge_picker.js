@@ -8,11 +8,25 @@
  */
 
 $(function(){
+    var badgePicker     = window.Claroline.BadgePicker = {};
+    var modal           = window.Claroline.Modal;
 
-    var badgePicker = window.Claroline.BadgePicker = {};
-    var modal       = window.Claroline.Modal;
+    badgePicker.defaultSettings = {
+        multiple: true
+    };
+    badgePicker.settings = {};
+
+    badgePicker.configureBadgePicker = function (customSettings) {
+        this.settings = $.extend({}, this.defaultSettings, customSettings);
+    };
 
     badgePicker.openBadgePicker = function (url, callback) {
-        modal.displayForm(url, callback, function () {}, false);
+        badgePicker.configureBadgePicker(this.settings);
+        var settings = {
+            url:  url,
+            type: 'POST',
+            data: $.extend({}, badgePicker.settings)
+        };
+        modal.displayCustomForm(settings, callback, null, false);
     };
 });

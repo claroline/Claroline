@@ -33,6 +33,7 @@ class BadgeManager
     const BADGE_PICKER_MODE_USER      = 'user';
     const BADGE_PICKER_MODE_PLATFORM  = 'platform';
     const BADGE_PICKER_MODE_WORKSPACE = 'workspace';
+    const BADGE_PICKER_DEFAULT_MODE    = self::BADGE_PICKER_MODE_PLATFORM;
 
     /**
      * @var \Doctrine\ORM\EntityManager

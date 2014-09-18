@@ -5,7 +5,7 @@
             <h4 class="modal-title">{{ 'badge_selection' | trans({}, 'badge') }}</h4>
         </div>
         <div class='modal-body'>
-            <ul class="list-inline badge_picker_list">
+            <ul class="list-inline badge_picker_list" data-multiple="{{ multiple }}">
                 {% for badge in badges %}
                 <li class="badge_picker_item">
                     <input type="checkbox" name="badge_{{ badge.id }}" value="{{ badge.id }}" class="hidden" />
@@ -19,31 +19,41 @@
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">{{ 'cancel'|trans({}, 'platform') }}</button>
-            <button type="button" class="btn btn-primary form_valid_button" disabled="disabled">{{ 'select'|trans({}, 'badge') }}</button>
+            <button type="button" class="btn btn-primary submit" disabled="disabled">{{ 'select'|trans({}, 'badge') }}</button>
         </div>
     </form>
 </div>
 
 <script type="text/javascript">
     $(function(){
-        var modalElement = $(".badge_picker_modal");
-        var validButton  = $(".form_valid_button");
+        var modalElement      = $(".badge_picker_modal");
+        var validButton       = $("button.submit");
+        var multipleSelection = $(".badge_picker_list").data('multiple');
 
         $(".badge_picker_item").click(function (event) {
-            $(this).toggleClass('selected');
-            var checkbox = $('input[type=checkbox]', this);
-            checkbox.prop('checked', !checkbox.prop('checked'));
+            manageMultipleSelection(this);
+            toggleBadgeSelection(this);
             checkValidButton();
         });
 
         function checkValidButton() {
-            var selectedBadges = $("input[type=checkbox]:checked", modalElement);
-            if (0 < selectedBadges.length) {
-                validButton.prop('disabled', false);
+            validButton.prop('disabled', 0 == countSelectedBadge());
+        }
+
+        function countSelectedBadge() {
+            return $("input[type=checkbox]:checked", modalElement).length;
+        }
+
+        function manageMultipleSelection(badge) {
+            if (!multipleSelection && !$(badge).hasClass('selected')) {
+                $(".badge_picker_item.selected", modalElement).removeClass('selected');
             }
-            else {
-                validButton.prop('disabled', true);
-            }
+        }
+
+        function toggleBadgeSelection(badge) {
+            $(badge).toggleClass('selected');
+            var checkbox = $('input[type=checkbox]', badge);
+            checkbox.prop('checked', !checkbox.prop('checked'));
         }
     });
 </script>

@@ -12,6 +12,7 @@
 namespace Claroline\CoreBundle\Form\Field;
 
 use Claroline\CoreBundle\Form\DataTransformer\BadgePickerTransformer;
+use Claroline\CoreBundle\Manager\BadgeManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -53,7 +54,8 @@ class BadgePickerType extends AbstractType
      */
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
-        $view->vars['multiple'] = $options['multiple'];
+        $view->vars['multiple']    = $options['multiple'];
+        $view->vars['mode']        = $options['mode'];
     }
 
     /**
@@ -63,7 +65,8 @@ class BadgePickerType extends AbstractType
     {
         $resolver->setDefaults(
             array(
-                'multiple' => false
+                'multiple'    => false,
+                'mode'        => BadgeManager::BADGE_PICKER_DEFAULT_MODE
             )
         );
     }
