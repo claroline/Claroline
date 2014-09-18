@@ -20,6 +20,7 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\Security\Core\SecurityContextInterface;
 
 /**
  * @DI\Service("claroline.manager.model_manager")
@@ -28,20 +29,24 @@ class ModelManager
 {
     private $om;
     private $modelRepository;
+    private $sc;
 
     /**
      * Constructor.
      *
      * @DI\InjectParams({
-     *     "om" = @DI\Inject("claroline.persistence.object_manager")
+     *     "om" = @DI\Inject("claroline.persistence.object_manager"),
+     *     "sc" = @DI\Inject("security.context")
      * })
      */
     public function __construct(
-        ObjectManager $om
+        ObjectManager $om,
+        SecurityContextInterface $sc
     )
     {
         $this->om = $om;
         $this->modelRepository = $this->om->getRepository('ClarolineCoreBundle:Model\WorkspaceModel');
+        $this->sc = $sc;
     }
 
     public function create($name, Workspace $workspace)
@@ -49,6 +54,7 @@ class ModelManager
         $model = new WorkspaceModel();
         $model->setName($name);
         $model->setWorkspace($workspace);
+        if ($this->sc->getToken()->getUser() !== 'anon.') $model->addUser($this->sc->getToken()->getUser());
         $this->om->persist($model);
         $this->om->flush();
 
