@@ -43,6 +43,8 @@ $('body').on('click', '.rename-model-link', function (event) {
 var addModel = function (model) {
     var html = Twig.render(ModelRow, {'model': model});
     $('#table-model-body').append(html);
+    $('#no-model-div').hide();
+    $('.model-list').show();
 }
 
 var removeModel = function (event, args, model) {
