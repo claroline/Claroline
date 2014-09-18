@@ -64,7 +64,10 @@
         parameters = parameters || {};
         var mainParameters = buildParameters('main', parameters, false, true);
         var pickerParameters = buildParameters('defaultPicker', parameters, true, true);
-        var shortcutParameters = buildParameters('shortcutPicker', parameters, true, true);
+        //set the shortcut picker parameters
+        var sParameters = parameters || {};
+        sParameters.isDirectorySelectionAllowed = false;
+        var shortcutParameters = buildParameters('shortcutPicker', sParameters, true, true);
         views['main'] = new manager.Views.Master(mainParameters, dispatcher);
         views['defaultPicker'] = new manager.Views.Master(pickerParameters, dispatcher);
         views['shortcutPicker'] = new manager.Views.Master(shortcutParameters, dispatcher);
@@ -195,6 +198,7 @@
         var allowDirectorySelection = true;
         if (parameters.isDirectorySelectionAllowed !== undefined)
             allowDirectorySelection = parameters.isDirectorySelectionAllowed;
+        console.debug(allowDirectorySelection);
         var mergedParameters = {
             viewName: viewName,
             isPickerMode: isPicker,
