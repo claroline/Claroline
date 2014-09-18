@@ -25,6 +25,7 @@ use Claroline\ForumBundle\Entity\Message;
 use Claroline\ForumBundle\Form\ForumType;
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 class ForumListener extends ContainerAware
 {
@@ -70,10 +71,15 @@ class ForumListener extends ContainerAware
 
     public function onOpen(OpenResourceEvent $event)
     {
-        $route = $this->container
-            ->get('router')
-            ->generate('claro_forum_categories', array('forum' => $event->getResource()->getId()));
-        $event->setResponse(new RedirectResponse($route));
+        $requestStack = $this->container->get('request_stack');
+        $httpKernel = $this->container->get('http_kernel');
+        $request = $requestStack->getCurrentRequest();
+        $params = array();
+        $params['_controller'] = 'ClarolineForumBundle:Forum:open';
+        $params['forum'] = $event->getResource()->getId();
+        $subRequest = $request->duplicate(array(), null, $params);
+        $response = $httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
+        $event->setResponse($response);
         $event->stopPropagation();
     }
 
