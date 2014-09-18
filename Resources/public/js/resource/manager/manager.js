@@ -192,9 +192,9 @@
     }
 
     function buildParameters(viewName, parameters, isPicker, isDefault) {
-        var isDirectorySelectionAllowed = true;
+        var allowDirectorySelection = true;
         if (parameters.isDirectorySelectionAllowed !== undefined)
-            isDirectorySelectionAllowed = parameters.isDirectorySelectionAllowed;
+            allowDirectorySelection = parameters.isDirectorySelectionAllowed;
         var mergedParameters = {
             viewName: viewName,
             isPickerMode: isPicker,
@@ -210,7 +210,7 @@
             zoom: parameters.zoom || fetchedParameters.zoom || 'zoom100',
             pickerCallback: parameters.callback || function () {},
             isPickerMultiSelectAllowed: isDefault || parameters.isPickerMultiSelectAllowed || false,
-            isDirectorySelectionAllowed: isDirectorySelectionAllowed
+            isDirectorySelectionAllowed: allowDirectorySelection
         };
 
         if (mergedParameters.preFetchedDirectory) {
