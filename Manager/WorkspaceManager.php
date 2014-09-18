@@ -11,27 +11,17 @@
 
 namespace Claroline\CoreBundle\Manager;
 
-use Claroline\CoreBundle\Entity\Home\HomeTab;
-use Claroline\CoreBundle\Entity\Home\HomeTabConfig;
-use Claroline\CoreBundle\Entity\Resource\Directory;
-use Claroline\CoreBundle\Entity\Resource\ResourceNode;
-use Claroline\CoreBundle\Entity\Resource\ResourceRights;
-use Claroline\CoreBundle\Entity\Resource\ResourceShortcut;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Widget\WidgetHomeTabConfig;
-use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceFavourite;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceRegistrationQueue;
-use Claroline\CoreBundle\Event\NotPopulatedEventException;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Library\Security\Utilities;
 use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
 use Claroline\CoreBundle\Library\Workspace\Configuration;
 use Claroline\CoreBundle\Manager\HomeTabManager;
 use Claroline\CoreBundle\Manager\MaskManager;
-use Claroline\CoreBundle\Manager\ResourceManager;;
-use Claroline\CoreBundle\Manager\RightsManager;
+use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Pager\PagerFactory;
 use Claroline\CoreBundle\Persistence\ObjectManager;
@@ -75,8 +65,6 @@ class WorkspaceManager
     private $userRepo;
     /** @var WorkspaceRepository */
     private $workspaceRepo;
-    /** @var ToolManager */
-    private $toolManager;
     /** @var StrictDispatcher */
     private $dispatcher;
     /** @var ObjectManager */
@@ -90,7 +78,6 @@ class WorkspaceManager
     private $pagerFactory;
     private $workspaceFavouriteRepo;
     private $container;
-    private $rightsManager;
 
     /**
      * Constructor.
@@ -100,15 +87,13 @@ class WorkspaceManager
      *     "roleManager"     = @DI\Inject("claroline.manager.role_manager"),
      *     "maskManager"     = @DI\Inject("claroline.manager.mask_manager"),
      *     "resourceManager" = @DI\Inject("claroline.manager.resource_manager"),
-     *     "toolManager"     = @DI\Inject("claroline.manager.tool_manager"),
      *     "dispatcher"      = @DI\Inject("claroline.event.event_dispatcher"),
      *     "om"              = @DI\Inject("claroline.persistence.object_manager"),
      *     "ut"              = @DI\Inject("claroline.utilities.misc"),
      *     "sut"             = @DI\Inject("claroline.security.utilities"),
      *     "templateDir"     = @DI\Inject("%claroline.param.templates_directory%"),
      *     "pagerFactory"    = @DI\Inject("claroline.pager.pager_factory"),
-     *     "container"       = @DI\Inject("service_container"),
-     *     "rightsManager"   = @DI\Inject("claroline.manager.rights_manager")
+     *     "container"       = @DI\Inject("service_container")
      * })
      */
     public function __construct(
@@ -116,22 +101,19 @@ class WorkspaceManager
         RoleManager $roleManager,
         MaskManager $maskManager,
         ResourceManager $resourceManager,
-        ToolManager $toolManager,
         StrictDispatcher $dispatcher,
         ObjectManager $om,
         ClaroUtilities $ut,
         Utilities $sut,
         $templateDir,
         PagerFactory $pagerFactory,
-        ContainerInterface $container,
-        RightsManager $rightsManager
+        ContainerInterface $container
     )
     {
         $this->homeTabManager = $homeTabManager;
         $this->maskManager = $maskManager;
         $this->roleManager = $roleManager;
         $this->resourceManager = $resourceManager;
-        $this->toolManager = $toolManager;
         $this->ut = $ut;
         $this->sut = $sut;
         $this->om = $om;
@@ -148,7 +130,6 @@ class WorkspaceManager
         $this->workspaceFavouriteRepo = $om->getRepository('ClarolineCoreBundle:Workspace\WorkspaceFavourite');
         $this->pagerFactory = $pagerFactory;
         $this->container = $container;
-        $this->rightsManager = $rightsManager;
     }
 
     /**
@@ -832,295 +813,6 @@ class WorkspaceManager
     }
 
     /**
-     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $source
-     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
-     */
-    public function duplicateWorkspaceRoles(
-        Workspace $source,
-        Workspace $workspace,
-        User $user
-    )
-    {
-        $this->om->startFlushSuite();
-
-        $guid = $workspace->getGuid();
-        $roles = $source->getRoles();
-        $unusedRolePartName = '_' . $source->getGuid();
-
-        foreach ($roles as $role) {
-            $roleName = str_replace($unusedRolePartName, '', $role->getName());
-
-            $createdRole = $this->roleManager->createWorkspaceRole(
-                $roleName . '_' . $guid,
-                $role->getTranslationKey(),
-                $workspace,
-                $role->isReadOnly()
-            );
-
-            if ($roleName === 'ROLE_WS_MANAGER') {
-                $user->addRole($createdRole);
-                $this->om->persist($user);
-            }
-        }
-        $this->om->endFlushSuite();
-    }
-
-    /**
-     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $source
-     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
-     */
-    public function duplicateOrderedTools(Workspace $source, Workspace $workspace)
-    {
-        $this->om->startFlushSuite();
-
-        $orderedTools = $source->getOrderedTools();
-        $workspaceRoles = $this->getArrayRolesByWorkspace($workspace);
-
-        foreach ($orderedTools as $orderedTool) {
-            $workspaceOrderedTool = $this->toolManager->addWorkspaceTool(
-                $orderedTool->getTool(),
-                $orderedTool->getOrder(),
-                $orderedTool->getName(),
-                $workspace
-            );
-
-            $roles = $orderedTool->getRoles();
-
-            foreach ($roles as $role) {
-
-                if ($role->getType() === 1) {
-                    $this->toolManager->addRoleToOrderedTool(
-                        $workspaceOrderedTool,
-                        $role
-                    );
-                } else {
-                    $key = $role->getTranslationKey();
-
-                    if (isset($workspaceRoles[$key]) && !empty($workspaceRoles[$key])) {
-                        $this->toolManager->addRoleToOrderedTool(
-                            $workspaceOrderedTool,
-                            $workspaceRoles[$key]
-                        );
-                    }
-                }
-            }
-        }
-        $this->om->endFlushSuite();
-    }
-
-    /**
-     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $source
-     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
-     * @param \Claroline\CoreBundle\Entity\User $user
-     */
-    public function duplicateRootDirectory(
-        Workspace $source,
-        Workspace $workspace,
-        User $user
-    )
-    {
-        $rootDirectory = new Directory();
-        $rootDirectory->setName($workspace->getName());
-        $directoryType = $this->resourceManager->getResourceTypeByName('directory');
-        $resource = $this->resourceManager->create(
-            $rootDirectory,
-            $directoryType,
-            $user,
-            $workspace,
-            null,
-            null,
-            array()
-        );
-
-        $workspaceRoles = $this->getArrayRolesByWorkspace($workspace);
-        $root = $this->resourceManager->getWorkspaceRoot($source);
-        $rights = $root->getRights();
-
-        foreach ($rights as $right) {
-            $role = $right->getRole();
-
-            if ($role->getType() === 1) {
-                $newRight = $this->rightsManager->getRightsFromIdentityMap(
-                    $role->getName(),
-                    $resource->getResourceNode()
-                );
-            } else {
-                $newRight = new ResourceRights();
-                $newRight->setResourceNode($resource->getResourceNode());
-
-                if ($role->getWorkspace() === $source) {
-                    $key = $role->getTranslationKey();
-
-                    if (isset($workspaceRoles[$key]) && !empty($workspaceRoles[$key])) {
-                        $newRight->setRole($workspaceRoles[$key]);
-                    }
-                } else {
-                    $newRight->setRole($role);
-                }
-            }
-            $newRight->setMask($right->getMask());
-            $newRight->setCreatableResourceTypes(
-                $right->getCreatableResourceTypes()->toArray()
-            );
-            $this->om->persist($newRight);
-        }
-        $this->om->flush();
-
-        return $resource;
-    }
-
-    public function duplicateHomeTabs(
-        Workspace $source,
-        Workspace $workspace,
-        array $homeTabs
-    )
-    {
-        $this->om->startFlushSuite();
-
-        $homeTabConfigs = $this->homeTabManager
-            ->getHomeTabConfigsByWorkspaceAndHomeTabs($source, $homeTabs);
-        $order = 1;
-        $widgetCongigErrors = array();
-
-        foreach ($homeTabConfigs as $homeTabConfig) {
-            $homeTab = $homeTabConfig->getHomeTab();
-            $widgetHomeTabConfigs = $homeTab->getWidgetHomeTabConfigs();
-
-            $newHomeTab = new HomeTab();
-            $newHomeTab->setType('workspace');
-            $newHomeTab->setWorkspace($workspace);
-            $newHomeTab->setName($homeTab->getName());
-            $this->om->persist($newHomeTab);
-
-            $newHomeTabConfig = new HomeTabConfig();
-            $newHomeTabConfig->setHomeTab($newHomeTab);
-            $newHomeTabConfig->setWorkspace($workspace);
-            $newHomeTabConfig->setType('workspace');
-            $newHomeTabConfig->setLocked($homeTabConfig->isVisible());
-            $newHomeTabConfig->setLocked($homeTabConfig->isLocked());
-            $newHomeTabConfig->setTabOrder($order);
-            $this->om->persist($newHomeTabConfig);
-            $order++;
-
-            foreach ($widgetHomeTabConfigs as $widgetConfig) {
-                $widgetInstance = $widgetConfig->getWidgetInstance();
-                $widget = $widgetInstance->getWidget();
-
-                $newWidgetInstance = new WidgetInstance();
-                $newWidgetInstance->setIsAdmin(false);
-                $newWidgetInstance->setIsDesktop(false);
-                $newWidgetInstance->setWorkspace($workspace);
-                $newWidgetInstance->setWidget($widget);
-                $newWidgetInstance->setName($widgetInstance->getName());
-                $this->om->persist($newWidgetInstance);
-
-                $newWidgetConfig = new WidgetHomeTabConfig();
-                $newWidgetConfig->setType('workspace');
-                $newWidgetConfig->setWorkspace($workspace);
-                $newWidgetConfig->setHomeTab($newHomeTab);
-                $newWidgetConfig->setWidgetInstance($newWidgetInstance);
-                $newWidgetConfig->setVisible($widgetConfig->isVisible());
-                $newWidgetConfig->setLocked($widgetConfig->isLocked());
-                $newWidgetConfig->setWidgetOrder($widgetConfig->getWidgetOrder());
-                $this->om->persist($newWidgetConfig);
-
-                if ($widget->isConfigurable()) {
-
-                    try {
-                        $this->dispatcher->dispatch(
-                            'copy_widget_config_' . $widget->getName(),
-                            'CopyWidgetConfiguration',
-                            array($widgetInstance, $newWidgetInstance)
-                        );
-                    } catch (NotPopulatedEventException $e) {
-                        $widgetCongigErrors[] = array(
-                            'widgetName' => $widget->getName(),
-                            'widgetInstanceName' => $widgetInstance->getName(),
-                            'error' => $e->getMessage()
-                        );
-                    }
-                }
-            }
-        }
-        $this->om->endFlushSuite();
-
-        return $widgetCongigErrors;
-    }
-
-    public function duplicateResources(
-        array $resourcesModels,
-        Directory $rootDirectory,
-        Workspace $workspace,
-        User $user
-    )
-    {
-        $this->om->startFlushSuite();
-
-        $copies = array();
-        $resourcesErrors = array();
-        $workspaceRoles = $this->getArrayRolesByWorkspace($workspace);
-
-        foreach ($resourcesModels as $resourceModel) {
-            $resourceNode = $resourceModel->getResourceNode();
-
-            if ($resourceModel->isCopy()) {
-
-                try {
-                    $copy = $this->resourceManager->copy(
-                        $resourceNode,
-                        $rootDirectory->getResourceNode(),
-                        $user,
-                        false,
-                        false
-                    );
-                    $copies[] = $copy;
-                } catch (NotPopulatedEventException $e) {
-                    $resourcesErrors[] = array(
-                        'resourceName' => $resourceNode->getName(),
-                        'resourceType' => $resourceNode->getResourceType()->getName(),
-                        'type' => 'copy',
-                        'error' => $e->getMessage()
-                    );
-                    continue;
-                }
-
-                /*** Copies rights ***/
-                $this->duplicateRights(
-                    $resourceNode,
-                    $copy->getResourceNode(),
-                    $workspaceRoles
-                );
-
-                /*** Copies content of a directory ***/
-                if ($resourceNode->getResourceType()->getName() === 'directory') {
-                    $errors = $this->duplicateDirectoryContent(
-                        $resourceNode,
-                        $copy->getResourceNode(),
-                        $user,
-                        $workspaceRoles
-                    );
-                    $resourcesErrors = array_merge_recursive($resourcesErrors, $errors);
-                }
-            } else {
-                $shortcut = $this->resourceManager->makeShortcut(
-                    $resourceNode,
-                    $rootDirectory->getResourceNode(),
-                    $user,
-                    new ResourceShortcut()
-                );
-                $copies[] = $shortcut;
-            }
-        }
-
-        /*** Sets previous and next for each copied resource ***/
-        $this->linkResourcesArray($copies);
-
-        $this->om->endFlushSuite();
-
-        return $resourcesErrors;
-    }
-
-    /**
      * @param integer $page
      * @param integer $max
      * @param string  $orderedBy
@@ -1152,122 +844,5 @@ class WorkspaceManager
     public function countUsers($workspaceId)
     {
         return $this->workspaceRepo->countUsers($workspaceId);
-    }
-
-    private function getArrayRolesByWorkspace(Workspace $workspace)
-    {
-        $workspaceRoles = array();
-        $wRoles = $this->roleManager->getRolesByWorkspace($workspace);
-
-        foreach ($wRoles as $wRole) {
-            $workspaceRoles[$wRole->getTranslationKey()] = $wRole;
-        }
-
-        return $workspaceRoles;
-    }
-
-    private function linkResourcesArray(array $resources)
-    {
-        for ($i = 0; $i < count($resources); $i++) {
-
-            if (isset($resources[$i]) && isset($resources[$i + 1])) {
-                $node = $resources[$i]->getResourceNode();
-                $nextNode = $resources[$i + 1]->getResourceNode();
-                $node->setNext($nextNode);
-                $nextNode->setPrevious($node);
-                $this->om->persist($node);
-                $this->om->persist($nextNode);
-            }
-        }
-    }
-
-    private function duplicateRights(
-        ResourceNode $resourceNode,
-        ResourceNode $copy,
-        array $workspaceRoles
-    )
-    {
-        $rights = $resourceNode->getRights();
-        $workspace = $resourceNode->getWorkspace();
-
-        foreach ($rights as $right) {
-            $role = $right->getRole();
-            $key = $role->getTranslationKey();
-
-            $newRight = new ResourceRights();
-            $newRight->setResourceNode($copy);
-            $newRight->setMask($right->getMask());
-            $newRight->setCreatableResourceTypes(
-                $right->getCreatableResourceTypes()->toArray()
-            );
-
-            if ($role->getWorkspace() === $workspace &&
-                isset($workspaceRoles[$key]) &&
-                !empty($workspaceRoles[$key])) {
-
-                $newRight->setRole($workspaceRoles[$key]);
-            } else {
-                $newRight->setRole($role);
-            }
-            $this->om->persist($newRight);
-        }
-        $this->om->flush();
-    }
-
-    private function duplicateDirectoryContent(
-        ResourceNode $directory,
-        ResourceNode $directoryCopy,
-        User $user,
-        array $workspaceRoles
-    )
-    {
-        $children = $directory->getChildren();
-        $copies = array();
-        $resourcesErrors = array();
-
-        foreach ($children as $child) {
-
-           try {
-                $copy = $this->resourceManager->copy(
-                    $child,
-                    $directoryCopy,
-                    $user,
-                    false,
-                    false
-                );
-                $copies[] = $copy;
-            } catch (NotPopulatedEventException $e) {
-                $resourcesErrors[] = array(
-                    'resourceName' => $child->getName(),
-                    'resourceType' => $child->getResourceType()->getName(),
-                    'type' => 'copy',
-                    'error' => $e->getMessage()
-                );
-                continue;
-            }
-
-            /*** Copies rights ***/
-            $this->duplicateRights(
-                $child,
-                $copy->getResourceNode(),
-                $workspaceRoles
-            );
-
-            /*** Recursive call for a directory ***/
-            if ($child->getResourceType()->getName() === 'directory') {
-                $errors = $this->duplicateDirectoryContent(
-                    $child,
-                    $copy->getResourceNode(),
-                    $user,
-                    $workspaceRoles
-                );
-                $resourcesErrors = array_merge_recursive($resourcesErrors, $errors);
-            }
-        }
-
-        $this->linkResourcesArray($copies);
-        $this->om->flush();
-
-        return $resourcesErrors;
     }
 }

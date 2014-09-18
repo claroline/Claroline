@@ -39,6 +39,7 @@ use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
+use Claroline\CoreBundle\Manager\WorkspaceModelManager;
 use Claroline\CoreBundle\Manager\WorkspaceTagManager;
 use Claroline\CoreBundle\Manager\WidgetManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
@@ -54,6 +55,7 @@ class WorkspaceController extends Controller
 {
     private $homeTabManager;
     private $workspaceManager;
+    private $workspaceModelManager;
     private $resourceManager;
     private $roleManager;
     private $userManager;
@@ -73,29 +75,31 @@ class WorkspaceController extends Controller
 
     /**
      * @DI\InjectParams({
-     *     "homeTabManager"     = @DI\Inject("claroline.manager.home_tab_manager"),
-     *     "workspaceManager"   = @DI\Inject("claroline.manager.workspace_manager"),
-     *     "resourceManager"    = @DI\Inject("claroline.manager.resource_manager"),
-     *     "roleManager"        = @DI\Inject("claroline.manager.role_manager"),
-     *     "userManager"        = @DI\Inject("claroline.manager.user_manager"),
-     *     "tagManager"         = @DI\Inject("claroline.manager.workspace_tag_manager"),
-     *     "toolManager"        = @DI\Inject("claroline.manager.tool_manager"),
-     *     "eventDispatcher"    = @DI\Inject("claroline.event.event_dispatcher"),
-     *     "security"           = @DI\Inject("security.context"),
-     *     "router"             = @DI\Inject("router"),
-     *     "utils"              = @DI\Inject("claroline.security.utilities"),
-     *     "formFactory"        = @DI\Inject("claroline.form.factory"),
-     *     "tokenUpdater"       = @DI\Inject("claroline.security.token_updater"),
-     *     "widgetManager"      = @DI\Inject("claroline.manager.widget_manager"),
-     *     "request"            = @DI\Inject("request"),
-     *     "templateDir"        = @DI\Inject("%claroline.param.templates_directory%"),
-     *     "translator"         = @DI\Inject("translator"),
-     *     "session"            = @DI\Inject("session")
+     *     "homeTabManager"        = @DI\Inject("claroline.manager.home_tab_manager"),
+     *     "workspaceManager"      = @DI\Inject("claroline.manager.workspace_manager"),
+     *     "workspaceModelManager" = @DI\Inject("claroline.manager.workspace_model_manager"),
+     *     "resourceManager"       = @DI\Inject("claroline.manager.resource_manager"),
+     *     "roleManager"           = @DI\Inject("claroline.manager.role_manager"),
+     *     "userManager"           = @DI\Inject("claroline.manager.user_manager"),
+     *     "tagManager"            = @DI\Inject("claroline.manager.workspace_tag_manager"),
+     *     "toolManager"           = @DI\Inject("claroline.manager.tool_manager"),
+     *     "eventDispatcher"       = @DI\Inject("claroline.event.event_dispatcher"),
+     *     "security"              = @DI\Inject("security.context"),
+     *     "router"                = @DI\Inject("router"),
+     *     "utils"                 = @DI\Inject("claroline.security.utilities"),
+     *     "formFactory"           = @DI\Inject("claroline.form.factory"),
+     *     "tokenUpdater"          = @DI\Inject("claroline.security.token_updater"),
+     *     "widgetManager"         = @DI\Inject("claroline.manager.widget_manager"),
+     *     "request"               = @DI\Inject("request"),
+     *     "templateDir"           = @DI\Inject("%claroline.param.templates_directory%"),
+     *     "translator"            = @DI\Inject("translator"),
+     *     "session"               = @DI\Inject("session")
      * })
      */
     public function __construct(
         HomeTabManager $homeTabManager,
         WorkspaceManager $workspaceManager,
+        WorkspaceModelManager $workspaceModelManager,
         ResourceManager $resourceManager,
         RoleManager $roleManager,
         UserManager $userManager,
@@ -116,6 +120,7 @@ class WorkspaceController extends Controller
     {
         $this->homeTabManager = $homeTabManager;
         $this->workspaceManager = $workspaceManager;
+        $this->workspaceModelManager = $workspaceModelManager;
         $this->resourceManager = $resourceManager;
         $this->roleManager = $roleManager;
         $this->userManager = $userManager;
@@ -1175,13 +1180,13 @@ class WorkspaceController extends Controller
         $workspace->setCreator($user);
 
         $this->workspaceManager->createWorkspace($workspace);
-        $this->workspaceManager
+        $this->workspaceModelManager
             ->duplicateWorkspaceRoles($modelWorkspace, $workspace, $user);
-        $this->workspaceManager
+        $this->workspaceModelManager
             ->duplicateOrderedTools($modelWorkspace, $workspace);
-        $rootDirectory = $this->workspaceManager
+        $rootDirectory = $this->workspaceModelManager
             ->duplicateRootDirectory($modelWorkspace, $workspace, $user);
-        $widgetConfigErrors = $this->workspaceManager
+        $widgetConfigErrors = $this->workspaceModelManager
             ->duplicateHomeTabs($modelWorkspace, $workspace, $homeTabs->toArray());
 
         $flashBag = $this->session->getFlashBag();
@@ -1200,7 +1205,7 @@ class WorkspaceController extends Controller
             $flashBag->add('error', $msg);
         }
 
-        $resourcesErrors = $this->workspaceManager->duplicateResources(
+        $resourcesErrors = $this->workspaceModelManager->duplicateResources(
             $resourcesModels->toArray(),
             $rootDirectory,
             $workspace,
