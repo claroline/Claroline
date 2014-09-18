@@ -196,22 +196,56 @@
      * @param url The route of the controller rendering the form
      * @param successHandler A successHandler
      * @param formRenderHandler an action wich is done after the form is rendered the first time
-     * @param submit Determine if the form will be submit if user valid the form, if not the successHandler is
-     *      executed without ajax request on action's form. Nothing will happen if no successHandler is defined
      */
-    modal.displayForm = function (url, successHandler, formRenderHandler, submit) {
-        var isFormSubmittable = (typeof submit !== 'undefined') ? submit : true;
-
+    modal.displayForm = function (url, successHandler, formRenderHandler) {
         $.ajax(url)
         .success(function (data) {
             var modalElement = modal.create(data);
 
             modalElement.on('click', 'button.btn', function (event) {
                 event.preventDefault();
+                modal.submitForm(modalElement, successHandler);
+            });
+            formRenderHandler(data);
+        })
+        .error(function () {
+            modal.error();
+        });
+    };
+
+
+    /**
+     * Displays a form in a modal. The form requires all the modals divs and layout because it's pretty much impossible
+     * to render something pretty otherwise as the form will usually include the class modal-body for datas and
+     * modal-footer for submissions/cancelation.
+     * The modal root element must contain the class "modal-dialog"
+     *
+     * It assumes the route for the form submission returns:
+     * - a json response when successfull
+     * - the form rendered with its errors when an error occured
+     *
+     * @param url The route of the controller rendering the form
+     * @param settings Ajax settings as described here http://api.jquery.com/jquery.ajax/
+     * @param successHandler A successHandler
+     * @param formRenderHandler an action wich is done after the form is rendered the first time
+     * @param submit Determine if the form will be submit if user valid the form, if not the successHandler is
+     *      executed without ajax request on action's form. Nothing will happen if no successHandler is defined
+     */
+    modal.displayCustomForm = function (settings, successHandler, formRenderHandler, submit) {
+        var isFormSubmittable = (typeof submit !== 'undefined') ? submit : true;
+        var formRenderHandler = (typeof formRenderHandler !== 'undefined' && null !== formRenderHandler) ? formRenderHandler : function() {};
+
+        $.ajax(settings)
+        .success(function (data) {
+            var modalElement = modal.create(data);
+
+            modalElement.on('click', 'button.submit', function (event) {
+                event.preventDefault();
                 if (isFormSubmittable) {
                     modal.submitForm(modalElement, successHandler);
                 } else {
                     successHandler(modalElement);
+                    modalElement.modal('hide');
                 }
             });
             formRenderHandler(data);
