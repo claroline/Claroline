@@ -139,6 +139,25 @@ class InteractionMatchingHandler extends InteractionHandler
         $originalProposals = $arg_list[2];
         $originalHints = $arg_list[3];
 
+        $proposals = $interMatching->getProposals();        //var_dump($proposals);
+        $indLabel = 1;
+
+        //remove all relationships between proposal and label
+        foreach ($proposals as $proposal) {
+            $proposal->removeAssociatedLabel();
+        }
+
+        //add relation between proposal and label
+        foreach ($interMatching->getLabels() as $label) {
+            if(count($this->request->get($indLabel.'_correspondence')) > 0 ) {
+                foreach($this->request->get($indLabel.'_correspondence') as $indProposal) {//echo 'ind : '.$indProposal.'<br>';
+                    $proposals[$indProposal - 1]->setAssociatedLabel($label);
+                }
+            }
+
+            $indLabel++;
+        }
+
         // filter $originalLabels to contain label no longer present
         foreach ($interMatching->getLabels() as $label) {
             foreach ($originalLabels as $key => $toDel) {
@@ -159,6 +178,7 @@ class InteractionMatchingHandler extends InteractionHandler
         foreach ($originalLabels as $label) {
             $proposals = $this->em->getRepository('UJMExoBundle:Proposal')
                      ->findBy(array('associatedLabel' => $label));
+            //remove the relationship between the deleted label and proposal
             foreach($proposals as $proposal) {
                 $proposal->removeAssociatedLabel();
                 $this->em->persist($proposal);
@@ -174,19 +194,7 @@ class InteractionMatchingHandler extends InteractionHandler
 
             $this->em->remove($proposal);
         }
-        
-        //add correspondence
-//        foreach ($interMatching->getLabels() as $label) {
-//            $proposals = $this->em->getRepository('UJMExoBundle:Proposal')
-//                 ->findBy(array('associatedLabel' => $label));
-//            foreach( $proposals as $proposal){
-//                if($proposals == $label){
-//                    
-//                }
-//            }
-//        }
-        
-        
+
         $this->modifyHints($interMatching, $originalHints);
 
         $this->em->persist($interMatching);
