@@ -245,7 +245,7 @@ class ModelController extends Controller
      */
     public function configureModelAction(WorkspaceModel $model)
     {
-        $resourceModels = $model->getResourceModel();
+        $resourceModels = $model->getResourcesModel();
         $copied = [];
         $links = [];
 

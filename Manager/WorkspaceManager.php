@@ -14,7 +14,9 @@ namespace Claroline\CoreBundle\Manager;
 use Claroline\CoreBundle\Entity\Home\HomeTab;
 use Claroline\CoreBundle\Entity\Home\HomeTabConfig;
 use Claroline\CoreBundle\Entity\Resource\Directory;
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceRights;
+use Claroline\CoreBundle\Entity\Resource\ResourceShortcut;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Widget\WidgetHomeTabConfig;
 use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
@@ -44,7 +46,6 @@ use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
-use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Yaml\Yaml;
 
 /**
@@ -1049,7 +1050,6 @@ class WorkspaceManager
     public function duplicateResources(
         array $resourcesModels,
         Directory $rootDirectory,
-        Workspace $source,
         Workspace $workspace,
         User $user
     )
@@ -1061,15 +1061,16 @@ class WorkspaceManager
         $workspaceRoles = $this->getArrayRolesByWorkspace($workspace);
 
         foreach ($resourcesModels as $resourceModel) {
+            $resourceNode = $resourceModel->getResourceNode();
 
             if ($resourceModel->isCopy()) {
-                $resourceNode = $resourceModel->getResourceNode();
 
                 try {
                     $copy = $this->resourceManager->copy(
                         $resourceNode,
                         $rootDirectory->getResourceNode(),
                         $user,
+                        false,
                         false
                     );
                     $copies[] = $copy;
@@ -1083,45 +1084,36 @@ class WorkspaceManager
                     continue;
                 }
 
-                /*** Copy rights ***/
+                /*** Copies rights ***/
+                $this->duplicateRights(
+                    $resourceNode,
+                    $copy->getResourceNode(),
+                    $workspaceRoles
+                );
 
-                $rights = $resourceNode->getRights();
-
-                foreach ($rights as $right) {
-                    $role = $right->getRole();
-                    $key = $role->getTranslationKey();
-
-                    $newRight = new ResourceRights();
-                    $newRight->setResourceNode($copy->getResourceNode());
-                    $newRight->setMask($right->getMask());
-                    $newRight->setCreatableResourceTypes($right->getCreatableResourceTypes()->toArray());
-
-                    if ($role->getWorkspace() === $source &&
-                        isset($workspaceRoles[$key]) &&
-                        !empty($workspaceRoles[$key])) {
-                        
-                        $newRight->setRole($workspaceRoles[$key]);
-                    } else {
-                        $newRight->setRole($role);
-                    }
-                    $this->om->persist($newRight);
+                /*** Copies content of a directory ***/
+                if ($resourceNode->getResourceType()->getName() === 'directory') {
+                    $errors = $this->duplicateDirectoryContent(
+                        $resourceNode,
+                        $copy->getResourceNode(),
+                        $user,
+                        $workspaceRoles
+                    );
+                    $resourcesErrors = array_merge_recursive($resourcesErrors, $errors);
                 }
+            } else {
+                $shortcut = $this->resourceManager->makeShortcut(
+                    $resourceNode,
+                    $rootDirectory->getResourceNode(),
+                    $user,
+                    new ResourceShortcut()
+                );
+                $copies[] = $shortcut;
             }
         }
 
         /*** Sets previous and next for each copied resource ***/
-
-        for ($i = 0; $i < count($copies); $i++) {
-
-            if (isset($copies[$i]) && isset($copies[$i + 1])) {
-                $node = $copies[$i]->getResourceNode();
-                $nextNode = $copies[$i + 1]->getResourceNode();
-                $node->setNext($nextNode);
-                $nextNode->setPrevious($node);
-                $this->om->persist($node);
-                $this->om->persist($nextNode);
-            }
-        }
+        $this->linkResourcesArray($copies);
 
         $this->om->endFlushSuite();
 
@@ -1172,5 +1164,110 @@ class WorkspaceManager
         }
 
         return $workspaceRoles;
+    }
+
+    private function linkResourcesArray(array $resources)
+    {
+        for ($i = 0; $i < count($resources); $i++) {
+
+            if (isset($resources[$i]) && isset($resources[$i + 1])) {
+                $node = $resources[$i]->getResourceNode();
+                $nextNode = $resources[$i + 1]->getResourceNode();
+                $node->setNext($nextNode);
+                $nextNode->setPrevious($node);
+                $this->om->persist($node);
+                $this->om->persist($nextNode);
+            }
+        }
+    }
+
+    private function duplicateRights(
+        ResourceNode $resourceNode,
+        ResourceNode $copy,
+        array $workspaceRoles
+    )
+    {
+        $rights = $resourceNode->getRights();
+        $workspace = $resourceNode->getWorkspace();
+
+        foreach ($rights as $right) {
+            $role = $right->getRole();
+            $key = $role->getTranslationKey();
+
+            $newRight = new ResourceRights();
+            $newRight->setResourceNode($copy);
+            $newRight->setMask($right->getMask());
+            $newRight->setCreatableResourceTypes(
+                $right->getCreatableResourceTypes()->toArray()
+            );
+
+            if ($role->getWorkspace() === $workspace &&
+                isset($workspaceRoles[$key]) &&
+                !empty($workspaceRoles[$key])) {
+
+                $newRight->setRole($workspaceRoles[$key]);
+            } else {
+                $newRight->setRole($role);
+            }
+            $this->om->persist($newRight);
+        }
+        $this->om->flush();
+    }
+
+    private function duplicateDirectoryContent(
+        ResourceNode $directory,
+        ResourceNode $directoryCopy,
+        User $user,
+        array $workspaceRoles
+    )
+    {
+        $children = $directory->getChildren();
+        $copies = array();
+        $resourcesErrors = array();
+
+        foreach ($children as $child) {
+
+           try {
+                $copy = $this->resourceManager->copy(
+                    $child,
+                    $directoryCopy,
+                    $user,
+                    false,
+                    false
+                );
+                $copies[] = $copy;
+            } catch (NotPopulatedEventException $e) {
+                $resourcesErrors[] = array(
+                    'resourceName' => $child->getName(),
+                    'resourceType' => $child->getResourceType()->getName(),
+                    'type' => 'copy',
+                    'error' => $e->getMessage()
+                );
+                continue;
+            }
+
+            /*** Copies rights ***/
+            $this->duplicateRights(
+                $child,
+                $copy->getResourceNode(),
+                $workspaceRoles
+            );
+
+            /*** Recursive call for a directory ***/
+            if ($child->getResourceType()->getName() === 'directory') {
+                $errors = $this->duplicateDirectoryContent(
+                    $child,
+                    $copy->getResourceNode(),
+                    $user,
+                    $workspaceRoles
+                );
+                $resourcesErrors = array_merge_recursive($resourcesErrors, $errors);
+            }
+        }
+
+        $this->linkResourcesArray($copies);
+        $this->om->flush();
+
+        return $resourcesErrors;
     }
 }

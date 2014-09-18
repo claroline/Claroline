@@ -764,7 +764,8 @@ class ResourceManager
         ResourceNode $node,
         ResourceNode $parent,
         User $user,
-        $withRights = true
+        $withRights = true,
+        $withDirectoryContent = true
     )
     {
         $last = $this->resourceNodeRepo->findOneBy(array('parent' => $parent, 'next' => null));
@@ -787,7 +788,9 @@ class ResourceManager
             $newNode = $this->copyNode($node, $parent, $user, $last, $withRights);
             $copy->setResourceNode($newNode);
 
-            if ($node->getResourceType()->getName() == 'directory') {
+            if ($node->getResourceType()->getName() == 'directory' &&
+                $withDirectoryContent) {
+
                 foreach ($node->getChildren() as $child) {
                     $this->copy($child, $newNode, $user);
                 }

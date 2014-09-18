@@ -1203,7 +1203,6 @@ class WorkspaceController extends Controller
         $resourcesErrors = $this->workspaceManager->duplicateResources(
             $resourcesModels->toArray(),
             $rootDirectory,
-            $modelWorkspace,
             $workspace,
             $user
         );
