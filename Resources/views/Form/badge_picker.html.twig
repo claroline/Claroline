@@ -36,10 +36,16 @@
             $(function(){
                 $("#badgepicker_{{ id }}").click(function() {
                     {% if false == multiple %}
-                    var hiddenInputField = $("#{{ id }}");
+                    var hiddenInputField    = $("#{{ id }}");
+                    var badgeSelectionField = $(".badge_selection_field");
                     var callback = function (modalElement) {
                         var selectedBadges = $("input[type=checkbox]:checked", modalElement);
-                        hiddenInputField.val($(selectedBadges[0]).val());
+                        var selectedBadge  = $(selectedBadges[0]);
+                        hiddenInputField.val(selectedBadge.val());
+                        $(".badge_text", badgeSelectionField).html(selectedBadge.data('text'));
+                        $(".badge_image", badgeSelectionField)
+                            .attr('src', selectedBadge.data('icon'))
+                            .attr('alt', selectedBadge.data('text'));
                     };
                     {% endif %}
                     var url = "{{ path('claro_badge_picker') }}";
