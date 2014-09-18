@@ -48,6 +48,7 @@ var pickerLink = resourceManager.createPicker(
     {
         'isPickerMultiSelectAllowed': true,
         'directoryId': rootId,
+        'isDirectorySelectionAllowed': false,
         'callback': function (nodes) {
             var ids = [];
             for (var id in nodes) {

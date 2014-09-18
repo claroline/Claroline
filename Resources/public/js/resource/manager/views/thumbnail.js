@@ -44,6 +44,7 @@
             this.el.id = node.id;
             this.$el.addClass(this.zoomValue);
             node.displayableName = Claroline.Utilities.formatText(node.name, 20, 2);
+            if (node.type === 'directory' && !this.parameters.isDirectorySelectionAllowed) isSelectionAllowed = false;
             var actions = this.parameters.resourceTypes.hasOwnProperty(node.type) ?
                 this.parameters.resourceTypes[node.type].actions :
                 [];
@@ -52,7 +53,7 @@
                 'isSelectionAllowed': isSelectionAllowed,
                 'hasMenu': true,
                 'actions': actions,
-                'webRoot': this.parameters.webPath
+                'webRoot': this.parameters.webPath,
             });
         }
     });

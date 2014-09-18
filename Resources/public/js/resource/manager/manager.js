@@ -78,8 +78,10 @@
      *
      * - callback: the function to be called when nodes are selected
      *      (default to empty function)
-     * - isMultiSelectAllowed: whether the selection of multiple nodes should be allowed
+     * - isPickerMultiSelectAllowed: whether the selection of multiple nodes should be allowed
      *      (default to false)
+     * - isDirectorySelectionAllowed: can a directory be selected
+     *      (default to true)
      * - typeWhiteList: an array of resource type names to accept
      *      (defaults to null, i.e. all types are accepted)
      * - typeBlackList: an array of resource type names to exclude (ignored if a white list is given)
@@ -190,6 +192,9 @@
     }
 
     function buildParameters(viewName, parameters, isPicker, isDefault) {
+        var isDirectorySelectionAllowed = true;
+        if (parameters.isDirectorySelectionAllowed !== undefined)
+            isDirectorySelectionAllowed = parameters.isDirectorySelectionAllowed;
         var mergedParameters = {
             viewName: viewName,
             isPickerMode: isPicker,
@@ -204,7 +209,8 @@
             webPath: parameters.webPath || fetchedParameters.webPath || '',
             zoom: parameters.zoom || fetchedParameters.zoom || 'zoom100',
             pickerCallback: parameters.callback || function () {},
-            isPickerMultiSelectAllowed: isDefault || parameters.isPickerMultiSelectAllowed || false
+            isPickerMultiSelectAllowed: isDefault || parameters.isPickerMultiSelectAllowed || false,
+            isDirectorySelectionAllowed: isDirectorySelectionAllowed
         };
 
         if (mergedParameters.preFetchedDirectory) {
