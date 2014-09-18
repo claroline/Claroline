@@ -69,7 +69,7 @@ class BadgePickerTransformer implements DataTransformerInterface
             );
         }
 
-        return "";
+        return null;
     }
 
     /**
