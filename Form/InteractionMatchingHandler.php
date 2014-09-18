@@ -44,7 +44,7 @@ class InteractionMatchingHandler extends InteractionHandler
     protected function onSuccessAdd($interMatching)
     {
         $indLabel = 1;
-        $proposals = $interMatching->getProposals();
+        $proposals = array_merge($interMatching->getProposals()->toArray());
 
         // to instantiate an object of the global namespace, and not of the current
         $interMatching->getInteraction()->getQuestion()->setDateCreate(new \Datetime());
@@ -63,7 +63,7 @@ class InteractionMatchingHandler extends InteractionHandler
             if ($this->isClone === FALSE) {
                 if(count($this->request->get($indLabel.'_correspondence')) > 0 ) {
                     foreach($this->request->get($indLabel.'_correspondence') as $indProposal) {
-                        $proposals[$indProposal]->setAssociatedLabel($label);
+                        $proposals[$indProposal - 1]->setAssociatedLabel($label);
                     }
                 }
             }
@@ -147,17 +147,6 @@ class InteractionMatchingHandler extends InteractionHandler
             $proposal->removeAssociatedLabel();
         }
 
-        //add relation between proposal and label
-        foreach ($interMatching->getLabels() as $label) {
-            if(count($this->request->get($indLabel.'_correspondence')) > 0 ) {
-                foreach($this->request->get($indLabel.'_correspondence') as $indProposal) {//echo 'ind : '.$indProposal.'<br>';
-                    $proposals[$indProposal - 1]->setAssociatedLabel($label);
-                }
-            }
-
-            $indLabel++;
-        }
-
         // filter $originalLabels to contain label no longer present
         foreach ($interMatching->getLabels() as $label) {
             foreach ($originalLabels as $key => $toDel) {
@@ -203,14 +192,27 @@ class InteractionMatchingHandler extends InteractionHandler
 
         // Persist all Labels of interactionMatching
         foreach ($interMatching->getLabels() as $label) {
-            $interMatching->addLabel($label);
+            //$interMatching->addLabel($label);
+            $label->setInteractionMatching($interMatching);
             $this->em->persist($label);
         }
         foreach ($interMatching->getProposals() as $proposal) {
-            $interMatching->addProposal($proposal);
+            //$interMatching->addProposal($proposal);
+            $proposal->setInteractionMatching($interMatching);
             $this->em->persist($proposal);
         }
 
+        $proposals = array_merge($interMatching->getProposals()->toArray());
+        foreach ($interMatching->getLabels() as $label) {
+            if(count($this->request->get($indLabel.'_correspondence')) > 0 ) {
+                foreach($this->request->get($indLabel.'_correspondence') as $indProposal) {
+                    $proposals[$indProposal - 1]->setAssociatedLabel($label);
+                    $this->em->persist($proposals[$indProposal - 1]);
+                }
+            }
+
+            $indLabel++;
+        }
         $this->em->flush();
     }
 }
