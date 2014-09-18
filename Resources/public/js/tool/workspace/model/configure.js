@@ -16,7 +16,7 @@ var modelId = $('#data').attr('data-model-id');
 var pickerCopy = resourceManager.createPicker(
     'copy',
     {
-        'isMultiSelectAllowed': true,
+        'isPickerMultiSelectAllowed': true,
         'directoryId': rootId,
         'callback': function (nodes) {
             var ids = [];
@@ -46,7 +46,7 @@ var pickerCopy = resourceManager.createPicker(
 var pickerLink = resourceManager.createPicker(
     'link',
     {
-        'isMultiSelectAllowed': true,
+        'isPickerMultiSelectAllowed': true,
         'directoryId': rootId,
         'callback': function (nodes) {
             var ids = [];
