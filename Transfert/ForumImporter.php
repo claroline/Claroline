@@ -21,6 +21,7 @@ use Claroline\ForumBundle\Entity\Forum;
 use Claroline\ForumBundle\Entity\Category;
 use Claroline\ForumBundle\Entity\Subject;
 use Claroline\ForumBundle\Entity\Message;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 
 /**
  * @DI\Service("claroline.importer.forum_importer")
@@ -61,7 +62,7 @@ class ForumImporter extends Importer implements ConfigurationInterface
     {
         $rootNode
             ->children()
-                ->arrayNode('category')->isRequired()
+                ->arrayNode('category')
                     ->children()
                         ->scalarNode('name')->isRequired()->end()
                         ->arrayNode('subjects')
@@ -160,5 +161,10 @@ class ForumImporter extends Importer implements ConfigurationInterface
         }
 
         return $forum;
+    }
+
+    public function export(Workspace $workspace, array &$files, $object)
+    {
+        return array();
     }
 }
