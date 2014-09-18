@@ -30,7 +30,11 @@
         {% endblock %}
     </div>
     <h3>{% block dropzone_content_drops_by_list_title %}{{ 'fully corrected copies'|trans({}, 'icap_dropzone') }}{% endblock %}</h3>
-     <h5>{% block dropzone_content_drops_by_list_subtitle %}{% endblock %}</h5>
+    <div>
+        {% block dropzone_content_drops_by_list_tools %}
+        {% endblock %}
+    </div>
+    <h5>{% block dropzone_content_drops_by_list_subtitle %}{% endblock %}</h5>
 
     {% block dropzone_content_drops_by_Listing %}
         {% include 'IcapDropzoneBundle:Drop:Listing/dropsListing.html.twig' %}

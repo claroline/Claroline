@@ -56,14 +56,18 @@
                     {% if  needCorrection == 1 %}
                         <a class="btn btn-default btn-xs"
                            href="{{ path('icap_dropzone_unlock_user',{'resourceId':dropzone.id,'userId':user.id}) }}">
+                            <span class="fa fa-unlock-alt">&nbsp;</span>
                             {{ 'unlock user'|trans({},'icap_dropzone') }}
                         </a>
                     {% endif %}
                 {% else %}
-                    <button type="button" class="btn btn-info btn-xs" disabled
-                            >
+                    {# <button type="button" class="btn btn-info btn-xs" disabled> #}
+                    <a class="btn btn-info btn-xs" disabled>
+                        <span class="fa fa-unlock-alt info">&nbsp;</span>
                         {{ "unlocked user"|trans({},'icap_dropzone') }}
-                    </button>
+                    </a>
+
+                    {# </button>#}
                 {% endif %}
                 </td>
                 <td>

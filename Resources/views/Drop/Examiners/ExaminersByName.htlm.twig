@@ -27,6 +27,14 @@
 {% block dropzone_content_drops_by_list_title %}
     {{ 'List of examiners'|trans({}, 'icap_dropzone') }}
 {% endblock %}
+{% block dropzone_content_drops_by_list_tools %}
+    <div class="btn-group text-right">
+        <button type="button" class="btn btn-default btn-xs" data-toggle="tooltip" data-container="body"
+                data-placement="top"
+                title="{{ 'unlock_user_tooltip'|trans({},'icap_dropzone') }}"><span
+                    class="fa fa-unlock-alt">&nbsp;</span>{{ "unlock_all"|trans({},'icap_dropzone') }}</button>
+    </div>
+{% endblock %}
 {% block dropzone_content_drops_by_list_subtitle %}
     {{ 'People that have a copy in this dropzone'|trans({}, 'icap_dropzone') }}
 {% endblock %}
