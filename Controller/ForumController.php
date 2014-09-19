@@ -57,18 +57,21 @@ class ForumController extends Controller
      *     name="claro_forum_categories",
      *     defaults={"page"=1}
      * )
-     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      * @Template("ClarolineForumBundle::index.html.twig")
      *
      * @param Forum $forum
      * @param User $user
      */
-    public function openAction(Forum $forum, User $user)
+    public function openAction(Forum $forum)
     {
         $em = $this->getDoctrine()->getManager();
         $this->checkAccess($forum);
         $categories = $em->getRepository('ClarolineForumBundle:Forum')->findCategories($forum);
         $sc = $this->get('security.context');
+        $user = $sc->getToken()->getUser();
+        $hasSubscribed = $user === 'anon.' ?
+            false :
+            $this->manager->hasSubscribed($user, $forum);
         $isModerator = $sc->isGranted('moderate', new ResourceCollection(array($forum->getResourceNode())));
 
         return array(
@@ -76,7 +79,7 @@ class ForumController extends Controller
             '_resource' => $forum,
             'isModerator' => $isModerator,
             'categories' => $categories,
-            'hasSubscribed' => $this->manager->hasSubscribed($user, $forum),
+            'hasSubscribed' => $hasSubscribed,
         );
     }
 

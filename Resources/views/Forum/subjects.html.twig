@@ -115,7 +115,7 @@
                             >
                                 <b>{{ subject['title'] }}</b>
                             </a>
-                            {% if isModerator or app.user.id == subject['subject_creator_id'] %}
+                            {% if isModerator or (app.user.id is defined and app.user.id == subject['subject_creator_id']) %}
                                 <a class="pull-right" href="{{ path('claro_forum_edit_subject_form', {'subjectId': subject['id'] }) }}">
                                     <i class="fa fa-pencil"></i> {{ 'edit' | trans({}, 'platform') }}
                                 </a>
