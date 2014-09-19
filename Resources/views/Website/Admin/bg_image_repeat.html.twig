@@ -1,0 +1,53 @@
+{% if  tag is not null %}
+    {% set classPrefix = tag ~ '-bg' %}
+    {% set variablePrefix = tag ~ 'Bg' %}
+{% else %}
+    {% set classPrefix = 'bg' %}
+    {% set variablePrefix = 'bg' %}
+{% endif %}
+<div class="float-left">
+    <div>
+        <label for="{{ classPrefix }}-image">{{ 'bg_image'|trans({},'icap_website') }}</label><br/>
+        <span>{{ 'upload_image'|trans({},'icap_website') }}</span><br/>
+        <input id="{{ classPrefix }}-image" class="form-control" type="file" ng-file-select="uploadImage($files, '{{ variablePrefix }}Image')" accept="image/*">
+    </div>
+    <div>
+        <div>{{ 'or_paste_url'|trans({},'icap_website') }}</div>
+        <input id="{{ classPrefix }}-image-url" class="form-control" type="url" ng-model="options.temp.{{ variablePrefix }}ImagePath"> <button class="btn btn-sm btn-primary" ng-click="updateImagePath('{{ variablePrefix }}Image', false)">{{ 'apply'|trans({},'icap_website') }}</button>
+    </div>
+    <div>
+        <button class="btn btn-default btn-sm" ng-click="updateImagePath('{{ variablePrefix }}Image', true)">{{ 'reset'|trans({},'icap_website') }}</button>
+    </div>
+</div>
+<div class="float-left">
+    <div>
+        <div>{{ 'bg_repeat'|trans({},'icap_website') }}</div>
+        <div class="btn-group">
+            <button type="button" class="btn btn-default btn-sm" ng-class="{'active':options.{{ variablePrefix }}Repeat=='no-repeat'}" ng-click="options.{{ variablePrefix }}Repeat='no-repeat'">{{ 'none'|trans({}, 'icap_website') }}</button>
+            <button type="button" class="btn btn-default btn-sm" ng-class="{'active':options.{{ variablePrefix }}Repeat=='repeat-x'}" ng-click="options.{{ variablePrefix }}Repeat='repeat-x'">{{ 'horizontally'|trans({}, 'icap_website') }}</button>
+            <button type="button" class="btn btn-default btn-sm" ng-class="{'active':options.{{ variablePrefix }}Repeat=='repeat-y'}" ng-click="options.{{ variablePrefix }}Repeat='repeat-y'">{{ 'vertically'|trans({}, 'icap_website') }}</button>
+            <button type="button" class="btn btn-default btn-sm" ng-class="{'active':options.{{ variablePrefix }}Repeat=='repeat'}" ng-click="options.{{ variablePrefix }}Repeat='repeat'">{{ 'both'|trans({}, 'icap_website') }}</button>
+        </div>
+    </div>
+    <div>
+        <div>{{ 'bg_position'|trans({},'icap_website') }}</div>
+        <div>
+            <button type="button" class="btn btn-default btn-sm float-left bg-position-btn left-top" ng-class="{'active':options.isBgPositionButtonActive('{{ variablePrefix }}', 'left top')}" ng-click="options.{{ variablePrefix }}Position='left top'"><i class="fa fa-picture-o"></i></button>
+            <button type="button" class="btn btn-default btn-sm float-left bg-position-btn center-top" ng-class="{'active':options.isBgPositionButtonActive('{{ variablePrefix }}', 'center top')}" ng-click="options.{{ variablePrefix }}Position='center top'"><i class="fa fa-picture-o"></i></button>
+            <button type="button" class="btn btn-default btn-sm float-left bg-position-btn right-top" ng-class="{'active':options.isBgPositionButtonActive('{{ variablePrefix }}', 'right top')}" ng-click="options.{{ variablePrefix }}Position='right top'"><i class="fa fa-picture-o"></i></button>
+            <div class="clearfix"></div>
+        </div>
+        <div>
+            <button type="button" class="btn btn-default btn-sm float-left bg-position-btn left-center" ng-class="{'active':options.isBgPositionButtonActive('{{ variablePrefix }}', 'left center')}" ng-click="options.{{ variablePrefix }}Position='left center'"><i class="fa fa-picture-o"></i></button>
+            <button type="button" class="btn btn-default btn-sm float-left bg-position-btn center-center" ng-class="{'active':options.isBgPositionButtonActive('{{ variablePrefix }}', 'center center')}" ng-click="options.{{ variablePrefix }}Position='center center'"><i class="fa fa-picture-o"></i></button>
+            <button type="button" class="btn btn-default btn-sm float-left bg-position-btn right-center" ng-class="{'active':options.isBgPositionButtonActive('{{ variablePrefix }}', 'right center')}" ng-click="options.{{ variablePrefix }}Position='right center'"><i class="fa fa-picture-o"></i></button>
+            <div class="clearfix"></div>
+        </div>
+        <div>
+            <button type="button" class="btn btn-default btn-sm float-left bg-position-btn left-bottom" ng-class="{'active':options.isBgPositionButtonActive('{{ variablePrefix }}', 'left bottom')}" ng-click="options.{{ variablePrefix }}Position='left bottom'"><i class="fa fa-picture-o"></i></button>
+            <button type="button" class="btn btn-default btn-sm float-left bg-position-btn center-bottom" ng-class="{'active':options.isBgPositionButtonActive('{{ variablePrefix }}', 'center bottom')}" ng-click="options.{{ variablePrefix }}Position='center bottom'"><i class="fa fa-picture-o"></i></button>
+            <button type="button" class="btn btn-default btn-sm float-left bg-position-btn right-bottom" ng-class="{'active':options.isBgPositionButtonActive('{{ variablePrefix }}', 'right bottom')}" ng-click="options.{{ variablePrefix }}Position='right bottom'"><i class="fa fa-picture-o"></i></button>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+</div>

@@ -31,8 +31,8 @@ class Controller extends BaseController{
         if (!$this->get('security.context')->isGranted($permission, $collection)) {
             throw new AccessDeniedException($collection->getErrorsForDisplay());
         }
-        $logEvent = new LogResourceReadEvent($website->getResourceNode());
-        $this->get('event_dispatcher')->dispatch('log', $logEvent);
+        //$logEvent = new LogResourceReadEvent($website->getResourceNode());
+        //$this->get('event_dispatcher')->dispatch('log', $logEvent);
     }
 
     /**
@@ -94,6 +94,31 @@ class Controller extends BaseController{
         if (is_string($user)) {
             $user = null;
         }
+
         return $user;
+    }
+
+    /**
+     * @return \Icap\WebsiteBundle\Manager\WebsitePageManager
+     */
+    protected function getWebsitePageManager()
+    {
+        return $this->get('icap_website.manager.page');
+    }
+
+    /**
+     * @return \Icap\WebsiteBundle\Repository\WebsitePageRepository
+     */
+    protected function getWebsitePageRepository()
+    {
+        return $this->get('icap_website.repository.page');
+    }
+
+    /**
+     * @return \Icap\WebsiteBundle\Manager\WebsitePageManager
+     */
+    protected function getWebsiteOptionsManager()
+    {
+        return $this->get('icap_website.manager.options');
     }
 }

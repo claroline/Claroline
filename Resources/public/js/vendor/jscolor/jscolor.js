@@ -17,6 +17,7 @@ var jscolor = {
 	bindClass : 'color', // class name
 	binding : true, // automatic binding via <input class="...">
 	preloading : true, // use image preloading?
+    transparent: 'transparent',
 
 
 	install : function() {
@@ -342,6 +343,8 @@ var jscolor = {
 		this.maxS = 1; // read-only  0-1
 		this.minV = 0; // read-only  0-1
 		this.maxV = 1; // read-only  0-1
+        this.enableTransparent = true; // enables tranparent option for color selection
+        this.isTransparent = false; // if the color value equals transparent value
 
 		this.pickerOnfocus = true; // display picker on focus?
 		this.pickerMode = 'HSV'; // HSV | HVS
@@ -443,17 +446,17 @@ var jscolor = {
 				var value = this.toString();
 				if(this.caps) { value = value.toUpperCase(); }
 				if(this.hash) { value = '#'+value; }
+                if(this.isTransparent) {value = 'transparent';}
 				valueElement.value = value;
 			}
 			if(!(flags & leaveStyle) && styleElement) {
 				styleElement.style.backgroundImage = "none";
-				styleElement.style.backgroundColor =
-					'#'+this.toString();
+				styleElement.style.backgroundColor = this.isTransparent?'transparent':('#'+this.toString());
 				styleElement.style.color =
-					0.213 * this.rgb[0] +
+                    (0.213 * this.rgb[0] +
 					0.715 * this.rgb[1] +
 					0.072 * this.rgb[2]
-					< 0.5 ? '#FFF' : '#000';
+					< 0.5)&&!this.isTransparent ? '#FFF' : '#000';
 			}
 			if(!(flags & leavePad) && isPickerOwner()) {
 				redrawPad();
@@ -508,7 +511,12 @@ var jscolor = {
 
 
 		this.fromString = function(hex, flags) {
-			var m = hex.match(/^\W*([0-9A-F]{3}([0-9A-F]{3})?)\W*$/i);
+			if (hex.toLowerCase() == 'transparent') {
+                hex = 'ffffff';
+                THIS.isTransparent = true;
+            }
+            var m = hex.match(/^\W*([0-9A-F]{3}([0-9A-F]{3})?)\W*$/i);
+
 			if(!m) {
 				return false;
 			} else {
@@ -533,6 +541,7 @@ var jscolor = {
 
 
 		this.toString = function() {
+            if(THIS.isTransparent) return 'transparent';
 			return (
 				(0x100 | Math.round(255*this.rgb[0])).toString(16).substr(1) +
 				(0x100 | Math.round(255*this.rgb[1])).toString(16).substr(1) +
@@ -590,6 +599,10 @@ var jscolor = {
 					btnS : document.createElement('span'),
 					btnT : document.createTextNode(THIS.pickerCloseText)
 				};
+                if (THIS.enableTransparent) {
+                    jscolor.picker.trspContainer = document.createElement('div');
+                    jscolor.picker.trspInput = document.createElement('input');
+                }
 				for(var i=0,segSize=4; i<jscolor.images.sld[1]; i+=segSize) {
 					var seg = document.createElement('div');
 					seg.style.height = segSize+'px';
@@ -606,6 +619,17 @@ var jscolor = {
 				jscolor.picker.btnS.appendChild(jscolor.picker.btnT);
 				jscolor.picker.btn.appendChild(jscolor.picker.btnS);
 				jscolor.picker.box.appendChild(jscolor.picker.btn);
+                if(THIS.enableTransparent){
+                    jscolor.picker.trspContainer.appendChild(jscolor.picker.trspInput);
+                    jscolor.picker.boxB.appendChild(jscolor.picker.trspContainer);
+                    jscolor.picker.trspInput.type = 'checkbox';
+                    jscolor.picker.trspInput.id = 'jscolor-transparent';
+                    jscolor.picker.trspInput.name = jscolor.picker.trspInput.id;
+                    jscolor.picker.trspInput.value = 'transparent';
+                    jscolor.picker.trspLabel = document.createElement('label');
+                    jscolor.picker.trspLabel.htmlFor = jscolor.picker.trspInput.id;
+                    jscolor.picker.trspLabel.innerHTML = jscolor.transparent;
+                }
 				jscolor.picker.boxB.appendChild(jscolor.picker.box);
 			}
 
@@ -648,14 +672,18 @@ var jscolor = {
 			p.padM.onmouseout = function() { if(holdPad) { holdPad=false; jscolor.fireEvent(valueElement,'change'); } };
 			p.padM.onmousedown = function(e) {
 				// if the slider is at the bottom, move it up
-				switch(modeID) {
+                if (THIS.enableTransparent) {
+                    p.trspInput.checked = false;
+                    THIS.isTransparent = false;
+                }
+                switch(modeID) {
 					case 0: if (THIS.hsv[2] === 0) { THIS.fromHSV(null, null, 1.0); }; break;
 					case 1: if (THIS.hsv[1] === 0) { THIS.fromHSV(null, 1.0, null); }; break;
 				}
 				holdSld=false;
 				holdPad=true;
 				setPad(e);
-				dispatchImmediateChange();
+                dispatchImmediateChange();
 			};
 			if('ontouchstart' in window) {
 				p.padM.addEventListener('touchstart', function(e) {
@@ -672,7 +700,11 @@ var jscolor = {
 			p.sldM.onmouseup =
 			p.sldM.onmouseout = function() { if(holdSld) { holdSld=false; jscolor.fireEvent(valueElement,'change'); } };
 			p.sldM.onmousedown = function(e) {
-				holdPad=false;
+                if (THIS.enableTransparent) {
+                    p.trspInput.checked = false;
+                    THIS.isTransparent = false;
+                }
+                holdPad=false;
 				holdSld=true;
 				setSld(e);
 				dispatchImmediateChange();
@@ -694,6 +726,7 @@ var jscolor = {
 			var dims = getPickerDims(THIS);
 			p.box.style.width = dims[0] + 'px';
 			p.box.style.height = dims[1] + 'px';
+            p.box.style.position = 'relative';
 
 			// picker border
 			p.boxB.style.position = 'absolute';
@@ -789,6 +822,35 @@ var jscolor = {
 			p.pad.style.backgroundImage = "url('"+jscolor.getDir()+padImg+"')";
 			p.pad.style.backgroundRepeat = "no-repeat";
 			p.pad.style.backgroundPosition = "0 0";
+
+            if (THIS.enableTransparent) {
+                p.trspLabel.style.fontWeight = 'normal';
+                p.trspLabel.style.marginBottom = 0;
+                p.trspLabel.style.display = 'block';
+                p.trspLabel.style.marginTop = '-13px';
+                p.trspLabel.style.marginLeft = '16px';
+
+                p.trspContainer.style.lineHeight = '10px';
+                p.trspContainer.style.paddingLeft = '10px';
+                p.trspContainer.style.fontSize = '12px';
+
+                p.trspContainer.appendChild(p.trspLabel);
+                p.trspContainer.onmousedown = function () {
+                    abortBlur=true;
+                }
+                p.trspContainer.onclick = function() {
+                    if(p.trspInput.checked){
+                        valueElement.value='transparent';
+                        THIS.importColor();
+                        jscolor.fireEvent(valueElement,'change');
+                    } else {
+                        valueElement.value = '#FFFFFF';
+                        THIS.isTransparent = false;
+                        THIS.importColor();
+                        jscolor.fireEvent(valueElement,'change');
+                    }
+                }
+            }
 
 			// place pointers
 			redrawPad();

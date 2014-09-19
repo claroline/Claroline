@@ -1,6 +1,6 @@
-var uploaderApp = angular.module("uploaderApp", []);
-(function (module) {
-     
+(function () {
+    'use strict';
+
     var fileReader = function ($q, $log) {
  
         var onLoad = function(reader, deferred, scope) {
@@ -50,9 +50,9 @@ var uploaderApp = angular.module("uploaderApp", []);
             readAsDataUrl: readAsDataURL  
         };
     };
- 
-    module.factory("fileReader",
+
+    angular.module("fileReaderApp", []).factory("fileReader",
                    ["$q", "$log", fileReader]);
  
-}(uploaderApp));
+})();
 

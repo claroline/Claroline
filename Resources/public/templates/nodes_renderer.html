@@ -1,0 +1,9 @@
+<div class="tree-node tree-node-content menu-item-container"  ng-class="{'selected':menu.currentNode.id==node.id}" ng-click="menu.changeCurrentNode(node.id)">
+    <a class="btn btn-danger btn-xs" data-nodrag ng-click="removeTreeNode(this)"><span class="fa fa-trash-o"></span></a>
+    <a class="btn btn-primary btn-xs" data-nodrag ng-click="node.appendEmptyChild()"><span class="fa fa-plus"></span></a>
+    <span ng-style="{'margin-left':((depth()-1)*14)+'px',}"><a class="btn btn-success btn-xs" ng-if="node.children && node.children.length > 0" data-nodrag ng-click="toggle(this)"><span class="fa" ng-class="{'fa-chevron-right': collapsed, 'fa-chevron-down': !collapsed}"></span></a> {{node.label}}</span>
+</div>
+<ul ui-tree-nodes="" ng-model="node.children" ng-class="{hidden: collapsed}">
+    <li ng-repeat="node in node.children" ui-tree-node ui-tree-handle ng-include="template">
+    </li>
+</ul>

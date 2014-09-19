@@ -11,14 +11,16 @@ namespace Icap\WebsiteBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Gedmo\Mapping\Annotation as Gedmo;
+use JsonSerializable;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @Gedmo\Tree(type="nested")
  * @ORM\Table(name="icap__website_page")
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="Icap\WebsiteBundle\Repository\WebsitePageRepository")
  * @ORM\HasLifecycleCallbacks()
  */
-class WebsitePage {
+class WebsitePage implements JsonSerializable{
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -39,7 +41,7 @@ class WebsitePage {
 
     /**
      * @var string
-     *
+     * @Assert\NotBlank()
      * @ORM\Column(type="string")
      */
     protected $title;
@@ -53,7 +55,7 @@ class WebsitePage {
 
     /**
      * @var string
-     *
+     * @Assert\Url()
      * @ORM\Column(type="string", nullable=true)
      */
     protected $url;
@@ -79,7 +81,7 @@ class WebsitePage {
     protected $resourceNode;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Icap\WebsiteBundle\Entity\Website", inversedBy="children")
+     * @ORM\ManyToOne(targetEntity="Icap\WebsiteBundle\Entity\Website")
      * @ORM\JoinColumn(name="website_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")
      */
     protected $website;
@@ -114,6 +116,8 @@ class WebsitePage {
      * @ORM\JoinColumn(name="parent_id", referencedColumnName="id", onDelete="CASCADE")
      */
     protected $parent;
+
+    protected $previousSibling;
 
     /**
      * @return mixed
@@ -342,8 +346,36 @@ class WebsitePage {
     /**
      * @param mixed $parent
      */
-    public function setParent(\Icap\WebsiteBundle\Entity\WebsitePage $parent)
+    public function setParent(WebsitePage $parent)
     {
         $this->parent = $parent;
     }
-} 
+
+    /**
+     * @return mixed
+     */
+    public function getPreviousSibling()
+    {
+        return $this->previousSibling;
+    }
+
+    public function setPreviousSibling(WebsitePage $sibling)
+    {
+        $this->previousSibling = $sibling;
+    }
+
+    /**
+     * (PHP 5 &gt;= 5.4.0)<br/>
+     * Specify data which should be serialized to JSON
+     * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
+     * @return mixed data which can be serialized by <b>json_encode</b>,
+     * which is a value of any type other than a resource.
+     */
+    public function jsonSerialize()
+    {
+        return array(
+            'id' => $this->getId(),
+            'website' => $this->getWebsite()->getId()
+        );
+    }
+}

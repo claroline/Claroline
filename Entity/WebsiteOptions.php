@@ -9,12 +9,15 @@
 namespace Icap\WebsiteBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JsonSerializable;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="icap__website_options")
  */
-class WebsiteOptions {
+class WebsiteOptions implements JsonSerializable{
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -47,6 +50,7 @@ class WebsiteOptions {
     /**
      * @var string
      *
+     * @Assert\Choice(choices = {"google", "xiti"}, message = "Choose a valid provider.")
      * @ORM\Column(type="string", nullable=true)
      */
     protected $analyticsProvider;
@@ -71,6 +75,7 @@ class WebsiteOptions {
     /**
      * @var string
      *
+     * @Assert\Length(max = 11)
      * @ORM\Column(type="string", nullable=true)
      */
     protected $bgColor;
@@ -96,12 +101,19 @@ class WebsiteOptions {
      */
     protected $bgPosition;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    protected $totalWidth;
 
     /** Banner Options */
 
     /**
      * @var string
      *
+     * @Assert\Length(max = 11)
      * @ORM\Column(type="string", nullable=true)
      */
     protected $bannerBgColor;
@@ -153,6 +165,7 @@ class WebsiteOptions {
     /**
      * @var string
      *
+     * @Assert\Length(max = 11)
      * @ORM\Column(type="string", nullable=true)
      */
     protected $footerBgColor;
@@ -205,6 +218,7 @@ class WebsiteOptions {
     /**
      * @var string
      *
+     * @Assert\Length(max = 11)
      * @ORM\Column(type="string", nullable=true)
      */
     protected $menuBgColor;
@@ -212,6 +226,7 @@ class WebsiteOptions {
     /**
      * @var string
      *
+     * @Assert\Length(max = 11)
      * @ORM\Column(type="string", nullable=true)
      */
     protected $sectionBgColor;
@@ -219,6 +234,7 @@ class WebsiteOptions {
     /**
      * @var string
      *
+     * @Assert\Length(max = 11)
      * @ORM\Column(type="string", nullable=true)
      */
     protected $menuBorderColor;
@@ -226,6 +242,7 @@ class WebsiteOptions {
     /**
      * @var string
      *
+     * @Assert\Length(max = 7)
      * @ORM\Column(type="string", nullable=true)
      */
     protected $menuFontColor;
@@ -233,6 +250,15 @@ class WebsiteOptions {
     /**
      * @var string
      *
+     * @Assert\Length(max = 11)
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $sectionFontColor;
+
+    /**
+     * @var string
+     *
+     * @Assert\Length(max = 11)
      * @ORM\Column(type="string", nullable=true)
      */
     protected $menuHoverColor;
@@ -252,6 +278,13 @@ class WebsiteOptions {
     protected $menuFontStyle;
 
     /**
+     * @var integer
+     *
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    protected $menuFontSize = 12;
+
+    /**
      * @var string
      *
      * @ORM\Column(type="string", nullable=true)
@@ -263,11 +296,12 @@ class WebsiteOptions {
      *
      * @ORM\Column(type="integer", nullable=true)
      */
-    protected $menuWidth;
+    protected $menuWidth = 0;
 
     /**
      * @var string
      *
+     * @Assert\Choice(choices = {"vertical", "horizontal"}, message = "Choose a valid menu orientation.")
      * @ORM\Column(type="string", nullable=true)
      */
     protected $menuOrientation;
@@ -779,6 +813,22 @@ class WebsiteOptions {
     /**
      * @return int
      */
+    public function getMenuFontSize()
+    {
+        return $this->menuFontSize;
+    }
+
+    /**
+     * @param int $menuFontSize
+     */
+    public function setMenuFontSize($menuFontSize)
+    {
+        $this->menuFontSize = $menuFontSize;
+    }
+
+    /**
+     * @return int
+     */
     public function getMenuWidth()
     {
         return $this->menuWidth;
@@ -809,6 +859,42 @@ class WebsiteOptions {
     }
 
     /**
+     * @return string
+     */
+    public function getTotalWidth()
+    {
+        if ($this->totalWidth === null) {
+            return 0;
+        }
+
+        return $this->totalWidth;
+    }
+
+    /**
+     * @param string $totalWidth
+     */
+    public function setTotalWidth($totalWidth)
+    {
+        $this->totalWidth = $totalWidth;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSectionFontColor()
+    {
+        return $this->sectionFontColor;
+    }
+
+    /**
+     * @param string $sectionFontColor
+     */
+    public function setSectionFontColor($sectionFontColor)
+    {
+        $this->sectionFontColor = $sectionFontColor;
+    }
+
+    /**
      * @return mixed
      */
     public function getWebsite()
@@ -824,5 +910,112 @@ class WebsiteOptions {
         $this->website = $website;
     }
 
+    /**
+     * @param $imgStr
+     * @return null || string
+     */
+    public function getAbsolutePath($imgStr)
+    {
+        if ($this->$imgStr === null || filter_var($this->$imgStr, FILTER_VALIDATE_URL)) {
+            return $this->$imgStr;
+        } else {
+            return $this->getUploadRootDir() . DIRECTORY_SEPARATOR . $this->$imgStr;
+        }
+    }
 
-} 
+    /**
+     * @param $imgStr
+     * @return null || string
+     */
+    public function getWebPath($imgStr)
+    {
+        if ($this->$imgStr === null || filter_var($this->$imgStr, FILTER_VALIDATE_URL)) {
+            return $this->$imgStr;
+        } else {
+            return DIRECTORY_SEPARATOR . $this->getUploadDir() . DIRECTORY_SEPARATOR . $this->$imgStr;
+        }
+    }
+
+    /**
+     * @throws \Exception
+     * @return string
+     */
+    public function getUploadRootDir()
+    {
+        $ds = DIRECTORY_SEPARATOR;
+
+        $uploadRootDir = sprintf(
+            '%s%s..%s..%s..%s..%s..%s..%sweb%s%s',
+            __DIR__, $ds, $ds, $ds, $ds, $ds, $ds, $ds, $ds, $this->getUploadDir()
+        );
+        $realpathUploadRootDir = realpath($uploadRootDir);
+
+        if (false === $realpathUploadRootDir) {
+            throw new \Exception(
+                sprintf(
+                    "Invalid upload root dir '%s'for uploading website images.",
+                    $uploadRootDir
+                )
+            );
+        }
+
+        return $realpathUploadRootDir;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUploadDir()
+    {
+        return sprintf("uploads%swebsites%s".$this->getWebsite()->getId(), DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR);
+    }
+
+    /**
+     * (PHP 5 &gt;= 5.4.0)<br/>
+     * Specify data which should be serialized to JSON
+     * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
+     * @return mixed data which can be serialized by <b>json_encode</b>,
+     * which is a value of any type other than a resource.
+     */
+    public function jsonSerialize()
+    {
+        return array(
+            'copyrightEnabled'=> $this->getCopyrightEnabled(),
+            'copyrightText'=> $this->getCopyrightText(),
+            'analyticsProvider'=> $this->getAnalyticsProvider(),
+            'analyticsAccountId'=> $this->getAnalyticsAccountId(),
+            'cssCode'=> $this->getCssCode(),
+            'bgColor'=> $this->getBgColor(),
+            'bgImage'=> $this->getWebPath('bgImage'),
+            'bgRepeat'=> $this->getBgRepeat(),
+            'bgPosition'=> $this->getBgPosition(),
+            'bannerBgColor'=> $this->getBannerBgColor(),
+            'bannerBgImage'=> $this->getWebPath('bannerBgImage'),
+            'bannerBgRepeat'=> $this->getBannerBgRepeat(),
+            'bannerBgPosition'=> $this->getBgPosition(),
+            'bannerHeight'=> $this->getBannerHeight(),
+            'bannerEnabled'=> $this->getBannerEnabled(),
+            'bannerText'=> $this->getBannerText(),
+            'footerBgColor'=> $this->getFooterBgColor(),
+            'footerBgImage'=> $this->getWebPath('footerBgImage'),
+            'footerBgRepeat'=> $this->getFooterBgRepeat(),
+            'footerBgPosition'=> $this->getFooterBgPosition(),
+            'footerHeight'=> $this->getFooterHeight(),
+            'footerEnabled'=> $this->getFooterEnabled(),
+            'footerText'=> $this->getFooterText(),
+            'menuBgColor'=> $this->getMenuBgColor(),
+            'sectionBgColor'=> $this->getSectionBgColor(),
+            'menuBorderColor'=> $this->getMenuBorderColor(),
+            'menuFontColor'=> $this->getMenuFontColor(),
+            'menuHoverColor'=> $this->getMenuHoverColor(),
+            'menuFontFamily'=> $this->getMenuFontFamily(),
+            'menuFontStyle'=> $this->getMenuFontStyle(),
+            'menuFontWeight'=> $this->getMenuFontWeight(),
+            'menuFontSize'=> $this->getMenuFontSize(),
+            'menuWidth'=> $this->getMenuWidth(),
+            'menuOrientation'=> $this->getMenuOrientation(),
+            'totalWidth' => $this->getTotalWidth(),
+            'sectionFontColor' => $this->getSectionFontColor()
+        );
+    }
+}

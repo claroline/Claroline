@@ -1,1 +1,38 @@
 icap_website_type_name: Name
+'bg_color': Background color
+'site_width': Website's width
+'full_scr': Full screen
+'bg_image': Background image
+'upload_image': upload an image
+'or_paste_url': or paste the image's URL
+'apply': Apply
+'reset': Reset
+'bg_repeat': Background repeat
+'bg_position': Background position
+'none': None
+'horizontal': Horizontal
+'vertical': Vertical
+'width': Width
+'height': Height
+'hover_color': Hover color
+'section_color': Section color
+'font_color': Font color
+'section_font_color': Section font color
+'font_size': Font size
+'font_family': Font
+'banner': Banner
+'footer': Footer
+'structure': Structure
+'menu': Menu
+'general': General
+'default': Default
+'enable_copyright': Display copyright on footer
+'enable_analytics': Activate analytics (using external tools)
+'css_code': Apply css rules to website's content
+'analytics_info': Example: 'UA-XXXXX-Y' for Google Analytics or 'xxxxxxx' for XiTi.
+'rich_content': Rich content
+'horizontally': Horizontally
+'vertically': Vertically
+'both': Both
+'activate': Enable
+'save_options': Save options

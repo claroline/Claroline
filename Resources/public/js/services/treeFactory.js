@@ -1,6 +1,6 @@
 var treeApp = angular.module('treeApp', []);
 
-treeApp.factory('Tree', function($filter, TreeNode){
+treeApp.factory('Tree', ['$filter', 'TreeNode', function($filter, TreeNode){
 	function Tree (data, label, useFirstItemAsRoot) {
 		this.label = label;
 		this.root = null;
@@ -43,9 +43,9 @@ treeApp.factory('Tree', function($filter, TreeNode){
 	};
 	
 	return Tree;
-});
+}]);
 
-treeApp.factory('TreeNode', function(UtilityFunctions){
+treeApp.factory('TreeNode', ['UtilityFunctions', function(UtilityFunctions){
 	function TreeNode (id, label, parent, children, attributes, tree) {
 		this.id = UtilityFunctions.isDefinedNotNull(id)?id:Math.rand();
 		this.label = UtilityFunctions.isDefinedNotNull(label)?label:"Child";
@@ -87,5 +87,4 @@ treeApp.factory('TreeNode', function(UtilityFunctions){
 	};
 	
 	return TreeNode;
-});
-
+}]);
