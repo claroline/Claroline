@@ -30,6 +30,12 @@
     margin: 0;
     margin-bottom: 1px;
 }
+/*
+.path-player .breadcrumbs ul > li {
+   border-top-right-radius:3px;
+   border-bottom-right-radius:3px;
+   padding-right:5px;
+}*/
 
 .path-player .breadcrumbs ul > li:first-child {
     border-top-left-radius: 3px;
@@ -102,9 +108,16 @@
     border-left-color: #91deea;
 }
 
-.path-player .breadcrumbs ul.dropdown-menu li{
-    border-radius:3px;
+/* breadcrumb childrens border-radius */
+.path-player .breadcrumbs ul.dropdown-menu li{  
+    border-radius: 3px 0 0 3px;
     display:block;
+}
+
+/* override breadcrumb childrens h:over background */
+.path-player .breadcrumbs ul.dropdown-menu li a:hover{
+   background: rgba(0,0,0,0) !important;
+   text-decoration: underline;
 }
 
 .path-player .breadcrumbs li.dropdown{
@@ -138,6 +151,8 @@
     display:none;
 }
 
+
+
 .path-player .breadcrumbs ul > li.terminal {
    border-top-right-radius:3px;
    border-bottom-right-radius:3px;
@@ -151,4 +166,9 @@
 
 .path-player .breadcrumbs ul > li.ghost:hover {
     opacity:1;   
+}
+
+/* CHROME HACK FOR OUTLINED BUTTON WHEN FOCUSED */
+.btn:focus {
+    outline: none;
 }

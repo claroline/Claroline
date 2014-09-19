@@ -10,18 +10,17 @@ use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Translation\TranslatorInterface;
-
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-
 use Innova\PathBundle\Form\Handler\PathHandler;
 use Innova\PathBundle\Entity\Path\Path;
 use Doctrine\Common\Persistence\ObjectManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
+use Innova\PathBundle\Entity\Path\PathTemplate;
+use Innova\PathBundle\Manager\PathTemplateManager;
 
 /**
  * Class EditorController
@@ -42,8 +41,8 @@ use Claroline\CoreBundle\Manager\ResourceManager;
  * )
  * @ParamConverter("workspace", class="ClarolineCoreBundle:Workspace\Workspace", options={"mapping": {"workspaceId": "id"}})
  */
-class EditorController
-{
+class EditorController {
+
     /**
      * Object manager
      * @var \Doctrine\Common\Persistence\ObjectManager
@@ -104,22 +103,14 @@ class EditorController
      * @param \Claroline\CoreBundle\Manager\ResourceManager $resourceManager
      */
     public function __construct(
-        ObjectManager        $objectManager,
-        RouterInterface      $router,
-        FormFactoryInterface $formFactory,
-        SessionInterface     $session,
-        TranslatorInterface  $translator,
-        PathHandler          $pathHandler,
-        PathManager          $pathManager,
-        ResourceManager      $resourceManager)
-    {
-        $this->om              = $objectManager;
-        $this->router          = $router;
-        $this->formFactory     = $formFactory;
-        $this->session         = $session;
-        $this->translator      = $translator;
-        $this->pathHandler     = $pathHandler;
-        $this->pathManager     = $pathManager;
+    ObjectManager $objectManager, RouterInterface $router, FormFactoryInterface $formFactory, SessionInterface $session, TranslatorInterface $translator, PathHandler $pathHandler, PathManager $pathManager, ResourceManager $resourceManager) {
+        $this->om = $objectManager;
+        $this->router = $router;
+        $this->formFactory = $formFactory;
+        $this->session = $session;
+        $this->translator = $translator;
+        $this->pathHandler = $pathHandler;
+        $this->pathManager = $pathManager;
         $this->resourceManager = $resourceManager;
     }
 
@@ -133,11 +124,40 @@ class EditorController
      * @Method({"GET", "POST"})
      * @Template("InnovaPathBundle:Editor:main.html.twig")
      */
-    public function newAction(Workspace $workspace)
-    {
+    public function newAction(Workspace $workspace) {
         $path = Path::initialize();
         $this->pathManager->checkAccess('CREATE', $path, $workspace);
 
+        return $this->renderEditor($workspace, $path);
+    }
+
+   
+    /**
+     * Create a new path from a template
+     * 
+     * @param  \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
+     * 
+     * @Route(
+     *      "/new_from_template/{templateId}",
+     *      name    = "innova_path_editor_create_from_template",
+     *      options = {"expose" = true}
+     * )
+     * @Method({"GET", "POST"})
+     * @ParamConverter("template", class="InnovaPathBundle:Path\PathTemplate", options={"mapping": {"templateId": "id"}})
+     * @Template("InnovaPathBundle:Editor:main.html.twig")
+     */
+    public function newFromModelAction(Workspace $workspace, PathTemplate $template) {
+        $path = new Path();
+        
+        $this->pathManager->checkAccess('CREATE', $path, $workspace);
+
+        $path->setName($template->getName());
+        
+        $structure = $template->getStructure();
+        $path->setDescription($template->getDescription());
+        
+        $path->initializeStructure(json_decode($structure, true));
+        echo $path->getStructure();die;
         return $this->renderEditor($workspace, $path);
     }
 
@@ -152,8 +172,7 @@ class EditorController
      * @Method({"GET", "PUT"})
      * @Template("InnovaPathBundle:Editor:main.html.twig")
      */
-    public function editAction(Workspace $workspace, Path $path)
-    {
+    public function editAction(Workspace $workspace, Path $path) {
         $this->pathManager->checkAccess('EDIT', $path);
 
         return $this->renderEditor($workspace, $path, 'PUT');
@@ -166,9 +185,8 @@ class EditorController
      * @param  string $httpMethod
      * @return array|RedirectResponse
      */
-    protected function renderEditor(Workspace $workspace, Path $path, $httpMethod = null)
-    {
-        $params = array ();
+    protected function renderEditor(Workspace $workspace, Path $path, $httpMethod = null) {
+        $params = array();
         if (!empty($httpMethod)) {
             $params['method'] = $httpMethod;
         }
@@ -176,15 +194,14 @@ class EditorController
         $form = $this->formFactory->create('innova_path', $path, $params);
 
         // Add save and close flag to form
-        $form->add('saveAndClose', 'hidden', array ('mapped' => false));
+        $form->add('saveAndClose', 'hidden', array('mapped' => false));
 
         // Try to process data
         $this->pathHandler->setForm($form);
         if ($this->pathHandler->process()) {
             // Add user message
             $this->session->getFlashBag()->add(
-                'success',
-                $this->translator->trans('path_save_success', array(), 'path_editor')
+                'success', $this->translator->trans('path_save_success', array(), 'path_editor')
             );
 
             $saveAndClose = $form->get('saveAndClose')->getData();
@@ -192,14 +209,13 @@ class EditorController
 
             if (!$saveAndClose) {
                 // Redirect to editor
-                $url = $this->router->generate('innova_path_editor_edit', array (
+                $url = $this->router->generate('innova_path_editor_edit', array(
                     'workspaceId' => $workspace->getId(),
                     'id' => $path->getId(),
                 ));
-            }
-            else {
+            } else {
                 // Redirect to list of paths
-                $url = $this->router->generate('claro_workspace_open_tool', array (
+                $url = $this->router->generate('claro_workspace_open_tool', array(
                     'workspaceId' => $workspace->getId(),
                     'toolName' => 'innova_path',
                 ));
@@ -215,12 +231,12 @@ class EditorController
         $resourceTypes = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findAll();
         $resourceIcons = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceIcon')->findByIsShortcut(false);
 
-        return array (
-            'workspace'     => $workspace,
+        return array(
+            'workspace' => $workspace,
             'wsDirectoryId' => $wsDirectory->getId(),
             'resourceTypes' => $resourceTypes,
             'resourceIcons' => $resourceIcons,
-            'form'          => $form->createView(),
+            'form' => $form->createView(),
         );
     }
 
@@ -237,26 +253,25 @@ class EditorController
      * )
      * @Method("GET")
      */
-    public function loadActivityAction($nodeId)
-    {
-        $activity = array ();
+    public function loadActivityAction($nodeId) {
+        $activity = array();
 
         $node = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findOneById($nodeId);
         if (!empty($node)) {
             $resource = $this->resourceManager->getResourceFromNode($node);
             if (!empty($resource)) {
-                $activity['id']          = $resource->getId();
-                $activity['name']        = $resource->getTitle();
+                $activity['id'] = $resource->getId();
+                $activity['name'] = $resource->getTitle();
                 $activity['description'] = $resource->getDescription();
 
                 // Primary resources
                 $activity['primaryResource'] = null;
                 $primaryResource = $resource->getPrimaryResource();
                 if (!empty($primaryResource)) {
-                    $activity['primaryResource'] = array (
+                    $activity['primaryResource'] = array(
                         'resourceId' => $primaryResource->getId(),
-                        'name'       => $primaryResource->getName(),
-                        'type'       => $primaryResource->getMimeType(),
+                        'name' => $primaryResource->getName(),
+                        'type' => $primaryResource->getMimeType(),
                     );
                 }
 
@@ -264,15 +279,15 @@ class EditorController
                 $parameters = $resource->getParameters();
                 if (!empty($parameters)) {
                     // Secondary resources
-                    $activity['resources'] = array ();
+                    $activity['resources'] = array();
 
                     $secondaryResources = $parameters->getSecondaryResources();
                     if (!empty($secondaryResources)) {
                         foreach ($secondaryResources as $secondaryResource) {
-                            $activity['resources'][] = array (
-                                'resourceId'          => $secondaryResource->getId(),
-                                'name'                => $secondaryResource->getName(),
-                                'type'                => $secondaryResource->getMimeType(),
+                            $activity['resources'][] = array(
+                                'resourceId' => $secondaryResource->getId(),
+                                'name' => $secondaryResource->getName(),
+                                'type' => $secondaryResource->getMimeType(),
                                 'propagateToChildren' => true,
                             );
                         }
@@ -280,17 +295,17 @@ class EditorController
 
                     // Global Parameters
                     $activity['withTutor'] = $parameters->isWithTutor();
-                    $activity['who']       = $parameters->getWho();
-                    $activity['where']     = $parameters->getWhere();
+                    $activity['who'] = $parameters->getWho();
+                    $activity['where'] = $parameters->getWhere();
 
-                    $activity['durationHours']   = null;
+                    $activity['durationHours'] = null;
                     $activity['durationMinutes'] = null;
 
                     $duration = $parameters->getMaxDuration(); // Duration in seconds
                     if (!empty($duration)) {
                         $duration = $duration / 60; // Duration in minutes
 
-                        $activity['durationHours']   = (int) ($duration / 60);
+                        $activity['durationHours'] = (int) ($duration / 60);
                         $activity['durationMinutes'] = $duration % 60;
                     }
                 }
@@ -314,16 +329,16 @@ class EditorController
      * )
      * @Method("GET")
      */
-    public function showActivityAction($activityId)
-    {
+    public function showActivityAction($activityId) {
         // Retrieve node from Activity id
         $activity = $this->om->getRepository('ClarolineCoreBundle:Resource\Activity')->findOneById($activityId);
         if (empty($activity)) {
             throw new NotFoundHttpException('Unable to find Activity referenced by ID : ' . $activityId);
         }
 
-        $route = $this->router->generate('claro_resource_open', array ('node' => $activity->getResourceNode()->getId(), 'resourceType' => 'activity'));
+        $route = $this->router->generate('claro_resource_open', array('node' => $activity->getResourceNode()->getId(), 'resourceType' => 'activity'));
 
         return new RedirectResponse($route);
     }
+
 }

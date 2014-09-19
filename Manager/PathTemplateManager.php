@@ -78,4 +78,14 @@ class PathTemplateManager
         
         return $this;
     }
+    
+     
+    /**
+     * Find all available templates
+     * @return array
+     */
+    public function findById($template)
+    {
+        return $this->om->getRepository('InnovaPathBundle:Path\PathTemplate')->find($template);      
+    }
 }

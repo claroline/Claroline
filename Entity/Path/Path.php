@@ -241,7 +241,7 @@ class Path extends AbstractResource implements PathInterface
      * Initialize JSON structure
      * @return \Innova\PathBundle\Entity\Path\Path
      */
-    public function initializeStructure()
+    public function initializeStructure(array $steps = array())
     {
         $structure = array (
             'name' => $this->getName(),
@@ -254,7 +254,7 @@ class Path extends AbstractResource implements PathInterface
                     'resourceId'   => null,
                     'name'         => $this->getName(),
                     'withTutor'    => false,
-                    'children'     => array (),
+                    'children'     => $steps,
                 ),
             ),
         );
