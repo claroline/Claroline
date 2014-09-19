@@ -98,6 +98,18 @@ class ForumController extends Controller
         $forum = $category->getForum();
         $this->checkAccess($forum);
         $pager = $this->manager->getSubjectsPager($category, $page, $max);
+
+        $subjectsIds = array();
+        $lastMessages = array();
+
+        foreach ($pager as $subject) {
+            $subjectsIds[] = $subject['id'];
+        }
+        $messages = $this->manager->getLastMessagesBySubjectsIds($subjectsIds);
+
+        foreach ($messages as $message) {
+            $lastMessages[$message->getSubject()->getId()] = $message;
+        }
         $collection = new ResourceCollection(array($forum->getResourceNode()));
         $sc = $this->get('security.context');
         $canCreateSubject = $sc->isGranted('post', $collection);
@@ -109,7 +121,8 @@ class ForumController extends Controller
             'canCreateSubject' => $canCreateSubject,
             'isModerator' => $isModerator,
             'category' => $category,
-            'max' => $max
+            'max' => $max,
+            'lastMessages' => $lastMessages
         );
     }
 
@@ -223,6 +236,7 @@ class ForumController extends Controller
             $user = $this->get('security.context')->getToken()->getUser();
             $subject = $form->getData();
             $subject->setCreator($user);
+            $subject->setAuthor($user->getFirstName() . ' ' . $user->getLastName());
             //instantiation of the new resources
             $subject->setCategory($category);
             $this->manager->createSubject($subject);
@@ -232,6 +246,7 @@ class ForumController extends Controller
                 $message = new Message();
                 $message->setContent($dataMessage['content']);
                 $message->setCreator($user);
+                $message->setAuthor($user->getFirstName() . ' ' . $user->getLastName());
                 $message->setSubject($subject);
                 $this->manager->createMessage($message, $subject);
 

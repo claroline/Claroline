@@ -115,8 +115,8 @@
                             {{ category['count_messages'] }}
                         </td>
                         <td>
-                            {{ category['last_message_creator_firstname'] }}
-                            {{ category['last_message_creator_lastname'] }}<br/>
+                            {{ category['last_message_author'] }}
+                            <br/>
                             {% if  category['last_message_created'] %}
                                  {{ category['last_message_created']|timeAgo() }}
                             {% endif %}
