@@ -9,7 +9,7 @@
                 <input type="hidden" id="{{ id }}" name="{{ full_name }}" {% if value is not empty %}value="{{ value.id }}" {% endif %}class="badge-picker">
 
                 <div class="input-group select-field">
-                    <p class="form-control{% if value is not empty %} hide{% endif %}" disabled="disabled">
+                    <p class="form-control no_badge_selected{% if value is not empty %} hide{% endif %}" disabled="disabled">
                         {% if multiple %}
                         {{ 'select_badges'|trans({}, 'badge') }}
                         {% else %}
@@ -19,10 +19,8 @@
                     <p class="form-control badge_selection_field{% if value is empty %} hide{% endif %}" data-title="{% if value is not empty %}{{ value.text }}{% endif %}"
                         data-container="body" data-toggle="popover" data-placement="top"
                         data-content="{% if value is not empty %}{{ value.description }}{% endif %}">
-                        {% if value is not empty %}
-                            <span class="badge_text">{{ value.text }}</span>
-                            <img src="{{ asset(value.icon) }}" alt="{{ value.text }}" class="badge_image" />
-                        {% endif %}
+                        <span class="badge_text{% if value is empty %} hide{% endif %}">{% if value is not empty %}{{ value.text }}{% endif %}</span>
+                        <img src="{% if value is not empty %}{{ asset(value.icon) }}{% endif %}" alt="{% if value is not empty %}{{ value.text }}{% endif %}" class="badge_image{% if value is empty %} hide{% endif %}" />
                     </p>
                     <span class="input-group-btn">
                         <button type="button" class="btn btn-default" id="badgepicker_{{ id }}" title="{{ 'browse_badges'|trans({}, 'badge') }}" data-toggle="tooltip"><i class="fa fa-folder-open"></i></button>
@@ -42,10 +40,15 @@
                         var selectedBadges = $("input[type=checkbox]:checked", modalElement);
                         var selectedBadge  = $(selectedBadges[0]);
                         hiddenInputField.val(selectedBadge.val());
-                        $(".badge_text", badgeSelectionField).html(selectedBadge.data('text'));
+                        $(".badge_text", badgeSelectionField)
+                            .html(selectedBadge.data('text'))
+                            .removeClass('hide');
                         $(".badge_image", badgeSelectionField)
                             .attr('src', selectedBadge.data('icon'))
-                            .attr('alt', selectedBadge.data('text'));
+                            .attr('alt', selectedBadge.data('text'))
+                            .removeClass('hide');
+                        $(".no_badge_selected").addClass('hide');
+                        $(".badge_selection_field").removeClass('hide');
                     };
                     {% endif %}
                     var url = "{{ path('claro_badge_picker') }}";
