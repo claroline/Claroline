@@ -48,3 +48,4 @@ no: Non
 notifications_explanation: L'activation des notifications globales entraîne l'envoi d'un mail aux utilisateurs ayant accès au forum lors de l'ajout d'un message.
 activate_global_notifications: Activer les notifications globales
 disable_global_notifications: Annuler les notifications globales
+responses: Réponses
