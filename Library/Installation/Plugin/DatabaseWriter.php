@@ -17,7 +17,6 @@ use Symfony\Component\HttpKernel\KernelInterface;
 use Claroline\CoreBundle\Manager\MaskManager;
 use Claroline\CoreBundle\Library\PluginBundle;
 use Claroline\CoreBundle\Manager\IconManager;
-use Claroline\CoreBundle\Library\Workspace\TemplateBuilder;
 use Claroline\CoreBundle\Entity\Activity\ActivityRuleAction;
 use Claroline\CoreBundle\Entity\Plugin;
 use Claroline\CoreBundle\Entity\Theme\Theme;
@@ -107,10 +106,6 @@ class DatabaseWriter
 
     public function update(PluginBundle $plugin, array $pluginConfiguration)
     {
-        if ($this->modifyTemplate) {
-            $this->templateBuilder = TemplateBuilder::fromTemplate("{$this->templateDir}default.zip");
-        }
-
         /** @var Plugin $pluginEntity */
         $pluginEntity = $this->em->getRepository('ClarolineCoreBundle:Plugin')->findOneBy(
             array(
@@ -156,27 +151,6 @@ class DatabaseWriter
 
         foreach ($resourceTypes as $resourceType) {
             $this->deleteActivityRules($resourceType);
-        }
-
-        if ($this->modifyTemplate) {
-            $this->templateBuilder = TemplateBuilder::fromTemplate("{$this->templateDir}default.zip");
-            foreach ($resourceTypes as $resourceType) {
-                $this->templateBuilder->removeResourceType($resourceType->getName());
-            }
-
-            $tools = $this->em
-                ->getRepository('ClarolineCoreBundle:Tool\Tool')
-                ->findByPlugin($plugin->getGeneratedId());
-
-            foreach ($tools as $tool) {
-                $this->templateBuilder->removeTool($tool->getName());
-            }
-
-            $config = $this->templateBuilder->getConfig();
-
-            $widgets = $this->em
-                ->getRepository('ClarolineCoreBundle:Widget\Widget')
-                ->findByPlugin($plugin->getGeneratedId());
         }
 
         // deletion of other plugin db dependencies is made via a cascade mechanism
@@ -267,10 +241,6 @@ class DatabaseWriter
         $this->updateCustomAction($resource['actions'], $resourceType);
         $this->updateIcons($resource, $resourceType, $plugin);
         $this->updateActivityRules($resource['activity_rules'], $resourceType);
-
-        if (!$isExistResourceType && $this->modifyTemplate) {
-            $this->templateBuilder->addResourceType($resource['name'], 'ROLE_WS_MANAGER');
-        }
 
         return $resourceType;
     }
@@ -581,10 +551,5 @@ class DatabaseWriter
     {
         $this->deleteActivityRules($resourceType);
         $this->persistActivityRules($rules, $resourceType);
-    }
-
-    public function setModifyTemplate($bool)
-    {
-        $this->modifyTemplate = $bool;
     }
 }

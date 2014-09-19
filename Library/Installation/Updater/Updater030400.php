@@ -26,6 +26,7 @@ class Updater030400 {
 
     public function postUpdate()
     {
+        $this->log('replacing default zip file');
         $this->replaceDefaultZip();
     }
 
@@ -35,5 +36,17 @@ class Updater030400 {
         $sourcePath = $this->container->getParameter('claroline.param.default_template');
         @unlink($destinationPath);
         copy($sourcePath, $destinationPath);
+    }
+
+    public function setLogger($logger)
+    {
+        $this->logger = $logger;
+    }
+
+    private function log($message)
+    {
+        if ($log = $this->logger) {
+            $log('    ' . $message);
+        }
     }
 } 
