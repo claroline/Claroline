@@ -13,6 +13,7 @@ namespace Claroline\CoreBundle\Form\Badge\Type\Tool\Workspace;
 
 use Claroline\CoreBundle\Entity\Badge\BadgeRule;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
+use Claroline\CoreBundle\Manager\BadgeManager;
 use Claroline\CoreBundle\Manager\EventManager;
 use Claroline\CoreBundle\Repository\Badge\BadgeRepository;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -81,23 +82,18 @@ class BadgeRuleType extends AbstractType
             ->add('isUserReceiver', 'checkbox')
             ->add('occurrence', 'integer', array('attr' => array('class' => 'input-sm')))
             ->add('result', 'text')
-            ->add('resource', 'zenstruck_ajax_entity', array(
-                'attr'           => array('class' => 'fullwidth'),
-                'placeholder'    => $this->translator->trans('badge_form_resource_selection', array(), 'badge'),
-                'class'          => 'ClarolineCoreBundle:Resource\ResourceNode',
-                'use_controller' => true,
-                'property'       => 'pathForDisplay',
-                'repo_method'    => 'findByNameForAjax',
-                'extra_data'     => array('workspace' => $this->workspace)
-            ))
-            ->add('badge', 'zenstruck_ajax_entity', array(
-                'attr'           => array('class' => 'fullwidth'),
-                'placeholder'    => $this->translator->trans('badge_form_badge_selection', array(), 'badge'),
-                'class'          => 'ClarolineCoreBundle:Badge\Badge',
-                'use_controller' => true,
-                'property'       => sprintf("%sName", $locale),
-                'repo_method'    => sprintf('findByName%sForAjax', ucfirst($locale))
-            ))
+            ->add('resource', 'resourcePicker', array(
+                    'required' => false,
+                    'attr' => array(
+                        'data-restrict-for-owner' => 1
+                    )
+                )
+            )
+            ->add('badge', 'badgepicker', array(
+                    'mode'      => BadgeManager::BADGE_PICKER_MODE_WORKSPACE,
+                    'workspace' => $this->workspace
+                )
+            )
             ->add(
                 'resultComparison',
                 'choice',
