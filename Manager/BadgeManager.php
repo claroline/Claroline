@@ -280,6 +280,7 @@ class BadgeManager
         /** @var QueryBuilder $badgeQueryBuilder */
         $badgeQueryBuilder = $badgeRepository->createQueryBuilder($rootAlias = 'badge');
         $badgeQueryBuilder = $badgeRepository->orderByName($badgeQueryBuilder, $rootAlias, $parameters['locale']);
+        $badgeQueryBuilder = $badgeRepository->filterByBlacklist($badgeQueryBuilder, $rootAlias, $parameters['blacklist']);
 
         switch($parameters['mode']) {
             case self::BADGE_PICKER_MODE_USER:

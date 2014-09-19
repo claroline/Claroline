@@ -316,4 +316,28 @@ class BadgeRepository extends EntityRepository
 
         return $queryBuilder;
     }
+
+    /**
+     * @param QueryBuilder   $queryBuilder
+     * @param string         $rootAlias
+     * @param array          $blacklist Badge id we don't want to be retrieve
+     *
+     * @return QueryBuilder
+     */
+    public function filterByBlacklist(QueryBuilder $queryBuilder, $rootAlias, $blacklist)
+    {
+        if (0 < count($blacklist)) {
+            $blacklistedBadgeIds = array();
+
+            foreach ($blacklist as $blacklistedId) {
+                $blacklistedBadgeIds[] = $blacklistedId;
+            }
+
+            $queryBuilder
+                ->andWhere(sprintf("%s.id NOT IN (:badgeIds)", $rootAlias))
+                ->setParameter('badgeIds', join(',', $blacklistedBadgeIds));
+        }
+
+        return $queryBuilder;
+    }
 }

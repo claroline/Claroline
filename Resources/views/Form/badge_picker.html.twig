@@ -52,11 +52,13 @@
                     };
                     {% endif %}
                     var url = "{{ path('claro_badge_picker') }}";
+
                     var badgePickerSettings = {
                         mode: "{{ mode }}",
                         multiple: {{ multiple|default('false') }},
                         value: hiddenInputField.val(),
-                        workspace: {{ workspace }}
+                        workspace: {{ workspace|default('null') }},
+                        blacklist: {{ blacklist|json_encode }}
                     };
                     window.Claroline.BadgePicker.configureBadgePicker(badgePickerSettings);
                     window.Claroline.BadgePicker.openBadgePicker(url, callback);

@@ -57,6 +57,7 @@ class BadgePickerType extends AbstractType
         $view->vars['multiple']    = $options['multiple'];
         $view->vars['mode']        = $options['mode'];
         $view->vars['workspace']   = $options['workspace'];
+        $view->vars['blacklist']   = $options['blacklist'];
     }
 
     /**
@@ -68,7 +69,8 @@ class BadgePickerType extends AbstractType
             array(
                 'multiple'    => false,
                 'mode'        => BadgeManager::BADGE_PICKER_DEFAULT_MODE,
-                'workspace'   => null
+                'workspace'   => null,
+                'blacklist'   => array()
             )
         );
     }

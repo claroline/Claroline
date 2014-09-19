@@ -101,7 +101,8 @@ class BadgeController extends Controller
             'locale'    => $platformConfigHandler->getParameter('locale_language'),
             'mode'      => $requestParameters->get('mode', BadgeManager::BADGE_PICKER_DEFAULT_MODE),
             'user'      => $user,
-            'workspace' => $requestParameters->get('workspace', null)
+            'workspace' => $requestParameters->get('workspace', null),
+            'blacklist' => $requestParameters->get('blacklist', array())
         );
 
         $badges = $badgeManager->getForBadgePicker($parameters);

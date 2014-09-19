@@ -12,6 +12,7 @@
 namespace Claroline\CoreBundle\Form\Badge\Type\Tool\Workspace;
 
 use Claroline\CoreBundle\Entity\Badge\BadgeRule;
+use Claroline\CoreBundle\Form\Badge\EventListener\AddBadgeFieldSubscriber;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Manager\BadgeManager;
 use Claroline\CoreBundle\Manager\EventManager;
@@ -19,6 +20,8 @@ use Claroline\CoreBundle\Repository\Badge\BadgeRepository;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -40,8 +43,11 @@ class BadgeRuleType extends AbstractType
     /** @var \Symfony\Component\Security\Core\SecurityContextInterface */
     private $securityContext;
 
-    /** @var integer */
-    public $workspace;
+    /** @var int */
+    private $workspaceId;
+
+    /** @var int */
+    private $badgeId;
 
     /**
      * @DI\InjectParams({
@@ -89,16 +95,57 @@ class BadgeRuleType extends AbstractType
                     )
                 )
             )
-            ->add('badge', 'badgepicker', array(
-                    'mode'      => BadgeManager::BADGE_PICKER_MODE_WORKSPACE,
-                    'workspace' => $this->workspace
-                )
-            )
             ->add(
                 'resultComparison',
                 'choice',
                 array('choices' => BadgeRule::getResultComparisonTypes())
             );
+
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, array($this, 'onPreSetData'));
+    }
+
+    public function onPreSetData(FormEvent $event){
+        /** @var \Claroline\CoreBundle\Entity\Badge\Badge $badge */
+        $badge = $event->getData();
+        $form  = $event->getForm();
+
+        $blacklist = array();
+
+        if (null !== $this->badgeId) {
+            array_push($blacklist, $this->badgeId);
+        }
+
+        $form
+            ->add('badge', 'badgepicker', array(
+                'mode'      => BadgeManager::BADGE_PICKER_MODE_WORKSPACE,
+                'workspace' => $this->workspaceId,
+                'blacklist' => $blacklist
+            )
+        );
+    }
+
+    /**
+     * @param int $workspaceId
+     *
+     * @return BadgeRuleType
+     */
+    public function setWorkspaceId($workspaceId)
+    {
+        $this->workspaceId = $workspaceId;
+
+        return $this;
+    }
+
+    /**
+     * @param int $badgeId
+     *
+     * @return BadgeRuleType
+     */
+    public function setBadgeId($badgeId)
+    {
+        $this->badgeId = $badgeId;
+
+        return $this;
     }
 
     public function getName()
