@@ -7,6 +7,11 @@
     border-width: 1px;
 }
 
+/* angular-ui hack https://github.com/angular-ui/bootstrap/issues/1671 */
+.path-editor .panel-group .panel {
+    overflow: visible;
+}
+
 .path-editor .panel-title a:hover {
     text-decoration: none;
 }

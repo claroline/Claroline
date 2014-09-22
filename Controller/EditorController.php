@@ -220,7 +220,6 @@ class EditorController {
             }
 
             // Redirect to list
-
             return new RedirectResponse($url);
         }
 
