@@ -116,7 +116,7 @@ class RegisterUserToWorkspaceFromCsvCommand extends ContainerAwareCommand
                         }
                         else {
                             $output->writeln(
-                                "<error> Line $i: {Unknown action [$action].} </error>"
+                                "<error> Line $i: {Unknown action [$action]. Allowed actions are [register] and [unregister]} </error>"
                             );
                         }
                     } elseif (count($roles) < 1) {
@@ -139,7 +139,7 @@ class RegisterUserToWorkspaceFromCsvCommand extends ContainerAwareCommand
                     }
                 }
             } else {
-                $output->writeln("<error> Line $i: {Each row must have 4 parameters.} </error>");
+                $output->writeln("<error> Line $i: {Each row must have 4 parameters. Required format is [Username];[Workspace code];[Role translation key];[register|unregister]} </error>");
             }
 
             if ($i % 100 === 0) {
