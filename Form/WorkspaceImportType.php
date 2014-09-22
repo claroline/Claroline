@@ -34,15 +34,6 @@ class WorkspaceImportType extends AbstractType
                 )
             )
         );
-        $builder->add(
-            'strict',
-            'checkbox',
-            array(
-                'label' => 'strict',
-                'mapped' => false,
-                'required' => false
-            )
-        );
     }
 
     public function getName()

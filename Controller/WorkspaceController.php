@@ -306,7 +306,6 @@ class WorkspaceController extends Controller
             $model = $form->get('model')->getData();
 
             if (!is_null($model)) {
-
                 $this->createWorkspaceFromModel($model, $form);
             } else {
                 $config = Configuration::fromTemplate(

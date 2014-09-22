@@ -198,28 +198,6 @@ class WorkspaceManager
     }
 
     /**
-     * Open an archive and register it in the workspace template table.
-     *
-     * @param string $configName
-     *
-     * @return \ZipArchive
-     */
-    public function createArchive($configName)
-    {
-        $archive = $this->om->factory('\ZipArchive');
-        $hash = $this->ut->generateGuid();
-        $pathArch = $this->templateDir."{$hash}.zip";
-        $template = $this->om->factory('Claroline\CoreBundle\Entity\Workspace\Template');
-        $template->setHash("{$hash}.zip");
-        $template->setName($configName);
-        $this->om->persist($template);
-        $this->om->flush();
-        $archive->open($pathArch, \ZipArchive::CREATE);
-
-        return $archive;
-    }
-
-    /**
      * Appends a role list to a right array.
      *
      * @param array $rights

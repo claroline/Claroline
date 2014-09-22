@@ -50,7 +50,7 @@ class ModelController extends Controller
      *     "formFactory"     = @DI\Inject("form.factory"),
      *     "groupManager"    = @DI\Inject("claroline.manager.group_manager"),
      *     "homeTabManager"  = @DI\Inject("claroline.manager.home_tab_manager"),
-     *     "modelManager"    = @DI\Inject("claroline.manager.model_manager"),
+     *     "modelManager"    = @DI\Inject("claroline.manager.workspace_model_manager"),
      *     "request"         = @DI\Inject("request"),
      *     "resourceManager" = @DI\Inject("claroline.manager.resource_manager"),
      *     "router"          = @DI\Inject("router"),

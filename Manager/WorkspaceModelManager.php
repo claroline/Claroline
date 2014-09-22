@@ -77,6 +77,247 @@ class WorkspaceModelManager
     }
 
     /**
+     * @param $name
+     * @param Workspace $workspace
+     * @return WorkspaceModel
+     */
+    public function create($name, Workspace $workspace)
+    {
+        $model = new WorkspaceModel();
+        $model->setName($name);
+        $model->setWorkspace($workspace);
+        if ($this->sc->getToken()->getUser() !== 'anon.') $model->addUser($this->sc->getToken()->getUser());
+        $this->om->persist($model);
+        $this->om->flush();
+
+        return $model;
+    }
+
+    /**
+     * @param WorkspaceModel $model
+     * @param $name
+     * @return WorkspaceModel
+     */
+    public function edit(WorkspaceModel $model, $name)
+    {
+        $model->setName($name);
+        $this->om->persist($model);
+        $this->om->flush();
+
+        return $model;
+    }
+
+    /**
+     * @param WorkspaceModel $model
+     */
+    public function delete(WorkspaceModel $model)
+    {
+        $this->om->remove($model);
+        $this->om->flush();
+    }
+
+    /**
+     * @param Workspace $workspace
+     * @return mixed
+     */
+    public function getByWorkspace(Workspace $workspace)
+    {
+        return $this->modelRepository->findByWorkspace($workspace);
+    }
+
+    /**
+     * @param WorkspaceModel $model
+     * @param User $user
+     */
+    public function addUser(WorkspaceModel $model, User $user)
+    {
+        $model->addUser($user);
+        $this->om->persist($model);
+        $this->om->flush();
+    }
+
+    /**
+     * @param WorkspaceModel $model
+     * @param Group $group
+     */
+    public function addGroup(WorkspaceModel $model, Group $group)
+    {
+        $model->addGroup($group);
+        $this->om->persist($model);
+        $this->om->flush();
+    }
+
+    /**
+     * @param WorkspaceModel $model
+     * @param Group $group
+     */
+    public function removeGroup(WorkspaceModel $model, Group $group)
+    {
+        $group->removeModel($model);
+        $this->om->persist($model);
+        $this->om->flush();
+    }
+
+    /**
+     * @param WorkspaceModel $model
+     * @param User $user
+     */
+    public function removeUser(WorkspaceModel $model, User $user)
+    {
+        $user->removeModel($model);
+        $this->om->persist($model);
+        $this->om->flush();
+    }
+
+    /**
+     * @param WorkspaceModel $model
+     * @param array $users
+     */
+    public function addUsers(WorkspaceModel $model, array $users)
+    {
+        $this->om->startFlushSuite();
+
+        foreach ($users as $user) {
+            $this->addUser($model, $user);
+        }
+
+        $this->om->endFlushSuite();
+    }
+
+    /**
+     * @param WorkspaceModel $model
+     * @param array $groups
+     */
+    public function addGroups(WorkspaceModel $model, array $groups)
+    {
+        $this->om->startFlushSuite();
+
+        foreach ($groups as $group) {
+            $this->addGroup($model, $group);
+        }
+
+        $this->om->endFlushSuite();
+    }
+
+    /**
+     * @param WorkspaceModel $model
+     * @param array $resourceNodes
+     * @param $isCopy
+     * @return array
+     */
+    public function addResourceNodes(WorkspaceModel $model, array $resourceNodes, $isCopy)
+    {
+        $this->om->startFlushSuite();
+        $resourceModels = [];
+
+        foreach ($resourceNodes as $resourceNode) {
+            $resourceModels[] = $this->addResourceNode($model, $resourceNode, $isCopy);
+        }
+
+        $this->om->endFlushSuite();
+
+        return $resourceModels;
+    }
+
+    /**
+     * @param WorkspaceModel $model
+     * @param ResourceNode $resourceNode
+     * @param $isCopy
+     * @return ResourceModel
+     */
+    public function addResourceNode(WorkspaceModel $model, ResourceNode $resourceNode, $isCopy)
+    {
+        $resourceModel = new ResourceModel();
+        $resourceModel->setModel($model);
+        $resourceModel->setResourceNode($resourceNode);
+        $resourceModel->setIsCopy($isCopy);
+        $this->om->persist($resourceModel);
+        $this->om->flush();
+
+        return $resourceModel;
+    }
+
+    /**
+     * @param ResourceModel $resourceModel
+     */
+    public function removeResourceModel(ResourceModel $resourceModel)
+    {
+        $this->om->remove($resourceModel);
+        $this->om->flush();
+    }
+
+    /**
+     * @param WorkspaceModel $model
+     * @param array $homeTabs
+     */
+    public function addHomeTabs(WorkspaceModel $model, array $homeTabs)
+    {
+        $this->om->startFlushSuite();
+
+        foreach ($homeTabs as $homeTab) {
+            $this->addHomeTab($model, $homeTab);
+        }
+
+        $this->om->endFlushSuite();
+    }
+
+    /**
+     * @param WorkspaceModel $model
+     * @param HomeTab $homeTab
+     */
+    public function addHomeTab(WorkspaceModel $model, HomeTab $homeTab)
+    {
+        $model->addHomeTab($homeTab);
+        $this->om->persist($model);
+        $this->om->flush();
+    }
+
+    /**
+     * @param WorkspaceModel $model
+     * @param HomeTab $homeTab
+     */
+    public function removeHomeTab(WorkspaceModel $model, HomeTab $homeTab)
+    {
+        $model->removeHomeTab($homeTab);
+        $this->om->persist($model);
+        $this->om->flush();
+    }
+
+    /**
+     * @param WorkspaceModel $model
+     * @param array $homeTabs
+     */
+    public function updateHomeTabs(WorkspaceModel $model, array $homeTabs)
+    {
+        $this->om->startFlushSuite();
+        $oldHomeTabs = $model->getHomeTabs();
+
+        foreach ($oldHomeTabs as $oldHomeTab) {
+            $search = array_search($oldHomeTab, $homeTabs, true);
+
+            if ($search !== false) {
+                unset($homeTabs[$search]);
+            } else {
+                $this->removeHomeTab($model, $oldHomeTab);
+            }
+        }
+        $this->addHomeTabs($model, $homeTabs);
+        $this->om->endFlushSuite();
+    }
+
+    /**
+     * @param WorkspaceModel $model
+     * @return array
+     */
+    public function toArray(WorkspaceModel $model)
+    {
+        $array = [];
+        $array['name'] = $model->getName();
+
+        return $array;
+    }
+
+    /**
      * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $source
      * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
      * @param \Claroline\CoreBundle\Entity\User $user
