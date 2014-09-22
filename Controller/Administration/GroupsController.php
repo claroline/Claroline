@@ -485,9 +485,7 @@ class GroupsController extends Controller
     public function importMembersFormAction(Group $group)
     {
         $this->checkOpen();
-        $form = $this->formFactory->create(
-            FormFactory::TYPE_USER_IMPORT, array($this->authenticationManager->getDrivers())
-        );
+        $form = $this->formFactory->create(FormFactory::TYPE_USER_IMPORT);
 
         return array('form' => $form->createView(), 'group' => $group);
     }
@@ -510,9 +508,7 @@ class GroupsController extends Controller
     {
         $this->checkOpen();
         $validFile = true;
-        $form = $this->formFactory->create(
-            FormFactory::TYPE_USER_IMPORT, array($this->authenticationManager->getDrivers())
-        );
+        $form = $this->formFactory->create(FormFactory::TYPE_USER_IMPORT);
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
