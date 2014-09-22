@@ -11,20 +11,38 @@
 
 namespace Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders\Tools;
 
+use Claroline\CoreBundle\Entity\Home\HomeTab;
+use Claroline\CoreBundle\Entity\Home\HomeTabConfig;
+use Claroline\CoreBundle\Entity\Widget\WidgetHomeTabConfig;
+use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Persistence\ObjectManager;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Config\Definition\Processor;
 use Claroline\CoreBundle\Library\Transfert\Importer;
-use Symfony\Component\Yaml\Yaml;
+use Claroline\CoreBundle\Library\Transfert\RichTextInterface;
 
 /**
  * @DI\Service("claroline.tool.home_importer")
  * @DI\Tag("claroline.importer")
  */
-class HomeImporter extends Importer implements ConfigurationInterface
+class HomeImporter extends Importer implements ConfigurationInterface, RichTextInterface
 {
-    private $result;
+    private $om;
+    private $container;
+    /**
+     * @DI\InjectParams({
+     *      "om"        = @DI\Inject("claroline.persistence.object_manager"),
+     *      "container" = @DI\Inject("service_container")
+     * })
+     */
+    public function __construct(ObjectManager $om, $container)
+    {
+        $this->om = $om;
+        $this->container = $container;
+    }
 
     public function  getConfigTreeBuilder()
     {
@@ -56,7 +74,14 @@ class HomeImporter extends Importer implements ConfigurationInterface
                                                 ->children()
                                                     ->scalarNode('name')->isRequired()->end()
                                                     ->scalarNode('type')->isRequired()->end()
-                                                    ->scalarNode('config')->isRequired()->end()
+                                                    ->variableNode('data')->end()
+                                                    ->arrayNode('import')
+                                                        ->prototype('array')
+                                                                ->children()
+                                                                ->scalarNode('path')->end()
+                                                            ->end()
+                                                        ->end()
+                                                    ->end()
                                                 ->end()
                                             ->end()
                                         ->end()
@@ -79,7 +104,7 @@ class HomeImporter extends Importer implements ConfigurationInterface
         $processor = new Processor();
         $this->result = $processor->processConfiguration($this, $data);
         //home widget validations
-        foreach ($data['tabs'] as $tab) {
+        foreach ($data['data'] as $tab) {
             foreach ($tab['tab'] as $widgets) {
                 $toolImporter = null;
                 if (isset ($widgets['widgets'])) {
@@ -88,14 +113,6 @@ class HomeImporter extends Importer implements ConfigurationInterface
                             if ($importer->getName() == $widget['widget']['type']) {
                                 $toolImporter = $importer;
                             }
-                        }
-
-                        if (isset ($widget['widget']['config']) && $toolImporter) {
-                            $ds = DIRECTORY_SEPARATOR;
-                            $filepath = $this->getRootPath() . $ds . $widget['widget']['config'];
-                            //@todo error handling if path doesn't exists
-                            $widgetdata =  Yaml::parse(file_get_contents($filepath));
-                            $toolImporter->validate($widgetdata);
                         }
 
                         if (isset($widget['widget']['data']) && $toolImporter) {
@@ -110,7 +127,121 @@ class HomeImporter extends Importer implements ConfigurationInterface
 
     public function import(array $array)
     {
+        $homeTabOrder = 1;
 
+        foreach ($array['data'] as $tab) {
+            $homeTab = new HomeTab();
+            $homeTab->setName($tab['tab']['name']);
+            $homeTab->setWorkspace($this->getWorkspace());
+            $homeTab->setType('workspace');
+            $this->om->persist($homeTab);
+            $homeTabConfig = new HomeTabConfig();
+            $homeTabConfig->setHomeTab($homeTab);
+            $homeTabConfig->setType('workspace');
+            $homeTabConfig->setWorkspace($this->getWorkspace());
+            $homeTabConfig->setLocked(false);
+            $homeTabConfig->setVisible(true);
+            $homeTabConfig->setTabOrder($homeTabOrder);
+            $this->om->persist($homeTabConfig);
+            $this->container->get('claroline.manager.home_tab_manager')->insertHomeTabConfig($homeTabConfig);
+            $widgetOrder = 1;
+
+            foreach ($tab['tab']['widgets'] as $widget) {
+                $widgetType = $this->om->getRepository('ClarolineCoreBundle:Widget\Widget')
+                    ->findOneByName($widget['widget']['type']);
+                $widgetInstance = new WidgetInstance();
+                $widgetInstance->setName($widget['widget']['name']);
+                $widgetInstance->setWidget($widgetType);
+                $widgetInstance->setWorkspace($this->getWorkspace());
+                $widgetInstance->setIsAdmin(false);
+                $widgetInstance->setIsDesktop(false);
+                $this->om->persist($widgetInstance);
+
+                $widgetHomeTabConfig = new WidgetHomeTabConfig();
+                $widgetHomeTabConfig->setWidgetInstance($widgetInstance);
+                $widgetHomeTabConfig->setHomeTab($homeTab);
+                $widgetHomeTabConfig->setWorkspace($this->getWorkspace());
+                $widgetHomeTabConfig->setType('workspace');
+                $widgetHomeTabConfig->setVisible(true);
+                $widgetHomeTabConfig->setLocked(false);
+                $widgetHomeTabConfig->setWidgetOrder($widgetOrder);
+                $this->om->persist($widgetHomeTabConfig);
+
+                foreach ($this->getListImporters() as $importer) {
+                    if ($importer->getName() == $widget['widget']['type']) {
+                        $toolImporter = $importer;
+                    }
+                }
+
+                if (isset($widget['widget']['data']) && $toolImporter) {
+                    $widgetdata = $widget['widget']['data'];
+                    $toolImporter->import($widgetdata, $widgetInstance);
+                }
+
+                $widgetOrder++;
+            }
+
+            $homeTabOrder++;
+        }
+    }
+
+    public function export(Workspace $workspace, array &$files, $object)
+    {
+        $homeTabs = $this->container->get('claroline.manager.home_tab_manager')
+            ->getWorkspaceHomeTabConfigsByWorkspace($workspace);
+        $tabs = [];
+
+        foreach ($homeTabs as $homeTab) {
+            $widgets = [];
+            $widgetConfigs = $this->container->get('claroline.manager.home_tab_manager')
+                ->getWidgetConfigsByWorkspace($homeTab->getHomeTab(), $workspace);
+
+            foreach ($widgetConfigs as $widgetConfig) {
+                $data = [];
+                $importer = $this->getImporterByName($widgetConfig->getWidgetInstance()->getWidget()->getName());
+
+                if ($importer) {
+                    $data = $importer->export($workspace, $files, $widgetConfig->getWidgetInstance());
+                }
+
+                //export the widget content here
+                $widgetData = array('widget' => array(
+                    'name' => $widgetConfig->getWidgetInstance()->getName(),
+                    'type' => $widgetConfig->getWidgetInstance()->getWidget()->getName(),
+                    'data' => $data
+                ));
+                $widgets[] = $widgetData;
+            }
+
+            $tabs[] = array('tab' => array(
+                'name' => $homeTab->getHomeTab()->getName(),
+                'widgets' => $widgets
+            ));
+        }
+
+        return $tabs;
+    }
+
+    public function format($data)
+    {
+        foreach ($data['data'] as $tab) {
+            foreach ($tab['tab']['widgets'] as $widget) {
+                $widgetImporter = null;
+
+                foreach ($this->getListImporters() as $importer) {
+                    if ($importer->getName() == $widget['widget']['type']) {
+                        $widgetImporter = $importer;
+                    }
+                }
+
+                if ($widgetImporter instanceof RichTextInterface) {
+                    if (isset($widget['widget']['data']) && $widgetImporter) {
+                        $widgetdata = $widget['widget']['data'];
+                        $widgetImporter->format($widgetdata);
+                    }
+                }
+            }
+        }
     }
 
     public function getName()

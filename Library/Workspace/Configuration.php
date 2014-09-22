@@ -12,8 +12,8 @@
 namespace Claroline\CoreBundle\Library\Workspace;
 
 use \RuntimeException;
-use Symfony\Component\Yaml\Yaml;
-use Claroline\CoreBundle\Library\Workspace\Exception\BaseRoleException;
+use Claroline\CoreBundle\Library\Transfert\Resolver;
+use Claroline\CoreBundle\Entity\User;
 
 class Configuration
 {
@@ -24,36 +24,52 @@ class Configuration
     private $selfRegistration = false;
     private $registrationValidation = false;
     private $selfUnregistration = false;
-    /**
-     * If you want to use the role_anonymous from the platform, use
-     * 'ROLE_ANONYMOUS'.
-     * @var array
-     */
-    private $roles;
-    private $toolsPermissions;
-    private $toolsConfig;
-    private $permsRootConfig;
     private $templateFile;
+    private $extractPath;
+    private $owner = null;
 
-    public function __construct($template, $full = true)
+    public function __construct($path)
     {
-        if ($full) {
-            $this->templateFile = $template;
-            $archive = new \ZipArchive();
+        $this->templateFile = $path;
 
-            if (true === $code = $archive->open($template)) {
-                $parsedFile = Yaml::parse($archive->getFromName('config.yml'));
-                $archive->close();
-                $this->setRoles($parsedFile['roles']);
-                $this->setToolsPermissions($parsedFile['tools_infos']);
-                $this->setToolsConfiguration($parsedFile['tools']);
-                $this->setPermsRootConfiguration($parsedFile['root_perms']);
+        //Default.zip is the template used for creating users.
+        //Therefore we don't want to extract it every time.
+        if (strpos($path, 'default.zip')) {
+            $rootPath = str_replace('default.zip', '', $path);
+            $extractPath = $rootPath . "default";
+
+            if (!is_dir($this->extractPath)) {
+                $archive = new \ZipArchive();
+                if (true === $code = $archive->open($path)) {
+                    $this->extract($extractPath, $archive);
+                }
+            }
+        } else {
+            $archive = new \ZipArchive();
+            if (true === $code = $archive->open($path)) {
+                $extractPath = sys_get_temp_dir() . DIRECTORY_SEPARATOR . uniqid();
+                $this->extract($extractPath, $archive);
             } else {
                 throw new \Exception(
-                    "Couldn't open template archive '{$template}' (error {$code})"
+                    "Couldn't open template archive '{$path}' (error {$code})"
                 );
             }
         }
+    }
+
+    /**
+     * Assume the archive is already opened.
+     *
+     * @param $extractPath
+     * @param $archive
+     */
+    private function extract($extractPath, $archive)
+    {
+        $archive->extractTo($extractPath);
+        $archive->close();
+        $this->setExtractPath($extractPath);
+        $resolver = new Resolver($extractPath);
+        $this->data = $resolver->resolve();
     }
 
     /**
@@ -62,6 +78,21 @@ class Configuration
     public static function fromTemplate($templateFile)
     {
         return new self($templateFile);
+    }
+
+    public function getArchive()
+    {
+        return $this->templateFile;
+    }
+
+    public function setWorkspaceType($type)
+    {
+        $this->workspaceType = $type;
+    }
+
+    public function getWorkspaceType()
+    {
+        return $this->workspaceType;
     }
 
     public function setWorkspaceName($name)
@@ -91,7 +122,6 @@ class Configuration
         return $this->workspaceCode;
     }
 
-
     public function setWorkspaceDescription($workspaceDescription)
     {
         $this->workspaceDescription = $workspaceDescription;
@@ -102,54 +132,9 @@ class Configuration
         return $this->workspaceDescription;
     }
 
-    public function getRoles()
-    {
-        return $this->roles;
-    }
-
-    public function setRoles(array $roles)
-    {
-        $this->roles = $roles;
-    }
-
-    public function getToolsPermissions()
-    {
-        return $this->toolsPermissions;
-    }
-
-    public function setToolsPermissions(array $toolsPermissions)
-    {
-        $this->toolsPermissions = $toolsPermissions;
-    }
-
-    public function getToolsConfiguration()
-    {
-        return $this->toolsConfig;
-    }
-
-    public function setToolsConfiguration(array $toolsConfig)
-    {
-        $this->toolsConfig = $toolsConfig;
-    }
-
     public function setArchive($templateFile)
     {
         $this->templateFile = $templateFile;
-    }
-
-    public function getArchive()
-    {
-        return $this->templateFile;
-    }
-
-    public function setPermsRootConfiguration($config)
-    {
-        $this->permsRootConfig = $config;
-    }
-
-    public function getPermsRootConfiguration()
-    {
-        return $this->permsRootConfig;
     }
 
     public function setDisplayable($displayable)
@@ -172,16 +157,6 @@ class Configuration
         return $this->selfRegistration;
     }
 
-    public function getRegistrationValidation()
-    {
-        return $this->registrationValidation;
-    }
-
-    public function setRegistrationValidation($registrationValidation)
-    {
-        $this->registrationValidation = $registrationValidation;
-    }
-
     public function setSelfUnregistration($selfUnregistration)
     {
         $this->selfUnregistration = $selfUnregistration;
@@ -190,5 +165,40 @@ class Configuration
     public function getSelfUnregistration()
     {
         return $this->selfUnregistration;
+    }
+
+    public function getData()
+    {
+        return $this->data;
+    }
+
+    public function setExtractPath($path)
+    {
+        $this->extractPath = $path;
+    }
+
+    public function getExtractPath()
+    {
+        return $this->extractPath;
+    }
+
+    public function setOwner(User $owner)
+    {
+        $this->owner = $owner;
+    }
+
+    public function getOwner()
+    {
+        return $this->owner;
+    }
+
+    public function getRegistrationValidation()
+    {
+        return $this->registrationValidation;
+    }
+
+    public function setRegistrationValidation($registrationValidation)
+    {
+        $this->registrationValidation = $registrationValidation;
     }
 }

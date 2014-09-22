@@ -558,6 +558,7 @@ no_group: There is no group.
 no_home_tab: 'There is no Home tab'
 no_learning_outcomes: 'No learning outcomes'
 no_message: 'No message'
+no_model: 'No model'
 no_package_description: No package description.
 no_resources_in_workspace: There are currently no resources in this workspace.
 no_role_selected_message: 'No role selected.'
@@ -970,11 +971,11 @@ workspace_edit_form_selfUnregistration: 'Public unregistration'
 workspace_form_code: Code
 workspace_form_description: Description
 workspace_form_displayable: Public
+workspace_form_model: Template
 workspace_form_name: Name
 workspace_form_registrationValidation : 'Registration validation'
 workspace_form_selfRegistration: 'Public registration'
 workspace_form_selfUnregistration: 'Public unregistration'
-workspace_form_template: Template
 workspace_form_type: Type
 workspace_home_tab_creation: 'Workspace Home tab creation'
 workspace_home_tab_edition: 'Workspace Home tab edition'
@@ -1010,3 +1011,7 @@ yes: Yes
 yesterday_activity: 'Yesterday''s activity'
 your_current_url: 'Your current URL'
 your_username: 'Your username is '
+workspace_import: Workspace import
+create_users: Create users
+your_username: 'Your username is '
+remove_resource_from_model: Remove a resource from the model

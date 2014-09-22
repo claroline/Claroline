@@ -13,6 +13,7 @@ namespace Claroline\CoreBundle\Listener\Resource;
 
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\File\File as SfFile;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesser;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -32,7 +33,7 @@ use Claroline\CoreBundle\Event\ExportResourceTemplateEvent;
 use Claroline\CoreBundle\Event\ImportResourceTemplateEvent;
 
 /**
- * @DI\Service
+ * @DI\Service("claroline.listener.file_listener")
  */
 class FileListener implements ContainerAwareInterface
 {
@@ -94,24 +95,17 @@ class FileListener implements ContainerAwareInterface
             $file = $form->getData();
             $tmpFile = $form->get('file')->getData();
             $fileName = $tmpFile->getClientOriginalName();
-            $extension = pathinfo($fileName, PATHINFO_EXTENSION);
+            $mimeType = $tmpFile->getClientMimeType();
 
-            //uncompress
-            if ($extension === 'zip' && $form->get('uncompress')->getData()) {
-                $resources = $this->unzip($tmpFile, $event->getParent());
-                $event->setResources($resources);
+            if (pathinfo($fileName, PATHINFO_EXTENSION) === 'zip' && $form->get('uncompress')->getData()) {
+                $roots = $this->unzip($tmpFile, $event->getParent());
+                $event->setResources($roots);
+
                 //do not process the resources afterwards because nodes have been created with the unzip function.
                 $event->setProcess(false);
                 $event->stopPropagation();
             } else {
-                $size = filesize($tmpFile);
-                $mimeType = $tmpFile->getClientMimeType();
-                $hashName = $this->container->get('claroline.utilities.misc')->generateGuid() . "." . $extension;
-                $tmpFile->move($this->container->getParameter('claroline.param.files_directory'), $hashName);
-                $file->setSize($size);
-                $file->setName($fileName);
-                $file->setHashName($hashName);
-                $file->setMimeType($mimeType);
+                $file = $this->createFile($file, $tmpFile, $fileName, $mimeType);
                 $event->setResources(array($file));
                 $event->stopPropagation();
             }
@@ -259,6 +253,7 @@ class FileListener implements ContainerAwareInterface
 
     /**
      * @DI\Observe("resource_file_to_template")
+     * @todo is this still used ?
      *
      * @param ExportResourceTemplateEvent $event
      */
@@ -324,6 +319,8 @@ class FileListener implements ContainerAwareInterface
 
     private function unzip($archivePath, ResourceNode $root)
     {
+
+
         $extractPath = sys_get_temp_dir() .
             DIRECTORY_SEPARATOR .
             $this->container->get('claroline.utilities.misc')->generateGuid() .
@@ -430,5 +427,19 @@ class FileListener implements ContainerAwareInterface
             null,
             $perms
         );
+    }
+
+    public function createFile(File $file, SfFile $tmpFile, $fileName, $mimeType)
+    {
+        $extension = pathinfo($fileName, PATHINFO_EXTENSION);
+        $size = filesize($tmpFile);
+        $hashName = $this->container->get('claroline.utilities.misc')->generateGuid() . "." . $extension;
+        $tmpFile->move($this->container->getParameter('claroline.param.files_directory'), $hashName);
+        $file->setSize($size);
+        $file->setName($fileName);
+        $file->setHashName($hashName);
+        $file->setMimeType($mimeType);
+
+        return $file;
     }
 }

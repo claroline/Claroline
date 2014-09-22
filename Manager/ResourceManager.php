@@ -407,9 +407,9 @@ class ResourceManager
         if (count($rights) === 0 && $parent !== null) {
             $node = $this->rightsManager->copy($parent, $node);
         } else {
-            if (count($rights) === 0) {
-                throw new RightsException('Rights must be specified if there is no parent');
-            }
+//            if (count($rights) === 0) {
+//                throw new RightsException('Rights must be specified if there is no parent');
+//            }
             $this->createRights($node, $rights);
         }
 
@@ -760,7 +760,13 @@ class ResourceManager
      *
      * @return \Claroline\CoreBundle\Entity\Resource\ResourceNode
      */
-    public function copy(ResourceNode $node, ResourceNode $parent, User $user)
+    public function copy(
+        ResourceNode $node,
+        ResourceNode $parent,
+        User $user,
+        $withRights = true,
+        $withDirectoryContent = true
+    )
     {
         $last = $this->resourceNodeRepo->findOneBy(array('parent' => $parent, 'next' => null));
         $resource = $this->getResourceFromNode($node);
@@ -779,10 +785,12 @@ class ResourceManager
             );
 
             $copy = $event->getCopy();
-            $newNode = $this->copyNode($node, $parent, $user, $last);
+            $newNode = $this->copyNode($node, $parent, $user, $last, $withRights);
             $copy->setResourceNode($newNode);
 
-            if ($node->getResourceType()->getName() == 'directory') {
+            if ($node->getResourceType()->getName() == 'directory' &&
+                $withDirectoryContent) {
+
                 foreach ($node->getChildren() as $child) {
                     $this->copy($child, $newNode, $user);
                 }
@@ -1344,7 +1352,13 @@ class ResourceManager
      *
      * @return \Claroline\CoreBundle\Entity\Resource\ResourceNode
      */
-    private function copyNode(ResourceNode $node, ResourceNode $newParent, User $user,  ResourceNode $last = null)
+    private function copyNode(
+        ResourceNode $node,
+        ResourceNode $newParent,
+        User $user,
+        ResourceNode $last = null,
+        $withRights = true
+    )
     {
         $newNode = $this->om->factory('Claroline\CoreBundle\Entity\Resource\ResourceNode');
         $newNode->setResourceType($node->getResourceType());
@@ -1357,13 +1371,17 @@ class ResourceManager
         $newNode->setIcon($node->getIcon());
         $newNode->setClass($node->getClass());
         $newNode->setMimeType($node->getMimeType());
+        $newNode->setAccessibleFrom($node->getAccessibleFrom());
+        $newNode->setAccessibleUntil($node->getAccessibleUntil());
 
-        //if everything happens inside the same workspace, rights are copied
-        if ($newParent->getWorkspace() === $node->getWorkspace()) {
-            $this->rightsManager->copy($node, $newNode);
-        } else {
-            //otherwise we use the parent rights
-            $this->setRights($newNode, $newParent, array());
+        if ($withRights) {
+            //if everything happens inside the same workspace, rights are copied
+            if ($newParent->getWorkspace() === $node->getWorkspace()) {
+                $this->rightsManager->copy($node, $newNode);
+            } else {
+                //otherwise we use the parent rights
+                $this->setRights($newNode, $newParent, array());
+            }
         }
 
         $this->om->persist($newNode);

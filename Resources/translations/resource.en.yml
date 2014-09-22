@@ -13,6 +13,7 @@ file: File
 open: Open
 open-tracking: 'View tracking'
 rename: Rename
+resource_copy_warning: 'An error occured while copying resource <%resourceName%>'
 resource_name_form_name: 'Resource name'
 resource_properties_form_accessibleFrom: 'Accessible from'
 resource_properties_form_accessibleUntil: 'Accessible until'

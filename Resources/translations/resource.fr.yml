@@ -13,6 +13,7 @@ file: Fichier
 open: Ouvrir
 open-tracking: 'Voir le suivi de l''objet'
 rename: Renommer
+resource_copy_warning: 'Une erreur est survenue lors de la copie de la ressource <%resourceName%>'
 resource_name_form_name: 'Nom de la ressource'
 resource_properties_form_accessibleFrom: 'Accessible à partir du'
 resource_properties_form_accessibleUntil: 'Accessible jusqu''au'

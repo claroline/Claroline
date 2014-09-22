@@ -17,6 +17,8 @@ use Claroline\CoreBundle\Library\Transfert\Importer;
 use Symfony\Component\Config\Definition\Processor;
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Manager\RoleManager;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 
 /**
  * @DI\Service("claroline.importer.role_importer")
@@ -26,15 +28,18 @@ class RolesImporter extends Importer implements ConfigurationInterface
 {
     private static $data;
     private $om;
+    private $roleManager;
 
     /**
      * @DI\InjectParams({
-     *     "om" = @DI\Inject("claroline.persistence.object_manager")
+     *     "om"          = @DI\Inject("claroline.persistence.object_manager"),
+     *     "roleManager" = @DI\Inject("claroline.manager.role_manager")
      * })
      */
-    public function __construct(ObjectManager $om)
+    public function __construct(ObjectManager $om, RoleManager $roleManager)
     {
         $this->om = $om;
+        $this->roleManager = $roleManager;
     }
 
     public function  getConfigTreeBuilder()
@@ -63,7 +68,7 @@ class RolesImporter extends Importer implements ConfigurationInterface
                                         );
                                     }
                                 )
-                                ->thenInvalid("The name w/e already exists")
+                                ->thenInvalid("The name %s already exists")
                                 ->end()
                             ->end()
                             ->scalarNode('translation')->info('The displayed role name')->example('student')->isRequired()->end()
@@ -105,8 +110,8 @@ class RolesImporter extends Importer implements ConfigurationInterface
     public static function nameAlreadyExists($v)
     {
         $roles = self::getData();
-
         $found = false;
+
         foreach ($roles as $el) {
             foreach ($el as $role) {
                 if ($role['role']['name'] === $v) {
@@ -119,5 +124,48 @@ class RolesImporter extends Importer implements ConfigurationInterface
         }
 
         return false;
+    }
+
+    public function import(array $roles, Workspace $workspace)
+    {
+        $entityRoles = array();
+
+        foreach ($roles as $role) {
+            if (!$role['role']['is_base_role']) {
+                $roleEntity = $this->roleManager->createWorkspaceRole(
+                    "{$role['role']['name']}_{$workspace->getGuid()}",
+                    $role['role']['translation'],
+                    $workspace,
+                    false
+                );
+            } else {
+                $roleEntity = $this->roleManager->createBaseRole(
+                    $role['role']['name'],
+                    $role['role']['translation'],
+                    false
+                );
+            }
+
+            $entityRoles[$role['role']['name']] = $roleEntity;
+        }
+
+        return $entityRoles;
+    }
+
+    public function export(Workspace $workspace, array &$files, $object)
+    {
+        $data = [];
+
+        foreach ($workspace->getRoles() as $role) {
+            if ($role !== $this->roleManager->getManagerRole($workspace)) {
+                $data[] = array('role' => array(
+                    'name' => $this->roleManager->getWorkspaceRoleBaseName($role),
+                    'translation' => $role->getTranslationKey(),
+                    'is_base_role' => false
+                ));
+            }
+        }
+
+        return $data;
     }
 }

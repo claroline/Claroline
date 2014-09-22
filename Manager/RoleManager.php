@@ -333,27 +333,15 @@ class RoleManager
     public function initWorkspaceBaseRole(array $roles, Workspace $workspace)
     {
         $this->om->startFlushSuite();
-
         $entityRoles = array();
 
-        foreach ($roles as $name => $translation) {
-            $role = $this->createWorkspaceRole(
-                "{$name}_{$workspace->getGuid()}",
-                $translation,
-                $workspace,
-                false
-            );
-            $entityRoles[$name] = $role;
-        }
-
-        $role = $this->createWorkspaceRole(
+        $entityRoles['ROLE_WS_MANAGER'] = $this->createWorkspaceRole(
             "ROLE_WS_MANAGER_{$workspace->getGuid()}",
             'manager',
             $workspace,
             true
         );
 
-        $entityRoles['ROLE_WS_MANAGER'] = $role;
         $this->om->endFlushSuite();
 
         return $entityRoles;
@@ -801,5 +789,14 @@ class RoleManager
     public function getNonPlatformRolesForUser(User $user, $executeQuery = true)
     {
         return $this->roleRepo->findNonPlatformRolesForUser($user, $executeQuery);
+    }
+
+    public function getWorkspaceRoleBaseName(Role $role)
+    {
+        if ($role->getWorkspace()) {
+            return substr($role->getName(), 0, strrpos($role->getName(), '_'));
+        }
+
+        return $role->getName();
     }
 }

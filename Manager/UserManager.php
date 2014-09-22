@@ -14,11 +14,14 @@ namespace Claroline\CoreBundle\Manager;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Model\WorkspaceModel;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Security\PlatformRoles;
 use Claroline\CoreBundle\Library\Workspace\Configuration;
+use Claroline\CoreBundle\Manager\MailManager;
+use Claroline\CoreBundle\Manager\TransfertManager;
 use Claroline\CoreBundle\Pager\PagerFactory;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -51,6 +54,7 @@ class UserManager
     private $validator;
     private $workspaceManager;
     private $uploadsDirectory;
+    private $transfertManager;
     private $container;
 
     /**
@@ -69,6 +73,7 @@ class UserManager
      *     "validator"              = @DI\Inject("validator"),
      *     "workspaceManager"       = @DI\Inject("claroline.manager.workspace_manager"),
      *     "uploadsDirectory"       = @DI\Inject("%claroline.param.uploads_directory%"),
+     *     "transfertManager"       = @DI\Inject("claroline.manager.transfert_manager"),
      *     "container"              = @DI\Inject("service_container")
      * })
      */
@@ -84,6 +89,7 @@ class UserManager
         Translator $translator,
         ValidatorInterface $validator,
         WorkspaceManager $workspaceManager,
+        TransfertManager $transfertManager,
         $uploadsDirectory,
         ContainerInterface $container
     )
@@ -101,6 +107,7 @@ class UserManager
         $this->mailManager            = $mailManager;
         $this->validator              = $validator;
         $this->uploadsDirectory       = $uploadsDirectory;
+        $this->transfertManager       = $transfertManager;
         $this->container              = $container;
     }
 
@@ -351,7 +358,7 @@ class UserManager
         $personalWorkspaceName = $this->translator->trans('personal_workspace', array(), 'platform') . $user->getUsername();
         $config->setWorkspaceName($personalWorkspaceName);
         $config->setWorkspaceCode($user->getUsername());
-        $workspace = $this->workspaceManager->create($config, $user);
+        $workspace = $this->transfertManager->createWorkspace($config, $user, true);
         $user->setPersonalWorkspace($workspace);
         $this->objectManager->persist($user);
         $this->objectManager->flush();
@@ -698,6 +705,30 @@ class UserManager
     public function getUserById($userId)
     {
         return $this->userRepo->find($userId);
+    }
+
+    /**
+     * Returns users who don't have access to the model $model
+     *
+     * @param WorkspaceModel $model
+     */
+    public function getUsersNotSharingModel(WorkspaceModel $model, $page = 1, $max = 20)
+    {
+        $res = $this->userRepo->findUsersNotSharingModel($model, false);
+
+        return $this->pagerFactory->createPager($res, $page, $max);
+    }
+
+    /**
+     * Returns users who don't have access to the model $model
+     *
+     * @param WorkspaceModel $model
+     */
+    public function getUsersNotSharingModelBySearch(WorkspaceModel $model, $search, $page = 1, $max = 20)
+    {
+        $res = $this->userRepo->findUsersNotSharingModelBySearch($model, $search, false);
+
+        return $this->pagerFactory->createPager($res, $page, $max);
     }
 
     /**
