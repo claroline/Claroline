@@ -11,8 +11,6 @@ use Claroline\CoreBundle\Library\Security\Utilities;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Innova\PathBundle\Entity\Path\Path;
 
-use Innova\PathBundle\Manager\PathTemplateManager;
-
 /**
  * Path Manager
  * Manages life cycle of paths
@@ -37,12 +35,6 @@ class PathManager
      * @var \Symfony\Component\Security\Core\SecurityContextInterface $security
      */
     protected $security;
-    
-    /**
-     * Path template manager
-     * @var Innova\PathBundle\Manager\PathTemplateManager $pathTemplateManager
-     */
-    protected $pathTemplateManager;
 
     /**
      * Class constructor - Inject required services
@@ -55,14 +47,12 @@ class PathManager
         ObjectManager            $objectManager,
         SecurityContextInterface $securityContext,
         ResourceManager          $resourceManager,
-        Utilities                $utils, 
-        PathTemplateManager      $pathTemplateManager = null)
+        Utilities                $utils)
     {
         $this->om              = $objectManager;
         $this->security        = $securityContext;
         $this->resourceManager = $resourceManager;
         $this->utils           = $utils;
-        $this->pathTemplateManager = $pathTemplateManager;
     }
 
     public function checkAccess($actionName, Path $path, Workspace $workspace = null)

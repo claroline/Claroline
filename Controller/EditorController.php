@@ -20,7 +20,6 @@ use Innova\PathBundle\Entity\Path\Path;
 use Doctrine\Common\Persistence\ObjectManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Innova\PathBundle\Entity\Path\PathTemplate;
-use Innova\PathBundle\Manager\PathTemplateManager;
 
 /**
  * Class EditorController
@@ -147,17 +146,13 @@ class EditorController {
      * @Template("InnovaPathBundle:Editor:main.html.twig")
      */
     public function newFromModelAction(Workspace $workspace, PathTemplate $template) {
-        $path = new Path();
-        
+        $path = new Path();        
         $this->pathManager->checkAccess('CREATE', $path, $workspace);
-
-        $path->setName($template->getName());
-        
-        $structure = $template->getStructure();
+        $path->setName($template->getName());       
         $path->setDescription($template->getDescription());
-        
-        $path->initializeStructure(json_decode($structure, true));
-        echo $path->getStructure();die;
+        $structureArray = array();
+        array_push($structureArray, json_decode($template->getStructure()));
+        $path->initializeStructure($structureArray);
         return $this->renderEditor($workspace, $path);
     }
 
