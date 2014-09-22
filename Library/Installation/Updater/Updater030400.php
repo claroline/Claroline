@@ -21,6 +21,7 @@ class Updater030400 {
     public function __construct(ContainerInterface $container)
     {
         $this->em = $container->get('doctrine.orm.entity_manager');
+        $this->conn = $container->get('doctrine.dbal.default_connection');
         $this->container = $container;
     }
 
@@ -28,6 +29,7 @@ class Updater030400 {
     {
         $this->log('replacing default zip file');
         $this->replaceDefaultZip();
+        $this->removeModelTable();
     }
 
     private function replaceDefaultZip()
@@ -36,6 +38,12 @@ class Updater030400 {
         $sourcePath = $this->container->getParameter('claroline.param.default_template');
         @unlink($destinationPath);
         copy($sourcePath, $destinationPath);
+    }
+
+    private function removeModelTable()
+    {
+        $this->log('Removing model table...');
+        $this->conn->query('DROP TABLE claro_workspace_model_resource');
     }
 
     public function setLogger($logger)
