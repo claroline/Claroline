@@ -35,7 +35,6 @@ class RegisterUserToWorkspaceFromCsvCommand extends ContainerAwareCommand
 
     protected function interact(InputInterface $input, OutputInterface $output)
     {
-        //@todo ask authentication source
         $params = array(
             'csv_workspace_registration_path' => 'Absolute path to the csv file: '
         );
