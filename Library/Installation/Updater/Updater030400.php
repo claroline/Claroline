@@ -43,7 +43,12 @@ class Updater030400 {
     private function removeModelTable()
     {
         $this->log('Removing model table...');
-        $this->conn->query('DROP TABLE claro_workspace_model_resource');
+        try {
+            $this->conn->query('DROP TABLE claro_workspace_model_resource');
+        } catch (\Doctrine\DBAL\DBALException $e) {
+            $this->log('claro_workspace_model_resource already removed.');
+        }
+
     }
 
     public function setLogger($logger)
