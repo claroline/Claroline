@@ -9,12 +9,14 @@ var typeMatching;
 var advEditionLang;
 var correspEmptyLang;
 var correspErrorLang;
+var scoreErrorLang;
 
 var codeContainerProposal = 1; // to differentiate containers
 var codeContainerLabel = 0;
 
 // Question creation
-function creationMatching(addchoice, addproposal, deletechoice, LabelValue, ScoreRight, ProposalValue, numberProposal, correspondence, deleteLabel, deleteProposal, tMatching, advEdition, correspEmpty, correspondenceError){
+function creationMatching(addchoice, addproposal, deletechoice, LabelValue, ScoreRight, ProposalValue, numberProposal, correspondence, deleteLabel, deleteProposal, tMatching, advEdition, correspEmpty, correspondenceError , scoreError){
+    
 
     //initialisation of variables
     var indexProposal;
@@ -23,6 +25,7 @@ function creationMatching(addchoice, addproposal, deletechoice, LabelValue, Scor
     advEditionLang = advEdition;
     correspEmptyLang = correspEmpty;
     correspErrorLang = correspondenceError;
+    scoreErrorLang = scoreError;
 
     typeMatching = JSON.parse(tMatching);
 
@@ -71,7 +74,7 @@ function creationMatching(addchoice, addproposal, deletechoice, LabelValue, Scor
 }
 
 // Question edition
-function creationMatchingEdit(addchoice, addproposal, deletechoice, LabelValue, ScoreRight, ProposalValue, numberProposal, correspondence, deleteLabel, deleteProposal, tMatching, advEdition, correspEmpty, nbResponses, valueCorrespondence, tableLabel, tableProposal, correspondenceError) {
+function creationMatchingEdit(addchoice, addproposal, deletechoice, LabelValue, ScoreRight, ProposalValue, numberProposal, correspondence, deleteLabel, deleteProposal, tMatching, advEdition, correspEmpty, nbResponses, valueCorrespondence, tableLabel, tableProposal, correspondenceError, scoreError) {
 
     typeMatching = JSON.parse(tMatching);
     var valueCorres = JSON.parse(valueCorrespondence.replace(/&quot;/ig,'"'));
@@ -82,6 +85,7 @@ function creationMatchingEdit(addchoice, addproposal, deletechoice, LabelValue, 
     advEditionLang = advEdition;
     correspEmptyLang = correspEmpty;
     correspErrorLang = correspondenceError;
+    scoreErrorLang = scoreError;
 
     //in the first time
     $('#ujm_exobundle_interactionmatchingtype_typeMatching').children('option').each(function() {
@@ -232,7 +236,34 @@ function check_form(nbrProposals, nbrLabels) {
     var correspondence = false;
     var proposalSelected = [];
     var singleProposal = true;
+    var score = true;
 
+    if (($('#newTableProposal').find('tr:not(:first)').length) < 1) {
+        
+        alert(nbrProposals);
+        return false;
+    }
+    
+    if (($('#newTableLabel').find('tr:not(:first)').length) < 1) {
+        
+        alert(nbrLabels);
+        return false;
+    }
+    
+    $("*[id$='scoreRightResponse']").each( function() {
+        
+          if(!(parseFloat($(this).val()) == parseInt($(this).val())) && isNaN($(this).val())){
+            
+            alert(scoreErrorLang);
+            score = false;
+        }
+    });
+
+    if(score == false ){
+        
+        return false
+    }
+    
     $("*[id$='_correspondence']").each( function() {
         if ($("option:selected", this).length > 0) {
             correspondence = true;

@@ -253,8 +253,8 @@ my shared questions: Questions which was shared with me
 nameUser2Shared: Name of user to share the question
 nb_hole: It must have at least one hole
 nbr_choices: The number of choices must be greater than two
-nb_label: You must have minimum the same number of choices for proposals
-nb_proposal: It must have two choices of proposal
+nb_label: It must have one choice of label
+nb_proposal: It must have one choice of proposal
 need Correction: The red questions need correction
 never: Never
 newCategoryName: New name of the category
@@ -352,6 +352,7 @@ save: Save
 saveNewOrder: Save the new order
 sawHint: of penalty for seen hints
 score and list of question: Score and list of questions
+scoreError: Be careful, score must be a number
 scoreMax : Score maximum possible
 search: Search
 searchQuestion: Search questions
