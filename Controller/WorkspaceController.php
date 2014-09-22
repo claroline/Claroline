@@ -139,7 +139,6 @@ class WorkspaceController extends Controller
      *     defaults={"search"=""},
      *     options={"expose"=true}
      * )
-     * @EXT\Method("GET")
      * @EXT\ParamConverter("currentUser", options={"authenticatedUser" = false})
      * @EXT\Template()
      *
@@ -160,7 +159,6 @@ class WorkspaceController extends Controller
      *     name="claro_workspace_by_user",
      *     options={"expose"=true}
      * )
-     * @EXT\Method("GET")
      *
      * @EXT\Template()
      *
@@ -199,7 +197,6 @@ class WorkspaceController extends Controller
      *     defaults={"search"=""},
      *     options={"expose"=true}
      * )
-     * @EXT\Method("GET")
      *
      * @EXT\Template()
      *
@@ -223,7 +220,6 @@ class WorkspaceController extends Controller
      *     defaults={"page"=1},
      *     options={"expose"=true}
      * )
-     * @EXT\Method("GET")
      * @EXT\ParamConverter("currentUser", options={"authenticatedUser" = true})
      *
      * @EXT\Template()
@@ -254,7 +250,6 @@ class WorkspaceController extends Controller
      *     "/new/form",
      *     name="claro_workspace_creation_form"
      * )
-     * @EXT\Method("GET")
      *
      * @EXT\Template()
      *
@@ -349,10 +344,11 @@ class WorkspaceController extends Controller
         $this->tokenUpdater->cancelUsurpation($this->security->getToken());
 
         $sessionFlashBag = $this->session->getFlashBag();
-        $sessionFlashBag->add('success', $this->translator->trans(
-            'workspace_delete_success_message',
-            array('%workspaceName%' => $workspace->getName()),
-            'platform'
+        $sessionFlashBag->add(
+            'success', $this->translator->trans(
+                'workspace_delete_success_message',
+                array('%workspaceName%' => $workspace->getName()),
+                'platform'
             )
         );
 
@@ -404,8 +400,9 @@ class WorkspaceController extends Controller
         //if manager or admin, show every tools
         if ($hasManagerAccess) {
             $orderedTools = $this->toolManager->getOrderedToolsByWorkspace($workspace);
-        //otherwise only shows the relevant tools
+
         } else {
+            //otherwise only shows the relevant tools
             $orderedTools = $this->toolManager->getOrderedToolsByWorkspaceAndRoles($workspace, $currentRoles);
         }
 
@@ -558,7 +555,7 @@ class WorkspaceController extends Controller
         $lastWidgetOrder = 1;
         $homeTab = $this->homeTabManager
             ->getHomeTabByIdAndWorkspace($homeTabId, $workspace);
-        $isVisibleHomeTab = is_null($homeTab) ? false: true;
+        $isVisibleHomeTab = is_null($homeTab) ? false : true;
 
         if ($isVisibleHomeTab) {
 
@@ -602,7 +599,6 @@ class WorkspaceController extends Controller
      *     name="claro_workspace_open",
      *     options={"expose"=true}
      * )
-     * @EXT\Method("GET")
      * @EXT\ParamConverter(
      *      "workspace",
      *      class="ClarolineCoreBundle:Workspace\Workspace",
@@ -713,7 +709,6 @@ class WorkspaceController extends Controller
      *     defaults={"page"=1},
      *     options={"expose"=true}
      * )
-     * @EXT\Method("GET")
      * @EXT\ParamConverter(
      *      "workspaceTag",
      *      class="ClarolineCoreBundle:Workspace\WorkspaceTag",
@@ -745,7 +740,6 @@ class WorkspaceController extends Controller
      *     defaults={"page"=1},
      *     options={"expose"=true}
      * )
-     * @EXT\Method("GET")
      * @EXT\ParamConverter(
      *      "workspaceTag",
      *      class="ClarolineCoreBundle:Workspace\WorkspaceTag",
@@ -782,7 +776,6 @@ class WorkspaceController extends Controller
      *     defaults={"page"=1},
      *     options={"expose"=true}
      * )
-     * @EXT\Method("GET")
      * @EXT\Template()
      *
      * @param integer $page
@@ -803,7 +796,6 @@ class WorkspaceController extends Controller
      *     defaults={"page"=1},
      *     options={"expose"=true}
      * )
-     * @EXT\Method("GET")
      *
      * @EXT\Template()
      *
@@ -889,7 +881,6 @@ class WorkspaceController extends Controller
      *     defaults={"page"=1},
      *     options={"expose"=true}
      * )
-     * @EXT\Method("GET")
      * @EXT\ParamConverter(
      *      "workspaceTag",
      *      class="ClarolineCoreBundle:Workspace\WorkspaceTag",
@@ -922,7 +913,6 @@ class WorkspaceController extends Controller
      *     defaults={"page"=1},
      *     options={"expose"=true}
      * )
-     * @EXT\Method("GET")
      *
      * @EXT\Template()
      *
@@ -946,7 +936,6 @@ class WorkspaceController extends Controller
      *     defaults={"page"=1},
      *     options={"expose"=true}
      * )
-     * @EXT\Method("GET")
      *
      * @EXT\Template()
      *

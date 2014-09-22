@@ -72,7 +72,6 @@ class WorkspaceToolsParametersController extends AbstractParametersController
      *     "/{workspace}/tools",
      *     name="claro_workspace_tools_roles"
      * )
-     * @EXT\Method("GET")
      * @EXT\Template("ClarolineCoreBundle:Tool\workspace\parameters:toolRoles.html.twig")
      *
      * @param Workspace $workspace
@@ -137,7 +136,6 @@ class WorkspaceToolsParametersController extends AbstractParametersController
      *     "/{workspace}/tools/{tool}/editform",
      *     name="claro_workspace_order_tool_edit_form"
      * )
-     * @EXT\Method("GET")
      *
      * @EXT\Template("ClarolineCoreBundle:Tool\workspace\parameters:toolNameModalForm.html.twig")
      *
@@ -168,7 +166,7 @@ class WorkspaceToolsParametersController extends AbstractParametersController
      * @EXT\Template("ClarolineCoreBundle:Tool\workspace\parameters:workspaceOrderToolEdit.html.twig")
      *
      * @param Workspace $workspace
-     * @param OrderedTool       $ot
+     * @param OrderedTool $ot
      *
      * @return Response
      */
@@ -181,11 +179,13 @@ class WorkspaceToolsParametersController extends AbstractParametersController
         if ($form->isValid()) {
             $this->toolManager->editOrderedTool($form->getData());
 
-            return new JsonResponse(array(
-                'tool_id' => $workspaceOrderTool->getTool()->getId(),
-                'ordered_tool_id' => $workspaceOrderTool->getId(),
-                'name' => $workspaceOrderTool->getName()
-            ));
+            return new JsonResponse(
+                array(
+                    'tool_id' => $workspaceOrderTool->getTool()->getId(),
+                    'ordered_tool_id' => $workspaceOrderTool->getId(),
+                    'name' => $workspaceOrderTool->getName()
+                )
+            );
         }
 
         return array(

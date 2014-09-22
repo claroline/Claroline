@@ -54,7 +54,6 @@ class MyWorkspacesWidgetController extends Controller
      *     name="claro_display_workspaces_widget",
      *     options={"expose"=true}
      * )
-     * @EXT\Method("GET")
      *
      * @EXT\Template("ClarolineCoreBundle:Widget:displayMyWorkspacesWidget.html.twig")
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})

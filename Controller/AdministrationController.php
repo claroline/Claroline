@@ -84,7 +84,7 @@ class AdministrationController extends Controller
     public function openAdministrationToolAction($toolName)
     {
         $event = $this->eventDispatcher->dispatch(
-            'administration_tool_' . $toolName ,
+            'administration_tool_' . $toolName,
             'OpenAdministrationTool',
             array('toolName' => $toolName)
         );
@@ -94,7 +94,6 @@ class AdministrationController extends Controller
 
     /**
      * @EXT\Template("ClarolineCoreBundle:Administration:left_bar.html.twig")
-     * @EXT\Method("GET")
      * @return array
      */
     public function renderLeftBarAction()

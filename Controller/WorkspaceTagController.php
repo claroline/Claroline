@@ -167,7 +167,6 @@ class WorkspaceTagController extends Controller
      *     name="claro_admin_workspace_tag_create_form",
      *     options={"expose"=true}
      * )
-     * @EXT\Method("GET")
      *
      * @EXT\Template()
      *
@@ -235,7 +234,6 @@ class WorkspaceTagController extends Controller
      *     name="claro_workspace_tag_create_form",
      *     options={"expose"=true}
      * )
-     * @EXT\Method("GET")
      * @EXT\ParamConverter("currentUser", options={"authenticatedUser" = true})
      *
      * @EXT\Template()
@@ -302,7 +300,6 @@ class WorkspaceTagController extends Controller
      *     name="claro_admin_workspace_tag_edit_form",
      *     options={"expose"=true}
      * )
-     * @EXT\Method("GET")
      * @EXT\ParamConverter(
      *     "workspaceTag",
      *     class="ClarolineCoreBundle:Workspace\WorkspaceTag",
@@ -378,7 +375,6 @@ class WorkspaceTagController extends Controller
      *     name="claro_workspace_tag_edit_form",
      *     options={"expose"=true}
      * )
-     * @EXT\Method("GET")
      * @EXT\ParamConverter(
      *     "workspaceTag",
      *     class="ClarolineCoreBundle:Workspace\WorkspaceTag",
@@ -475,10 +471,7 @@ class WorkspaceTagController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function removeAdminTagHierarchy(
-        WorkspaceTag $parentTag,
-        WorkspaceTag $childTag
-    )
+    public function removeAdminTagHierarchy(WorkspaceTag $parentTag, WorkspaceTag $childTag)
     {
         if (!$this->securityContext->isGranted('ROLE_ADMIN')) {
             throw new AccessDeniedException();
@@ -578,11 +571,7 @@ class WorkspaceTagController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function removeTagHierarchy(
-        User $currentUser,
-        WorkspaceTag $parentTag,
-        WorkspaceTag $childTag
-    )
+    public function removeTagHierarchy(User $currentUser, WorkspaceTag $parentTag, WorkspaceTag $childTag)
     {
         $childrenHierarchies = $this->tagManager
             ->getHierarchiesByParent($currentUser, $childTag);
@@ -662,14 +651,12 @@ class WorkspaceTagController extends Controller
      *     defaults={"page"=1, "search"=""},
      *     options={"expose"=true}
      * )
-     * @EXT\Method("GET")
      * @EXT\Route(
      *     "admin/tag/{workspaceTagId}/check/children/page/{page}/search/{search}",
      *     name="claro_admin_workspace_tag_check_children_pager_search",
      *     defaults={"page"=1},
      *     options={"expose"=true}
      * )
-     * @EXT\Method("GET")
      * @EXT\ParamConverter(
      *      "workspaceTag",
      *      class="ClarolineCoreBundle:Workspace\WorkspaceTag",
@@ -713,14 +700,12 @@ class WorkspaceTagController extends Controller
      *     defaults={"page"=1, "search"=""},
      *     options={"expose"=true}
      * )
-     * @EXT\Method("GET")
      * @EXT\Route(
      *     "tag/{workspaceTagId}/check/children/page/{page}/search/{search}",
      *     name="claro_workspace_tag_check_children_pager_search",
      *     defaults={"page"=1},
      *     options={"expose"=true}
      * )
-     * @EXT\Method("GET")
      * @EXT\ParamConverter(
      *      "workspaceTag",
      *      class="ClarolineCoreBundle:Workspace\WorkspaceTag",
@@ -852,14 +837,12 @@ class WorkspaceTagController extends Controller
      *     defaults={"page"=1, "search"=""},
      *     options={"expose"=true}
      * )
-     * @EXT\Method("GET")
      * @EXT\Route(
      *     "/admin/workspace/tag/manage/page/{page}/search/{search}",
      *     name="claro_manage_admin_workspace_tag_search",
      *     defaults={"page"=1},
      *     options={"expose"=true}
      * )
-     * @EXT\Method("GET")
      *
      * @EXT\Template()
      *
@@ -919,14 +902,12 @@ class WorkspaceTagController extends Controller
      *     defaults={"page"=1, "search"=""},
      *     options={"expose"=true}
      * )
-     * @EXT\Method("GET")
      * @EXT\Route(
      *     "/workspace/tag/manage/page/{page}/search/{search}",
      *     name="claro_manage_workspace_tag_search",
      *     defaults={"page"=1},
      *     options={"expose"=true}
      * )
-     * @EXT\Method("GET")
      * @EXT\ParamConverter("currentUser", options={"authenticatedUser" = true})
      *
      * @EXT\Template()
@@ -1131,7 +1112,6 @@ class WorkspaceTagController extends Controller
      *     name="claro_admin_workspace_tag_organize",
      *     options={"expose"=true}
      * )
-     * @EXT\Method("GET")
      * @EXT\Template()
      *
      * Display list of admin workspace tags
@@ -1171,7 +1151,6 @@ class WorkspaceTagController extends Controller
      *     name="claro_workspace_tag_organize",
      *     options={"expose"=true}
      * )
-     * @EXT\Method("GET")
      * @EXT\ParamConverter("currentUser", options={"authenticatedUser" = true})
      * @EXT\Template()
      *
@@ -1288,7 +1267,7 @@ class WorkspaceTagController extends Controller
      */
     public function adminWorkspaceTagLinkWorkspaceAction(
         WorkspaceTag $workspaceTag,
-        Workspace $workspace = NULL
+        Workspace $workspace = null
     )
     {
         if (!$this->securityContext->isGranted('ROLE_ADMIN')) {
@@ -1308,14 +1287,12 @@ class WorkspaceTagController extends Controller
      *     defaults={"page"=1, "search"=""},
      *     options={"expose"=true}
      * )
-     * @EXT\Method("GET")
      * @EXT\Route(
      *     "/workspace/{linkedWorkspaceId}/public/list/page/{page}/search/{search}",
      *     name="claro_render_public_workspace_list_pager_search",
      *     defaults={"page"=1},
      *     options={"expose"=true}
      * )
-     * @EXT\Method("GET")
      *
      * @EXT\Template()
      *
