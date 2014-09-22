@@ -7,7 +7,7 @@
         <div class='modal-body'>
             <ul class="list-inline badge_picker_list" data-multiple="{{ multiple }}">
                 {% for badge in badges %}
-                    {% set isSelected = (value == badge.id) %}
+                    {% set isSelected = (badge.id in value) %}
                 <li class="badge_picker_item{% if isSelected %} selected{% endif %}">
                     <input type="checkbox" name="badge_{{ badge.id }}" value="{{ badge.id }}"
                         {% if isSelected %} checked="checked"{% endif %} class="hidden"
@@ -23,7 +23,7 @@
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">{{ 'cancel'|trans({}, 'platform') }}</button>
-            <button type="button" class="btn btn-primary submit" disabled="disabled">{{ 'select'|trans({}, 'badge') }}</button>
+            <button type="button" class="btn btn-primary submit">{{ 'select'|trans({}, 'badge') }}</button>
         </div>
     </form>
 </div>
@@ -31,18 +31,12 @@
 <script type="text/javascript">
     $(function(){
         var modalElement      = $(".badge_picker_modal");
-        var validButton       = $("button.submit");
         var multipleSelection = $(".badge_picker_list").data('multiple');
 
         $(".badge_picker_item").click(function (event) {
             manageMultipleSelection(this);
             toggleBadgeSelection(this);
-            checkValidButton();
         });
-
-        function checkValidButton() {
-            validButton.prop('disabled', 0 == countSelectedBadge());
-        }
 
         function countSelectedBadge() {
             return $("input[type=checkbox]:checked", modalElement).length;
@@ -64,7 +58,5 @@
             var checkbox = $('input[type=checkbox]', badge);
             checkbox.prop('checked', !checkbox.prop('checked'));
         }
-
-        checkValidButton();
     });
 </script>

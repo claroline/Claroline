@@ -107,10 +107,16 @@ class BadgeController extends Controller
 
         $badges = $badgeManager->getForBadgePicker($parameters);
 
+        $value = $requestParameters->get('value', array());
+
+        if (!is_array($value)) {
+            $value = array($value);
+        }
+
         return array(
             'badges'   => $badges,
             'multiple' => $requestParameters->get('multiple', true),
-            'value'    => $requestParameters->get('value', null)
+            'value'    => $value
         );
     }
 }
