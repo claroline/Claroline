@@ -8,14 +8,14 @@
             <div id="twig-resource-attributes"
                  data-resource-id="{{ _resource.getId() }}"
                  data-resource-name="{{ _resource.getName() }}"
-            >
+                    >
             </div>
             {% if not is_path_mode  %}
                 <ul class="breadcrumb">
                     <li><a href="{{ path('claro_desktop_open') }}"><i class="fa fa-briefcase"></i> {{ 'desktop'|trans({}, 'platform') }}</a></li>
                     <li><a href="{{ path('claro_desktop_open_tool', {'toolName': 'resource_manager'}) }}">{{ 'resources'|trans({}, 'platform') }}</a></li>
                     {% render controller("ClarolineCoreBundle:Resource:renderBreadcrumbs",
-                        {'node': _resource.getResourceNode(), '_breadcrumbs': app.request.query.get('_breadcrumbs', {})})
+                    {'node': _resource.getResourceNode(), '_breadcrumbs': app.request.query.get('_breadcrumbs', {})})
                     %}
                     {% block resourceBreadcrumb %}
                         <li class="active">{{ _resource.getResourceNode().getName() }}</li>
@@ -26,15 +26,19 @@
     </div>
 {% endblock %}
 
-{% block content %}
+{% block leftbar %}
     {% if not is_path_mode %}
-        <div class="navbar navbar-default desktop">
-            <ul class="nav navbar-nav">
-                {% render controller("ClarolineCoreBundle:Desktop:renderToolList") %}
-            </ul>
+        <div class="list-group menu">
+            <div class="list-group-item disabled">{{ 'desktop'|trans({}, 'platform') }}</div>
+            {% render controller("ClarolineCoreBundle:Desktop:renderToolList") %}
         </div>
     {% endif %}
+{% endblock %}
 
+{% block content %}
+    <div class="visible-xs">
+        {{ block("leftbar") }}
+    </div>
     <div class="section-content">
         <div class="panel panel-default">
             {% block section_content %}{% endblock %}
@@ -55,4 +59,3 @@
         {% endif %}
     </script>
 {% endblock %}
-

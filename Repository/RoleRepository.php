@@ -372,6 +372,27 @@ class RoleRepository extends EntityRepository
         return $executeQuery ? $query->getOneOrNullResult() : $query;
     }
 
+    public function findRolesByWorkspaceCodeAndTranslationKey(
+        $workspaceCode,
+        $translationKey,
+        $executeQuery = true
+    )
+    {
+        $dql = '
+            SELECT r
+            FROM Claroline\CoreBundle\Entity\Role r
+            INNER JOIN r.workspace w
+            WHERE w.code = :code
+            AND r.translationKey = :key
+        ';
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('code', $workspaceCode);
+        $query->setParameter('key', $translationKey);
+
+        return $executeQuery ? $query->getResult() : $query;
+    }
+
     /**
      * Returns all non-platform roles of a user.
      *
