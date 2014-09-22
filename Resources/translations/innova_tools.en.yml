@@ -10,10 +10,13 @@ back_to: Back to
 
 # C
 create_path: Create
+create_path_from_model: Create from model
+create_path_from_model_loading: Models loading...
 current_position: Current position
 class: The class
 classroom: In a classroom
 close: Close
+choose_model: Choose a model
 
 # D
 publish_success: Path has been published
@@ -68,6 +71,7 @@ paths_list: Paths list
 progression: Progression
 published: Published
 path_open_not_published_error: The path you wanted to open has not been published yet by its owner.
+paths_template_list: Template paths list
 
 # R
 resources: Resources
@@ -76,6 +80,7 @@ resources: Resources
 submit: Submit
 student: Individually
 status: Status
+select: Select
 
 # W
 with_computer: With a computer
