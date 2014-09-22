@@ -198,7 +198,6 @@ communication: Communication
 competence: Compétence
 competence_creation: 'Création d''une compétence'
 competence_edition: 'Modification de la compétence'
-competence_referencial: Réferenciel de compétences
 competence_referencial: Référentiel de compétences
 competences: Compétences
 competences_management: 'Gestion des compétences'
@@ -235,7 +234,7 @@ csv_users_import_infos: 'Informations sur le format du fichier CSV'
 csv_users_import_infos_format: Format
 csv_users_import_infos_format_a: 'Les données d''un utilisateur doivent être définies sur une ligne et séparées par un point virgule'
 csv_users_import_infos_format_b: 'Notez que vous ne devez pas ajouter un en-tête de fichier'
-csv_users_import_infos_optional: Optionel
+csv_users_import_infos_optional: Optionnel
 csv_users_import_infos_required: Requis
 curl_facebook_application_validation_error: 'Extension php curl manquante.'
 current_category: 'Catégorie courante'
@@ -315,17 +314,17 @@ edit_facet: Editer une facette
 edit_field: Editer un champ
 edit_password: 'Modifier votre mot de passe'
 edit_password_error: 'Une erreur est survenue pendant la modification de votre mot de passe.'
-edit_password_error_current : Votre mot de passe actuel n'est pas correcte.
+edit_password_error_current : Votre mot de passe actuel n'est pas correct.
 edit_password_message: 'Êtes vous sur de vouloir modifier votre mot de passe ?'
 edit_password_success: 'Modification de votre mot de passe effectuée avec succès.'
 edit_profile: 'Modifier votre profil'
 edit_profile_error: 'Une erreur est survenue pendant la modification du profil.'
-edit_profile_error_right : Vous n'êtes pas autorisez à uploader des images, veuillez contactez votre administrateur
-edit_profile_success: 'Modification du profil effectué avec succès.'
+edit_profile_error_right : Vous n'êtes pas autorisé à uploader des images, veuillez contactez votre administrateur
+edit_profile_success: 'Modification du profil effectuée avec succès.'
 edit_public_profile: 'Modifier le profil public'
 edit_public_profile_preferences_error: 'Une erreur est survenue lors de la modification des préférences de votre profil public.'
 edit_public_profile_preferences_success: 'Préférences de votre profil public modifiées avec succès.'
-edit_rights_success: Modification des droits effecetuée avec succès.
+edit_rights_success: Modification des droits effectuée avec succès.
 edit_security_token: 'Modification du jeton d''authentification'
 edit_your_profile_error: 'Une erreur est survenue pendant la modification de votre profil.'
 edit_your_profile_success: 'Modification de votre profil effectué avec succès.'
@@ -351,7 +350,6 @@ external_pdo_database: 'Base de données externe (PDO)'
 facebook: Facebook
 facebook_application_validation_error: 'Les identifiants fournis ne sont pas valides.'
 facets: Facettes
-fail_add_user_group_message: Ces utilisateurs n'ont pas pu être ajouté au groupe (vérifiez la limite d'utilisateurs par rôle).
 fail_add_user_group_message: Ces utilisateurs n'ont pas pu être ajoutés au groupe (vérifiez la limite d'utilisateurs par rôle).
 failed: Echoué
 fast_answer: 'Réponse rapide'
@@ -376,7 +374,7 @@ from: Depuis
 from_message: De
 general: Général
 general_parameters: 'Paramètres généraux'
-general_tab_form_explanation: Ce formulaire vous permet de spécifier quels sont les informations vues par rôle dans le profile public.
+general_tab_form_explanation: Ce formulaire vous permet de spécifier quelles sont les informations vues par rôle dans le profil public.
 generate_token: 'Générer un token aléatoire'
 generate_url: 'Inscription publique'
 generate_url_subscription: 'Inscription à l''espace d''activité par un utilisateur'
@@ -985,7 +983,7 @@ workspace_home_tab_edition: 'Edition de l''onglet pour les espaces d''activités
 workspace_home_tabs: 'Onglets pour les espaces d''activités'
 workspace_list: 'Liste des espaces d''activités'
 workspace_list: Liste des espaces d'activités
-workspace_management: L'espace d'activités a été crée le %creationDate%, par %creator%. Il y a %count% inscrit(s).
+workspace_management: L'espace d'activités a été créé le %creationDate%, par %creator%. Il y a %count% inscrit(s).
 workspace_management_date_null: Il y a %count% inscrit(s). La date de création de l'espace et son créateur ne sont pas connus.
 workspace_order_tool_edit_form_name: Nom
 workspace_registration_confirm_title: 'Voulez-vous vous inscrire à cet espace d''activités ?'
