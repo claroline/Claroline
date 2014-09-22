@@ -171,6 +171,8 @@ class UsersController extends Controller
     public function createAction(User $currentUser)
     {
         $this->checkOpen();
+        $translator = $this->get('translator');
+        $sessionFlashBag = $this->get('session')->getFlashBag();
         $roleUser = $this->roleManager->getRoleByName('ROLE_USER');
         $isAdmin = ($this->sc->isGranted('ROLE_ADMIN')) ? true : false;
 
@@ -207,6 +209,8 @@ class UsersController extends Controller
             $user = $form->getData();
             $newRoles = $form->get('platformRoles')->getData();
             $this->userManager->insertUserWithRoles($user, $newRoles);
+            
+            $sessionFlashBag->add('success', $translator->trans('user_creation_success', array(), 'platform'));
 
             return $this->redirect($this->generateUrl('claro_admin_user_list'));
         }
@@ -220,7 +224,7 @@ class UsersController extends Controller
         return array(
             'form_complete_user' => $form->createView(),
             'error' => $error,
-            'unavailableRoles' => $unavailableRoles
+            'unavailableRoles' => $unavailableRoles,
         );
     }
 
@@ -293,16 +297,18 @@ class UsersController extends Controller
     public function listAction($page, $search, $max, $order, $direction)
     {
         $this->checkOpen();
+        $canUserBeCreated = $this->roleManager->validateRoleInsert(new User(),$this->roleManager->getRoleByName('ROLE_USER'));
         $pager = $search === '' ?
             $this->userManager->getAllUsers($page, $max, $order, $direction) :
             $this->userManager->getUsersByName($search, $page, $max, $order, $direction);
 
         return array(
+            'canUserBeCreated' => $canUserBeCreated,
             'pager' => $pager,
             'search' => $search,
             'max' => $max,
             'order' => $order,
-            'direction' => $direction
+            'direction' => $direction,
         );
     }
 
@@ -347,9 +353,7 @@ class UsersController extends Controller
     public function importFormAction()
     {
         $this->checkOpen();
-        $form = $this->formFactory->create(
-            FormFactory::TYPE_USER_IMPORT, array($this->authenticationManager->getDrivers())
-        );
+        $form = $this->formFactory->create(FormFactory::TYPE_USER_IMPORT, array());
 
         return array('form' => $form->createView(), 'error' => null);
     }
@@ -387,14 +391,11 @@ class UsersController extends Controller
     public function importAction()
     {
         $this->checkOpen();
-        $form = $this->formFactory->create(
-            FormFactory::TYPE_USER_IMPORT, array($this->authenticationManager->getDrivers())
-        );
+        $form = $this->formFactory->create(FormFactory::TYPE_USER_IMPORT, array());
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
             $file = $form->get('file')->getData();
-            $authentication = $form->get('authentication')->getData();
             $sendMail = $form->get('sendMail')->getData();
             $lines = str_getcsv(file_get_contents($file), PHP_EOL);
 
@@ -410,7 +411,7 @@ class UsersController extends Controller
                 return array('form' => $form->createView(), 'error' => 'role_user unavailable');
             }
 
-            $this->userManager->importUsers($users, $authentication, $sendMail);
+            $this->userManager->importUsers($users, $sendMail);
 
             return new RedirectResponse($this->router->generate('claro_admin_user_list'));
         }

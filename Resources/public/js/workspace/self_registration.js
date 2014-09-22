@@ -120,4 +120,22 @@
             }
         });
     });
+    
+    $('#search-workspace-btn').on('click', function () {
+        var search = $('#search-workspace-input').val();
+        
+        window.location.href = Routing.generate(
+            'claro_list_workspaces_with_self_registration',
+            {'search': search}
+        );
+    });
+    
+    $('#search-workspace-input').on('change', function () {
+        var search = $('#search-workspace-input').val();
+        
+        window.location.href = Routing.generate(
+            'claro_list_workspaces_with_self_registration',
+            {'search': search}
+        );
+    });
 })();

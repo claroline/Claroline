@@ -221,7 +221,7 @@ class FileListener implements ContainerAwareInterface
                 );
                 $response->headers->set(
                     'Content-Disposition',
-                    'attachment; filename=file.'.pathinfo($item, PATHINFO_EXTENSION)
+                    'attachment; filename=' . urlencode($resource->getResourceNode()->getName())
                 );
                 $response->headers->set(
                     'Content-Type',
@@ -336,7 +336,7 @@ class FileListener implements ContainerAwareInterface
             $archive->close();
             $this->om->startFlushSuite();
             $perms = $this->container->get('claroline.manager.rights_manager')->getCustomRoleRights($root);
-            $resources = $this->uploadDir($extractPath, $root, $perms);
+            $resources = $this->uploadDir($extractPath, $root, $perms, true);
             $this->om->endFlushSuite();
 
             return $resources;
@@ -345,7 +345,7 @@ class FileListener implements ContainerAwareInterface
         throw new \Exception("The archive {$archivePath} can't be opened");
     }
 
-    private function uploadDir($dir, ResourceNode $parent, array $perms)
+    private function uploadDir($dir, ResourceNode $parent, array $perms, $first = false)
     {
         $resources = [];
         $iterator = new \DirectoryIterator($dir);
@@ -375,6 +375,8 @@ class FileListener implements ContainerAwareInterface
                     $perms
                 );
             }
+
+//            $this->om->forceFlush();
         }
 
         // set order manually as we are inside a flush suite
@@ -390,13 +392,22 @@ class FileListener implements ContainerAwareInterface
             }
         }
 
+        if ($first) {
+            $previous = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceNode')
+                ->findOneBy(array('parent' => $parent, 'next' => null));
+
+            if ($previous) {
+                $previous->setNext($resources[0]->getResourceNode());
+            }
+        }
+
         return $resources;
     }
 
     private function uploadFile(\DirectoryIterator $file, ResourceNode $parent, array $perms)
     {
         $entityFile = new File();
-        $fileName = $file->getFilename();
+        $fileName = utf8_encode($file->getFilename());
         $size = @filesize($file);
         $extension = pathinfo($fileName, PATHINFO_EXTENSION);
         $mimeType = $this->container->get('claroline.utilities.mime_type_guesser')->guess($extension);

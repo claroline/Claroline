@@ -79,9 +79,9 @@ activity_past_evaluation_form_date: Date
 activity_past_evaluation_form_numScore: Score
 activity_past_evaluation_form_score: Evaluation
 activity_past_evaluation_form_status: Statut
-activity_remove_primary_resource: Enlever la resource primaire
+activity_remove_primary_resource: Enlever la ressource primaire
 activity_resource_not_allowed: Vous ne pouvez pas ajouter une ressource de ce type
-activity_resource_remove: Êtes-vous sûr de vouloir enlever cette ressource de l'activite?
+activity_resource_remove: Êtes-vous sûr de vouloir enlever cette ressource de l'activité?
 activity_rule_action_none: Aucune
 activity_rule_configuration_for_auto_evaluation: 'Configuration de la règle pour l''évaluation automatique'
 activity_rule_form_action: Action
@@ -152,6 +152,8 @@ at_least_one_category_has_to_be_selected: 'Au moins une catégorie doit être se
 attempt: Tentative
 attempts: Tentatives
 authentication: Authentification
+authentication_invalid: La source d'authentification %authentication% de la ligne %line% n'est pas valide.
+authentication_source: Source d'authentification
 automatic: Automatique
 available_widgets: 'Widgets disponibles'
 available_workspaces: 'Espaces d''activités disponibles'
@@ -196,7 +198,6 @@ communication: Communication
 competence: Compétence
 competence_creation: 'Création d''une compétence'
 competence_edition: 'Modification de la compétence'
-competence_referencial: Réferenciel de compétences
 competence_referencial: Référentiel de compétences
 competences: Compétences
 competences_management: 'Gestion des compétences'
@@ -233,7 +234,7 @@ csv_users_import_infos: 'Informations sur le format du fichier CSV'
 csv_users_import_infos_format: Format
 csv_users_import_infos_format_a: 'Les données d''un utilisateur doivent être définies sur une ligne et séparées par un point virgule'
 csv_users_import_infos_format_b: 'Notez que vous ne devez pas ajouter un en-tête de fichier'
-csv_users_import_infos_optional: Optionel
+csv_users_import_infos_optional: Optionnel
 csv_users_import_infos_required: Requis
 curl_facebook_application_validation_error: 'Extension php curl manquante.'
 current_category: 'Catégorie courante'
@@ -313,17 +314,17 @@ edit_facet: Editer une facette
 edit_field: Editer un champ
 edit_password: 'Modifier votre mot de passe'
 edit_password_error: 'Une erreur est survenue pendant la modification de votre mot de passe.'
-edit_password_error_current : Votre mot de passe actuel n'est pas correcte.
+edit_password_error_current : Votre mot de passe actuel n'est pas correct.
 edit_password_message: 'Êtes vous sur de vouloir modifier votre mot de passe ?'
 edit_password_success: 'Modification de votre mot de passe effectuée avec succès.'
 edit_profile: 'Modifier votre profil'
 edit_profile_error: 'Une erreur est survenue pendant la modification du profil.'
-edit_profile_error_right : Vous n'êtes pas autorisez à uploader des images, veuillez contactez votre administrateur
-edit_profile_success: 'Modification du profil effectué avec succès.'
+edit_profile_error_right : Vous n'êtes pas autorisé à uploader des images, veuillez contactez votre administrateur
+edit_profile_success: 'Modification du profil effectuée avec succès.'
 edit_public_profile: 'Modifier le profil public'
 edit_public_profile_preferences_error: 'Une erreur est survenue lors de la modification des préférences de votre profil public.'
 edit_public_profile_preferences_success: 'Préférences de votre profil public modifiées avec succès.'
-edit_rights_success: Modification des droits effecetuée avec succès.
+edit_rights_success: Modification des droits effectuée avec succès.
 edit_security_token: 'Modification du jeton d''authentification'
 edit_your_profile_error: 'Une erreur est survenue pendant la modification de votre profil.'
 edit_your_profile_success: 'Modification de votre profil effectué avec succès.'
@@ -349,7 +350,6 @@ external_pdo_database: 'Base de données externe (PDO)'
 facebook: Facebook
 facebook_application_validation_error: 'Les identifiants fournis ne sont pas valides.'
 facets: Facettes
-fail_add_user_group_message: Ces utilisateurs n'ont pas pu être ajouté au groupe (vérifiez la limite d'utilisateurs par rôle).
 fail_add_user_group_message: Ces utilisateurs n'ont pas pu être ajoutés au groupe (vérifiez la limite d'utilisateurs par rôle).
 failed: Echoué
 fast_answer: 'Réponse rapide'
@@ -374,7 +374,7 @@ from: Depuis
 from_message: De
 general: Général
 general_parameters: 'Paramètres généraux'
-general_tab_form_explanation: Ce formulaire vous permet de spécifier quels sont les informations vues par rôle dans le profile public.
+general_tab_form_explanation: Ce formulaire vous permet de spécifier quelles sont les informations vues par rôle dans le profil public.
 generate_token: 'Générer un token aléatoire'
 generate_url: 'Inscription publique'
 generate_url_subscription: 'Inscription à l''espace d''activité par un utilisateur'
@@ -442,7 +442,7 @@ keep_me_logged_in: 'Se souvenir de moi'
 lastName: Nom
 last_30_days_activity: 'Activités des 30 derniers jours'
 last_attempt_date: 'Date de la dernière tentative'
-last_manager_error_message: Vous ne pouvez pas retirer tout les gestionnaires.
+last_manager_error_message: Vous ne pouvez pas retirer tous les gestionnaires.
 last_name: Nom
 layout: Layout
 learning_outcomes: 'Référentiel de compétences'
@@ -738,7 +738,6 @@ role_edition: 'Modification d''un rôle'
 role_limit_reached: La limite d'utilisateur de type %translationKey% a été atteinte.
 role_limit_reached: La limite d'utilisateurs de type %translationKey% a été atteinte.
 role_list: Liste des roles
-role_list: Liste des rôles
 role_name_changed_success: Le nom du rôle a été mis à jour avec succès.
 role_name_type_form_translationKey: Nom
 roles: Rôles
@@ -815,7 +814,7 @@ subscribe_selected_users: 'Inscrire les utilisateurs sélectionnés'
 subscribe_users: 'Inscrire des utilisateurs'
 subscription: Inscription
 success_rate: 'Taux de réussite'
-successfull_workspace_creation: L'espace d'activité %name% a été créé avec succès.
+successfull_workspace_creation: L'espace d'activités %name% a été créé avec succès.
 support_email: 'Email du support'
 switch: Echanger
 tag: Tag
@@ -833,7 +832,7 @@ text_form_content: Contenu
 text_form_name: Nom
 text_form_shareType: Redistribution
 text_form_text: Texte
-the_following_users_were_not_imported: 'Les utilisateurs suivant n''ont pas pu être importés:'
+the_following_users_were_not_imported: 'Les utilisateurs suivants n''ont pas pu être importés:'
 the_workspace: 'L''espace d''activités'
 this_page_requires_authentication: 'Cette page requiert une authentification. Veuillez vous identifier.'
 time_col: 'Colonne des durées'
@@ -905,6 +904,7 @@ url_invalid: 'Le code n''est pas correct, n''essayez pas de changer l''adresse'
 user: Utilisateur
 user_accounts: 'Comptes utilisateur'
 user_creation: 'Création d''un utilisateur'
+user_creation_success: Le compte utilisateur a été créé avec succès.
 user_limit_reached: La limite de création d'utilisateur a été atteinte.
 user_limit_reached: La limite de création d'utilisateurs a été atteinte.
 user_limit_success_update: La limite d'utilisateur par rôle a été mise à jour avec succès.
@@ -983,7 +983,7 @@ workspace_home_tab_edition: 'Edition de l''onglet pour les espaces d''activités
 workspace_home_tabs: 'Onglets pour les espaces d''activités'
 workspace_list: 'Liste des espaces d''activités'
 workspace_list: Liste des espaces d'activités
-workspace_management: L'espace d'activités a été crée le %creationDate%, par %creator%. Il y a %count% inscrit(s).
+workspace_management: L'espace d'activités a été créé le %creationDate%, par %creator%. Il y a %count% inscrit(s).
 workspace_management_date_null: Il y a %count% inscrit(s). La date de création de l'espace et son créateur ne sont pas connus.
 workspace_order_tool_edit_form_name: Nom
 workspace_registration_confirm_title: 'Voulez-vous vous inscrire à cet espace d''activités ?'

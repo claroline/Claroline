@@ -13,15 +13,18 @@ namespace Claroline\CoreBundle\Library\Installation\Updater;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Claroline\CoreBundle\Entity\Tool\Tool;
+use Claroline\CoreBundle\Entity\Widget\Widget;
 
 class Updater030300
 {
     private $em;
     private $logger;
+    private $configHandler;
 
     public function __construct(ContainerInterface $container)
     {
         $this->em = $container->get('doctrine.orm.entity_manager');
+        $this->configHandler = $container->get('claroline.config.platform_config_handler');
         $this->container = $container;
     }
 

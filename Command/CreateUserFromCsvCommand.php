@@ -85,9 +85,8 @@ class CreateUserFromCsvCommand extends ContainerAwareCommand
             $users[] = str_getcsv($line, ';');
         }
 
-        //@todo add an authentication source
         $userManager = $this->getContainer()->get('claroline.manager.user_manager');
-        $userManager->importUsers($users, null, false, function ($message) use ($output) {
+        $userManager->importUsers($users, false, function ($message) use ($output) {
             $output->writeln($message);
         });
     }

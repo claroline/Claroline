@@ -269,7 +269,7 @@ class UserManager
      *
      * @return array
      */
-    public function importUsers(array $users, $authentication = null, $sendMail = true, $logger = null)
+    public function importUsers(array $users, $sendMail = true, $logger = null)
     {
         $roleUser = $this->roleManager->getRoleByName('ROLE_USER');
         $max = $roleUser->getMaxUsers();
@@ -290,8 +290,24 @@ class UserManager
             $username = $user[2];
             $pwd = $user[3];
             $email = $user[4];
-            $code = isset($user[5]) ? $user[5] : null;
-            $phone = isset($user[6]) ? $user[6] : null;
+
+            if (isset($user[5])) {
+                $code = trim($user[5]) === '' ? null: $user[5];
+            } else {
+                $code = null;
+            }
+
+            if (isset($user[6])) {
+                $phone = trim($user[6]) === '' ? null: $user[6];
+            } else {
+                $phone = null;
+            }
+
+            if (isset($user[7])) {
+                $authentication = trim($user[7]) === '' ? null: $user[7];
+            } else {
+                $authentication = null;
+            }
 
             $newUser = new User();
             $newUser->setFirstName($firstName);
