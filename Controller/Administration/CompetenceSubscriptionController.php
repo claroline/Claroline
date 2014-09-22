@@ -28,8 +28,8 @@ use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
-class CompetenceSubscriptionController {
-
+class CompetenceSubscriptionController
+{
     private $cptmanager;
     private $request;
     private $userManager;
@@ -65,7 +65,6 @@ class CompetenceSubscriptionController {
     /**
      * @EXT\Route("/menu/",
      *  name="claro_admin_competences_subscription_menu")
-     * @EXT\Method("GET")
      * @EXT\Template()
      *
      */
@@ -76,9 +75,8 @@ class CompetenceSubscriptionController {
 
     /**
      * @EXT\Route("/management/",
-     *  name="claro_admin_competences_subscription_lists", 		
+     *  name="claro_admin_competences_subscription_lists",
      *	defaults={"search"=""}, options = {"expose"=true})
-     * @EXT\Method("GET")
      * @EXT\Template()
      *
      */
@@ -86,34 +84,33 @@ class CompetenceSubscriptionController {
     {
     	$search = '';
     	$competences = $this->cptmanager->getTransversalCompetences();
-    	return array(
+
+        return array(
 			'cpt' => $competences,
 			'search' => $search
     	);
     }
 
     /**
-     * @EXT\Route("/subscription/",  
+     * @EXT\Route("/subscription/",
      * name="claro_admin_competence_subcription_users_form",options={"expose"=true})
-     * @EXT\Method("GET")
      * @EXT\ParamConverter(
      *     "competences",
      *      class="ClarolineCoreBundle:Competence\Competence",
      *      options={"multipleIds" = true, "name" = "competences"}
      * )
-     * 
+     *
      * @EXT\Template()
-     **/ 
+     **/
     public function subscriptionAction(array $competences)
     {
         $users = array();
         foreach ($competences as $c) {
-            $users = array_merge($users,$this->cptmanager->getUserByCompetenceRoot($c));
+            $users = array_merge($users, $this->cptmanager->getUserByCompetenceRoot($c));
         }
-        
-        if (count($users)) 
-        {    
-    	   $pager = $this->userManager->getAllUsersExcept(1, 20, 'id', null, $users);
+
+        if (count($users)) {
+    	    $pager = $this->userManager->getAllUsersExcept(1, 20, 'id', null, $users);
         } else {
             $pager = $this->userManager->getAllUsers(1);
         }
@@ -126,9 +123,8 @@ class CompetenceSubscriptionController {
     }
 
     /**
-     * @EXT\Route("/subscription/users",  
+     * @EXT\Route("/subscription/users",
      * name="claro_admin_competence_subcription_users",options={"expose"=true})
-     * @EXT\Method("GET")
      * @EXT\ParamConverter(
      *     "competences",
      *      class="ClarolineCoreBundle:Competence\Competence",
@@ -140,17 +136,17 @@ class CompetenceSubscriptionController {
      *      options={"multipleIds" = true, "name" = "subjectIds"}
      * )
      * @EXT\Template()
-     **/ 
+     **/
     public function subscriptionUsersAction(array $users, array $competences)
     {
     	$this->cptmanager->subscribeUserToCompetences($users, $competences);
-    	return New Response(200);
+
+        return New Response(200);
     }
 
     /**
-     * @EXT\Route("/unsubscription/users/{root}",  
+     * @EXT\Route("/unsubscription/users/{root}",
      * name="claro_admin_competence_unsubscription_users",options={"expose"=true})
-     * @EXT\Method("GET")
      * @EXT\ParamConverter(
      *     "users",
      *      class="ClarolineCoreBundle:Competence\UserCompetence",
@@ -162,19 +158,19 @@ class CompetenceSubscriptionController {
      *      options={"id" = "root", "strictId" = true}
      * )
      * @EXT\Template()
-     **/ 
+     **/
     public function unsubscriptionUsersAction(array $users,CompetenceNode $root)
-    {        
+    {
     	$this->cptmanager->unsubscribeUserToCompetences($users, $root);
-    	return new Response(200);
+
+        return new Response(200);
     }
 
     /**
-     * @EXT\Route("/subscription/users/competences",  
+     * @EXT\Route("/subscription/users/competences",
      * name="claro_admin_competences_list_users",options={"expose"=true})
-     * @EXT\Method("GET")
      * @EXT\Template()
-     **/ 
+     **/
     public function listUsersAction()
     {
     	$listUsersCompetences =
@@ -186,7 +182,6 @@ class CompetenceSubscriptionController {
     /**
      * @EXT\Route("subscription/users/competences/show/{competenceId}",
      *  name="claro_admin_competences_subscription_details")
-     * @EXT\Method("GET")
      * @EXT\ParamConverter(
      *      "competence",
      *      class="ClarolineCoreBundle:Competence\CompetenceNode",
@@ -195,13 +190,13 @@ class CompetenceSubscriptionController {
      * @EXT\Template()
      * @param Competence $competence
      */
-    
+
     public function showSubscriptionAction($competence)
     {
         $this->checkOpen();
         $listUsersCompetences =
         $this->cptmanager->getCompetencesAssociateUsers($competence);
-        $tree =  $this->cptmanager->getHierarchy($competence);
+        $tree = $this->cptmanager->getHierarchy($competence);
 
         return array(
             'listUsers' => $listUsersCompetences,

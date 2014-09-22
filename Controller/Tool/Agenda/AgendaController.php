@@ -172,7 +172,6 @@ class AgendaController extends Controller
      *     "/workspace/{workspace}/export",
      *     name="claro_workspace_agenda_export"
      * )
-     * @EXT\Method({"GET","POST"})
      * @param Workspace $workspace
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -191,7 +190,6 @@ class AgendaController extends Controller
      *     "/desktop/export",
      *     name="claro_desktop_agenda_export"
      * )
-     * @EXT\Method({"GET"})
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function exportDesktopEventIcsAction()
@@ -201,7 +199,7 @@ class AgendaController extends Controller
 
     private function exportEvent($workspace = null)
     {
-        $file =  $this->agendaManager->export();
+        $file = $this->agendaManager->export();
         $response = new StreamedResponse();
 
         $response->setCallBack(
@@ -209,7 +207,6 @@ class AgendaController extends Controller
                 readfile($file);
             }
         );
-        $date = new \DateTime();
         $response->headers->set('Content-Transfer-Encoding', 'octet-stream');
         $response->headers->set('Content-Type', 'application/force-download');
         $response->headers->set('Content-Disposition', 'attachment; filename='. $workspace->getName().'.ics');
@@ -225,4 +222,4 @@ class AgendaController extends Controller
             throw new AccessDeniedException("The event cannot be updated");
         }
     }
-} 
+}

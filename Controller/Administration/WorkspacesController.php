@@ -64,14 +64,12 @@ class WorkspacesController
      *     defaults={"page"=1, "search"="", "max"=50, "order"="id", "direction"="ASC" },
      *     options = {"expose"=true}
      * )
-     * @EXT\Method("GET")
      * @EXT\Route(
      *     "/page/{page}/search/{search}/max/{max}/order/{order}/direction/{direction}",
      *     name="claro_admin_workspaces_management_search",
      *     defaults={"page"=1, "search"="", "max"=50, "order"="id", "direction"="ASC"},
      *     options = {"expose"=true}
      * )
-     * @EXT\Method("GET")
      * @EXT\Template
      *
      * @param $page

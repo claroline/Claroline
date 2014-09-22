@@ -715,4 +715,4 @@ class CompetenceController
 
         throw new AccessDeniedException();
     }
-} 
+}

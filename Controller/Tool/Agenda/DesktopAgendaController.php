@@ -134,7 +134,6 @@ class DesktopAgendaController extends Controller
      *     "/tasks",
      *     name="claro_desktop_agenda_tasks"
      * )
-     * @EXT\Method({"GET"})
      *
      * @EXT\Template("ClarolineCoreBundle:Agenda:tasks.html.twig")
      */
@@ -152,7 +151,6 @@ class DesktopAgendaController extends Controller
      *     name="claro_desktop_agenda_widget"
      * )
      * @EXT\Template("ClarolineCoreBundle:Widget:agenda_widget.html.twig")
-     * @EXT\Method({"GET"})
      */
     public function widgetAction($order = null)
     {

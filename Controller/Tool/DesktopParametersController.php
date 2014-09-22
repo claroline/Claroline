@@ -125,7 +125,6 @@ class DesktopParametersController extends Controller
      *     "tool/{tool}/config",
      *     name="claro_desktop_tool_config"
      * )
-     * @EXT\Method("GET")
      *
      * @param Tool $tool
      * @return Response
