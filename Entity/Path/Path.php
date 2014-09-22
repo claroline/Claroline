@@ -245,9 +245,13 @@ class Path extends AbstractResource implements PathInterface
     {
         $structure = array (
             'name' => $this->getName(),
-            'description' => $this->getDescription(),
-            'steps' =>
-            array (
+            'description' => $this->getDescription()
+        );
+        
+        if (!empty($steps)) {
+            $structure['steps'] = $steps;
+        } else {
+             $structure['steps'] = array (
                 array (
                     'id'           => 1,
                     'lvl'          => 0,
@@ -256,8 +260,8 @@ class Path extends AbstractResource implements PathInterface
                     'withTutor'    => false,
                     'children'     => $steps,
                 ),
-            ),
-        );
+            );
+        }          
     
         $this->setStructure(json_encode($structure));
         

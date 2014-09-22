@@ -146,13 +146,16 @@ class EditorController {
      * @Template("InnovaPathBundle:Editor:main.html.twig")
      */
     public function newFromModelAction(Workspace $workspace, PathTemplate $template) {
-        $path = new Path();        
+        $path = new Path();
+        
         $this->pathManager->checkAccess('CREATE', $path, $workspace);
+        
         $path->setName($template->getName());       
         $path->setDescription($template->getDescription());
-        $structureArray = array();
-        array_push($structureArray, json_decode($template->getStructure()));
+        
+        $structureArray = array(json_decode($template->getStructure()));
         $path->initializeStructure($structureArray);
+        
         return $this->renderEditor($workspace, $path);
     }
 
