@@ -18,4 +18,4 @@ password_mismatch: 'Les mots de passe ne correspondent pas'
 port_error: Le port doit être un nombre
 public_profile_url_not_valid: 'L''URL de votre profil public n''est pas valide.'
 role_already_exists: Ce rôle existe déjà.
-special_char_not_allowed: 'Les caractères spéciaux ne sont pas autorisés (les caractères autorisés sont : a-z, A-Z, 0-9, _ et .)'
+special_char_not_allowed: 'Les caractères spéciaux ne sont pas autorisés (les caractères autorisés sont : a-z, A-Z, 0-9, _, - et .)'
