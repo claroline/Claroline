@@ -230,7 +230,6 @@ class AuthenticationController
      *     name="claro_security_reset_password",
      *     options={"expose"=true}
      * )
-     * @Method("GET")
      *
      * @Template("ClarolineCoreBundle:Authentication:resetPassword.html.twig")
      */

@@ -89,7 +89,6 @@ class HomeController extends Controller
      *     name="claro_desktop_widget_configuration",
      *     options={"expose"=true}
      * )
-     * @EXT\Method("GET")
      *
      * Asks a widget to render its configuration page for desktop.
      *
@@ -120,7 +119,6 @@ class HomeController extends Controller
      *     name="claro_workspace_widget_configuration",
      *     options={"expose"=true}
      * )
-     * @EXT\Method("GET")
      * @EXT\ParamConverter(
      *      "workspace",
      *      class="ClarolineCoreBundle:Workspace\Workspace",
@@ -157,7 +155,6 @@ class HomeController extends Controller
      *     name="claro_widget_content",
      *     options={"expose"=true}
      * )
-     * @EXT\Method("GET")
      * @EXT\ParamConverter(
      *     "widgetInstance",
      *     class="ClarolineCoreBundle:Widget\WidgetInstance",
@@ -187,7 +184,6 @@ class HomeController extends Controller
      *     name="claro_desktop_widget_instance_create_form",
      *     options = {"expose"=true}
      * )
-     * @EXT\Method("GET")
      * @EXT\Template("ClarolineCoreBundle:Tool\desktop\home:desktopWidgetInstanceCreateForm.html.twig")
      *
      * Displays the widget instance form.
@@ -256,7 +252,6 @@ class HomeController extends Controller
      *     name="claro_workspace_widget_instance_create_form",
      *     options = {"expose"=true}
      * )
-     * @EXT\Method("GET")
      * @EXT\ParamConverter(
      *      "workspace",
      *      class="ClarolineCoreBundle:Workspace\Workspace",
@@ -342,7 +337,6 @@ class HomeController extends Controller
      *     name="claro_desktop_home_tab_create_form",
      *     options = {"expose"=true}
      * )
-     * @EXT\Method("GET")
      * @EXT\Template("ClarolineCoreBundle:Tool\desktop\home:desktopHomeTabCreateForm.html.twig")
      *
      * Displays the homeTab form.
@@ -417,7 +411,6 @@ class HomeController extends Controller
      *     name="claro_desktop_home_tab_edit_form",
      *     options = {"expose"=true}
      * )
-     * @EXT\Method("GET")
      * @EXT\ParamConverter(
      *     "homeTab",
      *     class="ClarolineCoreBundle:Home\HomeTab",
@@ -523,7 +516,6 @@ class HomeController extends Controller
      *     name="claro_display_desktop_home_tabs_without_config",
      *     options = {"expose"=true}
      * )
-     * @EXT\Method("GET")
      *
      * @EXT\Template("ClarolineCoreBundle:Tool\desktop\home:desktopHomeTabsWithoutConfig.html.twig")
      *
@@ -589,7 +581,6 @@ class HomeController extends Controller
      *     name="claro_display_desktop_home_tabs_with_config",
      *     options = {"expose"=true}
      * )
-     * @EXT\Method("GET")
      *
      * @EXT\Template("ClarolineCoreBundle:Tool\desktop\home:desktopHomeTabsWithConfig.html.twig")
      *
@@ -661,7 +652,6 @@ class HomeController extends Controller
      *     name="claro_workspace_home_tab_create_form",
      *     options = {"expose"=true}
      * )
-     * @EXT\Method("GET")
      * @EXT\ParamConverter(
      *      "workspace",
      *      class="ClarolineCoreBundle:Workspace\Workspace",
@@ -751,7 +741,6 @@ class HomeController extends Controller
      *     name="claro_workspace_home_tab_edit_form",
      *     options = {"expose"=true}
      * )
-     * @EXT\Method("GET")
      * @EXT\ParamConverter(
      *      "workspace",
      *      class="ClarolineCoreBundle:Workspace\Workspace",

@@ -94,10 +94,68 @@ class WorkspaceParametersController extends Controller
 
     /**
      * @EXT\Route(
+     *     "/{workspace}/form/export",
+     *     name="claro_workspace_export_form"
+     * )
+     *
+     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\parameters:template.html.twig")
+     *
+     * @param Workspace $workspace
+     *
+     * @return Response
+     */
+    public function workspaceExportFormAction(Workspace $workspace)
+    {
+        $this->checkAccess($workspace);
+        $form = $this->formFactory->create(FormFactory::TYPE_WORKSPACE_TEMPLATE);
+
+        return array(
+            'form' => $form->createView(),
+            'workspace' => $workspace
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/{workspace}/export",
+     *     name="claro_workspace_export"
+     * )
+     * @EXT\Method("POST")
+     *
+     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\parameters:template.html.twig")
+     *
+     * @param Workspace $workspace
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function workspaceExportAction(Workspace $workspace)
+    {
+        $this->checkAccess($workspace);
+        $form = $this->formFactory->create(FormFactory::TYPE_WORKSPACE_TEMPLATE);
+        $form->handleRequest($this->request);
+
+        if ($form->isValid()) {
+            $name = $form->get('name')->getData();
+            $this->workspaceManager->export($workspace, $name);
+            $route = $this->router->generate(
+                'claro_workspace_open_tool',
+                array('toolName' => 'parameters', 'workspaceId' => $workspace->getId())
+            );
+
+            return new RedirectResponse($route);
+        }
+
+        return array(
+            'form' => $form->createView(),
+            'workspace' => $workspace
+        );
+    }
+
+    /**
+     * @EXT\Route(
      *     "/{workspace}/editform",
      *     name="claro_workspace_edit_form"
      * )
-     * @EXT\Method("GET")
      *
      * @EXT\Template("ClarolineCoreBundle:Tool\workspace\parameters:workspaceEdit.html.twig")
      *
@@ -219,7 +277,6 @@ class WorkspaceParametersController extends Controller
      *     "/{workspace}/subscription/url/generate",
      *     name="claro_workspace_subscription_url_generate"
      * )
-     * @EXT\Method("GET")
      *
      * @EXT\Template("ClarolineCoreBundle:Tool\workspace\parameters:generate_url_subscription.html.twig")
      *
@@ -257,7 +314,6 @@ class WorkspaceParametersController extends Controller
      *     "/{workspace}/subscription/url/generate/anonymous",
      *     name="claro_workspace_subscription_url_generate_anonymous"
      * )
-     * @EXT\Method({"GET","POST"})
      *
      * @EXT\Template("ClarolineCoreBundle:Tool\workspace\parameters:generate_url_subscription_anonymous.html.twig")
      *

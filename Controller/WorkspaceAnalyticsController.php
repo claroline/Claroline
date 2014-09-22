@@ -78,7 +78,6 @@ class WorkspaceAnalyticsController extends Controller
      *     "/{workspaceId}/resources",
      *     name="claro_workspace_analytics_resources"
      * )
-     * @EXT\Method("GET")
      * @EXT\ParamConverter(
      *      "workspace",
      *      class="ClarolineCoreBundle:Workspace\Workspace",
@@ -107,7 +106,6 @@ class WorkspaceAnalyticsController extends Controller
      *     "/{workspaceId}/traffic",
      *     name="claro_workspace_analytics_traffic"
      * )
-     * @EXT\Method("GET")
      * @EXT\ParamConverter(
      *      "workspace",
      *      class="ClarolineCoreBundle:Workspace\Workspace",
@@ -146,7 +144,6 @@ class WorkspaceAnalyticsController extends Controller
      *     "/{workspaceId}/activities/evaluations",
      *     name="claro_workspace_activities_evaluations_show"
      * )
-     * @EXT\Method("GET")
      * @EXT\ParamConverter("currentUser", options={"authenticatedUser" = true})
      * @EXT\ParamConverter(
      *      "workspace",
@@ -309,7 +306,6 @@ class WorkspaceAnalyticsController extends Controller
      *     name="claro_workspace_activities_past_evaluations_show",
      *     options = {"expose": true}
      * )
-     * @EXT\Method("GET")
      * @EXT\ParamConverter("currentUser", options={"authenticatedUser" = true})
      * @EXT\ParamConverter(
      *      "user",
@@ -399,7 +395,6 @@ class WorkspaceAnalyticsController extends Controller
      *     name="claro_workspace_manager_activity_evaluations_show",
      *     defaults={"page"=1}
      * )
-     * @EXT\Method("GET")
      * @EXT\ParamConverter("currentUser", options={"authenticatedUser" = true})
      * @EXT\ParamConverter(
      *      "activity",

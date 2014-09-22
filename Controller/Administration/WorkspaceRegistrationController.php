@@ -89,13 +89,11 @@ class WorkspaceRegistrationController extends Controller
      *    defaults={"search"=""},
      *    options = {"expose"=true}
      * )
-     * @EXT\Method("GET")
      * @EXT\Route(
      *     "/registration/management/search/{search}",
      *     name="claro_admin_registration_management_search",
      *     options = {"expose"=true}
      * )
-     * @EXT\Method("GET")
      *
      * @EXT\Template()
      *
@@ -132,7 +130,6 @@ class WorkspaceRegistrationController extends Controller
      *    name="claro_admin_registration_management_users",
      *    options = {"expose"=true}
      * )
-     * @EXT\Method("GET")
      * @EXT\ParamConverter(
      *     "workspaces",
      *      class="ClarolineCoreBundle:Workspace\Workspace",
@@ -159,7 +156,6 @@ class WorkspaceRegistrationController extends Controller
      *    name="claro_admin_registration_management_groups",
      *    options = {"expose"=true}
      * )
-     * @EXT\Method("GET")
      * @EXT\ParamConverter(
      *     "workspaces",
      *      class="ClarolineCoreBundle:Workspace\Workspace",
@@ -187,14 +183,12 @@ class WorkspaceRegistrationController extends Controller
      *     defaults={"page"=1, "search"=""},
      *     options={"expose"=true}
      * )
-     * @EXT\Method("GET")
      * @EXT\Route(
      *     "/registration/list/users/page/{page}/search/{search}",
      *     name="claro_users_list_registration_pager_search",
      *     defaults={"page"=1},
      *     options={"expose"=true}
      * )
-     * @EXT\Method("GET")
      * @EXT\Template()
      *
      * Renders the user list in a pager for registration.
@@ -221,14 +215,12 @@ class WorkspaceRegistrationController extends Controller
      *     defaults={"page"=1, "search"=""},
      *     options={"expose"=true}
      * )
-     * @EXT\Method("GET")
      * @EXT\Route(
      *     "/registration/list/groups/page/{page}/search/{search}",
      *     name="claro_groups_list_registration_pager_search",
      *     defaults={"page"=1},
      *     options={"expose"=true}
      * )
-     * @EXT\Method("GET")
      * @EXT\Template()
      *
      * Renders the group list in a pager for registration.

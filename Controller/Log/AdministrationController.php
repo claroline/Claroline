@@ -30,8 +30,6 @@ class AdministrationController extends Controller
      *     defaults={"page" = 1}
      * )
      *
-     * @EXT\Method("GET")
-     *
      * @EXT\Template()
      *
      * Displays logs list using filter parameteres and page number

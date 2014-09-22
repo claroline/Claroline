@@ -53,7 +53,6 @@ class BadgeController
 
     /**
      * @Route("/", name="claro_api_badge_all", defaults={"_format" = "json"})
-     * @Method({"GET"})
      */
     public function allAction()
     {
@@ -68,7 +67,6 @@ class BadgeController
 
     /**
      * @Route("/{id}", name="claro_api_badge_get", requirements={"id" = "\d+"}, defaults={"_format" = "json"})
-     * @Method({"GET"})
      */
     public function getAction($id)
     {
