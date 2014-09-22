@@ -17,10 +17,11 @@ use Claroline\CoreBundle\Entity\Model\WorkspaceModel;
 use Claroline\CoreBundle\Entity\Model\ResourceModel;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Entity\Home\HomeTab;
 use Claroline\CoreBundle\Form\ModelType;
 use Claroline\CoreBundle\Manager\GroupManager;
 use Claroline\CoreBundle\Manager\HomeTabManager;
-use Claroline\CoreBundle\Manager\ModelManager;
+use Claroline\CoreBundle\Manager\WorkspaceModelManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Manager\UserManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
@@ -62,7 +63,7 @@ class ModelController extends Controller
         FormFactoryInterface $formFactory,
         GroupManager $groupManager,
         HomeTabManager $homeTabManager,
-        ModelManager $modelManager,
+        WorkspaceModelManager $modelManager,
         Request $request,
         ResourceManager $resourceManager,
         RouterInterface $router,
@@ -571,8 +572,30 @@ class ModelController extends Controller
     {
         $this->checkAccess($model->getWorkspace());
         $this->modelManager->updateHomeTabs($model, $homeTabs);
+        $data = [];
 
-        return new Response('success', 204);
+        foreach ($homeTabs as $homeTab) {
+            $data[] = array('name' => $homeTab->getName(), 'id' => $homeTab->getId());
+        }
+
+        return new JsonResponse($data);
+    }
+
+    /**
+     *  @EXT\Route(
+     *     "/{model}/homeTab/{homeTab}/unlink",
+     *     name="ws_model_tab_remove",
+     *     options={"expose"=true}
+     * )
+     * @param WorkspaceModel $model
+     * @param HomeTab $homeTab
+     */
+    public function unlinkHomeTab(WorkspaceModel $model, HomeTab $homeTab)
+    {
+        $this->checkAccess($model->getWorkspace());
+        $this->modelManager->removeHomeTab($model, $homeTab);
+
+        return new JsonResponse();
     }
 
     private function checkAccess(Workspace $workspace)

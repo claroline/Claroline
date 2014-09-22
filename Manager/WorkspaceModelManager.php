@@ -21,6 +21,8 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Widget\WidgetHomeTabConfig;
 use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Entity\Model\WorkspaceModel;
+use Claroline\CoreBundle\Entity\Model\ResourceModel;
 use Claroline\CoreBundle\Event\NotPopulatedEventException;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Manager\HomeTabManager;
@@ -29,6 +31,7 @@ use Claroline\CoreBundle\Manager\RightsManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CoreBundle\Persistence\ObjectManager;
+use Symfony\Component\Security\Core\SecurityContextInterface;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -43,6 +46,7 @@ class WorkspaceModelManager
     private $rightsManager;
     private $roleManager;
     private $toolManager;
+    private $sc;
 
     /**
      * Constructor.
@@ -54,26 +58,30 @@ class WorkspaceModelManager
      *     "resourceManager" = @DI\Inject("claroline.manager.resource_manager"),
      *     "rightsManager"   = @DI\Inject("claroline.manager.rights_manager"),
      *     "roleManager"     = @DI\Inject("claroline.manager.role_manager"),
-     *     "toolManager"     = @DI\Inject("claroline.manager.tool_manager")
+     *     "toolManager"     = @DI\Inject("claroline.manager.tool_manager"),
+     *     "sc"              = @DI\Inject("security.context")
      * })
      */
     public function __construct(
-        StrictDispatcher $dispatcher,
-        HomeTabManager $homeTabManager,
-        ObjectManager $om,
-        ResourceManager $resourceManager,
-        RightsManager $rightsManager,
-        RoleManager $roleManager,
-        ToolManager $toolManager
+        StrictDispatcher         $dispatcher,
+        HomeTabManager           $homeTabManager,
+        ObjectManager            $om,
+        ResourceManager          $resourceManager,
+        RightsManager            $rightsManager,
+        RoleManager              $roleManager,
+        ToolManager              $toolManager,
+        SecurityContextInterface $sc
     )
     {
-        $this->dispatcher = $dispatcher;
-        $this->homeTabManager = $homeTabManager;
-        $this->om = $om;
+        $this->dispatcher      = $dispatcher;
+        $this->homeTabManager  = $homeTabManager;
+        $this->om              = $om;
         $this->resourceManager = $resourceManager;
-        $this->rightsManager = $rightsManager;
-        $this->roleManager = $roleManager;
-        $this->toolManager = $toolManager;
+        $this->rightsManager   = $rightsManager;
+        $this->roleManager     = $roleManager;
+        $this->toolManager     = $toolManager;
+        $this->modelRepository = $this->om->getRepository('ClarolineCoreBundle:Model\WorkspaceModel');
+        $this->sc              = $sc;
     }
 
     /**
@@ -301,6 +309,7 @@ class WorkspaceModelManager
                 $this->removeHomeTab($model, $oldHomeTab);
             }
         }
+        
         $this->addHomeTabs($model, $homeTabs);
         $this->om->endFlushSuite();
     }

@@ -1079,3 +1079,10 @@ remove_group_from_model: Retirer un groupe
 remove_group_from_model_confirm: Êtes-vous sûr de vouloir retirer le groupe %groupe% ?
 workspace_import: Importer un espace d'activité
 create_users: Créer les utilisateurs
+remove_resource_from_model: Retirer une ressource du modèle
+remove_resource_from_model_comfirm: Êtes-vous vraiment sûr de vouloir retirer cette ressource ?
+add_tab: Ajouter un onglet
+links: Liens
+tabs: Onglets
+tab: Onglet
+copies: Copies
