@@ -68,7 +68,10 @@
         {% endif %}
     </div>
 
+    {% set messages = app.session.getFlashBag().peekAll() %}
+    {% if messages|length > 0 %}
     <div style="margin: 20px 20px 0 20px;">{{ macros.flashBox() }}</div>
+    {% endif %}
 
     {% if paths is empty  %}
         <div class="panel-body">

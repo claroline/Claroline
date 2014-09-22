@@ -30,12 +30,6 @@
     margin: 0;
     margin-bottom: 1px;
 }
-/*
-.path-player .breadcrumbs ul > li {
-   border-top-right-radius:3px;
-   border-bottom-right-radius:3px;
-   padding-right:5px;
-}*/
 
 .path-player .breadcrumbs ul > li:first-child {
     border-top-left-radius: 3px;
@@ -150,8 +144,6 @@
 .path-player .breadcrumbs ul > li.terminal > a:after {
     display:none;
 }
-
-
 
 .path-player .breadcrumbs ul > li.terminal {
    border-top-right-radius:3px;
