@@ -429,7 +429,7 @@ class RoleRepository extends EntityRepository
         $dql = '
             SELECT r
             FROM Claroline\CoreBundle\Entity\Role r
-            WHERE r.type != :type
+            WHERE r.type = :type
         ';
 
         $query = $this->_em->createQuery($dql);

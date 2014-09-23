@@ -39,7 +39,7 @@ class Updater030500
         $rolesTab = array();
 
         foreach ($userRoles as $userRole) {
-            $rolesTab[$userRole->getTranslationKey()] = $userRole;
+            $rolesTab[$userRole->getTranslationKey()] = true;
         }
 
         $this->om->startFlushSuite();
@@ -48,13 +48,7 @@ class Updater030500
             $username = $user->getUsername();
 
             if (!isset($rolesTab[$username])) {
-                $roleName = 'ROLE_USER_' . strtoupper($username);
-
-                $role = $this->roleManager->createUserRole(
-                    $roleName,
-                    $username
-                );
-                $this->roleManager->associateRole($user, $role);
+                $this->roleManager->createUserRole($user);
             }
         }
         $this->om->endFlushSuite();
