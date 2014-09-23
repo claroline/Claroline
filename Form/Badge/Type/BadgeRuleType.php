@@ -12,7 +12,6 @@
 namespace Claroline\CoreBundle\Form\Badge\Type;
 
 use Claroline\CoreBundle\Entity\Badge\BadgeRule;
-use Claroline\CoreBundle\Form\Badge\EventListener\AddBadgeFieldSubscriber;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Manager\BadgeManager;
 use Claroline\CoreBundle\Manager\EventManager;

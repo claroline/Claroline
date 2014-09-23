@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Form\Field;
 
+use Claroline\CoreBundle\Form\Badge\Type\BadgePickerBadgeType;
 use Claroline\CoreBundle\Form\DataTransformer\BadgePickerTransformer;
 use Claroline\CoreBundle\Manager\BadgeManager;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -46,7 +47,7 @@ class BadgePickerType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->addModelTransformer($this->badgePickerTransformer);
+//        $builder->addModelTransformer($this->badgePickerTransformer);
     }
 
     /**
@@ -67,17 +68,21 @@ class BadgePickerType extends AbstractType
     {
         $resolver->setDefaults(
             array(
-                'multiple'    => false,
-                'mode'        => BadgeManager::BADGE_PICKER_DEFAULT_MODE,
-                'workspace'   => null,
-                'blacklist'   => array()
+                'multiple'     => false,
+                'mode'         => BadgeManager::BADGE_PICKER_DEFAULT_MODE,
+                'workspace'    => null,
+                'blacklist'    => array(),
+                'type'         => new BadgePickerBadgeType(),
+                'allow_add'    => true,
+                'prototype'    => true,
+                'by_reference' => false
             )
         );
     }
 
     public function getParent()
     {
-        return 'text';
+        return 'collection';
     }
 
     public function getName()
