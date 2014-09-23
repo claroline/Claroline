@@ -162,7 +162,7 @@
         {% endif %}
     {% endif %}
 
-    {% if dropzone.isPeerReview and expectedCorrections > 0  and drop.unlockedUser == 0 %}
+    {% if dropzone.isPeerReview and expectedCorrections > 0  and drop is not null and drop.unlockedUser == 0 %}
         {% if drop is not null and drop.finished == true %}
             <hr/>
             <div class="row">
@@ -212,7 +212,7 @@
         {% endif %}
     {% endif %}
 
-    {% if (drop is not null and drop.finished == true and expectedCorrections <= 0) or  drop.unlockedUser == 1 %}
+    {% if (drop is not null and drop.finished == true and expectedCorrections <= 0) or (drop is not null and drop.unlockedUser == 1) %}
         <hr/>
         <div class="row">
 
