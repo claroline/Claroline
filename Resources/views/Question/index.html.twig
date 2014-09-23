@@ -85,6 +85,19 @@
             </div>
         </form>
 
+        <a >
+            <i class="btn btn-primary" >
+             {# ham : import Question button  #}
+            <form action="{{ path('ujm_question_import') }}" method="post" name="file" id="file" enctype="multipart/form-data">
+                <table align="center" >
+                    <tr><td><input type="file" name="f1" id="f1"></td><td>
+                     <input type="submit" value="upload"></td></tr>
+                </table>
+             </form>
+            {# ham : import Question button  #}
+            </i>
+        </a>
+
         <div id="infosSearch" style="display: none;">
             <br/>
             <div class="alert alert-info">
