@@ -45,11 +45,11 @@ class PostController extends Controller
             'non_repeatable_log_time_in_seconds'
         );
 
+        $entityManager = $this->getDoctrine()->getManager();
+
         if ($now >= ($session->get($sessionViewCounterKey, $now) + $notRepeatableLogTimeInSeconds)) {
             $post->increaseViewCounter();
             $session->set($sessionViewCounterKey, $now);
-
-            $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($post);
             $entityManager->flush();
         }
@@ -80,7 +80,6 @@ class PostController extends Controller
                     try {
                         $entityManager->persist($comment);
                         $entityManager->flush();
-
                         $this->dispatchCommentCreateEvent($post, $comment);
 
                         $flashBag->add('success', $translator->trans('icap_blog_comment_add_success', array(), 'icap_blog'));
