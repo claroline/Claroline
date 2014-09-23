@@ -23,10 +23,10 @@ $(function() {
     $(".droppable").each(function() {
         $(this).droppable({
             tolerance: "pointer",
-            activeClass: "ui-state-hover",
-            hoverClass: "ui-state-active",
+            activeClass: "state-hover",
+            hoverClass: "state-active",
             drop: function(event, ui) {
-                $(this).addClass("ui-state-highlight");
+                $(this).addClass("state-highlight");
                 idLabel = $(this).attr('id');
                 idLabel = idLabel.replace('droppable_', '');
                 idProposal = ui.draggable.attr("id");
@@ -34,14 +34,15 @@ $(function() {
                 if (idProposal) {
                     responses[idProposal] = idLabel;
                 }
-                if(ui.draggable.width() > $(this).width()) {
-                    $(this).width(ui.draggable.width() * 1.5);
-                }
+//                if(ui.draggable.width() > $(this).width()) {
+//                    $(this).width(ui.draggable.width() * 1.5);
+//                }
                 if(ui.draggable.height() > $(this).height()) {
                     $(this).height(ui.draggable.height() * 1.5);
                 }
             },
             out: function(event, ui) {
+                $(this).removeClass("state-highlight");
                 idProposal = ui.draggable.attr("id");
                 idProposal = idProposal.replace('draggable_', '');
                 if (idProposal) {
