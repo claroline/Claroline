@@ -1014,4 +1014,21 @@ your_username: 'Your username is '
 workspace_import: Workspace import
 create_users: Create users
 your_username: 'Your username is '
+models: Modèles
+create_model: Create a model
+remove_model: Remove a model
+remove_model_confirm: Are you sure you want to remove the model %name% ?
+share: Share
+remove_user_from_model: Remove a user from the model
+remove_user_from_model_confirm: Are you sure you want to remove the user %name%?
+remove_group_from_model: Remove a group from the model
+remove_group_from_model_confirm: Are you sure you want to remove the group %groupe%?
+workspace_import: Import a workspace
+create_users: Create users
 remove_resource_from_model: Remove a resource from the model
+remove_resource_from_model_comfirm: Are you sure you want to remove this resource?
+add_tab: Add a tab
+links: Links
+tabs: Tabs
+tab: Tab
+copies: Copies

@@ -108,7 +108,7 @@ class GroupsController extends Controller
     }
 
     /**
-     * @EXT\Route("/", name="claro_admin_create_group")
+     * @EXT\Route("/new/submit", name="claro_admin_create_group")
      * @EXT\Method("POST")
      * @EXT\Template("ClarolineCoreBundle:Administration/Groups:creationForm.html.twig")
      *
@@ -491,7 +491,7 @@ class GroupsController extends Controller
     }
 
     /**
-     * @EXT\Route("/{groupId}/import", name="claro_admin_import_users_into_group")
+     * @EXT\Route("/{groupId}/import/submit", name="claro_admin_import_users_into_group")
      * @EXT\Method("POST")
      * @EXT\ParamConverter(
      *      "group",

@@ -157,7 +157,7 @@ class UsersController extends Controller
     }
 
     /**
-     * @EXT\Route("/new", name="claro_admin_create_user")
+     * @EXT\Route("/new/submit", name="claro_admin_create_user")
      * @EXT\Method("POST")
      * @EXT\ParamConverter("currentUser", options={"authenticatedUser" = true})
      * @EXT\Template("ClarolineCoreBundle:Administration/Users:userCreationForm.html.twig")
@@ -382,7 +382,7 @@ class UsersController extends Controller
     }
 
     /**
-     * @EXT\Route("/import", name="claro_admin_import_users")
+     * @EXT\Route("/import/submit", name="claro_admin_import_users")
      * @EXT\Method("POST")
      * @EXT\Template("ClarolineCoreBundle:Administration/Users:importForm.html.twig")
      *
