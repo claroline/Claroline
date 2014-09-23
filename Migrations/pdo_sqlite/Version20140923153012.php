@@ -8,27 +8,12 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/09/23 01:58:29
+ * Generation date: 2014/09/23 03:30:14
  */
-class Version20140923135827 extends AbstractMigration
+class Version20140923153012 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
-        $this->addSql("
-            CREATE TABLE claro_workspace_model_resource (
-                id INTEGER NOT NULL, 
-                resource_node_id INTEGER NOT NULL, 
-                model_id INTEGER NOT NULL, 
-                isCopy BOOLEAN NOT NULL, 
-                PRIMARY KEY(id)
-            )
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_F5D706351BAD783F ON claro_workspace_model_resource (resource_node_id)
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_F5D706357975B7E7 ON claro_workspace_model_resource (model_id)
-        ");
         $this->addSql("
             DROP INDEX IDX_D6FE8DD8F624B39D
         ");
@@ -113,9 +98,6 @@ class Version20140923135827 extends AbstractMigration
 
     public function down(Schema $schema)
     {
-        $this->addSql("
-            DROP TABLE claro_workspace_model_resource
-        ");
         $this->addSql("
             DROP INDEX IDX_D6FE8DD8F624B39D
         ");
