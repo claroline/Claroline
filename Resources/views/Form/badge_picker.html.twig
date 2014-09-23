@@ -9,7 +9,7 @@
         {% endif %}
         <div {{ block('widget_container_attributes') }}>
             {{ form_errors(form) }}
-            <div class="form-collection{{ form|length ? '' : ' hide' }}">
+            <div class="badge-form-collection">
                 {% for rows in form %}
                     {{ _self.badge_collection_field(rows, allow_delete) }}
                 {% endfor %}
@@ -21,7 +21,7 @@
 
 {% macro badge_collection_field(rows, allow_delete) %}
     {% spaceless %}
-        <div class="form-collection-element">
+        <div class="badge-form-collection-element">
             {% for row in rows %}
                 {{ form_row(row) }}
             {% endfor %}
@@ -66,11 +66,22 @@
                 $("#badgepicker_{{ id }}").click(function() {
                 {% if multiple %}
                     var value = [];
-                    $(".selected_badge").each(function(index, element) {
+                    $(".badge-form-collection-element input[type=hidden]").each(function(index, element) {
                         value.push($(this).val());
                     });
+                    var badgePrototypeField = $("#{{ id }}").attr('data-prototype');
+
                     var callback = function (modalElement) {
-                        console.log('pouet');
+                        var selectedBadges      = $("input[type=checkbox]:checked", modalElement);
+                        var badgeFormCollection = $(".badge-form-collection");
+
+                        $(".badge-form-collection-element").remove();
+
+                        selectedBadges.each(function(index, element) {
+                            var newBadge = $(badgePrototypeField.replace(/__name__/g, index));
+                            badgeFormCollection.append(newBadge);
+                            $("input", newBadge).val($(element).val());
+                        });
                     };
                 {% else %}
                     var hiddenInputField    = $("#{{ id }}");
@@ -90,9 +101,9 @@
                         $(".badge_selection_field").removeClass('hide');
                     };
                     var value = hiddenInputField.val();
-                {% endif %}
-                    var url = "{{ path('claro_badge_picker') }}";
+                    {% endif %}
 
+                    var url = "{{ path('claro_badge_picker') }}";
                     var badgePickerSettings = {
                         mode: "{{ mode }}",
                         multiple: {{ multiple|default('false') }},
