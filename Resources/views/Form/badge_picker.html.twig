@@ -33,7 +33,15 @@
     {% spaceless %}
         <div class="badge_picker">
             {% if multiple %}
-                {{ block('badge_collection_widget') }}
+                <div id="{{ id }}" data-prototype="<div class=&quot;form-collection-element&quot;><input type=&quot;hidden&quot; id=&quot;{{ id }}___name___id&quot; name=&quot;{{ full_name }}[__name__][id]&quot;/></div>">
+                    <div class="badge-form-collection">
+                        {% for index, badge in value %}
+                            <div class="badge-form-collection-element">
+                                <input type="hidden" id="{{ id }}_{{ index }}_id" name="{{ full_name }}[{{ index }}][id]" value="{{ badge.id }}">
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
                 <button type="button" class="btn btn-default badges_selector" id="badgepicker_{{ id }}"
                         data-title="{{ 'browse_badges'|trans({}, 'badge') }}" data-toggle="tooltip">
                     <i class="fa fa-folder-open"></i>

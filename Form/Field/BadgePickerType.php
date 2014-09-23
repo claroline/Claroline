@@ -47,7 +47,7 @@ class BadgePickerType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-//        $builder->addModelTransformer($this->badgePickerTransformer);
+        $builder->addModelTransformer($this->badgePickerTransformer);
     }
 
     /**
@@ -71,18 +71,14 @@ class BadgePickerType extends AbstractType
                 'multiple'     => false,
                 'mode'         => BadgeManager::BADGE_PICKER_DEFAULT_MODE,
                 'workspace'    => null,
-                'blacklist'    => array(),
-                'type'         => new BadgePickerBadgeType(),
-                'allow_add'    => true,
-                'prototype'    => true,
-                'by_reference' => false
+                'blacklist'    => array()
             )
         );
     }
 
     public function getParent()
     {
-        return 'collection';
+        return 'text';
     }
 
     public function getName()
