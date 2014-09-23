@@ -79,7 +79,7 @@
                 url: event.currentTarget.getAttribute('href')
             });
         },
-        submitCreationOptions: function () {
+        submitCreationOptions: function (event) {
             event.preventDefault();
             this.dispatchSubmit(this.$('form')[0], 'edited-creation-rights');
         },
