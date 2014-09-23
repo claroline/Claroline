@@ -983,4 +983,16 @@ class UserRepository extends EntityRepository implements UserProviderInterface
 
         return $executeQuery ? $queryBuilder->getQuery()->getResult(): $queryBuilder->getQuery();
     }
+
+    public function findAllUsersWithoutPager($executeQuery = true)
+    {
+        $dql = '
+            SELECT u
+            FROM Claroline\CoreBundle\Entity\User u
+        ';
+
+        $query = $this->_em->createQuery($dql);
+
+        return $executeQuery ? $query->getResult(): $query;
+    }
 }

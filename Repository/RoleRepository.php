@@ -416,4 +416,25 @@ class RoleRepository extends EntityRepository
 
         return $executeQuery ? $query->getResult() : $query;
     }
+
+    /**
+     * Returns all user-type roles.
+     *
+     * @param boolean $executeQuery
+     *
+     * @return array[Role]|query
+     */
+    public function findAllUserRoles($executeQuery = true)
+    {
+        $dql = '
+            SELECT r
+            FROM Claroline\CoreBundle\Entity\Role r
+            WHERE r.type != :type
+        ';
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('type', Role::USER_ROLE);
+
+        return $executeQuery ? $query->getResult() : $query;
+    }
 }

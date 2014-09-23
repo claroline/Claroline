@@ -144,6 +144,27 @@ class RoleManager
     }
 
     /**
+     * @param string  $name
+     * @param string  $translationKey
+     * @param boolean $isReadOnly
+     *
+     * @return \Claroline\CoreBundle\Entity\Role
+     */
+    public function createUserRole($name, $translationKey, $isReadOnly = true)
+    {
+        $role = $this->om->factory('Claroline\CoreBundle\Entity\Role');
+        $role->setName($name);
+        $role->setTranslationKey($translationKey);
+        $role->setReadOnly($isReadOnly);
+        $role->setType(Role::USER_ROLE);
+
+        $this->om->persist($role);
+        $this->om->flush();
+
+        return $role;
+    }
+
+    /**
      * @param \Claroline\CoreBundle\Entity\AbstractRoleSubject $ars
      * @param string $roleName
      * @throws \Exception
@@ -798,5 +819,10 @@ class RoleManager
         }
 
         return $role->getName();
+    }
+
+    public function getAllUserRoles($executeQuery = true)
+    {
+        return $this->roleRepo->findAllUserRoles($executeQuery);
     }
 }
