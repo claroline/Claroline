@@ -204,7 +204,7 @@ class ProfileController extends Controller
             $user = $loggedUser;
             $editYourself = true;
         }
-
+        $userRole = $this->roleManager->getUserRoleByUser($user);
         $roles = $this->roleManager->getPlatformRoles($user);
 
         $form = $this->createForm(
@@ -246,6 +246,7 @@ class ProfileController extends Controller
 
             $user = $form->getData();
             $this->userManager->rename($user, $user->getUsername());
+            $this->roleManager->renameUserRole($userRole, $user->getUsername());
 
             $successMessage = $translator->trans('edit_profile_success', array(), 'platform');
             $errorMessage   = $translator->trans('edit_profile_error', array(), 'platform');

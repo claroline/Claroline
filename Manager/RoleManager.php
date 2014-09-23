@@ -144,9 +144,7 @@ class RoleManager
     }
 
     /**
-     * @param string  $name
-     * @param string  $translationKey
-     * @param boolean $isReadOnly
+     * @param User $user
      *
      * @return \Claroline\CoreBundle\Entity\Role
      */
@@ -168,6 +166,18 @@ class RoleManager
         $this->om->endFlushSuite();
 
         return $role;
+    }
+
+    /**
+     * @param string $username
+     */
+    public function renameUserRole(Role $role, $username)
+    {
+        $roleName = 'ROLE_USER_' . strtoupper($username);
+        $role->setName($roleName);
+        $role->setTranslationKey($username);
+        $this->om->persist($role);
+        $this->om->flush();
     }
 
     /**
@@ -830,5 +840,10 @@ class RoleManager
     public function getAllUserRoles($executeQuery = true)
     {
         return $this->roleRepo->findAllUserRoles($executeQuery);
+    }
+
+    public function getUserRoleByUser(User $user, $executeQuery = true)
+    {
+        return $this->roleRepo->findUserRoleByUser($user, $executeQuery);
     }
 }

@@ -129,6 +129,7 @@ class UserManager
         $this->roleManager->setRoleToRoleSubject($user, PlatformRoles::USER);
         $this->objectManager->persist($user);
         $this->strictEventDispatcher->dispatch('log', 'Log\LogUserCreate', array($user));
+        $this->roleManager->createUserRole($user);
         $this->objectManager->endFlushSuite();
 
         if ($this->mailManager->isMailerAvailable() && $sendMail) {
@@ -185,6 +186,7 @@ class UserManager
         if ($this->container->get('security.context')->getToken()->getUser()->getId() === $user->getId()) {
             throw new \Exception('A user cannot delete himself');
         }
+        $userRole = $this->roleManager->getUserRoleByUser($user);
 
         //soft delete~
         $user->setMail('mail#' . $user->getId());
@@ -205,6 +207,7 @@ class UserManager
             $this->objectManager->persist($ws);
         }
 
+        $this->objectManager->remove($userRole);
         $this->objectManager->persist($user);
         $this->objectManager->flush();
 

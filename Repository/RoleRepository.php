@@ -91,7 +91,7 @@ class RoleRepository extends EntityRepository
         $dql = "
             SELECT r FROM Claroline\CoreBundle\Entity\Role r
             JOIN r.users u
-            WHERE u.id = {$user->getId()} AND r.type != " . Role::WS_ROLE;
+            WHERE u.id = {$user->getId()} AND r.type = " . Role::PLATFORM_ROLE;
         $query = $this->_em->createQuery($dql);
 
         return $query->getResult();
@@ -436,5 +436,34 @@ class RoleRepository extends EntityRepository
         $query->setParameter('type', Role::USER_ROLE);
 
         return $executeQuery ? $query->getResult() : $query;
+    }
+
+    /**
+     * Returns user-type role of an user.
+     *
+     * @param User $user
+     * @param boolean $executeQuery
+     *
+     * @return array[Role]|query
+     */
+    public function findUserRoleByUser(User $user, $executeQuery = true)
+    {
+        $username = $user->getUsername();
+        $roleName = 'ROLE_USER_' . strtoupper($username);
+
+        $dql = '
+            SELECT r
+            FROM Claroline\CoreBundle\Entity\Role r
+            WHERE r.type = :type
+            AND r.name = :name
+            AND r.translationKey = :key
+        ';
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('type', Role::USER_ROLE);
+        $query->setParameter('name', $roleName);
+        $query->setParameter('key', $username);
+
+        return $executeQuery ? $query->getOneOrNullResult() : $query;
     }
 }
