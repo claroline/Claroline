@@ -6,13 +6,17 @@
             {% for message in messages %}
                 <li class="list-group-item">
                     <div class="list-group-item-text">
-					<a class="link-subject"
-                                href="{{ _path('claro_forum_messages', {'subject': message.getSubject().getId() }) }}"
-                            >
-                                {{ message.getSubject().getTitle() }}
-                            </a>
-					<p>{{ message.getContent()|raw }}</p>
-					<p class="text-muted">{{ 'forum_last_message_owner'|trans({}, 'widget') }} {{ message.getCreator().getFirstName() }} {{  message.getCreator().getLastName() }} {{ message.getCreationDate()| timeAgo }}</p>
+                        <a class="link-subject"
+                           href="{{ _path('claro_forum_messages', {'subject': message.getSubject().getId() }) }}"
+                        >
+                            {{ message.getSubject().getTitle() }}
+                        </a>
+                        <p>{{ message.getContent()|raw }}</p>
+                        <p class="text-muted">
+                            {{ 'forum_last_message_owner'|trans({}, 'widget') }}
+                            {{ message.getAuthor() }}
+                            {{ message.getCreationDate()| timeAgo }}
+                        </p>
                     </div>
                 </li>
             {% endfor %}

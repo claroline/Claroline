@@ -86,6 +86,11 @@ class Subject
     protected $isClosed = false;
 
     /**
+     * @ORM\Column(nullable=true)
+     */
+    protected $author;
+
+    /**
      * Constructor.
      */
     public function __construct()
@@ -182,5 +187,15 @@ class Subject
     public function isClosed()
     {
         return $this->isClosed;
+    }
+
+    public function getAuthor()
+    {
+        return $this->author;
+    }
+
+    public function setAuthor($author)
+    {
+        $this->author = $author;
     }
 }

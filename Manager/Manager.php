@@ -202,6 +202,7 @@ class Manager
 
      	$user = $this->sc->getToken()->getUser();
         $message->setCreator($user);
+        $message->setAuthor($user->getFirstName() . ' ' . $user->getLastName());
         $message->setSubject($subject);
         $this->om->persist($message);
         $this->om->flush();
@@ -587,5 +588,17 @@ class Manager
         $forum->setActivateNotifications(false);
         $this->om->persist($forum);
         $this->om->flush();
+    }
+
+    public function getLastMessagesBySubjectsIds(array $subjectsIds)
+    {
+        $lastMessages = array();
+
+        if (count($subjectsIds) > 0) {
+            $lastMessages = $this->forumRepo
+                ->findLastMessagesBySubjectsIds($subjectsIds);
+        }
+
+        return $lastMessages;
     }
 }

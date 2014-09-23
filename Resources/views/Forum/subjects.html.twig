@@ -122,17 +122,18 @@
                            {% endif %}
                             <br>
                             {{ 'started_by' | trans({}, 'forum') }}
-                            {{ subject['subject_creator_firstname'] }}
-                            {{ subject['subject_creator_lastname'] }},
+                            {{ subject['subject_author'] }},
                             {{ subject['subject_created']|intl_date_format() }}
                         </td>
                         <td>
                             {{ subject['count_messages'] }}
                         </td>
                         <td>
-                            {{ subject['last_message_creator_firstname'] }}
-                            {{ subject['last_message_creator_lastname'] }}<br/>
-                            {{ subject['last_message_created'] }}
+                            {% if lastMessages[subject['id']] is defined and lastMessages[subject['id']] is not empty %}
+                                {{ lastMessages[subject['id']].getAuthor() }}
+                                <br>
+                                {{ lastMessages[subject['id']].getModificationDate()|intl_date_format() }}
+                            {% endif %}
                         </td>
                         {% if isModerator %}
                             <td>

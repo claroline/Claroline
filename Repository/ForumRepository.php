@@ -34,6 +34,7 @@ class ForumRepository extends EntityRepository
             s.id as subjectId,
             s.title as title,
             s.isSticked as isSticked,
+            s.author as subject_author,
             subjectCreator.lastName as subject_creator_lastname,
             subjectCreator.firstName as subject_creator_firstname,
             subjectCreator.id as subject_creator_id,
@@ -93,6 +94,7 @@ class ForumRepository extends EntityRepository
 
         $dql = "
             SELECT m.creationDate as last_message_created,
+            m.author as last_message_author,
             c.id as categoryId,
             lastUser.lastName as last_message_creator_lastname,
             lastUser.firstName as last_message_creator_firstname
@@ -125,12 +127,14 @@ class ForumRepository extends EntityRepository
             $merged[$key]['last_message_created'] = null;
             $merged[$key]['last_message_creator_lastname'] = null;
             $merged[$key]['last_message_creator_firstname'] = null;
+            $merged[$key]['last_message_author'] = null;
 
             foreach ($lastMessages as $lastMessage) {
                 if ($category['id'] === $lastMessage['categoryId']) {
                     $merged[$key]['last_message_created'] = $lastMessage['last_message_created'];
                     $merged[$key]['last_message_creator_lastname'] = $lastMessage['last_message_creator_lastname'];
                     $merged[$key]['last_message_creator_firstname'] = $lastMessage['last_message_creator_firstname'];
+                    $merged[$key]['last_message_author'] = $lastMessage['last_message_author'];
                 }
             }
         }
@@ -178,5 +182,43 @@ class ForumRepository extends EntityRepository
         $query->setParameter('content', '%'.$content.'%');
 
         return ($getQuery) ? $query: $query->getResult();
+    }
+
+    public function findSubjectsWithNoAuthor($executeQuery = true)
+    {
+        $dql = '
+            SELECT s
+            FROM Claroline\ForumBundle\Entity\Subject s
+            WHERE s.author IS NULL
+        ';
+
+        $query = $this->_em->createQuery($dql);
+
+        return $executeQuery ? $query->getResult() : $query;
+    }
+
+    public function findLastMessagesBySubjectsIds(
+        array $subjectsIds,
+        $executeQuery = true
+    )
+    {
+        $dql = '
+            SELECT m
+            FROM Claroline\ForumBundle\Entity\Message m
+            JOIN m.subject s
+            WHERE s.id IN (:subjectsIds)
+            AND NOT EXISTS
+            (
+                SELECT m1
+                FROM Claroline\ForumBundle\Entity\Message m1
+                WHERE s = m1.subject
+                AND m.creationDate < m1.creationDate
+            )
+        ';
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('subjectsIds', $subjectsIds);
+
+        return $executeQuery ? $query->getResult() : $query;
     }
 }

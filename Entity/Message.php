@@ -68,6 +68,11 @@ class Message
     protected $creator;
 
     /**
+     * @ORM\Column(nullable=true)
+     */
+    protected $author;
+
+    /**
      * Returns the resource id.
      *
      * @return integer
@@ -130,5 +135,15 @@ class Message
     public function getModificationDate()
     {
         return $this->updated;
+    }
+
+    public function getAuthor()
+    {
+        return $this->author;
+    }
+
+    public function setAuthor($author)
+    {
+        $this->author = $author;
     }
 }

@@ -74,19 +74,26 @@
             </thead>
             <tbody id='table-message-body'>
             {% for message in pager.currentPageResults %}
+                {% set creator = message.getCreator() %}
                 <tr class="row-message">
                     <td width="125px">
                         <div>
-                            {% if message.getCreator().getPicture() != "" %}
-                             <img src="{{ asset('uploads/pictures/') ~ message.getCreator().getPicture() }}" class="col-md-12">
-                        {% else %}
+                            {% if creator.getPicture() != "" %}
+                                 <img src="{{ asset('uploads/pictures/') ~ creator.getPicture() }}" class="col-md-12">
+                            {% else %}
                                 <h1><i class="fa fa-user col-md-12"></i><h1>
-                        {% endif %}
+                            {% endif %}
                         </div>
                         <div>
-                        <a href="{{ path('claro_public_profile_view', {'publicUrl': message.getCreator().getPublicUrl()}) }}">
-                           {{ message.getCreator().getFirstName() }} {{ message.getCreator().getLastName() }}
-                        </a>
+                            {% if creator.isEnabled() %}
+                                <a href="{{ path('claro_public_profile_view', {'publicUrl': creator.getPublicUrl()}) }}">
+                            {% endif %}
+                                    
+                            {{ message.getAuthor() }}
+                              
+                            {% if creator.isEnabled() %}      
+                                </a>
+                            {% endif %}
                         </div>
                         <div>
                             {{ message.getCreationDate()|intl_date_format() }}
@@ -102,7 +109,7 @@
                                     <i class="fa fa-pencil"></i> {{ 'reply'|trans({}, 'forum') }}
                                 </a>
                             {% endif %}
-                            {% if isModerator or app.security.token.user == message.getCreator() %}
+                            {% if isModerator or app.security.token.user == creator %}
                                 <a class="btn btn-default" href="{{ path('claro_forum_edit_message_form', {'message': message.getId()}) }}">
                                     <i class="fa fa-pencil"></i> {{ 'edit'|trans({}, 'platform') }}
                                 </a>
