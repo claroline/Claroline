@@ -1,3 +1,10 @@
+{% stylesheets debug=false filter='lessphp, cssmin' output='css/clarolinecore/badge_view.css'
+  "@ClarolineCoreBundle/Resources/views/Badge/less/badge.less"
+  "@ClarolineCoreBundle/Resources/views/Badge/less/badge_picker.less"
+%}
+    <link rel="stylesheet" href="{{ asset_url }}" screen="media" />
+{% endstylesheets %}
+
 <div class="modal-dialog badge_picker_modal">
     <form novalidate="novalidate" action="" id="resource-rename-form" class="modal-content">
         <div class='modal-header'>
