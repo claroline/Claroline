@@ -28,7 +28,7 @@
                     {% include 'ClarolineCoreBundle:Log:view_details_resource.html.twig' %}
                     {% include 'ClarolineCoreBundle:Log:view_details_owner.html.twig' %}
                     {% include 'ClarolineCoreBundle:Log:view_details_workspace.html.twig' %}
-                    {% include 'ClarolineCoreBundle:Log:view_details_action_' ~ log.getAction() ~ '.html.twig' ignore missing %}
+                    {% include 'ClarolineCoreBundle:Log:view_details_action_' ~ log.getAction()|replace({'-': '_'}) ~ '.html.twig' ignore missing %}
                 </div>
             </div>
         {% endblock %}
