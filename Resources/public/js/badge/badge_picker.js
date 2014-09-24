@@ -53,7 +53,6 @@ $(function(){
                         text: element.attr('data-text')
                     };
                 });
-                console.log(nodeValue);
 
                 badgePicker.successHandler(nodeValue);
                 modalElement.modal('hide');
