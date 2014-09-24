@@ -48,3 +48,4 @@ no: No
 notifications_explanation: Global notifications will send a mail to each user who are granted this forum access each time a new message is created.
 activate_global_notifications: Activate global notifications
 disable_global_notifications: Disable global notifications
+responses: Replies

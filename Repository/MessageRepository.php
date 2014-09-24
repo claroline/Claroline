@@ -66,4 +66,17 @@ class MessageRepository extends EntityRepository
 
         return $paginator;
     }
+
+    public function findMessagesWithNoAuthor($executeQuery = true)
+    {
+        $dql = '
+            SELECT m
+            FROM Claroline\ForumBundle\Entity\Message m
+            WHERE m.author IS NULL
+        ';
+
+        $query = $this->_em->createQuery($dql);
+
+        return $executeQuery ? $query->getResult() : $query;
+    }
 }

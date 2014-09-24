@@ -8,7 +8,10 @@
                         <p>{{ message.getContent()| truncate(400, true, " [...]") | raw }}</p>
                         <ul class="breadcrumb">
                             <span class="text-muted">
-                                {{ 'forum_last_message_owner'|trans({}, 'widget') }} {{ message.getCreator().getFirstName() }} {{  message.getCreator().getLastName() }} {{ message.getCreationDate()| timeAgo }} dans&nbsp;
+                                {{ 'forum_last_message_owner'|trans({}, 'widget') }}
+                                {{ message.getAuthor() }}
+                                {{ message.getCreationDate()| timeAgo }}
+                                {{ 'in'|trans({}, 'widget') }}
                             </span>
                             <li>
                                 <a 
