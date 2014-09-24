@@ -60,6 +60,7 @@
                         {% else %}
                             {{ 'There are only nb minutes before the end of the peer review'|transchoice(minutesRemainingBeforeEndReview|number_format, {}, 'icap_dropzone') }}
                         {% endif %}
+
                     </div>
                 </div>
             {% endif %}
@@ -96,7 +97,7 @@
 
     {% if dropzone.timeRemainingBeforeStartReview > 0 and drop is not null and drop.finished == true %}
         <div class="row">
-            <div class="col-md-12 text-danger">
+            <div class="col-md-12 text-info">
                 {% set minutesRemainingBeforeStartReview = (dropzone.timeRemainingBeforeStartReview/60) %}
                 {% set hoursRemainingBeforeStartReview = (minutesRemainingBeforeStartReview/60) %}
                 {% set daysRemainingBeforeStartReview = (hoursRemainingBeforeStartReview/24) %}
@@ -108,6 +109,11 @@
                 {% else %}
                     {{ 'There are only nb minutes before the beginning of the peear review'|transchoice(minutesRemainingBeforeStartReview|number_format, {}, 'icap_dropzone') }}
                 {% endif %}
+
+                (
+                {{ 'Peer review phase'|trans({}, 'icap_dropzone') }}
+                - {{ 'From %startDate% to %endDate%'|trans({'%startDate%': dropzone.startReview|date('formatDatetime'|trans({}, 'icap_dropzone')), '%endDate%': dropzone.endReview|date('formatDatetime'|trans({}, 'icap_dropzone'))}, 'icap_dropzone') }}
+                )
             </div>
         </div>
     {% endif %}
