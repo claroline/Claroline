@@ -86,7 +86,7 @@
                         nodes.each(function(index, element) {
                             var newBadge = $(badgePrototypeField.replace(/__name__/g, index));
                             badgeFormCollection.append(newBadge);
-                            $("input", newBadge).val($(element).val());
+                            $("input", newBadge).val(element.id);
                         });
                     };
                 {% else %}
@@ -94,14 +94,14 @@
                     var badgeSelectionField = $(".badge_selection_field");
                     var callback = function (nodes) {
                         if (0 < nodes.length) {
-                            var selectedBadge = $(nodes[0]);
-                            hiddenInputField.val(selectedBadge.val());
+                            var selectedBadge = nodes[0];
+                            hiddenInputField.val(selectedBadge.id);
                             $(".badge_text", badgeSelectionField)
-                                .html(selectedBadge.data('text'))
+                                .html(selectedBadge.text)
                                 .removeClass('hide');
                             $(".badge_image", badgeSelectionField)
-                                .attr('src', selectedBadge.data('icon'))
-                                .attr('alt', selectedBadge.data('text'))
+                                .attr('src', selectedBadge.icon)
+                                .attr('alt', selectedBadge.text)
                                 .removeClass('hide');
                             $(".no_badge_selected").addClass('hide');
                             $(".badge_selection_field").removeClass('hide');

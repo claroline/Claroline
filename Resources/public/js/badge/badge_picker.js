@@ -43,8 +43,19 @@ $(function(){
             modalElement.on('click', 'button.submit', function (event) {
                 event.preventDefault();
                 var nodes = $(".badge_picker_item input[type=checkbox]:checked", modalElement);
+                var nodeValue = [];
+                nodes.each(function (index, element) {
+                    element = $(element);
 
-                badgePicker.successHandler(nodes);
+                    nodeValue[index] = {
+                        id:   element.val(),
+                        icon: element.attr('data-icon'),
+                        text: element.attr('data-text')
+                    };
+                });
+                console.log(nodeValue);
+
+                badgePicker.successHandler(nodeValue);
                 modalElement.modal('hide');
             });
         })
