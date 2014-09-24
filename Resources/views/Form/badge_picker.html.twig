@@ -96,20 +96,36 @@
                     var badgeSelectionField = $(".badge_selection_field");
                     var callback = function (modalElement) {
                         var selectedBadges = $("input[type=checkbox]:checked", modalElement);
-                        var selectedBadge  = $(selectedBadges[0]);
-                        hiddenInputField.val(selectedBadge.val());
-                        $(".badge_text", badgeSelectionField)
-                            .html(selectedBadge.data('text'))
-                            .removeClass('hide');
-                        $(".badge_image", badgeSelectionField)
-                            .attr('src', selectedBadge.data('icon'))
-                            .attr('alt', selectedBadge.data('text'))
-                            .removeClass('hide');
-                        $(".no_badge_selected").addClass('hide');
-                        $(".badge_selection_field").removeClass('hide');
+
+                        if (0 < selectedBadges.length) {
+                            var selectedBadge = $(selectedBadges[0]);
+                            hiddenInputField.val(selectedBadge.val());
+                            $(".badge_text", badgeSelectionField)
+                                .html(selectedBadge.data('text'))
+                                .removeClass('hide');
+                            $(".badge_image", badgeSelectionField)
+                                .attr('src', selectedBadge.data('icon'))
+                                .attr('alt', selectedBadge.data('text'))
+                                .removeClass('hide');
+                            $(".no_badge_selected").addClass('hide');
+                            $(".badge_selection_field").removeClass('hide');
+                        }
+                        else {
+                            hiddenInputField.val(null);
+                            $(".badge_text", badgeSelectionField)
+                                .html("")
+                                .addClass('hide');
+                            $(".badge_image", badgeSelectionField)
+                                .attr('src', "")
+                                .attr('alt', "");
+                            $(".no_badge_selected").removeClass('hide');
+                            $(".badge_selection_field").addClass('hide');
+                        }
+
                     };
                     var value = hiddenInputField.val();
-                    {% endif %}
+                {% endif %}
+
 
                     var url = "{{ path('claro_badge_picker') }}";
                     var badgePickerSettings = {
