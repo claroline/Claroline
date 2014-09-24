@@ -11,22 +11,45 @@ $(function(){
     var badgePicker     = window.Claroline.BadgePicker = {};
     var modal           = window.Claroline.Modal;
 
-    badgePicker.defaultSettings = {
+    badgePicker.defaultRequestData = {
         multiple: true
     };
-    badgePicker.settings = {};
+    badgePicker.url = "";
+    badgePicker.data = {};
+    badgePicker.successHandler = function() {};
 
-    badgePicker.configureBadgePicker = function (customSettings) {
-        this.settings = $.extend({}, this.defaultSettings, customSettings);
+    badgePicker.configureBadgePicker = function (url,requestData, successHandler) {
+        this.url            = url;
+        this.successHandler = successHandler;
+        this.data           = $.extend({}, this.defaultRequestData, requestData);
     };
 
-    badgePicker.openBadgePicker = function (url, callback) {
-        badgePicker.configureBadgePicker(this.settings);
+    badgePicker.openBadgePicker = function () {
+        badgePicker.configureBadgePicker(this.url, this.data, this.successHandler);
+        badgePicker.displayModal();
+    };
+
+    badgePicker.displayModal = function () {
         var settings = {
-            url:  url,
+            url:  this.url,
             type: 'POST',
-            data: $.extend({}, badgePicker.settings)
+            data: $.extend({}, this.data)
         };
-        modal.displayCustomForm(settings, callback, null, false);
+
+        $.ajax(settings)
+        .success(function (data) {
+            var modalElement = modal.create(data);
+
+            modalElement.on('click', 'button.submit', function (event) {
+                event.preventDefault();
+                var nodes = $(".badge_picker_item input[type=checkbox]:checked", modalElement);
+
+                badgePicker.successHandler(nodes);
+                modalElement.modal('hide');
+            });
+        })
+        .error(function () {
+            modal.error();
+        });
     };
 });

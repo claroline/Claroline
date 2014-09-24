@@ -78,14 +78,12 @@
                         value.push($(this).val());
                     });
                     var badgePrototypeField = $("#{{ id }}").attr('data-prototype');
+                    var badgeFormCollection = $(".badge-form-collection");
 
-                    var callback = function (modalElement) {
-                        var selectedBadges      = $("input[type=checkbox]:checked", modalElement);
-                        var badgeFormCollection = $(".badge-form-collection");
-
+                    var callback = function (nodes) {
                         $(".badge-form-collection-element").remove();
 
-                        selectedBadges.each(function(index, element) {
+                        nodes.each(function(index, element) {
                             var newBadge = $(badgePrototypeField.replace(/__name__/g, index));
                             badgeFormCollection.append(newBadge);
                             $("input", newBadge).val($(element).val());
@@ -94,11 +92,9 @@
                 {% else %}
                     var hiddenInputField    = $("#{{ id }}");
                     var badgeSelectionField = $(".badge_selection_field");
-                    var callback = function (modalElement) {
-                        var selectedBadges = $("input[type=checkbox]:checked", modalElement);
-
-                        if (0 < selectedBadges.length) {
-                            var selectedBadge = $(selectedBadges[0]);
+                    var callback = function (nodes) {
+                        if (0 < nodes.length) {
+                            var selectedBadge = $(nodes[0]);
                             hiddenInputField.val(selectedBadge.val());
                             $(".badge_text", badgeSelectionField)
                                 .html(selectedBadge.data('text'))
@@ -133,8 +129,8 @@
                         workspace: {{ workspace|default('null') }},
                         blacklist: {{ blacklist|json_encode }}
                     };
-                    window.Claroline.BadgePicker.configureBadgePicker(badgePickerSettings);
-                    window.Claroline.BadgePicker.openBadgePicker(url, callback);
+                    window.Claroline.BadgePicker.configureBadgePicker(url, badgePickerSettings, callback);
+                    window.Claroline.BadgePicker.openBadgePicker();
                 });
             });
         </script>
