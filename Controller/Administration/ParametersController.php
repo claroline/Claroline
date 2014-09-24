@@ -348,7 +348,7 @@ class ParametersController extends Controller
 
 
     /**
-     * @EXT\Route("/mail/server", name="claro_admin_edit_parameters_mail_server")
+     * @EXT\Route("/mail/server/submit", name="claro_admin_edit_parameters_mail_server")
      * @EXT\Method("POST")
      * @EXT\Template("ClarolineCoreBundle:Administration\Parameters:mailServerForm.html.twig")
      *
