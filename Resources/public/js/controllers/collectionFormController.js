@@ -23,6 +23,21 @@ portfolioApp
             }
         };
 
+        $scope.badgePickerConfig = {
+            multiple: true,
+            callback: function (nodes) {
+                $scope.collection = [];
+                angular.forEach(nodes, function (element, index) {
+                    var newChild  = angular.copy($scope.emptyChild);
+                    newChild.id   = element.id;
+                    newChild.name = element.text;
+                    delete newChild.added;
+                    $scope.collection.push(newChild);
+                });
+                $scope.$apply();
+            }
+        };
+
         $scope.addChild = function(child) {
             $scope.collection.push(child);
         };

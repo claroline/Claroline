@@ -157,6 +157,7 @@
         {% if 'en' != app.request.locale %}
             <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/datepicker/js/locales/bootstrap-datepicker.' ~ app.request.locale ~ '.js') }}"></script>
         {% endif %}
+        <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/badge/badge_picker.js') }}"></script>
 
         {% javascripts debug=true filter='jsmin' output='js/portfolio/angular.js'
             '@IcapPortfolioBundle/Resources/public/js/vendor/angular/angular.min.js'
@@ -210,6 +211,7 @@
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/directives/designDirective.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/directives/resourcePickerDirective.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/directives/datepickerDirective.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/directives/badgePickerDirective.js') }}"></script>
 
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/filters/trustAsHtml.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/filters/trans.js') }}"></script>

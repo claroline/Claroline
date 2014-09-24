@@ -1,6 +1,6 @@
-<div data-collection-form="{'userBadge': ''}" data-editable="false">
+<div data-collection-form="{'id': ''}" data-editable="false">
     <p>
-        <button type="button" class="btn btn-sm btn-success" data-ui-resource-picker="resourcePickerConfig">{{ 'badges_add_badge'|trans({}, 'icap_portfolio') }}</button>
+        <button type="button" class="btn btn-sm btn-success" data-ui-badge-picker="badgePickerConfig">{{ 'badges_add_badge'|trans({}, 'icap_portfolio') }}</button>
     </p>
     <ul class="list-unstyled">
         <li data-ng-repeat="badge in collection">
@@ -8,8 +8,6 @@
                 {% verbatim %}
                 <input type="text" readonly="readonly" data-ng-disabled="badge.toDelete" class="input-sm form-control"
                        name="userBadge" value="{{ badge.name }}" />
-                <input type="hidden" class="form-control" id="badges_{{ $index }}_badge"
-                     name="icap_portfolio_widget_form_badges[badges][{{ $index }}]" data-ng-model="badge.badge" data-ng-keyup="modify(badge, $index)" />
                 {% endverbatim %}
                 <span class="input-group-btn" data-ng-if="isAdded(badge)">
                     <button aria-label="{{ 'badges_delete_badge'|trans({}, 'icap_portfolio') }}" class="btn btn-sm btn-danger" type="button" data-ng-if="!isEmpty(badge) && !badge.toDelete" data-ng-click="deleteChild(badge)">

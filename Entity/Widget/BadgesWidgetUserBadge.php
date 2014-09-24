@@ -94,6 +94,7 @@ class BadgesWidgetUserBadge implements SubWidgetInterface
         $badge = $this->userBadge->getBadge();
 
         return array(
+            'id'   => $this->userBadge->getId(),
             'name' => $badge->getName(),
             'img'  => $badge->getWebPath()
         );
