@@ -173,6 +173,7 @@
                 });
             } else {
                 this.parameters.pickerCallback(this.checkedNodes.nodes, this.currentDirectoryId);
+                this.checkedNodes.nodes = {};
             }
 
             this.dispatcher.trigger('close-picker-' + this.parameters.viewName);
