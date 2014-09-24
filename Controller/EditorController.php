@@ -130,12 +130,14 @@ class EditorController {
         return $this->renderEditor($workspace, $path);
     }
 
-   
+
     /**
      * Create a new path from a template
-     * 
+     *
      * @param  \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
-     * 
+     * @param \Innova\PathBundle\Entity\Path\PathTemplate $template
+     * @return array|\Symfony\Component\HttpFoundation\RedirectResponse
+     *
      * @Route(
      *      "/new_from_template/{templateId}",
      *      name    = "innova_path_editor_create_from_template",

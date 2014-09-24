@@ -12,6 +12,7 @@ use Claroline\CoreBundle\Event\CreateResourceEvent;
 use Claroline\CoreBundle\Event\CopyResourceEvent;
 
 use Innova\PathBundle\Entity\Path\Path;
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 
 /**
  * Path Event Listener
@@ -69,7 +70,7 @@ class PathListener extends ContainerAware
         // Create form
         $form = $this->container->get('form.factory')->create('innova_path', new Path());
         
-        // Try to prcess form
+        // Try to process form
         $request = $this->container->get('request');
         $form->handleRequest($request);
 
@@ -134,7 +135,62 @@ class PathListener extends ContainerAware
      */
     public function onPathCopy(CopyResourceEvent $event)
     {
+        // Get Path to duplicate
+        $pathToCopy = $file = $event->getResource();
 
-        throw new \Exception("You can't copy path.");
+        // Create new Path
+        $path = new Path();
+
+        // Set up new Path properties
+        $path->setName($pathToCopy->getName());
+        $path->setDescription($pathToCopy->getDescription());
+
+        $parent = $event->getParent();
+        $structure = json_decode($pathToCopy->getStructure());
+
+        // Removes Step IDs from structure
+        foreach ($structure->steps as $step) {
+            // Remove reference to Step Entity
+            $step->resourceId = null;
+
+            // Remove references to Activity
+
+            // Duplicate primary resources
+            if (!empty($step->primaryResource)) {
+                $this->copyResource($step->primaryResource, $parent);
+            }
+
+            // Duplicate secondary resources
+            if (!empty($step->resources)) {
+                foreach ($step->resources as $resource) {
+                    $this->copyResource($resource, $parent);
+                }
+            }
+        }
+
+        $path->setStructure(json_encode($structure));
+
+        $event->setCopy($path);
+        $event->stopPropagation();
+    }
+
+    private function copyResource($resource, ResourceNode $parent)
+    {
+        // Get current User
+        $user = $this->container->get('security.context')->getToken()->getUser();
+
+        // Get resource manager
+        $manager = $this->container->get('claroline.manager.resource_manager');
+
+        $resourceNode = $manager->getNode($resource->resourceId);
+        if ($resourceNode) {
+            // Duplicate Node
+            $copy = $manager->copy($resourceNode, $parent, $user);
+
+            // Update structure with new id
+            $resource->resourceId = $copy->getResourceNode()->getId();
+        }
+
+        return $copy;
     }
 }

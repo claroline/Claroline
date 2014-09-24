@@ -236,9 +236,10 @@ class Path extends AbstractResource implements PathInterface
     
         return $path;
     }
-    
+
     /**
      * Initialize JSON structure
+     * @param array $steps
      * @return \Innova\PathBundle\Entity\Path\Path
      */
     public function initializeStructure(array $steps = array())
