@@ -89,6 +89,25 @@ class DropRepository extends EntityRepository
         return $dropIds;
     }
 
+    /**
+     *  Return if user was unlocked ( no need to make the required corrections
+     *  todo Why not in a user super class ?
+     * @param $dropzoneId
+     * @param $userId
+     * @return array
+     */
+    public function isUnlockedDrop($dropzoneId, $userId)
+    {
+        $qb = $this->createQueryBuilder('drop')
+            ->select('drop.unlockedUser')
+            ->andWhere('drop.dropzone = :dropzone')
+            ->andWhere('drop.user = :user')
+            ->setParameter('dropzone', $dropzoneId)
+            ->setParameter('user', $userId);
+        $isUnlockedDrop = $qb->getQuery()->getSingleScalarResult();
+        return $isUnlockedDrop;
+    }
+
     public function getPossibleDropIdsForDrawing(Dropzone $dropzone, $user)
     {
         // Only keep copies whose number correction (whether finished or not) does not exceed the dropzone ExpectedTotalCorrection
@@ -306,8 +325,20 @@ class DropRepository extends EntityRepository
             ->andWhere('drop.user = :user')
             ->setParameter('dropzone', $dropzoneId)
             ->setParameter('user', $userId);
-        return $qb->getQuery()->getResult()[0];
+        return $qb->getQuery()->getSingleScalarResult();
     }
+
+    public function getDropByUser($dropzoneId, $userId)
+    {
+        $qb = $this->createQueryBuilder('drop')
+            ->select('drop')
+            ->andWhere('drop.dropzone = :dropzone')
+            ->andWhere('drop.user = :user')
+            ->setParameter('dropzone', $dropzoneId)
+            ->setParameter('user', $userId);
+        return $qb->getQuery()->getSingleResult();
+    }
+
 
     public function getDropAndCorrectionsAndDocumentsAndUser($dropzone, $dropId)
     {

@@ -27,6 +27,18 @@
 {% block dropzone_content_drops_by_list_title %}
     {{ 'List of examiners'|trans({}, 'icap_dropzone') }}
 {% endblock %}
+{% block dropzone_content_drops_by_list_tools %}
+    <div class="btn-group text-right">
+        <a type="button" class="btn btn-default btn-xs" data-toggle="tooltip" data-container="body"
+           data-placement="top" title="{{ 'unlock_user_tooltip'|trans({},'icap_dropzone') }}"
+           href="{{ path('icap_dropzone_unlock_all_user',{'resourceId':dropzone.id}) }}"><span
+                    class="fa fa-unlock">&nbsp;</span>{{ "unlock_all"|trans({},'icap_dropzone') }}</a>
+
+        <a type="button" class="btn btn-default btn-xs"
+           href="{{ path('icap_dropzone_unlock_cancel',{'resourceId': dropzone.id}) }}">{#<span
+                    class="fa fa-lock">&nbsp;</span>#}{{ "cancel_unlock"|trans({},'icap_dropzone') }}</a>
+    </div>
+{% endblock %}
 {% block dropzone_content_drops_by_list_subtitle %}
     {{ 'People that have a copy in this dropzone'|trans({}, 'icap_dropzone') }}
 {% endblock %}

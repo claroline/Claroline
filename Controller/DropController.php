@@ -226,6 +226,115 @@ class DropController extends DropzoneBaseController
 
     /**
      * @Route(
+     *      "/{resourceId}/unlock/{userId}",
+     *      name="icap_dropzone_unlock_user",
+     *      requirements={"resourceId" = "\d+", "userId" = "\d+"}
+     * )
+     * @ParamConverter("dropzone",class="IcapDropzoneBundle:Dropzone", options={"id" = "resourceId"})
+     *
+     * @param \Icap\DropzoneBundle\Entity\Dropzone $dropzone
+     * @param $userId
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @internal param $user
+     * @internal param $userId
+     */
+    public function unlockUser(Dropzone $dropzone, $userId)
+    {
+        $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
+        $this->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
+        $dropRepo = $this->getDoctrine()->getManager()->getRepository('IcapDropzoneBundle:Drop');
+        $drop = $dropRepo->getDropByUser($dropzone->getId(), $userId);
+        if ($drop != null) {
+            $drop->setUnlockedUser(true);
+        }
+        $em = $this->getDoctrine()->getManager();
+        $em->merge($drop);
+        $em->flush();
+
+        return $this->redirect(
+            $this->generateUrl(
+                'icap_dropzone_examiners',
+                array(
+                    'resourceId' => $dropzone->getId()
+                )
+            )
+        );
+    }
+
+    /**
+     * @Route(
+     *      "/{resourceId}/unlock/all",
+     *      name="icap_dropzone_unlock_all_user",
+     *      requirements={"resourceId" = "\d+"}
+     * )
+     * @ParamConverter("dropzone",class="IcapDropzoneBundle:Dropzone", options={"id" = "resourceId"})
+     *
+     * @param \Icap\DropzoneBundle\Entity\Dropzone $dropzone
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @internal param $user
+     * @internal param $userId
+     */
+    public function unlockUsers(Dropzone $dropzone)
+    {
+        return $this->unlockOrLockUsers($dropzone, true);
+    }
+
+
+    /**
+     * @Route(
+     *      "/{resourceId}/unlock/cancel",
+     *      name="icap_dropzone_unlock_cancel",
+     *      requirements={"resourceId" = "\d+"}
+     * )
+     * @ParamConverter("dropzone",class="IcapDropzoneBundle:Dropzone", options={"id" = "resourceId"})
+     *
+     * @param \Icap\DropzoneBundle\Entity\Dropzone $dropzone
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @internal param $user
+     * @internal param $userId
+     */
+    public function unlockUsersCancel(Dropzone $dropzone)
+    {
+        return $this->unlockOrLockUsers($dropzone, false);
+    }
+
+
+    /**
+     *  Factorised function for lock & unlock users in a dropzone.
+     * @param Dropzone $dropzone
+     * @param bool $unlock
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    private function unlockOrLockUsers(Dropzone $dropzone, $unlock = true)
+    {
+        $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
+        $this->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
+
+        $dropRepo = $this->getDoctrine()->getManager()->getRepository('IcapDropzoneBundle:Drop');
+        $drops = $dropRepo->findBy(array('dropzone' => $dropzone->getId(), 'unlockedUser' => !$unlock));
+
+
+        foreach ($drops as $drop) {
+            $drop->setUnlockedUser($unlock);
+        }
+        $em = $this->getDoctrine()->getManager();
+        $em->flush();
+
+        return $this->redirect(
+            $this->generateUrl(
+                'icap_dropzone_examiners',
+                array(
+                    'resourceId' => $dropzone->getId()
+                )
+            )
+        );
+    }
+
+
+    /**
+     * @Route(
      *      "/{resourceId}/drops",
      *      name="icap_dropzone_drops",
      *      requirements={"resourceId" = "\d+"},
@@ -603,7 +712,7 @@ class DropController extends DropzoneBaseController
             ->countFinished($dropzone, $user);
 
         if ($dropzone->getDiplayCorrectionsToLearners() && $drop->countFinishedCorrections() >= $dropzone->getExpectedTotalCorrection() &&
-            $dropzone->getExpectedTotalCorrection() <= $nbCorrections || ($dropzone->isFinished() && $dropzone->getDiplayCorrectionsToLearners())
+            $dropzone->getExpectedTotalCorrection() <= $nbCorrections || ($dropzone->isFinished() && $dropzone->getDiplayCorrectionsToLearners() or $drop->getUnlockedUser())
         ) {
             $showCorrections = true;
         }
