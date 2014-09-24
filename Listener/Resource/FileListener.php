@@ -179,9 +179,11 @@ class FileListener implements ContainerAwareInterface
         $ds = DIRECTORY_SEPARATOR;
         $resource = $event->getResource();
         $mimeType = $resource->getResourceNode()->getMimeType();
+        $eventName = strtolower(str_replace('/', '_', 'play_file_' . $mimeType));
+        $eventName = str_replace('"', '', $eventName);
         $playEvent = $this->container->get('claroline.event.event_dispatcher')
                 ->dispatch(
-                    strtolower(str_replace('/', '_', 'play_file_' . $mimeType)),
+                    $eventName,
                     'PlayFile',
                     array($resource)
                 );
