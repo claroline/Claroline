@@ -396,7 +396,9 @@ class SurveyManager
             $executeQuery
         );
 
-        return $this->pagerFactory->createPagerFromArray($questions, $page, $max);
+        return $executeQuery ?
+            $this->pagerFactory->createPagerFromArray($questions, $page, $max) :
+            $this->pagerFactory->createPager($questions, $page, $max);
     }
 
     public function getQuestionsByWorkspaceWithExclusions(
@@ -417,7 +419,9 @@ class SurveyManager
             $executeQuery
         );
 
-        return $this->pagerFactory->createPagerFromArray($questions, $page, $max);
+        return $executeQuery ?
+            $this->pagerFactory->createPagerFromArray($questions, $page, $max) :
+            $this->pagerFactory->createPager($questions, $page, $max);
     }
 
     /**************************************
@@ -566,7 +570,9 @@ class SurveyManager
             $executeQuery
         );
 
-        return $this->pagerFactory->createPagerFromArray($comments, $page, $max);
+        return $executeQuery ?
+            $this->pagerFactory->createPagerFromArray($comments, $page, $max) :
+            $this->pagerFactory->createPager($comments, $page, $max);
     }
 
 
@@ -614,7 +620,9 @@ class SurveyManager
             $executeQuery
         );
 
-        return $this->pagerFactory->createPagerFromArray($answers, $page, $max);
+        return $executeQuery ?
+            $this->pagerFactory->createPagerFromArray($answers, $page, $max) :
+            $this->pagerFactory->createPager($answers, $page, $max);
     }
 
 
@@ -676,7 +684,9 @@ class SurveyManager
             $executeQuery
         );
 
-        return $this->pagerFactory->createPagerFromArray($answers, $page, $max);
+        return $executeQuery ?
+            $this->pagerFactory->createPagerFromArray($answers, $page, $max) :
+            $this->pagerFactory->createPager($answers, $page, $max);
     }
 
 
