@@ -889,19 +889,12 @@ class UserManager
      *
      * @return string
      */
-    public function generatePublicUrl(User $user, $try = 0)
+    public function generatePublicUrl(User $user)
     {
         $publicUrl = $user->getFirstName() . '.' . $user->getLastName();
         $publicUrl = strtolower(str_replace(' ', '-', $publicUrl));
-
-        if (0 < $try) {
-            $publicUrl .= $try;
-        }
-
         $searchedUsers = $this->objectManager->getRepository('ClarolineCoreBundle:User')->findOneByPublicUrl($publicUrl);
-        if (null !== $searchedUsers) {
-            $publicUrl = $this->generatePublicUrl($user, ++$try);
-        }
+        if (null !== $searchedUsers) $publicUrl .= $user->getId();
 
         return $publicUrl;
     }
