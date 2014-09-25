@@ -23,8 +23,16 @@ portfolioApp
             }
         };
 
+        var selectedValue = [];
+        angular.forEach($scope.collection, function (element, index) {
+            selectedValue.push(element.badge);
+        });
+
         $scope.badgePickerConfig = {
-            multiple: true,
+            data: {
+                multiple: true,
+                value: selectedValue
+            },
             callback: function (nodes) {
                 angular.forEach($scope.collection, function (element, index) {
                     $scope.deleteChild(element);
