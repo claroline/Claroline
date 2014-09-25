@@ -114,6 +114,7 @@ class ResourceRightsRepository extends EntityRepository
             JOIN rights.role role
             WHERE resource.id = :resourceId
             AND role.name <> :resourceManagerRole
+            AND role.type <> :roleType
             ORDER BY role.name
         ";
 
@@ -123,6 +124,7 @@ class ResourceRightsRepository extends EntityRepository
             'resourceManagerRole',
             'ROLE_WS_MANAGER_' . $resource->getWorkspace()->getGuid()
         );
+        $query->setParameter('roleType', Role::USER_ROLE);
 
         return $query->getResult();
     }
@@ -173,5 +175,29 @@ class ResourceRightsRepository extends EntityRepository
         $query->setParameter('roleName', $role->getName());
 
         return $query->getResult();
+    }
+
+    public function findUserRolesResourceRights(
+        ResourceNode $resource,
+        array $keys,
+        $executeQuery = true
+    )
+    {
+        $dql = '
+            SELECT rights
+            FROM Claroline\CoreBundle\Entity\Resource\ResourceRights rights
+            JOIN rights.resourceNode resource
+            JOIN rights.role role
+            WHERE resource = :resource
+            AND role.type = :type
+            AND role.translationKey IN (:keys)
+        ';
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('resource', $resource);
+        $query->setParameter('type', Role::USER_ROLE);
+        $query->setParameter('keys', $keys);
+
+        return $executeQuery ? $query->getResult() : $query;
     }
 }

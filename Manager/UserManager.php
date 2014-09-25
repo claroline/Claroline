@@ -15,6 +15,7 @@ use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Model\WorkspaceModel;
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
@@ -932,5 +933,90 @@ class UserManager
         $user->setInitDate(new \DateTime());
         $this->objectManager->persist($user);
         $this->objectManager->flush();
+    }
+
+    public function getUsersWithoutUserRole($executeQuery = true)
+    {
+        return $this->userRepo->findUsersWithoutUserRole($executeQuery);
+    }
+
+    public function getUsersWithRights(
+        ResourceNode $node,
+        $orderedBy = 'firstName',
+        $order = 'ASC',
+        $page = 1,
+        $max = 50,
+        $executeQuery = true
+    )
+    {
+        $users =  $this->userRepo
+            ->findUsersWithRights($node, $orderedBy, $order, $executeQuery);
+
+        return $executeQuery ?
+            $this->pagerFactory->createPagerFromArray($users, $page, $max) :
+            $this->pagerFactory->createPager($users, $page, $max);
+    }
+
+    public function getUsersWithoutRights(
+        ResourceNode $node,
+        $orderedBy = 'firstName',
+        $order = 'ASC',
+        $page = 1,
+        $max = 50,
+        $executeQuery = true
+    )
+    {
+        $users =  $this->userRepo
+            ->findUsersWithoutRights($node, $orderedBy, $order, $executeQuery);
+
+        return $executeQuery ?
+            $this->pagerFactory->createPagerFromArray($users, $page, $max) :
+            $this->pagerFactory->createPager($users, $page, $max);
+    }
+
+    public function getSearchedUsersWithRights(
+        ResourceNode $node,
+        $search = '',
+        $orderedBy = 'firstName',
+        $order = 'ASC',
+        $page = 1,
+        $max = 50,
+        $executeQuery = true
+    )
+    {
+        $users =  $this->userRepo->findSearchedUsersWithRights(
+            $node,
+            $search,
+            $orderedBy,
+            $order,
+            $executeQuery
+        );
+
+        return $executeQuery ?
+            $this->pagerFactory->createPagerFromArray($users, $page, $max) :
+            $this->pagerFactory->createPager($users, $page, $max);
+    }
+
+    public function getSearchedUsersWithoutRights(
+        ResourceNode $node,
+        $search = '',
+        $orderedBy = 'firstName',
+        $order = 'ASC',
+        $page = 1,
+        $max = 50,
+        $executeQuery = true
+    )
+    {
+        $users =  $this->userRepo->findSearchedUsersWithoutRights(
+            $node,
+            $search,
+            $orderedBy,
+            $order,
+            $executeQuery
+        );
+
+        return $executeQuery ?
+            $this->pagerFactory->createPagerFromArray($users, $page, $max) :
+            $this->pagerFactory->createPager($users, $page, $max);
     }
 }

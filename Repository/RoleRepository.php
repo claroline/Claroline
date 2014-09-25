@@ -466,4 +466,21 @@ class RoleRepository extends EntityRepository
 
         return $executeQuery ? $query->getOneOrNullResult() : $query;
     }
+
+    public function findUserRolesByTranslationKeys(array $keys, $executeQuery = true)
+    {
+        $dql = '
+            SELECT r
+            FROM Claroline\CoreBundle\Entity\Role r
+            WHERE r.type = :type
+            AND r.translationKey IN (:keys)
+        ';
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('type', Role::USER_ROLE);
+        $query->setParameter('keys', $keys);
+
+        return $executeQuery ? $query->getResult() : $query;
+
+    }
 }

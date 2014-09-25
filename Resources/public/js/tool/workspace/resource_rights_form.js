@@ -32,7 +32,7 @@
             }
         });
     };
-
+    
     $('body').on('change', '#simple input', function () {
         var element = this;
 
@@ -132,5 +132,149 @@
                 $('#form-rights-tag-wrapper').append(form);
             }
         });
+    });
+        
+    $('body').on('click', '#search-user-without-rights-btn',function () {
+        var search = $('#search-user-without-rights-input').val();
+        var nodeId = $('#users-without-rights-datas').attr('data-node-id');
+
+        $.ajax({
+            url: Routing.generate(
+                'claro_resources_rights_users_without_rights_form',
+                {'node': nodeId, 'search': search}
+            ),
+            type: 'GET',
+            success: function (datas) {
+                $('#users-without-rights-tab').empty();
+                $('#users-without-rights-tab').append(datas);
+            }
+        });
+    });
+
+    $('body').on('change', '#search-user-without-rights-input', function () {
+        var search = $('#search-user-without-rights-input').val();
+        var nodeId = $('#users-without-rights-datas').attr('data-node-id');
+
+        $.ajax({
+            url: Routing.generate(
+                'claro_resources_rights_users_without_rights_form',
+                {'node': nodeId, 'search': search}
+            ),
+            type: 'GET',
+            success: function (datas) {
+                $('#users-without-rights-tab').empty();
+                $('#users-without-rights-tab').append(datas);
+            }
+        });
+    });
+    
+    $('#users-without-rights-list').on('click', '.pagination > ul > li > a', function (event) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        var element = event.currentTarget;
+        var url = $(element).attr('href');
+
+        if (url !== '#') {
+            $.ajax({
+                url: url,
+                type: 'GET',
+                success: function (datas) {
+                    $('#users-without-rights-tab').empty();
+                    $('#users-without-rights-tab').append(datas);
+                }
+            });
+        }
+    });
+    
+    $('#users-without-rights-list').on('click', 'th > a', function (event) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        var element = event.currentTarget;
+        var url = $(element).attr('href');
+
+        if (url !== '#') {
+            $.ajax({
+                url: url,
+                type: 'GET',
+                success: function (datas) {
+                    $('#users-without-rights-tab').empty();
+                    $('#users-without-rights-tab').append(datas);
+                }
+            });
+        }
+    });
+        
+    $('body').on('click', '#search-user-with-rights-btn',function () {
+        var search = $('#search-user-with-rights-input').val();
+        var nodeId = $('#users-with-rights-datas').attr('data-node-id');
+
+        $.ajax({
+            url: Routing.generate(
+                'claro_resources_rights_users_with_rights_form',
+                {'node': nodeId, 'search': search}
+            ),
+            type: 'GET',
+            success: function (datas) {
+                $('#users-with-rights-tab').empty();
+                $('#users-with-rights-tab').append(datas);
+            }
+        });
+    });
+
+    $('body').on('change', '#search-user-with-rights-input', function () {
+        var search = $('#search-user-with-rights-input').val();
+        var nodeId = $('#users-with-rights-datas').attr('data-node-id');
+
+        $.ajax({
+            url: Routing.generate(
+                'claro_resources_rights_users_with_rights_form',
+                {'node': nodeId, 'search': search}
+            ),
+            type: 'GET',
+            success: function (datas) {
+                $('#users-with-rights-tab').empty();
+                $('#users-with-rights-tab').append(datas);
+            }
+        });
+    });
+    
+    $('#users-with-rights-list').on('click', '.pagination > ul > li > a', function (event) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        var element = event.currentTarget;
+        var url = $(element).attr('href');
+
+        if (url !== '#') {
+            $.ajax({
+                url: url,
+                type: 'GET',
+                success: function (datas) {
+                    $('#users-with-rights-tab').empty();
+                    $('#users-with-rights-tab').append(datas);
+                }
+            });
+        }
+    });
+    
+    $('#users-with-rights-list').on('click', 'th > a', function (event) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        var element = event.currentTarget;
+        var url = $(element).attr('href');
+
+        if (url !== '#') {
+            $.ajax({
+                url: url,
+                type: 'GET',
+                success: function (datas) {
+                    $('#users-with-rights-tab').empty();
+                    $('#users-with-rights-tab').append(datas);
+                }
+            });
+        }
     });
 })();

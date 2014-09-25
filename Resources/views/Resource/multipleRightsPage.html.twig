@@ -78,6 +78,13 @@
                 <li class="active"><a href="#simple" data-toggle="tab">{{ 'simple'|trans({}, 'platform') }}</a></li>
                 <li><a href="#general" data-toggle="tab">{{ 'advanced'|trans({}, 'platform') }}</a></li>
                 <li><a href="#workspaces-list" data-toggle="tab">{{ 'by_workspace'|trans({}, 'platform') }}</a></li>
+                <li><a href="#users-with-rights-list" data-toggle="tab">{{ 'users'|trans({}, 'platform') }}</a></li>
+                <li>
+                    <a href="#users-without-rights-list" data-toggle="tab">
+                        <i class="fa fa-plus-circle"></i>
+                        {{ 'users'|trans({}, 'platform') }}
+                    </a>
+                </li>
             </ul>
         </div>
         <div class="tab-content" id="rights-form-resource-tab-content">
@@ -227,6 +234,51 @@
                 </div>
                 <div id="form-rights-tag-wrapper"></div>
             </div>
+
+{# ------------------------------ USER WITH RIGHTS TAB ----------------------------------- #}
+    
+            <div class="tab-pane" id="users-with-rights-list">
+                <div class="{{ mode }}-body padding-top-none {% if isModal %}padding-bottom-none{% endif %} table-responsive"
+                     id="users-with-rights-tab"
+                >
+                    {{
+                        render(
+                            controller(
+                                'ClarolineCoreBundle:ResourceRights:resourcesRightsUsersWithRightsForm',
+                                {
+                                    'node': resource,
+                                    'search': ''
+                                }
+                            )
+                        )
+                    }}
+                </div>
+                {{ block('formfooter') }}
+            </div>
+
+{# ------------------------------ USERS WITHOUT RIGHTS TAB ----------------------------------- #}
+    
+            <div class="tab-pane" id="users-without-rights-list">
+                <div class="{{ mode }}-body padding-top-none {% if isModal %}padding-bottom-none{% endif %} table-responsive"
+                     id="users-without-rights-tab"
+                >
+                    {{
+                        render(
+                            controller(
+                                'ClarolineCoreBundle:ResourceRights:resourcesRightsUsersWithoutRightsForm',
+                                {
+                                    'node': resource,
+                                    'search': ''
+                                }
+                            )
+                        )
+                    }}
+                </div>
+                {{ block('formfooter') }}
+            </div>
+   
+{# --------------------------------- END ------------------------------------- #}
+                
         </div>
     </form>
 </div>

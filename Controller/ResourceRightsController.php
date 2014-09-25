@@ -20,6 +20,7 @@ use Claroline\CoreBundle\Manager\WorkspaceTagManager;
 use Claroline\CoreBundle\Manager\RightsManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\MaskManager;
+use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\HttpFoundation\Response;
@@ -38,6 +39,7 @@ class ResourceRightsController
     private $wsTagManager;
     private $templating;
     private $roleManager;
+    private $userManager;
     private $om;
 
     /**
@@ -49,6 +51,7 @@ class ResourceRightsController
      *     "wsTagManager"  = @DI\Inject("claroline.manager.workspace_tag_manager"),
      *     "templating"    = @DI\Inject("templating"),
      *     "roleManager"   = @DI\Inject("claroline.manager.role_manager"),
+     *     "userManager"   = @DI\Inject("claroline.manager.user_manager"),
      *     "om"            = @DI\Inject("claroline.persistence.object_manager")
      * })
      */
@@ -60,6 +63,7 @@ class ResourceRightsController
         WorkspaceTagManager $wsTagManager,
         TwigEngine $templating,
         RoleManager $roleManager,
+        UserManager $userManager,
         ObjectManager $om
     )
     {
@@ -70,6 +74,7 @@ class ResourceRightsController
         $this->templating = $templating;
         $this->roleManager = $roleManager;
         $this->maskManager = $maskManager;
+        $this->userManager = $userManager;
         $this->om = $om;
     }
 
@@ -239,6 +244,168 @@ class ResourceRightsController
         $this->rightsManager->editCreationRights($resourceTypes, $role, $node, $isRecursive);
 
         return new Response('', 204, array('Content-Type' => 'application/json'));
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/{node}/rights/users/with/rights/ordered/by/{orderedBy}/order/{order}/page/{page}/max/{max}/form/search/{search}",
+     *     name="claro_resources_rights_users_with_rights_form",
+     *     options={"expose"=true},
+     *     defaults={"search"="","ordered"="firstName","order"="ASC","page"=1,"max"=50}
+     * )
+     * @EXT\Template("ClarolineCoreBundle:Resource:resourcesRightsUsersWithRightsForm.html.twig")
+     *
+     * Displays the resource rights form for all users.
+     *
+     * @param ResourceNode $node
+     * @param string $search
+     * @param string $orderedBy
+     * @param string $order
+     * @param int $page
+     * @param int $max
+     *
+     * @return Response
+     */
+    public function resourcesRightsUsersWithRightsFormAction(
+        ResourceNode $node,
+        $search = '',
+        $orderedBy = 'firstName',
+        $order = 'ASC',
+        $page = 1,
+        $max = 50
+    )
+    {
+        $collection = new ResourceCollection(array($node));
+        $this->checkAccess('EDIT', $collection);
+        $isDir = $node->getResourceType()->getName() === 'directory';
+        $resourceType = $node->getResourceType();
+        $mask = $this->maskManager
+            ->decodeMask($resourceType->getDefaultMask(), $resourceType);
+
+        $users = empty($search) ?
+            $this->userManager
+                ->getUsersWithRights($node, $orderedBy, $order, $page, $max) :
+            $this->userManager->getSearchedUsersWithRights(
+                $node,
+                $search,
+                $orderedBy,
+                $order,
+                $page,
+                $max
+            );
+        $roleKeys = array();
+        $usersRoles = array();
+        $usersRights = array();
+
+        foreach ($users as $user) {
+            $roleKeys[] = $user->getUsername();
+        }
+        $usersRolesRaw = $this->roleManager
+            ->getUserRolesByTranslationKeys($roleKeys);
+
+        foreach ($usersRolesRaw as $userRole) {
+            $usersRoles[$userRole->getTranslationKey()] = $userRole;
+        }
+        $userRolesRights = $this->rightsManager
+            ->getUserRolesResourceRights($node, $roleKeys);
+
+        foreach ($userRolesRights as $right) {
+            $usersRights[$right->getRole()->getTranslationKey()] = $right;
+        }
+
+        return array(
+            'resource' => $node,
+            'isDir' => $isDir,
+            'mask' => $mask,
+            'users' => $users,
+            'usersRoles' => $usersRoles,
+            'usersRights' => $usersRights,
+            'orderedBy' => $orderedBy,
+            'order' => $order,
+            'max' => $max,
+            'search' => $search
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/{node}/rights/users/without/rights/ordered/by/{orderedBy}/order/{order}/page/{page}/max/{max}/form/search/{search}",
+     *     name="claro_resources_rights_users_without_rights_form",
+     *     options={"expose"=true},
+     *     defaults={"search"="","ordered"="firstName","order"="ASC","page"=1,"max"=50}
+     * )
+     * @EXT\Template("ClarolineCoreBundle:Resource:resourcesRightsUsersWithoutRightsForm.html.twig")
+     *
+     * Displays the resource rights form for all users.
+     *
+     * @param ResourceNode $node
+     * @param string $search
+     * @param string $orderedBy
+     * @param string $order
+     * @param int $page
+     * @param int $max
+     *
+     * @return Response
+     */
+    public function resourcesRightsUsersWithoutRightsFormAction(
+        ResourceNode $node,
+        $search = '',
+        $orderedBy = 'firstName',
+        $order = 'ASC',
+        $page = 1,
+        $max = 50
+    )
+    {
+        $collection = new ResourceCollection(array($node));
+        $this->checkAccess('EDIT', $collection);
+        $isDir = $node->getResourceType()->getName() === 'directory';
+        $resourceType = $node->getResourceType();
+        $mask = $this->maskManager
+            ->decodeMask($resourceType->getDefaultMask(), $resourceType);
+
+        $users = empty($search) ?
+            $this->userManager
+                ->getUsersWithoutRights($node, $orderedBy, $order, $page, $max) :
+            $this->userManager->getSearchedUsersWithoutRights(
+                $node,
+                $search,
+                $orderedBy,
+                $order,
+                $page,
+                $max
+            );
+        $roleKeys = array();
+        $usersRoles = array();
+        $usersRights = array();
+
+        foreach ($users as $user) {
+            $roleKeys[] = $user->getUsername();
+        }
+        $usersRolesRaw = $this->roleManager
+            ->getUserRolesByTranslationKeys($roleKeys);
+
+        foreach ($usersRolesRaw as $userRole) {
+            $usersRoles[$userRole->getTranslationKey()] = $userRole;
+        }
+        $userRolesRights = $this->rightsManager
+            ->getUserRolesResourceRights($node, $roleKeys);
+
+        foreach ($userRolesRights as $right) {
+            $usersRights[$right->getRole()->getTranslationKey()] = $right;
+        }
+
+        return array(
+            'resource' => $node,
+            'isDir' => $isDir,
+            'mask' => $mask,
+            'users' => $users,
+            'usersRoles' => $usersRoles,
+            'usersRights' => $usersRights,
+            'orderedBy' => $orderedBy,
+            'order' => $order,
+            'max' => $max,
+            'search' => $search
+        );
     }
 
     public function getPermissionsFromRequest(ResourceType $type)

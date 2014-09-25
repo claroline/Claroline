@@ -846,4 +846,11 @@ class RoleManager
     {
         return $this->roleRepo->findUserRoleByUser($user, $executeQuery);
     }
+
+    public function getUserRolesByTranslationKeys(array $keys, $executeQuery = true)
+    {
+        return count($keys) === 0 ?
+            array() :
+            $this->roleRepo->findUserRolesByTranslationKeys($keys, $executeQuery);
+    }
 }
