@@ -174,7 +174,7 @@
 
                 (!event.canChangePosition || this.parameters.isPickerMode) ?
                     this.$el.sortable('disable'):
-                    this.$el.sortable('enable');
+                    this.$el.sortable({helper: 'clone'});
             } else {
                 this.$el.html(Twig.render(ResourceManagerResults, {
                     'nodes': this.prepareResults(event.nodes),

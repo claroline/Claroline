@@ -781,7 +781,7 @@ class ResourceManager
             $event = $this->dispatcher->dispatch(
                 'copy_' . $node->getResourceType()->getName(),
                 'CopyResource',
-                array($resource)
+                array($resource, $parent)
             );
 
             $copy = $event->getCopy();

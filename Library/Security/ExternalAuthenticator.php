@@ -60,7 +60,7 @@ class ExternalAuthenticator implements SimpleFormAuthenticatorInterface
             $user->getSalt()
         );
 
-        if ($user->getAuthentication() and $user->getAuthentication() !== '') {
+        if ($user->getAuthentication() and $user->getAuthentication() !== '' && $token->getCredentials()) {
             if (!$this->authenticationManager->authenticate(
                 $user->getAuthentication(), $user->getUsername(), $token->getCredentials()
             )) {
