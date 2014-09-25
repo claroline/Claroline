@@ -15,16 +15,16 @@ class BadgesBadgeType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('id', 'integer', array(
-                'required' => false,
-                'mapped'   => false
-            ))
             ->add('name', 'text', array(
                 'required' => false,
                 'mapped'   => false
             ))
-            ->add('userBadge', 'entity', array(
-                'class'    => 'ClarolineCoreBundle:Badge\UserBadge',
+            ->add('img', 'text', array(
+                'required' => false,
+                'mapped'   => false
+            ))
+            ->add('badge', 'entity', array(
+                'class'    => 'ClarolineCoreBundle:Badge\Badge',
                 'property' => 'name',
                 'required' => false
             ));
@@ -39,7 +39,7 @@ class BadgesBadgeType extends AbstractType
     {
         $resolver->setDefaults(
             array(
-                'data_class'         => 'Icap\PortfolioBundle\Entity\Widget\BadgesWidgetUserBadge',
+                'data_class'         => 'Icap\PortfolioBundle\Entity\Widget\BadgesWidgetBadge',
                 'translation_domain' => 'icap_portfolio',
                 'csrf_protection'    => false,
             )

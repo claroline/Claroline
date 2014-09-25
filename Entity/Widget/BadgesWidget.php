@@ -16,39 +16,39 @@ class BadgesWidget extends AbstractWidget
     protected $widgetType = 'badges';
 
     /**
-     * @var BadgesWidgetUserBadge[]|\Doctrine\ORM\PersistentCollection
+     * @var BadgesWidgetBadge[]|\Doctrine\ORM\PersistentCollection
      *
-     * @ORM\OneToMany(targetEntity="Icap\PortfolioBundle\Entity\Widget\BadgesWidgetUserBadge", mappedBy="widget", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="Icap\PortfolioBundle\Entity\Widget\BadgesWidgetBadge", mappedBy="widget", cascade={"persist", "remove"})
      */
-    protected $userBadges;
+    protected $badges;
 
     public function __construct()
     {
-        $this->userBadges = new ArrayCollection();
+        $this->badges = new ArrayCollection();
     }
 
     /**
-     * @param \Icap\PortfolioBundle\Entity\Widget\BadgesWidgetUserBadge[] $userbadges
+     * @param \Icap\PortfolioBundle\Entity\Widget\BadgesWidgetBadge[] $userbadges
      *
      * @return BadgesWidget
      */
-    public function setUserBadges($userbadges)
+    public function setBadges($userbadges)
     {
         foreach ($userbadges as $userBagde) {
             $userBagde->setWidget($this);
         }
 
-        $this->userBadges = $userbadges;
+        $this->badges = $userbadges;
 
         return $this;
     }
 
     /**
-     * @return \Icap\PortfolioBundle\Entity\Widget\BadgesWidgetUserBadge[]
+     * @return \Icap\PortfolioBundle\Entity\Widget\BadgesWidgetBadge[]
      */
-    public function getUserBadges()
+    public function getBadges()
     {
-        return $this->userBadges;
+        return $this->badges;
     }
 
     /**
@@ -61,7 +61,7 @@ class BadgesWidget extends AbstractWidget
             'children' => array()
         );
 
-        foreach ($this->getUserBadges() as $userBadge) {
+        foreach ($this->getBadges() as $userBadge) {
             $data['children'][] = $userBadge->getData();
         }
 
@@ -83,6 +83,6 @@ class BadgesWidget extends AbstractWidget
      */
     public function getChildren()
     {
-        return $this->getUserBadges();
+        return $this->getBadges();
     }
 }

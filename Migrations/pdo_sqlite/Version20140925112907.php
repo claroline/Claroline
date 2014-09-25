@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/09/11 04:18:33
+ * Generation date: 2014/09/25 11:29:08
  */
-class Version20140911161831 extends AbstractMigration
+class Version20140925112907 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -21,18 +21,18 @@ class Version20140911161831 extends AbstractMigration
             )
         ");
         $this->addSql("
-            CREATE TABLE icap__portfolio_widget_badges_user_badge (
+            CREATE TABLE icap__portfolio_widget_badges_badge (
                 id INTEGER NOT NULL, 
-                user_badge_id INTEGER NOT NULL, 
+                badge_id INTEGER NOT NULL, 
                 widget_id INTEGER NOT NULL, 
                 PRIMARY KEY(id)
             )
         ");
         $this->addSql("
-            CREATE INDEX IDX_E104DE03172F26FC ON icap__portfolio_widget_badges_user_badge (user_badge_id)
+            CREATE INDEX IDX_25D41B98F7A2C2FC ON icap__portfolio_widget_badges_badge (badge_id)
         ");
         $this->addSql("
-            CREATE INDEX IDX_E104DE03FBE885E2 ON icap__portfolio_widget_badges_user_badge (widget_id)
+            CREATE INDEX IDX_25D41B98FBE885E2 ON icap__portfolio_widget_badges_badge (widget_id)
         ");
     }
 
@@ -42,7 +42,7 @@ class Version20140911161831 extends AbstractMigration
             DROP TABLE icap__portfolio_widget_badges
         ");
         $this->addSql("
-            DROP TABLE icap__portfolio_widget_badges_user_badge
+            DROP TABLE icap__portfolio_widget_badges_badge
         ");
     }
 }

@@ -40,7 +40,7 @@ class BadgesType extends AbstractWidgetType
                     'by_reference'  => false,
                     'allow_add'     => true,
                     'allow_delete'  => true,
-                    'property_path' => 'userBadges'
+                    'property_path' => 'badges'
                 )
             );
     }

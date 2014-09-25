@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/09/11 04:18:33
+ * Generation date: 2014/09/25 11:29:08
  */
-class Version20140911161831 extends AbstractMigration
+class Version20140925112907 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -21,13 +21,13 @@ class Version20140911161831 extends AbstractMigration
             )
         ");
         $this->addSql("
-            CREATE TABLE icap__portfolio_widget_badges_user_badge (
+            CREATE TABLE icap__portfolio_widget_badges_badge (
                 id INT AUTO_INCREMENT NOT NULL, 
-                user_badge_id INT NOT NULL, 
+                badge_id INT NOT NULL, 
                 widget_id INT NOT NULL, 
                 PRIMARY KEY(id), 
-                INDEX IDX_E104DE03172F26FC (user_badge_id), 
-                INDEX IDX_E104DE03FBE885E2 (widget_id)
+                INDEX IDX_25D41B98F7A2C2FC (badge_id), 
+                INDEX IDX_25D41B98FBE885E2 (widget_id)
             )
         ");
         $this->addSql("
@@ -37,13 +37,13 @@ class Version20140911161831 extends AbstractMigration
             ON DELETE CASCADE
         ");
         $this->addSql("
-            ALTER TABLE icap__portfolio_widget_badges_user_badge 
-            ADD CONSTRAINT FK_E104DE03172F26FC FOREIGN KEY (user_badge_id) 
+            ALTER TABLE icap__portfolio_widget_badges_badge 
+            ADD CONSTRAINT FK_25D41B98F7A2C2FC FOREIGN KEY (badge_id) 
             REFERENCES claro_user_badge (id)
         ");
         $this->addSql("
-            ALTER TABLE icap__portfolio_widget_badges_user_badge 
-            ADD CONSTRAINT FK_E104DE03FBE885E2 FOREIGN KEY (widget_id) 
+            ALTER TABLE icap__portfolio_widget_badges_badge 
+            ADD CONSTRAINT FK_25D41B98FBE885E2 FOREIGN KEY (widget_id) 
             REFERENCES icap__portfolio_widget_badges (id)
         ");
     }
@@ -51,14 +51,14 @@ class Version20140911161831 extends AbstractMigration
     public function down(Schema $schema)
     {
         $this->addSql("
-            ALTER TABLE icap__portfolio_widget_badges_user_badge 
-            DROP FOREIGN KEY FK_E104DE03FBE885E2
+            ALTER TABLE icap__portfolio_widget_badges_badge 
+            DROP FOREIGN KEY FK_25D41B98FBE885E2
         ");
         $this->addSql("
             DROP TABLE icap__portfolio_widget_badges
         ");
         $this->addSql("
-            DROP TABLE icap__portfolio_widget_badges_user_badge
+            DROP TABLE icap__portfolio_widget_badges_badge
         ");
     }
 }

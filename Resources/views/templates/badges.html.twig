@@ -1,6 +1,6 @@
 <ul class="list-unstyled badge_list">
-{% for widgetUserBadge in widget.userBadges %}
-    {% set badge = widgetUserBadge.userBadge.badge %}
+{% for widgetUserBadge in widget.badges %}
+    {% set badge = widgetUserBadge.badge %}
     <li><img src="{{ asset(badge.webPath) }}" alt="{{ badge.name }}" class="badge_image"/> {{ badge.name }}</li>
 {% else %}
     <li>{{ 'no_badges'|trans({}, 'icap_portfolio') }}</li>

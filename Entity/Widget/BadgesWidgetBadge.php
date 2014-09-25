@@ -8,10 +8,10 @@ use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Table(name="icap__portfolio_widget_badges_user_badge")
+ * @ORM\Table(name="icap__portfolio_widget_badges_badge")
  * @ORM\Entity
  */
-class BadgesWidgetUserBadge implements SubWidgetInterface
+class BadgesWidgetBadge implements SubWidgetInterface
 {
     /**
      * @var integer
@@ -23,17 +23,17 @@ class BadgesWidgetUserBadge implements SubWidgetInterface
     protected $id;
 
     /**
-     * @var \Claroline\CoreBundle\Entity\Badge\UserBadge
+     * @var \Claroline\CoreBundle\Entity\Badge\Badge
      *
-     * @ORM\ManyToOne(targetEntity="\Claroline\CoreBundle\Entity\Badge\UserBadge", inversedBy="badges")
-     * @ORM\JoinColumn(name="user_badge_id", referencedColumnName="id", nullable=false)
+     * @ORM\ManyToOne(targetEntity="\Claroline\CoreBundle\Entity\Badge\Badge")
+     * @ORM\JoinColumn(name="badge_id", referencedColumnName="id", nullable=false)
      */
-    private $userBadge;
+    private $badge;
 
     /**
      * @var \Icap\PortfolioBundle\Entity\Widget\BadgesWidget
      *
-     * @ORM\ManyToOne(targetEntity="Icap\PortfolioBundle\Entity\Widget\BadgesWidget", inversedBy="skills")
+     * @ORM\ManyToOne(targetEntity="Icap\PortfolioBundle\Entity\Widget\BadgesWidget", inversedBy="badges")
      * @ORM\JoinColumn(name="widget_id", referencedColumnName="id", nullable=false)
      */
     private $widget;
@@ -67,13 +67,13 @@ class BadgesWidgetUserBadge implements SubWidgetInterface
     }
 
     /**
-     * @param UserBadge $userBadge
+     * @param Badge $badge
      *
-     * @return BadgesWidgetUserBadge
+     * @return BadgesWidgetBadge
      */
-    public function setUserBadge(UserBadge $userBadge)
+    public function setBadge(Badge $badge)
     {
-        $this->userBadge = $userBadge;
+        $this->badge = $badge;
 
         return $this;
     }
@@ -81,9 +81,9 @@ class BadgesWidgetUserBadge implements SubWidgetInterface
     /**
      * @return UserBadge
      */
-    public function getUserBadge()
+    public function getBadge()
     {
-        return $this->userBadge;
+        return $this->badge;
     }
 
     /**
@@ -91,12 +91,10 @@ class BadgesWidgetUserBadge implements SubWidgetInterface
      */
     public function getData()
     {
-        $badge = $this->userBadge->getBadge();
-
         return array(
-            'id'   => $this->userBadge->getId(),
-            'name' => $badge->getName(),
-            'img'  => $badge->getWebPath()
+            'badge' => $this->badge->getId(),
+            'name'  => $this->badge->getName(),
+            'img'   => $this->badge->getWebPath()
         );
     }
 }

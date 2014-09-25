@@ -1,6 +1,6 @@
 <?php
 
-namespace Icap\PortfolioBundle\Migrations\pdo_sqlsrv;
+namespace Icap\PortfolioBundle\Migrations\sqlsrv;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/09/11 04:18:33
+ * Generation date: 2014/09/25 11:29:09
  */
-class Version20140911161831 extends AbstractMigration
+class Version20140925112907 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -21,18 +21,18 @@ class Version20140911161831 extends AbstractMigration
             )
         ");
         $this->addSql("
-            CREATE TABLE icap__portfolio_widget_badges_user_badge (
+            CREATE TABLE icap__portfolio_widget_badges_badge (
                 id INT IDENTITY NOT NULL, 
-                user_badge_id INT NOT NULL, 
+                badge_id INT NOT NULL, 
                 widget_id INT NOT NULL, 
                 PRIMARY KEY (id)
             )
         ");
         $this->addSql("
-            CREATE INDEX IDX_E104DE03172F26FC ON icap__portfolio_widget_badges_user_badge (user_badge_id)
+            CREATE INDEX IDX_25D41B98F7A2C2FC ON icap__portfolio_widget_badges_badge (badge_id)
         ");
         $this->addSql("
-            CREATE INDEX IDX_E104DE03FBE885E2 ON icap__portfolio_widget_badges_user_badge (widget_id)
+            CREATE INDEX IDX_25D41B98FBE885E2 ON icap__portfolio_widget_badges_badge (widget_id)
         ");
         $this->addSql("
             ALTER TABLE icap__portfolio_widget_badges 
@@ -41,13 +41,13 @@ class Version20140911161831 extends AbstractMigration
             ON DELETE CASCADE
         ");
         $this->addSql("
-            ALTER TABLE icap__portfolio_widget_badges_user_badge 
-            ADD CONSTRAINT FK_E104DE03172F26FC FOREIGN KEY (user_badge_id) 
+            ALTER TABLE icap__portfolio_widget_badges_badge 
+            ADD CONSTRAINT FK_25D41B98F7A2C2FC FOREIGN KEY (badge_id) 
             REFERENCES claro_user_badge (id)
         ");
         $this->addSql("
-            ALTER TABLE icap__portfolio_widget_badges_user_badge 
-            ADD CONSTRAINT FK_E104DE03FBE885E2 FOREIGN KEY (widget_id) 
+            ALTER TABLE icap__portfolio_widget_badges_badge 
+            ADD CONSTRAINT FK_25D41B98FBE885E2 FOREIGN KEY (widget_id) 
             REFERENCES icap__portfolio_widget_badges (id)
         ");
     }
@@ -55,14 +55,14 @@ class Version20140911161831 extends AbstractMigration
     public function down(Schema $schema)
     {
         $this->addSql("
-            ALTER TABLE icap__portfolio_widget_badges_user_badge 
-            DROP CONSTRAINT FK_E104DE03FBE885E2
+            ALTER TABLE icap__portfolio_widget_badges_badge 
+            DROP CONSTRAINT FK_25D41B98FBE885E2
         ");
         $this->addSql("
             DROP TABLE icap__portfolio_widget_badges
         ");
         $this->addSql("
-            DROP TABLE icap__portfolio_widget_badges_user_badge
+            DROP TABLE icap__portfolio_widget_badges_badge
         ");
     }
 }
