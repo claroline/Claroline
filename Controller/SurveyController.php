@@ -354,7 +354,7 @@ class SurveyController extends Controller
             $orderedBy,
             $order,
             $page,
-            20
+            $max
         );
 
         return array(
