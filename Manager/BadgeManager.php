@@ -284,6 +284,7 @@ class BadgeManager
 
         switch($parameters['mode']) {
             case self::BADGE_PICKER_MODE_USER:
+                $badgeQueryBuilder = $badgeRepository->filterByUser($badgeQueryBuilder, $rootAlias, $parameters['user']);
                 break;
             case self::BADGE_PICKER_MODE_PLATFORM:
                 $badgeQueryBuilder = $badgeRepository->filterByWorkspace($badgeQueryBuilder, $rootAlias, null);

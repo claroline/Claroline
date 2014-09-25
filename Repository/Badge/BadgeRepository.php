@@ -340,4 +340,21 @@ class BadgeRepository extends EntityRepository
 
         return $queryBuilder;
     }
+
+    /**
+     * @param QueryBuilder $queryBuilder
+     * @param string       $rootAlias
+     * @param User         $user
+     *
+     * @return QueryBuilder
+     */
+    public function filterByUser(QueryBuilder $queryBuilder, $rootAlias, User $user)
+    {
+        $queryBuilder
+            ->join('badge.userBadges', 'ub')
+            ->andWhere("ub.user = :user")
+            ->setParameter('user', $user);
+
+        return $queryBuilder;
+    }
 }
