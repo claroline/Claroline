@@ -29,8 +29,9 @@ portfolioApp
                 $scope.collection = [];
                 angular.forEach(nodes, function (element, index) {
                     var newChild  = angular.copy($scope.emptyChild);
-                    newChild.id   = element.id;
-                    newChild.name = element.text;
+                    newChild.badge = parseInt(element.id);
+                    newChild.name  = element.text;
+                    newChild.img   = element.icon;
                     delete newChild.added;
                     $scope.collection.push(newChild);
                 });
