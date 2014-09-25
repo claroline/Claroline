@@ -26,7 +26,9 @@ portfolioApp
         $scope.badgePickerConfig = {
             multiple: true,
             callback: function (nodes) {
-                $scope.collection = [];
+                angular.forEach($scope.collection, function (element, index) {
+                    $scope.deleteChild(element);
+                });
                 angular.forEach(nodes, function (element, index) {
                     var newChild  = angular.copy($scope.emptyChild);
                     newChild.badge = parseInt(element.id);
