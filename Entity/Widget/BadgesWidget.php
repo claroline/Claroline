@@ -28,17 +28,17 @@ class BadgesWidget extends AbstractWidget
     }
 
     /**
-     * @param \Icap\PortfolioBundle\Entity\Widget\BadgesWidgetBadge[] $userbadges
+     * @param \Icap\PortfolioBundle\Entity\Widget\BadgesWidgetBadge[] $badges
      *
      * @return BadgesWidget
      */
-    public function setBadges($userbadges)
+    public function setBadges($badges)
     {
-        foreach ($userbadges as $userBagde) {
-            $userBagde->setWidget($this);
+        foreach ($badges as $badge) {
+            $badge->setWidget($this);
         }
 
-        $this->badges = $userbadges;
+        $this->badges = $badges;
 
         return $this;
     }
