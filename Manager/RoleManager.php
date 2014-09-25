@@ -144,6 +144,43 @@ class RoleManager
     }
 
     /**
+     * @param User $user
+     *
+     * @return \Claroline\CoreBundle\Entity\Role
+     */
+    public function createUserRole(User $user)
+    {
+        $username = $user->getUsername();
+        $roleName = 'ROLE_USER_' . strtoupper($username);
+
+        $this->om->startFlushSuite();
+
+        $role = $this->om->factory('Claroline\CoreBundle\Entity\Role');
+        $role->setName($roleName);
+        $role->setTranslationKey($username);
+        $role->setReadOnly(true);
+        $role->setType(Role::USER_ROLE);
+        $this->om->persist($role);
+        $this->associateRole($user, $role);
+
+        $this->om->endFlushSuite();
+
+        return $role;
+    }
+
+    /**
+     * @param string $username
+     */
+    public function renameUserRole(Role $role, $username)
+    {
+        $roleName = 'ROLE_USER_' . strtoupper($username);
+        $role->setName($roleName);
+        $role->setTranslationKey($username);
+        $this->om->persist($role);
+        $this->om->flush();
+    }
+
+    /**
      * @param \Claroline\CoreBundle\Entity\AbstractRoleSubject $ars
      * @param string $roleName
      * @throws \Exception
@@ -798,5 +835,22 @@ class RoleManager
         }
 
         return $role->getName();
+    }
+
+    public function getAllUserRoles($executeQuery = true)
+    {
+        return $this->roleRepo->findAllUserRoles($executeQuery);
+    }
+
+    public function getUserRoleByUser(User $user, $executeQuery = true)
+    {
+        return $this->roleRepo->findUserRoleByUser($user, $executeQuery);
+    }
+
+    public function getUserRolesByTranslationKeys(array $keys, $executeQuery = true)
+    {
+        return count($keys) === 0 ?
+            array() :
+            $this->roleRepo->findUserRolesByTranslationKeys($keys, $executeQuery);
     }
 }

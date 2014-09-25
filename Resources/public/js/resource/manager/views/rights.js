@@ -25,7 +25,11 @@
             'click .res-creation-options': 'openCreationOptions',
             'click #form-node-creation-rights button[type=submit]': 'submitCreationOptions',
             'click .workspace-role-item': 'displayWorkspaceRolePermissions',
-            'click #submit-right-form-button': 'submitWorkspaceRolePermissions'
+            'click #submit-right-form-button': 'submitWorkspaceRolePermissions',
+            'click #search-user-with-rights-btn': 'searchUsersWithRights',
+            'click #search-user-without-rights-btn': 'searchUsersWithoutRights',
+            'click .pagination > ul > li > a': 'pagination',
+            'click th > a': 'reorder'
         },
         initialize: function (dispatcher) {
             this.dispatcher = dispatcher;
@@ -118,6 +122,104 @@
                     }, this));
                 }, this));
             }
+        },
+        searchUsersWithRights: function () {
+            var search = $('#search-user-with-rights-input').val();
+            var nodeId = $('#users-with-rights-datas').attr('data-node-id');
+
+            $.ajax({
+                url: Routing.generate(
+                    'claro_resources_rights_users_with_rights_form',
+                    {'node': nodeId, 'search': search}
+                ),
+                type: 'GET',
+                success: function (datas) {
+                    $('#users-with-rights-tab').empty();
+                    $('#users-with-rights-tab').append(datas);
+                }
+            });
+        },
+        searchUsersWithoutRights: function () {
+            var search = $('#search-user-without-rights-input').val();
+            var nodeId = $('#users-without-rights-datas').attr('data-node-id');
+
+            $.ajax({
+                url: Routing.generate(
+                    'claro_resources_rights_users_without_rights_form',
+                    {'node': nodeId, 'search': search}
+                ),
+                type: 'GET',
+                success: function (datas) {
+                    $('#users-without-rights-tab').empty();
+                    $('#users-without-rights-tab').append(datas);
+                }
+            });
+        },
+        pagination: function (event) {
+            event.preventDefault();
+            event.stopPropagation();
+
+            var element = event.currentTarget;
+            var url = $(element).attr('href');
+            var urlTab = url.split('/');
+            var type = this.getUsersListType(urlTab);
+
+            if (url !== '#') {
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    success: function (datas) {
+                        
+                        if (type === 'with') {
+                            $('#users-with-rights-tab').empty();
+                            $('#users-with-rights-tab').append(datas);
+                        } else if (type === 'without') {
+                            $('#users-without-rights-tab').empty();
+                            $('#users-without-rights-tab').append(datas);
+                        }
+                    }
+                });
+            }
+        },
+        reorder: function (event) {
+            event.preventDefault();
+            event.stopPropagation();
+
+            var element = event.currentTarget;
+            var url = $(element).attr('href');
+            var urlTab = url.split('/');
+            var type = this.getUsersListType(urlTab);
+
+            if (url !== '#') {
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    success: function (datas) {
+                        
+                        if (type === 'with') {
+                            $('#users-with-rights-tab').empty();
+                            $('#users-with-rights-tab').append(datas);
+                        } else if (type === 'without') {
+                            $('#users-without-rights-tab').empty();
+                            $('#users-without-rights-tab').append(datas);
+                        }
+                    }
+                });
+            }
+        },
+        getUsersListType: function (tab) {
+            var type;
+
+            for (var i = 0; i < tab.length; i++) {
+                if (tab[i] === 'users') {
+                    if (typeof(tab[i + 1]) !== 'undefined') {
+                        type = tab[i + 1];
+                    }
+                    break;
+                }
+            }
+
+            return type;
         }
     });
 })();

@@ -553,4 +553,16 @@ class RightsManager
 
         return $result;
     }
+
+    public function getUserRolesResourceRights(
+        ResourceNode $resource,
+        array $keys,
+        $executeQuery = true
+    )
+    {
+        return count($keys) > 0 ?
+            $this->rightsRepo
+                ->findUserRolesResourceRights($resource, $keys, $executeQuery) :
+            array();
+    }
 }

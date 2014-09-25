@@ -32,6 +32,7 @@ class Role implements RoleInterface
     const PLATFORM_ROLE = 1;
     const WS_ROLE = 2;
     const CUSTOM_ROLE = 3;
+    const USER_ROLE = 4;
 
     /**
      * @ORM\Id

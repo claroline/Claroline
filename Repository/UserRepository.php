@@ -22,6 +22,7 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Model\WorkspaceModel;
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Doctrine\ORM\Query;
 
 class UserRepository extends EntityRepository implements UserProviderInterface
@@ -982,5 +983,204 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         }
 
         return $executeQuery ? $queryBuilder->getQuery()->getResult(): $queryBuilder->getQuery();
+    }
+
+    public function findUsersWithoutUserRole($executeQuery = true)
+    {
+        $dql = '
+            SELECT u
+            FROM Claroline\CoreBundle\Entity\User u
+            WHERE u.isEnabled = true
+            AND NOT EXISTS
+            (
+                SELECT r
+                FROM Claroline\CoreBundle\Entity\Role r
+                WHERE r.type = :type
+                AND r.translationKey = u.username
+            )
+        ';
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('type', Role::USER_ROLE);
+
+        return $executeQuery ? $query->getResult(): $query;
+    }
+
+    public function findUsersWithRights(
+        ResourceNode $node,
+        $orderedBy = 'firstName',
+        $order = 'ASC',
+        $executeQuery = true
+    )
+    {
+        $dql = "
+            SELECT u
+            FROM Claroline\CoreBundle\Entity\User u
+            WHERE u.isEnabled = true
+            AND EXISTS
+            (
+                SELECT rr
+                FROM Claroline\CoreBundle\Entity\Resource\ResourceRights rr
+                JOIN rr.resourceNode rn
+                JOIN rr.role r
+                LEFT JOIN rr.resourceTypes rt
+                WHERE rn = :resourceNode
+                AND r.translationKey = u.username
+                AND
+                (
+                    rr.mask > 0
+                    OR EXISTS
+                    (
+                        SELECT rt2
+                        FROM Claroline\CoreBundle\Entity\Resource\ResourceType rt2
+                        WHERE rt2 = rt
+                    )
+                )
+            )
+            ORDER BY u.{$orderedBy} {$order}
+        ";
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('resourceNode', $node);
+
+        return $executeQuery ? $query->getResult(): $query;
+    }
+
+    public function findUsersWithoutRights(
+        ResourceNode $node,
+        $orderedBy = 'firstName',
+        $order = 'ASC',
+        $executeQuery = true
+    )
+    {
+        $dql = "
+            SELECT u
+            FROM Claroline\CoreBundle\Entity\User u
+            WHERE u.isEnabled = true
+            AND NOT EXISTS
+            (
+                SELECT rr
+                FROM Claroline\CoreBundle\Entity\Resource\ResourceRights rr
+                JOIN rr.resourceNode rn
+                JOIN rr.role r
+                LEFT JOIN rr.resourceTypes rt
+                WHERE rn = :resourceNode
+                AND r.translationKey = u.username
+                AND
+                (
+                    rr.mask > 0
+                    OR EXISTS
+                    (
+                        SELECT rt2
+                        FROM Claroline\CoreBundle\Entity\Resource\ResourceType rt2
+                        WHERE rt2 = rt
+                    )
+                )
+            )
+            ORDER BY u.{$orderedBy} {$order}
+        ";
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('resourceNode', $node);
+
+        return $executeQuery ? $query->getResult(): $query;
+    }
+
+    public function findSearchedUsersWithRights(
+        ResourceNode $node,
+        $search = '',
+        $orderedBy = 'firstName',
+        $order = 'ASC',
+        $executeQuery = true
+    )
+    {
+        $dql = "
+            SELECT u
+            FROM Claroline\CoreBundle\Entity\User u
+            WHERE u.isEnabled = true
+            AND
+            (
+                UPPER(u.firstName) LIKE :search
+                OR UPPER(u.lastName) LIKE :search
+                OR UPPER(u.username) LIKE :search
+            )
+            AND EXISTS
+            (
+                SELECT rr
+                FROM Claroline\CoreBundle\Entity\Resource\ResourceRights rr
+                JOIN rr.resourceNode rn
+                JOIN rr.role r
+                LEFT JOIN rr.resourceTypes rt
+                WHERE rn = :resourceNode
+                AND r.translationKey = u.username
+                AND
+                (
+                    rr.mask > 0
+                    OR EXISTS
+                    (
+                        SELECT rt2
+                        FROM Claroline\CoreBundle\Entity\Resource\ResourceType rt2
+                        WHERE rt2 = rt
+                    )
+                )
+            )
+            ORDER BY u.{$orderedBy} {$order}
+        ";
+
+        $upperSearch = strtoupper($search);
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('resourceNode', $node);
+        $query->setParameter('search', "%{$upperSearch}%");
+
+        return $executeQuery ? $query->getResult(): $query;
+    }
+
+    public function findSearchedUsersWithoutRights(
+        ResourceNode $node,
+        $search = '',
+        $orderedBy = 'firstName',
+        $order = 'ASC',
+        $executeQuery = true
+    )
+    {
+        $dql = "
+            SELECT u
+            FROM Claroline\CoreBundle\Entity\User u
+            WHERE u.isEnabled = true
+            AND
+            (
+                UPPER(u.firstName) LIKE :search
+                OR UPPER(u.lastName) LIKE :search
+                OR UPPER(u.username) LIKE :search
+            )
+            AND NOT EXISTS
+            (
+                SELECT rr
+                FROM Claroline\CoreBundle\Entity\Resource\ResourceRights rr
+                JOIN rr.resourceNode rn
+                JOIN rr.role r
+                LEFT JOIN rr.resourceTypes rt
+                WHERE rn = :resourceNode
+                AND r.translationKey = u.username
+                AND
+                (
+                    rr.mask > 0
+                    OR EXISTS
+                    (
+                        SELECT rt2
+                        FROM Claroline\CoreBundle\Entity\Resource\ResourceType rt2
+                        WHERE rt2 = rt
+                    )
+                )
+            )
+            ORDER BY u.{$orderedBy} {$order}
+        ";
+
+        $upperSearch = strtoupper($search);
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('resourceNode', $node);
+        $query->setParameter('search', "%{$upperSearch}%");
+
+        return $executeQuery ? $query->getResult(): $query;
     }
 }
