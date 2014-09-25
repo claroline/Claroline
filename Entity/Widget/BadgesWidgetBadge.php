@@ -2,7 +2,7 @@
 
 namespace Icap\PortfolioBundle\Entity\Widget;
 
-use Claroline\CoreBundle\Entity\Badge\UserBadge;
+use Claroline\CoreBundle\Entity\Badge\Badge;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Validator\Constraints as Assert;
