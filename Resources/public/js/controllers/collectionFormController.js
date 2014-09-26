@@ -33,19 +33,36 @@ portfolioApp
                 multiple: true,
                 value: selectedValue
             },
-            callback: function (nodes) {
+            successCallback: function (nodes) {
+                var receivedValue = [];
+                angular.forEach(nodes, function (element, index) {
+                    receivedValue.push(element.id);
+                });
+                var badgeToRemove = selectedValue.diff(receivedValue);
+                var badgeToAdd    = receivedValue.diff(selectedValue);
+
                 angular.forEach($scope.collection, function (element, index) {
-                    $scope.deleteChild(element);
+                    var id = parseInt(element.badge);
+                    if (badgeToRemove.inArray(id)) {
+                        $scope.deleteChild(element);
+                    }
                 });
                 angular.forEach(nodes, function (element, index) {
-                    var newChild  = angular.copy($scope.emptyChild);
-                    newChild.badge = parseInt(element.id);
-                    newChild.name  = element.text;
-                    newChild.img   = element.icon;
-                    delete newChild.added;
-                    $scope.collection.push(newChild);
+                    var id = parseInt(element.id);
+                    if (badgeToAdd.inArray(id)) {
+                        var newChild   = angular.copy($scope.emptyChild);
+                        newChild.badge = id;
+                        newChild.name  = element.text;
+                        newChild.img   = element.icon;
+                        delete newChild.added;
+                        $scope.collection.push(newChild);
+                    }
                 });
                 $scope.$apply();
+                selectedValue = [];
+                angular.forEach($scope.collection, function (element, index) {
+                    selectedValue.push(element.badge);
+                });
             }
         };
 
