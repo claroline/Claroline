@@ -51,4 +51,48 @@ class OrderedToolRepository extends EntityRepository
 
         return $query->getResult();
     }
+
+    public function incOrderedToolOrderForRange(
+        Workspace $workspace,
+        $fromOrder,
+        $toOrder,
+        $executeQuery = true
+    )
+    {
+        $dql = '
+            UPDATE Claroline\CoreBundle\Entity\Tool\OrderedTool ot
+            SET ot.order = ot.order + 1
+            WHERE ot.workspace = :workspace
+            AND ot.order >= :fromOrder
+            AND ot.order < :toOrder
+        ';
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('workspace', $workspace);
+        $query->setParameter('fromOrder', $fromOrder);
+        $query->setParameter('toOrder', $toOrder);
+
+        return $executeQuery ? $query->execute() : $query;
+    }
+
+    public function decOrderedToolOrderForRange(
+        Workspace $workspace,
+        $fromOrder,
+        $toOrder,
+        $executeQuery = true
+    )
+    {
+        $dql = '
+            UPDATE Claroline\CoreBundle\Entity\Tool\OrderedTool ot
+            SET ot.order = ot.order - 1
+            WHERE ot.workspace = :workspace
+            AND ot.order > :fromOrder
+            AND ot.order <= :toOrder
+        ';
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('workspace', $workspace);
+        $query->setParameter('fromOrder', $fromOrder);
+        $query->setParameter('toOrder', $toOrder);
+
+        return $executeQuery ? $query->execute() : $query;
+    }
 }
