@@ -17,15 +17,17 @@ $(function(){
     badgePicker.url = "";
     badgePicker.data = {};
     badgePicker.successHandler = function() {};
+    badgePicker.closeHandler   = function() {};
 
-    badgePicker.configureBadgePicker = function (url,requestData, successHandler) {
+    badgePicker.configureBadgePicker = function (url,requestData, successHandler, closeHandler) {
         this.url            = url;
         this.successHandler = successHandler;
+        this.closeHandler   = closeHandler;
         this.data           = $.extend({}, this.defaultRequestData, requestData);
     };
 
     badgePicker.openBadgePicker = function () {
-        badgePicker.configureBadgePicker(this.url, this.data, this.successHandler);
+        badgePicker.configureBadgePicker(this.url, this.data, this.successHandler, this.closeHandler);
         badgePicker.displayModal();
     };
 
@@ -56,6 +58,7 @@ $(function(){
 
                 badgePicker.successHandler(nodeValue);
                 modalElement.modal('hide');
+                badgePicker.closeHandler(nodeValue);
             });
         })
         .error(function () {
