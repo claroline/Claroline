@@ -11,9 +11,24 @@ use Innova\PathBundle\Entity\Step;
 use Innova\PathBundle\Entity\Path\Path;
 use Innova\PathBundle\Entity\Step2ResourceNode;
 use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\Translation\TranslatorInterface;
+
 
 class StepManager
 {
+    /**
+     * Current session
+     * @var \Symfony\Component\HttpFoundation\Session\SessionInterface
+     */
+    protected $session;
+
+    /**
+     * Translation manager
+     * @var \Symfony\Component\Translation\TranslatorInterface
+     */
+    protected $translator;
+
     /**
      *
      * @var \Doctrine\Common\Persistence\ObjectManager $om
@@ -41,11 +56,15 @@ class StepManager
     public function __construct(
         ObjectManager            $om,
         SecurityContextInterface $security,
-        ResourceManager          $resourceManager)
+        ResourceManager          $resourceManager,
+        SessionInterface         $session,
+        TranslatorInterface      $translator)
     {
         $this->om              = $om;
         $this->security        = $security;
         $this->resourceManager = $resourceManager;
+        $this->session           = $session;
+        $this->translator        = $translator;
     }
 
     /**
@@ -140,8 +159,9 @@ class StepManager
                 $activity->setPrimaryResource($resource);
             }
             else {
-                // Resource not found
-                throw new \LogicException('Unable to find ResourceNode referenced by ID : ' . $stepStructure->primaryResource->resourceId);
+                $warning = $this->translator->trans('warning_primary_resource_deleted', array('resourceId'=>$stepStructure->primaryResource->resourceId, 'resourceName'=>$stepStructure->primaryResource->name), "innova_tools");
+                $this->session->getFlashBag()->add('warning',$warning);
+                $stepStructure->primaryResource = null;
             }
         }
 
@@ -220,15 +240,20 @@ class StepManager
         // Publish new resources
         $publishedResources = array ();
         if (!empty($stepStructure->resources)) {
+            $i = 0;
             foreach ($stepStructure->resources as $resource) {
+
                 $resourceNode = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findOneById($resource->resourceId);
                 if (!empty($resourceNode)) {
                     $parameters->addSecondaryResource($resourceNode);
                     $publishedResources[] = $resourceNode;
                 }
                 else {
-                    throw new \LogicException('Unable to find ResourceNode referenced by ID : ' . $resource->resourceId);
+                    $warning = $this->translator->trans('warning_compl_resource_deleted', array('resourceId'=>$resource->resourceId, 'resourceName'=>$resource->name), "innova_tools");
+                    $this->session->getFlashBag()->add('warning',$warning);
+                    unset($stepStructure->resources[$i]);
                 }
+                $i++;
             }
         }
 

@@ -79,6 +79,8 @@ status: Statut
 select: Sélectionner
 
 # W
+warning_primary_resource_deleted: La ressource primaire 'resourceName' (resourceId) n'existe plus. Elle a été supprimée du parcours.
+warning_compl_resource_deleted: La ressource complémentaire 'resourceName' (resourceId) n'existe plus. Elle a été supprimée du parcours.
 with_computer: Avec un ordinateur
 without_computer: Sans ordinateur
 with_tutor: Avec un tuteur
