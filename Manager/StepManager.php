@@ -12,6 +12,7 @@ use Innova\PathBundle\Entity\Path\Path;
 use Innova\PathBundle\Entity\Step2ResourceNode;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 
 class StepManager
@@ -21,6 +22,12 @@ class StepManager
      * @var \Symfony\Component\HttpFoundation\Session\SessionInterface
      */
     protected $session;
+
+    /**
+     * Translation manager
+     * @var \Symfony\Component\Translation\TranslatorInterface
+     */
+    protected $translator;
 
     /**
      *
@@ -50,12 +57,14 @@ class StepManager
         ObjectManager            $om,
         SecurityContextInterface $security,
         ResourceManager          $resourceManager,
-        SessionInterface         $session)
+        SessionInterface         $session,
+        TranslatorInterface      $translator)
     {
         $this->om              = $om;
         $this->security        = $security;
         $this->resourceManager = $resourceManager;
         $this->session           = $session;
+        $this->translator        = $translator;
     }
 
     /**
@@ -150,7 +159,8 @@ class StepManager
                 $activity->setPrimaryResource($resource);
             }
             else {
-                $this->session->getFlashBag()->add('warning',"La ressource '".$stepStructure->primaryResource->name."' (".$stepStructure->primaryResource->resourceId.") n'existe plus et a été supprimée du parcours.");
+                $warning = $this->translator->trans('warning_primary_resource_deleted', array('resourceId'=>$stepStructure->primaryResource->resourceId, 'resourceName'=>$stepStructure->primaryResource->name), "innova_tools");
+                $this->session->getFlashBag()->add('warning',$warning);
                 $stepStructure->primaryResource = null;
             }
         }
@@ -239,7 +249,8 @@ class StepManager
                     $publishedResources[] = $resourceNode;
                 }
                 else {
-                    $this->session->getFlashBag()->add('warning',"La ressource '".$resource->name."' (".$resource->resourceId.") n'existe plus et a été supprimée du parcours.");
+                    $warning = $this->translator->trans('warning_compl_resource_deleted', array('resourceId'=>$resource->resourceId, 'resourceName'=>$resource->name), "innova_tools");
+                    $this->session->getFlashBag()->add('warning',$warning);
                     unset($stepStructure->resources[$i]);
                 }
                 $i++;

@@ -31,3 +31,4 @@ services:
             securityContext: @security.context
             resourceManager: @claroline.manager.resource_manager
             session:         @session
+            translator:         @translator

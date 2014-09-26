@@ -83,6 +83,8 @@ status: Status
 select: Select
 
 # W
+warning_primary_resource_deleted: The primary resource 'resourceName' (resourceId) no longer exists. It has been removed from path.
+warning_compl_resource_deleted: The complementary resource 'resourceName' (resourceId) no longer exists. It has been removed from path.
 with_computer: With a computer
 without_computer: Without a computer
 with_tutor: With a tutor
