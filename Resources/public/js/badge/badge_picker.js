@@ -48,7 +48,7 @@ $(function(){
                     element = $(element);
 
                     nodeValue[index] = {
-                        id:   element.val(),
+                        id:   parseInt(element.val()),
                         icon: element.attr('data-icon'),
                         text: element.attr('data-text')
                     };
