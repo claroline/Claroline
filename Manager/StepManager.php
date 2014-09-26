@@ -11,9 +11,17 @@ use Innova\PathBundle\Entity\Step;
 use Innova\PathBundle\Entity\Path\Path;
 use Innova\PathBundle\Entity\Step2ResourceNode;
 use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+
 
 class StepManager
 {
+    /**
+     * Current session
+     * @var \Symfony\Component\HttpFoundation\Session\SessionInterface
+     */
+    protected $session;
+
     /**
      *
      * @var \Doctrine\Common\Persistence\ObjectManager $om
@@ -41,11 +49,13 @@ class StepManager
     public function __construct(
         ObjectManager            $om,
         SecurityContextInterface $security,
-        ResourceManager          $resourceManager)
+        ResourceManager          $resourceManager,
+        SessionInterface         $session)
     {
         $this->om              = $om;
         $this->security        = $security;
         $this->resourceManager = $resourceManager;
+        $this->session           = $session;
     }
 
     /**
@@ -140,8 +150,8 @@ class StepManager
                 $activity->setPrimaryResource($resource);
             }
             else {
-                // Resource not found
-                throw new \LogicException('Unable to find ResourceNode referenced by ID : ' . $stepStructure->primaryResource->resourceId);
+                $this->session->getFlashBag()->add('warning',"La ressource '".$stepStructure->primaryResource->name."' (".$stepStructure->primaryResource->resourceId.") n'existe plus et a été supprimée du parcours.");
+                $stepStructure->primaryResource = null;
             }
         }
 
@@ -220,15 +230,19 @@ class StepManager
         // Publish new resources
         $publishedResources = array ();
         if (!empty($stepStructure->resources)) {
+            $i = 0;
             foreach ($stepStructure->resources as $resource) {
+
                 $resourceNode = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findOneById($resource->resourceId);
                 if (!empty($resourceNode)) {
                     $parameters->addSecondaryResource($resourceNode);
                     $publishedResources[] = $resourceNode;
                 }
                 else {
-                    throw new \LogicException('Unable to find ResourceNode referenced by ID : ' . $resource->resourceId);
+                    $this->session->getFlashBag()->add('warning',"La ressource '".$resource->name."' (".$resource->resourceId.") n'existe plus et a été supprimée du parcours.");
+                    unset($stepStructure->resources[$i]);
                 }
+                $i++;
             }
         }
 

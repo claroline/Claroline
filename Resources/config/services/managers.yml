@@ -30,3 +30,4 @@ services:
             om:              @doctrine.orm.entity_manager
             securityContext: @security.context
             resourceManager: @claroline.manager.resource_manager
+            session:         @session
