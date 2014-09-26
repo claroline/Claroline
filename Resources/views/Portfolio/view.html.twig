@@ -149,6 +149,20 @@
     {{ parent() }}
 
     {% if editMode %}
+        <script type="text/javascript">
+            'use strict';
+            (function() {
+                window.widgetsConfig = '{{ widgetsConfig|json_encode()|raw }}';
+                window.resourceTypes = {
+                    {% for resourceType in resourceTypes %}
+                        "{{ resourceType.getName() }}": {
+                            "name": "{{ resourceType.getName()|trans({}, 'resource') }}"
+                        }{% if loop.last != true %},{% endif %}
+                    {% endfor %}
+                };
+                window.assetPath = "{{ asset('') }}";
+            })();
+        </script>
         <script type="text/javascript" src="{{ asset('bundles/stfalcontinymce/vendor/tinymce/tinymce.jquery.min.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/stfalcontinymce/vendor/tinymce/jquery.tinymce.min.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/tinymce/tinymce.js') }}"></script>
@@ -218,18 +232,5 @@
 
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/templates/menu_disposition.tpl.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/templates/menu_widget-type.tpl.js') }}"></script>
-        <script type="text/javascript">
-            'use strict';
-            (function() {
-                window.widgetsConfig = '{{ widgetsConfig|json_encode()|raw }}';
-                window.resourceTypes = {
-                    {% for resourceType in resourceTypes %}
-                        "{{ resourceType.getName() }}": {
-                            "name": "{{ resourceType.getName()|trans({}, 'resource') }}"
-                        }{% if loop.last != true %},{% endif %}
-                    {% endfor %}
-                };
-            })();
-        </script>
     {% endif %}
 {% endblock %}

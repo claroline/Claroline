@@ -16,6 +16,7 @@ portfolioApp.config(["$httpProvider", "$locationProvider", function($http) {
         return JSON.stringify(data);
     });
 }]);
+portfolioApp.value('assetPath', window.assetPath);
 
 // Bootstrap portfolio application
 angular.element(document).ready(function() {
