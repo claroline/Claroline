@@ -2599,7 +2599,7 @@ class QuestionController extends Controller
                 ->getRepository('UJMExoBundle:Interaction')
                 ->getInteraction($id);
 
-            $typeInter = $interaction[0]->getType();
+            $typeInter = $interaction->getType();
 
             switch ($typeInter) {
                 case "InteractionQCM":
@@ -2853,7 +2853,7 @@ class QuestionController extends Controller
 
                                  $document->save('testfile.xml');
 
-                                $file = '/var/www/Claroline/web/testfile.xml';
+                                $file = $userDir.'testfile.xml';
                                 //readfile("/var/www/Claroline/web/testfile.xml");
 
 
@@ -2877,12 +2877,12 @@ class QuestionController extends Controller
                     $tmpFileName = tempnam("/tmp", "xb_");
                     $zip = new \ZipArchive();
                     $zip->open($tmpFileName, \ZipArchive::CREATE);
-                    $zip->addFile("/var/www/Claroline/web/testfile.xml", 'SchemaQTI.xml');
+                    $zip->addFile($userDir.'testfile.xml', 'SchemaQTI.xml');
 
 
                     if(!empty($path_img)){
                          $zip->addFile($path_img, "images/".$resources_node[0]->getName());
-                         $zip->addFile("/var/www/Claroline/web/imsmanifest.xml", 'imsmanifest.xml');
+                         $zip->addFile($userDir.'imsmanifest.xml', 'imsmanifest.xml');
                     }
                     $zip->close();
                     $response = new BinaryFileResponse($tmpFileName);
@@ -3030,8 +3030,8 @@ class QuestionController extends Controller
                     $tmpFileName = tempnam("/tmp", "xb_");
                     $zip = new \ZipArchive();
                     $zip->open($tmpFileName, \ZipArchive::CREATE);
-                    $zip->addFile("/var/www/Claroline/web/testfile.xml", 'SchemaQTI.xml');
-                    $zip->addFile("/var/www/Claroline/web/imsmanifest.xml", 'imsmanifest.xml');
+                    $zip->addFile($userDir.'testfile.xml', 'SchemaQTI.xml');
+                    $zip->addFile($userDir.'imsmanifest.xml', 'imsmanifest.xml');
                     if(!empty($path)){
                             $zip->addFile($path, "images/".$nom[count($nom)-1]);
                     }
@@ -3163,7 +3163,7 @@ class QuestionController extends Controller
                     $tmpFileName = tempnam("/tmp", "xb_");
                     $zip = new \ZipArchive();
                     $zip->open($tmpFileName, \ZipArchive::CREATE);
-                    $zip->addFile("/var/www/Claroline/web/Q_Hole.xml", 'QTI-Q-HoleShema.xml');
+                    $zip->addFile($userDir.'Q_Hole.xml', 'QTI-Q-HoleShema.xml');
 
                     $zip->close();
                     $response = new BinaryFileResponse($tmpFileName);
@@ -3269,7 +3269,7 @@ class QuestionController extends Controller
                                 $tmpFileName = tempnam("/tmp", "xb_");
                                 $zip = new \ZipArchive();
                                 $zip->open($tmpFileName, \ZipArchive::CREATE);
-                                $zip->addFile("/var/www/Claroline/web/Q_Open.xml", 'QTI-Q-OpenShema.xml');
+                                $zip->addFile($userDir.'Q_Open.xml', 'QTI-Q-OpenShema.xml');
 
                                 $zip->close();
                                 $response = new BinaryFileResponse($tmpFileName);
@@ -3362,13 +3362,13 @@ class QuestionController extends Controller
                                     $rst =$rst . $_FILES["f1"]["name"] . " already exists. ";
                                   } else {
                                     move_uploaded_file($_FILES["f1"]["tmp_name"],
-                                    "/var/www/Claroline/web/uploadfiles/" . $_FILES["f1"]["name"]);
+                                    $userDir . $_FILES["f1"]["name"]);
                                     $rst =$rst . "Stored in: " . "uploadfiles/" . $_FILES["f1"]["name"];
                                   }
                                 }
 
                                 //import xml file
-                                $file = "/var/www/Claroline/web/uploadfiles/".$_FILES["f1"]["name"];
+                                $file = $userDir.$_FILES["f1"]["name"];
                                 $document_xml = new \DomDocument();
                                 $document_xml->load($file);
                                 $elements = $document_xml->getElementsByTagName('assessmentItem');
@@ -3621,14 +3621,24 @@ class QuestionController extends Controller
                    //if it's QTI zip file  --> unzip the file into this path "/var/www/Claroline/web/uploadfiles/" --> add to the database the resources (images)
                   if(($_FILES["f1"]["type"] == "application/zip") && ($_FILES["f1"]["size"] < 20000000)){
 
+                      $userDir = './uploads/ujmexo/qti/'.$this->container->get('security.context')
+                        ->getToken()->getUser()->getUsername();
+
+                      if (!is_dir('./uploads/ujmexo/')) {
+                        mkdir('./uploads/ujmexo/');
+                      }
+                      if (!is_dir('./uploads/ujmexo/qti/')) {
+                        mkdir('./uploads/ujmexo/qti/');
+                      }
+
                       $rst = 'its a zip file';
                       move_uploaded_file($_FILES["f1"]["tmp_name"],
-                                "/var/www/Claroline/web/uploadfiles/" . $_FILES["f1"]["name"]);
+                                $userDir . $_FILES["f1"]["name"]);
                       $zip = new \ZipArchive;
-                      $zip->open("/var/www/Claroline/web/uploadfiles/" . $_FILES["f1"]["name"]);
-                      $res= zip_open("/var/www/Claroline/web/uploadfiles/" . $_FILES["f1"]["name"]);
+                      $zip->open($userDir . $_FILES["f1"]["name"]);
+                      $res= zip_open($userDir . $_FILES["f1"]["name"]);
 
-                      $zip->extractTo("/var/www/Claroline/web/uploadfiles/" );
+                      $zip->extractTo($userDir );
                       $tab_liste_fichiers = array();
                       while ($zip_entry = zip_read($res)) //Pour chaque fichier contenu dans le fichier zip
                         {
@@ -3647,7 +3657,7 @@ class QuestionController extends Controller
 
                         //Import for Question QCM --> from unZip File --> Type choiceMultiple Or  choice
                         //import xml file
-                                $file = "/var/www/Claroline/web/uploadfiles/SchemaQTI.xml";
+                                $file = "$userDir/SchemaQTI.xml";
                                 $document_xml = new \DomDocument();
                                 $document_xml->load($file);
                                 $elements = $document_xml->getElementsByTagName('assessmentItem');
@@ -3665,7 +3675,7 @@ class QuestionController extends Controller
                                                                                 //creation of the ResourceNode & File for the images...
                                                                                 $user= $this->container->get('security.context')->getToken()->getUser();
                                                                                 //createur du workspace
-                                                                                $workspace = $this->getDoctrine()->getManager()->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->findBy(array('creator' => $user->getId()));
+                                                                                $workspace = $this->getDoctrine()->getManager()->getRepository('ClarolineCoreBundle:Workspace\Workspace')->findBy(array('creator' => $user->getId()));
                                                                                 //$directory = $this->getReference("directory/{$this->directory}");
                                                                                 //$directory = $this->get('claroline.manager.resource_manager');
                                                                                 $resourceManager = $this->container->get('claroline.manager.resource_manager');
@@ -3678,7 +3688,7 @@ class QuestionController extends Controller
                                                                                 foreach ($tab_liste_fichiers as $filename) {
 
                                                                                     //filepath contain the path of the files in the extraction palce "uploadfile"
-                                                                                    $filePath = "/var/www/Claroline/web/uploadfiles/".$filename;
+                                                                                    $filePath = $userDir.$filename;
                                                                                     $filePathParts = explode(DIRECTORY_SEPARATOR, $filePath);
                                                                                     //file name of the file
                                                                                     $fileName = array_pop($filePathParts);
@@ -4147,12 +4157,15 @@ class QuestionController extends Controller
 
                 */
 
-                $this->removeDirectory("/var/www/Claroline/web/uploadfiles");
-                return $this->render(
-                      'UJMExoBundle:Question:ListQuestions.html.twig', array(
-                      'rst' => $rst,
-                      )
-                );
+                $this->removeDirectory($userDir);
+                $response = $this->forward('UJMExoBundle:Question:index', array());
+
+                return $response;
+//                return $this->render(
+//                      'UJMExoBundle:Question:index.html.twig', array(
+//                      'rst' => $rst,
+//                      )
+//                );
 
 
     }
