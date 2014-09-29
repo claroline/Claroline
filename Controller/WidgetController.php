@@ -21,6 +21,26 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 class WidgetController extends Controller
 {
     /**
+     * Renders all paths for a user
+     * @Route(
+     *     "/path",
+     *     name="claro_desktop_paths",
+     *     options={"expose"=true}
+     * )
+     * @Method("GET")
+     * @Template("InnovaPathBundle::Widget/listWidget.html.twig")
+     */
+    public function pathsDesktopWidgetAction()
+    {
+        $paths = $this->container->get('innova_path.manager.path')->findAccessibleByUser();
+
+        return array (
+            'widgetType' => 'desktop',
+            'paths'      => $paths,
+        );
+    }
+
+    /**
      * Renders all paths from a workspace
      * @param Workspace $workspace
      * @return array
@@ -45,26 +65,6 @@ class WidgetController extends Controller
         return array (
             'widgetType' => 'workspace',
             'workspace'  => $workspace,
-            'paths'      => $paths,
-        );
-    }
-
-    /**
-     * Renders all paths for a user
-     * @Route(
-     *     "/path/my-paths",
-     *     name="my_paths",
-     *     options={"expose"=true}
-     * )
-     * @Method("GET")
-     * @Template("InnovaPathBundle::Widget/listWidget.html.twig")
-     */
-    public function myPathsWidgetAction()
-    {
-        $paths = $this->container->get('innova_path.manager.path')->findAccessibleByUser();
-
-        return array (
-            'widgetType' => 'desktop',
             'paths'      => $paths,
         );
     }

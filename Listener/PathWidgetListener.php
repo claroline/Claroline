@@ -34,7 +34,7 @@ class PathWidgetListener
      * @param DisplayWidgetEvent $event
      * @throws \Claroline\CoreBundle\Listener\NoHttpRequestException
      */
-    public function onDisplayPathsWorkspace(DisplayWidgetEvent $event)
+    public function onDisplay(DisplayWidgetEvent $event)
     {
         if (!$this->request) {
             throw new NoHttpRequestException();
@@ -44,36 +44,12 @@ class PathWidgetListener
         $workspace = $widgetInstance->getWorkspace();
         $params = array();
 
-        $params['_controller'] = 'InnovaPathBundle:Widget:pathsWorkspaceWidget';
-        $params['workspaceId'] = $workspace->getId();
-      
-
-        $subRequest = $this->request->duplicate(
-            array(),
-            null,
-            $params
-        );
-        $response = $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
-
-        $event->setContent($response->getContent());
-        $event->stopPropagation();
-    }
-
-
-    /**
-     * @DI\Observe("widget_innova_my_paths_widget")
-     *
-     * @param DisplayWidgetEvent $event
-     * @throws \Claroline\CoreBundle\Listener\NoHttpRequestException
-     */
-    public function onDisplayMyPaths(DisplayWidgetEvent $event)
-    {
-        if (!$this->request) {
-            throw new NoHttpRequestException();
+        if (is_null($workspace)) {
+            $params['_controller'] = 'InnovaPathBundle:Widget:pathsDesktopWidget';
+        } else {
+            $params['_controller'] = 'InnovaPathBundle:Widget:pathsWorkspaceWidget';
+            $params['workspaceId'] = $workspace->getId();
         }
-
-        $params = array();
-        $params['_controller'] = 'InnovaPathBundle:Widget:myPathsWidget';
 
         $subRequest = $this->request->duplicate(array(), null, $params);
         $response = $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
