@@ -39,8 +39,8 @@
                 <input type="hidden" id="workspace-id" name="workspaceId" value="{{workspace.id}}"/>
             </div>
             <!-- Select template modal -->
-            <div class="modal fade" id="path-template-list-modal" tabindex="-1" role="dialog" aria-hidden="true">              
-                <div class="modal-dialog">                  
+            <div class="modal fade" id="path-template-list-modal" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
                             <button type="button" class="close" title="{{ 'close' | trans({}, 'innova_tools') }}" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -116,10 +116,12 @@
                             <em>{{ path.entity.description | striptags | truncate(40, true, ' [...]') }}</em>
                         </td>
                         <td class="text-right">
+                            {% if path.canEdit %}
                             <a href="{{ path('innova_path_editor_edit', {workspaceId: workspace.id, id: path.entity.id}) }}" class="btn btn-xs btn-default">
                                 <span class="fa fa-pencil"></span>
                                 {{ 'edit' | trans({}, 'innova_tools') }}
                             </a>
+                            {% endif %}
 
                             {% if (path.entity.modified or not path.entity.published) and path.canEdit %}
                                 <a href="{{ path('innova_path_publish', {workspaceId: workspace.id, id: path.entity.id}) }}" class="btn btn-xs btn-success">
