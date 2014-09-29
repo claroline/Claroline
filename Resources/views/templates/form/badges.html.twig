@@ -3,25 +3,15 @@
         <button type="button" class="btn btn-sm btn-success" data-ui-badge-picker="badgePickerConfig">{{ 'badges_select_badge'|trans({}, 'icap_portfolio') }}</button>
     </p>
     <ul class="list-unstyled badge_collection">
-        <li data-ng-repeat="badge in collection">
-            <div data-ng-class="{'input-group': isAdded(badge)}">
-                {% verbatim %}
-                <p class="form-control badge_selection_field" data-title="{{ badge.name }}"
-                    data-container="body" data-toggle="popover" data-placement="top"
-                    data-content="{{ badge.description }}">
-                    <span class="badge_text">{{ badge.name }}</span>
-                    <img data-ng-src="{{ assetPath + badge.img }}" alt="{{ badge.name }}" class="badge_image" />
-                </p>
-                {% endverbatim %}
-                <span class="input-group-btn" data-ng-if="isAdded(badge)">
-                    <button aria-label="{{ 'badges_delete_badge'|trans({}, 'icap_portfolio') }}" class="btn btn-sm btn-danger" type="button" data-ng-if="!isEmpty(badge) && !badge.toDelete" data-ng-click="deleteChild(badge)">
-                        <span class="fa fa-trash-o"></span>
-                    </button>
-                    <button aria-label="{{ 'badges_cancel_deletion_badge'|trans({}, 'icap_portfolio') }}" class="btn btn-sm btn-default" type="button" data-ng-if="badge.toDelete" data-ng-click="cancelDeletionOfChild(badge)">
-                        <span class="fa fa-undo"></span>
-                    </button>
-                </span>
-            </div>
+        <li data-ng-repeat="badge in collection" class="form-control badge_collection_item">
+            {% verbatim %}
+            <p class="badge_selection_field" data-title="{{ badge.name }}"
+                data-container="body" data-toggle="popover" data-placement="top"
+                data-content="{{ badge.description }}">
+                <span class="badge_text">{{ badge.name }}</span>
+                <img data-ng-src="{{ assetPath + badge.img }}" alt="{{ badge.name }}" class="badge_image" />
+            </p>
+            {% endverbatim %}
         </li>
     </ul>
 </div>

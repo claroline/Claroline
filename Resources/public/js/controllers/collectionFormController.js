@@ -50,18 +50,26 @@ portfolioApp
                 angular.forEach(nodes, function (element, index) {
                     var id = parseInt(element.id);
                     if (badgeToAdd.inArray(id)) {
-                        var newChild   = angular.copy($scope.emptyChild);
-                        newChild.badge = id;
-                        newChild.name  = element.text;
-                        newChild.img   = element.icon;
-                        delete newChild.added;
-                        $scope.collection.push(newChild);
+                        var badgeAboutToBeDelete = $scope.collection.filter(function(element) {return id === element.badge;});
+                        if (0 < badgeAboutToBeDelete.length) {
+                            delete badgeAboutToBeDelete[0].toDelete;
+                        }
+                        else {
+                            var newChild   = angular.copy($scope.emptyChild);
+                            newChild.badge = id;
+                            newChild.name  = element.text;
+                            newChild.img   = element.icon;
+                            delete newChild.added;
+                            $scope.addChild(newChild);
+                        }
                     }
                 });
                 $scope.$apply();
                 selectedValue = [];
                 angular.forEach($scope.collection, function (element, index) {
-                    selectedValue.push(element.badge);
+                    if (!element.toDelete) {
+                        selectedValue.push(element.badge);
+                    }
                 });
             }
         };
