@@ -20,16 +20,6 @@
         );
     });
 
-    $('.fa-arrow-circle-down').on('click', function (e) {
-        var rowIndex = e.target.parentElement.parentElement.rowIndex;
-        moveRowDown(rowIndex);
-    });
-
-    $('.fa-arrow-circle-up').on('click', function (e) {
-        var rowIndex = e.target.parentElement.parentElement.rowIndex;
-        moveRowUp(rowIndex);
-    });
-
     $('#edit-tools-btn').on('click', function (e) {
         e.preventDefault();
         var formData = new FormData(document.getElementById('workspace-tool-form'));
@@ -54,39 +44,49 @@
             }
         });
     });
-
-	function moveRowUp(index) {
-        var rows = $('#tool-table tr');
-        var size = rows.length;
-
-        if (index !== 1) {
-            rows.eq(index).insertAfter(rows.eq(index - 2));
-            setOrderingIconsState();
+    
+    $('#tool-table-body').sortable({
+        items: 'tr',
+        cursor: 'move'
+    });
+    
+    $('#tool-table-body').on('sortupdate', function (event, ui) {
+        
+        if (this === ui.item.parents('#tool-table-body')[0]) {
+            var workspaceId = $('#tool-table').data('workspace-id');
+            var orderedToolId = $(ui.item).data('ordered-tool-id');
+            var nextOrderedToolId = $(ui.item).next().data('ordered-tool-id');
+            var previousOrderedToolId = $(ui.item).prev().data('ordered-tool-id');
+            var execute = false;
+            var otherOrderedToolId;
+            var mode;
+            
+            if (nextOrderedToolId !== undefined) {
+                otherOrderedToolId = nextOrderedToolId;
+                mode = 'next';
+                execute = true;
+            } else if (previousOrderedToolId !== undefined) {
+                otherOrderedToolId = previousOrderedToolId;
+                mode = 'previous';
+                execute = true;
+            }
+            
+            if (execute) {
+                $.ajax({
+                    url: Routing.generate(
+                        'claro_workspace_update_ordered_tool_order',
+                        {
+                            'workspace': workspaceId,
+                            'orderedTool': orderedToolId,
+                            'otherOrderedTool': otherOrderedToolId,
+                            'mode': mode
+                        }
+                    ),
+                    type: 'POST'
+                });
+            }
         }
-	}
-
-    function moveRowDown(index) {
-        var rows = $('#tool-table tr');
-        var size = rows.length;
-
-        if (index !== size) {
-            rows.eq(index).insertAfter(rows.eq(index + 1));
-            setOrderingIconsState();
-        }
-    }
-
-    function setOrderingIconsState() {
-        var upIcons = $('#tool-table span.ordering-icon.up');
-        var downIcons = $('#tool-table span.ordering-icon.down');
-        var downLength = downIcons.length;
-
-        upIcons.each(function (index, icon) {
-            $(icon)[(index === 0 ? 'addClass' : 'removeClass')]('disabled');
-        });
-        downIcons.each(function (index, icon) {
-            $(icon)[index === downLength - 1 ? 'addClass' : 'removeClass']('disabled');
-        });
-    }
+    });
 
     var editName = function(tool) {
         $('#tool-' + tool.tool_id + '-name').html(tool.name);
