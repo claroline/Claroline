@@ -12,6 +12,7 @@ use Claroline\CoreBundle\Event\CreateResourceEvent;
 use Claroline\CoreBundle\Event\CopyResourceEvent;
 
 use Innova\PathBundle\Entity\Path\Path;
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 
 /**
  * Path Event Listener
@@ -40,7 +41,6 @@ class PathListener extends ContainerAware
             );
         }
         else {
-
             $route = $this->container
                     ->get('router')
                     ->generate(
@@ -69,7 +69,7 @@ class PathListener extends ContainerAware
         // Create form
         $form = $this->container->get('form.factory')->create('innova_path', new Path());
         
-        // Try to prcess form
+        // Try to process form
         $request = $this->container->get('request');
         $form->handleRequest($request);
 
@@ -134,7 +134,108 @@ class PathListener extends ContainerAware
      */
     public function onPathCopy(CopyResourceEvent $event)
     {
+        // Get Path to duplicate
+        $pathToCopy = $file = $event->getResource();
 
-        throw new \Exception("You can't copy path.");
+        // Create new Path
+        $path = new Path();
+
+        // Set up new Path properties
+        $path->setName($pathToCopy->getName());
+        $path->setDescription($pathToCopy->getDescription());
+
+        $parent = $event->getParent();
+        $structure = json_decode($pathToCopy->getStructure());
+
+        $processedNodes = array ();
+
+        // Removes Step IDs from structure
+        foreach ($structure->steps as $step) {
+            // Remove reference to Step Entity
+            $step->resourceId = null;
+
+            // Remove references to Activity
+            $step->activityId = null;
+
+            // Duplicate primary resources
+            if (!empty($step->primaryResource)) {
+                $processedNodes = $this->copyResource($step->primaryResource, $parent, $processedNodes);
+            }
+
+            // Duplicate secondary resources
+            if (!empty($step->resources)) {
+                foreach ($step->resources as $resource) {
+                    $processedNodes = $this->copyResource($resource, $parent, $processedNodes);
+                }
+            }
+        }
+
+        $path->setStructure(json_encode($structure));
+
+        $event->setCopy($path);
+        $event->stopPropagation();
+    }
+
+    private function copyResource($resource, ResourceNode $newParent, array $processedNodes = array ())
+    {
+        // Get current User
+        $user = $this->container->get('security.context')->getToken()->getUser();
+
+        // Get resource manager
+        $manager = $this->container->get('claroline.manager.resource_manager');
+
+        $resourceNode = $manager->getNode($resource->resourceId);
+        if ($resourceNode) {
+            // Check if Node is in a subdirectory
+            $wsRoot = $manager->getWorkspaceRoot($resourceNode->getWorkspace());
+            if ($wsRoot->getId() != $resourceNode->getParent()->getId()) {
+                // ResourceNode is not stored in WS root => create subdirectories tree
+                $ancestors = $manager->getAncestors($resourceNode);
+
+                foreach ($ancestors as $ancestor) {
+                    if ($wsRoot->getId() !== $ancestor['id'] && $resourceNode->getId() !== $ancestor['id']) {
+                        // Current node is not the WS Root and not the Node which want to duplicate
+                        $parentNode = $manager->getNode($ancestor['id']);
+                        if ($parentNode) {
+                            if (empty($processedNodes[$parentNode->getId()])) {
+                                // Current Node has not been processed => create a copy
+                                $directoryRes = $manager->createResource('Claroline\CoreBundle\Entity\Resource\Directory', $parentNode->getName());
+                                $directory = $manager->create(
+                                    $directoryRes,
+                                    $parentNode->getResourceType(),
+                                    $user,
+                                    $newParent->getWorkspace(),
+                                    $newParent,
+                                    $parentNode->getIcon()
+                                );
+
+                                $newParent = $directory->getResourceNode();
+                                $processedNodes[$parentNode->getId()] = $newParent;
+                            } else {
+                                // Current has already been processed => get copy
+                                $newParent = $processedNodes[$parentNode->getId()];
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (empty($processedNodes[$resourceNode->getId()])) {
+                // Current Node has not been processed => create a copy
+                // Duplicate Node
+                $copy = $manager->copy($resourceNode, $newParent, $user);
+                $copyNode = $copy->getResourceNode();
+
+                // Update structure with new id
+                $resource->resourceId = $copy->getResourceNode()->getId();
+
+                $processedNodes[$resourceNode->getId()] = $copyNode;
+            } else {
+                // Current has already been processed => get copy
+                $resource->resourceId = $processedNodes[$resourceNode->getId()]->getId();
+            }
+        }
+
+        return $processedNodes;
     }
 }
