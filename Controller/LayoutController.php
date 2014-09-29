@@ -179,6 +179,8 @@ class LayoutController extends Controller
             $loginTarget = $this->router->generate('claro_desktop_open');
         }
 
+        $portfolioUrl = $this->generateUrl('icap_portfolio_list');
+
         return array(
             'isLogged' => $isLogged,
             'countUnreadMessages' => $countUnreadMessages,
@@ -192,7 +194,8 @@ class LayoutController extends Controller
             'countUnviewedNotifications' => $countUnviewedNotifications,
             'canAdministrate' => $canAdministrate,
             'headerLocale' => $this->configHandler->getParameter('header_locale'),
-            'homeMenu' => $homeMenu
+            'homeMenu' => $homeMenu,
+            'portfolioUrl' => $portfolioUrl
         );
     }
 
