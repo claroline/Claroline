@@ -159,13 +159,13 @@ class PathListener extends ContainerAware
 
             // Duplicate primary resources
             if (!empty($step->primaryResource)) {
-                $processedNodes = array_merge($processedNodes, $this->copyResource($step->primaryResource, $parent, $processedNodes));
+                $processedNodes = $this->copyResource($step->primaryResource, $parent, $processedNodes);
             }
 
             // Duplicate secondary resources
             if (!empty($step->resources)) {
                 foreach ($step->resources as $resource) {
-                    $processedNodes = array_merge($processedNodes, $this->copyResource($resource, $parent, $processedNodes));
+                    $processedNodes = $this->copyResource($resource, $parent, $processedNodes);
                 }
             }
         }
@@ -188,7 +188,7 @@ class PathListener extends ContainerAware
         if ($resourceNode) {
             // Check if Node is in a subdirectory
             $wsRoot = $manager->getWorkspaceRoot($resourceNode->getWorkspace());
-            if ($wsRoot != $resourceNode->getParent()) {
+            if ($wsRoot->getId() != $resourceNode->getParent()->getId()) {
                 // ResourceNode is not stored in WS root => create subdirectories tree
                 $ancestors = $manager->getAncestors($resourceNode);
 
@@ -212,7 +212,6 @@ class PathListener extends ContainerAware
                                 $newParent = $directory->getResourceNode();
                                 $processedNodes[$parentNode->getId()] = $newParent;
                             } else {
-                                die('coucou');
                                 // Current has already been processed => get copy
                                 $newParent = $processedNodes[$parentNode->getId()];
                             }
