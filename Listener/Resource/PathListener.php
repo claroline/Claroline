@@ -160,9 +160,6 @@ class PathListener extends ContainerAware
             // Duplicate primary resources
             if (!empty($step->primaryResource)) {
                 $processedNodes = array_merge($processedNodes, $this->copyResource($step->primaryResource, $parent, $processedNodes));
-
-                var_dump($processedNodes);
-                die();
             }
 
             // Duplicate secondary resources
