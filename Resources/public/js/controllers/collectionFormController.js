@@ -23,6 +23,57 @@ portfolioApp
             }
         };
 
+        var selectedValue = [];
+        angular.forEach($scope.collection, function (element, index) {
+            selectedValue.push(element.badge);
+        });
+
+        $scope.badgePickerConfig = {
+            data: {
+                multiple: true,
+                value: selectedValue
+            },
+            successCallback: function (nodes) {
+                var receivedValue = [];
+                angular.forEach(nodes, function (element, index) {
+                    receivedValue.push(element.id);
+                });
+                var badgeToRemove = selectedValue.diff(receivedValue);
+                var badgeToAdd    = receivedValue.diff(selectedValue);
+
+                angular.forEach($scope.collection, function (element, index) {
+                    var id = parseInt(element.badge);
+                    if (badgeToRemove.inArray(id)) {
+                        $scope.deleteChild(element);
+                    }
+                });
+                angular.forEach(nodes, function (element, index) {
+                    var id = parseInt(element.id);
+                    if (badgeToAdd.inArray(id)) {
+                        var badgeAboutToBeDelete = $scope.collection.filter(function(element) {return id === element.badge;});
+                        if (0 < badgeAboutToBeDelete.length) {
+                            delete badgeAboutToBeDelete[0].toDelete;
+                        }
+                        else {
+                            var newChild   = angular.copy($scope.emptyChild);
+                            newChild.badge = id;
+                            newChild.name  = element.text;
+                            newChild.img   = element.icon;
+                            delete newChild.added;
+                            $scope.addChild(newChild);
+                        }
+                    }
+                });
+                $scope.$apply();
+                selectedValue = [];
+                angular.forEach($scope.collection, function (element, index) {
+                    if (!element.toDelete) {
+                        selectedValue.push(element.badge);
+                    }
+                });
+            }
+        };
+
         $scope.addChild = function(child) {
             $scope.collection.push(child);
         };

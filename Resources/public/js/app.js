@@ -1,7 +1,7 @@
 'use strict';
 
 var portfolioApp = angular.module('portfolioApp', ['ngResource', 'ngSanitize', 'ngAnimate', 'ui.tinymce',
-    'ui.resourcePicker', 'ui.datepicker', 'ui.dateTimeInput', 'mgcrea.ngStrap.popover']);
+    'ui.resourcePicker', 'ui.badgePicker', 'ui.datepicker', 'ui.dateTimeInput', 'mgcrea.ngStrap.popover']);
 
 portfolioApp.config(["$httpProvider", "$locationProvider", function($http) {
     var elementToRemove = ['views', 'editing', 'new', 'id', 'type'];
@@ -16,6 +16,7 @@ portfolioApp.config(["$httpProvider", "$locationProvider", function($http) {
         return JSON.stringify(data);
     });
 }]);
+portfolioApp.value('assetPath', window.assetPath);
 
 // Bootstrap portfolio application
 angular.element(document).ready(function() {

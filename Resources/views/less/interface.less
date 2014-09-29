@@ -55,6 +55,7 @@ body {
                         display:   block;
                         font-size: 18px;
                     }
+                    float:            left;
                     width:            80px;
                     height:           75px;
                     font-size:        12px;
@@ -65,6 +66,9 @@ body {
                     cursor:           pointer;
                     &:hover {
                         background-color: orange;
+                    }
+                    &:last-child {
+                        margin-bottom: 10px;
                     }
                 }
             }
@@ -116,6 +120,12 @@ body {
         .list-group {
             margin-bottom: 0px;
         }
+        .badge_list {
+            .badge_image {
+                width:  32px;
+                height: 32px;
+            }
+        }
     }
 }
 
@@ -148,6 +158,21 @@ body {
                 li {
                     margin-bottom: 5px;
                 }
+                .badge_collection {
+                    .badge_collection_item {
+                        height: auto;
+                        padding: 2px 0 2px 5px;
+                        .badge_selection_field {
+                            padding-top:    2px;
+                            padding-bottom: 2px;
+                            margin-bottom:  0;
+                            .badge_image {
+                                width:  32px;
+                                height: 32px;
+                            }
+                        }
+                    }
+                }
             }
             .panel-heading {
                 border-bottom: 0;
@@ -160,7 +185,7 @@ body {
     }
 }
 
-.panel {
+.widget-panel {
     span.loading {
         display:        inline-block;
         margin:         0;
