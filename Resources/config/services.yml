@@ -30,6 +30,10 @@ services:
         class: UJM\ExoBundle\Services\classes\exerciseServices
         arguments: [@doctrine, @security.context, @event_dispatcher]
 
+    ujm.qti_service:
+        class: UJM\ExoBundle\Services\classes\qtiService
+        arguments: [@doctrine, @security.context]
+
     ujm.exercise.validator.isvalidqcmglobalmark:
         class: UJM\ExoBundle\Validator\Constraints\isValidQCMGlobalMarkValidator
         arguments: [@request]

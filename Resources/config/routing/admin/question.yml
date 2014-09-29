@@ -11,7 +11,7 @@ ujm_question_index:
 
 #ham:Debut Export Question to QTI Norme
 ujm_question_export:
-    pattern:  /{id}/export/{pageNow}
+    pattern:  /export/{id}
     defaults: { _controller: UJMExoBundle:Question:export }
 ujm_question_import:
     pattern:  /import
