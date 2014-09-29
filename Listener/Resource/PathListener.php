@@ -29,11 +29,9 @@ class PathListener extends ContainerAware
     {
         $path = $event->getResource();
         if ($path->isPublished()) {
-            $route = $this->container
-                ->get('router')
-                ->generate(
+            $route = $this->container->get('router')->generate(
                 'innova_path_player_index',
-                array(
+                array (
                     'workspaceId' => $path->getResourceNode()->getWorkspace()->getId(),
                     'pathId' => $path->getId(),
                     'stepId' => $path->getRootStep()->getId()
@@ -41,19 +39,18 @@ class PathListener extends ContainerAware
             );
         }
         else {
-            $route = $this->container
-                    ->get('router')
-                    ->generate(
-                    'claro_workspace_open_tool',
-                    array(
-                        'workspaceId' => $path->getResourceNode()->getWorkspace()->getId(),
-                        'toolName' => 'innova_path'
-                    )
+            $route = $this->container->get('router')->generate(
+                'claro_workspace_open_tool',
+                array(
+                    'workspaceId' => $path->getResourceNode()->getWorkspace()->getId(),
+                    'toolName' => 'innova_path'
+                )
             );
+
             $this->container->get('session')->getFlashBag()->add(
-                    'warning',
-                    $this->container->get('translator')->trans("path_open_not_published_error", array(), "innova_tools")
-                );
+                'warning',
+                $this->container->get('translator')->trans("path_open_not_published_error", array(), "innova_tools")
+            );
         }
         
         $event->setResponse(new RedirectResponse($route));
