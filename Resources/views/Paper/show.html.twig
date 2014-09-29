@@ -404,6 +404,10 @@
                                     <option value="{{ loop.index }}" style="color: blue;" href="{{ path('ujm_paper_show', { 'id': paperID, 'p': loop.index - 1 }) }}">
                                         {{ 'nQuestion' | trans }}{{ loop.index }} / {{ interactions | length }}
                                     </option>
+                                {% elseif interaction.type == 'InteractionMatching' %}
+                                    <option value="{{ loop.index }}" style="color: orange;" href="{{ path('ujm_paper_show', { 'id': paperID, 'p': loop.index - 1 }) }}">
+                                        {{ 'nQuestion' | trans }}{{ loop.index }} / {{ interactions | length }}
+                                    </option>
                                 {% endif %}
 
                             {% endfor %}

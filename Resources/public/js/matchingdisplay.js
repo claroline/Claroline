@@ -1,14 +1,20 @@
 var responses = [];
 
 $(function() {
-    
+
     if($(".draggable").width() > $(".droppable").width()) {
         var $widthDraggable = $(".draggable").width();
         var $widthDroppable = $widthDraggable;
         $(".droppable").width($widthDroppable * 1.5);
     }
-    
+
     $(".draggable").each(function() {
+//        var $test = $(this).text().length;
+//        if($(this).width() > $(this).text().length) {
+//
+//            $(this).width($test);
+//        }
+
         $(this).draggable({
             cursor: 'move',
             revert: 'invalid',
@@ -18,6 +24,7 @@ $(function() {
             },
         });
     });
+
     $(".origin").droppable();
 
     $(".droppable").each(function() {
@@ -43,6 +50,7 @@ $(function() {
             },
             out: function(event, ui) {
                 $(this).removeClass("state-highlight");
+                
                 idProposal = ui.draggable.attr("id");
                 idProposal = idProposal.replace('draggable_', '');
                 if (idProposal) {
