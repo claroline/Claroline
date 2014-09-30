@@ -28,7 +28,7 @@
     <div class="panel-heading">
         <h3 class="panel-title">{{ 'general'|trans({}, 'platform') }}</h3>
     </div>
-    <form role="form" class="form-horizontal" action="{{path('claro_admin_edit_parameters_general')}}" method="post" {{ form_enctype(form_settings) }} id="form_settings" enctype='multipart/form-data'>
+    <form role="form" class="form-horizontal general_parameters_form" action="{{path('claro_admin_edit_parameters_general')}}" method="post" {{ form_enctype(form_settings) }} id="form_settings" enctype='multipart/form-data'>
         {{ macros.flashBox() }}
         <div class="panel-body">
             {{ form_row(form_settings.name) }}
@@ -43,8 +43,9 @@
             {{ form_row(form_settings.platform_init_date) }}
             {{ form_row(form_settings.platform_limit_date) }}
             {{ form_row(form_settings.anonymous_public_profile) }}
+
             {% set value = form_settings.vars.value.portfolioUrl %}
-            <div class="form-group row">
+            <div class="form-group row portfolio_url_row">
                 {{ form_label(form_settings.portfolio_url) }}
                 <div class="col-md-9">
                     <div class="radio">
@@ -53,11 +54,12 @@
                             {{ 'internal_portfolio'|trans({}, 'platform') }}
                         </label>
                     </div>
-                    <div class="radio">
-                        <label>
-                            <input type="radio" name="portfolioUrlOptions" id="portfolioUrlOptions2" value="1" {% if value is not empty %} checked="checked"{% endif %}>
+                    <div class="radio portfolio_url">
+                        <input type="radio" name="portfolioUrlOptions" id="portfolioUrlOptions2" value="1" {% if value is not empty %} checked="checked"{% endif %}>
+                        <div class="col-md-6 portfolio_url_field">
                             {{ form_widget(form_settings.portfolio_url) }}
-                        </label>
+                        </div>
+                        <p class="portfolio_url_help"><small>{{ 'general_parameters_portfolio_url_help'|trans({}, 'platform') }}</small></p>
                     </div>
                 </div>
             </div>
