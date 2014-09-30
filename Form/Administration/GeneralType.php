@@ -86,18 +86,6 @@ class GeneralType extends AbstractType
             ->add('redirect_after_login', 'checkbox', array('label' => 'redirect_after_login', 'required' => false))
             ->add('account_duration', 'integer', array('label' => 'account_duration_label', 'required' => false))
             ->add('anonymous_public_profile', 'checkbox', array('label' => 'show_profile_for_anonymous', 'required' => false))
-//            ->add('is_portfolio_tool_internal', 'choice', array(
-//                    'required' => false,
-//                    'mapped'   => false,
-//                    'expanded' => true,
-//                    'multiple' => false,
-//                    'choices'   => array(
-//                        '0'   => '0',
-//                        '1'   => '1'
-//                    ),
-//                    'empty_value' => false
-//                )
-//            )
             ->add('portfolio_url', 'url', array('label' => 'portfolio_url', 'required' => false));
 
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event){
