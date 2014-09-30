@@ -288,7 +288,6 @@ class Drop
     {
         $grade = 0;
         $nbFinishedCorrections = 0;
-
         if (count($this->getCorrections()) > 0) {
             foreach ($this->getCorrections() as $correction) {
                 if ($correction->getFinished() and $correction->getValid() and $correction->getTotalGrade() != null) {
@@ -308,6 +307,7 @@ class Drop
     }
 
     /**
+     * /!\ Care it check if correction is valid Too
      * @return int
      */
     public function countFinishedCorrections()

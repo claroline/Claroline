@@ -773,7 +773,7 @@ class Dropzone extends AbstractResource
     public function isNotStarted()
     {
         if ($this->manualPlanning) {
-            return $this->manualState == 'notStarted';
+            return $this->manualState == $this::MANUAL_STATE_NOT_STARTED;
         } else {
             $now = new \DateTime();
 
@@ -785,7 +785,7 @@ class Dropzone extends AbstractResource
     public function isAllowDrop()
     {
         if ($this->manualPlanning) {
-            return $this->manualState == 'allowDrop' or $this->manualState == 'allowDropAndPeerReview';
+            return $this->manualState == $this::MANUAL_STATE_ALLOW_DROP or $this->manualState == $this::MANUAL_STATE_ALLOW_DROP_AND_PEER_REVIEW;
         } else {
             $now = new \DateTime();
 
@@ -793,15 +793,21 @@ class Dropzone extends AbstractResource
         }
     }
 
+
+    /**
+     * Only return if we are in a peerReview phase, if you want to get the evaluation mode
+     * do dropzone->peerReview().
+     * @return bool
+     */
     public function isPeerReview()
     {
         if ($this->peerReview) {
             if ($this->manualPlanning) {
-                return $this->manualState == 'peerReview' or $this->manualState == 'allowDropAndPeerReview';
+
+                return $this->manualState == $this::MANUAL_STATE_PEER_REVIEW || $this->manualState == $this::MANUAL_STATE_ALLOW_DROP_AND_PEER_REVIEW;
             } else {
                 $now = new \DateTime();
-
-                return $now->getTimestamp() >= $this->startReview->getTimestamp() and $now->getTimestamp() < $this->endReview->getTimestamp();
+                return $this->startReview != null && $this->endReview != null && $now->getTimestamp() >= $this->startReview->getTimestamp() and $now->getTimestamp() < $this->endReview->getTimestamp();
             }
         } else {
             return false;
@@ -811,7 +817,7 @@ class Dropzone extends AbstractResource
     public function isFinished()
     {
         if ($this->manualPlanning) {
-            return $this->manualState == 'finished';
+            return $this->manualState == $this::MANUAL_STATE_FINISHED;
         } else {
             $now = new \DateTime();
 
