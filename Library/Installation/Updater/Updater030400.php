@@ -29,7 +29,7 @@ class Updater030400 {
     {
         $this->log('replacing default zip file');
         $this->replaceDefaultZip();
-        $this->removeModelTable();
+        //$this->removeModelTable();
     }
 
     private function replaceDefaultZip()

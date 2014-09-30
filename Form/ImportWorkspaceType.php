@@ -16,19 +16,13 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class WorkspaceTemplateType extends AbstractType
+class ImportWorkspaceType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add(
-            'name',
-            'text',
-            array(
-                'constraints' => array(
-                    new NotBlank()
-                )
-            )
-        );
+        $builder->add('name', 'text', array('label' => 'name', 'constraints' => array(new NotBlank())));
+        $builder->add('code', 'text', array('label' => 'code','constraints' => array(new NotBlank())));
+        $builder->add('workspace', 'file', array('label' => 'file','constraints' => array(new NotBlank())));
     }
 
     public function getName()
@@ -38,11 +32,6 @@ class WorkspaceTemplateType extends AbstractType
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver
-        ->setDefaults(
-            array(
-                'translation_domain' => 'platform'
-                )
-        );
+        $resolver->setDefaults(array('translation_domain' => 'platform'));
     }
 }
