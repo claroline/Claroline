@@ -179,7 +179,7 @@ class LayoutController extends Controller
             $loginTarget = $this->router->generate('claro_desktop_open');
         }
 
-        $portfolioUrl = $this->generateUrl('icap_portfolio_list');
+        $portfolioUrl = $this->configHandler->getParameter('portfolio_url') ?: $this->generateUrl('icap_portfolio_list');
 
         return array(
             'isLogged' => $isLogged,
