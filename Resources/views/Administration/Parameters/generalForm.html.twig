@@ -73,3 +73,23 @@
         </div>
     </form>
 {% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script type="text/javascript">
+    (function($) {
+        "use strict";
+
+        $(function() {
+            var portfolioUrlRadio = $(".portfolio_url input[type=radio]");
+            var portfolioUrlField = $(".portfolio_url_field input");
+
+            portfolioUrlField.on('keyup', function (event) {
+                if ('' !== $(this).val()) {
+                    portfolioUrlRadio.prop("checked", true);
+                }
+            });
+        });
+    })(jQuery);
+</script>
+{% endblock %}
