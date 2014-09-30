@@ -139,9 +139,8 @@ class LogWorkspaceRoleChangeRightEvent extends LogGenericEvent implements Mandat
      */
     public function isAllowedToNotify()
     {
-        if (!$this->changeSet || !isset($this->changeSet['mask'])) {
-            return false;
-        }
+        if (!$this->changeSet || !isset($this->changeSet['mask'])) return false;
+        if ($this->role->getName() === 'ROLE_ANONYMOUS' || $this->role->getName() === 'ROLE_USER') return false;
 
         $oldState = $this->changeSet['mask'][0];
         $newState = $this->changeSet['mask'][1];
