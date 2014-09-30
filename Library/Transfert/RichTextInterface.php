@@ -9,9 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Library\Workspace\Exception;
+namespace Claroline\CoreBundle\Library\Transfert;
 
-class BaseRoleException extends \Exception
+interface RichTextInterface
 {
-
+    public function format($data);
 }

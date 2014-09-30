@@ -27,6 +27,8 @@ class AgendaType extends AbstractType
             $recurring[$i] = $i;
         }
 
+        $now = new \DateTime();
+
         $attr = array();
         $attr['class'] = 'datepicker input-small';
         $attr['data-date-format'] = 'dd-mm-yyyy';
@@ -48,6 +50,7 @@ class AgendaType extends AbstractType
                 'startHours',
                 'time',
                 array(
+                    'data' => $now->getTimestamp(),
                     'attr' => array('class' => 'hours'),
                     'input' => 'timestamp',
                     'widget' => 'single_text'
@@ -68,6 +71,7 @@ class AgendaType extends AbstractType
                 'endHours',
                 'time',
                 array(
+                    'data' => $now->getTimestamp(),
                     'attr' => array('class' => 'hours'),
                     'input' => 'timestamp',
                     'widget' => 'single_text'

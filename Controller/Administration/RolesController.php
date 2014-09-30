@@ -79,7 +79,6 @@ class RolesController extends Controller
 
     /**
      * @EXT\Route("/tools/index", name="claro_admin_tools_index")
-     * @EXT\Method("GET")
      * @EXT\Template()
      *
      * @return array
@@ -142,7 +141,6 @@ class RolesController extends Controller
      *     name="claro_admin_create_platform_role_form",
      *     options={"expose"=true}
      * )
-     * @EXT\Method("GET")
      * @EXT\Template()
      *
      * @return array

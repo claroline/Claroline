@@ -30,9 +30,6 @@ class LogsController extends Controller
      *     requirements={"page" = "\d+"},
      *     defaults={"page" = 1}
      * )
-     *
-     * @EXT\Method("GET")
-     *
      * @EXT\Template()
      *
      * Displays logs list using filter parameters and page number

@@ -79,9 +79,9 @@ activity_past_evaluation_form_date: Date
 activity_past_evaluation_form_numScore: Score
 activity_past_evaluation_form_score: Evaluation
 activity_past_evaluation_form_status: Statut
-activity_remove_primary_resource: Enlever la resource primaire
+activity_remove_primary_resource: Enlever la ressource primaire
 activity_resource_not_allowed: Vous ne pouvez pas ajouter une ressource de ce type
-activity_resource_remove: Êtes-vous sûr de vouloir enlever cette ressource de l'activite?
+activity_resource_remove: Êtes-vous sûr de vouloir enlever cette ressource de l'activité?
 activity_rule_action_none: Aucune
 activity_rule_configuration_for_auto_evaluation: 'Configuration de la règle pour l''évaluation automatique'
 activity_rule_form_action: Action
@@ -165,6 +165,7 @@ badges_management: 'Gestion des badges'
 base_informations: 'Informations de base'
 best_score: 'Meilleur score'
 by: par
+by_user: 'Par utilisateur'
 by_workspace: 'Par espace'
 canCopy: 'Droit de copier'
 canCreate: 'Creation de %type%'
@@ -198,7 +199,6 @@ communication: Communication
 competence: Compétence
 competence_creation: 'Création d''une compétence'
 competence_edition: 'Modification de la compétence'
-competence_referencial: Réferenciel de compétences
 competence_referencial: Référentiel de compétences
 competences: Compétences
 competences_management: 'Gestion des compétences'
@@ -235,7 +235,7 @@ csv_users_import_infos: 'Informations sur le format du fichier CSV'
 csv_users_import_infos_format: Format
 csv_users_import_infos_format_a: 'Les données d''un utilisateur doivent être définies sur une ligne et séparées par un point virgule'
 csv_users_import_infos_format_b: 'Notez que vous ne devez pas ajouter un en-tête de fichier'
-csv_users_import_infos_optional: Optionel
+csv_users_import_infos_optional: Optionnel
 csv_users_import_infos_required: Requis
 curl_facebook_application_validation_error: 'Extension php curl manquante.'
 current_category: 'Catégorie courante'
@@ -315,17 +315,17 @@ edit_facet: Editer une facette
 edit_field: Editer un champ
 edit_password: 'Modifier votre mot de passe'
 edit_password_error: 'Une erreur est survenue pendant la modification de votre mot de passe.'
-edit_password_error_current : Votre mot de passe actuel n'est pas correcte.
+edit_password_error_current : Votre mot de passe actuel n'est pas correct.
 edit_password_message: 'Êtes vous sur de vouloir modifier votre mot de passe ?'
 edit_password_success: 'Modification de votre mot de passe effectuée avec succès.'
 edit_profile: 'Modifier votre profil'
 edit_profile_error: 'Une erreur est survenue pendant la modification du profil.'
-edit_profile_error_right : Vous n'êtes pas autorisez à uploader des images, veuillez contactez votre administrateur
-edit_profile_success: 'Modification du profil effectué avec succès.'
+edit_profile_error_right : Vous n'êtes pas autorisé à uploader des images, veuillez contactez votre administrateur
+edit_profile_success: 'Modification du profil effectuée avec succès.'
 edit_public_profile: 'Modifier le profil public'
 edit_public_profile_preferences_error: 'Une erreur est survenue lors de la modification des préférences de votre profil public.'
 edit_public_profile_preferences_success: 'Préférences de votre profil public modifiées avec succès.'
-edit_rights_success: Modification des droits effecetuée avec succès.
+edit_rights_success: Modification des droits effectuée avec succès.
 edit_security_token: 'Modification du jeton d''authentification'
 edit_your_profile_error: 'Une erreur est survenue pendant la modification de votre profil.'
 edit_your_profile_success: 'Modification de votre profil effectué avec succès.'
@@ -351,7 +351,6 @@ external_pdo_database: 'Base de données externe (PDO)'
 facebook: Facebook
 facebook_application_validation_error: 'Les identifiants fournis ne sont pas valides.'
 facets: Facettes
-fail_add_user_group_message: Ces utilisateurs n'ont pas pu être ajouté au groupe (vérifiez la limite d'utilisateurs par rôle).
 fail_add_user_group_message: Ces utilisateurs n'ont pas pu être ajoutés au groupe (vérifiez la limite d'utilisateurs par rôle).
 failed: Echoué
 fast_answer: 'Réponse rapide'
@@ -376,7 +375,7 @@ from: Depuis
 from_message: De
 general: Général
 general_parameters: 'Paramètres généraux'
-general_tab_form_explanation: Ce formulaire vous permet de spécifier quels sont les informations vues par rôle dans le profile public.
+general_tab_form_explanation: Ce formulaire vous permet de spécifier quelles sont les informations vues par rôle dans le profil public.
 generate_token: 'Générer un token aléatoire'
 generate_url: 'Inscription publique'
 generate_url_subscription: 'Inscription à l''espace d''activité par un utilisateur'
@@ -444,7 +443,7 @@ keep_me_logged_in: 'Se souvenir de moi'
 lastName: Nom
 last_30_days_activity: 'Activités des 30 derniers jours'
 last_attempt_date: 'Date de la dernière tentative'
-last_manager_error_message: Vous ne pouvez pas retirer tout les gestionnaires.
+last_manager_error_message: Vous ne pouvez pas retirer tous les gestionnaires.
 last_name: Nom
 layout: Layout
 learning_outcomes: 'Référentiel de compétences'
@@ -559,6 +558,7 @@ no_group: Il n'y a aucun groupe.
 no_home_tab: 'Il n''y a aucun onglet'
 no_learning_outcomes: 'Aucun référentiel de compétences'
 no_message: 'Aucun message'
+no_model: 'Aucun modèle'
 no_package_description: Aucune description du paquet.
 no_resources_in_workspace: Cet espace ne contient actuellement aucune ressource.
 no_role_selected_message: 'Aucun role sélectionné.'
@@ -740,7 +740,6 @@ role_edition: 'Modification d''un rôle'
 role_limit_reached: La limite d'utilisateur de type %translationKey% a été atteinte.
 role_limit_reached: La limite d'utilisateurs de type %translationKey% a été atteinte.
 role_list: Liste des roles
-role_list: Liste des rôles
 role_name_changed_success: Le nom du rôle a été mis à jour avec succès.
 role_name_type_form_translationKey: Nom
 roles: Rôles
@@ -817,7 +816,7 @@ subscribe_selected_users: 'Inscrire les utilisateurs sélectionnés'
 subscribe_users: 'Inscrire des utilisateurs'
 subscription: Inscription
 success_rate: 'Taux de réussite'
-successfull_workspace_creation: L'espace d'activité %name% a été créé avec succès.
+successfull_workspace_creation: L'espace d'activités %name% a été créé avec succès.
 support_email: 'Email du support'
 switch: Echanger
 tag: Tag
@@ -835,7 +834,7 @@ text_form_content: Contenu
 text_form_name: Nom
 text_form_shareType: Redistribution
 text_form_text: Texte
-the_following_users_were_not_imported: 'Les utilisateurs suivant n''ont pas pu être importés:'
+the_following_users_were_not_imported: 'Les utilisateurs suivants n''ont pas pu être importés:'
 the_workspace: 'L''espace d''activités'
 this_page_requires_authentication: 'Cette page requiert une authentification. Veuillez vous identifier.'
 time_col: 'Colonne des durées'
@@ -907,6 +906,7 @@ url_invalid: 'Le code n''est pas correct, n''essayez pas de changer l''adresse'
 user: Utilisateur
 user_accounts: 'Comptes utilisateur'
 user_creation: 'Création d''un utilisateur'
+user_creation_success: Le compte utilisateur a été créé avec succès.
 user_limit_reached: La limite de création d'utilisateur a été atteinte.
 user_limit_reached: La limite de création d'utilisateurs a été atteinte.
 user_limit_success_update: La limite d'utilisateur par rôle a été mise à jour avec succès.
@@ -974,18 +974,18 @@ workspace_edit_form_selfUnregistration: 'Désinscription publique'
 workspace_form_code: Code
 workspace_form_description: Description
 workspace_form_displayable: Public
+workspace_form_model: Modèle
 workspace_form_name: Nom
 workspace_form_registrationValidation : 'Validation de l''inscription'
 workspace_form_selfRegistration: 'Inscription publique'
 workspace_form_selfUnregistration: 'Désinscription publique'
-workspace_form_template: Modèle
 workspace_form_type: Type
 workspace_home_tab_creation: 'Création d''un onglet pour les espaces d''activités'
 workspace_home_tab_edition: 'Edition de l''onglet pour les espaces d''activités'
 workspace_home_tabs: 'Onglets pour les espaces d''activités'
 workspace_list: 'Liste des espaces d''activités'
 workspace_list: Liste des espaces d'activités
-workspace_management: L'espace d'activités a été crée le %creationDate%, par %creator%. Il y a %count% inscrit(s).
+workspace_management: L'espace d'activités a été créé le %creationDate%, par %creator%. Il y a %count% inscrit(s).
 workspace_management_date_null: Il y a %count% inscrit(s). La date de création de l'espace et son créateur ne sont pas connus.
 workspace_order_tool_edit_form_name: Nom
 workspace_registration_confirm_title: 'Voulez-vous vous inscrire à cet espace d''activités ?'
@@ -1014,6 +1014,77 @@ yes: Oui
 yesterday_activity: 'Activité de la veille'
 your_current_url: 'Votre URL actuelle'
 your_username: 'Votre nom d''utilisateur est '
+closed_account: Compte clos
+role_list: Liste des roles
+unavailable_role: Le role %translationKey% n'est pas utilisable
+fail_add_user_group_message: Ces utilisateurs n'ont pas pu être ajouté au groupe (vérifiez la limite d'utilisateurs par rôle).
+unavailable_platform: La plateforme n'est pas disponible.
+account_duration_label: Durée de vie des comptes (jours)
+platform_init_date: Date d'activation de la plateforme
+platform_expiration_date: Date d'expiration de la plateforme
+role_limit_reached: La limite d'utilisateur de type %translationKey% a été atteinte.
+user_limit_reached: La limite de création d'utilisateur a été atteinte.
+user_limit_too_low: Il y a déjà %total% %role%(s). La limite %newMax% est trop faible.
+limit: Limite
+yes: Oui
+no: Non
+show_profile_for_anonymous: Profil public accessible aux anonymes
+packages: Paquets
+core_packages: Paquets du noyau
+plugin_packages: Paquets des plugins
+no_package_description: Aucune description du paquet.
+yes: Oui
+no: Non
+actualize: Actualiser
+upgrade: Mettre à jour
+packages_upgrade_info_message: Attention, ceci est la page de gestion de mises à jour.
+package_upgrade_all_warning: Attention, ceci mettra à jour tous les paquets de la plateforme. Cette opération ne peut être annulée. Il est conseillé d'effectuer une sauvegarde des fichiers ainsi que de la base de données avant d'effectuer cette opération.
+profile_management: Gestion du profil
+visible_facet_form_explanation: Le champ "Visible" permet de spécifier si l'élément doit être visible ou non par l'utilisateur.
+editable_facet_form_explanation: Le champ "Modifiable" permet de spécifier si l'élément doit être modifiable ou non par l'utilisateur.
+roles_facet_form_explanation: Ce formulaire vous permet de spécifier quels rôles peuvent voir la facette dans le profil public de l'utilisateur.
+roles_fields_form_explanation: Ce formulaire vous permet de spécifier quels rôles peuvent voir et éditer le champ dans le profil public de l'utilisateur.
+general_tab_form_explanation: Ce formulaire vous permet de spécifier quels sont les informations vues par rôle dans le profile public.
+name_required: Nom requis
+remove_role_confirm: Êtes-vous sûr de vouloir supprimer le rôle %name% ?
+remove_role: Supprimer un rôle.
+initialize: Initialiser
+user_limit_success_update: La limite d'utilisateur par rôle a été mise à jour avec succès.
+role_name_changed_success: Le nom du rôle a été mis à jour avec succès.
+no_group: Il n'y a aucun groupe.
+successfull_workspace_creation: L'espace d'activité %name% a été créé avec succès.
+no_action_found: Aucune action trouvée.
+error: Erreur
+last_manager_error_message: Vous ne pouvez pas retirer tout les gestionnaires.
+remove_workspace_role_warning: Êtes-vous sûr de vouloir supprimer ce rôle ? Si ce rôle est associé à des utilisateurs, ces utilisateurs perdront leurs droits d'accès fournit par ce rôle.
+edit_rights_success: Modification des droits effectuée avec succès.
+maintenance: Maintenance
+start_maintenance: Lancer le mode maintenance
+end_maintenance: Terminer le mode maintenance
+maintenance_mode_enabled: Le mode maintenance est activé
+maintenance_mode_message: L'accès à la plateforme est désactivé pour les utilisateurs. Vous pouvez le réactiver dans la section maintenance des paramètres de l'administration.
+update_event: Mettre à jour un événement
+remove_event_confirm: Êtes-vous sûr de vouloir supprimer cet événement ?
+remove_event: Supprimer un événement
+edit_event_success: Événement mis à jour avec succès.
+models: Modèles
+create_model: Créer un modèle
+remove_model: Supprimer un modèle
+remove_model_confirm: Êtes-vous sûr de vous supprimer le modèle %name% ?
+share: Partager
+remove_user_from_model: Retirer un utilisateur
+remove_user_from_model_confirm: Êtes-vous sûr de vouloir retirer l'utilisateur %name% ?
+remove_group_from_model: Retirer un groupe
+remove_group_from_model_confirm: Êtes-vous sûr de vouloir retirer le groupe %groupe% ?
+workspace_import: Importer un espace d'activité
+create_users: Créer les utilisateurs
+remove_resource_from_model: Retirer une ressource du modèle
+remove_resource_from_model_comfirm: Êtes-vous vraiment sûr de vouloir retirer cette ressource ?
+add_tab: Ajouter un onglet
+links: Liens
+tabs: Onglets
+tab: Onglet
+copies: Copies
 portfolio_url: 'Url d''accès à l''outil de portfolio'
 internal_portfolio: 'Portfolio interne à la plateforme'
 general_parameters_updated_success: 'Paramètres généraux modifiés avec succès.'

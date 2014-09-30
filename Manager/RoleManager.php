@@ -144,6 +144,43 @@ class RoleManager
     }
 
     /**
+     * @param User $user
+     *
+     * @return \Claroline\CoreBundle\Entity\Role
+     */
+    public function createUserRole(User $user)
+    {
+        $username = $user->getUsername();
+        $roleName = 'ROLE_USER_' . strtoupper($username);
+
+        $this->om->startFlushSuite();
+
+        $role = $this->om->factory('Claroline\CoreBundle\Entity\Role');
+        $role->setName($roleName);
+        $role->setTranslationKey($username);
+        $role->setReadOnly(true);
+        $role->setType(Role::USER_ROLE);
+        $this->om->persist($role);
+        $this->associateRole($user, $role);
+
+        $this->om->endFlushSuite();
+
+        return $role;
+    }
+
+    /**
+     * @param string $username
+     */
+    public function renameUserRole(Role $role, $username)
+    {
+        $roleName = 'ROLE_USER_' . strtoupper($username);
+        $role->setName($roleName);
+        $role->setTranslationKey($username);
+        $this->om->persist($role);
+        $this->om->flush();
+    }
+
+    /**
      * @param \Claroline\CoreBundle\Entity\AbstractRoleSubject $ars
      * @param string $roleName
      * @throws \Exception
@@ -333,27 +370,15 @@ class RoleManager
     public function initWorkspaceBaseRole(array $roles, Workspace $workspace)
     {
         $this->om->startFlushSuite();
-
         $entityRoles = array();
 
-        foreach ($roles as $name => $translation) {
-            $role = $this->createWorkspaceRole(
-                "{$name}_{$workspace->getGuid()}",
-                $translation,
-                $workspace,
-                false
-            );
-            $entityRoles[$name] = $role;
-        }
-
-        $role = $this->createWorkspaceRole(
+        $entityRoles['ROLE_WS_MANAGER'] = $this->createWorkspaceRole(
             "ROLE_WS_MANAGER_{$workspace->getGuid()}",
             'manager',
             $workspace,
             true
         );
 
-        $entityRoles['ROLE_WS_MANAGER'] = $role;
         $this->om->endFlushSuite();
 
         return $entityRoles;
@@ -801,5 +826,31 @@ class RoleManager
     public function getNonPlatformRolesForUser(User $user, $executeQuery = true)
     {
         return $this->roleRepo->findNonPlatformRolesForUser($user, $executeQuery);
+    }
+
+    public function getWorkspaceRoleBaseName(Role $role)
+    {
+        if ($role->getWorkspace()) {
+            return substr($role->getName(), 0, strrpos($role->getName(), '_'));
+        }
+
+        return $role->getName();
+    }
+
+    public function getAllUserRoles($executeQuery = true)
+    {
+        return $this->roleRepo->findAllUserRoles($executeQuery);
+    }
+
+    public function getUserRoleByUser(User $user, $executeQuery = true)
+    {
+        return $this->roleRepo->findUserRoleByUser($user, $executeQuery);
+    }
+
+    public function getUserRolesByTranslationKeys(array $keys, $executeQuery = true)
+    {
+        return count($keys) === 0 ?
+            array() :
+            $this->roleRepo->findUserRolesByTranslationKeys($keys, $executeQuery);
     }
 }

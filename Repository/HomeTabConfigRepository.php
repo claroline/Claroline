@@ -350,4 +350,24 @@ class HomeTabConfigRepository extends EntityRepository
 
         return $query->execute();
     }
+
+    public function findHomeTabConfigsByWorkspaceAndHomeTabs(
+        Workspace $workspace,
+        array $homeTabs
+    )
+    {
+        $dql = "
+            SELECT htc
+            FROM Claroline\CoreBundle\Entity\Home\HomeTabConfig htc
+            WHERE htc.workspace = :workspace
+            AND htc.type = 'workspace'
+            AND htc.homeTab IN (:homeTabs)
+            ORDER BY htc.tabOrder ASC
+        ";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('workspace', $workspace);
+        $query->setParameter('homeTabs', $homeTabs);
+
+        return $query->getResult();
+    }
 }

@@ -147,7 +147,6 @@ class ParametersController extends Controller
 
     /**
      * @EXT\Route("/general", name="claro_admin_parameters_general")
-     * @EXT\Method("GET")
      * @EXT\Template
      *
      * @param Request $request
@@ -251,7 +250,6 @@ class ParametersController extends Controller
 
     /**
      * @EXT\Route("/appearance", name="claro_admin_parameters_appearance")
-     * @EXT\Method("GET")
      * @EXT\Template
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -339,7 +337,6 @@ class ParametersController extends Controller
 
     /**
      * @EXT\Route("/mail/server", name="claro_admin_parameters_mail_server")
-     * @EXT\Method("GET")
      * @EXT\Template
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -359,7 +356,7 @@ class ParametersController extends Controller
 
 
     /**
-     * @EXT\Route("/mail/server", name="claro_admin_edit_parameters_mail_server")
+     * @EXT\Route("/mail/server/submit", name="claro_admin_edit_parameters_mail_server")
      * @EXT\Method("POST")
      * @EXT\Template("ClarolineCoreBundle:Administration\Parameters:mailServerForm.html.twig")
      *
@@ -458,7 +455,6 @@ class ParametersController extends Controller
 
     /**
      * @EXT\Route("/mail/registration", name="claro_admin_mail_registration")
-     * @EXT\Method("GET")
      * @EXT\Template
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -499,7 +495,6 @@ class ParametersController extends Controller
 
     /**
      * @EXT\Route("/mail/layout", name="claro_admin_mail_layout")
-     * @EXT\Method("GET")
      * @EXT\Template
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -540,7 +535,6 @@ class ParametersController extends Controller
 
     /**
      * @EXT\Route("/terms", name="claro_admin_edit_terms_of_service")
-     * @EXT\Method("GET")
      * @EXT\Template
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
@@ -616,7 +610,6 @@ class ParametersController extends Controller
 
     /**
      * @EXT\Route("/session", name="claro_admin_session")
-     * @EXT\Method("GET")
      * @EXT\Template
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -697,7 +690,6 @@ class ParametersController extends Controller
 
     /**
      * @EXT\Route("/oauth/facebook", name="claro_admin_facebook_form")
-     * @EXT\Method("GET")
      * @EXT\Template
      *
      * @return \Symfony\Component\HttpFoundation\Response

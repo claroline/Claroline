@@ -62,7 +62,6 @@
                                 <th> {{ 'base_informations'|trans({}, 'platform') }} </th>
                                 <th> {{ 'mail'|trans({}, 'platform') }} </th>
                                 <th> {{ 'phone'|trans({}, 'platform') }} </th>
-                                <th> {{ 'public_profile_preferences_allow_mail_sending'|trans({}, 'platform') }} </th>
                                 <th> {{ 'public_profile_preferences_allow_message_sending'|trans({}, 'platform') }} </th>
                             </tr>
                             </thead>
@@ -97,14 +96,6 @@
                                         <td>
                                             <input name="phone-role-{{ platformRole.getId() }}" type="checkbox"
                                                 {% if found == true and currentPreference.getPhone() == true %}
-                                                    checked
-                                                {% endif %}
-                                            >
-                                            </input>
-                                        </td>
-                                        <td>
-                                            <input name="sendmail-role-{{ platformRole.getId() }}" type="checkbox"
-                                                {% if found == true and currentPreference.getSendMail() == true %}
                                                     checked
                                                 {% endif %}
                                             >

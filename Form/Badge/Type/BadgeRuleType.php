@@ -13,11 +13,14 @@ namespace Claroline\CoreBundle\Form\Badge\Type;
 
 use Claroline\CoreBundle\Entity\Badge\BadgeRule;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
+use Claroline\CoreBundle\Manager\BadgeManager;
 use Claroline\CoreBundle\Manager\EventManager;
 use Claroline\CoreBundle\Repository\Badge\BadgeRepository;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -38,6 +41,9 @@ class BadgeRuleType extends AbstractType
 
     /** @var \Symfony\Component\Security\Core\SecurityContextInterface */
     private $securityContext;
+
+    /** @var int */
+    private $badgeId;
 
     /**
      * @DI\InjectParams({
@@ -85,19 +91,41 @@ class BadgeRuleType extends AbstractType
                     )
                 )
             )
-            ->add('badge', 'zenstruck_ajax_entity', array(
-                'attr'           => array('class' => 'fullwidth'),
-                'placeholder'    => $this->translator->trans('badge_form_badge_selection', array(), 'badge'),
-                'class'          => 'ClarolineCoreBundle:Badge\Badge',
-                'use_controller' => true,
-                'property'       => sprintf("%sName", $locale),
-                'repo_method'    => sprintf('findByName%sForAjax', ucfirst($locale))
-            ))
             ->add(
                 'resultComparison',
                 'choice',
                 array('choices' => BadgeRule::getResultComparisonTypes())
             );
+
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, array($this, 'onPreSetData'));
+    }
+
+    public function onPreSetData(FormEvent $event){
+        $form  = $event->getForm();
+
+        $blacklist = array();
+
+        if (null !== $this->badgeId) {
+            array_push($blacklist, $this->badgeId);
+        }
+
+        $form
+            ->add('badge', 'badgepicker', array(
+                'blacklist' => $blacklist
+            )
+        );
+    }
+
+    /**
+     * @param int $badgeId
+     *
+     * @return BadgeRuleType
+     */
+    public function setBadgeId($badgeId)
+    {
+        $this->badgeId = $badgeId;
+
+        return $this;
     }
 
     public function getName()

@@ -18,13 +18,13 @@ use Claroline\CoreBundle\Controller\Tool\AbstractParametersController;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
-use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\RightsManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -36,7 +36,7 @@ class WorkspaceToolsParametersController extends AbstractParametersController
     private $resourceManager;
     private $formFactory;
     private $request;
-    private $objectManager;
+    private $om;
 
     /**
      * @DI\InjectParams({
@@ -67,12 +67,12 @@ class WorkspaceToolsParametersController extends AbstractParametersController
         $this->request         = $request;
         $this->om              = $om;
     }
+
     /**
      * @EXT\Route(
      *     "/{workspace}/tools",
      *     name="claro_workspace_tools_roles"
      * )
-     * @EXT\Method("GET")
      * @EXT\Template("ClarolineCoreBundle:Tool\workspace\parameters:toolRoles.html.twig")
      *
      * @param Workspace $workspace
@@ -137,7 +137,6 @@ class WorkspaceToolsParametersController extends AbstractParametersController
      *     "/{workspace}/tools/{tool}/editform",
      *     name="claro_workspace_order_tool_edit_form"
      * )
-     * @EXT\Method("GET")
      *
      * @EXT\Template("ClarolineCoreBundle:Tool\workspace\parameters:toolNameModalForm.html.twig")
      *
@@ -168,7 +167,7 @@ class WorkspaceToolsParametersController extends AbstractParametersController
      * @EXT\Template("ClarolineCoreBundle:Tool\workspace\parameters:workspaceOrderToolEdit.html.twig")
      *
      * @param Workspace $workspace
-     * @param OrderedTool       $ot
+     * @param OrderedTool $ot
      *
      * @return Response
      */
@@ -181,11 +180,13 @@ class WorkspaceToolsParametersController extends AbstractParametersController
         if ($form->isValid()) {
             $this->toolManager->editOrderedTool($form->getData());
 
-            return new JsonResponse(array(
-                'tool_id' => $workspaceOrderTool->getTool()->getId(),
-                'ordered_tool_id' => $workspaceOrderTool->getId(),
-                'name' => $workspaceOrderTool->getName()
-            ));
+            return new JsonResponse(
+                array(
+                    'tool_id' => $workspaceOrderTool->getTool()->getId(),
+                    'ordered_tool_id' => $workspaceOrderTool->getId(),
+                    'name' => $workspaceOrderTool->getName()
+                )
+            );
         }
 
         return array(
@@ -193,5 +194,64 @@ class WorkspaceToolsParametersController extends AbstractParametersController
             'workspace' => $workspace,
             'wot' => $workspaceOrderTool
         );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/{workspace}/tools/order/update/tool/{orderedTool}/with/{otherOrderedTool}/mode/{mode}",
+     *     name="claro_workspace_update_ordered_tool_order",
+     *     options={"expose"=true}
+     * )
+     * @param Workspace $workspace
+     * @param OrderedTool $orderedTool
+     * @param OrderedTool $otherOrderedTool
+     * @param string $mode
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function updateWorkspaceOrderedToolOrderAction(
+        Workspace $workspace,
+        OrderedTool $orderedTool,
+        OrderedTool $otherOrderedTool,
+        $mode
+    )
+    {
+        $this->checkAccess($workspace);
+
+        if ($orderedTool->getWorkspace() === $workspace &&
+            $otherOrderedTool->getWorkspace() === $workspace) {
+
+            $order = $orderedTool->getOrder();
+            $otherOrder = $otherOrderedTool->getOrder();
+
+            if ($mode === 'previous') {
+
+                if ($otherOrder > $order) {
+                    $newOrder = $otherOrder;
+                } else {
+                    $newOrder = $otherOrder + 1;
+                }
+            } elseif ($mode === 'next') {
+
+                if ($otherOrder > $order) {
+                    $newOrder = $otherOrder - 1;
+                } else {
+                    $newOrder = $otherOrder;
+                }
+            } else {
+
+                return new Response('Bad Request', 400);
+            }
+
+            $this->toolManager->updateOrderedToolOrder(
+                $orderedTool,
+                $newOrder
+            );
+
+            return new Response('success', 204);
+        } else {
+
+            throw new AccessDeniedException();
+        }
     }
 }

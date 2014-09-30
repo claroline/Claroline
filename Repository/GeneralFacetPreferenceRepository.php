@@ -31,7 +31,7 @@ class GeneralFacetPreferenceRepository extends EntityRepository
             MAX(p.baseData) as baseData,
             MAX(p.mail) as mail,
             MAX(p.phone) as phone,
-            MAX(p.sendMail) as sendMail,
+            MAX(p.mail) as sendMail,
             MAX(p.sendMessage) as sendMessage
             FROM Claroline\CoreBundle\Entity\Facet\GeneralFacetPreference p
             JOIN p.role as role

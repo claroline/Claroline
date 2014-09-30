@@ -821,6 +821,21 @@ div.pagination {
 /* MISC */
 /********/
 
+.navbar.desktop {
+    .border-top-radius(@border-radius-base);
+    .border-bottom-radius(@border-radius-base);
+    padding-left: 15px;
+    padding-right: 15px;
+
+    ul li {
+        float: left !important;
+    }
+}
+
+.tooltip-inner {
+    min-width: 180px;
+}
+
 .alert-default {
     background: @gray-lighter;
     border: 1px solid lighten(@gray, 50%);
@@ -998,8 +1013,7 @@ form .global-error {
         z-index: (@zindex-navbar-fixed - 1);
         background-color: darken(@brand-warning, 5%);
         border: none;
-        .navbar-nav li a
-        {
+        .navbar-nav li a {
             color: #fff;
             font-weight: bold;
         }

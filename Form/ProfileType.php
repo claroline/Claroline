@@ -96,7 +96,7 @@ class ProfileType extends AbstractType
                         'property' => 'translationKey',
                         'query_builder' => function (RoleRepository $roleRepository) use ($isAdmin) {
                             $query = $roleRepository->createQueryBuilder('r')
-                                    ->where("r.type != " . Role::WS_ROLE)
+                                    ->where("r.type = " . Role::PLATFORM_ROLE)
                                     ->andWhere("r.name != 'ROLE_ANONYMOUS'")
                                     ->andWhere("r.name != 'ROLE_USER'");
                             if (!$isAdmin) {

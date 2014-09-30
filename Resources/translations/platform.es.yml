@@ -156,6 +156,7 @@ bad_request: 'La solicitud no es correcta. Si usted llegó a esta página a trav
 badges_management: 'Gestión de insignias'
 best_score: 'Mejor puntaje'
 by: 'Por'
+by_user: 'Por usuarios'
 by_workspace: 'Por espacio de trabajo'
 canCopy: 'Derecho a copiar'
 canCreate: 'Crear %type%'
@@ -825,6 +826,7 @@ url_invalid: 'El código no es correcto, no intente cambiar la URL'
 user: 'Usuario'
 user_accounts: 'Cuentas de usuario'
 user_creation: 'Creación de un usuario'
+user_creation_success: El usuario se ha creado con éxito.
 user_limit_reached: Ha llegado al limite de creación de usuarios.
 user_limit_success_update: El número máximo de usuarios por rol ha sido actualizado con éxito.
 user_limit_too_low: Ya hay %total% %role%(s). El limite %newMax% es muy bajo.
@@ -882,10 +884,10 @@ workspace_edit_form_selfUnregistration: 'Desinscripción publica'
 workspace_form_code: 'Codigo'
 workspace_form_description: 'Descripción'
 workspace_form_displayable: 'Publico'
+workspace_form_model: Plantilla
 workspace_form_name: 'Nombre'
 workspace_form_selfRegistration: 'Inscripción publica'
 workspace_form_selfUnregistration: 'Desinscripción publica'
-workspace_form_template: 'Plantilla'
 workspace_form_type: 'Tipo'
 workspace_home_tab_creation: 'Creación de una pestaña en el inicio de un espacio de trabajo'
 workspace_home_tab_edition: 'Edición de una pestaña en el inicio de un espacio de trabajo'
@@ -917,3 +919,13 @@ yes: 'Si'
 yes: Sí
 yesterday_activity: 'Actividades de ayer'
 your_username: 'Su nombre de usuario es '
+display_captcha: 'Monstrar captcha a los anonimos'
+email: 'Correo electrónico'
+description: 'Descripción'
+picture_profile: 'Foto de perfil'
+verification: 'Repita su contraseña'
+manage_tools: Gestión de las herramientas
+create_role: Crear un rol
+uncompress_file: Descomprimir el archivo si es posible
+workspace_import: Importar de un espacio de trabajo
+create_users: Crear el usarios

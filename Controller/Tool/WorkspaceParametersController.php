@@ -16,6 +16,7 @@ use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
+use Claroline\CoreBundle\Manager\GroupManager;
 use Claroline\CoreBundle\Manager\LocaleManager;
 use Claroline\CoreBundle\Manager\TermsOfServiceManager;
 use Claroline\CoreBundle\Manager\UserManager;
@@ -45,19 +46,21 @@ class WorkspaceParametersController extends Controller
     private $userManager;
     private $tosManager;
     private $utilities;
+    private $groupManager;
 
     /**
      * @DI\InjectParams({
-     *     "workspaceManager"       = @DI\Inject("claroline.manager.workspace_manager"),
-     *     "workspaceTagManager"    = @DI\Inject("claroline.manager.workspace_tag_manager"),
-     *     "security"               = @DI\Inject("security.context"),
-     *     "eventDispatcher"        = @DI\Inject("claroline.event.event_dispatcher"),
-     *     "formFactory"            = @DI\Inject("claroline.form.factory"),
-     *     "router"                 = @DI\Inject("router"),
-     *     "localeManager"          = @DI\Inject("claroline.common.locale_manager"),
-     *     "userManager"            = @DI\Inject("claroline.manager.user_manager"),
-     *     "tosManager"             = @DI\Inject("claroline.common.terms_of_service_manager"),
-     *      "utilities"             = @DI\Inject("claroline.utilities.misc")
+     *     "workspaceManager"    = @DI\Inject("claroline.manager.workspace_manager"),
+     *     "workspaceTagManager" = @DI\Inject("claroline.manager.workspace_tag_manager"),
+     *     "security"            = @DI\Inject("security.context"),
+     *     "eventDispatcher"     = @DI\Inject("claroline.event.event_dispatcher"),
+     *     "formFactory"         = @DI\Inject("claroline.form.factory"),
+     *     "router"              = @DI\Inject("router"),
+     *     "localeManager"       = @DI\Inject("claroline.common.locale_manager"),
+     *     "userManager"         = @DI\Inject("claroline.manager.user_manager"),
+     *     "groupManager"        = @DI\Inject("claroline.manager.group_manager"),
+     *     "tosManager"          = @DI\Inject("claroline.common.terms_of_service_manager"),
+     *     "utilities"           = @DI\Inject("claroline.utilities.misc")
      * })
      */
     public function __construct(
@@ -70,6 +73,7 @@ class WorkspaceParametersController extends Controller
         Request $request,
         LocaleManager $localeManager,
         UserManager $userManager,
+        GroupManager $groupManager,
         TermsOfServiceManager $tosManager,
         ClaroUtilities $utilities
     )
@@ -83,6 +87,7 @@ class WorkspaceParametersController extends Controller
         $this->request = $request;
         $this->localeManager = $localeManager;
         $this->userManager = $userManager;
+        $this->groupManager = $groupManager;
         $this->tosManager = $tosManager;
         $this->utilities = $utilities;
     }
@@ -92,7 +97,6 @@ class WorkspaceParametersController extends Controller
      *     "/{workspace}/form/export",
      *     name="claro_workspace_export_form"
      * )
-     * @EXT\Method("GET")
      *
      * @EXT\Template("ClarolineCoreBundle:Tool\workspace\parameters:template.html.twig")
      *
@@ -152,7 +156,6 @@ class WorkspaceParametersController extends Controller
      *     "/{workspace}/editform",
      *     name="claro_workspace_edit_form"
      * )
-     * @EXT\Method("GET")
      *
      * @EXT\Template("ClarolineCoreBundle:Tool\workspace\parameters:workspaceEdit.html.twig")
      *
@@ -274,7 +277,6 @@ class WorkspaceParametersController extends Controller
      *     "/{workspace}/subscription/url/generate",
      *     name="claro_workspace_subscription_url_generate"
      * )
-     * @EXT\Method("GET")
      *
      * @EXT\Template("ClarolineCoreBundle:Tool\workspace\parameters:generate_url_subscription.html.twig")
      *
@@ -312,7 +314,6 @@ class WorkspaceParametersController extends Controller
      *     "/{workspace}/subscription/url/generate/anonymous",
      *     name="claro_workspace_subscription_url_generate_anonymous"
      * )
-     * @EXT\Method({"GET","POST"})
      *
      * @EXT\Template("ClarolineCoreBundle:Tool\workspace\parameters:generate_url_subscription_anonymous.html.twig")
      *

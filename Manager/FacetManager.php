@@ -586,7 +586,7 @@ class FacetManager
         return $data;
     }
 
-    function getVisibleAdminPublicPreference()
+    function getVisiblePublicPreference()
     {
         $tokenRoles = $this->sc->getToken()->getRoles();
         $roles = array();

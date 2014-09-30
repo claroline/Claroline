@@ -17,6 +17,7 @@ use Claroline\CoreBundle\Library\Transfert\Importer;
 use Symfony\Component\Config\Definition\Processor;
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 
 /**
  * @DI\Service("claroline.importer.groups_importer")
@@ -26,7 +27,6 @@ class GroupsImporter extends Importer implements ConfigurationInterface
 {
     private static $data;
     private $om;
-    private $merger;
 
     /**
      * @DI\InjectParams({
@@ -151,7 +151,7 @@ class GroupsImporter extends Importer implements ConfigurationInterface
     }
 
     /**
-     * Validate the workspace properties.
+     * Validate the group section.
      *
      * @param array $data
      */
@@ -194,6 +194,11 @@ class GroupsImporter extends Importer implements ConfigurationInterface
         }
 
         return false;
+    }
+
+    public function export(Workspace $workspace, array &$files, $object)
+    {
+        return array();
     }
 
     public static function nameAlreadyExistsInDatabase($v, $groups)

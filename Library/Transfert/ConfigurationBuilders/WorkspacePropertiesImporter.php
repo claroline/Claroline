@@ -17,6 +17,7 @@ use Claroline\CoreBundle\Library\Transfert\Importer;
 use Symfony\Component\Config\Definition\Processor;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 
 /**
  * @DI\Service("claroline.importer.properties_importer")
@@ -73,11 +74,17 @@ class WorkspacePropertiesImporter extends Importer implements ConfigurationInter
     {
         $processor = new Processor();
         $configuration = $processor->processConfiguration($this, $data);
-        $this->om->getRepository('Claroline\CoreBundle\Entity\Workspace\Workspace')
-            ->findOneByCode($configuration['code']);
         $this->validateOwner($configuration['owner']);
+        $this->validateCode($configuration['code']);
+    }
 
+    function validateCode($code)
+    {
+        $ws = $this->om->getRepository('ClarolineCoreBundle:Workspace\AbstractWorkspace')->findByCode($code);
 
+        if ($ws !== array()) {
+            throw new \Exception('The code ' . $code . ' already exists');
+        }
     }
 
     function validateOwner($owner)
@@ -95,8 +102,14 @@ class WorkspacePropertiesImporter extends Importer implements ConfigurationInter
         }
 
         //throws no result exception
-        $this->om->getRepository('Claroline\CoreBundle\Entity\User')->findOneByUsername($owner);
+        $this->om->getRepository('Claroline\CoreBundle\Entity\User')
+            ->findOneByUsername($owner);
 
         return true;
+    }
+
+    public function export(Workspace $workspace, array &$files, $object)
+    {
+        return array();
     }
 }

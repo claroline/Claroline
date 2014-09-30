@@ -165,6 +165,7 @@ badges_management: 'Badges management'
 base_informations: 'Basic information'
 best_score: 'Best score'
 by: by
+by_user: 'By user'
 by_workspace: 'By workspace'
 canCopy: 'Right to copy'
 canCreate: 'Create %type%'
@@ -558,6 +559,7 @@ no_group: There is no group.
 no_home_tab: 'There is no Home tab'
 no_learning_outcomes: 'No learning outcomes'
 no_message: 'No message'
+no_model: 'No model'
 no_package_description: No package description.
 no_resources_in_workspace: There are currently no resources in this workspace.
 no_role_selected_message: 'No role selected.'
@@ -903,6 +905,7 @@ url_invalid: 'the code is not correct, do no try to change the url'
 user: User
 user_accounts: 'User accounts'
 user_creation: 'User creation'
+user_creation_success: The user account has been successfully created.
 user_limit_reached: The user limit has been reached.
 user_limit_success_update: The user limit by role has been successfully updated.
 user_limit_too_low: There is already %total% %role%(s). The limit %newMax% is too low.
@@ -969,11 +972,11 @@ workspace_edit_form_selfUnregistration: 'Public unregistration'
 workspace_form_code: Code
 workspace_form_description: Description
 workspace_form_displayable: Public
+workspace_form_model: Template
 workspace_form_name: Name
 workspace_form_registrationValidation : 'Registration validation'
 workspace_form_selfRegistration: 'Public registration'
 workspace_form_selfUnregistration: 'Public unregistration'
-workspace_form_template: Template
 workspace_form_type: Type
 workspace_home_tab_creation: 'Workspace Home tab creation'
 workspace_home_tab_edition: 'Workspace Home tab edition'
@@ -1009,6 +1012,27 @@ yes: Yes
 yesterday_activity: 'Yesterday''s activity'
 your_current_url: 'Your current URL'
 your_username: 'Your username is '
+workspace_import: Workspace import
+create_users: Create users
+your_username: 'Your username is '
+models: Modèles
+create_model: Create a model
+remove_model: Remove a model
+remove_model_confirm: Are you sure you want to remove the model %name% ?
+share: Share
+remove_user_from_model: Remove a user from the model
+remove_user_from_model_confirm: Are you sure you want to remove the user %name%?
+remove_group_from_model: Remove a group from the model
+remove_group_from_model_confirm: Are you sure you want to remove the group %groupe%?
+workspace_import: Import a workspace
+create_users: Create users
+remove_resource_from_model: Remove a resource from the model
+remove_resource_from_model_comfirm: Are you sure you want to remove this resource?
+add_tab: Add a tab
+links: Links
+tabs: Tabs
+tab: Tab
+copies: Copies
 portfolio_url: 'Portfolio tool''s access url'
 internal_portfolio: 'Platform internal portfolio'
 general_parameters_updated_success: 'General parameters updated with success.'

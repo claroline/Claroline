@@ -94,7 +94,6 @@ class UsersController extends Controller
 
     /**
      * @EXT\Route("/menu", name="claro_admin_users_management")
-     * @EXT\Method("GET")
      * @EXT\Template
      *
      * @return Response
@@ -112,7 +111,6 @@ class UsersController extends Controller
 
     /**
      * @EXT\Route("/new", name="claro_admin_user_creation_form")
-     * @EXT\Method("GET")
      * @EXT\Template
      *
      * Displays the user creation form.
@@ -159,7 +157,7 @@ class UsersController extends Controller
     }
 
     /**
-     * @EXT\Route("/new", name="claro_admin_create_user")
+     * @EXT\Route("/new/submit", name="claro_admin_create_user")
      * @EXT\Method("POST")
      * @EXT\ParamConverter("currentUser", options={"authenticatedUser" = true})
      * @EXT\Template("ClarolineCoreBundle:Administration/Users:userCreationForm.html.twig")
@@ -173,6 +171,8 @@ class UsersController extends Controller
     public function createAction(User $currentUser)
     {
         $this->checkOpen();
+        $translator = $this->get('translator');
+        $sessionFlashBag = $this->get('session')->getFlashBag();
         $roleUser = $this->roleManager->getRoleByName('ROLE_USER');
         $isAdmin = ($this->sc->isGranted('ROLE_ADMIN')) ? true : false;
 
@@ -209,6 +209,8 @@ class UsersController extends Controller
             $user = $form->getData();
             $newRoles = $form->get('platformRoles')->getData();
             $this->userManager->insertUserWithRoles($user, $newRoles);
+            
+            $sessionFlashBag->add('success', $translator->trans('user_creation_success', array(), 'platform'));
 
             return $this->redirect($this->generateUrl('claro_admin_user_list'));
         }
@@ -222,7 +224,7 @@ class UsersController extends Controller
         return array(
             'form_complete_user' => $form->createView(),
             'error' => $error,
-            'unavailableRoles' => $unavailableRoles
+            'unavailableRoles' => $unavailableRoles,
         );
     }
 
@@ -269,7 +271,6 @@ class UsersController extends Controller
      *     defaults={"page"=1, "search"="", "max"=50, "order"="id","direction"="ASC"},
      *     options = {"expose"=true}
      * )
-     * @EXT\Method("GET")
      * @EXT\Route(
      *     "/users/page/{page}/search/{search}/max/{max}/order/{order}/direction/{direction}",
      *     name="claro_admin_user_list_search",
@@ -296,16 +297,18 @@ class UsersController extends Controller
     public function listAction($page, $search, $max, $order, $direction)
     {
         $this->checkOpen();
+        $canUserBeCreated = $this->roleManager->validateRoleInsert(new User(),$this->roleManager->getRoleByName('ROLE_USER'));
         $pager = $search === '' ?
             $this->userManager->getAllUsers($page, $max, $order, $direction) :
             $this->userManager->getUsersByName($search, $page, $max, $order, $direction);
 
         return array(
+            'canUserBeCreated' => $canUserBeCreated,
             'pager' => $pager,
             'search' => $search,
             'max' => $max,
             'order' => $order,
-            'direction' => $direction
+            'direction' => $direction,
         );
     }
 
@@ -316,14 +319,12 @@ class UsersController extends Controller
      *     defaults={"page"=1, "search"=""},
      *     options = {"expose"=true}
      * )
-     * @EXT\Method("GET")
      * @EXT\Route(
      *     "/page/{page}/pic/search/{search}",
      *     name="claro_admin_user_list_search_pics",
      *     defaults={"page"=1},
      *     options = {"expose"=true}
      * )
-     * @EXT\Method("GET")
      * @EXT\Template
      *
      * Displays the platform user list.
@@ -345,7 +346,6 @@ class UsersController extends Controller
 
     /**
      * @EXT\Route("/import", name="claro_admin_import_users_form")
-     * @EXT\Method("GET")
      * @EXT\Template
      *
      * @return Response
@@ -365,7 +365,6 @@ class UsersController extends Controller
      *     defaults={"page"=1, "max"=50},
      *     options={"expose"=true}
      * )
-     * @EXT\Method("GET")
      * @EXT\Template
      *
      * @param User    $user
@@ -383,7 +382,7 @@ class UsersController extends Controller
     }
 
     /**
-     * @EXT\Route("/import", name="claro_admin_import_users")
+     * @EXT\Route("/import/submit", name="claro_admin_import_users")
      * @EXT\Method("POST")
      * @EXT\Template("ClarolineCoreBundle:Administration/Users:importForm.html.twig")
      *

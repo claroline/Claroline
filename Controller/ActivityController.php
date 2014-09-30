@@ -336,7 +336,6 @@ class ActivityController
      *     name="claro_display_activity_evaluation",
      *     options={"expose"=true}
      * )
-     * @Method("GET")
      * @ParamConverter("currentUser", options={"authenticatedUser" = true})
      * @ParamConverter(
      *      "params",

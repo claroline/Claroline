@@ -31,7 +31,6 @@ class FileController extends Controller
      *     name="claro_file_get_media",
      *     options={"expose"=true}
      * )
-     * @EXT\Method("GET")
      *
      * @param integer $id
      *
@@ -152,12 +151,12 @@ class FileController extends Controller
             $this->get('claroline.manager.file_manager')->changeFile($file, $tmpFile);
 
             if ($this->get('claroline.twig.home_extension')->isDesktop()) {
-                $url = $this->generateUrl('claro_desktop_open_tool', array('toolName'=> 'resource_manager'));
-            } else{
+                $url = $this->generateUrl('claro_desktop_open_tool', array('toolName' => 'resource_manager'));
+            } else {
                 $url = $this->generateUrl(
                     'claro_workspace_open_tool',
                     array(
-                        'toolName'=> 'resource_manager',
+                        'toolName' => 'resource_manager',
                         'workspaceId' => $file->getResourceNode()->getWorkspace()->getId()
                     )
                 );

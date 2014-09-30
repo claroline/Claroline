@@ -85,7 +85,7 @@ class RightsManager
     }
 
     /**
-     * Create a new ResourceRight
+     * Create a new ResourceRight. If the ResourceRight already exists, it's edited instead.
      *
      * @param array|integer $permissions
      * @param \Claroline\CoreBundle\Entity\Role $role
@@ -101,9 +101,15 @@ class RightsManager
         array $creations = array()
     )
     {
-        $isRecursive ?
-            $this->recursiveCreation($permissions, $role, $node, $creations) :
-            $this->nonRecursiveCreation($permissions, $role, $node, $creations);
+        $rights = $this->rightsRepo->findBy(array('role' => $role, 'resourceNode' => $node));
+
+        if (count($rights) === 0) {
+            $isRecursive ?
+                $this->recursiveCreation($permissions, $role, $node, $creations) :
+                $this->nonRecursiveCreation($permissions, $role, $node, $creations);
+        } else {
+            $this->editPerms($permissions, $role, $node, $isRecursive, $creations);
+        }
     }
 
     /**
@@ -111,6 +117,7 @@ class RightsManager
      * @param \Claroline\CoreBundle\Entity\Role                  $role
      * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $node
      * @param boolean                                            $isRecursive
+     * @param array                                              $creations
      *
      * @return array|\Claroline\CoreBundle\Entity\Resource\ResourceRights[]
      */
@@ -118,10 +125,12 @@ class RightsManager
         $permissions,
         Role $role,
         ResourceNode $node,
-        $isRecursive = false
+        $isRecursive = false,
+        $creations = array()
     )
     {
-        //Bugfix: If the flushSuite is uncommented, doctrine returns an error
+        //Bugfix: If the flushSuite is uncommented, doctrine returns an error. It probably happens because rights
+        //weren't created already
         //(ResourceRights duplicate)
         //$this->om->startFlushSuite();
 
@@ -155,6 +164,10 @@ class RightsManager
             $this->container->get('claroline.manager.activity_manager')->initializePermissions($resource);
         }
 
+        if (count($creations) > 0) {
+            $this->editCreationRights($creations, $role, $node, $isRecursive);
+        }
+
         //$this->om->endFlushSuite();
         return $arRights;
     }
@@ -176,7 +189,7 @@ class RightsManager
     {
         //Bugfix: If the flushSuite is uncommented, doctrine returns an error
         //(ResourceRights duplicata)
-        //$this->om->startFlushSuite();
+//        $this->om->startFlushSuite();
 
         $arRights = ($isRecursive) ?
             $this->updateRightsTree($role, $node):
@@ -188,7 +201,7 @@ class RightsManager
             $this->logChangeSet($toUpdate);
         }
 
-        //$this->om->endFlushSuite();
+//        $this->om->endFlushSuite();
         return $arRights;
     }
 
@@ -305,6 +318,7 @@ class RightsManager
     /**
      * @param \Claroline\CoreBundle\Entity\Role                  $role
      * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $node
+     * @param boolean                                            $fetchUOW
      *
      * @return \Claroline\CoreBundle\Entity\Resource\ResourceRights $resourceRights
      */
@@ -312,11 +326,13 @@ class RightsManager
     {
         $resourceRights = $this->rightsRepo->findOneBy(array('resourceNode' => $node, 'role' => $role));
 
-        if ($resourceRights === null) {
-            $resourceRights = $this->om->factory('Claroline\CoreBundle\Entity\Resource\ResourceRights');
-            $resourceRights->setResourceNode($node);
-            $resourceRights->setRole($role);
+        if ($resourceRights) {
+            return $resourceRights;
         }
+
+        $resourceRights = $this->om->factory('Claroline\CoreBundle\Entity\Resource\ResourceRights');
+        $resourceRights->setResourceNode($node);
+        $resourceRights->setRole($role);
 
         return $resourceRights;
     }
@@ -452,7 +468,7 @@ class RightsManager
     /**
      * Merges permissions related to a specific resource type (i.e. "post" in a
      * forum) with a directory mask. This allows directory permissions to be
-     * applied recursively without loosing particular permissions.
+     * applied recursively without losing particular permissions.
      *
      * @param int $dirMask          A directory mask
      * @param int $resourceMask     A specific resource mask
@@ -518,5 +534,35 @@ class RightsManager
         }
 
         $this->om->endFlushSuite();
+    }
+
+    public function getRightsFromIdentityMap($roleName, ResourceNode $resourceNode)
+    {
+        $map = $this->om->getUnitOfWork()->getIdentityMap();
+        $result = null;
+
+        foreach ($map['Claroline\CoreBundle\Entity\Resource\ResourceRights'] as $right) {
+
+            if ($right->getRole()->getName() === $roleName &&
+                $right->getResourceNode() === $resourceNode) {
+
+                $result = $right;
+                break;
+            }
+        }
+
+        return $result;
+    }
+
+    public function getUserRolesResourceRights(
+        ResourceNode $resource,
+        array $keys,
+        $executeQuery = true
+    )
+    {
+        return count($keys) > 0 ?
+            $this->rightsRepo
+                ->findUserRolesResourceRights($resource, $keys, $executeQuery) :
+            array();
     }
 }

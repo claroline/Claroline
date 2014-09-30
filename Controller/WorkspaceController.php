@@ -13,9 +13,11 @@ namespace Claroline\CoreBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Claroline\CoreBundle\Event\StrictDispatcher;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
@@ -23,6 +25,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Translation\TranslatorInterface;
+use Claroline\CoreBundle\Entity\Model\WorkspaceModel;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceTag;
@@ -37,6 +40,7 @@ use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
+use Claroline\CoreBundle\Manager\WorkspaceModelManager;
 use Claroline\CoreBundle\Manager\WorkspaceTagManager;
 use Claroline\CoreBundle\Manager\WidgetManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
@@ -52,6 +56,7 @@ class WorkspaceController extends Controller
 {
     private $homeTabManager;
     private $workspaceManager;
+    private $workspaceModelManager;
     private $resourceManager;
     private $roleManager;
     private $userManager;
@@ -71,29 +76,31 @@ class WorkspaceController extends Controller
 
     /**
      * @DI\InjectParams({
-     *     "homeTabManager"     = @DI\Inject("claroline.manager.home_tab_manager"),
-     *     "workspaceManager"   = @DI\Inject("claroline.manager.workspace_manager"),
-     *     "resourceManager"    = @DI\Inject("claroline.manager.resource_manager"),
-     *     "roleManager"        = @DI\Inject("claroline.manager.role_manager"),
-     *     "userManager"        = @DI\Inject("claroline.manager.user_manager"),
-     *     "tagManager"         = @DI\Inject("claroline.manager.workspace_tag_manager"),
-     *     "toolManager"        = @DI\Inject("claroline.manager.tool_manager"),
-     *     "eventDispatcher"    = @DI\Inject("claroline.event.event_dispatcher"),
-     *     "security"           = @DI\Inject("security.context"),
-     *     "router"             = @DI\Inject("router"),
-     *     "utils"              = @DI\Inject("claroline.security.utilities"),
-     *     "formFactory"        = @DI\Inject("claroline.form.factory"),
-     *     "tokenUpdater"       = @DI\Inject("claroline.security.token_updater"),
-     *     "widgetManager"      = @DI\Inject("claroline.manager.widget_manager"),
-     *     "request"            = @DI\Inject("request"),
-     *     "templateDir"        = @DI\Inject("%claroline.param.templates_directory%"),
-     *     "translator"         = @DI\Inject("translator"),
-     *     "session"            = @DI\Inject("session")
+     *     "homeTabManager"        = @DI\Inject("claroline.manager.home_tab_manager"),
+     *     "workspaceManager"      = @DI\Inject("claroline.manager.workspace_manager"),
+     *     "workspaceModelManager" = @DI\Inject("claroline.manager.workspace_model_manager"),
+     *     "resourceManager"       = @DI\Inject("claroline.manager.resource_manager"),
+     *     "roleManager"           = @DI\Inject("claroline.manager.role_manager"),
+     *     "userManager"           = @DI\Inject("claroline.manager.user_manager"),
+     *     "tagManager"            = @DI\Inject("claroline.manager.workspace_tag_manager"),
+     *     "toolManager"           = @DI\Inject("claroline.manager.tool_manager"),
+     *     "eventDispatcher"       = @DI\Inject("claroline.event.event_dispatcher"),
+     *     "security"              = @DI\Inject("security.context"),
+     *     "router"                = @DI\Inject("router"),
+     *     "utils"                 = @DI\Inject("claroline.security.utilities"),
+     *     "formFactory"           = @DI\Inject("claroline.form.factory"),
+     *     "tokenUpdater"          = @DI\Inject("claroline.security.token_updater"),
+     *     "widgetManager"         = @DI\Inject("claroline.manager.widget_manager"),
+     *     "request"               = @DI\Inject("request"),
+     *     "templateDir"           = @DI\Inject("%claroline.param.templates_directory%"),
+     *     "translator"            = @DI\Inject("translator"),
+     *     "session"               = @DI\Inject("session")
      * })
      */
     public function __construct(
         HomeTabManager $homeTabManager,
         WorkspaceManager $workspaceManager,
+        WorkspaceModelManager $workspaceModelManager,
         ResourceManager $resourceManager,
         RoleManager $roleManager,
         UserManager $userManager,
@@ -114,6 +121,7 @@ class WorkspaceController extends Controller
     {
         $this->homeTabManager = $homeTabManager;
         $this->workspaceManager = $workspaceManager;
+        $this->workspaceModelManager = $workspaceModelManager;
         $this->resourceManager = $resourceManager;
         $this->roleManager = $roleManager;
         $this->userManager = $userManager;
@@ -139,13 +147,14 @@ class WorkspaceController extends Controller
      *     defaults={"search"=""},
      *     options={"expose"=true}
      * )
-     * @EXT\Method("GET")
      * @EXT\ParamConverter("currentUser", options={"authenticatedUser" = false})
      * @EXT\Template()
      *
      * Renders the workspace list page with its claroline layout.
      *
      * @param $currentUser
+     *
+     * @return Response
      */
     public function listAction($currentUser, $search = '')
     {
@@ -160,7 +169,6 @@ class WorkspaceController extends Controller
      *     name="claro_workspace_by_user",
      *     options={"expose"=true}
      * )
-     * @EXT\Method("GET")
      *
      * @EXT\Template()
      *
@@ -199,7 +207,6 @@ class WorkspaceController extends Controller
      *     defaults={"search"=""},
      *     options={"expose"=true}
      * )
-     * @EXT\Method("GET")
      *
      * @EXT\Template()
      *
@@ -223,7 +230,6 @@ class WorkspaceController extends Controller
      *     defaults={"page"=1},
      *     options={"expose"=true}
      * )
-     * @EXT\Method("GET")
      * @EXT\ParamConverter("currentUser", options={"authenticatedUser" = true})
      *
      * @EXT\Template()
@@ -254,7 +260,6 @@ class WorkspaceController extends Controller
      *     "/new/form",
      *     name="claro_workspace_creation_form"
      * )
-     * @EXT\Method("GET")
      *
      * @EXT\Template()
      *
@@ -265,7 +270,8 @@ class WorkspaceController extends Controller
     public function creationFormAction()
     {
         $this->assertIsGranted('ROLE_WS_CREATOR');
-        $form = $this->formFactory->create(FormFactory::TYPE_WORKSPACE);
+        $user = $this->security->getToken()->getUser();
+        $form = $this->formFactory->create(FormFactory::TYPE_WORKSPACE, array($user));
 
         return array('form' => $form->createView());
     }
@@ -286,29 +292,38 @@ class WorkspaceController extends Controller
     public function createAction()
     {
         $this->assertIsGranted('ROLE_WS_CREATOR');
-        $form = $this->formFactory->create(FormFactory::TYPE_WORKSPACE);
+        $user = $this->security->getToken()->getUser();
+        $form = $this->formFactory->create(FormFactory::TYPE_WORKSPACE, array($user));
         $form->handleRequest($this->request);
         $ds = DIRECTORY_SEPARATOR;
 
         if ($form->isValid()) {
-            $config = Configuration::fromTemplate(
-                $this->templateDir . $ds . $form->get('template')->getData()->getHash()
-            );
-            $config->setWorkspaceName($form->get('name')->getData());
-            $config->setWorkspaceCode($form->get('code')->getData());
-            $config->setDisplayable($form->get('displayable')->getData());
-            $config->setSelfRegistration($form->get('selfRegistration')->getData());
-            $config->setRegistrationValidation($form->get('registrationValidation')->getData());
-            $config->setSelfUnregistration($form->get('selfUnregistration')->getData());
-            $config->setWorkspaceDescription($form->get('description')->getData());
+            $model = $form->get('model')->getData();
 
-            $user = $this->security->getToken()->getUser();
-            $this->workspaceManager->create($config, $user);
+            if (!is_null($model)) {
+                $this->createWorkspaceFromModel($model, $form);
+            } else {
+                $config = Configuration::fromTemplate(
+                    $this->templateDir . $ds . 'default.zip'
+                );
+                $config->setWorkspaceName($form->get('name')->getData());
+                $config->setWorkspaceCode($form->get('code')->getData());
+                $config->setDisplayable($form->get('displayable')->getData());
+                $config->setSelfRegistration($form->get('selfRegistration')->getData());
+                $config->setRegistrationValidation($form->get('registrationValidation')->getData());
+                $config->setSelfUnregistration($form->get('selfUnregistration')->getData());
+                $config->setWorkspaceDescription($form->get('description')->getData());
+
+                $user = $this->security->getToken()->getUser();
+                $this->workspaceManager->create($config, $user);
+            }
             $this->tokenUpdater->update($this->security->getToken());
             $route = $this->router->generate('claro_workspace_by_user');
+
             $msg = $this->get('translator')->trans(
                 'successfull_workspace_creation',
-                array('%name%' => $form->get('name')->getData()), 'platform'
+                array('%name%' => $form->get('name')->getData()),
+                'platform'
             );
             $this->get('request')->getSession()->getFlashBag()->add('success', $msg);
 
@@ -349,10 +364,11 @@ class WorkspaceController extends Controller
         $this->tokenUpdater->cancelUsurpation($this->security->getToken());
 
         $sessionFlashBag = $this->session->getFlashBag();
-        $sessionFlashBag->add('success', $this->translator->trans(
-            'workspace_delete_success_message',
-            array('%workspaceName%' => $workspace->getName()),
-            'platform'
+        $sessionFlashBag->add(
+            'success', $this->translator->trans(
+                'workspace_delete_success_message',
+                array('%workspaceName%' => $workspace->getName()),
+                'platform'
             )
         );
 
@@ -404,8 +420,9 @@ class WorkspaceController extends Controller
         //if manager or admin, show every tools
         if ($hasManagerAccess) {
             $orderedTools = $this->toolManager->getOrderedToolsByWorkspace($workspace);
-        //otherwise only shows the relevant tools
+
         } else {
+            //otherwise only shows the relevant tools
             $orderedTools = $this->toolManager->getOrderedToolsByWorkspaceAndRoles($workspace, $currentRoles);
         }
 
@@ -558,7 +575,7 @@ class WorkspaceController extends Controller
         $lastWidgetOrder = 1;
         $homeTab = $this->homeTabManager
             ->getHomeTabByIdAndWorkspace($homeTabId, $workspace);
-        $isVisibleHomeTab = is_null($homeTab) ? false: true;
+        $isVisibleHomeTab = is_null($homeTab) ? false : true;
 
         if ($isVisibleHomeTab) {
 
@@ -602,7 +619,6 @@ class WorkspaceController extends Controller
      *     name="claro_workspace_open",
      *     options={"expose"=true}
      * )
-     * @EXT\Method("GET")
      * @EXT\ParamConverter(
      *      "workspace",
      *      class="ClarolineCoreBundle:Workspace\Workspace",
@@ -713,7 +729,6 @@ class WorkspaceController extends Controller
      *     defaults={"page"=1},
      *     options={"expose"=true}
      * )
-     * @EXT\Method("GET")
      * @EXT\ParamConverter(
      *      "workspaceTag",
      *      class="ClarolineCoreBundle:Workspace\WorkspaceTag",
@@ -745,7 +760,6 @@ class WorkspaceController extends Controller
      *     defaults={"page"=1},
      *     options={"expose"=true}
      * )
-     * @EXT\Method("GET")
      * @EXT\ParamConverter(
      *      "workspaceTag",
      *      class="ClarolineCoreBundle:Workspace\WorkspaceTag",
@@ -782,7 +796,6 @@ class WorkspaceController extends Controller
      *     defaults={"page"=1},
      *     options={"expose"=true}
      * )
-     * @EXT\Method("GET")
      * @EXT\Template()
      *
      * @param integer $page
@@ -803,7 +816,6 @@ class WorkspaceController extends Controller
      *     defaults={"page"=1},
      *     options={"expose"=true}
      * )
-     * @EXT\Method("GET")
      *
      * @EXT\Template()
      *
@@ -889,7 +901,6 @@ class WorkspaceController extends Controller
      *     defaults={"page"=1},
      *     options={"expose"=true}
      * )
-     * @EXT\Method("GET")
      * @EXT\ParamConverter(
      *      "workspaceTag",
      *      class="ClarolineCoreBundle:Workspace\WorkspaceTag",
@@ -922,7 +933,6 @@ class WorkspaceController extends Controller
      *     defaults={"page"=1},
      *     options={"expose"=true}
      * )
-     * @EXT\Method("GET")
      *
      * @EXT\Template()
      *
@@ -946,7 +956,6 @@ class WorkspaceController extends Controller
      *     defaults={"page"=1},
      *     options={"expose"=true}
      * )
-     * @EXT\Method("GET")
      *
      * @EXT\Template()
      *
@@ -1136,6 +1145,162 @@ class WorkspaceController extends Controller
         }
 
         return new Response('error', 400);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/{workspace}/export",
+     *     name="claro_workspace_export",
+     *     options={"expose"=true}
+     * )
+     */
+    public function exportAction(Workspace $workspace)
+    {
+        $archive = $this->container->get('claroline.manager.transfert_manager')->export($workspace);
+
+        $fileName = $workspace->getCode();
+        $mimeType = 'application/zip';
+        $response = new StreamedResponse();
+
+        $response->setCallBack(
+            function () use ($archive) {
+                readfile($archive);
+            }
+        );
+
+        $response->headers->set('Content-Transfer-Encoding', 'octet-stream');
+        $response->headers->set('Content-Type', 'application/force-download');
+        $response->headers->set('Content-Disposition', 'attachment; filename=' . urlencode($fileName));
+        $response->headers->set('Content-Type', $mimeType);
+        $response->headers->set('Connection', 'close');
+
+        return $response;
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/import/form",
+     *     name="claro_workspace_import_form",
+     * )
+     * @EXT\Template()
+     *
+     * @param int $page
+     *
+     * @return array
+     */
+    public function importFormAction()
+    {
+        $form = $this->formFactory->create(FormFactory::TYPE_WORKSPACE_IMPORT, array());
+
+        return array('form' => $form->createView());
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/import/submit",
+     *     name="claro_workspace_import",
+     * )
+     * @EXT\Template()
+     *
+     * @param int $page
+     *
+     * @return array
+     */
+    public function importAction()
+    {
+        $form = $this->formFactory->create(FormFactory::TYPE_WORKSPACE_IMPORT, array());
+        $form->handleRequest($this->request);
+
+        if ($form->isValid()) {
+            $workspace = $form->get('workspace')->getData();
+            $config= Configuration::fromTemplate($workspace);
+            $config->setWorkspaceName($form->get('name')->getData());
+            $config->setWorkspaceCode($form->get('code')->getData());
+            $config->setDisplayable(true);
+            $config->setSelfRegistration(true);
+            $config->setRegistrationValidation(true);
+            $config->setSelfUnregistration(true);
+            $config->setWorkspaceDescription(true);
+            $this->workspaceManager->create($config, $this->security->getToken()->getUser());
+        } else {
+            return new Response('LOL');
+        }
+
+        return new Response('YOLO');
+    }
+
+    private function createWorkspaceFromModel(WorkspaceModel $model, FormInterface $form)
+    {
+        $user = $this->security->getToken()->getUser();
+        $modelWorkspace = $model->getWorkspace();
+        $resourcesModels = $model->getResourcesModel();
+        $homeTabs = $model->getHomeTabs();
+
+        $workspace = new Workspace();
+        $workspace->setName($form->get('name')->getData());
+        $workspace->setCode($form->get('code')->getData());
+        $workspace->setDescription($form->get('description')->getData());
+        $workspace->setDisplayable($form->get('displayable')->getData());
+        $workspace->setSelfRegistration($form->get('selfRegistration')->getData());
+        $workspace->setSelfUnregistration($form->get('selfUnregistration')->getData());
+
+        $guid = $this->container->get('claroline.utilities.misc')->generateGuid();
+        $workspace->setGuid($guid);
+        $date = new \Datetime(date('d-m-Y H:i'));
+        $workspace->setCreationDate($date->getTimestamp());
+        $workspace->setCreator($user);
+
+        $this->workspaceManager->createWorkspace($workspace);
+        $this->workspaceModelManager
+            ->duplicateWorkspaceRoles($modelWorkspace, $workspace, $user);
+        $this->workspaceModelManager
+            ->duplicateOrderedTools($modelWorkspace, $workspace);
+        $rootDirectory = $this->workspaceModelManager
+            ->duplicateRootDirectory($modelWorkspace, $workspace, $user);
+        $widgetConfigErrors = $this->workspaceModelManager
+            ->duplicateHomeTabs($modelWorkspace, $workspace, $homeTabs->toArray());
+
+        $flashBag = $this->session->getFlashBag();
+
+        foreach ($widgetConfigErrors as $widgetConfigError) {
+            $widgetName = $widgetConfigError['widgetName'];
+            $widgetInstanceName = $widgetConfigError['widgetInstanceName'];
+            $msg = '[' .
+                $this->translator->trans($widgetName, array(), 'widget') .
+                '] ' .
+                $this->translator->trans(
+                    'widget_configuration_copy_warning',
+                    array('%widgetInstanceName%' => $widgetInstanceName),
+                    'widget'
+                );
+            $flashBag->add('error', $msg);
+        }
+
+        $resourcesErrors = $this->workspaceModelManager->duplicateResources(
+            $resourcesModels->toArray(),
+            $rootDirectory,
+            $workspace,
+            $user
+        );
+
+        foreach ($resourcesErrors as $resourceError) {
+            $resourceName = $resourceError['resourceName'];
+            $resourceType = $resourceError['resourceType'];
+            $isCopy = $resourceError['type'] === 'copy';
+
+            $msg = '[' .
+                $this->translator->trans($resourceType, array(), 'resource') .
+                '] ';
+
+            if ($isCopy) {
+                $msg .= $this->translator->trans(
+                    'resource_copy_warning',
+                    array('%resourceName%' => $resourceName),
+                    'resource'
+                );
+            }
+            $flashBag->add('error', $msg);
+        }
     }
 
     private function assertIsGranted($attributes, $object = null)

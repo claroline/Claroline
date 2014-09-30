@@ -20,9 +20,9 @@
                     <dt>{{ key|trans({}, 'platform') }}</dt>
                     <dd>
                         {% if values[0] %}
-                            {{ ('yes')|trans({}, 'platform') }}
+                            {{ values[0] }}
                         {% else %}
-                            {{ ('no')|trans({}, 'platform') }}
+                            {{ 'null'|trans({}, 'platform') }}
                         {% endif %}
                     </dd>
                 {% endif %}
@@ -48,9 +48,9 @@
                     <dt>{{ key|trans({}, 'platform') }}</dt>
                     <dd>
                         {% if values[1] %}
-                            {{ ('yes')|trans({}, 'platform') }}
+                            {{ values[1] }}
                         {% else %}
-                            {{ ('no')|trans({}, 'platform') }}
+                            {{ 'null'|trans({}, 'platform') }}
                         {% endif %}
                     </dd>
                 {% endif %}

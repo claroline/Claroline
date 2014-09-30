@@ -11,19 +11,36 @@
 
 namespace Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders\Tools\Widgets;
 
+use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 use Claroline\CoreBundle\Library\Transfert\Importer;
+use Claroline\CoreBundle\Library\Transfert\RichTextInterface;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\Processor;
+use Claroline\CoreBundle\Entity\Widget\SimpleTextConfig;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use JMS\DiExtraBundle\Annotation as DI;
+use Claroline\CoreBundle\Persistence\ObjectManager;
 
 /**
  * @DI\Service("claroline.widget.text_importer")
  * @DI\Tag("claroline.importer")
  */
-class TextImporter extends Importer implements ConfigurationInterface
+class TextImporter extends Importer implements ConfigurationInterface, RichTextInterface
 {
-    private $result;
+    private $om;
+    private $container;
+    /**
+     * @DI\InjectParams({
+     *      "om"        = @DI\Inject("claroline.persistence.object_manager"),
+     *      "container" = @DI\Inject("service_container")
+     * })
+     */
+    public function __construct(ObjectManager $om, $container)
+    {
+        $this->om = $om;
+        $this->container = $container;
+    }
 
     public function  getConfigTreeBuilder()
     {
@@ -45,9 +62,19 @@ class TextImporter extends Importer implements ConfigurationInterface
         $this->result = $processor->processConfiguration($this, $data);
     }
 
-    public function import(array $array)
+    public function import(array $data, WidgetInstance $widgetInstance)
     {
+        $widgetText = new SimpleTextConfig();
+        $content = '';
 
+        if ($data[0]['content']) {
+            $content = file_get_contents($this->getRootPath() . DIRECTORY_SEPARATOR . $data[0]['content']);
+        }
+
+        $widgetText->setContent($content);
+        $widgetText->setWidgetInstance($widgetInstance);
+        $this->om->persist($widgetText);
+        $this->om->flush();
     }
 
     public function getName()
@@ -65,4 +92,22 @@ class TextImporter extends Importer implements ConfigurationInterface
                 ->end()
             ->end();
     }
-} 
+
+    public function export(Workspace $workspace, array &$files, $object)
+    {
+        $txtConfig = $this->container->get('claroline.manager.simple_text_manager')->getTextConfig($object);
+        $tmpPath = sys_get_temp_dir() . DIRECTORY_SEPARATOR . uniqid();
+        file_put_contents($tmpPath, $txtConfig->getContent());
+        $archPath = 'widgets/text/' . uniqid() . '.txt';
+        //create file
+        $data = array(array('locale' => 'fr', 'content' => $archPath));
+        $files[$archPath] = $tmpPath;
+
+        return $data;
+    }
+
+    public function format($data)
+    {
+
+    }
+}
