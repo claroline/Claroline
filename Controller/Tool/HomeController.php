@@ -776,7 +776,7 @@ class HomeController extends Controller
 
     /**
      * @EXT\Route(
-     *     "workspace/{workspaceId}/home_tab/{homeTabId}/edit/form",
+     *     "workspace/{workspaceId}/home_tab/{homeTabId}/edit",
      *     name="claro_workspace_home_tab_edit"
      * )
      * @EXT\Method("POST")
