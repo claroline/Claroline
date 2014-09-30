@@ -277,4 +277,9 @@
             });
         }
     });
+    
+    $('#users-with-rights-list').on('click', '#add-new-user-rights-btn', function () {
+        $('#users-with-rights-list-tab').removeClass('active');
+        $('#users-without-rights-list-tab').addClass('active');
+    });
 })();

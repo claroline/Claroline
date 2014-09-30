@@ -165,6 +165,7 @@ badges_management: 'Gestion des badges'
 base_informations: 'Informations de base'
 best_score: 'Meilleur score'
 by: par
+by_user: 'Par utilisateur'
 by_workspace: 'Par espace'
 canCopy: 'Droit de copier'
 canCreate: 'Creation de %type%'

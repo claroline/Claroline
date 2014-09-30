@@ -49,6 +49,16 @@
 {% endif %}
 
 <div class="row">
+    <div class="input-group col-md-4 pull-left">
+        <a href="#users-without-rights-list"
+           class="btn btn-default"
+           id="add-new-user-rights-btn"
+           data-toggle="tab"
+        >
+            <i class="fa fa-plus-circle"></i>
+            {{ 'add_user'|trans({}, 'platform') }}
+        </a>
+    </div>
     <div class="input-group col-md-4 pull-right">
         <input class="form-control search-user-with-rights-input"
                type="text"

@@ -29,7 +29,8 @@
             'click #search-user-with-rights-btn': 'searchUsersWithRights',
             'click #search-user-without-rights-btn': 'searchUsersWithoutRights',
             'click .pagination > ul > li > a': 'pagination',
-            'click th > a': 'reorder'
+            'click th > a': 'reorder',
+            'click #add-new-user-rights-btn': 'switchUserRightsTab'
         },
         initialize: function (dispatcher) {
             this.dispatcher = dispatcher;
@@ -220,6 +221,10 @@
             }
 
             return type;
+        },
+        switchUserRightsTab: function () {
+            $('#users-with-rights-list-tab').removeClass('active');
+            $('#users-without-rights-list-tab').addClass('active');
         }
     });
 })();

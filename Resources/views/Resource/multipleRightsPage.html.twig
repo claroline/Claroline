@@ -78,8 +78,12 @@
                 <li class="active"><a href="#simple" data-toggle="tab">{{ 'simple'|trans({}, 'platform') }}</a></li>
                 <li><a href="#general" data-toggle="tab">{{ 'advanced'|trans({}, 'platform') }}</a></li>
                 <li><a href="#workspaces-list" data-toggle="tab">{{ 'by_workspace'|trans({}, 'platform') }}</a></li>
-                <li><a href="#users-with-rights-list" data-toggle="tab">{{ 'users'|trans({}, 'platform') }}</a></li>
-                <li>
+                <li id="users-with-rights-list-tab">
+                    <a href="#users-with-rights-list" data-toggle="tab">
+                        {{ 'by_user'|trans({}, 'platform') }}
+                    </a>
+                </li>
+                <li id="users-without-rights-list-tab">
                     <a href="#users-without-rights-list" data-toggle="tab">
                         <i class="fa fa-plus-circle"></i>
                         {{ 'users'|trans({}, 'platform') }}

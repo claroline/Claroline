@@ -165,6 +165,7 @@ badges_management: 'Badges management'
 base_informations: 'Basic information'
 best_score: 'Best score'
 by: by
+by_user: 'By user'
 by_workspace: 'By workspace'
 canCopy: 'Right to copy'
 canCreate: 'Create %type%'

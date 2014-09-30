@@ -156,6 +156,7 @@ bad_request: 'La solicitud no es correcta. Si usted llegó a esta página a trav
 badges_management: 'Gestión de insignias'
 best_score: 'Mejor puntaje'
 by: 'Por'
+by_user: 'Por usuarios'
 by_workspace: 'Por espacio de trabajo'
 canCopy: 'Derecho a copiar'
 canCreate: 'Crear %type%'
