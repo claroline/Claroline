@@ -24,6 +24,8 @@ class PortfolioController extends BaseController
      */
     public function getAction(User $loggedUser, Portfolio $portfolio)
     {
+        $this->checkPortfolioToolAccess();
+
         $response = new JsonResponse();
         $response->setData($this->getPortfolioManager()->getPortfolioData($portfolio));
 
@@ -38,6 +40,8 @@ class PortfolioController extends BaseController
      */
     public function putAction(Request $request, User $loggedUser, Portfolio $portfolio)
     {
+        $this->checkPortfolioToolAccess();
+
         $data = $this->getPortfolioManager()->handle($portfolio,$request->request->all());
 
         $response = new JsonResponse();

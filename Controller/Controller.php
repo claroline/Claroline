@@ -76,4 +76,27 @@ class Controller extends BaseController
     {
         return $this->get('icap_portfolio.manager.widgets');
     }
+
+    /**
+     * @return \Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler
+     */
+    public function getPlatformConfigHandler()
+    {
+        return $this->get('claroline.config.platform_config_handler');
+    }
+
+    /**
+     * @return bool
+     */
+    public function getPortfolioToolAccess()
+    {
+        return $this->getPlatformConfigHandler()->getParameter('portfolio_url') === null;
+    }
+
+    public function checkPortfolioToolAccess()
+    {
+        if (!$this->getPortfolioToolAccess()) {
+            throw $this->createNotFoundException();
+        }
+    }
 }
