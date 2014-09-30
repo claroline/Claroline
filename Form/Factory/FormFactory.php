@@ -33,7 +33,7 @@ class FormFactory
     const TYPE_EMAIL = 'email';
     const TYPE_WORKSPACE = 'workspace';
     const TYPE_WORKSPACE_EDIT = 'workspace_edit';
-    const TYPE_WORKSPACE_TEMPLATE = 'workspace_template';
+    const TYPE_WORKSPACE_IMPORT = 'workspace_import';
     const TYPE_LOG_WORKSPACE_WIDGET_CONFIG = 'log_workspace_widget_config';
     const TYPE_LOG_DESKTOP_WIDGET_CONFIG = 'log_desktop_widget_config';
     const TYPE_AGENDA = 'agenda';
@@ -107,8 +107,8 @@ class FormFactory
             'formType' => 'Claroline\CoreBundle\Form\WorkspaceEditType',
             'entity' => 'Claroline\CoreBundle\Entity\Workspace\Workspace'
         ),
-        self::TYPE_WORKSPACE_TEMPLATE => array(
-            'formType' => 'Claroline\CoreBundle\Form\WorkspaceTemplateType'
+        self::TYPE_WORKSPACE_IMPORT => array(
+            'formType' => 'Claroline\CoreBundle\Form\ImportWorkspaceType'
         ),
         self::TYPE_LOG_WORKSPACE_WIDGET_CONFIG => array(
             'formType' => 'Claroline\CoreBundle\Form\Log\LogWorkspaceWidgetConfigType'

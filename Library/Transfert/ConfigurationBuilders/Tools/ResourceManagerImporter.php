@@ -169,7 +169,7 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
 
         if (isset($data['data']['items'])) {
             foreach ($data['data']['items'] as $item) {
-                $res['data'] = $item['item']['data'];
+                if (isset($item['item']['data'])) $res['data'] = $item['item']['data'];
                 //get the entity from an importer
                 $entity = $this->getImporterByName($item['item']['type'])
                     ->import($res, $item['item']['name']);

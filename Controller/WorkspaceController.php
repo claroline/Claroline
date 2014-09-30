@@ -1177,6 +1177,58 @@ class WorkspaceController extends Controller
         return $response;
     }
 
+    /**
+     * @EXT\Route(
+     *     "/import/form",
+     *     name="claro_workspace_import_form",
+     * )
+     * @EXT\Template()
+     *
+     * @param int $page
+     *
+     * @return array
+     */
+    public function importFormAction()
+    {
+        $form = $this->formFactory->create(FormFactory::TYPE_WORKSPACE_IMPORT, array());
+
+        return array('form' => $form->createView());
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/import/submit",
+     *     name="claro_workspace_import",
+     * )
+     * @EXT\Template()
+     *
+     * @param int $page
+     *
+     * @return array
+     */
+    public function importAction()
+    {
+        $form = $this->formFactory->create(FormFactory::TYPE_WORKSPACE_IMPORT, array());
+        $form->handleRequest($this->request);
+
+        if ($form->isValid()) {
+            $workspace = $form->get('workspace')->getData();
+            $config= Configuration::fromTemplate($workspace);
+            $config->setWorkspaceName($form->get('name')->getData());
+            $config->setWorkspaceCode($form->get('code')->getData());
+            $config->setDisplayable(true);
+            $config->setSelfRegistration(true);
+            $config->setRegistrationValidation(true);
+            $config->setSelfUnregistration(true);
+            $config->setWorkspaceDescription(true);
+            $this->workspaceManager->create($config, $this->security->getToken()->getUser());
+        } else {
+            return new Response('LOL');
+        }
+
+        return new Response('YOLO');
+    }
+
     private function createWorkspaceFromModel(WorkspaceModel $model, FormInterface $form)
     {
         $user = $this->security->getToken()->getUser();

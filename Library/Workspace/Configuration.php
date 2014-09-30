@@ -49,6 +49,7 @@ class Configuration
             if (true === $code = $archive->open($path)) {
                 $extractPath = sys_get_temp_dir() . DIRECTORY_SEPARATOR . uniqid();
                 $this->extract($extractPath, $archive);
+                //set the default properties of the workspace here if we can find them.
             } else {
                 throw new \Exception(
                     "Couldn't open template archive '{$path}' (error {$code})"
