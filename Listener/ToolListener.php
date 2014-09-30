@@ -2,63 +2,50 @@
 
 namespace Innova\PathBundle\Listener;
 
-use Innova\PathBundle\Entity\Path\Path;
-use Innova\PathBundle\Manager\PathManager;
-use Symfony\Bundle\TwigBundle\TwigEngine;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 use Claroline\CoreBundle\Event\DisplayToolEvent;
 
 class ToolListener
 {
     /**
-     * Template engine
-     * @var \Symfony\Bundle\TwigBundle\TwigEngine
+     * Current request
+     * @var \Symfony\Component\HttpFoundation\RequestStack
      */
-    private $templating;
+    private $request;
 
     /**
-     * Path manager
-     * @var \Innova\PathBundle\Manager\PathManager
+     * Symfony Kernel
+     * @var \Symfony\Component\HttpKernel\HttpKernelInterface
      */
-    private $pathManager;
+    private $httpKernel;
 
     /**
      * Class constructor
-     * @param \Symfony\Bundle\TwigBundle\TwigEngine  $templating
-     * @param \Innova\PathBundle\Manager\PathManager $pathManager
      */
     public function __construct(
-        TwigEngine  $templating,
-        PathManager $pathManager)
+        RequestStack $requestStack,
+        HttpKernelInterface $httpKernel)
     {
-        $this->templating = $templating;
-        $this->pathManager = $pathManager;
+        $this->request = $requestStack->getCurrentRequest();
+        $this->httpKernel = $httpKernel;
     }
 
     /**
      * List paths of the Workspace on Tool open
-     * @param DisplayToolEvent $event
-     * @return $this
+     * @param \Claroline\CoreBundle\Event\DisplayToolEvent $event
      */
     public function onWorkspaceOpen(DisplayToolEvent $event)
     {
-        // Retrieve data
-        $paths = $this->pathManager->findAccessibleByUser($event->getWorkspace());
+        $subRequest = $this->request->duplicate(array(), null, array (
+            '_controller' => 'innova_path.controller.path:listAction',
+            'workspaceId' => $event->getWorkspace()->getId(),
+        ));
 
-        // Build response content
-        $content = $this->templating->render(
-            'InnovaPathBundle::index.html.twig',
-            array (
-                'canCreate' => $this->pathManager->isAllow('CREATE', new Path(), $event->getWorkspace()),
-                'workspace' => $event->getWorkspace(),
-                'paths' => $paths,
-            )
-        );
+        $response = $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
 
-        // Send content to display to dispatcher through event
-        $event->setContent($content);
+        $event->setContent($response->getContent());
         $event->stopPropagation();
-
-        return $this;
     }
 }

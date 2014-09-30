@@ -41,6 +41,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 // Controller dependencies
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -124,7 +125,32 @@ class PathController
         $this->pathManager       = $pathManager;
         $this->publishingManager = $publishingManager;
     }
-    
+
+    /**
+     * List all Paths for Workspace
+     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
+     * @return array
+     *
+     * @Route(
+     *     "/",
+     *     name    = "innova_path_list",
+     *     options = {"expose"=true}
+     * )
+     * @Method("GET")
+     * @Template("InnovaPathBundle::index.html.twig")
+     */
+    public function listAction(Workspace $workspace)
+    {
+        // Retrieve data
+        $paths = $this->pathManager->findAccessibleByUser($workspace);
+
+        return array (
+            'canCreate' => $this->pathManager->isAllow('CREATE', new Path(), $workspace),
+            'workspace' => $workspace,
+            'paths'     => $paths,
+        );
+    }
+
     /**
      * Delete path from database
      * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace

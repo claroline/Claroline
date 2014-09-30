@@ -2,8 +2,8 @@ services:
     innova_path.listener.path_tool:
         class: %innova_path.listener.path_tool.class%
         arguments:
-            templating:  @templating
-            pathManager: @innova_path.manager.path
+            requestStack: @request_stack
+            httpKernel:   @http_kernel
         tags:
             - { name: kernel.event_listener, event: open_tool_workspace_innova_path, method: onWorkspaceOpen }
 
