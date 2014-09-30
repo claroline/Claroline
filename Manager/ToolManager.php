@@ -694,4 +694,26 @@ class ToolManager
 
         $this->om->flush();
     }
+
+    public function updateOrderedToolOrder(OrderedTool $orderedTool, $newOrder)
+    {
+        $order = $orderedTool->getOrder();
+
+        if ($newOrder < $order) {
+            $this->orderedToolRepo->incOrderedToolOrderForRange(
+                $orderedTool->getWorkspace(),
+                $newOrder,
+                $order
+            );
+        } else {
+            $this->orderedToolRepo->decOrderedToolOrderForRange(
+                $orderedTool->getWorkspace(),
+                $order,
+                $newOrder
+            );
+        }
+        $orderedTool->setOrder($newOrder);
+        $this->om->persist($orderedTool);
+        $this->om->flush();
+    }
 }

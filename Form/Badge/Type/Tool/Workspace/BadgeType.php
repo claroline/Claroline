@@ -100,8 +100,10 @@ class BadgeType extends AbstractType
             /** @var \Claroline\CoreBundle\Entity\Badge\Badge $badge */
             $badge = $event->getData();
 
-            if (null !== $badge) {
-                $this->badgeRuleType->workspace = $badge->getWorkspace()->getId();
+            if ($badge && null !== $badge) {
+                $this->badgeRuleType
+                    ->setWorkspaceId($badge->getWorkspace()->getId())
+                    ->setBadgeId($badge->getId());
 
                 $form  = $event->getForm();
                 $form

@@ -29,6 +29,8 @@ class Updater030400 {
     {
         $this->log('replacing default zip file');
         $this->replaceDefaultZip();
+
+        //why is it here ? can't remember
         //$this->removeModelTable();
     }
 

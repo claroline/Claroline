@@ -18,6 +18,8 @@ use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Bundle\FrameworkBundle\Translation\Translator;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -91,20 +93,33 @@ class BadgeType extends AbstractType
                     'choices'     => Badge::getExpirePeriodLabels(),
                     'attr'        => array('class' => 'input-sm')
                 )
-            )
-            ->add(
-                'rules',
-                'collection',
-                array(
-                    'type'          => $this->badgeRuleType,
-                    'by_reference'  => false,
-                    'attr'          => array('class' => 'rule-collections'),
-                    'theme_options' => array('label_width' => 'col-md-3'),
-                    'prototype'     => true,
-                    'allow_add'     => true,
-                    'allow_delete'  => true
-                )
             );
+
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event){
+            /** @var \Claroline\CoreBundle\Entity\Badge\Badge $badge */
+            $badge = $event->getData();
+
+            if ($badge && null !== $badge) {
+                $this->badgeRuleType->setBadgeId($badge->getId());
+
+                $form  = $event->getForm();
+                $form
+                    ->add(
+                        'rules',
+                        'collection',
+                        array(
+                            'type'          => $this->badgeRuleType,
+                            'by_reference'  => false,
+                            'attr'          => array('class' => 'rule-collections'),
+                            'theme_options' => array('label_width' => 'col-md-3'),
+                            'prototype'     => true,
+                            'allow_add'     => true,
+                            'allow_delete'  => true
+                        )
+                    );
+            }
+
+        });
     }
 
     public function getName()

@@ -20,6 +20,7 @@ use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\Log\LogBadgeAwardEvent;
 use Claroline\CoreBundle\Event\Log\LogGenericEvent;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\UnitOfWork;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -29,6 +30,11 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
  */
 class BadgeManager
 {
+    const BADGE_PICKER_MODE_USER      = 'user';
+    const BADGE_PICKER_MODE_PLATFORM  = 'platform';
+    const BADGE_PICKER_MODE_WORKSPACE = 'workspace';
+    const BADGE_PICKER_DEFAULT_MODE    = self::BADGE_PICKER_MODE_PLATFORM;
+
     /**
      * @var \Doctrine\ORM\EntityManager
      */
@@ -51,6 +57,19 @@ class BadgeManager
     {
         $this->entityManager   = $entityManager;
         $this->eventDispatcher = $eventDispatcher;
+    }
+
+    /**
+     * @param integer $id
+     *
+     * @return Badge
+     */
+    public function getById($id)
+    {
+        /** @var \Claroline\CoreBundle\Entity\Badge\Badge $badge */
+        $badge = $this->entityManager->getRepository('ClarolineCoreBundle:Badge\Badge')->find($id);
+
+        return $badge;
     }
 
     /**
@@ -246,5 +265,39 @@ class BadgeManager
         $lastAwardedBadges   = $userBadgeRepository->findWorkspaceMostAwardedBadges($workspace, $limit);
 
         return $lastAwardedBadges;
+    }
+
+    /**
+     * @param array $parameters array of : locale (for ordering badge), mode, user, workspace
+     *
+     * @return array
+     */
+    public function getForBadgePicker(array $parameters)
+    {
+        /** @var \Claroline\CoreBundle\Repository\Badge\BadgeRepository $badgeRepository */
+        $badgeRepository = $this->entityManager->getRepository('ClarolineCoreBundle:Badge\Badge');
+
+        /** @var QueryBuilder $badgeQueryBuilder */
+        $badgeQueryBuilder = $badgeRepository->createQueryBuilder($rootAlias = 'badge');
+        $badgeQueryBuilder = $badgeRepository->orderByName($badgeQueryBuilder, $rootAlias, $parameters['locale']);
+        $badgeQueryBuilder = $badgeRepository->filterByBlacklist($badgeQueryBuilder, $rootAlias, $parameters['blacklist']);
+
+        switch($parameters['mode']) {
+            case self::BADGE_PICKER_MODE_USER:
+                $badgeQueryBuilder = $badgeRepository->filterByUser($badgeQueryBuilder, $rootAlias, $parameters['user']);
+                break;
+            case self::BADGE_PICKER_MODE_PLATFORM:
+                $badgeQueryBuilder = $badgeRepository->filterByWorkspace($badgeQueryBuilder, $rootAlias, null);
+                break;
+            case self::BADGE_PICKER_MODE_WORKSPACE:
+                if (null !== $parameters['workspace']) {
+                    $badgeQueryBuilder = $badgeRepository->filterByWorkspace($badgeQueryBuilder, $rootAlias, $parameters['workspace']);
+                }
+                break;
+            default:
+                throw new \InvalidArgumentException('Unknown mode for opening the badge picker.');
+        }
+
+        return $badgeQueryBuilder->getQuery()->getResult();
     }
 }

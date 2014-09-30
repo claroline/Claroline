@@ -37,51 +37,49 @@
                             {% if role.getType == 1 %} </em>{% endif %}
                             </th>
                         {% endfor %}
-                        <th> {{ 'position'|trans({}, 'platform') }} </th>
                     </thead>
-                        <tbody id="tool-table-body">
-                            {% for toolPermission in toolPermissions %}
-                                <tr data-tool-id="{{ toolPermission['tool'].getId() }}">
+                    <tbody id="tool-table-body">
+                        {% for toolPermission in toolPermissions %}
+                            <tr data-tool-id="{{ toolPermission['tool'].getId() }}"
+                                data-ordered-tool-id="{{ toolPermission['orderTool'].getId() }}"
+                                data-ordered-tool-order="{{ toolPermission['orderTool'].getOrder() }}"
+                            >
+                                <td>
+                                    <a href="{{ path('claro_workspace_order_tool_edit_form',
+                                        {'workspace': workspace.getId(),
+                                        'tool': toolPermission['tool'].getId()}) }}"
+                                       class="show-tool-edit-form"
+                                    >
+                                        <i class="fa fa-pencil"></i>
+                                    </a>
+                                    <span id="tool-{{ toolPermission['tool'].getId() }}-name">
+                                        {{ toolPermission['displayedName']|trans({}, 'tools') }}
+                                    </span>
+                                    <small><em>({{ toolPermission['tool'].getName()|trans({}, 'tools') }})</em></small>
+                                </td>
+                                {% for key, isVisible in toolPermission['visibility'] %}
                                     <td>
-                                        <a href="{{ path('claro_workspace_order_tool_edit_form',
-                                            {'workspace': workspace.getId(),
-                                            'tool': toolPermission['tool'].getId()}) }}"
-                                           class="show-tool-edit-form"
-                                        >
-                                            <i class="fa fa-pencil"></i>
-                                        </a>
-                                        <span id="tool-{{ toolPermission['tool'].getId() }}-name">
-                                            {{ toolPermission['displayedName']|trans({}, 'tools') }}
-                                        </span>
-                                        <small><em>({{ toolPermission['tool'].getName()|trans({}, 'tools') }})</em></small>
+                                        <input type="checkbox"
+                                               class="chk-tool-visible"
+                                               value="1"
+                                               name="chk-tool-{{ toolPermission['tool'].getId() }}-role-{{ key }}"
+                                            {% if toolPermission['tool'].isLockedForAdmin() %}
+                                               disabled
+                                            {% endif %}
+                                            {# The ROLE_ANONYMOUS key is 4 no matter what (see datafixtures) #}
+                                            {%  if key == 4 and toolPermission['tool'].isAnonymousExcluded() %}
+                                                disabled
+                                            {%  endif %}
+                                            {% if isVisible %}
+                                               checked
+                                            {% endif %}
+                                        />
                                     </td>
-                                    {% for key, isVisible in toolPermission['visibility'] %}
-                                        <td>
-                                            <input type="checkbox"
-                                                   class="chk-tool-visible"
-                                                   value="1"
-                                                   name="chk-tool-{{ toolPermission['tool'].getId() }}-role-{{ key }}"
-                                                {% if toolPermission['tool'].isLockedForAdmin() %}
-                                                   disabled
-                                                {% endif %}
-                                                {# The ROLE_ANONYMOUS key is 4 no matter what (see datafixtures) #}
-                                                {%  if key == 4 and toolPermission['tool'].isAnonymousExcluded() %}
-                                                    disabled
-                                                {%  endif %}
-                                                {% if isVisible %}
-                                                   checked
-                                                {% endif %}
-                                            />
-                                        </td>
-                                    {% endfor %}
-                                    <td>
-                                        <span class="fa fa-arrow-circle-up ordering-icon up{% if loop.first %} disabled{% endif %}" style="cursor: pointer;" ></span>
-                                        <span class="fa fa-arrow-circle-down ordering-icon down{% if loop.last %} disabled{% endif %}" style="cursor: pointer;" ></span>
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
+                                {% endfor %}
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
                 <button id="edit-tools-btn" class="btn btn-primary" href="{{ path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': 'parameters'}) }}">
                     {{ 'edit'|trans({}, 'platform') }}
                 </button>
