@@ -147,6 +147,7 @@ class ParametersController extends Controller
 
     /**
      * @EXT\Route("/general", name="claro_admin_parameters_general")
+     * @EXT\Method("GET")
      * @EXT\Template
      *
      * @param Request $request
