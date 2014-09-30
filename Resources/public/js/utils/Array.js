@@ -17,3 +17,7 @@ Array.prototype.inArray = function(value) {
     }
     return false;
 }
+
+Array.prototype.diff = function(part) {
+    return this.filter(function(element) {return part.indexOf(element) < 0;});
+};

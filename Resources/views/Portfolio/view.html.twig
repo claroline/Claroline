@@ -17,19 +17,17 @@
                     <h1 id="username">{{ portfolio.user.firstName ~ ' ' ~ portfolio.user.lastName }}</h1>
 
                     <div data-ng-repeat="widget in widgets | filter:{type: 'title'}" data-ng-show="widgets.length > 0">
-                        <div data-widget>
-                            <div class="portfolio-title-container">
-                                {% if editMode %}
-                                    <div class="widget-actions">
-                                        <button class="widget-action btn btn-sm btn-primary" data-ng-click="edit(widget);" data-ng-if="!widget.isEditing()">
-                                            <span class="fa fa-pencil"></span>
-                                        </button>
-                                    </div>
-                                    <div data-ng-bind-html="widget.views.view | trustAsHtml"></div>
-                                {% else %}
-                                    {% include 'IcapPortfolioBundle:templates:title.html.twig' with {'widget': titleWidget} only %}
-                                {% endif %}
-                            </div>
+                        <div class="portfolio-title-container" data-widget>
+                            {% if editMode %}
+                                <div class="widget-actions">
+                                    <button class="widget-action btn btn-sm btn-primary" data-ng-click="edit(widget);" data-ng-if="!widget.isEditing()">
+                                        <span class="fa fa-pencil"></span>
+                                    </button>
+                                </div>
+                                <div data-ng-bind-html="widget.views.view | trustAsHtml"></div>
+                            {% else %}
+                                {% include 'IcapPortfolioBundle:templates:title.html.twig' with {'widget': titleWidget} only %}
+                            {% endif %}
                         </div>
                     </div>
                 </div>
@@ -151,6 +149,20 @@
     {{ parent() }}
 
     {% if editMode %}
+        <script type="text/javascript">
+            'use strict';
+            (function() {
+                window.widgetsConfig = '{{ widgetsConfig|json_encode()|raw }}';
+                window.resourceTypes = {
+                    {% for resourceType in resourceTypes %}
+                        "{{ resourceType.getName() }}": {
+                            "name": "{{ resourceType.getName()|trans({}, 'resource') }}"
+                        }{% if loop.last != true %},{% endif %}
+                    {% endfor %}
+                };
+                window.assetPath = "{{ asset('') }}";
+            })();
+        </script>
         <script type="text/javascript" src="{{ asset('bundles/stfalcontinymce/vendor/tinymce/tinymce.jquery.min.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/stfalcontinymce/vendor/tinymce/jquery.tinymce.min.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/tinymce/tinymce.js') }}"></script>
@@ -159,6 +171,7 @@
         {% if 'en' != app.request.locale %}
             <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/datepicker/js/locales/bootstrap-datepicker.' ~ app.request.locale ~ '.js') }}"></script>
         {% endif %}
+        <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/badge/badge_picker.js') }}"></script>
 
         {% javascripts debug=true filter='jsmin' output='js/portfolio/angular.js'
             '@IcapPortfolioBundle/Resources/public/js/vendor/angular/angular.min.js'
@@ -212,24 +225,12 @@
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/directives/designDirective.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/directives/resourcePickerDirective.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/directives/datepickerDirective.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/directives/badgePickerDirective.js') }}"></script>
 
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/filters/trustAsHtml.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/filters/trans.js') }}"></script>
 
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/templates/menu_disposition.tpl.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/templates/menu_widget-type.tpl.js') }}"></script>
-        <script type="text/javascript">
-            'use strict';
-            (function() {
-                window.widgetsConfig = '{{ widgetsConfig|json_encode()|raw }}';
-                window.resourceTypes = {
-                    {% for resourceType in resourceTypes %}
-                        "{{ resourceType.getName() }}": {
-                            "name": "{{ resourceType.getName()|trans({}, 'resource') }}"
-                        }{% if loop.last != true %},{% endif %}
-                    {% endfor %}
-                };
-            })();
-        </script>
     {% endif %}
 {% endblock %}

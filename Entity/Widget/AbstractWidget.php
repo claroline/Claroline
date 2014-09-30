@@ -16,7 +16,8 @@ use Icap\PortfolioBundle\Entity\Portfolio;
  *      "userInformation" = "UserInformationWidget",
  *      "skills"          = "SkillsWidget",
  *      "presentation"    = "PresentationWidget",
- *      "formations"      = "FormationsWidget"
+ *      "formations"      = "FormationsWidget",
+ *      "badges"          = "BadgesWidget"
  * })
  */
 abstract class AbstractWidget

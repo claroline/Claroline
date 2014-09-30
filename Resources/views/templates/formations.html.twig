@@ -1,11 +1,7 @@
 <p>{{ widget.name }}</p>
 <p>{{ 'date_range_from'|trans({}, 'icap_portfolio') }} {{ widget.startDate|date('date_format'|trans({}, 'platform')) }} {{ 'date_range_to'|trans({}, 'icap_portfolio') }} {{ widget.endDate|date('date_format'|trans({}, 'platform')) }}</p>
-<ul>
+<ul class="list-group">
 {% for resource in widget.resources %}
-    <li>
-        <p>
-            {{ resource.resource.name }}
-        </p>
-    </li>
+    <li class="list-group-item">{{ resource.resource.name }}</li>
 {% endfor %}
 </ul>

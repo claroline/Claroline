@@ -2,7 +2,7 @@ body {
     padding-top: 53px;
 }
 
-#portfolio-section {
+#portfolio-container {
     .widget-menu-container {
         text-align:   center;
         padding-top:  25px;
@@ -55,6 +55,7 @@ body {
                         display:   block;
                         font-size: 18px;
                     }
+                    float:            left;
                     width:            80px;
                     height:           75px;
                     font-size:        12px;
@@ -66,51 +67,63 @@ body {
                     &:hover {
                         background-color: orange;
                     }
+                    &:last-child {
+                        margin-bottom: 10px;
+                    }
                 }
             }
         }
     }
-    #portfolio-container {
-        header {
-            background: #302e2c;
-            padding:    10px 0;
-            color:      #fff;
+    header {
+        background: #302e2c;
+        padding:    10px 0;
+        color:      #fff;
 
-            .beta_message {
-                width:         300px;
-                margin-bottom: 0;
+        .beta_message {
+            width:         300px;
+            margin-bottom: 0;
+        }
+        #username {
+            text-transform: uppercase;
+            padding-bottom: 0;
+        }
+        .portfolio-title-container {
+            position: relative;
+            float:    left;
+            #portfolio-title {
+                margin-top: 0;
             }
-            #username {
-                text-transform: uppercase;
-                padding-bottom: 0;
-            }
-            .portfolio-title-container {
-                position: relative;
-                float:    left;
-                #portfolio-title {
-                    margin-top: 0;
-                }
-                .widget-actions {
-                    position: absolute;
-                    top:      0;
-                    right:    -50px;
-                }
+            .widget-actions {
+                position: absolute;
+                top:      0;
+                right:    -50px;
             }
         }
+    }
 
-        .main-content {
-            padding-top: 25px;
+    .main-content {
+        padding-top: 25px;
 
-            .no-data {
-                text-align: center;
-            }
+        .no-data {
+            text-align: center;
         }
+    }
 
+    .widget-panel {
         .widget-actions {
             display: inline;
             .btn-danger.btn-loading {
                 padding-left: 7px;
                 padding-right: 6px;
+            }
+        }
+        .list-group {
+            margin-bottom: 0px;
+        }
+        .badge_list {
+            .badge_image {
+                width:  32px;
+                height: 32px;
             }
         }
     }
@@ -145,6 +158,21 @@ body {
                 li {
                     margin-bottom: 5px;
                 }
+                .badge_collection {
+                    .badge_collection_item {
+                        height: auto;
+                        padding: 2px 0 2px 5px;
+                        .badge_selection_field {
+                            padding-top:    2px;
+                            padding-bottom: 2px;
+                            margin-bottom:  0;
+                            .badge_image {
+                                width:  32px;
+                                height: 32px;
+                            }
+                        }
+                    }
+                }
             }
             .panel-heading {
                 border-bottom: 0;
@@ -157,7 +185,7 @@ body {
     }
 }
 
-.panel {
+.widget-panel {
     span.loading {
         display:        inline-block;
         margin:         0;
