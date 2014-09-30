@@ -1014,3 +1014,6 @@ yes: Oui
 yesterday_activity: 'Activité de la veille'
 your_current_url: 'Votre URL actuelle'
 your_username: 'Votre nom d''utilisateur est '
+portfolio_url: 'Url d''accès à l''outil de portfolio'
+internal_portfolio: 'Portfolio interne à la plateforme'
+general_parameters_updated_success: 'Paramètres généraux modifiés avec succès.'

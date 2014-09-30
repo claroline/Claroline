@@ -1009,3 +1009,6 @@ yes: Yes
 yesterday_activity: 'Yesterday''s activity'
 your_current_url: 'Your current URL'
 your_username: 'Your username is '
+portfolio_url: 'Portfolio tool''s access url'
+internal_portfolio: 'Platform internal portfolio'
+general_parameters_updated_success: 'General parameters updated with success.'

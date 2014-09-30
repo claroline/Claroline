@@ -56,6 +56,7 @@ class PlatformConfiguration
     private $footerLogin;
     private $footerWorkspaces;
     private $headerLocale;
+    private $portfolioUrl;
 
     /**
      * @param mixed $sessionDbDataCol
@@ -549,5 +550,25 @@ class PlatformConfiguration
     public function getHeaderLocale()
     {
         return $this->headerLocale;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPortfolioUrl()
+    {
+        return $this->portfolioUrl;
+    }
+
+    /**
+     * @param mixed $portfolioUrl
+     *
+     * @return PlatformConfiguration
+     */
+    public function setPortfolioUrl($portfolioUrl)
+    {
+        $this->portfolioUrl = $portfolioUrl;
+
+        return $this;
     }
 }

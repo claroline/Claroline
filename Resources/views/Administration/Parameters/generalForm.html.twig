@@ -1,5 +1,7 @@
 {% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
 
+{% form_theme form_settings _self %}
+
 {% block title %}{{ parent() ~ ' - ' ~ 'general' | trans({}, 'platform') | striptags | raw }}{% endblock %}
 
 {% block breadcrumb %}
@@ -27,8 +29,39 @@
         <h3 class="panel-title">{{ 'general'|trans({}, 'platform') }}</h3>
     </div>
     <form role="form" class="form-horizontal" action="{{path('claro_admin_edit_parameters_general')}}" method="post" {{ form_enctype(form_settings) }} id="form_settings" enctype='multipart/form-data'>
+        {{ macros.flashBox() }}
         <div class="panel-body">
-            {{ form_widget(form_settings) }}
+            {{ form_row(form_settings.name) }}
+            {{ form_row(form_settings.description) }}
+            {{ form_row(form_settings.support_email) }}
+            {{ form_row(form_settings.selfRegistration) }}
+            {{ form_row(form_settings.defaultRole) }}
+            {{ form_row(form_settings.localeLanguage) }}
+            {{ form_row(form_settings.formCaptcha) }}
+            {{ form_row(form_settings.redirect_after_login) }}
+            {{ form_row(form_settings.account_duration) }}
+            {{ form_row(form_settings.platform_init_date) }}
+            {{ form_row(form_settings.platform_limit_date) }}
+            {{ form_row(form_settings.anonymous_public_profile) }}
+            {% set value = form_settings.vars.value.portfolioUrl %}
+            <div class="form-group row">
+                {{ form_label(form_settings.portfolio_url) }}
+                <div class="col-md-9">
+                    <div class="radio">
+                        <label>
+                            <input type="radio" name="portfolioUrlOptions" id="portfolioUrlOptions1" value="0" {% if value is empty %} checked="checked"{% endif %}>
+                            {{ 'internal_portfolio'|trans({}, 'platform') }}
+                        </label>
+                    </div>
+                    <div class="radio">
+                        <label>
+                            <input type="radio" name="portfolioUrlOptions" id="portfolioUrlOptions2" value="1" {% if value is not empty %} checked="checked"{% endif %}>
+                            {{ form_widget(form_settings.portfolio_url) }}
+                        </label>
+                    </div>
+                </div>
+            </div>
+            {{ form_rest(form_settings) }}
         </div>
         <div class="panel-footer">
             <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>

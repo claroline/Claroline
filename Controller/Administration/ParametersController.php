@@ -150,9 +150,11 @@ class ParametersController extends Controller
      * @EXT\Method("GET")
      * @EXT\Template
      *
+     * @param Request $request
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function generalFormAction()
+    public function generalFormAction(Request $request)
     {
         $this->checkOpen();
 
@@ -160,7 +162,7 @@ class ParametersController extends Controller
         $platformConfig = $this->configHandler->getPlatformConfig();
         $role = $this->roleManager->getRoleByName($platformConfig->getDefaultRole());
         $form = $this->formFactory->create(
-            new AdminForm\GeneralType($this->localeManager->getAvailableLocales(), $role, $description),
+            new AdminForm\GeneralType($this->localeManager->getAvailableLocales(), $role, $description, $this->translator->trans('date_form_format', array(), 'platform'), $this->localeManager->getUserLocale($request)),
             $platformConfig
         );
 
@@ -175,9 +177,11 @@ class ParametersController extends Controller
      * @EXT\Method("POST")
      * @EXT\Template("ClarolineCoreBundle:Administration\Parameters:generalForm.html.twig")
      *
+     * @param Request $request
+     *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function submitSettingsAction()
+    public function submitSettingsAction(Request $request)
     {
         $this->checkOpen();
 
@@ -185,13 +189,14 @@ class ParametersController extends Controller
         $platformConfig = $this->configHandler->getPlatformConfig();
         $role = $this->roleManager->getRoleByName($platformConfig->getDefaultRole());
         $form = $this->formFactory->create(
-            new AdminForm\GeneralType($this->localeManager->getAvailableLocales(), $role, $description),
+            new AdminForm\GeneralType($this->localeManager->getAvailableLocales(), $role, $description, $this->translator->trans('date_form_format', array(), 'platform'), $this->localeManager->getUserLocale($request)),
             $platformConfig
         );
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
             try {
+                $portfolioUrlOptions = $this->request->request->get('portfolioUrlOptions', 0);
                 $this->configHandler->setParameters(
                     array(
                         'allow_self_registration' => $form['selfRegistration']->getData(),
@@ -205,6 +210,7 @@ class ParametersController extends Controller
                         'platform_limit_date' => $form['platform_limit_date']->getData(),
                         'account_duration' => $form['account_duration']->getData(),
                         'anonymous_public_profile' => $form['anonymous_public_profile']->getData(),
+                        'portfolio_url' => $portfolioUrlOptions ? $form['portfolio_url']->getData() : null
                     )
                 );
 
@@ -223,6 +229,10 @@ class ParametersController extends Controller
                 if ($logo) {
                     $this->get('claroline.common.logo_service')->createLogo($logo);
                 }
+
+                $this->get('session')->getFlashBag()->add('success', $this->get('translator')->trans('general_parameters_updated_success', array(), 'platform'));
+
+                return $this->redirect($this->generateUrl('claro_admin_parameters_general'));
             } catch (UnwritableException $e) {
                 $form->addError(
                     new FormError(
@@ -233,12 +243,10 @@ class ParametersController extends Controller
                         )
                     )
                 );
-
-                return array('form_settings' => $form->createView());
             }
         }
 
-        return $this->redirect($this->generateUrl('claro_admin_parameters_general'));
+        return array('form_settings' => $form->createView());
     }
 
     /**

@@ -13,7 +13,10 @@ namespace Claroline\CoreBundle\Form\Administration;
 
 use Claroline\CoreBundle\Entity\Role;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class GeneralType extends AbstractType
@@ -21,11 +24,15 @@ class GeneralType extends AbstractType
     private $langs;
     private $role;
     private $description;
+    private $dateFormat;
+    private $language;
 
-    public function __construct(array $langs, $role, $description)
+    public function __construct(array $langs, $role, $description, $dateFormat, $language)
     {
         $this->role = $role;
         $this->description = $description;
+        $this->dateFormat  = $dateFormat;
+        $this->language    = $language;
 
         if (!empty($langs)) {
             $this->langs = $langs;
@@ -78,9 +85,44 @@ class GeneralType extends AbstractType
             ->add('formCaptcha', 'checkbox', array('label' => 'display_captcha', 'required' => false))
             ->add('redirect_after_login', 'checkbox', array('label' => 'redirect_after_login', 'required' => false))
             ->add('account_duration', 'integer', array('label' => 'account_duration_label', 'required' => false))
-            ->add('platform_init_date', 'date', array('input' => 'timestamp', 'label' => 'platform_init_date', 'required' => false))
-            ->add('platform_limit_date', 'date', array('input' => 'timestamp', 'label' => 'platform_expiration_date', 'required' => false))
-            ->add('anonymous_public_profile', 'checkbox', array('label' => 'show_profile_for_anonymous', 'required' => false));
+            ->add('anonymous_public_profile', 'checkbox', array('label' => 'show_profile_for_anonymous', 'required' => false))
+//            ->add('is_portfolio_tool_internal', 'choice', array(
+//                    'required' => false,
+//                    'mapped'   => false,
+//                    'expanded' => true,
+//                    'multiple' => false,
+//                    'choices'   => array(
+//                        '0'   => '0',
+//                        '1'   => '1'
+//                    ),
+//                    'empty_value' => false
+//                )
+//            )
+            ->add('portfolio_url', 'url', array('label' => 'portfolio_url', 'required' => false));
+
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event){
+            /** @var \Claroline\CoreBundle\Library\Configuration\PlatformConfiguration $generalParameters */
+            $generalParameters = $event->getData();
+            $form = $event->getForm();
+
+            $form
+                ->add('platform_init_date', 'datepicker', array(
+                        'input'       => 'timestamp',
+                        'label'       => 'platform_init_date',
+                        'required'    => false,
+                        'format'      => $this->dateFormat,
+                        'language'    => $this->language
+                    )
+                )
+                ->add('platform_limit_date', 'datepicker', array(
+                        'input'       => 'timestamp',
+                        'label'       => 'platform_expiration_date',
+                        'required'    => false,
+                        'format'      => $this->dateFormat,
+                        'language'    => $this->language
+                    )
+                );
+        });
    }
 
     public function getName()
@@ -90,6 +132,10 @@ class GeneralType extends AbstractType
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults(array('translation_domain' => 'platform'));
+        $resolver->setDefaults(array(
+                'translation_domain' => 'platform',
+                'date_format'        => DateType::HTML5_FORMAT
+            )
+        );
     }
 }
