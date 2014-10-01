@@ -682,20 +682,53 @@ class RolesController extends Controller
      *     name="claro_users_pending_validation"
      * )
      */
-    public function pendingUsersValidationAction(WorkspaceRegistrationQueue $wksqueue, Workspace $workspace)
+    public function pendingUsersValidationAction(
+        WorkspaceRegistrationQueue $wksqueue,
+        Workspace $workspace
+    )
     {
+        $this->checkWorkspaceManagerAccess($workspace);
         $this->wksUqmanager->validateRegistration($wksqueue, $workspace);
         $route = $this->router->generate(
             'claro_users_pending',
             array('workspace' => $workspace->getId())
         );
 
-            return new RedirectResponse($route);
+        return new RedirectResponse($route);
+    }
+
+    /**
+     * @EXT\Route("/users/pending/decline/{workspace}/{wksqueue}",
+     *     name="claro_users_pending_decline"
+     * )
+     */
+    public function pendingUsersDeclineAction(
+        WorkspaceRegistrationQueue $wksqueue,
+        Workspace $workspace
+    )
+    {
+        $this->checkWorkspaceManagerAccess($workspace);
+        $this->wksUqmanager->removeRegistrationQueue($wksqueue);
+        $route = $this->router->generate(
+            'claro_users_pending',
+            array('workspace' => $workspace->getId())
+        );
+
+        return new RedirectResponse($route);
     }
 
     private function checkAccess(Workspace $workspace)
     {
         if (!$this->security->isGranted('users', $workspace)) {
+            throw new AccessDeniedException();
+        }
+    }
+
+    private function checkWorkspaceManagerAccess(Workspace $workspace)
+    {
+        $role = $this->roleManager->getManagerRole($workspace);
+
+        if (is_null($role) || !$this->security->isGranted($role->getName())) {
             throw new AccessDeniedException();
         }
     }

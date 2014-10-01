@@ -11,23 +11,23 @@
 
 namespace Claroline\CoreBundle\Manager;
 
-use JMS\DiExtraBundle\Annotation as DI;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceRegistrationQueue;
-use Claroline\CoreBundle\Entity\Workspace\workspace;
-use Claroline\CoreBundle\Entity\Role;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Manager\RoleManager;
+use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Claroline\CoreBundle\Pager\PagerFactory;
 use Claroline\CoreBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Manager\workspaceManager;
-use Claroline\CoreBundle\Manager\RoleManager;
+use JMS\DiExtraBundle\Annotation as DI;
 
 /**
  * @DI\Service("claroline.manager.workspace_user_queue_manager")
  */
 class WorkspaceUserQueueManager 
 {
-	private $objectManager;
-	private $pagerFactory;
-	private $wksQrepo;
+    private $objectManager;
+    private $pagerFactory;
+    private $wksQrepo;
     private $workspaceManager;
     private $roleManager;
 
@@ -44,7 +44,7 @@ class WorkspaceUserQueueManager
     public function __construct(
         ObjectManager $objectManager,
         PagerFactory $pagerFactory,
-        workspaceManager $workspaceManager,
+        WorkspaceManager $workspaceManager,
         RoleManager $roleManager
     )
     {
@@ -64,8 +64,28 @@ class WorkspaceUserQueueManager
 
     public function validateRegistration(WorkspaceRegistrationQueue $wksqrq)
     {
-       $this->roleManager->associateRolesToSubjects(array($wksqrq->getUser()), array($wksqrq->getRole()), true);
+        $this->roleManager->associateRolesToSubjects(
+            array($wksqrq->getUser()),
+            array($wksqrq->getRole()),
+            true
+        );
         $this->objectManager->remove($wksqrq);
         $this->objectManager->flush();
+    }
+
+    public function removeRegistrationQueue(WorkspaceRegistrationQueue $wksqrq)
+    {
+        $this->objectManager->remove($wksqrq);
+        $this->objectManager->flush();
+    }
+
+    public function removeUserFromWorkspaceQueue(Workspace $workspace, User $user)
+    {
+        $queue = $this->wksQrepo->findOneByWorkspaceAndUser($workspace, $user);
+
+        if (!is_null($queue)) {
+            $this->objectManager->remove($queue);
+            $this->objectManager->flush();
+        }
     }
 }
