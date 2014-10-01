@@ -1085,3 +1085,7 @@ links: Liens
 tabs: Onglets
 tab: Onglet
 copies: Copies
+portfolio_url: 'Url d''accès à l''outil de portfolio'
+internal_portfolio: 'Portfolio interne à la plateforme'
+general_parameters_updated_success: 'Paramètres généraux modifiés avec succès.'
+general_parameters_portfolio_url_help: 'commence par http://'
