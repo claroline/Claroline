@@ -99,15 +99,17 @@ class RssReaderListener
     private function getRssContent($rssConfig, $widgetId)
     {
         // TODO : handle feed format exception...
-        $content = @file_get_contents($rssConfig->getUrl());
+        $content = strstr(@file_get_contents($rssConfig->getUrl()), '<?xml');
 
-        if ($content === false) {
+        if ($content === false) return $this->templating->render('ClarolineRssReaderBundle::invalid.html.twig');
+
+        try {
+            $items = $this->rssReader
+                ->getReaderFor($content)
+                ->getFeedItems(10);
+        } catch (\Exception $e) {
             return $this->templating->render('ClarolineRssReaderBundle::invalid.html.twig');
         }
-
-        $items = $this->rssReader
-            ->getReaderFor($content)
-            ->getFeedItems(10);
 
         foreach ($items as $item) {
             $item->setDescription(preg_replace('/<[^>]+>/i', '', $item->getDescription()));
@@ -117,5 +119,6 @@ class RssReaderListener
             'ClarolineRssReaderBundle::rss.html.twig',
             array('rss' => $items, 'widgetId' => $widgetId)
         );
+
     }
 }
