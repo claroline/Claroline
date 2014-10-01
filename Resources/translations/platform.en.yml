@@ -1033,3 +1033,7 @@ links: Links
 tabs: Tabs
 tab: Tab
 copies: Copies
+portfolio_url: 'Portfolio tool''s access url'
+internal_portfolio: 'Platform internal portfolio'
+general_parameters_updated_success: 'General parameters updated with success.'
+general_parameters_portfolio_url_help: 'start with http://'
