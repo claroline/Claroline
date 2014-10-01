@@ -139,7 +139,7 @@ class PortfolioController extends Controller
     }
 
     /**
-     * @Route("/evaluators/{id}", name="icap_portfolio_manage_evaluators", requirements={"id" = "\d+"})
+     * @Route("/evaluators/{id}", name="icap_portfolio_update_evaluators", requirements={"id" = "\d+"})
      *
      * @ParamConverter("loggedUser", options={"authenticatedUser" = true})
      * @Template()
@@ -147,7 +147,7 @@ class PortfolioController extends Controller
     public function manageEvaluatorsAction(User $loggedUser, Portfolio $portfolio)
     {
         try {
-            if ($this->getPortfolioFormHandler()->handleVisibility($portfolio)) {
+            if ($this->getPortfolioFormHandler()->handleEvaluators($portfolio)) {
                 $this->getSessionFlashbag()->add('success', $this->getTranslator()->trans('portfolio_evaluators_update_success_message', array(), 'icap_portfolio'));
 
                 return $this->redirect($this->generateUrl('icap_portfolio_list'));

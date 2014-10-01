@@ -61,6 +61,11 @@ class Portfolio
     protected $portfolioUsers;
 
     /**
+     * @ORM\OneToMany(targetEntity="PortfolioEvaluator", mappedBy="portfolio", cascade={"all"})
+     */
+    protected $portfolioEvaluators;
+
+    /**
      * @ORM\OneToMany(targetEntity="PortfolioGroup", mappedBy="portfolio", cascade={"all"})
      */
     protected $portfolioGroups;
@@ -181,6 +186,30 @@ class Portfolio
     public function getPortfolioUsers()
     {
         return $this->portfolioUsers;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPortfolioEvaluators()
+    {
+        return $this->portfolioEvaluators;
+    }
+
+    /**
+     * @param PortfolioEvaluator[] $portfolioEvaluators
+     *
+     * @return Portfolio
+     */
+    public function setPortfolioEvaluators($portfolioEvaluators)
+    {
+        foreach ($portfolioEvaluators as $portfolioEvaluator) {
+            $portfolioEvaluator->setPortfolio($this);
+        }
+
+        $this->portfolioEvaluators = $portfolioEvaluators;
+
+        return $this;
     }
 
     /**

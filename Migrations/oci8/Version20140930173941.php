@@ -1,6 +1,6 @@
 <?php
 
-namespace Icap\PortfolioBundle\Migrations\pdo_oci;
+namespace Icap\PortfolioBundle\Migrations\oci8;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -8,12 +8,57 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/09/25 11:29:08
+ * Generation date: 2014/09/30 05:39:44
  */
-class Version20140925112907 extends AbstractMigration
+class Version20140930173941 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
+        $this->addSql("
+            CREATE TABLE icap__portfolio_evaluators (
+                id NUMBER(10) NOT NULL, 
+                user_id NUMBER(10) NOT NULL, 
+                portfolio_id NUMBER(10) NOT NULL, 
+                PRIMARY KEY(id)
+            )
+        ");
+        $this->addSql("
+            DECLARE constraints_Count NUMBER; BEGIN 
+            SELECT COUNT(CONSTRAINT_NAME) INTO constraints_Count 
+            FROM USER_CONSTRAINTS 
+            WHERE TABLE_NAME = 'ICAP__PORTFOLIO_EVALUATORS' 
+            AND CONSTRAINT_TYPE = 'P'; IF constraints_Count = 0 
+            OR constraints_Count = '' THEN EXECUTE IMMEDIATE 'ALTER TABLE ICAP__PORTFOLIO_EVALUATORS ADD CONSTRAINT ICAP__PORTFOLIO_EVALUATORS_AI_PK PRIMARY KEY (ID)'; END IF; END;
+        ");
+        $this->addSql("
+            CREATE SEQUENCE ICAP__PORTFOLIO_EVALUATORS_ID_SEQ START WITH 1 MINVALUE 1 INCREMENT BY 1
+        ");
+        $this->addSql("
+            CREATE TRIGGER ICAP__PORTFOLIO_EVALUATORS_AI_PK BEFORE INSERT ON ICAP__PORTFOLIO_EVALUATORS FOR EACH ROW DECLARE last_Sequence NUMBER; last_InsertID NUMBER; BEGIN 
+            SELECT ICAP__PORTFOLIO_EVALUATORS_ID_SEQ.NEXTVAL INTO : NEW.ID 
+            FROM DUAL; IF (
+                : NEW.ID IS NULL 
+                OR : NEW.ID = 0
+            ) THEN 
+            SELECT ICAP__PORTFOLIO_EVALUATORS_ID_SEQ.NEXTVAL INTO : NEW.ID 
+            FROM DUAL; ELSE 
+            SELECT NVL(Last_Number, 0) INTO last_Sequence 
+            FROM User_Sequences 
+            WHERE Sequence_Name = 'ICAP__PORTFOLIO_EVALUATORS_ID_SEQ'; 
+            SELECT : NEW.ID INTO last_InsertID 
+            FROM DUAL; WHILE (last_InsertID > last_Sequence) LOOP 
+            SELECT ICAP__PORTFOLIO_EVALUATORS_ID_SEQ.NEXTVAL INTO last_Sequence 
+            FROM DUAL; END LOOP; END IF; END;
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_CD4F54F9A76ED395 ON icap__portfolio_evaluators (user_id)
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_CD4F54F9B96B5643 ON icap__portfolio_evaluators (portfolio_id)
+        ");
+        $this->addSql("
+            CREATE UNIQUE INDEX portfolio_users_unique_idx ON icap__portfolio_evaluators (portfolio_id, user_id)
+        ");
         $this->addSql("
             CREATE TABLE icap__portfolio_widget_badges (
                 id NUMBER(10) NOT NULL, 
@@ -63,6 +108,16 @@ class Version20140925112907 extends AbstractMigration
             CREATE INDEX IDX_25D41B98FBE885E2 ON icap__portfolio_widget_badges_badge (widget_id)
         ");
         $this->addSql("
+            ALTER TABLE icap__portfolio_evaluators 
+            ADD CONSTRAINT FK_CD4F54F9A76ED395 FOREIGN KEY (user_id) 
+            REFERENCES claro_user (id)
+        ");
+        $this->addSql("
+            ALTER TABLE icap__portfolio_evaluators 
+            ADD CONSTRAINT FK_CD4F54F9B96B5643 FOREIGN KEY (portfolio_id) 
+            REFERENCES icap__portfolio (id)
+        ");
+        $this->addSql("
             ALTER TABLE icap__portfolio_widget_badges 
             ADD CONSTRAINT FK_C1AF804BBF396750 FOREIGN KEY (id) 
             REFERENCES icap__portfolio_abstract_widget (id) 
@@ -71,7 +126,7 @@ class Version20140925112907 extends AbstractMigration
         $this->addSql("
             ALTER TABLE icap__portfolio_widget_badges_badge 
             ADD CONSTRAINT FK_25D41B98F7A2C2FC FOREIGN KEY (badge_id) 
-            REFERENCES claro_user_badge (id)
+            REFERENCES claro_badge (id)
         ");
         $this->addSql("
             ALTER TABLE icap__portfolio_widget_badges_badge 
@@ -85,6 +140,9 @@ class Version20140925112907 extends AbstractMigration
         $this->addSql("
             ALTER TABLE icap__portfolio_widget_badges_badge 
             DROP CONSTRAINT FK_25D41B98FBE885E2
+        ");
+        $this->addSql("
+            DROP TABLE icap__portfolio_evaluators
         ");
         $this->addSql("
             DROP TABLE icap__portfolio_widget_badges

@@ -30,7 +30,7 @@ class EvaluatorsPortfolioType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('portfolio_users', 'collection', array(
+            ->add('portfolio_evaluators', 'collection', array(
                 'type'          => 'icap_portfolio_evaluator_form',
                 'by_reference'  => false,
                 'attr'          => array('class' => 'rule-collections'),
@@ -39,7 +39,7 @@ class EvaluatorsPortfolioType extends AbstractType
                 'allow_add'     => true,
                 'allow_delete'  => true
             ))
-            ->add('search_user', 'zenstruck_ajax_entity', array(
+            ->add('search_evaluator', 'zenstruck_ajax_entity', array(
                 'class'          => 'ClarolineCoreBundle:User',
                 'use_controller' => true,
                 'property'       => 'username',

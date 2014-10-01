@@ -1,0 +1,117 @@
+{% extends 'IcapPortfolioBundle::layout.html.twig' %}
+
+{% form_theme form _self %}
+
+{% block title %}{{ parent() ~ ' - ' ~ 'update_portfolio_evaluators' | trans({}, 'icap_portfolio') | striptags | raw }}{% endblock %}
+
+{% block content_title %}{{ 'update_portfolio_evaluators'|trans({}, 'icap_portfolio') }}{% endblock %}
+
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'fa fa-list-alt',
+                'name': 'my_portfolios'|trans({}, 'platform'),
+                'href': path('icap_portfolio_list')
+            },
+            {
+                'icon': 'fa fa-list-alt',
+                'name': 'manage_portfolio_evaluators'|trans({}, 'icap_portfolio'),
+                'href': ''
+            }
+        ])
+    }}
+{% endblock %}
+
+{% block _icap_portfolio_evaluators_form_portfolio_evaluators_widget %}
+    {% spaceless %}
+        {% if prototype is defined %}
+            {% set attr = attr|merge({'data-prototype': block('_icap_portfolio_evaluators_form_portfolio_evaluators_prototype') }) %}
+        {% endif %}
+        <div {{ block('widget_container_attributes') }}>
+            {{ form_errors(form) }}
+            <ul class="form-collection list-inline{{ form|length ? '' : ' hide' }}">
+                {% for rows in form %}
+                    <li class="form-collection-element">
+                    {% for row in rows %}
+                        {% set user = row.vars.data %}
+                        {{ form_widget(row, {'attr': {'class': 'hidden'}}) }}
+                        <span class="label label-primary">
+                            {{ user.firstname ~ ' ' ~ user.lastname }}
+                            <a class="remove" aria-hidden="true" href="#" data-toggle="tooltip"
+                                title="{{ 'revoke_access'|trans({}, 'icap_portfolio') }}"data-confirm-title="{{ 'revoke_access'|trans({}, 'icap_portfolio') }}">
+                                 <span class="fa fa-times"></span>
+                            </a>
+                        </span>
+                    {% endfor %}
+                    </li>
+                {% endfor %}
+            </ul>
+            {{ form_rest(form) }}
+        </div>
+    {% endspaceless %}
+{% endblock _icap_portfolio_evaluators_form_portfolio_evaluators_widget %}
+
+{% block _icap_portfolio_evaluators_form_portfolio_evaluators_prototype %}
+    {{ _self.collection_field(prototype, 'primary') }}
+{% endblock _icap_portfolio_evaluators_form_portfolio_evaluators_prototype %}
+
+{% macro collection_field(rows, class) %}
+    {% spaceless %}
+        <li class="form-collection-element">
+            {% for row in rows %}
+                {{ form_widget(row, {'attr': {'class': 'hidden'}}) }}
+                <span class="label label-{{ class }}">
+                    __value__
+                    <a class="remove" aria-hidden="true" href="#" data-toggle="tooltip"
+                        title="{{ 'revoke_access'|trans({}, 'icap_portfolio') }}"data-confirm-title="{{ 'revoke_access'|trans({}, 'icap_portfolio') }}">
+                         <span class="fa fa-times"></span>
+                    </a>
+                </span>
+            {% endfor %}
+        </li>
+    {% endspaceless %}
+{% endmacro %}
+
+{% block content_body %}
+    <form action="{{ path('icap_portfolio_update_evaluators', {'id': portfolio.id}) }}" method="post" class="form-vertical" id="evaluators_form" {{ form_enctype(form) }}>
+        {{ form_errors(form) }}
+
+        <div class="form-group">
+            <div class="col-md-12" id="choose_user">
+                <label class="row">{{ 'select_evaluators'|trans({}, 'icap_portfolio') }}</label>
+                <div class="row">
+                    <div class="col-md-12">
+                        {{ form_widget(form.portfolio_evaluators) }}
+                        {{ form_widget(form.search_evaluator) }}
+                        <button class="btn btn-xs btn-success form-collection-add-evaluator" disabled="disabled">{{ 'add'|trans({}, 'platform') }}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {{ form_rest(form) }}
+
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button type="submit" class="btn btn-primary">{{ 'update_evaluators'|trans({}, 'icap_portfolio') }}</button>
+                <a href="{{ path("icap_portfolio_list") }}" title="{{ 'cancel'|trans({}, 'platform') }}" class="btn btn-default">{{ 'cancel'|trans({}, 'platform') }}</a>
+            </div>
+        </div>
+    </form>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('bundles/frontend/jquery/plugin/select2/select2.css') }}" screen="media" />
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script type="text/javascript" src="{{ asset('bundles/zenstruckform/js/helper.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/select2/select2.min.js') }}"></script>
+{% if 'en' != app.request.locale %}
+<script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/select2/select2_locale_' ~ app.request.locale ~ '.js') }}"></script>
+{% endif %}
+<script type="text/javascript" src='{{ asset('bundles/icapportfolio/js/evaluators.js') }}'></script>
+{% endblock %}

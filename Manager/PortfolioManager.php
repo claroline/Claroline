@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManager;
 use Icap\PortfolioBundle\Entity\Portfolio;
 use Icap\PortfolioBundle\Entity\PortfolioUser;
+use Icap\PortfolioBundle\Entity\PortfolioEvaluator;
 use Icap\PortfolioBundle\Entity\Widget\TitleWidget;
 use Icap\PortfolioBundle\Entity\Widget\WidgetNode;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -106,9 +107,29 @@ class PortfolioManager
             }
         }
 
-        // Delete rules
         foreach ($originalPortfolioGroups as $originalPortfolioGroup) {
             $this->entityManager->remove($originalPortfolioGroup);
+        }
+
+        $this->persistPortfolio($portfolio);
+    }
+
+    /**
+     * @param Portfolio                               $portfolio
+     * @param Collection|PortfolioEvaluator[]         $originalPortfolioEvaluators
+     */
+    public function updateEvaluators(Portfolio $portfolio, Collection $originalPortfolioEvaluators)
+    {
+        $portfolioEvaluators = $portfolio->getPortfolioEvaluators();
+
+        foreach ($portfolioEvaluators as $portfolioEvaluator) {
+            if ($originalPortfolioEvaluators->contains($portfolioEvaluator)) {
+                $originalPortfolioEvaluators->removeElement($portfolioEvaluator);
+            }
+        }
+
+        foreach ($originalPortfolioEvaluators as $originalPortfolioUser) {
+            $this->entityManager->remove($originalPortfolioUser);
         }
 
         $this->persistPortfolio($portfolio);

@@ -27,7 +27,7 @@ class PortfolioHandler
     protected $requestStack;
 
     /**
-     * @var PortfolioManagerManager
+     * @var PortfolioManager
      */
     protected $portfolioManager;
 
@@ -159,6 +159,30 @@ class PortfolioHandler
 
             if ($form->isValid()) {
                 $this->portfolioManager->updateVisibility($portfolio, $originalPortfolioUsers, $originalPortfolioGroups);
+
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @param Portfolio $portfolio
+     *
+     * @return bool True on successfull processing, false otherwise
+     */
+    public function handleEvaluators(Portfolio $portfolio)
+    {
+        $originalPortfolioEvaluators  = $portfolio->getPortfolioEvaluators();
+        $form                         = $this->getEvaluatorsForm($portfolio);
+
+        $request = $this->requestStack->getCurrentRequest();
+        if ($request->isMethod('POST')) {
+            $form->submit($request);
+
+            if ($form->isValid()) {
+                $this->portfolioManager->updateEvaluators($portfolio, $originalPortfolioEvaluators);
 
                 return true;
             }
