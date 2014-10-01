@@ -6,6 +6,7 @@ use Claroline\CoreBundle\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Icap\PortfolioBundle\Entity\Widget\TitleWidget;
 use Icap\PortfolioBundle\Entity\Widget\WidgetNode;
 
 /**
@@ -189,7 +190,7 @@ class Portfolio
     }
 
     /**
-     * @return mixed
+     * @return PortfolioEvaluator[]
      */
     public function getPortfolioEvaluators()
     {
@@ -308,5 +309,22 @@ class Portfolio
     public function getWidgets()
     {
         return $this->widgets;
+    }
+
+    /**
+     * @return Widget\TitleWidget|null
+     */
+    public function getTitleWidget()
+    {
+        $titleWidget = null;
+
+        foreach ($this->getWidgets() as $widget) {
+            if ('title' === $widget->getWidgetType()) {
+                $titleWidget = $widget;
+                break;
+            }
+        }
+
+        return $titleWidget;
     }
 }

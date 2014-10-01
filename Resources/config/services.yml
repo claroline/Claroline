@@ -15,3 +15,12 @@ services:
         factory_method:  getRepository
         arguments:
             - IcapPortfolioBundle:Widget\WidgetType
+
+    #notification listeners
+    icap.listener.portfolio.notification_listener:
+        class: Icap\PortfolioBundle\Listener\Notification\NotificationListener
+        calls:
+            - [setContainer, ["@service_container"]]
+        tags:
+            - { name: kernel.event_listener, event: create_notification_item_portfolio-remove_evaluator, method: onCreateNotificationItem }
+            - { name: kernel.event_listener, event: create_notification_item_portfolio-add_evaluator, method: onCreateNotificationItem }

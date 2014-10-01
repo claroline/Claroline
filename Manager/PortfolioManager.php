@@ -3,6 +3,7 @@
 namespace Icap\PortfolioBundle\Manager;
 
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Event\Log\LogGenericEvent;
 use Claroline\CoreBundle\Pager\PagerFactory;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManager;
@@ -11,7 +12,10 @@ use Icap\PortfolioBundle\Entity\PortfolioUser;
 use Icap\PortfolioBundle\Entity\PortfolioEvaluator;
 use Icap\PortfolioBundle\Entity\Widget\TitleWidget;
 use Icap\PortfolioBundle\Entity\Widget\WidgetNode;
+use Icap\PortfolioBundle\Event\Log\PortfolioAddEvaluatorEvent;
+use Icap\PortfolioBundle\Event\Log\PortfolioRemoveEvaluatorEvent;
 use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\FormFactory;
 
 /**
@@ -35,19 +39,26 @@ class PortfolioManager
     protected $widgetsManager;
 
     /**
+     * @var EventDispatcherInterface
+     */
+    protected $eventDispatcher;
+
+    /**
      * Constructor.
      *
      * @DI\InjectParams({
-     *     "entityManager"  = @DI\Inject("doctrine.orm.entity_manager"),
-     *     "formFactory"    = @DI\Inject("form.factory"),
-     *     "widgetsManager" = @DI\Inject("icap_portfolio.manager.widgets")
+     *     "entityManager"   = @DI\Inject("doctrine.orm.entity_manager"),
+     *     "formFactory"     = @DI\Inject("form.factory"),
+     *     "widgetsManager"  = @DI\Inject("icap_portfolio.manager.widgets"),
+     *     "eventDispatcher" = @DI\Inject("event_dispatcher"),
      * })
      */
-    public function __construct(EntityManager $entityManager, FormFactory $formFactory, WidgetsManager $widgetsManager)
+    public function __construct(EntityManager $entityManager, FormFactory $formFactory, WidgetsManager $widgetsManager, EventDispatcherInterface $eventDispatcher)
     {
-        $this->entityManager  = $entityManager;
-        $this->formFactory    = $formFactory;
-        $this->widgetsManager = $widgetsManager;
+        $this->entityManager   = $entityManager;
+        $this->formFactory     = $formFactory;
+        $this->widgetsManager  = $widgetsManager;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -94,7 +105,6 @@ class PortfolioManager
             }
         }
 
-        // Delete rules
         foreach ($originalPortfolioUsers as $originalPortfolioUser) {
             $this->entityManager->remove($originalPortfolioUser);
         }
@@ -120,19 +130,44 @@ class PortfolioManager
      */
     public function updateEvaluators(Portfolio $portfolio, Collection $originalPortfolioEvaluators)
     {
-        $portfolioEvaluators = $portfolio->getPortfolioEvaluators();
+        $portfolioEvaluators                = $portfolio->getPortfolioEvaluators();
+        /** @var PortfolioEvaluator[] $addedPortfolioEvaluatorsToNotify */
+        $addedPortfolioEvaluatorsToNotify   = array();
+        /** @var PortfolioEvaluator[] $removedPortfolioEvaluatorsToNotify */
+        $removedPortfolioEvaluatorsToNotify = array();
 
         foreach ($portfolioEvaluators as $portfolioEvaluator) {
             if ($originalPortfolioEvaluators->contains($portfolioEvaluator)) {
                 $originalPortfolioEvaluators->removeElement($portfolioEvaluator);
             }
+            else {
+                $addedPortfolioEvaluatorsToNotify[] = $portfolioEvaluator;
+            }
         }
 
         foreach ($originalPortfolioEvaluators as $originalPortfolioUser) {
             $this->entityManager->remove($originalPortfolioUser);
+            $removedPortfolioEvaluatorsToNotify[] = $originalPortfolioUser;
         }
 
         $this->persistPortfolio($portfolio);
+
+        foreach ($addedPortfolioEvaluatorsToNotify as $addedPortfolioEvaluator) {
+            $portfolioAddEvaluatorEvent = new PortfolioAddEvaluatorEvent($portfolio, $addedPortfolioEvaluator);
+            $this->dispatch($portfolioAddEvaluatorEvent);
+        }
+        foreach ($removedPortfolioEvaluatorsToNotify as $removedPortfolioEvaluator) {
+            $portfolioAddEvaluatorEvent = new PortfolioRemoveEvaluatorEvent($portfolio, $removedPortfolioEvaluator);
+            $this->dispatch($portfolioAddEvaluatorEvent);
+        }
+    }
+
+    /**
+     * @param LogGenericEvent $event
+     */
+    protected function dispatch(LogGenericEvent $event)
+    {
+        $this->eventDispatcher->dispatch('log', $event);
     }
 
     /**

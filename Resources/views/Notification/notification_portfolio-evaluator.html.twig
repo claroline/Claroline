@@ -1,0 +1,4 @@
+{% set path = path('icap_portfolio_view', {'portfolioSlug': notification.details.portfolio.slug}) %}
+{% set portfolio = '<a href="' ~ path ~ '">' ~ notification.details.portfolio.name ~ '</a>' %}
+
+{{ notification.actionKey|trans({'%portfolio%': portfolio}, 'notification') | raw }}
