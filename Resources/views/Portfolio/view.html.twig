@@ -115,7 +115,7 @@
     {% if editMode %}
         <div class="form-container" data-ng-controller="editWidgetsController">
             <form name="form" class="edit-container" data-loading-form="save(editedWidget)" data-ng-repeat="editedWidget in editedWidgets">
-                <div class="panel panel-default">
+                <div class="panel panel-default widget-panel">
                     <div class="panel-heading">
                         <h3 class="panel-title">
                             <span data-ng-bind="editedWidget.getType() + '_form_title'|trans"></span>
