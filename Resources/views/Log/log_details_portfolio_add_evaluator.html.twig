@@ -1,0 +1,21 @@
+{% if log.receiver is defined %}
+    <div class="list-group">
+        <div class="list-group-item">
+            <h4>{{ ('log_portfolio_added_evaluator')|trans({}, 'log') }}</h4>
+
+            {% if log.receiver and log.doer and log.receiver.getId() == log.doer.getId() %}
+                <dl class="dl-horizontal">
+                    <dt></dt>
+                    <dd>{{ ('log_himself')|trans({}, 'log') }}</dd>
+                </dl>
+            {% else %}
+                <dl class="dl-horizontal">
+                    <dt>{{ ('last_name')|trans({}, 'platform') }}</dt>
+                    <dd>{{ log.receiver.firstName }}</dd>
+                    <dt>{{ ('first_name')|trans({}, 'platform') }}</dt>
+                    <dd>{{ log.receiver.lastName }}</dd>
+                </dl>
+            {% endif %}
+        </div>
+    </div>
+{% endif %}

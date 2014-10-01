@@ -6,3 +6,6 @@ log_portfolio-remove_evaluator_shortname: 'Remove evaluator on portfolio'
 
 log_portfolio-add_evaluator_title: 'Add evaluator on portfolio'
 log_portfolio-remove_evaluator_title: 'Remove evaluator on portfolio'
+
+log_portfolio_added_evaluator: 'Evaluator added to the portfolio'
+log_portfolio_removed_evaluator: 'Evaluator removed from the portfolio'
