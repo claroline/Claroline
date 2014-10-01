@@ -261,7 +261,7 @@ date_range.today: 'Hoy'
 date_range.week: 'S'
 date_range.yesterday: 'Ayer'
 db_table: 'Tabla de la base de datos'
-decline: Refutar
+decline: Rechazar
 deletable: 'Suprimir tabla'
 delete: 'Suprimir'
 delete_category: 'Suprimir categoría'
