@@ -36,6 +36,12 @@
                     <a href="{{ path('claro_desktop_agenda_export') }}" class="btn btn-default btn-xs" role="button">
                         {{ 'export'|trans({}, 'agenda') }}
                     </a>
+                    <a id="import-ics-btn" href="{{ path('claro_agenda_import_form') }}"
+                       class="btn btn-default btn-xs"
+                       role="button"
+                            >
+                        {{ 'import_agenda_file_file'|trans({}, 'agenda') }}
+                    </a>
                 </div>
 
                 {% if filters | length > 1 %}

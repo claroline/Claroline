@@ -197,14 +197,14 @@
      * @param successHandler A successHandler
      * @param formRenderHandler an action wich is done after the form is rendered the first time
      */
-    modal.displayForm = function (url, successHandler, formRenderHandler) {
+    modal.displayForm = function (url, successHandler, formRenderHandler, formId) {
         $.ajax(url)
         .success(function (data) {
             var modalElement = modal.create(data);
 
             modalElement.on('click', 'button.btn', function (event) {
                 event.preventDefault();
-                modal.submitForm(modalElement, successHandler);
+                modal.submitForm(modalElement, successHandler, formId);
             });
             formRenderHandler(data);
         })
@@ -241,24 +241,50 @@
     /**
      * This method is triggered when submit a form inside a modal created with modal.displayForm()
      */
-    modal.submitForm = function (modalElement, callBack)
+    modal.submitForm = function (modalElement, callBack, formId)
     {
-        var form = $('form', modalElement);
-        var url = form.attr('action');
-        var formData = form.serializeArray();
+        if (formId) {
+            //this implementation works
+            var form = $(modalElement).find('form');
+            var url = form.attr('action');
+//         var formData = new FormData(form[0]);
+            var formData = new FormData(document.getElementById(formId));
 
-        $.post(url, formData)
-        .success(function (data, textStatus, jqXHR) {
-            if (jqXHR.getResponseHeader('Content-Type') === 'application/json') {
-                modalElement.modal('hide');
-                callBack(data, textStatus, jqXHR);
-            } else {
-                $('.modal-dialog', modalElement).replaceWith(data);
-            }
-        })
-        .error(function () {
-            modal.error();
-        });
+            $.ajax({
+                url: url,
+                data: formData,
+                type: 'POST',
+                processData: false,
+                contentType: false,
+                success: function(data, textStatus, jqXHR) {
+                    if (jqXHR.getResponseHeader('Content-Type') === 'application/json') {
+                        $('.modal').modal('hide');
+                        callBack(data, textStatus, jqXHR);
+                    } else {
+                        //how do I find the root element of html ? It would be better to not have to use this class.
+                        $('.modal-dialog').replaceWith(data);
+                    }
+                }
+            });
+        } else {
+            //this implementation doesn't work for file fields
+            var form = $('form', modalElement);
+            var url = form.attr('action');
+            var formData = form.serializeArray();
+
+            $.post(url, formData)
+            .success(function (data, textStatus, jqXHR) {
+                if (jqXHR.getResponseHeader('Content-Type') === 'application/json') {
+                    modalElement.modal('hide');
+                    callBack(data, textStatus, jqXHR);
+                } else {
+                    $('.modal-dialog', modalElement).replaceWith(data);
+                }
+            })
+            .error(function () {
+                modal.error();
+            });
+        }
     };
 
     /**

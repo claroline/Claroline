@@ -108,7 +108,7 @@ class WorkspaceAgendaController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/{workspace}/import/modal/form",
+     *     "/workspace//{workspace}/import/modal/form",
      *     name="claro_workspace_agenda_import_form",
      *     options = {"expose"=true}
      * )
@@ -125,7 +125,7 @@ class WorkspaceAgendaController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/{workspace}/import",
+     *     "/workspace/{workspace}/import",
      *     name="claro_workspace_agenda_import"
      * )
      * @EXT\Template("ClarolineCoreBundle:Tool\workspace\agenda:importIcsModalForm.html.twig")
