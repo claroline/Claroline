@@ -327,4 +327,23 @@ class Portfolio
 
         return $titleWidget;
     }
+
+    /**
+     * @param User $user
+     *
+     * @return bool
+     */
+    public function hasEvaluator(User $user)
+    {
+        $isEvaluator = false;
+
+        foreach ($this->getPortfolioEvaluators() as $portfolioEvaluator) {
+            if ($user->getId() === $portfolioEvaluator->getUser()->getId()) {
+                $isEvaluator = true;
+                break;
+            }
+        }
+
+        return $isEvaluator;
+    }
 }

@@ -2,6 +2,8 @@
 
 {% block title %}{{ portfolio.user.firstName ~ ' ' ~ portfolio.user.lastName ~ ' - ' ~ 'portfolio' | trans({}, 'icap_portfolio') ~ ' - ' ~ titleWidget.title | striptags | raw }}{% endblock %}
 
+{% set editMode = (constant('Icap\\PortfolioBundle\\Manager\\PortfolioManager::PORTFOLIO_OPENING_MODE_EDIT') == openingMode) %}
+
 {% block content_container %}
     <div id="portfolio-section" data-portfolio-container="{{ portfolio.id }}">
         <div id="portfolio-container" data-ng-if="portfolio.$resolved">

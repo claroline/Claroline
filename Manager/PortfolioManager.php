@@ -23,6 +23,10 @@ use Symfony\Component\Form\FormFactory;
  */
 class PortfolioManager
 {
+    const PORTFOLIO_OPENING_MODE_VIEW     = 'view';
+    const PORTFOLIO_OPENING_MODE_EVALUATE = 'evaluate';
+    const PORTFOLIO_OPENING_MODE_EDIT     = 'edit';
+
     /**
      * @var \Doctrine\ORM\EntityManager
      */
@@ -286,5 +290,29 @@ class PortfolioManager
         }
 
         $this->entityManager->flush();
+    }
+
+    /**
+     * @param Portfolio $portfolio
+     * @param User|null $user
+     * @param bool      $isAdmin
+     *
+     * @return string|null
+     */
+    public function getOpeningMode(Portfolio $portfolio, $user, $isAdmin = false)
+    {
+        $openingMode = null;
+
+        if ($user === $portfolio->getUser() || $isAdmin) {
+            $openingMode = self::PORTFOLIO_OPENING_MODE_EDIT;
+        }
+        elseif ($portfolio->hasEvaluator($user)) {
+            $openingMode = self::PORTFOLIO_OPENING_MODE_EVALUATE;
+        }
+        elseif ($portfolio->visibleToUser($user)) {
+            $openingMode = self::PORTFOLIO_OPENING_MODE_VIEW;
+        }
+
+        return $openingMode;
     }
 }
