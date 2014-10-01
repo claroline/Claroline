@@ -32,7 +32,10 @@ class PortfolioRemoveEvaluatorEvent extends LogGenericEvent implements Notifiabl
         $this->portfolio          = $portfolio;
         $this->portfolioEvaluator = $portfolioEvaluator;
 
-        $user = $portfolio->getUser();
+        $user     = $portfolio->getUser();
+
+        /** @var \Icap\PortfolioBundle\Entity\Widget\TitleWidget $titleWidget */
+        $titleWidget = $this->portfolio->getTitleWidget();
 
         parent::__construct(
             self::ACTION,
@@ -40,6 +43,11 @@ class PortfolioRemoveEvaluatorEvent extends LogGenericEvent implements Notifiabl
                 'owner' => array(
                     'lastName'  => $user->getLastName(),
                     'firstName' => $user->getFirstName()
+                ),
+                'portfolio' => array(
+                    'id'    => $this->portfolio->getId(),
+                    'title' => $titleWidget->getTitle(),
+                    'slug'  => $titleWidget->getSlug()
                 )
             ),
             $portfolioEvaluator->getUser(),
@@ -123,9 +131,9 @@ class PortfolioRemoveEvaluatorEvent extends LogGenericEvent implements Notifiabl
 
         $notificationDetails = array(
             'portfolio' => array(
-                'id'   => $this->portfolio->getId(),
-                'name' => $titleWidget->getTitle(),
-                'slug' => $titleWidget->getSlug()
+                'id'    => $this->portfolio->getId(),
+                'title' => $titleWidget->getTitle(),
+                'slug'  => $titleWidget->getSlug()
             ),
             'evaluator'  => array(
                 'id'        => $receiver->getId(),

@@ -1,0 +1,15 @@
+{% set portfolio %}
+    {% include 'IcapPortfolioBundle:Log:log_list_item_portfolio.html.twig' %}
+{% endset %}
+
+{% set evaluator %}
+    {% include 'IcapPortfolioBundle:Log:log_list_item_evaluator.html.twig' %}
+{% endset %}
+
+{% if constant('Icap\\PortfolioBundle\\Event\\Log\\PortfolioAddEvaluatorEvent::ACTION') == log.action %}
+    {{ log.action|trans({'%portfolio%': portfolio, '%evaluator%': evaluator}, 'log')|raw }}
+{% elseif constant('Icap\\PortfolioBundle\\Event\\Log\\PortfolioRemoveEvaluatorEvent::ACTION') == log.action %}
+    {{ log.action|trans({'%portfolio%': portfolio, '%evaluator%': evaluator}, 'log')|raw }}
+{% else %}
+    no default text
+{% endif %}

@@ -1,6 +1,6 @@
 <?php
 
-namespace Icap\PortfolioBundle\Listener\Notification;
+namespace Icap\PortfolioBundle\Listener;
 
 use Claroline\CoreBundle\Event\Log\CreateFormResourceEvent;
 use Icap\NotificationBundle\Event\Notification\NotificationCreateDelegateViewEvent;

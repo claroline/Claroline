@@ -1,0 +1,8 @@
+portfolio-add_evaluator: 'a ajouté %evaluator% à la liste des évaluateurs de son portfolio %portfolio%'
+portfolio-remove_evaluator: 'a supprimé %evaluator% de la liste des évaluateurs de son portfolio %portfolio%'
+
+log_portfolio-add_evaluator_shortname: 'Ajout évaluateur sur portfolio'
+log_portfolio-remove_evaluator_shortname: 'Suppression évaluateur sur portfolio'
+
+log_portfolio-add_evaluator_title: 'Ajout d''un évaluateur sur un portfolio'
+log_portfolio-remove_evaluator_title: 'Suppression  d''un évaluateur sur un portfolio'

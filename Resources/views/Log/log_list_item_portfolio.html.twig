@@ -1,0 +1,3 @@
+{% if log.details.portfolio is defined %}
+    <a href="{{ path('icap_portfolio_view', {'portfolioSlug': log.details.portfolio.slug }) }}"><strong>{{ log.details.portfolio.title }}</strong></a>
+{% endif %}

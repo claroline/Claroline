@@ -34,12 +34,20 @@ class PortfolioAddEvaluatorEvent extends LogGenericEvent implements NotifiableIn
 
         $user = $portfolio->getUser();
 
+        /** @var \Icap\PortfolioBundle\Entity\Widget\TitleWidget $titleWidget */
+        $titleWidget = $this->portfolio->getTitleWidget();
+
         parent::__construct(
             self::ACTION,
             array(
                 'owner' => array(
                     'lastName'  => $user->getLastName(),
                     'firstName' => $user->getFirstName()
+                ),
+                'portfolio' => array(
+                    'id'    => $this->portfolio->getId(),
+                    'title' => $titleWidget->getTitle(),
+                    'slug'  => $titleWidget->getSlug()
                 )
             ),
             $portfolioEvaluator->getUser(),
