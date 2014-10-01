@@ -25,14 +25,20 @@ $(function() {
         });
     });
 
-    $(".origin").droppable();
+    $(".origin").each(function() {
+        $(this).droppable({
+            tolerance: "pointer",
+        });
+    });
 
     $(".droppable").each(function() {
+        var $countDraggable = 0;
         $(this).droppable({
             tolerance: "pointer",
             activeClass: "state-hover",
             hoverClass: "state-active",
             drop: function(event, ui) {
+                $countDraggable = $countDraggable + 1;
                 $(this).addClass("state-highlight");
                 idLabel = $(this).attr('id');
                 idLabel = idLabel.replace('droppable_', '');
@@ -49,8 +55,13 @@ $(function() {
                 }
             },
             out: function(event, ui) {
-                $(this).removeClass("state-highlight");
-                
+                $countDraggable = $countDraggable - 1;
+                if ($countDraggable < 0) {
+                    $countDraggable = 0;
+                }
+                if($countDraggable == 0 ) {
+                    $(this).removeClass("state-highlight");
+                }
                 idProposal = ui.draggable.attr("id");
                 idProposal = idProposal.replace('draggable_', '');
                 if (idProposal) {
