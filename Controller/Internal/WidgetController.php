@@ -26,6 +26,8 @@ class WidgetController extends BaseController
      */
     public function getAction(Request $request, User $loggedUser, Portfolio $portfolio, $type, $action)
     {
+        $this->checkPortfolioToolAccess();
+
         $data = array();
 
         if ("form" === $action) {
@@ -58,6 +60,8 @@ class WidgetController extends BaseController
      */
     public function postAction(Request $request, User $loggedUser, Portfolio $portfolio, $type)
     {
+        $this->checkPortfolioToolAccess();
+
         $response      = new JsonResponse();
         $widgetManager = $this->getWidgetsManager();
         $widgetsConfig = $widgetManager->getWidgetsConfig();
@@ -91,6 +95,8 @@ class WidgetController extends BaseController
      */
     public function putAction(Request $request, User $loggedUser, Portfolio $portfolio, $type, $widgetId)
     {
+        $this->checkPortfolioToolAccess();
+
         /** @var \Icap\PortfolioBundle\Repository\Widget\AbstractWidgetRepository $abstractWidgetRepository */
         $abstractWidgetRepository = $this->getDoctrine()->getRepository('IcapPortfolioBundle:Widget\AbstractWidget');
 
@@ -118,6 +124,8 @@ class WidgetController extends BaseController
      */
     public function deleteAction(Request $request, User $loggedUser, Portfolio $portfolio, $type, $widgetId)
     {
+        $this->checkPortfolioToolAccess();
+
         /** @var \Icap\PortfolioBundle\Repository\Widget\AbstractWidgetRepository $abstractWidgetRepository */
         $abstractWidgetRepository = $this->getDoctrine()->getRepository('IcapPortfolioBundle:Widget\AbstractWidget');
 

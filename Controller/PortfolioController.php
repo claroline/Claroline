@@ -26,6 +26,8 @@ class PortfolioController extends Controller
      */
     public function listAction(User $loggedUser, $page)
     {
+        $this->checkPortfolioToolAccess();
+
         $query = $this->getDoctrine()->getRepository('IcapPortfolioBundle:Portfolio')->findByUserWithWidgets($loggedUser, false);
         $pager = $this->get('claroline.pager.pager_factory')->createPager($query, $page, 10);
 
@@ -42,6 +44,8 @@ class PortfolioController extends Controller
      */
     public function addAction(User $loggedUser)
     {
+        $this->checkPortfolioToolAccess();
+
         $portfolio = new Portfolio();
         $portfolio->setUser($loggedUser);
 
@@ -71,6 +75,8 @@ class PortfolioController extends Controller
      */
     public function renameAction(User $loggedUser, TitleWidget $titleWidget)
     {
+        $this->checkPortfolioToolAccess();
+
         try {
             if ($this->getPortfolioFormHandler()->handleRename($titleWidget)) {
                 $this->getSessionFlashbag()->add('success', $this->getTranslator()->trans('portfolio_rename_success_message', array(), 'icap_portfolio'));
@@ -97,6 +103,8 @@ class PortfolioController extends Controller
      */
     public function deleteAction(User $loggedUser, Portfolio $portfolio)
     {
+        $this->checkPortfolioToolAccess();
+
         if ($loggedUser !== $portfolio->getUser()) {
             throw $this->createNotFoundException("Unkown user for this portfolio.");
         }
@@ -120,6 +128,8 @@ class PortfolioController extends Controller
      */
     public function updateVisibilityAction(User $loggedUser, Portfolio $portfolio)
     {
+        $this->checkPortfolioToolAccess();
+
         try {
             if ($this->getPortfolioFormHandler()->handleVisibility($portfolio)) {
                 $this->getSessionFlashbag()->add('success', $this->getTranslator()->trans('portfolio_visibility_update_success_message', array(), 'icap_portfolio'));
@@ -169,6 +179,8 @@ class PortfolioController extends Controller
      */
     public function viewAction($portfolioSlug)
     {
+        $this->checkPortfolioToolAccess();
+
         /** @var User|null $user */
         $user        = $this->getUser();
         /** @var \Icap\PortfolioBundle\Entity\Widget\TitleWidget $titleWidget */
