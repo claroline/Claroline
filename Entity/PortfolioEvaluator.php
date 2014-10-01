@@ -33,7 +33,7 @@ class PortfolioEvaluator
     protected $user;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Icap\PortfolioBundle\Entity\Portfolio", inversedBy="portfolioUsers")
+     * @ORM\ManyToOne(targetEntity="Icap\PortfolioBundle\Entity\Portfolio", inversedBy="portfolioEvaluators")
      * @ORM\JoinColumn(name="portfolio_id", referencedColumnName="id", nullable=false)
      */
     protected $portfolio;
