@@ -19,6 +19,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\SecurityContext;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceShortcut;
@@ -480,7 +481,8 @@ class ResourceController
 
             foreach ($nodes as $item) {
                 if ($user !== 'anon.') {
-                    if ($item['creator_username'] === $user->getUsername()) {
+                    if ($item['creator_username'] === $user->getUsername()
+                        && !$this->isUsurpatingWorkspaceRole($this->sc->getToken()) ) {
                         $item['mask'] = 1023;
                     }
                 }
@@ -813,5 +815,16 @@ class ResourceController
         $this->request->getSession()->set('resourceZoom', $zoom);
 
         return new Response(200);
+    }
+
+    private function isUsurpatingWorkspaceRole(TokenInterface $token)
+    {
+        foreach ($token->getRoles() as $role) {
+            if ($role->getRole() === 'ROLE_USURPATE_WORKSPACE_ROLE') {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
