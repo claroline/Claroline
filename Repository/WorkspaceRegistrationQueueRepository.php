@@ -17,27 +17,43 @@ use Doctrine\ORM\EntityRepository;
 
 class WorkspaceRegistrationQueueRepository extends EntityRepository
 {
-	public function findByWorkspace(Workspace $workspace)
-	{
-		$dql = "
-			SELECT w FROM Claroline\CoreBundle\Entity\Workspace\WorkspaceRegistrationQueue w
-			WHERE w.workspace = :workspace 
-		";
-		$query = $this->_em->createQuery($dql);
+    public function findByWorkspace(Workspace $workspace)
+    {
+        $dql = "
+            SELECT w FROM Claroline\CoreBundle\Entity\Workspace\WorkspaceRegistrationQueue w
+            WHERE w.workspace = :workspace
+        ";
+        $query = $this->_em->createQuery($dql);
         $query->setParameter('workspace', $workspace);
-        
-        return $query->getResult();
-	}
 
-	public function findByUser(User $user)
-	{
-		$dql ="
-			SELECT w FROM Claroline\CoreBundle\Entity\Workspace\WorkspaceRegistrationQueue w 
-			WHERE w.user = :user
-		";
-		$query = $this->_em->createQuery($dql);
-        $query->setParameter('user', $user);
-        
         return $query->getResult();
-	}
+    }
+
+    public function findByUser(User $user)
+    {
+        $dql ="
+            SELECT w FROM Claroline\CoreBundle\Entity\Workspace\WorkspaceRegistrationQueue w
+            WHERE w.user = :user
+        ";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('user', $user);
+
+        return $query->getResult();
+    }
+
+    public function findOneByWorkspaceAndUser(Workspace $workspace, User $user)
+    {
+        $dql = '
+            SELECT q
+            FROM Claroline\CoreBundle\Entity\Workspace\WorkspaceRegistrationQueue q
+            WHERE q.workspace = :workspace
+            AND q.user = :user
+        ';
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('workspace', $workspace);
+        $query->setParameter('user', $user);
+
+        return $query->getOneOrNullResult();
+    }
 }

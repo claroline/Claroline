@@ -11,48 +11,53 @@
 
 namespace Claroline\CoreBundle\Manager;
 
-use JMS\DiExtraBundle\Annotation as DI;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceRegistrationQueue;
-use Claroline\CoreBundle\Entity\Workspace\workspace;
-use Claroline\CoreBundle\Entity\Role;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Event\StrictDispatcher;
+use Claroline\CoreBundle\Manager\RoleManager;
+use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Claroline\CoreBundle\Pager\PagerFactory;
 use Claroline\CoreBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Manager\workspaceManager;
-use Claroline\CoreBundle\Manager\RoleManager;
+use JMS\DiExtraBundle\Annotation as DI;
 
 /**
  * @DI\Service("claroline.manager.workspace_user_queue_manager")
  */
 class WorkspaceUserQueueManager 
 {
-	private $objectManager;
-	private $pagerFactory;
-	private $wksQrepo;
-    private $workspaceManager;
+    private $dispatcher;
+    private $objectManager;
+    private $pagerFactory;
     private $roleManager;
+    private $wksQrepo;
+    private $workspaceManager;
 
-	  /**
+    /**
      * Constructor.
      *
      * @DI\InjectParams({
-     *     "objectManager"          = @DI\Inject("claroline.persistence.object_manager"),
-     *     "pagerFactory"           = @DI\Inject("claroline.pager.pager_factory"),
-     *     "workspaceManager"       = @DI\Inject("claroline.manager.workspace_manager"),
-     *     "roleManager"            = @DI\Inject("claroline.manager.role_manager")
+     *     "dispatcher"       = @DI\Inject("claroline.event.event_dispatcher"),
+     *     "objectManager"    = @DI\Inject("claroline.persistence.object_manager"),
+     *     "pagerFactory"     = @DI\Inject("claroline.pager.pager_factory"),
+     *     "roleManager"      = @DI\Inject("claroline.manager.role_manager"),
+     *     "workspaceManager" = @DI\Inject("claroline.manager.workspace_manager")
      * })
      */
     public function __construct(
+        StrictDispatcher $dispatcher,
         ObjectManager $objectManager,
         PagerFactory $pagerFactory,
-        workspaceManager $workspaceManager,
-        RoleManager $roleManager
+        RoleManager $roleManager,
+        WorkspaceManager $workspaceManager
     )
     {
+        $this->dispatcher = $dispatcher;
         $this->objectManager = $objectManager;
-        $this->wksQrepo = $this->objectManager->getRepository('ClarolineCoreBundle:Workspace\WorkspaceRegistrationQueue');
         $this->pagerFactory = $pagerFactory;
-        $this->workspaceManager = $workspaceManager;
         $this->roleManager = $roleManager;
+        $this->workspaceManager = $workspaceManager;
+        $this->wksQrepo = $this->objectManager->getRepository('ClarolineCoreBundle:Workspace\WorkspaceRegistrationQueue');
     }
 
     public function getAll(Workspace $workspace, $page = 1,$max = 20)
@@ -64,8 +69,34 @@ class WorkspaceUserQueueManager
 
     public function validateRegistration(WorkspaceRegistrationQueue $wksqrq)
     {
-       $this->roleManager->associateRolesToSubjects(array($wksqrq->getUser()), array($wksqrq->getRole()), true);
+        $this->roleManager->associateRolesToSubjects(
+            array($wksqrq->getUser()),
+            array($wksqrq->getRole()),
+            true
+        );
         $this->objectManager->remove($wksqrq);
         $this->objectManager->flush();
+    }
+
+    public function removeRegistrationQueue(WorkspaceRegistrationQueue $wksqrq)
+    {
+        $this->dispatcher->dispatch(
+            'log',
+            'Log\LogWorkspaceRegistrationDecline',
+            array($wksqrq)
+        );
+
+        $this->objectManager->remove($wksqrq);
+        $this->objectManager->flush();
+    }
+
+    public function removeUserFromWorkspaceQueue(Workspace $workspace, User $user)
+    {
+        $queue = $this->wksQrepo->findOneByWorkspaceAndUser($workspace, $user);
+
+        if (!is_null($queue)) {
+            $this->objectManager->remove($queue);
+            $this->objectManager->flush();
+        }
     }
 }

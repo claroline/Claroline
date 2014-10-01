@@ -51,6 +51,7 @@ You can redefine the layout used when a mail is sent: 'Vous pouvez redéfinir ic
 You can use the following variables in your form: 'Vous pouvez utiliser les variables suivantes dans votre formulaire'
 You can use the full screen version of the text editor to include HTML: 'Vous pouvez utiliser la version plein écran de l''éditeur afin d''y inclure du HTML'
 Your changes have been saved: 'Vos changements ont été sauvegardés'
+accept: Accepter
 account_created: 'Compte créé'
 account_duration_label: Durée de vie des comptes (jours)
 account_general_statistics: 'Statistiques générales sur les comptes'
@@ -277,6 +278,7 @@ date_range.today: 'Aujourd''hui'
 date_range.week: s
 date_range.yesterday: Hier
 db_table: 'Table de la base de données'
+decline: Refuser
 deletable: Supprimable
 delete: Supprimer
 delete_category: 'Supprimer la catégorie'
@@ -930,6 +932,7 @@ users_per_page: Utilisateurs par page
 users_registration_in_workspace: 'Inscription des utilisateurs dans l''espace d''activités'
 users_visits: 'Visites des utilisateurs'
 validate: Valider
+validation: Validation
 verification: 'Vérification'
 view: Voir
 view_category_hierarchy: 'Visualiser la structure des catégories'
@@ -988,6 +991,8 @@ workspace_list: Liste des espaces d'activités
 workspace_management: L'espace d'activités a été créé le %creationDate%, par %creator%. Il y a %count% inscrit(s).
 workspace_management_date_null: Il y a %count% inscrit(s). La date de création de l'espace et son créateur ne sont pas connus.
 workspace_order_tool_edit_form_name: Nom
+workspace_queue_cancel_confirm_title: 'Annuler la demande d''inscription'
+workspace_queue_cancel_confirm_message: 'Voulez-vous vraiment annuler votre demande d''inscription à cet espace d''activités ?'
 workspace_registration_confirm_title: 'Voulez-vous vous inscrire à cet espace d''activités ?'
 workspace_registration_message: 'Vous avez été inscrit à l''espace d''activité %workspace_name%'
 workspace_registration_message_object: 'Inscription à un espace d''activité'
