@@ -207,9 +207,11 @@ class AgendaController extends Controller
                 readfile($file);
             }
         );
+
+        $name = $workspace ? $workspace->getName(): 'desktop';
         $response->headers->set('Content-Transfer-Encoding', 'octet-stream');
         $response->headers->set('Content-Type', 'application/force-download');
-        $response->headers->set('Content-Disposition', 'attachment; filename='. $workspace->getName().'.ics');
+        $response->headers->set('Content-Disposition', 'attachment; filename=' . $name . '.ics');
         $response->headers->set('Content-Type', ' text/calendar');
         $response->headers->set('Connection', 'close');
 
