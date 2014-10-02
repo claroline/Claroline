@@ -16,10 +16,18 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Claroline\CoreBundle\Validator\Constraints\CsvUser;
+use Claroline\CoreBundle\Entity\Role;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class ImportUserType extends AbstractType
 {
+    private $showRoles;
+
+    public function __construct($showRoles = false)
+    {
+        $this->showRoles = $showRoles;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add(
@@ -43,6 +51,30 @@ class ImportUserType extends AbstractType
                 'required' => false
             )
         );
+
+        if ($this->showRoles) {
+            $builder->add(
+                'role',
+                'entity',
+                array(
+                    'required' => false,
+                    'label' => 'roles',
+                    'mapped' => false,
+                    'class' => 'Claroline\CoreBundle\Entity\Role',
+                    'expanded' => true,
+                    'multiple' => false,
+                    'property' => 'translationKey',
+                    'query_builder' => function (\Doctrine\ORM\EntityRepository $er) {
+                            $query = $er->createQueryBuilder('r')
+                                ->where("r.type = " . Role::PLATFORM_ROLE)
+                                ->andWhere("r.name != 'ROLE_ANONYMOUS'")
+                                ->andWhere("r.name != 'ROLE_USER'");
+
+                            return $query;
+                        }
+                )
+            );
+        }
     }
 
     public function getName()

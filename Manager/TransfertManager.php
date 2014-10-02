@@ -212,7 +212,7 @@ class TransfertManager
         );
 
         //required for roles
-        $this->om->forceFlush();
+        //$this->om->forceFlush();
 
         $tools = $this->getImporterByName('tools')
             ->import($data['tools'], $workspace, $entityRoles, $root);
