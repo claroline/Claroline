@@ -6,6 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use Icap\PortfolioBundle\Entity\Portfolio;
 use Icap\PortfolioBundle\Entity\Widget\AbstractWidget;
+use Icap\PortfolioBundle\Factory\WidgetFactory;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use Symfony\Component\Form\FormFactory;
@@ -15,23 +16,23 @@ use Symfony\Component\Form\FormFactory;
  */
 class WidgetsManager
 {
-    /**
-     * @var \Doctrine\ORM\EntityManager
-     */
+    /** @var EntityManager  */
     protected $entityManager;
 
-    /**
-     * @var \Symfony\Bundle\FrameworkBundle\Templating\EngineInterface
-     */
+    /** @var EngineInterface  */
     protected $templatingEngine;
 
-    /**
-     * @var \Symfony\Component\Form\FormFactory
-     */
+    /** @var FormFactory  */
     protected $formFactory;
 
     /** @var array */
     protected $widgetsConfig = null;
+
+    /** @var WidgetTypeManager  */
+    protected $widgetTypeManager;
+
+    /** @var WidgetFactory  */
+    protected $widgetFactory;
 
     /**
      * Constructor.
@@ -39,14 +40,18 @@ class WidgetsManager
      * @DI\InjectParams({
      *     "entityManager"     = @DI\Inject("doctrine.orm.entity_manager"),
      *     "templatingEngine"  = @DI\Inject("templating"),
-     *     "formFactory"       = @DI\Inject("form.factory")
+     *     "formFactory"       = @DI\Inject("form.factory"),
+     *     "widgetTypeManager" = @DI\Inject("icap_portfolio.manager.widget_type"),
+     *     "widgetFactory"     = @DI\Inject("icap_portfolio.factory.widget")
      * })
      */
-    public function __construct(EntityManager $entityManager, EngineInterface $templatingEngine, FormFactory $formFactory)
+    public function __construct(EntityManager $entityManager, EngineInterface $templatingEngine, FormFactory $formFactory, WidgetTypeManager $widgetTypeManager, WidgetFactory $widgetFactory)
     {
-        $this->entityManager    = $entityManager;
-        $this->templatingEngine = $templatingEngine;
-        $this->formFactory      = $formFactory;
+        $this->entityManager     = $entityManager;
+        $this->templatingEngine  = $templatingEngine;
+        $this->formFactory       = $formFactory;
+        $this->widgetTypeManager = $widgetTypeManager;
+        $this->widgetFactory     = $widgetFactory;
     }
 
     /**
@@ -54,40 +59,7 @@ class WidgetsManager
      */
     public function getWidgetsConfig()
     {
-        $widgetsConfig = $this->widgetsConfig;
-
-        if (null === $this->widgetsConfig) {
-            $widgetTypes = $this->entityManager->getRepository('IcapPortfolioBundle:Widget\WidgetType')->findAllInArray();
-
-            $sortedWidgetTypes = array();
-
-            foreach ($widgetTypes as $widgetType) {
-                $sortedWidgetTypes[$widgetType['name']] = $widgetType;
-            }
-
-            $this->widgetsConfig = $sortedWidgetTypes;
-            $widgetsConfig = $this->widgetsConfig;
-        }
-
-        return $widgetsConfig;
-    }
-
-    /**
-     * @param string $widgetType
-     *
-     * @return bool
-     */
-    public function isWidgetTypeUnique($widgetType)
-    {
-        $widgetTypeIsUnique = false;
-
-        $widgetsConfig = $this->getWidgetsConfig();
-
-        if (isset($widgetsConfig[$widgetType]) && $widgetsConfig[$widgetType]['isUnique']) {
-            $widgetTypeIsUnique = true;
-        }
-
-        return $widgetTypeIsUnique;
+        return $this->widgetTypeManager->getWidgetsConfig();
     }
 
     /**
@@ -165,7 +137,6 @@ class WidgetsManager
                     'row'       => $widget->getRow()
                 );
 
-                /** @var AbstractWidget $replacedWidget */
                 $maxRow = $this->entityManager->getRepository('IcapPortfolioBundle:Widget\AbstractWidget')->findMaxRow($widget->getPortfolio(), $widget->getColumn());
                 $widget->setRow($maxRow['maxRow'] + 1);
             }
@@ -210,18 +181,9 @@ class WidgetsManager
      */
     public function getNewWidget(Portfolio $portfolio, $type)
     {
-        $widgetsConfig = $this->getWidgetsConfig();
+        $widget = $this->widgetFactory->createWidget($portfolio, $type);
 
-        if (isset($widgetsConfig[$type])) {
-            $widgetNamespace = sprintf('Icap\PortfolioBundle\Entity\Widget\%sWidget', ucfirst($type));
-            /** @var \Icap\PortfolioBundle\Entity\Widget\AbstractWidget $widget */
-            $widget = new $widgetNamespace();
-            $widget->setPortfolio($portfolio);
-
-            return $widget;
-        }
-
-        throw new \InvalidArgumentException("Unknown type of widget.");
+        return $widget;
     }
 
     /**

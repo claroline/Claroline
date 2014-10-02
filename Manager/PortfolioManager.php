@@ -303,13 +303,18 @@ class PortfolioManager
     {
         $openingMode = null;
 
-        if ($user === $portfolio->getUser() || $isAdmin) {
-            $openingMode = self::PORTFOLIO_OPENING_MODE_EDIT;
+        if (null !== $user) {
+            if ($user === $portfolio->getUser() || $isAdmin) {
+                $openingMode = self::PORTFOLIO_OPENING_MODE_EDIT;
+            }
+            elseif ($portfolio->hasEvaluator($user)) {
+                $openingMode = self::PORTFOLIO_OPENING_MODE_EVALUATE;
+            }
+            elseif ($portfolio->visibleToUser($user)) {
+                $openingMode = self::PORTFOLIO_OPENING_MODE_VIEW;
+            }
         }
-        elseif ($portfolio->hasEvaluator($user)) {
-            $openingMode = self::PORTFOLIO_OPENING_MODE_EVALUATE;
-        }
-        elseif ($portfolio->visibleToUser($user)) {
+        elseif (Portfolio::VISIBILITY_EVERYBODY === $portfolio->getVisibility()) {
             $openingMode = self::PORTFOLIO_OPENING_MODE_VIEW;
         }
 

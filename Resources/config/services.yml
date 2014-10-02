@@ -1,20 +1,21 @@
 parameters:
-    icap_portfolio.repository.portfolio.class: Icap\PortfolioBundle\Repository\PortfolioRepository
+    icap_portfolio.repository.widget.class: Icap\PortfolioBundle\Repository\Widget\AbstractWidgetRepository
+    icap_portfolio.repository.widget_type.class: Icap\PortfolioBundle\Repository\Widget\WidgetTypeRepository
 
 services:
     # repositories
-    icap_portfolio.repository.portfolio:
-        class:           %icap_portfolio.repository.portfolio.class%
-        factory_service: doctrine.orm.entity_manager
-        factory_method:  getRepository
-        arguments:
-            - Icap\PortfolioBundle\Entity\Portfolio
-    icap_portfolio.repository.portfolio_widget_type:
-        class:           %icap_portfolio.repository.portfolio.class%
+    icap_portfolio.repository.widget_type:
+        class:           %icap_portfolio.repository.widget_type.class%
         factory_service: doctrine.orm.entity_manager
         factory_method:  getRepository
         arguments:
             - IcapPortfolioBundle:Widget\WidgetType
+    icap_portfolio.repository.widget:
+        class:           %icap_portfolio.repository.widget.class%
+        factory_service: doctrine.orm.entity_manager
+        factory_method:  getRepository
+        arguments:
+            - IcapPortfolioBundle:Widget\AbstractWidget
 
     #notification listeners
     icap.listener.portfolio.notification_listener:
