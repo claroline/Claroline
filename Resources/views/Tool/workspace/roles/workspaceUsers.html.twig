@@ -115,7 +115,9 @@
                         <th><a href="{{ sortUrl(max, search, 'username', workspace.getId(), direction) }}">{{ 'username'|trans({}, 'platform') }}</a></th>
                         <th><a href="{{ sortUrl(max, search, 'lastName', workspace.getId(), direction) }}">{{ 'last_name'|trans({}, 'platform') }}</a></th>
                         <th><a href="{{ sortUrl(max, search, 'firstName', workspace.getId(), direction) }}">{{ 'first_name'|trans({}, 'platform') }}</a></th>
-                        <th><a href="{{ sortUrl(max, search, 'mail', workspace.getId(), direction) }}">{{ 'mail'|trans({}, 'platform') }}</a></th>
+                        {% if showMail %}
+                            <th><a href="{{ sortUrl(max, search, 'mail', workspace.getId(), direction) }}">{{ 'mail'|trans({}, 'platform') }}</a></th>
+                        {% endif %}
                         <th>{{ 'role'|trans({}, 'platform') }}</th>
                     </tr>
                     </thead>
@@ -127,7 +129,9 @@
                             </td>
                             <td>{{ user.getLastName() }}</td>
                             <td>{{ user.getFirstName() }}</td>
-                            <td>{{ user.getMail() }}</td>
+                            {% if showMail %}
+                                <td>{{ user.getMail() }}</td>
+                            {% endif %}
                             <td>
                                 {% for role in user.getEntityRoles(false) %}
                                     {% if role.getWorkspace() == workspace %}

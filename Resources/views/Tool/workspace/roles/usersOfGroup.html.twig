@@ -122,7 +122,9 @@
                             <th><a href="{{ sortUrl(max, search, group.getId(), workspace.getId(), 'username', direction) }}">{{ 'username'|trans({}, 'platform') }}</a></th>
                             <th><a href="{{ sortUrl(max, search, group.getId(), workspace.getId(), 'lastName', direction) }}">{{ 'last_name'|trans({}, 'platform') }}</a></th>
                             <th><a href="{{ sortUrl(max, search, group.getId(), workspace.getId(), 'firstName', direction) }}">{{ 'first_name'|trans({}, 'platform') }}</a></th>
-                            <th><a href="{{ sortUrl(max, search, group.getId(), workspace.getId(), 'mail', direction) }}">{{ 'mail'|trans({}, 'platform') }}</a></th>
+                            {% if showMail %}
+                                <th><a href="{{ sortUrl(max, search, group.getId(), workspace.getId(), 'mail', direction) }}">{{ 'mail'|trans({}, 'platform') }}</a></th>
+                            {% endif %}
                         </tr>
                     </thead>
                     <tbody id="user-table-body">
@@ -132,7 +134,9 @@
                                 <td>{{ user.getUsername() }}</td>
                                 <td>{{ user.getLastName() }}</td>
                                 <td>{{ user.getFirstName() }}</td>
-                                <td>{{ user.getMail() }}</td>
+                                {% if showMail %}
+                                    <td>{{ user.getMail() }}</td>
+                                {% endif %}
                             </tr>
                         {% endfor %}
                     </tbody>

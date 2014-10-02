@@ -181,7 +181,7 @@ class AgendaManager
      * @param  Workspace $workspace
      * @return int number of events saved
      */
-    public function importEvents(UploadedFile $file, $workspace)
+    public function importEvents(UploadedFile $file, $workspace = null)
     {
         $ical = new \ICal($file->getPathname());
         $events = $ical->events();
@@ -194,7 +194,7 @@ class AgendaManager
             $e->setStart($ical->iCalDateToUnixTimestamp($event['DTSTART']));
             $e->setEnd($ical->iCalDateToUnixTimestamp($event['DTEND']));
             $e->setDescription($event['DESCRIPTION']);
-            $e->setWorkspace($workspace);
+            if ($workspace) $e->setWorkspace($workspace);
             $e->setUser($this->security->getToken()->getUser());
             $e->setPriority('#01A9DB');
             $this->om->persist($e);

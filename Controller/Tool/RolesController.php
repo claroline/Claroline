@@ -32,6 +32,7 @@ use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Manager\GroupManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Manager\RightsManager;
+use Claroline\CoreBundle\Manager\FacetManager;
 use Claroline\CoreBundle\Manager\CompetenceManager;
 use Claroline\CoreBundle\Manager\workspaceUserQueueManager;
 use Claroline\CoreBundle\Manager\Exception\LastManagerDeleteException;
@@ -59,6 +60,7 @@ class RolesController extends Controller
      *     "groupManager"     = @DI\Inject("claroline.manager.group_manager"),
      *     "resourceManager"  = @DI\Inject("claroline.manager.resource_manager"),
      *     "rightsManager"    = @DI\Inject("claroline.manager.rights_manager"),
+     *     "facetManager"     = @DI\Inject("claroline.manager.facet_manager"),
      *     "security"         = @DI\Inject("security.context"),
      *     "formFactory"      = @DI\Inject("claroline.form.factory"),
      *     "router"           = @DI\Inject("router"),
@@ -74,6 +76,7 @@ class RolesController extends Controller
         GroupManager $groupManager,
         ResourceManager $resourceManager,
         RightsManager $rightsManager,
+        FacetManager $facetManager,
         SecurityContextInterface $security,
         FormFactory $formFactory,
         UrlGeneratorInterface $router,
@@ -88,6 +91,7 @@ class RolesController extends Controller
         $this->groupManager = $groupManager;
         $this->resourceManager = $resourceManager;
         $this->rightsManager = $rightsManager;
+        $this->facetManager = $facetManager;
         $this->security = $security;
         $this->formFactory = $formFactory;
         $this->router = $router;
@@ -316,6 +320,7 @@ class RolesController extends Controller
     {
         $this->checkAccess($workspace);
         $wsRoles = $this->roleManager->getRolesByWorkspace($workspace);
+        $preferences = $this->facetManager->getVisiblePublicPreference();
 
         $pager = $search === '' ?
             $this->userManager->getAllUsers($page, $max, $order, $direction) :
@@ -328,7 +333,8 @@ class RolesController extends Controller
             'wsRoles' => $wsRoles,
             'max' => $max,
             'order' => $order,
-            'direction' => $direction
+            'direction' => $direction,
+            'showMail' => $preferences['mail']
         );
     }
 
@@ -483,6 +489,7 @@ class RolesController extends Controller
         $this->checkAccess($workspace);
         $wsRoles = $this->roleManager->getRolesByWorkspace($workspace);
         $currentUser = $this->security->getToken()->getUser();
+        $preferences = $this->facetManager->getVisiblePublicPreference();
 
         $pager = $search === '' ?
             $this->userManager->getByRolesIncludingGroups($wsRoles, $page, $max, $order, $direction) :
@@ -496,7 +503,8 @@ class RolesController extends Controller
             'max' => $max,
             'order' => $order,
             'direction' => $direction,
-            'currentUser' => $currentUser
+            'currentUser' => $currentUser,
+            'showMail' => $preferences['mail']
         );
     }
 
@@ -577,6 +585,7 @@ class RolesController extends Controller
     {
         $this->checkAccess($workspace);
 
+        $preferences = $this->facetManager->getVisiblePublicPreference();
         $pager = ($search === '') ?
             $this->userManager->getUsersByGroup($group, $page, $max, $order, $direction) :
             $this->userManager->getUsersByNameAndGroup($search, $group, $page, $max, $order, $direction);
@@ -588,7 +597,8 @@ class RolesController extends Controller
             'group' => $group,
             'max' => $max,
             'order' => $order,
-            'direction' => $direction
+            'direction' => $direction,
+            'showMail' => $preferences['mail']
         );
     }
 
