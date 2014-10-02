@@ -1,0 +1,20 @@
+{% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
+
+{% block title %}{{ parent() ~ ' - ' ~ '' | trans({}, 'platform') | striptags | raw }}
+{% endblock %}
+
+{% block section_content %}
+    <div class="panel-heading">
+        <div class="panel-title">
+            <h4>  {{ 'competence_subscription_management'|trans({},'competence')}}  </h4>
+        </div>
+    </div>
+    <div class="list-group" id="registration-list-div" subject-type="user">
+        <a class="list-group-item" href="{{path('claro_admin_competences_subscription_lists')}}">
+            {{ 'registration_to_workspaces'|trans({}, 'platform') }}
+        </a>
+        <a class="list-group-item" href="{{path('claro_admin_competences_list_users')}}">
+            {{ 'users_competences'|trans({}, 'competence') }}
+        </a>
+    </div>
+{% endblock %}

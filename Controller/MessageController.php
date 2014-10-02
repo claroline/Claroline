@@ -171,7 +171,7 @@ class MessageController
             return new RedirectResponse($url);
         }
 
-        $ancestors = $parent ? $this->messageManager->getConversation($parent): array();
+        $ancestors = $parent ? $this->messageManager->getConversation($parent) : array();
 
         return array('form' => $form->createView(), 'message' => $parent, 'ancestors' => $ancestors);
     }
@@ -183,14 +183,12 @@ class MessageController
      *     options={"expose"=true},
      *     defaults={"page"=1, "search"=""}
      * )
-     * @EXT\Method("GET")
      * @EXT\Route(
      *     "/received/page/{page}/search/{search}",
      *     name="claro_message_list_received_search",
      *     options={"expose"=true},
      *     defaults={"page"=1}
      * )
-     * @EXT\Method("GET")
      * @EXT\ParamConverter("receiver", options={"authenticatedUser" = true})
      * @EXT\Template()
      *
@@ -221,14 +219,12 @@ class MessageController
      *     options={"expose"=true},
      *     defaults={"page"=1, "search"=""}
      * )
-     * @EXT\Method("GET")
      * @EXT\Route(
      *     "/sent/page/{page}/search/{search}",
      *     name="claro_message_list_sent_search",
      *     options={"expose"=true},
      *     defaults={"page"=1}
      * )
-     * @EXT\Method("GET")
      * @EXT\ParamConverter("sender", options={"authenticatedUser" = true})
      * @EXT\Template()
      *
@@ -255,14 +251,12 @@ class MessageController
      *     options={"expose"=true},
      *     defaults={"page"=1, "search"=""}
      * )
-     * @EXT\Method("GET")
      * @EXT\Route(
      *     "/removed/page/{page}/search/{search}",
      *     name="claro_message_list_removed_search",
      *     options={"expose"=true},
      *     defaults={"page"=1}
      * )
-     * @EXT\Method("GET")
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      * @EXT\Template()
      *
@@ -451,14 +445,12 @@ class MessageController
      *     options={"expose"=true},
      *     defaults={"page"=1, "search"=""}
      * )
-     * @EXT\Method("GET")
      * @EXT\Route(
      *     "/contactable/users/page/{page}/search/{search}",
      *     name="claro_message_contactable_users_search",
      *     options={"expose"=true},
      *     defaults={"page"=1}
      * )
-     * @EXT\Method("GET")
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      * @EXT\Template()
      *
@@ -535,14 +527,12 @@ class MessageController
      *     options={"expose"=true},
      *     defaults={"page"=1, "search"=""}
      * )
-     * @EXT\Method("GET")
      * @EXT\Route(
      *     "/contactable/groups/page/{page}/search/{search}",
      *     name="claro_message_contactable_groups_search",
      *     options={"expose"=true},
      *     defaults={"page"=1}
      * )
-     * @EXT\Method("GET")
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      * @EXT\Template()
      *
@@ -622,14 +612,12 @@ class MessageController
      *     options={"expose"=true},
      *     defaults={"page"=1, "search"=""}
      * )
-     * @EXT\Method("GET")
      * @EXT\Route(
      *     "/contactable/workspaces/page/{page}/search/{search}",
      *     name="claro_message_contactable_workspaces_search",
      *     options={"expose"=true},
      *     defaults={"page"=1}
      * )
-     * @EXT\Method("GET")
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      * @EXT\Template()
      *

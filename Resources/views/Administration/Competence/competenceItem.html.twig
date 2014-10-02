@@ -1,0 +1,15 @@
+{% twig_js name="CompetenceItem" %}
+{% set competenceNodeId = competenceNode.id %}
+{% set competenceName = competenceNode.competence.name %}
+
+<li class="roots" data-id="{{ competenceNodeId }}">
+    <a href="{{ path('claro_show_admin_learning_outcomes', {'competenceNode': competenceNodeId}) }}">
+        {{ competenceName }}
+    </a>|
+    <a href="{{ path('claro_admin_competence_node_delete', {'competenceNode': competenceNodeId }) }}"
+       class="btn btn-default btn-sm delete-competence"
+    >
+        <i class="fa fa-trash-o"></i>
+        {{ 'delete'|trans({}, 'platform') }}
+    </a> 
+</li>

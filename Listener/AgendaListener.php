@@ -98,11 +98,14 @@ class AgendaListener
             throw new NoHttpRequestException();
         }
 
-        $params = array();
-        $params['_controller'] = 'ClarolineCoreBundle:Tool\DesktopAgenda:widget';
-        $subRequest = $this->request->duplicate(array(), null, $params);
-        $response = $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
+        $em = $this->container->get('doctrine.orm.entity_manager');
+        $user = $this->container->get('security.context')->getToken()->getUser();
+        $listEventsDesktop = $em->getRepository('ClarolineCoreBundle:Event')->findDesktop($user, false);
+        $listEvents = $em->getRepository('ClarolineCoreBundle:Event')->findByUserWithoutAllDay($user, 5);
 
-        return $response->getContent();
+        return $this->templating->render(
+            'ClarolineCoreBundle:Widget:agenda_widget.html.twig',
+            array('listEvents' => array_merge($listEvents, $listEventsDesktop))
+        );
     }
 }

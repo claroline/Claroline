@@ -13,6 +13,7 @@ namespace Claroline\CoreBundle\Listener\Resource;
 
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\File\File as SfFile;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesser;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -32,7 +33,7 @@ use Claroline\CoreBundle\Event\ExportResourceTemplateEvent;
 use Claroline\CoreBundle\Event\ImportResourceTemplateEvent;
 
 /**
- * @DI\Service
+ * @DI\Service("claroline.listener.file_listener")
  */
 class FileListener implements ContainerAwareInterface
 {
@@ -94,24 +95,17 @@ class FileListener implements ContainerAwareInterface
             $file = $form->getData();
             $tmpFile = $form->get('file')->getData();
             $fileName = $tmpFile->getClientOriginalName();
-            $extension = pathinfo($fileName, PATHINFO_EXTENSION);
+            $mimeType = $tmpFile->getClientMimeType();
 
-            //uncompress
-            if ($extension === 'zip' && $form->get('uncompress')->getData()) {
-                $resources = $this->unzip($tmpFile, $event->getParent());
-                $event->setResources($resources);
+            if (pathinfo($fileName, PATHINFO_EXTENSION) === 'zip' && $form->get('uncompress')->getData()) {
+                $roots = $this->unzip($tmpFile, $event->getParent());
+                $event->setResources($roots);
+
                 //do not process the resources afterwards because nodes have been created with the unzip function.
                 $event->setProcess(false);
                 $event->stopPropagation();
             } else {
-                $size = filesize($tmpFile);
-                $mimeType = $tmpFile->getClientMimeType();
-                $hashName = $this->container->get('claroline.utilities.misc')->generateGuid() . "." . $extension;
-                $tmpFile->move($this->container->getParameter('claroline.param.files_directory'), $hashName);
-                $file->setSize($size);
-                $file->setName($fileName);
-                $file->setHashName($hashName);
-                $file->setMimeType($mimeType);
+                $file = $this->createFile($file, $tmpFile, $fileName, $mimeType);
                 $event->setResources(array($file));
                 $event->stopPropagation();
             }
@@ -185,9 +179,11 @@ class FileListener implements ContainerAwareInterface
         $ds = DIRECTORY_SEPARATOR;
         $resource = $event->getResource();
         $mimeType = $resource->getResourceNode()->getMimeType();
+        $eventName = strtolower(str_replace('/', '_', 'play_file_' . $mimeType));
+        $eventName = str_replace('"', '', $eventName);
         $playEvent = $this->container->get('claroline.event.event_dispatcher')
                 ->dispatch(
-                    strtolower(str_replace('/', '_', 'play_file_' . $mimeType)),
+                    $eventName,
                     'PlayFile',
                     array($resource)
                 );
@@ -221,7 +217,7 @@ class FileListener implements ContainerAwareInterface
                 );
                 $response->headers->set(
                     'Content-Disposition',
-                    'attachment; filename=file.'.pathinfo($item, PATHINFO_EXTENSION)
+                    'attachment; filename=' . urlencode($resource->getResourceNode()->getName())
                 );
                 $response->headers->set(
                     'Content-Type',
@@ -259,6 +255,7 @@ class FileListener implements ContainerAwareInterface
 
     /**
      * @DI\Observe("resource_file_to_template")
+     * @todo is this still used ?
      *
      * @param ExportResourceTemplateEvent $event
      */
@@ -324,6 +321,8 @@ class FileListener implements ContainerAwareInterface
 
     private function unzip($archivePath, ResourceNode $root)
     {
+
+
         $extractPath = sys_get_temp_dir() .
             DIRECTORY_SEPARATOR .
             $this->container->get('claroline.utilities.misc')->generateGuid() .
@@ -336,7 +335,7 @@ class FileListener implements ContainerAwareInterface
             $archive->close();
             $this->om->startFlushSuite();
             $perms = $this->container->get('claroline.manager.rights_manager')->getCustomRoleRights($root);
-            $resources = $this->uploadDir($extractPath, $root, $perms);
+            $resources = $this->uploadDir($extractPath, $root, $perms, true);
             $this->om->endFlushSuite();
 
             return $resources;
@@ -345,7 +344,7 @@ class FileListener implements ContainerAwareInterface
         throw new \Exception("The archive {$archivePath} can't be opened");
     }
 
-    private function uploadDir($dir, ResourceNode $parent, array $perms)
+    private function uploadDir($dir, ResourceNode $parent, array $perms, $first = false)
     {
         $resources = [];
         $iterator = new \DirectoryIterator($dir);
@@ -375,6 +374,8 @@ class FileListener implements ContainerAwareInterface
                     $perms
                 );
             }
+
+//            $this->om->forceFlush();
         }
 
         // set order manually as we are inside a flush suite
@@ -390,13 +391,22 @@ class FileListener implements ContainerAwareInterface
             }
         }
 
+        if ($first) {
+            $previous = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceNode')
+                ->findOneBy(array('parent' => $parent, 'next' => null));
+
+            if ($previous) {
+                $previous->setNext($resources[0]->getResourceNode());
+            }
+        }
+
         return $resources;
     }
 
     private function uploadFile(\DirectoryIterator $file, ResourceNode $parent, array $perms)
     {
         $entityFile = new File();
-        $fileName = $file->getFilename();
+        $fileName = utf8_encode($file->getFilename());
         $size = @filesize($file);
         $extension = pathinfo($fileName, PATHINFO_EXTENSION);
         $mimeType = $this->container->get('claroline.utilities.mime_type_guesser')->guess($extension);
@@ -419,5 +429,19 @@ class FileListener implements ContainerAwareInterface
             null,
             $perms
         );
+    }
+
+    public function createFile(File $file, SfFile $tmpFile, $fileName, $mimeType)
+    {
+        $extension = pathinfo($fileName, PATHINFO_EXTENSION);
+        $size = filesize($tmpFile);
+        $hashName = $this->container->get('claroline.utilities.misc')->generateGuid() . "." . $extension;
+        $tmpFile->move($this->container->getParameter('claroline.param.files_directory'), $hashName);
+        $file->setSize($size);
+        $file->setName($fileName);
+        $file->setHashName($hashName);
+        $file->setMimeType($mimeType);
+
+        return $file;
     }
 }

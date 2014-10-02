@@ -235,4 +235,40 @@ class ToolListener
             )
         );
     }
+
+    /**
+     * @DI\Observe("open_tool_workspace_learning_profil")
+     *
+     * @param DisplayToolEvent $event
+     */
+    public function onDisplayWorkspaceLearningProfil(DisplayToolEvent $event)
+    {
+        $params = array(
+            '_controller' => 'ClarolineCoreBundle:Tool\CompetenceTool:listMyCompetences',
+            'workspace' => $event->getWorkspace()->getId()
+        );
+
+        $subRequest = $this->container->get('request')->duplicate(array(), null, $params);
+        $response = $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
+
+        $event->setContent($response->getContent());
+    }
+
+    /**
+     * @DI\Observe("open_tool_workspace_learning_outcomes")
+     *
+     * @param DisplayToolEvent $event
+     */
+    public function onDisplayWorkspaceLearningOutcomes(DisplayToolEvent $event)
+    {
+        $params = array(
+            '_controller' => 'ClarolineCoreBundle:Tool\CompetenceTool:workspaceLearningOutcomesList',
+            'workspace' => $event->getWorkspace()->getId()
+        );
+
+        $subRequest = $this->container->get('request')->duplicate(array(), null, $params);
+        $response = $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
+
+        $event->setContent($response->getContent());
+    }
 }

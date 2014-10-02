@@ -64,7 +64,10 @@
         parameters = parameters || {};
         var mainParameters = buildParameters('main', parameters, false, true);
         var pickerParameters = buildParameters('defaultPicker', parameters, true, true);
-        var shortcutParameters = buildParameters('shortcutPicker', parameters, true, true);
+        //set the shortcut picker parameters
+        var sParameters = parameters || {};
+        sParameters.isDirectorySelectionAllowed = false;
+        var shortcutParameters = buildParameters('shortcutPicker', sParameters, true, true);
         views['main'] = new manager.Views.Master(mainParameters, dispatcher);
         views['defaultPicker'] = new manager.Views.Master(pickerParameters, dispatcher);
         views['shortcutPicker'] = new manager.Views.Master(shortcutParameters, dispatcher);
@@ -78,8 +81,10 @@
      *
      * - callback: the function to be called when nodes are selected
      *      (default to empty function)
-     * - isMultiSelectAllowed: whether the selection of multiple nodes should be allowed
+     * - isPickerMultiSelectAllowed: whether the selection of multiple nodes should be allowed
      *      (default to false)
+     * - isDirectorySelectionAllowed: can a directory be selected
+     *      (default to true)
      * - typeWhiteList: an array of resource type names to accept
      *      (defaults to null, i.e. all types are accepted)
      * - typeBlackList: an array of resource type names to exclude (ignored if a white list is given)
@@ -137,6 +142,16 @@
     };
 
     /**
+     * Returns a manager
+     *
+     * @param name  string
+     * @returns object
+     */
+    manager.get = function(name) {
+        return views[name];
+    }
+
+    /**
      * Opens or closes a picker by its name.
      *
      * @param name      string  Name of the picker
@@ -180,6 +195,10 @@
     }
 
     function buildParameters(viewName, parameters, isPicker, isDefault) {
+        var allowDirectorySelection = true;
+        if (parameters.isDirectorySelectionAllowed !== undefined)
+            allowDirectorySelection = parameters.isDirectorySelectionAllowed;
+        console.debug(allowDirectorySelection);
         var mergedParameters = {
             viewName: viewName,
             isPickerMode: isPicker,
@@ -194,7 +213,8 @@
             webPath: parameters.webPath || fetchedParameters.webPath || '',
             zoom: parameters.zoom || fetchedParameters.zoom || 'zoom100',
             pickerCallback: parameters.callback || function () {},
-            isPickerMultiSelectAllowed: isDefault || parameters.isPickerMultiSelectAllowed || false
+            isPickerMultiSelectAllowed: isDefault || parameters.isPickerMultiSelectAllowed || false,
+            isDirectorySelectionAllowed: allowDirectorySelection
         };
 
         if (mergedParameters.preFetchedDirectory) {

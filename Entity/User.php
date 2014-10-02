@@ -23,6 +23,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Claroline\CoreBundle\Entity\AbstractRoleSubject;
 use Claroline\CoreBundle\Entity\Role;
+use Claroline\CoreBundle\Entity\Model\WorkspaceModel;
 use Claroline\CoreBundle\Validator\Constraints as ClaroAssert;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -300,6 +301,25 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
      */
     protected $fieldsFacetValue;
 
+    /**
+     * @var WorkspaceModel[]|ArrayCollection
+     *
+     * @ORM\ManyToMany(
+     *     targetEntity="Claroline\CoreBundle\Entity\Model\WorkspaceModel",
+     *     inversedBy="users",
+     *     fetch="EXTRA_LAZY"
+     * )
+     * @ORM\JoinTable(name="claro_workspace_model_user")
+     */
+    protected $models;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(nullable=true)
+     */
+    protected $authentication;
+
     public function __construct()
     {
         parent::__construct();
@@ -313,6 +333,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
         $this->issuedBadges      = new ArrayCollection();
         $this->badgeClaims       = new ArrayCollection();
         $this->fieldsFacetValue  = new ArrayCollection();
+        $this->models            = new ArrayCollection();
     }
 
     /**
@@ -894,7 +915,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
         /** @var \DateTime */
         $expDate = $this->getExpirationDate();
 
-        return ($this->getExpirationDate() >= new \DateTime()) ? true: false;
+        return ($this->getExpirationDate() >= new \DateTime()) ? true : false;
     }
 
     public function isAccountNonLocked()
@@ -992,7 +1013,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
 
     public function getExpirationDate()
     {
-        return $this->expirationDate !== null ? $this->expirationDate: new \DateTime(2100-01-01);
+        return $this->expirationDate !== null ? $this->expirationDate : new \DateTime('2100-01-01');
     }
 
     public function getFieldsFacetValue()
@@ -1013,5 +1034,27 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     public function getInitDate()
     {
         return $this->initDate;
+    }
+
+    public function addModel(WorkspaceModel $model)
+    {
+        if (!$this->models->contains($model)) {
+            $this->models->add($model);
+        }
+    }
+
+    public function removeModel(WorkspaceModel $model)
+    {
+        $this->models->removeElement($model);
+    }
+
+    public function setAuthentication($authentication)
+    {
+        $this->authentication = $authentication;
+    }
+
+    public function getAuthentication()
+    {
+        return $this->authentication;
     }
 }

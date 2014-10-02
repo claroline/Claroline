@@ -559,6 +559,7 @@ class HomeTabManager
         }
     }
 
+
     /**
      * HomeTabRepository access methods
      */
@@ -577,6 +578,7 @@ class HomeTabManager
             array('id' => $homeTabId, 'workspace' => $workspace)
         );
     }
+
 
     /**
      * HomeTabConfigRepository access methods
@@ -680,6 +682,25 @@ class HomeTabManager
             array('homeTab' => $homeTab, 'user' => $user)
         );
     }
+
+    public function getHomeTabConfigsByWorkspaceAndHomeTabs(
+        Workspace $workspace,
+        array $homeTabs
+    )
+    {
+        if (count($homeTabs) === 0) {
+            $homeTabConfigs = array();
+        } else {
+            $homeTabConfigs = $this->homeTabConfigRepo
+                ->findHomeTabConfigsByWorkspaceAndHomeTabs(
+                    $workspace,
+                    $homeTabs
+                );
+        }
+
+        return $homeTabConfigs;
+    }
+
 
     /**
      * WidgetHomeTabConfigRepository access methods

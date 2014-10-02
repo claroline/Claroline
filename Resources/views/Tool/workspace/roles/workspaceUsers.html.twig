@@ -68,6 +68,7 @@
             <li class="active"><a href="{{ path('claro_workspace_registered_user_list', {'workspace': workspace.getId()}) }}"> {{'users'|trans({}, 'platform') }} </a> </li>
             <li> <a href="{{ path('claro_workspace_registered_group_list', {'workspace': workspace.getId() }) }}"> {{'groups'|trans({}, 'platform') }} </a> </li>
             <li> <a href="{{ path('claro_workspace_roles', {'workspace': workspace.getId()} ) }}">{{ 'roles'|trans({}, 'platform') }}</a> </li>
+            <li><a href="{{path('claro_users_pending',{'workspace':workspace.getId()})}}"> {{'pending'|trans({},'platform') }} </a> </li>
         </ul>
         <h3>{{ 'users_list'|trans({}, 'platform') }}</h3>
         {{ macros.flashBox() }}
@@ -130,7 +131,7 @@
                             <td>
                                 {% for role in user.getEntityRoles(false) %}
                                     {% if role.getWorkspace() == workspace %}
-                                        <span class="label label-success" id="label-{{ role.getId () }}-{{ user.getId()}}">
+                                        <span class="label label-success" id="label-{{ role.getId() }}-{{ user.getId()}}">
                                                 {{ role.getTranslationKey()|trans({}, 'platform') }}
                                             <i class="fa fa-times-circle pointer-hand remove-role-button"
                                                href="{{ path('claro_workspace_remove_role_from_user', {'workspace': workspace.getId(), 'user': user.getId(), 'role': role.getId() } ) }}"
@@ -144,7 +145,7 @@
                                 {% for group in groups %}
                                     {% for role in group.getEntityRoles() %}
                                         {% if role.getWorkspace() == workspace %}
-                                            <span title="{{ group.getName() }}" class="label label-default" id="label-{{ role.getId () }}-{{ user.getId()}}">
+                                            <span title="{{ group.getName() }}" class="label label-default" id="label-{{ role.getId() }}-{{ user.getId()}}">
                                                     {{ role.getTranslationKey()|trans({}, 'platform') }}
                                                 </span>
 
@@ -185,7 +186,12 @@
                 url: route,
                 type: 'DELETE',
                 success: function() {
-                    target.parent().parent().parent().remove();
+                    console.log(target.parents('td').first().find('span').length);
+                    if (target.parents('td').first().find('span').length === 1) {
+                        target.parents('tr').first().remove();
+                    } else {
+                        target.parent().remove();
+                    }
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
                     window.Claroline.Modal.hide();

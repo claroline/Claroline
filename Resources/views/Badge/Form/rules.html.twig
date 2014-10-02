@@ -1,9 +1,9 @@
 {% trans_default_domain "badge" %}
 
-{% block collection_widget %}
+{% block _badge_form_rules_widget %}
     {% spaceless %}
         {% if prototype is defined %}
-            {% set attr = attr|merge({'data-prototype': block('collection_prototype') }) %}
+            {% set attr = attr|merge({'data-prototype': block('_badge_form_rules_widget_prototype') }) %}
         {% endif %}
         <div class="row badges_rules" {{ block('widget_container_attributes') }}>
             <p class="row">{{ form_label(form) }}</p>
@@ -115,13 +115,13 @@
             {{ form_rest(form) }}
         </div>
     {% endspaceless %}
-{% endblock collection_widget %}
+{% endblock _badge_form_rules_widget %}
 
-{% block collection_prototype %}
-    {{ _self.collection_prototype_row(prototype) }}
-{% endblock collection_prototype %}
+{% block _badge_form_rules_widget_prototype %}
+    {{ _self._badge_form_rules_widget_prototype_row(prototype) }}
+{% endblock _badge_form_rules_widget_prototype %}
 
-{% macro collection_prototype_row(rows) %}
+{% macro _badge_form_rules_widget_prototype_row(rows) %}
     {% spaceless %}
         <div class="tab-pane" id="rule__name__">
             <h4>{{ 'rule_details'|trans }}</h4>
@@ -140,7 +140,7 @@
                 <div class="col-md-5">
                     <div class="checkbox" style="margin-left: 20px;">
                         <label>
-                            <input type="checkbox">{{ 'badge_form_user_target_of_action'|trans }}<strong> *</strong>
+                            {{ form_widget(rows.children.isUserReceiver) }}{{ 'badge_form_user_target_of_action'|trans }}<strong> *</strong>
                         </label>
                     </div>
                 </div>

@@ -54,7 +54,6 @@
 
         $('body').on('click', '.delete-event', function (event) {
             event.preventDefault();
-
             window.Claroline.Modal.confirmRequest(
                 $(event.currentTarget).attr('href'),
                 removeEvent,
@@ -123,7 +122,7 @@
             //This is the url wich will get the events from ajax the 1st time the calendar is launched
             events: calendar.showUrl,
             axisFormat: 'HH:mm',
-            timeFormat: 'H(:mm)',
+            timeFormat: 'H:mm',
             agenda: 'h:mm{ - h:mm}',
             '': 'h:mm{ - h:mm}',
             minTime: 0,

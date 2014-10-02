@@ -62,7 +62,6 @@ class PackageController extends Controller
      *     "/",
      *     name="claro_admin_plugins"
      * )
-     * @EXT\Method("GET")
      *
      * @EXT\Template()
      *
@@ -94,7 +93,6 @@ class PackageController extends Controller
      *     name="claro_admin_update_packages",
      *     options={"expose"=true}
      * )
-     * @EXT\Method("GET")
      *
      * Display the plugin list
      *

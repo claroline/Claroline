@@ -1,0 +1,62 @@
+{% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
+
+{% block title %}
+    {{ 'competence' | trans({}, 'platform') | striptags | raw }}
+{% endblock %}
+
+{% set competenceNodeId = competenceNode.getId() %}
+{% set competenceName = competenceNode.getCompetence().getName() %}
+
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'icon-cog',
+                'name': 'administration'|trans({}, 'platform'),
+                'href': path('claro_admin_index')
+            },
+            {
+                'name': 'competence'|trans({}, 'platform'),
+                'href': path('claro_admin_competences')
+            },
+            {
+                'name': competenceName,
+                'href': path('claro_admin_competence_show_referential',{'competenceNode': competenceNodeId})
+            },
+            {
+                'name': 'competence_link'|trans({}, 'competence'),
+                'href': path('claro_admin_competences_link_form', {'competenceNode': competenceNodeId})
+            }
+        ])
+    }}
+{% endblock %}
+
+{% block content %}
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title id" data-root="{{ competenceNodeId }}">
+                {{ "competence_link" | trans({}, "competence" )}} - {{ competenceName }}
+            </h3>
+        </div>
+        <form action="{{ path('claro_admin_competences_link',{'parent': competenceNodeId}) }}"
+              method="post"
+              id="myForm"
+              class="form-horizontal"
+        >
+            <div class="panel-body">
+            	{% for competence in linkableCompetences %}
+                    {{ competence.getName() }}
+                    <input type="radio" class="checkbox" name="competence" value="{{ competence.getId() }}" />
+            	{% endfor %}	
+            </div>
+            <div class="panel-footer">
+             <input type="submit" value="ok" />
+            </div>
+        </form>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+ {{ parent() }}
+	<script type='text/javascript'src='{{ asset('bundles/clarolinecore/js/administration/competences.js') }}'></script>
+{% endblock %}

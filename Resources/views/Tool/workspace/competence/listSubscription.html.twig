@@ -1,0 +1,96 @@
+{% extends "ClarolineCoreBundle:Workspace:layout.html.twig" %}
+
+{% block title %}{{ parent() ~ ' - ' ~ '' | trans({}, 'platform') | striptags | raw }}{% endblock %}
+
+{% block breadcrumb %}
+    {{
+        macros.workspaceBreadcrumbs(
+            workspace,
+            [
+                {
+                    'name': 'registration_to_competence'|trans({}, 'competence'),
+                    'href': path('claro_workspace_roles', {'workspace': workspace.getId()})
+                },
+            ]
+        )
+    }}
+{% endblock %}
+{% block section_content %}
+    <div class="panel-heading">
+        {% render controller("ClarolineCoreBundle:Tool\\CompetenceTool:menuTab",{"workspace":workspace.getId()}) %}
+        <h3 class="panel-title" id="workspace" data-workspace="{{workspace.getId()}}">{{ 'registration_to_workspaces'|trans({}, 'platform') }}</h3>
+    </div>
+    <div class="panel-body" id="workspace-list-div">
+        <div class="search-bar row">
+            <div class="col-md-7">
+                <button
+                    class="btn btn-default cpt-button"
+                    disabled="disabled"
+                >
+                    {{ 'subscribe_users'|trans({}, 'platform') }}
+                </button>
+                <button
+                    class="btn btn-default subscribe-group-button"
+                    subject-type="group"
+                    disabled="disabled"
+                >
+                    {{ 'subscribe_groups'|trans({}, 'platform') }}
+                </button>
+            </div>
+            <div class="col-md-5">
+                 <div class="input-group">
+                     <input class="form-control" type="text" id="search-workspace-txt" placeholder="{{ 'search'|trans({}, 'platform') }}" value="{{ search }}">
+                    <span class="input-group-btn">
+                        <button class="filter btn btn-default" type="button" id="search-workspace-button">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <hr>
+
+        <h4>{{ 'select_competence_for_registration'|trans({}, 'competence') }}</h4><br>
+         <div class="table-responsive">
+            <table class="table table-striped table-bordered table-condensed">
+            <thead>
+                <th>{{'name'|trans({},'platform')}}
+                <th> <input type="checkbox" name="all" id="chkAll"> </th>
+            </thead>
+            {% for c in cpt %}
+            <tr>
+                <td> <a href="{{path('claro_admin_competence_show_referential', {'competenceNode': c.id})}}">
+                     {{c.name}}
+                    </a> 
+                </td> 
+                <td class="right"> <input type="checkbox" name="cpt" class="cpt" value="{{c.id}}" /></td>
+            </tr>
+            {% endfor %}
+            </table>
+         </div>
+        <br>
+        <button
+            class="btn btn-default cpt-button"
+            subject-type="user" disabled="disabled" 
+        >
+            {{ 'subscribe_users'|trans({}, 'platform') }}
+        </button>
+        <button
+            class="btn btn-default subscribe-group-button"
+            subject-type="group"
+            disabled="disabled"
+        >
+            {{ 'subscribe_groups'|trans({}, 'platform') }}
+        </button>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type='text/javascript'src='{{ asset('bundles/clarolinecore/js/administration/competences.js') }}'></script>
+    <script type='text/javascript'>
+    $(function () {
+        Claroline.Competence.initialize('workspace');
+    });
+</script>
+{% endblock %}

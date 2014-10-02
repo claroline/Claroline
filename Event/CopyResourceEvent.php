@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Event;
 
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Symfony\Component\EventDispatcher\Event;
 use Claroline\CoreBundle\Event\DataConveyorEventInterface;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
@@ -21,23 +22,35 @@ use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 class CopyResourceEvent extends Event implements DataConveyorEventInterface
 {
     private $resource;
+    private $parent;
     private $copy;
     private $isPopulated = false;
 
     /**
      * Constructor.
      *
-     * @param AbstractResource $resource
+     * @param \Claroline\CoreBundle\Entity\Resource\AbstractResource $resource
+     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $parent
      */
-    public function __construct(AbstractResource $resource)
+    public function __construct(AbstractResource $resource, ResourceNode $parent)
     {
         $this->resource = $resource;
+        $this->parent   = $parent;
+    }
+
+    /**
+     * Returns the new parent of the resource
+     * @return \Claroline\CoreBundle\Entity\Resource\ResourceNode
+     */
+    public function getParent()
+    {
+        return $this->parent;
     }
 
     /**
      * Returns the resource to be copied.
      *
-     * @return AbstractResource
+     * @return \Claroline\CoreBundle\Entity\Resource\AbstractResource
      */
     public function getResource()
     {
@@ -47,7 +60,7 @@ class CopyResourceEvent extends Event implements DataConveyorEventInterface
     /**
      * Sets the copy of the original resource.
      *
-     * @param AbstractResource $copy
+     * @param \Claroline\CoreBundle\Entity\Resource\AbstractResource $copy
      */
     public function setCopy(AbstractResource $copy)
     {
@@ -58,7 +71,7 @@ class CopyResourceEvent extends Event implements DataConveyorEventInterface
     /**
      * Returns the copy of the original resource.
      *
-     * @return AbstractResource
+     * @return \Claroline\CoreBundle\Entity\Resource\AbstractResource
      */
     public function getCopy()
     {

@@ -43,6 +43,7 @@ class WorkspaceTagManager
     private $workspaceManager;
     private $om;
     private $pagerFactory;
+    private $workspaceQueueRepo;
 
     /**
      * Constructor.
@@ -65,6 +66,7 @@ class WorkspaceTagManager
         $this->relTagRepo = $om->getRepository('ClarolineCoreBundle:Workspace\RelWorkspaceTag');
         $this->tagHierarchyRepo = $om->getRepository('ClarolineCoreBundle:Workspace\WorkspaceTagHierarchy');
         $this->workspaceRepo = $om->getRepository('ClarolineCoreBundle:Workspace\Workspace');
+        $this->workspaceQueueRepo = $om->getRepository('ClarolineCoreBundle:Workspace\WorkspaceRegistrationQueue');
         $this->roleManager = $roleManager;
         $this->workspaceManager = $workspaceManager;
         $this->om = $om;
@@ -410,9 +412,14 @@ class WorkspaceTagManager
         return $this->tagHierarchyRepo->findBy(array('tag' => $tag));
     }
 
-    public function getDatasForWorkspaceList($withRoles = true)
+    public function getDatasForWorkspaceList($withRoles = true, $search = '')
     {
-        $workspaces = $this->workspaceRepo->findDisplayableWorkspaces();
+        if (empty($search)) {
+            $workspaces = $this->workspaceRepo->findDisplayableWorkspaces();
+        } else {
+            $workspaces = $this->workspaceRepo
+                ->findDisplayableWorkspacesBySearch($search);
+        }
         $tags = $this->getNonEmptyAdminTags();
         $relTagWorkspace = $this->getTagRelationsByAdmin();
         $tagWorkspaces = array();
@@ -487,7 +494,8 @@ class WorkspaceTagManager
             'hierarchy' => $hierarchy,
             'rootTags' => $rootTags,
             'displayable' => $displayable,
-            'workspaceRoles' => $workspaceRoles
+            'workspaceRoles' => $workspaceRoles,
+            'search' => $search
         );
     }
 
@@ -554,9 +562,21 @@ class WorkspaceTagManager
      * Returns all datas necessary to display the list of all workspaces visible for all users
      * that are open for self-registration.
      */
-    public function getDatasForSelfRegistrationWorkspaceList(User $user)
+    public function getDatasForSelfRegistrationWorkspaceList(User $user, $search = '')
     {
-        $workspaces = $this->workspaceRepo->findWorkspacesWithSelfRegistration($user);
+        $workspaceQueue =  $this->workspaceQueueRepo->findByUser($user);
+        $listworkspacePending = array();
+
+        foreach ($workspaceQueue as $w ) {
+            $listworkspacePending[$w->getWorkspace()->getId()] = $w->getWorkspace()->getId();
+        }
+
+        if (empty($search)) {
+            $workspaces = $this->workspaceRepo->findWorkspacesWithSelfRegistration($user);
+        } else {
+             $workspaces = $this->workspaceRepo
+                 ->findWorkspacesWithSelfRegistrationBySearch($user, $search);
+        }
         $tags = $this->getNonEmptyAdminTags();
 
         try {
@@ -617,7 +637,9 @@ class WorkspaceTagManager
             'tagWorkspaces' => $tagWorkspacePager,
             'hierarchy' => $hierarchy,
             'rootTags' => $rootTags,
-            'displayable' => $displayable
+            'displayable' => $displayable,
+            'listworkspacePending' => $listworkspacePending,
+            'search' => $search
         );
     }
 

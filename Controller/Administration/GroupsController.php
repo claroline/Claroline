@@ -15,6 +15,7 @@ use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
+use Claroline\CoreBundle\Manager\AuthenticationManager;
 use Claroline\CoreBundle\Manager\GroupManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\ToolManager;
@@ -27,8 +28,8 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Translation\Translator;
 
 //This class belongs to the Users admin tool.
@@ -45,19 +46,21 @@ class GroupsController extends Controller
     private $sc;
     private $userAdminTool;
     private $translator;
+    private $authenticationManager;
 
     /**
      * @DI\InjectParams({
-     *     "userManager"        = @DI\Inject("claroline.manager.user_manager"),
-     *     "roleManager"        = @DI\Inject("claroline.manager.role_manager"),
-     *     "groupManager"       = @DI\Inject("claroline.manager.group_manager"),
-     *     "eventDispatcher"    = @DI\Inject("claroline.event.event_dispatcher"),
-     *     "formFactory"        = @DI\Inject("claroline.form.factory"),
-     *     "request"            = @DI\Inject("request"),
-     *     "router"             = @DI\Inject("router"),
-     *     "toolManager"        = @DI\Inject("claroline.manager.tool_manager"),
-     *     "sc"                 = @DI\Inject("security.context"),
-     *     "translator"         = @DI\Inject("translator")
+     *     "userManager"            = @DI\Inject("claroline.manager.user_manager"),
+     *     "roleManager"            = @DI\Inject("claroline.manager.role_manager"),
+     *     "groupManager"           = @DI\Inject("claroline.manager.group_manager"),
+     *     "eventDispatcher"        = @DI\Inject("claroline.event.event_dispatcher"),
+     *     "formFactory"            = @DI\Inject("claroline.form.factory"),
+     *     "request"                = @DI\Inject("request"),
+     *     "router"                 = @DI\Inject("router"),
+     *     "toolManager"            = @DI\Inject("claroline.manager.tool_manager"),
+     *     "sc"                     = @DI\Inject("security.context"),
+     *     "translator"             = @DI\Inject("translator"),
+     *     "authenticationManager"  = @DI\Inject("claroline.common.authentication_manager")
      * })
      */
     public function __construct(
@@ -70,25 +73,26 @@ class GroupsController extends Controller
         RouterInterface $router,
         SecurityContextInterface $sc,
         ToolManager $toolManager,
-        Translator $translator
+        Translator $translator,
+        AuthenticationManager $authenticationManager
     )
     {
-        $this->userManager     = $userManager;
-        $this->roleManager     = $roleManager;
-        $this->groupManager    = $groupManager;
+        $this->userManager = $userManager;
+        $this->roleManager = $roleManager;
+        $this->groupManager = $groupManager;
         $this->eventDispatcher = $eventDispatcher;
-        $this->formFactory     = $formFactory;
-        $this->request         = $request;
-        $this->router          = $router;
-        $this->toolManager     = $toolManager;
-        $this->userAdminTool   = $this->toolManager->getAdminToolByName('user_management');
-        $this->sc              = $sc;
-        $this->translator      = $translator;
+        $this->formFactory = $formFactory;
+        $this->request = $request;
+        $this->router = $router;
+        $this->toolManager = $toolManager;
+        $this->userAdminTool = $this->toolManager->getAdminToolByName('user_management');
+        $this->sc = $sc;
+        $this->translator = $translator;
+        $this->authenticationManager = $authenticationManager;
     }
 
     /**
      * @EXT\Route("/new", name="claro_admin_group_creation_form")
-     * @EXT\Method("GET")
      * @EXT\Template
      *
      * Displays the group creation form.
@@ -104,7 +108,7 @@ class GroupsController extends Controller
     }
 
     /**
-     * @EXT\Route("/", name="claro_admin_create_group")
+     * @EXT\Route("/new/submit", name="claro_admin_create_group")
      * @EXT\Method("POST")
      * @EXT\Template("ClarolineCoreBundle:Administration/Groups:creationForm.html.twig")
      *
@@ -138,14 +142,12 @@ class GroupsController extends Controller
      *     options={"expose"=true},
      *     defaults={"page"=1, "search"="", "max"=50, "order"="id", "direction"="ASC"}
      * )
-     * @EXT\Method("GET")
      * @EXT\Route(
      *     "/page/{page}/search/{search}/max/{max}/order/{order}/direction/{direction}",
      *     name="claro_admin_group_list_search",
      *     defaults={"page"=1, "max"=50, "order"="id", "direction"="ASC"},
      *     options = {"expose"=true}
      * )
-     * @EXT\Method("GET")
      * @EXT\Template()
      * @EXT\ParamConverter(
      *     "order",
@@ -211,14 +213,12 @@ class GroupsController extends Controller
      *     options={"expose"=true},
      *     defaults={"page"=1, "search"="", "max"=50, "order"="id"}
      * )
-     * @EXT\Method("GET")
      * @EXT\Route(
      *     "/{groupId}/users/page/{page}/search/{search}/max/{max}/{order}",
      *     name="claro_admin_user_of_group_list_search",
      *     options={"expose"=true},
      *     defaults={"page"=1, "max"=50, "order"="id"}
      * )
-     * @EXT\Method("GET")
      * @EXT\ParamConverter(
      *      "group",
      *      class="ClarolineCoreBundle:Group",
@@ -259,14 +259,12 @@ class GroupsController extends Controller
      *     options={"expose"=true},
      *     defaults={"page"=1, "search"="", "max"=50, "order"="id"}
      * )
-     * @EXT\Method("GET")
      * @EXT\Route(
      *     "/{groupId}/add-users/page/{page}/search/{search}/max/{max}/order/{order}",
      *     name="claro_admin_outside_of_group_user_list_search",
      *     options={"expose"=true},
      *     defaults={"page"=1, "max"=50, "order"="id"}
      * )
-     * @EXT\Method("GET")
      * @EXT\ParamConverter(
      *      "group",
      *      class="ClarolineCoreBundle:Group",
@@ -387,7 +385,6 @@ class GroupsController extends Controller
      *     name="claro_admin_group_settings_form",
      *     requirements={"groupId"="^(?=.*[1-9].*$)\d*$"}
      * )
-     * @EXT\Method("GET")
      * @EXT\ParamConverter(
      *      "group",
      *      class="ClarolineCoreBundle:Group",
@@ -474,7 +471,6 @@ class GroupsController extends Controller
 
     /**
      * @EXT\Route("/{groupId}/import", name="claro_admin_import_users_into_group_form")
-     * @EXT\Method("GET")
      * @EXT\ParamConverter(
      *      "group",
      *      class="ClarolineCoreBundle:Group",
@@ -495,7 +491,7 @@ class GroupsController extends Controller
     }
 
     /**
-     * @EXT\Route("/{groupId}/import", name="claro_admin_import_users_into_group")
+     * @EXT\Route("/{groupId}/import/submit", name="claro_admin_import_users_into_group")
      * @EXT\Method("POST")
      * @EXT\ParamConverter(
      *      "group",

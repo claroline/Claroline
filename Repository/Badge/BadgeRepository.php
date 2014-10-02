@@ -257,4 +257,104 @@ class BadgeRepository extends EntityRepository
 
         return $executeQuery ? $query->getResult(): $query;
     }
+
+    /**
+     * @param Workspace $workspace
+     *
+     * @return integer
+     */
+    public function countByWorkspace(Workspace $workspace)
+    {
+        $query = $this->getEntityManager()
+            ->createQuery(
+                'SELECT COUNT(b.id)
+                FROM ClarolineCoreBundle:Badge\Badge b
+                WHERE b.workspace = :workspaceId'
+            )
+            ->setParameter('workspaceId', $workspace->getId());
+
+        return $query->getSingleScalarResult();
+    }
+
+    /**
+     * @param QueryBuilder $queryBuilder
+     * @param string       $rootAlias
+     * @param string       $locale
+     *
+     * @internal param bool $executeQuery
+     *
+     * @return QueryBuilder|array
+     */
+    public function orderByName(QueryBuilder $queryBuilder, $rootAlias, $locale)
+    {
+        $queryBuilder
+            ->join(sprintf("%s.translations", $rootAlias), 'bt')
+            ->andWhere('bt.locale = :locale')
+            ->orderBy('bt.name', 'ASC')
+            ->setParameter('locale', $locale);
+
+        return $queryBuilder;
+    }
+
+    /**
+     * @param QueryBuilder   $queryBuilder
+     * @param string         $rootAlias
+     * @param Workspace|null $workspace
+     *
+     * @return QueryBuilder
+     */
+    public function filterByWorkspace(QueryBuilder $queryBuilder, $rootAlias, $workspace)
+    {
+        if (null === $workspace) {
+            $queryBuilder->andWhere(sprintf("%s.workspace IS NULL", $rootAlias));
+        }
+        else {
+            $queryBuilder
+                ->andWhere(sprintf("%s.workspace = :workspace", $rootAlias))
+                ->setParameter('workspace', $workspace);
+        }
+
+        return $queryBuilder;
+    }
+
+    /**
+     * @param QueryBuilder   $queryBuilder
+     * @param string         $rootAlias
+     * @param array          $blacklist Badge id we don't want to be retrieve
+     *
+     * @return QueryBuilder
+     */
+    public function filterByBlacklist(QueryBuilder $queryBuilder, $rootAlias, $blacklist)
+    {
+        if (0 < count($blacklist)) {
+            $blacklistedBadgeIds = array();
+
+            foreach ($blacklist as $blacklistedId) {
+                $blacklistedBadgeIds[] = $blacklistedId;
+            }
+
+            $queryBuilder
+                ->andWhere(sprintf("%s.id NOT IN (:badgeIds)", $rootAlias))
+                ->setParameter('badgeIds', join(',', $blacklistedBadgeIds));
+        }
+
+        return $queryBuilder;
+    }
+
+    /**
+     * @param QueryBuilder $queryBuilder
+     * @param string       $rootAlias
+     * @param User         $user
+     *
+     * @return QueryBuilder
+     */
+    public function filterByUser(QueryBuilder $queryBuilder, $rootAlias, User $user)
+    {
+        $queryBuilder
+            ->join('badge.userBadges', 'ub')
+            ->andWhere("ub.user = :user")
+            ->setParameter('user', $user);
+
+        return $queryBuilder;
+    }
 }

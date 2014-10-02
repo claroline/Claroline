@@ -68,6 +68,14 @@ class Workspace
 
     /**
      * @ORM\OneToMany(
+     *     targetEntity="Claroline\CoreBundle\Entity\Model\WorkspaceModel",
+     *     mappedBy="workspace"
+     * )
+     */
+    protected $models;
+
+    /**
+     * @ORM\OneToMany(
      *     targetEntity="Claroline\CoreBundle\Entity\Event",
      *     mappedBy="workspace",
      *     cascade={"persist"}
@@ -112,13 +120,28 @@ class Workspace
     protected $selfRegistration = false;
 
     /**
+     * @ORM\Column(name="registration_validation", type="boolean")
+     */
+    protected $registrationValidation = false;
+
+    /**
      * @ORM\Column(name="self_unregistration", type="boolean")
      */
     protected $selfUnregistration = false;
 
     /**
+     * @ORM\OneToMany(
+     *     targetEntity="Claroline\CoreBundle\Entity\Competence\Competence",
+     *     mappedBy="workspace",
+     *     cascade={"persist"}
+     * )
+     */
+    protected $competences;
+    
+    /**
      * @ORM\Column(name="creation_date", type="integer", nullable=true)
      */
+
     protected $creationDate;
 
     public function __construct()
@@ -230,6 +253,16 @@ class Workspace
     public function getSelfRegistration()
     {
         return $this->selfRegistration;
+    }
+
+    public function getRegistrationValidation()
+    {
+        return $this->registrationValidation;
+    }
+
+    public function setRegistrationValidation($registrationValidation)
+    {
+        $this->registrationValidation = $registrationValidation;
     }
 
     public function setSelfUnregistration($selfUnregistration)

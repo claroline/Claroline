@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Controller\Administration;
 
+use Claroline\CoreBundle\Entity\SecurityToken;
 use Claroline\CoreBundle\Form\Administration as AdminForm;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Configuration\UnwritableException;
@@ -25,6 +26,7 @@ use Claroline\CoreBundle\Manager\HwiManager;
 use Claroline\CoreBundle\Manager\LocaleManager;
 use Claroline\CoreBundle\Manager\MailManager;
 use Claroline\CoreBundle\Manager\RoleManager;
+use Claroline\CoreBundle\Manager\SecurityTokenManager;
 use Claroline\CoreBundle\Manager\TermsOfServiceManager;
 use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CoreBundle\Manager\IPWhiteListManager;
@@ -63,6 +65,7 @@ class ParametersController extends Controller
     private $toolManager;
     private $paramAdminTool;
     private $router;
+    private $tokenManager;
     private $ipwlm;
 
     /**
@@ -83,7 +86,8 @@ class ParametersController extends Controller
      *     "toolManager"        = @DI\Inject("claroline.manager.tool_manager"),
      *     "sc"                 = @DI\Inject("security.context"),
      *     "router"             = @DI\Inject("router"),
-     *     "ipwlm"              = @DI\Inject("claroline.manager.ip_white_list_manager")
+     *     "ipwlm"              = @DI\Inject("claroline.manager.ip_white_list_manager"),
+     *     "tokenManager"       = @DI\Inject("claroline.manager.security_token_manager")
      * })
      */
     public function __construct(
@@ -103,7 +107,8 @@ class ParametersController extends Controller
         ToolManager $toolManager,
         SecurityContextInterface $sc,
         RouterInterface $router,
-        IPWhiteListManager $ipwlm
+        IPWhiteListManager $ipwlm,
+        SecurityTokenManager $tokenManager
     )
     {
         $this->configHandler      = $configHandler;
@@ -124,6 +129,7 @@ class ParametersController extends Controller
         $this->paramAdminTool     = $this->toolManager->getAdminToolByName('platform_parameters');
         $this->router             = $router;
         $this->ipwlm              = $ipwlm;
+        $this->tokenManager       = $tokenManager;
     }
 
     /**
@@ -144,9 +150,11 @@ class ParametersController extends Controller
      * @EXT\Method("GET")
      * @EXT\Template
      *
+     * @param Request $request
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function generalFormAction()
+    public function generalFormAction(Request $request)
     {
         $this->checkOpen();
 
@@ -154,7 +162,7 @@ class ParametersController extends Controller
         $platformConfig = $this->configHandler->getPlatformConfig();
         $role = $this->roleManager->getRoleByName($platformConfig->getDefaultRole());
         $form = $this->formFactory->create(
-            new AdminForm\GeneralType($this->localeManager->getAvailableLocales(), $role, $description),
+            new AdminForm\GeneralType($this->localeManager->getAvailableLocales(), $role, $description, $this->translator->trans('date_form_format', array(), 'platform'), $this->localeManager->getUserLocale($request)),
             $platformConfig
         );
 
@@ -169,9 +177,11 @@ class ParametersController extends Controller
      * @EXT\Method("POST")
      * @EXT\Template("ClarolineCoreBundle:Administration\Parameters:generalForm.html.twig")
      *
+     * @param Request $request
+     *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function submitSettingsAction()
+    public function submitSettingsAction(Request $request)
     {
         $this->checkOpen();
 
@@ -179,13 +189,14 @@ class ParametersController extends Controller
         $platformConfig = $this->configHandler->getPlatformConfig();
         $role = $this->roleManager->getRoleByName($platformConfig->getDefaultRole());
         $form = $this->formFactory->create(
-            new AdminForm\GeneralType($this->localeManager->getAvailableLocales(), $role, $description),
+            new AdminForm\GeneralType($this->localeManager->getAvailableLocales(), $role, $description, $this->translator->trans('date_form_format', array(), 'platform'), $this->localeManager->getUserLocale($request)),
             $platformConfig
         );
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
             try {
+                $portfolioUrlOptions = $this->request->request->get('portfolioUrlOptions', 0);
                 $this->configHandler->setParameters(
                     array(
                         'allow_self_registration' => $form['selfRegistration']->getData(),
@@ -199,6 +210,7 @@ class ParametersController extends Controller
                         'platform_limit_date' => $form['platform_limit_date']->getData(),
                         'account_duration' => $form['account_duration']->getData(),
                         'anonymous_public_profile' => $form['anonymous_public_profile']->getData(),
+                        'portfolio_url' => $portfolioUrlOptions ? $form['portfolio_url']->getData() : null
                     )
                 );
 
@@ -217,6 +229,10 @@ class ParametersController extends Controller
                 if ($logo) {
                     $this->get('claroline.common.logo_service')->createLogo($logo);
                 }
+
+                $this->get('session')->getFlashBag()->add('success', $this->get('translator')->trans('general_parameters_updated_success', array(), 'platform'));
+
+                return $this->redirect($this->generateUrl('claro_admin_parameters_general'));
             } catch (UnwritableException $e) {
                 $form->addError(
                     new FormError(
@@ -227,17 +243,14 @@ class ParametersController extends Controller
                         )
                     )
                 );
-
-                return array('form_settings' => $form->createView());
             }
         }
 
-        return $this->redirect($this->generateUrl('claro_admin_parameters_general'));
+        return array('form_settings' => $form->createView());
     }
 
     /**
      * @EXT\Route("/appearance", name="claro_admin_parameters_appearance")
-     * @EXT\Method("GET")
      * @EXT\Template
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -325,7 +338,6 @@ class ParametersController extends Controller
 
     /**
      * @EXT\Route("/mail/server", name="claro_admin_parameters_mail_server")
-     * @EXT\Method("GET")
      * @EXT\Template
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -345,7 +357,7 @@ class ParametersController extends Controller
 
 
     /**
-     * @EXT\Route("/mail/server", name="claro_admin_edit_parameters_mail_server")
+     * @EXT\Route("/mail/server/submit", name="claro_admin_edit_parameters_mail_server")
      * @EXT\Method("POST")
      * @EXT\Template("ClarolineCoreBundle:Administration\Parameters:mailServerForm.html.twig")
      *
@@ -444,7 +456,6 @@ class ParametersController extends Controller
 
     /**
      * @EXT\Route("/mail/registration", name="claro_admin_mail_registration")
-     * @EXT\Method("GET")
      * @EXT\Template
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -485,7 +496,6 @@ class ParametersController extends Controller
 
     /**
      * @EXT\Route("/mail/layout", name="claro_admin_mail_layout")
-     * @EXT\Method("GET")
      * @EXT\Template
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -526,7 +536,6 @@ class ParametersController extends Controller
 
     /**
      * @EXT\Route("/terms", name="claro_admin_edit_terms_of_service")
-     * @EXT\Method("GET")
      * @EXT\Template
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
@@ -602,7 +611,6 @@ class ParametersController extends Controller
 
     /**
      * @EXT\Route("/session", name="claro_admin_session")
-     * @EXT\Method("GET")
      * @EXT\Template
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -683,7 +691,6 @@ class ParametersController extends Controller
 
     /**
      * @EXT\Route("/oauth/facebook", name="claro_admin_facebook_form")
-     * @EXT\Method("GET")
      * @EXT\Template
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -795,6 +802,176 @@ class ParametersController extends Controller
         MaintenanceHandler::disableMaintenance();
 
         return new RedirectResponse($this->router->generate('claro_admin_parameters_index'));
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/security/token/order/{order}/direction/{direction}",
+     *     name="claro_admin_security_token_list",
+     *     defaults={"order"="clientName","direction"="ASC"},
+     * )
+     * @EXT\Template(
+     *     "ClarolineCoreBundle:Administration\Parameters:securityTokenList.html.twig"
+     * )
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function securityTokenListAction($order, $direction)
+    {
+        $this->checkOpen();
+        $tokens = $this->tokenManager->getAllTokens($order, $direction);
+
+        return array(
+            'tokens' => $tokens,
+            'direction' => $direction
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/security/token/create/form",
+     *     name="claro_admin_security_token_create_form"
+     * )
+     * @EXT\Template(
+     *     "ClarolineCoreBundle:Administration\Parameters:securityTokenCreateForm.html.twig"
+     * )
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function securityTokenCreateFormAction()
+    {
+        $this->checkOpen();
+        $form = $this->formFactory->create(
+            new AdminForm\SecurityTokenType(),
+            new SecurityToken()
+        );
+
+        return array('form' => $form->createView());
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/security/token/create",
+     *     name="claro_admin_security_token_create"
+     * )
+     * @EXT\Template(
+     *     "ClarolineCoreBundle:Administration\Parameters:securityTokenCreateForm.html.twig"
+     * )
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function securityTokenCreateAction()
+    {
+        $this->checkOpen();
+        $securityToken = new SecurityToken();
+        $form = $this->formFactory->create(
+            new AdminForm\SecurityTokenType(),
+            $securityToken
+        );
+        $form->handleRequest($this->request);
+
+        if ($form->isValid()) {
+            $this->tokenManager->persistSecurityToken($securityToken);
+
+            return new RedirectResponse(
+                $this->router->generate('claro_admin_security_token_list')
+            );
+        }
+
+        return array('form' => $form->createView());
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/security/token/{tokenId}/edit/form",
+     *     name="claro_admin_security_token_edit_form"
+     * )
+     * @EXT\ParamConverter(
+     *     "securityToken",
+     *     class="ClarolineCoreBundle:SecurityToken",
+     *     options={"id" = "tokenId", "strictId" = true}
+     * )
+     * @EXT\Template(
+     *     "ClarolineCoreBundle:Administration\Parameters:securityTokenEditForm.html.twig"
+     * )
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function securityTokenEditFormAction(SecurityToken $securityToken)
+    {
+        $this->checkOpen();
+        $form = $this->formFactory->create(
+            new AdminForm\SecurityTokenType(),
+            $securityToken
+        );
+
+        return array(
+            'form' => $form->createView(),
+            'token' => $securityToken
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/security/token/{tokenId}/edit",
+     *     name="claro_admin_security_token_edit"
+     * )
+     * @EXT\ParamConverter(
+     *     "securityToken",
+     *     class="ClarolineCoreBundle:SecurityToken",
+     *     options={"id" = "tokenId", "strictId" = true}
+     * )
+     * @EXT\Template(
+     *     "ClarolineCoreBundle:Administration\Parameters:securityTokenEditForm.html.twig"
+     * )
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function securityTokenEditAction(SecurityToken $securityToken)
+    {
+        $this->checkOpen();
+        $form = $this->formFactory->create(
+            new AdminForm\SecurityTokenType(),
+            $securityToken
+        );
+        $form->handleRequest($this->request);
+
+        if ($form->isValid()) {
+            $this->tokenManager->persistSecurityToken($securityToken);
+
+            return new RedirectResponse(
+                $this->router->generate('claro_admin_security_token_list')
+            );
+        }
+
+        return array(
+            'form' => $form->createView(),
+            'token' => $securityToken
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/security/token/{tokenId}/delete",
+     *     name="claro_admin_security_token_delete",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter(
+     *     "securityToken",
+     *     class="ClarolineCoreBundle:SecurityToken",
+     *     options={"id" = "tokenId", "strictId" = true}
+     * )
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function securityTokenDeleteAction(SecurityToken $securityToken)
+    {
+        $this->checkOpen();
+        $this->tokenManager->deleteSecurityToken($securityToken);
+
+        return new RedirectResponse(
+            $this->router->generate('claro_admin_security_token_list')
+        );
     }
 
     /**

@@ -167,13 +167,14 @@
             if (!event.isSearchMode) {
                 this.$el.empty();
                 this.addNodes(event.nodes);
+
                 this.$el.sortable({
                     update: _.bind(this.orderNodes, this)
                 });
 
-                if (!event.canChangePosition || this.parameters.isPickerMode) {
-                    this.$el.sortable('disable');
-                }
+                (!event.canChangePosition || this.parameters.isPickerMode) ?
+                    this.$el.sortable('disable'):
+                    this.$el.sortable({helper: 'clone'});
             } else {
                 this.$el.html(Twig.render(ResourceManagerResults, {
                     'nodes': this.prepareResults(event.nodes),

@@ -146,7 +146,7 @@
                     <tbody id="user-table-body">
                         {% for user in pager.currentPageResults %}
                             <tr id="row-{{ user.id }}" class="row-user" data-user-id="{{ user.getId() }}">
-                                <td> <input class="chk-user chk-item" type="checkbox" value="{{ user.getId() }}"> </input></td>
+                                <td> <input class="chk-user chk-item" type="checkbox" value="{{ user.getId() }}"></td>
                                 <td>
                                     <a href="{{ path('claro_public_profile_view', {'publicUrl': user.getPublicUrl()}) }}"> {{user.getUsername()}}</a>
                                 </td>
@@ -154,18 +154,20 @@
                                 <td>{{ user.getFirstName() }}</td>
                                 <td>{{ user.getMail() }}</td>
                                 <td>
-                                    {% for role in user.getEntityRoles() %}
+                                    {% for role in user.getEntityRoles(false) %}
                                         {% if role.getWorkspace() == workspace %}
-                                            <span class="label label-success" id="label-{{ role.getId () }}-{{ user.getId()}}">
+                                            <span class="label label-success" id="label-{{ role.getId() }}-{{ user.getId()}}">
                                                 {{ role.getTranslationKey()|trans({}, 'platform') }}
                                             </span>
                                         {% endif %}
                                     {% endfor %}
+                                    
                                     {% set groups = user.getGroups() %}
-                                        {% for group in groups %}
+                                    
+                                    {% for group in groups %}
                                         {% for role in group.getEntityRoles() %}
                                             {% if role.getWorkspace() == workspace %}
-                                                <span title="{{ group.getName() }}" class="label label-default" id="label-{{ role.getId () }}-{{ user.getId()}}">
+                                                <span title="{{ group.getName() }}" class="label label-default" id="label-{{ role.getId() }}-{{ user.getId()}}">
                                                     {{ role.getTranslationKey()|trans({}, 'platform') }}
                                                 </span>
                                             {% endif %}

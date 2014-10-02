@@ -11,29 +11,33 @@
 
 namespace Claroline\CoreBundle\Listener\Tool;
 
-use Claroline\CoreBundle\Listener\NoHttpRequestException;
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\DisplayToolEvent;
 use Claroline\CoreBundle\Event\ConfigureWorkspaceToolEvent;
+use Claroline\CoreBundle\Listener\NoHttpRequestException;
+use Claroline\CoreBundle\Manager\MaskManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Manager\RightsManager;
+use Claroline\CoreBundle\Manager\RoleManager;
+use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Claroline\CoreBundle\Manager\WorkspaceTagManager;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Claroline\CoreBundle\Manager\MaskManager;
 
 /**
  * @DI\Service()
  */
 class ResourceManagerListener
 {
+    private $maskManager;
     private $resourceManager;
+    private $roleManager;
     private $rightsManager;
     private $workspaceManager;
-    private $maskManager;
+    private $userManager;
 
     /**
      * @DI\InjectParams({
@@ -45,6 +49,8 @@ class ResourceManagerListener
      *     "requestStack"           = @DI\Inject("request_stack"),
      *     "resourceManager"        = @DI\Inject("claroline.manager.resource_manager"),
      *     "rightsManager"          = @DI\Inject("claroline.manager.rights_manager"),
+     *     "roleManager"            = @DI\Inject("claroline.manager.role_manager"),
+     *     "userManager"            = @DI\Inject("claroline.manager.user_manager"),
      *     "workspaceManager"       = @DI\Inject("claroline.manager.workspace_manager"),
      *     "workspaceTagManager"    = @DI\Inject("claroline.manager.workspace_tag_manager"),
      *     "maskManager"            = @DI\Inject("claroline.manager.mask_manager")
@@ -59,6 +65,8 @@ class ResourceManagerListener
         RequestStack $requestStack,
         ResourceManager $resourceManager,
         RightsManager $rightsManager,
+        RoleManager $roleManager,
+        UserManager $userManager,
         WorkspaceManager $workspaceManager,
         WorkspaceTagManager $workspaceTagManager,
         MaskManager $maskManager
@@ -72,6 +80,8 @@ class ResourceManagerListener
         $this->request = $requestStack->getCurrentRequest();
         $this->resourceManager = $resourceManager;
         $this->rightsManager = $rightsManager;
+        $this->roleManager = $roleManager;
+        $this->userManager = $userManager;
         $this->workspaceManager = $workspaceManager;
         $this->workspaceTagManager = $workspaceTagManager;
         $this->maskManager = $maskManager;

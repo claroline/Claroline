@@ -11,18 +11,19 @@
 
 namespace Claroline\CoreBundle\Controller;
 
-use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Facet\Facet;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Form\ProfileType;
 use Claroline\CoreBundle\Form\ResetPasswordType;
 use Claroline\CoreBundle\Form\UserPublicProfileUrlType;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
+use Claroline\CoreBundle\Manager\AuthenticationManager;
+use Claroline\CoreBundle\Manager\FacetManager;
 use Claroline\CoreBundle\Manager\LocaleManager;
 use Claroline\CoreBundle\Manager\RoleManager;
-use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Manager\ToolManager;
-use Claroline\CoreBundle\Manager\FacetManager;
+use Claroline\CoreBundle\Manager\UserManager;
 use Doctrine\ORM\NoResultException;
 use JMS\DiExtraBundle\Annotation as DI;
 use JMS\SecurityExtraBundle\Annotation as SEC;
@@ -33,10 +34,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Security\Core\Encoder\EncoderFactory;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Security\Core\SecurityContextInterface;
 
 /**
  * Controller of the user profile.
@@ -53,19 +54,21 @@ class ProfileController extends Controller
     private $toolManager;
     private $facetManager;
     private $ch;
+    private $authenticationManager;
 
     /**
      * @DI\InjectParams({
-     *     "userManager"     = @DI\Inject("claroline.manager.user_manager"),
-     *     "roleManager"     = @DI\Inject("claroline.manager.role_manager"),
-     *     "eventDispatcher" = @DI\Inject("claroline.event.event_dispatcher"),
-     *     "security"        = @DI\Inject("security.context"),
-     *     "request"         = @DI\Inject("request"),
-     *     "localeManager"   = @DI\Inject("claroline.common.locale_manager"),
-     *     "encoderFactory"  = @DI\Inject("security.encoder_factory"),
-     *     "toolManager"     = @DI\Inject("claroline.manager.tool_manager"),
-     *     "facetManager"    = @DI\Inject("claroline.manager.facet_manager"),
-     *     "ch"              = @DI\Inject("claroline.config.platform_config_handler")
+     *     "userManager"            = @DI\Inject("claroline.manager.user_manager"),
+     *     "roleManager"            = @DI\Inject("claroline.manager.role_manager"),
+     *     "eventDispatcher"        = @DI\Inject("claroline.event.event_dispatcher"),
+     *     "security"               = @DI\Inject("security.context"),
+     *     "request"                = @DI\Inject("request"),
+     *     "localeManager"          = @DI\Inject("claroline.common.locale_manager"),
+     *     "encoderFactory"         = @DI\Inject("security.encoder_factory"),
+     *     "toolManager"            = @DI\Inject("claroline.manager.tool_manager"),
+     *     "facetManager"           = @DI\Inject("claroline.manager.facet_manager"),
+     *     "ch"                     = @DI\Inject("claroline.config.platform_config_handler"),
+     *     "authenticationManager"  = @DI\Inject("claroline.common.authentication_manager")
      * })
      */
     public function __construct(
@@ -78,7 +81,8 @@ class ProfileController extends Controller
         EncoderFactory $encoderFactory,
         ToolManager $toolManager,
         FacetManager $facetManager,
-        PlatformConfigurationHandler $ch
+        PlatformConfigurationHandler $ch,
+        AuthenticationManager $authenticationManager
     )
     {
         $this->userManager = $userManager;
@@ -91,6 +95,7 @@ class ProfileController extends Controller
         $this->toolManager = $toolManager;
         $this->facetManager = $facetManager;
         $this->ch = $ch;
+        $this->authenticationManager = $authenticationManager;
     }
 
     private function isInRoles($role, $roles)
@@ -148,14 +153,13 @@ class ProfileController extends Controller
         try {
             /** @var \Claroline\CoreBundle\Entity\User $user */
             $user = $this->getDoctrine()->getRepository('ClarolineCoreBundle:User')->findOneByIdOrPublicUrl($publicUrl);
-        }
-        catch (NoResultException $e) {
+        } catch (NoResultException $e) {
             throw new NotFoundHttpException("Page not found");
         }
 
         $facets = $this->facetManager->getVisibleFacets($this->security->getToken());
         $fieldFacetValues = $this->facetManager->getFieldValuesByUser($user);
-        $publicProfilePreferences = $this->facetManager->getVisibleAdminPublicPreference();
+        $publicProfilePreferences = $this->facetManager->getVisiblePublicPreference();
         $fieldFacets = $this->facetManager->getVisibleFieldFacets($this->security->getToken());
 
         $response = new Response(
@@ -187,7 +191,9 @@ class ProfileController extends Controller
     public function editProfileAction(User $loggedUser, User $user = null)
     {
         $isAdmin = $this->get('security.context')->isGranted('ROLE_ADMIN');
-        $isGrantedUserAdmin = $this->get('security.context')->isGranted('OPEN', $this->toolManager->getAdminToolByName('user_management'));
+        $isGrantedUserAdmin = $this->get('security.context')->isGranted(
+            'OPEN', $this->toolManager->getAdminToolByName('user_management')
+        );
         $editYourself = false;
 
         if (null !== $user && !$isAdmin && !$isGrantedUserAdmin) {
@@ -198,11 +204,18 @@ class ProfileController extends Controller
             $user = $loggedUser;
             $editYourself = true;
         }
-
+        $userRole = $this->roleManager->getUserRoleByUser($user);
         $roles = $this->roleManager->getPlatformRoles($user);
 
         $form = $this->createForm(
-            new ProfileType($roles, $isAdmin, $isGrantedUserAdmin, $this->localeManager->getAvailableLocales()), $user
+            new ProfileType(
+                $roles,
+                $isAdmin,
+                $isGrantedUserAdmin,
+                $this->localeManager->getAvailableLocales(),
+                $this->authenticationManager->getDrivers()
+            ),
+            $user
         );
 
         $form->handleRequest($this->request);
@@ -210,11 +223,11 @@ class ProfileController extends Controller
 
         if ($this->get('request')->getMethod() === 'POST') {
             $roles = ($isAdmin || $isGrantedUserAdmin) ?
-                $form->get('platformRoles')->getData():
+                $form->get('platformRoles')->getData() :
                 array($this->roleManager->getRoleByName('ROLE_USER'));
         } else {
             $roles = ($isAdmin || $isGrantedUserAdmin) ?
-                $this->roleManager->getAllPlatformRoles():
+                $this->roleManager->getAllPlatformRoles() :
                 array($this->roleManager->getRoleByName('ROLE_USER'));
         }
 
@@ -233,6 +246,7 @@ class ProfileController extends Controller
 
             $user = $form->getData();
             $this->userManager->rename($user, $user->getUsername());
+            $this->roleManager->renameUserRole($userRole, $user->getUsername());
 
             $successMessage = $translator->trans('edit_profile_success', array(), 'platform');
             $errorMessage   = $translator->trans('edit_profile_error', array(), 'platform');
@@ -373,7 +387,7 @@ class ProfileController extends Controller
                 $entityManager->flush();
 
                 $sessionFlashBag->add('success', $translator->trans('tune_public_url_success', array(), 'platform'));
-            } catch(\Exception $exception){
+            } catch (\Exception $exception) {
                 $sessionFlashBag->add('error', $translator->trans('tune_public_url_error', array(), 'platform'));
             }
 
@@ -397,7 +411,9 @@ class ProfileController extends Controller
      */
     public function checkPublicUrlAction(Request $request)
     {
-        $existedUser = $this->getDoctrine()->getRepository('ClarolineCoreBundle:User')->findOneByPublicUrl($request->request->get('publicUrl'));
+        $existedUser = $this->getDoctrine()->getRepository('ClarolineCoreBundle:User')->findOneByPublicUrl(
+            $request->request->get('publicUrl')
+        );
         $data = array('check' => false);
 
         if (null === $existedUser) {
@@ -405,6 +421,7 @@ class ProfileController extends Controller
         }
 
         $response = new JsonResponse($data);
+
         return $response;
     }
 
@@ -430,7 +447,9 @@ class ProfileController extends Controller
         $data = array();
 
         foreach ($fieldFacetValues as $fieldFacetValue) {
-            $data[$fieldFacetValue->getFieldFacet()->getId()] = $this->facetManager->getDisplayedValue($fieldFacetValue);
+            $data[$fieldFacetValue->getFieldFacet()->getId()] = $this->facetManager->getDisplayedValue(
+                $fieldFacetValue
+            );
         }
 
         return new JsonResponse($data);

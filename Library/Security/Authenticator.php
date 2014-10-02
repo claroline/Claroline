@@ -11,11 +11,11 @@
 
 namespace Claroline\CoreBundle\Library\Security;
 
-use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
-use Symfony\Component\Security\Core\SecurityContextInterface;
 use Claroline\CoreBundle\Persistence\ObjectManager;
-use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
+use Symfony\Component\Security\Core\SecurityContextInterface;
 
 /**
  * @DI\Service("claroline.authenticator")
@@ -24,20 +24,15 @@ class Authenticator
 {
     private $sc;
     private $encodeFactory;
-    private $userRepo;
 
     /**
      * @DI\InjectParams({
-     *     "om"            = @DI\Inject("claroline.persistence.object_manager"),
-     *     "sc"            = @DI\Inject("security.context"),
-     *     "encodeFactory" = @DI\Inject("security.encoder_factory")
+     *     "om"                     = @DI\Inject("claroline.persistence.object_manager"),
+     *     "sc"                     = @DI\Inject("security.context"),
+     *     "encodeFactory"          = @DI\Inject("security.encoder_factory")
      * })
      */
-    public function __construct(
-        ObjectManager $om,
-        SecurityContextInterface $sc,
-        EncoderFactoryInterface $encodeFactory
-    )
+    public function __construct(ObjectManager $om, SecurityContextInterface $sc, EncoderFactoryInterface $encodeFactory)
     {
         $this->userRepo = $om->getRepository('ClarolineCoreBundle:User');
         $this->sc = $sc;

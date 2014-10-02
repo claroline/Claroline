@@ -26,7 +26,7 @@
     {% endif %}
 {% endmacro %}
 
-{% macro displayControls() %}
+{% macro displayControls(canUserBeCreated) %}
     {% if app.user %}
         <button class="btn btn-default action-button table-control" data-action="remove" disabled>
             <i class="fa fa-trash-o"></i>
@@ -37,6 +37,12 @@
                 <i class="fa fa-refresh"></i>
                 {{ 'reset_password'|trans({}, 'platform') }}
             </button>
+        {% endif %}
+        {% if canUserBeCreated == true %}
+            <a href="{{path('claro_admin_user_creation_form')}}" class="btn btn-default">
+                <i class="fa fa-plus"></i>
+                {{ 'create_user'|trans({}, 'platform') }}
+            </a>
         {% endif %}
     {% endif %}
 {% endmacro %}
@@ -93,7 +99,7 @@
         </div>
         <div class="search-bar row">
             <div class="col-md-8">
-                {{ displayControls() }}
+                {{ displayControls(canUserBeCreated) }}
             </div>
             <div class="col-md-4">
                  <div class="input-group">
@@ -104,6 +110,7 @@
                         </button>
                     </span>
                 </div>
+
             </div>
         </div>
 
@@ -187,7 +194,7 @@
                  {{ renderPager(search, pager, max, order, direction) }}
             {% endif %}
         <div>
-            {{ displayControls() }}
+            {{ displayControls(canUserBeCreated) }}
         </div>
     </div>
 {% endblock %}

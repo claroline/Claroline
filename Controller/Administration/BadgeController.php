@@ -39,21 +39,22 @@ class BadgeController extends Controller
 {
     /**
      * @Route(
-     *     "/{badgePage}/{claimPage}",
+     *     "/{badgePage}/{claimPage}/{userPage}",
      *     name="claro_admin_badges",
-     *     requirements={"badgePage" = "\d+", "claimPage" = "\d+"},
-     *     defaults={"badgePage" = 1, "claimPage" = 1}
+     *     requirements={"badgePage" = "\d+", "userPage" = "\d+", "claimPage" = "\d+"},
+     *     defaults={"badgePage" = 1, "claimPage" = 1, "userPage" = 1}
      * )
      *
      * @Template
      */
-    public function listAction($badgePage, $claimPage)
+    public function listAction($badgePage = 1, $claimPage = 1, $userPage = 1)
     {
         $this->checkOpen();
 
         $parameters = array(
             'badgePage'        => $badgePage,
             'claimPage'        => $claimPage,
+            'userPage'         => $userPage,
             'add_link'         => 'claro_admin_badges_add',
             'edit_link'        => array(
                 'url'    => 'claro_admin_badges_edit',
@@ -63,6 +64,7 @@ class BadgeController extends Controller
             'view_link'        => 'claro_admin_badges_edit',
             'current_link'     => 'claro_admin_badges',
             'claim_link'       => 'claro_admin_manage_claim',
+            'statistics_link'  => 'claro_admin_badges_statistics',
             'route_parameters' => array()
         );
 
@@ -360,6 +362,17 @@ class BadgeController extends Controller
         }
 
         return $this->redirect($this->generateUrl('claro_admin_badges'));
+    }
+
+    /**
+     * @Route("/statistics", name="claro_admin_badges_statistics")
+     * @Template()
+     */
+    public function statisticsAction(Request $request)
+    {
+        $this->checkOpen();
+
+        return array();
     }
 
     private function checkOpen()

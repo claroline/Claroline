@@ -9,6 +9,7 @@ Audience/user visits: 'Visitas del usuario'
 Choose a logo: 'Escoger un logo'
 Choose visible actions in the widget: 'Escoger una acción visible en el widget'
 Choose workspaces displayed in the widget: 'Escoger un espacio de trabajo visible en el widget'
+Collapse: Acordeón
 Create a new resource: 'Crear un nuevo recurso'
 Draw an area on the graph to zoom, double-click to cancel: 'Dibuje un área en el gráfico para ampliar, haga doble clic para cancelar'
 Filter actions: 'Acciones de filtrado'
@@ -45,6 +46,7 @@ You can redefine the layout used when a mail is sent: 'Usted puede definir aquí
 You can use the following variables in your form: 'Usted puede usar las siguientes variables en su formulario'
 You can use the full screen version of the text editor to include HTML: 'Usted puede usar la versión de pantalla completa del editor de texto para incluir HTML'
 Your changes have been saved: 'Sus cambios han sido guardados'
+accept: Aceptar
 account_created: 'Cuenta creada.'
 account_duration_label: Duración de la vida de una cuentas (días)
 account_general_statistics: 'Estadísticas generales de la cuenta'
@@ -75,7 +77,7 @@ activity_past_evaluation_form_score: Evaluación
 activity_past_evaluation_form_status: Estado
 activity_remove_primary_resource: Retirar el recurso principal
 activity_resource_not_allowed: No puede agregar un recurso de este tipo
-activity_resource_remove: '¿Esta seguro que desea remover este recurso de la actividad?'
+activity_resource_remove: '¿Está seguro que desea remover este recurso de la actividad?'
 activity_rule_action_none: Ninguno
 activity_rule_configuration_for_auto_evaluation: 'Configuración de la regla para la evaluación automática'
 activity_rule_form_action: Acción
@@ -143,6 +145,9 @@ apply: 'Aplicar'
 at_least_one_category_has_to_be_selected: 'Debe seleccionar al menos una categoría'
 attempt: Intento
 attempts: Intentos
+authentication: Autenticación
+authentication_invalid: El origen de autentificación %authentication% de la linea %line% no es valido
+authentication_source: origen de autentificación
 automatic: Automático
 available_widgets: 'Widgets disponibles'
 available_workspaces: 'Espacios de trabajo disponibles'
@@ -152,6 +157,7 @@ bad_request: 'La solicitud no es correcta. Si usted llegó a esta página a trav
 badges_management: 'Gestión de insignias'
 best_score: 'Mejor puntaje'
 by: 'Por'
+by_user: 'Por usuarios'
 by_workspace: 'Por espacio de trabajo'
 canCopy: 'Derecho a copiar'
 canCreate: 'Crear %type%'
@@ -181,6 +187,8 @@ collaborative: Colaboración
 collaborator: 'Colaborador'
 comments: Comentarios
 communication: 'Comunicación'
+competence: Competencia
+competences: Competencias
 completed: Completado
 configuration: 'Configuración'
 configure: 'Configurar'
@@ -199,6 +207,7 @@ create_new_home_tab: 'Crear una pestaña'
 create_new_tag: 'Crear una etiqueta'
 create_new_user_account: 'Nuevo usuario'
 create_role: Crear un rol
+create_security_token: 'Crear un token de seguridad '
 create_subcategory: 'Crear una subcategoría'
 create_user: 'Crear un usuario'
 create_widget_instance: 'Crear un widget'
@@ -252,6 +261,7 @@ date_range.today: 'Hoy'
 date_range.week: 'S'
 date_range.yesterday: 'Ayer'
 db_table: 'Tabla de la base de datos'
+decline: Rechazar
 deletable: 'Suprimir tabla'
 delete: 'Suprimir'
 delete_category: 'Suprimir categoría'
@@ -284,6 +294,7 @@ edit_event_success: Evento actualizado correctamente
 edit_facet: Editar faceta
 edit_field: Editar campo
 edit_rights_success: La modificación de los derechos de acceso a sido realizada con éxito
+edit_security_token: 'Editar el token de seguridad'
 editable: 'Editable'
 editable_facet_form_explanation: El campo "Editable" permite de especificar si el elemento debe ser visible o no por el usuario.
 email: 'Correo electrónico'
@@ -331,6 +342,7 @@ from_message: 'De'
 general: 'General'
 general_parameters: 'Parámetros generales'
 general_tab_form_explanation: Este formulario permite especificar que información se ve por rol en el perfil público.
+generate_token: 'Generar un token aleatorio'
 generate_url: 'Dirección de subscripción publica'
 generate_url_subscription: 'Subscripción de un usuario a un espacio de trabajo'
 generate_url_subscription_anonyme: 'Subscripción de un anónimo a un espacio de trabajo'
@@ -360,7 +372,7 @@ home: 'Inicio'
 home_parameters: 'Parámetros'
 home_tab: 'Pestañas'
 home_tab_creation: 'Creación de pestañas'
-home_tab_delete_confirm_message: '¿Esta seguro que desea suprimir esta pestaña?'
+home_tab_delete_confirm_message: '¿Está seguro que desea suprimir esta pestaña?'
 home_tab_delete_confirm_title: 'Suprimir pestaña'
 home_tab_edition: 'Editar pestaña'
 home_tab_form_name: 'Nombre'
@@ -388,6 +400,7 @@ invalid_email: 'Este correo electrónico no es valido'
 invalid_encryption: 'Modo de autenticación no válido'
 invalid_transport: 'Transporte no válido'
 invalid_url: 'Esta URL no es válida'
+ip_address: 'Dirección IP'
 is_already_in_category: 'ya está en la categoría'
 jqplot_date_output_format: '%m/%d/%Y'
 keep_me_logged_in: 'Mantenerme conectado'
@@ -397,6 +410,7 @@ last_attempt_date: 'Fecha del último intento'
 last_manager_error_message: No es posible eliminar todos los administradores.
 last_name: 'Apellido'
 layout: 'disposición'
+learning_profil: Perfil de aprendizaje
 leave_this_page: 'Si usted cierra esta página, usted puede perder los cambios.'
 left: 'Izquierda'
 limit: Límite
@@ -440,9 +454,9 @@ message_form_content: 'Contenido'
 message_form_object: 'Asunto'
 message_form_to: 'A'
 messages: 'Mensajes'
-messages_confirm_delete: '¿Esta seguro que desea suprimir este archivo?'
-messages_confirm_permanent_delete: '¿Esta seguro que desea suprimir permanentemente estos mensajes?'
-messages_confirm_restore: '¿Esta seguro que desea restaurar estos mensajes?'
+messages_confirm_delete: '¿Está seguro que desea suprimir este archivo?'
+messages_confirm_permanent_delete: '¿Está seguro que desea suprimir permanentemente estos mensajes?'
+messages_confirm_restore: '¿Está seguro que desea restaurar estos mensajes?'
 messages_received: 'Mensajes recibidos'
 messages_received_removed: 'Mensajes recibidos suprimidos'
 messages_removed: 'Mensajes suprimidos'
@@ -594,24 +608,24 @@ remove: Retirar
 remove_event: Eliminar un evento
 remove_event_confirm: ¿Está seguro que desea eliminar este evento?
 remove_facet: Eliminar una faceta
-remove_facet_confirm: ¿Esta seguro que desea suprimir la faceta %name%?
+remove_facet_confirm: ¿Está seguro que desea suprimir la faceta %name%?
 remove_field: Eliminar una campo
-remove_field_confirm: ¿Esta seguro que desea suprimir el campo %name%?
-remove_group_confirm_message: '¿Esta seguro que desea suprimir este grupo?'
-remove_group_s_confirm_message: '¿Esta seguro que desea suprimir estos %count% grupos?'
-remove_message_confirm_message: '¿Esta seguro que desea suprimir este mensaje?'
-remove_message_s_confirm_message: '¿Esta seguro que desea suprimir estos %count% mensajes?'
+remove_field_confirm: ¿Está seguro que desea suprimir el campo %name%?
+remove_group_confirm_message: '¿Está seguro que desea suprimir este grupo?'
+remove_group_s_confirm_message: '¿Está seguro que desea suprimir estos %count% grupos?'
+remove_message_confirm_message: '¿Está seguro que desea suprimir este mensaje?'
+remove_message_s_confirm_message: '¿Está seguro que desea suprimir estos %count% mensajes?'
 remove_role: Eliminiar un rol.
-remove_role_confirm:  ¿Esta seguro que desea suprimir el rol %name%?
+remove_role_confirm:  ¿Está seguro que desea suprimir el rol %name%?
 remove_subcategory: 'Suprimir subcategoría'
-remove_user_confirm_message: '¿Esta seguro que desea suprimir este usuario?'
-remove_user_s_confirm_message: '¿Esta seguro que desea suprimir estos %count% usuarios?'
-remove_workspace_confirm_workspace: '¿Esta seguro que desea suprimir este espacio de trabajo?'
-remove_workspace_from_category_confirm_message: '¿Esta seguro que desea retirar este espacio de trabajo de la categoría?'
+remove_user_confirm_message: '¿Está seguro que desea suprimir este usuario?'
+remove_user_s_confirm_message: '¿Está seguro que desea suprimir estos %count% usuarios?'
+remove_workspace_confirm_workspace: '¿Está seguro que desea suprimir este espacio de trabajo?'
+remove_workspace_from_category_confirm_message: '¿Está seguro que desea retirar este espacio de trabajo de la categoría?'
 remove_workspace_from_category_confirm_title: 'Suprimir espacio de trabajo de una categoría'
 remove_workspace_from_selection: 'eliminar espacio de trabajo de la selección'
 remove_workspace_role_warning: ¿Está seguro que desea suprimir este rol? Si este rol está asociado a los usuarios, estos perderán sus derechos de acceso proporcionada por dicho rol.
-remove_workspaces_confirm_workspaces: '¿Esta seguro que desea suprimir estos %count% espacios de trabajo?'
+remove_workspaces_confirm_workspaces: '¿Está seguro que desea suprimir estos %count% espacios de trabajo?'
 rename: 'Renombrar'
 rename_category: 'Renombrar categoría'
 rename_tool: 'Renombrar herramienta'
@@ -619,14 +633,14 @@ rename_widget_instance: 'Renombrar widget'
 repeat_password: Repita la contraseña
 reset: 'Reinicializar'
 reset_password: Reinicializar contraseña
-reset_password_message: ¿Esta seguro que desea reinicializar su contraseña?
+reset_password_message: ¿Está seguro que desea reinicializar su contraseña?
 reset_password_txt: Usted pidió la reinicialización de su contraseña. Si usted no la pidió, por favor ignore este mensaje.
 resetting_your_password: Reinicialización de su contraseña
 resource: 'Recurso'
 resource_action_denied_message: 'La acción %action% no puede realizarse en ''%path%'': acceso denegado.'
 resource_creation_denied: 'Usted no tiene el permiso de crear en la carpeta ''%path'': acceso denegado'
 resource_creation_wrong_type: 'Usted no tiene el permiso de crear un tipo %type% en la carpeta ''%path%'': acceso denegado'
-resource_delete: '¿Esta seguro que desea suprimir este recurso?'
+resource_delete: '¿Está seguro que desea suprimir este recurso?'
 resource_picker: Selector de recursos
 resource_properties_form_sharable: 'Compartir este recurso'
 resource_properties_form_shareType: 'Compartir tipo'
@@ -640,7 +654,7 @@ resource_right_form_canShare: 'Compartir'
 resource_right_form_canView: 'ver'
 resource_right_form_isRecursive: 'Aplicar cambios a las subcarpetas actuales'
 resources: 'Recursos'
-resources_delete: '¿Esta seguro que desea suprimir estos recursos?'
+resources_delete: '¿Está seguro que desea suprimir estos recursos?'
 resources_most_downloaded: 'Los recursos más descargados'
 resources_rights: 'Derechos de acceso a un recurso'
 resources_rights_management: 'Gestión de acceso a un recurso'
@@ -672,6 +686,14 @@ search: 'Buscar'
 search_group: 'Buscar un grupo'
 search_user: 'Buscar un usuario'
 search_workspace: 'Buscar un espacio de trabajo'
+security_token: Token de seguridad
+security_token_delete_confirm_message: '¿Realmente desea eliminar este token de seguridad? '
+security_token_delete_confirm_title: 'Eliminar token de seguridad'
+security_token_form_clientIp: 'Dirección IP del cliente '
+security_token_form_clientName: 'Nombre del cliente '
+security_token_form_token: Token
+security_token_list: 'Lista de tokens de seguridad '
+security_tokens_management: 'Gestión de tokens de seguridad'
 see: 'Ver'
 see_more: 'Ver más'
 select all: 'Seleccionar todo'
@@ -722,6 +744,7 @@ subscribe_groups: 'Inscribir grupos'
 subscribe_selected_groups: 'Inscribir los grupos seleccionados'
 subscribe_selected_users: 'Inscribir los usuarios seleccionados'
 subscribe_users: 'Inscribir usuarios'
+subscription: Inscripción
 success_rate: 'Tasa de aprobación'
 successfull_workspace_creation: El espacio de trabajo %nombre% ha sido creado con éxito.
 support_email: 'Correo electrónico de soporte'
@@ -754,6 +777,7 @@ to_message: 'A'
 to_platform_users: 'A usuarios de la plataforma'
 to_workspace_members: 'A miembros de este espacio de trabajo'
 today: 'Hoy'
+token: Token
 tool: 'Herramienta'
 tool_form_displayName: 'Nombre que se muestra de la herramienta'
 tool_form_name: 'Nombre de la herramienta'
@@ -804,6 +828,7 @@ url_invalid: 'El código no es correcto, no intente cambiar la URL'
 user: 'Usuario'
 user_accounts: 'Cuentas de usuario'
 user_creation: 'Creación de un usuario'
+user_creation_success: El usuario se ha creado con éxito.
 user_limit_reached: Ha llegado al limite de creación de usuarios.
 user_limit_success_update: El número máximo de usuarios por rol ha sido actualizado con éxito.
 user_limit_too_low: Ya hay %total% %role%(s). El limite %newMax% es muy bajo.
@@ -822,6 +847,7 @@ users_per_page: 'usuarios por página'
 users_registration_in_workspace: 'Usuarios inscritos en un espacio de trabajo'
 users_visits: 'Conexiones del Usuarios'
 validate: 'Validar'
+validation: Validación
 verification: 'Repita su contraseña'
 view: 'Mostrar'
 view_category_hierarchy: 'Mostrar la jerarquía de la categoría'
@@ -834,7 +860,7 @@ warning_user_impersonation: 'Usted esta conectado como %user%.'
 warning_workspace_impersonation: 'Usted esta conectado como %role% del espacio de trabajo %workspace%.'
 widget: 'Widget'
 widget_display_form_name: 'Nombre'
-widget_home_tab_delete_confirm_message: '¿Esta seguro que desea retirar este widget de esta pestaña?'
+widget_home_tab_delete_confirm_message: '¿Está seguro que desea retirar este widget de esta pestaña?'
 widget_home_tab_delete_confirm_title: 'Retirar widgets de esta pestaña'
 widget_settings: 'Configuración del Widget'
 widgets: 'Widgets'
@@ -850,7 +876,7 @@ workspace: 'Espacio de trabajo'
 workspace_administration: 'Administración'
 workspace_classification: 'Clasificación de espacio de trabajo'
 workspace_delete: 'Suprimir el espacio de trabajo'
-workspace_delete_confirm_message: '¿Esta seguro que desea suprimir este espacio de trabajo?'
+workspace_delete_confirm_message: '¿Está seguro que desea suprimir este espacio de trabajo?'
 workspace_delete_confirm_title: 'Confirmar la supresión'
 workspace_edit_form_code: 'Código'
 workspace_edit_form_description: 'Descripción'
@@ -861,30 +887,32 @@ workspace_edit_form_selfUnregistration: 'Desinscripción publica'
 workspace_form_code: 'Codigo'
 workspace_form_description: 'Descripción'
 workspace_form_displayable: 'Publico'
+workspace_form_model: Plantilla
 workspace_form_name: 'Nombre'
 workspace_form_selfRegistration: 'Inscripción publica'
 workspace_form_selfUnregistration: 'Desinscripción publica'
-workspace_form_template: 'Plantilla'
 workspace_form_type: 'Tipo'
 workspace_home_tab_creation: 'Creación de una pestaña en el inicio de un espacio de trabajo'
 workspace_home_tab_edition: 'Edición de una pestaña en el inicio de un espacio de trabajo'
 workspace_home_tabs: 'Pestaña de un espacio de trabajo'
 workspace_list: 'Lista de espacios de trabajo'
 workspace_order_tool_edit_form_name: 'Nombre'
-workspace_registration_confirm_title: '¿Esta seguro que desea inscribirse a este espacio de trabajo?'
+workspace_queue_cancel_confirm_title: 'Anular la demanda de inscripción'
+workspace_queue_cancel_confirm_message: '¿Está seguro que desea anular esta demanda de inscripción a este espacio de trabajo?'
+workspace_registration_confirm_title: '¿Está seguro que desea inscribirse a este espacio de trabajo?'
 workspace_registration_message: 'Usted ha sido inscrito al espacio de trabajo %workspace_name%'
 workspace_registration_message_object: 'Inscripción al espacio de trabajo'
-workspace_remove_from_category_confirm_message: '¿Esta seguro que desea retirar este espacio de trabajo de la categoría?'
+workspace_remove_from_category_confirm_message: '¿Está seguro que desea retirar este espacio de trabajo de la categoría?'
 workspace_remove_from_category_confirm_title: 'Retirar espacio de trabajo de la categoría'
 workspace_resource: 'Recursos'
 workspace_role_type_form_requireDir: 'Crear una carpeta'
 workspace_role_type_form_translationKey: 'Nombre'
 workspace_tag_form_name: 'Nombre'
-workspace_tag_remove_confirm_message: '¿Esta seguro que desea suprimir esta categoría?'
+workspace_tag_remove_confirm_message: '¿Está seguro que desea suprimir esta categoría?'
 workspace_tag_remove_confirm_title: 'Suprimir categoría'
 workspace_template_form_name: 'Nombre'
 workspace_tools: 'Herramientas'
-workspace_unregistration_confirm_title: '¿Esta seguro que desea desinscribirse de un espacio de trabajo?'
+workspace_unregistration_confirm_title: '¿Está seguro que desea desinscribirse de un espacio de trabajo?'
 workspace_welcome: 'Bienvenido'
 workspaces: 'Espacio de trabajo'
 workspaces_included_in_category: 'Espacios de trabajo incluidos en esta categoría'
@@ -896,3 +924,13 @@ yes: 'Si'
 yes: Sí
 yesterday_activity: 'Actividades de ayer'
 your_username: 'Su nombre de usuario es '
+display_captcha: 'Monstrar captcha a los anonimos'
+email: 'Correo electrónico'
+description: 'Descripción'
+picture_profile: 'Foto de perfil'
+verification: 'Repita su contraseña'
+manage_tools: Gestión de las herramientas
+create_role: Crear un rol
+uncompress_file: Descomprimir el archivo si es posible
+workspace_import: Importar de un espacio de trabajo
+create_users: Crear el usarios

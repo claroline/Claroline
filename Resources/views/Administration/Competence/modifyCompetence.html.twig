@@ -1,0 +1,82 @@
+{% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
+
+{% block title %}
+    {{ 'competence' | trans({}, 'platform') | striptags | raw }}
+{% endblock %}
+
+{% block content %}
+    {% set competenceNodeId = competenceNode.getId() %}
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">{{ "competence" | trans({}, "platform" )}}</h3>
+        </div>
+        <form novalidate="novalidate" action="{{ path('claro_admin_competence_modify', {'competenceNode': competenceNodeId}) }}"
+              method="post" {{ form_enctype(form) }}
+              id="generic-form" lass="form-horizontal"
+        >
+            <div class="panel-body">
+                {{ form_widget(form) }}
+                {{ form_rest(form) }}
+                {{ form_errors(form) }}
+            </div>
+            <div class="panel-footer">
+                <button type="submit" class="btn btn-primary">
+                    {{ 'ok'|trans({}, 'platform') }}
+                </button>
+            </div>
+        </form>
+
+        <a href="{{ path('claro_admin_competence_delete', {'competence': competenceNodeId}) }}"
+           class="btn btn-primary"
+        >
+            {{ 'delete'|trans({}, 'platform') }}
+        </a>
+        <a href="{{ path('claro_admin_competence_move_form', {'competenceNode': competenceNodeId})}}"
+           class="btn btn-primary"
+        >
+            {{ 'move'|trans({}, 'platform') }}
+        </a>
+        <a href="{{ path('claro_admin_competences') }}" class="btn btn-primary">
+            {{ 'back'|trans({}, 'platform') }}
+        </a>
+        <a data-toggle="modal" href="#myModal" class="btn btn-primary">
+            {{'add'|trans({},'platform')}}
+        </a>
+        <a href="{{ path('claro_admin_competences_link_form', {'competenceNode': competenceNodeId}) }}"
+           class="btn btn-primary"
+        >
+            {{ 'link'|trans({}, 'platform') }}
+        </a>
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Modal title</h4>
+                </div>
+                <div class="modal-body">
+                    <form action="{{ path('claro_admin_competence_add_sub', {'competenceId': competenceNodeId }) }}"
+                          method="POST" {{ form_enctype(addForm) }}
+                          id="myForm"
+                    > 
+                        {{ form_widget(addForm) }}
+                        {{ form_rest(addForm) }}
+                        {{ form_errors(addForm) }}
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" id='save' class="btn btn-primary">Save changes</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+{% endblock %}
+    
+{% block javascripts %}
+    {{ parent() }}
+    <script type='text/javascript'src='{{ asset('bundles/clarolinecore/js/administration/competences.js') }}'></script>
+{% endblock %}

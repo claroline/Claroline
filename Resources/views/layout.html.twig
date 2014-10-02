@@ -189,6 +189,13 @@
         "@ClarolineCoreBundle/Resources/views/Administration/Roles/renderRoleRow.html.twig"
         "@ClarolineCoreBundle/Resources/views/Agenda/eventContent.html.twig"
         "@ClarolineCoreBundle/Resources/views/Agenda/task.html.twig"
+        "@ClarolineCoreBundle/Resources/views/Tool/workspace/parameters/model/modelRow.html.twig"
+        "@ClarolineCoreBundle/Resources/views/Tool/workspace/parameters/model/userRow.html.twig"
+        "@ClarolineCoreBundle/Resources/views/Tool/workspace/parameters/model/groupRow.html.twig"
+        "@ClarolineCoreBundle/Resources/views/Tool/workspace/parameters/model/resourceElement.html.twig"
+        "@ClarolineCoreBundle/Resources/views/Tool/workspace/parameters/model/tabElement.html.twig"
+        "@ClarolineCoreBundle/Resources/views/Administration/Competence/competenceItem.html.twig"
+        "@ClarolineCoreBundle/Resources/views/Administration/Competence/competenceNodeItem.html.twig"
         %}<script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
     {% javascripts debug=false filter='jsmin' output='vendor/jquery/ui/jqueryui.js'
@@ -204,6 +211,7 @@
     <script type="text/javascript" src="{{ url('bazinga_exposetranslation_js', { 'domain_name': 'platform' }) }}"></script>
     <script type="text/javascript" src="{{ url('bazinga_exposetranslation_js', { 'domain_name': 'resource' }) }}"></script>
     <script type="text/javascript" src="{{ url('bazinga_exposetranslation_js', { 'domain_name': 'badge' }) }}"></script>
+    <script type="text/javascript" src="{{ url('bazinga_exposetranslation_js', { 'domain_name': 'competence' }) }}"></script>
     <script type="text/javascript" src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/datepicker/js/bootstrap-datepicker.js') }}"></script>
     {% if 'en' != app.request.locale %}
@@ -237,28 +245,6 @@
     %}
         <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
-
-    {# Uncomment this for debug (temporary...) #}
-    {#<script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/common.js') }}"></script>#}
-    {#<script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/modal.js') }}"></script>#}
-    {#<script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/simplerights.js') }}"></script>#}
-    {#<script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/resource/manager/views/actions.js') }}"></script>#}
-    {#<script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/resource/manager/views/breadcrumbs.js') }}"></script>#}
-    {#<script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/resource/manager/views/confirm.js') }}"></script>#}
-    {#<script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/resource/manager/views/filters.js') }}"></script>#}
-    {#<script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/resource/manager/views/form.js') }}"></script>#}
-    {#<script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/resource/manager/views/rights.js') }}"></script>#}
-    {#<script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/resource/manager/views/master.js') }}"></script>#}
-    {#<script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/resource/manager/views/nodes.js') }}"></script>#}
-    {#<script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/resource/manager/views/thumbnail.js') }}"></script>#}
-    {#<script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/resource/manager/router.js') }}"></script>#}
-    {#<script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/resource/manager/server.js') }}"></script>#}
-    {#<script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/resource/manager/manager.js') }}"></script>#}
-    {#<script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/home/home.js') }}"></script>#}
-    {#<script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/locale.js') }}"></script>#}
-    {#<script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/resourceinput.js') }}"></script>#}
-    {#<script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/utilities.js') }}"></script>#}
-    {#<script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/startup.js') }}"></script>#}
 
     <script type="text/javascript" src="{{ asset('bundles/stfalcontinymce/vendor/tinymce/tinymce.jquery.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/stfalcontinymce/vendor/tinymce/jquery.tinymce.min.js') }}"></script><!-- this is not duplicated file -->

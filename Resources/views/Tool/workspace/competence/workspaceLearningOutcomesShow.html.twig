@@ -1,0 +1,54 @@
+{% extends "ClarolineCoreBundle:Workspace:layout.html.twig" %}
+
+{% set competenceNodeId = competenceNode.getId() %}
+{% set competenceName = competenceNode.getCompetence().getName() %}
+
+{% block title %}
+    {{ competenceName | trans({}, 'platform') | striptags | raw }}
+{% endblock %}
+
+{% block breadcrumb %}
+    {{
+        macros.workspaceBreadcrumbs(
+            workspace,
+            [
+                {
+                    'name': 'learning_outcomes'|trans({}, 'platform'),
+                    'href': path('claro_workspace_learning_outcomes_list', {'workspace': workspace.getId()})
+                },
+                {
+                   'name': competenceName,
+                    'href': ''
+                }
+            ]
+        )
+    }}
+{% endblock %}
+
+{% block content %}
+    <div id="workspace-data-element" data-workspace-id="{{ workspace.getId() }}">
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">
+                {{ competenceName }}
+            </h3>
+        </div>
+        <div class="panel-body">
+            {{ competenceHierarchy|raw }}
+        </div>
+        <div class="panel-footer">
+            <a href="{{ path('claro_workspace_learning_outcomes_list', {'workspace': workspace.getId()}) }}" class="btn btn-primary">
+                <i class="fa fa-arrow-left"></i>
+                {{ 'back'|trans({},'platform') }}
+            </a>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type='text/javascript'src='{{ asset('bundles/clarolinecore/js/tool/workspace/competence/workspaceLearningOutcomesShow.js') }}'></script>
+{% endblock %}

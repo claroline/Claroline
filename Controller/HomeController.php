@@ -59,7 +59,8 @@ class HomeController
      *     "/content/{content}/{type}/{father}",
      *     requirements={"content" = "\d+"},
      *     name="claroline_get_content_by_id_and_type",
-     *     defaults={"type" = "home", "father" = null}
+     *     defaults={"type" = "home", "father" = null},
+     *     options = {"expose" = true}
      * )
      *
      * @ParamConverter("content", class = "ClarolineCoreBundle:Content", options = {"id" = "content"})
@@ -263,9 +264,9 @@ class HomeController
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function menuAction($id, $size, $type, $father = null, $region = null)
+    public function menuAction($id, $size, $type, $father = null, $region = null, $collapse = null)
     {
-        return $this->manager->getMenu($id, $size, $type, $father, $region);
+        return $this->manager->getMenu($id, $size, $type, $father, $region, $collapse);
     }
 
     /**
@@ -505,6 +506,33 @@ class HomeController
             return new Response('true');
         } catch (\Exeption $e) {
             return new Response('false'); //useful in ajax
+        }
+    }
+
+    /**
+     * Update the collapse attribute of a content
+     *
+     * @Route(
+     *     "/content/collapse/{content}/{type}",
+     *     name="claroline_content_collapse",
+     *     options = {"expose" = true}
+     * )
+     *
+     * @Secure(roles="ROLE_ADMIN")
+     *
+     * @ParamConverter("content", class = "ClarolineCoreBundle:Content", options = {"id" = "content"})
+     * @ParamConverter("type", class = "ClarolineCoreBundle:Home\Type", options = {"mapping" : {"type": "name"}})
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function collapseAction($content, $type)
+    {
+        try {
+            $this->manager->collapse($content, $type);
+
+            return new Response('true');
+        } catch (\Exeption $e) {
+            return new Response('false');
         }
     }
 

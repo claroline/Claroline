@@ -91,7 +91,7 @@ class RoleRepository extends EntityRepository
         $dql = "
             SELECT r FROM Claroline\CoreBundle\Entity\Role r
             JOIN r.users u
-            WHERE u.id = {$user->getId()} AND r.type != " . Role::WS_ROLE;
+            WHERE u.id = {$user->getId()} AND r.type = " . Role::PLATFORM_ROLE;
         $query = $this->_em->createQuery($dql);
 
         return $query->getResult();
@@ -150,7 +150,7 @@ class RoleRepository extends EntityRepository
     /**
      * Returns the roles of a user in a workspace.
      *
-     * @param User              $user      The subject of the role
+     * @param User      $user      The subject of the role
      * @param Workspace $workspace The workspace the role should be bound to
      *
      * @return null|Role
@@ -349,5 +349,138 @@ class RoleRepository extends EntityRepository
         $query->setParameter('resourceNode', $resourceNode);
 
         return $executeQuery ? $query->getResult(): $query;
+    }
+
+    public function findRoleByWorkspaceCodeAndTranslationKey(
+        $workspaceCode,
+        $translationKey,
+        $executeQuery = true
+    )
+    {
+        $dql = '
+            SELECT r
+            FROM Claroline\CoreBundle\Entity\Role r
+            INNER JOIN r.workspace w
+            WHERE w.code = :code
+            AND r.translationKey = :key
+        ';
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('code', $workspaceCode);
+        $query->setParameter('key', $translationKey);
+
+        return $executeQuery ? $query->getOneOrNullResult() : $query;
+    }
+
+    public function findRolesByWorkspaceCodeAndTranslationKey(
+        $workspaceCode,
+        $translationKey,
+        $executeQuery = true
+    )
+    {
+        $dql = '
+            SELECT r
+            FROM Claroline\CoreBundle\Entity\Role r
+            INNER JOIN r.workspace w
+            WHERE w.code = :code
+            AND r.translationKey = :key
+        ';
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('code', $workspaceCode);
+        $query->setParameter('key', $translationKey);
+
+        return $executeQuery ? $query->getResult() : $query;
+    }
+
+    /**
+     * Returns all non-platform roles of a user.
+     *
+     * @param User $user The subject of the role
+     *
+     * @return array[Role]|query
+     */
+    public function findNonPlatformRolesForUser(User $user, $executeQuery = true)
+    {
+        $dql = '
+            SELECT r
+            FROM Claroline\CoreBundle\Entity\Role r
+            JOIN r.workspace w
+            JOIN r.users u
+            WHERE w.creator != :user
+            AND u = :user
+        ';
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('user', $user);
+
+        return $executeQuery ? $query->getResult() : $query;
+    }
+
+    /**
+     * Returns all user-type roles.
+     *
+     * @param boolean $executeQuery
+     *
+     * @return array[Role]|query
+     */
+    public function findAllUserRoles($executeQuery = true)
+    {
+        $dql = '
+            SELECT r
+            FROM Claroline\CoreBundle\Entity\Role r
+            WHERE r.type = :type
+        ';
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('type', Role::USER_ROLE);
+
+        return $executeQuery ? $query->getResult() : $query;
+    }
+
+    /**
+     * Returns user-type role of an user.
+     *
+     * @param User $user
+     * @param boolean $executeQuery
+     *
+     * @return array[Role]|query
+     */
+    public function findUserRoleByUser(User $user, $executeQuery = true)
+    {
+        $username = $user->getUsername();
+        $roleName = 'ROLE_USER_' . strtoupper($username);
+
+        $dql = '
+            SELECT r
+            FROM Claroline\CoreBundle\Entity\Role r
+            WHERE r.type = :type
+            AND r.name = :name
+            AND r.translationKey = :key
+        ';
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('type', Role::USER_ROLE);
+        $query->setParameter('name', $roleName);
+        $query->setParameter('key', $username);
+
+        return $executeQuery ? $query->getOneOrNullResult() : $query;
+    }
+
+    public function findUserRolesByTranslationKeys(array $keys, $executeQuery = true)
+    {
+        $dql = '
+            SELECT r
+            FROM Claroline\CoreBundle\Entity\Role r
+            WHERE r.type = :type
+            AND r.translationKey IN (:keys)
+        ';
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('type', Role::USER_ROLE);
+        $query->setParameter('keys', $keys);
+
+        return $executeQuery ? $query->getResult() : $query;
+
     }
 }

@@ -61,12 +61,13 @@ class PlatformConfigurationHandler
         'platform_limit_date' => 1559350861,//1 june 2019
         'platform_init_date' => 1388534461, //1 june 2014
         'account_duration' => null,
-        'username_regex' => '/^[\w\.]*$/',
+        'username_regex' => '/^[a-zA-Z0-9@\-_\.]*$/',
         'anonymous_public_profile' => false,
         'home_menu' => null,
         'footer_login' => false,
         'footer_workspaces' => false,
-        'header_locale' => false
+        'header_locale' => false,
+        'portfolio_url' => null
     );
 
     /**
@@ -163,6 +164,7 @@ class PlatformConfigurationHandler
         $config->setFooterLogin($this->parameters['footer_login']);
         $config->setFooterWorkspaces($this->parameters['footer_workspaces']);
         $config->setHeaderLocale($this->parameters['header_locale']);
+        $config->setPortfolioUrl($this->parameters['portfolio_url']);
 
         return $config;
     }
