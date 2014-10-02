@@ -161,4 +161,45 @@ class DesktopAgendaController extends Controller
 
         return array('listEvents' => array_merge($listEvents, $listEventsDesktop));
     }
+
+
+    /**
+     * @EXT\Route(
+     *     "/import/modal/form",
+     *     name="claro_agenda_import_form",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\Template("ClarolineCoreBundle:Tool\desktop\agenda:importIcsModalForm.html.twig")
+     * @return array
+     */
+    public function importEventsModalForm()
+    {
+        $form = $this->formFactory->create(FormFactory::TYPE_AGENDA_IMPORTER);
+
+        return array('form' => $form->createView());
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/import",
+     *     name="claro_agenda_import"
+     * )
+     * @EXT\Template("ClarolineCoreBundle:Tool\desktop\agenda:importIcsModalForm.html.twig")
+     *
+     * @param Workspace $workspace
+     * @return array
+     */
+    public function importsEventsIcsAction()
+    {
+        $form = $this->formFactory->create(FormFactory::TYPE_AGENDA_IMPORTER);
+        $form->handleRequest($this->request);
+
+        if ($form->isValid()) {
+            $events = $this->agendaManager->importEvents($form->get('file')->getData());
+
+            return new JsonResponse($events, 200);
+        }
+
+        return array('form' => $form->createView());
+    }
 }

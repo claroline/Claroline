@@ -28,14 +28,16 @@ class OrderedToolRepository extends EntityRepository
     {
         $rolesRestriction = '';
         $first = true;
+        $i = 0;
 
         foreach ($roles as $roleName) {
             if ($first) {
                 $first = false;
-                $rolesRestriction .= "(r.name like '$roleName'";
+                $rolesRestriction .= "(r.name like :role{$i}";
             } else {
-                $rolesRestriction .= " OR r.name like '$roleName'";
+                $rolesRestriction .= " OR r.name like :role{$i}";
             }
+            $i++;
         }
 
         $rolesRestriction .= ')';
@@ -48,6 +50,13 @@ class OrderedToolRepository extends EntityRepository
             ORDER BY ot.order
         ";
         $query = $this->_em->createQuery($dql);
+
+        $i = 0;
+        
+        foreach ($roles as $roleName) {
+            $query->setParameter("role{$i}", $roleName);
+            $i++;
+        }
 
         return $query->getResult();
     }
