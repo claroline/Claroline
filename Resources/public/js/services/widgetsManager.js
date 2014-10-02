@@ -7,6 +7,7 @@ portfolioApp
             emptyWidgets: [],
             forms:   [],
             editing: [],
+            evaluating: [],
             init: function(portfolioId, widgets) {
                 angular.forEach(widgets, function(rawWidget) {
                     var widget = widgetFactory.getWidget(portfolioId, rawWidget.type);
@@ -18,6 +19,11 @@ portfolioApp
                 if (!widget.isEditing()) {
                     this.loadForm(widget);
                     this.addEditing(widget);
+                }
+            },
+            evaluate: function(widget) {
+                if (!widget.isEvaluating()) {
+                    this.addEvaluating(widget);
                 }
             },
             loadForm: function(widget) {
@@ -38,6 +44,12 @@ portfolioApp
                     this.editing.push(widget);
                 }
             },
+            addEvaluating: function(widget) {
+                widget.setEvaluateMode(true);
+                if (!this.evaluating.inArray(widget)) {
+                    this.evaluating.push(widget);
+                }
+            },
             cancelEditing: function(widget, rollback) {
                 if (rollback) {
                     angular.copy(widget.copy, widget);
@@ -49,6 +61,11 @@ portfolioApp
                 if (widget.isNew()) {
                     this.widgets.remove(widget);
                 }
+            },
+            cancelEvaluating: function(widget) {
+                widget.setEvaluateMode(false);
+
+                this.evaluating.remove(widget);
             },
             save: function(widget) {
                 delete widget.copy;
