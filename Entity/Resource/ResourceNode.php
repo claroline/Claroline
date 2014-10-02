@@ -565,7 +565,7 @@ class ResourceNode
         return $this->pathForCreationLog;
     }
 
-    public function isVisible()
+    public function getIsVisible()
     {
         return $this->isVisible;
     }
