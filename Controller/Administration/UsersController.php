@@ -353,7 +353,7 @@ class UsersController extends Controller
     public function importFormAction()
     {
         $this->checkOpen();
-        $form = $this->formFactory->create(FormFactory::TYPE_USER_IMPORT, array());
+        $form = $this->formFactory->create(FormFactory::TYPE_USER_IMPORT, array('showRoles' => true));
 
         return array('form' => $form->createView(), 'error' => null);
     }
@@ -391,7 +391,7 @@ class UsersController extends Controller
     public function importAction()
     {
         $this->checkOpen();
-        $form = $this->formFactory->create(FormFactory::TYPE_USER_IMPORT, array());
+        $form = $this->formFactory->create(FormFactory::TYPE_USER_IMPORT, array('showRoles' => true));
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
@@ -411,7 +411,18 @@ class UsersController extends Controller
                 return array('form' => $form->createView(), 'error' => 'role_user unavailable');
             }
 
-            $this->userManager->importUsers($users, $sendMail);
+            $additionalRole = $form->get('role')->getData();
+
+            if ($additionalRole !== null) {
+                $max = $additionalRole->getMaxUsers();
+                $total = $this->userManager->countUsersByRoleIncludingGroup($additionalRole);
+
+                if ($total + count($users) > $max) {
+                    return array('form' => $form->createView(), 'error' => $additionalRole->getName() . ' unavailable');
+                }
+            }
+
+            $this->userManager->importUsers($users, $sendMail, null, array($additionalRole));
 
             return new RedirectResponse($this->router->generate('claro_admin_user_list'));
         }

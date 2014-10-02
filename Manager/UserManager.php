@@ -40,7 +40,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class UserManager
 {
-    const MAX_USER_BATCH_SIZE = 20;
+    const MAX_USER_BATCH_SIZE = 5;
 
     private $platformConfigHandler;
     private $strictEventDispatcher;
@@ -117,11 +117,12 @@ class UserManager
      * Its basic properties (name, username,... ) must already be set.
      *
      * @param \Claroline\CoreBundle\Entity\User $user
-     * @param boolean                           $sendMail do we need to mail the new user ?
+     * @param boolean                           $sendMail         do we need to mail the new user ?
+     * @param array                             $additionnalRoles a list of additionalRoles
      *
      * @return \Claroline\CoreBundle\Entity\User
      */
-    public function createUser(User $user, $sendMail = true)
+    public function createUser(User $user, $sendMail = true, $additionnalRoles = array())
     {
         $this->objectManager->startFlushSuite();
         $this->setPersonalWorkspace($user);
@@ -131,6 +132,11 @@ class UserManager
         $this->objectManager->persist($user);
         $this->strictEventDispatcher->dispatch('log', 'Log\LogUserCreate', array($user));
         $this->roleManager->createUserRole($user);
+
+        foreach ($additionnalRoles as $role) {
+            if ($role) $user->addRole($role);
+        }
+
         $this->objectManager->endFlushSuite();
 
         if ($this->mailManager->isMailerAvailable() && $sendMail) {
@@ -195,6 +201,7 @@ class UserManager
         $user->setLastName('lastname#' . $user->getId());
         $user->setPlainPassword(uniqid());
         $user->setUsername('username#' . $user->getId());
+        $user->setPublicUrl('removed#' . $user->getId());
         $user->setIsEnabled(false);
 
         // keeping the user's workspace with its original code
@@ -280,7 +287,7 @@ class UserManager
      *
      * @return array
      */
-    public function importUsers(array $users, $sendMail = true, $logger = null)
+    public function importUsers(array $users, $sendMail = true, $logger = null, $additionnalRoles = array())
     {
         $roleUser = $this->roleManager->getRoleByName('ROLE_USER');
         $max = $roleUser->getMaxUsers();
@@ -330,7 +337,7 @@ class UserManager
             $newUser->setPhone($phone);
             $newUser->setLocale($lg);
             $newUser->setAuthentication($authentication);
-            $this->createUser($newUser, $sendMail);
+            $this->createUser($newUser, $sendMail, $additionnalRoles);
             if ($logger) $logger(" [UOW size: " . $this->objectManager->getUnitOfWork()->size() . "]");
             if ($logger) $logger(" User $j ($username) being created");
             $i++;
@@ -341,7 +348,18 @@ class UserManager
                 $i = 0;
                 $this->objectManager->endFlushSuite();
                 if ($logger) $logger(" flushing users...");
+                $tmpRoles = $additionnalRoles;
                 $this->objectManager->clear();
+                $additionnalRoles = [];
+
+                foreach ($tmpRoles as $toAdd) {
+                    $additionnalRoles[] = $this->objectManager->merge($toAdd);
+                }
+
+                if ($this->container->get('security.context')->getToken()) {
+                    $this->objectManager->merge($this->container->get('security.context')->getToken()->getUser());
+                }
+
                 $this->objectManager->startFlushSuite();
             }
         }
