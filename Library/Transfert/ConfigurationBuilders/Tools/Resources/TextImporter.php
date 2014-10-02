@@ -49,17 +49,29 @@ class TextImporter extends Importer implements ConfigurationInterface
 
     public function addTextSection($rootNode)
     {
+        $rootPath = $this->getRootPath();
+
         $rootNode
             ->children()
-                ->arrayNode('text')
-                    ->prototype('array')
-                        ->children()
-                            ->scalarNode('path')->isRequired()->end()
+                ->arrayNode('file')
+                    ->children()
+                        ->scalarNode('path')->isRequired()
+                            ->validate()
+                                ->ifTrue(
+                                    function ($v) use ($rootPath) {
+                                        return call_user_func_array(
+                                            __CLASS__ . '::fileNotExists',
+                                            array($v, $rootPath)
+                                        );
+                                    }
+                                )
+                                ->thenInvalid("The file %s doesn't exists")
+                                ->end()
+                            ->end()
                         ->end()
                     ->end()
                 ->end()
-            ->end()
-        ->end();
+            ->end();
     }
 
     public function supports($type)
@@ -75,7 +87,23 @@ class TextImporter extends Importer implements ConfigurationInterface
 
     public function import(array $array)
     {
+        $ds = DIRECTORY_SEPARATOR;
 
+        foreach ($array['data'] as $item) {
+            $content = file_get_contents($this->getRootPath() . $ds . $item['file']['path']);
+            return $this->container->get('claroline.manager.text_manager')->create(
+                $content,
+                'title',
+                $this->container->get('security.context')->getToken()->getUser()
+            );
+        }
+    }
+
+    public static function fileNotExists($v, $rootpath)
+    {
+        $ds = DIRECTORY_SEPARATOR;
+
+        return !file_exists($rootpath . $ds . $v);;
     }
 
     public function export(Workspace $workspace, array &$files, $object)
