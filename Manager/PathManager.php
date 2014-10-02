@@ -7,6 +7,7 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Library\Security\Utilities;
+use Symfony\Component\Finder\Exception\AccessDeniedException;
 
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Innova\PathBundle\Entity\Path\Path;
