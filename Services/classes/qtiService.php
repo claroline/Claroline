@@ -14,6 +14,7 @@ class qtiService
     protected $doctrine;
     protected $securityContext;
     private $userDir;
+    private $node;
 
 
     /**
@@ -36,327 +37,237 @@ class qtiService
 
     /**
      * To export a question in QTI
+     * 
+     *  @access public
+     *
+     * @param integer $questionId id of question
+     * 
+     * return file
      *
      */
-    public function export($id)
+    public function export($questionId)
     {
 
         $this->createDirQTI();
 
-            $interaction = $this->doctrine
+        $interaction = $this->doctrine
                             ->getManager()
                             ->getRepository('UJMExoBundle:Interaction')
-                            ->getInteraction($id);
+                            ->getInteraction($questionId);
+            
+        $Question = $interaction->getQuestion();
 
-            $typeInter = $interaction->getType();
+        $typeInter = $interaction->getType();
 
             switch ($typeInter) {
                 case "InteractionQCM":
 
-                               $Question = $this->doctrine
-                                             ->getManager()
-                                             ->getRepository('UJMExoBundle:Question')->findBy(array('id' => $id));
+                $interactionsqcm = $this->doctrine
+                                        ->getManager()
+                                        ->getRepository('UJMExoBundle:InteractionQCM')->findBy(array('interaction' => $interaction->getId()));
 
-                              /**plusiers interactions */
-                               $interactions = $this->doctrine
-                                             ->getManager()
-                                             ->getRepository('UJMExoBundle:Interaction')->findBy(array('question' => $id));
+                //if it's Null mean "Global notation for QCM" Else it's Notation for each choice
+                $weightresponse = $interactionsqcm[0]->getWeightResponse();
 
-                              /**plusieurs interactions qcm*/
-                               $interactionsqcm = $this->doctrine
-                                                 ->getManager()
-                                                 ->getRepository('UJMExoBundle:InteractionQCM')->findBy(array('interaction' => $interactions[0]->getId()));
+                $choices2 = $interactionsqcm[0]->getChoices();
 
-                               //if it's Null mean "Global notation for QCM" Else it's Notation for each choice
-                               $weightresponse = $interactionsqcm[0]->getWeightResponse();
+                // Search for the ID of the ressource from the Invite colonne
+                $txt  = $interaction->getInvite();
 
-                               $choices2 = $interactionsqcm[0]->getChoices();
+                $path_img="";
 
-                                            // Search for the ID of the ressource from the Invite colonne
-                                               $txt  = $interactions[0]->getInvite();
-                                                 //$crawler = new Crawler($txt);
+                $dom2 = new \DOMDocument();
+                $dom2->loadHTML(html_entity_decode($txt));
+                $listeimgs = $dom2->getElementsByTagName("img");
+                foreach($listeimgs as $img)
+                {
+                  if ($img->hasAttribute("src")) {
+                     $src= $img->getAttribute("src");
+                     $id_node= substr($src, 47);
+                     $resources_file = $this->doctrine
+                                   ->getManager()
+                                   ->getRepository('ClarolineCoreBundle:Resource\File')->findBy(array('resourceNode' => $id_node));
+                     $resources_node = $this->doctrine
+                                   ->getManager()
+                                   ->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findBy(array('id' => $id_node));
+                     $path_img = $this->container->getParameter('claroline.param.files_directory').'/'.$resources_file[0]->getHashName();
+                  }
 
-                                               $path_img="";
-                                               $bool = false;
+                }
 
-                                                $dom2 = new \DOMDocument();
-                                                $dom2->loadHTML(html_entity_decode($txt));
-                                                $listeimgs = $dom2->getElementsByTagName("img");
-                                                $index = 0;
-                                                foreach($listeimgs as $img)
-                                                {
-                                                  if ($img->hasAttribute("src")) {
-                                                     $src= $img->getAttribute("src");
-                                                     $id_node= substr($src, 47);
-                                                     $resources_file = $this->doctrine
-                                                                   ->getManager()
-                                                                   ->getRepository('ClarolineCoreBundle:Resource\File')->findBy(array('resourceNode' => $id_node));
-                                                     $resources_node = $this->doctrine
-                                                                   ->getManager()
-                                                                   ->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findBy(array('id' => $id_node));
-                                                     $path_img = $this->container->getParameter('claroline.param.files_directory').'/'.$resources_file[0]->getHashName();
-                                                  }
+                $Alphabets = array('A','B','C','D','E','F','G','H','I','G','K','L');
 
-                                                }
-                                                //$res_prompt = $dom2->saveHTML();
+                $document = new \DOMDocument();
 
+                $this->qtiHead($document, 'choice', $Question->getTitle());
+                $responseDeclaration = $this->qtiResponseDeclaration($document, 'identifier');
+                $outcomeDeclaration = $this->qtiOutComeDeclaration($document);
 
-                                               /*
-                                               if ($crawler->filterXPath('//p/img')->count()>0) {
-                                                       $bool = true;
-                                                       $src = $crawler->filterXPath('//p/img')->attr('src');
-                                                       $id_node= substr($src, 47);
-                                                      // echo "qst with img => " . $src."<br>";
-                                                      // echo "idd => " . $id_node."<br>";
+                //add the tag <Default value> to the item <outcomeDeclaration>
+                $defaultValue = $document->CreateElement('defaultValue');
+                $outcomeDeclaration->appendChild($defaultValue);
+                $value = $document->CreateElement("value");
+                $prompttxt =  $document->CreateTextNode("0");
+                $value->appendChild($prompttxt);
+                $defaultValue->appendChild($value);
 
-                                                       $resources_file = $this->getDoctrine()
-                                                                   ->getManager()
-                                                                   ->getRepository('ClarolineCoreBundle:Resource\File')->findBy(array('resourceNode' => $id_node));
-                                                       $resources_node = $this->getDoctrine()
-                                                                   ->getManager()
-                                                                   ->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findBy(array('id' => $id_node));
-                                                       // echo $ressources_file[0]->getHashName();
+                $correctResponse = $document->CreateElement('correctResponse');
+                $responseDeclaration->appendChild($correctResponse);
 
-                                                       $path_img = $this->container->getParameter('claroline.param.files_directory').'/'.$resources_file[0]->getHashName();
+                $itemBody = $document->CreateElement('itemBody');
+                $this->node->appendChild($itemBody);
 
-                                               }*/
+                $choiceInteraction = $document->CreateElement('choiceInteraction');
+                $choiceInteraction->setAttribute("responseIdentifier", "RESPONSE");
+                if($interactionsqcm[0]->getShuffle()==1){
+                    $boolval = "true";
+                }else $boolval = "false";
 
-                               $Alphabets = array('A','B','C','D','E','F','G','H','I','G','K','L');
+                $choiceInteraction->setAttribute("shuffle",$boolval);
+                $choiceInteraction->setAttribute("maxChoices", "1");
+                $itemBody->appendChild($choiceInteraction);
 
-                               $document = new \DOMDocument();
-                                 // on crée l'élément principal <Node>
-                                     $node = $document->CreateElement('assessmentItem');
-                                     $node->setAttribute("xmlns", "http://www.imsglobal.org/xsd/imsqti_v2p1");
-                                     $node->setAttribute("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
-                                     $node->setAttribute("xsi:schemaLocation", "http://www.imsglobal.org/xsd/imsqti_v2p1 http://www.imsglobal.org/xsd/imsqti_v2p1.xsd");
+                $prompt = $document->CreateElement('prompt');
+                $choiceInteraction->appendChild($prompt);
 
-                                     $node->setAttribute("identifier", "choice");
-                                     $node->setAttribute("title",$Question[0]->getTitle());
-                                     $node->setAttribute("adaptive", "false");
-                                     $node->setAttribute("timeDependent", "false");
-                                     $document->appendChild($node);
+                //Code pour eliminer du code html sauf la balise img
+                $res1 =strip_tags($interaction->getInvite(), '<img>');
+                if(!empty($path_img)){
+                    //expression regulière pour eliminer tous les attributs des balises
+                    $reg="#(?<=\<img)\s*[^>]*(?=>)#";
+                    $res1=preg_replace($reg,"",$res1);
+                    //rajouter src de l'image
+                    $res1= str_replace("<img>", "<img src=\"".$resources_node[0]->getName()."\" alt=\"\" />",$res1);
+                    //generate the mannifest file
+                    $this->generate_imsmanifest_File($resources_node[0]->getName());
+                }
 
-                                     // Add the tag <responseDeclaration> to <node>
-                                     $responseDeclaration = $document->CreateElement('responseDeclaration');
-                                     $responseDeclaration->setAttribute("identifier", "RESPONSE");
-                                     $responseDeclaration->setAttribute("cardinality", "single");
-                                     $responseDeclaration->setAttribute("baseType", "identifier");
-                                     $node->appendChild($responseDeclaration);
+                $mapping = $document->CreateElement('mapping');
+                $prompttxt =  $document->CreateTextNode(html_entity_decode($res1));
+                $prompt->appendChild($prompttxt);
+                $i=-1;
+                foreach($choices2 as $ch){
 
-
-
-                                     // add the tag <outcomeDeclaration> to the <node>
-                                     $outcomeDeclaration = $document->CreateElement('outcomeDeclaration');
-                                     $outcomeDeclaration->setAttribute("identifier", "SCORE");
-                                     $outcomeDeclaration->setAttribute("cardinality", "single");
-                                     $outcomeDeclaration->setAttribute("baseType", "float");
-                                     $node->appendChild($outcomeDeclaration);
-
-
-                                     //add the tag <Default value> to the item <outcomeDeclaration>
-                                     $defaultValue = $document->CreateElement('defaultValue');
-                                     $outcomeDeclaration->appendChild($defaultValue);
-                                     $value = $document->CreateElement("value");
-                                     $prompttxt =  $document->CreateTextNode("0");
-                                     $value->appendChild($prompttxt);
-                                     $defaultValue->appendChild($value);
-
-
-
-                                     $correctResponse = $document->CreateElement('correctResponse');
-                                     $responseDeclaration->appendChild($correctResponse);
-
-                                     $itemBody = $document->CreateElement('itemBody');
-                                     $node->appendChild($itemBody);
-
-                                     $choiceInteraction = $document->CreateElement('choiceInteraction');
-                                     $choiceInteraction->setAttribute("responseIdentifier", "RESPONSE");
-                                     if($interactionsqcm[0]->getShuffle()==1){
-                                         $boolval = "true";
-                                     }else $boolval = "false";
-
-                                     $choiceInteraction->setAttribute("shuffle",$boolval);
-                                     $choiceInteraction->setAttribute("maxChoices", "1");
-                                     $itemBody->appendChild($choiceInteraction);
-
-                                     $prompt = $document->CreateElement('prompt');
-                                     $choiceInteraction->appendChild($prompt);
-
-                                        //Code pour eliminer du code html sauf la balise img
-                                        $res1 =strip_tags($interactions[0]->getInvite(), '<img>');
-                                        if(!empty($path_img)){
-                                            //expression regulière pour eliminer tous les attributs des balises
-                                            $reg="#(?<=\<img)\s*[^>]*(?=>)#";
-                                            $res1=preg_replace($reg,"",$res1);
-                                            //rajouter src de l'image
-                                            $res1= str_replace("<img>", "<img src=\"".$resources_node[0]->getName()."\" alt=\"\" />",$res1);
-                                            //generate the mannifest file
-                                            $this->generate_imsmanifest_File($resources_node[0]->getName());
-                                        }
-
-                                     $mapping = $document->CreateElement('mapping');
-                                     $prompttxt =  $document->CreateTextNode(html_entity_decode($res1));
-                                     $prompt->appendChild($prompttxt);
-                                     $i=-1;
-                                     foreach($choices2 as $ch){
-
-                                         $i++;
-                                         if($ch->getRightResponse()== true){
-                                                 $value = $document->CreateElement('value');
-                                                 $correctResponse->appendChild($value);
-                                                 $valuetxt =  $document->CreateTextNode("Choice".$Alphabets[$i]);
-                                                 $value->appendChild($valuetxt);
-                                         }
-                                        //Add new Tag mapping if the weight of the question is true
-                                        if($weightresponse==true){
-                                            // Unique Notation for the QCM
-                                            $mapEntry= $document->CreateElement('mapEntry');
-                                            $mapEntry->setAttribute("mapKey", "Choice".$Alphabets[$i] );
-                                            $mapEntry->setAttribute("mappedValue",$ch->getWeight());
-                                            $mapping->appendChild($mapEntry);
-                                            $responseDeclaration->appendChild($mapping);
-                                        }else{
-                                            // Globale Notation for the QCM
-                                            $responseProcessing =  $document->CreateElement('responseProcessing');
-                                            $responseCondition = $document->CreateElement('responseCondition');
-                                            $responseIf = $document->CreateElement('responseIf');
-                                            $responseElse = $document->CreateElement('responseElse');
-                                            $match = $document->CreateElement('match');
-                                            $variable = $document->CreateElement('variable');
-                                            $variable->setAttribute("identifier", "RESPONSE");
-                                            $correct = $document->CreateElement('correct');
-                                            $correct->setAttribute("identifier", "RESPONSE");
-
-                                            $match->appendChild($variable);
-                                            $match->appendChild($correct);
-
-                                            $setOutcomeValue = $document->CreateElement('setOutcomeValue');
-                                            $setOutcomeValue->setAttribute("identifier", "SCORE");
-
-                                            $baseValue= $document->CreateElement('baseValue');
-                                            $baseValue->setAttribute("baseType", "float");
-                                            $baseValuetxt = $document->CreateTextNode($interactionsqcm[0]->getScoreRightResponse());
-                                            $baseValue->appendChild($baseValuetxt);
-
-                                            $responseIf->appendChild($match);
-                                            $setOutcomeValue->appendChild($baseValue);
-                                            $responseIf->appendChild($setOutcomeValue);
-
-                                            ////
-                                            $setOutcomeValue = $document->CreateElement('setOutcomeValue');
-                                            $setOutcomeValue->setAttribute("identifier", "SCORE");
-
-                                            $baseValue= $document->CreateElement('baseValue');
-                                            $baseValue->setAttribute("baseType", "float");
-                                            $baseValuetxt = $document->CreateTextNode($interactionsqcm[0]->getScoreFalseResponse());
-                                            $baseValue->appendChild($baseValuetxt);
-
-
-                                            $setOutcomeValue->appendChild($baseValue);
-                                            $responseElse->appendChild($setOutcomeValue);
-
-
-                                            $responseCondition->appendChild($responseIf);
-                                            $responseCondition->appendChild($responseElse);
-
-                                            $responseProcessing->appendChild($responseCondition);
-
-
-
-                                        }
-                                        //
-
-                                         $simpleChoice = $document->CreateElement('simpleChoice');
-                                         $simpleChoice->setAttribute("identifier", "Choice".$Alphabets[$i]);
-                                         $choiceInteraction->appendChild($simpleChoice);
-                                         $simpleChoicetxt =  $document->CreateTextNode(strip_tags($ch->getLabel(),'<img>'));
-                                         $simpleChoice->appendChild($simpleChoicetxt);
-                                         //comment per line for each choice
-                                         if(($ch->getFeedback()!=Null) && ($ch->getFeedback()!="")){
-                                                $feedbackInline = $document->CreateElement('feedbackInline');
-                                                $feedbackInline->setAttribute("outcomeIdentifier", "FEEDBACK");
-                                                $feedbackInline->setAttribute("identifier","Choice".$Alphabets[$i]);
-                                                $feedbackInline->setAttribute("showHide","show");
-                                                $feedbackInlinetxt =  $document->CreateTextNode($ch->getFeedback());
-                                                $feedbackInline->appendChild($feedbackInlinetxt);
-                                                $simpleChoice->appendChild($feedbackInline);
-                                         }
-
-                                     }
-
-
-                                    //comment globale for this question
-                                    if(($interactions[0]->getFeedBack()!=Null) && ($interactions[0]->getFeedBack()!="") ){
-                                            $modalFeedback=$document->CreateElement('modalFeedback');
-                                            $modalFeedback->setAttribute("outcomeIdentifier","FEEDBACK");
-                                            $modalFeedback->setAttribute("identifier","COMMENT");
-                                            $modalFeedback->setAttribute("showHide","show");
-                                            $modalFeedbacktxt = $document->CreateTextNode($interactions[0]->getFeedBack());
-                                            $modalFeedback->appendChild($modalFeedbacktxt);
-                                            $node->appendChild($modalFeedback);
-                                    }
-
-                                    if($weightresponse==False){
-                                     $node->appendChild($responseProcessing);
-                                    }
-
-                                 $document->save($this->userDir.'testfile.xml');
-
-                                $file = $this->userDir.'testfile.xml';
-                                //readfile("/var/www/Claroline/web/testfile.xml");
-
-
-                    /*Debut : Code de telechargement des fichiers
-                    //$hashName = $this->container->get('claroline.utilities.misc')->generateGuid();
-                    $filename = "testfile.xml";
-                    $path = $_SERVER['DOCUMENT_ROOT'] . $this->get('request')->getBasePath() . "/" . $filename;
-                    //$content = file_get_contents($path);
-                    if (!file_exists($path)) {
-                         throw $this->createNotFoundException();
+                    $i++;
+                    if($ch->getRightResponse()== true){
+                            $value = $document->CreateElement('value');
+                            $correctResponse->appendChild($value);
+                            $valuetxt =  $document->CreateTextNode("Choice".$Alphabets[$i]);
+                            $value->appendChild($valuetxt);
                     }
-                     $response = new BinaryFileResponse($path);
-                     //$response->headers->set('Content-Type', $content->getContentType());
-                     $response->headers->set('Content-Type', 'application/force-download');
-                     $response->headers->set('Content-Disposition', "attachment; filename=$filename");
-                     $response->sendHeaders();
-                     return $response;
-                     //Fin : Code de telechargement des fichiers  */
+                   //Add new Tag mapping if the weight of the question is true
+                   if($weightresponse==true){
+                       // Unique Notation for the QCM
+                       $mapEntry= $document->CreateElement('mapEntry');
+                       $mapEntry->setAttribute("mapKey", "Choice".$Alphabets[$i] );
+                       $mapEntry->setAttribute("mappedValue",$ch->getWeight());
+                       $mapping->appendChild($mapEntry);
+                       $responseDeclaration->appendChild($mapping);
+                   }else{
+                       // Globale Notation for the QCM
+                       $responseProcessing =  $document->CreateElement('responseProcessing');
+                       $responseCondition = $document->CreateElement('responseCondition');
+                       $responseIf = $document->CreateElement('responseIf');
+                       $responseElse = $document->CreateElement('responseElse');
+                       $match = $document->CreateElement('match');
+                       $variable = $document->CreateElement('variable');
+                       $variable->setAttribute("identifier", "RESPONSE");
+                       $correct = $document->CreateElement('correct');
+                       $correct->setAttribute("identifier", "RESPONSE");
 
-                    //sfConfig::set('sf_web_debug', false);
-                    $tmpFileName = tempnam($this->userDir.'tmp', "xb_");
-                    $zip = new \ZipArchive();
-                    $zip->open($tmpFileName, \ZipArchive::CREATE);
-                    $zip->addFile($this->userDir.'testfile.xml', 'SchemaQTI.xml');
+                       $match->appendChild($variable);
+                       $match->appendChild($correct);
 
-                    if(!empty($path_img)){
-                         $zip->addFile($path_img, "images/".$resources_node[0]->getName());
-                         $zip->addFile($this->userDir.'imsmanifest.xml', 'imsmanifest.xml');
+                       $setOutcomeValue = $document->CreateElement('setOutcomeValue');
+                       $setOutcomeValue->setAttribute("identifier", "SCORE");
+
+                       $baseValue= $document->CreateElement('baseValue');
+                       $baseValue->setAttribute("baseType", "float");
+                       $baseValuetxt = $document->CreateTextNode($interactionsqcm[0]->getScoreRightResponse());
+                       $baseValue->appendChild($baseValuetxt);
+
+                       $responseIf->appendChild($match);
+                       $setOutcomeValue->appendChild($baseValue);
+                       $responseIf->appendChild($setOutcomeValue);
+
+                       ////
+                       $setOutcomeValue = $document->CreateElement('setOutcomeValue');
+                       $setOutcomeValue->setAttribute("identifier", "SCORE");
+
+                       $baseValue= $document->CreateElement('baseValue');
+                       $baseValue->setAttribute("baseType", "float");
+                       $baseValuetxt = $document->CreateTextNode($interactionsqcm[0]->getScoreFalseResponse());
+                       $baseValue->appendChild($baseValuetxt);
+
+
+                       $setOutcomeValue->appendChild($baseValue);
+                       $responseElse->appendChild($setOutcomeValue);
+
+
+                       $responseCondition->appendChild($responseIf);
+                       $responseCondition->appendChild($responseElse);
+
+                       $responseProcessing->appendChild($responseCondition);
+
+
+
+                   }
+                   //
+
+                    $simpleChoice = $document->CreateElement('simpleChoice');
+                    $simpleChoice->setAttribute("identifier", "Choice".$Alphabets[$i]);
+                    $choiceInteraction->appendChild($simpleChoice);
+                    $simpleChoicetxt =  $document->CreateTextNode(strip_tags($ch->getLabel(),'<img>'));
+                    $simpleChoice->appendChild($simpleChoicetxt);
+                    //comment per line for each choice
+                    if(($ch->getFeedback()!=Null) && ($ch->getFeedback()!="")){
+                           $feedbackInline = $document->CreateElement('feedbackInline');
+                           $feedbackInline->setAttribute("outcomeIdentifier", "FEEDBACK");
+                           $feedbackInline->setAttribute("identifier","Choice".$Alphabets[$i]);
+                           $feedbackInline->setAttribute("showHide","show");
+                           $feedbackInlinetxt =  $document->CreateTextNode($ch->getFeedback());
+                           $feedbackInline->appendChild($feedbackInlinetxt);
+                           $simpleChoice->appendChild($feedbackInline);
                     }
-                    $zip->close();
-                    $response = new BinaryFileResponse($tmpFileName);
-                    //$response->headers->set('Content-Type', $content->getContentType());
-                    $response->headers->set('Content-Type', 'application/application/zip');
-                    $response->headers->set('Content-Disposition', "attachment; filename=QTI-Archive.zip");
+
+                }
+
+                //comment globale for this question
+                if(($interaction->getFeedBack()!=Null) && ($interaction->getFeedBack()!="") ){
+                    $this->qtiFeedBack($document, $interaction->getFeedBack());
+                }
+
+                if($weightresponse==False){
+                    $this->node->appendChild($responseProcessing);
+                }
+
+                $document->save($this->userDir.'testfile.xml');
+
+                //sfConfig::set('sf_web_debug', false);
+                $tmpFileName = tempnam($this->userDir.'tmp', "xb_");
+                $zip = new \ZipArchive();
+                $zip->open($tmpFileName, \ZipArchive::CREATE);
+                $zip->addFile($this->userDir.'testfile.xml', 'SchemaQTI.xml');
+
+                if(!empty($path_img)){
+                     $zip->addFile($path_img, "images/".$resources_node[0]->getName());
+                     $zip->addFile($this->userDir.'imsmanifest.xml', 'imsmanifest.xml');
+                }
+                $zip->close();
+                $response = new BinaryFileResponse($tmpFileName);
+                //$response->headers->set('Content-Type', $content->getContentType());
+                $response->headers->set('Content-Type', 'application/application/zip');
+                $response->headers->set('Content-Disposition', "attachment; filename=QTI-Archive.zip");
 
 
-                    return $response;
-                 //  return $this->redirect($this->generateUrl('ujm_question_index', array('pageNow' => $pageNow)));
+                return $response;
 
 
                 case "InteractionGraphic":
-                     $Question = $this->doctrine
-                                             ->getManager()
-                                             ->getRepository('UJMExoBundle:Question')->findBy(array('id' => $id));
-
-
-                     $interactions = $this->doctrine
-                                             ->getManager()
-                                             ->getRepository('UJMExoBundle:Interaction')->findBy(array('question' => $id));
-
 
                      $interactionGraphic = $this->doctrine
                                                 ->getManager()
-                                                ->getRepository('UJMExoBundle:InteractionGraphic')->findBy(array('interaction' => $interactions[0]->getId()));
+                                                ->getRepository('UJMExoBundle:InteractionGraphic')->findBy(array('interaction' => $interaction->getId()));
 
                      $coords = $this->doctrine
                                                 ->getManager()
@@ -388,7 +299,7 @@ class qtiService
                     $node->setAttribute("xsi:schemaLocation", "http://www.imsglobal.org/xsd/imsqti_v2p1 http://www.imsglobal.org/xsd/imsqti_v2p1.xsd");
 
                     $node->setAttribute("identifier", "SelectPoint");
-                    $node->setAttribute("title",$Question[0]->getTitle());
+                    $node->setAttribute("title",$Question->getTitle());
                     $node->setAttribute("adaptive", "false");
                     $node->setAttribute("timeDependent", "false");
                     $document->appendChild($node);
@@ -433,7 +344,7 @@ class qtiService
 
 
                     $prompt = $document->CreateElement('prompt');
-                    $prompttxt =  $document->CreateTextNode($interactions[0]->getInvite());
+                    $prompttxt =  $document->CreateTextNode($interaction->getInvite());
                     $prompt->appendChild($prompttxt);
                     $selectPointInteraction->appendChild($prompt);
 
@@ -451,12 +362,12 @@ class qtiService
                     $node->appendChild($itemBody);
                     //save xml File
                     //comment
-                    if(($interactions[0]->getFeedBack()!=Null) && ($interactions[0]->getFeedBack()!="") ){
+                    if(($interaction->getFeedBack()!=Null) && ($interaction->getFeedBack()!="") ){
                             $modalFeedback=$document->CreateElement('modalFeedback');
                             $modalFeedback->setAttribute("outcomeIdentifier","FEEDBACK");
                             $modalFeedback->setAttribute("identifier","COMMENT");
                             $modalFeedback->setAttribute("showHide","show");
-                            $modalFeedbacktxt = $document->CreateTextNode($interactions[0]->getFeedBack());
+                            $modalFeedbacktxt = $document->CreateTextNode($interaction->getFeedBack());
                             $modalFeedback->appendChild($modalFeedbacktxt);
                             $node->appendChild($modalFeedback);
                     }
@@ -497,19 +408,10 @@ class qtiService
 
 
                 case "InteractionHole":
-                        $Question = $this->doctrine
-                                                 ->getManager()
-                                                 ->getRepository('UJMExoBundle:Question')->findBy(array('id' => $id));
-
-
-                         $interactions = $this->doctrine
-                                                 ->getManager()
-                                                 ->getRepository('UJMExoBundle:Interaction')->findBy(array('question' => $id));
-
 
                          $interactionHole = $this->doctrine
                                                     ->getManager()
-                                                    ->getRepository('UJMExoBundle:InteractionHole')->findBy(array('interaction' => $interactions[0]->getId()));
+                                                    ->getRepository('UJMExoBundle:InteractionHole')->findBy(array('interaction' => $interaction->getId()));
 
                          $ujmHole = $this->doctrine
                                                     ->getManager()
@@ -531,7 +433,7 @@ class qtiService
                     $node->setAttribute("xsi:schemaLocation", "http://www.imsglobal.org/xsd/imsqti_v2p1 http://www.imsglobal.org/xsd/imsqti_v2p1.xsd");
 
                     $node->setAttribute("identifier", "textEntry");
-                    $node->setAttribute("title",$Question[0]->getTitle());
+                    $node->setAttribute("title",$Question->getTitle());
                     $node->setAttribute("adaptive", "false");
                     $node->setAttribute("timeDependent", "false");
                     $document->appendChild($node);
@@ -592,12 +494,12 @@ class qtiService
                     $node->appendChild($itemBody);
 
                     //comment
-                    if(($interactions[0]->getFeedBack()!=Null) && ($interactions[0]->getFeedBack()!="") ){
+                    if(($interaction->getFeedBack()!=Null) && ($interaction->getFeedBack()!="") ){
                             $modalFeedback=$document->CreateElement('modalFeedback');
                             $modalFeedback->setAttribute("outcomeIdentifier","FEEDBACK");
                             $modalFeedback->setAttribute("identifier","COMMENT");
                             $modalFeedback->setAttribute("showHide","show");
-                            $modalFeedbacktxt = $document->CreateTextNode($interactions[0]->getFeedBack());
+                            $modalFeedbacktxt = $document->CreateTextNode($interaction->getFeedBack());
                             $modalFeedback->appendChild($modalFeedbacktxt);
                             $node->appendChild($modalFeedback);
                     }
@@ -624,18 +526,8 @@ class qtiService
 
                 case "InteractionOpen":
 
-                                $Question = $this->doctrine
-                                                             ->getManager()
-                                                             ->getRepository('UJMExoBundle:Question')->findBy(array('id' => $id));
-
-
-                                $interactions = $this->doctrine
-                                                             ->getManager()
-                                                             ->getRepository('UJMExoBundle:Interaction')->findBy(array('question' => $id));
-
-
                                 $interactionOpen = $this->doctrine->getManager()
-                                                        ->getRepository('UJMExoBundle:InteractionOpen')->getInteractionOpen($interaction[0]->getId());
+                                                        ->getRepository('UJMExoBundle:InteractionOpen')->getInteractionOpen($interaction->getId());
 
 
 
@@ -653,7 +545,7 @@ class qtiService
                                 $node->setAttribute("xsi:schemaLocation", "http://www.imsglobal.org/xsd/imsqti_v2p1 http://www.imsglobal.org/xsd/imsqti_v2p1.xsd");
 
                                 $node->setAttribute("identifier", "extendedText");
-                                $node->setAttribute("title",$Question[0]->getTitle());
+                                $node->setAttribute("title",$Question->getTitle());
                                 $node->setAttribute("adaptive", "false");
                                 $node->setAttribute("timeDependent", "false");
                                 $document->appendChild($node);
@@ -691,19 +583,19 @@ class qtiService
                                 $itemBody = $document->createElement("itemBody");
 
 
-                                $objecttxt =  $document->CreateTextNode($interactions[0]->getInvite());
+                                $objecttxt =  $document->CreateTextNode($interaction->getInvite());
                                 $itemBody->appendChild($objecttxt);
 
 
                                 $node->appendChild($itemBody);
 
                                 //comment
-                                if(($interactions[0]->getFeedBack()!=Null) && ($interactions[0]->getFeedBack()!="") ){
+                                if(($interaction->getFeedBack()!=Null) && ($interaction->getFeedBack()!="") ){
                                         $modalFeedback=$document->CreateElement('modalFeedback');
                                         $modalFeedback->setAttribute("outcomeIdentifier","FEEDBACK");
                                         $modalFeedback->setAttribute("identifier","COMMENT");
                                         $modalFeedback->setAttribute("showHide","show");
-                                        $modalFeedbacktxt = $document->CreateTextNode($interactions[0]->getFeedBack());
+                                        $modalFeedbacktxt = $document->CreateTextNode($interaction->getFeedBack());
                                         $modalFeedback->appendChild($modalFeedbacktxt);
                                         $node->appendChild($modalFeedback);
                                 }
@@ -797,5 +689,87 @@ class qtiService
 
 
 
+    }
+    
+    /**
+     * Generate head of QTI
+     * 
+     * @access private
+     *
+     * @param \DOMDocument $document
+     * @param String $identifier type question
+     * @param String $title title of question
+     * 
+     */
+    private function qtiHead($document, $identifier, $title)
+    {
+        $this->node = $document->CreateElement('assessmentItem');
+        $this->node->setAttribute("xmlns", "http://www.imsglobal.org/xsd/imsqti_v2p1");
+        $this->node->setAttribute("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
+        $this->node->setAttribute("xsi:schemaLocation", "http://www.imsglobal.org/xsd/imsqti_v2p1 http://www.imsglobal.org/xsd/imsqti_v2p1.xsd");
+        $this->node->setAttribute("identifier", $identifier);
+        $this->node->setAttribute("title", $title);
+        $this->node->setAttribute("adaptive", "false");
+        $this->node->setAttribute("timeDependent", "false");
+        $document->appendChild($this->node);
+    }
+    
+    /**
+     * Add the tag responseDeclaration to node
+     * 
+     * @access private
+     *
+     * @param \DOMDocument $document
+     * @param String $baseType
+     * 
+     */
+    private function qtiResponseDeclaration($document, $baseType)
+    {
+        $responseDeclaration = $document->CreateElement('responseDeclaration');
+        $responseDeclaration->setAttribute("identifier", "RESPONSE");
+        $responseDeclaration->setAttribute("cardinality", "single");
+        $responseDeclaration->setAttribute("baseType", $baseType);
+        $this->node->appendChild($responseDeclaration);
+
+        return $responseDeclaration;
+    }
+    
+    /**
+     * add the tag outcomeDeclaration to the node
+     * 
+     * @access private
+     *
+     * @param \DOMDocument $document
+     * 
+     */
+    private function qtiOutComeDeclaration($document)
+    {
+        $outcomeDeclaration = $document->CreateElement('outcomeDeclaration');
+        $outcomeDeclaration->setAttribute("identifier", "SCORE");
+        $outcomeDeclaration->setAttribute("cardinality", "single");
+        $outcomeDeclaration->setAttribute("baseType", "float");
+        $this->node->appendChild($outcomeDeclaration);
+        
+        return $outcomeDeclaration;
+    }
+    
+    /**
+     * add the tag modalFeedback to the node
+     * 
+     * @access private
+     *
+     * @param \DOMDocument $document
+     * @param String $feedBack
+     * 
+     */
+    private function qtiFeedBack ($document, $feedBack)
+    {
+        $modalFeedback=$document->CreateElement('modalFeedback');
+        $modalFeedback->setAttribute("outcomeIdentifier","FEEDBACK");
+        $modalFeedback->setAttribute("identifier","COMMENT");
+        $modalFeedback->setAttribute("showHide","show");
+        $modalFeedbacktxt = $document->CreateTextNode($feedBack);
+        $modalFeedback->appendChild($modalFeedbacktxt);
+        $this->node->appendChild($modalFeedback);
     }
 }

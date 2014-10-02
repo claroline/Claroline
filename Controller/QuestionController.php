@@ -2586,6 +2586,11 @@ class QuestionController extends Controller
      * Edited by Hamza
      * Export an existing Question.
      *
+     * 
+     * @access public
+     *
+     * @param integer $id : id of question
+     *
      */
     public function ExportAction($id)
     {
