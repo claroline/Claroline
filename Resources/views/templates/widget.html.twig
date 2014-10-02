@@ -1,8 +1,9 @@
-<div {% if editMode %}data-widget {% endif %}class="panel panel-default widget-panel">
+<div {% if constant('Icap\\PortfolioBundle\\Manager\\PortfolioManager::PORTFOLIO_OPENING_MODE_VIEW') != openingMode %}data-widget {% endif %}class="panel panel-default widget-panel">
     <div class="panel-heading">
-        {% if editMode %}
+        {% if constant('Icap\\PortfolioBundle\\Manager\\PortfolioManager::PORTFOLIO_OPENING_MODE_VIEW') != openingMode %}
             {% verbatim %}{{ widget.type + '_title'|trans }}{% endverbatim %}
             <div class="widget-actions">
+                {% if editMode %}
                 <button class="widget-action btn btn-xs btn-danger" data-ng-class="{'btn-loading': widget.isDeleting}" data-confirm-click="delete(widget);" data-ng-if="isDeletable(widget) && !widget.isNew()">
                     <span class="loading" data-ng-if="widget.isDeleting"></span>
                     <span class="fa fa-trash-o" data-ng-if="!widget.isDeleting"></span>
@@ -22,6 +23,11 @@
                     <button type="button" class="btn btn-default" data-ng-disabled="$last" data-ng-click="increaseRow(widget)"><span class="fa fa-arrow-down"></span></button>
                     <button type="button" class="btn btn-default" data-ng-disabled="1 == widget.row" data-ng-click="decreaseRow(widget)"><span class="fa fa-arrow-up"></span></button>
                 </div>
+                {% elseif evaluateMode %}
+                <button class="widget-action btn btn-xs btn-primary" data-ng-click="evaluate(widget);" data-ng-if="!widget.isEvaluating()">
+                    <span class="fa fa-quote-right"></span>
+                </button>
+                {% endif %}
             </div>
         {% else %}
             {% set widgetTitleKey = widget.widgetType ~ '_title' %}
@@ -29,7 +35,7 @@
         {% endif %}
     </div>
     <div class="panel-body">
-        {% if editMode %}
+        {% if constant('Icap\\PortfolioBundle\\Manager\\PortfolioManager::PORTFOLIO_OPENING_MODE_VIEW') != openingMode %}
             <div data-ng-bind-html="widget.views.view | trustAsHtml"></div>
         {% else %}
             {% include 'IcapPortfolioBundle:templates:' ~ widget.widgetType ~ '.html.twig' with {'widget': widget} %}

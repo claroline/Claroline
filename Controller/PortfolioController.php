@@ -228,7 +228,7 @@ class PortfolioController extends Controller
                 'resourceTypes' => $resourceTypes
             );
 
-            if (null !== $openingMode && PortfolioManager::PORTFOLIO_OPENING_MODE_VIEW !== $openingMode) {
+            if (PortfolioManager::PORTFOLIO_OPENING_MODE_VIEW === $openingMode) {
                 $responseParameters['cols'] = $this->getPortfolioDispositionManager()->getColumnsForDisposition($portfolio->getDisposition());
             }
 

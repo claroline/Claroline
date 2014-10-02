@@ -3,6 +3,7 @@
 {% block title %}{{ portfolio.user.firstName ~ ' ' ~ portfolio.user.lastName ~ ' - ' ~ 'portfolio' | trans({}, 'icap_portfolio') ~ ' - ' ~ titleWidget.title | striptags | raw }}{% endblock %}
 
 {% set editMode = (constant('Icap\\PortfolioBundle\\Manager\\PortfolioManager::PORTFOLIO_OPENING_MODE_EDIT') == openingMode) %}
+{% set evaluateMode = (constant('Icap\\PortfolioBundle\\Manager\\PortfolioManager::PORTFOLIO_OPENING_MODE_EVALUATE') == openingMode) %}
 
 {% block content_container %}
     <div id="portfolio-section" data-portfolio-container="{{ portfolio.id }}">
@@ -10,7 +11,7 @@
             <header>
                 <div class="container">
                     <p class="pull-right alert alert-warning beta_message" role="alert">
-                    {% if editMode %}
+                    {% if constant('Icap\\PortfolioBundle\\Manager\\PortfolioManager::PORTFOLIO_OPENING_MODE_VIEW') != openingMode %}
                         {{ 'beta_message' | trans({}, 'icap_portfolio') | raw }}
                     {% else %}
                         {{ 'beta_message_public' | trans({}, 'icap_portfolio') | raw }}
@@ -20,11 +21,17 @@
 
                     <div data-ng-repeat="widget in widgets | filter:{type: 'title'}" data-ng-show="widgets.length > 0">
                         <div class="portfolio-title-container" data-widget>
-                            {% if editMode %}
+                            {% if constant('Icap\\PortfolioBundle\\Manager\\PortfolioManager::PORTFOLIO_OPENING_MODE_VIEW') != openingMode %}
                                 <div class="widget-actions">
+                                {% if editMode %}
                                     <button class="widget-action btn btn-sm btn-primary" data-ng-click="edit(widget);" data-ng-if="!widget.isEditing()">
                                         <span class="fa fa-pencil"></span>
                                     </button>
+                                {% elseif evaluateMode %}
+                                    <button class="widget-action btn btn-sm btn-primary" data-ng-click="evaluate(widget);" data-ng-if="!widget.isEvaluating()">
+                                        <span class="fa fa-quote-right"></span>
+                                    </button>
+                                {% endif %}
                                 </div>
                                 <div data-ng-bind-html="widget.views.view | trustAsHtml"></div>
                             {% else %}
@@ -52,8 +59,8 @@
                     </li>
                 </ul>
                 {% endif %}
-                <div class="main-content col-md-8{% if false == editMode %} col-md-offset-2{% endif %}">
-                {% if editMode %}
+                <div class="main-content col-md-8{% if false == editMode %} col-md-offset-2{% endif %}"{% if evaluateMode %} data-design-container{% endif %}>
+                {% if constant('Icap\\PortfolioBundle\\Manager\\PortfolioManager::PORTFOLIO_OPENING_MODE_VIEW') != openingMode %}
                     <div data-ng-repeat="widget in widgets | filter:{type: '!title'} | orderBy:widget.row" data-ng-if="0 == portfolio.disposition">
                         {% include 'IcapPortfolioBundle:templates:widget.html.twig' %}
                     </div>
@@ -108,11 +115,11 @@
             </section>
         </div>
 
-        {% if editMode %}
+        {% if constant('Icap\\PortfolioBundle\\Manager\\PortfolioManager::PORTFOLIO_OPENING_MODE_VIEW') != openingMode %}
             <div data-ng-show="!portfolio.$resolved" id="portfolio-loading"></div>
         {% endif %}
     </div>
-    {% if editMode %}
+    {% if constant('Icap\\PortfolioBundle\\Manager\\PortfolioManager::PORTFOLIO_OPENING_MODE_VIEW') != openingMode %}
         <div class="form-container" data-ng-controller="editWidgetsController">
             <form name="form" class="edit-container" data-loading-form="save(editedWidget)" data-ng-repeat="editedWidget in editedWidgets">
                 <div class="panel panel-default widget-panel">
@@ -150,7 +157,7 @@
 {% block javascripts %}
     {{ parent() }}
 
-    {% if editMode %}
+    {% if constant('Icap\\PortfolioBundle\\Manager\\PortfolioManager::PORTFOLIO_OPENING_MODE_VIEW') != openingMode %}
         <script type="text/javascript">
             'use strict';
             (function() {
