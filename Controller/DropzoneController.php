@@ -1,6 +1,7 @@
 <?php
 namespace Icap\DropzoneBundle\Controller;
 
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\Log\LogResourceReadEvent;
 use Claroline\CoreBundle\Event\Log\LogResourceUpdateEvent;
@@ -526,6 +527,7 @@ class DropzoneController extends DropzoneBaseController
         $dropzoneProgress = $dropzoneManager->getDrozponeProgress($dropzone, $drop, $nbCorrections);
 
         $PeerReviewEndCase = $dropzoneManager->isPeerReviewEndedOrManualStateFinished($dropzone, $nbCorrections);
+
         return array(
             'workspace' => $dropzone->getResourceNode()->getWorkspace(),
             '_resource' => $dropzone,
@@ -578,6 +580,42 @@ class DropzoneController extends DropzoneBaseController
         $em->persist($event);
         $em->flush();
         return $event;
+    }
+
+    /**
+     * @Route(
+     *      "/{resourceId}/download",
+     *      name="icap_dropzone_download_copies",
+     *      requirements={"resourceId" = "\d+"}
+     * )
+     * @ParamConverter("dropzone", class="IcapDropzoneBundle:Dropzone", options={"id" = "resourceId"})
+     * @ParamConverter("user", options={
+     *      "authenticatedUser" = true,
+     *      "messageEnabled" = true,
+     *      "messageTranslationKey" = "Manage an evaluation requires authentication. Please login.",
+     *      "messageTranslationDomain" = "icap_dropzone"
+     * })
+     * @Template()
+     */
+    public function donwloadCopiesAction(Dropzone $dropzone, User $user)
+    {
+        //$this->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
+
+        $hiddenDirectory = $dropzone->getHiddenDirectory();
+        $test = new ResourceNode();
+        $test->getId();
+
+        $view = 'claro_resource_download';
+
+        return $this->redirect(
+            $this->generateUrl(
+                'claro_resource_download',
+                array(
+                    'ids[]' => array($hiddenDirectory->getId())
+                )
+            )
+        );
+
     }
 
 }
