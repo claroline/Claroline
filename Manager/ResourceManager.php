@@ -931,7 +931,7 @@ class ResourceManager
      *
      * @return array
      */
-    public function download(array $elements)
+    public function download(array $elements, $forceArchive = false)
     {
         $data = array();
 
@@ -944,7 +944,7 @@ class ResourceManager
         $archive->open($pathArch, \ZipArchive::CREATE);
         $nodes = $this->expandResources($elements);
 
-        if (count($nodes) === 1) {
+        if (!$forceArchive && count($nodes) === 1) {
             $event = $this->dispatcher->dispatch(
                 "download_{$nodes[0]->getResourceType()->getName()}",
                 'DownloadResource',
