@@ -316,7 +316,7 @@ class DropzoneManager
 
     }
 
-    public function getResourcesNodeIdsForDownload(Dropzone $dropzone)
+    public function getResourcesNodeIdsForDownload(Dropzone $dropzone, $begin, $end)
     {
         $ids = array();
 

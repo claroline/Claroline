@@ -342,3 +342,4 @@ unlock_user_tooltip: "Débloquer un utilisateur lui permetra de voir sa copie sa
 unlock_all: "débloquer tous "
 cancel_unlock: "annuler le déblocage"
 Download copies: "Télécharger les copies"
+No drops to download: "Aucune copie à télécharger"

@@ -343,3 +343,4 @@ unlock_user_tooltip: "An unlocked user will be able to see his copy without doin
 unlock_all: "unlock all"
 cancel_unlock: "cancel unlock for all"
 Download copies: "Download copies"
+No drops to download: "No copies to download"
