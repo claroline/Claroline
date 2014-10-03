@@ -2297,296 +2297,11 @@ class QuestionController extends Controller
         return $doublePagination;
     }
 
-//    public function ListQuestionsAction()
-//    {
-//            /**
-//          $listeQuestions = $this->getDoctrine()
-//                        ->getManager()
-//                        ->getRepository('UJMExoBundle:Question')->findAll();
-//
-//
-//           $livres = $this
-//            ->getDoctrine()
-//            ->getRepository('UJMExoBundle:Question’)->
-//
-//          *
-//          * ----
-//          *   ->where('u.id = :user_id')
-//                    ->setParameter('user_id', $user->getId())
-//
-//         $listeQuestions = $this->getDoctrine()
-//                            ->getManager()
-//                            ->createQueryBuilder()
-//                            ->select('intqcm')
-//                            ->from('UJMExoBundle:', 'ch')
-//                            ->innerJoin('ch.interactionQCM ','intqcm')
-//                            ->innerJoin('intqcm .interaction ','int')
-//                            ->innerJoin('int.question ','q')
-//                            ->getQuery()
-//                            ->getResult();
-//             *
-//             *
-//             *
-//          */
-//         $id = 3;
-//         $Question = $this->getDoctrine()
-//                        ->getManager()
-//                        ->getRepository('UJMExoBundle:Question')->findBy(array('id' => $id));
-//
-//         /**plusiers interactions */
-//          $interactions = $this->getDoctrine()
-//                        ->getManager()
-//                        ->getRepository('UJMExoBundle:Interaction')->findBy(array('question' => $id));
-//
-//         /**plusieurs interactions qcm*/
-//          $interactionsqcm = $this->getDoctrine()
-//                            ->getManager()
-//                            ->getRepository('UJMExoBundle:InteractionQCM')->findBy(array('interaction' => $interactions[0]->getId()));
-//
-//          $choices2 = $interactionsqcm[0]->getChoices();
-//
-//                    /**
-//          $choices = $this->getDoctrine()
-//                            ->getManager()
-//                            ->getRepository('UJMExoBundle:Choice')->findBy(array('interactionQCM' => $interactionsqcm[0]->getId()));
-//                       */
-//
-//
-//
-//            echo "val id ". $Question[0]->getId()."<br>";
-//            echo "count  ". count($interactions)."<br>";
-//            echo "count"   .count($interactionsqcm)."<br>";
-//            echo "count choices2".count($choices2)."<br><br>";
-//
-//
-//
-//            $var = "<p>Now is the winter of our discontent<br />"
-//                    . " Made glorious summer by this sun of <input id='1' class='blank' name='blank_1' size='15' type='text' value='york' /> "
-//                    . ";<br /> And all the clouds that lour'd upon our house<br /> In the deep bosom of the ocean buried.</p>";
-//
-//            $crawler = new Crawler($var);
-//
-//            $src = $crawler->filterXPath('//p')->text();
-//            //echo htmlentities($src)."<br>";
-//
-//            // $reg="#(<\img+)([^>]*)(>)#";
-//            $dom = new \DOMDocument();
-//
-//
-//            $chaine='<p>Now is the winter of our discontent<br /> Made glorious summer by this sun of <input id="1" class="blank" name="blank_1" size="15" type="text" value="" /> ;<br /> And all the <input id="2" class="blank" name="blank_2" size="15" type="text" value="" /> that lour\'d upon our house<br /> In the deep <input id="3" class="blank" name="blank_3" size="15" type="text" value="" /> of the ocean buried.</p>';
-//            $txt='<input id="1" class="blank" name="src"  />fgdfgsdfgsdfggf';
-//            $regex = '(<input\\s+id="\d+"\\s+class="blank"\\s+name="blank_\d+"\\s+size="\d+"\\s+type="text"\\s+value=""\\s+\/>)';
-//            $contenu = preg_replace($regex, "testoooo", $chaine);
-//            echo htmlentities($contenu);
-//
-//
-//
-//
-//  //echo preg_replace(".$re1.$re2.$re3.$re4.$re5.$re6.$re7.$re8.$re9.$re10.$re11.$re12.$re13.$re14.$re15.$re16.$re17.$re18.$re19.", '<textEntryInteraction responseIdentifier="RESPONSE" expectedLength="15"/>', $chaine);
-//
-//
-//  //echo htmlentities($texte);
-//
-//
-//            $dom->loadHTML($chaine);
-//
-//
-//            echo "response before-_-_-_-_-_-_-_-_-_-_-<br>";
-//
-//
-//
-//                    function nestUl($xml, $xpath)
-//                    {
-//                        $dom = new \DOMDocument();
-//                        $dom->loadXML($xml);
-//
-//                        $dom_xpath = new \DOMXPath($dom);
-//                        $nodes = $dom_xpath->query($xpath);
-//
-//                        foreach($nodes as $node) {
-//                        $li = $dom->createElement('li');
-//                        $li->appendChild($node->cloneNode(true));
-//                        $node->parentNode->replaceChild($li, $node);
-//                        }
-//                        return $dom->saveXML();
-//                    }
-//
-//                    //$xml = nestUl($xml, 'ul/ul');
-//                   // $xml = nestUl($xml, '/ul/ul');
-//
-//                   // echo $xml;
-//
-//
-//
-//
-//            $dom->loadHTML(htmlentities($chaine));
-//            // Clear all errors
-//            //libxml_clear_errors();
-//
-//            $xpath = new \DOMXpath($dom);
-//
-//
-//            // Get all child
-//            $path = '/p/img';
-//            $imgs = $xpath->query($path);
-//            echo $imgs->length."<br>";
-//            for($i=0;$i<$imgs->length;$i++) {
-//                $img = $imgs->item($i);
-//                echo "img"."<br>";
-//                $input_container = $dom->createElement('input');
-//                $input_container->appendChild($img);
-//                $dom->replaceChild($input_container, $img);
-//            }
-//            $dom->saveHTML();
-//            //echo htmlentities($chaine)."<br>";
-//
-//            echo "aaaaaaaaaaaaa-_-_-_-_-_-_-_-_-_-_-<br>";
-//
-//            /*
-//            $reg="#(?<=\<img)\s*[^>]*(?=>)#";
-//            $res=preg_replace($reg,"",$chaine);
-//
-//            $dom = new \DomDocument;
-//            $dom->loadHTML($res);
-//            $imgstags = $dom->getElementsByTagName("img")->item(0);
-//            $imgstags->setAttribute("src", "path/media/5");
-//            $dom->saveHTML($res);
-//
-//            echo htmlentities($res);
-//             //$reg="#(<\w+)([^>]*)(>)#";
-//             * #(?<=\<img)\s*[^>]*(?=>)#    */
-//            //Code pour eliminer du code html sauf la balise img
-//             echo htmlentities($chaine)."<br>";
-//             $res1 =strip_tags($chaine, '<img>');
-//             echo htmlentities($res1)."<br>";
-//            //expression regulière pour eliminer tous les attribut des balises
-//            $reg="#(?<=\<img)\s*[^>]*(?=>)#";
-//            $res1=preg_replace($reg,"",$res1);
-//
-//            echo htmlentities($res1);
-//
-//
-//            /*$interactions = $interqcm->getInteraction();
-//            echo "count intercations ".count($interactions)."<br>";
-//            $questions = $interactions->getquestion();
-//            echo "count questions ".count($questions)."<br>";
-//            echo "1st question".$questions[0]->get."<br>";*/
-//
-//
-//            $Alphabets = array('A','B','C','D','E','F','G','H','I','G','K','L');
-//
-//                $document = new \DOMDocument();
-//                // on crée l'élément principal <nouveaute>
-//		$node = $document->CreateElement('assessmentItem');
-//                $node->setAttribute("identifier", "choice");
-//                $node->setAttribute("title",$Question[0]->getTitle());
-//                $node->setAttribute("adaptive", "false");
-//                $node->setAttribute("timeDependent", "false");
-//		$document->appendChild($node);
-//
-//		// on ajoute l'élément <nrnouveaute> a <nouveaute>
-//		$responseDeclaration = $document->CreateElement('responseDeclaration');
-//                $responseDeclaration->setAttribute("identifier", "RESPONSE");
-//                $responseDeclaration->setAttribute("cardinality", "single");
-//                $responseDeclaration->setAttribute("baseType", "identifier");
-//                $node->appendChild($responseDeclaration);
-//
-//
-//                $correctResponse = $document->CreateElement('correctResponse');
-//                $responseDeclaration->appendChild($correctResponse);
-//
-//
-//
-//                /**
-//                <outcomeDeclaration identifier="SCORE" cardinality="single" baseType="float">
-//                        <defaultValue><value>0</value></defaultValue>
-//                </outcomeDeclaration>
-//                **/
-//
-//                $itemBody = $document->CreateElement('itemBody');
-//                $node->appendChild($itemBody);
-//
-//                $choiceInteraction = $document->CreateElement('choiceInteraction');
-//                $choiceInteraction->setAttribute("responseIdentifier", "RESPONSE");
-//                $choiceInteraction->setAttribute("shuffle", "false");
-//                $choiceInteraction->setAttribute("maxChoices", "1");
-//                $itemBody->appendChild($choiceInteraction);
-//
-//                $prompt = $document->CreateElement('prompt');
-//                $choiceInteraction->appendChild($prompt);
-//                $prompttxt =  $document->CreateTextNode($interactions[0]->getInvite());
-//		$prompt->appendChild($prompttxt);
-//                $i=-1;
-//                foreach($choices2 as $ch){
-//                    $i++;
-//                    if($ch->getRightResponse()== true){
-//                            $value = $document->CreateElement('value');
-//                            $correctResponse->appendChild($value);
-//                            $valuetxt =  $document->CreateTextNode("Choice".$Alphabets[$i]);
-//                            $value->appendChild($valuetxt);
-//                    }
-//                    $simpleChoice = $document->CreateElement('simpleChoice');
-//                    $simpleChoice->setAttribute("identifier", "Choice".$Alphabets[$i]);
-//                    $choiceInteraction->appendChild($simpleChoice);
-//                    $simpleChoicetxt =  $document->CreateTextNode($ch->getLabel());
-//                    $simpleChoice->appendChild($simpleChoicetxt);
-//                }
-//
-//
-//
-//
-//
-//
-//            //$europe = $dom->getElementsByTagName("europe")->item(0);
-//            //$europe->appendChild($nouveauPays);
-//            /**
-//            $dom->construct();
-//            $n_selection = $dom->createElement("selection");
-//            $n_interprete = $dom->createElement("interprete");
-//            $nt_interprete = $dom->createTextNode($nomartiste);
-//            $n_interprete->appendChild($nt_interprete);
-//            $n_selection = $dom->getElementsByTagName("selection")->item(0);
-//            $n_selection->appendChild($n_interprete);
-//            $dom->appendChild($n_selection);
-//             *
-//            $url    = "/";
-//            $html="Testfile.xml";
-//            $crawler = new Crawler($html, $url);
-//            */
-//             echo "<br />";
-//            echo '=========================change src of img ========================================';
-//            $document->save('testfile.xml');
-//            $dom = new \DOMDocument();
-//
-//            $data = '<img src="q_222855.jpg" alt="" />Quand a été crée Mozila Firefox?';
-//            $dom->loadHTML($data);
-//            $listeimgs = $dom->getElementsByTagName("img");
-//            foreach($listeimgs as $img)
-//            {
-//                echo 'find img';
-//              if ($img->hasAttribute("src")) {
-//                  echo  " - " . $img->getAttribute("src");
-//                  $img->setAttribute("src","newvalue");
-//
-//              }
-//              echo "<br />";
-//            }
-//            $res = $dom->saveHTML();
-//            echo htmlentities($res);
-//
-//           return $this->render(
-//            'UJMExoBundle:Question:ListQuestions.html.twig', array(
-//            'Questions' => $Question,
-//            )
-//        );
-//
-//    }
-
     /**
      * Edited by Hamza
      * Export an existing Question.
      *
-     * 
+     *
      * @access public
      *
      * @param integer $id : id of question
@@ -2594,17 +2309,25 @@ class QuestionController extends Controller
      */
     public function ExportAction($id)
     {
+        $em = $this->getDoctrine()->getManager();
         $question = $this->controlUserQuestion($id);
 
         if (count($question) > 0) {
-            $services = $this->container->get('ujm.qti_service');
-            
-            return $services->export($id);
+            $interaction = $em->getRepository('UJMExoBundle:Interaction')
+                              ->getInteraction($id);
+            $typeInter = $interaction->getType();
+            switch ($typeInter) {
+                case "InteractionQCM":
+                    $services = $this->container->get('ujm.qti_qcm_export');
+
+                    return $services->export($interaction);
+
+            }
         }
-        
+
         return new \Symfony\Component\HttpFoundation\Response;
     }
-   
+
     /**
      *
      * Edited by :Hamza
@@ -2625,7 +2348,7 @@ class QuestionController extends Controller
       if (!is_dir($userDir)) {
         mkdir($userDir);
       }
-                      
+
                   $allowedExts = array("xml");
                   $temp = explode(".", $_FILES["f1"]["name"]);
                   $source = $_FILES["f1"]["tmp_name"];

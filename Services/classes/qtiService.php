@@ -69,7 +69,7 @@ class qtiService
                 //if it's Null mean "Global notation for QCM" Else it's Notation for each choice
                 $weightresponse = $interactionsqcm[0]->getWeightResponse();
 
-                $choices2 = $interactionsqcm[0]->getChoices();
+                $choices = $interactionsqcm[0]->getChoices();
 
                 // Search for the ID of the ressource from the Invite colonne
                 $txt  = $interaction->getInvite();
@@ -94,8 +94,6 @@ class qtiService
                   }
 
                 }
-
-                $Alphabets = array('A','B','C','D','E','F','G','H','I','G','K','L');
 
                 $document = new \DOMDocument();
 
@@ -142,95 +140,9 @@ class qtiService
                     $this->generate_imsmanifest_File($resources_node[0]->getName());
                 }
 
-                $mapping = $document->CreateElement('mapping');
                 $prompttxt =  $document->CreateTextNode(html_entity_decode($res1));
                 $prompt->appendChild($prompttxt);
-                $i=-1;
-                foreach($choices2 as $ch){
-
-                    $i++;
-                    if($ch->getRightResponse()== true){
-                            $value = $document->CreateElement('value');
-                            $correctResponse->appendChild($value);
-                            $valuetxt =  $document->CreateTextNode("Choice".$Alphabets[$i]);
-                            $value->appendChild($valuetxt);
-                    }
-                   //Add new Tag mapping if the weight of the question is true
-                   if($weightresponse==true){
-                       // Unique Notation for the QCM
-                       $mapEntry= $document->CreateElement('mapEntry');
-                       $mapEntry->setAttribute("mapKey", "Choice".$Alphabets[$i] );
-                       $mapEntry->setAttribute("mappedValue",$ch->getWeight());
-                       $mapping->appendChild($mapEntry);
-                       $responseDeclaration->appendChild($mapping);
-                   }else{
-                       // Globale Notation for the QCM
-                       $responseProcessing =  $document->CreateElement('responseProcessing');
-                       $responseCondition = $document->CreateElement('responseCondition');
-                       $responseIf = $document->CreateElement('responseIf');
-                       $responseElse = $document->CreateElement('responseElse');
-                       $match = $document->CreateElement('match');
-                       $variable = $document->CreateElement('variable');
-                       $variable->setAttribute("identifier", "RESPONSE");
-                       $correct = $document->CreateElement('correct');
-                       $correct->setAttribute("identifier", "RESPONSE");
-
-                       $match->appendChild($variable);
-                       $match->appendChild($correct);
-
-                       $setOutcomeValue = $document->CreateElement('setOutcomeValue');
-                       $setOutcomeValue->setAttribute("identifier", "SCORE");
-
-                       $baseValue= $document->CreateElement('baseValue');
-                       $baseValue->setAttribute("baseType", "float");
-                       $baseValuetxt = $document->CreateTextNode($interactionsqcm[0]->getScoreRightResponse());
-                       $baseValue->appendChild($baseValuetxt);
-
-                       $responseIf->appendChild($match);
-                       $setOutcomeValue->appendChild($baseValue);
-                       $responseIf->appendChild($setOutcomeValue);
-
-                       ////
-                       $setOutcomeValue = $document->CreateElement('setOutcomeValue');
-                       $setOutcomeValue->setAttribute("identifier", "SCORE");
-
-                       $baseValue= $document->CreateElement('baseValue');
-                       $baseValue->setAttribute("baseType", "float");
-                       $baseValuetxt = $document->CreateTextNode($interactionsqcm[0]->getScoreFalseResponse());
-                       $baseValue->appendChild($baseValuetxt);
-
-
-                       $setOutcomeValue->appendChild($baseValue);
-                       $responseElse->appendChild($setOutcomeValue);
-
-
-                       $responseCondition->appendChild($responseIf);
-                       $responseCondition->appendChild($responseElse);
-
-                       $responseProcessing->appendChild($responseCondition);
-
-
-
-                   }
-                   //
-
-                    $simpleChoice = $document->CreateElement('simpleChoice');
-                    $simpleChoice->setAttribute("identifier", "Choice".$Alphabets[$i]);
-                    $choiceInteraction->appendChild($simpleChoice);
-                    $simpleChoicetxt =  $document->CreateTextNode(strip_tags($ch->getLabel(),'<img>'));
-                    $simpleChoice->appendChild($simpleChoicetxt);
-                    //comment per line for each choice
-                    if(($ch->getFeedback()!=Null) && ($ch->getFeedback()!="")){
-                           $feedbackInline = $document->CreateElement('feedbackInline');
-                           $feedbackInline->setAttribute("outcomeIdentifier", "FEEDBACK");
-                           $feedbackInline->setAttribute("identifier","Choice".$Alphabets[$i]);
-                           $feedbackInline->setAttribute("showHide","show");
-                           $feedbackInlinetxt =  $document->CreateTextNode($ch->getFeedback());
-                           $feedbackInline->appendChild($feedbackInlinetxt);
-                           $simpleChoice->appendChild($feedbackInline);
-                    }
-
-                }
+                $this->qtiChoicesQCM($document, $choices, $correctResponse, $weightresponse, $responseDeclaration);
 
                 //comment globale for this question
                 if(($interaction->getFeedBack()!=Null) && ($interaction->getFeedBack()!="") ){
@@ -691,85 +603,97 @@ class qtiService
 
     }
     
-    /**
-     * Generate head of QTI
-     * 
-     * @access private
-     *
-     * @param \DOMDocument $document
-     * @param String $identifier type question
-     * @param String $title title of question
-     * 
-     */
-    private function qtiHead($document, $identifier, $title)
-    {
-        $this->node = $document->CreateElement('assessmentItem');
-        $this->node->setAttribute("xmlns", "http://www.imsglobal.org/xsd/imsqti_v2p1");
-        $this->node->setAttribute("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
-        $this->node->setAttribute("xsi:schemaLocation", "http://www.imsglobal.org/xsd/imsqti_v2p1 http://www.imsglobal.org/xsd/imsqti_v2p1.xsd");
-        $this->node->setAttribute("identifier", $identifier);
-        $this->node->setAttribute("title", $title);
-        $this->node->setAttribute("adaptive", "false");
-        $this->node->setAttribute("timeDependent", "false");
-        $document->appendChild($this->node);
-    }
     
-    /**
-     * Add the tag responseDeclaration to node
-     * 
-     * @access private
-     *
-     * @param \DOMDocument $document
-     * @param String $baseType
-     * 
-     */
-    private function qtiResponseDeclaration($document, $baseType)
+    
+    private function qtiChoicesQCM($document, $choices, $correctResponse, $weightresponse, $responseDeclaration)
     {
-        $responseDeclaration = $document->CreateElement('responseDeclaration');
-        $responseDeclaration->setAttribute("identifier", "RESPONSE");
-        $responseDeclaration->setAttribute("cardinality", "single");
-        $responseDeclaration->setAttribute("baseType", $baseType);
-        $this->node->appendChild($responseDeclaration);
+        $Alphabets = array('A','B','C','D','E','F','G','H','I','G','K','L');
+        $mapping = $document->CreateElement('mapping');
+        $i=-1;
+        foreach($choices as $ch){
 
-        return $responseDeclaration;
-    }
-    
-    /**
-     * add the tag outcomeDeclaration to the node
-     * 
-     * @access private
-     *
-     * @param \DOMDocument $document
-     * 
-     */
-    private function qtiOutComeDeclaration($document)
-    {
-        $outcomeDeclaration = $document->CreateElement('outcomeDeclaration');
-        $outcomeDeclaration->setAttribute("identifier", "SCORE");
-        $outcomeDeclaration->setAttribute("cardinality", "single");
-        $outcomeDeclaration->setAttribute("baseType", "float");
-        $this->node->appendChild($outcomeDeclaration);
-        
-        return $outcomeDeclaration;
-    }
-    
-    /**
-     * add the tag modalFeedback to the node
-     * 
-     * @access private
-     *
-     * @param \DOMDocument $document
-     * @param String $feedBack
-     * 
-     */
-    private function qtiFeedBack ($document, $feedBack)
-    {
-        $modalFeedback=$document->CreateElement('modalFeedback');
-        $modalFeedback->setAttribute("outcomeIdentifier","FEEDBACK");
-        $modalFeedback->setAttribute("identifier","COMMENT");
-        $modalFeedback->setAttribute("showHide","show");
-        $modalFeedbacktxt = $document->CreateTextNode($feedBack);
-        $modalFeedback->appendChild($modalFeedbacktxt);
-        $this->node->appendChild($modalFeedback);
+            $i++;
+            if($ch->getRightResponse()== true){
+                    $value = $document->CreateElement('value');
+                    $correctResponse->appendChild($value);
+                    $valuetxt =  $document->CreateTextNode("Choice".$Alphabets[$i]);
+                    $value->appendChild($valuetxt);
+            }
+           //Add new Tag mapping if the weight of the question is true
+           if($weightresponse==true){
+               // Unique Notation for the QCM
+               $mapEntry= $document->CreateElement('mapEntry');
+               $mapEntry->setAttribute("mapKey", "Choice".$Alphabets[$i] );
+               $mapEntry->setAttribute("mappedValue",$ch->getWeight());
+               $mapping->appendChild($mapEntry);
+               $responseDeclaration->appendChild($mapping);
+           }else{
+               // Globale Notation for the QCM
+               $responseProcessing =  $document->CreateElement('responseProcessing');
+               $responseCondition = $document->CreateElement('responseCondition');
+               $responseIf = $document->CreateElement('responseIf');
+               $responseElse = $document->CreateElement('responseElse');
+               $match = $document->CreateElement('match');
+               $variable = $document->CreateElement('variable');
+               $variable->setAttribute("identifier", "RESPONSE");
+               $correct = $document->CreateElement('correct');
+               $correct->setAttribute("identifier", "RESPONSE");
+
+               $match->appendChild($variable);
+               $match->appendChild($correct);
+
+               $setOutcomeValue = $document->CreateElement('setOutcomeValue');
+               $setOutcomeValue->setAttribute("identifier", "SCORE");
+
+               $baseValue= $document->CreateElement('baseValue');
+               $baseValue->setAttribute("baseType", "float");
+               $baseValuetxt = $document->CreateTextNode($interactionsqcm[0]->getScoreRightResponse());
+               $baseValue->appendChild($baseValuetxt);
+
+               $responseIf->appendChild($match);
+               $setOutcomeValue->appendChild($baseValue);
+               $responseIf->appendChild($setOutcomeValue);
+
+               ////
+               $setOutcomeValue = $document->CreateElement('setOutcomeValue');
+               $setOutcomeValue->setAttribute("identifier", "SCORE");
+
+               $baseValue= $document->CreateElement('baseValue');
+               $baseValue->setAttribute("baseType", "float");
+               $baseValuetxt = $document->CreateTextNode($interactionsqcm[0]->getScoreFalseResponse());
+               $baseValue->appendChild($baseValuetxt);
+
+
+               $setOutcomeValue->appendChild($baseValue);
+               $responseElse->appendChild($setOutcomeValue);
+
+
+               $responseCondition->appendChild($responseIf);
+               $responseCondition->appendChild($responseElse);
+
+               $responseProcessing->appendChild($responseCondition);
+
+
+
+           }
+           //
+
+            $simpleChoice = $document->CreateElement('simpleChoice');
+            $simpleChoice->setAttribute("identifier", "Choice".$Alphabets[$i]);
+            $choiceInteraction->appendChild($simpleChoice);
+            $simpleChoicetxt =  $document->CreateTextNode(strip_tags($ch->getLabel(),'<img>'));
+            $simpleChoice->appendChild($simpleChoicetxt);
+            //comment per line for each choice
+            if(($ch->getFeedback()!=Null) && ($ch->getFeedback()!="")){
+                   $feedbackInline = $document->CreateElement('feedbackInline');
+                   $feedbackInline->setAttribute("outcomeIdentifier", "FEEDBACK");
+                   $feedbackInline->setAttribute("identifier","Choice".$Alphabets[$i]);
+                   $feedbackInline->setAttribute("showHide","show");
+                   $feedbackInlinetxt =  $document->CreateTextNode($ch->getFeedback());
+                   $feedbackInline->appendChild($feedbackInlinetxt);
+                   $simpleChoice->appendChild($feedbackInline);
+            }
+
+        }
     }
 }
