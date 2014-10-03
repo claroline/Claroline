@@ -42,6 +42,7 @@ use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Claroline\CoreBundle\Manager\WorkspaceModelManager;
 use Claroline\CoreBundle\Manager\WorkspaceTagManager;
+use Claroline\CoreBundle\Manager\WorkspaceUserQueueManager;
 use Claroline\CoreBundle\Manager\WidgetManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -57,6 +58,7 @@ class WorkspaceController extends Controller
     private $homeTabManager;
     private $workspaceManager;
     private $workspaceModelManager;
+    private $workspaceUserQueueManager;
     private $resourceManager;
     private $roleManager;
     private $userManager;
@@ -76,31 +78,33 @@ class WorkspaceController extends Controller
 
     /**
      * @DI\InjectParams({
-     *     "homeTabManager"        = @DI\Inject("claroline.manager.home_tab_manager"),
-     *     "workspaceManager"      = @DI\Inject("claroline.manager.workspace_manager"),
-     *     "workspaceModelManager" = @DI\Inject("claroline.manager.workspace_model_manager"),
-     *     "resourceManager"       = @DI\Inject("claroline.manager.resource_manager"),
-     *     "roleManager"           = @DI\Inject("claroline.manager.role_manager"),
-     *     "userManager"           = @DI\Inject("claroline.manager.user_manager"),
-     *     "tagManager"            = @DI\Inject("claroline.manager.workspace_tag_manager"),
-     *     "toolManager"           = @DI\Inject("claroline.manager.tool_manager"),
-     *     "eventDispatcher"       = @DI\Inject("claroline.event.event_dispatcher"),
-     *     "security"              = @DI\Inject("security.context"),
-     *     "router"                = @DI\Inject("router"),
-     *     "utils"                 = @DI\Inject("claroline.security.utilities"),
-     *     "formFactory"           = @DI\Inject("claroline.form.factory"),
-     *     "tokenUpdater"          = @DI\Inject("claroline.security.token_updater"),
-     *     "widgetManager"         = @DI\Inject("claroline.manager.widget_manager"),
-     *     "request"               = @DI\Inject("request"),
-     *     "templateDir"           = @DI\Inject("%claroline.param.templates_directory%"),
-     *     "translator"            = @DI\Inject("translator"),
-     *     "session"               = @DI\Inject("session")
+     *     "homeTabManager"            = @DI\Inject("claroline.manager.home_tab_manager"),
+     *     "workspaceManager"          = @DI\Inject("claroline.manager.workspace_manager"),
+     *     "workspaceModelManager"     = @DI\Inject("claroline.manager.workspace_model_manager"),
+     *     "workspaceUserQueueManager" = @DI\Inject("claroline.manager.workspace_user_queue_manager"),
+     *     "resourceManager"           = @DI\Inject("claroline.manager.resource_manager"),
+     *     "roleManager"               = @DI\Inject("claroline.manager.role_manager"),
+     *     "userManager"               = @DI\Inject("claroline.manager.user_manager"),
+     *     "tagManager"                = @DI\Inject("claroline.manager.workspace_tag_manager"),
+     *     "toolManager"               = @DI\Inject("claroline.manager.tool_manager"),
+     *     "eventDispatcher"           = @DI\Inject("claroline.event.event_dispatcher"),
+     *     "security"                  = @DI\Inject("security.context"),
+     *     "router"                    = @DI\Inject("router"),
+     *     "utils"                     = @DI\Inject("claroline.security.utilities"),
+     *     "formFactory"               = @DI\Inject("claroline.form.factory"),
+     *     "tokenUpdater"              = @DI\Inject("claroline.security.token_updater"),
+     *     "widgetManager"             = @DI\Inject("claroline.manager.widget_manager"),
+     *     "request"                   = @DI\Inject("request"),
+     *     "templateDir"               = @DI\Inject("%claroline.param.templates_directory%"),
+     *     "translator"                = @DI\Inject("translator"),
+     *     "session"                   = @DI\Inject("session")
      * })
      */
     public function __construct(
         HomeTabManager $homeTabManager,
         WorkspaceManager $workspaceManager,
         WorkspaceModelManager $workspaceModelManager,
+        WorkspaceUserQueueManager $workspaceUserQueueManager,
         ResourceManager $resourceManager,
         RoleManager $roleManager,
         UserManager $userManager,
@@ -122,6 +126,7 @@ class WorkspaceController extends Controller
         $this->homeTabManager = $homeTabManager;
         $this->workspaceManager = $workspaceManager;
         $this->workspaceModelManager = $workspaceModelManager;
+        $this->workspaceUserQueueManager = $workspaceUserQueueManager;
         $this->resourceManager = $resourceManager;
         $this->roleManager = $roleManager;
         $this->userManager = $userManager;
@@ -721,6 +726,31 @@ class WorkspaceController extends Controller
         $this->workspaceManager->addUserQueue($workspace, $user);
 
         return new JsonResponse(array('true'));
+    }
+
+
+    /**
+     * @EXT\Route(
+     *     "/{workspace}/registration/queue/remove",
+     *     name="claro_workspace_remove_user_from_queue",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = false})
+     *
+     * Removes user from Workspace registration queue.
+     *
+     * @param Workspace $workspace
+     * @param User $user
+     *
+     * @return Response
+     */
+    public function removeUserFromQueueAction(Workspace $workspace, User $user)
+    {
+        $this->workspaceUserQueueManager
+            ->removeUserFromWorkspaceQueue($workspace, $user);
+
+        return new Response('success', 204);
+
     }
 
     /** @EXT\Route(

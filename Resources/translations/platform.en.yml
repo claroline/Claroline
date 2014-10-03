@@ -51,6 +51,7 @@ You can redefine the layout used when a mail is sent: 'You can redefine the layo
 You can use the following variables in your form: 'You can use the following variables in your form'
 You can use the full screen version of the text editor to include HTML: 'You can use the full screen version of the text editor to include HTML'
 Your changes have been saved: 'Your changes have been saved'
+accept: Accept
 account_created: 'Account created.'
 account_duration_label: Account lifetime (days)
 account_general_statistics: 'Account general statistics'
@@ -277,6 +278,7 @@ date_range.today: Today
 date_range.week: w
 date_range.yesterday: Yesterday
 db_table: 'Database table'
+decline: Decline
 deletable: Deletable
 delete: Delete
 delete_category: 'Delete category'
@@ -928,6 +930,7 @@ users_per_page: Users per page
 users_registration_in_workspace: 'Users registration in workspace'
 users_visits: 'Users'' connections'
 validate: Validate
+validation: Validation
 verification: 'Verification'
 view: View
 view_category_hierarchy: 'View category hierarchy'
@@ -986,6 +989,8 @@ workspace_list: Workspace list
 workspace_management : 'The workspace has been create at %creationDate%, by %creator%. There is %count% suscriber(s).'
 workspace_management_date_null : 'There is %count% subscriber(s). The creation date and the creator are not mentioned'
 workspace_order_tool_edit_form_name: Name
+workspace_queue_cancel_confirm_title: 'Cancel registration request'
+workspace_queue_cancel_confirm_message: 'Do you really want to cancel the registration request to this workspace ?'
 workspace_registration_confirm_title: 'Do you really want to register to this workspace?'
 workspace_registration_message: 'You have been registered to the workspace %workspace_name%'
 workspace_registration_message_object: 'Workspace registration'
