@@ -46,9 +46,6 @@ portfolioApp
             },
             addEvaluating: function(widget) {
                 widget.setEvaluateMode(true);
-                if (!this.evaluating.inArray(widget)) {
-                    this.evaluating.push(widget);
-                }
             },
             cancelEditing: function(widget, rollback) {
                 if (rollback) {

@@ -24,7 +24,9 @@
                     <button type="button" class="btn btn-default" data-ng-disabled="1 == widget.row" data-ng-click="decreaseRow(widget)"><span class="fa fa-arrow-up"></span></button>
                 </div>
                 {% elseif evaluateMode %}
-                <button class="widget-action btn btn-xs btn-primary" data-ng-click="evaluate(widget);" data-ng-if="!widget.isEvaluating()">
+                <button type="button" class="widget-action btn btn-sm btn-primary" data-ng-click="evaluate(widget);"
+                        data-placement="right" data-container="body" data-animation="am-flip-x"
+                        data-template="templates/evaluation_form.tpl.html" data-bs-popover>
                     <span class="fa fa-quote-right"></span>
                 </button>
                 {% endif %}

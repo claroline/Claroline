@@ -19,16 +19,24 @@
                     </p>
                     <h1 id="username">{{ portfolio.user.firstName ~ ' ' ~ portfolio.user.lastName }}</h1>
 
+                    <!-- ugly hack to avoid tinymce field to appear after popover apperance, and make it move-->
+                    <div class="hidden">
+                        <textarea ui-tinymce class="form-control" rows="3" name="userInformation[presentation]" data-ng-model="evaluatedWidget.comment"></textarea>
+                    </div>
+
                     <div data-ng-repeat="widget in widgets | filter:{type: 'title'}" data-ng-show="widgets.length > 0">
                         <div class="portfolio-title-container" data-widget>
                             {% if constant('Icap\\PortfolioBundle\\Manager\\PortfolioManager::PORTFOLIO_OPENING_MODE_VIEW') != openingMode %}
                                 <div class="widget-actions">
                                 {% if editMode %}
-                                    <button class="widget-action btn btn-sm btn-primary" data-ng-click="edit(widget);" data-ng-if="!widget.isEditing()">
+                                    <button class="widget-action btn btn-sm btn-primary" data-ng-click="edit(widget);"
+                                            data-ng-if="!widget.isEditing()">
                                         <span class="fa fa-pencil"></span>
                                     </button>
                                 {% elseif evaluateMode %}
-                                    <button class="widget-action btn btn-sm btn-primary" data-ng-click="evaluate(widget);" data-ng-if="!widget.isEvaluating()">
+                                    <button type="button" class="widget-action btn btn-sm btn-primary" data-ng-click="evaluate(widget);"
+                                            data-placement="right" data-container="body" data-animation="am-flip-x"
+                                            data-template="templates/evaluation_form.tpl.html" data-bs-popover>
                                         <span class="fa fa-quote-right"></span>
                                     </button>
                                 {% endif %}
@@ -262,5 +270,6 @@
 
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/templates/menu_disposition.tpl.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/templates/menu_widget-type.tpl.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/templates/evaluation_form.tpl.js') }}"></script>
     {% endif %}
 {% endblock %}
