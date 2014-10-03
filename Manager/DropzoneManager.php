@@ -7,6 +7,7 @@ use Claroline\CoreBundle\Entity\User;
 use Icap\DropzoneBundle\Entity\Dropzone;
 use Icap\DropzoneBundle\Entity\Drop;
 use JMS\DiExtraBundle\Annotation as DI;
+use Proxies\__CG__\Icap\DropzoneBundle\Entity\Document;
 
 /**
  * @DI\Service("icap.manager.dropzone_manager")
@@ -313,6 +314,27 @@ class DropzoneManager
 
         $this->container->get('icap.manager.correction_manager')->recalculateScoreForCorrections($dropzone, $corrections);
 
+    }
+
+    public function getResourcesNodeIdsForDownload(Dropzone $dropzone)
+    {
+        $ids = array();
+
+        // on veut récupérer uniquement les drops terminés.
+        foreach ($dropzone->getDrops() as $drop) {
+            if ($drop->getFinished()) {
+
+                // on récupère le dossier parent des documents.
+                $documents = $drop->getDocuments();
+                if (count($documents) > 0) {
+                    $doc = $documents[0];
+                    $rootId = $doc->getResourceNode()->getParent()->getId();
+                    array_push($ids, $rootId);
+                }
+            }
+        }
+
+        return $ids;
     }
 
 

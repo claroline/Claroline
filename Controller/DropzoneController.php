@@ -602,16 +602,17 @@ class DropzoneController extends DropzoneBaseController
         //$this->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
 
         $hiddenDirectory = $dropzone->getHiddenDirectory();
-        $test = new ResourceNode();
-        $test->getId();
+        $idsToDL = $this->get('icap.manager.dropzone_manager')->getResourcesNodeIdsForDownload($dropzone);
 
-        $view = 'claro_resource_download';
+
+        // TODO cas ou pas de document dispos à gérer
 
         return $this->redirect(
             $this->generateUrl(
                 'claro_resource_download',
                 array(
-                    'ids[]' => array($hiddenDirectory->getId())
+                    'ids[]' => $idsToDL,
+                    'forceArchive' => '1'
                 )
             )
         );
