@@ -47,6 +47,8 @@ abstract class qtiExport
                 .$this->securityContext->getToken()
                 ->getUser()->getUsername().'/';
         $this->document = new \DOMDocument();
+        $this->document->preserveWhiteSpace = false;
+        $this->document->formatOutput = true;
     }
 
     /**
