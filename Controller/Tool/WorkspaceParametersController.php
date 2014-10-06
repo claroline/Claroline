@@ -17,6 +17,7 @@ use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Form\PartialWorkspaceImportType;
 use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
+use Claroline\CoreBundle\Library\Workspace\Configuration;
 use Claroline\CoreBundle\Manager\GroupManager;
 use Claroline\CoreBundle\Manager\LocaleManager;
 use Claroline\CoreBundle\Manager\TermsOfServiceManager;
@@ -383,6 +384,7 @@ class WorkspaceParametersController extends Controller
     public function importAction(Workspace $workspace)
     {
         $this->checkAccess($workspace);
+        $form = $this->container->get('form.factory')->create(new PartialWorkspaceImportType());
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {

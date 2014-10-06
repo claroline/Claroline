@@ -688,13 +688,15 @@ class WorkspaceManager
      */
     public function importInExistingWorkspace(Configuration $configuration, Workspace $workspace)
     {
-        $root = $this->resourceManager->getWorkspaceRoot($workspace);
+        $root = $this->resourceManager->getResourceFromNode($this->resourceManager->getWorkspaceRoot($workspace));
         $wsRoles = $this->roleManager->getRolesByWorkspace($workspace);
         $entityRoles = [];
 
         foreach ($wsRoles as $wsRole) {
             $entityRoles[$this->roleManager->getWorkspaceRoleBaseName($wsRole)] = $wsRole;
         }
+
+        var_dump(array_keys($entityRoles));
 
         return $this->container->get('claroline.manager.transfert_manager')->populateWorkspace(
             $workspace,

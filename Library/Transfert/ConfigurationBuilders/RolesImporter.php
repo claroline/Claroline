@@ -131,6 +131,7 @@ class RolesImporter extends Importer implements ConfigurationInterface
         $entityRoles = array();
 
         foreach ($roles as $role) {
+            $roleEntity = null;
 
             if (!$role['role']['is_base_role']) {
                 //check if the role exists in case we're importing everything in an existing workspace
@@ -150,7 +151,7 @@ class RolesImporter extends Importer implements ConfigurationInterface
                 );
             }
 
-            $entityRoles[$role['role']['name']] = $roleEntity;
+            if ($roleEntity) $entityRoles[$role['role']['name']] = $roleEntity;
         }
 
         return $entityRoles;
