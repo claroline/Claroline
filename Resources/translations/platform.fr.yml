@@ -765,6 +765,7 @@ security_token_form_token: 'Token'
 security_token_list: 'Liste des jetons d''authentification'
 security_tokens_management: 'Gestion des jetons d''authentification'
 see: Voir
+see_hidden_files: 'Voir les fichiers cachés'
 see_more: 'Voir plus'
 see_public_profile: 'Voir mon profil public'
 select all: 'Tout sélectionner'

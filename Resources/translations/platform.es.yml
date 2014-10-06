@@ -695,6 +695,7 @@ security_token_form_token: Token
 security_token_list: 'Lista de tokens de seguridad '
 security_tokens_management: 'Gestión de tokens de seguridad'
 see: 'Ver'
+see_hidden_files: 'Ver el archivo oculto'
 see_more: 'Ver más'
 select all: 'Seleccionar todo'
 select_all: 'Seleccionar todo'

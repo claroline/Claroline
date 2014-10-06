@@ -764,6 +764,7 @@ security_token_form_token: 'Token'
 security_token_list: 'Security token list'
 security_tokens_management: 'Security tokens management'
 see: See
+see_hidden_files: 'See hidden files'
 see_more: 'See more'
 see_public_profile: 'See my public profile'
 select all: 'Select all'
