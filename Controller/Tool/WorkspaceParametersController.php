@@ -15,7 +15,9 @@ use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
+use Claroline\CoreBundle\Form\PartialWorkspaceImportType;
 use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
+use Claroline\CoreBundle\Library\Workspace\Configuration;
 use Claroline\CoreBundle\Manager\GroupManager;
 use Claroline\CoreBundle\Manager\LocaleManager;
 use Claroline\CoreBundle\Manager\TermsOfServiceManager;
@@ -349,6 +351,49 @@ class WorkspaceParametersController extends Controller
             'form' => $form->createView(),
             'workspace' => $workspace
         );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/{workspace}/import/partial/form",
+     *     name="claro_workspace_partial_import_form"
+     * )
+     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\parameters:importForm.html.twig")
+     * @param Workspace $workspace
+     * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
+     * @return Response
+     */
+    public function importFormAction(Workspace $workspace)
+    {
+        $this->checkAccess($workspace);
+        $form = $this->container->get('form.factory')->create(new PartialWorkspaceImportType());
+
+        return array('form' => $form->createView(), 'workspace' => $workspace);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/{workspace}/import/partial/submit",
+     *     name="claro_workspace_partial_import_submit"
+     * )
+     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\parameters:importForm.html.twig")
+     * @param Workspace $workspace
+     * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
+     * @return Response
+     */
+    public function importAction(Workspace $workspace)
+    {
+        $this->checkAccess($workspace);
+        $form = $this->container->get('form.factory')->create(new PartialWorkspaceImportType());
+        $form->handleRequest($this->request);
+
+        if ($form->isValid()) {
+            $template = $form->get('workspace')->getData();
+            $config = Configuration::fromTemplate($template);
+            $this->workspaceManager->importInExistingWorkspace($config, $workspace);
+        }
+
+        return new Response('YOLOOOOLOOLLO');
     }
 
     private function checkAccess(Workspace $workspace)

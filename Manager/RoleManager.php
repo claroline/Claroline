@@ -592,6 +592,16 @@ class RoleManager
     }
 
     /**
+     * @param string $name
+     *
+     * @return \Claroline\CoreBundle\Entity\Role[]
+     */
+    public function getRolesByName($name)
+    {
+        return $this->roleRepo->findByName($name);
+    }
+
+    /**
      * @return \Claroline\CoreBundle\Entity\Role[]
      */
     public function getAllRoles()
