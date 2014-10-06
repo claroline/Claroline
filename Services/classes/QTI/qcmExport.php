@@ -78,66 +78,15 @@ class qcmExport extends qtiExport
         //$Alphabets = array('A','B','C','D','E','F','G','H','I','G','K','L');
         foreach($this->interactionqcm->getChoices() as $ch) {
 
-            $i++;
-            if($ch->getRightResponse() ==  true) {
-                $this->valueCorrectResponseTag($i);
-            }
-           //Add new Tag mapping if the weight of the question is true
+           $i++;
+           if($ch->getRightResponse() ==  true) {
+               $this->valueCorrectResponseTag($i);
+           }
+
            if($this->interactionqcm->getWeightResponse()==true) {
-               // Unique Notation for the QCM
-               $mapEntry= $this->document->CreateElement('mapEntry');
-               $mapEntry->setAttribute("mapKey", "Choice".$i);
-               $mapEntry->setAttribute("mappedValue",$ch->getWeight());
-               $mapping->appendChild($mapEntry);
-               $this->responseDeclaration->appendChild($mapping);
+               $this->notationByChoice($mapping, $i, $ch->getWeight());
            } else {
-               // Globale Notation for the QCM
-               $this->responseProcessing =  $this->document->CreateElement('responseProcessing');
-               $responseCondition = $this->document->CreateElement('responseCondition');
-               $responseIf = $this->document->CreateElement('responseIf');
-               $responseElse = $this->document->CreateElement('responseElse');
-               $match = $this->document->CreateElement('match');
-               $variable = $this->document->CreateElement('variable');
-               $variable->setAttribute("identifier", "RESPONSE");
-               $correct = $this->document->CreateElement('correct');
-               $correct->setAttribute("identifier", "RESPONSE");
-
-               $match->appendChild($variable);
-               $match->appendChild($correct);
-
-               $setOutcomeValue = $this->document->CreateElement('setOutcomeValue');
-               $setOutcomeValue->setAttribute("identifier", "SCORE");
-
-               $baseValue= $this->document->CreateElement('baseValue');
-               $baseValue->setAttribute("baseType", "float");
-               $baseValuetxt = $this->document->CreateTextNode($this->interactionqcm->getScoreRightResponse());
-               $baseValue->appendChild($baseValuetxt);
-
-               $responseIf->appendChild($match);
-               $setOutcomeValue->appendChild($baseValue);
-               $responseIf->appendChild($setOutcomeValue);
-
-               ////
-               $setOutcomeValue = $this->document->CreateElement('setOutcomeValue');
-               $setOutcomeValue->setAttribute("identifier", "SCORE");
-
-               $baseValue= $this->document->CreateElement('baseValue');
-               $baseValue->setAttribute("baseType", "float");
-               $baseValuetxt = $this->document->CreateTextNode($this->interactionqcm->getScoreFalseResponse());
-               $baseValue->appendChild($baseValuetxt);
-
-
-               $setOutcomeValue->appendChild($baseValue);
-               $responseElse->appendChild($setOutcomeValue);
-
-
-               $responseCondition->appendChild($responseIf);
-               $responseCondition->appendChild($responseElse);
-
-               $this->responseProcessing->appendChild($responseCondition);
-
-
-
+               $this->notationGlobal();
            }
 
            $this->simpleChoiceTag($ch, $i);
@@ -200,10 +149,10 @@ class qcmExport extends qtiExport
         $this->correctResponse = $this->document->CreateElement('correctResponse');
         $this->responseDeclaration->appendChild($this->correctResponse);
     }
-    
+
     /**
      * add tag value in correctResponse for each good choice
-     * 
+     *
      * @param Integer  $choiceNumber
      *
      * @access private
@@ -277,12 +226,12 @@ class qcmExport extends qtiExport
         $prompt->appendChild($prompttxt);
         $this->qtiChoicesQCM($this->correctResponse);
     }
-    
+
     /**
      * add the tag simpleChoice in choiceInteraction
      *
      * @access private
-     * 
+     *
      * @param \UJM\ExoBundle\Entity\Choice $choice
      * @param Integer $choiceNumber
      *
@@ -294,7 +243,7 @@ class qcmExport extends qtiExport
         $this->choiceInteraction->appendChild($simpleChoice);
         $simpleChoicetxt =  $this->document->CreateTextNode(strip_tags($choice->getLabel(),'<img>'));
         $simpleChoice->appendChild($simpleChoicetxt);
-        
+
         //comment per line for each choice
         if(($choice->getFeedback()!=Null) && ($choice->getFeedback()!="")){
             $feedbackInline = $this->document->CreateElement('feedbackInline');
@@ -305,6 +254,72 @@ class qcmExport extends qtiExport
             $feedbackInline->appendChild($feedbackInlinetxt);
             $simpleChoice->appendChild($feedbackInline);
         }
+    }
+
+    /**
+     * add the tags for notation by choice
+     *
+     * @access private
+     *
+     * @param DOM element $mapping
+     * @param Integer $i
+     * @param Float $weight
+     *
+     */
+    private function notationByChoice($mapping, $i, $weight)
+    {
+       $mapEntry= $this->document->CreateElement('mapEntry');
+       $mapEntry->setAttribute("mapKey", "Choice".$i);
+       $mapEntry->setAttribute("mappedValue", $weight);
+       $mapping->appendChild($mapEntry);
+       $this->responseDeclaration->appendChild($mapping);
+    }
+
+    private function notationGlobal()
+    {
+       $this->responseProcessing =  $this->document->CreateElement('responseProcessing');
+       $responseCondition = $this->document->CreateElement('responseCondition');
+       $responseIf = $this->document->CreateElement('responseIf');
+       $responseElse = $this->document->CreateElement('responseElse');
+       $match = $this->document->CreateElement('match');
+       $variable = $this->document->CreateElement('variable');
+       $variable->setAttribute("identifier", "RESPONSE");
+       $correct = $this->document->CreateElement('correct');
+       $correct->setAttribute("identifier", "RESPONSE");
+
+       $match->appendChild($variable);
+       $match->appendChild($correct);
+
+       $setOutcomeValue = $this->document->CreateElement('setOutcomeValue');
+       $setOutcomeValue->setAttribute("identifier", "SCORE");
+
+       $baseValue= $this->document->CreateElement('baseValue');
+       $baseValue->setAttribute("baseType", "float");
+       $baseValuetxt = $this->document->CreateTextNode($this->interactionqcm->getScoreRightResponse());
+       $baseValue->appendChild($baseValuetxt);
+
+       $responseIf->appendChild($match);
+       $setOutcomeValue->appendChild($baseValue);
+       $responseIf->appendChild($setOutcomeValue);
+
+       ////
+       $setOutcomeValue = $this->document->CreateElement('setOutcomeValue');
+       $setOutcomeValue->setAttribute("identifier", "SCORE");
+
+       $baseValue= $this->document->CreateElement('baseValue');
+       $baseValue->setAttribute("baseType", "float");
+       $baseValuetxt = $this->document->CreateTextNode($this->interactionqcm->getScoreFalseResponse());
+       $baseValue->appendChild($baseValuetxt);
+
+
+       $setOutcomeValue->appendChild($baseValue);
+       $responseElse->appendChild($setOutcomeValue);
+
+
+       $responseCondition->appendChild($responseIf);
+       $responseCondition->appendChild($responseElse);
+
+       $this->responseProcessing->appendChild($responseCondition);
     }
 
 }
