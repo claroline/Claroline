@@ -20,7 +20,6 @@ class qcmExport extends qtiExport
     private $choiceInteraction;
     private $resources_node;
     private $correctResponse;
-    private $itemBody;
     private $responseProcessing;
 
     /**
@@ -173,18 +172,6 @@ class qcmExport extends qtiExport
     }
 
     /**
-     * add the tag itemBody in node
-     *
-     * @access private
-     *
-     */
-    private function itemBodyTag()
-    {
-        $this->itemBody = $this->document->CreateElement('itemBody');
-        $this->node->appendChild($this->itemBody);
-    }
-
-    /**
      * add the tag choiceInteraction in itemBody
      *
      * @access private
@@ -201,7 +188,7 @@ class qcmExport extends qtiExport
         }
 
         $this->choiceInteraction->setAttribute("shuffle",$boolval);
-        $this->choiceInteraction->setAttribute("maxChoices", "1");
+        $this->choiceInteraction->setAttribute("maxChoices", count($this->interactionqcm->getChoices()));
         $this->itemBody->appendChild($this->choiceInteraction);
     }
 

@@ -26,6 +26,7 @@ abstract class qtiExport
     protected $responseDeclaration;
     protected $outcomeDeclaration;
     protected $modalFeedback;
+    protected $itemBody;
     protected $question;
     protected $path_img;
 
@@ -123,6 +124,18 @@ abstract class qtiExport
         $modalFeedbacktxt = $this->document->CreateTextNode($feedBack);
         $this->modalFeedback->appendChild($modalFeedbacktxt);
         $this->node->appendChild($this->modalFeedback);
+    }
+    
+    /**
+     * add the tag itemBody in node
+     *
+     * @access protected
+     *
+     */
+    protected function itemBodyTag()
+    {
+        $this->itemBody = $this->document->CreateElement('itemBody');
+        $this->node->appendChild($this->itemBody);
     }
 
     /**

@@ -16,8 +16,6 @@ namespace UJM\ExoBundle\Services\classes\QTI;
 class graphicExport extends qtiExport
 {
     private $interactiongraph;
-    private $coords;
-    private $picture;
 
     /**
      * Implements the abstract method
@@ -35,27 +33,19 @@ class graphicExport extends qtiExport
                                 ->getRepository('UJMExoBundle:InteractionGraphic')
                                 ->findOneBy(array('interaction' => $interaction->getId()));
 
-        $this->coords = $this->doctrine->getManager()
-                       ->getRepository('UJMExoBundle:Coords')
-                       ->findBy(array('interactionGraphic' => $this->interactiongraph->getId()));
-
-        $this->picture = $this->doctrine->getManager()
-                          ->getRepository('UJMExoBundle:Document')
-                          ->findOneBy(array('id' => $this->interactiongraph->getDocument()));
-
-        if (count($this->coords) > 1 ) {
-            $identifier  = 'positionObjects';
+        if (count($this->interactiongraph->getCoords()) > 1 ) {
             $cardinality = 'multiple';
         } else {
-            $identifier  = 'selectPoint';
             $cardinality = 'single';
         }
-        $this->qtiHead($identifier, $this->question->getTitle());
+        $this->qtiHead('selectPoint', $this->question->getTitle());
         $this->qtiResponseDeclaration('point', $cardinality);
         $this->qtiOutComeDeclaration();
 
         $this->correctResponseTag();
         $this->areaMappingTag();
+        $this->itemBodyTag();
+        $this->selectPointInteractionTag();
 
         $this->document->save($this->userDir.'testfile.xml');
 
@@ -93,7 +83,7 @@ class graphicExport extends qtiExport
     protected function correctResponseTag()
     {
         $correctResponse = $this->document->createElement("correctResponse");
-        foreach ($this->coords as $c) {
+        foreach ($this->interactiongraph->getCoords() as $c) {
             $xy = $this->qtiCoord($c);
             $Tagvalue = $this->document->CreateElement("value");
             $responsevalue = $this->document->CreateTextNode($xy[0]." ".$xy[1]);
@@ -116,7 +106,7 @@ class graphicExport extends qtiExport
         $areaMapping->setAttribute("defaultValue", "0");
         $this->responseDeclaration->appendChild($areaMapping);
 
-        foreach ($this->coords as $c) {
+        foreach ($this->interactiongraph->getCoords() as $c) {
             $xy = $this->qtiCoord($c);
             $areaMapEntry = $this->document->createElement("areaMapEntry");
             $areaMapEntry->setAttribute("shape", $c->getShape());
@@ -124,6 +114,37 @@ class graphicExport extends qtiExport
             $areaMapEntry->setAttribute("mappedValue", $c->getScoreCoords());
             $areaMapping->appendChild($areaMapEntry);
         }
+    }
+
+    /**
+     * add the tag selectPointInteractionTag in itemBody
+     *
+     * @access private
+     *
+     */
+    private function selectPointInteractionTag()
+    {
+        $selectPointInteraction = $this->document->createElement("selectPointInteraction");
+        $selectPointInteraction->setAttribute("responseIdentifier", "RESPONSE");
+        $selectPointInteraction->setAttribute("maxChoices",
+                count($this->interactiongraph->getCoords()));
+
+        $prompt = $this->document->CreateElement('prompt');
+        $prompttxt = $this->document->CreateTextNode($this->interactiongraph->getInteraction()->getInvite());
+        $prompt->appendChild($prompttxt);
+        $selectPointInteraction->appendChild($prompt);
+
+        $object = $this->document->CreateElement('object');
+        $object->setAttribute("type", "image/". $this->interactiongraph->getDocument()->getType());
+        $object->setAttribute("width", $this->interactiongraph->getWidth());
+        $object->setAttribute("height", $this->interactiongraph->getHeight());
+        $object->setAttribute("data", $this->interactiongraph->getDocument()->getUrl());
+        $objecttxt = $this->document->CreateTextNode($this->interactiongraph->getDocument()->getLabel());
+        $object->appendChild($objecttxt);
+        $selectPointInteraction->appendChild($object);
+
+
+        $this->itemBody->appendChild($selectPointInteraction);
     }
 
 }
