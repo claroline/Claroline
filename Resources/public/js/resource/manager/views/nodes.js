@@ -47,11 +47,12 @@
                 );
             }, this);
         },
-        addNodes: function (event) {
+        addNodes: function (event, visibility) {
             _.each(event, function (node) {
                 var isWhiteListed = this.parameters.resourceTypes[node.type] !== undefined;
+                var visible = node.is_visible || visibility === 'hidden';
 
-                if (isWhiteListed || node.type === 'directory') {
+                if ((isWhiteListed || node.type === 'directory') && visible) {
                     //1023 is the "I can do everything" mask.
                     if (this.parameters.restrictForOwner == 1 && node.mask != 1023 && node.type !== 'directory') {
                         return;
@@ -166,7 +167,7 @@
 
             if (!event.isSearchMode) {
                 this.$el.empty();
-                this.addNodes(event.nodes);
+                this.addNodes(event.nodes, event.visibility);
 
                 this.$el.sortable({
                     update: _.bind(this.orderNodes, this)
