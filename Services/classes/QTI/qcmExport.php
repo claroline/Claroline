@@ -6,6 +6,11 @@
  * and open the template in the editor.
  */
 
+/**
+ * To export a QCM question in QTI
+ *
+ */
+
 namespace UJM\ExoBundle\Services\classes\QTI;
 
 class qcmExport extends qtiExport
@@ -308,7 +313,6 @@ class qcmExport extends qtiExport
        $setOutcomeValue->appendChild($baseValue);
        $responseIf->appendChild($setOutcomeValue);
 
-       ////
        $setOutcomeValue = $this->document->CreateElement('setOutcomeValue');
        $setOutcomeValue->setAttribute("identifier", "SCORE");
 

@@ -149,6 +149,9 @@ abstract class qtiExport
         //$response->headers->set('Content-Type', $content->getContentType());
         $response->headers->set('Content-Type', 'application/application/zip');
         $response->headers->set('Content-Disposition', "attachment; filename=QTI-Archive.zip");
+        $response->headers->set('Cache-Control', 'no-cache, no-store, must-revalidate'); // HTTP 1.1.
+        $response->headers->set('Pragma', 'no-cache'); // HTTP 1.0.
+        $response->headers->set('Expires', '0'); // Proxies.
 
         return $response;
     }
