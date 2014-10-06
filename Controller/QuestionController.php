@@ -2321,10 +2321,15 @@ class QuestionController extends Controller
                     $services = $this->container->get('ujm.qti_qcm_export');
 
                     return $services->export($interaction);
-                    
+
                 case "InteractionGraphic":
                     $services = $this->container->get('ujm.qti_graphic_export');
-                    
+
+                    return $services->export($interaction);
+
+                case "InteractionHole":
+                    $services = $this->container->get('ujm.qti_hole_export');
+
                     return $services->export($interaction);
 
             }
