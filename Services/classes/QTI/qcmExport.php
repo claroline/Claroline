@@ -275,6 +275,12 @@ class qcmExport extends qtiExport
        $this->responseDeclaration->appendChild($mapping);
     }
 
+    /**
+     * add the tags for a global notation
+     *
+     * @access private
+     *
+     */
     private function notationGlobal()
     {
        $this->responseProcessing =  $this->document->CreateElement('responseProcessing');
