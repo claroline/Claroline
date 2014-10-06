@@ -12,6 +12,7 @@
 namespace Claroline\CoreBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 
 class OrderedToolRepository extends EntityRepository
@@ -61,7 +62,7 @@ class OrderedToolRepository extends EntityRepository
         return $query->getResult();
     }
 
-    public function incOrderedToolOrderForRange(
+    public function incWorkspaceOrderedToolOrderForRange(
         Workspace $workspace,
         $fromOrder,
         $toOrder,
@@ -83,7 +84,7 @@ class OrderedToolRepository extends EntityRepository
         return $executeQuery ? $query->execute() : $query;
     }
 
-    public function decOrderedToolOrderForRange(
+    public function decWorkspaceOrderedToolOrderForRange(
         Workspace $workspace,
         $fromOrder,
         $toOrder,
@@ -99,6 +100,50 @@ class OrderedToolRepository extends EntityRepository
         ';
         $query = $this->_em->createQuery($dql);
         $query->setParameter('workspace', $workspace);
+        $query->setParameter('fromOrder', $fromOrder);
+        $query->setParameter('toOrder', $toOrder);
+
+        return $executeQuery ? $query->execute() : $query;
+    }
+
+    public function incDesktopOrderedToolOrderForRange(
+        User $user,
+        $fromOrder,
+        $toOrder,
+        $executeQuery = true
+    )
+    {
+        $dql = '
+            UPDATE Claroline\CoreBundle\Entity\Tool\OrderedTool ot
+            SET ot.order = ot.order + 1
+            WHERE ot.user = :user
+            AND ot.order >= :fromOrder
+            AND ot.order < :toOrder
+        ';
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('user', $user);
+        $query->setParameter('fromOrder', $fromOrder);
+        $query->setParameter('toOrder', $toOrder);
+
+        return $executeQuery ? $query->execute() : $query;
+    }
+
+    public function decDesktopOrderedToolOrderForRange(
+        User $user,
+        $fromOrder,
+        $toOrder,
+        $executeQuery = true
+    )
+    {
+        $dql = '
+            UPDATE Claroline\CoreBundle\Entity\Tool\OrderedTool ot
+            SET ot.order = ot.order - 1
+            WHERE ot.user = :user
+            AND ot.order > :fromOrder
+            AND ot.order <= :toOrder
+        ';
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('user', $user);
         $query->setParameter('fromOrder', $fromOrder);
         $query->setParameter('toOrder', $toOrder);
 

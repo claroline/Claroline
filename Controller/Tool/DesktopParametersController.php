@@ -11,17 +11,19 @@
 
 namespace Claroline\CoreBundle\Controller\Tool;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\User;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Request;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Manager\ToolManager;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
-use Claroline\CoreBundle\Persistence\ObjectManager;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * @todo if user has ROLE_ANONYMOUS, a 403 should be returned (otherise he'll get a 500)
@@ -73,7 +75,13 @@ class DesktopParametersController extends Controller
      */
     public function desktopConfigureToolAction(User $user)
     {
-        return array('tools' => $this->toolManager->getDesktopToolsConfigurationArray($user));
+        $tools = $this->toolManager->getDesktopToolsConfigurationArray($user);
+        $orderedTools = $this->toolManager->getOrderedToolsByUser($user);
+
+        return array(
+            'tools' => $tools,
+            'orderedTools' => $orderedTools
+        );
     }
 
     /**
@@ -138,5 +146,63 @@ class DesktopParametersController extends Controller
         );
 
         return new Response($event->getContent());
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/tools/order/update/tool/{orderedTool}/with/{otherOrderedTool}/mode/{mode}",
+     *     name="claro_desktop_update_ordered_tool_order",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("user", options={"authenticatedUser"=true})
+     *
+     * @param OrderedTool $orderedTool
+     * @param OrderedTool $otherOrderedTool
+     * @param string $mode
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function updateWorkspaceOrderedToolOrderAction(
+        User $user,
+        OrderedTool $orderedTool,
+        OrderedTool $otherOrderedTool,
+        $mode
+    )
+    {
+        if ($orderedTool->getUser() === $user &&
+            $otherOrderedTool->getUser() === $user) {
+
+            $order = $orderedTool->getOrder();
+            $otherOrder = $otherOrderedTool->getOrder();
+
+            if ($mode === 'previous') {
+
+                if ($otherOrder > $order) {
+                    $newOrder = $otherOrder;
+                } else {
+                    $newOrder = $otherOrder + 1;
+                }
+            } elseif ($mode === 'next') {
+
+                if ($otherOrder > $order) {
+                    $newOrder = $otherOrder - 1;
+                } else {
+                    $newOrder = $otherOrder;
+                }
+            } else {
+
+                return new Response('Bad Request', 400);
+            }
+
+            $this->toolManager->updateDesktopOrderedToolOrder(
+                $orderedTool,
+                $newOrder
+            );
+
+            return new Response('success', 204);
+        } else {
+
+            throw new AccessDeniedException();
+        }
     }
 }
