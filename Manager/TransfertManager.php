@@ -117,11 +117,45 @@ class TransfertManager
     }
 
     /**
+     * Populates a workspace content with the content of an zip archive. In other words, it ignores the
+     * many properties of the configuration object and use an existing workspace as base.
+     *
+     * @param Workspace $workspace
+     * @param Confuguration $configuration
+     * @param Directory $root
+     * @param array $entityRoles
+     * @param bool $isValidated
+     * @param bool $importRoles
+     */
+    public function populateWorkspace(
+        Workspace $workspace,
+        Configuration $configuration,
+        Directory $root,
+        array $entityRoles,
+        $isValidated = false,
+        $importRoles = true
+    )
+    {
+        $data = $configuration->getData();
+
+        if (!$isValidated) {
+            $this->validate($data, false);
+        }
+
+        $this->setImporters($configuration, $data, $isStrict);
+        $this->setWorkspaceForImporter($workspace);
+
+        if ($importRoles) {
+            //$entityRoles = $this->getImporterByName('roles')->import($data['roles'], $workspace);
+        }
+
+        $tools = $this->getImporterByName('tools')->import($data['tools'], $workspace, $entityRoles, $root);
+    }
+
+    /**
      * @param Configuration $configuration
      * @param User $owner
      * @param bool $isValidated
-     * @param bool $isStrict
-     * @param bool $importUsers
      *
      * @throws InvalidConfigurationException
      * @return SimpleWorkbolspace
@@ -133,9 +167,7 @@ class TransfertManager
     public function createWorkspace(
         Configuration $configuration,
         User $owner,
-        $isValidated = false,
-        $isStrict = true,
-        $importUsers = false
+        $isValidated = false
     )
     {
         $configuration->setOwner($owner);
@@ -145,6 +177,7 @@ class TransfertManager
 
         if (!$isValidated) {
             $this->validate($data, false);
+            $isValidated = true;
         }
 
         $workspace = new Workspace();
@@ -157,8 +190,6 @@ class TransfertManager
         $workspace->setSelfUnregistration($configuration->getSelfUnregistration());
         $date = new \Datetime(date('d-m-Y H:i'));
         $workspace->setCreationDate($date->getTimestamp());
-
-        $this->setWorkspaceForImporter($workspace);
 
         if ($owner) {
             $workspace->setCreator($owner);
@@ -192,11 +223,6 @@ class TransfertManager
         $entityRoles['ROLE_USER'] = $this->om
             ->getRepository('ClarolineCoreBundle:Role')->findOneByName('ROLE_USER');
 
-        if ($importUsers) {
-            if (isset($data['members']['users'])) {
-                $this->getImporterByName('user')->import($data['members']['users'], $entityRoles);
-            }
-        }
 
         $dir = new Directory();
         $dir->setName($workspace->getName());
@@ -211,13 +237,9 @@ class TransfertManager
             array()
         );
 
-        //required for roles
-        //$this->om->forceFlush();
+        $this->populateWorkspace($workspace, $configuration, $root, $entityRoles, true, false);
 
-        $tools = $this->getImporterByName('tools')
-            ->import($data['tools'], $workspace, $entityRoles, $root);
         $this->om->endFlushSuite();
-
         //now we have to parse everything in case there is a rich text
         //rich texts must be located in the tools section
 

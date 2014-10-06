@@ -1242,8 +1242,8 @@ class WorkspaceController extends Controller
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
-            $workspace = $form->get('workspace')->getData();
-            $config= Configuration::fromTemplate($workspace);
+            $template = $form->get('workspace')->getData();
+            $config = Configuration::fromTemplate($template);
             $config->setWorkspaceName($form->get('name')->getData());
             $config->setWorkspaceCode($form->get('code')->getData());
             $config->setDisplayable(true);
