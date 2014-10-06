@@ -35,7 +35,7 @@
                                     </button>
                                 {% elseif evaluateMode %}
                                     <button type="button" class="widget-action btn btn-sm btn-primary" data-ng-click="evaluate(widget);"
-                                            data-placement="right" data-container="body" data-animation="am-flip-x"
+                                            data-placement="right" data-animation="am-flip-x"
                                             data-template="templates/evaluation_form.tpl.html" data-bs-popover>
                                         <span class="fa fa-quote-right"></span>
                                     </button>
@@ -142,26 +142,6 @@
                     <div class="panel-footer">
                         <button type="submit" class="btn btn-primary">{{ 'save'|trans({}, 'platform') }}</button>
                         <button type="button" class="btn btn-default" data-ng-click="cancel(editedWidget)">{{ 'cancel'|trans({}, 'platform') }}</button>
-                    </div>
-                </div>
-            </form>
-        </div>
-    {% endif %}
-    {% if constant('Icap\\PortfolioBundle\\Manager\\PortfolioManager::PORTFOLIO_OPENING_MODE_EVALUATE') == openingMode %}
-        <div class="form-container" data-ng-controller="evaluateWidgetsController">
-            <form name="form" class="evaluate-container" data-loading-form="save(evaluatedWidget)" data-ng-repeat="evaluatedWidget in evaluatedWidgets">
-                <div class="panel panel-default widget-panel">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">
-                            <span data-ng-bind="evaluatedWidget.getType() + '_form_title'|trans"></span>
-                            <button type="button" class="close" aria-hidden="true" data-ng-click="cancel(evaluatedWidget);">&times;</button>
-                        </h3>
-                    </div>
-                    <div class="panel-body panel-loading" data-ng-show="!evaluatedWidget.views.form"></div>
-                    <div class="panel-body" data-ng-show="evaluatedWidget.views.form" data-bind-html="evaluatedWidget.views.form"></div>
-                    <div class="panel-footer">
-                        <button type="submit" class="btn btn-primary">{{ 'save'|trans({}, 'platform') }}</button>
-                        <button type="button" class="btn btn-default" data-ng-click="cancel(evaluatedWidget)">{{ 'cancel'|trans({}, 'platform') }}</button>
                     </div>
                 </div>
             </form>

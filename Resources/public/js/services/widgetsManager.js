@@ -21,11 +21,6 @@ portfolioApp
                     this.addEditing(widget);
                 }
             },
-            evaluate: function(widget) {
-                if (!widget.isEvaluating()) {
-                    this.addEvaluating(widget);
-                }
-            },
             loadForm: function(widget) {
                 if (this.forms[widget.getType()]) {
                     widget.setFormView(this.forms[widget.getType()]);
@@ -44,9 +39,6 @@ portfolioApp
                     this.editing.push(widget);
                 }
             },
-            addEvaluating: function(widget) {
-                widget.setEvaluateMode(true);
-            },
             cancelEditing: function(widget, rollback) {
                 if (rollback) {
                     angular.copy(widget.copy, widget);
@@ -58,11 +50,6 @@ portfolioApp
                 if (widget.isNew()) {
                     this.widgets.remove(widget);
                 }
-            },
-            cancelEvaluating: function(widget) {
-                widget.setEvaluateMode(false);
-
-                this.evaluating.remove(widget);
             },
             save: function(widget) {
                 delete widget.copy;

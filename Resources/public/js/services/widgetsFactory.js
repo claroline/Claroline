@@ -29,10 +29,9 @@ portfolioApp
                         remove: { method: "DELETE"}
                     }
                 );
-                widget.prototype.editing    = false;
-                widget.prototype.evaluating = false;
-                widget.prototype.new        = true;
-                widget.prototype.type       = type;
+                widget.prototype.editing = false;
+                widget.prototype.new     = true;
+                widget.prototype.type    = type;
 
                 widget.prototype.generateUrl = function(parameters) {
                     parameters.portfolioId = portfolioId;
@@ -52,14 +51,8 @@ portfolioApp
                 widget.prototype.setEditMode = function(isEditing) {
                     this.editing = isEditing;
                 };
-                widget.prototype.setEvaluateMode = function(isEvaluating) {
-                    this.evaluating = isEvaluating;
-                };
                 widget.prototype.isEditing = function() {
                     return this.editing;
-                };
-                widget.prototype.isEvaluating = function() {
-                    return this.evaluating;
                 };
                 widget.prototype.getType = function() {
                     return this.type;
@@ -75,7 +68,7 @@ portfolioApp
                 widget.prototype.deleteChildren = function() {
                     if (this.children) {
                         var childrenToDelete = [];
-                        for (var i = 0;i < this.children.length; i++) {
+                        for (var i = 0; i < this.children.length; i++) {
                             var currentChild = this.children[i];
                             if (currentChild.toDelete || (undefined !== currentChild.added && !currentChild.added)) {
                                 childrenToDelete.push(currentChild);

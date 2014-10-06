@@ -6,10 +6,6 @@ portfolioApp
             widgetsManager.edit(widget);
         };
 
-        $scope.evaluate = function(widget) {
-            widgetsManager.evaluate(widget);
-        };
-
         $scope.isDeletable = function(widget) {
             return widgetsManager.isDeletable(widget);
         };
