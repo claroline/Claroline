@@ -131,13 +131,18 @@ class RolesImporter extends Importer implements ConfigurationInterface
         $entityRoles = array();
 
         foreach ($roles as $role) {
+            $roleEntity = null;
+
             if (!$role['role']['is_base_role']) {
-                $roleEntity = $this->roleManager->createWorkspaceRole(
-                    "{$role['role']['name']}_{$workspace->getGuid()}",
-                    $role['role']['translation'],
-                    $workspace,
-                    false
-                );
+                //check if the role exists in case we're importing everything in an existing workspace
+                if (count($this->roleManager->getRolesByName("{$role['role']['name']}_{$workspace->getGuid()}")) == 0) {
+                    $roleEntity = $this->roleManager->createWorkspaceRole(
+                        "{$role['role']['name']}_{$workspace->getGuid()}",
+                        $role['role']['translation'],
+                        $workspace,
+                        false
+                    );
+                }
             } else {
                 $roleEntity = $this->roleManager->createBaseRole(
                     $role['role']['name'],
@@ -146,7 +151,7 @@ class RolesImporter extends Importer implements ConfigurationInterface
                 );
             }
 
-            $entityRoles[$role['role']['name']] = $roleEntity;
+            if ($roleEntity) $entityRoles[$role['role']['name']] = $roleEntity;
         }
 
         return $entityRoles;

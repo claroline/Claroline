@@ -25,6 +25,7 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Workspace\Configuration;
 use Claroline\CoreBundle\Library\Transfert\RichTextInterface;
 use Symfony\Component\Yaml\Yaml;
+use Claroline\CoreBundle\Manager\Exception\ToolPositionAlreadyOccupiedException;
 
 /**
  * @DI\Service("claroline.manager.transfert_manager")
@@ -62,7 +63,7 @@ class TransfertManager
         $groupsImporter = $this->getImporterByName('groups');
         $rolesImporter  = $this->getImporterByName('roles');
         $toolsImporter  = $this->getImporterByName('tools');
-        $importer = $this->getImporterByName('workspace_properties');
+        $importer       = $this->getImporterByName('workspace_properties');
         $usersImporter  = $this->getImporterByName('user');
 
         //properties
@@ -73,19 +74,9 @@ class TransfertManager
             }
         }
 
-        if (isset($data['members']['users'])) {
-            $users['users'] = $data['members']['users'];
-            $usersImporter->validate($users);
-        }
-
         if (isset($data['roles'])) {
             $roles['roles'] = $data['roles'];
             $rolesImporter->validate($roles);
-        }
-
-        if (isset($data['members']['groups'])) {
-            $groups['users'] = $data['members']['groups'];
-            $groupsImporter->validate($groups);
         }
 
         if (isset ($data['tools'])) {
@@ -95,15 +86,12 @@ class TransfertManager
 
     }
 
-    public function import(
-        Configuration $configuration,
-        $isStrict = false
-    )
+    public function import(Configuration $configuration)
     {
         $data = $configuration->getData();
         $owner = $this->container->get('security.context')->getToken()->getUser();
         $configuration->setOwner($owner);
-        $this->setImporters($configuration, $data, $isStrict);
+        $this->setImporters($configuration, $data);
         $this->validate($data);
 
         //initialize the configuration
@@ -113,15 +101,54 @@ class TransfertManager
         $configuration->setSelfRegistration($data['properties']['self_registration']);
         $configuration->setSelfUnregistration($data['properties']['self_unregistration']);
 
-        $this->createWorkspace($configuration, $owner, true, $isStrict, true);
+        $this->createWorkspace($configuration, $owner, true);
+    }
+
+    /**
+     * Populates a workspace content with the content of an zip archive. In other words, it ignores the
+     * many properties of the configuration object and use an existing workspace as base.
+     *
+     * @param Workspace $workspace
+     * @param Confuguration $configuration
+     * @param Directory $root
+     * @param array $entityRoles
+     * @param bool $isValidated
+     * @param bool $importRoles
+     */
+    public function populateWorkspace(
+        Workspace $workspace,
+        Configuration $configuration,
+        Directory $root,
+        array $entityRoles,
+        $isValidated = false,
+        $importRoles = true
+    )
+    {
+        $this->om->startFlushSuite();
+        $data = $configuration->getData();
+        $this->setImporters($configuration, $data);
+        $this->setWorkspaceForImporter($workspace);
+
+        if (!$isValidated) {
+            $this->validate($data, false);
+        }
+
+        if ($importRoles) {
+            $importedRoles = $this->getImporterByName('roles')->import($data['roles'], $workspace);
+        }
+        
+        foreach ($entityRoles as $key => $entityRole) {
+            $importedRoles[$key] = $entityRole;
+        }
+
+        $tools = $this->getImporterByName('tools')->import($data['tools'], $workspace, $importedRoles, $root);
+        $this->om->endFlushSuite();
     }
 
     /**
      * @param Configuration $configuration
      * @param User $owner
      * @param bool $isValidated
-     * @param bool $isStrict
-     * @param bool $importUsers
      *
      * @throws InvalidConfigurationException
      * @return SimpleWorkbolspace
@@ -133,18 +160,17 @@ class TransfertManager
     public function createWorkspace(
         Configuration $configuration,
         User $owner,
-        $isValidated = false,
-        $isStrict = true,
-        $importUsers = false
+        $isValidated = false
     )
     {
         $configuration->setOwner($owner);
         $data = $configuration->getData();
         $this->om->startFlushSuite();
-        $this->setImporters($configuration, $data, $isStrict);
+        $this->setImporters($configuration, $data);
 
         if (!$isValidated) {
             $this->validate($data, false);
+            $isValidated = true;
         }
 
         $workspace = new Workspace();
@@ -157,8 +183,6 @@ class TransfertManager
         $workspace->setSelfUnregistration($configuration->getSelfUnregistration());
         $date = new \Datetime(date('d-m-Y H:i'));
         $workspace->setCreationDate($date->getTimestamp());
-
-        $this->setWorkspaceForImporter($workspace);
 
         if ($owner) {
             $workspace->setCreator($owner);
@@ -192,11 +216,6 @@ class TransfertManager
         $entityRoles['ROLE_USER'] = $this->om
             ->getRepository('ClarolineCoreBundle:Role')->findOneByName('ROLE_USER');
 
-        if ($importUsers) {
-            if (isset($data['members']['users'])) {
-                $this->getImporterByName('user')->import($data['members']['users'], $entityRoles);
-            }
-        }
 
         $dir = new Directory();
         $dir->setName($workspace->getName());
@@ -211,11 +230,8 @@ class TransfertManager
             array()
         );
 
-        //required for roles
-        //$this->om->forceFlush();
+        $this->populateWorkspace($workspace, $configuration, $root, $entityRoles, true, false);
 
-        $tools = $this->getImporterByName('tools')
-            ->import($data['tools'], $workspace, $entityRoles, $root);
         $this->om->endFlushSuite();
 
         //now we have to parse everything in case there is a rich text
@@ -302,14 +318,17 @@ class TransfertManager
      * @param array $data
      * @param $isStrict
      */
-    private function setImporters(Configuration $configuration, array $data, $isStrict)
+    private function setImporters(Configuration $configuration, array $data)
     {
         foreach ($this->listImporters as $importer) {
             $importer->setRootPath($configuration->getExtractPath());
-            $importer->setOwner($configuration->getOwner());
+            if ($owner = $configuration->getOwner()) {
+                $importer->setOwner($owner);
+            } else {
+                $importer->setOwner($this->container->get('security.context')->getToken()->getUser());
+            }
             $importer->setConfiguration($data);
             $importer->setListImporters($this->listImporters);
-            $importer->setStrict($isStrict);
         }
     }
 

@@ -678,4 +678,31 @@ class WorkspaceManager
     {
         return $this->workspaceRepo->countUsers($workspaceId);
     }
+
+    /**
+     * Import the content of an archive in a workspace.
+     *
+     * @param Configuration $configuration
+     * @param Workspace $workspace
+     * @return Workspace
+     */
+    public function importInExistingWorkspace(Configuration $configuration, Workspace $workspace)
+    {
+        $root = $this->resourceManager->getResourceFromNode($this->resourceManager->getWorkspaceRoot($workspace));
+        $wsRoles = $this->roleManager->getRolesByWorkspace($workspace);
+        $entityRoles = [];
+
+        foreach ($wsRoles as $wsRole) {
+            $entityRoles[$this->roleManager->getWorkspaceRoleBaseName($wsRole)] = $wsRole;
+        }
+
+        var_dump(array_keys($entityRoles));
+
+        return $this->container->get('claroline.manager.transfert_manager')->populateWorkspace(
+            $workspace,
+            $configuration,
+            $root,
+            $entityRoles
+        );
+    }
 }
