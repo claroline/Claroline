@@ -597,13 +597,12 @@ class DropzoneController extends DropzoneBaseController
      * })
      * @Template()
      */
-    public function donwloadCopiesAction(Dropzone $dropzone, User $user)
+    public function donwloadCopiesAction(Dropzone $dropzone, $beginDate = null, $endDate = null)
     {
         //$this->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
 
         $hiddenDirectory = $dropzone->getHiddenDirectory();
-        $idsToDL = $this->get('icap.manager.dropzone_manager')->getResourcesNodeIdsForDownload($dropzone);
-        $idsToDL = array();
+        $idsToDL = $this->get('icap.manager.dropzone_manager')->getResourcesNodeIdsForDownload($dropzone, $beginDate, $endDate);
 
         // TODO cas ou pas de document dispos à gérer
         if (count($idsToDL) <= 0) {

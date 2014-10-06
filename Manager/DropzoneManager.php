@@ -316,7 +316,12 @@ class DropzoneManager
 
     }
 
-    public function getResourcesNodeIdsForDownload(Dropzone $dropzone, $begin, $end)
+    private function isBetweenDates($begin, $end, $dateToTest)
+    {
+        return $dateToTest > $begin && $dateToTest <= $end;
+    }
+
+    public function getResourcesNodeIdsForDownload(Dropzone $dropzone, $beginDate, $endDate)
     {
         $ids = array();
 
@@ -324,15 +329,25 @@ class DropzoneManager
         foreach ($dropzone->getDrops() as $drop) {
             if ($drop->getFinished()) {
 
-                // on récupère le dossier parent des documents.
-                $documents = $drop->getDocuments();
-                if (count($documents) > 0) {
-                    $doc = $documents[0];
-                    $rootId = $doc->getResourceNode()->getParent()->getId();
-                    array_push($ids, $rootId);
+                //si date début & date de fin
+                // no date => get all completed drops
+                // if dates are not null , get only complete drop between the 2 dates.
+                if (($beginDate == null && $endDate == null) ||
+                    ($beginDate != null && $endDate != null &&
+                        $this->isBetweenDates($beginDate, $endDate, $drop->getDropDate()))
+                ) {
+                    // on récupère le dossier parent des documents.
+                    $documents = $drop->getDocuments();
+                    if (count($documents) > 0) {
+                        $doc = $documents[0];
+                        $rootId = $doc->getResourceNode()->getParent()->getId();
+                        array_push($ids, $rootId);
+                    }
                 }
+
             }
         }
+
 
         return $ids;
     }
