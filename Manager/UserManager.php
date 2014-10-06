@@ -353,7 +353,7 @@ class UserManager
                 $additionnalRoles = [];
 
                 foreach ($tmpRoles as $toAdd) {
-                    $additionnalRoles[] = $this->objectManager->merge($toAdd);
+                    if ($toAdd) $additionnalRoles[] = $this->objectManager->merge($toAdd);
                 }
 
                 if ($this->container->get('security.context')->getToken()) {
