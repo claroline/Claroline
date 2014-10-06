@@ -1253,10 +1253,12 @@ class WorkspaceController extends Controller
             $config->setWorkspaceDescription(true);
             $this->workspaceManager->create($config, $this->security->getToken()->getUser());
         } else {
-            return new Response('LOL');
+            throw new \Exception('Invalid form');
         }
 
-        return new Response('YOLO');
+        $route = $this->router->generate('claro_workspace_by_user');
+
+        return new RedirectResponse($route);
     }
 
     private function createWorkspaceFromModel(WorkspaceModel $model, FormInterface $form)

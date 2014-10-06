@@ -541,6 +541,8 @@ class RightsManager
         $map = $this->om->getUnitOfWork()->getIdentityMap();
         $result = null;
 
+        if (!array_key_exists('Claroline\CoreBundle\Entity\Resource\ResourceRights', $map)) return null;
+
         foreach ($map['Claroline\CoreBundle\Entity\Resource\ResourceRights'] as $right) {
 
             if ($right->getRole()->getName() === $roleName &&

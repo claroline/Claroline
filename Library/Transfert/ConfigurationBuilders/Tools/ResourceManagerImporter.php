@@ -105,8 +105,6 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
 
     public function import(array $data, $workspace, $entityRoles, Directory $root)
     {
-        //@TODO CHANGE IMPLEMENTATION SO ROLE_USER AND ROLE_ANONYMOUS PERMS CAN BE CHANGED
-
         /*
          * Each directory is created without parent.
          * The parent is set after the ResourceManager::create method is fired.

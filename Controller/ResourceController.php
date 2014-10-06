@@ -365,7 +365,14 @@ class ResourceController
      * @EXT\Route(
      *     "/download",
      *     name="claro_resource_download",
-     *     options={"expose"=true}
+     *     options={"expose"=true},
+     *     defaults ={"forceArchive"=false}
+     * )
+     * @EXT\Route(
+     *     "/download/{forceArchive}",
+     *     name="claro_resource_download",
+     *     options={"expose"=true},
+     *     requirements={"forceArchive" = "^(true|false|0|1)$"},
      * )
      * @EXT\ParamConverter(
      *     "nodes",
@@ -379,13 +386,14 @@ class ResourceController
      *
      * @param array $nodes
      *
+     * @param bool $forceArchive
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function downloadAction(array $nodes)
+    public function downloadAction(array $nodes, $forceArchive = false)
     {
         $collection = new ResourceCollection($nodes);
         $this->checkAccess('EXPORT', $collection);
-        $data = $this->resourceManager->download($nodes);
+        $data = $this->resourceManager->download($nodes, $forceArchive);
         $file = $data['file'];
         $fileName = $data['name'];
         $mimeType = $data['mimeType'];
