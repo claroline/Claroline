@@ -417,10 +417,10 @@ class ResourceController
 
     /**
      * @EXT\Route(
-     *     "directory/{nodeId}",
+     *     "directory/{nodeId}/visibility/{visibility}",
      *     name="claro_resource_directory",
      *     options={"expose"=true},
-     *     defaults={"nodeId"=0}
+     *     defaults={"nodeId"=0, "visibility"="visible"}
      * )
      * @EXT\ParamConverter(
      *      "node",
@@ -439,12 +439,13 @@ class ResourceController
      * is returned.
      *
      * @param ResourceNode $node the directory node
+     * @param string $visibility Only display visible resources if $visible == "visible"
      *
      * @return \Symfony\Component\HttpFoundation\Response
      *
      * @throws Exception if the id doesn't match any existing directory
      */
-    public function openDirectoryAction(ResourceNode $node = null)
+    public function openDirectoryAction(ResourceNode $node = null, $visibility = 'visible')
     {
         $user = $this->sc->getToken()->getUser();
         $path = array();
@@ -516,7 +517,8 @@ class ResourceController
                 'nodes' => $nodesWithCreatorPerms,
                 'canChangePosition' => $canChangePosition,
                 'workspace_id' => $workspaceId,
-                'is_root' => $isRoot
+                'is_root' => $isRoot,
+                'visibility' => $visibility
             )
         );
 

@@ -196,6 +196,11 @@ class ResourceNode
 
     private $pathForCreationLog = '';
 
+    /**
+     * @ORM\Column(name="is_visible", type="boolean", options={"default": 1})
+     */
+    protected $isVisible = true;
+
     public function __construct()
     {
         $this->rights = new ArrayCollection();
@@ -558,5 +563,15 @@ class ResourceNode
     public function getPathForCreationLog()
     {
         return $this->pathForCreationLog;
+    }
+
+    public function getIsVisible()
+    {
+        return $this->isVisible;
+    }
+
+    public function setIsVisible($isVisible)
+    {
+        $this->isVisible = $isVisible;
     }
 }
