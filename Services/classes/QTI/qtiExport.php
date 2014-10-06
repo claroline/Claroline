@@ -226,4 +226,12 @@ abstract class qtiExport
      * @param String \UJM\ExoBundle\Entity\Interaction $interaction
      */
     abstract public function export(\UJM\ExoBundle\Entity\Interaction $interaction);
+    
+    /**
+     * abstract method
+     * Add the tag correctResponse in responseDeclaration
+     * 
+     * @access protected
+     */
+    abstract protected function correctResponseTag();
 }

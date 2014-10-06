@@ -144,12 +144,13 @@ class qcmExport extends qtiExport
     }
 
     /**
+     * Implements the abstract method
      * add the tag correctResponse in responseDeclaration
      *
-     * @access private
+     * @access protected
      *
      */
-    private function correctResponseTag()
+    protected function correctResponseTag()
     {
         $this->correctResponse = $this->document->CreateElement('correctResponse');
         $this->responseDeclaration->appendChild($this->correctResponse);
