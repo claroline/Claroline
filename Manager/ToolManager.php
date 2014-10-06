@@ -674,6 +674,19 @@ class ToolManager
         return $this->om->getRepository('ClarolineCoreBundle:Tool\Tool')->find($id);
     }
 
+    /**
+     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $user
+     *
+     * @return \Claroline\CoreBundle\Entity\Tool\OrderedTool[]
+     */
+    public function getOrderedToolsByUser(User $user)
+    {
+        return $this->orderedToolRepo->findBy(
+            array('user' => $user),
+            array('order' => 'ASC')
+        );
+    }
+
     private function addMissingDesktopTools(User $user, array $missingTools, $startPosition)
     {
         foreach ($missingTools as $tool) {
@@ -695,19 +708,47 @@ class ToolManager
         $this->om->flush();
     }
 
-    public function updateOrderedToolOrder(OrderedTool $orderedTool, $newOrder)
+    public function updateWorkspaceOrderedToolOrder(
+        OrderedTool $orderedTool,
+        $newOrder
+    )
     {
         $order = $orderedTool->getOrder();
 
         if ($newOrder < $order) {
-            $this->orderedToolRepo->incOrderedToolOrderForRange(
+            $this->orderedToolRepo->incWorkspaceOrderedToolOrderForRange(
                 $orderedTool->getWorkspace(),
                 $newOrder,
                 $order
             );
         } else {
-            $this->orderedToolRepo->decOrderedToolOrderForRange(
+            $this->orderedToolRepo->decWorkspaceOrderedToolOrderForRange(
                 $orderedTool->getWorkspace(),
+                $order,
+                $newOrder
+            );
+        }
+        $orderedTool->setOrder($newOrder);
+        $this->om->persist($orderedTool);
+        $this->om->flush();
+    }
+
+    public function updateDesktopOrderedToolOrder(
+        OrderedTool $orderedTool,
+        $newOrder
+    )
+    {
+        $order = $orderedTool->getOrder();
+
+        if ($newOrder < $order) {
+            $this->orderedToolRepo->incDesktopOrderedToolOrderForRange(
+                $orderedTool->getUser(),
+                $newOrder,
+                $order
+            );
+        } else {
+            $this->orderedToolRepo->decDesktopOrderedToolOrderForRange(
+                $orderedTool->getUser(),
                 $order,
                 $newOrder
             );

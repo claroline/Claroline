@@ -243,7 +243,7 @@ class WorkspaceToolsParametersController extends AbstractParametersController
                 return new Response('Bad Request', 400);
             }
 
-            $this->toolManager->updateOrderedToolOrder(
+            $this->toolManager->updateWorkspaceOrderedToolOrder(
                 $orderedTool,
                 $newOrder
             );

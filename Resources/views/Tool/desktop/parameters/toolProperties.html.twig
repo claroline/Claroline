@@ -25,12 +25,15 @@
                         <tr>
                             <th>{{ 'name'|trans({}, 'platform') }}</th>
                             <th>{{ 'visible'|trans({}, 'platform') }}</th>
-                            <th>{{ 'position'|trans({}, 'platform') }}</th>
                         </tr>
                     </thead>
-                    <tbody id="widget-table-body">
-                        {% for tool in tools %}
-                            <tr class='row-tool-config' data-tool-id={{ tool.getId () }}>
+                    <tbody id="tools-table-body">
+                        {% for orderedTool in orderedTools %}
+                            {% set tool = orderedTool.getTool() %}
+                            <tr class='row-tool-config'
+                                data-tool-id={{ tool.getId () }}
+                                data-ordered-tool-id={{ orderedTool.getId () }}
+                            >
                                 <td>{{ tool.getName()|lower|trans({}, 'tools') }} </td>
                                 <td>
                                     <input
@@ -41,10 +44,6 @@
                                         {% if tool.isDesktopRequired() or tool.getName() == 'parameters' %} disabled {% endif %}
                                         {% if tool.isVisible() %} checked {% endif %}
                                     />
-                                </td>
-                                <td>
-                                    <span class="fa fa-arrow-circle-up ordering-icon up{% if loop.first %} disabled{% endif %}" style="cursor: pointer;" ></span>
-                                    <span class="fa fa-arrow-circle-down ordering-icon down{% if loop.last %} disabled{% endif %}" style="cursor: pointer;" ></span>
                                 </td>
                             </tr>
                         {% endfor %}
