@@ -91,6 +91,7 @@ class holeExport extends qtiExport
             $mapEntry->setAttribute("mappedValue",$resp->getScore());
             $mapping->appendChild($mapEntry);
         }
+        $responseDeclaration->appendChild($mapping);
     }
 
     /**
