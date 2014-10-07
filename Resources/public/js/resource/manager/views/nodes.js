@@ -48,6 +48,9 @@
             }, this);
         },
         addNodes: function (event, visibility) {
+            if (visibility === undefined) {
+                visibility = 'visible';
+            }
             _.each(event, function (node) {
                 var isWhiteListed = this.parameters.resourceTypes[node.type] !== undefined;
                 var visible = node.is_visible || visibility === 'hidden';
