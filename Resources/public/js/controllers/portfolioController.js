@@ -11,5 +11,6 @@ portfolioApp
         $scope.createWidget = function(type) {
             widgetsManager.create(portfolioManager.portfolioId, type);
         }
-        $scope.assetPath = assetPath;
+        $scope.assetPath      = assetPath;
+        $scope.displayComment = true;
     }]);

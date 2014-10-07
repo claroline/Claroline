@@ -2,8 +2,8 @@
 
 {% block title %}{{ portfolio.user.firstName ~ ' ' ~ portfolio.user.lastName ~ ' - ' ~ 'portfolio' | trans({}, 'icap_portfolio') ~ ' - ' ~ titleWidget.title | striptags | raw }}{% endblock %}
 
+{% set viewMode = (constant('Icap\\PortfolioBundle\\Manager\\PortfolioManager::PORTFOLIO_OPENING_MODE_VIEW') == openingMode) %}
 {% set editMode = (constant('Icap\\PortfolioBundle\\Manager\\PortfolioManager::PORTFOLIO_OPENING_MODE_EDIT') == openingMode) %}
-{% set evaluateMode = (constant('Icap\\PortfolioBundle\\Manager\\PortfolioManager::PORTFOLIO_OPENING_MODE_EVALUATE') == openingMode) %}
 
 {% block content_container %}
     <div id="portfolio-section" data-portfolio-container="{{ portfolio.id }}">
@@ -45,8 +45,9 @@
             </header>
 
             <section>
-                {% if editMode %}
+                {% if not viewMode %}
                 <ul class="col-md-2 widget-menu-container list-unstyled" data-design-container>
+                    {% if editMode %}
                     <li>
                         <button type="button" class="widget-menu-item btn btn-lg btn-default" data-template="templates/menu_disposition.tpl.html"
                             data-trigger="focus" data-placement="right" data-animation="am-fade-and-slide-left" data-bs-popover>
@@ -59,13 +60,16 @@
                             Contenu
                         </button>
                     </li>
-                </ul>
-                {% endif %}
-                <div class="row">
-                    <div class="col-md-2">
+                    {% endif %}
+                    <li>
                         <div class="panel panel-default communication_panel">
-                            <div class="panel-heading">Communication<button class="btn btn-default btn-xs pull-right"><span class="fa fa-arrow-left"></span></button></div>
-                            <div class="panel-body">
+                            <div class="panel-heading">
+                                Communication
+                                <button class="btn btn-default btn-xs pull-right" data-ng-click="displayComment=!displayComment">
+                                    <span class="fa" data-ng-class="{'fa-chevron-up': displayComment, 'fa-chevron-down': !displayComment}"></span>
+                                </button>
+                            </div>
+                            <div class="panel-body" data-ng-class="{hidden: !displayComment}">
                                 <ul class="media-list">
                                     <li class="media">
                                         <div class="media-body">
@@ -100,65 +104,66 @@
                                         </div>
                                     </li>
                                 </ul>
-                                <p>
-                                    <input id="btn-input" type="text" class="form-control input-sm" placeholder="Type your message here...">
+                                <p class="comment_field">
+                                    <input type="text" class="form-control input-sm" placeholder="Type your message here...">
                                 </p>
                             </div>
                         </div>
-                    </div>
-                    <div class="main-content col-md-8"{% if evaluateMode %} data-design-container{% endif %}>
-                        {% if constant('Icap\\PortfolioBundle\\Manager\\PortfolioManager::PORTFOLIO_OPENING_MODE_VIEW') != openingMode %}
-                            <div data-ng-repeat="widget in widgets | filter:{type: '!title'} | orderBy:widget.row" data-ng-if="0 == portfolio.disposition">
-                                {% include 'IcapPortfolioBundle:templates:widget.html.twig' %}
-                            </div>
-                            <div data-ng-if="1 == portfolio.disposition">
-                                <ul class="col-md-6 list-unstyled" data-ng-repeat="col in cols">
-                                    <li data-ng-repeat="widget in widgets | filter:{type: '!title', column: col} | orderBy:'+row'">
-                                        {% include 'IcapPortfolioBundle:templates:widget.html.twig' %}
-                                    </li>
-                                </ul>
-                            </div>
-                            <div data-ng-if="2 == portfolio.disposition">
-                                <ul class="col-md-4 list-unstyled" data-ng-repeat="col in cols">
-                                    <li data-ng-repeat="widget in widgets | filter:{type: '!title', column: col} | orderBy:'+row'">
-                                        {% include 'IcapPortfolioBundle:templates:widget.html.twig' %}
-                                    </li>
-                                </ul>
-                            </div>
-                            <p class="no-data well" data-ng-show="widgets.length <= 1">{{ 'no_widget'|trans({}, 'icap_portfolio')|raw }}</p>
-                        {% else %}
-                            {% set widgets = portfolio.widgets %}
-                            {% if 1 < widgets.count %}
-                                {% if 0 == portfolio.disposition %}
-                                    {% for widget in widgets | orderByRow if 'title' != widget.widgetType %}
-                                        {% include 'IcapPortfolioBundle:templates:widget.html.twig' %}
-                                    {% endfor %}
-                                {% elseif 1 == portfolio.disposition %}
-                                    {% for col in cols %}
-                                        <ul class="col-md-6 list-unstyled">
-                                            {% for widget in widgets | orderByRow if 'title' != widget.widgetType and col == widget.column  %}
-                                                <li>
-                                                    {% include 'IcapPortfolioBundle:templates:widget.html.twig' %}
-                                                </li>
-                                            {% endfor %}
-                                        </ul>
-                                    {% endfor %}
-                                {% elseif 2 == portfolio.disposition %}
-                                    {% for col in cols %}
-                                        <ul class="col-md-4 list-unstyled">
-                                            {% for widget in widgets | orderByRow if 'title' != widget.widgetType and col == widget.column %}
-                                                <li>
-                                                    {% include 'IcapPortfolioBundle:templates:widget.html.twig' %}
-                                                </li>
-                                            {% endfor %}
-                                        </ul>
-                                    {% endfor %}
-                                {% endif %}
-                            {% else %}
-                                <p class="no-data well">{{ 'portfolio_empty'|trans({}, 'icap_portfolio') }}</p>
+                    </li>
+                </ul>
+                {% endif %}
+                <div class="main-content col-md-8{% if viewMode %} col-md-offset-2{% endif %}"{% if not viewMode %} data-design-container{% endif %}>
+                    {% if not viewMode %}
+                        <div data-ng-repeat="widget in widgets | filter:{type: '!title'} | orderBy:widget.row" data-ng-if="0 == portfolio.disposition">
+                            {% include 'IcapPortfolioBundle:templates:widget.html.twig' %}
+                        </div>
+                        <div data-ng-if="1 == portfolio.disposition">
+                            <ul class="col-md-6 list-unstyled" data-ng-repeat="col in cols">
+                                <li data-ng-repeat="widget in widgets | filter:{type: '!title', column: col} | orderBy:'+row'">
+                                    {% include 'IcapPortfolioBundle:templates:widget.html.twig' %}
+                                </li>
+                            </ul>
+                        </div>
+                        <div data-ng-if="2 == portfolio.disposition">
+                            <ul class="col-md-4 list-unstyled" data-ng-repeat="col in cols">
+                                <li data-ng-repeat="widget in widgets | filter:{type: '!title', column: col} | orderBy:'+row'">
+                                    {% include 'IcapPortfolioBundle:templates:widget.html.twig' %}
+                                </li>
+                            </ul>
+                        </div>
+                        <p class="no-data well" data-ng-show="widgets.length <= 1">{{ 'no_widget'|trans({}, 'icap_portfolio')|raw }}</p>
+                    {% else %}
+                        {% set widgets = portfolio.widgets %}
+                        {% if 1 < widgets.count %}
+                            {% if 0 == portfolio.disposition %}
+                                {% for widget in widgets | orderByRow if 'title' != widget.widgetType %}
+                                    {% include 'IcapPortfolioBundle:templates:widget.html.twig' %}
+                                {% endfor %}
+                            {% elseif 1 == portfolio.disposition %}
+                                {% for col in cols %}
+                                    <ul class="col-md-6 list-unstyled">
+                                        {% for widget in widgets | orderByRow if 'title' != widget.widgetType and col == widget.column  %}
+                                            <li>
+                                                {% include 'IcapPortfolioBundle:templates:widget.html.twig' %}
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endfor %}
+                            {% elseif 2 == portfolio.disposition %}
+                                {% for col in cols %}
+                                    <ul class="col-md-4 list-unstyled">
+                                        {% for widget in widgets | orderByRow if 'title' != widget.widgetType and col == widget.column %}
+                                            <li>
+                                                {% include 'IcapPortfolioBundle:templates:widget.html.twig' %}
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endfor %}
                             {% endif %}
+                        {% else %}
+                            <p class="no-data well">{{ 'portfolio_empty'|trans({}, 'icap_portfolio') }}</p>
                         {% endif %}
-                    </div>
+                    {% endif %}
                 </div>
             </section>
         </div>
