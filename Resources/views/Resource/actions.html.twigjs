@@ -52,9 +52,9 @@
                data-toggle="tooltip"
                data-placement="bottom"
                title="{{ 'see_hidden_files'|trans({}, 'platform') }}"
-               data-visibility="{% if visibility == 'visible' %}visible{% else %}hidden{% endif %}"
+               data-visibility="{% if visibility == 'hidden' %}hidden{% else %}visible{% endif %}"
             >
-                <i id="visibility-icon" class="fa {% if visibility == 'visible' %}fa-eye-slash{% else %}fa-eye{% endif %}"></i>
+                <i id="visibility-icon" class="fa {% if visibility == 'hidden' %}fa-eye{% else %}fa-eye-slash{% endif %}"></i>
             </a>
         </li>
         <li class="dropdown">
