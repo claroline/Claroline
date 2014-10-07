@@ -774,7 +774,7 @@ class ResourceManager
         if ($resource instanceof ResourceShortcut) {
             $copy = $this->om->factory('Claroline\CoreBundle\Entity\Resource\ResourceShortcut');
             $copy->setTarget($resource->getTarget());
-            $newNode = $this->copyNode($node, $parent, $user, $last);
+            $newNode = $this->copyNode($node, $parent, $user, $last, $withRights);
             $copy->setResourceNode($newNode);
 
         } else {
