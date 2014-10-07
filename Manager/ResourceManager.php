@@ -164,6 +164,7 @@ class ResourceManager
         $node->setName($name);
         $node->setPrevious($previous);
         $node->setClass(get_class($resource));
+        $node->setIsVisible(true);
 
         if (!is_null($parent)) {
             $node->setAccessibleFrom($parent->getAccessibleFrom());
@@ -829,6 +830,7 @@ class ResourceManager
         $resourceArray['large_icon'] = $node->getIcon()->getRelativeUrl();
         $resourceArray['path_for_display'] = $node->getPathForDisplay();
         $resourceArray['mime_type'] = $node->getMimeType();
+        $resourceArray['is_visible'] = $node->getIsVisible();
 
         if ($node->getPrevious() !== null) {
             $resourceArray['previous_id'] = $node->getPrevious()->getId();
@@ -1373,6 +1375,7 @@ class ResourceManager
         $newNode->setMimeType($node->getMimeType());
         $newNode->setAccessibleFrom($node->getAccessibleFrom());
         $newNode->setAccessibleUntil($node->getAccessibleUntil());
+        $newNode->setIsVisible($node->getIsVisible());
 
         if ($withRights) {
             //if everything happens inside the same workspace, rights are copied
