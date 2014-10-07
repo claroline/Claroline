@@ -51,20 +51,20 @@
                     <li>
                         <button type="button" class="widget-menu-item btn btn-lg btn-default" data-template="templates/menu_disposition.tpl.html"
                             data-trigger="focus" data-placement="right" data-animation="am-fade-and-slide-left" data-bs-popover>
-                            Disposition
+                            {{ 'disposition' | trans({}, 'icap_portfolio') }}
                         </button>
                     </li>
                     <li>
                         <button type="button" class="widget-menu-item btn btn-lg btn-default" data-template="templates/menu_widget-type.tpl.html"
                             data-trigger="focus" data-placement="right" data-animation="am-fade-and-slide-left" data-bs-popover>
-                            Contenu
+                            {{ 'widget_content' | trans({}, 'icap_portfolio') }}
                         </button>
                     </li>
                     {% endif %}
                     <li>
                         <div class="panel panel-default communication_panel">
                             <div class="panel-heading">
-                                Communication
+                                {{ 'communication_panel' | trans({}, 'icap_portfolio') }}
                                 <button class="btn btn-default btn-xs pull-right" data-ng-click="displayComment=!displayComment">
                                     <span class="fa" data-ng-class="{'fa-chevron-up': displayComment, 'fa-chevron-down': !displayComment}"></span>
                                 </button>
