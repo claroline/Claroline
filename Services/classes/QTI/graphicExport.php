@@ -46,6 +46,11 @@ class graphicExport extends qtiExport
         $this->areaMappingTag();
         $this->itemBodyTag();
         $this->selectPointInteractionTag();
+        
+        if(($this->interactiongraph->getInteraction()->getFeedBack()!=Null) 
+                && ($this->interactiongraph->getInteraction()->getFeedBack()!="") ){
+            $this->qtiFeedBack($interaction->getFeedBack());
+        }
 
         $this->document->save($this->userDir.'testfile.xml');
 

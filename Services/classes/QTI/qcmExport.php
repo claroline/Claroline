@@ -61,7 +61,8 @@ class qcmExport extends qtiExport
         $this->promptTag();
 
         //comment globale for this question
-        if(($interaction->getFeedBack()!=Null) && ($interaction->getFeedBack()!="") ){
+        if(($this->interactionqcm->getInteraction()->getFeedBack()!=Null) 
+                && ($this->interactionqcm->getInteraction()->getFeedBack()!="") ){
             $this->qtiFeedBack($interaction->getFeedBack());
         }
 

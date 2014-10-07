@@ -43,7 +43,12 @@ class holeExport extends qtiExport
         $this->qtiOutComeDeclaration();
 
         $this->itemBodyTag();
-        //$this->mappingTag();
+        $this->textWithHole();
+
+        if(($this->interactionhole->getInteraction()->getFeedBack()!=Null)
+                && ($this->interactionhole->getInteraction()->getFeedBack()!="") ){
+            $this->qtiFeedBack($interaction->getFeedBack());
+        }
 
         $this->document->save($this->userDir.'testfile.xml');
 
@@ -76,39 +81,45 @@ class holeExport extends qtiExport
     {
         $responseDeclaration = $this->responseDeclaration[$this->nbResponseDeclaration - 1];
         $correctResponse = $this->correctResponse[$this->nbResponseDeclaration - 1];
+        $correctWordResponse = '';
         $mapping = $this->document->createElement("mapping");
         $mapping->setAttribute("defaultValue", "0");
 
         foreach ($hole->getWordResponses() as $resp) {
-            $Tagvalue = $this->document->CreateElement("value");
-            $responsevalue =  $this->document->CreateTextNode($resp->getResponse());
-            $Tagvalue->appendChild($responsevalue);
-            $correctResponse->appendChild($Tagvalue);
-            $responseDeclaration->appendChild($correctResponse);
+            if ($correctWordResponse == '') {
+                $correctWordResponse = $resp;
+            } else {
+                if ($correctWordResponse->getScore() < $resp->getScore()) {
+                    $correctWordResponse = $resp;
+                }
+            }
 
             $mapEntry =  $this->document->createElement("mapEntry");
             $mapEntry->setAttribute("mapKey", $resp->getResponse());
             $mapEntry->setAttribute("mappedValue",$resp->getScore());
             $mapping->appendChild($mapEntry);
         }
+        $Tagvalue = $this->document->CreateElement("value");
+        $responsevalue =  $this->document->CreateTextNode($correctWordResponse->getResponse());
+        $Tagvalue->appendChild($responsevalue);
+        $correctResponse->appendChild($Tagvalue);
+        $responseDeclaration->appendChild($correctResponse);
+
         $responseDeclaration->appendChild($mapping);
     }
 
     /**
-     * Description
+     * Text with hole
      *
      * @access private
      *
      */
-    private function aNomer()
+    private function textWithHole()
     {
-        $this->responseDeclaration->appendChild($mapping);
-
-        //change the tag <input....> by <inputentry.....>
-                           $qst = $this->interactionhole->getHtmlWithoutValue();
-                           $regex = '(<input\\s+id="\d+"\\s+class="blank"\\s+name="blank_\d+"\\s+size="\d+"\\s+type="text"\\s+value=""\\s+\/>)';
-                           $result = preg_replace($regex, '<textEntryInteraction responseIdentifier="RESPONSE" expectedLength="15"/>', $qst);
-                    $objecttxt =  $this->document->CreateTextNode($result);
-                    $this->itemBody->appendChild($objecttxt);
+        $qst = $this->interactionhole->getHtmlWithoutValue();
+        $regex = '(<input\\s+id="\d+"\\s+class="blank"\\s+name="blank_\d+"\\s+size="\d+"\\s+type="text"\\s+value=""\\s+\/>)';
+        $result = preg_replace($regex, '<textEntryInteraction responseIdentifier="RESPONSE" expectedLength="15"/>', $qst);
+        $objecttxt =  $this->document->CreateTextNode($result);
+        $this->itemBody->appendChild($objecttxt);
     }
 }
