@@ -645,12 +645,15 @@ class DropzoneController extends DropzoneBaseController
         if ($this->getRequest()->isMethod('POST')) {
             $date_format = $this->get('translator')->trans('date_form_datepicker_php', array(), 'platform');
             $date_format = str_replace('-', '/', $date_format);
+            $date_format .= " H:i:s"; // adding hours in order to have full day possibility ( day1 0h00 to day1 23h59 )
             $form_array = $this->getRequest()->request->get('icap_dropzone_date_download_between_date_form');
             if (array_key_exists('drop_period_begin_date', $form_array)) {
-                $beginDate = DateTime::createFromFormat($date_format, $form_array['drop_period_begin_date']);
+                $beginDate = DateTime::createFromFormat($date_format, $form_array['drop_period_begin_date'] . " 00:00:00");
+                // begin so day start at 00:00:00
             }
             if (array_key_exists('drop_period_end_date', $form_array)) {
-                $endDate = DateTime::createFromFormat($date_format, $form_array['drop_period_end_date']);
+                $endDate = DateTime::createFromFormat($date_format, $form_array['drop_period_end_date'] . " 23:59:59");
+                // end date so day end at 23:59:59
             }
 
         }
