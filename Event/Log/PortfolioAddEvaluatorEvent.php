@@ -131,9 +131,9 @@ class PortfolioAddEvaluatorEvent extends LogGenericEvent implements NotifiableIn
 
         $notificationDetails = array(
             'portfolio' => array(
-                'id'   => $this->portfolio->getId(),
-                'name' => $titleWidget->getTitle(),
-                'slug' => $titleWidget->getSlug()
+                'id'    => $this->portfolio->getId(),
+                'title' => $titleWidget->getTitle(),
+                'slug'  => $titleWidget->getSlug()
             ),
             'evaluator'  => array(
                 'id'        => $receiver->getId(),
