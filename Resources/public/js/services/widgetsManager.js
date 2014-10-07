@@ -7,7 +7,6 @@ portfolioApp
             emptyWidgets: [],
             forms:   [],
             editing: [],
-            evaluating: [],
             init: function(portfolioId, widgets) {
                 angular.forEach(widgets, function(rawWidget) {
                     var widget = widgetFactory.getWidget(portfolioId, rawWidget.type);

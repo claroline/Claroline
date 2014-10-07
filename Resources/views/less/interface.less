@@ -127,6 +127,24 @@ body {
             }
         }
     }
+
+    .communication_panel {
+        .media-list {
+            max-height: 250px;
+            overflow:   auto;
+            font-size:  12px;
+            .media + .media {
+                margin-top:  0;
+                padding-top: 10px;
+                border-top:  1px solid #DDDDDD;
+            }
+            .media-body {
+                .message {
+                    margin-bottom: 0;
+                }
+            }
+        }
+    }
 }
 
 #portfolio-loading {
@@ -183,46 +201,6 @@ body {
             }
         }
     }
-    .evaluate-container {
-        width:    400px;
-        margin:   0 5px 55px 0;
-        display:  inline-block;
-
-        .panel {
-            margin-bottom: 0;
-            .panel-loading {
-                height:     60px;
-                background: url("../../bundles/clarolinecore/images/loading.gif") no-repeat center center;
-            }
-            .panel-body {
-                li {
-                    margin-bottom: 5px;
-                }
-                .badge_collection {
-                    .badge_collection_item {
-                        height: auto;
-                        padding: 2px 0 2px 5px;
-                        .badge_selection_field {
-                            padding-top:    2px;
-                            padding-bottom: 2px;
-                            margin-bottom:  0;
-                            .badge_image {
-                                width:  32px;
-                                height: 32px;
-                            }
-                        }
-                    }
-                }
-            }
-            .panel-heading {
-                border-bottom: 0;
-            }
-            .panel-footer {
-                border-top: 0;
-                text-align: center;
-            }
-        }
-    }
 }
 
 .widget-panel {
@@ -235,17 +213,4 @@ body {
 
 #footer {
     clear: both;
-}
-
-.evaluation_popover {
-    max-width: none;
-    z-index:   1031;
-    width:     600px;
-    color:     black;
-    .form-actions {
-        padding-top: 10px;
-        .cancel_button {
-            margin-right: 5px;
-        }
-    }
 }
