@@ -606,7 +606,11 @@ class DropzoneController extends DropzoneBaseController
         $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
         $this->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
 
-        $view = 'IcapDropzoneBundle:Drop:dropsDownloadBetweenDatesModal.html.twig';
+        $view = 'IcapDropzoneBundle:Drop:dropsDownloadBetweenDates.html.twig';
+        if ($this->getRequest()->isXmlHttpRequest()) {
+            $view = 'IcapDropzoneBundle:Drop:dropsDownloadBetweenDatesModal.html.twig';
+        }
+
         $platformConfigHandler = $this->get('claroline.config.platform_config_handler');
         $form = $this->createForm(new DropsDownloadBetweenDatesType(), $dropzone, array('language' => $platformConfigHandler->getParameter('locale_language'), 'date_format' => $this->get('translator')->trans('date_form_datepicker_format', array(), 'platform')));
 

@@ -22,7 +22,7 @@
                                 {{ 'Download all copies'|trans({}, 'icap_dropzone') }} </a>
                         </li>
                         <li>
-                            <a class="launch-modal"
+                            <a class="launch-modal" data-loading-text="Loading..."
                                href="{{ path('icap_dropzone_download_copies_by_date', {'resourceId': dropzone.id}) }}">{{ 'Download between two dates'|trans({}, 'icap_dropzone') }}  </a>
                         </li>
                     </ul>
