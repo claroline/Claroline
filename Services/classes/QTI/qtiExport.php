@@ -23,7 +23,8 @@ abstract class qtiExport
     protected $userDir;
     protected $node;
     protected $document;
-    protected $responseDeclaration;
+    protected $responseDeclaration = array();
+    protected $nbResponseDeclaration = 0;
     protected $outcomeDeclaration;
     protected $modalFeedback;
     protected $itemBody;
@@ -75,20 +76,24 @@ abstract class qtiExport
     }
 
     /**
-     * Add the tag responseDeclaration to node
+     * Add a new tag responseDeclaration to node
      *
      * @access potected
      *
      * @param String $baseType
      *
      */
-    protected function qtiResponseDeclaration($baseType, $cardinality)
+    protected function qtiResponseDeclaration($identifier, $baseType, $cardinality)
     {
-        $this->responseDeclaration = $this->document->CreateElement('responseDeclaration');
-        $this->responseDeclaration->setAttribute("identifier", "RESPONSE");
-        $this->responseDeclaration->setAttribute("cardinality", $cardinality);
-        $this->responseDeclaration->setAttribute("baseType", $baseType);
-        $this->node->appendChild($this->responseDeclaration);
+        $this->responseDeclaration[$this->nbResponseDeclaration] = $this->document->CreateElement('responseDeclaration');
+
+        $newRespDec = $this->responseDeclaration[$this->nbResponseDeclaration];
+        $newRespDec->setAttribute("identifier", $identifier);
+        $newRespDec->setAttribute("cardinality", $cardinality);
+        $newRespDec->setAttribute("baseType", $baseType);
+        $this->node->appendChild($newRespDec);
+
+        $this->nbResponseDeclaration++;
     }
 
     /**
@@ -125,7 +130,7 @@ abstract class qtiExport
         $this->modalFeedback->appendChild($modalFeedbacktxt);
         $this->node->appendChild($this->modalFeedback);
     }
-    
+
     /**
      * add the tag itemBody in node
      *
@@ -239,11 +244,11 @@ abstract class qtiExport
      * @param String \UJM\ExoBundle\Entity\Interaction $interaction
      */
     abstract public function export(\UJM\ExoBundle\Entity\Interaction $interaction);
-    
+
     /**
      * abstract method
      * Add the tag correctResponse in responseDeclaration
-     * 
+     *
      * @access protected
      */
     abstract protected function correctResponseTag();

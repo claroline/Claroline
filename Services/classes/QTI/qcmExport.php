@@ -51,7 +51,7 @@ class qcmExport extends qtiExport
         $this->resourcesLinked();
 
         $this->qtiHead($choiceType, $this->question->getTitle());
-        $this->qtiResponseDeclaration('identifier', $cardinality);
+        $this->qtiResponseDeclaration('RESPONSE','identifier', $cardinality);
         $this->qtiOutComeDeclaration();
 
         $this->defaultValueTag();
@@ -152,7 +152,7 @@ class qcmExport extends qtiExport
     protected function correctResponseTag()
     {
         $this->correctResponse = $this->document->CreateElement('correctResponse');
-        $this->responseDeclaration->appendChild($this->correctResponse);
+        $this->responseDeclaration[0]->appendChild($this->correctResponse);
     }
 
     /**
@@ -265,7 +265,7 @@ class qcmExport extends qtiExport
        $mapEntry->setAttribute("mapKey", "Choice".$i);
        $mapEntry->setAttribute("mappedValue", $weight);
        $mapping->appendChild($mapEntry);
-       $this->responseDeclaration->appendChild($mapping);
+       $this->responseDeclaration[0]->appendChild($mapping);
     }
 
     /**

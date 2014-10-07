@@ -39,7 +39,7 @@ class graphicExport extends qtiExport
             $cardinality = 'single';
         }
         $this->qtiHead('selectPoint', $this->question->getTitle());
-        $this->qtiResponseDeclaration('point', $cardinality);
+        $this->qtiResponseDeclaration('RESPONSE', 'point', $cardinality);
         $this->qtiOutComeDeclaration();
 
         $this->correctResponseTag();
@@ -91,7 +91,7 @@ class graphicExport extends qtiExport
             $correctResponse->appendChild($Tagvalue);
         }
 
-        $this->responseDeclaration->appendChild($correctResponse);
+        $this->responseDeclaration[0]->appendChild($correctResponse);
     }
 
     /**
@@ -104,7 +104,7 @@ class graphicExport extends qtiExport
     {
         $areaMapping = $this->document->createElement("areaMapping");
         $areaMapping->setAttribute("defaultValue", "0");
-        $this->responseDeclaration->appendChild($areaMapping);
+        $this->responseDeclaration[0]->appendChild($areaMapping);
 
         foreach ($this->interactiongraph->getCoords() as $c) {
             $xy = $this->qtiCoord($c);
