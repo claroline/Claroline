@@ -79,6 +79,7 @@ class ForumImporter extends Importer implements ConfigurationInterface
                                                             ->children()
                                                                 ->scalarNode('path')->end()
                                                                 ->scalarNode('creator')->end()
+                                                                ->scalarNode('author')->end()
                                                                 ->scalarNode('creation_date')->end()
                                                                 ->scalarNode('modification_date')->end()
                                                             ->end()
@@ -150,6 +151,7 @@ class ForumImporter extends Importer implements ConfigurationInterface
 
                     $messageEntity->setCreator($creator);
                     $messageEntity->setSubject($subjectEntity);
+                    $messageEntity->setAuthor($message['message']['author']);
 
                     $this->om->persist($messageEntity);
                 }
