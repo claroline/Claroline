@@ -8,6 +8,7 @@ use Claroline\CoreBundle\Event\Log\LogResourceUpdateEvent;
 use Icap\DropzoneBundle\Entity\Dropzone;
 use Icap\DropzoneBundle\Event\Log\LogDropzoneConfigureEvent;
 use Icap\DropzoneBundle\Event\Log\LogDropzoneManualStateChangedEvent;
+use Icap\DropzoneBundle\Form\DropsDownloadBetweenDatesType;
 use Icap\DropzoneBundle\Form\DropzoneCommonType;
 use Icap\DropzoneBundle\Form\DropzoneCriteriaType;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
@@ -584,10 +585,48 @@ class DropzoneController extends DropzoneBaseController
 
     /**
      * @Route(
+     *      "/{resourceId}/download/byDates",
+     *      name="icap_dropzone_download_copies_by_date",
+     *      requirements={"resourceId" = "\d+"}
+     * )
+     *
+     *
+     *
+     * @ParamConverter("dropzone", class="IcapDropzoneBundle:Dropzone", options={"id" = "resourceId"})
+     * @ParamConverter("user", options={
+     *      "authenticatedUser" = true,
+     *      "messageEnabled" = true,
+     *      "messageTranslationKey" = "Manage an evaluation requires authentication. Please login.",
+     *      "messageTranslationDomain" = "icap_dropzone"
+     * })
+     * @Template()
+     */
+    public function downloadCopiesBetweenDatesAction(Dropzone $dropzone)
+    {
+        $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
+        $this->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
+
+        $view = 'IcapDropzoneBundle:Drop:dropsDownloadBetweenDatesModal.html.twig';
+        $platformConfigHandler = $this->get('claroline.config.platform_config_handler');
+        $form = $this->createForm(new DropsDownloadBetweenDatesType(), $dropzone, array('language' => $platformConfigHandler->getParameter('locale_language'), 'date_format' => $this->get('translator')->trans('date_form_datepicker_format', array(), 'platform')));
+
+        return $this->render($view, array(
+            'form' => $form->createView(),
+            'workspace' => $dropzone->getResourceNode()->getWorkspace(),
+            '_resource' => $dropzone,
+            'dropzone' => $dropzone,
+        ));
+    }
+
+    /**
+     * @Route(
      *      "/{resourceId}/download",
      *      name="icap_dropzone_download_copies",
      *      requirements={"resourceId" = "\d+"}
      * )
+     *
+     *
+     *
      * @ParamConverter("dropzone", class="IcapDropzoneBundle:Dropzone", options={"id" = "resourceId"})
      * @ParamConverter("user", options={
      *      "authenticatedUser" = true,
@@ -599,16 +638,30 @@ class DropzoneController extends DropzoneBaseController
      */
     public function donwloadCopiesAction(Dropzone $dropzone, $beginDate = null, $endDate = null)
     {
-        //$this->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
+        if ($this->getRequest()->isMethod('POST')) {
+            $date_format = $this->get('translator')->trans('date_form_datepicker_php', array(), 'platform');
+            $date_format = str_replace('-', '/', $date_format);
+            $form_array = $this->getRequest()->request->get('icap_dropzone_date_download_between_date_form');
+            if (array_key_exists('drop_period_begin_date', $form_array)) {
+                $beginDate = DateTime::createFromFormat($date_format, $form_array['drop_period_begin_date']);
+            }
+            if (array_key_exists('drop_period_end_date', $form_array)) {
+                $endDate = DateTime::createFromFormat($date_format, $form_array['drop_period_end_date']);
+            }
 
-        $hiddenDirectory = $dropzone->getHiddenDirectory();
+        }
+
         $idsToDL = $this->get('icap.manager.dropzone_manager')->getResourcesNodeIdsForDownload($dropzone, $beginDate, $endDate);
 
         // TODO cas ou pas de document dispos à gérer
         if (count($idsToDL) <= 0) {
+            $message = 'No drops to download';
+            if ($beginDate != null) {
+                $message = 'No drops to download in this period';
+            }
             $this->getRequest()->getSession()->getFlashBag()->add(
                 'warning',
-                $this->get('translator')->trans('No drops to download', array(), 'icap_dropzone')
+                $this->get('translator')->trans($message, array(), 'icap_dropzone')
             );
             return $this->redirect($this->generateUrl('icap_dropzone_drops', array('resourceId' => $dropzone->getId())));
         }
