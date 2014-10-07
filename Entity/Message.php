@@ -120,8 +120,8 @@ class Message
     protected $senderUsername = 'claroline-connect';
 
     /**
-     * @ORM\Column(name="receiver_string", length=2047)
-     * @Assert\Length(max = "2047")
+     * @ORM\Column(name="receiver_string", length=16000)
+     * @Assert\Length(max = "16000")
      */
     protected $to;
 
