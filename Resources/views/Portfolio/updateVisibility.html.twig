@@ -155,6 +155,8 @@
 
 {% block javascripts %}
 {{ parent() }}
+<script type="text/javascript" src='{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2/components/jquery.ui.effect.min.js') }}'></script>
+<script type="text/javascript" src='{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2/components/jquery.ui.effect-highlight.min.js') }}'></script>
 <script type="text/javascript" src="{{ asset('bundles/zenstruckform/js/helper.js') }}"></script>
 <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/select2/select2.min.js') }}"></script>
 {% if 'en' != app.request.locale %}
