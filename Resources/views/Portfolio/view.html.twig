@@ -19,11 +19,6 @@
                     </p>
                     <h1 id="username">{{ portfolio.user.firstName ~ ' ' ~ portfolio.user.lastName }}</h1>
 
-                    <!-- ugly hack to avoid tinymce field to appear after popover apperance, and make it move-->
-                    <div class="hidden">
-                        <textarea ui-tinymce class="form-control" rows="3" name="userInformation[presentation]" data-ng-model="evaluatedWidget.comment"></textarea>
-                    </div>
-
                     <div data-ng-repeat="widget in widgets | filter:{type: 'title'}" data-ng-show="widgets.length > 0">
                         <div class="portfolio-title-container" data-widget>
                             {% if constant('Icap\\PortfolioBundle\\Manager\\PortfolioManager::PORTFOLIO_OPENING_MODE_VIEW') != openingMode %}
