@@ -20,7 +20,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Table(name="claro_team")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Claroline\TeamBundle\Repository\TeamRepository")
  */
 class Team
 {

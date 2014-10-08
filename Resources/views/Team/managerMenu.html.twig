@@ -1,0 +1,47 @@
+{% macro sortUrl(workspaceId, orderedBy, order) %}
+    {% if order == 'ASC' %}
+        {% set newOrder = 'DESC' %}
+    {% else %}
+        {% set newOrder = 'ASC' %}
+    {% endif %}
+
+    {{ path('claro_team_manager_menu', {'workspace': workspaceId, 'orderedBy': orderedBy, 'order': newOrder }) }}
+{% endmacro %}
+
+{% from _self import sortUrl %}
+
+{% extends "ClarolineCoreBundle:Workspace:layout.html.twig" %}
+
+{% block title %}
+    {{ parent() ~ ' - ' ~ "claroline_team_tool" | trans({}, "tools") | striptags | raw }}
+{% endblock %}
+
+{% block breadcrumb %}
+    {{
+        macros.workspaceBreadcrumbs(
+            workspace,
+            [
+                {
+                    'name': 'claroline_team_tool'|trans({}, 'tools'),
+                    'href': ''
+                }
+            ]
+        )
+    }}
+{% endblock %}
+
+{% block section_content %}
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ 'claroline_team_tool'|trans({}, 'tools') }}</h3>
+    </div>
+    <div class="panel-body">
+        
+        {% if teams|length > 0 %}
+        
+        {% else %}
+            <div class="alert alert-warning">
+                {{ 'no_team'|trans({}, 'team') }}
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}
