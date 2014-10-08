@@ -977,12 +977,19 @@ class ResourceManager
             }
 
             $filename = $this->getRelativePath($currentDir, $node) . $node->getName();
+            $resource = $this->getResourceFromNode($node);
+
+            //if it's a file, we may have to add the extension back in case someone removed it from the name
+            if ($node->getResourceType()->getName() === 'file') {
+                $extension = '.' . pathinfo($resource->getHashName(), PATHINFO_EXTENSION);
+                if (!preg_match("#$extension#", $filename)) $filename .= $extension;
+            }
 
             if ($node->getResourceType()->getName() !== 'directory') {
                 $event = $this->dispatcher->dispatch(
                     "download_{$node->getResourceType()->getName()}",
                     'DownloadResource',
-                    array($this->getResourceFromNode($node))
+                    array($resource)
                 );
 
                 $obj = $event->getItem();
