@@ -1,0 +1,35 @@
+{% form_theme form "IcapDropzoneBundle::form_theme_bootstrap3.html.twig" %}
+
+<form class="form-vertical" method="POST"
+      action="{{ path('icap_dropzone_download_copies', {'resourceId':dropzone.id}) }}">
+    {{ form_errors(form) }}
+
+    <p>{{ "Select Period"|trans({},'icap_dropzone') }}</p>
+
+    <div class="row">
+        <div class="col-md-6">
+
+            {{ form_label(form.drop_period_begin_date,form.drop_period_begin_date.vars.label|trans({},'icap_dropzone')) }}
+            {{ form_errors(form.drop_period_begin_date) }}
+            {{ form_widget(form.drop_period_begin_date) }}
+        </div>
+        <div class="col-md-6">
+            {{ form_label(form.drop_period_end_date,form.drop_period_end_date.vars.label|trans({},'icap_dropzone')) }}
+            {{ form_errors(form.drop_period_end_date) }}
+            {{ form_widget(form.drop_period_end_date) }}
+        </div>
+    </div>
+
+    <div class="container ">
+        <div class="modal-footer">
+            <div class="btn-group ">
+                {#<button class="btn btn-default" data-dismiss="modal" aria-hidden="true">{{ 'Cancel'|trans({}, 'icap_dropzone') }}</button>#}
+                <button id="btn-dl-copies-by-date" type="submit" class="btn btn-default">
+                        <span
+                                class="fa fa-download"> </span> {{ 'Download copies in this period'|trans({}, 'icap_dropzone') }}
+                </button>
+            </div>
+        </div>
+    </div>
+    {{ form_end(form) }}
+

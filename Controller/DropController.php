@@ -24,6 +24,7 @@ use Pagerfanta\Exception\NotValidCurrentPageException;
 use Pagerfanta\Pagerfanta;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
+use Proxies\__CG__\Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -82,6 +83,7 @@ class DropController extends DropzoneBaseController
             $notFinishedDrop->setDropzone($dropzone);
             $notFinishedDrop->setFinished(false);
 
+
             $em->persist($notFinishedDrop);
             $em->flush();
             $em->refresh($notFinishedDrop);
@@ -105,11 +107,28 @@ class DropController extends DropzoneBaseController
             }
 
             if ($form->isValid()) {
+
+                //var_dump($notFinishedDrop);
+
+                // change the folder name to take the datetime of the drop event
+                $dropDate = new \DateTime();
+                $date_format = $this->get('translator')->trans('date_form_datepicker_php', array(), 'platform');
+                $rm = $this->get("claroline.manager.resource_manager");
+                $node = $rm->getById($notFinishedDrop->getHiddenDirectory()->getId());
+                // set the date time of the drop.
+                $folderName = $node->getName();
+                $rm->rename($node, $folderName . " " . $dropDate->format($date_format . " " . "H:i:s")); //());
+
+                //end setting datetime.
+
+
                 $notFinishedDrop->setFinished(true);
 
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($notFinishedDrop);
+
                 $em->flush();
+
 
                 $rm = $this->get('claroline.manager.role_manager');
                 $event = new LogDropEndEvent($dropzone, $notFinishedDrop, $rm);
