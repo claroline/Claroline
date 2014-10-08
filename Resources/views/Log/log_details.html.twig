@@ -2,9 +2,9 @@
 
 {% block logDetailsContext %}
     {{ parent() }}
-    {% if constant('Icap\\PortfolioBundle\\Event\\Log\\PortfolioAddEvaluatorEvent::ACTION') == log.action %}
-        {% include 'IcapPortfolioBundle:Log:log_details_portfolio_add_evaluator.html.twig' %}
-    {% elseif constant('Icap\\PortfolioBundle\\Event\\Log\\PortfolioRemoveEvaluatorEvent::ACTION') == log.action %}
-        {% include 'IcapPortfolioBundle:Log:log_details_portfolio_remove_evaluator.html.twig' %}
+    {% if constant('Icap\\PortfolioBundle\\Event\\Log\\PortfolioAddGuideEvent::ACTION') == log.action %}
+        {% include 'IcapPortfolioBundle:Log:log_details_portfolio_add_guide.html.twig' %}
+    {% elseif constant('Icap\\PortfolioBundle\\Event\\Log\\PortfolioRemoveGuideEvent::ACTION') == log.action %}
+        {% include 'IcapPortfolioBundle:Log:log_details_portfolio_remove_guide.html.twig' %}
     {% endif %}
 {% endblock %}

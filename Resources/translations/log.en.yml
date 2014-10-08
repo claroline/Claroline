@@ -1,11 +1,11 @@
-portfolio-add_evaluator: 'added %evaluator% in the evaluators list of the portfolio %portfolio%'
-portfolio-remove_evaluator: 'removed %evaluator% from the evaluators list of the portfolio %portfolio%'
+portfolio-add_guide: 'added %guide% in the guides list of the portfolio %portfolio%'
+portfolio-remove_guide: 'removed %guide% from the guides list of the portfolio %portfolio%'
 
-log_portfolio-add_evaluator_shortname: 'Add evaluator on portfolio'
-log_portfolio-remove_evaluator_shortname: 'Remove evaluator on portfolio'
+log_portfolio-add_guide_shortname: 'Add guide on portfolio'
+log_portfolio-remove_guide_shortname: 'Remove guide on portfolio'
 
-log_portfolio-add_evaluator_title: 'Add evaluator on portfolio'
-log_portfolio-remove_evaluator_title: 'Remove evaluator on portfolio'
+log_portfolio-add_guide_title: 'Add guide on portfolio'
+log_portfolio-remove_guide_title: 'Remove guide on portfolio'
 
-log_portfolio_added_evaluator: 'Evaluator added to the portfolio'
-log_portfolio_removed_evaluator: 'Evaluator removed from the portfolio'
+log_portfolio_added_guide: 'guide added to the portfolio'
+log_portfolio_removed_guide: 'guide removed from the portfolio'

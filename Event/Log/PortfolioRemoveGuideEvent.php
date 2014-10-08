@@ -5,11 +5,11 @@ namespace Icap\PortfolioBundle\Event\Log;
 use Claroline\CoreBundle\Event\Log\LogGenericEvent;
 use Icap\NotificationBundle\Entity\NotifiableInterface;
 use Icap\PortfolioBundle\Entity\Portfolio;
-use Icap\PortfolioBundle\Entity\PortfolioEvaluator;
+use Icap\PortfolioBundle\Entity\PortfolioGuide;
 
-class PortfolioAddEvaluatorEvent extends LogGenericEvent implements NotifiableInterface
+class PortfolioRemoveGuideEvent extends LogGenericEvent implements NotifiableInterface
 {
-    const ACTION = 'portfolio-add_evaluator';
+    const ACTION = 'portfolio-remove_guide';
 
     /**
      * @var \Icap\PortfolioBundle\Entity\Portfolio
@@ -17,22 +17,22 @@ class PortfolioAddEvaluatorEvent extends LogGenericEvent implements NotifiableIn
     protected $portfolio;
 
     /**
-     * @var \Icap\PortfolioBundle\Entity\PortfolioEvaluator
+     * @var \Icap\PortfolioBundle\Entity\PortfolioGuide
      */
-    protected $portfolioEvaluator;
+    protected $portfolioGuide;
 
     /**
      * Constructor.
      *
      * @param Portfolio          $portfolio
-     * @param PortfolioEvaluator $portfolioEvaluator
+     * @param PortfolioGuide $portfolioGuide
      */
-    public function __construct(Portfolio $portfolio, PortfolioEvaluator $portfolioEvaluator)
+    public function __construct(Portfolio $portfolio, PortfolioGuide $portfolioGuide)
     {
-        $this->portfolio          = $portfolio;
-        $this->portfolioEvaluator = $portfolioEvaluator;
+        $this->portfolio      = $portfolio;
+        $this->portfolioGuide = $portfolioGuide;
 
-        $user = $portfolio->getUser();
+        $user     = $portfolio->getUser();
 
         /** @var \Icap\PortfolioBundle\Entity\Widget\TitleWidget $titleWidget */
         $titleWidget = $this->portfolio->getTitleWidget();
@@ -50,7 +50,7 @@ class PortfolioAddEvaluatorEvent extends LogGenericEvent implements NotifiableIn
                     'slug'  => $titleWidget->getSlug()
                 )
             ),
-            $portfolioEvaluator->getUser(),
+            $portfolioGuide->getUser(),
             null,
             null,
             null,
@@ -135,7 +135,7 @@ class PortfolioAddEvaluatorEvent extends LogGenericEvent implements NotifiableIn
                 'title' => $titleWidget->getTitle(),
                 'slug'  => $titleWidget->getSlug()
             ),
-            'evaluator'  => array(
+            'guide'  => array(
                 'id'        => $receiver->getId(),
                 'publicUrl' => $receiver->getPublicUrl(),
                 'lastName'  => $receiver->getLastName(),

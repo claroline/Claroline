@@ -1,7 +1,7 @@
 {% if log.receiver is defined %}
     <div class="list-group">
         <div class="list-group-item">
-            <h4>{{ ('log_portfolio_removed_evaluator')|trans({}, 'log') }}</h4>
+            <h4>{{ ('log_portfolio_removed_guide')|trans({}, 'log') }}</h4>
 
             {% if log.receiver and log.doer and log.receiver.getId() == log.doer.getId() %}
                 <dl class="dl-horizontal">

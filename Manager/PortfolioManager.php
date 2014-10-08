@@ -9,11 +9,11 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManager;
 use Icap\PortfolioBundle\Entity\Portfolio;
 use Icap\PortfolioBundle\Entity\PortfolioUser;
-use Icap\PortfolioBundle\Entity\PortfolioEvaluator;
+use Icap\PortfolioBundle\Entity\PortfolioGuide;
 use Icap\PortfolioBundle\Entity\Widget\TitleWidget;
 use Icap\PortfolioBundle\Entity\Widget\WidgetNode;
-use Icap\PortfolioBundle\Event\Log\PortfolioAddEvaluatorEvent;
-use Icap\PortfolioBundle\Event\Log\PortfolioRemoveEvaluatorEvent;
+use Icap\PortfolioBundle\Event\Log\PortfolioAddGuideEvent;
+use Icap\PortfolioBundle\Event\Log\PortfolioRemoveGuideEvent;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\FormFactory;
@@ -130,39 +130,39 @@ class PortfolioManager
 
     /**
      * @param Portfolio                               $portfolio
-     * @param Collection|PortfolioEvaluator[]         $originalPortfolioEvaluators
+     * @param Collection|PortfolioGuide[]         $originalPortfolioGuides
      */
-    public function updateEvaluators(Portfolio $portfolio, Collection $originalPortfolioEvaluators)
+    public function updateGuides(Portfolio $portfolio, Collection $originalPortfolioGuides)
     {
-        $portfolioEvaluators                = $portfolio->getPortfolioEvaluators();
-        /** @var PortfolioEvaluator[] $addedPortfolioEvaluatorsToNotify */
-        $addedPortfolioEvaluatorsToNotify   = array();
-        /** @var PortfolioEvaluator[] $removedPortfolioEvaluatorsToNotify */
-        $removedPortfolioEvaluatorsToNotify = array();
+        $portfolioGuides                = $portfolio->getPortfolioGuides();
+        /** @var PortfolioGuide[] $addedPortfolioGuidesToNotify */
+        $addedPortfolioGuidesToNotify   = array();
+        /** @var PortfolioGuide[] $removedPortfolioGuidesToNotify */
+        $removedPortfolioGuidesToNotify = array();
 
-        foreach ($portfolioEvaluators as $portfolioEvaluator) {
-            if ($originalPortfolioEvaluators->contains($portfolioEvaluator)) {
-                $originalPortfolioEvaluators->removeElement($portfolioEvaluator);
+        foreach ($portfolioGuides as $portfolioGuide) {
+            if ($originalPortfolioGuides->contains($portfolioGuide)) {
+                $originalPortfolioGuides->removeElement($portfolioGuide);
             }
             else {
-                $addedPortfolioEvaluatorsToNotify[] = $portfolioEvaluator;
+                $addedPortfolioGuidesToNotify[] = $portfolioGuide;
             }
         }
 
-        foreach ($originalPortfolioEvaluators as $originalPortfolioUser) {
-            $this->entityManager->remove($originalPortfolioUser);
-            $removedPortfolioEvaluatorsToNotify[] = $originalPortfolioUser;
+        foreach ($originalPortfolioGuides as $originalPortfolioGuide) {
+            $this->entityManager->remove($originalPortfolioGuide);
+            $removedPortfolioGuidesToNotify[] = $originalPortfolioGuide;
         }
 
         $this->persistPortfolio($portfolio);
 
-        foreach ($addedPortfolioEvaluatorsToNotify as $addedPortfolioEvaluator) {
-            $portfolioAddEvaluatorEvent = new PortfolioAddEvaluatorEvent($portfolio, $addedPortfolioEvaluator);
-            $this->dispatch($portfolioAddEvaluatorEvent);
+        foreach ($addedPortfolioGuidesToNotify as $addedPortfolioGuide) {
+            $portfolioAddGuideEvent = new PortfolioAddGuideEvent($portfolio, $addedPortfolioGuide);
+            $this->dispatch($portfolioAddGuideEvent);
         }
-        foreach ($removedPortfolioEvaluatorsToNotify as $removedPortfolioEvaluator) {
-            $portfolioAddEvaluatorEvent = new PortfolioRemoveEvaluatorEvent($portfolio, $removedPortfolioEvaluator);
-            $this->dispatch($portfolioAddEvaluatorEvent);
+        foreach ($removedPortfolioGuidesToNotify as $removedPortfolioGuide) {
+            $portfolioAddGuideEvent = new PortfolioRemoveGuideEvent($portfolio, $removedPortfolioGuide);
+            $this->dispatch($portfolioAddGuideEvent);
         }
     }
 
@@ -307,7 +307,7 @@ class PortfolioManager
             if ($user === $portfolio->getUser() || $isAdmin) {
                 $openingMode = self::PORTFOLIO_OPENING_MODE_EDIT;
             }
-            elseif ($portfolio->hasEvaluator($user)) {
+            elseif ($portfolio->hasGuide($user)) {
                 $openingMode = self::PORTFOLIO_OPENING_MODE_EVALUATE;
             }
             elseif ($portfolio->visibleToUser($user)) {

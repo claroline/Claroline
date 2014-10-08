@@ -11,7 +11,7 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 /**
  * @DI\FormType
  */
-class PortfolioEvaluatorType extends AbstractType
+class PortfolioGuiderType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -28,14 +28,14 @@ class PortfolioEvaluatorType extends AbstractType
 
     public function getName()
     {
-        return 'icap_portfolio_evaluator_form';
+        return 'icap_portfolio_guide_form';
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(
             array(
-                'data_class'         => 'Icap\PortfolioBundle\Entity\PortfolioEvaluator',
+                'data_class'         => 'Icap\PortfolioBundle\Entity\PortfolioGuide',
                 'translation_domain' => 'icap_portfolio'
             )
         );

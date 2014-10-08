@@ -8,14 +8,14 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/09/30 05:39:43
+ * Generation date: 2014/10/07 04:50:38
  */
-class Version20140930173941 extends AbstractMigration
+class Version20141007165036 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
         $this->addSql("
-            CREATE TABLE icap__portfolio_evaluators (
+            CREATE TABLE icap__portfolio_guides (
                 id INTEGER NOT NULL, 
                 user_id INTEGER NOT NULL, 
                 portfolio_id INTEGER NOT NULL, 
@@ -23,13 +23,13 @@ class Version20140930173941 extends AbstractMigration
             )
         ");
         $this->addSql("
-            CREATE INDEX IDX_CD4F54F9A76ED395 ON icap__portfolio_evaluators (user_id)
+            CREATE INDEX IDX_27EAB640A76ED395 ON icap__portfolio_guides (user_id)
         ");
         $this->addSql("
-            CREATE INDEX IDX_CD4F54F9B96B5643 ON icap__portfolio_evaluators (portfolio_id)
+            CREATE INDEX IDX_27EAB640B96B5643 ON icap__portfolio_guides (portfolio_id)
         ");
         $this->addSql("
-            CREATE UNIQUE INDEX portfolio_users_unique_idx ON icap__portfolio_evaluators (portfolio_id, user_id)
+            CREATE UNIQUE INDEX portfolio_users_unique_idx ON icap__portfolio_guides (portfolio_id, user_id)
         ");
         $this->addSql("
             CREATE TABLE icap__portfolio_widget_badges (
@@ -56,7 +56,7 @@ class Version20140930173941 extends AbstractMigration
     public function down(Schema $schema)
     {
         $this->addSql("
-            DROP TABLE icap__portfolio_evaluators
+            DROP TABLE icap__portfolio_guides
         ");
         $this->addSql("
             DROP TABLE icap__portfolio_widget_badges

@@ -6,14 +6,14 @@ use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Table(name="icap__portfolio_evaluators",
+ * @ORM\Table(name="icap__portfolio_guides",
  *      uniqueConstraints={
  *          @ORM\UniqueConstraint(name="portfolio_users_unique_idx", columns={"portfolio_id", "user_id"})
  *      }
  * )
  * @ORM\Entity
  */
-class PortfolioEvaluator
+class PortfolioGuide
 {
     /**
      * @var integer
@@ -33,7 +33,7 @@ class PortfolioEvaluator
     protected $user;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Icap\PortfolioBundle\Entity\Portfolio", inversedBy="portfolioEvaluators")
+     * @ORM\ManyToOne(targetEntity="Icap\PortfolioBundle\Entity\Portfolio", inversedBy="portfolioGuides")
      * @ORM\JoinColumn(name="portfolio_id", referencedColumnName="id", nullable=false)
      */
     protected $portfolio;

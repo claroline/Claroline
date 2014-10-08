@@ -2,9 +2,9 @@
 
 {% form_theme form _self %}
 
-{% block title %}{{ parent() ~ ' - ' ~ 'update_portfolio_evaluators' | trans({}, 'icap_portfolio') | striptags | raw }}{% endblock %}
+{% block title %}{{ parent() ~ ' - ' ~ 'update_portfolio_guides' | trans({}, 'icap_portfolio') | striptags | raw }}{% endblock %}
 
-{% block content_title %}{{ 'update_portfolio_evaluators'|trans({}, 'icap_portfolio') }}{% endblock %}
+{% block content_title %}{{ 'update_portfolio_guides'|trans({}, 'icap_portfolio') }}{% endblock %}
 
 {% block breadcrumb %}
     {{
@@ -16,17 +16,17 @@
             },
             {
                 'icon': 'fa fa-list-alt',
-                'name': 'manage_portfolio_evaluators'|trans({}, 'icap_portfolio'),
+                'name': 'manage_portfolio_guides'|trans({}, 'icap_portfolio'),
                 'href': ''
             }
         ])
     }}
 {% endblock %}
 
-{% block _icap_portfolio_evaluators_form_portfolio_evaluators_widget %}
+{% block _icap_portfolio_guides_form_portfolio_guides_widget %}
     {% spaceless %}
         {% if prototype is defined %}
-            {% set attr = attr|merge({'data-prototype': block('_icap_portfolio_evaluators_form_portfolio_evaluators_prototype') }) %}
+            {% set attr = attr|merge({'data-prototype': block('_icap_portfolio_guides_form_portfolio_guides_prototype') }) %}
         {% endif %}
         <div {{ block('widget_container_attributes') }}>
             {{ form_errors(form) }}
@@ -50,11 +50,11 @@
             {{ form_rest(form) }}
         </div>
     {% endspaceless %}
-{% endblock _icap_portfolio_evaluators_form_portfolio_evaluators_widget %}
+{% endblock _icap_portfolio_guides_form_portfolio_guides_widget %}
 
-{% block _icap_portfolio_evaluators_form_portfolio_evaluators_prototype %}
+{% block _icap_portfolio_guides_form_portfolio_guides_prototype %}
     {{ _self.collection_field(prototype, 'primary') }}
-{% endblock _icap_portfolio_evaluators_form_portfolio_evaluators_prototype %}
+{% endblock _icap_portfolio_guides_form_portfolio_guides_prototype %}
 
 {% macro collection_field(rows, class) %}
     {% spaceless %}
@@ -74,17 +74,17 @@
 {% endmacro %}
 
 {% block content_body %}
-    <form action="{{ path('icap_portfolio_update_evaluators', {'id': portfolio.id}) }}" method="post" class="form-vertical" id="evaluators_form" {{ form_enctype(form) }}>
+    <form action="{{ path('icap_portfolio_update_guides', {'id': portfolio.id}) }}" method="post" class="form-vertical" id="guides_form" {{ form_enctype(form) }}>
         {{ form_errors(form) }}
 
         <div class="form-group">
             <div class="col-md-12" id="choose_user">
-                <label class="row">{{ 'select_evaluators'|trans({}, 'icap_portfolio') }}</label>
+                <label class="row">{{ 'select_guides'|trans({}, 'icap_portfolio') }}</label>
                 <div class="row">
                     <div class="col-md-12">
-                        {{ form_widget(form.portfolio_evaluators) }}
-                        {{ form_widget(form.search_evaluator) }}
-                        <button class="btn btn-xs btn-success form-collection-add-evaluator" disabled="disabled">{{ 'add'|trans({}, 'platform') }}</button>
+                        {{ form_widget(form.portfolio_guides) }}
+                        {{ form_widget(form.search_guide) }}
+                        <button class="btn btn-xs btn-success form-collection-add-guide" disabled="disabled">{{ 'add'|trans({}, 'platform') }}</button>
                     </div>
                 </div>
             </div>
@@ -94,7 +94,7 @@
 
         <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
-                <button type="submit" class="btn btn-primary">{{ 'update_evaluators'|trans({}, 'icap_portfolio') }}</button>
+                <button type="submit" class="btn btn-primary">{{ 'update_guides'|trans({}, 'icap_portfolio') }}</button>
                 <a href="{{ path("icap_portfolio_list") }}" title="{{ 'cancel'|trans({}, 'platform') }}" class="btn btn-default">{{ 'cancel'|trans({}, 'platform') }}</a>
             </div>
         </div>
@@ -113,5 +113,5 @@
 {% if 'en' != app.request.locale %}
 <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/select2/select2_locale_' ~ app.request.locale ~ '.js') }}"></script>
 {% endif %}
-<script type="text/javascript" src='{{ asset('bundles/icapportfolio/js/evaluators.js') }}'></script>
+<script type="text/javascript" src='{{ asset('bundles/icapportfolio/js/guides.js') }}'></script>
 {% endblock %}

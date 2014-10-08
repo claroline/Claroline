@@ -6,9 +6,9 @@
     {% else %}
         <strong>{{ systemName }}</strong>
     {% endif %}
-    {% if constant('Icap\\PortfolioBundle\\Event\\Log\\PortfolioRemoveEvaluatorEvent::ACTION') == notification.actionKey %}
-        {% include 'IcapPortfolioBundle:Notification:notification_portfolio-evaluator.html.twig' %}
-    {% elseif constant('Icap\\PortfolioBundle\\Event\\Log\\PortfolioAddEvaluatorEvent::ACTION') == notification.actionKey %}
-        {% include 'IcapPortfolioBundle:Notification:notification_portfolio-evaluator.html.twig' %}
+    {% if constant('Icap\\PortfolioBundle\\Event\\Log\\PortfolioRemoveGuideEvent::ACTION') == notification.actionKey %}
+        {% include 'IcapPortfolioBundle:Notification:notification_portfolio-guide.html.twig' %}
+    {% elseif constant('Icap\\PortfolioBundle\\Event\\Log\\PortfolioAddGuideEvent::ACTION') == notification.actionKey %}
+        {% include 'IcapPortfolioBundle:Notification:notification_portfolio-guide.html.twig' %}
     {% endif %}
 {% endblock %}

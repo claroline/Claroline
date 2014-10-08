@@ -2,14 +2,14 @@
     {% include 'IcapPortfolioBundle:Log:log_list_item_portfolio.html.twig' %}
 {% endset %}
 
-{% set evaluator %}
-    {% include 'IcapPortfolioBundle:Log:log_list_item_evaluator.html.twig' %}
+{% set guide %}
+    {% include 'IcapPortfolioBundle:Log:log_list_item_guide.html.twig' %}
 {% endset %}
 
-{% if constant('Icap\\PortfolioBundle\\Event\\Log\\PortfolioAddEvaluatorEvent::ACTION') == log.action %}
-    {{ log.action|trans({'%portfolio%': portfolio, '%evaluator%': evaluator}, 'log')|raw }}
-{% elseif constant('Icap\\PortfolioBundle\\Event\\Log\\PortfolioRemoveEvaluatorEvent::ACTION') == log.action %}
-    {{ log.action|trans({'%portfolio%': portfolio, '%evaluator%': evaluator}, 'log')|raw }}
+{% if constant('Icap\\PortfolioBundle\\Event\\Log\\PortfolioAddGuideEvent::ACTION') == log.action %}
+    {{ log.action|trans({'%portfolio%': portfolio, '%guide%': guide}, 'log')|raw }}
+{% elseif constant('Icap\\PortfolioBundle\\Event\\Log\\PortfolioRemoveGuideEvent::ACTION') == log.action %}
+    {{ log.action|trans({'%portfolio%': portfolio, '%guide%': guide}, 'log')|raw }}
 {% else %}
     no default text
 {% endif %}

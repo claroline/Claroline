@@ -12,7 +12,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 /**
  * @DI\FormType
  */
-class EvaluatorsPortfolioType extends AbstractType
+class GuidesPortfolioType extends AbstractType
 {
     /** @var \Symfony\Component\Translation\TranslatorInterface */
     private $translator;
@@ -30,8 +30,8 @@ class EvaluatorsPortfolioType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('portfolio_evaluators', 'collection', array(
-                'type'          => 'icap_portfolio_evaluator_form',
+            ->add('portfolio_guides', 'collection', array(
+                'type'          => 'icap_portfolio_guide_form',
                 'by_reference'  => false,
                 'attr'          => array('class' => 'rule-collections'),
                 'theme_options' => array('label_width' => 'col-md-12'),
@@ -39,7 +39,7 @@ class EvaluatorsPortfolioType extends AbstractType
                 'allow_add'     => true,
                 'allow_delete'  => true
             ))
-            ->add('search_evaluator', 'zenstruck_ajax_entity', array(
+            ->add('search_guide', 'zenstruck_ajax_entity', array(
                 'class'          => 'ClarolineCoreBundle:User',
                 'use_controller' => true,
                 'property'       => 'username',
@@ -51,7 +51,7 @@ class EvaluatorsPortfolioType extends AbstractType
 
     public function getName()
     {
-        return 'icap_portfolio_evaluators_form';
+        return 'icap_portfolio_guides_form';
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

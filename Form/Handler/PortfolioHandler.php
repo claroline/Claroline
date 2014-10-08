@@ -78,9 +78,9 @@ class PortfolioHandler
      *
      * @return \Symfony\Component\Form\Form|FormInterface
      */
-    public function getEvaluatorsForm(Portfolio $portfolio)
+    public function getGuidesForm(Portfolio $portfolio)
     {
-        return $this->formFactory->create('icap_portfolio_evaluators_form', $portfolio);
+        return $this->formFactory->create('icap_portfolio_guides_form', $portfolio);
     }
 
     /**
@@ -172,17 +172,17 @@ class PortfolioHandler
      *
      * @return bool True on successfull processing, false otherwise
      */
-    public function handleEvaluators(Portfolio $portfolio)
+    public function handleGuides(Portfolio $portfolio)
     {
-        $originalPortfolioEvaluators  = $portfolio->getPortfolioEvaluators();
-        $form                         = $this->getEvaluatorsForm($portfolio);
+        $originalPortfolioGuides  = $portfolio->getPortfolioGuides();
+        $form                         = $this->getGuidesForm($portfolio);
 
         $request = $this->requestStack->getCurrentRequest();
         if ($request->isMethod('POST')) {
             $form->submit($request);
 
             if ($form->isValid()) {
-                $this->portfolioManager->updateEvaluators($portfolio, $originalPortfolioEvaluators);
+                $this->portfolioManager->updateGuides($portfolio, $originalPortfolioGuides);
 
                 return true;
             }

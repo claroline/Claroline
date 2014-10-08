@@ -62,9 +62,9 @@ class Portfolio
     protected $portfolioUsers;
 
     /**
-     * @ORM\OneToMany(targetEntity="PortfolioEvaluator", mappedBy="portfolio", cascade={"all"})
+     * @ORM\OneToMany(targetEntity="PortfolioGuide", mappedBy="portfolio", cascade={"all"})
      */
-    protected $portfolioEvaluators;
+    protected $portfolioGuides;
 
     /**
      * @ORM\OneToMany(targetEntity="PortfolioGroup", mappedBy="portfolio", cascade={"all"})
@@ -190,25 +190,25 @@ class Portfolio
     }
 
     /**
-     * @return PortfolioEvaluator[]
+     * @return PortfolioGuide[]
      */
-    public function getPortfolioEvaluators()
+    public function getPortfolioGuides()
     {
-        return $this->portfolioEvaluators;
+        return $this->portfolioGuides;
     }
 
     /**
-     * @param PortfolioEvaluator[] $portfolioEvaluators
+     * @param PortfolioGuide[] $portfolioGuides
      *
      * @return Portfolio
      */
-    public function setPortfolioEvaluators($portfolioEvaluators)
+    public function setPortfolioGuides($portfolioGuides)
     {
-        foreach ($portfolioEvaluators as $portfolioEvaluator) {
-            $portfolioEvaluator->setPortfolio($this);
+        foreach ($portfolioGuides as $portfolioGuide) {
+            $portfolioGuide->setPortfolio($this);
         }
 
-        $this->portfolioEvaluators = $portfolioEvaluators;
+        $this->portfolioGuides = $portfolioGuides;
 
         return $this;
     }
@@ -333,17 +333,17 @@ class Portfolio
      *
      * @return bool
      */
-    public function hasEvaluator(User $user)
+    public function hasGuide(User $user)
     {
-        $isEvaluator = false;
+        $isGuide = false;
 
-        foreach ($this->getPortfolioEvaluators() as $portfolioEvaluator) {
-            if ($user->getId() === $portfolioEvaluator->getUser()->getId()) {
-                $isEvaluator = true;
+        foreach ($this->getPortfolioGuides() as $portfolioGuide) {
+            if ($user->getId() === $portfolioGuide->getUser()->getId()) {
+                $isGuide = true;
                 break;
             }
         }
 
-        return $isEvaluator;
+        return $isGuide;
     }
 }

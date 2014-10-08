@@ -150,27 +150,27 @@ class PortfolioController extends Controller
     }
 
     /**
-     * @Route("/evaluators/{id}", name="icap_portfolio_update_evaluators", requirements={"id" = "\d+"})
+     * @Route("/guides/{id}", name="icap_portfolio_update_guides", requirements={"id" = "\d+"})
      *
      * @ParamConverter("loggedUser", options={"authenticatedUser" = true})
      * @Template()
      */
-    public function manageEvaluatorsAction(User $loggedUser, Portfolio $portfolio)
+    public function manageGuidesAction(User $loggedUser, Portfolio $portfolio)
     {
         try {
-            if ($this->getPortfolioFormHandler()->handleEvaluators($portfolio)) {
-                $this->getSessionFlashbag()->add('success', $this->getTranslator()->trans('portfolio_evaluators_update_success_message', array(), 'icap_portfolio'));
+            if ($this->getPortfolioFormHandler()->handleGuides($portfolio)) {
+                $this->getSessionFlashbag()->add('success', $this->getTranslator()->trans('portfolio_guides_update_success_message', array(), 'icap_portfolio'));
 
                 return $this->redirect($this->generateUrl('icap_portfolio_list'));
             }
         } catch (\Exception $exception) {
-            $this->getSessionFlashbag()->add('error', $this->getTranslator()->trans('portfolio_evaluators_update_error_message', array(), 'icap_portfolio'));
+            $this->getSessionFlashbag()->add('error', $this->getTranslator()->trans('portfolio_guides_update_error_message', array(), 'icap_portfolio'));
 
             return $this->redirect($this->generateUrl('icap_portfolio_list'));
         }
 
         return array(
-            'form'      => $this->getPortfolioFormHandler()->getEvaluatorsForm($portfolio)->createView(),
+            'form'      => $this->getPortfolioFormHandler()->getGuidesForm($portfolio)->createView(),
             'portfolio' => $portfolio
         );
     }

@@ -2,10 +2,10 @@
     "use strict";
 
     $(function() {
-        var evaluatorsFormName    = "icap_portfolio_evaluators_form";
-        var evaluatorsForm        = $("#evaluators_form");
-        var userSelect2Field      = $("#icap_portfolio_evaluators_form_search_evaluator");
-        var addingEvaluatorButton = $('.form-collection-add-evaluator');
+        var guidesFormName    = "icap_portfolio_guides_form";
+        var guidesForm        = $("#guides_form");
+        var userSelect2Field  = $("#icap_portfolio_guides_form_search_guide");
+        var addingGuideButton = $('.form-collection-add-guide');
 
         ZenstruckFormHelper.initSelect2Helper()
 
@@ -15,7 +15,7 @@
         });
 
         // form collection prototype creation
-        addingEvaluatorButton.on('click', function(event) {
+        addingGuideButton.on('click', function(event) {
             addingButtonClick(event, $(this), userSelect2Field);
         });
 
@@ -43,7 +43,7 @@
         };
 
         userSelect2Field.on("change", function(event) {
-            select2FieldChange(event, addingEvaluatorButton);
+            select2FieldChange(event, addingGuideButton);
         });
 
         var select2FieldChange = function (event, button) {
@@ -56,7 +56,7 @@
             var parsedFormValue = {};
             $.each(formValue, function(index, element) {
                 var parsedName = element.name;
-                var parsedName = parsedName.substring(evaluatorsFormName.length + 1, parsedName.length - 1);
+                var parsedName = parsedName.substring(guidesFormName.length + 1, parsedName.length - 1);
                 if ('_token' != parsedName) {
                     parsedFormValue[parsedName] = element.value;
                 }

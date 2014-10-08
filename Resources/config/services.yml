@@ -23,16 +23,16 @@ services:
         calls:
             - [setContainer, ["@service_container"]]
         tags:
-            - { name: kernel.event_listener, event: create_notification_item_portfolio-remove_evaluator, method: onCreateNotificationItem }
-            - { name: kernel.event_listener, event: create_notification_item_portfolio-add_evaluator, method: onCreateNotificationItem }
+            - { name: kernel.event_listener, event: create_notification_item_portfolio-remove_guide, method: onCreateNotificationItem }
+            - { name: kernel.event_listener, event: create_notification_item_portfolio-add_guide, method: onCreateNotificationItem }
 
     icap.listener.portfolio.log_listener:
         class: Icap\PortfolioBundle\Listener\LogListener
         calls:
             - [setContainer, ["@service_container"]]
         tags:
-            - { name: kernel.event_listener, event: create_log_details_portfolio-remove_evaluator, method: onPostCreateLogDetails }
-            - { name: kernel.event_listener, event: create_log_details_portfolio-add_evaluator,    method: onPostCreateLogDetails }
+            - { name: kernel.event_listener, event: create_log_details_portfolio-remove_guide, method: onPostCreateLogDetails }
+            - { name: kernel.event_listener, event: create_log_details_portfolio-add_guide,    method: onPostCreateLogDetails }
 
-            - { name: kernel.event_listener, event: create_log_list_item_portfolio-remove_evaluator, method: onCreateLogListItem }
-            - { name: kernel.event_listener, event: create_log_list_item_portfolio-add_evaluator,    method: onCreateLogListItem }
+            - { name: kernel.event_listener, event: create_log_list_item_portfolio-remove_guide, method: onCreateLogListItem }
+            - { name: kernel.event_listener, event: create_log_list_item_portfolio-add_guide,    method: onCreateLogListItem }
