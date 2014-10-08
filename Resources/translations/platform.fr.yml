@@ -1097,3 +1097,5 @@ portfolio_url: 'Url d''accès à l''outil de portfolio'
 internal_portfolio: 'Portfolio interne à la plateforme'
 general_parameters_updated_success: 'Paramètres généraux modifiés avec succès.'
 general_parameters_portfolio_url_help: 'commence par http://'
+add_role_to_users: Ajouter un rôle a %count% utilisateur(s)
+add_role_to_groups: Ajouter un rôle a %count% groupe(s)

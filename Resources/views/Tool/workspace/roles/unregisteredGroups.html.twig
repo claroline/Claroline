@@ -86,24 +86,6 @@
             <div class="row">
                 <div class="col-md-8">
                     <div class="btn-group margin-md">
-                        <div class="btn-group">
-                            <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                                {{ 'roles'|trans({}, 'platform') }}
-                                <span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu" role="menu" >
-                                {% for role in wsRoles %}
-                                    <li role="presentation">
-                                        <input
-                                            class="chk-role hide" type="checkbox" value="{{ role.getId() }}"
-                                            data-name="{{ role.getTranslationKey()|trans({}, 'platform') }}"
-                                            id="role-{{ role.getId() }}"
-                                        >
-                                        <label for="role-{{ role.getId() }}">{{ role.getTranslationKey()|trans({}, 'platform') }}</label>
-                                    </li>
-                                {% endfor %}
-                            </ul>
-                        </div>
                         <button id="add-role-button" class="btn btn-default">
                             <i class="fa fa-plus"></i> {{ 'add'|trans({}, 'platform') }}
                         </button>
@@ -163,6 +145,38 @@
             {% endif %}
         </div>
     </div>
+
+    <!-- roles modal --------------------------------------------------------------------->
+    <div class="modal fade" id="modal-roles">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title">{{ 'add'|trans({}, 'platform' ) }}</h4>
+                </div>
+                <div class="modal-body">
+                    <div id="modal-explain">
+
+                    </div>
+                    </br>
+                    <form>
+                        {% for role in wsRoles %}
+                            <input
+                                    class="chk-role" type="checkbox" value="{{ role.getId() }}"
+                                    data-name="{{ role.getTranslationKey()|trans({}, 'platform') }}"
+                                    id="role-{{ role.getId() }}"
+                                    >
+                            {{ role.getTranslationKey()|trans({}, 'platform') }}</br>
+                        {% endfor %}
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">{{ 'close'|trans({}, 'platform') }}</button>
+                    <button id="add-modal-roles-btn" type="button" class="btn btn-primary">{{ 'add'|trans({}, 'platform') }}</button>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
 {% block javascripts %}
     {{ parent() }}
@@ -178,25 +192,12 @@
         Claroline.Table.initialize(parameters);
 
         $('#add-role-button').on('click', function (event) {
-            var roles = [];
-            var i = 0;
-            $('.chk-role:checked').each(function (index, element) {
-                console.debug(element);
-                roles[i] = $(element).attr('data-name');
-                i++;
-            });
-
-            if (i > 0) {
-                var html = Twig.render(confirmAddRole, {'nbItems': $('.chk-grp:checked').length, 'roles': roles});
-            } else {
-                var html = Twig.render(noRoleSelected);
-            }
-
-            $('#table-modal .modal-body').html(html);
-            $('#table-modal').modal('show');
+            var msg = Translator.get('platform:add_role_to_groups', {'count': $('.chk-grp:checked').length});
+            $('#modal-explain').html(msg);
+            $('#modal-roles').modal('show');
         });
 
-         $('#modal-valid-button').on('click', function () {
+         $('#add-modal-roles-btn').on('click', function () {
             var i = 0;
             var queryString = {};
             var groups = [];
@@ -251,10 +252,8 @@
                 }
             });
 
-            $('#table-modal').modal('hide');
-            $('.modal-body').empty();
+            $('#modal-roles').modal('hide');
         });
-
 
         function createValidationBox() {
             var html = Twig.render(
