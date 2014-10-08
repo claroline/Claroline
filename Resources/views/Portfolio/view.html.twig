@@ -131,7 +131,11 @@
                                 </li>
                             </ul>
                         </div>
+                        {% if editMode %}
                         <p class="no-data well" data-ng-show="widgets.length <= 1">{{ 'no_widget'|trans({}, 'icap_portfolio')|raw }}</p>
+                        {% else %}
+                        <p class="no-data well" data-ng-show="widgets.length <= 1">{{ 'portfolio_empty'|trans({}, 'icap_portfolio')|raw }}</p>
+                        {% endif %}
                     {% else %}
                         {% set widgets = portfolio.widgets %}
                         {% if 1 < widgets.count %}
