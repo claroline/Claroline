@@ -1,12 +1,14 @@
 <?php
 namespace Icap\DropzoneBundle\Controller;
 
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\Log\LogResourceReadEvent;
 use Claroline\CoreBundle\Event\Log\LogResourceUpdateEvent;
 use Icap\DropzoneBundle\Entity\Dropzone;
 use Icap\DropzoneBundle\Event\Log\LogDropzoneConfigureEvent;
 use Icap\DropzoneBundle\Event\Log\LogDropzoneManualStateChangedEvent;
+use Icap\DropzoneBundle\Form\DropsDownloadBetweenDatesType;
 use Icap\DropzoneBundle\Form\DropzoneCommonType;
 use Icap\DropzoneBundle\Form\DropzoneCriteriaType;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
@@ -526,6 +528,7 @@ class DropzoneController extends DropzoneBaseController
         $dropzoneProgress = $dropzoneManager->getDrozponeProgress($dropzone, $drop, $nbCorrections);
 
         $PeerReviewEndCase = $dropzoneManager->isPeerReviewEndedOrManualStateFinished($dropzone, $nbCorrections);
+
         return array(
             'workspace' => $dropzone->getResourceNode()->getWorkspace(),
             '_resource' => $dropzone,
@@ -578,6 +581,107 @@ class DropzoneController extends DropzoneBaseController
         $em->persist($event);
         $em->flush();
         return $event;
+    }
+
+    /**
+     * @Route(
+     *      "/{resourceId}/download/byDates",
+     *      name="icap_dropzone_download_copies_by_date",
+     *      requirements={"resourceId" = "\d+"}
+     * )
+     *
+     *
+     *
+     * @ParamConverter("dropzone", class="IcapDropzoneBundle:Dropzone", options={"id" = "resourceId"})
+     * @ParamConverter("user", options={
+     *      "authenticatedUser" = true,
+     *      "messageEnabled" = true,
+     *      "messageTranslationKey" = "Manage an evaluation requires authentication. Please login.",
+     *      "messageTranslationDomain" = "icap_dropzone"
+     * })
+     * @Template()
+     */
+    public function downloadCopiesBetweenDatesAction(Dropzone $dropzone)
+    {
+        $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
+        $this->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
+
+        $view = 'IcapDropzoneBundle:Drop:dropsDownloadBetweenDates.html.twig';
+        if ($this->getRequest()->isXmlHttpRequest()) {
+            $view = 'IcapDropzoneBundle:Drop:dropsDownloadBetweenDatesModal.html.twig';
+        }
+
+        $platformConfigHandler = $this->get('claroline.config.platform_config_handler');
+        $form = $this->createForm(new DropsDownloadBetweenDatesType(), $dropzone, array('language' => $platformConfigHandler->getParameter('locale_language'), 'date_format' => $this->get('translator')->trans('date_form_datepicker_format', array(), 'platform')));
+
+        return $this->render($view, array(
+            'form' => $form->createView(),
+            'workspace' => $dropzone->getResourceNode()->getWorkspace(),
+            '_resource' => $dropzone,
+            'dropzone' => $dropzone,
+        ));
+    }
+
+    /**
+     * @Route(
+     *      "/{resourceId}/download",
+     *      name="icap_dropzone_download_copies",
+     *      requirements={"resourceId" = "\d+"}
+     * )
+     *
+     *
+     *
+     * @ParamConverter("dropzone", class="IcapDropzoneBundle:Dropzone", options={"id" = "resourceId"})
+     * @ParamConverter("user", options={
+     *      "authenticatedUser" = true,
+     *      "messageEnabled" = true,
+     *      "messageTranslationKey" = "Manage an evaluation requires authentication. Please login.",
+     *      "messageTranslationDomain" = "icap_dropzone"
+     * })
+     * @Template()
+     */
+    public function donwloadCopiesAction(Dropzone $dropzone, $beginDate = null, $endDate = null)
+    {
+        if ($this->getRequest()->isMethod('POST')) {
+            $date_format = $this->get('translator')->trans('date_form_datepicker_php', array(), 'platform');
+            $date_format = str_replace('-', '/', $date_format);
+            $date_format .= " H:i:s"; // adding hours in order to have full day possibility ( day1 0h00 to day1 23h59 )
+            $form_array = $this->getRequest()->request->get('icap_dropzone_date_download_between_date_form');
+            if (array_key_exists('drop_period_begin_date', $form_array)) {
+                $beginDate = DateTime::createFromFormat($date_format, $form_array['drop_period_begin_date'] . " 00:00:00");
+                // begin so day start at 00:00:00
+            }
+            if (array_key_exists('drop_period_end_date', $form_array)) {
+                $endDate = DateTime::createFromFormat($date_format, $form_array['drop_period_end_date'] . " 23:59:59");
+                // end date so day end at 23:59:59
+            }
+
+        }
+
+        $idsToDL = $this->get('icap.manager.dropzone_manager')->getResourcesNodeIdsForDownload($dropzone, $beginDate, $endDate);
+
+        // TODO cas ou pas de document dispos à gérer
+        if (count($idsToDL) <= 0) {
+            $message = 'No drops to download';
+            if ($beginDate != null) {
+                $message = 'No drops to download in this period';
+            }
+            $this->getRequest()->getSession()->getFlashBag()->add(
+                'warning',
+                $this->get('translator')->trans($message, array(), 'icap_dropzone')
+            );
+            return $this->redirect($this->generateUrl('icap_dropzone_drops', array('resourceId' => $dropzone->getId())));
+        }
+        return $this->redirect(
+            $this->generateUrl(
+                'claro_resource_download',
+                array(
+                    'ids[]' => $idsToDL,
+                    'forceArchive' => '1'
+                )
+            )
+        );
+
     }
 
 }

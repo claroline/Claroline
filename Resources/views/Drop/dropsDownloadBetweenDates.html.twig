@@ -1,0 +1,28 @@
+{% extends "IcapDropzoneBundle::layout.html.twig" %}
+{% block resourceBreadcrumb %}
+    <li>
+        <a href="{{ path('icap_dropzone_drops_by_user',{'resourceId':dropzone.id}) }}"><span
+                    class="fa fa-list"></span>  {{ dropzone.resourceNode.name }}</a>
+    </li>
+    <li class="active"><span class="fa fa-file"></span> {{ 'Download copies'|trans({},'icap_dropzone') }}</li>
+{% endblock %}
+
+{% block dropzone_content %}
+    <div class="container">
+        <h3>
+            {{ 'Download between two dates'|trans({}, 'icap_dropzone') }}
+        </h3>
+
+        <div class=" col-md-8 ">
+
+            {% include "IcapDropzoneBundle:Drop:dropsDownloadBetweenDatesForm.html.twig" %}
+        </div>
+
+    </div>
+    <br>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}

@@ -9,8 +9,31 @@
     <div class="container container-dropzone">
         <h2>
             {{ 'List of copies'|trans({}, 'icap_dropzone') }}
-            <a class=" btn btn-default pull-right" href="{{ path('icap_dropzone_edit', {'resourceId': dropzone.id}) }}"><span
-                        class="fa fa-pencil-square-o"></span> {{ 'Edit evaluation'|trans({}, 'icap_dropzone') }}</a>
+            <div class=" pull-right">
+                <div class="btn-group">
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                        <span
+                                class="fa fa-download"></span> {{ 'Download copies'|trans({}, 'icap_dropzone') }} <span
+                                class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu">
+                        <li>
+                            <a href="{{ path('icap_dropzone_download_copies', {'resourceId': dropzone.id}) }}">
+                                {{ 'Download all copies'|trans({}, 'icap_dropzone') }} </a>
+                        </li>
+                        <li>
+                            <a class="launch-modal" data-loading-text="Loading..."
+                               href="{{ path('icap_dropzone_download_copies_by_date', {'resourceId': dropzone.id}) }}">{{ 'Download between two dates'|trans({}, 'icap_dropzone') }}  </a>
+                        </li>
+                    </ul>
+
+
+                    <a class=" btn btn-default "
+                       href="{{ path('icap_dropzone_edit', {'resourceId': dropzone.id}) }}"><span
+                                class="fa fa-pencil-square-o"></span> {{ 'Edit evaluation'|trans({}, 'icap_dropzone') }}
+                    </a>
+                </div>
+            </div>
         </h2>
 
         {% if unterminated_drops is defined %}
