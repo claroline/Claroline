@@ -11,7 +11,7 @@
             <header>
                 <div class="container">
                     <p class="pull-right alert alert-warning beta_message" role="alert">
-                    {% if constant('Icap\\PortfolioBundle\\Manager\\PortfolioManager::PORTFOLIO_OPENING_MODE_VIEW') != openingMode %}
+                    {% if editMode %}
                         {{ 'beta_message' | trans({}, 'icap_portfolio') | raw }}
                     {% else %}
                         {{ 'beta_message_public' | trans({}, 'icap_portfolio') | raw }}
