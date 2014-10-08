@@ -81,4 +81,9 @@ class StrictDispatcher
 
         return $event;
     }
+
+    public function hasListeners($eventName)
+    {
+        return $this->eventDispatcher->hasListeners($eventName);
+    }
 }
