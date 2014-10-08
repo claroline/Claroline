@@ -11,7 +11,7 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 /**
  * @DI\FormType
  */
-class PortfolioGuiderType extends AbstractType
+class PortfolioGuideType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
