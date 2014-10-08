@@ -16,12 +16,12 @@ var codeContainerLabel = 0;
 
 // Question creation
 function creationMatching(addchoice, addproposal, deletechoice, LabelValue, ScoreRight, ProposalValue, numberProposal, correspondence, deleteLabel, deleteProposal, tMatching, advEdition, correspEmpty, correspondenceError , scoreError){
-    
+
 
     //initialisation of variables
     var indexProposal;
     var indexLabel; // number of label
-    
+
     advEditionLang = advEdition;
     correspEmptyLang = correspEmpty;
     correspErrorLang = correspondenceError;
@@ -38,7 +38,7 @@ function creationMatching(addchoice, addproposal, deletechoice, LabelValue, Scor
          }
      });
 
-     tableCreationProposal(containerProposal, tableProposals, addproposal, deletechoice, ProposalValue, 0, codeContainerProposal, deleteProposal, numberProposal);
+    tableCreationProposal(containerProposal, tableProposals, addproposal, deletechoice, ProposalValue, 0, codeContainerProposal, deleteProposal, numberProposal);
     tableCreationLabel(containerLabel, tableLabels, addchoice, deletechoice, LabelValue, ScoreRight, 0, codeContainerLabel, deleteLabel, correspondence);
 
 
@@ -69,8 +69,6 @@ function creationMatching(addchoice, addproposal, deletechoice, LabelValue, Scor
             adddelete($(this), deletechoice, codeContainerLabel);
         });
     }
-
-
 }
 
 // Question edition
@@ -100,23 +98,32 @@ function creationMatchingEdit(addchoice, addproposal, deletechoice, LabelValue, 
     tableCreationLabel(containerLabel, tableLabels, addchoice, deletechoice, LabelValue, ScoreRight, nbResponses, codeContainerLabel, deleteLabel, correspondence);
 
     containerProposal.children().first().children('div').each(function() {
-        
+
         $(this).find('.row').each(function() {
-            
+
             fillProposalArray($(this));
+
+            //uncode chevrons and delete balises
+            $('.classic').find('textarea').each(function() {
+                $(this).val($(this).val().replace("&lt;", "<"));
+                $(this).val($(this).val().replace("&gt;", ">"));
+                $(this).val($(this).val().replace("<p>", ""));
+                $(this).val($(this).val().replace("</p>", ""));
+            });
+
             addRemoveRowTableProposal();
 
             // Add the form errors
             $('#proposalError').append($(this).find('span'));
         });
-        
+
         if (nbResponses == 0) {
 
             // Add the delete button
             $('#newTableProposal').find('tr:last').append('<td class="classic"></td>');
             adddelete($('#newTableProposal').find('td:last'), deletechoice);
         }
-        
+
         $('#newTableProposal').find('tbody').append('<tr><td></td></tr>');
     });
     $('#newTableProposal').find('tr').last().remove();
@@ -130,6 +137,11 @@ function creationMatchingEdit(addchoice, addproposal, deletechoice, LabelValue, 
 
             fillLabelArray($(this));
 
+            $('.classic').find('textarea').each(function() {
+                $(this).val($(this).val().replace("&lt;", "<"));
+                $(this).val($(this).val().replace("&gt;", ">"));
+            });
+
             // Add the form errors
             $('#labelError').append($(this).find('.field-error'));
         });
@@ -142,9 +154,9 @@ function creationMatchingEdit(addchoice, addproposal, deletechoice, LabelValue, 
             $('#newTableLabel').find('tr:last').append('<td class="classic"></td>');
             adddelete($('#newTableLabel').find('td:last'), deletechoice);
         }
-        
+
         $('#newTableLabel').find('tbody').append('<tr></tr>');
-        
+
         if (typeof labels[ind] !== 'undefined') {
             idlabel = labels[ind];
             idproposals = valueCorres[idlabel];
@@ -152,7 +164,7 @@ function creationMatchingEdit(addchoice, addproposal, deletechoice, LabelValue, 
                 $('#' + ind + '_correspondence option[value="' + proposals[val] + '"]').prop('selected', true);
             });
         }
-        
+
         ind++;
     });
     $('#newTableLabel').find('tr').last().remove();
@@ -239,31 +251,31 @@ function check_form(nbrProposals, nbrLabels) {
     var score = true;
 
     if (($('#newTableProposal').find('tr:not(:first)').length) < 1) {
-        
+
         alert(nbrProposals);
         return false;
     }
-    
+
     if (($('#newTableLabel').find('tr:not(:first)').length) < 1) {
-        
+
         alert(nbrLabels);
         return false;
     }
-    
+
     $("*[id$='scoreRightResponse']").each( function() {
-        
+
           if(!(parseFloat($(this).val()) == parseInt($(this).val())) && isNaN($(this).val())){
-            
+
             alert(scoreErrorLang);
             score = false;
         }
     });
 
     if(score == false ){
-        
+
         return false
     }
-    
+
     $("*[id$='_correspondence']").each( function() {
         if ($("option:selected", this).length > 0) {
             correspondence = true;
@@ -281,14 +293,20 @@ function check_form(nbrProposals, nbrLabels) {
     });
 
     if (singleProposal == false) {
-        
+
         return false;
     }
-    
+
     if (correspondence == false) {
 
         return confirm(correspEmptyLang);
     }
+
+    //for encoding the chevrons
+    $('.classic').find('textarea:visible').each(function() {
+        $(this).val($(this).val().replace("<", "&lt;"));
+        $(this).val($(this).val().replace(">", "&gt;"));
+    });
 }
 
 function fillLabelArray(row) {
