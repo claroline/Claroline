@@ -167,35 +167,8 @@ class GroupManager
      */
     public function importUsers(Group $group, array $users)
     {
-        $toImport = array();
-        $nonImportedUsers = array();
-
-        foreach ($users as $user) {
-            $firstName = $user[0];
-            $lastName = $user[1];
-            $username = $user[2];
-
-            $existingUser = $this->userRepo->findOneBy(
-                array(
-                    'username' => $username,
-                    'firstName' => $firstName,
-                    'lastName' => $lastName
-                )
-            );
-
-            if (is_null($existingUser)) {
-                $nonImportedUsers[] = array(
-                    'username' => $username,
-                    'firstName' => $firstName,
-                    'lastName' => $lastName
-                );
-            } else {
-                $toImport[] = $existingUser;
-            }
-        }
+        $toImport = $this->userRepo->findByUsernames($users);
         $this->addUsersToGroup($group, $toImport);
-
-        return $nonImportedUsers;
     }
 
     /**

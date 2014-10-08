@@ -232,6 +232,8 @@ create_workspace: 'Create workspace'
 creation: Creation
 creation_date: 'Creation date'
 creator: Creator
+csv_group_import_infos: 'CSV file informations'
+csv_group_import_infos_format: Format: username list separated by a carriage return
 csv_users_import_infos: 'CSV file informations'
 csv_users_import_infos_format: Format
 csv_users_import_infos_format_a: 'User informations must be defined in one line and separated by semicolon'

@@ -120,7 +120,8 @@ class LogListener
             $log->setReceiver($event->getReceiver());
         }
         if ($event->getAction() !== LogGroupDeleteEvent::ACTION) {
-            $log->setReceiverGroup($event->getReceiverGroup());
+            if ($receiverGroup = $event->getReceiverGroup()) $this->om->merge($receiverGroup);
+            $log->setReceiverGroup($receiverGroup);
         }
         if (
             !(

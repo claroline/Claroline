@@ -58,6 +58,7 @@ class FormFactory
     const TYPE_PLATFORM_MAIL_INSCRIPTION = 'platform_mail_inscription';
     const TYPE_AGENDA_IMPORTER = 'import_agenda_file';
     const TYPE_COMPETENCE = 'competence';
+    const TYPE_IMPORT_USERS_IN_GROUP = 'import_users_in_group';
 
     private static $types = array(
         self::TYPE_MESSAGE => array(
@@ -90,6 +91,9 @@ class FormFactory
         ),
         self::TYPE_USER_IMPORT => array(
             'formType' => 'Claroline\CoreBundle\Form\ImportUserType'
+        ),
+        self::TYPE_IMPORT_USERS_IN_GROUP => array(
+            'formType' => 'Claroline\CoreBundle\Form\ImportUsersInGroupType'
         ),
         self::TYPE_ADMIN_ANALYTICS_CONNECTIONS => array(
             'formType' => 'Claroline\CoreBundle\Form\AdminAnalyticsConnectionsType'
