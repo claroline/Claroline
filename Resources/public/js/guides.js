@@ -23,8 +23,8 @@
             event.preventDefault();
 
             var $container = element.siblings('div[data-prototype]').first();
-            var count = $('.form-collection-element', $container).length;
-            var prototype = $container.data('prototype');
+            var count      = $('.form-collection-element', $container).length;
+            var prototype  = $container.data('prototype');
 
             // set count, used as id in DOM
             prototype = prototype.replace(/__name__/g, count);
@@ -43,13 +43,16 @@
         };
 
         userSelect2Field.on("change", function(event) {
-            select2FieldChange(event, addingGuideButton);
+            var existingFieldValue = $('.form-collection input[value=' + event.val + ']');
+            if (0 >= existingFieldValue.length) {
+                //console.log("change " + JSON.stringify({val: event.val, added: event.added, removed: event.removed}));
+                addingGuideButton.prop('disabled', false);
+            }
+            else {
+                addingGuideButton.prop('disabled', true);
+                existingFieldValue.parent().effect("highlight", {color: '#d9534f'}, 1500);
+            }
         });
-
-        var select2FieldChange = function (event, button) {
-            //console.log("change " + JSON.stringify({val: event.val, added: event.added, removed: event.removed}));
-            button.removeAttr('disabled');
-        };
 
         function parseFormValue(formValue)
         {
