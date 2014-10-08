@@ -19,3 +19,4 @@ valid_end_date_required: Se requiere una fecha de finalización válida.
 valid_end_hour_required: Se requiere una hora de finalización válida.
 valid_start_date_required: Se requiere una fecha de inicio válida.
 valid_start_hour_required: Se requiere una hora de inicio válida.
+username_doesnt_exist: L'utilisateur %username% n'existe pas.
