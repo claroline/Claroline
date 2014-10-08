@@ -36,7 +36,7 @@ class holeExport extends qtiExport
 
         $this->qtiHead('textEntry', $this->question->getTitle());
         foreach($this->interactionhole->getHoles() as $hole) {
-            $this->qtiResponseDeclaration('RESPONSE'.$this->nbResponseDeclaration, 'string', 'single');
+            $this->qtiResponseDeclaration('blank_'.$this->nbResponseDeclaration, 'string', 'single');
             $this->correctResponseTag();
             $this->mappingTag($hole);
         }
@@ -116,10 +116,35 @@ class holeExport extends qtiExport
      */
     private function textWithHole()
     {
-        $qst = $this->interactionhole->getHtmlWithoutValue();
-        $regex = '(<input\\s+id="\d+"\\s+class="blank"\\s+name="blank_\d+"\\s+size="\d+"\\s+type="text"\\s+value=""\\s+\/>)';
-        $result = preg_replace($regex, '<textEntryInteraction responseIdentifier="RESPONSE" expectedLength="15"/>', $qst);
-        $objecttxt =  $this->document->CreateTextNode($result);
+        $textEntryInteraction = '';
+        $newId = 1;
+        $html = htmlspecialchars_decode($this->interactionhole->getHtmlWithoutValue());
+        $regex = '(<input\\s+id="\d+"\\s+class="blank"\\s+name="blank_\d+"\\s+size="\d+"\\s+type="text"\\s+value=""\\s+\/>|<select\\s+id="\d+"\\s+class="blank"\\s+name="blank_\d+">)';
+        preg_match_all($regex, $html, $matches);
+        foreach ($matches[0] as $matche) {
+            if (substr($matche, 1, 5) == 'input') {
+                $tabMatche = explode('"', $matche);
+                $id = $tabMatche[1];
+                $name = $tabMatche[5];
+                $size = $tabMatche[7];
+                $textEntryInteraction = str_replace('input', 'textEntryInteraction', $matche);
+                $textEntryInteraction = str_replace('class="blank" ', '', $textEntryInteraction);
+                $textEntryInteraction = str_replace('type="text" ', '', $textEntryInteraction);
+                $textEntryInteraction = str_replace('value="" ', '', $textEntryInteraction);
+                $textEntryInteraction = str_replace('id="'.$id.'"', 'responseIdentifier="blank_'.$newId.'"', $textEntryInteraction);
+                $textEntryInteraction = str_replace('name=" '.$name.'"', '', $textEntryInteraction);
+                $textEntryInteraction = str_replace('size="'.$size.'"', 'expectedLength="'.$size.'"', $textEntryInteraction);
+                //$textEntryInteraction = rtrim($textEntryInteraction, '>');
+                //$textEntryInteraction .= '/>';
+                $html = str_replace($matche, $textEntryInteraction, $html);
+            } else {
+
+            }
+            $newId++;
+        }
+
+        $objecttxt =  $this->document->loadXML($html);
+        //$objecttxt =  $this->document->CreateTextNode($html);
         $this->itemBody->appendChild($objecttxt);
     }
 }
