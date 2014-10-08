@@ -58,6 +58,8 @@ class ResourceManager
     private $roleRepo;
     /** @var RoleManager */
     private $roleManager;
+    /** @var MaskManager */
+    private $maskManager;
     /** @var IconManager */
     private $iconManager;
     /** @var Dispatcher */
@@ -76,6 +78,7 @@ class ResourceManager
      * @DI\InjectParams({
      *     "roleManager"     = @DI\Inject("claroline.manager.role_manager"),
      *     "iconManager"     = @DI\Inject("claroline.manager.icon_manager"),
+     *     "maskManager"     = @DI\Inject("claroline.manager.mask_manager"),
      *     "container"       = @DI\Inject("service_container"),
      *     "rightsManager"   = @DI\Inject("claroline.manager.rights_manager"),
      *     "dispatcher"      = @DI\Inject("claroline.event.event_dispatcher"),
@@ -92,7 +95,8 @@ class ResourceManager
         StrictDispatcher $dispatcher,
         ObjectManager $om,
         ClaroUtilities $ut,
-        Utilities $secut
+        Utilities $secut,
+        MaskManager $maskManager
     )
     {
         $this->resourceTypeRepo = $om->getRepository('ClarolineCoreBundle:Resource\ResourceType');
@@ -103,6 +107,7 @@ class ResourceManager
         $this->roleManager = $roleManager;
         $this->iconManager = $iconManager;
         $this->rightsManager = $rightsManager;
+        $this->maskManager = $maskManager;
         $this->dispatcher = $dispatcher;
         $this->om = $om;
         $this->ut = $ut;
@@ -1532,4 +1537,22 @@ class ResourceManager
             $this->om->flush();
         }
     }
+
+    /**
+     * Returns true if the listener is implemented for a resourceType and an action
+     *
+     * @param ResourceType $resourceType
+     * @param string       $actionName
+     */
+    public function isResourceActionImplemented(ResourceType $resourceType, $actionName)
+    {
+        $alwaysTrue = array('rename', 'edit-properties', 'edit-rights', 'open-tracking');
+        //first, directories can be downloaded even if there is no listener attached to it
+        if ($resourceType->getName() === 'directory' && $actionName == 'download') return true;
+        if (in_array($actionName, $alwaysTrue)) return true;
+
+
+        return $this->dispatcher->hasListeners($actionName . '_' . $resourceType->getName());
+    }
+
 }
