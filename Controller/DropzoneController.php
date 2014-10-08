@@ -73,13 +73,13 @@ class DropzoneController extends DropzoneBaseController
             if ($dropzone->getEditionState() < 2) {
                 $dropzone->setEditionState(2);
             }
-
+            /*
             if (!$dropzone->getDisplayNotationToLearners() and !$dropzone->getDisplayNotationMessageToLearners()) {
                 $form->get('displayNotationToLearners')->addError(new FormError('Choose at least one type of ranking'));
                 $form
                     ->get('displayNotationMessageToLearners')
                     ->addError(new FormError('Choose at least one type of ranking'));
-            }
+            }*/
 
             if (
                 !$dropzone->getAllowWorkspaceResource()
