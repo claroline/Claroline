@@ -100,15 +100,13 @@ function creationMatchingEdit(addchoice, addproposal, deletechoice, LabelValue, 
     containerProposal.children().first().children('div').each(function() {
 
         $(this).find('.row').each(function() {
-
+            
             fillProposalArray($(this));
 
-            //uncode chevrons and delete balises
+            //uncode chevrons
             $('.classic').find('textarea').each(function() {
                 $(this).val($(this).val().replace("&lt;", "<"));
                 $(this).val($(this).val().replace("&gt;", ">"));
-                $(this).val($(this).val().replace("<p>", ""));
-                $(this).val($(this).val().replace("</p>", ""));
             });
 
             addRemoveRowTableProposal();
@@ -167,6 +165,16 @@ function creationMatchingEdit(addchoice, addproposal, deletechoice, LabelValue, 
 
         ind++;
     });
+    
+    //for activate tinymce if there is html balise
+    $('.classic').find('textarea').each(function() {
+        if($(this).val().match("<p>")) {
+            idProposalVal = $(this).attr("id");
+            $("#"+idProposalVal).addClass("claroline-tiny-mce hide");
+            $("#"+idProposalVal).data("data-theme","advanced");
+        }
+    });
+    
     $('#newTableLabel').find('tr').last().remove();
     containerLabel.remove();
     tableLabels.next().remove();
