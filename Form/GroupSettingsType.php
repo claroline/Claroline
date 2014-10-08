@@ -45,7 +45,7 @@ class GroupSettingsType extends GroupType
                 'disabled' => false,
                 'query_builder' => function (\Doctrine\ORM\EntityRepository $er) use ($isAdmin){
                     $query = $er->createQueryBuilder('r')
-                        ->where("r.type != " . Role::WS_ROLE)
+                        ->where("r.type = " . Role::PLATFORM_ROLE)
                         ->andWhere("r.name != 'ROLE_ANONYMOUS'")
                         ->andWhere("r.name != 'ROLE_USER'");
 
