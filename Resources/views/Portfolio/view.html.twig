@@ -72,8 +72,10 @@
                                             <p class="message">
                                                 {{ comment.message }}
                                             </p>
-                                            <p class="pull-right author">
+                                            <p class="pull-right author" data-ng-if="comment.date">
                                                 <small>{{ comment.sender.lastName }} {{ comment.sender.firstName }}, {{ comment.date|date : 'dd/MM/yyyy' }}</small>
+                                            </p>
+                                            <p class="pull-right author loading" data-ng-if="!comment.date">
                                             </p>
                                         </div>
                                     </li>
