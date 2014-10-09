@@ -74,3 +74,6 @@ portfolio_guides_update_success_message: 'Liste des accompagnateurs du portfolio
 communication_panel: 'Accompagnement'
 disposition: 'Disposition'
 widget_content: 'Contenu'
+no_comments: 'Aucun commentaire'
+comment_type_your_message: 'Ecrivez votre message ici...'
+comment_send: 'Envoyer'

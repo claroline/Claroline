@@ -1,6 +1,6 @@
 <?php
 
-namespace Icap\PortfolioBundle\Migrations\pdo_oci;
+namespace Icap\PortfolioBundle\Migrations\oci8;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -8,12 +8,56 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/10/07 04:50:38
+ * Generation date: 2014/10/09 11:22:29
  */
-class Version20141007165036 extends AbstractMigration
+class Version20141009112225 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
+        $this->addSql("
+            CREATE TABLE icap__portfolio_comments (
+                id NUMBER(10) NOT NULL, 
+                portfolio_id NUMBER(10) NOT NULL, 
+                sender_id NUMBER(10) NOT NULL, 
+                message CLOB NOT NULL, 
+                sending_date TIMESTAMP(0) NOT NULL, 
+                PRIMARY KEY(id)
+            )
+        ");
+        $this->addSql("
+            DECLARE constraints_Count NUMBER; BEGIN 
+            SELECT COUNT(CONSTRAINT_NAME) INTO constraints_Count 
+            FROM USER_CONSTRAINTS 
+            WHERE TABLE_NAME = 'ICAP__PORTFOLIO_COMMENTS' 
+            AND CONSTRAINT_TYPE = 'P'; IF constraints_Count = 0 
+            OR constraints_Count = '' THEN EXECUTE IMMEDIATE 'ALTER TABLE ICAP__PORTFOLIO_COMMENTS ADD CONSTRAINT ICAP__PORTFOLIO_COMMENTS_AI_PK PRIMARY KEY (ID)'; END IF; END;
+        ");
+        $this->addSql("
+            CREATE SEQUENCE ICAP__PORTFOLIO_COMMENTS_ID_SEQ START WITH 1 MINVALUE 1 INCREMENT BY 1
+        ");
+        $this->addSql("
+            CREATE TRIGGER ICAP__PORTFOLIO_COMMENTS_AI_PK BEFORE INSERT ON ICAP__PORTFOLIO_COMMENTS FOR EACH ROW DECLARE last_Sequence NUMBER; last_InsertID NUMBER; BEGIN 
+            SELECT ICAP__PORTFOLIO_COMMENTS_ID_SEQ.NEXTVAL INTO : NEW.ID 
+            FROM DUAL; IF (
+                : NEW.ID IS NULL 
+                OR : NEW.ID = 0
+            ) THEN 
+            SELECT ICAP__PORTFOLIO_COMMENTS_ID_SEQ.NEXTVAL INTO : NEW.ID 
+            FROM DUAL; ELSE 
+            SELECT NVL(Last_Number, 0) INTO last_Sequence 
+            FROM User_Sequences 
+            WHERE Sequence_Name = 'ICAP__PORTFOLIO_COMMENTS_ID_SEQ'; 
+            SELECT : NEW.ID INTO last_InsertID 
+            FROM DUAL; WHILE (last_InsertID > last_Sequence) LOOP 
+            SELECT ICAP__PORTFOLIO_COMMENTS_ID_SEQ.NEXTVAL INTO last_Sequence 
+            FROM DUAL; END LOOP; END IF; END;
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_D4662DE3B96B5643 ON icap__portfolio_comments (portfolio_id)
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_D4662DE3F624B39D ON icap__portfolio_comments (sender_id)
+        ");
         $this->addSql("
             CREATE TABLE icap__portfolio_guides (
                 id NUMBER(10) NOT NULL, 
@@ -108,6 +152,16 @@ class Version20141007165036 extends AbstractMigration
             CREATE INDEX IDX_25D41B98FBE885E2 ON icap__portfolio_widget_badges_badge (widget_id)
         ");
         $this->addSql("
+            ALTER TABLE icap__portfolio_comments 
+            ADD CONSTRAINT FK_D4662DE3B96B5643 FOREIGN KEY (portfolio_id) 
+            REFERENCES icap__portfolio (id)
+        ");
+        $this->addSql("
+            ALTER TABLE icap__portfolio_comments 
+            ADD CONSTRAINT FK_D4662DE3F624B39D FOREIGN KEY (sender_id) 
+            REFERENCES claro_user (id)
+        ");
+        $this->addSql("
             ALTER TABLE icap__portfolio_guides 
             ADD CONSTRAINT FK_27EAB640A76ED395 FOREIGN KEY (user_id) 
             REFERENCES claro_user (id)
@@ -140,6 +194,9 @@ class Version20141007165036 extends AbstractMigration
         $this->addSql("
             ALTER TABLE icap__portfolio_widget_badges_badge 
             DROP CONSTRAINT FK_25D41B98FBE885E2
+        ");
+        $this->addSql("
+            DROP TABLE icap__portfolio_comments
         ");
         $this->addSql("
             DROP TABLE icap__portfolio_guides

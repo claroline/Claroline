@@ -66,42 +66,32 @@
                             </div>
                             <div class="panel-body" data-ng-class="{hidden: !displayComment}">
                                 <ul class="media-list">
-                                    <li class="media">
+                                    {% verbatim %}
+                                    <li class="media" data-ng-repeat="comment in portfolio.comments | orderBy:['+date']">
                                         <div class="media-body">
-                                            <p class="message">Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis.</p>
+                                            <p class="message">
+                                                {{ comment.message }}
+                                            </p>
                                             <p class="pull-right author">
-                                                <small>Jane Doe, 24/09/2014 18:15</small>
+                                                <small>{{ comment.sender.lastName }} {{ comment.sender.firstName }}, {{ comment.date|date : 'dd/MM/yyyy' }}</small>
                                             </p>
                                         </div>
                                     </li>
-                                    <li class="media">
+                                    {% endverbatim %}
+                                    <li class="media media-empty" ng-show="!portfolio.comments.length">
                                         <div class="media-body">
-                                            <p class="message">Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis.</p>
-                                            <p class="pull-right author">
-                                                <small>Jane Doe, 24/09/2014 18:15</small>
-                                            </p>
-                                        </div>
-                                    </li>
-                                    <li class="media">
-                                        <div class="media-body">
-                                            <p class="message">Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis.</p>
-                                            <p class="pull-right author">
-                                                <small>Jane Doe, 24/09/2014 18:15</small>
-                                            </p>
-                                        </div>
-                                    </li>
-                                    <li class="media">
-                                        <div class="media-body">
-                                            <p class="message">Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis.</p>
-                                            <p class="pull-right author">
-                                                <small>Jane Doe, 24/09/2014 18:15</small>
-                                            </p>
+                                            <p class="message">{{ 'no_comments'|trans({}, 'icap_portfolio') }}</p>
                                         </div>
                                     </li>
                                 </ul>
-                                <p class="comment_field">
-                                    <input type="text" class="form-control input-sm" placeholder="Type your message here...">
-                                </p>
+                                <form class="form" action="" data-ng-submit="addComment()">
+                                    <p class="comment_field">
+                                        <label for="portfolioComment">Commentaire</label><button type="submit" class="btn btn-primary btn-xs pull-right">{{ 'comment_send'|trans({}, 'icap_portfolio') }}</button>
+                                        <input type="text" id="portfolioComment" class="form-control input-sm"
+                                               placeholder="{{ 'comment_type_your_message'|trans({}, 'icap_portfolio') }}"
+                                            data-ng-model="comment">
+                                    </p>
+                                </form>
                             </div>
                         </div>
                     </li>

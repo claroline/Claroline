@@ -74,3 +74,6 @@ portfolio_guides_update_success_message: 'Guides list of the portfolio updated w
 communication_panel: 'Support'
 disposition: 'Positionning'
 widget_content: 'Content'
+no_comments: 'No comment'
+comment_type_your_message: 'Type your message here...'
+comment_send: 'Send'

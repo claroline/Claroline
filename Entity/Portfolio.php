@@ -79,6 +79,13 @@ class Portfolio
     protected $widgets;
 
     /**
+     * @var \Icap\PortfolioBundle\Entity\PortfolioComment[]
+     *
+     * @ORM\OneToMany(targetEntity="Icap\PortfolioBundle\Entity\PortfolioComment", mappedBy="portfolio", cascade={"persist"})
+     */
+    protected $comments;
+
+    /**
      * @ORM\Column(name="deletedAt", type="datetime", nullable=true)
      */
     private $deletedAt;
@@ -345,5 +352,29 @@ class Portfolio
         }
 
         return $isGuide;
+    }
+
+    /**
+     * @return PortfolioComment[]
+     */
+    public function getComments()
+    {
+        return $this->comments;
+    }
+
+    /**
+     * @param PortfolioComment[] $comments
+     *
+     * @return Portfolio
+     */
+    public function setComments($comments)
+    {
+        foreach ($comments as $comment) {
+            $comment->setPortfolio($this);
+        }
+
+        $this->comments = $comments;
+
+        return $this;
     }
 }

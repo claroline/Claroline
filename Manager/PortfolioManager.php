@@ -200,7 +200,9 @@ class PortfolioManager
     public function getPortfolioData(Portfolio $portfolio)
     {
         /** @var \Icap\PortfolioBundle\Entity\Widget\AbstractWidget[] $widgets */
-        $widgets = $portfolio->getWidgets();
+        $widgets  = $portfolio->getWidgets();
+        /** @var \Icap\PortfolioBundle\Entity\PortfolioComment[] $comments */
+        $comments = $portfolio->getComments();
 
         $data = array(
             'id'          => $portfolio->getId(),
@@ -222,6 +224,13 @@ class PortfolioManager
             $widgetDatas       = $widgetViews + $widget->getData();
             $data['widgets'][] = $widgetDatas;
         }
+
+        $commentsDatas = array();
+
+        foreach ($comments as $comment) {
+            $commentsDatas[] = $comment->getData();
+        }
+        $data['comments'] = $commentsDatas;
 
         return $data;
     }
@@ -270,6 +279,17 @@ class PortfolioManager
 
             return $data;
         }
+
+//        echo "<pre>";
+//        var_dump(count($portfolio->getComments()));
+//        echo "</pre>" . PHP_EOL;
+//        echo "<pre>";
+//        var_dump($form->getErrors());
+//        echo "</pre>" . PHP_EOL;
+//        echo "<pre>";
+//        var_dump($form->getErrorsAsString());
+//        echo "</pre>" . PHP_EOL;
+//        die("FFFFFUUUUUCCCCCKKKKK" . PHP_EOL);
 
         throw new \InvalidArgumentException();
     }

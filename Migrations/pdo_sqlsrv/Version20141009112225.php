@@ -1,6 +1,6 @@
 <?php
 
-namespace Icap\PortfolioBundle\Migrations\sqlsrv;
+namespace Icap\PortfolioBundle\Migrations\pdo_sqlsrv;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -8,12 +8,28 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/10/07 04:50:38
+ * Generation date: 2014/10/09 11:22:29
  */
-class Version20141007165036 extends AbstractMigration
+class Version20141009112225 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
+        $this->addSql("
+            CREATE TABLE icap__portfolio_comments (
+                id INT IDENTITY NOT NULL, 
+                portfolio_id INT NOT NULL, 
+                sender_id INT NOT NULL, 
+                message VARCHAR(MAX) NOT NULL, 
+                sending_date DATETIME2(6) NOT NULL, 
+                PRIMARY KEY (id)
+            )
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_D4662DE3B96B5643 ON icap__portfolio_comments (portfolio_id)
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_D4662DE3F624B39D ON icap__portfolio_comments (sender_id)
+        ");
         $this->addSql("
             CREATE TABLE icap__portfolio_guides (
                 id INT IDENTITY NOT NULL, 
@@ -54,6 +70,16 @@ class Version20141007165036 extends AbstractMigration
             CREATE INDEX IDX_25D41B98FBE885E2 ON icap__portfolio_widget_badges_badge (widget_id)
         ");
         $this->addSql("
+            ALTER TABLE icap__portfolio_comments 
+            ADD CONSTRAINT FK_D4662DE3B96B5643 FOREIGN KEY (portfolio_id) 
+            REFERENCES icap__portfolio (id)
+        ");
+        $this->addSql("
+            ALTER TABLE icap__portfolio_comments 
+            ADD CONSTRAINT FK_D4662DE3F624B39D FOREIGN KEY (sender_id) 
+            REFERENCES claro_user (id)
+        ");
+        $this->addSql("
             ALTER TABLE icap__portfolio_guides 
             ADD CONSTRAINT FK_27EAB640A76ED395 FOREIGN KEY (user_id) 
             REFERENCES claro_user (id)
@@ -86,6 +112,9 @@ class Version20141007165036 extends AbstractMigration
         $this->addSql("
             ALTER TABLE icap__portfolio_widget_badges_badge 
             DROP CONSTRAINT FK_25D41B98FBE885E2
+        ");
+        $this->addSql("
+            DROP TABLE icap__portfolio_comments
         ");
         $this->addSql("
             DROP TABLE icap__portfolio_guides
