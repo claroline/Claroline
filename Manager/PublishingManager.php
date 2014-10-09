@@ -208,10 +208,12 @@ class PublishingManager
                 }
 
                 $childrenLevel = $level + 1;
-                $childrenSteps = $this->publishSteps($childrenLevel, $step, $stepStructure->children, $propagatedResources + $currentPropagatedResources);
+
+                $propagatedResources = array_merge($propagatedResources, $currentPropagatedResources);
+                $childrenSteps = $this->publishSteps($childrenLevel, $step, $stepStructure->children, $propagatedResources);
     
                 // Store children steps
-                $processedSteps = $processedSteps + $childrenSteps;
+                $processedSteps = array_merge($processedSteps, $childrenSteps);
             }
     
             $currentOrder++;
