@@ -2332,6 +2332,11 @@ class QuestionController extends Controller
 
                     return $services->export($interaction);
 
+                case "InteractionOpen":
+                    $services = $this->container->get('ujm.qti_open_export');
+
+                    return $services->export($interaction);
+
             }
         }
 
