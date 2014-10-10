@@ -30,10 +30,6 @@ services:
         class: UJM\ExoBundle\Services\classes\exerciseServices
         arguments: [@doctrine, @security.context, @event_dispatcher]
 
-#    ujm.qti_service:
-#        class: UJM\ExoBundle\Services\classes\qtiService
-#        arguments: [@doctrine, @security.context]
-
     ujm.qti_qcm_export:
         class: UJM\ExoBundle\Services\classes\QTI\qcmExport
         arguments: [@doctrine, @security.context, @service_container]
