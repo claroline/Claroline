@@ -837,22 +837,3 @@
 
 
     }
-        //suppression les dossiers uploader
-        //All Files	/var/www/Claroline/web/uploadfiles
-        public function removeDirectory($directory){
-                if(!is_dir($directory)){
-                    throw new $this->createNotFoundException($directory.' is not directory '.__LINE__.', file '.__FILE__);
-                }
-                    $iterator = new \DirectoryIterator($directory);
-                        foreach ($iterator as $fileinfo) {
-
-                            if (!$fileinfo->isDot()) {
-                                if($fileinfo->isFile()) {
-                                    unlink($directory."/".$fileinfo->getFileName());
-
-                                }
-                            }
-                        }//end foreach
-                    //rmdir($directory);
-        }
-

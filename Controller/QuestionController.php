@@ -3,21 +3,10 @@
 namespace UJM\ExoBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\Form\FormBuilder;
-use Symfony\Component\DomCrawler\Crawler;
-//use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesser;
-
-use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 
 use Pagerfanta\Adapter\ArrayAdapter;
 use Pagerfanta\Pagerfanta;
 
-use UJM\ExoBundle\Entity\Category;
-use UJM\ExoBundle\Entity\Choice;
-use UJM\ExoBundle\Entity\Coords;
-use UJM\ExoBundle\Entity\Document;
-use UJM\ExoBundle\Entity\Interaction;
 use UJM\ExoBundle\Entity\InteractionGraphic;
 use UJM\ExoBundle\Entity\InteractionHole;
 use UJM\ExoBundle\Entity\InteractionMatching;
@@ -35,7 +24,6 @@ use UJM\ExoBundle\Form\InteractionQCMType;
 use UJM\ExoBundle\Form\QuestionType;
 use UJM\ExoBundle\Form\ResponseType;
 
-use UJM\ExoBundle\Repository\InteractionGraphicRepository;
 /**
  * Question controller.
  *
@@ -2348,6 +2336,29 @@ class QuestionController extends Controller
      */
     public function importAction()
     {
+        // si non zip
+        $allowedExts = array("xml");
+        $temp = explode(".", $_FILES["f1"]["name"]);
+        $source = $_FILES["f1"]["tmp_name"];
+        $extension = end($temp);
+        $rst= "src tmp_name : ".$source;
+        $rst= $rst."test rst";
+        if ((($_FILES["f1"]["type"] == "text/xml")) && in_array($extension, $allowedExts)) {
+            if ($_FILES["f1"]["error"] > 0) {
+                $rst =$rst . "Return Code: " . $_FILES["f1"]["error"] . "<br/>";
+            } else {
+                $file = $_FILES["f1"]["tmp_name"];
+                $document_xml = new \DomDocument();
+                $document_xml->load($file);
+                $elements = $document_xml->getElementsByTagName('assessmentItem');
+                $element = $elements->item(0);
+                $questionType = $element->getAttribute("identifier");
+                echo 'test : '.$questionType;die();
+            }
+        } else {
+            echo 'else';die();
+        }
 
+        return new \Symfony\Component\HttpFoundation\Response;
     }
 }
