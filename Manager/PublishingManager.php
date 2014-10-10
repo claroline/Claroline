@@ -188,7 +188,7 @@ class PublishingManager
             $this->publishPropagatedResources($step, $propagatedResources, $excludedResources);
 
             // Store step to know it doesn't have to be deleted when we will clean the path
-            $processedSteps[$step->getId()] = $step;
+            $processedSteps[] = $step;
     
             // Process children of current step
             if (!empty($stepStructure->children)) {
@@ -213,7 +213,7 @@ class PublishingManager
                 $childrenSteps = $this->publishSteps($childrenLevel, $step, $stepStructure->children, $propagatedResources);
     
                 // Store children steps
-                $processedSteps = array_merge($processedSteps, $childrenSteps);
+                $processedSteps = $processedSteps + $childrenSteps;
             }
     
             $currentOrder++;
@@ -282,7 +282,7 @@ class PublishingManager
      */
     protected function cleanSteps(array $neededSteps = array (), array $existingSteps = array ())
     {
-        $toRemove = array_diff_key($existingSteps, $neededSteps);
+        $toRemove = array_diff($existingSteps, $neededSteps);
         foreach ($toRemove as $stepToRemove) {
             $this->path->removeStep($stepToRemove);
             $this->om->remove($stepToRemove);

@@ -100,7 +100,12 @@ class Step
         $this->children           = new ArrayCollection();
         $this->inheritedResources = new ArrayCollection();
     }
-    
+
+    public function __toString()
+    {
+        return $this->getId() . ' - ' . $this->getName();
+    }
+
     /**
      * Get id
      * @return integer
