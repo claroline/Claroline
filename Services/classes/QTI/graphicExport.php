@@ -10,6 +10,7 @@ namespace UJM\ExoBundle\Services\classes\QTI;
 class graphicExport extends qtiExport
 {
     private $interactiongraph;
+    private $selectPointInteraction;
 
     /**
      * Implements the abstract method
@@ -40,8 +41,9 @@ class graphicExport extends qtiExport
         $this->areaMappingTag();
         $this->itemBodyTag();
         $this->selectPointInteractionTag();
-        
-        if(($this->interactiongraph->getInteraction()->getFeedBack()!=Null) 
+        $this->promptTag();
+
+        if(($this->interactiongraph->getInteraction()->getFeedBack()!=Null)
                 && ($this->interactiongraph->getInteraction()->getFeedBack()!="") ){
             $this->qtiFeedBack($interaction->getFeedBack());
         }
@@ -123,15 +125,10 @@ class graphicExport extends qtiExport
      */
     private function selectPointInteractionTag()
     {
-        $selectPointInteraction = $this->document->createElement("selectPointInteraction");
-        $selectPointInteraction->setAttribute("responseIdentifier", "RESPONSE");
-        $selectPointInteraction->setAttribute("maxChoices",
+        $this->selectPointInteraction = $this->document->createElement("selectPointInteraction");
+        $this->selectPointInteraction->setAttribute("responseIdentifier", "RESPONSE");
+        $this->selectPointInteraction->setAttribute("maxChoices",
                 count($this->interactiongraph->getCoords()));
-
-        $prompt = $this->document->CreateElement('prompt');
-        $prompttxt = $this->document->CreateTextNode($this->interactiongraph->getInteraction()->getInvite());
-        $prompt->appendChild($prompttxt);
-        $selectPointInteraction->appendChild($prompt);
 
         $object = $this->document->CreateElement('object');
         $object->setAttribute("type", "image/". $this->interactiongraph->getDocument()->getType());
@@ -140,10 +137,25 @@ class graphicExport extends qtiExport
         $object->setAttribute("data", $this->interactiongraph->getDocument()->getUrl());
         $objecttxt = $this->document->CreateTextNode($this->interactiongraph->getDocument()->getLabel());
         $object->appendChild($objecttxt);
-        $selectPointInteraction->appendChild($object);
+        $this->selectPointInteraction->appendChild($object);
 
 
-        $this->itemBody->appendChild($selectPointInteraction);
+        $this->itemBody->appendChild($this->selectPointInteraction);
+    }
+
+    /**
+     * Implements the abstract method
+     * add the tag prompt in selectPointInteraction
+     *
+     * @access protected
+     *
+     */
+    protected function promptTag()
+    {
+        $prompt = $this->document->CreateElement('prompt');
+        $prompttxt = $this->document->CreateTextNode($this->interactiongraph->getInteraction()->getInvite());
+        $prompt->appendChild($prompttxt);
+        $this->selectPointInteraction->appendChild($prompt);
     }
 
 }

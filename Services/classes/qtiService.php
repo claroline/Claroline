@@ -37,11 +37,11 @@ class qtiService
 
     /**
      * To export a question in QTI
-     * 
+     *
      *  @access public
      *
      * @param integer $questionId id of question
-     * 
+     *
      * return file
      *
      */
@@ -54,7 +54,7 @@ class qtiService
                             ->getManager()
                             ->getRepository('UJMExoBundle:Interaction')
                             ->getInteraction($questionId);
-            
+
         $Question = $interaction->getQuestion();
 
         $typeInter = $interaction->getType();
@@ -470,7 +470,7 @@ class qtiService
                                 $node->appendChild($responseDeclaration);
 
                                 //add <mapping> to <responseDeclaration>
-                                //add <mapEntry> to <responseDeclaration>
+                                //add <mapEntry> to <responseDeclaration>extendedTextInteractio
                                 $outcomeDeclaration = $document->createElement("outcomeDeclaration");
                                 $outcomeDeclaration->setAttribute("identifier", "Score");
                                 $outcomeDeclaration->setAttribute("cardinality", "single");
@@ -602,9 +602,9 @@ class qtiService
 
 
     }
-    
-    
-    
+
+
+
     private function qtiChoicesQCM($document, $choices, $correctResponse, $weightresponse, $responseDeclaration)
     {
         $Alphabets = array('A','B','C','D','E','F','G','H','I','G','K','L');

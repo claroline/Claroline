@@ -251,4 +251,12 @@ abstract class qtiExport
      * @access protected
      */
     abstract protected function correctResponseTag();
+
+    /**
+     * abstract method
+     * Add the tag prompt
+     *
+     * @access protected
+     */
+    abstract protected function promptTag();
 }

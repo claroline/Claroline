@@ -37,6 +37,7 @@ class holeExport extends qtiExport
         $this->qtiOutComeDeclaration();
 
         $this->itemBodyTag();
+        $this->promptTag();
         $this->textWithHole();
 
         if(($this->interactionhole->getInteraction()->getFeedBack()!=Null)
@@ -100,6 +101,21 @@ class holeExport extends qtiExport
         $responseDeclaration->appendChild($correctResponse);
 
         $responseDeclaration->appendChild($mapping);
+    }
+
+    /**
+     * Implements the abstract method
+     * add the tag prompt in itemBody
+     *
+     * @access protected
+     *
+     */
+    protected function promptTag()
+    {
+        $prompt = $this->document->CreateElement('prompt');
+        $prompttxt = $this->document->CreateTextNode($this->interactionhole->getInteraction()->getInvite());
+        $prompt->appendChild($prompttxt);
+        $this->itemBody->appendChild($prompt);
     }
 
     /**

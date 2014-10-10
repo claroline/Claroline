@@ -55,7 +55,7 @@ class qcmExport extends qtiExport
         $this->promptTag();
 
         //comment globale for this question
-        if(($this->interactionqcm->getInteraction()->getFeedBack()!=Null) 
+        if(($this->interactionqcm->getInteraction()->getFeedBack()!=Null)
                 && ($this->interactionqcm->getInteraction()->getFeedBack()!="") ){
             $this->qtiFeedBack($interaction->getFeedBack());
         }
@@ -188,12 +188,13 @@ class qcmExport extends qtiExport
     }
 
     /**
+     * Implements the abstract method
      * add the tag prompt in choiceInteraction
      *
-     * @access private
+     * @access protected
      *
      */
-    private function promptTag()
+    protected function promptTag()
     {
         $prompt = $this->document->CreateElement('prompt');
         $this->choiceInteraction->appendChild($prompt);
