@@ -29,7 +29,7 @@
 {% endif %}
 
 {% extends layout %}
-        
+
 {% block stylesheets %}
     {{ parent() }}
     <link href="{{ asset('bundles/ujmexo/css/matchingOverview.css') }}" type="text/css" rel="stylesheet"/>
@@ -68,10 +68,12 @@
                                 {% for proposal in interactionToDisplayed.proposals %}
                                     <div id="div_{{ proposal.id }}" class="origin" >
                                         <ul>
-                                            <li id="draggable_{{ proposal.id }}" class="draggable lidraggable"> {{ proposal.value | raw }} </li>
+                                            <li id="draggable_{{ proposal.id }}" class="draggable"> {{ proposal.value | raw }} </li>
                                         </ul>
                                     </div>
                                 {% endfor%}
+                            </td>
+                            <td style='padding: 20px;'>
                             </td>
                             <td>
                                 {% for label in interactionToDisplayed.labels %}
@@ -90,7 +92,7 @@
                     {% set tryInteraction = interactionToDisplayed %}
                     {% include "UJMExoBundle:Partial:hintTryInteraction.html.twig" %}
                 {% endif %}
-                
+
                 <div class="panel-footer">
                     <input type="hidden" name="testMatching" value="testMatching" />
                     <input type="hidden" name="interactionMatchingToValidated" value="{{ interactionToDisplayed.id }}" />

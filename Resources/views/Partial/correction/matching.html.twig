@@ -10,13 +10,15 @@
             <td>
                 {% if (tabResponseIndex[label.id] is not defined and tabRightResponse[label.id] == null) or tabRightResponse[label.id] == tabResponseIndex[label.id] %}
                     <div class="rightResponse" align="center">
-                        {{ label.value | raw }}
+                        <div class="labels">
+                            {{ label.value | raw }}
+                        </div>
                         {% for proposal in inter.proposals %}
                             {% if proposal.associatedLabel != null and proposal.associatedLabel.id == label.id %}
                                 <div class="associatedProposal" align="center">
                                     <table>
                                         <tr>
-                                            <td style='border: 1px solid #ddd;'>
+                                            <td class="proposals">
                                                 {{ proposal.value | raw }}
                                             </td>
                                         </tr>
@@ -27,7 +29,9 @@
                     </div>
                 {% else %}
                     <div class="falseResponse" align="center">
-                        {{ label.value | raw }}
+                        <div class="labels">
+                            {{ label.value | raw }}
+                        </div>
                         {% set responses = explodeString('-', tabResponseIndex[label.id]) %}
                         {% for response in responses %}
                             {% if (response != null) %}
@@ -35,7 +39,7 @@
                                 <div class="associatedProposal" align="center">
                                     <table>
                                         <tr>
-                                            <td style='border: 1px solid #ddd;'>
+                                            <td class="proposals">
                                                 {{ proposal.value | raw }}
                                             </td>
                                         </tr>
@@ -48,7 +52,9 @@
             </td>
             <td>
                 <div class="labelMatch" align="center">
-                    {{ label.value | raw }}
+                    <div class="labels">
+                            {{ label.value | raw }}
+                        </div>
                     {% for proposal in inter.proposals %}
                         {% if proposal.associatedLabel != null and proposal.associatedLabel.id == label.id %}
                             <div class="associatedProposal" align="center">

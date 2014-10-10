@@ -253,8 +253,8 @@ my shared questions: Questions qui m'ont été partagées
 nameUser2Shared: Nom de l'utilisateur avec qui partager la question
 nb_hole: Il doit y avoir au moins un trou
 nbr_choices: Le nombre de choix doit être supérieur à deux
-nb_label: Il faut avoir au minimun le même nombre de choix que de propositions
-nb_proposal: Il foit y avoir au moins deux propositions
+nb_label: Il doit y avoir au moins un label
+nb_proposal: Il doit y avoir au moins une proposition
 need Correction: Les questions en rouge nécessitent une correction
 never: Jamais
 newCategoryName: Nouveau nom de la catégorie
@@ -352,6 +352,7 @@ save: Enregistrer
 saveNewOrder: Enregistrer le nouvel ordre
 sawHint: de pénalité pour indices vus
 score and list of question: Note et liste des questions
+scoreError: Attention, le score doit être un chiffre !
 scoreMax : Score maximum possible
 search: Rechercher un document
 searchQuestion: Chercher des questions
@@ -438,7 +439,7 @@ Exercise.doprint: Imprimer la copie à la fin du test
 Exercise.duration: Durée
 Exercise.end_date: Date de fin
 Exercise.keepSameQuestion: Conserver les mêmes questions pour un même utilisateur
-Exercise.lockAttempt: Vérouiller le test
+Exercise.lockAttempt: Verrouiller le test
 Exercise.markMode: Note disponible
 Exercise.maxAttemps: Nombre d'essais autorisés
 Exercise.nbQuestion: Nombre de question à tirer aléatoirement
