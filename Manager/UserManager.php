@@ -916,7 +916,8 @@ class UserManager
         $publicUrl = $user->getFirstName() . '.' . $user->getLastName();
         $publicUrl = strtolower(str_replace(' ', '-', $publicUrl));
         $searchedUsers = $this->objectManager->getRepository('ClarolineCoreBundle:User')->findOneByPublicUrl($publicUrl);
-        if (null !== $searchedUsers) $publicUrl .= $user->getId();
+
+        if (null !== $searchedUsers) $publicUrl .= '_' . uniqid();
 
         return $publicUrl;
     }
