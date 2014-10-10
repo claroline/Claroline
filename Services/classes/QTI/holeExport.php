@@ -119,10 +119,10 @@ class holeExport extends qtiExport
         $textEntryInteraction = '';
         $newId = 1;
         $html = htmlspecialchars_decode($this->interactionhole->getHtmlWithoutValue());
-        $regexOpt = '(<option\\s+value="\d+">.</option>)';
-        $html = preg_replace($regexOpt, '', $html);echo $html;die();
+        $regexOpt = '(<option\\s+value="\d+">\w+</option>)';
+        $html = preg_replace($regexOpt, '', $html);
 
-        $regex = '(<input\\s+id="\d+"\\s+class="blank"\\s+name="blank_\d+"\\s+size="\d+"\\s+type="text"\\s+value=""\\s+\/>|<select\\s+id="\d+"\\s+class="blank"\\s+name="blank_\d+">)';
+        $regex = '(<input\\s+id="\d+"\\s+class="blank"\\s+name="blank_\d+"\\s+size="\d+"\\s+type="text"\\s+value=""\\s+\/>|<select\\s+id="\d+"\\s+class="blank"\\s+name="blank_\d+"></select>)';
         preg_match_all($regex, $html, $matches);
         foreach ($matches[0] as $matche) {
             $tabMatche = explode('"', $matche);
@@ -137,13 +137,14 @@ class holeExport extends qtiExport
                 $textEntryInteraction = str_replace('id="'.$id.'"', 'responseIdentifier="blank_'.$newId.'"', $textEntryInteraction);
                 $textEntryInteraction = str_replace('name="'.$name.'"', '', $textEntryInteraction);
                 $textEntryInteraction = str_replace('size="'.$size.'"', 'expectedLength="'.$size.'"', $textEntryInteraction);
-                $html = str_replace($matche, $textEntryInteraction, $html);
             } else {
-                $textEntryInteraction = str_replace('select', 'textEntryInteraction', $matche);
+                $textEntryInteraction = str_replace('</select>', '', $matche);
+                $textEntryInteraction = str_replace('select', 'textEntryInteraction', $textEntryInteraction);
                 $textEntryInteraction = str_replace('id="'.$id.'"', 'responseIdentifier="blank_'.$newId.'"', $textEntryInteraction);
                 $textEntryInteraction = str_replace('class="blank" ', 'expectedLength="'.$size.'"', $textEntryInteraction);
-                $textEntryInteraction = str_replace('name="'.$name.'"', '/', $textEntryInteraction);
+                $textEntryInteraction = str_replace('name="'.$name.'"', ' /', $textEntryInteraction);
             }
+            $html = str_replace($matche, $textEntryInteraction, $html);
             $newId++;
         }
         $fragment = $this->document->createDocumentFragment();
