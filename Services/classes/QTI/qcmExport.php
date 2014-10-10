@@ -48,7 +48,7 @@ class qcmExport extends qtiExport
         $this->qtiResponseDeclaration('RESPONSE','identifier', $cardinality);
         $this->qtiOutComeDeclaration();
 
-        $this->defaultValueTag();
+        //$this->defaultValueTag();
         $this->correctResponseTag();
         $this->itemBodyTag();
         $this->choiceInteractionTag();

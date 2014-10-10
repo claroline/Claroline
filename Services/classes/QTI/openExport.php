@@ -31,6 +31,7 @@ class openExport extends qtiExport
         $this->qtiHead('extendedText', $this->question->getTitle());
         $this->qtiResponseDeclaration('RESPONSE','string', 'single');
         $this->qtiOutComeDeclaration();
+        $this->defaultValueTag();
         $this->itemBodyTag();
         $this->extendedTetInteractionTag();
         $this->promptTag();
@@ -85,5 +86,21 @@ class openExport extends qtiExport
     {
         $this->correctResponse = $this->document->CreateElement('correctResponse');
         $this->responseDeclaration[0]->appendChild($this->correctResponse);
+    }
+
+    /**
+     * add the tag defaultValue in outcomeDeclaration
+     *
+     * @access private
+     *
+     */
+    private function defaultValueTag()
+    {
+        $defaultValue = $this->document->createElement("defaultValue");
+        $Tagvalue = $this->document->CreateElement("value");
+        $responsevalue =  $this->document->CreateTextNode($this->interactionopen->getScoreMaxLongResp());
+        $Tagvalue->appendChild($responsevalue);
+        $defaultValue->appendChild($Tagvalue);
+        $this->outcomeDeclaration->appendChild($defaultValue);
     }
 }
