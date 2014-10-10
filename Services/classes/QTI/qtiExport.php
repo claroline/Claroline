@@ -13,13 +13,12 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 
 
-abstract class qtiExport
+abstract class qtiExport extends qtiRepository
 {
 
     protected $doctrine;
     protected $securityContext;
     protected $container;
-    protected $userDir;
     protected $node;
     protected $document;
     protected $responseDeclaration = array();
@@ -44,9 +43,7 @@ abstract class qtiExport
         $this->doctrine        = $doctrine;
         $this->securityContext = $securityContext;
         $this->container       = $container;
-        $this->userDir = './uploads/ujmexo/qti/'
-                .$this->securityContext->getToken()
-                ->getUser()->getUsername().'/';
+        $this->createDirQTI();
         $this->document = new \DOMDocument();
         $this->document->preserveWhiteSpace = false;
         $this->document->formatOutput = true;
@@ -171,20 +168,6 @@ abstract class qtiExport
         $response->headers->set('Expires', '0'); // Proxies.
 
         return $response;
-    }
-
-
-    protected function createDirQTI()
-    {
-        if (!is_dir('./uploads/ujmexo/')) {
-            mkdir('./uploads/ujmexo/');
-        }
-        if (!is_dir('./uploads/ujmexo/qti/')) {
-            mkdir('./uploads/ujmexo/qti/');
-        }
-        if (!is_dir($this->userDir)) {
-            mkdir($this->userDir);
-        }
     }
 
     Private function generate_imsmanifest_File($namefile)
