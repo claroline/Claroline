@@ -7,17 +7,33 @@
 
 namespace UJM\ExoBundle\Services\classes\QTI;
 
+use Symfony\Component\Security\Core\SecurityContextInterface;
+
 class qtiRepository {
 
-    protected $userDir;
+    private $userDir;
+    private $securityContext;
+
+    /**
+     * Constructor
+     *
+     * @access public
+     *
+     * @param \Symfony\Component\Security\Core\SecurityContextInterface $securityContext Dependency Injection
+     *
+     */
+    public function __construct(SecurityContextInterface $securityContext)
+    {
+        $this->securityContext = $securityContext;
+    }
 
     /**
      * Create the repository
      *
-     * @access protected
+     * @access public
      *
      */
-    protected function createDirQTI()
+    public function createDirQTI()
     {
         $this->userDir = './uploads/ujmexo/qti/'
                 .$this->securityContext->getToken()
@@ -37,10 +53,10 @@ class qtiRepository {
     /**
      * Delete the repository
      *
-     * @access protected
+     * @access public
      *
      */
-    protected function removeDirectory()
+    public function removeDirectory()
     {
         if(!is_dir($$this->userDir)){
             throw new $this->createNotFoundException($this->userDir.' is not directory '.__LINE__.', file '.__FILE__);
@@ -54,6 +70,18 @@ class qtiRepository {
                 }
             }
         }
+    }
+
+    /**
+     * get userDir
+     *
+     * @access public
+     *
+     */
+    public function getUserDir()
+    {
+
+        return $this->userDir;
     }
 
 }

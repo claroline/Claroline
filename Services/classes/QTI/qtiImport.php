@@ -7,11 +7,15 @@
 
 namespace UJM\ExoBundle\Services\classes\QTI;
 
-class qtiImport extends qtiRepository
+use Doctrine\Bundle\DoctrineBundle\Registry;
+use Symfony\Component\Security\Core\SecurityContextInterface;
+
+abstract class qtiImport
 {
     private $doctrine;
     private $securityContext;
     private $container;
+    protected $qtiRepos;
 
     /**
      * Constructor
@@ -28,6 +32,13 @@ class qtiImport extends qtiRepository
         $this->securityContext = $securityContext;
         $this->container       = $container;
     }
-    
-    
+
+    /**
+     * abstract method to import a question
+     *
+     * @access public
+     * @param qtiRepository $qtiRepos
+     */
+    abstract public function import(qtiRepository $qtiRepos);
+
 }

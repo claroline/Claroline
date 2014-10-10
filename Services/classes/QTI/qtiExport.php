@@ -13,12 +13,13 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 
 
-abstract class qtiExport extends qtiRepository
+abstract class qtiExport
 {
 
     protected $doctrine;
     protected $securityContext;
     protected $container;
+    protected $qtiRepos;
     protected $node;
     protected $document;
     protected $responseDeclaration = array();
@@ -43,7 +44,6 @@ abstract class qtiExport extends qtiRepository
         $this->doctrine        = $doctrine;
         $this->securityContext = $securityContext;
         $this->container       = $container;
-        $this->createDirQTI();
         $this->document = new \DOMDocument();
         $this->document->preserveWhiteSpace = false;
         $this->document->formatOutput = true;
@@ -149,14 +149,14 @@ abstract class qtiExport extends qtiRepository
     protected function getResponse()
     {
         //sfConfig::set('sf_web_debug', false);
-        $tmpFileName = tempnam($this->userDir.'tmp', "xb_");
+        $tmpFileName = tempnam($this->qtiRepos->getUserDir().'tmp', "xb_");
         $zip = new \ZipArchive();
         $zip->open($tmpFileName, \ZipArchive::CREATE);
-        $zip->addFile($this->userDir.'testfile.xml', 'SchemaQTI.xml');
+        $zip->addFile($this->qtiRepos->getUserDir().'testfile.xml', 'SchemaQTI.xml');
 
         if(!empty($this->path_img)){
              $zip->addFile($this->path_img, "images/".$this->resources_node->getName());
-             $zip->addFile($this->userDir.'imsmanifest.xml', 'imsmanifest.xml');
+             $zip->addFile($this->qtiRepos->getUserDir().'imsmanifest.xml', 'imsmanifest.xml');
         }
         $zip->close();
         $response = new BinaryFileResponse($tmpFileName);
@@ -216,16 +216,17 @@ abstract class qtiExport extends qtiRepository
         $file2->setAttribute("href","images/".$namefile);
         $resource->appendChild($file2);
 
-        $document->save($this->userDir.'imsmanifest.xml');
+        $document->save($this->qtiRepos->getUserDir().'imsmanifest.xml');
     }
 
     /**
      * abstract method to export the question
      *
      * @access public
-     * @param String \UJM\ExoBundle\Entity\Interaction $interaction
+     * @param \UJM\ExoBundle\Entity\Interaction $interaction
+     * @param qtiRepository $qtiRepos
      */
-    abstract public function export(\UJM\ExoBundle\Entity\Interaction $interaction);
+    abstract public function export(\UJM\ExoBundle\Entity\Interaction $interaction, qtiRepository $qtiRepos);
 
     /**
      * abstract method

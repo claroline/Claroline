@@ -2298,30 +2298,33 @@ class QuestionController extends Controller
         $em = $this->getDoctrine()->getManager();
         $question = $this->controlUserQuestion($id);
 
+        $qtiRepos = $this->container->get('ujm.qti_repository');
+        $qtiRepos->createDirQTI();
+
         if (count($question) > 0) {
             $interaction = $em->getRepository('UJMExoBundle:Interaction')
                               ->getInteraction($id);
             $typeInter = $interaction->getType();
             switch ($typeInter) {
                 case "InteractionQCM":
-                    $services = $this->container->get('ujm.qti_qcm_export');
+                    $qtiExport = $this->container->get('ujm.qti_qcm_export');
 
-                    return $services->export($interaction);
+                    return $qtiExport->export($interaction, $qtiRepos);
 
                 case "InteractionGraphic":
-                    $services = $this->container->get('ujm.qti_graphic_export');
+                    $qtiExport = $this->container->get('ujm.qti_graphic_export');
 
-                    return $services->export($interaction);
+                    return $qtiExport->export($interaction, $qtiRepos);
 
                 case "InteractionHole":
-                    $services = $this->container->get('ujm.qti_hole_export');
+                    $qtiExport = $this->container->get('ujm.qti_hole_export');
 
-                    return $services->export($interaction);
+                    return $qtiExport->export($interaction, $qtiRepos);
 
                 case "InteractionOpen":
-                    $services = $this->container->get('ujm.qti_open_export');
+                    $qtiExport = $this->container->get('ujm.qti_open_export');
 
-                    return $services->export($interaction);
+                    return $qtiExport->export($interaction, $qtiRepos);
 
             }
         }
@@ -2336,28 +2339,42 @@ class QuestionController extends Controller
      */
     public function importAction()
     {
-        // si non zip
-        $allowedExts = array("xml");
-        $temp = explode(".", $_FILES["f1"]["name"]);
-        $source = $_FILES["f1"]["tmp_name"];
-        $extension = end($temp);
-        $rst= "src tmp_name : ".$source;
-        $rst= $rst."test rst";
-        if ((($_FILES["f1"]["type"] == "text/xml")) && in_array($extension, $allowedExts)) {
-            if ($_FILES["f1"]["error"] > 0) {
-                $rst =$rst . "Return Code: " . $_FILES["f1"]["error"] . "<br/>";
-            } else {
-                $file = $_FILES["f1"]["tmp_name"];
-                $document_xml = new \DomDocument();
-                $document_xml->load($file);
-                $elements = $document_xml->getElementsByTagName('assessmentItem');
-                $element = $elements->item(0);
-                $questionType = $element->getAttribute("identifier");
-                echo 'test : '.$questionType;die();
+        $qtiRepos = $this->container->get('ujm.qti_repository');
+        $qtiRepos->createDirQTI();
+
+        $rst = 'its a zip file';
+        move_uploaded_file($_FILES["f1"]["tmp_name"],
+                $qtiRepos->getUserDir() . $_FILES["f1"]["name"]);
+        $zip = new \ZipArchive;
+        $zip->open($qtiRepos->getUserDir() . $_FILES["f1"]["name"]);
+        $res= zip_open($qtiRepos->getUserDir() . $_FILES["f1"]["name"]);
+
+        $zip->extractTo($qtiRepos->getUserDir());
+        $tab_liste_fichiers = array();
+        while ($zip_entry = zip_read($res)) {
+            if(zip_entry_filesize($zip_entry) > 0) {
+                $nom_fichier = zip_entry_name($zip_entry);
+                $rst =$rst . '-_-_-_'.$nom_fichier;
+                array_push($tab_liste_fichiers, $nom_fichier);
+
             }
-        } else {
-            echo 'else';die();
         }
+        $zip->close();
+
+        $file = $qtiRepos->getUserDir()."/SchemaQTI.xml";
+        $document_xml = new \DomDocument();
+        $document_xml->load($file);
+        $elements = $document_xml->getElementsByTagName('assessmentItem');
+        $element = $elements->item(0); // On obtient le nœud assessmentItem
+        $questionType = $element->getAttribute("identifier");
+
+        switch ($questionType) {
+            case "choice":
+            case "choiceMultiple":
+                $qtiImport = $this->container->get('ujm.qti_qcm_import');
+
+                return $qtiImport->import($qtiRepos);
+            }
 
         return new \Symfony\Component\HttpFoundation\Response;
     }

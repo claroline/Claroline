@@ -20,11 +20,13 @@ class qcmExport extends qtiExport
      * Implements the abstract method
      *
      * @access public
-     * @param String \UJM\ExoBundle\Entity\Interaction $interaction
+     * @param \UJM\ExoBundle\Entity\Interaction $interaction
+     * @param qtiRepository $qtiRepos
      *
      */
-    public function export(\UJM\ExoBundle\Entity\Interaction $interaction)
+    public function export(\UJM\ExoBundle\Entity\Interaction $interaction, qtiRepository $qtiRepos)
     {
+        $this->qtiRepos = $qtiRepos;
         $this->question = $interaction->getQuestion();
 
         $this->interactionqcm = $this->doctrine
@@ -64,7 +66,7 @@ class qcmExport extends qtiExport
             $this->node->appendChild($this->responseProcessing);
         }
 
-        $this->document->save($this->userDir.'testfile.xml');
+        $this->document->save($this->qtiRepos->getUserDir().'testfile.xml');
 
         return $this->getResponse();
 
