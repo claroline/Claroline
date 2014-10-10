@@ -32,16 +32,96 @@
 
 {% block section_content %}
     <div class="panel-heading">
-        <h3 class="panel-title">{{ 'claroline_team_tool'|trans({}, 'tools') }}</h3>
+        <h3 class="panel-title">
+            {{ 'claroline_team_tool'|trans({}, 'tools') }}
+        </h3>
     </div>
     <div class="panel-body">
+        <div>
+            <a href="{{ path('claro_team_create_form', {'workspace': workspace.getId()}) }}"
+               class="btn btn-primary"
+            >
+                <i class="fa fa-plus"></i>
+                {{ 'create_a_team'|trans({}, 'team') }}
+            </a>
+            <a href="{{ path('claro_team_multiple_create_form', {'workspace': workspace.getId()}) }}"
+               class="btn btn-primary"
+            >
+                <i class="fa fa-plus-circle"></i>
+                {{ 'create_teams'|trans({}, 'team') }}
+            </a>
+            <span class="btn btn-primary">
+                <i class="fa fa-cog"></i>
+                {{ 'default_parameters'|trans({}, 'team') }}
+            </span>
+        </div>
+        <hr>
         
         {% if teams|length > 0 %}
-        
+            <div id="teams-list" class="table-responsive">
+                <table class="table">
+                    <tr>
+                        <th>
+                            <a href="{{ sortUrl(workspace.getId(), 'name', order) }}">
+                                {{ 'team'|trans({}, 'team') }}
+                            </a>
+                        </th>
+                        <th class="text-center">
+                            {{ 'users'|trans({}, 'team') }}
+                        </th>
+                        <th class="text-center">
+                            <a href="{{ sortUrl(workspace.getId(), 'maxUsers', order) }}">
+                                {{ 'maximum'|trans({}, 'team') }}
+                            </a>
+                        </th>
+                        <th class="text-center">
+                            {{ 'actions'|trans({}, 'team') }}
+                        </th>
+                    </tr>
+                    
+                    {% for team in teams %}
+                        <tr id="row-team-{{ team.getId() }}">
+                            <td>
+                                {{ team.getName() }}
+                            </td>
+                            <td class="text-center">
+                                {{ team.getUsers()|length }}
+                            </td>
+                            <td class="text-center">
+                                {% if team.getMaxUsers() is not empty %}
+                                    {{ team.getMaxUsers() }}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                            <td class="text-center">
+                                <a class="btn btn-default"
+                                   href="{{ path('claro_team_edit_form', {'team': team.getId()}) }}"
+                                >
+                                    <i class="fa fa-edit"></i>
+                                </a>
+                                <span class="btn btn-danger delete-team-btn"
+                                      data-team-id="{{ team.getId() }}"
+                                >
+                                    <i class="fa fa-trash-o"></i>
+                                </span>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
         {% else %}
             <div class="alert alert-warning">
                 {{ 'no_team'|trans({}, 'team') }}
             </div>
         {% endif %}
     </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src='{{ asset('bundles/clarolineteam/js/managerMenu.js') }}'
+            type="text/javascript"
+    >
+    </script>
 {% endblock %}

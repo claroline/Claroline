@@ -17,6 +17,7 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Table(name="claro_team")
@@ -33,6 +34,7 @@ class Team
 
     /**
      * @ORM\Column()
+     * @Assert\NotBlank()
      */
     protected $name;
 
@@ -162,11 +164,6 @@ class Team
         return $this->maxUsers;
     }
 
-    public function getRegistrationType()
-    {
-        return $this->registrationType;
-    }
-
     public function getSelfRegistration()
     {
         return $this->selfRegistration;
@@ -225,11 +222,6 @@ class Team
     public function setMaxUsers($maxUsers)
     {
         $this->maxUsers = $maxUsers;
-    }
-
-    public function setRegistrationType($registrationType)
-    {
-        $this->registrationType = $registrationType;
     }
 
     public function setSelfRegistration($selfRegistration)

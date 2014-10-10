@@ -34,4 +34,23 @@ class TeamRepository extends EntityRepository
 
         return $executeQuery ? $query->getResult() : $query;
     }
+
+    public function findTeamsByWorkspaceAndName(
+        Workspace $workspace,
+        $teamName,
+        $executeQuery = true
+    )
+    {
+        $dql = "
+            SELECT t
+            FROM Claroline\TeamBundle\Entity\Team t
+            WHERE t.workspace = :workspace
+            AND t.name = :teamName
+        ";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('workspace', $workspace);
+        $query->setParameter('teamName', $teamName);
+
+        return $executeQuery ? $query->getResult() : $query;
+    }
 }
