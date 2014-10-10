@@ -34,6 +34,10 @@ services:
         class: UJM\ExoBundle\Services\classes\QTI\qcmExport
         arguments: [@doctrine, @security.context, @service_container]
 
+    ujm.qti_qcm_import:
+        class: UJM\ExoBundle\Services\classes\QTI\qcmImport
+        arguments: [@doctrine, @security.context, @service_container]
+
     ujm.qti_graphic_export:
         class: UJM\ExoBundle\Services\classes\QTI\graphicExport
         arguments: [@doctrine, @security.context, @service_container]
