@@ -8,7 +8,7 @@ portfolioApp
             $scope.widgets = widgetsManager.widgets;
         });
 
-        $scope.widgetTypes = widgetsConfig.getTypes(true);
+        $scope.widgetTypes    = widgetsConfig.getTypes(true);
         $scope.assetPath      = assetPath;
         $scope.displayComment = true;
         $scope.comment        = "";
