@@ -24,7 +24,21 @@
                                     data-type="{{ node.type }}"
                                     data-mime-type="{{ node.mime_type }}"/>
                             </td>
-                            <td><a href="#" class="node-link" data-id="{{ node.id }}" data-type="{{ node.type }}">{{ node.name }}</a></td>
+                            <td>
+                                <a
+                                    {% if node.type != 'directory' %}
+                                        href="{{ path('claro_resource_open', {'node': node.id, 'resourceType': node.type}) }}"
+                                    {% else %}
+                                    {# I had to pass the node parameter because I can't use function without parameters #}
+                                        href="{{ getCurrentUrl(node) }}#resources/{{ node.id }}"
+                                    {% endif %}
+                                    class="node-link"
+                                    data-id="{{ node.id }}"
+                                    data-type="{{ node.type }}"
+                                >
+                                    {{ node.name }}
+                                </a>
+                            </td>
                             <td>
                                 {% for resourceType, attributes in resourceTypes %}
                                     {% if resourceType == node.type %}
