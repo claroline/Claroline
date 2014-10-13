@@ -35,8 +35,6 @@ class WidgetsManager
     protected $widgetFactory;
 
     /**
-     * Constructor.
-     *
      * @DI\InjectParams({
      *     "entityManager"     = @DI\Inject("doctrine.orm.entity_manager"),
      *     "templatingEngine"  = @DI\Inject("templating"),

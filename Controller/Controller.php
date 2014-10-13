@@ -63,6 +63,14 @@ class Controller extends BaseController
     }
 
     /**
+     * @return \Icap\PortfolioBundle\Manager\CommentsManager
+     */
+    public function getCommentsManager()
+    {
+        return $this->get('icap_portfolio.manager.comments');
+    }
+
+    /**
      * @return \Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler
      */
     public function getPlatformConfigHandler()

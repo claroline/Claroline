@@ -4,6 +4,6 @@ portfolioApp
     .directive("widget", function() {
         return {
             scope: true,
-            controller: "widgetsController"
+            controller: "widgetController"
         };
     });

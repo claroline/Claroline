@@ -1,7 +1,7 @@
 'use strict';
 
 portfolioApp
-    .factory('portfolioManager', ["Portfolio", "widgetsManager", function(Portfolio, widgetsManager){
+    .factory('portfolioManager', ["Portfolio", "widgetsManager", "commentsManager", function(Portfolio, widgetsManager, commentsManager){
         return {
             portfolio:   null,
             portfolioId: null,
@@ -10,6 +10,7 @@ portfolioApp
                 this.portfolioId = portfolioId;
                 this.portfolio   = Portfolio.get({portfolioId: this.portfolioId}, function(portfolio) {
                     widgetsManager.init(portfolioId, portfolio.widgets);
+                    commentsManager.init(portfolioId, portfolio.comments);
                 });
 
                 return this.portfolio;

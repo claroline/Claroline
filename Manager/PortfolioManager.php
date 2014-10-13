@@ -48,8 +48,6 @@ class PortfolioManager
     protected $eventDispatcher;
 
     /**
-     * Constructor.
-     *
      * @DI\InjectParams({
      *     "entityManager"   = @DI\Inject("doctrine.orm.entity_manager"),
      *     "formFactory"     = @DI\Inject("form.factory"),

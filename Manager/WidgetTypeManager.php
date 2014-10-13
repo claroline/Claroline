@@ -16,8 +16,6 @@ class WidgetTypeManager
     protected $widgetTypeRepository;
 
     /**
-     * Constructor.
-     *
      * @DI\InjectParams({
      *     "widgetTypeRepository" = @DI\Inject("icap_portfolio.repository.widget_type")
      * })
