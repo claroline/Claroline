@@ -430,11 +430,19 @@ class WorkspaceController extends Controller
             //otherwise only shows the relevant tools
             $orderedTools = $this->toolManager->getOrderedToolsByWorkspaceAndRoles($workspace, $currentRoles);
         }
+        $roleHasAccess = array();
+        $workspaceRolesWithAccess = $this->roleManager
+            ->getWorkspaceRoleWithToolAccess($workspace);
+
+        foreach ($workspaceRolesWithAccess as $workspaceRole) {
+            $roleHasAccess[$workspaceRole->getId()] = $workspaceRole;
+        }
 
         return array(
             'hasManagerAccess' => $hasManagerAccess,
             'orderedTools' => $orderedTools,
-            'workspace' => $workspace
+            'workspace' => $workspace,
+            'roleHasAccess' => $roleHasAccess
         );
     }
 

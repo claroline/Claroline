@@ -483,4 +483,30 @@ class RoleRepository extends EntityRepository
         return $executeQuery ? $query->getResult() : $query;
 
     }
+
+    public function findWorkspaceRoleWithToolAccess(Workspace $workspace)
+    {
+        $dql = '
+            SELECT r
+            FROM Claroline\CoreBundle\Entity\Role r
+            WHERE r.workspace = :workspace
+            AND (
+                r.name = :managerRoleName
+                OR EXISTS (
+                    SELECT ot
+                    FROM Claroline\CoreBundle\Entity\Tool\OrderedTool ot
+                    JOIN ot.roles otr
+                    WHERE ot.workspace = :workspace
+                    AND otr = r
+                )
+            )
+        ';
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('workspace', $workspace);
+        $query->setParameter('managerRoleName', 'ROLE_WS_MANAGER_' . $workspace->getGuid());
+
+
+        return $query->getResult();
+    }
 }

@@ -10,7 +10,7 @@
                 <a class="list-group-item" href="?view_as=ROLE_ANONYMOUS_{{ workspace.getId() }}">{{ 'anonymous'|trans({}, 'platform') }}</a>
             {% endif %}
             {% for role in workspace.getRoles() %}
-                {% if has_role_access_to_workspace(role.getName(), workspace.getId()) %}
+                {% if roleHasAccess[role.getId()] is defined %}
                     <a class="list-group-item" href="{{ path('claro_workspace_open', {'workspaceId': workspace.getId()}) }}?view_as={{ role.getName() }}">{{ role.getTranslationKey()|trans({}, 'platform') }}</a>
                 {% endif %}
             {% endfor %}
