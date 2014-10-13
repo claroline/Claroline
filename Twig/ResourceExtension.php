@@ -40,7 +40,10 @@ class ResourceExtension extends \Twig_Extension
 
     public function getFunctions()
     {
-        return array('isMenuActionImplemented' => new \Twig_Function_Method($this, 'isMenuActionImplemented'));
+        return array(
+            'isMenuActionImplemented' => new \Twig_Function_Method($this, 'isMenuActionImplemented'),
+            'getCurrentUrl' => new \Twig_Function_Method($this, 'getCurrentUrl')
+        );
     }
 
     public function getName()
@@ -53,4 +56,8 @@ class ResourceExtension extends \Twig_Extension
         return $this->resourceManager->isResourceActionImplemented($resourceType, $menuName);
     }
 
+    public function getCurrentUrl()
+    {
+        return '';
+    }
 } 

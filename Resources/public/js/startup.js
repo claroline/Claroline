@@ -84,6 +84,12 @@
         return translator.get(domain + ':' + name) == domain + ':' + name ? name: translator.get(domain + ':' + name);
     });
 
+    //Required for the resource manager, when we want to open a directory after a search
+    Twig.setFunction('getCurrentUrl', function() {
+        location = window.location.href;
+        return location.pathname;
+    });
+
     // Without the next lines, the fixed top bar overlays content
     // when jumping to a an internal anchor target
     var shiftWindow = function () {
