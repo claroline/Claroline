@@ -657,7 +657,7 @@ class MessageController
             } elseif (substr($name, 0, 1) === '[') {
                 $workspaceCodes[] = trim($name, '[]');
             } else {
-                $usernames[] = $name;
+                $usernames[] = trim($name);
             }
         }
 
