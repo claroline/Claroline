@@ -332,4 +332,15 @@ class TeamManager
             $executeQuery
         );
     }
+
+    public function getTeamsWithUsersByWorkspace(
+        Workspace $workspace,
+        $executeQuery = true
+    )
+    {
+        return $this->teamRepo->findTeamsWithUsersByWorkspace(
+            $workspace,
+            $executeQuery
+        );
+    }
 }

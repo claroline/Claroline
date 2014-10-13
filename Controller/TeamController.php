@@ -117,13 +117,21 @@ class TeamController extends Controller
 
         $teams = $this->teamManager
             ->getTeamsByWorkspace($workspace, $orderedBy, $order);
+        $teamsWithUsers = $this->teamManager
+            ->getTeamsWithUsersByWorkspace($workspace);
+        $nbUsers = array();
+        
+        foreach ($teamsWithUsers as $teamWithUsers) {
+            $nbUsers[$teamWithUsers['team']->getId()] = $teamWithUsers['nb_users'];
+        }
 
         return array(
             'workspace' => $workspace,
             'user' => $user,
             'teams' => $teams,
             'orderedBy' => $orderedBy,
-            'order' => $order
+            'order' => $order,
+            'nbUsers' => $nbUsers
         );
     }
 

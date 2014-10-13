@@ -53,4 +53,22 @@ class TeamRepository extends EntityRepository
 
         return $executeQuery ? $query->getResult() : $query;
     }
+
+    public function findTeamsWithUsersByWorkspace(
+        Workspace $workspace,
+        $executeQuery = true
+    )
+    {
+        $dql = "
+            SELECT t AS team, COUNT(u) AS nb_users
+            FROM Claroline\TeamBundle\Entity\Team t
+            JOIN t.users u
+            WHERE t.workspace = :workspace
+            GROUP BY t
+        ";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('workspace', $workspace);
+
+        return $executeQuery ? $query->getResult() : $query;
+    }
 }

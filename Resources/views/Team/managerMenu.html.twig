@@ -85,7 +85,11 @@
                                 {{ team.getName() }}
                             </td>
                             <td class="text-center">
-                                {{ team.getUsers()|length }}
+                                {% if nbUsers[team.getId()] is defined %}
+                                    {{ nbUsers[team.getId()] }}
+                                {% else %}
+                                    0
+                                {% endif %}
                             </td>
                             <td class="text-center">
                                 {% if team.getMaxUsers() is not empty %}
