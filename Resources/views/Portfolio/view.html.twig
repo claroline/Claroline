@@ -65,7 +65,7 @@
                                 </button>
                             </div>
                             <div class="panel-body" data-ng-class="{hidden: !displayComment}">
-                                <ul class="media-list">
+                                <ul class="media-list" data-scroll-container="comments">
                                     {% verbatim %}
                                     <li class="media" data-ng-repeat="comment in comments | orderBy:['+date']">
                                         <div class="media-body">
@@ -282,6 +282,7 @@
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/directives/datepickerDirective.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/directives/badgePickerDirective.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/directives/commentsDirective.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/directives/scrollContainerDirective.js') }}"></script>
 
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/filters/trustAsHtml.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/filters/trans.js') }}"></script>
