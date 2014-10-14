@@ -302,31 +302,14 @@ class PublishingManager
 
         if (!empty($nodes)) {
             $pathRights = $this->path->getResourceNode()->getRights();
-            $user = $this->security->getToken()->getUser();
 
-            // This piece of code is copied from ActivityManager
-            $nodesInitialized = array ();
             foreach ($nodes as $node) {
-                $isNodeCreator = $node->getCreator() === $user;
-                $ws = $node->getWorkspace();
-                $roleWsManager = $this->om->getRepository('ClarolineCoreBundle:Role')->findManagerRole($ws);
-                $isWsManager = $user->hasRole($roleWsManager);
-
-                if ($isNodeCreator || $isWsManager) {
-                    $nodesInitialized[] = $node;
+                foreach ($pathRights as $right) {
+                    if ($right->getMask() & 1) {
+                        $this->rightsManager->editPerms($right->getMask(), $right->getRole(), $node, true);
+                    }
                 }
             }
-
-            $rolesInitialized = array ();
-            foreach ($pathRights as $right) {
-                $role = $right->getRole();
-
-                if (!strpos('_' . $role->getName(), 'ROLE_WS_MANAGER') && $right->getMask() & 1) {
-                    $rolesInitialized[] = $role;
-                }
-            }
-
-            $this->rightsManager->initializePermissions($nodesInitialized, $rolesInitialized);
         }
 
         return $this;
