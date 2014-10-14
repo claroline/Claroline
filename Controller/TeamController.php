@@ -14,7 +14,9 @@ namespace Claroline\TeamBundle\Controller;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\TeamBundle\Entity\Team;
+use Claroline\TeamBundle\Entity\WorkspaceTeamParameters;
 use Claroline\TeamBundle\Form\MultipleTeamsType;
+use Claroline\TeamBundle\Form\TeamParamsType;
 use Claroline\TeamBundle\Form\TeamType;
 use Claroline\TeamBundle\Manager\TeamManager;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -115,6 +117,11 @@ class TeamController extends Controller
     {
         $this->checkWorkspaceManager($workspace, $user);
 
+        $params = $this->teamManager->getParametersByWorkspace($workspace);
+
+        if (is_null($params)) {
+            $params = $this->teamManager->createWorkspaceTeamParameters($workspace);
+        }
         $teams = $this->teamManager
             ->getTeamsByWorkspace($workspace, $orderedBy, $order);
         $teamsWithUsers = $this->teamManager
@@ -131,7 +138,8 @@ class TeamController extends Controller
             'teams' => $teams,
             'orderedBy' => $orderedBy,
             'order' => $order,
-            'nbUsers' => $nbUsers
+            'nbUsers' => $nbUsers,
+            'params' => $params
         );
     }
 
@@ -179,7 +187,13 @@ class TeamController extends Controller
     public function teamCreateFormAction(Workspace $workspace, User $user)
     {
         $this->checkWorkspaceManager($workspace, $user);
-        $form = $this->formFactory->create(new TeamType(), new Team());
+        $params = $this->teamManager->getParametersByWorkspace($workspace);
+        $team = new Team();
+        $team->setIsPublic($params->getIsPublic());
+        $team->setSelfRegistration($params->getSelfRegistration());
+        $team->setSelfUnregistration($params->getSelfUnregistration());
+
+        $form = $this->formFactory->create(new TeamType(), $team);
 
         return array(
             'form' => $form->createView(),
@@ -314,7 +328,8 @@ class TeamController extends Controller
     public function multipleTeamsCreateFormAction(Workspace $workspace, User $user)
     {
         $this->checkWorkspaceManager($workspace, $user);
-        $form = $this->formFactory->create(new MultipleTeamsType());
+        $params = $this->teamManager->getParametersByWorkspace($workspace);
+        $form = $this->formFactory->create(new MultipleTeamsType($params));
 
         return array(
             'form' => $form->createView(),
@@ -335,7 +350,8 @@ class TeamController extends Controller
     public function multipleTeamCreateAction(Workspace $workspace, User $user)
     {
         $this->checkWorkspaceManager($workspace, $user);
-        $form = $this->formFactory->create(new MultipleTeamsType());
+        $params = $this->teamManager->getParametersByWorkspace($workspace);
+        $form = $this->formFactory->create(new MultipleTeamsType($params));
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
@@ -350,9 +366,6 @@ class TeamController extends Controller
                 $datas['selfRegistration'],
                 $datas['selfUnregistration']
             );
-//            throw new \Exception(var_dump($datas));
-//            $this->teamManager->createTeam($team, $workspace, $user);
-//            $this->teamManager->initializeTeamRights($team);
 
             return new RedirectResponse(
                 $this->router->generate(
@@ -364,6 +377,151 @@ class TeamController extends Controller
 
             return array(
                 'form' => $form->createView(),
+                'workspace' => $workspace
+            );
+        }
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/team/{team}/users/register",
+     *     name="claro_team_manager_register_users",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     * @EXT\ParamConverter(
+     *     "users",
+     *      class="ClarolineCoreBundle:User",
+     *      options={"multipleIds" = true, "name" = "users"}
+     * )
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function managerRegisterUsersToTeamAction(
+        Team $team,
+        array $users,
+        User $user
+    )
+    {
+        $this->checkWorkspaceManager($team->getWorkspace(), $user);
+        $this->teamManager->registerUsersToTeam($team, $users);
+
+        return new Response('success', 200);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/team/{team}/users/unregister",
+     *     name="claro_team_manager_unregister_users",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     * @EXT\ParamConverter(
+     *     "users",
+     *      class="ClarolineCoreBundle:User",
+     *      options={"multipleIds" = true, "name" = "users"}
+     * )
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function managerUnregisterUsersToTeamAction(
+        Team $team,
+        array $users,
+        User $user
+    )
+    {
+        $this->checkWorkspaceManager($team->getWorkspace(), $user);
+        $this->teamManager->unregisterUsersFromTeam($team, $users);
+
+        return new Response('success', 200);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/team/{team}/self/register/user",
+     *     name="claro_team_self_register_user",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function selfregisterUserToTeamAction(Team $team, User $user)
+    {
+        $this->checkToolAccess($team->getWorkspace());
+        $workspace = $team->getWorkspace();
+        $params = $this->teamManager->getParametersByWorkspace($workspace);
+        $maxUsers = $team->getMaxUsers();
+        $full = !is_null($maxUsers) && (count($team->getUsers()) >= $maxUsers);
+        $nbAllowedTeams = $params->getMaxTeams();
+
+        if ($team->getSelfRegistration() && !$full) {
+            $this->teamManager->registerUsersToTeam($team, array($user));
+        }
+
+        return new Response('success', 200);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/workspace/team/parameters/{params}/edit/form",
+     *     name="claro_team_parameters_edit_form"
+     * )
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     * @EXT\Template()
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function teamParamsEditFormAction(
+        WorkspaceTeamParameters $params,
+        User $user
+    )
+    {
+        $workspace = $params->getWorkspace();
+        $this->checkWorkspaceManager($workspace, $user);
+        $form = $this->formFactory->create(new TeamParamsType(), $params);
+
+        return array(
+            'form' => $form->createView(),
+            'params' => $params,
+            'workspace' => $workspace
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/workspace/team/parameters/{params}/edit",
+     *     name="claro_team_parameters_edit"
+     * )
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     * @EXT\Template("ClarolineTeamBundle:Team:teamParamsEditForm.html.twig")
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function teamParamsEditAction(
+        WorkspaceTeamParameters $params,
+        User $user
+    )
+    {
+        $workspace = $params->getWorkspace();
+        $this->checkWorkspaceManager($workspace, $user);
+        $form = $this->formFactory->create(new TeamParamsType(), $params);
+        $form->handleRequest($this->request);
+
+        if ($form->isValid()) {
+            $this->teamManager->persistWorkspaceTeamParameters($params);
+
+            return new RedirectResponse(
+                $this->router->generate(
+                    'claro_team_manager_menu',
+                    array('workspace' => $workspace->getId())
+                )
+            );
+        } else {
+
+            return array(
+                'form' => $form->createView(),
+                'params' => $params,
                 'workspace' => $workspace
             );
         }

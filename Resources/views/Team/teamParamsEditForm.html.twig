@@ -1,7 +1,7 @@
 {% extends "ClarolineCoreBundle:Workspace:layout.html.twig" %}
 
 {% block title %}
-    {{ parent() ~ ' - ' ~ 'team_edition' | trans({}, 'team') | striptags | raw }}
+    {{ parent() ~ ' - ' ~ 'default_parameters' | trans({}, 'team') | striptags | raw }}
 {% endblock %}
 
 {% block breadcrumb %}
@@ -14,7 +14,7 @@
                     'href': path('claro_team_manager_menu', {'workspace': workspace.getId()})
                 },
                 {
-                    'name': team.getName(),
+                    'name': 'default_parameters'|trans({}, 'team'),
                     'href': ''
                 }
             ]
@@ -24,11 +24,11 @@
 
 {% block section_content %}
     <div class="panel-heading">
-        <h3 class="panel-title">{{ 'team_edition'|trans({}, 'team') }}</h3>
+        <h3 class="panel-title">{{ 'default_parameters'|trans({}, 'team') }}</h3>
     </div>
     <form role="form"
           class="form-horizontal"
-          action="{{ path('claro_team_edit', {'team': team.getId()}) }}"
+          action="{{ path('claro_team_parameters_edit', {'params': params.getId()}) }}"
           method="post"
           {{ form_enctype(form) }}
           id="form_settings"

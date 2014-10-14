@@ -13,6 +13,7 @@ team_creation: 'Création d''une équipe'
 team_edition: 'Modification de l''équipe'
 team_form_description: Description
 team_form_isPublic: 'Accès au répertoire de l''équipe'
+team_form_maxTeams: 'Nombre d''équipes autorisé par utilisateur'
 team_form_maxUsers: 'Nombre maximum d''utilisateurs'
 team_form_name: Nom
 team_form_nbTeams: 'Nombre d''équipes'

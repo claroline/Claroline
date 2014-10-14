@@ -11,48 +11,16 @@
 
 namespace Claroline\TeamBundle\Form;
 
-use Claroline\TeamBundle\Entity\WorkspaceTeamParameters;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Symfony\Component\Validator\Constraints\NotBlank;
 
-class MultipleTeamsType extends AbstractType
+class TeamParamsType extends AbstractType
 {
-    protected $params;
-
-    public function __construct(WorkspaceTeamParameters $params)
-    {
-        $this->params = $params;
-    }
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add(
-            'name',
-            'text',
-            array(
-                'required' => true,
-                'constraints' => new NotBlank()
-            )
-        );
-        $builder->add(
-            'description',
-            'tinymce',
-            array('required' => false)
-        );
-        $builder->add(
-            'nbTeams',
-            'integer',
-            array(
-                'attr' => array('min' => 1),
-                'required' => true,
-                'constraints' => new NotBlank(),
-                'data' => 1
-            )
-        );
-        $builder->add(
-            'maxUsers',
+            'maxTeams',
             'integer',
             array(
                 'attr' => array('min' => 0),
@@ -67,25 +35,18 @@ class MultipleTeamsType extends AbstractType
                     true => 'public',
                     false => 'private'
                 ),
-                'required' => true,
-                'data' => $this->params->getIsPublic()
+                'required' => true
             )
         );
         $builder->add(
             'selfRegistration',
             'checkbox',
-            array(
-                'required' => true,
-                'data' => $this->params->getSelfRegistration()
-            )
+            array('required' => true)
         );
         $builder->add(
             'selfUnregistration',
             'checkbox',
-            array(
-                'required' => true,
-                'data' => $this->params->getSelfUnregistration()
-            )
+            array('required' => true)
         );
     }
 

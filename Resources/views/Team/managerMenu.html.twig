@@ -50,10 +50,12 @@
                 <i class="fa fa-plus-circle"></i>
                 {{ 'create_teams'|trans({}, 'team') }}
             </a>
-            <span class="btn btn-primary">
+            <a href="{{ path('claro_team_parameters_edit_form', {'params': params.getId()}) }}"
+               class="btn btn-primary"
+            >
                 <i class="fa fa-cog"></i>
                 {{ 'default_parameters'|trans({}, 'team') }}
-            </span>
+            </a>
         </div>
         <hr>
         

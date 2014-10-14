@@ -20,6 +20,7 @@ use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Pager\PagerFactory;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\TeamBundle\Entity\Team;
+use Claroline\TeamBundle\Entity\WorkspaceTeamParameters;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -33,6 +34,7 @@ class TeamManager
     private $rightsManager;
     private $roleManager;
     private $teamRepo;
+    private $workspaceTeamParamsRepo;
 
     /**
      * @DI\InjectParams({
@@ -57,6 +59,8 @@ class TeamManager
         $this->rightsManager = $rightsManager;
         $this->roleManager = $roleManager;
         $this->teamRepo = $om->getRepository('ClarolineTeamBundle:Team');
+        $this->workspaceTeamParamsRepo =
+            $om->getRepository('ClarolineTeamBundle:WorkspaceTeamParameters');
     }
 
     public function createMultipleTeams(
@@ -80,8 +84,6 @@ class TeamManager
             $validName = $this->computeValidTeamName($workspace, $name, $index);
             $team->setName($validName['name']);
             $index = $validName['index'] + 1;
-//            $teamName = $name . ' ' . ($i + 1);
-//            $team->setName($teamName);
             $team->setWorkspace($workspace);
             $team->setMaxUsers($maxUsers);
             $team->setIsPublic($isPublic);
@@ -162,6 +164,28 @@ class TeamManager
             }
         }
         $this->resourceManager->createRights($resourceNode, $rights);
+    }
+
+    public function registerUsersToTeam(Team $team, array $users)
+    {
+        $this->om->startFlushSuite();
+        $teamRole = $team->getRole();
+
+        foreach ($users as $user) {
+            $this->roleManager->associateRole($user, $teamRole);
+        }
+        $this->om->endFlushSuite();
+    }
+
+    public function unregisterUsersFromTeam(Team $team, array $users)
+    {
+        $this->om->startFlushSuite();
+        $teamRole = $team->getRole();
+
+        foreach ($users as $user) {
+            $this->roleManager->dissociateRole($user, $teamRole);
+        }
+        $this->om->endFlushSuite();
     }
 
     private function createTeamRole(Team $team, Workspace $workspace)
@@ -314,6 +338,30 @@ class TeamManager
     }
 
 
+    /***********************************
+     * WorkspaceTeamParameters methods *
+     ***********************************/
+
+    public function createWorkspaceTeamParameters(Workspace $workspace)
+    {
+        $params = new WorkspaceTeamParameters();
+        $params->setWorkspace($workspace);
+        $params->setIsPublic(true);
+        $params->setSelfRegistration(false);
+        $params->setSelfUnregistration(false);
+        $this->om->persist($params);
+        $this->om->flush();
+
+        return $params;
+    }
+
+    public function persistWorkspaceTeamParameters(WorkspaceTeamParameters $params)
+    {
+        $this->om->persist($params);
+        $this->om->flush();
+    }
+
+
     /************************************
      * Access to TeamRepository methods *
      ************************************/
@@ -339,6 +387,22 @@ class TeamManager
     )
     {
         return $this->teamRepo->findTeamsWithUsersByWorkspace(
+            $workspace,
+            $executeQuery
+        );
+    }
+
+
+    /*******************************************************
+     * Access to WorkspaceTeamParametersRepository methods *
+     *******************************************************/
+
+    public function getParametersByWorkspace(
+        Workspace $workspace,
+        $executeQuery = true
+    )
+    {
+        return $this->workspaceTeamParamsRepo->findParametersByWorkspace(
             $workspace,
             $executeQuery
         );

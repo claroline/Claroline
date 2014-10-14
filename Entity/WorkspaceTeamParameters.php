@@ -16,7 +16,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Table(name="claro_team_parameters")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Claroline\TeamBundle\Repository\WorkspaceTeamParametersRepository")
  */
 class WorkspaceTeamParameters
 {
@@ -65,11 +65,6 @@ class WorkspaceTeamParameters
         return $this->workspace;
     }
 
-    public function getRegistrationType()
-    {
-        return $this->registrationType;
-    }
-
     public function getSelfRegistration()
     {
         return $this->selfRegistration;
@@ -98,11 +93,6 @@ class WorkspaceTeamParameters
     public function setWorkspace(Workspace $workspace)
     {
         $this->workspace = $workspace;
-    }
-
-    public function setRegistrationType($registrationType)
-    {
-        $this->registrationType = $registrationType;
     }
 
     public function setSelfRegistration($selfRegistration)

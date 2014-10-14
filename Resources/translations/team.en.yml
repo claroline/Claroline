@@ -12,6 +12,7 @@ team_creation: 'Team creation'
 team_edition: 'Team edition'
 team_form_description: Description
 team_form_isPublic: 'Team directory access'
+team_form_maxTeams: 'Number of teams allowed by user'
 team_form_maxUsers: 'Max number of users'
 team_form_name: Name
 team_form_nbTeams: 'Number of teams'
