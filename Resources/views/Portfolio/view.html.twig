@@ -116,6 +116,18 @@
                                 <li data-ng-repeat="widget in widgets | filter:{type: '!title', column: col} | orderBy:'+row'">
                                     {% include 'IcapPortfolioBundle:templates:widget.html.twig' %}
                                 </li>
+                                <li>
+                                    <div class="add_widget">
+                                        <div class="panel-body">
+                                            <p>
+                                                <span class="fa-stack fa-lg">
+                                                    <i class="fa fa-circle-o fa-stack-2x"></i>
+                                                    <i class="fa fa-plus fa-stack-1x"></i>
+                                                </span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </li>
                             </ul>
                         </div>
                         {% if editMode %}
