@@ -38,6 +38,7 @@ class Path extends AbstractResource implements PathInterface
      * @var \Doctrine\Common\Collections\ArrayCollection
      * 
      * @ORM\OneToMany(targetEntity="Innova\PathBundle\Entity\Step", mappedBy="path", indexBy="id")
+     * @ORM\OrderBy({"order" = "ASC"})
      */
     protected $steps;
 
