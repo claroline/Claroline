@@ -71,6 +71,7 @@ class Step
      * @var \Doctrine\Common\Collections\ArrayCollection
      * 
      * @ORM\OneToMany(targetEntity="Step", mappedBy="parent", indexBy="id")
+     * @ORM\OrderBy({"order" = "ASC"})
      */
     protected $children;
 
