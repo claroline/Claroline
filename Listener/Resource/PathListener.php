@@ -32,7 +32,7 @@ class PathListener extends ContainerAware
             $route = $this->container->get('router')->generate(
                 'innova_path_player_index',
                 array (
-                    'workspaceId' => $path->getResourceNode()->getWorkspace()->getId(),
+                    'workspaceId' => $path->getWorkspace()->getId(),
                     'pathId' => $path->getId(),
                     'stepId' => $path->getRootStep()->getId()
                 )
@@ -42,7 +42,7 @@ class PathListener extends ContainerAware
             $route = $this->container->get('router')->generate(
                 'claro_workspace_open_tool',
                 array(
-                    'workspaceId' => $path->getResourceNode()->getWorkspace()->getId(),
+                    'workspaceId' => $path->getWorkspace()->getId(),
                     'toolName' => 'innova_path'
                 )
             );
