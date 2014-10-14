@@ -70,7 +70,7 @@ class Step
      * Children steps
      * @var \Doctrine\Common\Collections\ArrayCollection
      * 
-     * @ORM\OneToMany(targetEntity="Step", mappedBy="parent", indexBy="id")
+     * @ORM\OneToMany(targetEntity="Step", mappedBy="parent", indexBy="id", cascade={"persist", "remove"})
      * @ORM\OrderBy({"order" = "ASC"})
      */
     protected $children;
@@ -80,7 +80,6 @@ class Step
      * @var \Innova\PathBundle\Entity\Path\Path
      * 
      * @ORM\ManyToOne(targetEntity="Innova\PathBundle\Entity\Path\Path", inversedBy="steps")
-     * @ORM\JoinColumn(onDelete="CASCADE")
      */
     protected $path;
 
@@ -88,7 +87,7 @@ class Step
      * Inherited resources
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Innova\PathBundle\Entity\InheritedResource", mappedBy="step", indexBy="id")
+     * @ORM\OneToMany(targetEntity="Innova\PathBundle\Entity\InheritedResource", mappedBy="step", indexBy="id", cascade={"persist", "remove"})
      * @ORM\OrderBy({"lvl" = "ASC"})
      */
     protected $inheritedResources;
