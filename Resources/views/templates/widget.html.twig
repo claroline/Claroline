@@ -19,7 +19,7 @@
                         <li role="presentation" data-ng-repeat="col in cols" data-ng-click="changeColumn(widget, col)"><a role="menuitem" tabindex="-1" href="#">{% verbatim %}{{ col }}{% endverbatim %}</a></li>
                     </ul>
                 </div>
-                <div class="btn-group btn-group-xs">
+                <div class="btn-group btn-group-xs" data-ng-if="!widget.isEditing() && !widget.isNew()">
                     <button type="button" class="btn btn-default" data-ng-disabled="$last" data-ng-click="increaseRow(widget)"><span class="fa fa-arrow-down"></span></button>
                     <button type="button" class="btn btn-default" data-ng-disabled="1 == widget.row" data-ng-click="decreaseRow(widget)"><span class="fa fa-arrow-up"></span></button>
                 </div>
