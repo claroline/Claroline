@@ -11,6 +11,7 @@
 
 namespace Claroline\TeamBundle\Repository;
 
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\ORM\EntityRepository;
 
@@ -41,12 +42,12 @@ class TeamRepository extends EntityRepository
         $executeQuery = true
     )
     {
-        $dql = "
+        $dql = '
             SELECT t
             FROM Claroline\TeamBundle\Entity\Team t
             WHERE t.workspace = :workspace
             AND t.name = :teamName
-        ";
+        ';
         $query = $this->_em->createQuery($dql);
         $query->setParameter('workspace', $workspace);
         $query->setParameter('teamName', $teamName);
@@ -59,15 +60,35 @@ class TeamRepository extends EntityRepository
         $executeQuery = true
     )
     {
-        $dql = "
+        $dql = '
             SELECT t AS team, COUNT(u) AS nb_users
             FROM Claroline\TeamBundle\Entity\Team t
             JOIN t.users u
             WHERE t.workspace = :workspace
             GROUP BY t
-        ";
+        ';
         $query = $this->_em->createQuery($dql);
         $query->setParameter('workspace', $workspace);
+
+        return $executeQuery ? $query->getResult() : $query;
+    }
+
+    public function findNbTeamsByUserAndWorkspace(
+        User $user,
+        Workspace $workspace,
+        $executeQuery = true
+    )
+    {
+        $dql = '
+            SELECT t
+            FROM Claroline\TeamBundle\Entity\Team t
+            JOIN t.users u
+            WHERE t.workspace = :workspace
+            AND u = :user
+        ';
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('workspace', $workspace);
+        $query->setParameter('user', $user);
 
         return $executeQuery ? $query->getResult() : $query;
     }

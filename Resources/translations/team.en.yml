@@ -3,12 +3,16 @@ create_teams: 'Create teams'
 default_parameters: 'Default parameters'
 delete_team: 'Delete team'
 delete_team_comfirm_message: 'Are you sure you want to delete this team ?'
+edit_team: 'Edit team'
 maximum: Maximum
+maximum_informations: 'The number of users that can be registered into team'
 no_team: 'No team'
 private: Private
 public: Public
+register_users_to_team: 'Register users to team'
 team: Team
 team_creation: 'Team creation'
+team_directory: 'Team''s directory'
 team_edition: 'Team edition'
 team_form_description: Description
 team_form_isPublic: 'Team directory access'

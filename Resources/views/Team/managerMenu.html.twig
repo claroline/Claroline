@@ -72,7 +72,11 @@
                             {{ 'users'|trans({}, 'team') }}
                         </th>
                         <th class="text-center">
-                            <a href="{{ sortUrl(workspace.getId(), 'maxUsers', order) }}">
+                            <a href="{{ sortUrl(workspace.getId(), 'maxUsers', order) }}"
+                               data-toggle="tooltip"
+                               data-placement="top"
+                               title="{{ 'maximum_informations'|trans({}, 'team') }}"
+                            >
                                 {{ 'maximum'|trans({}, 'team') }}
                             </a>
                         </th>
@@ -101,13 +105,27 @@
                                 {% endif %}
                             </td>
                             <td class="text-center">
+                                <span class="btn btn-default register-users-btn"
+                                      data-team-id="{{ team.getId() }}"
+                                      data-toggle="tooltip"
+                                      data-placement="top"
+                                      title="{{ 'register_users_to_team'|trans({}, 'team') }}"
+                                >
+                                    <i class="fa fa-sign-in"></i>
+                                </span>
                                 <a class="btn btn-default"
                                    href="{{ path('claro_team_edit_form', {'team': team.getId()}) }}"
+                                  data-toggle="tooltip"
+                                  data-placement="top"
+                                  title="{{ 'edit_team'|trans({}, 'team') }}"
                                 >
                                     <i class="fa fa-edit"></i>
                                 </a>
                                 <span class="btn btn-danger delete-team-btn"
                                       data-team-id="{{ team.getId() }}"
+                                      data-toggle="tooltip"
+                                      data-placement="top"
+                                      title="{{ 'delete_team'|trans({}, 'team') }}"
                                 >
                                     <i class="fa fa-trash-o"></i>
                                 </span>

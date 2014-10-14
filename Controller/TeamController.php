@@ -446,17 +446,42 @@ class TeamController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function selfregisterUserToTeamAction(Team $team, User $user)
+    public function selfRegisterUserToTeamAction(Team $team, User $user)
     {
-        $this->checkToolAccess($team->getWorkspace());
         $workspace = $team->getWorkspace();
+        $this->checkToolAccess($workspace);
         $params = $this->teamManager->getParametersByWorkspace($workspace);
         $maxUsers = $team->getMaxUsers();
         $full = !is_null($maxUsers) && (count($team->getUsers()) >= $maxUsers);
         $nbAllowedTeams = $params->getMaxTeams();
+        $nbTeams = $this->teamManager
+            ->getNbTeamsByUserAndWorkspace($user, $workspace);
+        $nbAllowed = is_null($nbAllowedTeams) || ($nbTeams < $nbAllowedTeams);
 
-        if ($team->getSelfRegistration() && !$full) {
+        if ($team->getSelfRegistration() && !$full && $nbAllowed) {
             $this->teamManager->registerUsersToTeam($team, array($user));
+        }
+
+        return new Response('success', 200);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/team/{team}/self/unregister/user",
+     *     name="claro_team_self_unregister_user",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function selfUnregisterUserToTeamAction(Team $team, User $user)
+    {
+        $workspace = $team->getWorkspace();
+        $this->checkToolAccess($workspace);
+
+        if ($team->getSelfUnregistration()) {
+            $this->teamManager->unregisterUsersFromTeam($team, array($user));
         }
 
         return new Response('success', 200);
