@@ -67,13 +67,13 @@ portfolioApp
 
                 return widget.isNew() ? widget.$save(success, failed) : widget.$update(success, failed);
             },
-            create: function(portfolioId, type) {
+            create: function(portfolioId, type, column) {
                 var isTypeUnique = widgetsConfig.config[type].isUnique;
                 if (isTypeUnique && 0 < this.findWidgetsByType(type).length) {
                     this.edit(this.findWidgetsByType(type)[0]);
                 }
                 else {
-                    this.createEmptyWidget(portfolioId, type, isTypeUnique);
+                    this.createEmptyWidget(portfolioId, type, isTypeUnique, column);
                 }
             },
             findWidgetsByType: function(type) {
@@ -87,7 +87,7 @@ portfolioApp
 
                 return widgets;
             },
-            createEmptyWidget: function(portfolioId, type, istypeUnique) {
+            createEmptyWidget: function(portfolioId, type, istypeUnique, column) {
                 var newWidget;
                 var widget = widgetFactory.getWidget(portfolioId, type);
 
@@ -100,10 +100,13 @@ portfolioApp
                     var $this = this;
                     newWidget.$promise.then(function() {
                         $this.emptyWidgets[type] = angular.copy(newWidget);
+                        newWidget.column = column;
                         $this.edit(newWidget);
                     });
                     this.addEditing(newWidget);
                 }
+
+                newWidget.column = column;
 
                 this.widgets.push(newWidget);
             },
