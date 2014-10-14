@@ -141,7 +141,7 @@ class PublishingManager
         $this->path->setPublished(true);
         $this->path->setModified(false);
 
-        // Manage rigths
+        // Manage rights
         $this->manageRights();
 
         // Persist data
