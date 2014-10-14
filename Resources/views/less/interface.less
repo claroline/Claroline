@@ -43,36 +43,6 @@ body {
                 }
             }
         }
-        #widget_types_popover {
-            max-width: 300px;
-            width:     300px;
-            .popover-content {
-                padding: 9px 10px;
-            }
-            .widget_type_list {
-                .widget_type  {
-                    .fa {
-                        display:   block;
-                        font-size: 18px;
-                    }
-                    float:            left;
-                    width:            80px;
-                    height:           75px;
-                    font-size:        12px;
-                    background-color: #E9E9E9;
-                    text-align:       center;
-                    padding:          15px 0 0 0;
-                    margin:           5px;
-                    cursor:           pointer;
-                    &:hover {
-                        background-color: orange;
-                    }
-                    &:last-child {
-                        margin-bottom: 10px;
-                    }
-                }
-            }
-        }
     }
     header {
         background: #302e2c;
@@ -131,15 +101,51 @@ body {
     .add_widget {
         border:        3px dashed #ccc;
         border-radius: 0.25em;
-        cursor:        pointer;
-        color:         #ccc;
+        margin-bottom: 20px;
         &:hover {
-            color:        #adadad;
             border-color: #adadad;
         }
-        p {
-            text-align: center;
-            margin:     0;
+        .panel-body {
+            padding: 0;
+            .add_widget_icon {
+                cursor:         pointer;
+                color:          #ccc;
+                text-align:     center;
+                margin:         0;
+                padding-top:    15px;
+                padding-bottom: 15px;
+                &:hover {
+                    color: #adadad;
+                }
+            }
+            .widget_type_list {
+                margin: 15px;
+                .widget_type  {
+                    .fa {
+                        display:   block;
+                        font-size: 18px;
+                    }
+                    float:            left;
+                    width:            80px;
+                    height:           75px;
+                    font-size:        12px;
+                    background-color: #E9E9E9;
+                    text-align:       center;
+                    padding:          15px 0 0 0;
+                    margin:           5px;
+                    cursor:           pointer;
+                    &:hover {
+                        background-color: orange;
+                    }
+                    &:last-child {
+                        margin-bottom: 15px;
+                    }
+                }
+            }
+            .fa-close {
+                cursor: pointer;
+                margin: 10px;
+            }
         }
     }
 

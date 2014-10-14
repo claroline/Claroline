@@ -49,12 +49,6 @@
                             {{ 'disposition' | trans({}, 'icap_portfolio') }}
                         </button>
                     </li>
-                    <li>
-                        <button type="button" class="widget-menu-item btn btn-lg btn-default" data-template="templates/menu_widget-type.tpl.html"
-                            data-trigger="focus" data-placement="right" data-animation="am-fade-and-slide-left" data-bs-popover>
-                            {{ 'widget_content' | trans({}, 'icap_portfolio') }}
-                        </button>
-                    </li>
                     {% endif %}
                     <li>
                         <div class="panel panel-default communication_panel" data-comments-container="portfolio.comments">
@@ -104,10 +98,14 @@
                         <div data-ng-repeat="widget in widgets | filter:{type: '!title'} | orderBy:widget.row" data-ng-if="0 == portfolio.disposition">
                             {% include 'IcapPortfolioBundle:templates:widget.html.twig' %}
                         </div>
+                        <div data-ng-include="'templates/menu_widget-type.tpl.html'" data-ng-if="0 == portfolio.disposition">
+                        </div>
                         <div data-ng-if="1 == portfolio.disposition">
                             <ul class="col-md-6 list-unstyled" data-ng-repeat="col in cols">
                                 <li data-ng-repeat="widget in widgets | filter:{type: '!title', column: col} | orderBy:'+row'">
                                     {% include 'IcapPortfolioBundle:templates:widget.html.twig' %}
+                                </li>
+                                <li data-ng-include="'templates/menu_widget-type.tpl.html'">
                                 </li>
                             </ul>
                         </div>
@@ -116,17 +114,7 @@
                                 <li data-ng-repeat="widget in widgets | filter:{type: '!title', column: col} | orderBy:'+row'">
                                     {% include 'IcapPortfolioBundle:templates:widget.html.twig' %}
                                 </li>
-                                <li>
-                                    <div class="add_widget">
-                                        <div class="panel-body">
-                                            <p>
-                                                <span class="fa-stack fa-lg">
-                                                    <i class="fa fa-circle-o fa-stack-2x"></i>
-                                                    <i class="fa fa-plus fa-stack-1x"></i>
-                                                </span>
-                                            </p>
-                                        </div>
-                                    </div>
+                                <li data-ng-include="'templates/menu_widget-type.tpl.html'">
                                 </li>
                             </ul>
                         </div>
