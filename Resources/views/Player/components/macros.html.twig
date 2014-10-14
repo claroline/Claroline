@@ -12,7 +12,7 @@
     </div>
 {% endmacro %}
 
-{% macro displayTreeItem(item, parents, currentStep, path, workspace) %}
+{% macro displayTreeItem(item, currentStep, path, workspace) %}
     {% import _self as macros %}
 
     <li>
@@ -24,7 +24,7 @@
         {% if item.children is not empty %}
         <ul>
             {% for child in item.children %}
-                {{ macros.displayTreeItem(child, parents, currentStep, path, workspace) }}
+                {{ macros.displayTreeItem(child, currentStep, path, workspace) }}
             {% endfor %}
         </ul>
         {% endif %}

@@ -22,7 +22,7 @@
                     <div class="col-md-12">
                         <ul class="tree">
                             {% set parents = currentStep.getParents() %}
-                            {{ macros.displayTreeItem(path.getRootStep(), parents, currentStep, path, workspace) }}
+                            {{ macros.displayTreeItem(path.getRootStep(), currentStep, path, workspace) }}
                         </ul>
                     </div>
                 </div>
