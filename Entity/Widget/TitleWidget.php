@@ -34,6 +34,12 @@ class TitleWidget extends AbstractWidget
      */
     protected $slug;
 
+    public function __construct()
+    {
+        $this->column = 0;
+        $this->row    = 0;
+    }
+
     /**
      * @param string|null $slug
      *
