@@ -115,7 +115,7 @@
             monthNames: [t('january'), t('february'), t('march'), t('april'), t('may'), t('june'), t('july'),
                 t('august'), t('september'), t('october'), t('november'), t('december')],
             monthNamesShort: [t('jan'), t('feb'), t('mar'), t('apr'), t('may'), t('ju'), t('jul'),
-                t('aug'), t('sept'), t('nov'), t('dec')],
+                t('aug'), t('sept'),  t('oct'), t('nov'), t('dec')],
             dayNames: [ t('sunday'),t('monday'), t('tuesday'), t('wednesday'), t('thursday'), t('friday'), t('saturday')],
             dayNamesShort: [ t('sun'), t('mon'), t('tue'), t('wed'), t('thu'), t('fri'), t('sat')],
             editable: true,
