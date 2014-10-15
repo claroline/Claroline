@@ -939,3 +939,4 @@ workspace_import: Importar de un espacio de trabajo
 create_users: Crear el usarios
 add_role_to_users: Agregar un campo a %count% usuario(s)
 add_role_to_groups: Agregar un campo a %count% grupo(s)
+activate_notifications: Activar notificaciones

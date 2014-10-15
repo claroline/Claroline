@@ -210,7 +210,8 @@ class ParametersController extends Controller
                         'platform_limit_date' => $form['platform_limit_date']->getData(),
                         'account_duration' => $form['account_duration']->getData(),
                         'anonymous_public_profile' => $form['anonymous_public_profile']->getData(),
-                        'portfolio_url' => $portfolioUrlOptions ? $form['portfolio_url']->getData() : null
+                        'portfolio_url' => $portfolioUrlOptions ? $form['portfolio_url']->getData() : null,
+                        'is_notification_active' => $form['isNotificationActive']->getData()
                     )
                 );
 

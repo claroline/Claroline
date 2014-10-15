@@ -67,7 +67,8 @@ class PlatformConfigurationHandler
         'footer_login' => false,
         'footer_workspaces' => false,
         'header_locale' => false,
-        'portfolio_url' => null
+        'portfolio_url' => null,
+        'is_notification_active' => true
     );
 
     /**
@@ -165,6 +166,7 @@ class PlatformConfigurationHandler
         $config->setFooterWorkspaces($this->parameters['footer_workspaces']);
         $config->setHeaderLocale($this->parameters['header_locale']);
         $config->setPortfolioUrl($this->parameters['portfolio_url']);
+        $config->setIsNotificationActive($this->parameters['is_notification_active']);
 
         return $config;
     }
