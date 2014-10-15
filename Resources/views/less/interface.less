@@ -55,7 +55,11 @@ body {
                    -moz-transition:0.5s linear all;
                      -o-transition:0.5s linear all;
                         transition:0.5s linear all;
-                height: 350px;
+                height:           200px;
+                padding:          0 10px 0 10px;
+                box-shadow:       0 -2px 5px #aaa inset;
+                background-color: #e2e2e2;
+                color:            black;
 
                 &.ng-hide {
                    height: 0;
@@ -95,9 +99,8 @@ body {
     .dispositions {
         padding-left:  15px;
         padding-right: 15px;
-        width: 200px;
         .disposition {
-            display:          block;
+            display:          inline-block;
             background-color: whitesmoke;
             height:           100px;
             margin-bottom:    10px;
@@ -115,6 +118,9 @@ body {
                 &:hover {
                     background-color: orange;
                 }
+            }
+            .col-md-12 {
+                float: left;
             }
             div.border {
                 height:      80px;

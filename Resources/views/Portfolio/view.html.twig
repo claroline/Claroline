@@ -42,7 +42,8 @@
                                 <span class="fa fa-cog"></span> Configuration
                             </p>
                         </div>
-                        <div class="row configuration_panel_container" data-ng-show="configurationPanelOpen" style="padding: 0 10px 0 10px; box-shadow: 0 -2px 10px #aaa inset; background-color: #e2e2e2;">
+                        <div class="row configuration_panel_container" data-ng-show="configurationPanelOpen">
+                            <h3>{{ 'disposition' | trans({}, 'icap_portfolio') }}</h3>
                             <ul class="dispositions">
                                 <li class="disposition" data-ng-class="{'selected': portfolio.disposition == 0, 'idle': !changing, 'loading': changing}" data-ng-click="changeDisposition(0)">
                                     <div>
