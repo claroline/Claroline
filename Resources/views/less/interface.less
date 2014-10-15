@@ -11,43 +11,11 @@ body {
             width:         100%;
             border-radius: 0;
         }
-        .dispositions {
-            padding-left:  15px;
-            padding-right: 15px;
-            width: 200px;
-            text-align: center;
-            .disposition {
-                display:          block;
-                background-color: whitesmoke;
-                height:           100px;
-                margin-bottom:    10px;
-                padding:          10px;
-                &.loading {
-                    background-position: center;
-                    width:               auto;
-                    opacity: 0.5;
-                }
-                &.selected {
-                    background-color: orange;
-                }
-                &.idle {
-                    cursor:           pointer;
-                    &:hover {
-                        background-color: orange;
-                    }
-                }
-                div.border {
-                    height:      80px;
-                    border:      1px solid grey;
-                    padding-top: 30px;
-                }
-            }
-        }
     }
     header {
-        background: #302e2c;
-        padding:    10px 0;
-        color:      #fff;
+        background:  #302e2c;
+        padding-top: 10px;
+        color:       #fff;
 
         .beta_message {
             width:         300px;
@@ -67,6 +35,31 @@ body {
                 position: absolute;
                 top:      0;
                 right:    -50px;
+            }
+        }
+        .configuration_panel {
+            clear:      both;
+            text-align: center;
+            .configuration_panel_button {
+                margin-bottom: 0;
+                cursor: pointer;
+                background-color: orange;
+                border-top-right-radius: 20px;
+                border-top-left-radius: 20px;
+                padding-left: 15px;
+                padding-right: 15px;
+            }
+
+            .configuration_panel_container {
+                -webkit-transition:0.5s linear all;
+                   -moz-transition:0.5s linear all;
+                     -o-transition:0.5s linear all;
+                        transition:0.5s linear all;
+                height: 350px;
+
+                &.ng-hide {
+                   height: 0;
+                }
             }
         }
     }
@@ -95,6 +88,38 @@ body {
             .badge_image {
                 width:  32px;
                 height: 32px;
+            }
+        }
+    }
+
+    .dispositions {
+        padding-left:  15px;
+        padding-right: 15px;
+        width: 200px;
+        .disposition {
+            display:          block;
+            background-color: whitesmoke;
+            height:           100px;
+            margin-bottom:    10px;
+            padding:          10px;
+            &.loading {
+                background-position: center;
+                width:               auto;
+                opacity: 0.5;
+            }
+            &.selected {
+                background-color: orange;
+            }
+            &.idle {
+                cursor:           pointer;
+                &:hover {
+                    background-color: orange;
+                }
+            }
+            div.border {
+                height:      80px;
+                border:      1px solid grey;
+                padding-top: 30px;
             }
         }
     }

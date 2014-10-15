@@ -36,6 +36,35 @@
                             {% endif %}
                         </div>
                     </div>
+                    <div class="configuration_panel">
+                        <div class="row">
+                            <p class="configuration_panel_button col-md-2 col-md-offset-5" data-ng-click="configurationPanelOpen = !configurationPanelOpen" role="button">
+                                <span class="fa fa-cog"></span> Configuration
+                            </p>
+                        </div>
+                        <div class="row configuration_panel_container" data-ng-show="configurationPanelOpen" style="padding: 0 10px 0 10px; box-shadow: 0 -2px 10px #aaa inset; background-color: #e2e2e2;">
+                            <ul class="dispositions">
+                                <li class="disposition" data-ng-class="{'selected': portfolio.disposition == 0, 'idle': !changing, 'loading': changing}" data-ng-click="changeDisposition(0)">
+                                    <div>
+                                        <div class="col-md-12 border">1</div>
+                                    </div>
+                                </li>
+                                <li class="disposition" data-ng-class="{'selected': portfolio.disposition == 1, 'idle': !changing, 'loading': changing}" data-ng-click="changeDisposition(1)">
+                                    <div>
+                                        <div class="col-md-6 border">1</div>
+                                        <div class="col-md-6 border">2</div>
+                                    </div>
+                                </li>
+                                <li class="disposition" data-ng-class="{'selected': portfolio.disposition == 2, 'idle': !changing, 'loading': changing}" data-ng-click="changeDisposition(2)">
+                                    <div>
+                                        <div class="col-md-4 border">1</div>
+                                        <div class="col-md-4 border">2</div>
+                                        <div class="col-md-4 border">3</div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             </header>
 
