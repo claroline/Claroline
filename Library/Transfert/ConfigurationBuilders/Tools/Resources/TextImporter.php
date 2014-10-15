@@ -103,7 +103,7 @@ class TextImporter extends Importer implements ConfigurationInterface
     {
         $ds = DIRECTORY_SEPARATOR;
 
-        return !file_exists($rootpath . $ds . $v);;
+        return !file_exists($rootpath . $ds . $v);
     }
 
     public function export(Workspace $workspace, array &$files, $object)

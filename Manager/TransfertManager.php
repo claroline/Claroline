@@ -36,6 +36,8 @@ class TransfertManager
     private $rootPath;
     private $om;
     private $container;
+    private $data;
+    private $workspace;
 
     /**
      * @DI\InjectParams({
@@ -48,6 +50,8 @@ class TransfertManager
         $this->listImporters = new ArrayCollection();
         $this->om = $om;
         $this->container = $container;
+        $this->data = array();
+        $this->workspace = null;
     }
 
     public function addImporter(Importer $importer)
@@ -88,7 +92,6 @@ class TransfertManager
 
     public function import(Configuration $configuration)
     {
-        $data = $configuration->getData();
         $owner = $this->container->get('security.context')->getToken()->getUser();
         $configuration->setOwner($owner);
         $this->setImporters($configuration, $data);
@@ -108,6 +111,9 @@ class TransfertManager
      * Populates a workspace content with the content of an zip archive. In other words, it ignores the
      * many properties of the configuration object and use an existing workspace as base.
      *
+     * This will set the $this->data var
+     * This will set the $this->workspace var
+     *
      * @param Workspace $workspace
      * @param Confuguration $configuration
      * @param Directory $root
@@ -126,6 +132,9 @@ class TransfertManager
     {
         $this->om->startFlushSuite();
         $data = $configuration->getData();
+        //refactor how workspace are created because this sucks
+        $this->data = $configuration->getData();
+        $this->workspace = $workspace;
         $this->setImporters($configuration, $data);
         $this->setWorkspaceForImporter($workspace);
 
@@ -165,6 +174,7 @@ class TransfertManager
     {
         $configuration->setOwner($owner);
         $data = $configuration->getData();
+        $this->data = $data;
         $this->om->startFlushSuite();
         $this->setImporters($configuration, $data);
 
@@ -231,16 +241,22 @@ class TransfertManager
         );
 
         $this->populateWorkspace($workspace, $configuration, $root, $entityRoles, true, false);
-
         $this->om->endFlushSuite();
 
+        return $workspace;
+    }
+
+    //refactor how workspace are created because this sucks
+    public function importRichText()
+    {
         //now we have to parse everything in case there is a rich text
         //rich texts must be located in the tools section
+        $data = $this->data;
+        $this->container->get('claroline.importer.rich_text_formatter')->setData($data);
+        $this->container->get('claroline.importer.rich_text_formatter')->setWorkspace($this->workspace);
 
-        /*
         foreach ($data['tools'] as $tool) {
             $importer = $this->getImporterByName($tool['tool']['type']);
-
             if (!$importer) {
                 throw new InvalidConfigurationException('The importer ' . $tool['tool']['type'] . ' does not exist');
             }
@@ -250,12 +266,8 @@ class TransfertManager
                 $importer->format($data);
             }
         }
-        */
 
-        //add missing tools for workspace
-        //$this->container->get('claroline.manager.tool_manager')->addMissingWorkspaceTools($workspace);
-
-        return $workspace;
+        $this->om->flush();
     }
 
     private function setRootPath($rootPath)
