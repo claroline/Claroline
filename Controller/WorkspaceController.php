@@ -1260,6 +1260,7 @@ class WorkspaceController extends Controller
             $config->setSelfUnregistration(true);
             $config->setWorkspaceDescription(true);
             $this->workspaceManager->create($config, $this->security->getToken()->getUser());
+            $this->workspaceManager->importRichText();
         } else {
             throw new \Exception('Invalid form');
         }

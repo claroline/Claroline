@@ -696,13 +696,24 @@ class WorkspaceManager
             $entityRoles[$this->roleManager->getWorkspaceRoleBaseName($wsRole)] = $wsRole;
         }
 
-        var_dump(array_keys($entityRoles));
-
-        return $this->container->get('claroline.manager.transfert_manager')->populateWorkspace(
+        $workspace = $this->container->get('claroline.manager.transfert_manager')->populateWorkspace(
             $workspace,
             $configuration,
             $root,
             $entityRoles
         );
+
+        $this->importRichText();
+
+        return $workspace;
+    }
+
+    /**
+     * This function must be fired right after a workspace is "populated".
+     * Don't use it otherwise !!!!
+     */
+    public function importRichText()
+    {
+        $this->container->get('claroline.manager.transfert_manager')->importRichText();
     }
 }
