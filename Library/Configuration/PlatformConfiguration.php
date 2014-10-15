@@ -370,7 +370,7 @@ class PlatformConfiguration
 
     /**
      * @Assert\Regex(
-     *      "/^\<meta name=\x22google-site-verification\x22 content=\x22([a-zA-Z0-9-]){1,43}\x22( \/)?\>$/",
+     *      "/^\<meta name=\x22google-site-verification\x22 content=\x22([\w]){1,43}\x22( \/)?\>$/",
      *      message = "google_meta_tag_error"
      * )
      */
