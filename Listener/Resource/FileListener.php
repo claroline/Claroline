@@ -95,7 +95,8 @@ class FileListener implements ContainerAwareInterface
             $file = $form->getData();
             $tmpFile = $form->get('file')->getData();
             $fileName = $tmpFile->getClientOriginalName();
-            $mimeType = $tmpFile->getClientMimeType();
+            $ext = $tmpFile->getClientOriginalExtension();
+            $mimeType = $this->container->get('claroline.utilities.mime_type_guesser')->guess($ext);
 
             if (pathinfo($fileName, PATHINFO_EXTENSION) === 'zip' && $form->get('uncompress')->getData()) {
                 $roots = $this->unzip($tmpFile, $event->getParent());
