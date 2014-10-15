@@ -574,4 +574,11 @@ class ResourceNode
     {
         $this->isVisible = $isVisible;
     }
+
+    public function addChild(ResourceNode $resourceNode)
+    {
+        if (!$this->children->contains($resourceNode)) {
+            $this->children->add($resourceNode);
+        }
+    }
 }
