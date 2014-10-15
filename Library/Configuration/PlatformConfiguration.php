@@ -57,6 +57,7 @@ class PlatformConfiguration
     private $footerWorkspaces;
     private $headerLocale;
     private $portfolioUrl;
+    private $isNotificationActive;
 
     /**
      * @param mixed $sessionDbDataCol
@@ -570,5 +571,15 @@ class PlatformConfiguration
         $this->portfolioUrl = $portfolioUrl;
 
         return $this;
+    }
+
+    public function getIsNotificationActive()
+    {
+        return $this->isNotificationActive;
+    }
+
+    public function setIsNotificationActive($bool)
+    {
+        $this->isNotificationActive = $bool;
     }
 }
