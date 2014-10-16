@@ -24,7 +24,7 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\ForumBundle\Manager\Manager;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -154,7 +154,7 @@ class ForumController extends Controller
         $collection = new ResourceCollection(array($forum->getResourceNode()));
 
         if (!$this->security->isGranted('post', $collection)) {
-            throw new AccessDeniedHttpException($collection->getErrorsForDisplay());
+            throw new AccessDeniedException($collection->getErrorsForDisplay());
         }
 
         $formSubject = $this->get('form.factory')->create(new SubjectType());
@@ -180,7 +180,7 @@ class ForumController extends Controller
         $collection = new ResourceCollection(array($forum->getResourceNode()));
 
         if (!$this->security->isGranted('post', $collection)) {
-            throw new AccessDeniedHttpException($collection->getErrorsForDisplay());
+            throw new AccessDeniedException($collection->getErrorsForDisplay());
         }
 
         $formCategory = $this->get('form.factory')->create(new CategoryType());
@@ -204,7 +204,7 @@ class ForumController extends Controller
         $collection = new ResourceCollection(array($forum->getResourceNode()));
 
         if (!$this->security->isGranted('post', $collection)) {
-            throw new AccessDeniedHttpException($collection->getErrorsForDisplay());
+            throw new AccessDeniedException($collection->getErrorsForDisplay());
         }
 
         $form = $this->get('form.factory')->create(new CategoryType(), new Category());
@@ -239,7 +239,7 @@ class ForumController extends Controller
         $collection = new ResourceCollection(array($forum->getResourceNode()));
 
         if (!$this->security->isGranted('post', $collection)) {
-            throw new AccessDeniedHttpException($collection->getErrorsForDisplay());
+            throw new AccessDeniedException($collection->getErrorsForDisplay());
         }
 
         $form = $this->get('form.factory')->create(new SubjectType(), new Subject);
@@ -357,7 +357,7 @@ class ForumController extends Controller
         $isModerator = $this->security->isGranted('moderate', new ResourceCollection(array($forum->getResourceNode())));
 
         if (!$isModerator && $this->security->getToken()->getUser() !== $message->getCreator()) {
-            throw new AccessDeniedHttpException();
+            throw new AccessDeniedException();
         }
 
         $form = $this->get('form.factory')->create(new MessageType(), $message);
@@ -386,7 +386,7 @@ class ForumController extends Controller
         $isModerator = $this->security->isGranted('moderate', new ResourceCollection(array($forum->getResourceNode())));
 
         if (!$isModerator && $this->security->getToken()->getUser() !== $message->getCreator()) {
-            throw new AccessDeniedHttpException();
+            throw new AccessDeniedException();
         }
 
         $oldContent = $message->getContent();
@@ -424,7 +424,7 @@ class ForumController extends Controller
         $isModerator = $this->security->isGranted('moderate', new ResourceCollection(array($forum->getResourceNode())));
 
         if (!$isModerator && $this->security->getToken()->getUser()) {
-            throw new AccessDeniedHttpException();
+            throw new AccessDeniedException();
         }
 
         $form = $this->container->get('form.factory')->create(new CategoryType, $category);
@@ -450,7 +450,7 @@ class ForumController extends Controller
         $isModerator = $this->security->isGranted('moderate', new ResourceCollection(array($forum->getResourceNode())));
 
         if (!$isModerator && $this->security->getToken()->getUser()) {
-            throw new AccessDeniedHttpException();
+            throw new AccessDeniedException();
         }
 
         $oldName = $category->getName();
@@ -488,7 +488,7 @@ class ForumController extends Controller
             );
         }
 
-        throw new AccessDeniedHttpException();
+        throw new AccessDeniedException();
     }
 
     /**
@@ -528,7 +528,7 @@ class ForumController extends Controller
         $isModerator = $this->security->isGranted('moderate', new ResourceCollection(array($subject->getCategory()->getForum()->getResourceNode())));
 
         if (!$isModerator && $this->security->getToken()->getUser() !== $subject->getCreator()) {
-            throw new AccessDeniedHttpException();
+            throw new AccessDeniedException();
         }
 
         $form = $this->container->get('form.factory')->create(new EditTitleType(), $subject);
@@ -561,7 +561,7 @@ class ForumController extends Controller
         );
 
         if (!$isModerator && $this->security->getToken()->getUser() !== $subject->getCreator()) {
-            throw new AccessDeniedHttpException();
+            throw new AccessDeniedException();
         }
 
         $oldTitle = $subject->getTitle();
@@ -603,7 +603,7 @@ class ForumController extends Controller
             );
         }
 
-        throw new AccessDeniedHttpException();
+        throw new AccessDeniedException();
     }
 
     /**
@@ -663,7 +663,7 @@ class ForumController extends Controller
             );
         }
 
-        throw new AccessDeniedHttpException();
+        throw new AccessDeniedException();
     }
 
     /**
@@ -675,7 +675,7 @@ class ForumController extends Controller
         $collection = new ResourceCollection(array($forum->getResourceNode()));
 
         if (!$this->security->isGranted('OPEN', $collection)) {
-            throw new AccessDeniedHttpException($collection->getErrorsForDisplay());
+            throw new AccessDeniedException($collection->getErrorsForDisplay());
         }
     }
 
@@ -982,7 +982,7 @@ class ForumController extends Controller
         $collection = new ResourceCollection(array($forum->getResourceNode()));
 
         if (!$this->security->isGranted('MODERATE', $collection)) {
-            throw new AccessDeniedHttpException($collection->getErrorsForDisplay());
+            throw new AccessDeniedException($collection->getErrorsForDisplay());
         }
 
         $this->manager->activateGlobalNotifications($forum);
@@ -1005,7 +1005,7 @@ class ForumController extends Controller
         $collection = new ResourceCollection(array($forum->getResourceNode()));
 
         if (!$this->security->isGranted('MODERATE', $collection)) {
-            throw new AccessDeniedHttpException($collection->getErrorsForDisplay());
+            throw new AccessDeniedException($collection->getErrorsForDisplay());
         }
 
         $this->manager->disableGlobalNotifications($forum);
