@@ -74,7 +74,7 @@ class WidgetController extends BaseController
                 )) {
                 $newWidget  = $widgetManager->getNewWidget($portfolio, $type);
                 $data       = $widgetManager->handle($newWidget, $type, $request->request->all());
-                $statusCode = Response::HTTP_OK;
+                $statusCode = Response::HTTP_CREATED;
             }
         }
 
