@@ -96,7 +96,7 @@ class ResourceRightsController
     public function rightFormAction(ResourceNode $node, Role $role = null)
     {
         $collection = new ResourceCollection(array($node));
-        $this->checkAccess('EDIT', $collection);
+        $this->checkAccess('ADMINISTRATE', $collection);
         $isDir = $node->getResourceType()->getName() === 'directory';
 
         if (!$role) {
@@ -151,7 +151,7 @@ class ResourceRightsController
     public function editPermsAction(ResourceNode $node)
     {
         $collection = new ResourceCollection(array($node));
-        $this->checkAccess('EDIT', $collection);
+        $this->checkAccess('ADMINISTRATE', $collection);
         $datas = $this->getPermissionsFromRequest($node->getResourceType());
         $isRecursive = $this->request->getCurrentRequest()->request->get('isRecursive');
 
@@ -175,7 +175,7 @@ class ResourceRightsController
     public function openPermsAction(ResourceNode $node)
     {
         $collection = new ResourceCollection(array($node));
-        $this->checkAccess('EDIT', $collection);
+        $this->checkAccess('ADMINISTRATE', $collection);
         $this->rightsManager->editPerms(1, $this->roleManager->getRoleByName('ROLE_USER'), $node, false);
         $this->rightsManager->editPerms(1, $this->roleManager->getRoleByName('ROLE_ANONYMOUS'), $node, false);
 
@@ -204,7 +204,7 @@ class ResourceRightsController
     public function rightCreationFormAction(ResourceNode $node, Role $role)
     {
         $collection = new ResourceCollection(array($node));
-        $this->checkAccess('EDIT', $collection);
+        $this->checkAccess('ADMINISTRATE', $collection);
 
         return array(
             'configs' => array($this->rightsManager->getOneByRoleAndResource($role, $node)),
@@ -235,7 +235,7 @@ class ResourceRightsController
     public function editPermsCreationAction(ResourceNode $node, Role $role)
     {
         $collection = new ResourceCollection(array($node));
-        $this->checkAccess('EDIT', $collection);
+        $this->checkAccess('ADMINISTRATE', $collection);
         $isRecursive = $this->request->getCurrentRequest()->request->get('isRecursive');
         $ids = $this->request->getCurrentRequest()->request->get('resourceTypes');
         $resourceTypes = $ids === null ?
@@ -276,7 +276,7 @@ class ResourceRightsController
     )
     {
         $collection = new ResourceCollection(array($node));
-        $this->checkAccess('EDIT', $collection);
+        $this->checkAccess('ADMINISTRATE', $collection);
         $isDir = $node->getResourceType()->getName() === 'directory';
         $resourceType = $node->getResourceType();
         $mask = $this->maskManager
@@ -357,7 +357,7 @@ class ResourceRightsController
     )
     {
         $collection = new ResourceCollection(array($node));
-        $this->checkAccess('EDIT', $collection);
+        $this->checkAccess('ADMINISTRATE', $collection);
         $isDir = $node->getResourceType()->getName() === 'directory';
         $resourceType = $node->getResourceType();
         $mask = $this->maskManager
