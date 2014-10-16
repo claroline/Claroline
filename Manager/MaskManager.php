@@ -22,11 +22,12 @@ use JMS\DiExtraBundle\Annotation as DI;
  */
 class MaskManager
 {
-    private static $defaultActions = array('open', 'copy', 'export', 'edit', 'delete');
+    private static $defaultActions = array('open', 'copy', 'export', 'edit', 'delete', 'administrate');
     private static $defaultMenus = array(
         'export' => array('download' => false),
-        'edit' => array('rename' => true, 'edit-properties' => true, 'edit-rights' => true, 'open-tracking' => false),
-        'delete' => array('delete' => false)
+        'edit' => array('rename' => true, 'edit-properties' => true),
+        'delete' => array('delete' => false),
+        'administrate' => array('edit-rights' => true, 'open-tracking' => false)
     );
 
     private $om;
