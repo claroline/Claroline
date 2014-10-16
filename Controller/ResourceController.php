@@ -352,7 +352,7 @@ class ResourceController
     {
         $resource = $this->resourceManager->getResourceFromNode($node);
         $collection = new ResourceCollection(array($node));
-        $this->checkAccess("EDIT", $collection);
+        $this->checkAccess("ADMINISTRATE", $collection);
 
         //$type = $node->getResourceType();
         $logs = $this->logManager
