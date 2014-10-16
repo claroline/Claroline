@@ -169,6 +169,7 @@ function addFormHoleEdit(add, response, point, size, orthography, del, selector,
 
 function createHole() {
     var blank = $.trim(tinyMCE.activeEditor.selection.getContent({format : 'text'}));
+    blank = blank.replace(/\s{2,}/g, ' ');
 
     if (blank != '') {
 
@@ -184,7 +185,7 @@ function createHole() {
         }
 
         var el = tinyMCE.activeEditor.dom
-            .create('input', {'id' : indexBlank, 'name' : 'blank_'+indexBlank, 'type' : 'text', 'size' : '15', 'value' : blank, 'class' : 'blank'});
+            .create('input', {'id' : indexBlank, 'name' : 'blank_'+indexBlank, 'type' : 'text', 'size' : '15', 'value' : blank, 'class' : 'blank', 'autocomplete' : 'off'});
 
         tinyMCE.activeEditor.selection.setNode(el);
 

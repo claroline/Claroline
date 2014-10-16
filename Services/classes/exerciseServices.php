@@ -434,6 +434,9 @@ class exerciseServices
 
         foreach($interHole->getHoles() as $hole) {
             $response = $request->get('blank_'.$hole->getPosition());
+            $response = trim($response);
+            $response = preg_replace('/\s+/', ' ', $response);
+
             if ($hole->getSelector()) {
                 $wr = $em->getRepository('UJMExoBundle:WordResponse')->find($response);
                 $tabResp[$hole->getPosition()] = $wr->getResponse();
@@ -474,6 +477,8 @@ class exerciseServices
 
         foreach($interHole->getHoles() as $hole) {
             $response = $request->get('blank_'.$hole->getPosition());
+            $response = trim($response);
+            $response = preg_replace('/\s+/', ' ', $response);
             if ($hole->getSelector() == true) {
                 $wr = $em->getRepository('UJMExoBundle:WordResponse')->find($response);
                 $score += $wr->getScore();
