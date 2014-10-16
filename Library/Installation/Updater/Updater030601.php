@@ -36,8 +36,9 @@ class Updater030601
         $resourceTypes = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findAll();
 
         foreach ($resourceTypes as $resourceType) {
-            try {
-                $permissionMap = $this->mm->getPermissionMap($resourceType);
+            $permissionMap = $this->mm->getPermissionMap($resourceType);
+
+            if (!in_array('administrate', $permissionMap)) {
                 $mask = $this->mm->getDecoder($resourceType, 'edit');
                 $mask->setName('administrate');
                 $this->om->persist($mask);
@@ -46,25 +47,21 @@ class Updater030601
                 $maskDecoder->setName('edit');
                 $maskDecoder->setResourceType($resourceType);
                 $this->om->persist($maskDecoder);
-
-                //add the "edit" perm because it has been... changed !
-            } catch (\Exception $e) {
-                $this->log("Perms already changed.");
             }
         }
 
+        $this->om->flush();
         //remove the "write perm" text.
         $textType = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneByName('text');
-        $mask = $this->mm->getDecoder($resourceType, 'edit');
-        $this->om->remove($mask);
-/*
+        $mask = $this->mm->getDecoder($textType, 'write');
+        if ($mask) $this->om->remove($mask);
+
         $fileType = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneByName('file');
-        //edit the "change-file" perm
-        $menuItem = $this->mm->getMenuFromNameAndResourceType('update-file', $fileType);
+        $menuItem = $this->mm->getMenuFromNameAndResourceType('update_file', $fileType);
         $mask = $this->mm->getDecoder($fileType, 'edit');
-        $menuItem->setValue($mask);
-        $this->om->persist($mask);
-        //edit the "change-file" menu*/
+        $menuItem->setValue($mask->getValue());
+        $this->om->persist($menuItem);
+        //edit the "change-file" menu
 
         $this->om->flush();
     }
