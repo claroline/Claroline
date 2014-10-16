@@ -20,7 +20,7 @@
                     <h1 id="username">{{ portfolio.user.firstName ~ ' ' ~ portfolio.user.lastName }}</h1>
 
                     <div data-ng-repeat="widget in widgets | filter:{type: 'title'}" data-ng-show="widgets.length > 0">
-                        <div class="portfolio-title-container" data-widget>
+                        <div class="portfolio-title-container{% if not editMode %} margin{% endif %}" data-widget>
                             {% if constant('Icap\\PortfolioBundle\\Manager\\PortfolioManager::PORTFOLIO_OPENING_MODE_VIEW') != openingMode %}
                                 <div class="widget-actions">
                                 {% if editMode %}
@@ -36,6 +36,7 @@
                             {% endif %}
                         </div>
                     </div>
+                    {% if editMode %}
                     <div class="configuration_panel">
                         <div class="row">
                             <p class="configuration_panel_button col-md-2 col-md-offset-5" data-ng-click="configurationPanelOpen = !configurationPanelOpen" role="button">
@@ -66,20 +67,13 @@
                             </ul>
                         </div>
                     </div>
+                    {% endif %}
                 </div>
             </header>
 
             <section class="col-md-12">
                 {% if not viewMode %}
                 <ul class="col-md-2 widget-menu-container list-unstyled" data-design-container>
-                    {% if editMode %}
-                    <li>
-                        <button type="button" class="widget-menu-item btn btn-lg btn-default" data-template="templates/menu_disposition.tpl.html"
-                            data-trigger="focus" data-placement="right" data-animation="am-fade-and-slide-left" data-bs-popover>
-                            {{ 'disposition' | trans({}, 'icap_portfolio') }}
-                        </button>
-                    </li>
-                    {% endif %}
                     <li>
                         <div class="panel panel-default communication_panel" data-comments-container="portfolio.comments">
                             <div class="panel-heading">
@@ -317,7 +311,6 @@
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/filters/trustAsHtml.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/filters/trans.js') }}"></script>
 
-        <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/templates/menu_disposition.tpl.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/templates/menu_widget-type.tpl.js') }}"></script>
     {% endif %}
 {% endblock %}
