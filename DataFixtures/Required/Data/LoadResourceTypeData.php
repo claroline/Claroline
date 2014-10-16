@@ -57,7 +57,7 @@ class LoadResourceTypeData implements RequiredFixture
 
         //add special actions.
         $composeDecoder = new MaskDecoder();
-        $composeDecoder->setValue(pow(2,10));
+        $composeDecoder->setValue(pow(2, 10));
         $composeDecoder->setName('compose');
         $composeDecoder->setResourceType($types['activity']);
         $manager->persist($composeDecoder);
@@ -83,7 +83,7 @@ class LoadResourceTypeData implements RequiredFixture
 
         $updateTextDecoder = new MaskDecoder();
         $updateTextDecoder->setValue(pow(2, 10));
-        $updateTextDecoder->setName('write');
+        $updateTextDecoder->setName('edit');
         $updateTextDecoder->setResourceType($types['text']);
         $manager->persist($updateTextDecoder);
 
