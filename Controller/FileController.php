@@ -125,6 +125,9 @@ class FileController extends Controller
      */
     public function updateFileFormAction(File $file)
     {
+        $node = $this->get('claroline.manager.resource_manager')->getResourceFromNode($file);
+        $collection = new ResourceCollection(array($node));
+        $this->checkAccess('EDIT', $collection);
         $form = $this->get('form.factory')->create(new UpdateFileType(), new File());
 
         return array(
@@ -142,6 +145,9 @@ class FileController extends Controller
      */
     public function updateFileAction(File $file)
     {
+        $node = $this->get('claroline.manager.resource_manager')->getResourceFromNode($file);
+        $collection = new ResourceCollection(array($node));
+        $this->checkAccess('EDIT', $collection);
         $request = $this->get('request');
         $form = $this->get('form.factory')->create(new UpdateFileType(), new File());
         $form->handleRequest($request);

@@ -71,6 +71,16 @@ class LoadResourceTypeData implements RequiredFixture
         $activityMenu->setIsForm(false);
         $manager->persist($activityMenu);
 
+        $updateFile = new MenuAction();
+        $updateFile->setName('update_file');
+        $updateFile->setAsync(true);
+        $updateFile->setIsCustom(true);
+        $updateFile->setIsForm(false);
+        $updateFile->setResourceType($types['file']);
+        //16 is default for edit
+        $updateFile->setValue(16);
+        $manager->persist($updateFile);
+
         $fileAction = new ActivityRuleAction();
         $fileAction->setAction('resource-read');
         $fileAction->setResourceType($types['file']);
