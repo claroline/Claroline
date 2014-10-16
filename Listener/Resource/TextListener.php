@@ -154,7 +154,7 @@ class TextListener implements ContainerAwareInterface
     {
         $text = $event->getResource();
         $collection = new ResourceCollection(array($text->getResourceNode()));
-        $isGranted = $this->container->get('security.context')->isGranted('WRITE', $collection);
+        $isGranted = $this->container->get('security.context')->isGranted('EDIT', $collection);
         $revisionRepo = $this->container->get('doctrine.orm.entity_manager')
             ->getRepository('ClarolineCoreBundle:Resource\Revision');
         $content = $this->container->get('templating')->render(
