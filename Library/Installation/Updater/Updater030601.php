@@ -38,7 +38,6 @@ class Updater030601
         foreach ($resourceTypes as $resourceType) {
             try {
                 $permissionMap = $this->mm->getPermissionMap($resourceType);
-
                 $mask = $this->mm->getDecoder($resourceType, 'edit');
                 $mask->setName('administrate');
                 $this->om->persist($mask);
@@ -46,6 +45,7 @@ class Updater030601
                 $maskDecoder->setValue(pow(2, count($permissionMap) + 1));
                 $maskDecoder->setName('edit');
                 $maskDecoder->setResourceType($resourceType);
+                $this->om->persist($maskDecoder);
 
                 //add the "edit" perm because it has been... changed !
             } catch (\Exception $e) {
@@ -57,14 +57,14 @@ class Updater030601
         $textType = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneByName('text');
         $mask = $this->mm->getDecoder($resourceType, 'edit');
         $this->om->remove($mask);
-
+/*
         $fileType = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneByName('file');
         //edit the "change-file" perm
         $menuItem = $this->mm->getMenuFromNameAndResourceType('update-file', $fileType);
         $mask = $this->mm->getDecoder($fileType, 'edit');
         $menuItem->setValue($mask);
         $this->om->persist($mask);
-        //edit the "change-file" menu
+        //edit the "change-file" menu*/
 
         $this->om->flush();
     }
