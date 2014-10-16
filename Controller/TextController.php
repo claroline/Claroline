@@ -45,7 +45,7 @@ class TextController extends Controller
     public function editFormAction(Text $text)
     {
         $collection = new ResourceCollection(array($text->getResourceNode()));
-        $this->checkAccess('WRITE', $collection);
+        $this->checkAccess('EDIT', $collection);
 
         $em = $this->container->get('doctrine.orm.entity_manager');
         $revisionRepo = $em->getRepository('ClarolineCoreBundle:Resource\Revision');
@@ -71,7 +71,7 @@ class TextController extends Controller
     public function editAction(Text $old)
     {
         $collection = new ResourceCollection(array($old->getResourceNode()));
-        $this->checkAccess('WRITE', $collection);
+        $this->checkAccess('EDIT', $collection);
 
         $request = $this->get('request');
         $user = $this->get('security.context')->getToken()->getUser();
@@ -112,7 +112,7 @@ class TextController extends Controller
         $revisionRepo = $this->getDoctrine()->getManager()
             ->getRepository('ClarolineCoreBundle:Resource\Revision');
         $collection = new ResourceCollection(array($text->getResourceNode()));
-        $isGranted = $this->container->get('security.context')->isGranted('WRITE', $collection);
+        $isGranted = $this->container->get('security.context')->isGranted('EDIT', $collection);
 
         return $this->render(
             'ClarolineCoreBundle:Text:index.html.twig',

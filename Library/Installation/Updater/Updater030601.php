@@ -36,26 +36,32 @@ class Updater030601
         $resourceTypes = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findAll();
 
         foreach ($resourceTypes as $resourceType) {
-            //we'll create a mask for each resource type
-            //first we check if the 'administrate perms already exists'
             $permissionMap = $this->mm->getPermissionMap($resourceType);
 
             if (!in_array('administrate', $permissionMap)) {
+                $mask = $this->mm->getDecoder($resourceType, 'edit');
+                $mask->setName('administrate');
+                $this->om->persist($mask);
                 $maskDecoder = new MaskDecoder();
                 $maskDecoder->setValue(pow(2, count($permissionMap) + 1));
-                $maskDecoder->setName('administrate');
+                $maskDecoder->setName('edit');
                 $maskDecoder->setResourceType($resourceType);
                 $this->om->persist($maskDecoder);
-
-                //now we edit the edit-rights and open-tracking menu entries
-                $editRightsMenu = $this->mm->getMenuFromNameAndResourceType('edit-rights', $resourceType);
-                $editRightsMenu->setValue(pow(2, count($permissionMap) + 1));
-                $openTrackingMenu = $this->mm->getMenuFromNameAndResourceType('open-tracking', $resourceType);
-                $openTrackingMenu->setValue(pow(2, count($permissionMap) + 1));
-                $this->om->persist($editRightsMenu);
-                $this->om->persist($openTrackingMenu);
             }
         }
+
+        $this->om->flush();
+        //remove the "write perm" text.
+        $textType = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneByName('text');
+        $mask = $this->mm->getDecoder($textType, 'write');
+        if ($mask) $this->om->remove($mask);
+
+        $fileType = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneByName('file');
+        $menuItem = $this->mm->getMenuFromNameAndResourceType('update_file', $fileType);
+        $mask = $this->mm->getDecoder($fileType, 'edit');
+        $menuItem->setValue($mask->getValue());
+        $this->om->persist($menuItem);
+        //edit the "change-file" menu
 
         $this->om->flush();
     }

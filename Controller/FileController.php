@@ -125,6 +125,8 @@ class FileController extends Controller
      */
     public function updateFileFormAction(File $file)
     {
+        $collection = new ResourceCollection(array($file->getResourceNode()));
+        $this->checkAccess('EDIT', $collection);
         $form = $this->get('form.factory')->create(new UpdateFileType(), new File());
 
         return array(
@@ -142,6 +144,8 @@ class FileController extends Controller
      */
     public function updateFileAction(File $file)
     {
+        $collection = new ResourceCollection(array($file->getResourceNode()));
+        $this->checkAccess('EDIT', $collection);
         $request = $this->get('request');
         $form = $this->get('form.factory')->create(new UpdateFileType(), new File());
         $form->handleRequest($request);
