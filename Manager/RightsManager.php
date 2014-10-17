@@ -156,6 +156,7 @@ class RightsManager
 
             $this->om->persist($toUpdate);
             $this->logChangeSet($toUpdate);
+            $this->dispatcher->dispatch('resource_change_permissions', 'UpdateResourceRights', array($node, $toUpdate));
         }
 
         //exception for activities
