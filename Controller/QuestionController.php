@@ -2373,8 +2373,8 @@ class QuestionController extends Controller
             case "choiceMultiple":
                 $qtiImport = $this->container->get('ujm.qti_qcm_import');
 
-                return $qtiImport->import($qtiRepos);
-            }
+                $qtiImport->import($qtiRepos, $document_xml);
+        }
 
         return new \Symfony\Component\HttpFoundation\Response;
     }

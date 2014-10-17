@@ -16,9 +16,12 @@ class qcmImport extends qtiImport
      * @param qtiRepository $qtiRepos
      *
      */
-    public function import(qtiRepository $qtiRepos)
+    public function import(qtiRepository $qtiRepos, \DOMDocument $document)
     {
         $this->qtiRepos = $qtiRepos;
-        echo 'qcm import';die();
+        $this->document = $document;
+        $this->getQTICategory();
+        $this->genericInteraction();
+        //Voir pour éventuellement s'appuyer sur le handler
     }
 }
