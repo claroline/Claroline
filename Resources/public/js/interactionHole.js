@@ -149,8 +149,9 @@ function addFormHoleEdit(add, response, point, size, orthography, del, selector,
 
             } else {
                 if (node.tagName == 'SELECT') {
-                    size = $('#ujm_exobundle_interactionholetype_holes_' + ind + '_size').val();
-                    nodeBlank = '<input type="text" value="' + node.value + '" size="' + size + '" class="blank" id="' + ind + '" name="blank_' + ind + '">';
+                    idSize = ind - 1;
+                    size = $('#ujm_exobundle_interactionholetype_holes_' + idSize + '_size').val();
+                    nodeBlank = '<input type="text" value="' + node.value + '" size="' + size + '" class="blank" id="' + ind + '" name="blank_' + ind + '" autocomplete="off">';
                     tinyMCE.get('ujm_exobundle_interactionholetype_html').selection.setContent(nodeBlank);
                 }
             }
@@ -282,7 +283,7 @@ function addHole(indexBlank, valHole) {
         } else {
             if (node.tagName == 'SELECT') {
                 size = $('#ujm_exobundle_interactionholetype_holes_' + index + '_size').val();
-                nodeBlank = '<input type="text" value="' + node.value + '" size="' + size + '" class="blank" id="' + index + '" name="blank_' + indexBlank + '">';
+                nodeBlank = '<input type="text" value="' + node.value + '" size="' + size + '" class="blank" id="' + index + '" name="blank_' + indexBlank + '" autocomplete="off">';
                 tinyMCE.get('ujm_exobundle_interactionholetype_html').selection.setContent(nodeBlank);
             }
         }
