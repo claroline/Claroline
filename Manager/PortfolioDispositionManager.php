@@ -30,6 +30,9 @@ class PortfolioDispositionManager
             case 2:
                 $cols = [1, 2, 3];
                 break;
+            case 3:
+                $cols = [1, 2, 3, 4];
+                break;
         }
 
         return $cols;

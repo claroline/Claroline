@@ -55,8 +55,11 @@ portfolioApp
                         case 2:
                             $scope.cols = [1, 2, 3];
                             break;
+                        case 3:
+                            $scope.cols = [1, 2, 3, 4];
+                            break;
                         default:
-                            $scope.cols = [];
+                            $scope.cols = [1];
                             break;
                     }
 
@@ -69,6 +72,12 @@ portfolioApp
                                 });
                                 break;
                             case 2:
+                                var widgetsToUpdate = $filter('filter')($scope.widgets, {type: '!title', column: 4});
+                                angular.forEach(widgetsToUpdate, function(widget, key) {
+                                    widget.column = 3;
+                                });
+                                break;
+                            case 3:
                                 break;
                             default:
                                 var widgetsToUpdate = $filter('filter')($scope.widgets, {type: '!title', column: '!3'});

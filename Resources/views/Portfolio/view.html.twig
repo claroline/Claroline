@@ -64,6 +64,14 @@
                                         <div class="col-md-4 border">3</div>
                                     </div>
                                 </li>
+                                <li class="disposition" data-ng-class="{'selected': portfolio.disposition == 3, 'idle': !changing, 'loading': changing}" data-ng-click="changeDisposition(3)">
+                                    <div>
+                                        <div class="col-md-3 border">1</div>
+                                        <div class="col-md-3 border">2</div>
+                                        <div class="col-md-3 border">3</div>
+                                        <div class="col-md-3 border">4</div>
+                                    </div>
+                                </li>
                             </ul>
                         </div>
                     </div>
@@ -71,17 +79,21 @@
                 </div>
             </header>
 
-            <section class="col-md-12">
                 {% if not viewMode %}
-                <div class="col-md-2 widget-menu-container">
-                    <div class="panel panel-default communication_panel" data-comments-container="portfolio.comments">
+                <div class="widget-menu-container">
+                    <div class="communication_panel_toggle" data-ng-init="displayComment=false">
+                        <button class="btn btn-default btn-sm pull-right"data-ng-click="displayComment=!displayComment">
+                            {{ 'communication_panel' | trans({}, 'icap_portfolio') }} <span class="fa fa-chevron-right"></span>
+                        </button>
+                    </div>
+                    <div class="panel panel-default communication_panel col-md-10" data-comments-container="portfolio.comments" data-ng-show="displayComment">
                         <div class="panel-heading">
                             {{ 'communication_panel' | trans({}, 'icap_portfolio') }}
-                            <button class="btn btn-default btn-xs pull-right" data-ng-init="displayComment=true" data-ng-click="displayComment=!displayComment">
-                                <span class="fa" data-ng-class="{'fa-chevron-up': displayComment, 'fa-chevron-down': !displayComment}"></span>
+                            <button class="btn btn-default btn-xs pull-right"data-ng-click="displayComment=!displayComment">
+                                <span class="fa fa-chevron-left"></span>
                             </button>
                         </div>
-                        <div class="panel-body" data-ng-class="{hidden: !displayComment}">
+                        <div class="panel-body">
                             <ul class="media-list" data-scroll-container="comments">
                                 {% verbatim %}
                                 <li class="media" data-ng-repeat="comment in comments | orderBy:['+date']">
@@ -115,7 +127,8 @@
                     </div>
                 </div>
                 {% endif %}
-                <div class="main-content col-md-8{% if viewMode %} col-md-offset-2{% endif %}"{% if not viewMode %} data-design-container{% endif %}>
+            <section class="col-md-12">
+                <div class="main-content col-md-10 col-md-offset-1"{% if not viewMode %} data-design-container{% endif %}>
                     {% if not viewMode %}
                         <div data-ng-repeat="widget in widgets | filter:{type: '!title'} | orderBy:widget.row" data-ng-if="0 == portfolio.disposition">
                             {% include 'IcapPortfolioBundle:templates:widget.html.twig' %}
@@ -133,6 +146,15 @@
                         </div>
                         <div data-ng-if="2 == portfolio.disposition">
                             <ul class="col-md-4 list-unstyled" data-ng-repeat="col in cols">
+                                <li data-ng-repeat="widget in widgets | filter:{type: '!title', column: col} | orderBy:'+row'">
+                                    {% include 'IcapPortfolioBundle:templates:widget.html.twig' %}
+                                </li>
+                                <li data-ng-include="'templates/menu_widget-type.tpl.html'">
+                                </li>
+                            </ul>
+                        </div>
+                        <div data-ng-if="3 == portfolio.disposition">
+                            <ul class="col-md-3 list-unstyled" data-ng-repeat="col in cols">
                                 <li data-ng-repeat="widget in widgets | filter:{type: '!title', column: col} | orderBy:'+row'">
                                     {% include 'IcapPortfolioBundle:templates:widget.html.twig' %}
                                 </li>
@@ -165,6 +187,16 @@
                             {% elseif 2 == portfolio.disposition %}
                                 {% for col in cols %}
                                     <ul class="col-md-4 list-unstyled">
+                                        {% for widget in widgets | orderByRow if 'title' != widget.widgetType and col == widget.column %}
+                                            <li>
+                                                {% include 'IcapPortfolioBundle:templates:widget.html.twig' %}
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endfor %}
+                            {% elseif 3 == portfolio.disposition %}
+                                {% for col in cols %}
+                                    <ul class="col-md-3 list-unstyled">
                                         {% for widget in widgets | orderByRow if 'title' != widget.widgetType and col == widget.column %}
                                             <li>
                                                 {% include 'IcapPortfolioBundle:templates:widget.html.twig' %}
