@@ -13,6 +13,7 @@ namespace Claroline\TeamBundle\Repository;
 
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\TeamBundle\Entity\Team;
 use Doctrine\ORM\EntityRepository;
 
 class TeamRepository extends EntityRepository
@@ -89,6 +90,198 @@ class TeamRepository extends EntityRepository
         $query = $this->_em->createQuery($dql);
         $query->setParameter('workspace', $workspace);
         $query->setParameter('user', $user);
+
+        return $executeQuery ? $query->getResult() : $query;
+    }
+
+    public function findUnregisteredUsersByTeam(
+        Team $team,
+        $orderedBy = 'username',
+        $order = 'ASC',
+        $executeQuery = true
+    )
+    {
+        $dql = "
+            SELECT DISTINCT u
+            FROM Claroline\CoreBundle\Entity\User u
+            WHERE u.isEnabled = true
+            AND (
+                u IN (
+                    SELECT DISTINCT u1
+                    FROM Claroline\CoreBundle\Entity\User u1
+                    JOIN u1.roles r1 WITH r1 IN (
+                        SELECT r12
+                        FROM Claroline\CoreBundle\Entity\Role r12
+                        WHERE r12.workspace = :workspace
+                        AND r12 != :role
+                    )
+                    WHERE u1.isEnabled = true
+                )
+                OR u IN (
+                    SELECT DISTINCT u2
+                    FROM Claroline\CoreBundle\Entity\User u2
+                    JOIN u2.groups g
+                    JOIN g.roles r2 WITH r2 IN (
+                        SELECT r22
+                        FROM Claroline\CoreBundle\Entity\Role r22
+                        WHERE r22.workspace = :workspace
+                        AND r22 != :role
+                    )
+                    WHERE u2.isEnabled = true
+                )
+            )
+            ORDER BY u.{$orderedBy} {$order}
+        ";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('workspace', $team->getWorkspace());
+        $query->setParameter('role', $team->getRole());
+
+        return $executeQuery ? $query->getResult() : $query;
+    }
+
+    public function findSearchedUnregisteredUsersByTeam(
+        Team $team,
+        $search = '',
+        $orderedBy = 'username',
+        $order = 'ASC',
+        $executeQuery = true
+    )
+    {
+        $dql = "
+            SELECT DISTINCT u
+            FROM Claroline\CoreBundle\Entity\User u
+            WHERE u.isEnabled = true
+            AND (
+                u IN (
+                    SELECT DISTINCT u1
+                    FROM Claroline\CoreBundle\Entity\User u1
+                    JOIN u1.roles r1 WITH r1 IN (
+                        SELECT r12
+                        FROM Claroline\CoreBundle\Entity\Role r12
+                        WHERE r12.workspace = :workspace
+                        AND r12 != :role
+                    )
+                    WHERE u1.isEnabled = true
+                )
+                OR u IN (
+                    SELECT DISTINCT u2
+                    FROM Claroline\CoreBundle\Entity\User u2
+                    JOIN u2.groups g
+                    JOIN g.roles r2 WITH r2 IN (
+                        SELECT r22
+                        FROM Claroline\CoreBundle\Entity\Role r22
+                        WHERE r22.workspace = :workspace
+                        AND r22 != :role
+                    )
+                    WHERE u2.isEnabled = true
+                )
+            )
+            AND
+            (
+                UPPER(u.firstName) LIKE :search
+                OR UPPER(u.lastName) LIKE :search
+                OR UPPER(u.username) LIKE :search
+            )
+            ORDER BY u.{$orderedBy} {$order}
+        ";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('workspace', $team->getWorkspace());
+        $query->setParameter('role', $team->getRole());
+        $upperSearch = strtoupper($search);
+        $query->setParameter('search', "%{$upperSearch}%");
+
+        return $executeQuery ? $query->getResult() : $query;
+    }
+
+    public function findWorkspaceUsers(
+        Workspace $workspace,
+        $orderedBy = 'username',
+        $order = 'ASC',
+        $executeQuery = true
+    )
+    {
+        $dql = "
+            SELECT DISTINCT u
+            FROM Claroline\CoreBundle\Entity\User u
+            WHERE u.isEnabled = true
+            AND (
+                u IN (
+                    SELECT DISTINCT u1
+                    FROM Claroline\CoreBundle\Entity\User u1
+                    JOIN u1.roles r1 WITH r1 IN (
+                        SELECT r12
+                        FROM Claroline\CoreBundle\Entity\Role r12
+                        WHERE r12.workspace = :workspace
+                    )
+                    WHERE u1.isEnabled = true
+                )
+                OR u IN (
+                    SELECT DISTINCT u2
+                    FROM Claroline\CoreBundle\Entity\User u2
+                    JOIN u2.groups g
+                    JOIN g.roles r2 WITH r2 IN (
+                        SELECT r22
+                        FROM Claroline\CoreBundle\Entity\Role r22
+                        WHERE r22.workspace = :workspace
+                    )
+                    WHERE u2.isEnabled = true
+                )
+            )
+            ORDER BY u.{$orderedBy} {$order}
+        ";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('workspace', $workspace);
+
+        return $executeQuery ? $query->getResult() : $query;
+    }
+
+    public function findSearchedWorkspaceUsers(
+        Workspace $workspace,
+        $search = '',
+        $orderedBy = 'username',
+        $order = 'ASC',
+        $executeQuery = true
+    )
+    {
+        $dql = "
+            SELECT DISTINCT u
+            FROM Claroline\CoreBundle\Entity\User u
+            WHERE u.isEnabled = true
+            AND (
+                u IN (
+                    SELECT DISTINCT u1
+                    FROM Claroline\CoreBundle\Entity\User u1
+                    JOIN u1.roles r1 WITH r1 IN (
+                        SELECT r12
+                        FROM Claroline\CoreBundle\Entity\Role r12
+                        WHERE r12.workspace = :workspace
+                    )
+                    WHERE u1.isEnabled = true
+                )
+                OR u IN (
+                    SELECT DISTINCT u2
+                    FROM Claroline\CoreBundle\Entity\User u2
+                    JOIN u2.groups g
+                    JOIN g.roles r2 WITH r2 IN (
+                        SELECT r22
+                        FROM Claroline\CoreBundle\Entity\Role r22
+                        WHERE r22.workspace = :workspace
+                    )
+                    WHERE u2.isEnabled = true
+                )
+            )
+            AND
+            (
+                UPPER(u.firstName) LIKE :search
+                OR UPPER(u.lastName) LIKE :search
+                OR UPPER(u.username) LIKE :search
+            )
+            ORDER BY u.{$orderedBy} {$order}
+        ";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('workspace', $workspace);
+        $upperSearch = strtoupper($search);
+        $query->setParameter('search', "%{$upperSearch}%");
 
         return $executeQuery ? $query->getResult() : $query;
     }

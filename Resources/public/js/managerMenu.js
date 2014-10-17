@@ -25,11 +25,67 @@
         );
     });
     
+    $('.register-users-btn').on('click', function () {
+        currentTeamId = $(this).data('team-id');
+        var teamName = $(this).data('team-name');
+        
+        $.ajax({
+            url: Routing.generate(
+                'claro_team_registration_users_list',
+                {'team': currentTeamId}
+            ),
+            type: 'GET',
+            success: function (datas) {
+                $('#view-registration-users-header').html(teamName);
+                $('#view-registration-users-body').html(datas);
+                $('#view-registration-users-box').modal('show');
+            }
+        });
+    });
+    
+    $('#view-registration-users-box').on('click', '.register-btn', function () {
+        var userId = $(this).data('user-id');
+        var teamId = $(this).data('team-id');
+        
+        $.ajax({
+            url: Routing.generate(
+                'claro_team_manager_register_user',
+                {
+                    'team': teamId,
+                    'user': userId
+                }
+            ),
+            type: 'POST',
+            success: function () {
+                refreshPage();
+            }
+        });
+    });
+    
+    $('#view-registration-users-box').on('click', '.unregister-btn', function () {
+        var userId = $(this).data('user-id');
+        var teamId = $(this).data('team-id');
+        
+        $.ajax({
+            url: Routing.generate(
+                'claro_team_manager_unregister_user',
+                {
+                    'team': teamId,
+                    'user': userId
+                }
+            ),
+            type: 'POST',
+            success: function () {
+                refreshPage();
+            }
+        });
+    });
+    
     var removeTeamRow = function () {
         $('#row-team-' + currentTeamId).remove();
-    }
+    };
     
     var refreshPage = function () {
         window.location.reload();
-    }
+    };
 })();

@@ -105,19 +105,20 @@
                                 {% endif %}
                             </td>
                             <td class="text-center">
-                                <span class="btn btn-default register-users-btn"
+                                <span class="btn btn-success register-users-btn"
                                       data-team-id="{{ team.getId() }}"
+                                      data-team-name="{{ team.getName() }}"
                                       data-toggle="tooltip"
                                       data-placement="top"
-                                      title="{{ 'register_users_to_team'|trans({}, 'team') }}"
+                                      title="{{ 'register_unregister_users_to_team'|trans({}, 'team') }}"
                                 >
                                     <i class="fa fa-sign-in"></i>
                                 </span>
                                 <a class="btn btn-default"
                                    href="{{ path('claro_team_edit_form', {'team': team.getId()}) }}"
-                                  data-toggle="tooltip"
-                                  data-placement="top"
-                                  title="{{ 'edit_team'|trans({}, 'team') }}"
+                                   data-toggle="tooltip"
+                                   data-placement="top"
+                                   title="{{ 'edit_team'|trans({}, 'team') }}"
                                 >
                                     <i class="fa fa-edit"></i>
                                 </a>
@@ -140,6 +141,24 @@
             </div>
         {% endif %}
     </div>
+
+    <div id="view-registration-users-box" class="modal fade" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <h3 id="view-registration-users-header" class="modal-header">
+                </h3>
+                <div id="view-registration-users-body" class="modal-body">
+                </div>
+                <div class="modal-footer">
+                    <input type="button"
+                           class="btn btn-default"
+                           data-dismiss="modal"
+                           value="{{ 'close'|trans({}, 'platform') }}"
+                    />
+                </div>
+            </div>
+        </div>
+    </div>  
 {% endblock %}
 
 {% block javascripts %}

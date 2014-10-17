@@ -191,6 +191,26 @@ class TeamManager
         }
     }
 
+    public function registerUserToTeam(Team $team, User $user)
+    {
+        $this->om->startFlushSuite();
+        $teamRole = $team->getRole();
+        $team->addUser($user);
+        $this->roleManager->associateRole($user, $teamRole);
+        $this->om->persist($team);
+        $this->om->endFlushSuite();
+    }
+
+    public function unregisterUserFromTeam(Team $team, User $user)
+    {
+        $this->om->startFlushSuite();
+        $teamRole = $team->getRole();
+        $team->removeUser($user);
+        $this->roleManager->dissociateRole($user, $teamRole);
+        $this->om->persist($team);
+        $this->om->endFlushSuite();
+    }
+
     public function registerUsersToTeam(Team $team, array $users)
     {
         $this->om->startFlushSuite();
@@ -512,6 +532,94 @@ class TeamManager
             $workspace,
             $executeQuery
         );
+    }
+
+    public function getUnregisteredUsersByTeam(
+        Team $team,
+        $orderedBy = 'username',
+        $order = 'ASC',
+        $page = 1,
+        $max = 50,
+        $executeQuery = true
+    )
+    {
+        $users = $this->teamRepo->findUnregisteredUsersByTeam(
+            $team,
+            $orderedBy,
+            $order,
+            $executeQuery
+        );
+
+        return $executeQuery ?
+            $this->pagerFactory->createPagerFromArray($users, $page, $max) :
+            $this->pagerFactory->createPager($users, $page, $max);
+    }
+
+    public function getSearchedUnregisteredUsersByTeam(
+        Team $team,
+        $search = '',
+        $orderedBy = 'username',
+        $order = 'ASC',
+        $page = 1,
+        $max = 50,
+        $executeQuery = true
+    )
+    {
+        $users = $this->teamRepo->findSearchedUnregisteredUsersByTeam(
+            $team,
+            $search,
+            $orderedBy,
+            $order,
+            $executeQuery
+        );
+
+        return $executeQuery ?
+            $this->pagerFactory->createPagerFromArray($users, $page, $max) :
+            $this->pagerFactory->createPager($users, $page, $max);
+    }
+
+    public function getWorkspaceUsers(
+        Workspace $workspace,
+        $orderedBy = 'username',
+        $order = 'ASC',
+        $page = 1,
+        $max = 50,
+        $executeQuery = true
+    )
+    {
+        $users = $this->teamRepo->findWorkspaceUsers(
+            $workspace,
+            $orderedBy,
+            $order,
+            $executeQuery
+        );
+
+        return $executeQuery ?
+            $this->pagerFactory->createPagerFromArray($users, $page, $max) :
+            $this->pagerFactory->createPager($users, $page, $max);
+    }
+
+    public function getSearchedWorkspaceUsers(
+        Workspace $workspace,
+        $search = '',
+        $orderedBy = 'username',
+        $order = 'ASC',
+        $page = 1,
+        $max = 50,
+        $executeQuery = true
+    )
+    {
+        $users = $this->teamRepo->findSearchedWorkspaceUsers(
+            $workspace,
+            $search,
+            $orderedBy,
+            $order,
+            $executeQuery
+        );
+
+        return $executeQuery ?
+            $this->pagerFactory->createPagerFromArray($users, $page, $max) :
+            $this->pagerFactory->createPager($users, $page, $max);
     }
 
 

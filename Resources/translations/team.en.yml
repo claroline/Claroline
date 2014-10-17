@@ -9,7 +9,8 @@ maximum_informations: 'The number of users that can be registered into team'
 no_team: 'No team'
 private: Private
 public: Public
-register_users_to_team: 'Register users to team'
+register: Register
+register_unregister_users_to_team: 'Register/Unregister users to team'
 team: Team
 team_creation: 'Team creation'
 team_directory: 'Team''s directory'
@@ -23,4 +24,5 @@ team_form_nbTeams: 'Number of teams'
 team_form_selfRegistration: 'Allow user to register'
 team_form_selfUnregistration: 'Allow user to unregister'
 teams_creation: 'Teams creation'
+unregister: Unregister
 users: Users

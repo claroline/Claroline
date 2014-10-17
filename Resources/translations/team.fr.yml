@@ -9,7 +9,8 @@ maximum_informations: 'Le nombre d''utilisateurs qui peuvent être inscrits à l
 no_team: 'Aucune équipe'
 private: Privé
 public: Public
-register_users_to_team: 'Inscrire des utilisateurs à l''équipe'
+register: Inscrire
+register_unregister_users_to_team: 'Inscrire/Désinscrire des utilisateurs à l''équipe'
 team: Equipe
 team_creation: 'Création d''une équipe'
 team_directory: 'Répertoire de l''équipe'
@@ -23,4 +24,5 @@ team_form_nbTeams: 'Nombre d''équipes'
 team_form_selfRegistration: 'Permettre aux utilisateurs de s''inscrire'
 team_form_selfUnregistration: 'Permettre aux utilisateurs de se désinscrire'
 teams_creation: 'Création d''équipes'
+unregister: Désinscrire
 users: Utilisateurs
