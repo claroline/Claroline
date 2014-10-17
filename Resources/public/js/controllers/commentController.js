@@ -2,7 +2,6 @@
 
 portfolioApp
     .controller("commentController", ["$scope", "portfolioManager", "commentsManager", "$timeout", function($scope, portfolioManager, commentsManager, $timeout) {
-        $scope.displayComment = true;
         $scope.message        = "";
 
         $scope.create = function() {
