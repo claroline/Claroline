@@ -137,7 +137,7 @@ class holeExport extends qtiExport
         $regex = '(<input\\s+id="\d+"\\s+class="blank"\\s+autocomplete="off"\\s+name="blank_\d+"\\s+size="\d+"\\s+type="text"\\s+value=""\\s+\/>|<select\\s+id="\d+"\\s+class="blank"\\s+name="blank_\d+"></select>)';
         preg_match_all($regex, $html, $matches);
         foreach ($matches[0] as $matche) {
-            $tabMatche = explode('"', $matche);//var_dump($tabMatche);die();
+            $tabMatche = explode('"', $matche);
             $id = $tabMatche[1];
             if (substr($matche, 1, 5) == 'input') {
                 $name = $tabMatche[7];
