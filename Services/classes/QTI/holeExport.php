@@ -137,11 +137,11 @@ class holeExport extends qtiExport
         $regex = '(<input\\s+id="\d+"\\s+class="blank"\\s+autocomplete="off"\\s+name="blank_\d+"\\s+size="\d+"\\s+type="text"\\s+value=""\\s+\/>|<select\\s+id="\d+"\\s+class="blank"\\s+name="blank_\d+"></select>)';
         preg_match_all($regex, $html, $matches);
         foreach ($matches[0] as $matche) {
-            $tabMatche = explode('"', $matche);
+            $tabMatche = explode('"', $matche);//var_dump($tabMatche);die();
             $id = $tabMatche[1];
-            $name = $tabMatche[5];
             if (substr($matche, 1, 5) == 'input') {
-                $size = $tabMatche[7];
+                $name = $tabMatche[7];
+                $size = $tabMatche[9];
                 $textEntryInteraction = str_replace('input', 'textEntryInteraction', $matche);
                 $textEntryInteraction = str_replace('class="blank" ', '', $textEntryInteraction);
                 $textEntryInteraction = str_replace('type="text" ', '', $textEntryInteraction);
@@ -151,6 +151,7 @@ class holeExport extends qtiExport
                 $textEntryInteraction = str_replace('autocomplete="off"', '', $textEntryInteraction);
                 $textEntryInteraction = str_replace('size="'.$size.'"', 'expectedLength="'.$size.'"', $textEntryInteraction);
             } else {
+                $name = $tabMatche[5];
                 $textEntryInteraction = str_replace('</select>', '', $matche);
                 $textEntryInteraction = str_replace('select', 'textEntryInteraction', $textEntryInteraction);
                 $textEntryInteraction = str_replace('id="'.$id.'"', 'responseIdentifier="blank_'.$newId.'"', $textEntryInteraction);
