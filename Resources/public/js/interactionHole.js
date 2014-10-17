@@ -346,6 +346,11 @@ function addWR(indexHole, idTabWR) {
     $('#ujm_exobundle_interactionholetype_holes_' + indexHole + '_wordResponses_' + indexWR + '_response').attr("placeholder", langKeyWord);
     $('#ujm_exobundle_interactionholetype_holes_' + indexHole + '_wordResponses_' + indexWR + '_score').attr("placeholder", langPoint);
 
+    $('#ujm_exobundle_interactionholetype_holes_' + indexHole + '_wordResponses_' + indexWR + '_response').focusout(function() {
+        $(this).val($.trim($(this).val()));
+        $(this).val($(this).val().replace(/\s{2,}/g, ' '));
+    });
+
     verticalAlignCenter();
 }
 
