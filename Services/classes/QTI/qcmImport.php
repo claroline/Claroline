@@ -21,7 +21,24 @@ class qcmImport extends qtiImport
         $this->qtiRepos = $qtiRepos;
         $this->document = $document;
         $this->getQTICategory();
-        $this->genericInteraction();
-        //Voir pour éventuellement s'appuyer sur le handler
+        $this->initAssessmentItem();
+        //$this->createQuestion();
+        $this->createInteraction();
+        //aprèès avoir créer les objet Voir pour éventuellement s'appuyer sur le handler pour le persist
+    }
+
+    /**
+     * Implements the abstract method
+     *
+     * @access protected
+     *
+     */
+    protected function getPrompt()
+    {
+        $ib = $this->assessmentItem->getElementsByTagName("itemBody")->item(0);
+        $ci = $ib->getElementsByTagName("choiceInteraction")->item(0);
+        $prompt = $ci->getElementsByTagName("prompt")->item(0)->nodeValue;
+
+        return $prompt;
     }
 }

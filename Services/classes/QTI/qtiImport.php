@@ -24,6 +24,7 @@ abstract class qtiImport
     protected $interaction;
     protected $question;
     protected $document;
+    protected $assessmentItem;
 
     /**
      * Constructor
@@ -43,12 +44,12 @@ abstract class qtiImport
     }
 
     /**
-     * Create the objets Interaction and Question
+     * Create the question objet
      *
      * @access protected
      *
      */
-    protected function genericInteraction()
+    protected function createQuestion()
     {
         $this->question = new Question();
         $this->question->setTitle($this->getTitle());
@@ -57,8 +58,18 @@ abstract class qtiImport
         $this->question->setCategory($this->qtiCat);
         $this->doctrine->getManager()->persist($this->question);
         $this->doctrine->getManager()->flush();
+    }
 
-        $this->interaction = new Interaction();
+    /**
+     * Create the interaction objet
+     *
+     * @access protected
+     *
+     */
+    protected function createInteraction()
+    {
+        $this->interaction = new Interaction;
+        echo $this->getPrompt();die();
     }
 
     /**
@@ -102,14 +113,24 @@ abstract class qtiImport
      */
     private function getTitle()
     {
-        $title = '';
-        $elements = $this->document->getElementsByTagName('assessmentItem');
-        $element = $elements->item(0);
-        if ($element->hasAttribute("title")) {
-           $title = $element->getAttribute("title");
+        $title = 'No title attribut in the element assessmentItem';
+        if ($this->assessmentItem->hasAttribute("title")) {
+           $title = $this->assessmentItem->getAttribute("title");
         }
 
         return $title;
+    }
+
+    /**
+     * init assessmentItem
+     *
+     * @access protected
+     *
+     */
+    protected function initAssessmentItem()
+    {
+        $root = $this->document->getElementsByTagName('assessmentItem');
+        $this->assessmentItem = $root->item(0);
     }
 
     /**
@@ -129,5 +150,12 @@ abstract class qtiImport
      * @param qtiRepository $qtiRepos
      */
     abstract public function import(qtiRepository $qtiRepos, \DOMDocument $document);
+
+    /**
+     * abstract method to get the prompt
+     *
+     * @access protected
+     */
+    abstract protected function getPrompt();
 
 }
