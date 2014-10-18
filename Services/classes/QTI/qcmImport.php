@@ -24,7 +24,8 @@ class qcmImport extends qtiImport
         $this->initAssessmentItem();
         //$this->createQuestion();
         $this->createInteraction();
-        //aprèès avoir créer les objet Voir pour éventuellement s'appuyer sur le handler pour le persist
+        //après avoir créer les objet Voir pour éventuellement s'appuyer sur le handler pour le persist
+        //TODO resources liées
     }
 
     /**
