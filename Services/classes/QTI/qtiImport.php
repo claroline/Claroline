@@ -68,8 +68,13 @@ abstract class qtiImport
      */
     protected function createInteraction()
     {
+        $feedback = $this->getFeedback();
         $this->interaction = new Interaction;
-        echo $this->getPrompt();die();
+        $this->interaction->setInvite($this->getPrompt());
+        if ($feedback != null) {
+            $this->interaction->setFeedBack($feedback);
+        }
+        $this->interaction->setQuestion($this->question);
     }
 
     /**
@@ -131,6 +136,23 @@ abstract class qtiImport
     {
         $root = $this->document->getElementsByTagName('assessmentItem');
         $this->assessmentItem = $root->item(0);
+    }
+
+    /**
+     * Get the feedback of question to import
+     *
+     * @access private
+     *
+     */
+    private function getFeedback()
+    {
+        $feedback = null;
+        $md = $this->assessmentItem->getElementsByTagName("modalFeedback")->item(0);
+        if (isset($md)) {
+           $feedback = $md->nodeValue;
+        }
+
+        return $feedback;
     }
 
     /**

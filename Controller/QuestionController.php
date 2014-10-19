@@ -2376,6 +2376,6 @@ class QuestionController extends Controller
                 $qtiImport->import($qtiRepos, $document_xml);
         }
 
-        return new \Symfony\Component\HttpFoundation\Response;
+        return $this->forward('UJMExoBundle:Question:index', array());
     }
 }

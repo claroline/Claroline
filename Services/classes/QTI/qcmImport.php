@@ -22,9 +22,14 @@ class qcmImport extends qtiImport
         $this->document = $document;
         $this->getQTICategory();
         $this->initAssessmentItem();
-        //$this->createQuestion();
+
+        $this->createQuestion();
+
         $this->createInteraction();
-        //après avoir créer les objet Voir pour éventuellement s'appuyer sur le handler pour le persist
+        $this->interaction->setType('InteractionQCM');
+        $this->doctrine->getManager()->persist($this->interaction);
+        $this->doctrine->getManager()->flush();
+        
         //TODO resources liées
     }
 
