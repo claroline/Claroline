@@ -22,7 +22,7 @@ class LoadRequiredFixturesData extends AbstractFixture
         $widgetTypes = array(
             array('title',           true,  false, null),
             array('userInformation', true,  true,  'info'),
-            array('text',            true,  true,  'comment'),
+            array('text',            true,  true,  'align-left'),
             array('skills',          false, true,  'bookmark'),
             array('formations',      false, true,  'graduation-cap'),
             array('badges',          false, true,  'trophy')
