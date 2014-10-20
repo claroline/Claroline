@@ -2361,20 +2361,26 @@ class QuestionController extends Controller
         }
         $zip->close();
 
-        $file = $qtiRepos->getUserDir()."/SchemaQTI.xml";
-        $document_xml = new \DomDocument();
-        $document_xml->load($file);
-        $ai = $document_xml->getElementsByTagName('assessmentItem')->item(0);
-        $ib = $ai->getElementsByTagName('itemBody')->item(0);
-        foreach($ib->childNodes as $node){
-            switch ($node->nodeName) {
-                case "choiceInteraction":
-                    $qtiImport = $this->container->get('ujm.qti_qcm_import');
+        if ($dh = opendir($qtiRepos->getUserDir())) {
+            while (($file = readdir($dh)) !== false) {
+                if (substr($file, -4, 4) == '.xml') {
+                    $document_xml = new \DomDocument();
+                    $document_xml->load($qtiRepos->getUserDir().'/'.$file);
+                    $ai = $document_xml->getElementsByTagName('assessmentItem')->item(0);
+                    $ib = $ai->getElementsByTagName('itemBody')->item(0);
+                    foreach($ib->childNodes as $node){
+                        switch ($node->nodeName) {
+                            case "choiceInteraction":
+                                $qtiImport = $this->container->get('ujm.qti_qcm_import');
 
-                    $qtiImport->import($qtiRepos, $document_xml);
+                                $qtiImport->import($qtiRepos, $document_xml);
+                        }
+                    }
+                }
             }
+            closedir($dh);
         }
-        
+
         $qtiRepos->removeDirectory();
 
         return $this->forward('UJMExoBundle:Question:index', array());
