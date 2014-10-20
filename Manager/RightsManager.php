@@ -132,13 +132,14 @@ class RightsManager
         //Bugfix: If the flushSuite is uncommented, doctrine returns an error. It probably happens because rights
         //weren't created already
         //(ResourceRights duplicate)
-        //$this->om->startFlushSuite();
+        $this->om->startFlushSuite();
 
         $arRights = $isRecursive ?
             $this->updateRightsTree($role, $node):
             array($this->getOneByRoleAndResource($role, $node));
 
         foreach ($arRights as $toUpdate) {
+
             if ($isRecursive) {
                 if (is_int($permissions)) {
                     $permissions = $this->mergeTypePermissions($permissions, $toUpdate->getMask());
@@ -157,6 +158,7 @@ class RightsManager
             $this->om->persist($toUpdate);
             $this->logChangeSet($toUpdate);
             $this->dispatcher->dispatch('resource_change_permissions', 'UpdateResourceRights', array($node, $toUpdate));
+
         }
 
         //exception for activities
@@ -169,7 +171,8 @@ class RightsManager
             $this->editCreationRights($creations, $role, $node, $isRecursive);
         }
 
-        //$this->om->endFlushSuite();
+        $this->om->endFlushSuite();
+
         return $arRights;
     }
 
@@ -412,7 +415,8 @@ class RightsManager
     public function logChangeSet(ResourceRights $rights)
     {
         $uow = $this->om->getUnitOfWork();
-        $uow->computeChangeSets();
+        $class = $this->om->getClassMetadata('Claroline\CoreBundle\Entity\Resource\ResourceRights');
+        $uow->computeChangeSet($class, $rights);
         $changeSet = $uow->getEntityChangeSet($rights);
 
         if (count($changeSet) > 0) {

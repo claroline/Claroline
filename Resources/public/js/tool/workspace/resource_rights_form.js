@@ -68,7 +68,6 @@
         e.preventDefault();
         var formAction = $(e.currentTarget).parents('form').first().attr('action');
         var form = document.getElementById('node-rights-form');
-        e.preventDefault();
         submitForm(formAction, form);
     });
 
