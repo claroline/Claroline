@@ -1,0 +1,22 @@
+{% if users|length > 0 %}
+    <div class="table-responsive">
+        <table class="table">
+            <tr>
+                <th>{{ 'firstName'|trans({}, 'platform') }}</th>
+                <th>{{ 'lastName'|trans({}, 'platform') }}</th>
+                <th>{{ 'username'|trans({}, 'platform') }}</th>
+            </tr>
+        {% for user in users %}
+            <tr>
+                <td>{{ user.getFirstName() }}</td>
+                <td>{{ user.getLastName() }}</td>
+                <td>{{ user.getUsername() }}</td>
+            </tr>
+        {% endfor %}
+        </table>
+    </div>
+{% else %}
+    <div class="alert alert-warning">
+        {{ 'no_user'|trans({}, 'platform') }}
+    </div>
+{% endif %}

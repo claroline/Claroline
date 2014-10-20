@@ -387,17 +387,22 @@ class TeamManager
         foreach ($resourceTypes as $resourceType) {
             $rights[$teamManagerRoleName]['create'][] =
                 array('name' => $resourceType->getName());
-            $subRights[$teamRoleName]['create'][] =
-                array('name' => $resourceType->getName());
             $subRights[$teamManagerRoleName]['create'][] =
+                array('name' => $resourceType->getName());
+            $subRights[$teamRoleName]['create'][] =
                 array('name' => $resourceType->getName());
         }
         $decoders = $directoryType->getMaskDecoders();
 
         foreach ($decoders as $decoder) {
-            $rights[$teamManagerRoleName][$decoder->getName()] = true;
-            $subRights[$teamRoleName][$decoder->getName()] = true;
-            $subRights[$teamManagerRoleName][$decoder->getName()] = true;
+            $decoderName = $decoder->getName();
+
+            $rights[$teamManagerRoleName][$decoderName] = true;
+            $subRights[$teamManagerRoleName][$decoderName] = true;
+            
+            if ($decoderName !== 'administrate') {
+                $subRights[$teamRoleName][$decoderName] = true;
+            }
         }
         $rights[$teamRoleName]['open'] = true;
 
@@ -580,7 +585,7 @@ class TeamManager
 
     public function getWorkspaceUsers(
         Workspace $workspace,
-        $orderedBy = 'username',
+        $orderedBy = 'firstName',
         $order = 'ASC',
         $page = 1,
         $max = 50,
@@ -602,7 +607,7 @@ class TeamManager
     public function getSearchedWorkspaceUsers(
         Workspace $workspace,
         $search = '',
-        $orderedBy = 'username',
+        $orderedBy = 'firstName',
         $order = 'ASC',
         $page = 1,
         $max = 50,

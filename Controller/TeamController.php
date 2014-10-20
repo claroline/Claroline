@@ -598,14 +598,14 @@ class TeamController extends Controller
      * @EXT\Route(
      *     "/team/{team}/registration/users/list/page/{page}/max/{max}/ordered/by/{orderedBy}/order/{order}/search/{search}",
      *     name="claro_team_registration_users_list",
-     *     defaults={"page"=1, "search"="", "max"=50, "orderedBy"="username","order"="ASC"},
+     *     defaults={"page"=1, "search"="", "max"=50, "orderedBy"="firstName","order"="ASC"},
      *     options={"expose"=true}
      * )
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      *
      * @EXT\Template()
      *
-     * Displays the list of users who are not registered in the team.
+     * Displays the list of users who are registered to the workspace.
      *
      * @param Team $team
      * @param string  $search
@@ -620,7 +620,7 @@ class TeamController extends Controller
         $search = '',
         $page = 1,
         $max = 50,
-        $orderedBy = 'username',
+        $orderedBy = 'firstName',
         $order = 'ASC'
     )
     {
@@ -659,6 +659,55 @@ class TeamController extends Controller
             'orderedBy' => $orderedBy,
             'order' => $order,
             'registered' => $registered
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/team/{team}/users/list",
+     *     name="claro_team_users_list",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     *
+     * @EXT\Template()
+     *
+     * Displays the list of users registered in a team
+     *
+     * @param Team $team
+     */
+    public function teamUserslistAction(Team $team)
+    {
+        $this->checkToolAccess($team->getWorkspace());
+
+        $users = $team->getUsers();
+
+        return array('users' => $users);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/team/{team}/manager/index",
+     *     name="claro_team_manager_team_index"
+     * )
+     * @EXT\ParamConverter("manager", options={"authenticatedUser" = true})
+     * @EXT\Template()
+     *
+     * @param Team $team
+     * @param User $user
+     */
+    public function managerTeamIndexAction(Team $team, User $manager)
+    {
+        $workspace = $team->getWorkspace();
+        $this->checkWorkspaceManager($workspace, $manager);
+        $users = $team->getUsers();
+        $params = $this->teamManager->getParametersByWorkspace($workspace);
+
+        return array(
+            'workspace' => $workspace,
+            'users' => $users,
+            'team' => $team,
+            'params' => $params
         );
     }
 

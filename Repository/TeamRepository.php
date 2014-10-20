@@ -96,7 +96,7 @@ class TeamRepository extends EntityRepository
 
     public function findUnregisteredUsersByTeam(
         Team $team,
-        $orderedBy = 'username',
+        $orderedBy = 'firstName',
         $order = 'ASC',
         $executeQuery = true
     )
@@ -142,7 +142,7 @@ class TeamRepository extends EntityRepository
     public function findSearchedUnregisteredUsersByTeam(
         Team $team,
         $search = '',
-        $orderedBy = 'username',
+        $orderedBy = 'firstName',
         $order = 'ASC',
         $executeQuery = true
     )
@@ -195,7 +195,7 @@ class TeamRepository extends EntityRepository
 
     public function findWorkspaceUsers(
         Workspace $workspace,
-        $orderedBy = 'username',
+        $orderedBy = 'firstName',
         $order = 'ASC',
         $executeQuery = true
     )
@@ -238,7 +238,7 @@ class TeamRepository extends EntityRepository
     public function findSearchedWorkspaceUsers(
         Workspace $workspace,
         $search = '',
-        $orderedBy = 'username',
+        $orderedBy = 'firstName',
         $order = 'ASC',
         $executeQuery = true
     )
