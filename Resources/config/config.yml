@@ -9,8 +9,8 @@ plugin:
           icon: icap_blog_icon.png
           actions:
             - name: post
-            - name: edit
-              menu_name:
+            - name: administrate
+              menu_name: configure_blog
           activity_rules:
             - action: resource-read
             - action: resource-icap_blog-post_create
