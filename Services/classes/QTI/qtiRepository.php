@@ -58,7 +58,7 @@ class qtiRepository {
      */
     public function removeDirectory()
     {
-        if(!is_dir($$this->userDir)){
+        if(!is_dir($this->userDir)){
             throw new $this->createNotFoundException($this->userDir.' is not directory '.__LINE__.', file '.__FILE__);
         }
         $iterator = new \DirectoryIterator($this->userDir);

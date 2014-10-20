@@ -43,7 +43,11 @@ class qcmImport extends qtiImport
     {
         $ib = $this->assessmentItem->getElementsByTagName("itemBody")->item(0);
         $ci = $ib->getElementsByTagName("choiceInteraction")->item(0);
-        $prompt = $ci->getElementsByTagName("prompt")->item(0)->nodeValue;
+        if ($ci->getElementsByTagName("prompt")->item(0)) {
+            $prompt = $ci->getElementsByTagName("prompt")->item(0)->nodeValue;
+        } else {
+            $prompt = $this->container->get('translator')->trans('qti_import_qcm_prompt');
+        }
 
         return $prompt;
     }

@@ -2364,17 +2364,18 @@ class QuestionController extends Controller
         $file = $qtiRepos->getUserDir()."/SchemaQTI.xml";
         $document_xml = new \DomDocument();
         $document_xml->load($file);
-        $elements = $document_xml->getElementsByTagName('assessmentItem');
-        $element = $elements->item(0); // On obtient le nœud assessmentItem
-        $questionType = $element->getAttribute("identifier");
+        $ai = $document_xml->getElementsByTagName('assessmentItem')->item(0);
+        $ib = $ai->getElementsByTagName('itemBody')->item(0);
+        foreach($ib->childNodes as $node){
+            switch ($node->nodeName) {
+                case "choiceInteraction":
+                    $qtiImport = $this->container->get('ujm.qti_qcm_import');
 
-        switch ($questionType) {
-            case "choice":
-            case "choiceMultiple":
-                $qtiImport = $this->container->get('ujm.qti_qcm_import');
-
-                $qtiImport->import($qtiRepos, $document_xml);
+                    $qtiImport->import($qtiRepos, $document_xml);
+            }
         }
+        
+        $qtiRepos->removeDirectory();
 
         return $this->forward('UJMExoBundle:Question:index', array());
     }

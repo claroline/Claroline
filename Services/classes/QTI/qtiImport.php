@@ -118,9 +118,10 @@ abstract class qtiImport
      */
     private function getTitle()
     {
-        $title = 'No title attribut in the element assessmentItem';
         if ($this->assessmentItem->hasAttribute("title")) {
            $title = $this->assessmentItem->getAttribute("title");
+        } else {
+            $title = $this->container->get('translator')->trans('qti_import_title');
         }
 
         return $title;
