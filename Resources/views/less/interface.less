@@ -3,13 +3,50 @@ body {
 }
 
 #portfolio-container {
-    .widget-menu-container {
-        position:     absolute;
-        z-index:      1;
-        padding-left: 0;
-        .widget-menu-item{
-            width:         100%;
-            border-radius: 0;
+    .communication_panel_toggle {
+        position: absolute;
+        left:     0;
+        button {
+            border-top-right-radius:   0;
+            border-top-left-radius:    0;
+            border-bottom-left-radius: 0;
+        }
+    }
+    .communication_panel {
+        position:      absolute;
+        z-index:       1;
+        text-align:    left;
+        left:          0;
+        padding-left:  0;
+        padding-right: 0;
+        -webkit-transition: 0.5s linear all;
+           -moz-transition: 0.5s linear all;
+             -o-transition: 0.5s linear all;
+                transition: 0.5s linear all;
+
+        &.ng-hide {
+           left: -34%;
+        }
+        .media-list {
+            max-height: 400px;
+            overflow:   auto;
+            font-size:  12px;
+            .media + .media {
+                margin-top:  0;
+                padding-top: 10px;
+                border-top:  1px solid #DDDDDD;
+            }
+            .media-empty {
+                margin-bottom: 10px;
+            }
+            .media-body {
+                .message {
+                    margin-bottom: 0;
+                }
+            }
+        }
+        .comment_field {
+            margin-bottom: 0;
         }
     }
     header {
@@ -186,49 +223,6 @@ body {
                 cursor: pointer;
                 margin: 10px;
             }
-        }
-    }
-    .communication_panel_toggle {
-        position: absolute;
-        button {
-            border-top-right-radius:   0;
-            border-top-left-radius:    0;
-            border-bottom-left-radius: 0;
-        }
-    }
-    .communication_panel {
-        text-align:    left;
-        left: 0;
-        padding-left:  0;
-        padding-right: 0;
-        -webkit-transition: 0.5s linear all;
-           -moz-transition: 0.5s linear all;
-             -o-transition: 0.5s linear all;
-                transition: 0.5s linear all;
-
-        &.ng-hide {
-           left: -440px;
-        }
-        .media-list {
-            max-height: 400px;
-            overflow:   auto;
-            font-size:  12px;
-            .media + .media {
-                margin-top:  0;
-                padding-top: 10px;
-                border-top:  1px solid #DDDDDD;
-            }
-            .media-empty {
-                margin-bottom: 10px;
-            }
-            .media-body {
-                .message {
-                    margin-bottom: 0;
-                }
-            }
-        }
-        .comment_field {
-            margin-bottom: 0;
         }
     }
 }
