@@ -5,28 +5,28 @@ namespace Icap\PortfolioBundle\Entity\Widget;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Table(name="icap__portfolio_widget_presentation")
+ * @ORM\Table(name="icap__portfolio_widget_text")
  * @ORM\Entity
  */
-class PresentationWidget extends AbstractWidget
+class TextWidget extends AbstractWidget
 {
-    protected $widgetType = 'presentation';
+    protected $widgetType = 'text';
 
     /**
      * @var string
      *
      * @ORM\Column(type="text", nullable=true)
      */
-    protected $presentation;
+    protected $text;
 
     /**
-     * @param string $description
+     * @param string $text
      *
      * @return UserInformationWidget
      */
-    public function setPresentation($description)
+    public function setText($text)
     {
-        $this->presentation = $description;
+        $this->text = $text;
 
         return $this;
     }
@@ -34,9 +34,9 @@ class PresentationWidget extends AbstractWidget
     /**
      * @return string
      */
-    public function getPresentation()
+    public function getText()
     {
-        return $this->presentation;
+        return $this->text;
     }
 
     /**
@@ -45,7 +45,7 @@ class PresentationWidget extends AbstractWidget
     public function getData()
     {
         return array(
-            'presentation' => $this->getPresentation()
+            'text' => $this->getText()
         );
     }
 
@@ -55,7 +55,7 @@ class PresentationWidget extends AbstractWidget
     public function getEmpty()
     {
         return array(
-            'presentation' => null
+            'text' => null
         );
     }
 }

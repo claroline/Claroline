@@ -1,6 +1,6 @@
 <?php
 
-namespace Icap\PortfolioBundle\Migrations\mysqli;
+namespace Icap\PortfolioBundle\Migrations\pdo_mysql;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/10/09 11:22:29
+ * Generation date: 2014/10/20 11:13:19
  */
-class Version20141009112225 extends AbstractMigration
+class Version20141020111318 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -38,18 +38,9 @@ class Version20141009112225 extends AbstractMigration
             ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
-            CREATE TABLE icap__portfolio_widget_badges (
+            CREATE TABLE icap__portfolio_widget_text (
                 id INT NOT NULL, 
-                PRIMARY KEY(id)
-            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
-        ");
-        $this->addSql("
-            CREATE TABLE icap__portfolio_widget_badges_badge (
-                id INT AUTO_INCREMENT NOT NULL, 
-                badge_id INT NOT NULL, 
-                widget_id INT NOT NULL, 
-                INDEX IDX_25D41B98F7A2C2FC (badge_id), 
-                INDEX IDX_25D41B98FBE885E2 (widget_id), 
+                text LONGTEXT DEFAULT NULL, 
                 PRIMARY KEY(id)
             ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
@@ -74,29 +65,24 @@ class Version20141009112225 extends AbstractMigration
             REFERENCES icap__portfolio (id)
         ");
         $this->addSql("
-            ALTER TABLE icap__portfolio_widget_badges 
-            ADD CONSTRAINT FK_C1AF804BBF396750 FOREIGN KEY (id) 
+            ALTER TABLE icap__portfolio_widget_text 
+            ADD CONSTRAINT FK_89550C61BF396750 FOREIGN KEY (id) 
             REFERENCES icap__portfolio_abstract_widget (id) 
             ON DELETE CASCADE
+        ");
+        $this->addSql("
+            ALTER TABLE icap__portfolio_widget_badges_badge 
+            DROP FOREIGN KEY FK_25D41B98F7A2C2FC
         ");
         $this->addSql("
             ALTER TABLE icap__portfolio_widget_badges_badge 
             ADD CONSTRAINT FK_25D41B98F7A2C2FC FOREIGN KEY (badge_id) 
             REFERENCES claro_badge (id)
         ");
-        $this->addSql("
-            ALTER TABLE icap__portfolio_widget_badges_badge 
-            ADD CONSTRAINT FK_25D41B98FBE885E2 FOREIGN KEY (widget_id) 
-            REFERENCES icap__portfolio_widget_badges (id)
-        ");
     }
 
     public function down(Schema $schema)
     {
-        $this->addSql("
-            ALTER TABLE icap__portfolio_widget_badges_badge 
-            DROP FOREIGN KEY FK_25D41B98FBE885E2
-        ");
         $this->addSql("
             DROP TABLE icap__portfolio_comments
         ");
@@ -104,10 +90,16 @@ class Version20141009112225 extends AbstractMigration
             DROP TABLE icap__portfolio_guides
         ");
         $this->addSql("
-            DROP TABLE icap__portfolio_widget_badges
+            DROP TABLE icap__portfolio_widget_text
         ");
         $this->addSql("
-            DROP TABLE icap__portfolio_widget_badges_badge
+            ALTER TABLE icap__portfolio_widget_badges_badge 
+            DROP FOREIGN KEY FK_25D41B98F7A2C2FC
+        ");
+        $this->addSql("
+            ALTER TABLE icap__portfolio_widget_badges_badge 
+            ADD CONSTRAINT FK_25D41B98F7A2C2FC FOREIGN KEY (badge_id) 
+            REFERENCES claro_user_badge (id)
         ");
     }
 }
