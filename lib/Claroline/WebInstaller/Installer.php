@@ -64,7 +64,9 @@ class Installer
             $refresher->installAssets();
             $this->launchInstaller($container, $output);
             $this->createAdminUser($container, $output);
-            $refresher->dumpAssets('prod');
+            //no idea why the other one doesn't work
+            exec('php ' . $container->getParameter('kernel.root_dir') . DIRECTORY_SEPARATOR . 'console assetic:dump');
+            //$refresher->dumpAssets('prod');
             $this->writer->writeInstallFlag();
             $this->hasSucceeded = true;
         } catch (\Exception $ex) {
