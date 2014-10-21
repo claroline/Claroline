@@ -252,13 +252,6 @@ class TeamManager
             $workspace
         );
 
-        //add the role to every resource of that workspace
-        $nodes = $this->resourceManager->getByWorkspace($workspace);
-
-        foreach ($nodes as $node) {
-            $this->rightsManager->create(0, $role, $node, false, array());
-        }
-
         return $role;
     }
 
@@ -279,13 +272,6 @@ class TeamManager
             $roleKey,
             $workspace
         );
-
-        //add the role to every resource of that workspace
-        $nodes = $this->resourceManager->getByWorkspace($workspace);
-
-        foreach ($nodes as $node) {
-            $this->rightsManager->create(0, $role, $node, false, array());
-        }
 
         return $role;
     }
@@ -362,14 +348,9 @@ class TeamManager
             'Claroline\CoreBundle\Entity\Resource\Directory',
             $team->getName()
         );
-        $subDirectory = $this->resourceManager->createResource(
-            'Claroline\CoreBundle\Entity\Resource\Directory',
-            $this->translator->trans('team_directory', array(), 'team')
-        );
         $teamRoleName = $teamRole->getName();
         $teamManagerRoleName = $teamManagerRole->getName();
         $rights = array();
-        $subRights = array();
         $rights[$teamRoleName] = array();
         $rights[$teamRoleName]['role'] = $teamRole;
         $rights[$teamRoleName]['create'] = array();
@@ -377,34 +358,22 @@ class TeamManager
         $rights[$teamManagerRoleName]['role'] = $teamManagerRole;
         $rights[$teamManagerRoleName]['create'] = array();
 
-        $subRights[$teamRoleName] = array();
-        $subRights[$teamRoleName]['role'] = $teamRole;
-        $subRights[$teamRoleName]['create'] = array();
-        $subRights[$teamManagerRoleName] = array();
-        $subRights[$teamManagerRoleName]['role'] = $teamManagerRole;
-        $subRights[$teamManagerRoleName]['create'] = array();
-
         foreach ($resourceTypes as $resourceType) {
             $rights[$teamManagerRoleName]['create'][] =
                 array('name' => $resourceType->getName());
-            $subRights[$teamManagerRoleName]['create'][] =
-                array('name' => $resourceType->getName());
-            $subRights[$teamRoleName]['create'][] =
+            $rights[$teamRoleName]['create'][] =
                 array('name' => $resourceType->getName());
         }
         $decoders = $directoryType->getMaskDecoders();
 
         foreach ($decoders as $decoder) {
             $decoderName = $decoder->getName();
-
             $rights[$teamManagerRoleName][$decoderName] = true;
-            $subRights[$teamManagerRoleName][$decoderName] = true;
             
-            if ($decoderName !== 'administrate') {
-                $subRights[$teamRoleName][$decoderName] = true;
+            if ($decoderName !== 'administrate' && $decoderName !== 'delete') {
+                $rights[$teamRoleName][$decoderName] = true;
             }
         }
-        $rights[$teamRoleName]['open'] = true;
 
         $teamDirectory = $this->resourceManager->create(
             $directory,
@@ -414,18 +383,6 @@ class TeamManager
             $rootDirectory,
             null,
             $rights
-        );
-        $subTeamDirectory = $this->resourceManager->create(
-            $subDirectory,
-            $directoryType,
-            $user,
-            $workspace,
-            $teamDirectory->getResourceNode(),
-            null,
-            $subRights
-        );
-        $teamDirectory->getResourceNode()->addChild(
-            $subTeamDirectory->getResourceNode()
         );
 
         return $teamDirectory;
