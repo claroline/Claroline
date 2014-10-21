@@ -1,0 +1,15 @@
+{% set portfolio %}
+    {% include 'IcapPortfolioBundle:Log:log_list_item_portfolio.html.twig' %}
+{% endset %}
+
+{% set guide %}
+    {% include 'IcapPortfolioBundle:Log:log_list_item_guide.html.twig' %}
+{% endset %}
+
+{% if constant('Icap\\PortfolioBundle\\Event\\Log\\PortfolioAddGuideEvent::ACTION') == log.action %}
+    {{ log.action|trans({'%portfolio%': portfolio, '%guide%': guide}, 'log')|raw }}
+{% elseif constant('Icap\\PortfolioBundle\\Event\\Log\\PortfolioRemoveGuideEvent::ACTION') == log.action %}
+    {{ log.action|trans({'%portfolio%': portfolio, '%guide%': guide}, 'log')|raw }}
+{% else %}
+    no default text
+{% endif %}

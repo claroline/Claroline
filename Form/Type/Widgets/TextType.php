@@ -10,25 +10,25 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 /**
  * @DI\FormType
  */
-class PresentationType extends AbstractWidgetType
+class TextType extends AbstractWidgetType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         parent::buildForm($builder, $options);
 
-        $builder->add('presentation', 'tinymce');
+        $builder->add('text', 'tinymce');
     }
 
     public function getName()
     {
-        return 'icap_portfolio_widget_form_presentation';
+        return 'icap_portfolio_widget_form_text';
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(
             array(
-                'data_class'         => 'Icap\PortfolioBundle\Entity\Widget\PresentationWidget',
+                'data_class'         => 'Icap\PortfolioBundle\Entity\Widget\TextWidget',
                 'translation_domain' => 'icap_portfolio',
                 'csrf_protection'    => false,
             )

@@ -59,8 +59,15 @@
         });
 
         var select2FieldChange = function (event, button) {
-            //console.log("change " + JSON.stringify({val: event.val, added: event.added, removed: event.removed}));
-            button.removeAttr('disabled');
+            var existingFieldValue = $('.form-collection input[value=' + event.val + ']', button.parent());
+            if (0 >= existingFieldValue.length) {
+                //console.log("change " + JSON.stringify({val: event.val, added: event.added, removed: event.removed}));
+                button.prop('disabled', false);
+            }
+            else {
+                button.prop('disabled', true);
+                existingFieldValue.parent().effect("highlight", {color: '#d9534f'}, 1500);
+            }
         };
 
         visibilityForm.change(function() {

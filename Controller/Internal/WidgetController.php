@@ -34,9 +34,8 @@ class WidgetController extends BaseController
             $data['form'] = $this->getWidgetsManager()->getFormView($type, $action);
         }
         else {
-            $widgetNamespace = sprintf('Icap\PortfolioBundle\Entity\Widget\%sWidget', ucfirst($type));
             /** @var \Icap\PortfolioBundle\Entity\Widget\AbstractWidget $widget */
-            $widget          = new $widgetNamespace();
+            $widget = $this->getWidgetsManager()->getNewWidget($portfolio, $type);
             $widgetDatas = array(
                 'type'   => $widget->getWidgetType(),
                 'column' => $widget->getColumn(),
@@ -75,7 +74,7 @@ class WidgetController extends BaseController
                 )) {
                 $newWidget  = $widgetManager->getNewWidget($portfolio, $type);
                 $data       = $widgetManager->handle($newWidget, $type, $request->request->all());
-                $statusCode = Response::HTTP_OK;
+                $statusCode = Response::HTTP_CREATED;
             }
         }
 

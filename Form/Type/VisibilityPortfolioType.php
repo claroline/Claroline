@@ -40,7 +40,6 @@ class VisibilityPortfolioType extends AbstractType
             ->add('portfolio_users', 'collection', array(
                 'type'          => 'icap_portfolio_visible_user_form',
                 'by_reference'  => false,
-                'attr'          => array('class' => 'rule-collections'),
                 'theme_options' => array('label_width' => 'col-md-12'),
                 'prototype'     => true,
                 'allow_add'     => true,
@@ -57,7 +56,6 @@ class VisibilityPortfolioType extends AbstractType
             ->add('portfolio_groups', 'collection', array(
                 'type'          => 'icap_portfolio_visible_group_form',
                 'by_reference'  => false,
-                'attr'          => array('class' => 'rule-collections'),
                 'theme_options' => array('label_width' => 'col-md-12'),
                 'prototype'     => true,
                 'allow_add'     => true,

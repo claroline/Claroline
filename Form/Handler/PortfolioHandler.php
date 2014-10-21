@@ -27,7 +27,7 @@ class PortfolioHandler
     protected $requestStack;
 
     /**
-     * @var PortfolioManagerManager
+     * @var PortfolioManager
      */
     protected $portfolioManager;
 
@@ -71,6 +71,16 @@ class PortfolioHandler
     public function getVisibilityForm(Portfolio $portfolio)
     {
         return $this->formFactory->create('icap_portfolio_visibility_form', $portfolio);
+    }
+
+    /**
+     * @param \Icap\PortfolioBundle\Entity\Portfolio $portfolio
+     *
+     * @return \Symfony\Component\Form\Form|FormInterface
+     */
+    public function getGuidesForm(Portfolio $portfolio)
+    {
+        return $this->formFactory->create('icap_portfolio_guides_form', $portfolio);
     }
 
     /**
@@ -149,6 +159,30 @@ class PortfolioHandler
 
             if ($form->isValid()) {
                 $this->portfolioManager->updateVisibility($portfolio, $originalPortfolioUsers, $originalPortfolioGroups);
+
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @param Portfolio $portfolio
+     *
+     * @return bool True on successfull processing, false otherwise
+     */
+    public function handleGuides(Portfolio $portfolio)
+    {
+        $originalPortfolioGuides  = $portfolio->getPortfolioGuides();
+        $form                         = $this->getGuidesForm($portfolio);
+
+        $request = $this->requestStack->getCurrentRequest();
+        if ($request->isMethod('POST')) {
+            $form->submit($request);
+
+            if ($form->isValid()) {
+                $this->portfolioManager->updateGuides($portfolio, $originalPortfolioGuides);
 
                 return true;
             }

@@ -6,6 +6,7 @@ use Claroline\CoreBundle\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Icap\PortfolioBundle\Entity\Widget\TitleWidget;
 use Icap\PortfolioBundle\Entity\Widget\WidgetNode;
 
 /**
@@ -61,6 +62,11 @@ class Portfolio
     protected $portfolioUsers;
 
     /**
+     * @ORM\OneToMany(targetEntity="PortfolioGuide", mappedBy="portfolio", cascade={"all"})
+     */
+    protected $portfolioGuides;
+
+    /**
      * @ORM\OneToMany(targetEntity="PortfolioGroup", mappedBy="portfolio", cascade={"all"})
      */
     protected $portfolioGroups;
@@ -71,6 +77,13 @@ class Portfolio
      * @ORM\OneToMany(targetEntity="Icap\PortfolioBundle\Entity\Widget\AbstractWidget", mappedBy="portfolio")
      */
     protected $widgets;
+
+    /**
+     * @var \Icap\PortfolioBundle\Entity\PortfolioComment[]
+     *
+     * @ORM\OneToMany(targetEntity="Icap\PortfolioBundle\Entity\PortfolioComment", mappedBy="portfolio", cascade={"persist"})
+     */
+    protected $comments;
 
     /**
      * @ORM\Column(name="deletedAt", type="datetime", nullable=true)
@@ -184,6 +197,30 @@ class Portfolio
     }
 
     /**
+     * @return PortfolioGuide[]
+     */
+    public function getPortfolioGuides()
+    {
+        return $this->portfolioGuides;
+    }
+
+    /**
+     * @param PortfolioGuide[] $portfolioGuides
+     *
+     * @return Portfolio
+     */
+    public function setPortfolioGuides($portfolioGuides)
+    {
+        foreach ($portfolioGuides as $portfolioGuide) {
+            $portfolioGuide->setPortfolio($this);
+        }
+
+        $this->portfolioGuides = $portfolioGuides;
+
+        return $this;
+    }
+
+    /**
      * @param mixed $portfolioGroups
      *
      * @return Portfolio
@@ -235,28 +272,36 @@ class Portfolio
     public function visibleToUser(User $user)
     {
         $portfolioUsers = $this->getPortfolioUsers();
+        $visibility     = $this->getVisibility();
         $isVisible      = false;
 
-        foreach ($portfolioUsers as $portfolioUser) {
-            if ($user === $portfolioUser->getUser()) {
-                $isVisible = true;
-                break;
-            }
+        if (Portfolio::VISIBILITY_EVERYBODY === $visibility ||
+            Portfolio::VISIBILITY_PLATFORM_USER === $visibility) {
+            $isVisible = true;
         }
+        elseif (Portfolio::VISIBILITY_USER === $visibility) {
+            foreach ($portfolioUsers as $portfolioUser) {
+                if ($user === $portfolioUser->getUser()) {
+                    $isVisible = true;
+                    break;
+                }
+            }
 
-        if (!$isVisible) {
-            $portfolioGroups = $this->getPortfolioGroups();
-            $userGroups      = $user->getGroups();
+            if (!$isVisible) {
+                $portfolioGroups = $this->getPortfolioGroups();
+                $userGroups      = $user->getGroups();
 
-            foreach ($portfolioGroups as $portfolioGroup) {
-                foreach ($userGroups as $userGroup) {
-                    if ($userGroup === $portfolioGroup->getGroup()) {
-                        $isVisible = true;
-                        break;
+                foreach ($portfolioGroups as $portfolioGroup) {
+                    foreach ($userGroups as $userGroup) {
+                        if ($userGroup === $portfolioGroup->getGroup()) {
+                            $isVisible = true;
+                            break;
+                        }
                     }
                 }
             }
         }
+
 
         return $isVisible;
     }
@@ -279,5 +324,65 @@ class Portfolio
     public function getWidgets()
     {
         return $this->widgets;
+    }
+
+    /**
+     * @return Widget\TitleWidget|null
+     */
+    public function getTitleWidget()
+    {
+        $titleWidget = null;
+
+        foreach ($this->getWidgets() as $widget) {
+            if ('title' === $widget->getWidgetType()) {
+                $titleWidget = $widget;
+                break;
+            }
+        }
+
+        return $titleWidget;
+    }
+
+    /**
+     * @param User $user
+     *
+     * @return bool
+     */
+    public function hasGuide(User $user)
+    {
+        $isGuide = false;
+
+        foreach ($this->getPortfolioGuides() as $portfolioGuide) {
+            if ($user->getId() === $portfolioGuide->getUser()->getId()) {
+                $isGuide = true;
+                break;
+            }
+        }
+
+        return $isGuide;
+    }
+
+    /**
+     * @return PortfolioComment[]
+     */
+    public function getComments()
+    {
+        return $this->comments;
+    }
+
+    /**
+     * @param PortfolioComment[] $comments
+     *
+     * @return Portfolio
+     */
+    public function setComments($comments)
+    {
+        foreach ($comments as $comment) {
+            $comment->setPortfolio($this);
+        }
+
+        $this->comments = $comments;
+
+        return $this;
     }
 }

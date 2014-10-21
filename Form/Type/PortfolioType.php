@@ -16,6 +16,13 @@ class PortfolioType extends AbstractType
     {
         $builder
             ->add('disposition', 'integer')
+            ->add('comments', 'collection', array(
+                    'type'   => 'icap_portfolio_portfolio_comment_form',
+                    'by_reference'  => false,
+                    'allow_add'     => true,
+                    'allow_delete'  => true
+                )
+            )
             ->add('widgets', 'text', array('mapped' => false));
     }
 

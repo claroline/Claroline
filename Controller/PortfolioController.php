@@ -6,6 +6,7 @@ use Claroline\CoreBundle\Entity\User;
 use Icap\PortfolioBundle\Entity\Portfolio;
 use Icap\PortfolioBundle\Entity\Widget\TitleWidget;
 use Icap\PortfolioBundle\Event\Log\PortfolioViewEvent;
+use Icap\PortfolioBundle\Manager\PortfolioManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -149,6 +150,32 @@ class PortfolioController extends Controller
     }
 
     /**
+     * @Route("/guides/{id}", name="icap_portfolio_update_guides", requirements={"id" = "\d+"})
+     *
+     * @ParamConverter("loggedUser", options={"authenticatedUser" = true})
+     * @Template()
+     */
+    public function manageGuidesAction(User $loggedUser, Portfolio $portfolio)
+    {
+        try {
+            if ($this->getPortfolioFormHandler()->handleGuides($portfolio)) {
+                $this->getSessionFlashbag()->add('success', $this->getTranslator()->trans('portfolio_guides_update_success_message', array(), 'icap_portfolio'));
+
+                return $this->redirect($this->generateUrl('icap_portfolio_list'));
+            }
+        } catch (\Exception $exception) {
+            $this->getSessionFlashbag()->add('error', $this->getTranslator()->trans('portfolio_guides_update_error_message', array(), 'icap_portfolio'));
+
+            return $this->redirect($this->generateUrl('icap_portfolio_list'));
+        }
+
+        return array(
+            'form'      => $this->getPortfolioFormHandler()->getGuidesForm($portfolio)->createView(),
+            'portfolio' => $portfolio
+        );
+    }
+
+    /**
      * @Route("/{portfolioSlug}", name="icap_portfolio_view")
      */
     public function viewAction($portfolioSlug)
@@ -160,34 +187,16 @@ class PortfolioController extends Controller
         /** @var \Icap\PortfolioBundle\Entity\Widget\TitleWidget $titleWidget */
         $titleWidget = $this->getDoctrine()->getRepository('IcapPortfolioBundle:Widget\TitleWidget')->findOneBySlug($portfolioSlug);
         $portfolio   = $titleWidget->getPortfolio();
-        $editMode    = false;
 
         if (null === $portfolio) {
             throw $this->createNotFoundException("Unknown portfolio.");
         }
-        if ($user === $portfolio->getUser()) {
-            $editMode = true;
-        }
 
-        $resourceTypes = $this->get('claroline.manager.resource_manager')->getAllResourceTypes();
+        $openingMode = $this->getPortfolioManager()->getOpeningMode($portfolio, $user, $this->get('security.context')->isgranted('ROLE_ADMIN'));
 
-        $widgetsConfig       = $this->getWidgetsManager()->getWidgetsConfig();
-        $responseParameters  = array(
-            'titleWidget'   => $titleWidget,
-            'portfolio'     => $portfolio,
-            'editMode'      => $editMode,
-            'widgetsConfig' => $widgetsConfig,
-            'resourceTypes' => $resourceTypes
-        );
+        if (null === $openingMode) {
+            $portfolioVisibility = $portfolio->getVisibility();
 
-        if (!$editMode) {
-            $responseParameters['cols'] = $this->getPortfolioDispositionManager()->getColumnsForDisposition($portfolio->getDisposition());
-        }
-
-        $response            = new Response($this->renderView('IcapPortfolioBundle:Portfolio:view.html.twig', $responseParameters));
-        $portfolioVisibility = $portfolio->getVisibility();
-
-        if ($user !== $portfolio->getUser() && !$this->get('security.context')->isgranted('ROLE_ADMIN')) {
             if (
                 Portfolio::VISIBILITY_NOBODY === $portfolioVisibility
                 || (
@@ -204,9 +213,29 @@ class PortfolioController extends Controller
                 $response = new Response($this->renderView('IcapPortfolioBundle:Portfolio:view.error.html.twig', array('errorCode' => 401, 'portfolioSlug' => $portfolioSlug)), 401);
             }
             else {
-                $event = new PortfolioViewEvent($portfolio);
-                $this->get('event_dispatcher')->dispatch('log', $event);
+                throw new \LogicException("Unknow opening mode for the portfolio.");
             }
+        }
+        else {
+            $event = new PortfolioViewEvent($portfolio);
+            $this->get('event_dispatcher')->dispatch('log', $event);
+
+            $resourceTypes = $this->get('claroline.manager.resource_manager')->getAllResourceTypes();
+
+            $widgetsConfig       = $this->getWidgetsManager()->getWidgetsConfig();
+            $responseParameters  = array(
+                'titleWidget'   => $titleWidget,
+                'portfolio'     => $portfolio,
+                'openingMode'   => $openingMode,
+                'widgetsConfig' => $widgetsConfig,
+                'resourceTypes' => $resourceTypes
+            );
+
+            if (PortfolioManager::PORTFOLIO_OPENING_MODE_VIEW === $openingMode) {
+                $responseParameters['cols'] = $this->getPortfolioDispositionManager()->getColumnsForDisposition($portfolio->getDisposition());
+            }
+
+            $response = new Response($this->renderView('IcapPortfolioBundle:Portfolio:view.html.twig', $responseParameters));
         }
 
         return $response;

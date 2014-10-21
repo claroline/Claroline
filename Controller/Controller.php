@@ -7,21 +7,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller as BaseController;
 class Controller extends BaseController
 {
     /**
-     * @return \Icap\PortfolioBundle\Repository\PortfolioRepository
-     */
-    public function getPortfolioRepository()
-    {
-        return $this->get('icap_portfolio.repository.portfolio');
-    }
-    /**
-     * @return \Icap\PortfolioBundle\Repository\Widget\WidgetTypeRepository
-     */
-    public function getPortfolioWidgetTypeRepository()
-    {
-        return $this->get('icap_portfolio.repository.portfolio_widget_type');
-    }
-
-    /**
      * @return \Symfony\Bundle\FrameworkBundle\Translation\Translator
      */
     public function getTranslator()
@@ -75,6 +60,14 @@ class Controller extends BaseController
     public function getWidgetsManager()
     {
         return $this->get('icap_portfolio.manager.widgets');
+    }
+
+    /**
+     * @return \Icap\PortfolioBundle\Manager\CommentsManager
+     */
+    public function getCommentsManager()
+    {
+        return $this->get('icap_portfolio.manager.comments');
     }
 
     /**

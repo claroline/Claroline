@@ -3,14 +3,19 @@
 namespace Icap\PortfolioBundle\Manager;
 
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Event\Log\LogGenericEvent;
 use Claroline\CoreBundle\Pager\PagerFactory;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManager;
 use Icap\PortfolioBundle\Entity\Portfolio;
 use Icap\PortfolioBundle\Entity\PortfolioUser;
+use Icap\PortfolioBundle\Entity\PortfolioGuide;
 use Icap\PortfolioBundle\Entity\Widget\TitleWidget;
 use Icap\PortfolioBundle\Entity\Widget\WidgetNode;
+use Icap\PortfolioBundle\Event\Log\PortfolioAddGuideEvent;
+use Icap\PortfolioBundle\Event\Log\PortfolioRemoveGuideEvent;
 use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\FormFactory;
 
 /**
@@ -18,6 +23,10 @@ use Symfony\Component\Form\FormFactory;
  */
 class PortfolioManager
 {
+    const PORTFOLIO_OPENING_MODE_VIEW     = 'view';
+    const PORTFOLIO_OPENING_MODE_EVALUATE = 'evaluate';
+    const PORTFOLIO_OPENING_MODE_EDIT     = 'edit';
+
     /**
      * @var \Doctrine\ORM\EntityManager
      */
@@ -34,19 +43,24 @@ class PortfolioManager
     protected $widgetsManager;
 
     /**
-     * Constructor.
-     *
+     * @var EventDispatcherInterface
+     */
+    protected $eventDispatcher;
+
+    /**
      * @DI\InjectParams({
-     *     "entityManager"  = @DI\Inject("doctrine.orm.entity_manager"),
-     *     "formFactory"    = @DI\Inject("form.factory"),
-     *     "widgetsManager" = @DI\Inject("icap_portfolio.manager.widgets")
+     *     "entityManager"   = @DI\Inject("doctrine.orm.entity_manager"),
+     *     "formFactory"     = @DI\Inject("form.factory"),
+     *     "widgetsManager"  = @DI\Inject("icap_portfolio.manager.widgets"),
+     *     "eventDispatcher" = @DI\Inject("event_dispatcher"),
      * })
      */
-    public function __construct(EntityManager $entityManager, FormFactory $formFactory, WidgetsManager $widgetsManager)
+    public function __construct(EntityManager $entityManager, FormFactory $formFactory, WidgetsManager $widgetsManager, EventDispatcherInterface $eventDispatcher)
     {
-        $this->entityManager  = $entityManager;
-        $this->formFactory    = $formFactory;
-        $this->widgetsManager = $widgetsManager;
+        $this->entityManager   = $entityManager;
+        $this->formFactory     = $formFactory;
+        $this->widgetsManager  = $widgetsManager;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -93,7 +107,6 @@ class PortfolioManager
             }
         }
 
-        // Delete rules
         foreach ($originalPortfolioUsers as $originalPortfolioUser) {
             $this->entityManager->remove($originalPortfolioUser);
         }
@@ -106,12 +119,57 @@ class PortfolioManager
             }
         }
 
-        // Delete rules
         foreach ($originalPortfolioGroups as $originalPortfolioGroup) {
             $this->entityManager->remove($originalPortfolioGroup);
         }
 
         $this->persistPortfolio($portfolio);
+    }
+
+    /**
+     * @param Portfolio                               $portfolio
+     * @param Collection|PortfolioGuide[]         $originalPortfolioGuides
+     */
+    public function updateGuides(Portfolio $portfolio, Collection $originalPortfolioGuides)
+    {
+        $portfolioGuides                = $portfolio->getPortfolioGuides();
+        /** @var PortfolioGuide[] $addedPortfolioGuidesToNotify */
+        $addedPortfolioGuidesToNotify   = array();
+        /** @var PortfolioGuide[] $removedPortfolioGuidesToNotify */
+        $removedPortfolioGuidesToNotify = array();
+
+        foreach ($portfolioGuides as $portfolioGuide) {
+            if ($originalPortfolioGuides->contains($portfolioGuide)) {
+                $originalPortfolioGuides->removeElement($portfolioGuide);
+            }
+            else {
+                $addedPortfolioGuidesToNotify[] = $portfolioGuide;
+            }
+        }
+
+        foreach ($originalPortfolioGuides as $originalPortfolioGuide) {
+            $this->entityManager->remove($originalPortfolioGuide);
+            $removedPortfolioGuidesToNotify[] = $originalPortfolioGuide;
+        }
+
+        $this->persistPortfolio($portfolio);
+
+        foreach ($addedPortfolioGuidesToNotify as $addedPortfolioGuide) {
+            $portfolioAddGuideEvent = new PortfolioAddGuideEvent($portfolio, $addedPortfolioGuide);
+            $this->dispatch($portfolioAddGuideEvent);
+        }
+        foreach ($removedPortfolioGuidesToNotify as $removedPortfolioGuide) {
+            $portfolioAddGuideEvent = new PortfolioRemoveGuideEvent($portfolio, $removedPortfolioGuide);
+            $this->dispatch($portfolioAddGuideEvent);
+        }
+    }
+
+    /**
+     * @param LogGenericEvent $event
+     */
+    protected function dispatch(LogGenericEvent $event)
+    {
+        $this->eventDispatcher->dispatch('log', $event);
     }
 
     /**
@@ -140,7 +198,9 @@ class PortfolioManager
     public function getPortfolioData(Portfolio $portfolio)
     {
         /** @var \Icap\PortfolioBundle\Entity\Widget\AbstractWidget[] $widgets */
-        $widgets = $portfolio->getWidgets();
+        $widgets  = $portfolio->getWidgets();
+        /** @var \Icap\PortfolioBundle\Entity\PortfolioComment[] $comments */
+        $comments = $portfolio->getComments();
 
         $data = array(
             'id'          => $portfolio->getId(),
@@ -162,6 +222,13 @@ class PortfolioManager
             $widgetDatas       = $widgetViews + $widget->getData();
             $data['widgets'][] = $widgetDatas;
         }
+
+        $commentsDatas = array();
+
+        foreach ($comments as $comment) {
+            $commentsDatas[] = $comment->getData();
+        }
+        $data['comments'] = $commentsDatas;
 
         return $data;
     }
@@ -230,5 +297,34 @@ class PortfolioManager
         }
 
         $this->entityManager->flush();
+    }
+
+    /**
+     * @param Portfolio $portfolio
+     * @param User|null $user
+     * @param bool      $isAdmin
+     *
+     * @return string|null
+     */
+    public function getOpeningMode(Portfolio $portfolio, $user, $isAdmin = false)
+    {
+        $openingMode = null;
+
+        if (null !== $user) {
+            if ($user === $portfolio->getUser() || $isAdmin) {
+                $openingMode = self::PORTFOLIO_OPENING_MODE_EDIT;
+            }
+            elseif ($portfolio->hasGuide($user)) {
+                $openingMode = self::PORTFOLIO_OPENING_MODE_EVALUATE;
+            }
+            elseif ($portfolio->visibleToUser($user)) {
+                $openingMode = self::PORTFOLIO_OPENING_MODE_VIEW;
+            }
+        }
+        elseif (Portfolio::VISIBILITY_EVERYBODY === $portfolio->getVisibility()) {
+            $openingMode = self::PORTFOLIO_OPENING_MODE_VIEW;
+        }
+
+        return $openingMode;
     }
 }

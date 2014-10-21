@@ -5,6 +5,7 @@ namespace Icap\PortfolioBundle;
 use Claroline\KernelBundle\Bundle\AutoConfigurableInterface;
 use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
 use Claroline\InstallationBundle\Bundle\InstallableBundle;
+use Icap\PortfolioBundle\Installation\AdditionalInstaller;
 
 class IcapPortfolioBundle extends InstallableBundle implements AutoConfigurableInterface
 {
@@ -27,5 +28,10 @@ class IcapPortfolioBundle extends InstallableBundle implements AutoConfigurableI
     public function getRequiredFixturesDirectory($environment)
     {
         return 'DataFixtures/Required';
+    }
+
+    public function getAdditionalInstaller()
+    {
+        return new AdditionalInstaller();
     }
 }
