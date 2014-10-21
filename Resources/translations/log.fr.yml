@@ -1,6 +1,6 @@
 portfolio-add_guide: 'a ajouté %guide% à la liste des accompagnateurs de son portfolio %portfolio%'
 portfolio-remove_guide: 'a supprimé %guide% de la liste des accompagnateurs de son portfolio %portfolio%'
-portfolio-add_viewer: 'a supprimé l''accès de %guide% à son portfolio %portfolio%'
+portfolio-add_viewer: 'a ajouté l''accès à %guide% sur son portfolio %portfolio%'
 
 log_portfolio-add_guide_shortname: 'Ajout accompagnateur sur portfolio'
 log_portfolio-remove_guide_shortname: 'Suppression accompagnateur sur portfolio'
