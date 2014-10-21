@@ -138,8 +138,10 @@
                                 <li data-ng-repeat="widget in widgets | filter:{type: '!title', column: col} | orderBy:'+row'">
                                     {% include 'IcapPortfolioBundle:templates:widget.html.twig' %}
                                 </li>
+                                {% if editMode %}
                                 <li data-ng-include="'templates/menu_widget-type.tpl.html'">
                                 </li>
+                                {% endif %}
                             </ul>
                         </div>
                         <div data-ng-if="2 == portfolio.disposition">
@@ -147,8 +149,10 @@
                                 <li data-ng-repeat="widget in widgets | filter:{type: '!title', column: col} | orderBy:'+row'">
                                     {% include 'IcapPortfolioBundle:templates:widget.html.twig' %}
                                 </li>
+                                {% if editMode %}
                                 <li data-ng-include="'templates/menu_widget-type.tpl.html'">
                                 </li>
+                                {% endif %}
                             </ul>
                         </div>
                         <div data-ng-if="3 == portfolio.disposition">
@@ -156,8 +160,10 @@
                                 <li data-ng-repeat="widget in widgets | filter:{type: '!title', column: col} | orderBy:'+row'">
                                     {% include 'IcapPortfolioBundle:templates:widget.html.twig' %}
                                 </li>
+                                {% if editMode %}
                                 <li data-ng-include="'templates/menu_widget-type.tpl.html'">
                                 </li>
+                                {% endif %}
                             </ul>
                         </div>
                         {% if editMode %}
