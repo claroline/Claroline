@@ -174,8 +174,8 @@ class PortfolioHandler
      */
     public function handleGuides(Portfolio $portfolio)
     {
-        $originalPortfolioGuides  = $portfolio->getPortfolioGuides();
-        $form                         = $this->getGuidesForm($portfolio);
+        $originalPortfolioGuides = $portfolio->getPortfolioGuides();
+        $form                    = $this->getGuidesForm($portfolio);
 
         $request = $this->requestStack->getCurrentRequest();
         if ($request->isMethod('POST')) {
