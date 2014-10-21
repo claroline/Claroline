@@ -6,10 +6,11 @@ use Claroline\CoreBundle\Event\Log\LogGenericEvent;
 use Icap\NotificationBundle\Entity\NotifiableInterface;
 use Icap\PortfolioBundle\Entity\Portfolio;
 use Icap\PortfolioBundle\Entity\PortfolioGuide;
+use Icap\PortfolioBundle\Entity\PortfolioUser;
 
-class PortfolioAddGuideEvent extends LogGenericEvent implements NotifiableInterface
+class PortfolioAddViewerEvent extends LogGenericEvent implements NotifiableInterface
 {
-    const ACTION = 'portfolio-add_guide';
+    const ACTION = 'portfolio-add_viewer';
 
     /**
      * @var \Icap\PortfolioBundle\Entity\Portfolio
@@ -17,10 +18,10 @@ class PortfolioAddGuideEvent extends LogGenericEvent implements NotifiableInterf
     protected $portfolio;
 
     /**
-     * @param Portfolio          $portfolio
-     * @param PortfolioGuide $portfolioGuide
+     * @param Portfolio     $portfolio
+     * @param PortfolioUser $portfolioUser
      */
-    public function __construct(Portfolio $portfolio, PortfolioGuide $portfolioGuide)
+    public function __construct(Portfolio $portfolio, PortfolioUser $portfolioUser)
     {
         $this->portfolio = $portfolio;
 
@@ -42,7 +43,7 @@ class PortfolioAddGuideEvent extends LogGenericEvent implements NotifiableInterf
                     'slug'  => $titleWidget->getSlug()
                 )
             ),
-            $portfolioGuide->getUser(),
+            $portfolioUser->getUser(),
             null,
             null,
             null,
@@ -127,7 +128,7 @@ class PortfolioAddGuideEvent extends LogGenericEvent implements NotifiableInterf
                 'title' => $titleWidget->getTitle(),
                 'slug'  => $titleWidget->getSlug()
             ),
-            'guide'  => array(
+            'viewer'  => array(
                 'id'        => $receiver->getId(),
                 'publicUrl' => $receiver->getPublicUrl(),
                 'lastName'  => $receiver->getLastName(),

@@ -1,11 +1,15 @@
 portfolio-add_guide: 'added %guide% in the guides list of the portfolio %portfolio%'
 portfolio-remove_guide: 'removed %guide% from the guides list of the portfolio %portfolio%'
+portfolio-add_viewer: 'removed access to %guide% on the portfolio %portfolio%'
 
 log_portfolio-add_guide_shortname: 'Add guide on portfolio'
 log_portfolio-remove_guide_shortname: 'Remove guide on portfolio'
+log_portfolio-add_viewer_shortname: 'Add user access on a portfolio'
 
 log_portfolio-add_guide_title: 'Add guide on portfolio'
 log_portfolio-remove_guide_title: 'Remove guide on portfolio'
+log_portfolio-add_viewer_title: 'Add user access on a portfolio'
 
-log_portfolio_added_guide: 'guide added to the portfolio'
-log_portfolio_removed_guide: 'guide removed from the portfolio'
+log_portfolio_added_guide: 'Guide added to the portfolio'
+log_portfolio_removed_guide: 'Guide removed from the portfolio'
+log_portfolio_added_viewer: 'User access added on the portfolio'

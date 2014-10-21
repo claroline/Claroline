@@ -17,20 +17,12 @@ class PortfolioRemoveGuideEvent extends LogGenericEvent implements NotifiableInt
     protected $portfolio;
 
     /**
-     * @var \Icap\PortfolioBundle\Entity\PortfolioGuide
-     */
-    protected $portfolioGuide;
-
-    /**
-     * Constructor.
-     *
      * @param Portfolio          $portfolio
      * @param PortfolioGuide $portfolioGuide
      */
     public function __construct(Portfolio $portfolio, PortfolioGuide $portfolioGuide)
     {
-        $this->portfolio      = $portfolio;
-        $this->portfolioGuide = $portfolioGuide;
+        $this->portfolio = $portfolio;
 
         $user     = $portfolio->getUser();
 

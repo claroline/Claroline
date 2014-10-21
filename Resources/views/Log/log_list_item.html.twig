@@ -10,6 +10,8 @@
     {{ log.action|trans({'%portfolio%': portfolio, '%guide%': guide}, 'log')|raw }}
 {% elseif constant('Icap\\PortfolioBundle\\Event\\Log\\PortfolioRemoveGuideEvent::ACTION') == log.action %}
     {{ log.action|trans({'%portfolio%': portfolio, '%guide%': guide}, 'log')|raw }}
+{% elseif constant('Icap\\PortfolioBundle\\Event\\Log\\PortfolioAddViewerEvent::ACTION') == log.action %}
+    {{ log.action|trans({'%portfolio%': portfolio, '%guide%': guide}, 'log')|raw }}
 {% else %}
     no default text
 {% endif %}
