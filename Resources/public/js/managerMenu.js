@@ -132,7 +132,7 @@
         });
     });
 
-    $('#view-registration-users-body').on('click', '#search-user-btn', function (event) {
+    $('#view-registration-users-body').on('click', '#search-user-btn', function () {
         var teamId = $(this).data('team-id');
         var search = $('#search-user-input').val();
         
@@ -152,11 +152,27 @@
         });
     });
     
+    $('.edit-team-btn').on('click', function (event) {
+        event.preventDefault();
+        event.stopPropagation();
+        var teamId = $(this).data('team-id');
+        
+        window.Claroline.Modal.displayForm(
+            Routing.generate(
+                'claro_team_edit_form',
+                {'team': teamId}
+            ),
+            refreshPage,
+            function() {}
+        );
+    });
+    
     var removeTeamRow = function () {
         $('#row-team-' + currentTeamId).remove();
     };
     
     var refreshPage = function () {
+        window.tinymce.claroline.disableBeforeUnload = true;
         window.location.reload();
     };
 })();

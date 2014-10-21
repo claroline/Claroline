@@ -122,7 +122,8 @@
                                 >
                                     <i class="fa fa-sign-in"></i>
                                 </span>
-                                <a class="btn btn-default"
+                                <a class="btn btn-default edit-team-btn"
+                                   data-team-id="{{ team.getId() }}"
                                    href="{{ path('claro_team_edit_form', {'team': team.getId()}) }}"
                                    data-toggle="tooltip"
                                    data-placement="top"

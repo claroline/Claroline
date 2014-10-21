@@ -26,6 +26,7 @@ use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\SecurityContextInterface;
@@ -240,7 +241,8 @@ class TeamController extends Controller
     /**
      * @EXT\Route(
      *     "/team/{team}/edit/form",
-     *     name="claro_team_edit_form"
+     *     name="claro_team_edit_form",
+     *     options={"expose"=true}
      * )
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      * @EXT\Template()
@@ -263,7 +265,8 @@ class TeamController extends Controller
     /**
      * @EXT\Route(
      *     "/team/{team}/edit",
-     *     name="claro_team_edit"
+     *     name="claro_team_edit",
+     *     options={"expose"=true}
      * )
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      * @EXT\Template("ClarolineTeamBundle:Team:teamEditForm.html.twig")
@@ -280,12 +283,7 @@ class TeamController extends Controller
         if ($form->isValid()) {
             $this->teamManager->persistTeam($team);
 
-            return new RedirectResponse(
-                $this->router->generate(
-                    'claro_team_manager_menu',
-                    array('workspace' => $workspace->getId())
-                )
-            );
+            return new JsonResponse('success', 200);
         } else {
 
             return array(
