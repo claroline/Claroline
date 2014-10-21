@@ -155,7 +155,7 @@ abstract class qtiExport
         $zip->addFile($this->qtiRepos->getUserDir().'testfile.xml', 'SchemaQTI.xml');
 
         if(!empty($this->path_img)){
-             $zip->addFile($this->path_img, "images/".$this->resources_node->getName());
+             $zip->addFile($this->path_img, "files/".$this->resources_node->getName());
              $zip->addFile($this->qtiRepos->getUserDir().'imsmanifest.xml', 'imsmanifest.xml');
         }
         $zip->close();
@@ -170,10 +170,12 @@ abstract class qtiExport
         return $response;
     }
 
-    Private function generate_imsmanifest_File($namefile)
+    protected function generate_imsmanifest_File($namefile)
     {
 
         $document = new \DOMDocument();
+        $document->preserveWhiteSpace = false;
+        $document->formatOutput = true;
         // on crée l'élément principal <Node>
         $node = $document->CreateElement('manifest');
         $node->setAttribute("xmlns", "http://www.imsglobal.org/xsd/imscp_v1p1");
@@ -213,7 +215,7 @@ abstract class qtiExport
 
         $file2 = $document->CreateElement('file');
         //the name of the image must be variable ....
-        $file2->setAttribute("href","images/".$namefile);
+        $file2->setAttribute("href","files/".$namefile);
         $resource->appendChild($file2);
 
         $document->save($this->qtiRepos->getUserDir().'imsmanifest.xml');

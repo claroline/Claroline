@@ -12,7 +12,7 @@ class qcmExport extends qtiExport
 
     private $interactionqcm;
     private $choiceInteraction;
-    private $resources_node;
+    protected $resources_node;
     private $correctResponse;
     private $responseProcessing;
 
