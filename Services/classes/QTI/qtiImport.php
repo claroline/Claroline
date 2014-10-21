@@ -56,6 +56,7 @@ abstract class qtiImport
         $this->question->setDateCreate(new \Datetime());
         $this->question->setUser($this->user);
         $this->question->setCategory($this->qtiCat);
+        $this->getDescription();
         $this->doctrine->getManager()->persist($this->question);
         $this->doctrine->getManager()->flush();
     }
@@ -164,6 +165,12 @@ abstract class qtiImport
      */
     private function getDescription()
     {
+        $ib = $this->assessmentItem->getElementsByTagName("itemBody")->item(0);
+        foreach($ib->childNodes as $child) {
+            if ($child->nodeType === XML_CDATA_SECTION_NODE) {
+                $this->question->setDescription($child->textContent);
+            }
+        }
     }
 
     /**

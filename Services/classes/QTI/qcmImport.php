@@ -53,12 +53,6 @@ class qcmImport extends qtiImport
         $ci = $ib->getElementsByTagName("choiceInteraction")->item(0);
         if ($ci->getElementsByTagName("prompt")->item(0)) {
             $prompt = $ci->getElementsByTagName("prompt")->item(0)->nodeValue;
-        } else {
-            foreach($ib->childNodes as $child) {
-                if ($child->nodeType === XML_CDATA_SECTION_NODE) {
-                    $prompt = $child->textContent;
-                }
-            }
         }
 
         return $prompt;
