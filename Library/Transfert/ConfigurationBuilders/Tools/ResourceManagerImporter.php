@@ -16,6 +16,7 @@ use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Config\Definition\Processor;
 use Claroline\CoreBundle\Library\Transfert\Importer;
+use Claroline\CoreBundle\Library\Transfert\RichTextInterface;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Claroline\CoreBundle\Manager\RightsManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
@@ -31,7 +32,7 @@ use Claroline\CoreBundle\Entity\Role;
  * @DI\Service("claroline.tool.resource_manager_importer")
  * @DI\Tag("claroline.importer")
  */
-class ResourceManagerImporter extends Importer implements ConfigurationInterface
+class ResourceManagerImporter extends Importer implements ConfigurationInterface, RichTextInterface
 {
     private $result;
     private $data;
@@ -606,6 +607,24 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
                     $role['role']['rights'],
                     $createdRights->getResourceNode()->getResourceType())
             );
+        }
+    }
+
+    public function format($data)
+    {
+        foreach ($data['data']['items'] as $item) {
+            foreach ($this->getListImporters() as $importer) {
+                if ($importer->getName() == $item['item']['type']) {
+                    $resourceImporter = $importer;
+                }
+            }
+
+            if ($resourceImporter instanceof RichTextInterface) {
+                if (isset($item['item']['data']) && $resourceImporter) {
+                    $itemData = $item['widget']['data'];
+                    $resourceImporter->format($itemData);
+                }
+            }
         }
     }
 } 
