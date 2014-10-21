@@ -46,6 +46,10 @@ services:
         class: UJM\ExoBundle\Services\classes\QTI\holeExport
         arguments: [@doctrine, @security.context, @service_container]
 
+    ujm.qti_hole_import:
+        class: UJM\ExoBundle\Services\classes\QTI\holeImport
+        arguments: [@doctrine, @security.context, @service_container]
+
     ujm.qti_open_export:
         class: UJM\ExoBundle\Services\classes\QTI\openExport
         arguments: [@doctrine, @security.context, @service_container]

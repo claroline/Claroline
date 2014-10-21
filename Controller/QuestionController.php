@@ -2364,16 +2364,31 @@ class QuestionController extends Controller
         if ($dh = opendir($qtiRepos->getUserDir())) {
             while (($file = readdir($dh)) !== false) {
                 if (substr($file, -4, 4) == '.xml') {
+                    $imported = false;
                     $document_xml = new \DomDocument();
                     $document_xml->load($qtiRepos->getUserDir().'/'.$file);
                     $ai = $document_xml->getElementsByTagName('assessmentItem')->item(0);
-                    $ib = $ai->getElementsByTagName('itemBody')->item(0);
-                    foreach($ib->childNodes as $node){
-                        switch ($node->nodeName) {
-                            case "choiceInteraction":
-                                $qtiImport = $this->container->get('ujm.qti_qcm_import');
-
+                    if ($ai != null) {
+                        $ib = $ai->getElementsByTagName('itemBody')->item(0);
+                        foreach ($ib->childNodes as $node){
+                            if ($imported === false) {
+                                switch ($node->nodeName) {
+                                    case "choiceInteraction":
+                                        $qtiImport = $this->container->get('ujm.qti_qcm_import');
+                                        $qtiImport->import($qtiRepos, $document_xml);
+                                        $imported = true;
+                                        break;
+                                }
+                            }
+                        }
+                        if ($imported === false) {
+                            if (($ib->getElementsByTagName('textEntryInteraction')->length > 0)
+                                    || ($ib->getElementsByTagName('inlineChoiceInteraction')->length > 0)) {
+                                $qtiImport = $this->container->get('ujm.qti_hole_import');
                                 $qtiImport->import($qtiRepos, $document_xml);
+                                $imported = true;
+                            } else {
+                            }
                         }
                     }
                 }
