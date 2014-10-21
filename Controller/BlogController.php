@@ -171,7 +171,7 @@ class BlogController extends Controller
      */
     public function configureAction(Request $request, Blog $blog, User $user)
     {
-        $this->checkAccess("EDIT", $blog);
+        $this->checkAccess("ADMINISTRATE", $blog);
 
         $blogOptions = $blog->getOptions();
 
@@ -220,7 +220,7 @@ class BlogController extends Controller
      */
     public function configureBannerAction(Request $request, Blog $blog)
     {
-        $this->checkAccess("EDIT", $blog);
+        $this->checkAccess("ADMINISTRATE", $blog);
 
         $blogOptions = $blog->getOptions();
 
@@ -259,7 +259,7 @@ class BlogController extends Controller
      */
     public function editAction(Request $request, Blog $blog, User $user)
     {
-        $this->checkAccess("EDIT", $blog);
+        $this->checkAccess("ADMINISTRATE", $blog);
 
         $form = $this->createForm(new BlogInfosType(), $blog);
 

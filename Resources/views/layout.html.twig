@@ -8,7 +8,7 @@
         <h1><a href="{{ path('icap_blog_view', {'blogId': _resource.id}) }}" title="{{ _resource.resourceNode.name }}" class="blog_title">{{ _resource.resourceNode.name }}</a></h1>
         {% endif %}
 
-        {% if is_granted('EDIT', _resource) %}
+        {% if is_granted('ADMINISTRATE', _resource) %}
         <div class="panel blog_banner_configurator">
             <div class="panel-heading btn btn-default" data-toggle="collapse" href="#blogBannerConfigurator">
                 <h4 class="panel-title">
@@ -93,20 +93,20 @@
             </div>
         </div>
         {% endif %}
-        {% if blogOptions.isBannerActivate or (false == blogOptions.isBannerActivate and is_granted('EDIT', _resource)) %}
+        {% if blogOptions.isBannerActivate or (false == blogOptions.isBannerActivate and is_granted('ADMINISTRATE', _resource)) %}
         <div id="blog_banner" class="col-md-12 well blog_banner{% if false == blogOptions.isBannerActivate %} hidden{% endif %}" style="height: {{ blogOptions.bannerHeight }}px; background-color: {{ blogOptions.bannerBackgroundColor }}; background-image: {% if null == blogOptions.bannerBackgroundImageWebPath %}none{% else %}url('{{ asset(blogOptions.bannerBackgroundImageWebPath) }}'){% endif %}; background-position: {{ blogOptions.bannerBackgroundImagePosition }}; background-repeat: {{ blogOptions.bannerBackgroundImageRepeat }};">
         </div>
         {% endif %}
         {{ macros.flashBox() }}
         <div class="row button_block">
-            {% if is_granted('EDIT', _resource) or is_granted('POST', _resource) or is_granted('ROLE_ADMIN') %}
+            {% if is_granted('ADMINISTRATE', _resource) or is_granted('POST', _resource) or is_granted('ROLE_ADMIN') %}
             <div class="col-md-12">
-                {% if is_granted('EDIT', _resource) or is_granted('POST', _resource) %}
+                {% if is_granted('ADMINISTRATE', _resource) or is_granted('POST', _resource) %}
                     <a href="{{ _path('icap_blog_post_new', {'blogId': _resource.id}) }}" title="{{ 'new_post'|trans({}, 'icap_blog') }}" class="btn btn-default">
                         <span class="fa fa-plus"></span> {{ 'new_post'|trans({}, 'icap_blog') }}
                     </a>
                 {% endif %}
-                {% if is_granted('EDIT', _resource) %}
+                {% if is_granted('ADMINISTRATE', _resource) %}
                     <a href="{{ path('icap_blog_configure', {"blogId": _resource.id}) }}" title="{{ 'options'|trans({}, 'platform') }}" class="btn btn-default">
                         <i class="fa fa-wrench"></i> {{ 'options'|trans({}, 'platform') }}
                     </a>
@@ -161,7 +161,7 @@
                     <div class="panel-heading">
                         <h3 class="panel-title">
                             {{ 'info_bar'|trans({}, 'icap_blog') }}
-                            {% if is_granted('EDIT', _resource) %}
+                            {% if is_granted('ADMINISTRATE', _resource) %}
                             <a href="{{ path('icap_blog_edit_infos', {'blogId': _resource.id}) }}" title="{{ 'edit_blog_infos'|trans({}, 'icap_blog') }}" class="btn btn-primary btn-xs pull-right white">
                                 <span class="fa fa-edit"></span>
                             </a>
@@ -265,7 +265,7 @@
         <link rel="stylesheet" href="{{ asset_url }}" screen="media" />
     {% endstylesheets %}
 
-    {% if blogOptions.isBannerActivate or (false == blogOptions.isBannerActivate and is_granted('EDIT', _resource)) %}
+    {% if blogOptions.isBannerActivate or (false == blogOptions.isBannerActivate and is_granted('ADMINISTRATE', _resource)) %}
         <link rel="stylesheet" href="{{ asset('bundles/frontend/bootstrap-colorpicker/dist/css/bootstrap-colorpicker.css') }}" screen="media" />
     {% endif %}
 {% endblock %}
@@ -283,7 +283,7 @@
     <script type='text/javascript'src='{{ asset('bundles/frontend/jquery/plugin/confirm-bootstrap/confirm-bootstrap.js') }}'></script>
     <script type='text/javascript'src='{{ asset('bundles/icapblog/js/jquery-tree.js') }}'></script>
 
-    {% if (blogOptions.isBannerActivate or false == blogOptions.isBannerActivate) and is_granted('EDIT', _resource) %}
+    {% if (blogOptions.isBannerActivate or false == blogOptions.isBannerActivate) and is_granted('ADMINISTRATE', _resource) %}
         <script type="text/javascript" src="{{ asset('bundles/frontend/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.js') }}"></script>
         <script type='text/javascript'src='{{ asset('bundles/icapblog/js/banner.js') }}'></script>
     {% endif %}
