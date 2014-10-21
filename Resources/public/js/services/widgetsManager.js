@@ -6,7 +6,6 @@ portfolioApp
             widgets: [],
             emptyWidgets: [],
             forms:   [],
-            editing: [],
             init: function(portfolioId, widgets) {
                 angular.forEach(widgets, function(rawWidget) {
                     var widget = widgetFactory.getWidget(portfolioId, rawWidget.type);
@@ -17,7 +16,7 @@ portfolioApp
                 widget.copy = angular.copy(widget);
                 if (!widget.isEditing()) {
                     this.loadForm(widget);
-                    this.addEditing(widget);
+                    widget.setEditMode(true);
                 }
             },
             loadForm: function(widget) {
@@ -32,12 +31,6 @@ portfolioApp
                     $this.forms[widget.getType()] = formViewData.form;
                 });
             },
-            addEditing: function(widget) {
-                widget.setEditMode(true);
-                if (!this.editing.inArray(widget)) {
-                    this.editing.push(widget);
-                }
-            },
             cancelEditing: function(widget, rollback) {
                 if (rollback) {
                     angular.copy(widget.copy, widget);
@@ -45,7 +38,6 @@ portfolioApp
 
                 widget.setEditMode(false);
 
-                this.editing.remove(widget);
                 if (widget.isNew()) {
                     this.widgets.remove(widget);
                 }
@@ -103,7 +95,6 @@ portfolioApp
                         newWidget.column = column;
                         $this.edit(newWidget);
                     });
-                    this.addEditing(newWidget);
                 }
 
                 newWidget.column = column;

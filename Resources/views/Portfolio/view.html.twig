@@ -222,7 +222,7 @@
         {% endif %}
     </div>
     {% if constant('Icap\\PortfolioBundle\\Manager\\PortfolioManager::PORTFOLIO_OPENING_MODE_EDIT') == openingMode %}
-        <div class="form-container" data-ng-controller="editWidgetsController">
+        <div class="form-container">
             <form name="form" class="edit-container" data-loading-form="save(editedWidget)" data-ng-repeat="editedWidget in editedWidgets">
                 <div class="panel panel-default widget-panel">
                     <div class="panel-heading">
@@ -314,7 +314,6 @@
 
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/controllers/portfolioController.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/controllers/widgetController.js') }}"></script>
-        <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/controllers/editWidgetsController.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/controllers/designController.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/controllers/collectionFormController.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/controllers/commentController.js') }}"></script>

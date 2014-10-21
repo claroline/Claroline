@@ -4,7 +4,7 @@
             {% verbatim %}{{ widget.type + '_title'|trans }}{% endverbatim %}
             <div class="widget-actions">
                 {% if editMode %}
-                <button class="widget-action btn btn-xs btn-danger" data-ng-class="{'btn-loading': widget.isDeleting}" data-confirm-click="delete(widget);" data-ng-if="isDeletable(widget) && !widget.isNew()">
+                <button class="widget-action btn btn-xs btn-danger" data-ng-class="{'btn-loading': widget.isDeleting}" data-confirm-click="delete(widget);" data-ng-if="!widget.isEditing() && isDeletable(widget) && !widget.isNew()">
                     <span class="loading" data-ng-if="widget.isDeleting"></span>
                     <span class="fa fa-trash-o" data-ng-if="!widget.isDeleting"></span>
                 </button>
@@ -30,11 +30,20 @@
             {{ widgetTitleKey|trans({}, 'icap_portfolio') }}
         {% endif %}
     </div>
-    <div class="panel-body">
+    <div class="panel-body" data-ng-show="!widget.editing && !widget.views.form">
         {% if constant('Icap\\PortfolioBundle\\Manager\\PortfolioManager::PORTFOLIO_OPENING_MODE_VIEW') != openingMode %}
             <div data-ng-bind-html="widget.views.view | trustAsHtml"></div>
         {% else %}
             {% include 'IcapPortfolioBundle:templates:' ~ widget.widgetType ~ '.html.twig' with {'widget': widget} %}
         {% endif %}
     </div>
+    <div class="panel-body panel-loading" data-ng-show="widget.editing && !widget.views.form"></div>
+    <form name="form" class="edit-container" data-loading-form="save(widget)"
+          data-ng-show="widget.editing && widget.views.form">
+        <div class="panel-body" data-bind-html="widget.views.form"></div>
+        <div class="panel-footer">
+            <button type="submit" class="btn btn-primary">{{ 'save'|trans({}, 'platform') }}</button>
+            <button type="button" class="btn btn-default" data-ng-click="cancelEdition(widget)">{{ 'cancel'|trans({}, 'platform') }}</button>
+        </div>
+    </form>
 </div>

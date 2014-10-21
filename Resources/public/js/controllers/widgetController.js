@@ -6,6 +6,14 @@ portfolioApp
             widgetsManager.edit(widget);
         };
 
+        $scope.cancelEdition = function(widget) {
+            widgetsManager.cancelEditing(widget, true);
+        };
+
+        $scope.save = function(widget) {
+            return widgetsManager.save(widget);
+        };
+
         $scope.isDeletable = function(widget) {
             return widgetsManager.isDeletable(widget);
         };

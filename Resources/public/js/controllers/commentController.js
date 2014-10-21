@@ -1,8 +1,9 @@
 'use strict';
 
 portfolioApp
-    .controller("commentController", ["$scope", "portfolioManager", "commentsManager", "$timeout", function($scope, portfolioManager, commentsManager, $timeout) {
-        $scope.message        = "";
+    .controller("commentController", ["$scope", "portfolioManager", "commentsManager", "$timeout",
+                              function($scope, portfolioManager, commentsManager, $timeout) {
+        $scope.message = "";
 
         $scope.create = function() {
             if (this.message) {
