@@ -272,28 +272,36 @@ class Portfolio
     public function visibleToUser(User $user)
     {
         $portfolioUsers = $this->getPortfolioUsers();
+        $visibility     = $this->getVisibility();
         $isVisible      = false;
 
-        foreach ($portfolioUsers as $portfolioUser) {
-            if ($user === $portfolioUser->getUser()) {
-                $isVisible = true;
-                break;
-            }
+        if (Portfolio::VISIBILITY_EVERYBODY === $visibility ||
+            Portfolio::VISIBILITY_PLATFORM_USER === $visibility) {
+            $isVisible = true;
         }
+        elseif (Portfolio::VISIBILITY_USER === $visibility) {
+            foreach ($portfolioUsers as $portfolioUser) {
+                if ($user === $portfolioUser->getUser()) {
+                    $isVisible = true;
+                    break;
+                }
+            }
 
-        if (!$isVisible) {
-            $portfolioGroups = $this->getPortfolioGroups();
-            $userGroups      = $user->getGroups();
+            if (!$isVisible) {
+                $portfolioGroups = $this->getPortfolioGroups();
+                $userGroups      = $user->getGroups();
 
-            foreach ($portfolioGroups as $portfolioGroup) {
-                foreach ($userGroups as $userGroup) {
-                    if ($userGroup === $portfolioGroup->getGroup()) {
-                        $isVisible = true;
-                        break;
+                foreach ($portfolioGroups as $portfolioGroup) {
+                    foreach ($userGroups as $userGroup) {
+                        if ($userGroup === $portfolioGroup->getGroup()) {
+                            $isVisible = true;
+                            break;
+                        }
                     }
                 }
             }
         }
+
 
         return $isVisible;
     }

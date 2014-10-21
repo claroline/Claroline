@@ -212,6 +212,9 @@ class PortfolioController extends Controller
                     )) {
                 $response = new Response($this->renderView('IcapPortfolioBundle:Portfolio:view.error.html.twig', array('errorCode' => 401, 'portfolioSlug' => $portfolioSlug)), 401);
             }
+            else {
+                throw new \LogicException("Unknow opening mode for the portfolio.");
+            }
         }
         else {
             $event = new PortfolioViewEvent($portfolio);
