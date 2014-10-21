@@ -18,7 +18,7 @@ class LogListener extends ContainerAware
         $event->stopPropagation();
     }
 
-    public function onPostCreateLogDetails(LogCreateDelegateViewEvent $event)
+    public function onCreateLogDetails(LogCreateDelegateViewEvent $event)
     {
         $content = $this->container->get('templating')->render(
             'IcapPortfolioBundle:Log:log_details.html.twig',

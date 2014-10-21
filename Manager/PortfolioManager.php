@@ -13,6 +13,7 @@ use Icap\PortfolioBundle\Entity\PortfolioGuide;
 use Icap\PortfolioBundle\Entity\Widget\TitleWidget;
 use Icap\PortfolioBundle\Entity\Widget\WidgetNode;
 use Icap\PortfolioBundle\Event\Log\PortfolioAddGuideEvent;
+use Icap\PortfolioBundle\Event\Log\PortfolioAddViewerEvent;
 use Icap\PortfolioBundle\Event\Log\PortfolioRemoveGuideEvent;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -99,11 +100,15 @@ class PortfolioManager
      */
     public function updateVisibility(Portfolio $portfolio, Collection $originalPortfolioUsers, Collection $originalPortfolioGroups)
     {
-        $portfolioUsers = $portfolio->getPortfolioUsers();
+        $portfolioUsers                = $portfolio->getPortfolioUsers();
+        $addedPortfolioViewersToNotify = array();
 
         foreach ($portfolioUsers as $portfolioUser) {
             if ($originalPortfolioUsers->contains($portfolioUser)) {
                 $originalPortfolioUsers->removeElement($portfolioUser);
+            }
+            else {
+                $addedPortfolioViewersToNotify[] = $portfolioUser;
             }
         }
 
@@ -124,6 +129,11 @@ class PortfolioManager
         }
 
         $this->persistPortfolio($portfolio);
+
+        foreach ($addedPortfolioViewersToNotify as $addedPortfolioViewer) {
+            $portfolioAddViewerEvent = new PortfolioAddViewerEvent($portfolio, $addedPortfolioViewer);
+            $this->dispatch($portfolioAddViewerEvent);
+        }
     }
 
     /**

@@ -16,7 +16,7 @@ class PortfolioViewEvent extends LogGenericEvent implements LogNotRepeatableInte
     protected $portfolio;
 
     /**
-     * Constructor.
+     * @param Portfolio $portfolio
      */
     public function __construct(Portfolio $portfolio)
     {
