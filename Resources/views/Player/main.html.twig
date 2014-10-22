@@ -17,9 +17,12 @@
     {% import 'InnovaPathBundle::Player/components/macros.html.twig' as macros %}
 
     <div id="path-main-container" class="path-player">
-        <div class="tree-browser">
-            {{ render(controller('innova_path.controller.path_player:displayTreeBrowserAction', { 'workspace': workspace, 'path': path, 'currentStep': currentStep } )) }}
-        </div>
+        <!-- Display modal only if we are not already playing the path -->
+        {% if showTree %}
+            <div class="tree-browser">
+                {{ render(controller('innova_path.controller.path_player:displayTreeBrowserAction', { 'workspace': workspace, 'path': path, 'currentStep': currentStep } )) }}
+            </div>
+        {% endif %}
 
         <div class="row">
             <div class="col-md-12">
