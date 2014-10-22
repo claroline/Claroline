@@ -32,6 +32,13 @@ abstract class AbstractWidget
     protected $id;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(type="string", nullable=false)
+     */
+    protected $label;
+
+    /**
      * @var integer
      *
      * @ORM\Column(name="col", type="integer", options={"default" = 1})
@@ -68,6 +75,9 @@ abstract class AbstractWidget
      */
     protected $portfolio;
 
+    /**
+     * @var string
+     */
     protected $widgetType = null;
 
     /**
@@ -76,6 +86,26 @@ abstract class AbstractWidget
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLabel()
+    {
+        return $this->label;
+    }
+
+    /**
+     * @param string $label
+     *
+     * @return AbstractWidget
+     */
+    public function setLabel($label)
+    {
+        $this->label = $label;
+
+        return $this;
     }
 
     /**
@@ -168,6 +198,19 @@ abstract class AbstractWidget
     public function getChildren()
     {
         return array();
+    }
+
+    /**
+     * @return array
+     */
+    public function getCommonData()
+    {
+        return array(
+            'label'  => $this->getLabel(),
+            'type'   => $this->getWidgetType(),
+            'column' => $this->getColumn(),
+            'row'    => $this->getRow()
+        );
     }
 
     /**

@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/10/20 11:13:19
+ * Generation date: 2014/10/22 02:17:54
  */
-class Version20141020111318 extends AbstractMigration
+class Version20141022141752 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -81,6 +81,10 @@ class Version20141020111318 extends AbstractMigration
             ON DELETE CASCADE
         ");
         $this->addSql("
+            ALTER TABLE icap__portfolio_abstract_widget 
+            ADD COLUMN \"label\" VARCHAR(255) NOT NULL
+        ");
+        $this->addSql("
             ALTER TABLE icap__portfolio_widget_badges_badge 
             DROP FOREIGN KEY FK_25D41B98F7A2C2FC
         ");
@@ -101,6 +105,10 @@ class Version20141020111318 extends AbstractMigration
         ");
         $this->addSql("
             DROP TABLE icap__portfolio_widget_text
+        ");
+        $this->addSql("
+            ALTER TABLE icap__portfolio_abstract_widget 
+            DROP COLUMN \"label\"
         ");
         $this->addSql("
             ALTER TABLE icap__portfolio_widget_badges_badge 

@@ -154,15 +154,12 @@ class WidgetsManager
             $this->entityManager->persist($widget);
             $this->entityManager->flush();
 
-            $widgetDatas = array(
-                'type'   => $widget->getWidgetType(),
-                'column' => $widget->getColumn(),
-                'row'    => $widget->getRow(),
+            $widgetViews = array(
                 'views'  => array(
                     'view' => $this->getView($widget, $type)
                 )
             );
-            $data = $widgetDatas + $widget->getData();
+            $data = $widget->getCommonData() + $widgetViews + $widget->getData();
 
             return $data;
         }
