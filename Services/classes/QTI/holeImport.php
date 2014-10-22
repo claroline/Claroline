@@ -69,22 +69,22 @@ class holeImport extends qtiImport
     protected function getHtml()
     {
         $this->textHtml = $this->qtiTextWithHoles;
-        $newId = 1;
-        $regex = '(<textEntryInteraction\\s*responseIdentifier="\w*"\\s+expectedLength="\d+"\\s*\/>)';
-        preg_match_all($regex, $this->qtiTextWithHoles, $matches);
+        $newId = 1;echo $this->textHtml;
+        $regex = "^<textEntryInteraction[.*]>$";
+        preg_match_all($regex, $this->qtiTextWithHoles, $matches);var_dump($matches);
         foreach ($matches[0] as $matche) {
-            $tabMatche = explode('"', $matche);
+            $tabMatche = explode('"', $matche);echo 'matche: '.$matche;
             $responseIdentifier = $tabMatche[1];
             $expectedLength     = $tabMatche[3];
             $correctResponse    = $this->getCorrectResponse($responseIdentifier);
             if (substr($matche, 1, 20) == 'textEntryInteraction') {
                 $text = str_replace('textEntryInteraction', 'input', $matche);
-                $text = str_replace('responseIdentifier="'.$responseIdentifier.'"', 'id="blank_'.$newId.'" autocomplete="off" name="blank_'.$newId.'"', $text);
+                $text = str_replace('responseIdentifier="'.$responseIdentifier.'"', 'id="blank_'.$newId.'" class="blank" autocomplete="off" name="blank_'.$newId.'"', $text);
                 $text = str_replace('expectedLength="'.$expectedLength.'"', 'size="'.$expectedLength.'" type="text" value="'.$correctResponse.'"', $text);
             }
             $newId++;
             $this->textHtml = str_replace($matche, $text, $this->textHtml);
-        }
+        }die();
         $this->interactionHole->setHtml($this->textHtml);
     }
 
@@ -100,7 +100,7 @@ class holeImport extends qtiImport
     {
         $correctResponse = '';
         foreach($this->assessmentItem->getElementsByTagName("responseDeclaration") as $rp) {
-            if ($rp->getAttribute("fixed") == $identifier) {
+            if ($rp->getAttribute("identifier") == $identifier) {
                 $correctResponse = $rp->getElementsByTagName("correctResponse")
                                       ->item(0)->getElementsByTagName("value")
                                       ->item(0)->nodeValue;
@@ -118,6 +118,14 @@ class holeImport extends qtiImport
      */
     protected function getHtmlWithoutValue()
     {
+        $regex = '(<input.*class="blank".*\/>)';
+        preg_match_all($regex, $this->textHtml, $matches);
+        foreach ($matches[0] as $matche) {
+            if (substr($matche, 1, 5) == 'input') {
+                $tabMatche = explode('"', $matche);
+                $value = $tabMatche[13];
+            }
+        }
         $this->interactionHole->sethtmlWithoutValue('htmlWithoutValue');
     }
 
