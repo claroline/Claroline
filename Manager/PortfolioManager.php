@@ -218,13 +218,7 @@ class PortfolioManager
         );
 
         foreach ($widgets as $widget) {
-            $widgetViews = array(
-                'views'  => array(
-                    'view' => $this->widgetsManager->getView($widget, $widget->getWidgetType())
-                )
-            );
-
-            $widgetDatas       = $widget->getCommonData() + $widgetViews + $widget->getData();
+            $widgetDatas       = $this->widgetsManager->getWidgetData($widget);
             $data['widgets'][] = $widgetDatas;
         }
 
