@@ -45,6 +45,7 @@ class TextWidget extends AbstractWidget
     public function getData()
     {
         return array(
+            'id'   => $this->getId(),
             'text' => $this->getText()
         );
     }
