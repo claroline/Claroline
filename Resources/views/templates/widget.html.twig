@@ -41,8 +41,7 @@
         <input type="text" class="input-sm form-control" name="widget_label" data-ng-model="widget.label">
     </div>
     <div class="panel-body col-md-12 loading" data-ng-show="widget.editing && !widget.views.form"></div>
-    <form name="form" class="edit-container" data-loading-form="save(widget)"
-          data-ng-show="widget.editing && widget.views.form">
+    <form name="form" class="edit-container" data-loading-form="save(widget)" data-ng-show="widget.editing && widget.views.form">
         <div class="panel-body" data-bind-html="widget.views.form"></div>
         <div class="panel-footer">
             <button type="submit" class="btn btn-primary">{{ 'save'|trans({}, 'platform') }}</button>
