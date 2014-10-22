@@ -171,7 +171,7 @@ class StepManager
             $activity->setParameters($step->getParameters());
 
             $activityType = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneByName('activity');
-            $currentUser = $this->security->getToken()->getUser();
+            $creator = $step->getPath()->getCreator();
             $workspace = $step->getWorkspace();
 
             // Store Activity in same directory than parent Path
@@ -180,7 +180,7 @@ class StepManager
                 $parent = $this->resourceManager->getWorkspaceRoot($workspace);
             }
 
-            $activity = $this->resourceManager->create($activity, $activityType, $currentUser, $workspace, $parent);
+            $activity = $this->resourceManager->create($activity, $activityType, $creator, $workspace, $parent);
         }
         else {
             // Activity already exists => update ResourceNode

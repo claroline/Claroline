@@ -116,7 +116,7 @@ class PublishingManager
      * Create all needed Entities from JSON structure created by the Editor
      * @param  \Innova\PathBundle\Entity\Path\Path $path
      * @throws \Exception
-     * @return \Innova\PathBundle\Manager\PublishingManager
+     * @return boolean
      */
     public function publish(Path $path)
     {
@@ -151,7 +151,7 @@ class PublishingManager
         // End Publishing
         $this->end();
         
-        return $this;
+        return true;
     }
     
     /**

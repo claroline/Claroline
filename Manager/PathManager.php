@@ -111,8 +111,27 @@ class PathManager
     }
 
     /**
+     * Get all Paths of the Platform
+     * @param bool $toPublish If false, returns all paths, if true returns only paths which need publishing
+     */
+    public function getPlatformPaths($toPublish = false)
+    {
+        return $this->om->getRepository('InnovaPathBundle:Path\Path')->findPlatformPaths($toPublish);
+    }
+
+    /**
+     * Get all Paths of a Workspace
+     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
+     * @param bool $toPublish If false, returns all paths, if true returns only paths which need publishing
+     */
+    public function getWorkspacePaths(Workspace $workspace, $toPublish = false)
+    {
+        return $this->om->getRepository('InnovaPathBundle:Path\Path')->findWorkspacePaths($workspace, $toPublish);
+    }
+
+    /**
      * Find accessible Paths
-     * @param Workspace $workspace
+     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
      * @return array
      */
     public function findAccessibleByUser(Workspace $workspace = null)

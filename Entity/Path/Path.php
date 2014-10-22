@@ -282,4 +282,18 @@ class Path extends AbstractResource implements PathInterface
 
         return $workspace;
     }
+
+    /**
+     * Wrapper to access creator of the Path
+     * @return \Claroline\CoreBundle\Entity\User
+     */
+    public function getCreator()
+    {
+        $creator = null;
+        if (!empty($this->resourceNode)) {
+            $creator = $this->resourceNode->getCreator();
+        }
+
+        return $creator;
+    }
 }
