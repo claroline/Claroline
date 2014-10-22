@@ -194,9 +194,7 @@ class WidgetsManager
     public function getWidgetData(AbstractWidget $widget, $withView = true)
     {
         $widgetViews = array(
-            'views'  => array(
-                'view' => $withView ? $this->getView($widget, $widget->getWidgetType()) : array()
-            )
+            'views'  => $withView ? array('view' => $this->getView($widget, $widget->getWidgetType())) : array()
         );
 
         return  $widget->getCommonData() + $widgetViews + $widget->getData();

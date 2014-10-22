@@ -26,8 +26,7 @@
                 {% endif %}
             </div>
         {% else %}
-            {% set widgetTitleKey = widget.widgetType ~ '_title' %}
-            {{ widgetTitleKey|trans({}, 'icap_portfolio') }}
+            {{ widget.label }}
         {% endif %}
     </div>
     <div class="panel-body" data-ng-show="!widget.editing && !widget.views.form">
