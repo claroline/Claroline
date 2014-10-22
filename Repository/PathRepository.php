@@ -22,7 +22,7 @@ class PathRepository extends EntityRepository
 
         $builder->whereTypeIn(array ('innova_path'));
         $builder->whereRoleIn($userRoles);
-        $builder->orderByPath();
+        $builder->orderByName();
 
         $dql = $builder->getDql();
         $query = $this->_em->createQuery($dql);
