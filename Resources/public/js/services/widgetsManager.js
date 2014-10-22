@@ -15,8 +15,8 @@ portfolioApp
             edit: function(widget) {
                 widget.copy = angular.copy(widget);
                 if (!widget.isEditing()) {
-                    this.loadForm(widget);
                     widget.setEditMode(true);
+                    this.loadForm(widget);
                 }
             },
             loadForm: function(widget) {
@@ -97,7 +97,8 @@ portfolioApp
                     });
                 }
 
-                newWidget.column = column;
+                newWidget.column  = column;
+                newWidget.editing = true;
 
                 this.widgets.push(newWidget);
             },
