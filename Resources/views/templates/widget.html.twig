@@ -37,7 +37,7 @@
         {% endif %}
     </div>
     {% if constant('Icap\\PortfolioBundle\\Manager\\PortfolioManager::PORTFOLIO_OPENING_MODE_EDIT') == openingMode %}
-    <div class="panel-heading" data-ng-show="widget.editing">
+    <div class="panel-heading" data-ng-show="widget.editing && widget.views.form">
         <input type="text" class="input-sm form-control" name="widget_label" data-ng-model="widget.label">
     </div>
     <div class="panel-body col-md-12 loading" data-ng-show="widget.editing && !widget.views.form"></div>
