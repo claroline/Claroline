@@ -221,26 +221,6 @@
             <div data-ng-show="!portfolio.$resolved" id="portfolio-loading"></div>
         {% endif %}
     </div>
-    {% if constant('Icap\\PortfolioBundle\\Manager\\PortfolioManager::PORTFOLIO_OPENING_MODE_EDIT') == openingMode %}
-        <div class="form-container" data-ng-controller="editWidgetsController">
-            <form name="form" class="edit-container" data-loading-form="save(editedWidget)" data-ng-repeat="editedWidget in editedWidgets">
-                <div class="panel panel-default widget-panel">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">
-                            <span data-ng-bind="editedWidget.getType() + '_form_title'|trans"></span>
-                            <button type="button" class="close" aria-hidden="true" data-ng-click="cancel(editedWidget);">&times;</button>
-                        </h3>
-                    </div>
-                    <div class="panel-body panel-loading" data-ng-show="!editedWidget.views.form"></div>
-                    <div class="panel-body" data-ng-show="editedWidget.views.form" data-bind-html="editedWidget.views.form"></div>
-                    <div class="panel-footer">
-                        <button type="submit" class="btn btn-primary">{{ 'save'|trans({}, 'platform') }}</button>
-                        <button type="button" class="btn btn-default" data-ng-click="cancel(editedWidget)">{{ 'cancel'|trans({}, 'platform') }}</button>
-                    </div>
-                </div>
-            </form>
-        </div>
-    {% endif %}
 {% endblock %}
 
 {% block stylesheets %}
@@ -314,7 +294,6 @@
 
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/controllers/portfolioController.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/controllers/widgetController.js') }}"></script>
-        <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/controllers/editWidgetsController.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/controllers/designController.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/controllers/collectionFormController.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/controllers/commentController.js') }}"></script>

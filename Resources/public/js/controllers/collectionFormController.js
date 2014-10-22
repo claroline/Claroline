@@ -5,8 +5,7 @@ portfolioApp
         $scope.emptyChild = jQuery.parseJSON($attrs.collectionForm.replace(/'/g, '"'));
         $scope.emptyChild.added = false;
 
-        var collection = $scope.editedWidget.children || [];
-        $scope.collection = collection;
+        $scope.collection = $scope.widget.children || [];
 
         $scope.resourcePickerConfig = {
             isPickerMultiSelectAllowed: true,

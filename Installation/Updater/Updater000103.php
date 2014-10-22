@@ -25,7 +25,8 @@ class Updater000103
         if (null !== $widgetType) {
             $widgetType
                 ->setName('text')
-                ->setIcon('align-left');
+                ->setIcon('align-left')
+                ->setIsUnique(false);
 
             $this->entityManager->persist($widgetType);
             $this->entityManager->flush();

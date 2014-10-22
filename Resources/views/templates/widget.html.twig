@@ -2,16 +2,16 @@
     <div class="panel-heading">
         {% if constant('Icap\\PortfolioBundle\\Manager\\PortfolioManager::PORTFOLIO_OPENING_MODE_VIEW') != openingMode %}
             {% verbatim %}{{ widget.type + '_title'|trans }}{% endverbatim %}
-            <div class="widget-actions">
+            <div class="widget-actions" data-ng-if="!widget.isEditing() && !widget.isNew()">
                 {% if editMode %}
-                <button class="widget-action btn btn-xs btn-danger" data-ng-class="{'btn-loading': widget.isDeleting}" data-confirm-click="delete(widget);" data-ng-if="isDeletable(widget) && !widget.isNew()">
+                <button class="widget-action btn btn-xs btn-danger" data-ng-class="{'btn-loading': widget.isDeleting}" data-confirm-click="delete(widget);" data-ng-if="isDeletable(widget)">
                     <span class="loading" data-ng-if="widget.isDeleting"></span>
                     <span class="fa fa-trash-o" data-ng-if="!widget.isDeleting"></span>
                 </button>
-                <button class="widget-action btn btn-xs btn-primary" data-ng-click="edit(widget);" data-ng-if="!widget.isEditing() && !widget.isNew()">
+                <button class="widget-action btn btn-xs btn-primary" data-ng-click="edit(widget);">
                     <span class="fa fa-pencil"></span>
                 </button>
-                <div class="btn-group btn-group-xs" data-ng-if="!widget.isEditing() && !widget.isNew()">
+                <div class="btn-group btn-group-xs">
                     <button class="btn btn-default dropdown-toggle" type="button" id="columnMenu" data-toggle="dropdown" data-ng-if="0 < portfolio.disposition">
                         <span class="fa fa-exchange"></span>
                     </button>
@@ -19,7 +19,7 @@
                         <li role="presentation" data-ng-repeat="col in cols" data-ng-click="changeColumn(widget, col)"><a role="menuitem" tabindex="-1" href="#">{% verbatim %}{{ col }}{% endverbatim %}</a></li>
                     </ul>
                 </div>
-                <div class="btn-group btn-group-xs" data-ng-if="!widget.isEditing() && !widget.isNew()">
+                <div class="btn-group btn-group-xs">
                     <button type="button" class="btn btn-default" data-ng-disabled="$last" data-ng-click="increaseRow(widget)"><span class="fa fa-arrow-down"></span></button>
                     <button type="button" class="btn btn-default" data-ng-disabled="1 == widget.row" data-ng-click="decreaseRow(widget)"><span class="fa fa-arrow-up"></span></button>
                 </div>
@@ -30,11 +30,22 @@
             {{ widgetTitleKey|trans({}, 'icap_portfolio') }}
         {% endif %}
     </div>
-    <div class="panel-body">
+    <div class="panel-body" data-ng-show="!widget.editing && !widget.views.form">
         {% if constant('Icap\\PortfolioBundle\\Manager\\PortfolioManager::PORTFOLIO_OPENING_MODE_VIEW') != openingMode %}
             <div data-ng-bind-html="widget.views.view | trustAsHtml"></div>
         {% else %}
             {% include 'IcapPortfolioBundle:templates:' ~ widget.widgetType ~ '.html.twig' with {'widget': widget} %}
         {% endif %}
     </div>
+    {% if constant('Icap\\PortfolioBundle\\Manager\\PortfolioManager::PORTFOLIO_OPENING_MODE_EDIT') == openingMode %}
+    <div class="panel-body col-md-12 loading" data-ng-show="widget.editing && !widget.views.form"></div>
+    <form name="form" class="edit-container" data-loading-form="save(widget)"
+          data-ng-show="widget.editing && widget.views.form">
+        <div class="panel-body" data-bind-html="widget.views.form"></div>
+        <div class="panel-footer">
+            <button type="submit" class="btn btn-primary">{{ 'save'|trans({}, 'platform') }}</button>
+            <button type="button" class="btn btn-default" data-ng-click="cancelEdition(widget)">{{ 'cancel'|trans({}, 'platform') }}</button>
+        </div>
+    </form>
+    {% endif %}
 </div>
