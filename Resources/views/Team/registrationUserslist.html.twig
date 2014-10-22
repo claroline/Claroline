@@ -116,8 +116,20 @@
                             >
                                 {{ 'unregister'|trans({}, 'team') }}
                             </span>
+                        {% elseif (params.getMaxTeams() is not empty) and
+                                  (nbTeams[userId] is defined) and
+                                  (nbTeams[userId] >= params.getMaxTeams())
+                        %}
+                            <span class="label label-info">
+                                {{ 'max_teams_limit_reached'|trans({}, 'team') }}
+                            </span>
                         {% else %}
-                            <span class="btn btn-success btn-sm pointer-hand register-btn"
+                            {% if (team.getMaxUsers() is not empty) and (registered|length >= team.getMaxUsers()) %}
+                                {% set disabled = 'disabled' %}
+                            {% else %}
+                                {% set disabled = '' %}
+                            {% endif %}
+                            <span class="btn btn-success btn-sm pointer-hand register-btn {{ disabled }}"
                                   data-user-id="{{ userId }}"
                                   data-team-id="{{ team.getId() }}"
                             >
@@ -133,4 +145,7 @@
     {% if users.getNbPages() > 1 %}
         {{ renderPager(users, team, search, orderedBy, order, max) }}
     {% endif %}
+
+    <div id="registration-users-list-datas" data-max-users="{{ team.getMaxUsers() }}">
+    </div>
 {% endif %}

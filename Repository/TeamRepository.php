@@ -74,7 +74,7 @@ class TeamRepository extends EntityRepository
         return $executeQuery ? $query->getResult() : $query;
     }
 
-    public function findNbTeamsByUserAndWorkspace(
+    public function findTeamsByUserAndWorkspace(
         User $user,
         Workspace $workspace,
         $executeQuery = true
@@ -282,6 +282,26 @@ class TeamRepository extends EntityRepository
         $query->setParameter('workspace', $workspace);
         $upperSearch = strtoupper($search);
         $query->setParameter('search', "%{$upperSearch}%");
+
+        return $executeQuery ? $query->getResult() : $query;
+    }
+
+    public function findNbTeamsByUsers(
+        Workspace $workspace,
+        array $users,
+        $executeQuery = true
+    )
+    {
+        $dql = '
+            SELECT COUNT(t.id) AS nb_teams, u.id AS user_id
+            FROM Claroline\TeamBundle\Entity\Team t
+            JOIN t.users u WITH u IN (:users)
+            WHERE t.workspace = :workspace
+            GROUP BY u.id
+        ';
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('workspace', $workspace);
+        $query->setParameter('users', $users);
 
         return $executeQuery ? $query->getResult() : $query;
     }

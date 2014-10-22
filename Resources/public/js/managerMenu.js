@@ -9,6 +9,7 @@
 
 (function () {
     'use strict';
+    
     var currentTeamId;
     
     $('.delete-team-btn').on('click', function () {
@@ -63,10 +64,15 @@
                 registerBtn.addClass('btn-danger');
                 registerBtn.addClass('unregister-btn');
                 registerBtn.html(Translator.get('team:unregister'));
-//                refreshPage();
+                
+                var maxUsers = $('#registration-users-list-datas').data('max-users');
                 var nbUsers = parseInt($('#nb-users-' + teamId).text());
                 nbUsers++;
                 $('#nb-users-' + teamId).html(nbUsers);
+                
+                if (maxUsers !== '' && nbUsers >= parseInt(maxUsers)) {
+                    $('.register-btn').addClass('disabled');
+                }
             }
         });
     });
@@ -95,6 +101,7 @@
                 var nbUsers = parseInt($('#nb-users-' + teamId).text());
                 nbUsers--;
                 $('#nb-users-' + teamId).html(nbUsers);
+                $('.register-btn').removeClass('disabled');
             }
         });
     });

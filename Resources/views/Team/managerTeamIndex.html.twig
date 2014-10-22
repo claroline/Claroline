@@ -64,3 +64,11 @@
         {% endif %}
     </div>
 {% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src='{{ asset('bundles/clarolineteam/js/managerTeamIndex.js') }}'
+            type="text/javascript"
+    >
+    </script>
+{% endblock %}

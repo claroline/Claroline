@@ -4,6 +4,7 @@ default_parameters: 'Paramètres par défaut'
 delete_team: 'Suppression de l''équipe'
 delete_team_comfirm_message: 'Êtes-vous sûr de vouloir supprimer cette équipe ?'
 edit_team: 'Modification de l''équipe'
+max_teams_limit_reached: 'Nombre maximum d''équipes atteint'
 maximum: Maximum
 maximum_informations: 'Le nombre d''utilisateurs qui peuvent être inscrits à l''équipe'
 no_team: 'Aucune équipe'

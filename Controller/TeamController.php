@@ -394,8 +394,19 @@ class TeamController extends Controller
         User $manager
     )
     {
-        $this->checkWorkspaceManager($team->getWorkspace(), $manager);
-        $this->teamManager->registerUserToTeam($team, $user);
+        $workspace = $team->getWorkspace();
+        $this->checkWorkspaceManager($workspace, $manager);
+        $params = $this->teamManager->getParametersByWorkspace($workspace);
+        $maxUsers = $team->getMaxUsers();
+        $full = !is_null($maxUsers) && (count($team->getUsers()) >= $maxUsers);
+        $nbAllowedTeams = $params->getMaxTeams();
+        $userTeams = $this->teamManager->getTeamsByUserAndWorkspace($user, $workspace);
+        $nbTeams = count($userTeams);
+        $nbAllowed = is_null($nbAllowedTeams) || ($nbTeams < $nbAllowedTeams);
+
+        if (!$full && $nbAllowed) {
+            $this->teamManager->registerUserToTeam($team, $user);
+        }
 
         return new Response('success', 200);
     }
@@ -494,12 +505,13 @@ class TeamController extends Controller
         $maxUsers = $team->getMaxUsers();
         $full = !is_null($maxUsers) && (count($team->getUsers()) >= $maxUsers);
         $nbAllowedTeams = $params->getMaxTeams();
-        $nbTeams = $this->teamManager
-            ->getNbTeamsByUserAndWorkspace($user, $workspace);
+        $userTeams = $this->teamManager
+            ->getTeamsByUserAndWorkspace($user, $workspace);
+        $nbTeams = count($userTeams);
         $nbAllowed = is_null($nbAllowedTeams) || ($nbTeams < $nbAllowedTeams);
 
         if ($team->getSelfRegistration() && !$full && $nbAllowed) {
-            $this->teamManager->registerUsersToTeam($team, array($user));
+            $this->teamManager->registerUserToTeam($team, $user);
         }
 
         return new Response('success', 200);
@@ -521,7 +533,7 @@ class TeamController extends Controller
         $this->checkToolAccess($workspace);
 
         if ($team->getSelfUnregistration()) {
-            $this->teamManager->unregisterUsersFromTeam($team, array($user));
+            $this->teamManager->unregisterUserFromTeam($team, $user);
         }
 
         return new Response('success', 200);
@@ -641,7 +653,18 @@ class TeamController extends Controller
                 $page,
                 $max
             );
+        $params = $this->teamManager->getParametersByWorkspace($workspace);
+        $usersArray = array();
+        $nbTeams = array();
 
+        foreach ($users as $u) {
+            $usersArray[] = $u;
+        }
+        $usersNbTeams = $this->teamManager->getNbTeamsByUsers($workspace, $usersArray);
+
+        foreach ($usersNbTeams as $userNbTeams) {
+            $nbTeams[$userNbTeams['user_id']] = $userNbTeams['nb_teams'];
+        }
         $registered = array();
 
         foreach ($team->getUsers() as $user) {
@@ -656,7 +679,9 @@ class TeamController extends Controller
             'max' => $max,
             'orderedBy' => $orderedBy,
             'order' => $order,
-            'registered' => $registered
+            'registered' => $registered,
+            'nbTeams' => $nbTeams,
+            'params' => $params
         );
     }
 

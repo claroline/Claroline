@@ -483,13 +483,13 @@ class TeamManager
         );
     }
 
-    public function getNbTeamsByUserAndWorkspace(
+    public function getTeamsByUserAndWorkspace(
         User $user,
         Workspace $workspace,
         $executeQuery = true
     )
     {
-        return $this->teamRepo->findNbTeamsByUserAndWorkspace(
+        return $this->teamRepo->findTeamsByUserAndWorkspace(
             $user,
             $workspace,
             $executeQuery
@@ -582,6 +582,21 @@ class TeamManager
         return $executeQuery ?
             $this->pagerFactory->createPagerFromArray($users, $page, $max) :
             $this->pagerFactory->createPager($users, $page, $max);
+    }
+
+    public function getNbTeamsByUsers(
+        Workspace $workspace,
+        array $users,
+        $executeQuery = true
+    )
+    {
+        return count($users) > 0 ?
+            $this->teamRepo->findNbTeamsByUsers(
+                $workspace,
+                $users,
+                $executeQuery
+            ) :
+            array();
     }
 
 
