@@ -47,6 +47,8 @@ class qtiRepository {
         }
         if (!is_dir($this->userDir)) {
             mkdir($this->userDir);
+        } else {
+            $this->removeDirectory();
         }
     }
 

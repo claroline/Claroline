@@ -118,15 +118,18 @@ class holeImport extends qtiImport
      */
     protected function getHtmlWithoutValue()
     {
-        $regex = '(<input.*class="blank".*\/>)';
-        preg_match_all($regex, $this->textHtml, $matches);
+        $htmlWithoutValue = $this->textHtml;
+        $regex = '(<input.*?class="blank".*?>)';
+        preg_match_all($regex, $htmlWithoutValue, $matches);
         foreach ($matches[0] as $matche) {
             if (substr($matche, 1, 5) == 'input') {
                 $tabMatche = explode('"', $matche);
                 $value = $tabMatche[13];
+                $inputWithoutValue = str_replace('value="'.$value.'"', 'value=""', $matche);
+                $htmlWithoutValue = str_replace($matche, $inputWithoutValue, $htmlWithoutValue);
             }
         }
-        $this->interactionHole->sethtmlWithoutValue('htmlWithoutValue');
+        $this->interactionHole->sethtmlWithoutValue($htmlWithoutValue);
     }
 
     /**
