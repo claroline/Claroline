@@ -84,6 +84,7 @@ class holeExport extends qtiExport
         $mapping->setAttribute("defaultValue", "0");
 
         foreach ($hole->getWordResponses() as $resp) {
+            $i = 0;
             if ($correctWordResponse == '') {
                 $correctWordResponse = $resp;
             } else {
@@ -93,12 +94,22 @@ class holeExport extends qtiExport
             }
 
             $mapEntry =  $this->document->createElement("mapEntry");
-            $mapEntry->setAttribute("mapKey", $resp->getResponse());
+            if (!$hole->getSelector()) {
+                $mapEntry->setAttribute("mapKey", $resp->getResponse());
+            } else {
+                $mapEntry->setAttribute("mapKey", 'choice_'.$resp->getId());
+            }
             $mapEntry->setAttribute("mappedValue",$resp->getScore());
             $mapping->appendChild($mapEntry);
+
+            $i++;
         }
         $Tagvalue = $this->document->CreateElement("value");
-        $responsevalue =  $this->document->CreateTextNode($correctWordResponse->getResponse());
+        if (!$hole->getSelector()) {
+            $responsevalue =  $this->document->CreateTextNode($correctWordResponse->getResponse());
+        } else {
+            $responsevalue =  $this->document->CreateTextNode('choice_'.$correctWordResponse->getId());
+        }
         $Tagvalue->appendChild($responsevalue);
         $correctResponse->appendChild($Tagvalue);
         $responseDeclaration->appendChild($correctResponse);
@@ -132,11 +143,11 @@ class holeExport extends qtiExport
         $textEntryInteraction = '';
         $newId = 1;
         $html = htmlspecialchars_decode($this->interactionhole->getHtmlWithoutValue());
-        $regexOpt = '(<option\\s+value="\d+">\w+</option>)';
-        $html = preg_replace($regexOpt, '', $html);
+        /*$regexOpt = '(<option\\s+value="\d+">\w+</option>)';
+        $html = preg_replace($regexOpt, '', $html);*/
 
         //$regex = '(<input\\s+id="\d+"\\s+class="blank"\\s+autocomplete="off"\\s+name="blank_\d+"\\s+size="\d+"\\s+type="text"\\s+value=""\\s+\/>|<select\\s+id="\d+"\\s+class="blank"\\s+name="blank_\d+"></select>)';
-        $regex = '(<input.*?class="blank".*?>|<select.*?class="blank".*?></select>)';
+        $regex = '(<input.*?class="blank".*?>|<select.*?class="blank".*?>.*?</select>)';
         preg_match_all($regex, $html, $matches);
         foreach ($matches[0] as $matche) {
             $tabMatche = explode('"', $matche);
@@ -153,12 +164,22 @@ class holeExport extends qtiExport
                 $textEntryInteraction = str_replace('autocomplete="off"', '', $textEntryInteraction);
                 $textEntryInteraction = str_replace('size="'.$size.'"', 'expectedLength="'.$size.'"', $textEntryInteraction);
             } else {
-                $name = $tabMatche[5];
-                $textEntryInteraction = str_replace('</select>', '', $matche);
-                $textEntryInteraction = str_replace('select', 'textEntryInteraction', $textEntryInteraction);
+                $name   = $tabMatche[5];
+                $textEntryInteraction = str_replace('</select>', '</inlineChoiceInteraction>', $matche);
+                $textEntryInteraction = str_replace('select', 'inlineChoiceInteraction', $textEntryInteraction);
                 $textEntryInteraction = str_replace('id="'.$id.'"', 'responseIdentifier="blank_'.$newId.'"', $textEntryInteraction);
                 $textEntryInteraction = str_replace('class="blank" ', 'expectedLength="15"', $textEntryInteraction);
-                $textEntryInteraction = str_replace('name="'.$name.'"', ' /', $textEntryInteraction);
+                $textEntryInteraction = str_replace('name="'.$name.'"', '', $textEntryInteraction);
+                $textEntryInteraction = str_replace('option', 'inlineChoice', $textEntryInteraction);
+
+                $regexOpt = '(<inlineChoice value=.*?>)';
+                preg_match_all($regexOpt, $textEntryInteraction, $matchesOpt);
+                foreach ($matchesOpt[0] as $matcheOpt) {
+                    $tabMatcheOpt = explode('"', $matcheOpt);
+                    $holeID       = $tabMatcheOpt[1];
+                    $opt = str_replace('value="'.$holeID.'"', 'identifier="choice_'.$holeID.'"', $matcheOpt);
+                    $textEntryInteraction = str_replace($matcheOpt, $opt, $textEntryInteraction);
+                }
             }
             $html = str_replace($matche, $textEntryInteraction, $html);
             $newId++;
