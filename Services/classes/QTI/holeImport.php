@@ -36,9 +36,10 @@ class holeImport extends qtiImport
         $this->createInteraction();
         $this->interaction->setType('InteractionHole');
         $this->doctrine->getManager()->persist($this->interaction);
-        $this->doctrine->getManager()->flush();
 
         $this->createInteractionHole();
+
+        $this->doctrine->getManager()->flush();
     }
 
     /**
@@ -57,7 +58,6 @@ class holeImport extends qtiImport
         $this->getHtmlWithoutValue();
 
         $this->doctrine->getManager()->persist($this->interactionHole);
-        $this->doctrine->getManager()->flush();
     }
 
     /**
@@ -75,12 +75,13 @@ class holeImport extends qtiImport
         foreach ($matches[0] as $matche) {
             $tabMatche = explode('"', $matche);
             $responseIdentifier = $tabMatche[1];
-            $expectedLength     = $tabMatche[3];
             $correctResponse    = $this->getCorrectResponse($responseIdentifier);
             if (substr($matche, 1, 20) == 'textEntryInteraction') {
+                $expectedLength = $tabMatche[3];
                 $text = str_replace('textEntryInteraction', 'input', $matche);
                 $text = str_replace('responseIdentifier="'.$responseIdentifier.'"', 'id="blank_'.$newId.'" class="blank" autocomplete="off" name="blank_'.$newId.'"', $text);
                 $text = str_replace('expectedLength="'.$expectedLength.'"', 'size="'.$expectedLength.'" type="text" value="'.$correctResponse.'"', $text);
+                $this->createHole($expectedLength, $responseIdentifier, false, $newId);
             } else {
                $text = str_replace('inlineChoiceInteraction', 'select', $matche);
                $text = str_replace('responseIdentifier="'.$responseIdentifier.'"', 'id="blank_'.$newId.'" class="blank" name="blank_'.$newId.'"', $text);
@@ -93,6 +94,7 @@ class holeImport extends qtiImport
                    $opt = preg_replace('(\s*identifier="'.$holeID.'")', '', $matcheOpt);
                    $text = str_replace($matcheOpt, $opt, $text);
                }
+               $this->createHole(15, $responseIdentifier, true, $newId);
             }
             $newId++;
             $this->textHtml = str_replace($matche, $text, $this->textHtml);
@@ -145,14 +147,27 @@ class holeImport extends qtiImport
     }
 
     /**
-     * Create holes
+     * Create hole
      *
      * @access protected
      *
+     * @param Intger $size hole's size for the input
+     * @param String $qtiId id of hole in the qti file
+     * @param boolean $selector text or list
+     * @param Integer $position position of hole in the text
+     *
      */
-    protected function createHoles()
+    protected function createHole($size, $qtiId, $selector, $position)
     {
+        $hole = new Hole();
+        $hole->setSize($size);
+        $hole->setSelector($selector);
+        $hole->setPosition($position);
+        $hole->setInteractionHole($this->interactionHole);
 
+        $this->doctrine->getManager()->persist($hole);
+
+        $this->createWordResponse($qtiId, $hole);
     }
 
     /**
@@ -160,10 +175,26 @@ class holeImport extends qtiImport
      *
      * @access protected
      *
+     * @param String $qtiId id of hole in the qti file
+     * @param UJM\ExoBundle\Entity\Hole $hole
+     *
      */
-    protected function createWordResponse()
+    protected function createWordResponse($qtiId, $hole)
     {
-
+        foreach($this->assessmentItem->getElementsByTagName("responseDeclaration") as $rp) {
+            if ($rp->getAttribute("identifier") == $qtiId) {
+                $mapping = $rp->getElementsByTagName("mapping")->item(0);
+                foreach ($mapping->getElementsByTagName("mapEntry") as $mapEntry) {
+                    $keyWord = new WordResponse();
+                    if ($hole->getSelector() === false) {
+                        $keyWord->setResponse($mapEntry->getAttribute('mapKey'));
+                        $keyWord->setScore($mapEntry->getAttribute('mappedValue'));
+                        $keyWord->setHole($hole);
+                        $this->doctrine->getManager()->persist($keyWord);
+                    }
+                }
+            }
+        }
     }
 
     /**
