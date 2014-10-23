@@ -1,4 +1,5 @@
 table.table_portfolios {
+    margin-top: 20px;
     .statusCol {
         width: 250px;
     }
@@ -40,6 +41,31 @@ table.table_portfolios {
         }
         &.visible_for_everybody {
             background-color: #5cb85c;
+        }
+    }
+}
+
+div.pagination {
+    ul {
+        margin: 0;
+    }
+}
+
+.guided_portfolios_panel{
+    .panel-body {
+        padding-top: 0;
+        padding-bottom: 0;
+    }
+
+    table.table_portfolios {
+        margin-top: 0;
+        tbody {
+            td {
+                border-top: 0;
+            }
+            tr + tr td {
+                border-top: 1px solid #ddd;
+            }
         }
     }
 }

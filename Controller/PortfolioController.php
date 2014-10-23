@@ -20,20 +20,24 @@ use Symfony\Component\HttpFoundation\Response;
 class PortfolioController extends Controller
 {
     /**
-     * @Route("/{page}", name="icap_portfolio_list", requirements={"page" = "\d+"}, defaults={"page" = 1})
+     * @Route("/{page}/{guidedPage}", name="icap_portfolio_list", requirements={"page" = "\d+", "guidedPage" = "\d+"}, defaults={"page" = 1, "guidedPage" = 1})
      *
      * @ParamConverter("loggedUser", options={"authenticatedUser" = true})
      * @Template()
      */
-    public function listAction(User $loggedUser, $page)
+    public function listAction(User $loggedUser, $page, $guidedPage)
     {
         $this->checkPortfolioToolAccess();
 
         $query = $this->getDoctrine()->getRepository('IcapPortfolioBundle:Portfolio')->findByUserWithWidgets($loggedUser, false);
-        $pager = $this->get('claroline.pager.pager_factory')->createPager($query, $page, 10);
+        $portfoliosPager = $this->get('claroline.pager.pager_factory')->createPager($query, $page, 2);
+
+        $query = $this->getDoctrine()->getRepository('IcapPortfolioBundle:Portfolio')->findGuidedPortfolios($loggedUser, false);
+        $guidedPortfoliosPager = $this->get('claroline.pager.pager_factory')->createPager($query, $guidedPage, 2);
 
         return array(
-            'pager' => $pager
+            'portfoliosPager'       => $portfoliosPager,
+            'guidedPortfoliosPager' => $guidedPortfoliosPager
         );
     }
 
