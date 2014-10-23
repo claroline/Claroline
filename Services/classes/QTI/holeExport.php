@@ -136,7 +136,7 @@ class holeExport extends qtiExport
         $html = preg_replace($regexOpt, '', $html);
 
         //$regex = '(<input\\s+id="\d+"\\s+class="blank"\\s+autocomplete="off"\\s+name="blank_\d+"\\s+size="\d+"\\s+type="text"\\s+value=""\\s+\/>|<select\\s+id="\d+"\\s+class="blank"\\s+name="blank_\d+"></select>)';
-        $regex = '(<input.*class="blank".*>|<select.*class="blank".*></select>)';
+        $regex = '(<input.*?class="blank".*?>|<select.*?class="blank".*?></select>)';
         preg_match_all($regex, $html, $matches);
         foreach ($matches[0] as $matche) {
             $tabMatche = explode('"', $matche);

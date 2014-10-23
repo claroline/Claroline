@@ -69,11 +69,11 @@ class holeImport extends qtiImport
     protected function getHtml()
     {
         $this->textHtml = $this->qtiTextWithHoles;
-        $newId = 1;echo $this->textHtml;
-        $regex = "^<textEntryInteraction[.*]>$";
-        preg_match_all($regex, $this->qtiTextWithHoles, $matches);var_dump($matches);
+        $newId = 1;
+        $regex = '(<textEntryInteraction.*?>)';
+        preg_match_all($regex, $this->qtiTextWithHoles, $matches);
         foreach ($matches[0] as $matche) {
-            $tabMatche = explode('"', $matche);echo 'matche: '.$matche;
+            $tabMatche = explode('"', $matche);
             $responseIdentifier = $tabMatche[1];
             $expectedLength     = $tabMatche[3];
             $correctResponse    = $this->getCorrectResponse($responseIdentifier);
@@ -84,7 +84,7 @@ class holeImport extends qtiImport
             }
             $newId++;
             $this->textHtml = str_replace($matche, $text, $this->textHtml);
-        }die();
+        }
         $this->interactionHole->setHtml($this->textHtml);
     }
 
