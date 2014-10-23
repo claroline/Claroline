@@ -1100,3 +1100,4 @@ general_parameters_portfolio_url_help: 'commence par http://'
 add_role_to_users: Ajouter un rôle a %count% utilisateur(s)
 add_role_to_groups: Ajouter un rôle a %count% groupe(s)
 activate_notifications: Activer les notifications
+model: Modèle

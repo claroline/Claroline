@@ -119,13 +119,14 @@ class UserManager
      * @param \Claroline\CoreBundle\Entity\User $user
      * @param boolean                           $sendMail         do we need to mail the new user ?
      * @param array                             $additionnalRoles a list of additionalRoles
+     * @param Model                             $model            a model to create workspace
      *
      * @return \Claroline\CoreBundle\Entity\User
      */
-    public function createUser(User $user, $sendMail = true, $additionnalRoles = array())
+    public function createUser(User $user, $sendMail = true, $additionnalRoles = array(), $model = null)
     {
         $this->objectManager->startFlushSuite();
-        $this->setPersonalWorkspace($user);
+        $this->setPersonalWorkspace($user, $model);
         $user->setPublicUrl($this->generatePublicUrl($user));
         $this->toolManager->addRequiredToolsToUser($user);
         $this->roleManager->setRoleToRoleSubject($user, PlatformRoles::USER);
@@ -327,6 +328,20 @@ class UserManager
                 $authentication = null;
             }
 
+            if (isset($user[8])) {
+                $modelName = trim($user[8]) === '' ? null: $user[8];
+            } else {
+                $modelName = null;
+            }
+
+            if ($modelName) {
+                $model = $this->objectManager
+                    ->getRepository('Claroline\CoreBundle\Entity\Model\WorkspaceModel')
+                    ->findOneByName($modelName);
+            } else {
+                $model = null;
+            }
+
             $newUser = new User();
             $newUser->setFirstName($firstName);
             $newUser->setLastName($lastName);
@@ -337,7 +352,7 @@ class UserManager
             $newUser->setPhone($phone);
             $newUser->setLocale($lg);
             $newUser->setAuthentication($authentication);
-            $this->createUser($newUser, $sendMail, $additionnalRoles);
+            $this->createUser($newUser, $sendMail, $additionnalRoles, $model);
             if ($logger) $logger(" [UOW size: " . $this->objectManager->getUnitOfWork()->size() . "]");
             if ($logger) $logger(" User $j ($username) being created");
             $i++;
@@ -349,12 +364,15 @@ class UserManager
                 $this->objectManager->endFlushSuite();
                 if ($logger) $logger(" flushing users...");
                 $tmpRoles = $additionnalRoles;
+                if ($model) $tmpModel = $model;
                 $this->objectManager->clear();
                 $additionnalRoles = [];
 
                 foreach ($tmpRoles as $toAdd) {
                     if ($toAdd) $additionnalRoles[] = $this->objectManager->merge($toAdd);
                 }
+
+                if ($tmpModel) $model = $this->objectManager->merge($tmpModel);
 
                 if ($this->container->get('security.context')->getToken()) {
                     $this->objectManager->merge($this->container->get('security.context')->getToken()->getUser());
@@ -371,16 +389,33 @@ class UserManager
      * Creates the personal workspace of a user.
      *
      * @param \Claroline\CoreBundle\Entity\User $user
+     * @param Model                             $model
      */
-    public function setPersonalWorkspace(User $user)
+    public function setPersonalWorkspace(User $user, $model = null)
     {
-        $config = Configuration::fromTemplate($this->personalWsTemplateFile);
         $locale = $this->platformConfigHandler->getParameter('locale_language');
         $this->translator->setLocale($locale);
         $personalWorkspaceName = $this->translator->trans('personal_workspace', array(), 'platform') . $user->getUsername();
-        $config->setWorkspaceName($personalWorkspaceName);
-        $config->setWorkspaceCode($user->getUsername());
-        $workspace = $this->transfertManager->createWorkspace($config, $user, true);
+
+        if (!$model) {
+            $config = Configuration::fromTemplate($this->personalWsTemplateFile);
+            $config->setWorkspaceName($personalWorkspaceName);
+            $config->setWorkspaceCode($user->getUsername());
+            $workspace = $this->transfertManager->createWorkspace($config, $user, true);
+        } else {
+            $workspace = $this->workspaceManager->createWorkspaceFromModel(
+                $model,
+                $user,
+                $personalWorkspaceName,
+                $user->getUsername(),
+                '',
+                false,
+                false,
+                false,
+                $errors
+            );
+        }
+
         $user->setPersonalWorkspace($workspace);
         $this->objectManager->persist($user);
         $this->objectManager->flush();

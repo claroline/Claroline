@@ -454,11 +454,13 @@ class WorkspaceModelManager
                     $newRight->setRole($role);
                 }
             }
+
+            //we may not find any right from the identity map
+            //if ($newRight) {
             $newRight->setMask($right->getMask());
-            $newRight->setCreatableResourceTypes(
-                $right->getCreatableResourceTypes()->toArray()
-            );
+            $newRight->setCreatableResourceTypes($right->getCreatableResourceTypes()->toArray());
             $this->om->persist($newRight);
+            //}
         }
         $this->om->flush();
 
@@ -716,7 +718,6 @@ class WorkspaceModelManager
         $resourcesErrors = array();
 
         foreach ($children as $child) {
-
            try {
                 $copy = $this->resourceManager->copy(
                     $child,

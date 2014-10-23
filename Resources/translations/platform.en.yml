@@ -1048,3 +1048,4 @@ general_parameters_portfolio_url_help: 'start with http://'
 add_role_to_users: Add a role to %count% user(s)
 add_role_to_groups: Add a role to %count% group(s)
 activate_notifications: Activate notifications
+model: Model

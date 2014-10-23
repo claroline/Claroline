@@ -1272,38 +1272,21 @@ class WorkspaceController extends Controller
 
     private function createWorkspaceFromModel(WorkspaceModel $model, FormInterface $form)
     {
-        $user = $this->security->getToken()->getUser();
-        $modelWorkspace = $model->getWorkspace();
-        $resourcesModels = $model->getResourcesModel();
-        $homeTabs = $model->getHomeTabs();
-
-        $workspace = new Workspace();
-        $workspace->setName($form->get('name')->getData());
-        $workspace->setCode($form->get('code')->getData());
-        $workspace->setDescription($form->get('description')->getData());
-        $workspace->setDisplayable($form->get('displayable')->getData());
-        $workspace->setSelfRegistration($form->get('selfRegistration')->getData());
-        $workspace->setSelfUnregistration($form->get('selfUnregistration')->getData());
-
-        $guid = $this->container->get('claroline.utilities.misc')->generateGuid();
-        $workspace->setGuid($guid);
-        $date = new \Datetime(date('d-m-Y H:i'));
-        $workspace->setCreationDate($date->getTimestamp());
-        $workspace->setCreator($user);
-
-        $this->workspaceManager->createWorkspace($workspace);
-        $this->workspaceModelManager
-            ->duplicateWorkspaceRoles($modelWorkspace, $workspace, $user);
-        $this->workspaceModelManager
-            ->duplicateOrderedTools($modelWorkspace, $workspace);
-        $rootDirectory = $this->workspaceModelManager
-            ->duplicateRootDirectory($modelWorkspace, $workspace, $user);
-        $widgetConfigErrors = $this->workspaceModelManager
-            ->duplicateHomeTabs($modelWorkspace, $workspace, $homeTabs->toArray());
+        $workspace = $this->workspaceManager->createWorkspaceFromModel(
+            $model,
+            $this->security->getToken()->getUser(),
+            $form->get('name')->getData(),
+            $form->get('code')->getData(),
+            $form->get('description')->getData(),
+            $form->get('displayable')->getData(),
+            $form->get('selfRegistration')->getData(),
+            $form->get('selfUnregistration')->getData(),
+            $errors
+        );
 
         $flashBag = $this->session->getFlashBag();
 
-        foreach ($widgetConfigErrors as $widgetConfigError) {
+        foreach ($errors['widgetConfigErrors'] as $widgetConfigError) {
             $widgetName = $widgetConfigError['widgetName'];
             $widgetInstanceName = $widgetConfigError['widgetInstanceName'];
             $msg = '[' .
@@ -1317,14 +1300,7 @@ class WorkspaceController extends Controller
             $flashBag->add('error', $msg);
         }
 
-        $resourcesErrors = $this->workspaceModelManager->duplicateResources(
-            $resourcesModels->toArray(),
-            $rootDirectory,
-            $workspace,
-            $user
-        );
-
-        foreach ($resourcesErrors as $resourceError) {
+        foreach ($errors['resourceErrors'] as $resourceError) {
             $resourceName = $resourceError['resourceName'];
             $resourceType = $resourceError['resourceType'];
             $isCopy = $resourceError['type'] === 'copy';
