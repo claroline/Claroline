@@ -154,15 +154,7 @@ class WidgetsManager
             $this->entityManager->persist($widget);
             $this->entityManager->flush();
 
-            $widgetDatas = array(
-                'type'   => $widget->getWidgetType(),
-                'column' => $widget->getColumn(),
-                'row'    => $widget->getRow(),
-                'views'  => array(
-                    'view' => $this->getView($widget, $type)
-                )
-            );
-            $data = $widgetDatas + $widget->getData();
+            $data = $this->getWidgetData($widget);
 
             return $data;
         }
@@ -191,6 +183,21 @@ class WidgetsManager
     {
         $this->entityManager->remove($widget);
         $this->entityManager->flush();
+    }
+
+    /**
+     * @param AbstractWidget $widget
+     * @param bool           $withView
+     *
+     * @return array
+     */
+    public function getWidgetData(AbstractWidget $widget, $withView = true)
+    {
+        $widgetViews = array(
+            'views'  => $withView ? array('view' => $this->getView($widget, $widget->getWidgetType())) : array()
+        );
+
+        return  $widget->getCommonData() + $widgetViews + $widget->getData();
     }
 }
  

@@ -1,8 +1,8 @@
-<div {% if constant('Icap\\PortfolioBundle\\Manager\\PortfolioManager::PORTFOLIO_OPENING_MODE_VIEW') != openingMode %}data-widget {% endif %}class="panel panel-default widget-panel">
-    <div class="panel-heading">
+<div {% if constant('Icap\\PortfolioBundle\\Manager\\PortfolioManager::PORTFOLIO_OPENING_MODE_VIEW') != openingMode %}data-widget {% endif %}class="panel panel-default widget-panel ng-cloak">
+    <div class="panel-heading" data-ng-show="!widget.editing">
         {% if constant('Icap\\PortfolioBundle\\Manager\\PortfolioManager::PORTFOLIO_OPENING_MODE_VIEW') != openingMode %}
-            {% verbatim %}{{ widget.type + '_title'|trans }}{% endverbatim %}
-            <div class="widget-actions" data-ng-if="!widget.isEditing() && !widget.isNew()">
+            {% verbatim %}{{ widget.label }}{% endverbatim %}
+            <div class="widget-actions pull-right" data-ng-if="!widget.isEditing() && !widget.isNew()">
                 {% if editMode %}
                 <button class="widget-action btn btn-xs btn-danger" data-ng-class="{'btn-loading': widget.isDeleting}" data-confirm-click="delete(widget);" data-ng-if="isDeletable(widget)">
                     <span class="loading" data-ng-if="widget.isDeleting"></span>
@@ -26,8 +26,7 @@
                 {% endif %}
             </div>
         {% else %}
-            {% set widgetTitleKey = widget.widgetType ~ '_title' %}
-            {{ widgetTitleKey|trans({}, 'icap_portfolio') }}
+            {{ widget.label }}
         {% endif %}
     </div>
     <div class="panel-body" data-ng-show="!widget.editing && !widget.views.form">
@@ -38,9 +37,11 @@
         {% endif %}
     </div>
     {% if constant('Icap\\PortfolioBundle\\Manager\\PortfolioManager::PORTFOLIO_OPENING_MODE_EDIT') == openingMode %}
+    <div class="panel-heading" data-ng-show="widget.editing && widget.views.form">
+        <input type="text" class="input-sm form-control" name="widget_label" data-ng-model="widget.label">
+    </div>
     <div class="panel-body col-md-12 loading" data-ng-show="widget.editing && !widget.views.form"></div>
-    <form name="form" class="edit-container" data-loading-form="save(widget)"
-          data-ng-show="widget.editing && widget.views.form">
+    <form name="form" class="edit-container" data-loading-form="save(widget)" data-ng-show="widget.editing && widget.views.form">
         <div class="panel-body" data-bind-html="widget.views.form"></div>
         <div class="panel-footer">
             <button type="submit" class="btn btn-primary">{{ 'save'|trans({}, 'platform') }}</button>

@@ -6,6 +6,7 @@ use Icap\PortfolioBundle\Entity\Portfolio;
 use Icap\PortfolioBundle\Manager\WidgetTypeManager;
 use Icap\PortfolioBundle\Repository\Widget\AbstractWidgetRepository;
 use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Bundle\FrameworkBundle\Translation\Translator;
 
 /**
  * @DI\Service("icap_portfolio.factory.widget")
@@ -18,18 +19,23 @@ class WidgetFactory
     /** @var WidgetTypeManager  */
     protected $widgetTypeManager;
 
+    /** @var Translator  */
+    protected $translator;
+
     /**
      * Constructor.
      *
      * @DI\InjectParams({
      *     "abstractWidgetRepository" = @DI\Inject("icap_portfolio.repository.widget"),
-     *     "widgetTypeManager"        = @DI\Inject("icap_portfolio.manager.widget_type")
+     *     "widgetTypeManager"        = @DI\Inject("icap_portfolio.manager.widget_type"),
+     *     "translator"               = @DI\Inject("translator")
      * })
      */
-    public function __construct(AbstractWidgetRepository $abstractWidgetRepository, WidgetTypeManager $widgetTypeManager)
+    public function __construct(AbstractWidgetRepository $abstractWidgetRepository, WidgetTypeManager $widgetTypeManager, Translator $translator)
     {
         $this->abstractWidgetRepository = $abstractWidgetRepository;
         $this->widgetTypeManager        = $widgetTypeManager;
+        $this->translator               = $translator;
     }
 
     /**
@@ -44,7 +50,9 @@ class WidgetFactory
             $widgetNamespace = sprintf('Icap\PortfolioBundle\Entity\Widget\%sWidget', ucfirst($widgetType));
             /** @var \Icap\PortfolioBundle\Entity\Widget\AbstractWidget $widget */
             $widget = new $widgetNamespace();
-            $widget->setPortfolio($portfolio);
+            $widget
+                ->setPortfolio($portfolio)
+                ->setLabel($this->translator->trans($widgetType . '_title', array(), 'icap_portfolio'));
 
             $maxRow = $this->abstractWidgetRepository->findMaxRow($widget->getPortfolio(), $widget->getColumn());
             $widget->setRow($maxRow['maxRow'] + 1);

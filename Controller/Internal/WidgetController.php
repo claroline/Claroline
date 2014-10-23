@@ -36,13 +36,7 @@ class WidgetController extends BaseController
         else {
             /** @var \Icap\PortfolioBundle\Entity\Widget\AbstractWidget $widget */
             $widget = $this->getWidgetsManager()->getNewWidget($portfolio, $type);
-            $widgetDatas = array(
-                'type'   => $widget->getWidgetType(),
-                'column' => $widget->getColumn(),
-                'row'    => $widget->getRow(),
-                'views'  => array()
-            );
-            $data = $widgetDatas + $widget->getEmpty();
+            $data   = $this->getWidgetsManager()->getWidgetData($widget, false);
         }
 
         $response = new JsonResponse();
