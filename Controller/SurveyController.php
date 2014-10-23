@@ -1454,6 +1454,8 @@ class SurveyController extends Controller
             $question
         );
 
+        //$surveyAnswer = $this->surveyManager->getSurveyAnswerBySurveyAndUser($survey, )
+
         return array(
             'survey' => $survey,
             'questions' => $questions,

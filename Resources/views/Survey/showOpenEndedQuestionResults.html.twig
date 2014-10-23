@@ -27,7 +27,16 @@
         <ul class="list-group">
             {% for answer in answers %}
                 <li class="list-group-item">
-                    {{ answer.getContent()|raw }}
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h1 class="panel-title">
+                                {{ answer.getQuestionAnswer().getSurveyAnswer().getUser().getUsername() }}
+                            </h1>
+                        </div>
+                        <div class="panel-body">
+                        {{ answer.getContent()|raw }}
+                        </div>
+                    </div>
                 </li>
             {% endfor %}
         </ul>
