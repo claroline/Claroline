@@ -165,7 +165,7 @@ class holeExport extends qtiExport
                 $textEntryInteraction = str_replace('</select>', '</inlineChoiceInteraction>', $matche);
                 $textEntryInteraction = str_replace('select', 'inlineChoiceInteraction', $textEntryInteraction);
                 $textEntryInteraction = str_replace('id="'.$id.'"', 'responseIdentifier="blank_'.$newId.'"', $textEntryInteraction);
-                $textEntryInteraction = str_replace('class="blank" ', 'expectedLength="15"', $textEntryInteraction);
+                $textEntryInteraction = str_replace('class="blank" ', '', $textEntryInteraction);
                 $textEntryInteraction = str_replace('name="'.$name.'"', '', $textEntryInteraction);
                 $textEntryInteraction = str_replace('option', 'inlineChoice', $textEntryInteraction);
                 //for the option elements
