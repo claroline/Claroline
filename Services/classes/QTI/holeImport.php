@@ -79,12 +79,12 @@ class holeImport extends qtiImport
             if (substr($matche, 1, 20) == 'textEntryInteraction') {
                 $expectedLength = $tabMatche[3];
                 $text = str_replace('textEntryInteraction', 'input', $matche);
-                $text = str_replace('responseIdentifier="'.$responseIdentifier.'"', 'id="blank_'.$newId.'" class="blank" autocomplete="off" name="blank_'.$newId.'"', $text);
+                $text = str_replace('responseIdentifier="'.$responseIdentifier.'"', 'id="'.$newId.'" class="blank" autocomplete="off" name="blank_'.$newId.'"', $text);
                 $text = str_replace('expectedLength="'.$expectedLength.'"', 'size="'.$expectedLength.'" type="text" value="'.$correctResponse.'"', $text);
                 $this->createHole($expectedLength, $responseIdentifier, false, $newId);
             } else {
                $text = str_replace('inlineChoiceInteraction', 'select', $matche);
-               $text = str_replace('responseIdentifier="'.$responseIdentifier.'"', 'id="blank_'.$newId.'" class="blank" name="blank_'.$newId.'"', $text);
+               $text = str_replace('responseIdentifier="'.$responseIdentifier.'"', 'id="'.$newId.'" class="blank" name="blank_'.$newId.'"', $text);
                $text = str_replace('inlineChoice', 'option', $text);
                $regexOpt = '(<option identifier=.*?>)';
                preg_match_all($regexOpt, $text, $matchesOpt);
@@ -210,7 +210,7 @@ class holeImport extends qtiImport
         $text = str_replace('<itemBody>', '', $text);
         $text = str_replace('</itemBody>', '', $text);
         $text = trim($text);
-        $this->qtiTextWithHoles = $text;
+        $this->qtiTextWithHoles = html_entity_decode($text);
     }
 
     /**
