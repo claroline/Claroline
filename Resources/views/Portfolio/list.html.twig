@@ -20,7 +20,58 @@
     <p class="alert alert-warning" role="alert">
         {{ 'beta_message' | trans({}, 'icap_portfolio') | raw }}
     </p>
-    {% if 0 < pager.nbResults %}
+
+    {% if 0 < guidedPortfoliosPager.nbResults %}
+    <div class="panel-group" id="accordion2">
+        <div class="panel panel-info guided_portfolios_panel">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion2" href="#guidedPortfolios2">
+                        Portfolios dont je suis accompagnateur <span class="badge">{{ guidedPortfoliosPager.nbResults }}</span>
+                    </a>
+                </h4>
+            </div>
+            <div id="guidedPortfolios2" class="panel-collapse collapse">
+                <div class="panel-body">
+                    <table class="table table-hover table_portfolios">
+                        <colgroup>
+                            <col class="nameCol">
+                            <col class="actionsCol">
+                        </colgroup>
+                        <tbody>
+                            {% for portfolio in guidedPortfoliosPager %}
+                                <tr class="portfolio">
+                                    <td>
+                                        <a href="{{ path('icap_portfolio_view', {'portfolioSlug': portfolio.widgets.0.slug}) }}" title="{{ portfolio.widgets.0.title }}">{{ portfolio.widgets.0.title }}</a><small> de {{ portfolio.user.lastName }} {{ portfolio.user.firstName }}</small>
+                                    </td>
+                                    <td>
+                                        <a href="#" class="btn btn-md btn-primary" title="">{{ 'see'|trans({}, 'icap_portfolio') }} <span class="fa fa-arrow-right"></span></a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+
+                {% if guidedPortfoliosPager.haveToPaginate %}
+                    {{
+                        pagerfanta(
+                            guidedPortfoliosPager,
+                            'twitter_bootstrap_translated',
+                            {
+                                'proximity' : 1,
+                                'routeName': 'icap_portfolio_list',
+                                'pageParameter': '[guidedPage]'
+                            }
+                        )
+                    }}
+                {%  endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if 0 < portfoliosPager.nbResults %}
         <table class="table table-hover table_portfolios">
             <colgroup>
                 <col class="nameCol">
@@ -35,7 +86,7 @@
                 </tr>
             </thead>
             <tbody>
-                {% for portfolio in pager %}
+                {% for portfolio in portfoliosPager %}
                     <tr class="portfolio">
                         <td>
                             <a href="{{ path('icap_portfolio_view', {'portfolioSlug': portfolio.widgets.0.slug}) }}" title="" class="block">{{ portfolio.widgets.0.title }}</a>
@@ -98,10 +149,10 @@
         </p>
     {% endif %}
 
-    {% if pager.haveToPaginate %}
+    {% if portfoliosPager.haveToPaginate %}
         {{
             pagerfanta(
-                pager,
+                portfoliosPager,
                 'twitter_bootstrap_translated',
                 {
                     'proximity' : 1,

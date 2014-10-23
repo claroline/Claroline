@@ -15,12 +15,12 @@ class PortfolioRepository extends EntityRepository
      */
     public function findByUser(User $user, $executeQuery = true)
     {
-        $query = $this->createQueryBuilder('p')
+        $queryBuilder = $this->createQueryBuilder('p')
             ->andWhere('p.user = :userId')
             ->setParameter('userId', $user->getId())
         ;
 
-        return $executeQuery ? $query->getQuery()->getResult(): $query->getQuery();
+        return $executeQuery ? $queryBuilder->getQuery()->getResult(): $queryBuilder->getQuery();
     }
 
     /**
@@ -31,7 +31,7 @@ class PortfolioRepository extends EntityRepository
      */
     public function findByUserWithWidgets(User $user, $executeQuery = true)
     {
-        $query = $this->createQueryBuilder('p')
+        $queryBuilder = $this->createQueryBuilder('p')
             ->select('p', 'widgets')
             ->join('p.widgets','widgets')
             ->andWhere('p.user = :userId')
@@ -39,6 +39,26 @@ class PortfolioRepository extends EntityRepository
             ->setParameter('userId', $user->getId())
         ;
 
-        return $executeQuery ? $query->getQuery()->getResult(): $query->getQuery();
+        return $executeQuery ? $queryBuilder->getQuery()->getResult(): $queryBuilder->getQuery();
+    }
+
+    /**
+     * @param User $user
+     * @param bool $executeQuery
+     *
+     * @return array|\Doctrine\ORM\Query
+     */
+    public function findGuidedPortfolios(User $user, $executeQuery = true)
+    {
+        $queryBuilder = $this->createQueryBuilder('p')
+            ->select('p', 'widgets')
+            ->join('p.widgets','widgets')
+            ->join('p.portfolioGuides', 'guides')
+            ->andWhere('guides.user = :guide')
+            ->andWhere('widgets INSTANCE OF IcapPortfolioBundle:Widget\TitleWidget')
+            ->setParameter('guide', $user)
+        ;
+
+        return $executeQuery ? $queryBuilder->getQuery()->getResult(): $queryBuilder->getQuery();
     }
 }
