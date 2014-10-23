@@ -143,6 +143,7 @@ class holeExport extends qtiExport
         $textEntryInteraction = '';
         $newId = 1;
         $html = htmlspecialchars_decode($this->interactionhole->getHtmlWithoutValue());
+        $html = html_entity_decode($html);
         $regex = '(<input.*?class="blank".*?>|<select.*?class="blank".*?>.*?</select>)';
         preg_match_all($regex, $html, $matches);
         foreach ($matches[0] as $matche) {
@@ -177,6 +178,7 @@ class holeExport extends qtiExport
                     $textEntryInteraction = str_replace($matcheOpt, $opt, $textEntryInteraction);
                 }
             }
+            $textEntryInteraction = str_replace('&nbsp;', ' ',$textEntryInteraction);
             $html = str_replace($matche, $textEntryInteraction, $html);
             $newId++;
         }
