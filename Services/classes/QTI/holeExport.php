@@ -143,16 +143,12 @@ class holeExport extends qtiExport
         $textEntryInteraction = '';
         $newId = 1;
         $html = htmlspecialchars_decode($this->interactionhole->getHtmlWithoutValue());
-        /*$regexOpt = '(<option\\s+value="\d+">\w+</option>)';
-        $html = preg_replace($regexOpt, '', $html);*/
-
-        //$regex = '(<input\\s+id="\d+"\\s+class="blank"\\s+autocomplete="off"\\s+name="blank_\d+"\\s+size="\d+"\\s+type="text"\\s+value=""\\s+\/>|<select\\s+id="\d+"\\s+class="blank"\\s+name="blank_\d+"></select>)';
         $regex = '(<input.*?class="blank".*?>|<select.*?class="blank".*?>.*?</select>)';
         preg_match_all($regex, $html, $matches);
         foreach ($matches[0] as $matche) {
             $tabMatche = explode('"', $matche);
             $id = $tabMatche[1];
-            if (substr($matche, 1, 5) == 'input') {
+            if (substr($matche, 1, 5) == 'input') { //hole with input element
                 $name = $tabMatche[7];
                 $size = $tabMatche[9];
                 $textEntryInteraction = str_replace('input', 'textEntryInteraction', $matche);
@@ -163,7 +159,7 @@ class holeExport extends qtiExport
                 $textEntryInteraction = str_replace('name="'.$name.'"', '', $textEntryInteraction);
                 $textEntryInteraction = str_replace('autocomplete="off"', '', $textEntryInteraction);
                 $textEntryInteraction = str_replace('size="'.$size.'"', 'expectedLength="'.$size.'"', $textEntryInteraction);
-            } else {
+            } else { //hole with select element
                 $name   = $tabMatche[5];
                 $textEntryInteraction = str_replace('</select>', '</inlineChoiceInteraction>', $matche);
                 $textEntryInteraction = str_replace('select', 'inlineChoiceInteraction', $textEntryInteraction);
@@ -171,7 +167,7 @@ class holeExport extends qtiExport
                 $textEntryInteraction = str_replace('class="blank" ', 'expectedLength="15"', $textEntryInteraction);
                 $textEntryInteraction = str_replace('name="'.$name.'"', '', $textEntryInteraction);
                 $textEntryInteraction = str_replace('option', 'inlineChoice', $textEntryInteraction);
-
+                //for the option elements
                 $regexOpt = '(<inlineChoice value=.*?>)';
                 preg_match_all($regexOpt, $textEntryInteraction, $matchesOpt);
                 foreach ($matchesOpt[0] as $matcheOpt) {
