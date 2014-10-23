@@ -1,4 +1,4 @@
-<div {% if constant('Icap\\PortfolioBundle\\Manager\\PortfolioManager::PORTFOLIO_OPENING_MODE_VIEW') != openingMode %}data-widget {% endif %}class="panel panel-default widget-panel">
+<div {% if constant('Icap\\PortfolioBundle\\Manager\\PortfolioManager::PORTFOLIO_OPENING_MODE_VIEW') != openingMode %}data-widget {% endif %}class="panel panel-default widget-panel ng-cloak">
     <div class="panel-heading" data-ng-show="!widget.editing">
         {% if constant('Icap\\PortfolioBundle\\Manager\\PortfolioManager::PORTFOLIO_OPENING_MODE_VIEW') != openingMode %}
             {% verbatim %}{{ widget.label }}{% endverbatim %}
