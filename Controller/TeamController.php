@@ -687,6 +687,81 @@ class TeamController extends Controller
 
     /**
      * @EXT\Route(
+     *     "/team/{team}/registration/unregistered/users/list/page/{page}/max/{max}/ordered/by/{orderedBy}/order/{order}/search/{search}",
+     *     name="claro_team_registration_unregistered_users_list",
+     *     defaults={"page"=1, "search"="", "max"=50, "orderedBy"="firstName","order"="ASC"},
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     *
+     * @EXT\Template()
+     *
+     * Displays the list of users who are registered to the workspace.
+     *
+     * @param Team $team
+     * @param string  $search
+     * @param integer $page
+     * @param integer $max
+     * @param string  $orderedBy
+     * @param string  $order
+     */
+    public function registrationUnregisteredUserslistAction(
+        Team $team,
+        User $user,
+        $search = '',
+        $page = 1,
+        $max = 50,
+        $orderedBy = 'firstName',
+        $order = 'ASC'
+    )
+    {
+        $workspace = $team->getWorkspace();
+        $this->checkWorkspaceManager($workspace, $user);
+
+        $users = $search === '' ?
+            $this->teamManager->getUnregisteredUsersByTeam(
+                $team,
+                $orderedBy,
+                $order,
+                $page,
+                $max
+            ) :
+            $this->teamManager->getSearchedUnregisteredUsersByTeam(
+                $team,
+                $search,
+                $orderedBy,
+                $order,
+                $page,
+                $max
+            );
+        $params = $this->teamManager->getParametersByWorkspace($workspace);
+        $usersArray = array();
+        $nbTeams = array();
+
+        foreach ($users as $u) {
+            $usersArray[] = $u;
+        }
+        $usersNbTeams = $this->teamManager->getNbTeamsByUsers($workspace, $usersArray);
+
+        foreach ($usersNbTeams as $userNbTeams) {
+            $nbTeams[$userNbTeams['user_id']] = $userNbTeams['nb_teams'];
+        }
+
+        return array(
+            'workspace' => $workspace,
+            'team' => $team,
+            'users' => $users,
+            'search' => $search,
+            'max' => $max,
+            'orderedBy' => $orderedBy,
+            'order' => $order,
+            'params' => $params,
+            'nbTeams' => $nbTeams
+        );
+    }
+
+    /**
+     * @EXT\Route(
      *     "/team/{team}/users/list",
      *     name="claro_team_users_list",
      *     options={"expose"=true}

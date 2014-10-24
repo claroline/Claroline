@@ -113,7 +113,6 @@ class TeamRepository extends EntityRepository
                         SELECT r12
                         FROM Claroline\CoreBundle\Entity\Role r12
                         WHERE r12.workspace = :workspace
-                        AND r12 != :role
                     )
                     WHERE u1.isEnabled = true
                 )
@@ -125,16 +124,26 @@ class TeamRepository extends EntityRepository
                         SELECT r22
                         FROM Claroline\CoreBundle\Entity\Role r22
                         WHERE r22.workspace = :workspace
-                        AND r22 != :role
                     )
                     WHERE u2.isEnabled = true
+                )
+            )
+            AND u NOT IN (
+                SELECT DISTINCT u3
+                FROM Claroline\CoreBundle\Entity\User u3
+                WHERE EXISTS (
+                    SELECT t
+                    FROM Claroline\TeamBundle\Entity\Team t
+                    JOIN t.users u4
+                    WHERE t = :team
+                    AND u4 = u3
                 )
             )
             ORDER BY u.{$orderedBy} {$order}
         ";
         $query = $this->_em->createQuery($dql);
         $query->setParameter('workspace', $team->getWorkspace());
-        $query->setParameter('role', $team->getRole());
+        $query->setParameter('team', $team);
 
         return $executeQuery ? $query->getResult() : $query;
     }
@@ -159,7 +168,6 @@ class TeamRepository extends EntityRepository
                         SELECT r12
                         FROM Claroline\CoreBundle\Entity\Role r12
                         WHERE r12.workspace = :workspace
-                        AND r12 != :role
                     )
                     WHERE u1.isEnabled = true
                 )
@@ -171,9 +179,19 @@ class TeamRepository extends EntityRepository
                         SELECT r22
                         FROM Claroline\CoreBundle\Entity\Role r22
                         WHERE r22.workspace = :workspace
-                        AND r22 != :role
                     )
                     WHERE u2.isEnabled = true
+                )
+            )
+            AND u NOT IN (
+                SELECT DISTINCT u3
+                FROM Claroline\CoreBundle\Entity\User u3
+                WHERE EXISTS (
+                    SELECT t
+                    FROM Claroline\TeamBundle\Entity\Team t
+                    JOIN t.users u4
+                    WHERE t = :team
+                    AND u4 = u3
                 )
             )
             AND
@@ -186,7 +204,7 @@ class TeamRepository extends EntityRepository
         ";
         $query = $this->_em->createQuery($dql);
         $query->setParameter('workspace', $team->getWorkspace());
-        $query->setParameter('role', $team->getRole());
+        $query->setParameter('team', $team);
         $upperSearch = strtoupper($search);
         $query->setParameter('search', "%{$upperSearch}%");
 

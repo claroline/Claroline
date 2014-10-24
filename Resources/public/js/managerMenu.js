@@ -159,9 +159,7 @@
         });
     });
     
-    $('.edit-team-btn').on('click', function (event) {
-        event.preventDefault();
-        event.stopPropagation();
+    $('.edit-team-btn').on('click', function () {
         var teamId = $(this).data('team-id');
         
         window.Claroline.Modal.displayForm(

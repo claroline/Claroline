@@ -81,6 +81,16 @@
                             </a>
                         </th>
                         <th class="text-center">
+                            <a href="{{ sortUrl(workspace.getId(), 'selfRegistration', order) }}">
+                                {{ 'public_registration'|trans({}, 'team') }}
+                            </a>
+                        </th>
+                        <th class="text-center">
+                            <a href="{{ sortUrl(workspace.getId(), 'selfUnregistration', order) }}">
+                                {{ 'public_unregistration'|trans({}, 'team') }}
+                            </a>
+                        </th>
+                        <th class="text-center">
                             {{ 'actions'|trans({}, 'team') }}
                         </th>
                     </tr>
@@ -113,6 +123,20 @@
                                 {% endif %}
                             </td>
                             <td class="text-center">
+                                {% if team.getSelfRegistration() %}
+                                <i class="fa fa-check-circle" style="color: #5CB85C"></i>
+                                {% else %}
+                                <i class="fa fa-times-circle" style="color: #D9534F"></i>
+                                {% endif %}
+                            </td>
+                            <td class="text-center">
+                                {% if team.getSelfUnregistration() %}
+                                    <i class="fa fa-check-circle" style="color: #5CB85C"></i>
+                                {% else %}
+                                    <i class="fa fa-times-circle" style="color: #D9534F"></i>
+                                {% endif %}
+                            </td>
+                            <td class="text-center">
                                 <span class="btn btn-success register-users-btn"
                                       data-team-id="{{ team.getId() }}"
                                       data-team-name="{{ team.getName() }}"
@@ -122,15 +146,14 @@
                                 >
                                     <i class="fa fa-sign-in"></i>
                                 </span>
-                                <a class="btn btn-default edit-team-btn"
+                                <span class="btn btn-default edit-team-btn"
                                    data-team-id="{{ team.getId() }}"
-                                   href="{{ path('claro_team_edit_form', {'team': team.getId()}) }}"
                                    data-toggle="tooltip"
                                    data-placement="top"
                                    title="{{ 'edit_team'|trans({}, 'team') }}"
                                 >
                                     <i class="fa fa-edit"></i>
-                                </a>
+                                </span>
                                 <span class="btn btn-danger delete-team-btn"
                                       data-team-id="{{ team.getId() }}"
                                       data-toggle="tooltip"

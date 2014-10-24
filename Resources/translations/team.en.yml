@@ -10,8 +10,11 @@ maximum_informations: 'The number of users that can be registered into team'
 no_team: 'No team'
 private: Private
 public: Public
+public_registration: 'Public registration'
+public_unregistration: 'Public unregistration'
 register: Register
 register_unregister_users_to_team: 'Register/Unregister users to team'
+register_users_to_team: 'Register users to team'
 team: Team
 team_creation: 'Team creation'
 team_directory: 'Team''s directory'

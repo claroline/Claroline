@@ -1,17 +1,20 @@
 actions: Actions
 create_teams: 'Créer des équipes'
 default_parameters: 'Paramètres par défaut'
-delete_team: 'Suppression de l''équipe'
+delete_team: 'Supprimer l''équipe'
 delete_team_comfirm_message: 'Êtes-vous sûr de vouloir supprimer cette équipe ?'
-edit_team: 'Modification de l''équipe'
+edit_team: 'Modifier l''équipe'
 max_teams_limit_reached: 'Nombre maximum d''équipes atteint'
 maximum: Maximum
 maximum_informations: 'Le nombre d''utilisateurs qui peuvent être inscrits à l''équipe'
 no_team: 'Aucune équipe'
 private: Privé
 public: Public
+public_registration: 'Inscription publique'
+public_unregistration: 'Désinscription publique'
 register: Inscrire
 register_unregister_users_to_team: 'Inscrire/Désinscrire des utilisateurs à l''équipe'
+register_users_to_team: 'Inscrire des utilisateurs à l''équipe'
 team: Equipe
 team_creation: 'Création d''une équipe'
 team_directory: 'Répertoire de l''équipe'
