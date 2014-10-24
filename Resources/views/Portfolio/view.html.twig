@@ -31,6 +31,7 @@
                                 {% endif %}
                                 </div>
                                 <div data-ng-bind-html="widget.views.view | trustAsHtml" data-ng-show="!widget.editing && !widget.views.form"></div>
+                                <div class="loading" data-ng-show="widget.editing && !widget.views.form"></div>
                                 <form name="form" class="edit-container form-inline widget-panel" data-loading-form="save(widget)" data-ng-show="widget.editing && widget.views.form">
                                     <div data-bind-html="widget.views.form" class="form-group"></div>
                                     <button type="submit" class="btn btn-md btn-primary">{{ 'save'|trans({}, 'platform') }}</button>
