@@ -405,7 +405,7 @@ class WorkspaceModelManager
      * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
      * @param \Claroline\CoreBundle\Entity\User $user
      */
-    public function duplicateRootDirectory(
+    private function duplicateRootDirectory(
         Workspace $source,
         Workspace $workspace,
         User $user
@@ -465,7 +465,7 @@ class WorkspaceModelManager
      * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
      * @param array $homeTabs
      */
-    public function duplicateHomeTabs(
+    private function duplicateHomeTabs(
         Workspace $source,
         Workspace $workspace,
         array $homeTabs
@@ -549,7 +549,7 @@ class WorkspaceModelManager
      * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
      * @param \Claroline\CoreBundle\Entity\User $user
      */
-    public function duplicateResources(
+    private function duplicateResources(
         array $resourcesModels,
         Directory $rootDirectory,
         Workspace $workspace,

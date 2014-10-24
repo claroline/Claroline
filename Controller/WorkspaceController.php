@@ -1285,7 +1285,6 @@ class WorkspaceController extends Controller
         );
 
         $flashBag = $this->session->getFlashBag();
-        var_dump($errors);
 
         foreach ($errors['widgetConfigErrors'] as $widgetConfigError) {
             $widgetName = $widgetConfigError['widgetName'];
