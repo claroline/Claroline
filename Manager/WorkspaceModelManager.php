@@ -331,14 +331,12 @@ class WorkspaceModelManager
      * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
      * @param \Claroline\CoreBundle\Entity\User $user
      */
-    public function duplicateWorkspaceRoles(
+    private function duplicateWorkspaceRoles(
         Workspace $source,
         Workspace $workspace,
         User $user
     )
     {
-        $this->om->startFlushSuite();
-
         $guid = $workspace->getGuid();
         $roles = $source->getRoles();
         $unusedRolePartName = '_' . $source->getGuid();
@@ -353,22 +351,21 @@ class WorkspaceModelManager
                 $role->isReadOnly()
             );
 
+
+
             if ($roleName === 'ROLE_WS_MANAGER') {
                 $user->addRole($createdRole);
                 $this->om->persist($user);
             }
         }
-        $this->om->endFlushSuite();
     }
 
     /**
      * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $source
      * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
      */
-    public function duplicateOrderedTools(Workspace $source, Workspace $workspace)
+    private function duplicateOrderedTools(Workspace $source, Workspace $workspace)
     {
-        $this->om->startFlushSuite();
-
         $orderedTools = $source->getOrderedTools();
         $workspaceRoles = $this->getArrayRolesByWorkspace($workspace);
 
@@ -401,7 +398,6 @@ class WorkspaceModelManager
                 }
             }
         }
-        $this->om->endFlushSuite();
     }
 
     /**
@@ -436,7 +432,7 @@ class WorkspaceModelManager
             $role = $right->getRole();
 
             if ($role->getType() === 1) {
-                $newRight = $this->rightsManager->getRightsFromIdentityMap(
+                $newRight = $this->rightsManager->getRightsFromIdentityMapOrScheduledForInsert(
                     $role->getName(),
                     $resource->getResourceNode()
                 );
@@ -455,12 +451,9 @@ class WorkspaceModelManager
                 }
             }
 
-            //we may not find any right from the identity map
-            //if ($newRight) {
             $newRight->setMask($right->getMask());
             $newRight->setCreatableResourceTypes($right->getCreatableResourceTypes()->toArray());
             $this->om->persist($newRight);
-            //}
         }
         $this->om->flush();
 
@@ -635,8 +628,21 @@ class WorkspaceModelManager
     private function getArrayRolesByWorkspace(Workspace $workspace)
     {
         $workspaceRoles = array();
+        $uow = $this->om->getUnitOfWork();
         $wRoles = $this->roleManager->getRolesByWorkspace($workspace);
+        $scheduledForInsert = $uow->getScheduledEntityInsertions();
 
+        foreach ($scheduledForInsert as $entity) {
+            if (get_class($entity) === 'Claroline\CoreBundle\Entity\Role') {
+                if ($entity->getWorkspace()) {
+                    if ($entity->getWorkspace()->getGuid() === $workspace->getGuid()) {
+                        $wRoles[] = $entity;
+                    }
+                }
+            }
+        }
+
+        //now we build the array
         foreach ($wRoles as $wRole) {
             $workspaceRoles[$wRole->getTranslationKey()] = $wRole;
         }
@@ -760,5 +766,23 @@ class WorkspaceModelManager
         $this->om->flush();
 
         return $resourcesErrors;
+    }
+
+    public function addDataFromModel(WorkspaceModel $model, Workspace $workspace, User $user, &$errors)
+    {
+        $modelWorkspace = $model->getWorkspace();
+        $resourcesModels = $model->getResourcesModel();
+        $homeTabs = $model->getHomeTabs();
+
+        $this->duplicateWorkspaceRoles($modelWorkspace, $workspace, $user);
+        $this->duplicateOrderedTools($modelWorkspace, $workspace);
+        $rootDirectory = $this->duplicateRootDirectory($modelWorkspace, $workspace, $user);
+        $errors['widgetConfigErrors'] = $this->duplicateHomeTabs($modelWorkspace, $workspace, $homeTabs->toArray());
+        $errors['resourceErrors'] = $this->duplicateResources(
+            $resourcesModels->toArray(),
+            $rootDirectory,
+            $workspace,
+            $user
+        );
     }
 }

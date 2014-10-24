@@ -191,9 +191,6 @@ class WorkspaceManager
     )
     {
         $workspaceModelManager = $this->container->get('claroline.manager.workspace_model_manager');
-        $modelWorkspace = $model->getWorkspace();
-        $resourcesModels = $model->getResourcesModel();
-        $homeTabs = $model->getHomeTabs();
 
         $workspace = new Workspace();
         $workspace->setName($name);
@@ -211,22 +208,7 @@ class WorkspaceManager
         $errors = [];
 
         $this->createWorkspace($workspace);
-        $workspaceModelManager->duplicateWorkspaceRoles($modelWorkspace, $workspace, $user);
-        $workspaceModelManager->duplicateOrderedTools($modelWorkspace, $workspace);
-
-        /*
-        $rootDirectory = $workspaceModelManager
-            ->duplicateRootDirectory($modelWorkspace, $workspace, $user);
-        $errors['widgetConfigErrors'] = $workspaceModelManager
-            ->duplicateHomeTabs($modelWorkspace, $workspace, $homeTabs->toArray());
-
-
-        $errors['resourceErrors'] = $workspaceModelManager->duplicateResources(
-            $resourcesModels->toArray(),
-            $rootDirectory,
-            $workspace,
-            $user
-        );*/
+        $workspaceModelManager->addDataFromModel($model, $workspace, $user, $errors);
 
         return $workspace;
     }

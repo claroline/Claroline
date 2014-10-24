@@ -290,6 +290,9 @@ class UserManager
      */
     public function importUsers(array $users, $sendMail = true, $logger = null, $additionnalRoles = array())
     {
+        //I need to do that to import roles from models. Please don't ask why, I have no fucking idea.
+        $this->objectManager->clear();
+
         $roleUser = $this->roleManager->getRoleByName('ROLE_USER');
         $max = $roleUser->getMaxUsers();
         $total = $this->countUsersByRoleIncludingGroup($roleUser);
@@ -353,6 +356,8 @@ class UserManager
             $newUser->setLocale($lg);
             $newUser->setAuthentication($authentication);
             $this->createUser($newUser, $sendMail, $additionnalRoles, $model);
+            $this->objectManager->persist($newUser);
+
             if ($logger) $logger(" [UOW size: " . $this->objectManager->getUnitOfWork()->size() . "]");
             if ($logger) $logger(" User $j ($username) being created");
             $i++;
@@ -364,15 +369,12 @@ class UserManager
                 $this->objectManager->endFlushSuite();
                 if ($logger) $logger(" flushing users...");
                 $tmpRoles = $additionnalRoles;
-                if ($model) $tmpModel = $model;
                 $this->objectManager->clear();
                 $additionnalRoles = [];
 
                 foreach ($tmpRoles as $toAdd) {
                     if ($toAdd) $additionnalRoles[] = $this->objectManager->merge($toAdd);
                 }
-
-                if ($tmpModel) $model = $this->objectManager->merge($tmpModel);
 
                 if ($this->container->get('security.context')->getToken()) {
                     $this->objectManager->merge($this->container->get('security.context')->getToken()->getUser());

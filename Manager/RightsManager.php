@@ -541,6 +541,32 @@ class RightsManager
         $this->om->endFlushSuite();
     }
 
+    public function getRightsFromIdentityMapOrScheduledForInsert($roleName, ResourceNode $resourceNode)
+    {
+        $res = null;
+        $res = $this->getRightsFromIdentityMap($roleName, $resourceNode);
+        if ($res) return $res;
+        return $this->getRightsScheduledForInsert($roleName, $resourceNode);
+    }
+
+    public function getRightsScheduledForInsert($roleName, ResourceNode $resourceNode)
+    {
+        $scheduledForInsert = $this->om->getUnitOfWork()->getScheduledEntityInsertions();
+        $res = null;
+
+        foreach ($scheduledForInsert as $entity) {
+            if (get_class($entity) === 'Claroline\CoreBundle\Entity\Resource\ResourceRights') {
+                if ($entity->getRole()->getName() === $roleName &&
+                    $entity->getResourceNode() === $resourceNode) {
+
+                    return $res = $entity;
+                }
+            }
+        }
+
+        return $res;
+    }
+
     public function getRightsFromIdentityMap($roleName, ResourceNode $resourceNode)
     {
         $map = $this->om->getUnitOfWork()->getIdentityMap();
@@ -548,13 +574,12 @@ class RightsManager
 
         if (!array_key_exists('Claroline\CoreBundle\Entity\Resource\ResourceRights', $map)) return null;
 
+        //so it was in the identityMap hey !
         foreach ($map['Claroline\CoreBundle\Entity\Resource\ResourceRights'] as $right) {
-
             if ($right->getRole()->getName() === $roleName &&
                 $right->getResourceNode() === $resourceNode) {
 
                 $result = $right;
-                break;
             }
         }
 

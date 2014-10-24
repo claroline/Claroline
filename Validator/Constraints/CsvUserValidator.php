@@ -98,6 +98,12 @@ class CsvUserValidator extends ConstraintValidator
                     $authentication = null;
                 }
 
+                if (isset($user[8])) {
+                    $modelName = trim($user[7]) === '' ? null: $user[7];
+                } else {
+                    $modelName = null;
+                }
+
                 (!array_key_exists($email, $mails)) ?
                     $mails[$email] = array($i + 1):
                     $mails[$email][] = $i + 1;
@@ -134,6 +140,7 @@ class CsvUserValidator extends ConstraintValidator
                     );
                 }
             }
+
             foreach ($usernames as $username => $lines) {
                 if (count($lines) > 1) {
                     $msg = $this->translator->trans(
@@ -141,6 +148,8 @@ class CsvUserValidator extends ConstraintValidator
                         array('%username%' => $username, '%lines%' => $this->getLines($lines)),
                         'platform'
                     ) . ' ';
+                }
+            }
 
             if ($modelName) {
                 $model = $this->om->getRepository('ClarolineCoreBundle:Model\WorkspaceModel')->findOneByName($modelName);
@@ -163,7 +172,7 @@ class CsvUserValidator extends ConstraintValidator
                 );
             }
         }
-                
+
         foreach ($usernames as $username => $lines) {
             if (count($lines) > 1) {
                 $msg = $this->translator->trans(
