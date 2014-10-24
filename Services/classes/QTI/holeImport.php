@@ -276,6 +276,9 @@ class holeImport extends qtiImport
         $text = str_replace('<itemBody>', '', $text);
         $text = str_replace('</itemBody>', '', $text);
         $text = trim($text);
+        //delete the line break in $text
+        $text = str_replace(CHR(10),"",$text);
+        $text = str_replace(CHR(13),"",$text);
         $this->qtiTextWithHoles = html_entity_decode($text);
     }
 
