@@ -16,6 +16,7 @@ class holeImport extends qtiImport
     protected $interactionHole;
     protected $qtiTextWithHoles;
     protected $textHtml;
+    protected $tabWrOpt = array();
 
     /**
      * Implements the abstract method
@@ -40,7 +41,7 @@ class holeImport extends qtiImport
         $this->createInteractionHole();
 
         $this->doctrine->getManager()->flush();
-        
+
         $this->addOptionValue();
     }
 
@@ -135,7 +136,7 @@ class holeImport extends qtiImport
     protected function getHtmlWithoutValue()
     {
         $htmlWithoutValue = $this->textHtml;
-        $regex = '(<input.*?class="blank".*?>|<select.*?class="blank".*?</select>)';
+        $regex = '(<input.*?class="blank".*?>)';
         preg_match_all($regex, $htmlWithoutValue, $matches);
         foreach ($matches[0] as $matche) {
             if (substr($matche, 1, 5) == 'input') {
@@ -143,21 +144,43 @@ class holeImport extends qtiImport
                 $value = $tabMatche[13];
                 $inputWithoutValue = str_replace('value="'.$value.'"', 'value=""', $matche);
                 $htmlWithoutValue = str_replace($matche, $inputWithoutValue, $htmlWithoutValue);
-            } 
+            }
         }
         $this->interactionHole->sethtmlWithoutValue($htmlWithoutValue);
     }
-    
+
+    /**
+     * addOptionValue : to add the id of wordreponse object as a value for the option element
+     *
+     * @access protected
+     *
+     */
     protected function addOptionValue()
     {
-//                $tabMatche = explode('"', $matche);
-//                $position = $tabMatche[1];
-//                $hole = $this->doctrine->getManager()
-//                             ->getRepository('UJMExoBundle:Hole')
-//                             ->findOneBy(array(
-//                                 'interactionHole' => $this->interactionHole,
-//                                 'position'        => $position
-//                                ));var_dump();die($hole);
+        $numOpt = 0;
+        $htmlWithoutValue = $this->interactionHole->getHtmlWithoutValue();
+        $regex = '(<select.*?class="blank".*?</select>)';
+        preg_match_all($regex, $htmlWithoutValue, $selects);
+        foreach ($selects[0] as $select) {
+            $newSelect = $select;
+            $regexOpt = '(<option.*?</option>)';
+            preg_match_all($regexOpt, $select, $options);
+            foreach ($options[0] as $option) {
+                $domOpt = new \DOMDocument();
+                $domOpt->loadXML($option);
+                $opt = $domOpt->getElementsByTagName('option')->item(0);
+                $wr = $this->tabWrOpt[$numOpt];
+                $optVal = $domOpt->createAttribute('value');
+                $optVal->value = $wr->getId();
+                $opt->appendChild($optVal);
+                $newSelect = str_replace($option, $domOpt->saveHTML(), $newSelect);
+                $numOpt++;
+            }
+            $htmlWithoutValue = str_replace($select, $newSelect,  $htmlWithoutValue);
+        }
+        $this->interactionHole->setHtmlWithoutValue($htmlWithoutValue);
+        $this->doctrine->getManager()->persist($this->interactionHole);
+        $this->doctrine->getManager()->flush();
     }
 
     /**
@@ -231,6 +254,7 @@ class holeImport extends qtiImport
                                 $keyWord->setScore($score);
                                 $keyWord->setHole($hole);
                                 $this->doctrine->getManager()->persist($keyWord);
+                                $this->tabWrOpt[] = $keyWord;
                             }
                         }
                     }
