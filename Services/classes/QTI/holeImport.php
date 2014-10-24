@@ -40,6 +40,8 @@ class holeImport extends qtiImport
         $this->createInteractionHole();
 
         $this->doctrine->getManager()->flush();
+        
+        $this->addOptionValue();
     }
 
     /**
@@ -133,7 +135,7 @@ class holeImport extends qtiImport
     protected function getHtmlWithoutValue()
     {
         $htmlWithoutValue = $this->textHtml;
-        $regex = '(<input.*?class="blank".*?>)';
+        $regex = '(<input.*?class="blank".*?>|<select.*?class="blank".*?</select>)';
         preg_match_all($regex, $htmlWithoutValue, $matches);
         foreach ($matches[0] as $matche) {
             if (substr($matche, 1, 5) == 'input') {
@@ -141,9 +143,21 @@ class holeImport extends qtiImport
                 $value = $tabMatche[13];
                 $inputWithoutValue = str_replace('value="'.$value.'"', 'value=""', $matche);
                 $htmlWithoutValue = str_replace($matche, $inputWithoutValue, $htmlWithoutValue);
-            }
+            } 
         }
         $this->interactionHole->sethtmlWithoutValue($htmlWithoutValue);
+    }
+    
+    protected function addOptionValue()
+    {
+//                $tabMatche = explode('"', $matche);
+//                $position = $tabMatche[1];
+//                $hole = $this->doctrine->getManager()
+//                             ->getRepository('UJMExoBundle:Hole')
+//                             ->findOneBy(array(
+//                                 'interactionHole' => $this->interactionHole,
+//                                 'position'        => $position
+//                                ));var_dump();die($hole);
     }
 
     /**
@@ -184,13 +198,41 @@ class holeImport extends qtiImport
         foreach($this->assessmentItem->getElementsByTagName("responseDeclaration") as $rp) {
             if ($rp->getAttribute("identifier") == $qtiId) {
                 $mapping = $rp->getElementsByTagName("mapping")->item(0);
-                foreach ($mapping->getElementsByTagName("mapEntry") as $mapEntry) {
-                    $keyWord = new WordResponse();
-                    if ($hole->getSelector() === false) {
+                if ($hole->getSelector() === false) {
+                    foreach ($mapping->getElementsByTagName("mapEntry") as $mapEntry) {
+                        $keyWord = new WordResponse();
                         $keyWord->setResponse($mapEntry->getAttribute('mapKey'));
                         $keyWord->setScore($mapEntry->getAttribute('mappedValue'));
                         $keyWord->setHole($hole);
                         $this->doctrine->getManager()->persist($keyWord);
+                    }
+                } else {
+                    $ib = $this->assessmentItem->getElementsByTagName("itemBody")->item(0);
+                    foreach ($ib->getElementsByTagName("inlineChoiceInteraction") as $ici) {
+                        if ($ici->getAttribute('responseIdentifier') == $qtiId) {
+                            foreach ($ici->getElementsByTagName('inlineChoice') as $ic) {
+                                $keyWord = new WordResponse();
+                                $score = 0;
+                                $matchScore = false;
+                                $keyWord->setResponse($ic->nodeValue);
+                                foreach ($mapping->getElementsByTagName("mapEntry") as $mapEntry) {
+                                    if ($mapEntry->getAttribute('mapKey') == $ic->getAttribute('identifier')) {
+                                        $score = $mapEntry->getAttribute('mappedValue');
+                                        $matchScore = true;
+                                    }
+                                }
+                                if ($matchScore === false) {
+                                    foreach ($mapping->getElementsByTagName("mapEntry") as $mapEntry) {
+                                        if ($mapEntry->getAttribute('mapKey') == $ic->nodeValue) {
+                                            $score = $mapEntry->getAttribute('mappedValue');
+                                        }
+                                    }
+                                }
+                                $keyWord->setScore($score);
+                                $keyWord->setHole($hole);
+                                $this->doctrine->getManager()->persist($keyWord);
+                            }
+                        }
                     }
                 }
             }
