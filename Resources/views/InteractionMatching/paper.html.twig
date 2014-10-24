@@ -62,7 +62,7 @@
             <form action="{{ path('ujm_interactionmatching_response') }}" method="post" {{ form_enctype(form) }}>
                 {{ form_widget(form) }}
                 <center>
-                    <table >
+                    <table>
                         <tr>
                             <td>
                                 {% for proposal in interactionToDisplayed.proposals %}
@@ -80,6 +80,8 @@
                                     <div id="droppable_{{ label.id }}" class="droppable" style="text-align: right;">
                                         <ul>
                                             <li class="lidroppable">{{ label.value | raw }}</li>
+                                        </ul>
+                                        <ul class="dragDropped">
                                         </ul>
                                     </div>
                                 {% endfor %}
