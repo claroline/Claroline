@@ -143,6 +143,9 @@ class holeExport extends qtiExport
         $textEntryInteraction = '';
         $newId = 1;
         $html = htmlspecialchars_decode($this->interactionhole->getHtmlWithoutValue());
+        //delete the line break in $html
+        $html = str_replace(CHR(10),"", $html);
+        $html = str_replace(CHR(13),"", $html);
         $html = html_entity_decode($html);
         $regex = '(<input.*?class="blank".*?>|<select.*?class="blank".*?>.*?</select>)';
         preg_match_all($regex, $html, $matches);

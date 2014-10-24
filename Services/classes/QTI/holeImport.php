@@ -94,15 +94,21 @@ class holeImport extends qtiImport
                foreach ($matchesOpt[0] as $matcheOpt) {
                    $tabMatcheOpt = explode('"', $matcheOpt);
                    $holeID       = $tabMatcheOpt[1];
-                   $opt = preg_replace('(\s*identifier="'.$holeID.'")', '', $matcheOpt);
+                   if ($correctResponse == $holeID) {
+                       $opt = preg_replace('(\s*identifier="'.$holeID.'")', ' holeCorrectResponse="1"', $matcheOpt);
+                   } else {
+                       $opt = preg_replace('(\s*identifier="'.$holeID.'")', ' holeCorrectResponse="0"', $matcheOpt);
+                   }
                    $text = str_replace($matcheOpt, $opt, $text);
                }
                $this->createHole(15, $responseIdentifier, true, $newId);
             }
             $newId++;
             $this->textHtml = str_replace($matche, $text, $this->textHtml);
+            $textHtmlClean = preg_replace('(<option holeCorrectResponse="0".*?</option>)', '', $this->textHtml);
+            $textHtmlClean = str_replace(' holeCorrectResponse="1"', '', $textHtmlClean);
         }
-        $this->interactionHole->setHtml($this->textHtml);
+        $this->interactionHole->setHtml($textHtmlClean);
     }
 
     /**
@@ -169,6 +175,7 @@ class holeImport extends qtiImport
                 $domOpt = new \DOMDocument();
                 $domOpt->loadXML($option);
                 $opt = $domOpt->getElementsByTagName('option')->item(0);
+                $opt->removeAttribute('holeCorrectResponse');
                 $wr = $this->tabWrOpt[$numOpt];
                 $optVal = $domOpt->createAttribute('value');
                 $optVal->value = $wr->getId();
@@ -279,6 +286,9 @@ class holeImport extends qtiImport
         //delete the line break in $text
         $text = str_replace(CHR(10),"",$text);
         $text = str_replace(CHR(13),"",$text);
+        //delete CDATA
+        $text = str_replace('<![CDATA[', '', $text);
+        $text = str_replace(']]>', '', $text);
         $this->qtiTextWithHoles = html_entity_decode($text);
     }
 
