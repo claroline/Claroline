@@ -20,5 +20,5 @@ portfolioApp.value('assetPath', window.assetPath);
 
 // Bootstrap portfolio application
 angular.element(document).ready(function() {
-    angular.bootstrap(document, ['portfolioApp']);
+    angular.bootstrap(document, ['portfolioApp'], {strictDi: true});
 });

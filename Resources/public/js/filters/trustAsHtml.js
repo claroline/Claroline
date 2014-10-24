@@ -1,8 +1,8 @@
 'use strict';
 
 portfolioApp
-    .filter('trustAsHtml', function($sce) {
+    .filter('trustAsHtml', ["$sce", function($sce) {
         return function(val) {
             return $sce.trustAsHtml(val);
         };
-    });
+    }]);
