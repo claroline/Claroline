@@ -32,7 +32,7 @@ class WorkspaceModel
     private $id;
 
     /**
-     * @ORM\Column()
+     * @ORM\Column(unique=true)
      * @Assert\NotBlank()
      */
     protected $name;
@@ -40,7 +40,7 @@ class WorkspaceModel
     /**
      * @ORM\ManyToOne(
      *     targetEntity="Claroline\CoreBundle\Entity\Workspace\Workspace",
-     *     inversedBy="models"
+     *     inversedBy="models", cascade={"merge"}
      * )
      * @ORM\JoinColumn(onDelete="CASCADE")
      */

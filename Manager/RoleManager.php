@@ -89,7 +89,7 @@ class RoleManager
      */
     public function createWorkspaceRole($name, $translationKey, Workspace $workspace, $isReadOnly = false)
     {
-        $role = $this->om->factory('Claroline\CoreBundle\Entity\Role');
+        $role = new Role();
         $role->setName($name);
         $role->setTranslationKey($translationKey);
         $role->setReadOnly($isReadOnly);

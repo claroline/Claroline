@@ -47,7 +47,7 @@ class OrderedTool
     /**
      * @ORM\ManyToOne(
      *     targetEntity="Claroline\CoreBundle\Entity\Workspace\Workspace",
-     *     cascade={"persist"},
+     *     cascade={"persist", "merge"},
      *     inversedBy="orderedTools"
      * )
      * @ORM\JoinColumn(onDelete="CASCADE")
@@ -57,7 +57,7 @@ class OrderedTool
     /**
      * @ORM\ManyToOne(
      *     targetEntity="Claroline\CoreBundle\Entity\Tool\Tool",
-     *     cascade={"persist"},
+     *     cascade={"persist", "merge"},
      *     inversedBy="orderedTools"
      * )
      * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
@@ -82,7 +82,8 @@ class OrderedTool
     /**
      * @ORM\ManyToMany(
      *     targetEntity="Claroline\CoreBundle\Entity\Role",
-     *     inversedBy="orderedTools"
+     *     inversedBy="orderedTools",
+     *     cascade={"merge"}
      * )
      * @ORM\JoinTable(name="claro_ordered_tool_role")
      */

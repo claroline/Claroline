@@ -145,7 +145,8 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
      * @ORM\ManyToMany(
      *     targetEntity="Claroline\CoreBundle\Entity\Role",
      *     inversedBy="users",
-     *     fetch="EXTRA_LAZY"
+     *     fetch="EXTRA_LAZY",
+     *     cascade={"merge"}
      * )
      * @ORM\JoinTable(name="claro_user_role")
      */

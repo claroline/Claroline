@@ -18,6 +18,7 @@ use Symfony\Component\Validator\ValidatorInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Manager\AuthenticationManager;
+use Claroline\CoreBundle\Persistence\ObjectManager;
 
 /**
  * @DI\Validator("csv_user_validator")
@@ -26,6 +27,7 @@ class CsvUserValidator extends ConstraintValidator
 {
     private $validator;
     private $translator;
+    private $om;
 
     /**
 
@@ -33,17 +35,20 @@ class CsvUserValidator extends ConstraintValidator
      *     "validator"             = @DI\Inject("validator"),
      *     "trans"                 = @DI\Inject("translator"),
      *     "authenticationManager" = @DI\Inject("claroline.common.authentication_manager"),
+     *     "om"                    = @DI\Inject("claroline.persistence.object_manager")
      * })
      */
     public function __construct(
         ValidatorInterface $validator,
         TranslatorInterface $translator,
-        AuthenticationManager $authenticationManager
+        AuthenticationManager $authenticationManager,
+        ObjectManager $om
     )
     {
         $this->validator = $validator;
         $this->translator = $translator;
         $this->authenticationManager = $authenticationManager;
+        $this->om = $om;
     }
 
     public function validate($value, Constraint $constraint)
@@ -93,6 +98,12 @@ class CsvUserValidator extends ConstraintValidator
                     $authentication = null;
                 }
 
+                if (isset($user[8])) {
+                    $modelName = trim($user[7]) === '' ? null: $user[7];
+                } else {
+                    $modelName = null;
+                }
+
                 (!array_key_exists($email, $mails)) ?
                     $mails[$email] = array($i + 1):
                     $mails[$email][] = $i + 1;
@@ -129,6 +140,7 @@ class CsvUserValidator extends ConstraintValidator
                     );
                 }
             }
+
             foreach ($usernames as $username => $lines) {
                 if (count($lines) > 1) {
                     $msg = $this->translator->trans(
@@ -136,9 +148,40 @@ class CsvUserValidator extends ConstraintValidator
                         array('%username%' => $username, '%lines%' => $this->getLines($lines)),
                         'platform'
                     ) . ' ';
+                }
+            }
+
+            if ($modelName) {
+                $model = $this->om->getRepository('ClarolineCoreBundle:Model\WorkspaceModel')->findOneByName($modelName);
+
+                if (!$model) {
+                    $msg = $this->translator->trans(
+                            'model_invalid',
+                            array('%model%' => $modelName, '%line%' => $i + 1),
+                            'platform'
+                        ) . ' ';
 
                     $this->context->addViolation($msg);
                 }
+            }
+
+            foreach ($errors as $error) {
+                $this->context->addViolation(
+                    $this->translator->trans('line_number', array('%line%' => $i + 1), 'platform') . ' ' .
+                    $error->getInvalidValue() . ' : ' . $error->getMessage()
+                );
+            }
+        }
+
+        foreach ($usernames as $username => $lines) {
+            if (count($lines) > 1) {
+                $msg = $this->translator->trans(
+                    'username_found_at',
+                    array('%username%' => $username, '%lines%' => $this->getLines($lines)),
+                    'platform'
+                ) . ' ';
+
+                $this->context->addViolation($msg);
             }
 
             foreach ($mails as $mail => $lines) {

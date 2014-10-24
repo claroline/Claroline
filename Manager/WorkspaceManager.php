@@ -15,6 +15,7 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceFavourite;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceRegistrationQueue;
+use Claroline\CoreBundle\Entity\Model\WorkspaceModel;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Library\Security\Utilities;
 use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
@@ -83,17 +84,17 @@ class WorkspaceManager
      * Constructor.
      *
      * @DI\InjectParams({
-     *     "homeTabManager"  = @DI\Inject("claroline.manager.home_tab_manager"),
-     *     "roleManager"     = @DI\Inject("claroline.manager.role_manager"),
-     *     "maskManager"     = @DI\Inject("claroline.manager.mask_manager"),
-     *     "resourceManager" = @DI\Inject("claroline.manager.resource_manager"),
-     *     "dispatcher"      = @DI\Inject("claroline.event.event_dispatcher"),
-     *     "om"              = @DI\Inject("claroline.persistence.object_manager"),
-     *     "ut"              = @DI\Inject("claroline.utilities.misc"),
-     *     "sut"             = @DI\Inject("claroline.security.utilities"),
-     *     "templateDir"     = @DI\Inject("%claroline.param.templates_directory%"),
-     *     "pagerFactory"    = @DI\Inject("claroline.pager.pager_factory"),
-     *     "container"       = @DI\Inject("service_container")
+     *     "homeTabManager"        = @DI\Inject("claroline.manager.home_tab_manager"),
+     *     "roleManager"           = @DI\Inject("claroline.manager.role_manager"),
+     *     "maskManager"           = @DI\Inject("claroline.manager.mask_manager"),
+     *     "resourceManager"       = @DI\Inject("claroline.manager.resource_manager"),
+     *     "dispatcher"            = @DI\Inject("claroline.event.event_dispatcher"),
+     *     "om"                    = @DI\Inject("claroline.persistence.object_manager"),
+     *     "ut"                    = @DI\Inject("claroline.utilities.misc"),
+     *     "sut"                   = @DI\Inject("claroline.security.utilities"),
+     *     "templateDir"           = @DI\Inject("%claroline.param.templates_directory%"),
+     *     "pagerFactory"          = @DI\Inject("claroline.pager.pager_factory"),
+     *     "container"             = @DI\Inject("service_container")
      * })
      */
     public function __construct(
@@ -175,6 +176,41 @@ class WorkspaceManager
     {
         $this->om->persist($workspace);
         $this->om->flush();
+    }
+
+    public function createWorkspaceFromModel(
+        WorkspaceModel $model,
+        User $user,
+        $name,
+        $code,
+        $description,
+        $displayable,
+        $selfRegistration,
+        $selfUnregistration,
+        &$errors = array()
+    )
+    {
+        $workspaceModelManager = $this->container->get('claroline.manager.workspace_model_manager');
+
+        $workspace = new Workspace();
+        $workspace->setName($name);
+        $workspace->setCode($code);
+        $workspace->setDescription($description);
+        $workspace->setDisplayable($displayable);
+        $workspace->setSelfRegistration($selfRegistration);
+        $workspace->setSelfUnregistration($selfUnregistration);
+        $guid = $this->ut->generateGuid();
+        $workspace->setGuid($guid);
+        $date = new \Datetime(date('d-m-Y H:i'));
+        $workspace->setCreationDate($date->getTimestamp());
+        $workspace->setCreator($user);
+
+        $errors = [];
+
+        $this->createWorkspace($workspace);
+        $workspaceModelManager->addDataFromModel($model, $workspace, $user, $errors);
+
+        return $workspace;
     }
 
     /**
