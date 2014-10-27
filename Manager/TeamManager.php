@@ -258,6 +258,39 @@ class TeamManager
         $this->om->endFlushSuite();
     }
 
+    public function fillTeams(Workspace $workspace, array $teams)
+    {
+        $this->om->startFlushSuite();
+        $workspaceTeams = $this->teamRepo->findTeamsByWorkspace($workspace);
+        $users = $this->teamRepo
+            ->findUsersWithNoTeamByWorkspace($workspace, $workspaceTeams);
+
+        foreach ($teams as $team) {
+
+            $maxUsers = $team->getMaxUsers();
+
+            if (is_null($maxUsers)) {
+                $this->registerUsersToTeam($team, $users);
+                break;
+            } else {
+                $nbFreeSpaces = $maxUsers - count($team->getUsers());
+
+                while ($nbFreeSpaces > 0 && count($users) > 0) {
+                    $index = rand(0, count($users) - 1);
+                    $this->registerUserToTeam($team, $users[$index]);
+                    unset($users[$index]);
+                    $users = array_values($users);
+                    $nbFreeSpaces--;
+                }
+
+                if (count($users) === 0) {
+                    break;
+                }
+            }
+        }
+        $this->om->endFlushSuite();
+    }
+
     private function createTeamRole(Team $team, Workspace $workspace)
     {
         $teamName = $team->getName();

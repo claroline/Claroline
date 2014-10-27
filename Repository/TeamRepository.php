@@ -139,11 +139,39 @@ class TeamRepository extends EntityRepository
                     AND u4 = u3
                 )
             )
+            AND u NOT IN (
+                SELECT DISTINCT u5
+                FROM Claroline\CoreBundle\Entity\User u5
+                JOIN u5.roles r5 WITH r5 IN (
+                    SELECT r52
+                    FROM Claroline\CoreBundle\Entity\Role r52
+                    WHERE r52.workspace = :workspace
+                    AND r52.name = :workspaceManagerName
+                )
+                WHERE u5.isEnabled = true
+            )
+            AND u NOT IN (
+                SELECT DISTINCT u6
+                FROM Claroline\CoreBundle\Entity\User u6
+                JOIN u6.groups g2
+                JOIN g2.roles r6 WITH r6 IN (
+                    SELECT r62
+                    FROM Claroline\CoreBundle\Entity\Role r62
+                    WHERE r62.workspace = :workspace
+                    AND r62.name = :workspaceManagerName
+                )
+                WHERE u6.isEnabled = true
+            )
             ORDER BY u.{$orderedBy} {$order}
         ";
         $query = $this->_em->createQuery($dql);
-        $query->setParameter('workspace', $team->getWorkspace());
+        $workspace = $team->getWorkspace();
+        $query->setParameter('workspace', $workspace);
         $query->setParameter('team', $team);
+        $query->setParameter(
+            'workspaceManagerName',
+            'ROLE_WS_MANAGER_' . $workspace->getGuid()
+        );
 
         return $executeQuery ? $query->getResult() : $query;
     }
@@ -194,6 +222,29 @@ class TeamRepository extends EntityRepository
                     AND u4 = u3
                 )
             )
+            AND u NOT IN (
+                SELECT DISTINCT u5
+                FROM Claroline\CoreBundle\Entity\User u5
+                JOIN u5.roles r5 WITH r5 IN (
+                    SELECT r52
+                    FROM Claroline\CoreBundle\Entity\Role r52
+                    WHERE r52.workspace = :workspace
+                    AND r52.name = :workspaceManagerName
+                )
+                WHERE u5.isEnabled = true
+            )
+            AND u NOT IN (
+                SELECT DISTINCT u6
+                FROM Claroline\CoreBundle\Entity\User u6
+                JOIN u6.groups g2
+                JOIN g2.roles r6 WITH r6 IN (
+                    SELECT r62
+                    FROM Claroline\CoreBundle\Entity\Role r62
+                    WHERE r62.workspace = :workspace
+                    AND r62.name = :workspaceManagerName
+                )
+                WHERE u6.isEnabled = true
+            )
             AND
             (
                 UPPER(u.firstName) LIKE :search
@@ -203,8 +254,13 @@ class TeamRepository extends EntityRepository
             ORDER BY u.{$orderedBy} {$order}
         ";
         $query = $this->_em->createQuery($dql);
-        $query->setParameter('workspace', $team->getWorkspace());
+        $workspace = $team->getWorkspace();
+        $query->setParameter('workspace', $workspace);
         $query->setParameter('team', $team);
+        $query->setParameter(
+            'workspaceManagerName',
+            'ROLE_WS_MANAGER_' . $workspace->getGuid()
+        );
         $upperSearch = strtoupper($search);
         $query->setParameter('search', "%{$upperSearch}%");
 
@@ -245,10 +301,37 @@ class TeamRepository extends EntityRepository
                     WHERE u2.isEnabled = true
                 )
             )
+            AND u NOT IN (
+                SELECT DISTINCT u5
+                FROM Claroline\CoreBundle\Entity\User u5
+                JOIN u5.roles r5 WITH r5 IN (
+                    SELECT r52
+                    FROM Claroline\CoreBundle\Entity\Role r52
+                    WHERE r52.workspace = :workspace
+                    AND r52.name = :workspaceManagerName
+                )
+                WHERE u5.isEnabled = true
+            )
+            AND u NOT IN (
+                SELECT DISTINCT u6
+                FROM Claroline\CoreBundle\Entity\User u6
+                JOIN u6.groups g2
+                JOIN g2.roles r6 WITH r6 IN (
+                    SELECT r62
+                    FROM Claroline\CoreBundle\Entity\Role r62
+                    WHERE r62.workspace = :workspace
+                    AND r62.name = :workspaceManagerName
+                )
+                WHERE u6.isEnabled = true
+            )
             ORDER BY u.{$orderedBy} {$order}
         ";
         $query = $this->_em->createQuery($dql);
         $query->setParameter('workspace', $workspace);
+        $query->setParameter(
+            'workspaceManagerName',
+            'ROLE_WS_MANAGER_' . $workspace->getGuid()
+        );
 
         return $executeQuery ? $query->getResult() : $query;
     }
@@ -288,6 +371,29 @@ class TeamRepository extends EntityRepository
                     WHERE u2.isEnabled = true
                 )
             )
+            AND u NOT IN (
+                SELECT DISTINCT u5
+                FROM Claroline\CoreBundle\Entity\User u5
+                JOIN u5.roles r5 WITH r5 IN (
+                    SELECT r52
+                    FROM Claroline\CoreBundle\Entity\Role r52
+                    WHERE r52.workspace = :workspace
+                    AND r52.name = :workspaceManagerName
+                )
+                WHERE u5.isEnabled = true
+            )
+            AND u NOT IN (
+                SELECT DISTINCT u6
+                FROM Claroline\CoreBundle\Entity\User u6
+                JOIN u6.groups g2
+                JOIN g2.roles r6 WITH r6 IN (
+                    SELECT r62
+                    FROM Claroline\CoreBundle\Entity\Role r62
+                    WHERE r62.workspace = :workspace
+                    AND r62.name = :workspaceManagerName
+                )
+                WHERE u6.isEnabled = true
+            )
             AND
             (
                 UPPER(u.firstName) LIKE :search
@@ -298,6 +404,10 @@ class TeamRepository extends EntityRepository
         ";
         $query = $this->_em->createQuery($dql);
         $query->setParameter('workspace', $workspace);
+        $query->setParameter(
+            'workspaceManagerName',
+            'ROLE_WS_MANAGER_' . $workspace->getGuid()
+        );
         $upperSearch = strtoupper($search);
         $query->setParameter('search', "%{$upperSearch}%");
 
@@ -320,6 +430,85 @@ class TeamRepository extends EntityRepository
         $query = $this->_em->createQuery($dql);
         $query->setParameter('workspace', $workspace);
         $query->setParameter('users', $users);
+
+        return $executeQuery ? $query->getResult() : $query;
+    }
+
+    public function findUsersWithNoTeamByWorkspace(
+        Workspace $workspace,
+        array $teams,
+        $executeQuery = true
+    )
+    {
+        $dql = "
+            SELECT DISTINCT u
+            FROM Claroline\CoreBundle\Entity\User u
+            WHERE u.isEnabled = true
+            AND (
+                u IN (
+                    SELECT DISTINCT u1
+                    FROM Claroline\CoreBundle\Entity\User u1
+                    JOIN u1.roles r1 WITH r1 IN (
+                        SELECT r12
+                        FROM Claroline\CoreBundle\Entity\Role r12
+                        WHERE r12.workspace = :workspace
+                    )
+                    WHERE u1.isEnabled = true
+                )
+                OR u IN (
+                    SELECT DISTINCT u2
+                    FROM Claroline\CoreBundle\Entity\User u2
+                    JOIN u2.groups g
+                    JOIN g.roles r2 WITH r2 IN (
+                        SELECT r22
+                        FROM Claroline\CoreBundle\Entity\Role r22
+                        WHERE r22.workspace = :workspace
+                    )
+                    WHERE u2.isEnabled = true
+                )
+            )
+            AND u NOT IN (
+                SELECT DISTINCT u3
+                FROM Claroline\CoreBundle\Entity\User u3
+                WHERE EXISTS (
+                    SELECT t
+                    FROM Claroline\TeamBundle\Entity\Team t
+                    JOIN t.users u4
+                    WHERE t IN (:teams)
+                    AND u4 = u3
+                )
+            )
+            AND u NOT IN (
+                SELECT DISTINCT u5
+                FROM Claroline\CoreBundle\Entity\User u5
+                JOIN u5.roles r5 WITH r5 IN (
+                    SELECT r52
+                    FROM Claroline\CoreBundle\Entity\Role r52
+                    WHERE r52.workspace = :workspace
+                    AND r52.name = :workspaceManagerName
+                )
+                WHERE u5.isEnabled = true
+            )
+            AND u NOT IN (
+                SELECT DISTINCT u6
+                FROM Claroline\CoreBundle\Entity\User u6
+                JOIN u6.groups g2
+                JOIN g2.roles r6 WITH r6 IN (
+                    SELECT r62
+                    FROM Claroline\CoreBundle\Entity\Role r62
+                    WHERE r62.workspace = :workspace
+                    AND r62.name = :workspaceManagerName
+                )
+                WHERE u6.isEnabled = true
+            )
+        ";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('workspace', $workspace);
+        $query->setParameter(
+            'workspaceManagerName',
+            'ROLE_WS_MANAGER_' . $workspace->getGuid()
+        );
+        $query->setParameter('teams', $teams);
 
         return $executeQuery ? $query->getResult() : $query;
     }

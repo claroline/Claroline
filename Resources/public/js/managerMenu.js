@@ -255,8 +255,8 @@
             route,
             refreshPage,
             null,
-            Translator.get('team:empty_selected_teams_comfirm_message'),
-            Translator.get('team:empty_teams')
+            Translator.get('team:fill_selected_teams_comfirm_message'),
+            Translator.get('team:fill_teams')
         );
     });
     

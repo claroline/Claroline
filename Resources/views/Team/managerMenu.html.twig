@@ -65,6 +65,9 @@
                         class="btn btn-default teams-action-btn disabled"
                         id="fill-teams-btn"
                         data-workspace-id="{{ workspace.getId }}"
+                       data-toggle="tooltip"
+                       data-placement="top"
+                       title="{{ 'fill_selected_teams_with_unregistered_users'|trans({}, 'team') }}"
                 >
                     <i class="fa fa-sign-in"></i>
                     {{ 'automatic_fill'|trans({}, 'team') }}
@@ -73,6 +76,9 @@
                         class="btn btn-default teams-action-btn disabled"
                         id="empty-teams-btn"
                         data-workspace-id="{{ workspace.getId }}"
+                       data-toggle="tooltip"
+                       data-placement="top"
+                       title="{{ 'unregister_all_users_from_selected_teams'|trans({}, 'team') }}"
                 >
                     <i class="fa fa-sign-out"></i>
                     {{ 'empty_action'|trans({}, 'team') }}
@@ -81,6 +87,9 @@
                         class="btn btn-default teams-action-btn disabled"
                         id="delete-teams-btn"
                         data-workspace-id="{{ workspace.getId }}"
+                       data-toggle="tooltip"
+                       data-placement="top"
+                       title="{{ 'delete_selected_teams'|trans({}, 'team') }}"
                 >
                     <i class="fa fa-trash-o"></i>
                     {{ 'delete'|trans({}, 'platform') }}

@@ -563,7 +563,7 @@ class TeamController extends Controller
     )
     {
         $this->checkWorkspaceManager($workspace, $manager);
-//        $this->teamManager->emptyTeams($teams);
+        $this->teamManager->fillTeams($workspace, $teams);
 
         return new Response('success', 200);
     }

@@ -2,14 +2,18 @@ actions: Actions
 automatic_fill: 'Remplir automatiquement'
 create_teams: 'Créer des équipes'
 default_parameters: 'Paramètres par défaut'
-delete_selected_teams_comfirm_message: 'Êtes-vous sûr de vouloir supprimer le(s) équipe(s) séléctionnée(s) ?'
+delete_selected_teams: 'Supprimer le(s) équipe(s) sélectionnée(s)'
+delete_selected_teams_comfirm_message: 'Êtes-vous sûr de vouloir supprimer le(s) équipe(s) sélectionnée(s) ?'
 delete_team: 'Supprimer l''équipe'
 delete_team_comfirm_message: 'Êtes-vous sûr de vouloir supprimer cette équipe ?'
 delete_teams: 'Supprimer des équipes'
 edit_team: 'Modifier l''équipe'
 empty_action: Vider
-empty_selected_teams_comfirm_message: 'Êtes-vous sûr de vouloir vider le(s) équipe(s) séléctionnée(s) ?'
+empty_selected_teams_comfirm_message: 'Êtes-vous sûr de vouloir vider le(s) équipe(s) sélectionnée(s) ?'
 empty_teams: 'Vider des équipes'
+fill_selected_teams_comfirm_message: 'Êtes-vous sûr de vouloir remplir le(s) équipe(s) sélectionnée(s) ?'
+fill_selected_teams_with_unregistered_users: 'Remplir automatiquement le(s) équipe(s) sélectionnée(s) avec les utilisateurs inscrits à aucune équipe'
+fill_teams: 'Remplir des équipes'
 max_teams_limit_reached: 'Nombre maximum d''équipes atteint'
 maximum: Maximum
 maximum_informations: 'Le nombre d''utilisateurs qui peuvent être inscrits à l''équipe'
@@ -35,4 +39,5 @@ team_form_selfRegistration: 'Permettre aux utilisateurs de s''inscrire'
 team_form_selfUnregistration: 'Permettre aux utilisateurs de se désinscrire'
 teams_creation: 'Création d''équipes'
 unregister: Désinscrire
+unregister_all_users_from_selected_teams: 'Désinscrire tous les utilisateurs des équipes sélectionnées'
 users: Utilisateurs
