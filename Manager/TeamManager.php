@@ -493,6 +493,21 @@ class TeamManager
         );
     }
 
+    public function getTeamsByUser(
+        User $user,
+        $orderedBy = 'name',
+        $order = 'ASC',
+        $executeQuery = true
+    )
+    {
+        return $this->teamRepo->findTeamsByWorkspace(
+            $user,
+            $orderedBy,
+            $order,
+            $executeQuery
+        );
+    }
+
     public function getTeamsWithUsersByWorkspace(
         Workspace $workspace,
         $executeQuery = true
