@@ -1,4 +1,3 @@
-actions: Actions
 all_other_teams: 'All other teams'
 automatic_fill: 'Automatic fill'
 create_a_team: 'Create a team'
@@ -16,6 +15,7 @@ empty_teams: 'Empty teams'
 fill_selected_teams_comfirm_message: 'Are you sure you want to fill the selected team(s) ?'
 fill_selected_teams_with_unregistered_users: 'Fill selected team(s) with users who are registered in no team'
 fill_teams: 'Fill teams'
+go_to_team_directory: 'Go to team''s directory'
 max_teams_limit_reached: 'Maximum number of teams reached'
 maximum: Maximum
 maximum_informations: 'The number of users that can be registered into team'

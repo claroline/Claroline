@@ -1,4 +1,3 @@
-actions: Actions
 all_other_teams: 'Toutes les autres équipes'
 automatic_fill: 'Remplir automatiquement'
 create_a_team: 'Créer une équipe'
@@ -16,6 +15,7 @@ empty_teams: 'Vider des équipes'
 fill_selected_teams_comfirm_message: 'Êtes-vous sûr de vouloir remplir le(s) équipe(s) sélectionnée(s) ?'
 fill_selected_teams_with_unregistered_users: 'Remplir automatiquement le(s) équipe(s) sélectionnée(s) avec les utilisateurs inscrits à aucune équipe'
 fill_teams: 'Remplir des équipes'
+go_to_team_directory: 'Accéder au répertoire de l''équipe'
 max_teams_limit_reached: 'Nombre maximum d''équipes atteint'
 maximum: Maximum
 maximum_informations: 'Le nombre d''utilisateurs qui peuvent être inscrits à l''équipe'

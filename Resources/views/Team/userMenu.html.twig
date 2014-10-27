@@ -70,7 +70,7 @@
                             </span>
                         </th>
                         <th class="text-center">
-                            {{ 'self_unregister'|trans({}, 'team') }}
+                            {{ 'actions'|trans({}, 'platform') }}
                         </th>
                     </tr>
                     
@@ -113,16 +113,26 @@
                                 {% endif %}
                             </td>
                             <td class="text-center">
+                                <span class="btn btn-default btn-sm team-directory-btn"
+                                      data-workspace-id="{{ workspace.getId() }}"
+                                      data-node-id="{{ userTeam.getDirectory().getResourceNode().getId() }}"
+                                      data-toggle="tooltip"
+                                      data-placement="top"
+                                      title="{{ 'go_to_team_directory'|trans({}, 'team') }}"
+                                >
+                                    <i class="fa fa-folder-open"></i>
+                                </span>
                                 
                                 {% if userTeam.getSelfUnregistration() %}
                                     <span class="btn btn-danger btn-sm unregister-btn"
                                           data-team-id="{{ userTeam.getId() }}"
                                           data-team-name="{{ userTeam.getName() }}"
+                                          data-toggle="tooltip"
+                                          data-placement="top"
+                                          title="{{ 'unregister_from_team'|trans({}, 'team') }}"
                                     >
                                         <i class="fa fa-sign-out"></i>
                                     </span>
-                                {% else %}
-                                    -
                                 {% endif %}
                             </td>
                         </tr>
