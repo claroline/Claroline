@@ -37,6 +37,26 @@ class TeamRepository extends EntityRepository
         return $executeQuery ? $query->getResult() : $query;
     }
 
+    public function findTeamsByUser(
+        User $user,
+        $orderedBy = 'name',
+        $order = 'ASC',
+        $executeQuery = true
+    )
+    {
+        $dql = "
+            SELECT t
+            FROM Claroline\TeamBundle\Entity\Team t
+            JOIN t.users tu
+            WHERE tu.user = :user
+            ORDER BY t.{$orderedBy} {$order}
+        ";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('user', $user);
+
+        return $executeQuery ? $query->getResult() : $query;
+    }
+
     public function findTeamsByWorkspaceAndName(
         Workspace $workspace,
         $teamName,
