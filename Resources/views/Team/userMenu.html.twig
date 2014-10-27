@@ -44,6 +44,8 @@
             <div class="alert alert-info">
                 {{ 'max_teams_limit_reached'|trans({}, 'team') }}
             </div>
+        {% else %}
+            <br>
         {% endif %}
         
         {% if userTeams|length > 0 %}
@@ -60,7 +62,12 @@
                             {{ 'users'|trans({}, 'team') }}
                         </th>
                         <th class="text-center">
-                            {{ 'maximum'|trans({}, 'team') }}
+                            <span data-toggle="tooltip"
+                                  data-placement="top"
+                                  title="{{ 'maximum_informations'|trans({}, 'team') }}"
+                            >
+                                {{ 'maximum'|trans({}, 'team') }}
+                            </span>
                         </th>
                         <th class="text-center">
                             {{ 'self_unregister'|trans({}, 'team') }}
@@ -70,7 +77,7 @@
                     {% for userTeam in userTeams %}
                         <tr id="row-team-{{ userTeam.getId() }}">
                             <td>
-                                <a href="">
+                                <a href="{{ path('claro_team_user_team_index', {'team': userTeam.getId()}) }}">
                                     {{ userTeam.getName() }}
                                 </a>
                             </td>
@@ -129,6 +136,7 @@
         {% endif %}
         <hr>
         <h3>{{ 'all_other_teams'|trans({}, 'team') }}</h3>
+        <br>
         
         {% if teams|length > 0 %}
             <div id="teams-list" class="table-responsive">

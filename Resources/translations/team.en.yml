@@ -36,6 +36,7 @@ self_unregister: Unregister
 team: Team
 team_creation: 'Team creation'
 team_directory: 'Team''s directory'
+team_directory_link:  'Team''s directory link'
 team_edition: 'Team edition'
 team_form_description: Description
 team_form_isPublic: 'Team directory access'

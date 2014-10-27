@@ -35,6 +35,21 @@
                 {{ team.getDescription()|raw }}
             </div>
         {% endif %}
+        {% set directoryNode = team.getDirectory().getResourceNode() %}
+        
+        <label>
+            {{ 'team_directory_link'|trans({}, 'team') }}
+            :
+        </label>
+        <a href="{{  path(
+                'claro_workspace_open_tool',
+                {'workspaceId': workspace.getId(), 'toolName': 'resource_manager'}
+            ) }}#resources/{{ directoryNode.getId() }}"
+            class="fa fa-folder-open"
+        >
+            {{ directoryNode.getName() }}
+        </a>
+        <hr>
         
         <div class="panel panel-default">
             <div class="panel-heading">

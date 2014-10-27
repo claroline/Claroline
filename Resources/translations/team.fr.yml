@@ -36,6 +36,7 @@ self_unregister: 'Se désinscrire'
 team: Equipe
 team_creation: 'Création d''une équipe'
 team_directory: 'Répertoire de l''équipe'
+team_directory_link:  'Lien vers le répertoire de l''équipe'
 team_edition: 'Modification de l''équipe'
 team_form_description: Description
 team_form_isPublic: 'Accès au répertoire de l''équipe'

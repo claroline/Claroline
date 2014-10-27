@@ -148,7 +148,8 @@ class TeamController extends Controller
      * @EXT\Route(
      *     "/workspace/{workspace}/team/user/menu/ordered/by/{orderedBy}/order/{order}",
      *     name="claro_team_user_menu",
-     *     defaults={"orderedBy"="name","order"="ASC"}
+     *     defaults={"orderedBy"="name","order"="ASC"},
+     *     options={"expose"=true}
      * )
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      * @EXT\Template()
@@ -925,6 +926,33 @@ class TeamController extends Controller
 
         return array(
             'workspace' => $workspace,
+            'users' => $users,
+            'team' => $team,
+            'params' => $params
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/team/{team}/user/index",
+     *     name="claro_team_user_team_index"
+     * )
+     * @EXT\ParamConverter("currentUser", options={"authenticatedUser" = true})
+     * @EXT\Template()
+     *
+     * @param Team $team
+     * @param User $currentUser
+     */
+    public function userTeamIndexAction(Team $team, User $currentUser)
+    {
+        $workspace = $team->getWorkspace();
+        $this->checkToolAccess($workspace);
+        $users = $team->getUsers();
+        $params = $this->teamManager->getParametersByWorkspace($workspace);
+
+        return array(
+            'workspace' => $workspace,
+            'currentUser' => $currentUser,
             'users' => $users,
             'team' => $team,
             'params' => $params
