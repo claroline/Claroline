@@ -172,6 +172,94 @@
         );
     });
     
+    $('.team-chk').on('change', function () {
+        var nbChecked = $('.team-chk:checked').length;
+        
+        if (nbChecked > 0) {
+            $('.teams-action-btn').removeClass('disabled');
+        } else {
+            $('.teams-action-btn').addClass('disabled');
+        }
+    });
+    
+    $('#delete-teams-btn').on('click', function () {
+        var workspaceId = $(this).data('workspace-id');
+        var i = 0;
+        var queryString = {};
+        var teams = [];
+        $('.team-chk:checked').each(function (index, element) {
+            teams[i] = element.value;
+            i++;
+        });
+        queryString.teams = teams;
+
+        var route = Routing.generate(
+            'claro_team_manager_delete_teams',
+            {'workspace': workspaceId }
+        );
+        route += '?' + $.param(queryString);
+
+        window.Claroline.Modal.confirmRequest(
+            route,
+            refreshPage,
+            null,
+            Translator.get('team:delete_selected_teams_comfirm_message'),
+            Translator.get('team:delete_teams')
+        );
+    });
+    
+    $('#empty-teams-btn').on('click', function () {
+        var workspaceId = $(this).data('workspace-id');
+        var i = 0;
+        var queryString = {};
+        var teams = [];
+        $('.team-chk:checked').each(function (index, element) {
+            teams[i] = element.value;
+            i++;
+        });
+        queryString.teams = teams;
+
+        var route = Routing.generate(
+            'claro_team_manager_empty_teams',
+            {'workspace': workspaceId }
+        );
+        route += '?' + $.param(queryString);
+
+        window.Claroline.Modal.confirmRequest(
+            route,
+            refreshPage,
+            null,
+            Translator.get('team:empty_selected_teams_comfirm_message'),
+            Translator.get('team:empty_teams')
+        );
+    });
+   
+    $('#fill-teams-btn').on('click', function () {
+        var workspaceId = $(this).data('workspace-id');
+        var i = 0;
+        var queryString = {};
+        var teams = [];
+        $('.team-chk:checked').each(function (index, element) {
+            teams[i] = element.value;
+            i++;
+        });
+        queryString.teams = teams;
+
+        var route = Routing.generate(
+            'claro_team_manager_fill_teams',
+            {'workspace': workspaceId }
+        );
+        route += '?' + $.param(queryString);
+
+        window.Claroline.Modal.confirmRequest(
+            route,
+            refreshPage,
+            null,
+            Translator.get('team:empty_selected_teams_comfirm_message'),
+            Translator.get('team:empty_teams')
+        );
+    });
+    
     var removeTeamRow = function () {
         $('#row-team-' + currentTeamId).remove();
     };

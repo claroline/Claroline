@@ -237,6 +237,27 @@ class TeamManager
         $this->om->endFlushSuite();
     }
 
+    public function deleteTeams(array $teams)
+    {
+        $this->om->startFlushSuite();
+        
+        foreach ($teams as $team) {
+            $this->deleteTeam($team);
+        }
+        $this->om->endFlushSuite();
+    }
+
+    public function emptyTeams(array $teams)
+    {
+        $this->om->startFlushSuite();
+
+        foreach ($teams as $team) {
+            $users = $team->getUsers();
+            $this->unregisterUsersFromTeam($team, $users);
+        }
+        $this->om->endFlushSuite();
+    }
+
     private function createTeamRole(Team $team, Workspace $workspace)
     {
         $teamName = $team->getName();

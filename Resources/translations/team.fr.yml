@@ -1,9 +1,15 @@
 actions: Actions
+automatic_fill: 'Remplir automatiquement'
 create_teams: 'Créer des équipes'
 default_parameters: 'Paramètres par défaut'
+delete_selected_teams_comfirm_message: 'Êtes-vous sûr de vouloir supprimer le(s) équipe(s) séléctionnée(s) ?'
 delete_team: 'Supprimer l''équipe'
 delete_team_comfirm_message: 'Êtes-vous sûr de vouloir supprimer cette équipe ?'
+delete_teams: 'Supprimer des équipes'
 edit_team: 'Modifier l''équipe'
+empty_action: Vider
+empty_selected_teams_comfirm_message: 'Êtes-vous sûr de vouloir vider le(s) équipe(s) séléctionnée(s) ?'
+empty_teams: 'Vider des équipes'
 max_teams_limit_reached: 'Nombre maximum d''équipes atteint'
 maximum: Maximum
 maximum_informations: 'Le nombre d''utilisateurs qui peuvent être inscrits à l''équipe'

@@ -39,19 +39,19 @@
     <div class="panel-body">
         <div>
             <a href="{{ path('claro_team_create_form', {'workspace': workspace.getId()}) }}"
-               class="btn btn-primary"
+               class="btn btn-primary margin-bottom-md"
             >
                 <i class="fa fa-plus"></i>
                 {{ 'create_a_team'|trans({}, 'team') }}
             </a>
             <a href="{{ path('claro_team_multiple_create_form', {'workspace': workspace.getId()}) }}"
-               class="btn btn-primary"
+               class="btn btn-primary margin-bottom-md"
             >
                 <i class="fa fa-plus-circle"></i>
                 {{ 'create_teams'|trans({}, 'team') }}
             </a>
             <a href="{{ path('claro_team_parameters_edit_form', {'params': params.getId()}) }}"
-               class="btn btn-primary"
+               class="btn btn-primary margin-bottom-md"
             >
                 <i class="fa fa-cog"></i>
                 {{ 'default_parameters'|trans({}, 'team') }}
@@ -60,9 +60,38 @@
         <hr>
         
         {% if teams|length > 0 %}
+            <div class="btn-group pull-right">
+                <button type="button"
+                        class="btn btn-default teams-action-btn disabled"
+                        id="fill-teams-btn"
+                        data-workspace-id="{{ workspace.getId }}"
+                >
+                    <i class="fa fa-sign-in"></i>
+                    {{ 'automatic_fill'|trans({}, 'team') }}
+                </button>
+                <button type="button"
+                        class="btn btn-default teams-action-btn disabled"
+                        id="empty-teams-btn"
+                        data-workspace-id="{{ workspace.getId }}"
+                >
+                    <i class="fa fa-sign-out"></i>
+                    {{ 'empty_action'|trans({}, 'team') }}
+                </button>
+                <button type="button"
+                        class="btn btn-default teams-action-btn disabled"
+                        id="delete-teams-btn"
+                        data-workspace-id="{{ workspace.getId }}"
+                >
+                    <i class="fa fa-trash-o"></i>
+                    {{ 'delete'|trans({}, 'platform') }}
+                </button>
+            </div>
+            <br>
+            <br>
             <div id="teams-list" class="table-responsive">
                 <table class="table">
                     <tr>
+                        <th></th>
                         <th>
                             <a href="{{ sortUrl(workspace.getId(), 'name', order) }}">
                                 {{ 'team'|trans({}, 'team') }}
@@ -97,6 +126,13 @@
                     
                     {% for team in teams %}
                         <tr id="row-team-{{ team.getId() }}">
+                            <td>
+                                <input type="checkbox"
+                                       class="team-chk"
+                                       value="{{ team.getId() }}"
+                                >
+                                </td>
+                            </td>
                             <td>
                                 <a href="{{ path('claro_team_manager_team_index', {'team': team.getId()}) }}">
                                     {{ team.getName() }}

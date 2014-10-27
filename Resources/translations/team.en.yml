@@ -1,9 +1,15 @@
 actions: Actions
+automatic_fill: 'Automatic fill'
 create_teams: 'Create teams'
 default_parameters: 'Default parameters'
+delete_selected_teams_comfirm_message: 'Are you sure you want to delete the selected team(s) ?'
 delete_team: 'Delete team'
 delete_team_comfirm_message: 'Are you sure you want to delete this team ?'
+delete_teams: 'Delete teams'
 edit_team: 'Edit team'
+empty_action: Empty
+empty_selected_teams_comfirm_message: 'Are you sure you want to empty the selected team(s) ?'
+empty_teams: 'Empty teams'
 max_teams_limit_reached: 'Maximum number of teams reached'
 maximum: Maximum
 maximum_informations: 'The number of users that can be registered into team'

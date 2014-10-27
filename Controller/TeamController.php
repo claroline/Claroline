@@ -489,6 +489,87 @@ class TeamController extends Controller
 
     /**
      * @EXT\Route(
+     *     "/workspace/{workspace}/teams/delete",
+     *     name="claro_team_manager_delete_teams",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("manager", options={"authenticatedUser" = true})
+     * @EXT\ParamConverter(
+     *     "teams",
+     *      class="ClarolineTeamBundle:Team",
+     *      options={"multipleIds" = true, "name" = "teams"}
+     * )
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function managerDeleteTeamsAction(
+        Workspace $workspace,
+        array $teams,
+        User $manager
+    )
+    {
+        $this->checkWorkspaceManager($workspace, $manager);
+        $this->teamManager->deleteTeams($teams);
+
+        return new Response('success', 200);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/workspace/{workspace}/teams/empty",
+     *     name="claro_team_manager_empty_teams",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("manager", options={"authenticatedUser" = true})
+     * @EXT\ParamConverter(
+     *     "teams",
+     *      class="ClarolineTeamBundle:Team",
+     *      options={"multipleIds" = true, "name" = "teams"}
+     * )
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function managerEmtyTeamsAction(
+        Workspace $workspace,
+        array $teams,
+        User $manager
+    )
+    {
+        $this->checkWorkspaceManager($workspace, $manager);
+        $this->teamManager->emptyTeams($teams);
+
+        return new Response('success', 200);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/workspace/{workspace}/teams/fill",
+     *     name="claro_team_manager_fill_teams",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("manager", options={"authenticatedUser" = true})
+     * @EXT\ParamConverter(
+     *     "teams",
+     *      class="ClarolineTeamBundle:Team",
+     *      options={"multipleIds" = true, "name" = "teams"}
+     * )
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function managerFillTeamsAction(
+        Workspace $workspace,
+        array $teams,
+        User $manager
+    )
+    {
+        $this->checkWorkspaceManager($workspace, $manager);
+//        $this->teamManager->emptyTeams($teams);
+
+        return new Response('success', 200);
+    }
+
+    /**
+     * @EXT\Route(
      *     "/team/{team}/self/register/user",
      *     name="claro_team_self_register_user",
      *     options={"expose"=true}
