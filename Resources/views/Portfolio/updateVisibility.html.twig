@@ -81,6 +81,35 @@
     {% endspaceless %}
 {% endblock _icap_portfolio_visibility_form_portfolio_groups_widget %}
 
+{% block _icap_portfolio_visibility_form_portfolio_teams_widget %}
+    {% spaceless %}
+        {% if prototype is defined %}
+            {% set attr = attr|merge({'data-prototype': block('_icap_portfolio_visibility_form_portfolio_teams_prototype') }) %}
+        {% endif %}
+        <div {{ block('widget_container_attributes') }}>
+            {{ form_errors(form) }}
+            <ul class="form-collection list-inline{{ form|length ? '' : ' hide' }}">
+                {% for rows in form %}
+                    <li class="form-collection-element">
+                    {% for row in rows %}
+                        {% set team = row.vars.data %}
+                        {{ form_widget(row, {'attr': {'class': 'hidden'}}) }}
+                        <span class="label label-warning">
+                            {{ team.name }}
+                            <a class="remove" aria-hidden="true" href="#" data-toggle="tooltip"
+                                title="{{ 'revoke_access'|trans({}, 'icap_portfolio') }}"data-confirm-title="{{ 'revoke_access'|trans({}, 'icap_portfolio') }}">
+                                 <span class="fa fa-times"></span>
+                            </a>
+                        </span>
+                    {% endfor %}
+                    </li>
+                {% endfor %}
+            </ul>
+            {{ form_rest(form) }}
+        </div>
+    {% endspaceless %}
+{% endblock _icap_portfolio_visibility_form_portfolio_teams_widget %}
+
 {% block _icap_portfolio_visibility_form_portfolio_users_prototype %}
     {{ _self.collection_field(prototype, 'primary') }}
 {% endblock _icap_portfolio_visibility_form_portfolio_users_prototype %}
@@ -88,6 +117,10 @@
 {% block _icap_portfolio_visibility_form_portfolio_groups_prototype %}
     {{ _self.collection_field(prototype, 'info') }}
 {% endblock _icap_portfolio_visibility_form_portfolio_groups_prototype %}
+
+{% block _icap_portfolio_visibility_form_portfolio_teams_prototype %}
+    {{ _self.collection_field(prototype, 'warning') }}
+{% endblock _icap_portfolio_visibility_form_portfolio_teams_prototype %}
 
 {% macro collection_field(rows, class) %}
     {% spaceless %}
@@ -132,6 +165,16 @@
                         {{ form_widget(form.portfolio_groups) }}
                         {{ form_widget(form.search_group) }}
                         <button class="btn btn-xs btn-success form-collection-add-group" disabled="disabled">{{ 'add'|trans({}, 'platform') }}</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-5{% if 1 != form.visibility.vars.data %} hidden{% endif %}" id="choose_team">
+                <label class="row">{{ 'select_visible_teams'|trans({}, 'icap_portfolio') }}</label>
+                <div class="row">
+                    <div class="col-md-12">
+                        {{ form_widget(form.portfolio_teams) }}
+                        {{ form_widget(form.search_team) }}
+                        <button class="btn btn-xs btn-success form-collection-add-team" disabled="disabled">{{ 'add'|trans({}, 'platform') }}</button>
                     </div>
                 </div>
             </div>

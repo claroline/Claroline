@@ -72,6 +72,11 @@ class Portfolio
     protected $portfolioGroups;
 
     /**
+     * @ORM\OneToMany(targetEntity="PortfolioTeam", mappedBy="portfolio", cascade={"all"})
+     */
+    protected $portfolioTeams;
+
+    /**
      * @var \Icap\PortfolioBundle\Entity\Widget\WidgetNode[]
      *
      * @ORM\OneToMany(targetEntity="Icap\PortfolioBundle\Entity\Widget\AbstractWidget", mappedBy="portfolio")
@@ -245,6 +250,30 @@ class Portfolio
     }
 
     /**
+     * @param mixed $portfolioTeams
+     *
+     * @return Portfolio
+     */
+    public function setPortfolioTeams($portfolioTeams)
+    {
+        foreach ($portfolioTeams as $portfolioTeam) {
+            $portfolioTeam->setPortfolio($this);
+        }
+
+        $this->portfolioTeams = $portfolioTeams;
+
+        return $this;
+    }
+
+    /**
+     * @return PortfolioTeam[]|ArrayCollection
+     */
+    public function getPortfolioTeams()
+    {
+        return $this->portfolioTeams;
+    }
+
+    /**
      * @param \Claroline\CoreBundle\Entity\User $user
      *
      * @return Portfolio
@@ -262,48 +291,6 @@ class Portfolio
     public function getUser()
     {
         return $this->user;
-    }
-
-    /**
-     * @param User $user
-     *
-     * @return bool
-     */
-    public function visibleToUser(User $user)
-    {
-        $portfolioUsers = $this->getPortfolioUsers();
-        $visibility     = $this->getVisibility();
-        $isVisible      = false;
-
-        if (Portfolio::VISIBILITY_EVERYBODY === $visibility ||
-            Portfolio::VISIBILITY_PLATFORM_USER === $visibility) {
-            $isVisible = true;
-        }
-        elseif (Portfolio::VISIBILITY_USER === $visibility) {
-            foreach ($portfolioUsers as $portfolioUser) {
-                if ($user === $portfolioUser->getUser()) {
-                    $isVisible = true;
-                    break;
-                }
-            }
-
-            if (!$isVisible) {
-                $portfolioGroups = $this->getPortfolioGroups();
-                $userGroups      = $user->getGroups();
-
-                foreach ($portfolioGroups as $portfolioGroup) {
-                    foreach ($userGroups as $userGroup) {
-                        if ($userGroup === $portfolioGroup->getGroup()) {
-                            $isVisible = true;
-                            break;
-                        }
-                    }
-                }
-            }
-        }
-
-
-        return $isVisible;
     }
 
     /**

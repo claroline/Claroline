@@ -142,6 +142,13 @@ class PortfolioController extends Controller
                 return $this->redirect($this->generateUrl('icap_portfolio_list'));
             }
         } catch (\Exception $exception) {
+            echo "<pre>";
+            var_dump($exception->getMessage());
+            echo "</pre>" . PHP_EOL;
+            echo "<pre>";
+            var_dump($exception->getTraceAsString());
+            echo "</pre>" . PHP_EOL;
+            die("FFFFFUUUUUCCCCCKKKKK" . PHP_EOL);
             $this->getSessionFlashbag()->add('error', $this->getTranslator()->trans('portfolio_visibility_update_error_message', array(), 'icap_portfolio'));
 
             return $this->redirect($this->generateUrl('icap_portfolio_list'));

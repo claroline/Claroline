@@ -5,6 +5,7 @@ namespace Icap\PortfolioBundle\Manager;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\Log\LogGenericEvent;
 use Claroline\CoreBundle\Pager\PagerFactory;
+use Claroline\TeamBundle\Manager\TeamManager;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManager;
 use Icap\PortfolioBundle\Entity\Portfolio;
@@ -49,14 +50,21 @@ class PortfolioManager
     protected $eventDispatcher;
 
     /**
+     * @var TeamManager
+     */
+    protected $teamManager;
+
+    /**
      * @DI\InjectParams({
      *     "entityManager"   = @DI\Inject("doctrine.orm.entity_manager"),
      *     "formFactory"     = @DI\Inject("form.factory"),
      *     "widgetsManager"  = @DI\Inject("icap_portfolio.manager.widgets"),
      *     "eventDispatcher" = @DI\Inject("event_dispatcher"),
+     *     "teamManager"     = @DI\Inject("claroline.manager.team_manager")
      * })
      */
-    public function __construct(EntityManager $entityManager, FormFactory $formFactory, WidgetsManager $widgetsManager, EventDispatcherInterface $eventDispatcher)
+    public function __construct(EntityManager $entityManager, FormFactory $formFactory, WidgetsManager $widgetsManager,
+        EventDispatcherInterface $eventDispatcher, TeamManager $teamManager)
     {
         $this->entityManager   = $entityManager;
         $this->formFactory     = $formFactory;
@@ -97,8 +105,10 @@ class PortfolioManager
      * @param Portfolio                               $portfolio
      * @param Collection|PortfolioUser[]              $originalPortfolioUsers
      * @param \Doctrine\Common\Collections\Collection $originalPortfolioGroups
+     * @param \Doctrine\Common\Collections\Collection $originalPortfolioTeams
      */
-    public function updateVisibility(Portfolio $portfolio, Collection $originalPortfolioUsers, Collection $originalPortfolioGroups)
+    public function updateVisibility(Portfolio $portfolio, Collection $originalPortfolioUsers,
+        Collection $originalPortfolioGroups, Collection $originalPortfolioTeams)
     {
         $portfolioUsers                = $portfolio->getPortfolioUsers();
         $addedPortfolioViewersToNotify = array();
@@ -126,6 +136,18 @@ class PortfolioManager
 
         foreach ($originalPortfolioGroups as $originalPortfolioGroup) {
             $this->entityManager->remove($originalPortfolioGroup);
+        }
+
+        $portfolioTeams = $portfolio->getPortfolioTeams();
+
+        foreach ($portfolioTeams as $portfolioTeam) {
+            if ($originalPortfolioTeams->contains($portfolioTeam)) {
+                $originalPortfolioTeams->removeElement($portfolioTeam);
+            }
+        }
+
+        foreach ($originalPortfolioTeams as $originalPortfolioTeam) {
+            $this->entityManager->remove($originalPortfolioTeam);
         }
 
         $this->persistPortfolio($portfolio);
@@ -315,7 +337,7 @@ class PortfolioManager
             elseif ($portfolio->hasGuide($user)) {
                 $openingMode = self::PORTFOLIO_OPENING_MODE_EVALUATE;
             }
-            elseif ($portfolio->visibleToUser($user)) {
+            elseif ($this->visibleToUser($portfolio, $user)) {
                 $openingMode = self::PORTFOLIO_OPENING_MODE_VIEW;
             }
         }
@@ -324,5 +346,64 @@ class PortfolioManager
         }
 
         return $openingMode;
+    }
+
+    /**
+     * @param Portfolio $portfolio
+     * @param User      $user
+     *
+     * @return bool
+     */
+    public function visibleToUser(Portfolio $portfolio, User $user)
+    {
+        $visibility     = $portfolio->getVisibility();
+        $isVisible      = false;
+
+        if (Portfolio::VISIBILITY_EVERYBODY === $visibility ||
+            Portfolio::VISIBILITY_PLATFORM_USER === $visibility) {
+            $isVisible = true;
+        }
+        elseif (Portfolio::VISIBILITY_USER === $visibility) {
+            $portfolioUsers = $portfolio->getPortfolioUsers();
+
+            foreach ($portfolioUsers as $portfolioUser) {
+                if ($user === $portfolioUser->getUser()) {
+                    $isVisible = true;
+                    break;
+                }
+            }
+
+            if (!$isVisible) {
+                $portfolioGroups = $portfolio->getPortfolioGroups();
+                $userGroups      = $user->getGroups();
+
+                foreach ($portfolioGroups as $portfolioGroup) {
+                    foreach ($userGroups as $userGroup) {
+                        if ($userGroup === $portfolioGroup->getGroup()) {
+                            $isVisible = true;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if (!$isVisible) {
+                $portfolioTeams = $portfolio->getPortfolioTeams();
+                /** @var \Claroline\TeamBundle\Entity\Team[] $userTeams */
+                $userTeams      = $this->teamManager->getTeamsByUser($user);
+
+                foreach ($portfolioTeams as $portfolioTeam) {
+                    foreach ($userTeams as $userTeam) {
+                        if ($userTeam === $portfolioTeam->getTeam()) {
+                            $isVisible = true;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+
+        return $isVisible;
     }
 }

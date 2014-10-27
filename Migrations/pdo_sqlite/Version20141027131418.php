@@ -8,12 +8,29 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/10/22 02:17:53
+ * Generation date: 2014/10/27 01:14:20
  */
-class Version20141022141752 extends AbstractMigration
+class Version20141027131418 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
+        $this->addSql("
+            CREATE TABLE icap__portfolio_teams (
+                id INTEGER NOT NULL, 
+                team_id INTEGER NOT NULL, 
+                portfolio_id INTEGER NOT NULL, 
+                PRIMARY KEY(id)
+            )
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_BBC17F49296CD8AE ON icap__portfolio_teams (team_id)
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_BBC17F49B96B5643 ON icap__portfolio_teams (portfolio_id)
+        ");
+        $this->addSql("
+            CREATE UNIQUE INDEX portfolio_teams_unique_idx ON icap__portfolio_teams (portfolio_id, team_id)
+        ");
         $this->addSql("
             CREATE TABLE icap__portfolio_comments (
                 id INTEGER NOT NULL, 
@@ -106,6 +123,9 @@ class Version20141022141752 extends AbstractMigration
 
     public function down(Schema $schema)
     {
+        $this->addSql("
+            DROP TABLE icap__portfolio_teams
+        ");
         $this->addSql("
             DROP TABLE icap__portfolio_comments
         ");

@@ -68,6 +68,21 @@ class VisibilityPortfolioType extends AbstractType
                 'repo_method'    => 'findByNameForAjax',
                 'placeholder'    => $this->translator->trans('select_group', array(), 'icap_portfolio'),
                 'mapped'         => false
+            ))
+            ->add('portfolio_teams', 'collection', array(
+                'type'          => 'icap_portfolio_visible_team_form',
+                'by_reference'  => false,
+                'theme_options' => array('label_width' => 'col-md-12'),
+                'prototype'     => true,
+                'allow_add'     => true,
+                'allow_delete'  => true
+            ))
+            ->add('search_team', 'zenstruck_ajax_entity', array(
+                'class'          => 'ClarolineTeamBundle:Team',
+                'use_controller' => true,
+                'property'       => 'name',
+                'placeholder'    => $this->translator->trans('select_team', array(), 'icap_portfolio'),
+                'mapped'         => false
             ));
     }
 

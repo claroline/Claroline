@@ -152,6 +152,7 @@ class PortfolioHandler
     {
         $originalPortfolioUsers  = $portfolio->getPortfolioUsers();
         $originalPortfolioGroups = $portfolio->getPortfolioGroups();
+        $originalPortfolioTeams  = $portfolio->getPortfolioTeams();
         $form                    = $this->getVisibilityForm($portfolio);
 
         $request = $this->requestStack->getCurrentRequest();
@@ -159,7 +160,7 @@ class PortfolioHandler
             $form->submit($request);
 
             if ($form->isValid()) {
-                $this->portfolioManager->updateVisibility($portfolio, $originalPortfolioUsers, $originalPortfolioGroups);
+                $this->portfolioManager->updateVisibility($portfolio, $originalPortfolioUsers, $originalPortfolioGroups, $originalPortfolioTeams);
 
                 return true;
             }
