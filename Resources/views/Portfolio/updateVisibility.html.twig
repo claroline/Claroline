@@ -148,33 +148,35 @@
             <div class="col-md-3">
                 {{ form_widget(form.visibility) }}
             </div>
-            <div class="col-md-5{% if 1 != form.visibility.vars.data %} hidden{% endif %}" id="choose_user">
-                <label class="row">{{ 'select_visible_users'|trans({}, 'icap_portfolio') }}</label>
-                <div class="row">
-                    <div class="col-md-12">
-                        {{ form_widget(form.portfolio_users) }}
-                        {{ form_widget(form.search_user) }}
-                        <button class="btn btn-xs btn-success form-collection-add-user" disabled="disabled">{{ 'add'|trans({}, 'platform') }}</button>
+            <div class="col-md-8">
+                <div {% if 1 != form.visibility.vars.data %}class="hidden" {% endif %}id="choose_user">
+                    <label class="row">{{ 'select_visible_users'|trans({}, 'icap_portfolio') }}</label>
+                    <div class="row">
+                        <div class="col-md-12">
+                            {{ form_widget(form.portfolio_users) }}
+                            {{ form_widget(form.search_user) }}
+                            <button class="btn btn-xs btn-success form-collection-add-user" disabled="disabled">{{ 'add'|trans({}, 'platform') }}</button>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-md-5{% if 1 != form.visibility.vars.data %} hidden{% endif %}" id="choose_group">
-                <label class="row">{{ 'select_visible_groups'|trans({}, 'icap_portfolio') }}</label>
-                <div class="row">
-                    <div class="col-md-12">
-                        {{ form_widget(form.portfolio_groups) }}
-                        {{ form_widget(form.search_group) }}
-                        <button class="btn btn-xs btn-success form-collection-add-group" disabled="disabled">{{ 'add'|trans({}, 'platform') }}</button>
+                <div {% if 1 != form.visibility.vars.data %}class="hidden" {% endif %}id="choose_group">
+                    <label class="row">{{ 'select_visible_groups'|trans({}, 'icap_portfolio') }}</label>
+                    <div class="row">
+                        <div class="col-md-12">
+                            {{ form_widget(form.portfolio_groups) }}
+                            {{ form_widget(form.search_group) }}
+                            <button class="btn btn-xs btn-success form-collection-add-group" disabled="disabled">{{ 'add'|trans({}, 'platform') }}</button>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-md-5{% if 1 != form.visibility.vars.data %} hidden{% endif %}" id="choose_team">
-                <label class="row">{{ 'select_visible_teams'|trans({}, 'icap_portfolio') }}</label>
-                <div class="row">
-                    <div class="col-md-12">
-                        {{ form_widget(form.portfolio_teams) }}
-                        {{ form_widget(form.search_team) }}
-                        <button class="btn btn-xs btn-success form-collection-add-team" disabled="disabled">{{ 'add'|trans({}, 'platform') }}</button>
+                <div {% if 1 != form.visibility.vars.data %}class="hidden" {% endif %}id="choose_team">
+                    <label class="row">{{ 'select_visible_teams'|trans({}, 'icap_portfolio') }}</label>
+                    <div class="row">
+                        <div class="col-md-12">
+                            {{ form_widget(form.portfolio_teams) }}
+                            {{ form_widget(form.search_team) }}
+                            <button class="btn btn-xs btn-success form-collection-add-team" disabled="disabled">{{ 'add'|trans({}, 'platform') }}</button>
+                        </div>
                     </div>
                 </div>
             </div>
