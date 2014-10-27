@@ -44,6 +44,8 @@ use Symfony\Component\Yaml\Yaml;
  */
 class WorkspaceManager
 {
+    const MAX_WORKSPACE_BATCH_SIZE = 10;
+
     /** @var HomeTabManager */
     private $homeTabManager;
     /** @var MaskManager */
@@ -159,10 +161,10 @@ class WorkspaceManager
      *
      * @return \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace
      */
-    public function create(Configuration $configuration, User $manager, $createUsers = false, $importUsers = false)
+    public function create(Configuration $configuration, User $manager)
     {
         $transfertManager = $this->container->get('claroline.manager.transfert_manager');
-        $workspace = $transfertManager->createWorkspace($configuration, $manager, $createUsers, $importUsers);
+        $workspace = $transfertManager->createWorkspace($configuration, $manager);
 
         return $workspace;
     }
@@ -751,5 +753,80 @@ class WorkspaceManager
     public function importRichText()
     {
         $this->container->get('claroline.manager.transfert_manager')->importRichText();
+    }
+
+    /**
+     * Import a workspace list from a csv data.
+     *
+     * @param array $workspaces
+     */
+    public function importWorkspaces(array $workspaces, $logger = null)
+    {
+        $this->om->clear();
+        $ds = DIRECTORY_SEPARATOR;
+        $i = 0;
+        $j = 0;
+        $workspaceModelManager = $this->container->get('claroline.manager.workspace_model_manager');
+
+        foreach ($workspaces as $workspace) {
+            $this->om->startFlushSuite();
+            $model = null;
+            $name = $workspace[0];
+            $code = $workspace[1];
+            $isVisible = $workspace[2];
+            $selfRegistration = $workspace[3];
+            $registrationValidation = $workspace[4];
+            $selfUnregistration = $workspace[5];
+
+            if (isset($workspace[6])) {
+                $user = $this->om->getRepository('ClarolineCoreBundle:User')
+                    ->findOneByUsername($workspace[6]);
+            } else {
+                $user = $this->container->get('security.context')->getToken()->getUser();
+            }
+
+            if (isset($workspace[7])) $model = $this->om->getRepository('ClarolineCoreBundle:Model\WorkspaceModel')
+                ->findOneByName($workspace[7]);
+
+            if ($model) {
+                $guid = $this->ut->generateGuid();
+                $workspace = new Workspace();
+                $this->createWorkspace($workspace);
+                $workspace->setName($name);
+                $workspace->setCode($code);
+                $workspace->setDisplayable($isVisible);
+                $workspace->setSelfRegistration($selfRegistration);
+                $workspace->setSelfUnregistration($selfUnregistration);
+                $workspace->setRegistrationValidation($registrationValidation);
+                $workspace->setGuid($guid);
+                $date = new \Datetime(date('d-m-Y H:i'));
+                $workspace->setCreationDate($date->getTimestamp());
+                $workspace->setCreator($user);
+                $workspaceModelManager->addDataFromModel($model, $workspace, $user, $errors);
+            } else {
+                //this should be changed later
+                $configuration = new Configuration($this->templateDir . $ds . 'default.zip');
+                $configuration->setWorkspaceName($name);
+                $configuration->setWorkspaceCode($code);
+                $configuration->setDisplayable($isVisible);
+                $configuration->setSelfRegistration($selfRegistration);
+                $configuration->setSelfUnregistration($registrationValidation);
+                $this->container->get('claroline.manager.transfert_manager')->createWorkspace($configuration, $user);
+            }
+
+            $i++;
+            $j++;
+
+            if ($i % self::MAX_WORKSPACE_BATCH_SIZE === 0) {
+                if ($logger) $logger(" [UOW size: " . $this->om->getUnitOfWork()->size() . "]");
+                $i = 0;
+                $this->om->endFlushSuite();
+                if ($logger) $logger(" Workspace $j ($name) being created");
+                $this->om->clear();
+                $this->om->startFlushSuite();
+            }
+
+            $this->om->endFlushSuite();
+        }
     }
 }

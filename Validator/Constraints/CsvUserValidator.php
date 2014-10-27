@@ -30,7 +30,6 @@ class CsvUserValidator extends ConstraintValidator
     private $om;
 
     /**
-
      * @DI\InjectParams({
      *     "validator"             = @DI\Inject("validator"),
      *     "trans"                 = @DI\Inject("translator"),
@@ -140,37 +139,37 @@ class CsvUserValidator extends ConstraintValidator
                     );
                 }
             }
+        }
 
-            foreach ($usernames as $username => $lines) {
-                if (count($lines) > 1) {
-                    $msg = $this->translator->trans(
-                        'username_found_at',
-                        array('%username%' => $username, '%lines%' => $this->getLines($lines)),
+        foreach ($usernames as $username => $lines) {
+            if (count($lines) > 1) {
+                $msg = $this->translator->trans(
+                    'username_found_at',
+                    array('%username%' => $username, '%lines%' => $this->getLines($lines)),
+                    'platform'
+                ) . ' ';
+            }
+        }
+
+        if ($modelName) {
+            $model = $this->om->getRepository('ClarolineCoreBundle:Model\WorkspaceModel')->findOneByName($modelName);
+
+            if (!$model) {
+                $msg = $this->translator->trans(
+                        'model_invalid',
+                        array('%model%' => $modelName, '%line%' => $i + 1),
                         'platform'
                     ) . ' ';
-                }
+
+                $this->context->addViolation($msg);
             }
+        }
 
-            if ($modelName) {
-                $model = $this->om->getRepository('ClarolineCoreBundle:Model\WorkspaceModel')->findOneByName($modelName);
-
-                if (!$model) {
-                    $msg = $this->translator->trans(
-                            'model_invalid',
-                            array('%model%' => $modelName, '%line%' => $i + 1),
-                            'platform'
-                        ) . ' ';
-
-                    $this->context->addViolation($msg);
-                }
-            }
-
-            foreach ($errors as $error) {
-                $this->context->addViolation(
-                    $this->translator->trans('line_number', array('%line%' => $i + 1), 'platform') . ' ' .
-                    $error->getInvalidValue() . ' : ' . $error->getMessage()
-                );
-            }
+        foreach ($errors as $error) {
+            $this->context->addViolation(
+                $this->translator->trans('line_number', array('%line%' => $i + 1), 'platform') . ' ' .
+                $error->getInvalidValue() . ' : ' . $error->getMessage()
+            );
         }
 
         foreach ($usernames as $username => $lines) {
