@@ -8,12 +8,23 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/10/22 02:17:54
+ * Generation date: 2014/10/27 01:14:20
  */
-class Version20141022141752 extends AbstractMigration
+class Version20141027131418 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
+        $this->addSql("
+            CREATE TABLE icap__portfolio_teams (
+                id INT AUTO_INCREMENT NOT NULL, 
+                team_id INT NOT NULL, 
+                portfolio_id INT NOT NULL, 
+                PRIMARY KEY(id), 
+                INDEX IDX_BBC17F49296CD8AE (team_id), 
+                INDEX IDX_BBC17F49B96B5643 (portfolio_id), 
+                UNIQUE INDEX portfolio_teams_unique_idx (portfolio_id, team_id)
+            )
+        ");
         $this->addSql("
             CREATE TABLE icap__portfolio_comments (
                 id INT AUTO_INCREMENT NOT NULL, 
@@ -43,6 +54,16 @@ class Version20141022141752 extends AbstractMigration
                 text TEXT DEFAULT NULL, 
                 PRIMARY KEY(id)
             )
+        ");
+        $this->addSql("
+            ALTER TABLE icap__portfolio_teams 
+            ADD CONSTRAINT FK_BBC17F49296CD8AE FOREIGN KEY (team_id) 
+            REFERENCES claro_team (id)
+        ");
+        $this->addSql("
+            ALTER TABLE icap__portfolio_teams 
+            ADD CONSTRAINT FK_BBC17F49B96B5643 FOREIGN KEY (portfolio_id) 
+            REFERENCES icap__portfolio (id)
         ");
         $this->addSql("
             ALTER TABLE icap__portfolio_comments 
@@ -87,6 +108,9 @@ class Version20141022141752 extends AbstractMigration
 
     public function down(Schema $schema)
     {
+        $this->addSql("
+            DROP TABLE icap__portfolio_teams
+        ");
         $this->addSql("
             DROP TABLE icap__portfolio_comments
         ");

@@ -1,6 +1,6 @@
 <?php
 
-namespace Icap\PortfolioBundle\Migrations\pdo_sqlsrv;
+namespace Icap\PortfolioBundle\Migrations\pdo_mysql;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -8,53 +8,62 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/10/22 02:17:54
+ * Generation date: 2014/10/27 01:14:19
  */
-class Version20141022141752 extends AbstractMigration
+class Version20141027131418 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
         $this->addSql("
+            CREATE TABLE icap__portfolio_teams (
+                id INT AUTO_INCREMENT NOT NULL, 
+                team_id INT NOT NULL, 
+                portfolio_id INT NOT NULL, 
+                INDEX IDX_BBC17F49296CD8AE (team_id), 
+                INDEX IDX_BBC17F49B96B5643 (portfolio_id), 
+                UNIQUE INDEX portfolio_teams_unique_idx (portfolio_id, team_id), 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
+        ");
+        $this->addSql("
             CREATE TABLE icap__portfolio_comments (
-                id INT IDENTITY NOT NULL, 
+                id INT AUTO_INCREMENT NOT NULL, 
                 portfolio_id INT NOT NULL, 
                 sender_id INT NOT NULL, 
-                message VARCHAR(MAX) NOT NULL, 
-                sending_date DATETIME2(6) NOT NULL, 
-                PRIMARY KEY (id)
-            )
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_D4662DE3B96B5643 ON icap__portfolio_comments (portfolio_id)
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_D4662DE3F624B39D ON icap__portfolio_comments (sender_id)
+                message LONGTEXT NOT NULL, 
+                sending_date DATETIME NOT NULL, 
+                INDEX IDX_D4662DE3B96B5643 (portfolio_id), 
+                INDEX IDX_D4662DE3F624B39D (sender_id), 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE icap__portfolio_guides (
-                id INT IDENTITY NOT NULL, 
+                id INT AUTO_INCREMENT NOT NULL, 
                 user_id INT NOT NULL, 
                 portfolio_id INT NOT NULL, 
-                PRIMARY KEY (id)
-            )
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_27EAB640A76ED395 ON icap__portfolio_guides (user_id)
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_27EAB640B96B5643 ON icap__portfolio_guides (portfolio_id)
-        ");
-        $this->addSql("
-            CREATE UNIQUE INDEX portfolio_users_unique_idx ON icap__portfolio_guides (portfolio_id, user_id) 
-            WHERE portfolio_id IS NOT NULL 
-            AND user_id IS NOT NULL
+                INDEX IDX_27EAB640A76ED395 (user_id), 
+                INDEX IDX_27EAB640B96B5643 (portfolio_id), 
+                UNIQUE INDEX portfolio_users_unique_idx (portfolio_id, user_id), 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE icap__portfolio_widget_text (
                 id INT NOT NULL, 
-                text VARCHAR(MAX), 
-                PRIMARY KEY (id)
-            )
+                text LONGTEXT DEFAULT NULL, 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
+        ");
+        $this->addSql("
+            ALTER TABLE icap__portfolio_teams 
+            ADD CONSTRAINT FK_BBC17F49296CD8AE FOREIGN KEY (team_id) 
+            REFERENCES claro_team (id)
+        ");
+        $this->addSql("
+            ALTER TABLE icap__portfolio_teams 
+            ADD CONSTRAINT FK_BBC17F49B96B5643 FOREIGN KEY (portfolio_id) 
+            REFERENCES icap__portfolio (id)
         ");
         $this->addSql("
             ALTER TABLE icap__portfolio_comments 
@@ -84,11 +93,11 @@ class Version20141022141752 extends AbstractMigration
         ");
         $this->addSql("
             ALTER TABLE icap__portfolio_abstract_widget 
-            ADD label NVARCHAR(255) NOT NULL
+            ADD `label` VARCHAR(255) NOT NULL
         ");
         $this->addSql("
             ALTER TABLE icap__portfolio_widget_badges_badge 
-            DROP CONSTRAINT FK_25D41B98F7A2C2FC
+            DROP FOREIGN KEY FK_25D41B98F7A2C2FC
         ");
         $this->addSql("
             ALTER TABLE icap__portfolio_widget_badges_badge 
@@ -100,6 +109,9 @@ class Version20141022141752 extends AbstractMigration
     public function down(Schema $schema)
     {
         $this->addSql("
+            DROP TABLE icap__portfolio_teams
+        ");
+        $this->addSql("
             DROP TABLE icap__portfolio_comments
         ");
         $this->addSql("
@@ -110,11 +122,11 @@ class Version20141022141752 extends AbstractMigration
         ");
         $this->addSql("
             ALTER TABLE icap__portfolio_abstract_widget 
-            DROP COLUMN label
+            DROP `label`
         ");
         $this->addSql("
             ALTER TABLE icap__portfolio_widget_badges_badge 
-            DROP CONSTRAINT FK_25D41B98F7A2C2FC
+            DROP FOREIGN KEY FK_25D41B98F7A2C2FC
         ");
         $this->addSql("
             ALTER TABLE icap__portfolio_widget_badges_badge 

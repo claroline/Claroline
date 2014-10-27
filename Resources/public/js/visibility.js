@@ -6,10 +6,13 @@
         var visibilityForm     = $("#visibility_form");
         var chooseUserBlock    = $("#choose_user");
         var chooseGroupBlock   = $("#choose_group");
+        var chooseTeamBlock    = $("#choose_team");
         var userSelect2Field   = $("#icap_portfolio_visibility_form_search_user");
         var groupSelect2Field  = $("#icap_portfolio_visibility_form_search_group");
+        var teamSelect2Field   = $("#icap_portfolio_visibility_form_search_team");
         var addingUserButton   = $('.form-collection-add-user');
         var addingGroupButton  = $('.form-collection-add-group');
+        var addingTeamButton   = $('.form-collection-add-team');
 
         ZenstruckFormHelper.initSelect2Helper()
 
@@ -26,6 +29,11 @@
         // form collection prototype creation
         addingGroupButton.on('click', function(event) {
             addingButtonClick(event, $(this), groupSelect2Field);
+        });
+
+        // form collection prototype creation
+        addingTeamButton.on('click', function(event) {
+            addingButtonClick(event, $(this), teamSelect2Field);
         });
 
         var addingButtonClick = function (event, element, select2Field) {
@@ -57,6 +65,9 @@
         groupSelect2Field.on("change", function(event) {
             select2FieldChange(event, addingGroupButton);
         });
+        teamSelect2Field.on("change", function(event) {
+            select2FieldChange(event, addingTeamButton);
+        });
 
         var select2FieldChange = function (event, button) {
             var existingFieldValue = $('.form-collection input[value=' + event.val + ']', button.parent());
@@ -75,10 +86,12 @@
             if (1 == formValues.visibility) {
                 chooseUserBlock.removeClass('hidden');
                 chooseGroupBlock.removeClass('hidden');
+                chooseTeamBlock.removeClass('hidden');
             }
             else {
                 chooseUserBlock.addClass('hidden');
                 chooseGroupBlock.addClass('hidden');
+                chooseTeamBlock.addClass('hidden');
             }
         });
 
