@@ -1,5 +1,7 @@
 actions: Actions
+all_other_teams: 'All other teams'
 automatic_fill: 'Automatic fill'
+create_a_team: 'Create a team'
 create_teams: 'Create teams'
 default_parameters: 'Default parameters'
 delete_selected_teams: 'Delete selected team(s)'
@@ -17,14 +19,20 @@ fill_teams: 'Fill teams'
 max_teams_limit_reached: 'Maximum number of teams reached'
 maximum: Maximum
 maximum_informations: 'The number of users that can be registered into team'
+my_teams: 'My teams'
+no_description: 'No description'
 no_team: 'No team'
 private: Private
 public: Public
 public_registration: 'Public registration'
 public_unregistration: 'Public unregistration'
 register: Register
+register_to_team: 'Register to team'
+register_to_team_comfirm_message: 'Are you sure you want to register to this team ?'
 register_unregister_users_to_team: 'Register/Unregister users to team'
 register_users_to_team: 'Register users to team'
+self_register: Register
+self_unregister: Unregister
 team: Team
 team_creation: 'Team creation'
 team_directory: 'Team''s directory'
@@ -40,4 +48,6 @@ team_form_selfUnregistration: 'Allow user to unregister'
 teams_creation: 'Teams creation'
 unregister: Unregister
 unregister_all_users_from_selected_teams: 'Unregister all users from selected team(s)'
+unregister_from_team: 'Unregister from team'
+unregister_from_team_comfirm_message: 'Are you sure you want to unregister from this team ?'
 users: Users

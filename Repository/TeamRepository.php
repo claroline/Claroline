@@ -512,4 +512,26 @@ class TeamRepository extends EntityRepository
 
         return $executeQuery ? $query->getResult() : $query;
     }
+
+    public function findTeamsWithExclusionsByWorkspace(
+        Workspace $workspace,
+        array $excludedTeams,
+        $orderedBy = 'name',
+        $order = 'ASC',
+        $executeQuery = true
+    )
+    {
+        $dql = "
+            SELECT t
+            FROM Claroline\TeamBundle\Entity\Team t
+            WHERE t.workspace = :workspace
+            AND t NOT IN (:excludedTeams)
+            ORDER BY t.{$orderedBy} {$order}
+        ";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('workspace', $workspace);
+        $query->setParameter('excludedTeams', $excludedTeams);
+
+        return $executeQuery ? $query->getResult() : $query;
+    }
 }

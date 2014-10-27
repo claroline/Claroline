@@ -107,6 +107,11 @@
                             </a>
                         </th>
                         <th class="text-center">
+                            <a href="{{ sortUrl(workspace.getId(), 'description', order) }}">
+                                {{ 'description'|trans({}, 'platform') }}
+                            </a>
+                        </th>
+                        <th class="text-center">
                             {{ 'users'|trans({}, 'team') }}
                         </th>
                         <th class="text-center">
@@ -146,6 +151,17 @@
                                 <a href="{{ path('claro_team_manager_team_index', {'team': team.getId()}) }}">
                                     {{ team.getName() }}
                                 </a>
+                            </td>
+                            <td class="text-center">
+                                {% if team.description() is not empty %}
+                                    <i class="fa fa-eye view-team-description-btn pointer-hand"
+                                       data-team-id="{{ team.getId() }}"
+                                       data-team-name="{{ team.getName() }}"
+                                    > 
+                                    </i>
+                                {% else %}
+                                    -
+                                {% endif %}
                             </td>
                             <td class="text-center">
                                 <span class="pointer-hand view-users-list-btn"
@@ -253,11 +269,33 @@
                 </div>
             </div>
         </div>
+    </div>
+
+    <div id="view-team-description-box" class="modal fade" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <h3 id="view-team-description-header" class="modal-header">
+                </h3>
+                <div id="view-team-description-body" class="modal-body">
+                </div>
+                <div class="modal-footer">
+                    <input type="button"
+                           class="btn btn-default"
+                           data-dismiss="modal"
+                           value="{{ 'close'|trans({}, 'platform') }}"
+                    />
+                </div>
+            </div>
+        </div>
     </div>  
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
+    <script type="text/javascript"
+            src="{{ url('bazinga_exposetranslation_js', { 'domain_name': 'team' }) }}"
+    >
+    </script>
     <script src='{{ asset('bundles/clarolineteam/js/managerMenu.js') }}'
             type="text/javascript"
     >

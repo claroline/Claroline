@@ -146,7 +146,7 @@ class TeamController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/workspace/{workspace}/team/user/menu",
+     *     "/workspace/{workspace}/team/user/menu/ordered/by/{orderedBy}/order/{order}",
      *     name="claro_team_user_menu",
      *     defaults={"orderedBy"="name","order"="ASC"}
      * )
@@ -165,13 +165,32 @@ class TeamController extends Controller
     {
         $this->checkToolAccess($workspace);
 
-        $teams = $this->teamManager
-            ->getTeamsByWorkspace($workspace, $orderedBy, $order);
+        $params = $this->teamManager->getParametersByWorkspace($workspace);
+        $userTeams = $this->teamManager->getTeamsByUserAndWorkspace($user, $workspace);
+        $teams = $this->teamManager->getTeamsWithExclusionsByWorkspace(
+            $workspace,
+            $userTeams,
+            $orderedBy,
+            $order
+        );
+        $teamsWithUsers = $this->teamManager
+            ->getTeamsWithUsersByWorkspace($workspace);
+        $nbUsers = array();
+
+        foreach ($teamsWithUsers as $teamWithUsers) {
+            $nbUsers[$teamWithUsers['team']->getId()] = $teamWithUsers['nb_users'];
+        }
 
         return array(
             'workspace' => $workspace,
             'user' => $user,
-            'teams' => $teams
+            'userTeams' => $userTeams,
+            'teams' => $teams,
+            'orderedBy' => $orderedBy,
+            'order' => $order,
+            'nbUsers' => $nbUsers,
+            'params' => $params,
+            'nbTeams' => count($userTeams)
         );
     }
 
@@ -359,6 +378,7 @@ class TeamController extends Controller
                 $user,
                 $datas['name'],
                 $datas['nbTeams'],
+                $datas['description'],
                 $datas['maxUsers'],
                 $datas['isPublic'],
                 $datas['selfRegistration'],
@@ -862,6 +882,27 @@ class TeamController extends Controller
         $users = $team->getUsers();
 
         return array('users' => $users);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/team/{team}/description/display",
+     *     name="claro_team_display_description",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     *
+     * @EXT\Template()
+     *
+     * Displays the description of a team
+     *
+     * @param Team $team
+     */
+    public function teamDescriptionDisplayAction(Team $team)
+    {
+        $this->checkToolAccess($team->getWorkspace());
+
+        return array('description' => $team->getDescription());
     }
 
     /**

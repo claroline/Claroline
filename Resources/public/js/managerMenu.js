@@ -123,6 +123,24 @@
             }
         });
     });
+    
+    $('.view-team-description-btn').on('click', function () {
+        var teamId = $(this).data('team-id');
+        var teamName = $(this).data('team-name');
+        
+        $.ajax({
+            url: Routing.generate(
+                'claro_team_display_description',
+                {'team': teamId}
+            ),
+            type: 'GET',
+            success: function (datas) {
+                $('#view-team-description-header').html(teamName);
+                $('#view-team-description-body').html(datas);
+                $('#view-team-description-box').modal('show');
+            }
+        });
+    });
 
     $('#view-registration-users-body').on('click', 'a', function (event) {
         event.preventDefault();

@@ -74,6 +74,7 @@ class TeamManager
         User $user,
         $name,
         $nbTeams,
+        $description,
         $maxUsers,
         $isPublic,
         $selfRegistration,
@@ -91,6 +92,7 @@ class TeamManager
             $team->setName($validName['name']);
             $index = $validName['index'] + 1;
             $team->setWorkspace($workspace);
+            $team->setDescription($description);
             $team->setMaxUsers($maxUsers);
             $team->setIsPublic($isPublic);
             $team->setSelfRegistration($selfRegistration);
@@ -651,6 +653,34 @@ class TeamManager
                 $executeQuery
             ) :
             array();
+    }
+
+    public function getTeamsWithExclusionsByWorkspace(
+        Workspace $workspace,
+        array $excludedTeams,
+        $orderedBy = 'name',
+        $order = 'ASC',
+        $executeQuery = true
+    )
+    {
+        if (count($excludedTeams) > 0) {
+
+            return $this->teamRepo->findTeamsWithExclusionsByWorkspace(
+                $workspace,
+                $excludedTeams,
+                $orderedBy,
+                $order,
+                $executeQuery
+            );
+        } else {
+
+            return $this->teamRepo->findTeamsByWorkspace(
+                $workspace,
+                $orderedBy,
+                $order,
+                $executeQuery
+            );
+        }
     }
 
 

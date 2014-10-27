@@ -196,6 +196,10 @@
 
 {% block javascripts %}
     {{ parent() }}
+    <script type="text/javascript"
+            src="{{ url('bazinga_exposetranslation_js', { 'domain_name': 'team' }) }}"
+    >
+    </script>
     <script src='{{ asset('bundles/clarolineteam/js/managerTeamIndex.js') }}'
             type="text/javascript"
     >
