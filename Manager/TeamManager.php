@@ -500,7 +500,7 @@ class TeamManager
         $executeQuery = true
     )
     {
-        return $this->teamRepo->findTeamsByWorkspace(
+        return $this->teamRepo->findTeamsByUser(
             $user,
             $orderedBy,
             $order,
