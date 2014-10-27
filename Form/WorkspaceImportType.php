@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Form;
 
+use Claroline\CoreBundle\Validator\Constraints\CsvWorkspace;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints\File;
@@ -30,7 +31,8 @@ class WorkspaceImportType extends AbstractType
                 'mapped' => false,
                 'constraints' => array(
                     new NotBlank(),
-                    new File()
+                    new File(),
+                    new CsvWorkspace()
                 )
             )
         );

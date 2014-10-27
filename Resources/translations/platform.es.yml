@@ -941,3 +941,9 @@ add_role_to_users: Agregar un campo a %count% usuario(s)
 add_role_to_groups: Agregar un campo a %count% grupo(s)
 activate_notifications: Activar notificaciones
 model: Modelo
+workspace_code_invalid: El código %code% ha sido utilizado en la línea %line%
+workspace_model_invalid: El modelo %model% no existe en la línea %line%
+workspace_user_invalid: El usuario %username% no existe en la línea %line%.
+6_parameters_min_msg: El archivo csv  debe incluir, al menos, 6 elementos por línea.
+7_parameters_min_msg: El archivo csv  debe incluir, al menos, 7 elementos por línea.
+code_found_at: El código %code% ha sido encontrado en las líneas %lines%
