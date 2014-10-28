@@ -124,13 +124,23 @@
                             </a>
                         </th>
                         <th class="text-center">
-                            <a href="{{ sortUrl(workspace.getId(), 'selfRegistration', order) }}">
-                                {{ 'public_registration'|trans({}, 'team') }}
+                            <a href="{{ sortUrl(workspace.getId(), 'selfRegistration', order) }}"
+                               data-toggle="tooltip"
+                               data-placement="top"
+                               title="{{ 'public_registration'|trans({}, 'team') }}"
+                            >
+                                <i class="fa fa-sign-in"></i>
+{#                                {{ 'public_registration'|trans({}, 'team') }}#}
                             </a>
                         </th>
                         <th class="text-center">
-                            <a href="{{ sortUrl(workspace.getId(), 'selfUnregistration', order) }}">
-                                {{ 'public_unregistration'|trans({}, 'team') }}
+                            <a href="{{ sortUrl(workspace.getId(), 'selfUnregistration', order) }}"
+                               data-toggle="tooltip"
+                               data-placement="top"
+                               title="{{ 'public_unregistration'|trans({}, 'team') }}"
+                            >
+                                <i class="fa fa-sign-out"></i>
+{#                                {{ 'public_unregistration'|trans({}, 'team') }}#}
                             </a>
                         </th>
                         <th class="text-center">
@@ -198,7 +208,16 @@
                                 {% endif %}
                             </td>
                             <td class="text-center">
-                                <span class="btn btn-success register-users-btn"
+                                <span class="btn btn-default btn-sm team-directory-btn"
+                                      data-workspace-id="{{ workspace.getId() }}"
+                                      data-node-id="{{ team.getDirectory().getResourceNode().getId() }}"
+                                      data-toggle="tooltip"
+                                      data-placement="top"
+                                      title="{{ 'go_to_team_directory'|trans({}, 'team') }}"
+                                >
+                                    <i class="fa fa-folder-open"></i>
+                                </span>
+                                <span class="btn btn-success btn-sm register-users-btn"
                                       data-team-id="{{ team.getId() }}"
                                       data-team-name="{{ team.getName() }}"
                                       data-toggle="tooltip"
@@ -207,7 +226,7 @@
                                 >
                                     <i class="fa fa-sign-in"></i>
                                 </span>
-                                <span class="btn btn-default edit-team-btn"
+                                <span class="btn btn-default btn-sm edit-team-btn"
                                    data-team-id="{{ team.getId() }}"
                                    data-toggle="tooltip"
                                    data-placement="top"
@@ -215,7 +234,7 @@
                                 >
                                     <i class="fa fa-edit"></i>
                                 </span>
-                                <span class="btn btn-danger delete-team-btn"
+                                <span class="btn btn-danger btn-sm delete-team-btn"
                                       data-team-id="{{ team.getId() }}"
                                       data-toggle="tooltip"
                                       data-placement="top"

@@ -278,6 +278,19 @@
         );
     });
     
+    $('.team-directory-btn').on('click', function () {
+        var directoryNodeId = $(this).data('node-id');
+        var workspaceId = $(this).data('workspace-id');
+        
+        window.location = Routing.generate(
+            'claro_workspace_open_tool',
+            {
+                'workspaceId': workspaceId,
+                'toolName': 'resource_manager'
+            }
+        ) + '#resources/' + directoryNodeId;
+    });
+    
     var removeTeamRow = function () {
         $('#row-team-' + currentTeamId).remove();
     };
