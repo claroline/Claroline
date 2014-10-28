@@ -67,7 +67,7 @@ class WidgetController extends BaseController
                     && null === $this->getDoctrine()->getRepository('IcapPortfolioBundle:Widget\AbstractWidget')->findOneByTypeAndPortfolio($type, $portfolio)
                 )) {
                 $newWidget  = $widgetManager->getNewWidget($portfolio, $type);
-                $data       = $widgetManager->handle($newWidget, $type, $request->request->all());
+                $data       = $widgetManager->handle($newWidget, $type, $request->request->all(), $this->get('kernel')->getEnvironment());
                 $statusCode = Response::HTTP_CREATED;
             }
         }
@@ -100,7 +100,7 @@ class WidgetController extends BaseController
             $widget = $abstractWidgetRepository->find($widgetId);
         }
 
-        $data = $this->getWidgetsManager()->handle($widget, $type, $request->request->all());
+        $data = $this->getWidgetsManager()->handle($widget, $type, $request->request->all(), $this->get('kernel')->getEnvironment());
 
         $response = new JsonResponse();
         $response->setData($data);

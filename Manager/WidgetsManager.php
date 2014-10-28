@@ -97,11 +97,11 @@ class WidgetsManager
      * @param AbstractWidget $widget
      * @param string         $type
      * @param array          $parameters
+     * @param string         $env
      *
-     * @throws \InvalidArgumentException
      * @return array
      */
-    public function handle(AbstractWidget $widget, $type, array $parameters)
+    public function handle(AbstractWidget $widget, $type, array $parameters, $env = 'prod')
     {
         $originalChildren = new ArrayCollection();
 
@@ -157,6 +157,12 @@ class WidgetsManager
             $data = $this->getWidgetData($widget);
 
             return $data;
+        }
+
+        if ('dev' === $env) {
+            echo "<pre>";
+            var_dump($form->getErrors());
+            echo "</pre>" . PHP_EOL;
         }
 
         throw new \InvalidArgumentException();
