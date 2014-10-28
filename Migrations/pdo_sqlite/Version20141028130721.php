@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/10/27 01:14:20
+ * Generation date: 2014/10/28 01:07:23
  */
-class Version20141027131418 extends AbstractMigration
+class Version20141028130721 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -70,6 +70,10 @@ class Version20141027131418 extends AbstractMigration
                 text CLOB DEFAULT NULL, 
                 PRIMARY KEY(id)
             )
+        ");
+        $this->addSql("
+            ALTER TABLE icap__portfolio 
+            ADD COLUMN commentsViewAt DATETIME NOT NULL
         ");
         $this->addSql("
             ALTER TABLE icap__portfolio_abstract_widget 
@@ -134,6 +138,51 @@ class Version20141027131418 extends AbstractMigration
         ");
         $this->addSql("
             DROP TABLE icap__portfolio_widget_text
+        ");
+        $this->addSql("
+            DROP INDEX IDX_8B1895DA76ED395
+        ");
+        $this->addSql("
+            CREATE TEMPORARY TABLE __temp__icap__portfolio AS 
+            SELECT id, 
+            user_id, 
+            visibility, 
+            disposition, 
+            deletedAt 
+            FROM icap__portfolio
+        ");
+        $this->addSql("
+            DROP TABLE icap__portfolio
+        ");
+        $this->addSql("
+            CREATE TABLE icap__portfolio (
+                id INTEGER NOT NULL, 
+                user_id INTEGER NOT NULL, 
+                visibility INTEGER NOT NULL, 
+                disposition INTEGER NOT NULL, 
+                deletedAt DATETIME DEFAULT NULL, 
+                PRIMARY KEY(id), 
+                CONSTRAINT FK_8B1895DA76ED395 FOREIGN KEY (user_id) 
+                REFERENCES claro_user (id) NOT DEFERRABLE INITIALLY IMMEDIATE
+            )
+        ");
+        $this->addSql("
+            INSERT INTO icap__portfolio (
+                id, user_id, visibility, disposition, 
+                deletedAt
+            ) 
+            SELECT id, 
+            user_id, 
+            visibility, 
+            disposition, 
+            deletedAt 
+            FROM __temp__icap__portfolio
+        ");
+        $this->addSql("
+            DROP TABLE __temp__icap__portfolio
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_8B1895DA76ED395 ON icap__portfolio (user_id)
         ");
         $this->addSql("
             DROP INDEX IDX_3E7AEFBBB96B5643

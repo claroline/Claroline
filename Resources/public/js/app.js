@@ -4,7 +4,7 @@ var portfolioApp = angular.module('portfolioApp', ['ngResource', 'ngSanitize', '
     'ui.resourcePicker', 'ui.badgePicker', 'ui.datepicker', 'ui.dateTimeInput', 'mgcrea.ngStrap.popover']);
 
 portfolioApp.config(["$httpProvider", "$locationProvider", function($http) {
-    var elementToRemove = ['views', 'editing', 'new', 'id', 'type'];
+    var elementToRemove = ['views', 'editing', 'new', 'id', 'type', 'unreadComments'];
 
     $http.defaults.transformRequest.push(function(data) {
         data = angular.fromJson(data);

@@ -42,7 +42,7 @@ class PortfolioController extends BaseController
     {
         $this->checkPortfolioToolAccess();
 
-        $data = $this->getPortfolioManager()->handle($portfolio,$request->request->all());
+        $data = $this->getPortfolioManager()->handle($portfolio, $request->request->all(), $this->get('kernel')->getEnvironment());
 
         $response = new JsonResponse();
         $response->setData($data);

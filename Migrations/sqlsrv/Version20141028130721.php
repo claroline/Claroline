@@ -1,6 +1,6 @@
 <?php
 
-namespace Icap\PortfolioBundle\Migrations\pdo_sqlsrv;
+namespace Icap\PortfolioBundle\Migrations\sqlsrv;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/10/27 01:14:20
+ * Generation date: 2014/10/28 01:07:23
  */
-class Version20141027131418 extends AbstractMigration
+class Version20141028130721 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -112,6 +112,10 @@ class Version20141027131418 extends AbstractMigration
             ON DELETE CASCADE
         ");
         $this->addSql("
+            ALTER TABLE icap__portfolio 
+            ADD commentsViewAt DATETIME2(6) NOT NULL
+        ");
+        $this->addSql("
             ALTER TABLE icap__portfolio_abstract_widget 
             ADD label NVARCHAR(255) NOT NULL
         ");
@@ -139,6 +143,10 @@ class Version20141027131418 extends AbstractMigration
         ");
         $this->addSql("
             DROP TABLE icap__portfolio_widget_text
+        ");
+        $this->addSql("
+            ALTER TABLE icap__portfolio 
+            DROP COLUMN commentsViewAt
         ");
         $this->addSql("
             ALTER TABLE icap__portfolio_abstract_widget 
