@@ -271,7 +271,7 @@ class PortfolioManager
      * @throws \InvalidArgumentException
      * @return array
      */
-    public function handle(Portfolio $portfolio, array $parameters)
+    public function handle(Portfolio $portfolio, array $parameters, $env = 'prod')
     {
         $data           = array();
         $oldDisposition = $portfolio->getDisposition();
@@ -297,6 +297,12 @@ class PortfolioManager
             $data = $this->getPortfolioData($portfolio);
 
             return $data;
+        }
+
+        if ('dev' === $env) {
+            echo "<pre>";
+            var_dump($form->getErrors());
+            echo "</pre>" . PHP_EOL;
         }
 
         throw new \InvalidArgumentException();
