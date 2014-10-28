@@ -112,6 +112,7 @@ class TeamManager
 
         foreach ($teams as $team) {
             $this->initializeTeamRights($team);
+//            $this->initializeTeamDirectoryPerms($team);
         }
         $this->om->endFlushSuite();
     }
@@ -547,6 +548,37 @@ class TeamManager
     {
         $this->om->persist($params);
         $this->om->flush();
+    }
+
+    public function initializeTeamDirectoryPerms(Team $team)
+    {
+        $directory = $team->getDirectory();
+
+        if (!is_null($directory)) {
+            $this->om->startFlushSuite();
+
+            $workspace = $team->getWorkspace();
+            $teamRole = $team->getRole();
+            $teamManagerRole = $team->getTeamManagerRole();
+            $isPublic = $team->getIsPublic();
+            $node = $directory->getResourceNode();
+            $workspaceRoles = $this->roleManager->getRolesByWorkspace($workspace);
+
+            foreach ($workspaceRoles as $role) {
+
+                if ($role->getId() !== $teamRole->getId() &&
+                    $role->getId() !== $teamManagerRole->getId()) {
+
+                    $rights = array();
+
+                    if ($isPublic) {
+                        $rights['open'] = true;
+                    }
+                    $this->rightsManager->editPerms($rights, $role, $node, true);
+                }
+            }
+            $this->om->endFlushSuite();
+        }
     }
 
 

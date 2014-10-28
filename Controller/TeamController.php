@@ -299,11 +299,17 @@ class TeamController extends Controller
     {
         $workspace = $team->getWorkspace();
         $this->checkWorkspaceManager($workspace, $user);
+        $oldIsPublic = $team->getIsPublic();
         $form = $this->formFactory->create(new TeamEditType(), $team);
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
+            $newIsPublic = $team->getIsPublic() || $team->getIsPublic() === 1;
             $this->teamManager->persistTeam($team);
+
+            if ($oldIsPublic !== $newIsPublic) {
+                $this->teamManager->initializeTeamDirectoryPerms($team);
+            }
 
             return new JsonResponse('success', 200);
         } else {
