@@ -88,7 +88,7 @@
                 {% if not viewMode %}
                 <div class="communication_panel_toggle" data-ng-init="displayComment=false">
                     <button class="btn btn-default btn-sm pull-right"data-ng-click="displayComment=!displayComment">
-                        {{ 'communication_panel' | trans({}, 'icap_portfolio') }} <span class="fa fa-chevron-right"></span>
+                        {{ 'communication_panel' | trans({}, 'icap_portfolio') }} <span class="badge">{% verbatim %}{{ portfolio.unreadComments }}{% endverbatim %}</span> <span class="fa fa-chevron-right"></span>
                     </button>
                 </div>
                 <div class="panel panel-default communication_panel col-md-4" data-comments-container="portfolio.comments" data-ng-show="displayComment">

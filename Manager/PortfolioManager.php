@@ -248,7 +248,8 @@ class PortfolioManager
         foreach ($comments as $comment) {
             $commentsDatas[] = $comment->getData();
         }
-        $data['comments'] = $commentsDatas;
+        $data['comments']       = $commentsDatas;
+        $data['unreadComments'] = $portfolio->getCountUnreadComments();
 
         return $data;
     }
