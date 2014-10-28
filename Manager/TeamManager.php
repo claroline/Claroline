@@ -150,7 +150,7 @@ class TeamManager
         $this->om->flush();
     }
 
-    public function deleteTeam(Team $team)
+    public function deleteTeam(Team $team, $withDirectory = false)
     {
         $teamRole = $team->getRole();
         $teamManagerRole = $team->getTeamManagerRole();
@@ -163,6 +163,11 @@ class TeamManager
             $this->om->remove($teamRole);
         }
         $this->om->remove($team);
+        $teamDirectory = $team->getDirectory();
+
+        if ($withDirectory && !is_null($teamDirectory)) {
+            $this->resourceManager->delete($teamDirectory->getResourceNode());
+        }
         $this->om->flush();
     }
 
@@ -246,14 +251,31 @@ class TeamManager
         $this->om->endFlushSuite();
     }
 
-    public function deleteTeams(array $teams)
+    public function deleteTeams(array $teams, $withDirectory = false)
     {
         $this->om->startFlushSuite();
+        $nodes = array();
         
         foreach ($teams as $team) {
+
+            if ($withDirectory) {
+                $directory = $team->getDirectory();
+
+                if (!is_null($directory)) {
+                    $nodes[] = $directory->getResourceNode();
+                }
+            }
             $this->deleteTeam($team);
         }
         $this->om->endFlushSuite();
+
+        if (count($nodes) > 0) {
+
+            foreach ($nodes as $node) {
+                $this->resourceManager->delete($node);
+            }
+            $this->om->flush();
+        }
     }
 
     public function emptyTeams(array $teams)

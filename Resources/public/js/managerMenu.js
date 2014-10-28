@@ -11,19 +11,35 @@
     'use strict';
     
     var currentTeamId;
+    var workspaceId = $('#datas-box').data('workspace-id');
     
     $('.delete-team-btn').on('click', function () {
         currentTeamId = $(this).data('team-id');
-        window.Claroline.Modal.confirmRequest(
-            Routing.generate(
+        var teamName = $(this).data('team-name');
+        $('#delete-team-directory-chk').prop('checked', false);
+        $('#delete-team-validation-header').html(teamName);
+        $('#delete-team-validation-box').modal('show');
+    });
+    
+    $('#delete-team-confirm-btn').on('click', function () {
+        var deleteDirectory = $('#delete-team-directory-chk').prop('checked') ?
+            1 :
+            0;
+        
+        $.ajax({
+            url: Routing.generate(
                 'claro_team_delete',
-                {'team': currentTeamId}
+                {
+                    'team': currentTeamId,
+                    'withDirectory': deleteDirectory
+                }
             ),
-            removeTeamRow,
-            null,
-            Translator.get('team:delete_team_comfirm_message'),
-            Translator.get('team:delete_team')
-        );
+            type: 'POST',
+            success: function (datas) {
+                $('#row-team-' + currentTeamId).remove();
+                $('#delete-team-validation-box').modal('hide');
+            }
+        });
     });
     
     $('.register-users-btn').on('click', function () {
@@ -201,7 +217,14 @@
     });
     
     $('#delete-teams-btn').on('click', function () {
-        var workspaceId = $(this).data('workspace-id');
+        $('#delete-teams-directory-chk').prop('checked', false);
+        $('#delete-teams-validation-box').modal('show');
+    });
+    
+    $('#delete-teams-confirm-btn').on('click', function () {
+        var deleteDirectory = $('#delete-teams-directory-chk').prop('checked') ?
+            1 :
+            0;
         var i = 0;
         var queryString = {};
         var teams = [];
@@ -213,21 +236,23 @@
 
         var route = Routing.generate(
             'claro_team_manager_delete_teams',
-            {'workspace': workspaceId }
+            {
+                'workspace': workspaceId,
+                'withDirectory': deleteDirectory
+            }
         );
         route += '?' + $.param(queryString);
-
-        window.Claroline.Modal.confirmRequest(
-            route,
-            refreshPage,
-            null,
-            Translator.get('team:delete_selected_teams_comfirm_message'),
-            Translator.get('team:delete_teams')
-        );
+        
+        $.ajax({
+            url: route,
+            type: 'POST',
+            success: function () {
+                window.location.reload();
+            }
+        });
     });
     
     $('#empty-teams-btn').on('click', function () {
-        var workspaceId = $(this).data('workspace-id');
         var i = 0;
         var queryString = {};
         var teams = [];
@@ -239,7 +264,7 @@
 
         var route = Routing.generate(
             'claro_team_manager_empty_teams',
-            {'workspace': workspaceId }
+            {'workspace': workspaceId}
         );
         route += '?' + $.param(queryString);
 
@@ -253,7 +278,6 @@
     });
    
     $('#fill-teams-btn').on('click', function () {
-        var workspaceId = $(this).data('workspace-id');
         var i = 0;
         var queryString = {};
         var teams = [];
@@ -265,7 +289,7 @@
 
         var route = Routing.generate(
             'claro_team_manager_fill_teams',
-            {'workspace': workspaceId }
+            {'workspace': workspaceId}
         );
         route += '?' + $.param(queryString);
 
@@ -280,7 +304,6 @@
     
     $('.team-directory-btn').on('click', function () {
         var directoryNodeId = $(this).data('node-id');
-        var workspaceId = $(this).data('workspace-id');
         
         window.location = Routing.generate(
             'claro_workspace_open_tool',

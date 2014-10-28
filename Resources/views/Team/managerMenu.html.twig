@@ -64,10 +64,9 @@
                 <button type="button"
                         class="btn btn-default teams-action-btn disabled"
                         id="fill-teams-btn"
-                        data-workspace-id="{{ workspace.getId }}"
-                       data-toggle="tooltip"
-                       data-placement="top"
-                       title="{{ 'fill_selected_teams_with_unregistered_users'|trans({}, 'team') }}"
+                        data-toggle="tooltip"
+                        data-placement="top"
+                        title="{{ 'fill_selected_teams_with_unregistered_users'|trans({}, 'team') }}"
                 >
                     <i class="fa fa-sign-in"></i>
                     {{ 'automatic_fill'|trans({}, 'team') }}
@@ -75,10 +74,9 @@
                 <button type="button"
                         class="btn btn-default teams-action-btn disabled"
                         id="empty-teams-btn"
-                        data-workspace-id="{{ workspace.getId }}"
-                       data-toggle="tooltip"
-                       data-placement="top"
-                       title="{{ 'unregister_all_users_from_selected_teams'|trans({}, 'team') }}"
+                        data-toggle="tooltip"
+                        data-placement="top"
+                        title="{{ 'unregister_all_users_from_selected_teams'|trans({}, 'team') }}"
                 >
                     <i class="fa fa-sign-out"></i>
                     {{ 'empty_action'|trans({}, 'team') }}
@@ -86,10 +84,9 @@
                 <button type="button"
                         class="btn btn-default teams-action-btn disabled"
                         id="delete-teams-btn"
-                        data-workspace-id="{{ workspace.getId }}"
-                       data-toggle="tooltip"
-                       data-placement="top"
-                       title="{{ 'delete_selected_teams'|trans({}, 'team') }}"
+                        data-toggle="tooltip"
+                        data-placement="top"
+                        title="{{ 'delete_selected_teams'|trans({}, 'team') }}"
                 >
                     <i class="fa fa-trash-o"></i>
                     {{ 'delete'|trans({}, 'platform') }}
@@ -211,7 +208,6 @@
                                 
                                 {% if team.getDirectory() is not empty %}
                                     <span class="btn btn-default btn-sm team-directory-btn"
-                                          data-workspace-id="{{ workspace.getId() }}"
                                           data-node-id="{{ team.getDirectory().getResourceNode().getId() }}"
                                           data-toggle="tooltip"
                                           data-placement="top"
@@ -239,6 +235,7 @@
                                 </span>
                                 <span class="btn btn-danger btn-sm delete-team-btn"
                                       data-team-id="{{ team.getId() }}"
+                                      data-team-name="{{ team.getName() }}"
                                       data-toggle="tooltip"
                                       data-placement="top"
                                       title="{{ 'delete_team'|trans({}, 'team') }}"
@@ -255,6 +252,9 @@
                 {{ 'no_team'|trans({}, 'team') }}
             </div>
         {% endif %}
+    </div>
+
+    <div id="datas-box" data-workspace-id="{{ workspace.getId() }}">
     </div>
 
     <div id="view-registration-users-box" class="modal fade" role="dialog" aria-hidden="true">
@@ -309,7 +309,79 @@
                 </div>
             </div>
         </div>
-    </div>  
+    </div> 
+    
+    <div id="delete-team-validation-box" class="modal fade" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 id="delete-team-validation-header"></h4>
+                </div>
+                <div class="modal-body">
+                    <p>{{ 'delete_team_comfirm_message'|trans({}, 'team') }}</p>
+                    <br>
+                    <div class="checkbox">
+                        <label>
+                            <input id="delete-team-directory-chk" type="checkbox">
+                            {{ 'delete_team_directory'|trans({}, 'team') }}
+                        </label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <input type="button"
+                           class="btn btn-default"
+                           data-dismiss="modal"
+                           value="{{ 'cancel'|trans({}, 'platform') }}"
+                    />
+                    <input type="button"
+                           id="delete-team-confirm-btn"
+                           class="btn btn-primary"
+                           value="{{ 'ok'|trans({}, 'platform') }}"
+                    />
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="delete-teams-validation-box" class="modal fade" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4>
+                        {{ 'delete_teams'|trans({}, 'team') }}
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <p>{{ 'delete_selected_teams_comfirm_message'|trans({}, 'team') }}</p>
+                    <br>
+                    <div class="checkbox">
+                        <label>
+                            <input id="delete-teams-directory-chk" type="checkbox">
+                            {{ 'delete_team_directory'|trans({}, 'team') }}
+                        </label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <input type="button"
+                           class="btn btn-default"
+                           data-dismiss="modal"
+                           value="{{ 'cancel'|trans({}, 'platform') }}"
+                    />
+                    <input type="button"
+                           id="delete-teams-confirm-btn"
+                           class="btn btn-primary"
+                           value="{{ 'ok'|trans({}, 'platform') }}"
+                    />
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
 
 {% block javascripts %}

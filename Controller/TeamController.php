@@ -318,19 +318,21 @@ class TeamController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/team/{team}/delete",
+     *     "/team/{team}/delete/{withDirectory}",
      *     name="claro_team_delete",
+     *     defaults={"withDirectory"=0},
      *     options={"expose"=true}
      * )
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function teamDeleteAction(Team $team, User $user)
+    public function teamDeleteAction(Team $team, User $user, $withDirectory = 0)
     {
         $workspace = $team->getWorkspace();
         $this->checkWorkspaceManager($workspace, $user);
-        $this->teamManager->deleteTeam($team);
+        $deleteDirectory = (intval($withDirectory) === 1);
+        $this->teamManager->deleteTeam($team, $deleteDirectory);
 
         return new Response('success', 200);
     }
@@ -513,8 +515,9 @@ class TeamController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/workspace/{workspace}/teams/delete",
+     *     "/workspace/{workspace}/teams/delete/{withDirectory}",
      *     name="claro_team_manager_delete_teams",
+     *     defaults={"withDirectory"=0},
      *     options={"expose"=true}
      * )
      * @EXT\ParamConverter("manager", options={"authenticatedUser" = true})
@@ -529,11 +532,13 @@ class TeamController extends Controller
     public function managerDeleteTeamsAction(
         Workspace $workspace,
         array $teams,
-        User $manager
+        User $manager,
+        $withDirectory = 0
     )
     {
         $this->checkWorkspaceManager($workspace, $manager);
-        $this->teamManager->deleteTeams($teams);
+        $deleteDirectory = (intval($withDirectory) === 1);
+        $this->teamManager->deleteTeams($teams, $deleteDirectory);
 
         return new Response('success', 200);
     }
