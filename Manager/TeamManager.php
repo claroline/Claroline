@@ -78,7 +78,8 @@ class TeamManager
         $maxUsers,
         $isPublic,
         $selfRegistration,
-        $selfUnregistration
+        $selfUnregistration,
+        ResourceNode $resource = null
     )
     {
         $this->om->startFlushSuite();
@@ -98,7 +99,7 @@ class TeamManager
             $team->setSelfRegistration($selfRegistration);
             $team->setSelfUnregistration($selfUnregistration);
 
-            $this->createTeam($team, $workspace, $user);
+            $this->createTeam($team, $workspace, $user, $resource);
             $node = $team->getDirectory()->getResourceNode();
             $node->setPrevious(null);
             $node->setNext(null);
@@ -115,7 +116,12 @@ class TeamManager
         $this->om->endFlushSuite();
     }
 
-    public function createTeam(Team $team, Workspace $workspace, User $user)
+    public function createTeam(
+        Team $team,
+        Workspace $workspace,
+        User $user,
+        ResourceNode $resource = null
+    )
     {
         $this->om->startFlushSuite();
         $team->setWorkspace($workspace);
@@ -130,7 +136,8 @@ class TeamManager
             $workspace,
             $user,
             $role,
-            $teamManagerRole
+            $teamManagerRole,
+            $resource
         );
         $team->setDirectory($directory);
         $this->om->persist($team);
@@ -393,7 +400,8 @@ class TeamManager
         Workspace $workspace,
         User $user,
         Role $teamRole,
-        Role $teamManagerRole
+        Role $teamManagerRole,
+        ResourceNode $resource = null
     )
     {
         $rootDirectory = $this->resourceManager->getWorkspaceRoot($workspace);
@@ -440,6 +448,17 @@ class TeamManager
             null,
             $rights
         );
+
+        if (!is_null($resource)) {
+            $this->resourceManager->copy(
+                $resource,
+                $teamDirectory->getResourceNode(),
+                $user,
+                true,
+                true,
+                $rights
+            );
+        }
 
         return $teamDirectory;
     }

@@ -16,6 +16,7 @@ use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\TeamBundle\Entity\Team;
 use Claroline\TeamBundle\Entity\WorkspaceTeamParameters;
 use Claroline\TeamBundle\Form\MultipleTeamsType;
+use Claroline\TeamBundle\Form\TeamEditType;
 use Claroline\TeamBundle\Form\TeamParamsType;
 use Claroline\TeamBundle\Form\TeamType;
 use Claroline\TeamBundle\Manager\TeamManager;
@@ -240,7 +241,8 @@ class TeamController extends Controller
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
-            $this->teamManager->createTeam($team, $workspace, $user);
+            $resource = $form->get('defaultResource')->getData();
+            $this->teamManager->createTeam($team, $workspace, $user, $resource);
             $this->teamManager->initializeTeamRights($team);
 
             return new RedirectResponse(
@@ -273,7 +275,7 @@ class TeamController extends Controller
     {
         $workspace = $team->getWorkspace();
         $this->checkWorkspaceManager($workspace, $user);
-        $form = $this->formFactory->create(new TeamType(), $team);
+        $form = $this->formFactory->create(new TeamEditType(), $team);
 
         return array(
             'form' => $form->createView(),
@@ -297,7 +299,7 @@ class TeamController extends Controller
     {
         $workspace = $team->getWorkspace();
         $this->checkWorkspaceManager($workspace, $user);
-        $form = $this->formFactory->create(new TeamType(), $team);
+        $form = $this->formFactory->create(new TeamEditType(), $team);
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
@@ -383,7 +385,8 @@ class TeamController extends Controller
                 $datas['maxUsers'],
                 $datas['isPublic'],
                 $datas['selfRegistration'],
-                $datas['selfUnregistration']
+                $datas['selfUnregistration'],
+                $form->get('defaultResource')->getData()
             );
 
             return new RedirectResponse(

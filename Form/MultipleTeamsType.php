@@ -52,6 +52,18 @@ class MultipleTeamsType extends AbstractType
             )
         );
         $builder->add(
+            'defaultResource',
+            'resourcePicker',
+            array(
+                'required' => false,
+                'mapped' => false,
+                'label' => 'default_resource',
+                'attr' => array(
+                    'data-restrict-for-owner' => 1
+                )
+            )
+        );
+        $builder->add(
             'maxUsers',
             'integer',
             array(

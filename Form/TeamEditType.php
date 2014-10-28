@@ -15,7 +15,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class TeamType extends AbstractType
+class TeamEditType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -28,18 +28,6 @@ class TeamType extends AbstractType
             'description',
             'tinymce',
             array('required' => false)
-        );
-        $builder->add(
-            'defaultResource',
-            'resourcePicker',
-            array(
-                'required' => false,
-                'mapped' => false,
-                'label' => 'default_resource',
-                'attr' => array(
-                    'data-restrict-for-owner' => 1
-                )
-            )
         );
         $builder->add(
             'maxUsers',
