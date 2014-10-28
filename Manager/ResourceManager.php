@@ -798,7 +798,7 @@ class ResourceManager
                 $withDirectoryContent) {
 
                 foreach ($node->getChildren() as $child) {
-                    $this->copy($child, $newNode, $user);
+                    $this->copy($child, $newNode, $user, $withRights);
                 }
             }
         }
