@@ -771,7 +771,8 @@ class ResourceManager
         ResourceNode $parent,
         User $user,
         $withRights = true,
-        $withDirectoryContent = true
+        $withDirectoryContent = true,
+        array $rights = array()
     )
     {
         $last = $this->resourceNodeRepo->findOneBy(array('parent' => $parent, 'next' => null));
@@ -780,7 +781,7 @@ class ResourceManager
         if ($resource instanceof ResourceShortcut) {
             $copy = $this->om->factory('Claroline\CoreBundle\Entity\Resource\ResourceShortcut');
             $copy->setTarget($resource->getTarget());
-            $newNode = $this->copyNode($node, $parent, $user, $last, $withRights);
+            $newNode = $this->copyNode($node, $parent, $user, $last, $withRights, $rights);
             $copy->setResourceNode($newNode);
 
         } else {
@@ -791,14 +792,14 @@ class ResourceManager
             );
 
             $copy = $event->getCopy();
-            $newNode = $this->copyNode($node, $parent, $user, $last, $withRights);
+            $newNode = $this->copyNode($node, $parent, $user, $last, $withRights, $rights);
             $copy->setResourceNode($newNode);
 
             if ($node->getResourceType()->getName() == 'directory' &&
                 $withDirectoryContent) {
 
                 foreach ($node->getChildren() as $child) {
-                    $this->copy($child, $newNode, $user, $withRights);
+                    $this->copy($child, $newNode, $user, $withRights, $withDirectoryContent, $rights);
                 }
             }
         }
@@ -1371,7 +1372,8 @@ class ResourceManager
         ResourceNode $newParent,
         User $user,
         ResourceNode $last = null,
-        $withRights = true
+        $withRights = true,
+        array $rights = array()
     )
     {
         $newNode = $this->om->factory('Claroline\CoreBundle\Entity\Resource\ResourceNode');
@@ -1391,11 +1393,11 @@ class ResourceManager
 
         if ($withRights) {
             //if everything happens inside the same workspace, rights are copied
-            if ($newParent->getWorkspace() === $node->getWorkspace()) {
+            if ($newParent->getWorkspace() === $node->getWorkspace() && count($rights) === 0) {
                 $this->rightsManager->copy($node, $newNode);
             } else {
                 //otherwise we use the parent rights
-                $this->setRights($newNode, $newParent, array());
+                $this->setRights($newNode, $newParent, $rights);
             }
         }
 
