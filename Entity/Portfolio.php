@@ -93,8 +93,17 @@ class Portfolio
     /**
      * @ORM\Column(name="deletedAt", type="datetime", nullable=true)
      */
-    private $deletedAt;
+    protected $deletedAt;
 
+    /**
+     * @ORM\Column(name="commentsViewAt", type="datetime")
+     */
+    protected $commentsViewAt;
+
+    public function __construct()
+    {
+        $this->commentsViewAt = new \DateTime();
+    }
     /**
      * @param int $id
      *
@@ -371,5 +380,41 @@ class Portfolio
         $this->comments = $comments;
 
         return $this;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getCommentsViewAt()
+    {
+        return $this->commentsViewAt;
+    }
+
+    /**
+     * @param \DateTime $commentsViewAt
+     *
+     * @return Portfolio
+     */
+    public function setCommentsViewAt($commentsViewAt)
+    {
+        $this->commentsViewAt = $commentsViewAt;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCountUnreadComments()
+    {
+        $countUnreadComments = 0;
+
+        foreach ($this->getComments() as $comment) {
+            if($this->getCommentsViewAt() < $comment->getSendingDate()) {
+                $countUnreadComments++;
+            }
+        }
+
+        return $countUnreadComments;
     }
 }

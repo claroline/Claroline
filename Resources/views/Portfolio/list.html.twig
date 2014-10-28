@@ -89,11 +89,14 @@
                 {% for portfolio in portfoliosPager %}
                     <tr class="portfolio">
                         <td>
-                            <a href="{{ path('icap_portfolio_view', {'portfolioSlug': portfolio.widgets.0.slug}) }}" title="" class="block">{{ portfolio.widgets.0.title }}</a>
-                            <a href="{{ path('icap_portfolio_view', {'portfolioSlug': portfolio.widgets.0.slug}) }}" title="" class="text-muted">{{ path('icap_portfolio_view', {'portfolioSlug': portfolio.widgets.0.slug}) }}</a>
+                            <a href="{{ path('icap_portfolio_view', {'portfolioSlug': portfolio.widgets.0.slug}) }}" title="{{ portfolio.widgets.0.title }}">{{ portfolio.widgets.0.title }}</a>
+                            {% set countUnreadComments = portfolio.countUnreadComments %}
+                            {% if 0 < countUnreadComments %} <span class="badge" data-toggle="tooltip" data-title="{{ 'portfolio_count_unread_comments'|transchoice(countUnreadComments, {'%countUnreadComments%': countUnreadComments}, 'icap_portfolio') }}">{{ countUnreadComments }}</span>{% endif %}
+                            {% set portfolioUrl = path('icap_portfolio_view', {'portfolioSlug': portfolio.widgets.0.slug}) %}
+                            <a href="{{ path('icap_portfolio_view', {'portfolioSlug': portfolio.widgets.0.slug}) }}" title="{{ portfolioUrl }}" class="block text-muted">{{ portfolioUrl }}</a>
                         </td>
                         <td>
-                            <span class="block">
+                            <span class="block visibility">
                                 <span class="badge {{ portfolio.visibility|visibilityLabel }}"></span>
                                 {{ portfolio.visibility|visibilityLabel|trans({}, 'icap_portfolio') }}
                             </span>
