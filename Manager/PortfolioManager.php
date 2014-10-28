@@ -18,6 +18,7 @@ use Icap\PortfolioBundle\Event\Log\PortfolioAddViewerEvent;
 use Icap\PortfolioBundle\Event\Log\PortfolioRemoveGuideEvent;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\FormFactory;
 
 /**
@@ -250,6 +251,7 @@ class PortfolioManager
         }
         $data['comments']       = $commentsDatas;
         $data['unreadComments'] = $portfolio->getCountUnreadComments();
+        $data['commentsViewAt'] = $portfolio->getCommentsViewAt()->format(DATE_W3C);
 
         return $data;
     }

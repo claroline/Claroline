@@ -13,4 +13,10 @@ portfolioApp
                 this.message = '';
             }
         };
+
+        $scope.updateCountViewComments = function () {
+            portfolioManager.portfolio.commentsViewAt = new Date();
+            portfolioManager.save(portfolioManager.portfolio);
+            $scope.displayComment= !$scope.displayComment;
+        }
     }]);
