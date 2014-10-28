@@ -208,15 +208,18 @@
                                 {% endif %}
                             </td>
                             <td class="text-center">
-                                <span class="btn btn-default btn-sm team-directory-btn"
-                                      data-workspace-id="{{ workspace.getId() }}"
-                                      data-node-id="{{ team.getDirectory().getResourceNode().getId() }}"
-                                      data-toggle="tooltip"
-                                      data-placement="top"
-                                      title="{{ 'go_to_team_directory'|trans({}, 'team') }}"
-                                >
-                                    <i class="fa fa-folder-open"></i>
-                                </span>
+                                
+                                {% if team.getDirectory() is not empty %}
+                                    <span class="btn btn-default btn-sm team-directory-btn"
+                                          data-workspace-id="{{ workspace.getId() }}"
+                                          data-node-id="{{ team.getDirectory().getResourceNode().getId() }}"
+                                          data-toggle="tooltip"
+                                          data-placement="top"
+                                          title="{{ 'go_to_team_directory'|trans({}, 'team') }}"
+                                    >
+                                        <i class="fa fa-folder-open"></i>
+                                    </span>
+                                {% endif %}
                                 <span class="btn btn-success btn-sm register-users-btn"
                                       data-team-id="{{ team.getId() }}"
                                       data-team-name="{{ team.getName() }}"

@@ -35,21 +35,26 @@
                 {{ team.getDescription()|raw }}
             </div>
         {% endif %}
-        {% set directoryNode = team.getDirectory().getResourceNode() %}
         
         <div>
             <label>
                 {{ 'team_directory_link'|trans({}, 'team') }}
                 :
             </label>
-            <a href="{{  path(
-                    'claro_workspace_open_tool',
-                    {'workspaceId': workspace.getId(), 'toolName': 'resource_manager'}
-                ) }}#resources/{{ directoryNode.getId() }}"
-                class="fa fa-folder-open"
-            >
-                {{ directoryNode.getName() }}
-            </a>
+            
+            {% if team.getDirectory() is not empty %}
+                {% set directoryNode = team.getDirectory().getResourceNode() %}
+                <a href="{{  path(
+                        'claro_workspace_open_tool',
+                        {'workspaceId': workspace.getId(), 'toolName': 'resource_manager'}
+                    ) }}#resources/{{ directoryNode.getId() }}"
+                    class="fa fa-folder-open"
+                >
+                    {{ directoryNode.getName() }}
+                </a>
+            {% else %}
+                -
+            {% endif %}
         </div>
         
         {% if team.getSelfRegistration() %}
