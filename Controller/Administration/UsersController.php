@@ -29,6 +29,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 
@@ -209,7 +210,7 @@ class UsersController extends Controller
             $user = $form->getData();
             $newRoles = $form->get('platformRoles')->getData();
             $this->userManager->insertUserWithRoles($user, $newRoles);
-            
+
             $sessionFlashBag->add('success', $translator->trans('user_creation_success', array(), 'platform'));
 
             return $this->redirect($this->generateUrl('claro_admin_user_list'));
@@ -428,6 +429,38 @@ class UsersController extends Controller
         }
 
         return array('form' => $form->createView());
+    }
+
+    /**
+     * @EXT\Route("/export/users/{format}", name="claro_admin_export_users")
+     *
+     * @return Response
+     */
+    public function export($format)
+    {
+        $exporter = $this->container->get('claroline.exporter.' . $format);
+        $exporterManager = $this->container->get('claroline.manager.exporter_manager');
+        $file = $exporterManager->export('Claroline\CoreBundle\Entity\User', $exporter);
+        $response = new StreamedResponse();
+
+        $response->setCallBack(
+            function () use ($file) {
+                readfile($file);
+            }
+        );
+
+        $response->headers->set('Content-Transfer-Encoding', 'octet-stream');
+        $response->headers->set('Content-Type', 'application/force-download');
+        $response->headers->set('Content-Disposition', 'attachment; filename=users.' . $format);
+
+        switch ($format) {
+            case 'csv': $response->headers->set('Content-Type', 'text/csv'); break;
+            case 'xls': $response->headers->set('Content-Type', 'application/vnd.ms-excel'); break;
+        }
+
+        $response->headers->set('Connection', 'close');
+
+        return $response;
     }
 
     private function checkOpen()
