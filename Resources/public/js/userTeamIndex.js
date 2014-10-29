@@ -39,6 +39,28 @@
         );
     });
     
+    $('.unregister-user-btn').on('click', function () {
+        var teamId = $(this).data('team-id');
+        var userId = $(this).data('user-id');
+        var firstName = $(this).data('user-first-name');
+        var lastName = $(this).data('user-last-name');
+        var username = $(this).data('user-username');
+        
+        window.Claroline.Modal.confirmRequest(
+            Routing.generate(
+                'claro_team_manager_unregister_user',
+                {
+                    'team': teamId,
+                    'user': userId
+                }
+            ),
+            removeUserRow,
+            userId,
+            Translator.get('team:unregister_user_from_team_confirm_message'),
+            firstName + ' ' + lastName + ' (' + username + ')'
+        );
+    });
+    
     var teamMenuPage = function () {
         var workspaceId = $('#datas-block').data('workspace-id');
         window.location = Routing.generate(
@@ -50,5 +72,9 @@
     var refreshPage = function () {
         window.tinymce.claroline.disableBeforeUnload = true;
         window.location.reload();
+    };
+    
+    var removeUserRow = function (event, userId) {
+        $('#row-user-' + userId).remove();
     };
 })();

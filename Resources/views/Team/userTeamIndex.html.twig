@@ -100,23 +100,48 @@
         
         <h3>{{ 'users'|trans({}, 'platform') }}</h3>
         <br>
-        <div id="users-list" class="table-responsive">
-            <table id="users-list-table" class="table">
-                <tr>
-                    <th>{{ 'firstName'|trans({}, 'platform') }}</th>
-                    <th>{{ 'lastName'|trans({}, 'platform') }}</th>
-                    <th>{{ 'username'|trans({}, 'platform') }}</th>
-                </tr>
+        
+        {% if users|length > 0 %}
+            <div id="users-list" class="table-responsive">
+                <table id="users-list-table" class="table">
+                    <tr>
+                        <th>{{ 'firstName'|trans({}, 'platform') }}</th>
+                        <th>{{ 'lastName'|trans({}, 'platform') }}</th>
+                        <th>{{ 'username'|trans({}, 'platform') }}</th>
 
-                {% for user in users %}
-                    <tr id="row-user-{{ user.getId() }}">
-                        <td>{{ user.getFirstName() }}</td>
-                        <td>{{ user.getLastName() }}</td>
-                        <td>{{ user.getUsername() }}</td>
+                        {% if isTeamManager %}
+                            <th></th>
+                        {% endif %}
                     </tr>
-                {% endfor %}
-            </table>
-        </div>
+
+                    {% for user in users %}
+                        <tr id="row-user-{{ user.getId() }}">
+                            <td>{{ user.getFirstName() }}</td>
+                            <td>{{ user.getLastName() }}</td>
+                            <td>{{ user.getUsername() }}</td>
+
+                            {% if isTeamManager %}
+                                <td class="text-center">
+                                    <span class="btn btn-danger btn-sm unregister-user-btn"
+                                          data-team-id="{{ team.getId() }}"
+                                          data-user-id="{{ user.getId() }}"
+                                          data-user-first-name="{{ user.getFirstName() }}"
+                                          data-user-last-name="{{ user.getLastName() }}"
+                                          data-user-username="{{ user.getUsername() }}"
+                                    >
+                                        {{ 'unregister'|trans({}, 'team') }}
+                                    </span>
+                                </td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        {% else %}
+            <div class="alert alert-warning">
+                {{ 'no_user'|trans({}, 'platform') }}
+            </div>
+        {% endif %}
     </div>
 
     <div id="datas-block" data-workspace-id="{{ workspace.getId() }}">

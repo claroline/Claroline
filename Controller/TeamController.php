@@ -473,7 +473,14 @@ class TeamController extends Controller
         User $manager
     )
     {
-        $this->checkWorkspaceManager($team->getWorkspace(), $manager);
+        $workspace = $team->getWorkspace();
+        $isWorkspaceManager = $this->isWorkspaceManager($workspace, $manager);
+        $isTeamManager = $this->isTeamManager($team, $manager);
+
+        if (!$isWorkspaceManager && !$isTeamManager) {
+
+            throw new AccessDeniedException();
+        }
         $this->teamManager->unregisterUserFromTeam($team, $user);
 
         return new Response('success', 200);
