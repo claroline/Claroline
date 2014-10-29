@@ -229,6 +229,9 @@
             {% elseif questionsList == 'exoList' %}
                 <td class="classic">-</td>
             {% endif %}
+            <td style="display: none;">
+                {{ interaction.question.id }}
+            </td> 
         </tr>
     {% endfor %}
     </tbody>
