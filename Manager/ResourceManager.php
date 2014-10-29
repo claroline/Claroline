@@ -763,6 +763,12 @@ class ResourceManager
      * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $node
      * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $parent
      * @param \Claroline\CoreBundle\Entity\User                  $user
+     * @param boolean $withRights
+     * Defines if the rights of the copied resource have to be created
+     * @param boolean $withDirectoryContent
+     * Defines if the content of a directory has to be copied too
+     * @param array $rights
+     * If defined, the copied resource will have exactly the given rights
      *
      * @return \Claroline\CoreBundle\Entity\Resource\ResourceNode
      */
@@ -1364,6 +1370,10 @@ class ResourceManager
      * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $newParent
      * @param \Claroline\CoreBundle\Entity\User                  $user
      * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $last
+     * @param boolean $withRights
+     * Defines if the rights of the copied node have to be created
+     * @param array $rights
+     * If defined, the copied node will have exactly the given rights
      *
      * @return \Claroline\CoreBundle\Entity\Resource\ResourceNode
      */
@@ -1393,11 +1403,12 @@ class ResourceManager
         $newNode->setIsVisible($node->getIsVisible());
 
         if ($withRights) {
-            //if everything happens inside the same workspace, rights are copied
+            //if everything happens inside the same workspace and no specific rights have been given,
+            //rights are copied
             if ($newParent->getWorkspace() === $node->getWorkspace() && count($rights) === 0) {
                 $this->rightsManager->copy($node, $newNode);
             } else {
-                //otherwise we use the parent rights
+                //otherwise we use the parent rights or the given rights if not empty
                 $this->setRights($newNode, $newParent, $rights);
             }
         }
