@@ -1381,6 +1381,7 @@ class ResourceManager
         $newNode->setCreator($user);
         $newNode->setWorkspace($newParent->getWorkspace());
         $newNode->setParent($newParent);
+        $newParent->addChild($newNode);
         $newNode->setName($this->getUniqueName($node, $newParent, true));
         $newNode->setPrevious($last);
         $newNode->setNext(null);
