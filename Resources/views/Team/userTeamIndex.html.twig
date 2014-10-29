@@ -26,6 +26,17 @@
     <div class="panel-heading">
         <h3 class="panel-title">
             {{ team.getName() }}
+            
+            {% if isTeamManager %}
+                <i id="edit-team-btn"
+                   class="fa fa-cog pointer-hand pull-right"
+                   data-team-id="{{ team.getId() }}"
+                   data-toggle="tooltip"
+                   data-placement="left"
+                   title="{{ 'edit_team'|trans({}, 'team') }}"
+                >
+                </i>
+            {% endif %}
         </h3>
     </div>
     <div class="panel-body">

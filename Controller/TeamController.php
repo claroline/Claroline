@@ -274,7 +274,13 @@ class TeamController extends Controller
     public function teamEditFormAction(Team $team, User $user)
     {
         $workspace = $team->getWorkspace();
-        $this->checkWorkspaceManager($workspace, $user);
+        $isWorkspaceManager = $this->isWorkspaceManager($workspace, $user);
+        $isTeamManager = $this->isTeamManager($team, $user);
+
+        if (!$isWorkspaceManager && !$isTeamManager) {
+
+            throw new AccessDeniedException();
+        }
         $form = $this->formFactory->create(new TeamEditType(), $team);
 
         return array(
@@ -298,7 +304,13 @@ class TeamController extends Controller
     public function teamEditAction(Team $team, User $user)
     {
         $workspace = $team->getWorkspace();
-        $this->checkWorkspaceManager($workspace, $user);
+        $isWorkspaceManager = $this->isWorkspaceManager($workspace, $user);
+        $isTeamManager = $this->isTeamManager($team, $user);
+
+        if (!$isWorkspaceManager && !$isTeamManager) {
+
+            throw new AccessDeniedException();
+        }
         $oldIsPublic = $team->getIsPublic();
         $form = $this->formFactory->create(new TeamEditType(), $team);
         $form->handleRequest($this->request);

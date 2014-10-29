@@ -26,11 +26,29 @@
         );
     });
     
+    $('#edit-team-btn').on('click', function () {
+        var teamId = $(this).data('team-id');
+        
+        window.Claroline.Modal.displayForm(
+            Routing.generate(
+                'claro_team_edit_form',
+                {'team': teamId}
+            ),
+            refreshPage,
+            function() {}
+        );
+    });
+    
     var teamMenuPage = function () {
         var workspaceId = $('#datas-block').data('workspace-id');
         window.location = Routing.generate(
             'claro_team_user_menu',
             {'workspace': workspaceId}
         );
+    };
+    
+    var refreshPage = function () {
+        window.tinymce.claroline.disableBeforeUnload = true;
+        window.location.reload();
     };
 })();
