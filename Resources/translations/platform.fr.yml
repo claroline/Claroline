@@ -1107,3 +1107,5 @@ workspace_user_invalid: L'utilisateur %username% n'existe pas à la ligne %line%
 6_parameters_min_msg: Le fichier csv doit comprendre au minimum 6 éléments par ligne.
 7_parameters_min_msg: Le fichier csv doit comprendre au minimum 7 éléments par ligne.
 code_found_at: Le code %code% a été trouvé aux lignes %lines%.
+excel_export: Export excel
+csv_export: Export csv 

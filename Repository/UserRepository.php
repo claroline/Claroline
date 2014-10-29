@@ -1183,4 +1183,17 @@ class UserRepository extends EntityRepository implements UserProviderInterface
 
         return $executeQuery ? $query->getResult(): $query;
     }
+
+    public function findAllWithFacets()
+    {
+        $dql = "
+            SELECT u, ff
+            FROM Claroline\CoreBundle\Entity\User u
+            LEFT JOIN u.fieldsFacetValue ff"
+        ;
+
+        $query = $this->_em->createQuery($dql);
+
+        return $query->getResult();
+    }
 }

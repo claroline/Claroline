@@ -255,16 +255,22 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     protected $description;
 
     /**
+     * @var boolean
+     *
      * @ORM\Column(type="boolean", nullable=true)
      */
     protected $hasAcceptedTerms;
 
     /**
+     * @var boolean
+     *
      * @ORM\Column(name="is_enabled", type="boolean")
      */
     protected $isEnabled = true;
 
     /**
+     * @var boolean
+     *
      * @ORM\Column(name="is_mail_notified", type="boolean")
      */
     protected $isMailNotified = true;
@@ -282,6 +288,8 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     protected $publicUrl;
 
     /**
+     * @var boolean
+     *
      * @ORM\Column(name="has_tuned_public_url", type="boolean")
      */
     protected $hasTunedPublicUrl = false;
@@ -671,6 +679,14 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
      * @return \DateTime
      */
     public function getCreationDate()
+    {
+        return $this->created;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getCreated()
     {
         return $this->created;
     }

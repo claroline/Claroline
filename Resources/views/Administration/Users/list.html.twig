@@ -44,6 +44,15 @@
                 {{ 'create_user'|trans({}, 'platform') }}
             </a>
         {% endif %}
+        <a class="btn btn-default action-button table-control"
+            href="{{ path('claro_admin_export_users', {'format': 'xls'}) }}">
+            {{ 'excel_export'|trans({}, 'platform') }}
+        </a>
+        <a class="btn btn-default action-button table-control"
+            href="{{ path('claro_admin_export_users', {'format': 'csv'}) }}">
+            {{ 'csv_export'|trans({}, 'platform') }}
+        </a>
+
     {% endif %}
 {% endmacro %}
 
