@@ -382,6 +382,7 @@ class TeamManager
             $roleKey,
             $workspace
         );
+        $this->setRightsForOldTeams($workspace, $role);
 
         return $role;
     }
@@ -403,8 +404,31 @@ class TeamManager
             $roleKey,
             $workspace
         );
+        $this->setRightsForOldTeams($workspace, $role);
 
         return $role;
+    }
+
+    private function setRightsForOldTeams(Workspace $workspace, Role $role)
+    {
+        $this->om->startFlushSuite();
+        $teams = $this->teamRepo->findTeamsByWorkspace($workspace);
+
+        foreach ($teams as $team) {
+            $directory = $team->getDirectory();
+
+            if ($team->getIsPublic() && !is_null($directory)) {
+                $rights = array();
+                $rights['open'] = true;
+                $this->rightsManager->editPerms(
+                    $rights,
+                    $role,
+                    $directory->getResourceNode(),
+                    true
+                );
+            }
+        }
+        $this->om->endFlushSuite();
     }
 
     private function computeValidRoleName($roleName, $guid)
