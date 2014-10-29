@@ -71,7 +71,7 @@
             {% endif %}
         </div>
         
-        {% if team.getSelfRegistration() %}
+        {% if isTeamMember and team.getSelfUnregistration() %}
             <div>
                 <label>
                     {{ 'unregister_from_team'|trans({}, 'team') }}

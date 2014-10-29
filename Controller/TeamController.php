@@ -963,6 +963,13 @@ class TeamController extends Controller
     {
         $workspace = $team->getWorkspace();
         $this->checkToolAccess($workspace);
+        $isTeamMember = $this->isTeamMember($team, $currentUser);
+        $isTeamManager = $this->isTeamManager($team, $currentUser);
+
+        if (!$isTeamMember && !$isTeamManager) {
+
+            throw new AccessDeniedException();
+        }
         $users = $team->getUsers();
         $params = $this->teamManager->getParametersByWorkspace($workspace);
 
@@ -971,7 +978,9 @@ class TeamController extends Controller
             'currentUser' => $currentUser,
             'users' => $users,
             'team' => $team,
-            'params' => $params
+            'params' => $params,
+            'isTeamMember' => $isTeamMember,
+            'isTeamManager' => $isTeamManager
         );
     }
 
@@ -1109,5 +1118,17 @@ class TeamController extends Controller
         }
 
         return $isWorkspaceManager;
+    }
+
+    private function isTeamMember(Team $team, User $user)
+    {
+        $users = $team->getUsersArrayCollection();
+
+        return $users->contains($user);
+    }
+
+    private function isTeamManager(Team $team, User $user)
+    {
+        return $user === $team->getTeamManager();
     }
 }

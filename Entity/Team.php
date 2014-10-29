@@ -149,6 +149,11 @@ class Team
         return $this->users->toArray();
     }
 
+    public function getUsersArrayCollection()
+    {
+        return $this->users;
+    }
+
     public function getTeamManager()
     {
         return $this->teamManager;
