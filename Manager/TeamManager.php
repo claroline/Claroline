@@ -211,7 +211,10 @@ class TeamManager
         $this->om->startFlushSuite();
         $teamRole = $team->getRole();
         $team->addUser($user);
-        $this->roleManager->associateRole($user, $teamRole);
+
+        if (!is_null($teamRole)) {
+            $this->roleManager->associateRole($user, $teamRole);
+        }
         $this->om->persist($team);
         $this->om->endFlushSuite();
     }
@@ -221,7 +224,10 @@ class TeamManager
         $this->om->startFlushSuite();
         $teamRole = $team->getRole();
         $team->removeUser($user);
-        $this->roleManager->dissociateRole($user, $teamRole);
+
+        if (!is_null($teamRole)) {
+            $this->roleManager->dissociateRole($user, $teamRole);
+        }
         $this->om->persist($team);
         $this->om->endFlushSuite();
     }
@@ -233,7 +239,10 @@ class TeamManager
 
         foreach ($users as $user) {
             $team->addUser($user);
-            $this->roleManager->associateRole($user, $teamRole);
+
+            if (!is_null($teamRole)) {
+                $this->roleManager->associateRole($user, $teamRole);
+            }
         }
         $this->om->persist($team);
         $this->om->endFlushSuite();
@@ -246,7 +255,43 @@ class TeamManager
 
         foreach ($users as $user) {
             $team->removeUser($user);
-            $this->roleManager->dissociateRole($user, $teamRole);
+
+            if (!is_null($teamRole)) {
+                $this->roleManager->dissociateRole($user, $teamRole);
+            }
+        }
+        $this->om->persist($team);
+        $this->om->endFlushSuite();
+    }
+
+    public function registerManagerToTeam(Team $team, User $user)
+    {
+        $this->om->startFlushSuite();
+        $currentTeamManager = $team->getTeamManager();
+        $teamManagerRole = $team->getTeamManagerRole();
+        $team->setTeamManager($user);
+
+        if (!is_null($teamManagerRole)) {
+            
+            if (!is_null($currentTeamManager)) {
+                $this->roleManager
+                    ->dissociateRole($currentTeamManager, $teamManagerRole);
+            }
+            $this->roleManager->associateRole($user, $teamManagerRole);
+        }
+        $this->om->persist($team);
+        $this->om->endFlushSuite();
+    }
+
+    public function unregisterManagerFromTeam(Team $team)
+    {
+        $this->om->startFlushSuite();
+        $teamManager = $team->getTeamManager();
+        $teamManagerRole = $team->getTeamManagerRole();
+        $team->setTeamManager(null);
+
+        if (!is_null($teamManagerRole) && !is_null($teamManager)) {
+            $this->roleManager->dissociateRole($teamManager, $teamManagerRole);
         }
         $this->om->persist($team);
         $this->om->endFlushSuite();
@@ -716,6 +761,50 @@ class TeamManager
     )
     {
         $users = $this->teamRepo->findSearchedWorkspaceUsers(
+            $workspace,
+            $search,
+            $orderedBy,
+            $order,
+            $executeQuery
+        );
+
+        return $executeQuery ?
+            $this->pagerFactory->createPagerFromArray($users, $page, $max) :
+            $this->pagerFactory->createPager($users, $page, $max);
+    }
+
+    public function getWorkspaceUsersWithManagers(
+        Workspace $workspace,
+        $orderedBy = 'firstName',
+        $order = 'ASC',
+        $page = 1,
+        $max = 50,
+        $executeQuery = true
+    )
+    {
+        $users = $this->teamRepo->findWorkspaceUsersWithManagers(
+            $workspace,
+            $orderedBy,
+            $order,
+            $executeQuery
+        );
+
+        return $executeQuery ?
+            $this->pagerFactory->createPagerFromArray($users, $page, $max) :
+            $this->pagerFactory->createPager($users, $page, $max);
+    }
+
+    public function getSearchedWorkspaceUsersWithManagers(
+        Workspace $workspace,
+        $search = '',
+        $orderedBy = 'firstName',
+        $order = 'ASC',
+        $page = 1,
+        $max = 50,
+        $executeQuery = true
+    )
+    {
+        $users = $this->teamRepo->findSearchedWorkspaceUsersWithManagers(
             $workspace,
             $search,
             $orderedBy,

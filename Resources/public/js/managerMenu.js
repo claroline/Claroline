@@ -35,7 +35,7 @@
                 }
             ),
             type: 'POST',
-            success: function (datas) {
+            success: function () {
                 $('#row-team-' + currentTeamId).remove();
                 $('#delete-team-validation-box').modal('hide');
             }
@@ -272,7 +272,7 @@
             route,
             refreshPage,
             null,
-            Translator.get('team:empty_selected_teams_comfirm_message'),
+            Translator.get('team:empty_selected_teams_confirm_message'),
             Translator.get('team:empty_teams')
         );
     });
@@ -297,7 +297,7 @@
             route,
             refreshPage,
             null,
-            Translator.get('team:fill_selected_teams_comfirm_message'),
+            Translator.get('team:fill_selected_teams_confirm_message'),
             Translator.get('team:fill_teams')
         );
     });
@@ -313,10 +313,6 @@
             }
         ) + '#resources/' + directoryNodeId;
     });
-    
-    var removeTeamRow = function () {
-        $('#row-team-' + currentTeamId).remove();
-    };
     
     var refreshPage = function () {
         window.tinymce.claroline.disableBeforeUnload = true;

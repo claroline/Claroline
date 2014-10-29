@@ -21,7 +21,7 @@
             ),
             teamMenuPage,
             null,
-            Translator.get('team:unregister_from_team_comfirm_message'),
+            Translator.get('team:unregister_from_team_confirm_message'),
             teamName
         );
     });

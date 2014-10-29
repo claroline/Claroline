@@ -410,7 +410,9 @@ class TeamController extends Controller
                 'workspace' => $workspace
             );
         }
-    }    /**
+    }
+
+    /**
      * @EXT\Route(
      *     "/team/{team}/user/{user}/register",
      *     name="claro_team_manager_register_user",
@@ -896,7 +898,7 @@ class TeamController extends Controller
 
         $users = $team->getUsers();
 
-        return array('users' => $users);
+        return array('team' => $team, 'users' => $users);
     }
 
     /**
@@ -971,6 +973,111 @@ class TeamController extends Controller
             'team' => $team,
             'params' => $params
         );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/team/{team}/manager/registration/users/list/page/{page}/max/{max}/ordered/by/{orderedBy}/order/{order}/search/{search}",
+     *     name="claro_team_manager_registration_users_list",
+     *     defaults={"page"=1, "search"="", "max"=50, "orderedBy"="firstName","order"="ASC"},
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     *
+     * @EXT\Template()
+     *
+     * Displays the list of users who can be registered as team manager.
+     *
+     * @param Team $team
+     * @param string  $search
+     * @param integer $page
+     * @param integer $max
+     * @param string  $orderedBy
+     * @param string  $order
+     */
+    public function registrationTeamManagerUserslistAction(
+        Team $team,
+        User $user,
+        $search = '',
+        $page = 1,
+        $max = 50,
+        $orderedBy = 'firstName',
+        $order = 'ASC'
+    )
+    {
+        $workspace = $team->getWorkspace();
+        $this->checkWorkspaceManager($workspace, $user);
+
+        $users = $search === '' ?
+            $this->teamManager->getWorkspaceUsersWithManagers(
+                $workspace,
+                $orderedBy,
+                $order,
+                $page,
+                $max
+            ) :
+            $this->teamManager->getSearchedWorkspaceUsersWithManagers(
+                $workspace,
+                $search,
+                $orderedBy,
+                $order,
+                $page,
+                $max
+            );
+
+        return array(
+            'workspace' => $workspace,
+            'team' => $team,
+            'users' => $users,
+            'search' => $search,
+            'max' => $max,
+            'orderedBy' => $orderedBy,
+            'order' => $order
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/team/{team}/user/{user}/register/manager",
+     *     name="claro_team_manager_register_manager",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("manager", options={"authenticatedUser" = true})
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function managerRegisterManagerToTeamAction(
+        Team $team,
+        User $user,
+        User $manager
+    )
+    {
+        $workspace = $team->getWorkspace();
+        $this->checkWorkspaceManager($workspace, $manager);
+        $this->teamManager->registerManagerToTeam($team, $user);
+
+        return new Response('success', 200);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/team/{team}/unregister/manager",
+     *     name="claro_team_manager_unregister_manager",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("manager", options={"authenticatedUser" = true})
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function managerUnregisterManagerFromTeamAction(
+        Team $team,
+        User $manager
+    )
+    {
+        $this->checkWorkspaceManager($team->getWorkspace(), $manager);
+        $this->teamManager->unregisterManagerFromTeam($team);
+
+        return new Response('success', 200);
     }
 
     private function checkToolAccess(Workspace $workspace)

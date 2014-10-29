@@ -209,7 +209,7 @@ class Team
         $this->role = $role;
     }
 
-    public function setTeamManager(User $teamManager)
+    public function setTeamManager(User $teamManager = null)
     {
         $this->teamManager = $teamManager;
     }

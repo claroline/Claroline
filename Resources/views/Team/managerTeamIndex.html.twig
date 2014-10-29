@@ -36,24 +36,63 @@
             </div>
         {% endif %}
         
-        <label>
-            {{ 'team_directory_link'|trans({}, 'team') }}
-            :
-        </label>
-        
-        {% if team.getDirectory() is not empty %}
-            {% set directoryNode = team.getDirectory().getResourceNode() %}
-            <a href="{{  path(
-                    'claro_workspace_open_tool',
-                    {'workspaceId': workspace.getId(), 'toolName': 'resource_manager'}
-                ) }}#resources/{{ directoryNode.getId() }}"
-                class="fa fa-folder-open"
-            >
-                {{ directoryNode.getName() }}
-            </a>
-        {% else %}
-            -
-        {% endif %}
+        <div>
+            <label>
+                {{ 'team_directory_link'|trans({}, 'team') }}
+                :
+            </label>
+
+            {% if team.getDirectory() is not empty %}
+                {% set directoryNode = team.getDirectory().getResourceNode() %}
+                <a href="{{  path(
+                        'claro_workspace_open_tool',
+                        {'workspaceId': workspace.getId(), 'toolName': 'resource_manager'}
+                    ) }}#resources/{{ directoryNode.getId() }}"
+                    class="fa fa-folder-open"
+                >
+                    {{ directoryNode.getName() }}
+                </a>
+            {% else %}
+                [{{ 'none'|trans({}, 'platform') }}]
+            {% endif %}
+        </div>
+        <div>    
+            <label>
+                {{ 'team_manager'|trans({}, 'team') }}
+                :
+            </label>
+
+            <span id="team-manager-box">
+                
+                {% if team.getTeamManager() is not empty %}
+                    {% set manager = team.getTeamManager() %}
+                    {{ manager.getFirstName() }}
+                    {{ manager.getLastName() }}
+                    <span>
+                        <i id="remove-team-manager-btn"
+                           class="fa fa-times-circle pointer-hand"
+                           style="color: #D9534F"
+                           data-toggle="tooltip"
+                           data-placement="top"
+                           title="{{ 'remove_team_manager'|trans({}, 'team') }}"
+                        >
+                        </i>
+                    </span>
+                {% else %}
+                    [{{ 'none'|trans({}, 'platform') }}]
+                {% endif %}
+            </span>
+            &nbsp;
+            <span>
+                <i id="select-team-manager-btn"
+                   class="fa fa-user pointer-hand"
+                   data-toggle="tooltip"
+                   data-placement="top"
+                   title="{{ 'select_team_manager'|trans({}, 'team') }}"
+                >
+                </i>
+            </span>
+        </div>
         <hr>
         
         <div class="panel panel-default">
@@ -64,10 +103,9 @@
                 <span class="pull-right">
                     <i id="edit-params-btn"
                        class="fa fa-cog pointer-hand"
-                       data-team-id="{{ team.getId() }}"
-                      data-toggle="tooltip"
-                      data-placement="left"
-                      title="{{ 'edit_team'|trans({}, 'team') }}"
+                       data-toggle="tooltip"
+                       data-placement="left"
+                       title="{{ 'edit_team'|trans({}, 'team') }}"
                     >
                     </i>
                 </span>
@@ -130,10 +168,9 @@
                 <span class="pull-right">
                     <i id="register-users-btn"
                        class="fa fa-sign-in pointer-hand"
-                       data-team-id="{{ team.getId() }}"
-                      data-toggle="tooltip"
-                      data-placement="left"
-                      title="{{ 'register_users_to_team'|trans({}, 'team') }}"
+                       data-toggle="tooltip"
+                       data-placement="left"
+                       title="{{ 'register_users_to_team'|trans({}, 'team') }}"
                     >
                     </i>
                 </span>
@@ -159,6 +196,9 @@
                                         <td class="text-center">
                                             <span class="btn btn-danger btn-sm pointer-hand unregister-btn"
                                                   data-user-id="{{ user.getId() }}"
+                                                  data-user-first-name="{{ user.getFirstName() }}"
+                                                  data-user-last-name="{{ user.getLastName() }}"
+                                                  data-user-username="{{ user.getUsername() }}"
                                             >
                                                 {{ 'unregister'|trans({}, 'team') }}
                                             </span>
@@ -194,6 +234,25 @@
                     {{ 'register_users_to_team'|trans({}, 'team') }}
                 </h3>
                 <div id="view-registration-users-body" class="modal-body">
+                </div>
+                <div class="modal-footer">
+                    <input type="button"
+                           class="btn btn-default"
+                           data-dismiss="modal"
+                           value="{{ 'close'|trans({}, 'platform') }}"
+                    />
+                </div>
+            </div>
+        </div>
+    </div>  
+
+    <div id="view-registration-manager-box" class="modal fade" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <h3 id="view-registration-manager-header" class="modal-header">
+                    {{ 'team_manager_selection'|trans({}, 'team') }}
+                </h3>
+                <div id="view-registration-manager-body" class="modal-body">
                 </div>
                 <div class="modal-footer">
                     <input type="button"

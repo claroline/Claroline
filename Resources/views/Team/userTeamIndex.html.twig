@@ -53,7 +53,21 @@
                     {{ directoryNode.getName() }}
                 </a>
             {% else %}
-                -
+                [{{ 'none'|trans({}, 'platform') }}]
+            {% endif %}
+        </div>
+        <div>    
+            <label>
+                {{ 'team_manager'|trans({}, 'team') }}
+                :
+            </label>
+
+            {% if team.getTeamManager() is not empty %}
+                {% set manager = team.getTeamManager() %}
+                {{ manager.getFirstName() }}
+                {{ manager.getLastName() }}
+            {% else %}
+                [{{ 'none'|trans({}, 'platform') }}]
             {% endif %}
         </div>
         

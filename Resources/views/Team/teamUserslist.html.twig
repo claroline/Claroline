@@ -1,4 +1,22 @@
+<div>    
+    <label>
+        {{ 'team_manager'|trans({}, 'team') }}
+        :
+    </label>
+
+    {% if team.getTeamManager() is not empty %}
+        {% set manager = team.getTeamManager() %}
+        {{ manager.getFirstName() }}
+        {{ manager.getLastName() }}
+    {% else %}
+        [{{ 'none'|trans({}, 'platform') }}]
+    {% endif %}
+</div>
+<hr>
+
 {% if users|length > 0 %}
+    <h3>{{ 'users'|trans({}, 'platform') }}</h3>
+    <br>
     <div class="table-responsive">
         <table class="table">
             <tr>

@@ -15,8 +15,6 @@
     var nbUsers = $('#team-datas').data('nb-users');
     
     $('#edit-params-btn').on('click', function () {
-        var teamId = $(this).data('team-id');
-        
         window.Claroline.Modal.displayForm(
             Routing.generate(
                 'claro_team_edit_form',
@@ -99,7 +97,11 @@
                     '<td>' + lastName + '</td>' +
                     '<td>' + username + '</td>' +
                     '<td class="text-center">' +
-                    '<span class="btn btn-danger btn-sm pointer-hand unregister-btn" data-user-id="' + userId + '">' +
+                    '<span class="btn btn-danger btn-sm pointer-hand unregister-btn" data-user-id="' + userId +
+                    '" data-user-first-name="' + firstName +
+                    '" data-user-last-name="' + lastName +
+                    '" data-user-username="' + username +
+                    '">' +
                     Translator.get('team:unregister') +
                     '</span>' +
                     '</td>' +
@@ -120,19 +122,115 @@
     
     $('#users-list-table').on('click', '.unregister-btn', function () {
         var userId = $(this).data('user-id');
+        var firstName = $(this).data('user-first-name');
+        var lastName = $(this).data('user-last-name');
+        var username = $(this).data('user-username');
         
-        $.ajax({
-            url: Routing.generate(
+        window.Claroline.Modal.confirmRequest(
+            Routing.generate(
                 'claro_team_manager_unregister_user',
                 {
                     'team': teamId,
                     'user': userId
                 }
             ),
+            removeUserRow,
+            userId,
+            Translator.get('team:unregister_user_from_team_confirm_message'),
+            firstName + ' ' + lastName + ' (' + username + ')'
+        );
+    });
+    
+    $('#select-team-manager-btn').on('click', function () {
+        $.ajax({
+            url: Routing.generate(
+                'claro_team_manager_registration_users_list',
+                {'team': teamId}
+            ),
+            type: 'GET',
+            success: function (datas) {
+                $('#view-registration-manager-body').html(datas);
+                $('#view-registration-manager-box').modal('show');
+            }
+        });
+    });
+    
+    $('body').on('click', '#remove-team-manager-btn', function () {
+        window.Claroline.Modal.confirmRequest(
+            Routing.generate(
+                'claro_team_manager_unregister_manager',
+                {'team': teamId}
+            ),
+            emptyTeamManagerBox,
+            null,
+            Translator.get('team:remove_team_manager_confirm_message'),
+            Translator.get('team:remove_team_manager')
+        );
+    });
+    
+    $('#view-registration-manager-body').on('click', 'a', function (event) {
+        event.preventDefault();
+        event.stopPropagation();
+        var url = $(this).attr('href');
+        
+        $.ajax({
+            url: url,
+            type: 'GET',
+            async: false,
+            success: function (result) {
+                $('#view-registration-manager-body').html(result);
+            }
+        });
+    });
+
+    $('#view-registration-manager-body').on('click', '#search-manager-btn', function () {
+        var search = $('#search-manager-input').val();
+        
+        $.ajax({
+            url: Routing.generate(
+                'claro_team_manager_registration_users_list',
+                {
+                    'team': teamId,
+                    'search': search
+                }
+            ),
+            type: 'GET',
+            async: false,
+            success: function (result) {
+                $('#view-registration-manager-body').html(result);
+            }
+        });
+    });
+
+    $('#view-registration-manager-body').on('click', '.register-manager-btn', function () {
+        var userId = $(this).data('user-id');
+        var firstName = $(this).data('user-first-name');
+        var lastName = $(this).data('user-last-name');
+        
+        $.ajax({
+            url: Routing.generate(
+                'claro_team_manager_register_manager',
+                {
+                    'team': teamId,
+                    'user': userId
+                }
+            ),
             type: 'POST',
+            async: false,
             success: function () {
-                nbUsers--;
-                $('#row-user-' + userId).remove();
+                var managerBox = firstName + ' ' + lastName + ' ' +
+                    '<span>' +
+                        '<i id="remove-team-manager-btn"' +
+                           'class="fa fa-times-circle pointer-hand"' +
+                           'style="color: #D9534F"' +
+                           'data-toggle="tooltip"' +
+                           'data-placement="top"' +
+                           'title="' + Translator.get('team:remove_team_manager') + '"' +
+                        '>' +
+                        '</i>' +
+                    '</span>';
+                $('#team-manager-box').html(managerBox);
+                $('#view-registration-manager-box').modal('hide');
             }
         });
     });
@@ -140,5 +238,15 @@
     var refreshPage = function () {
         window.tinymce.claroline.disableBeforeUnload = true;
         window.location.reload();
+    };
+    
+    var removeUserRow = function (event, userId) {
+        nbUsers--;
+        $('#row-user-' + userId).remove();
+    };
+    
+    var emptyTeamManagerBox = function () {
+        var noneMsg = '[' + Translator.get('platform:none') + ']';
+        $('#team-manager-box').html(noneMsg);
     };
 })();

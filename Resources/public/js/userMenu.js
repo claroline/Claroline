@@ -57,7 +57,7 @@
             ),
             refreshPage,
             null,
-            Translator.get('team:register_to_team_comfirm_message'),
+            Translator.get('team:register_to_team_confirm_message'),
             teamName
         );
     });
@@ -73,7 +73,7 @@
             ),
             refreshPage,
             null,
-            Translator.get('team:unregister_from_team_comfirm_message'),
+            Translator.get('team:unregister_from_team_confirm_message'),
             teamName
         );
     });
