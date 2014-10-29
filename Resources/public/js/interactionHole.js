@@ -149,8 +149,9 @@ function addFormHoleEdit(add, response, point, size, orthography, del, selector,
 
             } else {
                 if (node.tagName == 'SELECT') {
-                    size = $('#ujm_exobundle_interactionholetype_holes_' + ind + '_size').val();
-                    nodeBlank = '<input type="text" value="' + node.value + '" size="' + size + '" class="blank" id="' + ind + '" name="blank_' + ind + '">';
+                    idSize = ind - 1;
+                    size = $('#ujm_exobundle_interactionholetype_holes_' + idSize + '_size').val();
+                    nodeBlank = '<input type="text" value="' + node.value + '" size="' + size + '" class="blank" id="' + ind + '" name="blank_' + ind + '" autocomplete="off">';
                     tinyMCE.get('ujm_exobundle_interactionholetype_html').selection.setContent(nodeBlank);
                 }
             }
@@ -169,6 +170,7 @@ function addFormHoleEdit(add, response, point, size, orthography, del, selector,
 
 function createHole() {
     var blank = $.trim(tinyMCE.activeEditor.selection.getContent({format : 'text'}));
+    blank = blank.replace(/\s{2,}/g, ' ');
 
     if (blank != '') {
 
@@ -184,7 +186,7 @@ function createHole() {
         }
 
         var el = tinyMCE.activeEditor.dom
-            .create('input', {'id' : indexBlank, 'name' : 'blank_'+indexBlank, 'type' : 'text', 'size' : '15', 'value' : blank, 'class' : 'blank'});
+            .create('input', {'id' : indexBlank, 'name' : 'blank_'+indexBlank, 'type' : 'text', 'size' : '15', 'value' : blank, 'class' : 'blank', 'autocomplete' : 'off'});
 
         tinyMCE.activeEditor.selection.setNode(el);
 
@@ -281,7 +283,7 @@ function addHole(indexBlank, valHole) {
         } else {
             if (node.tagName == 'SELECT') {
                 size = $('#ujm_exobundle_interactionholetype_holes_' + index + '_size').val();
-                nodeBlank = '<input type="text" value="' + node.value + '" size="' + size + '" class="blank" id="' + index + '" name="blank_' + indexBlank + '">';
+                nodeBlank = '<input type="text" value="' + node.value + '" size="' + size + '" class="blank" id="' + index + '" name="blank_' + indexBlank + '" autocomplete="off">';
                 tinyMCE.get('ujm_exobundle_interactionholetype_html').selection.setContent(nodeBlank);
             }
         }
@@ -344,6 +346,11 @@ function addWR(indexHole, idTabWR) {
 
     $('#ujm_exobundle_interactionholetype_holes_' + indexHole + '_wordResponses_' + indexWR + '_response').attr("placeholder", langKeyWord);
     $('#ujm_exobundle_interactionholetype_holes_' + indexHole + '_wordResponses_' + indexWR + '_score').attr("placeholder", langPoint);
+
+    $('#ujm_exobundle_interactionholetype_holes_' + indexHole + '_wordResponses_' + indexWR + '_response').focusout(function() {
+        $(this).val($.trim($(this).val()));
+        $(this).val($(this).val().replace(/\s{2,}/g, ' '));
+    });
 
     verticalAlignCenter();
 }
