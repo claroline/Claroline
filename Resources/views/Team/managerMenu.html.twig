@@ -38,12 +38,6 @@
     </div>
     <div class="panel-body">
         <div>
-            <a href="{{ path('claro_team_create_form', {'workspace': workspace.getId()}) }}"
-               class="btn btn-primary margin-bottom-md"
-            >
-                <i class="fa fa-plus"></i>
-                {{ 'create_a_team'|trans({}, 'team') }}
-            </a>
             <a href="{{ path('claro_team_multiple_create_form', {'workspace': workspace.getId()}) }}"
                class="btn btn-primary margin-bottom-md"
             >
@@ -127,7 +121,6 @@
                                title="{{ 'public_registration'|trans({}, 'team') }}"
                             >
                                 <i class="fa fa-sign-in"></i>
-{#                                {{ 'public_registration'|trans({}, 'team') }}#}
                             </a>
                         </th>
                         <th class="text-center">
@@ -137,7 +130,6 @@
                                title="{{ 'public_unregistration'|trans({}, 'team') }}"
                             >
                                 <i class="fa fa-sign-out"></i>
-{#                                {{ 'public_unregistration'|trans({}, 'team') }}#}
                             </a>
                         </th>
                         <th class="text-center">
@@ -252,6 +244,14 @@
                 {{ 'no_team'|trans({}, 'team') }}
             </div>
         {% endif %}
+            
+        <a href="{{ path('claro_team_create_form', {'workspace': workspace.getId()}) }}"
+           class="btn btn-default btn-sm margin-bottom-md"
+        >
+            <i class="fa fa-plus"></i>
+            {{ 'create_a_team'|trans({}, 'team') }}
+        </a>
+{#        <a class="btn btn-default">ajouter une équipe</a>#}
     </div>
 
     <div id="datas-box" data-workspace-id="{{ workspace.getId() }}">
