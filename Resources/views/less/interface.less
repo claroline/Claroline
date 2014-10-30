@@ -3,50 +3,62 @@ body {
 }
 
 #portfolio-container {
-    .communication_panel_toggle {
-        position: absolute;
-        left:     0;
-        button {
-            border-top-right-radius:   0;
-            border-top-left-radius:    0;
-            border-bottom-left-radius: 0;
-        }
-    }
-    .communication_panel {
-        position:      absolute;
-        z-index:       1;
-        text-align:    left;
-        left:          0;
-        padding-left:  0;
-        padding-right: 0;
-        -webkit-transition: 0.4s linear all;
-           -moz-transition: 0.4s linear all;
-             -o-transition: 0.4s linear all;
-                transition: 0.4s linear all;
+    .communication_panel_container {
+        position           : absolute;
+        z-index            : 1;
+        text-align         : left;
+        left               : 0;
+        padding-left       : 0;
+        padding-right      : 0;
+        -webkit-transition : 0.4s linear all;
+           -moz-transition : 0.4s linear all;
+             -o-transition : 0.4s linear all;
+                transition : 0.4s linear all;
 
         &.ng-hide {
-           left: -34%;
+            left : -34%;
         }
-        .media-list {
-            max-height: 400px;
-            overflow:   auto;
-            font-size:  12px;
-            .media + .media {
-                margin-top:  0;
-                padding-top: 10px;
-                border-top:  1px solid #DDDDDD;
+
+        .communication_panel_toggle {
+            position:         absolute;
+            transform:        rotate(90deg);
+            transform-origin: 15px center;
+            -webkit-transition : 0.4s linear all;
+               -moz-transition : 0.4s linear all;
+                 -o-transition : 0.4s linear all;
+                    transition : 0.4s linear all;
+            &.expanded {
+                left: 100%;
             }
-            .media-empty {
-                margin-bottom: 10px;
+            button {
+                border-top-right-radius:   0;
+                border-top-left-radius:    0;
+                border-bottom-left-radius: 0;
             }
-            .media-body {
-                .message {
-                    margin-bottom: 0;
+        }
+
+        .communication_panel {
+            .media-list {
+                max-height : 400px;
+                overflow   : auto;
+                font-size  : 12px;
+                .media + .media {
+                    margin-top  : 0;
+                    padding-top : 10px;
+                    border-top  : 1px solid #DDDDDD;
+                }
+                .media-empty {
+                    margin-bottom : 10px;
+                }
+                .media-body {
+                    .message {
+                        margin-bottom : 0;
+                    }
                 }
             }
-        }
-        .comment_field {
-            margin-bottom: 0;
+            .comment_field {
+                margin-bottom : 0;
+            }
         }
     }
     header {
