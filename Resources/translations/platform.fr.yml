@@ -233,7 +233,7 @@ creation: Création
 creation_date: 'Date de création'
 creator: Créateur
 csv_group_import_infos: 'Informations sur le format du fichier CSV'
-csv_group_import_infos_format: Format: liste de nom d'utilisateurs séparés par un retour à la ligne.
+csv_group_import_infos_format: 'Format: liste de nom d''utilisateurs séparés par un retour à la ligne.'
 csv_users_import_infos: 'Informations sur le format du fichier CSV'
 csv_users_import_infos_format: Format
 csv_users_import_infos_format_a: 'Les données d''un utilisateur doivent être définies sur une ligne et séparées par un point virgule'
@@ -767,7 +767,6 @@ security_token_form_token: 'Token'
 security_token_list: 'Liste des jetons d''authentification'
 security_tokens_management: 'Gestion des jetons d''authentification'
 see: Voir
-see_hidden_files: 'Voir les fichiers cachés'
 see_more: 'Voir plus'
 see_public_profile: 'Voir mon profil public'
 select all: 'Tout sélectionner'

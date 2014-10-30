@@ -233,7 +233,7 @@ creation: Creation
 creation_date: 'Creation date'
 creator: Creator
 csv_group_import_infos: 'CSV file informations'
-csv_group_import_infos_format: Format: username list separated by a carriage return
+csv_group_import_infos_format: 'Format: username list separated by a carriage return'
 csv_users_import_infos: 'CSV file informations'
 csv_users_import_infos_format: Format
 csv_users_import_infos_format_a: 'User informations must be defined in one line and separated by semicolon'
@@ -766,7 +766,6 @@ security_token_form_token: 'Token'
 security_token_list: 'Security token list'
 security_tokens_management: 'Security tokens management'
 see: See
-see_hidden_files: 'See hidden files'
 see_more: 'See more'
 see_public_profile: 'See my public profile'
 select all: 'Select all'

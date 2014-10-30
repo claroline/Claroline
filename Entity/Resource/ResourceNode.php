@@ -565,16 +565,6 @@ class ResourceNode
         return $this->pathForCreationLog;
     }
 
-    public function getIsVisible()
-    {
-        return $this->isVisible;
-    }
-
-    public function setIsVisible($isVisible)
-    {
-        $this->isVisible = $isVisible;
-    }
-
     public function addChild(ResourceNode $resourceNode)
     {
         if (!$this->children->contains($resourceNode)) {

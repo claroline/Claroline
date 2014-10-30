@@ -45,11 +45,6 @@ class ResourcePropertiesType extends AbstractType
             )
         );
         $builder->add(
-            'isVisible',
-            'checkbox',
-            array( 'required' => true)
-        );
-        $builder->add(
             'accessibleFrom',
             'date',
             array(

@@ -55,8 +55,7 @@
             this.dispatcher.trigger(eventName, this.preFetchedDirectory);
         } else {
             var url = Routing.generate('claro_resource_directory', {
-                nodeId: event.nodeId,
-                visibility: $('#visibility-btn').data('visibility')
+                nodeId: event.nodeId
             });
 
             if (event.fromPicker) {
