@@ -242,7 +242,14 @@ class TeamController extends Controller
 
         if ($form->isValid()) {
             $resource = $form->get('defaultResource')->getData();
-            $this->teamManager->createTeam($team, $workspace, $user, $resource);
+            $creatableResources = $form->get('resourceTypes')->getData();
+            $this->teamManager->createTeam(
+                $team,
+                $workspace,
+                $user,
+                $resource,
+                $creatableResources->toArray()
+            );
             $this->teamManager->initializeTeamRights($team);
 
             return new RedirectResponse(
@@ -406,7 +413,8 @@ class TeamController extends Controller
                 $datas['isPublic'],
                 $datas['selfRegistration'],
                 $datas['selfUnregistration'],
-                $form->get('defaultResource')->getData()
+                $form->get('defaultResource')->getData(),
+                $form->get('resourceTypes')->getData()->toArray()
             );
 
             return new RedirectResponse(

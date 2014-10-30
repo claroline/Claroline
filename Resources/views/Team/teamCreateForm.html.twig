@@ -36,6 +36,16 @@
     >
         <div class="panel-body">
             {{ form_widget(form) }}
+            <div>
+                <span id="show-advanced-params-btn"
+                      class="btn btn-default btn-sm pointer-hand pull-right"
+                >
+                    <i id="show-advanced-btn-icon" class="fa fa-eye"></i>
+                    <span id="show-advanced-btn-text">
+                        {{ 'show_advanced_parameters'|trans({}, 'team') }}
+                    </span>
+                </span>
+            </div>
         </div>
         <br>
         <div class="panel-footer">
@@ -49,4 +59,16 @@
             </a>
         </div>
     </form>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript"
+            src="{{ url('bazinga_exposetranslation_js', { 'domain_name': 'team' }) }}"
+    >
+    </script>
+    <script src='{{ asset('bundles/clarolineteam/js/teamCreateForm.js') }}'
+            type="text/javascript"
+    >
+    </script>
 {% endblock %}

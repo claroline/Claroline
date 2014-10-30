@@ -79,7 +79,8 @@ class TeamManager
         $isPublic,
         $selfRegistration,
         $selfUnregistration,
-        ResourceNode $resource = null
+        ResourceNode $resource = null,
+        array $creatableResources = array()
     )
     {
         $this->om->startFlushSuite();
@@ -99,7 +100,13 @@ class TeamManager
             $team->setSelfRegistration($selfRegistration);
             $team->setSelfUnregistration($selfUnregistration);
 
-            $this->createTeam($team, $workspace, $user, $resource);
+            $this->createTeam(
+                $team,
+                $workspace,
+                $user,
+                $resource,
+                $creatableResources
+            );
             $node = $team->getDirectory()->getResourceNode();
             $node->setPrevious(null);
             $node->setNext(null);
@@ -121,7 +128,8 @@ class TeamManager
         Team $team,
         Workspace $workspace,
         User $user,
-        ResourceNode $resource = null
+        ResourceNode $resource = null,
+        array $creatableResources = array()
     )
     {
         $this->om->startFlushSuite();
@@ -138,7 +146,8 @@ class TeamManager
             $user,
             $role,
             $teamManagerRole,
-            $resource
+            $resource,
+            $creatableResources
         );
         $team->setDirectory($directory);
         $this->om->persist($team);
@@ -493,7 +502,8 @@ class TeamManager
         User $user,
         Role $teamRole,
         Role $teamManagerRole,
-        ResourceNode $resource = null
+        ResourceNode $resource = null,
+        array $creatableResources = array()
     )
     {
         $rootDirectory = $this->resourceManager->getWorkspaceRoot($workspace);
@@ -517,8 +527,13 @@ class TeamManager
         foreach ($resourceTypes as $resourceType) {
             $rights[$teamManagerRoleName]['create'][] =
                 array('name' => $resourceType->getName());
+//            $rights[$teamRoleName]['create'][] =
+//                array('name' => $resourceType->getName());
+        }
+
+        foreach ($creatableResources as $creatableResource) {
             $rights[$teamRoleName]['create'][] =
-                array('name' => $resourceType->getName());
+                array('name' => $creatableResource->getName());
         }
         $decoders = $directoryType->getMaskDecoders();
 

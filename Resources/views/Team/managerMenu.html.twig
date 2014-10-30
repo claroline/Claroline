@@ -103,7 +103,7 @@
                             </a>
                         </th>
                         <th class="text-center">
-                            {{ 'users'|trans({}, 'team') }}
+                            {{ 'users'|trans({}, 'platform') }}
                         </th>
                         <th class="text-center">
                             <a href="{{ sortUrl(workspace.getId(), 'maxUsers', order) }}"
@@ -251,7 +251,6 @@
             <i class="fa fa-plus"></i>
             {{ 'create_a_team'|trans({}, 'team') }}
         </a>
-{#        <a class="btn btn-default">ajouter une équipe</a>#}
     </div>
 
     <div id="datas-box" data-workspace-id="{{ workspace.getId() }}">

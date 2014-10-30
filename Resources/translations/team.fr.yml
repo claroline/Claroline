@@ -18,6 +18,7 @@ fill_selected_teams_confirm_message: 'Êtes-vous sûr de vouloir remplir le(s) �
 fill_selected_teams_with_unregistered_users: 'Remplir automatiquement le(s) équipe(s) sélectionnée(s) avec les utilisateurs inscrits à aucune équipe'
 fill_teams: 'Remplir des équipes'
 go_to_team_directory: 'Accéder au répertoire de l''équipe'
+hide_advanced_parameters: 'Cacher les paramètres avancés'
 max_teams_limit_reached: 'Nombre maximum d''équipes atteint'
 maximum: Maximum
 maximum_informations: 'Le nombre d''utilisateurs qui peuvent être inscrits à l''équipe'
@@ -39,6 +40,7 @@ select: Sélectionner
 select_team_manager: 'Sélectionner le gestionnaire de l''équipe'
 self_register: 'S''inscrire'
 self_unregister: 'Se désinscrire'
+show_advanced_parameters: 'Afficher les paramètres avancés'
 team: Equipe
 team_creation: 'Création d''une équipe'
 team_directory: 'Répertoire de l''équipe'
@@ -60,4 +62,3 @@ unregister_all_users_from_selected_teams: 'Désinscrire tous les utilisateurs de
 unregister_from_team: 'Se désinscrire de l''équipe'
 unregister_from_team_confirm_message: 'Êtes-vous sûr de vouloir vous désinscrire de cette équipe ?'
 unregister_user_from_team_confirm_message: 'Êtes-vous sûr de vouloir désinscrire cet utilisateur de cette équipe ?'
-users: Utilisateurs

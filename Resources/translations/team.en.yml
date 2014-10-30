@@ -18,6 +18,7 @@ fill_selected_teams_confirm_message: 'Are you sure you want to fill the selected
 fill_selected_teams_with_unregistered_users: 'Fill selected team(s) with users who are registered in no team'
 fill_teams: 'Fill teams'
 go_to_team_directory: 'Go to team''s directory'
+hide_advanced_parameters: 'Hide advanced parameters'
 max_teams_limit_reached: 'Maximum number of teams reached'
 maximum: Maximum
 maximum_informations: 'The number of users that can be registered into team'
@@ -39,6 +40,7 @@ select: Select
 select_team_manager: 'Select team manager'
 self_register: Register
 self_unregister: Unregister
+show_advanced_parameters: 'Show advanced parameters'
 team: Team
 team_creation: 'Team creation'
 team_directory: 'Team''s directory'
@@ -60,4 +62,3 @@ unregister_all_users_from_selected_teams: 'Unregister all users from selected te
 unregister_from_team: 'Unregister from team'
 unregister_from_team_confirm_message: 'Are you sure you want to unregister from this team ?'
 unregister_user_from_team_confirm_message: 'Are you sure you want to unregister this user from this team ?'
-users: Users

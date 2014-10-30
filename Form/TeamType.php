@@ -57,18 +57,40 @@ class TeamType extends AbstractType
                     true => 'public',
                     false => 'private'
                 ),
-                'required' => true
+                'required' => true,
+                'attr' => array('class' => 'advanced-param')
             )
         );
         $builder->add(
             'selfRegistration',
             'checkbox',
-            array('required' => true)
+            array(
+                'required' => true,
+                'attr' => array('class' => 'advanced-param')
+            )
         );
         $builder->add(
             'selfUnregistration',
             'checkbox',
-            array('required' => true)
+            array(
+                'required' => true,
+                'attr' => array('class' => 'advanced-param')
+            )
+        );
+        $builder->add(
+            'resourceTypes',
+            'entity',
+            array(
+                'required' => false,
+                'mapped' => false,
+                'expanded' => true,
+                'multiple' => true,
+                'translation_domain' => 'resource',
+                'label' => 'user_creatable_resources',
+                'class' => 'ClarolineCoreBundle:Resource\ResourceType',
+                'property' => 'name',
+                'attr' => array('class' => 'advanced-param')
+            )
         );
     }
 

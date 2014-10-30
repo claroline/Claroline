@@ -80,7 +80,8 @@ class MultipleTeamsType extends AbstractType
                     false => 'private'
                 ),
                 'required' => true,
-                'data' => $this->params->getIsPublic()
+                'data' => $this->params->getIsPublic(),
+                'attr' => array('class' => 'advanced-param')
             )
         );
         $builder->add(
@@ -88,7 +89,8 @@ class MultipleTeamsType extends AbstractType
             'checkbox',
             array(
                 'required' => true,
-                'data' => $this->params->getSelfRegistration()
+                'data' => $this->params->getSelfRegistration(),
+                'attr' => array('class' => 'advanced-param')
             )
         );
         $builder->add(
@@ -96,7 +98,23 @@ class MultipleTeamsType extends AbstractType
             'checkbox',
             array(
                 'required' => true,
-                'data' => $this->params->getSelfUnregistration()
+                'data' => $this->params->getSelfUnregistration(),
+                'attr' => array('class' => 'advanced-param')
+            )
+        );
+        $builder->add(
+            'resourceTypes',
+            'entity',
+            array(
+                'required' => false,
+                'mapped' => false,
+                'expanded' => true,
+                'multiple' => true,
+                'translation_domain' => 'resource',
+                'label' => 'user_creatable_resources',
+                'class' => 'ClarolineCoreBundle:Resource\ResourceType',
+                'property' => 'name',
+                'attr' => array('class' => 'advanced-param')
             )
         );
     }
