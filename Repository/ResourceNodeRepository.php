@@ -115,6 +115,7 @@ class ResourceNodeRepository extends MaterializedPathRepository
         //otherwise only show visible children
         } else {
             $builder->selectAsArray(true)
+                ->whereIsPublished()
                 ->whereParentIs($parent)
                 ->whereHasRoleIn($roles);
 

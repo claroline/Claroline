@@ -94,7 +94,8 @@ class ResourceQueryBuilder
             "    previous.id as previous_id,{$eol}" .
             "    next.id as next_id,{$eol}" .
             "    icon.relativeUrl as large_icon,{$eol}" .
-            "    node.mimeType as mime_type";
+            "    node.mimeType as mime_type,{$eol}" .
+            "    node.published as published";
 
         if ($withMaxPermissions) {
             $this->leftJoinRights = true;
@@ -372,6 +373,18 @@ class ResourceQueryBuilder
     {
         $this->addWhereClause('node.mimeType LIKE :mimeType');
         $this->parameters[':mimeType'] = $mimeType;
+
+        return $this;
+    }
+
+    /**
+     * Filters nodes that are published.
+     *
+     * @return ResourceQueryBuilder
+     */
+    public function whereIsPublished()
+    {
+        $this->addWhereClause('node.published = true');
 
         return $this;
     }
