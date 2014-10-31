@@ -136,13 +136,13 @@ class PublishingManager
     
         // Re encode updated structure and update Path
         $this->path->setStructure(json_encode($this->pathStructure));
-    
-        // Mark Path as published
-        $this->path->setPublished(true);
-        $this->path->setModified(false);
 
         // Manage rights
         $this->manageRights();
+
+        // Mark Path as published
+        $this->path->setPublished(true);
+        $this->path->setModified(false);
 
         // Persist data
         $this->om->persist($this->path);
@@ -213,7 +213,7 @@ class PublishingManager
                 $childrenSteps = $this->publishSteps($childrenLevel, $step, $stepStructure->children, $propagatedResources);
     
                 // Store children steps
-                $processedSteps = $processedSteps + $childrenSteps;
+                $processedSteps = array_merge($processedSteps, $childrenSteps);
             }
     
             $currentOrder++;
