@@ -71,8 +71,27 @@
                 .addClass('fa fa-caret-down'));
             this.$('#' + event.id + ' .dropdown[rel=tooltip]').attr('title', event.name);
         },
+        publishNode: function (event) {
+            var nodeId = event.id;
+            var published = event.published;
+            
+            if (published) {
+                this.$('#unpublished-mark-' + nodeId).remove();
+            } else {
+                var publishedIcon =
+                    '<span id="unpublished-mark-' + nodeId + '">' +
+                        '<i class="fa fa-circle text-danger pull-right" ' +
+                           'style="position: relative; top: -5px; right: -5px; font-size: 20px;" ' +
+                           'data-toggle="tooltip" ' +
+                           'data-placement="top" ' +
+                           'title="' + Translator.get('platform:this_resource_is_not_published') + '"></i>' +
+                    '</span>';
+                this.$('#node-element-' + nodeId).html(publishedIcon);
+            }
+        },
         editNode: function (event) {
             this.renameNode(event);
+            this.publishNode(event);
             this.$('#node-element-' + event.id).attr(
                 'style',
                 'background-image:url("' + this.parameters.webPath + event.large_icon + '");'

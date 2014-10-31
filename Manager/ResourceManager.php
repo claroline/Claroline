@@ -844,6 +844,7 @@ class ResourceManager
         $resourceArray['large_icon'] = $node->getIcon()->getRelativeUrl();
         $resourceArray['path_for_display'] = $node->getPathForDisplay();
         $resourceArray['mime_type'] = $node->getMimeType();
+        $resourceArray['published'] = $node->isPublished();
 
         if ($node->getPrevious() !== null) {
             $resourceArray['previous_id'] = $node->getPrevious()->getId();
