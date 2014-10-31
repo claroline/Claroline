@@ -87,7 +87,7 @@ class Workspace
      * @ORM\OneToMany(
      *     targetEntity="Claroline\CoreBundle\Entity\Tool\OrderedTool",
      *     mappedBy="workspace",
-     *     cascade={"persist"}
+     *     cascade={"persist", "merge"}
      * )
      */
     protected $orderedTools;
@@ -96,7 +96,7 @@ class Workspace
      * @ORM\OneToMany(
      *     targetEntity="Claroline\CoreBundle\Entity\Role",
      *     mappedBy="workspace",
-     *     cascade={"persist"}
+     *     cascade={"persist", "merge"}
      * )
      */
     protected $roles;

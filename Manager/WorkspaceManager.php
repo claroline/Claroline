@@ -15,6 +15,7 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceFavourite;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceRegistrationQueue;
+use Claroline\CoreBundle\Entity\Model\WorkspaceModel;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Library\Security\Utilities;
 use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
@@ -43,6 +44,8 @@ use Symfony\Component\Yaml\Yaml;
  */
 class WorkspaceManager
 {
+    const MAX_WORKSPACE_BATCH_SIZE = 10;
+
     /** @var HomeTabManager */
     private $homeTabManager;
     /** @var MaskManager */
@@ -83,17 +86,17 @@ class WorkspaceManager
      * Constructor.
      *
      * @DI\InjectParams({
-     *     "homeTabManager"  = @DI\Inject("claroline.manager.home_tab_manager"),
-     *     "roleManager"     = @DI\Inject("claroline.manager.role_manager"),
-     *     "maskManager"     = @DI\Inject("claroline.manager.mask_manager"),
-     *     "resourceManager" = @DI\Inject("claroline.manager.resource_manager"),
-     *     "dispatcher"      = @DI\Inject("claroline.event.event_dispatcher"),
-     *     "om"              = @DI\Inject("claroline.persistence.object_manager"),
-     *     "ut"              = @DI\Inject("claroline.utilities.misc"),
-     *     "sut"             = @DI\Inject("claroline.security.utilities"),
-     *     "templateDir"     = @DI\Inject("%claroline.param.templates_directory%"),
-     *     "pagerFactory"    = @DI\Inject("claroline.pager.pager_factory"),
-     *     "container"       = @DI\Inject("service_container")
+     *     "homeTabManager"        = @DI\Inject("claroline.manager.home_tab_manager"),
+     *     "roleManager"           = @DI\Inject("claroline.manager.role_manager"),
+     *     "maskManager"           = @DI\Inject("claroline.manager.mask_manager"),
+     *     "resourceManager"       = @DI\Inject("claroline.manager.resource_manager"),
+     *     "dispatcher"            = @DI\Inject("claroline.event.event_dispatcher"),
+     *     "om"                    = @DI\Inject("claroline.persistence.object_manager"),
+     *     "ut"                    = @DI\Inject("claroline.utilities.misc"),
+     *     "sut"                   = @DI\Inject("claroline.security.utilities"),
+     *     "templateDir"           = @DI\Inject("%claroline.param.templates_directory%"),
+     *     "pagerFactory"          = @DI\Inject("claroline.pager.pager_factory"),
+     *     "container"             = @DI\Inject("service_container")
      * })
      */
     public function __construct(
@@ -158,10 +161,10 @@ class WorkspaceManager
      *
      * @return \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace
      */
-    public function create(Configuration $configuration, User $manager, $createUsers = false, $importUsers = false)
+    public function create(Configuration $configuration, User $manager)
     {
         $transfertManager = $this->container->get('claroline.manager.transfert_manager');
-        $workspace = $transfertManager->createWorkspace($configuration, $manager, $createUsers, $importUsers);
+        $workspace = $transfertManager->createWorkspace($configuration, $manager);
 
         return $workspace;
     }
@@ -175,6 +178,41 @@ class WorkspaceManager
     {
         $this->om->persist($workspace);
         $this->om->flush();
+    }
+
+    public function createWorkspaceFromModel(
+        WorkspaceModel $model,
+        User $user,
+        $name,
+        $code,
+        $description,
+        $displayable,
+        $selfRegistration,
+        $selfUnregistration,
+        &$errors = array()
+    )
+    {
+        $workspaceModelManager = $this->container->get('claroline.manager.workspace_model_manager');
+
+        $workspace = new Workspace();
+        $workspace->setName($name);
+        $workspace->setCode($code);
+        $workspace->setDescription($description);
+        $workspace->setDisplayable($displayable);
+        $workspace->setSelfRegistration($selfRegistration);
+        $workspace->setSelfUnregistration($selfUnregistration);
+        $guid = $this->ut->generateGuid();
+        $workspace->setGuid($guid);
+        $date = new \Datetime(date('d-m-Y H:i'));
+        $workspace->setCreationDate($date->getTimestamp());
+        $workspace->setCreator($user);
+
+        $errors = [];
+
+        $this->createWorkspace($workspace);
+        $workspaceModelManager->addDataFromModel($model, $workspace, $user, $errors);
+
+        return $workspace;
     }
 
     /**
@@ -715,5 +753,80 @@ class WorkspaceManager
     public function importRichText()
     {
         $this->container->get('claroline.manager.transfert_manager')->importRichText();
+    }
+
+    /**
+     * Import a workspace list from a csv data.
+     *
+     * @param array $workspaces
+     */
+    public function importWorkspaces(array $workspaces, $logger = null)
+    {
+        $this->om->clear();
+        $ds = DIRECTORY_SEPARATOR;
+        $i = 0;
+        $j = 0;
+        $workspaceModelManager = $this->container->get('claroline.manager.workspace_model_manager');
+
+        foreach ($workspaces as $workspace) {
+            $this->om->startFlushSuite();
+            $model = null;
+            $name = $workspace[0];
+            $code = $workspace[1];
+            $isVisible = $workspace[2];
+            $selfRegistration = $workspace[3];
+            $registrationValidation = $workspace[4];
+            $selfUnregistration = $workspace[5];
+
+            if (isset($workspace[6])) {
+                $user = $this->om->getRepository('ClarolineCoreBundle:User')
+                    ->findOneByUsername($workspace[6]);
+            } else {
+                $user = $this->container->get('security.context')->getToken()->getUser();
+            }
+
+            if (isset($workspace[7])) $model = $this->om->getRepository('ClarolineCoreBundle:Model\WorkspaceModel')
+                ->findOneByName($workspace[7]);
+
+            if ($model) {
+                $guid = $this->ut->generateGuid();
+                $workspace = new Workspace();
+                $this->createWorkspace($workspace);
+                $workspace->setName($name);
+                $workspace->setCode($code);
+                $workspace->setDisplayable($isVisible);
+                $workspace->setSelfRegistration($selfRegistration);
+                $workspace->setSelfUnregistration($selfUnregistration);
+                $workspace->setRegistrationValidation($registrationValidation);
+                $workspace->setGuid($guid);
+                $date = new \Datetime(date('d-m-Y H:i'));
+                $workspace->setCreationDate($date->getTimestamp());
+                $workspace->setCreator($user);
+                $workspaceModelManager->addDataFromModel($model, $workspace, $user, $errors);
+            } else {
+                //this should be changed later
+                $configuration = new Configuration($this->templateDir . $ds . 'default.zip');
+                $configuration->setWorkspaceName($name);
+                $configuration->setWorkspaceCode($code);
+                $configuration->setDisplayable($isVisible);
+                $configuration->setSelfRegistration($selfRegistration);
+                $configuration->setSelfUnregistration($registrationValidation);
+                $this->container->get('claroline.manager.transfert_manager')->createWorkspace($configuration, $user);
+            }
+
+            $i++;
+            $j++;
+
+            if ($i % self::MAX_WORKSPACE_BATCH_SIZE === 0) {
+                if ($logger) $logger(" [UOW size: " . $this->om->getUnitOfWork()->size() . "]");
+                $i = 0;
+                $this->om->endFlushSuite();
+                if ($logger) $logger(" Workspace $j ($name) being created");
+                $this->om->clear();
+                $this->om->startFlushSuite();
+            }
+
+            $this->om->endFlushSuite();
+        }
     }
 }

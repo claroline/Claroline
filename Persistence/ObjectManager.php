@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Persistence;
 
+use Doctrine\ORM\UnitOfWork;
 use Doctrine\Common\Persistence\ObjectManagerDecorator;
 use Doctrine\Common\Persistence\ObjectManager as ObjectManagerInterface;
 use Doctrine\ORM\EntityManagerInterface;
@@ -170,8 +171,7 @@ class ObjectManager extends ObjectManagerDecorator
     /**
      * Returns the unit of work.
      *
-     * @todo remove this method if possible
-     * @inheritDoc
+     * @return UnitOfWork
      * @throws UnsupportedMethodException if the method is not supported by
      *                                    the underlying object manager
      */

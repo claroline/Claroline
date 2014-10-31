@@ -101,14 +101,12 @@ class AuthenticationController
         $lastUsername = $this->request->getSession()->get(SecurityContext::LAST_USERNAME);
         $user = $this->userManager->getUserByUsername($lastUsername);
 
-        if ($user) {
-            if (!$user->isAccountNonExpired()) {
-                return array(
-                    'last_username' => $lastUsername,
-                    'error' => false,
-                    'is_expired' => true
-                );
-            }
+        if ($user && !$user->isAccountNonExpired()) {
+            return array(
+                'last_username' => $lastUsername,
+                'error' => false,
+                'is_expired' => true
+            );
         }
 
         if ($this->request->attributes->has(SecurityContext::AUTHENTICATION_ERROR)) {

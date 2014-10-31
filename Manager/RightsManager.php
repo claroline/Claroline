@@ -132,13 +132,14 @@ class RightsManager
         //Bugfix: If the flushSuite is uncommented, doctrine returns an error. It probably happens because rights
         //weren't created already
         //(ResourceRights duplicate)
-        //$this->om->startFlushSuite();
+        $this->om->startFlushSuite();
 
         $arRights = $isRecursive ?
             $this->updateRightsTree($role, $node):
             array($this->getOneByRoleAndResource($role, $node));
 
         foreach ($arRights as $toUpdate) {
+
             if ($isRecursive) {
                 if (is_int($permissions)) {
                     $permissions = $this->mergeTypePermissions($permissions, $toUpdate->getMask());
@@ -157,6 +158,7 @@ class RightsManager
             $this->om->persist($toUpdate);
             $this->logChangeSet($toUpdate);
             $this->dispatcher->dispatch('resource_change_permissions', 'UpdateResourceRights', array($node, $toUpdate));
+
         }
 
         //exception for activities
@@ -169,7 +171,8 @@ class RightsManager
             $this->editCreationRights($creations, $role, $node, $isRecursive);
         }
 
-        //$this->om->endFlushSuite();
+        $this->om->endFlushSuite();
+
         return $arRights;
     }
 
@@ -412,7 +415,8 @@ class RightsManager
     public function logChangeSet(ResourceRights $rights)
     {
         $uow = $this->om->getUnitOfWork();
-        $uow->computeChangeSets();
+        $class = $this->om->getClassMetadata('Claroline\CoreBundle\Entity\Resource\ResourceRights');
+        $uow->computeChangeSet($class, $rights);
         $changeSet = $uow->getEntityChangeSet($rights);
 
         if (count($changeSet) > 0) {
@@ -537,6 +541,32 @@ class RightsManager
         $this->om->endFlushSuite();
     }
 
+    public function getRightsFromIdentityMapOrScheduledForInsert($roleName, ResourceNode $resourceNode)
+    {
+        $res = null;
+        $res = $this->getRightsFromIdentityMap($roleName, $resourceNode);
+        if ($res) return $res;
+        return $this->getRightsScheduledForInsert($roleName, $resourceNode);
+    }
+
+    public function getRightsScheduledForInsert($roleName, ResourceNode $resourceNode)
+    {
+        $scheduledForInsert = $this->om->getUnitOfWork()->getScheduledEntityInsertions();
+        $res = null;
+
+        foreach ($scheduledForInsert as $entity) {
+            if (get_class($entity) === 'Claroline\CoreBundle\Entity\Resource\ResourceRights') {
+                if ($entity->getRole()->getName() === $roleName &&
+                    $entity->getResourceNode() === $resourceNode) {
+
+                    return $res = $entity;
+                }
+            }
+        }
+
+        return $res;
+    }
+
     public function getRightsFromIdentityMap($roleName, ResourceNode $resourceNode)
     {
         $map = $this->om->getUnitOfWork()->getIdentityMap();
@@ -544,13 +574,12 @@ class RightsManager
 
         if (!array_key_exists('Claroline\CoreBundle\Entity\Resource\ResourceRights', $map)) return null;
 
+        //so it was in the identityMap hey !
         foreach ($map['Claroline\CoreBundle\Entity\Resource\ResourceRights'] as $right) {
-
             if ($right->getRole()->getName() === $roleName &&
                 $right->getResourceNode() === $resourceNode) {
 
                 $result = $right;
-                break;
             }
         }
 

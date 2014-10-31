@@ -353,7 +353,6 @@ class ResourceNodeRepository extends MaterializedPathRepository
             $dql = $builder->selectAsEntity(false, 'Claroline\CoreBundle\Entity\Resource\File')
                 ->whereParentIs($parent)
                 ->whereMimeTypeIs('%'.$mimeType.'%')
-                ->whereCanOpen()
                 ->getDql();
         }
 

@@ -1,4 +1,6 @@
 404: 'La page que vous cherchez n''existe pas.'
+6_parameters_min_msg: Le fichier csv doit comprendre au minimum 6 éléments par ligne.
+7_parameters_min_msg: Le fichier csv doit comprendre au minimum 7 éléments par ligne.
 Action List: 'Liste des actions'
 Actions per day: 'Nombre d''actions par jour'
 Activate the terms of service in the platform: 'Activez les conditions d''utilisation dans la plate-forme'
@@ -197,6 +199,7 @@ classroom: 'En classe'
 close: Fermer
 closed_account: Compte clos
 code: Code
+code_found_at: Le code %code% a été trouvé aux lignes %lines%.
 collaborative: Collaboratif
 collaborator: Collaborateur
 comment: Commentaire
@@ -239,6 +242,7 @@ create_workspace: 'Créer un espace d''activités'
 creation: Création
 creation_date: 'Date de création'
 creator: Créateur
+csv_export: Export csv
 csv_group_import_infos: 'Informations sur le format du fichier CSV'
 csv_group_import_infos_format: Format: liste de nom d'utilisateurs séparés par un retour à la ligne.
 csv_users_import_infos: 'Informations sur le format du fichier CSV'
@@ -356,6 +360,7 @@ evaluation-manual: Manuelle
 evaluation: Evaluation
 evaluation_edition: Evaluation
 evaluation_type: 'Type d''évaluation'
+excel_export: Export excel
 export: Exporter
 exportable: Exportable
 external_pdo_database: 'Base de données externe (PDO)'
@@ -530,6 +535,7 @@ missing_%content%: 'La variable %content% est manquante pour la langue "%languag
 missing_%password%: 'La variable %password% est manquante pour la langue "%language%".'
 missing_%username%: 'La variable %username% est manquante pour la langue "%language%".'
 mixed: Mixte
+model: Modèle
 models: Modèles
 month.April: Avril
 month.August: Août
@@ -995,6 +1001,7 @@ workspace.name_not_blank: 'Veuillez spécifier un nom pour ce workspace.'
 workspace: 'Espace d''activités'
 workspace_administration: Administration
 workspace_classification: 'Classification des espaces d''activités'
+workspace_code_invalid: Le code %code% est déjà utilisé à la ligne %line%.
 workspace_delete: 'Supprimer l''espace d''activités'
 workspace_delete_confirm_message: 'Etes-vous sûr de vouloir supprimer cet espace d''activités ?'
 workspace_delete_confirm_title: 'Confirmation de suppression'
@@ -1026,6 +1033,7 @@ workspace_list: 'Liste des espaces d''activités'
 workspace_list: Liste des espaces d'activités
 workspace_management: L'espace d'activités a été créé le %creationDate%, par %creator%. Il y a %count% inscrit(s).
 workspace_management_date_null: Il y a %count% inscrit(s). La date de création de l'espace et son créateur ne sont pas connus.
+workspace_model_invalid: Le modèle %model% n'existe pas à la ligne %line%.
 workspace_order_tool_edit_form_name: Nom
 workspace_queue_cancel_confirm_message: 'Voulez-vous vraiment annuler votre demande d''inscription à cet espace d''activités ?'
 workspace_queue_cancel_confirm_title: 'Annuler la demande d''inscription'
@@ -1043,6 +1051,7 @@ workspace_tag_remove_confirm_title: 'Retrait d''une catégorie'
 workspace_template_form_name: Nom
 workspace_tools: Outils
 workspace_unregistration_confirm_title: 'Voulez-vous vous désinscrire de cet espace d''activités ?'
+workspace_user_invalid: L'utilisateur %username% n'existe pas à la ligne %line%.
 workspace_welcome: Accueil
 workspaces: 'Espaces d''activités'
 workspaces_included_in_category: 'Espaces d''activités enregistrés dans cette catégorie'

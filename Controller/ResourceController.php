@@ -202,6 +202,7 @@ class ResourceController
         );
         $this->dispatcher->dispatch('log', 'Log\LogResourceRead', array($node));
 
+
         return $event->getResponse();
     }
 

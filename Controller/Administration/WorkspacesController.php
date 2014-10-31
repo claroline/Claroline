@@ -177,7 +177,7 @@ class WorkspacesController extends Controller
     }
 
     /**
-     * @EXT\Route("/import/form", name="claro_admin_import_form")
+     * @EXT\Route("/import/form", name="claro_admin_workspace_import_form")
      * @EXT\Template
      */
     public function importWorkspaceFormAction()
@@ -189,7 +189,7 @@ class WorkspacesController extends Controller
     }
 
     /**
-     * @EXT\Route("/import", name="claro_admin_import")
+     * @EXT\Route("/import", name="claro_admin_workspace_import")
      * @EXT\Template("ClarolineCoreBundle:Administration/Workspaces:importWorkspaceForm.html.twig")
      */
     public function importWorkspaceAction()
@@ -198,25 +198,21 @@ class WorkspacesController extends Controller
         $form->handleRequest($this->get('request'));
 
         if ($form->isValid()) {
-            $tmpFile = $form->get('file')->getData();
-            $tmpName = uniqid() . '.zip';
-            $tmpFile->move(sys_get_temp_dir(), $tmpName);
-            $configuration = new Configuration(sys_get_temp_dir() . DIRECTORY_SEPARATOR . $tmpName);
-            $isStrict = $form->get('strict')->getData();
+            $file = $form->get('file')->getData();
+            $lines = str_getcsv(file_get_contents($file), PHP_EOL);
 
-//            try {
-                $this->get('claroline.manager.transfert_manager')->import($configuration, $isStrict);
-//            }
-//            catch (\Exception $e) {
-//                $form->addError(
-//                    new FormError($e->getMessage())
-//                );
-//
-//                return array('form' => $form->createView());
-//            }
+            foreach ($lines as $line) {
+                if (trim($line) !== '') {
+                    $workspaces[] = str_getcsv($line, ';');
+                }
+            }
+
+            $this->workspaceManager->importWorkspaces($workspaces);
+
+            return $this->redirect($this->generateUrl('claro_admin_workspaces_management'));
         }
 
-        return $this->redirect($this->generateUrl('claro_admin_workspaces_management'));
+        return array('form' => $form->createView());
     }
 
     private function checkOpen()

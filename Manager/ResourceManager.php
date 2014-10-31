@@ -763,6 +763,12 @@ class ResourceManager
      * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $node
      * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $parent
      * @param \Claroline\CoreBundle\Entity\User                  $user
+     * @param boolean $withRights
+     * Defines if the rights of the copied resource have to be created
+     * @param boolean $withDirectoryContent
+     * Defines if the content of a directory has to be copied too
+     * @param array $rights
+     * If defined, the copied resource will have exactly the given rights
      *
      * @return \Claroline\CoreBundle\Entity\Resource\ResourceNode
      */
@@ -771,7 +777,8 @@ class ResourceManager
         ResourceNode $parent,
         User $user,
         $withRights = true,
-        $withDirectoryContent = true
+        $withDirectoryContent = true,
+        array $rights = array()
     )
     {
         $last = $this->resourceNodeRepo->findOneBy(array('parent' => $parent, 'next' => null));
@@ -780,7 +787,7 @@ class ResourceManager
         if ($resource instanceof ResourceShortcut) {
             $copy = $this->om->factory('Claroline\CoreBundle\Entity\Resource\ResourceShortcut');
             $copy->setTarget($resource->getTarget());
-            $newNode = $this->copyNode($node, $parent, $user, $last, $withRights);
+            $newNode = $this->copyNode($node, $parent, $user, $last, $withRights, $rights);
             $copy->setResourceNode($newNode);
 
         } else {
@@ -791,14 +798,14 @@ class ResourceManager
             );
 
             $copy = $event->getCopy();
-            $newNode = $this->copyNode($node, $parent, $user, $last, $withRights);
+            $newNode = $this->copyNode($node, $parent, $user, $last, $withRights, $rights);
             $copy->setResourceNode($newNode);
 
             if ($node->getResourceType()->getName() == 'directory' &&
                 $withDirectoryContent) {
 
                 foreach ($node->getChildren() as $child) {
-                    $this->copy($child, $newNode, $user);
+                    $this->copy($child, $newNode, $user, $withRights, $withDirectoryContent, $rights);
                 }
             }
         }
@@ -1363,6 +1370,10 @@ class ResourceManager
      * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $newParent
      * @param \Claroline\CoreBundle\Entity\User                  $user
      * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $last
+     * @param boolean $withRights
+     * Defines if the rights of the copied node have to be created
+     * @param array $rights
+     * If defined, the copied node will have exactly the given rights
      *
      * @return \Claroline\CoreBundle\Entity\Resource\ResourceNode
      */
@@ -1371,7 +1382,8 @@ class ResourceManager
         ResourceNode $newParent,
         User $user,
         ResourceNode $last = null,
-        $withRights = true
+        $withRights = true,
+        array $rights = array()
     )
     {
         $newNode = $this->om->factory('Claroline\CoreBundle\Entity\Resource\ResourceNode');
@@ -1379,6 +1391,7 @@ class ResourceManager
         $newNode->setCreator($user);
         $newNode->setWorkspace($newParent->getWorkspace());
         $newNode->setParent($newParent);
+        $newParent->addChild($newNode);
         $newNode->setName($this->getUniqueName($node, $newParent, true));
         $newNode->setPrevious($last);
         $newNode->setNext(null);
@@ -1390,12 +1403,13 @@ class ResourceManager
         $newNode->setIsVisible($node->getIsVisible());
 
         if ($withRights) {
-            //if everything happens inside the same workspace, rights are copied
-            if ($newParent->getWorkspace() === $node->getWorkspace()) {
+            //if everything happens inside the same workspace and no specific rights have been given,
+            //rights are copied
+            if ($newParent->getWorkspace() === $node->getWorkspace() && count($rights) === 0) {
                 $this->rightsManager->copy($node, $newNode);
             } else {
-                //otherwise we use the parent rights
-                $this->setRights($newNode, $newParent, array());
+                //otherwise we use the parent rights or the given rights if not empty
+                $this->setRights($newNode, $newParent, $rights);
             }
         }
 
