@@ -299,6 +299,7 @@ desktop_home_tabs: 'Desktop Home tabs'
 desktop_tools: 'Desktop tools'
 directory: Directory
 directory_form_name: Name
+directory_form_published: 'Publish resource'
 directory_form_shareType: Sharable
 display: Display
 display_captcha: 'Display captcha for anonymous'

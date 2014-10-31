@@ -299,6 +299,7 @@ desktop_home_tabs: 'Onglets pour le bureau'
 desktop_tools: 'Outils du bureau'
 directory: Répertoire
 directory_form_name: Nom
+directory_form_published: 'Publier la ressource'
 directory_form_shareType: Redistribution
 display: Afficher
 display_captcha: 'Afficher les captcha pour les anonymes'
