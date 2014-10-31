@@ -57,6 +57,7 @@ account_duration_label: Durée de vie des comptes (jours)
 account_general_statistics: 'Statistiques générales sur les comptes'
 action: Action
 actions: Actions
+activate_notifications: Activer les notifications
 active_widgets: 'Widgets actifs'
 activities: Activités
 activity_already: Cette ressource est déjà dans l'activité
@@ -113,9 +114,12 @@ add_group_s_confirm_message: 'groupe(s) ajouté(s)'
 add_groups: 'Ajouter des groupes'
 add_resource: 'Ajouter une ressource'
 add_role: 'Ajouter un role'
+add_role_to_groups: Ajouter un rôle a %count% groupe(s)
+add_role_to_users: Ajouter un rôle a %count% utilisateur(s)
 add_roles_confirm_message: 'Voulez vous ajouter le(s) role(s) suivant(s) aux %count% élément(s) sélectionné(s): '
 add_sub_competence: 'Ajouter une sous-compétence'
 add_subcategory: 'Ajouter une sous-catégorie'
+add_tab: Ajouter un onglet
 add_tag: 'Ajouter un Tag'
 add_tag_to_workspace: 'Ajouter un Tag à l''espace d''activités'
 add_user: 'Ajouter un utilisateur'
@@ -209,6 +213,7 @@ configure: Configurer
 connections: 'Nb Cnx.'
 cookie_lifetime: 'Durée de vie du cookie'
 copiable: Copiable
+copies: Copies
 copy: Copier
 core_packages: Paquets du noyau
 create: Créer
@@ -218,6 +223,7 @@ create_facet: Créer une facette
 create_field: Créer un champ
 create_group: 'Créer un groupe'
 create_learning_outcomes: 'Créer un référentiel de compétences'
+create_model: Créer un modèle
 create_new_admin_tag: 'Créer un nouveau Tag administrateur'
 create_new_home_tab: 'Créer un nouvel onglet'
 create_new_tag: 'Créer un nouveau Tag'
@@ -227,6 +233,7 @@ create_security_token: 'Créer un jeton d''authentification'
 create_sub_competence: 'Créer une sous-compétence'
 create_subcategory: 'Créer une sous-catégorie'
 create_user: 'Créer un utilisateur'
+create_users: Créer les utilisateurs
 create_widget_instance: 'Créer un nouveau Widget'
 create_workspace: 'Créer un espace d''activités'
 creation: Création
@@ -355,6 +362,7 @@ external_pdo_database: 'Base de données externe (PDO)'
 facebook: Facebook
 facebook_application_validation_error: 'Les identifiants fournis ne sont pas valides.'
 facets: Facettes
+fail_add_user_group_message: Ces utilisateurs n'ont pas pu être ajouté au groupe (vérifiez la limite d'utilisateurs par rôle).
 fail_add_user_group_message: Ces utilisateurs n'ont pas pu être ajoutés au groupe (vérifiez la limite d'utilisateurs par rôle).
 failed: Echoué
 fast_answer: 'Réponse rapide'
@@ -379,7 +387,10 @@ from: Depuis
 from_message: De
 general: Général
 general_parameters: 'Paramètres généraux'
+general_parameters_portfolio_url_help: 'commence par http://'
+general_parameters_updated_success: 'Paramètres généraux modifiés avec succès.'
 general_tab_form_explanation: Ce formulaire vous permet de spécifier quelles sont les informations vues par rôle dans le profil public.
+general_tab_form_explanation: Ce formulaire vous permet de spécifier quels sont les informations vues par rôle dans le profile public.
 generate_token: 'Générer un token aléatoire'
 generate_url: 'Inscription publique'
 generate_url_subscription: 'Inscription à l''espace d''activité par un utilisateur'
@@ -432,6 +443,7 @@ initialize: Initialiser
 inscription_mail: 'Mail d''inscription'
 instructions: Consignes
 internal_error: 'Erreur interne du serveur. Veuillez contactez l''administrateur de la plateforme.'
+internal_portfolio: 'Portfolio interne à la plateforme'
 invalid_auth_mode: 'Cryptage non valide'
 invalid_csv_file: 'Le fichier CSV n''est pas valide'
 invalid_driver: 'Ce driver n''est pas valide'
@@ -448,6 +460,7 @@ lastName: Nom
 last_30_days_activity: 'Activités des 30 derniers jours'
 last_attempt_date: 'Date de la dernière tentative'
 last_manager_error_message: Vous ne pouvez pas retirer tous les gestionnaires.
+last_manager_error_message: Vous ne pouvez pas retirer tout les gestionnaires.
 last_name: Nom
 layout: Layout
 learning_outcomes: 'Référentiel de compétences'
@@ -463,6 +476,7 @@ link_competence: 'Lier'
 link_outdated: 'le lien n''est plus valide'
 link_workspace: 'Lier un espace d''activités'
 linkable_competences: 'Compétences liables'
+links: Liens
 list_groups: 'Lister les groupes'
 list_users: 'Lister les utilisateurs'
 list_workspaces: 'Tous les espaces d''activités'
@@ -516,6 +530,7 @@ missing_%content%: 'La variable %content% est manquante pour la langue "%languag
 missing_%password%: 'La variable %password% est manquante pour la langue "%language%".'
 missing_%username%: 'La variable %username% est manquante pour la langue "%language%".'
 mixed: Mixte
+models: Modèles
 month.April: Avril
 month.August: Août
 month.December: Décembre
@@ -642,6 +657,7 @@ platform_role: 'Rôle plateforme'
 platform_widgets: 'Widgets de la plateforme'
 please_wait: 'Veuillez patienter...'
 plugin_packages: Paquets des plugins
+portfolio_url: 'Url d''accès à l''outil de portfolio'
 position: Position
 positive_number_expected: 'Cette valeur doit être un nombre positif'
 private: Privée
@@ -661,6 +677,7 @@ public_registration: 'Inscription publique'
 public_url_help: 'Note : Votre URL personnalisée doit comprendre au maximum 30 lettres ou chiffres. Ne pas utiliser d''espaces, de symboles ou de caractères spéciaux.'
 public_workspace_empty: 'Il n''y a aucun espace d''activités public.'
 public_workspaces: 'Espaces d''activités publics'
+publish: Publié
 recursive_dir_action: 'Appliquer au contenu du répertoire et aux sous-répertoires'
 redirect_after_login: 'Rediriger vers la dernière page visitée'
 register: Inscription
@@ -680,15 +697,23 @@ remove_facet_confirm: Etes-vous sur de vouloir supprimer la facette %name% ?
 remove_field: Supprimer une champ
 remove_field_confirm: Etes-vous sur de vouloir supprimer le champ %name% ?
 remove_group_confirm_message: 'Êtes-vous sûr de vouloir supprimer ce groupe ?'
+remove_group_from_model: Retirer un groupe
+remove_group_from_model_confirm: Êtes-vous sûr de vouloir retirer le groupe %groupe% ?
 remove_group_s_confirm_message: 'Êtes-vous sûr de vouloir supprimer ces %count% groupes?'
 remove_message_confirm_message: 'Êtes-vous sûr de vouloir supprimer ce message ?'
 remove_message_s_confirm_message: 'Êtes-vous sûr de vouloir supprimer ces %count% messages?'
+remove_model: Supprimer un modèle
+remove_model_confirm: Êtes-vous sûr de vous supprimer le modèle %name% ?
+remove_resource_from_model: Retirer une ressource du modèle
+remove_resource_from_model_comfirm: Êtes-vous vraiment sûr de vouloir retirer cette ressource ?
 remove_role: Supprimer un rôle.
 remove_role_confirm: Êtes-vous sûr de vouloir supprimer le rôle %name% ?
 remove_sub_competence: 'Retirer la compétence du référentiel'
 remove_sub_competence_comfirm_message: 'Voulez-vous vraiment retirer cette compétence de ce référentiel ?'
 remove_subcategory: 'Retirer la sous-catégorie'
 remove_user_confirm_message: 'Êtes-vous sûr de vouloir supprimer cet utilisateur ?'
+remove_user_from_model: Retirer un utilisateur
+remove_user_from_model_confirm: Êtes-vous sûr de vouloir retirer l'utilisateur %name% ?
 remove_user_s_confirm_message: 'Êtes-vous sûr de vouloir supprimer ces %count% utilisateurs?'
 remove_workspace_confirm: 'Êtes-vous sûr de vouloir supprimer cet espace d''activités ?'
 remove_workspace_from_category_confirm_message: 'Êtes-vous sûr de vouloir retirer cet espace d''activités de cette catégorie ?'
@@ -802,6 +827,7 @@ session_db_no_time_col: 'La colonne des durées n''existe pas.'
 session_id: 'Identifiant de session'
 settings: Paramètres
 sharable: Partageable
+share: Partager
 show: Voir
 show_as: 'Voir en tant que'
 show_as_admin: 'Voir comme admin'
@@ -821,9 +847,12 @@ subscribe_selected_users: 'Inscrire les utilisateurs sélectionnés'
 subscribe_users: 'Inscrire des utilisateurs'
 subscription: Inscription
 success_rate: 'Taux de réussite'
+successfull_workspace_creation: L'espace d'activité %name% a été créé avec succès.
 successfull_workspace_creation: L'espace d'activités %name% a été créé avec succès.
 support_email: 'Email du support'
 switch: Echanger
+tab: Onglet
+tabs: Onglets
 tag: Tag
 tag_children_list: 'Liste des enfants'
 tag_potential_children_list: 'Liste des enfants potentiels'
@@ -850,6 +879,7 @@ to_anonymous: 'aux utilisateurs anonymes'
 to_everyone: 'à tout le monde'
 to_message: À
 to_platform_users: 'aux utilisateurs de la plateforme'
+to_publish: Publier
 to_workspace_members: 'aux membres de cet espace'
 today: 'Aujourd''hui'
 token: Token
@@ -894,6 +924,8 @@ uncompress_file: Décompresser le fichier si possible
 under_min_length: 'Cette valeur est trop courte'
 unique connections: 'Nb Cnx. uniques'
 unknown: Inconnu
+unpublish: Depublier
+unpublished: Non publié
 unregister: Désinscription
 unregister_from_a_workspace: 'Me désinscrire d''un espace d''activités'
 unregistered: 'Non inscrit'
@@ -989,13 +1021,14 @@ workspace_form_type: Type
 workspace_home_tab_creation: 'Création d''un onglet pour les espaces d''activités'
 workspace_home_tab_edition: 'Edition de l''onglet pour les espaces d''activités'
 workspace_home_tabs: 'Onglets pour les espaces d''activités'
+workspace_import: Importer un espace d'activité
 workspace_list: 'Liste des espaces d''activités'
 workspace_list: Liste des espaces d'activités
 workspace_management: L'espace d'activités a été créé le %creationDate%, par %creator%. Il y a %count% inscrit(s).
 workspace_management_date_null: Il y a %count% inscrit(s). La date de création de l'espace et son créateur ne sont pas connus.
 workspace_order_tool_edit_form_name: Nom
-workspace_queue_cancel_confirm_title: 'Annuler la demande d''inscription'
 workspace_queue_cancel_confirm_message: 'Voulez-vous vraiment annuler votre demande d''inscription à cet espace d''activités ?'
+workspace_queue_cancel_confirm_title: 'Annuler la demande d''inscription'
 workspace_registration_confirm_title: 'Voulez-vous vous inscrire à cet espace d''activités ?'
 workspace_registration_message: 'Vous avez été inscrit à l''espace d''activité %workspace_name%'
 workspace_registration_message_object: 'Inscription à un espace d''activité'
@@ -1022,81 +1055,3 @@ yes: Oui
 yesterday_activity: 'Activité de la veille'
 your_current_url: 'Votre URL actuelle'
 your_username: 'Votre nom d''utilisateur est '
-closed_account: Compte clos
-role_list: Liste des roles
-unavailable_role: Le role %translationKey% n'est pas utilisable
-fail_add_user_group_message: Ces utilisateurs n'ont pas pu être ajouté au groupe (vérifiez la limite d'utilisateurs par rôle).
-unavailable_platform: La plateforme n'est pas disponible.
-account_duration_label: Durée de vie des comptes (jours)
-platform_init_date: Date d'activation de la plateforme
-platform_expiration_date: Date d'expiration de la plateforme
-role_limit_reached: La limite d'utilisateur de type %translationKey% a été atteinte.
-user_limit_reached: La limite de création d'utilisateur a été atteinte.
-user_limit_too_low: Il y a déjà %total% %role%(s). La limite %newMax% est trop faible.
-limit: Limite
-yes: Oui
-no: Non
-show_profile_for_anonymous: Profil public accessible aux anonymes
-packages: Paquets
-core_packages: Paquets du noyau
-plugin_packages: Paquets des plugins
-no_package_description: Aucune description du paquet.
-yes: Oui
-no: Non
-actualize: Actualiser
-upgrade: Mettre à jour
-packages_upgrade_info_message: Attention, ceci est la page de gestion de mises à jour.
-package_upgrade_all_warning: Attention, ceci mettra à jour tous les paquets de la plateforme. Cette opération ne peut être annulée. Il est conseillé d'effectuer une sauvegarde des fichiers ainsi que de la base de données avant d'effectuer cette opération.
-profile_management: Gestion du profil
-visible_facet_form_explanation: Le champ "Visible" permet de spécifier si l'élément doit être visible ou non par l'utilisateur.
-editable_facet_form_explanation: Le champ "Modifiable" permet de spécifier si l'élément doit être modifiable ou non par l'utilisateur.
-roles_facet_form_explanation: Ce formulaire vous permet de spécifier quels rôles peuvent voir la facette dans le profil public de l'utilisateur.
-roles_fields_form_explanation: Ce formulaire vous permet de spécifier quels rôles peuvent voir et éditer le champ dans le profil public de l'utilisateur.
-general_tab_form_explanation: Ce formulaire vous permet de spécifier quels sont les informations vues par rôle dans le profile public.
-name_required: Nom requis
-remove_role_confirm: Êtes-vous sûr de vouloir supprimer le rôle %name% ?
-remove_role: Supprimer un rôle.
-initialize: Initialiser
-user_limit_success_update: La limite d'utilisateur par rôle a été mise à jour avec succès.
-role_name_changed_success: Le nom du rôle a été mis à jour avec succès.
-no_group: Il n'y a aucun groupe.
-successfull_workspace_creation: L'espace d'activité %name% a été créé avec succès.
-no_action_found: Aucune action trouvée.
-error: Erreur
-last_manager_error_message: Vous ne pouvez pas retirer tout les gestionnaires.
-remove_workspace_role_warning: Êtes-vous sûr de vouloir supprimer ce rôle ? Si ce rôle est associé à des utilisateurs, ces utilisateurs perdront leurs droits d'accès fournit par ce rôle.
-edit_rights_success: Modification des droits effectuée avec succès.
-maintenance: Maintenance
-start_maintenance: Lancer le mode maintenance
-end_maintenance: Terminer le mode maintenance
-maintenance_mode_enabled: Le mode maintenance est activé
-maintenance_mode_message: L'accès à la plateforme est désactivé pour les utilisateurs. Vous pouvez le réactiver dans la section maintenance des paramètres de l'administration.
-update_event: Mettre à jour un événement
-remove_event_confirm: Êtes-vous sûr de vouloir supprimer cet événement ?
-remove_event: Supprimer un événement
-edit_event_success: Événement mis à jour avec succès.
-models: Modèles
-create_model: Créer un modèle
-remove_model: Supprimer un modèle
-remove_model_confirm: Êtes-vous sûr de vous supprimer le modèle %name% ?
-share: Partager
-remove_user_from_model: Retirer un utilisateur
-remove_user_from_model_confirm: Êtes-vous sûr de vouloir retirer l'utilisateur %name% ?
-remove_group_from_model: Retirer un groupe
-remove_group_from_model_confirm: Êtes-vous sûr de vouloir retirer le groupe %groupe% ?
-workspace_import: Importer un espace d'activité
-create_users: Créer les utilisateurs
-remove_resource_from_model: Retirer une ressource du modèle
-remove_resource_from_model_comfirm: Êtes-vous vraiment sûr de vouloir retirer cette ressource ?
-add_tab: Ajouter un onglet
-links: Liens
-tabs: Onglets
-tab: Onglet
-copies: Copies
-portfolio_url: 'Url d''accès à l''outil de portfolio'
-internal_portfolio: 'Portfolio interne à la plateforme'
-general_parameters_updated_success: 'Paramètres généraux modifiés avec succès.'
-general_parameters_portfolio_url_help: 'commence par http://'
-add_role_to_users: Ajouter un rôle a %count% utilisateur(s)
-add_role_to_groups: Ajouter un rôle a %count% groupe(s)
-activate_notifications: Activer les notifications

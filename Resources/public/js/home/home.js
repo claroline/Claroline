@@ -14,6 +14,7 @@
     var home = window.Claroline.Home;
     var modal = window.Claroline.Modal;
     var routing = window.Routing;
+    var translator = window.Translator;
 
     home.path = $('#homePath').html(); //global
     home.locale = $('#homeLocale').html(); //global
@@ -187,6 +188,35 @@
             });
         }
     };
+
+    /**
+     * Publish content page type
+     */
+    home.publishType = function (element)
+    {
+        var id = element.data('id');
+
+        if (id) {
+            $.ajax(routing.generate('claro_content_publish_type', {'type': id}))
+            .done(function (data) {
+                if (data === 'true') {
+                    $('.type-publish > span', element).text(translator.get('platform:unpublish'));
+                    $('strong > .text-muted > span', element).text(translator.get('platform:publish'));
+                    $('strong > .text-muted > .text-danger', element)
+                    .removeClass('text-danger').addClass('text-success');
+                } else {
+                    $('.type-publish > span', element).text(translator.get('platform:to_publish'));
+                    $('strong > .text-muted > span', element).text(translator.get('platform:unpublished'));
+                    $('strong > .text-muted > .text-success', element)
+                    .removeClass('text-success').addClass('text-danger');
+                }
+            })
+            .error(function () {
+                modal.error();
+            });
+        }
+    };
+
 
     /**
      * check if a translated content form is empty
