@@ -69,6 +69,7 @@ activity_evaluation_form_score: Evaluation
 activity_evaluation_form_status: Status
 activity_form_instructions: Instructions
 activity_form_name: Name
+activity_form_published: 'Publish resource'
 activity_parameters_form_evaluation_type: 'Evaluation type'
 activity_parameters_form_max_attempts: 'Number of allowed attempts'
 activity_parameters_form_max_duration: 'Allowed time limit (in second)'
