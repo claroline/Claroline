@@ -60,6 +60,9 @@
             });
         });
     })
+    .on('click', '.type-publish', function (event) {
+        home.publishType($(event.target).parents('.alert').first());
+    })
     .on('click', '.type-rename', function (event) {
         var type = $(event.target).parents('.alert').data('name');
         var link = $(event.target).parents('.alert').find('strong a');
