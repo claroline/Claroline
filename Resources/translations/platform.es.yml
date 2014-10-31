@@ -766,6 +766,7 @@ terms_enabled_but_empty: Las condiciones de servicio sólo se pueden habilitar s
 text: Texto
 text_form_content: 'Contenido'
 text_form_name: 'Nombre'
+text_form_published: 'Publicar el recurso'
 text_form_shareType: 'Compartible'
 text_form_text: 'Texto'
 the_following_users_were_not_imported: 'Los siguientes usuarios no han sido importados.'
