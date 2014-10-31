@@ -112,7 +112,7 @@ class HomeController
      */
     public function typeAction($type, $father = null, $region = null)
     {
-        $layout = $this->manager->contentLayout($type, $father, $region);
+        $layout = $this->manager->contentLayout($type, $father, $region, $this->security->isGranted('ROLE_ADMIN'));
 
         if ($layout) {
             return $this->render('ClarolineCoreBundle:Home:layout.html.twig', $this->renderContent($layout));
@@ -151,6 +151,21 @@ class HomeController
         $response->headers->addCacheControlDirective('expires', '-1');
 
         return $response;
+    }
+
+    /**
+     * Publish a content type page
+     *
+     * @Route("/publish/type/{type}", name="claro_content_publish_type", options = {"expose" = true})
+     * @Secure(roles="ROLE_ADMIN")
+     *
+     * @ParamConverter("type", class = "ClarolineCoreBundle:home\Type")
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function publishTypeAction($type)
+    {
+        return new Response(($this->manager->publishType($type)) ? 'true' : 'false');
     }
 
     /**
