@@ -382,9 +382,20 @@ class ResourceQueryBuilder
      *
      * @return ResourceQueryBuilder
      */
-    public function whereIsPublished()
+    public function whereIsAccessible(User $user)
     {
-        $this->addWhereClause('node.published = true');
+        $currentDate = new \DateTime();
+        $clause = '(
+            creator.id = :creatorId
+            OR (
+                node.published = true
+                AND (node.accessibleFrom IS NULL OR node.accessibleFrom <= :currentdate)
+                AND (node.accessibleUntil IS NULL OR node.accessibleUntil >= :currentdate)
+            )
+        )';
+        $this->addWhereClause($clause);
+        $this->parameters[':creatorId'] = $user->getId();
+        $this->parameters[':currentdate'] = $currentDate->format('Y-m-d H:i:s');
 
         return $this;
     }
@@ -530,17 +541,7 @@ class ResourceQueryBuilder
             $clause = "{$eol}({$eol}";
             $clause .= "rightRole.name IN (:roles){$eol}";
             $this->parameters[":roles"] = $otherRoles;
-            $clause .= "AND{$eol}BIT_AND(rights.mask, 1) = 1{$eol}";
-            $clause .= "AND{$eol}({$eol}";
-            $clause .= "node.accessibleFrom IS NULL{$eol}";
-            $clause .= "OR{$eol}";
-            $clause .= "node.accessibleFrom <= :currentdate{$eol}";
-            $clause .= "){$eol}AND{$eol}({$eol}";
-            $clause .= "node.accessibleUntil IS NULL{$eol}";
-            $clause .= "OR{$eol}";
-            $clause .= "node.accessibleUntil >= :currentdate{$eol}";
-            $clause .= "){$eol})";
-            $this->parameters[':currentdate'] = $currentDate->format('Y-m-d H:i:s');
+            $clause .= "AND{$eol}BIT_AND(rights.mask, 1) = 1{$eol})";
             $this->addWhereClause($clause);
         } elseif (count($otherRoles) === 0 && count($managerRoles) > 0) {
             $this->leftJoinRoles = true;
@@ -554,17 +555,7 @@ class ResourceQueryBuilder
             $clause = "{$eol}({$eol}({$eol}";
             $clause .= "rightRole.name IN (:otherroles){$eol}";
             $this->parameters[":otherroles"] = $otherRoles;
-            $clause .= "AND{$eol}BIT_AND(rights.mask, 1) = 1{$eol}";
-            $clause .= "AND{$eol}({$eol}";
-            $clause .= "node.accessibleFrom IS NULL{$eol}";
-            $clause .= "OR{$eol}";
-            $clause .= "node.accessibleFrom <= :currentdate{$eol}";
-            $clause .= "){$eol}AND{$eol}({$eol}";
-            $clause .= "node.accessibleUntil IS NULL{$eol}";
-            $clause .= "OR{$eol}";
-            $clause .= "node.accessibleUntil >= :currentdate{$eol}";
-            $clause .= "){$eol}){$eol}";
-            $this->parameters[':currentdate'] = $currentDate->format('Y-m-d H:i:s');
+            $clause .= "AND{$eol}BIT_AND(rights.mask, 1) = 1{$eol}){$eol}";
             $clause .= "OR{$eol}";
             $clause .= "role.name IN (:managerroles){$eol}";
             $this->parameters[":managerroles"] = $managerRoles;

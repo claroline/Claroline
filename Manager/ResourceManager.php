@@ -290,10 +290,11 @@ class ResourceManager
      *
      * @return array
      */
-    public function findAndSortChildren(ResourceNode $parent)
+    public function findAndSortChildren(ResourceNode $parent, User $user)
     {
         //a little bit hacky but retrieve all children of the parent
-        $nodes = $this->resourceNodeRepo->findChildren($parent, array('ROLE_ADMIN'));
+        $nodes = $this->resourceNodeRepo
+            ->findChildren($parent, array('ROLE_ADMIN'), $user);
         $sorted = array();
         //set the 1st item.
         foreach ($nodes as $node) {
@@ -333,14 +334,14 @@ class ResourceManager
      *
      * @return array
      */
-    public function sort(array $nodes)
+    public function sort(array $nodes, User $user)
     {
         $sortedResources = array();
 
         if (count($nodes) > 0) {
             if ($this->haveSameParents($nodes)) {
                 $parent = $this->resourceNodeRepo->find($nodes[0]['parent_id']);
-                $sortedList = $this->findAndSortChildren($parent);
+                $sortedList = $this->findAndSortChildren($parent, $user);
 
                 foreach ($sortedList as $sortedItem) {
                     foreach ($nodes as $node) {
@@ -1209,11 +1210,16 @@ class ResourceManager
      *
      * @return array
      */
-    public function getChildren(ResourceNode $node, array $roles, $isSorted = true)
+    public function getChildren(
+        ResourceNode $node,
+        array $roles,
+        User $user,
+        $isSorted = true
+    )
     {
-        $children = $this->resourceNodeRepo->findChildren($node, $roles);
+        $children = $this->resourceNodeRepo->findChildren($node, $roles, $user);
 
-        return ($isSorted) ? $this->sort($children): $children;
+        return ($isSorted) ? $this->sort($children, $user): $children;
     }
 
     /**

@@ -475,7 +475,7 @@ class ResourceController
             }
 
             $path = $this->resourceManager->getAncestors($node);
-            $nodes = $this->resourceManager->getChildren($node, $currentRoles);
+            $nodes = $this->resourceManager->getChildren($node, $currentRoles, $user);
 
             //set "admin" mask if someone is the creator of a resource or the resource workspace owner.
             //if someone needs admin rights, the resource type list will go in this array
