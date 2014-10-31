@@ -845,6 +845,7 @@ text_form_text: Texte
 the_following_users_were_not_imported: 'Les utilisateurs suivants n''ont pas pu être importés:'
 the_workspace: 'L''espace d''activités'
 this_page_requires_authentication: 'Cette page requiert une authentification. Veuillez vous identifier.'
+this_resource_is_not_published: 'Cette ressource n''est pas publiée'
 time_col: 'Colonne des durées'
 tinymce_all_buttons: Tous les outils
 title: Titre

@@ -15,8 +15,18 @@
     data-id="{{ node.id }}"
     data-type="{{ node.type }}"
     data-mime-type="{{ node.mime_type }}"
-    >
-
+>
+    {% if not node.published %}
+        <h4>
+            <i class="fa fa-circle text-danger pull-right"
+               style="position: relative; top: -5px; right: -5px;"
+               data-toggle="tooltip"
+               data-placement="top"
+               title="{{ 'this_resource_is_not_published'|trans({}, 'platform') }}"
+            >
+            </i>
+        </h4>
+    {% endif %}
 </div>
 {% if hasMenu == true %}
     <div class="dropdown" rel="tooltip" title="{{ node.name }}">

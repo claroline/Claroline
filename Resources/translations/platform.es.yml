@@ -773,6 +773,7 @@ text_form_text: 'Texto'
 the_following_users_were_not_imported: 'Los siguientes usuarios no han sido importados.'
 the_workspace: 'Espacio de trabajo'
 this_page_requires_authentication: 'Esta página requiere autenticación. Por favor, iniciar sesión.'
+this_resource_is_not_published: 'Este recurso no esta publicado'
 time_col: 'Columna de tiempo en la base de datos'
 tinymce_all_buttons: Todas las herramientas
 title: Título
