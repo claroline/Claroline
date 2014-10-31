@@ -364,6 +364,7 @@ file: Files
 file_form_file: File
 file_form_license: License
 file_form_name: Name
+file_form_published: 'Publish resource'
 file_form_shareType: Sharable
 file_form_shareType_0: Yes
 file_form_shareType_1: false

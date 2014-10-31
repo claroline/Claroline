@@ -328,6 +328,7 @@ file: 'Archivos'
 file_form_file: 'Archivo'
 file_form_license: 'Licencia'
 file_form_name: 'Nombre'
+file_form_published: 'Publicar el recurso'
 file_form_shareType: 'Compartible'
 file_form_shareType_0: 'Si'
 file_form_shareType_1: false

@@ -139,13 +139,15 @@ class ResourceManager
         Workspace $workspace,
         ResourceNode $parent = null,
         ResourceIcon $icon = null,
-        array $rights = array()
+        array $rights = array(),
+        $isPublished = true
     )
     {
         $this->om->startFlushSuite();
         $this->checkResourcePrepared($resource);
         $node = $this->om->factory('Claroline\CoreBundle\Entity\Resource\ResourceNode');
         $node->setResourceType($resourceType);
+        $node->setPublished($isPublished);
 
         $mimeType = ($resource->getMimeType() === null) ?
             'custom/' . $resourceType->getName():
@@ -1398,6 +1400,7 @@ class ResourceManager
         $newNode->setMimeType($node->getMimeType());
         $newNode->setAccessibleFrom($node->getAccessibleFrom());
         $newNode->setAccessibleUntil($node->getAccessibleUntil());
+        $newNode->setPublished($node->isPublished());
 
         if ($withRights) {
             //if everything happens inside the same workspace and no specific rights have been given,

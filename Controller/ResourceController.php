@@ -149,7 +149,10 @@ class ResourceController
                         $this->resourceManager->getResourceTypeByName($resourceType),
                         $user,
                         $parent->getWorkspace(),
-                        $parent
+                        $parent,
+                        null,
+                        array(),
+                        $event->isPublished()
                     );
 
                     $nodesArray[] = $this->resourceManager->toArray(

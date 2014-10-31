@@ -364,6 +364,7 @@ file: Fichier
 file_form_file: Fichier
 file_form_license: License
 file_form_name: Nom
+file_form_published: 'Publier la ressource'
 file_form_shareType: Redistribution
 file_form_shareType_0: Oui
 file_form_shareType_1: Non
