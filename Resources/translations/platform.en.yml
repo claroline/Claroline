@@ -838,6 +838,7 @@ terms_enabled_but_empty: Terms of service can only be enabled if the text is pro
 text: Text
 text_form_content: Content
 text_form_name: Name
+text_form_published: 'Publish resource'
 text_form_shareType: Sharable
 text_form_text: Text
 the_following_users_were_not_imported: 'The following users were not imported.'

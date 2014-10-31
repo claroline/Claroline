@@ -838,6 +838,7 @@ terms_enabled_but_empty: Les conditions d'utilisation ne peuvent être activées
 text: Texte
 text_form_content: Contenu
 text_form_name: Nom
+text_form_published: 'Publier la ressource'
 text_form_shareType: Redistribution
 text_form_text: Texte
 the_following_users_were_not_imported: 'Les utilisateurs suivants n''ont pas pu être importés:'
