@@ -70,7 +70,7 @@ class PortfolioComment
     }
 
     /**
-     * @return mixed
+     * @return \Icap\PortfolioBundle\Entity\Portfolio
      */
     public function getPortfolio()
     {
@@ -162,7 +162,7 @@ class PortfolioComment
                 'firstName' => $sender->getFirstName()
             ),
             'message' => $this->getMessage(),
-            'date'    => $this->getSendingDate()->getTimestamp()
+            'date'    => $this->getSendingDate()->format(DATE_W3C)
         );
     }
 }

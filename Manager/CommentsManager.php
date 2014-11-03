@@ -2,6 +2,7 @@
 
 namespace Icap\PortfolioBundle\Manager;
 
+use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\EntityManager;
 use Icap\PortfolioBundle\Entity\Portfolio;
 use Icap\PortfolioBundle\Entity\PortfolioComment;
@@ -24,28 +25,33 @@ class CommentsManager
     /** @var CommentFactory  */
     protected $commentFactory;
 
+    /** @var PortfolioGuideManager  */
+    protected $portfolioGuideManager;
+
     /**
      * @DI\InjectParams({
-     *     "entityManager"  = @DI\Inject("doctrine.orm.entity_manager"),
-     *     "formFactory"    = @DI\Inject("form.factory"),
-     *     "commentFactory" = @DI\Inject("icap_portfolio.factory.comment")
+     *     "entityManager"         = @DI\Inject("doctrine.orm.entity_manager"),
+     *     "formFactory"           = @DI\Inject("form.factory"),
+     *     "commentFactory"        = @DI\Inject("icap_portfolio.factory.comment"),
+     *     "portfolioGuideManager" = @DI\Inject("icap_portfolio.manager.portfolio_guide")
      * })
      */
-    public function __construct(EntityManager $entityManager, FormFactory $formFactory, CommentFactory $commentFactory)
+    public function __construct(EntityManager $entityManager, FormFactory $formFactory, CommentFactory $commentFactory, PortfolioGuideManager $portfolioGuideManager)
     {
-        $this->entityManager  = $entityManager;
-        $this->formFactory    = $formFactory;
-        $this->commentFactory = $commentFactory;
+        $this->entityManager         = $entityManager;
+        $this->formFactory           = $formFactory;
+        $this->commentFactory        = $commentFactory;
+        $this->portfolioGuideManager = $portfolioGuideManager;
     }
 
     /**
      * @param PortfolioComment $comment
+     * @param User             $user
      * @param array            $parameters
      *
-     * @throws \InvalidArgumentException
      * @return array
      */
-    public function handle(PortfolioComment $comment, array $parameters)
+    public function handle(PortfolioComment $comment, User $user, array $parameters)
     {
         $form = $this->formFactory->create('icap_portfolio_portfolio_comment_form', $comment);
         $form->submit($parameters);
@@ -53,6 +59,21 @@ class CommentsManager
         if ($form->isValid()) {
             $this->entityManager->persist($comment);
             $this->entityManager->flush();
+
+            $portfolio = $comment->getPortfolio();
+            if ($portfolio->getUser() === $user) {
+                $portfolio->setCommentsViewAt($comment->getSendingDate());
+
+                $this->entityManager->persist($comment);
+                $this->entityManager->flush();
+            }
+            else {
+                $portfolioGuide = $this->portfolioGuideManager->getByPortfolioAndGuide($portfolio, $user);
+
+                if (null !== $portfolioGuide) {
+                    $this->portfolioGuideManager->updateCommentsViewDate($portfolioGuide);
+                }
+            }
 
             return $comment->getData();
         }
@@ -62,13 +83,13 @@ class CommentsManager
 
     /**
      * @param Portfolio $portfolio
+     * @param User      $user
      *
-     * @throws \InvalidArgumentException
      * @return PortfolioComment
      */
-    public function getNewComment(Portfolio $portfolio)
+    public function getNewComment(Portfolio $portfolio, User $user)
     {
-        $comment = $this->commentFactory->createComment($portfolio);
+        $comment = $this->commentFactory->createComment($portfolio, $user);
 
         return $comment;
     }
