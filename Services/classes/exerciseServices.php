@@ -1046,7 +1046,7 @@ class exerciseServices
             return $subscription[0]->getAdmin();
         } else {
             $collection = new ResourceCollection(array($exercise->getResourceNode()));
-            if ($this->securityContext->isGranted('edit', $collection)) {
+            if ($this->securityContext->isGranted('ADMINISTRATE', $collection)) {
                 return 1;
             } else {
                 return 0;
