@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Migrations\pdo_sqlsrv;
+namespace Claroline\CoreBundle\Migrations\pdo_ibm;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -8,15 +8,18 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/10/30 03:59:05
+ * Generation date: 2014/11/03 09:13:08
  */
-class Version20141030155903 extends AbstractMigration
+class Version20141103091305 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
         $this->addSql("
+            CREATE UNIQUE INDEX UNIQ_536FFC4C5E237E06 ON claro_workspace_model (name)
+        ");
+        $this->addSql("
             ALTER TABLE claro_type 
-            ADD publish BIT NOT NULL
+            ADD COLUMN publish SMALLINT DEFAULT NULL
         ");
     }
 
@@ -25,6 +28,9 @@ class Version20141030155903 extends AbstractMigration
         $this->addSql("
             ALTER TABLE claro_type 
             DROP COLUMN publish
+        ");
+        $this->addSql("
+            DROP INDEX UNIQ_536FFC4C5E237E06
         ");
     }
 }
