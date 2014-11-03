@@ -224,9 +224,11 @@
                     <i class="fa fa-times"></i> {{ 'unpublish' | trans }}
                     </a></span>
             {% endif %}
-            <a class="btn btn-primary" href="{{ path('ujm_paper_list', { 'exoID': entity.id }) }}">
-                <i class="fa fa-list"></i> {{ 'result' | trans }}
-            </a>
+            {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                <a class="btn btn-primary" href="{{ path('ujm_paper_list', { 'exoID': entity.id }) }}">
+                    <i class="fa fa-list"></i> {{ 'result' | trans }}
+                </a>
+            {% endif %}
         </div>
     </div>
 {% endblock %}
