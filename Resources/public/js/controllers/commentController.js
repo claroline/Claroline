@@ -20,9 +20,12 @@ portfolioApp
         };
 
         $scope.updateCountViewComments = function () {
-            if (0 < portfolioManager.portfolio.unreadComments) {
-                portfolioManager.updateViewCommentsDate();
-            }
             $scope.displayComment= !$scope.displayComment;
+
+            if ($scope.displayComment) {
+                if (0 < portfolioManager.portfolio.unreadComments) {
+                    portfolioManager.updateViewCommentsDate();
+                }
+            }
         }
     }]);
