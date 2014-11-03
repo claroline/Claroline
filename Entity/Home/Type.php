@@ -47,7 +47,7 @@ class Type
     /**
      * @var integer
      *
-     * @ORM\Column(name="publish", type="boolean")
+     * @ORM\Column(name="publish", type="boolean", nullable=true)
      */
     private $publish;
 
