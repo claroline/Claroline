@@ -39,6 +39,16 @@ class PortfolioGuide
     protected $portfolio;
 
     /**
+     * @ORM\Column(name="comments_view_at", type="datetime")
+     */
+    protected $commentsViewAt;
+
+    public function __construct()
+    {
+        $this->commentsViewAt = new \DateTime();
+    }
+
+    /**
      * @param Portfolio $portfolio
      *
      * @return PortfolioUser
@@ -76,5 +86,25 @@ class PortfolioGuide
     public function getUser()
     {
         return $this->user;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCommentsViewAt()
+    {
+        return $this->commentsViewAt;
+    }
+
+    /**
+     * @param mixed $commentsViewAt
+     *
+     * @return PortfolioGuide
+     */
+    public function setCommentsViewAt($commentsViewAt)
+    {
+        $this->commentsViewAt = $commentsViewAt;
+
+        return $this;
     }
 }

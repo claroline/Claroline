@@ -21,8 +21,7 @@ portfolioApp
 
         $scope.updateCountViewComments = function () {
             if (0 < portfolioManager.portfolio.unreadComments) {
-                portfolioManager.portfolio.commentsViewAt = new Date();
-                portfolioManager.save(portfolioManager.portfolio);
+                portfolioManager.updateViewCommentsDate();
             }
             $scope.displayComment= !$scope.displayComment;
         }

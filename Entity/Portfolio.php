@@ -96,7 +96,7 @@ class Portfolio
     protected $deletedAt;
 
     /**
-     * @ORM\Column(name="commentsViewAt", type="datetime")
+     * @ORM\Column(name="comments_view_at", type="datetime")
      */
     protected $commentsViewAt;
 
@@ -104,6 +104,7 @@ class Portfolio
     {
         $this->commentsViewAt = new \DateTime();
     }
+
     /**
      * @param int $id
      *
