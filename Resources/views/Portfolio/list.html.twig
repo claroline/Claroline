@@ -22,16 +22,16 @@
     </p>
 
     {% if 0 < guidedPortfoliosPager.nbResults %}
-    <div class="panel-group" id="accordion2">
+    <div class="panel-group guided_portfolios_panel_group" id="guidedPortfoliosAccordion">
         <div class="panel panel-info guided_portfolios_panel">
             <div class="panel-heading">
                 <h4 class="panel-title">
-                    <a data-toggle="collapse" data-parent="#accordion2" href="#guidedPortfolios2">
+                    <a data-toggle="collapse" data-parent="#guidedPortfoliosAccordion" href="#guidedPortfolios">
                         {{ 'portfolio_i_guide'|trans({}, 'icap_portfolio') }} <span class="badge">{{ guidedPortfoliosPager.nbResults }}</span>
                     </a>
                 </h4>
             </div>
-            <div id="guidedPortfolios2" class="panel-collapse collapse">
+            <div id="guidedPortfolios" class="panel-collapse collapse">
                 <div class="panel-body">
                     <table class="table table-hover table_portfolios">
                         <colgroup>
