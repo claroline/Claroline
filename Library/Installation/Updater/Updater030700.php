@@ -32,7 +32,7 @@ class Updater030700
     private function updatePublishTypes()
     {
         $this->log('Updating publish types...');
-        $types = $this->om->getRepository('ClarolineCoreBundle:home\Type')->findAll();
+        $types = $this->om->getRepository('ClarolineCoreBundle:Home\Type')->findAll();
         foreach ($types as $type) {
             $type->setPublish(true);
             $this->om->persist($type);
