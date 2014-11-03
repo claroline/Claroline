@@ -197,9 +197,9 @@ class ResourceNode
     private $pathForCreationLog = '';
 
     /**
-     * @ORM\Column(name="is_visible", type="boolean", options={"default": 1})
+     * @ORM\Column(name="published", type="boolean", options={"default": 1})
      */
-    protected $isVisible = true;
+    protected $published = true;
 
     public function __construct()
     {
@@ -565,20 +565,20 @@ class ResourceNode
         return $this->pathForCreationLog;
     }
 
-    public function getIsVisible()
-    {
-        return $this->isVisible;
-    }
-
-    public function setIsVisible($isVisible)
-    {
-        $this->isVisible = $isVisible;
-    }
-
     public function addChild(ResourceNode $resourceNode)
     {
         if (!$this->children->contains($resourceNode)) {
             $this->children->add($resourceNode);
         }
+    }
+
+    public function isPublished()
+    {
+        return $this->published;
+    }
+
+    public function setPublished($published)
+    {
+        $this->published = $published;
     }
 }

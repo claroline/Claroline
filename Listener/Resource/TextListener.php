@@ -82,6 +82,8 @@ class TextListener implements ContainerAwareInterface
         $form->handleRequest($request);
 
         if ($form->isValid()) {
+            $published = $form->get('published')->getData();
+            $event->setPublished($published);
             $revision = new Revision();
             $revision->setContent($form->getData()->getText());
             $revision->setUser($user);

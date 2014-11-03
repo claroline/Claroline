@@ -21,6 +21,15 @@ class DirectoryType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('name', 'text', array('constraints' => new NotBlank()));
+        $builder->add(
+            'published',
+            'checkbox',
+            array(
+                'required' => true,
+                'mapped' => false,
+                'attr' => array('checked' => 'checked')
+           )
+        );
     }
 
     public function getName()

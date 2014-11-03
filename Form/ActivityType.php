@@ -33,6 +33,14 @@ class ActivityType extends AbstractType
                         'data-restrict-for-owner' => 1
                     )
                 )
+            )->add(
+                'published',
+                'checkbox',
+                array(
+                    'required' => true,
+                    'mapped' => false,
+                    'attr' => array('checked' => 'checked')
+               )
             );
     }
 
