@@ -1,12 +1,18 @@
-'use strict';
-
 /**
  * Alert Controller
  */
-function AlertCtrl($scope, AlertFactory) {
-    $scope.alerts = AlertFactory.getAlerts();
+(function () {
+    'use strict';
 
-    $scope.closeAlert  = function() {
-        AlertFactory.closeAlert();
-    };
-}
+    angular.module('AlertModule').controller('AlertCtrl', [
+        '$scope',
+        'AlertFactory',
+        function ($scope, AlertFactory) {
+            $scope.alerts = AlertFactory.getAlerts();
+
+            $scope.closeAlert  = function() {
+                AlertFactory.closeAlert();
+            };
+        }
+    ]);
+})();

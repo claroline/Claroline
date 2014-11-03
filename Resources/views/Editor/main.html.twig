@@ -39,7 +39,7 @@
 
 {% block content %}
     {{ form_start(form, {'attr': {'class': 'form-horizontal', 'novalidate': true}}) }}
-        <div data-ng-cloak="" data-ng-app="EditorApp" class="path-editor">
+        <div data-ng-cloak="" data-ng-app="EditorModule" class="path-editor">
             <div data-ng-controller="AlertCtrl" class="alerts">
                 {% include 'InnovaPathBundle:Editor:messages.html.twig' %}
             </div>
@@ -106,31 +106,49 @@
     {% endjavascripts %}
     
     {% javascripts debug=false filter='jsmin' output='vendor/innovapath/editor.js'
-        '@InnovaPathBundle/Resources/public/angularjs/Alert/Factory/AlertFactory.js'
-        '@InnovaPathBundle/Resources/public/angularjs/Alert/Controller/AlertCtrl.js'
-        '@InnovaPathBundle/Resources/public/angularjs/History/Factory/HistoryFactory.js'
-        '@InnovaPathBundle/Resources/public/angularjs/Clipboard/Factory/ClipboardFactory.js'
-        '@InnovaPathBundle/Resources/public/angularjs/Path/Factory/PathFactory.js'
-        '@InnovaPathBundle/Resources/public/angularjs/Path/Filter/PathToJsonFilter.js'
-        '@InnovaPathBundle/Resources/public/angularjs/Editor/Controller/MainCtrl.js'
-        '@InnovaPathBundle/Resources/public/angularjs/Editor/Controller/GlobalCtrl.js'
-        '@InnovaPathBundle/Resources/public/angularjs/Editor/Controller/ScenarioCtrl.js'
-        '@InnovaPathBundle/Resources/public/angularjs/Step/Controller/StepCtrl.js'
-        '@InnovaPathBundle/Resources/public/angularjs/Editor/Controller/ConfirmExitModalCtrl.js'
-        '@InnovaPathBundle/Resources/public/angularjs/Step/Factory/StepFactory.js'
-        '@InnovaPathBundle/Resources/public/angularjs/Confirm/Controller/ConfirmModalCtrl.js'
-        '@InnovaPathBundle/Resources/public/angularjs/Resource/Factory/ResourceFactory.js'
-        '@InnovaPathBundle/Resources/public/angularjs/Template/Factory/TemplateFactory.js'
-        '@InnovaPathBundle/Resources/public/angularjs/Template/Controller/TemplateCtrl.js'
-        '@InnovaPathBundle/Resources/public/angularjs/Template/Controller/TemplateModalCtrl.js'
-        '@InnovaPathBundle/Resources/public/angularjs/TruncateText/Filter/TruncateTextFilter.js'
-        '@InnovaPathBundle/Resources/public/angularjs/Editor/EditorApp.js'
+        '@InnovaPathBundle/Resources/public/angularjs/Truncate/*'
+        '@InnovaPathBundle/Resources/public/angularjs/Truncate/Filter/*'
+
+        '@InnovaPathBundle/Resources/public/angularjs/Alert/*'
+        '@InnovaPathBundle/Resources/public/angularjs/Alert/Controller/*'
+        '@InnovaPathBundle/Resources/public/angularjs/Alert/Factory/*'
+
+        '@InnovaPathBundle/Resources/public/angularjs/Clipboard/*'
+        '@InnovaPathBundle/Resources/public/angularjs/Clipboard/Factory/*'
+
+        '@InnovaPathBundle/Resources/public/angularjs/Confirm/*'
+        '@InnovaPathBundle/Resources/public/angularjs/Confirm/Controller/*'
+
+        '@InnovaPathBundle/Resources/public/angularjs/History/*'
+        '@InnovaPathBundle/Resources/public/angularjs/History/Factory/*'
+
+        '@InnovaPathBundle/Resources/public/angularjs/Path/*'
+        '@InnovaPathBundle/Resources/public/angularjs/Path/Factory/*'
+        '@InnovaPathBundle/Resources/public/angularjs/Path/Filter/*'
+
+        '@InnovaPathBundle/Resources/public/angularjs/Resource/*'
+        '@InnovaPathBundle/Resources/public/angularjs/Resource/Factory/*'
+
+        '@InnovaPathBundle/Resources/public/angularjs/Step/*'
+        '@InnovaPathBundle/Resources/public/angularjs/Step/Controller/*'
+        '@InnovaPathBundle/Resources/public/angularjs/Step/Factory/*'
+
+        '@InnovaPathBundle/Resources/public/angularjs/Template/*'
+        '@InnovaPathBundle/Resources/public/angularjs/Template/Controller/*'
+        '@InnovaPathBundle/Resources/public/angularjs/Template/Factory/*'
+
+
+        '@InnovaPathBundle/Resources/public/angularjs/Editor/*'
+    '@InnovaPathBundle/Resources/public/angularjs/Editor/Controller/*'
     %}
         <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
     
     {# Set some vars needed by Angular parts #}
     <script type="text/javascript">
+        {# Make Twig variables accessibles by AngularJS #}
+        var EditorApp = {};
+
         EditorApp.workspaceId   = {{ workspace.id }};
         EditorApp.formName      = "{{ form.vars.name }}";
         EditorApp.currentPath   = {{ form.vars.value.structure | raw }};
