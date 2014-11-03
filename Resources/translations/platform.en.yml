@@ -72,6 +72,7 @@ activity_evaluation_form_score: Evaluation
 activity_evaluation_form_status: Status
 activity_form_instructions: Instructions
 activity_form_name: Name
+activity_form_published: 'Publish resource'
 activity_parameters_form_evaluation_type: 'Evaluation type'
 activity_parameters_form_max_attempts: 'Number of allowed attempts'
 activity_parameters_form_max_duration: 'Allowed time limit (in second)'
@@ -244,7 +245,7 @@ creation_date: 'Creation date'
 creator: Creator
 csv_export: Csv export
 csv_group_import_infos: 'CSV file informations'
-csv_group_import_infos_format: Format: username list separated by a carriage return
+csv_group_import_infos_format: 'Format: username list separated by a carriage return'
 csv_users_import_infos: 'CSV file informations'
 csv_users_import_infos_format: Format
 csv_users_import_infos_format_a: 'User informations must be defined in one line and separated by semicolon'
@@ -310,6 +311,7 @@ desktop_home_tabs: 'Desktop Home tabs'
 desktop_tools: 'Desktop tools'
 directory: Directory
 directory_form_name: Name
+directory_form_published: 'Publish resource'
 directory_form_shareType: Sharable
 display: Display
 display_captcha: 'Display captcha for anonymous'
@@ -376,6 +378,7 @@ file: Files
 file_form_file: File
 file_form_license: License
 file_form_name: Name
+file_form_published: 'Publish resource'
 file_form_shareType: Sharable
 file_form_shareType_0: Yes
 file_form_shareType_1: false
@@ -794,7 +797,6 @@ security_token_form_token: 'Token'
 security_token_list: 'Security token list'
 security_tokens_management: 'Security tokens management'
 see: See
-see_hidden_files: 'See hidden files'
 see_more: 'See more'
 see_public_profile: 'See my public profile'
 select all: 'Select all'
@@ -868,11 +870,13 @@ terms_enabled_but_empty: Terms of service can only be enabled if the text is pro
 text: Text
 text_form_content: Content
 text_form_name: Name
+text_form_published: 'Publish resource'
 text_form_shareType: Sharable
 text_form_text: Text
 the_following_users_were_not_imported: 'The following users were not imported.'
 the_workspace: Workspace
 this_page_requires_authentication: 'This page requires authentication. Please login.'
+this_resource_is_not_published: 'This resource is not published'
 time_col: 'Database time column'
 tinymce_all_buttons: All tools
 title: Title

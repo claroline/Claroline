@@ -94,12 +94,14 @@ class FileListener implements ContainerAwareInterface
         if ($form->isValid()) {
             $file = $form->getData();
             $tmpFile = $form->get('file')->getData();
+            $published = $form->get('published')->getData();
+            $event->setPublished($published);
             $fileName = $tmpFile->getClientOriginalName();
             $ext = $tmpFile->getClientOriginalExtension();
             $mimeType = $this->container->get('claroline.utilities.mime_type_guesser')->guess($ext);
 
             if (pathinfo($fileName, PATHINFO_EXTENSION) === 'zip' && $form->get('uncompress')->getData()) {
-                $roots = $this->unzip($tmpFile, $event->getParent());
+                $roots = $this->unzip($tmpFile, $event->getParent(), $published);
                 $event->setResources($roots);
 
                 //do not process the resources afterwards because nodes have been created with the unzip function.
@@ -320,10 +322,8 @@ class FileListener implements ContainerAwareInterface
         return $newFile;
     }
 
-    private function unzip($archivePath, ResourceNode $root)
+    private function unzip($archivePath, ResourceNode $root, $published = true)
     {
-
-
         $extractPath = sys_get_temp_dir() .
             DIRECTORY_SEPARATOR .
             $this->container->get('claroline.utilities.misc')->generateGuid() .
@@ -336,7 +336,7 @@ class FileListener implements ContainerAwareInterface
             $archive->close();
             $this->om->startFlushSuite();
             $perms = $this->container->get('claroline.manager.rights_manager')->getCustomRoleRights($root);
-            $resources = $this->uploadDir($extractPath, $root, $perms, true);
+            $resources = $this->uploadDir($extractPath, $root, $perms, true, $published);
             $this->om->endFlushSuite();
 
             return $resources;
@@ -345,14 +345,20 @@ class FileListener implements ContainerAwareInterface
         throw new \Exception("The archive {$archivePath} can't be opened");
     }
 
-    private function uploadDir($dir, ResourceNode $parent, array $perms, $first = false)
+    private function uploadDir(
+        $dir,
+        ResourceNode $parent,
+        array $perms,
+        $first = false,
+        $published = true
+    )
     {
         $resources = [];
         $iterator = new \DirectoryIterator($dir);
 
         foreach ($iterator as $item) {
             if ($item->isFile()) {
-                $resources[] = $this->uploadFile($item, $parent, $perms);
+                $resources[] = $this->uploadFile($item, $parent, $perms, $published);
             }
 
             if ($item->isDir() && !$item->isDot()) {
@@ -366,13 +372,16 @@ class FileListener implements ContainerAwareInterface
                     $parent->getWorkspace(),
                     $parent,
                     null,
-                    $perms
+                    $perms,
+                    $published
                 );
 
                 $this->uploadDir(
                     $dir . DIRECTORY_SEPARATOR . $item->getBasename(),
                     $directory->getResourceNode(),
-                    $perms
+                    $perms,
+                    false,
+                    $published
                 );
             }
 
@@ -404,7 +413,12 @@ class FileListener implements ContainerAwareInterface
         return $resources;
     }
 
-    private function uploadFile(\DirectoryIterator $file, ResourceNode $parent, array $perms)
+    private function uploadFile(
+        \DirectoryIterator $file,
+        ResourceNode $parent,
+        array $perms,
+        $published = true
+    )
     {
         $entityFile = new File();
         $fileName = utf8_encode($file->getFilename());
@@ -428,7 +442,8 @@ class FileListener implements ContainerAwareInterface
             $parent->getWorkspace(),
             $parent,
             null,
-            $perms
+            $perms,
+            $published
         );
     }
 

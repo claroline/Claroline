@@ -104,6 +104,8 @@ class ActivityListener
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
+            $published = $form->get('published')->getData();
+            $event->setPublished($published);
             $activity = $form->getData();
             $activity->setName($activity->getTitle());
             $activityParameters = new ActivityParameters();

@@ -45,7 +45,7 @@ class ResourcePropertiesType extends AbstractType
             )
         );
         $builder->add(
-            'isVisible',
+            'published',
             'checkbox',
             array( 'required' => true)
         );

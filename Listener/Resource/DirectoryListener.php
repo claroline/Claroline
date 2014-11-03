@@ -114,6 +114,8 @@ class DirectoryListener
         $form->handleRequest($request);
 
         if ($form->isValid()) {
+            $published = $form->get('published')->getData();
+            $event->setPublished($published);
             $event->setResources(array($form->getData()));
             $event->stopPropagation();
 
