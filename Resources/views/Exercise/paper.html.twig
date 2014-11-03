@@ -185,28 +185,34 @@
 
                     <div id="interMatchingResponse">
                         <input type="hidden" id="jsonResponse" name ="jsonResponse" />
-                        <table>
-                            <tr>
-                                <td>
-                                    {% for proposal in interactionToDisplayed.proposals %}
-                                        <div id="div_{{ proposal.id }}" class="origin">
-                                            <ul>
-                                                <li id="draggable_{{ proposal.id }}" class="draggable" style='list-style-type:none;'> {{ proposal.value | raw }} </li>
-                                            </ul>
-                                        </div>
-                                    {% endfor%}
-                                </td>
-                                <td>
-                                    {% for label in interactionToDisplayed.labels %}
-                                        <div id="droppable_{{ label.id }}" class="droppable">
-                                            <ul>
-                                                <li style='list-style-type:none;'>{{ label.value | raw }}</li>
-                                            </ul>
-                                        </div>
-                                    {% endfor %}
-                                </td>
-                            </tr>
-                    </table>
+                        <center>
+                            <table>
+                                <tr>
+                                    <td>
+                                        {% for proposal in interactionToDisplayed.proposals %}
+                                            <div id="div_{{ proposal.id }}" class="origin">
+                                                <ul>
+                                                    <li id="draggable_{{ proposal.id }}" class="draggable" > {{ proposal.value | raw }} </li>
+                                                </ul>
+                                            </div>
+                                        {% endfor%}
+                                    </td>
+                                    <td style='padding: 20px;'>
+                                    </td>
+                                    <td>
+                                        {% for label in interactionToDisplayed.labels %}
+                                            <div id="droppable_{{ label.id }}" class="droppable" style="text-align: right;">
+                                                <ul>
+                                                    <li class="lidroppable">{{ label.value | raw }}</li>
+                                                </ul>
+                                                <ul class="dragDropped">
+                                                </ul>
+                                            </div>
+                                        {% endfor %}
+                                    </td>
+                                </tr>
+                            </table>
+                        </center>
                     </div>
                     {% if response != '' %}
                         {% for key, val in response %}
@@ -223,7 +229,7 @@
                 <!--</div>-->
 
                 <input type="hidden" name="interaction" value="{{ interactionToDisplayed.id }}"/>
-
+                
             {% endif %}
         </form>
     </div>
@@ -385,6 +391,55 @@
     {% elseif interactionType == 'InteractionMatching' %}
         <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2/jquery-ui-1.9.2.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/ext/jquery-ui-touch-punch.js') }}"></script>
+        <script>
+                $(".droppable").each(function() {
+                    $(this).droppable({
+                        tolerance: "pointer",
+                        activeClass: "state-hover",
+                        hoverClass: "state-active",
+                        drop: function(event, ui) {
+                            idLabel = $(this).attr('id');
+                            idLabel = idLabel.replace('droppable_', '');
+                            idProposal = ui.draggable.attr("id");
+                            idProposal = idProposal.replace('draggable_', '');
+                            if (idProposal) {
+                                responses[idProposal] = idLabel;
+                            }
+                            idProposal = ui.draggable.attr("id");
+                            $(this).addClass("state-highlight");
+                            $(this).children(".dragDropped").append($(ui.helper).clone().removeClass("draggable ui-draggable ui-draggable-dragging")
+                                    .removeAttr('style').css("list-style-type","none").addClass(idProposal));
+                            $("."+idProposal).attr('id', idProposal);
+                            if(ui.draggable.height() > $(this).height()) {
+                                $(this).height(ui.draggable.height() * 1.5);
+                            }
+                            var idDrag = "#"+idProposal;
+                            $(this).find(".dragDropped").children(idDrag).append("<a id=reset"+idDrag+"><img src={{ asset('bundles/ujmexo/images/delete.png') }} /></a>");
+                            //desactivate the drag
+                            $(idDrag).draggable("disable");
+                            // discolor the text
+                            $(idDrag).fadeTo(100, 0.3);
+
+                            var draggableDropped = $(this).children(".dragDropped").children(idDrag);
+                            if($(this).children(".dragDropped").children(idDrag).length <= 2) {
+                                $(this).children(".dragDropped").children(idDrag).children().last().click(function() {
+                                    if($(this).parent().parent().children().length <=1) {
+                                        $(this).parent().parent().parent().removeClass("state-highlight");
+                                    }
+                                    removeDrag(ui, idDrag, draggableDropped);
+                                });
+                            } else {
+                                $(this).children(".dragDropped").children(idDrag).children().click(function() {
+                                    if($(this).parent().children().length <=1) {
+                                        $(this).parent().parent().parent().removeClass("state-highlight");
+                                    }
+                                    removeDrag(ui, idDrag, draggableDropped);
+                                });
+                            }
+                        },
+                    });
+                });
+            </script>
     {% endif %}
 
     {% include "UJMExoBundle:Partial:modal/confirmFinishExercise.html.twig" %}

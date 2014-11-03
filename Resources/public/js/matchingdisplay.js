@@ -1,7 +1,7 @@
 var responses = [];
 
 $(function() {
-
+    
     if($(".draggable").width() > $(".droppable").width()) {
         var $widthDraggable = $(".draggable").width();
         var $widthDroppable = $widthDraggable;
@@ -9,16 +9,11 @@ $(function() {
     }
 
     $(".draggable").each(function() {
-//        var $test = $(this).text().length;
-//        if($(this).width() > $(this).text().length) {
-//
-//            $(this).width($test);
-//        }
-
         $(this).draggable({
             cursor: 'move',
             revert: 'invalid',
-            stop: function() {
+            helper: 'clone',
+            stop: function(event, ui) {
 //dump(responses);
                 dragStop();
             },
@@ -30,47 +25,21 @@ $(function() {
             tolerance: "pointer",
         });
     });
-
-    $(".droppable").each(function() {
-        var $countDraggable = 0;
-        $(this).droppable({
-            tolerance: "pointer",
-            activeClass: "state-hover",
-            hoverClass: "state-active",
-            drop: function(event, ui) {
-                $countDraggable = $countDraggable + 1;
-                $(this).addClass("state-highlight");
-                idLabel = $(this).attr('id');
-                idLabel = idLabel.replace('droppable_', '');
-                idProposal = ui.draggable.attr("id");
-                idProposal = idProposal.replace('draggable_', '');
-                if (idProposal) {
-                    responses[idProposal] = idLabel;
-                }
-//                if(ui.draggable.width() > $(this).width()) {
-//                    $(this).width(ui.draggable.width() * 1.5);
-//                }
-                if(ui.draggable.height() > $(this).height()) {
-                    $(this).height(ui.draggable.height() * 1.5);
-                }
-            },
-            out: function(event, ui) {
-                $countDraggable = $countDraggable - 1;
-                if ($countDraggable < 0) {
-                    $countDraggable = 0;
-                }
-                if($countDraggable == 0 ) {
-                    $(this).removeClass("state-highlight");
-                }
-                idProposal = ui.draggable.attr("id");
-                idProposal = idProposal.replace('draggable_', '');
-                if (idProposal) {
-                    responses[idProposal] = 'NULL';
-                }
-            },
-        });
-    });
 });
+
+function removeDrag(ui, idDrag, draggableDropped) {
+    idProposal = ui.draggable.attr("id");
+    idProposal = idProposal.replace('draggable_', '');
+    if (idProposal) {
+        responses[idProposal] = 'NULL';
+    }
+    dragStop();
+    
+    draggableDropped.remove();
+    // reinitalisation of draggable
+    $(idDrag).draggable("enable");
+    $(idDrag).fadeTo(100, 1);
+}
 
 function dragStop() {
     var resp = '';
