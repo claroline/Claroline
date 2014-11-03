@@ -23,20 +23,16 @@ class CommentController extends BaseController
      *
      * @ParamConverter("loggedUser", options={"authenticatedUser" = true})
      */
-    public function putAction(Request $request, User $loggedUser, Portfolio $portfolio)
+    public function postAction(Request $request, User $loggedUser, Portfolio $portfolio)
     {
         $this->checkPortfolioToolAccess();
 
         $commentManager = $this->getCommentsManager();
 
-        $newComment = $commentManager->getNewComment($portfolio);
-        $data       = $commentManager->handle($newComment, $request->request->all());
-        $statusCode = Response::HTTP_OK;
+        $newComment = $commentManager->getNewComment($portfolio, $loggedUser);
+        $data       = $commentManager->handle($newComment, $loggedUser, $request->request->all());
 
-        $response = new JsonResponse();
-        $response
-            ->setData($data)
-            ->setStatusCode($statusCode);
+        $response = new JsonResponse($data, Response::HTTP_OK);
 
         return $response;
     }
