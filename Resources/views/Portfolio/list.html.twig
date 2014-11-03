@@ -45,7 +45,7 @@
                                         <a href="{{ path('icap_portfolio_view', {'portfolioSlug': portfolio.widgets.0.slug}) }}" title="{{ portfolio.widgets.0.title }}">{{ portfolio.widgets.0.title }}</a><small> de {{ portfolio.user.lastName }} {{ portfolio.user.firstName }}</small>
                                     </td>
                                     <td>
-                                        <a href="#" class="btn btn-md btn-primary" title="">{{ 'see'|trans({}, 'icap_portfolio') }} <span class="fa fa-arrow-right"></span></a>
+                                        <a href="{{ path('icap_portfolio_view', {'portfolioSlug': portfolio.widgets.0.slug}) }}" class="btn btn-md btn-primary" title="">{{ 'see'|trans({}, 'icap_portfolio') }} <span class="fa fa-arrow-right"></span></a>
                                     </td>
                                 </tr>
                             {% endfor %}
