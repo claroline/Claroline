@@ -50,7 +50,7 @@ class Coords
     private $scoreCoords;
 
     /**
-     * @ORM\ManyToOne(targetEntity="UJM\ExoBundle\Entity\InteractionGraphic")
+     * @ORM\ManyToOne(targetEntity="UJM\ExoBundle\Entity\InteractionGraphic", inversedBy="coords")
      * @ORM\JoinColumn(name="interaction_graphic_id", referencedColumnName="id")
      */
     private $interactionGraphic;
