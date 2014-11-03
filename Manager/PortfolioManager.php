@@ -291,11 +291,6 @@ class PortfolioManager
                 $this->dispositionUpdated($portfolio);
             }
 
-            $data = array(
-                'id'          => $portfolio->getId(),
-                'disposition' => $portfolio->getDisposition(),
-            );
-
             $data = $this->getPortfolioData($portfolio);
 
             return $data;

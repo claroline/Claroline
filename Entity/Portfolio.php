@@ -406,12 +406,16 @@ class Portfolio
     /**
      * @return int
      */
-    public function getCountUnreadComments()
+    public function getCountUnreadComments(\DateTime $commentsViewAt = null)
     {
         $countUnreadComments = 0;
 
+        if (null === $commentsViewAt) {
+            $commentsViewAt = $this->getCommentsViewAt();
+        }
+
         foreach ($this->getComments() as $comment) {
-            if($this->getCommentsViewAt() < $comment->getSendingDate()) {
+            if($commentsViewAt < $comment->getSendingDate()) {
                 $countUnreadComments++;
             }
         }

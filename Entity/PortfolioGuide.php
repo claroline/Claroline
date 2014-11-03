@@ -11,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
  *          @ORM\UniqueConstraint(name="portfolio_users_unique_idx", columns={"portfolio_id", "user_id"})
  *      }
  * )
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Icap\PortfolioBundle\Repository\PortfolioGuideRepository")
  */
 class PortfolioGuide
 {
