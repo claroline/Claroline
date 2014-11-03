@@ -1,6 +1,6 @@
 <?php
 
-namespace Icap\PortfolioBundle\Migrations\sqlsrv;
+namespace Icap\PortfolioBundle\Migrations\pdo_sqlsrv;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/10/28 01:07:23
+ * Generation date: 2014/10/31 04:51:42
  */
-class Version20141028130721 extends AbstractMigration
+class Version20141031165140 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -54,6 +54,7 @@ class Version20141028130721 extends AbstractMigration
                 id INT IDENTITY NOT NULL, 
                 user_id INT NOT NULL, 
                 portfolio_id INT NOT NULL, 
+                comments_view_at DATETIME2(6) NOT NULL, 
                 PRIMARY KEY (id)
             )
         ");
@@ -113,7 +114,7 @@ class Version20141028130721 extends AbstractMigration
         ");
         $this->addSql("
             ALTER TABLE icap__portfolio 
-            ADD commentsViewAt DATETIME2(6) NOT NULL
+            ADD comments_view_at DATETIME2(6) NOT NULL
         ");
         $this->addSql("
             ALTER TABLE icap__portfolio_abstract_widget 
@@ -146,7 +147,7 @@ class Version20141028130721 extends AbstractMigration
         ");
         $this->addSql("
             ALTER TABLE icap__portfolio 
-            DROP COLUMN commentsViewAt
+            DROP COLUMN comments_view_at
         ");
         $this->addSql("
             ALTER TABLE icap__portfolio_abstract_widget 

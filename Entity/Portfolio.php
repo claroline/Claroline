@@ -96,7 +96,7 @@ class Portfolio
     protected $deletedAt;
 
     /**
-     * @ORM\Column(name="commentsViewAt", type="datetime")
+     * @ORM\Column(name="comments_view_at", type="datetime")
      */
     protected $commentsViewAt;
 
@@ -104,6 +104,7 @@ class Portfolio
     {
         $this->commentsViewAt = new \DateTime();
     }
+
     /**
      * @param int $id
      *
@@ -405,12 +406,16 @@ class Portfolio
     /**
      * @return int
      */
-    public function getCountUnreadComments()
+    public function getCountUnreadComments(\DateTime $commentsViewAt = null)
     {
         $countUnreadComments = 0;
 
+        if (null === $commentsViewAt) {
+            $commentsViewAt = $this->getCommentsViewAt();
+        }
+
         foreach ($this->getComments() as $comment) {
-            if($this->getCommentsViewAt() < $comment->getSendingDate()) {
+            if($commentsViewAt < $comment->getSendingDate()) {
                 $countUnreadComments++;
             }
         }

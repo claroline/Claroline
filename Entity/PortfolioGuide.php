@@ -11,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
  *          @ORM\UniqueConstraint(name="portfolio_users_unique_idx", columns={"portfolio_id", "user_id"})
  *      }
  * )
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Icap\PortfolioBundle\Repository\PortfolioGuideRepository")
  */
 class PortfolioGuide
 {
@@ -37,6 +37,16 @@ class PortfolioGuide
      * @ORM\JoinColumn(name="portfolio_id", referencedColumnName="id", nullable=false)
      */
     protected $portfolio;
+
+    /**
+     * @ORM\Column(name="comments_view_at", type="datetime")
+     */
+    protected $commentsViewAt;
+
+    public function __construct()
+    {
+        $this->commentsViewAt = new \DateTime();
+    }
 
     /**
      * @param Portfolio $portfolio
@@ -76,5 +86,25 @@ class PortfolioGuide
     public function getUser()
     {
         return $this->user;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCommentsViewAt()
+    {
+        return $this->commentsViewAt;
+    }
+
+    /**
+     * @param mixed $commentsViewAt
+     *
+     * @return PortfolioGuide
+     */
+    public function setCommentsViewAt($commentsViewAt)
+    {
+        $this->commentsViewAt = $commentsViewAt;
+
+        return $this;
     }
 }

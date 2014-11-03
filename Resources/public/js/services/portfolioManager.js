@@ -24,6 +24,10 @@ portfolioApp
                 }
 
                 return portfolio.$update(success, failed);
+            },
+            updateViewCommentsDate: function () {
+                this.portfolio.commentsViewAt = new Date();
+                this.save(this.portfolio);
             }
         };
     }]);

@@ -26,8 +26,16 @@ class PortfolioController extends BaseController
     {
         $this->checkPortfolioToolAccess();
 
-        $response = new JsonResponse();
-        $response->setData($this->getPortfolioManager()->getPortfolioData($portfolio));
+        $data = $this->getPortfolioManager()->getPortfolioData($portfolio);
+
+        $portfolioGuide = $this->getPortfolioGuideManager()->getByPortfolioAndGuide($portfolio, $loggedUser);
+
+        if (null !== $portfolioGuide) {
+            $data['unreadComments'] = $portfolio->getCountUnreadComments($portfolioGuide->getCommentsViewAt());
+            $data['commentsViewAt'] = $portfolioGuide->getCommentsViewAt();
+        }
+
+        $response = new JsonResponse($data);
 
         return $response;
     }
@@ -42,7 +50,22 @@ class PortfolioController extends BaseController
     {
         $this->checkPortfolioToolAccess();
 
-        $data = $this->getPortfolioManager()->handle($portfolio, $request->request->all(), $this->get('kernel')->getEnvironment());
+        $data = [];
+
+        if ($portfolio->getUser() === $loggedUser) {
+            $data = $this->getPortfolioManager()->handle($portfolio, $request->request->all(), $this->get('kernel')->getEnvironment());
+        }
+        else {
+            $portfolioGuide = $this->getPortfolioGuideManager()->getByPortfolioAndGuide($portfolio, $loggedUser);
+
+            if (null !== $portfolioGuide) {
+                $this->getPortfolioGuideManager()->updateCommentsViewDate($portfolioGuide);
+                $data = $this->getPortfolioManager()->getPortfolioData($portfolio);
+
+                $data['unreadComments'] = $portfolio->getCountUnreadComments($portfolioGuide->getCommentsViewAt());
+                $data['commentsViewAt'] = $portfolioGuide->getCommentsViewAt();
+            }
+        }
 
         $response = new JsonResponse();
         $response->setData($data);
