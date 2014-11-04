@@ -363,50 +363,54 @@ class PortfolioManager
         $visibility     = $portfolio->getVisibility();
         $isVisible      = false;
 
-        if (Portfolio::VISIBILITY_EVERYBODY === $visibility ||
-            Portfolio::VISIBILITY_PLATFORM_USER === $visibility) {
+        if ($portfolio->getUser() === $user) {
             $isVisible = true;
         }
-        elseif (Portfolio::VISIBILITY_USER === $visibility) {
-            $portfolioUsers = $portfolio->getPortfolioUsers();
-
-            foreach ($portfolioUsers as $portfolioUser) {
-                if ($user === $portfolioUser->getUser()) {
-                    $isVisible = true;
-                    break;
-                }
+        else {
+            if (Portfolio::VISIBILITY_EVERYBODY === $visibility ||
+                Portfolio::VISIBILITY_PLATFORM_USER === $visibility) {
+                $isVisible = true;
             }
+            elseif (Portfolio::VISIBILITY_USER === $visibility) {
+                $portfolioUsers = $portfolio->getPortfolioUsers();
 
-            if (!$isVisible) {
-                $portfolioGroups = $portfolio->getPortfolioGroups();
-                $userGroups      = $user->getGroups();
+                foreach ($portfolioUsers as $portfolioUser) {
+                    if ($user === $portfolioUser->getUser()) {
+                        $isVisible = true;
+                        break;
+                    }
+                }
 
-                foreach ($portfolioGroups as $portfolioGroup) {
-                    foreach ($userGroups as $userGroup) {
-                        if ($userGroup === $portfolioGroup->getGroup()) {
-                            $isVisible = true;
-                            break;
+                if (!$isVisible) {
+                    $portfolioGroups = $portfolio->getPortfolioGroups();
+                    $userGroups      = $user->getGroups();
+
+                    foreach ($portfolioGroups as $portfolioGroup) {
+                        foreach ($userGroups as $userGroup) {
+                            if ($userGroup === $portfolioGroup->getGroup()) {
+                                $isVisible = true;
+                                break;
+                            }
                         }
                     }
                 }
-            }
 
-            if (!$isVisible) {
-                $portfolioTeams = $portfolio->getPortfolioTeams();
-                /** @var \Claroline\TeamBundle\Entity\Team[] $userTeams */
-                $userTeams      = $this->teamManager->getTeamsByUser($user);
+                if (!$isVisible) {
+                    $portfolioTeams = $portfolio->getPortfolioTeams();
+                    /** @var \Claroline\TeamBundle\Entity\Team[] $userTeams */
+                    $userTeams      = $this->teamManager->getTeamsByUser($user);
 
-                foreach ($portfolioTeams as $portfolioTeam) {
-                    foreach ($userTeams as $userTeam) {
-                        if ($userTeam === $portfolioTeam->getTeam()) {
-                            $isVisible = true;
-                            break;
+                    foreach ($portfolioTeams as $portfolioTeam) {
+                        foreach ($userTeams as $userTeam) {
+                            if ($userTeam === $portfolioTeam->getTeam()) {
+                                $isVisible = true;
+                                break;
+                            }
                         }
                     }
                 }
             }
         }
-
 
         return $isVisible;
     }
