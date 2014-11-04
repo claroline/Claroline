@@ -326,9 +326,9 @@ publish: Publier
 qcm: QCM
 qcm creation: Création d'une question de type QCM
 qcm edition: Edition d'une question de type QCM
-question: Question
 qti_import_title: Pas d'attribut "title" pour l'élément "assessmentItem"
 qti_import_qcm_prompt: Pas d'élément "prompt" dans l'élément "choiceInteraction"
+question: Question
 question graphic: Question Graphique
 question hole : Question à trous
 question open: Question à Réponse Ouverte
