@@ -39,7 +39,7 @@ class WebsitePageController extends Controller{
     public function viewAction(Website $website, $pageId)
     {
         $this->checkAccess("OPEN", $website);
-        $isAdmin = $this->isUserGranted("EDIT", $website);
+        $isAdmin = $this->isUserGranted("ADMINISTRATE", $website);
         $user = $this->getLoggedUser();
         $pageManager = $this->getWebsitePageManager();
         $pages = $pageManager->getPageTree($website, $isAdmin, true);
@@ -73,7 +73,7 @@ class WebsitePageController extends Controller{
         $response = new JsonResponse();
         $this->checkAccess("OPEN", $website);
         try{
-            $isAdmin = $this->isUserGranted("EDIT", $website);
+            $isAdmin = $this->isUserGranted("ADMINISTRATE", $website);
 
             $pageManager = $this->getWebsitePageManager();
             $page = $pageManager->getPages($website, $pageId, $isAdmin, true);
@@ -103,7 +103,7 @@ class WebsitePageController extends Controller{
         $user = $this->getLoggedUser();
         if ($user !== null) {
             try{
-                $this->checkAccess("EDIT", $website);
+                $this->checkAccess("ADMINISTRATE", $website);
                 $pageManager = $this->getWebsitePageManager();
                 $parentPage = $pageManager->getPages($website, $parentPageId, true, false)[0];
                 $newPage = $pageManager->createEmptyPage($website, $parentPage);
@@ -134,7 +134,7 @@ class WebsitePageController extends Controller{
         $user = $this->getLoggedUser();
         if ($user !== null) {
             try{
-                $this->checkAccess("EDIT", $website);
+                $this->checkAccess("ADMINISTRATE", $website);
                 $pageManager = $this->getWebsitePageManager();
                 $page = $pageManager->getPages($website, $pageId, true, false)[0];
                 $pageJson = $pageManager->processForm($page, $request->request->all(), "PUT");
@@ -164,7 +164,7 @@ class WebsitePageController extends Controller{
         $response = new JsonResponse();
         $user = $this->getLoggedUser();
         if ($user !== null) {
-            $this->checkAccess("EDIT", $website);
+            $this->checkAccess("ADMINISTRATE", $website);
             $pageManager = $this->getWebsitePageManager();
             try{
                 $pageManager->handleMovePage($website, array(
@@ -197,7 +197,7 @@ class WebsitePageController extends Controller{
         $response = new JsonResponse();
         $user = $this->getLoggedUser();
         if ($user !== null) {
-            $this->checkAccess("EDIT", $website);
+            $this->checkAccess("ADMINISTRATE", $website);
             $pageManager = $this->getWebsitePageManager();
             $page = $pageManager->getPages($website, $pageId, true, false)[0];
             try{

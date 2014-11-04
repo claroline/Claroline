@@ -44,7 +44,7 @@ class WebsiteOptionsController extends Controller {
         $user = $this->getLoggedUser();
         if ($user !== null) {
             try{
-                $this->checkAccess("EDIT", $website);
+                $this->checkAccess("ADMINISTRATE", $website);
                 try{
                     $optionsManager = $this->getWebsiteOptionsManager();
                     $response->setData($request->request->all());
@@ -81,7 +81,7 @@ class WebsiteOptionsController extends Controller {
         $user = $this->getLoggedUser();
         if ($user !== null) {
             try{
-                $this->checkAccess("EDIT", $website);
+                $this->checkAccess("ADMINISTRATE", $website);
                 try{
                     $optionsManager = $this->getWebsiteOptionsManager();
                     $uploadedFile = $request->files->get('imageFile');
@@ -123,7 +123,7 @@ class WebsiteOptionsController extends Controller {
         $user = $this->getLoggedUser();
         if ($user !== null) {
             try{
-                $this->checkAccess("EDIT", $website);
+                $this->checkAccess("ADMINISTRATE", $website);
                 try{
                     $optionsManager = $this->getWebsiteOptionsManager();
                     $newPath = $request->request->get("newPath");

@@ -32,7 +32,7 @@ class WebsiteController extends Controller{
     public function viewAction(Website $website)
     {
         $this->checkAccess("OPEN", $website);
-        $isAdmin = $this->isUserGranted("EDIT", $website);
+        $isAdmin = $this->isUserGranted("ADMINISTRATE", $website);
         $user = $this->getLoggedUser();
         $pageManager = $this->getWebsitePageManager();
 
