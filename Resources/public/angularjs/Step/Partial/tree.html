@@ -1,6 +1,6 @@
 <!-- Drag&Drop handler -->
 <div ng-if="step.lvl !== 0" ui-tree-handle class="mytree-item-handler" data-toggle="tooltip" data-container="body" title="{{ 'step_drag' | trans:{}:'path_editor' }}">
-    <span class="fa fa-arrows"></span>
+    <span class="fa fa-ellipsis-v"></span>
     <span class="sr-only">{{ 'step_drag' | trans:{}:'path_editor' }}</span>
 </div>
 
@@ -9,7 +9,7 @@
      data-ng-click="setPreviewStep(step)"
      data-ng-mouseenter="showButtons = step.id"
      data-ng-mouseleave="showButtons = null">
-    
+
     <div class="lvl lvl-{{ step.lvl }}"></div>
     <div class="step">{{ step.name | truncate }}</div>
 

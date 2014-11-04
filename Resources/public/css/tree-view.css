@@ -14,12 +14,18 @@
     color: #333333;
 }
 
+.tree .tree-item:first-child {
+    margin-top: 0;
+}
+
 .tree-item {
     cursor: pointer;
     line-height: 24px;
     position: relative;
     background-color: #FFF;
-    margin: 5px 0;
+    margin: 5px;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
 }
 
 .tree-item:hover {
@@ -27,7 +33,7 @@
 }
 
 .lvl {
-    width: 32px;
+    width: 20px;
     display: block;
     height: 100%;
     position: absolute;
@@ -38,36 +44,39 @@
 }
 
 .step {
-    padding: 2px 8px;
-    padding-left: 42px;
+    padding: 5px 8px;
+    padding-left: 30px;
     border: 1px solid #CCC;
     border-left: none;
     border-radius: 3px;
     display: block;
     color: #333333;
+    font-size: 16px;
+    vertical-align: middle;
 }
 
 .active-step {
     background-color: rgb(240, 240, 240) !important;
 }
 
-.active-step .lvl {
+/*.active-step .lvl {
     border-right: none;
-    width: 32px;
-}
+    width: 20px;
+}*/
 
 .active-step .step {
-    padding-left: 54px;
-    font-weight: bold;
+    /*padding-left: 54px;*/
+    /*font-weight: bold;*/
 }
 
+/*
 .active-step .lvl:after {
     content: "";
-    border-top: 15px solid rgba(0,0,0,0);
-    border-bottom: 15px solid rgba(0,0,0,0);
-    border-left: 15px solid #ddd;
+    border-top: 17px solid rgba(0,0,0,0);
+    border-bottom: 17px solid rgba(0,0,0,0);
+    border-left: 17px solid #ddd;
     position: absolute;
-    right: -15px;
+    right: -17px;
     top: 0;
     z-index: 1;
-}
+}*/

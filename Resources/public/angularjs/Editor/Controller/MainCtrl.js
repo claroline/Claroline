@@ -30,12 +30,12 @@
                 HistoryFactory.update($scope.path);
             }
 
-            $scope.alerts = AlertFactory.getAlerts();
-
             // Store current previewed step
             $scope.previewStep = null;
 
             $scope.saveAndClose = false;
+
+            $scope.historyDisabled = HistoryFactory.getDisabled();
 
             /**
              * Update History when general data change
@@ -110,10 +110,12 @@
              * @returns void
              */
             $scope.undo = function() {
-                HistoryFactory.undo();
-                $scope.path = PathFactory.getPath();
+                if (HistoryFactory.canUndo()) {
+                    HistoryFactory.undo();
+                    $scope.path = PathFactory.getPath();
 
-                $scope.updatePreviewStep();
+                    $scope.updatePreviewStep();
+                }
             };
 
             /**
@@ -121,10 +123,16 @@
              * @returns void
              */
             $scope.redo = function() {
-                HistoryFactory.redo();
-                $scope.path = PathFactory.getPath();
+                if (HistoryFactory.canRedo()) {
+                    HistoryFactory.redo();
+                    $scope.path = PathFactory.getPath();
 
-                $scope.updatePreviewStep();
+                    $scope.updatePreviewStep();
+                }
+            };
+
+            $scope.save = function () {
+                document[EditorApp.formName].submit();
             };
 
             $scope.closeEditor = function (returnUrl) {
@@ -136,7 +144,7 @@
                     // There are pending modifications => ask for confirmation to know what to do
                     // Display confirm modal
                     var modalInstance = $modal.open({
-                        templateUrl: EditorApp.webDir + 'bundles/innovapath/angularjs/Editor/Partial/confirm-exit.html',
+                        templateUrl: EditorApp.webDir + 'bundles/innovapath/angularjs/Confirm/Partial/confirm-exit.html',
                         controller: 'ConfirmExitModalCtrl',
                         scope: $scope
                     });

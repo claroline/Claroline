@@ -1,3 +1,7 @@
+[data-ng-cloak] {
+    display: none !important;
+}
+
 /* app css stylesheet */
 .path-editor .panel-heading + .collapse {
     border-width: 0;
@@ -28,9 +32,9 @@
     z-index: 1;
 }
 
-/*.step-resources .resource {
-    margin-top: 18px;
-}*/
+.path-editor .navbar {
+    margin-bottom: 0;
+}
 
 form {
     margin: 0 0 5px;

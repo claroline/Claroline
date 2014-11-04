@@ -33,11 +33,11 @@
                     alerts[currentIndex] = alert;
 
                     // Auto close alert
-                    $timeout(function () {
+                    /*$timeout(function () {
                         console.log(alerts);
                         this.closeAlert(alert);
                         console.log(alerts);
-                    }.bind(this), 3000);
+                    }.bind(this), 3000);*/
 
                     return this;
                 },

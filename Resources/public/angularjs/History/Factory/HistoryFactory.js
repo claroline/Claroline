@@ -8,34 +8,35 @@
         '$rootScope',
         'PathFactory',
         function ($rootScope, PathFactory) {
-            // Is redo function is disabled ?
-            $rootScope.redoDisabled = true;
-
-            // Is undo function is disabled ?
-            $rootScope.undoDisabled = true;
+            var disabled = {
+                redo: true,
+                undo: true
+            };
 
             // History stack
             var history = [];
             var historyState = -1;
 
             return {
-                /**
-                 * Get current history stack
-                 *
-                 * @returns Array
-                 */
-                get: function() {
-                    return history;
+                getDisabled: function () {
+                    return disabled;
+                },
+
+                canUndo: function () {
+                    return !disabled.undo;
+                },
+
+                canRedo: function () {
+                    return !disabled.redo;
                 },
 
                 /**
                  * Restore default history state (= empty history)
-                 *
                  * @returns HistoryFactory
                  */
-                clear: function() {
-                    this.setRedoDisabled(true);
-                    this.setUndoDisabled(true);
+                clear: function () {
+                    disabled.redo = true;
+                    disabled.undo = true;
 
                     history = [];
                     historyState = -1;
@@ -45,44 +46,43 @@
 
                 /**
                  * Store current path in history
-                 *
-                 * @param path - The current path
+                 * @param path
                  * @returns HistoryFactory
                  */
-                update: function(path) {
+                update: function (path) {
                     // Increment history state
                     this.incrementHistoryState();
 
                     // Store path in history stack
-                    this.addPathToHistory(path);
+                    var pathCopy = angular.extend({}, path);
+                    history.push(pathCopy);
 
                     if (this.getHistoryState() !== 0) {
                         // History is not empty => enable the undo function
-                        this.setUndoDisabled(false);
+                        disabled.undo = false;
                     }
-                    this.setRedoDisabled(true);
+                    disabled.redo = true;
 
                     return this;
                 },
 
                 /**
                  * Get the last path state from history stack and set it as current path
-                 *
                  * @returns HistoryFactory
                  */
-                undo: function() {
+                undo: function () {
                     // Decrement history state
                     this.decrementHistoryState();
 
                     var path = this.getPathFromHistory(historyState);
 
                     // Clone object
-                    var pathCopy = jQuery.extend(true, {}, path);
+                    var pathCopy = angular.extend({}, path);
 
-                    this.setRedoDisabled(false);
+                    disabled.redo = false;
                     if (0 === historyState) {
                         // History stack is empty => disable the undo function
-                        this.setUndoDisabled(true);
+                        disabled.undo = true;
                     }
 
                     // Inject new path
@@ -93,21 +93,20 @@
 
                 /**
                  * Get the next history state from history stack and set it as current path
-                 *
                  * @returns HistoryFactory
                  */
-                redo: function() {
+                redo: function () {
                     // Increment history state
-                    this.incrementHistoryState();
+                    historyState++;
 
                     var path = this.getPathFromHistory(historyState);
 
                     // Clone object
-                    var pathCopy = jQuery.extend(true, {}, path);
+                    var pathCopy = angular.extend({}, path);
 
-                    this.setUndoDisabled(false);
+                    disabled.undo = false;
                     if (historyState == history.length - 1) {
-                        this.setRedoDisabled(true);
+                        disabled.redo = true;
                     }
 
                     // Inject new path
@@ -120,98 +119,50 @@
                  *
                  * @returns HistoryFactory
                  */
-                incrementHistoryState: function() {
+                incrementHistoryState: function () {
                     // Increment history state
                     this.setHistoryState(this.getHistoryState() + 1);
+
                     return this;
                 },
 
                 /**
                  *
-                 * @returns HistoryFactory
+                 * @returns {HistoryFactory}
                  */
                 decrementHistoryState: function() {
                     // Decrement history state
                     this.setHistoryState(this.getHistoryState() - 1);
+
                     return this;
                 },
 
                 /**
                  *
-                 * @returns Integer
+                 * @returns {number}
                  */
-                getHistoryState: function() {
+                getHistoryState: function () {
                     return historyState;
                 },
 
                 /**
                  *
-                 * @param data
-                 * @returns HistoryFactory
+                 * @param   {number}         data
+                 * @returns {HistoryFactory}
                  */
-                setHistoryState: function(data) {
+                setHistoryState: function (data) {
                     historyState = data;
+
                     return this;
                 },
 
                 /**
                  * Get path state stored at position index in history stack
-                 *
-                 * @param index
-                 * @returns object
+                 * @param   {number} index
+                 * @returns {object}
                  */
-                getPathFromHistory : function(index) {
+                getPathFromHistory : function (index) {
                     return history[index];
-                },
-
-                /**
-                 * Store path state in history stack
-                 *
-                 * @param data
-                 * @returns HistoryFactory
-                 */
-                addPathToHistory : function(data) {
-                    // Clone object
-                    var pathCopy = jQuery.extend(true, {}, data);
-                    history.push(pathCopy);
-
-                    return this;
-                },
-
-                /**
-                 *
-                 * @returns boolean
-                 */
-                getRedoDisabled: function() {
-                    return $rootScope.redoDisabled;
-                },
-
-                /**
-                 *
-                 * @param data
-                 * @returns HistoryFactory
-                 */
-                setRedoDisabled: function(data) {
-                    $rootScope.redoDisabled = data;
-                    return this;
-                },
-
-                /**
-                 *
-                 * @returns boolean
-                 */
-                getUndoDisabled: function() {
-                    return $rootScope.undoDisabled;
-                },
-
-                /**
-                 *
-                 * @param data
-                 * @returns HistoryFactory
-                 */
-                setUndoDisabled: function(data) {
-                    $rootScope.undoDisabled = data;
-                    return this;
                 }
             };
         }
