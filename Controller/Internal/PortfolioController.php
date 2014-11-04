@@ -10,6 +10,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * @Route("/internal")
@@ -25,6 +26,10 @@ class PortfolioController extends BaseController
     public function getAction(User $loggedUser, Portfolio $portfolio)
     {
         $this->checkPortfolioToolAccess();
+
+        if ($portfolio->getUser() !== $loggedUser && !$portfolio->hasGuide($loggedUser)) {
+            throw new NotFoundHttpException();
+        }
 
         $data = $this->getPortfolioManager()->getPortfolioData($portfolio);
 
