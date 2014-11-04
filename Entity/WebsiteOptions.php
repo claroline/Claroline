@@ -9,25 +9,27 @@
 namespace Icap\WebsiteBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use JsonSerializable;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints as Assert;
+use JMS\Serializer\Annotation as JMS;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="icap__website_options")
+ * @JMS\ExclusionPolicy("none")
  */
-class WebsiteOptions implements JsonSerializable{
+class WebsiteOptions{
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @JMS\Exclude
      */
     protected $id;
 
     /**
      * @ORM\OneToOne(targetEntity="Icap\WebsiteBundle\Entity\Website", inversedBy="options")
      * @ORM\JoinColumn(name="website_id", referencedColumnName="id", onDelete="CASCADE")
+     * @JMS\Exclude
      */
     protected  $website;
 
@@ -37,6 +39,7 @@ class WebsiteOptions implements JsonSerializable{
      * @var boolean
      *
      * @ORM\Column(type="boolean")
+     * @JMS\SerializedName("copyrightEnabled")
      */
     protected $copyrightEnabled = false;
 
@@ -44,21 +47,24 @@ class WebsiteOptions implements JsonSerializable{
      * @var string
      *
      * @ORM\Column(type="string", nullable=true)
+     * @JMS\SerializedName("copyrightText")
      */
-    protected $copyrightText;
+    protected $copyrightText = "";
 
     /**
      * @var string
      *
-     * @Assert\Choice(choices = {"google", "xiti"}, message = "Choose a valid provider.")
+     * @Assert\Choice(choices = {"none", "google", "xiti"}, message = "Choose a valid provider.")
      * @ORM\Column(type="string", nullable=true)
+     * @JMS\SerializedName("analyticsProvider")
      */
-    protected $analyticsProvider;
+    protected $analyticsProvider = "none";
 
     /**
      * @var string
      *
      * @ORM\Column(type="string", nullable=true)
+     * @JMS\SerializedName("analyticsAccountId")
      */
     protected $analyticsAccountId;
 
@@ -66,6 +72,7 @@ class WebsiteOptions implements JsonSerializable{
      * @var text
      *
      * @ORM\Column(type="text", nullable=true)
+     * @JMS\SerializedName("cssCode")
      */
     protected $cssCode;
 
@@ -77,13 +84,16 @@ class WebsiteOptions implements JsonSerializable{
      *
      * @Assert\Length(max = 11)
      * @ORM\Column(type="string", nullable=true)
+     * @JMS\SerializedName("bgColor")
      */
-    protected $bgColor;
+    protected $bgColor = "#EFEFEF";
 
     /**
      * @var string
      *
      * @ORM\Column(type="string", nullable=true)
+     * @JMS\Accessor(getter="getBgImageForWeb")
+     * @JMS\SerializedName("bgImage")
      */
     protected $bgImage;
 
@@ -91,22 +101,26 @@ class WebsiteOptions implements JsonSerializable{
      * @var string
      *
      * @ORM\Column(type="string", nullable=true)
+     * @JMS\SerializedName("bgRepeat")
      */
-    protected $bgRepeat;
+    protected $bgRepeat = "no-repeat";
 
     /**
      * @var string
      *
      * @ORM\Column(type="string", nullable=true)
+     * @JMS\SerializedName("bgPosition")
      */
-    protected $bgPosition;
+    protected $bgPosition = "center center";
 
     /**
      * @var string
      *
      * @ORM\Column(type="integer", nullable=true)
+     * @JMS\SerializedName("totalWidth")
+     * @JMS\Accessor(getter="getTotalWidth")
      */
-    protected $totalWidth;
+    protected $totalWidth = 960;
 
     /** Banner Options */
 
@@ -115,13 +129,16 @@ class WebsiteOptions implements JsonSerializable{
      *
      * @Assert\Length(max = 11)
      * @ORM\Column(type="string", nullable=true)
+     * @JMS\SerializedName("bannerBgColor")
      */
-    protected $bannerBgColor;
+    protected $bannerBgColor = "#1466B8";
 
     /**
      * @var string
      *
      * @ORM\Column(type="string", nullable=true)
+     * @JMS\Accessor(getter="getBannerBgImageForWeb")
+     * @JMS\SerializedName("bannerBgImage")
      */
     protected $bannerBgImage;
 
@@ -129,27 +146,31 @@ class WebsiteOptions implements JsonSerializable{
      * @var string
      *
      * @ORM\Column(type="string", nullable=true)
+     * @JMS\SerializedName("bannerBgRepeat")
      */
-    protected $bannerBgRepeat;
+    protected $bannerBgRepeat = "no-repeat";
 
     /**
      * @var string
      *
      * @ORM\Column(type="string", nullable=true)
+     * @JMS\SerializedName("bannerBgPosition")
      */
-    protected $bannerBgPosition;
+    protected $bannerBgPosition = "center center";
 
     /**
      * @var integer
      *
      * @ORM\Column(type="integer", nullable=true)
+     * @JMS\SerializedName("bannerHeight")
      */
-    protected $bannerHeight;
+    protected $bannerHeight = 50;
 
     /**
      * @var boolean
      *
      * @ORM\Column(type="boolean")
+     * @JMS\SerializedName("bannerEnabled")
      */
     protected $bannerEnabled = true;
 
@@ -157,6 +178,7 @@ class WebsiteOptions implements JsonSerializable{
      * @var text
      *
      * @ORM\Column(type="text", nullable=true)
+     * @JMS\SerializedName("bannerText")
      */
     protected $bannerText;
 
@@ -167,13 +189,16 @@ class WebsiteOptions implements JsonSerializable{
      *
      * @Assert\Length(max = 11)
      * @ORM\Column(type="string", nullable=true)
+     * @JMS\SerializedName("footerBgColor")
      */
-    protected $footerBgColor;
+    protected $footerBgColor = "#1466B8";
 
     /**
      * @var string
      *
      * @ORM\Column(type="string", nullable=true)
+     * @JMS\Accessor(getter="getFooterBgImageForWeb")
+     * @JMS\SerializedName("footerBgImage")
      */
     protected $footerBgImage;
 
@@ -181,27 +206,31 @@ class WebsiteOptions implements JsonSerializable{
      * @var string
      *
      * @ORM\Column(type="string", nullable=true)
+     * @JMS\SerializedName("footerBgRepeat")
      */
-    protected $footerBgRepeat;
+    protected $footerBgRepeat = "no-repeat";
 
     /**
      * @var string
      *
      * @ORM\Column(type="string", nullable=true)
+     * @JMS\SerializedName("footerBgPosition")
      */
-    protected $footerBgPosition;
+    protected $footerBgPosition = "center center";
 
     /**
      * @var integer
      *
      * @ORM\Column(type="integer", nullable=true)
+     * @JMS\SerializedName("footerHeight")
      */
-    protected $footerHeight;
+    protected $footerHeight = 50;
 
     /**
      * @var boolean
      *
      * @ORM\Column(type="boolean")
+     * @JMS\SerializedName("footerEnabled")
      */
     protected $footerEnabled = true;
 
@@ -209,6 +238,7 @@ class WebsiteOptions implements JsonSerializable{
      * @var text
      *
      * @ORM\Column(type="text", nullable=true)
+     * @JMS\SerializedName("footerText")
      */
     protected $footerText;
 
@@ -220,67 +250,76 @@ class WebsiteOptions implements JsonSerializable{
      *
      * @Assert\Length(max = 11)
      * @ORM\Column(type="string", nullable=true)
+     * @JMS\SerializedName("menuBgColor")
      */
-    protected $menuBgColor;
+    protected $menuBgColor = "#E0E0E0";
 
     /**
      * @var string
      *
      * @Assert\Length(max = 11)
      * @ORM\Column(type="string", nullable=true)
+     * @JMS\SerializedName("sectionBgColor")
      */
-    protected $sectionBgColor;
+    protected $sectionBgColor = "#C7C7C7";
 
     /**
      * @var string
      *
      * @Assert\Length(max = 11)
      * @ORM\Column(type="string", nullable=true)
+     * @JMS\SerializedName("menuBorderColor")
      */
-    protected $menuBorderColor;
+    protected $menuBorderColor = "#C2C2C2";
 
     /**
      * @var string
      *
      * @Assert\Length(max = 7)
      * @ORM\Column(type="string", nullable=true)
+     * @JMS\SerializedName("menuFontColor")
      */
-    protected $menuFontColor;
+    protected $menuFontColor = "#4A4A4A";
 
     /**
      * @var string
      *
      * @Assert\Length(max = 11)
      * @ORM\Column(type="string", nullable=true)
+     * @JMS\SerializedName("sectionFontColor")
      */
-    protected $sectionFontColor;
+    protected $sectionFontColor = "#4A4A4A";
 
     /**
      * @var string
      *
      * @Assert\Length(max = 11)
      * @ORM\Column(type="string", nullable=true)
+     * @JMS\SerializedName("menuHoverColor")
      */
-    protected $menuHoverColor;
+    protected $menuHoverColor = "#A3A3A3";
 
     /**
      * @var string
      *
      * @ORM\Column(type="string", nullable=true)
+     * @JMS\SerializedName("menuFontFamily")
      */
-    protected $menuFontFamily;
+    protected $menuFontFamily = "inherit";
 
     /**
      * @var string
      *
      * @ORM\Column(type="string", nullable=true)
+     * @JMS\SerializedName("menuFontStyle")
      */
-    protected $menuFontStyle;
+    protected $menuFontStyle = "normal";
 
     /**
      * @var integer
      *
      * @ORM\Column(type="integer", nullable=true)
+     * @JMS\SerializedName("menuFontSize")
      */
     protected $menuFontSize = 12;
 
@@ -288,23 +327,26 @@ class WebsiteOptions implements JsonSerializable{
      * @var string
      *
      * @ORM\Column(type="string", nullable=true)
+     * @JMS\SerializedName("menuFontWeight")
      */
-    protected $menuFontWeight;
+    protected $menuFontWeight = "normal";
 
     /**
      * @var integer
      *
      * @ORM\Column(type="integer", nullable=true)
+     * @JMS\SerializedName("menuWidth")
      */
-    protected $menuWidth = 0;
+    protected $menuWidth = 150;
 
     /**
      * @var string
      *
      * @Assert\Choice(choices = {"vertical", "horizontal"}, message = "Choose a valid menu orientation.")
      * @ORM\Column(type="string", nullable=true)
+     * @JMS\SerializedName("menuOrientation")
      */
-    protected $menuOrientation;
+    protected $menuOrientation = "vertical";
 
     /**
      * @return mixed
@@ -419,6 +461,14 @@ class WebsiteOptions implements JsonSerializable{
     }
 
     /**
+     * @return string
+     */
+    public function getBgImageForWeb()
+    {
+        return $this->getWebPath('bgImage');
+    }
+
+    /**
      * @param string $bgImage
      */
     public function setBgImage($bgImage)
@@ -480,6 +530,14 @@ class WebsiteOptions implements JsonSerializable{
     public function getBannerBgImage()
     {
         return $this->bannerBgImage;
+    }
+
+    /**
+     * @return string
+     */
+    public function getBannerBgImageForWeb()
+    {
+        return $this->getWebPath('bannerBgImage');
     }
 
     /**
@@ -592,6 +650,14 @@ class WebsiteOptions implements JsonSerializable{
     public function getFooterBgImage()
     {
         return $this->footerBgImage;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFooterBgImageForWeb()
+    {
+        return $this->getWebPath('footerBgImage');
     }
 
     /**
@@ -968,54 +1034,5 @@ class WebsiteOptions implements JsonSerializable{
     public function getUploadDir()
     {
         return sprintf("uploads%swebsites%s".$this->getWebsite()->getId(), DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR);
-    }
-
-    /**
-     * (PHP 5 &gt;= 5.4.0)<br/>
-     * Specify data which should be serialized to JSON
-     * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
-     * @return mixed data which can be serialized by <b>json_encode</b>,
-     * which is a value of any type other than a resource.
-     */
-    public function jsonSerialize()
-    {
-        return array(
-            'copyrightEnabled'=> $this->getCopyrightEnabled(),
-            'copyrightText'=> $this->getCopyrightText(),
-            'analyticsProvider'=> $this->getAnalyticsProvider(),
-            'analyticsAccountId'=> $this->getAnalyticsAccountId(),
-            'cssCode'=> $this->getCssCode(),
-            'bgColor'=> $this->getBgColor(),
-            'bgImage'=> $this->getWebPath('bgImage'),
-            'bgRepeat'=> $this->getBgRepeat(),
-            'bgPosition'=> $this->getBgPosition(),
-            'bannerBgColor'=> $this->getBannerBgColor(),
-            'bannerBgImage'=> $this->getWebPath('bannerBgImage'),
-            'bannerBgRepeat'=> $this->getBannerBgRepeat(),
-            'bannerBgPosition'=> $this->getBgPosition(),
-            'bannerHeight'=> $this->getBannerHeight(),
-            'bannerEnabled'=> $this->getBannerEnabled(),
-            'bannerText'=> $this->getBannerText(),
-            'footerBgColor'=> $this->getFooterBgColor(),
-            'footerBgImage'=> $this->getWebPath('footerBgImage'),
-            'footerBgRepeat'=> $this->getFooterBgRepeat(),
-            'footerBgPosition'=> $this->getFooterBgPosition(),
-            'footerHeight'=> $this->getFooterHeight(),
-            'footerEnabled'=> $this->getFooterEnabled(),
-            'footerText'=> $this->getFooterText(),
-            'menuBgColor'=> $this->getMenuBgColor(),
-            'sectionBgColor'=> $this->getSectionBgColor(),
-            'menuBorderColor'=> $this->getMenuBorderColor(),
-            'menuFontColor'=> $this->getMenuFontColor(),
-            'menuHoverColor'=> $this->getMenuHoverColor(),
-            'menuFontFamily'=> $this->getMenuFontFamily(),
-            'menuFontStyle'=> $this->getMenuFontStyle(),
-            'menuFontWeight'=> $this->getMenuFontWeight(),
-            'menuFontSize'=> $this->getMenuFontSize(),
-            'menuWidth'=> $this->getMenuWidth(),
-            'menuOrientation'=> $this->getMenuOrientation(),
-            'totalWidth' => $this->getTotalWidth(),
-            'sectionFontColor' => $this->getSectionFontColor()
-        );
     }
 }

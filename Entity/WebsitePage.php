@@ -9,18 +9,17 @@
 namespace Icap\WebsiteBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\ORM\Event\LifecycleEventArgs;
 use Gedmo\Mapping\Annotation as Gedmo;
-use JsonSerializable;
+use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @Gedmo\Tree(type="nested")
  * @ORM\Table(name="icap__website_page")
  * @ORM\Entity(repositoryClass="Icap\WebsiteBundle\Repository\WebsitePageRepository")
- * @ORM\HasLifecycleCallbacks()
+ * @JMS\ExclusionPolicy("none")
  */
-class WebsitePage implements JsonSerializable{
+class WebsitePage{
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -36,6 +35,7 @@ class WebsitePage implements JsonSerializable{
     /**
      * @ORM\Column(type="datetime", name="creation_date")
      * @Gedmo\Timestampable(on="create")
+     * @JMS\Exclude
      */
     protected $creationDate;
 
@@ -50,6 +50,7 @@ class WebsitePage implements JsonSerializable{
      * @var text
      *
      * @ORM\Column(type="text", nullable=true)
+     * @JMS\SerializedName("richText")
      */
     protected $richText;
 
@@ -64,6 +65,7 @@ class WebsitePage implements JsonSerializable{
      * @var boolean
      *
      * @ORM\Column(type="boolean")
+     * @JMS\SerializedName("isSection")
      */
     protected $isSection = false;
 
@@ -75,32 +77,54 @@ class WebsitePage implements JsonSerializable{
     protected $description;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(type="string", nullable=false)
+     */
+    protected $type;
+
+    /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode")
      * @ORM\JoinColumn(name="resource_node_id", referencedColumnName="id", nullable=true)
+     * @JMS\Type("integer")
+     * @JMS\Accessor(getter="getResourceNodeId")
+     * @JMS\SerializedName("resourceNode")
      */
     protected $resourceNode;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(type="string", nullable=true)
+     * @JMS\SerializedName("resourceNodeType")
+     */
+    protected $resourceNodeType;
+
+    /**
      * @ORM\ManyToOne(targetEntity="Icap\WebsiteBundle\Entity\Website")
      * @ORM\JoinColumn(name="website_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")
+     * @JMS\Exclude
      */
     protected $website;
 
     /**
      * @Gedmo\TreeLeft
      * @ORM\Column(name="lft", type="integer")
+     * @JMS\Exclude
      */
     protected $left;
 
     /**
      * @Gedmo\TreeLevel
      * @ORM\Column(name="lvl", type="integer")
+     * @JMS\Exclude
      */
     protected $level;
 
     /**
      * @Gedmo\TreeRight
      * @ORM\Column(name="rgt", type="integer")
+     * @JMS\Exclude
      */
     protected $right;
 
@@ -114,10 +138,10 @@ class WebsitePage implements JsonSerializable{
      * @Gedmo\TreeParent
      * @ORM\ManyToOne(targetEntity="Icap\WebsiteBundle\Entity\WebsitePage")
      * @ORM\JoinColumn(name="parent_id", referencedColumnName="id", onDelete="CASCADE")
+     * @JMS\Type("integer")
+     * @JMS\Accessor(getter="getParentId")
      */
     protected $parent;
-
-    protected $previousSibling;
 
     /**
      * @return mixed
@@ -240,11 +264,40 @@ class WebsitePage implements JsonSerializable{
     }
 
     /**
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * @param string $type
+     */
+    public function setType($type)
+    {
+        $pageType = new WebsitePageTypeEnum($type);
+        $this->type = $pageType->getValue();
+    }
+
+    /**
      * @return mixed
      */
     public function getResourceNode()
     {
         return $this->resourceNode;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getResourceNodeId()
+    {
+        if ($this->resourceNode!==null) {
+            return $this->resourceNode->getId();
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -344,6 +397,14 @@ class WebsitePage implements JsonSerializable{
     }
 
     /**
+     * @return mixed
+     */
+    public function getParentId()
+    {
+        return $this->parent->getId();
+    }
+
+    /**
      * @param mixed $parent
      */
     public function setParent(WebsitePage $parent)
@@ -352,30 +413,18 @@ class WebsitePage implements JsonSerializable{
     }
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function getPreviousSibling()
+    public function getResourceNodeType()
     {
-        return $this->previousSibling;
-    }
-
-    public function setPreviousSibling(WebsitePage $sibling)
-    {
-        $this->previousSibling = $sibling;
+        return $this->resourceNodeType;
     }
 
     /**
-     * (PHP 5 &gt;= 5.4.0)<br/>
-     * Specify data which should be serialized to JSON
-     * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
-     * @return mixed data which can be serialized by <b>json_encode</b>,
-     * which is a value of any type other than a resource.
+     * @param string $resourceNodeType
      */
-    public function jsonSerialize()
+    public function setResourceNodeType($resourceNodeType)
     {
-        return array(
-            'id' => $this->getId(),
-            'website' => $this->getWebsite()->getId()
-        );
+        $this->resourceNodeType = $resourceNodeType;
     }
 }

@@ -1,0 +1,145 @@
+{% extends 'IcapWebsiteBundle::layout.html.twig' %}
+{% import 'IcapWebsiteBundle:Website:Macros/common_macros.html.twig' as commonMacros %}
+
+{% set optionTabs = {'structure':'fa-sitemap', 'general':'fa-th-large', 'menu':'fa-list', 'banner':'fa-angle-up', 'footer':'fa-angle-down'} %}
+{% block content %}
+    <div class="website-container" ng-app="websiteApp">
+        <div class="loading text-center" ng-if="!pageLoaded" >
+            {{ 'loading'|trans({},'icap_website') }}
+        </div>
+        <div class="website-body" ng-controller="designEditController">
+            <div class="panel admin-bar">
+                <ul class="nav nav-tabs admin-tab-options" role="tablist">
+                    {% for option, icon in optionTabs %}
+                        <li class="{{ option }}-options" ng-class="{'active':optionsWindow=='{{ option }}'}"><a href="#/{{ option }}"><span class="icon-bg"></span><span class="option-text"><i class="fa {{ icon }}"></i> <span class="visible-md-inline visible-lg-inline">{{ option|trans({}, 'icap_website') }}</span></span></a></li>
+                    {% endfor %}
+                    <li class="pull-right"><button class="btn btn-primary save-options-btn" ng-click="options.saveOptions()"><i class="fa fa-floppy-o"></i> <span class="visible-md-inline visible-lg-inline">Save options</span></button></li>
+                </ul>
+                <div class="admin-tabs">
+                    {% include 'IcapWebsiteBundle:Website:Edit/general_options.html.twig' %}
+                    {% include 'IcapWebsiteBundle:Website:Edit/menu_options.html.twig' %}
+                    {% include 'IcapWebsiteBundle:Website:Edit/banner_footer_options.html.twig' with {'tag':'banner'} %}
+                    {% include 'IcapWebsiteBundle:Website:Edit/banner_footer_options.html.twig' with {'tag':'footer'} %}
+                    {% include 'IcapWebsiteBundle:Website:Edit/structure.html.twig' with {'pageTypes': pageTypes} %}
+                </div>
+            </div>
+            <div class="website-preview" ng-show="optionsWindow!='structure'" ng-style="websitePreviewStyle()">
+                <div class="website-preview-inner" ng-style="websitePreviewInnerStyle()">
+                    <div class="banner resizeable-bottom" ng-style="bannerStyle()" ng-show="options.bannerEnabled">
+                        <div ng-show="!options.bannerEditorActive" ng-bind-html="options.deliberatelyTrustSnippet('bannerText')"></div>
+                        <div ng-show="options.bannerEditorActive" ng-style="{'height':options.bannerHeight+'px'}"><textarea id="banner-text" ng-style="{'height':options.footerHeight}" class="form-control" ui-tinymce ng-model="options.bannerText"></textarea></div>
+                    </div>
+                    <div class="horizontal-resizer" resizer-bottom resizer="options.bannerHeight" resizer-max="200" ng-style="bannerResizerStyle()" resizer-min="0" ng-show="options.bannerEnabled">
+                        <div class="resizer-box-left"></div>
+                        <div class="resizer-box-center"></div>
+                        <div class="resizer-box-right"></div>
+                    </div>
+                    <div class="website-container">
+
+                        <div class="horizontal-menu" ng-show="options.menuOrientation=='horizontal'" ng-style="menuHorizontalStyle()">
+                            <flexnav menu="menu.root" nav-style="options" options="flexnavOptions" breakpoint="breakPoint"></flexnav>
+                        </div>
+                        <div class="container-content" ng-style="{height: contentHeight}">
+                            <div class="vertical-menu resizeable-right float-left" ng-show="options.menuOrientation=='vertical'" ng-style="menuVerticalStyle()">
+                                <wxy-push-menu menu="menu.root" menu-style="options" options="pushMenuOptions" menu-width="options.menuWidth"></wxy-push-menu>
+                            </div>
+                            <div class="vertical-resizer float-left" ng-show="options.menuOrientation=='vertical'" ng-mousedown="optionsWindow='menu'" resizer-right resizer="options.menuWidth" ng-style="menuResizerStyle()" resizer-max="200" resizer-min="50">
+                                <div class="resizer-box-top"></div>
+                                <div class="resizer-box-middle"></div>
+                                <div class="resizer-box-bottom"></div>
+                            </div>
+                            <div class="content" change-height="contentHeight" style="min-height: 200px;" ng-style="{'margin-left':((options.menuOrientation=='vertical')?(options.menuWidth+15):0)+'px'}">
+                                <div>
+                                    <div ng-if="currentClickedItem.type=='{{ pageTypes.blank }}'" ng-bind-html="currentClickedItem.trustedContent()"></div>
+                                    <iframe width="100%" iframe-height-on-load ng-if="currentClickedItem.type=='{{ pageTypes.url }}'" ng-src="{{ '{{ currentClickedItem.getTrustedUrl() }}' }}"></iframe>
+                                    <iframe width="100%" iframe-height-on-load ng-if="currentClickedItem.type=='{{ pageTypes.resource }}'" ng-src="{{ '{{ currentClickedItem.generateResourceUrl() }}' }}"></iframe>
+                                </div>
+                            </div>
+                            <div class="clear"></div>
+                        </div>
+                    </div>
+
+                    <div class="footer resizeable-bottom" ng-style="footerStyle()" ng-show="options.footerEnabled">
+                        <div ng-show="!options.footerEditorActive" ng-bind-html="options.deliberatelyTrustSnippet('footerText')"></div>
+                        <div ng-show="options.footerEditorActive" ng-style="{'height':options.footerHeight+'px'}"><textarea id="footer-text" ng-style="{'height':options.footerHeight}" class="form-control" ui-tinymce ng-model="options.footerText"></textarea></div>
+                        <div class="copyright-text" ng-if="options.copyrightEnabled&&!options.footerEditorActive" ng-style="{'color':options.menuFontColor}">© Copyright {{ '{{ options.copyrightText }}' }}</div>
+                    </div>
+                    <div class="horizontal-resizer" ng-style="footerResizerStyle()" resizer-bottom resizer="options.footerHeight" resizer-max="200" resizer-min="0" ng-show="options.footerEnabled">
+                        <div class="resizer-box-left"></div>
+                        <div class="resizer-box-center"></div>
+                        <div class="resizer-box-right"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('bundles/icapwebsite/css/angular/bootstrap-additions.min.css') }}" screen="media" />
+    <link rel="stylesheet" href="{{ asset('bundles/icapwebsite/css/angular/angular-ui-tree.min.css') }}" screen="media" />
+    <link rel="stylesheet" href="{{ asset('bundles/icapwebsite/css/angular/angular-motion.min.css') }}" screen="media" />
+    {% stylesheets debug=false filter='lessphp, cssmin' output='bundles/icapwebsite/css/style-edit.css'
+    "@IcapWebsiteBundle/Resources/views/less/edit.less"
+    %}
+    <link rel="stylesheet" href="{{ asset_url }}" screen="media" />
+    {% endstylesheets %}
+    <link rel="stylesheet" href="{{ asset('bundles/icapwebsite/css/angular/pushmenu.css') }}" screen="media" />
+    <link rel="stylesheet" href="{{ asset('bundles/icapwebsite/css/angular/flexnav.css') }}" screen="media" />
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        window.websiteId = {{ _resource.id }};
+        window.websiteOptions = {{ _resource.options|serialize('json', serialization_context().setSerializeNull(true))|raw }};
+        window.basePath = "{{ app.request.basePath }}";
+        window.websitePath = "{{ path('icap_website_view',{'websiteId': _resource.id}) }}";
+        window.optionTabs = [{% for option, icon in optionTabs  %} "{{ option }}"{% if not loop.last %},{% endif %} {% endfor %}];
+        window.pages = {{ _resource.pages|serialize('json', serialization_context().setSerializeNull(true))|raw }};
+        window.resourceTypes = {
+            {% for resourceType in resourceTypes %}
+            "{{ resourceType.getName() }}": {
+                "name": "{{ resourceType.getName()|trans({}, 'resource') }}"
+            }{% if loop.last != true %},{% endif %}
+            {% endfor %}
+        };
+    </script>
+
+    {{ commonMacros.angularScripts() }}
+
+    {#
+    TODO all files to one minified file
+    {% javascripts debug=false filter='jsmin' output='js/website/website-angular.js'
+    '@IcapWebsiteBundle/Resources/public/js/services/utilitiesFactory.js'
+    %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+    #}
+    <script type="text/javascript" src="{{ asset('bundles/icapwebsite/js/vendor/angular-ui/ui-tree/angular-ui-tree.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/icapwebsite/js/services/utilitiesFactory.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/icapwebsite/js/services/fileReaderFactory.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/icapwebsite/js/services/treeFactory.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/icapwebsite/js/directives/resourcePickerDirective.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/icapwebsite/js/vendor/angular-ui/multi-level-push-menu/pushmenu.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/icapwebsite/js/vendor/angular-ui/ui-flexnav/flexnav.js') }}"></script>
+
+    <script type="text/javascript" src="{{ asset('bundles/icapwebsite/js/editWebApp.js') }}"></script>
+
+    <script type="text/javascript" src="{{ asset('bundles/icapwebsite/js/services/websiteOptionsFactory.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/icapwebsite/js/services/globalRequestHandlingFactory.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/icapwebsite/js/config/httpInterceptor.js') }}"></script>
+
+    <script type="text/javascript" src="{{ asset('bundles/icapwebsite/js/controllers/resizeController.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/icapwebsite/js/controllers/designEditController.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/icapwebsite/js/directives/resizeDirective.js') }}"></script>
+
+    <script type="text/javascript" src="{{ asset('bundles/icapwebsite/js/templates/menu_renderer.tpl.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/icapwebsite/js/templates/tree_renderer.tpl.js') }}"></script>
+
+    <script type="text/javascript" src="{{ url('bazinga_exposetranslation_js', { 'domain_name': 'icap_website' }) }}"></script>
+
+
+{% endblock %}

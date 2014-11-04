@@ -1,0 +1,73 @@
+<!-- CONTENT EDITOR -->
+<div class="structure-container container-fluid" ng-show="optionsWindow=='structure'">
+    <div class="row">
+        <div class="edit-menu-container col-sm-3">
+            <button class="btn btn-primary btn-xs" ng-click="createNewPageForm()"><i class="fa fa-plus"></i> {{ 'add_new_page'|trans({}, 'icap_website') }}</button>
+            <div ui-tree="treeOptions" keep-drag-content-on-scene="true" id="tree-root">
+                <ul id="nd-{{ '{{ menu.root.id }}' }}" class="edit-menu" ui-tree-nodes ng-model="menu.root.children">
+                    <li id="nd-{{ '{{ node.id }}' }}" ng-repeat="node in menu.root.children" ui-tree-node ui-tree-handle ng-include="'tree_renderer.tpl'"></li>
+                </ul>
+            </div>
+        </div>
+        <div class="edit-page-container col-sm-9">
+            <div ng-if="menu.currentEditPageNode!=null && menu.confirmDelete == false">
+                <form class="form" role="form">
+                    <div class="form-group">
+                        <label for="page-title">{{ 'title'|trans({}, 'icap_website') }}</label>
+                        <input id="page-title" class="form-control" type="text" ng-model="menu.currentEditPageNode.title" placeholder="title" />
+                    </div>
+                    <div class="form-group">
+                        <label for="page-description">{{ 'description'|trans({}, 'icap_website') }}</label>
+                        <textarea id="page-description" class="form-control" ng-model="menu.currentEditPageNode.description" placeholder="description"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <input id="page-visible" type="checkbox" ng-model="menu.currentEditPageNode.visible" />
+                        <label for="page-visible">{{ 'visible'|trans({}, 'icap_website') }}</label>
+                    </div>
+                    <div class="form-group">
+                        <input id="page-is-section" type="checkbox" ng-model="menu.currentEditPageNode.isSection" />
+                        <label for="page-is-section">{{ 'section'|trans({}, 'icap_website') }}</label>
+                    </div>
+                    <div class="form-group">
+                        <label for="page-type">{{ 'type'|trans({}, 'icap_website') }}</label>
+                        <select ng-model="menu.currentEditPageNode.type">
+                            {% for type in pageTypes %}
+                                <option value="{{ type }}">{{ (type~"_page")|trans({}, 'icap_website') }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group" ng-if="menu.currentEditPageNode.type=='{{ pageTypes.blank }}'">
+                        <label for="page-richtext">{{ 'content'|trans({}, 'icap_website') }}</label>
+                        <textarea id="page-richtext" class="form-control" ui-tinymce ng-model="menu.currentEditPageNode.richText"></textarea>
+                    </div>
+                    <div class="form-group" ng-if="menu.currentEditPageNode.type=='{{ pageTypes.url }}'">
+                        <label for="page-url">{{ 'url'|trans({}, 'icap_website') }}</label>
+                        <input id="page-url" type="url" class="form-control" ng-model="menu.currentEditPageNode.url" placeholder="http://www.example.com"/>
+                    </div>
+                    <div class="form-group" ng-if="menu.currentEditPageNode.type=='{{ pageTypes.resource }}'">
+                        <label for="page-resource-node">{{ 'resource'|trans({}, 'icap_website') }}</label>
+                        <button type="button" class="btn btn-sm btn-success" data-ui-resource-picker="resourcePickerConfig">
+                            <span ng-if="!menu.currentEditPageNode.resourceNode">
+                                <i class="fa fa-plus"></i> {{ 'add_resource'|trans({}, 'icap_website') }}
+                            </span>
+                            <span ng-if="menu.currentEditPageNode.resourceNode">
+                                <i class="fa fa-refresh"></i> {{ 'change_resource'|trans({}, 'icap_website') }}
+                            </span>
+                        </button>
+                        <input id="page-resource-node" type="hidden" class="form-control" ng-model="menu.currentEditPageNode.resourceNode"/>
+                        <input id="page-resource-node" type="hidden" class="form-control" ng-model="menu.currentEditPageNode.resourceNodeType"/>
+                    </div>
+                    <button ng-click="saveWebsitePage()" class="btn btn-primary">{{ 'save'|trans({}, 'icap_website') }}</button>
+                </form>
+            </div>
+            <div ng-if="menu.confirmDelete == true">
+                <div>{{ 'confirm_delete_message'|trans({}, 'icap_website') }}</div>
+                <div>
+                    <button class="btn btn-primary" ng-click="removeCurrentPageNode()">{{ 'confirm'|trans({}, 'icap_website') }}</button>
+                    <button class="btn btn-default" ng-click="cancelPageNodeDelete()">{{ 'cancel'|trans({}, 'icap_website') }}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- END OF CONTENT EDITOR -->

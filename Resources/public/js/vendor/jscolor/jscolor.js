@@ -362,8 +362,7 @@ var jscolor = {
 		this.pickerInsetColor = 'ThreeDShadow ThreeDHighlight ThreeDHighlight ThreeDShadow'; // CSS color
 		this.pickerZIndex = 10000;
 
-
-		for(var p in prop) {
+        for(var p in prop) {
 			if(prop.hasOwnProperty(p)) {
 				this[p] = prop[p];
 			}

@@ -1,6 +1,5 @@
+'use strict';
 (function () {
-    'use strict';
-
     angular.module('websiteApp').factory('WebsiteOptions', ['$http', '$q', '$upload', '$sce', 'UtilityFunctions', function($http, $q, $upload, $sce, UtilityFunctions){
         function  WebsiteOptions (websiteOptions) {
             //General Options
@@ -13,11 +12,12 @@
             this.analyticsAccountId = websiteOptions.analyticsAccountId;
             this.copyrightEnabled = websiteOptions.copyrightEnabled;
             this.copyrightText = websiteOptions.copyrightText;
-            this.totalWidth = websiteOptions.totalWidth==0?800:websiteOptions.totalWidth;
-            this.isFullScreen = websiteOptions.totalWidth==0;
+            this.totalWidth = (websiteOptions.totalWidth==0||websiteOptions.totalWidth==null)?800:websiteOptions.totalWidth;
+            this.isFullScreen = websiteOptions.totalWidth==0||websiteOptions.totalWidth==null;
 
             //Menu options
             this.menuOrientation = websiteOptions.menuOrientation;
+            this.menuBorderColor = websiteOptions.menuBorderColor;
             this.menuWidth = websiteOptions.menuWidth;
             this.menuFontSize = websiteOptions.menuFontSize;
             this.menuFontFamily = websiteOptions.menuFontFamily;
@@ -37,6 +37,7 @@
             this.bannerBgPosition = websiteOptions.bannerBgPosition;
             this.bannerBgRepeat = websiteOptions.bannerBgRepeat;
             this.bannerText = websiteOptions.bannerText;
+            this.bannerEditorActive = false;
 
             //Footer options
             this.footerEnabled = websiteOptions.footerEnabled;
@@ -46,12 +47,12 @@
             this.footerBgPosition = websiteOptions.footerBgPosition;
             this.footerBgRepeat = websiteOptions.footerBgRepeat;
             this.footerText = websiteOptions.footerText;
+            this.footerEditorActive = false;
             this.temp = {
                 bgImagePath : null,
                 bannerBgImagePath: null,
                 footerBgImagePath: null
             }
-            this.jsonSerialize = jsonSerialize;
         }
         WebsiteOptions.prototype.getImageStyleText = function(imageStr) {
             if (UtilityFunctions.isNotBlank(this[imageStr])) {
@@ -77,21 +78,25 @@
                 });
         }
         WebsiteOptions.prototype.proceedImageUpload = function($files, imageStr) {
+            var options = this;
             return $upload.upload({
                 url : Routing.generate('icap_website_options_image_upload', {websiteId: websiteId, imageStr: imageStr}),
                 method: 'POST',
                 fileFormDataName: 'imageFile',
                 file: $files[0]
             }).success(function(response) {
+                options[imageStr] = response[imageStr];
                 return response;
             }).error(function(response){
                 return $q.reject(response);
             });
         }
         WebsiteOptions.prototype.proceedImagePathUpdate = function(newPath, imageStr) {
+            var options = this;
             return $http.put(Routing.generate('icap_website_options_image_update', {websiteId: websiteId, imageStr: imageStr}), {"newPath" : newPath})
                 .then(function(response) {
                     if(typeof response.data === 'object'){
+                        options[imageStr] = response.data[imageStr];
                         return response;
                     } else {
                         return $q.reject(response);
@@ -143,7 +148,7 @@
             return $sce.trustAsHtml(this[strVar]);
         }
 
-        var jsonSerialize = function() {
+        WebsiteOptions.prototype.jsonSerialize = function() {
             return {
                 bgColor : this.bgColor,
                 bgPosition : this.bgPosition,
@@ -162,6 +167,7 @@
                 menuFontWeight : this.menuFontWeight,
                 menuFontColor : this.menuFontColor,
                 menuBgColor : this.menuBgColor,
+                menuBorderColor: this.menuBorderColor,
                 menuHoverColor : this.menuHoverColor,
                 sectionBgColor : this.sectionBgColor,
                 sectionFontColor : this.sectionFontColor,

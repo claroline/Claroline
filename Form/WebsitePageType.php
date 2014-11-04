@@ -20,16 +20,20 @@ class WebsitePageType extends AbstractType
                 'text'
             )
             ->add(
+                'type',
+                'text'
+            )
+            ->add(
                 'description',
                 'text'
             )
             ->add(
                 'visible',
-                'boolean'
+                'checkbox'
             )
             ->add(
                 'isSection',
-                'boolean'
+                'checkbox'
             )
             ->add(
                 'richText',
@@ -47,6 +51,10 @@ class WebsitePageType extends AbstractType
                     'property' => 'id'
                 )
             )
+            ->add(
+                'resourceNodeType',
+                'text'
+            )
         ;
     }
 
@@ -57,7 +65,7 @@ class WebsitePageType extends AbstractType
     {
         return 'icap_website_page_type';
     }
-    
+
     /**
      * @param OptionsResolverInterface $resolver
      */

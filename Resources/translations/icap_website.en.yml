@@ -15,6 +15,7 @@ icap_website_type_name: Name
 'width': Width
 'height': Height
 'hover_color': Hover color
+'border_color': Border color
 'section_color': Section color
 'font_color': Font color
 'section_font_color': Section font color
@@ -35,4 +36,33 @@ icap_website_type_name: Name
 'vertically': Vertically
 'both': Both
 'activate': Enable
+'disable': Disable
 'save_options': Save options
+'editor_enable': Enable rich text editor
+'editor_disable': Disable rich text editor
+'add_new_page': Add new page
+'title': Title
+'description': Description
+'visible': Visible
+'section': Section
+'type': Type
+'content': Content
+'resource': Resource
+'save': Save
+'url': URL
+'blank_page': Blank page
+'url_page': External URL
+'resource_page': Platform resource
+'confirm': Confirm
+'cancel': Cancel
+'confirm_delete_message': Are you sure you want to permanently delete '{{ menu.currentPageNode.title }}' and all it's children?
+'add_resource': Add resource
+'change_resource': Change resource
+'error': Error
+'error_500': Your action has not been processed because of a server's internal error. If the error persists please contact our support team.
+'error_511': This action needs authentication. If you were authenticated before then your session has timed out. Please log in to platform and try again.
+'error_401': You don't have sufficient permissions to proceed to this action.
+'error_417': The action failed because a required parameter was missing or was invalid.
+'success': Success
+'success_message': Your request was processed successfully
+'loading': loading...

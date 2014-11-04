@@ -1,0 +1,23 @@
+<div class="{{ tag }}-options" ng-show="optionsWindow=='{{ tag }}'">
+    <div class="float-left">
+        <div>
+            <button class="btn btn-default" id="has-{{ tag }}" ng-show="!options.{{ tag }}Enabled" ng-click="options.{{ tag }}Enabled=true">{{ 'activate'|trans({}, 'icap_website') }}</button>
+            <button class="btn btn-default active" id="has-{{ tag }}" ng-show="options.{{ tag }}Enabled" ng-click="options.{{ tag }}Enabled=false">{{ 'disable'|trans({}, 'icap_website') }}</button>
+        </div>
+        <div>
+            <label for="{{ tag }}-bg-color">{{ 'bg_color'|trans({},'icap_website') }}</label>
+            <input class="color form-control" id="{{ tag }}-bg-color" ng-model="options.{{ tag }}BgColor"/>
+        </div>
+        <div>
+            <label for="{{ tag }}-height">{{ 'height'|trans({},'icap_website') }}</label>
+            <input type="number" class="form-control" id="{{ tag }}-height" max="200" ng-model="options.{{ tag }}Height"/> px
+        </div>
+    </div>
+    {% include 'IcapWebsiteBundle:Website:Edit/bg_image_repeat.html.twig' with {'tag':tag} %}
+    <div class="float-left">
+        <label for="{{ tag }}-text">{{ 'rich_content'|trans({}, 'icap_website') }}</label><br/>
+        <button ng-show="!options.{{ tag }}EditorActive" ng-click="options.{{ tag }}EditorActive=true" class="btn btn-default">{{ 'editor_enable'|trans({}, 'icap_website') }}</button>
+        <button ng-show="options.{{ tag }}EditorActive" ng-click="options.{{ tag }}EditorActive=false" class="btn btn-default active">{{ 'editor_disable'|trans({}, 'icap_website') }}</button>
+    </div>
+    <div class="clearfix"></div>
+</div>

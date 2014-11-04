@@ -17,16 +17,30 @@ class WebsitePageRepository extends NestedTreeRepository{
     /**
      * @param Website $website
      * @param boolean $isAdmin
-     * @param boolean $isArray (return array or html code)
      * @param boolean $isMenu (get page collection or array collection)
      *
      * @return mixed
      */
-    public function buildPageTree(Website $website, $isAdmin, $isArray = false, $isMenu = false)
+    public function buildPageTree(Website $website, $isAdmin, $isMenu = false)
     {
         $queryBuilder = $this->createQueryBuilder('page');
-        if ($isMenu) {
-            $queryBuilder->select('page');
+        if (!$isMenu) {
+            $queryBuilder->select("
+                page.id,
+                page.title,
+                page.visible,
+                page.isSection,
+                page.left,
+                page.level,
+                page.right,
+                IDENTITY(page.parent) AS parent,
+                IDENTITY(page.resourceNode) AS resourceNode,
+                page.resourceNodeType,
+                page.url,
+                page.richText,
+                page.root,
+                page.type
+            ");
         } else {
             $queryBuilder->select('
                 page.id,
@@ -37,7 +51,7 @@ class WebsitePageRepository extends NestedTreeRepository{
                 page.level,
                 page.right,
                 page.root,
-                IDENTITY(page.parent)
+                page.type
             ');
         }
 
@@ -51,19 +65,16 @@ class WebsitePageRepository extends NestedTreeRepository{
                 ->setParameter('visible', true);
         }
 
-        if($isArray){
-            $tree = $this->buildTreeArray($queryBuilder->getQuery()->getArrayResult());
-        } else {
-            $options = array('decorate' => false);
-            $tree = $this->buildTree($queryBuilder->getQuery()->getArrayResult(), $options);
-        }
+        $options = array('decorate' => false);
+        $nodes = $queryBuilder->getQuery()->getArrayResult();
+        $tree = $this->buildTreeArray($nodes, $options);
 
         return $tree;
     }
 
     /**
      * @param Website $website
-     * @param $pageId
+     * @param $pageIds
      * @param $isAdmin
      * @param $isAPI
      *

@@ -1,185 +1,137 @@
 {% extends 'IcapWebsiteBundle::layout.html.twig' %}
+{% import 'IcapWebsiteBundle:Website:Macros/common_macros.html.twig' as commonMacros %}
 
-{% set optionTabs = {'general':'fa-th-large', 'menu':'fa-list', 'banner':'fa-angle-up', 'footer':'fa-angle-down', 'structure':'fa-sitemap'} %}
+{% set options = _resource.options %}
+
 {% block content %}
-    <div class="website-container" ng-app="websiteApp">
+    <div class="website-container" ng-controller="designViewController">
         <div class="loading text-center" ng-if="!pageLoaded" >
-            patienter
+            {{ 'loading'|trans({},'icap_website') }}
         </div>
-        <div class="website-body" ng-controller="designController">
-            <div class="panel admin-bar">
-                <ul class="nav nav-tabs admin-tab-options" role="tablist">
-                    {% for option, icon in optionTabs %}
-                        <li class="{{ option }}-options" ng-class="{'active':optionsWindow=='{{ option }}'}"><a href="#/{{ option }}"><span class="icon-bg"></span><span class="option-text"><i class="fa {{ icon }}"></i> <span class="visible-md-inline visible-lg-inline">{{ option|trans({}, 'icap_website') }}</span></span></a></li>
-                    {% endfor %}
-                    <li class="pull-right"><button class="btn btn-primary save-options-btn" ng-click="options.saveOptions()"><i class="fa fa-floppy-o"></i> <span class="visible-md-inline visible-lg-inline">Save options</span></button></li>
-                </ul>
-                <div class="admin-tabs">
-                    {% include 'IcapWebsiteBundle:Website:Admin/general_options.html.twig' %}
-                    {% include 'IcapWebsiteBundle:Website:Admin/menu_options.html.twig' %}
-                    {% include 'IcapWebsiteBundle:Website:Admin/banner_footer_options.html.twig' with {'tag':'banner'} %}
-                    {% include 'IcapWebsiteBundle:Website:Admin/banner_footer_options.html.twig' with {'tag':'footer'} %}
-                </div>
-            </div>
-            <div class="website-preview" ng-show="optionsWindow!='structure'" ng-style="websitePreviewStyle()">
-                <div class="website-preview-inner" ng-style="websitePreviewInnerStyle()">
-                    <div class="banner resizeable-bottom" ng-style="bannerStyle()" ng-show="options.bannerEnabled" ng-click="optionsWindow='banner'">
-                        <div ng-bind-html="options.deliberatelyTrustSnippet('bannerText')"></div>
+        <div class="website-body">
+            {% if options.bannerEnabled %}
+                <header>
+                    <div class="banner">
+                        {% if options.bannerText is not empty %}
+                            <div class="bannerContent">{{ options.bannerText|raw }}</div>
+                        {% endif %}
                     </div>
-                    <div class="horizontal-resizer" resizer-bottom resizer resizer-max="200" ng-style="bannerResizerStyle()" resizer-min="0" resizer-variable="options.bannerHeight" ng-show="options.bannerEnabled">
-                        <div class="resizer-box-left"></div>
-                        <div class="resizer-box-center"></div>
-                        <div class="resizer-box-right"></div>
-                    </div>
-                    <div class="website-container">
-
-                        <div class="horizontal-menu" ng-show="options.menuOrientation=='horizontal'" ng-style="menuHorizontalStyle()" ng-click="optionsWindow='menu'">Horizontal menu</div>
-                        <div class="container-content" >
-                            <div class="vertical-menu resizeable-right float-left" ng-show="options.menuOrientation=='vertical'" ng-click="optionsWindow='menu'" ng-style="menuVerticalStyle()">
-                                <ul>
-                                    <li ng-repeat='data in menu.root.children' ng-init="template = '{{ asset('bundles/icapwebsite/templates/menu_renderer.html') }}'" ng-include="'{{ asset('bundles/icapwebsite/templates/menu_renderer.html') }}'">
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="vertical-resizer float-left" ng-show="options.menuOrientation=='vertical'" ng-mousedown="optionsWindow='menu'" resizer-right resizer ng-style="menuResizerStyle()" resizer-max="200" resizer-min="50" resizer-variable="options.menuWidth">
-                                <div class="resizer-box-top"></div>
-                                <div class="resizer-box-middle"></div>
-                                <div class="resizer-box-bottom"></div>
-                            </div>
-                            <div class="content" change-height change-height-variable="contentHeight" ng-style="{'margin-left':((options.menuOrientation=='vertical')?(options.menuWidth+15):0)+'px'}">
-                                <div>
-                                    content {{ '{{contentHeight}}' }} It is! It's the city of New New York! Strictly speaking, it's the fifteenth New York since the original, so that makes it New-New-New-New-New-New-New-New-
-                                    New-New-New-New-New-New-New New York. Oh my word! Shall we ask for a better quality of door so we can escape? I can't stand burnt toast. I loathe bus stations. Terrible places.
-                                    Full of lost luggage and lost soulsds. Don't you think she looks tired? You'll never understand. I want to see the universe, not to rule it. Rest is for the weary, sleep is for
-                                    the dead. I feel like a hungry man eager for the feast! Well, my Doctorate is purely honorary and Harry is only qualified to work on sailors. Good grief.... It's a Stegosaurus!
-                                    I'm Dr. James McCrimmon from the township of Balamory. I just have one question... do you know how to fly this thing? Jamie, remind me to give you a lesson in tying knots,
-                                    sometime. Eh? Doctor who? What's he talking about...? Logic, my dear Zoe, merely enables one to be wrong with authority. You may disguise your features but you can never
-                                    disguise your intent. You don't understand so you find excuses. How can you miss me? I'm easy to find. I'm the guy with two hearts, remember? My ship...my TARDIS...
-                                    Nine hundred years of time and space, and I've never been slapped by someone's mother. Kidneys! I have kidneys. And I don't like the colour. You're a clumsy,
-                                    ham fisted idiot! If you could touch the alien sand and hear the cries of strange birds, and watch them wheel in another sky, would that satisfy you?
-                                    We're trying to defeat the Daleks, not start a jumble sale! Sorry, must dash! Renewed? Have I? That's it, I've been renewed. It's part of the TARDIS. Without it
-                                    I couldn't survive. <br/><br/>Americium bismuth californium cobalt copernicium einsteinium fluorine hassium holmium hydrogen iridium livermorium meitnerium
-                                    nobelium osmium platinum protactinium radium roentgenium ruthenium seaborgium selenium thulium ununoctium ununseptium zinc. Boron carbon cobalt dubnium
-                                    dysprosium europium gadolinium hafnium indium lutetium nobelium silicon strontium tantalum technetium thulium tin vanadium zirconium. Antimony bromine
-                                    dysprosium gold iridium lutetium neodymium nickel phosphorus potassium radon technetium thallium thorium tungsten ununoctium ununtrium uranium xenon yttrium.
-                                    Cerium copernicium curium germanium hafnium helium iridium neodymium nickel oxygen praseodymium rhenium roentgenium selenium silicon tantalum technetium zirconium.
-                                    Barium beryllium bismuth hydrogen indium lithium magnesium meitnerium mercury nitrogen oxygen ruthenium seaborgium tantalum technetium terbium thallium thorium ununseptium.
-                                    Berkelium caesium copper fermium gallium helium indium krypton ruthenium titanium ununtrium uranium vanadium zinc. Actinium barium cadmium californium cerium chromium
-                                    copernicium dubnium europium krypton meitnerium nickel nitrogen nobelium phosphorus potassium radon ruthenium rutherfordium scandium silicon thulium ununpentium
-                                    uranium xenon yttrium. Aluminium antimony cobalt copper gadolinium krypton lanthanum lead meitnerium tantalum thorium ununtrium. Beryllium caesium chromium copper
-                                    flerovium lutetium molybdenum plutonium promethium samarium scandium silver technetium xenon ytterbium yttrium. Astatine bromine cadmium caesium flerovium
-                                    fluorine gadolinium holmium lead magnesium molybdenum nickel platinum praseodymium samarium thallium titanium ununpentium vanadium. Aluminium
-                                    americium argon arsenic berkelium beryllium boron bromine calcium californium dysprosium erbium gadolinium krypton manganese mendelevium neptunium
-                                    phosphorus plutonium radium rutherfordium scandium seaborgium tellurium zinc. Astatine calcium dysprosium europium fluorine francium germanium gold lutetium
-                                    meitnerium mendelevium mercury neptunium osmium plutonium polonium promethium radium radon ruthenium rutherfordium technetium tin vanadium xenon zirconium.
-                                    Actinium aluminium americium bismuth chlorine curium dubnium einsteinium europium fermium gallium holmium lithium livermorium meitnerium mercury neon niobium
-                                    oxygen potassium promethium radium ruthenium selenium sulfur tin zinc.
-                                </div>
-                            </div>
-                            <div class="clear"></div>
-                        </div>
-                    </div>
-
-                    <div class="footer resizeable-bottom" ng-style="footerStyle()" ng-show="options.footerEnabled" ng-click="optionsWindow='footer'">
-                        <div ng-bind-html="options.deliberatelyTrustSnippet('footerText')"></div>
-                        <div class="copyright-text" ng-if="options.copyrightEnabled" ng-style="{'color':options.menuFontColor}">© Copyright {{ '{{ options.copyrightText }}' }}</div>
-                    </div>
-                    <div class="horizontal-resizer" ng-style="footerResizerStyle()" resizer-bottom resizer resizer-max="200" resizer-min="0" resizer-variable="options.footerHeight" ng-show="options.footerEnabled">
-                        <div class="resizer-box-left"></div>
-                        <div class="resizer-box-center"></div>
-                        <div class="resizer-box-right"></div>
+                </header>
+            {% endif %}
+            {% if options.menuOrientation == 'horizontal' %}
+                <nav ng-if="false">
+                    {{commonMacros.buildMenu(_resource.pages[0], _resource.id)}}
+                </nav>
+                <flexnav menu="menu" nav-style="options" options="flexnavOptions" breakpoint="breakPoint"></flexnav>
+            {% endif %}
+            <div class="website-content" ng-style="{height: contentHeight+'px'}">
+                {% if options.menuOrientation == 'vertical' %}
+                    <aside ng-if="false">
+                        <nav>
+                            {{commonMacros.buildMenu(_resource.pages[0], _resource.id)}}
+                        </nav>
+                    </aside>
+                    <wxy-push-menu menu="menu" menu-style="options" options="pushMenuOptions" menu-width="options.menuWidth"></wxy-push-menu>
+                {% endif %}
+                <div class="website-page-content" change-height="contentHeight" style="min-height: 400px;">
+                    <div>
+                        {% if currentPage is defined and currentPage is not empty %}
+                            {% if currentPage.type == pageTypes.blank %}
+                                <div>{{ currentPage.richText|raw }}</div>
+                            {% elseif currentPage.type == pageTypes.url %}
+                                <iframe width="100%" iframe-height-on-load="contentHeight" src="{{ currentPage.url }}"></iframe>
+                            {% elseif currentPage.type == pageTypes.resource %}
+                                <iframe width="100%" iframe-height-on-load="contentHeight" src="{{ path('claro_resource_open', {
+                                'resourceType': currentPage.resourceNodeType,
+                                'node': currentPage.resourceNode.id
+                                }) }}"></iframe>
+                            {% endif %}
+                        {% endif %}
                     </div>
                 </div>
             </div>
-            <!-- CONTENT EDITOR -->
-            <div class="structure-container" ng-show="optionsWindow=='structure'">
-                <div class="edit-menu-container float-left">
-                    <button class="btn btn-primary btn-xs" ng-click="menu.root.appendEmptyChild()"><span class="fa fa-plus"></span></button> Site pages
-                    <!--<ul id="edit-menu" class="edit-menu" sortable="sortOptions" ng-model="menu.root.children">
-                        <li ng-repeat='data in menu.root.children' sortable-item ng-init="template = '{{ asset('bundles/icapwebsite/templates/menu_edit_renderer.html') }}'" ng-include="'{{ asset('bundles/icapwebsite/templates/menu_edit_renderer.html') }}'" ></li>
-                    </ul>-->
-                    <div ui-tree id="tree-root">
-                        <ul id="edit-menu" class="edit-menu" ui-tree-nodes="" ng-model="menu.root.children">
-                            <li ng-repeat="node in menu.root.children" ui-tree-node ui-tree-handle ng-init="template = '{{ asset('bundles/icapwebsite/templates/nodes_renderer.html') }}'" ng-include="'{{ asset('bundles/icapwebsite/templates/nodes_renderer.html') }}'"></li>
-                        </ul>
+            {% if options.footerEnabled %}
+                <footer>
+                    <div class="footer">
+                        {% if options.footerText is not empty %}
+                            <div class="footerContent">{{ options.footerText|raw }}</div>
+                        {% endif %}
+                        {% if options.copyrightEnabled is not empty %}
+                            <div class="copyright-text">© Copyright {{ options.copyrightText }}</div>
+                        {% endif %}
                     </div>
-                </div>
-                <div class="edit-page-container">
-                    <label>Label</label>
-                    <input type="text" ng-model="menu.currentNode.label" />
-                    <button ng-click="addNewMenuItem()">Create item</button>
-                </div>
-                <div class="clear"></div>
-            </div>
-            <!-- END OF CONTENT EDITOR -->
+                </footer>
+            {% endif %}
+            {% if options.analyticsProvider=="xiti" and options.analyticsId is not empty %}
+                <a href="http://www.xiti.com/xiti.asp?s=<%=webSite.options.analyticsAccountId%>" title="WebAnalytics" target="_top">
+                    <script type="text/javascript">
+                        //<!--
+                        Xt_param = 's={{ options.analyticsId }}&p={{ _resource.name~" - "~currentPage.title }}';
+                        try {Xt_r = top.document.referrer;}
+                        catch(e) {Xt_r = document.referrer; }
+                        Xt_h = new Date();
+                        Xt_i = '<img width="39" height="25" border="0" alt="" ';
+                        Xt_i += 'src="http://logv17.xiti.com/hit.xiti?'+Xt_param;
+                        Xt_i += '&hl='+Xt_h.getHours()+'x'+Xt_h.getMinutes()+'x'+Xt_h.getSeconds();
+                        if(parseFloat(navigator.appVersion)>=4)
+                        {Xt_s=screen;Xt_i+='&r='+Xt_s.width+'x'+Xt_s.height+'x'+Xt_s.pixelDepth+'x'+Xt_s.colorDepth;}
+                        document.write(Xt_i+'&ref='+Xt_r.replace(/[<>"]/g, '').replace(/&/g, '$')+'" title="Internet Audience">');
+                        //-->
+                    </script>
+                    <noscript>
+                        <img width="39" height="25" src="http://logv17.xiti.com/hit.xiti?s={{ options.analyticsId }}&p={{ _resource.name~" - "~currentPage.title }}" alt="WebAnalytics" />
+                    </noscript></a>
+            {% endif %}
         </div>
     </div>
 {% endblock %}
 
-{% block stylesheets %}
+{% block javascripts %}
     {{ parent() }}
-    <link rel="stylesheet" href="{{ asset('bundles/icapwebsite/css/bootstrap-additions.min.css') }}" screen="media" />
-    <link rel="stylesheet" href="{{ asset('bundles/icapwebsite/css/angular-ui-tree.min.css') }}" screen="media" />
-    <link rel="stylesheet" href="{{ asset('bundles/icapwebsite/css/angular-motion.min.css') }}" screen="media" />
-    {% stylesheets debug=false filter='lessphp, cssmin' output='bundles/icapwebsite/css/style-edit.css'
-    "@IcapWebsiteBundle/Resources/views/less/edit.less"
-    %}
-    <link rel="stylesheet" href="{{ asset_url }}" screen="media" />
-    {% endstylesheets %}
+    <script type="text/javascript">
+        window.menuNgPlugin = "{{ options.menuOrientation=='horizontal'?'ui.flexnav':'wxy.pushmenu' }}";
+        window.websiteId = {{ _resource.id }};
+        window.websitePath = "{{ path('icap_website_view',{'websiteId': _resource.id}) }}";
+        window.websiteOptions = {{ _resource.options|serialize('json', serialization_context().setSerializeNull(true))|raw }};
+        window.pages = {{ _resource.pages|serialize('json', serialization_context().setSerializeNull(true))|raw }};
+    </script>
+    {{ commonMacros.angularScripts() }}
+    <script type="text/javascript" src="{{ asset('bundles/icapwebsite/js/services/utilitiesFactory.js') }}"></script>
+    {% if options.menuOrientation == 'horizontal' %}
+        <script type="text/javascript" src="{{ asset('bundles/icapwebsite/js/vendor/angular-ui/ui-flexnav/flexnav.js') }}"></script>
+    {% else %}
+        <script type="text/javascript" src="{{ asset('bundles/icapwebsite/js/vendor/angular-ui/multi-level-push-menu/pushmenu.js') }}"></script>
+    {% endif %}
+    <script type="text/javascript" src="{{ asset('bundles/icapwebsite/js/viewWebApp.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/icapwebsite/js/controllers/resizeController.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/icapwebsite/js/controllers/designViewController.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/icapwebsite/js/directives/resizeDirective.js') }}"></script>
+
+    {% if options.analyticsProvider=="google" and options.analyticsId is not empty %}
+        <script>
+            (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+            })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+            ga('create', '{{ options.analyticsId }}', 'auto');
+            ga('send', 'pageview');
+        </script>
+    {% endif %}
 
 {% endblock %}
 
-
-{% block javascripts %}
-    <script type="text/javascript">
-        window.websiteId = {{ _resource.id }};
-        window.websiteOptions = {{ _resource.options|json_encode(constant('JSON_PRETTY_PRINT'))|raw }};
-        window.basePath = "{{ app.request.basePath }}";
-        window.optionTabs = [{% for option, icon in optionTabs  %} "{{ option }}"{% if not loop.last %},{% endif %} {% endfor %}];
-    </script>
-    <script type="text/javascript" src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
-    <script type="text/javascript" src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
-
-    <script type="text/javascript" src="{{ asset('bundles/stfalcontinymce/vendor/tinymce/tinymce.jquery.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/stfalcontinymce/vendor/tinymce/jquery.tinymce.min.js') }}"></script>
-
-    <script type="text/javascript" src="{{ asset('bundles/icapwebsite/js/vendor/jscolor/jscolor.js') }}"></script>
-    {% javascripts debug=false filter='jsmin' output='js/website/angular.js'
-    '@IcapWebsiteBundle/Resources/public/js/vendor/angular-plugins/angular-file-upload/angular-file-upload-shim.min.js'
-    '@IcapWebsiteBundle/Resources/public/js/vendor/angular/angular.min.js'
-    '@IcapWebsiteBundle/Resources/public/js/vendor/angular/angular-resource.min.js'
-    '@IcapWebsiteBundle/Resources/public/js/vendor/angular/angular-route.min.js'
-    '@IcapWebsiteBundle/Resources/public/js/vendor/angular/angular-touch.min.js'
-    '@IcapWebsiteBundle/Resources/public/js/vendor/angular/angular-animate.min.js'
-    '@IcapWebsiteBundle/Resources/public/js/vendor/angular/angular-sanitize.min.js'
-    '@IcapWebsiteBundle/Resources/public/js/vendor/angular-plugins/angular-file-upload/angular-file-upload.min.js'
-    '@IcapWebsiteBundle/Resources/public/js/vendor/angular-ui/ui-tinymce/tinymce.js'
-    '@IcapWebsiteBundle/Resources/public/js/vendor/angular-ui/ui-tree/angular-ui-tree.js'
-    '@IcapWebsiteBundle/Resources/public/js/vendor/angular-plugins/angular-strap/angular-strap.min.js'
-    '@IcapWebsiteBundle/Resources/public/js/vendor/angular-plugins/angular-strap/angular-strap.tpl.min.js'
+{% block stylesheets %}
+    {{ parent() }}
+    {% if options.menuOrientation == 'horizontal' %}
+        <link rel="stylesheet" href="{{ asset('bundles/icapwebsite/css/angular/flexnav.css') }}" screen="media" />
+    {% else %}
+        <link rel="stylesheet" href="{{ asset('bundles/icapwebsite/css/angular/pushmenu.css') }}" screen="media" />
+    {% endif %}
+    {% stylesheets debug=false filter='lessphp, cssmin' output='bundles/icapwebsite/css/style-view.css'
+    "@IcapWebsiteBundle/Resources/views/less/view.less"
     %}
-    <script type="text/javascript" src="{{ asset_url }}"></script>
-    {% endjavascripts %}
-
-    {#
-    TODO all files to one minified file
-    {% javascripts debug=false filter='jsmin' output='js/website/website-angular.js'
-    '@IcapWebsiteBundle/Resources/public/js/services/utilitiesFactory.js'
-    %}
-    <script type="text/javascript" src="{{ asset_url }}"></script>
-    {% endjavascripts %}
-    #}
-    <script type="text/javascript" src="{{ asset('bundles/icapwebsite/js/services/utilitiesFactory.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/icapwebsite/js/services/fileReaderFactory.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/icapwebsite/js/services/treeFactory.js') }}"></script>
-
-    <script type="text/javascript" src="{{ asset('bundles/icapwebsite/js/app.js') }}"></script>
-
-    <script type="text/javascript" src="{{ asset('bundles/icapwebsite/js/services/websiteOptionsFactory.js') }}"></script>
-
-    <script type="text/javascript" src="{{ asset('bundles/icapwebsite/js/controllers/resizeController.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/icapwebsite/js/controllers/designController.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/icapwebsite/js/directives/resizeDirective.js') }}"></script>
-
-
+    <link rel="stylesheet" href="{{ asset_url }}" screen="media" />
+    {% endstylesheets %}
+    {% include 'IcapWebsiteBundle:Website:View/view.css.twig' with {'options': _resource.options, 'commonMacros': commonMacros} %}
 {% endblock %}

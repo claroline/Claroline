@@ -14,7 +14,8 @@ icap_website_type_name: Nom
 'vertical': Vertical
 'width': Largeur
 'height': Hauteur
-'hover_color': Hover color
+'hover_color': Couleur de survol
+'border_color': Couleur de la bordure
 'section_color': Couleur des sections
 'font_color': Couleur du texte
 'section_font_color': Couleur du texte des sections
@@ -35,4 +36,33 @@ icap_website_type_name: Nom
 'vertically': Verticalement
 'both': Les deux
 'activate': Activer
+'disable': Désactiver
 'save_options': Sauvegarder les options
+'editor_enable': Activer l'éditeur de texte riche
+'editor_disable': Désactiver l'éditeur de texte riche
+'add_new_page': Créer une nouvelle page
+'title': Titre
+'description': Description
+'visible': Visible
+'section': Section
+'type': Type
+'content': Contenu
+'resource': Ressource
+'save': Sauvegarder
+'url': URL
+'blank_page': Page vide
+'url_page': Page d'un URL externe
+'resource_page': Ressource plateforme
+'confirm': Confirmer
+'cancel': Annuler
+'confirm_delete_message': Êtes-vous sûr de vouloir supprimer définitivement '{{ menu.currentPageNode.title }}' ainsi que tous ses enfants?
+'add_resource': Ajouter une ressource
+'change_resource': Changer la ressource
+'error': Erreur
+'error_500': Votre action n'a pas été effectuée à cause d'une erreur interne serveur. Si l'erreur persiste, veuillez contacter l'assistance ou votre administrateur système.
+'error_511': Cette action requiert une authentification. Si vous étiez préalablement identifié sur la plateforme, votre session a probablement expiré. Veuillez vous identifier à nouveau et relancer votre action.
+'error_401': Vous n'avez pas les droits suffisants pour effectuer cette action.
+'error_417': Votre action n'a pas été effectuée à cause d'un paramètre invalide ou manquant.
+'success': Succès
+'success_message': Votre action a bien été effectuée
+loading: patienter...

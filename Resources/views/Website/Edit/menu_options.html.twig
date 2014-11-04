@@ -18,21 +18,25 @@
         </div>
         <div>
             <label for="menu-hover-color">{{ 'hover_color'|trans({},'icap_website') }}</label>
-            <input class="color form-control" id="menu-hover-color" ng-model="options.menuHoverColor"/>
+            <input class="color {enableTransparent: false} form-control" id="menu-hover-color" ng-model="options.menuHoverColor"/>
         </div>
         <div>
             <label for="menu-section-color">{{ 'section_color'|trans({},'icap_website') }}</label>
             <input class="color form-control" id="menu-section-color" ng-model="options.sectionBgColor"/>
         </div>
+        <div>
+            <label for="menu-border-color">{{ 'border_color'|trans({},'icap_website') }}</label>
+            <input class="color form-control" id="menu-border-color" ng-model="options.menuBorderColor"/>
+        </div>
     </div>
     <div class="float-left">
         <div>
             <label for="menu-font-color">{{ 'font_color'|trans({},'icap_website') }}</label>
-            <input class="color form-control" id="menu-font-color" ng-model="options.menuFontColor"/>
+            <input class="color {enableTransparent: false} form-control" id="menu-font-color" ng-model="options.menuFontColor"/>
         </div>
         <div>
             <label for="section-font-color">{{ 'section_font_color'|trans({},'icap_website') }}</label>
-            <input class="color form-control" id="section-font-color" ng-model="options.sectionFontColor"/>
+            <input class="color {enableTransparent: false} form-control" id="section-font-color" ng-model="options.sectionFontColor"/>
         </div>
         <div>
             <label for="menu-font-size">{{ 'font_size'|trans({},'icap_website') }}</label>

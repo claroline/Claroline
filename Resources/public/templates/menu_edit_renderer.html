@@ -1,4 +1,0 @@
-<div ng-click="menu.changeCurrentNode(data.id)" class="menu-item-container" ng-class="{'selected':menu.currentNode.id==data.id}"><span><button class="btn btn-default btn-xs" sortable-item-handle><span class="glyphicon glyphicon-move"></span></button> <button class="btn btn-primary btn-xs" ng-click="data.appendEmptyChild(); $event.stopPropagation();"><span class="glyphicon glyphicon-plus"></span></button> <button class="btn btn-danger btn-xs" ng-click="data.destroy(); $event.stopPropagation();"><span class="glyphicon glyphicon-remove"></span></button></span> <span ng-style="{'margin-left':((data.depth-1)*10)+'px', 'padding-left':'12px', 'margin-right':'4px', 'border-bottom':'1px solid #444', 'border-left':'1px solid #444'}"></span> <span id="{{data.id}}">{{data.label}}</span></div>
-<ul ng-if="data.hasChildren" sortable="sortOptions" ng-model="data.children">
-    <li ng-repeat="data in data.children" sortable-item ng-include="template"></li>
-</ul>

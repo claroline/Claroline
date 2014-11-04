@@ -1,0 +1,30 @@
+<style type="text/css">
+html, body {
+    background-color: {{ options.bgColor }};
+    background-image: url("{{ commonMacros.getImagePath(options.getBgImageForWeb()) }}");
+    background-repeat: {{ options.bgRepeat }};
+    background-position: {{ options.bgPosition }};
+}
+
+div.banner{
+    background-color: {{ options.bannerBgColor }};
+    background-image: url("{{ commonMacros.getImagePath(options.getBannerBgImageForWeb()) }}");
+    background-repeat: {{ options.bannerBgRepeat }};
+    background-position: {{ options.bannerBgPosition }};
+    height: {{ options.bannerHeight }}px;
+}
+
+div.footer{
+    background-color: {{ options.footerBgColor }};
+    background-image: url("{{ commonMacros.getImagePath(options.getFooterBgImageForWeb()) }}");
+    background-repeat: {{ options.footerBgRepeat }};
+    background-position: {{ options.footerBgPosition }};
+    height: {{ options.footerHeight }}px;
+}
+
+{% if options.cssCode is not empty %}
+{{ options.cssCode }}
+{% endif %}
+
+</style>
+

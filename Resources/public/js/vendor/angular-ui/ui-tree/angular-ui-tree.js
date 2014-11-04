@@ -140,13 +140,13 @@
               },
 
               eventArgs: function(elements, pos, e) {
-				if(angular.isDefined(e)&&e!=null){
-					var newScope = angular.element(e.originalTarget).scope();
-					if(angular.isDefined(newScope)&&newScope!=null&&newScope.$type=="uiTreeNode"){
-						this.index = newScope.childNodesCount();
-						this.parent = newScope.$childNodesScope;
-					}				
-				}
+                  if(angular.isDefined(e)&&e!=null){
+                      var newScope = angular.element(e.originalEvent.originalTarget).scope();
+                      if(angular.isDefined(newScope)&&newScope!=null&&newScope.$type=="uiTreeNode"){
+                          this.index = newScope.childNodesCount();
+                          this.parent = newScope.$childNodesScope;
+                      }
+                  }
                 return {
                   source: this.sourceInfo,
                   dest: {
@@ -670,6 +670,13 @@
             }
           });
 
+            attrs.$observe('keepDragContentOnScene', function(val) {
+                var kdcos = scope.$eval(val);
+                if((typeof kdcos) == "boolean") {
+                    treeConfig.keepDragContentOnScene = kdcos;
+                }
+            });
+
           // check if the dest node can accept the dragging node
           // by default, we check the 'data-nodrop' attribute in `ui-tree-nodes`
           // and the 'max-depth' attribute in `ui-tree` or `ui-tree-nodes`.
@@ -699,7 +706,7 @@
           };
 
           callbacks.beforeDrop = function(event) {
-			//console.log(event);
+
           };
 
           scope.$watch(attrs.uiTree, function(newVal, oldVal){
@@ -1117,8 +1124,9 @@
             var dragEnd = function(e) {
               e.preventDefault();
 			  if (dragElm) {
+                var dropEnable = true;
                 scope.$treeScope.$apply(function() {
-                  scope.$callbacks.beforeDrop(dragInfo.eventArgs(elements, pos, e));
+                  dropEnable = scope.$callbacks.beforeDrop(dragInfo.eventArgs(elements, pos, e));
                 });
                 // roll back elements changed
                 hiddenPlaceElm.replaceWith(scope.$element);
@@ -1126,10 +1134,12 @@
                 dragElm.remove();
                 dragElm = null;
                 if (scope.$$apply) {
-                  dragInfo.apply();
-                  scope.$treeScope.$apply(function() {
-                    scope.$callbacks.dropped(dragInfo.eventArgs(elements, pos, e));
-                  });
+                  if (dropEnable) {
+                      dragInfo.apply();
+                      scope.$treeScope.$apply(function() {
+                          scope.$callbacks.dropped(dragInfo.eventArgs(elements, pos, e));
+                      });
+                  }
                 } else {
                   bindDrag();
                 }

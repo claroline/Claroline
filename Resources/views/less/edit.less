@@ -7,7 +7,7 @@
 @footer-options-bg:  #449DD5;
 @footer-options-bg-light: lighten(@footer-options-bg, 42%);
 @structure-options-bg: #6a55c2;
-@structure-options-bg-light: lighten(@structure-options-bg, 40%);
+@structure-options-bg-light: lighten(@structure-options-bg, 42%);
 
 @light-grey: #E5E5E5;
 @dark-grey:  #767676;
@@ -118,6 +118,7 @@ div.admin-bar {
       }
     }
     li.structure-options {
+      background-color:@structure-options-bg-light;
       .icon-bg {
         background-color:@structure-options-bg;
       }
@@ -147,7 +148,7 @@ div.admin-bar {
     div.footer-options {
       background-color:@footer-options-bg-light;
     }
-    div.structure-options {
+    div.structure-container {
       background-color:@structure-options-bg-light;
     }
 
@@ -186,6 +187,7 @@ div.admin-bar {
   }
 
   .bg-position-btn {
+    color: #428bca;
     &[class*="-top"]{
       padding-top: 1px;
       padding-bottom: 5px;

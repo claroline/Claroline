@@ -1,90 +1,258 @@
 var treeApp = angular.module('treeApp', []);
 
-treeApp.factory('Tree', ['$filter', 'TreeNode', function($filter, TreeNode){
-	function Tree (data, label, useFirstItemAsRoot) {
-		this.label = label;
-		this.root = null;
-		this.allNodes = [];
-		if (useFirstItemAsRoot) {
-			this.root = new TreeNode(data[0].id, data[0].label, null, data[0].children, data[0].attributes, this);
-		}  
-		else {
-			this.root = new TreeNode(0, label, null, data, {}, this);
-		}
-		this.currentNode = this.root;
+treeApp.factory('Tree', ['$filter', 'WebsitePageNode', 'UtilityFunctions', function($filter, WebsitePageNode, UtilityFunctions){
+	function Tree(websiteRootPage) {
+        this.root = null;
+        this.allNodes = [];
+        this.root = new WebsitePageNode(websiteRootPage, null, this);
+        this.currentPageNode = (this.root.children.length>0)?this.root.children[0]:this.root;
+        this.currentEditPageNode = (this.root.children.length>0)?this.root.children[0]:null;
+        this.confirmDelete = false;
 	};
-	Tree.prototype.getNodeById = function (id) {
+	Tree.prototype.getPageNodeById = function(id) {
 		return this.allNodes[id];
 	};
-	Tree.prototype.getRootNode = function () {
-		return this.root;
-	};
-	Tree.prototype.addNewNode = function (node) {
+	Tree.prototype.addNewPageNode = function(node) {
 		this.allNodes[node.id] = node;
 	};
-	Tree.prototype.removeNode = function (node) {
+	Tree.prototype.removePageNode = function(node) {
 		if(!this.allNodes.hasOwnProperty(node.id))
 		{
 			return;
 		}
 		delete this.allNodes[node.id];
-		console.log(this.allNodes);
-		
+
 		return node;
 	};
-	Tree.prototype.changeCurrentNode = function (newId) {
-		this.currentNode = this.getNodeById(newId);
+	Tree.prototype.removeCurrentPageNode = function() {
+        this.confirmDelete = false;
+		return this.currentPageNode.delete();
 	};
-	Tree.prototype.appendChildToCurrentNode = function (id, label, children, attributes) {
-		this.currentNode.appendChild(id, label, children, attributes);
-	};
-	Tree.prototype.destroyCurrentNode = function () {
-		this.currentNode.destroy();
-	};
+    Tree.prototype.createEmptyPageNode = function(parentPageNode) {
+        parentPageNode = UtilityFunctions.isDefinedNotNull(parentPageNode)?parentPageNode:this.root;
+        this.currentPageNode = parentPageNode;
+        this.currentEditPageNode = new WebsitePageNode(null, parentPageNode, this);
+    }
+    Tree.prototype.changeCurrentPageNode = function(node) {
+        this.currentPageNode = this.currentEditPageNode = node;
+    }
+    Tree.prototype.confirmNodeDelete = function(node) {
+        this.changeCurrentPageNode(node);
+        this.confirmDelete = true;
+    }
+    Tree.prototype.saveCurrentEditPageNode = function() {
+        return this.currentEditPageNode.save();
+    }
+    Tree.prototype.movePageNode = function(node, oldParent, newParent, oldIndex, newIndex) {
+        if (oldParent == null) oldParent = this.root;
+        if (newParent == null) newParent = this.root;
+        return node.move(oldParent, newParent, oldIndex, newIndex);
+    }
 	
 	return Tree;
 }]);
 
-treeApp.factory('TreeNode', ['UtilityFunctions', function(UtilityFunctions){
-	function TreeNode (id, label, parent, children, attributes, tree) {
-		this.id = UtilityFunctions.isDefinedNotNull(id)?id:Math.rand();
-		this.label = UtilityFunctions.isDefinedNotNull(label)?label:"Child";
-		this.parent = UtilityFunctions.isDefinedNotNull(parent)?parent:null;
-		this.tree = UtilityFunctions.isDefinedNotNull(tree)?tree:parent.tree;
-		this.tree.addNewNode(this);
-		this.attributes = UtilityFunctions.isDefinedNotNull(attributes)?attributes:{};
-		this.children = [];
-		if (UtilityFunctions.isDefinedNotNull(children) && children.length>0) this.createChildren(children);
-	};	
-	TreeNode.prototype.appendChild = function (id, label, children, attributes) {
-		var newChild = new TreeNode(id, label, this, children, attributes);
-		this.insertNode(newChild, -1);
+treeApp.factory('WebsitePageNode', ['$http', '$q', '$sce', 'UtilityFunctions', function($http, $q, $sce, UtilityFunctions){
+	function WebsitePageNode(websitePage, parent, tree) {
+        this.id = this.title = this.richText = this.url = this.resourceNode = null;
+        this.new = this.visible = true;
+        this.isSection = false;
+        this.visible = true;
+        this.type = "blank";
+        this.parent = UtilityFunctions.isDefinedNotNull(parent)?parent:null;
+        this.tree = UtilityFunctions.isDefinedNotNull(tree)?tree:null;
+        this.children = [];
+        if (UtilityFunctions.isDefinedNotNull(parent)) {
+            if (this.tree == null) {
+                this.tree = parent.tree;
+            }
+            if (this.tree != null && !this.new) {
+                this.tree.addNewPageNode(this);
+            }
+        }
+        if (UtilityFunctions.isDefinedNotNull(websitePage)) {
+            this.id = websitePage.id;
+            this.title = websitePage.title;
+            this.type = websitePage.type;
+            this.visible = websitePage.visible;
+            this.isSection = websitePage.isSection;
+            this.richText = websitePage.richText;
+            this.url = websitePage.url;
+            this.resourceNode = websitePage.resourceNode;
+            this.resourceNodeType = websitePage.resourceNodeType;
+            this.new = false;
+            if (websitePage.children.length>0) this.createChildrenPages(websitePage.children);
+        }
+	};
+
+    WebsitePageNode.prototype.getTrustedUrl = function() {
+      return $sce.trustAsResourceUrl(this.url);
+    };
+
+    WebsitePageNode.prototype.generateResourceUrl = function() {
+        if (this.resourceNode!=null && this.resourceNodeType!=null) {
+            var url = Routing.generate('claro_resource_open', {
+                resourceType: this.resourceNodeType,
+                node: this.resourceNode
+            });
+            return $sce.trustAsResourceUrl(url);
+        }
+        return null;
+    };
+
+    WebsitePageNode.prototype.trustedContent = function() {
+        return $sce.trustAsHtml(this.richText);
+    };
+
+    WebsitePageNode.prototype.baseUrl = Routing.generate('icap_website_view', {websiteId: window.websiteId})+"/page";
+
+    WebsitePageNode.prototype.appendChildPage = function(websitePage) {
+		var newChildNode = new WebsitePageNode(websitePage, this);
+		this.insertNode(newChildNode, -1);
 		
-		return newChild;
+		return newChildNode;
 	};
-	TreeNode.prototype.appendEmptyChild = function () {
-		var newChild = this.appendChild((new Date()).getTime(), 'New node '+(this.children.length+1), this, [], {});
-		this.tree.currentNode = newChild;
+    /*WebsitePageNode.prototype.appendEmptyPage = function () {
+		var newChild = this.appendChildPage();
+		this.tree.currentPageNode = newChild;
 	};
-	TreeNode.prototype.prependChild = function (id, label, children, attributes) {
-		var newChild = new TreeNode(id, label, this, children, attributes);
+	WebsitePageNode.prototype.prependChildPageNode = function (websitePage) {
+		var newChild = new WebsitePageNode(websitePage);
 		this.insertNode(newChild, 0);
-	};
-	TreeNode.prototype.createChildren = function (children) {
+	};*/
+	WebsitePageNode.prototype.createChildrenPages = function(children) {
 		if (children.length>0) {
 			for (var i = 0; i < children.length; i++) {
-				var child = children[i];
-				this.appendChild(child.id, child.label, child.children, child.attributes);
+				var childPage = children[i];
+				this.appendChildPage(childPage);
 			}
 		}
 	};
-	TreeNode.prototype.appendNode = function (node) {
+	WebsitePageNode.prototype.appendNode = function(node) {
 		this.insertNode(node, -1);
 	};
-	TreeNode.prototype.insertNode = function (node, index) {
-		if (index==-1) this.children.push(node);
-		else this.children.splice(index, 0, node);
+	WebsitePageNode.prototype.insertNode = function(node, index) {
+        node.parent = this;
+		if (index==-1) {
+            this.children.push(node);
+        }
+		else {
+            this.children.splice(index, 0, node);
+        }
 	};
+    WebsitePageNode.prototype.removeChildPageNode = function(node, index) {
+        if (!angular.isDefined(index)) {
+            index = -1;
+            for (var i=0; i<this.children.length; i++) {
+                var childNode = this.children[i];
+                if (childNode.id == node.id) {
+                    index = i;
+                    break;
+                }
+            }
+        }
+        this.children.splice(index, 1);
+        var childrenLength = this.children.length;
+
+        if (childrenLength>index) {
+            return this.children[index];
+        } else if (childrenLength>0) {
+            return this.children[index-1];
+        } else {
+            return this;
+        }
+    };
+    WebsitePageNode.prototype.save = function() {
+        if (this.new) {
+            return this.create();
+        } else {
+            return this.update();
+        }
+    };
+    WebsitePageNode.prototype.create = function() {
+        var pageNode = this;
+        return $http.post(this.baseUrl+"/"+this.parent.id, this.jsonSerialize())
+            .then(function(response) {
+                if(typeof response.data === 'object'){
+                    pageNode.id = response.data.id;
+                    pageNode.parent.appendNode(pageNode);
+                    pageNode.tree.addNewPageNode(pageNode);
+                    pageNode.new = false;
+                    pageNode.tree.changeCurrentPageNode(pageNode);
+
+                    return pageNode;
+                } else {
+                    return $q.reject(response.data);
+                }
+            }, function(response) {
+                return $q.reject(response.data);
+            });
+    };
+    WebsitePageNode.prototype.update = function() {
+        var pageNode = this;
+        return $http.put(this.baseUrl+"/"+this.id, this.jsonSerialize())
+            .then(function(response) {
+                if(typeof response.data === 'object'){
+                    return pageNode;
+                } else {
+                    return $q.reject(response.data);
+                }
+            }, function(response) {
+                return $q.reject(response.data);
+            });
+    };
+    WebsitePageNode.prototype.delete = function() {
+        var pageNode = this;
+        return $http.delete(this.baseUrl+"/"+this.id, this.jsonSerialize())
+            .then(function(response) {
+                if(typeof response.data === 'object'){
+                    pageNode.tree.removePageNode(this);
+                    var newCurrentNode = pageNode.parent.removeChildPageNode(pageNode);
+                    newCurrentNode.tree.changeCurrentPageNode(newCurrentNode);
+
+                    return pageNode;
+                } else {
+                    return $q.reject(response.data);
+                }
+            }, function(response) {
+                return $q.reject(response.data);
+            });
+    };
+    WebsitePageNode.prototype.move = function(oldParent, newParent, oldIndex, newIndex) {
+        var pageNode = this;
+        var previousSiblingId = 0;
+        if (newIndex > 0) {
+            previousSiblingId = newParent.children[newIndex-1].id;
+        }
+        return $http.put(this.baseUrl+"/"+this.id+"/"+newParent.id+"/"+previousSiblingId, {})
+            .then(function(response) {
+                if(typeof response.data === 'object'){
+                    oldParent.removeChildPageNode(pageNode, oldIndex);
+                    newParent.insertNode(pageNode, newIndex);
+                    pageNode.tree.changeCurrentPageNode(pageNode);
+
+                    return true;
+                } else {
+                    return false;
+                }
+            }, function(response) {
+                return $q.reject(response.data);
+            });
+    }
+
+    WebsitePageNode.prototype.jsonSerialize = function() {
+        return {
+            title: this.title,
+            description: this.description,
+            visible: this.visible,
+            isSection: this.isSection,
+            type: this.type,
+            richText: this.richText,
+            url: this.url,
+            resourceNode: this.resourceNode,
+            resourceNodeType: this.resourceNodeType
+        }
+    }
 	
-	return TreeNode;
+	return WebsitePageNode;
 }]);

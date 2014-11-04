@@ -10,9 +10,12 @@ namespace Icap\WebsiteBundle\Manager;
 
 use Icap\WebsiteBundle\Form\WebsitePageType;
 use JMS\DiExtraBundle\Annotation as DI;
+use JMS\Serializer\SerializationContext;
+use JMS\Serializer\Serializer;
 use Doctrine\ORM\EntityManager;
 use Icap\WebsiteBundle\Entity\Website;
 use Icap\WebsiteBundle\Entity\WebsitePage;
+use Icap\WebsiteBundle\Entity\WebsitePageTypeEnum;
 use Icap\WebsiteBundle\Repository\WebsitePageRepository;
 use Symfony\Component\Form\FormFactory;
 
@@ -39,19 +42,32 @@ class WebsitePageManager {
     protected $entityManager;
 
     /**
+     * @var \JMS\Seriealizer\Serializer
+     */
+    protected $serializer;
+
+    /**
      * Constructor
      *
      * @DI\InjectParams({
      *      "pageRepository" = @DI\Inject("icap_website.repository.page"),
      *      "formFactory" = @DI\Inject("form.factory"),
-     *      "entityManager" = @DI\Inject("doctrine.orm.entity_manager")
+     *      "entityManager" = @DI\Inject("doctrine.orm.entity_manager"),
+     *      "serializer"    = @DI\Inject("jms_serializer")
      * })
      */
-    public function __construct (WebsitePageRepository $pageRepository, FormFactory $formFactory, EntityManager $entityManager)
+    public function __construct (
+        WebsitePageRepository $pageRepository,
+        FormFactory $formFactory,
+        EntityManager $entityManager,
+        Serializer $serializer
+    )
     {
         $this->pageRepository = $pageRepository;
+        $this->pageRepository->setChildrenIndex("children");
         $this->formFactory = $formFactory;
         $this->entityManager = $entityManager;
+        $this->serializer = $serializer;
     }
 
     /**
@@ -67,8 +83,9 @@ class WebsitePageManager {
         if (!is_array($pageIds)) {
             $pageIds = array($pageIds);
         }
+        $pages = $this->pageRepository->findPages($website, $pageIds, $isAdmin, $isAPI);
 
-        return $this->pageRepository->findPages($website, $pageIds, $isAdmin, $isAPI);
+        return $pages;
     }
 
     /**
@@ -79,9 +96,9 @@ class WebsitePageManager {
      *
      * @return mixed
      */
-    public function getPageTree(Website $website, $isAdmin, $isArray, $isMenu)
+    public function getPageTree(Website $website, $isAdmin, $isMenu)
     {
-        return $this->pageRepository->buildPageTree($website, $isAdmin, $isArray, $isMenu);
+        return $this->pageRepository->buildPageTree($website, $isAdmin, $isMenu);
     }
 
     public function processForm(WebsitePage $page, array $parameters, $method = "PUT")
@@ -95,21 +112,16 @@ class WebsitePageManager {
              * Test if richText is set, set resourceNode and url to null
              * Test if resourceNode is set, set url to null
             */
-            if ($page->getIsSection()) {
-                $page->setRichText(null);
-                $page->setResourceNode(null);
-                $page->setUrl(null);
-            } else if ($page->getRichText()!==null && !empty($page->getRichText())) {
-                $page->setResourceNode(null);
-                $page->setUrl(null);
-            } else if ($page->getResourceNode()!==null){
-                $page->setUrl(null);
-            }
-
             $this->entityManager->persist($page);
             $this->entityManager->flush();
+            $serializationContext = new SerializationContext();
+            $serializationContext->setSerializeNull(true);
 
-            return $page->jsonSerialize();
+            return json_decode($this->serializer->serialize(
+                $page,
+                'json',
+                $serializationContext
+            ));
         }
 
         throw new \InvalidArgumentException();
@@ -124,7 +136,7 @@ class WebsitePageManager {
                 $page = $currentPage;
             } else if ($currentPage->getId() == $pageIds['newParentId']) {
                 $newParentPage = $currentPage;
-            } else if ($previousSiblingId != 0 && $currentPage->getId() == $pageIds['previousSiblingId']) {
+            } else if ($pageIds['previousSiblingId'] != 0 && $currentPage->getId() == $pageIds['previousSiblingId']) {
                 $previousSiblingPage = $currentPage;
             }
         }
@@ -132,7 +144,7 @@ class WebsitePageManager {
     }
 
     public function movePage($page, $newParentPage, $previousSiblingPage) {
-        if ($previousSiblingPage === null) {
+        if ($previousSiblingPage !== null) {
             $this->pageRepository->persistAsNextSiblingOf($page, $previousSiblingPage);
         }
         else {
@@ -152,10 +164,11 @@ class WebsitePageManager {
      *
      * @return \Icap\WebsiteBundle\Entity\WebsitePage
      */
-    public function createEmptyPage(Website $website)
+    public function createEmptyPage(Website $website, WebsitePage $parentPage)
     {
         $newPage = new WebsitePage();
         $newPage->setWebsite($website);
+        $newPage->setParent($parentPage);
 
         return $newPage;
     }

@@ -96,6 +96,7 @@ class Website extends AbstractResource{
                 $rootPage->setWebsite($this);
                 $rootPage->setIsSection(true);
                 $rootPage->setTitle($this->getResourceNode()->getName());
+                $rootPage->setType(WebsitePageTypeEnum::ROOT_PAGE);
                 $this->setRoot($rootPage);
 
                 $em->getRepository('IcapWebsiteBundle:WebsitePage')->persistAsFirstChild($rootPage);

@@ -41,7 +41,7 @@ resizerApp.directive('resizer', ['$document', function ($document) {
                 /*angular.element($resizeable).css({
                  width: x + 'px'
                  });*/
-                UtilityFunctions.deepSetValue($scope, $attrs.resizerVariable, x);
+                UtilityFunctions.deepSetValue($scope, $attrs.resizer, x);
                 $scope.$apply();
                 $document.find("body").css({cursor:"e-resize"});
             }
@@ -69,7 +69,7 @@ resizerApp.directive('resizer', ['$document', function ($document) {
                 /*angular.element($resizeable).css({
                  height: y + 'px'
                  });*/
-                UtilityFunctions.deepSetValue($scope, $attrs.resizerVariable, y);
+                UtilityFunctions.deepSetValue($scope, $attrs.resizer, y);
                 $scope.$apply();
                 $document.find("body").css({cursor:"n-resize"});
             }
@@ -84,7 +84,7 @@ resizerApp.directive( 'changeHeight', ['UtilityFunctions', function(UtilityFunct
             scope.$watch( function () {
                 return elem[0].scrollHeight;
             }, function( newHeight, oldHeight ) {
-                UtilityFunctions.deepSetValue(scope, attrs.changeHeightVariable, newHeight);
+                UtilityFunctions.deepSetValue(scope, attrs.changeHeight, newHeight);
             } );
         }
     }
@@ -94,7 +94,7 @@ resizerApp.directive( 'changeHeight', ['UtilityFunctions', function(UtilityFunct
             scope.$watch( function () {
                 return elem[0].scrollWidth;
             }, function( newWidth, oldWidth ) {
-                UtilityFunctions.deepSetValue(scope, attrs.changeWidthVariable, newWidth);
+                UtilityFunctions.deepSetValue(scope, attrs.changeWidth, newWidth);
             } );
         }
     }

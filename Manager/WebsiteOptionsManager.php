@@ -10,6 +10,8 @@ namespace Icap\WebsiteBundle\Manager;
 
 use Icap\WebsiteBundle\Form\WebsiteOptionsType;
 use JMS\DiExtraBundle\Annotation as DI;
+use JMS\Serializer\SerializationContext;
+use JMS\Serializer\Serializer;
 use Doctrine\ORM\EntityManager;
 use Icap\WebsiteBundle\Entity\Website;
 use Icap\WebsiteBundle\Entity\WebsiteOptions;
@@ -34,17 +36,24 @@ class WebsiteOptionsManager {
     protected $entityManager;
 
     /**
+     * @var \JMS\Seriealizer\Serializer
+     */
+    protected $serializer;
+
+    /**
      * Constructor
      *
      * @DI\InjectParams({
-     *      "formFactory" = @DI\Inject("form.factory"),
-     *      "entityManager" = @DI\Inject("doctrine.orm.entity_manager")
+     *      "formFactory"   = @DI\Inject("form.factory"),
+     *      "entityManager" = @DI\Inject("doctrine.orm.entity_manager"),
+     *      "serializer"    = @DI\Inject("jms_serializer")
      * })
      */
-    public function __construct (FormFactory $formFactory, EntityManager $entityManager)
+    public function __construct (FormFactory $formFactory, EntityManager $entityManager, Serializer $serializer)
     {
         $this->formFactory = $formFactory;
         $this->entityManager = $entityManager;
+        $this->serializer = $serializer;
     }
 
     public function processForm(WebsiteOptions $options, array $parameters, $method = "PUT")
@@ -53,12 +62,19 @@ class WebsiteOptionsManager {
         $form->submit($parameters, 'PATCH' !== $method);
         if ($form->isValid()) {
             $options = $form->getData();
-
             $this->entityManager->persist($options);
             $this->entityManager->flush();
+            $serializationContext = new SerializationContext();
+            $serializationContext->setSerializeNull(true);
 
-            return $options->jsonSerialize();
-        }
+            return json_decode($this->serializer->serialize(
+                $options,
+                'json',
+                $serializationContext
+            ));
+        } /*else {
+            return $this->getErrorMessages($form);
+        }*/
 
         throw new \InvalidArgumentException();
     }
@@ -66,7 +82,7 @@ class WebsiteOptionsManager {
     public function handleUploadImageFile(WebsiteOptions $options, UploadedFile $uploadedFile, $imageStr)
     {
         if ($uploadedFile->getMimeType()=="image/png" || $uploadedFile->getMimeType()=="image/jpg" || $uploadedFile->getMimeType()=="image/jpeg") {
-            $newFileName = $uploadedFile->getClientOriginalName();
+            $newFileName = sha1(uniqid(mt_rand(), true)).'.'.$uploadedFile->guessExtension();
             $oldFileName = null;
             $getImageValue = 'get'.ucfirst($imageStr);
             $setImageValue = 'set'.ucfirst($imageStr);
@@ -94,7 +110,7 @@ class WebsiteOptionsManager {
             throw new \InvalidArgumentException();
         }
     }
-    
+
     public function handleUpdateImageURL(WebsiteOptions $options, $newPath, $imageStr)
     {
         $getImageValue = 'get'.ucfirst($imageStr);
@@ -114,4 +130,26 @@ class WebsiteOptionsManager {
 
         return array($imageStr => $options->getWebPath($imageStr));
     }
-} 
+
+    private function getErrorMessages(\Symfony\Component\Form\Form $form) {
+        $errors = array();
+        foreach ($form->getErrors() as $key => $error) {
+            $template = $error->getMessageTemplate();
+            $parameters = $error->getMessageParameters();
+
+            foreach ($parameters as $var => $value) {
+                $template = str_replace($var, $value, $template);
+            }
+
+            $errors[$key] = $template;
+        }
+        if ($form->count()) {
+            foreach ($form as $child) {
+                if (!$child->isValid()) {
+                    $errors[$child->getName()] = $this->getErrorMessages($child);
+                }
+            }
+        }
+        return $errors;
+    }
+}
