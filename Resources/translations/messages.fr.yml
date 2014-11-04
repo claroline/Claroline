@@ -305,6 +305,7 @@ paper: Passage
 paper exo: Passage d'un test
 paperLegend: Copies nécessitant une correction manuelle
 paper list: Liste des copies
+parameters: Paramètres
 partially: Partiellement correcte
 penalty: Pénalité
 percentage: Pourcentage
@@ -329,6 +330,7 @@ qcm edition: Edition d'une question de type QCM
 qti_import_title: Pas d'attribut "title" pour l'élément "assessmentItem"
 qti_import_qcm_prompt: Pas d'élément "prompt" dans l'élément "choiceInteraction"
 question: Question
+questions: Questions
 question graphic: Question Graphique
 question hole : Question à trous
 question open: Question à Réponse Ouverte

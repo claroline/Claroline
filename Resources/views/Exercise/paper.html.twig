@@ -185,28 +185,34 @@
 
                     <div id="interMatchingResponse">
                         <input type="hidden" id="jsonResponse" name ="jsonResponse" />
-                        <table>
-                            <tr>
-                                <td>
-                                    {% for proposal in interactionToDisplayed.proposals %}
-                                        <div id="div_{{ proposal.id }}" class="origin">
-                                            <ul>
-                                                <li id="draggable_{{ proposal.id }}" class="draggable" style='list-style-type:none;'> {{ proposal.value | raw }} </li>
-                                            </ul>
-                                        </div>
-                                    {% endfor%}
-                                </td>
-                                <td>
-                                    {% for label in interactionToDisplayed.labels %}
-                                        <div id="droppable_{{ label.id }}" class="droppable">
-                                            <ul>
-                                                <li style='list-style-type:none;'>{{ label.value | raw }}</li>
-                                            </ul>
-                                        </div>
-                                    {% endfor %}
-                                </td>
-                            </tr>
-                    </table>
+                        <center>
+                            <table>
+                                <tr>
+                                    <td>
+                                        {% for proposal in interactionToDisplayed.proposals %}
+                                            <div id="div_{{ proposal.id }}" class="origin">
+                                                <ul>
+                                                    <li id="draggable_{{ proposal.id }}" class="draggable" > {{ proposal.value | raw }} </li>
+                                                </ul>
+                                            </div>
+                                        {% endfor%}
+                                    </td>
+                                    <td style='padding: 20px;'>
+                                    </td>
+                                    <td>
+                                        {% for label in interactionToDisplayed.labels %}
+                                            <div id="droppable_{{ label.id }}" class="droppable" style="text-align: right;">
+                                                <ul>
+                                                    <li class="lidroppable">{{ label.value | raw }}</li>
+                                                </ul>
+                                                <ul class="dragDropped">
+                                                </ul>
+                                            </div>
+                                        {% endfor %}
+                                    </td>
+                                </tr>
+                            </table>
+                        </center>
                     </div>
                     {% if response != '' %}
                         {% for key, val in response %}
@@ -385,6 +391,11 @@
     {% elseif interactionType == 'InteractionMatching' %}
         <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2/jquery-ui-1.9.2.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/ext/jquery-ui-touch-punch.js') }}"></script>
+        <script>
+            function deleteImage(){
+                return "{{ asset('bundles/ujmexo/images/delete.png') }}";
+            }
+        </script>
     {% endif %}
 
     {% include "UJMExoBundle:Partial:modal/confirmFinishExercise.html.twig" %}

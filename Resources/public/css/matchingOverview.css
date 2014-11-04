@@ -38,8 +38,8 @@
 }
 
 .state-active {
-	border: 1px solid #aaaaaa;
-	background: #989C98 50% 50% repeat-x;
-	font-weight: normal;
-	color: #212121;
+    border: 1px solid #aaaaaa;
+    background: #989C98 50% 50% repeat-x;
+    font-weight: normal;
+    color: #212121;
 }

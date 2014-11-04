@@ -1035,22 +1035,11 @@ class exerciseServices
      */
     public function isExerciseAdmin($exercise)
     {
-        $user = $this->securityContext->getToken()->getUser();
-
-        $subscription = $this->doctrine
-            ->getManager()
-            ->getRepository('UJMExoBundle:Subscription')
-            ->getControlExerciseEnroll($user->getId(), $exercise->getId());
-
-        if (count($subscription) > 0) {
-            return $subscription[0]->getAdmin();
+        $collection = new ResourceCollection(array($exercise->getResourceNode()));
+        if ($this->securityContext->isGranted('ADMINISTRATE', $collection)) {
+            return true;
         } else {
-            $collection = new ResourceCollection(array($exercise->getResourceNode()));
-            if ($this->securityContext->isGranted('edit', $collection)) {
-                return 1;
-            } else {
-                return 0;
-            }
+            return false;
         }
     }
 
@@ -1222,7 +1211,7 @@ class exerciseServices
      */
     public function controlMaxAttemps($exercise, $user, $exoAdmin)
     {
-        if (($exoAdmin != 1) && ($exercise->getMaxAttempts() > 0)
+        if (($exoAdmin === false) && ($exercise->getMaxAttempts() > 0)
             && ($exercise->getMaxAttempts() <= $this->getNbPaper($user->getId(),
             $exercise->getId(), true))
         ) {
@@ -1248,7 +1237,7 @@ class exerciseServices
             ((($exercise->getStartDate()->format('Y-m-d H:i:s') <= date('Y-m-d H:i:s'))
             && (($exercise->getUseDateEnd() == 0)
             || ($exercise->getEndDate()->format('Y-m-d H:i:s') >= date('Y-m-d H:i:s'))))
-            || ($exoAdmin == 1))
+            || ($exoAdmin === true))
         ) {
             return true;
         } else {

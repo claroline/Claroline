@@ -47,7 +47,7 @@ class ExerciseController extends Controller
 
         $exoAdmin = $this->container->get('ujm.exercise_services')->isExerciseAdmin($exercise);
 
-        if ($exoAdmin == 1) {
+        if ($exoAdmin === true) {
 
             if (!$exercise) {
                 throw $this->createNotFoundException('Unable to find Exercise entity.');
@@ -130,6 +130,11 @@ class ExerciseController extends Controller
         $exerciseSer = $this->container->get('ujm.exercise_services');
 
         $user = $this->container->get('security.context')->getToken()->getUser();
+        if (is_object($user)) {
+            $uid = $user->getId();
+        } else {
+            $uid = 'anonymous';
+        }
 
         $em = $this->getDoctrine()->getManager();
         $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($exerciseId);
@@ -145,17 +150,21 @@ class ExerciseController extends Controller
             throw $this->createNotFoundException('Unable to find Exercise entity.');
         }
 
-        if (($exerciseSer->controlDate($exoAdmin, $exercise) === true)
+        if (is_object($user) && ($exerciseSer->controlDate($exoAdmin, $exercise) === true)
             && ($exerciseSer->controlMaxAttemps($exercise, $user, $exoAdmin) === true)
-            && ( ($exercise->getPublished() === true) || ($exoAdmin == 1) )
+            && ( ($exercise->getPublished() === true) || ($exoAdmin === true) )
         ) {
             $allowToCompose = 1;
         }
 
         $nbQuestions = $em->getRepository('UJMExoBundle:ExerciseQuestion')->getCountQuestion($exerciseId);
 
-        $nbUserPaper = $exerciseSer->getNbPaper($user->getId(),
-                                                $exercise->getId());
+        if (is_object($user)) {
+            $nbUserPaper = $exerciseSer->getNbPaper($user->getId(),
+                                                    $exercise->getId());
+        } else {
+            $nbUserPaper = 0;
+        }
 
         if ($exercise->getPublished() != 1) {
             $published = 0;
@@ -170,7 +179,7 @@ class ExerciseController extends Controller
                 'workspace'      => $workspace,
                 'entity'         => $exercise,
                 'allowToCompose' => $allowToCompose,
-                'userId'         => $user->getId(),
+                'userId'         => $uid,
                 'nbQuestion'     => $nbQuestions['nbq'],
                 'nbUserPaper'    => $nbUserPaper,
                 'published'      => $published,
@@ -202,7 +211,7 @@ class ExerciseController extends Controller
             $exoAdmin = $this->container->get('ujm.exercise_services')
                                         ->isExerciseAdmin($exercise);
 
-            if ( ($exoAdmin == 1) && ($exercise->getPublished() == FALSE)) {
+            if ( ($exoAdmin === true) && ($exercise->getPublished() == FALSE)) {
 
                 $this->deletePapers($exercise->getId(), $em);
 
@@ -244,7 +253,7 @@ class ExerciseController extends Controller
             $nbPapers = $em->getRepository('UJMExoBundle:Paper')
                            ->countPapers($exercise->getId());
 
-            if ( ($exoAdmin == 1) && ($nbPapers == 0) ) {
+            if ( ($exoAdmin === true) && ($nbPapers == 0) ) {
                 $exercise->setPublished(FALSE);
                 $em->persist($exercise);
                 $em->flush();
@@ -275,7 +284,7 @@ class ExerciseController extends Controller
         $exoAdmin = $this->container->get('ujm.exercise_services')
                                     ->isExerciseAdmin($exercise);
 
-        if ( ($exoAdmin == 1) && ($exercise->getPublished() == FALSE) ) {
+        if ( ($exoAdmin === true) && ($exercise->getPublished() == FALSE) ) {
             $this->deletePapers($id, $em);
         }
 
@@ -317,7 +326,7 @@ class ExerciseController extends Controller
         $request = $this->get('request');
         $page = $request->query->get('page', 1);
 
-        if ($exoAdmin == 1) {
+        if ($exoAdmin === true) {
             $interactions = $this->getDoctrine()
                 ->getManager()
                 ->getRepository('UJMExoBundle:Interaction')
@@ -455,7 +464,7 @@ class ExerciseController extends Controller
             $pagerShared = $page;
         }
 
-        if ($exoAdmin == 1) {
+        if ($exoAdmin === true) {
 
             if ($QuestionsExo == 'true') {
 
@@ -640,7 +649,7 @@ class ExerciseController extends Controller
 
         $exoAdmin = $this->container->get('ujm.exercise_services')->isExerciseAdmin($exercise);
 
-        if ($exoAdmin == 1) {
+        if ($exoAdmin === true) {
             $em = $this->getDoctrine()->getManager();
             $eq = $em->getRepository('UJMExoBundle:ExerciseQuestion')
                 ->findOneBy(array('exercise' => $exoID, 'question' => $qid));
@@ -680,6 +689,9 @@ class ExerciseController extends Controller
         $exerciseSer = $this->container->get('ujm.exercise_services');
 
         $user = $this->container->get('security.context')->getToken()->getUser();
+        if (!is_object($user)) {
+            return $this->redirect($this->generateUrl('ujm_exercise_open', array('exerciseId' => $id)));
+        }
         $uid = $user->getId();
 
         $em = $this->getDoctrine()->getManager();
@@ -691,7 +703,7 @@ class ExerciseController extends Controller
         $workspace = $exercise->getResourceNode()->getWorkspace();
 
         if ( ($exerciseSer->controlDate($exoAdmin, $exercise) === true)
-             && ( ($exercise->getPublished() === true) || ($exoAdmin == 1) )
+             && ( ($exercise->getPublished() === true) || ($exoAdmin === true) )
            ) {
             $session = $this->getRequest()->getSession();
 

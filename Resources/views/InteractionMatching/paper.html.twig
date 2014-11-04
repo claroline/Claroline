@@ -62,7 +62,7 @@
             <form action="{{ path('ujm_interactionmatching_response') }}" method="post" {{ form_enctype(form) }}>
                 {{ form_widget(form) }}
                 <center>
-                    <table >
+                    <table>
                         <tr>
                             <td>
                                 {% for proposal in interactionToDisplayed.proposals %}
@@ -80,6 +80,8 @@
                                     <div id="droppable_{{ label.id }}" class="droppable" style="text-align: right;">
                                         <ul>
                                             <li class="lidroppable">{{ label.value | raw }}</li>
+                                        </ul>
+                                        <ul class="dragDropped">
                                         </ul>
                                     </div>
                                 {% endfor %}
@@ -111,4 +113,9 @@
     <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2/jquery-ui-1.9.2.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/ext/jquery-ui-touch-punch.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/matchingdisplay.js') }}"></script>
+    <script>
+        function deleteImage(){
+            return "{{ asset('bundles/ujmexo/images/delete.png') }}";
+        }
+    </script>
 {% endblock %}
