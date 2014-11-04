@@ -30,7 +30,7 @@ class CommentController extends BaseController
 
         $portfolioGuide = $this->get("icap_portfolio.manager.portfolio_guide")->getByPortfolioAndGuide($portfolio, $loggedUser);
 
-        if (null === $portfolioGuide) {
+        if ($portfolio->getUser() !== $loggedUser && null === $portfolioGuide) {
             throw new NotFoundHttpException();
         }
 
