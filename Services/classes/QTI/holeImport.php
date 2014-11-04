@@ -229,42 +229,72 @@ class holeImport extends qtiImport
             if ($rp->getAttribute("identifier") == $qtiId) {
                 $mapping = $rp->getElementsByTagName("mapping")->item(0);
                 if ($hole->getSelector() === false) {
-                    foreach ($mapping->getElementsByTagName("mapEntry") as $mapEntry) {
-                        $keyWord = new WordResponse();
-                        $keyWord->setResponse($mapEntry->getAttribute('mapKey'));
-                        $keyWord->setScore($mapEntry->getAttribute('mappedValue'));
-                        $keyWord->setHole($hole);
-                        $this->doctrine->getManager()->persist($keyWord);
-                    }
+                    $this->wordResponseForSimpleHole($mapping, $hole);
                 } else {
                     $ib = $this->assessmentItem->getElementsByTagName("itemBody")->item(0);
-                    foreach ($ib->getElementsByTagName("inlineChoiceInteraction") as $ici) {
-                        if ($ici->getAttribute('responseIdentifier') == $qtiId) {
-                            foreach ($ici->getElementsByTagName('inlineChoice') as $ic) {
-                                $keyWord = new WordResponse();
-                                $score = 0;
-                                $matchScore = false;
-                                $keyWord->setResponse($ic->nodeValue);
-                                foreach ($mapping->getElementsByTagName("mapEntry") as $mapEntry) {
-                                    if ($mapEntry->getAttribute('mapKey') == $ic->getAttribute('identifier')) {
-                                        $score = $mapEntry->getAttribute('mappedValue');
-                                        $matchScore = true;
-                                    }
-                                }
-                                if ($matchScore === false) {
-                                    foreach ($mapping->getElementsByTagName("mapEntry") as $mapEntry) {
-                                        if ($mapEntry->getAttribute('mapKey') == $ic->nodeValue) {
-                                            $score = $mapEntry->getAttribute('mappedValue');
-                                        }
-                                    }
-                                }
-                                $keyWord->setScore($score);
-                                $keyWord->setHole($hole);
-                                $this->doctrine->getManager()->persist($keyWord);
-                                $this->tabWrOpt[] = $keyWord;
+                    $this->wordResponseForList($qtiId, $ib, $mapping, $hole);
+                }
+            }
+        }
+    }
+
+    /**
+     * Create wordResponseForSimpleHole
+     *
+     * @access protected
+     *
+     * @param DOMNodelist::item $mapping element mapping
+     * @param UJM\ExoBundle\Entity\Hole $hole
+     *
+     */
+    protected function wordResponseForSimpleHole($mapping, $hole)
+    {
+        foreach ($mapping->getElementsByTagName("mapEntry") as $mapEntry) {
+            $keyWord = new WordResponse();
+            $keyWord->setResponse($mapEntry->getAttribute('mapKey'));
+            $keyWord->setScore($mapEntry->getAttribute('mappedValue'));
+            $keyWord->setHole($hole);
+            $this->doctrine->getManager()->persist($keyWord);
+        }
+    }
+
+    /**
+     * Create wordResponseForList
+     *
+     * @access protected
+     *
+     * @param String $qtiId id of hole in the qti file
+     * @param DOMNodelist::item $ib element itemBody
+     * @param DOMNodelist::item $mapping element mapping
+     * @param UJM\ExoBundle\Entity\Hole $hole
+     *
+     */
+    protected function wordResponseForList($qtiId, $ib, $mapping, $hole)
+    {
+        foreach ($ib->getElementsByTagName("inlineChoiceInteraction") as $ici) {
+            if ($ici->getAttribute('responseIdentifier') == $qtiId) {
+                foreach ($ici->getElementsByTagName('inlineChoice') as $ic) {
+                    $keyWord = new WordResponse();
+                    $score = 0;
+                    $matchScore = false;
+                    $keyWord->setResponse($ic->nodeValue);
+                    foreach ($mapping->getElementsByTagName("mapEntry") as $mapEntry) {
+                        if ($mapEntry->getAttribute('mapKey') == $ic->getAttribute('identifier')) {
+                            $score = $mapEntry->getAttribute('mappedValue');
+                            $matchScore = true;
+                        }
+                    }
+                    if ($matchScore === false) {
+                        foreach ($mapping->getElementsByTagName("mapEntry") as $mapEntry) {
+                            if ($mapEntry->getAttribute('mapKey') == $ic->nodeValue) {
+                                $score = $mapEntry->getAttribute('mappedValue');
                             }
                         }
                     }
+                    $keyWord->setScore($score);
+                    $keyWord->setHole($hole);
+                    $this->doctrine->getManager()->persist($keyWord);
+                    $this->tabWrOpt[] = $keyWord;
                 }
             }
         }
