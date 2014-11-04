@@ -1,8 +1,8 @@
 var responses = [];
-var balises = []
+var balises = [];
 
 $(function() {
-    
+
     if($(".draggable").width() > $(".droppable").width()) {
         var $widthDraggable = $(".draggable").width();
         var $widthDroppable = $widthDraggable;
@@ -10,17 +10,9 @@ $(function() {
     }
 
     $(".draggable").each(function() {
-        $(this).draggable({
-            cursor: 'move',
-            revert: 'invalid',
-            helper: 'clone',
-            stop: function(event, ui) {
-//dump(responses);
-                dragStop();
-            },
-        });
+        creationDraggable($(this));
     });
-    
+
     $(".droppable").each(function() {
         if($(this).children().length > 2) {
             childrens = $(this).children().length;
@@ -37,7 +29,6 @@ $(function() {
                 balises[numberId] = $(this);
                 idDrag = $(this).attr('id');
                 $(this).append("<a id=reset"+idDrag+"><img src="+deleteImage()+" /></a>");
-                test = $(this);
             });
         }
         $(this).droppable({
@@ -83,44 +74,37 @@ $(function() {
             idDrag = "#"+idDrag;
             // discolor the text
             $(idDrag).fadeTo(100, 0.3);
-            test = balises[numberId].parent().parent();
-            $(this).children().children().draggable({
-            cursor: 'move',
-            revert: 'invalid',
-            helper: 'clone',
-            stop: function(event, ui) {
-//dump(responses);
-                dragStop();
-            },
-        });
+            droppable = balises[numberId].parent().parent();
+            creationDraggable($(this).children().children());
             $(idDrag).draggable("enable");
-            disableDrag(idDrag, test);
-        } 
+            disableDrag(idDrag, droppable);
+        }
         $(this).droppable({
             tolerance: "pointer",
         });
     });
 });
 
+function creationDraggable(draggable){
+    draggable.draggable({
+        cursor: 'move',
+        revert: 'invalid',
+        helper: 'clone',
+        stop: function(event, ui) {
+//dump(responses);
+            dragStop();
+        },
+    });
+}
+
 function disableDrag(idDrag, parent){
-    
     var draggableDropped = parent.children(".dragDropped").children(idDrag);
-    if(parent.children(".dragDropped").children(idDrag).length <= 2) {
         parent.children(".dragDropped").children(idDrag).children().last().click(function() {
-            if(parent.parent().parent().parent().children().length <=1) {
+            if(parent.children(".dragDropped").children().length <= 1) {
                 parent.removeClass("state-highlight");
             }
             removeDrag(idDrag, draggableDropped);
         });
-    } else {
-        parent.children(".dragDropped").children(idDrag).children().click(function() {
-            if(parent.parent().parent().children().length <=1) {
-                alert("coucou 2");
-                parent.removeClass("state-highlight");
-            }
-            removeDrag(idDrag, draggableDropped);
-        });
-    }
 }
 
 function removeDrag(idDrag, draggableDropped) {
@@ -130,7 +114,7 @@ function removeDrag(idDrag, draggableDropped) {
         responses[idProposal] = 'NULL';
     }
     dragStop();
-    
+
     draggableDropped.remove();
     // reinitalisation of draggable
     $(idDrag).draggable("enable");
