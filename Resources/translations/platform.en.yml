@@ -181,6 +181,7 @@ canEdit: 'Right to edit'
 canExport: 'Right to export'
 canOpen: 'Right to open'
 cancel: Cancel
+cannot_change_password: you cannot change your password
 cannot_delete_unique_manager: 'Cannot remove the unique manager.'
 cannot_unsubscribe_from_workspace: 'Cannot unsubscribe from workspace'
 captcha: Captcha
