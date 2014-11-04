@@ -72,6 +72,11 @@
             <li> <a href="{{ path('claro_workspace_registered_user_list', {'workspace': workspace.getId() }) }}"> {{'users'|trans({}, 'platform') }} </a> </li>
             <li class="active"> <a href="{{ path('claro_workspace_registered_group_list', {'workspace': workspace.getId()}) }}"> {{'groups'|trans({}, 'platform') }} </a> </li>
             <li> <a href="{{ path('claro_workspace_roles', {'workspace': workspace.getId()} ) }}">{{ 'roles'|trans({}, 'platform') }}</a> </li>
+            <li>
+                <a href="{{ path('claro_users_pending',{'workspace':workspace.getId()}) }}">
+                    {{ 'pending'|trans({},'platform') }}
+                </a>
+            </li>
         </ul>
         <h3>{{ 'groups_registration_in_workspace'|trans({}, 'platform') }}</h3>
         {{ macros.flashBox() }}
@@ -125,7 +130,16 @@
                         {% for group in pager.currentPageResults %}
                             <tr id="row-{{ group.id }}" class="row-group" data-group-id="{{ group.getId() }}">
                                 <td> <input class="chk-grp chk-item" type="checkbox" value="{{ group.getId() }}"> </input></td>
-                                <td>  {{ group.name }} </td>
+                                <td>
+                                    <a href="{{
+                                        path(
+                                            'claro_workspace_unregistered_users_from_group_list',
+                                            {'group': group.getId(), 'workspace': workspace.getId()}
+                                        )
+                                    }}">
+                                        {{ group.name }}
+                                    </a>
+                                </td>
                                 <td>
                                     {% for role in group.getEntityRoles() %}
                                         {% if role.getWorkspace() == workspace %}
