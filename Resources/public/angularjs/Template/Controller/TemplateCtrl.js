@@ -51,7 +51,7 @@
                         }
                     })
                     .error(function(data, status) {
-                        AlertFactory.addAlert('danger', 'Error while removing Path template.');
+                        AlertFactory.addAlert('error', 'Error while removing Path template.');
                     });
             };
         }

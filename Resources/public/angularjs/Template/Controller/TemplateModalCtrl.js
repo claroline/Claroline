@@ -100,13 +100,13 @@
                         }
                         else {
                             // Server error while saving
-                            AlertFactory.addAlert('danger', Translator.get('path_editor:path_template_save_error'));
+                            AlertFactory.addAlert('error', Translator.get('path_editor:path_template_save_error'));
                         }
 
                         $modalInstance.close();
                     })
                     .error(function(data, status) {
-                        AlertFactory.addAlert('danger', Translator.get('path_editor:path_template_save_error'));
+                        AlertFactory.addAlert('error', Translator.get('path_editor:path_template_save_error'));
                     });
             }
         }

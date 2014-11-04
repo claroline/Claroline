@@ -1,16 +1,19 @@
 /**
  * Alert Factory
+ * Manage stack of Alerts
  */
 (function () {
     'use strict';
 
     angular.module('AlertModule').factory('AlertFactory', [
-        function () {
-            var alerts = [];
+        '$timeout',
+        function ($timeout) {
+            var alerts = {};
+            var currentIndex = 0;
 
             return {
                 /**
-                 *
+                 * Get all alerts
                  * @returns Array
                  */
                 getAlerts: function () {
@@ -18,36 +21,40 @@
                 },
 
                 /**
-                 *
+                 * Add a new alert
                  * @param msg
                  * @param type
                  * @returns AlertFactory
                  */
                 addAlert: function (type, msg) {
-                    alerts.push({ type: type, msg: msg });
+                    currentIndex++;
 
-                    var index = alerts.length;
+                    var alert = { id: currentIndex, type: type, msg: msg };
+                    alerts[currentIndex] = alert;
 
                     // Auto close alert
-                    setTimeout(function () {
-                        console.log(index);
-                        this.closeAlert(index);
+                    $timeout(function () {
+                        console.log(alerts);
+                        this.closeAlert(alert);
+                        console.log(alerts);
                     }.bind(this), 3000);
 
                     return this;
                 },
 
                 /**
-                 *
+                 * Close an alert
                  * @param index
                  * @returns AlertFactory
                  */
-                closeAlert: function (index) {
-                    alerts.splice(index, 1);
+                closeAlert: function (alert) {
+                    if (alerts[alert.id]) {
+                        delete alerts[alert.id];
+                    }
+
                     return this;
                 }
             };
-
         }
     ]);
 })();

@@ -33,7 +33,7 @@ path_name: Nom du parcours
 path_description: Description du parcours
 resource_edit_form: Edition d'une ressource
 resource_create_form: Création d'une ressource
-path_save_success: La parcours a correctement été sauvegardé.
+path_save_success: Le parcours a correctement été sauvegardé.
 path_template_save_success: Le modèle a correctement été sauvegardé.
 path_template_save_error: Une erreur s'est produite lors de la sauvegarde du modèle.
 
