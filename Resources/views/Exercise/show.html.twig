@@ -215,10 +215,10 @@
             {% endif %}
             {% if is_granted('ADMINISTRATE', _resource) %}
                 <a class="btn btn-primary" href="{{ path('ujm_exercise_edit', { 'id': entity.id }) }}">
-                    <i class="fa fa-pencil"></i> {{ 'edit' | trans }}
+                    <i class="fa fa-pencil"></i> {{ 'parameters' | trans }}
                 </a>
                 <a class="btn btn-primary" href="{{ path('ujm_exercise_questions', { 'id': entity.id }) }} " >
-                    <i class="fa fa-question"></i> {{ 'list of question' | trans }}
+                    <i class="fa fa-question"></i> {{ 'questions' | trans }}
                 </a>
                 <span id='spanUnpublish' style='display:none'><a id="btUnpublish" class="btn btn-primary" onclick="unpublish('{{ path('ujm_exercise_unpublish') }}', {{ entity.id }})">
                     <i class="fa fa-times"></i> {{ 'unpublish' | trans }}

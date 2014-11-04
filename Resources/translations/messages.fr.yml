@@ -305,6 +305,7 @@ paper: Passage
 paper exo: Passage d'un test
 paperLegend: Copies nécessitant une correction manuelle
 paper list: Liste des copies
+parameters: Paramètres
 partially: Partiellement correcte
 penalty: Pénalité
 percentage: Pourcentage
@@ -327,6 +328,7 @@ qcm: QCM
 qcm creation: Création d'une question de type QCM
 qcm edition: Edition d'une question de type QCM
 question: Question
+questions: Questions
 question graphic: Question Graphique
 question hole : Question à trous
 question open: Question à Réponse Ouverte
