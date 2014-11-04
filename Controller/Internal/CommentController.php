@@ -39,7 +39,7 @@ class CommentController extends BaseController
         $newComment = $commentManager->getNewComment($portfolio, $loggedUser);
         $data       = $commentManager->handle($newComment, $loggedUser, $request->request->all());
 
-        $response = new JsonResponse($data, Response::HTTP_OK);
+        $response = new JsonResponse($data, Response::HTTP_CREATED);
 
         return $response;
     }
