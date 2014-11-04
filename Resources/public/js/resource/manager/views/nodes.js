@@ -47,15 +47,11 @@
                 );
             }, this);
         },
-        addNodes: function (event, visibility) {
-            if (visibility === undefined) {
-                visibility = 'visible';
-            }
+        addNodes: function (event) {
             _.each(event, function (node) {
                 var isWhiteListed = this.parameters.resourceTypes[node.type] !== undefined;
-                var visible = node.is_visible || visibility === 'hidden';
 
-                if ((isWhiteListed || node.type === 'directory') && visible) {
+                if (isWhiteListed || node.type === 'directory') {
                     //1023 is the "I can do everything" mask.
                     if (this.parameters.restrictForOwner == 1 && node.mask != 1023 && node.type !== 'directory') {
                         return;
@@ -75,8 +71,27 @@
                 .addClass('fa fa-caret-down'));
             this.$('#' + event.id + ' .dropdown[rel=tooltip]').attr('title', event.name);
         },
+        publishNode: function (event) {
+            var nodeId = event.id;
+            var published = event.published;
+            
+            if (published) {
+                this.$('#unpublished-mark-' + nodeId).remove();
+            } else {
+                var publishedIcon =
+                    '<span id="unpublished-mark-' + nodeId + '">' +
+                        '<i class="fa fa-circle text-danger pull-right" ' +
+                           'style="position: relative; top: -5px; right: -5px; font-size: 20px;" ' +
+                           'data-toggle="tooltip" ' +
+                           'data-placement="top" ' +
+                           'title="' + Translator.get('platform:this_resource_is_not_published') + '"></i>' +
+                    '</span>';
+                this.$('#node-element-' + nodeId).html(publishedIcon);
+            }
+        },
         editNode: function (event) {
             this.renameNode(event);
+            this.publishNode(event);
             this.$('#node-element-' + event.id).attr(
                 'style',
                 'background-image:url("' + this.parameters.webPath + event.large_icon + '");'
@@ -170,7 +185,7 @@
 
             if (!event.isSearchMode) {
                 this.$el.empty();
-                this.addNodes(event.nodes, event.visibility);
+                this.addNodes(event.nodes);
 
                 this.$el.sortable({
                     update: _.bind(this.orderNodes, this)

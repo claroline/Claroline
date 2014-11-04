@@ -139,13 +139,15 @@ class ResourceManager
         Workspace $workspace,
         ResourceNode $parent = null,
         ResourceIcon $icon = null,
-        array $rights = array()
+        array $rights = array(),
+        $isPublished = true
     )
     {
         $this->om->startFlushSuite();
         $this->checkResourcePrepared($resource);
         $node = $this->om->factory('Claroline\CoreBundle\Entity\Resource\ResourceNode');
         $node->setResourceType($resourceType);
+        $node->setPublished($isPublished);
 
         $mimeType = ($resource->getMimeType() === null) ?
             'custom/' . $resourceType->getName():
@@ -169,7 +171,6 @@ class ResourceManager
         $node->setName($name);
         $node->setPrevious($previous);
         $node->setClass(get_class($resource));
-        $node->setIsVisible(true);
 
         if (!is_null($parent)) {
             $node->setAccessibleFrom($parent->getAccessibleFrom());
@@ -289,10 +290,11 @@ class ResourceManager
      *
      * @return array
      */
-    public function findAndSortChildren(ResourceNode $parent)
+    public function findAndSortChildren(ResourceNode $parent, User $user)
     {
         //a little bit hacky but retrieve all children of the parent
-        $nodes = $this->resourceNodeRepo->findChildren($parent, array('ROLE_ADMIN'));
+        $nodes = $this->resourceNodeRepo
+            ->findChildren($parent, array('ROLE_ADMIN'), $user);
         $sorted = array();
         //set the 1st item.
         foreach ($nodes as $node) {
@@ -332,14 +334,14 @@ class ResourceManager
      *
      * @return array
      */
-    public function sort(array $nodes)
+    public function sort(array $nodes, User $user)
     {
         $sortedResources = array();
 
         if (count($nodes) > 0) {
             if ($this->haveSameParents($nodes)) {
                 $parent = $this->resourceNodeRepo->find($nodes[0]['parent_id']);
-                $sortedList = $this->findAndSortChildren($parent);
+                $sortedList = $this->findAndSortChildren($parent, $user);
 
                 foreach ($sortedList as $sortedItem) {
                     foreach ($nodes as $node) {
@@ -842,7 +844,7 @@ class ResourceManager
         $resourceArray['large_icon'] = $node->getIcon()->getRelativeUrl();
         $resourceArray['path_for_display'] = $node->getPathForDisplay();
         $resourceArray['mime_type'] = $node->getMimeType();
-        $resourceArray['is_visible'] = $node->getIsVisible();
+        $resourceArray['published'] = $node->isPublished();
 
         if ($node->getPrevious() !== null) {
             $resourceArray['previous_id'] = $node->getPrevious()->getId();
@@ -1209,11 +1211,16 @@ class ResourceManager
      *
      * @return array
      */
-    public function getChildren(ResourceNode $node, array $roles, $isSorted = true)
+    public function getChildren(
+        ResourceNode $node,
+        array $roles,
+        User $user,
+        $isSorted = true
+    )
     {
-        $children = $this->resourceNodeRepo->findChildren($node, $roles);
+        $children = $this->resourceNodeRepo->findChildren($node, $roles, $user);
 
-        return ($isSorted) ? $this->sort($children): $children;
+        return ($isSorted) ? $this->sort($children, $user): $children;
     }
 
     /**
@@ -1400,7 +1407,7 @@ class ResourceManager
         $newNode->setMimeType($node->getMimeType());
         $newNode->setAccessibleFrom($node->getAccessibleFrom());
         $newNode->setAccessibleUntil($node->getAccessibleUntil());
-        $newNode->setIsVisible($node->getIsVisible());
+        $newNode->setPublished($node->isPublished());
 
         if ($withRights) {
             //if everything happens inside the same workspace and no specific rights have been given,

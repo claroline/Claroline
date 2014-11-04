@@ -22,9 +22,9 @@ resource_properties_form_creator: 'Creador'
 resource_properties_form_deletable: 'Suprimir'
 resource_properties_form_editable: 'Editar'
 resource_properties_form_exportable: 'Exportar'
-resource_properties_form_isVisible: Visible
 resource_properties_form_name: 'Nombre'
 resource_properties_form_newIcon: 'Icono'
+resource_properties_form_published: Publicado
 resource_properties_form_resourceType: 'Tipo de recurso'
 resource_shortcut: 'Acceso directo'
 text: 'Texto'

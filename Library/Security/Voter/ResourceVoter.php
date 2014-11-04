@@ -192,8 +192,9 @@ class ResourceVoter implements VoterInterface
             $accessibleUntil = $node->getAccessibleUntil();
             $currentDate = new \DateTime();
 
-            if ((is_null($accessibleFrom) || $currentDate >= $accessibleFrom)
-                && (is_null($accessibleUntil) || $currentDate <= $accessibleUntil)) {
+            if ((is_null($accessibleFrom) || $currentDate >= $accessibleFrom) &&
+                (is_null($accessibleUntil) || $currentDate <= $accessibleUntil) &&
+                $node->isPublished()) {
 
                 $mask = $this->repository->findMaximumRights($this->ut->getRoles($token), $node);
                 $type = $node->getResourceType();

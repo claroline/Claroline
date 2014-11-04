@@ -14,7 +14,6 @@ namespace Claroline\CoreBundle\Repository;
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\QueryBuilder;
 use Gedmo\Tree\Entity\Repository\MaterializedPathRepository;
-use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
@@ -86,7 +85,7 @@ class ResourceNodeRepository extends MaterializedPathRepository
      *
      * @return array[array] An array of resources represented as arrays
      */
-    public function findChildren(ResourceNode $parent, array $roles)
+    public function findChildren(ResourceNode $parent, array $roles, User $user)
     {
         if (count($roles) === 0) {
             throw new \RuntimeException('Roles cannot be empty');
@@ -116,7 +115,8 @@ class ResourceNodeRepository extends MaterializedPathRepository
         } else {
             $builder->selectAsArray(true)
                 ->whereParentIs($parent)
-                ->whereHasRoleIn($roles);
+                ->whereHasRoleIn($roles)
+                ->whereIsAccessible($user);
 
             $query = $this->_em->createQuery($builder->getDql());
             $query->setParameters($builder->getParameters());

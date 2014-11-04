@@ -71,6 +71,7 @@ activity_evaluation_form_score: Evaluation
 activity_evaluation_form_status: Statut
 activity_form_instructions: Instructions
 activity_form_name: Nom
+activity_form_published: 'Publier la ressource'
 activity_parameters_form_evaluation_type: 'Type d''évaluation'
 activity_parameters_form_max_attempts: 'Nombre de tentatives permises'
 activity_parameters_form_max_duration: 'Temps limite accordé (en seconde)'
@@ -245,7 +246,7 @@ creation_date: 'Date de création'
 creator: Créateur
 csv_export: Export csv
 csv_group_import_infos: 'Informations sur le format du fichier CSV'
-csv_group_import_infos_format: Format: liste de nom d'utilisateurs séparés par un retour à la ligne.
+csv_group_import_infos_format: 'Format: liste de nom d''utilisateurs séparés par un retour à la ligne.'
 csv_users_import_infos: 'Informations sur le format du fichier CSV'
 csv_users_import_infos_format: Format
 csv_users_import_infos_format_a: 'Les données d''un utilisateur doivent être définies sur une ligne et séparées par un point virgule'
@@ -311,6 +312,7 @@ desktop_home_tabs: 'Onglets pour le bureau'
 desktop_tools: 'Outils du bureau'
 directory: Répertoire
 directory_form_name: Nom
+directory_form_published: 'Publier la ressource'
 directory_form_shareType: Redistribution
 display: Afficher
 display_captcha: 'Afficher les captcha pour les anonymes'
@@ -378,6 +380,7 @@ file: Fichier
 file_form_file: Fichier
 file_form_license: License
 file_form_name: Nom
+file_form_published: 'Publier la ressource'
 file_form_shareType: Redistribution
 file_form_shareType_0: Oui
 file_form_shareType_1: Non
@@ -799,7 +802,6 @@ security_token_form_token: 'Token'
 security_token_list: 'Liste des jetons d''authentification'
 security_tokens_management: 'Gestion des jetons d''authentification'
 see: Voir
-see_hidden_files: 'Voir les fichiers cachés'
 see_more: 'Voir plus'
 see_public_profile: 'Voir mon profil public'
 select all: 'Tout sélectionner'
@@ -873,11 +875,13 @@ terms_enabled_but_empty: Les conditions d'utilisation ne peuvent être activées
 text: Texte
 text_form_content: Contenu
 text_form_name: Nom
+text_form_published: 'Publier la ressource'
 text_form_shareType: Redistribution
 text_form_text: Texte
 the_following_users_were_not_imported: 'Les utilisateurs suivants n''ont pas pu être importés:'
 the_workspace: 'L''espace d''activités'
 this_page_requires_authentication: 'Cette page requiert une authentification. Veuillez vous identifier.'
+this_resource_is_not_published: 'Cette ressource n''est pas publiée'
 time_col: 'Colonne des durées'
 tinymce_all_buttons: Tous les outils
 title: Titre

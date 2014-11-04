@@ -149,7 +149,10 @@ class ResourceController
                         $this->resourceManager->getResourceTypeByName($resourceType),
                         $user,
                         $parent->getWorkspace(),
-                        $parent
+                        $parent,
+                        null,
+                        array(),
+                        $event->isPublished()
                     );
 
                     $nodesArray[] = $this->resourceManager->toArray(
@@ -418,10 +421,10 @@ class ResourceController
 
     /**
      * @EXT\Route(
-     *     "directory/{nodeId}/visibility/{visibility}",
+     *     "directory/{nodeId}",
      *     name="claro_resource_directory",
      *     options={"expose"=true},
-     *     defaults={"nodeId"=0, "visibility"="visible"}
+     *     defaults={"nodeId"=0}
      * )
      * @EXT\ParamConverter(
      *      "node",
@@ -440,13 +443,12 @@ class ResourceController
      * is returned.
      *
      * @param ResourceNode $node the directory node
-     * @param string $visibility Only display visible resources if $visible == "visible"
      *
      * @return \Symfony\Component\HttpFoundation\Response
      *
      * @throws Exception if the id doesn't match any existing directory
      */
-    public function openDirectoryAction(ResourceNode $node = null, $visibility = 'visible')
+    public function openDirectoryAction(ResourceNode $node = null)
     {
         $user = $this->sc->getToken()->getUser();
         $path = array();
@@ -473,7 +475,7 @@ class ResourceController
             }
 
             $path = $this->resourceManager->getAncestors($node);
-            $nodes = $this->resourceManager->getChildren($node, $currentRoles);
+            $nodes = $this->resourceManager->getChildren($node, $currentRoles, $user);
 
             //set "admin" mask if someone is the creator of a resource or the resource workspace owner.
             //if someone needs admin rights, the resource type list will go in this array
@@ -518,8 +520,7 @@ class ResourceController
                 'nodes' => $nodesWithCreatorPerms,
                 'canChangePosition' => $canChangePosition,
                 'workspace_id' => $workspaceId,
-                'is_root' => $isRoot,
-                'visibility' => $visibility
+                'is_root' => $isRoot
             )
         );
 
