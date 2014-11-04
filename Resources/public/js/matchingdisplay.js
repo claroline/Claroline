@@ -1,5 +1,5 @@
 var responses = [];
-var balises = [];
+var balisesLiDropped = [];
 
 $(function() {
 
@@ -10,23 +10,26 @@ $(function() {
     }
 
     $(".draggable").each(function() {
-        creationDraggable($(this));
+        activeDraggable($(this));
     });
 
     $(".droppable").each(function() {
+        //for exercice, if go on previous question
         if($(this).children().length > 2) {
             childrens = $(this).children().length;
             var i=2;
-            //deplacement of li in ul
+            //displacement of each li in ul
             for(i=2; i<childrens; i++) {
                 $(this).children(".dragDropped").prepend($(this).children().last().clone());
                 $(this).children().last().remove();
             }
+            //active the css class when drag dropped
             $(this).addClass("state-highlight");
             $(this).children(".dragDropped").children().each(function() {
+                //add the image for delete drag
                 id = $(this).attr('id');
-                numberId = id.replace('draggable_', '');
-                balises[numberId] = $(this);
+                idNumber = id.replace('draggable_', '');
+                balisesLiDropped[idNumber] = $(this);
                 idDrag = $(this).attr('id');
                 $(this).append("<a id=reset"+idDrag+"><img src="+deleteImage()+" /></a>");
             });
@@ -43,17 +46,17 @@ $(function() {
                 if (idProposal) {
                     responses[idProposal] = idLabel;
                 }
+
                 idProposal = ui.draggable.attr("id");
                 $(this).addClass("state-highlight");
+                //clone the drag in drop
                 $(this).children(".dragDropped").append($(ui.helper).clone().removeClass("draggable ui-draggable ui-draggable-dragging")
                         .removeAttr('style').css("list-style-type","none").addClass(idProposal));
+
                 $("."+idProposal).attr('id', idProposal);
-                if(ui.draggable.height() > $(this).height()) {
-                    $(this).height(ui.draggable.height() * 1.5);
-                }
                 var idDrag = "#"+idProposal;
                 $(this).find(".dragDropped").children(idDrag).append("<a id=reset"+idDrag+"><img src="+deleteImage()+" /></a>");
-                //desactivate the drag
+                //desactivate the drag like he is dropped
                 $(idDrag).draggable("disable");
                 // discolor the text
                 $(idDrag).fadeTo(100, 0.3);
@@ -63,48 +66,51 @@ $(function() {
     });
 
     $(".origin").each(function() {
+        //for exercice, if go on previous question
         if($(this).children().children().length == 0) {
             id = $(this).attr('id');
-            numberId = id.replace('div_', '');
-            $(this).children().append(balises[numberId].clone());
+            idNumber = id.replace('div_', '');
+            //clones the li balise of draggable and takes the correct appearance like if is dropped
+            $(this).children().append(balisesLiDropped[idNumber].clone());
             $(this).children().children().children("a").remove();
             $(this).children().children().removeClass();
             $(this).children().children().addClass("draggable ui-draggable ui-draggable-disabled ui-state-disabled");
             idDrag = id.replace('div', 'draggable');
             idDrag = "#"+idDrag;
-            // discolor the text
             $(idDrag).fadeTo(100, 0.3);
-            droppable = balises[numberId].parent().parent();
-            creationDraggable($(this).children().children());
+            droppable = balisesLiDropped[idNumber].parent().parent();
+            activeDraggable($(this).children().children());
             $(idDrag).draggable("enable");
             disableDrag(idDrag, droppable);
         }
+
         $(this).droppable({
             tolerance: "pointer",
         });
     });
 });
 
-function creationDraggable(draggable){
+function activeDraggable(draggable) {
     draggable.draggable({
         cursor: 'move',
         revert: 'invalid',
         helper: 'clone',
         stop: function(event, ui) {
-//dump(responses);
+            //dump(responses);
             dragStop();
         },
     });
 }
 
-function disableDrag(idDrag, parent){
+function disableDrag(idDrag, parent) {
     var draggableDropped = parent.children(".dragDropped").children(idDrag);
-        parent.children(".dragDropped").children(idDrag).children().last().click(function() {
-            if(parent.children(".dragDropped").children().length <= 1) {
-                parent.removeClass("state-highlight");
-            }
-            removeDrag(idDrag, draggableDropped);
-        });
+    //removes a drag dropped
+    parent.children(".dragDropped").children(idDrag).children().last().click(function() {
+        if(parent.children(".dragDropped").children().length <= 1) {
+            parent.removeClass("state-highlight");
+        }
+        removeDrag(idDrag, draggableDropped);
+    });
 }
 
 function removeDrag(idDrag, draggableDropped) {
@@ -116,7 +122,7 @@ function removeDrag(idDrag, draggableDropped) {
     dragStop();
 
     draggableDropped.remove();
-    // reinitalisation of draggable
+    // resets of draggable
     $(idDrag).draggable("enable");
     $(idDrag).fadeTo(100, 1);
 }
