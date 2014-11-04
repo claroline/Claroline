@@ -962,6 +962,7 @@ username_found_at: 'The username %username% was found at lines: %lines%'
 username_or_email: 'Username or email'
 users: Users
 users_connected_once: 'users connected at least once'
+users_from_group_registration: 'Users from group registration'
 users_import: 'Users import'
 users_list: 'Users list'
 users_management: 'Users management'

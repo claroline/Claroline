@@ -860,6 +860,7 @@ username_found_at: 'El nombre de usuario %username% fue encontrado en la linea: 
 username_or_email: 'Nombre de usuario o correo electrónico'
 users: 'Usuario'
 users_connected_once: 'Usuarios que se han conectado al menos una vez'
+users_from_group_registration: 'Inscripción de uduarios del grupo'
 users_import: 'Importar usuarios'
 users_list: 'Lista de usuarios'
 users_management: 'Gestión de usuarios'

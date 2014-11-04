@@ -1,43 +1,42 @@
-{% macro renderPager(search, workspaceId, pager, max, order, direction) %}
-    {% if search == '' %}
-        {{
-            pagerfanta(
-                pager,
-                'twitter_bootstrap_translated',
-                {
-                    'proximity' : 1,
-                    'routeName': 'claro_workspace_unregistered_user_list',
-                    'routeParams': {'workspace': workspaceId, 'max': max, 'order': order, 'direction':direction}
+{% macro renderPager(pager, groupId, workspaceId, max, orderedBy, order, search) %}
+    {{
+        pagerfanta(
+            pager,
+            'twitter_bootstrap_translated',
+            {
+                'proximity' : 1,
+                'routeName': 'claro_workspace_unregistered_users_from_group_list',
+                'routeParams': {
+                    'group': groupId,
+                    'workspace': workspaceId,
+                    'max': max,
+                    'orderedBy': orderedBy,
+                    'order': order,
+                    'search': search
                 }
-            )
-        }}
-    {% else %}
-        {{
-            pagerfanta(
-                pager,
-                'twitter_bootstrap_translated',
-                {
-                    'proximity' : 1,
-                    'routeName': 'claro_workspace_unregistered_user_list_search',
-                    'routeParams': {'search': search, 'workspace': workspaceId, 'max': max, 'order': order, 'direction': direction}
-                }
-            )
-        }}
-    {% endif %}
+            }
+        )
+    }}
 {% endmacro %}
 
-{% macro sortUrl(max, search, order, workspaceId, direction) %}
-    {% if direction == 'ASC' %}
-        {% set newDirection = 'DESC' %}
+{% macro sortUrl(groupId, workspaceId, max, orderedBy, order, search) %}
+    {% if order == 'ASC' %}
+        {% set newOrder = 'DESC' %}
     {% else %}
-        {% set newDirection = 'ASC' %}
+        {% set newOrder = 'ASC' %}
     {% endif %}
 
-    {% if search == '' %}
-        {{ path('claro_workspace_unregistered_user_list', {'workspace': workspaceId, 'max': max, 'order': order, 'direction': newDirection}) }}
-    {% else %}
-        {{ path('claro_workspace_unregistered_user_list_search', {'search': search, 'workspace': workspaceId, 'max': max, 'order': order, 'direction':newDirection}) }}
-    {% endif %}
+    {{ path(
+        'claro_workspace_unregistered_users_from_group_list',
+        {
+            'group': groupId,
+            'workspace': workspaceId,
+            'max': max,
+            'orderedBy': orderedBy,
+            'order': newOrder,
+            'search': search
+        })
+    }}
 {% endmacro %}
 
 {% from _self import renderPager %}
@@ -46,7 +45,9 @@
 
 {% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
 
-{% block title %}{{ parent() ~ ' - ' ~ "users_registration_in_workspace" | trans({}, "platform") | striptags | raw }}{% endblock %}
+{% block title %}
+    {{ parent() ~ ' - ' ~ '[' ~ group.getName() ~ '] ' ~ 'users_from_group_registration' | trans({}, 'platform') | striptags | raw }}
+{% endblock %}
 
 {% block breadcrumb %}
     {{
@@ -54,11 +55,19 @@
             workspace,
             [
                 {
-                    'name': 'users'|trans({}, 'platform'),
-                    'href': path('claro_workspace_registered_user_list', {'workspace': workspace.getId()})
+                    'name': 'groups'|trans({}, 'platform'),
+                    'href': path('claro_workspace_registered_group_list', {'workspace': workspace.getId()})
                 },
                 {
-                    'name': 'register'|trans({}, 'platform'),
+                    'name': 'groups_registration_in_workspace'|trans({}, 'platform'),
+                    'href': path('claro_workspace_unregistered_group_list', {'workspace': workspace.getId()})
+                },
+                {
+                    'name': group.getName(),
+                    'href': ''
+                },
+                {
+                    'name': 'users_from_group_registration'|trans({}, 'platform'),
                     'href': ''
                 }
             ]
@@ -69,23 +78,39 @@
 {% block section_content %}
     <div class="panel-body">
         <ul class="nav nav-tabs margin-bottom-md">
-            <li class="active"><a href="{{ path('claro_workspace_registered_user_list', {'workspace': workspace.getId()}) }}"> {{'users'|trans({}, 'platform') }} </a> </li>
-            <li><a href="{{ path('claro_workspace_registered_group_list', {'workspace': workspace.getId() }) }}"> {{'groups'|trans({}, 'platform') }} </a></li>
-            <li><a href="{{ path('claro_workspace_roles', {'workspace': workspace.getId()} ) }}">{{ 'roles'|trans({}, 'platform') }}</a></li>
+            <li>
+                <a href="{{ path('claro_workspace_registered_user_list', {'workspace': workspace.getId()}) }}">
+                    {{ 'users'|trans({}, 'platform') }}
+                </a>
+            </li>
+            <li class="active">
+                <a href="{{ path('claro_workspace_registered_group_list', {'workspace': workspace.getId()}) }}">
+                    {{ 'groups'|trans({}, 'platform') }}
+                </a>
+            </li>
+            <li>
+                <a href="{{ path('claro_workspace_roles', {'workspace': workspace.getId()}) }}">
+                    {{ 'roles'|trans({}, 'platform') }}
+                </a>
+            </li>
             <li>
                 <a href="{{ path('claro_users_pending',{'workspace':workspace.getId()}) }}">
                     {{ 'pending'|trans({},'platform') }}
                 </a>
             </li>
         </ul>
-        <h3>{{ 'users_registration_in_workspace'|trans({}, 'platform') }}</h3>
+        
+        <h3>
+            [{{ group.getName() }}]
+            {{ 'users_from_group_registration'|trans({}, 'platform') }}
+        </h3>
         {{ macros.flashBox() }}
-        <div>
-            <div id="custom-flashbag-div" class="alert alert-success hide">
-                <a id="flashbag-close-button" class="close" href="#" aria-hidden="true">&times;</a>
-                <ul id="custom-flashbag-ul">
-                </ul>
-            </div>
+        <div id="custom-flashbag-div" class="clearfix alert alert-success hide">
+            <a id="flashbag-close-button" class="close" href="#" aria-hidden="true">
+                &times;
+            </a>
+            <ul id="custom-flashbag-ul">
+            </ul>
         </div>
     </div>
     <div class="list-group">
@@ -94,13 +119,19 @@
                 <div class="col-md-8">
                     <div class="btn-group  margin-md">
                         <button id="add-role-button" class="btn btn-default">
-                            <i class="fa fa-plus"></i> {{ 'add'|trans({}, 'platform' ) }}
+                            <i class="fa fa-plus"></i>
+                            {{ 'add'|trans({}, 'platform' ) }}
                         </button>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="input-group margin-md">
-                        <input class="form-control" type="text" id="search-items-txt"  placeholder="{{ 'search'|trans({}, 'platform') }}" value="{{ search }}">
+                        <input class="form-control"
+                               type="text"
+                               id="search-items-txt" 
+                               placeholder="{{ 'search'|trans({}, 'platform') }}"
+                               value="{{ search }}"
+                        >
                         <span class="input-group-btn">
                             <button class="filter btn btn-default" type="button" id="search-button">
                                 <i class="fa fa-search"></i>
@@ -111,9 +142,10 @@
             </div>
             <div class="row">
                 <div div class="col-md-8">
-            {% if pager.getNbPages() > 1 %}
-                {{ renderPager(search, workspace.getId(), pager, max, order, direction) }}
-            {% endif %}
+                    
+                    {% if pager.getNbPages() > 1 %}
+                        {{ renderPager(pager, group.getId(), workspace.getId(), max, orderedBy, order, search) }}
+                    {% endif %}
                 </div>
                 <div class="col-md-4">
                     {{ maxResultsSelectBox(max, "$('#search-button').trigger('click');", 'users_per_page') }}
@@ -123,25 +155,58 @@
                 <table class="table table-striped table-bordered table-condensed">
                     <thead>
                         <tr>
-                            <th><input type="checkbox" name="all" id="check-all-items"></input></th>
-                            <th><a href="{{ sortUrl(max, search, 'username', workspace.getId(),direction) }}">{{ 'username'|trans({}, 'platform') }}</a></th>
-                            <th><a href="{{ sortUrl(max, search, 'lastName', workspace.getId(),direction ) }}">{{ 'last_name'|trans({}, 'platform') }}</a></th>
-                            <th><a href="{{ sortUrl(max, search, 'firstName', workspace.getId(),direction )  }}">{{ 'first_name'|trans({}, 'platform') }}</a></th>
+                            <th>
+                                <input type="checkbox" name="all" id="check-all-items"></input>
+                            </th>
+                            <th>
+                                <a href="{{ sortUrl(group.getId(), workspace.getId(), max, 'username', order, search) }}">
+                                    {{ 'username'|trans({}, 'platform') }}
+                                </a>
+                            </th>
+                            <th>
+                                <a href="{{ sortUrl(group.getId(), workspace.getId(), max, 'lastName', order, search) }}">
+                                    {{ 'last_name'|trans({}, 'platform') }}
+                                </a>
+                            </th>
+                            <th>
+                                <a href="{{ sortUrl(group.getId(), workspace.getId(), max, 'firstName', order, search)  }}">
+                                    {{ 'first_name'|trans({}, 'platform') }}
+                                </a>
+                            </th>
+                            
                             {% if showMail %}
-                                <th><a href="{{ sortUrl(max, search, 'mail', workspace.getId(),direction ) }}">{{ 'mail'|trans({}, 'platform') }}</a></th>
+                                <th>
+                                    <a href="{{ sortUrl(group.getId(), workspace.getId(), max, 'mail', order, search) }}">
+                                        {{ 'mail'|trans({}, 'platform') }}
+                                    </a>
+                                </th>
                             {% endif %}
-                            <th>{{ 'role'|trans({}, 'platform') }}</th>
+                            <th>
+                                {{ 'role'|trans({}, 'platform') }}
+                            </th>
                         </tr>
                     </thead>
                     <tbody id="user-table-body">
+                        
                         {% for user in pager.currentPageResults %}
-                            <tr id="row-{{ user.id }}" class="row-user" data-user-id="{{ user.getId() }}">
-                                <td> <input class="chk-user chk-item" type="checkbox" value="{{ user.getId() }}"></td>
+                            <tr id="row-{{ user.id }}"
+                                class="row-user"
+                                data-user-id="{{ user.getId() }}"
+                            >
                                 <td>
-                                    <a href="{{ path('claro_public_profile_view', {'publicUrl': user.getPublicUrl()}) }}"> {{user.getUsername()}}</a>
+                                    <input class="chk-user chk-item"
+                                           type="checkbox"
+                                           value="{{ user.getId() }}"
+                                    >
+                                </td>
+                                <td>
+                                    <a href="{{ path('claro_public_profile_view', {'publicUrl': user.getPublicUrl()}) }}">
+                                        {{ user.getUsername() }}
+                                    </a>
                                 </td>
                                 <td>{{ user.getLastName() }}</td>
                                 <td>{{ user.getFirstName() }}</td>
+                                
                                 {% if showMail %}
                                     <td>{{ user.getMail() }}</td>
                                 {% endif %}
@@ -159,7 +224,10 @@
                                     {% for group in groups %}
                                         {% for role in group.getEntityRoles() %}
                                             {% if role.getWorkspace() == workspace %}
-                                                <span title="{{ group.getName() }}" class="label label-default" id="label-{{ role.getId() }}-{{ user.getId()}}">
+                                                <span title="{{ group.getName() }}"
+                                                      class="label label-default"
+                                                      id="label-{{ role.getId() }}-{{ user.getId()}}"
+                                                >
                                                     {{ role.getTranslationKey()|trans({}, 'platform') }}
                                                 </span>
                                             {% endif %}
@@ -171,8 +239,9 @@
                     </tbody>
                 </table>
             </div>
+            
             {% if pager.getNbPages() > 1 %}
-                {{ renderPager(search, workspace.getId(), pager, max, order, direction) }}
+                {{ renderPager(pager, group.getId(), workspace.getId(), max, orderedBy, order, search) }}
             {% endif %}
         </div>
     </div>
@@ -182,12 +251,20 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                    <h4 class="modal-title">{{ 'add'|trans({}, 'platform' ) }}</h4>
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span aria-hidden="true">
+                            &times;
+                        </span>
+                        <span class="sr-only">
+                            Close
+                        </span>
+                    </button>
+                    <h4 class="modal-title">
+                        {{ 'add'|trans({}, 'platform' ) }}
+                    </h4>
                 </div>
                 <div class="modal-body">
                     <div id="modal-explain">
-
                     </div>
                     </br>
                     <form>
@@ -202,13 +279,22 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">{{ 'close'|trans({}, 'platform') }}</button>
-                    <button id="add-modal-roles-btn" type="button" class="btn btn-primary">{{ 'add'|trans({}, 'platform') }}</button>
+                    <button type="button"
+                            class="btn btn-default"
+                            data-dismiss="modal"
+                    >
+                        {{ 'close'|trans({}, 'platform') }}
+                    </button>
+                    <button id="add-modal-roles-btn"
+                            type="button"
+                            class="btn btn-primary"
+                    >
+                        {{ 'add'|trans({}, 'platform') }}
+                    </button>
                 </div>
             </div>
         </div>
     </div>
-
 {% endblock %}
 
 {% block javascripts %}
@@ -220,8 +306,22 @@
         parameters = {};
         parameters.route = {};
         parameters.route.action = {};
-        parameters.route.normal = {"route": "claro_workspace_unregistered_user_list", "parameters": {'workspace': {{  workspace.getId() }}, 'order': '{{ order }}' }};
-        parameters.route.search = {"route": "claro_workspace_unregistered_user_list_search", "parameters": {'workspace': {{  workspace.getId() }}, 'order': '{{ order }}' }};
+        parameters.route.normal = {
+            'route': 'claro_workspace_unregistered_users_from_group_list',
+            'parameters': {
+                'group': {{ group.getId() }},
+                'workspace': {{ workspace.getId() }},
+                'order': '{{ order }}'
+            }
+        };
+        parameters.route.search = {
+            'route': 'claro_workspace_unregistered_users_from_group_list',
+            'parameters': {
+                'group': {{ group.getId() }},
+                'workspace': {{ workspace.getId() }},
+                'order': '{{ order }}'
+            }
+        };
         Claroline.Table.initialize(parameters);
 
         $('#add-role-button').on('click', function (event) {
