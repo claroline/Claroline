@@ -829,4 +829,30 @@ class WorkspaceManager
             $this->om->endFlushSuite();
         }
     }
+
+    public function getDisplayableNonPersonalWorkspaces(
+        $page = 1,
+        $max = 50,
+        $search = ''
+    )
+    {
+        $workspaces = $search === '' ?
+            $this->workspaceRepo->findDisplayableNonPersonalWorkspaces() :
+            $this->workspaceRepo->findDisplayableNonPersonalWorkspacesBySearch($search);
+
+        return $this->pagerFactory->createPagerFromArray($workspaces, $page, $max);
+    }
+
+    public function getDisplayablePersonalWorkspaces(
+        $page = 1,
+        $max = 50,
+        $search = ''
+    )
+    {
+        $workspaces = $search === '' ?
+            $this->workspaceRepo->findDisplayablePersonalWorkspaces() :
+            $this->workspaceRepo->findDisplayablePersonalWorkspacesBySearch($search);
+
+        return $this->pagerFactory->createPagerFromArray($workspaces, $page, $max);
+    }
 }

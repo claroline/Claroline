@@ -664,4 +664,118 @@ class WorkspaceRepository extends EntityRepository
 
         return $query->getResult();
     }
+
+    /**
+     * Returns the workspaces which are marked as displayable and are not someone's
+     * personal workspace.
+     *
+     * @return array[Workspace]
+     */
+    public function findDisplayableNonPersonalWorkspaces()
+    {
+        $dql = '
+            SELECT w
+            FROM Claroline\CoreBundle\Entity\Workspace\Workspace w
+            WHERE w.displayable = true
+            AND NOT EXISTS (
+                SELECT u
+                FROM Claroline\CoreBundle\Entity\User u
+                JOIN u.personalWorkspace pw
+                WHERE pw = w
+            )
+            ORDER BY w.name
+        ';
+        $query = $this->_em->createQuery($dql);
+
+        return $query->getResult();
+    }
+
+    /**
+     * Returns the workspaces which are marked as displayable and are not someone's
+     * personal workspace and where name or code contains $search param.
+     *
+     * @return array[Workspace]
+     */
+    public function findDisplayableNonPersonalWorkspacesBySearch($search)
+    {
+        $dql = '
+            SELECT w
+            FROM Claroline\CoreBundle\Entity\Workspace\Workspace w
+            WHERE w.displayable = true
+            AND (
+                UPPER(w.name) LIKE :search
+                OR UPPER(w.code) LIKE :search
+            )
+            AND NOT EXISTS (
+                SELECT u
+                FROM Claroline\CoreBundle\Entity\User u
+                JOIN u.personalWorkspace pw
+                WHERE pw = w
+            )
+            ORDER BY w.name
+        ';
+
+        $search = strtoupper($search);
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('search', "%{$search}%");
+
+        return $query->getResult();
+    }
+
+    /**
+     * Returns the workspaces which are marked as displayable and are someone's
+     * personal workspace.
+     *
+     * @return array[Workspace]
+     */
+    public function findDisplayablePersonalWorkspaces()
+    {
+        $dql = '
+            SELECT w
+            FROM Claroline\CoreBundle\Entity\Workspace\Workspace w
+            WHERE w.displayable = true
+            AND EXISTS (
+                SELECT u
+                FROM Claroline\CoreBundle\Entity\User u
+                JOIN u.personalWorkspace pw
+                WHERE pw = w
+            )
+            ORDER BY w.name
+        ';
+        $query = $this->_em->createQuery($dql);
+
+        return $query->getResult();
+    }
+
+    /**
+     * Returns the workspaces which are marked as displayable and are someone's
+     * personal workspace and where name or code contains $search param.
+     *
+     * @return array[Workspace]
+     */
+    public function findDisplayablePersonalWorkspacesBySearch($search)
+    {
+        $dql = '
+            SELECT w
+            FROM Claroline\CoreBundle\Entity\Workspace\Workspace w
+            WHERE w.displayable = true
+            AND (
+                UPPER(w.name) LIKE :search
+                OR UPPER(w.code) LIKE :search
+            )
+            AND EXISTS (
+                SELECT u
+                FROM Claroline\CoreBundle\Entity\User u
+                JOIN u.personalWorkspace pw
+                WHERE pw = w
+            )
+            ORDER BY w.name
+        ';
+
+        $search = strtoupper($search);
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('search', "%{$search}%");
+
+        return $query->getResult();
+    }
 }
