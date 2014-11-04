@@ -136,8 +136,10 @@
                         <div data-ng-repeat="widget in widgets | filter:{type: '!title'} | orderBy:widget.row" data-ng-if="0 == portfolio.disposition">
                             {% include 'IcapPortfolioBundle:templates:widget.html.twig' %}
                         </div>
+                        {% if editMode %}
                         <div data-ng-include="'templates/menu_widget-type.tpl.html'" data-ng-if="0 == portfolio.disposition">
                         </div>
+                        {% endif %}
                         <div data-ng-if="1 == portfolio.disposition">
                             <ul class="col-md-6 list-unstyled" data-ng-repeat="col in cols">
                                 <li data-ng-repeat="widget in widgets | filter:{type: '!title', column: col} | orderBy:'+row'">
