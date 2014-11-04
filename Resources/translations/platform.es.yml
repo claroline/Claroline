@@ -172,6 +172,7 @@ canEdit: 'Derecho editar'
 canExport: 'Derecho a exportar'
 canOpen: 'Derecho a abrir'
 cancel: 'Cancelar'
+cannot_change_password: Usted no puede cambiar su contraseña
 cannot_delete_unique_manager: 'No puede suprimir el único administrador.'
 cannot_unsubscribe_from_workspace: 'No se puede desinscribir del espacio de trabajo'
 categories: 'categorías'
