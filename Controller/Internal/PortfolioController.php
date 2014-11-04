@@ -55,8 +55,6 @@ class PortfolioController extends BaseController
     {
         $this->checkPortfolioToolAccess();
 
-        $data = [];
-
         if ($portfolio->getUser() === $loggedUser) {
             $data = $this->getPortfolioManager()->handle($portfolio, $request->request->all(), $this->get('kernel')->getEnvironment());
         }
@@ -69,6 +67,9 @@ class PortfolioController extends BaseController
 
                 $data['unreadComments'] = $portfolio->getCountUnreadComments($portfolioGuide->getCommentsViewAt());
                 $data['commentsViewAt'] = $portfolioGuide->getCommentsViewAt();
+            }
+            else {
+                throw new NotFoundHttpException();
             }
         }
 
