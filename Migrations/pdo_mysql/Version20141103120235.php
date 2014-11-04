@@ -8,21 +8,21 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/10/21 03:31:15
+ * Generation date: 2014/11/03 12:02:36
  */
-class Version20141021153113 extends AbstractMigration
+class Version20141103120235 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
         $this->addSql("
-            CREATE UNIQUE INDEX UNIQ_536FFC4C5E237E06 ON claro_workspace_model (name)
+            ALTER TABLE claro_resource_node CHANGE is_visible published TINYINT(1) DEFAULT '1' NOT NULL
         ");
     }
 
     public function down(Schema $schema)
     {
         $this->addSql("
-            DROP INDEX UNIQ_536FFC4C5E237E06 ON claro_workspace_model
+            ALTER TABLE claro_resource_node CHANGE published is_visible TINYINT(1) DEFAULT '1' NOT NULL
         ");
     }
 }

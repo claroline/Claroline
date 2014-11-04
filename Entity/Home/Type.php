@@ -45,6 +45,13 @@ class Type
     private $maxContentPage;
 
     /**
+     * @var integer
+     *
+     * @ORM\Column(name="publish", type="boolean", nullable=true)
+     */
+    private $publish;
+
+    /**
      * Constructor.
      */
     public function __construct($name = null)
@@ -110,5 +117,28 @@ class Type
     public function getMaxContentPage()
     {
         return $this->maxContentPage;
+    }
+
+     /**
+     * Set publish
+     *
+     * @param boolean publish
+     * @return Type
+     */
+    public function setPublish($publish)
+    {
+        $this->publish = $publish;
+
+        return $this;
+    }
+
+    /**
+     * Get publish
+     *
+     * @return boolean
+     */
+    public function isPublish()
+    {
+        return $this->publish;
     }
 }

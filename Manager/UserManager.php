@@ -566,7 +566,13 @@ class UserManager
      *
      * @return \Pagerfanta\Pagerfanta;
      */
-    public function getUsersByGroup(Group $group, $page, $max = 20, $orderedBy = 'id', $order = null)
+    public function getUsersByGroup(
+        Group $group,
+        $page,
+        $max = 20,
+        $orderedBy = 'id',
+        $order = 'ASC'
+    )
     {
         $query = $this->userRepo->findByGroup($group, false, $orderedBy, $order);
 
@@ -603,9 +609,22 @@ class UserManager
      *
      * @return \Pagerfanta\Pagerfanta
      */
-    public function getUsersByNameAndGroup($search, Group $group, $page, $max = 20, $orderedBy = 'id')
+    public function getUsersByNameAndGroup(
+        $search,
+        Group $group,
+        $page,
+        $max = 20,
+        $orderedBy = 'id',
+        $order = 'ASC'
+    )
     {
-        $query = $this->userRepo->findByNameAndGroup($search, $group, false, $orderedBy);
+        $query = $this->userRepo->findByNameAndGroup(
+            $search,
+            $group,
+            false,
+            $orderedBy,
+            $order
+        );
 
         return $this->pagerFactory->createPager($query, $page, $max);
     }

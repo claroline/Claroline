@@ -33,8 +33,7 @@
             'keypress input.name': 'filter',
             'click ul.zoom li a': 'zoom',
             'click a.open-picker': 'openPicker',
-            'click a.add': 'add',
-            'click a#visibility-btn': 'visibility'
+            'click a.add': 'add'
         },
         initialize: function (parameters, dispatcher) {
             this.parameters = parameters;
@@ -281,8 +280,6 @@
             var isPasteAllowed = isCreationAllowed
                 && this.isReadyToPaste
                 && (!this.isCutMode || this.checkedNodes.directoryId !== event.id);
-            var visibility = event.visibility;
-            var isVisibilityChangeAllowed = !this.isSearchMode;
 
             $(this.el).html(Twig.render(ResourceManagerActions, {
                 resourceTypes: this.parameters.resourceTypes,
@@ -293,41 +290,8 @@
                 isPasteAllowed: isPasteAllowed,
                 isCreateAllowed: isCreateAllowed,
                 creatableTypes: creatableTypes,
-                zoom: this.zoomValue,
-                visibility: visibility,
-                isVisibilityChangeAllowed: isVisibilityChangeAllowed
+                zoom: this.zoomValue
             }));
-        },
-        visibility: function () {
-            var visibility = $('#visibility-btn').data('visibility');
-            
-            if (!$('#visibility-btn').hasClass('disabled')) {
-                var icon = $('#visibility-icon');
-
-                if (visibility === 'visible') {
-                    icon.attr('class', 'fa fa-eye');
-                    $('#visibility-btn').data('visibility', 'hidden');
-                } else {
-                    icon.attr('class', 'fa fa-eye-slash');
-                    $('#visibility-btn').data('visibility', 'visible');
-                }
-
-                var url = Routing.generate(
-                    'claro_resource_directory',
-                    {
-                        nodeId: this.currentDirectoryId,
-                        visibility: $('#visibility-btn').data('visibility')
-                    }
-                );
-
-                $.ajax({
-                    url: url,
-                    success: function (data) {
-                        data.isSearchMode = false;
-                        this.dispatcher.trigger('directory-data-main', data);
-                    }
-                });
-            }
         }
     });
 })();

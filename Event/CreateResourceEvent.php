@@ -26,6 +26,7 @@ class CreateResourceEvent extends Event implements DataConveyorEventInterface
     private $resources;
     private $isPopulated = false;
     private $process = true;
+    private $published = true;
 
     public function __construct($parent = null, $resourceType = null)
     {
@@ -102,5 +103,15 @@ class CreateResourceEvent extends Event implements DataConveyorEventInterface
     public function getParent()
     {
         return $this->parent;
+    }
+
+    public function setPublished($published)
+    {
+        $this->published = $published;
+    }
+
+    public function isPublished()
+    {
+        return $this->published;
     }
 }

@@ -312,3 +312,6 @@ claro_admin_facet:
 claro_badge:
     resource: "@ClarolineCoreBundle/Controller/Badge"
 
+claro_api:
+    resource: "@ClarolineCoreBundle/Controller/API"
+    type: annotation

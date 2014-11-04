@@ -23,8 +23,8 @@ resource_properties_form_creator: Créateur
 resource_properties_form_deletable: Supprimer
 resource_properties_form_editable: Editer
 resource_properties_form_exportable: Exporter
-resource_properties_form_isVisible: Visible
 resource_properties_form_name: Nom
+resource_properties_form_published: Publié
 resource_properties_form_resourceType: 'Type de ressource'
 resource_properties_form_sharable: 'Partager cette ressource'
 resource_properties_form_shareType: Redistribution

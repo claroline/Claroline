@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/10/21 03:31:15
+ * Generation date: 2014/11/03 09:13:07
  */
-class Version20141021153113 extends AbstractMigration
+class Version20141103091305 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -54,10 +54,42 @@ class Version20141021153113 extends AbstractMigration
         $this->addSql("
             CREATE UNIQUE INDEX UNIQ_536FFC4C5E237E06 ON claro_workspace_model (name)
         ");
+        $this->addSql("
+            ALTER TABLE claro_type 
+            ADD COLUMN publish BOOLEAN DEFAULT NULL
+        ");
     }
 
     public function down(Schema $schema)
     {
+        $this->addSql("
+            CREATE TEMPORARY TABLE __temp__claro_type AS 
+            SELECT id, 
+            name, 
+            max_content_page 
+            FROM claro_type
+        ");
+        $this->addSql("
+            DROP TABLE claro_type
+        ");
+        $this->addSql("
+            CREATE TABLE claro_type (
+                id INTEGER NOT NULL, 
+                name VARCHAR(255) NOT NULL, 
+                max_content_page INTEGER NOT NULL, 
+                PRIMARY KEY(id)
+            )
+        ");
+        $this->addSql("
+            INSERT INTO claro_type (id, name, max_content_page) 
+            SELECT id, 
+            name, 
+            max_content_page 
+            FROM __temp__claro_type
+        ");
+        $this->addSql("
+            DROP TABLE __temp__claro_type
+        ");
         $this->addSql("
             DROP INDEX UNIQ_536FFC4C5E237E06
         ");

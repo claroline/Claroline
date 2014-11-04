@@ -139,13 +139,15 @@ class ResourceManager
         Workspace $workspace,
         ResourceNode $parent = null,
         ResourceIcon $icon = null,
-        array $rights = array()
+        array $rights = array(),
+        $isPublished = true
     )
     {
         $this->om->startFlushSuite();
         $this->checkResourcePrepared($resource);
         $node = $this->om->factory('Claroline\CoreBundle\Entity\Resource\ResourceNode');
         $node->setResourceType($resourceType);
+        $node->setPublished($isPublished);
 
         $mimeType = ($resource->getMimeType() === null) ?
             'custom/' . $resourceType->getName():
@@ -169,7 +171,6 @@ class ResourceManager
         $node->setName($name);
         $node->setPrevious($previous);
         $node->setClass(get_class($resource));
-        $node->setIsVisible(true);
 
         if (!is_null($parent)) {
             $node->setAccessibleFrom($parent->getAccessibleFrom());
@@ -289,10 +290,11 @@ class ResourceManager
      *
      * @return array
      */
-    public function findAndSortChildren(ResourceNode $parent)
+    public function findAndSortChildren(ResourceNode $parent, User $user)
     {
         //a little bit hacky but retrieve all children of the parent
-        $nodes = $this->resourceNodeRepo->findChildren($parent, array('ROLE_ADMIN'));
+        $nodes = $this->resourceNodeRepo
+            ->findChildren($parent, array('ROLE_ADMIN'), $user);
         $sorted = array();
         //set the 1st item.
         foreach ($nodes as $node) {
@@ -332,14 +334,14 @@ class ResourceManager
      *
      * @return array
      */
-    public function sort(array $nodes)
+    public function sort(array $nodes, User $user)
     {
         $sortedResources = array();
 
         if (count($nodes) > 0) {
             if ($this->haveSameParents($nodes)) {
                 $parent = $this->resourceNodeRepo->find($nodes[0]['parent_id']);
-                $sortedList = $this->findAndSortChildren($parent);
+                $sortedList = $this->findAndSortChildren($parent, $user);
 
                 foreach ($sortedList as $sortedItem) {
                     foreach ($nodes as $node) {
@@ -763,6 +765,12 @@ class ResourceManager
      * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $node
      * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $parent
      * @param \Claroline\CoreBundle\Entity\User                  $user
+     * @param boolean $withRights
+     * Defines if the rights of the copied resource have to be created
+     * @param boolean $withDirectoryContent
+     * Defines if the content of a directory has to be copied too
+     * @param array $rights
+     * If defined, the copied resource will have exactly the given rights
      *
      * @return \Claroline\CoreBundle\Entity\Resource\ResourceNode
      */
@@ -771,7 +779,8 @@ class ResourceManager
         ResourceNode $parent,
         User $user,
         $withRights = true,
-        $withDirectoryContent = true
+        $withDirectoryContent = true,
+        array $rights = array()
     )
     {
         $last = $this->resourceNodeRepo->findOneBy(array('parent' => $parent, 'next' => null));
@@ -780,7 +789,7 @@ class ResourceManager
         if ($resource instanceof ResourceShortcut) {
             $copy = $this->om->factory('Claroline\CoreBundle\Entity\Resource\ResourceShortcut');
             $copy->setTarget($resource->getTarget());
-            $newNode = $this->copyNode($node, $parent, $user, $last, $withRights);
+            $newNode = $this->copyNode($node, $parent, $user, $last, $withRights, $rights);
             $copy->setResourceNode($newNode);
 
         } else {
@@ -791,14 +800,14 @@ class ResourceManager
             );
 
             $copy = $event->getCopy();
-            $newNode = $this->copyNode($node, $parent, $user, $last, $withRights);
+            $newNode = $this->copyNode($node, $parent, $user, $last, $withRights, $rights);
             $copy->setResourceNode($newNode);
 
             if ($node->getResourceType()->getName() == 'directory' &&
                 $withDirectoryContent) {
 
                 foreach ($node->getChildren() as $child) {
-                    $this->copy($child, $newNode, $user);
+                    $this->copy($child, $newNode, $user, $withRights, $withDirectoryContent, $rights);
                 }
             }
         }
@@ -835,7 +844,7 @@ class ResourceManager
         $resourceArray['large_icon'] = $node->getIcon()->getRelativeUrl();
         $resourceArray['path_for_display'] = $node->getPathForDisplay();
         $resourceArray['mime_type'] = $node->getMimeType();
-        $resourceArray['is_visible'] = $node->getIsVisible();
+        $resourceArray['published'] = $node->isPublished();
 
         if ($node->getPrevious() !== null) {
             $resourceArray['previous_id'] = $node->getPrevious()->getId();
@@ -1202,11 +1211,16 @@ class ResourceManager
      *
      * @return array
      */
-    public function getChildren(ResourceNode $node, array $roles, $isSorted = true)
+    public function getChildren(
+        ResourceNode $node,
+        array $roles,
+        User $user,
+        $isSorted = true
+    )
     {
-        $children = $this->resourceNodeRepo->findChildren($node, $roles);
+        $children = $this->resourceNodeRepo->findChildren($node, $roles, $user);
 
-        return ($isSorted) ? $this->sort($children): $children;
+        return ($isSorted) ? $this->sort($children, $user): $children;
     }
 
     /**
@@ -1363,6 +1377,10 @@ class ResourceManager
      * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $newParent
      * @param \Claroline\CoreBundle\Entity\User                  $user
      * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $last
+     * @param boolean $withRights
+     * Defines if the rights of the copied node have to be created
+     * @param array $rights
+     * If defined, the copied node will have exactly the given rights
      *
      * @return \Claroline\CoreBundle\Entity\Resource\ResourceNode
      */
@@ -1371,7 +1389,8 @@ class ResourceManager
         ResourceNode $newParent,
         User $user,
         ResourceNode $last = null,
-        $withRights = true
+        $withRights = true,
+        array $rights = array()
     )
     {
         $newNode = $this->om->factory('Claroline\CoreBundle\Entity\Resource\ResourceNode');
@@ -1379,6 +1398,7 @@ class ResourceManager
         $newNode->setCreator($user);
         $newNode->setWorkspace($newParent->getWorkspace());
         $newNode->setParent($newParent);
+        $newParent->addChild($newNode);
         $newNode->setName($this->getUniqueName($node, $newParent, true));
         $newNode->setPrevious($last);
         $newNode->setNext(null);
@@ -1387,15 +1407,16 @@ class ResourceManager
         $newNode->setMimeType($node->getMimeType());
         $newNode->setAccessibleFrom($node->getAccessibleFrom());
         $newNode->setAccessibleUntil($node->getAccessibleUntil());
-        $newNode->setIsVisible($node->getIsVisible());
+        $newNode->setPublished($node->isPublished());
 
         if ($withRights) {
-            //if everything happens inside the same workspace, rights are copied
-            if ($newParent->getWorkspace() === $node->getWorkspace()) {
+            //if everything happens inside the same workspace and no specific rights have been given,
+            //rights are copied
+            if ($newParent->getWorkspace() === $node->getWorkspace() && count($rights) === 0) {
                 $this->rightsManager->copy($node, $newNode);
             } else {
-                //otherwise we use the parent rights
-                $this->setRights($newNode, $newParent, array());
+                //otherwise we use the parent rights or the given rights if not empty
+                $this->setRights($newNode, $newParent, $rights);
             }
         }
 

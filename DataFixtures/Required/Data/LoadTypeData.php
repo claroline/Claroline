@@ -24,6 +24,7 @@ class LoadTypeData implements RequiredFixture
         foreach ($fixtures as $i => $fixture) {
             $types[$i] = new Type();
             $types[$i]->setName($fixture);
+            $types[$i]->setPublish(true);
 
             $manager->persist($types[$i]);
         }

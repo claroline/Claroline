@@ -1,4 +1,6 @@
 404: 'Page Not found'
+6_parameters_min_msg: El archivo csv  debe incluir, al menos, 6 elementos por línea.
+7_parameters_min_msg: El archivo csv  debe incluir, al menos, 7 elementos por línea.
 Action List: 'Lista de acciones'
 Actions per day: 'Acciones por día'
 Activate the terms of service in the platform: 'Activar las Condiciones del servicio de la plataforma'
@@ -52,6 +54,7 @@ account_duration_label: Duración de la vida de una cuentas (días)
 account_general_statistics: 'Estadísticas generales de la cuenta'
 action: 'Acción'
 actions: 'Acciones'
+activate_notifications: Activar notificaciones
 active_widgets: 'Widgets activos'
 activities: Actividades
 activities_tracking: 'Seguimiento de las actividades'
@@ -64,6 +67,7 @@ activity_evaluation_form_score: Evaluación
 activity_evaluation_form_status: Estado
 activity_form_instructions: 'Instrucciones'
 activity_form_name: 'Nombre'
+activity_form_published: 'Publicar el recurso'
 activity_parameters_form_evaluation_type: 'Tipo de evaluación'
 activity_parameters_form_max_attempts: 'Numero de intentos permitidos'
 activity_parameters_form_max_duration: 'Tiempo limite establecido (en segundo)'
@@ -108,6 +112,8 @@ add_group_s_confirm_message: 'Grupos agregados'
 add_groups: 'Agregar grupos'
 add_resource: 'Agregar recurso'
 add_role: 'Agregar rol'
+add_role_to_groups: Agregar un campo a %count% grupo(s)
+add_role_to_users: Agregar un campo a %count% usuario(s)
 add_roles_confirm_message: 'Esta seguro que desea agregar los siguientes roles a los %count% elementos selecionados'
 add_subcategory: 'Agregar subcategoría'
 add_tag: 'Agregar etiqueta'
@@ -183,6 +189,7 @@ classroom: Aula
 close: 'Cerrar'
 closed_account: Cuenta cerrada.
 code: 'Código'
+code_found_at: El código %code% ha sido encontrado en las líneas %lines%
 collaborative: Colaboración
 collaborator: 'Colaborador'
 comments: Comentarios
@@ -210,13 +217,15 @@ create_role: Crear un rol
 create_security_token: 'Crear un token de seguridad '
 create_subcategory: 'Crear una subcategoría'
 create_user: 'Crear un usuario'
+create_users: Crear el usarios
 create_widget_instance: 'Crear un widget'
 create_workspace: 'Crear un espacio de trabajo'
 creation: 'Creación'
 creation_date: 'Fecha de creación'
 creator: 'Creador'
+csv_export: Csv exportación
 csv_group_import_infos: 'Informaciones del archivo CSV'
-csv_group_import_infos_format: Formato: Lista de nombre de usuario separado por un salto de línea.
+csv_group_import_infos_format: 'Formato: Lista de nombre de usuario separado por un salto de línea.'
 csv_users_import_infos: 'Informaciones del archivo CSV'
 csv_users_import_infos_format: 'Formato'
 csv_users_import_infos_format_a: 'Las informaciones del usuario deben estar definidas en una sola linea, separados por punto y coma'
@@ -278,6 +287,7 @@ desktop_home_tabs: 'Pestañas del escritorio'
 desktop_tools: 'Herramientas del escritorio'
 directory: 'Carpeta'
 directory_form_name: 'Nombre'
+directory_form_published: 'Publicar el recurso'
 directory_form_shareType: 'Compartible'
 display: 'Mostrar'
 display_captcha: 'Monstrar captcha a los anonimos'
@@ -313,6 +323,7 @@ evaluation-manual: Manual
 evaluation: Evaluación
 evaluation_edition: Evaluación
 evaluation_type: 'Tipo de evaluación'
+excel_export: Excel exportación
 export: 'Exportar'
 exportable: 'Exportable'
 external_pdo_database: 'Base de datos externa (PDO)'
@@ -328,6 +339,7 @@ file: 'Archivos'
 file_form_file: 'Archivo'
 file_form_license: 'Licencia'
 file_form_name: 'Nombre'
+file_form_published: 'Publicar el recurso'
 file_form_shareType: 'Compartible'
 file_form_shareType_0: 'Si'
 file_form_shareType_1: false
@@ -469,6 +481,7 @@ missing_%content%: 'La variable %content% falta en la lengua "%language%".'
 missing_%password%: 'La variable %password% falta en la lengua "%language%".'
 missing_%username%: 'La variable %username% falta en la lengua "%language%".'
 mixed: Mezclado
+model: Modelo
 month.April: 'Abril'
 month.August: 'Agosto'
 month.December: 'Diciembre'
@@ -596,6 +609,7 @@ public: 'Publico'
 public_registration: 'Inscripción publica'
 public_workspace_empty: 'No hay espacios de trabajo públicos.'
 public_workspaces: 'Espacios de trabajo públicos'
+publish: Publicado
 recursive_dir_action: 'Aplicar en el contenido de la carpeta y la subcarpeta'
 redirect_after_login: 'Redirigir a la ultima página visitada'
 register: 'Inscribirse'
@@ -697,7 +711,6 @@ security_token_form_token: Token
 security_token_list: 'Lista de tokens de seguridad '
 security_tokens_management: 'Gestión de tokens de seguridad'
 see: 'Ver'
-see_hidden_files: 'Ver el archivo oculto'
 see_more: 'Ver más'
 select all: 'Seleccionar todo'
 select_all: 'Seleccionar todo'
@@ -765,11 +778,13 @@ terms_enabled_but_empty: Las condiciones de servicio sólo se pueden habilitar s
 text: Texto
 text_form_content: 'Contenido'
 text_form_name: 'Nombre'
+text_form_published: 'Publicar el recurso'
 text_form_shareType: 'Compartible'
 text_form_text: 'Texto'
 the_following_users_were_not_imported: 'Los siguientes usuarios no han sido importados.'
 the_workspace: 'Espacio de trabajo'
 this_page_requires_authentication: 'Esta página requiere autenticación. Por favor, iniciar sesión.'
+this_resource_is_not_published: 'Este recurso no esta publicado'
 time_col: 'Columna de tiempo en la base de datos'
 tinymce_all_buttons: Todas las herramientas
 title: Título
@@ -778,6 +793,7 @@ to_anonymous: 'A usuarios anónimos'
 to_everyone: 'A todos'
 to_message: 'A'
 to_platform_users: 'A usuarios de la plataforma'
+to_publish: Publicar
 to_workspace_members: 'A miembros de este espacio de trabajo'
 today: 'Hoy'
 token: Token
@@ -815,6 +831,8 @@ uncompress_file: Descomprimir el archivo si es posible
 under_min_length: 'Este valor es muy corto'
 unique connections: 'Nb único Cnx.'
 unknown: Desconocido
+unpublish: Despublicar
+unpublished: No publicado
 unregister: 'Desinscribir'
 unregister_from_a_workspace: 'Desinscribir de un espacio de trabajo'
 unregistered: 'No inscritos'
@@ -842,6 +860,7 @@ username_found_at: 'El nombre de usuario %username% fue encontrado en la linea: 
 username_or_email: 'Nombre de usuario o correo electrónico'
 users: 'Usuario'
 users_connected_once: 'Usuarios que se han conectado al menos una vez'
+users_from_group_registration: 'Inscripción de uduarios del grupo'
 users_import: 'Importar usuarios'
 users_list: 'Lista de usuarios'
 users_management: 'Gestión de usuarios'
@@ -878,6 +897,7 @@ workspace.name_not_blank: 'El nombre del espacio de trabajo es obligatorio.'
 workspace: 'Espacio de trabajo'
 workspace_administration: 'Administración'
 workspace_classification: 'Clasificación de espacio de trabajo'
+workspace_code_invalid: El código %code% ha sido utilizado en la línea %line%
 workspace_delete: 'Suprimir el espacio de trabajo'
 workspace_delete_confirm_message: '¿Está seguro que desea suprimir este espacio de trabajo?'
 workspace_delete_confirm_title: 'Confirmar la supresión'
@@ -898,10 +918,12 @@ workspace_form_type: 'Tipo'
 workspace_home_tab_creation: 'Creación de una pestaña en el inicio de un espacio de trabajo'
 workspace_home_tab_edition: 'Edición de una pestaña en el inicio de un espacio de trabajo'
 workspace_home_tabs: 'Pestaña de un espacio de trabajo'
+workspace_import: Importar de un espacio de trabajo
 workspace_list: 'Lista de espacios de trabajo'
+workspace_model_invalid: El modelo %model% no existe en la línea %line%
 workspace_order_tool_edit_form_name: 'Nombre'
-workspace_queue_cancel_confirm_title: 'Anular la demanda de inscripción'
 workspace_queue_cancel_confirm_message: '¿Está seguro que desea anular esta demanda de inscripción a este espacio de trabajo?'
+workspace_queue_cancel_confirm_title: 'Anular la demanda de inscripción'
 workspace_registration_confirm_title: '¿Está seguro que desea inscribirse a este espacio de trabajo?'
 workspace_registration_message: 'Usted ha sido inscrito al espacio de trabajo %workspace_name%'
 workspace_registration_message_object: 'Inscripción al espacio de trabajo'
@@ -916,6 +938,7 @@ workspace_tag_remove_confirm_title: 'Suprimir categoría'
 workspace_template_form_name: 'Nombre'
 workspace_tools: 'Herramientas'
 workspace_unregistration_confirm_title: '¿Está seguro que desea desinscribirse de un espacio de trabajo?'
+workspace_user_invalid: El usuario %username% no existe en la línea %line%.
 workspace_welcome: 'Bienvenido'
 workspaces: 'Espacio de trabajo'
 workspaces_included_in_category: 'Espacios de trabajo incluidos en esta categoría'
@@ -927,25 +950,3 @@ yes: 'Si'
 yes: Sí
 yesterday_activity: 'Actividades de ayer'
 your_username: 'Su nombre de usuario es '
-display_captcha: 'Monstrar captcha a los anonimos'
-email: 'Correo electrónico'
-description: 'Descripción'
-picture_profile: 'Foto de perfil'
-verification: 'Repita su contraseña'
-manage_tools: Gestión de las herramientas
-create_role: Crear un rol
-uncompress_file: Descomprimir el archivo si es posible
-workspace_import: Importar de un espacio de trabajo
-create_users: Crear el usarios
-add_role_to_users: Agregar un campo a %count% usuario(s)
-add_role_to_groups: Agregar un campo a %count% grupo(s)
-activate_notifications: Activar notificaciones
-model: Modelo
-workspace_code_invalid: El código %code% ha sido utilizado en la línea %line%
-workspace_model_invalid: El modelo %model% no existe en la línea %line%
-workspace_user_invalid: El usuario %username% no existe en la línea %line%.
-6_parameters_min_msg: El archivo csv  debe incluir, al menos, 6 elementos por línea.
-7_parameters_min_msg: El archivo csv  debe incluir, al menos, 7 elementos por línea.
-code_found_at: El código %code% ha sido encontrado en las líneas %lines%
-excel_export: Excel exportación
-csv_export: Csv exportación 

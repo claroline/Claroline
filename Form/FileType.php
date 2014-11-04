@@ -52,6 +52,15 @@ class FileType extends AbstractType
                 )
             );
         }
+        $builder->add(
+            'published',
+            'checkbox',
+            array(
+                'required' => true,
+                'mapped' => false,
+                'attr' => array('checked' => 'checked')
+           )
+        );
     }
 
     public function getName()

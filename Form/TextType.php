@@ -29,6 +29,16 @@ class TextType extends AbstractType
     {
         $builder->add('name', 'text', array('label' => 'text_form_name', 'constraints' => new NotBlank()));
         $builder->add('text', 'tinymce', array('label' => 'text_form_text'));
+        $builder->add(
+            'published',
+            'checkbox',
+            array(
+                'label' => 'text_form_published',
+                'required' => true,
+                'mapped' => false,
+                'attr' => array('checked' => 'checked')
+           )
+        );
     }
 
     public function getName()

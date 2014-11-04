@@ -20,8 +20,6 @@ use JMS\DiExtraBundle\Annotation as DI;
  */
 class ExporterManager
 {
-    const USABLE_VAR_TYPE = array('string', 'integer', '\DateTime', 'boolean');
-
     private $om;
     private $trans;
 
@@ -110,13 +108,14 @@ class ExporterManager
 
     private function getExportableFields($class)
     {
+        $usableVarType = array('string', 'integer', '\DateTime', 'boolean');
         $refClass = new \ReflectionClass($class);
         $fields = [];
 
         foreach ($refClass->getProperties() as $refProperty) {
             if (preg_match('/@var\s+([^\s]+)/', $refProperty->getDocComment(), $matches)) {
                 list(, $type) = $matches;
-                if (in_array($type, self::USABLE_VAR_TYPE)) {
+                if (in_array($type, $usableVarType)) {
                     $fields[] = $refProperty->getName();
                 }
             }

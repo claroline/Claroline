@@ -380,6 +380,46 @@ class RolesController extends Controller
 
     /**
      * @EXT\Route(
+     *     "/{workspace}/users/unregistered/from/group/{group}/page/{page}/max/{max}/ordered/by/{orderedBy}/order/{order}/search/{search}",
+     *     name="claro_workspace_unregistered_users_from_group_list",
+     *     defaults={"page"=1, "search"="", "max"=50, "orderedBy"="id", "order"="ASC"},
+     *     options = {"expose"=true}
+     * )
+     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\roles:unregisteredUsersFromGroup.html.twig")
+     */
+    public function unregisteredUsersFromGroupListAction(
+        Group $group,
+        Workspace $workspace,
+        $page = 1,
+        $max = 50,
+        $orderedBy = 'id',
+        $order = 'ASC',
+        $search = ''
+    )
+    {
+        $this->checkAccess($workspace);
+        $wsRoles = $this->roleManager->getRolesByWorkspace($workspace);
+        $preferences = $this->facetManager->getVisiblePublicPreference();
+
+        $pager = $search === '' ?
+            $this->userManager->getUsersByGroup($group, $page, $max, $orderedBy, $order) :
+            $this->userManager->getUsersByNameAndGroup($search, $group, $page, $max, $orderedBy, $order);
+
+        return array(
+            'group' => $group,
+            'workspace' => $workspace,
+            'pager' => $pager,
+            'search' => $search,
+            'wsRoles' => $wsRoles,
+            'max' => $max,
+            'orderedBy' => $orderedBy,
+            'order' => $order,
+            'showMail' => $preferences['mail']
+        );
+    }
+
+    /**
+     * @EXT\Route(
      *     "/{workspace}/add/role/user",
      *     name="claro_workspace_add_roles_to_users",
      *     options={"expose"=true}

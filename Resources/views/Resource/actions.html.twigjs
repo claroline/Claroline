@@ -46,17 +46,6 @@
                 <i class="fa fa-download"></i>
             </a>
         </li>
-        <li>
-            <a id="visibility-btn"
-               class="visibility {% if isVisibilityChangeAllowed == false %}disabled{% endif %}"
-               data-toggle="tooltip"
-               data-placement="bottom"
-               title="{{ 'see_hidden_files'|trans({}, 'platform') }}"
-               data-visibility="{% if visibility == 'hidden' %}hidden{% else %}visible{% endif %}"
-            >
-                <i id="visibility-icon" class="fa {% if visibility == 'hidden' %}fa-eye{% else %}fa-eye-slash{% endif %}"></i>
-            </a>
-        </li>
         <li class="dropdown">
             <a class="dropdown-toggle zoom{% if isSearchMode == true %} disabled{% endif %}" data-toggle="dropdown">
                 <i class="fa fa-search-plus"></i>
