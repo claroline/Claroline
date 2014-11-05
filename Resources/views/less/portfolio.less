@@ -4,7 +4,7 @@ table.table_portfolios {
         width: 250px;
     }
     .actionsCol {
-        width: 170px;
+        width: 200px;
     }
     .portfolio {
         .block {
@@ -22,26 +22,37 @@ table.table_portfolios {
                     }
                 }
             }
-        }
-    }
-    .visibility {
-        .badge {
-            display:      block;
-            height:       15px;
-            width:        15px;
-            float:        left;
-            margin-right: 5px;
-            &.visibile_to_me {
-                background-color: #d9534f;
+            .visibility {
+                .badge {
+                    display:      block;
+                    height:       15px;
+                    width:        15px;
+                    float:        left;
+                    margin-right: 5px;
+                    &.visibile_to_me {
+                        background-color: #d9534f;
+                    }
+                    &.visible_for_some_users {
+                        background-color: #ed9c28;
+                    }
+                    &.visible_for_platform_user {
+                        background-color: #428bca;
+                    }
+                    &.visible_for_everybody {
+                        background-color: #5cb85c;
+                    }
+                }
             }
-            &.visible_for_some_users {
-                background-color: #ed9c28;
-            }
-            &.visible_for_platform_user {
-                background-color: #428bca;
-            }
-            &.visible_for_everybody {
-                background-color: #5cb85c;
+            .exchange_link {
+                &.highlight {
+                    color: #eea236;
+                    border-color: #eea236;
+                }
+                .badge {
+                    top:              0px;
+                    background-color: #f0ad4e;
+                    border-color:     #eea236;
+                }
             }
         }
     }
