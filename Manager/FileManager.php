@@ -66,15 +66,21 @@ class FileManager
 
     public function uploadContent(File $file,  UploadedFile $upload)
     {
+        $ds = DIRECTORY_SEPARATOR;
         $node = $file->getResourceNode();
+        $workspaceCode = $node->getWorkspace()->getCode();
 
         //edit file
         $fileName = $upload->getClientOriginalName();
         $size = @filesize($upload);
         $extension = pathinfo($fileName, PATHINFO_EXTENSION);
         $mimeType = $upload->getClientMimeType();
-        $hashName = $this->ut->generateGuid() . "." . $extension;
-        $upload->move($this->fileDir, $hashName);
+        $hashName = $workspaceCode .
+            $ds .
+            $this->ut->generateGuid() .
+            "." .
+            $extension;
+        $upload->move($this->fileDir . $ds . $workspaceCode, $hashName);
         $file->setSize($size);
         $file->setHashName($hashName);
         $file->setMimeType($mimeType);

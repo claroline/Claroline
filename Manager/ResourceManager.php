@@ -883,7 +883,7 @@ class ResourceManager
         if ($node->getParent() === null) {
             throw new \LogicException('Root directory cannot be removed');
         }
-
+        $workspace = $node->getWorkspace();
         $this->removePosition($node);
         $this->om->startFlushSuite();
         $nodes = $this->getDescendants($node);
@@ -906,6 +906,14 @@ class ResourceManager
 
                     foreach ($event->getFiles() as $file) {
                         unlink($file);
+
+                        $dir = $this->container->getParameter('claroline.param.files_directory') .
+                            DIRECTORY_SEPARATOR .
+                            $workspace->getCode();
+
+                        if (is_dir($dir) && $this->isDirectoryEmpty($dir)) {
+                            rmdir($dir);
+                        }
                     }
                 }
 
@@ -1576,4 +1584,23 @@ class ResourceManager
         return $this->dispatcher->hasListeners($actionName . '_' . $resourceType->getName());
     }
 
+    private function isDirectoryEmpty($dirName)
+    {
+        $files = array ();
+        $dirHandle = opendir($dirName);
+
+        if ($dirHandle) {
+
+            while ($file = readdir($dirHandle)) {
+
+                if ($file !== '.' && $file !== '..') {
+                    $files[] = $file;
+                    break;
+                }
+            }
+            closedir($dirHandle);
+        }
+
+        return count($files) === 0;
+    }
 }
