@@ -586,13 +586,18 @@ class ResourceManager
         if ($parent === $child) {
             throw new ResourceMoveException("You cannot move a directory into itself");
         }
-
+        $this->om->startFlushSuite();
         $this->removePosition($child);
         $this->setLastPosition($parent, $child);
         $child->setParent($parent);
         $child->setName($this->getUniqueName($child, $parent));
+
+        if ($child->getWorkspace()->getId() !== $parent->getWorkspace()->getId()) {
+
+            $this->updateWorkspace($child, $parent->getWorkspace());
+        }
         $this->om->persist($child);
-        $this->om->flush();
+        $this->om->endFlushSuite();
         $this->dispatcher->dispatch('log', 'Log\LogResourceMove', array($child, $parent));
 
         return $child;
@@ -1602,5 +1607,22 @@ class ResourceManager
         }
 
         return count($files) === 0;
+    }
+
+    private function updateWorkspace(ResourceNode $node, Workspace $workspace)
+    {
+        $this->om->startFlushSuite();
+        $node->setWorkspace($workspace);
+        $this->om->persist($node);
+
+        if ($node->getResourceType()->getName() === 'directory') {
+            $children = $this->resourceNodeRepo->getChildren($node);
+
+            foreach ($children as $child) {
+                $child->setWorkspace($workspace);
+                $this->om->persist($child);
+            }
+        }
+        $this->om->endFlushSuite();
     }
 }
