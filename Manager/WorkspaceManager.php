@@ -705,9 +705,15 @@ class WorkspaceManager
      *
      * @return \Pagerfanta\Pagerfanta;
      */
-    public function getWorkspaceByName($search, $page, $max = 20, $orderedBy = 'id')
+    public function getWorkspaceByName(
+        $search,
+        $page,
+        $max = 20,
+        $orderedBy = 'id',
+        $order = 'ASC'
+    )
     {
-        $query = $this->workspaceRepo->findByName($search, false, $orderedBy);
+        $query = $this->workspaceRepo->findByName($search, false, $orderedBy, $order);
 
         return $this->pagerFactory->createPager($query, $page, $max);
     }
@@ -852,6 +858,40 @@ class WorkspaceManager
         $workspaces = $search === '' ?
             $this->workspaceRepo->findDisplayablePersonalWorkspaces() :
             $this->workspaceRepo->findDisplayablePersonalWorkspacesBySearch($search);
+
+        return $this->pagerFactory->createPagerFromArray($workspaces, $page, $max);
+    }
+
+    public function getAllPersonalWorkspaces(
+        $page = 1,
+        $max = 50,
+        $search = '',
+        $orderedBy = 'name',
+        $order = 'ASC'
+    )
+    {
+        $workspaces = $search === '' ?
+            $this->workspaceRepo
+                ->findAllPersonalWorkspaces($orderedBy, $order) :
+            $this->workspaceRepo
+                ->findAllPersonalWorkspacesBySearch($search, $orderedBy, $order);
+
+        return $this->pagerFactory->createPagerFromArray($workspaces, $page, $max);
+    }
+
+    public function getAllNonPersonalWorkspaces(
+        $page = 1,
+        $max = 50,
+        $search = '',
+        $orderedBy = 'name',
+        $order = 'ASC'
+    )
+    {
+        $workspaces = $search === '' ?
+            $this->workspaceRepo
+                ->findAllNonPersonalWorkspaces($orderedBy, $order) :
+            $this->workspaceRepo
+                ->findAllNonPersonalWorkspacesBySearch($search, $orderedBy, $order);
 
         return $this->pagerFactory->createPagerFromArray($workspaces, $page, $max);
     }

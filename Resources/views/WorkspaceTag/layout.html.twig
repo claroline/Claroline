@@ -8,7 +8,7 @@
             <div class="list-group-item disabled">{{ 'workspaces' | trans({}, "platform")}}</div>
             <a class="list-group-item{{ "/workspaces/" | activeLink  }}" href="{{ path('claro_workspace_list') }}">
                 <i class="fa fa-book"></i>
-                {{ 'all_workspaces'|trans({}, 'platform') }}
+                {{ 'all_public_workspaces'|trans({}, 'platform') }}
             </a>
             <a class="list-group-item {{ "/workspaces/user" | activeLink  }}" href="{{ path('claro_workspace_by_user') }}">
                 <i class="fa fa-book"></i>
