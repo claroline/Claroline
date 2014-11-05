@@ -13,7 +13,6 @@ namespace Claroline\CoreBundle\Controller\Administration;
 
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Manager\GroupManager;
 use Claroline\CoreBundle\Manager\RoleManager;
@@ -25,7 +24,6 @@ use JMS\DiExtraBundle\Annotation as DI;
 use JMS\SecurityExtraBundle\Annotation as SEC;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Translation\Translator;
@@ -84,14 +82,15 @@ class WorkspaceRegistrationController extends Controller
 
     /**
      * @EXT\Route(
-     *    "/registration/management",
+     *    "/registration/management/max/{max}",
      *    name="claro_admin_registration_management",
-     *    defaults={"search"=""},
+     *    defaults={"search"="","max"=20},
      *    options = {"expose"=true}
      * )
      * @EXT\Route(
-     *     "/registration/management/search/{search}",
+     *     "/registration/management/search/{search}/max/{max}",
      *     name="claro_admin_registration_management_search",
+     *    defaults={"max"=20},
      *     options = {"expose"=true}
      * )
      *
@@ -101,12 +100,13 @@ class WorkspaceRegistrationController extends Controller
      *
      * @return Response
      */
-    public function registrationManagementAction($search)
+    public function registrationManagementAction($search = '', $max = 20)
     {
         $this->checkOpen();
 
         if ($search === '') {
-            $datas = $this->workspaceTagManager->getDatasForWorkspaceList(false);
+            $datas = $this->workspaceTagManager
+                ->getDatasForWorkspaceList(false, $search, $max);
 
             return array(
                 'workspaces'    => $datas['workspaces'],
@@ -115,13 +115,16 @@ class WorkspaceRegistrationController extends Controller
                 'hierarchy'     => $datas['hierarchy'],
                 'rootTags'      => $datas['rootTags'],
                 'displayable'   => $datas['displayable'],
-                'search'        => ''
+                'nonPersonalWs' => $datas['nonPersonalWs'],
+                'personalWs'    => $datas['personalWs'],
+                'search'        => '',
+                'max'           => $max
             );
+        } else {
+            $pager = $this->workspaceManager->getDisplayableWorkspacesBySearchPager($search, 1);
+
+            return array('workspaces' => $pager, 'search' => $search);
         }
-
-        $pager = $this->workspaceManager->getDisplayableWorkspacesBySearchPager($search, 1);
-
-        return array('workspaces' => $pager, 'search' => $search);
     }
 
     /**
