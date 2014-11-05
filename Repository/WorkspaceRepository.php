@@ -566,7 +566,12 @@ class WorkspaceRepository extends EntityRepository
         return null;
     }
 
-    public function findByName($search, $executeQuery = true, $orderedBy = 'id')
+    public function findByName(
+        $search,
+        $executeQuery = true,
+        $orderedBy = 'id',
+        $order = 'ASC'
+    )
     {
         $upperSearch = strtoupper($search);
         $upperSearch = trim($upperSearch);
@@ -576,7 +581,7 @@ class WorkspaceRepository extends EntityRepository
             FROM Claroline\CoreBundle\Entity\Workspace\Workspace w
             WHERE w.name LIKE :search
             OR UPPER(w.code) LIKE :search
-            ORDER BY w.{$orderedBy}
+            ORDER BY w.{$orderedBy} {$order}
         ";
 
         $query = $this->_em->createQuery($dql);
@@ -661,6 +666,234 @@ class WorkspaceRepository extends EntityRepository
 
         $query = $this->_em->createQuery($dql);
         $query->setParameter('roleNames', $roleNames);
+
+        return $query->getResult();
+    }
+
+    /**
+     * Returns the workspaces which are marked as displayable and are not someone's
+     * personal workspace.
+     *
+     * @return array[Workspace]
+     */
+    public function findDisplayableNonPersonalWorkspaces()
+    {
+        $dql = '
+            SELECT w
+            FROM Claroline\CoreBundle\Entity\Workspace\Workspace w
+            WHERE w.displayable = true
+            AND NOT EXISTS (
+                SELECT u
+                FROM Claroline\CoreBundle\Entity\User u
+                JOIN u.personalWorkspace pw
+                WHERE pw = w
+            )
+            ORDER BY w.name
+        ';
+        $query = $this->_em->createQuery($dql);
+
+        return $query->getResult();
+    }
+
+    /**
+     * Returns the workspaces which are marked as displayable and are not someone's
+     * personal workspace and where name or code contains $search param.
+     *
+     * @return array[Workspace]
+     */
+    public function findDisplayableNonPersonalWorkspacesBySearch($search)
+    {
+        $dql = '
+            SELECT w
+            FROM Claroline\CoreBundle\Entity\Workspace\Workspace w
+            WHERE w.displayable = true
+            AND (
+                UPPER(w.name) LIKE :search
+                OR UPPER(w.code) LIKE :search
+            )
+            AND NOT EXISTS (
+                SELECT u
+                FROM Claroline\CoreBundle\Entity\User u
+                JOIN u.personalWorkspace pw
+                WHERE pw = w
+            )
+            ORDER BY w.name
+        ';
+
+        $search = strtoupper($search);
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('search', "%{$search}%");
+
+        return $query->getResult();
+    }
+
+    /**
+     * Returns the workspaces which are marked as displayable and are someone's
+     * personal workspace.
+     *
+     * @return array[Workspace]
+     */
+    public function findDisplayablePersonalWorkspaces()
+    {
+        $dql = '
+            SELECT w
+            FROM Claroline\CoreBundle\Entity\Workspace\Workspace w
+            WHERE w.displayable = true
+            AND EXISTS (
+                SELECT u
+                FROM Claroline\CoreBundle\Entity\User u
+                JOIN u.personalWorkspace pw
+                WHERE pw = w
+            )
+            ORDER BY w.name
+        ';
+        $query = $this->_em->createQuery($dql);
+
+        return $query->getResult();
+    }
+
+    /**
+     * Returns the workspaces which are marked as displayable and are someone's
+     * personal workspace and where name or code contains $search param.
+     *
+     * @return array[Workspace]
+     */
+    public function findDisplayablePersonalWorkspacesBySearch($search)
+    {
+        $dql = '
+            SELECT w
+            FROM Claroline\CoreBundle\Entity\Workspace\Workspace w
+            WHERE w.displayable = true
+            AND (
+                UPPER(w.name) LIKE :search
+                OR UPPER(w.code) LIKE :search
+            )
+            AND EXISTS (
+                SELECT u
+                FROM Claroline\CoreBundle\Entity\User u
+                JOIN u.personalWorkspace pw
+                WHERE pw = w
+            )
+            ORDER BY w.name
+        ';
+
+        $search = strtoupper($search);
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('search', "%{$search}%");
+
+        return $query->getResult();
+    }
+
+    /**
+     * Returns all non-personal workspaces.
+     *
+     * @return array[Workspace]
+     */
+    public function findAllNonPersonalWorkspaces($orderedBy = 'name', $order = 'ASC')
+    {
+        $dql = "
+            SELECT w
+            FROM Claroline\CoreBundle\Entity\Workspace\Workspace w
+            WHERE NOT EXISTS (
+                SELECT u
+                FROM Claroline\CoreBundle\Entity\User u
+                JOIN u.personalWorkspace pw
+                WHERE pw = w
+            )
+            ORDER BY w.{$orderedBy} {$order}
+        ";
+        $query = $this->_em->createQuery($dql);
+
+        return $query->getResult();
+    }
+
+    /**
+     * Returns all non-personal workspaces which name or code contains $search param.
+     *
+     * @return array[Workspace]
+     */
+    public function findAllNonPersonalWorkspacesBySearch(
+        $search,
+        $orderedBy = 'name',
+        $order = 'ASC'
+    )
+    {
+        $dql = "
+            SELECT w
+            FROM Claroline\CoreBundle\Entity\Workspace\Workspace w
+            WHERE (
+                UPPER(w.name) LIKE :search
+                OR UPPER(w.code) LIKE :search
+            )
+            AND NOT EXISTS (
+                SELECT u
+                FROM Claroline\CoreBundle\Entity\User u
+                JOIN u.personalWorkspace pw
+                WHERE pw = w
+            )
+            ORDER BY w.{$orderedBy} {$order}
+        ";
+
+        $search = strtoupper($search);
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('search', "%{$search}%");
+
+        return $query->getResult();
+    }
+
+    /**
+     * Returns all personal workspaces.
+     *
+     * @return array[Workspace]
+     */
+    public function findAllPersonalWorkspaces($orderedBy = 'name', $order = 'ASC')
+    {
+        $dql = "
+            SELECT w
+            FROM Claroline\CoreBundle\Entity\Workspace\Workspace w
+            WHERE EXISTS (
+                SELECT u
+                FROM Claroline\CoreBundle\Entity\User u
+                JOIN u.personalWorkspace pw
+                WHERE pw = w
+            )
+            ORDER BY w.{$orderedBy} {$order}
+        ";
+        $query = $this->_em->createQuery($dql);
+
+        return $query->getResult();
+    }
+
+    /**
+     * Returns all personal workspaces which name or code contains $search param.
+     *
+     * @return array[Workspace]
+     */
+    public function findAllPersonalWorkspacesBySearch(
+        $search,
+        $orderedBy = 'name',
+        $order = 'ASC'
+    )
+    {
+        $dql = "
+            SELECT w
+            FROM Claroline\CoreBundle\Entity\Workspace\Workspace w
+            WHERE (
+                UPPER(w.name) LIKE :search
+                OR UPPER(w.code) LIKE :search
+            )
+            AND EXISTS (
+                SELECT u
+                FROM Claroline\CoreBundle\Entity\User u
+                JOIN u.personalWorkspace pw
+                WHERE pw = w
+            )
+            ORDER BY w.{$orderedBy} {$order}
+        ";
+
+        $search = strtoupper($search);
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('search', "%{$search}%");
 
         return $query->getResult();
     }

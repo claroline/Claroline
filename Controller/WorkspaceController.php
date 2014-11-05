@@ -849,6 +849,64 @@ class WorkspaceController extends Controller
 
     /**
      * @EXT\Route(
+     *     "/list/non/personal/workspaces/page/{page}/max/{max}/search/{search}",
+     *     name="claro_all_non_personal_workspaces_list_pager",
+     *     defaults={"page"=1,"max"=20,"seach"=""},
+     *     options={"expose"=true}
+     * )
+     * @EXT\Template()
+     *
+     * @param integer $page
+     *
+     * @return array
+     */
+    public function nonPersonalWorkspacesListPagerAction(
+        $page = 1,
+        $max = 20,
+        $search = ''
+    )
+    {
+        $nonPersonalWs = $this->workspaceManager
+            ->getDisplayableNonPersonalWorkspaces($page, $max, $search);
+
+        return array(
+            'nonPersonalWs' => $nonPersonalWs,
+            'max' => $max,
+            'search' => $search
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/list/personal/workspaces/page/{page}/max/{max}/search/{search}",
+     *     name="claro_all_personal_workspaces_list_pager",
+     *     defaults={"page"=1,"max"=20,"seach"=""},
+     *     options={"expose"=true}
+     * )
+     * @EXT\Template()
+     *
+     * @param integer $page
+     *
+     * @return array
+     */
+    public function personalWorkspacesListPagerAction(
+        $page = 1,
+        $max = 20,
+        $search = ''
+    )
+    {
+        $personalWs = $this->workspaceManager
+            ->getDisplayablePersonalWorkspaces($page, $max, $search);
+
+        return array(
+            'personalWs' => $personalWs,
+            'max' => $max,
+            'search' => $search
+        );
+    }
+
+    /**
+     * @EXT\Route(
      *     "/list/workspaces/self_reg/page/{page}",
      *     name="claro_all_workspaces_list_with_self_reg_pager",
      *     defaults={"page"=1},
@@ -985,6 +1043,64 @@ class WorkspaceController extends Controller
         $workspaces = $this->tagManager->getPagerAllWorkspaces($page);
 
         return array('workspaces' => $workspaces);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/registration/list/non/personal/workspaces/page/{page}/max/{max}/search/{search}",
+     *     name="claro_all_non_personal_workspaces_list_registration_pager",
+     *     defaults={"page"=1,"max"=20,"seach"=""},
+     *     options={"expose"=true}
+     * )
+     * @EXT\Template()
+     *
+     * @param integer $page
+     *
+     * @return array
+     */
+    public function nonPersonalWorkspacesListRegistrationPagerAction(
+        $page = 1,
+        $max = 20,
+        $search = ''
+    )
+    {
+        $nonPersonalWs = $this->workspaceManager
+            ->getDisplayableNonPersonalWorkspaces($page, $max, $search);
+
+        return array(
+            'nonPersonalWs' => $nonPersonalWs,
+            'max' => $max,
+            'search' => $search
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/registration/list/personal/workspaces/page/{page}/max/{max}/search/{search}",
+     *     name="claro_all_personal_workspaces_list_registration_pager",
+     *     defaults={"page"=1,"max"=20,"seach"=""},
+     *     options={"expose"=true}
+     * )
+     * @EXT\Template()
+     *
+     * @param integer $page
+     *
+     * @return array
+     */
+    public function personalWorkspacesListRegistrationPagerAction(
+        $page = 1,
+        $max = 20,
+        $search = ''
+    )
+    {
+        $personalWs = $this->workspaceManager
+            ->getDisplayablePersonalWorkspaces($page, $max, $search);
+
+        return array(
+            'personalWs' => $personalWs,
+            'max' => $max,
+            'search' => $search
+        );
     }
 
     /**

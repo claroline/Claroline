@@ -144,7 +144,9 @@ agenda: Agenda
 all: Tous
 all_available_workspaces: 'Tous les espaces d''activités disponibles'
 all_my_workspaces: 'Tous mes espaces d''activités'
-all_workspaces: Tous les espaces d'activités publics
+all_public_personal_workspaces: 'Tous les espaces personnels publics'
+all_public_workspaces: 'Tous les espaces d''activités publics'
+all_workspaces: 'Tous les espaces d''activités'
 already_existing_user: 'L''utilisateur existe déjà.'
 an_error_occured_message: 'Une erreur s''est produite. Veuillez contacter l''administrateur.'
 analytics_connections: 'Visites utilisateurs'
@@ -182,6 +184,7 @@ canEdit: 'Droit de modifier'
 canExport: 'Droit d''exporter'
 canOpen: 'Droit d''ouvrir'
 cancel: Annuler
+cannot_change_password: Vous ne pouvez pas changer votre mot de passe
 cannot_delete_unique_manager: 'Impossible de supprimer le seul gestionnaire.'
 cannot_unsubscribe_from_workspace: 'Impossible de vous désinscrire de l''espace d''activités'
 captcha: Captcha
@@ -594,6 +597,7 @@ no_search_results: 'Votre recherche n''a retourné aucun résultat.'
 no_tag: 'Il n''y a aucun Tag'
 no_user: 'Aucun utilisateur'
 no_workspace: 'Il n''y a aucun espace d''activités'
+non_personal_workspaces_only: 'Les espaces non personnels seulement'
 none: Aucun
 not_allowed_message: 'Vous n''êtes pas autorisé(e) à effectuer cette action.'
 not_attempted: 'Pas tenté'
@@ -634,6 +638,7 @@ path: Emplacement
 pending: En attente
 permissions: Permissions
 personal_workspace: 'Espace personnel - '
+personal_workspaces_only: 'Les espaces personnels seulement'
 phone: Téléphone
 picture_profile: 'Photo de profil'
 platform_appearance: 'Apparence de la plateforme'
