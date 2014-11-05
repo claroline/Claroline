@@ -69,3 +69,6 @@ foreach ($data as $row) {
 		file_put_contents($logFile, $logLine, FILE_APPEND);
 	}
 }
+
+$logLine = "Done !\n";
+file_put_contents($logFile, $logLine, FILE_APPEND);

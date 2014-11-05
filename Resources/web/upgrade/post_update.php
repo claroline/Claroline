@@ -117,10 +117,11 @@ $container = $kernel->getContainer();
 $installer = $container->get('claroline.installation.platform_installer');
 $installer->setLogger(
     function ($message) use ($logFile) {
-        file_put_contents($logFile, $message, FILE_APPEND);
+        file_put_contents($logFile, $message . "\n", FILE_APPEND);
     }
 );
 $installer->installFromOperationFile();
 
 
-echo "Done !";
+$logLine = "Done\n";
+file_put_contents($logFile, $logLine, FILE_APPEND);
