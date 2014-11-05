@@ -10,13 +10,6 @@
         <div id="portfolio-container" data-ng-if="portfolio.$resolved">
             <header>
                 <div class="container">
-                    <p class="pull-right alert alert-warning beta_message" role="alert">
-                    {% if editMode %}
-                        {{ 'beta_message' | trans({}, 'icap_portfolio') | raw }}
-                    {% else %}
-                        {{ 'beta_message_public' | trans({}, 'icap_portfolio') | raw }}
-                    {% endif %}
-                    </p>
                     <h1 id="username">{{ portfolio.user.firstName ~ ' ' ~ portfolio.user.lastName }}</h1>
 
                     <div data-ng-repeat="widget in widgets | filter:{type: 'title'}" data-ng-show="widgets.length > 0">
