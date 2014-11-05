@@ -1,4 +1,4 @@
-{% macro renderPager(search, pager, max, order) %}
+{% macro renderPager(search, pager, max, order, type) %}
     {% if search == '' %}
         {{
             pagerfanta(
@@ -7,7 +7,7 @@
                 {
                     'proximity' : 1,
                     'routeName': 'claro_admin_workspaces_management',
-                    'routeParams': {'max': max, 'order': order}
+                    'routeParams': {'max': max, 'order': order, 'type': type}
                 }
             )
         }}
@@ -19,7 +19,7 @@
                 {
                     'proximity' : 1,
                     'routeName': 'claro_admin_workspaces_management_search',
-                    'routeParams': {'search': search, 'max': max, 'order': order}
+                    'routeParams': {'search': search, 'max': max, 'order': order, 'type': type}
                 }
             )
         }}
@@ -41,7 +41,7 @@
         </a>
     {% endif %}
 {% endmacro %}
-{% macro sortUrl(max, search, order, direction) %}
+{% macro sortUrl(max, search, order, direction, type) %}
     {% if direction == 'ASC' %}
         {% set newDirection = 'DESC' %}
     {% else %}
@@ -49,9 +49,19 @@
     {% endif %}
 
     {% if search == '' %}
-        {{ path('claro_admin_workspaces_management', {'max': max, 'order': order , 'direction': newDirection}) }}
+        {{
+            path(
+                'claro_admin_workspaces_management',
+                {'max': max, 'order': order , 'direction': newDirection, 'type': type}
+            )
+        }}
     {% else %}
-        {{ path('claro_admin_workspaces_management_search', {'search': search, 'max': max, 'order': order}) }}
+        {{
+            path(
+                'claro_admin_workspaces_management_search',
+                {'search': search, 'max': max, 'order': order, 'direction': newDirection, 'type': type}
+            )
+        }}
     {% endif %}
 {% endmacro %}
 
@@ -103,9 +113,26 @@
             </div>
         </div>
         <div class="row">
+            <div class="col-md-4 margin-top-md pull-right">
+                <div class="input-group-btn">
+                    <select class="form-control" id="type-select">
+                        <option value="1" {% if type == 1 %}selected{% endif %}>
+                            {{ 'non_personal_workspaces_only'|trans({}, 'platform') }}
+                        </option>
+                        <option value="2" {% if type == 2 %}selected{% endif %}>
+                            {{ 'personal_workspaces_only'|trans({}, 'platform') }}
+                        </option>
+                        <option value="3" {% if type == 3 %}selected{% endif %}>
+                            {{ 'all_workspaces'|trans({}, 'platform') }}
+                        </option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="row">
             <div class="col-md-8">
                 {% if pager.getNbPages() > 1 %}
-                    {{ renderPager(search, pager, max, order) }}
+                    {{ renderPager(search, pager, max, order, type) }}
                 {% endif %}
             </div>
             <div class="col-md-4 margin-top-md margin-bottom-md">
@@ -127,14 +154,42 @@
                 <thead>
                     <tr>
                         <th><input type="checkbox" name="all" id="check-all-items"></th>
-                        <th>{{ 'id'|trans({}, 'platform') }}</th>
-                        <th><a href="{{ sortUrl(max, search, 'name', direction) }}">{{ 'name'|trans({}, 'platform') }} </a></th>
-                        <th><a href="{{ sortUrl(max, search, 'code', direction) }}"> {{ 'code'|trans({}, 'platform') }} </a></th>
-                        <th><a href="{{ sortUrl(max, search, 'creator', direction) }}"> {{ 'creator'|trans({}, 'platform') }} </a></th>
-                        <th><a href="{{ sortUrl(max, search, 'displayable', direction) }}"> {{ 'visibility'|trans({}, 'platform') }} </a></th>
-                        <th><a href="{{ sortUrl(max, search, 'selfRegistration', direction) }}"> {{ 'public_registration'|trans({}, 'platform') }} </a></th>
+                        <th>
+                            <a href="{{ sortUrl(max, search, 'id', direction, type) }}">
+                                {{ 'id'|trans({}, 'platform') }}
+                            </a>
+                        </th>
+                        <th>
+                            <a href="{{ sortUrl(max, search, 'name', direction, type) }}">
+                                {{ 'name'|trans({}, 'platform') }}
+                            </a>
+                        </th>
+                        <th>
+                            <a href="{{ sortUrl(max, search, 'code', direction, type) }}">
+                                {{ 'code'|trans({}, 'platform') }}
+                            </a>
+                        </th>
+                        <th>
+                            <a href="{{ sortUrl(max, search, 'creator', direction, type) }}">
+                                {{ 'creator'|trans({}, 'platform') }}
+                            </a>
+                        </th>
+                        <th>
+                            <a href="{{ sortUrl(max, search, 'displayable', direction, type) }}">
+                                {{ 'visibility'|trans({}, 'platform') }}
+                            </a>
+                        </th>
+                        <th>
+                            <a href="{{ sortUrl(max, search, 'selfRegistration', direction, type) }}">
+                                {{ 'public_registration'|trans({}, 'platform') }}
+                            </a>
+                        </th>
                         <th>{{ 'edit'|trans({}, 'platform') }}</th>
-                        <th>date </th>
+                        <th>
+                            <a href="{{ sortUrl(max, search, 'creationDate', direction, type) }}">
+                                {{ 'date'|trans({}, 'platform') }}
+                            </a>
+                        </th>
                     </tr>
                 </thead>
                 <tbody>
@@ -202,7 +257,7 @@
             </table>
         </div>
             {% if pager.getNbPages() > 1 %}
-                {{ renderPager(search, pager, max, order) }}
+                {{ renderPager(search, pager, max, order, type) }}
             {% endif %}
         <div>
             {{ displayControls() }}
@@ -223,11 +278,11 @@
         parameters.route.action = {};
         parameters.route.normal = {
             "route": "claro_admin_workspaces_management",
-            "parameters": {'order': '{{ order }}' }
+            "parameters": {'order': '{{ order }}', 'type': '{{ type }}'}
         };
         parameters.route.search = {
             "route": "claro_admin_workspaces_management_search",
-            "parameters": {'order': '{{ order }}' }
+            "parameters": {'order': '{{ order }}', 'type': '{{ type }}'}
         };
         parameters.route.action.remove = {
             "route": "claro_admin_delete_workspaces",
@@ -291,6 +346,36 @@
                     }
                 }
             });
+        });
+        
+        $('#type-select').on('change', function () {
+            var url;
+            var workspaceType = $(this).val();
+            
+            {% if search == '' %}
+                url = Routing.generate(
+                    'claro_admin_workspaces_management',
+                    {
+                        'max': {{ max }},
+                        'order': '{{ order }}',
+                        'direction': '{{ direction }}',
+                        'type': workspaceType
+                    }
+                );
+            {% else %}
+                url = Routing.generate(
+                    'claro_admin_workspaces_management_search',
+                    {
+                        'search': '{{ search }}',
+                        'max': {{ max }},
+                        'order': '{{ order }}',
+                        'direction': '{{ direction }}',
+                        'type': workspaceType
+                    }
+                );
+            {% endif %}
+            
+            window.location = url;
         });
     </script>
 {% endblock %}

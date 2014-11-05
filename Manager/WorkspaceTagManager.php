@@ -412,7 +412,7 @@ class WorkspaceTagManager
         return $this->tagHierarchyRepo->findBy(array('tag' => $tag));
     }
 
-    public function getDatasForWorkspaceList($withRoles = true, $search = '')
+    public function getDatasForWorkspaceList($withRoles = true, $search = '', $max = 20)
     {
         if (empty($search)) {
             $workspaces = $this->workspaceRepo->findDisplayableWorkspaces();
@@ -420,6 +420,10 @@ class WorkspaceTagManager
             $workspaces = $this->workspaceRepo
                 ->findDisplayableWorkspacesBySearch($search);
         }
+        $nonPersonalWs = $this->workspaceManager
+            ->getDisplayableNonPersonalWorkspaces(1, $max, $search);
+        $personalWs = $this->workspaceManager
+            ->getDisplayablePersonalWorkspaces(1, $max, $search);
         $tags = $this->getNonEmptyAdminTags();
         $relTagWorkspace = $this->getTagRelationsByAdmin();
         $tagWorkspaces = array();
@@ -495,7 +499,10 @@ class WorkspaceTagManager
             'rootTags' => $rootTags,
             'displayable' => $displayable,
             'workspaceRoles' => $workspaceRoles,
-            'search' => $search
+            'search' => $search,
+            'nonPersonalWs' => $nonPersonalWs,
+            'personalWs' => $personalWs,
+            'max' => $max
         );
     }
 

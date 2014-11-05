@@ -50,7 +50,7 @@
                 var page = getPage(urlTab);
 
                 if (tagId === -1) {
-                    route = Routing.generate('claro_all_workspaces_list_pager', {'page': page});
+                    route = url;
                 }
                 else {
                     route = Routing.generate(

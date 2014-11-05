@@ -63,15 +63,15 @@ class WorkspacesController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/page/{page}/max/{max}/order/{order}/direction/{direction}",
+     *     "/page/{page}/max/{max}/order/{order}/direction/{direction}/type/{type}",
      *     name="claro_admin_workspaces_management",
-     *     defaults={"page"=1, "search"="", "max"=50, "order"="id", "direction"="ASC" },
+     *     defaults={"page"=1, "search"="", "max"=50, "order"="id", "direction"="ASC", "type"=1},
      *     options = {"expose"=true}
      * )
      * @EXT\Route(
-     *     "/page/{page}/search/{search}/max/{max}/order/{order}/direction/{direction}",
+     *     "/page/{page}/search/{search}/max/{max}/order/{order}/direction/{direction}/type/{type}",
      *     name="claro_admin_workspaces_management_search",
-     *     defaults={"page"=1, "search"="", "max"=50, "order"="id", "direction"="ASC"},
+     *     defaults={"page"=1, "search"="", "max"=50, "order"="id", "direction"="ASC", "type"=1},
      *     options = {"expose"=true}
      * )
      * @EXT\Template
@@ -81,17 +81,46 @@ class WorkspacesController extends Controller
      * @param $max
      * @param $order
      * @param $direction
+     * @param $type
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function managementAction($page, $search, $max, $order, $direction)
+    public function managementAction($page, $search, $max, $order, $direction, $type = 1)
     {
         $this->checkOpen();
+        $workspaceType = intval($type);
 
-        $pager = $search === '' ?
-            $this->workspaceManager->findAllWorkspaces($page, $max, $order, $direction) :
-            $this->workspaceManager->getWorkspaceByName($search, $page, $max, $order);
+        if ($workspaceType === 2) {
+            $pager = $this->workspaceManager->getAllPersonalWorkspaces(
+                $page,
+                $max,
+                $search,
+                $order,
+                $direction
+            );
+        } elseif ($workspaceType === 3) {
+            $pager = $search === '' ?
+                $this->workspaceManager
+                    ->findAllWorkspaces($page, $max, $order, $direction) :
+                $this->workspaceManager
+                    ->getWorkspaceByName($search, $page, $max, $order, $direction);
+        } else {
+            $pager = $this->workspaceManager->getAllNonPersonalWorkspaces(
+                $page,
+                $max,
+                $search,
+                $order,
+                $direction
+            );
+        }
 
-        return array('pager' => $pager, 'search' => $search, 'max' => $max, 'order' => $order, 'direction' => $direction );
+        return array(
+            'pager' => $pager,
+            'search' => $search,
+            'max' => $max,
+            'order' => $order,
+            'direction' => $direction,
+            'type' => $type
+        );
     }
 
     /**

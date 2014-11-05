@@ -53,10 +53,7 @@
                     var search = $('#search-mode').attr('search');
 
                     if (search === '') {
-                        route = Routing.generate(
-                            'claro_all_workspaces_list_registration_pager',
-                            {'page': page}
-                        );
+                        route = url;
                     }
                     else {
                         route = Routing.generate(

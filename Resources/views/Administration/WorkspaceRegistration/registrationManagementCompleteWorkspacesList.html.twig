@@ -55,32 +55,69 @@
 {% endmacro %}
 
 {% from _self import showTag %}
+
 <div class="panel-group">
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <div class="panel-title">
-                <a  class="accordion-toggle"
-                    data-toggle="collapse"
-                    data-parent="#accordion-all"
-                    href="#collapse-all"
-                >
-                    <i class="fa fa-align-justify"></i>
-                    {{ 'all_workspaces'|trans({}, 'platform') }}
-                    <input
-                        class="accordion-checkbox pull-right"
-                        type="checkbox"
-                        value="all"
-                    >
-                </a>
-            </div>
+    
+    {% if nonPersonalWs|length == 0 and personalWs|length == 0  %}
+        <div class="alert alert-warning">
+            {{ 'no_workspace'|trans({}, 'platform') }}
         </div>
-        <div id="collapse-all" class="collapse {% if tags|length == 0 %}in{% endif %}">
-            {% if workspaces|length > 0 %}
-                <div id="workspace-list-pager-all" class="workspace-list-pager">
-                {% include 'ClarolineCoreBundle:Workspace:workspaceCompleteListRegistrationPager.html.twig' %}
+    {% else %}
+    
+        {% if nonPersonalWs|length > 0 %}
+            <div class="panel panel-default" id="accordion-all-non-personal">
+                <div class="panel-heading">
+                    <div class="panel-title">
+                        <a  class="accordion-toggle"
+                            data-toggle="collapse"
+                            data-parent="#accordion-all-non-personal"
+                            href="#collapse-all-non-personal"
+                        >
+                            <i class="fa fa-align-justify"></i>
+                            {{ 'all_public_workspaces'|trans({}, 'platform') }}
+                            <input
+                                class="accordion-checkbox pull-right"
+                                type="checkbox"
+                                value="all-non-personal"
+                            >
+                        </a>
+                    </div>
                 </div>
-            {% endif %}
-        </div>
-    </div>
+                <div id="collapse-all-non-personal" class="collapse {% if tags|length == 0 %}in{% endif %}">
+                    <div id="workspace-list-pager-all" class="workspace-list-pager">
+                        {% include 'ClarolineCoreBundle:Workspace:nonPersonalWorkspacesListRegistrationPager.html.twig' %}
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
+        {% if personalWs|length > 0 %}
+            <div class="panel panel-default" id="accordion-all-personal">
+                <div class="panel-heading">
+                    <div class="panel-title">
+                        <a  class="accordion-toggle"
+                            data-toggle="collapse"
+                            data-parent="#accordion-all-personal"
+                            href="#collapse-all-personal"
+                        >
+                            <i class="fa fa-align-justify"></i>
+                            {{ 'all_public_personal_workspaces'|trans({}, 'platform') }}
+                            <input
+                                class="accordion-checkbox pull-right"
+                                type="checkbox"
+                                value="all-personal"
+                            >
+                        </a>
+                    </div>
+                </div>
+                <div id="collapse-all-personal" class="collapse {% if tags|length == 0 %}in{% endif %}">
+                    <div id="workspace-list-pager-all" class="workspace-list-pager">
+                        {% include 'ClarolineCoreBundle:Workspace:personalWorkspacesListRegistrationPager.html.twig' %}
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    {% endif %}
+    
     {{ showTag(rootTags, tagWorkspaces, hierarchy, "0", displayable) }}
 </div>
