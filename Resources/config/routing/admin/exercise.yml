@@ -27,7 +27,7 @@ ujm_exercise_unpublish:
       _method: POST
 
 ujm_exercise_questions:
-    pattern:  /{id}/questions/{pageNow}/{categoryToFind}/{titleToFind}/{displayAll}
+    pattern:  /{id}/questions/{pageNow}/{displayAll}/{categoryToFind}/{titleToFind}
     defaults: { _controller: UJMExoBundle:Exercise:showQuestions, pageNow: 0, categoryToFind: z, titleToFind: z, displayAll: 0 }
     requirements:
         categoryToFind: ".+"
