@@ -63,7 +63,7 @@ class WebUpdater
             if (!$element->isDot()) {
                 $this->files[$newPath] = $element->getPathName();
 
-                if ($element->isDir()) {
+                if ($element->isDir() && $element->getBaseName() === 'upgrade') {
                     $this->listFiles($element->getPathName());
                 }
             }
@@ -98,4 +98,4 @@ class WebUpdater
 
         return rmdir($dir);
     }
-} 
+}

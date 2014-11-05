@@ -3,9 +3,9 @@
 $ds = DIRECTORY_SEPARATOR;
 $vendorDir = __DIR__ . "/../../vendor";
 $configDir = realpath($vendorDir . "/../app/config");
-$logFile = "{$vendorDir}/../app/logs/pre_update.log";
+$logFile = $vendorDir . '/../app/logs/pre_update.log';
 
-require "{$vendorDir}/autoload.php";
+require $vendorDir . '/autoload.php';
 
 use Symfony\Component\Yaml\Yaml;
 
@@ -33,7 +33,11 @@ $sql = "CREATE TABLE claro_bundle (
 	version VARCHAR(50)
 )";
 
-$logLine = $conn->query($sql) ? 'Creating table claro_bundle...\n': 'Table claro_bundle already exists.\n';
+$logLine = $conn->query($sql) ? "Creating table claro_bundle...\n": "Table claro_bundle already exists.\n";
+
+//remove the old log file
+unlink($logFile);
+touch($logFile);
 file_put_contents($logFile, $logLine, FILE_APPEND);
 
 //update the table
@@ -53,13 +57,13 @@ foreach ($data as $row) {
 			$sql = "UPDATE `claro_bundle` set version='{$version}'
 				where `name` LIKE \"{$name}\"";
 			$conn->query($sql);
-			$logLine = "Updating {$name} to the current version ({$version})";
+			$logLine = "Updating {$name} to the current version ({$version})\n";
 		} else {
 			//insert
 			$sql = "INSERT into claro_bundle (name, version)
 				VALUES('{$name}', '{$version}')";
 			$conn->query($sql);
-			$logLine = "Inserting {$name} to the current version ({$version})";
+			$logLine = "Inserting {$name} to the current version ({$version})\n";
 		}
 
 		file_put_contents($logFile, $logLine, FILE_APPEND);

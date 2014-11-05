@@ -122,13 +122,5 @@ $installer->setLogger(
 );
 $installer->installFromOperationFile();
 
-//we must clear the cache
-//exec ("php " . __DIR__ . "{$ds}..{$ds}app{$ds}console cache:clear");
-//now we can run the command claroline:update...
-//We also can call these commandands programmatically
-//(just check how it works in the claroline command folder ~but I'm lazy)
-//exec ("php " . __DIR__ . "{$ds}..{$ds}app{$ds}console claroline:update");
-//exec ("php " . __DIR__ . "{$ds}..{$ds}app{$ds}console assets:install");
-//exec ("php " . __DIR__ . "{$ds}..{$ds}app{$ds}console assetic:dump");
-//now we can remove the operations.xml file
+
 echo "Done !";

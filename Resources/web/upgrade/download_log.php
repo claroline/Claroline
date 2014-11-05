@@ -11,7 +11,8 @@
 
 include __DIR__ . '/authorize.php';
 
-$file = '../../app/logs/composer.log';
+$logFile = $_GET['logFile'];
+$file = '../../app/logs/' . $logFile . '.log';
 
 header("Cache-Control: public");
 header("Content-Description: File Transfer");
