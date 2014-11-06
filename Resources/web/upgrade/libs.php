@@ -55,3 +55,35 @@ class Translator
         self::$initialized = true;
     }
 }
+
+class FileManager
+{
+    /**
+     * http://stackoverflow.com/questions/1653771/how-do-i-remove-a-directory-that-is-not-empty
+     * @param $dir
+     * @return bool
+     */
+    public static function deleteDirectory($dir)
+    {
+        if (!file_exists($dir)) {
+            return true;
+        }
+
+        if (!is_dir($dir)) {
+            return unlink($dir);
+        }
+
+        foreach (scandir($dir) as $item) {
+            if ($item == '.' || $item == '..') {
+                continue;
+            }
+
+            if (self::deleteDirectory($dir . DIRECTORY_SEPARATOR . $item)) {
+                return false;
+            }
+
+        }
+
+        return rmdir($dir);
+    }
+}

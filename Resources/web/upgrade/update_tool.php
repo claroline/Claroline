@@ -10,7 +10,7 @@
  */
 
 include __DIR__ . '/authorize.php';
-include __DIR__ . '/translator.php';
+include __DIR__ . '/libs.php';
 
 $vendorDir = __DIR__ . "/../../vendor";
 $logPreUpdate = $vendorDir . '/../app/logs/pre_update.log';
@@ -28,7 +28,7 @@ $logPostUpdate = $vendorDir . '/../app/logs/post_update.log';
         <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
         <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-theme.min.css">
         <link rel="shortcut icon" href="../claroline.ico" />
-        <script src="update_lib.js"></script>
+        <script src="libs.js"></script>
         <script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
         <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
         <style>

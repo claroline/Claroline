@@ -8,25 +8,31 @@ $logFile = "{$vendorDir}/../app/logs/post_update.log";
 //I'm going to need some stefk libs...
 //require __DIR__ . "{$ds}..{$ds}vendor{$ds}autoload.php";
 require_once __DIR__. "/../../app/bootstrap.php.cache";
+include __DIR__ . '/libs.php';
 
 use Claroline\BundleRecorder\Operation;
 use Claroline\BundleRecorder\Handler\OperationHandler;
 use Claroline\BundleRecorder\Detector\Detector;
 use Claroline\BundleRecorder\Handler\BundleHandler;
 use Claroline\BundleRecorder\Recorder;
-use Symfony\Component\Yaml\Yaml;
 
+use Symfony\Component\Yaml\Yaml;
+use Symfony\Component\Console\Output\StreamOutput;
 use Symfony\Component\HttpFoundation\Request;
+use Claroline\CoreBundle\Library\Installation\Refresher;
 
 require_once __DIR__. "/../../app/AppKernel.php";
 
+$logLine = "Emptying the cache...\n";
+file_put_contents($logFile, $logLine . "\n", FILE_APPEND);
+Refresher::removeContentFrom($vendorDir . '/../app/cache');
+
 $kernel = new AppKernel('prod', false);
 $kernel->loadClassCache();
+//I need to do that in order to access some librairies required for the installation...
 $kernel->boot();
-//$request = Request::createFromGlobals();
-//$response = $kernel->handle($request);
-//$response->send();
 
+//we can also get the PDO connection from the sf2 container.
 //database parameters from the parameters.yml file
 $value = Yaml::parse($configDir . $ds . 'parameters.yml');
 $host = $value['parameters']['database_host'];
@@ -113,6 +119,11 @@ $recorder = new Recorder(
 );
 $recorder->buildBundleFile();
 
+//reboot the kernel for the new bundle file
+$kernel->shutdown();
+$kernel->boot();
+
+//install from the operation file
 $container = $kernel->getContainer();
 $installer = $container->get('claroline.installation.platform_installer');
 $installer->setLogger(
@@ -120,8 +131,15 @@ $installer->setLogger(
         file_put_contents($logFile, $message . "\n", FILE_APPEND);
     }
 );
-$installer->installFromOperationFile();
 
+//assets & assetic dump
+$installer->installFromOperationFile();
+$refresher = $container->get('claroline.installation.refresher');
+$output = new StreamOutput(fopen($logFile, 'a', false));
+$refresher->setOutput($output);
+$refresher->installAssets();
+$refresher->dumpAssets($container->getParameter('kernel.environment'));
+$refresher->compileGeneratedThemes();
 
 $logLine = "Done\n";
 file_put_contents($logFile, $logLine, FILE_APPEND);
