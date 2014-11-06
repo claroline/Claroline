@@ -20,7 +20,7 @@
 {% if hasMenu == true %}
     <div class="dropdown" rel="tooltip" title="{{ node.name }}">
         <a class="dropdown-toggle name dropdown-thumbnail" role="button" data-toggle="dropdown" href="#">
-            <div class="node-name">{{ node.displayableName|raw }} <i class="fa fa-caret-down"></i></div>
+            <div class="node-name{% if not node.published %} text-muted{% endif %}">{{ node.displayableName|raw }} <i class="fa fa-caret-down"></i></div>
         </a>
         <ul class="dropdown-menu" role="menu">
             {% for action, attributes in actions %}
