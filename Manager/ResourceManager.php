@@ -586,13 +586,18 @@ class ResourceManager
         if ($parent === $child) {
             throw new ResourceMoveException("You cannot move a directory into itself");
         }
-
+        $this->om->startFlushSuite();
         $this->removePosition($child);
         $this->setLastPosition($parent, $child);
         $child->setParent($parent);
         $child->setName($this->getUniqueName($child, $parent));
+
+        if ($child->getWorkspace()->getId() !== $parent->getWorkspace()->getId()) {
+
+            $this->updateWorkspace($child, $parent->getWorkspace());
+        }
         $this->om->persist($child);
-        $this->om->flush();
+        $this->om->endFlushSuite();
         $this->dispatcher->dispatch('log', 'Log\LogResourceMove', array($child, $parent));
 
         return $child;
@@ -883,7 +888,7 @@ class ResourceManager
         if ($node->getParent() === null) {
             throw new \LogicException('Root directory cannot be removed');
         }
-
+        $workspace = $node->getWorkspace();
         $this->removePosition($node);
         $this->om->startFlushSuite();
         $nodes = $this->getDescendants($node);
@@ -906,6 +911,14 @@ class ResourceManager
 
                     foreach ($event->getFiles() as $file) {
                         unlink($file);
+
+                        $dir = $this->container->getParameter('claroline.param.files_directory') .
+                            DIRECTORY_SEPARATOR .
+                            $workspace->getCode();
+
+                        if (is_dir($dir) && $this->isDirectoryEmpty($dir)) {
+                            rmdir($dir);
+                        }
                     }
                 }
 
@@ -1576,4 +1589,40 @@ class ResourceManager
         return $this->dispatcher->hasListeners($actionName . '_' . $resourceType->getName());
     }
 
+    private function isDirectoryEmpty($dirName)
+    {
+        $files = array ();
+        $dirHandle = opendir($dirName);
+
+        if ($dirHandle) {
+
+            while ($file = readdir($dirHandle)) {
+
+                if ($file !== '.' && $file !== '..') {
+                    $files[] = $file;
+                    break;
+                }
+            }
+            closedir($dirHandle);
+        }
+
+        return count($files) === 0;
+    }
+
+    private function updateWorkspace(ResourceNode $node, Workspace $workspace)
+    {
+        $this->om->startFlushSuite();
+        $node->setWorkspace($workspace);
+        $this->om->persist($node);
+
+        if ($node->getResourceType()->getName() === 'directory') {
+            $children = $this->resourceNodeRepo->getChildren($node);
+
+            foreach ($children as $child) {
+                $child->setWorkspace($workspace);
+                $this->om->persist($child);
+            }
+        }
+        $this->om->endFlushSuite();
+    }
 }

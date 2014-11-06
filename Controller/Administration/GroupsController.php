@@ -422,7 +422,7 @@ class GroupsController extends Controller
     }
 
     /**
-     * @EXT\Route("/{groupId}", name="claro_admin_update_group_settings")
+     * @EXT\Route("/{groupId}/update", name="claro_admin_update_group_settings")
      * @EXT\ParamConverter(
      *      "group",
      *      class="ClarolineCoreBundle:Group",

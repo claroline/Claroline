@@ -80,6 +80,11 @@
             <li> <a href="{{ path('claro_workspace_registered_user_list', {'workspace': workspace.getId() }) }}"> {{'users'|trans({}, 'platform') }} </a> </li>
             <li class="active"> <a href="#"> {{'groups'|trans({}, 'platform') }} </a> </li>
             <li> <a href="{{ path('claro_workspace_roles', {'workspace': workspace.getId()} ) }}">{{ 'roles'|trans({}, 'platform') }}</a> </li>
+            <li>
+                <a href="{{ path('claro_users_pending',{'workspace':workspace.getId()}) }}">
+                    {{ 'pending'|trans({},'platform') }}
+                </a>
+            </li>
         </ul>
         <h3>{{ group.getName() }}</h3>
         {{ macros.flashBox() }}

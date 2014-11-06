@@ -54,7 +54,7 @@
 
 {% extends 'ClarolineCoreBundle:WorkspaceTag:layout.html.twig' %}
 
-{% block title %}{{ parent() ~ ' - ' ~ "all_workspaces" | trans({}, "platform") | striptags | raw }}{% endblock %}
+{% block title %}{{ parent() ~ ' - ' ~ "all_public_workspaces" | trans({}, "platform") | striptags | raw }}{% endblock %}
 
 {% block breadcrumb %}
     {{
@@ -65,7 +65,7 @@
                 'href': path('claro_workspace_list')
             },
             {
-                'name': 'all_workspaces'|trans({}, 'platform'),
+                'name': 'all_public_workspaces'|trans({}, 'platform'),
                 'href': ''
             }
         ])
@@ -113,27 +113,50 @@
         </div>
         <br>
 
-        {% if workspaces is empty %}
-            {{ 'no_workspace' | trans({}, 'platform') }}
-        {% else %}
-            <div class="panel panel-default" id="accordion-all">
-                <div class="panel-heading">
-                    <a  class="accordion-toggle"
-                        data-toggle="collapse"
-                        data-parent="#accordion-all"
-                        href="#collapse-all"
-                    >
-                        <i class="fa fa-align-justify"></i>
-                        {{ 'all_workspaces'|trans({}, 'platform') }}
-                    </a>
-                </div>
-                <div id="collapse-all" class="list-group collapse {% if tags|length == 0 %}in{% endif %}">
-                    {% include 'ClarolineCoreBundle:Workspace:workspaceCompleteListPager.html.twig' %}
-                </div>
+        {% if nonPersonalWs|length == 0 and personalWs|length == 0 %}
+            <div class="alert alert-warning">
+                {{ 'no_workspace'|trans({}, 'platform') }}
             </div>
-        {% endif %}
+        {% else %}
+        
+            {% if nonPersonalWs|length > 0 %}
+                <div class="panel panel-default" id="accordion-all-non-personal">
+                    <div class="panel-heading">
+                        <a  class="accordion-toggle"
+                            data-toggle="collapse"
+                            data-parent="#accordion-all-non-personal"
+                            href="#collapse-all-non-personal"
+                        >
+                            <i class="fa fa-align-justify"></i>
+                            {{ 'all_public_workspaces'|trans({}, 'platform') }}
+                        </a>
+                    </div>
+                    <div id="collapse-all-non-personal" class="list-group collapse {% if tags|length == 0 %}in{% endif %}">
+                        {% include 'ClarolineCoreBundle:Workspace:nonPersonalWorkspacesListPager.html.twig' %}
+                    </div>
+                </div>
+            {% endif %}
 
-        {{ showTag(rootTags, tagWorkspaces, hierarchy, "0", displayable) }}
+            {% if personalWs|length > 0 %}
+                <div class="panel panel-default" id="accordion-all-personal">
+                    <div class="panel-heading">
+                        <a  class="accordion-toggle"
+                            data-toggle="collapse"
+                            data-parent="#accordion-all-personal"
+                            href="#collapse-all-personal"
+                        >
+                            <i class="fa fa-align-justify"></i>
+                            {{ 'all_public_personal_workspaces'|trans({}, 'platform') }}
+                        </a>
+                    </div>
+                    <div id="collapse-all-personal" class="list-group collapse {% if tags|length == 0 %}in{% endif %}">
+                        {% include 'ClarolineCoreBundle:Workspace:personalWorkspacesListPager.html.twig' %}
+                    </div>
+                </div>
+            {% endif %}
+
+            {{ showTag(rootTags, tagWorkspaces, hierarchy, "0", displayable) }}
+        {% endif %}
     </div>
 {% endblock %}
 

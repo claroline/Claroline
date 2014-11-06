@@ -144,7 +144,9 @@ agenda: Agenda
 all: All
 all_available_workspaces: 'All available workspaces'
 all_my_workspaces: 'All my workspaces'
-all_workspaces: 'All public workspaces'
+all_public_personal_workspaces: 'All public personal workspaces'
+all_public_workspaces: 'All public workspaces'
+all_workspaces: 'All workspaces'
 already_existing_user: 'The user already exists'
 an_error_occured_message: 'An error occured. Please contact the administrator.'
 analytics_connections: Connections
@@ -593,6 +595,7 @@ no_search_results: 'Your search hasn''t returned any result.'
 no_tag: 'There is no tag'
 no_user: 'No user'
 no_workspace: 'There is no workspace'
+non_personal_workspaces_only: 'Non-personal workspaces only'
 none: None
 not_allowed_message: 'You are not allowed to perform this action.'
 not_attempted: 'Not attempted'
@@ -632,6 +635,7 @@ path: Path
 pending: 'Pending'
 permissions: Permissions
 personal_workspace: 'Personal workspace - '
+personal_workspaces_only: 'Personal workspaces only'
 phone: Phone
 picture_profile: 'Picture profile'
 platform_appearance: 'Platform appearance'
@@ -963,6 +967,7 @@ username_found_at: 'The username %username% was found at lines: %lines%'
 username_or_email: 'Username or email'
 users: Users
 users_connected_once: 'users connected at least once'
+users_from_group_registration: 'Users from group registration'
 users_import: 'Users import'
 users_list: 'Users list'
 users_management: 'Users management'
