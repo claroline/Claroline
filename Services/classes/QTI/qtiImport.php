@@ -7,6 +7,7 @@
 
 namespace UJM\ExoBundle\Services\classes\QTI;
 
+use Claroline\CoreBundle\Entity\Resource\File;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use UJM\ExoBundle\Entity\Category;
@@ -51,6 +52,7 @@ abstract class qtiImport
      */
     protected function createQuestion()
     {
+        $this->objectToResource();
         $this->question = new Question();
         $this->question->setTitle($this->getTitle());
         $this->question->setDateCreate(new \Datetime());
@@ -170,6 +172,45 @@ abstract class qtiImport
             if ($child->nodeType === XML_CDATA_SECTION_NODE) {
                 $this->question->setDescription($child->textContent);
             }
+        }
+    }
+
+    /**
+     * Search object tag to create Claroline resource
+     *
+     * @access private
+     *
+     */
+    private function objectToResource()
+    {
+        $objects = $this->assessmentItem->getElementsByTagName("object");
+        $ws      = $this->user->getPersonalWorkspace();
+        $parent = $this->doctrine
+                       ->getRepository('ClarolineCoreBundle:Resource\ResourceNode')
+                       ->findWorkspaceRoot($ws);
+        $manager = $this->container->get('claroline.manager.resource_manager');
+        $filesDirectory = $this->container->getParameter('claroline.param.files_directory');
+        foreach ($objects as $ob) {
+            $fileName = $ob->getAttribute('data');
+            $tmpFile = $this->qtiRepos->getUserDir().'/'.$fileName;
+            $extension = pathinfo($fileName, PATHINFO_EXTENSION);
+            $hashName = $this->container->get('claroline.utilities.misc')->generateGuid() . '.' . $extension;
+            $mimeType = $ob->getAttribute('type');
+            $size = filesize($tmpFile);
+            $targetFilePath = $filesDirectory . DIRECTORY_SEPARATOR . $hashName;
+            copy($tmpFile, $targetFilePath);
+            $file = new File();
+            $file->setSize($size);
+            $file->setName($fileName);
+            $file->setHashName($hashName);
+            $file->setMimeType($mimeType);
+            $manager->create(
+                $file,
+                $manager->getResourceTypeByName('file'),
+                $this->user,
+                $ws,
+                $parent
+            );
         }
     }
 
