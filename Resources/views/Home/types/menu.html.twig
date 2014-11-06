@@ -30,7 +30,7 @@
                 <a {% if content.content is defined and content.content != "" %} href="{{ content.content | homeLink }}"{% endif %}>{{ content.title }}</a>
             </li>
         {% else %}
-            <div class="content-element relative list-group-item{{ content.content | activeLink }}"
+            <div class="content-element relative list-group-item{{ content.content | activeLink }} {% if is_granted('ROLE_ADMIN') %} move{% endif %}"
                 data-id="{{ content.id }}"
                 data-type="{{ type }}"
                 data-father="{{ father }}">
