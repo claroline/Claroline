@@ -1,0 +1,69 @@
+.content_body {
+    padding: 0;
+
+    .conversation-wrap {
+        box-shadow: 2px 0 3px #ddd;
+        padding:    0;
+        height:     350px;
+        overflow:   auto;
+        .conversation {
+            padding:       5px;
+            border-bottom: 1px solid #ddd;
+            margin:        0;
+        }
+    }
+
+    .messages-wrap {
+        padding: 0;
+        .message-wrap {
+            padding:  10px;
+            height:   350px;
+            overflow: auto;
+            .message {
+                padding: 5px;
+                margin:  0;
+                .time {
+                    color: #bfbfbf;
+                }
+                 .media-heading {
+                    color:#003bb3;
+                    font-weight: 700;
+                }
+            }
+        }
+        .send-wrap {
+            border-top: 1px solid #eee;
+            padding:    10px;
+        }
+
+        .btn-panel {
+            .btn {
+                margin-right:  10px;
+                margin-bottom: 10px;
+            }
+        }
+    }
+}
+
+body::-webkit-scrollbar {
+    width: 12px;
+}
+
+/* Let's get this party started */
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background:         #ddd;
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
+}
+::-webkit-scrollbar-thumb:window-inactive {
+    background: #ddd;
+}
