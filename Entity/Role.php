@@ -19,6 +19,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Claroline\CoreBundle\Library\Security\PlatformRoles;
 use Claroline\CoreBundle\Entity\Resource\ResourceRights;
+use Claroline\CoreBundle\Entity\Tool\ToolRights;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 
 /**
@@ -141,6 +142,14 @@ class Role implements RoleInterface
      */
     protected $maxUsers;
 
+    /**
+     * @ORM\OneToMany(
+     *     targetEntity="Claroline\CoreBundle\Entity\Tool\ToolRights",
+     *     mappedBy="role"
+     * )
+     */
+    protected $toolRights;
+
     public function __construct()
     {
         $this->users            = new ArrayCollection();
@@ -148,6 +157,7 @@ class Role implements RoleInterface
         $this->groups           = new ArrayCollection();
         $this->facets           = new ArrayCollection();
         $this->fieldFacetsRoles = new ArrayCollection();
+        $this->toolRights       = new ArrayCollection();
     }
 
     public function getId()
@@ -286,5 +296,15 @@ class Role implements RoleInterface
     {
         //2147483647 is the maximium integer in the database field.
         return ($this->maxUsers === null) ? 2147483647: $this->maxUsers;
+    }
+
+    public function addToolRights(ToolRights $tr)
+    {
+        $this->toolRights->add($tr);
+    }
+
+    public function getToolRights()
+    {
+        return $this->toolRights;
     }
 }

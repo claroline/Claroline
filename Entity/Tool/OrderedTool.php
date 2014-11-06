@@ -13,6 +13,7 @@ namespace Claroline\CoreBundle\Entity\Tool;
 
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Role;
+use Claroline\CoreBundle\Entity\Tool\ToolRights;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -99,9 +100,18 @@ class OrderedTool
      */
     protected $user;
 
+    /**
+     * @ORM\OneToMany(
+     *     targetEntity="Claroline\CoreBundle\Entity\Tool\ToolRights",
+     *     mappedBy="orderedTool"
+     * )
+     */
+    protected $rights;
+
     public function __construct()
     {
         $this->roles = new ArrayCollection();
+        $this->rights = new ArrayCollection();
     }
 
     public function getId()
@@ -187,5 +197,15 @@ class OrderedTool
     public function setVisibleInDesktop($isVisible)
     {
         $this->isVisibleInDesktop = $isVisible;
+    }
+
+    public function getRights()
+    {
+        return $this->rights;
+    }
+
+    public function addRight(ToolRights $right)
+    {
+        $this->rights->add($right);
     }
 }
