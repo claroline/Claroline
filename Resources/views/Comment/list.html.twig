@@ -22,46 +22,16 @@
 {% endblock %}
 
 {% block content_body %}
-    <div class="conversations-container col-lg-3">
+    <div class="portfolios-container col-lg-3">
         <div class="title-container">
             <p class="lead text-center">{{ 'portfolios'|trans({}, 'icap_portfolio') }}</p>
         </div>
-        <div class="conversation-container">
-            <div class="media conversation active" role="button">
+        <div class="portfolio-container">
+            <div class="media portfolio" role="button" data-ng-repeat="portfolio in portfolios"
+                 data-ng-class="{'unread': 0 < portfolio.unreadComments, 'active': selectedPortfolio == portfolio.id}"
+                data-ng-click="selectPortolio(portfolio.id)">
                 <div class="media-body">
-                    <h5 class="media-heading">Naimish Sakhpara</h5>
-                </div>
-            </div>
-            <div class="media conversation" role="button">
-                <div class="media-body">
-                    <h5 class="media-heading">Naimish Sakhpara</h5>
-                </div>
-            </div>
-            <div class="media conversation unread" role="button">
-                <div class="media-body">
-                    <h5 class="media-heading">Naimish Sakhpara<span class="badge pull-right">10</span></h5>
-                </div>
-            </div>
-            <div class="media conversation" role="button">
-                <div class="media-body">
-                    <h5 class="media-heading">Naimish Sakhpara</h5>
-                </div>
-            </div>
-            <div class="media conversation" role="button">
-                <div class="media-body">
-                    <h5 class="media-heading">Naimish Sakhpara</h5>
-                </div>
-            </div>
-
-            <div class="media conversation" role="button">
-                <div class="media-body">
-                    <h5 class="media-heading">Naimish Sakhpara</h5>
-                </div>
-            </div>
-
-            <div class="media conversation" role="button">
-                <div class="media-body">
-                    <h5 class="media-heading">Naimish Sakhpara</h5>
+                    <h5 class="media-heading">{% verbatim %}{{ portfolio.id }}{{ portfolio.title }}<span data-ng-show="0 < portfolio.unreadComments" class="badge pull-right">{{ portfolio.unreadComments }}</span>{% endverbatim %}</h5>
                 </div>
             </div>
         </div>
@@ -167,6 +137,10 @@
     <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/utils/Array.js') }}"></script>
 
     <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/comments/commentsApp.js') }}"></script>
+
+    <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/comments/controllers/portfoliosController.js') }}"></script>
+
+    <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/comments/directives/portfoliosDirective.js') }}"></script>
 
     <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/modules/trustAsHtml.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/modules/translation.js') }}"></script>
