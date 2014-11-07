@@ -1,7 +1,7 @@
 'use strict';
 
 commentsApp
-    .controller("portfoliosController", ["$scope", function($scope) {
+    .controller("portfoliosController", ["$scope", "$timeout", function($scope, $timeout) {
         $scope.selectedPortfolio = null;
         $scope.portfolios = [
             {
@@ -15,6 +15,9 @@ commentsApp
                 'unreadComments': 0
             }
         ];
+        $timeout(function () {
+            $scope.portfolios.$resolved = true;
+        }, 2000);
 
         $scope.selectPortolio = function(portfolioId) {
             $scope.selectedPortfolio = portfolioId;

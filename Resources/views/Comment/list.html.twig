@@ -22,14 +22,14 @@
 {% endblock %}
 
 {% block content_body %}
-    <div class="portfolios-container col-lg-3">
+    <div class="portfolios-container col-lg-3" data-ng-app="commentsApp" data-ng-strict-di>
         <div class="title-container">
             <p class="lead text-center">{{ 'portfolios'|trans({}, 'icap_portfolio') }}</p>
         </div>
-        <div class="portfolio-container">
-            <div class="media portfolio" role="button" data-ng-repeat="portfolio in portfolios"
+        <div class="portfolio-container loading" data-ng-class="{'loading': !portfolios.$resolved}">
+            <div class="media portfolio ng-cloak" role="button" data-ng-repeat="portfolio in portfolios"
                  data-ng-class="{'unread': 0 < portfolio.unreadComments, 'active': selectedPortfolio == portfolio.id}"
-                data-ng-click="selectPortolio(portfolio.id)">
+                data-ng-click="selectPortolio(portfolio.id)" data-ng-show="portfolios.$resolved">
                 <div class="media-body">
                     <h5 class="media-heading">{% verbatim %}{{ portfolio.id }}{{ portfolio.title }}<span data-ng-show="0 < portfolio.unreadComments" class="badge pull-right">{{ portfolio.unreadComments }}</span>{% endverbatim %}</h5>
                 </div>
