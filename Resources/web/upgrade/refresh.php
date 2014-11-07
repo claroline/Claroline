@@ -11,6 +11,6 @@
 
 include __DIR__ . '/authorize.php';
 
-$ds = DIRECTORY_SEPARATOR;
-$logDir = __DIR__ . "{$ds}..{$ds}..{$ds}app{$ds}logs{$ds}composer.log";
-echo @file_get_contents($logDir);
+$logFile = $_GET['logFile'];
+$file = '../../app/logs/' . $logFile . '.log';
+echo @file_get_contents($file);

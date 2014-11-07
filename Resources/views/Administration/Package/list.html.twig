@@ -58,19 +58,8 @@
             </div>
         </div>
     </div>
-    <div class="panel-footer">
-        <button class="btn btn-primary" id="update-packages-btn">{{ 'actualize'|trans({}, 'platform') }}</button>
-        <button href="{{ path('claro_admin_upgrade_packages') }}"
-           class="btn btn-primary"
-           id="upgrade-packages-btn"
-           data-upgrade-page="{{ asset('upgrade/upgrade.html.php') }}"
-           {% if upgradablePackages|length == 0 %}
-                disabled
-           {% endif %}
-        >
-            {{ 'upgrade'|trans({}, 'platform') }}
-        </button>
-        <button class="btn btn-secondary" id="cancel-btn">{{ 'cancel'|trans({}, 'platform') }}</button>
+    <div class="panel panel-footer">
+        <a class="btn btn-primary" href="{{ asset('upgrade/update_tool.php') }}">{{ 'upgrade'|trans({}, 'platform') }}</a>
     </div>
 {% endblock %}
 

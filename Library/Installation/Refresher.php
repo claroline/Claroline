@@ -120,7 +120,7 @@ class Refresher
         static::removeContentFrom($cacheDir);
     }
 
-    private static function removeContentFrom($directory)
+    public static function removeContentFrom($directory)
     {
         if (is_dir($directory)) {
             $fileSystem = new Filesystem();

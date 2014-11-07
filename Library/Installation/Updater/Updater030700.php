@@ -27,6 +27,7 @@ class Updater030700
     public function postUpdate()
     {
         $this->updatePublishTypes();
+        $this->removeOldWebFiles();
     }
 
     private function updatePublishTypes()
@@ -39,6 +40,23 @@ class Updater030700
         }
 
         $this->om->flush();
+    }
+
+    private function removeOldWebFiles()
+    {
+        $this->log('Removing old web files...');
+        $webDir = $this->container->getParameter('claroline.param.web_dir');
+
+        $toRemove = array(
+            '/maintenance.html.php',
+            '/upgrade/download_log.php',
+            '/upgrade/upgrade.html.php'
+        );
+
+        foreach ($toRemove as $file) {
+            $this->log('Removing ' . $webDir . $file .  '...');
+            @unlink($webDir . $file);
+        }
     }
 
     public function setLogger($logger)
