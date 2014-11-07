@@ -120,7 +120,7 @@
         </div>
         <form>
             <div class="send-container">
-                <textarea class="form-control send-message" rows="3"></textarea>
+                <textarea ui-tinymce class="form-control send-message" rows="3" name="message" data-ng-model="message"></textarea>
             </div>
             <div class="btn-panel">
                 <button type="button" class="btn btn-sm btn-primary pull-right">{{ 'comment_send'|trans({}, 'icap_portfolio') }}</button>
@@ -140,9 +140,34 @@
 
 {% block javascripts %}
     {{ parent() }}
+
     <script type="text/javascript">
-        $(function() {
-            tinymce.init({selector:'.send-message'});
-        });
+        'use strict';
+        (function() {
+            window.assetPath = "{{ asset('') }}";
+        })();
     </script>
+    <script type="text/javascript" src="{{ asset('bundles/stfalcontinymce/vendor/tinymce/tinymce.jquery.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/stfalcontinymce/vendor/tinymce/jquery.tinymce.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/tinymce/tinymce.js') }}"></script>
+
+    {% javascripts debug=true filter='jsmin' output='js/portfolio/angular.js'
+        '@IcapPortfolioBundle/Resources/public/js/vendor/angular/angular.min.js'
+        '@IcapPortfolioBundle/Resources/public/js/vendor/angular/angular-resource.min.js'
+        '@IcapPortfolioBundle/Resources/public/js/vendor/angular/angular-sanitize.min.js'
+        '@IcapPortfolioBundle/Resources/public/js/vendor/angular/angular-animate.min.js'
+    %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
+    <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/vendor/angular-ui/ui-tinymce/tinymce.js') }}"></script>
+
+    <script type="text/javascript" src="{{ url('bazinga_exposetranslation_js', { 'domain_name': 'icap_portfolio' }) }}"></script>
+
+    <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/utils/Array.js') }}"></script>
+
+    <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/comments/commentsApp.js') }}"></script>
+
+    <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/modules/trustAsHtml.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/modules/translation.js') }}"></script>
 {% endblock %}
