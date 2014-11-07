@@ -24,7 +24,7 @@
 {% block content_body %}
     <div class="conversations-container col-lg-3">
         <div class="title-container">
-            <p class="lead text-center">Portfolios</p>
+            <p class="lead text-center">{{ 'portfolios'|trans({}, 'icap_portfolio') }}</p>
         </div>
         <div class="conversation-container">
             <div class="media conversation active">
@@ -97,7 +97,7 @@
 
     <div class="messages-container col-lg-9">
         <div class="title-container">
-            <p class="lead text-center">Message</p>
+            <p class="lead text-center">{{ 'portfolios_comments'|trans({}, 'icap_portfolio') }}</p>
         </div>
         <div class="message-container">
             <div class="media message ">
@@ -146,13 +146,14 @@
                 </div>
             </div>
         </div>
-
-        <div class="send-container">
-            <textarea class="form-control send-message" rows="3"></textarea>
-        </div>
-        <div class="btn-panel">
-            <a href="" class="btn btn-sm btn-primary pull-right" role="button">Envoyer</a>
-        </div>
+        <form>
+            <div class="send-container">
+                <textarea class="form-control send-message" rows="3"></textarea>
+            </div>
+            <div class="btn-panel">
+                <button type="button" class="btn btn-sm btn-primary pull-right">{{ 'comment_send'|trans({}, 'icap_portfolio') }}</button>
+            </div>
+        </form>
     </div>
 {% endblock %}
 
