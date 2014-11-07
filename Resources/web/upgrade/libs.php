@@ -22,32 +22,45 @@ class Translator
 
     public static function init()
     {
-        $french = array(
-            'return' => 'Retour',
-            'an_exception_occured' => 'Une exception est survenue.',
-            'end_upgrade_message' => 'La mise à jour est terminée.',
-            'close' => 'Fermer',
-            'download_log' => 'Télécharger les logs'
+        $en = array(
+            'upgrade_tool' => 'Upgrade tool',
+            'upgrade_steps' => 'Upgrade steps',
+            'create_backup' => 'Backup creation',
+            'activate_maintenance_mode' => 'Maintenance activation',
+            'bundle_table_initialization' => 'Database initialization',
+            'vendor_replacement' => 'Vendor replacement',
+            'executing_migrations' => 'Upgrade execution',
+            'remove_maintenance_mode' => 'Disabling maintenance',
+            'start' => 'Start',
+            'return' => 'Return',
+            'close' => 'Close',
+            'debug_mode' => 'Debug mode',
+            'debug_mode_explanation' => 'The debug allors you to execute the update operations in an arbitrary order.'
         );
 
-        $en = array(
-            'return' => 'Return',
-            'an_exception_occured' => 'An exception occured.',
-            'end_upgrade_message' => 'The upgrade is over.',
-            'close' => 'Close',
-            'download_log' => 'Download logs'
+        $fr = array(
+            'upgrade_tool' => 'Outil de mise à jour',
+            'upgrade_steps' => 'Étapes de la mise à jour',
+            'create_backup' => 'Creation d\'un backup',
+            'activate_maintenance_mode' => 'Activation du mode maintenance',
+            'bundle_table_initialization' => 'Initialisation de la base de donnée',
+            'vendor_replacement' => 'Remplacement du dossier vendor',
+            'executing_migrations' => 'Exécution de la mise à jour',
+            'remove_maintenance_mode' => 'Désactivation du mode maintenance',
+            'start' => 'Commencer',
+            'return' => 'Retour',
+            'close' => 'Fermer',
+            'debug_mode' => 'Mode de debug',
+            'debug_mode_explanation' => 'Le mode de debug vous permet d\'exécuter les opérations de mise à jour dans un ordre arbitraire.'
         );
 
         $es = array(
             'return' => 'Regresar',
-            'an_exception_occured' => 'Se produjo una excepción.',
-            'end_upgrade_message' => 'La actualización se ha completado.',
-            'close' => 'Cerrar',
-            'download_log' => 'Descargar el registro'
+            'close' => 'Cerrar'
         );
 
         self::$translations = array(
-            'fr' => $french,
+            'fr' => $fr,
             'en' => $en,
             'es' => $es
         );

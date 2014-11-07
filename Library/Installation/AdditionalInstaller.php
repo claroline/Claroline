@@ -38,7 +38,7 @@ class AdditionalInstaller extends BaseInstaller
     public function preUpdate($currentVersion, $targetVersion)
     {
         $maintenanceUpdater = new Updater\WebUpdater($this->container->getParameter('kernel.root_dir'));
-        //$maintenanceUpdater->preUpdate();
+        $maintenanceUpdater->preUpdate();
 
         $this->setLocale();
 

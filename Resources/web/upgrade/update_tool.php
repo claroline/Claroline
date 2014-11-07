@@ -13,10 +13,6 @@ include __DIR__ . '/authorize.php';
 include __DIR__ . '/libs.php';
 
 $vendorDir = __DIR__ . "/../../vendor";
-$logPreUpdate = $vendorDir . '/../app/logs/pre_update.log';
-$logPostUpdate = $vendorDir . '/../app/logs/post_update.log';
-@unlink($logPreUpdate);
-@unlink($logPostUpdate);
 
 ?>
 
@@ -61,16 +57,22 @@ $logPostUpdate = $vendorDir . '/../app/logs/post_update.log';
                 <div class="col-md-12">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            Ceci est l'outil de mise à jour de claroline-connect
+                            <h3><?php Translator::translate('upgrade_tool'); ?></h3>
                         </div>
                         <div class="panel-body">
+                            <div>
+                                <input type="checkbox" id="debug-mode"><?php Translator::translate('debug_mode') ?></input>
+                                </br><?php Translator::translate('debug_mode_explanation') ?>
+                            </div>
 							<div class="well">
-								Etapes de la mise à jour
+								<h4><?php Translator::translate('upgrade_steps'); ?></h4>
 								<ul>
-									<li> créez un backup </li>
-									<li> lancez le script de preupdate </li>
-									<li> remplacez le dossier "vendor" </li>
-									<li> lancez le script de post update </li>
+									<li> 1 - <?php Translator::translate('create_backup'); ?> </li>
+                                    <li> 2 - <?php Translator::translate('activate_maintenance_mode'); ?>
+									<li> 3 - <?php Translator::translate('bundle_table_initialization'); ?> </li>
+									<li> 4 - <?php Translator::translate('vendor_replacement'); ?></li>
+									<li> 5 - <?php Translator::translate('executing_migrations'); ?> </li>
+                                    <li> 6 - <?php Translator::translate('remove_maintenance_mode'); ?> </li>
 								</ul>
 							</div>
                             <a id="start-btn" class="btn btn-primary" data-toggle="modal" data-target="#upgrade-modal">
@@ -96,8 +98,7 @@ $logPostUpdate = $vendorDir . '/../app/logs/post_update.log';
 				<h4 class="modal-title"></h4>
 			  </div>
 			  <div class="modal-body">
-				  <div id="content-modal")>
-				  </div>
+				  <p id="content-modal")></p>
 				  <div id="log-container" class="row">
 					<pre id="log-content" class="executable"
 						 style="max-height: 150px; overflow: auto; display: none"
@@ -121,55 +122,87 @@ $logPostUpdate = $vendorDir . '/../app/logs/post_update.log';
         <script>
 			//installation steps
 			var currentStep = 0;
+            var now = Date.now();
+            var isDebug = false;
 			var steps = [
 				{
 					'title': 'backup_title',
 					'content': 'backup_content',
 					'action': null,
-					'logFile': null
+					'logFile': null,
+                    'successAlert': null,
+                    'errorAlert': null
 				},
+                {
+                    'title': 'activate_maintenance_title',
+                    'content': 'activate_maintenance_content',
+                    'action': 'maintenance.php?on=1',
+                    'logFile': null,
+                    'successAlert': 'maintenance_enabled',
+                    'errorAlert': null
+                },
 				{
 					'title': 'pre_update_title',
 					'content': 'pre_update_content',
-					'action': 'pre_update.php',
-					'logFile': 'pre_update'
+					'action': 'pre_update.php?logId=' + now,
+					'logFile': 'pre_update-' + now,
+                    'successAlert': null,
+                    'errorAlert': 'database_update_error'
 				},
 				{
 					'title': 'replace_vendor_title',
 					'content': 'replace_vendor_content',
 					'action': null,
-					'logFile': null
+					'logFile': null,
+                    'successAlert': null,
+                    'errorAlert': null
 				},
 				{
 					'title': 'post_update_title',
 					'content': 'post_update_content',
-					'action': 'post_update.php',
-					'logFile': 'post_update'
-				}
+					'action': 'post_update.php?logId=' + now,
+					'logFile': 'post_update-' + now,
+                    'successAlert': null,
+                    'errorAlert': 'upgrade_error'
+				},
+                {
+                    'title': 'disable_maintenance_title',
+                    'content': 'disable_maintenance_content',
+                    'action': 'maintenance.php?on=0',
+                    'logFile': null,
+                    'successAlert': 'maintenance_disabled',
+                    'errorAlert': null
+                }
 			];
-
-			console.debug(steps);
 
 			//initialize objects
 			var translator   = new Translator();
 			translator.setLocale($('#data').attr('data-locale'));
 			var logDisplayer = new LogDisplayer('#log-content');
+            var executedSteps = [];
 
 			var setStepExecutable = function() {
 				$('.executable').show()
 				logDisplayer.setLogFile(steps[currentStep].logFile);
 				logDisplayer.start();
+                $('#log-content').hide();
+                executedSteps.indexOf(currentStep) != -1  ?
+                    $('#next-btn').prop('disabled', false):
+                    $('#next-btn').prop('disabled', true);
 
+                //if mode debug, the next button must always be available
+                if (isDebug) $('#next-btn').prop('disabled', false);
 			};
 
 			var setStepUnexecutable = function() {
 				$('.executable').hide();
 				logDisplayer.stop();
+                $('#next-btn').prop('disabled', false);
 			};
 
 			//initial modalbox content
 			$('#content-modal').html(translator.translate(steps[currentStep].content));
-			$('.modal-title').html(translator.translate(steps[currentStep].title));
+			$('.modal-title').html(currentStep + 1 + ' - ' + translator.translate(steps[currentStep].title));
 			steps[currentStep].action ? setStepExecutable(): setStepUnexecutable();
 
 			//event driven functions
@@ -177,22 +210,41 @@ $logPostUpdate = $vendorDir . '/../app/logs/post_update.log';
 				currentStep = currentStep + 1 >= steps.length ? currentStep: currentStep += 1;
 				steps[currentStep].action ? setStepExecutable(): setStepUnexecutable();
 				$('#content-modal').html(translator.translate(steps[currentStep].content));
-				$('.modal-title').html(translator.translate(steps[currentStep].title));
+				$('.modal-title').html(currentStep + 1 + ' - ' + translator.translate(steps[currentStep].title));
 			});
 
 			$('#back-btn').on('click', function(event) {
 				currentStep = currentStep - 1 < 0 ? currentStep: currentStep -= 1;
 				steps[currentStep].action ? setStepExecutable(): setStepUnexecutable();
 				$('#content-modal').html(translator.translate(steps[currentStep].content));
-				$('.modal-title').html(translator.translate(steps[currentStep].title));
+				$('.modal-title').html(currentStep + 1 + ' - ' + translator.translate(steps[currentStep].title));
 			});
 
 			$('#execute-btn').on('click', function(event) {
 				var action = steps[currentStep].action;
+                if (steps[currentStep].logFile) $('#log-content').show();
 				$.ajax({
-					'url': action
+					url: action,
+                    success: function (data) {
+                        executedSteps.push(currentStep);
+                        if (steps[currentStep].successAlert)
+                            alert(translator.translate(steps[currentStep].successAlert));
+                        $('#next-btn').prop('disabled', false);
+                        logDisplayer.end();
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        //debug the error for now. It doesn't handle fatal errors yet.
+                        console.debug(jqXHR);
+                        console.debug(textStatus);
+                        console.debug(errorThrown);
+                    }
 				});
 			});
+
+            $('#debug-mode').change(function() {
+                isDebug = $('#debug-mode').is(':checked');
+                if (isDebug) $('#next-btn').prop('disabled', false);
+            });
 
 			$('#upgrade-modal').on('hidden.bs.modal', function (e) {
 				logDisplayer.stop();
@@ -200,7 +252,6 @@ $logPostUpdate = $vendorDir . '/../app/logs/post_update.log';
 
 			$('#upgrade-modal').on('shown.bs.modal', function (e) {
 				if (steps[currentStep].logFile) logDisplayer.start();
-
 			});
         </script>
     </body>

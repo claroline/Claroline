@@ -1,13 +1,13 @@
 <?php
 
-$ds = DIRECTORY_SEPARATOR;
-$vendorDir = __DIR__ . "/../../vendor";
-$configDir = realpath("{$vendorDir}/../app/config");
-$logFile = "{$vendorDir}/../app/logs/post_update.log";
+include __DIR__ . '/authorize.php';
 
-//I'm going to need some stefk libs...
-//require __DIR__ . "{$ds}..{$ds}vendor{$ds}autoload.php";
-require_once __DIR__. "/../../app/bootstrap.php.cache";
+$vendorDir = __DIR__ . "/../../vendor";
+$configDir = realpath($vendorDir . '/../app/config');
+$logId = $_GET['logId'];
+$logFile = $vendorDir . '/../app/logs/post_update-' . $logId . '.log';
+
+require_once __DIR__ . '/../../app/bootstrap.php.cache';
 include __DIR__ . '/libs.php';
 
 use Claroline\BundleRecorder\Operation;
@@ -29,15 +29,16 @@ Refresher::removeContentFrom($vendorDir . '/../app/cache');
 
 $kernel = new AppKernel('prod', false);
 $kernel->loadClassCache();
-//I need to do that in order to access some librairies required for the installation...
+//I need to do that in order to access some services required for the installation...
 $kernel->boot();
 
 //we can also get the PDO connection from the sf2 container.
 //database parameters from the parameters.yml file
-$value = Yaml::parse($configDir . $ds . 'parameters.yml');
+$value = Yaml::parse($configDir . '/parameters.yml');
 $host = $value['parameters']['database_host'];
 $dbName = $value['parameters']['database_name'];
 //dsn driver... hardcoded. Change this if you really need it.
+//or use the connexion from sf2
 $driver = 'mysql';
 $dsn = "{$driver}:host={$host};dbname={$dbName}";
 $username = $value['parameters']['database_user'];
@@ -52,7 +53,7 @@ $operationFilePath = __DIR__ . "/../../app/config/operations.xml";
 unlink($operationFilePath);
 $operationHandler = new OperationHandler($operationFilePath);
 $detector = new Detector($vendorDir);
-$bundleHandler = new BundleHandler($configDir . $ds . 'bundles.ini');
+$bundleHandler = new BundleHandler($configDir . '/bundles.ini');
 
 //parsing installed.json...
 $bundles = array();
@@ -102,12 +103,6 @@ foreach ($bundles as $bundle) {
 
     $operation->setToVersion($bundle['new_version']);
     $operationHandler->addOperation($operation);
-}
-
-$fqcns = [];
-
-foreach ($bundles as $bundle) {
-    $fqcns[] = $bundle['fqcn'];
 }
 
 //Build the bundle file

@@ -1,9 +1,12 @@
 <?php
 
+include __DIR__ . '/authorize.php';
+
 $ds = DIRECTORY_SEPARATOR;
 $vendorDir = __DIR__ . "/../../vendor";
 $configDir = realpath($vendorDir . "/../app/config");
-$logFile = $vendorDir . '/../app/logs/pre_update.log';
+$logId = $_GET['logId'];
+$logFile = $vendorDir . '/../app/logs/pre_update-' . $logId . '.log';
 
 require $vendorDir . '/autoload.php';
 
@@ -33,10 +36,9 @@ $sql = "CREATE TABLE claro_bundle (
 	version VARCHAR(50)
 )";
 
-$logLine = $conn->query($sql) ? "Creating table claro_bundle...\n": "Table claro_bundle already exists.\n";
-
-//remove the old log file
-unlink($logFile);
+$logLine = $conn->query($sql) ?
+	"Creating table claro_bundle...\n":
+	"Table claro_bundle already exists.\n";
 touch($logFile);
 file_put_contents($logFile, $logLine, FILE_APPEND);
 
