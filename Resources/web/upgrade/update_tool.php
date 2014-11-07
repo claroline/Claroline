@@ -20,7 +20,7 @@ $vendorDir = __DIR__ . "/../../vendor";
 <html>
     <head>
         <meta charset="utf-8">
-        <title>Claroline installer</title>
+        <title>Claroline upgrader</title>
         <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
         <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-theme.min.css">
         <link rel="shortcut icon" href="../claroline.ico" />
@@ -57,7 +57,7 @@ $vendorDir = __DIR__ . "/../../vendor";
                 <div class="col-md-12">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            <h3><?php Translator::translate('upgrade_tool'); ?></h3>
+                            <h3><?php Translator::translate('upgrade_tool'); ?> (beta)</h3>
                         </div>
                         <div class="panel-body">
                             <div>
