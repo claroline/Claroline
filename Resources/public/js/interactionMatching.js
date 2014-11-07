@@ -29,15 +29,6 @@ function creationMatching(addchoice, addproposal, deletechoice, LabelValue, Scor
 
     typeMatching = JSON.parse(tMatching);
 
-    //in the first time
-    $('#ujm_exobundle_interactionmatchingtype_typeMatching').children('option').each(function() {
-         if (typeMatching[$(this).val()] == 2) {
-             $(this).prop('selected', true);
-         } else {
-             $(this).attr('disabled', 'disabled');
-         }
-     });
-
     tableCreationProposal(containerProposal, tableProposals, addproposal, deletechoice, ProposalValue, 0, codeContainerProposal, deleteProposal, numberProposal);
     tableCreationLabel(containerLabel, tableLabels, addchoice, deletechoice, LabelValue, ScoreRight, 0, codeContainerLabel, deleteLabel, correspondence);
 
@@ -84,15 +75,6 @@ function creationMatchingEdit(addchoice, addproposal, deletechoice, LabelValue, 
     correspEmptyLang = correspEmpty;
     correspErrorLang = correspondenceError;
     scoreErrorLang = scoreError;
-
-    //in the first time
-    $('#ujm_exobundle_interactionmatchingtype_typeMatching').children('option').each(function() {
-        if (typeMatching[$(this).val()] == 2) {
-            $(this).prop('selected', true);
-        } else {
-            $(this).attr('disabled', 'disabled');
-        }
-    });
 
     tableCreationProposal(containerProposal, tableProposals, addproposal, deletechoice, ProposalValue, nbResponses, codeContainerProposal, deleteProposal, numberProposal);
     tableCreationLabel(containerLabel, tableLabels, addchoice, deletechoice, LabelValue, ScoreRight, nbResponses, codeContainerLabel, deleteLabel, correspondence);
@@ -504,4 +486,66 @@ function addCorrespondence() {
             text: rowInd
         }));
     });
+}
+
+function whichChange() {
+    
+    
+    $('#ujm_exobundle_interactionmatchingtype_bind').change(function () {
+        if ($(this).is(':checked')) {
+            $("*[id$='_correspondence']").each( function() {
+                if ($("option:selected", this).length > 0) {
+                    correspondence = true;
+                    $("option:selected", this).each( function () {
+                        //alert($(this).val());
+                        //si dans tableau return false + mmsg si non ajout dans tableau
+//                        if (proposalSelected[$(this).val()]) {
+//                            alert(correspErrorLang);
+//                            singleProposal = false;
+//                        } else {
+                            proposalSelected[$(this).val()] = true;
+//                        }
+                    });
+                }
+            });
+            
+            if (correspondence == false) {
+
+                return confirm(correspEmptyLang);
+            }
+        }
+    });
+    
+    $('#ujm_exobundle_interactionmatchingtype_drag').change(function () {
+        if ($(this).is(':checked')) {
+            $("*[id$='_correspondence']").each( function() {
+                if ($("option:selected", this).length > 0) {
+                    correspondence = true;
+                    $("option:selected", this).each( function () {
+                        //alert($(this).val());
+                        //si dans tableau return false + mmsg si non ajout dans tableau
+                        if (proposalSelected[$(this).val()]) {
+                            alert(correspErrorLang);
+                            singleProposal = false;
+                        } else {
+                            proposalSelected[$(this).val()] = true;
+                        }
+                    });
+                }
+            });
+
+            if (singleProposal == false) {
+
+                return false;
+            }
+
+            if (correspondence == false) {
+
+                return confirm(correspEmptyLang);
+            }
+        }
+    });
+    
+    
+    
 }
