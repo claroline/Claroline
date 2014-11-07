@@ -439,6 +439,14 @@ body.iframe {
 /*  menu    */
 /************/
 
+.move, .move a {
+    cursor: move !important;
+}
+
+.ui-state-highlight {
+    height: 50px;
+}
+
 .list-group{
 
     .border-top-radius(@list-group-border-radius);
@@ -458,6 +466,13 @@ body.iframe {
         overflow: hidden;
     }
     > .nav.nav-pills{
+        li > a {
+            background-color: darken(@body-bg, 30%);
+            color: #fff;
+            &:hover {
+                 background-color: @component-active-bg;
+            }
+        }
         margin-bottom: 5px;
         border: 1px solid transparent;
         &.admin:hover{
@@ -685,7 +700,7 @@ body.iframe {
         &.ui-state-default {
             border: none;
             background: none;
-            .node-name {
+            .node-name:not(.text-muted) {
                 font-weight: normal;
                 color: @gray-dark;
             }

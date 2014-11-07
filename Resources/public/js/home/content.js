@@ -264,9 +264,7 @@
         items: '> .content-element',
         cancel: 'input, textarea, button, select, option, a.btn.dropdown-toggle, .dropdown-menu,a',
         cursor: 'move'
-    });
-
-    $('.contents').on('sortupdate', function (event, ui) {
+    }).on('sortupdate', function (event, ui) {
         if (this === ui.item.parent()[0]) {
             var a = $(ui.item).data('id');
             var b = $(ui.item).next().data('id');
@@ -281,6 +279,24 @@
                     modal.error();
                 });
             }
+        }
+    });
+
+    $('.content-element > .list-group.menu').sortable({
+        items: '> .content-element.list-group-item',
+        placeholder: 'ui-state-highlight',
+        cursor: 'move'
+    }).on('sortupdate', function (event, ui) {
+        var a = $(ui.item).data('id');
+        var b = $(ui.item).next().data('id');
+        var type = $(ui.item).data('type');
+        var father = $(ui.item).parents('.content-element').first().data('id');
+
+        if (a && type) {
+            $.ajax(home.path + 'content/reorder/' + type + '/' + a + '/' + b + '/' + father)
+            .error(function () {
+                modal.error();
+            });
         }
     });
 }());
