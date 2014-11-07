@@ -7,6 +7,7 @@
 
 namespace UJM\ExoBundle\Services\classes\QTI;
 
+use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Entity\Resource\File;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Symfony\Component\Security\Core\SecurityContextInterface;
@@ -26,6 +27,7 @@ abstract class qtiImport
     protected $question;
     protected $document;
     protected $assessmentItem;
+    protected $dirQTI;
 
     /**
      * Constructor
@@ -185,11 +187,9 @@ abstract class qtiImport
     {
         $objects = $this->assessmentItem->getElementsByTagName("object");
         $ws      = $this->user->getPersonalWorkspace();
-        $parent = $this->doctrine
-                       ->getRepository('ClarolineCoreBundle:Resource\ResourceNode')
-                       ->findWorkspaceRoot($ws);
         $manager = $this->container->get('claroline.manager.resource_manager');
         $filesDirectory = $this->container->getParameter('claroline.param.files_directory');
+        $this->getDirQTIImport($ws);
         foreach ($objects as $ob) {
             $fileName = $ob->getAttribute('data');
             $tmpFile = $this->qtiRepos->getUserDir().'/'.$fileName;
@@ -209,8 +209,53 @@ abstract class qtiImport
                 $manager->getResourceTypeByName('file'),
                 $this->user,
                 $ws,
-                $parent
+                $this->dirQTI
             );
+        }
+    }
+
+    /**
+     * Create a directory in the personal workspace of user to import documents
+     *
+     * @access private
+     *
+     * @param Claroline\CoreBundle\Entity\Workspace
+     *
+     */
+    private function createDirQTIImport($ws)
+    {
+        $manager = $this->container->get('claroline.manager.resource_manager');
+        $parent = $this->doctrine
+                       ->getRepository('ClarolineCoreBundle:Resource\ResourceNode')
+                       ->findWorkspaceRoot($ws);
+        $dir = new Directory();
+        $dir->setName('QTI_SYS');
+        $abstractResource = $manager->create(
+                                    $dir,
+                                    $manager->getResourceTypeByName('directory'),
+                                    $this->user,
+                                    $ws,
+                                    $parent
+                                );
+        $this->dirQTI = $abstractResource->getResourceNode();
+    }
+
+    /**
+     * Get the resource QTI_SYS
+     *
+     * @access private
+     *
+     * @param Claroline\CoreBundle\Entity\Workspace
+     *
+     */
+    private function getDirQTIImport($ws)
+    {
+        $this->dirQTI = $this->doctrine->getManager()
+                             ->getRepository('ClarolineCoreBundle:Resource\ResourceNode')
+                             ->findOneBy(array('workspace' => $ws, 'name' => 'QTI_SYS'));
+
+        if (!is_object($this->dirQTI)) {
+            $this->createDirQTIImport($ws);
         }
     }
 
