@@ -2,7 +2,7 @@
 
 commentsApp
     .controller("portfoliosController", ["$scope", "$timeout", function($scope, $timeout) {
-        $scope.selectedPortfolio = null;
+        $scope.selectedPortfolio = window.currentPortfolio;
         $scope.portfolios = [
             {
                 'id': 42,

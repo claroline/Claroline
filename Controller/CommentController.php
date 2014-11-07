@@ -15,12 +15,12 @@ use JMS\DiExtraBundle\Annotation\Inject;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * @Route("/portfolio/{portfolioSlug}")
+ * @Route("/portfolio")
  */
 class CommentController extends Controller
 {
     /**
-     * @Route("/comments", name="icap_portfolio_comments_list")
+     * @Route("/comments/{portfolioSlug}", name="icap_portfolio_comments_list", defaults={"portfolioSlug" = null})
      *
      * @ParamConverter("loggedUser", options={"authenticatedUser" = true})
      * @Template()
@@ -29,18 +29,21 @@ class CommentController extends Controller
     {
         $this->checkPortfolioToolAccess();
 
-        /** @var \Icap\PortfolioBundle\Entity\Widget\TitleWidget $titleWidget */
-        $titleWidget = $this->getDoctrine()->getRepository('IcapPortfolioBundle:Widget\TitleWidget')->findOneBySlug($portfolioSlug);
+        $portfolioId = 0;
 
-        if (null === $titleWidget) {
-            throw $this->createNotFoundException();
+        if (null !== $portfolioSlug) {
+            /** @var \Icap\PortfolioBundle\Entity\Widget\TitleWidget $titleWidget */
+            $titleWidget = $this->getDoctrine()->getRepository('IcapPortfolioBundle:Widget\TitleWidget')->findOneBySlug($portfolioSlug);
+
+            if (null === $titleWidget) {
+                throw $this->createNotFoundException();
+            }
+
+            $portfolioId = $titleWidget->getPortfolio()->getId();
         }
 
-        $portfolio = $titleWidget->getPortfolio();
-
         return array(
-            'portfolio'   => $portfolio,
-            'titlewidget' => $titleWidget
+            'portfolioId' => $portfolioId
         );
     }
 }
