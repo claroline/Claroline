@@ -15,12 +15,22 @@
             height:     350px;
             overflow:   auto;
             .conversation {
-                padding:       5px;
+                padding:       10px;
                 border-bottom: 1px solid #ddd;
                 margin:        0;
+                cursor:        pointer;
+                &:hover {
+                    background-color: #eee;
+                }
                 &.active {
                     color:            #fff;
                     background-color: #428bca;
+                }
+                &.unread {
+                    border-right: 4px solid #f0ad4e;
+                    .badge {
+                        background-color: #f0ad4e;
+                    }
                 }
             }
         }
