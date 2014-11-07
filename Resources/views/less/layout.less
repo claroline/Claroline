@@ -466,6 +466,13 @@ body.iframe {
         overflow: hidden;
     }
     > .nav.nav-pills{
+        li > a {
+            background-color: darken(@body-bg, 30%);
+            color: #fff;
+            &:hover {
+                 background-color: @component-active-bg;
+            }
+        }
         margin-bottom: 5px;
         border: 1px solid transparent;
         &.admin:hover{
