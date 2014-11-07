@@ -171,9 +171,13 @@ abstract class qtiImport
     {
         $ib = $this->assessmentItem->getElementsByTagName("itemBody")->item(0);
         foreach($ib->childNodes as $child) {
+            $desc = $this->question->getDescription();
             if ($child->nodeType === XML_CDATA_SECTION_NODE) {
-                $this->question->setDescription($child->textContent);
+                $desc .= $child->textContent;
+            } else if ($child->nodeName == 'a' || $child->nodeName == 'img') {
+                $desc .= $this->domElementToString($child);
             }
+            $this->question->setDescription($desc);
         }
     }
 
@@ -204,13 +208,60 @@ abstract class qtiImport
             $file->setName($fileName);
             $file->setHashName($hashName);
             $file->setMimeType($mimeType);
-            $manager->create(
-                $file,
-                $manager->getResourceTypeByName('file'),
-                $this->user,
-                $ws,
-                $this->dirQTI
-            );
+            $abstractResource = $manager->create(
+                                    $file,
+                                    $manager->getResourceTypeByName('file'),
+                                    $this->user,
+                                    $ws,
+                                    $this->dirQTI
+                                );
+            $this->replaceNode($ob, $abstractResource->getResourceNode());
+        }
+    }
+
+    /**
+     * Replace the object tag by a link to the Claroline resource
+     *
+     * @access private
+     *
+     * @param DOMNodelist::item $ob element object
+     * @param Claroline\CoreBundle\Entity\Resource $resourceNode
+     *
+     */
+    private function replaceNode($ob, $resourceNode)
+    {
+        $mimeType = $ob->getAttribute('type');
+        if (strpos($mimeType, 'image/') !== false) {
+            $url = $this->container->get('router')
+                        ->generate('claro_file_get_media',
+                                array('node' => $resourceNode->getId())
+                          );
+            $imgTag    = $this->document->createElement('img');
+
+            $styleAttr = $this->document->createAttribute('style');
+            $srcAttr   = $this->document->createAttribute('src');
+            $altAttr   = $this->document->createAttribute('alt');
+
+            $styleAttr->value = 'max-width: 100%;';
+            $srcAttr->value   = $url;
+            $altAttr->value   = $resourceNode->getName();
+
+            $imgTag->appendChild($styleAttr);
+            $imgTag->appendChild($srcAttr);
+            $imgTag->appendChild($altAttr);
+
+            $ob->parentNode->replaceChild($imgTag, $ob);
+        } else {
+            $url = $this->container->get('router')
+                                   ->generate('claro_resource_open',
+                                           array('resourceType' => $resourceNode->getResourceType()->getName() ,
+                                                 'node' => $resourceNode->getId()
+                                     ));
+            $aTag     = $this->document->createElement('a', $resourceNode->getName());
+            $hrefAttr = $this->document->createAttribute('href');
+            $hrefAttr->value = $url;
+            $aTag->appendChild($hrefAttr);
+            $ob->parentNode->replaceChild($aTag, $ob);
         }
     }
 
@@ -257,6 +308,28 @@ abstract class qtiImport
         if (!is_object($this->dirQTI)) {
             $this->createDirQTIImport($ws);
         }
+    }
+    
+    /**
+     * To convet a domElement to string
+     *
+     * @access private
+     *
+     * @param DOMNodelist::item $domEl element of dom
+     * 
+     * @return String
+     *
+     */
+    protected function domElementToString($domEl)
+    {
+        $tagName = $domEl->nodeName;
+        $html = '<'.$tagName.' ';
+        foreach ($domEl->attributes as $attr) {
+            $html .= $attr->nodeName.'="' . $attr->nodeValue . '"';
+        }
+        $html .= '>' . $domEl->nodeValue . '</a>';
+        
+        return $html;
     }
 
     /**
