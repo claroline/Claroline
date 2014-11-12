@@ -41,13 +41,18 @@
         }
     }
 
-    .messages-container {
+    .comments-container {
         padding: 0;
-        .message-container {
+        .comment-container {
             padding:  10px;
             height:   350px;
             overflow: auto;
-            .message {
+            &.loading {
+                width               : 100%;
+                background-position : center;
+                background-color    : #f5f5f5;
+            }
+            .comment {
                 padding: 5px;
                 margin:  0;
                 .time {

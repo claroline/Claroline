@@ -3,7 +3,7 @@
 commentsApp
     .directive("portfolioContainer", function() {
         return {
-            restrict: "AC",
+            restrict:   "AC",
             controller: "portfoliosController"
         };
     });
