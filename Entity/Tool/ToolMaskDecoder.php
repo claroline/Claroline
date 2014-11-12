@@ -20,8 +20,16 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class ToolMaskDecoder
 {
-    const OPEN   = 1;
-    const EDIT   = 2;
+    public static $defaultActions = array('open', 'edit');
+    public static $defaultValues = array('open' => 1, 'edit' => 2);
+    public static $defaultDeniedIconClass = array(
+        'open' => 'fa fa-eye-slash',
+        'edit' => 'fa fa-edit'
+    );
+    public static $defaultGrantedIconClass = array(
+        'open' => 'fa fa-eye',
+        'edit' => 'fa fa-edit'
+    );
 
     /**
      * @ORM\Id
@@ -50,6 +58,16 @@ class ToolMaskDecoder
      */
     protected $tool;
 
+    /**
+     * @ORM\Column(name="granted_icon_class")
+     */
+    protected $grantedIconClass;
+
+    /**
+     * @ORM\Column(name="denied_icon_class")
+     */
+    protected $deniedIconClass;
+
     public function getId()
     {
         return $this->id;
@@ -70,6 +88,16 @@ class ToolMaskDecoder
         return $this->tool;
     }
 
+    public function getGrantedIconClass()
+    {
+        return $this->grantedIconClass;
+    }
+
+    public function getDeniedIconClass()
+    {
+        return $this->deniedIconClass;
+    }
+
     public function setId($id)
     {
         $this->id = $id;
@@ -88,5 +116,15 @@ class ToolMaskDecoder
     public function setTool(Tool $tool)
     {
         $this->tool = $tool;
+    }
+
+    public function setGrantedIconClass($grantedIconClass)
+    {
+        $this->grantedIconClass = $grantedIconClass;
+    }
+
+    public function setDeniedIconClass($deniedIconClass)
+    {
+        $this->deniedIconClass = $deniedIconClass;
     }
 }

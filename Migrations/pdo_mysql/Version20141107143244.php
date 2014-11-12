@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Migrations\drizzle_pdo_mysql;
+namespace Claroline\CoreBundle\Migrations\pdo_mysql;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/11/06 09:44:46
+ * Generation date: 2014/11/07 02:32:46
  */
-class Version20141106094443 extends AbstractMigration
+class Version20141107143244 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -20,21 +20,23 @@ class Version20141106094443 extends AbstractMigration
                 role_id INT NOT NULL, 
                 ordered_tool_id INT NOT NULL, 
                 mask INT NOT NULL, 
-                PRIMARY KEY(id), 
                 INDEX IDX_EFEDEC7ED60322AC (role_id), 
                 INDEX IDX_EFEDEC7EBAC1B1D7 (ordered_tool_id), 
-                UNIQUE INDEX tool_rights_unique_ordered_tool_role (ordered_tool_id, role_id)
-            )
+                UNIQUE INDEX tool_rights_unique_ordered_tool_role (ordered_tool_id, role_id), 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_tool_mask_decoder (
                 id INT AUTO_INCREMENT NOT NULL, 
                 tool_id INT NOT NULL, 
-                `value` INT NOT NULL, 
+                value INT NOT NULL, 
                 name VARCHAR(255) NOT NULL, 
-                PRIMARY KEY(id), 
-                INDEX IDX_323623448F7B22CC (tool_id)
-            )
+                granted_icon_class VARCHAR(255) NOT NULL, 
+                denied_icon_class VARCHAR(255) NOT NULL, 
+                INDEX IDX_323623448F7B22CC (tool_id), 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             ALTER TABLE claro_tool_rights 

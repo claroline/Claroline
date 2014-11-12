@@ -81,11 +81,13 @@ class WorkspaceToolsParametersController extends AbstractParametersController
     public function workspaceToolsRolesAction(Workspace $workspace)
     {
         $this->checkAccess($workspace);
+        $toolsDatas = $this->toolManager->getWorkspaceToolsConfigurationArray($workspace);
 
         return array(
             'roles' => $this->roleManager->getWorkspaceConfigurableRoles($workspace),
             'workspace' => $workspace,
-            'toolPermissions' => $this->toolManager->getWorkspaceToolsConfigurationArray($workspace)
+            'toolPermissions' => $toolsDatas['existingTools'],
+            'maskDecoders' => $toolsDatas['maskDecoders']
         );
     }
 

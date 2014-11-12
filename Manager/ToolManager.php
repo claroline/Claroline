@@ -12,7 +12,6 @@
 namespace Claroline\CoreBundle\Manager;
 
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
@@ -25,6 +24,7 @@ use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
 use Claroline\CoreBundle\Manager\Exception\ToolPositionAlreadyOccupiedException;
 use Claroline\CoreBundle\Manager\Exception\UnremovableToolException;
+use Claroline\CoreBundle\Manager\ToolMaskDecoderManager;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -49,22 +49,26 @@ class ToolManager
     private $om;
     /** @var RoleManager */
     private $roleManager;
+    /** @var ToolMaskDecoderManager */
+    private $toolMaskManager;
 
     /**
      * Constructor.
      *
      * @DI\InjectParams({
-     *     "ed"          = @DI\Inject("claroline.event.event_dispatcher"),
-     *     "utilities"   = @DI\Inject("claroline.utilities.misc"),
-     *     "om"          = @DI\Inject("claroline.persistence.object_manager"),
-     *     "roleManager" = @DI\Inject("claroline.manager.role_manager")
+     *     "ed"              = @DI\Inject("claroline.event.event_dispatcher"),
+     *     "utilities"       = @DI\Inject("claroline.utilities.misc"),
+     *     "om"              = @DI\Inject("claroline.persistence.object_manager"),
+     *     "roleManager"     = @DI\Inject("claroline.manager.role_manager"),
+     *     "toolMaskManager" = @DI\Inject("claroline.manager.tool_mask_decoder_manager")
      * })
      */
     public function __construct(
         StrictDispatcher $ed,
         ClaroUtilities $utilities,
         ObjectManager $om,
-        RoleManager $roleManager
+        RoleManager $roleManager,
+        ToolMaskDecoderManager $toolMaskManager
     )
     {
         $this->orderedToolRepo = $om->getRepository('ClarolineCoreBundle:Tool\OrderedTool');
@@ -75,6 +79,7 @@ class ToolManager
         $this->utilities = $utilities;
         $this->om = $om;
         $this->roleManager = $roleManager;
+        $this->toolMaskManager = $toolMaskManager;
     }
 
     public function create(Tool $tool)
@@ -237,20 +242,21 @@ class ToolManager
         $ot = $this->orderedToolRepo->findBy(array('workspace' => $workspace), array('order' => 'ASC'));
         $wsRoles = $this->roleManager->getWorkspaceConfigurableRoles($workspace);
         $existingTools = array();
+        $maskDecoders = array();
 
         foreach ($ot as $orderedTool) {
             if ($orderedTool->getTool()->isDisplayableInWorkspace()) {
                 //creates the visibility array
                 foreach ($wsRoles as $role) {
-                    $isVisible = false;
-                    //is the tool visible for a role in a workspace ?
-                    foreach ($orderedTool->getRoles() as $toolRole) {
-                        if ($toolRole === $role) {
-                            $isVisible = true;
-                        }
-                    }
+                    $roleVisibility[$role->getId()] = array();
+                }
+                $rights = $orderedTool->getRights();
 
-                    $roleVisibility[$role->getId()] = $isVisible;
+                foreach ($rights as $right) {
+                    $rightRole = $right->getRole();
+                    $mask = $right->getMask();
+                    $roleVisibility[$rightRole->getId()] = $this->toolMaskManager
+                        ->decodeMask($mask, $orderedTool->getTool());
                 }
 
                 $existingTools[] = array(
@@ -263,8 +269,21 @@ class ToolManager
                 );
             }
         }
+        $decoders = $this->toolMaskManager->getAllMaskDecoders();
 
-        return $existingTools;
+        foreach ($decoders as $decoder) {
+            $tool = $decoder->getTool();
+
+            if (!isset($maskDecoders[$tool->getId()])) {
+                $maskDecoders[$tool->getId()] = array();
+            }
+            $maskDecoders[$tool->getId()][$decoder->getName()] = $decoder;
+        }
+
+        return array(
+            'existingTools' => $existingTools,
+            'maskDecoders' => $maskDecoders
+        );
     }
 
     /**

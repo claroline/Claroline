@@ -57,29 +57,74 @@
                                     </span>
                                     <small><em>({{ toolPermission['tool'].getName()|trans({}, 'tools') }})</em></small>
                                 </td>
-                                {% for key, isVisible in toolPermission['visibility'] %}
-                                    <td>
-                                        <input type="checkbox"
+                                {% for key, rights in toolPermission['visibility'] %}
+                                    <td class="text-center">
+                                        {#<input type="checkbox"
                                                class="chk-tool-visible"
                                                value="1"
                                                name="chk-tool-{{ toolPermission['tool'].getId() }}-role-{{ key }}"
                                             {% if toolPermission['tool'].isLockedForAdmin() %}
                                                disabled
-                                            {% endif %}
+                                            {% endif %}#}
                                             {# The ROLE_ANONYMOUS key is 4 no matter what (see datafixtures) #}
-                                            {%  if key == 4 and toolPermission['tool'].isAnonymousExcluded() %}
+                                            {#{%  if key == 4 and toolPermission['tool'].isAnonymousExcluded() %}
                                                 disabled
                                             {%  endif %}
                                             {% if isVisible %}
                                                checked
                                             {% endif %}
-                                        />
+                                        />#}
+                                        {% if toolPermission['tool'].isLockedForAdmin() or
+                                            (key == 4 and toolPermission['tool'].isAnonymousExcluded())
+                                        %}
+                                            -
+                                        {% else %}
+                                            {% set toolId = toolPermission['tool'].getId() %}
+                                            
+                                            {% if maskDecoders[toolId] is defined %}
+                                                {% for decoder in maskDecoders[toolId] %}
+                                                    {% if rights[decoder.getName()] is defined and rights[decoder.getName()] %}
+                                                        <i class="{{ decoder.getGrantedIconClass() }} {{ decoder.getName() }}-granted-btn text-success pointer-hand"></i>
+                                                    {% else %}
+                                                        <i class="{{ decoder.getDeniedIconClass() }} {{ decoder.getName() }}-denied-btn text-danger pointer-hand"></i>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            {% else %}
+                                                -
+                                            {% endif %}
+                                        {% endif %}
                                     </td>
                                 {% endfor %}
                             </tr>
                         {% endfor %}
                     </tbody>
                 </table>
+                <div>
+                    <span class="col-md-5">
+                        <i class="fa fa-eye text-success"></i>
+                        :
+                        {{ 'tool_is_visible_and_can_be_opened'|trans({}, 'platform') }}
+                    </span>
+                    <span>
+                        <i class="fa fa-eye-slash text-danger"></i>
+                        :
+                        {{ 'tool_is_not_visible_and_cannot_be_opened'|trans({}, 'platform') }}
+                    </span>
+                </div>
+                <div>
+                    <span class="col-md-5">
+                        <i class="fa fa-edit text-success"></i>
+                        :
+                        {{ 'tool_can_be_edited'|trans({}, 'platform') }}
+                    </span>
+                    <span>
+                        <i class="fa fa-edit text-danger"></i>
+                        :
+                        {{ 'tool_cannot_be_edited'|trans({}, 'platform') }}
+                    </span>
+                </div>
+                <br>
+                <br>
                 <button id="edit-tools-btn" class="btn btn-primary" href="{{ path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': 'parameters'}) }}">
                     {{ 'edit'|trans({}, 'platform') }}
                 </button>
@@ -87,6 +132,11 @@
                      href="{{ path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': 'parameters'}) }}"
                 >
                     {{ 'cancel'|trans({}, 'platform') }}
+                </a>
+                <a class="btn btn-default"
+                     href="{{ path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': 'parameters'}) }}"
+                >
+                    {{ 'back'|trans({}, 'platform') }}
                 </a>
             </div>
         </form>

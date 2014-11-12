@@ -191,4 +191,16 @@ class ToolRepository extends EntityRepository
 
         return $query->getSingleScalarResult();
     }
+
+    public function findToolsDispayableInWorkspace()
+    {
+        $dql = '
+            SELECT t
+            FROM Claroline\CoreBundle\Entity\Tool\Tool t
+            WHERE t.isDisplayableInWorkspace = true
+        ';
+        $query = $this->_em->createQuery($dql);
+
+        return $query->getResult();
+    }
 }
