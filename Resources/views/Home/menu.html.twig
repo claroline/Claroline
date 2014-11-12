@@ -16,14 +16,12 @@
                     </a>
                 </li>
             {% else %}
-                {% if region is not defined or (region is defined and region is empty) %}
-                    {% if type is defined %}
-                        <li>
-                            <a class="content-size">
-                                <i class="fa fa-fw fa-arrows-h"></i> {{ "Size" | trans({}, 'home') }}
-                            </a>
-                        </li>
-                    {% endif %}
+                {% if region is not defined or (region is defined and region is empty) and type is defined %}
+                    <li>
+                        <a class="content-size">
+                            <i class="fa fa-fw fa-arrows-h"></i> {{ "Size" | trans({}, 'home') }}
+                        </a>
+                    </li>
                     <li>
                         <a class="content-edit">
                             <i class="fa fa-fw fa-pencil"></i> {{ "Edit" | trans({}, 'home') }}
@@ -37,7 +35,7 @@
                         </a>
                     </li>
                 {% endif %}
-                {% if type != "menu" %}
+                {% if region is not defined or (region is defined and region is empty) and type != "menu" %}
                     <li role="presentation">
                         <a role="menuitem" class="collapse-content">
                             <i class="fa fa-fw fa-sort"></i> {{ "Collapse" | trans({}, 'home') }}
@@ -55,10 +53,17 @@
                         <i class="fa fa-fw fa-trash-o"></i> {{ "Delete" | trans({}, 'home') }}
                     </a>
                 </li>
-                {% if type == "menu" %}
+                {% if region is not defined or (region is defined and region is empty) and type == "menu" %}
                     <li role="presentation">
                         <a role="menuitem" href="{{ path('claroline_content_menu_settings', {'content': id}) }}">
                             <i class="fa fa-fw fa-cog"></i> {{ "settings" | trans({}, 'platform') }}
+                        </a>
+                    </li>
+                {% endif %}
+                {% if region is defined and region is not empty and type is defined and type is not empty %}
+                    <li role="presentation">
+                        <a role="menuitem" href="{{ path('claro_get_content_by_type', {'type': type}) }}">
+                            <i class="fa fa-fw fa-pencil"></i> {{ 'Edit in the page' | trans({}, 'home') }}
                         </a>
                     </li>
                 {% endif %}
