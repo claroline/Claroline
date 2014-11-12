@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Migrations\pdo_oci;
+namespace Claroline\CoreBundle\Migrations\oci8;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/11/07 02:32:47
+ * Generation date: 2014/11/12 11:25:43
  */
-class Version20141107143244 extends AbstractMigration
+class Version20141112112541 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -101,6 +101,9 @@ class Version20141107143244 extends AbstractMigration
         ");
         $this->addSql("
             CREATE INDEX IDX_323623448F7B22CC ON claro_tool_mask_decoder (tool_id)
+        ");
+        $this->addSql("
+            CREATE UNIQUE INDEX tool_mask_decoder_unique_tool_and_name ON claro_tool_mask_decoder (tool_id, name)
         ");
         $this->addSql("
             ALTER TABLE claro_tool_rights 

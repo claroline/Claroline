@@ -83,10 +83,28 @@
                                             
                                             {% if maskDecoders[toolId] is defined %}
                                                 {% for decoder in maskDecoders[toolId] %}
-                                                    {% if rights[decoder.getName()] is defined and rights[decoder.getName()] %}
-                                                        <i class="{{ decoder.getGrantedIconClass() }} {{ decoder.getName() }}-granted-btn text-success pointer-hand"></i>
+                                                    {% set decoderName = decoder.getName() %}
+                                                    {% set grantedIconClass = decoder.getGrantedIconClass() %}
+                                                    {% set deniedIconClass = decoder.getDeniedIconClass() %}
+                                            
+                                                    {% if rights[decoderName] is defined and rights[decoderName] %}
+                                                        <i class="{{ grantedIconClass }} text-success pointer-hand granted-btn"
+                                                           data-role-id="{{ key }}"
+                                                           data-ordered-tool-id="{{ toolPermission['orderTool'].getId() }}"
+                                                           data-icon-class="{{ grantedIconClass }}"
+                                                           data-inverse-icon-class="{{ deniedIconClass }}"
+                                                           data-decoder-name="{{ decoderName }}"
+                                                        >
+                                                        </i>
                                                     {% else %}
-                                                        <i class="{{ decoder.getDeniedIconClass() }} {{ decoder.getName() }}-denied-btn text-danger pointer-hand"></i>
+                                                        <i class="{{ deniedIconClass }} text-danger pointer-hand denied-btn"
+                                                           data-role-id="{{ key }}"
+                                                           data-ordered-tool-id="{{ toolPermission['orderTool'].getId() }}"
+                                                           data-icon-class="{{ deniedIconClass }}"
+                                                           data-inverse-icon-class="{{ grantedIconClass }}"
+                                                           data-decoder-name="{{ decoderName }}"
+                                                        >
+                                                        </i>
                                                     {% endif %}
                                                 {% endfor %}
                                             {% else %}

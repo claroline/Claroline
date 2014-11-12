@@ -87,6 +87,68 @@
             }
         }
     });
+    
+    $('#tool-table-body').on('click', '.granted-btn', function () {
+        var currentBtn = $(this);
+        var orderedToolId = $(this).data('ordered-tool-id');
+        var roleId = $(this).data('role-id');
+        var action = $(this).data('decoder-name');
+        var iconClass = $(this).data('icon-class');
+        var inverseIconClass = $(this).data('inverse-icon-class');
+        
+        $.ajax({
+            url: Routing.generate(
+                'claro_workspace_inverse_ordered_tool_right',
+                {
+                    'orderedTool': orderedToolId,
+                    'role': roleId,
+                    'action': action
+                }
+            ),
+            type: 'POST',
+            success: function() {
+                currentBtn.removeClass('granted-btn');
+                currentBtn.removeClass('text-success');
+                currentBtn.removeClass(iconClass);
+                currentBtn.addClass('denied-btn');
+                currentBtn.addClass('text-danger');
+                currentBtn.addClass(inverseIconClass);
+                currentBtn.data('icon-class', inverseIconClass);
+                currentBtn.data('inverse-icon-class', iconClass);
+            }
+        });
+    });
+
+    $('#tool-table-body').on('click', '.denied-btn', function () {
+        var currentBtn = $(this);
+        var orderedToolId = $(this).data('ordered-tool-id');
+        var roleId = $(this).data('role-id');
+        var action = $(this).data('decoder-name');
+        var iconClass = $(this).data('icon-class');
+        var inverseIconClass = $(this).data('inverse-icon-class');
+        
+        $.ajax({
+            url: Routing.generate(
+                'claro_workspace_inverse_ordered_tool_right',
+                {
+                    'orderedTool': orderedToolId,
+                    'role': roleId,
+                    'action': action
+                }
+            ),
+            type: 'POST',
+            success: function() {
+                currentBtn.removeClass('denied-btn');
+                currentBtn.removeClass('text-danger');
+                currentBtn.removeClass(iconClass);
+                currentBtn.addClass('granted-btn');
+                currentBtn.addClass('text-success');
+                currentBtn.addClass(inverseIconClass);
+                currentBtn.data('icon-class', inverseIconClass);
+                currentBtn.data('inverse-icon-class', iconClass);
+            }
+        });
+    });
 
     var editName = function(tool) {
         $('#tool-' + tool.tool_id + '-name').html(tool.name);

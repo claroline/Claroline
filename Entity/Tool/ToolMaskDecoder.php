@@ -16,7 +16,14 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\ToolMaskDecoderRepository")
- * @ORM\Table(name="claro_tool_mask_decoder")
+ * @ORM\Table(
+ *     name="claro_tool_mask_decoder",
+ *     uniqueConstraints={
+ *         @ORM\UniqueConstraint(
+ *             name="tool_mask_decoder_unique_tool_and_name",
+ *             columns={"tool_id", "name"}
+ *         )
+ *     })
  */
 class ToolMaskDecoder
 {

@@ -93,13 +93,13 @@ class ToolMaskDecoderManager
         return $this->maskRepo->findAllMaskDecoders($executeQuery);
     }
 
-    public function getMaskDecodersByToolAndName(
+    public function getMaskDecoderByToolAndName(
         Tool $tool,
         $name,
         $executeQuery = true
     )
     {
-        return $this->maskRepo->findMaskDecodersByToolAndName(
+        return $this->maskRepo->findMaskDecoderByToolAndName(
             $tool,
             $name,
             $executeQuery

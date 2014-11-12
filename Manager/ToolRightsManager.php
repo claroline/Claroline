@@ -63,10 +63,21 @@ class ToolRightsManager
     {
         $tool = $orderedTool->getTool();
         $maskDecoder = $this->maskManager
-            ->getMaskDecodersByToolAndName($tool, $action);
+            ->getMaskDecoderByToolAndName($tool, $action);
+        $maskValue = $maskDecoder->getValue();
 
         if (!is_null($maskDecoder)) {
-            
+            $rights = $this->toolRightsRepo
+                ->findRightsByRoleAndOrderedTool($role, $orderedTool);
+
+            if (is_null($rights)) {
+                $this->createToolRights($orderedTool, $role, $maskValue);
+            } else {
+                $rightsMask = $rights->getMask() ^ $maskValue;
+                $rights->setMask($rightsMask);
+                $this->om->persist($rights);
+                $this->om->flush();
+            }
         }
     }
 

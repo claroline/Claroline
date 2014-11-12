@@ -48,6 +48,6 @@ class ToolRightsRepository extends EntityRepository
         $query->setParameter('role', $role);
         $query->setParameter('orderedTool', $orderedTool);
 
-        return $executeQuery ? $query->getResult() : $query;
+        return $executeQuery ? $query->getOneOrNullResult() : $query;
     }
 }

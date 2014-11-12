@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Migrations\pdo_sqlsrv;
+namespace Claroline\CoreBundle\Migrations\mysqli;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -8,45 +8,36 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/11/07 02:32:47
+ * Generation date: 2014/11/12 11:25:44
  */
-class Version20141107143244 extends AbstractMigration
+class Version20141112112541 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
         $this->addSql("
             CREATE TABLE claro_tool_rights (
-                id INT IDENTITY NOT NULL, 
+                id INT AUTO_INCREMENT NOT NULL, 
                 role_id INT NOT NULL, 
                 ordered_tool_id INT NOT NULL, 
                 mask INT NOT NULL, 
-                PRIMARY KEY (id)
-            )
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_EFEDEC7ED60322AC ON claro_tool_rights (role_id)
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_EFEDEC7EBAC1B1D7 ON claro_tool_rights (ordered_tool_id)
-        ");
-        $this->addSql("
-            CREATE UNIQUE INDEX tool_rights_unique_ordered_tool_role ON claro_tool_rights (ordered_tool_id, role_id) 
-            WHERE ordered_tool_id IS NOT NULL 
-            AND role_id IS NOT NULL
+                INDEX IDX_EFEDEC7ED60322AC (role_id), 
+                INDEX IDX_EFEDEC7EBAC1B1D7 (ordered_tool_id), 
+                UNIQUE INDEX tool_rights_unique_ordered_tool_role (ordered_tool_id, role_id), 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_tool_mask_decoder (
-                id INT IDENTITY NOT NULL, 
+                id INT AUTO_INCREMENT NOT NULL, 
                 tool_id INT NOT NULL, 
                 value INT NOT NULL, 
-                name NVARCHAR(255) NOT NULL, 
-                granted_icon_class NVARCHAR(255) NOT NULL, 
-                denied_icon_class NVARCHAR(255) NOT NULL, 
-                PRIMARY KEY (id)
-            )
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_323623448F7B22CC ON claro_tool_mask_decoder (tool_id)
+                name VARCHAR(255) NOT NULL, 
+                granted_icon_class VARCHAR(255) NOT NULL, 
+                denied_icon_class VARCHAR(255) NOT NULL, 
+                INDEX IDX_323623448F7B22CC (tool_id), 
+                UNIQUE INDEX tool_mask_decoder_unique_tool_and_name (tool_id, name), 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             ALTER TABLE claro_tool_rights 

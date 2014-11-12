@@ -15,10 +15,12 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Controller\Tool\AbstractParametersController;
+use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Manager\ToolManager;
+use Claroline\CoreBundle\Manager\ToolRightsManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\RightsManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
@@ -31,6 +33,7 @@ use JMS\DiExtraBundle\Annotation as DI;
 class WorkspaceToolsParametersController extends AbstractParametersController
 {
     private $toolManager;
+    private $toolRightsManager;
     private $roleManager;
     private $rightsManager;
     private $resourceManager;
@@ -40,17 +43,19 @@ class WorkspaceToolsParametersController extends AbstractParametersController
 
     /**
      * @DI\InjectParams({
-     *     "toolManager"     = @DI\Inject("claroline.manager.tool_manager"),
-     *     "roleManager"     = @DI\Inject("claroline.manager.role_manager"),
-     *     "rightsManager"   = @DI\Inject("claroline.manager.rights_manager"),
-     *     "resourceManager" = @DI\Inject("claroline.manager.resource_manager"),
-     *     "formFactory"     = @DI\Inject("claroline.form.factory"),
-     *     "request"         = @DI\Inject("request"),
-     *     "om"              = @DI\Inject("claroline.persistence.object_manager")
+     *     "toolManager"       = @DI\Inject("claroline.manager.tool_manager"),
+     *     "toolRightsManager" = @DI\Inject("claroline.manager.tool_rights_manager"),
+     *     "roleManager"       = @DI\Inject("claroline.manager.role_manager"),
+     *     "rightsManager"     = @DI\Inject("claroline.manager.rights_manager"),
+     *     "resourceManager"   = @DI\Inject("claroline.manager.resource_manager"),
+     *     "formFactory"       = @DI\Inject("claroline.form.factory"),
+     *     "request"           = @DI\Inject("request"),
+     *     "om"                = @DI\Inject("claroline.persistence.object_manager")
      * })
      */
     public function __construct(
         ToolManager $toolManager,
+        ToolRightsManager $toolRightsManager,
         RoleManager $roleManager,
         RightsManager $rightsManager,
         ResourceManager $resourceManager,
@@ -59,13 +64,14 @@ class WorkspaceToolsParametersController extends AbstractParametersController
         ObjectManager $om
     )
     {
-        $this->toolManager     = $toolManager;
-        $this->roleManager     = $roleManager;
-        $this->rightsManager   = $rightsManager;
-        $this->resourceManager = $resourceManager;
-        $this->formFactory     = $formFactory;
-        $this->request         = $request;
-        $this->om              = $om;
+        $this->toolManager       = $toolManager;
+        $this->toolRightsManager = $toolRightsManager;
+        $this->roleManager       = $roleManager;
+        $this->rightsManager     = $rightsManager;
+        $this->resourceManager   = $resourceManager;
+        $this->formFactory       = $formFactory;
+        $this->request           = $request;
+        $this->om                = $om;
     }
 
     /**
@@ -255,5 +261,31 @@ class WorkspaceToolsParametersController extends AbstractParametersController
 
             throw new AccessDeniedException();
         }
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/ordered/tool/{orderedTool}/role/{role}/action/{action}/inverse",
+     *     name="claro_workspace_inverse_ordered_tool_right",
+     *     options={"expose"=true}
+     * )
+     * @param OrderedTool $orderedTool
+     * @param Role $role
+     * @param string $action
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function inverseWorkspaceOrderedToolRightAction(
+        OrderedTool $orderedTool,
+        Role $role,
+        $action
+    )
+    {
+        $workspace = $orderedTool->getWorkspace();
+        $this->checkAccess($workspace);
+
+        $this->toolRightsManager->inverseActionValue($orderedTool, $role, $action);
+
+        return new Response('success', 200);
     }
 }

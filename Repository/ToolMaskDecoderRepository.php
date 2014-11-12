@@ -41,7 +41,7 @@ class ToolMaskDecoderRepository extends EntityRepository
         return $executeQuery ? $query->getResult() : $query;
     }
 
-    public function findMaskDecodersByToolAndName(
+    public function findMaskDecoderByToolAndName(
         Tool $tool,
         $name,
         $executeQuery = true
