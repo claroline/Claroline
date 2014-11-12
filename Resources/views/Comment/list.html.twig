@@ -27,7 +27,7 @@
             <div class="title-container">
                 <p class="lead text-center">{{ 'portfolios'|trans({}, 'icap_portfolio') }}</p>
             </div>
-            <div class="portfolio-container loading" data-ng-class="{'loading': !portfolios.$resolved}">
+            <div class="portfolio-container loading" data-ng-class="{'loading': !portfolios.$resolved}" data-ng-init="init()">
                 <div class="media portfolio ng-cloak" role="button" data-ng-repeat="portfolio in portfolios"
                      data-ng-class="{'unread': 0 < portfolio.unreadComments, 'active': selectedPortfolio == portfolio.id}"
                      data-ng-click="selectPortolio(portfolio.id)" data-ng-show="portfolios.$resolved">
@@ -42,7 +42,7 @@
             <div class="title-container">
                 <p class="lead text-center">{{ 'portfolios_comments'|trans({}, 'icap_portfolio') }}</p>
             </div>
-            <div class="comment-container loading" data-ng-class="{'loading': !comments.$resolved}">
+            <div class="comment-container loading" data-ng-class="{'loading': !comments.$resolved}" data-ng-init="getComments(selectedPortfolio)">
                 <div class="media comment ng-cloak" data-ng-repeat="comment in comments" data-ng-show="comments.$resolved">
                     {% verbatim %}
                     <a class="pull-left" href="#">
@@ -51,7 +51,7 @@
                     <div class="media-body">
                         <small class="pull-right time"><i class="fa fa-calendar"></i> {{ comment.date }}</small>
                         <h5 class="media-heading">{{ comment.user }}</h5>
-                        <small class="col-lg-10">{{ comment.message }}</small>
+                        <small class="col-lg-10" data-ng-bind-html="comment.message | trustAsHtml"></small>
                     </div>
                     {% endverbatim %}
                 </div>

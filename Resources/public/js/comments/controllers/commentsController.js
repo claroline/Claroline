@@ -35,7 +35,10 @@ commentsApp
                             'meeting in the discussed how to go about this all fast and how eventually this will end."'
             }
         ];
-        $timeout(function () {
-            $scope.comments.$resolved = true;
-        }, 2000);
+
+        $scope.getComments = function (portfolioId) {
+            $timeout(function () {
+                $scope.comments.$resolved = true;
+            }, 3000);
+        }
     }]);

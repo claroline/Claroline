@@ -5,19 +5,24 @@ commentsApp
         $scope.selectedPortfolio = window.currentPortfolio;
         $scope.portfolios = [
             {
-                'id': 42,
+                'id': 1,
                 'title': 'pouet',
                 'unreadComments': 2
             },
             {
-                'id': 41,
+                'id': 2,
                 'title': 'ethsdtghsfd',
                 'unreadComments': 0
             }
         ];
-        $timeout(function () {
-            $scope.portfolios.$resolved = true;
-        }, 2000);
+
+        $scope.init = function () {
+            if (0 < this.selectedPortfolio) {
+                $timeout(function () {
+                    $scope.portfolios.$resolved = true;
+                }, 2000);
+            }
+        };
 
         $scope.selectPortolio = function(portfolioId) {
             $scope.selectedPortfolio = portfolioId;
