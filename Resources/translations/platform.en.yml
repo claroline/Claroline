@@ -895,8 +895,12 @@ to_workspace_members: 'to the members of this workspace'
 today: Today
 token: Token
 tool: Tool
+tool_can_be_edited: 'Tool can be edited'
+tool_cannot_be_edited: 'Tool cannot be edited'
 tool_form_displayName: 'Displayed tool name'
 tool_form_name: 'tool name'
+tool_is_not_visible_and_cannot_be_opened: 'Tool is not visible and cannot be opened'
+tool_is_visible_and_can_be_opened: 'Tool is visible and can be opened'
 tool_parameters: 'Tool parameters'
 tool_roles_create_directory: 'The "Create a directory" option allow you to automatically create a directory for that group.'
 tool_roles_create_directory: The "Create a directory" option allow you to automatically create a directory for that group.

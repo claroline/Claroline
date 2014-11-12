@@ -899,8 +899,13 @@ to_workspace_members: 'aux membres de cet espace'
 today: 'Aujourd''hui'
 token: Token
 tool: Outil
+tool: Tool
+tool_can_be_edited: 'L''outil peut être modifié'
+tool_cannot_be_edited: 'L''outil ne peut pas être modifié'
 tool_form_displayName: 'Nom affiché'
 tool_form_name: Nom
+tool_is_not_visible_and_cannot_be_opened: 'L''outil n''est pas visible et ne peut pas être ouvert'
+tool_is_visible_and_can_be_opened: 'L''outil est visible et peut être ouvert'
 tool_parameters: 'Paramètres des outils'
 tool_roles_create_directory: 'L''option "Créer un répertoire" vous permet de créer automatiquement un répertoire dédié aux utilisateurs de ce groupe.'
 tool_roles_create_directory: L'option "Créer un répertoire" vous permet de créer automatiquement un répertoire dédié aux utilisateurs de ce groupe.
