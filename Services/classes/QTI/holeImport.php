@@ -323,13 +323,16 @@ class holeImport extends qtiImport
      */
     protected function getPrompt()
     {
-        $prompt = '';
+        $text = '';
         $ib = $this->assessmentItem->getElementsByTagName("itemBody")->item(0);
         if ($ib->getElementsByTagName("prompt")->item(0)) {
-            $prompt = $ib->getElementsByTagName("prompt")->item(0)->nodeValue;
+            $prompt = $ib->getElementsByTagName("prompt")->item(0);
+            $text = $this->domElementToString($prompt);
+            $text = str_replace('<prompt>', '', $text);
+            $text = str_replace('</prompt>', '', $text);
             $ib->removeChild($ib->getElementsByTagName("prompt")->item(0));
         }
 
-        return $prompt;
+        return $text;
     }
 }

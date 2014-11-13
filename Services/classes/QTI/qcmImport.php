@@ -10,8 +10,8 @@ namespace UJM\ExoBundle\Services\classes\QTI;
 use UJM\ExoBundle\Entity\Choice;
 use UJM\ExoBundle\Entity\InteractionQCM;
 
-class qcmImport extends qtiImport
-{
+class qcmImport extends qtiImport {
+
     protected $interactionQCM;
 
     /**
@@ -21,8 +21,7 @@ class qcmImport extends qtiImport
      * @param qtiRepository $qtiRepos
      *
      */
-    public function import(qtiRepository $qtiRepos, \DOMDocument $document)
-    {
+    public function import(qtiRepository $qtiRepos, \DOMDocument $document) {
         $this->qtiRepos = $qtiRepos;
         $this->document = $document;
         $this->getQTICategory();
@@ -46,8 +45,7 @@ class qcmImport extends qtiImport
      * @access protected
      *
      */
-    protected function getPrompt()
-    {
+    protected function getPrompt() {
         $prompt = '';
         $ib = $this->assessmentItem->getElementsByTagName("itemBody")->item(0);
         $ci = $ib->getElementsByTagName("choiceInteraction")->item(0);
@@ -70,8 +68,7 @@ class qcmImport extends qtiImport
      * @access protected
      *
      */
-    protected function createInteractionQCM()
-    {
+    protected function createInteractionQCM() {
         $rp = $this->assessmentItem->getElementsByTagName("responseProcessing");
         $this->interactionQCM = new InteractionQCM();
         $this->interactionQCM->setInteraction($this->interaction);
@@ -94,8 +91,7 @@ class qcmImport extends qtiImport
      * @access protected
      *
      */
-    protected function getShuffle()
-    {
+    protected function getShuffle() {
         $ib = $this->assessmentItem->getElementsByTagName("itemBody")->item(0);
         $ci = $ib->getElementsByTagName("choiceInteraction")->item(0);
         if ($ci->hasAttribute("shuffle") && $ci->getAttribute("shuffle") == 'true') {
@@ -111,21 +107,20 @@ class qcmImport extends qtiImport
      * @access protected
      *
      */
-    protected function getQCMType()
-    {
+    protected function getQCMType() {
         $ri = $this->assessmentItem->getElementsByTagName("responseDeclaration")->item(0);
         if ($ri->hasAttribute("cardinality") && $ri->getAttribute("cardinality") == 'multiple') {
-             $type = $this->doctrine
-                          ->getManager()
-                          ->getRepository('UJMExoBundle:TypeQCM')
-                          ->findOneBy(array('code' => 1));
+            $type = $this->doctrine
+                    ->getManager()
+                    ->getRepository('UJMExoBundle:TypeQCM')
+                    ->findOneBy(array('code' => 1));
 
             $this->interactionQCM->setTypeQCM($type);
         } else {
             $type = $this->doctrine
-                          ->getManager()
-                          ->getRepository('UJMExoBundle:TypeQCM')
-                          ->findOneBy(array('code' => 2));
+                    ->getManager()
+                    ->getRepository('UJMExoBundle:TypeQCM')
+                    ->findOneBy(array('code' => 2));
 
             $this->interactionQCM->setTypeQCM($type);
         }
@@ -137,16 +132,14 @@ class qcmImport extends qtiImport
      * @access protected
      *
      */
-    protected function createChoices()
-    {
+    protected function createChoices() {
         $order = 1;
         $ib = $this->assessmentItem->getElementsByTagName("itemBody")->item(0);
         $ci = $ib->getElementsByTagName("choiceInteraction")->item(0);
 
-        foreach($ci->getElementsByTagName("simpleChoice") as $simpleChoice) {
+        foreach ($ci->getElementsByTagName("simpleChoice") as $simpleChoice) {
             $choice = new Choice();
-            if ($simpleChoice->hasAttribute("fixed")
-                    && $simpleChoice->getAttribute("fixed") == 'true') {
+            if ($simpleChoice->hasAttribute("fixed") && $simpleChoice->getAttribute("fixed") == 'true') {
                 $choice->setPositionForce(true);
             }
             $feedback = $simpleChoice->getElementsByTagName("feedbackInline");
@@ -154,7 +147,7 @@ class qcmImport extends qtiImport
                 $choice->setFeedback($feedback->item(0)->nodeValue);
                 $simpleChoice->removeChild($feedback->item(0));
             }
-            $choice->setLabel($simpleChoice->nodeValue);
+            $choice->setLabel($this->choiceValue($simpleChoice));
             $choice->setOrdre($order);
             $choice->setWeight($this->getWeightChoice($simpleChoice->getAttribute("identifier")));
             $choice->setRightResponse($this->getRightResponse($simpleChoice->getAttribute("identifier")));
@@ -166,6 +159,21 @@ class qcmImport extends qtiImport
     }
 
     /**
+     * @access protected
+     *
+     * @param DOMNodelist::item $simpleChoice element simpleChoice
+     *
+     * return String $value
+     */
+    protected function choiceValue($simpleChoice) {
+        $value = $this->domElementToString($simpleChoice);
+        $value = str_replace('<simpleChoice>', '', $value);
+        $value = str_replace('</simpleChoice>', '', $value);
+
+        return $value;
+    }
+
+    /**
      * Get weightChoice
      *
      * @access protected
@@ -174,17 +182,14 @@ class qcmImport extends qtiImport
      *
      * return float
      */
-    protected function getWeightChoice($identifier)
-    {
+    protected function getWeightChoice($identifier) {
         $weight = 0;
         $ri = $this->assessmentItem->getElementsByTagName("responseDeclaration")->item(0);
         $mapping = $ri->getElementsByTagName("mapping");
         if ($mapping->item(0)) {
             $mps = $mapping->item(0)->getElementsByTagName("mapEntry");
             foreach ($mps as $mp) {
-                if ($mp->hasAttribute("mappedValue")
-                        && $mp->hasAttribute("mapKey")
-                        && $mp->getAttribute("mapKey") == $identifier) {
+                if ($mp->hasAttribute("mappedValue") && $mp->hasAttribute("mapKey") && $mp->getAttribute("mapKey") == $identifier) {
                     $weight = $mp->getAttribute("mappedValue");
                     break;
                 }
@@ -203,8 +208,7 @@ class qcmImport extends qtiImport
      *
      * return boolean
      */
-    protected function getRightResponse($identifier)
-    {
+    protected function getRightResponse($identifier) {
         $rightResponse = false;
         $ri = $this->assessmentItem->getElementsByTagName("responseDeclaration")->item(0);
         $cr = $ri->getElementsByTagName("correctResponse")->item(0);
@@ -225,9 +229,8 @@ class qcmImport extends qtiImport
      * @access protected
      *
      */
-    protected function getGlobalScore()
-    {
-
+    protected function getGlobalScore() {
+        
     }
 
 }
