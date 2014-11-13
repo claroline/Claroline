@@ -71,9 +71,11 @@ class UserInformationWidget extends AbstractWidget
      */
     public function getData()
     {
+        $birthDate = $this->getBirthDate();
+
         return array(
             'city'      => $this->getCity(),
-            'birthDate' => $this->getBirthDate()->format('Y/m/d')
+            'birthDate' => $birthDate ? $birthDate->format('Y/m/d') : $birthDate
         );
     }
 

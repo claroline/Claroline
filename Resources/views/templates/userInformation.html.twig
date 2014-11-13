@@ -1,2 +1,2 @@
-<p><span class="fa fa-birthday-cake"> {{ widget.birthDate|date('date_format'|trans({}, 'platform')) }}</span></p>
+<p><span class="fa fa-birthday-cake"> {% if null != widget.birthDate %}{{ widget.birthDate|date('date_format'|trans({}, 'platform')) }}{% endif %}</span></p>
 <p><span class="fa fa-map-marker"> {{ widget.city }}</p>
