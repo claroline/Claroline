@@ -17,7 +17,7 @@ commentsApp
                 });
         };
 
-        $scope.selectPortolio = function(portfolioId) {
+        $scope.clickOnPortolio = function(portfolioId) {
             if ($scope.selectedPortfolio != portfolioId) {
                 $scope.selectedPortfolio = portfolioId;
             }

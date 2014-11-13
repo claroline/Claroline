@@ -30,7 +30,7 @@
             <div class="portfolio-container loading" data-ng-class="{'loading': !portfolios.$resolved}" data-ng-init="init()">
                 <div class="media portfolio ng-cloak" role="button" data-ng-repeat="portfolio in portfolios"
                      data-ng-class="{'unread': 0 < portfolio.unreadComments, 'active': selectedPortfolio == portfolio.id}"
-                     data-ng-click="selectPortolio(portfolio.id)" data-ng-show="portfolios.$resolved">
+                     data-ng-click="clickOnPortolio(portfolio.id)" data-ng-show="portfolios.$resolved">
                     <div class="media-body">
                         <h5 class="media-heading">{% verbatim %}{{ portfolio.title }}<span data-ng-show="0 < portfolio.unreadComments" class="badge pull-right">{{ portfolio.unreadComments }}</span>{% endverbatim %}</h5>
                     </div>
