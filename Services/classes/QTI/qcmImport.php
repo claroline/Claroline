@@ -51,11 +51,17 @@ class qcmImport extends qtiImport
         $prompt = '';
         $ib = $this->assessmentItem->getElementsByTagName("itemBody")->item(0);
         $ci = $ib->getElementsByTagName("choiceInteraction")->item(0);
+        $text = '';
         if ($ci->getElementsByTagName("prompt")->item(0)) {
-            $prompt = $ci->getElementsByTagName("prompt")->item(0)->nodeValue;
+            //$prompt = $ci->getElementsByTagName("prompt")->item(0)->nodeValue;
+
+            $prompt = $ci->getElementsByTagName("prompt")->item(0);
+            $text = $this->domElementToString($prompt);
+            $text = str_replace('<prompt>', '', $text);
+            $text = str_replace('</prompt>', '', $text);
         }
 
-        return $prompt;
+        return $text;
     }
 
     /**

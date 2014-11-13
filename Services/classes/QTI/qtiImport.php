@@ -323,17 +323,16 @@ abstract class qtiImport
      */
     protected function domElementToString($domEl)
     {
-        $tagName = $domEl->nodeName;
-        $html = '<'.$tagName.' ';
-        foreach ($domEl->attributes as $attr) {
-            $html .= $attr->nodeName.'="' . $attr->nodeValue . '"';
-        }
-        $html .= '>' . $domEl->nodeValue;
-        if ($tagName == 'a') {
-            $html .= '</a>';
-        }
+        $text = $this->document->saveXML($domEl);
+        $text = trim($text);
+        //delete the line break in $text
+        $text = str_replace(CHR(10),"",$text);
+        $text = str_replace(CHR(13),"",$text);
+        //delete CDATA
+        $text = str_replace('<![CDATA[', '', $text);
+        $text = str_replace(']]>', '', $text);
 
-        return $html;
+        return $text;
     }
 
     /**

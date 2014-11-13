@@ -309,16 +309,9 @@ class holeImport extends qtiImport
     protected function getQtiTextWithHoles()
     {
         $ib = $this->assessmentItem->getElementsByTagName("itemBody")->item(0);
-        $text = $this->document->saveXML($ib);
+        $text = $this->domElementToString($ib);
         $text = str_replace('<itemBody>', '', $text);
         $text = str_replace('</itemBody>', '', $text);
-        $text = trim($text);
-        //delete the line break in $text
-        $text = str_replace(CHR(10),"",$text);
-        $text = str_replace(CHR(13),"",$text);
-        //delete CDATA
-        $text = str_replace('<![CDATA[', '', $text);
-        $text = str_replace(']]>', '', $text);
         $this->qtiTextWithHoles = html_entity_decode($text);
     }
 
