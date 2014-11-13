@@ -5,7 +5,7 @@ portfolioApp
         return {
             baseUrl: Routing.generate("icap_portfolio_internal_portfolio"),
             portfolioId: null,
-            getWidget: function(portfolioId) {
+            getComment: function(portfolioId) {
                 this.portfolioId = portfolioId;
 
                 var comment = $resource(
