@@ -1,7 +1,7 @@
 'use strict';
 
 portfolioApp
-    .factory("Portfolio", ["$resource", "widgetFactory", "widgetsConfig", "urlInterpolator", function($resource, widgetFactory, widgetsConfig, urlInterpolator){
+    .factory("Portfolio", ["$resource", function($resource){
         var url = Routing.generate("icap_portfolio_internal_portfolio") + "/:portfolioId";
         var portfolio = $resource(url,
             {
