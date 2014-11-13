@@ -25,6 +25,7 @@ use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
 use Claroline\CoreBundle\Manager\Exception\ToolPositionAlreadyOccupiedException;
 use Claroline\CoreBundle\Manager\Exception\UnremovableToolException;
 use Claroline\CoreBundle\Manager\ToolMaskDecoderManager;
+use Claroline\CoreBundle\Manager\ToolRightsManager;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -51,16 +52,19 @@ class ToolManager
     private $roleManager;
     /** @var ToolMaskDecoderManager */
     private $toolMaskManager;
+    /** @var ToolRightsManager */
+    private $toolRightsManager;
 
     /**
      * Constructor.
      *
      * @DI\InjectParams({
-     *     "ed"              = @DI\Inject("claroline.event.event_dispatcher"),
-     *     "utilities"       = @DI\Inject("claroline.utilities.misc"),
-     *     "om"              = @DI\Inject("claroline.persistence.object_manager"),
-     *     "roleManager"     = @DI\Inject("claroline.manager.role_manager"),
-     *     "toolMaskManager" = @DI\Inject("claroline.manager.tool_mask_decoder_manager")
+     *     "ed"                = @DI\Inject("claroline.event.event_dispatcher"),
+     *     "utilities"         = @DI\Inject("claroline.utilities.misc"),
+     *     "om"                = @DI\Inject("claroline.persistence.object_manager"),
+     *     "roleManager"       = @DI\Inject("claroline.manager.role_manager"),
+     *     "toolMaskManager"   = @DI\Inject("claroline.manager.tool_mask_decoder_manager"),
+     *     "toolRightsManager" = @DI\Inject("claroline.manager.tool_rights_manager")
      * })
      */
     public function __construct(
@@ -68,7 +72,8 @@ class ToolManager
         ClaroUtilities $utilities,
         ObjectManager $om,
         RoleManager $roleManager,
-        ToolMaskDecoderManager $toolMaskManager
+        ToolMaskDecoderManager $toolMaskManager,
+        ToolRightsManager $toolRightsManager
     )
     {
         $this->orderedToolRepo = $om->getRepository('ClarolineCoreBundle:Tool\OrderedTool');
@@ -80,6 +85,7 @@ class ToolManager
         $this->om = $om;
         $this->roleManager = $roleManager;
         $this->toolMaskManager = $toolMaskManager;
+        $this->toolRightsManager = $toolRightsManager;
     }
 
     public function create(Tool $tool)
@@ -243,6 +249,40 @@ class ToolManager
         $wsRoles = $this->roleManager->getWorkspaceConfigurableRoles($workspace);
         $existingTools = array();
         $maskDecoders = array();
+        $otVisibility = array();
+        $otDecoders = array();
+        $rights = $this->toolRightsManager->getRightsForOrderedTools($ot);
+        $decoders = $this->toolMaskManager->getAllMaskDecoders();
+
+        foreach ($decoders as $decoder) {
+            $tool = $decoder->getTool();
+
+            if (!isset($maskDecoders[$tool->getId()])) {
+                $maskDecoders[$tool->getId()] = array();
+            }
+            $maskDecoders[$tool->getId()][$decoder->getName()] = $decoder;
+
+            if (!isset($otDecoders[$tool->getId()])) {
+                $otDecoders[$tool->getId()] = array();
+            }
+            $otDecoders[$tool->getId()][] = $decoder;
+        }
+
+        foreach ($rights as $right) {
+            $rightOt = $right->getOrderedTool();
+            $rightRole = $right->getRole();
+            $rightTool = $rightOt->getTool();
+            $mask = $right->getMask();
+
+            if (!isset($otVisibility[$rightOt->getId()])) {
+                $otVisibility[$rightOt->getId()] = array();
+            }
+            $otVisibility[$rightOt->getId()][$rightRole->getId()] =
+                $this->toolMaskManager->decodeMaskWithDecoders(
+                    $mask,
+                    $otDecoders[$rightTool->getId()]
+                );
+        }
 
         foreach ($ot as $orderedTool) {
             if ($orderedTool->getTool()->isDisplayableInWorkspace()) {
@@ -250,13 +290,12 @@ class ToolManager
                 foreach ($wsRoles as $role) {
                     $roleVisibility[$role->getId()] = array();
                 }
-                $rights = $orderedTool->getRights();
 
-                foreach ($rights as $right) {
-                    $rightRole = $right->getRole();
-                    $mask = $right->getMask();
-                    $roleVisibility[$rightRole->getId()] = $this->toolMaskManager
-                        ->decodeMask($mask, $orderedTool->getTool());
+                if (isset($otVisibility[$orderedTool->getId()])) {
+
+                    foreach ($otVisibility[$orderedTool->getId()] as $key => $value) {
+                        $roleVisibility[$key] = $value;
+                    }
                 }
 
                 $existingTools[] = array(
@@ -268,16 +307,6 @@ class ToolManager
                     'orderTool' => $orderedTool
                 );
             }
-        }
-        $decoders = $this->toolMaskManager->getAllMaskDecoders();
-
-        foreach ($decoders as $decoder) {
-            $tool = $decoder->getTool();
-
-            if (!isset($maskDecoders[$tool->getId()])) {
-                $maskDecoders[$tool->getId()] = array();
-            }
-            $maskDecoders[$tool->getId()][$decoder->getName()] = $decoder;
         }
 
         return array(

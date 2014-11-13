@@ -50,4 +50,25 @@ class ToolRightsRepository extends EntityRepository
 
         return $executeQuery ? $query->getOneOrNullResult() : $query;
     }
+
+    public function findRightsForOrderedTools(
+        array $orderedTools,
+        $executeQuery = true
+    )
+    {
+        if (count($orderedTools) === 0) {
+
+            return array();
+        } else {
+            $dql = '
+                SELECT tr
+                FROM Claroline\CoreBundle\Entity\Tool\ToolRights tr
+                WHERE tr.orderedTool IN (:orderedTools)
+            ';
+            $query = $this->_em->createQuery($dql);
+            $query->setParameter('orderedTools', $orderedTools);
+
+            return $executeQuery ? $query->getResult() : $query;
+        }
+    }
 }

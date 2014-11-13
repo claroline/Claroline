@@ -349,7 +349,12 @@ class WorkspaceManager
      * @param string|null       $toolName
      * @return array[boolean]
      */
-    public function getAccesses(TokenInterface $token, array $workspaces, $toolName = null)
+    public function getAccesses(
+        TokenInterface $token,
+        array $workspaces,
+        $toolName = null,
+        $action = 'open'
+    )
     {
         $userRoleNames = $this->sut->getRoles($token);
         $accesses = array();
@@ -377,7 +382,7 @@ class WorkspaceManager
         if (!$hasAllAccesses) {
             $em = $this->container->get('doctrine.orm.entity_manager');
             $openWsIds = $em->getRepository('ClarolineCoreBundle:Workspace\Workspace')
-                ->findOpenWorkspaceIds($userRoleNames, $workspacesWithoutManagerRole, $toolName);
+                ->findOpenWorkspaceIds($userRoleNames, $workspacesWithoutManagerRole, $toolName, $action);
 
             foreach ($openWsIds as $idRow) {
                 $accesses[$idRow['id']] = true;

@@ -27,39 +27,26 @@ class OrderedToolRepository extends EntityRepository
      */
     public function findByWorkspaceAndRoles(Workspace $workspace, array $roles)
     {
-        $rolesRestriction = '';
-        $first = true;
-        $i = 0;
+        if (count($roles) === 0) {
 
-        foreach ($roles as $roleName) {
-            if ($first) {
-                $first = false;
-                $rolesRestriction .= "(r.name like :role{$i}";
-            } else {
-                $rolesRestriction .= " OR r.name like :role{$i}";
-            }
-            $i++;
+            return array();
+        } else {
+            $dql = '
+                SELECT ot
+                FROM Claroline\CoreBundle\Entity\Tool\OrderedTool ot
+                JOIN ot.rights r
+                JOIN r.role rr
+                WHERE ot.workspace = :workspace
+                AND rr.name IN (:roleNames)
+                AND BIT_AND(r.mask, 1) = 1
+                ORDER BY ot.order
+            ';
+            $query = $this->_em->createQuery($dql);
+            $query->setParameter('workspace', $workspace);
+            $query->setParameter('roleNames', $roles);
+
+            return $query->getResult();
         }
-
-        $rolesRestriction .= ')';
-        $dql = "
-            SELECT ot FROM Claroline\CoreBundle\Entity\Tool\OrderedTool ot
-            JOIN ot.workspace ws
-            JOIN ot.roles r
-            WHERE ws.id = {$workspace->getId()}
-            AND {$rolesRestriction}
-            ORDER BY ot.order
-        ";
-        $query = $this->_em->createQuery($dql);
-
-        $i = 0;
-        
-        foreach ($roles as $roleName) {
-            $query->setParameter("role{$i}", $roleName);
-            $i++;
-        }
-
-        return $query->getResult();
     }
 
     public function incWorkspaceOrderedToolOrderForRange(

@@ -80,6 +80,19 @@ class ToolMaskDecoderManager
         return $perms;
     }
 
+    public function decodeMaskWithDecoders($mask, array $decoders)
+    {
+        $perms = array();
+
+        foreach ($decoders as $decoder) {
+            $perms[$decoder->getName()] = ($mask & $decoder->getValue()) ?
+                true:
+                false;
+        }
+
+        return $perms;
+    }
+
 
     /***** ToolRightsRepository access methods *****/
 

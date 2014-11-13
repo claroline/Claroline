@@ -99,49 +99,6 @@ class WorkspaceToolsParametersController extends AbstractParametersController
 
     /**
      * @EXT\Route(
-     *     "/{workspace}/tools/edit",
-     *     name="claro_workspace_tools_roles_edit",
-     *     options={"expose"=true}
-     * )
-     * @EXT\Method("POST")
-     */
-    public function editToolsRolesAction(Workspace $workspace)
-    {
-        $this->checkAccess($workspace);
-        $parameters = $this->request->request->all();
-        $this->om->startFlushSuite();
-        //moving tools;
-        foreach ($parameters as $parameter => $value) {
-            if (strpos($parameter, 'tool-') === 0) {
-                $toolId = (int) str_replace('tool-', '', $parameter);
-                $tool = $this->toolManager->getToolById($toolId);
-                $this->toolManager->setToolPosition($tool, $value, null, $workspace);
-            }
-        }
-
-        //reset the visiblity for every tool
-        $this->toolManager->resetToolsVisiblity(null, $workspace);
-
-        //set tool visibility
-        foreach ($parameters as $parameter => $value) {
-            if (strpos($parameter, 'chk-') === 0) {
-                //regex are evil
-                $matches = array();
-                preg_match('/tool-(.*?)-/', $parameter, $matches);
-                $tool = $this->toolManager->getToolById((int) $matches[1]);
-                preg_match('/role-(.*)/', $parameter, $matches);
-                $role = $this->roleManager->getRole($matches[1]);
-                $this->toolManager->addRole($tool, $role, $workspace);
-            }
-        }
-
-        $this->om->endFlushSuite();
-
-        return new Response();
-    }
-
-    /**
-     * @EXT\Route(
      *     "/{workspace}/tools/{tool}/editform",
      *     name="claro_workspace_order_tool_edit_form"
      * )

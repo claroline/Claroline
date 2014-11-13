@@ -107,4 +107,15 @@ class ToolRightsManager
             $executeQuery
         );
     }
+
+    public function getRightsForOrderedTools(
+        array $orderedTools,
+        $executeQuery = true
+    )
+    {
+        return $this->toolRightsRepo->findRightsForOrderedTools(
+            $orderedTools,
+            $executeQuery
+        );
+    }
 }
