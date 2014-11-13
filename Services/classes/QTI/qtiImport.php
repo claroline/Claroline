@@ -328,7 +328,10 @@ abstract class qtiImport
         foreach ($domEl->attributes as $attr) {
             $html .= $attr->nodeName.'="' . $attr->nodeValue . '"';
         }
-        $html .= '>' . $domEl->nodeValue . '</a>';
+        $html .= '>' . $domEl->nodeValue;
+        if ($tagName == 'a') {
+            $html .= '</a>';
+        }
 
         return $html;
     }
