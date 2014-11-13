@@ -176,6 +176,7 @@ abstract class qtiImport
                 $desc .= $child->textContent;
             } else if ($child->nodeName == 'a' || $child->nodeName == 'img') {
                 $desc .= $this->domElementToString($child);
+                $ib->removeChild($child);
             }
             $this->question->setDescription($desc);
         }
@@ -309,14 +310,14 @@ abstract class qtiImport
             $this->createDirQTIImport($ws);
         }
     }
-    
+
     /**
      * To convet a domElement to string
      *
      * @access private
      *
      * @param DOMNodelist::item $domEl element of dom
-     * 
+     *
      * @return String
      *
      */
@@ -328,7 +329,7 @@ abstract class qtiImport
             $html .= $attr->nodeName.'="' . $attr->nodeValue . '"';
         }
         $html .= '>' . $domEl->nodeValue . '</a>';
-        
+
         return $html;
     }
 
