@@ -18,6 +18,20 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class PortfolioController extends BaseController
 {
     /**
+     * @Route("/portfolio", name="icap_portfolio_internal_portfolios", options={"expose"=true})
+     * @Method({"GET"})
+     *
+     * @ParamConverter("loggedUser", options={"authenticatedUser" = true})
+     */
+    public function getAllAction(User $loggedUser)
+    {
+        $this->checkPortfolioToolAccess();
+
+        $response = new JsonResponse($this->getPortfolioManager()->getUserGuidedPortfoliosData($loggedUser));
+
+        return $response;
+    }
+    /**
      * @Route("/portfolio/{id}", name="icap_portfolio_internal_portfolio", options={"expose"=true})
      * @Method({"GET"})
      *

@@ -82,7 +82,6 @@ portfolioApp
             createEmptyWidget: function(portfolioId, type, istypeUnique, column) {
                 var newWidget;
                 var widget = widgetFactory.getWidget(portfolioId, type);
-
                 if (this.emptyWidgets[type]) {
                     newWidget = new widget(angular.copy(this.emptyWidgets[type]));
                     this.edit(newWidget);

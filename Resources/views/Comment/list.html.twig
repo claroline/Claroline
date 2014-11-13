@@ -32,7 +32,7 @@
                      data-ng-class="{'unread': 0 < portfolio.unreadComments, 'active': selectedPortfolio == portfolio.id}"
                      data-ng-click="selectPortolio(portfolio.id)" data-ng-show="portfolios.$resolved">
                     <div class="media-body">
-                        <h5 class="media-heading">{% verbatim %}{{ portfolio.id }}{{ portfolio.title }}<span data-ng-show="0 < portfolio.unreadComments" class="badge pull-right">{{ portfolio.unreadComments }}</span>{% endverbatim %}</h5>
+                        <h5 class="media-heading">{% verbatim %}{{ portfolio.title }}<span data-ng-show="0 < portfolio.unreadComments" class="badge pull-right">{{ portfolio.unreadComments }}</span>{% endverbatim %}</h5>
                     </div>
                 </div>
             </div>
@@ -114,6 +114,8 @@
 
     <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/comments/directives/portfoliosDirective.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/comments/directives/commentsDirective.js') }}"></script>
+
+    <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/comments/services/portfolioManager.js') }}"></script>
 
     <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/modules/trustAsHtml.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/modules/translation.js') }}"></script>

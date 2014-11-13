@@ -257,6 +257,30 @@ class PortfolioManager
     }
 
     /**
+     * @param User $user
+     *
+     * @return array
+     */
+    public function getUserGuidedPortfoliosData(User $user)
+    {
+        /** @var \Icap\PortfolioBundle\Entity\Portfolio[] $portfolios */
+        $portfolios = $this->entityManager->getRepository("IcapPortfolioBundle:Portfolio")->findAvailableToGuideByUser($user);
+
+        $data = array();
+
+        foreach ($portfolios as $portfolio) {
+            $data[] = array(
+                'id'             => $portfolio->getId(),
+                'title'          => $portfolio->getTitleWidget()->getTitle(),
+                'unreadComments' => $portfolio->getCountUnreadComments(),
+                'commentsViewAt' => $portfolio->getCommentsViewAt()->format(DATE_W3C)
+            );
+        }
+
+        return $data;
+    }
+
+    /**
      * @param object $data
      *
      * @return \Symfony\Component\Form\Form|\Symfony\Component\Form\FormInterface
