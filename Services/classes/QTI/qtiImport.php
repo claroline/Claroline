@@ -190,7 +190,8 @@ abstract class qtiImport
      */
     private function objectToResource()
     {
-        $objects = $this->assessmentItem->getElementsByTagName("object");
+        $elements = array();
+        $objects = $this->assessmentItem->getElementsByTagName('object');
         $ws      = $this->user->getPersonalWorkspace();
         $manager = $this->container->get('claroline.manager.resource_manager');
         $filesDirectory = $this->container->getParameter('claroline.param.files_directory');
@@ -216,7 +217,22 @@ abstract class qtiImport
                                     $ws,
                                     $this->dirQTI
                                 );
-            $this->replaceNode($ob, $abstractResource->getResourceNode());
+            $elements[] = array($ob, $abstractResource->getResourceNode());
+        }
+        $this->callReplaceNode($elements);
+    }
+
+    /**
+     *
+     * @access private
+     *
+     * @param array of array $elements
+     *
+     */
+    private function callReplaceNode($elements)
+    {
+        foreach ($elements as $el) {
+            $this->replaceNode($el[0], $el[1]);
         }
     }
 
