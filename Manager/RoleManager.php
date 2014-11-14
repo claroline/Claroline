@@ -541,17 +541,6 @@ class RoleManager
     }
 
     /**
-     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
-     * @param \Claroline\CoreBundle\Entity\Tool\Tool                   $tool
-     *
-     * @return \Claroline\CoreBundle\Entity\Role[]
-     */
-    public function getRolesByWorkspaceAndTool(Workspace $workspace, Tool $tool)
-    {
-        return $this->roleRepo->findByWorkspaceAndTool($workspace, $tool);
-    }
-
-    /**
      * @param string $search
      *
      * @return \Claroline\CoreBundle\Entity\Role[]

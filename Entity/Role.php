@@ -93,14 +93,6 @@ class Role implements RoleInterface
 
     /**
      * @ORM\ManyToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Tool\OrderedTool",
-     *     mappedBy="roles"
-     * )
-     */
-    protected $orderedTools;
-
-    /**
-     * @ORM\ManyToMany(
      *     targetEntity="Claroline\CoreBundle\Entity\Tool\AdminTool",
      *     mappedBy="roles"
      * )

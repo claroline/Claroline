@@ -157,12 +157,14 @@ class ToolsImporter extends Importer implements ConfigurationInterface
 
             $position++;
 
-            if (isset($tool['tool']['roles']) && $addRoleToOtr) {
-                foreach ($tool['tool']['roles'] as $role) {
-                    $roleEntity = $this->roleManager->getRoleByName($role['name'] . '_' . $workspace->getGuid());
-                    $this->toolManager->addRoleToOrderedTool($otr, $entityRoles[$role['name']]);
-                }
-            }
+//  Must be updated
+//  
+//            if (isset($tool['tool']['roles']) && $addRoleToOtr) {
+//                foreach ($tool['tool']['roles'] as $role) {
+//                    $roleEntity = $this->roleManager->getRoleByName($role['name'] . '_' . $workspace->getGuid());
+//                    $this->toolManager->addRoleToOrderedTool($otr, $entityRoles[$role['name']]);
+//                }
+//            }
 
             $importer = $this->getImporterByName($tool['tool']['type']);
 
@@ -187,9 +189,11 @@ class ToolsImporter extends Importer implements ConfigurationInterface
         foreach ($workspaceTools as $workspaceTool) {
             $roles = array();
 
-            foreach ($workspaceTool->getRoles() as $role) {
-                $roles[] = array('name' => $this->roleManager->getWorkspaceRoleBaseName($role));
-            }
+//  Must be updated
+//
+//            foreach ($workspaceTool->getRoles() as $role) {
+//                $roles[] = array('name' => $this->roleManager->getWorkspaceRoleBaseName($role));
+//            }
 
             $tool = array(
                 'type'        => $workspaceTool->getTool()->getName(),

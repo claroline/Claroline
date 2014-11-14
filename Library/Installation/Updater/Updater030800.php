@@ -11,10 +11,13 @@
 namespace Claroline\CoreBundle\Library\Installation\Updater;
 
 use Claroline\CoreBundle\Entity\Tool\ToolMaskDecoder;
+use Doctrine\DBAL\Connection;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class Updater030800
 {
+    /** @var  Connection */
+    private $connection;
     private $container;
     private $maskManager;
     private $om;
@@ -24,6 +27,7 @@ class Updater030800
 
     public function __construct(ContainerInterface $container)
     {
+        $this->connection = $container->get('doctrine.dbal.default_connection');
         $this->container = $container;
         $this->maskManager =
             $container->get('claroline.manager.tool_mask_decoder_manager');
@@ -35,15 +39,22 @@ class Updater030800
             $container->get('claroline.manager.tool_rights_manager');
     }
 
+    public function preUpdate()
+    {
+        $this->orderedToolsRolesTableBackup();
+    }
+
     public function postUpdate()
     {
         $this->om->startFlushSuite();
         $this->createDefaultToolMaskDecoders();
         $this->updateToolsRights();
         $this->om->endFlushSuite();
+        $this->deleteBackupTable();
+        $this->emptyOrderedToolRoleTable();
     }
 
-    public function createDefaultToolMaskDecoders()
+    private function createDefaultToolMaskDecoders()
     {
         $this->log('Creating default tool mask decoders...');
         $this->om->startFlushSuite();
@@ -59,28 +70,70 @@ class Updater030800
         $this->om->endFlushSuite();
     }
 
-    public function updateToolsRights()
+    private function updateToolsRights()
     {
         $this->log('Updating tool rights...');
-        $this->om->startFlushSuite();
-        $orderedTools = $this->orderedToolRepo->findAll();
 
-        foreach ($orderedTools as $orderedTool) {
+        $query = 'SELECT * FROM claro_ordered_tool_role_temp';
+        $rows = $this->connection->query($query);
+        $value = ToolMaskDecoder::$defaultValues['open'];
+        $count = 0;
+        $insertQuery = "
+            INSERT INTO claro_tool_rights (role_id, ordered_tool_id, mask)
+            VALUES
+        ";
 
-            foreach ($orderedTool->getRoles() as $role) {
-                $toolRights = $this->toolRightsManager
-                    ->getRightsByRoleAndOrderedTool($role, $orderedTool);
+        foreach ($rows as $row) {
+            $rights = $this->toolRightsManager->getRightsByRoleIdAndOrderedToolId(
+                $row['role_id'],
+                $row['orderedtool_id']
+            );
 
-                if (count($toolRights) === 0) {
-                    $this->toolRightsManager->createToolRights(
-                        $orderedTool,
-                        $role,
-                        ToolMaskDecoder::$defaultValues['open']
-                    );
+            if (is_null($rights)) {
+
+                if ($count === 0) {
+                    $insertQuery .= "({$row['role_id']}, {$row['orderedtool_id']}, {$value})";
+                } else {
+                    $insertQuery .= ", ({$row['role_id']}, {$row['orderedtool_id']}, {$value})";
                 }
+                $count++;
             }
         }
-        $this->om->endFlushSuite();
+
+        if ($count > 0) {
+            $this->connection->query($insertQuery);
+        }
+    }
+
+    private function orderedToolsRolesTableBackup()
+    {
+        $tablesList = $this->connection->getSchemaManager()->listTableNames();
+
+        if (!in_array('claro_ordered_tool_role_temp', $tablesList)) {
+            $this->log('backing up claro_ordered_tool_role table...');
+
+            $query = '
+                CREATE TABLE claro_ordered_tool_role_temp
+                AS (SELECT * FROM claro_ordered_tool_role)
+            ';
+            $this->connection->query($query);
+        } else {
+            $this->log('claro_ordered_tool_role_temp talbe already exists');
+        }
+    }
+
+    private function deleteBackupTable()
+    {
+        $this->log('deleting temporary table...');
+        $this->connection->query('DROP TABLE claro_ordered_tool_role_temp');
+    }
+
+    private function emptyOrderedToolRoleTable()
+    {
+        $this->log('emptying claro_ordered_tool_role table...');
+        $this->connection->query('SET FOREIGN_KEY_CHECKS=0');
+        $this->connection->query('TRUNCATE TABLE claro_ordered_tool_role');
+        $this->connection->query('SET FOREIGN_KEY_CHECKS=1');
     }
 
     public function setLogger($logger)

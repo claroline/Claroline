@@ -118,4 +118,11 @@ class ToolRightsManager
             $executeQuery
         );
     }
+
+    public function getRightsByRoleIdAndOrderedToolId($roleId, $orderedToolId) {
+
+        return $this->toolRightsRepo->findOneBy(
+            array('role' => $roleId, 'orderedTool' => $orderedToolId)
+        );
+    }
 }

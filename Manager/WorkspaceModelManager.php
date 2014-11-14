@@ -377,26 +377,28 @@ class WorkspaceModelManager
                 $workspace
             );
 
-            $roles = $orderedTool->getRoles();
-
-            foreach ($roles as $role) {
-
-                if ($role->getType() === 1) {
-                    $this->toolManager->addRoleToOrderedTool(
-                        $workspaceOrderedTool,
-                        $role
-                    );
-                } else {
-                    $key = $role->getTranslationKey();
-
-                    if (isset($workspaceRoles[$key]) && !empty($workspaceRoles[$key])) {
-                        $this->toolManager->addRoleToOrderedTool(
-                            $workspaceOrderedTool,
-                            $workspaceRoles[$key]
-                        );
-                    }
-                }
-            }
+//  Must be updated
+//  
+//            $roles = $orderedTool->getRoles();
+//
+//            foreach ($roles as $role) {
+//
+//                if ($role->getType() === 1) {
+//                    $this->toolManager->addRoleToOrderedTool(
+//                        $workspaceOrderedTool,
+//                        $role
+//                    );
+//                } else {
+//                    $key = $role->getTranslationKey();
+//
+//                    if (isset($workspaceRoles[$key]) && !empty($workspaceRoles[$key])) {
+//                        $this->toolManager->addRoleToOrderedTool(
+//                            $workspaceOrderedTool,
+//                            $workspaceRoles[$key]
+//                        );
+//                    }
+//                }
+//            }
         }
     }
 

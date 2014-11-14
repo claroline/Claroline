@@ -129,54 +129,6 @@ class ToolManager
     }
 
     /**
-     * @param \Claroline\CoreBundle\Entity\Tool\Tool                   $tool
-     * @param \Claroline\CoreBundle\Entity\Role                        $role
-     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
-     */
-    public function addRole(Tool $tool, Role $role, Workspace $workspace)
-    {
-        $otr = $this->orderedToolRepo->findOneBy(array('tool' => $tool, 'workspace' => $workspace));
-        $otr->addRole($role);
-        $this->om->persist($otr);
-        $this->om->flush();
-    }
-
-    /**
-     * @param \Claroline\CoreBundle\Entity\Tool\OrderedTool $otr
-     * @param \Claroline\CoreBundle\Entity\Role             $role
-     */
-    public function addRoleToOrderedTool(OrderedTool $otr, Role $role)
-    {
-        $otr->addRole($role);
-        $this->om->persist($otr);
-        $this->om->flush();
-    }
-
-    /**
-     * @param \Claroline\CoreBundle\Entity\Tool\Tool                   $tool
-     * @param \Claroline\CoreBundle\Entity\Role                        $role
-     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
-     */
-    public function removeRole(Tool $tool, Role $role, Workspace $workspace)
-    {
-        $otr = $this->orderedToolRepo->findOneBy(array('tool' => $tool, 'workspace' => $workspace));
-        $otr->removeRole($role);
-        $this->om->persist($otr);
-        $this->om->flush();
-    }
-
-    /**
-     * @param \Claroline\CoreBundle\Entity\Tool\OrderedTool $otr
-     * @param \Claroline\CoreBundle\Entity\Role             $role
-     */
-    public function removeRoleFromOrderedTool(OrderedTool $otr, Role $role)
-    {
-        $otr->removeRole($role);
-        $this->om->persist($otr);
-        $this->om->flush();
-    }
-
-    /**
      * @param \Claroline\CoreBundle\Entity\User $user
      *
      * @return \Claroline\CoreBundle\Entity\Tool\Tool
@@ -473,7 +425,6 @@ class ToolManager
         $orderedTools = $this->orderedToolRepo->findBy(array('user' => $user, 'workspace' => $workspace));
 
         foreach ($orderedTools as $orderedTool) {
-            $orderedTool->resetRoles();
 
             if ($user && $orderedTool->getTool()->getName() !== 'parameters') {
                 $orderedTool->setVisibleInDesktop(false);

@@ -81,16 +81,6 @@ class OrderedTool
     protected $isVisibleInDesktop = false;
 
     /**
-     * @ORM\ManyToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Role",
-     *     inversedBy="orderedTools",
-     *     cascade={"merge"}
-     * )
-     * @ORM\JoinTable(name="claro_ordered_tool_role")
-     */
-    protected $roles;
-
-    /**
      * @ORM\ManyToOne(
      *     targetEntity="Claroline\CoreBundle\Entity\User",
      *     cascade={"persist"},
@@ -110,7 +100,6 @@ class OrderedTool
 
     public function __construct()
     {
-        $this->roles = new ArrayCollection();
         $this->rights = new ArrayCollection();
     }
 
@@ -157,26 +146,6 @@ class OrderedTool
     public function getName()
     {
         return $this->name;
-    }
-
-    public function addRole(Role $role)
-    {
-        $this->roles->add($role);
-    }
-
-    public function removeRole(Role $role)
-    {
-        $this->roles->removeElement($role);
-    }
-
-    public function resetRoles()
-    {
-        $this->roles = new ArrayCollection();
-    }
-
-    public function getRoles()
-    {
-        return $this->roles;
     }
 
     public function setUser(User $user = null)
