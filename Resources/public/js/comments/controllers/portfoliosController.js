@@ -1,7 +1,7 @@
 'use strict';
 
 commentsApp
-    .controller("portfoliosController", ["$scope", "portfolioManager", function($scope, portfolioManager) {
+    .controller("portfoliosController", ["$scope", "portfolioManager", "commentsManager", function($scope, portfolioManager, commentsManager) {
         $scope.selectedPortfolio = window.currentPortfolio;
         $scope.portfolios = [];
 
@@ -10,9 +10,10 @@ commentsApp
             promise.then(
                 function(data) {
                     $scope.portfolios = data;
+                    commentsManager.init($scope.selectedPortfolio);
                 },
                 function(errorPayload) {
-                    console.error('failure loading movie', errorPayload);
+                    console.error('failure loading portfolios', errorPayload);
                 });
         };
 
