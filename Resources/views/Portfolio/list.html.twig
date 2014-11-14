@@ -142,7 +142,7 @@
                             {% set countUnreadComments = portfolio.countUnreadComments %}
                             <a href="{{ path('icap_portfolio_comments_list', {'portfolioSlug': portfolio.widgets.0.slug}) }}" title="{{ 'guide_exchange'|trans({}, 'icap_portfolio') }}"
                                class="btn btn-xs btn-default exchange_link{% if 0 < countUnreadComments %} highlight{% endif %}" data-toggle="tooltip" data-container="body" data-placement="top" >
-                                <span class="fa fa-comments-o"></span>
+                                <span class="fa fa-comment-o"></span>
                                 {% if 0 < countUnreadComments %} <span class="badge">{{ countUnreadComments }}</span>{% endif %}
                             </a>
                         </td>
@@ -168,6 +168,12 @@
             )
         }}
     {%  endif %}
+    <div class="pull-right">
+        <a href="{{ path('icap_portfolio_comments_list') }}" title="{{ 'portfolio_exchange_space'|trans({}, 'icap_portfolio') }}"
+           class="btn btn-sm btn-default" data-toggle="tooltip" data-container="body" data-placement="top" >
+            <span class="fa fa-comments-o"></span>
+        </a>
+    </div>
 {% endblock %}
 
 
