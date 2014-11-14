@@ -27,14 +27,16 @@
             <div class="title-container">
                 <p class="lead text-center">{{ 'portfolios'|trans({}, 'icap_portfolio') }}</p>
             </div>
-            <ul class="list-group portfolio-container loading" data-ng-class="{'loading': !portfolios.$resolved}" data-ng-init="init()">
-                <li class="list-group-item">My portfolios</li>
+            <ul class="list-group portfolio-container" data-ng-init="init()">
+                <li class="list-group-item title">My portfolios</li>
+                <li class="list-group-item loading" data-ng-class="{'loading': !portfolios.$resolved}" data-ng-show="!portfolios.$resolved"></li>
                 <li class="list-group-item portfolio ng-cloak" role="button" data-ng-repeat="portfolio in portfolios"
                      data-ng-class="{'unread': 0 < portfolio.unreadComments, 'active': selectedPortfolio == portfolio.id}"
                      data-ng-click="clickOnPortolio(portfolio.id)" data-ng-show="portfolios.$resolved">
                     {% verbatim %}{{ portfolio.title }}<span data-ng-show="0 < portfolio.unreadComments" class="badge pull-right">{{ portfolio.unreadComments }}</span>{% endverbatim %}
                 </li>
-                <li class="list-group-item">Portfolios I am guide on</li>
+                <li class="list-group-item title">Portfolios I am guide on</li>
+                <li class="list-group-item loading" data-ng-class="{'loading': !portfolios.$resolved}" data-ng-show="!portfolios.$resolved"></li>
                 <li class="list-group-item portfolio ng-cloak" role="button" data-ng-repeat="portfolio in portfolios"
                      data-ng-class="{'unread': 0 < portfolio.unreadComments, 'active': selectedPortfolio == portfolio.id}"
                      data-ng-click="clickOnPortolio(portfolio.id)" data-ng-show="portfolios.$resolved">
