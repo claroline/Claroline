@@ -10,7 +10,6 @@ commentsApp
             promise.then(
                 function(data) {
                     $scope.portfolios = data;
-                    $scope.portfolios.$resolved = true;
                 },
                 function(errorPayload) {
                     console.error('failure loading movie', errorPayload);

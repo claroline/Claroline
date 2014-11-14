@@ -9,6 +9,7 @@ commentsApp
                     var deferred = $q.defer();
                     $http.get(Routing.generate("icap_portfolio_internal_portfolios"))
                         .success(function(data) {
+                            data.$resolved = true;
                             deferred.resolve(data);
                         }).error(function(msg, code) {
                             deferred.reject(msg);
