@@ -269,7 +269,10 @@ class PortfolioManager
         $data = array();
 
         foreach ($portfolios as $portfolio) {
+            $type = ($user === $portfolio->getUser()) ? 'owned' : 'guided';
+
             $data[] = array(
+                'type'           => $type,
                 'id'             => $portfolio->getId(),
                 'title'          => $portfolio->getTitleWidget()->getTitle(),
                 'unreadComments' => $portfolio->getCountUnreadComments(),
