@@ -147,7 +147,7 @@
                 // Remove checked nodes for next time
                 nodes = {};
             };
-$scope, $http, HistoryFactory, PathFactory, StepFactory, ResourceFactory
+
             // Tiny MCE options
             $scope.tinymceOptions = {
                 relative_urls: false,
@@ -156,7 +156,6 @@ $scope, $http, HistoryFactory, PathFactory, StepFactory, ResourceFactory
                 browser_spellcheck : true,
                 autoresize_min_height: 100,
                 autoresize_max_height: 500,
-                content_css: EditorApp.webDir + 'bundles/clarolinecore/css/tinymce/tinymce.css',
                 plugins: [
                     'autoresize advlist autolink lists link image charmap print preview hr anchor pagebreak',
                     'searchreplace wordcount visualblocks visualchars fullscreen',
