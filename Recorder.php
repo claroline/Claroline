@@ -243,7 +243,8 @@ class Recorder
             if ($prettyName === $package->getPrettyName()) {
                 $autoload = $package->getAutoload();
                 if (isset($autoload['psr-0'])) {
-                    $prefixe = array_shift(array_keys($autoload['psr-0']));
+                    $key = array_keys($autoload['psr-0']);
+                    $prefixe = array_shift($key);
 
                     return $prefixe . '\\' . str_replace('\\', '', $prefixe);
                 } else {
