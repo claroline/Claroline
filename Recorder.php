@@ -49,18 +49,6 @@ class Recorder
         $this->vendorDir = $vendorDir;
         $installedFile = new JsonFile($this->vendorDir . '/composer/installed.json');
         $this->fromRepo = new InstalledFilesystemRepository($installedFile);
-        $toRepo = new ArrayRepository();
-        $pool = new Pool();
-        $pool->addRepository($this->fromRepo);
-        $pool->addRepository(new PlatformRepository());
-        $request = new Request($pool);
-
-        foreach ($this->fromRepo->getPackages() as $package) {
-            $request->install($package->getName());
-        }
-
-        $solver = new Solver(new DefaultPolicy(), $pool, $toRepo);
-        $this->operations = $solver->solve($request);
     }
 
     public function setLogger(\Closure $logger)
@@ -120,7 +108,7 @@ class Recorder
     {
         $orderedBundles = array();
 
-        foreach ($this->operations as $operation) {
+        foreach ($this->getOperations() as $operation) {
             $package = $operation->getPackage();
             $prettyName = $package->getPrettyName();
             $bundles = $this->detector->detectBundles($prettyName);
@@ -139,9 +127,7 @@ class Recorder
             }
         }
 
-        var_dump($orderedBundles);
         $orderedBundles = $this->orderClaroBundlesForInstall($orderedBundles);
-        var_dump($orderedBundles);
         $this->bundleHandler->writeBundleFile(array_unique($orderedBundles));
     }
 
@@ -179,7 +165,7 @@ class Recorder
     {
         $claroBundles = array();
         
-        foreach ($this->operations as $operation) {
+        foreach ($this->getOperations() as $operation) {
             $package = $operation->getPackage();
             if ($package->getType() === 'claroline-core'
                 || $package->getType() === 'claroline-plugin') {
@@ -251,6 +237,23 @@ class Recorder
         }
 
         return $dependencies;
+    }
+    
+    private function getOperations()
+    {
+        $toRepo = new ArrayRepository();
+        $pool = new Pool();
+        $pool->addRepository($this->fromRepo);
+        $pool->addRepository(new PlatformRepository());
+        $request = new Request($pool);
+
+        foreach ($this->fromRepo->getPackages() as $package) {
+            $request->install($package->getName());
+        }
+
+        $solver = new Solver(new DefaultPolicy(), $pool, $toRepo);
+        
+        return $solver->solve($request);
     }
 
     private function getNameSpace($prettyName)
