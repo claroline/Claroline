@@ -30,6 +30,10 @@
                     return !disabled.redo;
                 },
 
+                isEmpty: function () {
+                    return 0 === historyState || -1 === historyState;
+                },
+
                 /**
                  * Restore default history state (= empty history)
                  * @returns HistoryFactory

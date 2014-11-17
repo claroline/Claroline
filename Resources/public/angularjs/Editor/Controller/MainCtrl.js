@@ -136,7 +136,7 @@
             };
 
             $scope.closeEditor = function (returnUrl) {
-                if (0 === HistoryFactory.getHistoryState()) {
+                if (HistoryFactory.isEmpty()) {
                     // Path is not modified => exit without confirm
                     window.location = returnUrl;
                 }
