@@ -139,7 +139,9 @@ class Recorder
             }
         }
 
+        var_dump($orderedBundles);
         $orderedBundles = $this->orderClaroBundlesForInstall($orderedBundles);
+        var_dump($orderedBundles);
         $this->bundleHandler->writeBundleFile(array_unique($orderedBundles));
     }
 
