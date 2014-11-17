@@ -175,6 +175,8 @@ class Recorder
      */
     public function orderClaroBundlesForInstall(array $bundles)
     {
+        $claroBundles = array();
+        
         foreach ($this->operations as $operation) {
             $package = $operation->getPackage();
             if ($package->getType() === 'claroline-core'
