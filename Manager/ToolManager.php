@@ -116,8 +116,9 @@ class ToolManager
             $switchTool = $this->orderedToolRepo->findOneBy(array('workspace' => $workspace, 'order' => $position));
         }
 
-        if ($switchTool !== null) {
-            throw new ToolPositionAlreadyOccupiedException('A tool already exists at this position');
+        while (!is_null($switchTool)) {
+            $position++;
+            $switchTool = $this->orderedToolRepo->findOneBy(array('workspace' => $workspace, 'order' => $position));
         }
 
         $orderedTool = $this->om->factory('Claroline\CoreBundle\Entity\Tool\OrderedTool');
