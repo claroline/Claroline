@@ -204,12 +204,6 @@ class ToolsImporter extends Importer implements ConfigurationInterface
         $i = 0;
 
         foreach ($workspaceTools as $workspaceTool) {
-//  Must be updated
-//            $roles = array();
-//
-//            foreach ($workspaceTool->getRoles() as $role) {
-//                $roles[] = array('name' => $this->roleManager->getWorkspaceRoleBaseName($role));
-//            }
             $rights = array();
 
             foreach ($workspaceTool->getRights() as $right) {
