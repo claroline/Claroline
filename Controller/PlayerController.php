@@ -74,29 +74,31 @@ class PlayerController extends ContainerAware
      */
     public function displayAction(Workspace $workspace, Path $path, Step $currentStep)
     {
-        // we need to know if we are already playing the pass or comming from path list in order to show tree-brower or not
+        // we need to know if we are already playing the pass or coming from path list in order to show tree-brower or not
         $request = $this->container->get('request');
-        $referer = $request->headers->get('referer'); // prev route
-        $current = $request->get('_route'); // current route
         $router = $this->container->get('router');
-        $matcher = $router->getMatcher();   
-        
-        // get previous url        
-        $lastPath = substr($referer, strpos($referer, $request->getBaseUrl()));
-        $lastPath = str_replace($request->getBaseUrl(), '', $lastPath);
-    
-        $parameters = $matcher->match($lastPath);
-        $previous = $parameters['_route'];
-        
-        // if previous url does not match displayAction route we have to display the tree-browser modal
-        $showTree = $previous != $current ? true:false;
+
+        $referer = $request->headers->get('referer');
+        if (!empty($referer)) {
+            $context = $router->getContext();
+            $currentMethod = $context->getMethod();
+            $context->setMethod('HEAD');
+
+            $baseUrl = $request->getBaseUrl();
+            $lastPath = substr($referer, strpos($referer, $baseUrl) + strlen($baseUrl));
+            $previous = $router->getMatcher()->match($lastPath);
+
+            $context->setMethod($currentMethod);
+        }
 
         return array (
             'workspace' => $workspace,
             'path' => $path,
             'currentStep' => $currentStep,
             'edit' => false,
-            'showTree' => $showTree,
+
+            // if previous url does not match displayAction route we have to display the tree-browser modal
+            'showSummary' => $previous['_route'] != $request->get('_route'),
         );
     }
     

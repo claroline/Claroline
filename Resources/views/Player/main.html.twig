@@ -18,7 +18,7 @@
 
     <div id="path-main-container" class="path-player">
         <!-- Display modal only if we are not already playing the path -->
-        {% if showTree %}
+        {% if showSummary %}
             <div class="tree-browser">
                 {{ render(controller('innova_path.controller.path_player:displayTreeBrowserAction', { 'workspace': workspace, 'path': path, 'currentStep': currentStep } )) }}
             </div>
