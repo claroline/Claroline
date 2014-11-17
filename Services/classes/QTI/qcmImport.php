@@ -35,8 +35,6 @@ class qcmImport extends qtiImport {
         $this->doctrine->getManager()->flush();
 
         $this->createInteractionQCM();
-
-        //TODO resources liées
     }
 
     /**
