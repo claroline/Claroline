@@ -6,10 +6,49 @@
     </li>
 {% endmacro %}
 
-{% macro displayResourceFrame(resource, step) %}
+{% macro displayResourceFrame(resource) %}
     <div id="resource{{ resource.id }}" class="path-tab resource-tab">
-        <iframe style="border:none; padding:0;" id="{{ resource.id }}" seamless width="100%" class="resource-frame" src="{{ path('claro_resource_open', {'node': resource.id, 'resourceType': resource.resourceType.name }) }}"></iframe>
+        <iframe style="border:none; padding:0;" id="{{ resource.id }}" seamless width="100%" class="resource-frame" src=""></iframe>
     </div>
+{% endmacro %}
+
+{% macro displayResourceFrameJS(resource) %}
+    <script type="text/javascript">
+        $(document).ready(function() {
+            var $frame = $('iframe#{{ resource.id }}');
+
+            // Resize IFrame on load
+            $frame.load(function () {
+                resizeIframe($(this));
+
+                // Observe DOM modifications to resize IFrame to fit content
+                var MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
+                var observer = new MutationObserver(function (mutations, observer) {
+                    resizeIframe($frame);
+                });
+
+                observer.observe($frame.get(0).contentDocument.body, {
+                    subtree: true,
+                    childList: true
+                });
+
+                $frame.on('resize', function () {
+                    console.log('fired');
+                    resizeIframe($frame);
+                });
+            }).attr('src', '{{ path('claro_resource_open', {'node': resource.id, 'resourceType': resource.resourceType.name }) }}');
+
+            // Resize IFrame on window resize
+            $(window).on('resize', function () {
+                resizeIframe($frame);
+            });
+        });
+
+        function resizeIframe(frame) {
+            var height = frame.contents().height();
+            frame.animate({ height: height }, 100, function() {});
+        }
+    </script>
 {% endmacro %}
 
 {% macro displayTreeItem(item, currentStep, path, workspace) %}

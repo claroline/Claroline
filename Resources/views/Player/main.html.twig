@@ -61,6 +61,10 @@
 {% block javascripts %}
     {{ parent() }}
 
+    {% import 'InnovaPathBundle::Player/components/macros.html.twig' as macros %}
+
+    {{ macros.displayResourceFrameJS(currentStep.activity.primaryResource) }}
+
     <script type="text/javascript">
         var pathId = {{ path.id }};
         {% if currentStep == path.getRootStep %}

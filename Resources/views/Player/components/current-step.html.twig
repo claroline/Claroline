@@ -42,7 +42,7 @@
             </div>
 
             {% if currentStep.activity is not empty and currentStep.activity.primaryResource is not empty %}
-                {{ macros.displayResourceframe(currentStep.activity.primaryResource, currentStep) }}
+                {{ macros.displayResourceFrame(currentStep.activity.primaryResource) }}
             {% endif %}
         {% endif %}
     </div>
