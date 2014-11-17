@@ -34,6 +34,7 @@ class Recorder
     private $removableBundles = array();
     private $logger;
     private $fromRepo;
+    private $operations;
 
     public function __construct(
         Detector $detector,
@@ -48,6 +49,18 @@ class Recorder
         $this->vendorDir = $vendorDir;
         $installedFile = new JsonFile($this->vendorDir . '/composer/installed.json');
         $this->fromRepo = new InstalledFilesystemRepository($installedFile);
+        $toRepo = new ArrayRepository();
+        $pool = new Pool();
+        $pool->addRepository($this->fromRepo);
+        $pool->addRepository(new PlatformRepository());
+        $request = new Request($pool);
+
+        foreach ($this->fromRepo->getPackages() as $package) {
+            $request->install($package->getName());
+        }
+
+        $solver = new Solver(new DefaultPolicy(), $pool, $toRepo);
+        $this->operations = $solver->solve($request);
     }
 
     public function setLogger(\Closure $logger)
@@ -107,7 +120,8 @@ class Recorder
     {
         $orderedBundles = array();
 
-        foreach ($this->fromRepo->getCanonicalPackages() as $package) {
+        foreach ($this->operations as $operation) {
+            $package = $operation->getPackage();
             $prettyName = $package->getPrettyName();
             $bundles = $this->detector->detectBundles($prettyName);
             $autoload = $package->getAutoload();
@@ -156,20 +170,17 @@ class Recorder
     }
 
     /**
-     * This is a simplistic sort but it's enough for now 
+     * This is a simplistic sort but it's enough for now
      * (it won't handle recursive/multiple dependencies but it's enough for now)
      */
     public function orderClaroBundlesForInstall(array $bundles)
     {
-        //maybe use $this->fromRepo instead
-        $installedBundles = json_decode(file_get_contents($this->vendorDir . '/composer/installed.json'));
-        $claroBundles = array();
-
-        foreach ($installedBundles as $installedBundle) {
-            if ($installedBundle->type === 'claroline-core'
-                || $installedBundle->type === 'claroline-plugin') {
-                $claroBundles[$this->getNameSpace($installedBundle->name)] =
-                    $this->getDependencies($installedBundle->require);
+        foreach ($this->operations as $operation) {
+            $package = $operation->getPackage();
+            if ($package->getType() === 'claroline-core'
+                || $package->getType() === 'claroline-plugin') {
+                $claroBundles[$this->getNameSpace($package->getName())] =
+                    $this->getDependencies($package);
             }
         }
 
@@ -224,11 +235,12 @@ class Recorder
      * @param The require class wich was parsed from the installed.json with json_decode
      * @return array
      */
-    private function getDependencies(\StdClass $require)
+    private function getDependencies(PackageInterface $package)
     {
         $dependencies = [];
+        $requires = $package->getRequires();
 
-        foreach($require as $name => $el) {
+        foreach($requires as $name => $el) {
             if ($this->isClarolinePackage($name)) {
                 $dependencies[] = $this->getNameSpace($name);
             }
@@ -239,7 +251,9 @@ class Recorder
 
     private function getNameSpace($prettyName)
     {
-        foreach ($this->fromRepo->getCanonicalPackages() as $package) {
+        foreach ($this->operations as $operation) {
+            $package = $operation->getPackage();
+
             if ($prettyName === $package->getPrettyName()) {
                 $autoload = $package->getAutoload();
                 if (isset($autoload['psr-0'])) {
