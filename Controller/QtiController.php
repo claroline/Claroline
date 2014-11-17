@@ -15,6 +15,10 @@ class QtiController extends Controller {
      */
     public function importAction()
     {
+        if (strstr($_FILES["qtifile"]["type"], 'application/zip') === false) {
+            return $this->forward('UJMExoBundle:Question:index', array('qtiError' => true));
+        }
+        
         $qtiRepos = $this->container->get('ujm.qti_repository');
         $qtiRepos->createDirQTI();
 

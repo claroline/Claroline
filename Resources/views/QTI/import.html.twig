@@ -2,17 +2,17 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
+                <h3 class="panel-title">{{'QTI import'|trans}}</h3>
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                 </br>
             </div>
             <div class="modal-body">
-                <h3 class="panel-title">{{'QTI import'|trans}}</h3>
                 <form id="qtiImportForm" enctype="multipart/form-data" method="post"
                       action="{{ path('ujm_qti_import', { 'redirection': 0 }) }}">
-                    <input id="qtifile" name="qtifile" type="file" required="true" accept="application/zip"/>
+                    <input id="qtifile" class="form-control" name="qtifile" type="file" required="true" />
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">{{ 'cancel'|trans({}, 'platform') }}</button>
-                        <button type="submit" class="btn btn-primary" id="submit_picture" onclick="check_form();">
+                        <button type="submit" class="btn btn-primary" id="submit_picture">
                             {{ 'ok'|trans({}, 'platform') }}
                         </button>
                     </div>
@@ -23,6 +23,4 @@
 </div>
 <script type="text/javascript">
     $('#modalqtiimport').modal('toggle', 'show');
-    function check_form() {
-    }
 </script>

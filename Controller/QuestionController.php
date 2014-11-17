@@ -161,6 +161,10 @@ class QuestionController extends Controller
         $vars['listExo']              = $listExo;
         $vars['idExo']                = -1;
         $vars['QuestionsExo']         = 'false';
+        
+        if ($request->get("qtiError")) {
+            $vars['qtiError'] = $request->get("qtiError");
+        }
 
         return $this->render('UJMExoBundle:Question:index.html.twig', $vars);
     }
@@ -2330,74 +2334,5 @@ class QuestionController extends Controller
         }
 
         return new \Symfony\Component\HttpFoundation\Response;
-    }
-
-    /**
-     * Import question in QTI
-     *
-     * @access public
-     */
-    public function importAction()
-    {
-        $qtiRepos = $this->container->get('ujm.qti_repository');
-        $qtiRepos->createDirQTI();
-
-        $rst = 'its a zip file';
-        move_uploaded_file($_FILES["f1"]["tmp_name"],
-                $qtiRepos->getUserDir() . $_FILES["f1"]["name"]);
-        $zip = new \ZipArchive;
-        $zip->open($qtiRepos->getUserDir() . $_FILES["f1"]["name"]);
-        $res= zip_open($qtiRepos->getUserDir() . $_FILES["f1"]["name"]);
-
-        $zip->extractTo($qtiRepos->getUserDir());
-        $tab_liste_fichiers = array();
-        while ($zip_entry = zip_read($res)) {
-            if(zip_entry_filesize($zip_entry) > 0) {
-                $nom_fichier = zip_entry_name($zip_entry);
-                $rst =$rst . '-_-_-_'.$nom_fichier;
-                array_push($tab_liste_fichiers, $nom_fichier);
-
-            }
-        }
-        $zip->close();
-
-        if ($dh = opendir($qtiRepos->getUserDir())) {
-            while (($file = readdir($dh)) !== false) {
-                if (substr($file, -4, 4) == '.xml') {
-                    $imported = false;
-                    $document_xml = new \DomDocument();
-                    $document_xml->load($qtiRepos->getUserDir().'/'.$file);
-                    $ai = $document_xml->getElementsByTagName('assessmentItem')->item(0);
-                    if ($ai != null) {
-                        $ib = $ai->getElementsByTagName('itemBody')->item(0);
-                        foreach ($ib->childNodes as $node){
-                            if ($imported === false) {
-                                switch ($node->nodeName) {
-                                    case "choiceInteraction":
-                                        $qtiImport = $this->container->get('ujm.qti_qcm_import');
-                                        $qtiImport->import($qtiRepos, $document_xml);
-                                        $imported = true;
-                                        break;
-                                }
-                            }
-                        }
-                        if ($imported === false) {
-                            if (($ib->getElementsByTagName('textEntryInteraction')->length > 0)
-                                    || ($ib->getElementsByTagName('inlineChoiceInteraction')->length > 0)) {
-                                $qtiImport = $this->container->get('ujm.qti_hole_import');
-                                $qtiImport->import($qtiRepos, $document_xml);
-                                $imported = true;
-                            } else {
-                            }
-                        }
-                    }
-                }
-            }
-            closedir($dh);
-        }
-
-        $qtiRepos->removeDirectory();
-
-        return $this->forward('UJMExoBundle:Question:index', array());
     }
 }
