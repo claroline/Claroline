@@ -238,7 +238,7 @@ class QuestionController extends Controller
      *
      * @access public
      *
-     * @param integer $id id Interaction
+     * @param integer $id id Question
      * @param integer $exoID id Exercise if the user is in an exercise, -1 if the user is in the question bank
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -424,7 +424,7 @@ class QuestionController extends Controller
      *
      * @access public
      *
-     * @param integer $id id Interaction
+     * @param integer $id id Question
      * @param integer $exoID id Exercise if the user is in an exercise, -1 if the user is in the question bank
      * @param \Symfony\Component\Form\FormBuilder $form if form is not valid (see the methods update in InteractionGraphicContoller, InteractionQCMConteroller ...)
      *
@@ -664,7 +664,7 @@ class QuestionController extends Controller
      *
      * @access public
      *
-     * @param integer $id id Interaction
+     * @param integer $id id Question
      * @param integer $pageNow actual page for the pagination
      * @param integer $maxpage number max questions per page
      * @param integer $nbItem number of question
@@ -2056,7 +2056,12 @@ class QuestionController extends Controller
      */
     public function duplicateAction ($interID, $exoID)
     {
-        $question = $this->controlUserQuestion($interID);
+        $interaction = $this->getDoctrine()
+                            ->getManager()
+                            ->getRepository('UJMExoBundle:Interaction')
+                            ->find($interID);
+
+        $question = $this->controlUserQuestion($interaction->getQuestion()->getId());
         $sharedQuestion = $this->container->get('ujm.exercise_services')->controlUserSharedQuestion($interID);
 
         $allowToAccess = FALSE;
@@ -2065,16 +2070,11 @@ class QuestionController extends Controller
             $exercise = $this->getDoctrine()->getManager()->getRepository('UJMExoBundle:Exercise')->find($exoID);
 
             if ($this->container->get('ujm.exercise_services')
-                     ->isExerciseAdmin($exercise)) {
+                     ->isExerciseAdmin($exercise) === true) {
                 $allowToAccess = TRUE;
             }
         }
-
         if (count($question) > 0 || count($sharedQuestion) > 0 || $allowToAccess === TRUE) {
-            $interaction = $this->getDoctrine()
-                                ->getManager()
-                                ->getRepository('UJMExoBundle:Interaction')
-                                ->getInteraction($interID);
 
             $typeInter = $interaction->getType();
 

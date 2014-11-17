@@ -157,7 +157,7 @@
                     </a>
                 {% endif %}
                 {% if rights['allowDuplicateQuestion'] %}
-                <a class="btn btn-default" data-toggle="tooltip" title="{{ 'duplicate' | trans }}" href="{{ path('ujm_question_duplicate', { 'interID': interaction.id }) }}">
+                <a class="btn btn-default" data-toggle="tooltip" title="{{ 'duplicate' | trans }}" href="{{ path('ujm_question_duplicate', { 'interID': interaction.id, 'exoID': exerciseID }) }}">
                     <i class="fa fa-repeat"></i>
                 </a>
                 {# ham : Export Question button  #}
