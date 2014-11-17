@@ -396,10 +396,11 @@ class HomeController
      * The response is the word true in a string in success, otherwise false.
      *
      * @param string $type The type of the content.
-     * @param string $a    The id of the content 1.
-     * @param string $b    The id of the content 2.
+     * @param string $a The id of the content 1.
+     * @param string $b The id of the content 2.
+     * @param string $father The father content.
      *
-     * @Route("/content/reorder/{type}/{a}/{b}", requirements={"a" = "\d+"}, name="claroline_content_reorder")
+     * @Route("/content/reorder/{type}/{a}/{b}/{father}", requirements={"a" = "\d+"}, name="claroline_content_reorder")
      *
      * @Secure(roles="ROLE_ADMIN")
      *
@@ -407,13 +408,14 @@ class HomeController
      *
      * @ParamConverter("a", class = "ClarolineCoreBundle:Content", options = {"id" = "a"})
      * @ParamConverter("b", class = "ClarolineCoreBundle:Content", options = {"id" = "b"})
+     * @ParamConverter("father", class = "ClarolineCoreBundle:Content", options = {"id" = "father"})
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function reorderAction($type, $a, Content $b = null)
+    public function reorderAction($type, $a, Content $b = null, Content $father = null)
     {
         try {
-            $this->manager->reorderContent($type, $a, $b);
+            $this->manager->reorderContent($type, $a, $b, $father);
 
             return new Response('true');
         } catch (\Exeption $e) {

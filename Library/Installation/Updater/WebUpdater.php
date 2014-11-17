@@ -98,4 +98,4 @@ class WebUpdater
 
         return rmdir($dir);
     }
-} 
+}
