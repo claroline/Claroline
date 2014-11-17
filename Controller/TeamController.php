@@ -168,6 +168,10 @@ class TeamController extends Controller
         $this->checkToolAccess($workspace);
 
         $params = $this->teamManager->getParametersByWorkspace($workspace);
+
+        if (is_null($params)) {
+            $params = $this->teamManager->createWorkspaceTeamParameters($workspace);
+        }
         $userTeams = $this->teamManager->getTeamsByUserAndWorkspace($user, $workspace);
         $teams = $this->teamManager->getTeamsWithExclusionsByWorkspace(
             $workspace,
