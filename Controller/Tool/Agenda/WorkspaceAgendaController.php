@@ -108,7 +108,7 @@ class WorkspaceAgendaController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/workspace//{workspace}/import/modal/form",
+     *     "/workspace/{workspace}/import/modal/form",
      *     name="claro_workspace_agenda_import_form",
      *     options = {"expose"=true}
      * )
@@ -117,7 +117,7 @@ class WorkspaceAgendaController extends Controller
      */
     public function importEventsModalForm(Workspace $workspace)
     {
-        $this->checkAccess($workspace);
+        $this->checkAccess($workspace, 'edit');
         $form = $this->formFactory->create(FormFactory::TYPE_AGENDA_IMPORTER);
 
         return array('form' => $form->createView(), 'workspace' => $workspace);
@@ -135,7 +135,7 @@ class WorkspaceAgendaController extends Controller
      */
     public function importsEventsIcsAction(Workspace $workspace)
     {
-        $this->checkAccess($workspace);
+        $this->checkAccess($workspace, 'edit');
         $form = $this->formFactory->create(FormFactory::TYPE_AGENDA_IMPORTER);
         $form->handleRequest($this->request);
 
@@ -161,7 +161,7 @@ class WorkspaceAgendaController extends Controller
      */
     public function addEventModalFormAction(Workspace $workspace)
     {
-        $this->checkAccess($workspace);
+        $this->checkAccess($workspace, 'edit');
         $form = $this->formFactory->create(FormFactory::TYPE_AGENDA);
 
         return array(
@@ -187,7 +187,7 @@ class WorkspaceAgendaController extends Controller
      */
     public function addEventAction(Workspace $workspace)
     {
-        $this->checkAccess($workspace);
+        $this->checkAccess($workspace, 'edit');
         $form = $this->formFactory->create(FormFactory::TYPE_AGENDA);
         $form->handleRequest($this->request);
 
@@ -208,9 +208,9 @@ class WorkspaceAgendaController extends Controller
     }
 
     //checks the access of the agenda tool
-    private function checkAccess($workspace)
+    private function checkAccess($workspace, $action = 'open')
     {
-        if (!$this->security->isGranted('agenda', $workspace)) {
+        if (!$this->security->isGranted(array('agenda', $action), $workspace)) {
             throw new AccessDeniedException("The event cannot be updated");
         }
     }

@@ -37,12 +37,15 @@
                     <a href="{{ path('claro_workspace_agenda_export',{workspace: workspace.getId()}) }}" class="btn btn-default btn-xs"  role="button">
                         {{ 'export'|trans({}, 'agenda') }}
                     </a>
-                    <a id="import-ics-btn" href="{{ path('claro_workspace_agenda_import_form', {'workspace': workspace.getId()}) }}"
-                       class="btn btn-default btn-xs"
-                       role="button"
-                            >
-                        {{ 'import_agenda_file_file'|trans({}, 'agenda') }}
-                    </a>
+                    
+                    {% if canCreate %}
+                        <a id="import-ics-btn" href="{{ path('claro_workspace_agenda_import_form', {'workspace': workspace.getId()}) }}"
+                           class="btn btn-default btn-xs"
+                           role="button"
+                                >
+                            {{ 'import_agenda_file_file'|trans({}, 'agenda') }}
+                        </a>
+                    {% endif %}
                 </div>
 
                 <div class="panel panel-default">
@@ -71,7 +74,7 @@
     <script type='text/javascript'src='{{ asset('bundles/frontend/date.js') }}'></script>
     <script type='text/javascript'>
         $(function () {
-            Claroline.Calendar.initialize('workspace', {{ workspace.getId() }}, {{ canCreate }});
+            Claroline.Calendar.initialize('workspace', {{ workspace.getId() }}, {% if canCreate %}true{% else %}false{% endif %});
         });
     </script>
     <script type="text/javascript" src="{{ url('bazinga_exposetranslation_js', { 'domain_name': 'agenda' }) }}"></script>
