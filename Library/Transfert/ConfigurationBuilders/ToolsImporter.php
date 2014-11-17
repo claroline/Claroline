@@ -23,6 +23,7 @@ use Claroline\CoreBundle\Manager\ToolRightsManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\Resource\Directory;
+use Claroline\CoreBundle\Entity\Tool\ToolMaskDecoder;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 
 /**
@@ -162,23 +163,14 @@ class ToolsImporter extends Importer implements ConfigurationInterface
 
             $position++;
 
-//  Must be updated
-//  
-//            if (isset($tool['tool']['roles']) && $addRoleToOtr) {
-//                foreach ($tool['tool']['roles'] as $role) {
-//                    $roleEntity = $this->roleManager->getRoleByName($role['name'] . '_' . $workspace->getGuid());
+            if (isset($tool['tool']['roles']) && $addRoleToOtr) {
+                foreach ($tool['tool']['roles'] as $role) {
+                    $roleEntity = $this->roleManager->getRoleByName($role['name'] . '_' . $workspace->getGuid());
 //                    $this->toolManager->addRoleToOrderedTool($otr, $entityRoles[$role['name']]);
-//                }
-//            }
-            if (isset($tool['tool']['rights']) && $addRoleToOtr) {
-
-                foreach ($tool['tool']['rights'] as $right) {
-                    $roleEntity = $this->roleManager
-                        ->getRoleByName($right['role'] . '_' . $workspace->getGuid());
                     $this->toolRightManager->createToolRights(
                         $otr,
                         $entityRoles[$right['role']],
-                        $right['mask']
+                        ToolMaskDecoder::$defaultValues['open']
                     );
                 }
             }
@@ -204,21 +196,15 @@ class ToolsImporter extends Importer implements ConfigurationInterface
         $i = 0;
 
         foreach ($workspaceTools as $workspaceTool) {
-            $rights = array();
-
-            foreach ($workspaceTool->getRights() as $right) {
-                $role = $right->getRole();
-
-                $rights[] = array(
-                    'role' => $this->roleManager->getWorkspaceRoleBaseName($role),
-                    'mask' => $right->getMask()
-                );
+            $roles = array();
+            foreach ($workspaceTool->getRoles() as $role) {
+                $roles[] = array('name' => $this->roleManager->getWorkspaceRoleBaseName($role));
             }
 
             $tool = array(
                 'type'        => $workspaceTool->getTool()->getName(),
                 'translation' => $workspaceTool->getTool()->getDisplayName(),
-                'rights'  => $rights
+                'roles'       => $roles
             );
 
             $importer = $this->getImporterByName($workspaceTool->getTool()->getName());
