@@ -11,6 +11,7 @@
 namespace Claroline\CoreBundle\Repository;
 
 use Claroline\CoreBundle\Entity\Tool\Tool;
+use Claroline\CoreBundle\Entity\Tool\ToolMaskDecoder;
 use Doctrine\ORM\EntityRepository;
 
 class ToolMaskDecoderRepository extends EntityRepository
@@ -59,5 +60,21 @@ class ToolMaskDecoderRepository extends EntityRepository
         $query->setParameter('name', $name);
 
         return $executeQuery ? $query->getOneOrNullResult() : $query;
+    }
+
+    public function findCustomMaskDecodersByTool(Tool $tool, $executeQuery = true)
+    {
+        $dql = '
+            SELECT tmd
+            FROM Claroline\CoreBundle\Entity\Tool\ToolMaskDecoder tmd
+            WHERE tmd.tool = :tool
+            AND tmd.name NOT IN (:defaultActions)
+            ORDER BY tmd.value ASC
+        ';
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('tool', $tool);
+        $query->setParameter('defaultActions', ToolMaskDecoder::$defaultActions);
+
+        return $executeQuery ? $query->getResult() : $query;
     }
 }

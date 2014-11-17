@@ -899,7 +899,6 @@ to_workspace_members: 'aux membres de cet espace'
 today: 'Aujourd''hui'
 token: Token
 tool: Outil
-tool: Tool
 tool_can_be_edited: 'L''outil peut être modifié'
 tool_cannot_be_edited: 'L''outil ne peut pas être modifié'
 tool_form_displayName: 'Nom affiché'

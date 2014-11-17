@@ -40,21 +40,49 @@ class ToolMaskDecoderManager
      *
      * @param \Claroline\CoreBundle\Entity\Tool\Tool $tool
      */
-    public function createToolMaskDecoder(Tool $tool)
+    public function createDefaultToolMaskDecoders(Tool $tool)
     {
         foreach (ToolMaskDecoder::$defaultActions as $action) {
-            $maskDecoder = new ToolMaskDecoder();
-            $maskDecoder->setTool($tool);
-            $maskDecoder->setName($action);
-            $maskDecoder->setValue(ToolMaskDecoder::$defaultValues[$action]);
-            $maskDecoder->setGrantedIconClass(
-                ToolMaskDecoder::$defaultGrantedIconClass[$action]
-            );
-            $maskDecoder->setDeniedIconClass(
-                ToolMaskDecoder::$defaultDeniedIconClass[$action]
-            );
-            $this->om->persist($maskDecoder);
+            $maskDecoder = $this->maskRepo
+                ->findMaskDecoderByToolAndName($tool, $action);
+
+            if (is_null($maskDecoder)) {
+                $maskDecoder = new ToolMaskDecoder();
+                $maskDecoder->setTool($tool);
+                $maskDecoder->setName($action);
+                $maskDecoder->setValue(ToolMaskDecoder::$defaultValues[$action]);
+                $maskDecoder->setGrantedIconClass(
+                    ToolMaskDecoder::$defaultGrantedIconClass[$action]
+                );
+                $maskDecoder->setDeniedIconClass(
+                    ToolMaskDecoder::$defaultDeniedIconClass[$action]
+                );
+                $this->om->persist($maskDecoder);
+            }
         }
+        $this->om->flush();
+    }
+
+    /**
+     * Create a specific mask decoder for a tool.
+     *
+     * @param \Claroline\CoreBundle\Entity\Tool\Tool $tool
+     */
+    public function createToolMaskDecoder(
+        Tool $tool,
+        $action,
+        $value,
+        $grantedIconClass,
+        $deniedIconClass
+    )
+    {
+        $maskDecoder = new ToolMaskDecoder();
+        $maskDecoder->setTool($tool);
+        $maskDecoder->setName($action);
+        $maskDecoder->setValue($value);
+        $maskDecoder->setGrantedIconClass($grantedIconClass);
+        $maskDecoder->setDeniedIconClass($deniedIconClass);
+        $this->om->persist($maskDecoder);
         $this->om->flush();
     }
 
@@ -117,5 +145,10 @@ class ToolMaskDecoderManager
             $name,
             $executeQuery
         );
+    }
+
+    public function getCustomMaskDecodersByTool(Tool $tool, $executeQuery = true)
+    {
+        return $this->maskRepo->findCustomMaskDecodersByTool($tool, $executeQuery);
     }
 }

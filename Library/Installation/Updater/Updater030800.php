@@ -64,7 +64,7 @@ class Updater030800
             $maskDecoders = $this->maskManager->getMaskDecodersByTool($tool);
 
             if (count($maskDecoders) === 0) {
-                $this->maskManager->createToolMaskDecoder($tool);
+                $this->maskManager->createDefaultToolMaskDecoders($tool);
             }
         }
         $this->om->endFlushSuite();

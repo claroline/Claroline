@@ -90,8 +90,11 @@ class ToolManager
 
     public function create(Tool $tool)
     {
+        $this->om->startFlushSuite();
         $this->om->persist($tool);
-        $this->om->flush();
+        $this->om->forceFlush();
+        $this->toolMaskManager->createDefaultToolMaskDecoders($tool);
+        $this->om->endFlushSuite();
     }
 
     /**
