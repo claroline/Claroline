@@ -38,7 +38,7 @@
         <a class="btn btn-primary" href="{{ path('ujm_question_new') }}">
             <i class="fa fa-plus"></i> {{ 'create a new entry' | trans }}
         </a>
-        <a class="btn btn-primary">
+        <a class="btn btn-primary" onClick="importQTI('{{ path('ujm_qti_import_form') }}');">
             <i class="fa fa-upload"></i> {{ 'import QTI' | trans }}
         </a>
         <a class="btn btn-primary" href="{{ path('ujm_question_manage_doc') }}">
@@ -87,19 +87,6 @@
                 </span>
             </div>
         </form>
-
-        <a >
-            <i class="btn btn-primary" >
-             {# ham : import Question button  #}
-            <form action="{{ path('ujm_question_import') }}" method="post" name="file" id="file" enctype="multipart/form-data">
-                <table align="center" >
-                    <tr><td><input type="file" name="f1" id="f1"></td><td>
-                     <input type="submit" value="upload"></td></tr>
-                </table>
-             </form>
-            {# ham : import Question button  #}
-            </i>
-        </a>
 
         <div id="infosSearch" style="display: none;">
             <br/>
@@ -169,6 +156,7 @@
     {{ parent() }}
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/sortAndSearch.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/resize.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/qti.js') }}"></script>
 
     <script type="text/javascript">
         $(document).ready(function () {

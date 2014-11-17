@@ -45,3 +45,7 @@ all_hint:
 all_paper:
     resource: "routing/all/paper.yml"
     prefix:   /all/paper
+    
+all_qti:
+    resource: "routing/all/qti.yml"
+    prefix:   /all/qti
