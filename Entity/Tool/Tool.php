@@ -11,6 +11,8 @@
 
 namespace Claroline\CoreBundle\Entity\Tool;
 
+use Claroline\CoreBundle\Entity\Tool\ToolMaskDecoder;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -109,6 +111,20 @@ class Tool
      * )
      */
     protected $orderedTools;
+
+    /**
+     * @ORM\OneToMany(
+     *     targetEntity="Claroline\CoreBundle\Entity\Tool\ToolMaskDecoder",
+     *     mappedBy="tool",
+     *     cascade={"persist"}
+     * )
+     */
+    protected $maskDecoders;
+
+    public function __construct()
+    {
+        $this->maskDecoders = new ArrayCollection();
+    }
 
     public function getId()
     {
@@ -286,5 +302,15 @@ class Tool
     public function isAnonymousExcluded()
     {
         return $this->isAnonymousExcluded;
+    }
+    
+    public function addMaskDecoder(ToolMaskDecoder $maskDecoder)
+    {
+        $this->maskDecoders->add($maskDecoder);
+    }
+
+    public function getMaskDecoders()
+    {
+        return $this->maskDecoders;
     }
 }

@@ -15,6 +15,8 @@ use Claroline\CoreBundle\Entity\Resource\MaskDecoder;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Claroline\CoreBundle\Manager\MaskManager;
+use Claroline\CoreBundle\Manager\ToolManager;
+use Claroline\CoreBundle\Manager\ToolMaskDecoderManager;
 use Claroline\CoreBundle\Library\PluginBundle;
 use Claroline\CoreBundle\Manager\IconManager;
 use Claroline\CoreBundle\Entity\Activity\ActivityRuleAction;
@@ -43,19 +45,22 @@ class DatabaseWriter
     private $fileSystem;
     private $kernelRootDir;
     private $templateDir;
-    private $templateBuilder;
     private $modifyTemplate = false;
+    private $toolManager;
+    private $toolMaskManager;
 
     /**
      * Constructor.
      *
      * @DI\InjectParams({
-     *     "em"             = @DI\Inject("claroline.persistence.object_manager"),
-     *     "im"             = @DI\Inject("claroline.manager.icon_manager"),
-     *     "mm"             = @DI\Inject("claroline.manager.mask_manager"),
-     *     "fileSystem"     = @DI\Inject("filesystem"),
-     *     "kernel"         = @DI\Inject("kernel"),
-     *     "templateDir"    = @DI\Inject("%claroline.param.templates_directory%")
+     *     "em"              = @DI\Inject("claroline.persistence.object_manager"),
+     *     "im"              = @DI\Inject("claroline.manager.icon_manager"),
+     *     "mm"              = @DI\Inject("claroline.manager.mask_manager"),
+     *     "fileSystem"      = @DI\Inject("filesystem"),
+     *     "kernel"          = @DI\Inject("kernel"),
+     *     "templateDir"     = @DI\Inject("%claroline.param.templates_directory%"),
+     *     "toolManager"     = @DI\Inject("claroline.manager.tool_manager"),
+     *     "toolMaskManager" = @DI\Inject("claroline.manager.tool_mask_decoder_manager")
      * })
      */
     public function __construct(
@@ -64,7 +69,9 @@ class DatabaseWriter
         Filesystem $fileSystem,
         KernelInterface $kernel,
         MaskManager $mm,
-        $templateDir
+        $templateDir,
+        ToolManager $toolManager,
+        ToolMaskDecoderManager $toolMaskManager
     )
     {
         $this->em = $em;
@@ -74,6 +81,8 @@ class DatabaseWriter
         $this->kernelRootDir = $kernel->getRootDir();
         $this->templateDir = $templateDir;
         $this->modifyTemplate = $kernel->getEnvironment() !== 'test';
+        $this->toolManager = $toolManager;
+        $this->toolMaskManager = $toolMaskManager;
     }
 
     /**
@@ -255,6 +264,7 @@ class DatabaseWriter
         }
 
         $this->persistTool($tool, $pluginEntity, $toolEntity);
+        $this->updateCustomToolRights($tool['tool_rights'], $toolEntity);
     }
 
     private function persistIcons(array $resource, ResourceType $resourceType, PluginBundle $plugin)
@@ -488,7 +498,8 @@ class DatabaseWriter
             $toolEntity->setClass("wrench");
         }
 
-        $this->em->persist($toolEntity);
+        $this->toolManager->create($toolEntity);
+        $this->persistCustomToolRights($tool['tool_rights'], $toolEntity);
     }
 
     private function persistTheme($theme, $pluginEntity)
@@ -551,5 +562,44 @@ class DatabaseWriter
     {
         $this->deleteActivityRules($resourceType);
         $this->persistActivityRules($rules, $resourceType);
+    }
+
+    private function persistCustomToolRights(array $rights, Tool $tool)
+    {
+        $decoders = $this->toolMaskManager->getMaskDecodersByTool($tool);
+        $nb = count($decoders);
+
+        foreach ($rights as $right) {
+            $maskDecoder = $this->toolMaskManager
+                ->getMaskDecoderByToolAndName($tool, $right['name']);
+
+            if (is_null($maskDecoder)) {
+                $value = pow(2, $nb);
+                $this->toolMaskManager->createToolMaskDecoder(
+                    $tool,
+                    $right['name'],
+                    $value,
+                    $right['granted_icon_class'],
+                    $right['denied_icon_class']
+                );
+                $nb++;
+            }
+        }
+    }
+
+    private function updateCustomToolRights(array $rights, Tool $tool)
+    {
+        $this->deleteCustomToolRights($tool);
+        $this->persistCustomToolRights($rights, $tool);
+    }
+
+    private function deleteCustomToolRights(Tool $tool)
+    {
+        $customDecoders = $this->toolMaskManager->getCustomMaskDecodersByTool($tool);
+
+        foreach ($customDecoders as $decoder) {
+            $this->em->remove($decoder);
+        }
+        $this->em->flush();
     }
 }

@@ -11,7 +11,7 @@
 
 namespace Claroline\CoreBundle\Repository;
 
-use Claroline\CoreBundle\Entity\Tool\Tool;
+use Claroline\CoreBundle\Entity\Tool\ToolMaskDecoder;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\ORM\EntityRepository;
@@ -67,12 +67,16 @@ class WorkspaceRepository extends EntityRepository
     public function findByAnonymous()
     {
         $dql = "
-            SELECT DISTINCT w FROM Claroline\CoreBundle\Entity\Workspace\Workspace w
+            SELECT DISTINCT w
+            FROM Claroline\CoreBundle\Entity\Workspace\Workspace w
             JOIN w.orderedTools ot
-            JOIN ot.roles r
+            JOIN ot.rights otr
+            JOIN otr.role r
             WHERE r.name = 'ROLE_ANONYMOUS'
+            AND BIT_AND(otr.mask, :openValue) = :openValue
         ";
         $query = $this->_em->createQuery($dql);
+        $query->setParameter('openValue', ToolMaskDecoder::$defaultValues['open']);
 
         return $query->getResult();
     }
@@ -124,30 +128,50 @@ class WorkspaceRepository extends EntityRepository
      * @param string|null       $toolName
      * @return array[integer]
      */
-    public function findOpenWorkspaceIds(array $roles, array $workspaces, $toolName = null)
+    public function findOpenWorkspaceIds(
+        array $roleNames,
+        array $workspaces,
+        $toolName = null,
+        $action = 'open'
+    )
     {
-        $dql = '
-            SELECT DISTINCT w.id FROM Claroline\CoreBundle\Entity\Workspace\Workspace w
-            JOIN w.orderedTools ot
-            JOIN ot.tool t
-            JOIN ot.roles otr
-            WHERE otr.name IN (:roles)
-            AND w IN (:workspaces)
-        ';
+        if (count($roleNames) === 0 || count($workspaces) === 0) {
 
-        if ($toolName) {
-            $dql .= 'AND t.name = :toolName';
+            return array();
+        } else {
+            $dql = '
+                SELECT DISTINCT w.id
+                FROM Claroline\CoreBundle\Entity\Workspace\Workspace w
+                JOIN w.orderedTools ot
+                JOIN ot.tool t
+                JOIN ot.rights r
+                JOIN r.role rr
+                WHERE w IN (:workspaces)
+                AND rr.name IN (:roleNames)
+                AND EXISTS (
+                    SELECT d
+                    FROM Claroline\CoreBundle\Entity\Tool\ToolMaskDecoder d
+                    WHERE d.tool = t
+                    AND d.name = :action
+                    AND BIT_AND(r.mask, d.value) = d.value
+                )
+            ';
+
+            if ($toolName) {
+                $dql .= 'AND t.name = :toolName';
+            }
+
+            $query = $this->_em->createQuery($dql);
+            $query->setParameter('workspaces', $workspaces);
+            $query->setParameter('roleNames', $roleNames);
+            $query->setParameter('action', $action);
+
+            if ($toolName) {
+                $query->setParameter('toolName', $toolName);
+            }
+
+            return $query->getResult();
         }
-
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('roles', $roles);
-        $query->setParameter('workspaces', $workspaces);
-
-        if ($toolName) {
-            $query->setParameter('toolName', $toolName);
-        }
-
-        return $query->getResult();
     }
 
     /**
@@ -163,13 +187,16 @@ class WorkspaceRepository extends EntityRepository
             SELECT DISTINCT w
             FROM Claroline\CoreBundle\Entity\Workspace\Workspace w
             JOIN w.orderedTools ot
-            JOIN ot.roles r
+            JOIN ot.rights otr
+            JOIN otr.role r
             WHERE r.name IN (:roleNames)
+            AND BIT_AND(otr.mask, :openValue) = :openValue
             ORDER BY w.name
         ';
 
         $query = $this->_em->createQuery($dql);
         $query->setParameter('roleNames', $roleNames);
+        $query->setParameter('openValue', ToolMaskDecoder::$defaultValues['open']);
 
         return $query->getResult();
     }
@@ -189,8 +216,10 @@ class WorkspaceRepository extends EntityRepository
             SELECT DISTINCT w
             FROM Claroline\CoreBundle\Entity\Workspace\Workspace w
             JOIN w.orderedTools ot
-            JOIN ot.roles r
+            JOIN ot.rights otr
+            JOIN otr.role r
             WHERE r.name IN (:roleNames)
+            AND BIT_AND(otr.mask, :openValue) = :openValue
             AND (
                 UPPER(w.name) LIKE :search
                 OR UPPER(w.code) LIKE :search
@@ -201,6 +230,7 @@ class WorkspaceRepository extends EntityRepository
         $upperSearch = strtoupper($search);
         $query = $this->_em->createQuery($dql);
         $query->setParameter('roleNames', $roleNames);
+        $query->setParameter('openValue', ToolMaskDecoder::$defaultValues['open']);
         $query->setParameter('search', "%{$upperSearch}%");
 
         return $query->getResult();
@@ -551,14 +581,17 @@ class WorkspaceRepository extends EntityRepository
                 SELECT DISTINCT w
                 FROM Claroline\CoreBundle\Entity\Workspace\Workspace w
                 JOIN w.orderedTools ot
-                JOIN ot.roles r
+                JOIN ot.rights otr
+                JOIN otr.role r
                 WHERE w = :workspace
                 AND r.name IN (:roles)
+                AND BIT_AND(otr.mask, :openValue) = :openValue
             ";
 
             $query = $this->_em->createQuery($dql);
             $query->setParameter('workspace', $workspace);
             $query->setParameter('roles', $roles);
+            $query->setParameter('openValue', ToolMaskDecoder::$defaultValues['open']);
 
             return $query->getOneOrNullResult();
         }

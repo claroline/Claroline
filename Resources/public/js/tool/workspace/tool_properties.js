@@ -19,31 +19,6 @@
             'edit-tool-name'
         );
     });
-
-    $('#edit-tools-btn').on('click', function (e) {
-        e.preventDefault();
-        var formData = new FormData(document.getElementById('workspace-tool-form'));
-        var url = $('#workspace-tool-form').attr('action');
-
-        $('#tool-table tr').each(function (index) {
-            if ($(this).attr('data-tool-id')) {
-                formData.append('tool-' + $(this).attr('data-tool-id'), index);
-            }
-        });
-
-        var redirect = $(this).attr('href');
-
-        $.ajax({
-            url: url,
-            data: formData,
-            type: 'POST',
-            processData: false,
-            contentType: false,
-            success: function(data, textStatus, jqXHR) {
-                window.location = redirect;
-            }
-        });
-    });
     
     $('#tool-table-body').sortable({
         items: 'tr',
@@ -86,6 +61,68 @@
                 });
             }
         }
+    });
+    
+    $('#tool-table-body').on('click', '.granted-btn', function () {
+        var currentBtn = $(this);
+        var orderedToolId = $(this).data('ordered-tool-id');
+        var roleId = $(this).data('role-id');
+        var action = $(this).data('decoder-name');
+        var iconClass = $(this).data('icon-class');
+        var inverseIconClass = $(this).data('inverse-icon-class');
+        
+        $.ajax({
+            url: Routing.generate(
+                'claro_workspace_inverse_ordered_tool_right',
+                {
+                    'orderedTool': orderedToolId,
+                    'role': roleId,
+                    'action': action
+                }
+            ),
+            type: 'POST',
+            success: function() {
+                currentBtn.removeClass('granted-btn');
+                currentBtn.removeClass('text-success');
+                currentBtn.removeClass(iconClass);
+                currentBtn.addClass('denied-btn');
+                currentBtn.addClass('text-danger');
+                currentBtn.addClass(inverseIconClass);
+                currentBtn.data('icon-class', inverseIconClass);
+                currentBtn.data('inverse-icon-class', iconClass);
+            }
+        });
+    });
+
+    $('#tool-table-body').on('click', '.denied-btn', function () {
+        var currentBtn = $(this);
+        var orderedToolId = $(this).data('ordered-tool-id');
+        var roleId = $(this).data('role-id');
+        var action = $(this).data('decoder-name');
+        var iconClass = $(this).data('icon-class');
+        var inverseIconClass = $(this).data('inverse-icon-class');
+        
+        $.ajax({
+            url: Routing.generate(
+                'claro_workspace_inverse_ordered_tool_right',
+                {
+                    'orderedTool': orderedToolId,
+                    'role': roleId,
+                    'action': action
+                }
+            ),
+            type: 'POST',
+            success: function() {
+                currentBtn.removeClass('denied-btn');
+                currentBtn.removeClass('text-danger');
+                currentBtn.removeClass(iconClass);
+                currentBtn.addClass('granted-btn');
+                currentBtn.addClass('text-success');
+                currentBtn.addClass(inverseIconClass);
+                currentBtn.data('icon-class', inverseIconClass);
+                currentBtn.data('inverse-icon-class', iconClass);
+            }
+        });
     });
 
     var editName = function(tool) {
