@@ -40,8 +40,37 @@ class OperationHandler extends BaseHandler
             $opNode->setAttribute('to', $operation->getToVersion());
         }
 
-        $this->rootElement->appendChild($opNode);
+        $nextNode = $this->findNextNode($operation);
+        $this->rootElement->insertBefore($opNode, $nextNode);
         $this->writeOperations();
+    }
+
+    private function findNextNode(Operation $operation)
+    {
+        $dependencies = $operation->getDependencies();
+        $prevNode = null;
+        $saveFurthest = 0;
+
+        foreach ($dependencies[0] as $dependency) {
+            $foundDep = false;
+            $i = 0;
+
+            foreach ($this->rootElement->childNodes as $childNode) {
+                $i++;
+                if ($childNode->nodeValue === $dependency) {
+                    if ($i > $saveFurthest) {
+                        $prevNode = $childNode;
+                        $saveFurthest = $i;
+                    }
+                }
+            }
+        }
+
+        if ($prevNode) {
+            return $prevNode->nextSibling;
+        }
+
+        return $this->rootElement->firstChild;
     }
 
     public function getOperations()

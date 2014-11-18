@@ -24,6 +24,7 @@ class Operation
     private $bundleType;
     private $fromVersion;
     private $toVersion;
+    private $dependencies;
 
     public function __construct($type, $bundleFqcn, $bundleType)
     {
@@ -42,6 +43,7 @@ class Operation
         $this->type = $type;
         $this->bundleFqcn = $bundleFqcn;
         $this->bundleType = $bundleType;
+        $this->dependencies = array();
     }
 
     public function getType()
@@ -77,5 +79,15 @@ class Operation
     public function getToVersion()
     {
         return $this->toVersion;
+    }
+
+    public function setDependencies($dependencies)
+    {
+        $this->dependencies = $dependencies;
+    }
+
+    public function getDependencies()
+    {
+        return $this->dependencies;
     }
 }

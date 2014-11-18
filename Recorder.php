@@ -69,6 +69,7 @@ class Recorder
             $bundle = $this->detector->detectBundle($package->getPrettyName());
             $type = $this->getOperationBundleType($package);
             $operation = new Operation(Operation::INSTALL, $bundle, $type);
+            $operation->setDependencies($this->getDependencies($package));
             $this->operationHandler->addOperation($operation);
         }
     }
@@ -81,6 +82,7 @@ class Recorder
             $operation = new Operation(Operation::UPDATE, $bundle, $type);
             $operation->setFromVersion($initial->getVersion());
             $operation->setToVersion($target->getVersion());
+            $operation->setDependencies($this->getDependencies($package));
             $this->operationHandler->addOperation($operation);
         }
     }
@@ -128,6 +130,9 @@ class Recorder
             }
         }
 
+        //The next line not be necessary. Some problems were caused by some recursive dependencies...
+        //we may comment this line. However, since it's working properly now, I'm not touching anything
+        //because it doesn't do anything wrong.
         $orderedBundles = $this->orderClaroBundlesForInstall($orderedBundles);
         $this->bundleHandler->writeBundleFile(array_unique($orderedBundles));
     }
@@ -145,7 +150,7 @@ class Recorder
         }
 
         $operations = $this->getOperations();
-        
+
         foreach ($operations as $operation) {
             $package = $operation->getPackage();
             if ($element === $package->getPrettyName()) {
@@ -169,7 +174,7 @@ class Recorder
     {
         $claroBundles = array();
         $operations = $this->getOperations();
-        
+
         foreach ($operations as $operation) {
             $package = $operation->getPackage();
             if ($package->getType() === 'claroline-core'
@@ -230,7 +235,7 @@ class Recorder
      * @param The require class wich was parsed from the installed.json with json_decode
      * @return array
      */
-    private function getDependencies(PackageInterface $package)
+    public function getDependencies(PackageInterface $package)
     {
         $dependencies = [];
         $requires = $package->getRequires();
@@ -245,8 +250,8 @@ class Recorder
 
         return $dependencies;
     }
-    
-    private function getOperations()
+
+    public function getOperations()
     {
         $toRepo = new ArrayRepository();
         $pool = new Pool();
@@ -260,14 +265,14 @@ class Recorder
 
         $solver = new Solver(new DefaultPolicy(), $pool, $toRepo);
         $operations = $solver->solve($request);
-        
+
         return $operations;
     }
 
     private function getNameSpace($prettyName)
     {
         $operations = $this->getOperations();
-        
+
         foreach ($operations as $operation) {
             $package = $operation->getPackage();
 
