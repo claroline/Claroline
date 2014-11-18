@@ -105,7 +105,7 @@
                                     <div class="media-body">
                                         <p class="message" data-ng-bind-html="comment.message | trustAsHtml"></p>
                                         <p class="pull-right author" data-ng-if="comment.date">
-                                            <small>{{ comment.sender.lastName }} {{ comment.sender.firstName }}, {{ comment.date|date : 'dd/MM/yyyy HH:mm:ss' }}</small>
+                                            <small>{{ comment.sender.lastName }} {{ comment.sender.firstName }}, {{ comment.date|date : ('comment_date_format'|trans) }}</small>
                                         </p>
                                         <p class="pull-right author loading" data-ng-if="!comment.date">
                                         </p>
