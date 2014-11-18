@@ -223,7 +223,7 @@ class IconManager
         $icon->setMimeType('custom');
         $icon->setShortcut(false);
         $this->om->persist($icon);
-        $this->createShortcutIcon($icon);
+        $this->createShortcutIcon($icon, $workspace);
         $this->om->endFlushSuite();
 
         return $icon;
@@ -307,6 +307,21 @@ class IconManager
     {
         $this->om->startFlushSuite();
         $oldIcon = $resource->getIcon();
+
+        if (!$oldIcon->isShortcut()) {
+            $oldShortcutIcon = $oldIcon->getShortcutIcon();
+            $shortcutIcon = $icon->getShortcutIcon();
+
+            if (!is_null($oldShortcutIcon) && !is_null($shortcutIcon)) {
+                $nodes = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceNode')
+                    ->findBy(array('icon' => $oldShortcutIcon));
+
+                foreach ($nodes as $node) {
+                    $node->setIcon($shortcutIcon);
+                    $this->om->persist($node);
+                }
+            }
+        }
         $this->delete($oldIcon);
         $resource->setIcon($icon);
         $this->om->persist($resource);
