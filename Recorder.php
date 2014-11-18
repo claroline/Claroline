@@ -237,6 +237,7 @@ class Recorder
      */
     public function getDependencies(PackageInterface $package)
     {
+        echo ("Searching dependencies for {$package}...");
         $dependencies = [];
         $requires = $package->getRequires();
 
@@ -247,7 +248,9 @@ class Recorder
                 }
             }
         }
-
+        
+        var_dump($dependencies);
+        
         return $dependencies;
     }
 
