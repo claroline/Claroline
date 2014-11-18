@@ -153,6 +153,7 @@ class Recorder
 
         foreach ($operations as $operation) {
             $package = $operation->getPackage();
+            var_dump("comparing {$package->getPrettyName()} and {$element}");
             if ($element === $package->getPrettyName()) {
                 return $this->isClarolinePackage($package);
             }
