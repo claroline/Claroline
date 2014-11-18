@@ -145,7 +145,7 @@ class Recorder
      */
     private function isClarolinePackage($element)
     {
-        if ($element instanceof PackageInterface) {
+        if (method_exists($element, 'getType')) {
             return $element->getType() === 'claroline-core' || $element->getType() === 'claroline-plugin';
         }
 
