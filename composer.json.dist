@@ -24,6 +24,7 @@
         "icap/wiki-bundle": ">=3.1.3,<4.0",
         "icap/lesson-bundle": "~1.4",
         "icap/dropzone-bundle": ">=0.6.13,<=0.7.1",
+        "icap/portfolio-bundle": "v0.1.2",
         "ujm/exo-bundle": ">=1.3.2,<2.0",
         "innova/path-bundle": ">=2.0.5,<3.0"
     },
