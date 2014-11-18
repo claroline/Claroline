@@ -108,7 +108,7 @@ class Recorder
     {
         $orderedBundles = array();
         $operations = $this->getOperations();
-        var_dump($operations);
+        var_dump(count($operations));
 
         foreach ($operations as $operation) {
             $package = $operation->getPackage();
@@ -145,7 +145,10 @@ class Recorder
             return $element->getType() === 'claroline-core' || $element->getType() === 'claroline-plugin';
         }
 
-        foreach ($this->fromRepo->getCanonicalPackages() as $package) {
+        $operations = $this->getOperations();
+        
+        foreach ($operations as $operation) {
+            $package = $operation->getPackage();
             if ($element === $package->getPrettyName()) {
                 return $this->isClarolinePackage($package);
             }
@@ -167,7 +170,7 @@ class Recorder
     {
         $claroBundles = array();
         $operations = $this->getOperations();
-        var_dump($operations);
+        var_dump(count($operations));
         
         foreach ($operations as $operation) {
             $package = $operation->getPackage();
@@ -179,7 +182,7 @@ class Recorder
         }
 
         $bundleCopies = $bundles;
-        var_dump($claroBundles);
+        var_dump(count($claroBundles));
 
         foreach ($claroBundles as $claroBundle => $dependencies) {
             foreach ($dependencies as $dependency) {
@@ -235,9 +238,11 @@ class Recorder
         $dependencies = [];
         $requires = $package->getRequires();
 
-        foreach($requires as $name => $el) {
-            if ($this->isClarolinePackage($name)) {
-                $dependencies[] = $this->getNameSpace($name);
+        if ($requires) {
+            foreach($requires as $name => $el) {
+                if ($this->isClarolinePackage($name)) {
+                    $dependencies[] = $this->getNameSpace($name);
+                }
             }
         }
 
