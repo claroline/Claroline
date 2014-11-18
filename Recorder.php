@@ -146,6 +146,8 @@ class Recorder
     private function isClarolinePackage($element)
     {
         if ($element instanceof PackageInterface) {
+            var_dump("{$element->getPrettyName()} is a {$element->getType()}");
+            
             return $element->getType() === 'claroline-core' || $element->getType() === 'claroline-plugin';
         }
 
@@ -153,7 +155,7 @@ class Recorder
 
         foreach ($operations as $operation) {
             $package = $operation->getPackage();
-            var_dump("comparing {$package->getPrettyName()} and {$element}");
+            
             if ($element === $package->getPrettyName()) {
                 return $this->isClarolinePackage($package);
             }
