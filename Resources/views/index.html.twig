@@ -21,19 +21,17 @@
                     {% if is_mailer_available() %}
                         {% if isModerator %}
                             <div id="top-div" class="well">
-                                    {{ 'notifications_explanation'|trans({}, 'forum') }}
+                                {{ 'notifications_explanation'|trans({}, 'forum') }}
                             </div>
                         {% else %}
-                            {% if not _resource.getActivateNotifications() %}
-                                {% if hasSubscribed %}
-                                    <a class="btn btn-primary" href="{{ _path('claro_forum_unsubscribe', {'forum': _resource.getId()}) }}">
-                                        {{ 'unsubscribe_mail_list'|trans({}, 'forum') }}
-                                    </a>
-                                {% else %}
-                                    <a class="btn btn-primary" href="{{ _path('claro_forum_subscribe', {'forum': _resource.getId()}) }}">
-                                        {{ 'subscribe_mail_list'|trans({}, 'forum') }}
-                                    </a>
-                                {% endif %}
+                            {% if hasSubscribed %}
+                                <a class="btn btn-primary" href="{{ _path('claro_forum_unsubscribe', {'forum': _resource.getId()}) }}">
+                                    {{ 'unsubscribe_mail_list'|trans({}, 'forum') }}
+                                </a>
+                            {% else %}
+                                <a class="btn btn-primary" href="{{ _path('claro_forum_subscribe', {'forum': _resource.getId()}) }}">
+                                    {{ 'subscribe_mail_list'|trans({}, 'forum') }}
+                                </a>
                             {% endif %}
                         {% endif %}
                     {% endif %}
@@ -68,17 +66,16 @@
                            href="{{ _path('claro_forum_activate_global_notifications', {'forum': _resource.getId()}) }}">
                             {{ 'activate_global_notifications'|trans({}, 'forum') }}
                         </a>
-
-                        {% if hasSubscribed %}
-                            <a class="btn btn-primary" href="{{ _path('claro_forum_unsubscribe', {'forum': _resource.getId()}) }}">
-                                {{ 'unsubscribe_mail_list'|trans({}, 'forum') }}
-                            </a>
-                        {% else %}
-                            <a class="btn btn-primary" href="{{ _path('claro_forum_subscribe', {'forum': _resource.getId()}) }}">
-                                {{ 'subscribe_mail_list'|trans({}, 'forum') }}
-                            </a>
-                        {% endif %}
-
+                    {% endif %}
+            
+                    {% if hasSubscribed %}
+                        <a class="btn btn-primary" href="{{ _path('claro_forum_unsubscribe', {'forum': _resource.getId()}) }}">
+                            {{ 'unsubscribe_mail_list'|trans({}, 'forum') }}
+                        </a>
+                    {% else %}
+                        <a class="btn btn-primary" href="{{ _path('claro_forum_subscribe', {'forum': _resource.getId()}) }}">
+                            {{ 'subscribe_mail_list'|trans({}, 'forum') }}
+                        </a>
                     {% endif %}
                 {% endif %}
 

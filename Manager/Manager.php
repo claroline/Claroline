@@ -59,6 +59,7 @@ class Manager
     private $subjectRepo;
     private $messageRepo;
     private $forumRepo;
+    private $roleRepo;
     private $userRepo;
     private $messageManager;
     private $translator;
@@ -100,6 +101,7 @@ class Manager
         $this->subjectRepo = $om->getRepository('ClarolineForumBundle:Subject');
         $this->messageRepo = $om->getRepository('ClarolineForumBundle:Message');
         $this->forumRepo = $om->getRepository('ClarolineForumBundle:Forum');
+        $this->roleRepo = $om->getRepository('ClarolineCoreBundle:Role');
         $this->userRepo = $om->getRepository('ClarolineCoreBundle:User');
         $this->dispatcher = $dispatcher;
         $this->messageManager = $messageManager;
@@ -117,12 +119,13 @@ class Manager
      * @param \Claroline\ForumBundle\Entity\Forum $forum
      * @param \Claroline\CoreBundle\Entity\User $user
      */
-    public function subscribe(Forum $forum, User $user)
+    public function subscribe(Forum $forum, User $user, $selfActivation = true)
     {
         $this->om->startFlushSuite();
         $notification = new Notification();
         $notification->setUser($user);
         $notification->setForum($forum);
+        $notification->setSelfActivation($selfActivation);
         $this->om->persist($notification);
         $this->dispatch(new SubscribeForumEvent($forum));
         $this->om->endFlushSuite();
@@ -271,25 +274,11 @@ class Manager
     {
         $forum = $message->getSubject()->getCategory()->getForum();
 
-        if ($forum->getActivateNotifications()) {
-            $relevantRoles = [];
-            $rights = $forum->getResourceNode()->getRights();
+        $notifications = $this->notificationRepo->findBy(array('forum' => $forum));
+        $users = array();
 
-            foreach ($rights as $right) {
-                //can open
-                if ($right->getMask() & 1) {
-                    $relevantRoles[] = $right->getRole();
-                }
-            }
-
-            $users = $this->userRepo->findByRoles($relevantRoles);
-        } else {
-            $notifications = $this->notificationRepo->findBy(array('forum' => $forum));
-            $users = array();
-
-            foreach ($notifications as $notification) {
-                $users[] = $notification->getUser();
-            }
+        foreach ($notifications as $notification) {
+            $users[] = $notification->getUser();
         }
 
         $title = $this->translator->trans(
@@ -578,16 +567,32 @@ class Manager
 
     public function activateGlobalNotifications(Forum $forum)
     {
+        $this->om->startFlushSuite();
         $forum->setActivateNotifications(true);
         $this->om->persist($forum);
-        $this->om->flush();
+        $node = $forum->getResourceNode();
+        $roles = $this->roleRepo->findRolesWithRightsByResourceNode($node);
+        $usersWithRoles = $this->userRepo->findUsersByRolesIncludingGroups($roles);
+        $users = $this->forumRepo
+            ->findUnnotifiedUsersFromListByForum($forum, $usersWithRoles);
+
+        foreach ($users as $user) {
+            $this->subscribe($forum, $user, false);
+        }
+        $this->om->endFlushSuite();
     }
 
     public function disableGlobalNotifications(Forum $forum)
     {
+        $this->om->startFlushSuite();
         $forum->setActivateNotifications(false);
         $this->om->persist($forum);
-        $this->om->flush();
+        $notifications = $this->forumRepo->findNonSelfNotificationsByForum($forum);
+
+        foreach ($notifications as $notification) {
+            $this->removeNotification($forum, $notification);
+        }
+        $this->om->endFlushSuite();
     }
 
     public function getLastMessagesBySubjectsIds(array $subjectsIds)
@@ -600,5 +605,19 @@ class Manager
         }
 
         return $lastMessages;
+    }
+
+    /**
+     * Unsubscribe a user from a forum.
+     *
+     * @param \Claroline\ForumBundle\Entity\Forum $forum
+     * @param \Claroline\ForumBundle\Entity\Notification $notification
+     */
+    private function removeNotification(Forum $forum, Notification $notification)
+    {
+        $this->om->startFlushSuite();
+        $this->om->remove($notification);
+        $this->dispatch(new UnsubscribeForumEvent($forum));
+        $this->om->endFlushSuite();
     }
 }
