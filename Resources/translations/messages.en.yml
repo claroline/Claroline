@@ -328,8 +328,11 @@ publish: Publish
 qcm: QCM
 qcm creation: Creation of a question of type QCM
 qcm edition: Edition of a question of type QCM
+qti format warning: You must import a zip archive with an IMS_QTI file
 qti_import_title: No title attribut in the element assessmentItem
 qti_import_qcm_prompt: No prompt element in the choiceInteraction element
+qti unsupported format: Non-compliant QTI format or unsupported
+qti xml not found: XML schema not found
 question: Question
 questions: Questions
 question graphic: Graphic Question

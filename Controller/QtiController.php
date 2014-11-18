@@ -16,9 +16,10 @@ class QtiController extends Controller {
     public function importAction()
     {
         if (strstr($_FILES["qtifile"]["type"], 'application/zip') === false) {
-            return $this->forward('UJMExoBundle:Question:index', array('qtiError' => true));
+
+            return $this->importError('qti format warning');
         }
-        
+        $xmlFileFound = false;
         $qtiRepos = $this->container->get('ujm.qti_repository');
         $qtiRepos->createDirQTI();
 
@@ -44,6 +45,7 @@ class QtiController extends Controller {
         if ($dh = opendir($qtiRepos->getUserDir())) {
             while (($file = readdir($dh)) !== false) {
                 if (substr($file, -4, 4) == '.xml') {
+                    $xmlFileFound = true;
                     $imported = false;
                     $document_xml = new \DomDocument();
                     $document_xml->load($qtiRepos->getUserDir().'/'.$file);
@@ -68,10 +70,14 @@ class QtiController extends Controller {
                                 $qtiImport->import($qtiRepos, $document_xml);
                                 $imported = true;
                             } else {
+                                return $this->importError('qti unsupported format');
                             }
                         }
                     }
                 }
+            }
+            if ($xmlFileFound === false) {
+                return $this->importError('qti xml not found');
             }
             closedir($dh);
         }
@@ -91,6 +97,15 @@ class QtiController extends Controller {
     public function importFormAction()
     {
         return $this->render('UJMExoBundle:QTI:import.html.twig');
+    }
+
+
+    public function importError($mssg)
+    {
+        return $this->forward('UJMExoBundle:Question:index',
+                    array('qtiError' =>
+                        $this->get('translator')->trans($mssg))
+                    );
     }
 
 }
