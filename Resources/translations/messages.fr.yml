@@ -328,6 +328,7 @@ publish: Publier
 qcm: QCM
 qcm creation: Création d'une question de type QCM
 qcm edition: Edition d'une question de type QCM
+qti can't open zip: Impossible d'ouvrir l'archive
 qti format warning: Vous devez importer une archiver zip contenant un fichier compatible IMS_QTI
 qti_import_title: Pas d'attribut "title" pour l'élément "assessmentItem"
 qti_import_qcm_prompt: Pas d'élément "prompt" dans l'élément "choiceInteraction"

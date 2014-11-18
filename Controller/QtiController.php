@@ -12,6 +12,7 @@ class QtiController extends Controller {
      * @access public
      *
      * @return \Symfony\Component\HttpFoundation\Response
+     *
      */
     public function importAction()
     {
@@ -19,29 +20,46 @@ class QtiController extends Controller {
 
             return $this->importError('qti format warning');
         }
-        $xmlFileFound = false;
+
         $qtiRepos = $this->container->get('ujm.qti_repository');
-        $qtiRepos->createDirQTI();
+        if ($this->extractFiles($qtiRepos) === false) {
 
-        $rst = 'its a zip file';
-        move_uploaded_file($_FILES["qtifile"]["tmp_name"],
-                $qtiRepos->getUserDir() . $_FILES["qtifile"]["name"]);
-        $zip = new \ZipArchive;
-        $zip->open($qtiRepos->getUserDir() . $_FILES["qtifile"]["name"]);
-        $res= zip_open($qtiRepos->getUserDir() . $_FILES["qtifile"]["name"]);
-
-        $zip->extractTo($qtiRepos->getUserDir());
-        $tab_liste_fichiers = array();
-        while ($zip_entry = zip_read($res)) {
-            if(zip_entry_filesize($zip_entry) > 0) {
-                $nom_fichier = zip_entry_name($zip_entry);
-                $rst =$rst . '-_-_-_'.$nom_fichier;
-                array_push($tab_liste_fichiers, $nom_fichier);
-
-            }
+            return $this->importError('qti can\'t open zip');
         }
-        $zip->close();
 
+        $scanFile = $this->scanFiles($qtiRepos);
+        if ($scanFile !== true) {
+
+            return $this->importError($scanFile);
+        }
+
+        return $this->forward('UJMExoBundle:Question:index', array());
+    }
+
+    /**
+     * Create the form to import a QTI file
+     *
+     * @access public
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function importFormAction()
+    {
+        return $this->render('UJMExoBundle:QTI:import.html.twig');
+    }
+
+    /**
+     * Scan the QTI files
+     *
+     * @access private
+     *
+     * @param UJM\ExoBundle\Services\classes\QTI $qtiRepos
+     *
+     * @return true or code error
+     */
+    private function scanFiles($qtiRepos)
+    {
+        $xmlFileFound = false;
         if ($dh = opendir($qtiRepos->getUserDir())) {
             while (($file = readdir($dh)) !== false) {
                 if (substr($file, -4, 4) == '.xml') {
@@ -70,37 +88,69 @@ class QtiController extends Controller {
                                 $qtiImport->import($qtiRepos, $document_xml);
                                 $imported = true;
                             } else {
-                                return $this->importError('qti unsupported format');
+                                return 'qti unsupported format';
                             }
                         }
                     }
                 }
             }
             if ($xmlFileFound === false) {
-                return $this->importError('qti xml not found');
+
+                return 'qti xml not found';
             }
             closedir($dh);
         }
-
         $qtiRepos->removeDirectory();
 
-        return $this->forward('UJMExoBundle:Question:index', array());
+        return true;
     }
 
     /**
-     * Create the form to import a QTI file
+     * Extract the QTI files
      *
-     * @access public
+     * @access private
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @param UJM\ExoBundle\Services\classes\QTI $qtiRepos
+     *
+     * @return boolean
      */
-    public function importFormAction()
+    private function extractFiles($qtiRepos)
     {
-        return $this->render('UJMExoBundle:QTI:import.html.twig');
+        $qtiRepos->createDirQTI();
+
+        $rst = 'its a zip file';
+        move_uploaded_file($_FILES["qtifile"]["tmp_name"],
+                $qtiRepos->getUserDir() . $_FILES["qtifile"]["name"]);
+        $zip = new \ZipArchive;
+        if ($zip->open($qtiRepos->getUserDir() . $_FILES["qtifile"]["name"]) !== true) {
+
+            return false;
+        }
+        $res = zip_open($qtiRepos->getUserDir() . $_FILES["qtifile"]["name"]);
+        $zip->extractTo($qtiRepos->getUserDir());
+        $tab_liste_fichiers = array();
+        while ($zip_entry = zip_read($res)) {
+            if(zip_entry_filesize($zip_entry) > 0) {
+                $nom_fichier = zip_entry_name($zip_entry);
+                $rst =$rst . '-_-_-_'.$nom_fichier;
+                array_push($tab_liste_fichiers, $nom_fichier);
+
+            }
+        }
+        $zip->close();
+
+        return true;
     }
 
-
-    public function importError($mssg)
+    /**
+     * Return a response with warning
+     *
+     * @access private
+     *
+     * @return Response
+     *
+     */
+    private function importError($mssg)
     {
         return $this->forward('UJMExoBundle:Question:index',
                     array('qtiError' =>
