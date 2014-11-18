@@ -50,17 +50,21 @@ class OperationHandler extends BaseHandler
         $dependencies = $operation->getDependencies();
         $prevNode = null;
         $saveFurthest = 0;
+        
+        var_dump($dependencies);
 
-        foreach ($dependencies[0] as $dependency) {
-            $foundDep = false;
-            $i = 0;
-
-            foreach ($this->rootElement->childNodes as $childNode) {
-                $i++;
-                if ($childNode->nodeValue === $dependency) {
-                    if ($i > $saveFurthest) {
-                        $prevNode = $childNode;
-                        $saveFurthest = $i;
+        if (isset($dependencies[0])) {
+            foreach ($dependencies[0] as $dependency) {
+                $foundDep = false;
+                $i = 0;
+    
+                foreach ($this->rootElement->childNodes as $childNode) {
+                    $i++;
+                    if ($childNode->nodeValue === $dependency) {
+                        if ($i > $saveFurthest) {
+                            $prevNode = $childNode;
+                            $saveFurthest = $i;
+                        }
                     }
                 }
             }
