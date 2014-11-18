@@ -240,10 +240,10 @@ class Recorder
         echo ("Searching dependencies for {$package}...");
         $dependencies = [];
         $requires = $package->getRequires();
-        var_dump($requires);
 
         if ($requires) {
             foreach($requires as $name => $el) {
+                var_dump($name);
                 if ($this->isClarolinePackage($name)) {
                     $dependencies[] = $this->getNameSpace($name);
                 }
