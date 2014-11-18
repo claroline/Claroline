@@ -108,7 +108,6 @@ class Recorder
     {
         $orderedBundles = array();
         $operations = $this->getOperations();
-        var_dump(count($operations));
 
         foreach ($operations as $operation) {
             $package = $operation->getPackage();
@@ -170,7 +169,6 @@ class Recorder
     {
         $claroBundles = array();
         $operations = $this->getOperations();
-        var_dump(count($operations));
         
         foreach ($operations as $operation) {
             $package = $operation->getPackage();
@@ -182,7 +180,6 @@ class Recorder
         }
 
         $bundleCopies = $bundles;
-        var_dump(count($claroBundles));
 
         foreach ($claroBundles as $claroBundle => $dependencies) {
             foreach ($dependencies as $dependency) {
