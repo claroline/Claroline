@@ -2,6 +2,8 @@
 
 namespace Icap\PortfolioBundle\Controller;
 
+use Claroline\CoreBundle\Entity\User;
+use Icap\PortfolioBundle\Entity\Portfolio;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller as BaseController;
 
 class Controller extends BaseController
@@ -94,10 +96,25 @@ class Controller extends BaseController
         return $this->getPlatformConfigHandler()->getParameter('portfolio_url') === null;
     }
 
-    public function checkPortfolioToolAccess()
+    /**
+     * @param null|User      $user
+     * @param null|Portfolio $portfolio
+     *
+     * @throws NotFoundHttpException
+     */
+    public function checkPortfolioToolAccess(User $user = null, Portfolio $portfolio = null)
     {
         if (!$this->getPortfolioToolAccess()) {
             throw $this->createNotFoundException();
         }
+
+        if (null !== $user && null !== $portfolio && $portfolio->getUser() !== $user) {
+            $portfolioGuide = $this->getPortfolioGuideManager()->getByPortfolioAndGuide($portfolio, $user);
+
+            if (null === $portfolioGuide) {
+                 throw $this->createNotFoundException();
+             }
+        }
+
     }
 }

@@ -10,7 +10,7 @@ commentsApp
             promise.then(
                 function(data) {
                     $scope.portfolios = data;
-                    commentsManager.init($scope.selectedPortfolio);
+                    commentsManager.loadComments($scope.selectedPortfolio);
                 },
                 function(errorPayload) {
                     console.error('failure loading portfolios', errorPayload);
@@ -20,6 +20,7 @@ commentsApp
         $scope.clickOnPortolio = function(portfolioId) {
             if ($scope.selectedPortfolio != portfolioId) {
                 $scope.selectedPortfolio = portfolioId;
+                commentsManager.loadComments(portfolioId);
             }
             else {
                 $scope.selectedPortfolio = null;

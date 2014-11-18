@@ -7,7 +7,7 @@ commentsApp
 
             getPortfolios: function() {
                     var deferred = $q.defer();
-                    $http.get(Routing.generate("icap_portfolio_internal_portfolios"))
+                    $http.get(Routing.generate("icap_portfolio_internal_portfolio"))
                         .success(function(data) {
                             data.$resolved = true;
                             deferred.resolve(data);

@@ -19,6 +19,20 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class CommentController extends BaseController
 {
     /**
+     * @Route("/comment", name="icap_portfolio_internal_comments_get")
+     * @Method({"GET"})
+     *
+     * @ParamConverter("loggedUser", options={"authenticatedUser" = true})
+     */
+    public function getAllAction(User $loggedUser, Portfolio $portfolio)
+    {
+        $this->checkPortfolioToolAccess($loggedUser, $portfolio);
+
+        $response = new JsonResponse($this->getCommentsManager()->getCommentsByPortfolio($portfolio), Response::HTTP_OK);
+
+        return $response;
+    }
+    /**
      * @Route("/comment", name="icap_portfolio_internal_comment_post")
      * @Method({"POST"})
      *
@@ -26,13 +40,7 @@ class CommentController extends BaseController
      */
     public function postAction(Request $request, User $loggedUser, Portfolio $portfolio)
     {
-        $this->checkPortfolioToolAccess();
-
-        $portfolioGuide = $this->get("icap_portfolio.manager.portfolio_guide")->getByPortfolioAndGuide($portfolio, $loggedUser);
-
-        if ($portfolio->getUser() !== $loggedUser && null === $portfolioGuide) {
-            throw new NotFoundHttpException();
-        }
+        $this->checkPortfolioToolAccess($loggedUser, $portfolio);
 
         $commentManager = $this->getCommentsManager();
 

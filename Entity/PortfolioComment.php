@@ -8,7 +8,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Table(name="icap__portfolio_comments")
- * @ORM\Entity(repositoryClass="Icap\PortfolioBundle\Repository\PortfolioCommentRepository")
+ * @ORM\Entity
  */
 class PortfolioComment
 {
@@ -157,6 +157,7 @@ class PortfolioComment
         $sender    = $this->getSender();
 
         return array(
+            'id'      => $this->getId(),
             'sender'  => array(
                 'lastName'  => $sender->getLastName(),
                 'firstName' => $sender->getFirstName()

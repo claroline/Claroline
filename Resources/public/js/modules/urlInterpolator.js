@@ -1,6 +1,8 @@
 'use strict';
 
-portfolioApp
+var appInterpolator = angular.module('app.interpolator', []);
+
+appInterpolator
     .service("urlInterpolator", ["$interpolate", function($interpolate){
         return {
             interpolate: function(text, parameters) {

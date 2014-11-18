@@ -1,50 +1,9 @@
 'use strict';
 
 commentsApp
-    .factory("commentsManager", ["commentFactory", function(commentFactory){
+    .factory("commentsManager", ["$http", "commentFactory", "urlInterpolator", function($http, commentFactory, urlInterpolator){
         return {
             comments: [],
-            init: function(portfolioId) {
-                var comments = [
-                    {
-                        'id': 1,
-                        'user': 'Naimish Sakhpara',
-                        'date': '07/11/2014 12:10',
-                        'message': 'Location H-2, Ayojan Nagar, Near Gate-3, Near<br /> Shreyas Crossing Dharnidhar Derasar,<br /> ' +
-                                    'Paldi, Ahmedabad 380007, Ahmedabad,<br /> India<br /> Phone 091 37 669307<br /> Email aapamdavad.district@gmail.com'
-                    },
-                    {
-                        'id': 2,
-                        'user': 'Naimish Sakhpara',
-                        'date': '08/11/2014 12:10',
-                        'message': 'Arnab Goswami: "Some people close to Congress Party and close to the government had a #secret ' +
-                                    '#meeting in a farmhouse in Maharashtra in which Anna Hazare send some representatives and they had a ' +
-                                    'meeting in the discussed how to go about this all fast and how eventually this will end."'
-                    },
-                    {
-                        'id': 3,
-                        'user': 'Naimish Sakhpara',
-                        'date': '09/11/2014 12:10',
-                        'message': 'Arnab Goswami: "Some people close to Congress Party and close to the government had a #secret ' +
-                                    '#meeting in a farmhouse in Maharashtra in which Anna Hazare send some representatives and they had a ' +
-                                    'meeting in the discussed how to go about this all fast and how eventually this will end."'
-                    },
-                    {
-                        'id': 4,
-                        'user': 'Naimish Sakhpara',
-                        'date': '10/11/2014 12:10',
-                        'message': 'Arnab Goswami: "Some people close to Congress Party and close to the government had a #secret ' +
-                                    '#meeting in a farmhouse in Maharashtra in which Anna Hazare send some representatives and they had a ' +
-                                    'meeting in the discussed how to go about this all fast and how eventually this will end."'
-                    }
-                ];
-                angular.forEach(comments, function(rawComment) {
-                    var comment = commentFactory.getComment(portfolioId);
-                    this.comments.push(new comment(rawComment));
-                }, this);
-
-                this.comments.$resolved = true;
-            },
             create: function(portfolioId, rawComment) {
                 var emptyComment = commentFactory.getComment(portfolioId);
                 var comment      = new emptyComment(rawComment);
@@ -61,6 +20,28 @@ commentsApp
                 }
 
                 return comment.$save(success, failed);
+            },
+            loadComments: function(portfolioId) {
+                this.comments.length = 0;
+                this.comments.$resolved = false;
+
+                if (0 < portfolioId) {
+                    var url = urlInterpolator.interpolate('/{{portfolioId}}/comment', {portfolioId: portfolioId});
+                    var $this = this;
+
+                    $http.get(url)
+                        .success(function(data) {
+                            angular.forEach(data, function(rawComment) {
+                                var comment = commentFactory.getComment(portfolioId);
+                                this.comments.push(new comment(rawComment));
+                            }, $this);
+
+                            $this.comments.$resolved = true;
+                        });
+                }
+                else {
+                    this.comments.$resolved = true;
+                }
             }
         };
     }]);
