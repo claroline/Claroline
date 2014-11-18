@@ -13,6 +13,7 @@ namespace Claroline\CoreBundle\DataFixtures\Required\Data;
 
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Tool\Tool;
+use Claroline\CoreBundle\Entity\Tool\ToolMaskDecoder;
 use Claroline\CoreBundle\DataFixtures\Required\RequiredFixture;
 
 class LoadToolsData implements RequiredFixture
@@ -47,6 +48,20 @@ class LoadToolsData implements RequiredFixture
             $entity->setIsAnonymousExcluded($tool[10]);
 
             $manager->persist($entity);
+            $this->createToolMaskDecoders($manager, $entity);
+        }
+    }
+
+    private function createToolMaskDecoders(ObjectManager $manager, Tool $tool)
+    {
+        foreach (ToolMaskDecoder::$defaultActions as $action) {
+            $decoder = new ToolMaskDecoder();
+            $decoder->setTool($tool);
+            $decoder->setName($action);
+            $decoder->setValue(ToolMaskDecoder::$defaultValues[$action]);
+            $decoder->setGrantedIconClass(ToolMaskDecoder::$defaultGrantedIconClass[$action]);
+            $decoder->setDeniedIconClass(ToolMaskDecoder::$defaultDeniedIconClass[$action]);
+            $manager->persist($decoder);
         }
     }
 

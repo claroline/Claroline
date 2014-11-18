@@ -16,9 +16,8 @@ use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Group;
-use Claroline\CoreBundle\Entity\Tool\Tool;
+use Claroline\CoreBundle\Entity\Tool\ToolMaskDecoder;
 use Claroline\CoreBundle\Entity\Tool\AdminTool;
-use Claroline\CoreBundle\Entity\Facet\FieldFacet;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 
 class RoleRepository extends EntityRepository
@@ -164,31 +163,6 @@ class RoleRepository extends EntityRepository
             WHERE ws.guid = '{$workspace->getGuid()}'
             AND r.name != 'ROLE_ADMIN'
             AND user.id = {$user->getId()}
-        ";
-
-        $query = $this->_em->createQuery($dql);
-
-        return $query->getResult();
-    }
-
-    /**
-     * Returns the roles which have access to a workspace tool.
-     *
-     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
-     * @param \Claroline\CoreBundle\Entity\Tool\Tool                   $tool
-     */
-    public function findByWorkspaceAndTool(Workspace $workspace, Tool $tool)
-    {
-        $dql = "
-            SELECT DISTINCT r FROM Claroline\CoreBundle\Entity\Role r
-            JOIN r.workspace ws
-            JOIN ws.orderedTools ot
-            JOIN ot.roles r_2
-            JOIN ot.tool tool
-            WHERE ws.guid = '{$workspace->getGuid()}'
-            AND tool.id = {$tool->getId()}
-            AND r.id = r_2.id
-            AND r.name != 'ROLE_ADMIN'
         ";
 
         $query = $this->_em->createQuery($dql);
@@ -495,9 +469,11 @@ class RoleRepository extends EntityRepository
                 OR EXISTS (
                     SELECT ot
                     FROM Claroline\CoreBundle\Entity\Tool\OrderedTool ot
-                    JOIN ot.roles otr
+                    JOIN ot.rights otr
+                    JOIN otr.role otrr
                     WHERE ot.workspace = :workspace
-                    AND otr = r
+                    AND otrr = r
+                    AND BIT_AND(otr.mask, :openValue) = :openValue
                 )
             )
         ';
@@ -505,7 +481,7 @@ class RoleRepository extends EntityRepository
         $query = $this->_em->createQuery($dql);
         $query->setParameter('workspace', $workspace);
         $query->setParameter('managerRoleName', 'ROLE_WS_MANAGER_' . $workspace->getGuid());
-
+        $query->setParameter('openValue', ToolMaskDecoder::$defaultValues['open']);
 
         return $query->getResult();
     }

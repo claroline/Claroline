@@ -43,8 +43,11 @@ class WorkspaceVoter implements VoterInterface
     public function vote(TokenInterface $token, $object, array $attributes)
     {
         if ($object instanceof Workspace) {
-            $target = $attributes[0] === 'OPEN' ? null : $attributes[0];
-            $accesses = $this->wm->getAccesses($token, array($object), $target);
+            $toolName = isset($attributes[0]) && $attributes[0] !== 'OPEN' ?
+                $attributes[0] :
+                null;
+            $action = isset($attributes[1]) ? strtolower($attributes[1]) : 'open';
+            $accesses = $this->wm->getAccesses($token, array($object), $toolName, $action);
 
             return isset($accesses[$object->getId()]) && $accesses[$object->getId()] === true ?
                 VoterInterface::ACCESS_GRANTED :

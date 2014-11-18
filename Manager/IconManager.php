@@ -14,6 +14,7 @@ namespace Claroline\CoreBundle\Manager;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceIcon;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Repository\ResourceIconRepository;
 use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
 use Claroline\CoreBundle\Library\Utilities\ThumbnailCreator;
@@ -76,7 +77,7 @@ class IconManager
      *
      * @return \Claroline\CoreBundle\Entity\Resource\ResourceIcon
      */
-    public function getIcon(AbstractResource $resource)
+    public function getIcon(AbstractResource $resource, Workspace $workspace)
     {
         $node = $resource->getResourceNode();
         $mimeElements = explode('/', $node->getMimeType());
@@ -84,17 +85,30 @@ class IconManager
         // if video or img => generate the thumbnail, otherwise find an existing one.
         if (($mimeElements[0] === 'video' || $mimeElements[0] === 'image')) {
             $this->om->startFlushSuite();
-            $thumbnailPath = $this->createFromFile($this->fileDir. $ds . $resource->getHashName(), $mimeElements[0]);
+            $thumbnailPath = $this->createFromFile(
+                $this->fileDir. $ds . $resource->getHashName(),
+                $mimeElements[0],
+                $workspace
+            );
 
             if ($thumbnailPath !== null) {
                 $thumbnailName = pathinfo($thumbnailPath, PATHINFO_BASENAME);
-                $relativeUrl = "thumbnails/{$thumbnailName}";
+
+                if (is_null($workspace)) {
+                    $relativeUrl = "thumbnails/{$thumbnailName}";
+                } else {
+                    $relativeUrl = 'thumbnails' .
+                        $ds .
+                        $workspace->getCode() .
+                        $ds .
+                        $thumbnailName;
+                }
                 $icon = $this->om->factory('Claroline\CoreBundle\Entity\Resource\ResourceIcon');
                 $icon->setMimeType('custom');
                 $icon->setRelativeUrl($relativeUrl);
                 $icon->setShortcut(false);
                 $this->om->persist($icon);
-                $this->createShortcutIcon($icon);
+                $this->createShortcutIcon($icon, $workspace);
                 $this->om->endFlushSuite();
 
                 return $icon;
@@ -140,7 +154,7 @@ class IconManager
      *
      * @throws \RuntimeException
      */
-    public function createShortcutIcon(ResourceIcon $icon)
+    public function createShortcutIcon(ResourceIcon $icon, Workspace $workspace = null)
     {
         $this->om->startFlushSuite();
 
@@ -148,7 +162,7 @@ class IconManager
 
         try {
             $originalIconLocation = "{$this->rootDir}{$ds}..{$ds}web{$ds}{$icon->getRelativeUrl()}";
-            $shortcutLocation = $this->creator->shortcutThumbnail($originalIconLocation);
+            $shortcutLocation = $this->creator->shortcutThumbnail($originalIconLocation, $workspace);
         } catch (\Exception $e) {
             $shortcutLocation = "{$this->rootDir}{$ds}.."
             . "{$ds}web{$ds}bundles{$ds}clarolinecore{$ds}images{$ds}resources{$ds}icons{$ds}shortcut-default.png";
@@ -185,20 +199,31 @@ class IconManager
      *
      * @return \Claroline\CoreBundle\Entity\Resource\ResourceIcon
      */
-    public function createCustomIcon(UploadedFile $file)
+    public function createCustomIcon(UploadedFile $file, Workspace $workspace = null)
     {
         $this->om->startFlushSuite();
         $iconName = $file->getClientOriginalName();
         $extension = pathinfo($iconName, PATHINFO_EXTENSION);
-        $hashName = $this->ut->generateGuid() . "." . $extension;
-        $file->move($this->thumbDir, $hashName);
+
+        if (is_null($workspace)) {
+            $dest = $this->thumbDir;
+            $hashName = $this->ut->generateGuid() . "." . $extension;
+        } else {
+            $dest = $this->thumbDir . DIRECTORY_SEPARATOR . $workspace->getCode();
+            $hashName = $workspace->getCode() .
+                DIRECTORY_SEPARATOR .
+                $this->ut->generateGuid() .
+                "." .
+                $extension;
+        }
+        $file->move($dest, $hashName);
         //entity creation
         $icon = $this->om->factory('Claroline\CoreBundle\Entity\Resource\ResourceIcon');
         $icon->setRelativeUrl("thumbnails/{$hashName}");
         $icon->setMimeType('custom');
         $icon->setShortcut(false);
         $this->om->persist($icon);
-        $this->createShortcutIcon($icon);
+        $this->createShortcutIcon($icon, $workspace);
         $this->om->endFlushSuite();
 
         return $icon;
@@ -212,10 +237,20 @@ class IconManager
      *
      * @return null|string $thumnnailPath
      */
-    public function createFromFile($filePath, $baseMime)
+    public function createFromFile($filePath, $baseMime, Workspace $workspace = null)
     {
         $ds = DIRECTORY_SEPARATOR;
-        $newPath = $this->thumbDir. $ds . $this->ut->generateGuid() . ".png";
+
+        if (is_null($workspace)) {
+            $prefix = $this->thumbDir;
+        } else {
+            $prefix = $this->thumbDir . $ds . $workspace->getCode();
+
+            if (!is_dir($prefix)) {
+                mkdir($prefix);
+            }
+        }
+        $newPath = $prefix . $ds . $this->ut->generateGuid() . ".png";
 
         $thumbnailPath = null;
         if ($baseMime === 'video') {
@@ -242,7 +277,7 @@ class IconManager
     /**
      * @param \Claroline\CoreBundle\Entity\Resource\ResourceIcon $icon
      */
-    public function delete(ResourceIcon $icon)
+    public function delete(ResourceIcon $icon, Workspace $workspace = null)
     {
         if ($icon->getMimeType() === 'custom') {
             //search if this icon is used elsewhere (ie copy)
@@ -254,8 +289,8 @@ class IconManager
                 $this->om->remove($shortcut);
                 $this->om->remove($icon);
                 $this->om->flush();
-                $this->removeImageFromThumbDir($icon);
-                $this->removeImageFromThumbDir($icon->getShortcutIcon());
+                $this->removeImageFromThumbDir($icon, $workspace);
+                $this->removeImageFromThumbDir($icon->getShortcutIcon(), $workspace);
             }
         }
     }
@@ -272,6 +307,21 @@ class IconManager
     {
         $this->om->startFlushSuite();
         $oldIcon = $resource->getIcon();
+
+        if (!$oldIcon->isShortcut()) {
+            $oldShortcutIcon = $oldIcon->getShortcutIcon();
+            $shortcutIcon = $icon->getShortcutIcon();
+
+            if (!is_null($oldShortcutIcon) && !is_null($shortcutIcon)) {
+                $nodes = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceNode')
+                    ->findBy(array('icon' => $oldShortcutIcon));
+
+                foreach ($nodes as $node) {
+                    $node->setIcon($shortcutIcon);
+                    $this->om->persist($node);
+                }
+            }
+        }
         $this->delete($oldIcon);
         $resource->setIcon($icon);
         $this->om->persist($resource);
@@ -283,14 +333,42 @@ class IconManager
     /**
      * @param \Claroline\CoreBundle\Entity\Resource\ResourceIcon $icon
      */
-    public function removeImageFromThumbDir(ResourceIcon $icon)
+    public function removeImageFromThumbDir(ResourceIcon $icon, Workspace $workspace = null)
     {
         if (preg_match('#^thumbnails#', $icon->getRelativeUrl())) {
             $pathName = $this->rootDir . '/../web/' . $icon->getRelativeUrl();
 
             if (file_exists($pathName)) {
                 unlink($pathName);
+
+                if (!is_null($workspace)) {
+                    $dir = $this->thumbDir . DIRECTORY_SEPARATOR . $workspace->getCode();
+
+                    if (is_dir($dir) && $this->isDirectoryEmpty($dir)) {
+                        rmdir($dir);
+                    }
+                }
             }
         }
+    }
+
+    private function isDirectoryEmpty($dirName)
+    {
+        $files = array ();
+        $dirHandle = opendir($dirName);
+
+        if ($dirHandle) {
+
+            while ($file = readdir($dirHandle)) {
+
+                if ($file !== '.' && $file !== '..') {
+                    $files[] = $file;
+                    break;
+                }
+            }
+            closedir($dirHandle);
+        }
+
+        return count($files) === 0;
     }
 }

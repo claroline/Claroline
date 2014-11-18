@@ -12,6 +12,7 @@
 namespace Claroline\CoreBundle\Library\Utilities;
 
 use JMS\DiExtraBundle\Annotation as DI;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
 
 /**
@@ -161,7 +162,7 @@ class ThumbnailCreator
         imagedestroy($dstImg);
     }
 
-    public function shortcutThumbnail($srcImg)
+    public function shortcutThumbnail($srcImg, Workspace $workspace = null)
     {
         if (!$this->isGdLoaded) {
              throw new UnloadedExtensionException('The GD extension is missing \n');
@@ -182,9 +183,15 @@ class ThumbnailCreator
         imagesavealpha($im, true);
         imagecopy($im, $stamp, 0, imagesy($im) - imagesy($stamp), 0, 0, imagesx($stamp), imagesy($stamp));
         $name = "{$this->ut->generateGuid()}.{$extension}";
-        imagepng($im, $this->thumbnailDir.$ds.$name);
+
+        if (!is_null($workspace)) {
+            $dir = $this->thumbnailDir . $ds . $workspace->getCode(). $ds . $name;
+        } else {
+            $dir = $this->thumbnailDir . $ds . $name;
+        }
+        imagepng($im, $dir);
         imagedestroy($im);
 
-        return "{$this->thumbnailDir}{$ds}{$name}";
+        return $dir;
     }
 }

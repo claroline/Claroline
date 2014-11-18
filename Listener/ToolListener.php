@@ -16,6 +16,7 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Event\DisplayToolEvent;
 use Claroline\CoreBundle\Entity\Event;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
@@ -78,7 +79,7 @@ class ToolListener
      */
     public function onDisplayWorkspaceAgenda(DisplayToolEvent $event)
     {
-        $event->setContent($this->workspaceAgenda($event->getWorkspace()->getId()));
+        $event->setContent($this->workspaceAgenda($event->getWorkspace()));
     }
 
     /**
@@ -172,16 +173,19 @@ class ToolListener
         return $response->getContent();
     }
 
-    public function workspaceAgenda($workspaceId)
+    public function workspaceAgenda(Workspace $workspace)
     {
         $em = $this->container->get('doctrine.orm.entity_manager');
-        $listEvents = $em->getRepository('ClarolineCoreBundle:Event')->findByWorkspaceId($workspaceId, true);
+        $listEvents = $em->getRepository('ClarolineCoreBundle:Event')
+            ->findByWorkspaceId($workspace->getId(), true);
+        $canCreate = $this->container->get('security.context')
+            ->isGranted(array('agenda', 'edit'), $workspace);
 
         return $this->templating->render(
             'ClarolineCoreBundle:Tool/workspace/agenda:agenda.html.twig',
             array(
-                'workspace' => $workspace = $this->workspaceManager->getWorkspaceById($workspaceId),
-                'canCreate' => $this->container->get('security.context')->getToken()->getUser() === 'anon.' ? 'false': 'true'
+                'workspace' => $workspace,
+                'canCreate' => $canCreate
             )
         );
     }

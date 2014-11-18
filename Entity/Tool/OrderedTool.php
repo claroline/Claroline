@@ -13,6 +13,7 @@ namespace Claroline\CoreBundle\Entity\Tool;
 
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Role;
+use Claroline\CoreBundle\Entity\Tool\ToolRights;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -80,16 +81,6 @@ class OrderedTool
     protected $isVisibleInDesktop = false;
 
     /**
-     * @ORM\ManyToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Role",
-     *     inversedBy="orderedTools",
-     *     cascade={"merge"}
-     * )
-     * @ORM\JoinTable(name="claro_ordered_tool_role")
-     */
-    protected $roles;
-
-    /**
      * @ORM\ManyToOne(
      *     targetEntity="Claroline\CoreBundle\Entity\User",
      *     cascade={"persist"},
@@ -99,9 +90,17 @@ class OrderedTool
      */
     protected $user;
 
+    /**
+     * @ORM\OneToMany(
+     *     targetEntity="Claroline\CoreBundle\Entity\Tool\ToolRights",
+     *     mappedBy="orderedTool"
+     * )
+     */
+    protected $rights;
+
     public function __construct()
     {
-        $this->roles = new ArrayCollection();
+        $this->rights = new ArrayCollection();
     }
 
     public function getId()
@@ -149,26 +148,6 @@ class OrderedTool
         return $this->name;
     }
 
-    public function addRole(Role $role)
-    {
-        $this->roles->add($role);
-    }
-
-    public function removeRole(Role $role)
-    {
-        $this->roles->removeElement($role);
-    }
-
-    public function resetRoles()
-    {
-        $this->roles = new ArrayCollection();
-    }
-
-    public function getRoles()
-    {
-        return $this->roles;
-    }
-
     public function setUser(User $user = null)
     {
         $this->user = $user;
@@ -187,5 +166,15 @@ class OrderedTool
     public function setVisibleInDesktop($isVisible)
     {
         $this->isVisibleInDesktop = $isVisible;
+    }
+
+    public function getRights()
+    {
+        return $this->rights;
+    }
+
+    public function addRight(ToolRights $right)
+    {
+        $this->rights->add($right);
     }
 }

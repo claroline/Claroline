@@ -30,6 +30,7 @@ use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Manager\RightsManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\ToolManager;
+use Claroline\CoreBundle\Manager\ToolRightsManager;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -46,20 +47,22 @@ class WorkspaceModelManager
     private $rightsManager;
     private $roleManager;
     private $toolManager;
+    private $toolRightsManager;
     private $sc;
 
     /**
      * Constructor.
      *
      * @DI\InjectParams({
-     *     "dispatcher"      = @DI\Inject("claroline.event.event_dispatcher"),
-     *     "homeTabManager"  = @DI\Inject("claroline.manager.home_tab_manager"),
-     *     "om"              = @DI\Inject("claroline.persistence.object_manager"),
-     *     "resourceManager" = @DI\Inject("claroline.manager.resource_manager"),
-     *     "rightsManager"   = @DI\Inject("claroline.manager.rights_manager"),
-     *     "roleManager"     = @DI\Inject("claroline.manager.role_manager"),
-     *     "toolManager"     = @DI\Inject("claroline.manager.tool_manager"),
-     *     "sc"              = @DI\Inject("security.context")
+     *     "dispatcher"        = @DI\Inject("claroline.event.event_dispatcher"),
+     *     "homeTabManager"    = @DI\Inject("claroline.manager.home_tab_manager"),
+     *     "om"                = @DI\Inject("claroline.persistence.object_manager"),
+     *     "resourceManager"   = @DI\Inject("claroline.manager.resource_manager"),
+     *     "rightsManager"     = @DI\Inject("claroline.manager.rights_manager"),
+     *     "roleManager"       = @DI\Inject("claroline.manager.role_manager"),
+     *     "toolManager"       = @DI\Inject("claroline.manager.tool_manager"),
+     *     "toolRightsManager" = @DI\Inject("claroline.manager.tool_rights_manager"),
+     *     "sc"                = @DI\Inject("security.context")
      * })
      */
     public function __construct(
@@ -70,18 +73,20 @@ class WorkspaceModelManager
         RightsManager            $rightsManager,
         RoleManager              $roleManager,
         ToolManager              $toolManager,
+        ToolRightsManager        $toolRightsManager,
         SecurityContextInterface $sc
     )
     {
-        $this->dispatcher      = $dispatcher;
-        $this->homeTabManager  = $homeTabManager;
-        $this->om              = $om;
-        $this->resourceManager = $resourceManager;
-        $this->rightsManager   = $rightsManager;
-        $this->roleManager     = $roleManager;
-        $this->toolManager     = $toolManager;
-        $this->modelRepository = $this->om->getRepository('ClarolineCoreBundle:Model\WorkspaceModel');
-        $this->sc              = $sc;
+        $this->dispatcher        = $dispatcher;
+        $this->homeTabManager    = $homeTabManager;
+        $this->om                = $om;
+        $this->resourceManager   = $resourceManager;
+        $this->rightsManager     = $rightsManager;
+        $this->roleManager       = $roleManager;
+        $this->toolManager       = $toolManager;
+        $this->toolRightsManager = $toolRightsManager;
+        $this->modelRepository   = $this->om->getRepository('ClarolineCoreBundle:Model\WorkspaceModel');
+        $this->sc                = $sc;
     }
 
     /**
@@ -94,7 +99,10 @@ class WorkspaceModelManager
         $model = new WorkspaceModel();
         $model->setName($name);
         $model->setWorkspace($workspace);
-        if ($this->sc->getToken()->getUser() !== 'anon.') $model->addUser($this->sc->getToken()->getUser());
+
+        if ($this->sc->getToken()->getUser() !== 'anon.') {
+            $model->addUser($this->sc->getToken()->getUser());
+        }
         $this->om->persist($model);
         $this->om->flush();
 
@@ -377,22 +385,25 @@ class WorkspaceModelManager
                 $workspace
             );
 
-            $roles = $orderedTool->getRoles();
+            $rights = $orderedTool->getRights();
 
-            foreach ($roles as $role) {
+            foreach ($rights as $right) {
+                $role = $right->getRole();
 
                 if ($role->getType() === 1) {
-                    $this->toolManager->addRoleToOrderedTool(
+                    $this->toolRightsManager->createToolRights(
                         $workspaceOrderedTool,
-                        $role
+                        $role,
+                        $right->getMask()
                     );
                 } else {
                     $key = $role->getTranslationKey();
 
                     if (isset($workspaceRoles[$key]) && !empty($workspaceRoles[$key])) {
-                        $this->toolManager->addRoleToOrderedTool(
+                        $this->toolRightsManager->createToolRights(
                             $workspaceOrderedTool,
-                            $workspaceRoles[$key]
+                            $workspaceRoles[$key],
+                            $right->getMask()
                         );
                     }
                 }

@@ -12,7 +12,6 @@
 namespace Claroline\CoreBundle\Manager;
 
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
@@ -25,6 +24,8 @@ use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
 use Claroline\CoreBundle\Manager\Exception\ToolPositionAlreadyOccupiedException;
 use Claroline\CoreBundle\Manager\Exception\UnremovableToolException;
+use Claroline\CoreBundle\Manager\ToolMaskDecoderManager;
+use Claroline\CoreBundle\Manager\ToolRightsManager;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -49,22 +50,30 @@ class ToolManager
     private $om;
     /** @var RoleManager */
     private $roleManager;
+    /** @var ToolMaskDecoderManager */
+    private $toolMaskManager;
+    /** @var ToolRightsManager */
+    private $toolRightsManager;
 
     /**
      * Constructor.
      *
      * @DI\InjectParams({
-     *     "ed"          = @DI\Inject("claroline.event.event_dispatcher"),
-     *     "utilities"   = @DI\Inject("claroline.utilities.misc"),
-     *     "om"          = @DI\Inject("claroline.persistence.object_manager"),
-     *     "roleManager" = @DI\Inject("claroline.manager.role_manager")
+     *     "ed"                = @DI\Inject("claroline.event.event_dispatcher"),
+     *     "utilities"         = @DI\Inject("claroline.utilities.misc"),
+     *     "om"                = @DI\Inject("claroline.persistence.object_manager"),
+     *     "roleManager"       = @DI\Inject("claroline.manager.role_manager"),
+     *     "toolMaskManager"   = @DI\Inject("claroline.manager.tool_mask_decoder_manager"),
+     *     "toolRightsManager" = @DI\Inject("claroline.manager.tool_rights_manager")
      * })
      */
     public function __construct(
         StrictDispatcher $ed,
         ClaroUtilities $utilities,
         ObjectManager $om,
-        RoleManager $roleManager
+        RoleManager $roleManager,
+        ToolMaskDecoderManager $toolMaskManager,
+        ToolRightsManager $toolRightsManager
     )
     {
         $this->orderedToolRepo = $om->getRepository('ClarolineCoreBundle:Tool\OrderedTool');
@@ -75,12 +84,17 @@ class ToolManager
         $this->utilities = $utilities;
         $this->om = $om;
         $this->roleManager = $roleManager;
+        $this->toolMaskManager = $toolMaskManager;
+        $this->toolRightsManager = $toolRightsManager;
     }
 
     public function create(Tool $tool)
     {
+        $this->om->startFlushSuite();
         $this->om->persist($tool);
-        $this->om->flush();
+        $this->om->forceFlush();
+        $this->toolMaskManager->createDefaultToolMaskDecoders($tool);
+        $this->om->endFlushSuite();
     }
 
     /**
@@ -102,8 +116,9 @@ class ToolManager
             $switchTool = $this->orderedToolRepo->findOneBy(array('workspace' => $workspace, 'order' => $position));
         }
 
-        if ($switchTool !== null) {
-            throw new ToolPositionAlreadyOccupiedException('A tool already exists at this position');
+        while (!is_null($switchTool)) {
+            $position++;
+            $switchTool = $this->orderedToolRepo->findOneBy(array('workspace' => $workspace, 'order' => $position));
         }
 
         $orderedTool = $this->om->factory('Claroline\CoreBundle\Entity\Tool\OrderedTool');
@@ -115,54 +130,6 @@ class ToolManager
         $this->om->flush();
 
         return $orderedTool;
-    }
-
-    /**
-     * @param \Claroline\CoreBundle\Entity\Tool\Tool                   $tool
-     * @param \Claroline\CoreBundle\Entity\Role                        $role
-     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
-     */
-    public function addRole(Tool $tool, Role $role, Workspace $workspace)
-    {
-        $otr = $this->orderedToolRepo->findOneBy(array('tool' => $tool, 'workspace' => $workspace));
-        $otr->addRole($role);
-        $this->om->persist($otr);
-        $this->om->flush();
-    }
-
-    /**
-     * @param \Claroline\CoreBundle\Entity\Tool\OrderedTool $otr
-     * @param \Claroline\CoreBundle\Entity\Role             $role
-     */
-    public function addRoleToOrderedTool(OrderedTool $otr, Role $role)
-    {
-        $otr->addRole($role);
-        $this->om->persist($otr);
-        $this->om->flush();
-    }
-
-    /**
-     * @param \Claroline\CoreBundle\Entity\Tool\Tool                   $tool
-     * @param \Claroline\CoreBundle\Entity\Role                        $role
-     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
-     */
-    public function removeRole(Tool $tool, Role $role, Workspace $workspace)
-    {
-        $otr = $this->orderedToolRepo->findOneBy(array('tool' => $tool, 'workspace' => $workspace));
-        $otr->removeRole($role);
-        $this->om->persist($otr);
-        $this->om->flush();
-    }
-
-    /**
-     * @param \Claroline\CoreBundle\Entity\Tool\OrderedTool $otr
-     * @param \Claroline\CoreBundle\Entity\Role             $role
-     */
-    public function removeRoleFromOrderedTool(OrderedTool $otr, Role $role)
-    {
-        $otr->removeRole($role);
-        $this->om->persist($otr);
-        $this->om->flush();
     }
 
     /**
@@ -237,20 +204,54 @@ class ToolManager
         $ot = $this->orderedToolRepo->findBy(array('workspace' => $workspace), array('order' => 'ASC'));
         $wsRoles = $this->roleManager->getWorkspaceConfigurableRoles($workspace);
         $existingTools = array();
+        $maskDecoders = array();
+        $otVisibility = array();
+        $otDecoders = array();
+        $rights = $this->toolRightsManager->getRightsForOrderedTools($ot);
+        $decoders = $this->toolMaskManager->getAllMaskDecoders();
+
+        foreach ($decoders as $decoder) {
+            $tool = $decoder->getTool();
+
+            if (!isset($maskDecoders[$tool->getId()])) {
+                $maskDecoders[$tool->getId()] = array();
+            }
+            $maskDecoders[$tool->getId()][$decoder->getName()] = $decoder;
+
+            if (!isset($otDecoders[$tool->getId()])) {
+                $otDecoders[$tool->getId()] = array();
+            }
+            $otDecoders[$tool->getId()][] = $decoder;
+        }
+
+        foreach ($rights as $right) {
+            $rightOt = $right->getOrderedTool();
+            $rightRole = $right->getRole();
+            $rightTool = $rightOt->getTool();
+            $mask = $right->getMask();
+
+            if (!isset($otVisibility[$rightOt->getId()])) {
+                $otVisibility[$rightOt->getId()] = array();
+            }
+            $otVisibility[$rightOt->getId()][$rightRole->getId()] =
+                $this->toolMaskManager->decodeMaskWithDecoders(
+                    $mask,
+                    $otDecoders[$rightTool->getId()]
+                );
+        }
 
         foreach ($ot as $orderedTool) {
             if ($orderedTool->getTool()->isDisplayableInWorkspace()) {
                 //creates the visibility array
                 foreach ($wsRoles as $role) {
-                    $isVisible = false;
-                    //is the tool visible for a role in a workspace ?
-                    foreach ($orderedTool->getRoles() as $toolRole) {
-                        if ($toolRole === $role) {
-                            $isVisible = true;
-                        }
-                    }
+                    $roleVisibility[$role->getId()] = array();
+                }
 
-                    $roleVisibility[$role->getId()] = $isVisible;
+                if (isset($otVisibility[$orderedTool->getId()])) {
+
+                    foreach ($otVisibility[$orderedTool->getId()] as $key => $value) {
+                        $roleVisibility[$key] = $value;
+                    }
                 }
 
                 $existingTools[] = array(
@@ -264,7 +265,10 @@ class ToolManager
             }
         }
 
-        return $existingTools;
+        return array(
+            'existingTools' => $existingTools,
+            'maskDecoders' => $maskDecoders
+        );
     }
 
     /**
@@ -425,7 +429,6 @@ class ToolManager
         $orderedTools = $this->orderedToolRepo->findBy(array('user' => $user, 'workspace' => $workspace));
 
         foreach ($orderedTools as $orderedTool) {
-            $orderedTool->resetRoles();
 
             if ($user && $orderedTool->getTool()->getName() !== 'parameters') {
                 $orderedTool->setVisibleInDesktop(false);

@@ -29,50 +29,45 @@ class ToolRepository extends EntityRepository
      */
     public function findDisplayedByRolesAndWorkspace(array $roles, Workspace $workspace)
     {
-        $isAdmin = false;
+        if (count($roles) === 0) {
 
-        foreach ($roles as $role) {
-            if ($role === 'ROLE_ADMIN' || $role === 'ROLE_WS_MANAGER_' . $workspace->getGuid()) {
-                $isAdmin = true;
-            }
-        }
-
-        if (!$isAdmin) {
-            if (null === $firstRole = array_shift($roles)) {
-                throw new \RuntimeException('The roles array cannot be empty');
-            }
-
-            $dql = "
-                SELECT tool FROM Claroline\CoreBundle\Entity\Tool\Tool tool
-                JOIN tool.orderedTools ot
-                JOIN ot.workspace ws
-                JOIN ot.roles role
-                WHERE role.name = :firstRole and ws.id = {$workspace->getId()}
-            ";
-
-            foreach ($roles as $key => $role) {
-                $dql .= " OR role.name = :role_{$key} and ws.id = {$workspace->getId()}";
-            }
-
-            $dql .= ' ORDER BY ot.order';
-            $query = $this->_em->createQuery($dql);
-            $query->setParameter('firstRole', $firstRole);
-
-            foreach ($roles as $key => $role) {
-                $query->setParameter('role_'.$key, $role);
-            }
-
+            return array();
         } else {
-            $dql = '
-                SELECT tool
-                FROM Claroline\CoreBundle\Entity\Tool\Tool tool
-                WHERE tool.isDisplayableInWorkspace = true
-            ';
+            $isAdmin = false;
 
-            $query = $this->_em->createQuery($dql);
+            foreach ($roles as $role) {
+                if ($role === 'ROLE_ADMIN' || $role === 'ROLE_WS_MANAGER_' . $workspace->getGuid()) {
+                    $isAdmin = true;
+                }
+            }
+
+            if (!$isAdmin) {
+                $dql = '
+                    SELECT t
+                    FROM Claroline\CoreBundle\Entity\Tool\Tool t
+                    JOIN t.orderedTools ot
+                    JOIN ot.rights r
+                    JOIN r.role rr
+                    WHERE ot.workspace = :workspace
+                    AND rr.name IN (:roleNames)
+                    AND BIT_AND(r.mask, 1) = 1
+                    ORDER BY ot.order
+                ';
+                $query = $this->_em->createQuery($dql);
+                $query->setParameter('workspace', $workspace);
+                $query->setParameter('roleNames', $roles);
+            } else {
+                $dql = '
+                    SELECT tool
+                    FROM Claroline\CoreBundle\Entity\Tool\Tool tool
+                    WHERE tool.isDisplayableInWorkspace = true
+                ';
+
+                $query = $this->_em->createQuery($dql);
+            }
+
+            return $query->getResult();
         }
-
-        return $query->getResult();
     }
 
     /**
@@ -190,5 +185,17 @@ class ToolRepository extends EntityRepository
         $query = $this->_em->createQuery($dql);
 
         return $query->getSingleScalarResult();
+    }
+
+    public function findToolsDispayableInWorkspace()
+    {
+        $dql = '
+            SELECT t
+            FROM Claroline\CoreBundle\Entity\Tool\Tool t
+            WHERE t.isDisplayableInWorkspace = true
+        ';
+        $query = $this->_em->createQuery($dql);
+
+        return $query->getResult();
     }
 }
