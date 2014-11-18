@@ -50,8 +50,6 @@ class OperationHandler extends BaseHandler
         $dependencies = $operation->getDependencies();
         $prevNode = null;
         $saveFurthest = 0;
-        
-        var_dump($dependencies);
 
         if (isset($dependencies[0])) {
             foreach ($dependencies[0] as $dependency) {
