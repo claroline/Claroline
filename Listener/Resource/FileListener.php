@@ -101,7 +101,7 @@ class FileListener implements ContainerAwareInterface
             $published = $form->get('published')->getData();
             $event->setPublished($published);
             $fileName = $tmpFile->getClientOriginalName();
-            $ext = $tmpFile->getClientOriginalExtension();
+            $ext = strtolower($tmpFile->getClientOriginalExtension());
             $mimeType = $this->container->get('claroline.utilities.mime_type_guesser')->guess($ext);
             $workspaceDir = $this->filesDir .
                 DIRECTORY_SEPARATOR .
