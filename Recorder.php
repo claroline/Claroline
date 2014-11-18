@@ -240,6 +240,7 @@ class Recorder
         echo ("Searching dependencies for {$package}...");
         $dependencies = [];
         $requires = $package->getRequires();
+        var_dump($requires);
 
         if ($requires) {
             foreach($requires as $name => $el) {
