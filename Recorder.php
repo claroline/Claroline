@@ -107,8 +107,10 @@ class Recorder
     public function buildBundleFile()
     {
         $orderedBundles = array();
+        $operations = $this->getOperations();
+        var_dump($operations);
 
-        foreach ($this->getOperations() as $operation) {
+        foreach ($operations as $operation) {
             $package = $operation->getPackage();
             $prettyName = $package->getPrettyName();
             $bundles = $this->detector->detectBundles($prettyName);
@@ -164,8 +166,10 @@ class Recorder
     public function orderClaroBundlesForInstall(array $bundles)
     {
         $claroBundles = array();
+        $operations = $this->getOperations();
+        var_dump($operations);
         
-        foreach ($this->getOperations() as $operation) {
+        foreach ($operations as $operation) {
             $package = $operation->getPackage();
             if ($package->getType() === 'claroline-core'
                 || $package->getType() === 'claroline-plugin') {
@@ -175,6 +179,7 @@ class Recorder
         }
 
         $bundleCopies = $bundles;
+        var_dump($claroBundles);
 
         foreach ($claroBundles as $claroBundle => $dependencies) {
             foreach ($dependencies as $dependency) {
@@ -252,8 +257,9 @@ class Recorder
         }
 
         $solver = new Solver(new DefaultPolicy(), $pool, $toRepo);
+        $operations = $solver->solve($request);
         
-        return $solver->solve($request);
+        return $operations;
     }
 
     private function getNameSpace($prettyName)
