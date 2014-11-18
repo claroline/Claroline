@@ -82,7 +82,7 @@ class Recorder
             $operation = new Operation(Operation::UPDATE, $bundle, $type);
             $operation->setFromVersion($initial->getVersion());
             $operation->setToVersion($target->getVersion());
-            $operation->setDependencies($this->getDependencies($package));
+            $operation->setDependencies($this->getDependencies($target));
             $this->operationHandler->addOperation($operation);
         }
     }
