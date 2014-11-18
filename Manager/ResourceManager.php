@@ -183,7 +183,7 @@ class ResourceManager
         $this->om->persist($resource);
 
         if ($icon === null) {
-            $icon = $this->iconManager->getIcon($resource);
+            $icon = $this->iconManager->getIcon($resource, $workspace);
         }
 
         $parentPath = '';
@@ -929,7 +929,7 @@ class ResourceManager
                 );
 
                 if ($node->getIcon()) {
-                    $this->iconManager->delete($node->getIcon());
+                    $this->iconManager->delete($node->getIcon(), $workspace);
                 }
 
                 /*
@@ -944,7 +944,7 @@ class ResourceManager
         }
 
         if ($node->getIcon()) {
-            $this->iconManager->delete($node->getIcon());
+            $this->iconManager->delete($node->getIcon(), $workspace);
         }
 
         $this->om->remove($node);
@@ -1126,7 +1126,7 @@ class ResourceManager
     public function changeIcon(ResourceNode $node, UploadedFile $file)
     {
         $this->om->startFlushSuite();
-        $icon = $this->iconManager->createCustomIcon($file);
+        $icon = $this->iconManager->createCustomIcon($file, $node->getWorkspace());
         $this->iconManager->replace($node, $icon);
         $this->logChangeSet($node);
         $this->om->endFlushSuite();
@@ -1541,7 +1541,10 @@ class ResourceManager
     public function resetIcon(ResourceNode $node)
     {
         $this->om->startFlushSuite();
-        $icon = $this->iconManager->getIcon($this->getResourceFromNode($node));
+        $icon = $this->iconManager->getIcon(
+            $this->getResourceFromNode($node),
+            $node->getWorkspace()
+        );
         $node->setIcon($icon);
         $this->om->endFlushSuite();
     }
