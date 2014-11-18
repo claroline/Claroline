@@ -244,7 +244,8 @@ class Recorder
 
         if ($requires) {
             foreach($requires as $name => $el) {
-                var_dump("{$name} is claroline ? {$this->isClarolinePackage($name)}");
+                var_dump("{$name} is claroline ?");
+                var_dump($this->isClarolinePackage($name));
                 if ($this->isClarolinePackage($name)) {
                     $dependencies[] = $this->getNameSpace($name);
                 }
