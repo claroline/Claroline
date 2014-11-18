@@ -269,7 +269,9 @@ class Recorder
 
     private function getNameSpace($prettyName)
     {
-        foreach ($this->operations as $operation) {
+        $operations = $this->getOperations();
+        
+        foreach ($operations as $operation) {
             $package = $operation->getPackage();
 
             if ($prettyName === $package->getPrettyName()) {
