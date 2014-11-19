@@ -39,6 +39,10 @@ class Notification
      */
     protected $user;
 
+    /**
+     * @ORM\Column(name="self_activation", type="boolean", options={"default": 1})
+     */
+    protected $selfActivation = true;
 
     public function getId()
     {
@@ -63,5 +67,15 @@ class Notification
     public function getForum()
     {
         return $this->forum;
+    }
+
+    public function getSelfActivation()
+    {
+        return $this->selfActivation;
+    }
+
+    public function setSelfActivation($selfActivation)
+    {
+        $this->selfActivation = $selfActivation;
     }
 }

@@ -221,4 +221,52 @@ class ForumRepository extends EntityRepository
 
         return $executeQuery ? $query->getResult() : $query;
     }
+
+    public function findUnnotifiedUsersFromListByForum(
+        Forum $forum,
+        array $users,
+        $executeQuery = true
+    )
+    {
+        if (count($users) === 0) {
+
+            return array();
+        } else {
+            $dql = '
+                SELECT DISTINCT u
+                FROM Claroline\CoreBundle\Entity\User u
+                WHERE u IN (:users)
+                AND NOT EXISTS (
+                    SELECT n
+                    FROM Claroline\ForumBundle\Entity\Notification n
+                    WHERE n.forum = :forum
+                    AND n.user = u
+                )
+            ';
+
+            $query = $this->_em->createQuery($dql);
+            $query->setParameter('users', $users);
+            $query->setParameter('forum', $forum);
+
+            return $executeQuery ? $query->getResult() : $query;
+        }
+    }
+
+    public function findNonSelfNotificationsByForum(
+        Forum $forum,
+        $executeQuery = true
+    )
+    {
+        $dql = '
+            SELECT n
+            FROM Claroline\ForumBundle\Entity\Notification n
+            WHERE n.forum = :forum
+            AND n.selfActivation = false
+        ';
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('forum', $forum);
+
+        return $executeQuery ? $query->getResult() : $query;
+    }
 }
