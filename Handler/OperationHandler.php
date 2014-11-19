@@ -40,7 +40,7 @@ class OperationHandler extends BaseHandler
             $opNode->setAttribute('to', $operation->getToVersion());
         }
 
-        if ($append) {
+        if (!$append) {
             $nextNode = $this->findNextNode($operation);
             $this->rootElement->insertBefore($opNode, $nextNode);
         } else {
