@@ -42,6 +42,11 @@ commentsApp
                 else {
                     this.comments.$resolved = true;
                 }
+            },
+            addComment: function(portfolioId, message) {
+                if (0 < portfolioId) {
+                    this.create(portfolioId, {message: message})
+                }
             }
         };
     }]);
