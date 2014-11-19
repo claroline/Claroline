@@ -5,7 +5,6 @@ var appDirectives = angular.module('app.directives', []);
 appDirectives
     .directive('scrollContainer', ["commentsManager", "$timeout", function (commentsManager, $timeout) {
         return {
-            scope:    true,
             restrict: "A",
             link: function ($scope, element, attrs) {
                 $scope.comments = commentsManager.comments;
