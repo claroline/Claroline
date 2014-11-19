@@ -108,7 +108,7 @@ foreach ($bundles as $bundle) {
 
     $operation->setToVersion($bundle['new_version']);
     $operation->setDependencies($bundle['dependencies']);
-    $operationHandler->addOperation($operation);
+    $operationHandler->addOperation($operation, false);
 }
 
 //Build the bundle file
