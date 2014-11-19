@@ -47,25 +47,6 @@ class Recorder
         $this->bundleHandler = $bundleHandler;
         $this->operationHandler = $operationHandler;
         $this->vendorDir = $vendorDir;
-        $installedFile = new JsonFile($this->vendorDir . '/composer/installed.json');
-        $this->fromRepo = new InstalledFilesystemRepository($installedFile);
-        $toRepo = new ArrayRepository();
-        $pool = new Pool();
-        $pool->addRepository($this->fromRepo);
-        $pool->addRepository(new PlatformRepository());
-        $request = new Request($pool);
-
-        foreach ($this->fromRepo->getPackages() as $package) {
-            $request->install($package->getName());
-        }
-
-        $solver = new Solver(new DefaultPolicy(), $pool, $toRepo);
-        $this->operations = $solver->solve($request);
-        
-        foreach ($this->operations as $operation) {
-            var_dump($operation->getPackage()->getPrettyName());
-        }
-        
     }
 
     public function setLogger(\Closure $logger)
@@ -271,7 +252,21 @@ class Recorder
 
     public function getOperations()
     {
-        return $this->operations;
+        $installedFile = new JsonFile($this->vendorDir . '/composer/installed.json');
+        $this->fromRepo = new InstalledFilesystemRepository($installedFile);
+        $toRepo = new ArrayRepository();
+        $pool = new Pool();
+        $pool->addRepository($this->fromRepo);
+        $pool->addRepository(new PlatformRepository());
+        $request = new Request($pool);
+
+        foreach ($this->fromRepo->getPackages() as $package) {
+            $request->install($package->getName());
+        }
+
+        $solver = new Solver(new DefaultPolicy(), $pool, $toRepo);
+        
+        return $solver->solve($request);
     }
 
     private function getNameSpace($prettyName)
