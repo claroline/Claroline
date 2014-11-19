@@ -28,7 +28,7 @@ class OperationHandler extends BaseHandler
         $this->document->appendChild($this->rootElement);
     }
 
-    public function addOperation(Operation $operation)
+    public function addOperation(Operation $operation, $append = true)
     {
         $this->log("Logging {$operation->getType()} action in the operation file...");
         $opNode = $this->document->createElement($operation->getType());
@@ -40,8 +40,13 @@ class OperationHandler extends BaseHandler
             $opNode->setAttribute('to', $operation->getToVersion());
         }
 
-        $nextNode = $this->findNextNode($operation);
-        $this->rootElement->insertBefore($opNode, $nextNode);
+        if ($append) {
+            $nextNode = $this->findNextNode($operation);
+            $this->rootElement->insertBefore($opNode, $nextNode);
+        } else {
+            $this->rootElement->appendChild($opNode);
+        }
+
         $this->writeOperations();
     }
 
