@@ -133,7 +133,7 @@ class Recorder
         //The next line not be necessary. Some problems were caused by some recursive dependencies...
         //we may comment this line. However, since it's working properly now, I'm not touching anything
         //because it doesn't do anything wrong.
-        $orderedBundles = $this->orderClaroBundlesForInstall($orderedBundles);
+        //$orderedBundles = $this->orderClaroBundlesForInstall($orderedBundles);
         $this->bundleHandler->writeBundleFile(array_unique($orderedBundles));
     }
 
