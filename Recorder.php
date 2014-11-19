@@ -153,6 +153,7 @@ class Recorder
 
         foreach ($operations as $operation) {
             $package = $operation->getPackage();
+            var_dump('looping...');
             
             if ($element === $package->getPrettyName()) {
                 var_dump('recursion');
