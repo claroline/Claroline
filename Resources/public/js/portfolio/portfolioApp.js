@@ -2,7 +2,7 @@
 
 var portfolioApp = angular.module('portfolioApp', ['ngResource', 'ngSanitize', 'ngAnimate', 'ui.tinymce',
     'ui.resourcePicker', 'ui.badgePicker', 'ui.datepicker', 'ui.dateTimeInput', 'mgcrea.ngStrap.popover',
-    'app.translation', 'app.filters', 'app.interpolator']);
+    'app.translation', 'app.filters', 'app.interpolator', 'app.directives']);
 
 portfolioApp.config(["$httpProvider", "$locationProvider", function($http) {
     var elementToRemove = ['views', 'editing', 'new', 'id', 'type', 'unreadComments'];

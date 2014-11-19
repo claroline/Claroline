@@ -1,6 +1,8 @@
 'use strict';
 
-portfolioApp
+var appDirectives = angular.module('app.directives', []);
+
+appDirectives
     .directive('scrollContainer', ["commentsManager", "$timeout", function (commentsManager, $timeout) {
         return {
             scope:    true,
@@ -12,7 +14,7 @@ portfolioApp
                     if (newValue >= oldValue) {
                         $timeout(function(){
                             element[0].scrollTop = element[0].scrollHeight;
-                        },0);
+                        }, 0);
                     }
                 });
             }

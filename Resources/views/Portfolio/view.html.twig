@@ -94,12 +94,12 @@
                             <span class="fa" data-ng-class="{'fa-chevron-down': displayComment, 'fa-chevron-up': !displayComment}"></span>
                         </button>
                     </div>
-                    <div class="panel panel-default communication_panel" data-comments-container="portfolio.comments" data-ng-show="displayComment">
+                    <div class="panel panel-default communication_panel nghide" data-comments-container="portfolio.comments" data-ng-class="{'nghide': !displayComment}">
                         <div class="panel-heading">
                             {{ 'communication_panel' | trans({}, 'icap_portfolio') }}
                         </div>
                         <div class="panel-body">
-                            <ul class="media-list" data-scroll-container="comments">
+                            <ul class="media-list" data-scroll-container>
                                 {% verbatim %}
                                 <li class="media" data-ng-repeat="comment in comments | orderBy:['+date']">
                                     <div class="media-body">
@@ -324,11 +324,11 @@
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/portfolio/directives/datepickerDirective.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/portfolio/directives/badgePickerDirective.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/portfolio/directives/commentsDirective.js') }}"></script>
-        <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/portfolio/directives/scrollContainerDirective.js') }}"></script>
 
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/modules/trustAsHtml.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/modules/translation.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/modules/urlInterpolator.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/modules/scrollContainerDirective.js') }}"></script>
 
         <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/portfolio/templates/menu_widget-type.tpl.js') }}"></script>
     {% endif %}
