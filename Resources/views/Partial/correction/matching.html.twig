@@ -5,7 +5,6 @@
         <th class="classic">{{ 'expected answer' | trans }}</th>
     </tr>
 
-{#    {% if interMatching.typeMatching.code == 2 %}#}
         {% for label in inter.labels %}
             <tr>
                 <td>
@@ -67,67 +66,4 @@
                 </td>
             </tr>
         {% endfor%}
-{#    {%else %}#}
-        {#{% for label in inter.labels %}
-            <tr>
-                <td>
-                    {% if (tabResponseIndex[label.id] is not defined and tabRightResponse[label.id] == null) or tabRightResponse[label.id] == tabResponseIndex[label.id] %}
-                        <div class="rightResponse" align="center">
-                            <div class="labels">
-                                {{ label.value | raw }}
-                            </div>
-                            {% for proposal in inter.proposals %}
-                                {% if proposal.associatedLabel != null and proposal.associatedLabel.id == label.id %}
-                                    <div class="associatedProposal" align="center">
-                                        <table>
-                                            <tr>
-                                                <td class="proposals">
-                                                    {{ proposal.value | raw }}
-                                                </td>
-                                            </tr>
-                                        </table>
-                                    </div>
-                                {% endif %}
-                            {% endfor%}
-                        </div>
-                    {% else %}
-                        <div class="falseResponse" align="center">
-                            <div class="labels">
-                                {{ label.value | raw }}
-                            </div>
-                            {% set responses = explodeString('-', tabResponseIndex[label.id]) %}
-                            {% for response in responses %}
-                                {% if (response != null) %}
-                                    {% set proposal = getProposal(response) %}
-                                    <div class="associatedProposal" align="center">
-                                        <table>
-                                            <tr>
-                                                <td class="proposals">
-                                                    {{ proposal.value | raw }}
-                                                </td>
-                                            </tr>
-                                        </table>
-                                    </div>
-                                {% endif %}
-                            {% endfor %}
-                        </div>
-                    {% endif %}
-                </td>
-                <td>
-                    <div class="labelMatch" align="center">
-                        <div class="labels">
-                                {{ label.value | raw }}
-                            </div>
-                        {% for proposal in inter.proposals %}
-                            {% if proposal.associatedLabel != null and proposal.associatedLabel.id == label.id %}
-                                <div class="associatedProposal" align="center">
-                                    {{ proposal.value | raw }}
-                                </div>
-                            {% endif %}
-                        {% endfor%}
-                    </div>
-                </td>
-            </tr>
-        {% endfor%}#}
-{#    {% endif %}#}
 </table>

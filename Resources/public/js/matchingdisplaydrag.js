@@ -2,7 +2,7 @@ var responses = [];
 var balisesLiDropped = [];
 
 $(function() {
-    
+
     if($(".draggable").width() > $(".droppable").width()) {
         var $widthDraggable = $(".draggable").width();
         var $widthDroppable = $widthDraggable;
