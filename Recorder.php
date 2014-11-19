@@ -49,6 +49,23 @@ class Recorder
         $this->vendorDir = $vendorDir;
         $installedFile = new JsonFile($this->vendorDir . '/composer/installed.json');
         $this->fromRepo = new InstalledFilesystemRepository($installedFile);
+        $toRepo = new ArrayRepository();
+        $pool = new Pool();
+        $pool->addRepository($this->fromRepo);
+        $pool->addRepository(new PlatformRepository());
+        $request = new Request($pool);
+
+        foreach ($this->fromRepo->getPackages() as $package) {
+            $request->install($package->getName());
+        }
+
+        $solver = new Solver(new DefaultPolicy(), $pool, $toRepo);
+        $this->operations = $solver->solve($request);
+        
+        foreach ($this->operations as $operation) {
+            var_dump($operation->getPackage()->getPrettyName());
+        }
+        
     }
 
     public function setLogger(\Closure $logger)
@@ -153,10 +170,8 @@ class Recorder
 
         foreach ($operations as $operation) {
             $package = $operation->getPackage();
-            var_dump("comparing {$package->getPrettyName()} and {$element}");
             
             if ($element == $package->getPrettyName()) {
-                var_dump('recursion');
                 return $this->isClarolinePackage($package);
             }
         }
@@ -240,14 +255,11 @@ class Recorder
      */
     public function getDependencies(PackageInterface $package)
     {
-        echo ("Searching dependencies for {$package}...");
         $dependencies = [];
         $requires = $package->getRequires();
 
         if ($requires) {
             foreach($requires as $name => $el) {
-                var_dump("{$name} is claroline ?");
-                var_dump($this->isClarolinePackage($name));
                 if ($this->isClarolinePackage($name)) {
                     $dependencies[] = $this->getNameSpace($name);
                 }
@@ -259,20 +271,7 @@ class Recorder
 
     public function getOperations()
     {
-        $toRepo = new ArrayRepository();
-        $pool = new Pool();
-        $pool->addRepository($this->fromRepo);
-        $pool->addRepository(new PlatformRepository());
-        $request = new Request($pool);
-
-        foreach ($this->fromRepo->getPackages() as $package) {
-            $request->install($package->getName());
-        }
-
-        $solver = new Solver(new DefaultPolicy(), $pool, $toRepo);
-        $operations = $solver->solve($request);
-
-        return $operations;
+        return $this->operations;
     }
 
     private function getNameSpace($prettyName)
