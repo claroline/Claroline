@@ -66,7 +66,7 @@
                         </small>
                         <small class="pull-right loading" data-ng-show="!comment.date"></small>
                         <h5 class="media-heading">{{ comment.user }}</h5>
-                        <small class="col-lg-10" data-ng-bind-html="comment.message | trustAsHtml"></small>
+                        <p class="col-lg-10" data-ng-bind-html="comment.message | trustAsHtml"></p>
                     </div>
                     {% endverbatim %}
                 </div>
@@ -79,7 +79,7 @@
             </div>
             <form name="comment-form">
                 <div class="send-container">
-                    <textarea ui-tinymce class="form-control send-comment" rows="3" name="comment" data-ng-model="comment"></textarea>
+                    <textarea ui-tinymce="tinyMceConfig" class="form-control send-comment" rows="3" name="comment" data-ng-model="comment"></textarea>
                 </div>
                 <div class="btn-panel">
                     <button type="button" class="btn btn-sm btn-primary pull-right" disabled="disabled" data-ng-disabled="!selectedPortfolio" data-ng-click="addComment(selectedPortfolio, comment); comment = ''">{{ 'comment_send'|trans({}, 'icap_portfolio') }}</button>
