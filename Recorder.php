@@ -67,7 +67,8 @@ class Recorder
             $bundle = $this->detector->detectBundle($package->getPrettyName());
             $type = $this->getOperationBundleType($package);
             $operation = new Operation(Operation::INSTALL, $bundle, $type);
-            $operation->setDependencies($this->getDependencies($package));
+            //do not reorder because installed.json is not done yet
+            //$operation->setDependencies($this->getDependencies($package));
             $this->operationHandler->addOperation($operation);
         }
     }
@@ -80,7 +81,8 @@ class Recorder
             $operation = new Operation(Operation::UPDATE, $bundle, $type);
             $operation->setFromVersion($initial->getVersion());
             $operation->setToVersion($target->getVersion());
-            $operation->setDependencies($this->getDependencies($target));
+            //do not reorder because installed.json is not done yet
+            //$operation->setDependencies($this->getDependencies($target));
             $this->operationHandler->addOperation($operation);
         }
     }
