@@ -6,8 +6,7 @@ commentsApp
         $scope.portfolios = [];
 
         $scope.init = function () {
-            var promise = portfolioManager.getPortfolios();
-            promise.then(
+            portfolioManager.getPortfolios().then(
                 function(data) {
                     $scope.portfolios = data;
                     commentsManager.loadComments($scope.selectedPortfolio);
