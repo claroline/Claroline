@@ -153,9 +153,9 @@ class Recorder
 
         foreach ($operations as $operation) {
             $package = $operation->getPackage();
-            var_dump('looping...');
+            var_dump("comparing {$package->getPrettyName()} and {$element}");
             
-            if ($element === $package->getPrettyName()) {
+            if ($element == $package->getPrettyName()) {
                 var_dump('recursion');
                 return $this->isClarolinePackage($package);
             }
