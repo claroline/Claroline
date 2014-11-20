@@ -63,7 +63,9 @@
 
     {% import 'InnovaPathBundle::Player/components/macros.html.twig' as macros %}
 
+    {% if currentStep.activity.primaryResource %}
     {{ macros.displayResourceFrameJS(currentStep.activity.primaryResource) }}
+    {% endif %}
 
     <script type="text/javascript">
         var pathId = {{ path.id }};
