@@ -65,7 +65,7 @@
                             {{ comment.date|date : ('comment_date_format'|trans) }}
                         </small>
                         <small class="pull-right loading" data-ng-show="!comment.date"></small>
-                        <h5 class="media-heading">{{ comment.user }}</h5>
+                        <h5 class="media-heading">{{ comment.sender.lastName }} {{ comment.sender.firstName }}</h5>
                         <p class="col-lg-10" data-ng-bind-html="comment.message | trustAsHtml"></p>
                     </div>
                     {% endverbatim %}
