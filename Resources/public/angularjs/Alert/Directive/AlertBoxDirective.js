@@ -53,8 +53,6 @@
 
                     scope.alerts = AlertFactory.getAlerts();
 
-                    console.log(scope.alerts);
-
                     scope.closeAlert  = function (alert) {
                         AlertFactory.closeAlert(alert);
                     };

@@ -33,7 +33,6 @@
                 });
 
                 $frame.on('resize', function () {
-                    console.log('fired');
                     resizeIframe($frame);
                 });
             }).attr('src', '{{ path('claro_resource_open', {'node': resource.id, 'resourceType': resource.resourceType.name }) }}');
