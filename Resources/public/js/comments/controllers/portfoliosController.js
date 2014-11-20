@@ -2,7 +2,7 @@
 
 commentsApp
     .controller("portfoliosController", ["$scope", "portfolioManager", "commentsManager", "$filter",
-                                function($scope, portfolioManager, commentsManager, $filter) {
+        function($scope, portfolioManager, commentsManager, $filter) {
         $scope.selectedPortfolioId = window.currentPortfolioId;
         $scope.selectedPortfolio   = null;
         $scope.portfolios          = portfolioManager.getPortfolios();
@@ -18,7 +18,7 @@ commentsApp
         );
 
         $scope.clickOnPortolio = function(portfolioId) {
-            if ($scope.selectedPortfolioId != portfolioId) {
+            if (null === $scope.selectedPortfolio) {
                 $scope.selectedPortfolioId = portfolioId;
                 $scope.selectedPortfolio  = $filter('filter')($scope.portfolios, {id: $scope.selectedPortfolioId})[0];
                 commentsManager.loadComments(portfolioId);
@@ -34,5 +34,5 @@ commentsApp
             if (0 < $scope.selectedPortfolio.unreadComments) {
                 portfolioManager.updateViewCommentsDate($scope.selectedPortfolio);
             }
-        }
+        };
     }]);
