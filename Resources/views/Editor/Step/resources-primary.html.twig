@@ -20,7 +20,7 @@
             <em data-ng-show="null == previewStep.primaryResource">{{ 'no_primary_resource'|trans({}, 'path_editor') }}</em>
             <div data-ng-show="null != previewStep.primaryResource" class="row">
                 <div class="col-md-2 col-sm-2 text-right">
-                    <img height="60" src="{% verbatim %}{{ resourceIcons[previewStep.primaryResource.type] || resourceIcons['custom/default'] }}{% endverbatim %}" alt="{% verbatim %}{{ previewStep.primaryResource.type }}{% endverbatim %}" />
+                    <img height="60" data-ng-src="{% verbatim %}{{ resourceIcons[previewStep.primaryResource.type] || resourceIcons['custom/default'] }}{% endverbatim %}" alt="{% verbatim %}{{ previewStep.primaryResource.type }}{% endverbatim %}" />
                 </div>
                 <div class="col-md-10 col-sm-10">
                     <p class="h4">{% verbatim %}{{ previewStep.primaryResource.name }}{% endverbatim %}</p>
