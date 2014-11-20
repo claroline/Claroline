@@ -269,18 +269,27 @@ class PortfolioManager
         $data = array();
 
         foreach ($portfolios as $portfolio) {
-            $type = ($user === $portfolio->getUser()) ? 'owned' : 'guided';
-
-            $data[] = array(
-                'type'           => $type,
-                'id'             => $portfolio->getId(),
-                'title'          => $portfolio->getTitleWidget()->getTitle(),
-                'unreadComments' => $portfolio->getCountUnreadComments(),
-                'commentsViewAt' => $portfolio->getCommentsViewAt()->format(DATE_W3C)
-            );
+            $data[] = $this->getUserGuidedPortfolioData($portfolio, $user);
         }
 
         return $data;
+    }
+
+    /**
+     * @param Portfolio $portfolio
+     * @param User      $user
+     *
+     * @return array
+     */
+    public function getUserGuidedPortfolioData(Portfolio $portfolio, User $user)
+    {
+        return array(
+            'type'           => ($user === $portfolio->getUser()) ? 'owned' : 'guided',
+            'id'             => $portfolio->getId(),
+            'title'          => $portfolio->getTitleWidget()->getTitle(),
+            'unreadComments' => $portfolio->getCountUnreadComments(),
+            'commentsViewAt' => $portfolio->getCommentsViewAt()->format(DATE_W3C)
+        );
     }
 
     /**
@@ -440,5 +449,15 @@ class PortfolioManager
         }
 
         return $isVisible;
+    }
+
+    /**
+     * @param Portfolio $portfolio
+     */
+    public function updateCommentsViewDate(Portfolio $portfolio)
+    {
+        $portfolio->setCommentsViewAt(new \DateTime());
+
+        $this->entityManager->flush($portfolio);
     }
 }
