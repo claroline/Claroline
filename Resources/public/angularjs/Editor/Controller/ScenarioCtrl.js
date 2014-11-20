@@ -117,13 +117,6 @@
                     templateUrl: EditorApp.webDir + 'bundles/innovapath/angularjs/Template/Partial/template-edit.html',
                     controller: 'TemplateModalCtrl'
                 });
-
-                modalInstance.result.then(function() {
-                    // Confirm
-                    $scope.pageslideOpen();
-                }, function () {
-                    // Cancel
-                });
             };
         }
     ]);
