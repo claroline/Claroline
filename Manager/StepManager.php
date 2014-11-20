@@ -163,6 +163,9 @@ class StepManager
                 $this->session->getFlashBag()->add('warning',$warning);
                 $stepStructure->primaryResource = null;
             }
+        } else if ($activity->getPrimaryResource()) {
+            // Step had a resource which has been deleted
+            $activity->setPrimaryResource(null);
         }
 
         // Generate Claroline resource node and rights
