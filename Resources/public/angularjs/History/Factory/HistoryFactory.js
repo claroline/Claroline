@@ -5,9 +5,8 @@
     'use strict';
 
     angular.module('HistoryModule').factory('HistoryFactory', [
-        '$rootScope',
         'PathFactory',
-        function ($rootScope, PathFactory) {
+        function (PathFactory) {
             var disabled = {
                 redo: true,
                 undo: true
@@ -36,7 +35,7 @@
 
                 /**
                  * Restore default history state (= empty history)
-                 * @returns HistoryFactory
+                 * @returns {*}
                  */
                 clear: function () {
                     disabled.redo = true;
@@ -51,7 +50,7 @@
                 /**
                  * Store current path in history
                  * @param path
-                 * @returns HistoryFactory
+                 * @returns {*}
                  */
                 update: function (path) {
                     // Increment history state
@@ -72,7 +71,7 @@
 
                 /**
                  * Get the last path state from history stack and set it as current path
-                 * @returns HistoryFactory
+                 * @returns {*}
                  */
                 undo: function () {
                     // Decrement history state
@@ -97,7 +96,7 @@
 
                 /**
                  * Get the next history state from history stack and set it as current path
-                 * @returns HistoryFactory
+                 * @returns {*}
                  */
                 redo: function () {
                     // Increment history state
@@ -121,7 +120,7 @@
 
                 /**
                  *
-                 * @returns HistoryFactory
+                 * @returns {*}
                  */
                 incrementHistoryState: function () {
                     // Increment history state
@@ -132,7 +131,7 @@
 
                 /**
                  *
-                 * @returns {HistoryFactory}
+                 * @returns {*}
                  */
                 decrementHistoryState: function() {
                     // Decrement history state
@@ -151,8 +150,8 @@
 
                 /**
                  *
-                 * @param   {number}         data
-                 * @returns {HistoryFactory}
+                 * @param   {number} data
+                 * @returns {*}
                  */
                 setHistoryState: function (data) {
                     historyState = data;
