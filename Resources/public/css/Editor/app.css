@@ -2,6 +2,21 @@
     display: none !important;
 }
 
+.path-editor .panel-heading {
+    position: relative;
+}
+
+.path-editor .alert {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    padding: 5px 15px;
+    z-index: 10;
+    cursor: pointer;
+}
+
 /* app css stylesheet */
 .path-editor .panel-heading + .collapse {
     border-width: 0;

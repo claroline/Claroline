@@ -40,8 +40,6 @@
 {% block content %}
     {{ form_start(form, {'attr': {'class': 'form-horizontal', 'novalidate': true}}) }}
         <div data-ng-cloak="" data-ng-app="EditorModule" class="path-editor">
-            <alert-box></alert-box>
-
             <div data-ng-controller="MainCtrl">
                 <div data-ng-controller="TemplateCtrl" id="templates-sidebar" style="display:none;" >
                     {% include 'InnovaPathBundle:Editor:Template/sidebar.html.twig' %}
