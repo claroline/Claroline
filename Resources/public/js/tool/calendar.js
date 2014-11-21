@@ -72,7 +72,7 @@
             window.Claroline.Modal.displayForm(
                 $(event.currentTarget).attr('href'),
                 updateCalendarItemCallback,
-                function () {$('#agenda_form_allDay').is(':checked') ? hideFormDates(): showFormDates();},
+                function () {$('#agenda_form_isTask').is(':checked') ? hideFormDates(): showFormDates();},
                 'form-event'
             );
         });
@@ -88,16 +88,16 @@
         });
 
         //hide the dates if it's a task.
-        $('body').on('click', '#agenda_form_allDay', function() {
-            $('#agenda_form_allDay').is(':checked') ? hideFormDates(): showFormDates();
+        $('body').on('click', '#agenda_form_isTask', function() {
+            $('#agenda_form_isTask').is(':checked') ? hideFormDates(): showFormDates();
         });
 
         //INITIALIZE CALENDAR
         $('#calendar').fullCalendar({
             header: {
-                left: 'prev,next today',
+                left: 'prev, next today',
                 center: 'title',
-                right: 'month,agendaWeek,agendaDay'
+                right: 'month, agendaWeek, agendaDay'
             },
             columnFormat: {
                 month: 'ddd',
@@ -114,7 +114,7 @@
                 week: t('week'),
                 day: t('day')
             },
-            firstDay:1,
+            firstDay: 1,
             monthNames: [t('january'), t('february'), t('march'), t('april'), t('may'), t('june'), t('july'),
                 t('august'), t('september'), t('october'), t('november'), t('december')],
             monthNamesShort: [t('jan'), t('feb'), t('mar'), t('apr'), t('may'), t('ju'), t('jul'),
@@ -128,15 +128,13 @@
             timeFormat: 'H:mm',
             agenda: 'h:mm{ - h:mm}',
             '': 'h:mm{ - h:mm}',
-            minTime: 0,
-            maxTime: 24,
             allDaySlot: false,
             lazyFetching : false,
-            eventDrop: function (event, dayDelta, minuteDelta) {
-                move(event, dayDelta, minuteDelta);
+            eventDrop: function (event, delta, revertFunc, jsEvent, ui, view) {
+                move(event, delta._days, delta._milliseconds / (1000 * 60));
             },
             dayClick: renderAddEventForm,
-            eventClick:  function (event) {
+            eventClick:  function (event, jsEvent, view) {
                 //don't do anything because it's the "edit" button from the popover that is going to trigger the modal
             },
             //renders the popover for an event
@@ -146,14 +144,20 @@
                 if (!event.visible) return false;
                 renderEvent(event, element);
             },
-            eventResize: function (event, dayDelta, minuteDelta) {
-                resize(event, dayDelta, minuteDelta);
+            eventResize: function (event, delta, revertFunc, jsEvent, ui, view) {
+                resize(event, delta._days, delta._milliseconds / (1000 * 60));
             }
         });
     };
 
     var hidePopovers = function () {
         $('.fc-event').popover('hide');
+    }
+
+    var rerenderEvent = function(event, element) {
+        //destroy old popover
+        element.popover('destroy');
+        renderEvent(event, element);
     }
 
     //@todo move this on the eventClick event ?
@@ -169,15 +173,12 @@
 
     var renderAddEventForm = function (date) {
         if (calendar.canCreate) {
-            var dateVal = $.fullCalendar.formatDate(
-                date,
-                Translator.get('platform:date_agenda_display_format')
-            );
+            var dateVal = moment(date).format(Translator.get('platform:date_agenda_display_format'));
 
             var postRenderAddEventAction = function (html) {
                 $('#agenda_form_start').val(dateVal);
                 $('#agenda_form_end').val(dateVal);
-            }
+            };
 
             window.Claroline.Modal.displayForm(
                 calendar.addUrl,
@@ -253,8 +254,9 @@
         $.ajax({
             'url': Routing.generate(route, {'event': event.id, 'day': dayDelta, 'minute': minuteDelta}),
             'type': 'POST',
-            'success': function () {
+            'success': function (event) {
                 $('.panel-body').first().prepend(calendar.flashbag);
+                rerenderEvent(event, $('.' + event.className));
             },
             'error': function () {
                 //do more error handling here
