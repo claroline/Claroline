@@ -97,6 +97,9 @@
                     <div class="panel panel-default communication_panel nghide" data-comments-container="portfolio.comments" data-ng-class="{'nghide': !displayComment}">
                         <div class="panel-heading">
                             {{ 'communication_panel' | trans({}, 'icap_portfolio') }}
+                            <a href="{{ path('icap_portfolio_comments_list', {'portfolioSlug': titleWidget.slug}) }}"
+                               title="{{ 'see_all_exchange'|trans({}, 'icap_portfolio') }}" class="pull-right text-muted fa fa-share">
+                                {{ 'see_all_exchange'|trans({}, 'icap_portfolio') }}</a>
                         </div>
                         <div class="panel-body">
                             <ul class="media-list" data-scroll-container>
