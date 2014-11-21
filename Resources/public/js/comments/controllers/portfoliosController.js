@@ -10,7 +10,6 @@ commentsApp
             function(data) {
                 $scope.portfolios = data;
                 $scope.clickOnPortolio($scope.selectedPortfolioId);
-                commentsManager.loadComments($scope.selectedPortfolioId);
             },
             function(errorPayload) {
                 console.error('failure loading portfolios', errorPayload);
