@@ -2,6 +2,8 @@
 <html>
 <head>
     <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Claroline installer</title>
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-theme.min.css">
@@ -19,9 +21,6 @@
         }
         .navbar img { height: 35px; margin: 7px auto; }
         .required { color: #777; font-weight: normal; }
-        .info-txt { margin: auto auto 24px; }
-        .panel-body { max-width: 94%; margin: 24px; }
-        .step-controls { margin: 14px 14% auto; }
     </style>
 </head>
 <body>
@@ -39,9 +38,7 @@
                     <div class="panel-heading">
                         <h3 class="panel-title"><?php echo $trans($var('stepTitle')) ?></h3>
                     </div>
-                    <div class="panel-body">
-                        <?php echo $render($var('stepTemplate'), $var('stepVariables')) ?>
-                    </div>
+                    <?php echo $render($var('stepTemplate'), $var('stepVariables')) ?>
                 </div>
 
             </div>
