@@ -263,30 +263,27 @@
                 window.assetPath = "{{ asset('') }}";
             })();
         </script>
-        <script type="text/javascript" src="{{ asset('bundles/stfalcontinymce/vendor/tinymce/tinymce.jquery.min.js') }}"></script>
-        <script type="text/javascript" src="{{ asset('bundles/stfalcontinymce/vendor/tinymce/jquery.tinymce.min.js') }}"></script>
-        <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/tinymce/tinymce.js') }}"></script>
-        <script type='text/javascript' src='{{ asset('bundles/frontend/jquery/plugin/confirm-bootstrap/confirm-bootstrap.js') }}'></script>
-        <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/datepicker/js/bootstrap-datepicker.js') }}"></script>
+
+        <script type="text/javascript" src="{{ url('bazinga_exposetranslation_js', { 'domain_name': 'icap_portfolio' }) }}"></script>
+
         {% if 'en' != app.request.locale %}
             <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/datepicker/js/locales/bootstrap-datepicker.' ~ app.request.locale ~ '.js') }}"></script>
         {% endif %}
-        <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/badge/badge_picker.js') }}"></script>
 
-        {% javascripts debug=true filter='jsmin' output='js/portfolio/angular.js'
+        {% javascripts debug=true filter='jsmin' output='js/portfolio/portfolio/vendor.js'
+            '@ClarolineCoreBundle/Resources/public/js/tinymce/tinymce.js'
+            '@ClarolineCoreBundle/Resources/public/js/badge/badge_picker.js'
+            '@StfalconTinymceBundle/Resources/public/vendor/tinymce/tinymce.jquery.min.js'
+            '@StfalconTinymceBundle/Resources/public/vendor/tinymce/jquery.tinymce.min.js'
+            '@FrontEndBundle/Resources/public/jquery/plugin/confirm-bootstrap/confirm-bootstrap.js'
+            '@FrontEndBundle/Resources/public/jquery/plugin/datepicker/js/bootstrap-datepicker.js'
             '@IcapPortfolioBundle/Resources/public/js/vendor/angular/angular.min.js'
             '@IcapPortfolioBundle/Resources/public/js/vendor/angular/angular-resource.min.js'
             '@IcapPortfolioBundle/Resources/public/js/vendor/angular/angular-sanitize.min.js'
             '@IcapPortfolioBundle/Resources/public/js/vendor/angular/angular-animate.min.js'
-        %}
-            <script type="text/javascript" src="{{ asset_url }}"></script>
-        {% endjavascripts %}
-
-        <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/vendor/angular-ui/ui-tinymce/tinymce.js') }}"></script>
-        <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/vendor/moment.min.js') }}"></script>
-        <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/vendor/dateTimeInput.js') }}"></script>
-
-        {% javascripts debug=true filter='jsmin' output='js/portfolio/angular-strap.js'
+            '@IcapPortfolioBundle/Resources/public/js/vendor/angular-ui/ui-tinymce/tinymce.js'
+            '@IcapPortfolioBundle/Resources/public/js/vendor/moment.min.js'
+            '@IcapPortfolioBundle/Resources/public/js/vendor/dateTimeInput.js'
             '@IcapPortfolioBundle/Resources/public/js/vendor/angular-strap/dimensions.min.js'
             '@IcapPortfolioBundle/Resources/public/js/vendor/angular-strap/tooltip.min.js'
             '@IcapPortfolioBundle/Resources/public/js/vendor/angular-strap/tooltip.tpl.min.js'
@@ -296,43 +293,39 @@
             <script type="text/javascript" src="{{ asset_url }}"></script>
         {% endjavascripts %}
 
-        <script type="text/javascript" src="{{ url('bazinga_exposetranslation_js', { 'domain_name': 'icap_portfolio' }) }}"></script>
-
-        <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/utils/Array.js') }}"></script>
-
-        <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/portfolio/portfolioApp.js') }}"></script>
-
-        <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/portfolio/controllers/portfolioController.js') }}"></script>
-        <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/portfolio/controllers/widgetController.js') }}"></script>
-        <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/portfolio/controllers/designController.js') }}"></script>
-        <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/portfolio/controllers/collectionFormController.js') }}"></script>
-        <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/portfolio/controllers/commentController.js') }}"></script>
-
-        <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/portfolio/services/portfolioFactory.js') }}"></script>
-        <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/portfolio/services/portfolioManager.js') }}"></script>
-        <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/portfolio/services/widgetsManager.js') }}"></script>
-        <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/portfolio/services/widgetsConfig.js') }}"></script>
-        <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/portfolio/services/widgetFactory.js') }}"></script>
-        <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/portfolio/services/commentsManager.js') }}"></script>
-        <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/portfolio/services/commentFactory.js') }}"></script>
-
-        <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/portfolio/directives/widgetDirective.js') }}"></script>
-        <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/portfolio/directives/portfolioDirective.js') }}"></script>
-        <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/portfolio/directives/bindHtmlDirective.js') }}"></script>
-        <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/portfolio/directives/loadingFormDirective.js') }}"></script>
-        <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/portfolio/directives/confirmClickDirective.js') }}"></script>
-        <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/portfolio/directives/collectionFormDirective.js') }}"></script>
-        <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/portfolio/directives/designDirective.js') }}"></script>
-        <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/portfolio/directives/resourcePickerDirective.js') }}"></script>
-        <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/portfolio/directives/datepickerDirective.js') }}"></script>
-        <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/portfolio/directives/badgePickerDirective.js') }}"></script>
-        <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/portfolio/directives/commentsDirective.js') }}"></script>
-
-        <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/modules/trustAsHtml.js') }}"></script>
-        <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/modules/translation.js') }}"></script>
-        <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/modules/urlInterpolator.js') }}"></script>
-        <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/modules/scrollContainerDirective.js') }}"></script>
-
-        <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/portfolio/templates/menu_widget-type.tpl.js') }}"></script>
+        {% javascripts debug=true filter='jsmin' output='js/portfolio/portfolio/script.js'
+            '@IcapPortfolioBundle/Resources/public/js/utils/Array.js'
+            '@IcapPortfolioBundle/Resources/public/js/portfolio/portfolioApp.js'
+            '@IcapPortfolioBundle/Resources/public/js/portfolio/controllers/portfolioController.js'
+            '@IcapPortfolioBundle/Resources/public/js/portfolio/controllers/widgetController.js'
+            '@IcapPortfolioBundle/Resources/public/js/portfolio/controllers/designController.js'
+            '@IcapPortfolioBundle/Resources/public/js/portfolio/controllers/collectionFormController.js'
+            '@IcapPortfolioBundle/Resources/public/js/portfolio/controllers/commentController.js'
+            '@IcapPortfolioBundle/Resources/public/js/portfolio/services/portfolioFactory.js'
+            '@IcapPortfolioBundle/Resources/public/js/portfolio/services/portfolioManager.js'
+            '@IcapPortfolioBundle/Resources/public/js/portfolio/services/widgetsManager.js'
+            '@IcapPortfolioBundle/Resources/public/js/portfolio/services/widgetsConfig.js'
+            '@IcapPortfolioBundle/Resources/public/js/portfolio/services/widgetFactory.js'
+            '@IcapPortfolioBundle/Resources/public/js/portfolio/services/commentsManager.js'
+            '@IcapPortfolioBundle/Resources/public/js/portfolio/services/commentFactory.js'
+            '@IcapPortfolioBundle/Resources/public/js/portfolio/directives/widgetDirective.js'
+            '@IcapPortfolioBundle/Resources/public/js/portfolio/directives/portfolioDirective.js'
+            '@IcapPortfolioBundle/Resources/public/js/portfolio/directives/bindHtmlDirective.js'
+            '@IcapPortfolioBundle/Resources/public/js/portfolio/directives/loadingFormDirective.js'
+            '@IcapPortfolioBundle/Resources/public/js/portfolio/directives/confirmClickDirective.js'
+            '@IcapPortfolioBundle/Resources/public/js/portfolio/directives/collectionFormDirective.js'
+            '@IcapPortfolioBundle/Resources/public/js/portfolio/directives/designDirective.js'
+            '@IcapPortfolioBundle/Resources/public/js/portfolio/directives/resourcePickerDirective.js'
+            '@IcapPortfolioBundle/Resources/public/js/portfolio/directives/datepickerDirective.js'
+            '@IcapPortfolioBundle/Resources/public/js/portfolio/directives/badgePickerDirective.js'
+            '@IcapPortfolioBundle/Resources/public/js/portfolio/directives/commentsDirective.js'
+            '@IcapPortfolioBundle/Resources/public/js/modules/trustAsHtml.js'
+            '@IcapPortfolioBundle/Resources/public/js/modules/translation.js'
+            '@IcapPortfolioBundle/Resources/public/js/modules/urlInterpolator.js'
+            '@IcapPortfolioBundle/Resources/public/js/modules/scrollContainerDirective.js'
+            '@IcapPortfolioBundle/Resources/public/js/portfolio/templates/menu_widget-type.tpl.js'
+        %}
+            <script type="text/javascript" src="{{ asset_url }}"></script>
+        {% endjavascripts %}
     {% endif %}
 {% endblock %}
