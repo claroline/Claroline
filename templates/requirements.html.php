@@ -1,8 +1,3 @@
-<!--
-<?php echo $getIp(); ?>
-    <?php echo $getURL(); ?>
-    <?php var_dump($getCountry()); ?>
-    -->
 <div class="panel-body">
     <p class="info-txt">
         <?php if ($var('has_failed_requirement')): ?>
