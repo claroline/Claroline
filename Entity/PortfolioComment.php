@@ -8,7 +8,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Table(name="icap__portfolio_comments")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Icap\PortfolioBundle\Repository\PortfolioCommentRepository")
  */
 class PortfolioComment
 {

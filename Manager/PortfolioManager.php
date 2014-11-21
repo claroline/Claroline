@@ -233,7 +233,7 @@ class PortfolioManager
         /** @var \Icap\PortfolioBundle\Entity\Widget\AbstractWidget[] $widgets */
         $widgets  = $portfolio->getWidgets();
         /** @var \Icap\PortfolioBundle\Entity\PortfolioComment[] $comments */
-        $comments = $portfolio->getComments();
+        $comments = $this->entityManager->getRepository('IcapPortfolioBundle:PortfolioComment')->findSome($portfolio);
 
         $data = array(
             'id'          => $portfolio->getId(),
