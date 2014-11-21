@@ -1,0 +1,155 @@
+{% extends 'IcapPortfolioBundle::layout.html.twig' %}
+
+{% block content_title %}
+    {{ 'portfolio_exchange_space'|trans({}, 'icap_portfolio') }}
+{% endblock %}
+
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'fa fa-list-alt',
+                'name': 'my_portfolios'|trans({}, 'platform'),
+                'href': path('icap_portfolio_list')
+            },
+            {
+                'icon': 'fa fa-list-alt',
+                'name': 'portfolio_exchange_space'|trans({}, 'icap_portfolio'),
+                'href': ''
+            }
+        ])
+    }}
+{% endblock %}
+
+{% block content_body %}
+    <div data-ng-app="commentsApp" data-ng-strict-di>
+        <div class="portfolios-container col-lg-3">
+            <div class="title-container">
+                <p class="lead text-center">{{ 'portfolios'|trans({}, 'icap_portfolio') }}</p>
+            </div>
+            <ul class="list-group portfolio-container" data-ng-init="init()">
+                <li class="list-group-item title">{{ 'my_owned_portfolio'|trans({}, 'icap_portfolio') }}</li>
+                <li class="list-group-item loading" data-ng-class="{'loading': !portfolios.$resolved}" data-ng-show="!portfolios.$resolved"></li>
+                <li class="list-group-item portfolio ng-cloak" role="button" data-ng-repeat="portfolio in ownedPortfolios = (portfolios | filter:{type: 'owned'})"
+                     data-ng-class="{'unread': 0 < portfolio.unreadComments, 'active': selectedPortfolioId == portfolio.id}"
+                     data-ng-click="clickOnPortolio(portfolio.id)">
+                    {% verbatim %}{{ portfolio.title }}<span data-ng-show="0 < portfolio.unreadComments" class="badge pull-right">{{ portfolio.unreadComments }}</span>{% endverbatim %}
+                </li>
+                <li class="list-group-item empty ng-cloak" data-ng-show="portfolios.$resolved && !ownedPortfolios.length">
+                    {{ 'no_owned_portfolio'|trans({}, 'icap_portfolio') }}
+                </li>
+                <li class="list-group-item title">{{ 'my_guided_portfolio'|trans({}, 'icap_portfolio') }}</li>
+                <li class="list-group-item loading" data-ng-class="{'loading': !portfolios.$resolved}" data-ng-show="!portfolios.$resolved"></li>
+                <li class="list-group-item portfolio ng-cloak" role="button" data-ng-repeat="portfolio in guidedPortfolios = (portfolios | filter:{type: 'guided'})"
+                     data-ng-class="{'unread': 0 < portfolio.unreadComments, 'active': selectedPortfolioId == portfolio.id}"
+                     data-ng-click="clickOnPortolio(portfolio.id)">
+                    {% verbatim %}{{ portfolio.title }}<span data-ng-show="0 < portfolio.unreadComments" class="badge pull-right">{{ portfolio.unreadComments }}</span>{% endverbatim %}
+                </li>
+                <li class="list-group-item empty ng-cloak" data-ng-show="portfolios.$resolved && !guidedPortfolios.length">
+                    {{ 'no_guided_portfolio'|trans({}, 'icap_portfolio') }}
+                </li>
+            </ul>
+        </div>
+
+        <div class="comments-container col-lg-9">
+            <div class="title-container">
+                <p class="lead text-center">{{ 'portfolios_comments'|trans({}, 'icap_portfolio') }}</p>
+            </div>
+            <div class="comment-container loading"
+                 data-scroll-container data-ng-init="initComments(selectedPortfolioId)" data-ng-class="{'loading': !comments.$resolved}">
+                <div class="media comment ng-cloak" data-ng-repeat="comment in comments | orderBy:['+date']"
+                     data-ng-show="selectedPortfolioId && comments.$resolved">
+                    {% verbatim %}
+                    <img class="pull-left media-object avatar" alt="{{ comment.sender.lastName }} {{ comment.sender.firstName }}"
+                         data-ng-src="{{ assetPath + comment.sender.avatar }}" data-ng-if="comment.sender.avatar">
+                    <span class="fa pull-left avatar empty-avatar" data-ng-if="!comment.sender.avatar" data-ng-class="{'loading': !comment.date, 'fa-user': comment.date}"></span>
+                    <div class="media-body">
+                        <small class="pull-right time" data-ng-show="comment.date">
+                            <span class="fa fa-calendar"></span>
+                            {{ comment.date|date : ('comment_date_format'|trans) }}
+                        </small>
+                        <small class="pull-right loading" data-ng-show="!comment.date"></small>
+                        <h5 class="media-heading">{{ comment.sender.lastName }} {{ comment.sender.firstName }}</h5>
+                        <p class="col-lg-10" data-ng-bind-html="comment.message | trustAsHtml"></p>
+                    </div>
+                    {% endverbatim %}
+                </div>
+                <div class="ng-cloak" data-ng-show="selectedPortfolioId && comments.$resolved && 0 >= comments.length">
+                    <p class="col-lg-10">{{ 'no_comments'|trans({}, 'icap_portfolio') }}.</p>
+                </div>
+                <div class="alert alert-info ng-cloak" data-ng-show="!selectedPortfolioId && comments.$resolved">
+                    <p>{{ 'select_portfolio_to_comment'|trans({}, 'icap_portfolio') }}.</p>
+                </div>
+            </div>
+            <form name="comment-form">
+                <div class="send-container">
+                    <textarea ui-tinymce="tinyMceConfig" class="form-control send-comment" rows="3" name="comment" data-ng-model="comment"></textarea>
+                </div>
+                <div class="btn-panel">
+                    <button type="button" class="btn btn-sm btn-primary pull-right" disabled="disabled"
+                            data-ng-disabled="!selectedPortfolioId" data-ng-click="addComment(selectedPortfolioId, comment); comment = ''">
+                        {{ 'comment_send'|trans({}, 'icap_portfolio') }}</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {% stylesheets debug=false filter='lessphp, cssmin'  output='css/icapportfolio/comments.css'
+      "@IcapPortfolioBundle/Resources/views/less/comments.less"
+    %}
+        <link rel="stylesheet" href="{{ asset_url }}" screen="media" />
+    {% endstylesheets %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script type="text/javascript">
+        'use strict';
+        (function() {
+            window.currentPortfolioId = {{ portfolioId }};
+            window.assetPath          = "{{ asset('') }}";
+        })();
+    </script>
+    <script type="text/javascript" src="{{ asset('bundles/stfalcontinymce/vendor/tinymce/tinymce.jquery.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/stfalcontinymce/vendor/tinymce/jquery.tinymce.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/tinymce/tinymce.js') }}"></script>
+
+    {% javascripts debug=true filter='jsmin' output='js/portfolio/angular.js'
+        '@IcapPortfolioBundle/Resources/public/js/vendor/angular/angular.min.js'
+        '@IcapPortfolioBundle/Resources/public/js/vendor/angular/angular-resource.min.js'
+        '@IcapPortfolioBundle/Resources/public/js/vendor/angular/angular-sanitize.min.js'
+        '@IcapPortfolioBundle/Resources/public/js/vendor/angular/angular-animate.min.js'
+    %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
+    <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/vendor/angular-ui/ui-tinymce/tinymce.js') }}"></script>
+
+    <script type="text/javascript" src="{{ url('bazinga_exposetranslation_js', { 'domain_name': 'icap_portfolio' }) }}"></script>
+
+    <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/utils/Array.js') }}"></script>
+
+    <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/comments/commentsApp.js') }}"></script>
+
+    <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/comments/controllers/portfoliosController.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/comments/controllers/commentsController.js') }}"></script>
+
+    <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/comments/directives/portfoliosDirective.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/comments/directives/commentsDirective.js') }}"></script>
+
+    <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/comments/services/portfolioManager.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/comments/services/commentsManager.js') }}"></script>
+
+    <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/comments/services/commentFactory.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/comments/services/portfolioFactory.js') }}"></script>
+
+    <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/modules/trustAsHtml.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/modules/translation.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/modules/urlInterpolator.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/modules/scrollContainerDirective.js') }}"></script>
+{% endblock %}

@@ -90,8 +90,6 @@
                     <tr class="portfolio">
                         <td>
                             <a href="{{ path('icap_portfolio_view', {'portfolioSlug': portfolio.widgets.0.slug}) }}" title="{{ portfolio.widgets.0.title }}">{{ portfolio.widgets.0.title }}</a>
-                            {% set countUnreadComments = portfolio.countUnreadComments %}
-                            {% if 0 < countUnreadComments %} <span class="badge" data-toggle="tooltip" data-title="{{ 'portfolio_count_unread_comments'|transchoice(countUnreadComments, {'%countUnreadComments%': countUnreadComments}, 'icap_portfolio') }}">{{ countUnreadComments }}</span>{% endif %}
                             {% set portfolioUrl = path('icap_portfolio_view', {'portfolioSlug': portfolio.widgets.0.slug}) %}
                             <a href="{{ path('icap_portfolio_view', {'portfolioSlug': portfolio.widgets.0.slug}) }}" title="{{ portfolioUrl }}" class="block text-muted">{{ portfolioUrl }}</a>
                         </td>
@@ -141,6 +139,12 @@
                                     </li>
                                 </ul>
                             </div>
+                            {% set countUnreadComments = portfolio.countUnreadComments %}
+                            <a href="{{ path('icap_portfolio_comments_list', {'portfolioSlug': portfolio.widgets.0.slug}) }}" title="{{ 'guide_exchange'|trans({}, 'icap_portfolio') }}"
+                               class="btn btn-xs btn-default exchange_link{% if 0 < countUnreadComments %} highlight{% endif %}" data-toggle="tooltip" data-container="body" data-placement="top" >
+                                <span class="fa fa-comment-o"></span>
+                                {% if 0 < countUnreadComments %} <span class="badge">{{ countUnreadComments }}</span>{% endif %}
+                            </a>
                         </td>
                     </tr>
                 {% endfor %}
@@ -164,6 +168,12 @@
             )
         }}
     {%  endif %}
+    <div class="pull-right">
+        <a href="{{ path('icap_portfolio_comments_list') }}" title="{{ 'portfolio_exchange_space'|trans({}, 'icap_portfolio') }}"
+           class="btn btn-sm btn-default" data-toggle="tooltip" data-container="body" data-placement="top" >
+            <span class="fa fa-comments-o"></span>
+        </a>
+    </div>
 {% endblock %}
 
 

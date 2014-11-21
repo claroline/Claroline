@@ -233,7 +233,7 @@ class PortfolioManager
         /** @var \Icap\PortfolioBundle\Entity\Widget\AbstractWidget[] $widgets */
         $widgets  = $portfolio->getWidgets();
         /** @var \Icap\PortfolioBundle\Entity\PortfolioComment[] $comments */
-        $comments = $portfolio->getComments();
+        $comments = $this->entityManager->getRepository('IcapPortfolioBundle:PortfolioComment')->findSome($portfolio);
 
         $data = array(
             'id'          => $portfolio->getId(),
@@ -254,6 +254,42 @@ class PortfolioManager
         $data['commentsViewAt'] = $portfolio->getCommentsViewAt()->format(DATE_W3C);
 
         return $data;
+    }
+
+    /**
+     * @param User $user
+     *
+     * @return array
+     */
+    public function getUserGuidedPortfoliosData(User $user)
+    {
+        /** @var \Icap\PortfolioBundle\Entity\Portfolio[] $portfolios */
+        $portfolios = $this->entityManager->getRepository("IcapPortfolioBundle:Portfolio")->findAvailableToGuideByUser($user);
+
+        $data = array();
+
+        foreach ($portfolios as $portfolio) {
+            $data[] = $this->getUserGuidedPortfolioData($portfolio, $user);
+        }
+
+        return $data;
+    }
+
+    /**
+     * @param Portfolio $portfolio
+     * @param User      $user
+     *
+     * @return array
+     */
+    public function getUserGuidedPortfolioData(Portfolio $portfolio, User $user)
+    {
+        return array(
+            'type'           => ($user === $portfolio->getUser()) ? 'owned' : 'guided',
+            'id'             => $portfolio->getId(),
+            'title'          => $portfolio->getTitleWidget()->getTitle(),
+            'unreadComments' => $portfolio->getCountUnreadComments(),
+            'commentsViewAt' => $portfolio->getCommentsViewAt()->format(DATE_W3C)
+        );
     }
 
     /**
@@ -413,5 +449,15 @@ class PortfolioManager
         }
 
         return $isVisible;
+    }
+
+    /**
+     * @param Portfolio $portfolio
+     */
+    public function updateCommentsViewDate(Portfolio $portfolio)
+    {
+        $portfolio->setCommentsViewAt(new \DateTime());
+
+        $this->entityManager->flush($portfolio);
     }
 }

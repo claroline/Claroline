@@ -93,5 +93,24 @@ class CommentsManager
 
         return $comment;
     }
+
+    /**
+     * @param Portfolio $portfolio
+     *
+     * @return array
+     */
+    public function getCommentsByPortfolio(Portfolio $portfolio)
+    {
+        $comments = array();
+
+        /** @var \Icap\PortfolioBundle\Entity\PortfolioComment[] $commentObjects */
+        $commentObjects = $this->entityManager->getRepository('IcapPortfolioBundle:PortfolioComment')->findByPortfolio($portfolio);
+
+        foreach ($commentObjects as $commentObject) {
+            $comments[] = $commentObject->getData();
+        }
+
+        return $comments;
+    }
 }
  

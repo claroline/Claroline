@@ -61,4 +61,26 @@ class PortfolioRepository extends EntityRepository
 
         return $executeQuery ? $queryBuilder->getQuery()->getResult(): $queryBuilder->getQuery();
     }
+
+    /**
+     * @param User $user
+     * @param bool $executeQuery
+     *
+     * @return array|\Doctrine\ORM\Query
+     */
+    public function findAvailableToGuideByUser(User $user, $executeQuery = true)
+    {
+        $queryBuilder = $this->createQueryBuilder('p')
+            ->select('p', 'widgets')
+            ->join('p.widgets','widgets')
+            ->leftJoin('p.portfolioGuides', 'guides')
+            ->andWhere('p.user = :user')
+            ->orWhere('guides.user = :guide')
+            ->andWhere('widgets INSTANCE OF IcapPortfolioBundle:Widget\TitleWidget')
+            ->setParameter('user', $user)
+            ->setParameter('guide', $user)
+        ;
+
+        return $executeQuery ? $queryBuilder->getQuery()->getResult(): $queryBuilder->getQuery();
+    }
 }

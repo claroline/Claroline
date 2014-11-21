@@ -6,12 +6,12 @@ portfolioApp
             comments: [],
             init: function(portfolioId, comments) {
                 angular.forEach(comments, function(rawComment) {
-                    var comment = commentFactory.getWidget(portfolioId);
+                    var comment = commentFactory.getComment(portfolioId);
                     this.comments.push(new comment(rawComment));
                 }, this);
             },
             create: function(portfolioId, rawComment) {
-                var emptyComment = commentFactory.getWidget(portfolioId);
+                var emptyComment = commentFactory.getComment(portfolioId);
                 var comment      = new emptyComment(rawComment);
 
                 this.comments.push(comment);

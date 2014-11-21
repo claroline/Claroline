@@ -203,7 +203,7 @@ class WidgetsManager
             'views'  => $withView ? array('view' => $this->getView($widget, $widget->getWidgetType())) : array()
         );
 
-        return  $widget->getCommonData() + $widgetViews + $widget->getData();
+        return  $widget->getCommonData() + $widgetViews + ($withView ? $widget->getData() : $widget->getEmpty());
     }
 }
  

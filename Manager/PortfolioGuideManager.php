@@ -45,6 +45,9 @@ class PortfolioGuideManager
         return $portfolioGuide;
     }
 
+    /**
+     * @param PortfolioGuide $portfolioGuide
+     */
     public function updateCommentsViewDate(PortfolioGuide $portfolioGuide)
     {
         $portfolioGuide->setCommentsViewAt(new \DateTime());
