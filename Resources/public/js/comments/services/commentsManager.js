@@ -23,9 +23,9 @@ commentsApp
             },
             loadComments: function(portfolioId) {
                 this.comments.length = 0;
-                this.comments.$resolved = false;
 
-                if (0 < portfolioId) {
+                if (portfolioId) {
+                    this.comments.$resolved = false;
                     var url = urlInterpolator.interpolate('/{{portfolioId}}/comment', {portfolioId: portfolioId});
                     var $this = this;
 

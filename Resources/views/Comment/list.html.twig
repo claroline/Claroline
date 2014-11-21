@@ -55,7 +55,7 @@
             <div class="title-container">
                 <p class="lead text-center">{{ 'portfolios_comments'|trans({}, 'icap_portfolio') }}</p>
             </div>
-            <div class="comment-container{% if 0 < portfolioId %} loading{% endif %}"
+            <div class="comment-container loading"
                  data-scroll-container data-ng-init="initComments(selectedPortfolioId)" data-ng-class="{'loading': !comments.$resolved}">
                 <div class="media comment ng-cloak" data-ng-repeat="comment in comments | orderBy:['+date']"
                      data-ng-show="selectedPortfolioId && comments.$resolved">
@@ -74,7 +74,7 @@
                     </div>
                     {% endverbatim %}
                 </div>
-                <div class="ng-cloak" data-ng-show="selectedPortfolioId && comments.$resolved && 0 >=  comments.length">
+                <div class="ng-cloak" data-ng-show="selectedPortfolioId && comments.$resolved && 0 >= comments.length">
                     <p class="col-lg-10">{{ 'no_comments'|trans({}, 'icap_portfolio') }}.</p>
                 </div>
                 <div class="alert alert-info ng-cloak" data-ng-show="!selectedPortfolioId && comments.$resolved">

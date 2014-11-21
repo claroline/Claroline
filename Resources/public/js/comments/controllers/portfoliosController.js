@@ -3,13 +3,13 @@
 commentsApp
     .controller("portfoliosController", ["$scope", "portfolioManager", "commentsManager", "$filter",
         function($scope, portfolioManager, commentsManager, $filter) {
-        $scope.selectedPortfolioId = window.currentPortfolioId;
+        $scope.selectedPortfolioId = 0;
         $scope.selectedPortfolio   = null;
         $scope.portfolios          = portfolioManager.getPortfolios();
         $scope.portfolios.then(
             function(data) {
                 $scope.portfolios = data;
-                $scope.clickOnPortolio($scope.selectedPortfolioId);
+                $scope.clickOnPortolio(window.currentPortfolioId);
             },
             function(errorPayload) {
                 console.error('failure loading portfolios', errorPayload);
@@ -17,16 +17,16 @@ commentsApp
         );
 
         $scope.clickOnPortolio = function(portfolioId) {
-            if (null === $scope.selectedPortfolio) {
+            $scope.selectedPortfolioId = 0;
+            $scope.selectedPortfolio = null;
+
+            if (portfolioId !== $scope.selectedPortfolioId) {
                 $scope.selectedPortfolioId = portfolioId;
                 $scope.selectedPortfolio  = $filter('filter')($scope.portfolios, {id: $scope.selectedPortfolioId})[0];
-                commentsManager.loadComments(portfolioId);
                 $scope.updateCountViewComments();
             }
-            else {
-                $scope.selectedPortfolioId = 0;
-                $scope.selectedPortfolio = null;
-            }
+
+            commentsManager.loadComments(portfolioId);
         };
 
         $scope.updateCountViewComments = function () {
