@@ -17,10 +17,6 @@
 {% endblock %}
 
 {% block content_body %}
-    <p class="alert alert-warning" role="alert">
-        {{ 'beta_message' | trans({}, 'icap_portfolio') | raw }}
-    </p>
-
     {% if 0 < guidedPortfoliosPager.nbResults %}
     <div class="panel-group guided_portfolios_panel_group" id="guidedPortfoliosAccordion">
         <div class="panel panel-info guided_portfolios_panel">
