@@ -402,8 +402,8 @@ general: Général
 general_parameters: 'Paramètres généraux'
 general_parameters_portfolio_url_help: 'commence par http://'
 general_parameters_updated_success: 'Paramètres généraux modifiés avec succès.'
-general_tab_form_explanation: Ce formulaire vous permet de spécifier quelles sont les informations vues par rôle dans le profil public.
-general_tab_form_explanation: Ce formulaire vous permet de spécifier quels sont les informations vues par rôle dans le profile public.
+general_tab_form_explanation: Ce formulaire vous permet de spécifier quelles sont les informations vues par rôle dans le profile public.
+general_tab_form_explanation: Ce formulaire vous permet de spécifier quelles sont les informations vues par rôle dans le profile public.
 generate_token: 'Générer un token aléatoire'
 generate_url: 'Inscription publique'
 generate_url_subscription: 'Inscription à l''espace d''activité par un utilisateur'
