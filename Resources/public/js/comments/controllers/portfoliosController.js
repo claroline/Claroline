@@ -17,16 +17,16 @@ commentsApp
         );
 
         $scope.clickOnPortolio = function(portfolioId) {
-            $scope.selectedPortfolioId = 0;
-            $scope.selectedPortfolio = null;
-
             if (portfolioId !== $scope.selectedPortfolioId) {
                 $scope.selectedPortfolioId = portfolioId;
                 $scope.selectedPortfolio  = $filter('filter')($scope.portfolios, {id: $scope.selectedPortfolioId})[0];
                 $scope.updateCountViewComments();
+            } else {
+                $scope.selectedPortfolioId = 0;
+                $scope.selectedPortfolio = null;
             }
 
-            commentsManager.loadComments(portfolioId);
+            commentsManager.loadComments($scope.selectedPortfolioId);
         };
 
         $scope.updateCountViewComments = function () {
