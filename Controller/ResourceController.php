@@ -111,8 +111,9 @@ class ResourceController
 
     /**
      * @EXT\Route(
-     *     "/create/{resourceType}/{parentId}",
+     *     "/create/{resourceType}/{parentId}/published/{published}",
      *     name="claro_resource_create",
+     *     defaults={"published"=0},
      *     options={"expose"=true}
      * )
      * @EXT\ParamConverter(
@@ -131,12 +132,18 @@ class ResourceController
      * @throws \Exception
      * @return Response
      */
-    public function createAction($resourceType, ResourceNode $parent, User $user)
+    public function createAction(
+        $resourceType,
+        ResourceNode $parent,
+        User $user,
+        $published = 0
+    )
     {
         $collection = new ResourceCollection(array($parent));
         $collection->setAttributes(array('type' => $resourceType));
         $this->checkAccess('CREATE', $collection);
         $event = $this->dispatcher->dispatch('create_'.$resourceType, 'CreateResource', array($parent, $resourceType));
+        $isPublished = intval($published) === 1 ? true : $event->isPublished();
 
         if (count($event->getResources()) > 0) {
             $nodesArray = array();
@@ -152,7 +159,7 @@ class ResourceController
                         $parent,
                         null,
                         array(),
-                        $event->isPublished()
+                        $isPublished
                     );
 
                     $nodesArray[] = $this->resourceManager->toArray(
