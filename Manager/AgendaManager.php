@@ -227,6 +227,8 @@ class AgendaManager
     {
         $event->setEnd($event->getEnd()->getTimeStamp() + $this->toSeconds($dayDelta, $minDelta));
         $this->om->flush();
+
+        return $this->toArray($event);
     }
 
     public function updateStartDate(Event $event, $dayDelta = 0, $minDelta = 0)
@@ -239,6 +241,8 @@ class AgendaManager
     {
         $this->updateStartDate($event, $dayDelta, $minuteDelta);
         $this->updateEndDate($event, $dayDelta, $minuteDelta);
+
+        return $this->toArray($event);
     }
 
     /**
@@ -249,14 +253,21 @@ class AgendaManager
     {
         $start = is_null($event->getStart())? null : $event->getStart()->getTimestamp();
         $end = is_null($event->getEnd())? null : $event->getEnd()->getTimestamp();
+        $startDate = new \DateTime();
+        $startDate->setTimeStamp($start);
+        $startIso = $startDate->format(\DateTime::ISO8601);
+        $endDate = new \DateTime();
+        $startDate->setTimeStamp($end);
+        $endIso = $startDate->format(\DateTime::ISO8601);
 
         return array(
             'id' => $event->getId(),
             'title' => $event->getTitle(),
-            'start' => $start,
-            'end' => $end,
+            'start' => $startIso,
+            'end' => $endIso,
             'color' => $event->getPriority(),
             'allDay' => $event->getAllDay(),
+            'isTask' => $event->isTask(),
             'owner' => $event->getUser()->getUsername(),
             'description' => $event->getDescription(),
             'editable' => $this->security->isGranted('EDIT', $event),
@@ -266,7 +277,8 @@ class AgendaManager
             'startFormatted' => date($this->translator->trans('date_range.format.with_hours', array(), 'platform'), $start),
             'endFormatted' => date($this->translator->trans('date_range.format.with_hours', array(), 'platform'), $end),
             'endHours' => $event->getEndHours(),
-            'startHours' => $event->getStartHours()
+            'startHours' => $event->getStartHours(),
+            'className' => 'event_' . $event->getId()
         );
     }
 

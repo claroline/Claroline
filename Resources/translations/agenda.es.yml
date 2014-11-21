@@ -1,4 +1,5 @@
 add_event: 'agregar un evento'
+isTask: Tarea
 agenda_form_allDay: 'Tarea'
 agenda_form_description: 'Descripción'
 agenda_form_end: 'Fecha de finalización'

@@ -70,9 +70,14 @@ class Event
     private $user;
 
     /**
-     * @ORM\Column(name="allday", type="boolean", nullable=true)
+     * @ORM\Column(name="allday", type="boolean")
      */
     private $allDay = false;
+
+    /**
+     * @ORM\Column(name="istask", type="boolean")
+     */
+    private $isTask = false;
 
     /**
      *
@@ -282,5 +287,20 @@ class Event
     public function getDateRange()
     {
         return $this->daterange;
+    }
+
+    public function setIsTask($isTask)
+    {
+        $this->isTask = $isTask;
+    }
+
+    public function getIsTask()
+    {
+        return $this->isTask;
+    }
+
+    public function isTask()
+    {
+        return $this->isTask;
     }
 }

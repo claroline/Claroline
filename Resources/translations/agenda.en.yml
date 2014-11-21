@@ -1,5 +1,6 @@
 add_event: 'Add new event'
-agenda_form_allDay: Task
+isTask: Task
+agenda_form_allDay: All day
 agenda_form_description: Description
 agenda_form_end: 'End date'
 agenda_form_endHours: 'End hour'
