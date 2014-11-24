@@ -12,7 +12,7 @@
             <?php echo $trans('install_details') ?>
         </button>
 
-        <div id="log-container" class="row" style="display: none">
+        <div id="log-container" style="display: none">
             <hr>
             <pre id="log-content"
                  style="max-height: 300px; overflow: auto"
