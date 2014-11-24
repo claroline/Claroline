@@ -29,9 +29,10 @@ portfolioApp
                         remove: { method: "DELETE"}
                     }
                 );
-                widget.prototype.editing = false;
-                widget.prototype.new     = true;
-                widget.prototype.type    = type;
+                widget.prototype.editing  = false;
+                widget.prototype.new      = true;
+                widget.prototype.type     = type;
+                widget.prototype.updating = false;
 
                 widget.prototype.generateUrl = function(parameters) {
                     parameters.portfolioId = portfolioId;
@@ -78,6 +79,12 @@ portfolioApp
                             this.children.remove(childrenToDelete[i]);
                         }
                     }
+                };
+                widget.prototype.setUpdatingMode = function(isUpdating) {
+                    this.updating = isUpdating;
+                };
+                widget.prototype.isUpdating = function() {
+                    return this.updating;
                 };
 
                 this.widgetResources[type] = widget;

@@ -2,7 +2,7 @@
     <div class="panel-heading" data-ng-show="!widget.editing">
         {% if constant('Icap\\PortfolioBundle\\Manager\\PortfolioManager::PORTFOLIO_OPENING_MODE_VIEW') != openingMode %}
             {% verbatim %}{{ widget.label }}{% endverbatim %}
-            <div class="widget-actions pull-right" data-ng-if="!widget.isEditing() && !widget.isNew()">
+            <div class="widget-actions pull-right" data-ng-if="!widget.isEditing() && !widget.isNew() && !widget.isUpdating()">
                 {% if editMode %}
                 <button class="widget-action btn btn-xs btn-danger" data-ng-class="{'btn-loading': widget.isDeleting}" data-confirm-click="delete(widget);" data-ng-if="isDeletable(widget)">
                     <span class="loading" data-ng-if="widget.isDeleting"></span>

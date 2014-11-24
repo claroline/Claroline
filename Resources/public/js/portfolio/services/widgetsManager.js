@@ -43,6 +43,7 @@ portfolioApp
                 }
             },
             save: function(widget) {
+                widget.setUpdatingMode(true);
                 delete widget.copy;
 
                 widget.deleteChildren();
@@ -51,6 +52,7 @@ portfolioApp
                 var success = function() {
                     widget.setNewMode(false);
                     $this.cancelEditing(widget);
+                    widget.setUpdatingMode(false);
                 };
                 var failed = function(error) {
                     console.error('Error occured while saving widget');
