@@ -146,7 +146,7 @@ class WidgetsManager
                 );
                 /** @var AbstractWidget $replacedWidget */
                 $replacedWidget = $this->entityManager->getRepository('IcapPortfolioBundle:Widget\AbstractWidget')->findOneBy($replacedWidgetParameters);
-                $replacedWidget->setRow(--$newRow);
+                $replacedWidget->setRow($originalRow);
 
                 $this->entityManager->persist($replacedWidget);
             }
