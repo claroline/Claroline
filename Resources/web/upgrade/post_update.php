@@ -95,6 +95,8 @@ foreach ($res->fetchAll() as $installedBundle) {
             $bundle['old_version'] = $installedBundle['version'];
         }
     }
+    //removing last ref
+    unset($bundle);
 }
 
 //generating the operations.xml file
