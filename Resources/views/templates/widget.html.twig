@@ -1,9 +1,9 @@
 <div {% if constant('Icap\\PortfolioBundle\\Manager\\PortfolioManager::PORTFOLIO_OPENING_MODE_VIEW') != openingMode %}data-widget {% endif %}class="panel panel-default widget-panel ng-cloak">
-    <div class="panel-heading" data-ng-show="!widget.editing">
+    <div class="panel-heading" data-ng-show="!widget.isEditing()">
         {% if constant('Icap\\PortfolioBundle\\Manager\\PortfolioManager::PORTFOLIO_OPENING_MODE_VIEW') != openingMode %}
             {% verbatim %}{{ widget.label }}{% endverbatim %}
-            <div class="widget-actions pull-right" data-ng-if="!widget.isEditing() && !widget.isNew() && !widget.isUpdating()">
-                {% if editMode %}
+            {% if editMode %}
+            <div class="widget-actions pull-right" data-ng-if="!widget.isNew() && !widget.isUpdating()">
                 <button class="widget-action btn btn-xs btn-danger" data-ng-class="{'btn-loading': widget.isDeleting}" data-confirm-click="delete(widget);" data-ng-if="isDeletable(widget)">
                     <span class="loading" data-ng-if="widget.isDeleting"></span>
                     <span class="fa fa-trash-o" data-ng-if="!widget.isDeleting"></span>
@@ -23,8 +23,9 @@
                     <button type="button" class="btn btn-default" data-ng-disabled="$last" data-ng-click="increaseRow(widget)"><span class="fa fa-arrow-down"></span></button>
                     <button type="button" class="btn btn-default" data-ng-disabled="1 == widget.row" data-ng-click="decreaseRow(widget)"><span class="fa fa-arrow-up"></span></button>
                 </div>
-                {% endif %}
             </div>
+            <span class="pull-right loading" data-ng-if="widget.isUpdating()"></span>
+            {% endif %}
         {% else %}
             {{ widget.label }}
         {% endif %}
