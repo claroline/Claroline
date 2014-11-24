@@ -422,4 +422,20 @@ class Portfolio
 
         return $countUnreadComments;
     }
+
+    /**
+     * @return \Datetime
+     */
+    public function getLastUpdateDate()
+    {
+        $lastUpdateDate = null;
+
+        foreach ($this->getWidgets() as $widget) {
+            if ($lastUpdateDate < $widget->getUpdatedAt()) {
+                $lastUpdateDate = $widget->getUpdatedAt();
+            }
+        }
+
+        return $lastUpdateDate;
+    }
 }

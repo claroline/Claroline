@@ -35,7 +35,6 @@ class PortfolioRepository extends EntityRepository
             ->select('p', 'widgets')
             ->join('p.widgets','widgets')
             ->andWhere('p.user = :userId')
-            ->andWhere('widgets INSTANCE OF IcapPortfolioBundle:Widget\TitleWidget')
             ->setParameter('userId', $user->getId())
         ;
 

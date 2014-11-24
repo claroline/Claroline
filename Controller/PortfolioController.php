@@ -29,11 +29,11 @@ class PortfolioController extends Controller
     {
         $this->checkPortfolioToolAccess();
 
-        $query = $this->getDoctrine()->getRepository('IcapPortfolioBundle:Portfolio')->findByUserWithWidgets($loggedUser, false);
-        $portfoliosPager = $this->get('claroline.pager.pager_factory')->createPager($query, $page, 10);
+        $ownedPortfolioQuery = $this->getDoctrine()->getRepository('IcapPortfolioBundle:Portfolio')->findByUserWithWidgets($loggedUser, false);
+        $portfoliosPager = $this->get('claroline.pager.pager_factory')->createPager($ownedPortfolioQuery, $page, 10);
 
-        $query = $this->getDoctrine()->getRepository('IcapPortfolioBundle:Portfolio')->findGuidedPortfolios($loggedUser, false);
-        $guidedPortfoliosPager = $this->get('claroline.pager.pager_factory')->createPager($query, $guidedPage, 10);
+        $guidedPortfolioQuery = $this->getDoctrine()->getRepository('IcapPortfolioBundle:Portfolio')->findGuidedPortfolios($loggedUser, false);
+        $guidedPortfoliosPager = $this->get('claroline.pager.pager_factory')->createPager($guidedPortfolioQuery, $guidedPage, 10);
 
         return array(
             'portfoliosPager'       => $portfoliosPager,
