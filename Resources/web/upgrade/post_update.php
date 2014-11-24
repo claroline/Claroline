@@ -1,5 +1,8 @@
 <?php
 
+ini_set("max_execution_time", 3600);
+//ini_set("memory_limit", "512M");
+
 include __DIR__ . '/authorize.php';
 
 $vendorDir = __DIR__ . "/../../vendor";
@@ -138,3 +141,5 @@ $refresher->compileGeneratedThemes();
 
 $logLine = "Done\n";
 file_put_contents($logFile, $logLine, FILE_APPEND);
+
+exit(0);
