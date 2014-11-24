@@ -29,6 +29,10 @@ portfolioApp
                 var newRow      = widget.row + 1;
                 var nextWidgets = $filter('filter')($scope.widgets, {type: '!title', column: widget.column, row: newRow});
 
+                if (0 >= nextWidgets.length) {
+                    throw "Row/column management error.";
+                }
+
                 nextWidgets[0].row--;
                 widget.row++;
 
@@ -38,6 +42,10 @@ portfolioApp
             $scope.decreaseRow = function(widget) {
                 var newRow          = widget.row - 1;
                 var previousWidgets = $filter('filter')($scope.widgets, {type: '!title', column: widget.column, row: newRow});
+
+                if (0 >= previousWidgets.length) {
+                    throw "Row/column management error.";
+                }
 
                 previousWidgets[0].row++;
                 widget.row--;
