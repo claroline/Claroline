@@ -6,12 +6,11 @@
             <label class="control-label col-sm-2"><?php echo $trans('install_language'); ?></label>
             <div class="col-sm-10">
                 <select name="install_language" class="form-control auto-submit">
-                    <option <?php if ($var('install_language') === 'en'){ echo 'selected';} ?>>
-                        English
+                    <?php foreach ($getLangs() as $lang) { ?>
+                    <option value="<?php echo $lang; ?>" <?php if ($var('install_language') === $lang){ echo 'selected';} ?>>
+                        <?php echo strtoupper($lang); ?>
                     </option>
-                    <option <?php if ($var('install_language') === 'fr'){ echo 'selected';} ?>>
-                        Français
-                    </option>
+                    <?php } ?>
                 </select>
             </div>
         </div>

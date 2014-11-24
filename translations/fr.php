@@ -103,5 +103,6 @@ return array(
     'skip_step' => 'Passer cette étape',
     'next_step' => 'Suivant',
     'test_again' => 'Réessayer',
-    'please_wait' => 'Veuillez patienter'
+    'please_wait' => 'Veuillez patienter',
+    'country' => 'Pays'
 );

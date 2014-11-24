@@ -42,7 +42,7 @@ class Controller
     public function languageStepSubmit()
     {
         $language = $this->request->request->get('install_language');
-        $languageCode = $this->getLanguageCode($language);
+        $languageCode = $language;
         $this->parameters->setInstallationLanguage($languageCode);
         $this->container->getTranslator()->setLanguage($languageCode);
 
@@ -123,7 +123,6 @@ class Controller
     public function platformSubmitStep()
     {
         $postSettings = $this->request->request->all();
-        $postSettings['language'] = $this->getLanguageCode($postSettings['language']);
         $platformSettings = $this->parameters->getPlatformSettings();
         $platformSettings->bindData($postSettings);
         $errors = $platformSettings->validate();
@@ -307,17 +306,6 @@ class Controller
         $path = $path === '/' ? '' : $path;
 
         return new RedirectResponse($this->request->getBaseUrl() . $path);
-    }
-
-    private function getLanguageCode($language)
-    {
-        switch ($language) {
-            case 'Français':
-                return 'fr';
-            case 'English':
-            default:
-                return 'en';
-        }
     }
 
     private function getTransportId($transport)

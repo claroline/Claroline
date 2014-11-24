@@ -85,6 +85,9 @@ class Container
             $baseUrl = $this->request->getBaseUrl();
             $templating->addHelpers(
                 array(
+                    'getLangs' => function () {
+                        return $this->getLangs();
+                    },
                     'getIp' => function () {
                         return $this->getClientIp();
                     },
@@ -494,6 +497,24 @@ class Container
         }
 
         return $output;
+    }
+
+    /**
+     * Get installation languages
+     */
+    public function getLangs()
+    {
+        $langs = scandir($this->installerDirectory . '/translations/');
+
+        foreach ($langs as $key => $lang) {
+            if (!preg_match('/^.*\.php$/', $lang)) {
+                unset($langs[$key]);
+            } else {
+                $langs[$key] = str_replace('.php', '', $langs[$key]);
+            }
+        }
+
+        return $langs;
     }
 
     public function getWriter()
