@@ -109,9 +109,9 @@ $vendorDir = __DIR__ . "/../../vendor";
 
 			  <div class="modal-footer">
 				<button id="execute-btn" type="button" class="btn btn-primary executable">Execute</button>
-				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 				<button id="back-btn" type="button" class="btn btn-primary">Back</button>
 				<button id="next-btn" type="button" class="btn btn-primary">Next</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 			  </div>
 			</div>
 		  </div>
@@ -182,7 +182,7 @@ $vendorDir = __DIR__ . "/../../vendor";
             var executedSteps = [];
 
 			var setStepExecutable = function() {
-				$('.executable').show()
+				$('.executable').show();
 				logDisplayer.setLogFile(steps[currentStep].logFile);
 				logDisplayer.start();
                 $('#log-content').hide();
@@ -200,6 +200,19 @@ $vendorDir = __DIR__ . "/../../vendor";
                 $('#next-btn').prop('disabled', false);
 			};
 
+            var hideNextPrev = function()
+            {
+                if (currentStep === steps.length - 1) {
+                    $('#next-btn').hide()
+                } else {
+                    $('#next-btn').show();
+                    //show end button
+                }
+
+                currentStep === 0 ?
+                    $('#back-btn').hide(): $('#back-btn').show();
+            }
+
 			//initial modalbox content
 			$('#content-modal').html(translator.translate(steps[currentStep].content));
 			$('.modal-title').html(currentStep + 1 + ' - ' + translator.translate(steps[currentStep].title));
@@ -211,6 +224,7 @@ $vendorDir = __DIR__ . "/../../vendor";
 				steps[currentStep].action ? setStepExecutable(): setStepUnexecutable();
 				$('#content-modal').html(translator.translate(steps[currentStep].content));
 				$('.modal-title').html(currentStep + 1 + ' - ' + translator.translate(steps[currentStep].title));
+                hideNextPrev();
 			});
 
 			$('#back-btn').on('click', function(event) {
@@ -218,6 +232,7 @@ $vendorDir = __DIR__ . "/../../vendor";
 				steps[currentStep].action ? setStepExecutable(): setStepUnexecutable();
 				$('#content-modal').html(translator.translate(steps[currentStep].content));
 				$('.modal-title').html(currentStep + 1 + ' - ' + translator.translate(steps[currentStep].title));
+                hideNextPrev();
 			});
 
 			$('#execute-btn').on('click', function(event) {
@@ -251,6 +266,7 @@ $vendorDir = __DIR__ . "/../../vendor";
 			});
 
 			$('#upgrade-modal').on('shown.bs.modal', function (e) {
+                hideNextPrev();
 				if (steps[currentStep].logFile) logDisplayer.start();
 			});
         </script>
