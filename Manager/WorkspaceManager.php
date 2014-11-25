@@ -900,4 +900,10 @@ class WorkspaceManager
 
         return $this->pagerFactory->createPagerFromArray($workspaces, $page, $max);
     }
+
+    public function getWorkspaceByCode($workspaceCode, $executeQuery = true)
+    {
+        return $this->workspaceRepo
+            ->findWorkspaceByCode($workspaceCode, $executeQuery);
+    }
 }

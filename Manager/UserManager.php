@@ -1087,4 +1087,18 @@ class UserManager
             $this->pagerFactory->createPagerFromArray($users, $page, $max) :
             $this->pagerFactory->createPager($users, $page, $max);
     }
+
+    public function getOneUserByUsername($username, $executeQuery = true)
+    {
+        return $this->userRepo->findOneUserByUsername($username, $executeQuery);
+    }
+
+    public function getUserByUsernameOrMail($username, $mail, $executeQuery = true)
+    {
+        return $this->userRepo->findUserByUsernameOrMail(
+            $username,
+            $mail,
+            $executeQuery
+        );
+    }
 }

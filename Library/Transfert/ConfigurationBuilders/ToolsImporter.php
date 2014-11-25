@@ -169,7 +169,7 @@ class ToolsImporter extends Importer implements ConfigurationInterface
 //                    $this->toolManager->addRoleToOrderedTool($otr, $entityRoles[$role['name']]);
                     $this->toolRightManager->createToolRights(
                         $otr,
-                        $entityRoles[$right['role']],
+                        $entityRoles[$role['name']],
                         ToolMaskDecoder::$defaultValues['open']
                     );
                 }
