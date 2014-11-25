@@ -470,6 +470,7 @@ inscription_mail: 'Inscription mail'
 instructions: Instructions
 internal_error: 'Internal server error. Please contact the administrator.'
 internal_portfolio: 'Platform internal portfolio'
+invalid_action: 'Invalid action'
 invalid_auth_mode: 'Invalid encryption'
 invalid_csv_file: 'Invalid CSV file'
 invalid_driver: 'This driver is not valid'

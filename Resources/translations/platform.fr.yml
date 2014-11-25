@@ -472,6 +472,7 @@ inscription_mail: 'Mail d''inscription'
 instructions: Consignes
 internal_error: 'Erreur interne du serveur. Veuillez contactez l''administrateur de la plateforme.'
 internal_portfolio: 'Portfolio interne à la plateforme'
+invalid_action: 'Action non valide'
 invalid_auth_mode: 'Cryptage non valide'
 invalid_csv_file: 'Le fichier CSV n''est pas valide'
 invalid_driver: 'Ce driver n''est pas valide'

@@ -11,9 +11,6 @@
 
 namespace Claroline\CoreBundle\Command;
 
-use Claroline\CoreBundle\Entity\Group;
-use Claroline\CoreBundle\Manager\Exception\AddRoleException;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -70,6 +67,74 @@ class FunctionsCsvCommand extends ContainerAwareCommand
         return $argument;
     }
 
+    /**
+     * All actions defined in CSV files are group by type and executed in the following order
+     *
+     * Functions order :
+     *     - Deletes users --> claro_delete_user
+     *     - Creates groups --> claro_create_group
+     *     - Empties group --> claro_empty_group
+     *     - Deletes groups --> claro_delete_group
+     *     - Creates users --> claro_create_user
+     *     - [Forced flush]
+     *     - Creates Workspaces --> claro_create_workspace
+     *     - [Forced flush]
+     *     - Deletes workspace roles --> claro_delete_workspace_role
+     *     - Creates workspace roles --> claro_create_workspace_role
+     *     - [Forced flush]
+     *     - Unregisters users from groups --> claro_unregister_from_group
+     *     - Unregisters users from workspaces (unregisters from workspace role) --> claro_unregister_user_from_workspace
+     *     - Unregisters groups from workspaces (unregisters from workspace role) --> claro_unregister_group_from_workspace
+     *     - [Forced flush]
+     *     - Registers users to groups --> claro_register_to_group
+     *     - Registers users to workspaces (registers to workspace role) --> claro_register_user_to_workspace
+     *     - Registers groups to workspaces (registers to workspace role) --> claro_register_group_to_workspace
+     *
+     * Syntax : (Elements within [] are required. Elements within {} are optional)
+     *
+     *     - Creates users :
+     *         [first name];[last name];[username];[password];[email];{code};{phone};{auth};{model name};claro_create_user
+     *
+     *     - Deletes users :
+     *         [username];claro_delete_user
+     *
+     *     - Creates Workspaces :
+     *         [name];[code];[isVisible];[selfRegistration];[registrationValidation];[selfUnregistration];[creator username];{model name};claro_create_workspace
+     *
+     *     - Creates groups :
+     *         [group name];claro_create_group
+     *
+     *     - Empties group :
+     *         [group name];claro_empty_group
+     *
+     *     - Deletes groups :
+     *         [group name];claro_delete_group
+     *
+     *     - Creates workspace roles :
+     *         [workspace code];[role name];claro_create_workspace_role
+     *
+     *     - Deletes workspace roles :
+     *         [workspace code];[role name];claro_delete_workspace_role
+     *
+     *     - Registers users to groups :
+     *         [username];[group name];claro_unregister_from_group
+     *
+     *     - Unregisters users from groups :
+     *         [username];[group name];claro_register_to_group
+     *
+     *     - Registers users to workspaces (registers to workspace role) :
+     *         [username];[workspace code];[role name];claro_register_user_to_workspace
+     *
+     *     - Unregisters users from workspaces (unregisters from workspace role) :
+     *         [username];[workspace code];[role name];claro_unregister_user_from_workspace
+     *
+     *     - Registers groups to workspaces (registers to workspace role) :
+     *         [group name];[workspace code];[role name];claro_register_group_to_workspace
+     *
+     *     - Unregisters groups from workspaces (unregisters from workspace role) :
+     *         [group name];[workspace code];[role name];claro_unregister_group_from_workspace
+     *
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $om = $this->getContainer()->get('claroline.persistence.object_manager');
