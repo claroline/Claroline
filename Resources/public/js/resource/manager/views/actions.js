@@ -116,6 +116,11 @@
                     sourceDirectoryId: this.checkedNodes.directoryId,
                     view: this.parameters.viewName
                 });
+                
+                if(this.isCutMode) {
+                    // disable cut/copy/paste/delete/download buttons && empty this.checkedNodes.nodes after paste action
+                    this.setInitialState();
+                }
             }
         },
         'toggleFilters': function () {
