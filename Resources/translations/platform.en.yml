@@ -245,6 +245,7 @@ create_user: 'Create user'
 create_users: Create users
 create_widget_instance: 'Create a widget'
 create_workspace: 'Create workspace'
+creating: 'Creating'
 creation: Creation
 creation_date: 'Creation date'
 creator: Creator

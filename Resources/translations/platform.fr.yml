@@ -245,6 +245,7 @@ create_user: 'Créer un utilisateur'
 create_users: Créer les utilisateurs
 create_widget_instance: 'Créer un nouveau Widget'
 create_workspace: 'Créer un espace d''activités'
+creating: 'En cours de création'
 creation: Création
 creation_date: 'Date de création'
 creator: Créateur
