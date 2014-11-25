@@ -37,6 +37,8 @@ class Updater030800
         $this->toolRepo = $this->om->getRepository('ClarolineCoreBundle:Tool\Tool');
         $this->toolRightsManager =
             $container->get('claroline.manager.tool_rights_manager');
+        $this->eventRepo =
+            $this->om->getRepository('ClarolineCoreBundle:Event');
     }
 
     public function preUpdate()
@@ -46,12 +48,13 @@ class Updater030800
 
     public function postUpdate()
     {
-        $this->om->startFlushSuite();
+        /*$this->om->startFlushSuite();
         $this->createDefaultToolMaskDecoders();
         $this->updateToolsRights();
         $this->om->endFlushSuite();
         $this->deleteBackupTable();
-        $this->emptyOrderedToolRoleTable();
+        $this->emptyOrderedToolRoleTable();*/
+        $this->refreshEvents();
     }
 
     private function createDefaultToolMaskDecoders()
@@ -134,6 +137,25 @@ class Updater030800
         $this->connection->query('SET FOREIGN_KEY_CHECKS=0');
         $this->connection->query('TRUNCATE TABLE claro_ordered_tool_role');
         $this->connection->query('SET FOREIGN_KEY_CHECKS=1');
+    }
+
+    private function refreshEvents()
+    {
+        $this->log('Updating events...');
+        $events = $this->eventRepo->findAll();
+
+        //there shouldn't be too much events atm
+        foreach ($events as $event) {
+            $isAllDay = $event->getAllDay();
+            //$isAllDay = 1;
+            $event->setIsTask($isAllDay);
+            $event->setAllDay(false);
+            $this->om->persist($event);
+
+            $this->om->flush();
+        }
+
+
     }
 
     public function setLogger($logger)

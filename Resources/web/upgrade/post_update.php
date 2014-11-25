@@ -1,5 +1,8 @@
 <?php
 
+ini_set("max_execution_time", 3600);
+//ini_set("memory_limit", "512M");
+
 include __DIR__ . '/authorize.php';
 
 $vendorDir = __DIR__ . "/../../vendor";
@@ -54,22 +57,27 @@ unlink($operationFilePath);
 $operationHandler = new OperationHandler($operationFilePath);
 $detector = new Detector($vendorDir);
 $bundleHandler = new BundleHandler($configDir . '/bundles.ini');
+$recorder = new Recorder(
+    new Detector($vendorDir),
+    new BundleHandler($configDir . '/bundles.ini'),
+    new OperationHandler($configDir . '/operations.xml'),
+    $vendorDir
+);
 
-//parsing installed.json...
 $bundles = array();
-$ds = DIRECTORY_SEPARATOR;
-$jsonFile = "{$vendorDir}/composer/installed.json";
-$data = json_decode(file_get_contents($jsonFile));
 
 //retrieve the current bundles
-foreach ($data as $row) {
-    if ($row->type === 'claroline-plugin' || $row->type === 'claroline-core') {
+foreach ($recorder->getOperations() as $operation) {
+    $package = $operation->getPackage();
+    if ($package->getType() === 'claroline-plugin' ||
+        $package->getType() === 'claroline-core') {
         $bundles[] = array(
-            'type'         => $row->type,
-            'name'         => $row->name,
-            'new_version'  => $row->version,
+            'type'         => $package->getType(),
+            'name'         => $package->getPrettyName(),
+            'new_version'  => $package->getVersion(),
             'is_installed' => false,
-            'fqcn'         => $detector->detectBundle($row->name)
+            'fqcn'         => $detector->detectBundle($package->getPrettyName()),
+            'dependencies' => array($recorder->getDependencies($package))
         );
     }
 }
@@ -87,6 +95,8 @@ foreach ($res->fetchAll() as $installedBundle) {
             $bundle['old_version'] = $installedBundle['version'];
         }
     }
+    //removing last ref
+    unset($bundle);
 }
 
 //generating the operations.xml file
@@ -102,16 +112,11 @@ foreach ($bundles as $bundle) {
     }
 
     $operation->setToVersion($bundle['new_version']);
-    $operationHandler->addOperation($operation);
+    $operation->setDependencies($bundle['dependencies']);
+    $operationHandler->addOperation($operation, false);
 }
 
 //Build the bundle file
-$recorder = new Recorder(
-    new Detector($vendorDir),
-    new BundleHandler($configDir . '/bundles.ini'),
-    new OperationHandler($configDir . '/operations.xml'),
-    $vendorDir
-);
 $recorder->buildBundleFile();
 
 //reboot the kernel for the new bundle file
@@ -138,3 +143,5 @@ $refresher->compileGeneratedThemes();
 
 $logLine = "Done\n";
 file_put_contents($logFile, $logLine, FILE_APPEND);
+
+exit(0);

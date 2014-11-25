@@ -95,7 +95,8 @@ class DesktopAgendaController extends Controller
      */
     public function addEventModalFormAction()
     {
-        $form = $this->formFactory->create(FormFactory::TYPE_AGENDA);
+        $formType = $this->get('claroline.form.agenda');
+        $form = $this->createForm($formType, new Event());
 
         return array(
             'form' => $form->createView(),
@@ -113,7 +114,8 @@ class DesktopAgendaController extends Controller
     */
     public function addEvent()
     {
-        $form = $this->formFactory->create(FormFactory::TYPE_AGENDA);
+        $formType = $this->get('claroline.form.agenda');
+        $form = $this->createForm($formType, new Event());
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {

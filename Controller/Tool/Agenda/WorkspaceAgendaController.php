@@ -162,7 +162,8 @@ class WorkspaceAgendaController extends Controller
     public function addEventModalFormAction(Workspace $workspace)
     {
         $this->checkAccess($workspace, 'edit');
-        $form = $this->formFactory->create(FormFactory::TYPE_AGENDA);
+        $formType = $this->get('claroline.form.agenda');
+        $form = $this->createForm($formType, new Event());
 
         return array(
             'form' => $form->createView(),
@@ -188,7 +189,8 @@ class WorkspaceAgendaController extends Controller
     public function addEventAction(Workspace $workspace)
     {
         $this->checkAccess($workspace, 'edit');
-        $form = $this->formFactory->create(FormFactory::TYPE_AGENDA);
+        $formType = $this->get('claroline.form.agenda');
+        $form = $this->createForm($formType, new Event());
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {

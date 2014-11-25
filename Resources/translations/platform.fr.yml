@@ -266,7 +266,9 @@ data_col: 'Colonne des données'
 database: 'Base de données'
 database_connection_failed: 'La connexion à la base de données à échoué.'
 date: Date
-date_agenda_display_format: dd-MM-yyyy
+date_agenda_display_format: DD-MM-YYYY
+date_agenda_display_format_for_calendar: d-m-Y
+date_agenda_display_format_for_form: dd-MM-yyyy
 date_form_datepicker_format: dd-mm-yyyy
 date_form_datepicker_php: d-m-Y
 date_form_format: dd/MM/yyyy
@@ -405,8 +407,8 @@ general: Général
 general_parameters: 'Paramètres généraux'
 general_parameters_portfolio_url_help: 'commence par http://'
 general_parameters_updated_success: 'Paramètres généraux modifiés avec succès.'
-general_tab_form_explanation: Ce formulaire vous permet de spécifier quelles sont les informations vues par rôle dans le profil public.
-general_tab_form_explanation: Ce formulaire vous permet de spécifier quels sont les informations vues par rôle dans le profile public.
+general_tab_form_explanation: Ce formulaire vous permet de spécifier quelles sont les informations vues par rôle dans le profile public.
+general_tab_form_explanation: Ce formulaire vous permet de spécifier quelles sont les informations vues par rôle dans le profile public.
 generate_token: 'Générer un token aléatoire'
 generate_url: 'Inscription publique'
 generate_url_subscription: 'Inscription à l''espace d''activité par un utilisateur'

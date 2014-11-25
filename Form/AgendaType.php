@@ -16,9 +16,33 @@ use Symfony\Component\Form\AbstractType;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\Translation\TranslatorInterface;
+use JMS\DiExtraBundle\Annotation as DI;
 
+/**
+ * @DI\Service("claroline.form.agenda")
+ */
 class AgendaType extends AbstractType
 {
+    private $translator;
+    private $editMode;
+
+    /**
+     * @DI\InjectParams({
+     *     "translator" = @DI\Inject("translator")
+     * })
+     */
+    public function __construct(TranslatorInterface $translator)
+    {
+        $this->translator = $translator;
+        $this->editMode = false;
+    }
+
+    public function setEditMode()
+    {
+        $this->editMode = true;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $recurring = array();
@@ -31,22 +55,32 @@ class AgendaType extends AbstractType
 
         $attr = array();
         $attr['class'] = 'datepicker input-small';
-        $attr['data-date-format'] = 'dd-mm-yyyy';
+        $attr['data-date-format'] = $this->translator->trans('date_form_datepicker_format', array(), 'platform');
         $attr['autocomplete'] = 'off';
         $builder
-            ->add('title', 'text', array('required' => true))
-            ->add(
+            ->add('title', 'text', array('required' => true));
+
+        $builder->add(
+            'isTask',
+            'checkbox',
+            array(
+                'label' => 'isTask'
+            )
+        );
+
+        $builder->add(
                 'start',
                 'datepicker',
                 array(
                     'required'  => false,
                     'widget'    => 'single_text',
-                    'format'    => 'dd-MM-yyyy',
+                    'format'    => $this->translator->trans('date_agenda_display_format_for_form', array(), 'platform'),
                     'attr'      => $attr,
                     'autoclose' => true
                     )
-                )
-            ->add(
+                );
+        if (!$this->editMode) {
+            $builder->add(
                 'startHours',
                 'time',
                 array(
@@ -55,19 +89,33 @@ class AgendaType extends AbstractType
                     'input' => 'timestamp',
                     'widget' => 'single_text'
                 )
-            )
-            ->add(
-                'end',
-                'datepicker',
+            );
+        } else {
+            $builder->add(
+                'startHours',
+                'time',
                 array(
-                    'required'  => false,
-                    'widget'    => 'single_text',
-                    'format'    => 'dd-MM-yyyy',
-                    'attr'      => $attr,
-                    'autoclose' => true
+                    'attr' => array('class' => 'hours'),
+                    'input' => 'timestamp',
+                    'widget' => 'single_text'
                 )
+            );
+        }
+
+        $builder->add(
+            'end',
+            'datepicker',
+            array(
+                'required'  => false,
+                'widget'    => 'single_text',
+                'format'    => $this->translator->trans('date_agenda_display_format_for_form', array(), 'platform'),
+                'attr'      => $attr,
+                'autoclose' => true
             )
-            ->add(
+        );
+
+        if (!$this->editMode) {
+            $builder->add(
                 'endHours',
                 'time',
                 array(
@@ -76,9 +124,21 @@ class AgendaType extends AbstractType
                     'input' => 'timestamp',
                     'widget' => 'single_text'
                 )
-            )
-            ->add('allDay', 'checkbox')
-            ->add('description', 'tinymce')
+            );
+        } else {
+            $builder->add(
+                'endHours',
+                'time',
+                array(
+                    'attr' => array('class' => 'hours'),
+                    'input' => 'timestamp',
+                    'widget' => 'single_text'
+                )
+            );
+        }
+
+        //$builder->add('allDay', 'checkbox');
+        $builder->add('description', 'tinymce')
             ->add(
                 'priority',
                 'choice',
@@ -89,12 +149,13 @@ class AgendaType extends AbstractType
                         '#848484' => 'low'
                     )
                 )
-            )
-            ->add(
-                'recurring',
-                'choice',
-                array('choices' => $recurring)
             );
+
+        $builder->add(
+            'recurring',
+            'choice',
+            array('choices' => $recurring)
+        );
     }
 
     public function getName()

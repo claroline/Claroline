@@ -36,7 +36,7 @@
     common.uploadfile = function (form, element, callBack) {
         var workspace = $(form).data('workspace');
         $(form).upload(
-            routing.generate('claro_resource_create', {'resourceType' : 'file', 'parentId' : workspace}),
+            routing.generate('claro_resource_create', {'resourceType' : 'file', 'parentId' : workspace, 'published': 1}),
             function (done) {
                 if (done.getResponseHeader('Content-Type')  === 'application/json') {
                     var resource = $.parseJSON(done.responseText)[0];

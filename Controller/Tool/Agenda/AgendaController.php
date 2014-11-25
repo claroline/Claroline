@@ -75,7 +75,9 @@ class AgendaController extends Controller
     public function updateEventModalFormAction(Event $event)
     {
         $this->checkPermission($event);
-        $form = $this->formFactory->create(FormFactory::TYPE_AGENDA, array(), $event);
+        $formType = $this->get('claroline.form.agenda');
+        $formType->setEditMode();
+        $form = $this->createForm($formType, $event);
 
         return array(
             'form' => $form->createView(),
@@ -100,7 +102,9 @@ class AgendaController extends Controller
     public function updateAction(Event $event)
     {
         $this->checkPermission($event);
-        $form = $this->formFactory->create(FormFactory::TYPE_AGENDA, array(), $event);
+        $formType = $this->get('claroline.form.agenda');
+        $formType->setEditMode();
+        $form = $this->createForm($formType, $event);
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
