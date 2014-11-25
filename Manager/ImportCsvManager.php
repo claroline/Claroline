@@ -962,7 +962,7 @@ class ImportCsvManager
 
                 if (is_null($workspace)) {
                     $workspaces[] = $lineDatas;
-                    $logs[] = "$creatingTxt $workspaceTxt [$wsCode] ...";
+                    $logs[] = "$workspaceTxt [$wsCode] : $creatingTxt...";
                 } else {
                     $logs[] = "[$lineNb] $workspaceTxt [$wsCode] $existedTxt";
                 }
