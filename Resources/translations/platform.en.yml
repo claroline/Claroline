@@ -148,6 +148,8 @@ all_public_personal_workspaces: 'All public personal workspaces'
 all_public_workspaces: 'All public workspaces'
 all_workspaces: 'All workspaces'
 already_existing_user: 'The user already exists'
+already_exists: 'already exists'
+already_exists_in_workspace: 'already exists in workspace'
 an_error_occured_message: 'An error occured. Please contact the administrator.'
 analytics_connections: Connections
 analytics_home: Home
@@ -320,6 +322,8 @@ display: Display
 display_captcha: 'Display captcha for anonymous'
 display_options: 'Display options'
 distinguished_name: Distinguished Name (DN)
+does_not_exist: 'doesn''t exist'
+does_not_exist_in_workspace: 'doesn''t exist in workspace'
 done_on: 'done on'
 down: Down
 download: Download
@@ -420,9 +424,18 @@ groups_list: 'Groups list'
 groups_per_page: 'Groups per page'
 groups_per_page: Groups per page
 groups_registration_in_workspace: 'Groups registration in workspace'
+has_been_created: 'has been created'
+has_been_created_in_workspace: 'has been created in workspace'
+has_been_deleted: 'has been deleted'
+has_been_deleted_in_workspace: 'has been deleted in workspace'
+has_been_emptied: 'has been emptied'
+has_been_registered_in_workspace: 'has been registered in workspace'
+has_been_registered_to_group: 'has been registered to group'
 has_been_put_in_category: 'has been put in category'
 has_been_suscribed_with_role: 'has been suscribed with role'
 has_been_suscribed_with_role_group: 'has been suscribed with role'
+has_been_unregistered_from_group: 'has been unregistered from group'
+has_been_unregistered_from_role: 'has been unregistered from group'
 has_not_been_imported: 'has not been imported'
 has_not_been_imported_into_the_group: 'has not been imported into the group'
 hide: Hide
@@ -441,10 +454,13 @@ home_tabs: 'Home tabs'
 home_tabs_configuration: 'Home tabs configuration'
 id: Id
 id_col: 'Database data column'
+identical_group_name: 'Identical group name'
+identical_role_name: 'Identical role name'
 import: Import
 import_roles: 'Import roles'
 import_user_file_file: 'Import from a csv file'
 import_users: 'Import users'
+in_workspace: 'in workspace'
 incomplete: Incomplete
 individual: Individual
 informations: Informations
@@ -458,10 +474,12 @@ invalid_csv_file: 'Invalid CSV file'
 invalid_driver: 'This driver is not valid'
 invalid_email: 'This email address is not valid'
 invalid_encryption: 'Invalid authentication mode'
+invalid_syntax: 'Invalid syntax'
 invalid_transport: 'Invalid transport'
 invalid_url: 'This url is not valid'
 ip_address: 'IP address'
 is_already_in_category: 'is already in category'
+is_already_in_use: 'is already in use'
 is_mail_displayed: 'Display email?'
 jqplot_date_output_format: '%m/%d/%Y'
 keep_me_logged_in: 'Keep me logged in'
@@ -970,6 +988,7 @@ username: Username
 username_found_at: 'The username %username% was found at lines: %lines%'
 username_or_email: 'Username or email'
 users: Users
+users_cannot_be_registered_to_group: 'Users cannot be registered to group'
 users_connected_once: 'users connected at least once'
 users_from_group_registration: 'Users from group registration'
 users_import: 'Users import'
@@ -1004,6 +1023,7 @@ will display the password: 'will display the password'
 will display the user first name: 'will display the user first name'
 will display the user last name: 'will display the user last name'
 will display the username: 'will display the username'
+with_role: 'with role'
 workspace.create: 'Create a new workspace'
 workspace.name_not_blank: 'The workspace''s name is required.'
 workspace: Workspace

@@ -408,6 +408,8 @@ class ImportCsvManager
                         $logs[] = "[$lineNb] $groupTxt [$groupName] $nonExistentTxt";
                     }
                 } else {
+                    $username = $user->getUsername();
+                    $groupName = $group->getName();
                     $this->groupManager->removeUsersFromGroup($group, array($user));
                     $logs[] = "$userTxt [$username] $unregisteredTxt [$groupName]";
                 }
@@ -462,6 +464,8 @@ class ImportCsvManager
                         $logs[] = "[$lineNb] $groupTxt [$groupName] $nonExistentTxt";
                     }
                 } else {
+                    $groupName = $group->getName();
+
                     if (!isset($toRegister[$groupName])) {
                         $toRegister[$groupName] = array();
                         $toRegister[$groupName]['group'] = $group;
@@ -836,6 +840,7 @@ class ImportCsvManager
                         $workspace,
                         $roleName
                     );
+                    $groupName = $group->getName();
                     $workspaceName = $workspace->getName();
                     $workspaceCode = $workspace->getCode();
 
@@ -908,6 +913,7 @@ class ImportCsvManager
                         $workspace,
                         $roleName
                     );
+                    $groupName = $group->getName();
                     $workspaceName = $workspace->getName();
                     $workspaceCode = $workspace->getCode();
 
@@ -978,7 +984,7 @@ class ImportCsvManager
         $usernameTxt = $this->translator->trans('username', array(), 'platform');
         $mailTxt = $this->translator->trans('mail', array(), 'platform');
         $usedTxt = $this->translator->trans(
-            'is_already_used',
+            'is_already_in_use',
             array(),
             'platform'
         );
@@ -1000,7 +1006,7 @@ class ImportCsvManager
 
                 if (is_null($user)) {
                     $users[] = $lineDatas;
-                    $logs[] = "$creatingTxt $userTxt [$username] ...";
+                    $logs[] = "$userTxt [$username] : $creatingTxt...";
                 } else {
                     $logs[] = "[$lineNb] $usernameTxt [$username] | $mailTxt [$mail] $usedTxt";
                 }
