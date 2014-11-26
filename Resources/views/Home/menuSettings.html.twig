@@ -29,7 +29,7 @@
 {% endblock %}
 
 {% block leftbar %}
-    {% if is_granted('ROLE_ADMIN') %}
+    {% if is_granted('ROLE_HOME_MANAGER') %}
         <div class="list-group menu">
             <div class="list-group-item disabled">{{ "Content Administration" | trans({}, "home") }}</div>
             <a class="list-group-item {% if path('claro_index') == app.request.requesturi %} active{% endif %}"
@@ -155,7 +155,7 @@
 
 {% block javascripts %}
     {{ parent() }}
-        {% if is_granted('ROLE_ADMIN') %}
+        {% if is_granted('ROLE_HOME_MANAGER') %}
             <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/home/content.js') }}"></script>
             <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/home/menuSettings.js') }}"></script>
         {% endif %}

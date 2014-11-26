@@ -1,7 +1,7 @@
 {% if not father is defined %}{% set father = null %}{% endif%}
 {% if content != null %}
 
-    {% if is_granted('ROLE_ADMIN') and publish is defined and not publish %}
+    {% if is_granted('ROLE_HOME_MANAGER') and publish is defined and not publish %}
         <div class="alert alert-danger">
             <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
             <strong><i class="fa fa-exclamation-triangle"></i> {{ 'unpublish_page' | trans({}, 'home') }}</strong>

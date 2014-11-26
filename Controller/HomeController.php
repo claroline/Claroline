@@ -112,7 +112,7 @@ class HomeController
      */
     public function typeAction($type, $father = null, $region = null)
     {
-        $layout = $this->manager->contentLayout($type, $father, $region, $this->security->isGranted('ROLE_ADMIN'));
+        $layout = $this->manager->contentLayout($type, $father, $region, $this->canEdit());
 
         if ($layout) {
             return $this->render('ClarolineCoreBundle:Home:layout.html.twig', $this->renderContent($layout));
@@ -125,7 +125,7 @@ class HomeController
      * Render the page of types administration.
      *
      * @Route("/types", name="claroline_types_manager")
-     * @Secure(roles="ROLE_ADMIN")
+     * @Secure(roles="ROLE_HOME_MANAGER")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -157,7 +157,7 @@ class HomeController
      * Publish a content type page
      *
      * @Route("/publish/type/{type}", name="claro_content_publish_type", options = {"expose" = true})
-     * @Secure(roles="ROLE_ADMIN")
+     * @Secure(roles="ROLE_HOME_MANAGER")
      *
      * @ParamConverter("type", class = "ClarolineCoreBundle:home\Type")
      *
@@ -172,7 +172,7 @@ class HomeController
      * Rename a content form
      *
      * @Route("/rename/type/{type}", name="claro_content_rename_type_form", options = {"expose" = true})
-     * @Secure(roles="ROLE_ADMIN")
+     * @Secure(roles="ROLE_HOME_MANAGER")
      *
      * @Template("ClarolineCoreBundle:Home:rename.html.twig")
      *
@@ -187,7 +187,7 @@ class HomeController
      * Rename a content form
      *
      * @Route("/rename/type/{type}/{name}", name="claro_content_rename_type", options = {"expose" = true})
-     * @Secure(roles="ROLE_ADMIN")
+     * @Secure(roles="ROLE_HOME_MANAGER")
      *
      * @ParamConverter("type", class = "ClarolineCoreBundle:home\Type", options = {"mapping" : {"type": "name"}})
      *
@@ -208,7 +208,7 @@ class HomeController
      * Render the "move a content" form.
      *
      * @Route("/move/content/{currentType}", name="claroline_move_content_form", options = {"expose" = true})
-     * @Secure(roles="ROLE_ADMIN")
+     * @Secure(roles="ROLE_HOME_MANAGER")
      *
      * @Template("ClarolineCoreBundle:Home:move.html.twig")
      *
@@ -224,7 +224,7 @@ class HomeController
      *
      * @Route("/move/content/{content}/{type}/{page}", name="claroline_move_content", options = {"expose" = true})
      *
-     * @Secure(roles="ROLE_ADMIN")
+     * @Secure(roles="ROLE_HOME_MANAGER")
      *
      * @Template("ClarolineCoreBundle:Home:move.html.twig")
      *
@@ -257,7 +257,7 @@ class HomeController
     public function creatorAction($type, $id = null, $content = null, $father = null)
     {
         //cant use @Secure(roles="ROLE_ADMIN") annotation beacause this method is called in anonymous mode
-        if ($this->security->isGranted('ROLE_ADMIN')) {
+        if ($this->canEdit()) {
             return $this->render(
                 'ClarolineCoreBundle:Home/types:'.$type.'.creator.twig',
                 $this->manager->getCreator($type, $id, $content, $father),
@@ -352,7 +352,7 @@ class HomeController
      *     defaults={"type" = "home", "father" = null}
      * )
      *
-     * @Secure(roles="ROLE_ADMIN")
+     * @Secure(roles="ROLE_HOME_MANAGER")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -374,7 +374,7 @@ class HomeController
      *     name="claroline_content_update",
      *     defaults={"size" = null, "type" = null}
      * )
-     * @Secure(roles="ROLE_ADMIN")
+     * @Secure(roles="ROLE_HOME_MANAGER")
      *
      * @ParamConverter("content", class = "ClarolineCoreBundle:Content", options = {"id" = "content"})
      *
@@ -402,7 +402,7 @@ class HomeController
      *
      * @Route("/content/reorder/{type}/{a}/{b}/{father}", requirements={"a" = "\d+"}, name="claroline_content_reorder")
      *
-     * @Secure(roles="ROLE_ADMIN")
+     * @Secure(roles="ROLE_HOME_MANAGER")
      *
      * @ParamConverter("type", class = "ClarolineCoreBundle:Home\Type", options = {"mapping": {"type": "name"}})
      *
@@ -428,7 +428,7 @@ class HomeController
      * The response is the word true in a string in success, otherwise false.
      *
      * @Route("/content/delete/{content}", name="claroline_content_delete")
-     * @Secure(roles="ROLE_ADMIN")
+     * @Secure(roles="ROLE_HOME_MANAGER")
      *
      * @ParamConverter("content", class = "ClarolineCoreBundle:Content", options = {"id" = "content"})
      *
@@ -466,7 +466,7 @@ class HomeController
      * The response is a template of the type in success, otherwise false.
      *
      * @Route("/content/createtype/{name}", name="claroline_content_createtype")
-     * @Secure(roles="ROLE_ADMIN")
+     * @Secure(roles="ROLE_HOME_MANAGER")
      *
      * @Template("ClarolineCoreBundle:Home:type.html.twig")
      *
@@ -486,7 +486,7 @@ class HomeController
      * The response is the word true in a string in success, otherwise false.
      *
      * @Route("/content/deletetype/{type}", name="claroline_content_deletetype")
-     * @Secure(roles="ROLE_ADMIN")
+     * @Secure(roles="ROLE_HOME_MANAGER")
      *
      * @ParamConverter("type", class = "ClarolineCoreBundle:Home\Type", options = {"id" = "type"})
      *
@@ -511,7 +511,7 @@ class HomeController
      * @ParamConverter("region", class = "ClarolineCoreBundle:Home\Region", options = {"mapping": {"region": "name"}})
      * @ParamConverter("content", class = "ClarolineCoreBundle:Content", options = {"id" = "content"})
      *
-     * @Secure(roles="ROLE_ADMIN")
+     * @Secure(roles="ROLE_HOME_MANAGER")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -535,7 +535,7 @@ class HomeController
      *     options = {"expose" = true}
      * )
      *
-     * @Secure(roles="ROLE_ADMIN")
+     * @Secure(roles="ROLE_HOME_MANAGER")
      *
      * @ParamConverter("content", class = "ClarolineCoreBundle:Content", options = {"id" = "content"})
      * @ParamConverter("type", class = "ClarolineCoreBundle:Home\Type", options = {"mapping" : {"type": "name"}})
@@ -582,7 +582,7 @@ class HomeController
      * Menu settings
      *
      * @Route("/content/menu/settings/{content}", name="claroline_content_menu_settings")
-     * @Secure(roles="ROLE_ADMIN")
+     * @Secure(roles="ROLE_HOME_MANAGER")
      *
      * @ParamConverter("content", class = "ClarolineCoreBundle:Content", options = {"id" = "content"})
      *
@@ -613,7 +613,7 @@ class HomeController
      * @param workspaces A Boolean that determine if there is the workspace button in the footer
      * @param locale A boolean that determine if there is a locale button in the header
      *
-     * @Secure(roles="ROLE_ADMIN")
+     * @Secure(roles="ROLE_HOME_MANAGER")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -684,5 +684,11 @@ class HomeController
         }
 
         return new Response($this->templating->render($template, $variables));
+    }
+
+    private function canEdit()
+    {
+        return $this->security->isGranted('ROLE_ADMIN') ||
+            $this->security->isGranted('ROLE_HOME_MANAGER');
     }
 }

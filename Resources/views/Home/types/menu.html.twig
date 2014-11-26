@@ -5,7 +5,7 @@
     {% if father is not defined or (father is defined and father is empty) %}
         <div class="content-element relative {{ size }}" data-id="{{ content.id }}" data-type="{{ type }}">
             {% if region is defined and (region == "header" or region == "footer") %}
-                <ul class="nav nav-pills relative{% if is_granted('ROLE_ADMIN') %} admin{% endif %}">
+                <ul class="nav nav-pills relative{% if is_granted('ROLE_HOME_MANAGER') %} admin{% endif %}">
                     {% render controller("ClarolineCoreBundle:Home:type", { 'type': type, 'father': content.id, 'region': region }) %}
                     {% render controller("ClarolineCoreBundle:Home:menu", { 'id': content.id, 'size': size, 'type': type, 'region': region  }) %}
                 </ul>
@@ -30,7 +30,7 @@
                 <a {% if content.content is defined and content.content != "" %} href="{{ content.content | homeLink }}"{% endif %}>{{ content.title }}</a>
             </li>
         {% else %}
-            <div class="content-element relative list-group-item{{ content.content | activeLink }} {% if is_granted('ROLE_ADMIN') %} move{% endif %}"
+            <div class="content-element relative list-group-item{{ content.content | activeLink }} {% if is_granted('ROLE_HOME_MANAGER') %} move{% endif %}"
                 data-id="{{ content.id }}"
                 data-type="{{ type }}"
                 data-father="{{ father }}">
