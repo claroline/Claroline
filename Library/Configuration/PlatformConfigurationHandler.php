@@ -68,7 +68,8 @@ class PlatformConfigurationHandler
         'footer_workspaces' => false,
         'header_locale' => false,
         'portfolio_url' => null,
-        'is_notification_active' => true
+        'is_notification_active' => true,
+        'createPersonnalWorkspace' => true
     );
 
     /**
@@ -167,6 +168,7 @@ class PlatformConfigurationHandler
         $config->setHeaderLocale($this->parameters['header_locale']);
         $config->setPortfolioUrl($this->parameters['portfolio_url']);
         $config->setIsNotificationActive($this->parameters['is_notification_active']);
+        $config->setCreatePersonnalWorkspace($this->parameters['createPersonnalWorkspace']);
 
         return $config;
     }
