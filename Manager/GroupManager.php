@@ -143,6 +143,23 @@ class GroupManager
     }
 
     /**
+     * Removes all users from a group.
+     *
+     * @param \Claroline\CoreBundle\Entity\Group $group
+     */
+    public function removeAllUsersFromGroup(Group $group)
+    {
+        $users = $group->getUsers();
+
+        foreach ($users as $user) {
+            $group->removeUser($user);
+        }
+
+        $this->om->persist($group);
+        $this->om->flush();
+    }
+
+    /**
      * Removes an array of user from a group.
      *
      * @param \Claroline\CoreBundle\Entity\Group $group
@@ -485,5 +502,10 @@ class GroupManager
         }
 
         return true;
+    }
+
+    public function getGroupByName($name, $executeQuery = true)
+    {
+        return $this->groupRepo->findGroupByName($name, $executeQuery);
     }
 }
