@@ -22,6 +22,7 @@ class Updater030800
     private $maskManager;
     private $om;
     private $orderedToolRepo;
+    private $roleManager;
     private $toolRepo;
     private $toolRightsManager;
 
@@ -34,6 +35,7 @@ class Updater030800
         $this->om = $container->get('claroline.persistence.object_manager');
         $this->orderedToolRepo =
             $this->om->getRepository('ClarolineCoreBundle:Tool\OrderedTool');
+        $this->roleManager = $container->get('claroline.manager.role_manager');
         $this->toolRepo = $this->om->getRepository('ClarolineCoreBundle:Tool\Tool');
         $this->toolRightsManager =
             $container->get('claroline.manager.tool_rights_manager');
@@ -48,13 +50,14 @@ class Updater030800
 
     public function postUpdate()
     {
-        /*$this->om->startFlushSuite();
+        $this->om->startFlushSuite();
         $this->createDefaultToolMaskDecoders();
         $this->updateToolsRights();
         $this->om->endFlushSuite();
         $this->deleteBackupTable();
-        $this->emptyOrderedToolRoleTable();*/
+        $this->emptyOrderedToolRoleTable();
         $this->refreshEvents();
+        $this->createHomeMangagerRole();
     }
 
     private function createDefaultToolMaskDecoders()
@@ -154,8 +157,18 @@ class Updater030800
 
             $this->om->flush();
         }
+    }
 
+    private function createHomeMangagerRole()
+    {
+        $this->log('Creating home manager role...');
+        $name = 'ROLE_HOME_MANAGER';
+        $key = 'home_manager';
+        $role = $this->roleManager->getRoleByName($name);
 
+        if (is_null($role)) {
+            $this->roleManager->createBaseRole($name, $key);
+        }
     }
 
     public function setLogger($logger)

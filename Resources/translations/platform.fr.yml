@@ -432,6 +432,7 @@ has_not_been_imported_into_the_group: 'n''a pas été importé(e) dans le groupe
 hide: Cacher
 history: Historique
 home: Accueil
+home_manager: 'Gestionnaire de l''accueil'
 home_parameters: 'Paramètres de l''accueil'
 home_tab: Onglet
 home_tab_creation: 'Création d''un onglet'

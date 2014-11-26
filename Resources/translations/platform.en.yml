@@ -430,6 +430,7 @@ has_not_been_imported_into_the_group: 'has not been imported into the group'
 hide: Hide
 history: History
 home: Home
+home_manager: 'Home manager'
 home_parameters: 'Home parameters'
 home_tab: 'Home tab'
 home_tab_creation: 'Home tab creation'
