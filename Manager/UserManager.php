@@ -126,7 +126,10 @@ class UserManager
     public function createUser(User $user, $sendMail = true, $additionnalRoles = array(), $model = null)
     {
         $this->objectManager->startFlushSuite();
-        $this->setPersonalWorkspace($user, $model);
+        $createPersonalWorkspace = $this->container
+            ->get('claroline.config.platform_config_handler')
+            ->getParameter('createPersonnalWorkspace');
+        if ($createPersonalWorkspace) $this->setPersonalWorkspace($user, $model);
         $user->setPublicUrl($this->generatePublicUrl($user));
         $this->toolManager->addRequiredToolsToUser($user);
         $this->roleManager->setRoleToRoleSubject($user, PlatformRoles::USER);
