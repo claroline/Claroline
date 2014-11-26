@@ -366,7 +366,8 @@ class UserManager
             if ($i % self::MAX_USER_BATCH_SIZE === 0) {
                 if ($logger) $logger(" [UOW size: " . $this->objectManager->getUnitOfWork()->size() . "]");
                 $i = 0;
-                $this->objectManager->endFlushSuite();
+                $this->objectManager->forceFlush();
+
                 if ($logger) $logger(" flushing users...");
                 $tmpRoles = $additionnalRoles;
                 $this->objectManager->clear();
@@ -379,8 +380,6 @@ class UserManager
                 if ($this->container->get('security.context')->getToken()) {
                     $this->objectManager->merge($this->container->get('security.context')->getToken()->getUser());
                 }
-
-                $this->objectManager->startFlushSuite();
             }
         }
 

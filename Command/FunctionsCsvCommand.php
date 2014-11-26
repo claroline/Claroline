@@ -158,6 +158,7 @@ class FunctionsCsvCommand extends ContainerAwareCommand
             }
             $output->writeln('');
         }
+        $om->forceFlush();
 
         if (isset($parsedDatas['claro_create_group'])) {
             $output->writeln('-------------------');
@@ -172,6 +173,7 @@ class FunctionsCsvCommand extends ContainerAwareCommand
             }
             $output->writeln('');
         }
+        $om->forceFlush();
 
         if (isset($parsedDatas['claro_empty_group'])) {
             $output->writeln('------------------');
@@ -186,6 +188,7 @@ class FunctionsCsvCommand extends ContainerAwareCommand
             }
             $output->writeln('');
         }
+        $om->forceFlush();
 
         if (isset($parsedDatas['claro_delete_group'])) {
             $output->writeln('-------------------');
@@ -200,6 +203,7 @@ class FunctionsCsvCommand extends ContainerAwareCommand
             }
             $output->writeln('');
         }
+        $om->forceFlush();
 
         if (isset($parsedDatas['claro_create_user'])) {
             $output->writeln('------------------');
@@ -214,7 +218,6 @@ class FunctionsCsvCommand extends ContainerAwareCommand
             }
             $output->writeln('');
         }
-
         $om->forceFlush();
 
         if (isset($parsedDatas['claro_create_workspace'])) {
@@ -230,7 +233,6 @@ class FunctionsCsvCommand extends ContainerAwareCommand
             }
             $output->writeln('');
         }
-
         $om->forceFlush();
 
         if (isset($parsedDatas['claro_delete_workspace_role'])) {
@@ -246,6 +248,7 @@ class FunctionsCsvCommand extends ContainerAwareCommand
             }
             $output->writeln('');
         }
+        $om->forceFlush();
 
         if (isset($parsedDatas['claro_create_workspace_role'])) {
             $output->writeln('----------------------------');
@@ -260,7 +263,6 @@ class FunctionsCsvCommand extends ContainerAwareCommand
             }
             $output->writeln('');
         }
-        
         $om->forceFlush();
 
         if (isset($parsedDatas['claro_unregister_from_group'])) {
@@ -276,6 +278,7 @@ class FunctionsCsvCommand extends ContainerAwareCommand
             }
             $output->writeln('');
         }
+        $om->forceFlush();
 
         if (isset($parsedDatas['claro_unregister_user_from_workspace'])) {
             $output->writeln('--------------------------------------');
@@ -290,6 +293,7 @@ class FunctionsCsvCommand extends ContainerAwareCommand
             }
             $output->writeln('');
         }
+        $om->forceFlush();
 
         if (isset($parsedDatas['claro_unregister_group_from_workspace'])) {
             $output->writeln('---------------------------------------');
@@ -304,7 +308,6 @@ class FunctionsCsvCommand extends ContainerAwareCommand
             }
             $output->writeln('');
         }
-
         $om->forceFlush();
 
         if (isset($parsedDatas['claro_register_to_group'])) {
@@ -320,6 +323,7 @@ class FunctionsCsvCommand extends ContainerAwareCommand
             }
             $output->writeln('');
         }
+        $om->forceFlush();
 
         if (isset($parsedDatas['claro_register_user_to_workspace'])) {
             $output->writeln('----------------------------------');
@@ -334,6 +338,7 @@ class FunctionsCsvCommand extends ContainerAwareCommand
             }
             $output->writeln('');
         }
+        $om->forceFlush();
 
         if (isset($parsedDatas['claro_register_group_to_workspace'])) {
             $output->writeln('-----------------------------------');
@@ -348,7 +353,6 @@ class FunctionsCsvCommand extends ContainerAwareCommand
             }
             $output->writeln('');
         }
-
         $om->endFlushSuite();
     }
 }

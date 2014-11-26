@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Manager;
 
+use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Manager\Exception\AddRoleException;
 use Claroline\CoreBundle\Manager\GroupManager;
 use Claroline\CoreBundle\Manager\RoleManager;
@@ -1014,7 +1015,7 @@ class ImportCsvManager
         }
 
         if (count($users) > 0) {
-            $this->userManager->importUsers($users);
+            $this->userManager->importUsers($users, false);
         }
 
         return $logs;
