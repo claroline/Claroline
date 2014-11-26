@@ -107,15 +107,15 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
     {
         $user = $this->securityContext->getToken()->getUser();
 
-        if ($this->configurationHandler->getParameter('redirect_after_login') && $user->getLastUri() !== null) {
-            $uri = $user->getLastUri();
-        } else {
-            $uri = $this->router->generate('claro_desktop_open');
+        if ($uri = $request->getSession()->get('_security.main.target_path')) {
+            return new RedirectResponse($uri);
         }
 
-        $response = new RedirectResponse($uri);
+        if ($this->configurationHandler->getParameter('redirect_after_login') && $user->getLastUri() !== null) {
+            return new RedirectResponse($user->getLastUri());
+        }
 
-        return $response;
+        return new RedirectResponse($this->router->generate('claro_desktop_open'));
     }
 
     /**
