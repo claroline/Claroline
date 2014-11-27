@@ -30,7 +30,8 @@
             'click #search-user-without-rights-btn': 'searchUsersWithoutRights',
             'click .pagination > ul > li > a': 'pagination',
             'click th > a': 'reorder',
-            'click #add-new-user-rights-btn': 'switchUserRightsTab'
+            'click #add-new-user-rights-btn': 'switchUserRightsTab',
+            'click #search-workspaces-btn': 'searchWorkspaces'
         },
         initialize: function (dispatcher) {
             this.dispatcher = dispatcher;
@@ -156,6 +157,23 @@
                 }
             });
         },
+        searchWorkspaces: function () {
+            var search = $('#search-workspaces-input').val();
+            var nodeId = $('#workspaces-datas').data('node-id');
+            var max = $('#workspaces-datas').data('max');
+
+            $.ajax({
+                url: Routing.generate(
+                    'claro_all_workspaces_list_pager_for_resource_rights',
+                    {'resource': nodeId, 'wsSearch': search, 'page': 1, 'wsMax': max}
+                ),
+                type: 'GET',
+                success: function (datas) {
+                    $('#all-workspaces-panel').empty();
+                    $('#all-workspaces-panel').append(datas);
+                }
+            });
+        },
         pagination: function (event) {
             event.preventDefault();
             event.stopPropagation();
@@ -177,6 +195,9 @@
                         } else if (type === 'without') {
                             $('#users-without-rights-tab').empty();
                             $('#users-without-rights-tab').append(datas);
+                        } else {
+                            $('#all-workspaces-panel').empty();
+                            $('#all-workspaces-panel').append(datas);
                         }
                     }
                 });

@@ -1,0 +1,78 @@
+{% macro renderPager(pager, search, max, resource) %}
+    {{
+        pagerfanta(
+            pager,
+            'twitter_bootstrap_translated',
+            {
+                'proximity' : 1,
+                'routeName': 'claro_all_workspaces_list_pager_for_resource_rights',
+                'routeParams': {'wsSearch': search, 'wsMax': max, 'resource': resource.getId() }
+            }
+        )
+    }}
+{% endmacro %}
+
+{% from _self import renderPager %}
+
+{% if wsSearch != '' %}
+    <div class="alert alert-info">
+        {{ 'results_for_search_on'|trans({}, 'platform') }} :
+        "{{ wsSearch }}"
+    </div>
+{% endif %}
+<div class="margin-bottom-md">
+    <div class="input-group col-md-4 pull-right">
+        <input class="form-control search-workspaces-input"
+               type="text"
+               id="search-workspaces-input"
+               placeholder="{{ 'search'|trans({}, 'platform') }}"
+               value={{wsSearch}}
+        >
+        <span class="input-group-btn">
+            <button class="filter btn btn-default search-workspaces-btn" type="button" id="search-workspaces-btn">
+                <i class="fa fa-search"></i>
+            </button>
+        </span>
+    </div>
+</div>
+<br>
+<br>
+                                
+{% if workspaces.getNbPages() > 1 %}
+     {{ renderPager(workspaces, wsSearch, wsMax, resource) }}
+{% endif %}
+
+{% for workspace in workspaces %}
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <a data-toggle="collapse" href="#collapse-all-{{ workspace.getCode() }}">
+                <h3 class="panel-title">
+                    {{ workspace.getName() }}
+                    <span class="workspace-code">({{ workspace.getCode() }})</span>
+                </h3>
+            </a>
+        </div>
+        <div id="collapse-all-{{ workspace.getCode() }}" class="list-group collapse">
+            {% for role in workspaceRoles[workspace.getCode()] %}
+
+                {% if 'ROLE_WS_MANAGER' in role.getName() != 1 %}
+                    <a class="workspace-role-item list-group-item"
+                       href="{{ path('claro_resource_right_form', {'node':resource.id, 'role':role.id}) }}">
+                        {{ role.getTranslationKey()|trans({}, 'platform') }}
+                    </a>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+{% endfor %}
+
+{% if workspaces.getNbPages() > 1 %}
+     {{ renderPager(workspaces, wsSearch, wsMax, resource) }}
+{% endif %}
+
+<div id="workspaces-datas"
+     data-node-id="{{ resource.getId() }}"
+     data-search="{{ wsSearch }}"
+     data-max="{{ wsMax }}"
+>
+</div>

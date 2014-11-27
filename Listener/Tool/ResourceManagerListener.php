@@ -200,7 +200,7 @@ class ResourceManagerListener
         return $zoom;
     }
 
-    private function workspaceResourceRightsForm(Workspace $workspace)
+    private function workspaceResourceRightsForm(Workspace $workspace, $wsMax = 10)
     {
         if (!$this->sc->isGranted('parameters', $workspace)) {
             throw new AccessDeniedException();
@@ -226,7 +226,9 @@ class ResourceManagerListener
                 'rootTags' => $datas['rootTags'],
                 'displayable' => $datas['displayable'],
                 'workspaceRoles' => $datas['workspaceRoles'],
-                'mask' => $mask
+                'mask' => $mask,
+                'wsMax' => $wsMax,
+                'wsSearch' => ''
             )
         );
     }
