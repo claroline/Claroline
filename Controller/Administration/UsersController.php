@@ -14,6 +14,7 @@ namespace Claroline\CoreBundle\Controller\Administration;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
+use Claroline\CoreBundle\Form\Administration\UserPropertiesType;
 use Claroline\CoreBundle\Manager\AuthenticationManager;
 use Claroline\CoreBundle\Manager\LocaleManager;
 use Claroline\CoreBundle\Manager\MailManager;
@@ -21,6 +22,7 @@ use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
+use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use JMS\DiExtraBundle\Annotation as DI;
 use JMS\SecurityExtraBundle\Annotation as SEC;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
@@ -46,6 +48,7 @@ class UsersController extends Controller
     private $router;
     private $toolManager;
     private $userAdminTool;
+    private $configHandler;
 
     /**
      * @DI\InjectParams({
@@ -60,7 +63,8 @@ class UsersController extends Controller
      *     "router"                 = @DI\Inject("router"),
      *     "sc"                     = @DI\Inject("security.context"),
      *     "toolManager"            = @DI\Inject("claroline.manager.tool_manager"),
-     *     "authenticationManager"  = @DI\Inject("claroline.common.authentication_manager")
+     *     "authenticationManager"  = @DI\Inject("claroline.common.authentication_manager"),
+     *     "configHandler"          = @DI\Inject("claroline.config.platform_config_handler")
      * })
      */
     public function __construct(
@@ -75,22 +79,24 @@ class UsersController extends Controller
         RouterInterface $router,
         SecurityContextInterface $sc,
         ToolManager $toolManager,
-        AuthenticationManager $authenticationManager
+        AuthenticationManager $authenticationManager,
+        PlatformConfigurationHandler $configHandler
     )
     {
-        $this->userManager = $userManager;
-        $this->roleManager = $roleManager;
-        $this->eventDispatcher = $eventDispatcher;
-        $this->formFactory = $formFactory;
-        $this->request = $request;
-        $this->mailManager = $mailManager;
-        $this->localeManager = $localeManager;
-        $this->router = $router;
-        $this->workspaceManager = $workspaceManager;
-        $this->sc = $sc;
-        $this->toolManager = $toolManager;
-        $this->userAdminTool = $this->toolManager->getAdminToolByName('user_management');
+        $this->userManager           = $userManager;
+        $this->roleManager           = $roleManager;
+        $this->eventDispatcher       = $eventDispatcher;
+        $this->formFactory           = $formFactory;
+        $this->request               = $request;
+        $this->mailManager           = $mailManager;
+        $this->localeManager         = $localeManager;
+        $this->router                = $router;
+        $this->workspaceManager      = $workspaceManager;
+        $this->sc                    = $sc;
+        $this->toolManager           = $toolManager;
+        $this->userAdminTool         = $this->toolManager->getAdminToolByName('user_management');
         $this->authenticationManager = $authenticationManager;
+        $this->configHandler         = $configHandler;
     }
 
     /**
@@ -438,6 +444,7 @@ class UsersController extends Controller
      */
     public function export($format)
     {
+        $this->checkOpen();
         $exporter = $this->container->get('claroline.exporter.' . $format);
         $exporterManager = $this->container->get('claroline.manager.exporter_manager');
         $file = $exporterManager->export('Claroline\CoreBundle\Entity\User', $exporter);
@@ -461,6 +468,52 @@ class UsersController extends Controller
         $response->headers->set('Connection', 'close');
 
         return $response;
+    }
+
+    /**
+     * @EXT\Route("/user/form/properties", name="claro_admin_user_form_properties")
+     *
+     * @EXT\Template("ClarolineCoreBundle:Administration/Users:userFormProperties.html.twig")
+     */
+    public function userFormPropertiesAction()
+    {
+        $this->checkOpen();
+        $platformConfig = $this->configHandler->getPlatformConfig();
+        $form = $this->createForm(new UserPropertiesType(), $platformConfig, array(
+            'action' => $this->generateUrl('claro_admin_user_form_properties_submit')
+        ));
+
+        return array('form' => $form->createView());
+    }
+
+    /**
+     * @EXT\Route("/user/form/properties/submit", name="claro_admin_user_form_properties_submit"),
+     *
+     * @EXT\Template("ClarolineCoreBundle:Administration/Users:userFormProperties.html.twig")
+     */
+    public function submitUserFormPropertiesAction()
+    {
+        $this->checkOpen();
+        $platformConfig = $this->configHandler->getPlatformConfig();
+
+        $form = $this->createForm(
+            new UserPropertiesType(),
+            $platformConfig
+        );
+
+        $form->handleRequest($this->request);
+
+        if ($form->isValid()) {
+            $this->configHandler->setParameters(
+                array(
+                    'createPersonnalWorkspace' => $form['createPersonnalWorkspace']->getData()
+                )
+            );
+
+            return new RedirectResponse($this->router->generate('claro_admin_users_management'));
+        }
+
+        return array('form' => $form->createView());
     }
 
     private function checkOpen()

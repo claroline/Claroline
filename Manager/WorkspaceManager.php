@@ -831,10 +831,9 @@ class WorkspaceManager
             if ($i % self::MAX_WORKSPACE_BATCH_SIZE === 0) {
                 if ($logger) $logger(" [UOW size: " . $this->om->getUnitOfWork()->size() . "]");
                 $i = 0;
-                $this->om->endFlushSuite();
+                $this->om->forceFlush();
                 if ($logger) $logger(" Workspace $j ($name) being created");
                 $this->om->clear();
-                $this->om->startFlushSuite();
             }
 
             $this->om->endFlushSuite();
@@ -899,5 +898,11 @@ class WorkspaceManager
                 ->findAllNonPersonalWorkspacesBySearch($search, $orderedBy, $order);
 
         return $this->pagerFactory->createPagerFromArray($workspaces, $page, $max);
+    }
+
+    public function getWorkspaceByCode($workspaceCode, $executeQuery = true)
+    {
+        return $this->workspaceRepo
+            ->findWorkspaceByCode($workspaceCode, $executeQuery);
     }
 }

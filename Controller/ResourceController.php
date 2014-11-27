@@ -200,7 +200,8 @@ class ResourceController
         //in order to remember for later. To keep links breadcrumb working we'll need to do something like this
         //if we don't want to change to much code
         $this->request->getSession()->set('current_resource_node', $node);
-    
+
+        //this line should be moved after $node = $this->getRealTarget() if we want to be consistent.
         $collection = new ResourceCollection(array($node));
         //If it's a link, the resource will be its target.
         $node = $this->getRealTarget($node);

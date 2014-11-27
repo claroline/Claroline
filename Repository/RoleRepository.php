@@ -506,4 +506,31 @@ class RoleRepository extends EntityRepository
 
         return $query->getResult();
     }
+
+    public function findWorkspaceRoleByNameOrTranslationKey(
+        Workspace $workspace,
+        $translationKey,
+        $executeQuery = true
+    )
+    {
+        $dql = '
+            SELECT r
+            FROM Claroline\CoreBundle\Entity\Role r
+            WHERE r.workspace = :workspace
+            AND (
+                r.name = :roleName
+                OR UPPER(r.translationKey) = :key
+            )
+        ';
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('workspace', $workspace);
+        $query->setParameter('key', strtoupper($translationKey));
+        $query->setParameter(
+            'roleName',
+            'ROLE_WS_' . strtoupper($translationKey) . '_' . $workspace->getGuid()
+        );
+
+        return $executeQuery ? $query->getOneOrNullResult() : $query;
+    }
 }

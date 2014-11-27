@@ -58,6 +58,7 @@ class PlatformConfiguration
     private $headerLocale;
     private $portfolioUrl;
     private $isNotificationActive;
+    private $createPersonnalWorkspace;
 
     /**
      * @param mixed $sessionDbDataCol
@@ -581,5 +582,15 @@ class PlatformConfiguration
     public function setIsNotificationActive($bool)
     {
         $this->isNotificationActive = $bool;
+    }
+
+    public function setCreatePersonnalWorkspace($personnalWs)
+    {
+        $this->createPersonnalWorkspace = $personnalWs;
+    }
+
+    public function getCreatePersonnalWorkspace()
+    {
+        return $this->createPersonnalWorkspace;
     }
 }

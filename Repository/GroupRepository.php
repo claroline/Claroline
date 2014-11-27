@@ -496,4 +496,26 @@ class GroupRepository extends EntityRepository
 
         return $executeQuery ? $query->getResult(): $query;
     }
+
+    /**
+     * Returns a group by its name.
+     *
+     * @param string $name
+     * @param boolean $executeQuery
+     *
+     * @return Group|null
+     */
+    public function findGroupByName($name, $executeQuery = true)
+    {
+        $dql = '
+            SELECT g
+            FROM Claroline\CoreBundle\Entity\Group g
+            WHERE g.name = :name
+        ';
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('name', $name);
+
+        return $executeQuery ? $query->getOneOrNullResult() : $query;
+    }
 }

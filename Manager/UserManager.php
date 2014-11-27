@@ -126,7 +126,10 @@ class UserManager
     public function createUser(User $user, $sendMail = true, $additionnalRoles = array(), $model = null)
     {
         $this->objectManager->startFlushSuite();
-        $this->setPersonalWorkspace($user, $model);
+        $createPersonalWorkspace = $this->container
+            ->get('claroline.config.platform_config_handler')
+            ->getParameter('createPersonnalWorkspace');
+        if ($createPersonalWorkspace) $this->setPersonalWorkspace($user, $model);
         $user->setPublicUrl($this->generatePublicUrl($user));
         $this->toolManager->addRequiredToolsToUser($user);
         $this->roleManager->setRoleToRoleSubject($user, PlatformRoles::USER);
@@ -288,10 +291,17 @@ class UserManager
      *
      * @return array
      */
-    public function importUsers(array $users, $sendMail = true, $logger = null, $additionnalRoles = array())
+    public function importUsers(array $users, $sendMail = true, $logger = null, $additionalRoles = array())
     {
+        //keep these roles before the clear() will mess everything up. It's not what we want.
+        $tmpRoles = $additionalRoles;
+        $additionalRoles = [];
         //I need to do that to import roles from models. Please don't ask why, I have no fucking idea.
         $this->objectManager->clear();
+
+        foreach ($tmpRoles as $role) {
+            if ($role) $additionalRoles[] = $this->objectManager->merge($role);
+        }
 
         $roleUser = $this->roleManager->getRoleByName('ROLE_USER');
         $max = $roleUser->getMaxUsers();
@@ -355,7 +365,7 @@ class UserManager
             $newUser->setPhone($phone);
             $newUser->setLocale($lg);
             $newUser->setAuthentication($authentication);
-            $this->createUser($newUser, $sendMail, $additionnalRoles, $model);
+            $this->createUser($newUser, $sendMail, $additionalRoles, $model);
             $this->objectManager->persist($newUser);
 
             if ($logger) $logger(" [UOW size: " . $this->objectManager->getUnitOfWork()->size() . "]");
@@ -366,21 +376,20 @@ class UserManager
             if ($i % self::MAX_USER_BATCH_SIZE === 0) {
                 if ($logger) $logger(" [UOW size: " . $this->objectManager->getUnitOfWork()->size() . "]");
                 $i = 0;
-                $this->objectManager->endFlushSuite();
+                $this->objectManager->forceFlush();
+
                 if ($logger) $logger(" flushing users...");
-                $tmpRoles = $additionnalRoles;
+                $tmpRoles = $additionalRoles;
                 $this->objectManager->clear();
-                $additionnalRoles = [];
+                $additionalRoles = [];
 
                 foreach ($tmpRoles as $toAdd) {
-                    if ($toAdd) $additionnalRoles[] = $this->objectManager->merge($toAdd);
+                    if ($toAdd) $additionalRoles[] = $this->objectManager->merge($toAdd);
                 }
 
                 if ($this->container->get('security.context')->getToken()) {
                     $this->objectManager->merge($this->container->get('security.context')->getToken()->getUser());
                 }
-
-                $this->objectManager->startFlushSuite();
             }
         }
 
@@ -1086,5 +1095,19 @@ class UserManager
         return $executeQuery ?
             $this->pagerFactory->createPagerFromArray($users, $page, $max) :
             $this->pagerFactory->createPager($users, $page, $max);
+    }
+
+    public function getOneUserByUsername($username, $executeQuery = true)
+    {
+        return $this->userRepo->findOneUserByUsername($username, $executeQuery);
+    }
+
+    public function getUserByUsernameOrMail($username, $mail, $executeQuery = true)
+    {
+        return $this->userRepo->findUserByUsernameOrMail(
+            $username,
+            $mail,
+            $executeQuery
+        );
     }
 }

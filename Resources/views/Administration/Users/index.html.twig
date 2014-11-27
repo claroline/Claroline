@@ -39,8 +39,11 @@
         <a class="list-group-item" href="{{ path('claro_admin_group_list') }}" id="link_group_list">
             {{ 'list_groups'|trans({}, 'platform') }}
         </a>
-        <a class="list-group-item" href="{{ path('claro_admin_facet_index') }}" id="link_group_list">
+        <a class="list-group-item" href="{{ path('claro_admin_facet_index') }}" id="link_facet_index">
             {{ 'profile_management'|trans({}, 'platform') }}
+        </a>
+        <a class="list-group-item" href="{{ path('claro_admin_user_form_properties') }}" id="link_user_properties">
+            {{ 'properties'|trans({}, 'platform') }}
         </a>
     </div>
 {% endblock %}
