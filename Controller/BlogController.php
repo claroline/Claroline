@@ -304,11 +304,13 @@ class BlogController extends Controller
      */
     public function rssAction(Blog $blog)
     {
+        $baseUrl = $this->get('request')->getSchemeAndHttpHost();
+
         $feed = array(
-            'title'       => $blog->getName(),
+            'title'       => $blog->getResourceNode()->getName(),
             'description' => $blog->getInfos(),
-            'siteUrl'     => $this->generateUrl('icap_blog_view', array('blogId' => $blog->getId())),
-            'feedUrl'     => $this->generateUrl('icap_blog_rss', array('blogId' => $blog->getId())),
+            'siteUrl'     => $baseUrl . $this->generateUrl('icap_blog_view', array('blogId' => $blog->getId())),
+            'feedUrl'     => $baseUrl . $this->generateUrl('icap_blog_rss', array('blogId' => $blog->getId())),
             'lang'        => $this->get("claroline.config.platform_config_handler")->getParameter('locale_language')
         );
 
@@ -319,7 +321,7 @@ class BlogController extends Controller
         foreach ($posts as $post) {
             $items[] = array(
                 'title'  => $post->getTitle(),
-                'url'    => $this->generateUrl('icap_blog_post_view', array('blogId' => $blog->getId(), 'postSlug' => $post->getSlug())),
+                'url'    => $baseUrl . $this->generateUrl('icap_blog_post_view', array('blogId' => $blog->getId(), 'postSlug' => $post->getSlug())),
                 'date'   => $post->getPublicationDate()->format("d/m/Y h:i:s"),
                 'intro'  => $post->getContent(),
                 'author' => $post->getAuthor()->getFirstName() - $post->getAuthor()->getLastName()
