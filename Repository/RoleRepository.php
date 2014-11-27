@@ -288,6 +288,27 @@ class RoleRepository extends EntityRepository
         return $query->getResult();
     }
 
+    public function findAllWhereWorkspaceIsDisplayableAndInList(array $workspaces)
+    {
+        if (count($workspaces) === 0) {
+
+            return array();
+        } else {
+            $dql = "
+                SELECT r, w
+                FROM Claroline\CoreBundle\Entity\Role r
+                JOIN r.workspace w
+                WHERE w.displayable = true
+                AND w IN (:workspaces)
+            ";
+
+            $query = $this->_em->createQuery($dql);
+            $query->setParameter('workspaces', $workspaces);
+
+            return $query->getResult();
+        }
+    }
+
     public function findByAdminTool(AdminTool $adminTool)
     {
         $dql = "

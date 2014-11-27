@@ -111,6 +111,7 @@ class ResourceRightsController
             $data['isDir'] = $isDir;
             $data['isModal'] = true;
             $data['mask'] = $mask;
+            $data['wsSearch'] = '';
 
             return $this->templating->renderResponse(
                 'ClarolineCoreBundle:Resource:multipleRightsPage.html.twig',

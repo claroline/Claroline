@@ -280,5 +280,60 @@
     $('#users-with-rights-list').on('click', '#add-new-user-rights-btn', function () {
         $('#users-with-rights-list-tab').removeClass('active');
         $('#users-without-rights-list-tab').addClass('active');
+    });    
+    
+    $('body').on('click', '#search-workspaces-btn',function () {
+        var search = $('#search-workspaces-input').val();
+        var nodeId = $('#workspaces-datas').data('node-id');
+        var max = $('#workspaces-datas').data('max');
+
+        $.ajax({
+            url: Routing.generate(
+                'claro_all_workspaces_list_pager_for_resource_rights',
+                {'resource': nodeId, 'wsSearch': search, 'page': 1, 'wsMax': max}
+            ),
+            type: 'GET',
+            success: function (datas) {
+                $('#all-workspaces-panel').empty();
+                $('#all-workspaces-panel').append(datas);
+            }
+        });
+    });
+
+    $('body').on('change', '#search-workspaces-input', function () {
+        var search = $('#search-workspaces-input').val();
+        var nodeId = $('#workspaces-datas').data('node-id');
+        var max = $('#workspaces-datas').data('max');
+
+        $.ajax({
+            url: Routing.generate(
+                'claro_all_workspaces_list_pager_for_resource_rights',
+                {'resource': nodeId, 'wsSearch': search, 'page': 1, 'wsMax': max}
+            ),
+            type: 'GET',
+            success: function (datas) {
+                $('#all-workspaces-panel').empty();
+                $('#all-workspaces-panel').append(datas);
+            }
+        });
+    });
+    
+    $('#all-workspaces-panel').on('click', '.pagination > ul > li > a', function (event) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        var element = event.currentTarget;
+        var url = $(element).attr('href');
+
+        if (url !== '#') {
+            $.ajax({
+                url: url,
+                type: 'GET',
+                success: function (datas) {
+                    $('#all-workspaces-panel').empty();
+                    $('#all-workspaces-panel').append(datas);
+                }
+            });
+        }
     });
 })();

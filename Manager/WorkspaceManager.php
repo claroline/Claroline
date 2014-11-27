@@ -543,11 +543,11 @@ class WorkspaceManager
      *
      * @return \PagerFanta\PagerFanta
      */
-    public function getDisplayableWorkspacesPager($page)
+    public function getDisplayableWorkspacesPager($page, $max = 20)
     {
         $workspaces = $this->workspaceRepo->findDisplayableWorkspaces();
 
-        return $this->pagerFactory->createPagerFromArray($workspaces, $page);
+        return $this->pagerFactory->createPagerFromArray($workspaces, $page, $max);
     }
 
     /**
@@ -567,11 +567,11 @@ class WorkspaceManager
      *
      * @return \PagerFanta\PagerFanta
      */
-    public function getDisplayableWorkspacesBySearchPager($search, $page)
+    public function getDisplayableWorkspacesBySearchPager($search, $page, $max = 20)
     {
         $workspaces = $this->workspaceRepo->findDisplayableWorkspacesBySearch($search);
 
-        return $this->pagerFactory->createPagerFromArray($workspaces, $page);
+        return $this->pagerFactory->createPagerFromArray($workspaces, $page, $max);
     }
 
     /**

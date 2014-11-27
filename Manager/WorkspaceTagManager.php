@@ -412,7 +412,12 @@ class WorkspaceTagManager
         return $this->tagHierarchyRepo->findBy(array('tag' => $tag));
     }
 
-    public function getDatasForWorkspaceList($withRoles = true, $search = '', $max = 20)
+    public function getDatasForWorkspaceList(
+        $withRoles = true,
+        $search = '',
+        $max = 20,
+        $wsMax = 10
+    )
     {
         if (empty($search)) {
             $workspaces = $this->workspaceRepo->findDisplayableWorkspaces();
@@ -492,7 +497,7 @@ class WorkspaceTagManager
         }
 
         return array(
-            'workspaces' => $this->pagerFactory->createPagerFromArray($workspaces, 1),
+            'workspaces' => $this->pagerFactory->createPagerFromArray($workspaces, 1, $wsMax),
             'tags' => $tags,
             'tagWorkspaces' => $tagWorkspacePager,
             'hierarchy' => $hierarchy,
@@ -502,7 +507,8 @@ class WorkspaceTagManager
             'search' => $search,
             'nonPersonalWs' => $nonPersonalWs,
             'personalWs' => $personalWs,
-            'max' => $max
+            'max' => $max,
+            'wsMax' => $wsMax
         );
     }
 
