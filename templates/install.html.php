@@ -60,7 +60,7 @@
 <script>
     $(function () {
         $('body').on('click', '#do-install', function () {
-            $('#pre-install, #pre-install-msg').remove();
+            $('#pre-install, #pre-install-msg, .sendData').remove();
             $('#wait-msg, #show-details').css('display', 'block');
         })
         .on('change', '.sendData .radio input', function () {
