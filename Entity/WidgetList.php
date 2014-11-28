@@ -9,7 +9,7 @@ use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 
 /**
  * @ORM\Table(name="icap__blog_widget_list")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Icap\BlogBundle\Repository\WidgetListRepository")
  */
 class WidgetList
 {
