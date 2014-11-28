@@ -2,7 +2,7 @@
     "name": "ujm/exo-bundle",
     "type": "claroline-plugin",
     "require": {
-        "claroline/core-bundle": "~3.6.1"
+        "claroline/core-bundle": ">=3.6.1,< 4.0"
     },
     "autoload": {
         "psr-0": { "UJM\\ExoBundle": "" }
