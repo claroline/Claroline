@@ -35,16 +35,19 @@ class Controller
         return $this->renderStep(
             'language.html.php',
             'welcome',
-            array('install_language' => $this->parameters->getInstallationLanguage())
+            array(
+                'install_language' => $this->parameters->getInstallationLanguage(),
+                'country' => $this->parameters->getCountry()
+            )
         );
     }
 
     public function languageStepSubmit()
     {
         $language = $this->request->request->get('install_language');
-        $languageCode = $language;
-        $this->parameters->setInstallationLanguage($languageCode);
-        $this->container->getTranslator()->setLanguage($languageCode);
+        $this->parameters->setInstallationLanguage($language);
+        $this->parameters->setCountry($this->request->request->get('country'));
+        $this->container->getTranslator()->setLanguage($language);
 
         return $this->redirect('/');
     }
@@ -131,7 +134,6 @@ class Controller
         if (count($errors) > 0) {
             return $this->redirect('/platform');
         }
-
 
         return $this->redirect('/admin');
     }

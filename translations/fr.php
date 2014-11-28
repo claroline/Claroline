@@ -104,5 +104,14 @@ return array(
     'next_step' => 'Suivant',
     'test_again' => 'Réessayer',
     'please_wait' => 'Veuillez patienter',
-    'country' => 'Pays'
+    'country' => 'Pays',
+    'confirm_send_data' => 'Nous vous proposons de marquer votre accord pour l''envoi de données :',
+    'technical' => 'Techniques',
+    'statistics' => 'Statistiques',
+    'technical_data' => 'URL, version, langue principale, IP et email du support',
+    'statistics_data' => 'nombre d''espaces, nombre d''utilisateurs',
+    'agreeing' => 'En acceptant l''envoi de ces données, vous bénéficierez d''un meilleur service et vous contribuerez à l''amélioration de la plateforme Claroline Connect que vous allez installer',
+    'personal_data' => 'Aucune donnée personnelle ne sera récupérée. Les données techniques et statistiques récupérées seront exclusivement utilisées en relation avec le projet Claroline Connect et ne seront pas autrement diffusées',
+    'send' => 'Envoyer',
+    'not_send' => 'Ne pas envoyer'
 );

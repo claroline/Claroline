@@ -17,7 +17,7 @@
         <div class="form-group">
             <label class="control-label col-sm-2"><?php echo $trans('country'); ?></label>
             <div class="col-sm-10">
-                <select name="country" class="form-control">
+                <select name="country" class="form-control auto-submit">
                     <option></option>
                     <?php $current = $getCountry(); ?>
                     <?php foreach ($getCountries() as $country) { ?>

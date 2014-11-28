@@ -20,17 +20,37 @@
 
             </pre>
         </div>
-
-        <!--<?php echo $getIp(); ?>
-        <?php echo $getURL(); ?>
-        <?php var_dump($getCountry()); ?>-->
+        <div class="sendData">
+            <hr>
+            <p><?php echo $trans('confirm_send_data'); ?></p>
+            <ul>
+                <li><?php echo $trans('technical'); ?> (<i><?php echo $trans('technical_data'); ?></i>).
+                <li><?php echo $trans('statistics'); ?> (<i><?php echo $trans('statistics_data'); ?></i>).
+            </ul>
+            <small>
+                <p><?php echo $trans('agreeing'); ?>.</p>
+                <p><?php echo $trans('personal_data'); ?>.</p>
+            </small>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="sendData" value="true">
+                    <?php echo $trans('send'); ?>
+                </label>
+            </div>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="sendData" value="false">
+                    <?php echo $trans('not_send'); ?>
+                </label>
+            </div>
+        </div>
     </div>
     <div class="panel-footer">
         <div class="btn-group">
             <a id="pre-install" href="<?php echo $path('/mailing') ?>" class="btn btn-default">
                 <?php echo $trans('previous_step') ?>
             </a>
-            <button id="do-install" type="submit" class="btn btn-primary">
+            <button id="do-install" type="submit" class="btn btn-primary" disabled="disabled">
                 <?php echo $trans('do_install') ?>
             </button>
         </div>
@@ -39,13 +59,16 @@
 
 <script>
     $(function () {
-        $('#do-install').on('click', function () {
-            $('#pre-install').remove();
-            $('#pre-install-msg').remove();
-            $('#wait-msg').css('display', 'block');
-            $('#show-details').css('display', 'block');
+        $('body').on('click', '#do-install', function () {
+            $('#pre-install, #pre-install-msg').remove();
+            $('#wait-msg, #show-details').css('display', 'block');
+        })
+        .on('change', '.sendData .radio input', function () {
+            $('#do-install').removeAttr('disabled');
         });
+
         var areDetailsShowed = false;
+
         $('#show-details').on('click', function () {
             if (areDetailsShowed) {
                 return;

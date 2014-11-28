@@ -60,6 +60,25 @@
                 that.innerHTML = msg + points[index];
                 index = ++index > 3 ? 0 : index;
             }, 500);
+
+            if ($('.sendData .radio input[name="sendData"]:checked').val()) {
+                var postData = {
+                    'ip': '<?php echo $getIp(); ?>',
+                    'url': '<?php echo $getURL(); ?>',
+                    'lang': '<?php echo $getLang(); ?>',
+                    'country': '<?php echo $getCountry(); ?>',
+                    'email': '<?php echo $getEmail(); ?>',
+                    'version': '<?php echo $getVersion(); ?>',
+                    'workspaces': 1,
+                    'users': 1
+                }
+
+                $.ajax('http://stats.claroline.net/alive.php').done(function (data) {
+                    if (data === 'true') {
+                        $.post('http://stats.claroline.net/insert.php', postData);
+                    }
+                });
+            }
         });
     </script>
 </body>
