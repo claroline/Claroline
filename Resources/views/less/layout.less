@@ -467,10 +467,10 @@ body.iframe {
     }
     > .nav.nav-pills{
         > li > a {
-            background-color: darken(@body-bg, 30%);
+            background-color: @component-active-bg;
             color: #fff;
             &:hover {
-                 background-color: @component-active-bg;
+                 background-color: darken(@body-bg, 30%);
             }
         }
         margin-bottom: 5px;
