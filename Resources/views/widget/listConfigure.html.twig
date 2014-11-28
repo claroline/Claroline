@@ -1,0 +1,9 @@
+<form name="blog_widgt_list_form" class="form-inline" method="post" action="{{ path("icap_blog_widget_list_configure", {'id': widgetInstance.id}) }}">
+    {{ form_errors(form) }}
+
+    {{ form_row(form.blog) }}
+
+    <button type="submit" id="blog_widgt_list_form_add" class="btn btn-primary">{{ 'add'|trans({}, 'platform') }}</button>
+
+    {{ form_rest(form) }}
+</form>

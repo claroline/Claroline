@@ -1,0 +1,10 @@
+<div class="list-group">
+    {% for widgetItem in widgetItems %}
+    <a href="{{ path('icap_blog_view', {'blogId' : widgetItem.blog.id}) }}" class="list-group-item">
+        {{ widgetItem.blog.resourceNode.name }}
+        <span class="badge">12</span>
+    </a>
+    {% else %}
+    <span>{{ 'no_blog'|trans({}, 'icap_blog') }}</span>
+    {% endfor %}
+</div>
