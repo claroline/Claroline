@@ -574,8 +574,8 @@ class ResourceManager
     /**
      * Moves a resource.
      *
-     * @param ResourceNode $child
-     * @param ResourceNode $parent
+     * @param ResourceNode $child currently treated node
+     * @param ResourceNode $parent old parent
      *
      * @throws ResourceMoveException
      *
@@ -640,19 +640,17 @@ class ResourceManager
         $node->setNext(null);
         $this->om->persist($node);
 
-        if ($next) {
-            $this->removePreviousWherePreviousIs($previous);
-            $next->setPrevious($previous);
-            $this->om->persist($next);
-        }
-
         if ($previous) {
-            $this->removeNextWhereNextIs($next);
             $previous->setNext($next);
             $this->om->persist($previous);
         }
 
-        $this->om->flush();
+        if ($next) {
+            $next->setPrevious($previous);
+            $this->om->persist($next);          
+        }
+
+        $this->om->forceFlush();
     }
 
     /**
