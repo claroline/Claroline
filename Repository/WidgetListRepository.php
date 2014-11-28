@@ -16,17 +16,15 @@ class WidgetListRepository extends EntityRepository
      */
     public function findByWidgetInstance(WidgetInstance $widgetInstance, $executeQuery = true)
     {
-        $query = $this->getEntityManager()
-            ->createQuery('
-                SELECT wl, b, rn, bo, p
-                FROM IcapBlogBundle:WidgetList wl
-                JOIN wl.blog b
-                JOIN b.resourceNode rn
-                JOIN b.options bo
-                LEFT JOIN b.posts p
-                WHERE wl.widgetInstance = :widgetInstance
-            ')
+        $query = $this->createQueryBuilder('wl')
+            ->select(array('wl', 'blog', 'rn', 'bo', 'post'))
+            ->join('wl.blog', 'blog')
+            ->join('blog.resourceNode', 'rn')
+            ->join('blog.options', 'bo')
+            ->leftJoin('blog.posts', 'post')
+            ->where('wl.widgetInstance = :widgetInstance')
             ->setParameter('widgetInstance', $widgetInstance)
+            ->getQuery()
         ;
 
         return $executeQuery ? $query->getResult(): $query;
