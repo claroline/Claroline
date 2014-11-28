@@ -285,7 +285,7 @@ nQuestion: Question n°
 numberProposal: Number of the proposal
 number of papers: Number of papers
 number of questions: Number of questions
-number of questions to draw: Number of questions to draw
+number of questions to draw: Number of questions to draw (0 for all)
 numerical: Numerical
 num_paper: Paper's number
 my models: My models
