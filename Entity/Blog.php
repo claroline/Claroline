@@ -68,6 +68,22 @@ class Blog extends AbstractResource
     }
 
     /**
+     * @return int
+     */
+    public function getCountPublishedPosts()
+    {
+        $countPublishedPosts = 0;
+
+        foreach ($this->getPosts() as $post) {
+            if (Statusable::STATUS_PUBLISHED === $post->getStatus()) {
+                $countPublishedPosts++;
+            }
+        }
+
+        return $countPublishedPosts;
+    }
+
+    /**
      * @param BlogOptions $options
      *
      * @return Blog
