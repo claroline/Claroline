@@ -219,7 +219,7 @@ class ResourceManager
     public function getUniqueName(ResourceNode $node, ResourceNode $parent = null, $isCopy = false)
     {
         $candidateName = $node->getName();
-
+        $nodeType = $node->getResourceType();
         //if the parent is null, then it's a workspace root and the name is always correct
         //otherwise we fetch each workspace root with the findBy and the UnitOfWork won't be happy...
         if (!$parent) return $candidateName;
@@ -236,8 +236,9 @@ class ResourceManager
                 // same name is also incremented
                 continue;
             }
-
-            $siblingNames[] = $levelNode->getName();
+            if ($levelNode->getResourceType() === $nodeType) {
+                $siblingNames[] = $levelNode->getName();
+            }
         }
 
         if (!in_array($candidateName, $siblingNames)) {
