@@ -1,0 +1,9 @@
+<div class="panel-body">
+    {% if exoID == -1 %}
+    <a href="{{ path('ujm_question_index') }}" class="btn btn-primary">
+    {% else %}
+    <a href="{{ path('ujm_exercise_questions', { 'id': exoID}) }}" class="btn btn-primary">
+    {% endif %}
+        <i class="fa fa-arrow-left"></i> {{ 'back' | trans }}
+    </a>
+</div>

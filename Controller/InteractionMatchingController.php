@@ -100,7 +100,7 @@ class InteractionMatchingController extends Controller
      */
     public function updateAction($id)
     {
-        $exoID = $this->container->get('request')->request->get('exercice');
+        $exoID = $this->container->get('request')->request->get('exercise');
         $user = $this->container->get('security.context')->getToken()->getUser();
         $catID = -1;
 
@@ -134,7 +134,7 @@ class InteractionMatchingController extends Controller
             } else {
                 return $this->redirect(
                     $this->generateUrl(
-                        'ujm_question_index',
+                        'ujm_exercise_questions',
                             array(
                                 'id' => $exoID
                             )

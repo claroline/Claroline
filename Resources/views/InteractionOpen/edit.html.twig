@@ -35,11 +35,7 @@
             <h3 class="panel-title">{{'open edition'|trans}}</h3>
         </div>
 
-        <div class="panel-body">
-            <a href="{{ path('ujm_question_index') }}" class="btn btn-primary">
-                <i class="fa fa-arrow-left"></i> {{ 'back' | trans }}
-            </a>
-        </div>
+        {% include "UJMExoBundle:Partial:question/linkToBack.html.twig" %}
 
         <form action="{{ path('ujm_interactionopen_update', { 'id': entity.id }) }}" method="post" {{ form_enctype(edit_form) }}>
             <div class="panel-body">
