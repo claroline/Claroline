@@ -30,7 +30,7 @@ class WidgetListener
 
     /**
      * @DI\InjectParams({
-     *      "widgetManager"    = @DI\Inject("icap.blog.manager.widget"),
+     *      "widgetManager"    = @DI\Inject("icap_blog.manager.widget"),
      *      "formFactory"      = @DI\Inject("form.factory"),
      *      "templatingEngine" = @DI\Inject("templating"),
      *      "widgetListType"   = @DI\Inject("icap_blog.form.widget_list")
@@ -67,12 +67,15 @@ class WidgetListener
      */
     public function onWidgetListConfigure(ConfigureWidgetEvent $event)
     {
-        $form    = $this->formFactory->create($this->widgetListType);
+        $form        = $this->formFactory->create($this->widgetListType);
+        $widgetItems = $this->widgetManager->getWidgetList($event->getInstance());
+
         $content = $this->templatingEngine->render(
             'IcapBlogBundle:widget:listConfigure.html.twig',
             array(
                 'form'           => $form->createView(),
-                'widgetInstance' => $event->getInstance()
+                'widgetInstance' => $event->getInstance(),
+                'widgetItems'    => $widgetItems
             )
         );
 

@@ -7,7 +7,7 @@ use Doctrine\ORM\EntityManager;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
- * @DI\Service("icap.blog.manager.widget")
+ * @DI\Service("icap_blog.manager.widget")
  */
 class WidgetManager
 {

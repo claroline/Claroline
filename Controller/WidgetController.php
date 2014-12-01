@@ -4,8 +4,10 @@ namespace Icap\BlogBundle\Controller;
 
 use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 
+use Doctrine\ORM\EntityManager;
 use Icap\BlogBundle\Entity\WidgetList;
 use Icap\BlogBundle\Form\WidgetListType;
+use Icap\BlogBundle\Listener\BlogListener;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\Form\Form;
@@ -20,7 +22,7 @@ class WidgetController extends Controller
      * @Route("/icap_blog/widget/{id}/config", name="icap_blog_widget_list_configure", requirements={"id" = "\d+"})
      * @Method("POST")
      */
-    public function updateSimpleTextWidgetConfig(Request $request, WidgetInstance $widgetInstance)
+    public function updateWidgetBlogList(Request $request, WidgetInstance $widgetInstance)
     {
         if (!$this->get('security.context')->isGranted('edit', $widgetInstance)) {
             throw new AccessDeniedException();
@@ -40,15 +42,16 @@ class WidgetController extends Controller
 
             return new Response('', Response::HTTP_NO_CONTENT);
         } else {
+            $widgetItems = $this->get('icap_blog.manager.widget')->getWidgetList($widgetInstance);
+
             return $this->render(
                 'IcapBlogBundle:widget:listConfigure.html.twig',
                 array(
                     'form'           => $form->createView(),
-                    'widgetInstance' => $widgetInstance
+                    'widgetInstance' => $widgetInstance,
+                    'widgetItems'    => $widgetItems
                 )
             );
         }
-
-
     }
 }
