@@ -4,9 +4,9 @@ namespace Icap\BlogBundle\Controller;
 
 use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
-use Icap\BlogBundle\Entity\WidgetList;
-use Icap\BlogBundle\Form\WidgetListType;
+use Icap\BlogBundle\Entity\WidgetBlogList;
 use Icap\BlogBundle\Listener\BlogListener;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -28,16 +28,35 @@ class WidgetController extends Controller
             throw new AccessDeniedException();
         }
 
-        $widgetList = new WidgetList();
-        $widgetList->setWidgetInstance($widgetInstance);
+        $originalWidgetListBlogs = $this->get('icap_blog.manager.widget')->getWidgetListBlogs($widgetInstance);
+        $originalWidgetListBlogs = new ArrayCollection($originalWidgetListBlogs);
+
+        $widgetBlogList = new WidgetBlogList();
+        $widgetBlogList->setWidgetListBlogs($originalWidgetListBlogs);
 
         /** @var Form $form */
-        $form = $this->container->get('form.factory')->create($this->get('icap_blog.form.widget_list'), $widgetList);
+        $form = $this->container->get('form.factory')->create($this->get('icap_blog.form.widget_list'), $widgetBlogList);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
             $entityManager = $this->get('doctrine.orm.entity_manager');
-            $entityManager->persist($widgetList);
+
+            $widgetListBlogs = $widgetBlogList->getWidgetListBlogs();
+
+            foreach ($widgetListBlogs as $widgetListBlog) {
+                if ($originalWidgetListBlogs->contains($widgetListBlog)) {
+                    $originalWidgetListBlogs->removeElement($widgetListBlog);
+                }
+                else {
+                    $widgetListBlog->setWidgetInstance($widgetInstance);
+                    $entityManager->persist($widgetListBlog);
+                }
+            }
+
+            foreach ($originalWidgetListBlogs as $originalWidgetListBlog) {
+                $entityManager->remove($originalWidgetListBlog);
+            }
+
             $entityManager->flush();
 
             return new Response('', Response::HTTP_NO_CONTENT);

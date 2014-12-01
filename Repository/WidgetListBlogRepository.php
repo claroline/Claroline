@@ -6,7 +6,7 @@ use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 use Doctrine\ORM\EntityRepository;
 use Icap\BlogBundle\Entity\WidgetList;
 
-class WidgetListRepository extends EntityRepository
+class WidgetListBlogRepository extends EntityRepository
 {
     /**
      * @param WidgetInstance|Blog $widgetInstance

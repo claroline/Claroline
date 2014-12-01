@@ -8,35 +8,35 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/11/26 10:16:01
+ * Generation date: 2014/12/01 04:41:21
  */
-class Version20141126101559 extends AbstractMigration
+class Version20141201164119 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
         $this->addSql("
-            CREATE TABLE icap__blog_widget_list (
+            CREATE TABLE icap__blog_widget_list_blog (
                 id INT IDENTITY NOT NULL, 
-                blog_id INT, 
-                widgetInstance_id INT, 
+                blog_id INT NOT NULL, 
+                widgetInstance_id INT NOT NULL, 
                 PRIMARY KEY (id)
             )
         ");
         $this->addSql("
-            CREATE INDEX IDX_6979A1C3DAE07E97 ON icap__blog_widget_list (blog_id)
+            CREATE INDEX IDX_294D4E02DAE07E97 ON icap__blog_widget_list_blog (blog_id)
         ");
         $this->addSql("
-            CREATE INDEX IDX_6979A1C3AB7B5A55 ON icap__blog_widget_list (widgetInstance_id)
+            CREATE INDEX IDX_294D4E02AB7B5A55 ON icap__blog_widget_list_blog (widgetInstance_id)
         ");
         $this->addSql("
-            ALTER TABLE icap__blog_widget_list 
-            ADD CONSTRAINT FK_6979A1C3DAE07E97 FOREIGN KEY (blog_id) 
+            ALTER TABLE icap__blog_widget_list_blog 
+            ADD CONSTRAINT FK_294D4E02DAE07E97 FOREIGN KEY (blog_id) 
             REFERENCES icap__blog (id) 
             ON DELETE CASCADE
         ");
         $this->addSql("
-            ALTER TABLE icap__blog_widget_list 
-            ADD CONSTRAINT FK_6979A1C3AB7B5A55 FOREIGN KEY (widgetInstance_id) 
+            ALTER TABLE icap__blog_widget_list_blog 
+            ADD CONSTRAINT FK_294D4E02AB7B5A55 FOREIGN KEY (widgetInstance_id) 
             REFERENCES claro_widget_instance (id) 
             ON DELETE CASCADE
         ");
@@ -45,7 +45,7 @@ class Version20141126101559 extends AbstractMigration
     public function down(Schema $schema)
     {
         $this->addSql("
-            DROP TABLE icap__blog_widget_list
+            DROP TABLE icap__blog_widget_list_blog
         ");
     }
 }

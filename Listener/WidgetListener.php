@@ -4,6 +4,7 @@ namespace Icap\BlogBundle\Listener;
 
 use Claroline\CoreBundle\Event\ConfigureWidgetEvent;
 use Claroline\CoreBundle\Event\DisplayWidgetEvent;
+use Icap\BlogBundle\Entity\WidgetBlogList;
 use Icap\BlogBundle\Form\WidgetListType;
 use Icap\BlogBundle\Manager\WidgetManager;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -50,7 +51,7 @@ class WidgetListener
      */
     public function onWidgetListDisplay(DisplayWidgetEvent $event)
     {
-        $widgetItems = $this->widgetManager->getWidgetList($event->getInstance());
+        $widgetItems = $this->widgetManager->getWidgetListBlogs($event->getInstance());
 
         $content = $this->templatingEngine->render(
             'IcapBlogBundle:widget:list.html.twig',
@@ -67,15 +68,17 @@ class WidgetListener
      */
     public function onWidgetListConfigure(ConfigureWidgetEvent $event)
     {
-        $form        = $this->formFactory->create($this->widgetListType);
-        $widgetItems = $this->widgetManager->getWidgetList($event->getInstance());
+        $widgetListBlogs = $this->widgetManager->getWidgetListBlogs($event->getInstance());
+        $widgetBlogList = new WidgetBlogList();
+        $widgetBlogList->setWidgetListBlogs($widgetListBlogs);
+
+        $form = $this->formFactory->create($this->widgetListType, $widgetBlogList);
 
         $content = $this->templatingEngine->render(
             'IcapBlogBundle:widget:listConfigure.html.twig',
             array(
                 'form'           => $form->createView(),
-                'widgetInstance' => $event->getInstance(),
-                'widgetItems'    => $widgetItems
+                'widgetInstance' => $event->getInstance()
             )
         );
 

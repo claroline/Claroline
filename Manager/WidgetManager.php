@@ -27,12 +27,12 @@ class WidgetManager
     /**
      * @param WidgetInstance $widgetInstance
      *
-     * @return \Icap\BlogBundle\Entity\WidgetList[]
+     * @return \Icap\BlogBundle\Entity\WidgetListBlog[]
      */
-    public function getWidgetList(WidgetInstance $widgetInstance)
+    public function getWidgetListBlogs(WidgetInstance $widgetInstance)
     {
         return $this->entityManager
-            ->getRepository('IcapBlogBundle:WidgetList')
+            ->getRepository('IcapBlogBundle:WidgetListBlog')
             ->findByWidgetInstance($widgetInstance);
     }
 }

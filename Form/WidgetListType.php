@@ -15,44 +15,27 @@ use JMS\DiExtraBundle\Annotation as DI;
  */
 class WidgetListType extends AbstractType
 {
-    /**
-     * @var IntToBlogTransformer
-     */
-    private $intToBlogTransformer;
-
-    /**
-     * @DI\InjectParams({
-     *     "intToBlogTransformer" = @DI\Inject("icap_blog.transformer.int_to_blog")
-     * })
-     */
-    public function __construct(IntToBlogTransformer $intToBlogTransformer)
-    {
-        $this->intToBlogTransformer = $intToBlogTransformer;
-    }
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add(
-            $builder
-                ->create('blog', 'integer', array(
-                    'theme_options' => array(
-                        'label_width'   => 'col-md-6',
-                        'control_width' => 'col-md-6'
-                    )
-                ))
-                ->addModelTransformer($this->intToBlogTransformer)
-        );
+        $builder->add('widgetListBlogs', 'collection', array(
+            'type'          => 'blog_widget_blog_form',
+            'by_reference'  => false,
+            'prototype'     => true,
+            'allow_add'     => true,
+            'allow_delete'  => true
+        ));
     }
 
     public function getName()
     {
-        return 'blog_widgt_list_form';
+        return 'blog_widget_list_form';
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(
             array(
+                'data_class'         => 'Icap\BlogBundle\Entity\WidgetBlogList',
                 'translation_domain' => 'icap_blog'
             )
         );

@@ -8,10 +8,10 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 
 /**
- * @ORM\Table(name="icap__blog_widget_list")
- * @ORM\Entity(repositoryClass="Icap\BlogBundle\Repository\WidgetListRepository")
+ * @ORM\Table(name="icap__blog_widget_list_blog")
+ * @ORM\Entity(repositoryClass="Icap\BlogBundle\Repository\WidgetListBlogRepository")
  */
-class WidgetList
+class WidgetListBlog
 {
     /**
      * @ORM\Id
@@ -22,7 +22,7 @@ class WidgetList
 
     /**
      * @ORM\ManyToOne(targetEntity="Icap\BlogBundle\Entity\Blog")
-     * @ORM\JoinColumn(onDelete="CASCADE")
+     * @ORM\JoinColumn(onDelete="CASCADE", nullable=false)
      *
      * @var \Icap\BlogBundle\Entity\Blog
      */
@@ -30,7 +30,7 @@ class WidgetList
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Widget\WidgetInstance")
-     * @ORM\JoinColumn(onDelete="CASCADE")
+     * @ORM\JoinColumn(onDelete="CASCADE", nullable=false)
      *
      * @var \Claroline\CoreBundle\Entity\Widget\WidgetInstance
      */

@@ -1,14 +1,23 @@
-<form name="blog_widegt_list_form" class="form-inline" method="post" action="{{ path("icap_blog_widget_list_configure", {'id': widgetInstance.id}) }}">
-    {{ form_errors(form) }}
-    {{ form_row(form.blog) }}
-    {{ form_rest(form) }}
+{% trans_default_domain "icap_blog" %}
+
+<form name="blog_widegt_list_form" class="form-inline" action="{{ path("icap_blog_widget_list_configure", {'id': widgetInstance.id}) }}" method="post" {{ form_enctype(form) }}>
+    <div class="panel-body">
+        {{ form_errors(form) }}
+        {{ form_widget(form.widgetListBlogs) }}
+        {{ form_rest(form) }}
+    </div>
+    <div class="panel-footer">
+    <button type="submit" class="btn btn-primary">{{ 'edit'|trans({}, 'platform') }}</button>
+        <a href="#">
+            <button type="button" class="btn btn-default claro-widget-form-cancel">{{ 'cancel'|trans({}, 'platform') }}</button>
+        </a>
+    </div>
 </form>
-<ul class="list-group">
-    {% for widgetItem in widgetItems %}
-    <li class="list-group-item">
-        {{ widgetItem.blog.resourceNode.name }}
-    </li>
-    {% else %}
-    <span>{{ 'no_blog'|trans({}, 'icap_blog') }}</span>
-    {% endfor %}
-</ul>
+
+<script type="text/javascript" src="{{ asset('bundles/zenstruckform/js/helper.js') }}"></script>
+<script type="text/javascript">
+    (function () {
+        "use strict";
+        ZenstruckFormHelper.initFormCollectionHelper();
+    }());
+</script>
