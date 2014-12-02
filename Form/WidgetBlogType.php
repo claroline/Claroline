@@ -38,7 +38,8 @@ class WidgetBlogType extends AbstractType
                     'theme_options' => array(
                         'label_width'   => 'col-md-6',
                         'control_width' => 'col-md-6'
-                    )
+                    ),
+                    'label' => 'blog'
                 ))
                 ->addModelTransformer($this->intToBlogTransformer)
         );
