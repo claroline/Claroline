@@ -61,7 +61,7 @@ class WidgetController extends Controller
 
             return new Response('', Response::HTTP_NO_CONTENT);
         } else {
-            $widgetItems = $this->get('icap_blog.manager.widget')->getWidgetList($widgetInstance);
+            $widgetItems = $this->get('icap_blog.manager.widget')->getWidgetListBlogs($widgetInstance);
 
             return $this->render(
                 'IcapBlogBundle:widget:listConfigure.html.twig',
