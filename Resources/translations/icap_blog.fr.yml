@@ -96,3 +96,5 @@ classic: "Classique"
 3D: "Sphère 3D <span>(* Non compatible avec IE<9)</span>"
 view: '%viewCounter% vue | %viewCounter% vues'
 icap_blog_options_form_display_post_view_counter: 'Affichage du nombre de vue par article ?'
+blog_widgt_list_form_blog: 'Blog à ajouter'
+widget_list_no_blog: 'Aucun blog affiché'
