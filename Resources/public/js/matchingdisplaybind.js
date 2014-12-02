@@ -69,24 +69,24 @@ function placeProposal(idLabel, idProposal) {
 
 //registration of relations
 function checkIn(divProposal) {
-        var idProposal = divProposal.attr("id");
-        var proposal = idProposal.replace('draggable_', '');
-        responses[proposal] = 'NULL';
-        var connections = jsPlumb.getConnections({source:idProposal});
-        responses[proposal] = proposals = [];
-        for(i=0; i<connections.length; i++) {
-            var idLabel = connections[i].targetId;
-            var label = idLabel.replace('droppable_', '');
+    var idProposal = divProposal.attr("id");
+    var proposal = idProposal.replace('draggable_', '');
+    responses[proposal] = 'NULL';
+    var connections = jsPlumb.getConnections({source:idProposal});
+    responses[proposal] = proposals = [];
+    for(i=0; i<connections.length; i++) {
+        var idLabel = connections[i].targetId;
+        var label = idLabel.replace('droppable_', '');
             responses[proposal][i] = label;
-        }
-        dragStop();
+    }
+    dragStop();
 }
 
 function dragStop() {
     var resp = '';
     $.each(responses, function(key, value) {
         if (value) {
-            resp = resp + key + '-' + value + ';';
+            resp = resp + key + ',' + value + ';';
         }
     });
     $('#jsonResponse').val(resp);

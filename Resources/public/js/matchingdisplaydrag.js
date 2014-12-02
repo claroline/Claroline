@@ -131,7 +131,7 @@ function dragStop() {
     var resp = '';
     $.each(responses, function(key, value) {
         if (value) {
-            resp = resp + key + '-' + value + ';';
+            resp = resp + key + ',' + value + ';';
         }
     });
     $('#jsonResponse').val(resp);

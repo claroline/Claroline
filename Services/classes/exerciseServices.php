@@ -631,11 +631,13 @@ class exerciseServices
         foreach ($interMatching->getProposals() as $proposal) {
             $associateLabel = $proposal->getAssociatedLabel();
             if ($associateLabel != null) {
-                $index = $associateLabel->getId();
-                if (isset($tabRightResponse[$index])) {
-                    $tabRightResponse[$index] .= '-' . $proposal->getId();
-                } else {
-                    $tabRightResponse[$index] = $proposal->getId();
+                foreach ($associateLabel as $associatedLabel) {
+                    $index = $associatedLabel->getId();
+                    if (isset($tabRightResponse[$index])) {
+                        $tabRightResponse[$index] .= '-' . $proposal->getId();
+                    } else {
+                        $tabRightResponse[$index] = $proposal->getId();
+                    }
                 }
             }
         }
@@ -656,16 +658,16 @@ class exerciseServices
 
         //array of responses of user indexed by labelId
         foreach ($tabResponse as $rep) {
-            $tabTmp = explode('-', $rep);
-            if (count($tabTmp) > 1) {
-                if (isset($tabResponseIndex[$tabTmp[1]])) {
-                    $tabResponseIndex[$tabTmp[1]] .= '-' . $tabTmp[0];
+            $tabTmp = preg_split('(,)', $rep);
+            for ($i = 1; $i < count($tabTmp);$i++) {
+                if (isset($tabResponseIndex[$tabTmp[$i]])) {
+                    $tabResponseIndex[$tabTmp[$i]] .= '-' . $tabTmp[0];
                 } else {
-                    $tabResponseIndex[$tabTmp[1]] = $tabTmp[0];
+                    $tabResponseIndex[$tabTmp[$i]] = $tabTmp[0];
                 }
             }
         }
-
+        
         return $tabResponseIndex;
     }
 
