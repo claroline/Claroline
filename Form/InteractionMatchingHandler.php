@@ -144,7 +144,7 @@ class InteractionMatchingHandler extends InteractionHandler
 
         //remove all relationships between proposal and label
         foreach ($proposals as $proposal) {
-            $proposals->removeAssociatedLabel($proposal);
+            $proposal->removeAssociatedLabel($proposal);
         }
 
         // filter $originalLabels to contain label no longer present

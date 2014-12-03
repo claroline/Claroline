@@ -113,9 +113,9 @@ class Proposal
      * Remove Label
      *
      */
-    public function removeAssociatedLabel(\UJM\ExoBundle\Entity\Label $label)
+    public function removeAssociatedLabel()
     {
-        $this->associatedLabel->removeElement($label);
+        $this->associatedLabel = NULL;
     }
 
 }
