@@ -3,6 +3,7 @@ namespace Icap\PortfolioBundle\Installation\Updater;
 
 use Doctrine\Common\Persistence\Mapping\MappingException;
 use Doctrine\ORM\EntityManager;
+use Icap\PortfolioBundle\Entity\Widget\WidgetType;
 
 class Updater010000
 {
@@ -23,6 +24,7 @@ class Updater010000
         $widgetType = $this->entityManager->getRepository("IcapPortfolioBundle:Widget\\WidgetType")->findOneBy(array('name' => 'badges'));
 
         if (null === $widgetType) {
+            $widgetType = new WidgetType();
             $widgetType
                 ->setName('badges')
                 ->setIcon('trophy')
