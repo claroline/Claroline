@@ -1,6 +1,14 @@
-<div class="list-group">
+{% block stylesheets %}
+    {% stylesheets debug=false filter="lessphp, cssmin"  output="css/icapblog/widget_list.css"
+      "@IcapBlogBundle/Resources/views/less/widget_list.less"
+    %}
+        <link rel="stylesheet" href="{{ asset_url }}" screen="media" />
+    {% endstylesheets %}
+{% endblock %}
+
+<div class="list-group blog_list">
     {% for widgetItem in widgetItems %}
-    <a href="{{ path('icap_blog_view', {'blogId' : widgetItem.blog.id}) }}" class="list-group-item">
+    <a href="{{ path('icap_blog_view', {'blogId' : widgetItem.blog.id}) }}" class="list-group-item col-md-3">
         {{ widgetItem.blog.resourceNode.name }}
         <span class="badge">{{ widgetItem.blog.countPublishedPosts }}</span>
     </a>
