@@ -63,7 +63,7 @@ class InteractionMatchingHandler extends InteractionHandler
             if ($this->isClone === FALSE) {
                 if(count($this->request->get($indLabel.'_correspondence')) > 0 ) {
                     foreach($this->request->get($indLabel.'_correspondence') as $indProposal) {
-                        $proposals[$indProposal - 1]->setAssociatedLabel($label);
+                        $proposals[$indProposal - 1]->addAssociatedLabel($label);
                     }
                 }
             }
@@ -144,7 +144,7 @@ class InteractionMatchingHandler extends InteractionHandler
 
         //remove all relationships between proposal and label
         foreach ($proposals as $proposal) {
-            $proposal->removeAssociatedLabel();
+            $proposals->removeAssociatedLabel($proposal);
         }
 
         // filter $originalLabels to contain label no longer present
@@ -206,7 +206,7 @@ class InteractionMatchingHandler extends InteractionHandler
         foreach ($interMatching->getLabels() as $label) {
             if(count($this->request->get($indLabel.'_correspondence')) > 0 ) {
                 foreach($this->request->get($indLabel.'_correspondence') as $indProposal) {
-                    $proposals[$indProposal - 1]->setAssociatedLabel($label);
+                    $proposals[$indProposal - 1]->addAssociatedLabel($label);
                     $this->em->persist($proposals[$indProposal - 1]);
                 }
             }

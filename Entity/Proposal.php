@@ -35,8 +35,9 @@ class Proposal
     private $interactionMatching;
 
     /**
-     * @ORM\ManyToOne(targetEntity="UJM\ExoBundle\Entity\Label")
+     * @ORM\ManyToMany(targetEntity="UJM\ExoBundle\Entity\Label")
      * @ORM\JoinColumn(name="label_id", referencedColumnName="id")
+     * @ORM\JoinTable(name="ujm_proposal_label")
      */
     private $associatedLabel;
 
@@ -103,18 +104,18 @@ class Proposal
      * Set Label
      *
      */
-    public function setAssociatedLabel(\UJM\ExoBundle\Entity\Label $label)
+    public function addAssociatedLabel(\UJM\ExoBundle\Entity\Label $label)
     {
-        $this->associatedLabel = $label;
+        $this->associatedLabel[] = $label;
     }
 
     /**
      * Remove Label
      *
      */
-    public function removeAssociatedLabel()
+    public function removeAssociatedLabel(\UJM\ExoBundle\Entity\Label $label)
     {
-        $this->associatedLabel = NULL;
+        $this->associatedLabel->removeElement($label);
     }
 
 }

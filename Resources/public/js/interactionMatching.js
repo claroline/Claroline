@@ -29,15 +29,6 @@ function creationMatching(addchoice, addproposal, deletechoice, LabelValue, Scor
 
     typeMatching = JSON.parse(tMatching);
 
-    //in the first time
-    $('#ujm_exobundle_interactionmatchingtype_typeMatching').children('option').each(function() {
-         if (typeMatching[$(this).val()] == 2) {
-             $(this).prop('selected', true);
-         } else {
-             $(this).attr('disabled', 'disabled');
-         }
-     });
-
     tableCreationProposal(containerProposal, tableProposals, addproposal, deletechoice, ProposalValue, 0, codeContainerProposal, deleteProposal, numberProposal);
     tableCreationLabel(containerLabel, tableLabels, addchoice, deletechoice, LabelValue, ScoreRight, 0, codeContainerLabel, deleteLabel, correspondence);
 
@@ -84,15 +75,6 @@ function creationMatchingEdit(addchoice, addproposal, deletechoice, LabelValue, 
     correspEmptyLang = correspEmpty;
     correspErrorLang = correspondenceError;
     scoreErrorLang = scoreError;
-
-    //in the first time
-    $('#ujm_exobundle_interactionmatchingtype_typeMatching').children('option').each(function() {
-        if (typeMatching[$(this).val()] == 2) {
-            $(this).prop('selected', true);
-        } else {
-            $(this).attr('disabled', 'disabled');
-        }
-    });
 
     tableCreationProposal(containerProposal, tableProposals, addproposal, deletechoice, ProposalValue, nbResponses, codeContainerProposal, deleteProposal, numberProposal);
     tableCreationLabel(containerLabel, tableLabels, addchoice, deletechoice, LabelValue, ScoreRight, nbResponses, codeContainerLabel, deleteLabel, correspondence);
@@ -257,7 +239,9 @@ function check_form(nbrProposals, nbrLabels) {
     var proposalSelected = [];
     var singleProposal = true;
     var score = true;
-
+    
+    var typeMatching = $('#ujm_exobundle_interactionmatchingtype_typeMatching option:selected').val();
+    
     if (($('#newTableProposal').find('tr:not(:first)').length) < 1) {
 
         alert(nbrProposals);
@@ -269,6 +253,12 @@ function check_form(nbrProposals, nbrLabels) {
         alert(nbrLabels);
         return false;
     }
+    
+    //for encoding the chevrons
+    $('.classic').find('textarea:visible').each(function() {
+        $(this).val($(this).val().replace("<", "&lt;"));
+        $(this).val($(this).val().replace(">", "&gt;"));
+    });
 
     $("*[id$='scoreRightResponse']").each( function() {
 
@@ -278,7 +268,7 @@ function check_form(nbrProposals, nbrLabels) {
             score = false;
         }
     });
-
+    
     if(score == false ){
 
         return false
@@ -287,19 +277,25 @@ function check_form(nbrProposals, nbrLabels) {
     $("*[id$='_correspondence']").each( function() {
         if ($("option:selected", this).length > 0) {
             correspondence = true;
-            $("option:selected", this).each( function () {
-                //alert($(this).val());
-                //si dans tableau return false + mmsg si non ajout dans tableau
-                if (proposalSelected[$(this).val()]) {
-                    alert(correspErrorLang);
-                    singleProposal = false;
-                } else {
-                    proposalSelected[$(this).val()] = true;
-                }
-            });
+            if (typeMatching == 2) {
+                $("option:selected", this).each( function () {
+                    //alert($(this).val());
+                    //si dans tableau return false + mmsg si non ajout dans tableau
+
+                        if (proposalSelected[$(this).val()]) {
+
+                                alert(correspErrorLang);
+
+                            singleProposal = false;
+                        } else {
+                            proposalSelected[$(this).val()] = true;
+                        }
+
+                });
+            }
         }
     });
-
+    
     if (singleProposal == false) {
 
         return false;
@@ -309,12 +305,6 @@ function check_form(nbrProposals, nbrLabels) {
 
         return confirm(correspEmptyLang);
     }
-
-    //for encoding the chevrons
-    $('.classic').find('textarea:visible').each(function() {
-        $(this).val($(this).val().replace("<", "&lt;"));
-        $(this).val($(this).val().replace(">", "&gt;"));
-    });
 }
 
 function fillLabelArray(row) {
