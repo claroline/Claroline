@@ -8,7 +8,6 @@ use Symfony\Component\Translation\Translator;
 
 /**
  * @DI\Service()
- * @DI\Tag("kernel.event_listene")
  */
 class ConfigureTopRightMenuListener
 {
