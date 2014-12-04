@@ -13,9 +13,7 @@
             {% if (params.dropdown is defined and params.dropdown is not empty) and (params.hideArrow is not defined or params.hideArrow is empty) %}<i class="caret"></i>{% endif %}
         </a>
         {% if params.dropdown is defined and params.dropdown is not empty %}
-            <ul class="dropdown-menu" role="menu">
-                {{ params.dropdown | raw }}
-            </ul>
+        {{ params.dropdown | raw }}
         {% endif %}
     </li>
 {% endmacro %}
@@ -23,27 +21,7 @@
 {% block topBar %}
 
     {% block leftSide %}
-        {% import _self as topbar %}
-        {% if config.getParameter('name') == "" and config.getParameter('logo') == "" %}
-            {{ topbar.item({'name':'home', 'href':path('claro_index'), 'icon':'home'}) }}
-        {% endif %}
-        {{ topbar.item({'name': 'desktop', 'breakhide': true, 'href':path('claro_desktop_open'), 'icon':'briefcase', 'route':'/desktop/tool/', 'title': 'desktop' | trans({}, 'platform')}) }}
-        {% if canAdministrate == true %}
-            {{ topbar.item({'name': 'administration', 'breakhide': true, 'href':path('claro_admin_index'), 'icon':'cog', 'route':'/admin/', 'title':'administration' | trans({}, 'platform')}) }}
-        {% endif %}
-        {% if countUnreadMessages > 0 %}
-            {{ topbar.item({'name': 'messages', 'breakhide': true, 'href':path('claro_message_list_received'), 'icon':'envelope', 'route':'/message/', 'title':'new_message_alert' | trans({'%count%': countUnreadMessages}, 'platform'), 'badge' : countUnreadMessages }) }}
-        {% else %}
-            {{ topbar.item({'name': 'messages', 'breakhide': true, 'href':path('claro_message_list_received'), 'icon':'envelope', 'route':'/message/', 'title':'new_message_alert' | trans({'%count%': countUnreadMessages}, 'platform')}) }}
-        {% endif %}
-        {% if countUnviewedNotifications > 0 %}
-            {{ topbar.item({'name': 'notifications', 'breakhide': true, 'id':'notification-topbar-item', 'href':path('icap_notification_view'), 'icon':'bell', 'route':'/icap_notification/', 'title':'notifications', 'badge' : countUnviewedNotifications}) }}
-        {% else %}
-            {{ topbar.item({'name': 'notifications', 'breakhide': true, 'id':'notification-topbar-item', 'href':path('icap_notification_view'), 'icon':'bell', 'route':'/icap_notification/', 'title':'notifications'}) }}
-        {% endif %}
-        {% if '/icap_notification/'|compareRoute('true') is empty %}
-            {% include "IcapNotificationBundle:Notification:dropdownScript.html.twig" with {'notificationElementId':'notification-topbar-item'} %}
-        {% endif %}
+        {{ knp_menu_render('ClarolineCoreBundle:Builder:topBarLeftMenu', {}, 'top_bar_left') }}
     {% endblock leftSide %}
 
     {% block rightSide %}
@@ -73,6 +51,7 @@
     {% endblock logged %}
 
     {% block dropdownWorkspace %}
+        <ul class="dropdown-menu" role="menu">
         {% import _self as topbar %}
         {% if isLogged %}
             {% if not workspaces is empty %}
@@ -91,40 +70,27 @@
         {% else %}
             {{ topbar.item({'name':'find_workspaces', 'href':path('claro_workspace_list'), 'icon':'book'}) }}
         {% endif %}
+        </ul>
     {% endblock dropdownWorkspace %}
 
     {% block dropdowLogin %}
-        <li role="presentation">
-            <a role="menuitem" id="link-registration" href="{{ path(register_target) }}">
-                {{ 'register'|trans({}, 'platform') }}
-            </a>
-        </li>
-        <li role="presentation" class="divider"></li>
-        <li role="presentation">
-            <a role="menuitem" href="{{ login_target }}" id="link-login">
-                {{ 'login'|trans({}, 'platform') }}
-            </a>
-        </li>
+        <ul class="dropdown-menu" role="menu">
+            <li role="presentation">
+                <a role="menuitem" id="link-registration" href="{{ path(register_target) }}">
+                    {{ 'register'|trans({}, 'platform') }}
+                </a>
+            </li>
+            <li role="presentation" class="divider"></li>
+            <li role="presentation">
+                <a role="menuitem" href="{{ login_target }}" id="link-login">
+                    {{ 'login'|trans({}, 'platform') }}
+                </a>
+            </li>
+        </ul>
     {% endblock dropdowLogin %}
 
     {% block dropdownLogged %}
-        {{ topbar.item({'name':'my_profile', 'href':path('claro_profile_view'), 'icon':'user'}) }}
-        <li role="presentation" class="divider"></li>
-        {% if personalWs is not null %}
-            {{ topbar.item({'name':'my_workspace', 'href':path('claro_workspace_open_tool', {'workspaceId': personalWs.getId(), 'toolName': 'home'}), 'icon':'book'}) }}
-        {% endif %}
-        {{ topbar.item({'name':'my_agenda', 'href':path('claro_desktop_open_tool', {'toolName': 'agenda' }), 'icon':'calendar'}) }}
-        {{ topbar.item({'name':'my_resources', 'href':path('claro_desktop_open_tool', {'toolName': 'resource_manager'}) ~ '#resources/0', 'icon':'folder'}) }}
-        {{ topbar.item({'name':'my_badges', 'href':path('claro_profile_view_badges'), 'icon':'trophy'}) }}
-        {{ topbar.item({'name':portfolioText, 'href':portfolioUrl, 'icon':'list-alt'}) }}
-        <li role="presentation" class="divider"></li>
-        {% if isImpersonated %}
-            {% set logoutPath = path('claro_desktop_open', {'_switch': '_exit'}) %}
-        {% else %}
-            {% set logoutPath = path('claro_security_logout') %}
-        {% endif %}
-        {{ topbar.item({'name':'logout', 'href':logoutPath, 'icon':'power-off', id:"btn-logout"}) }}
-
+        {{ knp_menu_render('ClarolineCoreBundle:Builder:topBarRightMenu', {}, 'top_bar_right') }}
     {% endblock dropdownLogged %}
 
 {% endblock topBar %}

@@ -59,7 +59,8 @@
         "icap/notification-bundle": "~1.0",
         "johngrogg/ics-parser": "dev-master",
         "gregwar/captcha-bundle": "dev-master",
-        "innova/angular-ui-translation-bundle": "2.0.0"
+        "innova/angular-ui-translation-bundle": "2.0.0",
+        "knplabs/knp-menu-bundle": "~2.0"
     },
     "require-dev": {
         "mockery/mockery": "dev-master@dev",

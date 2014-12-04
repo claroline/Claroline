@@ -206,7 +206,7 @@ class LogListener
     /**
      * Is a repeat if the session contains a same logSignature for the same action category
      */
-    private function isARepeat(LogGenericEvent $event)
+    public function isARepeat(LogGenericEvent $event)
     {
         if ($this->securityContext->getToken() === null) {
             //Only if have a user session;
@@ -269,12 +269,6 @@ class LogListener
     {
         if (!($event instanceof LogNotRepeatableInterface) or !$this->isARepeat($event)) {
             $this->createLog($event);
-        }
-
-        if ($event instanceof NotifiableInterface && $this->ch->getParameter('is_notification_active')) {
-            if ($event->isAllowedToNotify()) {
-                $this->notificationManager->createNotificationAndNotify($event);
-            }
         }
     }
 }
