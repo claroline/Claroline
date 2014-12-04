@@ -11,7 +11,7 @@ use Symfony\Component\Security\Core\SecurityContext;
 
 /**
  * @DI\Service()
- * @DI\Tag("kernel.event_listene")
+ * @DI\Tag("kernel.event_listener")
  */
 class ConfigureTopLeftMenuListener
 {
