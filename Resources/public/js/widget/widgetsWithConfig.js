@@ -135,7 +135,7 @@
                     visibilityBtn.attr('visiblility-value', 'visible');
                     visibilityBtn.find('i').removeClass('fa-eye');
                     visibilityBtn.find('i').addClass('fa-eye-slash');
-                    visibilityBtn.find('span').html(translator.get('platform:hide'));
+                    visibilityBtn.find('span').html(translator.trans('hide', {}, 'platform'));
                     currentElement.find('.panel-title').first().removeClass('strike');
 
                     currentElement.find('.panel-body').first().show('slow');
@@ -143,7 +143,7 @@
                     visibilityBtn.attr('visiblility-value', 'invisible');
                     visibilityBtn.find('i').removeClass('fa-eye-slash');
                     visibilityBtn.find('i').addClass('fa-eye');
-                    visibilityBtn.find('span').html(translator.get('platform:display'));
+                    visibilityBtn.find('span').html(translator.trans('display', {}, 'platform'));
                     currentElement.find('.panel-title').first().addClass('strike');
 
                     currentElement.find('.panel-body').first().hide('slow');

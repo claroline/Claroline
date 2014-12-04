@@ -200,13 +200,13 @@
             $.ajax(routing.generate('claro_content_publish_type', {'type': id}))
             .done(function (data) {
                 if (data === 'true') {
-                    $('.type-publish > span', element).text(translator.get('platform:unpublish'));
-                    $('strong > .text-muted > span', element).text(translator.get('platform:publish'));
+                    $('.type-publish > span', element).text(translator.trans('unpublish', {}, 'platform'));
+                    $('strong > .text-muted > span', element).text(translator.trans('publish', {}, 'platform'));
                     $('strong > .text-muted > .text-danger', element)
                     .removeClass('text-danger').addClass('text-success');
                 } else {
-                    $('.type-publish > span', element).text(translator.get('platform:to_publish'));
-                    $('strong > .text-muted > span', element).text(translator.get('platform:unpublished'));
+                    $('.type-publish > span', element).text(translator.trans('to_publish', {}, 'platform'));
+                    $('strong > .text-muted > span', element).text(translator.trans('unpublished', {}, 'platform'));
                     $('strong > .text-muted > .text-success', element)
                     .removeClass('text-success').addClass('text-danger');
                 }

@@ -26,13 +26,13 @@
                 var flashbag =
                    '<div class="alert alert-success">' +
                    '<a data-dismiss="alert" class="close" href="#" aria-hidden="true">&times;</a>' +
-                   Translator.get('platform:edit_rights_success') +
+                   Translator.trans('edit_rights_success', {}, 'platform') +
                    '</div>';
                    $('.panel-body').first().prepend(flashbag);
             }
         });
     };
-    
+
     $('body').on('change', '#simple input', function () {
         var element = this;
 
@@ -132,7 +132,7 @@
             }
         });
     });
-        
+
     $('body').on('click', '#search-user-without-rights-btn',function () {
         var search = $('#search-user-without-rights-input').val();
         var nodeId = $('#users-without-rights-datas').attr('data-node-id');
@@ -166,7 +166,7 @@
             }
         });
     });
-    
+
     $('#users-without-rights-list').on('click', '.pagination > ul > li > a', function (event) {
         event.preventDefault();
         event.stopPropagation();
@@ -185,7 +185,7 @@
             });
         }
     });
-    
+
     $('#users-without-rights-list').on('click', 'th > a', function (event) {
         event.preventDefault();
         event.stopPropagation();
@@ -204,7 +204,7 @@
             });
         }
     });
-        
+
     $('body').on('click', '#search-user-with-rights-btn',function () {
         var search = $('#search-user-with-rights-input').val();
         var nodeId = $('#users-with-rights-datas').attr('data-node-id');
@@ -238,7 +238,7 @@
             }
         });
     });
-    
+
     $('#users-with-rights-list').on('click', '.pagination > ul > li > a', function (event) {
         event.preventDefault();
         event.stopPropagation();
@@ -257,7 +257,7 @@
             });
         }
     });
-    
+
     $('#users-with-rights-list').on('click', 'th > a', function (event) {
         event.preventDefault();
         event.stopPropagation();
@@ -276,12 +276,12 @@
             });
         }
     });
-    
+
     $('#users-with-rights-list').on('click', '#add-new-user-rights-btn', function () {
         $('#users-with-rights-list-tab').removeClass('active');
         $('#users-without-rights-list-tab').addClass('active');
-    });    
-    
+    });
+
     $('body').on('click', '#search-workspaces-btn',function () {
         var search = $('#search-workspaces-input').val();
         var nodeId = $('#workspaces-datas').data('node-id');
@@ -317,7 +317,7 @@
             }
         });
     });
-    
+
     $('#all-workspaces-panel').on('click', '.pagination > ul > li > a', function (event) {
         event.preventDefault();
         event.stopPropagation();

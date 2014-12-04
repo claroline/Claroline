@@ -101,7 +101,7 @@ class ClarolineCoreBundle extends InstallableBundle implements AutoConfigurableI
             if (in_array($environment, array('prod', 'dev', 'test'))) {
                 return $config->addContainerResource($this->buildPath("{$envConfigs[$bundleClass]}_{$environment}"));
             }
-        } elseif ($bundle instanceof \Bazinga\ExposeTranslationBundle\BazingaExposeTranslationBundle) {
+        } elseif ($bundle instanceof \Bazinga\Bundle\JsTranslationBundle\BazingaJsTranslationBundle) {
             return $config->addRoutingResource($this->buildPath('bazinga_routing'));
         } elseif ($bundle instanceof FOSOAuthServerBundle) {
             $config = new ConfigurationBuilder();

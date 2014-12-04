@@ -30,7 +30,7 @@
                             .data('resource', resource.id)
                             .data('activity', activity)
                             .html(
-                                ' ' + translator.get('platform:remove')
+                                ' ' + translator.trans('remove', {}, 'platform')
                             )
                         )
                     )
@@ -77,8 +77,8 @@
                 );
             } else {
                 modal.simpleContainer(
-                    translator.get('platform:add_resource'),
-                    translator.get('platform:activity_already')
+                    translator.trans('add_resource', {}, 'platform'),
+                    translator.trans('activity_already', {}, 'platform')
                 );
             }
         })

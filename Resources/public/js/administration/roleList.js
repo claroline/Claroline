@@ -21,8 +21,8 @@
             {
                 'confirmFooter': true,
                 'modalId': 'confirm-modal',
-                'body': Translator.get('platform:remove_role_confirm', {'name': roleName}),
-                'header': Translator.get('platform:remove_role', {})
+                'body': Translator.trans('remove_role_confirm', {'name': roleName}, 'platform'),
+                'header': Translator.trans('remove_role', {}, 'platform')
             }
         );
 
@@ -142,10 +142,6 @@
             '<span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>' +
             text + '</div>';
         $('.panel-body').prepend(html)
-    }
-
-    function trans(domain, name) {
-        return Translator.get(domain + ':' + name) == domain + ':' + name ? name: Translator.get(domain + ':' + name)
     }
 
     function isBlank(str) {

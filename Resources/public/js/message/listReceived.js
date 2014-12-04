@@ -12,7 +12,7 @@
                 var translationKey = (val === 0) ? 'notification_deactivated': 'notification_activated';
                 var toAppend = '<div class="alert alert-info">' +
                     '<a class="close" data-dismiss="alert" href="#" aria-hidden="true">&times;</a>' +
-                    translator.get('platform' + ':' + translationKey) +
+                    translator.trans(translationKey, {}, 'platform') +
                     '</div>';
                 $('#flashbox').html(toAppend);
             }

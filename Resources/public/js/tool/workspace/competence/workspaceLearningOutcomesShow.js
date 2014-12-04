@@ -9,37 +9,37 @@
 
 (function () {
     'use strict';
-    
+
     var workspaceId = $('#workspace-data-element').data('workspace-id');
-    
+
     $('.competence-view-btn').on('click', function() {
         var competenceId = $(this).data('competence-id');
         var route = Routing.generate(
             'claro_workspace_competence_view',
             {'workspace': workspaceId, 'competence': competenceId}
         );
-        
+
         window.Claroline.Modal.displayForm(
             route,
             refreshPage,
             function() {}
         );
     });
-    
+
     $('.competence-edit-btn').on('click', function() {
         var competenceId = $(this).data('competence-id');
         var route = Routing.generate(
             'claro_workspace_competence_edit_form',
             {'workspace': workspaceId, 'competence': competenceId}
         );
-        
+
         window.Claroline.Modal.displayForm(
             route,
             refreshPage,
             function() {}
         );
     });
-    
+
     $('.add-sub-competence-btn').on('click', function() {
         var competenceNodeId = $(this).data('competence-node-id');
         var route = Routing.generate(
@@ -65,7 +65,7 @@
             function() {}
         );
     });
-    
+
     $('.remove-competence-node-btn').on('click', function() {
         var competenceNodeId = $(this).data('competence-node-id');
         var route = Routing.generate(
@@ -76,11 +76,11 @@
             route,
             refreshPage,
             null,
-            Translator.get('platform:remove_sub_competence_comfirm_message'),
-            Translator.get('platform:remove_sub_competence')
+            Translator.trans('remove_sub_competence_comfirm_message', {}, 'platform'),
+            Translator.trans('remove_sub_competence', {}, 'platform')
         );
     });
-    
+
     var refreshPage = function () {
         window.tinymce.claroline.disableBeforeUnload = true;
         window.location.reload();

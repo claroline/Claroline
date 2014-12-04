@@ -178,7 +178,7 @@ $('#add-tab').on('click', function (event) {
     $.ajax({
         url: url,
         success: function (data) {
-            window.Claroline.Modal.confirmContainer(Translator.get('platform:add_tab'), data)
+            window.Claroline.Modal.confirmContainer(Translator.trans('add_tab', {}, 'platform'), data)
                 .on('click', '.btn-primary', function () {
                     var parameters = {};
                     var array = [];
@@ -193,7 +193,7 @@ $('#add-tab').on('click', function (event) {
                     parameters.ids = array;
                     route = Routing.generate('ws_model_homeTabs_model_link', {'model': modelId});
                     route += '?' + $.param(parameters);
-                    
+
                     $.ajax({
                         url: route,
                         type: 'GET',
@@ -217,8 +217,8 @@ $('body').on('click', '.delete-resourceModel', function (event) {
         $(event.currentTarget).attr('href'),
         removeResourceElement,
         $(event.currentTarget).parent(),
-        Translator.get('platform:remove_resource_from_model_comfirm'),
-        Translator.get('platform:remove_resource_from_model')
+        Translator.trans('remove_resource_from_model_comfirm', {}, 'platform'),
+        Translator.trans('remove_resource_from_model', {}, 'platform')
     );
 });
 
@@ -228,15 +228,15 @@ $('body').on('click', '.delete-tabModel', function (event) {
         $(event.currentTarget).attr('href'),
         removeTabElement,
         $(event.currentTarget).parent(),
-        Translator.get('platform:remove_tab_from_model_comfirm'),
-        Translator.get('platform:remove_tab_from_model')
+        Translator.trans('remove_tab_from_model_comfirm', {}, 'platform'),
+        Translator.trans('remove_tab_from_model', {}, 'platform')
     );
 });
 
 $('#add-user-btn').on('click', function () {
     currentType = 'user';
     typeMap['user'] = [];
-    window.Claroline.Modal.confirmContainer(Translator.get('platform:add_user'), '')
+    window.Claroline.Modal.confirmContainer(Translator.trans('add_user', {}, 'platform'), '')
         .on('click', '.btn-primary', function(event) { addUsers() });
     displayPager(Routing.generate('ws_share_user_list', {'model': modelId}));
 });
@@ -244,7 +244,7 @@ $('#add-user-btn').on('click', function () {
 $('#add-group-btn').on('click', function () {
     currentType = 'group';
     typeMap['group'] = [];
-    window.Claroline.Modal.confirmContainer(Translator.get('platform:add_group'), '')
+    window.Claroline.Modal.confirmContainer(Translator.trans('add_group', {}, 'platform'), '')
         .on('click', '.btn-primary', function(event) { addGroups() });
     displayPager(Routing.generate('ws_share_group_list', {'model': modelId}));
 });
@@ -269,8 +269,8 @@ $('body').on('click', '.delete-user', function (event) {
         $(event.currentTarget).attr('href'),
         removeTableRow,
         'user',
-        Translator.get('platform:remove_user_from_model_comfirm'),
-        Translator.get('platform:remove_user_from_model')
+        Translator.trans('remove_user_from_model_comfirm', {}, 'platform'),
+        Translator.trans('remove_user_from_model', {}, 'platform')
     );
 });
 
@@ -280,8 +280,8 @@ $('body').on('click', '.delete-group', function (event) {
         $(event.currentTarget).attr('href'),
         removeTableRow,
         'group',
-        Translator.get('platform:remove_group_from_model_comfirm'),
-        Translator.get('platform:remove_group_from_model')
+        Translator.trans('remove_group_from_model_comfirm', {}, 'platform'),
+        Translator.trans('remove_group_from_model', {}, 'platform')
     );
 });
 

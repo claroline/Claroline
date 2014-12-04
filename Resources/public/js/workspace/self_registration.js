@@ -94,19 +94,19 @@
     $('#registration-confirm-ok').click(function () {
         var resultText;
         var registrationRoute;
-        
+
         if (registrationValidation === 'validation') {
             registrationRoute = Routing.generate(
                 'claro_workspace_add_user_queue',
                 {'workspace': workspaceId, 'user': twigUserId}
             );
-            resultText = Translator.get('platform' + ':' + 'pending');
+            resultText = Translator.trans('pending', {}, 'platform');
         } else {
             registrationRoute = Routing.generate(
                 'claro_workspace_add_user',
                 {'workspace': workspaceId, 'user': twigUserId}
             );
-            resultText = Translator.get('platform' + ':' + 'registered');
+            resultText = Translator.trans('registered', {}, 'platform');
         }
 
         $.ajax({
@@ -135,25 +135,25 @@
             }
         });
     });
-    
+
     $('#search-workspace-btn').on('click', function () {
         var search = $('#search-workspace-input').val();
-        
+
         window.location.href = Routing.generate(
             'claro_list_workspaces_with_self_registration',
             {'search': search}
         );
     });
-    
+
     $('#search-workspace-input').on('change', function () {
         var search = $('#search-workspace-input').val();
-        
+
         window.location.href = Routing.generate(
             'claro_list_workspaces_with_self_registration',
             {'search': search}
         );
     });
-    
+
     $('body').on('click', '.cancel-workspace-pending', function () {
         workspaceId = $(this).data('workspace-id');
         workspaceName = $(this).attr('data-workspace-name');
@@ -162,9 +162,9 @@
         cancelButtonClass = '.cancel-button-' + workspaceId;
         $('#confirm-queue-removal-box').modal('show');
     });
-    
+
     $('#workspace-queue-cancel-confirm-ok').click(function () {
-        var resultText = Translator.get('platform' + ':' + 'register');
+        var resultText = Translator.trans('platform' + ':' + 'register');
 
         $.ajax({
             url: Routing.generate(

@@ -37,9 +37,9 @@
                     }
 
                     if (dropEnabled) {
-                        $('.dropzone-text').html(Translator.get('platform:drop_file'));
+                        $('.dropzone-text').html(Translator.trans('drop_file', {}, 'platform'));
                     } else {
-                        $('.dropzone-text').html(Translator.get('platform:drag_file_here'));
+                        $('.dropzone-text').html(Translator.trans('drag_file_here', {}, 'platform'));
                     }
                 }, function (files) {
                     if (dropEnabled) {
@@ -94,7 +94,7 @@
                     upload: function () {
                         if (FU.index === 0) {
                             $('.nodes').after(
-                                '<div class="resources-progress-bar"><div>' + Translator.get('platform:upload') +
+                                '<div class="resources-progress-bar"><div>' + Translator.trans('upload', {}, 'platform') +
                                 '<div class="progress progress-striped active">' +
                                 '<div class="progress-bar progress-bar-info" role="progressbar" style="width: 0%;" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">' +
                                 '</div></div><div id="progress-files">1/' + FU.files.length + '</div></div></div>'
@@ -128,9 +128,9 @@
                             manager.dispatcher.trigger('open-directory', event)
                         } else {
                             if (xhr.status === 403) {
-                                showErrorMessage(Translator.get('platform:upload_denied'));
+                                showErrorMessage(Translator.trans('upload_denied', {}, 'platform'));
                             } else {
-                                showErrorMessage(Translator.get('platform:upload_fail'));
+                                showErrorMessage(Translator.trans('upload_fail', {}, 'platform'));
                             }
                         }
 
@@ -178,9 +178,9 @@
             }
 
             if (file.size >= size) {
-                showErrorMessage(Translator.get('platform:max_size_is', {'size': maxSize}));
+                showErrorMessage(Translator.trans('max_size_is', {'size': maxSize}, 'platform'));
             } else if (file.size === void 0) {
-                showErrorMessage(Translator.get('platform:empty_file'));
+                showErrorMessage(Translator.trans('empty_file', {}, 'platform'));
             } else {
                 FU.add(file);
             }

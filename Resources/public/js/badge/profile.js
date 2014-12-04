@@ -354,7 +354,7 @@
         }
 
         function displayError(messageKey) {
-            $("p", errorContainer).text(Translator.get('badge:' + messageKey));
+            $("p", errorContainer).text(Translator.trans('messageKey', {}, 'badge'));
             errorContainer.show();
         }
 

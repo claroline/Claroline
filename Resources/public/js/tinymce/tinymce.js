@@ -179,7 +179,7 @@
             editor.addButton('resourcePicker', {
                 'icon': 'none fa fa-folder-open',
                 'classes': 'widget btn',
-                'tooltip': translator.get('platform:resources'),
+                'tooltip': translator.trans('resources', {}, 'platform'),
                 'onclick': function () {
                     tinymce.activeEditor = editor;
                     tinymce.claroline.resourcePickerOpen();
@@ -188,7 +188,7 @@
             editor.addButton('fileUpload', {
                 'icon': 'none fa fa-file',
                 'classes': 'widget btn',
-                'tooltip': translator.get('platform:upload'),
+                'tooltip': translator.trans('upload', {}, 'platform'),
                 'onclick': function () {
                     tinymce.activeEditor = editor;
                     modal.fromRoute('claro_upload_modal', null, function (element) {
@@ -235,7 +235,7 @@
         editor.addButton('displayAllButtons', {
             'icon': 'none fa fa-chevron-down',
             'classes': 'widget btn',
-            'tooltip': translator.get('platform:tinymce_all_buttons'),
+            'tooltip': translator.trans('tinymce_all_buttons', {}, 'platform'),
             onclick: function () {
                 if (!this.active()) {
                     this.active(true);
@@ -390,7 +390,7 @@
 
     $(window).on('beforeunload', function () {
         if (tinymce.claroline.checkBeforeUnload()) {
-            return translator.get('platform:leave_this_page');
+            return translator.trans('leave_this_page', {}, 'platform');
         }
     });
 }());

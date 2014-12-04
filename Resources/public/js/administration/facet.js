@@ -47,8 +47,8 @@
                 url,
                 removeFacet,
                 facetId,
-                Translator.get('platform:remove_facet_confirm', {'name': facetName}),
-                Translator.get('platform:remove_facet')
+                Translator.trans('remove_facet_confirm', {'name': facetName}, 'platform'),
+                Translator.trans('remove_facet', {}, 'platform')
             );
         })
         .on('click', '.facet-rename-btn', function(event) {
@@ -69,8 +69,8 @@
                 url,
                 removeField,
                 fieldFacetId,
-                Translator.get('platform:remove_field_confirm', {'name': fieldFacetName}),
-                Translator.get('platform:remove_field')
+                Translator.trans('remove_field_confirm', {'name': fieldFacetName}, 'platform'),
+                Translator.trans('remove_field', {}, 'platform')
             );
         })
         .on('click', '.facet-role-btn', function(event) {
@@ -213,7 +213,7 @@
         var flashbag =
             '<div class="alert alert-success">' +
             '<a data-dismiss="alert" class="close" href="#" aria-hidden="true">&times;</a>' +
-            Translator.get('platform:edit_profile_success') +
+            Translator.trans('edit_profile_success', {}, 'platform') +
             '</div>';
 
         $('.panel-body').first().prepend(flashbag);

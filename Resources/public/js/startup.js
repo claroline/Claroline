@@ -23,7 +23,7 @@
             $(w.document.body).html(responseText);
         } else {
             var msg = statusCode === 403 ? 'not_allowed' : 'an_error_occured';
-            alert(translator.get('platform:' + msg + '_message'));
+            alert(translator.trans(msg + '_message', {}, 'platform'));
         }
     };
 
@@ -81,7 +81,7 @@
 
     // Required for variables translations (the language can't be known at the compile time)
     Twig.setFilter('trans', function (name, parameters, domain) {
-        return translator.get(domain + ':' + name) == domain + ':' + name ? name: translator.get(domain + ':' + name);
+        return translator.trans(name, parameters, domain);
     });
 
     //Required for the resource manager, when we want to open a directory after a search
