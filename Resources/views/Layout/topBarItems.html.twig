@@ -21,27 +21,7 @@
 {% block topBar %}
 
     {% block leftSide %}
-        {% import _self as topbar %}
-        {% if config.getParameter('name') == "" and config.getParameter('logo') == "" %}
-            {{ topbar.item({'name':'home', 'href':path('claro_index'), 'icon':'home'}) }}
-        {% endif %}
-        {{ topbar.item({'name': 'desktop', 'breakhide': true, 'href':path('claro_desktop_open'), 'icon':'briefcase', 'route':'/desktop/tool/', 'title': 'desktop' | trans({}, 'platform')}) }}
-        {% if canAdministrate == true %}
-            {{ topbar.item({'name': 'administration', 'breakhide': true, 'href':path('claro_admin_index'), 'icon':'cog', 'route':'/admin/', 'title':'administration' | trans({}, 'platform')}) }}
-        {% endif %}
-        {% if countUnreadMessages > 0 %}
-            {{ topbar.item({'name': 'messages', 'breakhide': true, 'href':path('claro_message_list_received'), 'icon':'envelope', 'route':'/message/', 'title':'new_message_alert' | trans({'%count%': countUnreadMessages}, 'platform'), 'badge' : countUnreadMessages }) }}
-        {% else %}
-            {{ topbar.item({'name': 'messages', 'breakhide': true, 'href':path('claro_message_list_received'), 'icon':'envelope', 'route':'/message/', 'title':'new_message_alert' | trans({'%count%': countUnreadMessages}, 'platform')}) }}
-        {% endif %}
-        {% if countUnviewedNotifications > 0 %}
-            {{ topbar.item({'name': 'notifications', 'breakhide': true, 'id':'notification-topbar-item', 'href':path('icap_notification_view'), 'icon':'bell', 'route':'/icap_notification/', 'title':'notifications', 'badge' : countUnviewedNotifications}) }}
-        {% else %}
-            {{ topbar.item({'name': 'notifications', 'breakhide': true, 'id':'notification-topbar-item', 'href':path('icap_notification_view'), 'icon':'bell', 'route':'/icap_notification/', 'title':'notifications'}) }}
-        {% endif %}
-        {% if '/icap_notification/'|compareRoute('true') is empty %}
-            {% include "IcapNotificationBundle:Notification:dropdownScript.html.twig" with {'notificationElementId':'notification-topbar-item'} %}
-        {% endif %}
+        {{ knp_menu_render('ClarolineCoreBundle:Builder:topBarLeftMenu', {}, 'top_bar_left') }}
     {% endblock leftSide %}
 
     {% block rightSide %}

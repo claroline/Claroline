@@ -9,8 +9,6 @@ use Symfony\Component\EventDispatcher\Event;
 
 class ConfigureMenuEvent extends Event
 {
-    const CONFIGURE = 'claroline_top_bar_right_menu_configure';
-
     private $factory;
     private $menu;
 

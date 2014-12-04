@@ -159,11 +159,8 @@ class LayoutController extends Controller
         if ($isLogged = !in_array('ROLE_ANONYMOUS', $roles)) {
             $tools = $this->toolManager->getAdminToolsByRoles($token->getRoles());
             $canAdministrate = count($tools) > 0;
-            $countUnreadMessages = $this->messageManager->getNbUnreadMessages($user);
             $personalWs = $user->getPersonalWorkspace();
             $workspaces = $this->findWorkspacesFromLogs();
-            $countUnviewedNotifications = $this->get('icap.notification.manager')
-                ->countUnviewedNotifications($user->getId());
         } else {
             $workspaces = $this->workspaceManager->getWorkspacesByAnonymous();
 
@@ -179,12 +176,8 @@ class LayoutController extends Controller
             $loginTarget = $this->router->generate('claro_desktop_open');
         }
 
-        $portfolioUrl  = $this->configHandler->getParameter('portfolio_url') ?: $this->generateUrl('icap_portfolio_list');
-        $portfolioText = $this->configHandler->getParameter('portfolio_url') ? 'my_portfolios' : 'my_portfolios_beta';
-
         return array(
             'isLogged' => $isLogged,
-            'countUnreadMessages' => $countUnreadMessages,
             'register_target' => $registerTarget,
             'login_target' => $loginTarget,
             'workspaces' => $workspaces,
@@ -192,12 +185,9 @@ class LayoutController extends Controller
             "isImpersonated" => $this->isImpersonated(),
             'isInAWorkspace' => $workspace !== null,
             'currentWorkspace' => $workspace,
-            'countUnviewedNotifications' => $countUnviewedNotifications,
             'canAdministrate' => $canAdministrate,
             'headerLocale' => $this->configHandler->getParameter('header_locale'),
-            'homeMenu' => $homeMenu,
-            'portfolioUrl' => $portfolioUrl,
-            'portfolioText' => $portfolioText
+            'homeMenu' => $homeMenu
         );
     }
 

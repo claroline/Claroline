@@ -79,13 +79,13 @@ class Builder extends ContainerAware
             ->setAttribute('role', 'presentation')
             ->setExtra('icon', 'fa fa-trophy');
 
-        $this->addDivider($menu, '2');
-
         //allowing the menu to be extended
         $this->container->get('event_dispatcher')->dispatch(
-            ConfigureMenuEvent::CONFIGURE,
+            'claroline_top_bar_right_menu_configure',
             new ConfigureMenuEvent($factory, $menu)
         );
+
+        $this->addDivider($menu, '2');
 
         //logout
         if ($hasRoleExtension->isImpersonated()) {
@@ -107,10 +107,67 @@ class Builder extends ContainerAware
         return $menu;
     }
 
+    public function topBarLeftMenu(FactoryInterface $factory, array $options)
+    {
+        $translator = $this->container->get('translator');
+        $securityContext = $this->container->get('security.context');
+        $configHandler = $this->container->get('claroline.config.platform_config_handler');
+
+        $menu = $factory->createItem('root')
+            ->setChildrenAttribute('class', 'nav navbar-nav');
+
+         if ($configHandler->getParameter('name') == "" && $configHandler->getParameter('logo') == "") {
+             $menu->addChild($translator->trans('home', array(), 'platform'), array('route' => 'claro_index'))
+                ->setExtra('icon', 'fa fa-home');
+         }
+
+        $menu->addChild($translator->trans('my_profile', array(), 'platform'), array('route' => 'claro_desktop_open'))
+            ->setAttribute('role', 'presentation')
+            ->setExtra('icon', 'fa fa-briefcase')
+            ->setExtra('title', $translator->trans('desktop', array(), 'platform'));
+
+        $token = $securityContext->getToken();
+        $tools = $this->container->get('claroline.manager.tool_manager')
+            ->getAdminToolsByRoles($token->getRoles());
+        $canAdministrate = count($tools) > 0;
+
+        if ($canAdministrate) {
+            $menu->addChild($translator->trans('administration', array(), 'platform'), array('route' => 'claro_admin_index'))
+                ->setExtra('icon', 'fa fa-cog')
+                ->setExtra('title', $translator->trans('administration', array(), 'platform'));
+        }
+
+        if ($token) {
+            $user = $token->getUser();
+            $roles = $this->container->get('claroline.security.utilities')->getRoles($token);
+        } else {
+            $roles = array('ROLE_ANONYMOUS');
+        }
+
+        if (!in_array('ROLE_ANONYMOUS', $roles)) {
+            $countUnreadMessages = $this->container->get('claroline.manager.message_manager')->getNbUnreadMessages($user);
+            $messageTitle = $translator->trans('new_message_alert', array('%count%' => $countUnreadMessages), 'platform');
+
+            $menu->addChild($translator->trans('messages', array(), 'platform'), array('route' => 'claro_message_list_received'))
+                ->setExtra('icon', 'fa fa-envelope')
+                ->setExtra('title', $messageTitle)
+                ->setExtra('badge', $countUnreadMessages);
+        }
+
+        //allowing the menu to be extended
+        $this->container->get('event_dispatcher')->dispatch(
+            'claroline_top_bar_left_menu_configure',
+            new ConfigureMenuEvent($factory, $menu)
+        );
+
+        return $menu;
+    }
+
     public function addDivider($menu, $name)
     {
         $menu->addChild($name)
             ->setAttribute('class', 'divider')
             ->setAttribute('role', 'presentation');
+
     }
 }
