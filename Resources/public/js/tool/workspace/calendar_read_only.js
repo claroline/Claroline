@@ -54,17 +54,17 @@
             header: {
                 left: 'prev,next today',
                 center: 'title',
-                right: 'month,agendaWeek,agendaDay',      
+                right: 'month,agendaWeek,agendaDay',
             },
             buttonText: {
-                prev: Translator.get('agenda' + ':' + 'prev'),
-                next: Translator.get('agenda' + ':' + 'next'),
-                prevYear: Translator.get('agenda' + ':' + 'prevYear'),
-                nextYear: Translator.get('agenda' + ':' + 'nextYear'),
-                today:    Translator.get('agenda' + ':' + 'today'),
-                month:    Translator.get('agenda' + ':' + 'month'),
-                week:     Translator.get('agenda' + ':' + 'week'),
-                day:      Translator.get('agenda' + ':' + 'day')
+                prev: Translator.trans('prev', {}, 'agenda'),
+                next: Translator.trans('next', {}, 'agenda'),
+                prevYear: Translator.trans('prevYear', {}, 'agenda'),
+                nextYear: Translator.trans('nextYear', {}, 'agenda'),
+                today:    Translator.trans('today', {}, 'agenda'),
+                month:    Translator.trans('month', {}, 'agenda'),
+                week:     Translator.trans('week', {}, 'agenda'),
+                day:      Translator.trans('day', {}, 'agenda')
             },
             monthNames: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet',
                 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'],

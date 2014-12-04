@@ -25,8 +25,8 @@ $('body').on('click', '.delete-model-link', function (event) {
         $(event.currentTarget).attr('href'),
         removeModel,
         undefined,
-        Translator.get('platform:remove_model_comfirm'),
-        Translator.get('platform:remove_model')
+        Translator.trans('remove_model_comfirm', {}, 'platform'),
+        Translator.trans('remove_model', {}, 'platform')
     );
 });
 

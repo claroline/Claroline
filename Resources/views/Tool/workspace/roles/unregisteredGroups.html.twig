@@ -206,7 +206,7 @@
         Claroline.Table.initialize(parameters);
 
         $('#add-role-button').on('click', function (event) {
-            var msg = Translator.get('platform:add_role_to_groups', {'count': $('.chk-grp:checked').length});
+            var msg = Translator.trans('add_role_to_groups', {'count': $('.chk-grp:checked').length}, 'platform');
             $('#modal-explain').html(msg);
             $('#modal-roles').modal('show');
         });
@@ -244,7 +244,7 @@
                 url:route,
                 success: function() {
                     var flashbag = $('#custom-flashbag-ul');
-                    flashbag.append('<li>' +  Translator.get('platform:operation_done') + '</li>');
+                    flashbag.append('<li>' +  Translator.trans('operation_done', {}, 'platform') + '</li>');
                     $('#custom-flashbag-div').removeClass('hide');
 
                     //add each role to the group list

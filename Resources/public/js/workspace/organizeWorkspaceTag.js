@@ -102,20 +102,20 @@
                            ' <li class="edit-tag-btn">\n' +
                                 '<a href="#">\n' +
                                     '<i class="fa fa-pencil"></i>\n' +
-                                    Translator.get('platform' + ':' + 'rename_category') +
+                                    Translator.trans('rename_category', {}, 'platform') +
                                 '\n</a>\n' +
                             '</li>\n' +
                             '<li class="divider"></li>\n' +
                             '<li class="create-sub-tag-btn">\n' +
                                 '<a href="#">\n' +
                                     '<i class="fa fa-plus"></i>\n' +
-                                    Translator.get('platform' + ':' + 'create_subcategory') +
+                                    Translator.trans('create_subcategory', {}, 'platform') +
                                 '\n</a>\n' +
                             '</li>' +
                             '<li class="add-tag-btn">\n' +
                                 '<a href="#">\n' +
                                     '<i class="fa fa-list-alt"></i>\n' +
-                                    Translator.get('platform' + ':' + 'add_subcategory') +
+                                    Translator.trans('add_subcategory', {}, 'platform') +
                                 '\n</a>\n' +
                             '</li>\n' +
                             '<li class="divider"></li>\n';
@@ -124,14 +124,14 @@
             generatedTagElement += '<li class="remove-tag-btn">\n' +
                                         '<a href="#">\n' +
                                             '<i class="fa fa-times"></i>\n' +
-                                            Translator.get('platform' + ':' + 'remove_subcategory') +
+                                            Translator.trans('remove_subcategory', {}, 'platform') +
                                         '\n</a>\n' +
                                     '</li>\n';
         }
         generatedTagElement += '<li class="delete-tag-btn">\n' +
                                 '<a href="#">\n' +
                                     '<i class="fa fa-trash-o"></i>\n' +
-                                    Translator.get('platform' + ':' + 'delete_category') +
+                                    Translator.trans('delete_category', {}, 'platform') +
                                 '\n</a>\n' +
                             '</li>\n' +
                         '</ul>\n' +
@@ -156,7 +156,7 @@
             type: 'GET',
             success: function (datas) {
                 openFormModal(
-                    Translator.get('platform' + ':' + 'create_category'),
+                    Translator.trans('create_category', {}, 'platform'),
                     datas
                 );
             }
@@ -179,7 +179,7 @@
             type: 'GET',
             success: function (datas) {
                 openFormModal(
-                    Translator.get('platform' + ':' + 'rename_category'),
+                    Translator.trans('rename_category', {}, 'platform'),
                     datas
                 );
             }
@@ -329,7 +329,7 @@
                                 '<li class="remove-tag-btn">\n' +
                                     '<a href="#">\n' +
                                         '<i class="fa fa-times"></i>\n' +
-                                        Translator.get('platform' + ':' + 'remove_subcategory') +
+                                        Translator.trans('remove_subcategory', {}, 'platform') +
                                     '\n</a>\n' +
                                 '</li>\n';
                             removeTagDivider.after(removeTagLine);
@@ -462,7 +462,7 @@
             type: 'GET',
             success: function (datas) {
                 openFormModal(
-                    Translator.get('platform' + ':' + 'create_subcategory'),
+                    Translator.trans('create_subcategory', {}, 'platform'),
                     datas
                 );
             }

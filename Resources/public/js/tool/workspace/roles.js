@@ -21,8 +21,8 @@
                 {
                     'confirmFooter': true,
                     'modalId': 'confirm-modal',
-                    'body': Translator.get('platform:remove_workspace_role_warning'),
-                    'header': Translator.get('platform:remove_role')
+                    'body': Translator.trans('remove_workspace_role_warning', {}, 'platform'),
+                    'header': Translator.trans('remove_role', {}, 'platform')
                 }
             );
 

@@ -76,7 +76,7 @@
                 if (name === '') {
                     $('input', element).parent().addClass('has-error').append(
                         common.createElement('div', 'help-block field-error').html(
-                            translator.get('platform:name_required')
+                            translator.trans('name_required', {}, 'platform')
                         )
                     );
                 } else {
@@ -101,7 +101,7 @@
                             } else {
                                 $('input', element).parent().addClass('has-error').append(
                                     common.createElement('div', 'help-block field-error').html(
-                                        translator.get('home:A page of contents with this name already exist')
+                                        translator.trans('A page of contents with this name already exist', {}, 'home')
                                     )
                                 );
                             }
@@ -135,8 +135,8 @@
                     });
                 } else {
                     modal.simpleContainer(
-                        translator.get('home:New content page'),
-                        translator.get('home:A page of contents with this name already exist')
+                        translator.trans('New content page', {}, 'home'),
+                        translator.trans('A page of contents with this name already exist', {}, 'home')
                     );
                 }
             });

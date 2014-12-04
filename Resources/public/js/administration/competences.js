@@ -9,7 +9,7 @@
 
 (function () {
     'use strict';
-    
+
     //in template ClarolineCoreBundle:Administration\Competence:competences.html.twig
     $('body').on('click', '#show-add-form', function(event) {
         window.Claroline.Modal.displayForm(
@@ -19,35 +19,35 @@
             'competence-create-form'
         );
     });
-    
+
     $('.competence-view-btn').on('click', function() {
         var competenceId = $(this).data('competence-id');
         var route = Routing.generate(
             'claro_admin_competence_view',
             {'competence': competenceId}
         );
-        
+
         window.Claroline.Modal.displayForm(
             route,
             refreshPage,
             function() {}
         );
     });
-    
+
     $('.competence-edit-btn').on('click', function() {
         var competenceId = $(this).data('competence-id');
         var route = Routing.generate(
             'claro_admin_competence_edit_form',
             {'competence': competenceId}
         );
-        
+
         window.Claroline.Modal.displayForm(
             route,
             refreshPage,
             function() {}
         );
     });
-    
+
     $('.add-sub-competence-btn').on('click', function() {
         var competenceNodeId = $(this).data('competence-node-id');
         var route = Routing.generate(
@@ -73,7 +73,7 @@
             function() {}
         );
     });
-    
+
     $('.remove-competence-node-btn').on('click', function() {
         var competenceNodeId = $(this).data('competence-node-id');
         var route = Routing.generate(
@@ -84,11 +84,11 @@
             route,
             refreshPage,
             null,
-            Translator.get('platform:remove_sub_competence_comfirm_message'),
-            Translator.get('platform:remove_sub_competence')
+            Translator.trans('remove_sub_competence_comfirm_message', {}, 'platform'),
+            Translator.trans('remove_sub_competence', {}, 'platform')
         );
     });
-    
+
 //    //in template competenceReferential.html.twig
 //    $('body').on('click', '#show-referential-comptence-form', function(event) {
 //        event.preventDefault();
@@ -108,8 +108,8 @@
             $(event.currentTarget).attr('href'),
             removeEvent,
             element,
-            Translator.get('competence:remove_competence_comfirm'),
-            Translator.get('competence:remove_competence')
+            Translator.trans('remove_competence_comfirm', {}, 'competence'),
+            Translator.trans('remove_competence', {}, 'competence')
         );
     });
 
@@ -121,8 +121,8 @@
 //            route,
 //            refreshPage,
 //            element,
-//            Translator.get('platform:remove_sub_competence_comfirm_message'),
-//            Translator.get('platform:remove_sub_competence')
+//            Translator.trans('remove_sub_competence_comfirm_message', {}, 'platform'),
+//            Translator.trans('remove_sub_competence', {}, 'platform')
 //        );
 //    });
 
@@ -170,16 +170,16 @@
 //    });
 //	/***************************** competences subscription **************************************/
 //
-//    $('#chkAll').click(function(event) {  //on click 
+//    $('#chkAll').click(function(event) {  //on click
 //        if(this.checked) { // check select status
 //            $('.cpt').each(function() { //loop through each checkbox
-//                this.checked = true;  //select all checkboxes with class "cpt"               
+//                this.checked = true;  //select all checkboxes with class "cpt"
 //            });
 //            $('.cpt-button').removeAttr('disabled');
 //        } else {
 //            $('.cpt').each(function() { //loop through each checkbox
-//                this.checked = false; //deselect all checkboxes with class "cpt"                       
-//            });         
+//                this.checked = false; //deselect all checkboxes with class "cpt"
+//            });
 //        }
 //    });
 //
@@ -240,8 +240,8 @@
 //                if (context === 'workspace') {
 //                    route = Routing.generate(
 //                        'claro_workspace_competence_subcription_users',{'workspaceId': $('#workspace').attr('data-workspace')}
-//                    ); 
-//                    
+//                    );
+//
 //                } else {
 //                    route = Routing.generate(
 //                        'claro_admin_competence_subcription_users'
@@ -307,7 +307,7 @@
     var removeEvent = function(competence, element) {
         $(element).remove();
     }
-    
+
     var refreshPage = function () {
         window.tinymce.claroline.disableBeforeUnload = true;
         window.location.reload();

@@ -79,8 +79,8 @@
                     'resources_delete' :
                     'resource_delete';
                 this.dispatcher.trigger('confirm', {
-                    header: Translator.get('platform:delete'),
-                    body: Translator.get('platform:' + trans),
+                    header: Translator.trans('delete', {}, 'platform'),
+                    body: Translator.trans(trans, {}, 'platform'),
                     callback: _.bind(function () {
                         this.dispatcher.trigger('delete', {
                             ids: _.keys(this.checkedNodes.nodes),
@@ -116,7 +116,7 @@
                     sourceDirectoryId: this.checkedNodes.directoryId,
                     view: this.parameters.viewName
                 });
-                
+
                 if(this.isCutMode) {
                     // disable cut/copy/paste/delete/download buttons && empty this.checkedNodes.nodes after paste action
                     this.setInitialState();

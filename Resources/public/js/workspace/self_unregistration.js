@@ -16,9 +16,9 @@
     }
 
     function addFlashBagMessage() {
-        var msgA = Translator.get('platform:cannot_unsubscribe_from_workspace');
+        var msgA = Translator.trans('cannot_unsubscribe_from_workspace', {}, 'platform');
         msgA += ' "' + workspaceName + ' [' + workspaceCode + ']".';
-        var msgB = Translator.get('platform:cannot_delete_unique_manager');
+        var msgB = Translator.trans('cannot_delete_unique_manager', {}, 'platform');
         var msg = '<p>' + msgA + '</p><p>' + msgB + '</p>';
         $('#custom-flashbag-msg-div').append(msg);
         $('#custom-flashbag-div').removeClass('hide');

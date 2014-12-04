@@ -27,7 +27,7 @@
                 var flashbag =
                     '<div class="alert alert-success">' +
                     '<a data-dismiss="alert" class="close" href="#" aria-hidden="true">&times;</a>' +
-                    Translator.get('platform:edit_profile_success') +
+                    Translator.trans('edit_profile_success', {}, 'platform') +
                     '</div>';
 
                 $('.panel-body').first().prepend(flashbag);

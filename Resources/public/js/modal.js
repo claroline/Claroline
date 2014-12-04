@@ -87,8 +87,8 @@
     {
         modal.hide();
         modal.simpleContainer(
-            translator.get('home:An error occurred'),
-            translator.get('home:Please try again later or check your internet connection')
+            translator.trans('An error occurred', {}, 'home'),
+            translator.trans('Please try again later or check your internet connection', {}, 'home')
         );
     };
 
@@ -98,7 +98,7 @@
     modal.defaultFooter = function ()
     {
         return common.createElement('button', 'btn btn-primary')
-            .html(translator.get('home:Ok'))
+            .html(translator.trans('Ok', {}, 'home'))
             .attr('data-dismiss', 'modal');
     };
 
@@ -136,10 +136,10 @@
     {
         var footer = common.createElement('div').append(
             common.createElement('button', 'btn btn-default')
-            .html(translator.get('platform:cancel'))
+            .html(translator.trans('cancel', {}, 'platform'))
             .attr('data-dismiss', 'modal')
         ).append(
-            common.createElement('button', 'btn btn-primary').html(translator.get('home:Ok'))
+            common.createElement('button', 'btn btn-primary').html(translator.trans('Ok', {}, 'home'))
             .attr('data-dismiss', 'modal')
         );
 

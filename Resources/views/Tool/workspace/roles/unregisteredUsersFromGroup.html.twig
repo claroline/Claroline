@@ -99,7 +99,7 @@
                 </a>
             </li>
         </ul>
-        
+
         <h3>
             [{{ group.getName() }}]
             {{ 'users_from_group_registration'|trans({}, 'platform') }}
@@ -128,7 +128,7 @@
                     <div class="input-group margin-md">
                         <input class="form-control"
                                type="text"
-                               id="search-items-txt" 
+                               id="search-items-txt"
                                placeholder="{{ 'search'|trans({}, 'platform') }}"
                                value="{{ search }}"
                         >
@@ -142,7 +142,7 @@
             </div>
             <div class="row">
                 <div div class="col-md-8">
-                    
+
                     {% if pager.getNbPages() > 1 %}
                         {{ renderPager(pager, group.getId(), workspace.getId(), max, orderedBy, order, search) }}
                     {% endif %}
@@ -173,7 +173,7 @@
                                     {{ 'first_name'|trans({}, 'platform') }}
                                 </a>
                             </th>
-                            
+
                             {% if showMail %}
                                 <th>
                                     <a href="{{ sortUrl(group.getId(), workspace.getId(), max, 'mail', order, search) }}">
@@ -187,7 +187,7 @@
                         </tr>
                     </thead>
                     <tbody id="user-table-body">
-                        
+
                         {% for user in pager.currentPageResults %}
                             <tr id="row-{{ user.id }}"
                                 class="row-user"
@@ -206,7 +206,7 @@
                                 </td>
                                 <td>{{ user.getLastName() }}</td>
                                 <td>{{ user.getFirstName() }}</td>
-                                
+
                                 {% if showMail %}
                                     <td>{{ user.getMail() }}</td>
                                 {% endif %}
@@ -218,9 +218,9 @@
                                             </span>
                                         {% endif %}
                                     {% endfor %}
-                                    
+
                                     {% set groups = user.getGroups() %}
-                                    
+
                                     {% for group in groups %}
                                         {% for role in group.getEntityRoles() %}
                                             {% if role.getWorkspace() == workspace %}
@@ -239,7 +239,7 @@
                     </tbody>
                 </table>
             </div>
-            
+
             {% if pager.getNbPages() > 1 %}
                 {{ renderPager(pager, group.getId(), workspace.getId(), max, orderedBy, order, search) }}
             {% endif %}
@@ -325,7 +325,7 @@
         Claroline.Table.initialize(parameters);
 
         $('#add-role-button').on('click', function (event) {
-            var msg = Translator.get('platform:add_role_to_users', {'count': $('.chk-user:checked').length});
+            var msg = Translator.trans('add_role_to_users', {'count': $('.chk-user:checked').length}, {}, 'platform');
 
             $('#modal-explain').html(msg);
             $('#modal-roles').modal('show');
@@ -364,7 +364,7 @@
                 url:route,
                 success: function() {
                     var flashbag = $('#custom-flashbag-ul');
-                    flashbag.append('<li>' + Translator.get('platform:operation_done') + '</li>');
+                    flashbag.append('<li>' + Translator.trans('operation_done', {}, 'platform') + '</li>');
                     $('#custom-flashbag-div').removeClass('hide');
 
                     //add each role to the user list

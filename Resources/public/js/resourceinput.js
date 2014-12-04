@@ -90,7 +90,7 @@
                     common.createElement('input', 'form-control')
                         .css('cursor', 'pointer')
                         .attr('type', 'text')
-                        .attr('placeholder', translator.get('platform:add_resource'))
+                        .attr('placeholder', translator.trans('add_resource', {}, 'platform'))
                         .on('focus', function () {
                             activePicker = this.parentNode;
                             openPicker(pickerName, customParameters);
@@ -101,7 +101,7 @@
                         .append(
                             common.createElement('a', 'btn btn-default disabled resource-view')
                                 .append(common.createElement('i', 'fa fa-eye'))
-                                .attr('title', translator.get('platform:see'))
+                                .attr('title', translator.trans('see', {}, 'platform'))
                                 .attr('data-toggle', 'tooltip')
                                 .attr('target', '_blank')
                                 .css('margin', '0')
@@ -109,7 +109,7 @@
                         .append(
                             common.createElement('a', 'btn btn-default')
                                 .append(common.createElement('i', 'fa fa-folder-open'))
-                                .attr('title', translator.get('platform:resources'))
+                                .attr('title', translator.trans('resources', {}, 'platform'))
                                 .attr('data-toggle', 'tooltip')
                                 .css('margin', '0')
                                 .on('click', function () {
@@ -120,7 +120,7 @@
                         .append(
                             common.createElement('a', 'btn btn-default')
                                 .append(common.createElement('i', 'fa fa-file'))
-                                .attr('title', translator.get('platform:upload'))
+                                .attr('title', translator.trans('upload', {}, 'platform'))
                                 .attr('data-toggle', 'tooltip')
                                 .css('margin', '0')
                                 .on('click', function () {

@@ -14,7 +14,7 @@
     var calendar = window.Claroline.Calendar = {};
 
     function t(key) {
-        return Translator.get('agenda' + ':' + key);
+        return Translator.trans(key, {}, 'agenda');
     }
 
     calendar.initialize = function (
@@ -33,7 +33,7 @@
         calendar.flashbag =
             '<div class="alert alert-success">' +
                 '<a data-dismiss="alert" class="close" href="#" aria-hidden="true">&times;</a>' +
-                Translator.get('platform:edit_event_success') +
+                Translator.trans('edit_event_success', {}, 'platform') +
             '</div>';
 
         //initialize route & url depending on the context
@@ -61,8 +61,8 @@
                 $(event.currentTarget).attr('href'),
                 removeEvent,
                 undefined,
-                Translator.get('platform:remove_event_confirm'),
-                Translator.get('platform:remove_event')
+                Translator.trans('remove_event_confirm', {}, 'platform'),
+                Translator.trans('remove_event', {}, 'platform')
             );
         });
 
@@ -173,7 +173,7 @@
 
     var renderAddEventForm = function (date) {
         if (calendar.canCreate) {
-            var dateVal = moment(date).format(Translator.get('platform:date_agenda_display_format'));
+            var dateVal = moment(date).format(Translator.trans('date_agenda_display_format', {}, 'platform'));
 
             var postRenderAddEventAction = function (html) {
                 $('#agenda_form_start').val(dateVal);

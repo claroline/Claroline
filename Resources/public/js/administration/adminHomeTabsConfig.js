@@ -42,7 +42,7 @@
             type: 'GET',
             success: function (datas) {
                 openFormModal(
-                    Translator.get('platform' + ':' + 'home_tab_creation'),
+                    Translator.trans('home_tab_creation', {}, 'platform'),
                     datas
                 );
             }
@@ -65,7 +65,7 @@
             type: 'GET',
             success: function (datas) {
                 openFormModal(
-                    Translator.get('platform' + ':' + 'home_tab_edition'),
+                    Translator.trans('home_tab_edition', {}, 'platform'),
                     datas
                 );
             }
@@ -318,7 +318,7 @@
             type: 'GET',
             success: function (datas) {
                 openFormModal(
-                    Translator.get('platform' + ':' + 'create_widget_instance'),
+                    Translator.trans('create_widget_instance', {}, 'platform'),
                     datas
                 );
             }
@@ -401,7 +401,7 @@
             type: 'GET',
             success: function (datas) {
                 openFormModal(
-                    Translator.get('platform' + ':' + 'rename_widget_instance'),
+                    Translator.trans('rename_widget_instance', {}, 'platform'),
                     datas
                 );
             }

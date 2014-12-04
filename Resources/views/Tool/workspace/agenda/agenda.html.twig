@@ -69,7 +69,7 @@
 
 {% block javascripts %}
     {{ parent() }}
-    <script type="text/javascript" src="{{ url('bazinga_exposetranslation_js', { 'domain_name': 'agenda' }) }}"></script>
+    <script type="text/javascript" src="{{ url('bazinga_jstranslation_js', { 'domain_name': 'agenda' }) }}"></script>
     <script type="text/javascript" src="{{ asset(calendarPath ~ 'lib/moment.min.js') }}"></script>
     <script type='text/javascript' src='{{ asset(calendarPath ~ 'fullcalendar.js') }}' ></script>
     <script type='text/javascript'src='{{ asset('bundles/clarolinecore/js/tool/calendar.js') }}'></script>

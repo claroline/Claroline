@@ -53,7 +53,7 @@
                 this.el.id = 'picker-' + this.parameters.viewName;
                 this.$el.html(Twig.render(ModalWindow, {
                     'modalId': 'picker-' + this.parameters.viewName,
-                    'header' : Translator.get('platform:resource_picker'),
+                    'header' : Translator.trans('resource_picker', {}, 'platform'),
                     'body': ''
                 }));
                 this.wrapper = this.$('.modal-body');

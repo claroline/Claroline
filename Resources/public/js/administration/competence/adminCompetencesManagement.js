@@ -9,7 +9,7 @@
 
 (function () {
     'use strict';
-    
+
     $('#create-admin-competence-btn').on('click', function () {
         window.Claroline.Modal.displayForm(
             Routing.generate('claro_admin_competence_create'),
@@ -17,29 +17,29 @@
             function() {}
         );
     });
-    
+
     $('.edit-admin-competence-btn').on('click', function () {
         var competenceId = $(this).data('competence-id');
-        
+
         window.Claroline.Modal.displayForm(
             Routing.generate('claro_admin_competence_edit', {'competence': competenceId}),
             refreshPage,
             function() {}
         );
     });
-    
+
     $('.delete-admin-competence-btn').on('click', function () {
         var competenceId = $(this).data('competence-id');
-        
+
         window.Claroline.Modal.confirmRequest(
             Routing.generate('claro_admin_competence_delete', {'competence': competenceId}),
             refreshPage,
             null,
-            Translator.get('platform:delete_competence_confirm_message'),
-            Translator.get('platform:delete_competence')
+            Translator.trans('delete_competence_confirm_message', {}, 'platform'),
+            Translator.trans('delete_competence', {}, 'platform')
         );
     });
-    
+
     var refreshPage = function () {
         window.tinymce.claroline.disableBeforeUnload = true;
         window.location.reload();

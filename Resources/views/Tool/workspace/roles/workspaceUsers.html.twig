@@ -200,7 +200,7 @@
                 error: function (jqXHR, textStatus, errorThrown) {
                     window.Claroline.Modal.hide();
                     window.Claroline.Modal.simpleContainer(
-                        Translator.get('platform:error', {}),
+                        Translator.trans('error', {}, 'platform'),
                         jqXHR.responseJSON.message
                     );
                 }
