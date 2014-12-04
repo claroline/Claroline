@@ -45,7 +45,7 @@
         "zendframework/zend-crypt": "~2.3",
         "besimple/sso-auth-bundle": "*",
         "composer/composer": "dev-master",
-        "willdurand/js-translation-bundle": "~2.1",
+        "willdurand/js-translation-bundle": "2.1.4",
         "mrclay/minify": "dev-master",
         "natxet/CssMin": "dev-master",
         "werkint/jsmin": "dev-master",
