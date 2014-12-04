@@ -38,7 +38,7 @@
         "white-october/pagerfanta-bundle": "~1.0",
         "idci/exporter-bundle": "~1.0",
         "leafo/lessphp": "0.4.0",
-        "twbs/bootstrap": "3.3.0",
+        "twbs/bootstrap": "3.0.0",
         "fortawesome/font-awesome": "4.2.0",
         "zenstruck/form-bundle": "dev-master",
         "cocur/slugify": "~0.10",
