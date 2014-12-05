@@ -223,7 +223,7 @@ class DatabaseWriter
         }
 
         foreach ($processedConfiguration['themes'] as $theme) {
-            $this->persistTheme($theme, $plugin);
+            $this->createTheme($theme, $plugin);
         }
 
         foreach ($processedConfiguration['admin_tools'] as $adminTool) {
@@ -238,16 +238,20 @@ class DatabaseWriter
      */
     private function updateConfiguration($processedConfiguration, Plugin $plugin, PluginBundle $pluginBundle)
     {
-        foreach ($processedConfiguration['resources'] as $resource) {
-            $this->updateResourceTypes($resource, $plugin, $pluginBundle);
+        foreach ($processedConfiguration['resources'] as $resourceConfiguration) {
+            $this->updateResourceTypes($resourceConfiguration, $plugin, $pluginBundle);
         }
 
-        foreach ($processedConfiguration['tools'] as $tool) {
-            $this->updateTool($tool, $plugin);
+        foreach ($processedConfiguration['widgets'] as $widgetConfiguration) {
+            $this->updateWidget($widgetConfiguration, $pluginBundle, $plugin);
         }
 
-        foreach ($processedConfiguration['widgets'] as $widget) {
-            $this->updateWidget($widget, $pluginBundle, $plugin);
+        foreach ($processedConfiguration['tools'] as $toolConfiguration) {
+            $this->updateTool($toolConfiguration, $plugin);
+        }
+
+        foreach ($processedConfiguration['themes'] as $themeConfiguration) {
+            $this->updateTheme($themeConfiguration, $plugin);
         }
     }
 
@@ -613,9 +617,35 @@ class DatabaseWriter
      * @param array  $themeConfiguration
      * @param Plugin $plugin
      */
-    private function persistTheme($themeConfiguration, Plugin $plugin)
+    private function createTheme($themeConfiguration, Plugin $plugin)
     {
         $theme = new Theme();
+        $this->persistTheme($themeConfiguration, $plugin, $theme);
+    }
+
+    /**
+     * @param array  $themeConfiguration
+     * @param Plugin $plugin
+     */
+    private function updateTheme($themeConfiguration, Plugin $plugin)
+    {
+        $theme = $this->em->getRepository('ClarolineCoreBundle:Theme\Theme')
+            ->findOneByName($themeConfiguration['name']);
+
+        if ($theme === null) {
+            $theme = new Theme();
+        }
+
+        $this->persistTheme($themeConfiguration, $plugin, $theme);
+    }
+
+    /**
+     * @param array  $themeConfiguration
+     * @param Plugin $plugin
+     * @param Theme  $theme
+     */
+    private function persistTheme($themeConfiguration, Plugin $plugin, Theme $theme)
+    {
         $theme->setName($themeConfiguration['name']);
         $theme->setPath(
             $plugin->getVendorName().
