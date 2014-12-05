@@ -51,7 +51,7 @@ class AuthenticatedUserConverter implements ParamConverterInterface
      * @throws InvalidConfigurationException if the parameter name is missing
      * @throws AccessDeniedHttpException     if the current user is not authenticated
      */
-    public function apply(Request $request, ConfigurationInterface $configuration)
+    public function apply(Request $request, ParamConverter $configuration)
     {
         if (null === $parameter = $configuration->getName()) {
             throw new InvalidConfigurationException(InvalidConfigurationException::MISSING_NAME);
@@ -96,7 +96,7 @@ class AuthenticatedUserConverter implements ParamConverterInterface
     /**
      * @{inheritDoc}
      */
-    public function supports(ConfigurationInterface $configuration)
+    public function supports(ParamConverter $configuration)
     {
         if (!$configuration instanceof ParamConverter) {
             return false;

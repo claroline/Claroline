@@ -49,7 +49,7 @@ class MultipleIdsConverter implements ParamConverterInterface
      * @throws NotFoundHttpException         if one or more entities cannot be retreived
      * @throws BadRequestHttpException       if there is no "ids" array parameter in the query string
      */
-    public function apply(Request $request, ConfigurationInterface $configuration)
+    public function apply(Request $request, ParamConverter $configuration)
     {
         if (null === $parameter = $configuration->getName()) {
             throw new InvalidConfigurationException(InvalidConfigurationException::MISSING_NAME);
@@ -84,7 +84,7 @@ class MultipleIdsConverter implements ParamConverterInterface
     /**
      * @{inheritDoc}
      */
-    public function supports(ConfigurationInterface $configuration)
+    public function supports(ParamConverter $configuration)
     {
         if (!$configuration instanceof ParamConverter) {
             return false;
