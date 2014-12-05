@@ -243,7 +243,7 @@ class DatabaseWriter
         }
 
         foreach ($processedConfiguration['tools'] as $tool) {
-            $this->updateTool($tool, $pluginBundle);
+            $this->updateTool($tool, $plugin);
         }
 
         foreach ($processedConfiguration['widgets'] as $widget) {
