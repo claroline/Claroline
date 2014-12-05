@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Entity\Tool;
 
+use Claroline\CoreBundle\Entity\Plugin;
 use Claroline\CoreBundle\Entity\Tool\ToolMaskDecoder;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -203,7 +204,7 @@ class Tool
         return $this->isVisible;
     }
 
-    public function setPlugin($plugin)
+    public function setPlugin(Plugin $plugin)
     {
         $this->plugin = $plugin;
 
