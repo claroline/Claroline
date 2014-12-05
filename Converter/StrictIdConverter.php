@@ -47,7 +47,7 @@ class StrictIdConverter implements ParamConverterInterface
      * @throws InvalidConfigurationException if the parameter name, class or id option are missing
      * @throws NotFoundHttpException         if the id doesn't matche an existing entity
      */
-    public function apply(Request $request, ConfigurationInterface $configuration)
+    public function apply(Request $request, ParamConverter $configuration)
     {
         if (null === $parameter = $configuration->getName()) {
             throw new InvalidConfigurationException(InvalidConfigurationException::MISSING_NAME);
@@ -83,7 +83,7 @@ class StrictIdConverter implements ParamConverterInterface
     /**
      * @{inheritDoc}
      */
-    public function supports(ConfigurationInterface $configuration)
+    public function supports(ParamConverter $configuration)
     {
         if (!$configuration instanceof ParamConverter) {
             return false;
