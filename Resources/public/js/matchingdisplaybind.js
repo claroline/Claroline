@@ -1,7 +1,7 @@
 var responses = [];
 
 $(function() {
-
+    
     jsPlumb.ready(function() {
         jsPlumb.setContainer($("body"));
 
@@ -27,11 +27,38 @@ $(function() {
             HoverPaintStyle:{strokeStyle:"red"},
             LogEnabled:false,
             DropOptions:{tolerance:"touch"},
-            onMaxConnections: 1,
+        });
+        
+        //if there are multiples same link
+        jsPlumb.bind("beforeDrop", function(info){
+            var connection = jsPlumb.getConnections({
+                source:info["sourceId"],
+                target:info["targetId"]
+            });
+            if(connection.length !== 0){
+                //if the connection is already makes
+                if (info["sourceId"] == connection[0].sourceId && info["targetId"] == connection[0].targetId) {
+                    return false;
+                } else {
+                    return true;
+                }
+            } else {
+                return true;
+            }
         });
 
-        jsPlumb.bind("click", function(connections) {
-            jsPlumb.detach(connections);
+        //for remove connections
+        jsPlumb.bind("click", function(connection) {
+            var target = connection["target"]["id"];
+            var connectionsTarget = jsPlumb.getConnections({
+                target:target,
+            });
+            if (connectionsTarget.length > 1) {
+                jsPlumb.detach(connection);
+            } else {
+                jsPlumb.detach(connection);
+                jsPlumb.removeAllEndpoints($("#" + target));
+            }
         });
     });
 
@@ -74,7 +101,7 @@ function checkIn(divProposal) {
     responses[proposal] = 'NULL';
     var connections = jsPlumb.getConnections({source:idProposal});
     responses[proposal] = proposals = [];
-    for(i=0; i<connections.length; i++) {
+    for(i = 0; i < connections.length; i++) {
         var idLabel = connections[i].targetId;
         var label = idLabel.replace('droppable_', '');
             responses[proposal][i] = label;
