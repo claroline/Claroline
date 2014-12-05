@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Entity\Tool;
 
+use Claroline\CoreBundle\Entity\Plugin;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Claroline\CoreBundle\Entity\Role;
@@ -100,7 +101,7 @@ class AdminTool
         return $this->class;
     }
 
-    public function setPlugin($plugin)
+    public function setPlugin(Plugin $plugin)
     {
         $this->plugin = $plugin;
     }

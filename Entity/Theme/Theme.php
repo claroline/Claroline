@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Entity\Theme;
 
+use Claroline\CoreBundle\Entity\Plugin;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -117,7 +118,7 @@ class Theme
         return $this->path;
     }
 
-    public function setPlugin($plugin)
+    public function setPlugin(Plugin $plugin)
     {
         $this->plugin = $plugin;
     }
