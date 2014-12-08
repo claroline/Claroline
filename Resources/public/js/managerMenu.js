@@ -9,10 +9,10 @@
 
 (function () {
     'use strict';
-    
+
     var currentTeamId;
     var workspaceId = $('#datas-box').data('workspace-id');
-    
+
     $('.delete-team-btn').on('click', function () {
         currentTeamId = $(this).data('team-id');
         var teamName = $(this).data('team-name');
@@ -20,12 +20,12 @@
         $('#delete-team-validation-header').html(teamName);
         $('#delete-team-validation-box').modal('show');
     });
-    
+
     $('#delete-team-confirm-btn').on('click', function () {
         var deleteDirectory = $('#delete-team-directory-chk').prop('checked') ?
             1 :
             0;
-        
+
         $.ajax({
             url: Routing.generate(
                 'claro_team_delete',
@@ -41,11 +41,11 @@
             }
         });
     });
-    
+
     $('.register-users-btn').on('click', function () {
         currentTeamId = $(this).data('team-id');
         var teamName = $(this).data('team-name');
-        
+
         $.ajax({
             url: Routing.generate(
                 'claro_team_registration_users_list',
@@ -59,12 +59,12 @@
             }
         });
     });
-    
+
     $('#view-registration-users-box').on('click', '.register-btn', function () {
         var registerBtn = $(this);
         var userId = $(this).data('user-id');
         var teamId = $(this).data('team-id');
-        
+
         $.ajax({
             url: Routing.generate(
                 'claro_team_manager_register_user',
@@ -79,25 +79,25 @@
                 registerBtn.removeClass('register-btn');
                 registerBtn.addClass('btn-danger');
                 registerBtn.addClass('unregister-btn');
-                registerBtn.html(Translator.get('team:unregister'));
-                
+                registerBtn.html(Translator.trans('unregister', {}, 'team'));
+
                 var maxUsers = $('#registration-users-list-datas').data('max-users');
                 var nbUsers = parseInt($('#nb-users-' + teamId).text());
                 nbUsers++;
                 $('#nb-users-' + teamId).html(nbUsers);
-                
+
                 if (maxUsers !== '' && nbUsers >= parseInt(maxUsers)) {
                     $('.register-btn').addClass('disabled');
                 }
             }
         });
     });
-    
+
     $('#view-registration-users-box').on('click', '.unregister-btn', function () {
         var unregisterBtn = $(this);
         var userId = $(this).data('user-id');
         var teamId = $(this).data('team-id');
-        
+
         $.ajax({
             url: Routing.generate(
                 'claro_team_manager_unregister_user',
@@ -112,8 +112,8 @@
                 unregisterBtn.removeClass('unregister-btn');
                 unregisterBtn.addClass('btn-success');
                 unregisterBtn.addClass('register-btn');
-                unregisterBtn.html(Translator.get('team:register'));
-                
+                unregisterBtn.html(Translator.trans('register', {}, 'team'));
+
                 var nbUsers = parseInt($('#nb-users-' + teamId).text());
                 nbUsers--;
                 $('#nb-users-' + teamId).html(nbUsers);
@@ -121,11 +121,11 @@
             }
         });
     });
-    
+
     $('.view-users-list-btn').on('click', function () {
         var teamId = $(this).data('team-id');
         var teamName = $(this).data('team-name');
-        
+
         $.ajax({
             url: Routing.generate(
                 'claro_team_users_list',
@@ -139,11 +139,11 @@
             }
         });
     });
-    
+
     $('.view-team-description-btn').on('click', function () {
         var teamId = $(this).data('team-id');
         var teamName = $(this).data('team-name');
-        
+
         $.ajax({
             url: Routing.generate(
                 'claro_team_display_description',
@@ -162,7 +162,7 @@
         event.preventDefault();
         event.stopPropagation();
         var url = $(this).attr('href');
-        
+
         $.ajax({
             url: url,
             type: 'GET',
@@ -176,7 +176,7 @@
     $('#view-registration-users-body').on('click', '#search-user-btn', function () {
         var teamId = $(this).data('team-id');
         var search = $('#search-user-input').val();
-        
+
         $.ajax({
             url: Routing.generate(
                 'claro_team_registration_users_list',
@@ -192,10 +192,10 @@
             }
         });
     });
-    
+
     $('.edit-team-btn').on('click', function () {
         var teamId = $(this).data('team-id');
-        
+
         window.Claroline.Modal.displayForm(
             Routing.generate(
                 'claro_team_edit_form',
@@ -205,22 +205,22 @@
             function() {}
         );
     });
-    
+
     $('.team-chk').on('change', function () {
         var nbChecked = $('.team-chk:checked').length;
-        
+
         if (nbChecked > 0) {
             $('.teams-action-btn').removeClass('disabled');
         } else {
             $('.teams-action-btn').addClass('disabled');
         }
     });
-    
+
     $('#delete-teams-btn').on('click', function () {
         $('#delete-teams-directory-chk').prop('checked', false);
         $('#delete-teams-validation-box').modal('show');
     });
-    
+
     $('#delete-teams-confirm-btn').on('click', function () {
         var deleteDirectory = $('#delete-teams-directory-chk').prop('checked') ?
             1 :
@@ -242,7 +242,7 @@
             }
         );
         route += '?' + $.param(queryString);
-        
+
         $.ajax({
             url: route,
             type: 'POST',
@@ -251,7 +251,7 @@
             }
         });
     });
-    
+
     $('#empty-teams-btn').on('click', function () {
         var i = 0;
         var queryString = {};
@@ -272,11 +272,11 @@
             route,
             refreshPage,
             null,
-            Translator.get('team:empty_selected_teams_confirm_message'),
-            Translator.get('team:empty_teams')
+            Translator.trans('empty_selected_teams_confirm_message', {}, 'team'),
+            Translator.trans('empty_teams', {}, 'team')
         );
     });
-   
+
     $('#fill-teams-btn').on('click', function () {
         var i = 0;
         var queryString = {};
@@ -297,14 +297,14 @@
             route,
             refreshPage,
             null,
-            Translator.get('team:fill_selected_teams_confirm_message'),
-            Translator.get('team:fill_teams')
+            Translator.trans('fill_selected_teams_confirm_message', {}, 'team'),
+            Translator.trans('fill_teams', {}, 'team')
         );
     });
-    
+
     $('.team-directory-btn').on('click', function () {
         var directoryNodeId = $(this).data('node-id');
-        
+
         window.location = Routing.generate(
             'claro_workspace_open_tool',
             {
@@ -313,7 +313,7 @@
             }
         ) + '#resources/' + directoryNodeId;
     });
-    
+
     var refreshPage = function () {
         window.tinymce.claroline.disableBeforeUnload = true;
         window.location.reload();

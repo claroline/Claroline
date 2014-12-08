@@ -29,13 +29,13 @@
         </h3>
     </div>
     <div class="panel-body">
-        
+
         {% if team.getDescription() is not empty %}
             <div class="well well-sm">
                 {{ team.getDescription()|raw }}
             </div>
         {% endif %}
-        
+
         <div>
             <label>
                 {{ 'team_directory_link'|trans({}, 'team') }}
@@ -56,14 +56,14 @@
                 [{{ 'none'|trans({}, 'platform') }}]
             {% endif %}
         </div>
-        <div>    
+        <div>
             <label>
                 {{ 'team_manager'|trans({}, 'team') }}
                 :
             </label>
 
             <span id="team-manager-box">
-                
+
                 {% if team.getTeamManager() is not empty %}
                     {% set manager = team.getTeamManager() %}
                     {{ manager.getFirstName() }}
@@ -94,7 +94,7 @@
             </span>
         </div>
         <hr>
-        
+
         <div class="panel panel-default">
             <div class="panel-heading">
                 <a data-toggle="collapse" href="#collapse-params">
@@ -159,7 +159,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="panel panel-default">
             <div class="panel-heading">
                 <a data-toggle="collapse" href="#collapse-users-list">
@@ -244,7 +244,7 @@
                 </div>
             </div>
         </div>
-    </div>  
+    </div>
 
     <div id="view-registration-manager-box" class="modal fade" role="dialog" aria-hidden="true">
         <div class="modal-dialog">
@@ -263,7 +263,7 @@
                 </div>
             </div>
         </div>
-    </div>  
+    </div>
 
     <div id="team-datas"
          data-team-id="{{ team.getId() }}"
@@ -276,7 +276,7 @@
 {% block javascripts %}
     {{ parent() }}
     <script type="text/javascript"
-            src="{{ url('bazinga_exposetranslation_js', { 'domain_name': 'team' }) }}"
+            src="{{ url('bazinga_jstranslation_js', { 'domain_name': 'team' }) }}"
     >
     </script>
     <script src='{{ asset('bundles/clarolineteam/js/managerTeamIndex.js') }}'
