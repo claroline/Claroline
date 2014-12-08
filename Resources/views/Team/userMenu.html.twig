@@ -37,9 +37,9 @@
 
     <div class="panel-body">
         <h3>{{ 'my_teams'|trans({}, 'team') }}</h3>
-        
+
         {% set maxTeamsReached = (params.getMaxTeams() is not empty) and (nbTeams >= params.getMaxTeams()) %}
-        
+
         {% if maxTeamsReached %}
             <div class="alert alert-info">
                 {{ 'max_teams_limit_reached'|trans({}, 'team') }}
@@ -47,7 +47,7 @@
         {% else %}
             <br>
         {% endif %}
-        
+
         {% if userTeams|length > 0 %}
             <div id="teams-list" class="table-responsive">
                 <table class="table">
@@ -73,7 +73,7 @@
                             {{ 'actions'|trans({}, 'platform') }}
                         </th>
                     </tr>
-                    
+
                     {% for userTeam in userTeams %}
                         <tr id="row-team-{{ userTeam.getId() }}">
                             <td>
@@ -86,7 +86,7 @@
                                     <i class="fa fa-eye view-team-description-btn pointer-hand"
                                        data-team-id="{{ userTeam.getId() }}"
                                        data-team-name="{{ userTeam.getName() }}"
-                                    > 
+                                    >
                                     </i>
                                 {% else %}
                                     -
@@ -113,7 +113,7 @@
                                 {% endif %}
                             </td>
                             <td class="text-center">
-                                
+
                                 {% if userTeam.getDirectory() is not empty %}
                                     <span class="btn btn-default btn-sm team-directory-btn"
                                           data-workspace-id="{{ workspace.getId() }}"
@@ -125,7 +125,7 @@
                                         <i class="fa fa-folder-open"></i>
                                     </span>
                                 {% endif %}
-                                
+
                                 {% if userTeam.getSelfUnregistration() %}
                                     <span class="btn btn-danger btn-sm unregister-btn"
                                           data-team-id="{{ userTeam.getId() }}"
@@ -150,7 +150,7 @@
         <hr>
         <h3>{{ 'all_other_teams'|trans({}, 'team') }}</h3>
         <br>
-        
+
         {% if teams|length > 0 %}
             <div id="teams-list" class="table-responsive">
                 <table class="table">
@@ -179,7 +179,7 @@
                             {{ 'self_register'|trans({}, 'team') }}
                         </th>
                     </tr>
-                    
+
                     {% for team in teams %}
                         <tr id="row-team-{{ team.getId() }}">
                             <td>
@@ -190,7 +190,7 @@
                                     <i class="fa fa-eye view-team-description-btn pointer-hand"
                                        data-team-id="{{ team.getId() }}"
                                        data-team-name="{{ team.getName() }}"
-                                    > 
+                                    >
                                     </i>
                                 {% else %}
                                     -
@@ -217,7 +217,7 @@
                                 {% endif %}
                             </td>
                             <td class="text-center">
-                                
+
                                 {% if team.getSelfRegistration() %}
                                     <span class="btn btn-success btn-sm register-btn"
                                           data-team-id="{{ team.getId() }}"
@@ -257,7 +257,7 @@
                 </div>
             </div>
         </div>
-    </div>  
+    </div>
 
     <div id="view-team-description-box" class="modal fade" role="dialog" aria-hidden="true">
         <div class="modal-dialog">
@@ -275,13 +275,13 @@
                 </div>
             </div>
         </div>
-    </div>  
+    </div>
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
     <script type="text/javascript"
-            src="{{ url('bazinga_exposetranslation_js', { 'domain_name': 'team' }) }}"
+            src="{{ url('bazinga_jstranslation_js', { 'domain_name': 'team' }) }}"
     >
     </script>
     <script src='{{ asset('bundles/clarolineteam/js/userMenu.js') }}'

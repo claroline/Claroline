@@ -26,7 +26,7 @@
     <div class="panel-heading">
         <h3 class="panel-title">
             {{ team.getName() }}
-            
+
             {% if isTeamManager %}
                 <i id="edit-team-btn"
                    class="fa fa-cog pointer-hand pull-right"
@@ -40,19 +40,19 @@
         </h3>
     </div>
     <div class="panel-body">
-        
+
         {% if team.getDescription() is not empty %}
             <div class="well well-sm">
                 {{ team.getDescription()|raw }}
             </div>
         {% endif %}
-        
+
         <div>
             <label>
                 {{ 'team_directory_link'|trans({}, 'team') }}
                 :
             </label>
-            
+
             {% if team.getDirectory() is not empty %}
                 {% set directoryNode = team.getDirectory().getResourceNode() %}
                 <a href="{{  path(
@@ -67,7 +67,7 @@
                 [{{ 'none'|trans({}, 'platform') }}]
             {% endif %}
         </div>
-        <div>    
+        <div>
             <label>
                 {{ 'team_manager'|trans({}, 'team') }}
                 :
@@ -81,7 +81,7 @@
                 [{{ 'none'|trans({}, 'platform') }}]
             {% endif %}
         </div>
-        
+
         {% if isTeamMember and team.getSelfUnregistration() %}
             <div>
                 <label>
@@ -97,10 +97,10 @@
             </div>
         {% endif %}
         <hr>
-        
+
         <h3>{{ 'users'|trans({}, 'platform') }}</h3>
         <br>
-        
+
         {% if users|length > 0 %}
             <div id="users-list" class="table-responsive">
                 <table id="users-list-table" class="table">
@@ -151,7 +151,7 @@
 {% block javascripts %}
     {{ parent() }}
     <script type="text/javascript"
-            src="{{ url('bazinga_exposetranslation_js', { 'domain_name': 'team' }) }}"
+            src="{{ url('bazinga_jstranslation_js', { 'domain_name': 'team' }) }}"
     >
     </script>
     <script src='{{ asset('bundles/clarolineteam/js/userTeamIndex.js') }}'
