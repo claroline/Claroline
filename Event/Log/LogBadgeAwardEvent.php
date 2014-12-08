@@ -13,7 +13,6 @@ namespace Claroline\CoreBundle\Event\Log;
 
 use Claroline\CoreBundle\Entity\Badge\Badge;
 use Claroline\CoreBundle\Entity\User;
-use Icap\NotificationBundle\Entity\NotifiableInterface;
 
 class LogBadgeAwardEvent extends LogGenericEvent implements NotifiableInterface
 {

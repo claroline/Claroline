@@ -12,7 +12,6 @@
 namespace Claroline\CoreBundle\Event\Log;
 
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceRegistrationQueue;
-use Icap\NotificationBundle\Entity\NotifiableInterface;
 
 class LogWorkspaceRegistrationDeclineEvent extends LogGenericEvent implements NotifiableInterface
 {
