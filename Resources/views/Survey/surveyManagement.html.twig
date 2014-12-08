@@ -16,7 +16,7 @@
 {% block resourceBreadcrumb %}
     <li class="active">{{ _resource.getResourceNode().getName() }}</li>
 {% endblock %}
-    
+
 {% block section_content %}
     <div id="survey-data-element" data-survey-id="{{ surveyId }}">
     </div>
@@ -47,7 +47,7 @@
                             {{ 'questions_management'|trans({}, 'survey') }}
                         </a>
                     </li>
-                    
+
                     {% if status == 'published' or status == 'closed' %}
                         {% if questionResult is not empty %}
                             <li role="presentation" class="divider"></li>
@@ -65,7 +65,7 @@
             </div>
         </h3>
     </div>
-    
+
     {% if status == 'unpublished' %}
         <br>
         <div class="alert alert-info">
@@ -106,7 +106,7 @@
                 <i class="fa fa-eye"></i>
                 {{ 'display_survey'|trans({}, 'survey') }}
             </span>
-            
+
             {% if status == 'published' or status == 'closed' %}
                 <a href="{{ path('claro_survey_answer_form', {'survey': surveyId}) }}"
                    class="btn btn-success margin-bottom-md"
@@ -116,13 +116,13 @@
                 </a>
             {% endif %}
         </div>
-        
+
         {% if survey.getDescription() is not empty %}
             <div class="well well-sm">
                 {{ survey.getDescription()|raw }}
             </div>
         {% endif %}
-        
+
         {% if questionRelations|length == 0 %}
             <div class="alert alert-danger" role="alert">
                 {{ 'no_question'|trans({}, 'survey') }}
@@ -138,7 +138,7 @@
                         <td>
                             <b>
                                 [{{ questionType|trans({}, 'survey') }}]
-                                
+
                                 {% if questionType != 'title' %}
                                     {{ question.getTitle() }}
                                 {% endif %}
@@ -146,7 +146,7 @@
                             {{ question.getQuestion()|raw }}
                         </td>
                         <td>
-                            
+
                             {% if questionType != 'title' %}
                                 <span class="btn btn-default view-question-btn"
                                       data-question-id="{{ question.getId() }}"
@@ -211,7 +211,7 @@
             </div>
         {% endif %}
     </div>
-    
+
     <div id="add-question-box" class="modal fade" role="dialog" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -233,7 +233,7 @@
             </div>
         </div>
     </div>
-    
+
     <div id="view-question-box" class="modal fade" role="dialog" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -249,7 +249,7 @@
             </div>
         </div>
     </div>
-    
+
     <div id="view-survey-box" class="modal fade" role="dialog" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -264,12 +264,12 @@
                 </div>
             </div>
         </div>
-    </div>  
+    </div>
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
-    <script type="text/javascript" src="{{ url('bazinga_exposetranslation_js', { 'domain_name': 'survey' }) }}"></script>
+    <script type="text/javascript" src="{{ url('bazinga_jstranslation_js', { 'domain_name': 'survey' }) }}"></script>
     <script
         src='{{ asset('bundles/clarolinesurvey/js/surveyManagement.js') }}'
         type="text/javascript">
