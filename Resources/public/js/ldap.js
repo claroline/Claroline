@@ -248,8 +248,8 @@
             ldap.saveSettings(form);
         } else {
             modal.simpleContainer(
-                translator.get('ldap:' + type + '_settings'),
-                translator.get('ldap:ldap_save_' + type + '_settings_error')
+                translator.trans(type + '_settings', {}, 'ldap'),
+                translator.trans('ldap_save_' + type + '_settings_error', {}, 'ldap')
             );
         }
     })

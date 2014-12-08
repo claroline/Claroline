@@ -64,6 +64,6 @@
 
 {% block javascripts %}
     {{ parent() }}
-    <script type="text/javascript" src="{{ url('bazinga_exposetranslation_js', { 'domain_name': 'ldap' }) }}"></script>
+    <script type="text/javascript" src="{{ url('bazinga_jstranslation_js', { 'domain_name': 'ldap' }) }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/clarolineldap/js/ldap.js') }}"></script>
 {% endblock %}
