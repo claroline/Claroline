@@ -12,7 +12,7 @@
 
     var formType = $('#question-form-datas-block').data('form-type');
     var surveyId = $('#question-form-datas-block').data('survey-id');
-    
+
     if (formType === 'edit') {
         var questionId = $('#question-form-datas-block').data('question-id');
     }
@@ -21,10 +21,10 @@
     function enableTypedQuestionConfiguration()
     {
         var questionType = $('#question_form_type').val();
-        
+
         if (questionType === 'multiple_choice_single' ||
             questionType === 'multiple_choice_multiple') {
-        
+
             var route = (formType === 'create') ?
                 Routing.generate(
                     'claro_survey_typed_question_create_form',
@@ -41,7 +41,7 @@
                         'questionType': questionType
                     }
                 );
-            
+
             $.ajax({
                 url: route,
                 type: 'GET',
@@ -59,24 +59,24 @@
             $('#typed-question-form-block').hide('slow');
         }
     }
-    
+
     function enableCommentLabel()
     {
         var commentChk = $('#question_form_commentAllowed').is(':checked');
         var commentLabelElement = $('#question_form_commentLabel').parents('.form-group');
-        
+
         if (commentChk) {
             commentLabelElement.show('slow');
         } else {
             commentLabelElement.hide('slow');
         }
     }
-    
+
     function enableChoiceOtherLabel()
     {
         var choiceOtherChk = $('#choice-other-chk').is(':checked');
         var choiceOtherElement = $('#choice-other-label-element');
-        
+
         if (choiceOtherChk) {
             choiceOtherElement.show('slow');
         } else {
@@ -92,23 +92,23 @@
             '"><td><textarea class="claroline-tiny-mce" name="choice[' +
             choiceId +
             ']">';
-        
+
         if (value !== undefined) {
             newTr += value;
-        }    
+        }
         newTr += '</textarea></td><td style="vertical-align: middle"><span class="btn btn-danger delete-choice-btn" data-choice-id="' +
             choiceId +
             '">' +
-            Translator.get('platform' + ':' + 'delete') +
+            Translator.trans('delete', {}, 'platform') +
             '</span></td></tr>';
-                             
+
         $('#choices-table').append(newTr);
     }
 
     function applyModel()
     {
         var modelId = $('#form-model').val();
-        
+
         if (modelId !== 'none') {
             $.ajax({
                 url: Routing.generate(
@@ -118,12 +118,12 @@
                 type: 'GET',
                 success: function (datas) {
                     var details = $.parseJSON(datas);
-                    
+
                     if (details['questionType']) {
                         $('#question_form_type').val(details['questionType']);
                         enableTypedQuestionConfiguration();
                     }
-                    
+
                     if (details['withComment'] === 'comment') {
                         $('#question_form_commentAllowed').prop('checked', true);
                         $('#question_form_commentLabel').val(details['commentLabel']);
@@ -131,27 +131,27 @@
                         $('#question_form_commentAllowed').prop('checked', false);
                     }
                     enableCommentLabel();
-                    
+
                     switch (details['questionType']) {
-                        
+
                         case 'multiple_choice_single':
                         case 'multiple_choice_multiple':
-                        
+
                             if (details['choiceDisplay'] === 'horizontal') {
                                 $('#choice-display-form-type').val('horizontal');
                             } else {
                                 $('#choice-display-form-type').val('vertical');
                             }
-                            
+
                             var choices = details['choices'];
                             var tableBody = $('#choices-table').children('tbody');
                             tableBody.empty();
                             choiceId = 0;
                             $('#choice-other-chk').prop('checked', false);
                             enableChoiceOtherLabel();
-                            
+
                             for (var i = 0; i < choices.length; i++) {
-                                
+
                                 if (choices[i]['other'] === 'other') {
                                     $('#choice-other-chk').prop('checked', true);
                                     enableChoiceOtherLabel();
@@ -168,15 +168,15 @@
             });
         }
     }
-    
+
     $('#form-model').on('change', function () {
         applyModel();
     });
-    
+
     $('#question_form_commentAllowed').on('change', function () {
         enableCommentLabel();
     });
-    
+
     $('#typed-question-form-block').on('change', '#choice-other-chk', function () {
         enableChoiceOtherLabel();
     });
@@ -184,7 +184,7 @@
     $('#question_form_type').on('change', function () {
         enableTypedQuestionConfiguration();
     });
-    
+
     $('#typed-question-form-block').on('click', '#add-choice-btn', function () {
         addChoice();
     });
@@ -193,7 +193,7 @@
         var dataChoiceId = $(this).data('choice-id');
         $('#choice-row-' + dataChoiceId).remove();
     });
-    
+
     $(document).ready(function () {
         enableCommentLabel();
         enableTypedQuestionConfiguration();
