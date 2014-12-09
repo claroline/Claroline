@@ -33,6 +33,9 @@
 {% block stylesheets %}
     {{ parent() }}
     <link href="{{ asset('bundles/ujmexo/css/matchingOverview.css') }}" type="text/css" rel="stylesheet"/>
+    {% if interactionToDisplayed.typeMatching.code == 1 %}
+        <link href="{{ asset('bundles/ujmexo/css/matchingBind.css') }}"  type="text/css" rel="stylesheet"/>
+    {% endif %}
 {% endblock %}
 
 {% block title %} {{ 'paper' | trans }} {{ 'question' | trans }} {% endblock %}

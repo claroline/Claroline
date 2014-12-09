@@ -1,7 +1,7 @@
 var responses = [];
 
 $(function() {
-    
+
     jsPlumb.ready(function() {
         jsPlumb.setContainer($("body"));
 
@@ -28,7 +28,7 @@ $(function() {
             LogEnabled:false,
             DropOptions:{tolerance:"touch"},
         });
-        
+
         //if there are multiples same link
         jsPlumb.bind("beforeDrop", function(info){
             var connection = jsPlumb.getConnections({
@@ -104,7 +104,7 @@ function checkIn(divProposal) {
     for(i = 0; i < connections.length; i++) {
         var idLabel = connections[i].targetId;
         var label = idLabel.replace('droppable_', '');
-            responses[proposal][i] = label;
+        responses[proposal][i] = label;
     }
     dragStop();
 }
