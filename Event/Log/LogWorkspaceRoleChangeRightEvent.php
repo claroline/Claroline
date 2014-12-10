@@ -12,7 +12,6 @@
 namespace Claroline\CoreBundle\Event\Log;
 
 use Claroline\CoreBundle\Event\MandatoryEventInterface;
-use Icap\NotificationBundle\Entity\NotifiableInterface;
 
 class LogWorkspaceRoleChangeRightEvent extends LogGenericEvent implements MandatoryEventInterface, NotifiableInterface
 {

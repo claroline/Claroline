@@ -14,7 +14,6 @@ namespace Claroline\CoreBundle\Event\Log;
 use Claroline\CoreBundle\Entity\AbstractRoleSubject;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
-use Icap\NotificationBundle\Entity\NotifiableInterface;
 
 class LogRoleSubscribeEvent extends LogGenericEvent implements NotifiableInterface
 {
