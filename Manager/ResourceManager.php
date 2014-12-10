@@ -143,6 +143,7 @@ class ResourceManager
         $isPublished = true
     )
     {
+        $this->checkStorageAllowed($workspace);
         $this->om->startFlushSuite();
         $this->checkResourcePrepared($resource);
         $node = $this->om->factory('Claroline\CoreBundle\Entity\Resource\ResourceNode');
@@ -648,7 +649,7 @@ class ResourceManager
 
         if ($next) {
             $next->setPrevious($previous);
-            $this->om->persist($next);          
+            $this->om->persist($next);
         }
 
         $this->om->forceFlush();
@@ -1626,5 +1627,16 @@ class ResourceManager
             }
         }
         $this->om->endFlushSuite();
+    }
+
+    public function checkStorageAllowed(Workspace $workspace)
+    {
+        $ch = $this->container->get('claroline.config.platform_config_handler');
+        $workspaceManager = $this->container->getParameter('claroline.manager.workspace_manager');
+        $maxFileStorage = $ch->getParameter('max_upload_resources');
+
+        if ($maxFileStorage < $workspaceManager->countResources($workspace)) {
+            throw new Exception\FileLimitExceededException("Max number of file {$maxFileStorage} exeeded");
+        }
     }
 }

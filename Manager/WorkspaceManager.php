@@ -176,6 +176,9 @@ class WorkspaceManager
      */
     public function createWorkspace(Workspace $workspace)
     {
+        $ch = $this->container->get('claroline.config.platform_config_handler');
+        $workspace->setMaxUploadResources($ch->getParameter('max_upload_resources'));
+        $workspace->setMaxStorageSize($ch->getParameter('max_storage_size'));
         $this->om->persist($workspace);
         $this->om->flush();
     }
@@ -904,5 +907,33 @@ class WorkspaceManager
     {
         return $this->workspaceRepo
             ->findWorkspaceByCode($workspaceCode, $executeQuery);
+    }
+
+    public function countResources(Workspace $workspace)
+    {
+        //@todo count directory from dql
+        $root = $this->resourceManager->getWorkspaceRoot($workspace);
+        $descendants = $this->resourceManager->getDescendants($root);
+
+        return count($descendants);
+    }
+
+    public function getStorageDirectory(Workspace $workspace)
+    {
+        $ds = DIRECTORY_SEPARATOR;
+
+        return $this->container->getParameter('claroline.param.files_directory') . $ds . $workspace->getCode();
+    }
+
+    public function getUsedStorage(Workspace $workspace)
+    {
+        $dir = $this->getStorageDirectory($workspace);
+        $size = 0;
+
+        foreach(new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dir)) as $file){
+            $size += $file->getSize();
+        }
+
+        return $size;
     }
 }

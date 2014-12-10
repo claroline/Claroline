@@ -211,7 +211,9 @@ class ParametersController extends Controller
                         'account_duration' => $form['account_duration']->getData(),
                         'anonymous_public_profile' => $form['anonymous_public_profile']->getData(),
                         'portfolio_url' => $portfolioUrlOptions ? $form['portfolio_url']->getData() : null,
-                        'is_notification_active' => $form['isNotificationActive']->getData()
+                        'is_notification_active' => $form['isNotificationActive']->getData(),
+                        'max_storage_size' => $form['maxStorageSize']->getData(),
+                        'max_upload_resources' => $form['maxUploadResources']->getData()
                     )
                 );
 

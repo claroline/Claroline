@@ -54,6 +54,16 @@ class Workspace
     protected $code;
 
     /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    protected $maxStorageSize;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    protected $maxUploadResources;
+
+    /**
      * @ORM\Column(type="boolean")
      */
     protected $displayable = false;
@@ -137,7 +147,7 @@ class Workspace
      * )
      */
     protected $competences;
-    
+
     /**
      * @ORM\Column(name="creation_date", type="integer", nullable=true)
      */
@@ -289,5 +299,25 @@ class Workspace
         $date = date('d-m-Y H:i', $this->creationDate);
 
         return new \Datetime($date);
+    }
+
+    public function setMaxStorageSize($maxSize)
+    {
+        $this->maxStorageSize = $maxSize;
+    }
+
+    public function getMaxStorageSize()
+    {
+        return $this->maxStorageSize;
+    }
+
+    public function setMaxUploadResources($maxSize)
+    {
+        $this->maxUploadResources = $maxSize;
+    }
+
+    public function getMaxUploadResources()
+    {
+        return $this->maxUploadResources;
     }
 }

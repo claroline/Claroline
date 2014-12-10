@@ -69,7 +69,9 @@ class PlatformConfigurationHandler
         'header_locale' => false,
         'portfolio_url' => null,
         'is_notification_active' => true,
-        'createPersonnalWorkspace' => true
+        'createPersonnalWorkspace' => true,
+        'max_storage_size' => null,
+        'max_upload_resources' => null
     );
 
     /**
@@ -169,6 +171,8 @@ class PlatformConfigurationHandler
         $config->setPortfolioUrl($this->parameters['portfolio_url']);
         $config->setIsNotificationActive($this->parameters['is_notification_active']);
         $config->setCreatePersonnalWorkspace($this->parameters['createPersonnalWorkspace']);
+        $config->setMaxUploadResources($this->parameters['max_upload_resources']);
+        $config->setMaxStorageSize($this->parameters['max_storage_size']);
 
         return $config;
     }

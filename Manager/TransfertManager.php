@@ -145,7 +145,7 @@ class TransfertManager
         if ($importRoles) {
             $importedRoles = $this->getImporterByName('roles')->import($data['roles'], $workspace);
         }
-        
+
         foreach ($entityRoles as $key => $entityRole) {
             $importedRoles[$key] = $entityRole;
         }
@@ -241,6 +241,7 @@ class TransfertManager
         );
 
         $this->populateWorkspace($workspace, $configuration, $root, $entityRoles, true, false);
+        $this->container->get('claroline.manager.workspace_manager')->createWorkspace($workspace);
         $this->om->endFlushSuite();
 
         return $workspace;

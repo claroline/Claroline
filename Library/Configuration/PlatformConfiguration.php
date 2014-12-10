@@ -59,6 +59,8 @@ class PlatformConfiguration
     private $portfolioUrl;
     private $isNotificationActive;
     private $createPersonnalWorkspace;
+    private $maxStorageSize;
+    private $maxUploadResources;
 
     /**
      * @param mixed $sessionDbDataCol
@@ -592,5 +594,25 @@ class PlatformConfiguration
     public function getCreatePersonnalWorkspace()
     {
         return $this->createPersonnalWorkspace;
+    }
+
+    public function setMaxStorageSize($maxSize)
+    {
+        $this->maxStorageSize = $maxSize;
+    }
+
+    public function getMaxStorageSize()
+    {
+        return $this->maxStorageSize;
+    }
+
+    public function setMaxUploadResources($maxSize)
+    {
+        $this->maxUploadResources = $maxSize;
+    }
+
+    public function getMaxUploadResources()
+    {
+        return $this->maxUploadResources;
     }
 }
