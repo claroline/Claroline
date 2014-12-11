@@ -171,7 +171,7 @@ class ClaroUtilities
         return date('d-m-Y', $date);
     }
 
-    private function getFormatter() 
+    private function getFormatter()
     {
         if (!$this->formatter && $this->hasIntl) {
             $request = $this->container->get('request_stack')->getMasterRequest();
@@ -185,5 +185,20 @@ class ClaroUtilities
         }
 
         return $this->formatter;
+    }
+
+    public function formatFileSize($fileSize)
+    {
+        if ($fileSize < 1024) {
+            return $fileSize . ' B';
+        } elseif ($fileSize < 1048576) {
+            return round($fileSize / 1024, 2) . ' KB';
+        } elseif ($fileSize < 1073741824) {
+            return round($fileSize / 1048576, 2) . ' MB';
+        } elseif ($fileSize < 1099511627776) {
+            return round($fileSize / 1073741824, 2) . ' GB';
+        }
+
+        return round($fileSize / 1099511627776, 2) . ' TB';
     }
 }

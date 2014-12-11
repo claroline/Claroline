@@ -179,6 +179,7 @@ class WorkspaceManager
         $ch = $this->container->get('claroline.config.platform_config_handler');
         $workspace->setMaxUploadResources($ch->getParameter('max_upload_resources'));
         $workspace->setMaxStorageSize($ch->getParameter('max_storage_size'));
+        @mkdir($this->getStorageDirectory($workspace));
         $this->om->persist($workspace);
         $this->om->flush();
     }
@@ -909,14 +910,30 @@ class WorkspaceManager
             ->findWorkspaceByCode($workspaceCode, $executeQuery);
     }
 
+    /**
+     * Count the number of resources in a workspace
+     *
+     * @param Workspace $workspace
+     *
+     * @return integer
+     */
     public function countResources(Workspace $workspace)
     {
         //@todo count directory from dql
         $root = $this->resourceManager->getWorkspaceRoot($workspace);
+        if (!$root) return 0;
         $descendants = $this->resourceManager->getDescendants($root);
 
         return count($descendants);
     }
+
+    /**
+     * Get the workspace storage directory
+     *
+     * @param Workspace $workspace
+     *
+     * @return string
+     */
 
     public function getStorageDirectory(Workspace $workspace)
     {
@@ -925,12 +942,21 @@ class WorkspaceManager
         return $this->container->getParameter('claroline.param.files_directory') . $ds . $workspace->getCode();
     }
 
+    /**
+     * Get the current used storage in a workspace.
+     *
+     * @param Workspace $workspace
+     *
+     * @return integer
+     */
     public function getUsedStorage(Workspace $workspace)
     {
         $dir = $this->getStorageDirectory($workspace);
         $size = 0;
 
-        foreach(new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dir)) as $file){
+        if (!is_dir($dir)) return $size;
+
+        foreach(new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($dir)) as $file){
             $size += $file->getSize();
         }
 

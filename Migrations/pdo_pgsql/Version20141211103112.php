@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Migrations\pdo_sqlsrv;
+namespace Claroline\CoreBundle\Migrations\pdo_pgsql;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -8,19 +8,19 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/12/10 10:25:48
+ * Generation date: 2014/12/11 10:31:13
  */
-class Version20141210102547 extends AbstractMigration
+class Version20141211103112 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
         $this->addSql("
             ALTER TABLE claro_workspace 
-            ADD maxStorageSize INT
+            ADD maxStorageSize INT NOT NULL
         ");
         $this->addSql("
             ALTER TABLE claro_workspace 
-            ADD maxUploadResources INT
+            ADD maxUploadResources INT NOT NULL
         ");
     }
 
@@ -28,11 +28,11 @@ class Version20141210102547 extends AbstractMigration
     {
         $this->addSql("
             ALTER TABLE claro_workspace 
-            DROP COLUMN maxStorageSize
+            DROP maxStorageSize
         ");
         $this->addSql("
             ALTER TABLE claro_workspace 
-            DROP COLUMN maxUploadResources
+            DROP maxUploadResources
         ");
     }
 }

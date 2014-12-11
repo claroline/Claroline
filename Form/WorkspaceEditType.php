@@ -20,17 +20,27 @@ class WorkspaceEditType extends AbstractType
     private $username;
     private $creationDate;
     private $number;
+    private $storageSpaceUsed;
+    private $countResources;
 
     /**
      * Constructor.
      *
      * @param string $username
      */
-    public function __construct($username = null, $creationDate = null, $number = null)
+    public function __construct(
+        $username = null,
+        $creationDate = null,
+        $number = null,
+        $storageSpaceUsed = null,
+        $countResources = null
+    )
     {
         $this->username = $username;
         $this->creationDate = $creationDate;
         $this->number = $number;
+        $this->storageSpaceUsed = $storageSpaceUsed;
+        $this->countResources = $countResources;
     }
 
 
@@ -47,14 +57,14 @@ class WorkspaceEditType extends AbstractType
                 'text',
                 array(
                     'disabled' => 'disabled',
-                    'data' => $this->creationDate        
+                    'data' => $this->creationDate
                 )
             );
         $builder->add('creator', 'text', array('disabled' => 'disabled', 'data' => $this->username));
         if (isset($options['theme_options']['tinymce']) and !$options['theme_options']['tinymce']) {
             $builder->add(
                 'description',
-                'textarea', 
+                'textarea',
                 array('required' => false)
             );
         } else {
@@ -65,6 +75,10 @@ class WorkspaceEditType extends AbstractType
         $builder->add('registrationValidation', 'checkbox', array('required' => false));
         $builder->add('selfUnregistration', 'checkbox', array('required' => false));
         $builder->add('number', 'text', array('disabled' => 'disabled', 'data' => $this->number, 'mapped' => false));
+        $builder->add('formattedStorageSize', 'text', array('disabled' => 'disabled', 'label' => 'max_storage_size'));
+        $builder->add('storageUsed', 'text', array('mapped' => false, 'disabled' => 'disabled', 'label' => 'storage_used', 'data' => $this->storageSpaceUsed));
+        $builder->add('maxUploadResources', 'text', array('disabled' => 'disabled', 'label' => 'max_amount_resources'));
+        $builder->add('countResources', 'text', array('mapped' => false, 'disabled' => 'disabled', 'label' => 'count_resources', 'data' => $this->countResources));
     }
 
     public function getName()

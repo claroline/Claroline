@@ -8,16 +8,16 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/12/10 10:25:47
+ * Generation date: 2014/12/11 10:31:13
  */
-class Version20141210102547 extends AbstractMigration
+class Version20141211103112 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
         $this->addSql("
             ALTER TABLE claro_workspace 
-            ADD maxStorageSize INT DEFAULT NULL, 
-            ADD maxUploadResources INT DEFAULT NULL
+            ADD maxStorageSize INT NOT NULL, 
+            ADD maxUploadResources INT NOT NULL
         ");
     }
 

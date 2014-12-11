@@ -174,8 +174,20 @@ class WorkspaceParametersController extends Controller
             $workspace->getCreationDate()
         );
         $count = $this->workspaceManager->countUsers($workspace->getId());
+        $storageUsed = $this->workspaceManager->getUsedStorage($workspace);
+        $storageUsed = $this->utilities->formatFileSize($storageUsed);
+        $countResources = $this->workspaceManager->countResources($workspace);
+
         $form = $this->formFactory->create(
-            FormFactory::TYPE_WORKSPACE_EDIT, array($username, $creationDate, $count), $workspace
+            FormFactory::TYPE_WORKSPACE_EDIT,
+            array(
+                $username,
+                $creationDate,
+                $count,
+                $storageUsed,
+                $countResources
+            ),
+            $workspace
         );
 
         if ($workspace->getSelfRegistration()) {

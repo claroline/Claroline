@@ -89,7 +89,7 @@ class GeneralType extends AbstractType
             ->add('portfolio_url', 'url', array('label' => 'portfolio_url', 'required' => false))
             ->add('isNotificationActive', 'checkbox', array('label' => 'activate_notifications', 'required' => false))
             ->add('maxStorageSize', 'integer', array('required' => false, 'label' => 'max_storage_size'))
-            ->add('maxUploadResources', 'integer', array('required' => false, 'label' => 'max_upload_size'));
+            ->add('maxUploadResources', 'integer', array('required' => false, 'label' => 'count_resources'));
 
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event){
             /** @var \Claroline\CoreBundle\Library\Configuration\PlatformConfiguration $generalParameters */

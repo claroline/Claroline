@@ -38,6 +38,8 @@ use Symfony\Component\Security\Core\SecurityContextInterface;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Form\Form;
+use Symfony\Component\Form\FormError;
 
 /**
  * @DI\Service("claroline.manager.resource_manager")
@@ -143,7 +145,6 @@ class ResourceManager
         $isPublished = true
     )
     {
-        $this->checkStorageAllowed($workspace);
         $this->om->startFlushSuite();
         $this->checkResourcePrepared($resource);
         $node = $this->om->factory('Claroline\CoreBundle\Entity\Resource\ResourceNode');
@@ -1629,14 +1630,59 @@ class ResourceManager
         $this->om->endFlushSuite();
     }
 
-    public function checkStorageAllowed(Workspace $workspace)
+    /**
+     * Check if a file can be added in the workspace storage dir (disk usage limit)
+     *
+     * @param Workspace $workspace
+     * @param \SplFileInfo $file
+     */
+    public function checkEnoughStorageSpaceLeft(Workspace $workspace, \SplFileInfo $file)
+    {
+        $workspaceManager = $this->container->get('claroline.manager.workspace_manager');
+        $workspaceDir = $workspaceManager->getStorageDirectory($workspace);
+        $fileSize = filesize($file);
+        $allowedMaxSize = $workspace->getMaxStorageSize() * 1048576;
+        $currentStorage = $workspaceManager->getUsedStorage($workspace);
+
+        return ($currentStorage + $fileSize > $allowedMaxSize) ? false: true;
+    }
+
+    /**
+     * Check if a ResourceNode can be added in a Workspace (resource amount limit)
+     *
+     * @param Workspace $workspace
+     */
+    public function checkResourceLimitExceeded(Workspace $workspace)
     {
         $ch = $this->container->get('claroline.config.platform_config_handler');
-        $workspaceManager = $this->container->getParameter('claroline.manager.workspace_manager');
-        $maxFileStorage = $ch->getParameter('max_upload_resources');
+        $workspaceManager = $this->container->get('claroline.manager.workspace_manager');
+        $maxFileStorage = $workspace->getMaxUploadResources();
 
-        if ($maxFileStorage < $workspaceManager->countResources($workspace)) {
-            throw new Exception\FileLimitExceededException("Max number of file {$maxFileStorage} exeeded");
-        }
+        return ($maxFileStorage < $workspaceManager->countResources($workspace)) ? true: false;
+    }
+
+    /**
+     * Adds the storage exceeded error in a form.
+     *
+     * @param Form $form
+     * @param integer $filesize
+     */
+    public function addStorageExceededFormError(Form $form, $fileSize, Workspace $workspace)
+    {
+        //we want how many bites and well...
+        $maxSize = $workspace->getMaxStorageSize() * 1048576;
+        $usedSize = $this->container->get('claroline.manager.workspace_manager')
+            ->getUsedStorage($workspace);
+        $storageLeft = $maxSize - $usedSize;
+        $fileSize = $this->ut->formatFileSize($fileSize);
+        $storageLeft = $this->ut->formatFileSize($storageLeft);
+
+        $translator = $this->container->get('translator');
+        $msg = $translator->trans(
+            'storage_limit_exceeded',
+            array('%storageLeft%' => $storageLeft, '%fileSize%' => $fileSize),
+            'platform'
+        );
+        $form->addError(new FormError($msg));
     }
 }

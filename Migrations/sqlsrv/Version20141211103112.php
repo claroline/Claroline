@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Migrations\ibm_db2;
+namespace Claroline\CoreBundle\Migrations\sqlsrv;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -8,16 +8,19 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/12/10 10:25:48
+ * Generation date: 2014/12/11 10:31:13
  */
-class Version20141210102547 extends AbstractMigration
+class Version20141211103112 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
         $this->addSql("
             ALTER TABLE claro_workspace 
-            ADD COLUMN maxStorageSize INTEGER DEFAULT NULL 
-            ADD COLUMN maxUploadResources INTEGER DEFAULT NULL
+            ADD maxStorageSize INT NOT NULL
+        ");
+        $this->addSql("
+            ALTER TABLE claro_workspace 
+            ADD maxUploadResources INT NOT NULL
         ");
     }
 
@@ -25,11 +28,11 @@ class Version20141210102547 extends AbstractMigration
     {
         $this->addSql("
             ALTER TABLE claro_workspace 
-            DROP COLUMN maxStorageSize 
-            DROP COLUMN maxUploadResources
+            DROP COLUMN maxStorageSize
         ");
         $this->addSql("
-            CALL SYSPROC.ADMIN_CMD ('REORG TABLE claro_workspace')
+            ALTER TABLE claro_workspace 
+            DROP COLUMN maxUploadResources
         ");
     }
 }

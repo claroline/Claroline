@@ -16,6 +16,8 @@ use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Symfony\Component\Translation\Translator;
 use Claroline\CoreBundle\Manager\MaskManager;
+use Claroline\CoreBundle\Manager\ResourceManager;
+use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Claroline\CoreBundle\Library\Security\Utilities;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use Claroline\CoreBundle\Entity\Resource\MaskDecoder;
@@ -38,16 +40,27 @@ class ResourceVoter implements VoterInterface
     private $specialActions ;
     private $ut;
     private $maskManager;
+    private $resourceManager;
+    private $workspaceManager;
 
     /**
      * @DI\InjectParams({
-     *     "em"           = @DI\Inject("doctrine.orm.entity_manager"),
-     *     "translator"   = @DI\Inject("translator"),
-     *     "ut"           = @DI\Inject("claroline.security.utilities"),
-     *     "maskManager"  = @DI\Inject("claroline.manager.mask_manager")
+     *     "em"               = @DI\Inject("doctrine.orm.entity_manager"),
+     *     "translator"       = @DI\Inject("translator"),
+     *     "ut"               = @DI\Inject("claroline.security.utilities"),
+     *     "maskManager"      = @DI\Inject("claroline.manager.mask_manager"),
+     *     "resourceManager"  = @DI\Inject("claroline.manager.resource_manager"),
+     *     "workspaceManager" = @DI\Inject("claroline.manager.workspace_manager")
      * })
      */
-    public function __construct(EntityManager $em, Translator $translator, Utilities $ut, MaskManager $maskManager)
+    public function __construct(
+        EntityManager $em,
+        Translator $translator,
+        Utilities $ut,
+        MaskManager $maskManager,
+        ResourceManager $resourceManager,
+        WorkspaceManager $workspaceManager
+    )
     {
         $this->em = $em;
         $this->repository = $em->getRepository('ClarolineCoreBundle:Resource\ResourceRights');
@@ -55,6 +68,8 @@ class ResourceVoter implements VoterInterface
         $this->specialActions = array('move', 'create', 'copy');
         $this->ut = $ut;
         $this->maskManager = $maskManager;
+        $this->resourceManager = $resourceManager;
+        $this->workspaceManager = $workspaceManager;
     }
 
     public function vote(TokenInterface $token, $object, array $attributes)
@@ -96,6 +111,7 @@ class ResourceVoter implements VoterInterface
                 return VoterInterface::ACCESS_GRANTED;
             }
 
+            $errors = array_unique($errors);
             $object->setErrors($errors);
 
             return VoterInterface::ACCESS_DENIED;
@@ -238,9 +254,24 @@ class ResourceVoter implements VoterInterface
     {
         $errors = array();
 
+        //even the workspace manager can't break the file limit.
+        $workspace = $node->getWorkspace();
+        $isLimitExceeded = $this->resourceManager
+            ->checkResourceLimitExceeded($workspace);
+
+        if ($isLimitExceeded) {
+            $currentCount = $this->workspaceManager->countResources($workspace);
+            $errors[] = $this->translator
+                ->trans(
+                    'resource_limit_exceeded',
+                    array('%current%' => $currentCount, '%max%' => $workspace->getMaxUploadResources()),
+                    'platform'
+                );
+        }
+
         //if I am the manager, I can do whatever I want
         if ($this->isWorkspaceManager($workspace, $token)) {
-            return array();
+            return $errors;
         }
 
         //otherwise we need to check
