@@ -55,6 +55,7 @@ class qcmImport extends qtiImport {
             $text = $this->domElementToString($prompt);
             $text = str_replace('<prompt>', '', $text);
             $text = str_replace('</prompt>', '', $text);
+            $text = html_entity_decode($text);
         }
 
         return $text;

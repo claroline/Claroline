@@ -330,6 +330,7 @@ class holeImport extends qtiImport
             $text = $this->domElementToString($prompt);
             $text = str_replace('<prompt>', '', $text);
             $text = str_replace('</prompt>', '', $text);
+            $text = html_entity_decode($text);
             $ib->removeChild($ib->getElementsByTagName("prompt")->item(0));
         }
 
