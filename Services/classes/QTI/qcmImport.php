@@ -228,7 +228,17 @@ class qcmImport extends qtiImport {
      *
      */
     protected function getGlobalScore() {
-        
+        $rp = $this->assessmentItem->getElementsByTagName("responseProcessing")->item(0);
+        $responsesIf = $rp->getElementsByTagName("responseIf");
+        foreach ($responsesIf as $ri) {
+            if ($ri->getElementsByTagName("match")->item(0) != null) {
+                $val = $ri->getElementsByTagName("baseValue")->item(0)->nodeValue;
+                $this->interactionQCM->setScoreRightResponse($val);
+            }
+        }
+        $reponseEsle = $rp->getElementsByTagName("responseElse")->item(0);
+        $val = $reponseEsle->getElementsByTagName("baseValue")->item(0)->nodeValue;
+        $this->interactionQCM->setScoreFalseResponse($val);
     }
 
 }
