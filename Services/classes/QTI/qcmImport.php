@@ -165,8 +165,10 @@ class qcmImport extends qtiImport {
      */
     protected function choiceValue($simpleChoice) {
         $value = $this->domElementToString($simpleChoice);
-        $value = str_replace('<simpleChoice>', '', $value);
+        //$value = str_replace('<simpleChoice>', '', $value);
+        $value = preg_replace('(<simpleChoice.*?>)', '', $value);
         $value = str_replace('</simpleChoice>', '', $value);
+        $value = html_entity_decode($value);
 
         return $value;
     }
