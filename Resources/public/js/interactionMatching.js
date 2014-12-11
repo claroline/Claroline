@@ -17,7 +17,6 @@ var codeContainerLabel = 0;
 // Question creation
 function creationMatching(addchoice, addproposal, deletechoice, LabelValue, ScoreRight, ProposalValue, numberProposal, correspondence, deleteLabel, deleteProposal, tMatching, advEdition, correspEmpty, correspondenceError , scoreError){
 
-
     //initialisation of variables
     var indexProposal;
     var indexLabel; // number of label
@@ -318,7 +317,7 @@ function fillLabelArray(row) {
 
         advLabelVal(idLabelVal);
     }
-
+    
     // Add the field of type input
     if (row.find('input').length) {
         $('#newTableLabel').find('tr:last').append('<td class="classic"></td>');
@@ -334,19 +333,28 @@ function fillLabelArray(row) {
 
 function advLabelVal(idLabelVal) {
     $("#adve_"+idLabelVal).click(function(e) {
-            if ($("#"+idLabelVal).hasClass("claroline-tiny-mce hide")) {
-//                $("#"+idLabelVal).removeClass("claroline-tiny-mce");
-//                $("#"+idLabelVal).removeClass("hide");
-//                $("#"+idLabelVal).removeData("data-theme");
+        if ($("#"+idLabelVal).hasClass("claroline-tiny-mce hide")) {
+//            $("#"+idLabelVal).removeClass("claroline-tiny-mce");
+//            $("#"+idLabelVal).removeClass("hide");
+//            $("#"+idLabelVal).removeData("data-theme");
 
-            } else {
-                $("#"+idLabelVal).addClass("claroline-tiny-mce hide");
-                $("#"+idLabelVal).data("data-theme","advanced");
-            }
+        } else {
+            $("#"+idLabelVal).addClass("claroline-tiny-mce hide");
+            $("#"+idLabelVal).data("data-theme","advanced");
+        }
 
-            e.preventDefault();
-            return false;
-        });
+        // If the navavigator is chrome
+        var userNavigator = navigator.userAgent;
+        var positionText = userNavigator.indexOf("Chrome");
+        if(positionText !== -1) {
+            $('#newTableLabel').find('tbody').append('<tr></tr>');
+            addLabel(containerLabel, "Suppromer", tableLabels, codeContainerLabel);
+            $('#newTableLabel').find('tr:last').remove();
+        }
+        
+        e.preventDefault();
+        return false;
+    });
 }
 
 function fillProposalArray(row) {
@@ -360,22 +368,24 @@ function fillProposalArray(row) {
 
         advProposalVal(idProposalVal);
     }
-
+    
 }
 
 function advProposalVal(idProposalVal) {
     $("#adve_"+idProposalVal).click(function(e) {
-            if ($("#"+idProposalVal).hasClass("claroline-tiny-mce hide")) {
-                //todo
+        if ($("#"+idProposalVal).hasClass("claroline-tiny-mce hide")) {
+//            $("#"+idProposalVal).removeClass("claroline-tiny-mce");
+//            $("#"+idProposalVal).removeClass("hide");
+//            $("#"+idProposalVal).removeData("data-theme");
 
-            } else {
-                $("#"+idProposalVal).addClass("claroline-tiny-mce hide");
-                $("#"+idProposalVal).data("data-theme","advanced");
-            }
+        } else {
+            $("#"+idProposalVal).addClass("claroline-tiny-mce hide");
+            $("#"+idProposalVal).data("data-theme","advanced");
+        }
 
-            e.preventDefault();
-            return false;
-        });
+        e.preventDefault();
+        return false;
+    });
 }
 
 function adddelete(tr, deletechoice, codeContainer){

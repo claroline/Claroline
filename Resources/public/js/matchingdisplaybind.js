@@ -10,7 +10,6 @@ $(function() {
             isSource: true,
             anchor: "Right",
             cssClass: "endPoints",
-//            endpointStyle: {hoverClass: "test"},
         });
 
         //Create all droppable in target
@@ -18,7 +17,6 @@ $(function() {
             isTarget: true,
             anchor: "Left",
             cssClass: "endPoints",
-//            endpointStyle: {hoverClass: "test"},
         });
         
         //defaults parameteres for all connections
@@ -27,7 +25,7 @@ $(function() {
             Connector: "Straight",
             Endpoint: "Dot",
             EndpointStyle: {fillStyle:"#777", radius: 5},
-            PaintStyle: { strokeStyle:"#777", lineWidth: 20},//4
+            PaintStyle: { strokeStyle:"#777", lineWidth: 4},
             HoverPaintStyle: {strokeStyle:"red"},
             LogEnabled: false,
             DropOptions: {tolerance:"touch"},
@@ -66,11 +64,6 @@ $(function() {
         });
     });
 
-    $("#droppable_34").click(function() {
-        $(".origin").each(function() {
-            checkIn($(this));
-        });
-    });
     //for check in connections
     var formBalise = $("body").find("form");
     var idFormBalise = formBalise.attr("id");
