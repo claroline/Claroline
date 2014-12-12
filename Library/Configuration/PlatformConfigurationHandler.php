@@ -13,6 +13,7 @@ namespace Claroline\CoreBundle\Library\Configuration;
 
 use \RuntimeException;
 use Symfony\Component\Yaml\Yaml;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfiguration;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -69,7 +70,9 @@ class PlatformConfigurationHandler
         'header_locale' => false,
         'portfolio_url' => null,
         'is_notification_active' => true,
-        'createPersonnalWorkspace' => true
+        'createPersonnalWorkspace' => true,
+        'max_storage_size' => Workspace::DEFAULT_MAX_STORAGE_SIZE,
+        'max_upload_resources' => Workspace::DEFAULT_MAX_FILE_COUNT
     );
 
     /**
@@ -169,6 +172,8 @@ class PlatformConfigurationHandler
         $config->setPortfolioUrl($this->parameters['portfolio_url']);
         $config->setIsNotificationActive($this->parameters['is_notification_active']);
         $config->setCreatePersonnalWorkspace($this->parameters['createPersonnalWorkspace']);
+        $config->setMaxUploadResources($this->parameters['max_upload_resources']);
+        $config->setMaxStorageSize($this->parameters['max_storage_size']);
 
         return $config;
     }

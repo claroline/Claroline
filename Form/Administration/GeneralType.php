@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Form\Administration;
 
+use Claroline\CoreBundle\Validator\Constraints\FileSize;
 use Claroline\CoreBundle\Entity\Role;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -87,7 +88,9 @@ class GeneralType extends AbstractType
             ->add('account_duration', 'integer', array('label' => 'account_duration_label', 'required' => false))
             ->add('anonymous_public_profile', 'checkbox', array('label' => 'show_profile_for_anonymous', 'required' => false))
             ->add('portfolio_url', 'url', array('label' => 'portfolio_url', 'required' => false))
-            ->add('isNotificationActive', 'checkbox', array('label' => 'activate_notifications', 'required' => false));
+            ->add('isNotificationActive', 'checkbox', array('label' => 'activate_notifications', 'required' => false))
+            ->add('maxStorageSize', 'text', array('required' => false, 'label' => 'max_storage_size', 'constraints' => array(new FileSize())))
+            ->add('maxUploadResources', 'integer', array('required' => false, 'label' => 'count_resources'));
 
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event){
             /** @var \Claroline\CoreBundle\Library\Configuration\PlatformConfiguration $generalParameters */

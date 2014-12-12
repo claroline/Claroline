@@ -1104,3 +1104,9 @@ yesterday_activity: 'Activité de la veille'
 your_current_url: 'Votre URL actuelle'
 your_username: 'Votre nom d''utilisateur est '
 activate_personal_workspace_creation: Activer la création des espaces personnels.
+storage_limit_exceeded: Il ne vous reste pas assez d'espace de stockage (%storageLeft%) sur votre espace d'activité. Le poids de votre fichier est de %fileSize%.
+max_storage_size: Espace de stockage maximum
+storage_used: Espace de stockage utlisé
+max_amount_resources: Nombre de ressource maximum
+count_resources: Nombre de ressource
+resource_limit_exceeded: La limite maximale (%max%) de ressource est dépassée. Vous avez déjà créé %current% ressources.

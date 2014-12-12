@@ -40,6 +40,7 @@ class FileListener implements ContainerAwareInterface
 {
     private $container;
     private $resourceManager;
+    private $workspaceManager;
     private $om;
     private $sc;
     private $request;
@@ -57,6 +58,7 @@ class FileListener implements ContainerAwareInterface
     {
         $this->container = $container;
         $this->resourceManager = $container->get('claroline.manager.resource_manager');
+        $this->workspaceManager = $container->get('claroline.manager.workspace_manager');
         $this->om = $container->get('claroline.persistence.object_manager');
         $this->sc = $container->get('security.context');
         $this->request = $container->get('request_stack');
@@ -94,43 +96,54 @@ class FileListener implements ContainerAwareInterface
         $form = $this->container->get('form.factory')->create(new FileType(true), new File());
         $form->handleRequest($request);
 
+
         if ($form->isValid()) {
             $workspace = $event->getParent()->getWorkspace();
-            $file = $form->getData();
-            $tmpFile = $form->get('file')->getData();
-            $published = $form->get('published')->getData();
-            $event->setPublished($published);
-            $fileName = $tmpFile->getClientOriginalName();
-            $ext = strtolower($tmpFile->getClientOriginalExtension());
-            $mimeType = $this->container->get('claroline.utilities.mime_type_guesser')->guess($ext);
-            $workspaceDir = $this->filesDir .
-                DIRECTORY_SEPARATOR .
-                $workspace->getCode();
+            $workspaceDir = $this->workspaceManager->getStorageDirectory($workspace);
+            $isStorageLeft = $this->resourceManager->checkEnoughStorageSpaceLeft(
+                $workspace,
+                $form->get('file')->getData()
+            );
 
-            if (!is_dir($workspaceDir)) {
-                mkdir($workspaceDir);
-            }
-
-            if (pathinfo($fileName, PATHINFO_EXTENSION) === 'zip' && $form->get('uncompress')->getData()) {
-                $roots = $this->unzip($tmpFile, $event->getParent(), $published);
-                $event->setResources($roots);
-
-                //do not process the resources afterwards because nodes have been created with the unzip function.
-                $event->setProcess(false);
-                $event->stopPropagation();
-            } else {
-                $file = $this->createFile(
-                    $file,
-                    $tmpFile,
-                    $fileName,
-                    $mimeType,
-                    $workspace
+            if (!$isStorageLeft) {
+                $this->resourceManager->addStorageExceededFormError(
+                    $form, filesize($form->get('file')->getData()), $workspace
                 );
-                $event->setResources(array($file));
-                $event->stopPropagation();
-            }
+            } else {
+                //check if there is enough space liedt
+                $file = $form->getData();
+                $tmpFile = $form->get('file')->getData();
+                $published = $form->get('published')->getData();
+                $event->setPublished($published);
+                $fileName = $tmpFile->getClientOriginalName();
+                $ext = strtolower($tmpFile->getClientOriginalExtension());
+                $mimeType = $this->container->get('claroline.utilities.mime_type_guesser')->guess($ext);
 
-            return;
+                if (!is_dir($workspaceDir)) {
+                    mkdir($workspaceDir);
+                }
+
+                if (pathinfo($fileName, PATHINFO_EXTENSION) === 'zip' && $form->get('uncompress')->getData()) {
+                    $roots = $this->unzip($tmpFile, $event->getParent(), $published);
+                    $event->setResources($roots);
+
+                    //do not process the resources afterwards because nodes have been created with the unzip function.
+                    $event->setProcess(false);
+                    $event->stopPropagation();
+                } else {
+                    $file = $this->createFile(
+                        $file,
+                        $tmpFile,
+                        $fileName,
+                        $mimeType,
+                        $workspace
+                    );
+                    $event->setResources(array($file));
+                    $event->stopPropagation();
+                }
+
+                return;
+            }
         }
 
         $content = $this->container->get('templating')->render(
@@ -188,7 +201,8 @@ class FileListener implements ContainerAwareInterface
         $file = $event->getResource();
         $hash = $file->getHashName();
         $event->setItem(
-            $this->container->getParameter('claroline.param.files_directory') . DIRECTORY_SEPARATOR . $hash
+            $this->container
+                ->getParameter('claroline.param.files_directory') . DIRECTORY_SEPARATOR . $hash
         );
         $event->stopPropagation();
     }
@@ -206,11 +220,11 @@ class FileListener implements ContainerAwareInterface
         $eventName = strtolower(str_replace('/', '_', 'play_file_' . $mimeType));
         $eventName = str_replace('"', '', $eventName);
         $playEvent = $this->container->get('claroline.event.event_dispatcher')
-                ->dispatch(
-                    $eventName,
-                    'PlayFile',
-                    array($resource)
-                );
+            ->dispatch(
+                $eventName,
+                'PlayFile',
+                array($resource)
+            );
 
         if ($playEvent->getResponse() instanceof Response) {
             $response = $playEvent->getResponse();

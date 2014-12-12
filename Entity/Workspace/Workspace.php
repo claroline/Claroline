@@ -24,6 +24,9 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Workspace
 {
+    const DEFAULT_MAX_STORAGE_SIZE = "1 TB";
+    const DEFAULT_MAX_FILE_COUNT = 10000;
+
     protected static $visitorPrefix = 'ROLE_WS_VISITOR';
     protected static $collaboratorPrefix = 'ROLE_WS_COLLABORATOR';
     protected static $managerPrefix = 'ROLE_WS_MANAGER';
@@ -52,6 +55,16 @@ class Workspace
      * @Assert\NotBlank()
      */
     protected $code;
+
+    /**
+     * @ORM\Column(type="string", nullable=false)
+     */
+    protected $maxStorageSize = "1 TB";
+
+    /**
+     * @ORM\Column(type="integer", nullable=false)
+     */
+    protected $maxUploadResources = 10000;
 
     /**
      * @ORM\Column(type="boolean")
@@ -137,7 +150,7 @@ class Workspace
      * )
      */
     protected $competences;
-    
+
     /**
      * @ORM\Column(name="creation_date", type="integer", nullable=true)
      */
@@ -289,5 +302,35 @@ class Workspace
         $date = date('d-m-Y H:i', $this->creationDate);
 
         return new \Datetime($date);
+    }
+
+    /**
+     * Sets how many MB can be stored in the workspace
+     *
+     * @param $maxSize
+     */
+    public function setMaxStorageSize($maxSize)
+    {
+        $this->maxStorageSize = $maxSize;
+    }
+
+    /**
+     * Returns how many MB can be stored in the workspace.
+     *
+     * @return integer
+     */
+    public function getMaxStorageSize()
+    {
+        return $this->maxStorageSize;
+    }
+
+    public function setMaxUploadResources($maxSize)
+    {
+        $this->maxUploadResources = $maxSize;
+    }
+
+    public function getMaxUploadResources()
+    {
+        return $this->maxUploadResources;
     }
 }

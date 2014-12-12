@@ -21,3 +21,4 @@ valid_start_date_required: Une date de début valide est requise.
 valid_start_hour_required: Une heure de début valide est requise.
 2047_characters_max: Vous ne pouvez pas dépasser la limite de 2047 caractères.
 username_doesnt_exist: L'utilisateur %username% n'existe pas.
+invalid_size_message: Cette unité de stockage n'est pas valide (B, KB, MB, GB)

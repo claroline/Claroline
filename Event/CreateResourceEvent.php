@@ -85,6 +85,9 @@ class CreateResourceEvent extends Event implements DataConveyorEventInterface
         return $this->isPopulated;
     }
 
+    /**
+     * Required for the unzipping stuff.
+     */
     public function setProcess($boolean)
     {
         $this->process = $boolean;

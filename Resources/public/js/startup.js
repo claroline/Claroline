@@ -22,8 +22,7 @@
             var w = window.open();
             $(w.document.body).html(responseText);
         } else {
-            var msg = statusCode === 403 ? 'not_allowed' : 'an_error_occured';
-            alert(translator.trans(msg + '_message', {}, 'platform'));
+            modal.confirmContainer(translator.trans('error', {}, 'platform'), responseText);
         }
     };
 
@@ -67,7 +66,7 @@
     });
 
     $(document).ajaxError(function (event, jqXHR) {
-        if (jqXHR.status === 403 && jqXHR.getResponseHeader('XXX-Claroline') !== 'insufficient-permissions') {
+        if (jqXHR.status === 403 && jqXHR.getResponseHeader('XXX-Claroline') !== 'resource-error') {
             ajaxAuthenticationErrorHandler(jqXHR.responseText);
         } else if (jqXHR.status === 500 || jqXHR.status === 422 || jqXHR.status === 403) {
             ajaxServerErrorHandler(jqXHR.status, jqXHR.responseText);

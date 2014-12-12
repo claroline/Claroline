@@ -141,7 +141,20 @@ class ResourceController
     {
         $collection = new ResourceCollection(array($parent));
         $collection->setAttributes(array('type' => $resourceType));
-        $this->checkAccess('CREATE', $collection);
+
+        if (!$this->sc->isGranted('CREATE', $collection)) {
+            $errors = $collection->getErrors();
+            $content = $this->templating->render(
+                'ClarolineCoreBundle:Resource:errors.html.twig',
+                array('errors' => $errors)
+            );
+
+            $response = new Response($content, 403);
+            $response->headers->add(array('XXX-Claroline' => 'resource-error'));
+
+            return $response;
+        }
+
         $event = $this->dispatcher->dispatch('create_'.$resourceType, 'CreateResource', array($parent, $resourceType));
         $isPublished = intval($published) === 1 ? true : $event->isPublished();
 
@@ -276,8 +289,14 @@ class ResourceController
         $collection->addAttribute('parent', $newParent);
 
         if (!$this->sc->isGranted('MOVE', $collection)) {
-            $response = new Response($this->translator->trans('insufficient_permissions', array(), 'error'), 403);
-            $response->headers->add(array('XXX-Claroline' => 'insufficient-permissions'));
+            $errors = $collection->getErrors();
+            $content = $this->templating->render(
+                'ClarolineCoreBundle:Resource:errors.html.twig',
+                array('errors' => $errors)
+            );
+
+            $response = new Response($content, 403);
+            $response->headers->add(array('XXX-Claroline' => 'resource-error'));
 
             return $response;
         }
@@ -522,13 +541,13 @@ class ResourceController
 
         $jsonResponse = new JsonResponse(
             array(
-                'id' => $directoryId,
-                'path' => $path,
-                'creatableTypes' => $creatableTypes,
-                'nodes' => $nodesWithCreatorPerms,
+                'id'                => $directoryId,
+                'path'              => $path,
+                'creatableTypes'    => $creatableTypes,
+                'nodes'             => $nodesWithCreatorPerms,
                 'canChangePosition' => $canChangePosition,
-                'workspace_id' => $workspaceId,
-                'is_root' => $isRoot
+                'workspace_id'      => $workspaceId,
+                'is_root'           => $isRoot
             )
         );
 
@@ -567,11 +586,17 @@ class ResourceController
         $collection->addAttribute('parent', $parent);
 
         if (!$this->sc->isGranted('COPY', $collection)) {
-            $response = new Response($this->translator->trans('insufficient_permissions', array(), 'error'), 403);
-            $response->headers->add(array('XXX-Claroline' => 'insufficient-permissions'));
+            $errors = $collection->getErrors();
+            $content = $this->templating->render(
+                'ClarolineCoreBundle:Resource:errors.html.twig',
+                array('errors' => $errors)
+            );
+
+            $response = new Response($content, 403);
+            $response->headers->add(array('XXX-Claroline' => 'resource-error'));
 
             return $response;
-        }
+            }
 
         foreach ($nodes as $node) {
             $newNodes[] = $this->resourceManager->toArray(

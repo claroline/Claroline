@@ -22,6 +22,7 @@ use Claroline\CoreBundle\Manager\GroupManager;
 use Claroline\CoreBundle\Manager\LocaleManager;
 use Claroline\CoreBundle\Manager\TermsOfServiceManager;
 use Claroline\CoreBundle\Manager\UserManager;
+use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Claroline\CoreBundle\Manager\WorkspaceTagManager;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -49,6 +50,7 @@ class WorkspaceParametersController extends Controller
     private $tosManager;
     private $utilities;
     private $groupManager;
+    private $toolManager;
 
     /**
      * @DI\InjectParams({
@@ -62,7 +64,8 @@ class WorkspaceParametersController extends Controller
      *     "userManager"         = @DI\Inject("claroline.manager.user_manager"),
      *     "groupManager"        = @DI\Inject("claroline.manager.group_manager"),
      *     "tosManager"          = @DI\Inject("claroline.common.terms_of_service_manager"),
-     *     "utilities"           = @DI\Inject("claroline.utilities.misc")
+     *     "utilities"           = @DI\Inject("claroline.utilities.misc"),
+     *     "toolManager"         = @DI\Inject("claroline.manager.tool_manager")
      * })
      */
     public function __construct(
@@ -77,7 +80,8 @@ class WorkspaceParametersController extends Controller
         UserManager $userManager,
         GroupManager $groupManager,
         TermsOfServiceManager $tosManager,
-        ClaroUtilities $utilities
+        ClaroUtilities $utilities,
+        ToolManager $toolManager
     )
     {
         $this->workspaceManager = $workspaceManager;
@@ -92,6 +96,7 @@ class WorkspaceParametersController extends Controller
         $this->groupManager = $groupManager;
         $this->tosManager = $tosManager;
         $this->utilities = $utilities;
+        $this->toolManager = $toolManager;
     }
 
     /**
@@ -174,8 +179,23 @@ class WorkspaceParametersController extends Controller
             $workspace->getCreationDate()
         );
         $count = $this->workspaceManager->countUsers($workspace->getId());
+        $storageUsed = $this->workspaceManager->getUsedStorage($workspace);
+        $storageUsed = $this->utilities->formatFileSize($storageUsed);
+        $countResources = $this->workspaceManager->countResources($workspace);
+        $workspaceAdminTool = $this->toolManager->getAdminToolByName('workspace_management');
+        $isAdmin = $this->security->isGranted('OPEN', $workspaceAdminTool);
+
         $form = $this->formFactory->create(
-            FormFactory::TYPE_WORKSPACE_EDIT, array($username, $creationDate, $count), $workspace
+            FormFactory::TYPE_WORKSPACE_EDIT,
+            array(
+                $username,
+                $creationDate,
+                $count,
+                $storageUsed,
+                $countResources,
+                $isAdmin
+            ),
+            $workspace
         );
 
         if ($workspace->getSelfRegistration()) {
@@ -219,11 +239,18 @@ class WorkspaceParametersController extends Controller
         $wsRegisteredName = $workspace->getName();
         $wsRegisteredCode = $workspace->getCode();
         $wsRegisteredDisplayable = $workspace->isDisplayable();
-        $form = $this->formFactory->create(FormFactory::TYPE_WORKSPACE_EDIT, array(), $workspace);
+        $workspaceAdminTool = $this->toolManager->getAdminToolByName('workspace_management');
+        $isAdmin = $this->security->isGranted('OPEN', $workspaceAdminTool);
+        $form = $this->formFactory->create(
+            FormFactory::TYPE_WORKSPACE_EDIT,
+            array(null, null, null, null, null, $isAdmin),
+            $workspace
+        );
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
-            $this->workspaceManager->createWorkspace($workspace);
+            //throw new \Exception($workspace->getMaxStorageSize());
+            $this->workspaceManager->editWorkspace($workspace);
             $this->workspaceManager->rename($workspace, $workspace->getName());
             $displayable = $workspace->isDisplayable();
 
@@ -245,9 +272,23 @@ class WorkspaceParametersController extends Controller
             $workspace->setCode($wsRegisteredCode);
         }
 
+        $user = $this->security->getToken()->getUser();
+
+        if ($workspace->getSelfRegistration()) {
+            $url = $this->router->generate(
+                'claro_workspace_subscription_url_generate',
+                array('workspace' => $workspace->getId()),
+                true
+            );
+        } else {
+            $url = '';
+        }
+
         return array(
             'form' => $form->createView(),
             'workspace' => $workspace,
+            'url' => $url,
+            'user' => $user
         );
     }
 
