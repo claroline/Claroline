@@ -170,8 +170,6 @@ class WorkspaceManager
     }
 
     /**
-     * Perist and flush a workspace.
-     *
      * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
      */
     public function createWorkspace(Workspace $workspace)
@@ -180,6 +178,11 @@ class WorkspaceManager
         $workspace->setMaxUploadResources($ch->getParameter('max_upload_resources'));
         $workspace->setMaxStorageSize($ch->getParameter('max_storage_size'));
         @mkdir($this->getStorageDirectory($workspace));
+        $this->editWorkspace($workspace);
+    }
+
+    public function editWorkspace(Workspace $workspace)
+    {
         $this->om->persist($workspace);
         $this->om->flush();
     }

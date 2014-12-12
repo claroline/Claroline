@@ -308,8 +308,6 @@ class Workspace
      * Sets how many MB can be stored in the workspace
      *
      * @param $maxSize
-     *
-     * @return integer
      */
     public function setMaxStorageSize($maxSize)
     {

@@ -14,6 +14,7 @@ namespace Claroline\CoreBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Claroline\CoreBundle\Validator\Constraints\FileSize;
 
 class WorkspaceEditType extends AbstractType
 {
@@ -22,6 +23,7 @@ class WorkspaceEditType extends AbstractType
     private $number;
     private $storageSpaceUsed;
     private $countResources;
+    private $isAdmin;
 
     /**
      * Constructor.
@@ -33,7 +35,8 @@ class WorkspaceEditType extends AbstractType
         $creationDate = null,
         $number = null,
         $storageSpaceUsed = null,
-        $countResources = null
+        $countResources = null,
+        $isAdmin = false
     )
     {
         $this->username = $username;
@@ -41,6 +44,7 @@ class WorkspaceEditType extends AbstractType
         $this->number = $number;
         $this->storageSpaceUsed = $storageSpaceUsed;
         $this->countResources = $countResources;
+        $this->isAdmin = $isAdmin;
     }
 
 
@@ -75,9 +79,21 @@ class WorkspaceEditType extends AbstractType
         $builder->add('registrationValidation', 'checkbox', array('required' => false));
         $builder->add('selfUnregistration', 'checkbox', array('required' => false));
         $builder->add('number', 'text', array('disabled' => 'disabled', 'data' => $this->number, 'mapped' => false));
-        $builder->add('maxStorageSize', 'text', array('disabled' => 'disabled', 'label' => 'max_storage_size'));
+
+        if (!$this->isAdmin) {
+            $builder->add('maxStorageSize', 'text', array('disabled' => 'disabled', 'label' => 'max_storage_size'));
+        } else {
+            $builder->add('maxStorageSize', 'text', array('label' => 'max_storage_size', 'constraints' => array(new FileSize())));
+        }
+
         $builder->add('storageUsed', 'text', array('mapped' => false, 'disabled' => 'disabled', 'label' => 'storage_used', 'data' => $this->storageSpaceUsed));
-        $builder->add('maxUploadResources', 'text', array('disabled' => 'disabled', 'label' => 'max_amount_resources'));
+
+        if (!$this->isAdmin) {
+            $builder->add('maxUploadResources', 'text', array('disabled' => 'disabled', 'label' => 'max_amount_resources'));
+        } else {
+            $builder->add('maxUploadResources', 'text', array('label' => 'max_amount_resources'));
+        }
+
         $builder->add('countResources', 'text', array('mapped' => false, 'disabled' => 'disabled', 'label' => 'count_resources', 'data' => $this->countResources));
     }
 
