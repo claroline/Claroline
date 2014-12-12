@@ -1641,8 +1641,8 @@ class ResourceManager
         $workspaceManager = $this->container->get('claroline.manager.workspace_manager');
         $workspaceDir = $workspaceManager->getStorageDirectory($workspace);
         $fileSize = filesize($file);
-        $allowedMaxSize = $workspace->getMaxStorageSize() * 1048576;
-        $currentStorage = $workspaceManager->getUsedStorage($workspace);
+        $allowedMaxSize = $this->ut->getRealFileSize($workspace->getMaxStorageSize());
+        $currentStorage = $this->ut->getRealFileSize($workspaceManager->getUsedStorage($workspace));
 
         return ($currentStorage + $fileSize > $allowedMaxSize) ? false: true;
     }
@@ -1669,10 +1669,14 @@ class ResourceManager
      */
     public function addStorageExceededFormError(Form $form, $fileSize, Workspace $workspace)
     {
+        $filesize = $this->ut->getRealFileSize($fileSize);
         //we want how many bites and well...
-        $maxSize = $workspace->getMaxStorageSize() * 1048576;
-        $usedSize = $this->container->get('claroline.manager.workspace_manager')
-            ->getUsedStorage($workspace);
+        $maxSize = $this->ut->getRealFileSize($workspace->getMaxStorageSize());
+        //throw new \Exception($maxSize);
+        $usedSize = $this->ut->getRealFileSize(
+            $this->container->get('claroline.manager.workspace_manager')->getUsedStorage($workspace)
+        );
+
         $storageLeft = $maxSize - $usedSize;
         $fileSize = $this->ut->formatFileSize($fileSize);
         $storageLeft = $this->ut->formatFileSize($storageLeft);

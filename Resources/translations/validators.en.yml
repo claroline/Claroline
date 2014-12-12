@@ -21,3 +21,4 @@ valid_start_date_required: A valid start date is required.
 valid_start_hour_required: A valid start hour is required.
 2047_characters_max: 2047 characters max.
 username_doesnt_exist: El usuario %username% no existe.
+invalid_size_message: This storage unit is invalid (B, KB, MB, GB)

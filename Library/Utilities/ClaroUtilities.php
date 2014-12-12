@@ -187,8 +187,20 @@ class ClaroUtilities
         return $this->formatter;
     }
 
+    /**
+     * Take a file size (B) and displays it in a more readable way.
+     */
     public function formatFileSize($fileSize)
     {
+        //don't format if it's already formatted.
+        $validUnits = array('KB', 'MB', 'GB', 'TB');
+
+        foreach ($validUnits as $unit) {
+            if (strpos($unit, $fileSize)) {
+                return $fileSize;
+            }
+        }
+
         if ($fileSize < 1024) {
             return $fileSize . ' B';
         } elseif ($fileSize < 1048576) {
@@ -200,5 +212,38 @@ class ClaroUtilities
         }
 
         return round($fileSize / 1099511627776, 2) . ' TB';
+    }
+
+    /**
+     * Take a formatted file size and returns the number of bytes
+     */
+    public function getRealFileSize($fileSize)
+    {
+        //B goes at the end because it's always matched otherwise
+        $validUnits = array('KB', 'MB', 'GB', 'TB');
+        $value = str_replace(' ', '', $fileSize);
+
+        $replacements = array('');
+        $pattern = '/(\d+)/';
+        $data = preg_grep($pattern, array($value));
+
+        foreach ($validUnits as $unit) {
+            if (strpos($fileSize, $unit)) {
+                switch($unit) {
+                    case 'B':
+                        return $data[0] * pow(1024, 0);
+                    case 'KB':
+                        return $data[0] * pow(1024, 1);
+                    case 'MB':
+                        return $data[0] * pow(1024, 2);
+                    case 'GB':
+                        return $data[0] * pow(1024, 3);
+                    case 'TB':
+                        return $data[0] * pow(1024, 4);
+                }
+            }
+        }
+
+        return $fileSize;
     }
 }
