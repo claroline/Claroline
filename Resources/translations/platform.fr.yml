@@ -1110,3 +1110,4 @@ storage_used: Espace de stockage utlisé
 max_amount_resources: Nombre de ressource maximum
 count_resources: Nombre de ressource
 resource_limit_exceeded: La limite maximale (%max%) de ressource est dépassée. Vous avez déjà créé %current% ressources.
+my_public_documents: Mes documents public

@@ -16,6 +16,7 @@ use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Model\WorkspaceModel;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
@@ -129,6 +130,7 @@ class UserManager
         $createPersonalWorkspace = $this->container
             ->get('claroline.config.platform_config_handler')
             ->getParameter('createPersonnalWorkspace');
+
         if ($createPersonalWorkspace) $this->setPersonalWorkspace($user, $model);
         $user->setPublicUrl($this->generatePublicUrl($user));
         $this->toolManager->addRequiredToolsToUser($user);
@@ -426,6 +428,25 @@ class UserManager
                 $errors
             );
         }
+
+        //add "my public documents" folder
+        $resourceManager = $this->container->get('claroline.manager.resource_manager');
+        $directory = new Directory();
+        $dirName = $this->translator->trans('my_public_documents', array(), 'platform');
+        $directory->setName($dirName);
+        $parent = $resourceManager->getNodeScheduledForInsert($workspace, $workspace->getName());
+        $role = $this->roleManager->getRoleByName('ROLE_ANONYMOUS');
+
+        $createdResource = $resourceManager->create(
+            $directory,
+            $resourceManager->getResourceTypeByName('directory'),
+            $user,
+            $workspace,
+            $parent,
+            null,
+            array('ROLE_ANONYMOUS' => array('open' => true, 'export' => true, 'create' => array(), 'role' => $role)),
+            true
+        );
 
         $user->setPersonalWorkspace($workspace);
         $this->objectManager->persist($user);

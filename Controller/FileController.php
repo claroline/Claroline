@@ -117,11 +117,11 @@ class FileController extends Controller
      */
     public function uploadModalAction()
     {
+        $pws = $this->getCurrentUser()->getPersonalWorkspace();
+
         return array(
             'form' => $this->get('form.factory')->create(new FileType())->createView(),
-            'workspace' => $this->get('claroline.manager.resource_manager')->getWorkspaceRoot(
-                $this->getCurrentUser()->getPersonalWorkspace()
-            )->getId()
+            'workspace' => $this->get('claroline.manager.resource_manager')->getWorkspaceRoot($pws)->getId()
         );
     }
 

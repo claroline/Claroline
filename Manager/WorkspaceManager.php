@@ -965,9 +965,4 @@ class WorkspaceManager
 
         return $size;
     }
-
-    public function cleanStorageDir(Workspace $workspace)
-    {
-
-    }
 }

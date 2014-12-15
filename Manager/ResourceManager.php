@@ -447,21 +447,25 @@ class ResourceManager
             $this->rightsManager->create($data, $data['role'], $node, false, $resourceTypes);
         }
 
-        $this->rightsManager->create(
-            0,
-            $this->roleRepo->findOneBy(array('name' => 'ROLE_ANONYMOUS')),
-            $node,
-            false,
-            array()
-        );
+        if (!array_key_exists('ROLE_ANONYMOUS', $rights)) {
+            $this->rightsManager->create(
+                0,
+                $this->roleRepo->findOneBy(array('name' => 'ROLE_ANONYMOUS')),
+                $node,
+                false,
+                array()
+            );
+        }
 
-        $this->rightsManager->create(
-            0,
-            $this->roleRepo->findOneBy(array('name' => 'ROLE_USER')),
-            $node,
-            false,
-            array()
-        );
+        if (!array_key_exists('ROLE_USER', $rights)) {
+            $this->rightsManager->create(
+                0,
+                $this->roleRepo->findOneBy(array('name' => 'ROLE_USER')),
+                $node,
+                false,
+                array()
+            );
+        }
     }
 
     /**
@@ -1688,5 +1692,24 @@ class ResourceManager
             'platform'
         );
         $form->addError(new FormError($msg));
+    }
+
+    public function getNodeScheduledForInsert(Workspace $workspace, $name, $parent = null)
+    {
+        $scheduledForInsert = $this->om->getUnitOfWork()->getScheduledEntityInsertions();
+        $res = null;
+
+        foreach ($scheduledForInsert as $entity) {
+            if (get_class($entity) === 'Claroline\CoreBundle\Entity\Resource\ResourceNode') {
+                if ($entity->getWorkspace()->getCode() === $workspace->getCode() &&
+                    $entity->getName() === $name &&
+                    $entity->getParent() == $parent) {
+
+                    return $entity;
+                }
+            }
+        }
+
+        return $res;
     }
 }
