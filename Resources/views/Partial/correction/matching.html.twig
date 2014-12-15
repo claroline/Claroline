@@ -8,7 +8,7 @@
         {% for label in inter.labels %}
             <tr>
                 <td>
-                    {% if (tabResponseIndex[label.id] is not defined and tabRightResponse[label.id] == null) or tabRightResponse[label.id] == tabResponseIndex[label.id] %}
+                    {% if (tabResponseIndex[label.id] is not defined and tabRightResponse[label.id] == null) or tabRightResponse[label.id]|lower is sameas(tabResponseIndex[label.id]|lower) %}
                         <div class="rightResponse" align="center">
                             <div class="labels">
                                 {{ label.value | raw }}
