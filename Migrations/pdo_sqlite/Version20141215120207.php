@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/12/12 10:06:39
+ * Generation date: 2014/12/15 12:02:08
  */
-class Version20141212100638 extends AbstractMigration
+class Version20141215120207 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -22,10 +22,48 @@ class Version20141212100638 extends AbstractMigration
             ALTER TABLE claro_workspace 
             ADD COLUMN maxUploadResources INTEGER NOT NULL
         ");
+        $this->addSql("
+            ALTER TABLE claro_directory 
+            ADD COLUMN is_upload_destination BOOLEAN NOT NULL
+        ");
     }
 
     public function down(Schema $schema)
     {
+        $this->addSql("
+            DROP INDEX UNIQ_12EEC186B87FAB32
+        ");
+        $this->addSql("
+            CREATE TEMPORARY TABLE __temp__claro_directory AS 
+            SELECT id, 
+            resourceNode_id 
+            FROM claro_directory
+        ");
+        $this->addSql("
+            DROP TABLE claro_directory
+        ");
+        $this->addSql("
+            CREATE TABLE claro_directory (
+                id INTEGER NOT NULL, 
+                resourceNode_id INTEGER DEFAULT NULL, 
+                PRIMARY KEY(id), 
+                CONSTRAINT FK_12EEC186B87FAB32 FOREIGN KEY (resourceNode_id) 
+                REFERENCES claro_resource_node (id) 
+                ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE
+            )
+        ");
+        $this->addSql("
+            INSERT INTO claro_directory (id, resourceNode_id) 
+            SELECT id, 
+            resourceNode_id 
+            FROM __temp__claro_directory
+        ");
+        $this->addSql("
+            DROP TABLE __temp__claro_directory
+        ");
+        $this->addSql("
+            CREATE UNIQUE INDEX UNIQ_12EEC186B87FAB32 ON claro_directory (resourceNode_id)
+        ");
         $this->addSql("
             DROP INDEX UNIQ_D902854577153098
         ");

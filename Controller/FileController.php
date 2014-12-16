@@ -16,11 +16,13 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\HttpFoundation\Response;
 use Claroline\CoreBundle\Entity\Resource\File;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use Claroline\CoreBundle\Form\UpdateFileType;
+use Claroline\CoreBundle\Form\TinyMceUploadModalType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 
 class FileController extends Controller
@@ -73,6 +75,7 @@ class FileController extends Controller
      */
     public function uploadWithAjaxAction(ResourceNode $parent, User $user)
     {
+        $parent = $this->get('claroline.manager.resource_manager')->getById($parent);
         $collection = new ResourceCollection(array($parent));
         $collection->setAttributes(array('type' => 'file'));
         $this->checkAccess('CREATE', $collection);
@@ -111,17 +114,86 @@ class FileController extends Controller
     }
 
     /**
+     * @EXT\Route(
+     *     "/tinymce/upload/{parent}",
+     *     name="claro_file_upload_with_tinymce",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     *
+     * Creates a resource from uploaded file.
+     *
+     * @param integer $parentId the parent id
+     *
+     * @throws \Exception
+     * @return Response
+     */
+    public function uploadWithTinyMceAction($parent, User $user)
+    {
+        $parent = $this->get('claroline.manager.resource_manager')->getById($parent);
+        $collection = new ResourceCollection(array($parent));
+        $collection->setAttributes(array('type' => 'file'));
+
+        if (!$this->get('security.context')->isGranted('CREATE', $collection)) {
+            //use different header so we know something went wrong
+            $content = $this->get('translator')->trans(
+                'resource_creation_denied',
+                array('%path%' => $parent->getPathForDisplay()),
+                'platform'
+            );
+            $response = new Response($content, 403);
+            $response->headers->add(array('XXX-Claroline' => 'resource-error'));
+
+            return $response;
+        }
+
+        //let's create the file !
+        $request = $this->getRequest();
+        $fileForm = $request->files->get('file_form');
+        $file = $fileForm['file'];
+        $fileListener = $this->get('claroline.listener.file_listener');
+        $ext = strtolower($file->getClientOriginalExtension());
+        $mimeType = $this->container->get('claroline.utilities.mime_type_guesser')->guess($ext);
+        $file = $fileListener->createFile(
+            new File(),
+            $file,
+            $file->getClientOriginalName(),
+            $mimeType,
+            $parent->getWorkspace()
+        );
+
+        $resourceManager = $this->get('claroline.manager.resource_manager');
+
+        $file = $resourceManager->create(
+            $file,
+            $resourceManager->getResourceTypeByName('file'),
+            $user,
+            $parent->getWorkspace(),
+            $parent,
+            null,
+            array(),
+            true
+        );
+
+        $nodesArray[0] = $resourceManager->toArray(
+            $file->getResourceNode(), $this->get('security.context')->getToken()
+        );
+
+        return new JsonResponse($nodesArray);
+    }
+
+    /**
      * @EXT\Route("uploadmodal", name="claro_upload_modal", options = {"expose" = true})
      *
      * @EXT\Template("ClarolineCoreBundle:Resource:uploadModal.html.twig")
      */
     public function uploadModalAction()
     {
+        $destinations = $this->get('claroline.manager.resource_manager')->getDefaultUploadDestinations();
         $pws = $this->getCurrentUser()->getPersonalWorkspace();
 
         return array(
-            'form' => $this->get('form.factory')->create(new FileType())->createView(),
-            'workspace' => $this->get('claroline.manager.resource_manager')->getWorkspaceRoot($pws)->getId()
+            'form' => $this->get('form.factory')->create(new TinyMceUploadModalType($destinations))->createView()
         );
     }
 
@@ -134,7 +206,7 @@ class FileController extends Controller
     {
         $collection = new ResourceCollection(array($file->getResourceNode()));
         $this->checkAccess('EDIT', $collection);
-        $form = $this->get('form.factory')->create(new UpdateFileType(), new File());
+        $form = $this->get('form.factory')->create(new FileType(), new File());
 
         return array(
             'form' => $form->createView(),

@@ -6,6 +6,7 @@
         data-node-name="{{ node.name }}"
         data-type="{{ node.type }}"
         data-mime-type="{{ node.mime_type }}"
+        data-path="{{ node.path_for_display }}"
         {% if isSelectionAllowed == false %}style="visibility: collapse;"{% endif %}
         />
 </div>

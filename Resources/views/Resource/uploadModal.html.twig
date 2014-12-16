@@ -12,8 +12,9 @@
                     name='file_form[file]'
                     id='file_form_file'
                     style='position:absolute;top:-1000px;'
-                    data-workspace={{ workspace }}>
-                    {{ form_widget(form._token) }}
+                >
+                {{ form_row(form.destination) }}
+                {{ form_widget(form._token) }}
             </form>
             <button type="button" class="btn btn-primary btn-lg filePicker">
                 <i class='fa fa-file'></i>
@@ -22,9 +23,6 @@
                 <div role="progressbar" class="progress-bar" data-valuenow="0" aria-valuemin="0" aria-valuemax="100">
                     <span class="sr-only">0%</span>
                 </div>
-            </div>
-            <div class="alert alert-danger margin-top-md hide">
-                {{ 'An error has occurred, please check if the file size does not exceeds the permitted size' | trans({}, 'platform')}}
             </div>
             <hr>
             <p>{{ 'Or choose an existing file from resource manager' | trans({}, 'platform') }}:</p>

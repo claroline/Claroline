@@ -29,6 +29,7 @@ class Updater040100
     public function postUpdate()
     {
         $this->updateWorkspaceFileLimit();
+        $this->updateFileStorageDir();
     }
 
     private function updateWorkspaceFileLimit()
@@ -45,6 +46,30 @@ class Updater040100
             $workspace->setMaxUploadResources(Workspace::DEFAULT_MAX_FILE_COUNT);
             $em->persist($workspace);
 
+            $i++;
+
+            if ($i % self::MAX_BATCH_SIZE === 0) {
+                $em->flush();
+                $i = 0;
+            }
+        }
+
+        $em->flush();
+    }
+
+    private function updateFileStorageDir()
+    {
+        $em = $this->container->get('doctrine.orm.entity_manager');
+        $directories = $em->getRepository('ClarolineCoreBundle:Resource\Directory')
+            ->findRootDirectories();
+
+        $i = 0;
+
+        $this->log('Updating root directories...');
+
+        foreach ($directories as $directory) {
+            $directory->setIsUploadDestination(true);
+            $em->persist($directory);
             $i++;
 
             if ($i % self::MAX_BATCH_SIZE === 0) {

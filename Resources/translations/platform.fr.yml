@@ -771,7 +771,7 @@ reset_pwd_form_password : 'Votre mot de passe actuel'
 resetting_your_password: Réinitialisation de votre mot de passe
 resource: Ressource
 resource_action_denied_message: 'L''action %action% n''a pas pu être exécutée sur la resource ''%path%'': accès refusé.'
-resource_creation_denied: 'Vous n''avez pas la permission de créer une ressource dans le répertoire ''%path'': accès refusé.'
+resource_creation_denied: 'Vous n''avez pas la permission de créer une ressource dans le répertoire ''%path%'': accès refusé.'
 resource_creation_wrong_type: 'Vous n''avez pas la permission de créer un(e) %type% dans le répertoire ''%path%'': accès refusé.'
 resource_delete: 'Êtes-vous sûr de vouloir supprimer cette ressource ?'
 resource_picker: Sélecteur de ressources
@@ -1111,3 +1111,6 @@ max_amount_resources: Nombre de ressource maximum
 count_resources: Nombre de ressource
 resource_limit_exceeded: La limite maximale (%max%) de ressource est dépassée. Vous avez déjà créé %current% ressources.
 my_public_documents: Mes documents public
+new_folder_in_current_ws: Nouveau répertoire dans l'espace d'activité courant
+others: Autres
+destination: Destination

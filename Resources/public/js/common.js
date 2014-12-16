@@ -33,10 +33,13 @@
      * @param element A HTML modal element.
      *
      */
-    common.uploadfile = function (form, element, callBack) {
+    common.uploadfile = function (form, element, parent, callBack) {
         var workspace = $(form).data('workspace');
         $(form).upload(
-            routing.generate('claro_resource_create', {'resourceType' : 'file', 'parentId' : workspace, 'published': 1}),
+            routing.generate(
+                'claro_file_upload_with_tinymce',
+                {'parent': parent}
+            ),
             function (done) {
                 if (done.getResponseHeader('Content-Type')  === 'application/json') {
                     var resource = $.parseJSON(done.responseText)[0];

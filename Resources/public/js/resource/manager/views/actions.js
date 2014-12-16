@@ -219,7 +219,9 @@
                 this.checkedNodes.nodes[event.node.id] = [
                     event.node.name,
                     event.node.type,
-                    event.node.mimeType
+                    event.node.mimeType,
+                    event.node.path,
+                    event.node.id
                 ];
             }
 

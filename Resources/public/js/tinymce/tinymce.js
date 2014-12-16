@@ -154,7 +154,6 @@
 
     /**
      * Open a resource picker from a TinyMCE editor.
-     *
      */
     tinymce.claroline.resourcePickerOpen = function ()
     {
@@ -166,6 +165,39 @@
             resourceManager.picker('tinyMcePicker', 'open');
         }
     };
+
+    /**
+     * Open a resource picker from a TinyMCE editor.
+     */
+    tinymce.claroline.directoryPickerOpen = function ()
+    {
+        if (!resourceManager.hasPicker('tinyMceDirectoryPicker')) {
+            resourceManager.createPicker('tinyMceDirectoryPicker', {
+                callback: tinymce.claroline.directoryPickerCallBack,
+                resourceTypes: ['directory'],
+                isDirectorySelectionAllowed: true,
+                isPickerMultiSelectAllowed: false
+            }, true);
+        } else {
+            resourceManager.picker('tinyMceDirectoryPicker', 'open');
+        }
+    };
+
+    /**
+     * Open a directory picker from a TinyMCE editor.
+     */
+    tinymce.claroline.directoryPickerCallBack = function(nodes)
+    {
+        for (var id in nodes) {
+            var val = nodes[id][4];
+            var path = nodes[id][3];
+        }
+
+        //file_form_destination
+        var html = '<option value="' + val + '">' + path + '</option>';
+        $('#file_form_destination').append(html);
+        $('#file_form_destination').val(val);
+    }
 
     /**
      * Add resource picker and upload files buttons in a TinyMCE editor if data-resource-picker is on.
@@ -198,9 +230,19 @@
                         .on('click', '.filePicker', function () {
                             $('#file_form_file').click();
                         })
+                        .on('change', '#file_form_destination', function(event) {
+                            if ($('#file_form_destination').val() === 'others') {
+                                tinymce.claroline.directoryPickerOpen();
+                            }
+                        })
                         .on('change', '#file_form_file', function () {
-                            common.uploadfile(this, element, tinymce.claroline.callBack);
-                        });
+                            common.uploadfile(
+                                this,
+                                element,
+                                $('#file_form_destination').val(),
+                                tinymce.claroline.callBack
+                            );
+                        })
                     });
                 }
             });
