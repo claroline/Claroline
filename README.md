@@ -47,7 +47,7 @@ Project setup
 
 ### Development installation
 
-- Clone this repository
+- git clone https://github.com/claroline/Claroline.git
 - Create an *app/config/parameters.yml* file based on
   *app/config/parameters.yml.dist*
   and fill at least the main db parameters (database doesn't have to exist,
