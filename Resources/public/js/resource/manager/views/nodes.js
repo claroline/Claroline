@@ -132,7 +132,8 @@
                     id: event.currentTarget.getAttribute('value'),
                     name: event.currentTarget.getAttribute('data-node-name'),
                     type: event.currentTarget.getAttribute('data-type'),
-                    mimeType: event.currentTarget.getAttribute('data-mime-type')
+                    mimeType: event.currentTarget.getAttribute('data-mime-type'),
+                    path: event.currentTarget.getAttribute('data-path')
 
                 },
                 isChecked: event.currentTarget.checked,

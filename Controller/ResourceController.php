@@ -539,6 +539,12 @@ class ResourceController
             $this->request->getSession()->set('pickerDirectoryId', $directoryId);
         }
 
+        foreach($nodesWithCreatorPerms as &$element) {
+            $element['path_for_display'] = ResourceNode::convertPathForDisplay($element['path']);
+        }
+
+        unset($element);
+
         $jsonResponse = new JsonResponse(
             array(
                 'id'                => $directoryId,

@@ -198,7 +198,6 @@
         var allowDirectorySelection = true;
         if (parameters.isDirectorySelectionAllowed !== undefined)
             allowDirectorySelection = parameters.isDirectorySelectionAllowed;
-        console.debug(allowDirectorySelection);
         var mergedParameters = {
             viewName: viewName,
             isPickerMode: isPicker,

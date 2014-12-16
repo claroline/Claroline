@@ -16,9 +16,11 @@ use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\Resource\ResourceShortcut;
 use Claroline\CoreBundle\Entity\Resource\ResourceIcon;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Repository\ResourceTypeRepository;
+use Claroline\CoreBundle\Repository\DirectoryRepository;
 use Claroline\CoreBundle\Repository\ResourceNodeRepository;
 use Claroline\CoreBundle\Repository\ResourceRightsRepository;
 use Claroline\CoreBundle\Repository\ResourceShortcutRepository;
@@ -38,6 +40,7 @@ use Symfony\Component\Security\Core\SecurityContextInterface;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormError;
 
@@ -58,6 +61,8 @@ class ResourceManager
     private $shortcutRepo;
     /** @var RoleRepository */
     private $roleRepo;
+    /** @var DirectoryRepository */
+    private $directoryRepo;
     /** @var RoleManager */
     private $roleManager;
     /** @var MaskManager */
@@ -72,6 +77,8 @@ class ResourceManager
     private $ut;
     /** @var Utilities */
     private $secut;
+    /* @var TranslatorInterface */
+    private $translator;
     private $container;
 
     /**
@@ -86,7 +93,8 @@ class ResourceManager
      *     "dispatcher"      = @DI\Inject("claroline.event.event_dispatcher"),
      *     "om"              = @DI\Inject("claroline.persistence.object_manager"),
      *     "ut"              = @DI\Inject("claroline.utilities.misc"),
-     *     "secut"           = @DI\Inject("claroline.security.utilities")
+     *     "secut"           = @DI\Inject("claroline.security.utilities"),
+     *     "translator"      = @DI\Inject("translator")
      * })
      */
     public function __construct (
@@ -98,7 +106,8 @@ class ResourceManager
         ObjectManager $om,
         ClaroUtilities $ut,
         Utilities $secut,
-        MaskManager $maskManager
+        MaskManager $maskManager,
+        TranslatorInterface $translator
     )
     {
         $this->resourceTypeRepo = $om->getRepository('ClarolineCoreBundle:Resource\ResourceType');
@@ -106,6 +115,7 @@ class ResourceManager
         $this->resourceRightsRepo = $om->getRepository('ClarolineCoreBundle:Resource\ResourceRights');
         $this->roleRepo = $om->getRepository('ClarolineCoreBundle:Role');
         $this->shortcutRepo = $om->getRepository('ClarolineCoreBundle:Resource\ResourceShortcut');
+        $this->directoryRepo = $om->getRepository('ClarolineCoreBundle:Resource\Directory');
         $this->roleManager = $roleManager;
         $this->iconManager = $iconManager;
         $this->rightsManager = $rightsManager;
@@ -115,6 +125,7 @@ class ResourceManager
         $this->ut = $ut;
         $this->secut = $secut;
         $this->container = $container;
+        $this->translator = $translator;
     }
 
     /**
@@ -1694,6 +1705,15 @@ class ResourceManager
         $form->addError(new FormError($msg));
     }
 
+    /**
+     * Search a ResourceNode wich is persisted but not flushed yet
+     *
+     * @param Workspace $workspace
+     * @param $name
+     * @param ResourceNode $parent
+     *
+     * @return ResourceNode
+     */
     public function getNodeScheduledForInsert(Workspace $workspace, $name, $parent = null)
     {
         $scheduledForInsert = $this->om->getUnitOfWork()->getScheduledEntityInsertions();
@@ -1711,5 +1731,63 @@ class ResourceManager
         }
 
         return $res;
+    }
+
+    /**
+     * Adds the public file directory in a workspace
+     *
+     * @param Workspace $workspace
+     *
+     * @return Directory
+     */
+    public function addPublicFileDirectory(Workspace $workspace)
+    {
+        $directory = new Directory();
+        $dirName = $this->translator->trans('my_public_documents', array(), 'platform');
+        $directory->setName($dirName);
+        $directory->setIsUploadDestination(true);
+        $parent = $this->getNodeScheduledForInsert($workspace, $workspace->getName());
+        $role = $this->roleManager->getRoleByName('ROLE_ANONYMOUS');
+
+        return $this->create(
+            $directory,
+            $this->getResourceTypeByName('directory'),
+            $workspace->getCreator(),
+            $workspace,
+            $parent,
+            null,
+            array('ROLE_ANONYMOUS' => array('open' => true, 'export' => true, 'create' => array(), 'role' => $role)),
+            true
+        );
+    }
+
+    /**
+     * Returns the list of file upload destination choices
+     *
+     * @return array
+     */
+    public function getDefaultUploadDestinations()
+    {
+        $user = $this->container->get('security.context')->getToken()->getUser();
+        if ($user == 'anon.') return array();
+
+        $pws = $user->getPersonalWorkspace();
+        $defaults = [];
+
+        if ($pws) {
+            $defaults = array_merge(
+                $defaults,
+                $this->directoryRepo->findDefaultUploadDirectories($pws)
+            );
+        }
+
+        if ($node = $this->container->get('request')->getSession()->get('current_resource_node')) {
+            $defaults = array_merge(
+                $defaults,
+                $this->directoryRepo->findDefaultUploadDirectories($node->getWorkspace())
+            );
+        }
+
+        return $defaults;
     }
 }

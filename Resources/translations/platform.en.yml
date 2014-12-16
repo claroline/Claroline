@@ -1100,3 +1100,6 @@ your_current_url: 'Your current URL'
 your_username: 'Your username is '
 activate_personal_workspace_creation: Activate personal workspace creation.
 my_public_documents: My public documents
+new_folder_in_current_ws: New directory in the current workspace
+others: Others
+destination: Destination

@@ -581,4 +581,13 @@ class ResourceNode
     {
         $this->published = $published;
     }
+
+    /**
+     * toString method.
+     * used to display the no path in forms
+     */
+    public function __toString()
+    {
+        return $this->getPathForDisplay();
+    }
 }
