@@ -78,6 +78,8 @@ class PlayerController extends ContainerAware
         $request = $this->container->get('request');
         $router = $this->container->get('router');
 
+        $showSummary = true;
+
         $referer = $request->headers->get('referer');
         if (!empty($referer)) {
             $context = $router->getContext();
@@ -85,10 +87,19 @@ class PlayerController extends ContainerAware
             $context->setMethod('HEAD');
 
             $baseUrl = $request->getBaseUrl();
-            $lastPath = substr($referer, strpos($referer, $baseUrl) + strlen($baseUrl));
-            $previous = $router->getMatcher()->match($lastPath);
 
+            if (false !== strpos($referer, $baseUrl)) {
+                $lastPath = substr($referer, strpos($referer, $baseUrl) + strlen($baseUrl));
+            } else {
+                $lastPath = $referer;
+            }
+
+            $previous = $router->getMatcher()->match($lastPath);
             $context->setMethod($currentMethod);
+
+            if ($previous['_route'] != $request->get('_route')) {
+                $showSummary = false;
+            }
         }
 
         return array (
@@ -98,7 +109,7 @@ class PlayerController extends ContainerAware
             'edit' => false,
 
             // if previous url does not match displayAction route we have to display the tree-browser modal
-            'showSummary' => $previous['_route'] != $request->get('_route'),
+            'showSummary' => $showSummary,
         );
     }
     
