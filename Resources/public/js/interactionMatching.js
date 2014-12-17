@@ -7,6 +7,7 @@ var tableLabels = $('#tableLabel'); // div which contain the labels array
 var typeMatching;
 
 var advEditionLang;
+var remAdvEditionLang;
 var correspEmptyLang;
 var correspErrorLang;
 var scoreErrorLang;
@@ -15,13 +16,14 @@ var codeContainerProposal = 1; // to differentiate containers
 var codeContainerLabel = 0;
 
 // Question creation
-function creationMatching(addchoice, addproposal, deletechoice, LabelValue, ScoreRight, ProposalValue, numberProposal, correspondence, deleteLabel, deleteProposal, tMatching, advEdition, correspEmpty, correspondenceError , scoreError){
+function creationMatching(addchoice, addproposal, deletechoice, LabelValue, ScoreRight, ProposalValue, numberProposal, correspondence, deleteLabel, deleteProposal, tMatching, advEdition, remAdvEdition, correspEmpty, correspondenceError , scoreError){
 
     //initialisation of variables
     var indexProposal;
     var indexLabel; // number of label
 
     advEditionLang = advEdition;
+    remAdvEditionLang = remAdvEdition;
     correspEmptyLang = correspEmpty;
     correspErrorLang = correspondenceError;
     scoreErrorLang = scoreError;
@@ -62,7 +64,7 @@ function creationMatching(addchoice, addproposal, deletechoice, LabelValue, Scor
 }
 
 // Question edition
-function creationMatchingEdit(addchoice, addproposal, deletechoice, LabelValue, ScoreRight, ProposalValue, numberProposal, correspondence, deleteLabel, deleteProposal, tMatching, advEdition, correspEmpty, nbResponses, valueCorrespondence, tableLabel, tableProposal, correspondenceError, scoreError) {
+function creationMatchingEdit(addchoice, addproposal, deletechoice, LabelValue, ScoreRight, ProposalValue, numberProposal, correspondence, deleteLabel, deleteProposal, tMatching, advEdition, remAdvEdition, correspEmpty, nbResponses, valueCorrespondence, tableLabel, tableProposal, correspondenceError, scoreError) {
 
     typeMatching = JSON.parse(tMatching);
     var valueCorres = JSON.parse(valueCorrespondence.replace(/&quot;/ig,'"'));
@@ -71,6 +73,7 @@ function creationMatchingEdit(addchoice, addproposal, deletechoice, LabelValue, 
     var ind = 1;
 
     advEditionLang = advEdition;
+    remAdvEditionLang = remAdvEdition;
     correspEmptyLang = correspEmpty;
     correspErrorLang = correspondenceError;
     scoreErrorLang = scoreError;
@@ -334,15 +337,23 @@ function fillLabelArray(row) {
 function advLabelVal(idLabelVal) {
     $("#adve_"+idLabelVal).click(function(e) {
         if ($("#"+idLabelVal).hasClass("claroline-tiny-mce hide")) {
+            
 //            $("#"+idLabelVal).removeClass("claroline-tiny-mce");
 //            $("#"+idLabelVal).removeClass("hide");
+//            $("#"+idLabelVal).removeAttr('style');
 //            $("#"+idLabelVal).removeData("data-theme");
+//            $("#"+idLabelVal).parent('td').children('div').addClass("hide");
+//            $("#"+idLabelVal).parent('td').find('a').text(advEditionLang);
 
         } else {
+            
             $("#"+idLabelVal).addClass("claroline-tiny-mce hide");
             $("#"+idLabelVal).data("data-theme","advanced");
-        }
+//            $("#"+idLabelVal).parent('td').children('div').removeClass("hide");
+//            $("#"+idLabelVal).parent('td').find('a').text(remAdvEditionLang);
 
+        }
+        
         // If the navavigator is chrome
         var userNavigator = navigator.userAgent;
         var positionText = userNavigator.indexOf("Chrome");
@@ -351,7 +362,7 @@ function advLabelVal(idLabelVal) {
             addLabel(containerLabel, "Suppromer", tableLabels, codeContainerLabel);
             $('#newTableLabel').find('tr:last').remove();
         }
-        
+
         e.preventDefault();
         return false;
     });
@@ -365,7 +376,6 @@ function fillProposalArray(row) {
         $('#newTableProposal').find('tr:last').append('<td class="classic"></td>');
         $('#newTableProposal').find('td:last').append(row.find('textarea'));
         $('#newTableProposal').find('td:last').append('<span><a href="#" id="adve_'+idProposalVal+'">'+advEditionLang+'</a></span>');
-
         advProposalVal(idProposalVal);
     }
     
@@ -374,13 +384,21 @@ function fillProposalArray(row) {
 function advProposalVal(idProposalVal) {
     $("#adve_"+idProposalVal).click(function(e) {
         if ($("#"+idProposalVal).hasClass("claroline-tiny-mce hide")) {
+            
 //            $("#"+idProposalVal).removeClass("claroline-tiny-mce");
 //            $("#"+idProposalVal).removeClass("hide");
+//            $("#"+idProposalVal).removeAttr('style');
 //            $("#"+idProposalVal).removeData("data-theme");
-
+//            $("#"+idProposalVal).parent('td').children('div').addClass("hide");
+//            $("#"+idProposalVal).parent('td').find('a').text(advEditionLang);
+            
         } else {
+            
             $("#"+idProposalVal).addClass("claroline-tiny-mce hide");
             $("#"+idProposalVal).data("data-theme","advanced");
+//            $("#"+idProposalVal).parent('td').children('div').removeClass("hide");
+//            $("#"+idProposalVal).parent('td').find('a').text(remAdvEditionLang);
+            
         }
 
         e.preventDefault();

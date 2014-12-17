@@ -691,7 +691,7 @@ class exerciseServices
 
         foreach ($tabRightResponse as $labelId => $value) {
             if ( isset($tabResponseIndex[$labelId]) && $tabRightResponse[$labelId] != null
-                    && ($tabRightResponse[$labelId] == $tabResponseIndex[$labelId]) ) {
+                    && (!substr_compare($tabRightResponse[$labelId], $tabResponseIndex[$labelId], 0)) ) {
                 $label = $this->doctrine
                               ->getManager()
                               ->getRepository('UJMExoBundle:Label')
