@@ -80,6 +80,8 @@ class ExoImporter extends Importer implements ConfigurationInterface
     {
         //this is the root of the unzipped archive
         $rootPath = $this->getRootPath();
+        echo 'coucou je suis l\'importer exercice';die();
+        //créer un zip par question
     }
 
     public function export(Workspace $workspace, array &$files, $object)
