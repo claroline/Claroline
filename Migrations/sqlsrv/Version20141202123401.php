@@ -40,6 +40,14 @@ class Version20141202123401 extends AbstractMigration
             ON DELETE CASCADE
         ");
         $this->addSql("
+            INSERT INTO ujm_proposal_label (
+                proposal_id, label_id
+            ) 
+            SELECT id, 
+            label_id
+            FROM ujm_proposal WHERE label_id IS NOT NULL
+        ");
+        $this->addSql("
             ALTER TABLE ujm_proposal 
             DROP COLUMN label_id
         ");

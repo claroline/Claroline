@@ -28,6 +28,14 @@ class Version20141202123401 extends AbstractMigration
             CREATE INDEX IDX_F9B1BA4A33B92F39 ON ujm_proposal_label (label_id)
         ");
         $this->addSql("
+            INSERT INTO ujm_proposal_label (
+                proposal_id, label_id
+            ) 
+            SELECT id, 
+            label_id
+            FROM ujm_proposal WHERE label_id IS NOT NULL
+        ");
+        $this->addSql("
             DROP INDEX IDX_B797C100FAB79C10
         ");
         $this->addSql("
