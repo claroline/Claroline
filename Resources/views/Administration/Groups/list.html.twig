@@ -32,6 +32,10 @@
             <i class="fa fa-trash-o"></i>
             {{ 'delete'|trans({}, 'platform') }}
         </button>
+        <a href="{{path('claro_admin_group_creation_form')}}" class="btn btn-default">
+            <i class="fa fa-plus"></i>
+            {{ 'create_group'|trans({}, 'platform') }}
+        </a>
     {% endif %}
 {% endmacro %}
 
