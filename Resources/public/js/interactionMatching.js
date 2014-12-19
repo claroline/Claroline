@@ -15,8 +15,10 @@ var scoreErrorLang;
 var codeContainerProposal = 1; // to differentiate containers
 var codeContainerLabel = 0;
 
+var correspondances = [];
+
 // Question creation
-function creationMatching(addchoice, addproposal, deletechoice, LabelValue, ScoreRight, ProposalValue, numberProposal, correspondence, deleteLabel, deleteProposal, tMatching, advEdition, remAdvEdition, correspEmpty, correspondenceError , scoreError){
+function creationMatching(addchoice, addproposal, deletechoice, LabelValue, ScoreRight, ProposalValue, numberProposal, correspondence, deleteLabel, deleteProposal, tMatching, advEdition, remAdvEdition, correspEmpty, correspondenceError , scoreError) {
 
     //initialisation of variables
     var indexProposal;
@@ -142,7 +144,7 @@ function creationMatchingEdit(addchoice, addproposal, deletechoice, LabelValue, 
         if (typeof labels[ind] !== 'undefined') {
             idlabel = labels[ind];
             idproposals = valueCorres[idlabel];
-            $.each( idproposals, function(key, val){//alert(proposals[val]);
+            $.each( idproposals, function(key, val) {//alert(proposals[val]);
                 $('#' + ind + '_correspondence option[value="' + proposals[val] + '"]').prop('selected', true);
             });
         }
@@ -164,12 +166,13 @@ function creationMatchingEdit(addchoice, addproposal, deletechoice, LabelValue, 
     tableLabels.next().remove();
 }
 
-function addLabel(container, deletechoice, table, codeContainer){
+function addLabel(container, deletechoice, table, codeContainer) {
+    
     var contain;
     var uniqLabelId = false;
     var indexLabel = $('#newTableLabel').find('tr:not(:first)').length;
     while (uniqLabelId == false) {
-        if ($('#ujm_exobundle_interactionmatchingtype_labels_' + indexLabel + '_scoreRightResponse').length){
+        if ($('#ujm_exobundle_interactionmatchingtype_labels_' + indexLabel + '_scoreRightResponse').length) {
                 indexLabel++;
             } else{
                 uniqLabelId = true;
@@ -200,12 +203,14 @@ function addLabel(container, deletechoice, table, codeContainer){
     table.next().remove();
 }
 
-function addProposal(container, deletechoice, table, codeContainer){
+function addProposal(container, deletechoice, table, codeContainer) {
+    
+    getCorrespondances();
     var contain;
     var uniqProposalId = false;
     var indexProposal = $('#newTableProposal').find('tr:not(:first)').length;
     while (uniqProposalId == false) {
-        if ($('#ujm_exobundle_interactionmatchingtype_proposals_' + indexProposal + '_value').length){
+        if ($('#ujm_exobundle_interactionmatchingtype_proposals_' + indexProposal + '_value').length) {
                 indexProposal++;
             } else{
                 uniqProposalId = true;
@@ -233,6 +238,8 @@ function addProposal(container, deletechoice, table, codeContainer){
     table.next().remove();
 
     addRemoveRowTableProposal();
+
+    replaceCorrespondances();
 }
 
 //check if the form is valid
@@ -264,14 +271,14 @@ function check_form(nbrProposals, nbrLabels) {
 
     $("*[id$='scoreRightResponse']").each( function() {
 
-          if(!(parseFloat($(this).val()) == parseInt($(this).val())) && isNaN($(this).val())){
+          if(!(parseFloat($(this).val()) == parseInt($(this).val())) && isNaN($(this).val())) {
 
             alert(scoreErrorLang);
             score = false;
         }
     });
     
-    if(score == false ){
+    if(score == false ) {
 
         return false
     }
@@ -406,10 +413,10 @@ function advProposalVal(idProposalVal) {
     });
 }
 
-function adddelete(tr, deletechoice, codeContainer){
+function adddelete(tr, deletechoice, codeContainer) {
     var delLink;
     // Create the button to delete a row
-    if(codeContainer == 0){
+    if(codeContainer == 0) {
         delLink = $('<a href="newTableLabel" class="btn btn-danger">' + deletechoice + '</a>');
     } else {
         delLink = $('<a href="newTableProposal" class="btn btn-danger">' + deletechoice + '</a>');
@@ -420,17 +427,74 @@ function adddelete(tr, deletechoice, codeContainer){
 
     // When click, delete the row in the table
     delLink.click(function(e) {
+//        getCorrespondances();
+        var numberId;
+        if(codeContainer == 0) {
+            numberId = $(this).parent('td').parent('tr').find("select").attr("id");
+            numberId = numberId.replace("_correspondence", "");
+            $("#newTableLabel").find("select").each(function() {
+                var i = 1;
+                for(i = 1; i < correspondances.length; i++ ) {
+                    if(i == numberId) {
+                        correspondances[numberId] = 0;
+                    }
+                }
+            });
+        } else {
+            numberId = $(this).parent('td').parent('tr').find("span").text();
+            numberId = numberId.replace("Edition avancée", "");
+        }
+        
         $(this).parent('td').parent('tr').remove();
 
         addRemoveRowTableProposal();
         removeRowTableLabel();
+        
+//        if(codeContainer == 0) {
+//            $("#newTableLabel").find("select").each(function() {
+//            
+//                for(var i = 1; i < correspondances.length; i++ ) {
+//                    var w = i;
+//                    if (i => numberId) {
+//                        w = w +1;
+//                    }
+//                    var value = correspondances[w] + '';
+//                    var tableau = value.split(",");
+//                    for(var u = 0; u < tableau.length; u++) {
+//                        $('#'+ w + '_correspondence option[value="' + tableau[u] + '"]').prop('selected',true);
+//                    }
+//                }
+//            });
+//        } else {
+//            $("#newTableLabel").find("select").each(function() {
+//            
+//                for(var i = 1; i <= correspondances.length; i++ ) {
+//                    var test = correspondances[i] + '';
+//                    var tableau = test.split(",");
+//                    if(i < numberId ) {
+//                        for(var u = 0; u < tableau.length; u++ ) {
+//                            $('#'+ i + '_correspondence option[value="' + tableau[u] + '"]').prop('selected', true);
+//                        }
+//                    } else {
+//                        for(var u = 0; u < tableau.length; u++ ) {
+//                            if(tableau[u] !== numberId ) {
+//                                var valeur = tableau[u];
+//                                valeur = valeur -1;
+//                                $('#'+ i + '_correspondence option[value="' + valeur + '"]').prop('selected', true);
+//                            }
+//                        }
+//                    }
+//
+//                }
+//            });
+//        }
 
         e.preventDefault();
         return false;
     });
 }
 
-function tableCreationLabel(container, table, button, deletechoice, LabelValue, ScoreRight, nbResponses, codeContainer, supp, correspondence){
+function tableCreationLabel(container, table, button, deletechoice, LabelValue, ScoreRight, nbResponses, codeContainer, supp, correspondence) {
     if (nbResponses == 0) {
         // Creation of the table
         table.append('<table id="newTableLabel" class="table table-striped table-bordered table-condensed"><thead><tr style="background-color: lightsteelblue;"><th class="classic">'+LabelValue+'</th><th class="classic">'+ScoreRight+'</th><th class="classic">'+correspondence+'</th><th class="classic">'+supp+'</th></tr></thead><tbody><tr></tr></tbody></table>');
@@ -452,7 +516,7 @@ function tableCreationLabel(container, table, button, deletechoice, LabelValue, 
     }
 }
 
-function tableCreationProposal(container, table, button, deletechoice, ProposalValue, nbResponses, codeContainer, supp, correspondence){
+function tableCreationProposal(container, table, button, deletechoice, ProposalValue, nbResponses, codeContainer, supp, correspondence) {
     if (nbResponses == 0) {
         // Creation of the table
         table.append('<table id="newTableProposal" class="table table-striped table-bordered table-condensed"><thead><tr style="background-color: lightsteelblue;"><th class="classic">'+correspondence+'</th><th class="classic">'+ProposalValue+'</th><th class="classic">'+supp+'</th></tr></thead><tbody><tr><td></td></tr></tbody></table>');
@@ -475,7 +539,7 @@ function tableCreationProposal(container, table, button, deletechoice, ProposalV
 }
 
 function addRemoveRowTableProposal () {
-
+    
     var rowInd;
 
     $("*[id$='_correspondence']").each( function() {
@@ -498,6 +562,7 @@ function addRemoveRowTableProposal () {
 }
 
 function removeRowTableLabel() {
+    
     var ind = 1;
     $("*[id$='_correspondence']").each( function() {
          $(this).attr("id", ind + "_correspondence");
@@ -508,7 +573,6 @@ function removeRowTableLabel() {
 
 function addCorrespondence() {
 
-    // Add correspondence
     $('#newTableLabel').find('tr:last').append('<td class="classic"></td>');
     $('#newTableLabel').find('td:last').append('<select id="' + $('#newTableLabel').find('tr:not(:first)').length + '_correspondence" \n\
                                                 name="' + $('#newTableLabel').find('tr:not(:first)').length + '_correspondence[]" \n\
@@ -521,5 +585,32 @@ function addCorrespondence() {
             value: rowInd,
             text: rowInd
         }));
+    });
+}
+
+function getCorrespondances() {
+    $("#newTableLabel").find("select").each(function() {
+        var numberId = $(this).attr("id");
+        numberId = numberId.replace("_correspondence", "");
+        var selected = $(this).val();
+        correspondances[numberId] = selected;
+    });
+}
+
+function replaceCorrespondances() {
+    $("#newTableLabel").find("select").each(function() {
+        var numberId = $(this).attr("id");
+        numberId = numberId.replace("_correspondence", "");
+        var i = 1;
+        
+        for(i = 1; i< correspondances.length;i++) {
+            if (i == numberId) {
+                var value = correspondances[i] + '';
+                var tableau = value.split(",");
+                for(var u = 0; u < tableau.length; u++) {
+                    $('#'+ i + '_correspondence option[value="' + tableau[u] + '"]').prop('selected',true);
+                }
+            }
+        }
     });
 }

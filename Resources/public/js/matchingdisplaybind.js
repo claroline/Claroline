@@ -64,6 +64,12 @@ $(function() {
         });
     });
 
+    $("#droppable_26").click(function() {
+            $(".origin").each(function() {
+                checkIn($(this));
+            });
+        });
+
     //for check in connections
     var formBalise = $("body").find("form");
     var idFormBalise = formBalise.attr("id");
@@ -100,15 +106,17 @@ function placeProposal(idLabel, idProposal) {
 function checkIn(divProposal) {
     var idProposal = divProposal.attr("id");
     var proposal = idProposal.replace('draggable_', '');
-    responses[proposal] = 'NULL';
     var connections = jsPlumb.getConnections({source:idProposal});
-    responses[proposal] = proposals = [];
-    for(i = 0; i < connections.length; i++) {
-        var idLabel = connections[i].targetId;
-        var label = idLabel.replace('droppable_', '');
-        responses[proposal][i] = label;
+    if(connections[0]) {
+        responses[proposal] = 'NULL';
+        responses[proposal] = proposals = [];
+        for(i = 0; i < connections.length; i++) {
+            var idLabel = connections[i].targetId;
+            var label = idLabel.replace('droppable_', '');
+            responses[proposal][i] = label;
+        }
+        dragStop();
     }
-    dragStop();
 }
 
 function dragStop() {
