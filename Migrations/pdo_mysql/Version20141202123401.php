@@ -35,6 +35,16 @@ class Version20141202123401 extends AbstractMigration
             REFERENCES ujm_label (id) 
             ON DELETE CASCADE
         ");
+        
+        $this->addSql("
+            INSERT INTO iujm_proposal_label (
+                proposal_id, label_id
+            ) 
+            SELECT id, 
+            label_id, 
+            FROM ujm_proposal WHERE label_id IS NOT NULL
+        ");
+        
         $this->addSql("
             ALTER TABLE ujm_proposal 
             DROP FOREIGN KEY FK_2672B44B33B92F39
