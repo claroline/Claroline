@@ -1,10 +1,10 @@
-{% extends 'IcapWebsiteBundle::layout.html.twig' %}
+{% extends 'IcapWebsiteBundle::view_layout.html.twig' %}
 {% import 'IcapWebsiteBundle:Website:Macros/common_macros.html.twig' as commonMacros %}
 
 {% set options = _resource.options %}
 
 {% block content %}
-    <div class="website-container" ng-controller="designViewController">
+    <div class="website-container" ng-controller="MainController">
         <div class="loading text-center" ng-if="!pageLoaded" >
             {{ 'loading'|trans({},'icap_website') }}
         </div>
@@ -22,7 +22,7 @@
                 <nav ng-if="false">
                     {{commonMacros.buildMenu(_resource.pages[0], _resource.id)}}
                 </nav>
-                <flexnav menu="menu" nav-style="options" options="flexnavOptions" breakpoint="breakPoint"></flexnav>
+                <ui-flexnav menu="menu" nav-style="options" options="flexnavOptions"></ui-flexnav>
             {% endif %}
             <div class="website-content" ng-style="{height: contentHeight+'px'}">
                 {% if options.menuOrientation == 'vertical' %}
@@ -87,25 +87,81 @@
 {% endblock %}
 
 {% block javascripts %}
-    {{ parent() }}
-    <script type="text/javascript">
-        window.menuNgPlugin = "{{ options.menuOrientation=='horizontal'?'ui.flexnav':'wxy.pushmenu' }}";
-        window.websiteId = {{ _resource.id }};
-        window.websitePath = "{{ path('icap_website_view',{'websiteId': _resource.id}) }}";
-        window.websiteOptions = {{ _resource.options|serialize('json', serialization_context().setSerializeNull(true))|raw }};
-        window.pages = {{ _resource.pages|serialize('json', serialization_context().setSerializeNull(true))|raw }};
-    </script>
     {{ commonMacros.angularScripts() }}
-    <script type="text/javascript" src="{{ asset('bundles/icapwebsite/js/services/utilitiesFactory.js') }}"></script>
+
+    <script type="text/javascript">
+        (function() {
+            'use strict';
+
+            window.menuNgPlugin = "{{ options.menuOrientation=='horizontal'?'ui.flexnav':'wxy.pushmenu' }}";
+            var websiteData = {
+                'id': {{ _resource.id }},
+                'options': {{ _resource.options|serialize('json', serialization_context().setSerializeNull(true))|raw }},
+                'path': "{{ path('icap_website_view',{'websiteId': _resource.id}) }}",
+                'pages': {{ _resource.pages|serialize('json', serialization_context().setSerializeNull(true))|raw }}
+            };
+
+            angular
+                    .module('website.constants', [])
+                    .constant('website.data', websiteData);
+        })();
+    </script>
+
+    {#
+        Import utilities module
+    #}
+    {% javascripts debug=false output='js/website/app/components/utilities.js'
+    '@IcapWebsiteBundle/Resources/public/js/components/utilities/utilities.module.js'
+    '@IcapWebsiteBundle/Resources/public/js/components/utilities/utilities.service.js'
+    '@IcapWebsiteBundle/Resources/public/js/components/utilities/iframeHeightOnLoad.directive.js'
+    %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
     {% if options.menuOrientation == 'horizontal' %}
-        <script type="text/javascript" src="{{ asset('bundles/icapwebsite/js/vendor/angular-ui/ui-flexnav/flexnav.js') }}"></script>
+        {#
+            Import flexnav module
+        #}
+        {% javascripts debug=false filter='jsmin' output='js/website/components/flexnav.js'
+        '@IcapWebsiteBundle/Resources/public/js/components/flexnav/flexnav.module.js'
+        '@IcapWebsiteBundle/Resources/public/js/components/flexnav/flexnav-options.service.js'
+        '@IcapWebsiteBundle/Resources/public/js/components/flexnav/flexnav-utils.service.js'
+        '@IcapWebsiteBundle/Resources/public/js/components/flexnav/flexnav.directive.js'
+        '@IcapWebsiteBundle/Resources/public/js/components/flexnav/flexnav-submenu.directive.js'
+        '@IcapWebsiteBundle/Resources/public/js/components/flexnav/templates/main_menu.tpl.js'
+        '@IcapWebsiteBundle/Resources/public/js/components/flexnav/templates/sub_menu.tpl.js'
+        %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+        {% endjavascripts %}
     {% else %}
         <script type="text/javascript" src="{{ asset('bundles/icapwebsite/js/vendor/angular-ui/multi-level-push-menu/pushmenu.js') }}"></script>
     {% endif %}
-    <script type="text/javascript" src="{{ asset('bundles/icapwebsite/js/viewWebApp.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/icapwebsite/js/controllers/resizeController.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/icapwebsite/js/controllers/designViewController.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/icapwebsite/js/directives/resizeDirective.js') }}"></script>
+
+    {#
+        Import resizer component
+    #}
+    {% javascripts debug=false filter='jsmin' output='js/website/app/components/resizer.js'
+    '@IcapWebsiteBundle/Resources/public/js/components/resizer/resizer.module.js'
+    '@IcapWebsiteBundle/Resources/public/js/components/resizer/resizer.directive.js'
+    '@IcapWebsiteBundle/Resources/public/js/components/resizer/resizerBottom.directive.js'
+    '@IcapWebsiteBundle/Resources/public/js/components/resizer/resizerRight.directive.js'
+    '@IcapWebsiteBundle/Resources/public/js/components/resizer/changeHeight.directive.js'
+    %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
+    {#
+        Import app module
+    #}
+    {% javascripts debug=false filter='jsmin' output='js/website/app/app.view.js'
+    '@IcapWebsiteBundle/Resources/public/js/view-app/app.js'
+    '@IcapWebsiteBundle/Resources/public/js/view-app/app.config.js'
+    '@IcapWebsiteBundle/Resources/public/js/app.bootstrap.js'
+    %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
+    <script type="text/javascript" src="{{ asset('bundles/icapwebsite/js/view-app/main.controller.js') }}"></script>
 
     {% if options.analyticsProvider=="google" and options.analyticsId is not empty %}
         <script>

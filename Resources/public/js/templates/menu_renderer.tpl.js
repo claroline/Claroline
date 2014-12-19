@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('websiteApp').run([
+angular.module('app').run([
     '$templateCache',
     function($templateCache) {
         $templateCache.put('menu_renderer.tpl',

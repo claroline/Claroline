@@ -39,6 +39,7 @@ class WebsiteController extends Controller{
         $viewArray = array(
             '_resource' => $website,
             'workspace' => $website->getResourceNode()->getWorkspace(),
+            'isAdmin' => $isAdmin,
             'user' => $user,
             'pageTypes' => array(
                 'blank' => WebsitePageTypeEnum::BLANK_PAGE,
@@ -56,12 +57,12 @@ class WebsiteController extends Controller{
         } else {
             $pages = $pageManager->getPageTree($website, $isAdmin, true);
             $website->setPages($pages);
-            $currentPage = null;
-            if(!empty($pages) && !empty($pages[0]['children'])){
+            $currentPage = $website->getHomePage();
+            if($currentPage == null && !empty($pages) && !empty($pages[0]['children'])){
                 $currentPage = $pages[0]['children'][0];
-            }
-            if (isset($currentPage) && $currentPage !== null) {
-                $currentPage = $pageManager->getPages($website, $currentPage['id'], $isAdmin, false)[0];
+                if (isset($currentPage) && $currentPage !== null) {
+                    $currentPage = $pageManager->getPages($website, $currentPage['id'], $isAdmin, false)[0];
+                }
             }
 
             $viewArray['currentPage'] = $currentPage;

@@ -34,6 +34,13 @@ class Website extends AbstractResource{
     protected $pages;
 
     /**
+     * @ORM\OneToOne(targetEntity="Icap\WebsiteBundle\Entity\WebsitePage", mappedBy="website", cascade={"all"})
+     * @ORM\JoinColumn(name="homepage_id", referencedColumnName="id")
+     */
+    protected $homePage;
+
+
+    /**
      * @return mixed
      */
     public function getOptions()
@@ -81,6 +88,22 @@ class Website extends AbstractResource{
     public function setRoot($root)
     {
         $this->root = $root;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getHomePage()
+    {
+        return $this->homePage;
+    }
+
+    /**
+     * @param mixed $homePage
+     */
+    public function setHomePage($homePage)
+    {
+        $this->homePage = $homePage;
     }
 
     /**

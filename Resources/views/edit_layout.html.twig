@@ -1,0 +1,21 @@
+{% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
+
+{% block layout %}
+    <div class="loading text-center" data-ng-if="!pageLoaded" >
+        {{ 'loading'|trans({},'icap_website') }}
+    </div>
+    {{ parent() }}
+{% endblock %}
+
+{% block content_container %}
+    <div class="content-container">
+        <div class="row">
+            <div class="col-md-12">
+                {% block breadcrumb %}{{ parent() }}{% endblock %}
+            </div>
+        </div>
+        {% block content %}{% endblock %}
+        <div id="push"></div>
+    </div>
+{% endblock %}
+{% block leftbar %}{% endblock %}

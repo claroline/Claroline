@@ -17,6 +17,7 @@
     font-size: 100%;
     position: relative;
     white-space: nowrap;
+    font-size: 12px;
   }
   .flexnav li a {
     position: relative;
@@ -51,7 +52,7 @@
     top: 0;
     right: 0;
     width: 2.2em;
-    height: 100%;
+    height: 2.2em;
     display: inline-block;
     background: rgba(0, 0, 0, 0.075);
     text-align: center; }
@@ -62,7 +63,7 @@
       top: 0.3em;
       font-size: 1.3em;
     }
-
+.submenu-visual-container {position: relative; display: block;}
 .menu-button {
   position: relative;
   display: block;
@@ -111,9 +112,6 @@
       left: 0; }
       .flexnav li > ul li {
         width: 100%; }
-    .flexnav li ul li > ul {
-      margin-left: 100%;
-      top: 0; }
     .flexnav > li:last-child ul li > ul {
         margin-left: -2.2em;
         top: 2.2em; }

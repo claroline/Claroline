@@ -107,7 +107,7 @@ class WebsitePageController extends Controller{
                 $pageManager = $this->getWebsitePageManager();
                 $parentPage = $pageManager->getPages($website, $parentPageId, true, false)[0];
                 $newPage = $pageManager->createEmptyPage($website, $parentPage);
-                $newPageJson = $pageManager->processForm($newPage, $request->request->all(), "POST");
+                $newPageJson = $pageManager->processForm($website, $newPage, $request->request->all(), "POST");
                 $response->setData($newPageJson);
             } catch(\Exception $exception) {
                 $response->setStatusCode(Response::HTTP_INTERNAL_SERVER_ERROR);
@@ -137,8 +137,38 @@ class WebsitePageController extends Controller{
                 $this->checkAccess("ADMINISTRATE", $website);
                 $pageManager = $this->getWebsitePageManager();
                 $page = $pageManager->getPages($website, $pageId, true, false)[0];
-                $pageJson = $pageManager->processForm($page, $request->request->all(), "PUT");
+                $pageJson = $pageManager->processForm($website, $page, $request->request->all(), "PUT");
                 $response->setData($pageJson);
+            } catch(\Exception $exception) {
+                $response->setStatusCode(Response::HTTP_INTERNAL_SERVER_ERROR);
+            }
+        } else {
+            $response->setStatusCode(Response::HTTP_NETWORK_AUTHENTICATION_REQUIRED);
+        }
+
+        return $response;
+    }
+
+    /**
+     * @Route(
+     *      "/page/{pageId}/setHomepage",
+     *      requirements={"pageId" = "\d+"},
+     *      name="icap_website_page_set_homepage"
+     * )
+     * @ParamConverter("website", class="IcapWebsiteBundle:Website", options={"id" = "websiteId"})
+     * @Method({"PUT"})
+     */
+    public function setHomepageAction(Website $website, $pageId)
+    {
+        $response = new JsonResponse();
+        $user = $this->getLoggedUser();
+        if ($user !== null) {
+            try{
+                $this->checkAccess("ADMINISTRATE", $website);
+                $pageManager = $this->getWebsitePageManager();
+                $page = $pageManager->getPages($website, $pageId, true, false)[0];
+                $pageManager->changeHomepage($website, $page);
+                $response->setStatusCode(Response::HTTP_OK);
             } catch(\Exception $exception) {
                 $response->setStatusCode(Response::HTTP_INTERNAL_SERVER_ERROR);
             }

@@ -72,7 +72,7 @@ class WebsitePageManager {
 
     /**
      * @param Website $website
-     * @param $pageId
+     * @param $pageIds
      * @param $isAdmin
      * @param $isAPI
      *
@@ -91,7 +91,6 @@ class WebsitePageManager {
     /**
      * @param Website $website
      * @param $isAdmin
-     * @param $isArray
      * @param $isMenu
      *
      * @return mixed
@@ -101,7 +100,7 @@ class WebsitePageManager {
         return $this->pageRepository->buildPageTree($website, $isAdmin, $isMenu);
     }
 
-    public function processForm(WebsitePage $page, array $parameters, $method = "PUT")
+    public function processForm(Website $website, WebsitePage $page, array $parameters, $method = "PUT")
     {
         $form = $this->formFactory->create(new WebsitePageType(), $page, array('method' => $method));
         $form->submit($parameters, 'PATCH' !== $method);
@@ -112,8 +111,12 @@ class WebsitePageManager {
              * Test if richText is set, set resourceNode and url to null
              * Test if resourceNode is set, set url to null
             */
-            $this->entityManager->persist($page);
-            $this->entityManager->flush();
+            if ($method == "POST" && $website->getHomePage() === null) {
+                $this->setHomepage($website, $page);
+            } else {
+                $this->entityManager->persist($page);
+                $this->entityManager->flush();
+            }
             $serializationContext = new SerializationContext();
             $serializationContext->setSerializeNull(true);
 
@@ -125,6 +128,25 @@ class WebsitePageManager {
         }
 
         throw new \InvalidArgumentException();
+    }
+
+    public function changeHomepage(Website $website, WebsitePage $page) {
+        $oldHomepage = $website->getHomePage();
+
+        if ($oldHomepage !== null) {
+            $oldHomepage->setIsHomepage(false);
+            $this->entityManager->persist($oldHomepage);
+        }
+        $this->setHomepage($website, $page);
+    }
+
+    public function setHomepage(Website $website, WebsitePage $page) {
+        $website->setHomePage($page);
+        $page->setIsHomepage(true);
+
+        $this->entityManager->persist($page);
+        $this->entityManager->persist($website);
+        $this->entityManager->flush();
     }
 
     public function handleMovePage(Website $website, array $pageIds)
@@ -161,6 +183,7 @@ class WebsitePageManager {
 
     /**
      * @param Website $website
+     * @param WebsitePage $parentPage
      *
      * @return \Icap\WebsiteBundle\Entity\WebsitePage
      */

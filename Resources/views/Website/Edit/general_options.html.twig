@@ -1,49 +1,38 @@
-<div class="general-options" ng-show="optionsWindow=='general'">
-    <div class="float-left">
-        <div>
-            <label for="bg-color">{{ 'bg_color'|trans({},'icap_website') }}</label>
-            <input class="color form-control" id="bg-color" ng-model="options.bgColor"/>
-        </div>
+<div class="general-options small-inputs row" data-ng-show="optionWindow=='general'">
+    <div class="col-md-3">
         <div>
             <label for="total-width">{{ 'site_width'|trans({},'icap_website') }}</label>
             <div>
-                <button class="btn btn-default" ng-class="{'active':options.isFullScreen}" ng-click="options.toggleFullScreen()"><i class="fa fa-arrows-alt"></i></button>
-                {{ 'full_scr'|trans({},'icap_website') }}
-            </div>
-            <div style="margin-top: 5px;">
-                {{ 'or'|trans({}, 'icap_website') }} <input type="number" class="form-control" min="800" max="1200" id="total-width" ng-model="options.totalWidth" ng-disabled="options.isFullScreen">px
+                <input id="full-screen-set-option" type="radio" data-ng-model="vm.options.isFullScreen" data-ng-value="true"> <label for="full-screen-set-option" class="normal-text">{{ 'full_scr'|trans({},'icap_website') }}</label>
+                <input id="full-screen-unset-option" type="radio" data-ng-model="vm.options.isFullScreen" data-ng-value="false"> <label for="full-screen-unset-option" class="normal-text">{{ 'fix_scr'|trans({}, 'icap_website') }}</label>
+                <input type="number" class="form-control" min="800" max="1200" id="total-width" data-ng-model="vm.options.totalWidth" data-ng-disabled="vm.options.isFullScreen">px
             </div>
         </div>
-    </div>
-    {% include 'IcapWebsiteBundle:Website:Edit/bg_image_repeat.html.twig' with {'tag':null} %}
-    <div class="float-left">
         <div>
-            <div class="input-group">
-                <span class="input-group-btn">
-                    <button class="btn btn-default btn-sm" ng-click="options.toggleCopyrightEnabled()" ng-class="{'active':options.copyrightEnabled}">© Copyright</button>
-                </span>
-                <input type="text" class="form-control" id='copyright-text' ng-disabled="!options.copyrightEnabled" ng-model="options.copyrightText" placeholder="{{ 'now'|date('Y') }} - John Doe">
-            </div>
+            <label for="bg-color">{{ 'bg_color'|trans({},'icap_website') }}</label><br/>
+            <input class="color form-control" id="bg-color" data-ng-model="vm.options.bgColor"/>
         </div>
         <div>
             <div>{{ 'enable_analytics'|trans({}, 'icap_website') }}</div>
             <div>
                 <div class="input-group">
                     <span class="input-group-btn">
-                        <select id="analytics-provider" class="form-control" ng-model="options.analyticsProvider">
+                        <select id="analytics-provider" class="form-control" data-ng-model="vm.options.analyticsProvider">
                             <option value="none">{{ 'none'|trans({}, 'icap_website') }}</option>
                             <option value="google">Google</option>
                             <option value="xiti">XiTi</option>
                         </select>
                     </span>
-                    <input id="analytics-id" ng-model="options.analyticsAccountId" placeholder="id" class="form-control" ng-disabled="options.analyticsProvider=='none'||options.analyticsProvider==null">
+                    <input id="analytics-id" data-ng-model="vm.options.analyticsAccountId" placeholder="id" class="form-control" data-ng-disabled="vm.options.analyticsProvider=='none'||vm.options.analyticsProvider==null">
                 </div>
             </div>
         </div>
     </div>
-    <div class="float-left">
-        <label for="css-code">{{ 'css_code'|trans({}, 'icap_website') }}</label><br/>
-        <textarea id="css-code" ng-model="options.cssCode" style="font-size: 10px; height: 95px; width: 340px;" class="form-control"></textarea>
+    {% include 'IcapWebsiteBundle:Website:Edit/bg_image_repeat.html.twig' with {'tag':null} %}
+    <div class="col-md-5">
+        <div>
+            <label for="css-code">{{ 'css_code'|trans({}, 'icap_website') }}</label><br/>
+            <textarea id="css-code" data-ng-model="vm.options.cssCode" style="font-size: 10px; height: 95px; width: 100%;" class="form-control"></textarea>
+        </div>
     </div>
-    <div class="clearfix"></div>
 </div>

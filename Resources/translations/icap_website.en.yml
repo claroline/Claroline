@@ -1,10 +1,13 @@
 icap_website_type_name: Name
+save_all_options: Save all options
 'bg_color': Background color
 'site_width': Website's width
 'full_scr': Full screen
+'fix_scr': Fix
 'bg_image': Background image
-'upload_image': upload an image
-'or_paste_url': or paste the image's URL
+'upload_image': Upload
+'paste_url': URL
+'no_image': None
 'apply': Apply
 'reset': Reset
 'bg_repeat': Background repeat
@@ -31,28 +34,32 @@ icap_website_type_name: Name
 'enable_analytics': Activate analytics (using external tools)
 'css_code': Apply css rules to website's content
 'analytics_info': Example: 'UA-XXXXX-Y' for Google Analytics or 'xxxxxxx' for XiTi.
-'rich_content': Rich content
-'horizontally': Horizontally
-'vertically': Vertically
+'rich_content': Add rich content :
+'rich_content_explain': Add rich content by making visible the editor inside the object
+'horizontally': Horiz.
+'vertically': Verti.
 'both': Both
 'activate': Enable
 'disable': Disable
 'save_options': Save options
-'editor_enable': Enable rich text editor
-'editor_disable': Disable rich text editor
+'editor_enable': Show editor
+'editor_disable': Hide editor
 'add_new_page': Add new page
 'title': Title
 'description': Description
-'visible': Visible
-'section': Section
+'visible': Make this page visible on the site
+'section': This is a section page
+'section_info': Has a different style on menu
 'type': Type
 'content': Content
 'resource': Resource
 'save': Save
+'save_page': Save and create page
+'save_changes': Save changes
 'url': URL
-'blank_page': Blank page
-'url_page': External URL
-'resource_page': Platform resource
+'blank_page': Rich text page
+'url_page': External URL page
+'resource_page': Platfrom resource page
 'confirm': Confirm
 'cancel': Cancel
 'confirm_delete_message': Are you sure you want to permanently delete '{{ menu.currentPageNode.title }}' and all it's children?
@@ -66,3 +73,17 @@ icap_website_type_name: Name
 'success': Success
 'success_message': Your request was processed successfully
 'loading': loading...
+'title_limit_message': Less than 70 characters, as this is the limit Google displays in search results.
+'description_limit_message': Maximum 160 characters. Capitalize the first letter of an important word or the whole word.
+'chars': characters
+'edit_page': Edit page properties
+'create_page': Create a new page
+'create_sub_page': Create a sub page
+'page_list': Page list
+empty_site_message: Your website is currently empty. You need to create some pages. The first page to create will be set as homepage. You can change this option anytime by clicking 'Set as homepage' inside the edit panel of the currently selected page.
+'set_as_homepage': Set as homepage
+'menu_orientation': Menu orientation
+'change_bg_image_attention_text': Attention! If you change this option the current option (image) will be deleted.
+
+
+

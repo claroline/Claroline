@@ -25,16 +25,22 @@ class WebsitePageRepository extends NestedTreeRepository{
     {
         $queryBuilder = $this->createQueryBuilder('page');
         if (!$isMenu) {
-            $queryBuilder->select("
+            $queryBuilder->leftJoin('page.resourceNode', 'resource')
+                ->leftJoin('resource.workspace', 'resourceWorkspace')
+                ->select("
                 page.id,
                 page.title,
                 page.visible,
                 page.isSection,
+                page.isHomepage,
+                page.description,
                 page.left,
                 page.level,
                 page.right,
                 IDENTITY(page.parent) AS parent,
-                IDENTITY(page.resourceNode) AS resourceNode,
+                resource.id AS resourceNode,
+                resource.name AS resourceNodeName,
+                resourceWorkspace.name AS resourceNodeWorkspace,
                 page.resourceNodeType,
                 page.url,
                 page.richText,

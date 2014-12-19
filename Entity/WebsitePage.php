@@ -144,6 +144,12 @@ class WebsitePage{
     protected $parent;
 
     /**
+     * @ORM\Column(type="boolean", nullable=true)
+     * @JMS\Type("boolean")
+     */
+    protected $isHomepage = false;
+
+    /**
      * @return mixed
      */
     public function getId()
@@ -426,5 +432,22 @@ class WebsitePage{
     public function setResourceNodeType($resourceNodeType)
     {
         $this->resourceNodeType = $resourceNodeType;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIsHomepage()
+    {
+        if($this->isHomepage === null) return false;
+        else return $this->isHomepage;
+    }
+
+    /**
+     * @param mixed $isHomepage
+     */
+    public function setIsHomepage($isHomepage)
+    {
+        $this->isHomepage = $isHomepage;
     }
 }
