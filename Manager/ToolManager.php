@@ -15,6 +15,7 @@ use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
+use Claroline\CoreBundle\Entity\Tool\PwsToolConfig;
 use Claroline\CoreBundle\Entity\Tool\AdminTool;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Repository\OrderedToolRepository;
@@ -76,15 +77,16 @@ class ToolManager
         ToolRightsManager $toolRightsManager
     )
     {
-        $this->orderedToolRepo = $om->getRepository('ClarolineCoreBundle:Tool\OrderedTool');
-        $this->toolRepo = $om->getRepository('ClarolineCoreBundle:Tool\Tool');
-        $this->roleRepo = $om->getRepository('ClarolineCoreBundle:Role');
-        $this->adminToolRepo = $om->getRepository('ClarolineCoreBundle:Tool\AdminTool');
-        $this->ed = $ed;
-        $this->utilities = $utilities;
-        $this->om = $om;
-        $this->roleManager = $roleManager;
-        $this->toolMaskManager = $toolMaskManager;
+        $this->orderedToolRepo   = $om->getRepository('ClarolineCoreBundle:Tool\OrderedTool');
+        $this->toolRepo          = $om->getRepository('ClarolineCoreBundle:Tool\Tool');
+        $this->roleRepo          = $om->getRepository('ClarolineCoreBundle:Role');
+        $this->adminToolRepo     = $om->getRepository('ClarolineCoreBundle:Tool\AdminTool');
+        $this->pwsToolConfigRepo = $om->getRepository('ClarolineCoreBundle:Tool\PwsToolConfig');
+        $this->ed                = $ed;
+        $this->utilities         = $utilities;
+        $this->om                = $om;
+        $this->roleManager       = $roleManager;
+        $this->toolMaskManager   = $toolMaskManager;
         $this->toolRightsManager = $toolRightsManager;
     }
 
@@ -575,8 +577,13 @@ class ToolManager
      */
     public function getOrderedToolsByWorkspaceAndRoles(Workspace $workspace, array $roles)
     {
+        if ($workspace->isPersonal()) {
+            return $this->orderedToolRepo->findPersonalDisplayableByWorkspaceAndRoles($workspace, $roles);
+        }
+
         return $this->orderedToolRepo->findByWorkspaceAndRoles($workspace, $roles);
     }
+
 
     /**
      * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
@@ -587,6 +594,10 @@ class ToolManager
     {
         // pre-load associated tools to save some requests
         $this->toolRepo->findDisplayedToolsByWorkspace($workspace);
+
+        if ($workspace->isPersonal()) {
+            return $this->orderedToolRepo->findPersonalDisplayable($workspace);
+        }
 
         return $this->orderedToolRepo->findBy(array('workspace' => $workspace), array('order' => 'ASC'));
     }
@@ -719,5 +730,128 @@ class ToolManager
         $orderedTool->setOrder($newOrder);
         $this->om->persist($orderedTool);
         $this->om->flush();
+    }
+
+    public function getPersonalWorkspaceToolConfigs()
+    {
+        return $this->pwsToolConfigRepo->findAll();
+    }
+
+    public function getAvailableWorkspaceTools()
+    {
+        return $this->toolRepo->findBy(array('isDisplayableInWorkspace' => true));
+    }
+
+    public function getPersonalWorkspaceToolConfigAsArray()
+    {
+        $roles = $this->roleManager->getAllPlatformRoles();
+        $availableTools = $this->getAvailableWorkspaceTools();
+        $data = [];
+
+        foreach ($roles as $role) {
+            $data[$role->getName()] = array();
+            $perms = $this->pwsToolConfigRepo->findByRole($role);
+
+            if ($perms === array() || $perms === null) {
+                foreach($availableTools as $availableTool) {
+                    $data[$role->getName()][$availableTool->getId()] = array(
+                        'toolId' => $availableTool->getId(),
+                        'name'   => $availableTool->getName(),
+                        'mask'   => 0,
+                        'id'     => 0
+                    );
+                }
+            } else {
+                $tools = [];
+                foreach ($perms as $perm) {
+                    $tools[$perm->getTool()->getId()] = array(
+                        'toolId' => $perm->getTool()->getId(),
+                        'name'   => $perm->getTool()->getName(),
+                        'mask'   => $perm->getMask(),
+                        'id'     => $perm->getId()
+                    );
+                }
+
+                //then we'll have to add the missing roles
+                //[ ADD MISSING ROLES HERE]
+                foreach ($availableTools as $availableTool) {
+                    $found = false;
+
+                    foreach ($tools as $tool) {
+                        if ($tool['name'] === $availableTool->getName()) {
+                            $found = true;
+                        }
+                    }
+
+                    if (!$found) {
+                        $tools[$availableTool->getId()] = array(
+                            'toolId' => $availableTool->getId(),
+                            'name'   => $availableTool->getName(),
+                            'mask'   => 0,
+                            'id'     => null
+                        );
+                    }
+                }
+
+                $data[$role->getName()] = $tools;
+            }
+        }
+
+        //order the array so we can use it easily.
+        return $data;
+    }
+
+    public function getAllWorkspaceMaskDecodersAsArray()
+    {
+        $availableTools = $this->getAvailableWorkspaceTools();
+        $data = [];
+
+        foreach ($availableTools as $availableTool) {
+            $decoders = $this->toolMaskManager
+                ->getMaskDecodersByTool($availableTool);
+            $decByName = [];
+
+            foreach ($decoders as $decoder) {
+                $decByName[$decoder->getName()] = $decoder;
+            }
+
+            $data[$availableTool->getId()] = $decByName;
+        }
+
+        return $data;
+    }
+
+    public function activatePersonalWorkspaceToolPerm($value, Tool $tool, Role $role)
+    {
+        $value = (integer) $value;
+        $config = $this->getPersonalWorkspaceToolConfig($tool, $role);
+        $config->setMask($config->getMask() | $value);
+        $this->om->persist($config);
+        $this->om->flush();
+    }
+
+    public function removePersonaLWorkspaceToolPerm($value, Tool $tool, Role $role)
+    {
+        $value = (integer) $value;
+        $config = $this->getPersonalWorkspaceToolConfig($tool, $role);
+        $config->setMask($config->getMask() & ~$value);
+        $this->om->persist($config);
+        $this->om->flush();
+    }
+
+    public function getPersonalWorkspaceToolConfig(Tool $tool, Role $role)
+    {
+        $pwstc = $this->pwsToolConfigRepo->findBy(array('tool' => $tool, 'role' => $role));
+
+        if ($pwstc) return $pwstc[0];
+
+        $pwstc = new PwsToolConfig();
+        $pwstc->setTool($tool);
+        $pwstc->setRole($role);
+        $pwstc->setMask(0);
+        $this->om->persist($pwstc);
+        $this->om->flush();
+
+        return $pwstc;
     }
 }

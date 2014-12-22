@@ -12,6 +12,9 @@
 namespace Claroline\CoreBundle\Controller\Administration;
 
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Tool\PwsToolConfig;
+use Claroline\CoreBundle\Entity\Tool\Tool;
+use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Form\Administration\UserPropertiesType;
@@ -21,6 +24,7 @@ use Claroline\CoreBundle\Manager\MailManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CoreBundle\Manager\UserManager;
+use Claroline\CoreBundle\Manager\ToolMaskDecoderManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -28,6 +32,7 @@ use JMS\SecurityExtraBundle\Annotation as SEC;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\RouterInterface;
@@ -49,12 +54,14 @@ class UsersController extends Controller
     private $toolManager;
     private $userAdminTool;
     private $configHandler;
+    private $toolMaskDecoderManager;
 
     /**
      * @DI\InjectParams({
      *     "userManager"            = @DI\Inject("claroline.manager.user_manager"),
      *     "workspaceManager"       = @DI\Inject("claroline.manager.workspace_manager"),
      *     "roleManager"            = @DI\Inject("claroline.manager.role_manager"),
+     *     "toolMaskDecoderManager" = @DI\Inject("claroline.manager.tool_mask_decoder_manager"),
      *     "eventDispatcher"        = @DI\Inject("claroline.event.event_dispatcher"),
      *     "formFactory"            = @DI\Inject("claroline.form.factory"),
      *     "request"                = @DI\Inject("request"),
@@ -79,24 +86,26 @@ class UsersController extends Controller
         RouterInterface $router,
         SecurityContextInterface $sc,
         ToolManager $toolManager,
+        ToolMaskDecoderManager $toolMaskDecoderManager,
         AuthenticationManager $authenticationManager,
         PlatformConfigurationHandler $configHandler
     )
     {
-        $this->userManager           = $userManager;
-        $this->roleManager           = $roleManager;
-        $this->eventDispatcher       = $eventDispatcher;
-        $this->formFactory           = $formFactory;
-        $this->request               = $request;
-        $this->mailManager           = $mailManager;
-        $this->localeManager         = $localeManager;
-        $this->router                = $router;
-        $this->workspaceManager      = $workspaceManager;
-        $this->sc                    = $sc;
-        $this->toolManager           = $toolManager;
-        $this->userAdminTool         = $this->toolManager->getAdminToolByName('user_management');
-        $this->authenticationManager = $authenticationManager;
-        $this->configHandler         = $configHandler;
+        $this->userManager            = $userManager;
+        $this->roleManager            = $roleManager;
+        $this->eventDispatcher        = $eventDispatcher;
+        $this->formFactory            = $formFactory;
+        $this->request                = $request;
+        $this->mailManager            = $mailManager;
+        $this->localeManager          = $localeManager;
+        $this->router                 = $router;
+        $this->workspaceManager       = $workspaceManager;
+        $this->sc                     = $sc;
+        $this->toolManager            = $toolManager;
+        $this->userAdminTool          = $this->toolManager->getAdminToolByName('user_management');
+        $this->authenticationManager  = $authenticationManager;
+        $this->configHandler          = $configHandler;
+        $this->toolMaskDecoderManager = $toolMaskDecoderManager;
     }
 
     /**
@@ -514,6 +523,78 @@ class UsersController extends Controller
         }
 
         return array('form' => $form->createView());
+    }
+
+    /**
+     * @EXT\Route("/user/workspace/index", name="claro_admin_user_personal_workspace_index"),
+     *
+     * @EXT\Template("ClarolineCoreBundle:Administration/Users:personnalWorkspaceIndex.html.twig")
+     */
+    public function personalWorkspaceIndexAction()
+    {
+        $this->checkOpen();
+
+        return array();
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/workspace/personal/tool/config",
+     *     name="claro_admin_workspace_tool_config_index"
+     * )
+     * @EXT\Template("ClarolineCoreBundle:Administration\Users:personalWorkspaceToolConfig.html.twig")
+     *
+     * change the desktop tool name.
+     *
+     * @return Response
+     */
+    public function personalWorkspaceToolConfigIndexAction()
+    {
+        $personalWsToolConfigs = $this->toolManager->getPersonalWorkspaceToolConfigAsArray();
+        $maskDecoders = $this->toolManager->getAllWorkspaceMaskDecodersAsArray();
+        $roles = $this->roleManager->getAllPlatformRoles();
+        $tools = $this->toolManager->getAvailableWorkspaceTools();
+        //generate the personalWsRights if they don't exist yet.
+        //$this->createMissingPersonalWorkspaceToolConfig();
+
+        //var_dump($personalWsToolConfigs);
+
+        return array(
+            'personalWsToolConfigs' => $personalWsToolConfigs,
+            'roles'                 => $roles,
+            'tools'                 => $tools,
+            'maskDecoders'          => $maskDecoders
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/pws/tool/activate/{perm}/{role}/{tool}",
+     *     name="claro_admin_pws_activate_tool",
+     *     options={"expose"=true}
+     * )
+     */
+    public function activatePersonalWorkspaceToolPermAction($perm, Role $role, Tool $tool)
+    {
+        $this->checkOpen();
+        $this->toolManager->activatePersonalWorkspaceToolPerm($perm, $tool, $role);
+
+        return new JsonResponse(array(), 200);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/pws/tool/remove/{perm}/{role}/{tool}",
+     *     name="claro_admin_pws_remove_tool",
+     *     options={"expose"=true}
+     * )
+     */
+    public function removePersonalWorkspaceToolPermAction($perm, Role $role, Tool $tool)
+    {
+        $this->checkOpen();
+        $this->toolManager->removePersonalWorkspaceToolPerm($perm, $tool, $role);
+
+        return new JsonResponse(array(), 200);
     }
 
     private function checkOpen()

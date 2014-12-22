@@ -21,6 +21,7 @@ use Claroline\CoreBundle\Library\Security\PlatformRoles;
 use Claroline\CoreBundle\Entity\Resource\ResourceRights;
 use Claroline\CoreBundle\Entity\Tool\ToolRights;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Entity\Tool\PwsToolConfig;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\RoleRepository")
@@ -142,6 +143,14 @@ class Role implements RoleInterface
      */
     protected $toolRights;
 
+    /**
+     * @ORM\OneToMany(
+     *     targetEntity="Claroline\CoreBundle\Entity\Tool\PwsToolConfig",
+     *     mappedBy="role"
+     * )
+     */
+    protected $pwsToolConfig;
+
     public function __construct()
     {
         $this->users            = new ArrayCollection();
@@ -150,6 +159,7 @@ class Role implements RoleInterface
         $this->facets           = new ArrayCollection();
         $this->fieldFacetsRoles = new ArrayCollection();
         $this->toolRights       = new ArrayCollection();
+        $this->pwsToolConfig    = new ArrauCollection();
     }
 
     public function getId()
@@ -298,5 +308,15 @@ class Role implements RoleInterface
     public function getToolRights()
     {
         return $this->toolRights;
+    }
+
+    public function addPwsToolConfig(PwsToolConfig $tr)
+    {
+        $this->pwsToolConfig->add($tr);
+    }
+
+    public function getPwsToolConfig()
+    {
+        return $this->pwsToolConfig;
     }
 }

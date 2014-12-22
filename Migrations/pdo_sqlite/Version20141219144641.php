@@ -8,12 +8,30 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2014/12/15 12:02:08
+ * Generation date: 2014/12/19 02:46:42
  */
-class Version20141215120207 extends AbstractMigration
+class Version20141219144641 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
+        $this->addSql("
+            CREATE TABLE claro_personnal_workspace_tool_config (
+                id INTEGER NOT NULL, 
+                role_id INTEGER NOT NULL, 
+                tool_id INTEGER NOT NULL, 
+                mask INTEGER NOT NULL, 
+                PRIMARY KEY(id)
+            )
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_7A4A6A64D60322AC ON claro_personnal_workspace_tool_config (role_id)
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_7A4A6A648F7B22CC ON claro_personnal_workspace_tool_config (tool_id)
+        ");
+        $this->addSql("
+            CREATE UNIQUE INDEX pws_unique_tool_config ON claro_personnal_workspace_tool_config (tool_id, role_id)
+        ");
         $this->addSql("
             ALTER TABLE claro_workspace 
             ADD COLUMN maxStorageSize VARCHAR(255) NOT NULL
@@ -23,6 +41,10 @@ class Version20141215120207 extends AbstractMigration
             ADD COLUMN maxUploadResources INTEGER NOT NULL
         ");
         $this->addSql("
+            ALTER TABLE claro_workspace 
+            ADD COLUMN is_personal BOOLEAN NOT NULL
+        ");
+        $this->addSql("
             ALTER TABLE claro_directory 
             ADD COLUMN is_upload_destination BOOLEAN NOT NULL
         ");
@@ -30,6 +52,9 @@ class Version20141215120207 extends AbstractMigration
 
     public function down(Schema $schema)
     {
+        $this->addSql("
+            DROP TABLE claro_personnal_workspace_tool_config
+        ");
         $this->addSql("
             DROP INDEX UNIQ_12EEC186B87FAB32
         ");
