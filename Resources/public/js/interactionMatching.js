@@ -86,7 +86,7 @@ function creationMatchingEdit(addchoice, addproposal, deletechoice, LabelValue, 
     containerProposal.children().first().children('div').each(function() {
 
         $(this).find('.row').each(function() {
-            
+
             fillProposalArray($(this));
 
             //uncode chevrons
@@ -151,7 +151,7 @@ function creationMatchingEdit(addchoice, addproposal, deletechoice, LabelValue, 
 
         ind++;
     });
-    
+
     //for activate tinymce if there is html balise
     $('.classic').find('textarea').each(function() {
         if($(this).val().match("<p>")) {
@@ -160,14 +160,14 @@ function creationMatchingEdit(addchoice, addproposal, deletechoice, LabelValue, 
             $("#"+idProposalVal).data("data-theme","advanced");
         }
     });
-    
+
     $('#newTableLabel').find('tr').last().remove();
     containerLabel.remove();
     tableLabels.next().remove();
 }
 
 function addLabel(container, deletechoice, table, codeContainer) {
-    
+
     var contain;
     var uniqLabelId = false;
     var indexLabel = $('#newTableLabel').find('tr:not(:first)').length;
@@ -204,7 +204,8 @@ function addLabel(container, deletechoice, table, codeContainer) {
 }
 
 function addProposal(container, deletechoice, table, codeContainer) {
-    
+
+    // for getting correspondances
     getCorrespondances();
     var contain;
     var uniqProposalId = false;
@@ -239,7 +240,20 @@ function addProposal(container, deletechoice, table, codeContainer) {
 
     addRemoveRowTableProposal();
 
-    replaceCorrespondances();
+    // for replace correspondances
+    $("#newTableLabel").find("select").each(function() {
+        var numberId = $(this).attr("id");
+        numberId = numberId.replace("_correspondence", "");
+        for(var i = 1; i < correspondances.length; i++) {
+            if (i == numberId) {
+                var value = correspondances[i] + '';
+                var tableau = value.split(",");
+                for(var u = 0; u < tableau.length; u++) {
+                    $('#'+ i + '_correspondence option[value="' + tableau[u] + '"]').prop('selected',true);
+                }
+            }
+        }
+    });
 }
 
 //check if the form is valid
@@ -248,9 +262,9 @@ function check_form(nbrProposals, nbrLabels) {
     var proposalSelected = [];
     var singleProposal = true;
     var score = true;
-    
+
     var typeMatching = $('#ujm_exobundle_interactionmatchingtype_typeMatching option:selected').val();
-    
+
     if (($('#newTableProposal').find('tr:not(:first)').length) < 1) {
 
         alert(nbrProposals);
@@ -262,7 +276,7 @@ function check_form(nbrProposals, nbrLabels) {
         alert(nbrLabels);
         return false;
     }
-    
+
     //for encoding the chevrons
     $('.classic').find('textarea:visible').each(function() {
         $(this).val($(this).val().replace("<", "&lt;"));
@@ -277,7 +291,7 @@ function check_form(nbrProposals, nbrLabels) {
             score = false;
         }
     });
-    
+
     if(score == false ) {
 
         return false
@@ -304,7 +318,7 @@ function check_form(nbrProposals, nbrLabels) {
             }
         }
     });
-    
+
     if (singleProposal == false) {
 
         return false;
@@ -327,7 +341,7 @@ function fillLabelArray(row) {
 
         advLabelVal(idLabelVal);
     }
-    
+
     // Add the field of type input
     if (row.find('input').length) {
         $('#newTableLabel').find('tr:last').append('<td class="classic"></td>');
@@ -344,7 +358,7 @@ function fillLabelArray(row) {
 function advLabelVal(idLabelVal) {
     $("#adve_"+idLabelVal).click(function(e) {
         if ($("#"+idLabelVal).hasClass("claroline-tiny-mce hide")) {
-            
+
 //            $("#"+idLabelVal).removeClass("claroline-tiny-mce");
 //            $("#"+idLabelVal).removeClass("hide");
 //            $("#"+idLabelVal).removeAttr('style');
@@ -353,14 +367,14 @@ function advLabelVal(idLabelVal) {
 //            $("#"+idLabelVal).parent('td').find('a').text(advEditionLang);
 
         } else {
-            
+
             $("#"+idLabelVal).addClass("claroline-tiny-mce hide");
             $("#"+idLabelVal).data("data-theme","advanced");
 //            $("#"+idLabelVal).parent('td').children('div').removeClass("hide");
 //            $("#"+idLabelVal).parent('td').find('a').text(remAdvEditionLang);
 
         }
-        
+
         // If the navavigator is chrome
         var userNavigator = navigator.userAgent;
         var positionText = userNavigator.indexOf("Chrome");
@@ -385,27 +399,27 @@ function fillProposalArray(row) {
         $('#newTableProposal').find('td:last').append('<span><a href="#" id="adve_'+idProposalVal+'">'+advEditionLang+'</a></span>');
         advProposalVal(idProposalVal);
     }
-    
+
 }
 
 function advProposalVal(idProposalVal) {
     $("#adve_"+idProposalVal).click(function(e) {
         if ($("#"+idProposalVal).hasClass("claroline-tiny-mce hide")) {
-            
+
 //            $("#"+idProposalVal).removeClass("claroline-tiny-mce");
 //            $("#"+idProposalVal).removeClass("hide");
 //            $("#"+idProposalVal).removeAttr('style');
 //            $("#"+idProposalVal).removeData("data-theme");
 //            $("#"+idProposalVal).parent('td').children('div').addClass("hide");
 //            $("#"+idProposalVal).parent('td').find('a').text(advEditionLang);
-            
+
         } else {
-            
+
             $("#"+idProposalVal).addClass("claroline-tiny-mce hide");
             $("#"+idProposalVal).data("data-theme","advanced");
 //            $("#"+idProposalVal).parent('td').children('div').removeClass("hide");
 //            $("#"+idProposalVal).parent('td').find('a').text(remAdvEditionLang);
-            
+
         }
 
         e.preventDefault();
@@ -427,67 +441,55 @@ function adddelete(tr, deletechoice, codeContainer) {
 
     // When click, delete the row in the table
     delLink.click(function(e) {
-//        getCorrespondances();
+        // for getting correspondances
+        getCorrespondances();
+        // for update correspondances
         var numberId;
         if(codeContainer == 0) {
             numberId = $(this).parent('td').parent('tr').find("select").attr("id");
             numberId = numberId.replace("_correspondence", "");
-            $("#newTableLabel").find("select").each(function() {
-                var i = 1;
-                for(i = 1; i < correspondances.length; i++ ) {
-                    if(i == numberId) {
-                        correspondances[numberId] = 0;
-                    }
+            for(var i = 1; i < correspondances.length; i++ ) {
+                if(numberId == i) {
+                    correspondances[i] = 0;
                 }
-            });
+                if(i > numberId) {
+                    var w = i - 1;
+                    correspondances[w] = correspondances[i];
+                }
+            }
         } else {
             numberId = $(this).parent('td').parent('tr').find("span").text();
             numberId = numberId.replace("Edition avancée", "");
+            for(var i = 1; i < correspondances.length; i++ ) {
+                var value = correspondances[i] + '';
+                var tableau = value.split(",");
+                for(var u = 0; u < tableau.length; u++ ) {
+                    if(tableau[u] == numberId) {
+                        tableau[u] = 0;
+                    }
+                    if(tableau[u] > numberId) {
+                        tableau[u] = tableau[u] -1;
+                    }
+                }
+                correspondances[i] = tableau;
+            }
         }
-        
+
         $(this).parent('td').parent('tr').remove();
 
         addRemoveRowTableProposal();
         removeRowTableLabel();
-        
-//        if(codeContainer == 0) {
-//            $("#newTableLabel").find("select").each(function() {
-//            
-//                for(var i = 1; i < correspondances.length; i++ ) {
-//                    var w = i;
-//                    if (i => numberId) {
-//                        w = w +1;
-//                    }
-//                    var value = correspondances[w] + '';
-//                    var tableau = value.split(",");
-//                    for(var u = 0; u < tableau.length; u++) {
-//                        $('#'+ w + '_correspondence option[value="' + tableau[u] + '"]').prop('selected',true);
-//                    }
-//                }
-//            });
-//        } else {
-//            $("#newTableLabel").find("select").each(function() {
-//            
-//                for(var i = 1; i <= correspondances.length; i++ ) {
-//                    var test = correspondances[i] + '';
-//                    var tableau = test.split(",");
-//                    if(i < numberId ) {
-//                        for(var u = 0; u < tableau.length; u++ ) {
-//                            $('#'+ i + '_correspondence option[value="' + tableau[u] + '"]').prop('selected', true);
-//                        }
-//                    } else {
-//                        for(var u = 0; u < tableau.length; u++ ) {
-//                            if(tableau[u] !== numberId ) {
-//                                var valeur = tableau[u];
-//                                valeur = valeur -1;
-//                                $('#'+ i + '_correspondence option[value="' + valeur + '"]').prop('selected', true);
-//                            }
-//                        }
-//                    }
-//
-//                }
-//            });
-//        }
+
+        // for replace correspondances
+        $("#newTableLabel").find("select").each(function() {
+            for(var i = 1; i < correspondances.length; i++ ) {
+                var value = correspondances[i] + '';
+                var tableau = value.split(",");
+                for(var u = 0; u < tableau.length; u++) {
+                    $('#'+ i + '_correspondence option[value="' + tableau[u] + '"]').prop('selected',true);
+                }
+            }
+        });
 
         e.preventDefault();
         return false;
@@ -512,7 +514,7 @@ function tableCreationLabel(container, table, button, deletechoice, LabelValue, 
         });
     } else {
         // Add the structure of the table
-            table.append('<table id="newTableLabel" class="table table-striped table-bordered table-condensed"><thead><tr style="background-color: lightsteelblue;"><th class="classic">' + LabelValue + '</th><th class="classic">' + ScoreRight + '</th><th class="classic">' + correspondence + '</th></tr></thead><tbody><tr></tr></tbody></table>');
+        table.append('<table id="newTableLabel" class="table table-striped table-bordered table-condensed"><thead><tr style="background-color: lightsteelblue;"><th class="classic">' + LabelValue + '</th><th class="classic">' + ScoreRight + '</th><th class="classic">' + correspondence + '</th></tr></thead><tbody><tr></tr></tbody></table>');
     }
 }
 
@@ -539,7 +541,7 @@ function tableCreationProposal(container, table, button, deletechoice, ProposalV
 }
 
 function addRemoveRowTableProposal () {
-    
+
     var rowInd;
 
     $("*[id$='_correspondence']").each( function() {
@@ -562,7 +564,7 @@ function addRemoveRowTableProposal () {
 }
 
 function removeRowTableLabel() {
-    
+
     var ind = 1;
     $("*[id$='_correspondence']").each( function() {
          $(this).attr("id", ind + "_correspondence");
@@ -594,23 +596,5 @@ function getCorrespondances() {
         numberId = numberId.replace("_correspondence", "");
         var selected = $(this).val();
         correspondances[numberId] = selected;
-    });
-}
-
-function replaceCorrespondances() {
-    $("#newTableLabel").find("select").each(function() {
-        var numberId = $(this).attr("id");
-        numberId = numberId.replace("_correspondence", "");
-        var i = 1;
-        
-        for(i = 1; i< correspondances.length;i++) {
-            if (i == numberId) {
-                var value = correspondances[i] + '';
-                var tableau = value.split(",");
-                for(var u = 0; u < tableau.length; u++) {
-                    $('#'+ i + '_correspondence option[value="' + tableau[u] + '"]').prop('selected',true);
-                }
-            }
-        }
     });
 }
