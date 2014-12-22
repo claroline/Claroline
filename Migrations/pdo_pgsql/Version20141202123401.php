@@ -40,6 +40,14 @@ class Version20141202123401 extends AbstractMigration
             ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE
         ");
         $this->addSql("
+            INSERT INTO ujm_proposal_label (
+                proposal_id, label_id
+            ) 
+            SELECT id, 
+            label_id
+            FROM ujm_proposal WHERE label_id IS NOT NULL
+        ");
+        $this->addSql("
             ALTER TABLE ujm_proposal 
             DROP CONSTRAINT FK_2672B44B33B92F39
         ");
