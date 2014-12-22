@@ -154,8 +154,12 @@ class Workspace
     /**
      * @ORM\Column(name="creation_date", type="integer", nullable=true)
      */
-
     protected $creationDate;
+
+    /**
+     * @ORM\Column(name="is_personal", type="boolean")
+     */
+    protected $isPersonal = false;
 
     public function __construct()
     {
@@ -332,5 +336,15 @@ class Workspace
     public function getMaxUploadResources()
     {
         return $this->maxUploadResources;
+    }
+
+    public function setIsPersonal($boolean)
+    {
+        $this->isPersonal = true;
+    }
+
+    public function isPersonal()
+    {
+        return $this->isPersonal;
     }
 }

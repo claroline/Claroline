@@ -136,4 +136,46 @@ class OrderedToolRepository extends EntityRepository
 
         return $executeQuery ? $query->execute() : $query;
     }
+
+    public function findPersonalDisplayableByWorkspaceAndRoles(
+        Workspace $workspace,
+        array $roles
+    )
+    {
+        $dql = 'SELECT ot
+            FROM Claroline\CoreBundle\Entity\Tool\OrderedTool ot
+            JOIN ot.tool t
+            JOIN ot.right r
+            JOIN r.role rr
+            JOIN t.pwsToolConfig ptc
+            WHERE ot.workspace = :workspace
+            AND rr.name IN (:roleNames)
+            AND BIT_AND(r.mask, 1) = 1
+            AND BIT_AND(ptc.mask, 1) = 1
+            ORDER BY ot.order
+        ';
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('roleNames', $roles);
+
+        return $query->getResult();
+    }
+
+    public function findPersonalDisplayable(Workspace $workspace)
+    {
+        $dql = 'SELECT ot
+            FROM Claroline\CoreBundle\Entity\Tool\OrderedTool ot
+            JOIN ot.tool t
+            JOIN t.pwsToolConfig ptc
+            JOIN ot.workspace workspace
+            WHERE BIT_AND(ptc.mask, 1) = 1
+            AND workspace.id = :workspaceId
+            ORDER BY ot.order
+        ';
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('workspaceId', $workspace->getId());
+
+        return $query->getResult();
+    }
 }

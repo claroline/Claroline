@@ -122,9 +122,18 @@ class Tool
      */
     protected $maskDecoders;
 
+    /**
+     * @ORM\OneToMany(
+     *     targetEntity="Claroline\CoreBundle\Entity\Tool\PwsToolConfig",
+     *     mappedBy="tool"
+     * )
+     */
+    protected $pwsToolConfig;
+
     public function __construct()
     {
-        $this->maskDecoders = new ArrayCollection();
+        $this->maskDecoders  = new ArrayCollection();
+        $this->pwsToolConfig = new ArrauCollection();
     }
 
     public function getId()
@@ -304,7 +313,7 @@ class Tool
     {
         return $this->isAnonymousExcluded;
     }
-    
+
     public function addMaskDecoder(ToolMaskDecoder $maskDecoder)
     {
         $this->maskDecoders->add($maskDecoder);
@@ -313,5 +322,15 @@ class Tool
     public function getMaskDecoders()
     {
         return $this->maskDecoders;
+    }
+
+    public function addPwsToolConfig(PwsToolConfig $tr)
+    {
+        $this->pwsToolConfig->add($tr);
+    }
+
+    public function getPwsToolConfig()
+    {
+        return $this->pwsToolConfig;
     }
 }

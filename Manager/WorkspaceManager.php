@@ -38,6 +38,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Yaml\Yaml;
+use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * @DI\Service("claroline.manager.workspace_manager")
@@ -964,5 +965,19 @@ class WorkspaceManager
         }
 
         return $size;
+    }
+
+    public function replaceCode(Workspace $workspace, $code)
+    {
+        if ($workspace->getCode() !== $code) {
+            $oldStorageDir =  $this->getStorageDirectory($workspace);
+            $workspace->setCode($code);
+            $newStorageDir = $this->getStorageDirectory($workspace);
+            //move directory~
+            $fs = new FileSystem();
+            $fs->rename($oldStorageDir, $newStorageDir);
+            $this->om->persist($workspace);
+            $this->om->flush();
+        }
     }
 }
