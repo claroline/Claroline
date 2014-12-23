@@ -24,6 +24,7 @@ use Claroline\CoreBundle\Persistence\ObjectManager;
  */
 class RichTextFormatter
 {
+    //placeholder = [[uid=123]]
     const REGEX_PLACEHOLDER = '#\[\[uid=([^\]]+)\]\]#';
 
     private $data;
@@ -79,12 +80,98 @@ class RichTextFormatter
         return $text;
     }
 
+    /**
+     * For now we only look parse .txt. in the archive.
+     * It's way easier that way.
+     *
+     * @param $data
+     * @param $files
+     *
+     * @return array
+     */
+    public function setPlaceHolders(array $files)
+    {
+        $formattedFiles = [];
+
+        foreach ($files as $key => $file) {
+            $ext = pathinfo($file, PATHINFO_EXTENSION);
+            $newFile = $file;
+
+            if ($ext === 'txt') {
+                $text = $this->setPlaceHolder($file);
+                $newFile = sys_get_temp_dir() . DIRECTORY_SEPARATOR . uniqid() . 'txt';
+                file_put_contents($newFile, $text);
+            }
+
+            $formattedFile[$key] = $newFile;
+        }
+
+        return $formattedFile;
+    }
+
+    private function setPlaceHolder($file)
+    {
+        //urls to be matched...
+        //'/file/resource/media/([^']+)#'
+        //'/resource/open/([^/]+)/([^']+)'
+
+        $text = file_get_contents($file);
+        $baseUrl = $this->router->getContext()->getBaseUrl();
+
+        //first regex
+        $regex = '#' . $baseUrl . '/file/resource/media/([^\'"]+)#';
+
+        preg_match_all($regex, $text, $matches, PREG_SET_ORDER);
+
+        if (count($matches) > 0) {
+            foreach ($matches as $match) {
+                $text = $this->replaceLink($text, $match[0], $match[1]);
+                //$text = str_replace($match[0], "[[uid=$match[1]]]", $text);
+            }
+        }
+
+        //second regex
+        $regex = '#' . $baseUrl . '/resource/open/([^/]+)/([^\'"]+)#';
+
+        preg_match_all($regex, $text, $matches, PREG_SET_ORDER);
+
+        if (count($matches) > 0) {
+            foreach ($matches as $match) {
+                // I have to change the matches yolo!
+                //$text = str_replace($match[0], "[[uid=$match[2]]]", $text);
+                $text = $this->replaceLink($text, $match[0], $match[2]);
+            }
+        }
+
+        return $text;
+    }
+
+    private function replaceLink($txt, $fullMatch, $nodeId)
+    {
+        //videos <source type="video/webm" src=...media...></source>
+        //files <a href=...open...> - name - </a>
+        //imgs <img style='max-width: 100%;' src='{$url}' alt='{$node->getName()}'>
+        $matchReplaced = [];
+
+        preg_match(
+            "#(<source|<a|<img)(.*){$fullMatch}(.*)(/>|</a>|</source>)#",
+            $txt,
+            $matchReplaced
+        );
+
+        if (count($matchReplaced)  > 0) {
+            $txt = str_replace($matchReplaced[0], "[[uid={$nodeId}]]", $txt);
+        }
+
+        return $txt;
+    }
+
     public function setData(array $data)
     {
         $this->data = $data;
 
         foreach ($this->data['tools'] as $tool) {
-            if ($tool['tool']['type'] = 'resource_manager') {
+            if ($tool['tool']['type'] === 'resource_manager') {
                 $this->resourceManagerData = $tool['tool'];
             }
         }
@@ -150,10 +237,24 @@ class RichTextFormatter
      */
     private function generateDisplayedUrlForTinyMce(ResourceNode $node)
     {
-        $url = $this->router->generate('claro_file_get_media', array('node' => $node->getId()));
-        //it may change depeding on the mime type
-        $toReplace = "<img style='max-width: 100%;' src='{$url}' alt='{$node->getName()}'>";
+        if (strpos('_' . $node->getMimeType(), 'image') > 0) {
+            $url = $this->router->generate('claro_file_get_media', array('node' => $node->getId()));
+            return "<img style='max-width: 100%;' src='{$url}' alt='{$node->getName()}'>";
+        }
 
-        return $toReplace;
+        if (strpos('_' . $node->getMimeType(), 'video') > 0) {
+            $url = $this->router->generate('claro_file_get_media', array('node' => $node->getId()));
+            return "<source type='{$node->getMimeType()}' src='{$url}'></source>";
+        }
+
+        $url = $this->router->generate(
+            'claro_resource_open',
+            array(
+                'resourceType' => $node->getResourceType()->getName(),
+                'node' => $node->getId()
+            )
+        );
+
+        return "<a href='{$url}'>{$node->getName()}</a>";
     }
-} 
+}

@@ -133,7 +133,7 @@ class Tool
     public function __construct()
     {
         $this->maskDecoders  = new ArrayCollection();
-        $this->pwsToolConfig = new ArrauCollection();
+        $this->pwsToolConfig = new ArrayCollection();
     }
 
     public function getId()

@@ -259,9 +259,6 @@ class TransfertManager
 
         foreach ($data['tools'] as $tool) {
             $importer = $this->getImporterByName($tool['tool']['type']);
-            if (!$importer) {
-                throw new InvalidConfigurationException('The importer ' . $tool['tool']['type'] . ' does not exist');
-            }
 
             if (isset($tool['tool']['data']) && $importer instanceof RichTextInterface) {
                 $data['data'] = $tool['tool']['data'];
@@ -299,6 +296,9 @@ class TransfertManager
         $data['roles'] = $this->getImporterByName('roles')->export($workspace, $files, null);
         $data['tools'] = $this->getImporterByName('tools')->export($workspace, $files, null);
 
+        $files = $this->container->get('claroline.importer.rich_text_formatter')
+            ->setPlaceHolders($files);
+        //throw new \Exception();
         //generate the archive in a temp dir
         $content = Yaml::dump($data, 10);
         //zip and returns the archive

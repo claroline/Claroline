@@ -1313,7 +1313,7 @@ class WorkspaceController extends Controller
     {
         $archive = $this->container->get('claroline.manager.transfert_manager')->export($workspace);
 
-        $fileName = $workspace->getCode();
+        $fileName = $workspace->getCode() . '.zip';
         $mimeType = 'application/zip';
         $response = new StreamedResponse();
 

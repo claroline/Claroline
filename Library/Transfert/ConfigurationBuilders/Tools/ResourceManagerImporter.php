@@ -565,7 +565,7 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
             $perms = $this->maskManager->decodeMask($right->getMask(), $node->getResourceType());
 
             //we only keep workspace in the current workspace and platform roles
-            if ($right->getRole()->getWorkspace() === $node->getWorkspace() || $right->getRole()->getWorkspace() === null) {
+            if ($right->getRole()->getWorkspace() === $node->getWorkspace() /*|| $right->getRole()->getWorkspace() === null*/) {
                 //creation rights are missing here but w/e
                 $roles[] = array(
                     'role' => array(
@@ -627,4 +627,4 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
             }
         }
     }
-} 
+}

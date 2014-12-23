@@ -153,12 +153,20 @@ class ToolsImporter extends Importer implements ConfigurationInterface
             $toolEntity = $this->om->getRepository('Claroline\CoreBundle\Entity\Tool\Tool')
                 ->findOneByName($tool['tool']['type']);
 
-            try {
-                $addRoleToOtr = true;
+            //check the tool already exists in the workspace~
+            $orderedTool = $this->om->getRepository('Claroline\CoreBundle\Entity\Tool\OrderedTool')
+                ->findBy(array('tool' => $toolEntity, 'workspace' => $workspace));
+
+            $addRoleToOtr = count($orderedTool) > 0 ? false: true;
+
+            if ($addRoleToOtr) {
                 $otr = $this->toolManager
-                    ->addWorkspaceTool($toolEntity, $position, $tool['tool']['translation'], $workspace);
-            } catch (\Exception $e) {
-                $addRoleToOtr = false;
+                    ->addWorkspaceTool(
+                        $toolEntity,
+                        $position,
+                        $tool['tool']['translation'],
+                        $workspace
+                    );
             }
 
             $position++;
@@ -197,8 +205,8 @@ class ToolsImporter extends Importer implements ConfigurationInterface
 
         foreach ($workspaceTools as $workspaceTool) {
             $roles = array();
-            foreach ($workspaceTool->getRoles() as $role) {
-                $roles[] = array('name' => $this->roleManager->getWorkspaceRoleBaseName($role));
+            foreach ($workspaceTool->getRights() as $right) {
+                $roles[] = array('name' => $this->roleManager->getWorkspaceRoleBaseName($right->getRole()));
             }
 
             $tool = array(
