@@ -73,8 +73,11 @@ class RichTextFormatter
             $el = $this->findItemFromUid($uid);
             $node = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceNode')
                 ->findOneBy(array('parent' => $parent, 'name' => $el['name']));
-            $toReplace = $this->generateDisplayedUrlForTinyMce($node);
-            $text = str_replace($match[0], $toReplace, $text);
+
+            if ($node) {
+                $toReplace = $this->generateDisplayedUrlForTinyMce($node);
+                $text = str_replace($match[0], $toReplace, $text);
+            }
         }
 
         return $text;
@@ -214,8 +217,10 @@ class RichTextFormatter
 
     private function findDirectoryFromUid($uid)
     {
-        foreach ($this->resourceManagerData['data']['directories'] as $item) {
-            if ($item['directory']['uid'] === $uid) return $item['directory'];
+        if (isset($this->resourceManagerData['data']['directories'])) {
+            foreach ($this->resourceManagerData['data']['directories'] as $item) {
+                if ($item['directory']['uid'] === $uid) return $item['directory'];
+            }
         }
     }
 
