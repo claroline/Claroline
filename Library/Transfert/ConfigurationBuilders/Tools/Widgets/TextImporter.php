@@ -96,7 +96,7 @@ class TextImporter extends Importer implements ConfigurationInterface, RichTextI
     public function export(Workspace $workspace, array &$files, $object)
     {
         $txtConfig = $this->container->get('claroline.manager.simple_text_manager')->getTextConfig($object);
-        $tmpPath = sys_get_temp_dir() . DIRECTORY_SEPARATOR . uniqid();
+        $tmpPath = sys_get_temp_dir() . DIRECTORY_SEPARATOR . uniqid() . '.txt';
         file_put_contents($tmpPath, $txtConfig->getContent());
         $archPath = 'widgets/text/' . uniqid() . '.txt';
         //create file

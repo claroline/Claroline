@@ -157,6 +157,8 @@ class OrderedToolRepository extends EntityRepository
 
         $query = $this->_em->createQuery($dql);
         $query->setParameter('roleNames', $roles);
+        $query->setParameter('workspace', $workspace);
+
 
         return $query->getResult();
     }

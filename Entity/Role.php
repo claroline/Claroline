@@ -159,7 +159,7 @@ class Role implements RoleInterface
         $this->facets           = new ArrayCollection();
         $this->fieldFacetsRoles = new ArrayCollection();
         $this->toolRights       = new ArrayCollection();
-        $this->pwsToolConfig    = new ArrauCollection();
+        $this->pwsToolConfig    = new ArrayCollection();
     }
 
     public function getId()

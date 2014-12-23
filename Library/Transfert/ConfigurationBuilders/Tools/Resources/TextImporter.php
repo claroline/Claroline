@@ -35,7 +35,7 @@ class TextImporter extends Importer implements ConfigurationInterface
     public function __construct($container)
     {
         $this->container = $container;
-        $om = $this->container->get('claroline.persistence.object_manager');
+        $this->om = $this->container->get('claroline.persistence.object_manager');
     }
 
     public function getConfigTreeBuilder()
@@ -91,6 +91,7 @@ class TextImporter extends Importer implements ConfigurationInterface
 
         foreach ($array['data'] as $item) {
             $content = file_get_contents($this->getRootPath() . $ds . $item['file']['path']);
+
             return $this->container->get('claroline.manager.text_manager')->create(
                 $content,
                 'title',
@@ -108,14 +109,22 @@ class TextImporter extends Importer implements ConfigurationInterface
 
     public function export(Workspace $workspace, array &$files, $object)
     {
-        $content = $this->om->getRepository('Claroline\CoreBundle\Entity\Revision')
+        $content = $this->om->getRepository('Claroline\CoreBundle\Entity\Resource\Revision')
             ->getLastRevision($object)->getContent();
 
-        return array();
+        $uid = uniqid() . '.txt';
+        $tmpPath = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $uid;
+        file_put_contents($tmpPath, $content);
+        $files[$uid] = $tmpPath;
+        $data = array(array('file' => array(
+            'path' => $uid
+        )));
+
+        return $data;
     }
 
     public function getName()
     {
         return 'text';
     }
-} 
+}

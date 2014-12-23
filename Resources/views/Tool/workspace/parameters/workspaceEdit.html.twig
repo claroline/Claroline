@@ -46,11 +46,11 @@
                     <i class="fa fa-trash-o"></i> {{ 'workspace_delete'|trans({}, 'platform') }}
                 </a>
             {% endif %}
-            {# comment until fix functionality
-            <a href="{{ path('claro_workspace_export_form', {'workspace': workspace.getId() }) }}" class='btn btn-default' role="button">
+
+            <a href="{{ path('claro_workspace_export', {'workspace': workspace.getId() }) }}" class='btn btn-default' role="button">
                 <i class="fa fa-floppy-o"></i> {{ 'save_as_template'|trans({}, 'platform') }}
             </a>
-            #}
+
             <a class="btn btn-default" href="{{ path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': 'parameters'}) }}">
                  {{ 'cancel'|trans({}, 'platform') }}
             </a>
