@@ -621,7 +621,7 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
 
             if ($resourceImporter instanceof RichTextInterface) {
                 if (isset($item['item']['data']) && $resourceImporter) {
-                    $itemData = $item['widget']['data'];
+                    $itemData = $item['item']['data'];
                     $resourceImporter->format($itemData);
                 }
             }

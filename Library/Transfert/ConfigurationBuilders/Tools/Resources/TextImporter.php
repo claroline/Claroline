@@ -12,6 +12,7 @@
 namespace Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders\Tools\Resources;
 
 use Claroline\CoreBundle\Library\Transfert\Importer;
+use Claroline\CoreBundle\Library\Transfert\RichTextInterface;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
@@ -22,7 +23,7 @@ use Claroline\CoreBundle\Entity\Workspace\Workspace;
  * @DI\Service("claroline.tool.resources.text_importer")
  * @DI\Tag("claroline.importer")
  */
-class TextImporter extends Importer implements ConfigurationInterface
+class TextImporter extends Importer implements ConfigurationInterface, RichTextInterface
 {
     private $container;
     private $om;
@@ -126,5 +127,20 @@ class TextImporter extends Importer implements ConfigurationInterface
     public function getName()
     {
         return 'text';
+    }
+
+    public function format($data)
+    {
+        if ($path = $data[0]['file']['path']) {
+            $content = file_get_contents($this->getRootPath() . DIRECTORY_SEPARATOR . $path);
+            $entities = $this->om->getRepository('ClarolineCoreBundle:Resource\Revision')->findByContent($content);
+
+            foreach ($entities as $entity) {
+                $text = $entity->getContent();
+                $text = $this->container->get('claroline.importer.rich_text_formatter')->format($text);
+                $entity->setContent($text);
+                $this->om->persist($entity);
+            }
+        }
     }
 }
