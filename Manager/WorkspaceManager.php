@@ -397,6 +397,24 @@ class WorkspaceManager
             }
         }
 
+        //remove accessess if workspace is personal and right was not given
+
+        foreach ($workspaces as $workspace) {
+            if ($workspace->isPersonal() && $toolName) {
+                $pwc = $this->container->get('claroline.manager.tool_manager')
+                    ->getPersonalWorkspaceToolConfigs();
+                $canOpen = false;
+
+                foreach ($pwc as $conf) {
+                    if ($conf->getTool()->getName() === $toolName) {
+                        $canOpen = ($conf->getMask() & 1) ? true: false;
+                    }
+                }
+
+                $accesses[$workspace->getId()] = $canOpen;
+            }
+        }
+
         return $accesses;
     }
 
