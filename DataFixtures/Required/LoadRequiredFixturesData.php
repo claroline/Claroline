@@ -33,7 +33,7 @@ class LoadRequiredFixturesData extends AbstractFixture implements ContainerAware
     {
         $fixturesDir = __DIR__ . DIRECTORY_SEPARATOR . 'Data';
         $om = $this->container->get('claroline.persistence.object_manager');
-        $om->startFlushSuite();
+        //$om->startFlushSuite();
 
         $iterator = new \RecursiveIteratorIterator(
             new \RecursiveDirectoryIterator($fixturesDir),
@@ -63,11 +63,12 @@ class LoadRequiredFixturesData extends AbstractFixture implements ContainerAware
                     $fixture = new $className;
                     $fixture->setContainer($this->container);
                     $fixture->load($om);
+                    $om->flush();
                 }
             }
         }
 
-        $om->endFlushSuite();
+        //$om->endFlushSuite();
 
         //create the default workspace template.
         $destinationPath = $this->container->getParameter('claroline.param.templates_directory'). '/default.zip';

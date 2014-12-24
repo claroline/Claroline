@@ -14,6 +14,7 @@ namespace Claroline\CoreBundle\DataFixtures\Required\Data;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\Tool\ToolMaskDecoder;
+use Claroline\CoreBundle\Entity\Tool\PwsToolConfig;
 use Claroline\CoreBundle\DataFixtures\Required\RequiredFixture;
 
 class LoadToolsData implements RequiredFixture
@@ -49,7 +50,10 @@ class LoadToolsData implements RequiredFixture
 
             $manager->persist($entity);
             $this->createToolMaskDecoders($manager, $entity);
+            $this->createPersonalWorkspaceToolConfig($manager, $entity);
         }
+
+        $manager->flush();
     }
 
     private function createToolMaskDecoders(ObjectManager $manager, Tool $tool)
@@ -63,6 +67,16 @@ class LoadToolsData implements RequiredFixture
             $decoder->setDeniedIconClass(ToolMaskDecoder::$defaultDeniedIconClass[$action]);
             $manager->persist($decoder);
         }
+    }
+
+    private function createPersonalWorkspaceToolConfig(ObjectManager $manager, Tool $tool)
+    {
+        $roleUser = $manager->getRepository('ClarolineCoreBundle:Role')->findOneByName('ROLE_USER');
+        $pwc = new PwsToolConfig();
+        $pwc->setTool($tool);
+        $pwc->setRole($roleUser);
+        $pwc->setMask(3);
+        $manager->persist($pwc);
     }
 
     public function setContainer($container)
