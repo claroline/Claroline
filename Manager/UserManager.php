@@ -432,6 +432,7 @@ class UserManager
         //add "my public documents" folder
         $resourceManager = $this->container->get('claroline.manager.resource_manager');
         $resourceManager->addPublicFileDirectory($workspace);
+        $workspace->setIsPersonal(true);
         $user->setPersonalWorkspace($workspace);
         $this->objectManager->persist($user);
         $this->objectManager->flush();
