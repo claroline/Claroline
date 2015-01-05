@@ -93,13 +93,9 @@ class PostRepository extends EntityRepository
      */
     public function findCalendarDatas(Blog $blog, $startDate, $endDate, $executeQuery = true)
     {
-        $startDateTime = new \DateTime();
-        $startDateTime->setTimestamp($startDate);
-
+        $startDateTime    = new \DateTime($startDate);
         $currentTimestamp = time();
-
-        $endDateTime = new \DateTime();
-        $endDateTime->setTimestamp($endDate);
+        $endDateTime      = new \DateTime($endDate);
 
         if ($currentTimestamp < $endDate) {
             $endDateTime->setTimestamp($currentTimestamp);
