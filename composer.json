@@ -14,7 +14,7 @@
         "php": ">=5.4.1",
         "claroline/core-bundle":                "~4.0",
         "innova/angular-ui-translation-bundle": "2.0.0",
-        "claroline/team-bundle":                "~1.0"
+        "claroline/team-bundle":                "~2.0"
         
     },
     "autoload": {
