@@ -65,15 +65,31 @@
                                             -
                                         {% else %}
                                             {% set toolId = toolPermission['tool'].getId() %}
-                                            
+
                                             {% if maskDecoders[toolId] is defined %}
                                                 {% for decoder in maskDecoders[toolId] %}
                                                     {% set decoderName = decoder.getName() %}
                                                     {% set grantedIconClass = decoder.getGrantedIconClass() %}
                                                     {% set deniedIconClass = decoder.getDeniedIconClass() %}
-                                            
+                                                    {% set maskValue = decoder.getValue() %}
+                                                    {% set readonly = 0 %}
+
+                                                    {# we check if we can change perms in that workspace #}
+                                                    {# it's currently only available for personal workspaces #}
+
+                                                    {% set adminMask = 65535 %} {# default => we can do anything #}
+                                                    {% if workspace.isPersonal() == 1 %}
+                                                        {% set adminMask = pwsToolConfigs[toolPermission['tool'].getId()]['mask'] %}
+                                                    {% endif %}
+
                                                     {% if rights[decoderName] is defined and rights[decoderName] %}
-                                                        <i class="{{ grantedIconClass }} text-success pointer-hand granted-btn"
+                                                        <i class="
+                                                           {% if maskValue b-and adminMask %}
+                                                               {{ grantedIconClass }} text-success pointer-hand granted-btn
+                                                           {% else %}
+                                                               {{ deniedIconClass }}
+                                                           {% endif %}
+                                                           "
                                                            data-role-id="{{ key }}"
                                                            data-ordered-tool-id="{{ toolPermission['orderTool'].getId() }}"
                                                            data-icon-class="{{ grantedIconClass }}"
@@ -82,7 +98,7 @@
                                                         >
                                                         </i>
                                                     {% else %}
-                                                        <i class="{{ deniedIconClass }} text-danger pointer-hand denied-btn"
+                                                        <i class="{{ deniedIconClass }} {% if maskValue b-and adminMask %} text-danger pointer-hand denied-btn" {% endif %}
                                                            data-role-id="{{ key }}"
                                                            data-ordered-tool-id="{{ toolPermission['orderTool'].getId() }}"
                                                            data-icon-class="{{ deniedIconClass }}"
@@ -127,6 +143,18 @@
                     </span>
                 </div>
                 <br>
+                <div>
+                    <span class="col-md-5">
+                        <i class="fa fa-eye-slash"></i>
+                        :
+                        {{ 'tool_admin_disabled'|trans({}, 'platform') }}
+                    </span>
+                    <span>
+                        <i class="fa fa-edit"></i>
+                        :
+                        {{ 'tool_admin_disabled'|trans({}, 'platform') }}
+                    </span>
+                </div>
                 <br>
                 <a class="btn btn-default"
                      href="{{ path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': 'parameters'}) }}"

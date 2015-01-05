@@ -29,6 +29,7 @@ use Claroline\CoreBundle\Manager\ToolMaskDecoderManager;
 use Claroline\CoreBundle\Manager\ToolRightsManager;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * @DI\Service("claroline.manager.tool_manager")
@@ -56,6 +57,8 @@ class ToolManager
     /** @var ToolRightsManager */
     private $toolRightsManager;
 
+    private $container;
+
     /**
      * Constructor.
      *
@@ -65,7 +68,8 @@ class ToolManager
      *     "om"                = @DI\Inject("claroline.persistence.object_manager"),
      *     "roleManager"       = @DI\Inject("claroline.manager.role_manager"),
      *     "toolMaskManager"   = @DI\Inject("claroline.manager.tool_mask_decoder_manager"),
-     *     "toolRightsManager" = @DI\Inject("claroline.manager.tool_rights_manager")
+     *     "toolRightsManager" = @DI\Inject("claroline.manager.tool_rights_manager"),
+     *     "container"         = @DI\Inject("service_container")
      * })
      */
     public function __construct(
@@ -74,7 +78,8 @@ class ToolManager
         ObjectManager $om,
         RoleManager $roleManager,
         ToolMaskDecoderManager $toolMaskManager,
-        ToolRightsManager $toolRightsManager
+        ToolRightsManager $toolRightsManager,
+        ContainerInterface $container
     )
     {
         $this->orderedToolRepo   = $om->getRepository('ClarolineCoreBundle:Tool\OrderedTool');
@@ -88,6 +93,7 @@ class ToolManager
         $this->roleManager       = $roleManager;
         $this->toolMaskManager   = $toolMaskManager;
         $this->toolRightsManager = $toolRightsManager;
+        $this->container         = $container;
     }
 
     public function create(Tool $tool)
@@ -262,7 +268,7 @@ class ToolManager
                     'position' => $orderedTool->getOrder(),
                     'workspace' => $workspace,
                     'displayedName' => $orderedTool->getName(),
-                    'orderTool' => $orderedTool
+                    'orderTool' => $orderedTool,
                 );
             }
         }
@@ -749,12 +755,12 @@ class ToolManager
         $data = [];
 
         foreach ($roles as $role) {
-            $data[$role->getName()] = array();
+            $data[$role->getId()] = array();
             $perms = $this->pwsToolConfigRepo->findByRole($role);
 
             if ($perms === array() || $perms === null) {
                 foreach($availableTools as $availableTool) {
-                    $data[$role->getName()][$availableTool->getId()] = array(
+                    $data[$role->getId()][$availableTool->getId()] = array(
                         'toolId' => $availableTool->getId(),
                         'name'   => $availableTool->getName(),
                         'mask'   => 0,
@@ -793,12 +799,28 @@ class ToolManager
                     }
                 }
 
-                $data[$role->getName()] = $tools;
+                $data[$role->getId()] = $tools;
             }
         }
 
         //order the array so we can use it easily.
         return $data;
+    }
+
+    public function getPersonalWorkspaceToolConfigForCurrentUser()
+    {
+        $token = $this->container->get('security.context')->getToken();
+        $user = $token->getUser();
+
+        //maybe from the utils thing
+        $roles = $token->getRoles();
+        $roleNames = [];
+
+        foreach ($roles as $role) {
+            $roleNames[] = $role->getRole();
+        }
+
+        return $this->pwsToolConfigRepo->findByRoles($roleNames);
     }
 
     public function getAllWorkspaceMaskDecodersAsArray()

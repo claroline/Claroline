@@ -16,7 +16,7 @@ use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\PwsToolConfigRepository")
  * @ORM\Table(
  *     name="claro_personnal_workspace_tool_config",
  *     uniqueConstraints={
