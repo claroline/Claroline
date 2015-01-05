@@ -1114,3 +1114,6 @@ my_public_documents: Mes documents public
 new_folder_in_current_ws: Nouveau répertoire dans l'espace d'activité courant
 others: Autres
 destination: Destination
+personal_workspace_tools_management: Gestion des outils de l'espace personnel
+personal_workspace_management: Gestion de l'espace personnel
+tool_admin_disabled: L'administrateur de la plateforme a désactivé l'outil

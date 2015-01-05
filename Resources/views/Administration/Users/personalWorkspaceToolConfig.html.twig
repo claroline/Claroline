@@ -48,39 +48,41 @@
                         <th> {{ tool.getName|trans({}, 'tools')}} </th>
                         {% for role in roles %}
                             <th>
-                                {% set toolId = tool.getId() %}
-                                {% set maskVal =  personalWsToolConfigs[role.getName()][toolId]['mask'] %}
-                                {% if maskDecoders[toolId] is defined %}
-                                    {% for decoder in maskDecoders[toolId] %}
-                                        {% set decoderName = decoder.getName() %}
-                                        {% set grantedIconClass = decoder.getGrantedIconClass() %}
-                                        {% set deniedIconClass = decoder.getDeniedIconClass() %}
-                                        {% if (maskVal b-and maskDecoders[toolId][decoderName].getValue()) %}
-                                            <i class="{{ grantedIconClass }} text-success pointer-hand granted-btn"
-                                               data-role-id="{{ role.getId() }}"
-                                               data-pws-config-id="{{ personalWsToolConfigs[role.getName()][toolId]['id'] }}"
-                                               data-icon-class="{{ grantedIconClass }}"
-                                               data-inverse-icon-class="{{ deniedIconClass }}"
-                                               data-decoder-name="{{ decoderName }}"
-                                               data-value="{{ decoder.getValue() }}"
-                                               data-tool-id="{{ toolId }}"
-                                            >
-                                            </i>
-                                        {% else %}
-                                            <i class="{{ deniedIconClass }} text-danger pointer-hand denied-btn"
-                                               data-role-id="{{ role.getId() }}"
-                                               data-pws-config-id="{{ personalWsToolConfigs[role.getName()][toolId]['id'] }}"
-                                               data-icon-class="{{ deniedIconClass }}"
-                                               data-inverse-icon-class="{{ grantedIconClass }}"
-                                               data-decoder-name="{{ decoderName }}"
-                                               data-value="{{ decoder.getValue() }}"
-                                               data-tool-id="{{ toolId }}"
-                                            >
-                                            </i>
-                                        {% endif %}
-                                    {% endfor %}
-                                {% else %}
-                                    -
+                                {% if tool.getName() == 'parameters' %} - {% else %}
+                                    {% set toolId = tool.getId() %}
+                                    {% set maskVal =  personalWsToolConfigs[role.getId()][toolId]['mask'] %}
+                                    {% if maskDecoders[toolId] is defined %}
+                                        {% for decoder in maskDecoders[toolId] %}
+                                            {% set decoderName = decoder.getName() %}
+                                            {% set grantedIconClass = decoder.getGrantedIconClass() %}
+                                            {% set deniedIconClass = decoder.getDeniedIconClass() %}
+                                            {% if (maskVal b-and maskDecoders[toolId][decoderName].getValue()) %}
+                                                <i class="{{ grantedIconClass }} text-success pointer-hand granted-btn"
+                                                   data-role-id="{{ role.getId() }}"
+                                                   data-pws-config-id="{{ personalWsToolConfigs[role.getId()][toolId]['id'] }}"
+                                                   data-icon-class="{{ grantedIconClass }}"
+                                                   data-inverse-icon-class="{{ deniedIconClass }}"
+                                                   data-decoder-name="{{ decoderName }}"
+                                                   data-value="{{ decoder.getValue() }}"
+                                                   data-tool-id="{{ toolId }}"
+                                                >
+                                                </i>
+                                            {% else %}
+                                                <i class="{{ deniedIconClass }} text-danger pointer-hand denied-btn"
+                                                   data-role-id="{{ role.getId() }}"
+                                                   data-pws-config-id="{{ personalWsToolConfigs[role.getId()][toolId]['id'] }}"
+                                                   data-icon-class="{{ deniedIconClass }}"
+                                                   data-inverse-icon-class="{{ grantedIconClass }}"
+                                                   data-decoder-name="{{ decoderName }}"
+                                                   data-value="{{ decoder.getValue() }}"
+                                                   data-tool-id="{{ toolId }}"
+                                                >
+                                                </i>
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% else %}
+                                        -
+                                    {% endif %}
                                 {% endif %}
                             </th>
                         {% endfor %}

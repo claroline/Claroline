@@ -88,12 +88,14 @@ class WorkspaceToolsParametersController extends AbstractParametersController
     {
         $this->checkAccess($workspace);
         $toolsDatas = $this->toolManager->getWorkspaceToolsConfigurationArray($workspace);
+        $pwsToolConfigs = $this->toolManager->getPersonalWorkspaceToolConfigForCurrentUser();
 
         return array(
             'roles' => $this->roleManager->getWorkspaceConfigurableRoles($workspace),
             'workspace' => $workspace,
             'toolPermissions' => $toolsDatas['existingTools'],
-            'maskDecoders' => $toolsDatas['maskDecoders']
+            'maskDecoders' => $toolsDatas['maskDecoders'],
+            'pwsToolConfigs' => $pwsToolConfigs
         );
     }
 

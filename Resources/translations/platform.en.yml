@@ -1103,3 +1103,6 @@ my_public_documents: My public documents
 new_folder_in_current_ws: New directory in the current workspace
 others: Others
 destination: Destination
+personal_workspace_tools_management: Personal workspace tools management
+personal_workspace_management: Personal workspace management
+tool_admin_disabled: This tool was deactivated by the administrator
