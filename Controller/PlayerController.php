@@ -94,7 +94,11 @@ class PlayerController extends ContainerAware
                 $lastPath = $referer;
             }
 
-            $previous = $router->getMatcher()->match($lastPath);
+            $previous = null;
+            try {
+                $previous = $router->getMatcher()->match($lastPath);
+            } catch (\Exception $e) {} // Do nothing on error, we don't want a NotFound exception if URL doesn't match
+
             $context->setMethod($currentMethod);
 
             if ($previous['_route'] != $request->get('_route')) {
