@@ -13,7 +13,7 @@
     ],
     "require": {
         "php": ">=5.3.0",
-        "claroline/core-bundle": ">=3.0.0,<4.0",
+        "claroline/core-bundle": "~4.0",
         "icap/html-diff": "1.0.1"
     },
     "autoload": {
