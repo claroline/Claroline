@@ -21,7 +21,8 @@
         "claroline/scorm-bundle": "~2.0",
         "claroline/survey-bundle": "~2.0",
         "claroline/team-bundle": "~2.0",
-        "ujm/exo-bundle": ">=1.4.5,<2.0"
+        "ujm/exo-bundle": ">=1.4.5,<2.0",
+        "icap/blog-bundle": "~2.0"
     },
     "require-dev": {
         "mockery/mockery": "dev-master@dev",
