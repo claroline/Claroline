@@ -6,7 +6,7 @@ appTranslation
     .factory('translationService', function(){
         return {
             trans: function(key) {
-                return Translator.get('icap_portfolio' + ':' + key);
+                return Translator.trans(key, {}, 'icap_portfolio');
             }
         };
     })
