@@ -1,6 +1,6 @@
 <?php
 
-namespace Icap\LessonBundle\listener;
+namespace Icap\LessonBundle\Listener;
 
 use Claroline\CoreBundle\Event\PluginOptionsEvent;
 use Claroline\CoreBundle\Event\CreateFormResourceEvent;
