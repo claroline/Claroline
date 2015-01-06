@@ -78,7 +78,7 @@ class PlayerController extends ContainerAware
         $request = $this->container->get('request');
         $router = $this->container->get('router');
 
-        $showSummary = true;
+        $showSummary = false;
 
         $referer = $request->headers->get('referer');
         if (!empty($referer)) {
@@ -101,8 +101,8 @@ class PlayerController extends ContainerAware
 
             $context->setMethod($currentMethod);
 
-            if ($previous['_route'] != $request->get('_route')) {
-                $showSummary = false;
+            if (!empty($previous) && $previous['_route'] != $request->get('_route')) {
+                $showSummary = true;
             }
         }
 
