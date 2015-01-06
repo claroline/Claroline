@@ -27,8 +27,8 @@
                 var statusCode = rejection.status;
                 if(statusCode!=511 && statusCode!=401 && statusCode!=417) statusCode = 500;
                 $alert({
-                    title: Translator.get('icap_website:error'),
-                    content: Translator.get('icap_website:error_'+statusCode),
+                    title: Translator.trans('error', {}, 'icap_website'),
+                    content: Translator.trans('error_' + statusCode, {}, 'icap_website'),
                     placement: 'top',
                     type: 'danger',
                     duration: 5,
@@ -39,8 +39,8 @@
             function requestSuccessHandler(response) {
                 if(response.config.url.indexOf('.tpl')==-1){
                     $alert({
-                        title: Translator.get('icap_website:success'),
-                        content: Translator.get('icap_website:success_message'),
+                        title: Translator.trans('success', {}, 'icap_website'),
+                        content: Translator.trans('success_message', {}, 'icap_website'),
                         placement: 'top',
                         type: 'success',
                         duration: 3,
