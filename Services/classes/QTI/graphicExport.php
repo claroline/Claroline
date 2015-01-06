@@ -52,6 +52,8 @@ class graphicExport extends qtiExport
 
         $this->document->save($this->qtiRepos->getUserDir().'testfile.xml');
 
+        $this->getPicture();
+
         return $this->getResponse();
     }
 
@@ -158,6 +160,21 @@ class graphicExport extends qtiExport
         $prompttxt = $this->document->CreateTextNode($this->interactiongraph->getInteraction()->getInvite());
         $prompt->appendChild($prompttxt);
         $this->selectPointInteraction->appendChild($prompt);
+    }
+
+    /**
+     * add the picture in the archive
+     *
+     * @access private
+     *
+     */
+    private function getPicture()
+    {
+        $picture = $this->interactiongraph->getDocument();
+        $src = $picture->getUrl();
+        $dest = $this->qtiRepos->getUserDir().$picture->getLabel().$picture->getType();
+        copy($src, $dest);
+
     }
 
 }

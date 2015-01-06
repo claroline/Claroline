@@ -143,10 +143,12 @@ abstract class qtiExport
      *
      * @access protected
      *
+     * @param array of String $docLinked attached files
+     * 
      * @return BinaryFileResponse QTI zip
      *
      */
-    protected function getResponse()
+    protected function getResponse($docLinked = array())
     {
         //sfConfig::set('sf_web_debug', false);
         $tmpFileName = tempnam($this->qtiRepos->getUserDir().'tmp', "xb_");

@@ -78,6 +78,16 @@ class QtiController extends Controller {
                                         $qtiImport->import($qtiRepos, $document_xml);
                                         $imported = true;
                                         break;
+                                    case 'selectPointInteraction':
+                                        $qtiImport = $this->container->get('ujm.qti_graphic_import');
+                                        $qtiImport->import($qtiRepos, $document_xml);
+                                        $imported = true;
+                                        break;
+                                    case 'hotspotInteraction':
+                                        $qtiImport = $this->container->get('ujm.qti_graphic_import');
+                                        $qtiImport->import($qtiRepos, $document_xml);
+                                        $imported = true;
+                                        break;
                                 }
                             }
                         }

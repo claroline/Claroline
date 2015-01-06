@@ -41,6 +41,10 @@ services:
     ujm.qti_graphic_export:
         class: UJM\ExoBundle\Services\classes\QTI\graphicExport
         arguments: [@doctrine, @security.context, @service_container]
+        
+    ujm.qti_graphic_import:
+        class: UJM\ExoBundle\Services\classes\QTI\graphicImport
+        arguments: [@doctrine, @security.context, @service_container]
 
     ujm.qti_hole_export:
         class: UJM\ExoBundle\Services\classes\QTI\holeExport
