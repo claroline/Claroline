@@ -2,16 +2,14 @@
     "name": "icap/dropzone-bundle",
     "type": "claroline-plugin",
     "require": {
+        "php": ">=5.4.1",
         "ext-intl": "*",
-        "claroline/core-bundle": "~3.0"
+        "claroline/core-bundle": "~4.0"
     },
     "autoload": {
         "psr-0": { "Icap\\DropzoneBundle": "" }
     },
     "target-dir": "Icap/DropzoneBundle",
-    "extra": {
-        "dbVersion": "20130906115738"
-    },
     "require-dev": {
         "phpunit/phpunit": "4.1.*"
     }
