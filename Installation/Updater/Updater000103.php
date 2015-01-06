@@ -31,6 +31,17 @@ class Updater000103
             $this->entityManager->persist($widgetType);
             $this->entityManager->flush();
         }
+
+        /** @var \Icap\PortfolioBundle\Entity\Widget\AbstractWidget[] $abstractWidgets */
+        $abstractWidgets = $this->entityManager->getRepository("IcapPortfolioBundle:Widget\\AbstractWidget")->findOneBy(array('widget_type' => 'presentation'));
+
+        foreach ($abstractWidgets as $abstractWidget) {
+            $abstractWidget->setWidgetType('text');
+
+            $this->entityManager->persist($abstractWidget);
+        }
+
+        $this->entityManager->flush();
     }
 
 }

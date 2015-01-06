@@ -193,6 +193,18 @@ abstract class AbstractWidget
     }
 
     /**
+     * @param string $widgetType
+     *
+     * @return AbstractWidget
+     */
+    public function setWidgetType($widgetType)
+    {
+        $this->widgetType = $widgetType;
+
+        return $this;
+    }
+
+    /**
      * @return array
      */
     public function getChildren()
