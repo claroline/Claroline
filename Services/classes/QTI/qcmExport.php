@@ -44,8 +44,6 @@ class qcmExport extends qtiExport
             $cardinality = 'single';
         }
 
-        $this->resourcesLinked();
-
         $this->qtiHead($choiceType, $this->question->getTitle());
         $this->qtiResponseDeclaration('RESPONSE','identifier', $cardinality);
         $this->qtiOutComeDeclaration();
@@ -91,33 +89,6 @@ class qcmExport extends qtiExport
            }
 
            $this->simpleChoiceTag($ch, $i);
-
-        }
-    }
-
-    private function resourcesLinked()
-    {
-        // Search for the ID of the ressource from the Invite colonne
-        $txt  = $this->interactionqcm->getInteraction()->getInvite();
-
-        $this->path_img="";
-
-        $dom2 = new \DOMDocument();
-        $dom2->loadHTML(html_entity_decode($txt));
-        $listeimgs = $dom2->getElementsByTagName("img");
-        foreach($listeimgs as $img)
-        {
-          if ($img->hasAttribute("src")) {
-             $src= $img->getAttribute("src");
-             $id_node= substr($src, 47);
-             $resources_file = $this->doctrine
-                           ->getManager()
-                           ->getRepository('ClarolineCoreBundle:Resource\File')->findBy(array('resourceNode' => $id_node));
-             $this->resources_node = $this->doctrine
-                           ->getManager()
-                           ->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->find($id_node);
-             $this->path_img = $this->container->getParameter('claroline.param.files_directory').'/'.$resources_file[0]->getHashName();
-          }
 
         }
     }
@@ -203,15 +174,6 @@ class qcmExport extends qtiExport
 
         //Code pour eliminer du code html sauf la balise img
         $res1 =strip_tags($this->interactionqcm->getInteraction()->getInvite(), '<img>');
-        if(!empty($this->path_img)){
-            //expression regulière pour eliminer tous les attributs des balises
-            $reg="#(?<=\<img)\s*[^>]*(?=>)#";
-            $res1=preg_replace($reg,"",$res1);
-            //rajouter src de l'image
-            $res1= str_replace("<img>", "<img src=\"".$this->resources_node->getName()."\" alt=\"\" />",$res1);
-            //generate the mannifest file
-            $this->generate_imsmanifest_File($this->resources_node->getName());
-        }
 
         $prompttxt =  $this->document->CreateTextNode(html_entity_decode($res1));
         $prompt->appendChild($prompttxt);

@@ -28,7 +28,7 @@ abstract class qtiExport
     protected $modalFeedback;
     protected $itemBody;
     protected $question;
-    protected $path_img;
+    protected $resourcesLinked = array();
 
     /**
      * Constructor
@@ -148,18 +148,18 @@ abstract class qtiExport
      * @return BinaryFileResponse QTI zip
      *
      */
-    protected function getResponse($docLinked = array())
+    protected function getResponse()
     {
         //sfConfig::set('sf_web_debug', false);
         $tmpFileName = tempnam($this->qtiRepos->getUserDir().'tmp', "xb_");
         $zip = new \ZipArchive();
         $zip->open($tmpFileName, \ZipArchive::CREATE);
         $zip->addFile($this->qtiRepos->getUserDir().'testfile.xml', 'SchemaQTI.xml');
-
-        if(!empty($this->path_img)){
-             $zip->addFile($this->path_img, "files/".$this->resources_node->getName());
-             $zip->addFile($this->qtiRepos->getUserDir().'imsmanifest.xml', 'imsmanifest.xml');
+        
+        foreach ($this->resourcesLinked as $file) {
+            $zip->addFile($file['url'], $file['name']);
         }
+
         $zip->close();
         $response = new BinaryFileResponse($tmpFileName);
         //$response->headers->set('Content-Type', $content->getContentType());
@@ -170,57 +170,6 @@ abstract class qtiExport
         $response->headers->set('Expires', '0'); // Proxies.
 
         return $response;
-    }
-
-    protected function generate_imsmanifest_File($namefile)
-    {
-
-        $document = new \DOMDocument();
-        $document->preserveWhiteSpace = false;
-        $document->formatOutput = true;
-        // on crée l'élément principal <Node>
-        $node = $document->CreateElement('manifest');
-        $node->setAttribute("xmlns", "http://www.imsglobal.org/xsd/imscp_v1p1");
-        $node->setAttribute("xmlns:imsmd", "http://www.imsglobal.org/xsd/imsmd_v1p2");
-        $node->setAttribute("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
-        $node->setAttribute("xmlns:imsqti", "http://www.imsglobal.org/xsd/imsqti_metadata_v2p1");
-        $node->setAttribute("xsi:schemaLocation", "http://www.imsglobal.org/xsd/imscp_v1p1 imscp_v1p1.xsd http://www.imsglobal.org/xsd/imsmd_v1p2 imsmd_v1p2p4.xsd http://www.imsglobal.org/xsd/imsqti_metadata_v2p1  http://www.imsglobal.org/xsd/qti/qtiv2p1/imsqti_metadata_v2p1.xsd");
-
-        $document->appendChild($node);
-        // Add the tag <responseDeclaration> to <node>
-        $metadata = $document->CreateElement('metadata');
-        $node->appendChild($metadata);
-
-        $schema = $document->CreateElement('schema');
-        $schematxt = $document->CreateTextNode('IMS Content');
-        $schema->appendChild($schematxt);
-        $metadata->appendChild($schema);
-
-
-        $schemaversion=$document->CreateElement('schemaversion');
-        $schemaversiontxt = $document->CreateTextNode('1.1');
-        $schemaversion->appendChild($schemaversiontxt);
-        $metadata->appendChild($schemaversion);
-
-        $resources = $document->CreateElement('resources');
-        $node->appendChild($resources);
-
-        $resource = $document->CreateElement('resource');
-        $resource->setAttribute("type","imsqti_item_xmlv2p1");
-        //the name of the file must be variable ....
-        $resource->setAttribute("href","SchemaQTI.xml");
-        $resources->appendChild($resource);
-
-        $file = $document->CreateElement('file');
-        $file->setAttribute("href","SchemaQTI.xml");
-        $resource->appendChild($file);
-
-        $file2 = $document->CreateElement('file');
-        //the name of the image must be variable ....
-        $file2->setAttribute("href","files/".$namefile);
-        $resource->appendChild($file2);
-
-        $document->save($this->qtiRepos->getUserDir().'imsmanifest.xml');
     }
 
     /**

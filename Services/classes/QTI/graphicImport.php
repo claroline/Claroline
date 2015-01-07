@@ -46,15 +46,15 @@ class graphicImport extends qtiImport {
     protected function getPrompt()
     {
         $text = '';
-        $ib = $this->assessmentItem->getElementsByTagName("itemBody")->item(0);
-        if ($ib->getElementsByTagName("prompt")->item(0)) {
-            $prompt = $ib->getElementsByTagName("prompt")->item(0);
-            $text = $this->domElementToString($prompt);
-            $text = str_replace('<prompt>', '', $text);
-            $text = str_replace('</prompt>', '', $text);
-            $text = html_entity_decode($text);
-            $ib->removeChild($ib->getElementsByTagName("prompt")->item(0));
-        }
+//        $ib = $this->assessmentItem->getElementsByTagName("itemBody")->item(0);
+//        if ($ib->getElementsByTagName("prompt")->item(0)) {
+//            $prompt = $ib->getElementsByTagName("prompt")->item(0);
+//            $text = $this->domElementToString($prompt);
+//            $text = str_replace('<prompt>', '', $text);
+//            $text = str_replace('</prompt>', '', $text);
+//            $text = html_entity_decode($text);
+//            $ib->removeChild($ib->getElementsByTagName("prompt")->item(0));
+//        }
 
         return $text;
     }

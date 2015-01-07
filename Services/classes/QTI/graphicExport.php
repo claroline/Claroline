@@ -138,7 +138,7 @@ class graphicExport extends qtiExport
         $object->setAttribute("type", "image/". $this->interactiongraph->getDocument()->getType());
         $object->setAttribute("width", $this->interactiongraph->getWidth());
         $object->setAttribute("height", $this->interactiongraph->getHeight());
-        $object->setAttribute("data", $this->interactiongraph->getDocument()->getUrl());
+        $object->setAttribute("data", $this->interactiongraph->getDocument()->getLabel().$this->interactiongraph->getDocument()->getType());
         $objecttxt = $this->document->CreateTextNode($this->interactiongraph->getDocument()->getLabel());
         $object->appendChild($objecttxt);
         $this->selectPointInteraction->appendChild($object);
@@ -172,8 +172,11 @@ class graphicExport extends qtiExport
     {
         $picture = $this->interactiongraph->getDocument();
         $src = $picture->getUrl();
-        $dest = $this->qtiRepos->getUserDir().$picture->getLabel().$picture->getType();
+        $pictureName = $picture->getLabel().$picture->getType();
+        $dest = $this->qtiRepos->getUserDir().$pictureName;
         copy($src, $dest);
+        $ressource = array ('name' => $pictureName, 'url' => $dest);
+        $this->resourcesLinked[] = $ressource;
 
     }
 
