@@ -49,20 +49,7 @@
     function initialize() {
         $('input.resource-picker:not(.resource-picker-done)').each(function () {
             var pickerName = 'formResourcePicker';
-            var customParameters = null;
-
-            // todo: this could/should be expanded to other picker parameters
-            if ($(this).data('blacklist')) {
-                pickerName = $(this).attr('name') + '-picker';
-                customParameters = {
-                    typeBlackList: $(this).data('blacklist').split(',')
-                };
-            }
-
-            if ($(this).data('restrict-for-owner')) {
-                customParameters = customParameters || {};
-                customParameters['restrictForOwner'] = $(this).data('restrict-for-owner');
-            }
+            var customParameters = processCustomParameters($(this).data());
 
             var element = createInput(this.parentNode, pickerName, customParameters);
             var name = $(this).data('name');
@@ -79,6 +66,39 @@
             checkView($('.input-group', element));
         });
     };
+
+    function processCustomParameters(datas) {
+        var customParameters = {};
+        console.log(customParameters.length);
+
+        var simpleParameterList = [
+            'restrictForOwner',
+            'isPickerMultiSelectAllowed',
+            'isDirectorySelectionAllowed'
+        ];
+        var arrayParameterList = [
+            'typeBlackList',
+            'typeWhiteList'
+        ];
+
+        for (var i = 0; i < simpleParameterList.length; i++) {
+            var simpleParameterName = simpleParameterList[i];
+            if (undefined !== datas[simpleParameterName]) {
+                customParameters = customParameters || {};
+                customParameters[simpleParameterName] = datas[simpleParameterName];
+            }
+        }
+
+        for (var i = 0; i < arrayParameterList.length; i++) {
+            var arrayParameterName = arrayParameterList[i];
+            if (undefined !== datas[arrayParameterName]) {
+                customParameters = customParameters || {};
+                customParameters[arrayParameterName] = datas[arrayParameterName].split(',');
+            }
+        }
+
+        return customParameters;
+    }
 
     /**
      * Creates a resource input as child of a dom element
