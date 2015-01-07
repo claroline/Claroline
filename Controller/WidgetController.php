@@ -60,17 +60,17 @@ class WidgetController extends Controller
             $entityManager->flush();
 
             return new Response('', Response::HTTP_NO_CONTENT);
-        } else {
-            $widgetItems = $this->get('icap_blog.manager.widget')->getWidgetListBlogs($widgetInstance);
-
-            return $this->render(
-                'IcapBlogBundle:widget:listConfigure.html.twig',
-                array(
-                    'form'           => $form->createView(),
-                    'widgetInstance' => $widgetInstance,
-                    'widgetItems'    => $widgetItems
-                )
-            );
         }
+
+        $widgetItems = $this->get('icap_blog.manager.widget')->getWidgetListBlogs($widgetInstance);
+
+        return $this->render(
+            'IcapBlogBundle:widget:listConfigure.html.twig',
+            array(
+                'form'           => $form->createView(),
+                'widgetInstance' => $widgetInstance,
+                'widgetItems'    => $widgetItems
+            )
+        );
     }
 }
