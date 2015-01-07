@@ -217,7 +217,10 @@ abstract class qtiImport
                                     $ws,
                                     $this->dirQTI
                                 );
-            $elements[] = array($ob, $abstractResource->getResourceNode());
+            if ($ob->parentNode->nodeName != 'selectPointInteraction' && 
+                    $ob->parentNode->nodeName != 'hotspotInteraction') {
+                $elements[] = array($ob, $abstractResource->getResourceNode());
+            }
         }
         $this->callReplaceNode($elements);
     }

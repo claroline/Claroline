@@ -34,7 +34,60 @@ class graphicImport extends qtiImport {
         $this->doctrine->getManager()->persist($this->interaction);
         $this->doctrine->getManager()->flush();
 
-        //$this->createInteractionGraphic();
+        $this->createInteractionGraphic();
+    }
+
+    /**
+     * Create the InteractionGraphic object
+     *
+     * @access protected
+     *
+     */
+    protected function createInteractionGraphic() {
+        $spi = $this->assessmentItem->getElementsByTagName("selectPointInteraction")->item(0);
+        $ob = $spi->getElementsByTagName('object')->item(0);
+
+        $this->interactionGraph = new InteractionGraphic();
+        $this->interactionGraph->setInteraction($this->interaction);
+        $this->interactionGraph->setHeight($ob->getAttribute('height'));
+        $this->interactionGraph->setWidth($ob->getAttribute('width'));
+
+        $this->doctrine->getManager()->persist($this->interactionGraph);
+        $this->doctrine->getManager()->flush();
+
+        $this->createCoords();
+        $this->createPicture();
+    }
+
+    /**
+     * Create the Coords
+     *
+     * @access protected
+     *
+     */
+    protected function createCoords() {
+        $am = $this->assessmentItem->getElementsByTagName("areaMapping")->item(0);
+
+        foreach ($am->getElementsByTagName("areaMapEntry") as $areaMapEntry) {
+            $coords = new Coords();
+            $coords->setValue($areaMapEntry->getAttribute('coords'));
+            $coords->setShape($areaMapEntry->getAttribute('shape'));
+            $coords->setScoreCoords($areaMapEntry->getAttribute('mappedValue'));
+            $coords->setColor('white');
+            $coords->setInteractionGraphic($this->interactionGraph);
+            $this->doctrine->getManager()->persist($coords);
+            $this->doctrine->getManager()->flush();
+        }
+    }
+
+    /**
+     * Create the Document
+     *
+     * @access protected
+     *
+     */
+    protected function createPicture() {
+
     }
 
     /**
@@ -46,15 +99,14 @@ class graphicImport extends qtiImport {
     protected function getPrompt()
     {
         $text = '';
-//        $ib = $this->assessmentItem->getElementsByTagName("itemBody")->item(0);
-//        if ($ib->getElementsByTagName("prompt")->item(0)) {
-//            $prompt = $ib->getElementsByTagName("prompt")->item(0);
-//            $text = $this->domElementToString($prompt);
-//            $text = str_replace('<prompt>', '', $text);
-//            $text = str_replace('</prompt>', '', $text);
-//            $text = html_entity_decode($text);
-//            $ib->removeChild($ib->getElementsByTagName("prompt")->item(0));
-//        }
+        $ib = $this->assessmentItem->getElementsByTagName("itemBody")->item(0);
+        if ($ib->getElementsByTagName("prompt")->item(0)) {
+            $prompt = $ib->getElementsByTagName("prompt")->item(0);
+            $text = $this->domElementToString($prompt);
+            $text = str_replace('<prompt>', '', $text);
+            $text = str_replace('</prompt>', '', $text);
+            $text = html_entity_decode($text);
+        }
 
         return $text;
     }
