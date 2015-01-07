@@ -68,8 +68,7 @@
     };
 
     function processCustomParameters(datas) {
-        var customParameters = {};
-        console.log(customParameters.length);
+        var customParameters = null;
 
         var simpleParameterList = [
             'restrictForOwner',
