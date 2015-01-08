@@ -50,22 +50,46 @@ class LoadRequiredFixturesData extends AbstractFixture implements ContainerAware
         }
 
         $declared = get_declared_classes();
+        $orderedClassNames = array();
+        $unorderedClassNames = array();
 
         foreach ($declared as $className) {
             $reflClass = new \ReflectionClass($className);
             $sourceFile = $reflClass->getFileName();
 
-            if (in_array($sourceFile, $includedFiles)) {
-                if (in_array(
+            if (in_array($sourceFile, $includedFiles) &&
+                in_array(
                     'Claroline\CoreBundle\DataFixtures\Required\RequiredFixture',
-                    $reflClass->getInterfaceNames())
-                ) {
-                    $fixture = new $className;
-                    $fixture->setContainer($this->container);
-                    $fixture->load($om);
-                    $om->flush();
+                    $reflClass->getInterfaceNames()
+                )
+            ) { 
+                $fixture = new $className;
+
+                if (method_exists($fixture, 'getOrder')) {
+                    $order = $fixture->getOrder();
+                    
+                    if (!isset($orderedClassNames[$order])) {
+                        $orderedClassNames[$order] = $className;
+                    }
+                    else {
+                        $orderedClassNames[] = $className;
+                    }
+                } else {
+                    $unorderedClassNames[] = $className;
                 }
             }
+        }
+        ksort($orderedClassNames);
+        
+        foreach ($unorderedClassNames as $className) {
+            $orderedClassNames[] = $className;
+        }
+        
+        foreach ($orderedClassNames as $className) {
+            $fixture = new $className;
+            $fixture->setContainer($this->container);
+            $fixture->load($om);
+            $om->flush();
         }
 
         //$om->endFlushSuite();
