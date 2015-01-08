@@ -36,11 +36,7 @@
             <h3 class="panel-title">{{'hole edition'|trans}}</h3>
         </div>
 
-        <div class="panel-body">
-            <a href="{{ path('ujm_question_index') }}" class="btn btn-primary">
-                <i class="fa fa-arrow-left"></i> {{ 'back' | trans }}
-            </a>
-        </div>
+        {% include "UJMExoBundle:Partial:question/linkToBack.html.twig" %}
 
         <form onsubmit="return check_form('{{ 'nb_hole' | trans }}')"
               action="{{ path('ujm_interactionhole_update', { 'id': entity.id }) }}"

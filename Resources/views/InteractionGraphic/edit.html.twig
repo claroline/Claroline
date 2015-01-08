@@ -37,11 +37,7 @@
         </div>
     </div>
 
-    <div class="panel-body">
-        <a class="btn btn-primary" href="{{ path('ujm_question_index') }}">
-            <i class="fa fa-arrow-left"></i> {{ 'back' | trans }}
-        </a>
-    </div>
+    {% include "UJMExoBundle:Partial:question/linkToBack.html.twig" %}
 
     <form id="InterGraphForm" onsubmit="return Check('{{ 'noTitle' | trans }}', '{{ 'noQuestion' | trans }} ...','{{ 'noImg' | trans }} !',
         '{{ 'noAnswerZone' | trans }} ...', '{{ edit_form.interaction.question.title.vars.id }}', '{{ edit_form.interaction.invite.vars.id }}');"
