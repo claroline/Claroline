@@ -7,10 +7,10 @@
 {% endblock %}
 
 <div class="list-group blog_list">
-    {% for widgetItem in widgetItems %}
-    <a href="{{ path('icap_blog_view', {'blogId' : widgetItem.blog.id}) }}" class="list-group-item col-md-3">
-        <span class="blog_name">{{ widgetItem.blog.resourceNode.name }}</span>
-        <span class="badge">{{ widgetItem.blog.countPublishedPosts }}</span>
+    {% for blog in blogs %}
+    <a href="{{ path('icap_blog_view', {'blogId' : blog.id}) }}" class="list-group-item col-md-3">
+        <span class="blog_name">{{ blog.resourceNode.name }}</span>
+        <span class="badge">{{ blog.countPublishedPosts }}</span>
     </a>
     {% else %}
     <span>{{ 'widget_list_no_blog'|trans({}, 'icap_blog') }}</span>

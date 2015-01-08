@@ -32,17 +32,19 @@ class WidgetBlogType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add(
-            $builder
-                ->create('blog', 'integer', array(
+        $builder->add('resourceNode', 'resourcePicker', array(
                     'theme_options' => array(
                         'label_width'   => 'col-md-6',
                         'control_width' => 'col-md-6'
                     ),
-                    'label' => 'blog'
-                ))
-                ->addModelTransformer($this->intToBlogTransformer)
-        );
+                    'attr' => array(
+                        'data-restrict-for-owner'             => 1,
+                        'data-is-picker-multi-select-allowed' => 0,
+                        'data-is-directory-selection-allowed' => 0,
+                        'data-type-white-list'                => 'icap_blog',
+                        'data-display-download-button'        => 0
+                    )
+                ));
     }
 
     public function getName()

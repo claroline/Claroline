@@ -27,23 +27,35 @@ class IntToBlogTransformer implements DataTransformerInterface
     }
 
     /**
-     * @param Badge[]|Badge $value
+     * @param Blog $value
      *
      * @return int|string
      */
     public function transform($value)
     {
+        echo "<pre>t ";
+        var_dump(get_class($value));
+        echo "</pre>" . PHP_EOL;
+
+        if ($value instanceof Blog) {
+            echo "<pre>";
+            var_dump($value->getResourceNode()->getName());
+            echo "</pre>" . PHP_EOL;
+        }
         return ($value instanceof Blog) ? $value->getId() : null;
     }
 
     /**
      * @param integer $blogId
      *
-     * @return Badge|null
+     * @return Blog|null
      * @throws \Symfony\Component\Form\Exception\TransformationFailedException
      */
     public function reverseTransform($blogId)
     {
+        echo "<pre>r ";
+        var_dump($blogId);
+        echo "</pre>" . PHP_EOL;
         if (!$blogId) {
             return null;
         }

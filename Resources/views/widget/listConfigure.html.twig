@@ -10,7 +10,7 @@
     {% endstylesheets %}
 {% endblock %}
 
-<form name="blog_widegt_list_form" class="form-inline" action="{{ path("icap_blog_widget_list_configure", {'id': widgetInstance.id}) }}" method="post" {{ form_enctype(form) }}>
+<form name="blog_widegt_list_form" class="form-inline" action="{{ path("icap_blog_widget_list_configure", {'id': widgetInstance.id}) }}" method="post" {{ form_enctype(form) }} novalidate="novalidate">
     <div class="panel-body">
         {{ form_errors(form) }}
         {{ form_widget(form.widgetListBlogs) }}

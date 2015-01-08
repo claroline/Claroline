@@ -2,6 +2,7 @@
 
 namespace Icap\BlogBundle\Entity;
 
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Doctrine\ORM\Mapping as ORM;
 use Icap\BlogBundle\Entity\Blog;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -21,12 +22,12 @@ class WidgetListBlog
     protected $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Icap\BlogBundle\Entity\Blog")
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode")
      * @ORM\JoinColumn(onDelete="CASCADE", nullable=false)
      *
-     * @var \Icap\BlogBundle\Entity\Blog
+     * @var \Claroline\CoreBundle\Entity\Resource\ResourceNode
      */
-    protected $blog;
+    protected $resourceNode;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Widget\WidgetInstance")
@@ -45,21 +46,21 @@ class WidgetListBlog
     }
 
     /**
-     * @return \Icap\BlogBundle\Entity\Blog
+     * @return ResourceNode
      */
-    public function getBlog()
+    public function getResourceNode()
     {
-        return $this->blog;
+        return $this->resourceNode;
     }
 
     /**
-     * @param \Icap\BlogBundle\Entity\Blog $blog
+     * @param ResourceNode $resourceNode
      *
-     * @return WidgetList
+     * @return WidgetListBlog
      */
-    public function setBlog(Blog $blog)
+    public function setResourceNode(ResourceNode $resourceNode)
     {
-        $this->blog = $blog;
+        $this->resourceNode = $resourceNode;
 
         return $this;
     }
