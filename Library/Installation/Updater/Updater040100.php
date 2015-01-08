@@ -14,6 +14,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\Tool\PwsToolConfig;
 use Claroline\CoreBundle\Entity\Tool\ToolMaskDecoder;
+use Claroline\CoreBundle\Entity\Resource\PwsRightsManagementAccess;
 
 class Updater040100
 {
@@ -34,6 +35,7 @@ class Updater040100
         $this->updateFileStorageDir();
         $this->updatePersonalWorkspaceToolConfig();
         $this->updatePersonalWorkspaceBoolean();
+        $this->updatePersonalWorkspaceResourceRightsConfig();
     }
 
     private function updateWorkspaceFileLimit()
@@ -129,6 +131,27 @@ class Updater040100
         }
 
         $em->flush();
+    }
+
+    private function updatePersonalWorkspaceResourceRightsConfig()
+    {
+        $em = $this->container->get('doctrine.orm.entity_manager');
+        $roleUser = $this->container
+            ->get('claroline.manager.role_manager')
+            ->getRoleByName('ROLE_USER');
+
+        //test if it exists first
+        $config = $em->getRepository('ClarolineCoreBundle:Resource\PwsRightsManagementAccess')
+            ->findOneByRole($roleUser);
+
+        if ($config === null) {
+            $this->log('Adding new personal workspace resource rights config access...');
+            $config = new PwsRightsManagementAccess();
+            $config->setRole($roleUser);
+            $config->setIsAccessible(true);
+            $em->persist($config);
+            $em->flush();
+        }
     }
 
     public function setLogger($logger)

@@ -29,6 +29,9 @@ use JMS\DiExtraBundle\Annotation as DI;
 /**
  * This voter is involved in access decisions for AbstractResource instances.
  *
+ * Please note that the 'ADMINISTRATE' perm does a lot of things and it's sadly not always
+ * decided here (see RightsManager::canEditPwsPerm)
+ *
  * @DI\Service
  * @DI\Tag("security.voter")
  */

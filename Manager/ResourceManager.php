@@ -890,6 +890,15 @@ class ResourceManager
             $resourceArray['mask'] = $this->resourceRightsRepo->findMaximumRights($roles, $node);
         }
 
+        //the following line is required because we wanted to disable the right edition in personal worksspaces...
+        //this is not required for everything to work properly.
+
+        if ($node->getWorkspace()->isPersonal() && !$this->rightsManager->canEditPwsPerm($token)) {
+            $resourceArray['enableRightsEdition'] = false;
+        } else {
+            $resourceArray['enableRightsEdition'] = true;
+        }
+
         return $resourceArray;
     }
 
