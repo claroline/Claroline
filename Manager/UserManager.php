@@ -177,7 +177,7 @@ class UserManager
         $user->setUsername($username);
         $personalWorkspaceName = $this->translator->trans('personal_workspace', array(), 'platform') . $user->getUsername();
         $pws = $user->getPersonalWorkspace();
-        $this->workspaceManager->rename($pws, $personalWorkspaceName);
+        if ($pws) $this->workspaceManager->rename($pws, $personalWorkspaceName);
         $this->objectManager->persist($user);
         $this->objectManager->flush();
     }
