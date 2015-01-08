@@ -16,6 +16,7 @@ use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceRights;
+use Claroline\CoreBundle\Entity\Resource\PwsRightsManagementAccess;
 use Claroline\CoreBundle\Repository\ResourceNodeRepository;
 use Claroline\CoreBundle\Repository\RoleRepository;
 use Claroline\CoreBundle\Repository\ResourceTypeRepository;
@@ -25,6 +26,7 @@ use Claroline\CoreBundle\Manager\MaskManager;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Symfony\Component\Translation\Translator;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 /**
  * @DI\Service("claroline.manager.rights_manager")
@@ -76,6 +78,7 @@ class RightsManager
         $this->resourceRepo = $om->getRepository('ClarolineCoreBundle:Resource\ResourceNode');
         $this->roleRepo = $om->getRepository('ClarolineCoreBundle:Role');
         $this->resourceTypeRepo = $om->getRepository('ClarolineCoreBundle:Resource\ResourceType');
+        $this->pwsRightsManagementAccessRepo = $om->getRepository('ClarolineCoreBundle:Resource\PwsRightsManagementAccess');
         $this->translator = $translator;
         $this->om = $om;
         $this->dispatcher = $dispatcher;
@@ -596,5 +599,59 @@ class RightsManager
             $this->rightsRepo
                 ->findUserRolesResourceRights($resource, $keys, $executeQuery) :
             array();
+    }
+
+    public function getAllPersonalWorkspaceRightsConfig()
+    {
+        return $this->pwsRightsManagementAccessRepo->findAll();
+    }
+
+    public function getPwsRightsManagementAccess(Role $role)
+    {
+        $access = $this->pwsRightsManagementAccessRepo->findOneByRole($role);
+
+        if (!$access === null) {
+            $access = new PwsRightsManagementAccess();
+            $access->setRole($role);
+            $access->setIsAccessible(false);
+            $this->om->persist($access);
+            $this->om->flush();
+        }
+
+        return $access;
+    }
+
+    public function activatePersonalWorkspaceRightsPerm(Role $role)
+    {
+        $access = $this->getPwsRightsManagementAccess($role);
+        $access->setIsAccessible(true);
+        $this->om->persist($access);
+        $this->om->flush();
+    }
+
+    public function deactivatePersonalWorkspaceRightsPerm(Role $role)
+    {
+        $access = $this->getPwsRightsManagementAccess($role);
+        $access->setIsAccessible(false);
+        $this->om->persist($access);
+        $this->om->flush();
+    }
+
+    /**
+     * Check if the permissions can be edited for a resource. This may change in the future
+     * because it's quite heavy !
+     */
+    public function canEditPwsPerm(TokenInterface $token)
+    {
+        $roles = $this->roleManager->getStringRolesFromToken($token);
+        $accesses = $this->om
+            ->getRepository('ClarolineCoreBundle:Resource\PwsRightsManagementAccess')
+            ->findByRoles($roles);
+
+        foreach ($accesses as $access) {
+            if ($access->isAccessible()) return true;
+        }
+
+        return false;
     }
 }

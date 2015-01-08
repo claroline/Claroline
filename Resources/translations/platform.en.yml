@@ -1106,3 +1106,4 @@ destination: Destination
 personal_workspace_tools_management: Personal workspace tools management
 personal_workspace_management: Personal workspace management
 tool_admin_disabled: This tool was deactivated by the administrator
+can_edit_permission: Can edit permissions

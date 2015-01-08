@@ -19,6 +19,7 @@ use Claroline\CoreBundle\Entity\Event;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Manager\ToolManager;
+use Claroline\CoreBundle\Manager\RightsManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
 
 /**
@@ -32,6 +33,7 @@ class ToolListener
     private $formFactory;
     private $templating;
     private $httpKernel;
+    private $rightsManager;
     const R_U = "ROLE_USER";
     const R_A = "ROLE_ADMIN";
 
@@ -39,6 +41,7 @@ class ToolListener
      * @DI\InjectParams({
      *     "container"        = @DI\Inject("service_container"),
      *     "toolManager"      = @DI\Inject("claroline.manager.tool_manager"),
+     *     "rightsManager"    = @DI\Inject("claroline.manager.rights_manager"),
      *     "workspaceManager" = @DI\Inject("claroline.manager.workspace_manager"),
      *     "formFactory"      = @DI\Inject("claroline.form.factory"),
      *     "templating"       = @DI\Inject("templating"),
@@ -48,6 +51,7 @@ class ToolListener
     public function __construct(
         ContainerInterface $container,
         ToolManager $toolManager,
+        RightsManager $rightsManager,
         WorkspaceManager $workspaceManager,
         FormFactory $formFactory,
         $templating,
@@ -60,6 +64,7 @@ class ToolListener
         $this->formFactory = $formFactory;
         $this->templating = $templating;
         $this->httpKernel = $httpKernel;
+        $this->rightsManager = $rightsManager;
     }
 
     /**
@@ -136,9 +141,17 @@ class ToolListener
             array('isConfigurableInWorkspace' => true, 'isDisplayableInWorkspace' => true)
         );
 
+        $canOpenResRights = true;
+
+        if ($workspace->isPersonal() && !$this->rightsManager->canEditPwsPerm(
+            $this->container->get('security.context')->getToken()
+        )) {
+            $canOpenResRights = false;
+        }
+
         return $this->templating->render(
             'ClarolineCoreBundle:Tool\workspace\parameters:parameters.html.twig',
-            array('workspace' => $workspace, 'tools' => $tools)
+            array('workspace' => $workspace, 'tools' => $tools, 'canOpenResRights' => $canOpenResRights)
         );
     }
 
