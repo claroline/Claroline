@@ -94,8 +94,10 @@
         </div>
         {% endif %}
         {% if blogOptions.isBannerActivate or (false == blogOptions.isBannerActivate and is_granted('ADMINISTRATE', _resource)) %}
-        <div id="blog_banner" class="col-md-12 well blog_banner{% if false == blogOptions.isBannerActivate %} hidden{% endif %}" style="height: {{ blogOptions.bannerHeight }}px; background-color: {{ blogOptions.bannerBackgroundColor }}; background-image: {% if null == blogOptions.bannerBackgroundImageWebPath %}none{% else %}url('{{ asset(blogOptions.bannerBackgroundImageWebPath) }}'){% endif %}; background-position: {{ blogOptions.bannerBackgroundImagePosition }}; background-repeat: {{ blogOptions.bannerBackgroundImageRepeat }};">
-        </div>
+        <a href="{{ path('icap_blog_view', {'blogId': _resource.id}) }}" title="{{ _resource.resourceNode.name }}">
+            <div id="blog_banner" class="col-md-12 well blog_banner{% if false == blogOptions.isBannerActivate %} hidden{% endif %}" style="height: {{ blogOptions.bannerHeight }}px; background-color: {{ blogOptions.bannerBackgroundColor }}; background-image: {% if null == blogOptions.bannerBackgroundImageWebPath %}none{% else %}url('{{ asset(blogOptions.bannerBackgroundImageWebPath) }}'){% endif %}; background-position: {{ blogOptions.bannerBackgroundImagePosition }}; background-repeat: {{ blogOptions.bannerBackgroundImageRepeat }};">
+            </div>
+        </a>
         {% endif %}
         {{ macros.flashBox() }}
         <div class="row button_block">
