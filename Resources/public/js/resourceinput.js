@@ -74,6 +74,8 @@
             'restrictForOwner',
             'isPickerMultiSelectAllowed',
             'isDirectorySelectionAllowed',
+            'displayViewButton',
+            'displayBrowseButton',
             'displayDownloadButton'
         ];
         var arrayParameterList = [
@@ -104,18 +106,25 @@
      * Creates a resource input as child of a dom element
      */
     function createInput(parentElement, pickerName, customParameters) {
+        var displayViewButton     = (customParameters && undefined !== customParameters['displayViewButton']) ? customParameters['displayViewButton'] : true;
+        var displayBrowseButton   = (customParameters && undefined !== customParameters['displayBrowseButton']) ? customParameters['displayBrowseButton'] : true;
         var displayDownloadButton = (customParameters && undefined !== customParameters['displayDownloadButton']) ? customParameters['displayDownloadButton'] : true;
 
-        var buttonBar = common.createElement('span', 'input-group-btn')
-            .append(
+        var buttonBar = common.createElement('span', 'input-group-btn');
+
+        if (displayViewButton) {
+            buttonBar.append(
                 common.createElement('a', 'btn btn-default disabled resource-view')
                     .append(common.createElement('i', 'fa fa-eye'))
                     .attr('title', translator.trans('see', {}, 'platform'))
                     .attr('data-toggle', 'tooltip')
                     .attr('target', '_blank')
                     .css('margin', '0')
-            )
-            .append(
+            );
+        }
+
+        if (displayBrowseButton) {
+            buttonBar.append(
                 common.createElement('a', 'btn btn-default')
                     .append(common.createElement('i', 'fa fa-folder-open'))
                     .attr('title', translator.trans('resources', {}, 'platform'))
@@ -126,6 +135,7 @@
                         openPicker(pickerName, customParameters);
                     })
             );
+        }
 
         if (displayDownloadButton) {
             buttonBar.append(
