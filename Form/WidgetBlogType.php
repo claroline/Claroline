@@ -42,7 +42,8 @@ class WidgetBlogType extends AbstractType
                         'data-is-picker-multi-select-allowed' => 0,
                         'data-is-directory-selection-allowed' => 0,
                         'data-type-white-list'                => 'icap_blog',
-                        'data-display-download-button'        => 0
+                        'data-display-download-button'        => 0,
+                        'data-display-browse-button'          => 0
                     )
                 ));
     }
