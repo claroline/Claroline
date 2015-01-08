@@ -61,7 +61,7 @@ class graphicExport extends qtiExport
      * rect: left-x, top-y, right-x, bottom-y.
      * circle: center-x, center-y, radius. Note. When the radius value is a percentage value,
      *
-     * @access public
+     * @access private
      *
      */
     private function qtiCoord($coords)

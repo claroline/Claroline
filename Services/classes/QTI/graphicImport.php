@@ -8,6 +8,7 @@
 namespace UJM\ExoBundle\Services\classes\QTI;
 
 use UJM\ExoBundle\Entity\Coords;
+use UJM\ExoBundle\Entity\Document;
 use UJM\ExoBundle\Entity\InteractionGraphic;
 
 class graphicImport extends qtiImport {
@@ -56,7 +57,7 @@ class graphicImport extends qtiImport {
         $this->doctrine->getManager()->flush();
 
         $this->createCoords();
-        $this->createPicture();
+        $this->createPicture($ob);
     }
 
     /**
@@ -69,8 +70,12 @@ class graphicImport extends qtiImport {
         $am = $this->assessmentItem->getElementsByTagName("areaMapping")->item(0);
 
         foreach ($am->getElementsByTagName("areaMapEntry") as $areaMapEntry) {
+            $tabCoords = explode(',', $areaMapEntry->getAttribute('coords'));
             $coords = new Coords();
-            $coords->setValue($areaMapEntry->getAttribute('coords'));
+            $x = $tabCoords[0] - $tabCoords[2];
+            $y = $tabCoords[1] - $tabCoords[2];
+            $coords->setValue($x.','.$y);
+            $coords->setSize($tabCoords[2] * 2);
             $coords->setShape($areaMapEntry->getAttribute('shape'));
             $coords->setScoreCoords($areaMapEntry->getAttribute('mappedValue'));
             $coords->setColor('white');
@@ -83,12 +88,68 @@ class graphicImport extends qtiImport {
     /**
      * Create the Document
      *
+     * @param DOMELEMENT $ob object tag
      * @access protected
      *
      */
-    protected function createPicture() {
+    protected function createPicture($objectTag) {
+
+        $user = $this->container->get('security.context')->getToken()->getUser();
+        $userDir = './uploads/ujmexo/users_documents/'.$user->getUsername();
+        $this->cpPicture($objectTag->getAttribute('data'), $userDir);
+
+        $document = new Document();
+        $document->setLabel($objectTag->nodeValue);
+        $document->setType($objectTag->getAttribute('type'));
+        $document->setUrl($userDir.'/images/'.$objectTag->getAttribute('data'));
+        $document->setUser($user);
+
+        $this->doctrine->getManager()->persist($document);
+        $this->doctrine->getManager()->flush();
+
+        $this->interactionGraph->setDocument($document);
+        $this->doctrine->getManager()->persist($this->interactionGraph);
+        $this->doctrine->getManager()->flush();
 
     }
+
+    /**
+     * Copy the picture in the user's directory
+     *
+     * @param String $picture picture's name
+     * @param String $userDir user's directory
+     * @access protected
+     *
+     */
+    protected function cpPicture($picture, $userDir) {
+        $src = $this->qtiRepos->getUserDir().'/'.$picture;
+
+        if (!is_dir('./uploads/ujmexo/')) {
+            mkdir('./uploads/ujmexo/');
+        }
+        if (!is_dir('./uploads/ujmexo/users_documents/')) {
+            mkdir('./uploads/ujmexo/users_documents/');
+        }
+
+        if (!is_dir($userDir)) {
+            $dirs = array('audio','images','media','video');
+            mkdir($userDir);
+
+            foreach ($dirs as $dir) {
+                mkdir($userDir.'/'.$dir);
+            }
+        }
+
+        $dest = $userDir.'/images/'.$picture;
+        $i = 1;
+        while (file_exists($dest)) {
+            $dest = $userDir.'/images/'.$i.'_'.$picture;
+            $i++;
+        }
+
+        copy($src, $dest);
+    }
+
 
     /**
      * Implements the abstract method
