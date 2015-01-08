@@ -73,7 +73,8 @@
         var simpleParameterList = [
             'restrictForOwner',
             'isPickerMultiSelectAllowed',
-            'isDirectorySelectionAllowed'
+            'isDirectorySelectionAllowed',
+            'displayDownloadButton'
         ];
         var arrayParameterList = [
             'typeBlackList',
@@ -103,6 +104,53 @@
      * Creates a resource input as child of a dom element
      */
     function createInput(parentElement, pickerName, customParameters) {
+        var displayDownloadButton = (customParameters && undefined !== customParameters['displayDownloadButton']) ? customParameters['displayDownloadButton'] : true;
+
+        var buttonBar = common.createElement('span', 'input-group-btn')
+            .append(
+                common.createElement('a', 'btn btn-default disabled resource-view')
+                    .append(common.createElement('i', 'fa fa-eye'))
+                    .attr('title', translator.trans('see', {}, 'platform'))
+                    .attr('data-toggle', 'tooltip')
+                    .attr('target', '_blank')
+                    .css('margin', '0')
+            )
+            .append(
+                common.createElement('a', 'btn btn-default')
+                    .append(common.createElement('i', 'fa fa-folder-open'))
+                    .attr('title', translator.trans('resources', {}, 'platform'))
+                    .attr('data-toggle', 'tooltip')
+                    .css('margin', '0')
+                    .on('click', function () {
+                        activePicker = this.parentNode.parentNode;
+                        openPicker(pickerName, customParameters);
+                    })
+            );
+
+        if (displayDownloadButton) {
+            buttonBar.append(
+                common.createElement('a', 'btn btn-default')
+                    .append(common.createElement('i', 'fa fa-file'))
+                    .attr('title', translator.trans('upload', {}, 'platform'))
+                    .attr('data-toggle', 'tooltip')
+                    .css('margin', '0')
+                    .on('click', function () {
+                        activePicker = this.parentNode.parentNode;
+                        modal.fromRoute('claro_upload_modal', null, function (element) {
+                            element.on('click', '.resourcePicker', function () {
+                                openPicker(pickerName, customParameters);
+                            })
+                                .on('click', '.filePicker', function () {
+                                    $('#file_form_file').click();
+                                })
+                                .on('change', '#file_form_file', function () {
+                                    common.uploadfile(this, element, defaultCallback);
+                                });
+                        });
+                    })
+            );
+        }
+
         return $(parentElement).append(
             common.createElement('div', 'input-group')
                 .append(
@@ -115,49 +163,7 @@
                             openPicker(pickerName, customParameters);
                         })
                 )
-                .append(
-                    common.createElement('span', 'input-group-btn')
-                        .append(
-                            common.createElement('a', 'btn btn-default disabled resource-view')
-                                .append(common.createElement('i', 'fa fa-eye'))
-                                .attr('title', translator.trans('see', {}, 'platform'))
-                                .attr('data-toggle', 'tooltip')
-                                .attr('target', '_blank')
-                                .css('margin', '0')
-                        )
-                        .append(
-                            common.createElement('a', 'btn btn-default')
-                                .append(common.createElement('i', 'fa fa-folder-open'))
-                                .attr('title', translator.trans('resources', {}, 'platform'))
-                                .attr('data-toggle', 'tooltip')
-                                .css('margin', '0')
-                                .on('click', function () {
-                                    activePicker = this.parentNode.parentNode;
-                                    openPicker(pickerName, customParameters);
-                                })
-                        )
-                        .append(
-                            common.createElement('a', 'btn btn-default')
-                                .append(common.createElement('i', 'fa fa-file'))
-                                .attr('title', translator.trans('upload', {}, 'platform'))
-                                .attr('data-toggle', 'tooltip')
-                                .css('margin', '0')
-                                .on('click', function () {
-                                    activePicker = this.parentNode.parentNode;
-                                    modal.fromRoute('claro_upload_modal', null, function (element) {
-                                        element.on('click', '.resourcePicker', function () {
-                                            openPicker(pickerName, customParameters);
-                                        })
-                                            .on('click', '.filePicker', function () {
-                                                $('#file_form_file').click();
-                                            })
-                                            .on('change', '#file_form_file', function () {
-                                                common.uploadfile(this, element, defaultCallback);
-                                            });
-                                    });
-                                })
-                        )
-                )
+                .append(buttonBar)
         );
     }
 
