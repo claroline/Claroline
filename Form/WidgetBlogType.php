@@ -37,7 +37,12 @@ class WidgetBlogType extends AbstractType
                         'label_width'   => 'col-md-6',
                         'control_width' => 'col-md-6'
                     ),
-                    'label' => 'blog'
+                    'attr' => array(
+                        'data-restrict-for-owner' => 1,
+                        'data-is-picker-multi-select-allowed' => 0,
+                        'data-is-directory-selection-allowed' => 0,
+                        'data-type-white-list' => 'icap_blog',
+                    )
                 ));
     }
 
