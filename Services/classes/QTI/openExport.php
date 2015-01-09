@@ -10,7 +10,7 @@ namespace UJM\ExoBundle\Services\classes\QTI;
 class openExport extends qtiExport
 {
     private $interactionopen;
-    private $extendedTetInteraction;
+    private $extendedTextInteraction;
 
     /**
      * Implements the abstract method
@@ -35,7 +35,7 @@ class openExport extends qtiExport
         $this->qtiOutComeDeclaration();
         $this->defaultValueTag();
         $this->itemBodyTag();
-        $this->extendedTetInteractionTag();
+        $this->extendedTextInteractionTag();
         $this->promptTag();
 
         if(($this->interactionopen->getInteraction()->getFeedBack()!=Null)
@@ -49,21 +49,21 @@ class openExport extends qtiExport
     }
 
     /**
-     * add the tag extendedTetInteraction in itemBody
+     * add the tag extendedTextInteraction in itemBody
      *
      * @access private
      *
      */
-    private function extendedTetInteractionTag()
+    private function extendedTextInteractionTag()
     {
-        $this->extendedTetInteraction = $this->document->CreateElement('extendedTetInteraction');
-        $this->extendedTetInteraction->setAttribute("responseIdentifier", "RESPONSE");
-        $this->itemBody->appendChild($this->extendedTetInteraction);
+        $this->extendedTextInteraction = $this->document->CreateElement('extendedTextInteraction');
+        $this->extendedTextInteraction->setAttribute("responseIdentifier", "RESPONSE");
+        $this->itemBody->appendChild($this->extendedTextInteraction);
     }
 
     /**
      * Implements the abstract method
-     * add the tag prompt in extendedTetInteraction
+     * add the tag prompt in extendedTextInteraction
      *
      * @access protected
      *
@@ -73,7 +73,7 @@ class openExport extends qtiExport
         $prompt = $this->document->CreateElement('prompt');
         $prompttxt = $this->document->CreateTextNode($this->interactionopen->getInteraction()->getInvite());
         $prompt->appendChild($prompttxt);
-        $this->extendedTetInteraction->appendChild($prompt);
+        $this->extendedTextInteraction->appendChild($prompt);
     }
 
 

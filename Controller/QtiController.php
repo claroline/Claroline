@@ -73,18 +73,23 @@ class QtiController extends Controller {
                         foreach ($ib->childNodes as $node){
                             if ($imported === false) {
                                 switch ($node->nodeName) {
-                                    case "choiceInteraction":
+                                    case "choiceInteraction": //qcm
                                         $qtiImport = $this->container->get('ujm.qti_qcm_import');
                                         $qtiImport->import($qtiRepos, $document_xml);
                                         $imported = true;
                                         break;
-                                    case 'selectPointInteraction':
+                                    case 'selectPointInteraction': //graphic with the tag selectPointInteraction
                                         $qtiImport = $this->container->get('ujm.qti_graphic_import');
                                         $qtiImport->import($qtiRepos, $document_xml);
                                         $imported = true;
                                         break;
-                                    case 'hotspotInteraction':
+                                    case 'hotspotInteraction': //graphic with the tag hotspotInteraction
                                         $qtiImport = $this->container->get('ujm.qti_graphic_import');
+                                        $qtiImport->import($qtiRepos, $document_xml);
+                                        $imported = true;
+                                        break;
+                                    case 'extendedTextInteraction': //open
+                                        $qtiImport = $this->container->get('ujm.qti_open_import');
                                         $qtiImport->import($qtiRepos, $document_xml);
                                         $imported = true;
                                         break;
@@ -93,7 +98,7 @@ class QtiController extends Controller {
                         }
                         if ($imported === false) {
                             if (($ib->getElementsByTagName('textEntryInteraction')->length > 0)
-                                    || ($ib->getElementsByTagName('inlineChoiceInteraction')->length > 0)) {
+                                    || ($ib->getElementsByTagName('inlineChoiceInteraction')->length > 0)) { //question with hole
                                 $qtiImport = $this->container->get('ujm.qti_hole_import');
                                 $qtiImport->import($qtiRepos, $document_xml);
                                 $imported = true;

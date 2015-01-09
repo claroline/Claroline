@@ -57,6 +57,10 @@ services:
     ujm.qti_open_export:
         class: UJM\ExoBundle\Services\classes\QTI\openExport
         arguments: [@doctrine, @security.context, @service_container]
+        
+    ujm.qti_open_import:
+        class: UJM\ExoBundle\Services\classes\QTI\openImport
+        arguments: [@doctrine, @security.context, @service_container]
 
     ujm.qti_repository:
         class: UJM\ExoBundle\Services\classes\QTI\qtiRepository
