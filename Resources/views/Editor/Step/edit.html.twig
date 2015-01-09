@@ -4,30 +4,8 @@
         {# Step level #}
         <div class="preview-lvl lvl-{% verbatim %}{{ previewStep.lvl }}{% endverbatim %}"></div>
 
-        {# Step name #}
-        <h3 class="panel-title" data-ng-if="previewStep.lvl == 0" >
-            <strong data-ng-bind="previewStep.name" style="margin-left: 8px;"></strong>
-        </h3>
-
-        <div class="btn-group float-right-top" data-ng-if="previewStep.lvl == 0">
-            <button data-ng-click="showActivity()" class="btn btn-sm btn-default" type="button" data-ng-if="previewStep.activityId" data-toggle="tooltip" data-container="body" title="{{ 'see_activity'|trans({}, 'path_editor') }}">
-                <span class="fa fa-eye"></span>
-                <span class="sr-only">{{ 'see_activity'|trans({}, 'path_editor') }}</span>
-            </button>
-
-            <button class="btn btn-sm btn-default" type="button" data-ui-resource-picker="activityResourcePicker" data-toggle="tooltip" data-container="body" title="{{ 'select_activity'|trans({}, 'path_editor') }}">
-                <span class="fa fa-folder-open"></span>
-                <span class="sr-only">{{ 'select_activity'|trans({}, 'path_editor') }}</span>
-            </button>
-
-            <button data-ng-click="deleteActivity()" class="btn btn-sm btn-danger" type="button" data-ng-if="previewStep.activityId" data-toggle="tooltip" data-container="body" title="{{ 'delete_activity'|trans({}, 'path_editor') }}">
-                <span class="fa fa-trash-o"></span>
-                <span class="sr-only">{{ 'delete_activity'|trans({}, 'path_editor') }}</span>
-            </button>
-        </div>
-
         {# Edit step name #}
-        <div style="margin-left: 8px;" class="input-group" data-ng-if="previewStep.lvl != 0" >
+        <div style="margin-left: 8px;" class="input-group">
             <input type="text" class="form-control" name="step-name" data-ng-model="previewStep.name" />
             <div class="input-group-btn">
                 <button data-ng-click="showActivity()" class="btn btn-default" type="button" data-ng-if="previewStep.activityId" data-toggle="tooltip" data-container="body" title="{{ 'see_activity' |trans({}, 'path_editor') }}">
