@@ -998,5 +998,5 @@ class WorkspaceManager
             $this->om->persist($workspace);
             $this->om->flush();
         }
-    }
+    }    
 }

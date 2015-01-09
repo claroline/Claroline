@@ -657,7 +657,7 @@ paste: Paste
 path: Path
 pending: 'Pending'
 permissions: Permissions
-personal_workspace: 'Personal workspace - '
+personal_workspace: 'Personal workspace'
 personal_workspaces_only: 'Personal workspaces only'
 phone: Phone
 picture_profile: 'Picture profile'

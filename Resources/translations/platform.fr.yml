@@ -660,7 +660,7 @@ paste: Coller
 path: Emplacement
 pending: En attente
 permissions: Permissions
-personal_workspace: 'Espace personnel - '
+personal_workspace: 'Espace personnel'
 personal_workspaces_only: 'Les espaces personnels seulement'
 phone: Téléphone
 picture_profile: 'Photo de profil'
