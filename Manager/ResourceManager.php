@@ -1756,6 +1756,7 @@ class ResourceManager
         $directory->setName($dirName);
         $directory->setIsUploadDestination(true);
         $parent = $this->getNodeScheduledForInsert($workspace, $workspace->getName());
+        if (!$parent) $parent = $this->resourceNodeRepo->findOneBy(array('workspace' => $workspace->getId(), 'parent' => $parent));
         $role = $this->roleManager->getRoleByName('ROLE_ANONYMOUS');
 
         return $this->create(

@@ -151,6 +151,14 @@ class Role implements RoleInterface
      */
     protected $pwsToolConfig;
 
+    /**
+     * @ORM\OneToMany(
+     *     targetEntity="Claroline\CoreBundle\Entity\Resource\PwsRightsManagementAccess",
+     *     mappedBy="role"
+     * )
+     */
+    protected $pwsRightsManagementAccess;
+
     public function __construct()
     {
         $this->users            = new ArrayCollection();

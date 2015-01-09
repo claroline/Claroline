@@ -646,6 +646,44 @@ class UsersController extends Controller
         return new JsonResponse(array(), 200);
     }
 
+    /**
+     * @EXT\Route(
+     *     "/pws/create/{user}",
+     *     name="claro_admin_pws_create",
+     *     options={"expose"=true}
+     * )
+     */
+    public function createPersonalWorkspace(User $user)
+    {
+        $this->checkOpen();
+
+        if (!$user->getPersonalWorkspace()) {
+            $this->userManager->setPersonalWorkspace($user);
+        } else {
+            throw new \Exception('Workspace already exists');
+        }
+
+        return new JsonResponse(array(), 200);
+
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/pws/delete/{user}",
+     *     name="claro_admin_pws_delete",
+     *     options={"expose"=true}
+     * )
+     */
+    public function deletePersonalWorkspace(User $user)
+    {
+        $this->checkOpen();
+        $personalWorkspace = $user->getPersonalWorkspace();
+        $this->eventDispatcher->dispatch('log', 'Log\LogWorkspaceDelete', array($personalWorkspace));
+        $this->workspaceManager->deleteWorkspace($personalWorkspace);
+
+        return new JsonResponse(array(), 200);
+    }
+
     private function checkOpen()
     {
         if ($this->sc->isGranted('OPEN', $this->userAdminTool)) {
