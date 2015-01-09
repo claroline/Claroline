@@ -43,7 +43,7 @@ function getDoNotDisplayAnymore(){
             dataType: 'json',
         })
         .done(function(data) {
-            if (typeof isRoot != 'undefined' && data.isChecked == false) {
+            if (typeof isRoot != 'undefined' && data.isChecked == false && showSummary) {
                 $('#full-tree').modal('show');
                 window.localStorage.setItem('do-not-display-anymore-' + pathId, "false");
             } else if (data.isChecked == "true") {
@@ -52,7 +52,7 @@ function getDoNotDisplayAnymore(){
 
             }
         });
-    } else if (typeof isRoot != 'undefined') {
+    } else if (typeof isRoot != 'undefined' && showSummary) {
         $('#full-tree').modal('show');
     }
 }

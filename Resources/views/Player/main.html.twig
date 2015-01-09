@@ -18,7 +18,7 @@
 
     <div id="path-main-container" class="path-player">
         <!-- Summary -->
-        <div id="full-tree" class="modal fade" {% if not showSummary %}style="display: none;"{% endif %}>
+        <div id="full-tree" class="modal fade">
             {{ render(controller('innova_path.controller.path_player:displayTreeBrowserAction', { 'workspace': workspace, 'path': path, 'currentStep': currentStep } )) }}
         </div>
 
@@ -69,6 +69,10 @@
         var pathId = {{ path.id }};
         {% if currentStep == path.getRootStep %}
             var isRoot = true;
+        {% endif %}
+
+        {% if showSummary %}
+            var showSummary = true;
         {% endif %}
     </script>
 
