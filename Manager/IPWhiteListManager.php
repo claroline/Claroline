@@ -34,11 +34,22 @@ class IPWhiteListManager
 
     public function addIP($ip)
     {
+        $ipAdded = false;
+
         if (!$this->IPExists($ip)) {
-            if (!file_put_contents($this->ipFile, $ip, FILE_APPEND)) {
-                throw new \Exception('The IP ' . $ip . ' could not be added to the white list');
+            if (!is_writeable($this->ipFile)) {
+                if (!file_put_contents($this->ipFile, $ip, FILE_APPEND)) {
+                    throw new \Exception('The IP ' . $ip . ' could not be added to the white list');
+                }
+
+                $ipAdded = true;
             }
         }
+        else {
+            $ipAdded = true;
+        }
+
+        return false;
     }
 
     public function getIPs()

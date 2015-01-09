@@ -1106,3 +1106,4 @@ destination: Destination
 personal_workspace_tools_management: Personal workspace tools management
 personal_workspace_management: Personal workspace management
 tool_admin_disabled: This tool was deactivated by the administrator
+package_update_impossible: 'Package update impossible on this page. please contact the administrator.'
