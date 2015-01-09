@@ -28,7 +28,9 @@ function setDoNotDisplayAnymore(isChecked){
     });
 }
 
-function getDoNotDisplayAnymore(){
+function getDoNotDisplayAnymore() {
+    console.log('Start checking if we need to display summary...');
+
     var openSummary = false;
 
     var doNotDisplayAnymore = window.localStorage.getItem('do-not-display-anymore-' + pathId);
