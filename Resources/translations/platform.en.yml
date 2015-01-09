@@ -1111,3 +1111,4 @@ max_storage_size: Maximum storage size
 storage_used: Storage used
 max_amount_resources: Maximum amount of resources
 count_resources: Amount of resources
+package_update_impossible: 'Package update impossible on this page. please contact the administrator.'

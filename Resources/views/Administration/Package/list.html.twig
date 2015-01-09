@@ -59,7 +59,11 @@
         </div>
     </div>
     <div class="panel panel-footer">
-        <a class="btn btn-primary" href="{{ asset('upgrade/update_tool.php') }}">{{ 'upgrade'|trans({}, 'platform') }}</a>
+        {% if allowUpdate %}
+            <a class="btn btn-primary" href="{{ asset('upgrade/update_tool.php') }}">{{ 'upgrade'|trans({}, 'platform') }}</a>
+        {% else %}
+            <div class="alert alert-danger" role="alert">{{ 'package_update_impossible'|trans({}, 'platform') }}</div>
+        {% endif %}
     </div>
 {% endblock %}
 
