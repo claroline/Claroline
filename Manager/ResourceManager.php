@@ -890,6 +890,15 @@ class ResourceManager
             $resourceArray['mask'] = $this->resourceRightsRepo->findMaximumRights($roles, $node);
         }
 
+        //the following line is required because we wanted to disable the right edition in personal worksspaces...
+        //this is not required for everything to work properly.
+
+        if ($node->getWorkspace()->isPersonal() && !$this->rightsManager->canEditPwsPerm($token)) {
+            $resourceArray['enableRightsEdition'] = false;
+        } else {
+            $resourceArray['enableRightsEdition'] = true;
+        }
+
         return $resourceArray;
     }
 
@@ -1747,6 +1756,7 @@ class ResourceManager
         $directory->setName($dirName);
         $directory->setIsUploadDestination(true);
         $parent = $this->getNodeScheduledForInsert($workspace, $workspace->getName());
+        if (!$parent) $parent = $this->resourceNodeRepo->findOneBy(array('workspace' => $workspace->getId(), 'parent' => $parent));
         $role = $this->roleManager->getRoleByName('ROLE_ANONYMOUS');
 
         return $this->create(

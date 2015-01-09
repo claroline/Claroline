@@ -660,7 +660,7 @@ paste: Coller
 path: Emplacement
 pending: En attente
 permissions: Permissions
-personal_workspace: 'Espace personnel - '
+personal_workspace: 'Espace personnel'
 personal_workspaces_only: 'Les espaces personnels seulement'
 phone: Téléphone
 picture_profile: 'Photo de profil'
@@ -1117,4 +1117,5 @@ destination: Destination
 personal_workspace_tools_management: Gestion des outils de l'espace personnel
 personal_workspace_management: Gestion de l'espace personnel
 tool_admin_disabled: L'administrateur de la plateforme a désactivé l'outil
+can_edit_permission: Peut éditer les permissions
 package_update_impossible: 'Mise à jour des paquets impossible sur cette page. Veuillez contacter l''administrateur.'

@@ -143,6 +143,7 @@
                         <th><a href="{{ sortUrl(max, search, 'firstName' , direction) }}">{{ 'first_name'|trans({}, 'platform') }}</a></th>
                         <th><a href="{{ sortUrl(max, search, 'mail', direction) }}">{{ 'mail'|trans({}, 'platform') }}</a></th>
                         <th>{{ 'role'|trans({}, 'platform') }}</th>
+                        <th>{{ 'personal_workspace'|trans({}, 'platform')}} </th>
                         <th>{{ 'actions' | trans({}, 'platform') }}</th>
                     </tr>
                 </thead>
@@ -171,6 +172,13 @@
                                         {% endif %}
                                     {% endfor %}
                                 </div>
+                            </td>
+                            <td>
+                                {% if user.getPersonalWorkspace() %}
+                                    <a class='btn btn-default delete-pws' href='#' data-user-id='{{ user.getId() }}'>{{ 'delete'|trans({}, 'platform') }}</a>
+                                {% else %}
+                                    <a class='btn btn-default create-pws' href='#' data-user-id='{{ user.getId() }}'>{{ 'create'|trans({}, 'platform') }}</a>
+                                {% endif %}
                             </td>
                             <td>
                                 {% set isUserAdmin = false %}
@@ -219,5 +227,38 @@
         parameters.route.action.remove = {"route": "claro_admin_multidelete_user", "parameters": {}, "type": "DELETE", "confirmTemplate": removeUserConfirm, "delete": true};
         parameters.route.action.password = {"route": "claro_security_initialize_password", "parameters": {}, "type": "POST", "confirmTemplate": resetPasswordConfirm};
         Claroline.Table.initialize(parameters);
+
+
+
+        $('body').on('click', '.delete-pws', function(event) {
+            event.preventDefault();
+            var el = $(event.target);
+            var route = Routing.generate('claro_admin_pws_delete', {user: el.attr('data-user-id')});
+
+            $.ajax({
+                url: route,
+                success: function(data, textStatus, jqXHR) {
+                    el.addClass('create-pws');
+                    el.removeClass('delete-pws');
+                    el.html(Translator.trans('create', {}, 'platform'));
+                }
+            })
+        });
+
+        $('body').on('click', '.create-pws', function(event) {
+            event.preventDefault();
+            var route = Routing.generate('claro_admin_pws_create', {user: $(event.target).attr('data-user-id')});
+            var el = $(event.target);
+
+            $.ajax({
+                url: route,
+                success: function(data, textStatus, jqXHR) {
+                    el.addClass('delete-pws');
+                    el.removeClass('create-pws');
+                    el.html(Translator.trans('delete', {}, 'platform'));
+                }
+            })
+        });
+
     </script>
 {% endblock %}

@@ -177,7 +177,7 @@ class UserManager
         $user->setUsername($username);
         $personalWorkspaceName = $this->translator->trans('personal_workspace', array(), 'platform') . $user->getUsername();
         $pws = $user->getPersonalWorkspace();
-        $this->workspaceManager->rename($pws, $personalWorkspaceName);
+        if ($pws) $this->workspaceManager->rename($pws, $personalWorkspaceName);
         $this->objectManager->persist($user);
         $this->objectManager->flush();
     }
@@ -408,7 +408,7 @@ class UserManager
     {
         $locale = $this->platformConfigHandler->getParameter('locale_language');
         $this->translator->setLocale($locale);
-        $personalWorkspaceName = $this->translator->trans('personal_workspace', array(), 'platform') . $user->getUsername();
+        $personalWorkspaceName = $this->translator->trans('personal_workspace', array(), 'platform') . ' - ' . $user->getUsername();
 
         if (!$model) {
             $config = Configuration::fromTemplate($this->personalWsTemplateFile);

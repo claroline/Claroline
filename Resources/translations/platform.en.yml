@@ -657,7 +657,7 @@ paste: Paste
 path: Path
 pending: 'Pending'
 permissions: Permissions
-personal_workspace: 'Personal workspace - '
+personal_workspace: 'Personal workspace'
 personal_workspaces_only: 'Personal workspaces only'
 phone: Phone
 picture_profile: 'Picture profile'
@@ -1106,4 +1106,9 @@ destination: Destination
 personal_workspace_tools_management: Personal workspace tools management
 personal_workspace_management: Personal workspace management
 tool_admin_disabled: This tool was deactivated by the administrator
+can_edit_permission: Can edit permissions
+max_storage_size: Maximum storage size
+storage_used: Storage used
+max_amount_resources: Maximum amount of resources
+count_resources: Amount of resources
 package_update_impossible: 'Package update impossible on this page. please contact the administrator.'

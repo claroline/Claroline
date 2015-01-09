@@ -491,6 +491,7 @@ class ResourceController
         } else {
             $isRoot = false;
             $workspaceId = $node->getWorkspace()->getId();
+            $isPws = $node->getWorkspace()->isPersonal();
             $node = $this->getRealTarget($node);
             $collection = new ResourceCollection(array($node));
             $this->checkAccess('OPEN', $collection);
@@ -518,6 +519,12 @@ class ResourceController
                 }
             }
 
+            $enableRightsEdition = true;
+
+            if ($isPws && !$this->rightsManager->canEditPwsPerm($this->sc->getToken())) {
+                $enableRightsEdition = false;
+            }
+
             foreach ($nodes as $item) {
                 if ($user !== 'anon.') {
                     if ($item['creator_username'] === $user->getUsername()
@@ -525,6 +532,8 @@ class ResourceController
                         $item['mask'] = 1023;
                     }
                 }
+
+                $item['enableRightsEdition'] = $enableRightsEdition;
                 $nodesWithCreatorPerms[] = $item;
             }
 

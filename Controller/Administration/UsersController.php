@@ -24,6 +24,7 @@ use Claroline\CoreBundle\Manager\MailManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CoreBundle\Manager\UserManager;
+use Claroline\CoreBundle\Manager\RightsManager;
 use Claroline\CoreBundle\Manager\ToolMaskDecoderManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
@@ -52,6 +53,7 @@ class UsersController extends Controller
     private $localeManager;
     private $router;
     private $toolManager;
+    private $rightsManager;
     private $userAdminTool;
     private $configHandler;
     private $toolMaskDecoderManager;
@@ -61,6 +63,7 @@ class UsersController extends Controller
      *     "userManager"            = @DI\Inject("claroline.manager.user_manager"),
      *     "workspaceManager"       = @DI\Inject("claroline.manager.workspace_manager"),
      *     "roleManager"            = @DI\Inject("claroline.manager.role_manager"),
+     *     "rightsManager"          = @DI\Inject("claroline.manager.rights_manager"),
      *     "toolMaskDecoderManager" = @DI\Inject("claroline.manager.tool_mask_decoder_manager"),
      *     "eventDispatcher"        = @DI\Inject("claroline.event.event_dispatcher"),
      *     "formFactory"            = @DI\Inject("claroline.form.factory"),
@@ -86,6 +89,7 @@ class UsersController extends Controller
         RouterInterface $router,
         SecurityContextInterface $sc,
         ToolManager $toolManager,
+        RightsManager $rightsManager,
         ToolMaskDecoderManager $toolMaskDecoderManager,
         AuthenticationManager $authenticationManager,
         PlatformConfigurationHandler $configHandler
@@ -93,6 +97,7 @@ class UsersController extends Controller
     {
         $this->userManager            = $userManager;
         $this->roleManager            = $roleManager;
+        $this->rightsManager          = $rightsManager;
         $this->eventDispatcher        = $eventDispatcher;
         $this->formFactory            = $formFactory;
         $this->request                = $request;
@@ -542,11 +547,9 @@ class UsersController extends Controller
      *     "/workspace/personal/tool/config",
      *     name="claro_admin_workspace_tool_config_index"
      * )
-     * @EXT\Template("ClarolineCoreBundle:Administration\Users:personalWorkspaceToolConfig.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:Administration\Users:personalWorkspaceToolConfig.html.twig").
      *
-     * change the desktop tool name.
-     *
-     * @return Response
+     * @return array
      */
     public function personalWorkspaceToolConfigIndexAction()
     {
@@ -554,16 +557,32 @@ class UsersController extends Controller
         $maskDecoders = $this->toolManager->getAllWorkspaceMaskDecodersAsArray();
         $roles = $this->roleManager->getAllPlatformRoles();
         $tools = $this->toolManager->getAvailableWorkspaceTools();
-        //generate the personalWsRights if they don't exist yet.
-        //$this->createMissingPersonalWorkspaceToolConfig();
-
-        //var_dump($personalWsToolConfigs);
 
         return array(
             'personalWsToolConfigs' => $personalWsToolConfigs,
             'roles'                 => $roles,
             'tools'                 => $tools,
             'maskDecoders'          => $maskDecoders
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/workspace/personal/resources/config",
+     *     name="claro_admin_personal_workspace_resource_rights"
+     * )
+     * @EXT\Template("ClarolineCoreBundle:Administration\Users:personalWorkspaceResourceRightsConfig.html.twig")
+     *
+     * @return array
+     */
+    public function personalWorkspaceResourceRightsConfigAction()
+    {
+        $roles = $this->roleManager->getAllPlatformRoles();
+        $rights = $this->rightsManager->getAllPersonalWorkspaceRightsConfig();
+
+        return array(
+            'roles' => $roles,
+            'rights' => $rights
         );
     }
 
@@ -593,6 +612,74 @@ class UsersController extends Controller
     {
         $this->checkOpen();
         $this->toolManager->removePersonalWorkspaceToolPerm($perm, $tool, $role);
+
+        return new JsonResponse(array(), 200);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/pws/rights/activate/{role}",
+     *     name="claro_admin_pws_activate_rights_change",
+     *     options={"expose"=true}
+     * )
+     */
+    public function activatePersonalWorkspaceRightsAction(Role $role)
+    {
+        $this->checkOpen();
+        $this->rightsManager->activatePersonalWorkspaceRightsPerm($role);
+
+        return new JsonResponse(array(), 200);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/pws/rights/deactivate/{role}",
+     *     name="claro_admin_pws_deactivate_rights_change",
+     *     options={"expose"=true}
+     * )
+     */
+    public function deactivatePersonalWorkspaceRightsAction(Role $role)
+    {
+        $this->checkOpen();
+        $this->rightsManager->deactivatePersonalWorkspaceRightsPerm($role);
+
+        return new JsonResponse(array(), 200);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/pws/create/{user}",
+     *     name="claro_admin_pws_create",
+     *     options={"expose"=true}
+     * )
+     */
+    public function createPersonalWorkspace(User $user)
+    {
+        $this->checkOpen();
+
+        if (!$user->getPersonalWorkspace()) {
+            $this->userManager->setPersonalWorkspace($user);
+        } else {
+            throw new \Exception('Workspace already exists');
+        }
+
+        return new JsonResponse(array(), 200);
+
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/pws/delete/{user}",
+     *     name="claro_admin_pws_delete",
+     *     options={"expose"=true}
+     * )
+     */
+    public function deletePersonalWorkspace(User $user)
+    {
+        $this->checkOpen();
+        $personalWorkspace = $user->getPersonalWorkspace();
+        $this->eventDispatcher->dispatch('log', 'Log\LogWorkspaceDelete', array($personalWorkspace));
+        $this->workspaceManager->deleteWorkspace($personalWorkspace);
 
         return new JsonResponse(array(), 200);
     }

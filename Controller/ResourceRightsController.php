@@ -463,7 +463,12 @@ class ResourceRightsController
      */
     private function checkAccess($permission, ResourceCollection $collection)
     {
-        if (!$this->sc->isGranted($permission, $collection)) {
+        //Here, we not only check is Administrate, but if it's a personal workspace and the feature was disabled
+        //we can't either.
+
+        $isPwsRightEnabled = $this->rightsManager->canEditPwsPerm($this->sc->getToken());
+
+        if (!$this->sc->isGranted($permission, $collection) || !$isPwsRightEnabled) {
             throw new AccessDeniedException($collection->getErrorsForDisplay());
         }
     }

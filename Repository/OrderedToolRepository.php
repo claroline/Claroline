@@ -28,7 +28,6 @@ class OrderedToolRepository extends EntityRepository
     public function findByWorkspaceAndRoles(Workspace $workspace, array $roles)
     {
         if (count($roles) === 0) {
-
             return array();
         } else {
             $dql = '
@@ -145,7 +144,7 @@ class OrderedToolRepository extends EntityRepository
         $dql = 'SELECT ot
             FROM Claroline\CoreBundle\Entity\Tool\OrderedTool ot
             JOIN ot.tool t
-            JOIN ot.right r
+            JOIN ot.rights r
             JOIN r.role rr
             JOIN t.pwsToolConfig ptc
             WHERE ot.workspace = :workspace

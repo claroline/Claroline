@@ -406,8 +406,9 @@ class WorkspaceManager
                 $canOpen = false;
 
                 foreach ($pwc as $conf) {
-                    if ($conf->getTool()->getName() === $toolName) {
-                        $canOpen = ($conf->getMask() & 1) ? true: false;
+                    if (!$toolName) $toolName = 'home';
+                    if ($conf->getTool()->getName() === $toolName && $conf->getMask() & 1) {
+                        $canOpen = true;
                     }
                 }
 
@@ -997,5 +998,5 @@ class WorkspaceManager
             $this->om->persist($workspace);
             $this->om->flush();
         }
-    }
+    }    
 }
