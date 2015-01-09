@@ -31,6 +31,9 @@ function setDoNotDisplayAnymore(isChecked){
 function getDoNotDisplayAnymore() {
     console.log('Start checking if we need to display summary...');
 
+    console.log('showSummary = ' + showSummary);
+    console.log('typeof isRoot = ' + (typeof isRoot));
+
     var openSummary = false;
 
     var doNotDisplayAnymore = window.localStorage.getItem('do-not-display-anymore-' + pathId);
