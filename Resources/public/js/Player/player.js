@@ -34,6 +34,7 @@ function getDoNotDisplayAnymore(){
     var doNotDisplayAnymore = window.localStorage.getItem('do-not-display-anymore-' + pathId);
     if (typeof doNotDisplayAnymore !== 'undefined' && null !== doNotDisplayAnymore) {
         if (doNotDisplayAnymore) {
+            console.log('User has disabled auto open of summary');
             $('#do-not-display-anymore').prop('checked', true);
             openSummary = false;
         } else {
@@ -47,9 +48,11 @@ function getDoNotDisplayAnymore(){
             })
             .done(function(data) {
                 if (typeof isRoot != 'undefined' && data.isChecked == false && showSummary) {
+                    console.log('Server has said we need to display the summary');
                     openSummary = true;
                     window.localStorage.setItem('do-not-display-anymore-' + pathId, "false");
                 } else if (data.isChecked == "true") {
+                    console.log('Server has said the auto open of summary is disabled');
                     $('#do-not-display-anymore').prop('checked', true);
                     window.localStorage.setItem('do-not-display-anymore-' + pathId, "true");
 
@@ -57,10 +60,12 @@ function getDoNotDisplayAnymore(){
             });
         }
     } else if (typeof isRoot != 'undefined' && showSummary) {
+        console.log('We are on root and we need to display summary');
         openSummary = true;
     }
 
     if (openSummary) {
+        console.log('DISPLAY SUMMARY');
         $('#full-tree').modal('show');
     }
 }
