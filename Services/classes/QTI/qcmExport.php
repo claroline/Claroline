@@ -172,10 +172,10 @@ class qcmExport extends qtiExport
         $prompt = $this->document->CreateElement('prompt');
         $this->choiceInteraction->appendChild($prompt);
 
-        //Code pour eliminer du code html sauf la balise img
-        $res1 =strip_tags($this->interactionqcm->getInteraction()->getInvite(), '<img>');
-
-        $prompttxt =  $this->document->CreateTextNode(html_entity_decode($res1));
+        $prompttxt =  $this->document
+                ->CreateTextNode(
+                        $this->interactionqcm->getInteraction()->getInvite()
+                        );
         $prompt->appendChild($prompttxt);
         $this->qtiChoicesQCM($this->correctResponse);
     }
@@ -194,7 +194,7 @@ class qcmExport extends qtiExport
         $simpleChoice = $this->document->CreateElement('simpleChoice');
         $simpleChoice->setAttribute("identifier", "Choice".$choiceNumber);
         $this->choiceInteraction->appendChild($simpleChoice);
-        $simpleChoicetxt =  $this->document->CreateTextNode(strip_tags($choice->getLabel(),'<img>'));
+        $simpleChoicetxt =  $this->document->CreateTextNode($choice->getLabel());
         $simpleChoice->appendChild($simpleChoicetxt);
 
         //comment per line for each choice

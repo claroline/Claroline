@@ -170,16 +170,20 @@ abstract class qtiImport
     private function getDescription()
     {
         $ib = $this->assessmentItem->getElementsByTagName("itemBody")->item(0);
+        $desc = '';
         foreach($ib->childNodes as $child) {
-            $desc = $this->question->getDescription();
-            if ($child->nodeType === XML_CDATA_SECTION_NODE) {
+            if ($child->nodeType === XML_CDATA_SECTION_NODE || $child->nodeType === XML_TEXT_NODE) {
                 $desc .= $child->textContent;
-            } else if ($child->nodeName == 'a' || $child->nodeName == 'img') {
-                $desc .= $this->domElementToString($child);
+            } else if ($child->nodeName == 'a' || $child->nodeName == 'img' || $child->nodeName == 'p') {
+                if ($child->nodeValue != '' ) {
+                    $desc .= $child->nodeValue;
+                } else {
+                    $desc .= $this->domElementToString($child);
+                }
                 $ib->removeChild($child);
             }
-            $this->question->setDescription($desc);
         }
+        $this->question->setDescription($desc);
     }
 
     /**
@@ -217,7 +221,7 @@ abstract class qtiImport
                                     $ws,
                                     $this->dirQTI
                                 );
-            if ($ob->parentNode->nodeName != 'selectPointInteraction' && 
+            if ($ob->parentNode->nodeName != 'selectPointInteraction' &&
                     $ob->parentNode->nodeName != 'hotspotInteraction') {
                 $elements[] = array($ob, $abstractResource->getResourceNode());
             }

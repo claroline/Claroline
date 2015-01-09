@@ -118,13 +118,30 @@ abstract class qtiExport
      */
     protected function qtiFeedBack($feedBack)
     {
-        $this->modalFeedback=$this->document->CreateElement('modalFeedback');
+        $this->modalFeedback = $this->document->CreateElement('modalFeedback');
         $this->modalFeedback->setAttribute("outcomeIdentifier","FEEDBACK");
         $this->modalFeedback->setAttribute("identifier","COMMENT");
         $this->modalFeedback->setAttribute("showHide","show");
         $modalFeedbacktxt = $this->document->CreateTextNode($feedBack);
         $this->modalFeedback->appendChild($modalFeedbacktxt);
         $this->node->appendChild($this->modalFeedback);
+    }
+
+    /**
+     * add a tag p in itemBody for the description
+     *
+     * @access protected
+     *
+     */
+    protected function qtiDescription()
+    {
+        $describe = $this->question->getDescription();
+        if ($describe != NULL && $describe != '') {
+            $describeTag = $this->document->CreateElement('p');
+            $describeTxt = $this->document->CreateTextNode($describe);
+            $describeTag->appendChild($describeTxt);
+            $this->itemBody->appendChild($describeTag);
+        }
     }
 
     /**
@@ -137,6 +154,7 @@ abstract class qtiExport
     {
         $this->itemBody = $this->document->CreateElement('itemBody');
         $this->node->appendChild($this->itemBody);
+        $this->qtiDescription();
     }
 
     /**
@@ -144,7 +162,7 @@ abstract class qtiExport
      * @access protected
      *
      * @param array of String $docLinked attached files
-     * 
+     *
      * @return BinaryFileResponse QTI zip
      *
      */
@@ -155,7 +173,7 @@ abstract class qtiExport
         $zip = new \ZipArchive();
         $zip->open($tmpFileName, \ZipArchive::CREATE);
         $zip->addFile($this->qtiRepos->getUserDir().'testfile.xml', 'SchemaQTI.xml');
-        
+
         foreach ($this->resourcesLinked as $file) {
             $zip->addFile($file['url'], $file['name']);
         }
