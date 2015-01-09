@@ -137,9 +137,7 @@ abstract class qtiExport
     {
         $describe = $this->question->getDescription();
         if ($describe != NULL && $describe != '') {
-            $describeTag = $this->document->CreateElement('p');
-            $describeTxt = $this->document->CreateTextNode($describe);
-            $describeTag->appendChild($describeTxt);
+            $describeTag = $this->document->createCDATASection($describe);
             $this->itemBody->appendChild($describeTag);
         }
     }

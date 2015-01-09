@@ -174,12 +174,8 @@ abstract class qtiImport
         foreach($ib->childNodes as $child) {
             if ($child->nodeType === XML_CDATA_SECTION_NODE || $child->nodeType === XML_TEXT_NODE) {
                 $desc .= $child->textContent;
-            } else if ($child->nodeName == 'a' || $child->nodeName == 'img' || $child->nodeName == 'p') {
-                if ($child->nodeValue != '' ) {
-                    $desc .= $child->nodeValue;
-                } else {
-                    $desc .= $this->domElementToString($child);
-                }
+            } else if ($child->nodeName == 'a' || $child->nodeName == 'img') {
+                $desc .= $this->domElementToString($child);
                 $ib->removeChild($child);
             }
         }
