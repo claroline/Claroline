@@ -58,12 +58,16 @@ class ConfigureTopLeftMenuListener
             );
 
             $menu = $event->getMenu();
-            $menu->addChild($this->translator->trans('notifications', array(), 'platform'), array('route' => 'icap_notification_view'))
+            $countUnviewedNotificationsMenuLink = $menu->addChild($this->translator->trans('notifications', array(), 'platform'), array('route' => 'icap_notification_view'))
                 ->setExtra('icon', 'fa fa-bell')
                 ->setExtra('title', $this->translator->trans('notifications', array(), 'platform'))
                 ->setAttribute('id', 'notification-topbar-item')
-                ->setExtra('close', $end)
-                ->setExtra('badge', $countUnviewedNotifications);
+                ->setExtra('close', $end);
+
+            if (0 < $countUnviewedNotifications) {
+                $countUnviewedNotificationsMenuLink
+                    ->setExtra('badge', $countUnviewedNotifications);
+            }
 
             return $menu;
         }
