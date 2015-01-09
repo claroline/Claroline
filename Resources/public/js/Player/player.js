@@ -63,29 +63,4 @@ function getDoNotDisplayAnymore(){
     if (openSummary) {
         $('#full-tree').modal('show');
     }
-
-    if (doNotDisplayAnymore == "true"){
-        $('#do-not-display-anymore').prop('checked', true);
-    } else if (doNotDisplayAnymore != "false") {
-        $.ajax({
-            url: Routing.generate('getDoNotDisplayAnymore'),
-            type: 'GET',
-            data:{
-                pathId: pathId
-            },
-            dataType: 'json'
-        })
-        .done(function(data) {
-            if (typeof isRoot != 'undefined' && data.isChecked == false && showSummary) {
-                $('#full-tree').modal('show');
-                window.localStorage.setItem('do-not-display-anymore-' + pathId, "false");
-            } else if (data.isChecked == "true") {
-                $('#do-not-display-anymore').prop('checked', true);
-                window.localStorage.setItem('do-not-display-anymore-' + pathId, "true");
-
-            }
-        });
-    } else if (typeof isRoot != 'undefined' && showSummary) {
-        $('#full-tree').modal('show');
-    }
 }
