@@ -148,10 +148,14 @@ class Builder extends ContainerAware
             $countUnreadMessages = $this->container->get('claroline.manager.message_manager')->getNbUnreadMessages($user);
             $messageTitle = $translator->trans('new_message_alert', array('%count%' => $countUnreadMessages), 'platform');
 
-            $menu->addChild($translator->trans('messages', array(), 'platform'), array('route' => 'claro_message_list_received'))
+            $messageMenuLink = $menu->addChild($translator->trans('messages', array(), 'platform'), array('route' => 'claro_message_list_received'))
                 ->setExtra('icon', 'fa fa-envelope')
-                ->setExtra('title', $messageTitle)
-                ->setExtra('badge', $countUnreadMessages);
+                ->setExtra('title', $messageTitle);
+
+            if (0 < $countUnreadMessages) {
+                $messageMenuLink
+                    ->setExtra('badge', $countUnreadMessages);
+            }
         }
 
         //allowing the menu to be extended
