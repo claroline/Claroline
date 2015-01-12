@@ -23,14 +23,14 @@ class holeImport extends qtiImport
      *
      * @access public
      * @param qtiRepository $qtiRepos
+     * @param DOMElement $assessmentItem assessmentItem of the question to imported
      *
      */
-    public function import(qtiRepository $qtiRepos, \DOMDocument $document)
+    public function import(qtiRepository $qtiRepos, $assessmentItem)
     {
         $this->qtiRepos = $qtiRepos;
-        $this->document = $document;
         $this->getQTICategory();
-        $this->initAssessmentItem();
+        $this->initAssessmentItem($assessmentItem);
 
         $this->createQuestion();
 

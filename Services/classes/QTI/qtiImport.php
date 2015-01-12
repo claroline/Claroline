@@ -25,7 +25,6 @@ abstract class qtiImport
     protected $qtiCat;
     protected $interaction;
     protected $question;
-    protected $document;
     protected $assessmentItem;
     protected $dirQTI;
 
@@ -136,12 +135,12 @@ abstract class qtiImport
      * init assessmentItem
      *
      * @access protected
+     * @param DOMElement $assessmentItem assessmentItem of the question to imported
      *
      */
-    protected function initAssessmentItem()
+    protected function initAssessmentItem($assessmentItem)
     {
-        $root = $this->document->getElementsByTagName('assessmentItem');
-        $this->assessmentItem = $root->item(0);
+        $this->assessmentItem = $assessmentItem;
     }
 
     /**
@@ -256,11 +255,11 @@ abstract class qtiImport
                         ->generate('claro_file_get_media',
                                 array('node' => $resourceNode->getId())
                           );
-            $imgTag    = $this->document->createElement('img');
+            $imgTag    = $this->assessmentItem->ownerDocument->createElement('img');
 
-            $styleAttr = $this->document->createAttribute('style');
-            $srcAttr   = $this->document->createAttribute('src');
-            $altAttr   = $this->document->createAttribute('alt');
+            $styleAttr = $this->assessmentItem->ownerDocument->createAttribute('style');
+            $srcAttr   = $this->assessmentItem->ownerDocument->createAttribute('src');
+            $altAttr   = $this->assessmentItem->ownerDocument->createAttribute('alt');
 
             $styleAttr->value = 'max-width: 100%;';
             $srcAttr->value   = $url;
@@ -277,8 +276,8 @@ abstract class qtiImport
                                            array('resourceType' => $resourceNode->getResourceType()->getName() ,
                                                  'node' => $resourceNode->getId()
                                      ));
-            $aTag     = $this->document->createElement('a', $resourceNode->getName());
-            $hrefAttr = $this->document->createAttribute('href');
+            $aTag     = $this->assessmentItem->ownerDocument->createElement('a', $resourceNode->getName());
+            $hrefAttr = $this->assessmentItem->ownerDocument->createAttribute('href');
             $hrefAttr->value = $url;
             $aTag->appendChild($hrefAttr);
             $ob->parentNode->replaceChild($aTag, $ob);
@@ -342,7 +341,7 @@ abstract class qtiImport
      */
     protected function domElementToString($domEl)
     {
-        $text = $this->document->saveXML($domEl);
+        $text = $this->assessmentItem->ownerDocument->saveXML($domEl);
         $text = trim($text);
         //delete the line break in $text
         $text = str_replace(CHR(10),"",$text);
@@ -359,8 +358,9 @@ abstract class qtiImport
      *
      * @access public
      * @param qtiRepository $qtiRepos
+     * @param DOMElement $assessmentItem assessmentItem of the question to imported
      */
-    abstract public function import(qtiRepository $qtiRepos, \DOMDocument $document);
+    abstract public function import(qtiRepository $qtiRepos, $assessmentItem);
 
     /**
      * abstract method to get the prompt

@@ -64,33 +64,32 @@ class QtiController extends Controller {
             while (($file = readdir($dh)) !== false) {
                 if (substr($file, -4, 4) == '.xml') {
                     $xmlFileFound = true;
-                    $imported = false;
                     $document_xml = new \DomDocument();
                     $document_xml->load($qtiRepos->getUserDir().'/'.$file);
-                    $ai = $document_xml->getElementsByTagName('assessmentItem')->item(0);
-                    if ($ai != null) {
+                    foreach ($document_xml->getElementsByTagName('assessmentItem') as $ai) {
+                        $imported = false;
                         $ib = $ai->getElementsByTagName('itemBody')->item(0);
                         foreach ($ib->childNodes as $node){
                             if ($imported === false) {
                                 switch ($node->nodeName) {
                                     case "choiceInteraction": //qcm
                                         $qtiImport = $this->container->get('ujm.qti_qcm_import');
-                                        $qtiImport->import($qtiRepos, $document_xml);
+                                        $qtiImport->import($qtiRepos, $ai);
                                         $imported = true;
                                         break;
                                     case 'selectPointInteraction': //graphic with the tag selectPointInteraction
                                         $qtiImport = $this->container->get('ujm.qti_graphic_import');
-                                        $qtiImport->import($qtiRepos, $document_xml);
+                                        $qtiImport->import($qtiRepos, $ai);
                                         $imported = true;
                                         break;
                                     case 'hotspotInteraction': //graphic with the tag hotspotInteraction
                                         $qtiImport = $this->container->get('ujm.qti_graphic_import');
-                                        $qtiImport->import($qtiRepos, $document_xml);
+                                        $qtiImport->import($qtiRepos, $ai);
                                         $imported = true;
                                         break;
                                     case 'extendedTextInteraction': //open
                                         $qtiImport = $this->container->get('ujm.qti_open_import');
-                                        $qtiImport->import($qtiRepos, $document_xml);
+                                        $qtiImport->import($qtiRepos, $ai);
                                         $imported = true;
                                         break;
                                 }
@@ -100,7 +99,7 @@ class QtiController extends Controller {
                             if (($ib->getElementsByTagName('textEntryInteraction')->length > 0)
                                     || ($ib->getElementsByTagName('inlineChoiceInteraction')->length > 0)) { //question with hole
                                 $qtiImport = $this->container->get('ujm.qti_hole_import');
-                                $qtiImport->import($qtiRepos, $document_xml);
+                                $qtiImport->import($qtiRepos, $ai);
                                 $imported = true;
                             } else {
                                 return 'qti unsupported format';
