@@ -1,7 +1,7 @@
 {
-    "name": "claroline/formation-bundle",
-    "description": "Claroline formation tool plugin",
-    "keywords": ["Claroline", "Plugin", "Formation", "Tool"],
+    "name": "claroline/cursus-bundle",
+    "description": "Claroline cursus tool plugin",
+    "keywords": ["Claroline", "Plugin", "Cursus", "Tool"],
     "homepage": "http://www.claroline.net",
     "type": "claroline-plugin",
     "license": "GPL-3.0+",
@@ -17,7 +17,7 @@
         "claroline/core-bundle": "~4.0"
     },
     "autoload": {
-        "psr-0": { "Claroline\\FormationBundle": "" }
+        "psr-0": { "Claroline\\CursusBundle": "" }
     },
-    "target-dir": "Claroline/FormationBundle"
+    "target-dir": "Claroline/CursusBundle"
 }

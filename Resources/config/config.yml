@@ -2,5 +2,5 @@ plugin:
   has_options: false
 
   admin_tools:
-    - name: claroline_formation_tool
+    - name: claroline_cursus_tool
       class: list-alt

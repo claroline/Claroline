@@ -1,1 +1,1 @@
-# FormationBundle
+# CursusBundle
