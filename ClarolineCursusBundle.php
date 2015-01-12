@@ -9,11 +9,14 @@
  * file that was distributed with this source code.
  */
  
-namespace Claroline\FormationBundle;
+namespace Claroline\CursusBundle;
 
 use Claroline\CoreBundle\Library\PluginBundle;
-use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
 
-class ClarolineFormationBundle extends PluginBundle
+class ClarolineCursusBundle extends PluginBundle
 {
+    public function hasMigrations()
+    {
+        return false;
+    }
 }
