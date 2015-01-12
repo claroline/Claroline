@@ -1,0 +1,23 @@
+{
+    "name": "claroline/formation-bundle",
+    "description": "Claroline formation tool plugin",
+    "keywords": ["Claroline", "Plugin", "Formation", "Tool"],
+    "homepage": "http://www.claroline.net",
+    "type": "claroline-plugin",
+    "license": "GPL-3.0+",
+    "authors": [
+        {
+            "name": "Claroline development team",
+            "email": "dev@claroline.net",
+            "homepage": "http://github.com/claroline"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.1",
+        "claroline/core-bundle": "dev-master"
+    },
+    "autoload": {
+        "psr-0": { "Claroline\\FormationBundle": "" }
+    },
+    "target-dir": "Claroline/FormationBundle"
+}
