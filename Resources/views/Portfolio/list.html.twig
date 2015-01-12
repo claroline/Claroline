@@ -1,9 +1,5 @@
 {% extends 'IcapPortfolioBundle::layout.html.twig' %}
 
-{% block content_title %}
-    {{ parent() }} <a href="{{ path('icap_portfolio_add') }}" title="{{ 'add_portfolio'|trans({}, 'icap_portfolio') }}" class="btn btn-default btn-xs">{{ 'add_portfolio'|trans({}, 'icap_portfolio') }}</a>
-{% endblock %}
-
 {% block breadcrumb %}
     {{
         macros.breadcrumbs([
@@ -66,6 +62,25 @@
         </div>
     </div>
     {% endif %}
+
+    <div class="btn-toolbar pull-right portfolio_toolbar" role="toolbar" aria-label="...">
+        <div class="btn-group btn-group-sm" role="group" aria-label="Portfolio menu">
+            <a href="{{ path('icap_portfolio_add') }}" title="{{ 'add_portfolio'|trans({}, 'icap_portfolio') }}"
+               data-toggle="tooltip" data-container="body" data-placement="top" class="btn btn-default">
+                <span class="fa fa-plus"></span>
+            </a>
+        </div>
+        <div class="btn-group btn-group-sm" role="group" aria-label="Portfolio menu">
+            <a href="#" title="{{ 'import_portfolio'|trans({}, 'icap_portfolio') }}"
+               data-toggle="tooltip" data-container="body" data-placement="top" class="btn btn-default">
+                <span class="fa fa-download"></span>
+            </a>
+            <a href="#" title="{{ 'export_portfolio'|trans({}, 'icap_portfolio') }}"
+               data-toggle="tooltip" data-container="body" data-placement="top" class="btn btn-default">
+                <span class="fa fa-upload"></span>
+            </a>
+        </div>
+    </div>
 
     {% if 0 < portfoliosPager.nbResults %}
         <table class="table table-hover table_portfolios">
@@ -147,7 +162,7 @@
             </tbody>
         </table>
     {% else %}
-        <p class="well text-center">
+        <p class="well text-center clearfix">
             {{ 'no_portfolios_create_one'|trans({'%newPortfolioUrl%': path('icap_portfolio_add')}, 'icap_portfolio')|raw }}
         </p>
     {% endif %}
