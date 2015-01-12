@@ -64,17 +64,11 @@ $(function() {
         });
     });
 
-    $("#droppable_26").click(function() {
-            $(".origin").each(function() {
-                checkIn($(this));
-            });
-        });
-
     //for check in connections
     var formBalise = $("body").find("form");
     var idFormBalise = formBalise.attr("id");
     if(idFormBalise == "formResponse") {
-        $("#formResponse").submit(function() {
+        $("#"+idFormBalise).submit(function() {
             $(".origin").each(function() {
                 checkIn($(this));
             });
@@ -98,8 +92,6 @@ function placeProposal(idLabel, idProposal) {
             });
         });
     });
-    responses[idProposal] = idLabel;
-    dragStop();
 }
 
 //registration of relations
