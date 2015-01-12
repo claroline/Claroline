@@ -16,4 +16,8 @@ use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
 
 class ClarolineFormationBundle extends PluginBundle
 {
+    public function hasMigrations()
+    {
+        return false;
+    }
 }
