@@ -1,4 +1,4 @@
-{% import 'InnovaPathBundle::Player/components/macros.html.twig' as macros %}
+{% import _self as macros %}
 
 <div id="resources-btn">
     <ul class="nav nav-tabs">
@@ -13,3 +13,12 @@
         {% endfor %}
     </ul>
 </div>
+
+{# Macros #}
+{% macro displayResourceButton(resource, lvl) %}
+    <li rel="tooltip" data-original-title="{{ resource.resourceType.name | trans({}, 'resource') }}">
+        <a target="_blank" class="path-tab-btn resource-link lvl-{{ lvl }} resource-tab-btn" href="{{ path('claro_resource_open', {'node': resource.id, 'resourceType': resource.resourceType.name }) }}">
+            <span class="resource-name">{{ resource.name }}</span>
+        </a>
+    </li>
+{% endmacro %}

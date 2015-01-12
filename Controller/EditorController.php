@@ -62,7 +62,7 @@ class EditorController {
 
     /**
      * Session
-     * @var \Symfony\Component\HttpFoundation\Session\SessionInterface
+     * @var \Symfony\Component\HttpFoundation\Session\SessionInterface $session
      */
     protected $session;
 
@@ -92,24 +92,32 @@ class EditorController {
 
     /**
      * Class constructor
-     * @param \Doctrine\Common\Persistence\ObjectManager $objectManager
-     * @param \Symfony\Component\Routing\RouterInterface $router
-     * @param \Symfony\Component\Form\FormFactoryInterface $formFactory
+     * @param \Doctrine\Common\Persistence\ObjectManager                 $objectManager
+     * @param \Symfony\Component\Routing\RouterInterface                 $router
+     * @param \Symfony\Component\Form\FormFactoryInterface               $formFactory
      * @param \Symfony\Component\HttpFoundation\Session\SessionInterface $session
-     * @param \Symfony\Component\Translation\TranslatorInterface $translator
-     * @param \Innova\PathBundle\Form\Handler\PathHandler $pathHandler
-     * @param \Innova\PathBundle\Manager\PathManager $pathManager
-     * @param \Claroline\CoreBundle\Manager\ResourceManager $resourceManager
+     * @param \Symfony\Component\Translation\TranslatorInterface         $translator
+     * @param \Innova\PathBundle\Form\Handler\PathHandler                $pathHandler
+     * @param \Innova\PathBundle\Manager\PathManager                     $pathManager
+     * @param \Claroline\CoreBundle\Manager\ResourceManager              $resourceManager
      */
     public function __construct(
-    ObjectManager $objectManager, RouterInterface $router, FormFactoryInterface $formFactory, SessionInterface $session, TranslatorInterface $translator, PathHandler $pathHandler, PathManager $pathManager, ResourceManager $resourceManager) {
-        $this->om = $objectManager;
-        $this->router = $router;
-        $this->formFactory = $formFactory;
-        $this->session = $session;
-        $this->translator = $translator;
-        $this->pathHandler = $pathHandler;
-        $this->pathManager = $pathManager;
+        ObjectManager        $objectManager,
+        RouterInterface      $router,
+        FormFactoryInterface $formFactory,
+        SessionInterface     $session,
+        TranslatorInterface  $translator,
+        PathHandler          $pathHandler,
+        PathManager          $pathManager,
+        ResourceManager      $resourceManager)
+    {
+        $this->om              = $objectManager;
+        $this->router          = $router;
+        $this->formFactory     = $formFactory;
+        $this->session         = $session;
+        $this->translator      = $translator;
+        $this->pathHandler     = $pathHandler;
+        $this->pathManager     = $pathManager;
         $this->resourceManager = $resourceManager;
     }
 
@@ -123,13 +131,13 @@ class EditorController {
      * @Method({"GET", "POST"})
      * @Template("InnovaPathBundle:Editor:main.html.twig")
      */
-    public function newAction(Workspace $workspace) {
+    public function newAction(Workspace $workspace)
+    {
         $path = Path::initialize();
         $this->pathManager->checkAccess('CREATE', $path, $workspace);
 
         return $this->renderEditor($workspace, $path);
     }
-
 
     /**
      * Create a new path from a template
@@ -147,7 +155,8 @@ class EditorController {
      * @ParamConverter("template", class="InnovaPathBundle:Path\PathTemplate", options={"mapping": {"templateId": "id"}})
      * @Template("InnovaPathBundle:Editor:main.html.twig")
      */
-    public function newFromModelAction(Workspace $workspace, PathTemplate $template) {
+    public function newFromModelAction(Workspace $workspace, PathTemplate $template)
+    {
         $path = new Path();
         
         $this->pathManager->checkAccess('CREATE', $path, $workspace);
@@ -172,7 +181,8 @@ class EditorController {
      * @Method({"GET", "PUT"})
      * @Template("InnovaPathBundle:Editor:main.html.twig")
      */
-    public function editAction(Workspace $workspace, Path $path) {
+    public function editAction(Workspace $workspace, Path $path)
+    {
         $this->pathManager->checkAccess('EDIT', $path);
 
         return $this->renderEditor($workspace, $path, 'PUT');
@@ -185,7 +195,8 @@ class EditorController {
      * @param  string $httpMethod
      * @return array|RedirectResponse
      */
-    protected function renderEditor(Workspace $workspace, Path $path, $httpMethod = null) {
+    protected function renderEditor(Workspace $workspace, Path $path, $httpMethod = null)
+    {
         $params = array();
         if (!empty($httpMethod)) {
             $params['method'] = $httpMethod;
@@ -252,7 +263,8 @@ class EditorController {
      * )
      * @Method("GET")
      */
-    public function loadActivityAction($nodeId) {
+    public function loadActivityAction($nodeId)
+    {
         $activity = array();
 
         $node = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findOneById($nodeId);
@@ -328,7 +340,8 @@ class EditorController {
      * )
      * @Method("GET")
      */
-    public function showActivityAction($activityId) {
+    public function showActivityAction($activityId)
+    {
         // Retrieve node from Activity id
         $activity = $this->om->getRepository('ClarolineCoreBundle:Resource\Activity')->findOneById($activityId);
         if (empty($activity)) {

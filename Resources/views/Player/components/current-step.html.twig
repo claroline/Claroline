@@ -1,5 +1,3 @@
-{% import 'InnovaPathBundle::Player/components/macros.html.twig' as macros %}
-
 <div class="panel panel-default">
     <div id="step-title" class="panel-heading">
         <div class="bg-lvl-{{ currentStep.lvl }} lvl-indicator-xlarge">&nbsp;</div>
@@ -7,43 +5,39 @@
     </div>
 
     <div class="panel-body">
-        {% if edit == true %}
-            {{ form_widget(form.description) }}
-            {{ form_widget(form.save, { 'label': 'Sauvegarder' }) }}
-            {{ form_end(form) }}
-        {% else %}
-            {% if currentStep.children is not empty %}
-                {% if currentStep.description is null %}
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <h5 class="panel-title text-center">
-                                <a data-toggle="collapse" href="#collapse-children">
-                                {{ 'next_step' | trans({}, 'path_player') }}
-                                </a>
-                            </h5>
-                        </div>
-                        <ul id="collapse-children" class="list-group collapse {% if currentStep.description is null %}in{% endif %}">
-                        {% for child in currentStep.children %}
-                            <li class="list-group-item">
-                            <a href="{{ path('innova_path_player_index', { workspaceId: workspace.id, pathId: path.id, stepId: child.id }) }}">
-                            {{ child.name }}
+        {% if currentStep.children is not empty %}
+            {% if currentStep.description is null %}
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h5 class="panel-title text-center">
+                            <a data-toggle="collapse" href="#collapse-children">
+                            {{ 'next_step' | trans({}, 'path_player') }}
                             </a>
-                            </li>
-                        {% endfor %}
-                        </ul>
+                        </h5>
                     </div>
-                {% endif %}
+                    <ul id="collapse-children" class="list-group collapse {% if currentStep.description is null %}in{% endif %}">
+                    {% for child in currentStep.children %}
+                        <li class="list-group-item">
+                        <a href="{{ path('innova_path_player_index', { workspaceId: workspace.id, pathId: path.id, stepId: child.id }) }}">
+                        {{ child.name }}
+                        </a>
+                        </li>
+                    {% endfor %}
+                    </ul>
+                </div>
             {% endif %}
+        {% endif %}
 
-            {% set allParents = currentStep.getParents() %}
+        {% set allParents = currentStep.getParents() %}
 
-            <div id="current-step-text" class="current-step-text path-tab">
-                {{ currentStep.description | raw }}
+        <div id="current-step-text" class="current-step-text path-tab">
+            {{ currentStep.description | raw }}
+        </div>
+
+        {% if currentStep.activity is not empty and currentStep.activity.primaryResource is not empty %}
+            <div id="resource{{ currentStep.activity.primaryResource.id }}" class="path-tab resource-tab">
+                <iframe style="border:none; padding:0;" id="{{ currentStep.activity.primaryResource.id }}" seamless width="100%" class="resource-frame" src=""></iframe>
             </div>
-
-            {% if currentStep.activity is not empty and currentStep.activity.primaryResource is not empty %}
-                {{ macros.displayResourceFrame(currentStep.activity.primaryResource) }}
-            {% endif %}
         {% endif %}
     </div>
 </div>

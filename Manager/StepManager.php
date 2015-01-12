@@ -68,6 +68,16 @@ class StepManager
     }
 
     /**
+     * Get a step by ID
+     * @param  integer $stepId
+     * @return null|Step
+     */
+    public function get($stepId)
+    {
+        return $this->om->getRepository("InnovaPathBundle:Step")->findOneById($stepId);
+    }
+
+    /**
      * Create a new step from JSON structure
      * @param  \Innova\PathBundle\Entity\Path\Path $path          Parent path of the step
      * @param  integer                             $level         Depth of the step in the path

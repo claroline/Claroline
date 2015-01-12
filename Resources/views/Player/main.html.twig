@@ -10,16 +10,13 @@
     %}
         <link rel="stylesheet" href="{{ asset_url }}" />
     {% endstylesheets %}
-
 {% endblock %}
 
 {% block content %}
-    {% import 'InnovaPathBundle::Player/components/macros.html.twig' as macros %}
-
     <div id="path-main-container" class="path-player">
-        <!-- Summary -->
+        {# Summary #}
         <div id="full-tree" class="modal fade">
-            {{ render(controller('innova_path.controller.path_player:displayTreeBrowserAction', { 'workspace': workspace, 'path': path, 'currentStep': currentStep } )) }}
+            {% include 'InnovaPathBundle:Player:components/tree-browser.html.twig' with { 'workspace': workspace, 'path': path, 'currentStep': currentStep, 'autoDisplayEnabled': autoDisplayEnabled } %}
         </div>
 
         <div class="row">
@@ -37,7 +34,7 @@
 
                 {# Breadcrumb #}
                 <div class="breadcrumbs">
-                    {{ render(controller('innova_path.controller.path_player:displayBreadcrumbsAction', { 'workspace': workspace, 'path': path, 'currentStep': currentStep })) }}
+                    {% include 'InnovaPathBundle:Player:components/breadcrumbs.html.twig' with { 'workspace': workspace, 'path': path, 'currentStep': currentStep, 'roadBack': roadBack } %}
                 </div>
             </div>
         </div>
@@ -45,12 +42,12 @@
         <div class="content row">
             {# Resources #}
             <div class="col-md-12">
-                {% include 'InnovaPathBundle::Player/components/resources.html.twig' %}
+                {% include 'InnovaPathBundle:Player:components/resources.html.twig' with { currentStep: currentStep } %}
             </div>
 
             {# Step content #}
             <div class="current-step col-md-12">
-                {{ render(controller('innova_path.controller.path_player:displayCurrentStepAction', { 'workspace': workspace, 'path': path, 'currentStep': currentStep, 'edit': edit } )) }}
+                {% include 'InnovaPathBundle:Player:components/current-step.html.twig' with { 'workspace': workspace, 'path': path, 'currentStep': currentStep } %}
             </div>
         </div>
     </div>
@@ -59,27 +56,72 @@
 {% block javascripts %}
     {{ parent() }}
 
-    {% import 'InnovaPathBundle::Player/components/macros.html.twig' as macros %}
-
+    {# Adapt size for the IFrame which contains the primary resource #}
     {% if currentStep.activity.primaryResource %}
-    {{ macros.displayResourceFrameJS(currentStep.activity.primaryResource) }}
+        <script type="text/javascript">
+            $(document).ready(function() {
+                // Enable tooltip
+                $('*').tooltip({ placement: 'top' });
+
+                // Force all links of a step to be opened in a new tab
+                $('#current-step-text a').attr('target','_blank');
+
+                var $frame = $('iframe#{{ currentStep.activity.primaryResource.id }}');
+
+                // Resize IFrame on load
+                $frame.load(function () {
+                    resizeIframe($(this));
+
+                    // Observe DOM modifications to resize IFrame to fit content
+                    var MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
+                    var observer = new MutationObserver(function (mutations, observer) {
+                        resizeIframe($frame);
+                    });
+
+                    observer.observe($frame.get(0).contentDocument.body, {
+                        subtree: true,
+                        childList: true
+                    });
+
+                    $frame.on('resize', function () {
+                        resizeIframe($frame);
+                    });
+                }).attr('src', '{{ path('claro_resource_open', {'node': currentStep.activity.primaryResource.id, 'resourceType': currentStep.activity.primaryResource.resourceType.name }) }}');
+
+                // Resize IFrame on window resize
+                $(window).on('resize', function () {
+                    resizeIframe($frame);
+                });
+            });
+
+            function resizeIframe(frame) {
+                var height = frame.contents().height();
+                frame.animate({ height: height }, 100, function() {});
+            }
+        </script>
     {% endif %}
 
     <script type="text/javascript">
-        var pathId = {{ path.id }};
-        {% if currentStep == path.getRootStep %}
-            var isRoot = true;
-        {% endif %}
+        var pathId      = {{ path.id }};
+        var workspaceId = {{ workspace.id }};
 
-        var showSummary = false;
-        {% if showSummary %}
-            showSummary = true;
-        {% endif %}
+        $(document).ready(function() {
+            {% if autoDisplaySummary %}
+            $('#full-tree').modal('show');
+            {% endif %}
+
+            $('#do-not-display-anymore').on('change', function () {
+                var isChecked = $(this).is(':checked');
+
+                $.ajax({
+                    url: Routing.generate('innova_path_player_toggle_summary', {
+                        workspaceId : workspaceId,
+                        pathId      : pathId,
+                        disabled    : isChecked ? 1 : 0
+                    }),
+                    method: 'PUT'
+                });
+            });
+        });
     </script>
-
-    {% javascripts debug=false filter='jsmin' output='vendor/innovapath/player.js'
-        '@InnovaPathBundle/Resources/public/js/Player/*'
-    %}
-        <script type="text/javascript" src="{{ asset_url }}"></script>
-    {% endjavascripts %}
 {% endblock %}

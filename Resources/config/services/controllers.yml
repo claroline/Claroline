@@ -22,10 +22,12 @@ services:
     innova_path.controller.path_player:
         class: %innova_path.controller.path_player.class%
         arguments:
+            router:      @router
             session:     @session
-            translator:  @translator
+            stepManager: @innova_path.manager.step
         calls:
-          - [setContainer, ["@service_container"]]
+          - [setRequest, [@request]]
+        scope: request
 
     # Contextual Editor controller
     innova_path.controller.path_contextual_editor:

@@ -1,4 +1,4 @@
-{% import 'InnovaPathBundle::Player/components/macros.html.twig' as macros %}
+{% import _self as macros %}
 
 <div class="modal-dialog">
     <div class="modal-content">
@@ -13,7 +13,7 @@
                 <div class="col-md-12"  id="do-not-display-anymore-container">
                     <label class="text-muted pull-right" for="do-not-display-anymore">
                         {{ 'do_not_display_automatically' | trans({}, 'path_player') }}
-                        <input type="checkbox" id="do-not-display-anymore" name="do-not-display-anymore" />
+                        <input type="checkbox" id="do-not-display-anymore" name="do-not-display-anymore" {% if not autoDisplayEnabled %}checked="checked"{% endif %} />
                     </label>
                 </div>
             </div>
@@ -31,3 +31,23 @@
         </div>
     </div>
 </div>
+
+{# Macros #}
+{% macro displayTreeItem(item, currentStep, path, workspace) %}
+    {% import _self as macros %}
+
+    <li>
+        <div class="tree-item{% if item == currentStep %} active-step{% endif %}">
+            <div class="lvl lvl-{{ item.lvl }}"></div>
+            <a class="step" href="{{ path('innova_path_player_index', { workspaceId: workspace.id, pathId: path.id, stepId: item.id }) }}">{{ item.name }}</a>
+        </div>
+
+        {% if item.children is not empty %}
+            <ul>
+                {% for child in item.children %}
+                    {{ macros.displayTreeItem(child, currentStep, path, workspace) }}
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </li>
+{% endmacro %}

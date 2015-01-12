@@ -7,12 +7,12 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\DependencyInjection\ContainerAware;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\HttpFoundation\Request;
 
+use Innova\PathBundle\Manager\StepManager;
 use Innova\PathBundle\Entity\Path\Path;
 use Innova\PathBundle\Entity\Step;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
@@ -22,18 +22,26 @@ use Claroline\CoreBundle\Entity\Workspace\Workspace;
  * @author Innovalangues <contact@innovalangues.net>
  * 
  * @Route(
- *      "",
- *      name="innova_path_player",
- *      service="innova_path.controller.path_player"
+ *      "workspace/{workspaceId}/path/{pathId}",
+ *      name = "innova_path_player",
+ *      service = "innova_path.controller.path_player"
  * )
+ * @ParamConverter("workspace", class = "ClarolineCoreBundle:Workspace\Workspace", options = { "mapping": {"workspaceId": "id"} })
+ * @ParamConverter("path",      class = "InnovaPathBundle:Path\Path",              options = { "mapping": {"pathId": "id"} })
  */
-class PlayerController extends ContainerAware 
+class PlayerController
 {
     /**
-     * Translator engine
-     * @var \Symfony\Component\Translation\TranslatorInterface
+     * Step Manager
+     * @var \Innova\PathBundle\Manager\StepManager
      */
-    protected $translator;
+    protected $stepManager;
+
+    /**
+     * Router
+     * @var \Symfony\Component\Routing\RouterInterface
+     */
+    protected $router;
 
     /**
      * Session
@@ -42,93 +50,86 @@ class PlayerController extends ContainerAware
     protected $session;
 
     /**
-     * Class constructor
-     * @param \Symfony\Component\HttpFoundation\Session\SessionInterface $session
-     * @param \Symfony\Component\Translation\TranslatorInterface         $translator
+     * Current request
+     * @var \Symfony\Component\HttpFoundation\Request
      */
-    public function __construct(
-        SessionInterface     $session,
-        TranslatorInterface  $translator)
+    protected $request;
+
+    /**
+     * Class constructor
+     * @param \Symfony\Component\Routing\RouterInterface                 $router
+     * @param \Symfony\Component\HttpFoundation\Session\SessionInterface $session
+     * @param \Innova\PathBundle\Manager\StepManager                     $stepManager
+     */
+    public function __construct(RouterInterface $router, SessionInterface $session, StepManager $stepManager)
     {
+        $this->router      = $router;
         $this->session     = $session;
-        $this->translator  = $translator;
+        $this->stepManager = $stepManager;
+    }
+
+    /**
+     * Set current request
+     * @param  \Symfony\Component\HttpFoundation\Request   $request
+     * @return \Innova\PathBundle\Controller\PlayerController
+     */
+    public function setRequest(Request $request = null)
+    {
+        $this->request = $request;
+
+        return $this;
     }
 
     /**
      * Display path player
-     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
-     * @param \Innova\PathBundle\Entity\Path\Path                      $path
-     * @param \Innova\PathBundle\Entity\Step                           $currentStep
+     * @param  \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
+     * @param  \Innova\PathBundle\Entity\Path\Path              $path
+     * @param  \Innova\PathBundle\Entity\Step                   $currentStep
      * @return array
      *
      * @Route(
-     *      "workspace/{workspaceId}/path/{pathId}/step/{stepId}",
-     *      name="innova_path_player_index",
-     *      options={"expose" = true}
+     *      "/step/{stepId}",
+     *      name = "innova_path_player_index",
+     *      options = { "expose" = true }
      * )
-     * @ParamConverter("workspace", class="ClarolineCoreBundle:Workspace\Workspace", options={"mapping": {"workspaceId": "id"}})
-     * @ParamConverter("path", class="InnovaPathBundle:Path\Path", options={"mapping": {"pathId": "id"}})
-     * @ParamConverter("currentStep", class="InnovaPathBundle:Step", options={"mapping": {"stepId": "id"}})
+     * @ParamConverter("currentStep", class="InnovaPathBundle:Step", options = { "mapping": {"stepId": "id"} })
      * @Method("GET")
      * @Template("InnovaPathBundle:Player:main.html.twig")
      */
     public function displayAction(Workspace $workspace, Path $path, Step $currentStep)
     {
-        // we need to know if we are already playing the pass or coming from path list in order to show tree-brower or not
-        $request = $this->container->get('request');
-        $router = $this->container->get('router');
+        // Check if path summary needs to be displayed automatically
+        $autoDisplaySummary = $this->isSummaryAutoDisplayed($path, $currentStep);
 
-        $showSummary = false;
+        // Build road back to the previous visited step
+        $roadBack = $this->buildRoadBack($currentStep);
 
-        $referer = $request->headers->get('referer');
-        if (!empty($referer)) {
-            $context = $router->getContext();
-            $currentMethod = $context->getMethod();
-            $context->setMethod('HEAD');
-
-            $baseUrl = $request->getBaseUrl();
-
-            if (false !== strpos($referer, $baseUrl)) {
-                $lastPath = substr($referer, strpos($referer, $baseUrl) + strlen($baseUrl));
-            } else {
-                $lastPath = $referer;
-            }
-
-            $previous = null;
-            try {
-                $previous = $router->getMatcher()->match($lastPath);
-            } catch (\Exception $e) {} // Do nothing on error, we don't want a NotFound exception if URL doesn't match
-
-            $context->setMethod($currentMethod);
-
-            if (!empty($previous) && $previous['_route'] != $request->get('_route')) {
-                $showSummary = true;
-            }
-        }
+        // Store current step in session to can build road back when User will leave it
+        $this->session->set('lastStepId', $currentStep->getId());
 
         return array (
-            'workspace' => $workspace,
-            'path' => $path,
-            'currentStep' => $currentStep,
-            'edit' => false,
-
-            // if previous url does not match displayAction route we have to display the tree-browser modal
-            'showSummary' => $showSummary,
+            'workspace'          => $workspace,
+            'path'               => $path,
+            'currentStep'        => $currentStep,
+            'roadBack'           => $roadBack,
+            'autoDisplaySummary' => $autoDisplaySummary,
+            'autoDisplayEnabled' => $this->isAutoDisplayEnabled($path)
         );
     }
-    
-    /**
-     * @Method("GET")
-     * @Template("InnovaPathBundle:Player:components/breadcrumbs.html.twig")
-     */
-    public function displayBreadcrumbsAction(Workspace $workspace, Path $path, Step $currentStep)
-    {
-        $ghost = array ();
-        $session = $this->container->get('request')->getSession();
-        $lastStepId = $session->get('lastStepId');
-        $lastStep = $this->container->get('doctrine')->getManager()->getRepository("InnovaPathBundle:Step")->findOneById($lastStepId);
 
-        if($lastStep){
+    /**
+     * Build road back to the last visited step
+     * @param  \Innova\PathBundle\Entity\Step $currentStep
+     * @return Array
+     */
+    private function buildRoadBack(Step $currentStep)
+    {
+        $roadBack = array ();
+
+        $lastStepId = $this->session->get('lastStepId');
+        $lastStep   = $this->stepManager->get($lastStepId);
+
+        if ($lastStep) {
             $currentStepLevel = $currentStep->getLvl();
             $lastStepParents = $lastStep->getParents();
 
@@ -139,105 +140,99 @@ class PlayerController extends ContainerAware
                             $ghost[] = $lastStepParent;
                         }
                     }
-                    $ghost[] = $lastStep;
+                    $roadBack[] = $lastStep;
                 }
             }
         }
 
-        $session->set('lastStepId', $currentStep->getId());
-
-        return array (
-            'workspace' => $workspace,
-            'path' => $path,
-            'currentStep' => $currentStep,
-            'ghost' => $ghost,
-        );
+        return $roadBack;
     }
 
     /**
-     * @Method("GET")
-     * @Template("InnovaPathBundle:Player:components/resources.html.twig")
+     * Check if summary needs to be displayed (if the User just arrived on the Path)
      */
-    public function displayResourcesAction(Step $currentStep)
+    private function isSummaryAutoDisplayed(Path $path, Step $currentStep)
     {
-        return array (
-            'currentStep' => $currentStep,
-        );
+        $showSummary = false;
+
+        if (null == $currentStep->getParent()) {
+            // We are on the root step of the path
+            // Check if User has disabled auto display of the summary
+            if ($this->isAutoDisplayEnabled($path)) {
+                // Auto display is not disabled for this path
+                // Check if User comes from another part of the app
+                $referrer = $this->request->headers->get('referer');
+                if (!empty($referrer)) {
+                    $context = $this->router->getContext();
+                    $currentMethod = $context->getMethod();
+                    $context->setMethod('HEAD');
+
+                    $baseUrl = $this->request->getBaseUrl();
+
+                    if (false !== strpos($referrer, $baseUrl)) {
+                        $lastPath = substr($referrer, strpos($referrer, $baseUrl) + strlen($baseUrl));
+                    } else {
+                        $lastPath = $referrer;
+                    }
+
+                    $previous = null;
+                    try {
+                        $previous = $this->router->getMatcher()->match($lastPath);
+                    } catch (\Exception $e) {
+                        // Do nothing on error, we just don't want a NotFound exception if URL doesn't match
+                    }
+
+                    $context->setMethod($currentMethod);
+
+                    if (!empty($previous) && $previous['_route'] != $this->request->get('_route')) {
+                        $showSummary = true;
+                    }
+                }
+            }
+        }
+
+        return $showSummary;
     }
-    
-    /**
-     * @Method("GET")
-     * @Template("InnovaPathBundle:Player:components/tree-browser.html.twig")
-     */
-    public function displayTreeBrowserAction(Workspace $workspace, Path $path, Step $currentStep)
+
+    private function isAutoDisplayEnabled(Path $path)
     {
-        return array (
-            'workspace' => $workspace,
-            'path' => $path,
-            'currentStep' => $currentStep,
-        );
-    }
-    
-    /**
-     * @Method("GET")
-     * @Template("InnovaPathBundle:Player:components/current-step.html.twig")
-     */
-    public function displayCurrentStepAction(Workspace $workspace, Path $path, Step $currentStep, $edit)
-    {
-        $form = $this->container->get('form.factory')->create('innova_step', $currentStep, array ('method' => 'POST', 'action' => $this->container->get('router')->generate('innova_path_save_current_step', array( 'stepId' => $currentStep->getId(),'workspaceId' => $workspace->getId(),'pathId' => $path->getId()))));
-        
-        return array (
-            'workspace' => $workspace,
-            'path' => $path,
-            'currentStep' => $currentStep,
-            'edit' => $edit,
-            'form' => $form->createView()
-        );
+        $enabled = true;
+
+        $disabledSummaryAutoDisplay = $this->session->get('doNotDisplayAnymore');
+        if (!empty($disabledSummaryAutoDisplay) && !empty($disabledSummaryAutoDisplay[$path->getId()])) {
+            $enabled = false;
+        }
+
+        return $enabled;
     }
 
     /**
      *
-     * @Route("/set-do-not-display-anymore", name="setDoNotDisplayAnymore", options={"expose"=true})
-     * @Method("GET")
+     * @Route(
+     *      "/disable_summary/{disabled}",
+     *      name     = "innova_path_player_toggle_summary",
+     *      defaults = { "disabled" = false },
+     *      options  = { "expose"   = true }
+     * )
+     * @Method("PUT")
      */
-    public function setDoNotDisplayAnymoreAction(Request $request)
+    public function toggleSummaryAutoDisplay(Workspace $workspace, Path $path, $disabled)
     {
-        $isChecked = $request->query->get('isChecked');
-        $pathId = $request->query->get('pathId');
+        $disabled = filter_var($disabled, FILTER_VALIDATE_BOOLEAN);
 
-        $session = $this->container->get('request')->getSession();
-        if(!$doNotDisplay = $session->get('doNotDisplayAnymore')){
-            $doNotDisplay = array();
+        $disabledSummaryAutoDisplay = $this->session->get('doNotDisplayAnymore');
+        if (empty($disabledSummaryAutoDisplay)) {
+            $disabledSummaryAutoDisplay = array ();
         }
 
-        $doNotDisplay[$pathId] = $isChecked;
-
-        $session->set('doNotDisplayAnymore', $doNotDisplay);
-
-        return new JsonResponse(
-            array('isChecked' => $doNotDisplay[$pathId])
-        );
-    }
-
-    /**
-     *
-     * @Route("/get-do-not-display-anymore", name="getDoNotDisplayAnymore", options={"expose"=true})
-     * @Method("GET")
-     */
-    public function getDoNotDisplayAnymoreAction(Request $request)
-    {
-        $pathId = $request->query->get('pathId');
-        $isChecked = null;
-
-        $session = $this->container->get('request')->getSession();
-        if($doNotDisplay = $session->get('doNotDisplayAnymore') && isset($doNotDisplay[$pathId]) && $doNotDisplay[$pathId]) {
-            $isChecked = true;
-        } else {
-            $isChecked = false;
+        if ($disabled) {
+            $disabledSummaryAutoDisplay[$path->getId()] = $disabled;
+        } else if (!empty($disabledSummaryAutoDisplay[$path->getId()])) {
+            unset($disabledSummaryAutoDisplay[$path->getId()]);
         }
 
-        return new JsonResponse(
-            array('isChecked' => $isChecked)
-        );
+        $this->session->set('doNotDisplayAnymore', $disabledSummaryAutoDisplay);
+
+        return new JsonResponse($disabled);
     }
 }
