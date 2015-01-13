@@ -75,6 +75,12 @@ abstract class qtiImport
         $feedback = $this->getFeedback();
         $this->interaction = new Interaction;
         $this->interaction->setInvite($this->getPrompt());
+        if ($this->interaction->getInvite() == '' && $this->question->getDescription() != '') {
+            $this->interaction->setInvite($this->question->getDescription());
+            $this->question->setDescription('');
+            $this->doctrine->getManager()->persist($this->question);
+            $this->doctrine->getManager()->flush();
+        }
         if ($feedback != null) {
             $this->interaction->setFeedBack($feedback);
         }
