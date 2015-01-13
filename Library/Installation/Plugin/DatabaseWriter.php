@@ -27,6 +27,8 @@ use Claroline\CoreBundle\Entity\Resource\ResourceIcon;
 use Claroline\CoreBundle\Entity\Resource\MenuAction;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\Tool\AdminTool;
+use Claroline\CoreBundle\Entity\Tool\ToolMaskDecoder;
+use Claroline\CoreBundle\Entity\Tool\PwsToolConfig;
 use Claroline\CoreBundle\Entity\Widget\Widget;
 use Symfony\Component\Filesystem\Filesystem;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -610,6 +612,13 @@ class DatabaseWriter
         }
 
         $this->toolManager->create($tool);
+        $roleUser = $this->em->getRepository('ClarolineCoreBundle:Role')->findOneByName('ROLE_USER');
+        $mask = ToolMaskDecoder::$defaultValues['open'] + ToolMaskDecoder::$defaultValues['edit'];
+        $pws = new PwsToolConfig();
+        $pws->setTool($tool);
+        $pws->setRole($roleUser);
+        $pws->setMask($mask);
+        $this->em->persist($pws);
         $this->persistCustomToolRights($toolConfiguration['tool_rights'], $tool);
     }
 
