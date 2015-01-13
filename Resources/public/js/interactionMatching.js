@@ -105,7 +105,7 @@ function creationMatchingEdit(addchoice, addproposal, deletechoice, LabelValue, 
 
             // Add the delete button
             $('#newTableProposal').find('tr:last').append('<td class="classic"></td>');
-            adddelete($('#newTableProposal').find('td:last'), deletechoice);
+            adddelete($('#newTableProposal').find('td:last'), deletechoice, 1);
         }
 
         $('#newTableProposal').find('tbody').append('<tr><td></td></tr>');
@@ -136,7 +136,7 @@ function creationMatchingEdit(addchoice, addproposal, deletechoice, LabelValue, 
         if (nbResponses == 0) {
             // Add the delete button
             $('#newTableLabel').find('tr:last').append('<td class="classic"></td>');
-            adddelete($('#newTableLabel').find('td:last'), deletechoice);
+            adddelete($('#newTableLabel').find('td:last'), deletechoice, 0);
         }
 
         $('#newTableLabel').find('tbody').append('<tr></tr>');
@@ -445,7 +445,8 @@ function adddelete(tr, deletechoice, codeContainer) {
         getCorrespondances();
         // for update correspondances
         var numberId;
-        if(codeContainer == 0) {
+        var typeDelete = delLink.attr("href");
+        if(typeDelete == "newTableLabel") {
             numberId = $(this).parent('td').parent('tr').find("select").attr("id");
             numberId = numberId.replace("_correspondence", "");
             for(var i = 1; i < correspondances.length; i++ ) {
@@ -490,7 +491,7 @@ function adddelete(tr, deletechoice, codeContainer) {
                 }
             }
         });
-
+        
         e.preventDefault();
         return false;
     });
