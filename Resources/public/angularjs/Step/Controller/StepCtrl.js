@@ -154,6 +154,7 @@
                 theme: 'modern',
                 language: EditorApp.locale,
                 browser_spellcheck : true,
+                entity_encoding : "numeric",
                 autoresize_min_height: 100,
                 autoresize_max_height: 500,
                 plugins: [
