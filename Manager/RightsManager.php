@@ -610,7 +610,7 @@ class RightsManager
     {
         $access = $this->pwsRightsManagementAccessRepo->findOneByRole($role);
 
-        if (!$access === null) {
+        if ($access === null) {
             $access = new PwsRightsManagementAccess();
             $access->setRole($role);
             $access->setIsAccessible(false);

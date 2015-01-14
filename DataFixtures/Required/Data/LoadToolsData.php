@@ -16,6 +16,7 @@ use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\Tool\ToolMaskDecoder;
 use Claroline\CoreBundle\Entity\Tool\PwsToolConfig;
 use Claroline\CoreBundle\DataFixtures\Required\RequiredFixture;
+use Claroline\CoreBundle\Entity\Resource\PwsRightsManagementAccess;
 
 class LoadToolsData implements RequiredFixture
 {
@@ -53,6 +54,7 @@ class LoadToolsData implements RequiredFixture
             $this->createPersonalWorkspaceToolConfig($manager, $entity);
         }
 
+        $this->updatePersonalWorkspaceResourceRightsConfig($manager);
         $manager->flush();
     }
 
@@ -77,6 +79,16 @@ class LoadToolsData implements RequiredFixture
         $pwc->setRole($roleUser);
         $pwc->setMask(3);
         $manager->persist($pwc);
+    }
+
+    private function updatePersonalWorkspaceResourceRightsConfig(ObjectManager $manager)
+    {
+        $roleUser = $manager->getRepository('ClarolineCoreBundle:Role')->findOneByName('ROLE_USER');
+        $config = new PwsRightsManagementAccess();
+        $config->setRole($roleUser);
+        $config->setIsAccessible(true);
+        $manager->persist($config);
+        $manager->flush();
     }
 
     public function setContainer($container)

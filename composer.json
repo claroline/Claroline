@@ -59,7 +59,8 @@
         "johngrogg/ics-parser": "dev-master",
         "gregwar/captcha-bundle": "1.0.12",
         "knplabs/knp-menu-bundle": "2.0.0",
-        "innova/angular-js-bundle": "1.0.2"
+        "innova/angular-js-bundle": "1.0.2",
+        "innova/angular-ui-translation-bundle" "~3.0.1"
     },
     "require-dev": {
         "mockery/mockery": "dev-master@dev",
