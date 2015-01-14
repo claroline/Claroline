@@ -3,6 +3,7 @@ twig:
     strict_variables: %kernel.debug%
     globals:
         chosenRangeKeys: %chosenRangeKeys%
+        uploadsDir: %claroline.param.uploads_directory%
     form:
         resources:
             - 'ClarolineCoreBundle:Form:date_range.html.twig'
