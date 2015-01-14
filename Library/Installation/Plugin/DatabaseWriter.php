@@ -584,6 +584,13 @@ class DatabaseWriter
     {
         $tool = new Tool();
         $this->persistTool($toolConfiguration, $plugin, $tool);
+        $roleUser = $this->em->getRepository('ClarolineCoreBundle:Role')->findOneByName('ROLE_USER');
+        $mask = ToolMaskDecoder::$defaultValues['open'] + ToolMaskDecoder::$defaultValues['edit'];
+        $pws = new PwsToolConfig();
+        $pws->setTool($tool);
+        $pws->setRole($roleUser);
+        $pws->setMask($mask);
+        $this->em->persist($pws);
     }
 
     /**
@@ -612,13 +619,6 @@ class DatabaseWriter
         }
 
         $this->toolManager->create($tool);
-        $roleUser = $this->em->getRepository('ClarolineCoreBundle:Role')->findOneByName('ROLE_USER');
-        $mask = ToolMaskDecoder::$defaultValues['open'] + ToolMaskDecoder::$defaultValues['edit'];
-        $pws = new PwsToolConfig();
-        $pws->setTool($tool);
-        $pws->setRole($roleUser);
-        $pws->setMask($mask);
-        $this->em->persist($pws);
         $this->persistCustomToolRights($toolConfiguration['tool_rights'], $tool);
     }
 
