@@ -18,9 +18,5 @@ class AdditionalInstaller extends BaseInstaller
             $updater = new Updater010000($this->container->get('doctrine.orm.entity_manager'));
             $updater->postUpdate();
         }
-        if (version_compare($currentVersion, '2.0.3', '<')) {
-            $updater = new Updater020003($this->container->get('doctrine.orm.entity_manager'));
-            $updater->postUpdate();
-        }
     }
 }
