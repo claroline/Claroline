@@ -20,7 +20,7 @@ class Updater020003
 
     public function fixWidgetType(){
         /** @var \Icap\PortfolioBundle\Entity\Widget\AbstractWidget[] $abstractWidgets */
-        $abstractWidgets = $this->entityManager->getRepository("IcapPortfolioBundle:Widget\\AbstractWidget")->findOneBy(array('widget_type' => 'presentation'));
+        $abstractWidgets = $this->entityManager->getRepository("IcapPortfolioBundle:Widget\\AbstractWidget")->findOneBy(array('widgetType' => 'presentation'));
 
         foreach ($abstractWidgets as $abstractWidget) {
             $abstractWidget->setWidgetType('text');
