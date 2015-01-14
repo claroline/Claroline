@@ -30,11 +30,6 @@ $logLine = "Emptying the cache...\n";
 file_put_contents($logFile, $logLine . "\n", FILE_APPEND);
 Refresher::removeContentFrom($vendorDir . '/../app/cache');
 
-$kernel = new AppKernel('prod', false);
-$kernel->loadClassCache();
-//I need to do that in order to access some services required for the installation...
-$kernel->boot();
-
 //we can also get the PDO connection from the sf2 container.
 //database parameters from the parameters.yml file
 $value = Yaml::parse($configDir . '/parameters.yml');
@@ -63,6 +58,13 @@ $recorder = new Recorder(
     new OperationHandler($configDir . '/operations.xml'),
     $vendorDir
 );
+
+$recorder->buildBundleFile();
+
+$kernel = new AppKernel('prod', false);
+$kernel->loadClassCache();
+//I need to do that in order to access some services required for the installation...
+$kernel->boot();
 
 $bundles = array();
 
