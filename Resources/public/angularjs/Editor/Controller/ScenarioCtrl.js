@@ -58,9 +58,9 @@
                     templateUrl: EditorApp.webDir + 'bundles/innovapath/angularjs/Confirm/Partial/confirm.html',
                     controller: 'ConfirmModalCtrl',
                     resolve: {
-                        title: function () { return Translator.get('path_editor:step_delete_title', { stepName: step.name }) },
-                        message: function () { return Translator.get('path_editor:step_delete_confirm') },
-                        confirmButton: function () { return Translator.get('path_editor:step_delete') }
+                        title: function () { return Translator.trans('step_delete_title', { stepName: step.name }, 'path_editor') },
+                        message: function () { return Translator.trans('step_delete_confirm', {}, 'path_editor') },
+                        confirmButton: function () { return Translator.trans('step_delete', {}, 'path_editor') }
                     }
                 });
 
@@ -82,9 +82,9 @@
                     templateUrl: EditorApp.webDir + 'bundles/innovapath/angularjs/Confirm/Partial/confirm.html',
                     controller: 'ConfirmModalCtrl',
                     resolve: {
-                        title: function () { return Translator.get('path_editor:step_delete_children_title', { stepName: step.name }) },
-                        message: function () { return Translator.get('path_editor:step_delete_children_confirm') },
-                        confirmButton: function () { return Translator.get('path_editor:step_delete_children') }
+                        title: function () { return Translator.trans('step_delete_children_title', { stepName: step.name }, 'path_editor') },
+                        message: function () { return Translator.trans('step_delete_children_confirm', {}, 'path_editor') },
+                        confirmButton: function () { return Translator.trans('step_delete_children', {}, 'path_editor') }
                     }
                 });
 
@@ -100,7 +100,7 @@
             $scope.addChild = function(step) {
                 var newStep = StepFactory.generateNewStep(step);
 
-                if (typeof step.children == undefined || null == step.children) {
+                if (typeof step.children == 'undefined' || null == step.children) {
                     step.children = [];
                 }
                 step.children.push(newStep);

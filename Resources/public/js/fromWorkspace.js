@@ -22,7 +22,7 @@ $(document).ready(function () {
         // change button layout
         $(this).children('span:first').remove();
 
-        var message = Translator.get('innova_tools:create_path_from_model_loading');
+        var message = Translator.trans('create_path_from_model_loading', {}, 'innova_tools');
         $(this).text(message);
 
         // disable button
@@ -55,7 +55,7 @@ $(document).ready(function () {
     // modal closed 
     $('#path-template-list-modal').on('hidden.bs.modal', function () { 
         $('.path-from-model').prop('disabled', ''); 
-        var message = Translator.get('innova_tools:create_path_from_model') ;
+        var message = Translator.trans('create_path_from_model', {}, 'innova_tools') ;
         $('.path-from-model').html('<span class="fa fa-plus"></span> ' + message);
     });
 });
