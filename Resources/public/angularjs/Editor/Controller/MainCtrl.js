@@ -18,7 +18,7 @@
             if (null === $scope.path.name || $scope.path.name.length === 0) {
                 // Add default name to Root step
                 if (undefined != $scope.path.steps[0]) {
-                    $scope.path.steps[0].name = Translator.get('path_editor:root_default_name');
+                    $scope.path.steps[0].name = Translator.trans('root_default_name', {}, 'path_editor');
                 }
             }
 

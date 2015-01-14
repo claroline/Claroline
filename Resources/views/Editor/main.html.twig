@@ -70,7 +70,10 @@
     {{ parent() }}
     
     {# Load translations #}
-    <script type="text/javascript" src="{{ url('bazinga_exposetranslation_js', { 'domain_name': 'path_editor' }) }}"></script>
+    {% javascripts 'js/translations/path_editor/*.js' %}
+        <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
     {# Angular #}
     {% javascripts debug=false filter='jsmin' output='vendor/angular/angular-js.js'
         '@InnovaAngularJSBundle/Resources/public/js/angular.min.js'
