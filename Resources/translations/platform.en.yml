@@ -1112,3 +1112,5 @@ storage_used: Storage used
 max_amount_resources: Maximum amount of resources
 count_resources: Amount of resources
 package_update_impossible: 'Package update impossible on this page. please contact the administrator.'
+parameters_save_success: 'Parameters saved with success.'
+parameters_save_error: 'An error occured while saving parameters.'

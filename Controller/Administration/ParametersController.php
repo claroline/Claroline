@@ -287,6 +287,8 @@ class ParametersController extends Controller
                         $this->get('claroline.common.logo_service')->createLogo($logo);
                     }
 
+                    $this->addFlashMessage('parameters_save_success');
+
                     return $this->redirect($this->generateUrl('claro_admin_index'));
                 } catch (UnwritableException $e) {
                     $form->addError(
@@ -588,6 +590,10 @@ class ParametersController extends Controller
 
             if ($form->isValid()) {
                 $this->configHandler->setParameter('google_meta_tag', $form['google_meta_tag']->getData());
+
+                $this->addFlashMessage('parameters_save_success');
+
+                return $this->redirect($this->generateUrl('claro_admin_index'));
             }
         }
 
@@ -1006,5 +1012,13 @@ class ParametersController extends Controller
         }
 
         return $form->createView();
+    }
+
+    protected function addFlashMessage($message, $type = 'success')
+    {
+        $this->get('session')->getFlashBag()->add(
+            $type,
+            $this->translator->trans($message, array(), 'platform')
+        );
     }
 }

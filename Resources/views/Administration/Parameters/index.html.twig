@@ -24,6 +24,7 @@
         <h3 class="panel-title">{{ 'parameters'|trans({}, 'platform') }}</h3>
     </div>
     <div class="list-group">
+        {{ macros.flashBox() }}
         <a class="list-group-item" href="{{ path('claro_admin_parameters_general') }}">
             {{ 'general'|trans({}, 'platform') }}
         </a>

@@ -1119,3 +1119,5 @@ personal_workspace_management: Gestion de l'espace personnel
 tool_admin_disabled: L'administrateur de la plateforme a désactivé l'outil
 can_edit_permission: Peut éditer les permissions
 package_update_impossible: 'Mise à jour des paquets impossible sur cette page. Veuillez contacter l''administrateur.'
+parameters_save_success: 'Paramètres sauvegardés avec succès.'
+parameters_save_error: 'Une erreur est survenue pendant la sauvegarde des paramètres.'
