@@ -147,7 +147,6 @@ class ParametersController extends Controller
 
     /**
      * @EXT\Route("/general", name="claro_admin_parameters_general")
-     * @EXT\Method("GET")
      * @EXT\Template
      *
      * @param Request $request
@@ -158,98 +157,77 @@ class ParametersController extends Controller
     {
         $this->checkOpen();
 
-        $description = $this->contentManager->getTranslatedContent(array('type' => 'platformDescription'));
+        $descriptions = $this->contentManager->getTranslatedContent(array('type' => 'platformDescription'));
         $platformConfig = $this->configHandler->getPlatformConfig();
         $role = $this->roleManager->getRoleByName($platformConfig->getDefaultRole());
         $form = $this->formFactory->create(
-            new AdminForm\GeneralType($this->localeManager->getAvailableLocales(), $role, $description, $this->translator->trans('date_form_format', array(), 'platform'), $this->localeManager->getUserLocale($request)),
+            new AdminForm\GeneralType($this->localeManager->getAvailableLocales(), $role, $descriptions, $this->translator->trans('date_form_format', array(), 'platform'), $this->localeManager->getUserLocale($request)),
             $platformConfig
         );
+
+        if ($this->request->isMethod('POST')) {
+            $form->handleRequest($request);
+            if ($form->isValid()) {
+                try {
+                    $portfolioUrlOptions = $request->get('portfolioUrlOptions', 0);
+                    $this->configHandler->setParameters(
+                        array(
+                            'allow_self_registration' => $form['selfRegistration']->getData(),
+                            'locale_language' => $form['localeLanguage']->getData(),
+                            'name' => $form['name']->getData(),
+                            'support_email' => $form['support_email']->getData(),
+                            'default_role' => $form['defaultRole']->getData()->getName(),
+                            'redirect_after_login' => $form['redirect_after_login']->getData(),
+                            'form_captcha' => $form['formCaptcha']->getData(),
+                            'platform_init_date' => $form['platform_init_date']->getData(),
+                            'platform_limit_date' => $form['platform_limit_date']->getData(),
+                            'account_duration' => $form['account_duration']->getData(),
+                            'anonymous_public_profile' => $form['anonymous_public_profile']->getData(),
+                            'portfolio_url' => $portfolioUrlOptions ? $form['portfolio_url']->getData() : null,
+                            'is_notification_active' => $form['isNotificationActive']->getData(),
+                            'max_storage_size' => $form['maxStorageSize']->getData(),
+                            'max_upload_resources' => $form['maxUploadResources']->getData()
+                        )
+                    );
+
+                    $content = $request->get('platform_parameters_form');
+
+                    if (isset($content['description'])) {
+                        $descriptionContent = $this->contentManager->getContent(array('type' => 'platformDescription'));
+                        if ($descriptionContent) {
+                            $this->contentManager->updateContent($descriptionContent, $content['description']);
+                        } else {
+                            $this->contentManager->createContent($content['description'], 'platformDescription');
+                        }
+                    }
+
+                    $logo = $request->files->get('logo');
+
+                    if ($logo) {
+                        $this->get('claroline.common.logo_service')->createLogo($logo);
+                    }
+
+                    $this->addFlashMessage('general_parameters_updated_success');
+
+                    return $this->redirect($this->generateUrl('claro_admin_index'));
+                } catch (UnwritableException $e) {
+                    $form->addError(
+                        new FormError(
+                            $this->translator->trans(
+                                'unwritable_file_exception',
+                                array('%path%' => $e->getPath()),
+                                'platform'
+                            )
+                        )
+                    );
+                }
+            }
+        }
 
         return array(
             'form_settings' => $form->createView(),
             'logos' => $this->get('claroline.common.logo_service')->listLogos()
         );
-    }
-
-    /**
-     * @EXT\Route("/general/submit", name="claro_admin_edit_parameters_general")
-     * @EXT\Method("POST")
-     * @EXT\Template("ClarolineCoreBundle:Administration\Parameters:generalForm.html.twig")
-     *
-     * @param Request $request
-     *
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
-     */
-    public function submitSettingsAction(Request $request)
-    {
-        $this->checkOpen();
-
-        $description = $this->contentManager->getContent(array('type' => 'platformDescription'));
-        $platformConfig = $this->configHandler->getPlatformConfig();
-        $role = $this->roleManager->getRoleByName($platformConfig->getDefaultRole());
-        $form = $this->formFactory->create(
-            new AdminForm\GeneralType($this->localeManager->getAvailableLocales(), $role, $description, $this->translator->trans('date_form_format', array(), 'platform'), $this->localeManager->getUserLocale($request)),
-            $platformConfig
-        );
-        $form->handleRequest($this->request);
-
-        if ($form->isValid()) {
-            try {
-                $portfolioUrlOptions = $this->request->request->get('portfolioUrlOptions', 0);
-                $this->configHandler->setParameters(
-                    array(
-                        'allow_self_registration' => $form['selfRegistration']->getData(),
-                        'locale_language' => $form['localeLanguage']->getData(),
-                        'name' => $form['name']->getData(),
-                        'support_email' => $form['support_email']->getData(),
-                        'default_role' => $form['defaultRole']->getData()->getName(),
-                        'redirect_after_login' => $form['redirect_after_login']->getData(),
-                        'form_captcha' => $form['formCaptcha']->getData(),
-                        'platform_init_date' => $form['platform_init_date']->getData(),
-                        'platform_limit_date' => $form['platform_limit_date']->getData(),
-                        'account_duration' => $form['account_duration']->getData(),
-                        'anonymous_public_profile' => $form['anonymous_public_profile']->getData(),
-                        'portfolio_url' => $portfolioUrlOptions ? $form['portfolio_url']->getData() : null,
-                        'is_notification_active' => $form['isNotificationActive']->getData(),
-                        'max_storage_size' => $form['maxStorageSize']->getData(),
-                        'max_upload_resources' => $form['maxUploadResources']->getData()
-                    )
-                );
-
-                $content = $this->request->get('platform_parameters_form');
-
-                if (isset($content['description'])) {
-                    if ($description) {
-                        $this->contentManager->updateContent($description, $content['description']);
-                    } else {
-                        $this->contentManager->createContent($content['description'], 'platformDescription');
-                    }
-                }
-
-                $logo = $this->request->files->get('logo');
-
-                if ($logo) {
-                    $this->get('claroline.common.logo_service')->createLogo($logo);
-                }
-
-                $this->get('session')->getFlashBag()->add('success', $this->get('translator')->trans('general_parameters_updated_success', array(), 'platform'));
-
-                return $this->redirect($this->generateUrl('claro_admin_parameters_general'));
-            } catch (UnwritableException $e) {
-                $form->addError(
-                    new FormError(
-                        $this->translator->trans(
-                            'unwritable_file_exception',
-                            array('%path%' => $e->getPath()),
-                            'platform'
-                        )
-                    )
-                );
-            }
-        }
-
-        return array('form_settings' => $form->createView());
     }
 
     /**
@@ -267,9 +245,9 @@ class ParametersController extends Controller
             new AdminForm\AppearanceType($this->getThemes()),
             $platformConfig
         );
-        $form->handleRequest($this->request);
 
         if ($this->request->isMethod('POST')) {
+            $form->handleRequest($this->request);
             if ($form->isValid()) {
                 try {
                     $this->configHandler->setParameters(
