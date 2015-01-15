@@ -50,6 +50,33 @@ abstract class qtiExport
     }
 
     /**
+     * Generate object tags for the attached files
+     *
+     * @access protected
+     *
+     */
+    protected function objetcTags()
+    {
+//        $imgs = $this->document->getElementsByTagName("img");
+//        foreach ($imgs as $img) {
+//            echo 'ok';
+//        }
+        $prompt = $this->document->getElementsByTagName('prompt')->item(0);
+        //$txt = $prompt->nodeValue;
+        $txt = html_entity_decode($prompt->nodeValue);
+        $regex = '(<a.*?</a>)';
+        preg_match_all($regex, $txt, $matches);
+        foreach ($matches[0] as $matche) {
+            $url = substr($matche, stripos($matche, 'href="/') + 7, stripos($matche, '">') - 10);
+            $url = explode('/', $url);
+            $nodeId = $url[6];
+            echo $nodeId."<br>";
+
+        }
+        die();
+    }
+
+    /**
      * Generate head of QTI
      *
      * @access protected
@@ -166,7 +193,8 @@ abstract class qtiExport
      */
     protected function getResponse()
     {
-        //sfConfig::set('sf_web_debug', false);
+        //$this->objetcTags();
+
         $tmpFileName = tempnam($this->qtiRepos->getUserDir().'tmp', "xb_");
         $zip = new \ZipArchive();
         $zip->open($tmpFileName, \ZipArchive::CREATE);
