@@ -267,63 +267,45 @@ class ParametersController extends Controller
             new AdminForm\AppearanceType($this->getThemes()),
             $platformConfig
         );
+        $form->handleRequest($this->request);
+
+        if ($this->request->isMethod('POST')) {
+            if ($form->isValid()) {
+                try {
+                    $this->configHandler->setParameters(
+                        array(
+                            'nameActive' => $form['name_active']->getData(),
+                            'theme' => $form['theme']->getData(),
+                            'footer' => $form['footer']->getData(),
+                            'logo' => $this->request->get('selectlogo'),
+                        )
+                    );
+
+                    $logo = $this->request->files->get('logo');
+
+                    if ($logo) {
+                        $this->get('claroline.common.logo_service')->createLogo($logo);
+                    }
+
+                    return $this->redirect($this->generateUrl('claro_admin_index'));
+                } catch (UnwritableException $e) {
+                    $form->addError(
+                        new FormError(
+                            $this->translator->trans(
+                                'unwritable_file_exception',
+                                array('%path%' => $e->getPath()),
+                                'platform'
+                            )
+                        )
+                    );
+                }
+            }
+        }
 
         return array(
             'form_appearance' => $form->createView(),
             'logos' => $this->get('claroline.common.logo_service')->listLogos()
         );
-    }
-
-    /**
-     * @EXT\Route("/appearance/submit", name="claro_admin_edit_parameters_appearance")
-     * @EXT\Method("POST")
-     * @EXT\Template("ClarolineCoreBundle:Administration\Parameters:appearanceForm.html.twig")
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function submitAppearanceAction()
-    {
-        $this->checkOpen();
-
-        $platformConfig = $this->configHandler->getPlatformConfig();
-        $form = $this->formFactory->create(
-            new AdminForm\AppearanceType($this->getThemes()),
-            $platformConfig
-        );
-        $form->handleRequest($this->request);
-
-        if ($form->isValid()) {
-            try {
-                $this->configHandler->setParameters(
-                    array(
-                        'nameActive' => $form['name_active']->getData(),
-                        'theme' => $form['theme']->getData(),
-                        'footer' => $form['footer']->getData(),
-                        'logo' => $this->request->get('selectlogo'),
-                    )
-                );
-
-                $logo = $this->request->files->get('logo');
-
-                if ($logo) {
-                    $this->get('claroline.common.logo_service')->createLogo($logo);
-                }
-            } catch (UnwritableException $e) {
-                $form->addError(
-                    new FormError(
-                        $this->translator->trans(
-                            'unwritable_file_exception',
-                            array('%path%' => $e->getPath()),
-                            'platform'
-                        )
-                    )
-                );
-
-                return array('form_appearance' => $form->createView());
-            }
-        }
-
-        return $this->redirect($this->generateUrl('claro_admin_index'));
     }
 
     /**
