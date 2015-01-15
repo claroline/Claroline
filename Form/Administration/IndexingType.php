@@ -27,7 +27,7 @@ class IndexingType extends AbstractType
                 'label' => 'Google HTML tag validation',
                 'constraints' => array(
                    new Regex(array(
-                       'pattern' => "/^\<meta name=\x22google-site-verification\x22 content=\x22([\w]){1,43}\x22( \/)?\>$/",
+                       'pattern' => "/^\<meta name=\x22google-site-verification\x22 content=\x22\bUA-\d{4,10}-\d{1,4}\b\x22( \/)?\>$/",
                        'message' => 'google_meta_tag_error'
                    ))
                 ),
