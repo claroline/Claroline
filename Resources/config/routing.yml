@@ -1,0 +1,4 @@
+claro_cursus_bundle:
+    resource: "@ClarolineCursusBundle/Controller/"
+    type:     annotation
+    prefix:   /
