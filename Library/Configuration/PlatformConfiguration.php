@@ -11,8 +11,6 @@
 
 namespace Claroline\CoreBundle\Library\Configuration;
 
-use Symfony\Component\Validator\Constraints as Assert;
-
 class PlatformConfiguration
 {
     private $name;
@@ -371,12 +369,6 @@ class PlatformConfiguration
         $this->googleMetaTag = $googleMetaTag;
     }
 
-    /**
-     * @Assert\Regex(
-     *      "/^\<meta name=\x22google-site-verification\x22 content=\x22([\w]){1,43}\x22( \/)?\>$/",
-     *      message = "google_meta_tag_error"
-     * )
-     */
     public function getGoogleMetaTag()
     {
         return $this->googleMetaTag;
