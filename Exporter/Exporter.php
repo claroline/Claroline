@@ -3,10 +3,21 @@
 namespace Icap\PortfolioBundle\Exporter;
 
 use Icap\PortfolioBundle\Entity\Portfolio;
+use Symfony\Component\Templating\EngineInterface;
 
 class Exporter
 {
     protected $availableFormats = array('leap2a');
+
+    /**
+     * @var EngineInterface
+     */
+    protected $templatingEngine;
+
+    public function __construct(EngineInterface $templatingEngine)
+    {
+        $this->templatingEngine = $templatingEngine;
+    }
 
     public function export(Portfolio $portfolio, $format)
     {
@@ -14,7 +25,7 @@ class Exporter
             throw new \InvalidArgumentException('Unknown format.');
         }
 
-        return 'pouet';
+        return $this->templatingEngine->render(sprintf('IcapPortfolioBundle:Exporter:%s.xml.twig', $format), array('portfolio' => $portfolio));
     }
 
     /**
