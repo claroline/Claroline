@@ -27,7 +27,7 @@ class QtiController extends Controller {
             return $this->importError('qti can\'t open zip');
         }
 
-        $scanFile = $this->scanFiles($qtiRepos);
+        $scanFile = $qtiRepos->scanFiles();
         if ($scanFile !== true) {
 
             return $this->importError($scanFile);
@@ -46,77 +46,6 @@ class QtiController extends Controller {
     public function importFormAction()
     {
         return $this->render('UJMExoBundle:QTI:import.html.twig');
-    }
-
-    /**
-     * Scan the QTI files
-     *
-     * @access private
-     *
-     * @param UJM\ExoBundle\Services\classes\QTI $qtiRepos
-     *
-     * @return true or code error
-     */
-    private function scanFiles($qtiRepos)
-    {
-        $xmlFileFound = false;
-        if ($dh = opendir($qtiRepos->getUserDir())) {
-            while (($file = readdir($dh)) !== false) {
-                if (substr($file, -4, 4) == '.xml') {
-                    $xmlFileFound = true;
-                    $document_xml = new \DomDocument();
-                    $document_xml->load($qtiRepos->getUserDir().'/'.$file);
-                    foreach ($document_xml->getElementsByTagName('assessmentItem') as $ai) {
-                        $imported = false;
-                        $ib = $ai->getElementsByTagName('itemBody')->item(0);
-                        foreach ($ib->childNodes as $node){
-                            if ($imported === false) {
-                                switch ($node->nodeName) {
-                                    case "choiceInteraction": //qcm
-                                        $qtiImport = $this->container->get('ujm.qti_qcm_import');
-                                        $qtiImport->import($qtiRepos, $ai);
-                                        $imported = true;
-                                        break;
-                                    case 'selectPointInteraction': //graphic with the tag selectPointInteraction
-                                        $qtiImport = $this->container->get('ujm.qti_graphic_import');
-                                        $qtiImport->import($qtiRepos, $ai);
-                                        $imported = true;
-                                        break;
-                                    case 'hotspotInteraction': //graphic with the tag hotspotInteraction
-                                        $qtiImport = $this->container->get('ujm.qti_graphic_import');
-                                        $qtiImport->import($qtiRepos, $ai);
-                                        $imported = true;
-                                        break;
-                                    case 'extendedTextInteraction': //open
-                                        $qtiImport = $this->container->get('ujm.qti_open_import');
-                                        $qtiImport->import($qtiRepos, $ai);
-                                        $imported = true;
-                                        break;
-                                }
-                            }
-                        }
-                        if ($imported === false) {
-                            if (($ib->getElementsByTagName('textEntryInteraction')->length > 0)
-                                    || ($ib->getElementsByTagName('inlineChoiceInteraction')->length > 0)) { //question with hole
-                                $qtiImport = $this->container->get('ujm.qti_hole_import');
-                                $qtiImport->import($qtiRepos, $ai);
-                                $imported = true;
-                            } else {
-                                return 'qti unsupported format';
-                            }
-                        }
-                    }
-                }
-            }
-            if ($xmlFileFound === false) {
-
-                return 'qti xml not found';
-            }
-            closedir($dh);
-        }
-        $qtiRepos->removeDirectory();
-
-        return true;
     }
 
     /**

@@ -80,6 +80,30 @@ class ExoImporter extends Importer implements ConfigurationInterface
     {
         //this is the root of the unzipped archive
         $rootPath = $this->getRootPath();
+
+        $qtiRepos = $this->container->get('ujm.qti_repository');
+        $qtiRepos->createDirQTI();
+
+        if ($exercises = opendir($rootPath.'/qti')) {
+            while (($exercise = readdir($exercises)) !== false) {
+                if ($exercise != '.' && $exercise != '..') {
+                    $questions = opendir($rootPath.'/qti/'.$exercise);
+                    while (($question = readdir($questions)) !== false) {
+                        if ($question != '.' && $question != '..') {
+                            $files = opendir($rootPath.'/qti/'.$exercise.'/'.$question);
+                            while (($file = readdir($files)) !== false) {
+                                if ($file != '.' && $file != '..') {
+                                    copy($rootPath.'/qti/'.$exercise.'/'.$question.'/'.$file, $qtiRepos->getUserDir().$file);
+                                }
+                            }
+                        }
+                        $qtiRepos->scanFiles();
+                    }
+               }
+           }
+        }
+
+        die();
     }
 
     public function export(Workspace $workspace, array &$files, $object)

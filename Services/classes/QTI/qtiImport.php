@@ -35,6 +35,7 @@ abstract class qtiImport
      *
      * @param \Doctrine\Bundle\DoctrineBundle\Registry $doctrine Dependency Injection
      * @param \Symfony\Component\Security\Core\SecurityContextInterface $securityContext Dependency Injection
+     * @param \Symfony\Component\DependencyInjection\Container $container
      *
      */
     public function __construct(Registry $doctrine, SecurityContextInterface $securityContext, $container)
