@@ -392,4 +392,111 @@ EXPORT;
 
         $this->assertEquals($expected, $actual);
     }
+
+    public function testLeap2aExportPortfolioWithTwoWidgetOfOneSkills()
+    {
+        $exporter = new Exporter($this->twigEngine);
+
+        /** @var \Icap\PortfolioBundle\Entity\Widget\TitleWidget $titleWidget */
+        $titleWidget = $this->mock('Icap\PortfolioBundle\Entity\Widget\TitleWidget[getUpdatedAt]');
+        $titleWidget->shouldReceive('getUpdatedAt')->andReturn(new \DateTime());
+        $titleWidget
+            ->setTitle($portfolioTitle = uniqid())
+            ->setSlug($portfolioSlug = uniqid());
+
+        $skillsWidgetSkill = $this->mock('Icap\PortfolioBundle\Entity\Widget\SkillsWidgetSkill[getId]');
+        $skillsWidgetSkill->shouldReceive('getId')->andReturn($skillsWidgetSkillId = rand(0, PHP_INT_MAX));
+        $skillsWidgetSkill
+            ->setName($skillsWidgetSkillName = uniqid());
+
+        $skillsWidgetSkill2 = $this->mock('Icap\PortfolioBundle\Entity\Widget\SkillsWidgetSkill[getId]');
+        $skillsWidgetSkill2->shouldReceive('getId')->andReturn($skillsWidgetSkillId2 = rand(0, PHP_INT_MAX));
+        $skillsWidgetSkill2
+            ->setName($skillsWidgetSkillName2 = uniqid());
+
+        $skillsWidget = $this->mock('Icap\PortfolioBundle\Entity\Widget\SkillsWidget[getId, getUpdatedAt]');
+        $skillsWidget->shouldReceive('getId')->andReturn($skillsWidgetId = rand(0, PHP_INT_MAX));
+        $skillsWidget->shouldReceive('getUpdatedAt')->andReturn($skillsWidgetUpdatedAt = (new \DateTime())->add(new \DateInterval('P2D')));
+        $skillsWidget
+            ->setSkills(array($skillsWidgetSkill))
+            ->setLabel($skillsWidgetLabel = uniqid());
+
+        $skillsWidget2 = $this->mock('Icap\PortfolioBundle\Entity\Widget\SkillsWidget[getId, getUpdatedAt]');
+        $skillsWidget2->shouldReceive('getId')->andReturn($skillsWidgetId2 = rand(0, PHP_INT_MAX));
+        $skillsWidget2->shouldReceive('getUpdatedAt')->andReturn($skillsWidgetUpdatedAt2 = (new \DateTime())->add(new \DateInterval('P2D')));
+        $skillsWidget2
+            ->setSkills(array($skillsWidgetSkill2))
+            ->setLabel($skillsWidgetLabel2 = uniqid());
+
+        $portfolio = new Portfolio();
+        $portfolio
+            ->setUser($this->createUser($firstname = uniqid(), $lastname = uniqid()))
+            ->setWidgets(array($titleWidget, $skillsWidget, $skillsWidget2));
+
+        $actual = $exporter->export($portfolio, 'leap2a');
+        $portfolioLastUpdateDate = $skillsWidgetUpdatedAt->format(\DateTime::ATOM);
+        $skillsWidgetUpdatedDate2 = $skillsWidgetUpdatedAt2->format(\DateTime::ATOM);
+        $expected = <<<EXPORT
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"
+      xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+      xmlns:leap2="http://terms.leapspecs.org/"
+      xmlns:categories="http://www.leapspecs.org/2A/categories"
+      xmlns:claroline="http://www.leapspecs.org/2A/categories">
+    <leap2:version>http://www.leapspecs.org/2010-07/2A/</leap2:version>
+    <id>$portfolioSlug</id>
+    <title>$portfolioTitle</title>
+    <author>
+        <name>$firstname $lastname</name>
+    </author>
+    <updated>$portfolioLastUpdateDate</updated>
+    <entry>
+        <title>$skillsWidgetLabel</title>
+        <id>portfolio:skills/$skillsWidgetId</id>
+        <updated>$portfolioLastUpdateDate</updated>
+        <content></content>
+
+        <rdf:type rdf:resource="leap2:selection"/>
+        <category term="Abilities" scheme="categories:selection_type#"/>
+
+        <link rel="leap2:has_part" href="portfolio:skill/$skillsWidgetSkillId" leap2:display_order="1"/>
+    </entry>
+
+    <entry>
+        <title>$skillsWidgetSkillName</title>
+        <id>portfolio:skill/$skillsWidgetSkillId</id>
+        <updated>$portfolioLastUpdateDate</updated>
+        <content></content>
+
+        <rdf:type rdf:resource="leap2:ability"/>
+
+        <link rel="leap2:is_part_of" href="portfolio:skills/$skillsWidgetId" leap2:display_order="1"/>
+    </entry>
+    <entry>
+        <title>$skillsWidgetLabel2</title>
+        <id>portfolio:skills/$skillsWidgetId2</id>
+        <updated>$skillsWidgetUpdatedDate2</updated>
+        <content></content>
+
+        <rdf:type rdf:resource="leap2:selection"/>
+        <category term="Abilities" scheme="categories:selection_type#"/>
+
+        <link rel="leap2:has_part" href="portfolio:skill/$skillsWidgetSkillId2" leap2:display_order="1"/>
+    </entry>
+
+    <entry>
+        <title>$skillsWidgetSkillName2</title>
+        <id>portfolio:skill/$skillsWidgetSkillId2</id>
+        <updated>$skillsWidgetUpdatedDate2</updated>
+        <content></content>
+
+        <rdf:type rdf:resource="leap2:ability"/>
+
+        <link rel="leap2:is_part_of" href="portfolio:skills/$skillsWidgetId2" leap2:display_order="1"/>
+    </entry>
+</feed>
+EXPORT;
+
+        $this->assertEquals($expected, $actual);
+    }
 }
