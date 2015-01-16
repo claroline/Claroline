@@ -1,0 +1,26 @@
+    <entry>
+        <title>{{ widget.label }}</title>
+        <id>portfolio:badges/{{ widget.id }}</id>
+        <updated>{{ widget.updatedAt|date(constant('\DateTime::ATOM')) }}</updated>
+        <content></content>
+
+        <rdf:type rdf:resource="leap2:selection"/>
+        <category term="Grouping" scheme="categories:selection_type#"/>
+
+{% for badgesWidgetBadge in widget.badges %}
+        <link rel="leap2:has_part" href="portfolio:badge/{{ badgesWidgetBadge.id }}" leap2:display_order="{{ loop.index }}"/>
+{% endfor %}
+    </entry>
+
+{% for badgesWidgetBadge in widget.badges %}
+    <entry>
+        <title>{{ badgesWidgetBadge.badge.name }}</title>
+        <id>portfolio:badge/{{ badgesWidgetBadge.id }}</id>
+        <updated>{{ widget.updatedAt|date(constant('\DateTime::ATOM')) }}</updated>
+        <content type="html">{{ badgesWidgetBadge.badge.description }}</content>
+
+        <rdf:type rdf:resource="leap2:achievement"/>
+
+        <link rel="leap2:is_part_of" href="portfolio:badges/{{ widget.id }}" leap2:display_order="{{ loop.index }}"/>
+    </entry>
+{% endfor %}

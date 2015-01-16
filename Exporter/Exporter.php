@@ -25,7 +25,7 @@ class Exporter
             throw new \InvalidArgumentException('Unknown format.');
         }
 
-        return $this->templatingEngine->render(sprintf('IcapPortfolioBundle:Exporter:%s.xml.twig', $format), array('portfolio' => $portfolio));
+        return $this->templatingEngine->render(sprintf('IcapPortfolioBundle:Exporter:export.%s.twig', $format), array('portfolio' => $portfolio));
     }
 
     /**

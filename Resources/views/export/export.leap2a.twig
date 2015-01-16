@@ -11,4 +11,9 @@
         <name>{{ portfolio.user.firstname }} {{ portfolio.user.lastname }}</name>
     </author>
     <updated>{{ portfolio.lastUpdateDate|date(constant('\DateTime::ATOM')) }}</updated>
+{% for widget in portfolio.widgets %}
+{% if 'title' != widget.widgetType %}
+{% include 'IcapPortfolioBundle:export\\leap2a:' ~ widget.widgetType ~ '.leap2a.twig' %}
+{% endif %}
+{% endfor %}
 </feed>
