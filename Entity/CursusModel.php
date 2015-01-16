@@ -11,14 +11,15 @@
 
 namespace Claroline\CursusBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Table(name="claro_course")
+ * @ORM\Table(name="claro_cursus_model")
  * @ORM\Entity
  */
-class Course
+class CursusModel
 {
     /**
      * @ORM\Column(type="integer")
@@ -45,10 +46,18 @@ class Course
     protected $description;
     
     /**
-     * @ORM\Column(name="public_registration", type="boolean")
+     * @ORM\OneToMany(
+     *     targetEntity="Claroline\CursusBundle\Entity\CursusModelCourse",
+     *     mappedBy="cursusModel"
+     * )
      */
-    protected $publicRegistration = false;
+    protected $cursusCourses;
     
+    public function __construct()
+    {
+        $this->cursusCourses = new ArrayCollection();
+    }
+
     public function getId()
     {
         return $this->id;
@@ -68,34 +77,29 @@ class Course
     {
         $this->code = $code;
     }
-
+    
     public function getName()
-    {
+    {   
         return $this->name;
     }
 
     public function setName($name)
-    {
+    {   
         $this->name = $name;
     }
 
     public function getDescription()
-    {
+    {   
         return $this->description;
     }
 
     public function setDescription($description)
-    {
+    {   
         $this->description = $description;
     }
 
-    public function getPublicRegistration()
+    public function getCursesCourses()
     {
-        return $this->publicRegistration;
-    }
-
-    public function setPublicRegistration($publicRegistration)
-    {
-        $this->publicRegistration = $publicRegistration;
+        return $this->cursusCourses->toArray();
     }
 }
