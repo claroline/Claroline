@@ -57,15 +57,14 @@ class Installer
 
             $kernel = new $this->kernelClass('prod', false);
             $kernel->boot();
-
             $container = $kernel->getContainer();
-            $refresher = $container->get('claroline.installation.refresher');
-            $refresher->setOutput($output);
-            $refresher->installAssets();
             $this->launchInstaller($container, $output);
             $this->createAdminUser($container, $output);
             //with command line... but it's broken. The other one works.
             //exec('php ' . $container->getParameter('kernel.root_dir') . DIRECTORY_SEPARATOR . 'console assetic:dump');
+            $refresher = $container->get('claroline.installation.refresher');
+            $refresher->setOutput($output);
+            $refresher->installAssets();
             $refresher->dumpAssets('prod');
             $this->writer->writeInstallFlag();
             $this->hasSucceeded = true;
