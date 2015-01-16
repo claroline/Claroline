@@ -67,7 +67,7 @@ class SkillsWidgetSkill implements SubWidgetInterface
      *
      * @return SkillsWidgetSkill
      */
-    public function setWiidget($skillsWidget)
+    public function setWidget($skillsWidget)
     {
         $this->widget = $skillsWidget;
 

@@ -14,9 +14,8 @@
 
     <entry>
         <title>Mes compétences</title>
-        <id>portfolio:skills1</id>
+        <id>portfolio:skills/1</id>
         <updated>2010-10-07T22:30:23+02:00</updated>
-        <published>2010-10-07T22:30:23+02:00</published>
         <content></content>
 
         <rdf:type rdf:resource="leap2:selection"/>
@@ -30,21 +29,21 @@
         <title>skill</title>
         <id>portfolio:skill/1</id>
         <updated>2008-01-08T14:12:12Z</updated>
-        <content type="text">The description of a skills</content>
+        <content></content>
 
         <rdf:type rdf:resource="leap2:ability"/>
 
-        <link rel="leap2:is_part_of" href="portfolio:skill1" leap2:display_order="1"/>
+        <link rel="leap2:is_part_of" href="portfolio:skills/1" leap2:display_order="1"/>
     </entry>
 
     <entry>
         <title>skill 2</title>
         <id>portfolio:skill/2</id>
         <updated>2008-01-08T14:12:12Z</updated>
-        <content type="text">The description of an other skill</content>
+        <content></content>
 
         <rdf:type rdf:resource="leap2:ability"/>
 
-        <link rel="leap2:is_part_of" href="portfolio:skill1" leap2:display_order="2"/>
+        <link rel="leap2:is_part_of" href="portfolio:skills/1" leap2:display_order="2"/>
     </entry>
 </feed>
