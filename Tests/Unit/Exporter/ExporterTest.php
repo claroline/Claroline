@@ -33,6 +33,24 @@ class ExporterTest extends MockeryTestCase
         $this->twigEngine = new TwigEngine($twigEnvironment, new TemplateNameParser());
     }
 
+    /**
+     * @param string $firstname
+     * @param string $lastname
+     *
+     * @return User
+     */
+    public function createUser($firstname, $lastname)
+    {
+        $username = uniqid();
+
+        $user = new User();
+        $user
+            ->setFirstName($firstname)
+            ->setLastName($lastname);
+
+        return $user;
+    }
+
     public function testClassExists()
     {
         $exporter = new Exporter($this->twigEngine);
@@ -88,23 +106,5 @@ class ExporterTest extends MockeryTestCase
 EXPORT;
 
         $this->assertEquals($expected, $actual);
-    }
-
-    /**
-     * @param string $firstname
-     * @param string $lastname
-     *
-     * @return User
-     */
-    public function createUser($firstname, $lastname)
-    {
-        $username = uniqid();
-
-        $user = new User();
-        $user
-            ->setFirstName($firstname)
-            ->setLastName($lastname);
-
-        return $user;
     }
 }
