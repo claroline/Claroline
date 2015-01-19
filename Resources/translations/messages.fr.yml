@@ -341,6 +341,7 @@ questionSharedWith: Cette question est partagée avec les utilisateurs suivants
 random order of questions: Ordre des questions aléatoire
 raz: => Pour remettre à leurs position initiale tous les pointeurs, appuyez sur "c".
 square: Carré
+remove advanced edition: Edition simple
 remove_question_confirm_message:  Êtes vous sûr de vouloir supprimer cette question ?
 reset: Réinitialiser
 resizeZone: Pour redimmensionner une image, placez votre souris sur son coin inférieur droit et, tout en maintenant le clic gauche, faites la glisser
