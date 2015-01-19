@@ -33,6 +33,7 @@ class ExporterTest extends MockeryTestCase
             'IcapPortfolioBundle:export\leap2a:badges.leap2a.twig' => file_get_contents(__DIR__ . '/../../../Resources/views/export/leap2a/badges.leap2a.twig'),
             'IcapPortfolioBundle:export\leap2a:skills.leap2a.twig' => file_get_contents(__DIR__ . '/../../../Resources/views/export/leap2a/skills.leap2a.twig'),
             'IcapPortfolioBundle:export\leap2a:text.leap2a.twig' => file_get_contents(__DIR__ . '/../../../Resources/views/export/leap2a/text.leap2a.twig'),
+            'IcapPortfolioBundle:export\leap2a:userInformation.leap2a.twig' => file_get_contents(__DIR__ . '/../../../Resources/views/export/leap2a/userInformation.leap2a.twig'),
         ));
 
         $twigEnvironment  = new Twig_Environment($templateLoader);
@@ -553,6 +554,65 @@ EXPORT;
         <id>portfolio:text/$textWidgetId</id>
         <updated>$textWidgetUpdatedAt</updated>
         <content type="html">$textWidgetText</content>
+    </entry>
+</feed>
+EXPORT;
+
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testLeap2aExportPortfolioWithUserInformationsWidget()
+    {
+        $exporter = new Exporter($this->twigEngine);
+
+        /** @var \Icap\PortfolioBundle\Entity\Widget\TitleWidget $titleWidget */
+        $titleWidget = $this->mock('Icap\PortfolioBundle\Entity\Widget\TitleWidget[getUpdatedAt]');
+        $titleWidget->shouldReceive('getUpdatedAt')->andReturn(new \DateTime());
+        $titleWidget
+            ->setTitle($portfolioTitle = uniqid())
+            ->setSlug($portfolioSlug = uniqid());
+
+        /** @var \Icap\PortfolioBundle\Entity\Widget\UserInformationWidget $userInformationsWidget */
+        $userInformationsWidget = $this->mock('Icap\PortfolioBundle\Entity\Widget\UserInformationWidget[getId, getUpdatedAt]');
+        $userInformationsWidget->shouldReceive('getId')->andReturn($userInformationsWidgetId = rand(0, PHP_INT_MAX));
+        $userInformationsWidget->shouldReceive('getUpdatedAt')->andReturn($userInformationsWidgetUpdatedAt = (new \DateTime())->add(new \DateInterval('P2D')));
+        $userInformationsWidget
+            ->setBirthDate($userInformationsWidgetBirthDate = new \DateTime('1986/11/29'))
+            ->setCity($userInformationsWidgetCity = uniqid())
+            ->setLabel($userInformationsWidgetLabel = uniqid());
+
+        $portfolio = new Portfolio();
+        $portfolio
+            ->setUser($this->createUser($firstname = uniqid(), $lastname = uniqid()))
+            ->setWidgets(array($titleWidget, $userInformationsWidget));
+
+        $actual = $exporter->export($portfolio, 'leap2a');
+        $portfolioLastUpdateDate = $titleWidget->getUpdatedAt()->format(\DateTime::ATOM);
+        $userInformationsWidgetUpdatedAt = $userInformationsWidgetUpdatedAt->format(\DateTime::ATOM);
+        $userInformationsWidgetBirthDate = $userInformationsWidgetBirthDate->format(\DateTime::ATOM);
+        $expected = <<<EXPORT
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"
+      xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+      xmlns:leap2="http://terms.leapspecs.org/"
+      xmlns:categories="http://www.leapspecs.org/2A/categories"
+      xmlns:claroline="http://www.leapspecs.org/2A/categories">
+    <leap2:version>http://www.leapspecs.org/2010-07/2A/</leap2:version>
+    <id>$portfolioSlug</id>
+    <title>$portfolioTitle</title>
+    <author>
+        <name>$firstname $lastname</name>
+    </author>
+    <updated>$userInformationsWidgetUpdatedAt</updated>
+
+    <entry>
+        <title>$userInformationsWidgetLabel</title>
+        <id>portfolio:text/$userInformationsWidgetId</id>
+        <updated>$userInformationsWidgetUpdatedAt</updated>
+        <content></content>
+        <rdf:type rdf:resource="leap2:person"/>
+        <leap2:persondata leap2:field="dob">$userInformationsWidgetBirthDate</leap2:persondata>
+        <leap2:persondata leap2:field="other" leap2:label="city">$userInformationsWidgetCity</leap2:persondata>
     </entry>
 </feed>
 EXPORT;

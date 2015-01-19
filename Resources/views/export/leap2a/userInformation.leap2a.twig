@@ -1,0 +1,10 @@
+
+    <entry>
+        <title>{{ widget.label }}</title>
+        <id>portfolio:text/{{ widget.id }}</id>
+        <updated>{{ widget.updatedAt|date(constant('\DateTime::ATOM')) }}</updated>
+        <content></content>
+        <rdf:type rdf:resource="leap2:person"/>
+        <leap2:persondata leap2:field="dob">{{ widget.birthDate|date(constant('\DateTime::ATOM')) }}</leap2:persondata>
+        <leap2:persondata leap2:field="other" leap2:label="city">{{ widget.city }}</leap2:persondata>
+    </entry>
