@@ -16,7 +16,6 @@
         <title>Mon texte</title>
         <id>portfolio:text1</id>
         <updated>2010-10-07T22:30:23+02:00</updated>
-        <published>2010-10-07T22:30:23+02:00</published>
         <content type="html"><p>Just a text content.</p></content>
     </entry>
 </feed>

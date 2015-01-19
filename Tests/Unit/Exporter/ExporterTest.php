@@ -32,6 +32,7 @@ class ExporterTest extends MockeryTestCase
             'IcapPortfolioBundle:Exporter:export.leap2a.twig' => file_get_contents(__DIR__ . '/../../../Resources/views/export/export.leap2a.twig'),
             'IcapPortfolioBundle:export\leap2a:badges.leap2a.twig' => file_get_contents(__DIR__ . '/../../../Resources/views/export/leap2a/badges.leap2a.twig'),
             'IcapPortfolioBundle:export\leap2a:skills.leap2a.twig' => file_get_contents(__DIR__ . '/../../../Resources/views/export/leap2a/skills.leap2a.twig'),
+            'IcapPortfolioBundle:export\leap2a:text.leap2a.twig' => file_get_contents(__DIR__ . '/../../../Resources/views/export/leap2a/text.leap2a.twig'),
         ));
 
         $twigEnvironment  = new Twig_Environment($templateLoader);
@@ -173,6 +174,7 @@ EXPORT;
         <name>$firstname $lastname</name>
     </author>
     <updated>$portfolioLastUpdateDate</updated>
+
     <entry>
         <title>$badgesWidgetLabel</title>
         <id>portfolio:badges/$badgesWidgetId</id>
@@ -266,6 +268,7 @@ EXPORT;
         <name>$firstname $lastname</name>
     </author>
     <updated>$portfolioLastUpdateDate</updated>
+
     <entry>
         <title>$badgesWidgetLabel</title>
         <id>portfolio:badges/$badgesWidgetId</id>
@@ -354,6 +357,7 @@ EXPORT;
         <name>$firstname $lastname</name>
     </author>
     <updated>$portfolioLastUpdateDate</updated>
+
     <entry>
         <title>$skillsWidgetLabel</title>
         <id>portfolio:skills/$skillsWidgetId</id>
@@ -450,6 +454,7 @@ EXPORT;
         <name>$firstname $lastname</name>
     </author>
     <updated>$portfolioLastUpdateDate</updated>
+
     <entry>
         <title>$skillsWidgetLabel</title>
         <id>portfolio:skills/$skillsWidgetId</id>
@@ -472,6 +477,7 @@ EXPORT;
 
         <link rel="leap2:is_part_of" href="portfolio:skills/$skillsWidgetId" leap2:display_order="1"/>
     </entry>
+
     <entry>
         <title>$skillsWidgetLabel2</title>
         <id>portfolio:skills/$skillsWidgetId2</id>
@@ -493,6 +499,60 @@ EXPORT;
         <rdf:type rdf:resource="leap2:ability"/>
 
         <link rel="leap2:is_part_of" href="portfolio:skills/$skillsWidgetId2" leap2:display_order="1"/>
+    </entry>
+</feed>
+EXPORT;
+
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testLeap2aExportPortfolioWithTextWidget()
+    {
+        $exporter = new Exporter($this->twigEngine);
+
+        /** @var \Icap\PortfolioBundle\Entity\Widget\TitleWidget $titleWidget */
+        $titleWidget = $this->mock('Icap\PortfolioBundle\Entity\Widget\TitleWidget[getUpdatedAt]');
+        $titleWidget->shouldReceive('getUpdatedAt')->andReturn(new \DateTime());
+        $titleWidget
+            ->setTitle($portfolioTitle = uniqid())
+            ->setSlug($portfolioSlug = uniqid());
+
+        /** @var \Icap\PortfolioBundle\Entity\Widget\TextWidget $textWidget */
+        $textWidget = $this->mock('Icap\PortfolioBundle\Entity\Widget\TextWidget[getId, getUpdatedAt]');
+        $textWidget->shouldReceive('getId')->andReturn($textWidgetId = rand(0, PHP_INT_MAX));
+        $textWidget->shouldReceive('getUpdatedAt')->andReturn($textWidgetUpdatedAt = (new \DateTime())->add(new \DateInterval('P2D')));
+        $textWidget
+            ->setText($textWidgetText = uniqid())
+            ->setLabel($textWidgetLabel = uniqid());
+
+        $portfolio = new Portfolio();
+        $portfolio
+            ->setUser($this->createUser($firstname = uniqid(), $lastname = uniqid()))
+            ->setWidgets(array($titleWidget, $textWidget));
+
+        $actual = $exporter->export($portfolio, 'leap2a');
+        $portfolioLastUpdateDate = $titleWidget->getUpdatedAt()->format(\DateTime::ATOM);
+        $textWidgetUpdatedAt = $textWidgetUpdatedAt->format(\DateTime::ATOM);
+        $expected = <<<EXPORT
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"
+      xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+      xmlns:leap2="http://terms.leapspecs.org/"
+      xmlns:categories="http://www.leapspecs.org/2A/categories"
+      xmlns:claroline="http://www.leapspecs.org/2A/categories">
+    <leap2:version>http://www.leapspecs.org/2010-07/2A/</leap2:version>
+    <id>$portfolioSlug</id>
+    <title>$portfolioTitle</title>
+    <author>
+        <name>$firstname $lastname</name>
+    </author>
+    <updated>$textWidgetUpdatedAt</updated>
+
+    <entry>
+        <title>$textWidgetLabel</title>
+        <id>portfolio:text/$textWidgetId</id>
+        <updated>$textWidgetUpdatedAt</updated>
+        <content type="html">$textWidgetText</content>
     </entry>
 </feed>
 EXPORT;
