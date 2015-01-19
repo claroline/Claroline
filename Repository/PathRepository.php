@@ -4,13 +4,12 @@ namespace Innova\PathBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-
 use Claroline\CoreBundle\Repository\ResourceQueryBuilder;
 use Doctrine\ORM\QueryBuilder;
 
 class PathRepository extends EntityRepository
 {
-    public function findAccessibleByUser(array $roots = array (), array $userRoles)
+    public function findAccessibleByUser(array $roots = array(), array $userRoles)
     {
         $builder = new ResourceQueryBuilder();
 
@@ -20,7 +19,7 @@ class PathRepository extends EntityRepository
             $builder->whereRootIn($roots);
         }
 
-        $builder->whereTypeIn(array ('innova_path'));
+        $builder->whereTypeIn(array('innova_path'));
         $builder->whereRoleIn($userRoles);
         $builder->orderByName();
 
@@ -35,7 +34,7 @@ class PathRepository extends EntityRepository
 
     /**
      * Get all Paths of the Platform
-     * @param  bool $toPublish If false, returns all paths, if true returns only paths which need publishing
+     * @param  bool  $toPublish If false, returns all paths, if true returns only paths which need publishing
      * @return array
      */
     public function findPlatformPaths($toPublish = false)
@@ -52,8 +51,8 @@ class PathRepository extends EntityRepository
 
     /**
      * Get all Paths of a Workspace
-     * @param Workspace $workspace
-     * @param bool $toPublish If false, returns all paths, if true returns only paths which need publishing
+     * @param  Workspace $workspace
+     * @param  bool      $toPublish If false, returns all paths, if true returns only paths which need publishing
      * @return array
      */
     public function findWorkspacePaths(Workspace $workspace, $toPublish = false)
@@ -61,11 +60,32 @@ class PathRepository extends EntityRepository
         $builder = $this->createQueryBuilder('p');
 
         // Join with resourceNode
-        $builder->join('p.resourceNode', 'r', 'WITH', 'r.workspace = ' . $workspace->getId());
+        $builder->join('p.resourceNode', 'r', 'WITH', 'r.workspace = '.$workspace->getId());
 
         // Get only Paths which need publishing
         if ($toPublish) {
             $this->whereToPublish($builder);
+        }
+
+        return $builder->getQuery()->getResult();
+    }
+
+    /**
+     * Get all published Paths
+     * @param  Workspace $workspace
+     * @param  bool      $withPending If true, returns all published paths, including the ones with pending changes
+     * @return array
+     */
+    public function findPublishedPath($withPending = false)
+    {
+        $builder = $this->createQueryBuilder('p');
+
+        $builder->where('p.published = :published');
+        $builder->setParameter('published', true);
+
+        if (!$withPending) {
+            $builder->andWhere('p.modified = :modified');
+            $builder->setParameter('modified', $withPending);
         }
 
         return $builder->getQuery()->getResult();
