@@ -3,6 +3,7 @@
 namespace Icap\PortfolioBundle\Exporter;
 
 use Claroline\CoreBundle\Entity\Badge\BadgeTranslation;
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Rule\Entity\Rule;
 use Claroline\CoreBundle\Entity\Badge\Badge;
 use Claroline\CoreBundle\Entity\Badge\BadgeRule;
@@ -12,6 +13,7 @@ use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
 use FOS\JsRoutingBundle\Tests\Extractor\ExposedRoutesExtractorTest;
 use Icap\PortfolioBundle\Entity\Portfolio;
 use Icap\PortfolioBundle\Entity\Widget\BadgesWidgetBadge;
+use Icap\PortfolioBundle\Entity\Widget\FormationsWidgetResource;
 use Icap\PortfolioBundle\Entity\Widget\SkillsWidget;
 use Icap\PortfolioBundle\Entity\Widget\SkillsWidgetSkill;
 use Symfony\Bridge\Twig\TwigEngine;
@@ -34,6 +36,7 @@ class ExporterTest extends MockeryTestCase
             'IcapPortfolioBundle:export\leap2a:skills.leap2a.twig' => file_get_contents(__DIR__ . '/../../../Resources/views/export/leap2a/skills.leap2a.twig'),
             'IcapPortfolioBundle:export\leap2a:text.leap2a.twig' => file_get_contents(__DIR__ . '/../../../Resources/views/export/leap2a/text.leap2a.twig'),
             'IcapPortfolioBundle:export\leap2a:userInformation.leap2a.twig' => file_get_contents(__DIR__ . '/../../../Resources/views/export/leap2a/userInformation.leap2a.twig'),
+            'IcapPortfolioBundle:export\leap2a:formations.leap2a.twig' => file_get_contents(__DIR__ . '/../../../Resources/views/export/leap2a/formations.leap2a.twig')
         ));
 
         $twigEnvironment  = new Twig_Environment($templateLoader);
@@ -613,6 +616,98 @@ EXPORT;
         <rdf:type rdf:resource="leap2:person"/>
         <leap2:persondata leap2:field="dob">$userInformationsWidgetBirthDate</leap2:persondata>
         <leap2:persondata leap2:field="other" leap2:label="city">$userInformationsWidgetCity</leap2:persondata>
+    </entry>
+</feed>
+EXPORT;
+
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testLeap2aExportPortfolioWithOneFormationWidgetWithOneresource()
+    {
+        $exporter = new Exporter($this->twigEngine);
+
+        /** @var \Icap\PortfolioBundle\Entity\Widget\TitleWidget $titleWidget */
+        $titleWidget = $this->mock('Icap\PortfolioBundle\Entity\Widget\TitleWidget[getUpdatedAt]');
+        $titleWidget->shouldReceive('getUpdatedAt')->andReturn(new \DateTime());
+        $titleWidget
+            ->setTitle($portfolioTitle = uniqid())
+            ->setSlug($portfolioSlug = uniqid());
+
+        /** @var \Icap\PortfolioBundle\Entity\Widget\FormationsWidgetResource $formationWidgetResource */
+        $formationWidgetResource = $this->mock('Icap\PortfolioBundle\Entity\Widget\FormationsWidgetResource[getId]');
+        $formationWidgetResource->shouldReceive('getId')->andReturn($formationWidgetResourceId = rand(0, PHP_INT_MAX));
+
+        $formationWidgetResourceResourceNode = new ResourceNode();
+        $formationWidgetResourceResourceNode->setId($formationWidgetResourceResourceNodeId = rand(0, PHP_INT_MAX));
+        $formationWidgetResourceResourceNode->setModificationDate($formationWidgetResourceUpdatedAt = new \DateTime());
+        $formationWidgetResourceResourceNode->setName($formationWidgetResourceName = uniqid());
+
+        $formationWidgetResource
+            ->setResource($formationWidgetResourceResourceNode);
+
+        /** @var \Icap\PortfolioBundle\Entity\Widget\FormationsWidget $formationWidget */
+        $formationWidget = $this->mock('Icap\PortfolioBundle\Entity\Widget\FormationsWidget[getId, getUpdatedAt]');
+        $formationWidget->shouldReceive('getId')->andReturn($formationWidgetId = rand(0, PHP_INT_MAX));
+        $formationWidget->shouldReceive('getUpdatedAt')->andReturn($formationWidgetUpdatedAt = (new \DateTime())->add(new \DateInterval('P2D')));
+        $formationWidget
+            ->setName($formationWidgetName = uniqid())
+            ->setStartDate($formationWidgetStartDate = new \DateTime())
+            ->setEndDate($formationWidgetEndDate = (new \DateTime())->add(new \DateInterval('P1Y')))
+            ->setResources(array($formationWidgetResource))
+            ->setLabel($userInformationsWidgetLabel = uniqid());
+
+        $portfolio = new Portfolio();
+        $portfolio
+            ->setUser($this->createUser($firstname = uniqid(), $lastname = uniqid()))
+            ->setWidgets(array($titleWidget, $formationWidget));
+
+        $actual = $exporter->export($portfolio, 'leap2a');
+        $portfolioLastUpdateDate = $titleWidget->getUpdatedAt()->format(\DateTime::ATOM);
+        $formationWidgetUpdatedAt = $formationWidgetUpdatedAt->format(\DateTime::ATOM);
+        $formationWidgetStartDate = $formationWidgetStartDate->format(\DateTime::ATOM);
+        $formationWidgetEndDate = $formationWidgetEndDate->format(\DateTime::ATOM);
+        $formationWidgetResourceUpdatedAt = $formationWidgetResourceUpdatedAt->format(\DateTime::ATOM);
+        $expected = <<<EXPORT
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"
+      xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+      xmlns:leap2="http://terms.leapspecs.org/"
+      xmlns:categories="http://www.leapspecs.org/2A/categories"
+      xmlns:claroline="http://www.leapspecs.org/2A/categories">
+    <leap2:version>http://www.leapspecs.org/2010-07/2A/</leap2:version>
+    <id>$portfolioSlug</id>
+    <title>$portfolioTitle</title>
+    <author>
+        <name>$firstname $lastname</name>
+    </author>
+    <updated>$formationWidgetUpdatedAt</updated>
+
+    <entry>
+        <title>$userInformationsWidgetLabel</title>
+        <id>portfolio:formations/$formationWidgetId</id>
+        <updated>$formationWidgetUpdatedAt</updated>
+        <content type="text">$formationWidgetName</content>
+
+        <leap2:date leap2:point="start">$formationWidgetStartDate</leap2:date>
+        <leap2:date leap2:point="end">$formationWidgetEndDate</leap2:date>
+
+        <rdf:type rdf:resource="leap2:activity"/>
+
+        <link rel="leap2:has_part" href="portfolio:resource/$formationWidgetResourceResourceNodeId" leap2:display_order="1"/>
+    </entry>
+
+    <entry>
+        <title>$formationWidgetResourceName</title>
+        <id>portfolio:resource/$formationWidgetResourceResourceNodeId</id>
+        <uri>$formationWidgetResourceResourceNodeId</uri>
+        <updated>$formationWidgetResourceUpdatedAt</updated>
+        <content></content>
+
+        <rdf:type rdf:resource="leap2:resource"/>
+        <category term="Web" scheme="categories:resource_type#"/>
+
+        <link rel="leap2:is_part_of" href="portfolio:formations/$formationWidgetId" leap2:display_order="1"/>
     </entry>
 </feed>
 EXPORT;
