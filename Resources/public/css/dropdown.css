@@ -29,5 +29,5 @@
 
 @media (min-width: 990px) {
     #top_bar div.notifications-dropdown-list {left: -196px; right: auto; min-width: 340px;}
-    div.notifications-dropdown-list ul#notification-list {max-height: 170px; overflow: auto;}
+    div.notifications-dropdown-list ul#notification-list {display: block; max-height: 350px; overflow: auto;}
 }
