@@ -53,11 +53,11 @@ class PathCommand extends ContainerAwareCommand
                 }
             } else {
                 // Path not found
-                $output->writeln('<error>Unable to find Path referenced by ID : ' . $pathId . '</error>');
+                $output->writeln('<error>Unable to find Path referenced by ID : '.$pathId.'</error>');
             }
         } else {
             // Need to publish a list of Paths
-            $paths = array ();
+            $paths = array();
 
             if ($workspaceId = $input->getOption('workspace')) {
                 // Need to publish Paths for a specific Workspace
@@ -67,7 +67,7 @@ class PathCommand extends ContainerAwareCommand
                     $paths = $this->pathRepo->findWorkspacePaths($workspace, !$force);
                 } else {
                     // Workspace not found
-                    $output->writeln('<error>Unable to find Workspace referenced by ID : ' . $workspaceId . '</error>');
+                    $output->writeln('<error>Unable to find Workspace referenced by ID : '.$workspaceId.'</error>');
                 }
             } else {
                 // Need to publish all Paths
@@ -94,12 +94,12 @@ class PathCommand extends ContainerAwareCommand
 
         try {
             if ($this->pathPublishing->publish($path)) {
-                $output->writeln('<comment>' . $datePublished . '</comment> <info>[ok]</info> ' . $path->getResourceNode()->getName() . ' (ID = ' . $path->getId() . ')');
+                $output->writeln('<comment>'.$datePublished.'</comment> <info>[ok]</info> '.$path->getResourceNode()->getName().' (ID = '.$path->getId().')');
             } else {
-                $output->writeln('<comment>' . $datePublished . '</comment> <error>[error]</error> ' . $path->getResourceNode()->getName() . ' (ID = ' . $path->getId() . ')');
+                $output->writeln('<comment>'.$datePublished.'</comment> <error>[error]</error> '.$path->getResourceNode()->getName().' (ID = '.$path->getId().')');
             }
         } catch (\Exception $e) {
-            $output->writeln('<error>' . $e->getMessage() . '</error>');
+            $output->writeln('<error>'.$e->getMessage().'</error>');
         }
 
         return $this;
