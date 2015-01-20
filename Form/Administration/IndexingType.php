@@ -14,6 +14,7 @@ namespace Claroline\CoreBundle\Form\Administration;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\Validator\Constraints\Regex;
 
 class IndexingType extends AbstractType
 {
@@ -23,7 +24,13 @@ class IndexingType extends AbstractType
             'google_meta_tag',
             'text',
             array(
-                'label' => 'Google HTML tag validation'
+                'label' => 'Google HTML tag validation',
+                'constraints' => array(
+                   new Regex(array(
+                       'pattern' => "/^\<meta name=\x22google-site-verification\x22 content=\x22\bUA-\d{4,10}-\d{1,4}\b\x22( \/)?\>$/",
+                       'message' => 'google_meta_tag_error'
+                   ))
+                ),
             )
         );
     }

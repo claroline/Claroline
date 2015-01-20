@@ -127,7 +127,7 @@ class Refresher
             $cacheIterator = new \DirectoryIterator($directory);
 
             foreach ($cacheIterator as $item) {
-                if (!$item->isDot()) {
+                if (!$item->isDot() && '.gitkeep' !== $item->getFilename()) {
                     $fileSystem->remove($item->getPathname());
                 }
             }
