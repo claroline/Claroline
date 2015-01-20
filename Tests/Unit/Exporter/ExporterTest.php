@@ -93,7 +93,6 @@ class ExporterTest extends KernelAwareTestCase
     {
         $exporter = new Exporter($this->twigEngine);
 
-        $expected = uniqid();
         $portfolio = new Portfolio();
 
         $this->setExpectedException('InvalidArgumentException');
