@@ -214,8 +214,9 @@ class ResourceController
         //if we don't want to change to much code
         $this->request->getSession()->set('current_resource_node', $node);
 
-        //this line should be moved after $node = $this->getRealTarget() if we want to be consistent.
+        //double check... first the resource, then the target
         $collection = new ResourceCollection(array($node));
+        $this->checkAccess('OPEN', $collection);
         //If it's a link, the resource will be its target.
         $node = $this->getRealTarget($node);
         $this->checkAccess('OPEN', $collection);

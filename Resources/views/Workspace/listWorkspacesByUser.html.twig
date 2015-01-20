@@ -103,12 +103,11 @@
                 <div id="collapse-all" class="list-group collapse {% if tags|length == 0 %}in{% endif %}">
                     {% for workspace in workspaces %}
                     {% set workspaceId = workspace.getId() %}
+                    {% if has_access_to_workspace(workspace.getId()) %}
                         <a  class="list-group-item" class="row-workspace row-workspace-id-{{ workspaceId }}"
-                            {% if has_access_to_workspace(workspace.getId()) %}
-                                href="{{ path('claro_workspace_open',
-                                {'workspaceId': workspaceId, 'toolName': 'home'}) }}"
-                                id="link-home-{{ workspaceId }}"
-                            {% endif %}
+                            href="{{ path('claro_workspace_open',
+                            {'workspaceId': workspaceId, 'toolName': 'home'}) }}"
+                            id="link-home-{{ workspaceId }}"
                         >
                             <i class="fa fa-book"></i>
                             {{ workspace.getName() }}
@@ -124,6 +123,7 @@
                                ></i>
                             </span>
                         </a>
+                    {% endif %}
                     {% endfor %}
                 </div>
             </div>
