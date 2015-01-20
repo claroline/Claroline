@@ -38,6 +38,9 @@
             this.dispatcher.on('save-picker-directory', function (event) {
                 this.pickerDirectoryId = event.directoryId;
             }, this);
+            this.dispatcher.on('open-directory', function (event) {
+                this.parameters.currentDirectoryId = event.nodeId;
+            }, this);
         },
         buildElement: function () {
             this.el.className = 'main resource-manager';
