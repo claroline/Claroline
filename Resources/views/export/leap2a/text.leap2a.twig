@@ -1,0 +1,7 @@
+
+    <entry>
+        <title>{{ widget.label }}</title>
+        <id>portfolio:text/{{ widget.id }}</id>
+        <updated>{{ widget.updatedAt|date(constant('\DateTime::ATOM')) }}</updated>
+        <content type="html">{{ widget.text }}</content>
+    </entry>

@@ -35,7 +35,7 @@ class SkillsWidget extends AbstractWidget
     public function setSkills($skills)
     {
         foreach ($skills as $skill) {
-            $skill->setWiidget($this);
+            $skill->setWidget($this);
         }
 
         $this->skills = $skills;

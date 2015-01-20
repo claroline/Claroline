@@ -47,6 +47,18 @@ class BadgesWidgetBadge implements SubWidgetInterface
     }
 
     /**
+     * @param int $id
+     *
+     * @return BadgesWidgetBadge
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
+    /**
      * @param BadgesWidget $badgesWidget
      *
      * @return BadgesWidget

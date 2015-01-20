@@ -1,0 +1,31 @@
+
+    <entry>
+        <title>{{ widget.label }}</title>
+        <id>portfolio:formations/{{ widget.id }}</id>
+        <updated>{{ widget.updatedAt|date(constant('\DateTime::ATOM')) }}</updated>
+        <content type="text">{{ widget.name }}</content>
+
+        <leap2:date leap2:point="start">{{ widget.startDate|date(constant('\DateTime::ATOM')) }}</leap2:date>
+        <leap2:date leap2:point="end">{{ widget.endDate|date(constant('\DateTime::ATOM')) }}</leap2:date>
+
+        <rdf:type rdf:resource="leap2:activity"/>
+
+{% for formationWidgetResource in widget.resources %}
+        <link rel="leap2:has_part" href="portfolio:resource/{{ formationWidgetResource.resource.id }}" leap2:display_order="{{ loop.index }}"/>
+{% endfor %}
+    </entry>
+
+{% for formationWidgetResource in widget.resources %}
+    <entry>
+        <title>{{ formationWidgetResource.resource.name }}</title>
+        <id>portfolio:resource/{{ formationWidgetResource.resource.id }}</id>
+        <uri>{{ formationWidgetResource.resource.id }}</uri>
+        <updated>{{ formationWidgetResource.resource.modificationDate|date(constant('\DateTime::ATOM')) }}</updated>
+        <content></content>
+
+        <rdf:type rdf:resource="leap2:resource"/>
+        <category term="Web" scheme="categories:resource_type#"/>
+
+        <link rel="leap2:is_part_of" href="portfolio:formations/{{ widget.id }}" leap2:display_order="{{ loop.index }}"/>
+    </entry>
+{% endfor %}

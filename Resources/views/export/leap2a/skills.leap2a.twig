@@ -1,0 +1,27 @@
+
+    <entry>
+        <title>{{ widget.label }}</title>
+        <id>portfolio:skills/{{ widget.id }}</id>
+        <updated>{{ widget.updatedAt|date(constant('\DateTime::ATOM')) }}</updated>
+        <content></content>
+
+        <rdf:type rdf:resource="leap2:selection"/>
+        <category term="Abilities" scheme="categories:selection_type#"/>
+
+{% for skillsWidgetSkill in widget.skills %}
+        <link rel="leap2:has_part" href="portfolio:skill/{{ skillsWidgetSkill.id }}" leap2:display_order="{{ loop.index }}"/>
+{% endfor %}
+    </entry>
+
+{% for skillsWidgetSkill in widget.skills %}
+    <entry>
+        <title>{{ skillsWidgetSkill.name }}</title>
+        <id>portfolio:skill/{{ skillsWidgetSkill.id }}</id>
+        <updated>{{ widget.updatedAt|date(constant('\DateTime::ATOM')) }}</updated>
+        <content></content>
+
+        <rdf:type rdf:resource="leap2:ability"/>
+
+        <link rel="leap2:is_part_of" href="portfolio:skills/{{ widget.id }}" leap2:display_order="{{ loop.index }}"/>
+    </entry>
+{% endfor %}

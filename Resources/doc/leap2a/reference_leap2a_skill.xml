@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"
+      xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+      xmlns:leap2="http://terms.leapspecs.org/"
+      xmlns:categories="http://www.leapspecs.org/2A/categories"
+      xmlns:claroline="http://www.leapspecs.org/2A/categories">
+    <leap2:version>http://www.leapspecs.org/2010-07/2A/</leap2:version>
+    <id>http://www.example.ac.uk/pfs/export_262144/</id>
+    <title>A few small related items</title>
+    <author>
+        <name>Theophilus Thistledown</name>
+    </author>
+    <updated>2009-03-15T14:33:12Z</updated>
+
+    <entry>
+        <title>Mes compétences</title>
+        <id>portfolio:skills/1</id>
+        <updated>2010-10-07T22:30:23+02:00</updated>
+        <content></content>
+
+        <rdf:type rdf:resource="leap2:selection"/>
+        <category term="Abilities" scheme="categories:selection_type#"/>
+
+        <link rel="leap2:has_part" href="portfolio:skill/1" leap2:display_order="1"/>
+        <link rel="leap2:has_part" href="portfolio:skill/2" leap2:display_order="2"/>
+    </entry>
+
+    <entry>
+        <title>skill</title>
+        <id>portfolio:skill/1</id>
+        <updated>2008-01-08T14:12:12Z</updated>
+        <content></content>
+
+        <rdf:type rdf:resource="leap2:ability"/>
+
+        <link rel="leap2:is_part_of" href="portfolio:skills/1" leap2:display_order="1"/>
+    </entry>
+
+    <entry>
+        <title>skill 2</title>
+        <id>portfolio:skill/2</id>
+        <updated>2008-01-08T14:12:12Z</updated>
+        <content></content>
+
+        <rdf:type rdf:resource="leap2:ability"/>
+
+        <link rel="leap2:is_part_of" href="portfolio:skills/1" leap2:display_order="2"/>
+    </entry>
+</feed>

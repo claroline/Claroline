@@ -6,6 +6,7 @@ use Claroline\CoreBundle\Entity\User;
 use Icap\PortfolioBundle\Entity\Portfolio;
 use Icap\PortfolioBundle\Entity\Widget\TitleWidget;
 use Icap\PortfolioBundle\Event\Log\PortfolioViewEvent;
+use Icap\PortfolioBundle\Exporter\Exporter;
 use Icap\PortfolioBundle\Manager\PortfolioManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -177,6 +178,31 @@ class PortfolioController extends Controller
             'form'      => $this->getPortfolioFormHandler()->getGuidesForm($portfolio)->createView(),
             'portfolio' => $portfolio
         );
+    }
+
+    /**
+     * @Route("/export/{portfolioSlug}.{format}", name="icap_portfolio_export")
+     */
+    public function exportAction($portfolioSlug, $format)
+    {
+        $this->checkPortfolioToolAccess();
+
+        /** @var User|null $user */
+        $user        = $this->getUser();
+        /** @var \Icap\PortfolioBundle\Entity\Widget\TitleWidget $titleWidget */
+        $titleWidget = $this->getDoctrine()->getRepository('IcapPortfolioBundle:Widget\TitleWidget')->findOneBySlug($portfolioSlug);
+        $portfolio   = $titleWidget->getPortfolio();
+
+        if (null === $portfolio) {
+            throw $this->createNotFoundException("Unknown portfolio.");
+        }
+
+        $portfolioExporter = new Exporter($this->get('templating'));
+
+        $response = new Response($portfolioExporter->export($portfolio, $format));
+        $response->headers->set('Content-Type', 'text/xml');
+
+        return $response;
     }
 
     /**

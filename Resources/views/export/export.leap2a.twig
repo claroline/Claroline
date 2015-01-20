@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"
+      xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+      xmlns:leap2="http://terms.leapspecs.org/"
+      xmlns:categories="http://www.leapspecs.org/2A/categories"
+      xmlns:claroline="http://www.leapspecs.org/2A/categories">
+    <leap2:version>http://www.leapspecs.org/2010-07/2A/</leap2:version>
+    <id>{{ portfolio.titleWidget.slug }}</id>
+    <title>{{ portfolio.titleWidget.title }}</title>
+    <author>
+        <name>{{ portfolio.user.firstname }} {{ portfolio.user.lastname }}</name>
+    </author>
+    <updated>{{ portfolio.lastUpdateDate|date(constant('\DateTime::ATOM')) }}</updated>
+{% for widget in portfolio.widgets %}
+{% if 'title' != widget.widgetType %}
+{% include 'IcapPortfolioBundle:export\\leap2a:' ~ widget.widgetType ~ '.leap2a.twig' %}
+{% endif %}
+{% endfor %}
+</feed>

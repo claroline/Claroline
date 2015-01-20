@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"
+      xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+      xmlns:leap2="http://terms.leapspecs.org/"
+      xmlns:categories="http://www.leapspecs.org/2A/categories"
+      xmlns:claroline="http://www.leapspecs.org/2A/categories">
+    <leap2:version>http://www.leapspecs.org/2010-07/2A/</leap2:version>
+    <id>http://www.example.ac.uk/pfs/export_262144/</id>
+    <title>A few small related items</title>
+    <author>
+        <name>Theophilus Thistledown</name>
+    </author>
+    <updated>2009-03-15T14:33:12Z</updated>
+
+    <entry>
+        <title>Mon texte</title>
+        <id>portfolio:text1</id>
+        <updated>2010-10-07T22:30:23+02:00</updated>
+        <content type="html"><p>Just a text content.</p></content>
+    </entry>
+</feed>
