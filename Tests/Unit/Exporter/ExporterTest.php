@@ -31,7 +31,7 @@ class ExporterTest extends MockeryTestCase
         parent::setUp();
 
         $templateLoader = new Twig_Loader_Array(array(
-            'IcapPortfolioBundle:Exporter:export.leap2a.twig' => file_get_contents(__DIR__ . '/../../../Resources/views/export/export.leap2a.twig'),
+            'IcapPortfolioBundle:export:export.leap2a.twig' => file_get_contents(__DIR__ . '/../../../Resources/views/export/export.leap2a.twig'),
             'IcapPortfolioBundle:export\leap2a:badges.leap2a.twig' => file_get_contents(__DIR__ . '/../../../Resources/views/export/leap2a/badges.leap2a.twig'),
             'IcapPortfolioBundle:export\leap2a:skills.leap2a.twig' => file_get_contents(__DIR__ . '/../../../Resources/views/export/leap2a/skills.leap2a.twig'),
             'IcapPortfolioBundle:export\leap2a:text.leap2a.twig' => file_get_contents(__DIR__ . '/../../../Resources/views/export/leap2a/text.leap2a.twig'),
