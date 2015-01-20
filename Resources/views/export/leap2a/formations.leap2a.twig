@@ -19,7 +19,7 @@
     <entry>
         <title>{{ formationWidgetResource.resource.name }}</title>
         <id>portfolio:resource/{{ formationWidgetResource.resource.id }}</id>
-        <uri>{{ formationWidgetResource.resource.id }}</uri>
+        <uri>{{ url("claro_resource_open", {'node': formationWidgetResource.resource.id, 'resourceType': formationWidgetResource.resource.resourceType.name }) }}</uri>
         <updated>{{ formationWidgetResource.resource.modificationDate|date(constant('\DateTime::ATOM')) }}</updated>
         <content></content>
 
