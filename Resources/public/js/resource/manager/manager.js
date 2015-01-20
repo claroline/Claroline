@@ -213,7 +213,8 @@
             zoom: parameters.zoom || fetchedParameters.zoom || 'zoom100',
             pickerCallback: parameters.callback || function () {},
             isPickerMultiSelectAllowed: isDefault || parameters.isPickerMultiSelectAllowed || false,
-            isDirectorySelectionAllowed: allowDirectorySelection
+            isDirectorySelectionAllowed: allowDirectorySelection,
+            currentDirectoryId: null
         };
 
         if (mergedParameters.preFetchedDirectory) {

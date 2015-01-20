@@ -84,7 +84,7 @@
         _upload: function (file) {
             if (file) {
                 var manager = Claroline.ResourceManager.get('main');
-                var currentDirectoryId = manager.parameters.directoryId;
+                var currentDirectoryId = manager.parameters.currentDirectoryId || manager.parameters.directoryId;
 
                 file.xhr = FileAPI.upload({
                     url: Routing.generate('claro_file_upload_with_ajax', {'parent': currentDirectoryId}),
