@@ -64,6 +64,7 @@ class TextImporter extends Importer implements ConfigurationInterface, RichTextI
 
     public function import(array $data, WidgetInstance $widgetInstance)
     {
+        var_dump($data);
         $widgetText = new SimpleTextConfig();
         $content = '';
 

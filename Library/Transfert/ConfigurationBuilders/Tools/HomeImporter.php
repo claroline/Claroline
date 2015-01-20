@@ -167,15 +167,11 @@ class HomeImporter extends Importer implements ConfigurationInterface, RichTextI
                 $widgetHomeTabConfig->setWidgetOrder($widgetOrder);
                 $this->om->persist($widgetHomeTabConfig);
 
-                foreach ($this->getListImporters() as $importer) {
-                    if ($importer->getName() == $widget['widget']['type']) {
-                        $toolImporter = $importer;
-                    }
-                }
+                $importer = $this->getImporterByName($widget['widget']['type']);
 
-                if (isset($widget['widget']['data']) && $toolImporter) {
+                if (isset($widget['widget']['data']) && $importer) {
                     $widgetdata = $widget['widget']['data'];
-                    $toolImporter->import($widgetdata, $widgetInstance);
+                    $importer->import($widgetdata, $widgetInstance);
                 }
 
                 $widgetOrder++;
