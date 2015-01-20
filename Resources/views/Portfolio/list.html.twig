@@ -65,15 +65,8 @@
 
     <div class="btn-toolbar pull-right portfolio_toolbar" role="toolbar" aria-label="...">
         <div class="btn-group btn-group-sm" role="group" aria-label="Portfolio menu">
-            <a href="{{ path('icap_portfolio_add') }}" title="{{ 'add_portfolio'|trans({}, 'icap_portfolio') }}"
-               data-toggle="tooltip" data-container="body" data-placement="top" class="btn btn-default">
-                <span class="fa fa-plus"></span>
-            </a>
-        </div>
-        <div class="btn-group btn-group-sm" role="group" aria-label="Portfolio menu">
-            <a href="#" title="{{ 'import_portfolio'|trans({}, 'icap_portfolio') }}"
-               data-toggle="tooltip" data-container="body" data-placement="top" class="btn btn-default">
-                <span class="fa fa-download"></span>
+            <a href="{{ path('icap_portfolio_add') }}" title="{{ 'add_portfolio'|trans({}, 'icap_portfolio') }}" class="btn btn-default">
+                {{ 'add_portfolio'|trans({}, 'icap_portfolio') }} <span class="fa fa-plus"></span>
             </a>
         </div>
     </div>
