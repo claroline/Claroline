@@ -2,29 +2,32 @@
 
 namespace Icap\PortfolioBundle\Exporter;
 
+use Claroline\CoreBundle\Entity\Badge\Badge;
 use Claroline\CoreBundle\Entity\Badge\BadgeTranslation;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
-use Claroline\CoreBundle\Rule\Entity\Rule;
-use Claroline\CoreBundle\Entity\Badge\Badge;
-use Claroline\CoreBundle\Entity\Badge\BadgeRule;
-use Claroline\CoreBundle\Entity\Log\Log;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
-use FOS\JsRoutingBundle\Tests\Extractor\ExposedRoutesExtractorTest;
 use Icap\PortfolioBundle\Entity\Portfolio;
 use Icap\PortfolioBundle\Entity\Widget\BadgesWidgetBadge;
-use Icap\PortfolioBundle\Entity\Widget\FormationsWidgetResource;
-use Icap\PortfolioBundle\Entity\Widget\SkillsWidget;
-use Icap\PortfolioBundle\Entity\Widget\SkillsWidgetSkill;
+use Icap\PortfolioBundle\Tests\Unit\KernelAwareTestCase;
 use Symfony\Bridge\Twig\TwigEngine;
+use Symfony\Component\Routing\Generator\UrlGenerator;
+use Symfony\Component\Routing\RequestContext;
+use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Templating\TemplateNameParser;
 use Twig_Environment;
 use Twig_Loader_Array;
-use Twig_Loader_Filesystem;
 
-class ExporterTest extends MockeryTestCase
+class ExporterTest extends KernelAwareTestCase
 {
+    /**
+     * @var TwigEngine
+     */
     private $twigEngine;
+
+    /**
+     * @var Twig_Environment
+     */
+    private $twigEnvironment;
 
     protected function setUp()
     {
@@ -39,8 +42,26 @@ class ExporterTest extends MockeryTestCase
             'IcapPortfolioBundle:export\leap2a:formations.leap2a.twig' => file_get_contents(__DIR__ . '/../../../Resources/views/export/leap2a/formations.leap2a.twig')
         ));
 
-        $twigEnvironment  = new Twig_Environment($templateLoader);
-        $this->twigEngine = new TwigEngine($twigEnvironment, new TemplateNameParser());
+        $this->twigEnvironment  = new Twig_Environment($templateLoader);
+
+        $this->twigEngine = new TwigEngine($this->twigEnvironment, new TemplateNameParser());
+    }
+
+    /**
+     * @param string $urlToReturn
+     *
+     * @return \Symfony\Bridge\Twig\Extension\RoutingExtension
+     */
+    protected function createRoutingExtension($urlToReturn)
+    {
+        $routeCollection = new RouteCollection();
+        $requestContext  = new RequestContext();
+        $urlGenerator    = new UrlGenerator($routeCollection, $requestContext);
+
+        $routingTwigExtension = $this->mock('Symfony\Bridge\Twig\Extension\RoutingExtension[getUrl]', array($urlGenerator));
+        $routingTwigExtension->shouldReceive('getUrl')->andReturn($urlToReturn);
+
+        return $routingTwigExtension;
     }
 
     /**
@@ -49,7 +70,7 @@ class ExporterTest extends MockeryTestCase
      *
      * @return User
      */
-    public function createUser($firstname, $lastname)
+    protected function createUser($firstname, $lastname)
     {
         $username = uniqid();
 
@@ -625,6 +646,11 @@ EXPORT;
 
     public function testLeap2aExportPortfolioWithOneFormationWidgetWithOneresource()
     {
+        $formationWidgetResourceResourceNodeId = rand(0, PHP_INT_MAX);
+
+        $this->twigEnvironment->addExtension($this->createRoutingExtension($formationWidgetResourceResourceNodeId));
+        $this->twigEngine = new TwigEngine($this->twigEnvironment, new TemplateNameParser());
+
         $exporter = new Exporter($this->twigEngine);
 
         /** @var \Icap\PortfolioBundle\Entity\Widget\TitleWidget $titleWidget */
@@ -639,7 +665,7 @@ EXPORT;
         $formationWidgetResource->shouldReceive('getId')->andReturn($formationWidgetResourceId = rand(0, PHP_INT_MAX));
 
         $formationWidgetResourceResourceNode = new ResourceNode();
-        $formationWidgetResourceResourceNode->setId($formationWidgetResourceResourceNodeId = rand(0, PHP_INT_MAX));
+        $formationWidgetResourceResourceNode->setId($formationWidgetResourceResourceNodeId);
         $formationWidgetResourceResourceNode->setModificationDate($formationWidgetResourceUpdatedAt = new \DateTime());
         $formationWidgetResourceResourceNode->setName($formationWidgetResourceName = uniqid());
 
