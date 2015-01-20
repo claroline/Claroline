@@ -6,9 +6,9 @@ use Claroline\CoreBundle\Entity\Badge\Badge;
 use Claroline\CoreBundle\Entity\Badge\BadgeTranslation;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
 use Icap\PortfolioBundle\Entity\Portfolio;
 use Icap\PortfolioBundle\Entity\Widget\BadgesWidgetBadge;
-use Icap\PortfolioBundle\Tests\Unit\KernelAwareTestCase;
 use Symfony\Bridge\Twig\TwigEngine;
 use Symfony\Component\Routing\Generator\UrlGenerator;
 use Symfony\Component\Routing\RequestContext;
@@ -17,7 +17,7 @@ use Symfony\Component\Templating\TemplateNameParser;
 use Twig_Environment;
 use Twig_Loader_Array;
 
-class ExporterTest extends KernelAwareTestCase
+class ExporterTest extends MockeryTestCase
 {
     /**
      * @var TwigEngine
