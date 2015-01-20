@@ -146,7 +146,7 @@
                                 {% if 0 < countUnreadComments %} <span class="badge">{{ countUnreadComments }}</span>{% endif %}
                             </a>
                             <a href="{{ path('icap_portfolio_export', {'portfolioSlug': portfolio.titleWidget.slug, 'format': 'leap2a'}) }}"
-                               title="{{ 'export_portfolio'|trans({}, 'icap_portfolio') }}"
+                               download="{{ portfolio.titleWidget.slug }}.leap2a.xml" title="{{ 'export_portfolio'|trans({}, 'icap_portfolio') }}"
                                data-toggle="tooltip" data-container="body" data-placement="top" class="btn btn-xs btn-default">
                                 <span class="fa fa-upload"></span>
                             </a>
