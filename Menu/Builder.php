@@ -57,8 +57,13 @@ class Builder extends ContainerAware
             ->setExtra('icon', 'fa fa-book');
         }
 
-        $menu->addChild($translator->trans('my_agenda', array(), 'platform'), array('route' => 'claro_profile_view'))
-            ->setAttribute('class', 'dropdown')
+        $menu->addChild(
+            $translator->trans('my_agenda', array(), 'platform'),
+            array(
+                'route' => 'claro_desktop_open_tool',
+                'routeParameters' => array('toolName' => 'agenda')
+            )
+        )->setAttribute('class', 'dropdown')
             ->setAttribute('role', 'presentation')
             ->setExtra('icon', 'fa fa-calendar');
 
@@ -66,16 +71,20 @@ class Builder extends ContainerAware
             $translator->trans('my_resources', array(), 'platform'),
             array(
                 'route' => 'claro_desktop_open_tool',
-                'routeParameters' => array('toolName' => 'resourceManager')
+                'routeParameters' => array('toolName' => 'resource_manager')
             )
         )
             ->setAttribute('class', 'dropdown')
             ->setAttribute('role', 'presentation')
             ->setExtra('icon', 'fa fa-folder')
-            ->setExtra('uri-add', '#/resource/0');
+            ->setExtra('uri-add', '#resources/0');
 
-        $menu->addChild($translator->trans('my_badges', array(), 'platform'), array('route' => 'claro_profile_view_badges'))
-            ->setAttribute('class', 'dropdown')
+        $menu->addChild(
+            $translator->trans('my_badges', array(), 'platform'),
+            array(
+                'route' => 'claro_profile_view_badges'
+            )
+        )->setAttribute('class', 'dropdown')
             ->setAttribute('role', 'presentation')
             ->setExtra('icon', 'fa fa-trophy');
 
