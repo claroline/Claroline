@@ -342,6 +342,24 @@ class Portfolio
     }
 
     /**
+     * @param string $widgetType
+     *
+     * @return AbstractWidget[]
+     */
+    public function getWidget($widgetType)
+    {
+        $widgets = array();
+
+        foreach ($this->getWidgets() as $widget) {
+            if ($widgetType === $widget->getWidgetType()) {
+                $widgets[] = $widget;
+            }
+        }
+
+        return $widgets;
+    }
+
+    /**
      * @param User $user
      *
      * @return bool
