@@ -167,6 +167,18 @@ class ForumImporter extends Importer implements ConfigurationInterface
 
     public function export(Workspace $workspace, array &$files, $object)
     {
-        return array();
+        $categories = $object->getCategories();
+        $data = [];
+
+        foreach ($categories as $category) {
+            $data[] = array(
+                'category' => array(
+                    'name' => $category->getName(),
+                    'subjects' => array()
+                )
+            );
+        }
+
+        return $data;
     }
 }
