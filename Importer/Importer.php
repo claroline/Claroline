@@ -21,7 +21,7 @@ class Importer
      */
     public function import($content, $format, User $user)
     {
-        if (!$this->isFormatAvailable($format)) {
+        if (!in_array($format, $this->availableFormats)) {
             throw new \InvalidArgumentException('Unknown format.');
         }
 
@@ -31,15 +31,6 @@ class Importer
         $portfolio->setUser($user);
 
         return $portfolio;
-    }
-
-    /**
-     * @param $format
-     *
-     * @return boolean
-     */
-    public function isFormatAvailable($format) {
-        return in_array($format, $this->availableFormats);
     }
 
     /**
