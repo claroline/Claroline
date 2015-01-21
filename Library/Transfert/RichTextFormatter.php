@@ -106,10 +106,10 @@ class RichTextFormatter
                 file_put_contents($newFile, $text);
             }
 
-            $formattedFile[$key] = $newFile;
+            $formattedFiles[$key] = $newFile;
         }
 
-        return $formattedFile;
+        return $formattedFiles;
     }
 
     private function setPlaceHolder($file)
