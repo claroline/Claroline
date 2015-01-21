@@ -30,6 +30,8 @@ class ParameterBag
     private $mailingSettings = null;
     private $mailingValidationErrors = array();
     private $mailingGlobalError = null;
+    private $hasConfirmedSendDatas = false;
+    private $token = null;
 
     /**
      *
@@ -162,6 +164,25 @@ class ParameterBag
     public function getMailingGlobalError()
     {
         return $this->mailingGlobalError;
+    }
+    public function getHasConfirmedSendDatas()
+    {
+        return $this->hasConfirmedSendDatas;
+    }
+
+    public function setHasConfirmedSendDatas($hasConfirmedSendDatas)
+    {
+        $this->hasConfirmedSendDatas = $hasConfirmedSendDatas;
+    }
+
+    public function getToken()
+    {
+        return $this->token;
+    }
+
+    public function setToken($token)
+    {
+        $this->token = $token;
     }
 
     public function ipInfo($ip = null, $purpose = "location", $deepDetect = true)

@@ -41,7 +41,9 @@ class Writer
         $this->writeMainParameters(
             $parameters->getDatabaseSettings(),
             $parameters->getPlatformSettings(),
-            $parameters->getMailingSettings()
+            $parameters->getMailingSettings(),
+            $parameters->getHasConfirmedSendDatas(),
+            $parameters->getToken()
         );
         $this->writePlatformParameters($parameters->getPlatformSettings());
     }
@@ -54,7 +56,9 @@ class Writer
     private function writeMainParameters(
         DatabaseSettings $dbSettings,
         PlatformSettings $platformSettings,
-        MailingSettings $mailSettings
+        MailingSettings $mailSettings,
+        $hasConfirmedSendDatas = false,
+        $token = null
     )
     {
         $defaultTemplateContent = file_get_contents($this->templateFile);
@@ -76,6 +80,14 @@ class Writer
             'locale' => $platformSettings->getLanguage(),
             'secret' => md5(rand(0, 10000000))
         );
+
+        if ($hasConfirmedSendDatas) {
+            $parameters['confirm_send_datas'] = 'OK';
+        }
+
+        if (!empty($token)) {
+            $parameters['token'] = $token;
+        }
         $parameters = array_merge($defaultParameters['parameters'], $parameters);
         $this->doWrite(array('parameters' => $parameters), $this->mainFile);
     }

@@ -22,6 +22,7 @@ class Controller
 {
     private $container;
     private $request;
+    private $parameters;
 
     public function __construct(Container $container)
     {
@@ -230,6 +231,14 @@ class Controller
 
     public function installSubmitStep()
     {
+        $sendDatasConfirmed = isset($_POST['sendData']) && $_POST['sendData'] === 'true';
+        $token = $this->generateToken(20);
+        $this->parameters->setToken($token);
+
+        if ($sendDatasConfirmed) {
+            $this->parameters->setHasConfirmedSendDatas(true);
+            $datas = $this->generateSentDatas();
+        }
         $this->container->getWriter()->writeParameters($this->container->getParameterBag());
         $installer = $this->container->getInstaller();
         session_write_close(); // needed because symfony will init a new session
@@ -238,6 +247,10 @@ class Controller
 
         if (!$installer->hasSucceeded()) {
             return $this->redirect('/error/' . $installer->getLogFilename());
+        }
+
+        if ($sendDatasConfirmed) {
+            $this->sendDatas($datas);
         }
 
         return $this->redirect('/../app.php');
@@ -318,5 +331,87 @@ class Controller
             default:
                 return strtolower($transport);
         }
+    }
+
+    private function generateSentDatas()
+    {
+        $datas = array();
+        $platformSettings = $this->parameters->getPlatformSettings();
+
+        $datas['url'] = 'http://localhost/stats/insert.php';
+        $datas['ip'] = $_SERVER['REMOTE_ADDR'];
+        $datas['name'] = $platformSettings->getName();
+        $datas['platformUrl'] = 'http://www.claro-stats.com';
+        $datas['lang'] = $platformSettings->getLanguage();
+        $datas['country'] = $this->parameters->getCountry();
+        $datas['supportEmail'] = $platformSettings->getSupportEmail();
+        $datas['version'] = '-';
+        $datas['nbWorkspaces'] = 0;
+        $datas['nbUsers'] = 0;
+        $datas['type'] = 0;
+        $datas['token'] = $this->parameters->getToken();
+
+        $jsonString = file_get_contents("../vendor/composer/installed.json");
+        $bundles = json_decode($jsonString, true);
+
+        foreach ($bundles as $bundle) {
+
+            if (isset($bundle['name']) && $bundle['name'] === 'claroline/core-bundle') {
+                $datas['version'] = $bundle['version'];
+                break;
+            }
+        }
+
+        return $datas;
+    }
+
+    private function sendDatas(array $datas)
+    {
+        $url = $datas['url'];
+        $ip = $datas['ip'];
+        $name = $datas['name'];
+        $platformUrl = $datas['platformUrl'];
+        $lang = $datas['lang'];
+        $country = $datas['country'];
+        $supportEmail = $datas['supportEmail'];
+        $version = $datas['version'];
+        $nbWorkspaces = $datas['nbWorkspaces'];
+        $nbUsers = $datas['nbUsers'];
+        $type = $datas['type'];
+        $token = $datas['token'];
+        
+        $postDatas = "ip=$ip" .
+            "&name=$name" .
+            "&url=$platformUrl" .
+            "&lang=$lang" .
+            "&country=$country" .
+            "&email=$supportEmail" .
+            "&version=$version" .
+            "&workspaces=$nbWorkspaces" .
+            "&users=$nbUsers" .
+            "&stats_type=$type" .
+            "&token=$token";
+
+        $curl = curl_init($url);
+        curl_setopt($curl, CURLOPT_POST, 1);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, $postDatas);
+        curl_setopt($curl, CURLOPT_FOLLOWLOCATION, 1);
+        curl_setopt($curl, CURLOPT_HEADER, 0);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        curl_exec($curl);
+    }
+
+    private function generateToken($length)
+    {
+        $chars = array_merge(range(0,9), range('a', 'z'), range('A', 'Z'));
+        $charsSize = count($chars);
+        $token = uniqid();
+
+        while (strlen($token) < $length) {
+            $index = rand(0, $charsSize - 1);
+            $token .= $chars[$index];
+        }
+
+        return $token;
     }
 }
