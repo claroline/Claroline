@@ -127,20 +127,3 @@ function addHints(container, deleteHint) {
     container.remove();
     tableHints.next().remove();
 }
-
-// Delete a hint
-function addDelete(tr, deleteHint) {
-
-    // Create the button to delete a hint
-    var delLink = $('<a href="#" class="btn btn-danger">'+deleteHint+'</a>');
-
-    // Add the button to the row
-    tr.append(delLink);
-
-    // When click, delete the matching hint's row in the table
-    delLink.click(function(e) {
-        $(this).parent('td').parent('tr').remove();
-        e.preventDefault();
-        return false;
-    });
-}

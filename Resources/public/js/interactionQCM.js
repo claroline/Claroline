@@ -5,7 +5,9 @@ var typeQCM;
 
 // QCM Creation
 function creationQCM(expectedAnswer, response, point, comment, positionForce, addchoice, deleteChoice, tQCM) {
-
+    
+    $("#ujm_exobundle_interactionqcmtype_typeQCM_2").prop("checked", true);
+    
     var index; // number of choices
     
     typeQCM = JSON.parse(tQCM);
@@ -63,6 +65,7 @@ function creationQCM(expectedAnswer, response, point, comment, positionForce, ad
             });
         }
     });*/
+    $("#ujm_exobundle_interactionqcmtype_choices_1_label").parent().append('<span class="input-group-addon" id="basic-addon2"><a href="#" style="background-color="#FFFFFF";><i class="fa fa-font"></i></a></span>');
 }
 
 // QCM Edition
@@ -163,10 +166,8 @@ function addChoice(container, deleteChoice) {
         .replace(/__name__/g, index)
         .replace('<a class="btn btn-danger remove" href="#">Delete</a>', '')
     );
-
     // Add the button to delete a choice
     addDelete(contain, deleteChoice);
-
     // Add the modified dataprototype to the page
     container.append(contain);
 
@@ -174,11 +175,13 @@ function addChoice(container, deleteChoice) {
     container.find('.row').each(function () {
         fillChoicesArray($(this));
     });
+    
+    //add the feedback button
+    addFeedback($('#newTable').find('tr:last').append('<td></td>'));
 
     // Add the delete button
     $('#newTable').find('tr:last').append('<td class="classic"></td>');
-    $('#newTable').find('td:last').append(contain.find('a:contains("'+deleteChoice+'")'));
-
+    $('#newTable').find('td:last').append(contain.find('a.btn-danger'));
     // Remove the useless fileds form
     container.remove();
     tableChoices.next().remove();
@@ -187,23 +190,6 @@ function addChoice(container, deleteChoice) {
     
     $('#ujm_exobundle_interactionqcmtype_choices_'+index+'_weight').click(function() {
         $(this).focus();
-    });
-}
-
-// Delete a choice
-function addDelete(tr, deleteChoice) {
-
-    // Create the button to delete a choice
-    var delLink = $('<a href="#" class="btn btn-danger">'+deleteChoice+'</a>');
-
-    // Add the button to the row
-    tr.append(delLink);
-
-    // When click, delete the matching choice's row in the table
-    delLink.click(function(e) {
-        $(this).parent('td').parent('tr').remove();
-        e.preventDefault();
-        return false;
     });
 }
 
@@ -346,7 +332,7 @@ function whichChange() {
 
     // When "type of QCM (unique/multiple)" change, change the expected response to radio or checkbox
     $('#ujm_exobundle_interactionqcmtype_typeQCM').change(function () {
-        var type = $('#ujm_exobundle_interactionqcmtype_typeQCM option:selected').val();
+        var type = $('#ujm_exobundle_interactionqcmtype_typeQCM :checked').val();
 
         $("*[id$='_rightResponse']").each(function () {
             if (typeQCM[type] == 1) {
@@ -383,10 +369,10 @@ function tableChoicesCreation(expectedAnswer, response, point, comment, position
 
     if (nbResponses == 0) {
         // Add the structure od the table
-        tableChoices.append('<table id="newTable" class="table table-striped table-bordered table-condensed"><thead><tr style="background-color: lightsteelblue;"><th class="classic">'+expectedAnswer+'</th><th class="classic">'+response+'</th><th class="classic">'+point+'</th><th class="classic">'+comment+'</th><th class="classic">'+positionForce+'</th><th class="classic">-----</th></tr></thead><tbody><tr></tr></tbody></table>');
+        tableChoices.append('<table id="newTable" class="table table-striped table-condensed"><thead><tr style="background-color: lightsteelblue;"></tr></thead><tbody><tr></tr></tbody></table>');
 
         // create the button to add a choice
-        var add = $('<a href="#" id="add_choice" class="btn btn-primary"><i class="fa fa-plus"></i>&nbsp;'+addchoice+'</a>');
+        var add = $('<a href="#" id="add_choice" class="btn btn-default"><i class="fa fa-plus"></i></a>');
 
         // Add the button after the table
         tableChoices.append(add);
@@ -402,4 +388,13 @@ function tableChoicesCreation(expectedAnswer, response, point, comment, position
         // Add the structure od the table
         tableChoices.append('<table id="newTable" class="table table-striped table-bordered table-condensed"><thead><tr style="background-color: lightsteelblue;"><th class="classic">'+expectedAnswer+'</th><th class="classic">'+response+'</th><th class="classic">'+point+'</th><th class="classic">'+comment+'</th><th class="classic">'+positionForce+'</th></tr></thead><tbody><tr></tr></tbody></table>');
     }
+}
+
+function addFeedback(tr) {
+
+    // Create the button feedback
+    var delFeedback = $('<a href="#" class="btn btn-default"><i class="fa fa-comments-o"></i></a>');
+    
+    tr.append(delFeedback);
+    
 }

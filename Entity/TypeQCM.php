@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * UJM\ExoBundle\Entity\TypeQCM
  *
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="UJM\ExoBundle\Repository\TypeQCMRepository")
  * @ORM\Table(name="ujm_type_qcm")
  */
 class TypeQCM

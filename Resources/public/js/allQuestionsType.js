@@ -88,3 +88,20 @@ function displayDeleteCategory() {
 }
 
 displayDeleteCategory();
+
+// Delete button
+function addDelete(tr, deleteTrans) {
+
+    // Create the button to delete
+    var delLink = $('<a href="#" class="btn btn-danger"><i class="fa fa-close"></i></a>');
+
+    // Add the button to the row
+    tr.append(delLink);
+
+    // When click, delete the matching row in the table
+    delLink.click(function(e) {
+        $(this).parent('td').parent('tr').remove();
+        e.preventDefault();
+        return false;
+    });
+}

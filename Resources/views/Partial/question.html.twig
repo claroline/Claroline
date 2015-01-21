@@ -1,63 +1,15 @@
 <div class="form-group row">
-    {{ form_label(form.interaction.question.title) }}
-    <div class="col-md-9">{{ form_widget(form.interaction.question.title) }}</div>
+    <div class="col-md-4">{{ form_widget(form.interaction.question.title) }}</div>
+        <button type="button" class="btn btn-default">Catégorie</button>
+        <button type="button" class="btn btn-default">Description</button> 
 </div>
 
-<br><hr><br>
-
-<div>
-    <div class="form-group row">
-        <label class="control-label col-md-3">{{ 'category' | trans }}</label>
-        <div class="col-md-9">
-            {{ form_widget(form.interaction.question.category) }}
-            {{ form_errors(form.interaction.question.category) }}
-        </div>
-    </div>
-    <a class="btn btn-primary" onclick="openCat('{{ path('ujm_category_new_pop', {'edit': 1} ) }}');"><i class="fa fa-pencil"></i> {{ 'alter category' | trans }}</a>
-    <a class="btn btn-primary" onclick="openCat('{{ path('ujm_category_new_pop') }}');"><i class="fa fa-plus"></i> {{ 'create a new category' | trans }}</a>
-    <a id="linkedCategory" style="display: none;" class="btn btn-primary" id="lien_category_drop" onclick="dropCategory();"><i class="fa fa-trash-o"></i> {{ 'drop category' | trans }}</a>
+<div class="form-group row">
+    <div class="control-label col-md-8"> {{ form_widget(form.interaction.invite) }}</div>
+            <button type="button" class="btn btn-default">Indice</button>
+            <button type="button" class="btn btn-default"><i class="fa fa-font"></i></button>
 </div>
-
-<br><hr><br>
-
-<div>
-    <a class="btn btn-primary" data-toggle="collapse" data-target="#collepsedescription">
-        <i class="fa fa-pencil"></i> {{ 'Question.description' | trans }}
-    </a>
-    <div id="collepsedescription" class="list-group collapse">
-        <div class="list-group-item">{{ form_widget(form.interaction.question.description) }}</div>
-    </div>
-</div>
-
-<br><hr><br>
-
-<div>
-    <label class="control-label col-md-3">{{ 'question' | trans }}</label>
-    <br><br>
-    {{ form_widget(form.interaction.invite) }}
-</div>
-
-<br><hr><br>
-
-<div>
-    <a class="btn btn-primary" data-toggle="collapse" data-target="#collepseinteraction">
-        <i class="fa fa-pencil"></i> {{ 'Interaction.feedback' | trans }}
-    </a>
-    <div id="collepseinteraction" class="list-group collapse">
-        <div class="list-group-item">{{ form_widget(form.interaction.feedBack) }}</div>
-    </div>
-</div>
-
-<br><hr><br>
-
-<div id="divHint" class="panel-body">
-    <div id="hintError"></div>
-    <div id="tableHint"></div>
-    {{ form_widget(form.interaction.hints) }}
-    {{ form_errors(form.interaction.hints) }}
-</div>
-
-<br><hr><br>
+<hr>
 
 <input type="hidden" id="pathDrop" value="{{ path('ujm_category_drop') }}"/>
 

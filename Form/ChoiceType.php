@@ -20,18 +20,19 @@ class ChoiceType extends AbstractType
                 )
             )
             ->add(
-                'label', 'tinymce', array(
-                    'label' => ' '
+                'label', 'text', array(
+                    'label' => ' ',
+                    'attr' => array(
+                        'placeholder' => 'Réponse',
+                        
+                    )
                 )
             )
             ->add(
                 'weight', 'text', array(
-                    'required' => false, 'label' => ' ', 'attr' => array('style' => 'width:50px; text-align: end;')
-                )
-            )
-            ->add(
-                'feedback', 'tinymce', array(
-                    'required' => false, 'label' => ' '
+                    'required' => false, 
+                    'label' => ' ', 
+                    'attr' => array('style' => 'width:50px; text-align: end;', 'placeholder' => 'pts')
                 )
             )
             ->add(

@@ -28,8 +28,9 @@ class InteractionType extends AbstractType
                     $this->user, $this->catID
                 )
             )
-            ->add('invite', 'tinymce', array(
+            ->add('invite', 'text', array(
                     'label' => 'Interaction.invite',
+                    'attr'  => array('placeholder' => 'question'),
                     'required' => true
                 )
             )

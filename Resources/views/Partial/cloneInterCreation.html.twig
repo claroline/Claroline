@@ -1,5 +1,9 @@
-<div id="divnbq" class="form-group row">
-    <label class="control-label col-md-3">
-        {{ "duplicate this question" | trans | raw }}
-    </label>
+<div>
+    
+    <a class="btn btn-default" data-toggle="collapse" data-target="#collepseinteraction">
+        <i class="fa fa-copy"></i>
+    </a>
+    <div id="collepseinteraction" class="list-group collapse">
+        <div class="list-group-item">{{ form_widget(form.interaction.feedBack) }}</div>
+    </div>
 </div>

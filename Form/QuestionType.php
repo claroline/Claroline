@@ -29,7 +29,8 @@ class QuestionType extends AbstractType
         $builder
             ->add(
                 'title', 'text', array(
-                    'label' => 'Question.title'
+                    'label' => 'Question.title',
+                    'attr'  => array( 'placeholder' => 'Question.title')
                 )
             )
             ->add(
