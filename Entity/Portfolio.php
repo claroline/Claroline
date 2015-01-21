@@ -103,6 +103,7 @@ class Portfolio
     public function __construct()
     {
         $this->commentsViewAt = new \DateTime();
+        $this->widgets        = new ArrayCollection();
     }
 
     /**
