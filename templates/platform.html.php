@@ -13,10 +13,10 @@
             </label>
             <div class="col-sm-10">
                 <select name="language" class="form-control">
-                    <option <?php if ($var('platform_settings')->getLanguage() === 'en') echo 'selected' ?>>
+                    <option value="EN" <?php if ($var('platform_settings')->getLanguage() === 'en') echo 'selected' ?>>
                         English
                     </option>
-                    <option <?php if ($var('platform_settings')->getLanguage() === 'fr') echo 'selected' ?>>
+                    <option value="FR" <?php if ($var('platform_settings')->getLanguage() === 'fr') echo 'selected' ?>>
                         Français
                     </option>
                 </select>
