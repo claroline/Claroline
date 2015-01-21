@@ -944,6 +944,42 @@ class ParametersController extends Controller
     }
 
     /**
+     * @EXT\Route(
+     *     "/send/datas/confirmation/form",
+     *     name="claro_admin_send_datas_confirm_form"
+     * )
+     * @EXT\Template(
+     *     "ClarolineCoreBundle:Administration\Parameters:sendDatasConfirmationForm.html.twig"
+     * )
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function sendDatasConfirmationFormAction()
+    {
+        $this->checkOpen();
+
+        return array();
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/send/datas/confirm",
+     *     name="claro_admin_send_datas_confirm"
+     * )
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function sendDatasConfirmAction()
+    {
+        $this->checkOpen();
+        //Confirm action
+
+        return new RedirectResponse(
+            $this->router->generate('claro_admin_parameters_index')
+        );
+    }
+
+    /**
      *  Returns the list of available themes.
      *
      *  @return array

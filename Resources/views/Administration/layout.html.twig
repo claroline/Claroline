@@ -11,6 +11,18 @@
         {{ block("leftbar") }}
     </div>
     <div class="panel panel-default">
+        
+        {% if not is_send_datas_confirmed() %}
+            <div class="alert-update-mode">
+                <h4 class="label label-danger">
+                    {{ 'send_datas_has_not_been_confirmed'|trans({}, 'platform') }}
+                    <i class="fa fa-question-circle pointer-hand">
+                        <a href="{{ path('claro_admin_send_datas_confirm_form') }}">
+                        </a>
+                    </i>
+                </h4>
+            </div>
+        {% endif %}
         {% block section_content %}{% endblock %}
     </div>
 {% endblock %}
