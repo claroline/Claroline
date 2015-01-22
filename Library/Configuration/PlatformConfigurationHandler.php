@@ -72,7 +72,9 @@ class PlatformConfigurationHandler
         'is_notification_active' => true,
         'createPersonnalWorkspace' => true,
         'max_storage_size' => Workspace::DEFAULT_MAX_STORAGE_SIZE,
-        'max_upload_resources' => Workspace::DEFAULT_MAX_FILE_COUNT
+        'max_upload_resources' => Workspace::DEFAULT_MAX_FILE_COUNT,
+        'confirm_send_datas' => null,
+        'token' => null
     );
 
     /**

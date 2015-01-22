@@ -44,7 +44,7 @@ class SendDatasConfirmExtension extends \Twig_Extension
 
     public function isSendDatasConfirmed()
     {
-        return $this->platformConfigHandler->hasParameter('confirm_send_datas');
+        return !is_null($this->platformConfigHandler->getParameter('confirm_send_datas'));
     }
 
     /**
