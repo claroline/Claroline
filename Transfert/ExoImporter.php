@@ -103,7 +103,7 @@ class ExoImporter extends Importer implements ConfigurationInterface
            }
         }
 
-        die();
+        //die();
     }
 
     public function export(Workspace $workspace, array &$files, $object)
