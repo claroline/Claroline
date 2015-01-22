@@ -45,6 +45,7 @@ class Writer
         );
         $this->writePlatformParameters(
             $parameters->getPlatformSettings(),
+            $parameters->getCountry(),
             $parameters->getHasConfirmedSendDatas(),
             $parameters->getToken()
         );
@@ -86,6 +87,7 @@ class Writer
 
     private function writePlatformParameters(
         PlatformSettings $settings,
+        $country = null,
         $hasConfirmedSendDatas = false,
         $token = null
     )
@@ -95,6 +97,10 @@ class Writer
             'support_email' => $settings->getSupportEmail(),
             'locale_language' => $settings->getLanguage()
         );
+
+        if (!empty($country)) {
+            $parameters['country'] = $country;
+        }
 
         if ($hasConfirmedSendDatas) {
             $parameters['confirm_send_datas'] = 'OK';

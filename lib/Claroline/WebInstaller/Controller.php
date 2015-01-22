@@ -351,7 +351,7 @@ class Controller
         $datas['type'] = 0;
         $datas['token'] = $this->parameters->getToken();
 
-        $jsonString = file_get_contents("../vendor/composer/installed.json");
+        $jsonString = file_get_contents('../vendor/composer/installed.json');
         $bundles = json_decode($jsonString, true);
 
         foreach ($bundles as $bundle) {
