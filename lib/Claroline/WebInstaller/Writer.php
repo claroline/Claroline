@@ -41,11 +41,13 @@ class Writer
         $this->writeMainParameters(
             $parameters->getDatabaseSettings(),
             $parameters->getPlatformSettings(),
-            $parameters->getMailingSettings(),
+            $parameters->getMailingSettings()
+        );
+        $this->writePlatformParameters(
+            $parameters->getPlatformSettings(),
             $parameters->getHasConfirmedSendDatas(),
             $parameters->getToken()
         );
-        $this->writePlatformParameters($parameters->getPlatformSettings());
     }
 
     public function writeInstallFlag()
@@ -56,9 +58,7 @@ class Writer
     private function writeMainParameters(
         DatabaseSettings $dbSettings,
         PlatformSettings $platformSettings,
-        MailingSettings $mailSettings,
-        $hasConfirmedSendDatas = false,
-        $token = null
+        MailingSettings $mailSettings
     )
     {
         $defaultTemplateContent = file_get_contents($this->templateFile);
@@ -80,6 +80,21 @@ class Writer
             'locale' => $platformSettings->getLanguage(),
             'secret' => md5(rand(0, 10000000))
         );
+        $parameters = array_merge($defaultParameters['parameters'], $parameters);
+        $this->doWrite(array('parameters' => $parameters), $this->mainFile);
+    }
+
+    private function writePlatformParameters(
+        PlatformSettings $settings,
+        $hasConfirmedSendDatas = false,
+        $token = null
+    )
+    {
+        $parameters = array(
+            'name' => $settings->getName(),
+            'support_email' => $settings->getSupportEmail(),
+            'locale_language' => $settings->getLanguage()
+        );
 
         if ($hasConfirmedSendDatas) {
             $parameters['confirm_send_datas'] = 'OK';
@@ -88,18 +103,8 @@ class Writer
         if (!empty($token)) {
             $parameters['token'] = $token;
         }
-        $parameters = array_merge($defaultParameters['parameters'], $parameters);
-        $this->doWrite(array('parameters' => $parameters), $this->mainFile);
-    }
-
-    private function writePlatformParameters(PlatformSettings $settings)
-    {
         $this->doWrite(
-            array(
-                'name' => $settings->getName(),
-                'support_email' => $settings->getSupportEmail(),
-                'locale_language' => $settings->getLanguage()
-            ),
+            $parameters,
             $this->platformFile
         );
     }
