@@ -23,8 +23,7 @@ class ChoiceType extends AbstractType
                 'label', 'text', array(
                     'label' => ' ',
                     'attr' => array(
-                        'placeholder' => 'Réponse',
-                        
+                        'placeholder' => 'Réponse',               
                     )
                 )
             )

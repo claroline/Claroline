@@ -105,3 +105,7 @@ function addDelete(tr, deleteTrans) {
         return false;
     });
 }
+
+$(document).ready(function() {
+    $('#ujm_exobundle_interactionqcmtype_interaction_invite_ifr').height(50);
+});

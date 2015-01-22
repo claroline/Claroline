@@ -7,7 +7,9 @@ var typeQCM;
 function creationQCM(expectedAnswer, response, point, comment, positionForce, addchoice, deleteChoice, tQCM) {
     
     $("#ujm_exobundle_interactionqcmtype_typeQCM_2").prop("checked", true);
-    
+    $("#ujm_exobundle_interactionqcmtype_weightResponse").prop("checked", true);
+    $('.radio').css({"display" : "inline-block", "margin-right" : "4%", "margin-top" : "1%"});
+    //$('ujm_exobundle_interactionqcmtype_typeQCM_1').css({});
     var index; // number of choices
     
     typeQCM = JSON.parse(tQCM);
@@ -65,7 +67,7 @@ function creationQCM(expectedAnswer, response, point, comment, positionForce, ad
             });
         }
     });*/
-    $("#ujm_exobundle_interactionqcmtype_choices_1_label").parent().append('<span class="input-group-addon" id="basic-addon2"><a href="#" style="background-color="#FFFFFF";><i class="fa fa-font"></i></a></span>');
+   // $("#ujm_exobundle_interactionqcmtype_choices_1_label").parent().append('<span class="input-group-addon" id="basic-addon2"><a href="#" style="background-color="#FFFFFF";><i class="fa fa-font"></i></a></span>');
 }
 
 // QCM Edition
@@ -268,23 +270,23 @@ function whichChecked() {
     }
     // Disable or not the score by response if weightResponse is checked
     if ($('#ujm_exobundle_interactionqcmtype_weightResponse').is(':checked')) {
-        $('#ujm_exobundle_interactionqcmtype_scoreRightResponse').prop('disabled', true);
-        $('#ujm_exobundle_interactionqcmtype_scoreFalseResponse').prop('disabled', true);
+        $('#ujm_exobundle_interactionqcmtype_scoreRightResponse').css({"display" : "none"});
+        $('#ujm_exobundle_interactionqcmtype_scoreFalseResponse').css({"display" : "none"});
 
         $("*[id$='_weight']").each(function() {
-            $(this).prop('disabled', false);
+            $(this).css({"display" : "inline-block"});
         });
     } else {
-        $('#ujm_exobundle_interactionqcmtype_scoreRightResponse').prop('disabled', false);
-        $('#ujm_exobundle_interactionqcmtype_scoreFalseResponse').prop('disabled', false);
+        $('#ujm_exobundle_interactionqcmtype_scoreRightResponse').css({"display" : "inline-block"});
+        $('#ujm_exobundle_interactionqcmtype_scoreFalseResponse').css({"display" : "inline-block"});
 
         $("*[id$='_weight']").each(function() {
-            $(this).prop('disabled', true);
+            $(this).css({"display" : "none"});
         });
     }
 
     // Change the type od ExpectedAnswer (radio or checkbox) depending on which typeQCM is choose
-    var type = $('#ujm_exobundle_interactionqcmtype_typeQCM option:selected').val();
+    var type = $('#ujm_exobundle_interactionqcmtype_typeQCM :checked').val();
 
     $("*[id$='_rightResponse']").each(function () {
         if (typeQCM[type] == 1) {
@@ -314,18 +316,18 @@ function whichChange() {
     // When "set points by response" change, disable or not single choice point
     $('#ujm_exobundle_interactionqcmtype_weightResponse').change(function () {
         if ($(this).is(':checked')) {
-            $('#ujm_exobundle_interactionqcmtype_scoreRightResponse').prop('disabled', true);
-            $('#ujm_exobundle_interactionqcmtype_scoreFalseResponse').prop('disabled', true);
+            $('#ujm_exobundle_interactionqcmtype_scoreRightResponse').css({"display" : "none"});
+            $('#ujm_exobundle_interactionqcmtype_scoreFalseResponse').css({"display" : "none"});
 
             $("*[id$='_weight']").each(function() {
-                $(this).prop('disabled', false);
+                $(this).css({"display" : "inline-block"});
             });
         } else {
-            $('#ujm_exobundle_interactionqcmtype_scoreRightResponse').prop('disabled', false);
-            $('#ujm_exobundle_interactionqcmtype_scoreFalseResponse').prop('disabled', false);
+            $('#ujm_exobundle_interactionqcmtype_scoreRightResponse').css({"display" : "inline-block"});
+            $('#ujm_exobundle_interactionqcmtype_scoreFalseResponse').css({"display" : "inline-block"});
 
             $("*[id$='_weight']").each(function() {
-                $(this).prop('disabled', true);
+                $(this).css({"display" : "none"});
             });
         }
     });
@@ -393,8 +395,8 @@ function tableChoicesCreation(expectedAnswer, response, point, comment, position
 function addFeedback(tr) {
 
     // Create the button feedback
-    var delFeedback = $('<a href="#" class="btn btn-default"><i class="fa fa-comments-o"></i></a>');
+    var addFeedbacks = $('<td class="classic"><a href="#" class="btn btn-default" <a=""><i class="fa fa-comments-o"></i></td>');
     
-    tr.append(delFeedback);
+    tr.append(addFeedbacks);
     
 }

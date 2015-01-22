@@ -1,15 +1,14 @@
 <div>
     <div>
         <div class="form-group row">
+            {{ form_label(form.weightResponse) }}
+            <div class="col-md-2">{{ form_widget(form.weightResponse) }}</div>
+        </div>
+        <div class="form-group row">
             {{ form_errors(form.scoreRightResponse) }}
             <div class="col-md-3">{{ form_widget(form.scoreRightResponse) }}</div>
             {{ form_errors(form.scoreFalseResponse) }}
             <div class="col-md-3">{{ form_widget(form.scoreFalseResponse) }}</div>
-        </div>
-        <div class="form-group row">
-            {{ form_label(form.weightResponse) }}
-            <div class="col-md-2">{{ form_widget(form.weightResponse) }}</div>
-            <br> <a class="btn btn-default" data-toggle="collapse" data-target="#collepseinteraction">Feedback général   </a><br>
         </div>
     </div>
 
@@ -25,3 +24,5 @@
          {{ form_errors(form.choices) }}
     </div>
 </div>
+
+ <br> <a href="#">Feedback général</a><br>
