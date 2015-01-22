@@ -141,6 +141,7 @@ administration: Administration
 administrative_code: 'Administrative code'
 advanced: Advanced
 agenda: Agenda
+agreeing: 'By agreeing to send the data, you will enjoy a better service and you will contribute to improving the Claroline Connect platform that you are installing.'
 all: All
 all_available_workspaces: 'All available workspaces'
 all_my_workspaces: 'All my workspaces'
@@ -219,6 +220,7 @@ competences_management: 'Competences management'
 completed: Completed
 configuration: Configuration
 configure: Configure
+confirm_send_data: 'We suggest to confirm your agreement to send data:'
 connections: Connections
 cookie_lifetime: 'Cookie lifetime'
 copiable: Copiable
@@ -657,6 +659,7 @@ paste: Paste
 path: Path
 pending: 'Pending'
 permissions: Permissions
+personal_data: 'No personal data will be retrieved. The technical and statistical data collected will be used only in relation to the Claroline Connect project and will not be otherwise broadcast.'
 personal_workspace: 'Personal workspace'
 personal_workspaces_only: 'Personal workspaces only'
 phone: Phone
@@ -870,6 +873,8 @@ show_profile_for_anonymous: Profil public access for anonymous.
 simple: Simple
 start_date: 'Start date'
 start_maintenance: Start maintenance mode
+statistics: 'Statistics'
+statistics_data: 'number of workspaces and users'
 status: Status
 steal_session: 'Steal the session'
 storage_type: 'Storage type'
@@ -894,6 +899,8 @@ tags_list: 'Tags list'
 tags_management: 'Tags management'
 tags_organization: 'Tags organization'
 teacher: Teacher
+technical: 'Technical'
+technical_data: 'URL, Version, primary language, IP and email support'
 terms_enabled_but_empty: Terms of service can only be enabled if the text is provided in at least one language.
 text: Text
 text_form_content: Content

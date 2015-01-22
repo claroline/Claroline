@@ -141,6 +141,7 @@ administration: Administration
 administrative_code: 'Code administratif'
 advanced: Avancé
 agenda: Agenda
+agreeing: 'En acceptant l''envoi de ces données, vous bénéficierez d''un meilleur service et vous contribuerez à l''amélioration de la plateforme Claroline Connect que vous allez installer.'
 all: Tous
 all_available_workspaces: 'Tous les espaces d''activités disponibles'
 all_my_workspaces: 'Tous mes espaces d''activités'
@@ -219,6 +220,7 @@ competences_management: 'Gestion des compétences'
 completed: Terminé
 configuration: Configuration
 configure: Configurer
+confirm_send_data: 'Nous vous proposons de marquer votre accord pour l''envoi de données :'
 connections: 'Nb Cnx.'
 cookie_lifetime: 'Durée de vie du cookie'
 copiable: Copiable
@@ -660,6 +662,7 @@ paste: Coller
 path: Emplacement
 pending: En attente
 permissions: Permissions
+personal_data: 'Aucune donnée personnelle ne sera récupérée. Les données techniques et statistiques récupérées seront exclusivement utilisées en relation avec le projet Claroline Connect et ne seront pas autrement diffusées.'
 personal_workspace: 'Espace personnel'
 personal_workspaces_only: 'Les espaces personnels seulement'
 phone: Téléphone
@@ -873,6 +876,8 @@ show_profile_for_anonymous: Profil public accessible aux anonymes
 simple: Simple
 start_date: 'Date de début'
 start_maintenance: Lancer le mode maintenance
+statistics: 'Statistiques'
+statistics_data: 'nombre d''espaces, nombre d''utilisateurs'
 status: Statut
 steal_session: 'Voler la session'
 storage_type: 'Type de stockage'
@@ -898,6 +903,8 @@ tags_list: 'Liste des Tags'
 tags_management: 'Gestion des Tags'
 tags_organization: 'Organisation des Tags'
 teacher: Professeur
+technical: 'Techniques'
+technical_data: 'URL, version, langue principale, IP et email du support'
 terms_enabled_but_empty: Les conditions d'utilisation ne peuvent être activées que si le texte est fourni dans au moins une langue.
 text: Texte
 text_form_content: Contenu
