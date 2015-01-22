@@ -1116,4 +1116,9 @@ class UserManager
             $executeQuery
         );
     }
+
+    public function getCountAllEnabledUsers($executeQuery = true)
+    {
+        return $this->userRepo->countAllEnabledUsers($executeQuery);
+    }
 }

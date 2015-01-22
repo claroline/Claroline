@@ -14,13 +14,17 @@
         
         {% if not is_send_datas_confirmed() %}
             <div class="alert-update-mode">
-                <h4 class="label label-danger">
-                    {{ 'send_datas_has_not_been_confirmed'|trans({}, 'platform') }}
-                    <i class="fa fa-question-circle pointer-hand">
-                        <a href="{{ path('claro_admin_send_datas_confirm_form') }}">
-                        </a>
-                    </i>
-                </h4>
+                <a href="{{ path('claro_admin_send_datas_confirm_form') }}">
+                    <h4 class="label label-danger">
+                        {{ 'send_datas_has_not_been_confirmed'|trans({}, 'platform') }}
+                            <i class="fa fa-question-circle"
+                               data-toggle="tooltip"
+                               data-placement="bottom"
+                               title="{{ 'send_datas_bar_msg'|trans({}, 'platform') }}"
+                            >
+                            </i>
+                    </h4>
+                </a>
             </div>
         {% endif %}
         {% block section_content %}{% endblock %}

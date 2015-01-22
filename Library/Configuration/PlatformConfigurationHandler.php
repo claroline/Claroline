@@ -74,7 +74,8 @@ class PlatformConfigurationHandler
         'max_storage_size' => Workspace::DEFAULT_MAX_STORAGE_SIZE,
         'max_upload_resources' => Workspace::DEFAULT_MAX_FILE_COUNT,
         'confirm_send_datas' => null,
-        'token' => null
+        'token' => null,
+        'country' => '-'
     );
 
     /**

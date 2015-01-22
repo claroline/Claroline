@@ -1237,4 +1237,17 @@ class UserRepository extends EntityRepository implements UserProviderInterface
 
         return $executeQuery ? $query->getOneOrNullResult() : $query;
     }
+
+    public function countAllEnabledUsers($executeQuery = true)
+    {
+        $dql = '
+            SELECT COUNT(DISTINCT u)
+            FROM Claroline\CoreBundle\Entity\User u
+            WHERE u.isEnabled = true
+        ';
+
+        $query = $this->_em->createQuery($dql);
+
+        return $executeQuery ? $query->getSingleScalarResult() : $query;
+    }
 }
