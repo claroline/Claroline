@@ -18,6 +18,8 @@ use Claroline\CoreBundle\Library\Transfert\RichTextInterface;
 use Symfony\Component\Config\Definition\Processor;
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use UJM\ExoBundle\Entity\Exercise;
+use UJM\ExoBundle\Form\ExerciseHandler;
 
 /**
  * @DI\Service("claroline.importer.exo_importer")
@@ -87,7 +89,12 @@ class ExoImporter extends Importer implements ConfigurationInterface
         if ($exercises = opendir($rootPath.'/qti')) {
             while (($exercise = readdir($exercises)) !== false) {
                 if ($exercise != '.' && $exercise != '..') {
-                    $questions = opendir($rootPath.'/qti/'.$exercise);
+                    //créer exo
+//                    $newExercise = new Exercise();
+//                    $newExercise->setTitle($exercise);
+//                    $exoHandler = new ExerciseHandler(NULL, NULL, $this->om, $qtiRepos->getQtiUser(), NULL);
+//                    $exoHandler->importExercise($newExercise);
+//                    $questions = opendir($rootPath.'/qti/'.$exercise);
                     while (($question = readdir($questions)) !== false) {
                         if ($question != '.' && $question != '..') {
                             $files = opendir($rootPath.'/qti/'.$exercise.'/'.$question);

@@ -11,6 +11,7 @@ use Symfony\Component\Security\Core\SecurityContextInterface;
 
 class qtiRepository {
 
+    private $user;
     private $userDir;
     private $securityContext;
     private $container;
@@ -28,8 +29,21 @@ class qtiRepository {
     {
         $this->securityContext = $securityContext;
         $this->container = $container;
+        $this->user = $this->securityContext->getToken()->getUser();
     }
 
+    /**
+     * get user
+     *
+     * @access public
+     *
+     */
+    public function getQtiUser()
+    {
+        
+        return $this->user;
+    }
+    
     /**
      * Create the repository
      *
@@ -38,9 +52,7 @@ class qtiRepository {
      */
     public function createDirQTI()
     {
-        $this->userDir = './uploads/ujmexo/qti/'
-                .$this->securityContext->getToken()
-                ->getUser()->getUsername().'/';
+        $this->userDir = './uploads/ujmexo/qti/'.$this->user->getUsername().'/';
 
         if (!is_dir('./uploads/ujmexo/')) {
             mkdir('./uploads/ujmexo/');
