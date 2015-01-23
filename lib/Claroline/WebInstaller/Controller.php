@@ -14,6 +14,7 @@ namespace Claroline\WebInstaller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Installation\Settings\SettingChecker;
 use Claroline\CoreBundle\Library\Installation\Settings\DatabaseChecker;
 use Claroline\CoreBundle\Library\Installation\Settings\MailingChecker;
@@ -23,12 +24,17 @@ class Controller
     private $container;
     private $request;
     private $parameters;
+    private $configHandler;
 
     public function __construct(Container $container)
     {
         $this->container = $container;
         $this->request = $this->container->getRequest();
         $this->parameters = $this->container->getParameterBag();
+        $ds = DIRECTORY_SEPARATOR;
+        $configFile = $container->getAppDirectory() .
+            $ds . 'config' . $ds . 'platform_options.yml';
+        $this->configHandler = new PlatformConfigurationHandler($configFile);
     }
 
     public function languageStep()
@@ -338,29 +344,18 @@ class Controller
         $datas = array();
         $platformSettings = $this->parameters->getPlatformSettings();
 
-        $datas['url'] = 'http://localhost/stats/insert.php';
-        $datas['ip'] = $_SERVER['REMOTE_ADDR'];
+        $datas['url'] = $this->configHandler->getParameter('datas_sending_url');
+        $datas['ip'] = $this->container->getClientIp();
         $datas['name'] = $platformSettings->getName();
         $datas['platformUrl'] = 'http://www.claro-stats.com';
         $datas['lang'] = $platformSettings->getLanguage();
         $datas['country'] = $this->parameters->getCountry();
         $datas['supportEmail'] = $platformSettings->getSupportEmail();
-        $datas['version'] = '-';
+        $datas['version'] = $this->container->getVersion();
         $datas['nbWorkspaces'] = 0;
         $datas['nbUsers'] = 0;
         $datas['type'] = 0;
         $datas['token'] = $this->parameters->getToken();
-
-        $jsonString = file_get_contents('../vendor/composer/installed.json');
-        $bundles = json_decode($jsonString, true);
-
-        foreach ($bundles as $bundle) {
-
-            if (isset($bundle['name']) && $bundle['name'] === 'claroline/core-bundle') {
-                $datas['version'] = $bundle['version'];
-                break;
-            }
-        }
 
         return $datas;
     }
