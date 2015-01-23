@@ -18,31 +18,37 @@ class XmlToArray implements TransformerInterface
         $xml = new \SimpleXMLElement($string);
         $this->xmlNamespaces = $xml->getNamespaces(true);
 
-
-
         $array = $this->xmlToArray($xml);
 
         return $array;
     }
 
-    public function xmlToArray(\SimpleXMlElement $xml)
+    private function xmlToArray($node, &$parent = null)
     {
-        $array = [];
+        $namespaces = $node->getNameSpaces(true);
 
-        foreach ($this->xmlNamespaces as $namespaceKey => $namespace) {
-            $namespacedChildren = $xml->children($namespace);
-            /** @var \SimpleXMLElement $child */
-            foreach((array)$namespacedChildren as $childKey => $child) {
-                $array[$childKey] = is_object($child) ? $this->xmlToArray($child) : ['value' => $child];
-                if ($xml->$childKey && $xml->$childKey->attributes()) {
-                    $childAttributes = (array)$xml->$childKey->attributes();
-                    if (0 < count($childAttributes)) {
-                        $array[$childKey]['attributes'] = $childAttributes['@attributes'];
-                    }
-                }
-            }
+        $array = [];
+        $value = trim((string) $node);
+        if ($value) {
+            $array['value'] = $value;
         }
 
-        return $array;
+        foreach ($namespaces as $namespaceKey => $namespace) {
+            foreach ($node->children($namespace) as $namespacedChildrenKey => $namespacedchildren) {
+                $this->xmlToArray($namespacedchildren, $array[$namespacedChildrenKey]);
+            }
+            foreach ($node->attributes($namespace) as $namespacedAttributeKey => $namespacedAttribute) {
+                $array['attributes'][$namespacedAttributeKey] = (string) $namespacedAttribute;
+            }
+        }
+        foreach ($node->children() as $childrenKey => $children) {
+            $this->xmlToArray($children, $array[$childrenKey]);
+        }
+        foreach ($node->attributes() as $attributeKey => $attribute) {
+            $array['attributes'][$attributeKey] = "$attribute";
+        }
+
+        $parent = $array;
+        return $parent;
     }
 }
