@@ -203,6 +203,7 @@ class CreatePluginCommand extends ContainerAwareCommand
         $this->addResourceTypeConfig($rootDir, $vendor, $bundle, $rType, $config);
         $this->addResourceTypeForm($rootDir, $vendor, $bundle, $rType);
         $this->addResourceTypeListener($rootDir, $vendor, $bundle, $rType);
+        $this->addResourceTypeRepository($rootDir, $vendor, $bundle, $rType);
         $transDir = $rootDir . '/Resources/translations';
 
         $resTrans = array(
@@ -226,6 +227,17 @@ class CreatePluginCommand extends ContainerAwareCommand
         }
     }
 
+    private function addResourceTypeRepository($rootDir, $vendor, $bundle, $rType)
+    {
+        $templateDir = $this->getContainer()->getParameter('claroline.param.plugin_template_resource_directory');
+        $newPath = $rootDir . '/Repository/' . $rType . 'Repository.php';
+        $content = file_get_contents($templateDir . '/repository.tmp');
+        file_put_contents(
+            $newPath,
+            $this->replaceCommonPlaceHolders($content, $vendor, $bundle, $rType)
+        );
+    }
+
     private function addResourceTypeListener($rootDir, $vendor, $bundle, $rType)
     {
         $className = $rType . 'ResourceListener';
@@ -233,9 +245,10 @@ class CreatePluginCommand extends ContainerAwareCommand
         $templateDir = $this->getContainer()->getParameter('claroline.param.plugin_template_resource_directory');
         $content = file_get_contents($templateDir . '/listener.tmp');
         $content = str_replace('[[listener_section]]', file_get_contents($templateDir . '/resource_listener_section.tmp'), $content);
-        $content = $this->replaceCommonPlaceHolders($content, $vendor, $bundle, $rType);
-
-        file_put_contents($newPath, $content);
+        file_put_contents(
+            $newPath,
+            $this->replaceCommonPlaceHolders($content, $vendor, $bundle, $rType)
+        );
     }
 
     private function addResourceTypeConfig($rootDir, $vendor, $bundle, $rType, &$config)
