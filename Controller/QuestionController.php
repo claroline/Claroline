@@ -161,7 +161,7 @@ class QuestionController extends Controller
         $vars['listExo']              = $listExo;
         $vars['idExo']                = -1;
         $vars['QuestionsExo']         = 'false';
-        
+
         if ($request->get("qtiError")) {
             $vars['qtiError'] = $request->get("qtiError");
         }
@@ -2327,6 +2327,11 @@ class QuestionController extends Controller
 
                 case "InteractionOpen":
                     $qtiExport = $this->container->get('ujm.qti_open_export');
+
+                    return $qtiExport->export($interaction, $qtiRepos);
+
+                case "InteractionMatching":
+                    $qtiExport = $this->container->get('ujm.qti_matching_export');
 
                     return $qtiExport->export($interaction, $qtiRepos);
 
