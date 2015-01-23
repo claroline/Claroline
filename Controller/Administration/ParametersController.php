@@ -1092,7 +1092,6 @@ class ParametersController extends Controller
         $url = $this->configHandler->getParameter('datas_sending_url');
         $ip = $_SERVER['REMOTE_ADDR'];
         $name = $this->configHandler->getParameter('name');
-        $platformUrl = 'http://www.claro-stats.com';
         $lang = $this->configHandler->getParameter('locale_language');
         $country = $this->configHandler->getParameter('country');
         $supportEmail = $this->configHandler->getParameter('support_email');
@@ -1101,6 +1100,14 @@ class ParametersController extends Controller
         $nbUsers = $this->userManager->getCountAllEnabledUsers();
         $type = $mode;
         $token = $this->configHandler->getParameter('token');
+
+        $currentUrl = $this->request->getHttpHost() .
+            $this->request->getRequestUri();
+        $platformUrl = preg_replace(
+            array('/app\.php(.)*$/', '/app_dev\.php(.)*$/'),
+            array('app.php', 'app_dev.php'),
+            $currentUrl
+        );
 
         $postDatas = "ip=$ip" .
             "&name=$name" .
