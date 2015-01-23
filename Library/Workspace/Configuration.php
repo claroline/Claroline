@@ -66,7 +66,7 @@ class Configuration
      */
     private function extract($extractPath, $archive)
     {
-        $archive->extractTo($extractPath);
+        $res = $archive->extractTo($extractPath);
         $archive->close();
         $this->setExtractPath($extractPath);
         $resolver = new Resolver($extractPath);
