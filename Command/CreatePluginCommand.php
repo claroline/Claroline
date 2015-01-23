@@ -1,7 +1,5 @@
 <?php
 
-//TODO: INSERT IN BUNDLES.INI & AUTOLOAD
-
 /*
  * This file is part of the Claroline Connect package.
  *
