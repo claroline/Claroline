@@ -347,7 +347,6 @@ class Controller
         $datas['url'] = $this->configHandler->getParameter('datas_sending_url');
         $datas['ip'] = $this->container->getClientIp();
         $datas['name'] = $platformSettings->getName();
-        $datas['platformUrl'] = 'http://www.claro-stats.com';
         $datas['lang'] = $platformSettings->getLanguage();
         $datas['country'] = $this->parameters->getCountry();
         $datas['supportEmail'] = $platformSettings->getSupportEmail();
@@ -356,6 +355,10 @@ class Controller
         $datas['nbUsers'] = 0;
         $datas['type'] = 0;
         $datas['token'] = $this->parameters->getToken();
+
+        $currentUrl = $this->request->getHttpHost() .
+            $this->request->getRequestUri();
+        $datas['platformUrl'] = str_replace('install.php/install', 'app.php', $currentUrl);
 
         return $datas;
     }
