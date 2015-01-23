@@ -1009,6 +1009,28 @@ class ParametersController extends Controller
     }
 
     /**
+     * @EXT\Route(
+     *     "/send/datas/token/{token}",
+     *     name="claro_admin_send_datas"
+     * )
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function sendDatasAction($token)
+    {
+        if ($token === $this->configHandler->getParameter('token') &&
+            $this->configHandler->getParameter('confirm_send_datas') === 'OK') {
+
+            $this->sendDatas(2);
+
+            return new Response('success', 200);
+        } else {
+
+            return new Response('Forbidden', 403);
+        }
+    }
+
+    /**
      *  Returns the list of available themes.
      *
      *  @return array
@@ -1065,33 +1087,20 @@ class ParametersController extends Controller
         );
     }
     
-    private function sendDatas()
+    private function sendDatas($mode = 1)
     {
-        $url = 'http://localhost/stats/insert.php';
+        $url = $this->configHandler->getParameter('datas_sending_url');
         $ip = $_SERVER['REMOTE_ADDR'];
         $name = $this->configHandler->getParameter('name');
         $platformUrl = 'http://www.claro-stats.com';
         $lang = $this->configHandler->getParameter('locale_language');
         $country = $this->configHandler->getParameter('country');
         $supportEmail = $this->configHandler->getParameter('support_email');
+        $version = $this->getCoreBundleVersion();
         $nbWorkspaces = $this->workspaceManager->getNbWorkspaces();
         $nbUsers = $this->userManager->getCountAllEnabledUsers();
-        $type = 1;
+        $type = $mode;
         $token = $this->configHandler->getParameter('token');
-
-        $ds = DIRECTORY_SEPARATOR;
-        $installedFile = $this->container->getParameter('kernel.root_dir') .
-            $ds . '..' . $ds . 'vendor' . $ds . 'composer' . $ds . 'installed.json';
-        $jsonString = file_get_contents($installedFile);
-        $bundles = json_decode($jsonString, true);
-
-        foreach ($bundles as $bundle) {
-
-            if (isset($bundle['name']) && $bundle['name'] === 'claroline/core-bundle') {
-                $version = $bundle['version'];
-                break;
-            }
-        }
 
         $postDatas = "ip=$ip" .
             "&name=$name" .
@@ -1126,5 +1135,25 @@ class ParametersController extends Controller
         }
 
         return $token;
+    }
+
+    private function getCoreBundleVersion()
+    {
+        $ds = DIRECTORY_SEPARATOR;
+        $version = '-';
+        $installedFile = $this->container->getParameter('kernel.root_dir') .
+            $ds . '..' . $ds . 'vendor' . $ds . 'composer' . $ds . 'installed.json';
+        $jsonString = file_get_contents($installedFile);
+        $bundles = json_decode($jsonString, true);
+
+        foreach ($bundles as $bundle) {
+
+            if (isset($bundle['name']) && $bundle['name'] === 'claroline/core-bundle') {
+                $version = $bundle['version'];
+                break;
+            }
+        }
+
+        return $version;
     }
 }

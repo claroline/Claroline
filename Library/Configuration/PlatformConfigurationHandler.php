@@ -75,7 +75,8 @@ class PlatformConfigurationHandler
         'max_upload_resources' => Workspace::DEFAULT_MAX_FILE_COUNT,
         'confirm_send_datas' => null,
         'token' => null,
-        'country' => '-'
+        'country' => '-',
+        'datas_sending_url' => 'http://localhost/stats/insert.php'
     );
 
     /**

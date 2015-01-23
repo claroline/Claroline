@@ -16,11 +16,12 @@
             <div class="alert-update-mode">
                 <a href="{{ path('claro_admin_send_datas_confirm_form') }}">
                     <h4 class="label label-danger">
-                        {{ 'send_datas_has_not_been_confirmed'|trans({}, 'platform') }}
+                        {{ 'infos_sending_has_not_been_accepted'|trans({}, 'platform') }}
                             <i class="fa fa-question-circle"
+                               data-container=".alert-update-mode"
                                data-toggle="tooltip"
                                data-placement="bottom"
-                               title="{{ 'send_datas_bar_msg'|trans({}, 'platform') }}"
+                               title="{{ 'infos_sending_bar_msg'|trans({}, 'platform') }}"
                             >
                             </i>
                     </h4>

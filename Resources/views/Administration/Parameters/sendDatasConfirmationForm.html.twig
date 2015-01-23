@@ -1,7 +1,7 @@
 {% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
 
 {% block title %}
-    {{ parent() ~ ' - ' ~ 'send_datas_confirmation' | trans({}, 'platform') | striptags | raw }}
+    {{ parent() ~ ' - ' ~ 'infos_sending_acceptance' | trans({}, 'platform') | striptags | raw }}
 {% endblock %}
 
 {% block breadcrumb %}
@@ -13,7 +13,7 @@
                 'href': path('claro_admin_parameters_index')
             },
             {
-                'name': 'send_datas_confirmation'|trans({}, 'platform'),
+                'name': 'infos_sending_acceptance'|trans({}, 'platform'),
                 'href': ''
             }
         ])
@@ -23,7 +23,7 @@
 {% block section_content %}
     <div class="panel-heading">
         <h3 class="panel-title">
-            {{ 'send_datas_confirmation'|trans({}, 'platform') }}
+            {{ 'infos_sending_acceptance'|trans({}, 'platform') }}
         </h3>
     </div>
     <div class="panel-body">

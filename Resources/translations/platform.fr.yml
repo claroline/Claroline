@@ -472,6 +472,9 @@ in_workspace: 'dans l''espace d''activités'
 incomplete: Incomplet
 individual: Individuel
 informations: Informations
+infos_sending_acceptance: 'Acceptation d''envoi d''informations'
+infos_sending_bar_msg: 'Cliquez sur cette barre pour plus d''informations'
+infos_sending_has_not_been_accepted: 'L''envoi d''informations n''a pas été accepté'
 initialize: Initialiser
 inscription_mail: 'Mail d''inscription'
 instructions: Consignes

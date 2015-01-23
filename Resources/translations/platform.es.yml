@@ -411,6 +411,9 @@ import_users: 'Importar usuarios'
 incomplete: Incompleto
 individual: Individual
 informations: 'Informaciones'
+infos_sending_acceptance: 'Aceptación del envío de información '
+infos_sending_bar_msg: 'Haga clic en esta barra para obtener más información '
+infos_sending_has_not_been_accepted: 'El envío de información no fue aceptado '
 initialize: Inicializar
 inscription_mail: 'Inscripción de correo electrónico'
 instructions: 'Instrucciones'

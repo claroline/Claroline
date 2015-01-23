@@ -470,6 +470,9 @@ in_workspace: 'in workspace'
 incomplete: Incomplete
 individual: Individual
 informations: Informations
+infos_sending_acceptance: 'Informations sending acceptance'
+infos_sending_bar_msg: 'Click on this bar for more informations'
+infos_sending_has_not_been_accepted: 'Informations sending has not been accepted'
 initialize: Initialize
 inscription_mail: 'Inscription mail'
 instructions: Instructions
