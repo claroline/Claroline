@@ -41,7 +41,7 @@ services:
     ujm.qti_graphic_export:
         class: UJM\ExoBundle\Services\classes\QTI\graphicExport
         arguments: [@doctrine, @security.context, @service_container]
-        
+
     ujm.qti_graphic_import:
         class: UJM\ExoBundle\Services\classes\QTI\graphicImport
         arguments: [@doctrine, @security.context, @service_container]
@@ -57,9 +57,17 @@ services:
     ujm.qti_open_export:
         class: UJM\ExoBundle\Services\classes\QTI\openExport
         arguments: [@doctrine, @security.context, @service_container]
-        
+
     ujm.qti_open_import:
         class: UJM\ExoBundle\Services\classes\QTI\openImport
+        arguments: [@doctrine, @security.context, @service_container]
+
+    ujm.qti_matching_export:
+        class: UJM\ExoBundle\Services\classes\QTI\matchingExport
+        arguments: [@doctrine, @security.context, @service_container]
+
+    ujm.qti_matching_import:
+        class: UJM\ExoBundle\Services\classes\QTI\matchingImport
         arguments: [@doctrine, @security.context, @service_container]
 
     ujm.qti_repository:
