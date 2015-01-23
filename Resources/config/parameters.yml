@@ -8,6 +8,8 @@ parameters:
     claroline.param.uploads_directory : "%claroline.param.web_dir%/uploads"
     claroline.param.templates_directory: "%kernel.root_dir%/../templates/"
     claroline.param.default_template: "%kernel.root_dir%/../vendor/claroline/core-bundle/Claroline/CoreBundle/Resources/template/default.zip"
+    claroline.param.plugin_skel_directory: "%kernel.root_dir%/../vendor/claroline/core-bundle/Claroline/CoreBundle/Resources/bundle-creator/skel"
+    claroline.param.plugin_template_resource_directory: "%kernel.root_dir%/../vendor/claroline/core-bundle/Claroline/CoreBundle/Resources/bundle-creator/optional/resource"
     claroline.param.authentication_directory: "%kernel.root_dir%/config/Authentication"
     claroline.param.platform_config_handler_class: Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler
     claroline.param.platform_options_file: %kernel.root_dir%/config/platform_options.yml
@@ -17,4 +19,3 @@ parameters:
     claroline.composer_log_file: "%kernel.root_dir%/logs/composer.log"
     claroline.ip_white_list_file: "%kernel.root_dir%/config/ips"
     claroline.cache_dir: "%kernel.root_dir%/cache"
-
