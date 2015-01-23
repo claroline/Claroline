@@ -1105,7 +1105,7 @@ class ParametersController extends Controller
             $this->request->getRequestUri();
         $platformUrl = preg_replace(
             array('/app\.php(.)*$/', '/app_dev\.php(.)*$/'),
-            array('app.php', 'app_dev.php'),
+            'app.php',
             $currentUrl
         );
 
