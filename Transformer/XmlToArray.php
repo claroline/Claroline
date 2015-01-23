@@ -18,6 +18,8 @@ class XmlToArray implements TransformerInterface
         $xml = new \SimpleXMLElement($string);
         $this->xmlNamespaces = $xml->getNamespaces(true);
 
+
+
         $array = $this->xmlToArray($xml);
 
         return $array;
@@ -32,6 +34,12 @@ class XmlToArray implements TransformerInterface
             /** @var \SimpleXMLElement $child */
             foreach((array)$namespacedChildren as $childKey => $child) {
                 $array[$childKey] = is_object($child) ? $this->xmlToArray($child) : ['value' => $child];
+                if ($xml->$childKey && $xml->$childKey->attributes()) {
+                    $childAttributes = (array)$xml->$childKey->attributes();
+                    if (0 < count($childAttributes)) {
+                        $array[$childKey]['attributes'] = $childAttributes['@attributes'];
+                    }
+                }
             }
         }
 
