@@ -17,7 +17,7 @@ use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 
 /**
  * @ORM\Table(name="claro__[[resource_type]]")
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="[[Vendor]]\[[Bundle]]Bundle\Repository\[[Resource_Type]]Repository")
  */
 class [[Resource_Type]] extends AbstractResource
 {
