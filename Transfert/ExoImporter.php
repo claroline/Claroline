@@ -94,7 +94,7 @@ class ExoImporter extends Importer implements ConfigurationInterface
 //                    $newExercise->setTitle($exercise);
 //                    $exoHandler = new ExerciseHandler(NULL, NULL, $this->om, $qtiRepos->getQtiUser(), NULL);
 //                    $exoHandler->importExercise($newExercise);
-//                    $questions = opendir($rootPath.'/qti/'.$exercise);
+                    $questions = opendir($rootPath.'/qti/'.$exercise);
                     while (($question = readdir($questions)) !== false) {
                         if ($question != '.' && $question != '..') {
                             $files = opendir($rootPath.'/qti/'.$exercise.'/'.$question);
