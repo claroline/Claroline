@@ -154,54 +154,9 @@ CONTENT;
         $this->assertEquals($importedPortfolio->getUser(), $user);
     }
 
-    public function testRetrieveWidgets()
+    public function testRetrieveWidgetsWithOneSkillsWidget()
     {
-        $importer = new Importer();
-
-        $entries = array(
-            0 => array (
-                'title' => '54bfa2efedbcc',
-                'id' => 'portfolio:skills/1742121776',
-                'updated' => '2015-01-23T11:07:37+01:00',
-                'content' => array (),
-                'category' =>
-                array (
-                    '@attributes' => array (
-                        'term' => 'Abilities',
-                        'scheme' => 'categories:selection_type#',
-                    ),
-                )
-            )
-        );
-        $entries = array(
-            'entry' => array(
-                'title'    => array(
-                    'value' => 'Mes super badges'
-                ),
-                'id'       => array(
-                    'value' => 'portfolio:badges1'
-                ),
-                'updated'  => array(
-                    'value' => '2010-10-07T22:30:23+02:00'
-                ),
-                'content'  => array(),
-                'type'     => array(
-                    'attributes' => array(
-                        'resource' => 'leap2:selection'
-                    )
-                ),
-                'category' => array(
-                    'attributes' => array(
-                        'term' => 'Grouping',
-                        'scheme' => 'categories:selection_type#'
-                    )
-                )
-            )
-        );
-
-        $widgets = $importer->retrieveWidgets($entries);
-
-        $contentTest = <<<TEST
+        $content = <<<TEST
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom"
       xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
@@ -252,11 +207,13 @@ CONTENT;
 </feed>
 TEST;
 
-//        echo "<pre>";
-//        var_dump($importer->transformContent($contentTest, 'leap2a'));
-//        echo "</pre>" . PHP_EOL;
+        $transformer = new XmlToArray();
+        $entries     = $transformer->transform($content)['entry'];
+        $importer    = new Importer();
 
+        $widgets = $importer->retrieveWidgets($entries);
         $this->assertEquals(1, count($widgets));
+        $this->assertEquals(2, count($widgets[0]->getSkills()));
     }
 
     public function testLeap2aImportPortfolioWithSkillWidget()
