@@ -198,27 +198,21 @@ EXPORT;
         <name>$firstname $lastname</name>
     </author>
     <updated>$portfolioLastUpdateDate</updated>
-
     <entry>
         <title>$badgesWidgetLabel</title>
         <id>portfolio:badges/$badgesWidgetId</id>
         <updated>$portfolioLastUpdateDate</updated>
         <content></content>
-
         <rdf:type rdf:resource="leap2:selection"/>
         <category term="Grouping" scheme="categories:selection_type#"/>
-
         <link rel="leap2:has_part" href="portfolio:badge/$badgesWidgetBadgeId" leap2:display_order="1"/>
     </entry>
-
     <entry>
         <title>$badgeName</title>
         <id>portfolio:badge/$badgesWidgetBadgeId</id>
         <updated>$portfolioLastUpdateDate</updated>
         <content type="html">$badgeDescription</content>
-
         <rdf:type rdf:resource="leap2:achievement"/>
-
         <link rel="leap2:is_part_of" href="portfolio:badges/$badgesWidgetId" leap2:display_order="1"/>
     </entry>
 </feed>
@@ -292,28 +286,22 @@ EXPORT;
         <name>$firstname $lastname</name>
     </author>
     <updated>$portfolioLastUpdateDate</updated>
-
     <entry>
         <title>$badgesWidgetLabel</title>
         <id>portfolio:badges/$badgesWidgetId</id>
         <updated>$portfolioLastUpdateDate</updated>
         <content></content>
-
         <rdf:type rdf:resource="leap2:selection"/>
         <category term="Grouping" scheme="categories:selection_type#"/>
-
         <link rel="leap2:has_part" href="portfolio:badge/$badgesWidgetBadgeId" leap2:display_order="1"/>
         <link rel="leap2:has_part" href="portfolio:badge/$badgesWidgetBadge2Id" leap2:display_order="2"/>
     </entry>
-
     <entry>
         <title>$badgeName</title>
         <id>portfolio:badge/$badgesWidgetBadgeId</id>
         <updated>$portfolioLastUpdateDate</updated>
         <content type="html">$badgeDescription</content>
-
         <rdf:type rdf:resource="leap2:achievement"/>
-
         <link rel="leap2:is_part_of" href="portfolio:badges/$badgesWidgetId" leap2:display_order="1"/>
     </entry>
     <entry>
@@ -321,9 +309,7 @@ EXPORT;
         <id>portfolio:badge/$badgesWidgetBadge2Id</id>
         <updated>$portfolioLastUpdateDate</updated>
         <content type="html">$badgeDescription</content>
-
         <rdf:type rdf:resource="leap2:achievement"/>
-
         <link rel="leap2:is_part_of" href="portfolio:badges/$badgesWidgetId" leap2:display_order="2"/>
     </entry>
 </feed>
@@ -381,28 +367,22 @@ EXPORT;
         <name>$firstname $lastname</name>
     </author>
     <updated>$portfolioLastUpdateDate</updated>
-
     <entry>
         <title>$skillsWidgetLabel</title>
         <id>portfolio:skills/$skillsWidgetId</id>
         <updated>$portfolioLastUpdateDate</updated>
         <content></content>
-
         <rdf:type rdf:resource="leap2:selection"/>
         <category term="Abilities" scheme="categories:selection_type#"/>
-
         <link rel="leap2:has_part" href="portfolio:skill/$skillsWidgetSkillId" leap2:display_order="1"/>
         <link rel="leap2:has_part" href="portfolio:skill/$skillsWidgetSkillId2" leap2:display_order="2"/>
     </entry>
-
     <entry>
         <title>$skillsWidgetSkillName</title>
         <id>portfolio:skill/$skillsWidgetSkillId</id>
         <updated>$portfolioLastUpdateDate</updated>
         <content></content>
-
         <rdf:type rdf:resource="leap2:ability"/>
-
         <link rel="leap2:is_part_of" href="portfolio:skills/$skillsWidgetId" leap2:display_order="1"/>
     </entry>
     <entry>
@@ -410,9 +390,7 @@ EXPORT;
         <id>portfolio:skill/$skillsWidgetSkillId2</id>
         <updated>$portfolioLastUpdateDate</updated>
         <content></content>
-
         <rdf:type rdf:resource="leap2:ability"/>
-
         <link rel="leap2:is_part_of" href="portfolio:skills/$skillsWidgetId" leap2:display_order="2"/>
     </entry>
 </feed>
@@ -478,50 +456,38 @@ EXPORT;
         <name>$firstname $lastname</name>
     </author>
     <updated>$portfolioLastUpdateDate</updated>
-
     <entry>
         <title>$skillsWidgetLabel</title>
         <id>portfolio:skills/$skillsWidgetId</id>
         <updated>$portfolioLastUpdateDate</updated>
         <content></content>
-
         <rdf:type rdf:resource="leap2:selection"/>
         <category term="Abilities" scheme="categories:selection_type#"/>
-
         <link rel="leap2:has_part" href="portfolio:skill/$skillsWidgetSkillId" leap2:display_order="1"/>
     </entry>
-
     <entry>
         <title>$skillsWidgetSkillName</title>
         <id>portfolio:skill/$skillsWidgetSkillId</id>
         <updated>$portfolioLastUpdateDate</updated>
         <content></content>
-
         <rdf:type rdf:resource="leap2:ability"/>
-
         <link rel="leap2:is_part_of" href="portfolio:skills/$skillsWidgetId" leap2:display_order="1"/>
     </entry>
-
     <entry>
         <title>$skillsWidgetLabel2</title>
         <id>portfolio:skills/$skillsWidgetId2</id>
         <updated>$skillsWidgetUpdatedDate2</updated>
         <content></content>
-
         <rdf:type rdf:resource="leap2:selection"/>
         <category term="Abilities" scheme="categories:selection_type#"/>
-
         <link rel="leap2:has_part" href="portfolio:skill/$skillsWidgetSkillId2" leap2:display_order="1"/>
     </entry>
-
     <entry>
         <title>$skillsWidgetSkillName2</title>
         <id>portfolio:skill/$skillsWidgetSkillId2</id>
         <updated>$skillsWidgetUpdatedDate2</updated>
         <content></content>
-
         <rdf:type rdf:resource="leap2:ability"/>
-
         <link rel="leap2:is_part_of" href="portfolio:skills/$skillsWidgetId2" leap2:display_order="1"/>
     </entry>
 </feed>
@@ -571,12 +537,11 @@ EXPORT;
         <name>$firstname $lastname</name>
     </author>
     <updated>$textWidgetUpdatedAt</updated>
-
     <entry>
         <title>$textWidgetLabel</title>
         <id>portfolio:text/$textWidgetId</id>
         <updated>$textWidgetUpdatedAt</updated>
-        <content type="html">$textWidgetText</content>
+        <content type="html"><![CDATA[$textWidgetText]]></content>
     </entry>
 </feed>
 EXPORT;
@@ -627,7 +592,6 @@ EXPORT;
         <name>$firstname $lastname</name>
     </author>
     <updated>$userInformationsWidgetUpdatedAt</updated>
-
     <entry>
         <title>$userInformationsWidgetLabel</title>
         <id>portfolio:text/$userInformationsWidgetId</id>
@@ -707,31 +671,25 @@ EXPORT;
         <name>$firstname $lastname</name>
     </author>
     <updated>$formationWidgetUpdatedAt</updated>
-
     <entry>
         <title>$userInformationsWidgetLabel</title>
         <id>portfolio:formations/$formationWidgetId</id>
         <updated>$formationWidgetUpdatedAt</updated>
         <content type="text">$formationWidgetName</content>
-
         <leap2:date leap2:point="start">$formationWidgetStartDate</leap2:date>
         <leap2:date leap2:point="end">$formationWidgetEndDate</leap2:date>
-
         <rdf:type rdf:resource="leap2:activity"/>
-
+        <category term="Education" scheme="categories:life_area"/>
         <link rel="leap2:has_part" href="portfolio:resource/$formationWidgetResourceResourceNodeId" leap2:display_order="1"/>
     </entry>
-
     <entry>
         <title>$formationWidgetResourceName</title>
         <id>portfolio:resource/$formationWidgetResourceResourceNodeId</id>
         <uri>$formationWidgetResourceResourceNodeId</uri>
         <updated>$formationWidgetResourceUpdatedAt</updated>
         <content></content>
-
         <rdf:type rdf:resource="leap2:resource"/>
         <category term="Web" scheme="categories:resource_type#"/>
-
         <link rel="leap2:is_part_of" href="portfolio:formations/$formationWidgetId" leap2:display_order="1"/>
     </entry>
 </feed>

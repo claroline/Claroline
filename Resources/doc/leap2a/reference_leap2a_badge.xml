@@ -30,8 +30,6 @@
         <updated>2008-01-08T14:12:12Z</updated>
         <content type="html">The description of a badge</content>
 
-        <leap2:date leap2:point="end">2011-03-15</leap2:date>
-
         <rdf:type rdf:resource="leap2:achievement"/>
 
         <link rel="leap2:is_part_of" href="portfolio:badges1" leap2:display_order="1"/>
@@ -42,8 +40,6 @@
         <id>portfolio:badge/2</id>
         <updated>2008-01-08T14:12:12Z</updated>
         <content type="html">The description of an other badge</content>
-
-        <leap2:date leap2:point="end">2011-03-15</leap2:date>
 
         <rdf:type rdf:resource="leap2:achievement"/>
 
