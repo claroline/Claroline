@@ -3,4 +3,5 @@
         <id>portfolio:text/{{ widget.id }}</id>
         <updated>{{ widget.updatedAt|date(constant('\DateTime::ATOM')) }}</updated>
         <content type="html"><![CDATA[{{ widget.text }}]]></content>
+        <rdf:type rdf:resource="leap2:entry"/>
     </entry>

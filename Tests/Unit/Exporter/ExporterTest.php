@@ -542,6 +542,7 @@ EXPORT;
         <id>portfolio:text/$textWidgetId</id>
         <updated>$textWidgetUpdatedAt</updated>
         <content type="html"><![CDATA[$textWidgetText]]></content>
+        <rdf:type rdf:resource="leap2:entry"/>
     </entry>
 </feed>
 EXPORT;

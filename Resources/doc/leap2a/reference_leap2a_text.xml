@@ -16,5 +16,6 @@
         <id>portfolio:text1</id>
         <updated>2010-10-07T22:30:23+02:00</updated>
         <content type="html"><![CDATA[<p>Just a text content.</p>]]></content>
+        <rdf:type rdf:resource="leap2:entry"/>
     </entry>
 </feed>
