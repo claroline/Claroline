@@ -5,6 +5,7 @@ namespace Icap\PortfolioBundle\Importer;
 use Claroline\CoreBundle\Entity\User;
 use Icap\PortfolioBundle\Entity\Portfolio;
 use Icap\PortfolioBundle\Entity\Widget\TitleWidget;
+use Icap\PortfolioBundle\Transformer\XmlToArray;
 
 class Importer
 {
@@ -27,8 +28,7 @@ class Importer
 
         $arrayContent = $this->transformContent($content, $format);
 
-        $portfolio = $this->arrayToPortfolio($arrayContent);
-        $portfolio->setUser($user);
+        $portfolio = $this->arrayToPortfolio($arrayContent, $user);
 
         return $portfolio;
     }
@@ -38,15 +38,15 @@ class Importer
      * @param string $format
      *
      * @return array
+     * @throws \Exception
      * @throws \InvalidArgumentException
      */
     public function transformContent($content, $format)
     {
         switch($format) {
             case self::IMPORT_FORMAT_LEAP2A:
-                $xml   = simplexml_load_string($content);
-                $json  = json_encode($xml);
-                $transformedContent = json_decode($json, true);
+                $xmlToArrayTransformer = new XmlToArray();
+                $transformedContent = $xmlToArrayTransformer->transform($content)['feed'];
                 break;
             default:
                 throw new \InvalidArgumentException('Cannot transform unknown format.');
@@ -57,24 +57,48 @@ class Importer
 
     /**
      * @param array $arrayContent
+     * @param User  $user
      *
      * @return Portfolio
      * @throws \Exception
      */
-    public function arrayToPortfolio(array $arrayContent)
+    public function arrayToPortfolio(array $arrayContent, User $user)
     {
         $portfolio = new Portfolio();
+        $portfolio->setUser($user);
         $widgets = array();
 
         if (!isset($arrayContent['title'])) {
             throw new \Exception("Missing portfolio's title");
         }
         $titleWidget = new TitleWidget();
-        $titleWidget->setTitle($arrayContent['title']);
+        $titleWidget->setTitle($arrayContent['title']['$']);
         $widgets[] = $titleWidget;
 
         $portfolio->setWidgets($widgets);
 
         return $portfolio;
+    }
+
+    /**
+     * @param array $entries
+     *
+     * @return array
+     */
+    public function retrieveWidgets(array $entries)
+    {
+        $widgets = array();
+
+//        echo "<pre>";
+//        var_dump($entries);
+//        echo "</pre>" . PHP_EOL;
+
+        foreach ($entries as $entry) {
+//            echo "<pre>";
+//            var_dump($entry);
+//            echo "</pre>" . PHP_EOL;
+        }
+
+        return $widgets;
     }
 }
