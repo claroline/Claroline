@@ -79,7 +79,7 @@ CONTENT;
         $importer->transformContent($content, uniqid());
     }
 
-    public function testArrayToPortfolioMissingTitle()
+    public function testLeap2aImportMissingTitle()
     {
         $importer = new Importer();
         $user     = new User();
@@ -87,18 +87,26 @@ CONTENT;
 
         $this->setExpectedException('Exception');
 
-        $portfolio = $importer->arrayToPortfolio($array, $user);
+        $portfolio = $importer->import($array, Importer::IMPORT_FORMAT_LEAP2A, $user);
     }
 
-    public function testArrayToPortfolio()
+    public function testImport()
     {
         $importer = new Importer();
         $user     = new User();
-        $array    = array(
-            'title' => array('$' => $portfolioTitle = uniqid())
-        );
+        $portfolioTitle = uniqid();
+        $content = <<<CONTENT
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"
+      xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+      xmlns:leap2="http://terms.leapspecs.org/"
+      xmlns:categories="http://www.leapspecs.org/2A/categories">
+    <leap2:version>http://www.leapspecs.org/2010-07/2A/</leap2:version>
+    <title>$portfolioTitle</title>
+</feed>
+CONTENT;
 
-        $portfolio = $importer->arrayToPortfolio($array, $user);
+        $portfolio = $importer->import($content, Importer::IMPORT_FORMAT_LEAP2A, $user);
 
         $this->assertEquals(get_class($portfolio), 'Icap\PortfolioBundle\Entity\Portfolio');
 
