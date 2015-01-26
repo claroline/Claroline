@@ -35,24 +35,22 @@ class XmlToArrayTest extends MockeryTestCase
 CONTENT;
 
         $expected = array (
-            'feed' => array(
-                'leap2:version' => array(
-                    '$' => 'http://www.leapspecs.org/2010-07/2A/'
-                ),
-                'id' => array(
-                    '$' => '54be827257316'
-                ),
-                'title' => array(
-                    '$' => '54be8272572d8'
-                ),
-                'author' => array(
-                    'name' => array(
-                        '$' => '54be827257361 54be82725739a'
-                    )
-                ),
-                'updated' => array(
-                    '$' => '2015-01-20T17:29:38+01:00'
+            'leap2:version' => array(
+                '$' => 'http://www.leapspecs.org/2010-07/2A/'
+            ),
+            'id' => array(
+                '$' => '54be827257316'
+            ),
+            'title' => array(
+                '$' => '54be8272572d8'
+            ),
+            'author' => array(
+                'name' => array(
+                    '$' => '54be827257361 54be82725739a'
                 )
+            ),
+            'updated' => array(
+                '$' => '2015-01-20T17:29:38+01:00'
             )
         );
 
@@ -74,9 +72,7 @@ CONTENT;
 CONTENT;
 
         $expected = array(
-            'feed' => array(
-                'content' => array()
-            )
+            'content' => array()
         );
 
         $this->assertEquals($expected, $transformer->transform($content));
@@ -97,11 +93,9 @@ CONTENT;
 CONTENT;
 
         $expected = array(
-            'feed' => array(
-                'category' => array(
-                    '@term' => 'Grouping',
-                    '@scheme' => 'categories:selection_type#'
-                )
+            'category' => array(
+                '@term' => 'Grouping',
+                '@scheme' => 'categories:selection_type#'
             )
         );
 
@@ -123,11 +117,9 @@ CONTENT;
 CONTENT;
 
         $expected = array(
-            'feed' => array(
-                'content' => array(
-                    '@type' => 'text',
-                    '$' => 'value'
-                )
+            'content' => array(
+                '@type' => 'text',
+                '$' => 'value'
             )
         );
 
@@ -149,10 +141,8 @@ CONTENT;
 CONTENT;
 
         $expected = array(
-            'feed' => array(
-                'rdf:type' => array(
-                    '@rdf:resource' => 'leap2:selection'
-                )
+            'rdf:type' => array(
+                '@rdf:resource' => 'leap2:selection'
             )
         );
 
@@ -190,43 +180,41 @@ CONTENT;
 CONTENT;
 
         $expected = array (
-            'feed' => array(
-                'leap2:version' => array(
-                    '$' => 'http://www.leapspecs.org/2010-07/2A/'
-                ),
-                'id' =>  array(
-                    '$' => '54be827257316'
-                ),
-                'title' =>  array(
-                    '$' => '54be8272572d8'
-                ),
-                'author' => array(
-                    'name' => array(
-                        '$' => '54be827257361 54be82725739a'
-                    )
-                ),
-                'updated' =>  array(
-                    '$' => '2015-01-20T17:29:38+01:00'
-                ),
-                'entry' => array(
-                    array(
-                        'title' => array(
-                            '$' => 'Mes super badges'
-                        ),
-                        'id' => array(
-                            '$' => 'portfolio:badges1'
-                        ),
-                        'updated' => array(
-                            '$' => '2010-10-07T22:30:23+02:00'
-                        ),
-                        'content' => array(),
-                        'rdf:type' => array(
-                            '@rdf:resource' => 'leap2:selection'
-                        ),
-                        'category' => array(
-                            '@term' => 'Grouping',
-                            '@scheme' => 'categories:selection_type#'
-                        )
+            'leap2:version' => array(
+                '$' => 'http://www.leapspecs.org/2010-07/2A/'
+            ),
+            'id' =>  array(
+                '$' => '54be827257316'
+            ),
+            'title' =>  array(
+                '$' => '54be8272572d8'
+            ),
+            'author' => array(
+                'name' => array(
+                    '$' => '54be827257361 54be82725739a'
+                )
+            ),
+            'updated' =>  array(
+                '$' => '2015-01-20T17:29:38+01:00'
+            ),
+            'entry' => array(
+                array(
+                    'title' => array(
+                        '$' => 'Mes super badges'
+                    ),
+                    'id' => array(
+                        '$' => 'portfolio:badges1'
+                    ),
+                    'updated' => array(
+                        '$' => '2010-10-07T22:30:23+02:00'
+                    ),
+                    'content' => array(),
+                    'rdf:type' => array(
+                        '@rdf:resource' => 'leap2:selection'
+                    ),
+                    'category' => array(
+                        '@term' => 'Grouping',
+                        '@scheme' => 'categories:selection_type#'
                     )
                 )
             )
@@ -273,58 +261,56 @@ CONTENT;
 CONTENT;
 
         $expected = array(
-            'feed' => array(
-                'leap2:version' => array(
-                    '$' => 'http://www.leapspecs.org/2010-07/2A/'
-                ),
-                'id' => array(
-                    '$' => '54be827257316'
-                ),
-                'title' => array(
-                    '$' => '54be8272572d8'
-                ),
-                'author' => array(
-                    'name' => array(
-                        '$' => '54be827257361 54be82725739a'
-                    )
-                ),
-                'updated' => array(
-                    '$' => '2015-01-20T17:29:38+01:00'
-                ),
-                'entry' => array(
-                    array(
-                        'title' => array(
-                            '$' => 'Mes super badges'
-                        ),
-                        'id' => array(
-                            '$' => 'portfolio:badges1'
-                        ),
-                        'updated' => array(
-                            '$' => '2010-10-07T22:30:23+02:00'
-                        ),
-                        'content' => array(),
-                        'rdf:type' => array(
-                            '@rdf:resource' => 'leap2:selection',
-                        ),
-                        'category' => array(
-                            '@term' => 'Grouping',
-                            '@scheme' => 'categories:selection_type#'
-                        ),
+            'leap2:version' => array(
+                '$' => 'http://www.leapspecs.org/2010-07/2A/'
+            ),
+            'id' => array(
+                '$' => '54be827257316'
+            ),
+            'title' => array(
+                '$' => '54be8272572d8'
+            ),
+            'author' => array(
+                'name' => array(
+                    '$' => '54be827257361 54be82725739a'
+                )
+            ),
+            'updated' => array(
+                '$' => '2015-01-20T17:29:38+01:00'
+            ),
+            'entry' => array(
+                array(
+                    'title' => array(
+                        '$' => 'Mes super badges'
                     ),
-                    array(
-                        'title' => array(
-                            '$' => 'Mon texte'
-                        ),
-                        'id' => array(
-                            '$' => 'portfolio:text1'
-                        ),
-                        'updated' => array(
-                            '$' => '2010-10-07T22:30:23+02:00'
-                        ),
-                        'content' => array(
-                            '@type' => 'html',
-                            '$' => 'Just a text content.'
-                        )
+                    'id' => array(
+                        '$' => 'portfolio:badges1'
+                    ),
+                    'updated' => array(
+                        '$' => '2010-10-07T22:30:23+02:00'
+                    ),
+                    'content' => array(),
+                    'rdf:type' => array(
+                        '@rdf:resource' => 'leap2:selection',
+                    ),
+                    'category' => array(
+                        '@term' => 'Grouping',
+                        '@scheme' => 'categories:selection_type#'
+                    ),
+                ),
+                array(
+                    'title' => array(
+                        '$' => 'Mon texte'
+                    ),
+                    'id' => array(
+                        '$' => 'portfolio:text1'
+                    ),
+                    'updated' => array(
+                        '$' => '2010-10-07T22:30:23+02:00'
+                    ),
+                    'content' => array(
+                        '@type' => 'html',
+                        '$' => 'Just a text content.'
                     )
                 )
             )

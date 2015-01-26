@@ -17,7 +17,7 @@ class XmlToArray implements TransformerInterface
         if (false === $xml) {
             throw new \Exception("Unable to parse xml string.");
         }
-        return  $this->xmlToArray($xml);
+        return  $this->xmlToArray($xml)['feed'];
     }
 
     /**
