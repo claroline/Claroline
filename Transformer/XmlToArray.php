@@ -22,7 +22,7 @@ class XmlToArray implements TransformerInterface
 
     /**
      * Method found here http://outlandish.com/blog/xml-to-json/
-     * 
+     *
      * @param \SimpleXMLElement $xml
      * @param array             $options
      *
