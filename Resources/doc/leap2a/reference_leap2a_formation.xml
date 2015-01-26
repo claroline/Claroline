@@ -21,6 +21,7 @@
         <leap2:date leap2:point="end">2011-03-15</leap2:date>
 
         <rdf:type rdf:resource="leap2:activity"/>
+        <category term="Education" scheme="categories:life_area"/>
 
         <link rel="leap2:has_part" href="portfolio:resource/1" leap2:display_order="1"/>
         <link rel="leap2:has_part" href="portfolio:resource/2" leap2:display_order="2"/>
@@ -73,7 +74,7 @@
         <content type="text">The description of a resource 3</content>
 
         <rdf:type rdf:resource="leap2:resource"/>
-        <category term="Other" scheme="categories:resource_type#"/>
+        <category term="Web" scheme="categories:resource_type#"/>
 
         <link rel="leap2:is_part_of" href="portfolio:formation/2" leap2:display_order="1"/>
     </entry>
