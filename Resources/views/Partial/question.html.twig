@@ -7,7 +7,14 @@
 <div class="form-group row">
     <div class="control-label col-md-8"> {{ form_widget(form.interaction.invite) }}</div>
             <a class="btn btn-default" href="#">Indice</a>
+           <!---- <a class="btn btn-default" href="#">Edition avancée</a>--->
+           
 </div>
+    <a class="btn btn-default" data-toggle="collapse" data-target="#collepseinteraction">Feedback général</a>
+        <div id="collepseinteraction" class="list-group collapse">
+        <div class="list-group-item">{{ form_widget(form.interaction.feedBack) }}</div>
+
+    </div>
 <hr>
 
 <input type="hidden" id="pathDrop" value="{{ path('ujm_category_drop') }}"/>
