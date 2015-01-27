@@ -19,6 +19,7 @@ use Symfony\Component\Config\Definition\Processor;
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use UJM\ExoBundle\Entity\Exercise;
+use UJM\ExoBundle\Entity\Subscription;
 use UJM\ExoBundle\Form\ExerciseHandler;
 
 /**
@@ -90,9 +91,30 @@ class ExoImporter extends Importer implements ConfigurationInterface
             while (($exercise = readdir($exercises)) !== false) {
                 if ($exercise != '.' && $exercise != '..') {
                     //créer exo
-//                    $newExercise = new Exercise();
-//                    $newExercise->setTitle($exercise);
-//                    $exoHandler = new ExerciseHandler(NULL, NULL, $this->om, $qtiRepos->getQtiUser(), NULL);
+                    $newExercise = new Exercise();
+                    $newExercise->setTitle($exercise);
+                    $newExercise->setDateCreate(new \Datetime());
+                    $newExercise->setNbQuestionPage(1);
+                    $newExercise->setNbQuestion(0);
+                    $newExercise->setDuration(0);
+                    $newExercise->setMaxAttempts(0);
+                    $newExercise->setStartDate(new \Datetime());
+                    $newExercise->setEndDate(new \Datetime());
+                    $newExercise->setDateCorrection(new \Datetime());
+                    $newExercise->setCorrectionMode('1');
+                    $newExercise->setMarkMode('1');
+                    $newExercise->setPublished(FALSE);
+                    $this->om->persist($newExercise);
+                    $this->om->flush();
+
+                    $subscription = new Subscription($qtiRepos->getQtiUser(), $newExercise);
+                    $subscription->setAdmin(1);
+                    $subscription->setCreator(1);
+
+                    $this->om->persist($subscription);
+
+                    $this->om->flush();
+//                    $exoHandler = new ExerciseHandler(NULL, NULL, $this->om, $qtiRepos->getQtiUser(), 'create');
 //                    $exoHandler->importExercise($newExercise);
                     $questions = opendir($rootPath.'/qti/'.$exercise);
                     while (($question = readdir($questions)) !== false) {
@@ -105,12 +127,14 @@ class ExoImporter extends Importer implements ConfigurationInterface
                             }
                         }
                         $qtiRepos->scanFiles();
+                        //la méthode import devra renvoyer l'id de la nouvelle question
+                        //passer l'exo à scanfile, si ce paramètre est renseigné on attribut la question à l'exercice
                     }
                }
            }
         }
 
-        //die();
+        return $newExercise;
     }
 
     public function export(Workspace $workspace, array &$files, $object)

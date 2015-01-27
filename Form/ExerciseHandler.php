@@ -87,16 +87,4 @@ class ExerciseHandler
             $this->em->flush();
         }
     }
-    
-    /**
-     * Import an Exercise
-     *
-     * @access public
-     *
-     * @param \UJM\ExoBundle\Entity\Exercise $exercise exercise to create
-     */
-    public function importExercise(Exercise $exercise)
-    {
-        $this->onSuccess($exercise);
-    }
 }
