@@ -84,7 +84,7 @@ class matchingExport extends qtiExport
         }
         $this->matchInteraction = $this->document->CreateElement('matchInteraction');
         $this->matchInteraction->setAttribute("directedPair", "RESPONSE");
-        //shuffle always false because no implements now
+        //shuffle always false because no implements
         $this->matchInteraction->setAttribute("shuffle", "false");
         $this->matchInteraction->setAttribute("maxAssociation", $maxAssociation);
         $this->itemBody->appendChild($this->matchInteraction);
@@ -124,6 +124,7 @@ class matchingExport extends qtiExport
         $i=-1;
         foreach ($this->interactionmatching->getProposals() as $pr) {
             $i++;
+            //for add proposals
             $this->simpleMatchSetTagProposal($pr, $i, $proposal);
         }
     }
@@ -142,18 +143,22 @@ class matchingExport extends qtiExport
         //for the maxConnection in the tag simpleAssociableChoice of proposals
         if($this->cardinality == "multiple") {
             $w=0;
-            foreach ($this->interactionmatching->getLabels() as $pr) {
+            foreach ($this->interactionmatching->getLabels() as $la) {
                 $w++;
             }
             $maxAssociation = $w;
         } else {
             $maxAssociation = 1;
         }
+
         $simpleProposal = $this->document->CreateElement('simpleAssociableChoice');
+
         $simpleProposal->setAttribute("identifier", "left".$numberProposal);
         $simpleProposal->setAttribute("matchMax", $maxAssociation);
+
         $this->matchInteraction->appendChild($simpleProposal);
         $simpleProposaltxt =  $this->document->CreateTextNode($proposal->getValue());
+
         $simpleProposal->appendChild($simpleProposaltxt);
         $elementProposal->appendChild($simpleProposal);
     }
@@ -170,6 +175,7 @@ class matchingExport extends qtiExport
         $i=-1;
         foreach ($this->interactionmatching->getLabels() as $la) {
             $i++;
+            //for add labels
             $this->simpleMatchSetTagLabel($la, $i, $label);
         }
     }
@@ -186,19 +192,23 @@ class matchingExport extends qtiExport
     protected function simpleMatchSetTagLabel($label, $numberLabel, $elementLabel)
     {
         if($this->cardinality == "multiple") {
-            $w=0;
-            foreach ($this->interactionmatching->getLabels() as $pr) {
+            $w = 0;
+            foreach ($this->interactionmatching->getProposals() as $pr) {
                 $w++;
             }
             $maxAssociation = $w;
         } else {
             $maxAssociation = 1;
         }
+
         $simpleLabel = $this->document->CreateElement('simpleAssociableChoice');
+
         $simpleLabel->setAttribute("identifier", "right".$numberLabel);
         $simpleLabel->setAttribute("matchMax", $maxAssociation);
+
         $this->matchInteraction->appendChild($simpleLabel);
         $simpleLabeltxt =  $this->document->CreateTextNode($label->getValue());
+
         $simpleLabel->appendChild($simpleLabeltxt);
         $elementLabel->appendChild($simpleLabel);
     }
@@ -226,7 +236,8 @@ class matchingExport extends qtiExport
     {
         $mapping = $this->document->CreateElement('mapping');
         $mapping->setAttribute("defaultValue", "0");
-        $this->getAssociationsMapEntry($mapping);
+        //get associations
+        $this->AssociationsMapEntry($mapping);
         $this->responseDeclaration[0]->appendChild($mapping);
     }
 
@@ -237,38 +248,41 @@ class matchingExport extends qtiExport
      *
      * @param type $mapping
      */
-    protected function getAssociationsMapEntry($mapping)
+    protected function AssociationsMapEntry($mapping)
     {
         $labels = [];
         $points = [];
+        $nbrLabel = [];
+
         foreach ($this->interactionmatching->getLabels() as $keyLa => $la) {
             $labels[$keyLa] = $la->getId();
             $points[$keyLa] = $la->getScoreRightResponse();
+            $nbrLabel[$la->getId()] = 0;
         }
-        $proposals = $this->getAssociatedLabels();
-
-//        $this->relations();
+        //recup of associated labels
+        $proposals = $this->AssociatedLabels();
+        $nbrLabelAssociated = $this->nbrLabel($nbrLabel, $labels);
 
         foreach ($proposals as $key => $pr2) {
 
             foreach ($pr2 as $test) {
+
                 //recup of each id label of relations
                 $associatedLabel = $test->getId();
-                //recup id label of the interaction
-                foreach ($labels as $key2 => $la2) {
-                    //compare two labels for know the index for 'rigth...' in mapEntry
-                    if($la2 == $associatedLabel) {
 
+                //recovery id label of the interaction
+                foreach ($labels as $key2 => $la2) {
+
+                    //compare two labels for know the index in mapEntry
+                    if($la2 == $associatedLabel) {
                         $mapEntry= $this->document->CreateElement('mapEntry');
                         $mapEntry->setAttribute("mapKey", "left".$key." right".$key2);
 
-//                        if ($oldAssociate == $associatedLabel) {
-//
-//                            $mapEntry->setAttribute("mappedValue", $points[$key2]/2);
-//                        } else {
-
+                        if ( $nbrLabelAssociated[$la2] == 0 ) {
                             $mapEntry->setAttribute("mappedValue", $points[$key2]);
-//                        }
+                        } else {
+                            $mapEntry->setAttribute("mappedValue", $points[$key2] / $nbrLabelAssociated[$la2]);
+                        }
                         $mapping->appendChild($mapEntry);
                     }
                 }
@@ -276,20 +290,31 @@ class matchingExport extends qtiExport
         }
     }
 
-    protected function relations()
+    /**
+     * get number of labels for the division of the notation
+     *
+     * @param type $nbrLabel
+     * @param type $labels
+     * @return type
+     */
+    protected function nbrLabel($nbrLabel, $labels)
     {
-        foreach ($this->interactionmatching->getProposals() as $keyPr => $pr) {
-            $proposals[$keyPr] = $pr->getAssociatedLabel();
+        $proposals = $this->AssociatedLabels();
 
-            foreach ($proposals as $key => $pr2) {
-                foreach ($pr2 as $coucou => $test) {
-                    $associatedLabel[$coucou] = $test->getId();
-                    $supertest = $pr->getAssociatedLabel($test->getId());
-                    var_dump($supertest);
+        foreach ($proposals as $pr2) {
+
+            foreach ($pr2 as $test) {
+                $associatedLabel = $test->getId();
+
+                foreach ($labels as $la2) {
+
+                    if($la2 == $associatedLabel) {
+                        $nbrLabel[$la2] = $nbrLabel[$la2] +1;
+                    }
                 }
-
             }
         }
+        return $nbrLabel;
     }
 
     /**
@@ -305,14 +330,18 @@ class matchingExport extends qtiExport
         foreach ($this->interactionmatching->getLabels() as $keyLa => $la) {
             $labels[$keyLa] = $la->getId();
         }
-        $proposals = $this->getAssociatedLabels();
+        $proposals = $this->AssociatedLabels();
+
         foreach ($proposals as $key => $pr2) {
+
             foreach ($pr2 as $test){
                 //to know labels of associatedLabel in the table proposal
                 $associatedLabel = $test->getId();
+
                 //to know labels of table label
                 foreach ($labels as $key2 => $la2) {
-                    //compare two labels for know the index for 'rigth...' in mapEntry
+
+                    //compare two labels for know the index in mapEntry
                     if($la2 == $associatedLabel) {
                         $value= $this->document->CreateElement('value');
                         $valuetxt = $this->document->CreateTextNode("left".$key." right".$key2);
@@ -331,13 +360,12 @@ class matchingExport extends qtiExport
      *
      * @return $proposals
      */
-    protected function getAssociatedLabels()
+    protected function AssociatedLabels()
     {
         $proposals = [];
-        foreach ($this->interactionmatching->getProposals() as $keyPr => $pr) {
-            $proposals[$keyPr] = $pr->getAssociatedLabel();
+        foreach ($this->interactionmatching->getProposals() as $key => $pr) {
+            $proposals[$key] = $pr->getAssociatedLabel();
         }
         return $proposals;
-
     }
 }
