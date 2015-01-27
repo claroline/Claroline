@@ -94,14 +94,14 @@ class graphicImport extends qtiImport {
      */
     protected function createPicture($objectTag) {
 
-        $user = $this->container->get('security.context')->getToken()->getUser();
+        $user    = $this->container->get('security.context')->getToken()->getUser();
         $userDir = './uploads/ujmexo/users_documents/'.$user->getUsername();
-        $this->cpPicture($objectTag->getAttribute('data'), $userDir);
+        $picName = $this->cpPicture($objectTag->getAttribute('data'), $userDir);
 
         $document = new Document();
         $document->setLabel($objectTag->nodeValue);
         $document->setType($objectTag->getAttribute('type'));
-        $document->setUrl($userDir.'/images/'.$objectTag->getAttribute('data'));
+        $document->setUrl($userDir.'/images/'.$picName);
         $document->setUser($user);
 
         $this->doctrine->getManager()->persist($document);
@@ -140,14 +140,18 @@ class graphicImport extends qtiImport {
             }
         }
 
-        $dest = $userDir.'/images/'.$picture;
+        $picName = $picture;
+        $dest = $userDir.'/images/'.$picName;
         $i = 1;
         while (file_exists($dest)) {
-            $dest = $userDir.'/images/'.$i.'_'.$picture;
+            $picName = $i.'_'.$picture;
+            $dest = $userDir.'/images/'.$picName;
             $i++;
         }
 
         copy($src, $dest);
+
+        return $picName;
     }
 
 
