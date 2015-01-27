@@ -95,6 +95,40 @@ class WorkspaceRepository extends EntityRepository
     }
 
     /**
+     * Counts the personal workspaces.
+     *
+     * @return integer
+     */
+    public function countPersonalWorkspaces()
+    {
+        $dql = '
+            SELECT COUNT(w)
+            FROM Claroline\CoreBundle\Entity\Workspace\Workspace w
+            WHERE w.isPersonal = true
+        ';
+        $query = $this->_em->createQuery($dql);
+
+        return $query->getSingleScalarResult();
+    }
+
+    /**
+     * Counts the non personal workspaces.
+     *
+     * @return integer
+     */
+    public function countNonPersonalWorkspaces()
+    {
+        $dql = '
+            SELECT COUNT(w)
+            FROM Claroline\CoreBundle\Entity\Workspace\Workspace w
+            WHERE w.isPersonal = false
+        ';
+        $query = $this->_em->createQuery($dql);
+
+        return $query->getSingleScalarResult();
+    }
+
+    /**
      * Returns the workspaces whose at least one tool is accessible to one of the given roles.
      *
      * @param string[] $roles

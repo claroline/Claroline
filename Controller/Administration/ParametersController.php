@@ -1096,7 +1096,8 @@ class ParametersController extends Controller
         $country = $this->configHandler->getParameter('country');
         $supportEmail = $this->configHandler->getParameter('support_email');
         $version = $this->getCoreBundleVersion();
-        $nbWorkspaces = $this->workspaceManager->getNbWorkspaces();
+        $nbNonPersonalWorkspaces = $this->workspaceManager->getNbNonPersonalWorkspaces();
+        $nbPersonalWorkspaces = $this->workspaceManager->getNbPersonalWorkspaces();
         $nbUsers = $this->userManager->getCountAllEnabledUsers();
         $type = $mode;
         $token = $this->configHandler->getParameter('token');
@@ -1116,7 +1117,8 @@ class ParametersController extends Controller
             "&country=$country" .
             "&email=$supportEmail" .
             "&version=$version" .
-            "&workspaces=$nbWorkspaces" .
+            "&workspaces=$nbNonPersonalWorkspaces" .
+            "&personal_workspaces=$nbPersonalWorkspaces" .
             "&users=$nbUsers" .
             "&stats_type=$type" .
             "&token=$token";
