@@ -144,7 +144,6 @@ class Importer
             }
         }
 
-//        die("FFFFFUUUUUCCCCCKKKKK" . PHP_EOL);
         return $widgets;
     }
 
