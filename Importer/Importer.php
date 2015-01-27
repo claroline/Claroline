@@ -2,6 +2,7 @@
 
 namespace Icap\PortfolioBundle\Importer;
 
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Icap\PortfolioBundle\Entity\Portfolio;
 use Icap\PortfolioBundle\Entity\Widget\AbstractWidget;
@@ -210,7 +211,12 @@ class Importer
             $this->validateEntry($subEntry);
 
             if ('leap2:resource' === $subEntry['rdf:type']['@rdf:resource']) {
+                $resourceNode = new ResourceNode();
+                $resourceNode->setId(substr($subEntry['id']['$'], strlen('portfolio:resource/')));
+
                 $formationsWidgetResource = new FormationsWidgetResource();
+                $formationsWidgetResource->setResource($resourceNode);
+
                 $formationsWidgetResources[] = $formationsWidgetResource;
             }
         }

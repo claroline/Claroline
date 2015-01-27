@@ -330,6 +330,9 @@ CONTENT;
         $formationsWidgetLabel     = uniqid();
         $formationsWidgetContent   = uniqid();
 
+        $formationsWidgetResourceId = rand(0, PHP_INT_MAX);
+        $formationsWidgetResourceUri = uniqid();
+
         $content = <<<CONTENT
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom"
@@ -357,8 +360,8 @@ CONTENT;
     </entry>
     <entry>
         <title>54c7934987cb2</title>
-        <id>portfolio:resource/159163183</id>
-        <uri>159163183</uri>
+        <id>portfolio:resource/$formationsWidgetResourceId</id>
+        <uri>$formationsWidgetResourceUri</uri>
         <updated>$formationsWidgetUpdatedAtText</updated>
         <content></content>
         <rdf:type rdf:resource="leap2:resource"/>
@@ -386,6 +389,12 @@ CONTENT;
 
         $this->assertEquals('Icap\PortfolioBundle\Entity\Widget\FormationsWidget', get_class($formationsWidget));
         $this->assertEquals($formationsWidgetLabel, $formationsWidget->getLabel());
-        $this->assertEquals(1, count($formationsWidget->getResources()));
+
+        $formationsWidgetResources = $formationsWidget->getResources();
+        /** @var \Icap\PortfolioBundle\Entity\Widget\FormationsWidgetResource $formationsWidgetResource */
+        $formationsWidgetResource = $formationsWidgetResources[0];
+
+        $this->assertEquals(1, count($formationsWidgetResources));
+        $this->assertEquals($formationsWidgetResourceId, $formationsWidgetResource->getResource()->getId());
     }
 }
