@@ -352,6 +352,7 @@ class Controller
         $datas['supportEmail'] = $platformSettings->getSupportEmail();
         $datas['version'] = $this->container->getVersion();
         $datas['nbWorkspaces'] = 0;
+        $datas['nbPersonalWorkspaces'] = 0;
         $datas['nbUsers'] = 0;
         $datas['type'] = 0;
         $datas['token'] = $this->parameters->getToken();
@@ -374,6 +375,7 @@ class Controller
         $supportEmail = $datas['supportEmail'];
         $version = $datas['version'];
         $nbWorkspaces = $datas['nbWorkspaces'];
+        $nbPersonalWorkspaces = $datas['nbPersonalWorkspaces'];
         $nbUsers = $datas['nbUsers'];
         $type = $datas['type'];
         $token = $datas['token'];
@@ -386,6 +388,7 @@ class Controller
             "&email=$supportEmail" .
             "&version=$version" .
             "&workspaces=$nbWorkspaces" .
+            "&personal_workspaces=$nbPersonalWorkspaces" .
             "&users=$nbUsers" .
             "&stats_type=$type" .
             "&token=$token";
