@@ -5,6 +5,8 @@ namespace Icap\PortfolioBundle\Importer;
 use Claroline\CoreBundle\Entity\User;
 use Icap\PortfolioBundle\Entity\Portfolio;
 use Icap\PortfolioBundle\Entity\Widget\AbstractWidget;
+use Icap\PortfolioBundle\Entity\Widget\FormationsWidget;
+use Icap\PortfolioBundle\Entity\Widget\FormationsWidgetResource;
 use Icap\PortfolioBundle\Entity\Widget\SkillsWidget;
 use Icap\PortfolioBundle\Entity\Widget\SkillsWidgetSkill;
 use Icap\PortfolioBundle\Entity\Widget\TitleWidget;
@@ -110,29 +112,12 @@ class Importer
             if (null !== $widgetType) {
                 switch($widgetType) {
                     case 'skills':
-                        $skillsWidgetSkills = array();
-
-                        foreach ($entries as $subEntry) {
-                            $this->validateEntry($subEntry);
-
-                            if ('leap2:ability' === $subEntry['rdf:type']['@rdf:resource']) {
-                                $skillsWidgetSkill = new SkillsWidgetSkill();
-                                $skillsWidgetSkill->setName($subEntry['title']);
-
-                                $skillsWidgetSkills[] = $skillsWidgetSkill;
-                            }
-                        }
-
-                        $skillsWidget = new SkillsWidget();
-                        $skillsWidget
-                            ->setLabel($entry['title'])
-                            ->setSkills($skillsWidgetSkills);
-
-                        $widgets[] = $skillsWidget;
+                            $widgets[] = $this->extractSkillsWidget($entries, $entry);
                         break;
                     case 'userInformation':
                         break;
                     case 'formations':
+                            $widgets[] = $this->extractFormationsWidget($entries, $entry);
                         break;
                     case 'text':
                         break;
@@ -179,5 +164,62 @@ class Importer
                         )
                     )
                 );
+    }
+
+    /**
+     * @param array $entries
+     * @param array $entry
+     *
+     * @return SkillsWidget
+     * @throws \Exception
+     */
+    protected function extractSkillsWidget(array $entries, array $entry)
+    {
+        $skillsWidgetSkills = array();
+
+        foreach ($entries as $subEntry) {
+            $this->validateEntry($subEntry);
+
+            if ('leap2:ability' === $subEntry['rdf:type']['@rdf:resource']) {
+                $skillsWidgetSkill = new SkillsWidgetSkill();
+                $skillsWidgetSkill->setName($subEntry['title']);
+
+                $skillsWidgetSkills[] = $skillsWidgetSkill;
+            }
+        }
+
+        $skillsWidget = new SkillsWidget();
+        $skillsWidget
+            ->setLabel($entry['title']['$'])
+            ->setSkills($skillsWidgetSkills);
+
+        return $skillsWidget;
+    }
+
+    /**
+     * @param array $entries
+     * @param array $entry
+     *
+     * @return FormationsWidget
+     */
+    protected function extractFormationsWidget(array $entries, array $entry)
+    {
+        $formationsWidgetResources = array();
+
+        foreach ($entries as $subEntry) {
+            $this->validateEntry($subEntry);
+
+            if ('leap2:resource' === $subEntry['rdf:type']['@rdf:resource']) {
+                $formationsWidgetResource = new FormationsWidgetResource();
+                $formationsWidgetResources[] = $formationsWidgetResource;
+            }
+        }
+
+        $formationsWidget = new FormationsWidget();
+        $formationsWidget
+            ->setLabel($entry['title']['$'])
+            ->setResources($formationsWidgetResources);
+
+        return $formationsWidget;
     }
 }
