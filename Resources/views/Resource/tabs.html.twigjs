@@ -1,0 +1,5 @@
+{% twig_js name="ResourceManagerTabs" %}
+
+{% for tab in tabs %}
+    <li role="presentation" class="resource-manager-{{tab}}-tab {%if loop.first %}active{% endif %}"><a class="tab-btn" href="#{{tab}}-tab-pane" role="tab" aria-controls="{{tab}}-tab-pane" data-toggle="tab">{{tab|trans}}</a></li>
+{% endfor %}

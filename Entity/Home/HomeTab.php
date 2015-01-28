@@ -116,4 +116,13 @@ class HomeTab
     {
         return $this->widgetHomeTabConfigs;
     }
+
+    public function serializeForWidgetPicker() {
+        $return = array(
+            'id' => $this->id,
+            'name' => $this->name
+        );
+
+        return $return;
+    }
 }

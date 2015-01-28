@@ -32,7 +32,10 @@
             'change-zoom': 'zoom',
             'custom-action': 'customAction',
             'create-shortcuts': 'createShortcuts',
-            'get-url': 'get'
+            'get-url': 'get',
+            'get-workspace-list': 'getWorkspaces',
+            'get-tab-list': 'getVisibleTabsForWorkspace',
+            'get-widget-list': 'getVisibleWidgetsForTabAndWorkspace'
         };
         _.each(this.outerEvents, function (method, event) {
             this.dispatcher.on(event, this[method], this);
@@ -75,6 +78,53 @@
         }
 
         this.preFetchedDirectory = null;
+    };
+
+    server.prototype.getWorkspaces = function () {
+        var url = Routing.generate('claro_workspace_by_user_picker');
+
+        $.ajax({
+            url: url,
+            success: function (data) {
+                data.type = "workspace";
+                data.acceptsType = "tab";
+                data.parents = {};
+                this.dispatcher.trigger('workspace-list-returned', data);
+            }
+        });
+    };
+
+    server.prototype.getVisibleTabsForWorkspace = function (event) {
+        var url = Routing.generate('claro_list_visible_workspace_home_tabs_picker', {
+            'workspaceId': event.workspace
+        });
+
+        $.ajax({
+            url: url,
+            success: function (data) {
+                data.type = "tab";
+                data.acceptsType = "widget";
+                data.parents = {"workspace": event.workspace};
+                this.dispatcher.trigger('tab-list-returned-'+event.workspace, data);
+            }
+        });
+    };
+
+    server.prototype.getVisibleWidgetsForTabAndWorkspace = function (event) {
+        var url = Routing.generate('claro_workspace_home_tab_widget_list_picker', {
+            'workspaceId': event.workspace,
+            'homeTabId': event.tab
+        });
+
+        $.ajax({
+            url: url,
+            success: function (data) {
+                data.type = "widget";
+                data.acceptsType = null;
+                data.parents = {'workspace': event.workspace, "tab": event.tab};
+                this.dispatcher.trigger('widget-list-returned-'+event.workspace+'-'+event.tab, data);
+            }
+        });
     };
 
     server.prototype.submit = function (event) {

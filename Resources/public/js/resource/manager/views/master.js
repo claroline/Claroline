@@ -43,12 +43,10 @@
             }, this);
         },
         buildElement: function () {
-            this.el.className = 'main resource-manager';
+            this.el.className = 'main resource-manager tabpanel';
             this.wrapper = this.$el;
             this.subViews = {
-                breadcrumbs: new views.Breadcrumbs(this.parameters, this.dispatcher),
-                actions: new views.Actions(this.parameters, this.dispatcher),
-                nodes: new views.Nodes(this.parameters, this.dispatcher)
+                tabpanes: new views.Tabpanes(this.parameters, this.dispatcher)
             };
 
             if (this.parameters.isPickerMode) {
@@ -64,6 +62,10 @@
                 this.subViews.form = new views.Form(this.dispatcher);
                 this.subViews.rights = new views.Rights(this.dispatcher);
                 this.subViews.confirm = new views.Confirm(this.dispatcher);
+            }
+
+            if (this.parameters.isTinyMce) {
+                this.subViews.tabs = new views.Tabs(this.parameters, this.dispatcher);
             }
         },
         openAsPicker: function () {
@@ -82,12 +84,11 @@
             if (!this.isAppended) {
                 this.parameters.parentElement.append(this.$el);
 
-                if (!this.parameters.breadcrumbElement) {
-                    this.wrapper.append(this.subViews.breadcrumbs.el);
+                if (this.parameters.isTinyMce) {
+                    this.wrapper.append(this.subViews.tabs.el);
                 }
 
-                this.wrapper.append(this.subViews.actions.el);
-                this.wrapper.append(this.subViews.nodes.el);
+                this.wrapper.append(this.subViews.tabpanes.el);
 
                 if (!this.parameters.isPickerMode) {
                     this.wrapper.append(this.subViews.form.el);
