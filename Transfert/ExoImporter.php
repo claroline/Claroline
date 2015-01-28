@@ -90,7 +90,6 @@ class ExoImporter extends Importer implements ConfigurationInterface
         if ($exercises = opendir($rootPath.'/qti')) {
             while (($exercise = readdir($exercises)) !== false) {
                 if ($exercise != '.' && $exercise != '..') {
-                    //créer exo
                     $newExercise = new Exercise();
                     $newExercise->setTitle($exercise);
                     $newExercise->setDateCreate(new \Datetime());
@@ -112,10 +111,7 @@ class ExoImporter extends Importer implements ConfigurationInterface
                     $subscription->setCreator(1);
 
                     $this->om->persist($subscription);
-
                     $this->om->flush();
-//                    $exoHandler = new ExerciseHandler(NULL, NULL, $this->om, $qtiRepos->getQtiUser(), 'create');
-//                    $exoHandler->importExercise($newExercise);
                     $questions = opendir($rootPath.'/qti/'.$exercise);
                     while (($question = readdir($questions)) !== false) {
                         if ($question != '.' && $question != '..') {
