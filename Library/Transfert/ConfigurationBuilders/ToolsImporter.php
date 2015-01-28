@@ -159,7 +159,7 @@ class ToolsImporter extends Importer implements ConfigurationInterface
 
             $addRoleToOtr = count($orderedTool) > 0 ? false: true;
 
-            if ($addRoleToOtr) {
+            if ($addRoleToOtr && $toolEntity) {
                 $otr = $this->toolManager
                     ->addWorkspaceTool(
                         $toolEntity,
@@ -167,9 +167,9 @@ class ToolsImporter extends Importer implements ConfigurationInterface
                         $tool['tool']['translation'],
                         $workspace
                     );
-            }
 
-            $position++;
+                $position++;
+            }
 
             if (isset($tool['tool']['roles']) && $addRoleToOtr) {
                 foreach ($tool['tool']['roles'] as $role) {

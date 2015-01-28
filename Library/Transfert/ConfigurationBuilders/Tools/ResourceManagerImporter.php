@@ -27,6 +27,7 @@ use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\Role;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * @DI\Service("claroline.tool.resource_manager_importer")
@@ -43,6 +44,7 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
     private $availableParents;
     private $om;
     private $availableCreators;
+    private $env;
 
     /**
      * @DI\InjectParams({
@@ -50,7 +52,8 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
      *     "maskManager"     = @DI\Inject("claroline.manager.mask_manager"),
      *     "resourceManager" = @DI\Inject("claroline.manager.resource_manager"),
      *     "roleManager"     = @DI\Inject("claroline.manager.role_manager"),
-     *     "om"              = @DI\Inject("claroline.persistence.object_manager")
+     *     "om"              = @DI\Inject("claroline.persistence.object_manager"),
+     *     "container"       = @DI\Inject("service_container")
      * })
      */
     public function __construct(
@@ -58,14 +61,17 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
         MaskManager $maskManager,
         ResourceManager $resourceManager,
         RoleManager $roleManager,
-        ObjectManager $om
+        ObjectManager $om,
+        ContainerInterface $container
     )
     {
         $this->rightManager    = $rightManager;
         $this->resourceManager = $resourceManager;
         $this->maskManager     = $maskManager;
         $this->roleManager     = $roleManager;
-        $this->om = $om;
+        $this->om              = $om;
+        $this->container       = $container;
+        $this->env             = $container->get('kernel')->getEnvironment();
     }
 
     public function  getConfigTreeBuilder()
@@ -92,11 +98,11 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
             foreach ($data['data']['items'] as $item) {
                 $importer = $this->getImporterByName($item['item']['type']);
 
-                if (!$importer) {
+                if (!$importer && $this->env === 'dev') {
                     throw new InvalidConfigurationException('The importer ' . $item['item']['type'] . ' does not exist');
                 }
 
-                if (isset($item['item']['data'])) {
+                if ($importer && isset($item['item']['data'])) {
                     $forum['data'] = $item['item']['data'];
                     $importer->validate($forum['data']);
                 }
@@ -170,42 +176,48 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
             foreach ($data['data']['items'] as $item) {
                 if (isset($item['item']['data'])) $res['data'] = $item['item']['data'];
                 //get the entity from an importer
-                $entity = $this->getImporterByName($item['item']['type'])
-                    ->import($res, $item['item']['name']);
-                $entity->setName($item['item']['name']);
-                $type = $this->om
-                    ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')
-                    ->findOneByName($item['item']['type']);
+                $importer = $this->getImporterByName($item['item']['type']);
 
-                if ($item['item']['creator']) {
-                    $owner = $this->om
-                        ->getRepository('ClarolineCoreBundle:User')
-                        ->findOneByUsername($item['item']['creator']);
-                } else {
-                    $owner = $this->getOwner();
-                }
+                if ($importer) {
+                    $entity = $importer->import($res, $item['item']['name']);
+                    //some importers are not fully functionnal yet
+                    if ($entity) {
+                        $entity->setName($item['item']['name']);
+                        $type = $this->om
+                            ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')
+                            ->findOneByName($item['item']['type']);
 
-                $entity = $this->resourceManager->create(
-                    $entity,
-                    $type,
-                    $owner,
-                    $workspace,
-                    null,
-                    null,
-                    array()
-                );
+                        if ($item['item']['creator']) {
+                            $owner = $this->om
+                                ->getRepository('ClarolineCoreBundle:User')
+                                ->findOneByUsername($item['item']['creator']);
+                        } else {
+                            $owner = $this->getOwner();
+                        }
 
-                $entity->getResourceNode()->setParent($directories[$item['item']['parent']]->getResourceNode());
-                $this->om->persist($entity);
+                        $entity = $this->resourceManager->create(
+                            $entity,
+                            $type,
+                            $owner,
+                            $workspace,
+                            null,
+                            null,
+                            array()
+                        );
 
-                //add the missing roles
-                if (isset($item['item']['roles'])) {
-                    foreach ($item['item']['roles'] as $role) {
-                        $this->setPermissions($role, $entityRoles[$role['role']['name']], $entity);
+                        $entity->getResourceNode()->setParent($directories[$item['item']['parent']]->getResourceNode());
+                        $this->om->persist($entity);
+
+                        //add the missing roles
+                        if (isset($item['item']['roles'])) {
+                            foreach ($item['item']['roles'] as $role) {
+                                $this->setPermissions($role, $entityRoles[$role['role']['name']], $entity);
+                            }
+                        }
+
+                        $resourceNodes[$item['item']['uid']] = $entity;
                     }
                 }
-
-                $resourceNodes[$item['item']['uid']] = $entity;
             }
         }
 
@@ -566,13 +578,17 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
 
             //we only keep workspace in the current workspace and platform roles
             if ($right->getRole()->getWorkspace() === $node->getWorkspace() /*|| $right->getRole()->getWorkspace() === null*/) {
+
                 //creation rights are missing here but w/e
-                $roles[] = array(
-                    'role' => array(
-                        'name' => $this->roleManager->getWorkspaceRoleBaseName($right->getRole()),
-                        'rights' => $perms,
-                    )
+                $name = $this->roleManager->getWorkspaceRoleBaseName($right->getRole());
+
+                $data = array(
+                    'name' => $name,
+                    'rights' => $perms
                 );
+
+                //don't keep the role manager
+                if (!strpos('_' . $name, 'ROLE_WS_MANAGER')) $roles[] = array('role' => $data);
             }
         }
 
