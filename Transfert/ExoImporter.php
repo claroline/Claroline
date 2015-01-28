@@ -126,9 +126,7 @@ class ExoImporter extends Importer implements ConfigurationInterface
                                 }
                             }
                         }
-                        $qtiRepos->scanFiles();
-                        //la méthode import devra renvoyer l'id de la nouvelle question
-                        //passer l'exo à scanfile, si ce paramètre est renseigné on attribut la question à l'exercice
+                        $qtiRepos->scanFilesToImport($newExercise);
                     }
                }
            }
