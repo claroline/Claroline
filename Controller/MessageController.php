@@ -642,6 +642,14 @@ class MessageController
     public function checkAccess(Message $message, User $user)
     {
         if ($message->getSenderUsername() === $user->getUsername()) {
+
+            return true;
+        }
+        $userMessage = $this->messageManager
+            ->getOneUserMessageByUserAndMessage($user, $message);
+
+        if (!is_null($userMessage)) {
+
             return true;
         }
 
