@@ -211,11 +211,8 @@ class Importer
             $this->validateEntry($subEntry);
 
             if ('leap2:resource' === $subEntry['rdf:type']['@rdf:resource']) {
-                $resourceNode = new ResourceNode();
-                $resourceNode->setId(substr($subEntry['id']['$'], strlen('portfolio:resource/')));
-
                 $formationsWidgetResource = new FormationsWidgetResource();
-                $formationsWidgetResource->setResource($resourceNode);
+                $formationsWidgetResource->setUri($subEntry['uri']['$']);
 
                 $formationsWidgetResources[] = $formationsWidgetResource;
             }

@@ -395,6 +395,6 @@ CONTENT;
         $formationsWidgetResource = $formationsWidgetResources[0];
 
         $this->assertEquals(1, count($formationsWidgetResources));
-        $this->assertEquals($formationsWidgetResourceId, $formationsWidgetResource->getResource()->getId());
+        $this->assertEquals($formationsWidgetResourceUri, $formationsWidgetResource->getUri());
     }
 }

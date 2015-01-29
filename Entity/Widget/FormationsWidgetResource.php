@@ -30,10 +30,19 @@ class FormationsWidgetResource implements SubWidgetInterface
     protected $resource;
 
     /**
+     * @var FormationsWidget
+     *
      * @ORM\ManyToOne(targetEntity="Icap\PortfolioBundle\Entity\Widget\FormationsWidget", inversedBy="resources")
      * @ORM\JoinColumn(name="widget_id", referencedColumnName="id", nullable=false)
      */
     private $widget;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $uri;
 
     /**
      * @return int
@@ -81,6 +90,26 @@ class FormationsWidgetResource implements SubWidgetInterface
     public function getWidget()
     {
         return $this->widget;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUri()
+    {
+        return $this->uri;
+    }
+
+    /**
+     * @param string $uri
+     *
+     * @return FormationsWidgetResource
+     */
+    public function setUri($uri)
+    {
+        $this->uri = $uri;
+
+        return $this;
     }
 
     /**
