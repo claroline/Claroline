@@ -1,0 +1,12 @@
+{
+    "name": "hevinci/competency-bundle",
+    "type": "claroline-plugin",
+    "require": {
+        "php": ">=5.4.1",
+        "claroline/core-bundle": "~4.0"
+    },
+    "autoload": {
+        "psr-0": { "HeVinci\\CompetencyBundle": "" }
+    },
+    "target-dir": "HeVinci/CompetencyBundle"
+}
