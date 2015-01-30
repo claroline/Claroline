@@ -77,7 +77,7 @@ class AdminLogFilterType extends AbstractType
 
     public function getName()
     {
-        return 'admin_log_filter_form';
+        return '';
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
