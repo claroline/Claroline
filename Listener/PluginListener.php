@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\Response;
 class PluginListener
 {
     /**
-     * @DI\Observe("administration_tool_hevinci_competencies")
+     * @DI\Observe("administration_tool_competencies")
      *
      * @param OpenAdministrationToolEvent $event
      */
@@ -26,7 +26,7 @@ class PluginListener
     }
 
     /**
-     * @DI\Observe("administration_tool_hevinci_learning_objectives")
+     * @DI\Observe("administration_tool_learning-objectives")
      *
      * @param OpenAdministrationToolEvent $event
      */
@@ -37,7 +37,7 @@ class PluginListener
     }
 
     /**
-     * @DI\Observe("open_tool_desktop_hevinci_my_learning_objectives")
+     * @DI\Observe("open_tool_desktop_my-learning-objectives")
      *
      * @param DisplayToolEvent $event
      */
@@ -48,7 +48,7 @@ class PluginListener
     }
 
     /**
-     * @DI\Observe("manage_competencies_activity")
+     * @DI\Observe("manage-competencies_activity")
      *
      * @param CustomActionResourceEvent $event
      */
@@ -58,7 +58,7 @@ class PluginListener
     }
 
     /**
-     * @DI\Observe("widget_hevinci_my_learning_objectives")
+     * @DI\Observe("widget_my-learning-objectives")
      *
      * @param DisplayWidgetEvent $event
      */

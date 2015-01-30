@@ -18,13 +18,13 @@ class AdditionalInstaller extends BaseInstaller
         $actionRepo = $em->getRepository('ClarolineCoreBundle:Resource\MenuAction');
 
         $activityType = $typeRepo->findOneByName('activity');
-        $decoder = $decoderRepo->findOneByName('manage_competencies');
-        $action = $actionRepo->findOneByName('manage_competencies');
+        $decoder = $decoderRepo->findOneByName('manage-competencies');
+        $action = $actionRepo->findOneByName('manage-competencies');
 
         if (!$decoder) {
             $exp = count($decoderRepo->findByResourceType($activityType));
             $decoder = new MaskDecoder();
-            $decoder->setName('manage_competencies');
+            $decoder->setName('manage-competencies');
             $decoder->setResourceType($activityType);
             $decoder->setValue(pow(2, $exp));
             $em->persist($decoder);
@@ -32,7 +32,7 @@ class AdditionalInstaller extends BaseInstaller
 
         if (!$action) {
             $action = new MenuAction();
-            $action->setName('manage_competencies');
+            $action->setName('manage-competencies');
             $action->setResourceType($activityType);
             $action->setValue($decoder->getValue());
             $em->persist($action);
