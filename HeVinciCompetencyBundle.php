@@ -1,6 +1,6 @@
 <?php
 
-namespace HeVinci\PalefBundle;
+namespace HeVinci\CompetencyBundle;
 
 use Claroline\CoreBundle\Library\PluginBundle;
 use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
@@ -18,4 +18,4 @@ class HeVinciCompetencyBundle extends PluginBundle
     {
         return false;
     }
-} 
+}
