@@ -18,3 +18,25 @@ function HideInstruction() {
 }
 
 
+
+
+// thead aren't displayed (by default) for more visibility
+$('#Entete').css({"display" : "inline-block"});
+$('#showEntete').css({"display" : "none"});
+$('#hideEntete').css({"display" : "inline-block"});
+
+// If click, thead are displayed
+function DisplayEntete() {
+    $('#Entete').css({"opacity" : "100"});
+    $('#showEntete').css({"display" : "none"});
+    $('#hideEntete').css({"display" : "inline-block"});
+}
+
+// If click, thead are hidden
+function HideEntete() {
+    $('#Entete').css({"opacity" : "0"});
+    $('#hideEntete').css({"display" : "none"});
+    $('#showEntete').css({"display" : "inline-block"});
+}
+
+

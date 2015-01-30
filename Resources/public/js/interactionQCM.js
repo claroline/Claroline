@@ -9,6 +9,7 @@ function creationQCM(expectedAnswer, response, point, comment, positionForce, ad
     $("#ujm_exobundle_interactionqcmtype_typeQCM_2").prop("checked", true);
     $("#ujm_exobundle_interactionqcmtype_weightResponse").prop("checked", true);
     $('.radio').css({"display" : "inline-block", "margin-right" : "4%", "margin-top" : "1%"});
+
     //$('ujm_exobundle_interactionqcmtype_typeQCM_1').css({});
     var index; // number of choices
     
@@ -44,7 +45,10 @@ function creationQCM(expectedAnswer, response, point, comment, positionForce, ad
            });
        }
     });
-
+    $('#newTable').find("tr:not(:first)").each(function () {
+                $(this).find("td").eq(2).addClass("input-group");
+                $(this).find("td").eq(2).append('<span class="input-group-addon"><i class="fa fa-font"><i></span>');
+    });
     // Make the choices' table sortable with jquery ui plugin
     //$('tbody').sortable();
 
@@ -351,15 +355,14 @@ function fillChoicesArray(row) {
     // Add the field of type input
     if (row.find('input').length) {
         if (row.find('input').attr('id').indexOf('ordre') == -1) {
-            $('#newTable').find('tr:last').append('<td class="classic"></td>');
-            $('#newTable').find('td:last').append(row.find('input'));
+            $('#newTable').find('tr:last').append('<td class="classic"></td>');//.addClass("input-group");
+            $('#newTable').find('td:last').append(row.find('input'));//.append('<span class="input-group-addon"><i class="fa fa-font"><i></span>');
         } else {
             // Add the field positionForced as hidden td
             $('#newTable').find('tr:last').append('<td class="classic" style="display:none;"></td>');
             $('#newTable').find('td:last').append(row.find('input'));
         }
     }
-
     // Add the field of type textarea
     if (row.find('textarea').length) {
         $('#newTable').find('tr:last').append('<td class="classic"></td>');

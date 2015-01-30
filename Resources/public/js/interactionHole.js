@@ -18,17 +18,21 @@ var langDel;
 
 function addFormHole(add, response, point, size, orthography, del, selector, source_image_add, wlangKeyWord, wlangPoint) {
     langKeyWord = wlangKeyWord;
-    langPoint   = wlangPoint;
-    langDel     = del;
+    langPoint   = "pts";
+    langDel     = '<i class="fa fa-close"></i>';
 
-    tableHoles.append('<table id="newTable" class="table table-striped table-bordered table-condensed"><thead><tr style="background-color: lightsteelblue;"><th class="classic">' + size + '</th><th class="classic">' + orthography + '</th><th class="classic">' + selector + '</th><th class="classic">' + response + '</th><th class="classic">' + del + '</th></tr></thead><tbody></tbody></table>');
-    $('tbody').sortable();
+    tableHoles.append('<table id="newTable" class="table table-striped table table-condensed"><thead id="Entete"><tr><th >' + size + '</th><th >' + orthography + '</th><th >' + selector + '</th><th >' + response + '</th><th >' + del + '</th></tr></thead><tbody></tbody></table>');
+    $('tbody').sortable();  
+    
+    $('#newTable').css({"display" : "none"});
+    
+
 }
 
 function addFormHoleEdit(add, response, point, size, orthography, del, selector, source_image_add, wlangKeyWord, wlangPoint, nbResponses) {
     langKeyWord = wlangKeyWord;
     langPoint   = wlangPoint;
-    langDel     = del;
+    langDel     = "del";
     var index;
     var i = 0;
 
@@ -293,6 +297,12 @@ function addHole(indexBlank, valHole) {
 
     changeSize(index, index);
     disableNotYetReady();
+    
+    if (($('#newTable').find('td').length) > 1) {
+        $('#newTable').css({"display" : "inline-block"});
+    } else {
+        $('#newTable').css({"display" : "none"});
+    }
 }
 
 function addWR(indexHole, idTabWR) {

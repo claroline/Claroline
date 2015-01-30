@@ -180,6 +180,14 @@ $(function () {
             }
         }
     });
+
+    $("#movable").mousedown(function() {
+        if ($('#Answer').find('#dragContainer0').length > 1) {
+            $('#AlreadyPlacedArray').css({"display" : "none"});
+        } else {
+           $('#AlreadyPlacedArray').css({"display" : "inline"});
+        }
+    });
 });
 
 // Check if the score is a correct number
@@ -437,11 +445,11 @@ $(document.body).on('hidden.bs.modal', function () {
 
 function alreadyPlacedAnswersZone(shape, color, pathImg, point) {
 
-    var contenu = '<tr><td class="classic">' + (parseInt(grade) + 1) + '</td><td class="classic">';
+    var contenu = '<tr><td class="classic" width="25%">' + (parseInt(grade) + 1) + '</td><td class="classic">';
 
     if (shape == 'square') {
         contenu += '<select class="form-control" id="shape' + grade + '" size="1" onchange="alterAlreadyPlaced(\'' + pathImg + '\', this);">\n\
-                        <option value="circle">' + translations['tradCircle'] + '</option>\n\
+                        <option value="circle"> <img src="bundles/ujmexo/images/graphic/circlew.png"></option>\n\
                         <option value="square" selected>' + translations['tradSquare'] + '</option>\n\
                     </select></td>'
     } else {
