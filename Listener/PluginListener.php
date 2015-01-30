@@ -7,13 +7,35 @@ use Claroline\CoreBundle\Event\DisplayToolEvent;
 use Claroline\CoreBundle\Event\DisplayWidgetEvent;
 use Claroline\CoreBundle\Event\OpenAdministrationToolEvent;
 use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
+ * Defines the listening methods for all the core extension
+ * points used in this plugin (tools and widgets).
+ *
  * @DI\Service
  */
 class PluginListener
 {
+    private $request;
+    private $kernel;
+
+    /**
+     * @DI\InjectParams({
+     *     "stack"  = @DI\Inject("request_stack"),
+     *     "kernel" = @DI\Inject("http_kernel")
+     * })
+     *
+     * @param RequestStack $stack
+     */
+    public function __construct(RequestStack $stack, HttpKernelInterface $kernel)
+    {
+        $this->request = $stack->getCurrentRequest();
+        $this->kernel = $kernel;
+    }
+
     /**
      * @DI\Observe("administration_tool_competencies")
      *
@@ -21,7 +43,10 @@ class PluginListener
      */
     public function onOpenCompetencyTool(OpenAdministrationToolEvent $event)
     {
-        $event->setResponse(new Response('Competencies tool'));
+        $response = $this->makeSubRequest([
+            '_controller' => 'HeVinciCompetencyBundle:Competency:frameworks'
+        ]);
+        $event->setResponse($response);
         $event->stopPropagation();
     }
 
@@ -66,5 +91,12 @@ class PluginListener
     {
         $event->setContent('My learning objectives widget');
         $event->stopPropagation();
+    }
+
+    private function makeSubRequest(array $parameters)
+    {
+        $subRequest = $this->request->duplicate(array(), null, $parameters);
+
+        return $this->kernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
     }
 }
