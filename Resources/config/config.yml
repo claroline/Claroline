@@ -1,2 +1,18 @@
 plugin:
   has_options: false
+  
+  admin_tools:
+    - name: hevinci_competencies
+      class: graduation-cap
+    - name: hevinci_learning_objectives
+      class: arrow-up
+
+  tools:
+    - name: hevinci_my_learning_objectives
+      class: arrow-up
+      is_displayable_in_workspace: false
+      is_displayable_in_desktop: true
+
+  widgets:
+     - name: hevinci_my_learning_objectives
+       is_configurable: false

@@ -4,6 +4,7 @@ namespace HeVinci\CompetencyBundle;
 
 use Claroline\CoreBundle\Library\PluginBundle;
 use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
+use HeVinci\CompetencyBundle\Installation\AdditionalInstaller;
 
 class HeVinciCompetencyBundle extends PluginBundle
 {
@@ -12,6 +13,11 @@ class HeVinciCompetencyBundle extends PluginBundle
         $config = new ConfigurationBuilder();
 
         return $config->addRoutingResource(__DIR__ . '/Resources/config/routing.yml', null, 'competency');
+    }
+
+    public function getAdditionalInstaller()
+    {
+        return new AdditionalInstaller();
     }
 
     public function hasMigrations()
