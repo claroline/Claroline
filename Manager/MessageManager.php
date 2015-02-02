@@ -381,4 +381,9 @@ class MessageManager
         $message = $this->create($content, $object, $users, $sender);
         $this->send($message);
     }
+
+    public function getOneUserMessageByUserAndMessage(User $user, Message $message)
+    {
+        return $this->userMessageRepo->findOneByUserAndMessage($user, $message);
+    }
 }
