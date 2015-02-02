@@ -44,6 +44,21 @@ class CreatePluginCommand extends ContainerAwareCommand
             InputOption::VALUE_REQUIRED,
             'When set to true, add a default config for the resource type'
         );
+        $this->addOption(
+            'tool',
+            null,
+            InputOption::VALUE_REQUIRED,
+            'When set to true, add a default config for the tool'
+        );
+        $this->addOption(
+            'widget',
+            null,
+            InputOption::VALUE_REQUIRED,
+            'When set to true, add a default config for the widget'
+        );
+        //todo admin tool
+        //todo top bar shortcut
+        //todo oauth (the whole system must be implemented here)
 
         $this->addOption(
             'install',
@@ -112,6 +127,8 @@ class CreatePluginCommand extends ContainerAwareCommand
 
         //now we create the resource type listener, entity & config if we wanted
         $rType = $input->getOption('resource_type');
+        $tType = $input->getOption('tool');
+        $wType = $input->getOption('widget');
 
         $config = array(
             'plugin' => array(
@@ -120,6 +137,8 @@ class CreatePluginCommand extends ContainerAwareCommand
         );
 
         if ($rType) $this->addResourceType($rootDir, $ivendor, $ibundle, $rType, $config);
+        if ($tType) $this->addTool($rootDir, $ivendor, $ibundle, $tType, $config);
+        if ($wType) $this->addWidget($rootDir, $ivendor, $ibundle, $wType, $config);
 
         $yaml = Yaml::dump($config, 5);
         file_put_contents($rootDir . '/Resources/config/config.yml', $yaml);
@@ -204,6 +223,7 @@ class CreatePluginCommand extends ContainerAwareCommand
         $this->addResourceTypeForm($rootDir, $vendor, $bundle, $rType);
         $this->addResourceTypeListener($rootDir, $vendor, $bundle, $rType);
         $this->addResourceTypeRepository($rootDir, $vendor, $bundle, $rType);
+        $this->addResourceTypeTranslationFiles($rootDir, $vendor, $rType);
         $transDir = $rootDir . '/Resources/translations';
 
         $resTrans = array(
@@ -230,7 +250,7 @@ class CreatePluginCommand extends ContainerAwareCommand
     private function addResourceTypeRepository($rootDir, $vendor, $bundle, $rType)
     {
         $templateDir = $this->getContainer()->getParameter('claroline.param.plugin_template_resource_directory');
-        $newPath = $rootDir . '/Repository/' . $rType . 'Repository.php';
+        $newPath = $rootDir . '/Repository/' . ucfirst($rType) . 'Repository.php';
         $content = file_get_contents($templateDir . '/repository.tmp');
         file_put_contents(
             $newPath,
@@ -240,11 +260,10 @@ class CreatePluginCommand extends ContainerAwareCommand
 
     private function addResourceTypeListener($rootDir, $vendor, $bundle, $rType)
     {
-        $className = $rType . 'ResourceListener';
+        $className = ucfirst($rType) . 'ResourceListener';
         $newPath = $rootDir . '/Listener/' . $className . '.php';
         $templateDir = $this->getContainer()->getParameter('claroline.param.plugin_template_resource_directory');
         $content = file_get_contents($templateDir . '/listener.tmp');
-        $content = str_replace('[[listener_section]]', file_get_contents($templateDir . '/resource_listener_section.tmp'), $content);
         file_put_contents(
             $newPath,
             $this->replaceCommonPlaceHolders($content, $vendor, $bundle, $rType)
@@ -263,7 +282,7 @@ class CreatePluginCommand extends ContainerAwareCommand
     private function addResourceTypeEntity($rootDir, $vendor, $bundle, $rType)
     {
         $templateDir = $this->getContainer()->getParameter('claroline.param.plugin_template_resource_directory');
-        $newPath = $rootDir . '/Entity/' . $rType . '.php';
+        $newPath = $rootDir . '/Entity/' . ucfirst($rType) . '.php';
         $content = file_get_contents($templateDir . '/resource.tmp');
         file_put_contents(
             $newPath,
@@ -285,6 +304,95 @@ class CreatePluginCommand extends ContainerAwareCommand
             file_get_contents($templateDir . '/form_view.tmp')
         );
     }
+
+    private function addResourceTypeTranslationFiles($rootDir, $vendor, $rType)
+    {
+        $data = array(strtolower($vendor) . '_' . strtolower($rType) => ucfirst($rType));
+        $transDir = $rootDir . '/Resources/translations';
+
+        foreach ($this->langs as $lang) {
+            $transFileName = $transDir . '/resource.' . $lang . '.yml';
+            file_put_contents($transFileName, Yaml::dump($data, 5));
+        }
+    }
+
+    private function addTool($rootDir, $vendor, $bundle, $tType, &$config)
+    {
+        $this->addToolConfig($tType, $config);
+        $this->addToolListener($rootDir, $vendor, $bundle, $tType);
+        $this->addToolTranslationFiles($rootDir, $tType);
+    }
+
+    private function addToolConfig($rType, &$config)
+    {
+        $config['plugin']['tools'][] = array(
+            'name' => $rType,
+            'is_displayable_in_workspace' => true,
+            'is_displayable_in_desktop' => true,
+        );
+    }
+
+    private function addToolListener($rootDir, $vendor, $bundle, $tType)
+    {
+        $className = ucfirst($tType) . 'Listener';
+        $newPath = $rootDir . '/Listener/' . $className . '.php';
+        $templateDir = $this->getContainer()->getParameter('claroline.param.plugin_template_tool_directory');
+        $content = file_get_contents($templateDir . '/listener.tmp');
+        file_put_contents(
+            $newPath,
+            $this->replaceCommonPlaceHolders($content, $vendor, $bundle, '', $tType)
+        );
+    }
+
+    private function addToolTranslationFiles($rootDir, $tType)
+    {
+        $data = array(strtolower($tType) => ucfirst($tType));
+        $transDir = $rootDir . '/Resources/translations';
+
+        foreach ($this->langs as $lang) {
+            $transFileName = $transDir . '/tools.' . $lang . '.yml';
+            file_put_contents($transFileName, Yaml::dump($data, 5));
+        }
+    }
+
+    private function addWidget($rootDir, $vendor, $bundle, $wType, &$config)
+    {
+        $this->addWidgetConfig($wType, $vendor, $config);
+        $this->addWidgetListener($rootDir, $vendor, $bundle, $wType);
+        $this->addWidgetTranslationFiles($rootDir, $vendor, $wType);
+    }
+
+    private function addWidgetConfig($wType, $vendor, &$config)
+    {
+        $config['plugin']['widgets'][] = array(
+            'name' => strtolower($vendor) . '_' . strtolower($wType) . '_widget',
+            'is_configurable' => false
+        );
+    }
+
+    private function addWidgetListener($rootDir, $vendor, $bundle, $wType)
+    {
+        $className = ucfirst($wType) . 'Listener';
+        $newPath = $rootDir . '/Listener/' . $className . '.php';
+        $templateDir = $this->getContainer()->getParameter('claroline.param.plugin_template_widget_directory');
+        $content = file_get_contents($templateDir . '/listener.tmp');
+        file_put_contents(
+            $newPath,
+            $this->replaceCommonPlaceHolders($content, $vendor, $bundle, '', '', $wType)
+        );
+    }
+
+    private function addWidgetTranslationFiles($rootDir, $vendor, $wType)
+    {
+        $data = array(strtolower($vendor) . '_' . strtolower($wType) . '_widget' => ucfirst($wType));
+        $transDir = $rootDir . '/Resources/translations';
+
+        foreach ($this->langs as $lang) {
+            $transFileName = $transDir . '/widget.' . $lang . '.yml';
+            file_put_contents($transFileName, Yaml::dump($data, 5));
+        }
+    }
+
 
     private function listFiles($source, $target, $files = array(), $rootDir = null)
     {
@@ -335,7 +443,9 @@ class CreatePluginCommand extends ContainerAwareCommand
         $content,
         $vendor,
         $bundle,
-        $rType = ''
+        $rType = '',
+        $tType = '',
+        $wType = ''
     )
     {
         $patterns = array(
@@ -344,16 +454,24 @@ class CreatePluginCommand extends ContainerAwareCommand
             '/\[\[Bundle\]\]/',
             '/\[\[bundle\]\]/',
             '/\[\[Resource_Type\]\]/',
-            '/\[\[resource_type\]\]/'
+            '/\[\[resource_type\]\]/',
+            '/\[\[Tool\]\]/',
+            '/\[\[tool\]\]/',
+            '/\[\[Widget\]\]/',
+            '/\[\[widget\]\]/'
         );
 
         $replacements = array(
-            $vendor,
+            ucfirst($vendor),
             strtolower($vendor),
-            $bundle,
+            ucfirst($bundle),
             strtolower($bundle),
-            $rType,
-            strtolower($rType)
+            ucfirst($rType),
+            strtolower($rType),
+            ucfirst($tType),
+            strtolower($tType),
+            ucfirst($wType),
+            strtolower($wType)
         );
 
         return preg_replace($patterns, $replacements, $content);
