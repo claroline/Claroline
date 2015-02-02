@@ -23,7 +23,7 @@
                                     </button>
                                 {% endif %}
                                 </div>
-                                <div data-ng-bind-html="widget.views.view | trustAsHtml" data-ng-show="!widget.editing && !widget.views.form"></div>
+                                <div data-ng-bind-html="widget.views.view" data-ng-show="!widget.editing && !widget.views.form"></div>
                                 <div class="loading" data-ng-show="widget.editing && !widget.views.form"></div>
                                 <form name="form" class="edit-container form-inline widget-panel" data-loading-form="save(widget)" data-ng-show="widget.editing && widget.views.form">
                                     <div data-bind-html="widget.views.form" class="form-group"></div>
@@ -99,7 +99,7 @@
                                 {% verbatim %}
                                 <li class="media" data-ng-repeat="comment in comments | orderBy:['+date']">
                                     <div class="media-body">
-                                        <p class="message" data-ng-bind-html="comment.message | trustAsHtml"></p>
+                                        <p class="message" data-ng-bind-html="comment.message"></p>
                                         <p class="pull-right author" data-ng-if="comment.date">
                                             <small>{{ comment.sender.lastName }} {{ comment.sender.firstName }}, <span class="fa fa-calendar"></span> {{ comment.date|date : ('comment_date_format'|trans) }}</small>
                                         </p>
@@ -312,7 +312,6 @@
             '@IcapPortfolioBundle/Resources/public/js/portfolio/directives/datepickerDirective.js'
             '@IcapPortfolioBundle/Resources/public/js/portfolio/directives/badgePickerDirective.js'
             '@IcapPortfolioBundle/Resources/public/js/portfolio/directives/commentsDirective.js'
-            '@IcapPortfolioBundle/Resources/public/js/modules/trustAsHtml.js'
             '@IcapPortfolioBundle/Resources/public/js/modules/translation.js'
             '@IcapPortfolioBundle/Resources/public/js/modules/urlInterpolator.js'
             '@IcapPortfolioBundle/Resources/public/js/modules/scrollContainerDirective.js'

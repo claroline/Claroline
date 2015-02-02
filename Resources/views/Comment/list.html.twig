@@ -70,7 +70,7 @@
                         </small>
                         <small class="pull-right loading" data-ng-show="!comment.date"></small>
                         <h5 class="media-heading">{{ comment.sender.lastName }} {{ comment.sender.firstName }}</h5>
-                        <p class="col-lg-10" data-ng-bind-html="comment.message | trustAsHtml"></p>
+                        <p class="col-lg-10" data-ng-bind-html="comment.message"></p>
                     </div>
                     {% endverbatim %}
                 </div>
@@ -142,7 +142,6 @@
         '@IcapPortfolioBundle/Resources/public/js/comments/services/commentsManager.js'
         '@IcapPortfolioBundle/Resources/public/js/comments/services/commentFactory.js'
         '@IcapPortfolioBundle/Resources/public/js/comments/services/portfolioFactory.js'
-        '@IcapPortfolioBundle/Resources/public/js/modules/trustAsHtml.js'
         '@IcapPortfolioBundle/Resources/public/js/modules/translation.js'
         '@IcapPortfolioBundle/Resources/public/js/modules/urlInterpolator.js'
         '@IcapPortfolioBundle/Resources/public/js/modules/scrollContainerDirective.js'

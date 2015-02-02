@@ -32,7 +32,7 @@
     </div>
     <div class="panel-body" data-ng-show="!widget.editing && !widget.views.form">
         {% if constant('Icap\\PortfolioBundle\\Manager\\PortfolioManager::PORTFOLIO_OPENING_MODE_VIEW') != openingMode %}
-            <div data-ng-bind-html="widget.views.view | trustAsHtml"></div>
+            <div data-ng-bind-html="widget.views.view"></div>
         {% else %}
             {% include 'IcapPortfolioBundle:templates:' ~ widget.widgetType ~ '.html.twig' with {'widget': widget} %}
         {% endif %}
