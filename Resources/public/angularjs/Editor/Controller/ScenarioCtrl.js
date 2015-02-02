@@ -22,7 +22,7 @@
 
                     // Hide tooltip for the dragged element
                     if (event.source && event.source.nodeScope && event.source.nodeScope.$element) {
-                        e.source.nodeScope.$element.find('.angular-ui-tree-handle').tooltip('toggle');
+                        event.source.nodeScope.$element.find('.angular-ui-tree-handle').tooltip('toggle');
                     }
                 },
                 dropped: function (event) {
