@@ -3,12 +3,8 @@
 portfolioApp
     .directive("collectionForm", function() {
         return {
-            scope:    {
-                'collectionForm': '@collectionForm',
-                'widget': '=collectionFormWidget'
-            },
+            scope:    true,
             restrict: 'A',
-            controller: "collectionFormController",
-            templateUrl: 'templates/collection-form_directive.tpl.html'
+            controller: "collectionFormController"
         };
     });

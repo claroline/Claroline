@@ -17,13 +17,9 @@ angular.module('ui.resourcePicker', [])
         };
 
         return {
-            scope: {
-                uiResourcePicker: '=',
-                uiResources: '='
-            },
             restrict: "A",
             link: function ($scope, element, attrs) {
-                var uiResourcePickerConfiguration = ($scope.uiResourcePicker) ? $scope.uiResourcePicker : {};
+                var uiResourcePickerConfiguration = (attrs.uiResourcePicker) ? $scope.$eval(attrs.uiResourcePicker) : {};
 
                 var options = angular.extend({}, defaultOptions, uiResourcePickerConfiguration)
 
