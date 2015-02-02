@@ -2,7 +2,7 @@
 
 portfolioApp
     .controller("collectionFormController", ["$scope", "$attrs", function($scope, $attrs) {
-        $scope.emptyChild = jQuery.parseJSON($attrs.collectionForm.replace(/'/g, '"'));
+        $scope.emptyChild = jQuery.parseJSON($scope.collectionForm.replace(/'/g, '"'));
         $scope.emptyChild.added = false;
 
         $scope.collection = $scope.widget.children || [];
