@@ -72,7 +72,7 @@ class WorkspaceLogFilterType extends AbstractType
 
     public function getName()
     {
-        return 'workspace_log_filter_form';
+        return '';
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
@@ -80,7 +80,8 @@ class WorkspaceLogFilterType extends AbstractType
         $resolver
         ->setDefaults(
             array(
-                'translation_domain' => 'log'
+                'translation_domain' => 'log',
+                'csrf_protection' => false
             )
         );
     }

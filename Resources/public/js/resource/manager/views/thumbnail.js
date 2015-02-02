@@ -53,7 +53,7 @@
                 'isSelectionAllowed': isSelectionAllowed,
                 'hasMenu': true,
                 'actions': actions,
-                'webRoot': this.parameters.webPath,
+                'webRoot': this.parameters.webPath
             });
         }
     });

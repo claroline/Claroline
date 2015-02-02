@@ -370,4 +370,24 @@ class HomeTabConfigRepository extends EntityRepository
 
         return $query->getResult();
     }
+
+    public function checkHomeTabVisibilityByIdAndWorkspace(
+        $homeTabId,
+        Workspace $workspace
+    )
+    {
+        $dql = "
+            SELECT htc.id
+            FROM Claroline\CoreBundle\Entity\Home\HomeTabConfig htc
+            WHERE htc.homeTab = :homeTabId
+            AND htc.workspace = :workspace
+            AND htc.visible = true
+            ORDER BY htc.tabOrder ASC
+        ";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('workspace', $workspace);
+        $query->setParameter('homeTabId', $homeTabId);
+
+        return $query->getResult();
+    }
 }

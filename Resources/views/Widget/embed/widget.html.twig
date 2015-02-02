@@ -1,0 +1,63 @@
+{% extends 'ClarolineCoreBundle::base.html.twig' %}
+
+{% block stylesheets %}
+
+    {% if config.getParameter('theme') != '' %}
+        <link rel="stylesheet" href="{{ asset('') ~ 'themes/' ~ config.getParameter('theme') ~ '/bootstrap.css' }}" screen="media" />
+    {% endif %}
+
+    {% stylesheets debug=false filter='lessphp, cssmin'  output='vendor/fortawesome/font-awesome/css/font-awesome.css'
+    '../vendor/fortawesome/font-awesome/less/font-awesome.less'
+    %}
+    <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+
+    {% image debug=false output='vendor/fortawesome/font-awesome/fonts/FontAwesome.otf'
+    '../vendor/fortawesome/font-awesome/fonts/FontAwesome.otf' %}
+    {% endimage %}
+
+    {% image debug=false output='vendor/fortawesome/font-awesome/fonts/fontawesome-webfont.eot'
+    '../vendor/fortawesome/font-awesome/fonts/fontawesome-webfont.eot' %}
+    {% endimage %}
+
+    {% image debug=false output='vendor/fortawesome/font-awesome/fonts/fontawesome-webfont.svg'
+    '../vendor/fortawesome/font-awesome/fonts/fontawesome-webfont.svg' %}
+    {% endimage %}
+
+    {% image debug=false output='vendor/fortawesome/font-awesome/fonts/fontawesome-webfont.ttf'
+    '../vendor/fortawesome/font-awesome/fonts/fontawesome-webfont.ttf' %}
+    {% endimage %}
+
+    {% image debug=false output='vendor/fortawesome/font-awesome/fonts/fontawesome-webfont.woff'
+    '../vendor/fortawesome/font-awesome/fonts/fontawesome-webfont.woff' %}
+    {% endimage %}
+    <style>
+        body{
+            background: none;
+            padding: 0;
+            margin: 0;
+        }
+    </style>
+{% endblock %}
+
+{% block javascripts_header %}
+    {{ parent() }}
+    <script type="text/javascript" src='{{ asset('bundles/frontend/jquery/jquery-2.1.0.min.js') }}'></script>
+{% endblock %}
+
+{% block layout %}
+    {% if widget is not null%}
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">{{ widget.title|raw }}</h3>
+        </div>
+        <div class="panel-body">
+            {{ widget.content|raw }}
+        </div>
+    </div>
+    {% endif %}
+{% endblock %}
+
+{% block javascripts %}
+
+{% endblock %}

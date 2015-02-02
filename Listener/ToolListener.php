@@ -217,7 +217,7 @@ class ToolListener
     public function workspaceAnalytics($workspace)
     {
         $params = array(
-            '_controller' => 'ClarolineCoreBundle:WorkspaceAnalytics:showResources',
+            '_controller' => 'ClarolineCoreBundle:WorkspaceAnalytics:showTraffic',
             'workspaceId' => $workspace->getId()
         );
 

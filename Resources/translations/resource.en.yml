@@ -31,3 +31,5 @@ resource_shortcut: Shortcut
 text: Text
 write: Write
 administrate: Administrate
+empty: Empty
+insert: Insert

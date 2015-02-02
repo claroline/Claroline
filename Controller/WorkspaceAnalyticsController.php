@@ -75,34 +75,6 @@ class WorkspaceAnalyticsController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/{workspaceId}/resources",
-     *     name="claro_workspace_analytics_resources"
-     * )
-     * @EXT\ParamConverter(
-     *      "workspace",
-     *      class="ClarolineCoreBundle:Workspace\Workspace",
-     *      options={"id" = "workspaceId", "strictId" = true}
-     * )
-     * @EXT\Template("ClarolineCoreBundle:Tool/workspace/analytics:resources.html.twig")
-     *
-     * Displays workspace analytics resource page.
-     *
-     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
-     * @return Response
-     */
-    public function showResourcesAction(Workspace $workspace)
-    {
-        $typeCount = $this->analyticsManager->getWorkspaceResourceTypesCount($workspace);
-
-        return array(
-            'analyticsTab' => 'resources',
-            'workspace' => $workspace,
-            'resourceCount' => $typeCount
-        );
-    }
-
-    /**
-     * @EXT\Route(
      *     "/{workspaceId}/traffic",
      *     name="claro_workspace_analytics_traffic"
      * )
@@ -141,6 +113,34 @@ class WorkspaceAnalyticsController extends Controller
 
     /**
      * @EXT\Route(
+     *     "/{workspaceId}/resources",
+     *     name="claro_workspace_analytics_resources"
+     * )
+     * @EXT\ParamConverter(
+     *      "workspace",
+     *      class="ClarolineCoreBundle:Workspace\Workspace",
+     *      options={"id" = "workspaceId", "strictId" = true}
+     * )
+     * @EXT\Template("ClarolineCoreBundle:Tool/workspace/analytics:resources.html.twig")
+     *
+     * Displays workspace analytics resource page.
+     *
+     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
+     * @return Response
+     */
+    public function showResourcesAction(Workspace $workspace)
+    {
+        $typeCount = $this->analyticsManager->getWorkspaceResourceTypesCount($workspace);
+
+        return array(
+            'analyticsTab' => 'resources',
+            'workspace' => $workspace,
+            'resourceCount' => $typeCount
+        );
+    }
+
+    /**
+     * @EXT\Route(
      *     "/{workspaceId}/activities/evaluations",
      *     name="claro_workspace_activities_evaluations_show"
      * )
@@ -152,6 +152,9 @@ class WorkspaceAnalyticsController extends Controller
      * )
      *
      * Displays activities evaluations home tab of analytics tool
+     *
+     * @param User $currentUser
+     * @param Workspace $workspace
      *
      * @return Response
      *

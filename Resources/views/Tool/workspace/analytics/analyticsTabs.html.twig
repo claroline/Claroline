@@ -5,9 +5,9 @@
 {% block section_content %}
     <div class="panel-body">
         <ul class="nav nav-tabs">
-            <li {% if analyticsTab == 'resources' %}class="active"{% endif %}>
-                <a href="{{ path('claro_workspace_analytics_resources', {'workspaceId': workspace.getId()}) }}">
-                    {{ 'resources'|trans({}, 'platform') }}
+            <li {% if analyticsTab == 'traffic' %}class="active"{% endif %}>
+                <a href="{{ path('claro_workspace_analytics_traffic', {'workspaceId': workspace.getId()}) }}">
+                    {{ 'traffic'|trans({}, 'platform') }}
                 </a>
             </li>
             <li {% if analyticsTab == 'activities' %}class="active"{% endif %}>
@@ -15,9 +15,9 @@
                     {{ 'activities'|trans({}, 'platform') }}
                 </a>
             </li>
-            <li {% if analyticsTab == 'traffic' %}class="active"{% endif %}>
-                <a href="{{ path('claro_workspace_analytics_traffic', {'workspaceId': workspace.getId()}) }}">
-                    {{ 'traffic'|trans({}, 'platform') }}
+            <li {% if analyticsTab == 'resources' %}class="active"{% endif %}>
+                <a href="{{ path('claro_workspace_analytics_resources', {'workspaceId': workspace.getId()}) }}">
+                    {{ 'resources'|trans({}, 'platform') }}
                 </a>
             </li>
         </ul>
