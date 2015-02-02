@@ -1,0 +1,19 @@
+hevinci_activity:
+    resource: "@HeVinciCompetencyBundle/Controller/ActivityController.php"
+    type: annotation
+
+hevinci_objectives_widget:
+    resource: "@HeVinciCompetencyBundle/Controller/WidgetController.php"
+    type: annotation
+
+hevinci_objectives_tool:
+    resource: "@HeVinciCompetencyBundle/Controller/LearningObjectiveController.php"
+    type: annotation
+
+hevinci_my_objectives_tool:
+    resource: "@HeVinciCompetencyBundle/Controller/MyLearningObjectiveController.php"
+    type: annotation
+
+hevinci_competency_tool:
+    resource: "@HeVinciCompetencyBundle/Controller/CompetencyController.php"
+    type: annotation

@@ -17,7 +17,7 @@ class CompetencyController
      * Displays the index of the competency tool, i.e. the list
      * of competency frameworks.
      *
-     * @EXT\Route("/frameworks", name="hevinci_competency_index")
+     * @EXT\Route("/frameworks", name="hevinci_competencies_index")
      */
     public function frameworksAction()
     {

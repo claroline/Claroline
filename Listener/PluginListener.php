@@ -7,15 +7,15 @@ use Claroline\CoreBundle\Event\DisplayToolEvent;
 use Claroline\CoreBundle\Event\DisplayWidgetEvent;
 use Claroline\CoreBundle\Event\OpenAdministrationToolEvent;
 use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
  * Defines the listening methods for all the core extension
  * points used in this plugin (tools and widgets).
  *
- * @DI\Service
+ * @DI\Service("hevinci.competency.plugin_listener")
  */
 class PluginListener
 {
@@ -43,11 +43,7 @@ class PluginListener
      */
     public function onOpenCompetencyTool(OpenAdministrationToolEvent $event)
     {
-        $response = $this->makeSubRequest([
-            '_controller' => 'HeVinciCompetencyBundle:Competency:frameworks'
-        ]);
-        $event->setResponse($response);
-        $event->stopPropagation();
+        $this->forward('HeVinciCompetencyBundle:Competency:frameworks', $event);
     }
 
     /**
@@ -57,8 +53,7 @@ class PluginListener
      */
     public function onOpenLearningObjectivesTool(OpenAdministrationToolEvent $event)
     {
-        $event->setResponse(new Response('Learning objectives tool'));
-        $event->stopPropagation();
+        $this->forward('HeVinciCompetencyBundle:LearningObjective:objectives', $event);
     }
 
     /**
@@ -68,8 +63,7 @@ class PluginListener
      */
     public function onOpenMyLearningObjectivesTool(DisplayToolEvent $event)
     {
-        $event->setContent('My learning objectives tool');
-        $event->stopPropagation();
+        $this->forward('HeVinciCompetencyBundle:MyLearningObjective:objectives', $event);
     }
 
     /**
@@ -79,7 +73,7 @@ class PluginListener
      */
     public function onOpenActivityCompetencies(CustomActionResourceEvent $event)
     {
-        $event->setResponse(new Response('Activity competency management'));
+        $this->forward('HeVinciCompetencyBundle:Activity:competencies', $event);
     }
 
     /**
@@ -89,14 +83,26 @@ class PluginListener
      */
     public function onDisplayObjectivesWidget(DisplayWidgetEvent $event)
     {
-        $event->setContent('My learning objectives widget');
-        $event->stopPropagation();
+        $this->forward('HeVinciCompetencyBundle:Widget:objectives', $event);
     }
 
-    private function makeSubRequest(array $parameters)
+    private function forward($controller, Event $event)
     {
-        $subRequest = $this->request->duplicate(array(), null, $parameters);
+        $attributes = ['_controller' => $controller];
 
-        return $this->kernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
+        if ($event instanceof CustomActionResourceEvent) {
+            $attributes['id'] = $event->getResource()->getId();
+        }
+
+        $subRequest = $this->request->duplicate([], null, $attributes);
+        $response = $this->kernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
+
+        if ($event instanceof DisplayToolEvent || $event instanceof DisplayWidgetEvent) {
+            $event->setContent($response->getContent());
+        } else {
+            $event->setResponse($response);
+        }
+
+        $event->stopPropagation();
     }
 }
