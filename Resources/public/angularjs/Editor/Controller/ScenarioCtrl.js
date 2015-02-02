@@ -16,7 +16,20 @@
 
             // Configure sortable Tree feature
             $scope.treeOptions = {
-                dropped : function(e){
+                dragStart: function (event) {
+                    // Disable tooltip on drag handlers
+                    $('.angular-ui-tree-handle').tooltip('disable');
+
+                    // Hide tooltip for the dragged element
+                    if (event.source && event.source.nodeScope && event.source.nodeScope.$element) {
+                        e.source.nodeScope.$element.find('.angular-ui-tree-handle').tooltip('toggle');
+                    }
+                },
+                dropped: function (event) {
+                    // Enable tooltip on drag handlers
+                    $('.angular-ui-tree-handle').tooltip('enable');
+
+                    // Reorder steps tree
                     $scope.applyTreeChanges();
                 }
             };
