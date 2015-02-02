@@ -70,7 +70,7 @@ class ResourceLogFilterType extends AbstractType
 
     public function getName()
     {
-        return 'workspace_log_filter_form';
+        return '';
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

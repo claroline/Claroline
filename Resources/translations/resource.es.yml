@@ -30,3 +30,5 @@ resource_shortcut: 'Acceso directo'
 text: 'Texto'
 write: 'Escribir'
 administrate: Administrar
+empty: Vacío
+insert: Insertar

@@ -12,6 +12,7 @@
 namespace Claroline\CoreBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use Claroline\CoreBundle\Entity\Message;
 use Claroline\CoreBundle\Entity\User;
 
 class UserMessageRepository extends EntityRepository
@@ -217,5 +218,20 @@ class UserMessageRepository extends EntityRepository
         $query->setParameter('userId', $user->getId());
 
         return $query->getResult();
+    }
+
+    public function findOneByUserAndMessage(User $user, Message $message)
+    {
+        $dql = '
+            SELECT um
+            FROM Claroline\CoreBundle\Entity\UserMessage um
+            WHERE um.user = :user
+            AND um.message = :message
+        ';
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('user', $user);
+        $query->setParameter('message', $message);
+
+        return $query->getOneOrNullResult();
     }
 }

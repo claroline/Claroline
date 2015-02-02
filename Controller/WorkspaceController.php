@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Controller;
 
+use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Symfony\Component\Form\FormInterface;
@@ -74,6 +75,7 @@ class WorkspaceController extends Controller
     private $widgetManager;
     private $request;
     private $templateDir;
+    private $templating;
     private $translator;
     private $session;
 
@@ -97,6 +99,7 @@ class WorkspaceController extends Controller
      *     "widgetManager"             = @DI\Inject("claroline.manager.widget_manager"),
      *     "request"                   = @DI\Inject("request"),
      *     "templateDir"               = @DI\Inject("%claroline.param.templates_directory%"),
+     *     "templating"                = @DI\Inject("templating"),
      *     "translator"                = @DI\Inject("translator"),
      *     "session"                   = @DI\Inject("session")
      * })
@@ -120,6 +123,7 @@ class WorkspaceController extends Controller
         WidgetManager $widgetManager,
         Request $request,
         $templateDir,
+        TwigEngine $templating,
         TranslatorInterface $translator,
         SessionInterface $session
     )
@@ -142,6 +146,7 @@ class WorkspaceController extends Controller
         $this->widgetManager = $widgetManager;
         $this->request = $request;
         $this->templateDir = $templateDir;
+        $this->templating = $templating;
         $this->translator = $translator;
         $this->session = $session;
     }
@@ -159,7 +164,7 @@ class WorkspaceController extends Controller
      * Renders the workspace list page with its claroline layout.
      *
      * @param $currentUser
-     *
+     * @param $search
      * @return Response
      */
     public function listAction($currentUser, $search = '')
@@ -208,6 +213,39 @@ class WorkspaceController extends Controller
 
     /**
      * @EXT\Route(
+     *     "/user/picker",
+     *     name="claro_workspace_by_user_picker",
+     *     options={"expose"=true}
+     * )
+     *
+     * Renders the registered workspace list for a user to be used by the picker.
+     *
+     * @return Response
+     */
+    public function listWorkspacesByUserForPickerAction()
+    {
+        $isGranted = $this->security->isGranted('ROLE_USER');
+        $response = new JsonResponse('', 401);
+        if ($isGranted === true) {
+            $token = $this->security->getToken();
+            $user = $token->getUser();
+
+            $workspaces = $this->workspaceManager
+                ->getWorkspacesByUser($user);
+
+            $workspacesData = array();
+            foreach ($workspaces as $workspace) {
+                array_push($workspacesData, $workspace->serializeForWidgetPicker());
+            }
+            $data = array('items'=>$workspacesData);
+            $response->setData($data)->setStatusCode(200);
+        }
+
+        return $response;
+    }
+
+    /**
+     * @EXT\Route(
      *     "/displayable/selfregistration/search/{search}",
      *     name="claro_list_workspaces_with_self_registration",
      *     defaults={"search"=""},
@@ -217,7 +255,9 @@ class WorkspaceController extends Controller
      * @EXT\Template()
      *
      * Renders the displayable workspace list.
-     *
+
+     * @param $search
+
      * @return Response
      */
     public function listWorkspacesWithSelfRegistrationAction($search = '')
@@ -514,7 +554,6 @@ class WorkspaceController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      *
-     * @todo Reduce the number of sql queries for this action (-> dql)
      */
     public function widgetsWithoutConfigAction(
         Workspace $workspace,
@@ -523,36 +562,159 @@ class WorkspaceController extends Controller
     {
         $widgets = array();
 
-        $homeTab = $this->homeTabManager->getHomeTabById($homeTabId);
+        $widgetHomeTabConfigs = $this->homeTabManager
+            ->getVisibleWidgetConfigsByTabIdAndWorkspace($homeTabId, $workspace);
 
-        if (is_null($homeTab)) {
-            $isVisibleHomeTab = false;
-        } else {
-            $isVisibleHomeTab = $this->homeTabManager
-                ->checkHomeTabVisibilityByWorkspace($homeTab, $workspace);
-        }
+        foreach ($widgetHomeTabConfigs as $widgetHomeTabConfig) {
+            $widgetInstance = $widgetHomeTabConfig->getWidgetInstance();
 
-        if ($isVisibleHomeTab) {
+            $event = $this->eventDispatcher->dispatch(
+                "widget_{$widgetInstance->getWidget()->getName()}",
+                'DisplayWidget',
+                array($widgetInstance)
+            );
 
-            $widgetHomeTabConfigs = $this->homeTabManager
-                ->getVisibleWidgetConfigsByWorkspace($homeTab, $workspace);
-
-            foreach ($widgetHomeTabConfigs as $widgetHomeTabConfig) {
-                $widgetInstance = $widgetHomeTabConfig->getWidgetInstance();
-
-                $event = $this->eventDispatcher->dispatch(
-                    "widget_{$widgetInstance->getWidget()->getName()}",
-                    'DisplayWidget',
-                    array($widgetInstance)
-                );
-
-                $widget['config'] = $widgetHomeTabConfig;
-                $widget['content'] = $event->getContent();
-                $widgets[] = $widget;
-            }
+            $widget['config'] = $widgetHomeTabConfig;
+            $widget['content'] = $event->getContent();
+            $widgets[] = $widget;
         }
 
         return array('widgetsDatas' => $widgets);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/{workspaceId}/tab/{homeTabId}/picker",
+     *     name="claro_workspace_home_tab_widget_list_picker",
+     *     options={"expose"=true}
+     * )
+     *
+     * @EXT\ParamConverter(
+     *      "workspace",
+     *      class="ClarolineCoreBundle:Workspace\Workspace",
+     *      options={"id" = "workspaceId", "strictId" = true}
+     * )
+     * Returns a list with all visible registered widgets for a homeTab of a workspace.
+     *
+     * @param Workspace $workspace
+     * @param integer           $homeTabId
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function listWidgetsForPickerAction(
+        Workspace $workspace,
+        $homeTabId
+    )
+    {
+        $response = new JsonResponse('', 401);
+        $isGranted = $this->security->isGranted('OPEN', $workspace);
+
+        if ($isGranted===true) {
+            $widgetData = array();
+            $widgetHomeTabConfigs = $this->homeTabManager
+                ->getVisibleWidgetConfigsByTabIdAndWorkspace($homeTabId, $workspace);
+            foreach ($widgetHomeTabConfigs as $widgetHomeTabConfig) {
+                array_push($widgetData, $widgetHomeTabConfig->getWidgetInstance()->serializeForWidgetPicker());
+            }
+            $data = array(
+                'items' => $widgetData
+            );
+
+            $response->setData($data)->setStatusCode(200);
+        }
+
+        return $response;
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/{workspaceId}/tab/{homeTabId}/widget/{widgetId}/embed",
+     *     name="claro_workspace_home_tab_widget_embed_picker",
+     *     options={"expose"=true}
+     * )
+     *
+     * Returns the html iframe to embed a widget
+     *
+     * @param integer   $workspaceId
+     * @param integer   $homeTabId
+     * @param integer   $widgetId
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function embedWidgetForPickerAction(
+        $workspaceId,
+        $homeTabId,
+        $widgetId
+    )
+    {
+        return new Response(
+            $this->templating->render(
+                "ClarolineCoreBundle:Widget:embed/iframe.html.twig",
+                array(
+                    'widgetId' => $widgetId,
+                    'workspaceId' => $workspaceId,
+                    'homeTabId' => $homeTabId,
+                )
+            )
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/{workspaceId}/tab/{homeTabId}/widget/{widgetId}/embeded",
+     *     name="claro_workspace_hometab_embeded_widget",
+     *     options={"expose"=true}
+     * )
+     *
+     * @EXT\ParamConverter(
+     *      "workspace",
+     *      class="ClarolineCoreBundle:Workspace\Workspace",
+     *      options={"id" = "workspaceId", "strictId" = true}
+     * )
+     *
+     * Returns the widget's html content
+     *
+     * @param Workspace $workspace
+     * @param integer   $homeTabId
+     * @param integer   $widgetId
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function getEmbededWidgetAction(
+        Workspace $workspace,
+        $homeTabId,
+        $widgetId
+    )
+    {
+        $this->assertIsGranted('OPEN', $workspace);
+
+        $widgetConfig = $this->homeTabManager
+            ->getVisibleWidgetConfigByWidgetIdAndTabIdAndWorkspace($widgetId, $homeTabId, $workspace);
+
+        $widget = null;
+        if (!empty($widgetConfig)) {
+            $widgetInstance = $widgetConfig->getWidgetInstance();
+
+            $event = $this->eventDispatcher->dispatch(
+                "widget_{$widgetInstance->getWidget()->getName()}",
+                'DisplayWidget',
+                array($widgetInstance)
+            );
+
+            $widget = array(
+                'title' => $widgetInstance->getName(),
+                'content' => $event->getContent()
+            );
+        }
+
+        return new Response(
+            $this->templating->render(
+                "ClarolineCoreBundle:Widget:embed/widget.html.twig",
+                array(
+                    'widget' => $widget
+                )
+            )
+        );
     }
 
     /**
@@ -1181,6 +1343,45 @@ class WorkspaceController extends Controller
             'workspaceHomeTabConfigs' => $workspaceHomeTabConfigs,
             'tabId' => $homeTabId
         );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/{workspaceId}/tabs/picker",
+     *     name="claro_list_visible_workspace_home_tabs_picker",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\ParamConverter(
+     *      "workspace",
+     *      class="ClarolineCoreBundle:Workspace\Workspace",
+     *      options={"id" = "workspaceId", "strictId" = true}
+     * )
+     *
+     * Returns the list of visible tabs for a workspace
+     *
+     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
+     *
+     * @return array
+     */
+    public function listWorkspaceVisibleHomeTabsForPickerAction(
+        Workspace $workspace
+    )
+    {
+        $response = new JsonResponse('', 401);
+        $isGranted = $this->security->isGranted('OPEN', $workspace);
+        if ($isGranted === true) {
+            $workspaceHomeTabConfigs = $this->homeTabManager
+                ->getVisibleWorkspaceHomeTabConfigsByWorkspace($workspace);
+
+            $tabsData = array();
+            foreach ($workspaceHomeTabConfigs as $workspaceHomeTabConfig) {
+                array_push($tabsData, $workspaceHomeTabConfig->getHomeTab()->serializeForWidgetPicker());
+            }
+            $data = array('items'=>$tabsData);
+            $response->setData($data)->setStatusCode(200);
+        }
+
+        return $response;
     }
 
     /**

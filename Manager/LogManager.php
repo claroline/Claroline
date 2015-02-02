@@ -233,7 +233,6 @@ class LogManager
             $page,
             'admin',
             $this->container->get('claroline.form.adminLogFilter'),
-            'admin_log_filter_form',
             null,
             $maxResult
         );
@@ -251,7 +250,6 @@ class LogManager
             $page,
             'workspace',
             $this->container->get('claroline.form.workspaceLogFilter'),
-            'workspace_log_filter_form',
             $workspaceIds,
             $maxResult
         );
@@ -268,7 +266,6 @@ class LogManager
             $page,
             'workspace',
             $this->container->get('claroline.form.resourceLogFilter'),
-            'workspace_log_filter_form',
             null,
             $maxResult,
             $resourceNodeIds,
@@ -283,7 +280,6 @@ class LogManager
         $page,
         $actionsRestriction,
         $logFilterFormType,
-        $queryParamName,
         $workspaceIds = null,
         $maxResult = -1,
         $resourceNodeIds = null,
@@ -298,18 +294,17 @@ class LogManager
         $userSearch = null;
         $dateRangeToTextTransformer = new DateRangeToTextTransformer($this->container->get('translator'));
 
-        if (array_key_exists($queryParamName, $data)) {
-            $data = $data[$queryParamName];
-            $action = isset($data['action']) ? $data['action']: null;
-            $range = $dateRangeToTextTransformer->reverseTransform($data['range']);
-            $userSearch = $data['user'];
-        } elseif (array_key_exists('filter', $data)) {
+        if (array_key_exists('filter', $data)) {
             $decodeFilter = json_decode(urldecode($data['filter']));
             if ($decodeFilter !== null) {
                 $action = $decodeFilter->action;
                 $range = $dateRangeToTextTransformer->reverseTransform($decodeFilter->range);
                 $userSearch = $decodeFilter->user;
             }
+        } else {
+            $action = isset($data['action']) ? $data['action']: null;
+            $range = isset($data['range']) ?$dateRangeToTextTransformer->reverseTransform($data['range']):null;
+            $userSearch = isset($data['user'])?$data['user']:null;
         }
 
         if ($range == null) {
