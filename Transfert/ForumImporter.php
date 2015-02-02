@@ -108,58 +108,60 @@ class ForumImporter extends Importer implements ConfigurationInterface
     {
         $forum = new Forum();
         $repo = $this->om->getRepository('ClarolineCoreBundle:User');
+        
+        if (isset($data['data'])) {
+            foreach ($data['data'] as $category) {
+                $entityCategory = new Category();
+                $entityCategory->setForum($forum);
+                $entityCategory->setName($category['category']['name']);
 
-        foreach ($data['data'] as $category) {
-            $entityCategory = new Category();
-            $entityCategory->setForum($forum);
-            $entityCategory->setName($category['category']['name']);
-
-            foreach ($category['category']['subjects'] as $subject) {
-                $subjectEntity = new Subject();
-                $subjectEntity->setTitle($subject['subject']['name']);
-
-                $creator = null;
-
-                if ($subject['subject']['creator'] !== null) {
-                    $creator = $repo->findOneByUsername($subject['subject']['creator']);
-                }
-
-                if ($creator === null) {
-                    $creator = $this->container->get('security.context')->getToken()->getUser();
-                }
-
-                $subjectEntity->setCreator($creator);
-                $subjectEntity->setCategory($entityCategory);
-
-                foreach ($subject['subject']['messages'] as $message) {
-                    $messageEntity = new Message();
-                    $content = file_get_contents(
-                        $this->getRootPath() . DIRECTORY_SEPARATOR . $message['message']['path']
-                    );
-
-                    $messageEntity->setContent($content);
+                foreach ($category['category']['subjects'] as $subject) {
+                    $subjectEntity = new Subject();
+                    $subjectEntity->setTitle($subject['subject']['name']);
 
                     $creator = null;
 
-                    if ($message['message']['creator'] !== null) {
-                        $creator = $repo->findOneByUsername($message['message']['creator']);
+                    if ($subject['subject']['creator'] !== null) {
+                        $creator = $repo->findOneByUsername($subject['subject']['creator']);
                     }
 
                     if ($creator === null) {
                         $creator = $this->container->get('security.context')->getToken()->getUser();
                     }
 
-                    $messageEntity->setCreator($creator);
-                    $messageEntity->setSubject($subjectEntity);
-                    $messageEntity->setAuthor($message['message']['author']);
+                    $subjectEntity->setCreator($creator);
+                    $subjectEntity->setCategory($entityCategory);
 
-                    $this->om->persist($messageEntity);
+                    foreach ($subject['subject']['messages'] as $message) {
+                        $messageEntity = new Message();
+                        $content = file_get_contents(
+                            $this->getRootPath() . DIRECTORY_SEPARATOR . $message['message']['path']
+                        );
+
+                        $messageEntity->setContent($content);
+
+                        $creator = null;
+
+                        if ($message['message']['creator'] !== null) {
+                            $creator = $repo->findOneByUsername($message['message']['creator']);
+                        }
+
+                        if ($creator === null) {
+                            $creator = $this->container->get('security.context')->getToken()->getUser();
+                        }
+
+                        $messageEntity->setCreator($creator);
+                        $messageEntity->setSubject($subjectEntity);
+                        $messageEntity->setAuthor($message['message']['author']);
+
+                        $this->om->persist($messageEntity);
+                    }
+
+                    $this->om->persist($subjectEntity);
                 }
 
-                $this->om->persist($subjectEntity);
+                $this->om->persist($entityCategory);
             }
-
-            $this->om->persist($entityCategory);
         }
 
         return $forum;
