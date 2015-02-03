@@ -13,26 +13,50 @@ use Icap\PortfolioBundle\Entity\Widget\SkillsWidgetSkill;
 use Icap\PortfolioBundle\Entity\Widget\TitleWidget;
 use Icap\PortfolioBundle\Transformer\XmlToArray;
 
-class Importer
+class Leap2aImporter implements  ImporterInterface
 {
-    const IMPORT_FORMAT_LEAP2A = 'leap2a';
-    protected $availableFormats = array(self::IMPORT_FORMAT_LEAP2A);
+    const IMPORT_FORMAT = 'leap2a';
+    const IMPORT_FORMAT_LABEL = 'Leap2a';
+
+    protected $xmlToArrayTransformer;
+
+    /**
+     * @param XmlToArray $xmlToArrayTransformer
+     */
+    public function __construct(XmlToArray $xmlToArrayTransformer = null)
+    {
+        if (null === $xmlToArrayTransformer) {
+            $xmlToArrayTransformer = new XmlToArray();
+        }
+        $this->xmlToArrayTransformer = $xmlToArrayTransformer;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFormat()
+    {
+        return self::IMPORT_FORMAT;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFormatLabel()
+    {
+        return self::IMPORT_FORMAT_LABEL;
+    }
 
     /**
      * @param string $content
-     * @param string $format
      * @param User   $user
      *
      * @return \Icap\PortfolioBundle\Entity\Portfolio
      * @throws \InvalidArgumentException
      */
-    public function import($content, $format, User $user)
+    public function import($content, User $user)
     {
-        if (!in_array($format, $this->availableFormats)) {
-            throw new \InvalidArgumentException('Unknown format.');
-        }
-
-        $arrayContent = $this->transformContent($content, $format);
+        $arrayContent = $this->transformContent($content);
 
         $portfolio = $this->arrayToPortfolio($arrayContent, $user);
 
@@ -41,24 +65,14 @@ class Importer
 
     /**
      * @param string $content
-     * @param string $format
      *
      * @return array
      * @throws \Exception
      * @throws \InvalidArgumentException
      */
-    public function transformContent($content, $format)
+    public function transformContent($content)
     {
-        switch($format) {
-            case self::IMPORT_FORMAT_LEAP2A:
-                $xmlToArrayTransformer = new XmlToArray();
-                $transformedContent = $xmlToArrayTransformer->transform($content);
-                break;
-            default:
-                throw new \InvalidArgumentException('Cannot transform unknown format.');
-        }
-
-        return $transformedContent;
+        return $this->xmlToArrayTransformer->transform($content);
     }
 
     /**

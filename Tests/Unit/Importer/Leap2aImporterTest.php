@@ -8,28 +8,18 @@ use Icap\PortfolioBundle\Entity\Portfolio;
 use Icap\PortfolioBundle\Entity\Widget\TitleWidget;
 use Icap\PortfolioBundle\Transformer\XmlToArray;
 
-class ImporterTest extends MockeryTestCase
+class Leap2aImporterTest extends MockeryTestCase
 {
     public function testClassExists()
     {
-        $importer = new Importer();
+        $importer = new Leap2aImporter();
 
-        $this->assertInstanceOf('\Icap\PortfolioBundle\Importer\Importer', $importer);
-    }
-
-    public function testImportInWrongFormat()
-    {
-        $importer = new Importer();
-        $user     = new User();
-
-        $this->setExpectedException('InvalidArgumentException');
-
-        $importer->import(uniqid(), uniqid(), $user);
+        $this->assertInstanceOf('\Icap\PortfolioBundle\Importer\Leap2aImporter', $importer);
     }
 
     public function testTransformContentLeap2a()
     {
-        $importer = new Importer();
+        $importer = new Leap2aImporter();
         $content = <<<CONTENT
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom"
@@ -69,30 +59,30 @@ CONTENT;
         $this->assertEquals($expected, $importer->transformContent($content, 'leap2a'));
     }
 
-    public function testTransformContentWrongFormat()
+    public function testTransformWrongContent()
     {
-        $importer = new Importer();
+        $importer = new Leap2aImporter();
         $content = uniqid();
 
-        $this->setExpectedException('InvalidArgumentException');
+        $this->setExpectedException('Exception');
 
-        $importer->transformContent($content, uniqid());
+        $importer->transformContent($content);
     }
 
     public function testLeap2aImportMissingTitle()
     {
-        $importer = new Importer();
+        $importer = new Leap2aImporter();
         $user     = new User();
         $array    = array();
 
         $this->setExpectedException('Exception');
 
-        $portfolio = $importer->import($array, Importer::IMPORT_FORMAT_LEAP2A, $user);
+        $portfolio = $importer->import($array, $user);
     }
 
     public function testImport()
     {
-        $importer = new Importer();
+        $importer = new Leap2aImporter();
         $user     = new User();
         $portfolioTitle = uniqid();
         $content = <<<CONTENT
@@ -106,7 +96,7 @@ CONTENT;
 </feed>
 CONTENT;
 
-        $portfolio = $importer->import($content, Importer::IMPORT_FORMAT_LEAP2A, $user);
+        $portfolio = $importer->import($content, $user);
 
         $this->assertEquals(get_class($portfolio), 'Icap\PortfolioBundle\Entity\Portfolio');
 
@@ -117,7 +107,7 @@ CONTENT;
 
     public function testLeap2aImportEmptyPortfolio()
     {
-        $importer = new Importer();
+        $importer = new Leap2aImporter();
 
         $portfolioTitle = uniqid();
 
@@ -143,7 +133,7 @@ CONTENT;
 </feed>
 CONTENT;
 
-        $importedPortfolio = $importer->import($content, 'leap2a', $user);
+        $importedPortfolio = $importer->import($content, $user);
 
         $this->assertEquals(get_class($importedPortfolio), 'Icap\PortfolioBundle\Entity\Portfolio');
 
@@ -209,7 +199,7 @@ TEST;
 
         $transformer = new XmlToArray();
         $entries     = $transformer->transform($content)['entry'];
-        $importer    = new Importer();
+        $importer    = new Leap2aImporter();
 
         $widgets = $importer->retrieveWidgets($entries);
         $this->assertEquals(1, count($widgets));
@@ -219,7 +209,7 @@ TEST;
 
     public function testLeap2aImportPortfolioWithSkillWidget()
     {
-        $importer = new Importer();
+        $importer = new Leap2aImporter();
 
         $portfolioTitle = uniqid();
 
@@ -289,7 +279,7 @@ TEST;
 </feed>
 CONTENT;
 
-        $importedPortfolio = $importer->import($content, 'leap2a', $user);
+        $importedPortfolio = $importer->import($content, $user);
 
         $this->assertEquals('Icap\PortfolioBundle\Entity\Portfolio', get_class($importedPortfolio));
 
@@ -312,7 +302,7 @@ CONTENT;
 
     public function testLeap2aImportPortfolioWithFormationWidget()
     {
-        $importer = new Importer();
+        $importer = new Leap2aImporter();
 
         $portfolioTitle = uniqid();
 
@@ -372,7 +362,7 @@ CONTENT;
 </feed>
 CONTENT;
 
-        $importedPortfolio = $importer->import($content, 'leap2a', $user);
+        $importedPortfolio = $importer->import($content, $user);
 
         $this->assertEquals('Icap\PortfolioBundle\Entity\Portfolio', get_class($importedPortfolio));
 

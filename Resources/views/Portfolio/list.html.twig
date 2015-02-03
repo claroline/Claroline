@@ -63,11 +63,23 @@
     </div>
     {% endif %}
 
-    <div class="btn-toolbar pull-right portfolio_toolbar" role="toolbar" aria-label="...">
-        <div class="btn-group btn-group-sm" role="group" aria-label="Portfolio menu">
+    <div class="btn-toolbar pull-right portfolio_toolbar" role="toolbar" aria-label="portfolio options">
+        <div class="btn-group btn-group-sm" role="group" aria-label="{{ 'add_portfolio'|trans({}, 'icap_portfolio') }}">
             <a href="{{ path('icap_portfolio_add') }}" title="{{ 'add_portfolio'|trans({}, 'icap_portfolio') }}" class="btn btn-default">
                 <span class="fa fa-plus"></span> {{ 'add_portfolio'|trans({}, 'icap_portfolio') }}
             </a>
+        </div>
+        <div class="btn-group btn-group-sm" role="group">
+            <button id="btnGroupDrop1" type="button" class="btn btn-default dropdown-toggle" aria-expanded="false"
+                    data-toggle="dropdown">
+                <span class="fa fa-download"></span>
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu" aria-labelledby="btnGroupDrop1">
+                {% for availableImportFormatKey, availableImportFormat in availableImportFormats %}
+                <li><a href="#{{ availableImportFormatKey }}">{{ availableImportFormat }}</a></li>
+                {% endfor %}
+            </ul>
         </div>
     </div>
 
@@ -189,6 +201,12 @@
         (function($) {
             $(function() {
                 $('.delete').confirmModal();
+                $('.dropdown-toggle').dropdown();
+                $('.dropdown-toggle').tooltip({
+                    container: "body",
+                    placement: "top",
+                    title: "{{ 'import_portfolio'|trans({}, 'icap_portfolio') }}"
+                });
             });
         })(jQuery);
     </script>

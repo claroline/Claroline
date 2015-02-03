@@ -7,6 +7,7 @@ use Icap\PortfolioBundle\Entity\Portfolio;
 use Icap\PortfolioBundle\Entity\Widget\TitleWidget;
 use Icap\PortfolioBundle\Event\Log\PortfolioViewEvent;
 use Icap\PortfolioBundle\Exporter\Exporter;
+use Icap\PortfolioBundle\Manager\ImportManager;
 use Icap\PortfolioBundle\Manager\PortfolioManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -36,9 +37,13 @@ class PortfolioController extends Controller
         $guidedPortfolioQuery = $this->getDoctrine()->getRepository('IcapPortfolioBundle:Portfolio')->findGuidedPortfolios($loggedUser, false);
         $guidedPortfoliosPager = $this->get('claroline.pager.pager_factory')->createPager($guidedPortfolioQuery, $guidedPage, 10);
 
+        $importManager          = new ImportManager();
+        $availableImportFormats = $importManager->getAvailableImportFormats();
+
         return array(
-            'portfoliosPager'       => $portfoliosPager,
-            'guidedPortfoliosPager' => $guidedPortfoliosPager
+            'portfoliosPager'        => $portfoliosPager,
+            'guidedPortfoliosPager'  => $guidedPortfoliosPager,
+            'availableImportFormats' => $availableImportFormats
         );
     }
 
