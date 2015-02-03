@@ -147,9 +147,9 @@ class FormationsWidgetResource implements SubWidgetInterface
         $resource = $this->getResource();
 
         return array(
-            'resource' => $resource->getId(),
-            'id'       => $resource->getId(),
-            'name'     => $resource->getPathForDisplay(),
+            'resource' => $resource ? $resource->getId() : null,
+            'id'       => $resource ? $resource->getId() : null,
+            'name'     => $resource ? $resource->getPathForDisplay() : null,
             'uri'      => $this->getUri(),
             'uriLabel' => $this->getUriLabel()
         );
