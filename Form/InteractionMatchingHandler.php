@@ -19,7 +19,7 @@ class InteractionMatchingHandler extends InteractionHandler
         if ( $this->request->getMethod() == 'POST' ) {
             $this->form->handleRequest($this->request);
 
-            if ( $this->validateNbClone() === FALSE ) {
+            if ( $this->validateNbClone() === TRUE ) {
                 return 'infoDuplicateQuestion';
             }
 

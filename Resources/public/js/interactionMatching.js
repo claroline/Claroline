@@ -193,7 +193,7 @@ function addLabel(container, deletechoice, table, codeContainer){
             // Change the "name" by the index and delete the symfony delete form button
             contain = $(container.attr('data-prototype').replace(/__name__label__/g, 'Choice n°' + (indexLabel))
                 .replace(/__name__/g, indexLabel)
-                .replace('<a class="btn btn-danger remove" href="#">Delete</a>', '')
+                .replace('<a class="btn btn-danger remove" href="#"><i class="fa fa-close"></i></a>', '')
             );
     }
 
@@ -229,7 +229,7 @@ function addProposal(container, deletechoice, table, codeContainer){
             // Change the "name" by the index and delete the symfony delete form button
             contain = $(container.attr('data-prototype').replace(/__name__label__/g, 'Choice n°' + (indexProposal))
                 .replace(/__name__/g, indexProposal)
-                .replace('<a class="btn btn-danger remove" href="#">Delete</a>', '')
+                .replace('<a class="btn btn-danger remove" href="#"><i class="fa fa-close"></i></a>', '')
             );
     }
 
