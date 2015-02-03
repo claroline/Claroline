@@ -76,7 +76,7 @@ class PlatformConfigurationHandler
         'confirm_send_datas' => null,
         'token' => null,
         'country' => '-',
-        'datas_sending_url' => 'http://localhost/stats/insert.php'
+        'datas_sending_url' => 'http://stats.claroline.net/insert.php'
     );
 
     /**
