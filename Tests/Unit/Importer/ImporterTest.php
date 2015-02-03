@@ -331,6 +331,7 @@ CONTENT;
         $formationsWidgetContent   = uniqid();
 
         $formationsWidgetResourceId = rand(0, PHP_INT_MAX);
+        $formationsWidgetResourceName = uniqid();
         $formationsWidgetResourceUri = uniqid();
 
         $content = <<<CONTENT
@@ -359,7 +360,7 @@ CONTENT;
         <link rel="leap2:has_part" href="portfolio:resource/159163183" leap2:display_order="1"/>
     </entry>
     <entry>
-        <title>54c7934987cb2</title>
+        <title>$formationsWidgetResourceName</title>
         <id>portfolio:resource/$formationsWidgetResourceId</id>
         <uri>$formationsWidgetResourceUri</uri>
         <updated>$formationsWidgetUpdatedAtText</updated>
@@ -395,6 +396,7 @@ CONTENT;
         $formationsWidgetResource = $formationsWidgetResources[0];
 
         $this->assertEquals(1, count($formationsWidgetResources));
+        $this->assertEquals($formationsWidgetResourceName, $formationsWidgetResource->getUriLabel());
         $this->assertEquals($formationsWidgetResourceUri, $formationsWidgetResource->getUri());
     }
 }

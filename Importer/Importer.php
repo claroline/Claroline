@@ -212,7 +212,9 @@ class Importer
 
             if ('leap2:resource' === $subEntry['rdf:type']['@rdf:resource']) {
                 $formationsWidgetResource = new FormationsWidgetResource();
-                $formationsWidgetResource->setUri($subEntry['uri']['$']);
+                $formationsWidgetResource
+                    ->setUriLabel($subEntry['title']['$'])
+                    ->setUri($subEntry['uri']['$']);
 
                 $formationsWidgetResources[] = $formationsWidgetResource;
             }

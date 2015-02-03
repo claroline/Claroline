@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2015/01/29 10:06:29
+ * Generation date: 2015/02/03 10:56:14
  */
-class Version20150129100627 extends AbstractMigration
+class Version20150203105612 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -20,7 +20,8 @@ class Version20150129100627 extends AbstractMigration
         $this->addSql("
             ALTER TABLE icap__portfolio_widget_formations_resource 
             ADD (
-                uri VARCHAR2(255) DEFAULT NULL NULL
+                uri VARCHAR2(255) DEFAULT NULL NULL, 
+                uriLabel VARCHAR2(255) DEFAULT NULL NULL
             )
         ");
     }
@@ -29,7 +30,7 @@ class Version20150129100627 extends AbstractMigration
     {
         $this->addSql("
             ALTER TABLE icap__portfolio_widget_formations_resource 
-            DROP (uri)
+            DROP (uri, uriLabel)
         ");
         $this->addSql("
             DROP INDEX portfolio_slug_unique_idx

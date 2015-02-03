@@ -45,6 +45,13 @@ class FormationsWidgetResource implements SubWidgetInterface
     protected $uri;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $uriLabel;
+
+    /**
      * @return int
      */
     public function getId()
@@ -113,6 +120,26 @@ class FormationsWidgetResource implements SubWidgetInterface
     }
 
     /**
+     * @return string
+     */
+    public function getUriLabel()
+    {
+        return $this->uriLabel;
+    }
+
+    /**
+     * @param string $uriLabel
+     *
+     * @return FormationsWidgetResource
+     */
+    public function setUriLabel($uriLabel)
+    {
+        $this->uriLabel = $uriLabel;
+
+        return $this;
+    }
+
+    /**
      * @return array
      */
     public function getData()
@@ -122,7 +149,9 @@ class FormationsWidgetResource implements SubWidgetInterface
         return array(
             'resource' => $resource->getId(),
             'id'       => $resource->getId(),
-            'name'     => $resource->getPathForDisplay()
+            'name'     => $resource->getPathForDisplay(),
+            'uri'      => $this->getUri(),
+            'uriLabel' => $this->getUriLabel()
         );
     }
 }

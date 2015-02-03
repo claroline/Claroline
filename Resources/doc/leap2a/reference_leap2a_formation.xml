@@ -32,7 +32,7 @@
         <id>portfolio:resource/1</id>
         <uri>gsertfhgf</uri>
         <updated>2008-01-08T14:12:12Z</updated>
-        <content type="text">The description of a resource</content>
+        <content></content>
 
         <rdf:type rdf:resource="leap2:resource"/>
         <category term="Web" scheme="categories:resource_type#"/>
@@ -45,7 +45,7 @@
         <id>portfolio:resource/2</id>
         <uri>gsertfhgf</uri>
         <updated>2008-01-08T14:12:12Z</updated>
-        <content type="text">The description of an other resource</content>
+        <content></content>
 
         <rdf:type rdf:resource="leap2:resource"/>
         <category term="Web" scheme="categories:resource_type#"/>
@@ -72,7 +72,7 @@
         <id>portfolio:resource/3</id>
         <uri>gsertfhgf</uri>
         <updated>2008-01-08T14:12:12Z</updated>
-        <content type="text">The description of a resource 3</content>
+        <content></content>
 
         <rdf:type rdf:resource="leap2:resource"/>
         <category term="Web" scheme="categories:resource_type#"/>
