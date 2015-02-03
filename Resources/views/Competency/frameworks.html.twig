@@ -1,0 +1,30 @@
+{% extends 'ClarolineCoreBundle::Administration/layout.html.twig' %}
+
+{% block title %}
+    {{ parent() ~ ' - ' ~ 'competencies'|trans({}, 'tools')|striptags|raw }}
+{% endblock %}
+
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'fa fa-cog',
+                'name': 'administration'|trans({}, 'platform'),
+                'href': path('claro_admin_index')
+            },
+            {
+                'name': 'competencies'|trans({}, 'tools'),
+                'href': ''
+            }
+        ])
+    }}
+{% endblock %}
+
+{% block section_content %}
+    <div class="panel-heading">
+        <div class="panel-title">{{ 'competencies'|trans({}, 'tools') }}</div>
+    </div>
+    <div class="panel-body">
+        TODO
+    </div>
+{% endblock %}

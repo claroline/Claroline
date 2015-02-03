@@ -5,7 +5,6 @@ namespace HeVinci\CompetencyBundle\Controller;
 use JMS\DiExtraBundle\Annotation as DI;
 use JMS\SecurityExtraBundle\Annotation as SEC;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
-use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @DI\Tag("security.secure_service")
@@ -18,9 +17,12 @@ class LearningObjectiveController
      * the list of learning objectives.
      *
      * @EXT\Route("/objectives", name="hevinci_objectives_index")
+     * @EXT\Template
+     *
+     * @return array
      */
     public function objectivesAction()
     {
-        return new Response('Learning objectives list');
+        return [];
     }
 }

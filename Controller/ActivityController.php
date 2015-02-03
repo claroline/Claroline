@@ -4,7 +4,6 @@ namespace HeVinci\CompetencyBundle\Controller;
 
 use Claroline\CoreBundle\Entity\Resource\Activity;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
-use Symfony\Component\HttpFoundation\Response;
 
 class ActivityController
 {
@@ -17,12 +16,13 @@ class ActivityController
      *     class="ClarolineCoreBundle:Resource\Activity",
      *     options={"id" = "id", "strictId" = true}
      * )
+     * @EXT\Template
      *
      * @param Activity $activity
-     * @return Response
+     * @return array
      */
     public function competenciesAction(Activity $activity)
     {
-        return new Response('Activity competency management');
+        return ['_resource' => $activity];
     }
 }

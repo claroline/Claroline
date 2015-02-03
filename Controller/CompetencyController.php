@@ -5,7 +5,6 @@ namespace HeVinci\CompetencyBundle\Controller;
 use JMS\DiExtraBundle\Annotation as DI;
 use JMS\SecurityExtraBundle\Annotation as SEC;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
-use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @DI\Tag("security.secure_service")
@@ -18,9 +17,12 @@ class CompetencyController
      * of competency frameworks.
      *
      * @EXT\Route("/frameworks", name="hevinci_competencies_index")
+     * @EXT\Template
+     *
+     * @return array
      */
     public function frameworksAction()
     {
-        return new Response('Competency frameworks list');
+        return [];
     }
 }
