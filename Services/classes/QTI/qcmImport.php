@@ -21,6 +21,7 @@ class qcmImport extends qtiImport {
      * @param qtiRepository $qtiRepos
      * @param DOMElement $assessmentItem assessmentItem of the question to imported
      *
+     * @return UJM\ExoBundle\Entity\InteractionQCM
      */
     public function import(qtiRepository $qtiRepos, $assessmentItem) {
         $this->qtiRepos = $qtiRepos;
@@ -35,6 +36,8 @@ class qcmImport extends qtiImport {
         $this->doctrine->getManager()->flush();
 
         $this->createInteractionQCM();
+
+        return $this->interactionQCM;
     }
 
     /**

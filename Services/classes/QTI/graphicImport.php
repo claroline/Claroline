@@ -22,6 +22,7 @@ class graphicImport extends qtiImport {
      * @param qtiRepository $qtiRepos
      * @param DOMElement $assessmentItem assessmentItem of the question to imported
      *
+     * @return UJM\ExoBundle\Entity\InteractionGraphic
      */
     public function import(qtiRepository $qtiRepos, $assessmentItem) {
         $this->qtiRepos = $qtiRepos;
@@ -36,6 +37,8 @@ class graphicImport extends qtiImport {
         $this->doctrine->getManager()->flush();
 
         $this->createInteractionGraphic();
+
+        return $this->interactionGraph;
     }
 
     /**

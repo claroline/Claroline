@@ -20,6 +20,7 @@ class openImport extends qtiImport
      * @param qtiRepository $qtiRepos
      * @param DOMElement $assessmentItem assessmentItem of the question to imported
      *
+     * @return UJM\ExoBundle\Entity\InteractionOpen
      */
     public function import(qtiRepository $qtiRepos, $assessmentItem) {
         $this->qtiRepos = $qtiRepos;
@@ -34,6 +35,8 @@ class openImport extends qtiImport
         $this->doctrine->getManager()->flush();
 
         $this->createInteractionOpen();
+
+        return $this->interactionOpen;
     }
 
     /**

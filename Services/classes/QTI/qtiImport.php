@@ -366,6 +366,8 @@ abstract class qtiImport
      * @access public
      * @param qtiRepository $qtiRepos
      * @param DOMElement $assessmentItem assessmentItem of the question to imported
+     *
+     * @return UJM\ExoBundle\Entity\InteractionQCM or InteractionGraphic or ....
      */
     abstract public function import(qtiRepository $qtiRepos, $assessmentItem);
 
