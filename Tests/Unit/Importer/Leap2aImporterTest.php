@@ -389,4 +389,72 @@ CONTENT;
         $this->assertEquals($formationsWidgetResourceName, $formationsWidgetResource->getUriLabel());
         $this->assertEquals($formationsWidgetResourceUri, $formationsWidgetResource->getUri());
     }
+
+    public function testLeap2aImportPortfolioWithUserInformationsWidget()
+    {
+        $importer = new Leap2aImporter();
+
+        $portfolioTitle = uniqid();
+
+        $user = new User();
+        $user
+            ->setUsername(uniqid())
+            ->setFirstName($firstname = uniqid())
+            ->setLastName($lastname = uniqid());
+
+        $userInformationsWidgetId      = rand(0, PHP_INT_MAX);
+        $formationsWidgetUpdatedAtText = (new \DateTime())->format(\DateTime::ATOM);
+        $formationsWidgetLabel         = uniqid();
+
+        $bithDate = (new \DateTime('1986/11/29'))->format(\DateTime::ATOM);
+        $city  = uniqid();
+
+        $content = <<<CONTENT
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"
+      xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+      xmlns:leap2="http://terms.leapspecs.org/"
+      xmlns:categories="http://www.leapspecs.org/2A/categories">
+    <leap2:version>http://www.leapspecs.org/2010-07/2A/</leap2:version>
+    <id>http://www.example.ac.uk/pfs/export_262144/</id>
+    <title>$portfolioTitle</title>
+    <author>
+        <name>Theophilus Thistledown</name>
+    </author>
+    <updated>2009-03-15T14:33:12Z</updated>
+
+    <entry>
+        <title>$formationsWidgetLabel</title>
+        <id>portfolio:people/$userInformationsWidgetId</id>
+        <updated>$formationsWidgetUpdatedAtText</updated>
+        <content></content>
+
+        <rdf:type rdf:resource="leap2:person"/>
+
+        <leap2:persondata leap2:field="dob">$bithDate</leap2:persondata>
+        <leap2:persondata leap2:field="other" leap2:label="city">$city</leap2:persondata>
+    </entry>
+</feed>
+CONTENT;
+
+        $importedPortfolio = $importer->import($content, $user);
+
+        $this->assertEquals('Icap\PortfolioBundle\Entity\Portfolio', get_class($importedPortfolio));
+
+        $importedPortfolioTitleWidget = $importedPortfolio->getTitleWidget();
+        $this->assertNotNull($importedPortfolioTitleWidget);
+        $this->assertEquals($portfolioTitle, $importedPortfolioTitleWidget->getTitle());
+
+        $this->assertEquals($importedPortfolio->getUser(), $user);
+
+        $userInformationsWidgets = $importedPortfolio->getWidget('userInformation');
+        $this->assertEquals(1, count($userInformationsWidgets));
+
+        /** @var \Icap\PortfolioBundle\Entity\Widget\UserInformationWidget $userInformationWidgets */
+        $userInformationWidgets = $userInformationsWidgets[0];
+
+        $this->assertEquals('Icap\PortfolioBundle\Entity\Widget\UserInformationWidget', get_class($userInformationWidgets));
+        $this->assertEquals($bithDate, $userInformationWidgets->getBirthDate()->format(\DateTime::ATOM));
+        $this->assertEquals($city, $userInformationWidgets->getCity());
+    }
 }

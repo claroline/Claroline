@@ -11,6 +11,7 @@ use Icap\PortfolioBundle\Entity\Widget\FormationsWidgetResource;
 use Icap\PortfolioBundle\Entity\Widget\SkillsWidget;
 use Icap\PortfolioBundle\Entity\Widget\SkillsWidgetSkill;
 use Icap\PortfolioBundle\Entity\Widget\TitleWidget;
+use Icap\PortfolioBundle\Entity\Widget\UserInformationWidget;
 use Icap\PortfolioBundle\Transformer\XmlToArray;
 
 class Leap2aImporter implements  ImporterInterface
@@ -130,6 +131,7 @@ class Leap2aImporter implements  ImporterInterface
                             $widgets[] = $this->extractSkillsWidget($entries, $entry);
                         break;
                     case 'userInformation':
+                            $widgets[] = $this->extractUserInformationWidget($entry);
                         break;
                     case 'formations':
                             $widgets[] = $this->extractFormationsWidget($entries, $entry);
@@ -240,5 +242,28 @@ class Leap2aImporter implements  ImporterInterface
             ->setResources($formationsWidgetResources);
 
         return $formationsWidget;
+    }
+
+    private function extractUserInformationWidget(array $entry)
+    {
+        $userInformationWidget = new UserInformationWidget();
+        $userInformationWidget->setLabel($entry['title']['$']);
+
+        foreach ($entry['leap2:persondata'] as $personData) {
+            switch($personData['@leap2:field']) {
+                case 'dob':
+                    $userInformationWidget->setBirthDate(new \DateTime($personData['$']));
+                    break;
+                case 'other':
+                    switch($personData['@leap2:label']) {
+                        case 'city':
+                            $userInformationWidget->setCity($personData['$']);
+                            break;
+                    }
+                    break;
+            }
+        }
+
+        return $userInformationWidget;
     }
 }
