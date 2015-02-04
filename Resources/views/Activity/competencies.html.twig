@@ -20,5 +20,6 @@
     </div>
     <div class="panel-body">
         TODO
+        ({{ is_granted('ROLE_COMPETENCY_MANAGER') ? 'edit mode' : 'read-only' }})
     </div>
 {% endblock %}

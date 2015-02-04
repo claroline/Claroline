@@ -12,12 +12,10 @@ class AdditionalInstallerTest extends TransactionalTestCase
     {
         $container = $this->client->getContainer();
         $em = $container->get('doctrine.orm.entity_manager');
-        $decoderRepo = $em->getRepository('ClarolineCoreBundle:Resource\MaskDecoder');
         $actionRepo = $em->getRepository('ClarolineCoreBundle:Resource\MenuAction');
         $roleRepo = $em->getRepository('ClarolineCoreBundle:Role');
         $this->createActivityType($em);
 
-        $this->assertNull($decoderRepo->findOneByName('manage-competencies'));
         $this->assertNull($actionRepo->findOneByName('manage-competencies'));
         $this->assertNull($roleRepo->findOneByName('ROLE_COMPETENCY_MANAGER'));
 
@@ -25,7 +23,6 @@ class AdditionalInstallerTest extends TransactionalTestCase
         $installer->setContainer($container);
         $installer->postInstall();
 
-        $this->assertNotNull($decoderRepo->findOneByName('manage-competencies'));
         $this->assertNotNull($actionRepo->findOneByName('manage-competencies'));
         $this->assertNotNull($roleRepo->findOneByName('ROLE_COMPETENCY_MANAGER'));
     }

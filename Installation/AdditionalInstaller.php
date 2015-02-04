@@ -16,31 +16,21 @@ class AdditionalInstaller extends BaseInstaller
 
     private function addActivityCustomAction()
     {
-        $this->log('Adding competency custom action to activities...');
+        $this->log('Adding custom action to activities...');
 
         $em = $this->container->get('doctrine.orm.entity_manager');
         $typeRepo = $em->getRepository('ClarolineCoreBundle:Resource\ResourceType');
-        $decoderRepo = $em->getRepository('ClarolineCoreBundle:Resource\MaskDecoder');
         $actionRepo = $em->getRepository('ClarolineCoreBundle:Resource\MenuAction');
 
         $activityType = $typeRepo->findOneByName('activity');
-        $decoder = $decoderRepo->findOneByName('manage-competencies');
         $action = $actionRepo->findOneByName('manage-competencies');
-
-        if (!$decoder) {
-            $exp = count($decoderRepo->findByResourceType($activityType));
-            $decoder = new MaskDecoder();
-            $decoder->setName('manage-competencies');
-            $decoder->setResourceType($activityType);
-            $decoder->setValue(pow(2, $exp));
-            $em->persist($decoder);
-        }
 
         if (!$action) {
             $action = new MenuAction();
             $action->setName('manage-competencies');
             $action->setResourceType($activityType);
-            $action->setValue($decoder->getValue());
+            // the new action will be bound to the 'open' permission
+            $action->setValue(MaskDecoder::OPEN);
             $em->persist($action);
         }
 
