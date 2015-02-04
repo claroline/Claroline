@@ -158,10 +158,7 @@ class Leap2aImporter implements  ImporterInterface
      */
     protected function validateEntry(array $entry)
     {
-        if (!isset($entry['rdf:type'])) {
-            throw new \Exception('Entry type missing.');
-        }
-        if (!isset($entry['rdf:type']['@rdf:resource'])) {
+        if (!isset($entry['rdf:type']) || !isset($entry['rdf:type']['@rdf:resource'])) {
             throw new \Exception('Entry type missing.');
         }
     }
