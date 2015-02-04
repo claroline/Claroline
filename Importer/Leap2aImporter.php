@@ -222,12 +222,12 @@ class Leap2aImporter implements  ImporterInterface
     protected function extractFormationsWidget(array $entries, array $entry)
     {
         $formationsWidgetResources = array();
+        $formationsWidgetId = $entry['id']['$'];
 
         foreach ($entries as $subEntry) {
             $this->validateEntry($subEntry);
 
             if ('leap2:resource' === $subEntry['rdf:type']['@rdf:resource']) {
-                $formationsWidgetResource = new FormationsWidgetResource();
                 $selfLink = null;
 
                 foreach ($subEntry['link'] as $entryLink) {
@@ -235,16 +235,26 @@ class Leap2aImporter implements  ImporterInterface
                     if (false !== $selfLinkKey) {
                         $selfLink = $entryLink['@href'];
                     }
+                    $isPartOfLinkKey = array_search('leap2:is_part_of', $entryLink);
+                    if (false !== $isPartOfLinkKey) {
+                        $isPartOfLink = $entryLink['@href'];
+                    }
                 }
                 if (null === $selfLink) {
                     throw new \Exception('Unable to find self link for the resource.');
                 }
+                if (null === $isPartOfLink) {
+                    throw new \Exception('Unable to find is_part_of link for the resource.');
+                }
 
-                $formationsWidgetResource
-                    ->setUriLabel($subEntry['title']['$'])
-                    ->setUri($selfLink);
+                if ($formationsWidgetId === $isPartOfLink) {
+                    $formationsWidgetResource = new FormationsWidgetResource();
+                    $formationsWidgetResource
+                        ->setUriLabel($subEntry['title']['$'])
+                        ->setUri($selfLink);
 
-                $formationsWidgetResources[] = $formationsWidgetResource;
+                    $formationsWidgetResources[] = $formationsWidgetResource;
+                }
             }
         }
 

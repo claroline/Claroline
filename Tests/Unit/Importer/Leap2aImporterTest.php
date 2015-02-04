@@ -219,13 +219,13 @@ TEST;
             ->setFirstName($firstname = uniqid())
             ->setLastName($lastname = uniqid());
 
-        $skillsWidgetSkillId   = rand(0, PHP_INT_MAX);
+        $skillsWidgetSkillId   = mt_rand();
         $skillsWidgetSkillName = uniqid();
 
-        $skillsWidgetSkillId2   = rand(0, PHP_INT_MAX);
+        $skillsWidgetSkillId2   = mt_rand();
         $skillsWidgetSkillName2 = uniqid();
 
-        $skillsWidgetId        = rand(0, PHP_INT_MAX);
+        $skillsWidgetId        = mt_rand();
         $skillsWidgetUpdatedAtText = (new \DateTime())->add(new \DateInterval('P2D'))->format(\DateTime::ATOM);
         $skillsWidgetLabel     = uniqid();
 
@@ -312,7 +312,7 @@ CONTENT;
             ->setFirstName($firstname = uniqid())
             ->setLastName($lastname = uniqid());
 
-        $formationsWidgetId        = rand(0, PHP_INT_MAX);
+        $formationsWidgetId        = mt_rand();
         $formationsWidgetStartedAt = new \DateTime();
         $formationsWidgetStartedAtText = (new \DateTime())->format(\DateTime::ATOM);
         $formationsWidgetUpdatedAtText = $formationsWidgetStartedAt->add(new \DateInterval('P2D'))->format(\DateTime::ATOM);
@@ -320,7 +320,7 @@ CONTENT;
         $formationsWidgetLabel     = uniqid();
         $formationsWidgetContent   = uniqid();
 
-        $formationsWidgetResourceId = rand(0, PHP_INT_MAX);
+        $formationsWidgetResourceId = mt_rand();
         $formationsWidgetResourceName = uniqid();
         $formationsWidgetResourceUri = uniqid();
 
@@ -390,6 +390,93 @@ CONTENT;
         $this->assertEquals($formationsWidgetResourceUri, $formationsWidgetResource->getUri());
     }
 
+    public function testLeap2aImportPortfolioWithFormationWidgetWithResourceOnWrongEntryId()
+    {
+        $importer = new Leap2aImporter();
+
+        $portfolioTitle = uniqid();
+
+        $user = new User();
+        $user
+            ->setUsername(uniqid())
+            ->setFirstName($firstname = uniqid())
+            ->setLastName($lastname = uniqid());
+
+        $formationsWidgetId        = mt_rand(0, PHP_INT_MAX / 2);
+        $formationsWidgetStartedAt = new \DateTime();
+        $formationsWidgetStartedAtText = (new \DateTime())->format(\DateTime::ATOM);
+        $formationsWidgetUpdatedAtText = $formationsWidgetStartedAt->add(new \DateInterval('P2D'))->format(\DateTime::ATOM);
+        $formationsWidgetEndedAtText   = $formationsWidgetStartedAt->add(new \DateInterval('P4D'))->format(\DateTime::ATOM);
+        $formationsWidgetLabel     = uniqid();
+        $formationsWidgetContent   = uniqid();
+
+        $formationsWidgetResourceId = mt_rand();
+        $formationsWidgetResourceName = uniqid();
+        $formationsWidgetResourceUri = uniqid();
+        $formationsWidgetResourceWidgetId = mt_rand(PHP_INT_MAX / 2 + 1, PHP_INT_MAX);
+
+        $content = <<<CONTENT
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"
+      xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+      xmlns:leap2="http://terms.leapspecs.org/"
+      xmlns:categories="http://www.leapspecs.org/2A/categories"
+      xmlns:claroline="http://www.leapspecs.org/2A/categories">
+    <leap2:version>http://www.leapspecs.org/2010-07/2A/</leap2:version>
+    <id>54c793498714a</id>
+    <title>$portfolioTitle</title>
+    <author>
+        <name>$firstname $lastname</name>
+    </author>
+    <updated>2015-01-29T14:31:53+01:00</updated>
+    <entry>
+        <title>$formationsWidgetLabel</title>
+        <id>portfolio:formations/$formationsWidgetId</id>
+        <updated>$formationsWidgetUpdatedAtText</updated>
+        <content type="text">$formationsWidgetContent</content>
+        <leap2:date leap2:point="start">$formationsWidgetStartedAtText</leap2:date>
+        <leap2:date leap2:point="end">$formationsWidgetEndedAtText</leap2:date>
+        <rdf:type rdf:resource="leap2:activity"/>
+        <category term="Education" scheme="categories:life_area"/>
+        <link rel="leap2:has_part" href="portfolio:resource/159163183" leap2:display_order="1"/>
+    </entry>
+    <entry>
+        <title>$formationsWidgetResourceName</title>
+        <id>portfolio:resource/$formationsWidgetResourceId</id>
+        <updated>$formationsWidgetUpdatedAtText</updated>
+        <content></content>
+        <rdf:type rdf:resource="leap2:resource"/>
+        <category term="Web" scheme="categories:resource_type#"/>
+        <link rel="self" href="$formationsWidgetResourceUri" />
+        <link rel="leap2:is_part_of" href="portfolio:formations/$formationsWidgetResourceWidgetId" leap2:display_order="1"/>
+    </entry>
+</feed>
+CONTENT;
+
+        $importedPortfolio = $importer->import($content, $user);
+
+        $this->assertEquals('Icap\PortfolioBundle\Entity\Portfolio', get_class($importedPortfolio));
+
+        $importedPortfolioTitleWidget = $importedPortfolio->getTitleWidget();
+        $this->assertNotNull($importedPortfolioTitleWidget);
+        $this->assertEquals($portfolioTitle, $importedPortfolioTitleWidget->getTitle());
+
+        $this->assertEquals($importedPortfolio->getUser(), $user);
+
+        $formationsWidgets = $importedPortfolio->getWidget('formations');
+        $this->assertEquals(1, count($formationsWidgets));
+
+        /** @var \Icap\PortfolioBundle\Entity\Widget\FormationsWidget $formationsWidget */
+        $formationsWidget = $formationsWidgets[0];
+
+        $this->assertEquals('Icap\PortfolioBundle\Entity\Widget\FormationsWidget', get_class($formationsWidget));
+        $this->assertEquals($formationsWidgetLabel, $formationsWidget->getLabel());
+
+        $formationsWidgetResources = $formationsWidget->getResources();
+
+        $this->assertEquals(0, count($formationsWidgetResources));
+    }
+
     public function testLeap2aImportPortfolioWithUserInformationsWidget()
     {
         $importer = new Leap2aImporter();
@@ -402,7 +489,7 @@ CONTENT;
             ->setFirstName($firstname = uniqid())
             ->setLastName($lastname = uniqid());
 
-        $userInformationsWidgetId      = rand(0, PHP_INT_MAX);
+        $userInformationsWidgetId      = mt_rand();
         $userInformationsWidgetUpdatedAtText = (new \DateTime())->format(\DateTime::ATOM);
         $userInformationsWidgetLabel         = uniqid();
 
@@ -470,7 +557,7 @@ CONTENT;
             ->setFirstName($firstname = uniqid())
             ->setLastName($lastname = uniqid());
 
-        $textWidgetId      = rand(0, PHP_INT_MAX);
+        $textWidgetId      = mt_rand();
         $textWidgetUpdatedAtText = (new \DateTime())->format(\DateTime::ATOM);
         $textWidgetLabel         = uniqid();
         $textWidgetContent = '<p>Just a text content.</p>';
