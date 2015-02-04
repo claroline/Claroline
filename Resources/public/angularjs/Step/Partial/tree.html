@@ -1,19 +1,30 @@
-<!-- Drag&Drop handler -->
-<div ng-if="step.lvl !== 0" ui-tree-handle class="mytree-item-handler" data-toggle="tooltip" data-container="body" title="{{ 'step_drag' | trans:{}:'path_editor' }}">
-    <span class="fa fa-ellipsis-v"></span>
-    <span class="sr-only">{{ 'step_drag' | trans:{}:'path_editor' }}</span>
-</div>
-
 <!-- Item row -->
-<div ui-tree-handle class="tree-item" data-nodrag data-ng-class="{'active-step': previewStep.id == step.id}"
+<div data-ui-tree-handle="" class="tree-item" data-ng-class="{'active-step': previewStep.id == step.id}"
      data-ng-click="setPreviewStep(step)"
      data-ng-mouseenter="showButtons = step.id"
      data-ng-mouseleave="showButtons = null">
 
-    <div class="lvl lvl-{{ step.lvl }}"></div>
-    <div class="step">{{ step.name | truncate }}</div>
+    <!-- Level indicator -->
+    <div class="lvl lvl-{{ step.lvl }}">
+        <!-- Drag&Drop handler -->
+        <div ng-if="step.lvl !== 0" data-ui-tree-handle="" class="step-drag-handler" data-toggle="tooltip" data-container="body" title="{{ 'step_drag' | trans:{}:'path_editor' }}">
+            <span class="fa fa-ellipsis-v"></span>
+            <span class="sr-only">{{ 'step_drag' | trans:{}:'path_editor' }}</span>
+        </div>
+    </div>
 
-    <span data-ng-show="showButtons == step.id || previewStep == step" class="step-actions btn-group">
+    <!-- Step name -->
+    <div class="step" data-nodrag="">
+        <!--Collapse / Expand button -->
+        <a class="step-toggle" href="" data-ng-click="toggle(this)" data-ng-show="step.children" role="button">
+            <span class="fa fa-fw" data-ng-class="{ 'fa-caret-right': collapsed, 'fa-caret-down': !collapsed }"></span>
+        </a>
+
+        {{ step.name | truncate }}
+    </div>
+
+    <!-- Actions available -->
+    <span data-ng-show="showButtons == step.id || previewStep == step" class="step-actions btn-group" data-nodrag="">
         <a href="#" class="btn btn-default btn-sm" data-ng-click="addChild(step)" data-toggle="tooltip" data-container="body" title="{{ 'step_add_child' | trans:{}:'path_editor' }}">
             <span class="fa fa-plus"></span>
             <span class="sr-only">{{ 'step_add_child' | trans:{}:'path_editor' }}</span>
@@ -40,7 +51,7 @@
         </a>
     </span>
 </div>
-<ol ui-tree-nodes="" ng-model="step.children">
-    <li ui-tree-node data-ng-repeat="step in step.children" data-ng-include="webDir + 'bundles/innovapath/angularjs/Step/Partial/tree.html'" onload="isRootNode = false"></li>
+<ol class="step-children border-lvl-{{ step.lvl }}" data-ui-tree-nodes="" data-ng-model="step.children" data-ng-hide="collapsed">
+    <li data-ui-tree-node="" data-ng-repeat="step in step.children" data-ng-include="webDir + 'bundles/innovapath/angularjs/Step/Partial/tree.html'" onload="isRootNode = false"></li>
 </ol>
 

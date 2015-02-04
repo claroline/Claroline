@@ -35,12 +35,13 @@
 .lvl {
     width: 20px;
     display: block;
-    height: 100%;
     position: absolute;
     left: 0;
     top: 0;
+    bottom: 0;
     border-radius: 3px 0 0 3px;
-    float: left;
+    vertical-align: middle;
+    margin: 0;
 }
 
 .step {
