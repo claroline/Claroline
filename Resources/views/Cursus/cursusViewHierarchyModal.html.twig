@@ -1,0 +1,19 @@
+{% macro showCursus(cursus) %}
+    {% set children = cursus.getChildren() %}
+
+    {{ cursus.getTitle() }}
+
+    {% if children|length > 0 %}
+        <ul>
+        {% for child in children %}
+            <li>
+                {{ _self.showCursus(child) }}
+            </li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+{% endmacro %}
+
+{% from _self import showCursus %}
+
+{{ showCursus(cursus) }}

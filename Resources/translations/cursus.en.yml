@@ -1,5 +1,9 @@
 course: Course
+create_cursus: 'Create "%cursusWord%"'
 cursus: Cursus
+cursus_form_code: Code
+cursus_form_description: Description
+cursus_form_title: Title
 cursus_plugin_configuration: 'Cursus plugin configuration'
 default: Default
 displayed_word: 'Displayed word'

@@ -12,6 +12,7 @@
 namespace Claroline\CursusBundle\Manager;
 
 use Claroline\CoreBundle\Persistence\ObjectManager;
+use Claroline\CursusBundle\Entity\Cursus;
 use Claroline\CursusBundle\Entity\CursusDisplayedWord;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bundle\FrameworkBundle\Translation\Translator;
@@ -23,6 +24,7 @@ class CursusManager
 {
     private $om;
     private $translator;
+    private $cursusRepo;
     private $cursusWordRepo;
     
     /**
@@ -38,6 +40,8 @@ class CursusManager
     {
         $this->om = $om;
         $this->translator = $translator;
+        $this->cursusRepo =
+            $om->getRepository('ClarolineCursusBundle:Cursus');
         $this->cursusWordRepo =
             $om->getRepository('ClarolineCursusBundle:CursusDisplayedWord');
     }
@@ -63,18 +67,18 @@ class CursusManager
         
         return $result;
     }
-    
-    private function initializeDisplayedWord($word)
+
+    public function persistCursus(Cursus $cursus)
     {
-        $toDisplay = $this->translator->trans($word, array(), 'cursus');
-        $displayedWord = new CursusDisplayedWord();
-        $displayedWord->setWord($word);
-        $displayedWord->setDisplayedWord($toDisplay);
-        $this->om->persist($displayedWord);
+        $this->om->persist($cursus);
         $this->om->flush();
-        
-        return $toDisplay;
-    }    
+    }
+
+    public function deleteCursus(Cursus $cursus)
+    {
+        $this->om->remove($cursus);
+        $this->om->flush();
+    }
     
 
     /***************************************************
@@ -84,5 +88,30 @@ class CursusManager
     public function getOneDisplayedWordByWord($word)
     {
         return $this->cursusWordRepo->findOneByWord($word);
+    }
+
+
+    /**************************************
+     * Access to CursusRepository methods *
+     **************************************/
+
+    public function getAllRootCursus($executeQuery = true)
+    {
+        return $this->cursusRepo->findAllRootCursus($executeQuery);
+    }
+
+    public function getLastRootCursusOrder($executeQuery = true)
+    {
+        return $this->cursusRepo->findLastRootCursusOrder($executeQuery);
+    }
+
+    public function getLastCursusOrderByParent(Cursus $cursus, $executeQuery = true)
+    {
+        return $this->cursusRepo->findLastCursusOrderByParent($cursus, $executeQuery);
+    }
+
+    public function getHierarchyByCursus(Cursus $cursus, $executeQuery = true)
+    {
+        return $this->cursusRepo->findHierarchyByCursus($cursus, $executeQuery);
     }
 }

@@ -14,7 +14,7 @@ namespace Claroline\CursusBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Table(name="claro_cursus_displayed_word")
+ * @ORM\Table(name="claro_cursusbundle_cursus_displayed_word")
  * @ORM\Entity
  */
 class CursusDisplayedWord
