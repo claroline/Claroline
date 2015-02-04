@@ -11,5 +11,5 @@ Tests
 
 ```
     php app/console claroline:init_test_schema --env=test
-    phpunit -c app vendor/hevinci/competency-bundle
+    phpunit -c vendor/hevinci/competency-bundle/HeVinci/CompetencyBundle
 ```
