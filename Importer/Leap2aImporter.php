@@ -10,6 +10,7 @@ use Icap\PortfolioBundle\Entity\Widget\FormationsWidget;
 use Icap\PortfolioBundle\Entity\Widget\FormationsWidgetResource;
 use Icap\PortfolioBundle\Entity\Widget\SkillsWidget;
 use Icap\PortfolioBundle\Entity\Widget\SkillsWidgetSkill;
+use Icap\PortfolioBundle\Entity\Widget\TextWidget;
 use Icap\PortfolioBundle\Entity\Widget\TitleWidget;
 use Icap\PortfolioBundle\Entity\Widget\UserInformationWidget;
 use Icap\PortfolioBundle\Transformer\XmlToArray;
@@ -137,6 +138,7 @@ class Leap2aImporter implements  ImporterInterface
                             $widgets[] = $this->extractFormationsWidget($entries, $entry);
                         break;
                     case 'text':
+                            $widgets[] = $this->extractTextWidget($entry);
                         break;
                     case 'badges':
                         break;
@@ -244,6 +246,11 @@ class Leap2aImporter implements  ImporterInterface
         return $formationsWidget;
     }
 
+    /**
+     * @param array $entry
+     *
+     * @return UserInformationWidget
+     */
     private function extractUserInformationWidget(array $entry)
     {
         $userInformationWidget = new UserInformationWidget();
@@ -265,5 +272,20 @@ class Leap2aImporter implements  ImporterInterface
         }
 
         return $userInformationWidget;
+    }
+
+    /**
+     * @param array $entry
+     *
+     * @return UserInformationWidget
+     */
+    private function extractTextWidget(array $entry)
+    {
+        $TextWidget = new TextWidget();
+        $TextWidget
+            ->setLabel($entry['title']['$'])
+            ->setText($entry['content']['$']);
+
+        return $TextWidget;
     }
 }
