@@ -131,7 +131,7 @@ class Leap2aImporter implements  ImporterInterface
     {
         $skillsWidgets = array();
 
-        $skillsWidgetNodes = $nodes->xpath(("//entry[rdf:type/@rdf:resource = 'leap2:selection' and category/@term = 'Abilities']"));
+        $skillsWidgetNodes = $nodes->xpath("//entry[rdf:type/@rdf:resource = 'leap2:selection' and category/@term = 'Abilities']");
         foreach ($skillsWidgetNodes as $skillsWidgetNode) {
             $skillsWidget = new SkillsWidget();
             $skillsWidgetTitle = $skillsWidgetNode->xpath("title");
