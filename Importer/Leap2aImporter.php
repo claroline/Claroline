@@ -20,19 +20,6 @@ class Leap2aImporter implements  ImporterInterface
     const IMPORT_FORMAT = 'leap2a';
     const IMPORT_FORMAT_LABEL = 'Leap2a';
 
-    protected $xmlToArrayTransformer;
-
-    /**
-     * @param XmlToArray $xmlToArrayTransformer
-     */
-    public function __construct(XmlToArray $xmlToArrayTransformer = null)
-    {
-        if (null === $xmlToArrayTransformer) {
-            $xmlToArrayTransformer = new XmlToArray();
-        }
-        $this->xmlToArrayTransformer = $xmlToArrayTransformer;
-    }
-
     /**
      * @return string
      */
@@ -58,109 +45,61 @@ class Leap2aImporter implements  ImporterInterface
      */
     public function import($content, User $user)
     {
-        $arrayContent = $this->transformContent($content);
+        $content = str_replace('xmlns=', 'ns=', $content);
+        $xml = new \SimpleXMLElement($content);
 
-        $portfolio = $this->arrayToPortfolio($arrayContent, $user);
+        $portfolio = $this->retrievePortfolioFromXml($xml, $user);
 
         return $portfolio;
     }
 
     /**
-     * @param string $content
-     *
-     * @return array
-     * @throws \Exception
-     * @throws \InvalidArgumentException
-     */
-    public function transformContent($content)
-    {
-        return $this->xmlToArrayTransformer->transform($content);
-    }
-
-    /**
-     * @param array $arrayContent
-     * @param User  $user
+     * @param \SimpleXMLElement $xml
+     * @param User              $user
      *
      * @return Portfolio
      * @throws \Exception
      */
-    public function arrayToPortfolio(array $arrayContent, User $user)
+    public function retrievePortfolioFromXml(\SimpleXMLElement $xml, User $user)
     {
-        $portfolio = new Portfolio();
-        $portfolio->setUser($user);
+        $portfolioTitleNodes = $xml->xpath('/feed/title');
 
-        if (!isset($arrayContent['title'])) {
+        if (0 === count($portfolioTitleNodes)) {
             throw new \Exception("Missing portfolio's title");
         }
+        $portfolioTitle = (string)$portfolioTitleNodes[0];
+
         $titleWidget = new TitleWidget();
-        $titleWidget->setTitle($arrayContent['title']['$']);
+        $titleWidget->setTitle($portfolioTitle);
 
-        $widgets = array();
-
-        if (isset($arrayContent['entry'])) {
-            $widgets = $this->retrieveWidgets($arrayContent['entry']);
-        }
-
+        $widgets   = $this->retrieveWidgets($xml);
         $widgets[] = $titleWidget;
 
-        $portfolio->setWidgets($widgets);
+        $portfolio = new Portfolio();
+        $portfolio
+            ->setUser($user)
+            ->setWidgets($widgets);
 
         return $portfolio;
     }
 
     /**
-     * @param array $entries
+     * @param \SimpleXmlElement $nodes
      *
      * @return \Icap\PortfolioBundle\Entity\Widget\AbstractWidget[]
      * @throws \Exception
      */
-    public function retrieveWidgets(array $entries)
+    public function retrieveWidgets(\SimpleXMLElement $nodes)
     {
-        $widgets = array();
+        $skillsWidgets = $this->extractSkillsWidget($nodes);
 
-        foreach ($entries as $entry) {
-            $this->validateEntry($entry);
+//        $userInformationWidgets = $this->extractUserInformationWidget($nodes);
 
-            $entryType = $entry['rdf:type']['@rdf:resource'];
-            $entryCategory = isset($entry['category']) ? $entry['category']['@term'] : null;
+//        $formationWidgets = $this->extractFormationsWidget($nodes);
 
-            $widgetType = $this->getWidgetType($entryType, $entryCategory);
+//        $textWidgets = $this->extractTextWidget($nodes);
 
-            if (null !== $widgetType) {
-                switch($widgetType) {
-                    case 'skills':
-                            $widgets[] = $this->extractSkillsWidget($entries, $entry);
-                        break;
-                    case 'userInformation':
-                            $widgets[] = $this->extractUserInformationWidget($entry);
-                        break;
-                    case 'formations':
-                            $widgets[] = $this->extractFormationsWidget($entries, $entry);
-                        break;
-                    case 'text':
-                            $widgets[] = $this->extractTextWidget($entry);
-                        break;
-                    case 'badges':
-                        break;
-                    default:
-                        throw new \Exception(sprintf("Unknown widget type '%s'.", $widgetType));
-                }
-            }
-        }
-
-        return $widgets;
-    }
-
-    /**
-     * @param array $entry
-     *
-     * @throws \Exception
-     */
-    protected function validateEntry(array $entry)
-    {
-        if (!isset($entry['rdf:type']) || !isset($entry['rdf:type']['@rdf:resource'])) {
-            throw new \Exception('Entry type missing.');
-        }
+        return $skillsWidgets;
     }
 
     /**
@@ -183,33 +122,54 @@ class Leap2aImporter implements  ImporterInterface
     }
 
     /**
-     * @param array $entries
-     * @param array $entry
+     * @param \SimpleXMLElement $nodes
      *
      * @return SkillsWidget
      * @throws \Exception
      */
-    protected function extractSkillsWidget(array $entries, array $entry)
+    protected function extractSkillsWidget(\SimpleXMLElement $nodes)
     {
-        $skillsWidgetSkills = array();
+        $skillsWidgets = array();
 
-        foreach ($entries as $subEntry) {
-            $this->validateEntry($subEntry);
+        $skillsWidgetNodes = $nodes->xpath(("//entry[rdf:type/@rdf:resource = 'leap2:selection' and category/@term = 'Abilities']"));
+        foreach ($skillsWidgetNodes as $skillsWidgetNode) {
+            $skillsWidget = new SkillsWidget();
+            $skillsWidgetTitle = $skillsWidgetNode->xpath("title");
 
-            if ('leap2:ability' === $subEntry['rdf:type']['@rdf:resource']) {
+            if (0 === count($skillsWidgetTitle)) {
+                throw new \Exception('Entry has no title.');
+            }
+
+            $skillsWidget->setLabel((string)$skillsWidgetTitle[0]);
+
+            $skillsWidgetSkills = array();
+            $relatedSkills = array();
+
+            foreach ($skillsWidgetNode->xpath("link[@rel='leap2:has_part']/@href") as $relatedSkillAttributes) {
+                $relatedSkillArrayAttributes = (array)$relatedSkillAttributes;
+                $relatedSkillNodes = $nodes->xpath(sprintf("entry[id[.='%s']]", $relatedSkillArrayAttributes['@attributes']['href']));
+
+                if (0 === count($relatedSkillNodes)) {
+                    throw new \Exception("Unable to find skills.");
+                }
+                $relatedSkillNode = (array)$relatedSkillNodes[0];
+
+                $relatedSkillNodeLink = (array)$relatedSkillNode['link'];
+
+                if ((string)$skillsWidgetNode->xpath("id")[0] !== $relatedSkillNodeLink['@attributes']['href']) {
+                    throw new \Exception("Inconsistency in skills relation.");
+                }
+
                 $skillsWidgetSkill = new SkillsWidgetSkill();
-                $skillsWidgetSkill->setName($subEntry['title']);
+                $skillsWidgetSkill->setName($relatedSkillNode['title']);
 
                 $skillsWidgetSkills[] = $skillsWidgetSkill;
             }
+            $skillsWidget->setSkills($skillsWidgetSkills);
+            $skillsWidgets[] = $skillsWidget;
         }
 
-        $skillsWidget = new SkillsWidget();
-        $skillsWidget
-            ->setLabel($entry['title']['$'])
-            ->setSkills($skillsWidgetSkills);
-
-        return $skillsWidget;
+        return $skillsWidgets;
     }
 
     /**

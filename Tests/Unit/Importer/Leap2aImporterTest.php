@@ -17,58 +17,6 @@ class Leap2aImporterTest extends MockeryTestCase
         $this->assertInstanceOf('\Icap\PortfolioBundle\Importer\Leap2aImporter', $importer);
     }
 
-    public function testTransformContentLeap2a()
-    {
-        $importer = new Leap2aImporter();
-        $content = <<<CONTENT
-<?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"
-      xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-      xmlns:leap2="http://terms.leapspecs.org/"
-      xmlns:categories="http://www.leapspecs.org/2A/categories">
-    <leap2:version>http://www.leapspecs.org/2010-07/2A/</leap2:version>
-    <id>54be827257316</id>
-    <title>54be8272572d8</title>
-    <author>
-        <name>54be827257361 54be82725739a</name>
-    </author>
-    <updated>2015-01-20T17:29:38+01:00</updated>
-</feed>
-CONTENT;
-
-        $expected = array(
-            'leap2:version' => array(
-                '$' => 'http://www.leapspecs.org/2010-07/2A/'
-            ),
-            'id' => array(
-                '$' => '54be827257316'
-            ),
-            'title' => array(
-                '$' => '54be8272572d8',
-            ),
-            'author' => array(
-                'name' => array(
-                    '$' => '54be827257361 54be82725739a'
-                )
-            ),
-            'updated' => array(
-                '$' => '2015-01-20T17:29:38+01:00'
-            )
-        );
-
-        $this->assertEquals($expected, $importer->transformContent($content, 'leap2a'));
-    }
-
-    public function testTransformWrongContent()
-    {
-        $importer = new Leap2aImporter();
-        $content = uniqid();
-
-        $this->setExpectedException('Exception');
-
-        $importer->transformContent($content);
-    }
-
     public function testLeap2aImportMissingTitle()
     {
         $importer = new Leap2aImporter();
