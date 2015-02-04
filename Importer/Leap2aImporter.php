@@ -93,13 +93,13 @@ class Leap2aImporter implements  ImporterInterface
     {
         $skillsWidgets = $this->extractSkillsWidgets($nodes);
 
-//        $userInformationWidgets = $this->extractUserInformationWidget($nodes);
+        $userInformationWidgets = $this->extractUserInformationWidgets($nodes);
 
 //        $formationWidgets = $this->extractFormationsWidget($nodes);
 
         $textWidgets = $this->extractTextWidgets($nodes);
 
-        return $skillsWidgets + $textWidgets;
+        return $skillsWidgets + $userInformationWidgets + $textWidgets;
     }
 
     /**
@@ -124,12 +124,12 @@ class Leap2aImporter implements  ImporterInterface
     /**
      * @param \SimpleXMLElement $nodes
      *
-     * @return SkillsWidget
+     * @return SkillsWidget[]
      * @throws \Exception
      */
     protected function extractSkillsWidgets(\SimpleXMLElement $nodes)
     {
-        $skillsWidgets = array();
+        $skillsWidgets = [];
 
         $skillsWidgetNodes = $nodes->xpath("//entry[rdf:type/@rdf:resource = 'leap2:selection' and category/@term = 'Abilities']");
         foreach ($skillsWidgetNodes as $skillsWidgetNode) {
@@ -142,8 +142,7 @@ class Leap2aImporter implements  ImporterInterface
 
             $skillsWidget->setLabel((string)$skillsWidgetTitle[0]);
 
-            $skillsWidgetSkills = array();
-            $relatedSkills = array();
+            $skillsWidgetSkills = [];
 
             foreach ($skillsWidgetNode->xpath("link[@rel='leap2:has_part']/@href") as $relatedSkillAttributes) {
                 $relatedSkillArrayAttributes = (array)$relatedSkillAttributes;
@@ -176,12 +175,12 @@ class Leap2aImporter implements  ImporterInterface
      * @param array $entries
      * @param array $entry
      *
-     * @return FormationsWidget
+     * @return FormationsWidget[]
      * @throws \Exception
      */
     protected function extractFormationsWidget(array $entries, array $entry)
     {
-        $formationsWidgetResources = array();
+        $formationsWidgetResources = [];
         $formationsWidgetId = $entry['id']['$'];
 
         foreach ($entries as $subEntry) {
@@ -227,41 +226,42 @@ class Leap2aImporter implements  ImporterInterface
     }
 
     /**
-     * @param array $entry
+     * @param \SimpleXMLElement $nodes
      *
      * @return UserInformationWidget
      */
-    private function extractUserInformationWidget(array $entry)
+    private function extractUserInformationWidgets(\SimpleXMLElement $nodes)
     {
-        $userInformationWidget = new UserInformationWidget();
-        $userInformationWidget->setLabel($entry['title']['$']);
+        $userInformationWidgetNodes = $nodes->xpath("//entry[rdf:type/@rdf:resource = 'leap2:person']");
+        $userInformationWidgets     = [];
 
-        foreach ($entry['leap2:persondata'] as $personData) {
-            switch($personData['@leap2:field']) {
-                case 'dob':
-                    $userInformationWidget->setBirthDate(new \DateTime($personData['$']));
-                    break;
-                case 'other':
-                    switch($personData['@leap2:label']) {
-                        case 'city':
-                            $userInformationWidget->setCity($personData['$']);
-                            break;
-                    }
-                    break;
-            }
+        if (0 < count($userInformationWidgetNodes)) {
+            $birthDateNode = $userInformationWidgetNodes[0]->xpath("leap2:persondata[@leap2:field ='dob']");
+            $birthDate     = (string)$birthDateNode[0];
+
+            $cityNode = $userInformationWidgetNodes[0]->xpath("leap2:persondata[@leap2:field = 'other' and @leap2:label = 'city']");
+            $city     = (string)$cityNode[0];
+
+            $userInformationWidget = new UserInformationWidget();
+            $userInformationWidget
+                ->setLabel((string)$userInformationWidgetNodes[0]->title)
+                ->setBirthDate(new \DateTime($birthDate))
+                ->setCity($city);
+
+            $userInformationWidgets[] = $userInformationWidget;
         }
 
-        return $userInformationWidget;
+        return $userInformationWidgets;
     }
 
     /**
      * @param \SimpleXMLElement $nodes
      *
-     * @return UserInformationWidget
+     * @return TextWidget[]
      */
     private function extractTextWidgets(\SimpleXMLElement $nodes)
     {
-        $textWidgets     = array();
+        $textWidgets     = [];
         $textWidgetNodes = $nodes->xpath("//entry[rdf:type/@rdf:resource = 'leap2:entry']");
 
         foreach ($textWidgetNodes as $textWidgetNode) {
