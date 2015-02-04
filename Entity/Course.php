@@ -12,11 +12,13 @@
 namespace Claroline\CursusBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
+ * @ORM\Entity(repositoryClass="Claroline\CursusBundle\Repository\CourseRepository")
  * @ORM\Table(name="claro_cursusbundle_course")
- * @ORM\Entity
+ * @DoctrineAssert\UniqueEntity("code")
  */
 class Course
 {
@@ -37,7 +39,7 @@ class Course
      * @ORM\Column()
      * @Assert\NotBlank()
      */
-    protected $name;
+    protected $title;
 
     /**
      * @ORM\Column(type="text", nullable=true)
@@ -69,14 +71,14 @@ class Course
         $this->code = $code;
     }
 
-    public function getName()
+    public function getTitle()
     {
-        return $this->name;
+        return $this->title;
     }
 
-    public function setName($name)
+    public function setTitle($title)
     {
-        $this->name = $name;
+        $this->title = $title;
     }
 
     public function getDescription()

@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CursusBundle\Migrations\mysqli;
+namespace Claroline\CursusBundle\Migrations\pdo_mysql;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2015/01/30 02:01:49
+ * Generation date: 2015/02/04 12:43:40
  */
-class Version20150130140147 extends AbstractMigration
+class Version20150204124338 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -18,7 +18,7 @@ class Version20150130140147 extends AbstractMigration
             CREATE TABLE claro_cursusbundle_course (
                 id INT AUTO_INCREMENT NOT NULL, 
                 code VARCHAR(255) NOT NULL, 
-                name VARCHAR(255) NOT NULL, 
+                title VARCHAR(255) NOT NULL, 
                 description LONGTEXT DEFAULT NULL, 
                 public_registration TINYINT(1) NOT NULL, 
                 UNIQUE INDEX UNIQ_3359D34977153098 (code), 

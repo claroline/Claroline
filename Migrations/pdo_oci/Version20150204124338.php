@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2015/01/30 02:01:49
+ * Generation date: 2015/02/04 12:43:40
  */
-class Version20150130140147 extends AbstractMigration
+class Version20150204124338 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -18,7 +18,7 @@ class Version20150130140147 extends AbstractMigration
             CREATE TABLE claro_cursusbundle_course (
                 id NUMBER(10) NOT NULL, 
                 code VARCHAR2(255) NOT NULL, 
-                name VARCHAR2(255) NOT NULL, 
+                title VARCHAR2(255) NOT NULL, 
                 description CLOB DEFAULT NULL NULL, 
                 public_registration NUMBER(1) NOT NULL, 
                 PRIMARY KEY(id)
