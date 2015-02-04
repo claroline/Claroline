@@ -217,6 +217,7 @@ class Leap2aImporter implements  ImporterInterface
      * @param array $entry
      *
      * @return FormationsWidget
+     * @throws \Exception
      */
     protected function extractFormationsWidget(array $entries, array $entry)
     {
@@ -227,9 +228,21 @@ class Leap2aImporter implements  ImporterInterface
 
             if ('leap2:resource' === $subEntry['rdf:type']['@rdf:resource']) {
                 $formationsWidgetResource = new FormationsWidgetResource();
+                $selfLink = null;
+
+                foreach ($subEntry['link'] as $entryLink) {
+                    $selfLinkKey = array_search('self', $entryLink);
+                    if (false !== $selfLinkKey) {
+                        $selfLink = $entryLink['@href'];
+                    }
+                }
+                if (null === $selfLink) {
+                    throw new \Exception('Unable to find self link for the resource.');
+                }
+
                 $formationsWidgetResource
                     ->setUriLabel($subEntry['title']['$'])
-                    ->setUri($subEntry['uri']['$']);
+                    ->setUri($selfLink);
 
                 $formationsWidgetResources[] = $formationsWidgetResource;
             }

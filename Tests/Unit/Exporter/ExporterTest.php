@@ -686,11 +686,11 @@ EXPORT;
     <entry>
         <title>$formationWidgetResourceName</title>
         <id>portfolio:resource/$formationWidgetResourceResourceNodeId</id>
-        <uri>$formationWidgetResourceResourceNodeId</uri>
         <updated>$formationWidgetResourceUpdatedAt</updated>
         <content></content>
         <rdf:type rdf:resource="leap2:resource"/>
         <category term="Web" scheme="categories:resource_type#"/>
+        <link rel="self" href="$formationWidgetResourceResourceNodeId" />
         <link rel="leap2:is_part_of" href="portfolio:formations/$formationWidgetId" leap2:display_order="1"/>
     </entry>
 </feed>

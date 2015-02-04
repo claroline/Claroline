@@ -15,11 +15,11 @@
     <entry>
         <title>{{ formationWidgetResource.resource.name }}</title>
         <id>portfolio:resource/{{ formationWidgetResource.resource.id }}</id>
-        <uri>{{ url("claro_resource_open", {'node': formationWidgetResource.resource.id, 'resourceType': formationWidgetResource.resource.resourceType.name }) }}</uri>
         <updated>{{ formationWidgetResource.resource.modificationDate|date(constant('\DateTime::ATOM')) }}</updated>
         <content></content>
         <rdf:type rdf:resource="leap2:resource"/>
         <category term="Web" scheme="categories:resource_type#"/>
+        <link rel="self" href="{{ url("claro_resource_open", {'node': formationWidgetResource.resource.id, 'resourceType': formationWidgetResource.resource.resourceType.name }) }}" />
         <link rel="leap2:is_part_of" href="portfolio:formations/{{ widget.id }}" leap2:display_order="{{ loop.index }}"/>
     </entry>
 {% endfor %}
