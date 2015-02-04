@@ -96,7 +96,7 @@ CONTENT;
     {
         $content = <<<TEST
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"
+<feed ns="http://www.w3.org/2005/Atom"
       xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
       xmlns:leap2="http://terms.leapspecs.org/"
       xmlns:categories="http://www.leapspecs.org/2A/categories">
@@ -145,11 +145,9 @@ CONTENT;
 </feed>
 TEST;
 
-        $transformer = new XmlToArray();
-        $entries     = $transformer->transform($content)['entry'];
-        $importer    = new Leap2aImporter();
+        $importer = new Leap2aImporter();
 
-        $widgets = $importer->retrieveWidgets($entries);
+        $widgets = $importer->retrieveWidgets(new \SimpleXMLElement($content));
         $this->assertEquals(1, count($widgets));
         $this->assertEquals(get_class($widgets[0]), 'Icap\PortfolioBundle\Entity\Widget\SkillsWidget');
         $this->assertEquals(2, count($widgets[0]->getSkills()));
