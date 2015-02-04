@@ -565,7 +565,7 @@ class DatabaseWriter
 
         if (isset($widgetConfiguration['icon'])) {
             $widget->setIcon(
-                "bundles{$ds}{$plugin->getAssetsFolder()}{$ds}images{$ds}icons{$ds}{$widgetConfiguration['icon']}"
+                "bundles{$ds}{$pluginBundle->getAssetsFolder()}{$ds}images{$ds}icons{$ds}{$widgetConfiguration['icon']}"
             );
         } else {
             $widget->setIcon(
