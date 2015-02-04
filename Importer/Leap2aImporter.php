@@ -91,15 +91,15 @@ class Leap2aImporter implements  ImporterInterface
      */
     public function retrieveWidgets(\SimpleXMLElement $nodes)
     {
-        $skillsWidgets = $this->extractSkillsWidget($nodes);
+        $skillsWidgets = $this->extractSkillsWidgets($nodes);
 
 //        $userInformationWidgets = $this->extractUserInformationWidget($nodes);
 
 //        $formationWidgets = $this->extractFormationsWidget($nodes);
 
-//        $textWidgets = $this->extractTextWidget($nodes);
+        $textWidgets = $this->extractTextWidgets($nodes);
 
-        return $skillsWidgets;
+        return $skillsWidgets + $textWidgets;
     }
 
     /**
@@ -127,7 +127,7 @@ class Leap2aImporter implements  ImporterInterface
      * @return SkillsWidget
      * @throws \Exception
      */
-    protected function extractSkillsWidget(\SimpleXMLElement $nodes)
+    protected function extractSkillsWidgets(\SimpleXMLElement $nodes)
     {
         $skillsWidgets = array();
 
@@ -255,17 +255,24 @@ class Leap2aImporter implements  ImporterInterface
     }
 
     /**
-     * @param array $entry
+     * @param \SimpleXMLElement $nodes
      *
      * @return UserInformationWidget
      */
-    private function extractTextWidget(array $entry)
+    private function extractTextWidgets(\SimpleXMLElement $nodes)
     {
-        $TextWidget = new TextWidget();
-        $TextWidget
-            ->setLabel($entry['title']['$'])
-            ->setText($entry['content']['$']);
+        $textWidgets     = array();
+        $textWidgetNodes = $nodes->xpath("//entry[rdf:type/@rdf:resource = 'leap2:entry']");
 
-        return $TextWidget;
+        foreach ($textWidgetNodes as $textWidgetNode) {
+            $textWidget = new TextWidget();
+            $textWidget
+                ->setLabel((string)$textWidgetNode->title)
+                ->setText((string)$textWidgetNode->content);
+
+            $textWidgets[] = $textWidget;
+        }
+
+        return $textWidgets;
     }
 }
