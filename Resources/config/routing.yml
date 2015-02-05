@@ -98,11 +98,6 @@ claro_desktop:
     prefix: desktop
     type: annotation
 
-claro_desktop_tool_agenda:
-    resource: "@ClarolineCoreBundle/Controller/Tool/Agenda/DesktopAgendaController.php"
-    prefix: desktop/tool/agenda
-    type: annotation
-
 claro_desktop_tool_home:
     resource: "@ClarolineCoreBundle/Controller/Tool/HomeController.php"
     prefix: tool/home
@@ -131,16 +126,6 @@ claro_workspace_tool_properties:
 claro_workspace_tool_tools_properties:
     resource: "@ClarolineCoreBundle/Controller/Tool/WorkspaceToolsParametersController.php"
     prefix: workspaces/tool/properties
-    type: annotation
-
-claro_workspace_tool_agenda:
-    resource: "@ClarolineCoreBundle/Controller/Tool/Agenda/WorkspaceAgendaController.php"
-    prefix: workspaces/tool/agenda
-    type: annotation
-
-claro_tool_agenda:
-    resource: "@ClarolineCoreBundle/Controller/Tool/Agenda/AgendaController.php"
-    prefix: tool/agenda
     type: annotation
 
 claro_workspace_roles:

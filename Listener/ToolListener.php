@@ -78,16 +78,6 @@ class ToolListener
     }
 
     /**
-     * @DI\Observe("open_tool_workspace_agenda")
-     *
-     * @param DisplayToolEvent $event
-     */
-    public function onDisplayWorkspaceAgenda(DisplayToolEvent $event)
-    {
-        $event->setContent($this->workspaceAgenda($event->getWorkspace()));
-    }
-
-    /**
      * @DI\Observe("open_tool_workspace_logs")
      *
      * @param DisplayToolEvent $event
@@ -115,16 +105,6 @@ class ToolListener
     public function onDisplayDesktopParameters(DisplayToolEvent $event)
     {
         $event->setContent($this->desktopParameters());
-    }
-
-    /**
-     * @DI\Observe("open_tool_desktop_agenda")
-     *
-     * @param DisplayToolEvent $event
-     */
-    public function onDisplayDesktopAgenda(DisplayToolEvent $event)
-    {
-        $event->setContent($this->desktopAgenda());
     }
 
     /**
@@ -186,23 +166,6 @@ class ToolListener
         return $response->getContent();
     }
 
-    public function workspaceAgenda(Workspace $workspace)
-    {
-        $em = $this->container->get('doctrine.orm.entity_manager');
-        $listEvents = $em->getRepository('ClarolineCoreBundle:Event')
-            ->findByWorkspaceId($workspace->getId(), true);
-        $canCreate = $this->container->get('security.context')
-            ->isGranted(array('agenda', 'edit'), $workspace);
-
-        return $this->templating->render(
-            'ClarolineCoreBundle:Tool/workspace/agenda:agenda.html.twig',
-            array(
-                'workspace' => $workspace,
-                'canCreate' => $canCreate
-            )
-        );
-    }
-
     public function workspaceLogs($workspaceId)
     {
         /** @var \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace */
@@ -225,32 +188,6 @@ class ToolListener
         $response = $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
 
         return $response->getContent();
-    }
-
-    public function desktopAgenda()
-    {
-        $em = $this->container->get('doctrine.orm.entity_manager');
-        $usr = $this->container->get('security.context')->getToken()->getUser();
-        $listEventsDesktop = $em->getRepository('ClarolineCoreBundle:Event')->findDesktop($usr, true);
-        $listEvents = $em->getRepository('ClarolineCoreBundle:Event')->findByUser($usr, false);
-        $workspaces = array();
-        $filters = array();
-
-        foreach ($listEvents as $event) {
-            $filters[$event->getWorkspace()->getId()] = $event->getWorkspace()->getName();
-        }
-
-        if (count($listEventsDesktop) > 0) {
-            $filters[0] = $this->container->get('translator')->trans('desktop', array(), 'platform');
-        }
-
-        return $this->templating->render(
-            'ClarolineCoreBundle:Tool/desktop/agenda:agenda.html.twig',
-            array(
-                'listEvents' => $listEventsDesktop,
-                'filters' => $filters
-            )
-        );
     }
 
     /**
