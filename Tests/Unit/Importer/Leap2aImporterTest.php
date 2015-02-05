@@ -4,9 +4,6 @@ namespace Icap\PortfolioBundle\Importer;
 
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
-use Icap\PortfolioBundle\Entity\Portfolio;
-use Icap\PortfolioBundle\Entity\Widget\TitleWidget;
-use Icap\PortfolioBundle\Transformer\XmlToArray;
 
 class Leap2aImporterTest extends MockeryTestCase
 {
