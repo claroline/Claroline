@@ -293,7 +293,7 @@ CONTENT;
         <leap2:date leap2:point="end">$formationsWidgetEndedAtText</leap2:date>
         <rdf:type rdf:resource="leap2:activity"/>
         <category term="Education" scheme="categories:life_area"/>
-        <link rel="leap2:has_part" href="portfolio:resource/159163183" leap2:display_order="1"/>
+        <link rel="leap2:has_part" href="portfolio:resource/$formationsWidgetResourceId" leap2:display_order="1"/>
     </entry>
     <entry>
         <title>$formationsWidgetResourceName</title>
@@ -319,7 +319,7 @@ CONTENT;
         $this->assertEquals($importedPortfolio->getUser(), $user);
 
         $formationsWidgets = $importedPortfolio->getWidget('formations');
-        $this->assertEquals(1, count($formationsWidgets));
+        $this->assertEquals(1, count($formationsWidgets), 'Number of formations widget.');
 
         /** @var \Icap\PortfolioBundle\Entity\Widget\FormationsWidget $formationsWidget */
         $formationsWidget = $formationsWidgets[0];
@@ -331,7 +331,7 @@ CONTENT;
         /** @var \Icap\PortfolioBundle\Entity\Widget\FormationsWidgetResource $formationsWidgetResource */
         $formationsWidgetResource = $formationsWidgetResources[0];
 
-        $this->assertEquals(1, count($formationsWidgetResources));
+        $this->assertEquals(1, count($formationsWidgetResources), 'Number of resource in the formations widget.');
         $this->assertEquals($formationsWidgetResourceName, $formationsWidgetResource->getUriLabel());
         $this->assertEquals($formationsWidgetResourceUri, $formationsWidgetResource->getUri());
     }
@@ -384,7 +384,7 @@ CONTENT;
         <leap2:date leap2:point="end">$formationsWidgetEndedAtText</leap2:date>
         <rdf:type rdf:resource="leap2:activity"/>
         <category term="Education" scheme="categories:life_area"/>
-        <link rel="leap2:has_part" href="portfolio:resource/159163183" leap2:display_order="1"/>
+        <link rel="leap2:has_part" href="portfolio:resource/$formationsWidgetResourceId" leap2:display_order="1"/>
     </entry>
     <entry>
         <title>$formationsWidgetResourceName</title>
@@ -399,28 +399,9 @@ CONTENT;
 </feed>
 CONTENT;
 
+        $this->setExpectedException('Exception', "Inconsistency in resources relation for formation widget.");
+
         $importedPortfolio = $importer->import($content, $user);
-
-        $this->assertEquals('Icap\PortfolioBundle\Entity\Portfolio', get_class($importedPortfolio));
-
-        $importedPortfolioTitleWidget = $importedPortfolio->getTitleWidget();
-        $this->assertNotNull($importedPortfolioTitleWidget);
-        $this->assertEquals($portfolioTitle, $importedPortfolioTitleWidget->getTitle());
-
-        $this->assertEquals($importedPortfolio->getUser(), $user);
-
-        $formationsWidgets = $importedPortfolio->getWidget('formations');
-        $this->assertEquals(1, count($formationsWidgets));
-
-        /** @var \Icap\PortfolioBundle\Entity\Widget\FormationsWidget $formationsWidget */
-        $formationsWidget = $formationsWidgets[0];
-
-        $this->assertEquals('Icap\PortfolioBundle\Entity\Widget\FormationsWidget', get_class($formationsWidget));
-        $this->assertEquals($formationsWidgetLabel, $formationsWidget->getLabel());
-
-        $formationsWidgetResources = $formationsWidget->getResources();
-
-        $this->assertEquals(0, count($formationsWidgetResources));
     }
 
     public function testLeap2aImportPortfolioWithUserInformationsWidget()

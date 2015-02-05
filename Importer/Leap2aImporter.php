@@ -45,7 +45,7 @@ class Leap2aImporter implements  ImporterInterface
      */
     public function import($content, User $user)
     {
-        $content = str_replace('xmlns=', 'ns=', $content);
+        $content = str_replace('xmlns=', 'ns=', $content);// For getting something from the \SimpleXMLElement
         $xml = new \SimpleXMLElement($content);
 
         $portfolio = $this->retrievePortfolioFromXml($xml, $user);
@@ -95,30 +95,11 @@ class Leap2aImporter implements  ImporterInterface
 
         $userInformationWidgets = $this->extractUserInformationWidgets($nodes);
 
-//        $formationWidgets = $this->extractFormationsWidget($nodes);
+        $formationWidgets = $this->extractFormationsWidgets($nodes);
 
         $textWidgets = $this->extractTextWidgets($nodes);
 
-        return $skillsWidgets + $userInformationWidgets + $textWidgets;
-    }
-
-    /**
-     * @param string      $entryType
-     * @param null|string $entryCategory
-     *
-     * @return null|string
-     */
-    protected function getWidgetType($entryType, $entryCategory)
-    {
-        return ('leap2:selection' === $entryType && null !== $entryCategory && 'Abilities' === $entryCategory) ? 'skills' : (
-                    ('leap2:person' === $entryType) ? 'userInformation' : (
-                        ('leap2:activity' && null !== $entryCategory && 'Education' === $entryCategory) ? 'formations' : (
-                            ('leap2:entry' === $entryType) ? 'text' : (
-                                ('leap2:selection' === $entryType && null !== $entryCategory && 'Grouping' === $entryCategory) ? 'badges' : null
-                            )
-                        )
-                    )
-                );
+        return $skillsWidgets + $userInformationWidgets + $formationWidgets + $textWidgets;
     }
 
     /**
@@ -129,9 +110,9 @@ class Leap2aImporter implements  ImporterInterface
      */
     protected function extractSkillsWidgets(\SimpleXMLElement $nodes)
     {
-        $skillsWidgets = [];
-
+        $skillsWidgets     = [];
         $skillsWidgetNodes = $nodes->xpath("//entry[rdf:type/@rdf:resource = 'leap2:selection' and category/@term = 'Abilities']");
+
         foreach ($skillsWidgetNodes as $skillsWidgetNode) {
             $skillsWidget = new SkillsWidget();
             $skillsWidgetTitle = $skillsWidgetNode->xpath("title");
@@ -156,7 +137,7 @@ class Leap2aImporter implements  ImporterInterface
                 $relatedSkillNodeLink = (array)$relatedSkillNode['link'];
 
                 if ((string)$skillsWidgetNode->xpath("id")[0] !== $relatedSkillNodeLink['@attributes']['href']) {
-                    throw new \Exception("Inconsistency in skills relation.");
+                    throw new \Exception("Inconsistency in skills relation for skills widget.");
                 }
 
                 $skillsWidgetSkill = new SkillsWidgetSkill();
@@ -172,57 +153,68 @@ class Leap2aImporter implements  ImporterInterface
     }
 
     /**
-     * @param array $entries
-     * @param array $entry
+     * @param \SimpleXMLElement $nodes
      *
      * @return FormationsWidget[]
      * @throws \Exception
      */
-    protected function extractFormationsWidget(array $entries, array $entry)
+    protected function extractFormationsWidgets(\SimpleXMLElement $nodes)
     {
-        $formationsWidgetResources = [];
-        $formationsWidgetId = $entry['id']['$'];
+        $formationsWidgets      = [];
+        $formationsWidgetsNodes = $nodes->xpath("//entry[rdf:type/@rdf:resource = 'leap2:activity' and category/@term = 'Education']");
 
-        foreach ($entries as $subEntry) {
-            $this->validateEntry($subEntry);
+        foreach ($formationsWidgetsNodes as $formationsWidgetsNode) {
+            $formationsWidget = new FormationsWidget();
+            $formationsWidgetTitle = $formationsWidgetsNode->xpath("title");
 
-            if ('leap2:resource' === $subEntry['rdf:type']['@rdf:resource']) {
-                $selfLink = null;
-
-                foreach ($subEntry['link'] as $entryLink) {
-                    $selfLinkKey = array_search('self', $entryLink);
-                    if (false !== $selfLinkKey) {
-                        $selfLink = $entryLink['@href'];
-                    }
-                    $isPartOfLinkKey = array_search('leap2:is_part_of', $entryLink);
-                    if (false !== $isPartOfLinkKey) {
-                        $isPartOfLink = $entryLink['@href'];
-                    }
-                }
-                if (null === $selfLink) {
-                    throw new \Exception('Unable to find self link for the resource.');
-                }
-                if (null === $isPartOfLink) {
-                    throw new \Exception('Unable to find is_part_of link for the resource.');
-                }
-
-                if ($formationsWidgetId === $isPartOfLink) {
-                    $formationsWidgetResource = new FormationsWidgetResource();
-                    $formationsWidgetResource
-                        ->setUriLabel($subEntry['title']['$'])
-                        ->setUri($selfLink);
-
-                    $formationsWidgetResources[] = $formationsWidgetResource;
-                }
+            if (0 === count($formationsWidgetTitle)) {
+                throw new \Exception('Entry has no title.');
             }
+
+            $formationsWidget->setLabel((string)$formationsWidgetTitle[0]);
+
+            $formationsWidgetResources = [];
+
+            foreach ($formationsWidgetsNode->xpath("link[@rel='leap2:has_part']/@href") as $relatedResourceAttributes) {
+                $relatedResourceArrayAttributes = (array)$relatedResourceAttributes;
+                $relatedResourceNodes = $nodes->xpath(sprintf("entry[id[.='%s']]", $relatedResourceArrayAttributes['@attributes']['href']));
+
+                if (0 === count($relatedResourceNodes)) {
+                    throw new \Exception("Unable to find resources.");
+                }
+                $relatedResourceNode = $relatedResourceNodes[0];
+
+                $relatedResourceHrefNodes = $relatedResourceNode->xpath("link[@rel='leap2:is_part_of']/@href");
+
+                if (0 === $relatedResourceHrefNodes) {
+                    throw new \Exception("Inconsistency in resources relation, resource isn't related to any formation widget.");
+                }
+
+                $relatedResourceHrefArrayNodes = (array)$relatedResourceHrefNodes[0];
+
+                if ((string)$formationsWidgetsNode->xpath("id")[0] !== $relatedResourceHrefArrayNodes['@attributes']['href']) {
+                    throw new \Exception("Inconsistency in resources relation for formation widget.");
+                }
+
+                $relatedResourceSelfHrefNodes = $relatedResourceNode->xpath("link[@rel='self']/@href");
+
+                if (0 === $relatedResourceSelfHrefNodes) {
+                    throw new \Exception("Resource doesn't have a self link.");
+                }
+
+                $relatedResourceSelfHrefArrayNodes = (array)$relatedResourceSelfHrefNodes[0];
+                $formationsWidgetResource = new FormationsWidgetResource();
+                $formationsWidgetResource
+                    ->setUriLabel($relatedResourceNode->title)
+                    ->setUri($relatedResourceSelfHrefArrayNodes['@attributes']['href']);
+
+                $formationsWidgetResources[] = $formationsWidgetResource;
+            }
+            $formationsWidget->setResources($formationsWidgetResources);
+            $formationsWidgets[] = $formationsWidget;
         }
 
-        $formationsWidget = new FormationsWidget();
-        $formationsWidget
-            ->setLabel($entry['title']['$'])
-            ->setResources($formationsWidgetResources);
-
-        return $formationsWidget;
+        return $formationsWidgets;
     }
 
     /**
