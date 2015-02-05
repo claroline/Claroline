@@ -48,14 +48,19 @@ class ImportManagerTest extends MockeryTestCase
     {
         $importManager = new ImportManager();
 
-        $expected = array(
-            'leap2a' => 'Leap2a'
-        );
-
         $expectedFormat = uniqid();
 
         $this->setExpectedException('Exception', "No importer for the '$expectedFormat' format.");
 
         $portfolio = $importManager->simulateImport(uniqid(), new User(), $expectedFormat);
+    }
+
+    public function testDoImportWithoutEntityManager()
+    {
+        $importManager = new ImportManager();
+
+        $this->setExpectedException('Exception', 'No entity manager, you can only simulate an import.');
+
+        $portfolio = $importManager->doImport(uniqid(), new User(), uniqid());
     }
 }

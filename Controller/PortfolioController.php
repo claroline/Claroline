@@ -38,7 +38,8 @@ class PortfolioController extends Controller
         $guidedPortfoliosPager = $this->get('claroline.pager.pager_factory')->createPager($guidedPortfolioQuery, $guidedPage, 10);
 
         $importManager          = new ImportManager();
-        $availableImportFormats = $importManager->getAvailableImportFormats();
+        $availableImportFormats = $importManager->getAvailableFormats();
+        $importManager->setEntityManager($this->getEntityManager());
 
         return array(
             'portfoliosPager'        => $portfoliosPager,
