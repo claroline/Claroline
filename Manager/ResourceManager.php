@@ -1059,6 +1059,8 @@ class ResourceManager
         }
 
         $archive->close();
+        $tmpList = $this->container->getParameter('claroline.param.platform_generated_archive_path');
+        file_put_contents($tmpList, $pathArch . "\n", FILE_APPEND);
         $data['name'] = 'archive.zip';
         $data['file'] = $pathArch;
         $data['mimeType'] = 'application/zip';
