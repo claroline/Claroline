@@ -32,6 +32,7 @@ use Claroline\CoreBundle\Event\DownloadResourceEvent;
 use Claroline\CoreBundle\Event\CustomActionResourceEvent;
 use Claroline\CoreBundle\Event\ExportResourceTemplateEvent;
 use Claroline\CoreBundle\Event\ImportResourceTemplateEvent;
+use Claroline\CoreBundle\Library\Utilities\ZipArchive;
 
 /**
  * @DI\Service("claroline.listener.file_listener")
@@ -369,10 +370,9 @@ class FileListener implements ContainerAwareInterface
     {
         $extractPath = sys_get_temp_dir() .
             DIRECTORY_SEPARATOR .
-            $this->container->get('claroline.utilities.misc')->generateGuid() .
-            '.zip';
+            $this->container->get('claroline.utilities.misc')->generateGuid();
 
-        $archive = new \ZipArchive();
+        $archive = new ZipArchive();
 
         if ($archive->open($archivePath) === true) {
             $archive->extractTo($extractPath);
@@ -381,6 +381,8 @@ class FileListener implements ContainerAwareInterface
             $perms = $this->container->get('claroline.manager.rights_manager')->getCustomRoleRights($root);
             $resources = $this->uploadDir($extractPath, $root, $perms, true, $published);
             $this->om->endFlushSuite();
+            $fs = new \Claroline\CoreBundle\Library\Utilities\FileSystem();
+            $fs->rmdir($extractPath, true);    
 
             return $resources;
         }
@@ -465,7 +467,7 @@ class FileListener implements ContainerAwareInterface
     {
         $workspaceCode = $parent->getWorkspace()->getCode();
         $entityFile = new File();
-        $fileName = utf8_encode($file->getFilename());
+        $fileName = $file->getFilename();
         $size = @filesize($file);
         $extension = pathinfo($fileName, PATHINFO_EXTENSION);
         $mimeType = $this->container->get('claroline.utilities.mime_type_guesser')->guess($extension);
