@@ -33,7 +33,7 @@ function sendData(select, path, prefx) {
             // Set its new attributes
             $(answerImg).attr("id", "AnswerImage");
             $(answerImg).attr('src', data);
-
+            
             // Add it to the page
             $('#Answer').append(answerImg);
 
@@ -67,6 +67,8 @@ function sendData(select, path, prefx) {
                     minWidth: 70,
                     maxWidth: maxSize
                 });
+                
+                $('#Answer').children('div').css({'margin': 'auto'});
             });
         }
     });
@@ -105,83 +107,10 @@ $(function () {
 
         // When stop drag
         stop: function(event, ui) {
-            if($('#AnswerImage').length){
-
-                $('#Answer').append('<div id="dragContainer' + grade +
-                    '"><i class="fa fa-arrows" style="cursor: move; position: absolute; left: -10px; top: -15px;"></i>'
-                    + '<p id="num' + parseInt(grade + 1) +'" style="position: absolute; left: 5px; top: -20px;">'
-                    + parseInt(grade + 1) + '</p></div>');
-
-                var stoppos = $(this).position();
-
-                // Create a new image
-                var img = new Image();
-
-                // Give it id corresonding of numbers of previous answer
-                img.id = 'img' + grade;
-
-
-                // With the url of the dragged image
-                $(img).attr('src', el.attr('src'));
-
-                // Add it to the page
-                $('#dragContainer' + grade).append(img);
-
-                imgx = parseInt(stoppos.left);
-                imgx -= $('#Answer').position().left; // $('#Answer').prop('offsetLeft');
-
-                // Position y answer zone
-                imgy = parseInt(stoppos.top);
-                imgy -= $('#Answer').position().top;
-
-                // With the position of the dragged image
-                $('#dragContainer' + grade).css({
-                    "position" : "absolute",
-                    "left" : String(imgx) + 'px',
-                    "top"  : String(imgy) + 'px'
-                });
-
-                // Make the new answer zone draggable and save its new position when stop drag
-                $(img).resizable({
-                    aspectRatio: true,
-                    minWidth: 10,
-                    maxWidth: 500
-                });
-
-                $('#dragContainer' + grade).draggable({
-                    containment : '#AnswerImage',
-                    cursor : 'move',
-                    handle : 'i',
-
-                    stop: function(event, ui) {
-                        $(img).css("left", $(this).css("left"));
-                        $(img).css("top", $(this).css("top"));
-                    }
-                });
-
-                // Alter symbol score in order to insert right score into the database
-                var score = $('#points').val().replace(/[.,]/, '/');
-
-                // Save the score matching to an answer zone (thanks to its id)
-                point[img.id] = score;
-
-                var infos = getImageInformations($(img).attr('src'));
-
-                alreadyPlacedAnswersZone(infos['shape'], infos['color'], infos['pathImg'], score);
-
-                grade++;
-            }
-            // If add a new answer zone, the reference image go back to its initial place
-            if (event.target.id == 'movable') {
-                el.css({
-                    "left" : "0px",
-                    "top"  : "0px"
-                });
-            }
-        }
+        }        
     });
-
-    $("#movable").mousedown(function() {
+   
+    $("#addp").click(function() {
         if ($('#Answer').find('#dragContainer0').length > 1) {
             $('#AlreadyPlacedArray').css({"display" : "none"});
         } else {
@@ -494,7 +423,7 @@ function alreadyPlacedAnswersZone(shape, color, pathImg, point) {
             </select></td>';
 
     contenu += '<td class="classic"><input class="form-control" type="TEXT" id="points' + grade + '" value="'
-                    + point + '" onblur="changePoints(\'' + translations['tradWrongPoint'] + '\', this);"></td></tr>';
+                    + point + '" onblur="changePoints(\'' + translations['tradWrongPoint'] + '\', this);"></td><td class="classic"><a class="btn btn-danger"><i class="fa fa-close"></i></a></td></tr>';
 
     $('#AlreadyPlacedArray').find('tbody').append(contenu);
 }
@@ -593,3 +522,84 @@ function setOrderAfterDel() {
         }
     });
 }
+
+function addans() {
+    $('#addp').click(function() {
+    if($('#AnswerImage').length){
+
+                $('#Answer').append('<div id="dragContainer' + grade +
+                    '"><i class="fa fa-arrows" style="cursor: move; position: absolute; left: -10px; top: -15px;"></i>'
+                    + '<p id="num' + parseInt(grade + 1) +'" style="position: absolute; left: 5px; top: -20px;">'
+                    + parseInt(grade + 1) + '</p></div>');
+
+//                var stoppos = $(this).position();
+
+                var toppos = $('#Answer').position().top;
+                var leftpos = $('#Answer').find('.ui-wrapper').position().left;
+
+                // Create a new image
+                var img = new Image();
+
+                // Give it id corresonding of numbers of previous answer
+                img.id = 'img' + grade;
+
+
+                // With the url of the dragged image
+                $(img).attr('src', el.attr('src'));
+
+                // Add it to the page
+                $('#dragContainer' + grade).append(img);
+
+                imgx = parseInt(leftpos);
+                imgx -= $('#Answer').position().left; // $('#Answer').prop('offsetLeft');
+
+                // Position y answer zone
+                imgy = parseInt(toppos);
+                imgy -= $('#Answer').position().top;
+
+                // With the position of the dragged image
+                $('#dragContainer' + grade).css({
+                    "position" : "absolute",
+                    "left" : String(imgx) + 'px',
+                    "top"  : String(imgy) + 'px'
+                });
+
+                // Make the new answer zone draggable and save its new position when stop drag
+                $(img).resizable({
+                    aspectRatio: true,
+                    minWidth: 10,
+                    maxWidth: 500
+                });
+
+                $('#dragContainer' + grade).draggable({
+                    containment : '#AnswerImage',
+                    cursor : 'move',
+                    handle : 'i',
+
+                    stop: function(event, ui) {
+                        $(img).css("left", $(this).css("left"));
+                        $(img).css("top", $(this).css("top"));
+                    }
+                });
+
+                // Alter symbol score in order to insert right score into the database
+                var score = $('#points').val().replace(/[.,]/, '/');
+
+                // Save the score matching to an answer zone (thanks to its id)
+                point[img.id] = score;
+
+                var infos = getImageInformations($(img).attr('src'));
+
+                alreadyPlacedAnswersZone(infos['shape'], infos['color'], infos['pathImg'], score);
+
+                grade++;
+            }
+            // If add a new answer zone, the reference image go back to its initial place
+            if (event.target.id == 'movable') {
+                el.css({
+                    "left" : "0px",
+                    "top"  : "0px"
+                });
+            }
+        });
+    }
