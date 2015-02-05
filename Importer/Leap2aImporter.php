@@ -15,17 +15,14 @@ use Icap\PortfolioBundle\Entity\Widget\TitleWidget;
 use Icap\PortfolioBundle\Entity\Widget\UserInformationWidget;
 use Icap\PortfolioBundle\Transformer\XmlToArray;
 
-class Leap2aImporter implements  ImporterInterface
+class Leap2aImporter implements ImporterInterface
 {
-    const IMPORT_FORMAT = 'leap2a';
-    const IMPORT_FORMAT_LABEL = 'Leap2a';
-
     /**
      * @return string
      */
     public function getFormat()
     {
-        return self::IMPORT_FORMAT;
+        return 'leap2a';
     }
 
     /**
@@ -33,7 +30,7 @@ class Leap2aImporter implements  ImporterInterface
      */
     public function getFormatLabel()
     {
-        return self::IMPORT_FORMAT_LABEL;
+        return 'Leap2a';
     }
 
     /**
