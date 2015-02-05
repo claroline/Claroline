@@ -72,7 +72,7 @@
 
 {% set cursusTitle = cursus.getTitle() %}
 {% block title %}
-    {{ parent() ~ ' - ' ~ 'claroline_cursus_tool' | trans({}, 'tools') | striptags | raw ~ ' - ' ~ cursusTitle}}
+    {{ parent() ~ ' - ' ~ 'claroline_cursus_tool' | trans({}, 'tools') | striptags | raw ~ ' - ' ~ cursusTitle }}
 {% endblock %}
 
 {% block breadcrumb %}
@@ -98,10 +98,12 @@
 {% block section_content %}
     <div class="panel-heading">
         <h3 class="panel-title">
+            [{{ displayedWords['cursus'] }}]
             {{ cursusTitle }}
         </h3>
     </div>
     <div class="panel-body">
+        {{ macros.flashBox() }}
         {% include 'ClarolineCursusBundle:Cursus:toolMenuIndexTabs.html.twig'%}
         <br>
         <div>

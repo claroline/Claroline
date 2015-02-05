@@ -27,14 +27,16 @@
         </h3>
     </div>
     <div class="panel-body">
+        {{ macros.flashBox() }}
         {% include 'ClarolineCursusBundle:Cursus:toolMenuIndexTabs.html.twig'%}
+        
         <br>
         <div>
-            {% if cursus|length > 0 %}
+            {% if allRootCursus|length > 0 %}
                 <ul>
-                    {% for oneCursus in cursus %}
-                        {% set cursusId = oneCursus.getId() %}
-                        {% set cursusTitle = oneCursus.getTitle() %}
+                    {% for cursus in allRootCursus %}
+                        {% set cursusId = cursus.getId() %}
+                        {% set cursusTitle = cursus.getTitle() %}
                     
                         <li class="cursus-element"
                             data-cursus-id="{{ cursusId }}"
@@ -92,7 +94,7 @@
                 </ul>
                 <br>
             {% else %}
-                <div class="alert alert-info">
+                <div class="alert alert-warning">
                     {{ displayedWords['cursus'] }} :
                     {{ 'none'|trans({}, 'platform') }}
                 </div>

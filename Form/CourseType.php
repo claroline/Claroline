@@ -15,7 +15,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class CursusType extends AbstractType
+class CourseType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -27,18 +27,23 @@ class CursusType extends AbstractType
         $builder->add(
             'code',
             'text',
-            array('required' => false)
+            array('required' => true)
         );
         $builder->add(
             'description',
             'tinymce',
             array('required' => false)
         );
+        $builder->add(
+            'publicRegistration',
+            'checkbox',
+            array('required' => true)
+        );
     }
 
     public function getName()
     {
-        return 'cursus_form';
+        return 'course_form';
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

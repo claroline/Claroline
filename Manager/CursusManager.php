@@ -11,7 +11,9 @@
 
 namespace Claroline\CursusBundle\Manager;
 
+use Claroline\CoreBundle\Pager\PagerFactory;
 use Claroline\CoreBundle\Persistence\ObjectManager;
+use Claroline\CursusBundle\Entity\Course;
 use Claroline\CursusBundle\Entity\Cursus;
 use Claroline\CursusBundle\Entity\CursusDisplayedWord;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -23,23 +25,30 @@ use Symfony\Bundle\FrameworkBundle\Translation\Translator;
 class CursusManager
 {
     private $om;
+    private $pagerFactory;
     private $translator;
+    private $courseRepo;
     private $cursusRepo;
     private $cursusWordRepo;
     
     /**
      * @DI\InjectParams({
      *     "om"              = @DI\Inject("claroline.persistence.object_manager"),
+     *     "pagerFactory"    = @DI\Inject("claroline.pager.pager_factory"),
      *     "translator"      = @DI\Inject("translator")
      * })
      */
     public function __construct(
         ObjectManager $om,
+        PagerFactory $pagerFactory,
         Translator $translator
     )
     {
         $this->om = $om;
+        $this->pagerFactory = $pagerFactory;
         $this->translator = $translator;
+        $this->courseRepo =
+            $om->getRepository('ClarolineCursusBundle:Course');
         $this->cursusRepo =
             $om->getRepository('ClarolineCursusBundle:Cursus');
         $this->cursusWordRepo =
@@ -79,6 +88,18 @@ class CursusManager
         $this->om->remove($cursus);
         $this->om->flush();
     }
+
+    public function persistCourse(Course $course)
+    {
+        $this->om->persist($course);
+        $this->om->flush();
+    }
+
+    public function deleteCourse(Course $course)
+    {
+        $this->om->remove($course);
+        $this->om->flush();
+    }
     
 
     /***************************************************
@@ -113,5 +134,50 @@ class CursusManager
     public function getHierarchyByCursus(Cursus $cursus, $executeQuery = true)
     {
         return $this->cursusRepo->findHierarchyByCursus($cursus, $executeQuery);
+    }
+
+
+    /**************************************
+     * Access to CourseRepository methods *
+     **************************************/
+
+    public function getAllCourses(
+        $orderedBy = 'title',
+        $order = 'ASC',
+        $page = 1,
+        $max = 50,
+        $executeQuery = true
+    )
+    {
+        $courses = $this->courseRepo->findAllCourses(
+            $orderedBy,
+            $order,
+            $executeQuery
+        );
+
+        return $executeQuery ?
+            $this->pagerFactory->createPagerFromArray($courses, $page, $max) :
+            $this->pagerFactory->createPager($courses, $page, $max);
+    }
+
+    public function getSearchedCourses(
+        $search = '',
+        $orderedBy = 'title',
+        $order = 'ASC',
+        $page = 1,
+        $max = 50,
+        $executeQuery = true
+    )
+    {
+        $courses = $this->courseRepo->findSearchedCourses(
+            $search,
+            $orderedBy,
+            $order,
+            $executeQuery
+        );
+
+        return $executeQuery ?
+            $this->pagerFactory->createPagerFromArray($courses, $page, $max) :
+            $this->pagerFactory->createPager($courses, $page, $max);
     }
 }
