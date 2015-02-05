@@ -25,6 +25,7 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Workspace\Configuration;
 use Claroline\CoreBundle\Library\Transfert\RichTextInterface;
 use Symfony\Component\Yaml\Yaml;
+use Claroline\CoreBundle\Library\Utilities\FileSystem;
 use Claroline\CoreBundle\Manager\Exception\ToolPositionAlreadyOccupiedException;
 
 /**
@@ -244,6 +245,7 @@ class TransfertManager
         $this->populateWorkspace($workspace, $configuration, $root, $entityRoles, true, false);
         $this->container->get('claroline.manager.workspace_manager')->createWorkspace($workspace);
         $this->om->endFlushSuite();
+        $fs = new FileSystem();
 
         return $workspace;
     }
