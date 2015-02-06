@@ -45,5 +45,5 @@ Publish a specific Path.
 * Axel Penin (Elorfin)
 * Arnaud Bey (arnaudbey)
 * Eric Vincent (ericvincenterv)
-
+* Nicolas Dufour (eldoniel)
 [1]: https://insight.sensiolabs.com/projects/91c3195e-8056-40e9-b1d3-e5cc10230e4f/small.png
