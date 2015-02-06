@@ -1,0 +1,79 @@
+{% if listEvents is not empty %}
+    <div class="table-responsive">
+        <table id="mytable" class="table table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th class="white-space"> <a href="#">  {{ 'agenda_form_title'|trans({}, 'agenda') }} </a> </th>
+                    <th class="white-space"> {{ 'agenda_form_description'|trans({}, 'agenda') }} </th>
+                    <th class="white-space"> <a href="#">  {{ 'workspace'|trans({}, 'agenda') }} </a></th>
+                    <th class="white-space"> <a href="#">  {{ 'start_date'|trans({}, 'agenda') }}</a> </th>
+                    <th class="white-space"> <a href="#">  {{ 'end_date'|trans({}, 'agenda') }} </a></th>
+                    <th class="white-space"> <a href="#">  {{ 'type'|trans({}, 'agenda') }} </a></th>
+                    <th class="white-space"> <a href="#">  {{ 'agenda_form_priority'|trans({}, 'agenda') }} </a></th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for e in listEvents %}
+                <tr>
+                    <td>
+                        <h5>{{ e.title }}</h5>
+                    </td>
+                    <td>
+                        {% if e.description is not empty %}
+                            {{ e.description |raw }}
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if e.getWorkspace() is not empty %}
+                            {{ e.getWorkspace().getName() }}
+                        {% else %}
+                            {{ 'desktop'|trans({}, 'platform') }}
+                        {% endif %}
+                    </td>
+                    <td> {{ e.start|date("d/m/Y g:i")}} </td>
+                    <td> {{ e.end|date("d/m/Y g:i") }} </td>
+                    <td>
+                        {% if e.allDay %}
+                            {{ 'task'|trans({}, 'agenda') }}
+                        {% else %}
+                            {{ 'event'|trans({}, 'agenda') }}
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if e.priority == '#848484' %}
+                            <span style="color:{{ e.priority }}">{{ 'low'|trans({}, 'agenda') }}</span>
+                        {% elseif e.priority == '#FF0000' %}
+                            <span style="color:{{ e.priority }}">{{ 'high'|trans({}, 'agenda') }}</span>
+                        {% else %}
+                            <span style="color:#01A9DB">{{ 'medium'|trans({}, 'agenda') }}</span>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% else %}
+    {{ 'no event found'|trans({}, 'agenda') }}</li>
+{% endif %}
+
+{% block javascripts %}
+    <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/table-sorter/jquery.tablesorter.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/table-sorter/jquery.metadata.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/tool/calendarDatePicker.js') }}"></script>
+    <script type="text/javascript">
+
+    $(document).ready(function() {
+        if ($("#mytable").find("tr").size() > 1)
+        {
+            $("#mytable").tablesorter( {
+                sortList: [[5,0], [6,0],[3,0],[1,0]],
+                dateFormat : "ddmmyyyy",
+                headers: {
+                    2: { sorter: "shortDate" }
+                }
+            });
+        }
+    });
+</script>
+{% endblock javascripts %}

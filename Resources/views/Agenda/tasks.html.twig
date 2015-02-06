@@ -1,0 +1,5 @@
+<div id="tasks-list">
+    {% for event in events %}
+        {% include "ClarolineAgendaBundle:Agenda:task.html.twig" with {'event': event} %}
+    {% endfor %}
+</div>

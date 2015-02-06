@@ -1,0 +1,21 @@
+{% twig_js name="EventContent" %}
+
+{% if event.editable %}
+    <a href="{{ path('claro_agenda_update_event_form', {'event': event.id}) }}" class="edit-event-link">
+        {{ 'edit'|trans({}, 'platform') }}
+    </a>
+{% endif %}
+
+<div>{{ 'agenda_form_start'|trans({}, 'agenda') }}: {{ event.startFormatted }}</div>
+<div>{{ 'agenda_form_end'|trans({}, 'agenda') }}: {{ event.endFormatted }}</div>
+<div>{{ 'agenda_form_author'|trans({}, 'agenda') }}: {{ event.owner }}</div>
+
+{% if event.workspace != null %}
+<div>{{ 'workspace'|trans({}, 'platform') }}: {{ event.workspace }}</div>
+{% endif %}
+{% if event.description is defined and event.description != null %}
+{{ 'description'|trans({}, 'platform') }} :
+<div style="max-height: 150px; overflow-y: auto;">
+     {{ event.description|raw }}
+</div>
+{% endif %}

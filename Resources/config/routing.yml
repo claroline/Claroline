@@ -1,0 +1,14 @@
+claro_desktop_tool_agenda:
+    resource: "@ClarolineAgendaBundle/Controller/DesktopAgendaController.php"
+    prefix: desktop/tool/agenda
+    type: annotation
+
+claro_workspace_tool_agenda:
+    resource: "@ClarolineAgendaBundle/Controller/WorkspaceAgendaController.php"
+    prefix: workspaces/tool/agenda
+    type: annotation
+
+claro_tool_agenda:
+    resource: "@ClarolineAgendaBundle/Controller/AgendaController.php"
+    prefix: tool/agenda
+    type: annotation

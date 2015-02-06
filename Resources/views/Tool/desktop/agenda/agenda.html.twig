@@ -1,0 +1,110 @@
+{% extends 'ClarolineCoreBundle:Desktop:layout.html.twig' %}
+
+{% set calendarPath = 'bundles/frontend/jquery/plugin/fullcalendar-2.2.1/' %}
+
+{% block title %}{{ parent() ~ ' - ' ~ "agenda" | trans({}, "platform") | striptags | raw }}{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel='stylesheet' type='text/css' href='{{ asset(calendarPath ~ 'fullcalendar.css') }}'/>
+    <link rel='stylesheet' type='text/css' href='{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2.custom/css/ui-lightness/jquery-ui-1.9.2.custom.css') }}'/>
+    <link rel='stylesheet' type='text/css' href='{{ asset(calendarPath ~ 'fullcalendar.print.css') }}' media='print' />
+    <link rel='stylesheet' type='text/css' href='{{ asset('bundles/frontend/jquery/plugin/datepicker/css/datepicker.css') }}'
+    >
+{% endblock %}
+{% block breadcrumb %}
+    {{
+        macros.desktopBreadcrumbs([
+            {
+                'name': 'agenda'|trans({}, 'platform'),
+                'href': ''
+            }
+        ])
+    }}
+{% endblock %}
+{% block section_content %}
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ 'agenda'|trans({}, 'platform') }}</h3>
+    </div>
+    <div class="panel-body">
+        <div class="row">
+            <div id="events"></div>
+            <div id='calendar' class="col-md-9"></div>
+
+            <div class="col-md-3">
+                <div class="panel text-center">
+                    <a href="{{ path('claro_desktop_agenda_export') }}" class="btn btn-default btn-xs" role="button">
+                        {{ 'export'|trans({}, 'agenda') }}
+                    </a>
+                    <a id="import-ics-btn" href="{{ path('claro_agenda_import_form') }}"
+                       class="btn btn-default btn-xs"
+                       role="button"
+                            >
+                        {{ 'import_agenda_file_file'|trans({}, 'agenda') }}
+                    </a>
+                </div>
+
+                {% if filters | length > 1 %}
+                    <div class="panel panel-default">
+                        <div data-toggle="collapse" data-target="#panel-owners" class="panel-heading">{{'filter_ws'|trans({}, 'agenda')}}</div>
+                        <div id="panel-owners" class="panel-body list-group in" style="padding:0">
+                            <div id="selectWorkspace">
+                                {% for wsId, filterName in filters %}
+                                    <li class="list-group-item">
+                                        <input
+                                            id="ws-{{ wsId }}"
+                                            type="checkbox"
+                                            name="{{ filterName}}"
+                                            class="filter"
+                                            value="{{ wsId }}"
+                                        />
+                                        <label for="ws-{{ wsId }}">{{ filterName }}</label>
+                                    </li>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+
+                <div class="panel panel-default">
+                    <div class="panel-heading">{{'tasks'|trans({}, 'agenda')}}</div>
+                    <div id="tasks" class="panel-body list-group" style="padding:0">
+                        {% render controller('ClarolineAgendaBundle:DesktopAgenda:tasks') %}
+                    </div>
+                </div>
+
+                <div class="panel panel-default">
+                    <div class="panel-heading">{{ 'agenda_form_priority'|trans({}, 'agenda') }}</div>
+                    <div class="panel-body list-group" style="padding:0">
+                        <li class="list-group-item" style="color:#FF0000">  {{ 'high'|trans({}, 'agenda') }} </li>
+                        <li class="list-group-item" style="color:#01A9DB"> {{ 'medium'|trans({}, 'agenda') }} </li>
+                        <li class="list-group-item" style="color:#848484"> {{ 'low'|trans({}, 'agenda') }} </li>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    {% javascripts debug=false filter='twig_js, jsmin' vars=["locale"]
+        "@ClarolineAgendaBundle/Resources/views/Agenda/eventContent.html.twig"
+        "@ClarolineAgendaBundle/Resources/views/Agenda/task.html.twig" %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+    <script type="text/javascript" src="{{ url('bazinga_jstranslation_js', { 'domain': 'agenda' }) }}"></script>
+    <script type="text/javascript" src="{{ asset(calendarPath ~ 'lib/moment.min.js') }}"></script>
+    <script type='text/javascript' src='{{ asset(calendarPath ~ 'fullcalendar.js') }}' ></script>
+    <script type='text/javascript'src='{{ asset('bundles/clarolineagenda/js/calendar.js') }}'></script>
+    <script type='text/javascript'src='{{ asset('bundles/frontend/date.js') }}'></script>
+    <script type='text/javascript'>
+        $(function () {
+            Claroline.Calendar.initialize('desktop');
+        });
+    </script>
+    <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/datepicker/js/bootstrap-datepicker.js') }}"></script> <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/tool/calendarDatePicker.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2/components/jquery.ui.draggable.min.js') }}"> </script>
+    <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2/components/jquery.ui.resizable.min.js') }}"> </script>
+{% endblock javascripts %}
