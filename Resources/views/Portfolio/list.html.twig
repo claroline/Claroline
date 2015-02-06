@@ -70,7 +70,7 @@
             </a>
         </div>
         <div class="btn-group btn-group-sm" role="group">
-            <button id="btnGroupDrop1" type="button" class="btn btn-default dropdown-toggle" aria-expanded="false"
+            <button id="btnGroupDrop1" type="button" class="btn btn-default import-dropdown-toggle" aria-expanded="false"
                     data-toggle="dropdown">
                 <span class="fa fa-download"></span>
                 <span class="caret"></span>
@@ -201,8 +201,8 @@
         (function($) {
             $(function() {
                 $('.delete').confirmModal();
-                $('.dropdown-toggle').dropdown();
-                $('.dropdown-toggle').tooltip({
+                $('.import-dropdown-toggle').dropdown();
+                $('.import-dropdown-toggle').tooltip({
                     container: "body",
                     placement: "top",
                     title: "{{ 'import_portfolio'|trans({}, 'icap_portfolio') }}"
