@@ -21,7 +21,7 @@ class ImportManager
     private $availableFormats = [];
 
     /**
-     * @var EntityManager
+     * @var ObjectManager
      */
     private $entityManager;
 
@@ -48,6 +48,30 @@ class ImportManager
     public function getAvailableFormats()
     {
         return $this->availableFormats;
+    }
+
+    /**
+     * @return ObjectManager
+     * @throws \Exception
+     */
+    public function getEntityManager()
+    {
+        if (null === $this->entityManager) {
+            throw new \Exception('No entity manager, you can only simulate an import.');
+        }
+        return $this->entityManager;
+    }
+
+    /**
+     * @param ObjectManager $entityManager
+     *
+     * @return ImportManager
+     */
+    public function setEntityManager(ObjectManager $entityManager)
+    {
+        $this->entityManager = $entityManager;
+
+        return $this;
     }
 
     /**
@@ -90,32 +114,12 @@ class ImportManager
      */
     public function doImport($content, User $user, $format)
     {
+        $portfolio     = $this->simulateImport($content, $user, $format);
         $entityManager = $this->getEntityManager();
 
-        $portfolio = $this->import($content, $user, $format);
-    }
+        $entityManager->persist($portfolio);
+        $entityManager->flush();
 
-    /**
-     * @return ObjectManager
-     * @throws \Exception
-     */
-    public function getEntityManager()
-    {
-        if (null === $this->entityManager) {
-            throw new \Exception('No entity manager, you can only simulate an import.');
-        }
-        return $this->entityManager;
-    }
-
-    /**
-     * @param ObjectManager $entityManager
-     *
-     * @return ImportManager
-     */
-    public function setEntityManager(ObjectManager $entityManager)
-    {
-        $this->entityManager = $entityManager;
-
-        return $this;
+        return $portfolio;
     }
 }
