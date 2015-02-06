@@ -34,6 +34,11 @@ class CursusType extends AbstractType
             'tinymce',
             array('required' => false)
         );
+        $builder->add(
+            'blocking',
+            'checkbox',
+            array('required' => true)
+        );
     }
 
     public function getName()
