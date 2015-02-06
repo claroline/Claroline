@@ -187,6 +187,26 @@ class Cursus
         $this->course = $course;
     }
 
+    public function isBlocking()
+    {
+        return $this->blocking;
+    }
+
+    public function setBlocking($blocking)
+    {
+        $this->blocking = $blocking;
+    }
+
+    public function getDetails()
+    {
+        return $this->details;
+    }
+
+    public function setDetails($details)
+    {
+        $this->details = $details;
+    }
+
     public function getParent()
     {
         return $this->parent;
