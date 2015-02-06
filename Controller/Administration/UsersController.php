@@ -229,8 +229,7 @@ class UsersController extends Controller
         if ($form->isValid() && count($unavailableRoles) === 0) {
             $user = $form->getData();
             $newRoles = $form->get('platformRoles')->getData();
-            $this->userManager->insertUserWithRoles($user, $newRoles);
-
+            $this->userManager->createUser($user, true, $newRoles);
             $sessionFlashBag->add('success', $translator->trans('user_creation_success', array(), 'platform'));
 
             return $this->redirect($this->generateUrl('claro_admin_user_list'));
@@ -482,52 +481,6 @@ class UsersController extends Controller
         $response->headers->set('Connection', 'close');
 
         return $response;
-    }
-
-    /**
-     * @EXT\Route("/user/form/properties", name="claro_admin_user_form_properties")
-     *
-     * @EXT\Template("ClarolineCoreBundle:Administration/Users:userFormProperties.html.twig")
-     */
-    public function userFormPropertiesAction()
-    {
-        $this->checkOpen();
-        $platformConfig = $this->configHandler->getPlatformConfig();
-        $form = $this->createForm(new UserPropertiesType(), $platformConfig, array(
-            'action' => $this->generateUrl('claro_admin_user_form_properties_submit')
-        ));
-
-        return array('form' => $form->createView());
-    }
-
-    /**
-     * @EXT\Route("/user/form/properties/submit", name="claro_admin_user_form_properties_submit"),
-     *
-     * @EXT\Template("ClarolineCoreBundle:Administration/Users:userFormProperties.html.twig")
-     */
-    public function submitUserFormPropertiesAction()
-    {
-        $this->checkOpen();
-        $platformConfig = $this->configHandler->getPlatformConfig();
-
-        $form = $this->createForm(
-            new UserPropertiesType(),
-            $platformConfig
-        );
-
-        $form->handleRequest($this->request);
-
-        if ($form->isValid()) {
-            $this->configHandler->setParameters(
-                array(
-                    'createPersonnalWorkspace' => $form['createPersonnalWorkspace']->getData()
-                )
-            );
-
-            return new RedirectResponse($this->router->generate('claro_admin_users_management'));
-        }
-
-        return array('form' => $form->createView());
     }
 
     /**

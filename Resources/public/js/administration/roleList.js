@@ -112,6 +112,14 @@
         isNegative($(event.currentTarget).val()) || isBlank($(event.currentTarget).val()) ?
             btn.attr('disabled', 'disabled'):
             btn.removeAttr('disabled');
+    })
+    .on('click', '.pws-chk', function(event) {
+        var roleId = $(event.currentTarget).attr('data-role-id');
+        var url = Routing.generate('platform_role_workspace_creation_edit', {'role': roleId});
+        $.ajax({
+            url: url,
+            type: 'GET'
+        });
     });
 
     //HELPER

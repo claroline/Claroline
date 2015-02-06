@@ -115,6 +115,7 @@ class RoleManager
         $role->setName($name);
         $role->setTranslationKey($translationKey);
         $role->setReadOnly($isReadOnly);
+        $role->setPersonalWorkspaceCreationEnabled(true);
         $role->setType(Role::PLATFORM_ROLE);
         $this->om->persist($role);
         $this->om->flush();
@@ -875,4 +876,12 @@ class RoleManager
             $executeQuery
         );
     }
+
+    public function invertWorkspaceCreation(Role $role)
+    {
+        $role->setPersonalWorkspaceCreationEnabled(!$role->isPersonalWorkspaceCreationEnabled());
+        $this->om->persist($role);
+        $this->om->flush();
+    }
+
 }
