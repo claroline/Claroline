@@ -44,24 +44,32 @@ class ExporterManager
      *
      * @param $class a class entity class to be exported
      * @param $exporter the exporter object to use
+     * @param $extra some extra parameters depending on the exporter
      */
-    public function export($class, $exporter)
+    public function export($class, $exporter, array $extra = array())
     {
         if ($class === 'Claroline\CoreBundle\Entity\User') {
-            return $this->exportUsers($exporter);
+            return $this->exportUsers($exporter, $extra);
         }
 
-        return $this->defaultExport($class, $exporter);
+        return $this->defaultExport($class, $exporter, $extra);
     }
 
     /**
-     * We had the facets to the user export
+     * We add the facets to the user export
      */
-    private function exportUsers($exporter)
+    private function exportUsers($exporter, array $extra)
     {
         $dontExport = array('password', 'description', 'salt', 'plainPassword');
 
-        $users = $this->om->getRepository('ClarolineCoreBundle:User')->findAllWithFacets();
+        if (isset($extra['workspace'])) {
+            $users = $this->om->getRepository('ClarolineCoreBundle:User')
+                ->findAllWithFacetsByWorkspace($extra['workspace']);
+        } else {
+            $users = $this->om->getRepository('ClarolineCoreBundle:User')
+                ->findAllWithFacets();
+        }
+
         $fieldsFacets = $this->om->getRepository('ClarolineCoreBundle:Facet\FieldFacet')->findAll();
         $fields = $this->getExportableFields('Claroline\CoreBundle\Entity\User');
 
