@@ -15,6 +15,7 @@ class qtiRepository {
     private $userDir;
     private $securityContext;
     private $container;
+    private $exercise = null;
 
     /**
      * Constructor
@@ -40,10 +41,10 @@ class qtiRepository {
      */
     public function getQtiUser()
     {
-        
+
         return $this->user;
     }
-    
+
     /**
      * Create the repository
      *
@@ -125,22 +126,22 @@ class qtiRepository {
                                 switch ($node->nodeName) {
                                     case "choiceInteraction": //qcm
                                         $qtiImport = $this->container->get('ujm.qti_qcm_import');
-                                        $qtiImport->import($this, $ai);
+                                        $interX = $qtiImport->import($this, $ai);
                                         $imported = true;
                                         break;
                                     case 'selectPointInteraction': //graphic with the tag selectPointInteraction
                                         $qtiImport = $this->container->get('ujm.qti_graphic_import');
-                                        $qtiImport->import($this, $ai);
+                                        $interX = $qtiImport->import($this, $ai);
                                         $imported = true;
                                         break;
                                     case 'hotspotInteraction': //graphic with the tag hotspotInteraction
                                         $qtiImport = $this->container->get('ujm.qti_graphic_import');
-                                        $qtiImport->import($this, $ai);
+                                        $interX= $qtiImport->import($this, $ai);
                                         $imported = true;
                                         break;
                                     case 'extendedTextInteraction': //open
                                         $qtiImport = $this->container->get('ujm.qti_open_import');
-                                        $qtiImport->import($this, $ai);
+                                        $interX = $qtiImport->import($this, $ai);
                                         $imported = true;
                                         break;
                                     case 'matchInteraction': //matching
@@ -155,7 +156,7 @@ class qtiRepository {
                             if (($ib->getElementsByTagName('textEntryInteraction')->length > 0)
                                     || ($ib->getElementsByTagName('inlineChoiceInteraction')->length > 0)) { //question with hole
                                 $qtiImport = $this->container->get('ujm.qti_hole_import');
-                                $qtiImport->import($this, $ai);
+                                $interX = $qtiImport->import($this, $ai);
                                 $imported = true;
                             } else {
                                 return 'qti unsupported format';
@@ -172,7 +173,38 @@ class qtiRepository {
         }
         $this->removeDirectory();
 
+        if ($this->exercise != null) {
+            $this->addQuestionInExercise($interX);
+        }
+
         return true;
+    }
+
+
+    /**
+     * Call scanFiles method for ExoImporter
+     *
+     * @access public
+     *
+     * @param UJM\ExoBundle\Entity\Exercise $exercise
+     */
+    public function scanFilesToImport($exercise)
+    {
+        $this->exercise = $exercise;
+        $this->scanFiles();
+        $this->exercise = null;
+    }
+
+    /**
+     *
+     * @access private
+     *
+     * @param UJM\ExoBundle\Entity\InteractionQCM or InteractionGraphic or .... $interX
+     */
+    private function addQuestionInExercise($interX)
+    {
+        $exoServ = $this->container->get('ujm.exercise_services');
+        $exoServ->setExerciseQuestion($this->exercise->getId(), $interX);
     }
 
 }

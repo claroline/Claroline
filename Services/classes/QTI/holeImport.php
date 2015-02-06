@@ -25,6 +25,7 @@ class holeImport extends qtiImport
      * @param qtiRepository $qtiRepos
      * @param DOMElement $assessmentItem assessmentItem of the question to imported
      *
+     * @return UJM\ExoBundle\Entity\InteractionHole
      */
     public function import(qtiRepository $qtiRepos, $assessmentItem)
     {
@@ -43,6 +44,8 @@ class holeImport extends qtiImport
         $this->doctrine->getManager()->flush();
 
         $this->addOptionValue();
+
+        return $this->interactionHole;
     }
 
     /**

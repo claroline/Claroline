@@ -129,16 +129,22 @@ class graphicExport extends qtiExport
      */
     private function selectPointInteractionTag()
     {
+        $taburl = explode('/', $this->interactiongraph->getDocument()->getUrl());
+        $pictureName = end($taburl);
         $this->selectPointInteraction = $this->document->createElement("selectPointInteraction");
         $this->selectPointInteraction->setAttribute("responseIdentifier", "RESPONSE");
         $this->selectPointInteraction->setAttribute("maxChoices",
                 count($this->interactiongraph->getCoords()));
 
         $object = $this->document->CreateElement('object');
-        $object->setAttribute("type", "image/". $this->interactiongraph->getDocument()->getType());
+        $mimetype = $this->interactiongraph->getDocument()->getType();
+        if (strpos($mimetype, 'image/') === false) {
+            $mimetype = "image/". $mimetype;
+        }
+        $object->setAttribute("type", $mimetype);
         $object->setAttribute("width", $this->interactiongraph->getWidth());
         $object->setAttribute("height", $this->interactiongraph->getHeight());
-        $object->setAttribute("data", $this->interactiongraph->getDocument()->getLabel().$this->interactiongraph->getDocument()->getType());
+        $object->setAttribute("data", $pictureName);
         $objecttxt = $this->document->CreateTextNode($this->interactiongraph->getDocument()->getLabel());
         $object->appendChild($objecttxt);
         $this->selectPointInteraction->appendChild($object);
@@ -172,7 +178,8 @@ class graphicExport extends qtiExport
     {
         $picture = $this->interactiongraph->getDocument();
         $src = $picture->getUrl();
-        $pictureName = $picture->getLabel().$picture->getType();
+        $taburl = explode('/', $src);
+        $pictureName = end($taburl);
         $dest = $this->qtiRepos->getUserDir().$pictureName;
         copy($src, $dest);
         $ressource = array ('name' => $pictureName, 'url' => $dest);
