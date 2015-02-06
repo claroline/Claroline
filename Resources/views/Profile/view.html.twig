@@ -20,7 +20,7 @@
                             </a>
                         </li>
                         <li role="presentation" >
-                            <a role="menuitem" href="{{ path('claro_user_password_edit') }}">
+                            <a role="menuitem" href="{{ path('claro_user_password_edit', {'user': user.getId()}) }}">
                                 {{ 'edit_password'|trans({}, 'platform') }}
                             </a>
                         </li>

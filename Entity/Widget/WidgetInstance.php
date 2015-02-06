@@ -128,4 +128,14 @@ class WidgetInstance
     {
         $this->isDesktop = $bool;
     }
+
+    public function serializeForWidgetPicker()
+    {
+        $return = array(
+            'id'    => $this->id,
+            'name'  => $this->name
+        );
+
+        return $return;
+    }
 }

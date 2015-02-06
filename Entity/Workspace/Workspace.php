@@ -347,4 +347,14 @@ class Workspace
     {
         return $this->isPersonal;
     }
+
+    public function serializeForWidgetPicker()
+    {
+        $return = array(
+            'id' => $this->id,
+            'name' => $this->name
+        );
+
+        return $return;
+    }
 }

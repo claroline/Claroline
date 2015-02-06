@@ -316,16 +316,26 @@ class ProfileController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/password/edit",
+     *     "/password/edit/{user}",
      *      name="claro_user_password_edit"
      * )
      * @EXT\ParamConverter("loggedUser", options={"authenticatedUser" = true})
      * @EXT\Template()
      */
-    public function editPasswordAction(User $loggedUser)
+    public function editPasswordAction(User $user, User $loggedUser)
     {
-        $form = $this->createForm(new ResetPasswordType(true));
-        $oldPassword = $loggedUser->getPassword();
+        $isAdmin = $this->get('security.context')->isGranted('ROLE_ADMIN');
+        $isGrantedUserAdmin = $this->get('security.context')->isGranted(
+            'OPEN', $this->toolManager->getAdminToolByName('user_management')
+        );
+        $selfEdit = $user->getId() === $loggedUser->getId() ? true: false;
+
+        if (!$selfEdit && !$isAdmin && !$isGrantedUserAdmin) {
+            throw new AccessDeniedException();
+        }
+
+        $form = $this->createForm(new ResetPasswordType($selfEdit));
+        $oldPassword = $user->getPassword();
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
@@ -333,25 +343,35 @@ class ProfileController extends Controller
             $sessionFlashBag = $this->get('session')->getFlashBag();
             /** @var \Symfony\Bundle\FrameworkBundle\Translation\Translator $translator */
             $translator = $this->get('translator');
-            $loggedUser->setPlainPassword($form['password']->getData());
+            $continue = !$selfEdit;
 
-            if ($this->encodePassword($loggedUser) === $oldPassword) {
-                $loggedUser->setPlainPassword($form['plainPassword']->getData());
-                $loggedUser->setPassword($this->encodePassword($loggedUser));
+            if ($selfEdit) $user->setPlainPassword($form['password']->getData());
+
+            if ($selfEdit && $this->encodePassword($user) === $oldPassword) {
+                $continue = true;
+            }
+
+            if ($continue) {
+                $user->setPlainPassword($form['plainPassword']->getData());
+                $user->setPassword($this->encodePassword($user));
                 $entityManager = $this->get('doctrine.orm.entity_manager');
-                $entityManager->persist($loggedUser);
+                $entityManager->persist($user);
                 $entityManager->flush();
                 $sessionFlashBag->add('success', $translator->trans('edit_password_success', array(), 'platform'));
             } else {
                 $sessionFlashBag->add('error', $translator->trans('edit_password_error_current', array(), 'platform'));
             }
 
-            return $this->redirect($this->generateUrl('claro_profile_view'));
+            if ($selfEdit) {
+                return $this->redirect($this->generateUrl('claro_profile_view'));
+            } else {
+                return $this->redirect($this->generateUrl('claro_admin_user_list'));
+            }
         }
 
         return array(
             'form' => $form->createView(),
-            'user' => $loggedUser
+            'user' => $user
         );
     }
 

@@ -33,3 +33,5 @@ resource_shortcut: Raccourcis
 text: Texte
 write: Ecrire
 administrate: Administrer
+empty: Vide
+insert: Insérer

@@ -342,9 +342,9 @@ edit_competence: 'Edit competence'
 edit_event_success: The event was updated successfully.
 edit_facet: Edit a facet
 edit_field: Edit a field
-edit_password: 'Edit your password'
-edit_password_error: 'An error occured while editing your password.'
-edit_password_error_current : Your currently password is not correct.
+edit_password: 'Edit the password'
+edit_password_error: 'An error occured while editing the password.'
+edit_password_error_current : The current password is not correct.
 edit_password_message: 'Do you really want to update your passwords?'
 edit_password_success: 'Your password has been edited with success.'
 edit_profile: 'Edit your profile'

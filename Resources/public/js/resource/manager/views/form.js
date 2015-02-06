@@ -57,8 +57,10 @@
             });
         },
         replaceId: function (id) {
-            var action = this.$('form').attr('action').replace('_nodeId', id);
-            this.$('form').attr('action', action);
+            if (this.$('form')&&this.$('form').attr('action')) {
+                var action = this.$('form').attr('action').replace('_nodeId', id);
+                this.$('form').attr('action', action);
+            }
         },
         render: function (event) {
             this.targetNodeId = event.nodeId || this.targetNodeId;

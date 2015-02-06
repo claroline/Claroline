@@ -1,0 +1,7 @@
+{% twig_js name="ResourceManagerTreeNode" %}
+
+{% if isEmpty==false %}
+<span><i class="fa {{iconClass}}"></i> {{name}}</span> {% if isLeaf %}<a class="add-content"> <i class="fa fa-plus"></i> {{"insert"|trans({},'resource')}}</a>{% endif %}
+{% else %}
+<span class="empty">{{"empty"|trans({},'resource')}}</span>
+{% endif %}

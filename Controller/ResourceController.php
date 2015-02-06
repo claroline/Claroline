@@ -829,12 +829,18 @@ class ResourceController
      */
     public function managerParametersAction()
     {
-        $json = $this->templating->render(
-            'ClarolineCoreBundle:Resource:managerParameters.json.twig',
-            array('resourceTypes' => $this->resourceManager->getAllResourceTypes())
-        );
+        $response = new Response('', 401, array('Content-Type' => 'application/json'));
+        if ($this->sc->isGranted('USER_ROLE')) {
+            $json = $this->templating->render(
+                'ClarolineCoreBundle:Resource:managerParameters.json.twig',
+                array('resourceTypes' => $this->resourceManager->getAllResourceTypes())
+            );
+            $response
+                ->setContent($json)
+                ->setStatusCode(200);
+        }
 
-        return new Response($json, 200, array('Content-Type' => 'application/json'));
+        return $response;
     }
 
     /**

@@ -214,7 +214,8 @@
             pickerCallback: parameters.callback || function () {},
             isPickerMultiSelectAllowed: isDefault || parameters.isPickerMultiSelectAllowed || false,
             isDirectorySelectionAllowed: allowDirectorySelection,
-            currentDirectoryId: null
+            currentDirectoryId: null,
+            isTinyMce: parameters.isTinyMce || false
         };
 
         if (mergedParameters.preFetchedDirectory) {

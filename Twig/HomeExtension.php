@@ -246,12 +246,7 @@ class HomeExtension extends \Twig_Extension
         $webRoot = realpath($this->kernel->getRootDir() . '/../web/');
         $toCheck = realpath($webRoot . '/' . $path);
 
-        // check if the file exists
-        if (!is_file($toCheck)) {
-            return false;
-        }
-
-        return true;
+        return $toCheck !== '' && $toCheck !== null ? true: false;
     }
 
 

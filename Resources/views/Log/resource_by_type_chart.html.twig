@@ -1,6 +1,6 @@
 <style type="text/css">
     .pie-chart{
-        {% if chartHeight is empty %}
+        {% if chartHeight is not defined or chartHeight is empty %}
         height:600px;
         {% else %}
         height: {{ chartHeight }}px;
@@ -8,7 +8,7 @@
     }
 </style>
 <link rel="stylesheet" href="{{ asset('bundles/clarolinecore/css/common/jqplot/jquery.jqplot.css') }}" type="text/css" />
-{% if filesImported is empty %}
+{% if filesImported is not defined or filesImported is empty %}
 <!--[if lt IE 9]><script language="javascript" type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/excanvas.min.js') }}"></script><![endif]-->
 <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/jquery.jqplot.min.js') }}"></script>
 <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/plugins/jqplot.pieRenderer.min.js') }}"></script>
@@ -36,7 +36,7 @@
     var bg_color = "transparent";
     if (navigator.userAgent.match(/msie/i) && navigator.userAgent.match(/8/)) bg_color = "#fff";
     var numberRows = 7;
-    {% if numberRows is not empty %}
+    {% if numberRows is defined and numberRows is not empty %}
     numberRows = {{ numberRows }};
     {% endif %}
     $(document).ready(function(){

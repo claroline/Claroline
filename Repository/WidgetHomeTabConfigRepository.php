@@ -128,6 +128,56 @@ class WidgetHomeTabConfigRepository extends EntityRepository
         return $query->getResult();
     }
 
+    public function findVisibleWidgetConfigsByTabIdAndWorkspace(
+        $homeTabId,
+        Workspace $workspace
+    )
+    {
+        $dql = "
+            SELECT whtc
+            FROM Claroline\CoreBundle\Entity\Widget\WidgetHomeTabConfig whtc
+            JOIN Claroline\CoreBundle\Entity\Home\HomeTabConfig htc
+            WITH htc.homeTab = :homeTabId
+            WHERE whtc.homeTab = :homeTabId
+            AND htc.visible = true
+            AND whtc.workspace = :workspace
+            AND whtc.type = 'workspace'
+            AND whtc.visible = true
+            ORDER BY whtc.widgetOrder ASC
+        ";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('homeTabId', $homeTabId);
+        $query->setParameter('workspace', $workspace);
+
+        return $query->getResult();
+    }
+
+    public function findVisibleWidgetConfigByWidgetIdAndTabIdAndWorkspace(
+        $widgetId,
+        $homeTabId,
+        Workspace $workspace
+    )
+    {
+        $dql = "
+            SELECT whtc
+            FROM Claroline\CoreBundle\Entity\Widget\WidgetHomeTabConfig whtc
+            JOIN Claroline\CoreBundle\Entity\Home\HomeTabConfig htc
+            WITH htc.homeTab = :homeTabId
+            WHERE whtc.homeTab = :homeTabId
+            AND htc.visible = true
+            AND whtc.workspace = :workspace
+            AND whtc.type = 'workspace'
+            AND whtc.visible = true
+            AND whtc.widgetInstance = :widgetId
+        ";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('widgetId', $widgetId);
+        $query->setParameter('homeTabId', $homeTabId);
+        $query->setParameter('workspace', $workspace);
+
+        return $query->getOneOrNullResult();
+    }
+
     public function findOrderOfLastWidgetInAdminHomeTab(HomeTab $homeTab)
     {
         $dql = "

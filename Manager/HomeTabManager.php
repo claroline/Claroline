@@ -369,6 +369,22 @@ class HomeTabManager
         return $homeTabConfig->isVisible();
     }
 
+    public function checkHomeTabVisibilityByIdAndWorkspace(
+        $homeTabId,
+        Workspace $workspace
+    )
+    {
+        $homeTabConfig = $this
+            ->homeTabConfigRepo
+            ->checkHomeTabVisibilityByIdAndWorkspace($homeTabId, $workspace);
+
+        if (is_null($homeTabConfig) || count($homeTabConfig)!=1) {
+            return false;
+        }
+
+        return true;
+    }
+
     public function insertWidgetHomeTabConfig(
         WidgetHomeTabConfig $widgetHomeTabConfig
     )
@@ -744,6 +760,25 @@ class HomeTabManager
     {
         return $this->widgetHomeTabConfigRepo
             ->findVisibleWidgetConfigsByWorkspace($homeTab, $workspace);
+    }
+
+    public function getVisibleWidgetConfigsByTabIdAndWorkspace(
+        $homeTabId,
+        Workspace $workspace
+    )
+    {
+        return $this->widgetHomeTabConfigRepo
+            ->findVisibleWidgetConfigsByTabIdAndWorkspace($homeTabId, $workspace);
+    }
+
+    public function getVisibleWidgetConfigByWidgetIdAndTabIdAndWorkspace(
+        $widgetId,
+        $homeTabId,
+        Workspace $workspace
+    )
+    {
+        return $this->widgetHomeTabConfigRepo
+            ->findVisibleWidgetConfigByWidgetIdAndTabIdAndWorkspace($widgetId, $homeTabId, $workspace);
     }
 
     public function getOrderOfLastWidgetInAdminHomeTab(HomeTab $homeTab)

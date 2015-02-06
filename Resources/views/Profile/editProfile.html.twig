@@ -19,6 +19,9 @@
             <div class="panel-footer">
                 <button type="submit" class="btn btn-primary">{{ 'edit'|trans({}, 'platform') }}</button>
                 <a href="{{ cancelUrl }}" class="btn btn-default" role="button">{{ 'cancel' | trans({}, 'platform') }}</a>
+                <a href="{{path('claro_user_password_edit', {'user': user.getId()})}}"  class="btn btn-default" role="button">
+                    {{'edit_password'|trans({}, 'platform')}}
+                </a>
             </div>
         </form>
     </div>

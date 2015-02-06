@@ -134,22 +134,45 @@
      * @param nodes An array of resource nodes.
      *
      */
-    tinymce.claroline.callBack = function (nodes)
+    tinymce.claroline.callBack = function (nodes, currentDirectoryId, isWidget)
     {
-        var nodeId = _.keys(nodes)[0];
-        var mimeType = nodes[_.keys(nodes)][2] !== '' ? nodes[_.keys(nodes)][2] : 'unknown/mimetype';
-        var openInNewTab = tinymce.activeEditor.getParam('picker').openResourcesInNewTab ? '1' : '0';
+        if (!isWidget) {
+            var nodeId = _.keys(nodes)[0];
+            var mimeType = nodes[_.keys(nodes)][2] !== '' ? nodes[_.keys(nodes)][2] : 'unknown/mimetype';
+            var openInNewTab = tinymce.activeEditor.getParam('picker').openResourcesInNewTab ? '1' : '0';
 
-        $.ajax(home.path + 'resource/embed/' + nodeId + '/' + mimeType + '/' + openInNewTab)
-            .done(function (data) {
-                tinymce.activeEditor.insertContent(data);
-                if (!tinymce.activeEditor.plugins.fullscreen.isFullscreen()) {
-                    tinymce.claroline.editorChange(tinymce.activeEditor);
-                }
-            })
-            .error(function () {
-                modal.error();
-            });
+            $.ajax(home.path + 'resource/embed/' + nodeId + '/' + mimeType + '/' + openInNewTab)
+                .done(function (data) {
+                    tinymce.activeEditor.insertContent(data);
+                    if (!tinymce.activeEditor.plugins.fullscreen.isFullscreen()) {
+                        tinymce.claroline.editorChange(tinymce.activeEditor);
+                    }
+                })
+                .error(function () {
+                    modal.error();
+                });
+        } else {
+            var workspaceId = nodes[0].parents.workspace;
+            var homeTabId = nodes[0].parents.tab;
+            var widgetId = nodes[0].id;
+
+            var url = home.path +
+                "workspaces/" + workspaceId +
+                "/tab/" + homeTabId +
+                "/widget/" + widgetId +
+                "/embed";
+
+            $.ajax(url)
+                .done(function (data) {
+                    tinymce.activeEditor.insertContent(data);
+                    if (!tinymce.activeEditor.plugins.fullscreen.isFullscreen()) {
+                        tinymce.claroline.editorChange(tinymce.activeEditor);
+                    }
+                })
+                .error(function () {
+                    modal.error();
+                });
+        }
     };
 
     /**
@@ -159,7 +182,8 @@
     {
         if (!resourceManager.hasPicker('tinyMcePicker')) {
             resourceManager.createPicker('tinyMcePicker', {
-                callback: tinymce.claroline.callBack
+                callback: tinymce.claroline.callBack,
+                isTinyMce: true
             }, true);
         } else {
             resourceManager.picker('tinyMcePicker', 'open');
