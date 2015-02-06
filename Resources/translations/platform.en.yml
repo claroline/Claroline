@@ -843,7 +843,7 @@ send_mail: 'Send a mail'
 send_mail_form_content: Message
 send_mail_form_object: Object
 send_message: 'Send a message'
-send_message_to_workspace: 'Send a message to the users of the workspace.'
+send_message_to_workspace: 'Send a message'
 send_message_to_workspace: Send a message to the users of the workspace.
 send_message_to_workspace_info: This list shows the workspaces of which you are the manager.
 server: Server

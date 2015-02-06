@@ -847,7 +847,7 @@ send_mail: 'Envoyer un mail'
 send_mail_form_content: Message
 send_mail_form_object: Objet
 send_message: 'Envoyer un message'
-send_message_to_workspace: Envoyer un message aux utilisateurs de l'espace
+send_message_to_workspace: Envoyer un message
 send_message_to_workspace_info: Cette liste reprend les espaces d'activités dont vous êtes le gestionnaire.
 server: Serveur
 session: Session
