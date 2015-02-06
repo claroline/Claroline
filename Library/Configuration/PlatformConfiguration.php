@@ -56,7 +56,6 @@ class PlatformConfiguration
     private $headerLocale;
     private $portfolioUrl;
     private $isNotificationActive;
-    private $createPersonnalWorkspace;
     private $maxStorageSize;
     private $maxUploadResources;
 
@@ -576,16 +575,6 @@ class PlatformConfiguration
     public function setIsNotificationActive($bool)
     {
         $this->isNotificationActive = $bool;
-    }
-
-    public function setCreatePersonnalWorkspace($personnalWs)
-    {
-        $this->createPersonnalWorkspace = $personnalWs;
-    }
-
-    public function getCreatePersonnalWorkspace()
-    {
-        return $this->createPersonnalWorkspace;
     }
 
     public function setMaxStorageSize($maxSize)

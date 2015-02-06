@@ -159,6 +159,11 @@ class Role implements RoleInterface
      */
     protected $pwsRightsManagementAccess;
 
+    /**
+     * @ORM\Column(name="personal_workspace_creation_enabled", type="boolean")
+     */
+    protected $personalWorkspaceCreationEnabled = false;
+
     public function __construct()
     {
         $this->users            = new ArrayCollection();
@@ -326,5 +331,20 @@ class Role implements RoleInterface
     public function getPwsToolConfig()
     {
         return $this->pwsToolConfig;
+    }
+
+    public function getPersonalWorkspaceCreationEnabled()
+    {
+        return $this->personalWorkspaceCreationEnabled;
+    }
+
+    public function isPersonalWorkspaceCreationEnabled()
+    {
+        return $this->personalWorkspaceCreationEnabled;
+    }
+
+    public function setPersonalWorkspaceCreationEnabled($boolean)
+    {
+        $this->personalWorkspaceCreationEnabled = $boolean;
     }
 }

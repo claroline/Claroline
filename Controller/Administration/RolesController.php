@@ -330,6 +330,25 @@ class RolesController extends Controller
         );
     }
 
+    /**
+     * @EXT\Route(
+     *     "role/{role}/invert_workspace_creation",
+     *     name="platform_role_workspace_creation_edit",
+     *     options={"expose"=true}
+     * )
+     * @EXT\Method("GET")
+     *
+     * @param Role $role
+     * @return JsonResponse
+     */
+    public function invertPersonalWorkspaceCreationAction(Role $role)
+    {
+        $this->checkOpen();
+        $this->roleManager->invertWorkspaceCreation($role);
+
+        return new JsonResponse(array(), 200);
+    }
+
     private function checkOpen()
     {
         if ($this->sc->isGranted('OPEN', $this->roleAdminTool)) {
