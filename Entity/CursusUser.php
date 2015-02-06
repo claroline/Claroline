@@ -16,8 +16,16 @@ use Claroline\CursusBundle\Entity\Cursus;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity
- * @ORM\Table(name="claro_cursusbundle_cursus_user")
+ * @ORM\Entity(repositoryClass="Claroline\CursusBundle\Repository\CursusUserRepository")
+ * @ORM\Table(
+ *     name="claro_cursusbundle_cursus_user",
+ *     uniqueConstraints={
+ *         @ORM\UniqueConstraint(
+ *             name="cursus_user_unique_cursus_user",
+ *             columns={"cursus_id", "user_id"}
+ *         )
+ *     }
+ * )
  */
 class CursusUser
 {
@@ -32,7 +40,7 @@ class CursusUser
      * @ORM\ManyToOne(
      *     targetEntity="Claroline\CoreBundle\Entity\User"
      * )
-     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
+     * @ORM\JoinColumn(name="user_id", nullable=false, onDelete="CASCADE")
      */
     protected $user;
 
@@ -41,7 +49,7 @@ class CursusUser
      *     targetEntity="Claroline\CursusBundle\Entity\Cursus",
      *     inversedBy="cursusUsers"
      * )
-     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
+     * @ORM\JoinColumn(name="cursus_id", nullable=false, onDelete="CASCADE")
      */
     protected $cursus;
 

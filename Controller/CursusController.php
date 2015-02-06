@@ -11,6 +11,8 @@
 
 namespace Claroline\CursusBundle\Controller;
 
+use Claroline\CoreBundle\Entity\Group;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CursusBundle\Entity\Course;
 use Claroline\CursusBundle\Entity\Cursus;
@@ -367,6 +369,70 @@ class CursusController extends Controller
                 'parent' => $parent
             );
         }
+    }
+
+    /**
+     * @EXT\Route(
+     *     "cursus/{cursus}/associate/user/{user}",
+     *     name="claro_cursus_associate_user",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     */
+    public function cursusUserAssociateAction(Cursus $cursus, User $user)
+    {
+        $this->checkToolAccess();
+        $this->cursusManager->registerUserToCursus($cursus, $user);
+
+        return new JsonResponse('success', 200);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "cursus/{cursus}/dissociate/user/{user}",
+     *     name="claro_cursus_dissociate_user",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     */
+    public function cursusUserDissociateAction(Cursus $cursus, User $user)
+    {
+        $this->checkToolAccess();
+        $this->cursusManager->unregisterUserFromCursus($cursus, $user);
+
+        return new JsonResponse('success', 200);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "cursus/{cursus}/associate/group/{group}",
+     *     name="claro_cursus_associate_group",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     */
+    public function cursusGroupAssociateAction(Cursus $cursus, Group $group)
+    {
+        $this->checkToolAccess();
+        $this->cursusManager->registerGroupToCursus($cursus, $group);
+
+        return new JsonResponse('success', 200);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "cursus/{cursus}/dissociate/group/{group}",
+     *     name="claro_cursus_dissociate_group",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     */
+    public function cursusGroupDissociateAction(Cursus $cursus, Group $group)
+    {
+        $this->checkToolAccess();
+        $this->cursusManager->unregisterGroupFromCursus($cursus, $group);
+
+        return new JsonResponse('success', 200);
     }
 
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CursusBundle\Migrations\oci8;
+namespace Claroline\CursusBundle\Migrations\pdo_oci;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2015/02/06 10:22:30
+ * Generation date: 2015/02/06 11:17:46
  */
-class Version20150206102228 extends AbstractMigration
+class Version20150206111745 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -196,6 +196,9 @@ class Version20150206102228 extends AbstractMigration
             CREATE INDEX IDX_EA4DDE9340AEF4B9 ON claro_cursusbundle_cursus_group (cursus_id)
         ");
         $this->addSql("
+            CREATE UNIQUE INDEX cursus_group_unique_cursus_group ON claro_cursusbundle_cursus_group (cursus_id, group_id)
+        ");
+        $this->addSql("
             CREATE TABLE claro_cursusbundle_cursus_user (
                 id NUMBER(10) NOT NULL, 
                 user_id NUMBER(10) NOT NULL, 
@@ -237,6 +240,9 @@ class Version20150206102228 extends AbstractMigration
         ");
         $this->addSql("
             CREATE INDEX IDX_8AA52D840AEF4B9 ON claro_cursusbundle_cursus_user (cursus_id)
+        ");
+        $this->addSql("
+            CREATE UNIQUE INDEX cursus_user_unique_cursus_user ON claro_cursusbundle_cursus_user (cursus_id, user_id)
         ");
         $this->addSql("
             ALTER TABLE claro_cursusbundle_cursus 

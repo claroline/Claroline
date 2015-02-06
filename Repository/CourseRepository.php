@@ -11,7 +11,6 @@
 
 namespace Claroline\CursusBundle\Repository;
 
-use Claroline\CursusBundle\Entity\Course;
 use Doctrine\ORM\EntityRepository;
 
 class CourseRepository extends EntityRepository

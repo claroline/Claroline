@@ -17,7 +17,15 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="claro_cursusbundle_cursus_group")
+ * @ORM\Table(
+ *     name="claro_cursusbundle_cursus_group",
+ *     uniqueConstraints={
+ *         @ORM\UniqueConstraint(
+ *             name="cursus_group_unique_cursus_group",
+ *             columns={"cursus_id", "group_id"}
+ *         )
+ *     }
+ * )
  */
 class CursusGroup
 {
@@ -32,7 +40,7 @@ class CursusGroup
      * @ORM\ManyToOne(
      *     targetEntity="Claroline\CoreBundle\Entity\Group"
      * )
-     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
+     * @ORM\JoinColumn(name="group_id", nullable=false, onDelete="CASCADE")
      */
     protected $group;
 
@@ -41,7 +49,7 @@ class CursusGroup
      *     targetEntity="Claroline\CursusBundle\Entity\Cursus",
      *     inversedBy="cursusGroups"
      * )
-     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
+     * @ORM\JoinColumn(name="cursus_id", nullable=false, onDelete="CASCADE")
      */
     protected $cursus;
 
