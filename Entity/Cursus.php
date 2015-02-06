@@ -11,6 +11,7 @@
 
 namespace Claroline\CursusBundle\Entity;
 
+use Claroline\CursusBundle\Entity\Course;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
@@ -49,6 +50,24 @@ class Cursus
     protected $description;
 
     /**
+     * @ORM\ManyToOne(
+     *     targetEntity="Claroline\CursusBundle\Entity\Course"
+     * )
+     * @ORM\JoinColumn(nullable=true, onDelete="CASCADE")
+     */
+    protected $course;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    protected $blocking = true;
+
+    /**
+     * @ORM\Column(type="json_array", nullable=true)
+     */
+    protected $details;
+
+    /**
      * @Gedmo\TreeParent
      * @ORM\ManyToOne(
      *     targetEntity="Claroline\CursusBundle\Entity\Cursus",
@@ -70,6 +89,22 @@ class Cursus
      * @ORM\Column(name="cursus_order", type="integer")
      */
     protected $cursusOrder;
+
+    /**
+     * @ORM\OneToMany(
+     *     targetEntity="Claroline\CursusBundle\Entity\CursusUser",
+     *     mappedBy="cursus"
+     * )
+     */
+    protected $cursusUsers;
+
+    /**
+     * @ORM\OneToMany(
+     *     targetEntity="Claroline\CursusBundle\Entity\CursusGroup",
+     *     mappedBy="cursus"
+     * )
+     */
+    protected $cursusGroups;
 
     /**
      * @Gedmo\TreeRoot
@@ -98,6 +133,8 @@ class Cursus
     public function __construct()
     {
         $this->children = new ArrayCollection();
+        $this->cursusUsers = new ArrayCollection();
+        $this->cursusGroups = new ArrayCollection();
     }
 
     public function getId()
@@ -140,6 +177,16 @@ class Cursus
         $this->description = $description;
     }
 
+    public function getCourse()
+    {
+        return $this->course;
+    }
+
+    public function setCourse(Course $course)
+    {
+        $this->course = $course;
+    }
+
     public function getParent()
     {
         return $this->parent;
@@ -163,6 +210,16 @@ class Cursus
     public function setCursusOrder($cursusOrder)
     {
         $this->cursusOrder = $cursusOrder;
+    }
+
+    public function getCursusUsers()
+    {
+        return $this->cursusUsers->toArray();
+    }
+
+    public function getCursusGroups()
+    {
+        return $this->cursusGroups->toArray();
     }
 
     public function getRoot()
