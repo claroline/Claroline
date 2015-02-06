@@ -143,6 +143,11 @@ class qtiRepository {
                                         $qtiImport->import($this, $ai);
                                         $imported = true;
                                         break;
+                                    case 'matchInteraction': //matching
+                                        $qtiImport = $this->container->get('ujm.qti_matching_import');
+                                        $qtiImport->import($this, $ai);
+                                        $imported = true;
+                                        break;
                                 }
                             }
                         }
