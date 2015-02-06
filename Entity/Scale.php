@@ -4,6 +4,8 @@ namespace HeVinci\CompetencyBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use HeVinci\CompetencyBundle\Validator as CustomAssert;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity
@@ -19,12 +21,19 @@ class Scale
     private $id;
 
     /**
-     * @ORM\Column()
+     * @ORM\Column
+     * @Assert\NotBlank
+     * @Assert\Length(max="255")
      */
     private $name;
 
     /**
-     * @ORM\OneToMany(targetEntity="Level", mappedBy="scale")
+     * @ORM\OneToMany(
+     *     targetEntity="Level",
+     *     mappedBy="scale",
+     *     cascade={"persist", "remove"}
+     * )
+     * @CustomAssert\NotEmpty
      */
     private $levels;
 
@@ -63,5 +72,17 @@ class Scale
     public function getLevels()
     {
         return $this->levels;
+    }
+
+    /**
+     * @param ArrayCollection $levels
+     */
+    public function setLevels(ArrayCollection $levels)
+    {
+        foreach ($levels as $level) {
+            $level->setScale($this);
+        }
+
+        $this->levels = $levels;
     }
 }

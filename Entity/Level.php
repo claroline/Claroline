@@ -18,7 +18,7 @@ class Level
     private $id;
 
     /**
-     * @ORM\Column()
+     * @ORM\Column
      */
     private $name;
 
@@ -29,6 +29,7 @@ class Level
 
     /**
      * @ORM\ManyToOne(targetEntity="Scale", inversedBy="levels")
+     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      */
     private $scale;
 
@@ -62,6 +63,14 @@ class Level
     public function getValue()
     {
         return $this->value;
+    }
+
+    /**
+     * @param Scale $scale
+     */
+    public function setScale(Scale $scale)
+    {
+        $this->scale = $scale;
     }
 
     /**

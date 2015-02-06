@@ -1,1 +1,9 @@
 associated_competencies: Compétences associées
+create_framework: Créer un référentiel
+create_scale: Créer une échelle
+info:
+  no_frame: Il n'y a pas encore de référentiels. Vous pouvez créer un nouveau référentiel ou gérer les échelles de difficultés à l'aide des boutons ci-dessous.
+  no_frame_no_scale: Il n'y a pas encore de référentiels ni d'échelles. Si vous choisissez de créer un référentiel maintenant, celui-ci se verra assigner une échelle par défaut d'un seul niveau. Alternativement, vous pouvez créer une échelle directement et l'associer ensuite à votre référentiel.
+  scale_levels: "Les degrés doivent être séparés par des retours à la ligne. Exemple :\n\nFacile\nMoyen\nDifficile"
+levels: Dégrés
+manage_scales: Gérer les échelles

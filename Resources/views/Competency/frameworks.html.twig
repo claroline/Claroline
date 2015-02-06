@@ -1,30 +1,50 @@
-{% extends 'ClarolineCoreBundle::Administration/layout.html.twig' %}
+{% extends 'HeVinciCompetencyBundle:Competency:layout.html.twig' %}
 
-{% block title %}
-    {{ parent() ~ ' - ' ~ 'competencies'|trans({}, 'tools')|striptags|raw }}
+{% block panelBody %}
+    {% if frameworks|length > 0 %}
+
+    {% else %}
+        <br>
+        <div class="alert alert-info" role="alert">
+            <i class="fa fa-info-circle"></i>
+            {% if hasScales %}
+                {{ 'info.no_frame'|trans({}, 'competency') }}
+            {% else %}
+                {{ 'info.no_frame_no_scale'|trans({}, 'competency') }}
+            {% endif %}
+        </div>
+    {% endif %}
 {% endblock %}
 
-{% block breadcrumb %}
-    {{
-        macros.breadcrumbs([
-            {
-                'icon': 'fa fa-cog',
-                'name': 'administration'|trans({}, 'platform'),
-                'href': path('claro_admin_index')
-            },
-            {
-                'name': 'competencies'|trans({}, 'tools'),
-                'href': ''
-            }
-        ])
-    }}
+{% block panelFooter %}
+    <a href="#" class="btn btn-primary">
+        {{ 'create_framework'|trans({}, 'competency') }}
+    </a>
+    {% if not hasScales %}
+        <button id="create-scale" class="btn btn-primary">
+            {{ 'create_scale'|trans({}, 'competency') }}
+        </button>
+    {% else %}
+        <a href="#" class="btn btn-primary">
+            {{ 'manage_scales'|trans({}, 'competency') }}
+        </a>
+    {% endif %}
 {% endblock %}
 
-{% block section_content %}
-    <div class="panel-heading">
-        <div class="panel-title">{{ 'competencies'|trans({}, 'tools') }}</div>
-    </div>
-    <div class="panel-body">
-        TODO
-    </div>
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        $('#create-scale').on('click', function () {
+            window.Claroline.Modal.displayForm(
+                Routing.generate('hevinci_new_scale'),
+                reloadPage,
+                function() {},
+                'scale-form'
+            );
+        });
+        var reloadPage = function () {
+            window.tinymce.claroline.disableBeforeUnload = true;
+            window.location.reload();
+        }
+    </script>
 {% endblock %}

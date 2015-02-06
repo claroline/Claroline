@@ -19,7 +19,7 @@ class Competency
     private $id;
 
     /**
-     * @ORM\Column()
+     * @ORM\Column
      */
     private $name;
 

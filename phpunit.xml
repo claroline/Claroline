@@ -10,7 +10,7 @@
     processIsolation            = "false"
     stopOnFailure               = "false"
     syntaxCheck                 = "false"
-    bootstrap                   = "../../../../autoload.php" >
+    bootstrap                   = "../../../../../app/bootstrap.php.cache" >
 
     <php>
         <server name="KERNEL_DIR" value="../../../../../app/" />
