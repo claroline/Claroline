@@ -2,17 +2,13 @@
 
 namespace HeVinci\CompetencyBundle\Controller;
 
-use HeVinci\CompetencyBundle\Entity\Scale;
+use HeVinci\CompetencyBundle\Form\Handler\FormHandler;
 use HeVinci\CompetencyBundle\Manager\CompetencyManager;
-use HeVinci\CompetencyBundle\Form\ScaleType;
 use JMS\DiExtraBundle\Annotation as DI;
 use JMS\SecurityExtraBundle\Annotation as SEC;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
-use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Templating\EngineInterface;
 
 /**
  * @DI\Tag("security.secure_service")
@@ -21,27 +17,24 @@ use Symfony\Component\Templating\EngineInterface;
 class CompetencyController
 {
     private $competencyManager;
-    private $formFactory;
-    private $templating;
+    private $formHandler;
 
     /**
      * @DI\InjectParams({
      *     "manager" = @DI\Inject("hevinci.competency.competency_manager"),
-     *     "factory" = @DI\Inject("form.factory"),
-     *     "engine"  = @DI\Inject("templating")
+     *     "handler" = @DI\Inject("hevinci.form.handler")
      * })
      *
      * @param CompetencyManager $manager
+     * @param FormHandler       $handler
      */
     public function __construct(
         CompetencyManager $manager,
-        FormFactory $factory,
-        EngineInterface $engine
+        FormHandler $handler
     )
     {
         $this->competencyManager = $manager;
-        $this->formFactory = $factory;
-        $this->templating = $engine;
+        $this->formHandler = $handler;
     }
 
     /**
@@ -66,15 +59,13 @@ class CompetencyController
      *
      * @EXT\Route("/scales/new", name="hevinci_new_scale", options={"expose"=true})
      * @EXT\Method("GET")
-     * @EXT\Template
+     * @EXT\Template("HeVinciCompetencyBundle:Competency:scale.html.twig")
      *
      * @return array
      */
     public function newScaleAction()
     {
-        return [
-            'form' => $this->formFactory->create(new ScaleType())->createView()
-        ];
+        return ['form' => $this->formHandler->getView('hevinci.form.scale')];
     }
 
     /**
@@ -82,25 +73,18 @@ class CompetencyController
      *
      * @EXT\Route("/scales", name="hevinci_create_scale", options={"expose"=true})
      * @EXT\Method("POST")
+     * @EXT\Template("HeVinciCompetencyBundle:Competency:scale.html.twig")
      *
      * @return JsonResponse|array
      */
     public function createScaleAction(Request $request)
     {
-        $form = $this->formFactory->create(new ScaleType(), new Scale());
-        $form->handleRequest($request);
-
-        if ($form->isValid()) {
-            $this->competencyManager->createScale($form->getData());
+        if ($this->formHandler->handle('hevinci.form.scale', $request)) {
+            $this->competencyManager->createScale($this->formHandler->getData());
 
             return new JsonResponse();
         }
 
-        return new Response(
-            $this->templating->render(
-                'HeVinciCompetencyBundle:Competency:newScale.html.twig',
-                ['form' => $form->createView()]
-            )
-        );
+        return ['form' => $this->formHandler->getView()];
     }
 }

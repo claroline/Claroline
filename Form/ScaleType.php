@@ -2,10 +2,15 @@
 
 namespace HeVinci\CompetencyBundle\Form;
 
+use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
+/**
+ * @DI\Service("hevinci.form_type.scale")
+ * @DI\Tag("form.type")
+ */
 class ScaleType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)

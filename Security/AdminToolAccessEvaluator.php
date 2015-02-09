@@ -46,7 +46,7 @@ class AdminToolAccessEvaluator
     public function canOpenAdminTool($toolName)
     {
         $tool = $this->em->getRepository('ClarolineCoreBundle:Tool\AdminTool')
-            ->findOneByName($toolName);
+            ->findOneBy(['name' => $toolName]);
 
         if (!$tool) {
             throw new \Exception(

@@ -1,18 +1,18 @@
 plugin:
-  has_options: false
-  
-  admin_tools:
-    - name: competencies
-      class: graduation-cap
-    - name: learning-objectives
-      class: arrow-up
+    has_options: false
 
-  tools:
-    - name: my-learning-objectives
-      class: arrow-up
-      is_displayable_in_workspace: false
-      is_displayable_in_desktop: true
+    admin_tools:
+        - name: competencies
+          class: graduation-cap
+        - name: learning-objectives
+          class: arrow-up
 
-  widgets:
-     - name: my-learning-objectives
-       is_configurable: false
+    tools:
+        - name: my-learning-objectives
+          class: arrow-up
+          is_displayable_in_workspace: false
+          is_displayable_in_desktop: true
+
+    widgets:
+         - name: my-learning-objectives
+           is_configurable: false
