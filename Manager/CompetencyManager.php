@@ -13,7 +13,6 @@ class CompetencyManager
 {
     private $om;
     private $competencyRepo;
-    private $scaleRepo;
 
     /**
      * @DI\InjectParams({
@@ -26,7 +25,6 @@ class CompetencyManager
     {
         $this->om = $om;
         $this->competencyRepo = $om->getRepository('HeVinciCompetencyBundle:Competency');
-        $this->scaleRepo = $om->getRepository('HeVinciCompetencyBundle:Scale');
     }
 
     /**

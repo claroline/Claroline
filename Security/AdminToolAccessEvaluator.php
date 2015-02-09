@@ -49,7 +49,7 @@ class AdminToolAccessEvaluator
             ->findOneBy(['name' => $toolName]);
 
         if (!$tool) {
-            throw new \Exception(
+            throw new \LogicException(
                 "Annotation error: cannot found admin tool '{$toolName}'"
             );
         }
