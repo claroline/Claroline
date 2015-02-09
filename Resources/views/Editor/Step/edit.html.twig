@@ -5,7 +5,7 @@
         <div class="preview-lvl lvl-{% verbatim %}{{ previewStep.lvl }}{% endverbatim %}"></div>
 
         {# Edit step name #}
-        <div style="margin-left: 8px;" class="input-group">
+        <div style="margin-left: 10px;" class="input-group">
             <input type="text" class="form-control" name="step-name" data-ng-model="previewStep.name" />
             <div class="input-group-btn">
                 <button data-ng-click="showActivity()" class="btn btn-default" type="button" data-ng-if="previewStep.activityId" data-toggle="tooltip" data-container="body" title="{{ 'see_activity' |trans({}, 'path_editor') }}">
