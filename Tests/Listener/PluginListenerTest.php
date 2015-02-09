@@ -6,12 +6,12 @@ use Claroline\CoreBundle\Event\CustomActionResourceEvent;
 use Claroline\CoreBundle\Event\DisplayToolEvent;
 use Claroline\CoreBundle\Event\DisplayWidgetEvent;
 use Claroline\CoreBundle\Event\OpenAdministrationToolEvent;
-use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
+use HeVinci\CompetencyBundle\Util\UnitTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 
-class PluginListenerTest extends MockeryTestCase
+class PluginListenerTest extends UnitTestCase
 {
     private $request;
     private $response;
@@ -25,7 +25,7 @@ class PluginListenerTest extends MockeryTestCase
         $stack->push($this->request);
         $this->listener = new PluginListener($stack, $kernel);
         $this->response = new Response('Test response');
-        $kernel->shouldReceive('handle')->andReturn($this->response);
+        $kernel->expects()->method('handle')->willReturn($this->response);
     }
 
     public function testOpenCompetencyTool()
@@ -56,7 +56,7 @@ class PluginListenerTest extends MockeryTestCase
     {
         $this->expectSubRequest(['_controller' => 'HeVinciCompetencyBundle:Activity:competencies', 'id' => 14]);
         $activity = $this->mock('Claroline\CoreBundle\Entity\Resource\Activity');
-        $activity->shouldReceive('getId')->andReturn(14);
+        $activity->expects()->method('getId')->willReturn(14);
         $event = new CustomActionResourceEvent($activity);
         $this->listener->onOpenActivityCompetencies($event);
         $this->assertEquals($this->response, $event->getResponse());
@@ -73,8 +73,9 @@ class PluginListenerTest extends MockeryTestCase
     private function expectSubRequest(array $attributes)
     {
         $this->request
-            ->shouldReceive('duplicate')
+            ->expects()
+            ->method('duplicate')
             ->with([], null, $attributes)
-            ->andReturn(new Request());
+            ->willReturn(new Request());
     }
 }
