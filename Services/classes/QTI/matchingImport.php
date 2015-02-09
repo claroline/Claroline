@@ -20,9 +20,9 @@ class matchingImport extends qtiImport {
     * Implements the abstract method
     *
     * @access public
+    * 
     * @param qtiRepository $qtiRepos
     * @param DOMElement $assessmentItem assessmentItem of the question to imported
-    *
     */
     public function import(qtiRepository $qtiRepos, $assessmentItem) {
         $this->qtiRepos = $qtiRepos;
@@ -40,8 +40,8 @@ class matchingImport extends qtiImport {
     * Implements the abstract method
     *
     * @access protected
+    * 
     * @return $text
-    *
     */
     protected function getPrompt() {
         $prompt = '';
@@ -63,12 +63,12 @@ class matchingImport extends qtiImport {
     * Create the InteractionMatching object
     *
     * @access protected
-    *
     */
     protected function createInteractionMatching() {
         $rp = $this->assessmentItem->getElementsByTagName("responseProcessing");
         $this->interactionMatching = new InteractionMatching();
         $this->interactionMatching->setInteraction($this->interaction);
+        //for recording the type of the question
         $this->matchingType();
         $this->doctrine->getManager()->persist($this->interactionMatching);
         $this->doctrine->getManager()->flush();
@@ -76,13 +76,42 @@ class matchingImport extends qtiImport {
         $this->createProposals();
     }
 
+    /**
+     * Create Labels in BDD
+     *
+     * @access protected
+     */
+    protected function createLabels() {
+        $ib = $this->assessmentItem->getElementsByTagName("itemBody")->item(0);
+        $mi = $ib->getElementsByTagName("matchInteraction")->item(0);
+        $sms = $mi->getElementsByTagName("simpleMatchSet")->item(1);
+
+        foreach ($sms->getElementsByTagName("simpleAssociableChoice") as $simpleLabel) {
+            //create a new Label and set attributes
+            $label = new Label();
+            $label->setValue($this->value($simpleLabel));
+            $identifiant = $simpleLabel->getAttribute("identifier");
+            $label->setScoreRightResponse($this->notation($identifiant));
+            $label->setInteractionMatching($this->interactionMatching);
+            //recording in the DBB
+            $this->doctrine->getManager()->persist($label);
+            $this->doctrine->getManager()->flush();
+            $this->associatedLabels[$identifiant] = $label;
+        }
+    }
+
+    /**
+     * Create Proposals in BDD
+     *
+     * @access protected
+     */
     protected function createProposals() {
         $ib = $this->assessmentItem->getElementsByTagName("itemBody")->item(0);
         $mi = $ib->getElementsByTagName("matchInteraction")->item(0);
         $sms = $mi->getElementsByTagName("simpleMatchSet")->item(0);
         $labels = $this->associatedLabels;
         $allRelations = $this->relations();
-        
+
         // foreach proposal into the export file
         foreach ($sms->getElementsByTagName("simpleAssociableChoice") as $simpleProposal) {
             $proposal = new Proposal();
@@ -91,18 +120,18 @@ class matchingImport extends qtiImport {
             $proposal->setInteractionMatching($this->interactionMatching);
             $this->doctrine->getManager()->persist($proposal);
             $this->doctrine->getManager()->flush();
-            $goodLabel = 0;
+            $rightLabel = 0;
             //compare all relations to the proposal selected
             foreach ($allRelations as $relation) {
                 if (stripos($relation, $identifiant) !== false) {
-                    $goodLabel = $relation;
-                    $goodLabel = str_replace($identifiant, '', $goodLabel);
-                    $goodLabel = str_replace(' ', '', $goodLabel);
+                    $rightLabel = $relation;
+                    $rightLabel = str_replace($identifiant, '', $rightLabel);
+                    $rightLabel = str_replace(' ', '', $rightLabel);
                 }
             }
-            // foreach label of the export file, compare to the good relation
+            // foreach label of the export file, compare to the right relation
             foreach ($labels as $key => $label) {
-                if ($key == $goodLabel) {
+                if ($key == $rightLabel) {
                     $proposal->addAssociatedLabel($label);
                     $proposal->setInteractionMatching($this->interactionMatching);
                     $this->doctrine->getManager()->persist($proposal);
@@ -111,17 +140,19 @@ class matchingImport extends qtiImport {
             }
         }
     }
-    
+
     /**
      * get all relations of the question
      * 
+     * @access protected
+     *
      * @return $allRelations
      */
     protected function relations() {
         $rd = $this->assessmentItem->getElementsByTagName("responseDeclaration")->item(0);
         $cr = $rd->getElementsByTagName("mapping")->item(0);
         $allRelations = [];
-        
+
         foreach ($cr->getElementsByTagName("mapEntry") as $key => $relation) {
             $allRelations[$key] = $relation->getAttribute("mapKey");
         }
@@ -131,7 +162,10 @@ class matchingImport extends qtiImport {
     /**
      * Get value of the balise
      *
+     * @access protected
+     * 
      * @param type $balise
+     * 
      * @return $value
      */
     protected function value($balise) {
@@ -144,32 +178,12 @@ class matchingImport extends qtiImport {
     }
 
     /**
-     * Create Labels in BDD
-     * 
-     * @access protected
-     * 
-     */
-    protected function createLabels() {
-        $ib = $this->assessmentItem->getElementsByTagName("itemBody")->item(0);
-        $mi = $ib->getElementsByTagName("matchInteraction")->item(0);
-        $sms = $mi->getElementsByTagName("simpleMatchSet")->item(1);
-
-        foreach ($sms->getElementsByTagName("simpleAssociableChoice") as $simpleLabel) {
-            $label = new Label();
-            $label->setValue($this->value($simpleLabel));
-            $identifiant = $simpleLabel->getAttribute("identifier");
-            $label->setScoreRightResponse($this->notation($identifiant));
-            $label->setInteractionMatching($this->interactionMatching);
-            $this->doctrine->getManager()->persist($label);
-            $this->doctrine->getManager()->flush();
-            $this->associatedLabels[$identifiant] = $label;
-        }
-    }
-
-    /**
      * Get the score of the relation
      *
+     * @access protected
+     * 
      * @param type $identifiant
+     * 
      * @return $notation
      */
     protected function notation($identifiant) {
@@ -177,6 +191,7 @@ class matchingImport extends qtiImport {
         $notation = 0;
         foreach($m->getElementsByTagName("mapEntry") as $relation) {
             $value = $relation->getAttribute("mapKey");
+            //if mapEntry match to identifier add the notation
             if (stripos($value, $identifiant)) {
                 $notation = $notation + $relation->getAttribute("mappedValue");
             }
@@ -188,21 +203,22 @@ class matchingImport extends qtiImport {
     * Get Type Matching
     *
     * @access protected
-    *
     */
     protected function matchingType() {
         $ri = $this->assessmentItem->getElementsByTagName("responseDeclaration")->item(0);
-        if ($ri->hasAttribute("cardinality") && $ri->getAttribute("cardinality") == 'multiple') {
-            $type = $this->doctrine
-                ->getManager()
-                ->getRepository('UJMExoBundle:TypeMatching')
-                ->findOneBy(array('code' => 1));
-            $this->interactionMatching->setTypeMatching($type);
-        } else {
+        if ($ri->hasAttribute("cardinality") && $ri->getAttribute("cardinality") == 'single') {
+            //type : to drag
             $type = $this->doctrine
                 ->getManager()
                 ->getRepository('UJMExoBundle:TypeMatching')
                 ->findOneBy(array('code' => 2));
+            $this->interactionMatching->setTypeMatching($type);
+        } else {
+            //type : to bind
+            $type = $this->doctrine
+                ->getManager()
+                ->getRepository('UJMExoBundle:TypeMatching')
+                ->findOneBy(array('code' => 1));
             $this->interactionMatching->setTypeMatching($type);
         }
     }

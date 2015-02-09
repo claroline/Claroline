@@ -20,7 +20,6 @@ class matchingExport extends qtiExport
      * @access public
      * @param \UJM\ExoBundle\Entity\Interaction $interaction
      * @param qtiRepository $qtiRepos
-     *
      */
     public function export(\UJM\ExoBundle\Entity\Interaction $interaction, qtiRepository $qtiRepos)
     {
@@ -65,7 +64,6 @@ class matchingExport extends qtiExport
      * add the tag matchingInteraction in itemBody
      *
      * @access private
-     *
      */
     protected function matchingInteractionTag()
     {
@@ -95,7 +93,6 @@ class matchingExport extends qtiExport
      * Implements the abstract method
      *
      * @access protected
-     *
      */
     protected function promptTag()
     {
@@ -132,11 +129,11 @@ class matchingExport extends qtiExport
     /**
      * add the simpleAssociableChoiceTag
      *
+     * @access protected
+     * 
      * @param type $proposal
      * @param type $numberProposal
      * @param type $elementProposal
-     *
-     * @access protected
      */
     protected function simpleMatchSetTagProposal($proposal, $numberProposal, $elementProposal)
     {
@@ -183,11 +180,11 @@ class matchingExport extends qtiExport
     /**
      * add the simpleAssociableChoiceTag
      *
+     * @access protected
+     *
      * @param type $label
      * @param type $numberLabel
      * @param type $elementLabel
-     *
-     * @access protected
      */
     protected function simpleMatchSetTagLabel($label, $numberLabel, $elementLabel)
     {
@@ -218,7 +215,6 @@ class matchingExport extends qtiExport
      * add the tag correctResponse in responseDeclaration
      *
      * @access protected
-     *
      */
     protected function correctResponseTag()
     {
@@ -250,25 +246,21 @@ class matchingExport extends qtiExport
      */
     protected function AssociationsMapEntry($mapping)
     {
-        $labels = [];
-        $points = [];
-        $nbrLabel = [];
-
         foreach ($this->interactionmatching->getLabels() as $keyLa => $la) {
             $labels[$keyLa] = $la->getId();
             $points[$keyLa] = $la->getScoreRightResponse();
             $nbrLabel[$la->getId()] = 0;
         }
         //recup of associated labels
-        $proposals = $this->AssociatedLabels();
-        $nbrLabelAssociated = $this->nbrLabel($nbrLabel, $labels);
+        $allAssocLabel = $this->AssociatedLabels();
+        $nbrLabelAssociated = $this->nbrLabel($nbrLabel, $labels, $allAssocLabel);
 
-        foreach ($proposals as $key => $pr2) {
+        foreach ($allAssocLabel as $key => $assocLabel) {
 
-            foreach ($pr2 as $test) {
+            foreach ($assocLabel as $label) {
 
                 //recup of each id label of relations
-                $associatedLabel = $test->getId();
+                $associatedLabel = $label->getId();
 
                 //recovery id label of the interaction
                 foreach ($labels as $key2 => $la2) {
@@ -293,18 +285,20 @@ class matchingExport extends qtiExport
     /**
      * get number of labels for the division of the notation
      *
+     * @access protected
+     * 
      * @param type $nbrLabel
      * @param type $labels
-     * @return type
+     * @param type $allAssocLabel
+     * 
+     * @return $nbrLabel
      */
-    protected function nbrLabel($nbrLabel, $labels)
+    protected function nbrLabel($nbrLabel, $labels, $allAssocLabel)
     {
-        $proposals = $this->AssociatedLabels();
+        foreach ($allAssocLabel as $assocLabel) {
 
-        foreach ($proposals as $pr2) {
-
-            foreach ($pr2 as $test) {
-                $associatedLabel = $test->getId();
+            foreach ($assocLabel as $label) {
+                $associatedLabel = $label->getId();
 
                 foreach ($labels as $la2) {
 
@@ -326,23 +320,22 @@ class matchingExport extends qtiExport
      */
     protected function getAssociationsCorrectResponse($elementParent)
     {
-        $labels = [];
         foreach ($this->interactionmatching->getLabels() as $keyLa => $la) {
             $labels[$keyLa] = $la->getId();
         }
-        $proposals = $this->AssociatedLabels();
+        $allAssocLabel = $this->AssociatedLabels();
 
-        foreach ($proposals as $key => $pr2) {
+        foreach ($allAssocLabel as $key => $assocLabel) {
 
-            foreach ($pr2 as $test){
+            foreach ($assocLabel as $label){
                 //to know labels of associatedLabel in the table proposal
-                $associatedLabel = $test->getId();
+                $idAssociatedLabel = $label->getId();
 
                 //to know labels of table label
                 foreach ($labels as $key2 => $la2) {
 
                     //compare two labels for know the index in mapEntry
-                    if($la2 == $associatedLabel) {
+                    if($la2 == $idAssociatedLabel) {
                         $value= $this->document->CreateElement('value');
                         $valuetxt = $this->document->CreateTextNode("left".$key." right".$key2);
                         $value->appendChild($valuetxt);
@@ -358,14 +351,13 @@ class matchingExport extends qtiExport
      *
      * @access protected
      *
-     * @return $proposals
+     * @return $assocLabels
      */
     protected function AssociatedLabels()
     {
-        $proposals = [];
-        foreach ($this->interactionmatching->getProposals() as $key => $pr) {
-            $proposals[$key] = $pr->getAssociatedLabel();
+        foreach ($this->interactionmatching->getProposals() as $key => $la) {
+            $assocLabels[$key] = $la->getAssociatedLabel();
         }
-        return $proposals;
+        return $assocLabels;
     }
 }
