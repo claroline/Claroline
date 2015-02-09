@@ -18,6 +18,7 @@ use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Form\Administration\UserPropertiesType;
+use Claroline\CoreBundle\Form\Administration\ProfilePicsImportType;
 use Claroline\CoreBundle\Manager\AuthenticationManager;
 use Claroline\CoreBundle\Manager\LocaleManager;
 use Claroline\CoreBundle\Manager\MailManager;
@@ -635,6 +636,45 @@ class UsersController extends Controller
         $this->workspaceManager->deleteWorkspace($personalWorkspace);
 
         return new JsonResponse(array(), 200);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "import/profile/pics/form",
+     *     name="import_profile_pics_form",
+     *     options={"expose"=true}
+     * )
+     * @EXT\Template()
+     * )
+     */
+    public function importProfilePicsFormAction()
+    {
+        $this->checkOpen();
+        $form = $this->createForm(new ProfilePicsImportType());
+
+        return array('form' => $form->createView());
+    }
+
+    /**
+     * @EXT\Route(
+     *     "import/profile/pics",
+     *     name="import_profile_pics",
+     *     options={"expose"=true}
+     * )
+     * @EXT\Template("ClarolineCoreBundle:Administration/Users:importProfilePicsForm.html.twig")
+     */
+    public function importProfilePicsAction()
+    {
+        $this->checkOpen();
+        $form = $this->createForm(new ProfilePicsImportType());
+        $form->handleRequest($this->request);
+
+        if ($form->isValid()) {
+            $file = $form->get('file')->getData();
+            $this->userManager->importPictureFiles($file);
+        }
+
+        return array('form' => $form->createView());
     }
 
     private function checkOpen()
