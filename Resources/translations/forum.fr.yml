@@ -17,7 +17,7 @@ forum_form_name: Nom
 forum_options_form_subjects: Sujets par page
 forum_options_form_messages: Messages par page
 forum_subject_title_form_title: Titre
-forum_new_message: Un nouveau message a été ajouté dans le sujet "%subject%" du forum "%forum%".
+forum_new_message: Un nouveau message a été ajouté dans le sujet "%subject%" du forum "%forum% par %author%".
 forum_new_subject: Un nouveau sujet a été ajouté dans le forum "%forum%".
 last_message: Dernier message
 messages: Messages

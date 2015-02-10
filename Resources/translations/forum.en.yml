@@ -9,7 +9,7 @@ forum_back_to_subjects: Back to subjects
 forum_category_edit: 'Edit category'
 forum_form_name: Name
 forum_message_form_content: Content
-forum_new_message: A new post was added to topic "%subject%" in forum "%forum%".
+forum_new_message: A new post was added to topic "%subject%" in forum "%forum% by %author%".
 forum_new_subject: A new topic was initiated in forum "%forum%".
 forum_options_form_messages: Posts per page
 forum_options_form_subjects: Topics per page

@@ -273,7 +273,6 @@ class Manager
     public function sendMessageNotification(Message $message, User $user)
     {
         $forum = $message->getSubject()->getCategory()->getForum();
-
         $notifications = $this->notificationRepo->findBy(array('forum' => $forum));
         $users = array();
 
@@ -283,7 +282,7 @@ class Manager
 
         $title = $this->translator->trans(
             'forum_new_message',
-            array('%forum%' => $forum->getResourceNode()->getName(), '%subject%' => $message->getSubject()->getTitle()),
+            array('%forum%' => $forum->getResourceNode()->getName(), '%subject%' => $message->getSubject()->getTitle(), '%author%' => $message->getCreator()->getUsername()),
             'forum'
         );
 
@@ -294,7 +293,6 @@ class Manager
         $body = "<a href='{$url}'>{$title}</a><hr>{$message->getContent()}";
 
         $this->mailManager->send($title, $body, $users);
-
     }
 
     /**
