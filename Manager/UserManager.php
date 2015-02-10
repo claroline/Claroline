@@ -1092,6 +1092,47 @@ class UserManager
         );
     }
 
+    /**
+     *
+     */
+    public function importPictureFiles($filepath)
+    {
+        $archive = new \ZipArchive();
+        $archive->open($filepath);
+        $tmpDir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . uniqid();
+        //add the tmp dir to the "trash list files"
+        $tmpList = $this->container->getParameter('claroline.param.platform_generated_archive_path');
+        file_put_contents($tmpList, $tmpDir . "\n", FILE_APPEND);
+        $archive->extractTo($tmpDir);
+        $iterator = new \DirectoryIterator($tmpDir);
+
+        foreach ($iterator as $file) {
+            if (!$file->isDot()) {
+                $fileName = basename($file->getPathName());
+                $username = preg_replace("/\.[^.]+$/", "", $fileName);
+                $user = $this->getUserByUsername($username);
+
+                if (!is_writable($pictureDir = $this->uploadsDirectory.'/pictures/')) {
+                    throw new \Exception("{$pictureDir} is not writable");
+                }
+
+                $hash = sha1($user->getUsername()
+                    . '.'
+                    . pathinfo($fileName, PATHINFO_EXTENSION)
+                );
+
+                $user->setPicture($hash);
+                rename($file->getPathName(), $pictureDir . $user->getPicture());
+                $this->objectManager->persist($user);
+            }
+        }
+
+        $this->objectManager->flush();
+    }
+
+    /**
+     * Checks if a user will have a personal workspace at his creation
+     */
     private function personalWorkspaceAllowed($roles) {
         $roles[] = $this->roleManager->getRoleByName('ROLE_USER');
 

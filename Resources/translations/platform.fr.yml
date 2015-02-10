@@ -1121,3 +1121,5 @@ can_edit_permission: Peut éditer les permissions
 package_update_impossible: 'Mise à jour des paquets impossible sur cette page. Veuillez contacter l''administrateur.'
 parameters_save_success: 'Paramètres sauvegardés avec succès.'
 parameters_save_error: 'Une erreur est survenue pendant la sauvegarde des paramètres.'
+import_profile_pics: Importer des profils d'utilisateurs
+import_profile_pics_explanation: Veuillez sélectionner une archive zip. Cette archive doit contenir une liste d'images dont les noms sont structurés de cette manière: username.extension
