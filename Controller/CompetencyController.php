@@ -75,7 +75,8 @@ class CompetencyController
      * @EXT\Method("POST")
      * @EXT\Template("HeVinciCompetencyBundle:Competency:scale.html.twig")
      *
-     * @return JsonResponse|array
+     * @param Request $request
+     * @return array|JsonResponse
      */
     public function createScaleAction(Request $request)
     {

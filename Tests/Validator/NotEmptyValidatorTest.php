@@ -27,7 +27,7 @@ class NotEmptyValidatorTest extends UnitTestCase
 
     public function testValidateAddAViolationIfCollectionIsEmpty()
     {
-        $this->context->expects()
+        $this->context->expects($this->once())
             ->method('addViolation')
             ->with((new NotEmpty())->message);
         $this->validator->validate(new ArrayCollection(), new NotEmpty());

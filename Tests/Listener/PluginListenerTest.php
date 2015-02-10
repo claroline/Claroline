@@ -25,7 +25,7 @@ class PluginListenerTest extends UnitTestCase
         $stack->push($this->request);
         $this->listener = new PluginListener($stack, $kernel);
         $this->response = new Response('Test response');
-        $kernel->expects()->method('handle')->willReturn($this->response);
+        $kernel->expects($this->once())->method('handle')->willReturn($this->response);
     }
 
     public function testOpenCompetencyTool()
@@ -56,7 +56,7 @@ class PluginListenerTest extends UnitTestCase
     {
         $this->expectSubRequest(['_controller' => 'HeVinciCompetencyBundle:Activity:competencies', 'id' => 14]);
         $activity = $this->mock('Claroline\CoreBundle\Entity\Resource\Activity');
-        $activity->expects()->method('getId')->willReturn(14);
+        $activity->expects($this->once())->method('getId')->willReturn(14);
         $event = new CustomActionResourceEvent($activity);
         $this->listener->onOpenActivityCompetencies($event);
         $this->assertEquals($this->response, $event->getResponse());
@@ -73,7 +73,7 @@ class PluginListenerTest extends UnitTestCase
     private function expectSubRequest(array $attributes)
     {
         $this->request
-            ->expects()
+            ->expects($this->once())
             ->method('duplicate')
             ->with([], null, $attributes)
             ->willReturn(new Request());

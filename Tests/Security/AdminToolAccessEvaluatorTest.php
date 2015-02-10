@@ -15,7 +15,7 @@ class AdminToolAccessEvaluatorTest extends UnitTestCase
         $this->context = $this->mock('Symfony\Component\Security\Core\SecurityContextInterface');
         $this->repo = $this->mock('Doctrine\ORM\EntityRepository');
         $em = $this->mock('Doctrine\ORM\EntityManagerInterface');
-        $em->expects()
+        $em->expects($this->any())
             ->method('getRepository')
             ->with('ClarolineCoreBundle:Tool\AdminTool')
             ->willReturn($this->repo);
@@ -27,7 +27,7 @@ class AdminToolAccessEvaluatorTest extends UnitTestCase
      */
     public function testEvaluatorExpectsTheToolToExist()
     {
-        $this->repo->expects()
+        $this->repo->expects($this->once())
             ->method('findOneBy')
             ->with(['name' => 'foo'])
             ->willReturn(null);
@@ -36,14 +36,14 @@ class AdminToolAccessEvaluatorTest extends UnitTestCase
 
     public function testEvaluatorDelegatesToSecurityContext()
     {
-        $this->repo->expects()
+        $this->repo->expects($this->exactly(2))
             ->method('findOneBy')
             ->with(['name' => 'foo'])
             ->willReturn('FooTool');
-        $this->context->expects()
+        $this->context->expects($this->exactly(2))
             ->method('isGranted')
             ->with('OPEN', 'FooTool')
-            ->willReturn(true, false);
+            ->willReturnOnConsecutiveCalls(true, false);
         $this->assertTrue($this->evaluator->canOpenAdminTool('foo'));
         $this->assertFalse($this->evaluator->canOpenAdminTool('foo'));
     }
