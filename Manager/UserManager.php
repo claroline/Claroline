@@ -1116,13 +1116,13 @@ class UserManager
                     throw new \Exception("{$pictureDir} is not writable");
                 }
 
-                $hash = sha1( $user->getName()
+                $hash = sha1($user->getUsername()
                     . '.'
                     . pathinfo($fileName, PATHINFO_EXTENSION)
                 );
 
                 $user->setPicture($hash);
-                rename($pictureDir . $user->getPicture(), $user->getPicture());
+                rename($file->getPathName(), $pictureDir . $user->getPicture());
                 $this->objectManager->persist($user);
             }
         }

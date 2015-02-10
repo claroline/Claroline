@@ -29,7 +29,7 @@
     <form role="form" class="form-horizontal" action="{{ path('import_profile_pics') }}" method="post" {{ form_enctype(form) }} >
         <div class="panel-body">
             <div class="well">
-                //explain
+                {{ 'import_profile_pics_explanation'|trans({}, 'platform')}}
             </div>
 
             {{ form_widget(form) }}
