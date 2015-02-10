@@ -70,14 +70,17 @@
             </a>
         </div>
         <div class="btn-group btn-group-sm" role="group">
-            <button id="btnGroupDrop1" type="button" class="btn btn-default import-dropdown-toggle" aria-expanded="false"
+            <a href="{{ path('icap_portfolio_import') }}" class="btn btn-primary" data-toggle="tooltip"
+               data-container="body" title="{{ 'import_portfolio'|trans({}, 'icap_portfolio') }}" data-placement="top"
+               data-original-title="{{ 'import_portfolio'|trans({}, 'icap_portfolio') }}"><span class="fa fa-download"></span></a>
+            <button id="importButtonDropdown" type="button" class="btn btn-default dropdown-toggle import-dropdown" aria-expanded="false"
                     data-toggle="dropdown">
-                <span class="fa fa-download"></span>
                 <span class="caret"></span>
+                <span class="sr-only">{{ 'import_portfolio'|trans({}, 'icap_portfolio') }}</span>
             </button>
-            <ul class="dropdown-menu" role="menu" aria-labelledby="btnGroupDrop1">
+            <ul class="dropdown-menu" role="menu" aria-labelledby="importButtonDropdown">
                 {% for availableImportFormatKey, availableImportFormat in availableImportFormats %}
-                <li><a href="#{{ availableImportFormatKey }}">{{ availableImportFormat }}</a></li>
+                <li><a href="{{ path('icap_portfolio_import', {'format': availableImportFormatKey}) }}">{{ availableImportFormat }}</a></li>
                 {% endfor %}
             </ul>
         </div>
@@ -115,9 +118,9 @@
                             </small>
                         </td>
                         <td>
-                            <div class="btn-group">
+                            <div class="btn-group btn-group-xs">
                                 <a href="{{ path('icap_portfolio_view', {'portfolioSlug': portfolio.titleWidget.slug}) }}" class="btn btn-xs btn-primary">{{ 'update'|trans({}, 'icap_portfolio') }}</a>
-                                <button type="button" class="btn btn-xs btn-primary dropdown-toggle" data-toggle="dropdown">
+                                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
                                     <span class="caret"></span>
                                     <span class="sr-only">Toggle Dropdown</span>
                                 </button>
@@ -201,11 +204,11 @@
         (function($) {
             $(function() {
                 $('.delete').confirmModal();
-                $('.import-dropdown-toggle').dropdown();
-                $('.import-dropdown-toggle').tooltip({
+                $('.import-dropdown').dropdown();
+                $('.import-dropdown').tooltip({
                     container: "body",
                     placement: "top",
-                    title: "{{ 'import_portfolio'|trans({}, 'icap_portfolio') }}"
+                    title: "{{ 'choose_import_portfolio_format'|trans({}, 'icap_portfolio')|raw }}"
                 });
             });
         })(jQuery);

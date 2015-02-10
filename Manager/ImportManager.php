@@ -7,7 +7,11 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Icap\PortfolioBundle\Importer\Importer;
 use Icap\PortfolioBundle\Importer\ImporterInterface;
 use Icap\PortfolioBundle\Importer\Leap2aImporter;
+use JMS\DiExtraBundle\Annotation as DI;
 
+/**
+ * @DI\Service("icap_portfolio.manager.import")
+ */
 class ImportManager
 {
     /**

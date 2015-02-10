@@ -3,10 +3,12 @@
 namespace Icap\PortfolioBundle\Controller;
 
 use Claroline\CoreBundle\Entity\User;
+use Icap\PortfolioBundle\Entity\ImportData;
 use Icap\PortfolioBundle\Entity\Portfolio;
 use Icap\PortfolioBundle\Entity\Widget\TitleWidget;
 use Icap\PortfolioBundle\Event\Log\PortfolioViewEvent;
 use Icap\PortfolioBundle\Exporter\Exporter;
+use Icap\PortfolioBundle\Form\Type\PortfolioImport;
 use Icap\PortfolioBundle\Manager\ImportManager;
 use Icap\PortfolioBundle\Manager\PortfolioManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -14,6 +16,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use JMS\DiExtraBundle\Annotation\Inject;
+use Symfony\Component\Finder\Finder;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -37,9 +41,8 @@ class PortfolioController extends Controller
         $guidedPortfolioQuery = $this->getDoctrine()->getRepository('IcapPortfolioBundle:Portfolio')->findGuidedPortfolios($loggedUser, false);
         $guidedPortfoliosPager = $this->get('claroline.pager.pager_factory')->createPager($guidedPortfolioQuery, $guidedPage, 10);
 
-        $importManager          = new ImportManager();
+        $importManager          = $this->getImportManager();
         $availableImportFormats = $importManager->getAvailableFormats();
-        $importManager->setEntityManager($this->getEntityManager());
 
         return array(
             'portfoliosPager'        => $portfoliosPager,
@@ -188,13 +191,13 @@ class PortfolioController extends Controller
 
     /**
      * @Route("/export/{portfolioSlug}.{format}", name="icap_portfolio_export")
+     *
+     * @ParamConverter("loggedUser", options={"authenticatedUser" = true})
      */
     public function exportAction($portfolioSlug, $format)
     {
         $this->checkPortfolioToolAccess();
 
-        /** @var User|null $user */
-        $user        = $this->getUser();
         /** @var \Icap\PortfolioBundle\Entity\Widget\TitleWidget $titleWidget */
         $titleWidget = $this->getDoctrine()->getRepository('IcapPortfolioBundle:Widget\TitleWidget')->findOneBySlug($portfolioSlug);
         $portfolio   = $titleWidget->getPortfolio();
@@ -209,6 +212,94 @@ class PortfolioController extends Controller
         $response->headers->set('Content-Type', 'text/xml');
 
         return $response;
+    }
+
+    /**
+     * @Route("/import/{format}", name="icap_portfolio_import")
+     *
+     * @ParamConverter("loggedUser", options={"authenticatedUser" = true})
+     * @Template()
+     */
+    public function importFormAction(Request $request, User $loggedUser, $format = null)
+    {
+        $this->checkPortfolioToolAccess();
+
+        $importManager = $this->getImportManager();
+        $importData    = new ImportData();
+        $importData->setFormat($format);
+
+        /** @var  $form */
+        $form = $form = $this->createForm(
+            new PortfolioImport($importManager->getAvailableFormats())
+        );
+        $form->setData($importData);
+
+        if ($request->isMethod('POST')) {
+            $form->submit($request);
+
+            if ($form->isValid()) {
+                try {
+                    $portfolio = $importManager->simulateImport($importData->getContent(), $loggedUser, $importData->getFormat());
+                    $this->getSessionFlashbag()->add('success', $this->getTranslator()->trans('portfolio_import_success_message', array(), 'icap_portfolio'));
+                    $previewId = uniqid();
+                    $temporaryImportFilePath = sys_get_temp_dir() . DIRECTORY_SEPARATOR . sprintf("%s-%s-%s.%s", strtolower($loggedUser->getUsername()), date("Y_m_d\TH_i_s\Z"), $previewId, $importData->getFormat()) . '.import';
+                    if (!file_put_contents($temporaryImportFilePath, $importData->getContent())) {
+                        throw new \Exception(sprintf("Unable to create temporary import file '%s'.", $temporaryImportFilePath));
+                    }
+
+                    return $this->redirect($this->generateUrl('icap_portfolio_import_preview', ['format' => $importData->getFormat(), 'previewId' => $previewId]));
+                } catch (\Exception $exception) {
+                    $this->getSessionFlashbag()->add('error', $this->getTranslator()->trans('portfolio_import_error_message', array(), 'icap_portfolio'));
+
+                    return $this->redirect($this->generateUrl('icap_portfolio_import', ['format' => $format]));
+                }
+            }
+        }
+
+        return [
+            'form'      => $form->createView(),
+            'portfolio' => $importData
+        ];
+    }
+
+    /**
+     * @Route("/import/{format}/{previewId}", name="icap_portfolio_import_preview")
+     *
+     * @ParamConverter("loggedUser", options={"authenticatedUser" = true})
+     * @Template()
+     */
+    public function importPreviewAction(Request $request, User $loggedUser, $format, $previewId)
+    {
+        $this->checkPortfolioToolAccess();
+
+        $temporaryImportFilePathToSearch = sprintf("%s-*-%s.%s.import", strtolower($loggedUser->getUsername()), $previewId, $format);
+
+        $finder = new Finder();
+        $files = $finder->files()->in(sys_get_temp_dir())->depth('0')->name($temporaryImportFilePathToSearch);
+        $filesCount = $files->count();
+        $errorMessage = null;
+
+        if (0 === $filesCount) {
+            $errorMessage = 'portfolio_import_error_import_file_not_found_message';
+        }
+        else if (1 < $filesCount) {
+            $errorMessage = 'portfolio_import_error_import_too_many_file_message';
+        }
+
+        if (null !== $errorMessage) {
+            $this->getSessionFlashbag()->add('error', $this->getTranslator()->trans($errorMessage, array(), 'icap_portfolio'));
+
+            return $this->redirect($this->generateUrl('icap_portfolio_import', ['format' => $format]));
+        }
+
+        foreach ($files as $file) {
+            $portfolio = $this->getImportManager()->simulateImport($file->getContents(), $loggedUser, $format);
+        }
+
+        return [
+            'previewId' => $previewId,
+            'portfolio' => $portfolio
+        ];
     }
 
     /**

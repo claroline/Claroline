@@ -1,0 +1,40 @@
+{% extends 'IcapPortfolioBundle::layout.html.twig' %}
+
+{% block title %}{{ parent() ~ ' - ' ~ 'preview_importing_portfolio' | trans({}, 'icap_portfolio') | striptags | raw }}{% endblock %}
+
+{% block content_title %}{{ 'preview_importing_portfolio'|trans({}, 'icap_portfolio') }}{% endblock %}
+
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'fa fa-list-alt',
+                'name': 'my_portfolios'|trans({}, 'platform'),
+                'href': path('icap_portfolio_list')
+            },
+            {
+                'icon': 'fa fa-list-alt',
+                'name': 'preview_importing_portfolio'|trans({}, 'icap_portfolio'),
+                'href': ''
+            }
+        ])
+    }}
+{% endblock %}
+
+{% block content_body %}
+    <p>
+        <a href="#{{ previewId }}" title="" class="btn btn-primary">Importer</a>
+    </p>
+    <h1>{{ portfolio.titleWidget.title }}</h1>
+    {% for widget in portfolio.widgets %}
+        {% if 'title' != widget.widgetType%}
+    <div>
+        <h2>{{ widget.label }}</h2>
+        {% include 'IcapPortfolioBundle:templates:' ~ widget.widgetType ~ '.html.twig' %}
+    </div>
+        {% endif %}
+    {% endfor %}
+    <p>
+        <a href="#{{ previewId }}" title="" class="btn btn-primary">Importer</a>
+    </p>
+{% endblock %}
