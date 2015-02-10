@@ -3,7 +3,7 @@
 }
 
 .endPoints {
-    z-index: 10000000;
+    z-index: 1;
 }
 
 ._jsPlumb_endpoint {
