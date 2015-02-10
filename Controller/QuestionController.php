@@ -3,38 +3,27 @@
 namespace UJM\ExoBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\Form\FormBuilder;
-//use Symfony\Component\HttpFoundation\Response;
-
 
 use Pagerfanta\Adapter\ArrayAdapter;
 use Pagerfanta\Pagerfanta;
 
-use UJM\ExoBundle\Entity\Question;
-use UJM\ExoBundle\Form\QuestionType;
-
-use UJM\ExoBundle\Entity\InteractionQCM;
-use UJM\ExoBundle\Form\InteractionQCMType;
-
 use UJM\ExoBundle\Entity\InteractionGraphic;
-use UJM\ExoBundle\Form\InteractionGraphicType;
-
-use UJM\ExoBundle\Entity\InteractionOpen;
-use UJM\ExoBundle\Form\InteractionOpenType;
-
 use UJM\ExoBundle\Entity\InteractionHole;
-use UJM\ExoBundle\Form\InteractionHoleType;
-
 use UJM\ExoBundle\Entity\InteractionMatching;
-use UJM\ExoBundle\Form\InteractionMatchingType;
-
-use UJM\ExoBundle\Entity\Interaction;
+use UJM\ExoBundle\Entity\InteractionOpen;
+use UJM\ExoBundle\Entity\InteractionQCM;
+use UJM\ExoBundle\Entity\Question;
+use UJM\ExoBundle\Entity\Response;
 use UJM\ExoBundle\Entity\Share;
 
-use UJM\ExoBundle\Entity\Response;
+use UJM\ExoBundle\Form\InteractionGraphicType;
+use UJM\ExoBundle\Form\InteractionHoleType;
+use UJM\ExoBundle\Form\InteractionMatchingType;
+use UJM\ExoBundle\Form\InteractionOpenType;
+use UJM\ExoBundle\Form\InteractionQCMType;
+use UJM\ExoBundle\Form\QuestionType;
 use UJM\ExoBundle\Form\ResponseType;
 
-use UJM\ExoBundle\Repository\InteractionGraphicRepository;
 /**
  * Question controller.
  *
@@ -172,6 +161,10 @@ class QuestionController extends Controller
         $vars['listExo']              = $listExo;
         $vars['idExo']                = -1;
         $vars['QuestionsExo']         = 'false';
+
+        if ($request->get("qtiError")) {
+            $vars['qtiError'] = $request->get("qtiError");
+        }
 
         return $this->render('UJMExoBundle:Question:index.html.twig', $vars);
     }
@@ -2294,5 +2287,57 @@ class QuestionController extends Controller
         $doublePagination[3] = $pagerTwo;
 
         return $doublePagination;
+    }
+
+    /**
+     * Export an existing Question in QTI.
+     *
+     * @access public
+     *
+     * @param integer $id : id of question
+     *
+     */
+    public function ExportAction($id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $question = $this->controlUserQuestion($id);
+
+        $qtiRepos = $this->container->get('ujm.qti_repository');
+        $qtiRepos->createDirQTI();
+
+        if (count($question) > 0) {
+            $interaction = $em->getRepository('UJMExoBundle:Interaction')
+                              ->getInteraction($id);
+            $typeInter = $interaction->getType();
+            switch ($typeInter) {
+                case "InteractionQCM":
+                    $qtiExport = $this->container->get('ujm.qti_qcm_export');
+
+                    return $qtiExport->export($interaction, $qtiRepos);
+
+                case "InteractionGraphic":
+                    $qtiExport = $this->container->get('ujm.qti_graphic_export');
+
+                    return $qtiExport->export($interaction, $qtiRepos);
+
+                case "InteractionHole":
+                    $qtiExport = $this->container->get('ujm.qti_hole_export');
+
+                    return $qtiExport->export($interaction, $qtiRepos);
+
+                case "InteractionOpen":
+                    $qtiExport = $this->container->get('ujm.qti_open_export');
+
+                    return $qtiExport->export($interaction, $qtiRepos);
+
+                case "InteractionMatching":
+                    $qtiExport = $this->container->get('ujm.qti_matching_export');
+
+                    return $qtiExport->export($interaction, $qtiRepos);
+
+            }
+        }
+
+        return new \Symfony\Component\HttpFoundation\Response;
     }
 }

@@ -30,6 +30,50 @@ services:
         class: UJM\ExoBundle\Services\classes\exerciseServices
         arguments: [@doctrine, @security.context, @event_dispatcher]
 
+    ujm.qti_qcm_export:
+        class: UJM\ExoBundle\Services\classes\QTI\qcmExport
+        arguments: [@doctrine, @security.context, @service_container]
+
+    ujm.qti_qcm_import:
+        class: UJM\ExoBundle\Services\classes\QTI\qcmImport
+        arguments: [@doctrine, @security.context, @service_container]
+
+    ujm.qti_graphic_export:
+        class: UJM\ExoBundle\Services\classes\QTI\graphicExport
+        arguments: [@doctrine, @security.context, @service_container]
+
+    ujm.qti_graphic_import:
+        class: UJM\ExoBundle\Services\classes\QTI\graphicImport
+        arguments: [@doctrine, @security.context, @service_container]
+
+    ujm.qti_hole_export:
+        class: UJM\ExoBundle\Services\classes\QTI\holeExport
+        arguments: [@doctrine, @security.context, @service_container]
+
+    ujm.qti_hole_import:
+        class: UJM\ExoBundle\Services\classes\QTI\holeImport
+        arguments: [@doctrine, @security.context, @service_container]
+
+    ujm.qti_open_export:
+        class: UJM\ExoBundle\Services\classes\QTI\openExport
+        arguments: [@doctrine, @security.context, @service_container]
+
+    ujm.qti_open_import:
+        class: UJM\ExoBundle\Services\classes\QTI\openImport
+        arguments: [@doctrine, @security.context, @service_container]
+
+    ujm.qti_matching_export:
+        class: UJM\ExoBundle\Services\classes\QTI\matchingExport
+        arguments: [@doctrine, @security.context, @service_container]
+
+    ujm.qti_matching_import:
+        class: UJM\ExoBundle\Services\classes\QTI\matchingImport
+        arguments: [@doctrine, @security.context, @service_container]
+
+    ujm.qti_repository:
+        class: UJM\ExoBundle\Services\classes\QTI\qtiRepository
+        arguments: [@security.context, @service_container]
+
     ujm.exercise.validator.isvalidqcmglobalmark:
         class: UJM\ExoBundle\Validator\Constraints\isValidQCMGlobalMarkValidator
         arguments: [@request]

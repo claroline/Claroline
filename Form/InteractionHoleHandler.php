@@ -284,7 +284,7 @@ class InteractionHoleHandler extends \UJM\ExoBundle\Form\InteractionHandler{
                     $response = $wr->getResponse();
                     $select .= "<option value=\"$id\">$response</option>";
                 }
-                $select .= '</select>';
+                //$select .= '</select>';
                 $html = str_replace($regExpr, $select, $html);
             }
         }

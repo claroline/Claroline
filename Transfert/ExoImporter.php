@@ -18,6 +18,9 @@ use Claroline\CoreBundle\Library\Transfert\RichTextInterface;
 use Symfony\Component\Config\Definition\Processor;
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use UJM\ExoBundle\Entity\Exercise;
+use UJM\ExoBundle\Entity\Subscription;
+use UJM\ExoBundle\Form\ExerciseHandler;
 
 /**
  * @DI\Service("claroline.importer.exo_importer")
@@ -80,6 +83,52 @@ class ExoImporter extends Importer implements ConfigurationInterface
     {
         //this is the root of the unzipped archive
         $rootPath = $this->getRootPath();
+
+        $qtiRepos = $this->container->get('ujm.qti_repository');
+        $qtiRepos->createDirQTI();
+
+        if ($exercises = opendir($rootPath.'/qti')) {
+            while (($exercise = readdir($exercises)) !== false) {
+                if ($exercise != '.' && $exercise != '..') {
+                    $newExercise = new Exercise();
+                    $newExercise->setTitle($exercise);
+                    $newExercise->setDateCreate(new \Datetime());
+                    $newExercise->setNbQuestionPage(1);
+                    $newExercise->setNbQuestion(0);
+                    $newExercise->setDuration(0);
+                    $newExercise->setMaxAttempts(0);
+                    $newExercise->setStartDate(new \Datetime());
+                    $newExercise->setEndDate(new \Datetime());
+                    $newExercise->setDateCorrection(new \Datetime());
+                    $newExercise->setCorrectionMode('1');
+                    $newExercise->setMarkMode('1');
+                    $newExercise->setPublished(FALSE);
+                    $this->om->persist($newExercise);
+                    $this->om->flush();
+
+                    $subscription = new Subscription($qtiRepos->getQtiUser(), $newExercise);
+                    $subscription->setAdmin(1);
+                    $subscription->setCreator(1);
+
+                    $this->om->persist($subscription);
+                    $this->om->flush();
+                    $questions = opendir($rootPath.'/qti/'.$exercise);
+                    while (($question = readdir($questions)) !== false) {
+                        if ($question != '.' && $question != '..') {
+                            $files = opendir($rootPath.'/qti/'.$exercise.'/'.$question);
+                            while (($file = readdir($files)) !== false) {
+                                if ($file != '.' && $file != '..') {
+                                    copy($rootPath.'/qti/'.$exercise.'/'.$question.'/'.$file, $qtiRepos->getUserDir().$file);
+                                }
+                            }
+                        }
+                        $qtiRepos->scanFilesToImport($newExercise);
+                    }
+               }
+           }
+        }
+
+        return $newExercise;
     }
 
     public function export(Workspace $workspace, array &$files, $object)
