@@ -788,11 +788,11 @@ resource_right_form_canView: Voir
 resource_right_form_isRecursive: 'Appliquer au contenu du répertoire et aux sous-répertoires'
 resources: Ressources
 resources_delete: 'Êtes-vous sûr de vouloir supprimer ces ressources ?'
-resources_most_downloaded: 'Ressources les plus téléchargés'
+resources_most_downloaded: 'Ressources les plus téléchargées'
 resources_rights: 'Droits des ressources'
 resources_rights_management: 'Gestion des droits des ressources'
 resources_usage_list: 'Liste d''utilisation des ressources'
-resources_usage_ratio: 'Taux d''utilisation des resources'
+resources_usage_ratio: 'Taux d''utilisation des ressources'
 restore: Restaurer
 restore_messages_confirm_message: 'message(s) restauré(s)'
 results: Résultats
@@ -935,14 +935,14 @@ tools: Outils
 tools_rights_configuration: 'Configuration des droits sur les outils'
 top: Top
 top_extension: 'Top des extensions (Media), par nombre de fichiers'
-top_media_views: 'Top des Medias le plus consultés'
-top_resources_downloads: 'Top des resources les plus téléchargés'
-top_resources_views: 'Top des resources les plus consultés'
-top_users_connections: 'Top des utilisateurs s''étant les plus connectés'
+top_media_views: 'Top des Medias les plus consultés'
+top_resources_downloads: 'Top des ressources les plus téléchargées'
+top_resources_views: 'Top des ressources les plus consultées'
+top_users_connections: 'Top des utilisateurs s''étant le plus connectés'
 top_users_workspaces_enrolled: 'Top des utilisateurs étant inscrits dans le plus de modules'
-top_users_workspaces_owners: 'Top des utilisateurs ayant crée le plus de modules'
+top_users_workspaces_owners: 'Top des utilisateurs ayant créé le plus de modules'
 top_workspaces_connections: 'Top des espaces d''activités les plus consultés'
-top_workspaces_resources: 'Top des espaces d''activités avec le plus des resources'
+top_workspaces_resources: 'Top des espaces d''activités avec le plus de ressources'
 total: Total
 total_time: 'Durée totale'
 traffic: Fréquentation
