@@ -11,6 +11,8 @@
 
 namespace Claroline\CursusBundle\Entity;
 
+use Claroline\CoreBundle\Entity\Model\WorkspaceModel;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -50,7 +52,28 @@ class Course
      * @ORM\Column(name="public_registration", type="boolean")
      */
     protected $publicRegistration = false;
-    
+
+    /**
+     * @ORM\ManyToOne(
+     *     targetEntity="Claroline\CoreBundle\Entity\Model\WorkspaceModel"
+     * )
+     * @ORM\JoinColumn(name="workspace_model_id", nullable=true, onDelete="SET NULL")
+     */
+    protected $workspaceModel;
+
+    /**
+     * @ORM\OneToMany(
+     *     targetEntity="Claroline\CursusBundle\Entity\CourseSession",
+     *     mappedBy="course"
+     * )
+     */
+    protected $sessions;
+
+    public function __construct()
+    {
+        $this->sessions = new ArrayCollection();
+    }
+
     public function getId()
     {
         return $this->id;
@@ -99,5 +122,20 @@ class Course
     public function setPublicRegistration($publicRegistration)
     {
         $this->publicRegistration = $publicRegistration;
+    }
+
+    public function getWorkspaceModel()
+    {
+        return $this->workspaceModel;
+    }
+
+    public function setWorkspaceModel(WorkspaceModel $workspaceModel)
+    {
+        $this->workspaceModel = $workspaceModel;
+    }
+
+    public function getSessions()
+    {
+        return $this->sessions;
     }
 }

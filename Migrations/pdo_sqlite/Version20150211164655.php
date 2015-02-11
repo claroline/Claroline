@@ -8,15 +8,16 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2015/02/06 11:17:46
+ * Generation date: 2015/02/11 04:46:57
  */
-class Version20150206111745 extends AbstractMigration
+class Version20150211164655 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
         $this->addSql("
             CREATE TABLE claro_cursusbundle_course (
                 id INTEGER NOT NULL, 
+                workspace_model_id INTEGER DEFAULT NULL, 
                 code VARCHAR(255) NOT NULL, 
                 title VARCHAR(255) NOT NULL, 
                 description CLOB DEFAULT NULL, 
@@ -26,6 +27,9 @@ class Version20150206111745 extends AbstractMigration
         ");
         $this->addSql("
             CREATE UNIQUE INDEX UNIQ_3359D34977153098 ON claro_cursusbundle_course (code)
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_3359D349EE7F5384 ON claro_cursusbundle_course (workspace_model_id)
         ");
         $this->addSql("
             CREATE TABLE claro_cursusbundle_cursus (
@@ -64,6 +68,33 @@ class Version20150206111745 extends AbstractMigration
         ");
         $this->addSql("
             CREATE UNIQUE INDEX UNIQ_14E7B098C3F17511 ON claro_cursusbundle_cursus_displayed_word (word)
+        ");
+        $this->addSql("
+            CREATE TABLE claro_cursusbundle_course_session (
+                id INTEGER NOT NULL, 
+                course_id INTEGER NOT NULL, 
+                workspace_id INTEGER NOT NULL, 
+                user_role_id INTEGER DEFAULT NULL, 
+                manager_role_id INTEGER DEFAULT NULL, 
+                cursus_id INTEGER DEFAULT NULL, 
+                session_status INTEGER NOT NULL, 
+                PRIMARY KEY(id)
+            )
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_C5F56FDE591CC992 ON claro_cursusbundle_course_session (course_id)
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_C5F56FDE82D40A1F ON claro_cursusbundle_course_session (workspace_id)
+        ");
+        $this->addSql("
+            CREATE UNIQUE INDEX UNIQ_C5F56FDE8E0E3CA6 ON claro_cursusbundle_course_session (user_role_id)
+        ");
+        $this->addSql("
+            CREATE UNIQUE INDEX UNIQ_C5F56FDE68CE17BA ON claro_cursusbundle_course_session (manager_role_id)
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_C5F56FDE40AEF4B9 ON claro_cursusbundle_course_session (cursus_id)
         ");
         $this->addSql("
             CREATE TABLE claro_cursusbundle_cursus_group (
@@ -113,6 +144,9 @@ class Version20150206111745 extends AbstractMigration
         ");
         $this->addSql("
             DROP TABLE claro_cursusbundle_cursus_displayed_word
+        ");
+        $this->addSql("
+            DROP TABLE claro_cursusbundle_course_session
         ");
         $this->addSql("
             DROP TABLE claro_cursusbundle_cursus_group

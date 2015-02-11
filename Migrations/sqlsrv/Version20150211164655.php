@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CursusBundle\Migrations\pdo_sqlsrv;
+namespace Claroline\CursusBundle\Migrations\sqlsrv;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -8,15 +8,16 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2015/02/06 11:17:46
+ * Generation date: 2015/02/11 04:46:57
  */
-class Version20150206111745 extends AbstractMigration
+class Version20150211164655 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
         $this->addSql("
             CREATE TABLE claro_cursusbundle_course (
                 id INT IDENTITY NOT NULL, 
+                workspace_model_id INT, 
                 code NVARCHAR(255) NOT NULL, 
                 title NVARCHAR(255) NOT NULL, 
                 description VARCHAR(MAX), 
@@ -27,6 +28,9 @@ class Version20150206111745 extends AbstractMigration
         $this->addSql("
             CREATE UNIQUE INDEX UNIQ_3359D34977153098 ON claro_cursusbundle_course (code) 
             WHERE code IS NOT NULL
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_3359D349EE7F5384 ON claro_cursusbundle_course (workspace_model_id)
         ");
         $this->addSql("
             CREATE TABLE claro_cursusbundle_cursus (
@@ -79,6 +83,35 @@ class Version20150206111745 extends AbstractMigration
             WHERE word IS NOT NULL
         ");
         $this->addSql("
+            CREATE TABLE claro_cursusbundle_course_session (
+                id INT IDENTITY NOT NULL, 
+                course_id INT NOT NULL, 
+                workspace_id INT NOT NULL, 
+                user_role_id INT, 
+                manager_role_id INT, 
+                cursus_id INT, 
+                session_status INT NOT NULL, 
+                PRIMARY KEY (id)
+            )
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_C5F56FDE591CC992 ON claro_cursusbundle_course_session (course_id)
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_C5F56FDE82D40A1F ON claro_cursusbundle_course_session (workspace_id)
+        ");
+        $this->addSql("
+            CREATE UNIQUE INDEX UNIQ_C5F56FDE8E0E3CA6 ON claro_cursusbundle_course_session (user_role_id) 
+            WHERE user_role_id IS NOT NULL
+        ");
+        $this->addSql("
+            CREATE UNIQUE INDEX UNIQ_C5F56FDE68CE17BA ON claro_cursusbundle_course_session (manager_role_id) 
+            WHERE manager_role_id IS NOT NULL
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_C5F56FDE40AEF4B9 ON claro_cursusbundle_course_session (cursus_id)
+        ");
+        $this->addSql("
             CREATE TABLE claro_cursusbundle_cursus_group (
                 id INT IDENTITY NOT NULL, 
                 group_id INT NOT NULL, 
@@ -119,16 +152,52 @@ class Version20150206111745 extends AbstractMigration
             AND user_id IS NOT NULL
         ");
         $this->addSql("
+            ALTER TABLE claro_cursusbundle_course 
+            ADD CONSTRAINT FK_3359D349EE7F5384 FOREIGN KEY (workspace_model_id) 
+            REFERENCES claro_workspace_model (id) 
+            ON DELETE SET NULL
+        ");
+        $this->addSql("
             ALTER TABLE claro_cursusbundle_cursus 
             ADD CONSTRAINT FK_27921C33591CC992 FOREIGN KEY (course_id) 
             REFERENCES claro_cursusbundle_course (id) 
-            ON DELETE CASCADE
+            ON DELETE SET NULL
         ");
         $this->addSql("
             ALTER TABLE claro_cursusbundle_cursus 
             ADD CONSTRAINT FK_27921C33727ACA70 FOREIGN KEY (parent_id) 
             REFERENCES claro_cursusbundle_cursus (id) 
             ON DELETE CASCADE
+        ");
+        $this->addSql("
+            ALTER TABLE claro_cursusbundle_course_session 
+            ADD CONSTRAINT FK_C5F56FDE591CC992 FOREIGN KEY (course_id) 
+            REFERENCES claro_cursusbundle_course (id) 
+            ON DELETE CASCADE
+        ");
+        $this->addSql("
+            ALTER TABLE claro_cursusbundle_course_session 
+            ADD CONSTRAINT FK_C5F56FDE82D40A1F FOREIGN KEY (workspace_id) 
+            REFERENCES claro_workspace (id) 
+            ON DELETE CASCADE
+        ");
+        $this->addSql("
+            ALTER TABLE claro_cursusbundle_course_session 
+            ADD CONSTRAINT FK_C5F56FDE8E0E3CA6 FOREIGN KEY (user_role_id) 
+            REFERENCES claro_role (id) 
+            ON DELETE SET NULL
+        ");
+        $this->addSql("
+            ALTER TABLE claro_cursusbundle_course_session 
+            ADD CONSTRAINT FK_C5F56FDE68CE17BA FOREIGN KEY (manager_role_id) 
+            REFERENCES claro_role (id) 
+            ON DELETE SET NULL
+        ");
+        $this->addSql("
+            ALTER TABLE claro_cursusbundle_course_session 
+            ADD CONSTRAINT FK_C5F56FDE40AEF4B9 FOREIGN KEY (cursus_id) 
+            REFERENCES claro_cursusbundle_cursus (id) 
+            ON DELETE SET NULL
         ");
         $this->addSql("
             ALTER TABLE claro_cursusbundle_cursus_group 
@@ -163,8 +232,16 @@ class Version20150206111745 extends AbstractMigration
             DROP CONSTRAINT FK_27921C33591CC992
         ");
         $this->addSql("
+            ALTER TABLE claro_cursusbundle_course_session 
+            DROP CONSTRAINT FK_C5F56FDE591CC992
+        ");
+        $this->addSql("
             ALTER TABLE claro_cursusbundle_cursus 
             DROP CONSTRAINT FK_27921C33727ACA70
+        ");
+        $this->addSql("
+            ALTER TABLE claro_cursusbundle_course_session 
+            DROP CONSTRAINT FK_C5F56FDE40AEF4B9
         ");
         $this->addSql("
             ALTER TABLE claro_cursusbundle_cursus_group 
@@ -182,6 +259,9 @@ class Version20150206111745 extends AbstractMigration
         ");
         $this->addSql("
             DROP TABLE claro_cursusbundle_cursus_displayed_word
+        ");
+        $this->addSql("
+            DROP TABLE claro_cursusbundle_course_session
         ");
         $this->addSql("
             DROP TABLE claro_cursusbundle_cursus_group
