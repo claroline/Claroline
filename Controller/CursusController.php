@@ -410,7 +410,6 @@ class CursusController extends Controller
      *     options={"expose"=true}
      * )
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
-     *
      * @EXT\Template()
      *
      * Displays the list of courses.
@@ -491,6 +490,7 @@ class CursusController extends Controller
      *     options = {"expose"=true}
      * )
      * @EXT\Method("POST")
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      *
      * @param Cursus $cursus
      * @param Course $course
@@ -510,6 +510,7 @@ class CursusController extends Controller
      *     options = {"expose"=true}
      * )
      * @EXT\Method("POST")
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      * @EXT\ParamConverter(
      *     "courses",
      *      class="ClarolineCursusBundle:Course",
@@ -534,6 +535,7 @@ class CursusController extends Controller
      *     options = {"expose"=true}
      * )
      * @EXT\Method("POST")
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      *
      * @param Cursus $cursus
      * @param Course $course
@@ -553,6 +555,7 @@ class CursusController extends Controller
      *     options = {"expose"=true}
      * )
      * @EXT\Method("POST")
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      * @EXT\ParamConverter(
      *     "courses",
      *      class="ClarolineCursusBundle:Course",
@@ -595,6 +598,7 @@ class CursusController extends Controller
      *    options = {"expose"=true}
      * )
      * @EXT\Method("POST")
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      * @EXT\ParamConverter(
      *     "users",
      *      class="ClarolineCoreBundle:User",
@@ -636,6 +640,7 @@ class CursusController extends Controller
      *    options = {"expose"=true}
      * )
      * @EXT\Method("DELETE")
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      * @EXT\ParamConverter(
      *     "users",
      *      class="ClarolineCoreBundle:User",
@@ -693,8 +698,7 @@ class CursusController extends Controller
      *     name="claro_cursus_update_order",
      *     options={"expose"=true}
      * )
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      */
     public function updateCursusOrderAction(
         Cursus $cursus,
@@ -777,10 +781,10 @@ class CursusController extends Controller
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      * @EXT\Template("ClarolineCursusBundle:Cursus:courseCreateModalForm.html.twig")
      */
-    public function courseCreateFormAction()
+    public function courseCreateFormAction(User $user)
     {
         $this->checkToolAccess();
-        $form = $this->formFactory->create(new CourseType());
+        $form = $this->formFactory->create(new CourseType($user));
 
         return array('form' => $form->createView());
     }
@@ -794,11 +798,11 @@ class CursusController extends Controller
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      * @EXT\Template("ClarolineCursusBundle:Cursus:courseCreateModalForm.html.twig")
      */
-    public function courseCreateAction()
+    public function courseCreateAction(User $user)
     {
         $this->checkToolAccess();
         $course = new Course();
-        $form = $this->formFactory->create(new CourseType(), $course);
+        $form = $this->formFactory->create(new CourseType($user), $course);
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
@@ -830,11 +834,11 @@ class CursusController extends Controller
      *
      * @param Course $course
      */
-    public function courseEditFormAction(Course $course)
+    public function courseEditFormAction(Course $course, User $user)
     {
         $this->checkToolAccess();
         $form = $this->formFactory->create(
-            new CourseType(),
+            new CourseType($user),
             $course
         );
 
@@ -855,11 +859,11 @@ class CursusController extends Controller
      *
      * @param Course $course
      */
-    public function courseEditAction(Course $course)
+    public function courseEditAction(Course $course, User $user)
     {
         $this->checkToolAccess();
         $form = $this->formFactory->create(
-            new CourseType(),
+            new CourseType($user),
             $course
         );
         $form->handleRequest($this->request);

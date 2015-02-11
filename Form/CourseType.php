@@ -11,14 +11,25 @@
 
 namespace Claroline\CursusBundle\Form;
 
+use Claroline\CoreBundle\Entity\User;
+use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class CourseType extends AbstractType
 {
+    private $user;
+
+    public function __construct(User $user)
+    {
+        $this->user = $user;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $user = $this->user;
+
         $builder->add(
             'title',
             'text',
@@ -38,6 +49,23 @@ class CourseType extends AbstractType
             'publicRegistration',
             'checkbox',
             array('required' => true)
+        );
+        $builder->add(
+            'workspaceModel',
+            'entity',
+            array(
+                'class' => 'ClarolineCoreBundle:Model\WorkspaceModel',
+                'query_builder' => function (EntityRepository $er) use ($user) {
+
+                    return $er->createQueryBuilder('wm')
+                        ->join('wm.users', 'u')
+                        ->where('u.id = :userId')
+                        ->setParameter('userId', $user->getId())
+                        ->orderBy('wm.name', 'ASC');
+                },
+                'property' => 'name',
+                'required' => false
+            )
         );
     }
 

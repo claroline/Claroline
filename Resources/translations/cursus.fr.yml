@@ -3,6 +3,7 @@ course_form_code: Code
 course_form_description: Description
 course_form_publicRegistration: 'Inscription publique'
 course_form_title: Titre
+course_form_workspaceModel: 'Modèle d''espace d''activités'
 create_cursus: 'Créer "%cursusWord%"'
 cursus: Cursus
 cursus_form_code: Code
