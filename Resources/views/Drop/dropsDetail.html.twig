@@ -1,4 +1,4 @@
-{% extends "IcapDropzoneBundle::layout.html.twig" %}
+{% extends "InnovaCollecticielBundle::layout.html.twig" %}
 {% if (byUserMod is not defined) %}
     {% set byUserMod = 0 %}
 {% endif %}
@@ -6,24 +6,24 @@
 {% block resourceBreadcrumb %}
     {% if byUserMod == 1 %}
         <li>
-            <a href="{{ path('icap_dropzone_open', {'resourceId': dropzone.id}) }}"><span
+            <a href="{{ path('innova_collecticiel_open', {'resourceId': dropzone.id}) }}"><span
                         class="fa fa-list"></span> {{ dropzone.resourceNode.name }}</a>
         </li>
     {% else %}
         <li>
-            <a href="{{ path('icap_dropzone_edit_common',{'resourceId':dropzone.id}) }}"><span
+            <a href="{{ path('innova_collecticiel_edit_common',{'resourceId':dropzone.id}) }}"><span
                         class="fa fa-list"></span>  {{ dropzone.resourceNode.name }}</a>
         </li>
         <li>
-            <a href="{{ path('icap_dropzone_drops', {'resourceId': dropzone.id}) }}"> {{ 'List of copies'|trans({}, 'icap_dropzone') }}</a>
+            <a href="{{ path('innova_collecticiel_drops', {'resourceId': dropzone.id}) }}"> {{ 'List of copies'|trans({}, 'innova_collecticiel') }}</a>
         </li>
     {% endif %}
 
     <li class="active">
         {% if byUserMod == 1 %}
-            {{ 'Details of your copy'|trans({}, 'icap_dropzone') }}
+            {{ 'Details of your copy'|trans({}, 'innova_collecticiel') }}
         {% else %}
-            {{ 'Retail copy of %firstName% %lastName%'|trans({'%firstName%': drop.user.firstName, '%lastName%': drop.user.lastName}, 'icap_dropzone') }}
+            {{ 'Retail copy of %firstName% %lastName%'|trans({'%firstName%': drop.user.firstName, '%lastName%': drop.user.lastName}, 'innova_collecticiel') }}
         {% endif %}
     </li>
 
@@ -36,9 +36,9 @@
         <span class="{% if drop.reported and byUserMod == 0 %}text-danger{% endif %}">
             <h2>
                 {% if byUserMod == 1 %}
-                    {{ 'Details of your copy'|trans({}, 'icap_dropzone') }}
+                    {{ 'Details of your copy'|trans({}, 'innova_collecticiel') }}
                 {% else %}
-                    {{ 'Retail copy of %firstName% %lastName%'|trans({'%firstName%': drop.user.firstName, '%lastName%': drop.user.lastName}, 'icap_dropzone') }}
+                    {{ 'Retail copy of %firstName% %lastName%'|trans({'%firstName%': drop.user.firstName, '%lastName%': drop.user.lastName}, 'innova_collecticiel') }}
                 {% endif %}
             </h2>
         </span>
@@ -46,8 +46,8 @@
             <div class="row">
                 <div class="col-md-12">
                     <a class="btn btn-default btn-sm"
-                       href="{{ path('icap_dropzone_drops', {'resourceId': dropzone.id}) }}"><span
-                                class="fa fa-angle-left"></span> {{ 'Return to copies'|trans({}, 'icap_dropzone') }}
+                       href="{{ path('innova_collecticiel_drops', {'resourceId': dropzone.id}) }}"><span
+                                class="fa fa-angle-left"></span> {{ 'Return to copies'|trans({}, 'innova_collecticiel') }}
                     </a>
                 </div>
             </div>
@@ -60,29 +60,29 @@
                 <div class="row text-danger">
                     <div class="col-md-12">
                         <span class="fa fa-exclamation-triangle"></span>
-                        {{ 'This copy has been reported'|trans({}, 'icap_dropzone') }}
+                        {{ 'This copy has been reported'|trans({}, 'innova_collecticiel') }}
                     </div>
                 </div>
             {% endif %}
         {% endif %}
 
-        {% set documentListText = 'Documents'|trans({}, 'icap_dropzone') %}
+        {% set documentListText = 'Documents'|trans({}, 'innova_collecticiel') %}
         {{ dropzoneMacros.displayDocumentsList(drop, dropzone, 6, "condensed", documentListText) }}
 
         <div class="row">
-            <div class="text-muted col-md-4">{{ 'Learner'|trans({}, 'icap_dropzone') }}</div>
+            <div class="text-muted col-md-4">{{ 'Learner'|trans({}, 'innova_collecticiel') }}</div>
             <div class="col-md-8">{{ drop.user.firstName }} {{ drop.user.lastName }}</div>
         </div>
 
         <div class="row">
-            <div class="text-muted col-md-4">{{ 'Number of validated corrections'|trans({}, 'icap_dropzone') }}
+            <div class="text-muted col-md-4">{{ 'Number of validated corrections'|trans({}, 'innova_collecticiel') }}
             </div>
             <div class="col-md-8">
-                {% include 'IcapDropzoneBundle:Drop:dropsNbCorrections.html.twig' %}
+                {% include 'InnovaCollecticielBundle:Drop:dropsNbCorrections.html.twig' %}
                 {% if drop.unlockedDrop %}
                     {% if drop.unlockedDrop %}
                         <span class="text-warning fa fa-info-circle" data-toggle="tooltip" title=""
-                              data-original-title="{{ 'This copy has been unlocked by admin.(it did not received the expected number of correction)'|trans({}, 'icap_dropzone') }}"></span>
+                              data-original-title="{{ 'This copy has been unlocked by admin.(it did not received the expected number of correction)'|trans({}, 'innova_collecticiel') }}"></span>
                     {% endif %}
 
                 {% endif %}
@@ -90,8 +90,8 @@
         </div>
         {% if byUserMod == 0   or showCorrections or dropzone.displayNotationToLearners %}
             <div class="row">
-                <div class="text-muted col-md-4">{{ 'Average validated corrections'|trans({}, 'icap_dropzone') }}</div>
-                <div class="col-md-8">{% include 'IcapDropzoneBundle:Drop:dropsTotalGrade.html.twig' %}</div>
+                <div class="text-muted col-md-4">{{ 'Average validated corrections'|trans({}, 'innova_collecticiel') }}</div>
+                <div class="col-md-8">{% include 'InnovaCollecticielBundle:Drop:dropsTotalGrade.html.twig' %}</div>
             </div>
         {% endif %}
         <br/>
@@ -99,19 +99,19 @@
         and the author have done the expected number of correction #}
         {% if byUserMod == 0  or showCorrections %}
 
-            <h3>{{ 'List of corrections'|trans({}, 'icap_dropzone') }}</h3>
+            <h3>{{ 'List of corrections'|trans({}, 'innova_collecticiel') }}</h3>
             {% if isAllowedToEdit %}
                 <a class="btn btn-default"
-                   href="{{ path("icap_dropzone_drops_detail_add_correction",{'resourceId':dropzone.id,'dropId':drop.id}) }}">
-                    {{ "Add a correction"|trans({},'icap_dropzone') }}
+                   href="{{ path("innova_collecticiel_drops_detail_add_correction",{'resourceId':dropzone.id,'dropId':drop.id}) }}">
+                    {{ "Add a correction"|trans({},'innova_collecticiel') }}
                 </a>
                 {% if dropzone.peerReview %}
-                    <a href="{{ path('icap_dropzone_recalculate_drop_grade',
+                    <a href="{{ path('innova_collecticiel_recalculate_drop_grade',
                     { 'dropId': drop.id}) }}"
                        class="btn btn-default " data-toggle="tooltip" data-placement="left"
                        data-container="body"
-                       title="{{ 'recalculate_helper'|trans({},'icap_dropzone') }}">
-                        {{ 'Recalculate the score'|trans({}, 'icap_dropzone') }}</a>
+                       title="{{ 'recalculate_helper'|trans({},'innova_collecticiel') }}">
+                        {{ 'Recalculate the score'|trans({}, 'innova_collecticiel') }}</a>
                 {% endif %}
             {% endif %}
 
@@ -119,12 +119,12 @@
             <hr/>
 
             {% set corrections = drop.corrections %}
-            {% include 'IcapDropzoneBundle:Correction:Listing/correctionListing.html.twig' %}
+            {% include 'InnovaCollecticielBundle:Correction:Listing/correctionListing.html.twig' %}
         {% endif %}
 
         {% if byUserMod == 1 %}
-            <a href="{{ path("icap_dropzone_open",{'resourceId':dropzone.id}) }}"
-               class="btn btn-default">{{ "Return"|trans({},'icap_dropzone') }}</a>
+            <a href="{{ path("innova_collecticiel_open",{'resourceId':dropzone.id}) }}"
+               class="btn btn-default">{{ "Return"|trans({},'innova_collecticiel') }}</a>
         {% endif %}
     </div>
 {% endblock %}

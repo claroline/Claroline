@@ -1,5 +1,5 @@
 <?php
-namespace Icap\DropzoneBundle\Manager;
+namespace Innova\CollecticielBundle\Manager;
 
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;

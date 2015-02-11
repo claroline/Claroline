@@ -1,16 +1,16 @@
 <?php
-namespace Icap\DropzoneBundle\Manager;
+namespace Innova\CollecticielBundle\Manager;
 
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Manager\MaskManager;
 use Claroline\CoreBundle\Entity\User;
-use Icap\DropzoneBundle\Entity\Correction;
-use Icap\DropzoneBundle\Entity\Dropzone;
-use Icap\DropzoneBundle\Event\Log\LogCorrectionUpdateEvent;
+use Innova\CollecticielBundle\Entity\Correction;
+use Innova\CollecticielBundle\Entity\Dropzone;
+use Innova\CollecticielBundle\Event\Log\LogCorrectionUpdateEvent;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
- * @DI\Service("icap.manager.correction_manager")
+ * @DI\Service("innova.manager.correction_manager")
  */
 class CorrectionManager
 {
@@ -62,7 +62,7 @@ class CorrectionManager
 
     public function recalculateScoreForCorrections(Dropzone $dropzone, Array $corrections)
     {
-        $this->container->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
+        $this->container->get('innova.manager.dropzone_voter')->isAllowToEdit($dropzone);
         // recalculate the score for all corrections
         foreach ($corrections as $correction) {
             $oldTotalGrade = $correction->getTotalGrade();

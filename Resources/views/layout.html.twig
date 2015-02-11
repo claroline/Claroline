@@ -1,11 +1,11 @@
 {% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
 
-{% import 'IcapDropzoneBundle::macros.html.twig' as dropzoneMacros %}
+{% import 'InnovaCollecticielBundle::macros.html.twig' as dropzoneMacros %}
 
 {% block stylesheets %}
     {{ parent() }}
     {% stylesheets debug=false filter='lessphp'  output='css/icapdropzone/style.css'
-      "@IcapDropzoneBundle/Resources/views/less/style.less"
+      "@InnovaCollecticielBundle/Resources/views/less/style.less"
     %}
         <link rel="stylesheet" href="{{ asset_url }}" screen="media" />
     {% endstylesheets %}

@@ -1,6 +1,6 @@
 <?php
 
-namespace Icap\DropzoneBundle\Migrations\sqlsrv;
+namespace Innova\CollecticielBundle\Migrations\sqlsrv;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -15,19 +15,19 @@ class Version20140319130229 extends AbstractMigration
     public function up(Schema $schema)
     {
         $this->addSql("
-            ALTER TABLE icap__dropzonebundle_correction 
+            ALTER TABLE innova_collecticielbundle_correction 
             ADD correctionDenied BIT NOT NULL
         ");
         $this->addSql("
-            ALTER TABLE icap__dropzonebundle_correction 
+            ALTER TABLE innova_collecticielbundle_correction 
             ADD correctionDeniedComment VARCHAR(MAX)
         ");
         $this->addSql("
-            ALTER TABLE icap__dropzonebundle_dropzone 
+            ALTER TABLE innova_collecticielbundle_dropzone 
             ADD diplay_corrections_to_learners BIT NOT NULL
         ");
         $this->addSql("
-            ALTER TABLE icap__dropzonebundle_dropzone 
+            ALTER TABLE innova_collecticielbundle_dropzone 
             ADD allow_correction_deny BIT NOT NULL
         ");
     }
@@ -35,19 +35,19 @@ class Version20140319130229 extends AbstractMigration
     public function down(Schema $schema)
     {
         $this->addSql("
-            ALTER TABLE icap__dropzonebundle_correction 
+            ALTER TABLE innova_collecticielbundle_correction 
             DROP COLUMN correctionDenied
         ");
         $this->addSql("
-            ALTER TABLE icap__dropzonebundle_correction 
+            ALTER TABLE innova_collecticielbundle_correction 
             DROP COLUMN correctionDeniedComment
         ");
         $this->addSql("
-            ALTER TABLE icap__dropzonebundle_dropzone 
+            ALTER TABLE innova_collecticielbundle_dropzone 
             DROP COLUMN diplay_corrections_to_learners
         ");
         $this->addSql("
-            ALTER TABLE icap__dropzonebundle_dropzone 
+            ALTER TABLE innova_collecticielbundle_dropzone 
             DROP COLUMN allow_correction_deny
         ");
     }

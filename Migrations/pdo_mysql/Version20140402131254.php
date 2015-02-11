@@ -1,6 +1,6 @@
 <?php
 
-namespace Icap\DropzoneBundle\Migrations\pdo_mysql;
+namespace Innova\CollecticielBundle\Migrations\pdo_mysql;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -15,7 +15,7 @@ class Version20140402131254 extends AbstractMigration
     public function up(Schema $schema)
     {
         $this->addSql("
-            ALTER TABLE icap__dropzonebundle_dropzone 
+            ALTER TABLE innova_collecticielbundle_dropzone 
             ADD auto_close_opened_drops_when_time_is_up TINYINT(1) NOT NULL, 
             ADD auto_close_state VARCHAR(255) DEFAULT 'waiting' NOT NULL
         ");
@@ -24,7 +24,7 @@ class Version20140402131254 extends AbstractMigration
     public function down(Schema $schema)
     {
         $this->addSql("
-            ALTER TABLE icap__dropzonebundle_dropzone 
+            ALTER TABLE innova_collecticielbundle_dropzone 
             DROP auto_close_opened_drops_when_time_is_up, 
             DROP auto_close_state
         ");

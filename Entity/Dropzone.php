@@ -5,7 +5,7 @@
  * Time: 15:18
  */
 
-namespace Icap\DropzoneBundle\Entity;
+namespace Innova\CollecticielBundle\Entity;
 
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -16,7 +16,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="icap__dropzonebundle_dropzone")
+ * @ORM\Table(name="innova_collecticielbundle_dropzone")
  */
 class Dropzone extends AbstractResource
 {
@@ -187,7 +187,7 @@ class Dropzone extends AbstractResource
      * @var ArrayCollection
      *
      * @ORM\OneToMany(
-     *     targetEntity="Icap\DropzoneBundle\Entity\Drop",
+     *     targetEntity="Innova\CollecticielBundle\Entity\Drop",
      *     mappedBy="dropzone",
      *     cascade={"all"},
      *     orphanRemoval=true
@@ -199,7 +199,7 @@ class Dropzone extends AbstractResource
      * @var ArrayCollection
      *
      * @ORM\OneToMany(
-     *     targetEntity="Icap\DropzoneBundle\Entity\Criterion",
+     *     targetEntity="Innova\CollecticielBundle\Entity\Criterion",
      *     mappedBy="dropzone",
      *     cascade={"all"},
      *     orphanRemoval=true
@@ -874,7 +874,7 @@ class Dropzone extends AbstractResource
     /**
      * Add criterion
      *
-     * @param \Icap\DropzoneBundle\Entity\Criterion $criterion
+     * @param \Innova\CollecticielBundle\Entity\Criterion $criterion
      * @return Dropzone
      */
     public function addCriterion(Criterion $criterion)

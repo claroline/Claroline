@@ -5,20 +5,20 @@
  * Time: 09:30
  */
 
-namespace Icap\DropzoneBundle\Controller;
+namespace Innova\CollecticielBundle\Controller;
 
 use Claroline\CoreBundle\Event\Log\LogResourceReadEvent;
 use Claroline\CoreBundle\Event\Log\LogResourceUpdateEvent;
-use Icap\DropzoneBundle\Entity\Correction;
-use Icap\DropzoneBundle\Entity\Drop;
-use Icap\DropzoneBundle\Entity\Dropzone;
-use Icap\DropzoneBundle\Event\Log\LogCorrectionUpdateEvent;
-use Icap\DropzoneBundle\Event\Log\LogDropEndEvent;
-use Icap\DropzoneBundle\Event\Log\LogDropStartEvent;
-use Icap\DropzoneBundle\Event\Log\LogDropReportEvent;
-use Icap\DropzoneBundle\Form\CorrectionReportType;
-use Icap\DropzoneBundle\Form\DropType;
-use Icap\DropzoneBundle\Form\DocumentType;
+use Innova\CollecticielBundle\Entity\Correction;
+use Innova\CollecticielBundle\Entity\Drop;
+use Innova\CollecticielBundle\Entity\Dropzone;
+use Innova\CollecticielBundle\Event\Log\LogCorrectionUpdateEvent;
+use Innova\CollecticielBundle\Event\Log\LogDropEndEvent;
+use Innova\CollecticielBundle\Event\Log\LogDropStartEvent;
+use Innova\CollecticielBundle\Event\Log\LogDropReportEvent;
+use Innova\CollecticielBundle\Form\CorrectionReportType;
+use Innova\CollecticielBundle\Form\DropType;
+use Innova\CollecticielBundle\Form\DocumentType;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Exception\NotValidCurrentPageException;
 use Pagerfanta\Pagerfanta;
@@ -37,34 +37,34 @@ class DropController extends DropzoneBaseController
     /**
      * @Route(
      *      "/{resourceId}/drop",
-     *      name="icap_dropzone_drop",
+     *      name="innova_collecticiel_drop",
      *      requirements={"resourceId" = "\d+"}
      * )
-     * @ParamConverter("dropzone", class="IcapDropzoneBundle:Dropzone", options={"id" = "resourceId"})
+     * @ParamConverter("dropzone", class="InnovaCollecticielBundle:Dropzone", options={"id" = "resourceId"})
      * @ParamConverter("user", options={
      *      "authenticatedUser" = true,
      *      "messageEnabled" = true,
      *      "messageTranslationKey" = "Participate in an evaluation requires authentication. Please login.",
-     *      "messageTranslationDomain" = "icap_dropzone"
+     *      "messageTranslationDomain" = "innova_collecticiel"
      * })
      * @Template()
      */
     public function dropAction(Dropzone $dropzone, $user)
     {
-        $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
+        $this->get('innova.manager.dropzone_voter')->isAllowToOpen($dropzone);
 
         $em = $this->getDoctrine()->getManager();
-        $dropRepo = $em->getRepository('IcapDropzoneBundle:Drop');
+        $dropRepo = $em->getRepository('InnovaCollecticielBundle:Drop');
 
         if ($dropRepo->findOneBy(array('dropzone' => $dropzone, 'user' => $user, 'finished' => true)) !== null) {
             $this->getRequest()->getSession()->getFlashBag()->add(
                 'error',
-                $this->get('translator')->trans('You ve already made ​​your copy for this review', array(), 'icap_dropzone')
+                $this->get('translator')->trans('You ve already made ​​your copy for this review', array(), 'innova_collecticiel')
             );
 
             return $this->redirect(
                 $this->generateUrl(
-                    'icap_dropzone_open',
+                    'innova_collecticiel_open',
                     array(
                         'resourceId' => $dropzone->getId()
                     )
@@ -117,13 +117,13 @@ class DropController extends DropzoneBaseController
 
                 $this->getRequest()->getSession()->getFlashBag()->add(
                     'success',
-                    $this->get('translator')->trans('Your copy has been saved', array(), 'icap_dropzone')
+                    $this->get('translator')->trans('Your copy has been saved', array(), 'innova_collecticiel')
                 );
 
 
                 return $this->redirect(
                     $this->generateUrl(
-                        'icap_dropzone_open',
+                        'innova_collecticiel_open',
                         array(
                             'resourceId' => $dropzone->getId()
                         )
@@ -140,7 +140,7 @@ class DropController extends DropzoneBaseController
 
         $resourceTypes = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findAll();
 
-        $dropzoneManager = $this->get('icap.manager.dropzone_manager');
+        $dropzoneManager = $this->get('innova.manager.dropzone_manager');
         $dropzoneProgress = $dropzoneManager->getDropzoneProgressByUser($dropzone, $user);
 
         return array(
@@ -161,7 +161,7 @@ class DropController extends DropzoneBaseController
 
     private function addDropsStats($dropzone, $array)
     {
-        $dropRepo = $this->getDoctrine()->getManager()->getRepository('IcapDropzoneBundle:Drop');
+        $dropRepo = $this->getDoctrine()->getManager()->getRepository('InnovaCollecticielBundle:Drop');
         $array['nbDropCorrected'] = $dropRepo->countDropsFullyCorrected($dropzone);
         $array['nbDrop'] = $dropRepo->countDrops($dropzone);
 
@@ -172,25 +172,25 @@ class DropController extends DropzoneBaseController
      *
      * @Route(
      *      "/{resourceId}/drops/by/user",
-     *      name="icap_dropzone_drops_by_user",
+     *      name="innova_collecticiel_drops_by_user",
      *      requirements={"resourceId" = "\d+"},
      *      defaults={"page" = 1}
      * )
      * @Route(
      *      "/{resourceId}/drops/by/user/{page}",
-     *      name="icap_dropzone_drops_by_user_paginated",
+     *      name="innova_collecticiel_drops_by_user_paginated",
      *      requirements={"resourceId" = "\d+", "page" = "\d+"},
      *      defaults={"page" = 1}
      * )
-     * @ParamConverter("dropzone", class="IcapDropzoneBundle:Dropzone", options={"id" = "resourceId"})
+     * @ParamConverter("dropzone", class="InnovaCollecticielBundle:Dropzone", options={"id" = "resourceId"})
      * @Template()
      */
     public function dropsByUserAction($dropzone, $page)
     {
-        $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
-        $this->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
+        $this->get('innova.manager.dropzone_voter')->isAllowToOpen($dropzone);
+        $this->get('innova.manager.dropzone_voter')->isAllowToEdit($dropzone);
 
-        $dropRepo = $this->getDoctrine()->getManager()->getRepository('IcapDropzoneBundle:Drop');
+        $dropRepo = $this->getDoctrine()->getManager()->getRepository('InnovaCollecticielBundle:Drop');
         $dropsQuery = $dropRepo->getDropsFullyCorrectedOrderByUserQuery($dropzone);
 
         $countUnterminatedDrops = $dropRepo->countUnterminatedDropsByDropzone($dropzone->getId());
@@ -203,7 +203,7 @@ class DropController extends DropzoneBaseController
             if ($page > 0) {
                 return $this->redirect(
                     $this->generateUrl(
-                        'icap_dropzone_drops_by_user_paginated',
+                        'innova_collecticiel_drops_by_user_paginated',
                         array(
                             'resourceId' => $dropzone->getId(),
                             'page' => $pager->getNbPages()
@@ -227,12 +227,12 @@ class DropController extends DropzoneBaseController
     /**
      * @Route(
      *      "/{resourceId}/unlock/{userId}",
-     *      name="icap_dropzone_unlock_user",
+     *      name="innova_collecticiel_unlock_user",
      *      requirements={"resourceId" = "\d+", "userId" = "\d+"}
      * )
-     * @ParamConverter("dropzone",class="IcapDropzoneBundle:Dropzone", options={"id" = "resourceId"})
+     * @ParamConverter("dropzone",class="InnovaCollecticielBundle:Dropzone", options={"id" = "resourceId"})
      *
-     * @param \Icap\DropzoneBundle\Entity\Dropzone $dropzone
+     * @param \Innova\CollecticielBundle\Entity\Dropzone $dropzone
      * @param $userId
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      * @internal param $user
@@ -240,9 +240,9 @@ class DropController extends DropzoneBaseController
      */
     public function unlockUser(Dropzone $dropzone, $userId)
     {
-        $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
-        $this->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
-        $dropRepo = $this->getDoctrine()->getManager()->getRepository('IcapDropzoneBundle:Drop');
+        $this->get('innova.manager.dropzone_voter')->isAllowToOpen($dropzone);
+        $this->get('innova.manager.dropzone_voter')->isAllowToEdit($dropzone);
+        $dropRepo = $this->getDoctrine()->getManager()->getRepository('InnovaCollecticielBundle:Drop');
         $drop = $dropRepo->getDropByUser($dropzone->getId(), $userId);
         if ($drop != null) {
             $drop->setUnlockedUser(true);
@@ -253,7 +253,7 @@ class DropController extends DropzoneBaseController
 
         return $this->redirect(
             $this->generateUrl(
-                'icap_dropzone_examiners',
+                'innova_collecticiel_examiners',
                 array(
                     'resourceId' => $dropzone->getId()
                 )
@@ -264,12 +264,12 @@ class DropController extends DropzoneBaseController
     /**
      * @Route(
      *      "/{resourceId}/unlock/all",
-     *      name="icap_dropzone_unlock_all_user",
+     *      name="innova_collecticiel_unlock_all_user",
      *      requirements={"resourceId" = "\d+"}
      * )
-     * @ParamConverter("dropzone",class="IcapDropzoneBundle:Dropzone", options={"id" = "resourceId"})
+     * @ParamConverter("dropzone",class="InnovaCollecticielBundle:Dropzone", options={"id" = "resourceId"})
      *
-     * @param \Icap\DropzoneBundle\Entity\Dropzone $dropzone
+     * @param \Innova\CollecticielBundle\Entity\Dropzone $dropzone
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      * @internal param $user
@@ -284,12 +284,12 @@ class DropController extends DropzoneBaseController
     /**
      * @Route(
      *      "/{resourceId}/unlock/cancel",
-     *      name="icap_dropzone_unlock_cancel",
+     *      name="innova_collecticiel_unlock_cancel",
      *      requirements={"resourceId" = "\d+"}
      * )
-     * @ParamConverter("dropzone",class="IcapDropzoneBundle:Dropzone", options={"id" = "resourceId"})
+     * @ParamConverter("dropzone",class="InnovaCollecticielBundle:Dropzone", options={"id" = "resourceId"})
      *
-     * @param \Icap\DropzoneBundle\Entity\Dropzone $dropzone
+     * @param \Innova\CollecticielBundle\Entity\Dropzone $dropzone
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      * @internal param $user
@@ -309,10 +309,10 @@ class DropController extends DropzoneBaseController
      */
     private function unlockOrLockUsers(Dropzone $dropzone, $unlock = true)
     {
-        $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
-        $this->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
+        $this->get('innova.manager.dropzone_voter')->isAllowToOpen($dropzone);
+        $this->get('innova.manager.dropzone_voter')->isAllowToEdit($dropzone);
 
-        $dropRepo = $this->getDoctrine()->getManager()->getRepository('IcapDropzoneBundle:Drop');
+        $dropRepo = $this->getDoctrine()->getManager()->getRepository('InnovaCollecticielBundle:Drop');
         $drops = $dropRepo->findBy(array('dropzone' => $dropzone->getId(), 'unlockedUser' => !$unlock));
 
 
@@ -324,7 +324,7 @@ class DropController extends DropzoneBaseController
 
         return $this->redirect(
             $this->generateUrl(
-                'icap_dropzone_examiners',
+                'innova_collecticiel_examiners',
                 array(
                     'resourceId' => $dropzone->getId()
                 )
@@ -336,32 +336,32 @@ class DropController extends DropzoneBaseController
     /**
      * @Route(
      *      "/{resourceId}/drops",
-     *      name="icap_dropzone_drops",
+     *      name="innova_collecticiel_drops",
      *      requirements={"resourceId" = "\d+"},
      *      defaults={"page" = 1}
      * )
      * @Route(
      *      "/{resourceId}/drops/by/default",
-     *      name="icap_dropzone_drops_by_default",
+     *      name="innova_collecticiel_drops_by_default",
      *      requirements={"resourceId" = "\d+"},
      *      defaults={"page" = 1}
      * )
      * @Route(
      *      "/{resourceId}/drops/by/default/{page}",
-     *      name="icap_dropzone_drops_by_default_paginated",
+     *      name="innova_collecticiel_drops_by_default_paginated",
      *      requirements={"resourceId" = "\d+", "page" = "\d+"},
      *      defaults={"page" = 1}
      * )
      *
-     * @ParamConverter("dropzone", class="IcapDropzoneBundle:Dropzone", options={"id" = "resourceId"})
+     * @ParamConverter("dropzone", class="InnovaCollecticielBundle:Dropzone", options={"id" = "resourceId"})
      * @Template()
      **/
     public function dropsByDefaultAction($dropzone, $page)
     {
-        $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
-        $this->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
+        $this->get('innova.manager.dropzone_voter')->isAllowToOpen($dropzone);
+        $this->get('innova.manager.dropzone_voter')->isAllowToEdit($dropzone);
 
-        $dropRepo = $this->getDoctrine()->getManager()->getRepository('IcapDropzoneBundle:Drop');
+        $dropRepo = $this->getDoctrine()->getManager()->getRepository('InnovaCollecticielBundle:Drop');
         $dropsQuery = $dropRepo->getDropsFullyCorrectedOrderByReportAndDropDateQuery($dropzone);
 
         $adapter = new DoctrineORMAdapter($dropsQuery);
@@ -374,7 +374,7 @@ class DropController extends DropzoneBaseController
             if ($page > 0) {
                 return $this->redirect(
                     $this->generateUrl(
-                        'icap_dropzone_drops_by_user_paginated',
+                        'innova_collecticiel_drops_by_user_paginated',
                         array(
                             'resourceId' => $dropzone->getId(),
                             'page' => $pager->getNbPages()
@@ -399,26 +399,26 @@ class DropController extends DropzoneBaseController
      *
      * @Route(
      *      "/{resourceId}/drops/by/report",
-     *      name="icap_dropzone_drops_by_report",
+     *      name="innova_collecticiel_drops_by_report",
      *      requirements={"resourceId" = "\d+"},
      *      defaults={"page" = 1}
      * )
      * @Route(
      *      "/{resourceId}/drops/by/report/{page}",
-     *      name="icap_dropzone_drops_by_report_paginated",
+     *      name="innova_collecticiel_drops_by_report_paginated",
      *      requirements={"resourceId" = "\d+", "page" = "\d+"},
      *      defaults={"page" = 1}
      * )
      *
-     * @ParamConverter("dropzone", class="IcapDropzoneBundle:Dropzone", options={"id" = "resourceId"})
+     * @ParamConverter("dropzone", class="InnovaCollecticielBundle:Dropzone", options={"id" = "resourceId"})
      * @Template()
      */
     public function dropsByReportAction($dropzone, $page)
     {
-        $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
-        $this->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
+        $this->get('innova.manager.dropzone_voter')->isAllowToOpen($dropzone);
+        $this->get('innova.manager.dropzone_voter')->isAllowToEdit($dropzone);
 
-        $dropRepo = $this->getDoctrine()->getManager()->getRepository('IcapDropzoneBundle:Drop');
+        $dropRepo = $this->getDoctrine()->getManager()->getRepository('InnovaCollecticielBundle:Drop');
         $dropsQuery = $dropRepo->getDropsFullyCorrectedReportedQuery($dropzone);
 
         $adapter = new DoctrineORMAdapter($dropsQuery);
@@ -432,7 +432,7 @@ class DropController extends DropzoneBaseController
             if ($page > 0) {
                 return $this->redirect(
                     $this->generateUrl(
-                        'icap_dropzone_drops_by_user_paginated',
+                        'innova_collecticiel_drops_by_user_paginated',
                         array(
                             'resourceId' => $dropzone->getId(),
                             'page' => $pager->getNbPages()
@@ -456,25 +456,25 @@ class DropController extends DropzoneBaseController
     /**
      * @Route(
      *      "/{resourceId}/drops/by/date",
-     *      name="icap_dropzone_drops_by_date",
+     *      name="innova_collecticiel_drops_by_date",
      *      requirements={"resourceId" = "\d+"},
      *      defaults={"page" = 1}
      * )
      * @Route(
      *      "/{resourceId}/drops/by/date/{page}",
-     *      name="icap_dropzone_drops_by_date_paginated",
+     *      name="innova_collecticiel_drops_by_date_paginated",
      *      requirements={"resourceId" = "\d+", "page" = "\d+"},
      *      defaults={"page" = 1}
      * )
-     * @ParamConverter("dropzone", class="IcapDropzoneBundle:Dropzone", options={"id" = "resourceId"})
+     * @ParamConverter("dropzone", class="InnovaCollecticielBundle:Dropzone", options={"id" = "resourceId"})
      * @Template()
      */
     public function dropsByDateAction($dropzone, $page)
     {
-        $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
-        $this->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
+        $this->get('innova.manager.dropzone_voter')->isAllowToOpen($dropzone);
+        $this->get('innova.manager.dropzone_voter')->isAllowToEdit($dropzone);
 
-        $dropRepo = $this->getDoctrine()->getManager()->getRepository('IcapDropzoneBundle:Drop');
+        $dropRepo = $this->getDoctrine()->getManager()->getRepository('InnovaCollecticielBundle:Drop');
         $dropsQuery = $dropRepo->getDropsFullyCorrectedOrderByDropDateQuery($dropzone);
         $countUnterminatedDrops = $dropRepo->countUnterminatedDropsByDropzone($dropzone->getId());
 
@@ -487,7 +487,7 @@ class DropController extends DropzoneBaseController
             if ($page > 0) {
                 return $this->redirect(
                     $this->generateUrl(
-                        'icap_dropzone_drops_by_date_paginated',
+                        'innova_collecticiel_drops_by_date_paginated',
                         array(
                             'resourceId' => $dropzone->getId(),
                             'page' => $pager->getNbPages()
@@ -511,25 +511,25 @@ class DropController extends DropzoneBaseController
     /**
      * @Route(
      *      "/{resourceId}/drops/awaiting",
-     *      name="icap_dropzone_drops_awaiting",
+     *      name="innova_collecticiel_drops_awaiting",
      *      requirements={"resourceId" = "\d+"},
      *      defaults={"page" = 1}
      * )
      * @Route(
      *      "/{resourceId}/drops/awaiting/{page}",
-     *      name="icap_dropzone_drops_awaiting_paginated",
+     *      name="innova_collecticiel_drops_awaiting_paginated",
      *      requirements={"resourceId" = "\d+", "page" = "\d+"},
      *      defaults={"page" = 1}
      * )
-     * @ParamConverter("dropzone", class="IcapDropzoneBundle:Dropzone", options={"id" = "resourceId"})
+     * @ParamConverter("dropzone", class="InnovaCollecticielBundle:Dropzone", options={"id" = "resourceId"})
      * @Template()
      */
     public function dropsAwaitingAction($dropzone, $page)
     {
-        $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
-        $this->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
+        $this->get('innova.manager.dropzone_voter')->isAllowToOpen($dropzone);
+        $this->get('innova.manager.dropzone_voter')->isAllowToEdit($dropzone);
 
-        $dropRepo = $this->getDoctrine()->getManager()->getRepository('IcapDropzoneBundle:Drop');
+        $dropRepo = $this->getDoctrine()->getManager()->getRepository('InnovaCollecticielBundle:Drop');
         $dropsQuery = $dropRepo->getDropsAwaitingCorrectionQuery($dropzone);
 
         $countUnterminatedDrops = $dropRepo->countUnterminatedDropsByDropzone($dropzone->getId());
@@ -543,7 +543,7 @@ class DropController extends DropzoneBaseController
             if ($page > 0) {
                 return $this->redirect(
                     $this->generateUrl(
-                        'icap_dropzone_drops_awaiting_paginated',
+                        'innova_collecticiel_drops_awaiting_paginated',
                         array(
                             'resourceId' => $dropzone->getId(),
                             'page' => $pager->getNbPages()
@@ -567,26 +567,26 @@ class DropController extends DropzoneBaseController
     /**
      * @Route(
      *      "/{resourceId}/drops/delete/{dropId}/{tab}/{page}",
-     *      name="icap_dropzone_drops_delete",
+     *      name="innova_collecticiel_drops_delete",
      *      requirements={"resourceId" = "\d+", "dropId" = "\d+", "tab" = "\d+", "page" = "\d+"},
      *      defaults={"page" = 1}
      * )
-     * @ParamConverter("dropzone", class="IcapDropzoneBundle:Dropzone", options={"id" = "resourceId"})
-     * @ParamConverter("drop", class="IcapDropzoneBundle:Drop", options={"id" = "dropId"})
+     * @ParamConverter("dropzone", class="InnovaCollecticielBundle:Dropzone", options={"id" = "resourceId"})
+     * @ParamConverter("drop", class="InnovaCollecticielBundle:Drop", options={"id" = "dropId"})
      * @Template()
      */
     public function dropsDeleteAction($dropzone, $drop, $tab, $page)
     {
-        $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
-        $this->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
+        $this->get('innova.manager.dropzone_voter')->isAllowToOpen($dropzone);
+        $this->get('innova.manager.dropzone_voter')->isAllowToEdit($dropzone);
 
         $form = $this->createForm(new DropType(), $drop);
 
-        $previousPath = 'icap_dropzone_drops_by_user_paginated';
+        $previousPath = 'innova_collecticiel_drops_by_user_paginated';
         if ($tab == 1) {
-            $previousPath = 'icap_dropzone_drops_by_date_paginated';
+            $previousPath = 'innova_collecticiel_drops_by_date_paginated';
         } elseif ($tab == 2) {
-            $previousPath = 'icap_dropzone_drops_awaiting_paginated';
+            $previousPath = 'innova_collecticiel_drops_awaiting_paginated';
         }
 
         if ($this->getRequest()->isMethod('POST')) {
@@ -609,9 +609,9 @@ class DropController extends DropzoneBaseController
             }
         }
 
-        $view = 'IcapDropzoneBundle:Drop:dropsDelete.html.twig';
+        $view = 'InnovaCollecticielBundle:Drop:dropsDelete.html.twig';
         if ($this->getRequest()->isXmlHttpRequest()) {
-            $view = 'IcapDropzoneBundle:Drop:dropsDeleteModal.html.twig';
+            $view = 'InnovaCollecticielBundle:Drop:dropsDeleteModal.html.twig';
         }
 
         return $this->render($view, array(
@@ -629,26 +629,26 @@ class DropController extends DropzoneBaseController
     /**
      * @Route(
      *      "/{resourceId}/drops/detail/{dropId}",
-     *      name="icap_dropzone_drops_detail",
+     *      name="innova_collecticiel_drops_detail",
      *      requirements={"resourceId" = "\d+", "dropId" = "\d+"}
      * )
-     * @ParamConverter("dropzone", class="IcapDropzoneBundle:Dropzone", options={"id" = "resourceId"})
+     * @ParamConverter("dropzone", class="InnovaCollecticielBundle:Dropzone", options={"id" = "resourceId"})
      * @Template()
      */
     public function dropsDetailAction($dropzone, $dropId)
     {
-        $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
-        $this->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
+        $this->get('innova.manager.dropzone_voter')->isAllowToOpen($dropzone);
+        $this->get('innova.manager.dropzone_voter')->isAllowToEdit($dropzone);
 
         $dropResult = $this
             ->getDoctrine()
-            ->getRepository('IcapDropzoneBundle:Drop')
+            ->getRepository('InnovaCollecticielBundle:Drop')
             ->getDropAndCorrectionsAndDocumentsAndUser($dropzone, $dropId);
 
         $drop = null;
         $return = $this->redirect(
             $this->generateUrl(
-                'icap_dropzone_drops_awaiting',
+                'innova_collecticiel_drops_awaiting',
                 array(
                     'resourceId' => $dropzone->getId()
                 )
@@ -671,17 +671,17 @@ class DropController extends DropzoneBaseController
     /**
      * @Route(
      *      "/{resourceId}/drop/detail/{dropId}",
-     *      name="icap_dropzone_drop_detail_by_user",
+     *      name="innova_collecticiel_drop_detail_by_user",
      *      requirements={"resourceId" = "\d+", "dropId" = "\d+"}
      * )
-     * @ParamConverter("dropzone", class="IcapDropzoneBundle:Dropzone", options={"id" = "resourceId"})
-     * @ParamConverter("drop", class="IcapDropzoneBundle:Drop", options={"id" = "dropId"})
+     * @ParamConverter("dropzone", class="InnovaCollecticielBundle:Dropzone", options={"id" = "resourceId"})
+     * @ParamConverter("drop", class="InnovaCollecticielBundle:Drop", options={"id" = "dropId"})
      * @Template()
      */
     public function dropDetailAction(Dropzone $dropzone, Drop $drop)
     {
         // check  if the User is allowed to open the dropZone.
-        $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
+        $this->get('innova.manager.dropzone_voter')->isAllowToOpen($dropzone);
         // getting the userId to check if the current drop owner match with the loggued user.
         $userId = $this->get('security.context')->getToken()->getUser()->getId();
         $collection = new ResourceCollection(array($dropzone->getResourceNode()));
@@ -690,7 +690,7 @@ class DropController extends DropzoneBaseController
 
         // getting the data
         $dropSecure = $this->getDoctrine()
-            ->getRepository('IcapDropzoneBundle:Drop')
+            ->getRepository('InnovaCollecticielBundle:Drop')
             ->getDropAndValidEndedCorrectionsAndDocumentsByUser($dropzone, $drop->getId(), $userId);
 
         // if there is no result ( user is not the owner, or the drop has not ended Corrections , show 404)
@@ -708,7 +708,7 @@ class DropController extends DropzoneBaseController
         $user = $drop->getUser();
         $em = $this->getDoctrine()->getManager();
         $nbCorrections = $em
-            ->getRepository('IcapDropzoneBundle:Correction')
+            ->getRepository('InnovaCollecticielBundle:Correction')
             ->countFinished($dropzone, $user);
 
         if ($dropzone->getDiplayCorrectionsToLearners() && $drop->countFinishedCorrections() >= $dropzone->getExpectedTotalCorrection() &&
@@ -734,15 +734,15 @@ class DropController extends DropzoneBaseController
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      * @Route(
      *      "/unlock/drop/{dropId}",
-     *      name="icap_dropzone_unlock_drop",
+     *      name="innova_collecticiel_unlock_drop",
      *      requirements={"resourceId" = "\d+", "dropId" = "\d+"}
      * )
-     * @ParamConverter("drop", class="IcapDropzoneBundle:Drop", options={"id" = "dropId"})
+     * @ParamConverter("drop", class="InnovaCollecticielBundle:Drop", options={"id" = "dropId"})
      * @ParamConverter("user", options={
      *      "authenticatedUser" = true,
      *      "messageEnabled" = true,
      *      "messageTranslationKey" = "This action requires authentication. Please login.",
-     *      "messageTranslationDomain" = "icap_dropzone"
+     *      "messageTranslationDomain" = "innova_collecticiel"
      * })
      * @Template()
      */
@@ -755,13 +755,13 @@ class DropController extends DropzoneBaseController
         $this->getRequest()
             ->getSession()
             ->getFlashBag()
-            ->add('success', $this->get('translator')->trans('Drop have been unlocked', array(), 'icap_dropzone')
+            ->add('success', $this->get('translator')->trans('Drop have been unlocked', array(), 'innova_collecticiel')
             );
 
         $dropzoneId = $drop->getDropzone()->getId();
         return $this->redirect(
             $this->generateUrl(
-                'icap_dropzone_drops_awaiting',
+                'innova_collecticiel_drops_awaiting',
                 array(
                     'resourceId' => $dropzoneId
                 )
@@ -773,15 +773,15 @@ class DropController extends DropzoneBaseController
     /**
      * @Route(
      *      "/report/drop/{correctionId}",
-     *      name="icap_dropzone_report_drop",
+     *      name="innova_collecticiel_report_drop",
      *      requirements={"resourceId" = "\d+", "dropId" = "\d+", "correctionId" = "\d+"}
      * )
-     * @ParamConverter("correction", class="IcapDropzoneBundle:Correction", options={"id" = "correctionId"})
+     * @ParamConverter("correction", class="InnovaCollecticielBundle:Correction", options={"id" = "correctionId"})
      * @ParamConverter("user", options={
      *      "authenticatedUser" = true,
      *      "messageEnabled" = true,
      *      "messageTranslationKey" = "Participate in an evaluation requires authentication. Please login.",
-     *      "messageTranslationDomain" = "icap_dropzone"
+     *      "messageTranslationDomain" = "innova_collecticiel"
      * })
      * @Template()
      */
@@ -790,10 +790,10 @@ class DropController extends DropzoneBaseController
         $dropzone = $correction->getDropzone();
         $drop = $correction->getDrop();
         $em = $this->getDoctrine()->getManager();
-        $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
+        $this->get('innova.manager.dropzone_voter')->isAllowToOpen($dropzone);
 
         try {
-            $curent_user_correction = $em->getRepository('IcapDropzoneBundle:Correction')->getNotFinished($dropzone, $user);
+            $curent_user_correction = $em->getRepository('InnovaCollecticielBundle:Correction')->getNotFinished($dropzone, $user);
         } catch (NotFoundHttpException $e) {
             throw new AccessDeniedException();
         }
@@ -823,12 +823,12 @@ class DropController extends DropzoneBaseController
                     ->getRequest()
                     ->getSession()
                     ->getFlashBag()
-                    ->add('success', $this->get('translator')->trans('Your report has been saved', array(), 'icap_dropzone'));
+                    ->add('success', $this->get('translator')->trans('Your report has been saved', array(), 'innova_collecticiel'));
 
 
                 return $this->redirect(
                     $this->generateUrl(
-                        'icap_dropzone_open',
+                        'innova_collecticiel_open',
                         array(
                             'resourceId' => $dropzone->getId()
                         )
@@ -837,9 +837,9 @@ class DropController extends DropzoneBaseController
             }
         }
 
-        $view = 'IcapDropzoneBundle:Drop:reportDrop.html.twig';
+        $view = 'InnovaCollecticielBundle:Drop:reportDrop.html.twig';
         if ($this->getRequest()->isXmlHttpRequest()) {
-            $view = 'IcapDropzoneBundle:Drop:reportDropModal.html.twig';
+            $view = 'InnovaCollecticielBundle:Drop:reportDropModal.html.twig';
         }
 
         return $this->render($view, array(
@@ -863,19 +863,19 @@ class DropController extends DropzoneBaseController
     /**
      * @Route(
      *      "/{resourceId}/remove/report/{dropId}/{correctionId}/{invalidate}",
-     *      name="icap_dropzone_remove_report",
+     *      name="innova_collecticiel_remove_report",
      *      requirements={"resourceId" = "\d+", "dropId" = "\d+", "correctionId" = "\d+", "invalidate" = "0|1"}
      * )
-     * @ParamConverter("dropzone", class="IcapDropzoneBundle:Dropzone", options={"id" = "resourceId"})
-     * @ParamConverter("drop", class="IcapDropzoneBundle:Drop", options={"id" = "dropId"})
-     * @ParamConverter("correction", class="IcapDropzoneBundle:Correction", options={"id" = "correctionId"})
+     * @ParamConverter("dropzone", class="InnovaCollecticielBundle:Dropzone", options={"id" = "resourceId"})
+     * @ParamConverter("drop", class="InnovaCollecticielBundle:Drop", options={"id" = "dropId"})
+     * @ParamConverter("correction", class="InnovaCollecticielBundle:Correction", options={"id" = "correctionId"})
      * @Template()
      */
     public function removeReportAction(Dropzone $dropzone, Drop $drop, Correction $correction, $invalidate)
     {
 
-        $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
-        $this->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
+        $this->get('innova.manager.dropzone_voter')->isAllowToOpen($dropzone);
+        $this->get('innova.manager.dropzone_voter')->isAllowToEdit($dropzone);
 
         $em = $this->getDoctrine()->getManager();
         $correction->setReporter(false);
@@ -887,7 +887,7 @@ class DropController extends DropzoneBaseController
         $em->persist($correction);
         $em->flush();
 
-        $correctionRepo = $this->getDoctrine()->getRepository('IcapDropzoneBundle:Correction');
+        $correctionRepo = $this->getDoctrine()->getRepository('InnovaCollecticielBundle:Correction');
         if ($correctionRepo->countReporter($dropzone, $drop) == 0) {
             $drop->setReported(false);
             $em->persist($drop);
@@ -899,7 +899,7 @@ class DropController extends DropzoneBaseController
 
         return $this->redirect(
             $this->generateUrl(
-                'icap_dropzone_drops_detail',
+                'innova_collecticiel_drops_detail',
                 array(
                     'resourceId' => $dropzone->getId(),
                     'dropId' => $drop->getId(),
@@ -911,20 +911,20 @@ class DropController extends DropzoneBaseController
     /**
      * @Route(
      *      "/{resourceId}/autoclosedrops/confirm",
-     *      name="icap_dropzone_auto_close_drops_confirmation",
+     *      name="innova_collecticiel_auto_close_drops_confirmation",
      *      requirements={"resourceId" = "\d+", "dropId" = "\d+"}
      * )
-     * @ParamConverter("dropzone", class="IcapDropzoneBundle:Dropzone", options={"id" = "resourceId"})
+     * @ParamConverter("dropzone", class="InnovaCollecticielBundle:Dropzone", options={"id" = "resourceId"})
      * @Template()
      */
     public function autoCloseDropsConfirmationAction($dropzone)
     {
-        $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
-        $this->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
+        $this->get('innova.manager.dropzone_voter')->isAllowToOpen($dropzone);
+        $this->get('innova.manager.dropzone_voter')->isAllowToEdit($dropzone);
 
-        $view = 'IcapDropzoneBundle:Dropzone:confirmCloseUnterminatedDrop.html.twig';
+        $view = 'InnovaCollecticielBundle:Dropzone:confirmCloseUnterminatedDrop.html.twig';
         if ($this->getRequest()->isXmlHttpRequest()) {
-            $view = 'IcapDropzoneBundle:Dropzone:confirmCloseUnterminatedDropModal.html.twig';
+            $view = 'InnovaCollecticielBundle:Dropzone:confirmCloseUnterminatedDropModal.html.twig';
         }
         return $this->render($view, array(
             'workspace' => $dropzone->getResourceNode()->getWorkspace(),
@@ -936,24 +936,24 @@ class DropController extends DropzoneBaseController
     /**
      * @Route(
      *      "/{resourceId}/autoclosedrops",
-     *      name="icap_dropzone_auto_close_drops",
+     *      name="innova_collecticiel_auto_close_drops",
      *      requirements={"resourceId" = "\d+"}
      * )
-     * @ParamConverter("dropzone", class="IcapDropzoneBundle:Dropzone", options={"id" = "resourceId"})
+     * @ParamConverter("dropzone", class="InnovaCollecticielBundle:Dropzone", options={"id" = "resourceId"})
      *
      */
     public function autoCloseDropsAction($dropzone)
     {
-        $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
-        $this->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
+        $this->get('innova.manager.dropzone_voter')->isAllowToOpen($dropzone);
+        $this->get('innova.manager.dropzone_voter')->isAllowToEdit($dropzone);
 
-        $dropzoneManager = $this->get('icap.manager.dropzone_manager');
+        $dropzoneManager = $this->get('innova.manager.dropzone_manager');
         $dropzoneManager->closeDropzoneOpenedDrops($dropzone, true);
 
 
         return $this->redirect(
             $this->generateUrl(
-                'icap_dropzone_drops_awaiting',
+                'innova_collecticiel_drops_awaiting',
                 array(
                     'resourceId' => $dropzone->getId()
                 )

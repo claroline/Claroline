@@ -1,6 +1,6 @@
 <?php
 
-namespace Icap\DropzoneBundle\Migrations\pdo_sqlite;
+namespace Innova\CollecticielBundle\Migrations\pdo_sqlite;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -15,7 +15,7 @@ class Version20130927143036 extends AbstractMigration
     public function up(Schema $schema)
     {
         $this->addSql("
-            CREATE TABLE icap__dropzonebundle_correction (
+            CREATE TABLE innova_collecticielbundle_correction (
                 id INTEGER NOT NULL, 
                 user_id INTEGER NOT NULL, 
                 drop_id INTEGER DEFAULT NULL, 
@@ -34,16 +34,16 @@ class Version20130927143036 extends AbstractMigration
             )
         ");
         $this->addSql("
-            CREATE INDEX IDX_CDA81F40A76ED395 ON icap__dropzonebundle_correction (user_id)
+            CREATE INDEX IDX_CDA81F40A76ED395 ON innova_collecticielbundle_correction (user_id)
         ");
         $this->addSql("
-            CREATE INDEX IDX_CDA81F404D224760 ON icap__dropzonebundle_correction (drop_id)
+            CREATE INDEX IDX_CDA81F404D224760 ON innova_collecticielbundle_correction (drop_id)
         ");
         $this->addSql("
-            CREATE INDEX IDX_CDA81F40A8C6E7BD ON icap__dropzonebundle_correction (drop_zone_id)
+            CREATE INDEX IDX_CDA81F40A8C6E7BD ON innova_collecticielbundle_correction (drop_zone_id)
         ");
         $this->addSql("
-            CREATE TABLE icap__dropzonebundle_criterion (
+            CREATE TABLE innova_collecticielbundle_criterion (
                 id INTEGER NOT NULL, 
                 drop_zone_id INTEGER NOT NULL, 
                 instruction CLOB NOT NULL, 
@@ -51,10 +51,10 @@ class Version20130927143036 extends AbstractMigration
             )
         ");
         $this->addSql("
-            CREATE INDEX IDX_F94B3BA7A8C6E7BD ON icap__dropzonebundle_criterion (drop_zone_id)
+            CREATE INDEX IDX_F94B3BA7A8C6E7BD ON innova_collecticielbundle_criterion (drop_zone_id)
         ");
         $this->addSql("
-            CREATE TABLE icap__dropzonebundle_document (
+            CREATE TABLE innova_collecticielbundle_document (
                 id INTEGER NOT NULL, 
                 resource_node_id INTEGER DEFAULT NULL, 
                 drop_id INTEGER NOT NULL, 
@@ -64,13 +64,13 @@ class Version20130927143036 extends AbstractMigration
             )
         ");
         $this->addSql("
-            CREATE INDEX IDX_744084241BAD783F ON icap__dropzonebundle_document (resource_node_id)
+            CREATE INDEX IDX_744084241BAD783F ON innova_collecticielbundle_document (resource_node_id)
         ");
         $this->addSql("
-            CREATE INDEX IDX_744084244D224760 ON icap__dropzonebundle_document (drop_id)
+            CREATE INDEX IDX_744084244D224760 ON innova_collecticielbundle_document (drop_id)
         ");
         $this->addSql("
-            CREATE TABLE icap__dropzonebundle_drop (
+            CREATE TABLE innova_collecticielbundle_drop (
                 id INTEGER NOT NULL, 
                 drop_zone_id INTEGER NOT NULL, 
                 user_id INTEGER NOT NULL, 
@@ -83,22 +83,22 @@ class Version20130927143036 extends AbstractMigration
             )
         ");
         $this->addSql("
-            CREATE INDEX IDX_3AD19BA6A8C6E7BD ON icap__dropzonebundle_drop (drop_zone_id)
+            CREATE INDEX IDX_3AD19BA6A8C6E7BD ON innova_collecticielbundle_drop (drop_zone_id)
         ");
         $this->addSql("
-            CREATE INDEX IDX_3AD19BA6A76ED395 ON icap__dropzonebundle_drop (user_id)
+            CREATE INDEX IDX_3AD19BA6A76ED395 ON innova_collecticielbundle_drop (user_id)
         ");
         $this->addSql("
-            CREATE UNIQUE INDEX UNIQ_3AD19BA65342CDF ON icap__dropzonebundle_drop (hidden_directory_id)
+            CREATE UNIQUE INDEX UNIQ_3AD19BA65342CDF ON innova_collecticielbundle_drop (hidden_directory_id)
         ");
         $this->addSql("
-            CREATE UNIQUE INDEX unique_drop_for_user_in_drop_zone ON icap__dropzonebundle_drop (drop_zone_id, user_id)
+            CREATE UNIQUE INDEX unique_drop_for_user_in_drop_zone ON innova_collecticielbundle_drop (drop_zone_id, user_id)
         ");
         $this->addSql("
-            CREATE UNIQUE INDEX unique_drop_number_in_drop_zone ON icap__dropzonebundle_drop (drop_zone_id, number)
+            CREATE UNIQUE INDEX unique_drop_number_in_drop_zone ON innova_collecticielbundle_drop (drop_zone_id, number)
         ");
         $this->addSql("
-            CREATE TABLE icap__dropzonebundle_dropzone (
+            CREATE TABLE innova_collecticielbundle_dropzone (
                 id INTEGER NOT NULL, 
                 hidden_directory_id INTEGER DEFAULT NULL, 
                 edition_state INTEGER NOT NULL, 
@@ -125,13 +125,13 @@ class Version20130927143036 extends AbstractMigration
             )
         ");
         $this->addSql("
-            CREATE UNIQUE INDEX UNIQ_6782FC235342CDF ON icap__dropzonebundle_dropzone (hidden_directory_id)
+            CREATE UNIQUE INDEX UNIQ_6782FC235342CDF ON innova_collecticielbundle_dropzone (hidden_directory_id)
         ");
         $this->addSql("
-            CREATE UNIQUE INDEX UNIQ_6782FC23B87FAB32 ON icap__dropzonebundle_dropzone (resourceNode_id)
+            CREATE UNIQUE INDEX UNIQ_6782FC23B87FAB32 ON innova_collecticielbundle_dropzone (resourceNode_id)
         ");
         $this->addSql("
-            CREATE TABLE icap__dropzonebundle_grade (
+            CREATE TABLE innova_collecticielbundle_grade (
                 id INTEGER NOT NULL, 
                 criterion_id INTEGER NOT NULL, 
                 correction_id INTEGER NOT NULL, 
@@ -140,35 +140,35 @@ class Version20130927143036 extends AbstractMigration
             )
         ");
         $this->addSql("
-            CREATE INDEX IDX_B3C52D9397766307 ON icap__dropzonebundle_grade (criterion_id)
+            CREATE INDEX IDX_B3C52D9397766307 ON innova_collecticielbundle_grade (criterion_id)
         ");
         $this->addSql("
-            CREATE INDEX IDX_B3C52D9394AE086B ON icap__dropzonebundle_grade (correction_id)
+            CREATE INDEX IDX_B3C52D9394AE086B ON innova_collecticielbundle_grade (correction_id)
         ");
         $this->addSql("
-            CREATE UNIQUE INDEX unique_grade_for_criterion_and_correction ON icap__dropzonebundle_grade (criterion_id, correction_id)
+            CREATE UNIQUE INDEX unique_grade_for_criterion_and_correction ON innova_collecticielbundle_grade (criterion_id, correction_id)
         ");
     }
 
     public function down(Schema $schema)
     {
         $this->addSql("
-            DROP TABLE icap__dropzonebundle_correction
+            DROP TABLE innova_collecticielbundle_correction
         ");
         $this->addSql("
-            DROP TABLE icap__dropzonebundle_criterion
+            DROP TABLE innova_collecticielbundle_criterion
         ");
         $this->addSql("
-            DROP TABLE icap__dropzonebundle_document
+            DROP TABLE innova_collecticielbundle_document
         ");
         $this->addSql("
-            DROP TABLE icap__dropzonebundle_drop
+            DROP TABLE innova_collecticielbundle_drop
         ");
         $this->addSql("
-            DROP TABLE icap__dropzonebundle_dropzone
+            DROP TABLE innova_collecticielbundle_dropzone
         ");
         $this->addSql("
-            DROP TABLE icap__dropzonebundle_grade
+            DROP TABLE innova_collecticielbundle_grade
         ");
     }
 }

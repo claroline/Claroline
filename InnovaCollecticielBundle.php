@@ -5,14 +5,14 @@
  * Time: 15:00
  */
 
-namespace Icap\DropzoneBundle;
+namespace Innova\CollecticielBundle;
 
 use Claroline\CoreBundle\Library\PluginBundle;
 
-class IcapDropzoneBundle extends PluginBundle
+class InnovaCollecticielBundle extends PluginBundle
 {
     public function getRoutingPrefix()
     {
-        return "dropzone";
+        return "collecticiel";
     }
 }

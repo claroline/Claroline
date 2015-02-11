@@ -7,12 +7,12 @@
  * To change this template use File | Settings | File Templates.
  */
 
-namespace Icap\DropzoneBundle\Listener;
+namespace Innova\CollecticielBundle\Listener;
 
 
 use Doctrine\ORM\Event\LifecycleEventArgs;
-use Icap\DropzoneBundle\Entity\Document;
-use Proxies\__CG__\Icap\DropzoneBundle\Entity\Dropzone;
+use Innova\CollecticielBundle\Entity\Document;
+use Proxies\__CG__\Innova\CollecticielBundle\Entity\Dropzone;
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 

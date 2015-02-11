@@ -5,13 +5,13 @@
  * Time: 16:06
  */
 
-namespace Icap\DropzoneBundle\Entity;
+namespace Innova\CollecticielBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="icap__dropzonebundle_criterion")
+ * @ORM\Table(name="innova_collecticielbundle_criterion")
  */
 class Criterion {
     /**
@@ -26,7 +26,7 @@ class Criterion {
     protected $instruction;
     /**
      * @ORM\ManyToOne(
-     *      targetEntity="Icap\DropzoneBundle\Entity\Dropzone",
+     *      targetEntity="Innova\CollecticielBundle\Entity\Dropzone",
      *      inversedBy="peerReviewCriteria"
      * )
      * @ORM\JoinColumn(name="drop_zone_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")

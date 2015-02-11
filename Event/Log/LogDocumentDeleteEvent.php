@@ -1,16 +1,16 @@
 <?php
 
-namespace Icap\DropzoneBundle\Event\Log;
+namespace Innova\CollecticielBundle\Event\Log;
 
 use Claroline\CoreBundle\Event\Log\AbstractLogResourceEvent;
 use Claroline\CoreBundle\Event\Log\LogGenericEvent;
-use Icap\DropzoneBundle\Entity\Document;
-use Icap\DropzoneBundle\Entity\Drop;
-use Icap\DropzoneBundle\Entity\Dropzone;
+use Innova\CollecticielBundle\Entity\Document;
+use Innova\CollecticielBundle\Entity\Drop;
+use Innova\CollecticielBundle\Entity\Dropzone;
 
 class LogDocumentDeleteEvent extends AbstractLogResourceEvent {
 
-    const ACTION = 'resource-icap_dropzone-document_delete';
+    const ACTION = 'resource-innova_collecticiel-document_delete';
 
     /**
      * @param Dropzone $dropzone

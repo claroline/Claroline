@@ -1,8 +1,8 @@
 <?php
 
-namespace Icap\DropzoneBundle\Event\Log;
+namespace Innova\CollecticielBundle\Event\Log;
 
-use Icap\DropzoneBundle\Entity\Correction;
+use Innova\CollecticielBundle\Entity\Correction;
 
 interface PotentialEvaluationEndInterface
 {

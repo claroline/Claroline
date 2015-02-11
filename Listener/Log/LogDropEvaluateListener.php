@@ -1,6 +1,6 @@
 <?php
 
-namespace Icap\DropzoneBundle\Listener\Log;
+namespace Innova\CollecticielBundle\Listener\Log;
 
 use Claroline\CoreBundle\Event\Log\LogGenericEvent;
 use Claroline\CoreBundle\Event\Log\LogGroupDeleteEvent;
@@ -12,11 +12,11 @@ use Claroline\CoreBundle\Entity\Log\Log;
 use Claroline\CoreBundle\Event\LogCreateEvent;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Doctrine\ORM\EntityManager;
-use Icap\DropzoneBundle\Entity\Drop;
-use Icap\DropzoneBundle\Event\Log\LogCorrectionEndEvent;
-use Icap\DropzoneBundle\Event\Log\LogCorrectionUpdateEvent;
-use Icap\DropzoneBundle\Event\Log\LogDropEvaluateEvent;
-use Icap\DropzoneBundle\Event\Log\PotentialEvaluationEndInterface;
+use Innova\CollecticielBundle\Entity\Drop;
+use Innova\CollecticielBundle\Event\Log\LogCorrectionEndEvent;
+use Innova\CollecticielBundle\Event\Log\LogCorrectionUpdateEvent;
+use Innova\CollecticielBundle\Event\Log\LogDropEvaluateEvent;
+use Innova\CollecticielBundle\Event\Log\PotentialEvaluationEndInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Claroline\CoreBundle\Persistence\ObjectManager;
@@ -55,7 +55,7 @@ class LogDropEvaluateListener
             $correction = $event->getCorrection();
             $this->sendFinishedLog($correction->getDrop());
             if ($correction->getDrop()->getUser()->getId() != $correction->getUser()->getId()) {
-                $drop = $this->entityManager->getRepository('IcapDropzoneBundle:Drop')->findOneBy(array('user' => $correction->getUser()));
+                $drop = $this->entityManager->getRepository('InnovaCollecticielBundle:Drop')->findOneBy(array('user' => $correction->getUser()));
                 if ($drop !== null) {
                     $this->sendFinishedLog($drop);
                 }
@@ -75,7 +75,7 @@ class LogDropEvaluateListener
                 if ($drop->getDropzone()->getPeerReview() === true) {
 //                    var_dump('peer review. mais est ce que le user a corrigé assez de copie');
                     $nbCorrections = $this->entityManager
-                        ->getRepository('IcapDropzoneBundle:Correction')
+                        ->getRepository('InnovaCollecticielBundle:Correction')
                         ->countFinished($drop->getDropzone(), $drop->getUser());
 
                     if ($nbCorrections >= $drop->getDropzone()->getExpectedTotalCorrection()) {

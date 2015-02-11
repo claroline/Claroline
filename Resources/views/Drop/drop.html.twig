@@ -1,13 +1,13 @@
-{% extends "IcapDropzoneBundle::layout.html.twig" %}
+{% extends "InnovaCollecticielBundle::layout.html.twig" %}
 
-{% form_theme form "IcapDropzoneBundle::form_theme_bootstrap3.html.twig" %}
+{% form_theme form "InnovaCollecticielBundle::form_theme_bootstrap3.html.twig" %}
 
 {% block resourceBreadcrumb %}
     <li>
-        <a href="{{ path('icap_dropzone_open', {'resourceId': dropzone.id}) }}"><span
+        <a href="{{ path('innova_collecticiel_open', {'resourceId': dropzone.id}) }}"><span
                     class="fa fa-file"></span> {{ dropzone.resourceNode.name }}</a>
     </li>
-    <li class="active"> {{ 'Make my copy'|trans({}, 'icap_dropzone') }}</li>
+    <li class="active"> {{ 'Make my copy'|trans({}, 'innova_collecticiel') }}</li>
 {% endblock %}
 
 {% block dropzone_content %}
@@ -27,38 +27,38 @@
     </style>
     <div class="container">
         <h3>
-            {{ 'Make my copy'|trans({}, 'icap_dropzone') }}
+            {{ 'Make my copy'|trans({}, 'innova_collecticiel') }}
         </h3>
 
         {{ macros.flashBox() }}
 
         {# DROP STATUS BAR #}
-        {% include 'IcapDropzoneBundle:Drop:dropStatus.html.twig' %}
+        {% include 'InnovaCollecticielBundle:Drop:dropStatus.html.twig' %}
 
         {# INSTRUCTIONS #}
         {% if dropzone.instruction != null %}
-            {% include 'IcapDropzoneBundle:Dropzone:recallInstruction.html.twig' %}
+            {% include 'InnovaCollecticielBundle:Dropzone:recallInstruction.html.twig' %}
             <br/>
         {% endif %}
         <div class="panel panel-default">
             <div class="panel-body"><p class="text-muted"><span
-                            class="fa fa fa-info-circle"></span> {{ 'drop_info'|trans({},'icap_dropzone') }}</p>
+                            class="fa fa fa-info-circle"></span> {{ 'drop_info'|trans({},'innova_collecticiel') }}</p>
             </div>
         </div>
 
         {# DOCUMENTS ALLREADY ADDED #}
-        <h4>{{ 'Documents added  the copy'|trans({},'icap_dropzone') }}</h4>
+        <h4>{{ 'Documents added  the copy'|trans({},'innova_collecticiel') }}</h4>
         {{ dropzoneMacros.displayDocumentsList(drop, dropzone, 12, "complete", null) }}
 
 
 
         <br/>
         {# ADD DOCUMENT #}
-        {% include 'IcapDropzoneBundle:Drop:addDocument.html.twig' %}
+        {% include 'InnovaCollecticielBundle:Drop:addDocument.html.twig' %}
 
         {# GLOBAL DROP FORM #}
         <form id='dropzone_global_drop_form' class="form-horizontal" method="POST"
-              action="{{ path('icap_dropzone_drop', {'resourceId': dropzone.id}) }}">
+              action="{{ path('innova_collecticiel_drop', {'resourceId': dropzone.id}) }}">
             <div class="{% if form.vars.errors|length > 0 %}has-error{% endif %}">
                 {{ form_errors(form) }}
             </div>
@@ -67,7 +67,7 @@
 
                     <!-- Button trigger modal -->
                     <a id='dropzone_global_save_link' data-toggle="modal" href="#saveModal"
-                       class="btn btn-primary pull-right disabled-during-add">{{ 'Save and finished'|trans({}, 'icap_dropzone') }}</a>
+                       class="btn btn-primary pull-right disabled-during-add">{{ 'Save and finished'|trans({}, 'innova_collecticiel') }}</a>
 
                     <!-- Modal -->
                     <div class="modal fade" id="saveModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
@@ -77,22 +77,22 @@
                                 <div class="modal-header">
                                     <button type="button" class="close" data-dismiss="modal"
                                             aria-hidden="true">&times;</button>
-                                    <h4 class="modal-title">{{ 'Warning'|trans({}, 'icap_dropzone') }}</h4>
+                                    <h4 class="modal-title">{{ 'Warning'|trans({}, 'innova_collecticiel') }}</h4>
                                 </div>
                                 <div class="modal-body">
-                                    {{ 'You are about to make your copy. This action is final. Are you sure you have done'|trans({}, 'icap_dropzone') }}
+                                    {{ 'You are about to make your copy. This action is final. Are you sure you have done'|trans({}, 'innova_collecticiel') }}
 
                                     <div class='modal-warning text-danger' style="display:none">
                                         <span class="text-danger fa fa-exclamation-triangle"></span>
-                                        {{ 'Empty field warning'|trans({},'icap_dropzone') }}
+                                        {{ 'Empty field warning'|trans({},'innova_collecticiel') }}
                                     </div>
                                 </div>
                                 <div class="modal-footer">
                                     <a href="#" class="btn btn-default"
-                                       data-dismiss="modal">{{ 'Cancel'|trans({}, 'icap_dropzone') }}</a>
+                                       data-dismiss="modal">{{ 'Cancel'|trans({}, 'innova_collecticiel') }}</a>
 
                                     <button type="submit" class="btn btn-primary pull-right">
-                                        {{ 'Confirm and finished'|trans({}, 'icap_dropzone') }}
+                                        {{ 'Confirm and finished'|trans({}, 'innova_collecticiel') }}
                                     </button>
                                 </div>
                             </div>
@@ -147,7 +147,7 @@
                     $('.dropzone_ressrouceSelected').show();
                     $('.dropzone_noRessourceSelected').hide();
                     $('.selected-resource').html(name);
-                    $('#icap_dropzone_document_file_form_resource').val(resourceNodeId);
+                    $('#innova_collecticiel_document_file_form_resource').val(resourceNodeId);
 
                     $('#add-document-sumbit').removeAttr('disabled');
                     $('#add-document-sumbit').trigger('click');
@@ -156,17 +156,17 @@
                 }
             });
 
-            if ($('#icap_dropzone_document_file_form_file').val() != '') {
+            if ($('#innova_collecticiel_document_file_form_file').val() != '') {
                 $('.please-wait').show();
                 $(this).parents('form').submit();
             }
             // autosubmit input files.
-            $('#icap_dropzone_document_file_form_file').change(function () {
+            $('#innova_collecticiel_document_file_form_file').change(function () {
                 $('.please-wait').show();
                 $(this).parents('form').submit();
             });
 
-            $('#icap_dropzone_document_file_form_file').parents('form').find('button').click(function (e) {
+            $('#innova_collecticiel_document_file_form_file').parents('form').find('button').click(function (e) {
                 // desactivation of the submit button ( autosubmit is activated).
                 e.preventDefault();
             });
@@ -221,9 +221,9 @@
             $('#dropzone_global_save_link').click(function () {
                 // test if some text or data is not save before launch modal, in order to adapt message.
                 var fieldEmpty = true;
-                var text = $('#icap_dropzone_document_file_form_text').val();
-                var url = $('#icap_dropzone_document_file_form_url').val();
-                var file = $('#icap_dropzone_document_file_form_url').val();
+                var text = $('#innova_collecticiel_document_file_form_text').val();
+                var url = $('#innova_collecticiel_document_file_form_url').val();
+                var file = $('#innova_collecticiel_document_file_form_url').val();
                 if ((text != '' && text != '<p></p>') || (url != '') || (file != '')) {
                     fieldEmpty = false;
                 }

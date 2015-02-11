@@ -1,6 +1,6 @@
 <?php
 
-namespace Icap\DropzoneBundle\Migrations\oci8;
+namespace Innova\CollecticielBundle\Migrations\oci8;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -15,13 +15,13 @@ class Version20140407074633 extends AbstractMigration
     public function up(Schema $schema)
     {
         $this->addSql("
-            ALTER TABLE icap__dropzonebundle_drop 
+            ALTER TABLE innova_collecticielbundle_drop 
             ADD (
                 auto_closed_drop NUMBER(1) DEFAULT '0' NOT NULL
             )
         ");
         $this->addSql("
-            ALTER TABLE icap__dropzonebundle_dropzone MODIFY (
+            ALTER TABLE innova_collecticielbundle_dropzone MODIFY (
                 auto_close_opened_drops_when_time_is_up NUMBER(1) DEFAULT '0'
             )
         ");
@@ -30,11 +30,11 @@ class Version20140407074633 extends AbstractMigration
     public function down(Schema $schema)
     {
         $this->addSql("
-            ALTER TABLE icap__dropzonebundle_drop 
+            ALTER TABLE innova_collecticielbundle_drop 
             DROP (auto_closed_drop)
         ");
         $this->addSql("
-            ALTER TABLE icap__dropzonebundle_dropzone MODIFY (
+            ALTER TABLE innova_collecticielbundle_dropzone MODIFY (
                 auto_close_opened_drops_when_time_is_up NUMBER(1) DEFAULT NULL
             )
         ");

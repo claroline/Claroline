@@ -1,27 +1,27 @@
-{% extends "IcapDropzoneBundle:Drop:drops.html.twig" %}
+{% extends "InnovaCollecticielBundle:Drop:drops.html.twig" %}
 
 {% block dropzone_content_drops %}
 
     <div class="btn-group pull-right">
         {% block dropzone_content_drops_by_default %}
-            <a href="{{ path('icap_dropzone_drops_by_default', {'resourceId': dropzone.id}) }}"
+            <a href="{{ path('innova_collecticiel_drops_by_default', {'resourceId': dropzone.id}) }}"
                class="btn btn-default btn-xs {% block dropzone_content_drops_by_default_active %}{% endblock %}"
                data-toggle="tooltip" title=""
-               data-original-title="{{ 'Sorted by date with reported drops first'|trans({}, 'icap_dropzone') }}">{{ 'default sort'|trans({}, 'icap_dropzone') }}</a>
+               data-original-title="{{ 'Sorted by date with reported drops first'|trans({}, 'innova_collecticiel') }}">{{ 'default sort'|trans({}, 'innova_collecticiel') }}</a>
         {% endblock %}
         {% block dropzone_content_drops_by_user %}
-            <a href="{{ path('icap_dropzone_drops_by_user', {'resourceId': dropzone.id}) }}"
-               class="btn btn-default btn-xs {% block dropzone_content_drops_by_user_active %}{% endblock %}">{{ 'Sort by user'|trans({}, 'icap_dropzone') }}</a>
+            <a href="{{ path('innova_collecticiel_drops_by_user', {'resourceId': dropzone.id}) }}"
+               class="btn btn-default btn-xs {% block dropzone_content_drops_by_user_active %}{% endblock %}">{{ 'Sort by user'|trans({}, 'innova_collecticiel') }}</a>
         {% endblock %}
         {% block dropzone_content_drops_by_date %}
-            <a href="{{ path('icap_dropzone_drops_by_date', {'resourceId': dropzone.id}) }}"
-               class="btn btn-default btn-xs {% block dropzone_content_drops_by_date_active %}{% endblock %}">{{ 'Sort by date'|trans({}, 'icap_dropzone') }}</a>
+            <a href="{{ path('innova_collecticiel_drops_by_date', {'resourceId': dropzone.id}) }}"
+               class="btn btn-default btn-xs {% block dropzone_content_drops_by_date_active %}{% endblock %}">{{ 'Sort by date'|trans({}, 'innova_collecticiel') }}</a>
         {% endblock %}
         {% block dropzone_content_drops_by_reported %}
-            <a href="{{ path('icap_dropzone_drops_by_report', {'resourceId': dropzone.id}) }}"
+            <a href="{{ path('innova_collecticiel_drops_by_report', {'resourceId': dropzone.id}) }}"
                class="btn btn-default btn-xs {% block dropzone_content_drops_by_reported_active %}{% endblock %}"
                data-toggle="tooltip" title=""
-               data-original-title="{{ 'only reported drops'|trans({}, 'icap_dropzone') }}">{{ 'sort by reported'|trans({}, 'icap_dropzone') }}</a>
+               data-original-title="{{ 'only reported drops'|trans({}, 'innova_collecticiel') }}">{{ 'sort by reported'|trans({}, 'innova_collecticiel') }}</a>
         {% endblock %}
     </div>
 
@@ -29,7 +29,7 @@
         {% block dropzone_content_drops_by_beforeTitle %}
         {% endblock %}
     </div>
-    <h3>{% block dropzone_content_drops_by_list_title %}{{ 'fully corrected copies'|trans({}, 'icap_dropzone') }}{% endblock %}</h3>
+    <h3>{% block dropzone_content_drops_by_list_title %}{{ 'fully corrected copies'|trans({}, 'innova_collecticiel') }}{% endblock %}</h3>
     <div>
         {% block dropzone_content_drops_by_list_tools %}
         {% endblock %}
@@ -37,7 +37,7 @@
     <h5>{% block dropzone_content_drops_by_list_subtitle %}{% endblock %}</h5>
 
     {% block dropzone_content_drops_by_Listing %}
-        {% include 'IcapDropzoneBundle:Drop:Listing/dropsListing.html.twig' %}
+        {% include 'InnovaCollecticielBundle:Drop:Listing/dropsListing.html.twig' %}
     {% endblock %}
     
     <div class="container row">
@@ -50,7 +50,7 @@
                 'twitter_bootstrap_translated',
                 {
                 'proximity' : 1,
-                'routeName': 'icap_dropzone_drops_by_default_paginated',
+                'routeName': 'innova_collecticiel_drops_by_default_paginated',
                 'routeParams': {'resourceId': dropzone.id}
                 }
                 )
@@ -63,7 +63,7 @@
         <div class="row">
             <div class="col-md-12">
                 {% block dropzone_content_drops_by_no_result_exception %}
-                    {{ 'noCopyExpectedCorrection'|transchoice(dropzone.expectedTotalCorrection, {}, 'icap_dropzone') }}
+                    {{ 'noCopyExpectedCorrection'|transchoice(dropzone.expectedTotalCorrection, {}, 'innova_collecticiel') }}
                 {% endblock %}
             </div>
         </div>

@@ -1,15 +1,15 @@
 <?php
-namespace Icap\DropzoneBundle\Manager;
+namespace Innova\CollecticielBundle\Manager;
 
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Manager\MaskManager;
 use Claroline\CoreBundle\Entity\User;
-use Icap\DropzoneBundle\Entity\Dropzone;
-use Icap\DropzoneBundle\Entity\Drop;
+use Innova\CollecticielBundle\Entity\Dropzone;
+use Innova\CollecticielBundle\Entity\Drop;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
- * @DI\Service("icap.manager.dropzone_manager")
+ * @DI\Service("innova.manager.dropzone_manager")
  */
 class DropzoneManager
 {
@@ -35,12 +35,12 @@ class DropzoneManager
     /**
      *  Getting the user that have the 'open' rights.
      *  Excluded the admin profil.
-     * @param \Icap\DropzoneBundle\Entity\Dropzone $dropzone
+     * @param \Innova\CollecticielBundle\Entity\Dropzone $dropzone
      * @return array UserIds.
      */
     public function getDropzoneUsersIds(Dropzone $dropzone)
     {
-        $this->container->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
+        $this->container->get('innova.manager.dropzone_voter')->isAllowToEdit($dropzone);
 
         //getting the ressource node
         $ressourceNode = $dropzone->getResourceNode();
@@ -109,10 +109,10 @@ class DropzoneManager
     public function getDropzoneProgressByUser($dropzone, $user)
     {
         $drop = $this->em
-            ->getRepository('IcapDropzoneBundle:Drop')
+            ->getRepository('InnovaCollecticielBundle:Drop')
             ->findOneBy(array('dropzone' => $dropzone, 'user' => $user));
         $nbCorrections = $this->em
-            ->getRepository('IcapDropzoneBundle:Correction')
+            ->getRepository('InnovaCollecticielBundle:Correction')
             ->countFinished($dropzone, $user);
         return $this->getDrozponeProgress($dropzone, $drop, $nbCorrections);
     }
@@ -140,8 +140,8 @@ class DropzoneManager
      *  percent : rounded progress in percent
      *  nbCorrection : corrections made by the user in this evaluation.
      *
-     * @param \Icap\DropzoneBundle\Entity\Dropzone $dropzone
-     * @param \Icap\DropzoneBundle\Entity\Drop|\Icap\DropzoneBundle\Manager\Drop $drop
+     * @param \Innova\CollecticielBundle\Entity\Dropzone $dropzone
+     * @param \Innova\CollecticielBundle\Entity\Drop|\Innova\CollecticielBundle\Manager\Drop $drop
      * @param int $nbCorrection number of correction the user did.
      * @return array (states, currentState,percent,nbCorrection)
      */
@@ -276,7 +276,7 @@ class DropzoneManager
     {
 
         if ($force || $this->isDropzoneDropTimeIsUp($dropzone)) {
-            $dropRepo = $this->em->getRepository('IcapDropzoneBundle:Drop');
+            $dropRepo = $this->em->getRepository('InnovaCollecticielBundle:Drop');
             $dropRepo->closeUnTerminatedDropsByDropzone($dropzone->getId());
             $dropzone->setAutoCloseState(Dropzone::AUTO_CLOSED_STATE_CLOSED);
         }
@@ -300,18 +300,18 @@ class DropzoneManager
 
     public function recalculateScoreByDropzone(Dropzone $dropzone)
     {
-        $this->container->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
-        $this->container->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
+        $this->container->get('innova.manager.dropzone_voter')->isAllowToOpen($dropzone);
+        $this->container->get('innova.manager.dropzone_voter')->isAllowToEdit($dropzone);
 
         if (!$dropzone->getPeerReview()) {
             throw new AccessDeniedException();
         }
         // getting the repository
-        $CorrectionRepo = $this->em->getRepository('IcapDropzoneBundle:Correction');
+        $CorrectionRepo = $this->em->getRepository('InnovaCollecticielBundle:Correction');
         // getting all the drop corrections
         $corrections = $CorrectionRepo->findBy(['dropzone' => $dropzone->getId()]);
 
-        $this->container->get('icap.manager.correction_manager')->recalculateScoreForCorrections($dropzone, $corrections);
+        $this->container->get('innova.manager.correction_manager')->recalculateScoreForCorrections($dropzone, $corrections);
 
     }
 

@@ -5,7 +5,7 @@
  * Time: 15:39
  */
 
-namespace Icap\DropzoneBundle\Entity;
+namespace Innova\CollecticielBundle\Entity;
 
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -13,8 +13,8 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
- * @ORM\Entity(repositoryClass="Icap\DropzoneBundle\Repository\DropRepository")
- * @ORM\Table(name="icap__dropzonebundle_drop", uniqueConstraints={
+ * @ORM\Entity(repositoryClass="Innova\CollecticielBundle\Repository\DropRepository")
+ * @ORM\Table(name="innova_collecticielbundle_drop", uniqueConstraints={
  *      @ORM\UniqueConstraint(name="unique_drop_for_user_in_drop_zone", columns={"drop_zone_id", "user_id"}),
  *      @ORM\UniqueConstraint(name="unique_drop_number_in_drop_zone", columns={"drop_zone_id", "number"})
  * })
@@ -46,7 +46,7 @@ class Drop
     protected $number = null;
     /**
      * @ORM\ManyToOne(
-     *      targetEntity="Icap\DropzoneBundle\Entity\Dropzone",
+     *      targetEntity="Innova\CollecticielBundle\Entity\Dropzone",
      *      inversedBy="drops"
      * )
      * @ORM\JoinColumn(name="drop_zone_id", referencedColumnName="id", nullable=false)
@@ -54,7 +54,7 @@ class Drop
     protected $dropzone;
     /**
      * @ORM\OneToMany(
-     *     targetEntity="Icap\DropzoneBundle\Entity\Document",
+     *     targetEntity="Innova\CollecticielBundle\Entity\Document",
      *     mappedBy="drop",
      *     cascade={"all"},
      *     orphanRemoval=true
@@ -71,7 +71,7 @@ class Drop
 
     /**
      * @ORM\OneToMany(
-     *     targetEntity="Icap\DropzoneBundle\Entity\Correction",
+     *     targetEntity="Innova\CollecticielBundle\Entity\Correction",
      *     mappedBy="drop"
      * )
      */

@@ -5,26 +5,26 @@
  * Time: 09:30
  */
 
-namespace Icap\DropzoneBundle\Controller;
+namespace Innova\CollecticielBundle\Controller;
 
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\Log\LogResourceReadEvent;
 use Claroline\CoreBundle\Event\Log\LogResourceUpdateEvent;
-use Icap\DropzoneBundle\Entity\Correction;
-use Icap\DropzoneBundle\Entity\Dropzone;
-use Icap\DropzoneBundle\Entity\Drop;
-use Icap\DropzoneBundle\Entity\Grade;
-use Icap\DropzoneBundle\Event\Log\LogCorrectionDeleteEvent;
-use Icap\DropzoneBundle\Event\Log\LogCorrectionEndEvent;
-use Icap\DropzoneBundle\Event\Log\LogCorrectionStartEvent;
-use Icap\DropzoneBundle\Event\Log\LogCorrectionUpdateEvent;
-use Icap\DropzoneBundle\Event\Log\LogCorrectionValidationChangeEvent;
-use Icap\DropzoneBundle\Event\Log\LogCorrectionReportEvent;
-use Icap\DropzoneBundle\Event\Log\LogDropGradeAvailableEvent;
-use Icap\DropzoneBundle\Form\CorrectionCommentType;
-use Icap\DropzoneBundle\Form\CorrectionCriteriaPageType;
-use Icap\DropzoneBundle\Form\CorrectionStandardType;
-use Icap\DropzoneBundle\Form\CorrectionDenyType;
+use Innova\CollecticielBundle\Entity\Correction;
+use Innova\CollecticielBundle\Entity\Dropzone;
+use Innova\CollecticielBundle\Entity\Drop;
+use Innova\CollecticielBundle\Entity\Grade;
+use Innova\CollecticielBundle\Event\Log\LogCorrectionDeleteEvent;
+use Innova\CollecticielBundle\Event\Log\LogCorrectionEndEvent;
+use Innova\CollecticielBundle\Event\Log\LogCorrectionStartEvent;
+use Innova\CollecticielBundle\Event\Log\LogCorrectionUpdateEvent;
+use Innova\CollecticielBundle\Event\Log\LogCorrectionValidationChangeEvent;
+use Innova\CollecticielBundle\Event\Log\LogCorrectionReportEvent;
+use Innova\CollecticielBundle\Event\Log\LogDropGradeAvailableEvent;
+use Innova\CollecticielBundle\Form\CorrectionCommentType;
+use Innova\CollecticielBundle\Form\CorrectionCriteriaPageType;
+use Innova\CollecticielBundle\Form\CorrectionStandardType;
+use Innova\CollecticielBundle\Form\CorrectionDenyType;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Pagerfanta\Adapter\DoctrineDbalSingleTableAdapter;
@@ -46,12 +46,12 @@ class CorrectionController extends DropzoneBaseController
         if ($dropzone->isPeerReview() == false) {
             $this->getRequest()->getSession()->getFlashBag()->add(
                 'error',
-                $this->get('translator')->trans('The peer review is not enabled', array(), 'icap_dropzone')
+                $this->get('translator')->trans('The peer review is not enabled', array(), 'innova_collecticiel')
             );
 
             return $this->redirect(
                 $this->generateUrl(
-                    'icap_dropzone_open',
+                    'innova_collecticiel_open',
                     array(
                         'resourceId' => $dropzone->getId()
                     )
@@ -60,7 +60,7 @@ class CorrectionController extends DropzoneBaseController
         }
 
         // Check that the user has a finished dropzone for this drop.
-        $userDrop = $em->getRepository('IcapDropzoneBundle:Drop')->findOneBy(array(
+        $userDrop = $em->getRepository('InnovaCollecticielBundle:Drop')->findOneBy(array(
             'user' => $user,
             'dropzone' => $dropzone,
             'finished' => true
@@ -68,12 +68,12 @@ class CorrectionController extends DropzoneBaseController
         if ($userDrop == null) {
             $this->getRequest()->getSession()->getFlashBag()->add(
                 'error',
-                $this->get('translator')->trans('You must have made ​​your copy before correcting', array(), 'icap_dropzone')
+                $this->get('translator')->trans('You must have made ​​your copy before correcting', array(), 'innova_collecticiel')
             );
 
             return $this->redirect(
                 $this->generateUrl(
-                    'icap_dropzone_open',
+                    'innova_collecticiel_open',
                     array(
                         'resourceId' => $dropzone->getId()
                     )
@@ -82,16 +82,16 @@ class CorrectionController extends DropzoneBaseController
         }
 
         // Check that the user still make corrections
-        $nbCorrection = $em->getRepository('IcapDropzoneBundle:Correction')->countFinished($dropzone, $user);
+        $nbCorrection = $em->getRepository('InnovaCollecticielBundle:Correction')->countFinished($dropzone, $user);
         if ($nbCorrection >= $dropzone->getExpectedTotalCorrection()) {
             $this->getRequest()->getSession()->getFlashBag()->add(
                 'error',
-                $this->get('translator')->trans('You no longer have any copies to correct', array(), 'icap_dropzone')
+                $this->get('translator')->trans('You no longer have any copies to correct', array(), 'innova_collecticiel')
             );
 
             return $this->redirect(
                 $this->generateUrl(
-                    'icap_dropzone_open',
+                    'innova_collecticiel_open',
                     array(
                         'resourceId' => $dropzone->getId()
                     )
@@ -106,9 +106,9 @@ class CorrectionController extends DropzoneBaseController
     {
         $em = $this->getDoctrine()->getManager();
         // Check that the user as a not finished correction (exclude admin correction). Otherwise generate a new one.
-        $correction = $em->getRepository('IcapDropzoneBundle:Correction')->getNotFinished($dropzone, $user);
+        $correction = $em->getRepository('InnovaCollecticielBundle:Correction')->getNotFinished($dropzone, $user);
         if ($correction == null) {
-            $drop = $em->getRepository('IcapDropzoneBundle:Drop')->drawDropForCorrection($dropzone, $user);
+            $drop = $em->getRepository('InnovaCollecticielBundle:Drop')->drawDropForCorrection($dropzone, $user);
 
             if ($drop != null) {
                 $correction = new Correction();
@@ -135,7 +135,7 @@ class CorrectionController extends DropzoneBaseController
     private function getCriteriaPager($dropzone)
     {
         $em = $this->getDoctrine()->getManager();
-        $criterionRepository = $em->getRepository('IcapDropzoneBundle:Criterion');
+        $criterionRepository = $em->getRepository('InnovaCollecticielBundle:Criterion');
         $criterionQuery = $criterionRepository
             ->createQueryBuilder('criterion')
             ->andWhere('criterion.dropzone = :dropzone')
@@ -167,7 +167,7 @@ class CorrectionController extends DropzoneBaseController
         }
 
         if ($grade == null) {
-            $criterionReference = $em->getReference('IcapDropzoneBundle:Criterion', $criterionId);
+            $criterionReference = $em->getReference('InnovaCollecticielBundle:Criterion', $criterionId);
             $grade = new Grade();
             $grade->setCriterion($criterionReference);
             $grade->setCorrection($correction);
@@ -191,7 +191,7 @@ class CorrectionController extends DropzoneBaseController
         $drop = $correction->getDrop();
         $correction->setEndDate(new \DateTime());
         $correction->setFinished(true);
-        $totalGrade = $this->get('icap.manager.correction_manager')->calculateCorrectionTotalGrade($dropzone, $correction);
+        $totalGrade = $this->get('innova.manager.correction_manager')->calculateCorrectionTotalGrade($dropzone, $correction);
         $correction->setTotalGrade($totalGrade);
 
         $em->persist($correction);
@@ -207,7 +207,7 @@ class CorrectionController extends DropzoneBaseController
 
         $this->getRequest()->getSession()->getFlashBag()->add(
             'success',
-            $this->get('translator')->trans('Your correction has been saved', array(), 'icap_dropzone')
+            $this->get('translator')->trans('Your correction has been saved', array(), 'innova_collecticiel')
         );
 
         // check if the drop owner can now access to his grade.
@@ -216,7 +216,7 @@ class CorrectionController extends DropzoneBaseController
         if ($admin === true) {
             return $this->redirect(
                 $this->generateUrl(
-                    'icap_dropzone_drops_detail',
+                    'innova_collecticiel_drops_detail',
                     array(
                         'resourceId' => $dropzone->getId(),
                         'dropId' => $correction->getDrop()->getId()
@@ -226,7 +226,7 @@ class CorrectionController extends DropzoneBaseController
         } else {
             return $this->redirect(
                 $this->generateUrl(
-                    'icap_dropzone_open',
+                    'innova_collecticiel_open',
                     array(
                         'resourceId' => $dropzone->getId()
                     )
@@ -260,14 +260,14 @@ class CorrectionController extends DropzoneBaseController
             // copy corrected by user
 
             // corrections on the user's copy
-            $nbCorrectionByOthersOnUsersCopy = $em->getRepository('IcapDropzoneBundle:Correction')->getCorrectionsIds($dropzone, $drop);
+            $nbCorrectionByOthersOnUsersCopy = $em->getRepository('InnovaCollecticielBundle:Correction')->getCorrectionsIds($dropzone, $drop);
 
 
             //Expected corrections
             $expectedCorrections = $dropzone->getExpectedTotalCorrection();
 
             /**
-             * $nbCorrectionByUser = $em->getRepository('IcapDropzoneBundle:Correction')->getAlreadyCorrectedDropIds($dropzone, $user);
+             * $nbCorrectionByUser = $em->getRepository('InnovaCollecticielBundle:Correction')->getAlreadyCorrectedDropIds($dropzone, $user);
              * if(count($nbCorrectionByUser) >=  $expectedCorrections && count($nbCorrectionByOthersOnUsersCopy) >= $expectedCorrections  )
              **/
             // corrected copy only instead of corrected copy AND given corrections.
@@ -278,7 +278,7 @@ class CorrectionController extends DropzoneBaseController
 
         } else {
 
-            $nbCorrectionByOthersOnUsersCopy = $em->getRepository('IcapDropzoneBundle:Correction')
+            $nbCorrectionByOthersOnUsersCopy = $em->getRepository('InnovaCollecticielBundle:Correction')
                 ->getCorrectionsIds($dropzone, $drop);
 
             if ($nbCorrectionByOthersOnUsersCopy > 0) {
@@ -313,28 +313,28 @@ class CorrectionController extends DropzoneBaseController
     /**
      * @Route(
      *      "/{resourceId}/correct",
-     *      name="icap_dropzone_correct",
+     *      name="innova_collecticiel_correct",
      *      requirements={"resourceId" = "\d+"},
      *      defaults={"page" = 1}
      * )
      * @Route(
      *      "/{resourceId}/correct/{page}",
-     *      name="icap_dropzone_correct_paginated",
+     *      name="innova_collecticiel_correct_paginated",
      *      requirements={"resourceId" = "\d+", "page" = "\d+"},
      *      defaults={"page" = 1}
      * )
-     * @ParamConverter("dropzone", class="IcapDropzoneBundle:Dropzone", options={"id" = "resourceId"})
+     * @ParamConverter("dropzone", class="InnovaCollecticielBundle:Dropzone", options={"id" = "resourceId"})
      * @ParamConverter("user", options={
      *      "authenticatedUser" = true,
      *      "messageEnabled" = true,
      *      "messageTranslationKey" = "Correct an evaluation requires authentication. Please login.",
-     *      "messageTranslationDomain" = "icap_dropzone"
+     *      "messageTranslationDomain" = "innova_collecticiel"
      * })
      * @Template()
      */
     public function correctAction($dropzone, $user, $page)
     {
-        $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
+        $this->get('innova.manager.dropzone_voter')->isAllowToOpen($dropzone);
         $em = $this->getDoctrine()->getManager();
 
         $check = $this->checkRightToCorrect($dropzone, $user);
@@ -348,12 +348,12 @@ class CorrectionController extends DropzoneBaseController
                 'error',
                 $this
                     ->get('translator')
-                    ->trans('Unfortunately there is no copy to correct for the moment. Please try again later', array(), 'icap_dropzone')
+                    ->trans('Unfortunately there is no copy to correct for the moment. Please try again later', array(), 'innova_collecticiel')
             );
 
             return $this->redirect(
                 $this->generateUrl(
-                    'icap_dropzone_open',
+                    'innova_collecticiel_open',
                     array(
                         'resourceId' => $dropzone->getId()
                     )
@@ -372,7 +372,7 @@ class CorrectionController extends DropzoneBaseController
         $grades = array();
         if ($correction !== null) {
             $grades = $em
-                ->getRepository('IcapDropzoneBundle:Grade')
+                ->getRepository('InnovaCollecticielBundle:Grade')
                 ->findByCriteriaAndCorrection($pager->getCurrentPageResults(), $correction);
             foreach ($grades as $grade) {
                 $oldData[$grade->getCriterion()->getId()] = ($grade->getValue() >= $dropzone->getTotalCriteriaColumn())
@@ -401,7 +401,7 @@ class CorrectionController extends DropzoneBaseController
 
                     return $this->redirect(
                         $this->generateUrl(
-                            'icap_dropzone_correct_paginated',
+                            'innova_collecticiel_correct_paginated',
                             array(
                                 'resourceId' => $dropzone->getId(),
                                 'page' => $pageNumber
@@ -412,7 +412,7 @@ class CorrectionController extends DropzoneBaseController
                     if ($pager->getCurrentPage() < $pager->getNbPages()) {
                         return $this->redirect(
                             $this->generateUrl(
-                                'icap_dropzone_correct_paginated',
+                                'innova_collecticiel_correct_paginated',
                                 array(
                                     'resourceId' => $dropzone->getId(),
                                     'page' => ($page + 1)
@@ -422,7 +422,7 @@ class CorrectionController extends DropzoneBaseController
                     } else {
                         return $this->redirect(
                             $this->generateUrl(
-                                'icap_dropzone_correct_comment',
+                                'innova_collecticiel_correct_comment',
                                 array(
                                     'resourceId' => $dropzone->getId()
                                 )
@@ -433,10 +433,10 @@ class CorrectionController extends DropzoneBaseController
             }
         }
 
-        $dropzoneManager = $this->get('icap.manager.dropzone_manager');
+        $dropzoneManager = $this->get('innova.manager.dropzone_manager');
         $dropzoneProgress = $dropzoneManager->getDropzoneProgressByUser($dropzone, $user);
 
-        $view = 'IcapDropzoneBundle:Correction:correctCriteria.html.twig';
+        $view = 'InnovaCollecticielBundle:Correction:correctCriteria.html.twig';
 
         return $this->render(
             $view,
@@ -457,21 +457,21 @@ class CorrectionController extends DropzoneBaseController
     /**
      * @Route(
      *      "/{resourceId}/correct/comment",
-     *      name="icap_dropzone_correct_comment",
+     *      name="innova_collecticiel_correct_comment",
      *      requirements={"resourceId" = "\d+"}
      * )
-     * @ParamConverter("dropzone", class="IcapDropzoneBundle:Dropzone", options={"id" = "resourceId"})
+     * @ParamConverter("dropzone", class="InnovaCollecticielBundle:Dropzone", options={"id" = "resourceId"})
      * @ParamConverter("user", options={
      *      "authenticatedUser" = true,
      *      "messageEnabled" = true,
      *      "messageTranslationKey" = "Correct an evaluation requires authentication. Please login.",
-     *      "messageTranslationDomain" = "icap_dropzone"
+     *      "messageTranslationDomain" = "innova_collecticiel"
      * })
      * @Template()
      */
     public function correctCommentAction(Dropzone $dropzone, User $user)
     {
-        $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
+        $this->get('innova.manager.dropzone_voter')->isAllowToOpen($dropzone);
         $check = $this->checkRightToCorrect($dropzone, $user);
         if ($check !== null) {
             return $check;
@@ -487,12 +487,12 @@ class CorrectionController extends DropzoneBaseController
                     'error',
                     $this
                         ->get('translator')
-                        ->trans('Unfortunately there is no copy to correct for the moment. Please try again later', array(), 'icap_dropzone')
+                        ->trans('Unfortunately there is no copy to correct for the moment. Please try again later', array(), 'innova_collecticiel')
                 );
 
             return $this->redirect(
                 $this->generateUrl(
-                    'icap_dropzone_open',
+                    'innova_collecticiel_open',
                     array(
                         'resourceId' => $dropzone->getId()
                     )
@@ -518,12 +518,12 @@ class CorrectionController extends DropzoneBaseController
                             'error',
                             $this
                                 ->get('translator')
-                                ->trans('The comment field is required please let a comment', array(), 'icap_dropzone')
+                                ->trans('The comment field is required please let a comment', array(), 'innova_collecticiel')
                         );
 
                     return $this->redirect(
                         $this->generateUrl(
-                            'icap_dropzone_correct_comment',
+                            'innova_collecticiel_correct_comment',
                             array(
                                 'resourceId' => $dropzone->getId()
                             )
@@ -539,7 +539,7 @@ class CorrectionController extends DropzoneBaseController
 
                     return $this->redirect(
                         $this->generateUrl(
-                            'icap_dropzone_correct_paginated',
+                            'innova_collecticiel_correct_paginated',
                             array(
                                 'resourceId' => $dropzone->getId(),
                                 'page' => $pager->getNbPages()
@@ -552,11 +552,11 @@ class CorrectionController extends DropzoneBaseController
             }
         }
 
-        $view = 'IcapDropzoneBundle:Correction:correctComment.html.twig';
+        $view = 'InnovaCollecticielBundle:Correction:correctComment.html.twig';
 
-        $totalGrade = $this->get('icap.manager.correction_manager')->calculateCorrectionTotalGrade($dropzone, $correction);
+        $totalGrade = $this->get('innova.manager.correction_manager')->calculateCorrectionTotalGrade($dropzone, $correction);
 
-        $dropzoneManager = $this->get('icap.manager.dropzone_manager');
+        $dropzoneManager = $this->get('innova.manager.dropzone_manager');
         $dropzoneProgress = $dropzoneManager->getDropzoneProgressByUser($dropzone, $user);
 
         return $this->render(
@@ -580,28 +580,28 @@ class CorrectionController extends DropzoneBaseController
     /**
      * @Route(
      *      "/{resourceId}/drops/detail/correction/standard/{state}/{correctionId}/{backUserId}",
-     *      name="icap_dropzone_drops_detail_correction_standard",
+     *      name="innova_collecticiel_drops_detail_correction_standard",
      *      requirements={"resourceId" = "\d+", "correctionId" = "\d+", "state" = "show|edit", "backUserId" = "\d+"},
      *      defaults={"backUserId" = "-1"}
      * )
-     * @ParamConverter("dropzone", class="IcapDropzoneBundle:Dropzone", options={"id" = "resourceId"})
+     * @ParamConverter("dropzone", class="InnovaCollecticielBundle:Dropzone", options={"id" = "resourceId"})
      * @ParamConverter("user", options={
      *      "authenticatedUser" = true,
      *      "messageEnabled" = true,
      *      "messageTranslationKey" = "Correct an evaluation requires authentication. Please login.",
-     *      "messageTranslationDomain" = "icap_dropzone"
+     *      "messageTranslationDomain" = "innova_collecticiel"
      * })
      */
     public function dropsDetailCorrectionStandardAction(Dropzone $dropzone, $state, $correctionId, $user, $backUserId)
     {
-        $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
-        $this->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
+        $this->get('innova.manager.dropzone_voter')->isAllowToOpen($dropzone);
+        $this->get('innova.manager.dropzone_voter')->isAllowToEdit($dropzone);
 
 
         /** @var Correction $correction */
         $correction = $this
             ->getDoctrine()
-            ->getRepository('IcapDropzoneBundle:Correction')
+            ->getRepository('InnovaCollecticielBundle:Correction')
             ->getCorrectionAndDropAndUserAndDocuments($dropzone, $correctionId);
 
         $edit = $state == 'edit';
@@ -638,12 +638,12 @@ class CorrectionController extends DropzoneBaseController
 
                 $this->getRequest()->getSession()->getFlashBag()->add(
                     'success',
-                    $this->get('translator')->trans('Your correction has been saved', array(), 'icap_dropzone')
+                    $this->get('translator')->trans('Your correction has been saved', array(), 'innova_collecticiel')
                 );
 
                 return $this->redirect(
                     $this->generateUrl(
-                        'icap_dropzone_drops_detail',
+                        'innova_collecticiel_drops_detail',
                         array(
                             'resourceId' => $dropzone->getId(),
                             'dropId' => $correction->getDrop()->getId()
@@ -653,7 +653,7 @@ class CorrectionController extends DropzoneBaseController
             }
         }
 
-        $view = 'IcapDropzoneBundle:Correction:correctStandard.html.twig';
+        $view = 'InnovaCollecticielBundle:Correction:correctStandard.html.twig';
 
         return $this->render(
             $view,
@@ -674,30 +674,30 @@ class CorrectionController extends DropzoneBaseController
     /**
      * @Route(
      *      "/{resourceId}/drops/detail/correction/{state}/{correctionId}",
-     *      name="icap_dropzone_drops_detail_correction",
+     *      name="innova_collecticiel_drops_detail_correction",
      *      requirements={"resourceId" = "\d+", "correctionId" = "\d+", "state" = "show|edit|preview"},
      *      defaults={"page" = 1}
      * )
      * @Route(
      *      "/{resourceId}/drops/detail/correction/{state}/{correctionId}/{page}",
-     *      name="icap_dropzone_drops_detail_correction_paginated",
+     *      name="innova_collecticiel_drops_detail_correction_paginated",
      *      requirements={"resourceId" = "\d+", "correctionId" = "\d+", "page" = "\d+", "state" = "show|edit|preview"}
      * )
-     * @ParamConverter("dropzone", class="IcapDropzoneBundle:Dropzone", options={"id" = "resourceId"})
+     * @ParamConverter("dropzone", class="InnovaCollecticielBundle:Dropzone", options={"id" = "resourceId"})
      * @ParamConverter("user", options={
      *      "authenticatedUser" = true,
      *      "messageEnabled" = true,
      *      "messageTranslationKey" = "Correct an evaluation requires authentication. Please login.",
-     *      "messageTranslationDomain" = "icap_dropzone"
+     *      "messageTranslationDomain" = "innova_collecticiel"
      * })
      * @Template()
      */
     public function dropsDetailCorrectionAction(Dropzone $dropzone, $state, $correctionId, $page, $user)
     {
-        $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
+        $this->get('innova.manager.dropzone_voter')->isAllowToOpen($dropzone);
         $correction = $this
             ->getDoctrine()
-            ->getRepository('IcapDropzoneBundle:Correction')
+            ->getRepository('InnovaCollecticielBundle:Correction')
             ->getCorrectionAndDropAndUserAndDocuments($dropzone, $correctionId);
         $userId = $this->get('security.context')->getToken()->getUser()->getId();
         if ($state == 'preview') {
@@ -705,7 +705,7 @@ class CorrectionController extends DropzoneBaseController
                 throw new AccessDeniedException();
             }
         } else {
-            $this->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
+            $this->get('innova.manager.dropzone_voter')->isAllowToEdit($dropzone);
         }
         //$this->checkUserGradeAvailable($dropzone);
 
@@ -713,7 +713,7 @@ class CorrectionController extends DropzoneBaseController
         if (!$dropzone->getPeerReview()) {
             return $this->redirect(
                 $this->generateUrl(
-                    'icap_dropzone_drops_detail_correction_standard',
+                    'innova_collecticiel_drops_detail_correction_standard',
                     array(
                         'resourceId' => $dropzone->getId(),
                         'state' => $state,
@@ -749,7 +749,7 @@ class CorrectionController extends DropzoneBaseController
         $grades = array();
         if ($correction !== null) {
             $grades = $em
-                ->getRepository('IcapDropzoneBundle:Grade')
+                ->getRepository('InnovaCollecticielBundle:Grade')
                 ->findByCriteriaAndCorrection($pager->getCurrentPageResults(), $correction);
             foreach ($grades as $grade) {
                 $oldData[$grade->getCriterion()->getId()] = ($grade->getValue() >= $dropzone->getTotalCriteriaColumn())
@@ -777,7 +777,7 @@ class CorrectionController extends DropzoneBaseController
                     }
 
                     if ($correction->getFinished()) {
-                        $totalGrade = $this->get('icap.manager.correction_manager')->calculateCorrectionTotalGrade($dropzone, $correction);
+                        $totalGrade = $this->get('innova.manager.correction_manager')->calculateCorrectionTotalGrade($dropzone, $correction);
                         $correction->setTotalGrade($totalGrade);
 
                         $em->persist($correction);
@@ -789,7 +789,7 @@ class CorrectionController extends DropzoneBaseController
 
                         return $this->redirect(
                             $this->generateUrl(
-                                'icap_dropzone_drops_detail_correction_paginated',
+                                'innova_collecticiel_drops_detail_correction_paginated',
                                 array(
                                     'resourceId' => $dropzone->getId(),
                                     'state' => 'edit',
@@ -802,7 +802,7 @@ class CorrectionController extends DropzoneBaseController
                         if ($pager->getCurrentPage() < $pager->getNbPages()) {
                             return $this->redirect(
                                 $this->generateUrl(
-                                    'icap_dropzone_drops_detail_correction_paginated',
+                                    'innova_collecticiel_drops_detail_correction_paginated',
                                     array(
                                         'resourceId' => $dropzone->getId(),
                                         'state' => 'edit',
@@ -814,7 +814,7 @@ class CorrectionController extends DropzoneBaseController
                         } else {
                             return $this->redirect(
                                 $this->generateUrl(
-                                    'icap_dropzone_drops_detail_correction_comment',
+                                    'innova_collecticiel_drops_detail_correction_comment',
                                     array(
                                         'resourceId' => $dropzone->getId(),
                                         'state' => 'edit',
@@ -828,7 +828,7 @@ class CorrectionController extends DropzoneBaseController
             }
         }
 
-        $view = 'IcapDropzoneBundle:Correction:correctCriteria.html.twig';
+        $view = 'InnovaCollecticielBundle:Correction:correctCriteria.html.twig';
 
         if ($state == 'show' || $state == 'edit') {
             return $this->render(
@@ -867,28 +867,28 @@ class CorrectionController extends DropzoneBaseController
     /**
      * @Route(
      *      "/{resourceId}/drops/detail/correction/comment/{state}/{correctionId}",
-     *      name="icap_dropzone_drops_detail_correction_comment",
+     *      name="innova_collecticiel_drops_detail_correction_comment",
      *      requirements={"resourceId" = "\d+", "correctionId" = "\d+", "state" = "show|edit|preview"}
      * )
-     * @ParamConverter("dropzone", class="IcapDropzoneBundle:Dropzone", options={"id" = "resourceId"})
+     * @ParamConverter("dropzone", class="InnovaCollecticielBundle:Dropzone", options={"id" = "resourceId"})
      * @ParamConverter("user", options={
      *      "authenticatedUser" = true,
      *      "messageEnabled" = true,
      *      "messageTranslationKey" = "Correct an evaluation requires authentication. Please login.",
-     *      "messageTranslationDomain" = "icap_dropzone"
+     *      "messageTranslationDomain" = "innova_collecticiel"
      * })
      * @Template()
      */
     public function dropsDetailCorrectionCommentAction(Dropzone $dropzone, $state, $correctionId, $user)
     {
-        $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
+        $this->get('innova.manager.dropzone_voter')->isAllowToOpen($dropzone);
         if ($state != 'preview') {
-            $this->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
+            $this->get('innova.manager.dropzone_voter')->isAllowToEdit($dropzone);
         }
 
         $correction = $this
             ->getDoctrine()
-            ->getRepository('IcapDropzoneBundle:Correction')
+            ->getRepository('InnovaCollecticielBundle:Correction')
             ->getCorrectionAndDropAndUserAndDocuments($dropzone, $correctionId);
         $edit = $state == 'edit';
 
@@ -913,7 +913,7 @@ class CorrectionController extends DropzoneBaseController
                     if ($goBack == 1) {
                         return $this->redirect(
                             $this->generateUrl(
-                                'icap_dropzone_drops_detail_correction_paginated',
+                                'innova_collecticiel_drops_detail_correction_paginated',
                                 array(
                                     'resourceId' => $dropzone->getId(),
                                     'state' => 'edit',
@@ -930,8 +930,8 @@ class CorrectionController extends DropzoneBaseController
 
             }
 
-            $view = 'IcapDropzoneBundle:Correction:correctComment.html.twig';
-            $totalGrade = $this->get('icap.manager.correction_manager')->calculateCorrectionTotalGrade($dropzone, $correction);
+            $view = 'InnovaCollecticielBundle:Correction:correctComment.html.twig';
+            $totalGrade = $this->get('innova.manager.correction_manager')->calculateCorrectionTotalGrade($dropzone, $correction);
             return $this->render(
                 $view,
                 array(
@@ -950,11 +950,11 @@ class CorrectionController extends DropzoneBaseController
 
         }
 
-        $view = 'IcapDropzoneBundle:Correction:correctComment.html.twig';
+        $view = 'InnovaCollecticielBundle:Correction:correctComment.html.twig';
 
 
         if ($state == 'show') {
-            $totalGrade = $this->get('icap.manager.correction_manager')->calculateCorrectionTotalGrade($dropzone, $correction);
+            $totalGrade = $this->get('innova.manager.correction_manager')->calculateCorrectionTotalGrade($dropzone, $correction);
             return $this->render(
                 $view,
                 array(
@@ -993,23 +993,23 @@ class CorrectionController extends DropzoneBaseController
     /**
      * @Route(
      *      "/{resourceId}/drops/detail/{dropId}/add/correction",
-     *      name="icap_dropzone_drops_detail_add_correction",
+     *      name="innova_collecticiel_drops_detail_add_correction",
      *      requirements={"resourceId" = "\d+", "dropId" = "\d+"}
      * )
-     * @ParamConverter("dropzone", class="IcapDropzoneBundle:Dropzone", options={"id" = "resourceId"})
+     * @ParamConverter("dropzone", class="InnovaCollecticielBundle:Dropzone", options={"id" = "resourceId"})
      * @ParamConverter("user", options={
      *      "authenticatedUser" = true,
      *      "messageEnabled" = true,
      *      "messageTranslationKey" = "Correct an evaluation requires authentication. Please login.",
-     *      "messageTranslationDomain" = "icap_dropzone"
+     *      "messageTranslationDomain" = "innova_collecticiel"
      * })
-     * @ParamConverter("drop", class="IcapDropzoneBundle:Drop", options={"id" = "dropId"})
+     * @ParamConverter("drop", class="InnovaCollecticielBundle:Drop", options={"id" = "dropId"})
      * @Template()
      */
     public function dropsDetailAddCorrectionAction($dropzone, $user, $drop)
     {
-        $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
-        $this->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
+        $this->get('innova.manager.dropzone_voter')->isAllowToOpen($dropzone);
+        $this->get('innova.manager.dropzone_voter')->isAllowToEdit($dropzone);
 
         $em = $this->getDoctrine()->getManager();
         $correction = new Correction();
@@ -1027,7 +1027,7 @@ class CorrectionController extends DropzoneBaseController
 
         return $this->redirect(
             $this->generateUrl(
-                'icap_dropzone_drops_detail_correction',
+                'innova_collecticiel_drops_detail_correction',
                 array(
                     'resourceId' => $dropzone->getId(),
                     'state' => 'edit',
@@ -1041,19 +1041,19 @@ class CorrectionController extends DropzoneBaseController
     /**
      * @Route(
      *      "/{resourceId}/delete/correction/{correctionId}/{backPage}",
-     *      name="icap_dropzone_drops_detail_delete_correction",
+     *      name="innova_collecticiel_drops_detail_delete_correction",
      *      requirements={"resourceId" = "\d+", "correctionId" = "\d+"},
      *      defaults={"backPage" = "default"}
      * )
-     * @ParamConverter("dropzone", class="IcapDropzoneBundle:Dropzone", options={"id" = "resourceId"})
-     * @ParamConverter("correction", class="IcapDropzoneBundle:Correction", options={"id" = "correctionId"})
+     * @ParamConverter("dropzone", class="InnovaCollecticielBundle:Dropzone", options={"id" = "resourceId"})
+     * @ParamConverter("correction", class="InnovaCollecticielBundle:Correction", options={"id" = "correctionId"})
      * @Template()
      */
     public function deleteCorrectionAction(Dropzone $dropzone, Correction $correction, $backPage)
     {
         $userId = $correction->getUser()->getId();
-        $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
-        $this->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
+        $this->get('innova.manager.dropzone_voter')->isAllowToOpen($dropzone);
+        $this->get('innova.manager.dropzone_voter')->isAllowToEdit($dropzone);
 
         if ($correction->getEditable() === false) {
             throw new AccessDeniedException();
@@ -1075,7 +1075,7 @@ class CorrectionController extends DropzoneBaseController
             if ($backPage == "AdminCorrectionsByUser") {
                 $return = $this->redirect(
                     $this->generateUrl(
-                        'icap_dropzone_drops_detail',
+                        'innova_collecticiel_drops_detail',
                         array(
                             'resourceId' => $dropzone->getId(),
                             'dropId' => $dropId,
@@ -1085,7 +1085,7 @@ class CorrectionController extends DropzoneBaseController
             } else {
                 $return = $this->redirect(
                     $this->generateUrl(
-                        'icap_dropzone_examiner_corrections',
+                        'innova_collecticiel_examiner_corrections',
                         array(
                             'resourceId' => $dropzone->getId(),
                             'userId' => $userId,
@@ -1098,12 +1098,12 @@ class CorrectionController extends DropzoneBaseController
         } else {
             // Action on GET , Ask confirmation Modal or not.
 
-            $view = 'IcapDropzoneBundle:Correction:deleteCorrection.html.twig';
+            $view = 'InnovaCollecticielBundle:Correction:deleteCorrection.html.twig';
             $backUserId = 0;
 
             $backUserId = $this->getRequest()->get('backUserId');
             if ($this->getRequest()->isXmlHttpRequest()) {
-                $view = 'IcapDropzoneBundle:Correction:deleteCorrectionModal.html.twig';
+                $view = 'InnovaCollecticielBundle:Correction:deleteCorrectionModal.html.twig';
                 $backUserId = $correction->getUser()->getId();
             }
 
@@ -1124,12 +1124,12 @@ class CorrectionController extends DropzoneBaseController
     /**
      * @Route(
      *      "/{resourceId}/drops/detail/correction/validation/confirmation/{correctionId}/{value}",
-     *      name="icap_dropzone_revalidateCorrection",
+     *      name="innova_collecticiel_revalidateCorrection",
      *      requirements ={"resourceId" ="\d+","withDropOnly"="^(withDropOnly|all|withoutDrops)$"},
      *      defaults={"page" = 1, "withDropOnly" = "all", "value"="yes" }
      * )
-     * @ParamConverter("dropzone", class="IcapDropzoneBundle:Dropzone", options={"id" = "resourceId"})
-     * @ParamConverter("correction", class="IcapDropzoneBundle:Correction", options={"id" = "correctionId"})
+     * @ParamConverter("dropzone", class="InnovaCollecticielBundle:Dropzone", options={"id" = "resourceId"})
+     * @ParamConverter("correction", class="InnovaCollecticielBundle:Correction", options={"id" = "correctionId"})
      * @Template()
      */
     public function RevalidateCorrectionValidationAction(Dropzone $dropzone, Correction $correction, $value)
@@ -1140,9 +1140,9 @@ class CorrectionController extends DropzoneBaseController
         if ($dropzone->getExpectedTotalCorrection() <= $correction->getDrop()->countFinishedCorrections()) {
 
             // Ask confirmation to have more correction than expected.
-            $view = 'IcapDropzoneBundle:Correction:Admin/revalidateCorrection.html.twig';
+            $view = 'InnovaCollecticielBundle:Correction:Admin/revalidateCorrection.html.twig';
             if ($this->getRequest()->isXmlHttpRequest()) {
-                $view = 'IcapDropzoneBundle:Correction:Admin/revalidateCorrectionModal.html.twig';
+                $view = 'InnovaCollecticielBundle:Correction:Admin/revalidateCorrectionModal.html.twig';
             }
             return $this->render($view, array(
                 '_resource' => $dropzone,
@@ -1155,7 +1155,7 @@ class CorrectionController extends DropzoneBaseController
             $this->setCorrectionValidationAction($dropzone, $correction, 'yes', "default");
             return $this->redirect(
                 $this->generateUrl(
-                    'icap_dropzone_drops_detail',
+                    'innova_collecticiel_drops_detail',
                     array(
                         'resourceId' => $dropzone->getId(),
                         'dropId' => $correction->getDrop()->getId(),
@@ -1170,24 +1170,24 @@ class CorrectionController extends DropzoneBaseController
     /**
      * @Route(
      *      "/{resourceId}/drops/detail/correction/validation/{value}/{correctionId}",
-     *      name="icap_dropzone_drops_detail_correction_validation",
+     *      name="innova_collecticiel_drops_detail_correction_validation",
      *      requirements={"resourceId" = "\d+", "correctionId" = "\d+", "value" = "no|yes"},
      *      defaults={"routeParam"="default"}
      * )
      * @Route(
      *      "/{resourceId}/drops/detail/correction/validation/byUser/{value}/{correctionId}",
-     *      name="icap_dropzone_drops_detail_correction_validation_by_user",
+     *      name="innova_collecticiel_drops_detail_correction_validation_by_user",
      *      requirements={"resourceId" = "\d+", "correctionId" = "\d+", "value" = "no|yes"},
      *      defaults={"routeParam"="byUser"}
      * )
-     * @ParamConverter("dropzone", class="IcapDropzoneBundle:Dropzone", options={"id" = "resourceId"})
-     * @ParamConverter("correction", class="IcapDropzoneBundle:Correction", options={"id" = "correctionId"})
+     * @ParamConverter("dropzone", class="InnovaCollecticielBundle:Dropzone", options={"id" = "resourceId"})
+     * @ParamConverter("correction", class="InnovaCollecticielBundle:Correction", options={"id" = "correctionId"})
      * @Template()
      */
     public function setCorrectionValidationAction(Dropzone $dropzone, Correction $correction, $value, $routeParam)
     {
-        $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
-        $this->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
+        $this->get('innova.manager.dropzone_voter')->isAllowToOpen($dropzone);
+        $this->get('innova.manager.dropzone_voter')->isAllowToEdit($dropzone);
 
         $em = $this->getDoctrine()->getManager();
 
@@ -1212,7 +1212,7 @@ class CorrectionController extends DropzoneBaseController
         if ($routeParam == 'default') {
             return $this->redirect(
                 $this->generateUrl(
-                    'icap_dropzone_drops_detail',
+                    'innova_collecticiel_drops_detail',
                     array(
                         'resourceId' => $dropzone->getId(),
                         'dropId' => $correction->getDrop()->getId(),
@@ -1222,7 +1222,7 @@ class CorrectionController extends DropzoneBaseController
         } else if ($routeParam == "byUser") {
             return $this->redirect(
                 $this->generateUrl(
-                    'icap_dropzone_examiner_corrections',
+                    'innova_collecticiel_examiner_corrections',
                     array(
                         'resourceId' => $dropzone->getId(),
                         'userId' => $correction->getUser()->getId(),
@@ -1235,28 +1235,28 @@ class CorrectionController extends DropzoneBaseController
     /**
      * @Route(
      *      "/{resourceId}/drops/detail/{dropId}/invalidate_all",
-     *      name="icap_dropzone_drops_detail_invalidate_all_corrections",
+     *      name="innova_collecticiel_drops_detail_invalidate_all_corrections",
      *      requirements={"resourceId" = "\d+", "dropId" = "\d+"}
      * )
-     * @ParamConverter("dropzone", class="IcapDropzoneBundle:Dropzone", options={"id" = "resourceId"})
-     * @ParamConverter("drop", class="IcapDropzoneBundle:Drop", options={"id" = "dropId"})
+     * @ParamConverter("dropzone", class="InnovaCollecticielBundle:Dropzone", options={"id" = "resourceId"})
+     * @ParamConverter("drop", class="InnovaCollecticielBundle:Drop", options={"id" = "dropId"})
      * @Template()
      */
     public function invalidateAllCorrectionsAction($dropzone, $drop)
     {
-        $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
-        $this->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
+        $this->get('innova.manager.dropzone_voter')->isAllowToOpen($dropzone);
+        $this->get('innova.manager.dropzone_voter')->isAllowToEdit($dropzone);
 
         $this
             ->getDoctrine()
-            ->getRepository('IcapDropzoneBundle:Correction')
+            ->getRepository('InnovaCollecticielBundle:Correction')
             ->invalidateAllCorrectionForADrop($dropzone, $drop);
 
         //TODO invalidate all correction event
 
         return $this->redirect(
             $this->generateUrl(
-                'icap_dropzone_drops_detail',
+                'innova_collecticiel_drops_detail',
                 array(
                     'resourceId' => $dropzone->getId(),
                     'dropId' => $drop->getId(),
@@ -1267,16 +1267,16 @@ class CorrectionController extends DropzoneBaseController
 
     /**
      * @Route("/{resourceId}/drops/detail/correction/deny/{correctionId}",
-     * name="icap_dropzone_drops_deny_correction",
+     * name="innova_collecticiel_drops_deny_correction",
      * requirements={"resourceId" = "\d+","correctionId" = "\d+"})
      *
-     * @ParamConverter("dropzone", class="IcapDropzoneBundle:Dropzone", options={"id" = "resourceId"})
-     * @ParamConverter("correction", class="IcapDropzoneBundle:Correction", options={"id" = "correctionId"})
+     * @ParamConverter("dropzone", class="InnovaCollecticielBundle:Dropzone", options={"id" = "resourceId"})
+     * @ParamConverter("correction", class="InnovaCollecticielBundle:Correction", options={"id" = "correctionId"})
      *
      **/
     public function denyCorrectionAction($dropzone, $correction)
     {
-        $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
+        $this->get('innova.manager.dropzone_voter')->isAllowToOpen($dropzone);
         $form = $this->createForm(new CorrectionDenyType(), $correction);
 
         $dropUser = $correction->getDrop()->getUser();
@@ -1307,11 +1307,11 @@ class CorrectionController extends DropzoneBaseController
                     ->getRequest()
                     ->getSession()
                     ->getFlashBag()
-                    ->add('success', $this->get('translator')->trans('Your report has been saved', array(), 'icap_dropzone'));
+                    ->add('success', $this->get('translator')->trans('Your report has been saved', array(), 'innova_collecticiel'));
 
                 return $this->redirect(
                     $this->generateUrl(
-                        'icap_dropzone_drop_detail_by_user',
+                        'innova_collecticiel_drop_detail_by_user',
                         array(
                             'resourceId' => $dropzoneId,
                             'dropId' => $dropId,
@@ -1324,10 +1324,10 @@ class CorrectionController extends DropzoneBaseController
         }
 
         // not a post, she show the view.
-        $view = 'IcapDropzoneBundle:Correction:reportCorrection.html.twig';
+        $view = 'InnovaCollecticielBundle:Correction:reportCorrection.html.twig';
 
         if ($this->getRequest()->isXmlHttpRequest()) {
-            $view = 'IcapDropzoneBundle:Correction:reportCorrectionModal.html.twig';
+            $view = 'InnovaCollecticielBundle:Correction:reportCorrectionModal.html.twig';
         }
         return $this->render($view, array(
             'workspace' => $dropzone->getResourceNode()->getWorkspace(),
@@ -1351,17 +1351,17 @@ class CorrectionController extends DropzoneBaseController
     /**
      * @Route(
      *      "/{resourceId}/recalculate/score/{correctionId}",
-     *      name="icap_dropzone_recalculate_score",
+     *      name="innova_collecticiel_recalculate_score",
      *      requirements={"resourceId" = "\d+", "correctionId" = "\d+"}
      * )
-     * @ParamConverter("dropzone", class="IcapDropzoneBundle:Dropzone", options={"id" = "resourceId"})
-     * @ParamConverter("correction", class="IcapDropzoneBundle:Correction", options={"id" = "correctionId"})
+     * @ParamConverter("dropzone", class="InnovaCollecticielBundle:Dropzone", options={"id" = "resourceId"})
+     * @ParamConverter("correction", class="InnovaCollecticielBundle:Correction", options={"id" = "correctionId"})
      * @Template()
      */
     public function recalculateScoreAction(Dropzone $dropzone, Correction $correction)
     {
-        $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
-        $this->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
+        $this->get('innova.manager.dropzone_voter')->isAllowToOpen($dropzone);
+        $this->get('innova.manager.dropzone_voter')->isAllowToEdit($dropzone);
 
         if (!$dropzone->getPeerReview()) {
             throw new AccessDeniedException();
@@ -1369,7 +1369,7 @@ class CorrectionController extends DropzoneBaseController
 
         $oldTotalGrade = $correction->getTotalGrade();
 
-        $totalGrade = $this->get('icap.manager.correction_manager')->calculateCorrectionTotalGrade($dropzone, $correction);
+        $totalGrade = $this->get('innova.manager.correction_manager')->calculateCorrectionTotalGrade($dropzone, $correction);
         $correction->setTotalGrade($totalGrade);
         $em = $this->getDoctrine()->getManager();
 
@@ -1383,7 +1383,7 @@ class CorrectionController extends DropzoneBaseController
 
         return $this->redirect(
             $this->generateUrl(
-                'icap_dropzone_drops_detail',
+                'innova_collecticiel_drops_detail',
                 array(
                     'resourceId' => $dropzone->getId(),
                     'dropId' => $correction->getDrop()->getId(),
@@ -1396,20 +1396,20 @@ class CorrectionController extends DropzoneBaseController
      *
      * @Route(
      *      "/{resourceId}/examiners/{userId}",
-     *      name="icap_dropzone_examiner_corrections",
+     *      name="innova_collecticiel_examiner_corrections",
      *      requirements ={"resourceId" ="\d+","userId"="\d+"},
      *      defaults={"page" = 1 }
      * )
      *
      * @Route(
      *      "/{resourceId}/examiners/{userId}/{page}",
-     *      name="icap_dropzone_examiner_corrections_paginated",
+     *      name="innova_collecticiel_examiner_corrections_paginated",
      *      requirements ={"resourceId" ="\d+","userId"="\d+","page"="\d+"},
      *      defaults={"page" = 1 }
      * )
      *
      *
-     * @ParamConverter("dropzone",class="IcapDropzoneBundle:Dropzone",options={"id" = "resourceId"})
+     * @ParamConverter("dropzone",class="InnovaCollecticielBundle:Dropzone",options={"id" = "resourceId"})
      * @ParamConverter("user",class="ClarolineCoreBundle:User",options={"id" = "userId"})
      * @Template()
      *
@@ -1417,11 +1417,11 @@ class CorrectionController extends DropzoneBaseController
      * **/
     public function correctionsByUserAction(Dropzone $dropzone, User $user, $page)
     {
-        $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
-        $this->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
+        $this->get('innova.manager.dropzone_voter')->isAllowToOpen($dropzone);
+        $this->get('innova.manager.dropzone_voter')->isAllowToEdit($dropzone);
 
         $correctionsQuery = $this->getDoctrine()->getManager()
-            ->getRepository('IcapDropzoneBundle:Correction')
+            ->getRepository('InnovaCollecticielBundle:Correction')
             ->getByDropzoneUser($dropzone->getId(), $user->getId(), true);
 
 
@@ -1434,7 +1434,7 @@ class CorrectionController extends DropzoneBaseController
             if ($page > 0) {
                 return $this->redirect(
                     $this->generateUrl(
-                        'icap_dropzone_examiner_corrections_paginated',
+                        'innova_collecticiel_examiner_corrections_paginated',
                         array(
                             'resourceId' => $dropzone->getId(),
                             'userId' => $user->getId(),
@@ -1460,20 +1460,20 @@ class CorrectionController extends DropzoneBaseController
      *
      * @Route(
      *      "/{resourceId}/examiners/{withDropOnly}",
-     *      name="icap_dropzone_examiners",
+     *      name="innova_collecticiel_examiners",
      *      requirements ={"resourceId" ="\d+","withDropOnly"="^(withDropOnly|all|withoutDrops)$"},
      *      defaults={"page" = 1, "withDropOnly" = "all" }
      * )
      *
      * @Route(
      *      "/{resourceId}/examiners/{withDropOnly}/{page}",
-     *      name="icap_dropzone_examiners_paginated",
+     *      name="innova_collecticiel_examiners_paginated",
      *      requirements ={"resourceId" ="\d+","withDropOnly"="^(withDropOnly|all|withoutDrops)$","page"="\d+"},
      *      defaults={"page" = 1, "withDropOnly" = "all" }
      * )
      *
      *
-     * @ParamConverter("dropzone",class="IcapDropzoneBundle:Dropzone",options={"id" = "resourceId"})
+     * @ParamConverter("dropzone",class="InnovaCollecticielBundle:Dropzone",options={"id" = "resourceId"})
      * @Template()
      *
      *
@@ -1481,8 +1481,8 @@ class CorrectionController extends DropzoneBaseController
     public function ExaminersByCorrectionMadeAction($dropzone, $page, $withDropOnly)
     {
         // check rights
-        $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
-        $this->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
+        $this->get('innova.manager.dropzone_voter')->isAllowToOpen($dropzone);
+        $this->get('innova.manager.dropzone_voter')->isAllowToEdit($dropzone);
 
         /*
         // view only available in peerReview mode
@@ -1491,7 +1491,7 @@ class CorrectionController extends DropzoneBaseController
             // redirection if the dropzone is not in PeerReview.
             return $this->redirect(
                     $this->generateUrl(
-                        'icap_dropzone_drop',
+                        'innova_collecticiel_drop',
                         array(
                             'resourceId' => $dropzone->getId()
                         )
@@ -1501,9 +1501,9 @@ class CorrectionController extends DropzoneBaseController
         */
 
         //getting the repos
-        $dropRepo = $this->getDoctrine()->getManager()->getRepository('IcapDropzoneBundle:Drop');
+        $dropRepo = $this->getDoctrine()->getManager()->getRepository('InnovaCollecticielBundle:Drop');
         $countUnterminatedDrops = $dropRepo->countUnterminatedDropsByDropzone($dropzone->getId());
-        $correctionRepo = $this->getDoctrine()->getManager()->getRepository('IcapDropzoneBundle:Correction');
+        $correctionRepo = $this->getDoctrine()->getManager()->getRepository('InnovaCollecticielBundle:Correction');
 
         // getting the Query of  users that have at least one correction.
         $usersQuery = $correctionRepo->getUsersByDropzoneQuery($dropzone);
@@ -1520,7 +1520,7 @@ class CorrectionController extends DropzoneBaseController
             if ($page > 0) {
                 return $this->redirect(
                     $this->generateUrl(
-                        'icap_dropzone_examiners_paginated',
+                        'innova_collecticiel_examiners_paginated',
                         array(
                             'resourceId' => $dropzone->getId(),
                             'page' => $pager->getNbPages()
@@ -1549,7 +1549,7 @@ class CorrectionController extends DropzoneBaseController
         );
 
         return $this->render(
-            'IcapDropzoneBundle:Drop:Examiners/ExaminersByName.htlm.twig',
+            'InnovaCollecticielBundle:Drop:Examiners/ExaminersByName.htlm.twig',
             $response
         );
 
@@ -1557,8 +1557,8 @@ class CorrectionController extends DropzoneBaseController
 
     private function addCorrectionCount(Dropzone $dropzone, $users)
     {
-        $correctionRepo = $this->getDoctrine()->getManager()->getRepository('IcapDropzoneBundle:Correction');
-        $dropRepo = $this->getDoctrine()->getManager()->getRepository('IcapDropzoneBundle:Drop');
+        $correctionRepo = $this->getDoctrine()->getManager()->getRepository('InnovaCollecticielBundle:Correction');
+        $dropRepo = $this->getDoctrine()->getManager()->getRepository('InnovaCollecticielBundle:Drop');
         $response = array();
         foreach ($users as $user) {
 
@@ -1598,23 +1598,23 @@ class CorrectionController extends DropzoneBaseController
     /**
      * @Route(
      *      "/{dropId}/recalculateDropGrade",
-     *      name="icap_dropzone_recalculate_drop_grade",
+     *      name="innova_collecticiel_recalculate_drop_grade",
      *      requirements={"dropId" = "\d+"}
      * )
-     * @ParamConverter("drop", class="IcapDropzoneBundle:Drop", options={"id" = "dropId"})
+     * @ParamConverter("drop", class="InnovaCollecticielBundle:Drop", options={"id" = "dropId"})
      *
      */
     public function recalculateScoreByDropAction($drop)
     {
         $dropzone = $drop->getDropzone();
-        $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
-        $this->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
+        $this->get('innova.manager.dropzone_voter')->isAllowToOpen($dropzone);
+        $this->get('innova.manager.dropzone_voter')->isAllowToEdit($dropzone);
 
         if (!$dropzone->getPeerReview()) {
             throw new AccessDeniedException();
         }
         // getting the repository
-        $CorrectionRepo = $this->getDoctrine()->getManager()->getRepository('IcapDropzoneBundle:Correction');
+        $CorrectionRepo = $this->getDoctrine()->getManager()->getRepository('InnovaCollecticielBundle:Correction');
         // getting all the drop corrections
         $corrections = $CorrectionRepo->findBy(['drop' => $drop->getId()]);
 
@@ -1623,7 +1623,7 @@ class CorrectionController extends DropzoneBaseController
 
         return $this->redirect(
             $this->generateUrl(
-                'icap_dropzone_drops_detail',
+                'innova_collecticiel_drops_detail',
                 array(
                     'resourceId' => $dropzone->getId(),
                     'dropId' => $drop->getId(),
@@ -1636,22 +1636,22 @@ class CorrectionController extends DropzoneBaseController
     /**
      * @Route(
      *      "/{dropzone}/recalculateDropzoneGrades",
-     *      name="icap_dropzone_recalculate_dropzone_grades",
+     *      name="innova_collecticiel_recalculate_dropzone_grades",
      *      requirements={"dropId" = "\d+"}
      * )
-     * @ParamConverter("dropzone", class="IcapDropzoneBundle:Dropzone", options={"id" = "dropzone"})
+     * @ParamConverter("dropzone", class="InnovaCollecticielBundle:Dropzone", options={"id" = "dropzone"})
      *
      */
     public function recalculateScoreByDropzoneAction($dropzone)
     {
-        $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
-        $this->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
+        $this->get('innova.manager.dropzone_voter')->isAllowToOpen($dropzone);
+        $this->get('innova.manager.dropzone_voter')->isAllowToEdit($dropzone);
 
         $this->get('icap.dropzone_manager')->recalculateScoreByDropzone($dropzone);
 
         return $this->redirect(
             $this->generateUrl(
-                'icap_dropzone_edit_criteria',
+                'innova_collecticiel_edit_criteria',
                 array(
                     'resourceId' => $dropzone->getId(),
                 )
@@ -1664,7 +1664,7 @@ class CorrectionController extends DropzoneBaseController
         // recalculate the score for all corrections
         foreach ($corrections as $correction) {
             $oldTotalGrade = $correction->getTotalGrade();
-            $totalGrade = $this->get('icap.manager.correction_manager')->calculateCorrectionTotalGrade($dropzone, $correction);
+            $totalGrade = $this->get('innova.manager.correction_manager')->calculateCorrectionTotalGrade($dropzone, $correction);
             $correction->setTotalGrade($totalGrade);
             $em = $this->getDoctrine()->getManager();
 

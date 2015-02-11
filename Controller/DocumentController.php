@@ -1,18 +1,18 @@
 <?php
-namespace Icap\DropzoneBundle\Controller;
+namespace Innova\CollecticielBundle\Controller;
 
 use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Entity\Resource\File;
 use Claroline\CoreBundle\Entity\Resource\Revision;
 use Claroline\CoreBundle\Entity\Resource\Text;
-use Icap\DropzoneBundle\Entity\Document;
-use Icap\DropzoneBundle\Entity\Drop;
-use Icap\DropzoneBundle\Entity\Dropzone;
-use Icap\DropzoneBundle\Event\Log\LogDocumentCreateEvent;
-use Icap\DropzoneBundle\Event\Log\LogDocumentDeleteEvent;
-use Icap\DropzoneBundle\Event\Log\LogDocumentOpenEvent;
-use Icap\DropzoneBundle\Form\DocumentDeleteType;
-use Icap\DropzoneBundle\Form\DocumentType;
+use Innova\CollecticielBundle\Entity\Document;
+use Innova\CollecticielBundle\Entity\Drop;
+use Innova\CollecticielBundle\Entity\Dropzone;
+use Innova\CollecticielBundle\Event\Log\LogDocumentCreateEvent;
+use Innova\CollecticielBundle\Event\Log\LogDocumentDeleteEvent;
+use Innova\CollecticielBundle\Event\Log\LogDocumentOpenEvent;
+use Innova\CollecticielBundle\Form\DocumentDeleteType;
+use Innova\CollecticielBundle\Form\DocumentType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -32,7 +32,7 @@ class DocumentController extends DropzoneBaseController
             $name = $this->get('translator')->trans(
                 'Hidden folder for "%dropzoneName%"',
                 array('%dropzoneName%' => $dropzone->getResourceNode()->getName()),
-                'icap_dropzone'
+                'innova_collecticiel'
             );
             $hiddenDirectory->setName($name);
 
@@ -76,7 +76,7 @@ class DocumentController extends DropzoneBaseController
             $str = $user->getFirstName() . "-" . $user->getLastName();
             $str = $slugify->slugify($str, ' ');
 
-            $name = $this->get('translator')->trans('Copy n°%number%', array('%number%' => $drop->getNumber()), 'icap_dropzone');
+            $name = $this->get('translator')->trans('Copy n°%number%', array('%number%' => $drop->getNumber()), 'innova_collecticiel');
             $name .= " - " . $str;
             $hiddenDropDirectory->setName($name);
 
@@ -147,7 +147,7 @@ class DocumentController extends DropzoneBaseController
         $revision->setContent($richText);
         $revision->setUser($drop->getUser());
         $text = new Text();
-        $text->setName($this->get('translator')->trans('Free text', array(), 'icap_dropzone'));
+        $text->setName($this->get('translator')->trans('Free text', array(), 'innova_collecticiel'));
         $revision->setText($text);
         $em->persist($text);
         $em->persist($revision);
@@ -220,16 +220,16 @@ class DocumentController extends DropzoneBaseController
     /**
      * @Route(
      *      "/{resourceId}/document/{documentType}/{dropId}",
-     *      name="icap_dropzone_document",
+     *      name="innova_collecticiel_document",
      *      requirements={"resourceId" = "\d+", "dropId" = "\d+", "documentType" = "url|file|resource|text"}
      * )
-     * @ParamConverter("dropzone", class="IcapDropzoneBundle:Dropzone", options={"id" = "resourceId"})
-     * @ParamConverter("drop", class="IcapDropzoneBundle:Drop", options={"id" = "dropId"})
+     * @ParamConverter("dropzone", class="InnovaCollecticielBundle:Dropzone", options={"id" = "resourceId"})
+     * @ParamConverter("drop", class="InnovaCollecticielBundle:Drop", options={"id" = "dropId"})
      * @Template()
      */
     public function documentAction($dropzone, $documentType, $drop)
     {
-        $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
+        $this->get('innova.manager.dropzone_voter')->isAllowToOpen($dropzone);
 
         $formType = null;
         if ($documentType == 'url') {
@@ -259,7 +259,7 @@ class DocumentController extends DropzoneBaseController
 
                 return $this->redirect(
                     $this->generateUrl(
-                        'icap_dropzone_drop',
+                        'innova_collecticiel_drop',
                         array(
                             'resourceId' => $dropzone->getId()
                         )
@@ -268,9 +268,9 @@ class DocumentController extends DropzoneBaseController
             }
         }
 
-        $view = 'IcapDropzoneBundle:Document:document.html.twig';
+        $view = 'InnovaCollecticielBundle:Document:document.html.twig';
         if ($this->getRequest()->isXMLHttpRequest()) {
-            $view = 'IcapDropzoneBundle:Document:documentInline.html.twig';
+            $view = 'InnovaCollecticielBundle:Document:documentInline.html.twig';
         }
 
         return $this->render(
@@ -289,18 +289,18 @@ class DocumentController extends DropzoneBaseController
     /**
      * @Route(
      *      "/{resourceId}/delete/document/{dropId}/{documentId}",
-     *      name="icap_dropzone_delete_document",
+     *      name="innova_collecticiel_delete_document",
      *      requirements={"resourceId" = "\d+", "dropId" = "\d+", "documentId" = "\d+"}
      * )
-     * @ParamConverter("dropzone", class="IcapDropzoneBundle:Dropzone", options={"id" = "resourceId"})
+     * @ParamConverter("dropzone", class="InnovaCollecticielBundle:Dropzone", options={"id" = "resourceId"})
      * @ParamConverter("user", options={"authenticatedUser" = true})
-     * @ParamConverter("drop", class="IcapDropzoneBundle:Drop", options={"id" = "dropId"})
-     * @ParamConverter("document", class="IcapDropzoneBundle:Document", options={"id" = "documentId"})
+     * @ParamConverter("drop", class="InnovaCollecticielBundle:Drop", options={"id" = "dropId"})
+     * @ParamConverter("document", class="InnovaCollecticielBundle:Document", options={"id" = "documentId"})
      * @Template()
      */
     public function deleteDocumentAction(Dropzone $dropzone, $user, Drop $drop, Document $document)
     {
-        $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
+        $this->get('innova.manager.dropzone_voter')->isAllowToOpen($dropzone);
 
         if ($drop->getId() != $document->getDrop()->getId()) {
             throw new \HttpInvalidParamException();
@@ -325,7 +325,7 @@ class DocumentController extends DropzoneBaseController
 
                 return $this->redirect(
                     $this->generateUrl(
-                        'icap_dropzone_drop',
+                        'innova_collecticiel_drop',
                         array(
                             'resourceId' => $dropzone->getId()
                         )
@@ -334,9 +334,9 @@ class DocumentController extends DropzoneBaseController
             }
         }
 
-        $view = 'IcapDropzoneBundle:Document:deleteDocument.html.twig';
+        $view = 'InnovaCollecticielBundle:Document:deleteDocument.html.twig';
         if ($this->getRequest()->isXMLHttpRequest()) {
-            $view = 'IcapDropzoneBundle:Document:deleteDocumentModal.html.twig';
+            $view = 'InnovaCollecticielBundle:Document:deleteDocumentModal.html.twig';
         }
 
         return $this->render(
@@ -355,17 +355,17 @@ class DocumentController extends DropzoneBaseController
     /**
      * @Route(
      *      "/{resourceId}/open/resource/{documentId}",
-     *      name="icap_dropzone_open_resource",
+     *      name="innova_collecticiel_open_resource",
      *      requirements={"resourceId" = "\d+", "documentId" = "\d+"}
      * )
-     * @ParamConverter("dropzone", class="IcapDropzoneBundle:Dropzone", options={"id" = "resourceId"})
-     * @ParamConverter("document", class="IcapDropzoneBundle:Document", options={"id" = "documentId"})
+     * @ParamConverter("dropzone", class="InnovaCollecticielBundle:Dropzone", options={"id" = "resourceId"})
+     * @ParamConverter("document", class="InnovaCollecticielBundle:Document", options={"id" = "documentId"})
      * @ParamConverter("user", options={"authenticatedUser" = true})
      * @Template()
      */
     public function openResourceAction(Dropzone $dropzone, Document $document, $user)
     {
-        $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
+        $this->get('innova.manager.dropzone_voter')->isAllowToOpen($dropzone);
 
         if ($document->getType() == 'url') {
             return $this->redirect($document->getUrl());

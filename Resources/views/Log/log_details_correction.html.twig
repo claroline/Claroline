@@ -1,5 +1,5 @@
 <dl class="dl-horizontal">
-    <dt>{{ 'created by a manager'|trans({}, 'icap_dropzone') }}</dt>
+    <dt>{{ 'created by a manager'|trans({}, 'innova_collecticiel') }}</dt>
     {% if correction.editable is sameas(true) %}
         <dd>{{ ('yes')|trans({}, 'platform') }}</dd>
     {% else %}
@@ -7,7 +7,7 @@
     {% endif %}
 
     {% if correction.valid is defined %}
-        <dt>{{ 'Invalidated'|trans({}, 'icap_dropzone') }}</dt>
+        <dt>{{ 'Invalidated'|trans({}, 'innova_collecticiel') }}</dt>
         {% if correction.valid is sameas(true) %}
             <dd>{{ ('no')|trans({}, 'platform') }}</dd>
         {% else %}
@@ -16,17 +16,17 @@
     {% endif %}
 
     {% if correction.totalGrade is defined %}
-        <dt>{{ 'Total grade'|trans({}, 'icap_dropzone') }}</dt>
+        <dt>{{ 'Total grade'|trans({}, 'innova_collecticiel') }}</dt>
         <dd>{{ correction.totalGrade }}</dd>
     {% endif %}
 
     {% if correction.comment is defined %}
-        <dt>{{ 'Comment'|trans({}, 'icap_dropzone') }}</dt>
+        <dt>{{ 'Comment'|trans({}, 'innova_collecticiel') }}</dt>
         <dd>{{ correction.comment|raw }}</dd>
     {% endif %}
 
     {% if correction.reporter is defined %}
-        <dt>{{ 'Reported'|trans({}, 'icap_dropzone') }}</dt>
+        <dt>{{ 'Reported'|trans({}, 'innova_collecticiel') }}</dt>
         {% if correction.reporter is sameas(true) %}
             <dd>{{ ('yes')|trans({}, 'platform') }}</dd>
         {% else %}
@@ -35,11 +35,11 @@
     {% endif %}
 
     {% if correction.reportComment is defined %}
-        <dt>{{ 'reportComment'|trans({}, 'icap_dropzone') }}</dt>
+        <dt>{{ 'reportComment'|trans({}, 'innova_collecticiel') }}</dt>
         <dd>{{ correction.reportComment|raw }}</dd>
     {% endif %}
 </dl>
 
 {% if correction.user is defined %}
-    {% include 'IcapDropzoneBundle:Log:log_details_user.html.twig' with {'user': correction.user} %}
+    {% include 'InnovaCollecticielBundle:Log:log_details_user.html.twig' with {'user': correction.user} %}
 {% endif %}

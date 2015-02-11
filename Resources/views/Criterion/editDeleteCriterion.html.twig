@@ -1,13 +1,13 @@
-{% extends "IcapDropzoneBundle:Dropzone:edit.html.twig" %}
+{% extends "InnovaCollecticielBundle:Dropzone:edit.html.twig" %}
 
 {% block drop_zone_content_edit %}
 
 
     <h3 id="myModalLabel">
-        {{ 'Warning'|trans({}, 'icap_dropzone') }}
+        {{ 'Warning'|trans({}, 'innova_collecticiel') }}
     </h3>
 
-    {% include "IcapDropzoneBundle:Criterion:editDeleteCriterionForm.html.twig" %}
+    {% include "InnovaCollecticielBundle:Criterion:editDeleteCriterionForm.html.twig" %}
 {% endblock %}
 
 {% block javascripts %}

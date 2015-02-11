@@ -5,14 +5,14 @@
  * Time: 15:58
  */
 
-namespace Icap\DropzoneBundle\Entity;
+namespace Innova\CollecticielBundle\Entity;
 
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="Icap\DropzoneBundle\Repository\DocumentRepository")
- * @ORM\Table(name="icap__dropzonebundle_document")
+ * @ORM\Entity(repositoryClass="Innova\CollecticielBundle\Repository\DocumentRepository")
+ * @ORM\Table(name="innova_collecticielbundle_document")
  */
 class Document {
     /**
@@ -38,7 +38,7 @@ class Document {
     protected $resourceNode;
     /**
      * @ORM\ManyToOne(
-     *      targetEntity="Icap\DropzoneBundle\Entity\Drop",
+     *      targetEntity="Innova\CollecticielBundle\Entity\Drop",
      *      inversedBy="documents"
      * )
      * @ORM\JoinColumn(name="drop_id", referencedColumnName="id", nullable=false)

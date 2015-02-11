@@ -5,27 +5,27 @@
  * Time: 09:30
  */
 
-namespace Icap\DropzoneBundle\Controller;
+namespace Innova\CollecticielBundle\Controller;
 
 use Claroline\CoreBundle\Event\Log\LogResourceReadEvent;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
-use Icap\DropzoneBundle\Entity\Dropzone;
-use Icap\DropzoneBundle\Event\Log\LogCorrectionDeleteEvent;
-use Icap\DropzoneBundle\Event\Log\LogCorrectionEndEvent;
-use Icap\DropzoneBundle\Event\Log\LogCorrectionStartEvent;
-use Icap\DropzoneBundle\Event\Log\LogCorrectionUpdateEvent;
-use Icap\DropzoneBundle\Event\Log\LogCorrectionValidationChangeEvent;
-use Icap\DropzoneBundle\Event\Log\LogCriterionCreateEvent;
-use Icap\DropzoneBundle\Event\Log\LogCriterionDeleteEvent;
-use Icap\DropzoneBundle\Event\Log\LogCriterionUpdateEvent;
-use Icap\DropzoneBundle\Event\Log\LogDocumentCreateEvent;
-use Icap\DropzoneBundle\Event\Log\LogDocumentDeleteEvent;
-use Icap\DropzoneBundle\Event\Log\LogDocumentOpenEvent;
-use Icap\DropzoneBundle\Event\Log\LogDropEndEvent;
-use Icap\DropzoneBundle\Event\Log\LogDropEvaluateEvent;
-use Icap\DropzoneBundle\Event\Log\LogDropStartEvent;
-use Icap\DropzoneBundle\Event\Log\LogDropzoneConfigureEvent;
-use Icap\DropzoneBundle\Event\Log\LogDropzoneManualStateChangedEvent;
+use Innova\CollecticielBundle\Entity\Dropzone;
+use Innova\CollecticielBundle\Event\Log\LogCorrectionDeleteEvent;
+use Innova\CollecticielBundle\Event\Log\LogCorrectionEndEvent;
+use Innova\CollecticielBundle\Event\Log\LogCorrectionStartEvent;
+use Innova\CollecticielBundle\Event\Log\LogCorrectionUpdateEvent;
+use Innova\CollecticielBundle\Event\Log\LogCorrectionValidationChangeEvent;
+use Innova\CollecticielBundle\Event\Log\LogCriterionCreateEvent;
+use Innova\CollecticielBundle\Event\Log\LogCriterionDeleteEvent;
+use Innova\CollecticielBundle\Event\Log\LogCriterionUpdateEvent;
+use Innova\CollecticielBundle\Event\Log\LogDocumentCreateEvent;
+use Innova\CollecticielBundle\Event\Log\LogDocumentDeleteEvent;
+use Innova\CollecticielBundle\Event\Log\LogDocumentOpenEvent;
+use Innova\CollecticielBundle\Event\Log\LogDropEndEvent;
+use Innova\CollecticielBundle\Event\Log\LogDropEvaluateEvent;
+use Innova\CollecticielBundle\Event\Log\LogDropStartEvent;
+use Innova\CollecticielBundle\Event\Log\LogDropzoneConfigureEvent;
+use Innova\CollecticielBundle\Event\Log\LogDropzoneManualStateChangedEvent;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 

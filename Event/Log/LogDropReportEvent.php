@@ -1,18 +1,18 @@
 <?php
 
-namespace Icap\DropzoneBundle\Event\Log;
+namespace Innova\CollecticielBundle\Event\Log;
 
 use Claroline\CoreBundle\Event\Log\AbstractLogResourceEvent;
 use Claroline\CoreBundle\Event\Log\LogGenericEvent;
 use Icap\NotificationBundle\Entity\NotifiableInterface;
-use Icap\DropzoneBundle\Entity\Document;
-use Icap\DropzoneBundle\Entity\Drop;
-use Icap\DropzoneBundle\Entity\Dropzone;
-use Icap\DropzoneBundle\Entity\Correction;
+use Innova\CollecticielBundle\Entity\Document;
+use Innova\CollecticielBundle\Entity\Drop;
+use Innova\CollecticielBundle\Entity\Dropzone;
+use Innova\CollecticielBundle\Entity\Correction;
 
 class LogDropReportEvent extends AbstractLogResourceEvent implements NotifiableInterface {
 
-    const ACTION = 'resource-icap_dropzone-drop_report';
+    const ACTION = 'resource-innova_collecticiel-drop_report';
     protected $dropzone;
     protected $details;
     private $role_manager;

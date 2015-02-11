@@ -5,7 +5,7 @@
  * Time: 16:40
  */
 
-namespace Icap\DropzoneBundle\Entity;
+namespace Innova\CollecticielBundle\Entity;
 
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -14,8 +14,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
- * @ORM\Entity(repositoryClass="Icap\DropzoneBundle\Repository\CorrectionRepository")
- * @ORM\Table(name="icap__dropzonebundle_correction")
+ * @ORM\Entity(repositoryClass="Innova\CollecticielBundle\Repository\CorrectionRepository")
+ * @ORM\Table(name="innova_collecticielbundle_correction")
 
  */
 class Correction {
@@ -95,7 +95,7 @@ class Correction {
 
     /**
      * @ORM\OneToMany(
-     *      targetEntity="Icap\DropzoneBundle\Entity\Grade",
+     *      targetEntity="Innova\CollecticielBundle\Entity\Grade",
      *      mappedBy="correction",
      *      cascade={"all"},
      *      orphanRemoval=true
@@ -113,7 +113,7 @@ class Correction {
 
     /**
      * @ORM\ManyToOne(
-     *      targetEntity="Icap\DropzoneBundle\Entity\Drop",
+     *      targetEntity="Innova\CollecticielBundle\Entity\Drop",
      *      inversedBy="corrections"
      * )
      * @ORM\JoinColumn(name="drop_id", referencedColumnName="id", nullable=true, onDelete="SET NULL")
@@ -122,7 +122,7 @@ class Correction {
 
     /**
      * @ORM\ManyToOne(
-     *      targetEntity="Icap\DropzoneBundle\Entity\Dropzone"
+     *      targetEntity="Innova\CollecticielBundle\Entity\Dropzone"
      * )
      * @ORM\JoinColumn(name="drop_zone_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")
      */

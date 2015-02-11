@@ -5,13 +5,13 @@
  * Time: 16:26
  */
 
-namespace Icap\DropzoneBundle\Entity;
+namespace Innova\CollecticielBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="Icap\DropzoneBundle\Repository\GradeRepository")
- * @ORM\Table(name="icap__dropzonebundle_grade", uniqueConstraints={@ORM\UniqueConstraint(name="unique_grade_for_criterion_and_correction", columns={"criterion_id", "correction_id"})})
+ * @ORM\Entity(repositoryClass="Innova\CollecticielBundle\Repository\GradeRepository")
+ * @ORM\Table(name="innova_collecticielbundle_grade", uniqueConstraints={@ORM\UniqueConstraint(name="unique_grade_for_criterion_and_correction", columns={"criterion_id", "correction_id"})})
  */
 class Grade {
     /**
@@ -26,14 +26,14 @@ class Grade {
     protected $value = 0;
     /**
      * @ORM\ManyToOne(
-     *      targetEntity="Icap\DropzoneBundle\Entity\Criterion"
+     *      targetEntity="Innova\CollecticielBundle\Entity\Criterion"
      * )
      * @ORM\JoinColumn(name="criterion_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")
      */
     protected $criterion;
     /**
      * @ORM\ManyToOne(
-     *      targetEntity="Icap\DropzoneBundle\Entity\Correction",
+     *      targetEntity="Innova\CollecticielBundle\Entity\Correction",
      *      inversedBy="grades"
      * )
      * @ORM\JoinColumn(name="correction_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")

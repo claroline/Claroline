@@ -5,12 +5,12 @@
  * Time: 14:56
  */
 
-namespace Icap\DropzoneBundle\Repository;
+namespace Innova\CollecticielBundle\Repository;
 
 
 use Doctrine\ORM\EntityRepository;
-use Icap\DropzoneBundle\Entity\Drop;
-use Icap\DropzoneBundle\Entity\Dropzone;
+use Innova\CollecticielBundle\Entity\Drop;
+use Innova\CollecticielBundle\Entity\Dropzone;
 
 class DropRepository extends EntityRepository
 {
@@ -117,7 +117,7 @@ class DropRepository extends EntityRepository
             return array();
         }
         // Remove copies that the logged user has already corrected
-        $alreadyCorrectedDropIds = $this->getEntityManager()->getRepository('IcapDropzoneBundle:Correction')->getAlreadyCorrectedDropIds($dropzone, $user);
+        $alreadyCorrectedDropIds = $this->getEntityManager()->getRepository('InnovaCollecticielBundle:Correction')->getAlreadyCorrectedDropIds($dropzone, $user);
 
         $qb = $this->createQueryBuilder('drop')
             ->select('drop.id')

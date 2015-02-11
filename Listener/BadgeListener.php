@@ -1,6 +1,6 @@
 <?php
 
-namespace Icap\DropzoneBundle\Listener;
+namespace Innova\CollecticielBundle\Listener;
 
 use Claroline\CoreBundle\Event\Badge\BadgeCreateValidationLinkEvent;
 use Doctrine\ORM\EntityManager;
@@ -10,22 +10,22 @@ use Icap\BlogBundle\Event\Log\LogPostCreateEvent;
 use Icap\BlogBundle\Event\Log\LogPostDeleteEvent;
 use Icap\BlogBundle\Event\Log\LogPostReadEvent;
 use Icap\BlogBundle\Event\Log\LogPostUpdateEvent;
-use Icap\DropzoneBundle\Entity\Dropzone;
-use Icap\DropzoneBundle\Event\Log\LogCorrectionDeleteEvent;
-use Icap\DropzoneBundle\Event\Log\LogCorrectionEndEvent;
-use Icap\DropzoneBundle\Event\Log\LogCorrectionStartEvent;
-use Icap\DropzoneBundle\Event\Log\LogCorrectionUpdateEvent;
-use Icap\DropzoneBundle\Event\Log\LogCorrectionValidationChangeEvent;
-use Icap\DropzoneBundle\Event\Log\LogCriterionCreateEvent;
-use Icap\DropzoneBundle\Event\Log\LogCriterionDeleteEvent;
-use Icap\DropzoneBundle\Event\Log\LogCriterionUpdateEvent;
-use Icap\DropzoneBundle\Event\Log\LogDocumentCreateEvent;
-use Icap\DropzoneBundle\Event\Log\LogDocumentDeleteEvent;
-use Icap\DropzoneBundle\Event\Log\LogDocumentOpenEvent;
-use Icap\DropzoneBundle\Event\Log\LogDropEndEvent;
-use Icap\DropzoneBundle\Event\Log\LogDropEvaluateEvent;
-use Icap\DropzoneBundle\Event\Log\LogDropStartEvent;
-use Icap\DropzoneBundle\Event\Log\LogDropzoneConfigureEvent;
+use Innova\CollecticielBundle\Entity\Dropzone;
+use Innova\CollecticielBundle\Event\Log\LogCorrectionDeleteEvent;
+use Innova\CollecticielBundle\Event\Log\LogCorrectionEndEvent;
+use Innova\CollecticielBundle\Event\Log\LogCorrectionStartEvent;
+use Innova\CollecticielBundle\Event\Log\LogCorrectionUpdateEvent;
+use Innova\CollecticielBundle\Event\Log\LogCorrectionValidationChangeEvent;
+use Innova\CollecticielBundle\Event\Log\LogCriterionCreateEvent;
+use Innova\CollecticielBundle\Event\Log\LogCriterionDeleteEvent;
+use Innova\CollecticielBundle\Event\Log\LogCriterionUpdateEvent;
+use Innova\CollecticielBundle\Event\Log\LogDocumentCreateEvent;
+use Innova\CollecticielBundle\Event\Log\LogDocumentDeleteEvent;
+use Innova\CollecticielBundle\Event\Log\LogDocumentOpenEvent;
+use Innova\CollecticielBundle\Event\Log\LogDropEndEvent;
+use Innova\CollecticielBundle\Event\Log\LogDropEvaluateEvent;
+use Innova\CollecticielBundle\Event\Log\LogDropStartEvent;
+use Innova\CollecticielBundle\Event\Log\LogDropzoneConfigureEvent;
 use Icap\LessonBundle\Event\Log\LogChapterCreateEvent;
 use Icap\LessonBundle\Event\Log\LogChapterDeleteEvent;
 use Icap\LessonBundle\Event\Log\LogChapterMoveEvent;
@@ -60,21 +60,21 @@ class BadgeListener
     }
 
     /**
-     * @DI\Observe("badge-resource-icap_dropzone-correction_delete-generate_validation_link")
-     * @DI\Observe("badge-resource-icap_dropzone-correction_end-generate_validation_link")
-     * @DI\Observe("badge-resource-icap_dropzone-correction_start-generate_validation_link")
-     * @DI\Observe("badge-resource-icap_dropzone-correction_update-generate_validation_link")
-     * @DI\Observe("badge-resource-icap_dropzone-correction_validation_change-generate_validation_link")
-     * @DI\Observe("badge-resource-icap_dropzone-criterion_create-generate_validation_link")
-     * @DI\Observe("badge-resource-icap_dropzone-criterion_delete-generate_validation_link")
-     * @DI\Observe("badge-resource-icap_dropzone-criterion_update-generate_validation_link")
-     * @DI\Observe("badge-resource-icap_dropzone-document_create-generate_validation_link")
-     * @DI\Observe("badge-resource-icap_dropzone-document_delete-generate_validation_link")
-     * @DI\Observe("badge-resource-icap_dropzone-document_open-generate_validation_link")
-     * @DI\Observe("badge-resource-icap_dropzone-drop_end-generate_validation_link")
-     * @DI\Observe("badge-resource-icap_dropzone-drop_evaluate-generate_validation_link")
-     * @DI\Observe("badge-resource-icap_dropzone-drop_start-generate_validation_link")
-     * @DI\Observe("badge-resource-icap_dropzone-dropzone_configure-generate_validation_link")
+     * @DI\Observe("badge-resource-innova_collecticiel-correction_delete-generate_validation_link")
+     * @DI\Observe("badge-resource-innova_collecticiel-correction_end-generate_validation_link")
+     * @DI\Observe("badge-resource-innova_collecticiel-correction_start-generate_validation_link")
+     * @DI\Observe("badge-resource-innova_collecticiel-correction_update-generate_validation_link")
+     * @DI\Observe("badge-resource-innova_collecticiel-correction_validation_change-generate_validation_link")
+     * @DI\Observe("badge-resource-innova_collecticiel-criterion_create-generate_validation_link")
+     * @DI\Observe("badge-resource-innova_collecticiel-criterion_delete-generate_validation_link")
+     * @DI\Observe("badge-resource-innova_collecticiel-criterion_update-generate_validation_link")
+     * @DI\Observe("badge-resource-innova_collecticiel-document_create-generate_validation_link")
+     * @DI\Observe("badge-resource-innova_collecticiel-document_delete-generate_validation_link")
+     * @DI\Observe("badge-resource-innova_collecticiel-document_open-generate_validation_link")
+     * @DI\Observe("badge-resource-innova_collecticiel-drop_end-generate_validation_link")
+     * @DI\Observe("badge-resource-innova_collecticiel-drop_evaluate-generate_validation_link")
+     * @DI\Observe("badge-resource-innova_collecticiel-drop_start-generate_validation_link")
+     * @DI\Observe("badge-resource-innova_collecticiel-dropzone_configure-generate_validation_link")
      */
     public function onBagdeCreateValidationLink(BadgeCreateValidationLinkEvent $event)
     {
@@ -100,10 +100,10 @@ class BadgeListener
             case LogDropzoneConfigureEvent::ACTION:
                 $logDetails = $event->getLog()->getDetails();
                 $parameters = array('resourceId' => $logDetails['dropzone']['id']);
-                $url        = $this->router->generate('icap_dropzone_open', $parameters, UrlGeneratorInterface::ABSOLUTE_PATH);
+                $url        = $this->router->generate('innova_collecticiel_open', $parameters, UrlGeneratorInterface::ABSOLUTE_PATH);
 
                 /** @var Dropzone $dropzone */
-                $dropzone = $this->entityManager->getRepository("IcapDropzoneBundle:Dropzone")->findOneById($logDetails['dropzone']['id']);
+                $dropzone = $this->entityManager->getRepository("InnovaCollecticielBundle:Dropzone")->findOneById($logDetails['dropzone']['id']);
                 $title    = $dropzone->getResourceNode()->getName();
                 $content = sprintf('<a href="%s" title="%s">%s</a>', $url, $title, $title);
                 break;

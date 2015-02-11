@@ -4,19 +4,19 @@
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                 <h3 id="myModalLabel">
-                     {{ 'Warning'|trans({}, 'icap_dropzone') }} 
+                     {{ 'Warning'|trans({}, 'innova_collecticiel') }} 
                 </h3>
             </div>
             <div class="modal-body">
-                {{ 'You will reactivate a correction but the expected number of correction is already reached. Are you sure ?'|trans({}, 'icap_dropzone') }}
+                {{ 'You will reactivate a correction but the expected number of correction is already reached. Are you sure ?'|trans({}, 'innova_collecticiel') }}
             </div>
             <div class="modal-footer">
                 <div class="btn-group">
-                    <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">{{ 'Cancel'|trans({}, 'icap_dropzone') }}</button>
+                    <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">{{ 'Cancel'|trans({}, 'innova_collecticiel') }}</button>
                     <a id="revalidate_modal_link" class="btn btn-primary"
-                       href="{{ path('icap_dropzone_drops_detail_correction_validation',
+                       href="{{ path('innova_collecticiel_drops_detail_correction_validation',
                            {'resourceId': dropzone.id, 'correctionId': correction.id, 'value': 'yes'}) }}"
-                           class="btn btn-default btn-xs">{{ 'revalidate'|trans({}, 'icap_dropzone') }}</a>
+                           class="btn btn-default btn-xs">{{ 'revalidate'|trans({}, 'innova_collecticiel') }}</a>
                 </div>
             </div>
         </div>

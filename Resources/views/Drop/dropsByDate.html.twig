@@ -1,4 +1,4 @@
-{% extends "IcapDropzoneBundle:Drop:dropsByBase.html.twig" %}
+{% extends "InnovaCollecticielBundle:Drop:dropsByBase.html.twig" %}
 
 {% block  drops_completed_active %} active {% endblock %}
 {% block drops_completed_link %} # {% endblock %}
@@ -14,7 +14,7 @@
             'twitter_bootstrap_translated',
             {
             'proximity' : 1,
-            'routeName': 'icap_dropzone_drops_by_date_paginated',
+            'routeName': 'innova_collecticiel_drops_by_date_paginated',
             'routeParams': {'resourceId': dropzone.id}
             }
             )

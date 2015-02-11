@@ -1,6 +1,6 @@
 <?php
 
-namespace Icap\DropzoneBundle\Migrations\drizzle_pdo_mysql;
+namespace Innova\CollecticielBundle\Migrations\drizzle_pdo_mysql;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -15,12 +15,12 @@ class Version20140319130229 extends AbstractMigration
     public function up(Schema $schema)
     {
         $this->addSql("
-            ALTER TABLE icap__dropzonebundle_correction 
+            ALTER TABLE innova_collecticielbundle_correction 
             ADD correctionDenied BOOLEAN NOT NULL, 
             ADD correctionDeniedComment TEXT DEFAULT NULL
         ");
         $this->addSql("
-            ALTER TABLE icap__dropzonebundle_dropzone 
+            ALTER TABLE innova_collecticielbundle_dropzone 
             ADD diplay_corrections_to_learners BOOLEAN NOT NULL, 
             ADD allow_correction_deny BOOLEAN NOT NULL
         ");
@@ -29,12 +29,12 @@ class Version20140319130229 extends AbstractMigration
     public function down(Schema $schema)
     {
         $this->addSql("
-            ALTER TABLE icap__dropzonebundle_correction 
+            ALTER TABLE innova_collecticielbundle_correction 
             DROP correctionDenied, 
             DROP correctionDeniedComment
         ");
         $this->addSql("
-            ALTER TABLE icap__dropzonebundle_dropzone 
+            ALTER TABLE innova_collecticielbundle_dropzone 
             DROP diplay_corrections_to_learners, 
             DROP allow_correction_deny
         ");

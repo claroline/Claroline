@@ -1,5 +1,5 @@
 {
-    "name": "icap/dropzone-bundle",
+    "name": "innova/collecticiel-bundle",
     "type": "claroline-plugin",
     "require": {
         "php": ">=5.4.1",
@@ -8,9 +8,9 @@
         "icap/notification-bundle": "~2.0"
     },
     "autoload": {
-        "psr-0": { "Icap\\DropzoneBundle": "" }
+        "psr-0": { "Innova\\CollecticielBundle": "" }
     },
-    "target-dir": "Icap/DropzoneBundle",
+    "target-dir": "Innova/CollecticielBundle",
     "require-dev": {
         "phpunit/phpunit": "4.1.*"
     }

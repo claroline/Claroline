@@ -1,6 +1,6 @@
 <?php
 
-namespace Icap\DropzoneBundle\Form;
+namespace Innova\CollecticielBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -95,7 +95,7 @@ class DropzoneCommonType extends AbstractType
 
     public function getName()
     {
-        return 'icap_dropzone_common_form';
+        return 'innova_collecticiel_common_form';
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
@@ -103,7 +103,7 @@ class DropzoneCommonType extends AbstractType
         $resolver->setDefaults(
             array(
                 'language' => 'en',
-                'translation_domain' => 'icap_dropzone',
+                'translation_domain' => 'innova_collecticiel',
                 'date_format'     => DateType::HTML5_FORMAT,
             )
         );

@@ -1,5 +1,5 @@
 {% if notification.details.dropzoneId is defined  %}
-    <a href="{{ path('icap_dropzone_open', {'resourceId' : notification.details.dropzoneId}) }}" target="_blank"><span
+    <a href="{{ path('innova_collecticiel_open', {'resourceId' : notification.details.dropzoneId}) }}" target="_blank"><span
                 class="fa fa-exclamation-triangle"></span> {{ notification.actionKey|trans({'%dropzone%' : notification.details.resource.name}, 'notification') }}
     </a>
 {% else %}

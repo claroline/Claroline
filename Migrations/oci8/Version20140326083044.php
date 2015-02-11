@@ -1,6 +1,6 @@
 <?php
 
-namespace Icap\DropzoneBundle\Migrations\oci8;
+namespace Innova\CollecticielBundle\Migrations\oci8;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -15,7 +15,7 @@ class Version20140326083044 extends AbstractMigration
     public function up(Schema $schema)
     {
         $this->addSql("
-            ALTER TABLE icap__dropzonebundle_dropzone 
+            ALTER TABLE innova_collecticielbundle_dropzone 
             ADD (
                 correctionInstruction CLOB DEFAULT NULL, 
                 successMessage CLOB DEFAULT NULL, 
@@ -27,7 +27,7 @@ class Version20140326083044 extends AbstractMigration
     public function down(Schema $schema)
     {
         $this->addSql("
-            ALTER TABLE icap__dropzonebundle_dropzone 
+            ALTER TABLE innova_collecticielbundle_dropzone 
             DROP (
                 correctionInstruction, successMessage, 
                 failMessage

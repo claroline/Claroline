@@ -1,6 +1,6 @@
 <?php
 
-namespace Icap\DropzoneBundle\Migrations\pdo_pgsql;
+namespace Innova\CollecticielBundle\Migrations\pdo_pgsql;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -15,15 +15,15 @@ class Version20140522071801 extends AbstractMigration
     public function up(Schema $schema)
     {
         $this->addSql("
-            ALTER TABLE icap__dropzonebundle_drop 
+            ALTER TABLE innova_collecticielbundle_drop 
             ADD unlocked_drop BOOLEAN DEFAULT 'false' NOT NULL
         ");
         $this->addSql("
-            ALTER TABLE icap__dropzonebundle_drop 
+            ALTER TABLE innova_collecticielbundle_drop 
             ADD unlocked_user BOOLEAN DEFAULT 'false' NOT NULL
         ");
         $this->addSql("
-            ALTER TABLE icap__dropzonebundle_dropzone 
+            ALTER TABLE innova_collecticielbundle_dropzone 
             DROP notify_on_drop
         ");
     }
@@ -31,15 +31,15 @@ class Version20140522071801 extends AbstractMigration
     public function down(Schema $schema)
     {
         $this->addSql("
-            ALTER TABLE icap__dropzonebundle_drop 
+            ALTER TABLE innova_collecticielbundle_drop 
             DROP unlocked_drop
         ");
         $this->addSql("
-            ALTER TABLE icap__dropzonebundle_drop 
+            ALTER TABLE innova_collecticielbundle_drop 
             DROP unlocked_user
         ");
         $this->addSql("
-            ALTER TABLE icap__dropzonebundle_dropzone 
+            ALTER TABLE innova_collecticielbundle_dropzone 
             ADD notify_on_drop BOOLEAN DEFAULT 'false' NOT NULL
         ");
     }

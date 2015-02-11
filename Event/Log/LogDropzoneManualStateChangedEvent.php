@@ -1,16 +1,16 @@
 <?php
 
-namespace Icap\DropzoneBundle\Event\Log;
+namespace Innova\CollecticielBundle\Event\Log;
 
 use Claroline\CoreBundle\Event\Log\AbstractLogResourceEvent;
 use Claroline\CoreBundle\Event\Log\LogGenericEvent;
 use Icap\NotificationBundle\Entity\NotifiableInterface;
-use Icap\DropzoneBundle\Entity\Dropzone;
+use Innova\CollecticielBundle\Entity\Dropzone;
 
 
 class LogDropzoneManualStateChangedEvent extends AbstractLogResourceEvent implements NotifiableInterface {
 
-    const ACTION = 'resource-icap_dropzone-dropzone_manual_state_changed';
+    const ACTION = 'resource-innova_collecticiel-dropzone_manual_state_changed';
     protected $dropzone;
     protected $newState;
     protected $details;

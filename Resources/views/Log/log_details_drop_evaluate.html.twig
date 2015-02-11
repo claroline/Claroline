@@ -1,7 +1,7 @@
 {% if log.details.result is defined %}
     <h4>{{ ('log_correction')|trans({}, 'log') }}</h4>
     <dl class="dl-horizontal">
-        <dt>{{ 'Total grade'|trans({}, 'icap_dropzone') }}</dt>
+        <dt>{{ 'Total grade'|trans({}, 'innova_collecticiel') }}</dt>
         <dd>{{ log.details.result }}</dd>
     </dl>
 {% endif %}
@@ -10,6 +10,6 @@
     <h4>{{ ('log_drop_documents')|trans({}, 'log') }}</h4>
 
     {% for document in log.details.drop.documents %}
-        {% include 'IcapDropzoneBundle:Log:log_details_document.html.twig' with {'document': document} %}
+        {% include 'InnovaCollecticielBundle:Log:log_details_document.html.twig' with {'document': document} %}
     {% endfor %}
 {% endif %}

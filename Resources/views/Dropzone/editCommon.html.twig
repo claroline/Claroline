@@ -1,7 +1,7 @@
-{% extends "IcapDropzoneBundle:Dropzone:edit.html.twig" %}
+{% extends "InnovaCollecticielBundle:Dropzone:edit.html.twig" %}
 
 {% form_theme form "ClarolineCoreBundle:Form:date_time_picker.html.twig" %}
-{% form_theme form "IcapDropzoneBundle::form_theme_bootstrap3.html.twig" %}
+{% form_theme form "InnovaCollecticielBundle::form_theme_bootstrap3.html.twig" %}
 {% block dropzone_edit_navTabs_param_link %}
     #
 {% endblock %}
@@ -10,33 +10,33 @@
         {#<div class="collapse navbar-collapse navbar-ex1-collapse">#}
             {#<ul class="nav navbar-nav">#}
                 {#<li class="active">#}
-                    {#<a href="{{ path('icap_dropzone_edit_common', {'resourceId': dropzone.id}) }}">#}
-                        {#{{ 'Common'|trans({}, 'icap_dropzone') }}#}
+                    {#<a href="{{ path('innova_collecticiel_edit_common', {'resourceId': dropzone.id}) }}">#}
+                        {#{{ 'Common'|trans({}, 'innova_collecticiel') }}#}
                     {#</a>#}
                 {#</li>#}
                 {#<li class="{% if dropzone.editionState < 1 %}disabled{% endif %}">#}
-                    {#<a href="{% if dropzone.editionState < 1 %}#{% else %}{{ path('icap_dropzone_edit_criteria', {'resourceId': dropzone.id}) }}{% endif %}">#}
-                        {#{{ 'Peer review criteria'|trans({}, 'icap_dropzone') }}#}
+                    {#<a href="{% if dropzone.editionState < 1 %}#{% else %}{{ path('innova_collecticiel_edit_criteria', {'resourceId': dropzone.id}) }}{% endif %}">#}
+                        {#{{ 'Peer review criteria'|trans({}, 'innova_collecticiel') }}#}
                     {#</a>#}
                 {#</li>#}
             {#</ul>#}
         {#</div>#}
     {#</div>#}
-    {#<h3>{{ 'Common information'|trans({}, 'icap_dropzone') }}</h3>#}
+    {#<h3>{{ 'Common information'|trans({}, 'innova_collecticiel') }}</h3>#}
 
-    <form class="form-horizontal" role="form" method="POST" action="{{ path('icap_dropzone_edit_common', {'resourceId': dropzone.id}) }}" {{ form_enctype(form) }}>
+    <form class="form-horizontal" role="form" method="POST" action="{{ path('innova_collecticiel_edit_common', {'resourceId': dropzone.id}) }}" {{ form_enctype(form) }}>
 
         {{ form_errors(form) }}
 
-        <p>{{ 'common_explication'|trans({}, 'icap_dropzone')|raw }}</p>
+        <p>{{ 'common_explication'|trans({}, 'innova_collecticiel')|raw }}</p>
 
-        <h4>{{ 'Instruction'|trans({}, 'icap_dropzone') }}</h4>
+        <h4>{{ 'Instruction'|trans({}, 'innova_collecticiel') }}</h4>
         <div class="form-group">
             {{ form_row(form.instruction, {'input_col_size': 'col-md-12', 'label_col_size': '', 'label_attr': {'style': 'display: none;'}}) }}
         </div>
 
-        <h4>{{ 'Document type allowed'|trans({}, 'icap_dropzone') }}</h4>
-        <p>{{ 'Select the types of documents that learners can make'|trans({}, 'icap_dropzone') }}</p>
+        <h4>{{ 'Document type allowed'|trans({}, 'innova_collecticiel') }}</h4>
+        <p>{{ 'Select the types of documents that learners can make'|trans({}, 'innova_collecticiel') }}</p>
 
         <div class="form-group">
             {{ form_row(form.allowUpload, {'input_col_size': 'col-lg-offset-2 col-lg-10', 'label_attr': {'class': 'control-label'}}) }}
@@ -45,15 +45,15 @@
             {{ form_row(form.allowUrl, {'input_col_size': 'col-lg-offset-2 col-lg-10', 'label_attr': {'class': 'control-label'}}) }}
         </div>
 
-        <h4>{{ 'Type of evaluation'|trans({}, 'icap_dropzone') }}</h4>
-        <p>{{ 'Select how copies will be corrected'|trans({}, 'icap_dropzone') }}</p>
+        <h4>{{ 'Type of evaluation'|trans({}, 'innova_collecticiel') }} Eric</h4>
+        <p>{{ 'Select how copies will be corrected'|trans({}, 'innova_collecticiel') }}</p>
         <div class="form-group">
 
             {{ form_row(form.peerReview, {'label_attr': {'style': 'display: none;'}}) }}
 
             <div class="col-sm-offset-3 col-lg-9 peer-review-options">
-            <div id="expected-total-correction-explication" class="col-lg-8 control-label" style="text-align: left;" data-toggle="popover" data-placement="bottom" data-content="{{ 'expected_total_correction'|trans({}, 'icap_dropzone')|raw }}">
-                <span class="fa fa-info-circle"></span> {{ 'Expected total correction'|trans({}, 'icap_dropzone') }}
+            <div id="expected-total-correction-explication" class="col-lg-8 control-label" style="text-align: left;" data-toggle="popover" data-placement="bottom" data-content="{{ 'expected_total_correction'|trans({}, 'innova_collecticiel')|raw }}">
+                <span class="fa fa-info-circle"></span> {{ 'Expected total correction'|trans({}, 'innova_collecticiel') }}
             </div>
                 {{ form_row(form.expectedTotalCorrection, {'input_col_size': 'col-lg-4', 'label_col_size': '', 'attr': {'style': 'width: 60px;'}, 'label_attr': {'style': 'display: none;'}}) }}
             </div>
@@ -69,16 +69,16 @@
                 </div>
             </div>
         </div>
-        <h4>{{ 'Rating'|trans({}, 'icap_dropzone') }}</h4>
+        <h4>{{ 'Rating'|trans({}, 'innova_collecticiel') }}</h4>
 
         <div class="form-group">
             {{ form_row(form.displayNotationToLearners, {'input_col_size': 'col-lg-offset-2 col-lg-10', 'label_attr': {'class': 'control-label', 'style': 'font-weight: normal;'}}) }}
             {{ form_row(form.displayNotationMessageToLearners, {'input_col_size': 'col-lg-offset-2 col-lg-10', 'label_attr': {'class': 'control-label', 'style': 'font-weight: normal;'}}) }}
             <div id='dropzone-message-part' class='col-lg-offset-3 col-lg-7' {% if dropzone.displayNotationMessageToLearners == false %} style="display:none" {% endif %} >
-                {{ form_label(form.successMessage,null,{'label': 'successMessage'|trans({},'icap_dropzone'), 'label_attr': {'class': 'control-label','style':'font-weight:normal;'}}) }}
+                {{ form_label(form.successMessage,null,{'label': 'successMessage'|trans({},'innova_collecticiel'), 'label_attr': {'class': 'control-label','style':'font-weight:normal;'}}) }}
                 {{ form_widget(form.successMessage, {'label_attr': {'class': 'control-label', 'style': 'font-weight: normal;'}}) }}
                 {{ form_errors(form.successMessage) }}
-                 {{ form_label(form.failMessage,null,{'label': 'failMessage'|trans({},'icap_dropzone'), 'label_attr': {'class': 'control-label','style':'font-weight:normal;'}}) }}
+                 {{ form_label(form.failMessage,null,{'label': 'failMessage'|trans({},'innova_collecticiel'), 'label_attr': {'class': 'control-label','style':'font-weight:normal;'}}) }}
                 {{ form_widget(form.failMessage, {'label_attr': {'class': 'control-label', 'style': 'font-weight: normal;'}}) }}
                 {{ form_errors(form.failMessage) }}
 
@@ -89,27 +89,27 @@
         </div>
 
 
-        <h4>{{ 'Planning'|trans({}, 'icap_dropzone') }}</h4>
+        <h4>{{ 'Planning'|trans({}, 'innova_collecticiel') }}</h4>
 
-        <p>{{ 'Planification instruction'|trans({}, 'icap_dropzone') }}</p>
+        <p>{{ 'Planification instruction'|trans({}, 'innova_collecticiel') }}</p>
 
-        <p class="peer-review-options">{{ 'Planification peer review instruction'|trans({}, 'icap_dropzone') }}</p>
+        <p class="peer-review-options">{{ 'Planification peer review instruction'|trans({}, 'innova_collecticiel') }}</p>
 
         {{ form_errors(form.manualPlanning) }}
         <div class="radio">
             <label>
                 {{ form_widget(form.manualPlanning.0) }}
-                <strong>{{ 'manualPlanning'|trans({}, 'icap_dropzone') }}</strong>
+                <strong>{{ 'manualPlanning'|trans({}, 'innova_collecticiel') }}</strong>
             </label>
         </div>
         <div id="planning_manual" class="form-group">
-            <div class="col-md-offset-2">{{ 'Choose current phase'|trans({}, 'icap_dropzone') }}</div>
+            <div class="col-md-offset-2">{{ 'Choose current phase'|trans({}, 'innova_collecticiel') }}</div>
             {{ form_row(form.manualState, {'label_attr': {'style': 'display: none;'}}) }}
         </div>
 
         <label class="radio">
             {{ form_widget(form.manualPlanning.1) }}
-            <strong>{{ 'scheduleByDatePlanning'|trans({}, 'icap_dropzone') }}</strong>
+            <strong>{{ 'scheduleByDatePlanning'|trans({}, 'innova_collecticiel') }}</strong>
         </label>
 
         <div id="planning_dates">
@@ -128,7 +128,7 @@
             <div class=" row form-group">
                 <div class="col-md-offset-2 ">
                     {{ form_row(form.autoCloseOpenedDropsWhenTimeIsUp,{'label_attr': {'class': 'control-label  popoverItem ', 'style': 'font-weight: normal;',
-                    'data-toggle':'popover','data-placement':'top','data-content': 'dropzone_startedNotValidatedYet_infos'|trans({}, 'icap_dropzone')|raw }}
+                    'data-toggle':'popover','data-placement':'top','data-content': 'dropzone_startedNotValidatedYet_infos'|trans({}, 'innova_collecticiel')|raw }}
                     ) }}
 
                 </div>
@@ -148,7 +148,7 @@
         </div>
 
         <div id="dropzone_notification_part">
-            <h4>{{ 'Notifications'|trans({}, 'icap_dropzone') }}</h4>
+            <h4>{{ 'Notifications'|trans({}, 'innova_collecticiel') }}</h4>
 
             <div class="form-group">
                 <div class="col-lg-offset-2 col-lg-9 manual-review-option">
@@ -159,12 +159,12 @@
         </div>
         <div class="btn-group pull-right">
             <a href="{{ path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': 'resource_manager'}) }}"
-               class="btn btn-default ">{{ 'Cancel'|trans({}, 'icap_dropzone') }}</a>
+               class="btn btn-default ">{{ 'Cancel'|trans({}, 'innova_collecticiel') }}</a>
 
-            <a href="#" class="btn btn-primary peer-review-options save-button" {% if dropzone.peerReview %}style="display: none;"{% endif %}>{{ 'Save'|trans({}, 'icap_dropzone') }}</a>
+            <a href="#" class="btn btn-primary peer-review-options save-button" {% if dropzone.peerReview %}style="display: none;"{% endif %}>{{ 'Save'|trans({}, 'innova_collecticiel') }}</a>
 
             <button id="submitAndGotoCriteriaButton" type="submit"
-                    class="btn btn-primary submit_button">{% if dropzone.peerReview %}{{ 'Save and continue'|trans({}, 'icap_dropzone') }}{% else %}{{ 'Save and finished'|trans({}, 'icap_dropzone') }}{% endif %}</button>
+                    class="btn btn-primary submit_button">{% if dropzone.peerReview %}{{ 'Save and continue'|trans({}, 'innova_collecticiel') }}{% else %}{{ 'Save and finished'|trans({}, 'innova_collecticiel') }}{% endif %}</button>
         </div>
         {{ form_rest(form) }}
     </form>
@@ -180,25 +180,25 @@
                 <div class="modal-header">
                     <a class="close" data-dismiss="modal">×</a>
 
-                    <h4>{{ 'People will not be able to drop anymore'|trans({},'icap_dropzone') }}</h4>
+                    <h4>{{ 'People will not be able to drop anymore'|trans({},'innova_collecticiel') }}</h4>
                 </div>
                 <div class="modal-body">
 
 
-                    <p>{{ 'Do you want to valid all drop started but not validated yet ?'|trans({},'icap_dropzone') }}</p>
+                    <p>{{ 'Do you want to valid all drop started but not validated yet ?'|trans({},'innova_collecticiel') }}</p>
 
                     <div class="panel panel-default">
                         <div class="panel-body"><p class="text-muted">
-                                <span class="fa fa-info-circle"></span> {{ 'dropzone_startedNotValidatedYet_infos'|trans({},'icap_dropzone') }}
+                                <span class="fa fa-info-circle"></span> {{ 'dropzone_startedNotValidatedYet_infos'|trans({},'innova_collecticiel') }}
                             </p>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <a href="#" class="btn btn-default"
-                       data-dismiss="modal">{{ 'Do nothing'|trans({},'icap_dropzone') }}</a>
+                       data-dismiss="modal">{{ 'Do nothing'|trans({},'innova_collecticiel') }}</a>
                     <a id="acitvate_manualStateAutoClose" href="#"
-                       class="btn btn-success">{{ 'Validate copies'|trans({},'icap_dropzone') }}</a>
+                       class="btn btn-success">{{ 'Validate copies'|trans({},'innova_collecticiel') }}</a>
                 </div>
             </div>
         </div>
@@ -218,27 +218,27 @@
                 'html': true
             });
 
-            $("input:radio[name='icap_dropzone_common_form[manualState]']").click(function()
+            $("input:radio[name='innova_collecticiel_common_form[manualState]']").click(function()
             {
                 onManualStateChange($(this));
             });
 
-            $('#icap_dropzone_common_form_stayHere').val(0);
-            $('#icap_dropzone_common_form_autoCloseForManualStates').val(0);
+            $('#innova_collecticiel_common_form_stayHere').val(0);
+            $('#innova_collecticiel_common_form_autoCloseForManualStates').val(0);
             $('.save-button').on('click', function(event) {
                 event.preventDefault();
-                $('#icap_dropzone_common_form_stayHere').val(1);
+                $('#innova_collecticiel_common_form_stayHere').val(1);
                 $('.submit_button').trigger('click');
             });
 
-            $('#icap_dropzone_common_form_peerReview_0').on('click', function() {
+            $('#innova_collecticiel_common_form_peerReview_0').on('click', function() {
                 enablePeerReviewOptions(false);
             });
-            $('#icap_dropzone_common_form_peerReview_1').on('click', function() {
+            $('#innova_collecticiel_common_form_peerReview_1').on('click', function() {
                 enablePeerReviewOptions(true);
             });
 
-            var $displayNotationToLearner = $('#icap_dropzone_common_form_displayNotationMessageToLearners');
+            var $displayNotationToLearner = $('#innova_collecticiel_common_form_displayNotationMessageToLearners');
             manageSuccessFailMessagesVisibility($displayNotationToLearner);
             $displayNotationToLearner.change(function () {
                 manageSuccessFailMessagesVisibility($(this));
@@ -251,31 +251,31 @@
                     $('.peer-review-options').show();
                     // hide the manuals options.
                     $('.manual-review-option').hide();
-                    $('#icap_dropzone_common_form_manualState_2').parent().show();
-                    $('#icap_dropzone_common_form_manualState_3').parent().show();
-                    $('#icap_dropzone_common_form_diplayCorrectionsToLearners').show();
+                    $('#innova_collecticiel_common_form_manualState_2').parent().show();
+                    $('#innova_collecticiel_common_form_manualState_3').parent().show();
+                    $('#innova_collecticiel_common_form_diplayCorrectionsToLearners').show();
                     $('#dropzone_notification_part').hide();
-                    $('.submit_button').html('{{ 'Save and continue'|trans({}, 'icap_dropzone') }}');
+                    $('.submit_button').html('{{ 'Save and continue'|trans({}, 'innova_collecticiel') }}');
                 } else {
                     // hide the peerReview options
                     $('.peer-review-options').hide();
                     //show the manuals options
                     $('.manual-review-option').show();
-                    $('#icap_dropzone_common_form_manualState_2').parent().hide();
-                    $('#icap_dropzone_common_form_manualState_3').parent().hide();
+                    $('#innova_collecticiel_common_form_manualState_2').parent().hide();
+                    $('#innova_collecticiel_common_form_manualState_3').parent().hide();
 
-                    var $expectedTotalCorrection = $('#icap_dropzone_common_form_expectedTotalCorrection');
+                    var $expectedTotalCorrection = $('#innova_collecticiel_common_form_expectedTotalCorrection');
                     if ($expectedTotalCorrection.val() < 1 || $expectedTotalCorrection.val() > 10) {
                         $expectedTotalCorrection.val(3);
                     }
-                    $('#icap_dropzone_common_form_endReview_date').val(null);
-                    $('#icap_dropzone_common_form_endReview_time').val(null);
-                    $('#icap_dropzone_common_form_startReview_date').val(null);
-                    $('#icap_dropzone_common_form_startReview_time').val(null);
+                    $('#innova_collecticiel_common_form_endReview_date').val(null);
+                    $('#innova_collecticiel_common_form_endReview_time').val(null);
+                    $('#innova_collecticiel_common_form_startReview_date').val(null);
+                    $('#innova_collecticiel_common_form_startReview_time').val(null);
 
                     $('#dropzone_notification_part').show();
 
-                    $('.submit_button').html('{{ 'Save and finished'|trans({}, 'icap_dropzone') }}');
+                    $('.submit_button').html('{{ 'Save and finished'|trans({}, 'innova_collecticiel') }}');
 
                 }
                 manageCorrectionVisibility(peerReviewEnabled);
@@ -304,8 +304,8 @@
                 $planning_dates.find('input').prop('disabled', false);
             };
 
-            $('#icap_dropzone_common_form_manualPlanning_0').on('click', manualPlanning);
-            $('#icap_dropzone_common_form_manualPlanning_1').on('click', datesPlanning);
+            $('#innova_collecticiel_common_form_manualPlanning_0').on('click', manualPlanning);
+            $('#innova_collecticiel_common_form_manualPlanning_1').on('click', datesPlanning);
 
             if ({{ dropzone.manualPlanning ? 'true' : 'false' }}) {
                 manualPlanning();
@@ -313,7 +313,7 @@
                 datesPlanning();
             }
 
-            $('#icap_dropzone_common_form_diplayCorrectionsToLearners').click(function()
+            $('#innova_collecticiel_common_form_diplayCorrectionsToLearners').click(function()
             {
                 manageCorrectionDeny();
             });
@@ -328,11 +328,11 @@
         {
             // Set manageCorrectionDeny dependencies
             // show option only if peerReview and CorrectionVisibility are Activated, set to false and desactivate if they are  not.
-            if($('#icap_dropzone_common_form_peerReview_1:checked').length == 1
-                && $('#icap_dropzone_common_form_diplayCorrectionsToLearners').prop('checked')) {
+            if($('#innova_collecticiel_common_form_peerReview_1:checked').length == 1
+                && $('#innova_collecticiel_common_form_diplayCorrectionsToLearners').prop('checked')) {
                 $('#allow-correction-deny').parent().show();
             } else {
-                $('#icap_dropzone_common_form_allowCorrectionDeny').prop('checked',false);
+                $('#innova_collecticiel_common_form_allowCorrectionDeny').prop('checked',false);
                 $('#allow-correction-deny').parent().hide();
             }
 
@@ -345,11 +345,11 @@
             // call manageCorrectionDeny to cascade dependencies .
            /* if(peerReviewEnabled)
             {
-                $('#icap_dropzone_common_form_diplayCorrectionsToLearners').parent().show();
+                $('#innova_collecticiel_common_form_diplayCorrectionsToLearners').parent().show();
             }else {
-                 $('#icap_dropzone_common_form_diplayCorrectionsToLearners').prop('checked',false).parent().hide();
+                 $('#innova_collecticiel_common_form_diplayCorrectionsToLearners').prop('checked',false).parent().hide();
             }*/
-            $('#icap_dropzone_common_form_diplayCorrectionsToLearners').parent().show();
+            $('#innova_collecticiel_common_form_diplayCorrectionsToLearners').parent().show();
             manageCorrectionDeny();
         }
 
@@ -373,12 +373,12 @@
         function onManualStateChange($radio)
         {
             var val = $radio.val();
-            $('#icap_dropzone_common_form_autoCloseForManualStates').val(0);
+            $('#innova_collecticiel_common_form_autoCloseForManualStates').val(0);
             if(val == 'finished' || val == 'peerReview' ) {
                 $('#autoClosePrompt').modal('show'); // call the modal dialog.
                 $('#acitvate_manualStateAutoClose').unbind('click').click(function(e) {
                     e.preventDefault();
-                    $('#icap_dropzone_common_form_autoCloseForManualStates').val(1);
+                    $('#innova_collecticiel_common_form_autoCloseForManualStates').val(1);
                     $('#autoClosePrompt').modal('hide');
                 });
             }

@@ -1,15 +1,15 @@
 <?php
 
-namespace Icap\DropzoneBundle\Event\Log;
+namespace Innova\CollecticielBundle\Event\Log;
 
 use Claroline\CoreBundle\Event\Log\AbstractLogResourceEvent;
 use Claroline\CoreBundle\Event\Log\LogGenericEvent;
-use Icap\DropzoneBundle\Entity\Drop;
-use Icap\DropzoneBundle\Entity\Dropzone;
+use Innova\CollecticielBundle\Entity\Drop;
+use Innova\CollecticielBundle\Entity\Dropzone;
 
 class LogDropStartEvent extends AbstractLogResourceEvent {
 
-    const ACTION = 'resource-icap_dropzone-drop_start';
+    const ACTION = 'resource-innova_collecticiel-drop_start';
 
     /**
      * @param Dropzone $dropzone

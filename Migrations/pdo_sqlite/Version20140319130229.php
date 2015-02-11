@@ -1,6 +1,6 @@
 <?php
 
-namespace Icap\DropzoneBundle\Migrations\pdo_sqlite;
+namespace Innova\CollecticielBundle\Migrations\pdo_sqlite;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -15,19 +15,19 @@ class Version20140319130229 extends AbstractMigration
     public function up(Schema $schema)
     {
         $this->addSql("
-            ALTER TABLE icap__dropzonebundle_correction 
+            ALTER TABLE innova_collecticielbundle_correction 
             ADD COLUMN correctionDenied BOOLEAN NOT NULL
         ");
         $this->addSql("
-            ALTER TABLE icap__dropzonebundle_correction 
+            ALTER TABLE innova_collecticielbundle_correction 
             ADD COLUMN correctionDeniedComment CLOB DEFAULT NULL
         ");
         $this->addSql("
-            ALTER TABLE icap__dropzonebundle_dropzone 
+            ALTER TABLE innova_collecticielbundle_dropzone 
             ADD COLUMN diplay_corrections_to_learners BOOLEAN NOT NULL
         ");
         $this->addSql("
-            ALTER TABLE icap__dropzonebundle_dropzone 
+            ALTER TABLE innova_collecticielbundle_dropzone 
             ADD COLUMN allow_correction_deny BOOLEAN NOT NULL
         ");
     }
@@ -44,7 +44,7 @@ class Version20140319130229 extends AbstractMigration
             DROP INDEX IDX_CDA81F40A8C6E7BD
         ");
         $this->addSql("
-            CREATE TEMPORARY TABLE __temp__icap__dropzonebundle_correction AS 
+            CREATE TEMPORARY TABLE __temp__innova_collecticielbundle_correction AS 
             SELECT id, 
             user_id, 
             drop_id, 
@@ -59,13 +59,13 @@ class Version20140319130229 extends AbstractMigration
             editable, 
             reporter, 
             reportComment 
-            FROM icap__dropzonebundle_correction
+            FROM innova_collecticielbundle_correction
         ");
         $this->addSql("
-            DROP TABLE icap__dropzonebundle_correction
+            DROP TABLE innova_collecticielbundle_correction
         ");
         $this->addSql("
-            CREATE TABLE icap__dropzonebundle_correction (
+            CREATE TABLE innova_collecticielbundle_correction (
                 id INTEGER NOT NULL, 
                 user_id INTEGER NOT NULL, 
                 drop_id INTEGER DEFAULT NULL, 
@@ -84,15 +84,15 @@ class Version20140319130229 extends AbstractMigration
                 CONSTRAINT FK_CDA81F40A76ED395 FOREIGN KEY (user_id) 
                 REFERENCES claro_user (id) NOT DEFERRABLE INITIALLY IMMEDIATE, 
                 CONSTRAINT FK_CDA81F404D224760 FOREIGN KEY (drop_id) 
-                REFERENCES icap__dropzonebundle_drop (id) 
+                REFERENCES innova_collecticielbundle_drop (id) 
                 ON DELETE SET NULL NOT DEFERRABLE INITIALLY IMMEDIATE, 
                 CONSTRAINT FK_CDA81F40A8C6E7BD FOREIGN KEY (drop_zone_id) 
-                REFERENCES icap__dropzonebundle_dropzone (id) 
+                REFERENCES innova_collecticielbundle_dropzone (id) 
                 ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE
             )
         ");
         $this->addSql("
-            INSERT INTO icap__dropzonebundle_correction (
+            INSERT INTO innova_collecticielbundle_correction (
                 id, user_id, drop_id, drop_zone_id, 
                 total_grade, comment, valid, start_date, 
                 last_open_date, end_date, finished, 
@@ -112,19 +112,19 @@ class Version20140319130229 extends AbstractMigration
             editable, 
             reporter, 
             reportComment 
-            FROM __temp__icap__dropzonebundle_correction
+            FROM __temp__innova_collecticielbundle_correction
         ");
         $this->addSql("
-            DROP TABLE __temp__icap__dropzonebundle_correction
+            DROP TABLE __temp__innova_collecticielbundle_correction
         ");
         $this->addSql("
-            CREATE INDEX IDX_CDA81F40A76ED395 ON icap__dropzonebundle_correction (user_id)
+            CREATE INDEX IDX_CDA81F40A76ED395 ON innova_collecticielbundle_correction (user_id)
         ");
         $this->addSql("
-            CREATE INDEX IDX_CDA81F404D224760 ON icap__dropzonebundle_correction (drop_id)
+            CREATE INDEX IDX_CDA81F404D224760 ON innova_collecticielbundle_correction (drop_id)
         ");
         $this->addSql("
-            CREATE INDEX IDX_CDA81F40A8C6E7BD ON icap__dropzonebundle_correction (drop_zone_id)
+            CREATE INDEX IDX_CDA81F40A8C6E7BD ON innova_collecticielbundle_correction (drop_zone_id)
         ");
         $this->addSql("
             DROP INDEX UNIQ_6782FC235342CDF
@@ -133,7 +133,7 @@ class Version20140319130229 extends AbstractMigration
             DROP INDEX UNIQ_6782FC23B87FAB32
         ");
         $this->addSql("
-            CREATE TEMPORARY TABLE __temp__icap__dropzonebundle_dropzone AS 
+            CREATE TEMPORARY TABLE __temp__innova_collecticielbundle_dropzone AS 
             SELECT id, 
             hidden_directory_id, 
             edition_state, 
@@ -156,13 +156,13 @@ class Version20140319130229 extends AbstractMigration
             allow_comment_in_correction, 
             total_criteria_column, 
             resourceNode_id 
-            FROM icap__dropzonebundle_dropzone
+            FROM innova_collecticielbundle_dropzone
         ");
         $this->addSql("
-            DROP TABLE icap__dropzonebundle_dropzone
+            DROP TABLE innova_collecticielbundle_dropzone
         ");
         $this->addSql("
-            CREATE TABLE icap__dropzonebundle_dropzone (
+            CREATE TABLE innova_collecticielbundle_dropzone (
                 id INTEGER NOT NULL, 
                 hidden_directory_id INTEGER DEFAULT NULL, 
                 edition_state INTEGER NOT NULL, 
@@ -194,7 +194,7 @@ class Version20140319130229 extends AbstractMigration
             )
         ");
         $this->addSql("
-            INSERT INTO icap__dropzonebundle_dropzone (
+            INSERT INTO innova_collecticielbundle_dropzone (
                 id, hidden_directory_id, edition_state, 
                 instruction, allow_workspace_resource, 
                 allow_upload, allow_url, allow_rich_text, 
@@ -228,16 +228,16 @@ class Version20140319130229 extends AbstractMigration
             allow_comment_in_correction, 
             total_criteria_column, 
             resourceNode_id 
-            FROM __temp__icap__dropzonebundle_dropzone
+            FROM __temp__innova_collecticielbundle_dropzone
         ");
         $this->addSql("
-            DROP TABLE __temp__icap__dropzonebundle_dropzone
+            DROP TABLE __temp__innova_collecticielbundle_dropzone
         ");
         $this->addSql("
-            CREATE UNIQUE INDEX UNIQ_6782FC235342CDF ON icap__dropzonebundle_dropzone (hidden_directory_id)
+            CREATE UNIQUE INDEX UNIQ_6782FC235342CDF ON innova_collecticielbundle_dropzone (hidden_directory_id)
         ");
         $this->addSql("
-            CREATE UNIQUE INDEX UNIQ_6782FC23B87FAB32 ON icap__dropzonebundle_dropzone (resourceNode_id)
+            CREATE UNIQUE INDEX UNIQ_6782FC23B87FAB32 ON innova_collecticielbundle_dropzone (resourceNode_id)
         ");
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Icap\DropzoneBundle\Form;
+namespace Innova\CollecticielBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -40,7 +40,7 @@ class CorrectionCriteriaPageType extends AbstractType
 
     public function getName()
     {
-        return 'icap_dropzone_correct_criteria_page_form';
+        return 'innova_collecticiel_correct_criteria_page_form';
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
@@ -49,7 +49,7 @@ class CorrectionCriteriaPageType extends AbstractType
             'totalChoice' => 5,
             'criteria' => array(),
             'edit' => true,
-            'translation_domain' => 'icap_dropzone'
+            'translation_domain' => 'innova_collecticiel'
         ));
     }
 }

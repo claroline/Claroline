@@ -1,6 +1,6 @@
 <?php
 
-namespace Icap\DropzoneBundle\Migrations\ibm_db2;
+namespace Innova\CollecticielBundle\Migrations\ibm_db2;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -15,12 +15,12 @@ class Version20140522071801 extends AbstractMigration
     public function up(Schema $schema)
     {
         $this->addSql("
-            ALTER TABLE icap__dropzonebundle_drop 
+            ALTER TABLE innova_collecticielbundle_drop 
             ADD COLUMN unlocked_drop SMALLINT NOT NULL 
             ADD COLUMN unlocked_user SMALLINT NOT NULL
         ");
         $this->addSql("
-            ALTER TABLE icap__dropzonebundle_dropzone 
+            ALTER TABLE innova_collecticielbundle_dropzone 
             DROP COLUMN notify_on_drop
         ");
     }
@@ -28,12 +28,12 @@ class Version20140522071801 extends AbstractMigration
     public function down(Schema $schema)
     {
         $this->addSql("
-            ALTER TABLE icap__dropzonebundle_drop 
+            ALTER TABLE innova_collecticielbundle_drop 
             DROP COLUMN unlocked_drop 
             DROP COLUMN unlocked_user
         ");
         $this->addSql("
-            ALTER TABLE icap__dropzonebundle_dropzone 
+            ALTER TABLE innova_collecticielbundle_dropzone 
             ADD COLUMN notify_on_drop SMALLINT NOT NULL
         ");
     }

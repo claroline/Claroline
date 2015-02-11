@@ -1,28 +1,28 @@
 <?php
 
-namespace Icap\DropzoneBundle\Event\Log;
+namespace Innova\CollecticielBundle\Event\Log;
 
 use Claroline\CoreBundle\Event\Log\AbstractLogResourceEvent;
 use Claroline\CoreBundle\Event\Log\LogGenericEvent;
 use Icap\NotificationBundle\Entity\NotifiableInterface;
-use Icap\DropzoneBundle\Entity\Document;
-use Icap\DropzoneBundle\Entity\Drop;
-use Icap\DropzoneBundle\Entity\Dropzone;
-use Icap\DropzoneBundle\Entity\Correction;
+use Innova\CollecticielBundle\Entity\Document;
+use Innova\CollecticielBundle\Entity\Drop;
+use Innova\CollecticielBundle\Entity\Dropzone;
+use Innova\CollecticielBundle\Entity\Correction;
 
 class LogDropGradeAvailableEvent extends AbstractLogResourceEvent implements NotifiableInterface {
 
-    const ACTION = 'resource-icap_dropzone-drop_grade_available';
+    const ACTION = 'resource-innova_collecticiel-drop_grade_available';
     protected $dropzone;
     protected $drop;
     protected $details;
 
     /**
-     * @param \Icap\DropzoneBundle\Entity\Dropzone $dropzone
-     * @param \Icap\DropzoneBundle\Entity\Drop $drop
-     * @internal param \Icap\DropzoneBundle\Event\Log\Wiki $wiki
-     * @internal param \Icap\DropzoneBundle\Event\Log\Section $section
-     * @internal param \Icap\DropzoneBundle\Event\Log\Contribution $contribution
+     * @param \Innova\CollecticielBundle\Entity\Dropzone $dropzone
+     * @param \Innova\CollecticielBundle\Entity\Drop $drop
+     * @internal param \Innova\CollecticielBundle\Event\Log\Wiki $wiki
+     * @internal param \Innova\CollecticielBundle\Event\Log\Section $section
+     * @internal param \Innova\CollecticielBundle\Event\Log\Contribution $contribution
      */
     public function __construct(Dropzone $dropzone, Drop $drop)
     {

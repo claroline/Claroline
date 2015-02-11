@@ -1,4 +1,4 @@
-{% extends "IcapDropzoneBundle::layout.html.twig" %}
+{% extends "InnovaCollecticielBundle::layout.html.twig" %}
 {% block resourceBreadcrumb %}
     <li class="active"><span class="fa fa-file"></span> {{ dropzone.resourceNode.name }}</li>
     <li class="active">Copies made</li>
@@ -8,9 +8,9 @@
 {% block dropzone_content %}
     <div class="container container-dropzone">
         <h3>
-            {{ 'Invalidate a drop'|trans({}, 'icap_dropzone') }}
+            {{ 'Invalidate a drop'|trans({}, 'innova_collecticiel') }}
         </h3>
-        {% include "IcapDropzoneBundle:Drop:dropsDeleteForm.html.twig" %}
+        {% include "InnovaCollecticielBundle:Drop:dropsDeleteForm.html.twig" %}
     </div>
 {% endblock %}
 

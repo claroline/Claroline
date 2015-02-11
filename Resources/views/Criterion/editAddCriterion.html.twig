@@ -1,14 +1,14 @@
-{% extends "IcapDropzoneBundle:Dropzone:edit.html.twig" %}
+{% extends "InnovaCollecticielBundle:Dropzone:edit.html.twig" %}
 
 {% block drop_zone_content_edit %}
     <h3>
         {% if criterion.id == 0 %}
-            {{ 'Add a criterion'|trans({}, 'icap_dropzone') }}
+            {{ 'Add a criterion'|trans({}, 'innova_collecticiel') }}
         {% else %}
-            {{ 'Edit a criterion'|trans({}, 'icap_dropzone') }}
+            {{ 'Edit a criterion'|trans({}, 'innova_collecticiel') }}
         {% endif %}
     </h3>
-    {% include "IcapDropzoneBundle:Criterion:editAddCriterionForm.html.twig" %}
+    {% include "InnovaCollecticielBundle:Criterion:editAddCriterionForm.html.twig" %}
 {% endblock %}
 
 {% block javascripts %}

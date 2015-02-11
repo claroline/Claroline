@@ -1,9 +1,9 @@
 <?php
 
-namespace Icap\DropzoneBundle\Library\Security\Voter;
+namespace Innova\CollecticielBundle\Library\Security\Voter;
 
 use Claroline\CoreBundle\Entity\User;
-use Icap\DropzoneBundle\Manager\TemporaryAccessResourceManager;
+use Innova\CollecticielBundle\Manager\TemporaryAccessResourceManager;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;

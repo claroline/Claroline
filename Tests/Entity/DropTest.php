@@ -6,10 +6,10 @@
  * Time: 10:19
  */
 
-namespace Icap\DropzoneBundle\Tests\Entity;
+namespace Innova\CollecticielBundle\Tests\Entity;
 
 
-use Icap\DropzoneBundle\Entity\Correction;
+use Innova\CollecticielBundle\Entity\Correction;
 
 class DropTest extends \PHPUnit_Framework_TestCase
 {

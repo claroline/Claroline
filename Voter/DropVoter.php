@@ -1,19 +1,19 @@
 <?php
 
-namespace Icap\DropzoneBundle\Voter;
+namespace Innova\CollecticielBundle\Voter;
 
 
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use Claroline\CoreBundle\Manager\MaskManager;
 use Claroline\CoreBundle\Entity\User;
-use Icap\DropzoneBundle\Entity\Dropzone;
-use Icap\DropzoneBundle\Entity;
+use Innova\CollecticielBundle\Entity\Dropzone;
+use Innova\CollecticielBundle\Entity;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
- * @DI\Service("icap.manager.drop_voter")
+ * @DI\Service("innova.manager.drop_voter")
  */
 class DropVoter
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Icap\DropzoneBundle\Listener;
+namespace Innova\CollecticielBundle\Listener;
 
 use Claroline\CoreBundle\Event\CustomActionResourceEvent;
 use Claroline\CoreBundle\Event\PluginOptionsEvent;
@@ -12,9 +12,9 @@ use Claroline\CoreBundle\Event\CopyResourceEvent;
 use Claroline\CoreBundle\Event\Log\LogCreateDelegateViewEvent;
 
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
-use Icap\DropzoneBundle\Entity\Criterion;
-use Icap\DropzoneBundle\Entity\Dropzone;
-use Icap\DropzoneBundle\Form\DropzoneType;
+use Innova\CollecticielBundle\Entity\Criterion;
+use Innova\CollecticielBundle\Entity\Dropzone;
+use Innova\CollecticielBundle\Form\DropzoneType;
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -28,7 +28,7 @@ class DropzoneListener extends ContainerAware
             'ClarolineCoreBundle:Resource:createForm.html.twig',
             array(
                 'form' => $form->createView(),
-                'resourceType' => 'icap_dropzone'
+                'resourceType' => 'innova_collecticiel'
             )
         );
 
@@ -50,7 +50,7 @@ class DropzoneListener extends ContainerAware
                 'ClarolineCoreBundle:Resource:createForm.html.twig',
                 array(
                     'form' => $form->createView(),
-                    'resourceType' => 'icap_dropzone'
+                    'resourceType' => 'innova_collecticiel'
                 )
             );
             $event->setErrorFormContent($content);
@@ -65,14 +65,14 @@ class DropzoneListener extends ContainerAware
             $route = $this->container
                 ->get('router')
                 ->generate(
-                    'icap_dropzone_open',
+                    'innova_collecticiel_open',
                     array('resourceId' => $event->getResource()->getId())
                 );
         } else {
             $route = $this->container
                 ->get('router')
                 ->generate(
-                    'icap_dropzone_edit',
+                    'innova_collecticiel_edit',
                     array('resourceId' => $event->getResource()->getId())
                 );
         }
@@ -87,7 +87,7 @@ class DropzoneListener extends ContainerAware
         $route = $this->container
             ->get('router')
             ->generate(
-                'icap_dropzone_open',
+                'innova_collecticiel_open',
                 array('resourceId' => $event->getResource()->getId())
             );
         $event->setResponse(new RedirectResponse($route));
@@ -99,7 +99,7 @@ class DropzoneListener extends ContainerAware
         $route = $this->container
             ->get('router')
             ->generate(
-                'icap_dropzone_edit',
+                'innova_collecticiel_edit',
                 array('resourceId' => $event->getResource()->getId())
             );
         $event->setResponse(new RedirectResponse($route));
@@ -112,7 +112,7 @@ class DropzoneListener extends ContainerAware
         $route = $this->container
             ->get('router')
             ->generate(
-                'icap_dropzone_drops',
+                'innova_collecticiel_drops',
                 array('resourceId' => $event->getResource()->getId())
             );
         $event->setResponse(new RedirectResponse($route));

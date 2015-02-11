@@ -1,6 +1,6 @@
 <?php
 
-namespace Icap\DropzoneBundle\Migrations\sqlsrv;
+namespace Innova\CollecticielBundle\Migrations\sqlsrv;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -15,18 +15,18 @@ class Version20140407074633 extends AbstractMigration
     public function up(Schema $schema)
     {
         $this->addSql("
-            ALTER TABLE icap__dropzonebundle_drop 
+            ALTER TABLE innova_collecticielbundle_drop 
             ADD auto_closed_drop BIT NOT NULL
         ");
         $this->addSql("
-            ALTER TABLE icap__dropzonebundle_drop 
+            ALTER TABLE innova_collecticielbundle_drop 
             ADD CONSTRAINT DF_3AD19BA6_D8F7A5C7 DEFAULT '0' FOR auto_closed_drop
         ");
         $this->addSql("
-            ALTER TABLE icap__dropzonebundle_dropzone ALTER COLUMN auto_close_opened_drops_when_time_is_up BIT NOT NULL
+            ALTER TABLE innova_collecticielbundle_dropzone ALTER COLUMN auto_close_opened_drops_when_time_is_up BIT NOT NULL
         ");
         $this->addSql("
-            ALTER TABLE icap__dropzonebundle_dropzone 
+            ALTER TABLE innova_collecticielbundle_dropzone 
             ADD CONSTRAINT DF_6782FC23_70DF9A93 DEFAULT '0' FOR auto_close_opened_drops_when_time_is_up
         ");
     }
@@ -34,15 +34,15 @@ class Version20140407074633 extends AbstractMigration
     public function down(Schema $schema)
     {
         $this->addSql("
-            ALTER TABLE icap__dropzonebundle_drop 
+            ALTER TABLE innova_collecticielbundle_drop 
             DROP COLUMN auto_closed_drop
         ");
         $this->addSql("
-            ALTER TABLE icap__dropzonebundle_dropzone 
+            ALTER TABLE innova_collecticielbundle_dropzone 
             DROP CONSTRAINT DF_6782FC23_70DF9A93
         ");
         $this->addSql("
-            ALTER TABLE icap__dropzonebundle_dropzone ALTER COLUMN auto_close_opened_drops_when_time_is_up BIT NOT NULL
+            ALTER TABLE innova_collecticielbundle_dropzone ALTER COLUMN auto_close_opened_drops_when_time_is_up BIT NOT NULL
         ");
     }
 }

@@ -5,11 +5,11 @@
  * Time: 14:56
  */
 
-namespace Icap\DropzoneBundle\Repository;
+namespace Innova\CollecticielBundle\Repository;
 
 
 use Doctrine\ORM\EntityRepository;
-use Icap\DropzoneBundle\Entity\Dropzone;
+use Innova\CollecticielBundle\Entity\Dropzone;
 use Claroline\CoreBundle\Entity\User;
 
 class CorrectionRepository extends EntityRepository {
@@ -124,7 +124,7 @@ class CorrectionRepository extends EntityRepository {
     public function invalidateAllCorrectionForADrop($dropzone, $drop)
     {
         $this->createQueryBuilder('correction')
-            ->update('IcapDropzoneBundle:Correction', 'correction')
+            ->update('InnovaCollecticielBundle:Correction', 'correction')
             ->set('correction.valid', 'false')
             ->where('correction.drop = :drop')
             ->andWhere('correction.dropzone = :dropzone')
@@ -154,11 +154,11 @@ class CorrectionRepository extends EntityRepository {
          $dql = '
         SELECT  DISTINCT u  FROM Claroline\CoreBundle\Entity\User u
         WHERE u IN (
-            SELECT u2 FROM IcapDropzoneBundle:Correction c
+            SELECT u2 FROM InnovaCollecticielBundle:Correction c
             JOIN c.user u2
             WHERE c.dropzone = :dropzoneId
             ) or u IN (
-             SELECT u3 FROM IcapDropzoneBundle:Drop d
+             SELECT u3 FROM InnovaCollecticielBundle:Drop d
               JOIN d.user u3
              WHERE d.dropzone = :dropzoneId
             )

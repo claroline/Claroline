@@ -1,4 +1,4 @@
-{% extends "IcapDropzoneBundle::layout.html.twig" %}
+{% extends "InnovaCollecticielBundle::layout.html.twig" %}
 {% block resourceBreadcrumb %}
     <li class="active"><span class="fa fa-list"></span> {{ dropzone.resourceNode.name }}</li>
 {% endblock %}
@@ -6,11 +6,11 @@
     <div class="row container-dropzone">
         <div class="col-md-6 col-md-offset-1">
             <h3>
-                {{ 'Warning'|trans({}, 'icap_dropzone') }}
+                {{ 'Warning'|trans({}, 'innova_collecticiel') }}
             </h3>
 
             <div>
-                {{ 'You will reactivate a correction but the expected number of correction is already reached. Are you sure ?'|trans({}, 'icap_dropzone') }}
+                {{ 'You will reactivate a correction but the expected number of correction is already reached. Are you sure ?'|trans({}, 'innova_collecticiel') }}
             </div>
         </div>
     </div>
@@ -18,11 +18,11 @@
         <div class="col-md-6 col-md-offset-1">
             <div class="btn-group">
                 <a class="btn btn-default" data-dismiss="modal" aria-hidden="true"
-                   href="{{ path('icap_dropzone_drops_detail', {'resourceId': dropzone.id,'dropId':drop.id}) }}">{{ 'Cancel'|trans({}, 'icap_dropzone') }}</a>
+                   href="{{ path('innova_collecticiel_drops_detail', {'resourceId': dropzone.id,'dropId':drop.id}) }}">{{ 'Cancel'|trans({}, 'innova_collecticiel') }}</a>
                 <a class="btn btn-primary"
-                   href="{{ path('icap_dropzone_drops_detail_correction_validation',
+                   href="{{ path('innova_collecticiel_drops_detail_correction_validation',
                    {'resourceId': dropzone.id, 'correctionId': correction.id, 'value': 'yes'}) }}"
-                   class="btn btn-default btn-xs">{{ 'revalidate'|trans({}, 'icap_dropzone') }}</a>
+                   class="btn btn-default btn-xs">{{ 'revalidate'|trans({}, 'innova_collecticiel') }}</a>
             </div>
         </div>
     </div>

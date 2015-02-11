@@ -5,17 +5,17 @@
  * Time: 09:30
  */
 
-namespace Icap\DropzoneBundle\Controller;
+namespace Innova\CollecticielBundle\Controller;
 
 use Claroline\CoreBundle\Event\Log\LogResourceReadEvent;
 use Claroline\CoreBundle\Event\Log\LogResourceUpdateEvent;
-use Icap\DropzoneBundle\Entity\Criterion;
-use Icap\DropzoneBundle\Entity\Dropzone;
-use Icap\DropzoneBundle\Event\Log\LogCriterionCreateEvent;
-use Icap\DropzoneBundle\Event\Log\LogCriterionDeleteEvent;
-use Icap\DropzoneBundle\Event\Log\LogCriterionUpdateEvent;
-use Icap\DropzoneBundle\Form\CriterionDeleteType;
-use Icap\DropzoneBundle\Form\CriterionType;
+use Innova\CollecticielBundle\Entity\Criterion;
+use Innova\CollecticielBundle\Entity\Dropzone;
+use Innova\CollecticielBundle\Event\Log\LogCriterionCreateEvent;
+use Innova\CollecticielBundle\Event\Log\LogCriterionDeleteEvent;
+use Innova\CollecticielBundle\Event\Log\LogCriterionUpdateEvent;
+use Innova\CollecticielBundle\Form\CriterionDeleteType;
+use Innova\CollecticielBundle\Form\CriterionType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -26,24 +26,24 @@ class CriterionController extends DropzoneBaseController
     /**
      * @Route(
      *      "/{resourceId}/edit/addcriterion/{page}/{criterionId}",
-     *      name="icap_dropzone_edit_add_criterion",
+     *      name="innova_collecticiel_edit_add_criterion",
      *      requirements={"resourceId" = "\d+", "criterionId" = "\d+", "page" = "\d+"},
      *      defaults={"criterionId" = 0}
      * )
-     * @ParamConverter("dropzone", class="IcapDropzoneBundle:Dropzone", options={"id" = "resourceId"})
+     * @ParamConverter("dropzone", class="InnovaCollecticielBundle:Dropzone", options={"id" = "resourceId"})
      * @Template()
      */
     public function editAddCriterionAction($dropzone, $page, $criterionId)
     {
-        $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
-        $this->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
+        $this->get('innova.manager.dropzone_voter')->isAllowToOpen($dropzone);
+        $this->get('innova.manager.dropzone_voter')->isAllowToEdit($dropzone);
 
         $criterion = new Criterion();
         if ($criterionId != 0) {
             $criterion = $this
                 ->getDoctrine()
                 ->getManager()
-                ->getRepository('IcapDropzoneBundle:Criterion')
+                ->getRepository('InnovaCollecticielBundle:Criterion')
                 ->find($criterionId);
         } else {
             $criterion->setDropzone($dropzone);
@@ -54,7 +54,7 @@ class CriterionController extends DropzoneBaseController
         if ($this->getRequest()->isXMLHttpRequest()) {
 
             return $this->render(
-                'IcapDropzoneBundle:Criterion:editAddCriterionModal.html.twig',
+                'InnovaCollecticielBundle:Criterion:editAddCriterionModal.html.twig',
                 array(
                     'workspace' => $dropzone->getResourceNode()->getWorkspace(),
                     '_resource' => $dropzone,
@@ -79,17 +79,17 @@ class CriterionController extends DropzoneBaseController
     /**
      * @Route(
      *      "/{resourceId}/edit/createcriterion/{page}/{criterionId}",
-     *      name="icap_dropzone_edit_create_criterion",
+     *      name="innova_collecticiel_edit_create_criterion",
      *      requirements={"resourceId" = "\d+", "criterionId" = "\d+", "page" = "\d+"},
      *      defaults={"criterionId" = 0}
      * )
-     * @ParamConverter("dropzone", class="IcapDropzoneBundle:Dropzone", options={"id" = "resourceId"})
-     * @Template("IcapDropzoneBundle:Dropzone:editAddCriteria.html.twig")
+     * @ParamConverter("dropzone", class="InnovaCollecticielBundle:Dropzone", options={"id" = "resourceId"})
+     * @Template("InnovaCollecticielBundle:Dropzone:editAddCriteria.html.twig")
      */
     public function editCreateCriterionAction($dropzone, $page, $criterionId)
     {
-        $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
-        $this->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
+        $this->get('innova.manager.dropzone_voter')->isAllowToOpen($dropzone);
+        $this->get('innova.manager.dropzone_voter')->isAllowToEdit($dropzone);
 
         $edit = null;
         $criterion = new Criterion();
@@ -97,7 +97,7 @@ class CriterionController extends DropzoneBaseController
             $criterion = $this
                 ->getDoctrine()
                 ->getManager()
-                ->getRepository('IcapDropzoneBundle:Criterion')
+                ->getRepository('InnovaCollecticielBundle:Criterion')
                 ->find($criterionId);
             $edit = true;
         } else {
@@ -135,7 +135,7 @@ class CriterionController extends DropzoneBaseController
 
             return $this->redirect(
                 $this->generateUrl(
-                    'icap_dropzone_edit_criteria_paginated',
+                    'innova_collecticiel_edit_criteria_paginated',
                     array(
                         'resourceId' => $dropzone->getId(),
                         'page' => $page
@@ -158,30 +158,30 @@ class CriterionController extends DropzoneBaseController
     /**
      * @Route(
      *      "/{resourceId}/edit/deletecriterion/{page}/{criterionId}/{number}",
-     *      name="icap_dropzone_edit_delete_criterion",
+     *      name="innova_collecticiel_edit_delete_criterion",
      *      requirements={"resourceId" = "\d+", "criterionId" = "\d+", "page" = "\d+", "number" = "\d+"}
      * )
-     * @ParamConverter("dropzone", class="IcapDropzoneBundle:Dropzone", options={"id" = "resourceId"})
-     * @ParamConverter("criterion", class="IcapDropzoneBundle:Criterion", options={"id" = "criterionId"})
+     * @ParamConverter("dropzone", class="InnovaCollecticielBundle:Dropzone", options={"id" = "resourceId"})
+     * @ParamConverter("criterion", class="InnovaCollecticielBundle:Criterion", options={"id" = "criterionId"})
      * @Template()
      */
     public function editDeleteCriterionAction(Dropzone $dropzone, $page, $criterion, $number)
     {
-        $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
-        $this->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
+        $this->get('innova.manager.dropzone_voter')->isAllowToOpen($dropzone);
+        $this->get('innova.manager.dropzone_voter')->isAllowToEdit($dropzone);
 
         $form = $this->createForm(new CriterionDeleteType(), $criterion);
 
         $nbCorrection = $this
             ->getDoctrine()
             ->getManager()
-            ->getRepository('IcapDropzoneBundle:Correction')
+            ->getRepository('InnovaCollecticielBundle:Correction')
             ->countByDropzone($dropzone->getId());
 
         if ($this->getRequest()->isXMLHttpRequest()) {
 
             return $this->render(
-                'IcapDropzoneBundle:Criterion:editDeleteCriterionModal.html.twig',
+                'InnovaCollecticielBundle:Criterion:editDeleteCriterionModal.html.twig',
                 array(
                     'workspace' => $dropzone->getResourceNode()->getWorkspace(),
                     '_resource' => $dropzone,
@@ -210,17 +210,17 @@ class CriterionController extends DropzoneBaseController
     /**
      * @Route(
      *      "/{resourceId}/edit/removecriterion/{page}/{criterionId}",
-     *      name="icap_dropzone_edit_remove_criterion",
+     *      name="innova_collecticiel_edit_remove_criterion",
      *      requirements={"resourceId" = "\d+", "criterionId" = "\d+", "page" = "\d+"}
      * )
-     * @ParamConverter("dropzone", class="IcapDropzoneBundle:Dropzone", options={"id" = "resourceId"})
-     * @ParamConverter("criterion", class="IcapDropzoneBundle:Criterion", options={"id" = "criterionId"})
-     * @Template("IcapDropzoneBundle:Dropzone:editDeleteCriterion.html.twig")
+     * @ParamConverter("dropzone", class="InnovaCollecticielBundle:Dropzone", options={"id" = "resourceId"})
+     * @ParamConverter("criterion", class="InnovaCollecticielBundle:Criterion", options={"id" = "criterionId"})
+     * @Template("InnovaCollecticielBundle:Dropzone:editDeleteCriterion.html.twig")
      */
     public function editRemoveCriterionAction(Dropzone $dropzone, $page, Criterion $criterion)
     {
-        $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
-        $this->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
+        $this->get('innova.manager.dropzone_voter')->isAllowToOpen($dropzone);
+        $this->get('innova.manager.dropzone_voter')->isAllowToEdit($dropzone);
 
         $form = $this->createForm(new CriterionDeleteType(), $criterion);
         $form->handleRequest($this->getRequest());
@@ -239,13 +239,13 @@ class CriterionController extends DropzoneBaseController
             if ($dropzone->hasCriteria() === false) {
                 $this->getRequest()->getSession()->getFlashBag()->add(
                     'warning',
-                    $this->get('translator')->trans('Warning your peer review offers no criteria on which to base correct copies', array(), 'icap_dropzone')
+                    $this->get('translator')->trans('Warning your peer review offers no criteria on which to base correct copies', array(), 'innova_collecticiel')
                 );
             }
 
             return $this->redirect(
                 $this->generateUrl(
-                    'icap_dropzone_edit_criteria_paginated',
+                    'innova_collecticiel_edit_criteria_paginated',
                     array(
                         'resourceId' => $dropzone->getId(),
                         'page' => $page

@@ -1,4 +1,4 @@
-{% extends "IcapDropzoneBundle::layout.html.twig" %}
+{% extends "InnovaCollecticielBundle::layout.html.twig" %}
 {% block resourceBreadcrumb %}
     <li class="active"><span class="fa fa-file"></span> {{ dropzone.resourceNode.name }}</li>
 {% endblock %}
@@ -6,9 +6,9 @@
 {% block dropzone_content %}
     <div class="container">
         <h3>
-            {{ 'Warning'|trans({}, 'icap_dropzone') }}
+            {{ 'Warning'|trans({}, 'innova_collecticiel') }}
         </h3>
-        {% include "IcapDropzoneBundle:Drop:reportDropForm.html.twig" %}
+        {% include "InnovaCollecticielBundle:Drop:reportDropForm.html.twig" %}
     </div>
 {% endblock %}
 

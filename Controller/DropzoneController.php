@@ -1,14 +1,14 @@
 <?php
-namespace Icap\DropzoneBundle\Controller;
+namespace Innova\CollecticielBundle\Controller;
 
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\Log\LogResourceReadEvent;
 use Claroline\CoreBundle\Event\Log\LogResourceUpdateEvent;
-use Icap\DropzoneBundle\Entity\Dropzone;
-use Icap\DropzoneBundle\Event\Log\LogDropzoneConfigureEvent;
-use Icap\DropzoneBundle\Event\Log\LogDropzoneManualStateChangedEvent;
-use Icap\DropzoneBundle\Form\DropzoneCommonType;
-use Icap\DropzoneBundle\Form\DropzoneCriteriaType;
+use Innova\CollecticielBundle\Entity\Dropzone;
+use Innova\CollecticielBundle\Event\Log\LogDropzoneConfigureEvent;
+use Innova\CollecticielBundle\Event\Log\LogDropzoneManualStateChangedEvent;
+use Innova\CollecticielBundle\Form\DropzoneCommonType;
+use Innova\CollecticielBundle\Form\DropzoneCriteriaType;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Exception\NotValidCurrentPageException;
 use Claroline\CoreBundle\Entity\Event;
@@ -29,29 +29,29 @@ class DropzoneController extends DropzoneBaseController
     /**
      * @Route(
      *      "/{resourceId}/edit",
-     *      name="icap_dropzone_edit",
+     *      name="innova_collecticiel_edit",
      *      requirements={"resourceId" = "\d+"}
      * )
      * @Route(
      *      "/{resourceId}/edit/common",
-     *      name="icap_dropzone_edit_common",
+     *      name="innova_collecticiel_edit_common",
      *      requirements={"resourceId" = "\d+"}
      * )
      * @ParamConverter("user", options={
      *      "authenticatedUser" = true,
      *      "messageEnabled" = true,
      *      "messageTranslationKey" = "Participate in an evaluation requires authentication. Please login.",
-     *      "messageTranslationDomain" = "icap_dropzone"
+     *      "messageTranslationDomain" = "innova_collecticiel"
      * })
-     * @ParamConverter("dropzone", class="IcapDropzoneBundle:Dropzone", options={"id" = "resourceId"})
+     * @ParamConverter("dropzone", class="InnovaCollecticielBundle:Dropzone", options={"id" = "resourceId"})
      * @Template()
      *
      * User is needed for Agenda Event
      */
     public function editCommonAction(Dropzone $dropzone, $user)
     {
-        $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
-        $this->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
+        $this->get('innova.manager.dropzone_voter')->isAllowToOpen($dropzone);
+        $this->get('innova.manager.dropzone_voter')->isAllowToEdit($dropzone);
         $platformConfigHandler = $this->get('claroline.config.platform_config_handler');
         $form = $this->createForm(new DropzoneCommonType(), $dropzone, array('language' => $platformConfigHandler->getParameter('locale_language'), 'date_format' => $this->get('translator')->trans('date_form_format', array(), 'platform')));
 
@@ -97,7 +97,7 @@ class DropzoneController extends DropzoneBaseController
             if (!$dropzone->getManualPlanning()) {
 
                 // var_dump($this->getRequest()->request->all());
-                $form_array = $this->getRequest()->request->get('icap_dropzone_common_form');
+                $form_array = $this->getRequest()->request->get('innova_collecticiel_common_form');
 
                 if (is_array($form_array)) {
                     // reconstruction of datetimes.
@@ -251,7 +251,7 @@ class DropzoneController extends DropzoneBaseController
 
             if ($form->isValid()) {
                 //getting the dropzoneManager
-                $dropzoneManager = $this->get('icap.manager.dropzone_manager');
+                $dropzoneManager = $this->get('innova.manager.dropzone_manager');
 
                 if ($dropzone->getPeerReview() != true) {
                     $dropzone->setExpectedTotalCorrection(1);
@@ -311,18 +311,18 @@ class DropzoneController extends DropzoneBaseController
                         if ($dropzone->hasCriteria() === false) {
                             $this->getRequest()->getSession()->getFlashBag()->add(
                                 'warning',
-                                $this->get('translator')->trans('Warning your peer review offers no criteria on which to base correct copies', array(), 'icap_dropzone')
+                                $this->get('translator')->trans('Warning your peer review offers no criteria on which to base correct copies', array(), 'innova_collecticiel')
                             );
                         }
 
                         $this->getRequest()->getSession()->getFlashBag()->add(
                             'success',
-                            $this->get('translator')->trans('The evaluation has been successfully saved', array(), 'icap_dropzone')
+                            $this->get('translator')->trans('The evaluation has been successfully saved', array(), 'innova_collecticiel')
                         );
                     } else {
                         return $this->redirect(
                             $this->generateUrl(
-                                'icap_dropzone_edit_criteria',
+                                'innova_collecticiel_edit_criteria',
                                 array(
                                     'resourceId' => $dropzone->getId()
                                 )
@@ -332,7 +332,7 @@ class DropzoneController extends DropzoneBaseController
                 } else {
                     $this->getRequest()->getSession()->getFlashBag()->add(
                         'success',
-                        $this->get('translator')->trans('The evaluation has been successfully saved', array(), 'icap_dropzone')
+                        $this->get('translator')->trans('The evaluation has been successfully saved', array(), 'innova_collecticiel')
                     );
                 }
             }
@@ -349,27 +349,27 @@ class DropzoneController extends DropzoneBaseController
     /**
      * @Route(
      *      "/{resourceId}/edit/criteria",
-     *      name="icap_dropzone_edit_criteria",
+     *      name="innova_collecticiel_edit_criteria",
      *      requirements={"resourceId" = "\d+"},
      *      defaults={"page" = 1}
      * )
      *
      * @Route(
      *      "/{resourceId}/edit/criteria/{page}",
-     *      name="icap_dropzone_edit_criteria_paginated",
+     *      name="innova_collecticiel_edit_criteria_paginated",
      *      requirements={"resourceId" = "\d+", "page" = "\d+"},
      *      defaults={"page" = 1}
      * )
-     * @ParamConverter("dropzone", class="IcapDropzoneBundle:Dropzone", options={"id" = "resourceId"})
+     * @ParamConverter("dropzone", class="InnovaCollecticielBundle:Dropzone", options={"id" = "resourceId"})
      * @Template()
      */
     public function editCriteriaAction(Dropzone $dropzone, $page)
     {
-        $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
-        $this->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
+        $this->get('innova.manager.dropzone_voter')->isAllowToOpen($dropzone);
+        $this->get('innova.manager.dropzone_voter')->isAllowToEdit($dropzone);
 
         $em = $this->getDoctrine()->getManager();
-        $repository = $em->getRepository('IcapDropzoneBundle:Criterion');
+        $repository = $em->getRepository('InnovaCollecticielBundle:Criterion');
         $query = $repository
             ->createQueryBuilder('criterion')
             ->andWhere('criterion.dropzone = :dropzone')
@@ -385,7 +385,7 @@ class DropzoneController extends DropzoneBaseController
             if ($page > 0) {
                 return $this->redirect(
                     $this->generateUrl(
-                        'icap_dropzone_edit_criteria_paginated',
+                        'innova_collecticiel_edit_criteria_paginated',
                         array(
                             'resourceId' => $dropzone->getId(),
                             'page' => $pager->getNbPages()
@@ -400,7 +400,7 @@ class DropzoneController extends DropzoneBaseController
         $nbCorrection = $this
             ->getDoctrine()
             ->getManager()
-            ->getRepository('IcapDropzoneBundle:Correction')
+            ->getRepository('InnovaCollecticielBundle:Correction')
             ->countByDropzone($dropzone->getId());
 
         $form = $this->createForm(new DropzoneCriteriaType(), $dropzone);
@@ -429,10 +429,10 @@ class DropzoneController extends DropzoneBaseController
 
 
                 if ($form->get('recalculateGrades')->getData() == 1) {
-                    $this->get('icap.manager.dropzone_manager')->recalculateScoreByDropzone($dropzone);
+                    $this->get('innova.manager.dropzone_manager')->recalculateScoreByDropzone($dropzone);
                     $this->getRequest()->getSession()->getFlashBag()->add(
                         'success',
-                        $this->get('translator')->trans('Grades were recalculated', array(), 'icap_dropzone')
+                        $this->get('translator')->trans('Grades were recalculated', array(), 'innova_collecticiel')
                     );
                 }
 
@@ -443,13 +443,13 @@ class DropzoneController extends DropzoneBaseController
                 if ($dropzone->hasCriteria() === false) {
                     $this->getRequest()->getSession()->getFlashBag()->add(
                         'warning',
-                        $this->get('translator')->trans('Warning your peer review offers no criteria on which to base correct copies', array(), 'icap_dropzone')
+                        $this->get('translator')->trans('Warning your peer review offers no criteria on which to base correct copies', array(), 'innova_collecticiel')
                     );
                 }
                 if ($add_criteria_after) {
 
                     return new JsonResponse(array('success' => true));
-                    //$this->generateUrl('icap_dropzone_edit_add_criterion',array('resourceId'=>$dropzone->getId(),'page'=>$page));
+                    //$this->generateUrl('innova_collecticiel_edit_add_criterion',array('resourceId'=>$dropzone->getId(),'page'=>$page));
 
                 }
 
@@ -457,12 +457,12 @@ class DropzoneController extends DropzoneBaseController
                 if ($goBack == 0) {
                     $this->getRequest()->getSession()->getFlashBag()->add(
                         'success',
-                        $this->get('translator')->trans('The evaluation has been successfully saved', array(), 'icap_dropzone')
+                        $this->get('translator')->trans('The evaluation has been successfully saved', array(), 'innova_collecticiel')
                     );
                 } else {
                     return $this->redirect(
                         $this->generateUrl(
-                            'icap_dropzone_edit_common',
+                            'innova_collecticiel_edit_common',
                             array(
                                 'resourceId' => $dropzone->getId()
                             )
@@ -486,27 +486,27 @@ class DropzoneController extends DropzoneBaseController
     /**
      * @Route(
      *      "/{resourceId}/open",
-     *      name="icap_dropzone_open",
+     *      name="innova_collecticiel_open",
      *      requirements={"resourceId" = "\d+"}
      * )
-     * @ParamConverter("dropzone", class="IcapDropzoneBundle:Dropzone", options={"id" = "resourceId"})
+     * @ParamConverter("dropzone", class="InnovaCollecticielBundle:Dropzone", options={"id" = "resourceId"})
      * @ParamConverter("user", options={
      *      "authenticatedUser" = true,
      *      "messageEnabled" = true,
      *      "messageTranslationKey" = "Participate in an evaluation requires authentication. Please login.",
-     *      "messageTranslationDomain" = "icap_dropzone"
+     *      "messageTranslationDomain" = "innova_collecticiel"
      * })
      * @Template()
      */
     public function openAction(Dropzone $dropzone, $user)
     {
         //Participant view for a dropzone
-        $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
+        $this->get('innova.manager.dropzone_voter')->isAllowToOpen($dropzone);
 
         $em = $this->getDoctrine()->getManager();
-        $dropRepo = $em->getRepository('IcapDropzoneBundle:Drop');
+        $dropRepo = $em->getRepository('InnovaCollecticielBundle:Drop');
         $drop = $dropRepo->findOneBy(array('dropzone' => $dropzone, 'user' => $user));
-        $dropzoneManager = $this->get('icap.manager.dropzone_manager');
+        $dropzoneManager = $this->get('innova.manager.dropzone_manager');
         // check if endAllowDrop is past and close all unvalidated
         // drops if autoclose options is activated.
         if ($dropzone->getAutoCloseState() == Dropzone::AUTO_CLOSED_STATE_WAITING) {
@@ -514,12 +514,12 @@ class DropzoneController extends DropzoneBaseController
         }
 
         $nbCorrections = $em
-            ->getRepository('IcapDropzoneBundle:Correction')
+            ->getRepository('InnovaCollecticielBundle:Correction')
             ->countFinished($dropzone, $user);
         $hasCopyToCorrect = $em
-            ->getRepository('IcapDropzoneBundle:Drop')
+            ->getRepository('InnovaCollecticielBundle:Drop')
             ->hasCopyToCorrect($dropzone, $user);
-        $hasUnfinishedCorrection = $em->getRepository('IcapDropzoneBundle:Correction')->getNotFinished($dropzone, $user) != null;
+        $hasUnfinishedCorrection = $em->getRepository('InnovaCollecticielBundle:Correction')->getNotFinished($dropzone, $user) != null;
 
 
         // get progression of the evaluation ( current state, all states available and needed infos to the view).
@@ -562,14 +562,14 @@ class DropzoneController extends DropzoneBaseController
 
         $dropzoneName = $dropzone->getResourceNode()->getName();
         if ($type == 'drop') {
-            $title = $this->get('translator')->trans('Deposit phase of the %dropzonename% evaluation', array('%dropzonename%' => $dropzoneName), 'icap_dropzone');
-            $desc = $this->get('translator')->trans('Evaluation %dropzonename% opening', array('%dropzonename%' => $dropzoneName), 'icap_dropzone');
+            $title = $this->get('translator')->trans('Deposit phase of the %dropzonename% evaluation', array('%dropzonename%' => $dropzoneName), 'innova_collecticiel');
+            $desc = $this->get('translator')->trans('Evaluation %dropzonename% opening', array('%dropzonename%' => $dropzoneName), 'innova_collecticiel');
 
             $event->setTitle($title);
             $event->setDescription($desc);
         } else {
-            $title = $this->get('translator')->trans('Peer Review is starting in %dropzonename% evaluation', array('%dropzonename%' => $dropzoneName), 'icap_dropzone');
-            $desc = $this->get('translator')->trans('Peer Review is starting in %dropzonename% evaluation', array('%dropzonename%' => $dropzoneName), 'icap_dropzone');
+            $title = $this->get('translator')->trans('Peer Review is starting in %dropzonename% evaluation', array('%dropzonename%' => $dropzoneName), 'innova_collecticiel');
+            $desc = $this->get('translator')->trans('Peer Review is starting in %dropzonename% evaluation', array('%dropzonename%' => $dropzoneName), 'innova_collecticiel');
 
             $event->setTitle($title);
             $event->setDescription($desc);
