@@ -80,7 +80,7 @@ class CompetencyController
      */
     public function createScaleAction(Request $request)
     {
-        if ($this->formHandler->handle('hevinci.form.scale', $request)) {
+        if ($this->formHandler->isValid('hevinci.form.scale', $request)) {
             $this->competencyManager->createScale($this->formHandler->getData());
 
             return new JsonResponse('Scale created');

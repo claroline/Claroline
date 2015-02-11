@@ -8,6 +8,8 @@ use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
+ * Utility class for handling forms defined as services.
+ *
  * @DI\Service("hevinci.form.handler")
  */
 class FormHandler
@@ -28,7 +30,16 @@ class FormHandler
         $this->currentForm = null;
     }
 
-    public function handle($formReference, Request $request, $data = null)
+    /**
+     * Returns whether a form is valid and stores it internally for future use.
+     *
+     * @param string    $formReference  The service name of a form
+     * @param Request   $request        The request to bind to the form
+     * @param mixed     $data           An optional entity or array to bind the form to
+     * @return bool
+     * @throws \InvalidArgumentException if the service doesn't refer to a form
+     */
+    public function isValid($formReference, Request $request, $data = null)
     {
         $form = $this->getForm($formReference);
 
@@ -41,11 +52,28 @@ class FormHandler
         return $form->isValid();
     }
 
+    /**
+     * Returns the data associated to the current form.
+     *
+     * @return mixed
+     * @throws \LogicException if no form has been handled yet
+     */
     public function getData()
     {
         return $this->getCurrentForm()->getData();
     }
 
+    /**
+     * Creates and returns a form view either from the current form
+     * or from a new form service reference passed as argument.
+     *
+     * @param string $formReference The service name of a form
+     * @return mixed
+     * @throws \InvalidArgumentException    if a reference is passed but it
+     *                                      doesn't refer to a form
+     * @throws \LogicException              if no reference is passed and
+     *                                      no form has been handled yet
+     */
     public function getView($formReference = null)
     {
         if ($formReference) {
@@ -60,7 +88,7 @@ class FormHandler
         $form = $this->container->get($reference);
 
         if (!$form instanceof Form) {
-            throw new \Exception(
+            throw new \InvalidArgumentException(
                 "The '{$reference}' service is not a form'"
             );
         }
