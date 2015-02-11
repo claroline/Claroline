@@ -96,7 +96,7 @@ class Leap2aImporter implements ImporterInterface
 
         $textWidgets = $this->extractTextWidgets($nodes);
 
-        return $skillsWidgets + $userInformationWidgets + $formationWidgets + $textWidgets;
+        return array_merge($skillsWidgets, $userInformationWidgets, $formationWidgets, $textWidgets);
     }
 
     /**

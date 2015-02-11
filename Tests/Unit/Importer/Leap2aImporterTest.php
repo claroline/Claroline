@@ -529,4 +529,147 @@ CONTENT;
         $this->assertEquals('Icap\PortfolioBundle\Entity\Widget\TextWidget', get_class($textWidget));
         $this->assertEquals($textWidgetContent, $textWidget->getText());
     }
+
+    public function testLeap2aImportPortfolioWithFormationAndSkillsWidget()
+    {
+        $importer = new Leap2aImporter();
+
+        $portfolioTitle = uniqid();
+
+        $user = new User();
+        $user
+            ->setUsername(uniqid())
+            ->setFirstName($firstname = uniqid())
+            ->setLastName($lastname = uniqid());
+
+        $skillsWidgetSkillId   = mt_rand();
+        $skillsWidgetSkillName = uniqid();
+
+        $skillsWidgetSkillId2   = mt_rand();
+        $skillsWidgetSkillName2 = uniqid();
+
+        $skillsWidgetId        = mt_rand();
+        $skillsWidgetUpdatedAtText = (new \DateTime())->add(new \DateInterval('P2D'))->format(\DateTime::ATOM);
+        $skillsWidgetLabel     = uniqid();
+
+        $formationsWidgetId        = mt_rand();
+        $formationsWidgetStartedAt = new \DateTime();
+        $formationsWidgetStartedAtText = (new \DateTime())->format(\DateTime::ATOM);
+        $formationsWidgetUpdatedAtText = $formationsWidgetStartedAt->add(new \DateInterval('P2D'))->format(\DateTime::ATOM);
+        $formationsWidgetEndedAtText   = $formationsWidgetStartedAt->add(new \DateInterval('P4D'))->format(\DateTime::ATOM);
+        $formationsWidgetLabel     = uniqid();
+        $formationsWidgetContent   = uniqid();
+
+        $formationsWidgetResourceId = mt_rand();
+        $formationsWidgetResourceName = uniqid();
+        $formationsWidgetResourceUri = uniqid();
+
+        $content = <<<CONTENT
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"
+      xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+      xmlns:leap2="http://terms.leapspecs.org/"
+      xmlns:categories="http://www.leapspecs.org/2A/categories"
+      xmlns:claroline="http://www.leapspecs.org/2A/categories">
+    <leap2:version>http://www.leapspecs.org/2010-07/2A/</leap2:version>
+    <id>54c793498714a</id>
+    <title>$portfolioTitle</title>
+    <author>
+        <name>$firstname $lastname</name>
+    </author>
+    <updated>2015-01-29T14:31:53+01:00</updated>
+    <entry>
+        <title>$formationsWidgetLabel</title>
+        <id>portfolio:formations/$formationsWidgetId</id>
+        <updated>$formationsWidgetUpdatedAtText</updated>
+        <content type="text">$formationsWidgetContent</content>
+        <leap2:date leap2:point="start">$formationsWidgetStartedAtText</leap2:date>
+        <leap2:date leap2:point="end">$formationsWidgetEndedAtText</leap2:date>
+        <rdf:type rdf:resource="leap2:activity"/>
+        <category term="Education" scheme="categories:life_area"/>
+        <link rel="leap2:has_part" href="portfolio:resource/$formationsWidgetResourceId" leap2:display_order="1"/>
+    </entry>
+    <entry>
+        <title>$formationsWidgetResourceName</title>
+        <id>portfolio:resource/$formationsWidgetResourceId</id>
+        <updated>$formationsWidgetUpdatedAtText</updated>
+        <content></content>
+        <rdf:type rdf:resource="leap2:resource"/>
+        <category term="Web" scheme="categories:resource_type#"/>
+        <link rel="self" href="$formationsWidgetResourceUri" />
+        <link rel="leap2:is_part_of" href="portfolio:formations/$formationsWidgetId" leap2:display_order="1"/>
+    </entry>
+
+    <entry>
+        <title>$skillsWidgetLabel</title>
+        <id>portfolio:skills/$skillsWidgetId</id>
+        <updated>$skillsWidgetUpdatedAtText</updated>
+        <content></content>
+
+        <rdf:type rdf:resource="leap2:selection"/>
+        <category term="Abilities" scheme="categories:selection_type#"/>
+
+        <link rel="leap2:has_part" href="portfolio:skill/$skillsWidgetSkillId" leap2:display_order="1"/>
+        <link rel="leap2:has_part" href="portfolio:skill/$skillsWidgetSkillId2" leap2:display_order="2"/>
+    </entry>
+    <entry>
+        <title>$skillsWidgetSkillName</title>
+        <id>portfolio:skill/$skillsWidgetSkillId</id>
+        <updated>$skillsWidgetUpdatedAtText</updated>
+        <content></content>
+
+        <rdf:type rdf:resource="leap2:ability"/>
+
+        <link rel="leap2:is_part_of" href="portfolio:skills/$skillsWidgetId" leap2:display_order="1"/>
+    </entry>
+    <entry>
+        <title>$skillsWidgetSkillName2</title>
+        <id>portfolio:skill/$skillsWidgetSkillId2</id>
+        <updated>$skillsWidgetUpdatedAtText</updated>
+        <content></content>
+
+        <rdf:type rdf:resource="leap2:ability"/>
+
+        <link rel="leap2:is_part_of" href="portfolio:skills/$skillsWidgetId" leap2:display_order="2"/>
+    </entry>
+</feed>
+CONTENT;
+
+        $importedPortfolio = $importer->import($content, $user);
+
+        $this->assertEquals('Icap\PortfolioBundle\Entity\Portfolio', get_class($importedPortfolio));
+
+        $importedPortfolioTitleWidget = $importedPortfolio->getTitleWidget();
+        $this->assertNotNull($importedPortfolioTitleWidget);
+        $this->assertEquals($portfolioTitle, $importedPortfolioTitleWidget->getTitle());
+
+        $this->assertEquals($importedPortfolio->getUser(), $user);
+
+        $formationsWidgets = $importedPortfolio->getWidget('formations');
+        $this->assertEquals(1, count($formationsWidgets), 'Number of formations widget.');
+
+        /** @var \Icap\PortfolioBundle\Entity\Widget\FormationsWidget $formationsWidget */
+        $formationsWidget = $formationsWidgets[0];
+
+        $this->assertEquals('Icap\PortfolioBundle\Entity\Widget\FormationsWidget', get_class($formationsWidget));
+        $this->assertEquals($formationsWidgetLabel, $formationsWidget->getLabel());
+
+        $formationsWidgetResources = $formationsWidget->getResources();
+        /** @var \Icap\PortfolioBundle\Entity\Widget\FormationsWidgetResource $formationsWidgetResource */
+        $formationsWidgetResource = $formationsWidgetResources[0];
+
+        $this->assertEquals(1, count($formationsWidgetResources), 'Number of resource in the formations widget.');
+        $this->assertEquals($formationsWidgetResourceName, $formationsWidgetResource->getUriLabel());
+        $this->assertEquals($formationsWidgetResourceUri, $formationsWidgetResource->getUri());
+
+        $skillsWidgets = $importedPortfolio->getWidget('skills');
+        $this->assertEquals(1, count($skillsWidgets));
+
+        /** @var \Icap\PortfolioBundle\Entity\Widget\SkillsWidget $skillsWidget */
+        $skillsWidget = $skillsWidgets[0];
+
+        $this->assertEquals('Icap\PortfolioBundle\Entity\Widget\SkillsWidget', get_class($skillsWidget));
+        $this->assertEquals($skillsWidgetLabel, $skillsWidget->getLabel());
+        $this->assertEquals(2, count($skillsWidget->getSkills()));
+    }
 }
