@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2015/02/11 01:59:39
+ * Generation date: 2015/02/11 02:09:53
  */
-class Version20150211135937 extends AbstractMigration
+class Version20150211140951 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -24,7 +24,7 @@ class Version20150211135937 extends AbstractMigration
         ");
         $this->addSql("
             ALTER TABLE claro_workspace 
-            ADD accessible_date BOOLEAN NOT NULL
+            ADD is_access_date BOOLEAN NOT NULL
         ");
         $this->addSql("
             ALTER TABLE claro_workspace 
@@ -44,7 +44,7 @@ class Version20150211135937 extends AbstractMigration
         ");
         $this->addSql("
             ALTER TABLE claro_workspace 
-            DROP accessible_date
+            DROP is_access_date
         ");
         $this->addSql("
             ALTER TABLE claro_workspace 

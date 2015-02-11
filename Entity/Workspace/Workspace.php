@@ -172,9 +172,9 @@ class Workspace
     protected $endDate;
 
     /**
-     * @ORM\Column(name="accessible_date", type="boolean")
+     * @ORM\Column(name="is_access_date", type="boolean")
      */
-    protected $accessibleDate = false;
+    protected $isAccessDate = false;
 
     /**
      * @ORM\Column(name="workspace_type", type="integer", nullable=true)
@@ -398,14 +398,14 @@ class Workspace
         $this->endDate = $endDate;
     }
 
-    public function getAccessibleDate()
+    public function getIsAccessDate()
     {
-        return $this->accessibleDate;
+        return $this->isAccessDate;
     }
 
-    public function setAccessibleDate($accessibleDate)
+    public function setIsAccessDate($isAccessDate)
     {
-        $this->accessibleDate = $accessibleDate;
+        $this->isAccessDate = $isAccessDate;
     }
 
     public function getWorkspaceType()

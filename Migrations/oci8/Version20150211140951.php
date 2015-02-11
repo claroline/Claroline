@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Migrations\pdo_oci;
+namespace Claroline\CoreBundle\Migrations\oci8;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2015/02/11 01:59:39
+ * Generation date: 2015/02/11 02:09:53
  */
-class Version20150211135937 extends AbstractMigration
+class Version20150211140951 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -19,7 +19,7 @@ class Version20150211135937 extends AbstractMigration
             ADD (
                 start_date TIMESTAMP(0) DEFAULT NULL NULL, 
                 end_date TIMESTAMP(0) DEFAULT NULL NULL, 
-                accessible_date NUMBER(1) NOT NULL, 
+                is_access_date NUMBER(1) NOT NULL, 
                 workspace_type NUMBER(10) DEFAULT NULL NULL
             )
         ");
@@ -30,7 +30,7 @@ class Version20150211135937 extends AbstractMigration
         $this->addSql("
             ALTER TABLE claro_workspace 
             DROP (
-                start_date, end_date, accessible_date, 
+                start_date, end_date, is_access_date, 
                 workspace_type
             )
         ");

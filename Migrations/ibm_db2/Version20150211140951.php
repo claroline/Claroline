@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2015/02/11 01:59:40
+ * Generation date: 2015/02/11 02:09:53
  */
-class Version20150211135937 extends AbstractMigration
+class Version20150211140951 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -18,7 +18,7 @@ class Version20150211135937 extends AbstractMigration
             ALTER TABLE claro_workspace 
             ADD COLUMN start_date TIMESTAMP(0) DEFAULT NULL 
             ADD COLUMN end_date TIMESTAMP(0) DEFAULT NULL 
-            ADD COLUMN accessible_date SMALLINT NOT NULL WITH DEFAULT 
+            ADD COLUMN is_access_date SMALLINT NOT NULL WITH DEFAULT 
             ADD COLUMN workspace_type INTEGER DEFAULT NULL
         ");
     }
@@ -29,7 +29,7 @@ class Version20150211135937 extends AbstractMigration
             ALTER TABLE claro_workspace 
             DROP COLUMN start_date 
             DROP COLUMN end_date 
-            DROP COLUMN accessible_date 
+            DROP COLUMN is_access_date 
             DROP COLUMN workspace_type
         ");
         $this->addSql("
