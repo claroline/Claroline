@@ -88,10 +88,10 @@
                             {% if creator.isEnabled() %}
                                 <a href="{{ path('claro_public_profile_view', {'publicUrl': creator.getPublicUrl()}) }}">
                             {% endif %}
-                                    
+
                             {{ message.getAuthor() }}
-                              
-                            {% if creator.isEnabled() %}      
+
+                            {% if creator.isEnabled() %}
                                 </a>
                             {% endif %}
                         </div>
@@ -130,8 +130,10 @@
         </table>
         <div>
             {{ renderPager(subject.getId(), pager, max) }}
+            <btn id='fast-reply-btn' class='btn btn-primary pull-right'>{{ 'fast_reply'|trans({}, 'forum')}}</btn>
         </div>
         {% if canAnswer %}
+        <div class="fast-reply" style="display: none;">
             <h4><i class="fa fa-reply"></i> {{ 'new_message' | trans({}, 'forum') }}</h4>
             <div>
             {% if not subject.isClosed() %}
@@ -140,6 +142,7 @@
             {% endif %}
             </div>
         {% endif %}
+        </div>
     </div>
     <div class="panel-footer clearfix">
         <div class="pull-right">
@@ -228,7 +231,9 @@
                     {'subject': {{ subject.getId()}}, 'max': $(this).val()}
                 );
             });
+            $('body').on('click', '#fast-reply-btn', function() {
+                $('.fast-reply').show();
+            });
         </script>
     {% endif %}
 {% endblock %}
-

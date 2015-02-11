@@ -49,3 +49,6 @@ notifications_explanation: Global notifications will send a mail to each user wh
 activate_global_notifications: Activate global notifications
 disable_global_notifications: Disable global notifications
 responses: Replies
+answer_message: Reply
+posted_by: Posted by %author% the %date%
+fast_reply: Fast reply

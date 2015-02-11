@@ -49,3 +49,6 @@ notifications_explanation: L'activation des notifications globales entraîne l'e
 activate_global_notifications: Activer les notifications globales
 disable_global_notifications: Annuler les notifications globales
 responses: Réponses
+answer_message: Réponse
+posted_by: Posté par %author% le %date%
+fast_reply: Réponse rapide

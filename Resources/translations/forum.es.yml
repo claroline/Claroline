@@ -48,3 +48,6 @@ notifications_explanation: Cuando se agrega un mensaje, la activación de las no
 activate_global_notifications: Activar las notificaciones globales
 disable_global_notifications: Anular las notificaciones globales
 responses: Respuestas
+answer_message: Respuesta
+posted_by: Iniciado por %author% el %date%
+fast_reply: Veloz respuesta

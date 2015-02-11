@@ -545,21 +545,27 @@ class Manager
         return $newForum;
     }
 
+    public function getMessageQuoteHTML(Message $message)
+    {
+        $answer = $this->translator->trans('answer_message', array(), 'forum');
+        $author = $message->getCreator()->getFirstName()
+            . ' '
+            . $message->getCreator()->getLastName();
+        $date = $message->getCreationDate()->format($this->translator->trans('date_range.format.with_hours', array(), 'platform'));
+        $by = $this->translator->trans('posted_by', array('%author%' => $author, '%date%' => $date), 'forum');
+        $mask = '<div class="original-poster"><b>' . $by . '</b></div><div class="well">%s</div></div>' . $answer . ':</div>';
+
+        return sprintf(
+            $mask,
+            $message->getContent()
+        );
+    }
+
     public function replyMessage(Message $message, Message $oldMessage)
     {
         // todo: this should be in a template...
-        $mask = '<div class="well"><div class="original-poster">%s :</div>%s</div>%s';
-        $oldAuthor = $oldMessage->getCreator()->getFirstName()
-            . ' '
-            . $oldMessage->getCreator()->getLastName();
-        $message->setContent(
-            sprintf(
-                $mask,
-                $oldAuthor,
-                $oldMessage->getContent(),
-                $message->getContent()
-            )
-        );
+        $html = $this->getMessageQuoteHTML($oldMessage) . $message->getContent();
+        $message->setContent($html);
         $this->createMessage($message, $oldMessage->getSubject());
     }
 

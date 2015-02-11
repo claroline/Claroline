@@ -949,12 +949,14 @@ class ForumController extends Controller
     {
         $subject = $message->getSubject();
         $forum = $subject->getCategory()->getForum();
-        $form = $this->container->get('form.factory')->create(new MessageType, new Message());
+        $reply = new Message();
+        $reply->setContent($this->manager->getMessageQuoteHTML($message));
+        $form = $this->container->get('form.factory')->create(new MessageType, $reply);
         $form->handleRequest($this->get('request'));
 
         if ($form->isValid()) {
-            $newMsg = $form->getData();
-            $this->manager->replyMessage($newMsg, $message);
+            $reply = $form->getData();
+            $this->manager->replyMessage($reply, $message);
 
             return new RedirectResponse(
                 $this->generateUrl('claro_forum_messages', array('subject' => $subject->getId()))
