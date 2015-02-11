@@ -134,6 +134,40 @@ class CursusManager
         $this->om->remove($cursusGroup);
         $this->om->flush();
     }
+
+    public function addCoursesToCursus(Cursus $parent, array $courses)
+    {
+        $this->om->startFlushSuite();
+        $lastOrder = $this->cursusRepo->findLastCursusOrderByParent($parent);
+
+        foreach ($courses as $course) {
+            $newCursus = new Cursus();
+            $newCursus->setParent($parent);
+            $newCursus->setCourse($course);
+            $newCursus->setTitle($course->getTitle());
+            $newCursus->setBlocking(false);
+            $lastOrder++;
+            $newCursus->setCursusOrder($lastOrder);
+            $this->om->persist($newCursus);
+        }
+        $this->om->endFlushSuite();
+    }
+
+    public function removeCoursesFromCursus(Cursus $parent, array $courses)
+    {
+        if (count($courses) > 0) {
+            $toRemove = $this->cursusRepo->findCursusByParentAndCourses(
+                $parent,
+                $courses
+            );
+            $this->om->startFlushSuite();
+
+            foreach ($toRemove as $cursus) {
+                $this->om->remove($cursus);
+            }
+            $this->om->endFlushSuite();
+        }
+    }
     
     public function registerUserToCursus(Cursus $cursus, User $user)
     {
@@ -220,6 +254,33 @@ class CursusManager
             $this->om->endFlushSuite();
         }
     }
+
+    public function updateCursusOrder(Cursus $cursus, $cursusOrder)
+    {
+        $this->updateCursusOrderByParent($cursusOrder, $cursus->getParent());
+        $cursus->setCursusOrder($cursusOrder);
+        $this->om->persist($cursus);
+        $this->om->flush();
+        
+    }
+
+    public function updateCursusOrderByParent(
+        $cursusOrder,
+        Cursus $parent = null,
+        $executeQuery = true
+    )
+    {
+        return is_null($parent) ?
+            $this->cursusRepo->updateCursusOrderWithoutParent(
+                $cursusOrder,
+                $executeQuery
+            ) :
+            $this->cursusRepo->updateCursusOrderByParent(
+                $parent,
+                $cursusOrder,
+                $executeQuery
+            );
+    }
     
 
     /***************************************************
@@ -251,9 +312,32 @@ class CursusManager
         return $this->cursusRepo->findLastCursusOrderByParent($cursus, $executeQuery);
     }
 
-    public function getHierarchyByCursus(Cursus $cursus, $executeQuery = true)
+    public function getHierarchyByCursus(
+        Cursus $cursus,
+        $orderedBy = 'cursusOrder',
+        $order = 'ASC',
+        $executeQuery = true
+    )
     {
-        return $this->cursusRepo->findHierarchyByCursus($cursus, $executeQuery);
+        return $this->cursusRepo->findHierarchyByCursus(
+            $cursus,
+            $orderedBy,
+            $order,
+            $executeQuery
+        );
+    }
+
+    public function getCursusByParentAndCourses(
+        Cursus $parent,
+        array $courses,
+        $executeQuery = true
+    )
+    {
+        return $this->cursusRepo->findCursusByParentAndCourses(
+            $parent,
+            $courses,
+            $executeQuery = true
+        );
     }
 
 

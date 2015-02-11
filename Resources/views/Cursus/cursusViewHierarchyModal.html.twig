@@ -1,13 +1,38 @@
-{% macro showCursus(cursus) %}
-    {% set children = cursus.getChildren() %}
+{% macro showCursus(cursus, hierarchy) %}
+    {% set cursusId = cursus.getId() %}
+    {% set cursusTitle = cursus.getTitle() %}
 
-    {{ cursus.getTitle() }}
+    {% if cursus.getCourse() is empty %}
+        <div class="cursus-element">
+            <span class="pointer-hand"
+                  data-toggle="collapse"
+                  href="#collapse-{{ cursusId }}"
+            >
+                {{ cursusTitle }}
+            </span>
 
-    {% if children|length > 0 %}
-        <ul>
-        {% for child in children %}
+            {% if hierarchy[cursusId] is defined %}
+                &nbsp;
+                <i class="fa fa-caret-down pointer-hand"
+                   data-toggle="collapse"
+                   href="#collapse-{{ cursusId }}"
+                >
+                </i>
+            {% endif %}
+        </div>
+    {% else %}
+        <span>
+            <span class="label label-primary">
+                {{ cursusTitle }}
+            </span>
+        </span>
+    {% endif %}
+
+    {% if hierarchy[cursusId] is defined %}
+        <ul id="collapse-{{ cursusId }}" class="collapse in">
+        {% for child in hierarchy[cursusId] %}
             <li>
-                {{ _self.showCursus(child) }}
+                {{ _self.showCursus(child, hierarchy) }}
             </li>
         {% endfor %}
         </ul>
@@ -16,4 +41,4 @@
 
 {% from _self import showCursus %}
 
-{{ showCursus(cursus) }}
+{{ showCursus(cursus, hierarchy) }}

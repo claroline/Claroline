@@ -255,8 +255,23 @@ class CursusController extends Controller
     public function cursusViewHierarchyAction(Cursus $cursus)
     {
         $this->checkToolAccess();
+        $hierarchy = array();
+        $allCursus = $this->cursusManager->getHierarchyByCursus($cursus);
 
-        return array('cursus' => $cursus);
+        foreach ($allCursus as $oneCursus) {
+            $parent = $oneCursus->getParent();
+
+            if (!is_null($parent)) {
+                $parentId = $parent->getId();
+
+                if (!isset($hierarchy[$parentId])) {
+                    $hierarchy[$parentId] = array();
+                }
+                $hierarchy[$parentId][] = $oneCursus;
+            }
+        }
+
+        return array('cursus' => $cursus, 'hierarchy' => $hierarchy);
     }
 
     /**
@@ -305,12 +320,28 @@ class CursusController extends Controller
         foreach (CursusDisplayedWord::$defaultKey as $key) {
             $displayedWords[$key] = $this->cursusManager->getDisplayedWord($key);
         }
+        $hierarchy = array();
+        $allCursus = $this->cursusManager->getHierarchyByCursus($cursus);
+        
+        foreach ($allCursus as $oneCursus) {
+            $parent = $oneCursus->getParent();
+            
+            if (!is_null($parent)) {
+                $parentId = $parent->getId();
+                
+                if (!isset($hierarchy[$parentId])) {
+                    $hierarchy[$parentId] = array();
+                }
+                $hierarchy[$parentId][] = $oneCursus;
+            }
+        }
 
         return array(
             'defaultWords' => CursusDisplayedWord::$defaultKey,
             'displayedWords' => $displayedWords,
             'type' => 'cursus',
-            'cursus' => $cursus
+            'cursus' => $cursus,
+            'hierarchy' => $hierarchy
         );
     }
 
@@ -352,7 +383,7 @@ class CursusController extends Controller
 
         if ($form->isValid()) {
             $cursus->setParent($parent);
-            $orderMax = $this->cursusManager->getLastRootCursusOrder();
+            $orderMax = $this->cursusManager->getLastCursusOrderByParent($parent);
 
             if (is_null($orderMax)) {
                 $cursus->setCursusOrder(1);
@@ -373,10 +404,180 @@ class CursusController extends Controller
 
     /**
      * @EXT\Route(
+     *     "cursus/{cursus}/add/courses/list/page/{page}/max/{max}/ordered/by/{orderedBy}/order/{order}/search/{search}",
+     *     name="claro_cursus_add_courses_users_list",
+     *     defaults={"page"=1, "search"="", "max"=50, "orderedBy"="title","order"="ASC"},
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     *
+     * @EXT\Template()
+     *
+     * Displays the list of courses.
+     *
+     * @param Cursus $cursus
+     * @param string  $search
+     * @param integer $page
+     * @param integer $max
+     * @param string  $orderedBy
+     * @param string  $order
+     */
+    public function cursusAddCoursesListAction(
+        Cursus $cursus,
+        $search = '',
+        $page = 1,
+        $max = 50,
+        $orderedBy = 'title',
+        $order = 'ASC'
+    )
+    {
+        $this->checkToolAccess();
+
+        $courses = $search === '' ?
+            $this->cursusManager->getAllCourses($orderedBy, $order, $page, $max) :
+            $this->cursusManager->getSearchedCourses($search, $orderedBy, $order, $page, $max);
+
+        return array(
+            'cursus' => $cursus,
+            'courses' => $courses,
+            'search' => $search,
+            'page' => $page,
+            'max' => $max,
+            'orderedBy' => $orderedBy,
+            'order' => $order
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "cursus/{cursus}/associate/course/{course}",
+     *     name="claro_cursus_associate_course",
+     *     options={"expose"=true}
+     * )
+     * @EXT\Method("POST")
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     */
+    public function cursusCourseAssociateAction(Cursus $cursus, Course $course)
+    {
+        $this->checkToolAccess();
+        $cursus->setCourse($course);
+        $this->cursusManager->persistCursus($cursus);
+
+        return new JsonResponse('success', 200);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "cursus/{cursus}/dissociate/course",
+     *     name="claro_cursus_dissociate_course",
+     *     options={"expose"=true}
+     * )
+     * @EXT\Method("POST")
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     */
+    public function cursusCourseDissociateAction(Cursus $cursus)
+    {
+        $this->checkToolAccess();
+        $cursus->setCourse(null);
+        $this->cursusManager->persistCursus($cursus);
+
+        return new JsonResponse('success', 200);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "cursus/{cursus}/add/course/{course}",
+     *     name="claro_cursus_add_course",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\Method("POST")
+     *
+     * @param Cursus $cursus
+     * @param Course $course
+     */
+    public function cursusCourseAddAction(Cursus $cursus, Course $course)
+    {
+        $this->checkToolAccess();
+        $this->cursusManager->addCoursesToCursus($cursus, array($course));
+
+        return new JsonResponse('success', 200);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "cursus/{cursus}/add/courses",
+     *     name="claro_cursus_add_courses",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\Method("POST")
+     * @EXT\ParamConverter(
+     *     "courses",
+     *      class="ClarolineCursusBundle:Course",
+     *      options={"multipleIds" = true, "name" = "courseIds"}
+     * )
+     *
+     * @param Cursus $cursus
+     * @param Course[] $courses
+     */
+    public function cursusCoursesAddAction(Cursus $cursus, array $courses)
+    {
+        $this->checkToolAccess();
+        $this->cursusManager->addCoursesToCursus($cursus, $courses);
+
+        return new JsonResponse('success', 200);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "cursus/{cursus}/remove/course/{course}",
+     *     name="claro_cursus_remove_course",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\Method("POST")
+     *
+     * @param Cursus $cursus
+     * @param Course $course
+     */
+    public function cursusCourseRemoveAction(Cursus $cursus, Course $course)
+    {
+        $this->checkToolAccess();
+        $this->cursusManager->removeCoursesFromCursus($cursus, array($course));
+
+        return new JsonResponse('success', 200);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "cursus/{cursus}/remove/courses",
+     *     name="claro_cursus_remove_courses",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\Method("POST")
+     * @EXT\ParamConverter(
+     *     "courses",
+     *      class="ClarolineCursusBundle:Course",
+     *      options={"multipleIds" = true, "name" = "courseIds"}
+     * )
+     *
+     * @param Cursus $cursus
+     * @param Course[] $courses
+     */
+    public function cursusCoursesRemoveAction(Cursus $cursus, array $courses)
+    {
+        $this->checkToolAccess();
+        $this->cursusManager->removeCoursesFromCursus($cursus, $courses);
+
+        return new JsonResponse('success', 200);
+    }
+
+
+    /**
+     * @EXT\Route(
      *     "cursus/{cursus}/associate/user/{user}",
      *     name="claro_cursus_associate_user",
      *     options={"expose"=true}
      * )
+     * @EXT\Method("POST")
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      */
     public function cursusUserAssociateAction(Cursus $cursus, User $user)
@@ -389,10 +590,35 @@ class CursusController extends Controller
 
     /**
      * @EXT\Route(
+     *     "cursus/{cursus}/associate/users",
+     *     name="claro_cursus_associate_users",
+     *    options = {"expose"=true}
+     * )
+     * @EXT\Method("POST")
+     * @EXT\ParamConverter(
+     *     "users",
+     *      class="ClarolineCoreBundle:User",
+     *      options={"multipleIds" = true, "name" = "userIds"}
+     * )
+     *
+     * @param Cursus $cursus
+     * @param User[] $users
+     */
+    public function cursusUsersAssociateAction(Cursus $cursus, array $users)
+    {
+        $this->checkToolAccess();
+        $this->cursusManager->registerUsersToCursus($cursus, $users);
+
+        return new JsonResponse('success', 200);
+    }
+
+    /**
+     * @EXT\Route(
      *     "cursus/{cursus}/dissociate/user/{user}",
      *     name="claro_cursus_dissociate_user",
      *     options={"expose"=true}
      * )
+     * @EXT\Method("DELETE")
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      */
     public function cursusUserDissociateAction(Cursus $cursus, User $user)
@@ -405,10 +631,35 @@ class CursusController extends Controller
 
     /**
      * @EXT\Route(
+     *     "cursus/{cursus}/dissociate/users",
+     *     name="claro_cursus_dissociate_users",
+     *    options = {"expose"=true}
+     * )
+     * @EXT\Method("DELETE")
+     * @EXT\ParamConverter(
+     *     "users",
+     *      class="ClarolineCoreBundle:User",
+     *      options={"multipleIds" = true, "name" = "userIds"}
+     * )
+     *
+     * @param Cursus $cursus
+     * @param User[] $users
+     */
+    public function cursusUsersDissociateAction(Cursus $cursus, array $users)
+    {
+        $this->checkToolAccess();
+        $this->cursusManager->unregisterUsersFromCursus($cursus, $users);
+
+        return new JsonResponse('success', 200);
+    }
+
+    /**
+     * @EXT\Route(
      *     "cursus/{cursus}/associate/group/{group}",
      *     name="claro_cursus_associate_group",
      *     options={"expose"=true}
      * )
+     * @EXT\Method("POST")
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      */
     public function cursusGroupAssociateAction(Cursus $cursus, Group $group)
@@ -425,6 +676,7 @@ class CursusController extends Controller
      *     name="claro_cursus_dissociate_group",
      *     options={"expose"=true}
      * )
+     * @EXT\Method("DELETE")
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      */
     public function cursusGroupDissociateAction(Cursus $cursus, Group $group)
@@ -433,6 +685,40 @@ class CursusController extends Controller
         $this->cursusManager->unregisterGroupFromCursus($cursus, $group);
 
         return new JsonResponse('success', 200);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "cursus/{cursus}/order/update/with/cursus/{otherCursus}/mode/{mode}",
+     *     name="claro_cursus_update_order",
+     *     options={"expose"=true}
+     * )
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function updateCursusOrderAction(
+        Cursus $cursus,
+        Cursus $otherCursus,
+        $mode
+    )
+    {
+        $this->checkToolAccess();
+
+        if ($cursus->getParent() === $otherCursus->getParent()) {
+            $newOrder = $otherCursus->getCursusOrder();
+
+            if ($mode === 'next') {
+                $this->cursusManager->updateCursusOrder($cursus, $newOrder);
+            } else {
+                $cursus->setCursusOrder($newOrder + 1);
+                $this->cursusManager->persistCursus($cursus);
+            }
+
+            return new JsonResponse('success', 204);
+        } else {
+
+            return new JsonResponse('Forbidden', 403);
+        }
     }
 
 

@@ -53,14 +53,14 @@ class Cursus
      * @ORM\ManyToOne(
      *     targetEntity="Claroline\CursusBundle\Entity\Course"
      * )
-     * @ORM\JoinColumn(nullable=true, onDelete="CASCADE")
+     * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
      */
     protected $course;
 
     /**
      * @ORM\Column(type="boolean")
      */
-    protected $blocking = true;
+    protected $blocking = false;
 
     /**
      * @ORM\Column(type="json_array", nullable=true)
