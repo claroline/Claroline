@@ -36,6 +36,7 @@ class Scale
      *     cascade={"persist", "remove"}
      * )
      * @CustomAssert\NotEmpty
+     * @CustomAssert\NoDuplicate
      */
     private $levels;
 
