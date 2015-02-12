@@ -23,7 +23,7 @@
 
 {% block content_body %}
     <p>
-        <a href="#{{ previewId }}" title="" class="btn btn-primary">Importer</a>
+        {{ 'check_before_do_import'|trans({}, 'icap_portfolio') }} <a href="#{{ previewId }}" title="{{ 'do_import'|trans({}, 'icap_portfolio') }}" class="btn btn-xs btn-primary">{{ 'do_import'|trans({}, 'icap_portfolio') }}</a>
     </p>
     <h1>{{ portfolio.titleWidget.title }}</h1>
     {% for widget in portfolio.widgets %}
@@ -38,7 +38,5 @@
     </div>
         {% endif %}
     {% endfor %}
-    <p>
-        <a href="#{{ previewId }}" title="" class="btn btn-primary">Importer</a>
-    </p>
+    <a href="#{{ previewId }}" title="{{ 'do_import'|trans({}, 'icap_portfolio') }}" class="btn btn-primary">{{ 'do_import'|trans({}, 'icap_portfolio') }}</a>
 {% endblock %}
