@@ -57,6 +57,11 @@ class PublishingManager
     protected $pathStructure;
 
     /**
+     * array uniqid => step
+     */
+    protected $uniqId2step;
+
+    /**
      * Class constructor
      * @param \Doctrine\Common\Persistence\ObjectManager                $objectManager
      * @param \Symfony\Component\Security\Core\SecurityContextInterface $security
@@ -93,6 +98,7 @@ class PublishingManager
         $this->pathStructure = json_decode($pathStructure);
 
         $this->path = $path;
+        $this->uniqId2step = array();
 
         return $this;
     }
@@ -106,6 +112,7 @@ class PublishingManager
     {
         $this->path          = null;
         $this->pathStructure = null;
+        $this->uniqId2step   = array();
 
         return $this;
     }
@@ -123,8 +130,7 @@ class PublishingManager
         $this->start($path);
 
         // Store existing steps to remove steps which no longer exist
-        $existingSteps = $path->getSteps();
-        $existingSteps = $existingSteps->toArray();
+        $existingSteps = $path->getSteps()->toArray();
 
         // Publish steps for this path
         $toProcess = !empty($this->pathStructure->steps) ? $this->pathStructure->steps : array();
@@ -133,8 +139,14 @@ class PublishingManager
         // Clean steps to remove
         $this->cleanSteps($publishedSteps, $existingSteps);
 
+        // flush alls steps
+        $this->om->flush();
+
+        // replace ids
+        $json = $this->replaceStepIds();
+
         // Re encode updated structure and update Path
-        $this->path->setStructure(json_encode($this->pathStructure));
+        $this->path->setStructure($json);
 
         // Manage rights
         $this->manageRights();
@@ -151,6 +163,16 @@ class PublishingManager
         $this->end();
 
         return true;
+    }
+
+    protected function replaceStepIds()
+    {
+        $json = json_encode($this->pathStructure);
+        foreach ($this->uniqId2step as $uniqId => $step) {
+            $json = str_replace($uniqId, $step->getId(), $json);
+        }
+
+        return $json;
     }
 
     /**
@@ -172,9 +194,10 @@ class PublishingManager
             if (empty($stepStructure->resourceId) || !$existingSteps->containsKey($stepStructure->resourceId)) {
                 // Current step has never been published or step entity has been deleted => create it
                 $step = $this->stepManager->create($this->path, $level, $parent, $currentOrder, $stepStructure);
-
+                $uniqId = "_STEP".uniqid();
+                $this->uniqId2step[$uniqId] = $step;
                 // Update json structure with new resource ID
-                $stepStructure->resourceId = $step->getId();
+                $stepStructure->resourceId = $uniqId;
             } else {
                 // Step already exists => update it
                 $step = $existingSteps->get($stepStructure->resourceId);
