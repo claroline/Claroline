@@ -141,58 +141,46 @@ class ExoImporter extends Importer implements ConfigurationInterface
                 $this->container->get('doctrine')->getManager(),
                 $object->getId(), FALSE);
 
+        exec('mkdir '.$qtiRepos->getUserDir().'questions');
+        $i = 1;
         foreach ($interactions as $interaction) {
-            $qti = $qtiRepos->export($interaction);
-            $qdir = $qtiRepos->getUserDir().$interaction->getQuestion()->getId().'_question';
-            mkdir($qdir);
-            exec('mv '.$qtiRepos->getUserDir().$interaction->getQuestion()->getId().'_qestion_qti.xml '.$qdir);
+            $qtiRepos->export($interaction);
+            exec('mkdir '.$qtiRepos->getUserDir().'questions/'.'question_'.$i);
+            $iterator = new \DirectoryIterator($qtiRepos->getUserDir());
+            foreach ($iterator as $element) {
+                if (!$element->isDot() && $element->isFile()) {
+                    exec ('mv '.$qtiRepos->getUserDir().$element->getFilename().' '.$qtiRepos->getUserDir().'questions/'.'question_'.$i);
+                }
+            }
+            $i++;
         }
 
-//        echo $qti;
-        die();
+        $pathQtiDir = $qtiRepos->getUserDir().'questions';
+        $questions = new \DirectoryIterator($pathQtiDir);
+        $i = 1;
+        foreach ($questions as $question) {
+            if ($question != '.' && $question != '..') {
+                $iterator = new \DirectoryIterator($pathQtiDir.'/'.$question->getFilename());
+                foreach ($iterator as $element) {
+                    if (!$element->isDot() && $element->isFile()) {
+                        $localPath = 'qti/'.$object->getTitle().'/question_'.$i.'/'.$element->getFileName();
+                        $files[$localPath] = $element->getPathName();
+                    }
+                }
+                $i++;
+            }
+        }
 
-        $qtiRepos->removeDirectory();
+        $version = '1';
+        $path = 'qti/'.$object->getTitle();
 
-        return array();
+        $data = array(array('file' => array(
+            'path' => $path,
+            'version' =>  $version
+        )));
+
+        return $data;
     }
-
-//    public function export(Workspace $workspace, array &$files, $object)
-//    {
-//		$pathQtiDir = genQtiDir(); //cette méthode n'existe pas, on est d'accord mais j'imagine que vous pouvez générer une archive
-//		$iterator = new \DirectoryIterator($pathQtiDir);
-//
-//		/*
-//		 * le tableau 'files' contient une liste de fichier à rajouter dans l'archive sous la forme
-//		 * array(
-//		 * 	   $localPath => $realPath,
-//		 *     ...
-//		 * );
-//		 * Comme c'est une référence vous n'avez pas besoin de faire de retour de ce tableau, il suffit juste de le mettre à jour.
-//		 *
-//		 * $object sera l'objet exporté, en l'occurence l'exercice
-//		 *
-//		 */
-//
-//		$exName = $object->...->getName() //je ne sais pas ou est stocké le nom de l'exercice
-//
-//		foreach ($iterator as $element) {
-//			if (!$element->isDot()) {
-//				$localPath = 'qti/' . $exName . '/rel/path/in/archive'; //ça sera vraissemblablement quelque chose de ce genre, ça dépend de votre implémentation
-//				$files[$localPath] = $file->getPathName() //voir le gros commentaire du début... on met à jour le tableau de fichier
-//			}
-//		}
-//
-//		$version = 'peu importe mais il est dans votre conf';
-//		//à voir selon votre implémentation, mais il me semble que j'avais mit qti/nomExercice
-//		$path = 'qti/'.$exName;
-//
-//        $data = array(array('file' => array(
-//            'path' => $path,
-//            'version' =>  $version
-//        )));
-//
-//        return $data;
-//    }
 
     public static function fileNotExists($v, $rootpath)
     {

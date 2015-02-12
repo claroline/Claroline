@@ -196,7 +196,8 @@ abstract class qtiExport
     {
         //$this->objetcTags();
 
-        $tmpFileName = tempnam($this->qtiRepos->getUserDir().'tmp', "xb_");
+        //$tmpFileName = tempnam($this->qtiRepos->getUserDir().'tmp', "xb_");
+        $tmpFileName = $this->qtiRepos->getUserDir().'zip/'.$this->question->getId().'_qestion_qti.zip';
         $zip = new \ZipArchive();
         $zip->open($tmpFileName, \ZipArchive::CREATE);
         $zip->addFile($this->qtiRepos->getUserDir().$this->question->getId().'_qestion_qti.xml', $this->question->getId().'_qestion_qti.xml');

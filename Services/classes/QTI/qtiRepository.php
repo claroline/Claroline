@@ -71,6 +71,9 @@ class qtiRepository {
         if (!is_dir($this->userRootDir.$directory)) {
             mkdir($this->userRootDir.$directory);
         }
+        if (!is_dir($this->userRootDir.$directory.'/zip')) {
+            mkdir($this->userRootDir.$directory.'/zip');
+        }
     }
 
     /**
