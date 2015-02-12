@@ -154,7 +154,8 @@ function creationMatchingEdit(addchoice, addproposal, deletechoice, LabelValue, 
 
     //for activate tinymce if there is html balise
     $('.classic').find('textarea').each(function() {
-        if($(this).val().match("<p>")) {
+        //if there is at the start an open tag and a close at the end. And at the middle all caracters possible or nothing
+        if($(this).val().match("<.+>.+|\s<\/.+>$")) {
             idProposalVal = $(this).attr("id");
             $("#"+idProposalVal).addClass("claroline-tiny-mce hide");
             $("#"+idProposalVal).data("data-theme","advanced");
