@@ -14,8 +14,8 @@ class Version20150211170325 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
+        $this->addSql("SET foreign_key_checks = 0");
         $this->addSql("
-            SET foreign_key_checks = 0;
             CREATE TABLE claro_panel_facet (
                 id INT AUTO_INCREMENT NOT NULL,
                 facet_id INT NOT NULL,
@@ -47,11 +47,11 @@ class Version20150211170325 extends AbstractMigration
             ADD CONSTRAINT FK_F6C21DB2E99038C0 FOREIGN KEY (panelFacet_id)
             REFERENCES claro_panel_facet (id)
             ON DELETE CASCADE
-            SET foreign_key_checks = 1;
         ");
         $this->addSql("
             CREATE INDEX IDX_F6C21DB2E99038C0 ON claro_field_facet (panelFacet_id)
         ");
+        $this->addSql("SET foreign_key_checks = 1");
     }
 
     public function down(Schema $schema)
