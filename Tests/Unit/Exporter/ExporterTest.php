@@ -550,6 +550,60 @@ EXPORT;
         $this->assertEquals($expected, $actual);
     }
 
+    public function testLeap2aExportPortfolioWithTextWidgetWithHtmlContent()
+    {
+        $exporter = new Exporter($this->twigEngine);
+
+        /** @var \Icap\PortfolioBundle\Entity\Widget\TitleWidget $titleWidget */
+        $titleWidget = $this->mock('Icap\PortfolioBundle\Entity\Widget\TitleWidget[getUpdatedAt]');
+        $titleWidget->shouldReceive('getUpdatedAt')->andReturn(new \DateTime());
+        $titleWidget
+            ->setTitle($portfolioTitle = uniqid())
+            ->setSlug($portfolioSlug = uniqid());
+
+        /** @var \Icap\PortfolioBundle\Entity\Widget\TextWidget $textWidget */
+        $textWidget = $this->mock('Icap\PortfolioBundle\Entity\Widget\TextWidget[getId, getUpdatedAt]');
+        $textWidget->shouldReceive('getId')->andReturn($textWidgetId = rand(0, PHP_INT_MAX));
+        $textWidget->shouldReceive('getUpdatedAt')->andReturn($textWidgetUpdatedAt = (new \DateTime())->add(new \DateInterval('P2D')));
+        $textWidget
+            ->setText($textWidgetText = '<p>Widget text content</p>')
+            ->setLabel($textWidgetLabel = uniqid());
+
+        $portfolio = new Portfolio();
+        $portfolio
+            ->setUser($this->createUser($firstname = uniqid(), $lastname = uniqid()))
+            ->setWidgets(array($titleWidget, $textWidget));
+
+        $actual = $exporter->export($portfolio, 'leap2a');
+        $portfolioLastUpdateDate = $titleWidget->getUpdatedAt()->format(\DateTime::ATOM);
+        $textWidgetUpdatedAt = $textWidgetUpdatedAt->format(\DateTime::ATOM);
+        $expected = <<<EXPORT
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"
+      xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+      xmlns:leap2="http://terms.leapspecs.org/"
+      xmlns:categories="http://www.leapspecs.org/2A/categories"
+      xmlns:claroline="http://www.leapspecs.org/2A/categories">
+    <leap2:version>http://www.leapspecs.org/2010-07/2A/</leap2:version>
+    <id>$portfolioSlug</id>
+    <title>$portfolioTitle</title>
+    <author>
+        <name>$firstname $lastname</name>
+    </author>
+    <updated>$textWidgetUpdatedAt</updated>
+    <entry>
+        <title>$textWidgetLabel</title>
+        <id>portfolio:text/$textWidgetId</id>
+        <updated>$textWidgetUpdatedAt</updated>
+        <content type="html"><![CDATA[$textWidgetText]]></content>
+        <rdf:type rdf:resource="leap2:entry"/>
+    </entry>
+</feed>
+EXPORT;
+
+        $this->assertEquals($expected, $actual);
+    }
+
     public function testLeap2aExportPortfolioWithUserInformationsWidget()
     {
         $exporter = new Exporter($this->twigEngine);
