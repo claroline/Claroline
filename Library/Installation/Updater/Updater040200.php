@@ -32,6 +32,7 @@ class Updater040200
     public function postUpdate()
     {
         $this->updateBaseRoles();
+        $this->updateFacets();
     }
 
     private function updateBaseRoles()
@@ -48,6 +49,10 @@ class Updater040200
         $this->om->flush();
     }
 
+    private function updateFacets()
+    {
+
+    }
 
     public function setLogger($logger)
     {

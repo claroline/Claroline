@@ -21,6 +21,7 @@ use Claroline\CoreBundle\Entity\Facet\FieldFacet;
 use Claroline\CoreBundle\Entity\Facet\FieldFacetValue;
 use Claroline\CoreBundle\Entity\Facet\FieldFacetRole;
 use Claroline\CoreBundle\Entity\Facet\GeneralFacetPreference;
+use Claroline\CoreBundle\Entity\Facet\PanelFacet;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Symfony\Component\Translation\Translator;
 use Symfony\Component\Security\Core\SecurityContextInterface;
@@ -36,6 +37,8 @@ class FacetManager
     private $om;
     private $translator;
     private $sc;
+    private $panelRepo;
+    private $fieldRepo;
 
     /**
      * @InjectParams({
@@ -53,6 +56,8 @@ class FacetManager
         $this->om = $om;
         $this->translator = $translator;
         $this->sc = $sc;
+        $this->panelRepo = $om->getRepository('ClarolineCoreBundle:Facet\PanelFacet');
+        $this->fieldRepo = $om->getRepository('ClarolineCoreBundle:Facet\FieldFacet');
     }
 
     /**
@@ -62,12 +67,13 @@ class FacetManager
      */
     public function createFacet($name)
     {
+        $this->om->startFlushSuite();
         $facet = new Facet();
         $facet->setName($name);
         $facet->setPosition($this->om->count('Claroline\CoreBundle\Entity\Facet\Facet'));
         $this->initFacetPermissions($facet);
         $this->om->persist($facet);
-        $this->om->flush();
+        $this->om->endFlushSuite();
 
         return $facet;
     }
@@ -113,9 +119,9 @@ class FacetManager
     /**
      * Fixes gaps beteween fields orders
      */
-    public function reorderFields(Facet $facet)
+    public function reorderFields(PanelFacet $panelFacet)
     {
-        $fields = $this->getFields($facet);
+        $fields = $panelFacet->getFieldsFacet();
         $order = 0;
 
         foreach ($fields as $field) {
@@ -130,15 +136,15 @@ class FacetManager
     /**
      * Creates a new field for a facet
      *
-     * @param Facet   $facet
-     * @param string  $name
-     * @param integer $type
+     * @param PanelFacet $facet
+     * @param string     $name
+     * @param integer    $type
      */
-    public function addField(Facet $facet, $name, $type)
+    public function addField(PanelFacet $panelFacet, $name, $type)
     {
         $this->om->startFlushSuite();
         $fieldFacet = new FieldFacet();
-        $fieldFacet->setFacet($facet);
+        $fieldFacet->setPanelFacet($panelFacet);
         $fieldFacet->setName($name);
         $fieldFacet->setType($type);
         $fieldFacet->setPosition($this->om->count('Claroline\CoreBundle\Entity\Facet\FieldFacet'));
@@ -150,16 +156,77 @@ class FacetManager
     }
 
     /**
+     * Adds a panel in a facet
+     *
+     * @param Facet $facet
+     * @param string $name
+     *
+     * @return PanelFacet
+     */
+    public function addPanel(Facet $facet, $name, $collapse = false)
+    {
+        $panelFacet = new PanelFacet();
+        $panelFacet->setName($name);
+        $panelFacet->setFacet($facet);
+        $panelFacet->setIsDefaultCollapsed($collapse);
+        $panelFacet->setPosition($this->om->count('Claroline\CoreBundle\Entity\Facet\PanelFacet'));
+        $this->om->persist($panelFacet);
+        $this->om->flush();
+
+        return $panelFacet;
+    }
+
+    /**
+     * Persists and flush a panel.
+     *
+     * @param FacetPanel $panel
+     *
+     * @return FacetPanel
+     */
+    public function editPanel(PanelFacet $panel)
+    {
+        $this->om->persist($panel);
+        $this->om->flush();
+
+        return $panel;
+    }
+
+    /**
+     * Removes a panel.
+     *
+     * @param FacetPanel $panel
+     */
+    public function removePanel(PanelFacet $panel)
+    {
+        //some reordering have to happen here...
+        $panels = $this->panelRepo->findPanelsAfter($panel);
+
+        foreach ($panels as $afterPanel) {
+            $afterPanel->setPosition($afterPanel->getPosition() - 1);
+            $this->om->persist($afterPanel);
+        }
+
+        $this->om->remove($panel);
+        $this->om->flush();
+        //reorder the fields for the still standing panels
+        $panels = $this->panelRepo->findAll();
+
+        foreach ($panels as $panel) {
+            $this->reorderFields($panel);
+        }
+    }
+
+    /**
      * Removes a field from a facet
      *
      * @param FieldFacet $field
      */
     public function removeField(FieldFacet $field)
     {
-        $facet = $field->getFacet();
+        $panel = $field->getPanelFacet();
         $this->om->remove($field);
         $this->om->flush();
-        $this->reorderFields($facet );
+        $this->reorderFields($panel);
     }
 
     /**
@@ -270,20 +337,42 @@ class FacetManager
     }
 
     /**
-     * Order the fields of a facet according to the $ids order.
+     * Order the fields of a panel according to the $ids order.
      *
-     * @param array $ids
-     * @param Facet $facet
+     * @param array      $ids
+     * @param PanelFacet $facet
      */
-    public function orderFields(array $ids, Facet $facet)
+    public function orderFields(array $ids, PanelFacet $panel)
     {
-        $fields = $this->getFields($facet);
+        $fields = $panel->getFieldsFacet();
 
         foreach ($fields as $field) {
             foreach($ids as $key => $id) {
                 if ($id === $field->getId()) {
                     $field->setPosition($key);
                     $this->om->persist($field);
+                }
+            }
+        }
+
+        $this->om->flush();
+    }
+
+    /**
+     * Order the panels of a facet according to the $ids order.
+     *
+     * @param array      $ids
+     * @param PanelFacet $facet
+     */
+    public function orderPanels(array $ids, Facet $facet)
+    {
+        $panels = $facet->getPanelFacets();
+
+        foreach ($panels as $panel) {
+            foreach($ids as $key => $id) {
+                if ($id === $panel->getId()) {
+                    $panel->setPosition($key);
+                    $this->om->persist($panel);
                 }
             }
         }
@@ -336,7 +425,7 @@ class FacetManager
     public function initFieldPermissions(FieldFacet $field)
     {
         $this->om->startFlushSuite();
-        $roles = $field->getFacet()->getRoles();
+        $roles = $field->getPanelFacet()->getFacet()->getRoles();
 
         foreach ($roles as $role) {
             $ffr = new FieldFacetRole();
@@ -437,12 +526,12 @@ class FacetManager
         $entities = $this->om->getRepository('ClarolineCoreBundle:Facet\Facet')->findVisibleFacets($token);
 
         foreach ($entities as $entity) {
-            $data[$entity->getPosition()] = array(
+            $data[] = array(
                 'id' => $entity->getId(),
                 'canOpen' => true,
                 'name' => $entity->getName(),
                 'position' => $entity->getPosition(),
-                'fieldFacets' => $entity->getFieldsFacet()
+                'panels' => $entity->getPanelFacets()
             );
         }
 
@@ -507,7 +596,7 @@ class FacetManager
                 'id' => $visible->getId(),
                 'name' => $visible->getName(),
                 'canOpen' => true,
-                'fieldFacets' => $visible->getFieldsFacet()
+                'panels' => $visible->getPanelFacets()
             );
         }
 
@@ -520,12 +609,12 @@ class FacetManager
             foreach ($visibleFacets as $facet) {
                 if ($el['id'] === $facet['id']) {
                     $canOpen = $facet['canOpen'] | $el['canOpen'];
-                    $data[$facet['position']] = array(
+                    $data[] = array(
                         'position' => $facet['position'],
                         'id' => $facet['id'],
                         'name' => $facet['name'],
                         'canOpen' => $canOpen,
-                        'fieldFacets' => $facet['fieldFacets']
+                        'panels' => $facet['panels']
                     );
                     $found = true;
                 }
@@ -562,7 +651,7 @@ class FacetManager
                 $canEdit = $field->getIsEditableByOwner();
             }
 
-            $data[$field->getPosition()] = array(
+            $data[] = array(
                 'id' => $field->getId(),
                 'canOpen' => $canOpen,
                 'canEdit' => $canEdit,

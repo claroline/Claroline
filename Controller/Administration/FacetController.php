@@ -23,8 +23,10 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Form\FormFactoryInterface;
 use Claroline\CoreBundle\Entity\Facet\Facet;
 use Claroline\CoreBundle\Entity\Facet\FieldFacet;
+use Claroline\CoreBundle\Entity\Facet\PanelFacet;
 use Claroline\CoreBundle\Form\Administration\FacetType;
 use Claroline\CoreBundle\Form\Administration\FieldFacetType;
+use Claroline\CoreBundle\Form\Administration\PanelFacetType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -110,18 +112,18 @@ class FacetController extends Controller
     /**
      * Returns the facet field creation form in a modal
      *
-     * @EXT\Route("{facet}/field/form",
+     * @EXT\Route("/panel/{panelFacet}/field/form",
      *      name="claro_admin_facet_field_form",
      *      options = {"expose"=true}
      * )
      * @EXT\Template
      */
-    public function fieldFormAction(Facet $facet)
+    public function fieldFormAction(PanelFacet $panelFacet)
     {
         $this->checkOpen();
         $form = $this->formFactory->create(new FieldFacetType(), new FieldFacet());
 
-        return array('form' => $form->createView(), 'facet' => $facet);
+        return array('form' => $form->createView(), 'panelFacet' => $panelFacet);
     }
 
     /**
@@ -155,12 +157,12 @@ class FacetController extends Controller
     /**
      * Returns the facet creation form in a modal
      *
-     * @EXT\Route("/create/field/facet/{facet}",
+     * @EXT\Route("/create/field/panel/{panelFacet}",
      *      name="claro_admin_field_facet_create",
      *      options = {"expose"=true}
      * )
      */
-    public function createFieldAction(Facet $facet)
+    public function createFieldAction(PanelFacet $panelFacet)
     {
         $this->checkOpen();
         $form = $this->formFactory->create(new FieldFacetType(), new FieldFacet());
@@ -168,7 +170,7 @@ class FacetController extends Controller
 
         if ($form->isValid()) {
             $field = $this->facetManager->addField(
-                $facet,
+                $panelFacet,
                 $form->get('name')->getData(),
                 $form->get('type')->getData()
             );
@@ -179,14 +181,14 @@ class FacetController extends Controller
                     'position' => $field->getPosition(),
                     'typeTranslationKey' => $field->getTypeTranslationKey(),
                     'id' => $field->getId(),
-                    'facet_id' => $facet->getId()
+                    'panelId' => $panelFacet->getId()
                 )
             );
         }
 
         return $this->render(
             'ClarolineCoreBundle:Administration\Facet:fieldForm.html.twig',
-            array('form' => $form->createView(), 'facet' => $facet)
+            array('form' => $form->createView(), 'panelId' => $panelFacet)
         );
     }
 
@@ -351,12 +353,12 @@ class FacetController extends Controller
     /**
      * Ajax method for ordering fields
      *
-     * @EXT\Route("/{facet}/fields/order",
+     * @EXT\Route("/{panel}/fields/order",
      *      name="claro_admin_field_facet_order",
      *      options = {"expose"=true}
      * )
      */
-    public function moveFieldFacetsAction(Facet $facet)
+    public function moveFieldFacetsAction(PanelFacet $panel)
     {
         $this->checkOpen();
         $params = $this->request->query->all();
@@ -366,7 +368,7 @@ class FacetController extends Controller
             $ids[] = (int) str_replace('field-', '', $value);
         }
 
-        $this->facetManager->orderFields($ids, $facet);
+        $this->facetManager->orderFields($ids, $panel);
 
         return new Response('success');
     }
@@ -472,6 +474,149 @@ class FacetController extends Controller
         return new JsonResponse($this->request->request->all(), 200);
     }
 
+    /**
+     * Returns the panel creation form in a modal
+     *
+     * @EXT\Route("/create/panel/facet/{facet}/form",
+     *      name="claro_admin_panel_facet_create_form",
+     *      options = {"expose"=true}
+     * )
+     * @EXT\Template()
+     */
+    public function panelFacetFormAction(Facet $facet)
+    {
+        $this->checkOpen();
+        $form = $this->formFactory->create(new PanelFacetType(), new PanelFacet());
+
+        return array('form' => $form->createView(), 'facet' => $facet);
+    }
+
+    /**
+     * Returns the panel creation form in a modal
+     *
+     * @EXT\Route("/create/panel/facet/{facet}",
+     *      name="claro_admin_panel_facet_create",
+     *      options = {"expose"=true}
+     * )
+     */
+    public function addPanelFacetAction(Facet $facet)
+    {
+        $this->checkOpen();
+        $form = $this->formFactory->create(new PanelFacetType(), new PanelFacet());
+        $form->handleRequest($this->request);
+
+        if ($form->isValid()) {
+            $panel = $this->facetManager->addPanel(
+                $facet,
+                $form->get('name')->getData(),
+                $form->get('isDefaultCollapsed')->getData()
+            );
+
+            return new JsonResponse(
+                array(
+                    'id' => $panel->getId(),
+                    'name' => $panel->getName(),
+                    'facet_id' => $facet->getId()
+                )
+            );
+        }
+
+        return $this->render(
+            'ClarolineCoreBundle:Administration\Facet:panelFacetForm.html.twig',
+            array('form' => $form->createView(), 'facet' => $facet)
+        );
+    }
+
+    /**
+     * Returns the panel creation edition in a modal
+     *
+     * @EXT\Route("/edit/panel/facet/{panelFacet}/form",
+     *      name="claro_admin_panel_facet_edit_form",
+     *      options = {"expose"=true}
+     * )
+     *
+     * @EXT\Template()
+     */
+    public function editPanelFacetFormAction(PanelFacet $panelFacet)
+    {
+        $this->checkOpen();
+        $form = $this->formFactory->create(new PanelFacetType(), $panelFacet);
+
+        return array('form' => $form->createView(), 'panelFacet' => $panelFacet);
+    }
+
+    /**
+     * Returns the panel creation edition in a modal
+     *
+     * @EXT\Route("/edit/panel/facet/{panelFacet}",
+     *      name="claro_admin_panel_facet_edit",
+     *      options = {"expose"=true}
+     * )
+     */
+    public function editPanelFacetAction(PanelFacet $panelFacet)
+    {
+        $this->checkOpen();
+        $form = $this->formFactory->create(new PanelFacetType(), $panelFacet);
+        $form->handleRequest($this->request);
+
+        if ($form->isValid()) {
+            $panel = $this->facetManager->editPanel($panelFacet);
+
+            return new JsonResponse(
+                array(
+                    'id' => $panelFacet->getId(),
+                    'name' => $panelFacet->getName(),
+                    'facet_id' => $panelFacet->getId()
+                )
+            );
+        }
+
+        return $this->render(
+            'ClarolineCoreBundle:Administration\Facet:editPanelFacetForm.html.twig',
+            array('form' => $form->createView(), 'panelFacet' => $panelFacet)
+        );
+    }
+
+    /**
+     * Removes a panel.
+     *
+     * @EXT\Route("/remove/panel/facet/{panelFacet}",
+     *      name="claro_admin_remove_panel_facet",
+     *      options = {"expose"=true}
+     * )
+     */
+    public function removePanelFacetAction(PanelFacet $panelFacet)
+    {
+        $this->checkOpen();
+        $this->facetManager->removePanel($panelFacet);
+
+        return new Response('success', 204);
+    }
+
+    /**
+     * Reorder panels.
+     *
+     * @EXT\Route("/order/panels/facet/{facet}",
+     *      name="claro_admin_panel_facet_order",
+     *      options = {"expose" = true}
+     * )
+     *
+     */
+    public function orderPanels(Facet $facet)
+    {
+        $this->checkOpen();
+        $params = $this->request->query->all();
+        $ids = [];
+
+        foreach ($params['ids'] as $value) {
+            $ids[] = (int) str_replace('panel-', '', $value);
+        }
+
+        $this->facetManager->orderPanels($ids, $facet);
+
+        return new Response('success');
+    }
+
     private function checkOpen()
     {
         if ($this->sc->isGranted('OPEN', $this->userAdminTool)) {
@@ -499,4 +644,4 @@ class FacetController extends Controller
 
         return $roles;
     }
-} 
+}
