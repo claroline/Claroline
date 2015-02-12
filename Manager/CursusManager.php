@@ -32,6 +32,8 @@ class CursusManager
     private $pagerFactory;
     private $translator;
     private $courseRepo;
+    private $courseGroupRepo;
+    private $courseUserRepo;
     private $cursusRepo;
     private $cursusGroupRepo;
     private $cursusUserRepo;
@@ -55,6 +57,10 @@ class CursusManager
         $this->translator = $translator;
         $this->courseRepo =
             $om->getRepository('ClarolineCursusBundle:Course');
+        $this->courseGroupRepo =
+            $om->getRepository('ClarolineCursusBundle:CourseGroup');
+        $this->courseUserRepo =
+            $om->getRepository('ClarolineCursusBundle:CourseUser');
         $this->cursusRepo =
             $om->getRepository('ClarolineCursusBundle:Cursus');
         $this->cursusGroupRepo =
@@ -416,6 +422,42 @@ class CursusManager
     {
         return $this->cursusGroupRepo->findOneCursusGroupByCursusAndGroup(
             $cursus,
+            $group,
+            $executeQuery
+        );
+    }
+
+
+    /******************************************
+     * Access to CourseUserRepository methods *
+     ******************************************/
+
+    public function getOneCourseUserByCourseAndUser(
+        Course $course,
+        User $user,
+        $executeQuery = true
+    )
+    {
+        return $this->courseUserRepo->findOneCourseUserByCourseAndUser(
+            $course,
+            $user,
+            $executeQuery
+        );
+    }
+
+
+    /*******************************************
+     * Access to CourseGroupRepository methods *
+     *******************************************/
+
+    public function getOneCourseGroupByCourseAndGroup(
+        Course $course,
+        Group $group,
+        $executeQuery = true
+    )
+    {
+        return $this->courseGroupRepo->findOneCourseGroupByCourseAndGroup(
+            $course,
             $group,
             $executeQuery
         );

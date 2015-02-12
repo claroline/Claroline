@@ -16,7 +16,7 @@ use Claroline\CursusBundle\Entity\Cursus;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Claroline\CursusBundle\Repository\CursusGroupRepository")
  * @ORM\Table(
  *     name="claro_cursusbundle_cursus_group",
  *     uniqueConstraints={
@@ -58,6 +58,11 @@ class CursusGroup
      */
     protected $registrationDate;
 
+    /**
+     * @ORM\Column(name="group_type", type="integer", nullable=true)
+     */
+    protected $groupType;
+
     public function getId()
     {
         return $this->id;
@@ -96,5 +101,15 @@ class CursusGroup
     public function setRegistrationDate($registrationDate)
     {
         $this->registrationDate = $registrationDate;
+    }
+
+    public function getGroupType()
+    {
+        return $this->groupType;
+    }
+
+    public function setGroupType($groupType)
+    {
+        $this->groupType = $groupType;
     }
 }

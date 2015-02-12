@@ -1,5 +1,4 @@
 <?php
-
 /*
  * This file is part of the Claroline Connect package.
  *
@@ -11,23 +10,23 @@
 
 namespace Claroline\CursusBundle\Entity;
 
-use Claroline\CoreBundle\Entity\User;
-use Claroline\CursusBundle\Entity\Cursus;
+use Claroline\CoreBundle\Entity\Group;
+use Claroline\CursusBundle\Entity\Course;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="Claroline\CursusBundle\Repository\CursusUserRepository")
+ * @ORM\Entity(repositoryClass="Claroline\CursusBundle\Repository\CourseGroupRepository")
  * @ORM\Table(
- *     name="claro_cursusbundle_cursus_user",
+ *     name="claro_cursusbundle_course_group",
  *     uniqueConstraints={
  *         @ORM\UniqueConstraint(
- *             name="cursus_user_unique_cursus_user",
- *             columns={"cursus_id", "user_id"}
+ *             name="cursus_group_unique_course_group",
+ *             columns={"course_id", "group_id"}
  *         )
  *     }
  * )
  */
-class CursusUser
+class CourseGroup
 {
     /**
      * @ORM\Id
@@ -38,20 +37,20 @@ class CursusUser
 
     /**
      * @ORM\ManyToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\User"
+     *     targetEntity="Claroline\CoreBundle\Entity\Group"
      * )
-     * @ORM\JoinColumn(name="user_id", nullable=false, onDelete="CASCADE")
+     * @ORM\JoinColumn(name="group_id", nullable=false, onDelete="CASCADE")
      */
-    protected $user;
+    protected $group;
 
     /**
      * @ORM\ManyToOne(
-     *     targetEntity="Claroline\CursusBundle\Entity\Cursus",
-     *     inversedBy="cursusUsers"
+     *     targetEntity="Claroline\CursusBundle\Entity\Course",
+     *     inversedBy="courseGroups"
      * )
-     * @ORM\JoinColumn(name="cursus_id", nullable=false, onDelete="CASCADE")
+     * @ORM\JoinColumn(name="course_id", nullable=false, onDelete="CASCADE")
      */
-    protected $cursus;
+    protected $course;
 
     /**
      * @ORM\Column(name="registration_date", type="datetime", nullable=false)
@@ -59,9 +58,9 @@ class CursusUser
     protected $registrationDate;
 
     /**
-     * @ORM\Column(name="user_type", type="integer", nullable=true)
+     * @ORM\Column(name="group_type", type="integer", nullable=true)
      */
-    protected $userType;
+    protected $groupType;
 
     public function getId()
     {
@@ -73,24 +72,24 @@ class CursusUser
         $this->id = $id;
     }
 
-    public function getUser()
+    public function getGroup()
     {
-        return $this->user;
+        return $this->group;
     }
 
-    public function setUser(User $user)
+    public function setGroup(Group $group)
     {
-        $this->user = $user;
+        $this->group = $group;
     }
 
-    public function getCursus()
+    public function getCourse()
     {
-        return $this->cursus;
+        return $this->course;
     }
 
-    public function setCursus(Cursus $cursus)
+    public function setCourse(Course $course)
     {
-        $this->cursus = $cursus;
+        $this->course = $course;
     }
 
     public function getRegistrationDate()
@@ -103,13 +102,13 @@ class CursusUser
         $this->registrationDate = $registrationDate;
     }
 
-    public function getUserType()
+    public function getGroupType()
     {
-        return $this->userType;
+        return $this->groupType;
     }
 
-    public function setUserType($userType)
+    public function setGroupType($groupType)
     {
-        $this->userType = $userType;
+        $this->groupType = $groupType;
     }
 }
