@@ -5,11 +5,13 @@ namespace HeVinci\CompetencyBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use HeVinci\CompetencyBundle\Validator as CustomAssert;
+use Symfony\Bridge\Doctrine\Validator\Constraints as BR;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="hevinci_scale")
+ * @BR\UniqueEntity("name")
  */
 class Scale
 {
@@ -21,7 +23,7 @@ class Scale
     private $id;
 
     /**
-     * @ORM\Column
+     * @ORM\Column(unique=true)
      * @Assert\NotBlank
      * @Assert\Length(max="255")
      */
