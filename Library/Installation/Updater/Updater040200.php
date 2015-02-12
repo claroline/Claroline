@@ -51,11 +51,11 @@ class Updater040200
 
     private function updateFacets()
     {
-        $facets = $om->getRepository('ClarolineCoreBundle:Facet\Facet')->findAll();
+        $facets = $this->om->getRepository('ClarolineCoreBundle:Facet\Facet')->findAll();
         $this->om->startFlushSuite();
 
         foreach ($facets as $facet) {
-            $this->container->get('claroline.facet.facet_manager')
+            $this->container->get('claroline.manager.facet_manager')
                 ->addPanel($facet, $facet->getName());
         }
 
