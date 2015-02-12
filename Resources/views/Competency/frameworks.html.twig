@@ -4,14 +4,15 @@
     {% if frameworks|length > 0 %}
 
     {% else %}
-        <br>
         <div class="alert alert-info" role="alert">
             <i class="fa fa-info-circle"></i>
-            {% if hasScales %}
-                {{ 'info.no_frame'|trans({}, 'competency') }}
-            {% else %}
-                {{ 'info.no_frame_no_scale'|trans({}, 'competency') }}
-            {% endif %}
+            <span id="status-info">
+                {% if hasScales %}
+                    {{ 'info.no_frame'|trans({}, 'competency') }}
+                {% else %}
+                    {{ 'info.no_frame_no_scale'|trans({}, 'competency') }}
+                {% endif %}
+            </span>
         </div>
     {% endif %}
 {% endblock %}
@@ -20,31 +21,10 @@
     <a href="#" class="btn btn-primary">
         {{ 'create_framework'|trans({}, 'competency') }}
     </a>
-    {% if not hasScales %}
-        <button id="create-scale" class="btn btn-primary">
-            {{ 'create_scale'|trans({}, 'competency') }}
-        </button>
-    {% else %}
-        <a href="#" class="btn btn-primary">
-            {{ 'manage_scales'|trans({}, 'competency') }}
-        </a>
-    {% endif %}
-{% endblock %}
-
-{% block javascripts %}
-    {{ parent() }}
-    <script>
-        $('#create-scale').on('click', function () {
-            window.Claroline.Modal.displayForm(
-                Routing.generate('hevinci_new_scale'),
-                reloadPage,
-                function() {},
-                'scale-form'
-            );
-        });
-        var reloadPage = function () {
-            window.tinymce.claroline.disableBeforeUnload = true;
-            window.location.reload();
-        }
-    </script>
+    <button id="create-scale" class="btn btn-primary" {{ hasScales ? 'style="display: none"' : '' }}>
+        {{ 'create_scale'|trans({}, 'competency') }}
+    </button>
+    <a id="manage-scales" href="#" class="btn btn-primary" {{ not hasScales ? 'style="display: none"' : '' }}>
+        {{ 'manage_scales'|trans({}, 'competency') }}
+    </a>
 {% endblock %}

@@ -38,3 +38,10 @@
     </div>
     {% block sectionRest %}{% endblock %}
 {% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ url('bazinga_jstranslation_js', { 'domain': 'competency' }) }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/hevincicompetency/js/flasher.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/hevincicompetency/js/competency.js') }}"></script>
+{% endblock %}
