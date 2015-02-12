@@ -168,7 +168,22 @@ class Leap2aImporter implements ImporterInterface
                 throw new \Exception('Entry has no title.');
             }
 
-            $formationsWidget->setLabel((string)$formationsWidgetTitle[0]);
+            $formationWidgetLabel = (string)$formationsWidgetTitle[0];
+            $formationsWidget
+                ->setLabel($formationWidgetLabel)
+                ->setName($formationWidgetLabel);
+
+            $formationsWidgetStartDate = $formationsWidgetsNode->xpath("leap2:date[@leap2:point='start']");
+
+            if (0 < count($formationsWidgetStartDate)) {
+                $formationsWidget->setStartDate(new \DateTime((string)$formationsWidgetStartDate[0]));
+            }
+
+            $formationsWidgetEndDate = $formationsWidgetsNode->xpath("leap2:date[@leap2:point='end']");
+
+            if (0 < count($formationsWidgetEndDate)) {
+                $formationsWidget->setEndDate(new \DateTime((string)$formationsWidgetEndDate[0]));
+            }
 
             $formationsWidgetResources = [];
 

@@ -79,7 +79,7 @@ class Portfolio
     /**
      * @var \Icap\PortfolioBundle\Entity\Widget\WidgetNode[]
      *
-     * @ORM\OneToMany(targetEntity="Icap\PortfolioBundle\Entity\Widget\AbstractWidget", mappedBy="portfolio")
+     * @ORM\OneToMany(targetEntity="Icap\PortfolioBundle\Entity\Widget\AbstractWidget", mappedBy="portfolio", cascade={"persist"})
      */
     protected $widgets;
 
@@ -311,6 +311,10 @@ class Portfolio
      */
     public function setWidgets($abstractWidgets)
     {
+        foreach ($abstractWidgets as $abstractWidget) {
+            $abstractWidget->setPortfolio($this);
+        }
+
         $this->widgets = $abstractWidgets;
 
         return $this;

@@ -22,21 +22,23 @@
 {% endblock %}
 
 {% block content_body %}
-    <p>
-        {{ 'check_before_do_import'|trans({}, 'icap_portfolio') }} <a href="#{{ previewId }}" title="{{ 'do_import'|trans({}, 'icap_portfolio') }}" class="btn btn-xs btn-primary">{{ 'do_import'|trans({}, 'icap_portfolio') }}</a>
-    </p>
-    <h1>{{ portfolio.titleWidget.title }}</h1>
-    {% for widget in portfolio.widgets %}
-        {% if 'title' != widget.widgetType%}
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <h3 class="panel-title">{{ widget.label }}</h3>
-        </div>
-        <div class="panel-body">
-        {% include 'IcapPortfolioBundle:templates:' ~ widget.widgetType ~ '.html.twig' %}
-        </div>
-    </div>
-        {% endif %}
-    {% endfor %}
-    <a href="#{{ previewId }}" title="{{ 'do_import'|trans({}, 'icap_portfolio') }}" class="btn btn-primary">{{ 'do_import'|trans({}, 'icap_portfolio') }}</a>
+    <form method="POST">
+        <p>
+            {{ 'check_before_do_import'|trans({}, 'icap_portfolio') }} <button type="submit" class="btn btn-xs btn-primary">{{ 'do_import'|trans({}, 'icap_portfolio') }}</button>
+        </p>
+        <h1>{{ portfolio.titleWidget.title }}</h1>
+        {% for widget in portfolio.widgets %}
+            {% if 'title' != widget.widgetType%}
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">{{ widget.label }}</h3>
+                    </div>
+                    <div class="panel-body">
+                        {% include 'IcapPortfolioBundle:templates:' ~ widget.widgetType ~ '.html.twig' %}
+                    </div>
+                </div>
+            {% endif %}
+        {% endfor %}
+        <button type="submit" class="btn btn-primary">{{ 'do_import'|trans({}, 'icap_portfolio') }}</button>
+    </form>
 {% endblock %}

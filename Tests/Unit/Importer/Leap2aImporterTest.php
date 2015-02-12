@@ -323,6 +323,97 @@ CONTENT;
 
         $this->assertEquals('Icap\PortfolioBundle\Entity\Widget\FormationsWidget', get_class($formationsWidget));
         $this->assertEquals($formationsWidgetLabel, $formationsWidget->getLabel());
+        $this->assertEquals($formationsWidgetLabel, $formationsWidget->getName());
+        $this->assertEquals($formationsWidgetStartedAtText, $formationsWidget->getStartDate()->format(\DateTime::ATOM));
+        $this->assertEquals($formationsWidgetEndedAtText, $formationsWidget->getEndDate()->format(\DateTime::ATOM));
+
+        $formationsWidgetResources = $formationsWidget->getResources();
+        /** @var \Icap\PortfolioBundle\Entity\Widget\FormationsWidgetResource $formationsWidgetResource */
+        $formationsWidgetResource = $formationsWidgetResources[0];
+
+        $this->assertEquals(1, count($formationsWidgetResources), 'Number of resource in the formations widget.');
+        $this->assertEquals($formationsWidgetResourceName, $formationsWidgetResource->getUriLabel());
+        $this->assertEquals($formationsWidgetResourceUri, $formationsWidgetResource->getUri());
+    }
+
+    public function testLeap2aImportPortfolioWithFormationWidgetWithoutDates()
+    {
+        $importer = new Leap2aImporter();
+
+        $portfolioTitle = uniqid();
+
+        $user = new User();
+        $user
+            ->setUsername(uniqid())
+            ->setFirstName($firstname = uniqid())
+            ->setLastName($lastname = uniqid());
+
+        $formationsWidgetId        = mt_rand();
+        $formationsWidgetUpdatedAtText = (new \DateTime())->add(new \DateInterval('P2D'))->format(\DateTime::ATOM);
+        $formationsWidgetLabel     = uniqid();
+        $formationsWidgetContent   = uniqid();
+
+        $formationsWidgetResourceId = mt_rand();
+        $formationsWidgetResourceName = uniqid();
+        $formationsWidgetResourceUri = uniqid();
+
+        $content = <<<CONTENT
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"
+      xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+      xmlns:leap2="http://terms.leapspecs.org/"
+      xmlns:categories="http://www.leapspecs.org/2A/categories"
+      xmlns:claroline="http://www.leapspecs.org/2A/categories">
+    <leap2:version>http://www.leapspecs.org/2010-07/2A/</leap2:version>
+    <id>54c793498714a</id>
+    <title>$portfolioTitle</title>
+    <author>
+        <name>$firstname $lastname</name>
+    </author>
+    <updated>2015-01-29T14:31:53+01:00</updated>
+    <entry>
+        <title>$formationsWidgetLabel</title>
+        <id>portfolio:formations/$formationsWidgetId</id>
+        <updated>$formationsWidgetUpdatedAtText</updated>
+        <content type="text">$formationsWidgetContent</content>
+        <rdf:type rdf:resource="leap2:activity"/>
+        <category term="Education" scheme="categories:life_area"/>
+        <link rel="leap2:has_part" href="portfolio:resource/$formationsWidgetResourceId" leap2:display_order="1"/>
+    </entry>
+    <entry>
+        <title>$formationsWidgetResourceName</title>
+        <id>portfolio:resource/$formationsWidgetResourceId</id>
+        <updated>$formationsWidgetUpdatedAtText</updated>
+        <content></content>
+        <rdf:type rdf:resource="leap2:resource"/>
+        <category term="Web" scheme="categories:resource_type#"/>
+        <link rel="self" href="$formationsWidgetResourceUri" />
+        <link rel="leap2:is_part_of" href="portfolio:formations/$formationsWidgetId" leap2:display_order="1"/>
+    </entry>
+</feed>
+CONTENT;
+
+        $importedPortfolio = $importer->import($content, $user);
+
+        $this->assertEquals('Icap\PortfolioBundle\Entity\Portfolio', get_class($importedPortfolio));
+
+        $importedPortfolioTitleWidget = $importedPortfolio->getTitleWidget();
+        $this->assertNotNull($importedPortfolioTitleWidget);
+        $this->assertEquals($portfolioTitle, $importedPortfolioTitleWidget->getTitle());
+
+        $this->assertEquals($importedPortfolio->getUser(), $user);
+
+        $formationsWidgets = $importedPortfolio->getWidget('formations');
+        $this->assertEquals(1, count($formationsWidgets), 'Number of formations widget.');
+
+        /** @var \Icap\PortfolioBundle\Entity\Widget\FormationsWidget $formationsWidget */
+        $formationsWidget = $formationsWidgets[0];
+
+        $this->assertEquals('Icap\PortfolioBundle\Entity\Widget\FormationsWidget', get_class($formationsWidget));
+        $this->assertEquals($formationsWidgetLabel, $formationsWidget->getLabel());
+        $this->assertEquals($formationsWidgetLabel, $formationsWidget->getName());
+        $this->assertNull($formationsWidget->getStartDate());
+        $this->assertNull($formationsWidget->getEndDate());
 
         $formationsWidgetResources = $formationsWidget->getResources();
         /** @var \Icap\PortfolioBundle\Entity\Widget\FormationsWidgetResource $formationsWidgetResource */
@@ -653,6 +744,9 @@ CONTENT;
 
         $this->assertEquals('Icap\PortfolioBundle\Entity\Widget\FormationsWidget', get_class($formationsWidget));
         $this->assertEquals($formationsWidgetLabel, $formationsWidget->getLabel());
+        $this->assertEquals($formationsWidgetLabel, $formationsWidget->getName());
+        $this->assertEquals($formationsWidgetStartedAtText, $formationsWidget->getStartDate()->format(\DateTime::ATOM));
+        $this->assertEquals($formationsWidgetEndedAtText, $formationsWidget->getEndDate()->format(\DateTime::ATOM));
 
         $formationsWidgetResources = $formationsWidget->getResources();
         /** @var \Icap\PortfolioBundle\Entity\Widget\FormationsWidgetResource $formationsWidgetResource */

@@ -240,7 +240,6 @@ class PortfolioController extends Controller
             if ($form->isValid()) {
                 try {
                     $portfolio = $importManager->simulateImport($importData->getContent(), $loggedUser, $importData->getFormat());
-                    $this->getSessionFlashbag()->add('success', $this->getTranslator()->trans('portfolio_import_success_message', array(), 'icap_portfolio'));
                     $previewId = uniqid();
                     $temporaryImportFilePath = sys_get_temp_dir() . DIRECTORY_SEPARATOR . sprintf("%s-%s-%s.%s", strtolower($loggedUser->getUsername()), date("Y_m_d\TH_i_s\Z"), $previewId, $importData->getFormat()) . '.import';
                     if (!file_put_contents($temporaryImportFilePath, $importData->getContent())) {
@@ -290,6 +289,24 @@ class PortfolioController extends Controller
             $this->getSessionFlashbag()->add('error', $this->getTranslator()->trans($errorMessage, array(), 'icap_portfolio'));
 
             return $this->redirect($this->generateUrl('icap_portfolio_import', ['format' => $format]));
+        }
+
+        if ($request->isMethod('POST')) {
+            try {
+                foreach ($files as $file) {
+                    $importManager = $this->getImportManager();
+                    $importManager->setEntityManager($this->getEntityManager());
+
+                    $portfolio = $importManager->doImport($file->getContents(), $loggedUser, $format);
+                }
+                $this->getSessionFlashbag()->add('success', $this->getTranslator()->trans('portfolio_import_success_message', array(), 'icap_portfolio'));
+
+                return $this->redirect($this->generateUrl('icap_portfolio_list'));
+            } catch(\Exception $exception){
+                $this->getSessionFlashbag()->add('error', $this->getTranslator()->trans('portfolio_import_error_message', array(), 'icap_portfolio'));
+
+                return $this->redirect($this->generateUrl('icap_portfolio_import', ['format' => $format]));
+            }
         }
 
         foreach ($files as $file) {

@@ -91,7 +91,6 @@ class PortfolioHandler
     public function handleAdd(Portfolio $portfolio)
     {
         $titleWidget = new TitleWidget();
-        $titleWidget->setLabel($titleWidget->getWidgetType());
 
         $form = $this->getAddForm();
         $form->setData($titleWidget);
