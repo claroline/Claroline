@@ -50,7 +50,7 @@ class graphicExport extends qtiExport
             $this->qtiFeedBack($interaction->getFeedBack());
         }
 
-        $this->document->save($this->qtiRepos->getUserDir().'testfile.xml');
+        $this->document->save($this->qtiRepos->getUserDir().$this->question->getId().'_qestion_qti.xml');
 
         $this->getPicture();
 

@@ -54,7 +54,7 @@ class matchingExport extends qtiExport
             $this->qtiFeedBack($interaction->getFeedBack());
         }
 
-        $this->document->save($this->qtiRepos->getUserDir().'testfile.xml');
+        $this->document->save($this->qtiRepos->getUserDir().$this->question->getId().'_qestion_qti.xml');
 
         return $this->getResponse();
 
@@ -130,7 +130,7 @@ class matchingExport extends qtiExport
      * add the simpleAssociableChoiceTag
      *
      * @access protected
-     * 
+     *
      * @param type $proposal
      * @param type $numberProposal
      * @param type $elementProposal
@@ -286,11 +286,11 @@ class matchingExport extends qtiExport
      * get number of labels for the division of the notation
      *
      * @access protected
-     * 
+     *
      * @param type $nbrLabel
      * @param type $labels
      * @param type $allAssocLabel
-     * 
+     *
      * @return $nbrLabel
      */
     protected function nbrLabel($nbrLabel, $labels, $allAssocLabel)

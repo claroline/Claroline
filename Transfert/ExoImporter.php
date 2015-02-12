@@ -133,8 +133,66 @@ class ExoImporter extends Importer implements ConfigurationInterface
 
     public function export(Workspace $workspace, array &$files, $object)
     {
+        $qtiRepos = $this->container->get('ujm.qti_repository');
+        $qtiRepos->createDirQTI($object->getTitle());
+
+        $interRepos = $this->om->getRepository('UJMExoBundle:Interaction');
+        $interactions = $interRepos->getExerciseInteraction(
+                $this->container->get('doctrine')->getManager(),
+                $object->getId(), FALSE);
+
+        foreach ($interactions as $interaction) {
+            $qti = $qtiRepos->export($interaction);
+            $qdir = $qtiRepos->getUserDir().$interaction->getQuestion()->getId().'_question';
+            mkdir($qdir);
+            exec('mv '.$qtiRepos->getUserDir().$interaction->getQuestion()->getId().'_qestion_qti.xml '.$qdir);
+        }
+
+//        echo $qti;
+        die();
+
+        $qtiRepos->removeDirectory();
+
         return array();
     }
+
+//    public function export(Workspace $workspace, array &$files, $object)
+//    {
+//		$pathQtiDir = genQtiDir(); //cette méthode n'existe pas, on est d'accord mais j'imagine que vous pouvez générer une archive
+//		$iterator = new \DirectoryIterator($pathQtiDir);
+//
+//		/*
+//		 * le tableau 'files' contient une liste de fichier à rajouter dans l'archive sous la forme
+//		 * array(
+//		 * 	   $localPath => $realPath,
+//		 *     ...
+//		 * );
+//		 * Comme c'est une référence vous n'avez pas besoin de faire de retour de ce tableau, il suffit juste de le mettre à jour.
+//		 *
+//		 * $object sera l'objet exporté, en l'occurence l'exercice
+//		 *
+//		 */
+//
+//		$exName = $object->...->getName() //je ne sais pas ou est stocké le nom de l'exercice
+//
+//		foreach ($iterator as $element) {
+//			if (!$element->isDot()) {
+//				$localPath = 'qti/' . $exName . '/rel/path/in/archive'; //ça sera vraissemblablement quelque chose de ce genre, ça dépend de votre implémentation
+//				$files[$localPath] = $file->getPathName() //voir le gros commentaire du début... on met à jour le tableau de fichier
+//			}
+//		}
+//
+//		$version = 'peu importe mais il est dans votre conf';
+//		//à voir selon votre implémentation, mais il me semble que j'avais mit qti/nomExercice
+//		$path = 'qti/'.$exName;
+//
+//        $data = array(array('file' => array(
+//            'path' => $path,
+//            'version' =>  $version
+//        )));
+//
+//        return $data;
+//    }
 
     public static function fileNotExists($v, $rootpath)
     {

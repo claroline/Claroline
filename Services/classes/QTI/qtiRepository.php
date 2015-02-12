@@ -12,6 +12,7 @@ use Symfony\Component\Security\Core\SecurityContextInterface;
 class qtiRepository {
 
     private $user;
+    private $userRootDir;
     private $userDir;
     private $securityContext;
     private $container;
@@ -49,11 +50,12 @@ class qtiRepository {
      * Create the repository
      *
      * @access public
-     *
+     * @param String $directory directory
      */
-    public function createDirQTI()
+    public function createDirQTI($directory = 'default')
     {
-        $this->userDir = './uploads/ujmexo/qti/'.$this->user->getUsername().'/';
+        $this->userRootDir = './uploads/ujmexo/qti/'.$this->user->getUsername().'/';
+        $this->userDir = $this->userRootDir.$directory.'/';
 
         if (!is_dir('./uploads/ujmexo/')) {
             mkdir('./uploads/ujmexo/');
@@ -61,10 +63,13 @@ class qtiRepository {
         if (!is_dir('./uploads/ujmexo/qti/')) {
             mkdir('./uploads/ujmexo/qti/');
         }
-        if (!is_dir($this->userDir)) {
-            mkdir($this->userDir);
+        if (!is_dir($this->userRootDir)) {
+            mkdir($this->userRootDir);
         } else {
             $this->removeDirectory();
+        }
+        if (!is_dir($this->userRootDir.$directory)) {
+            mkdir($this->userRootDir.$directory);
         }
     }
 
@@ -76,17 +81,10 @@ class qtiRepository {
      */
     public function removeDirectory()
     {
-        if(!is_dir($this->userDir)){
-            throw new $this->createNotFoundException($this->userDir.' is not directory '.__LINE__.', file '.__FILE__);
-        }
-        $iterator = new \DirectoryIterator($this->userDir);
-        foreach ($iterator as $fileinfo) {
-            if (!$fileinfo->isDot()) {
-                if($fileinfo->isFile()) {
-                    unlink($this->userDir."/".$fileinfo->getFileName());
-
-                }
-            }
+        if(!is_dir($this->userRootDir)){
+            throw new $this->createNotFoundException($this->userRootDir.' is not directory '.__LINE__.', file '.__FILE__);
+        } else {
+            exec ('rm -rf '.$this->userRootDir.'*');
         }
     }
 
@@ -178,6 +176,45 @@ class qtiRepository {
         }
 
         return true;
+    }
+
+    /**
+     * call method to export a question
+     *
+     * @access public
+     * @param  UJM\ExoBundle\Entity\Interaction $interaction
+     *
+     */
+    public function export($interaction)
+    {
+        $typeInter = $interaction->getType();
+        switch ($typeInter) {
+            case "InteractionQCM":
+                $qtiExport = $this->container->get('ujm.qti_qcm_export');
+
+                return $qtiExport->export($interaction, $this);
+
+            case "InteractionGraphic":
+                $qtiExport = $this->container->get('ujm.qti_graphic_export');
+
+                return $qtiExport->export($interaction, $this);
+
+            case "InteractionHole":
+                $qtiExport = $this->container->get('ujm.qti_hole_export');
+
+                return $qtiExport->export($interaction, $this);
+
+            case "InteractionOpen":
+                $qtiExport = $this->container->get('ujm.qti_open_export');
+
+                return $qtiExport->export($interaction, $this);
+
+            case "InteractionMatching":
+                $qtiExport = $this->container->get('ujm.qti_matching_export');
+
+                return $qtiExport->export($interaction, $this);
+
+        }
     }
 
 

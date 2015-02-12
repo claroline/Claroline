@@ -64,7 +64,7 @@ class qcmExport extends qtiExport
             $this->node->appendChild($this->responseProcessing);
         }
 
-        $this->document->save($this->qtiRepos->getUserDir().'testfile.xml');
+        $this->document->save($this->qtiRepos->getUserDir().$this->question->getId().'_qestion_qti.xml');
 
         return $this->getResponse();
 

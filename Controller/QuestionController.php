@@ -2308,36 +2308,9 @@ class QuestionController extends Controller
         if (count($question) > 0) {
             $interaction = $em->getRepository('UJMExoBundle:Interaction')
                               ->getInteraction($id);
-            $typeInter = $interaction->getType();
-            switch ($typeInter) {
-                case "InteractionQCM":
-                    $qtiExport = $this->container->get('ujm.qti_qcm_export');
-
-                    return $qtiExport->export($interaction, $qtiRepos);
-
-                case "InteractionGraphic":
-                    $qtiExport = $this->container->get('ujm.qti_graphic_export');
-
-                    return $qtiExport->export($interaction, $qtiRepos);
-
-                case "InteractionHole":
-                    $qtiExport = $this->container->get('ujm.qti_hole_export');
-
-                    return $qtiExport->export($interaction, $qtiRepos);
-
-                case "InteractionOpen":
-                    $qtiExport = $this->container->get('ujm.qti_open_export');
-
-                    return $qtiExport->export($interaction, $qtiRepos);
-
-                case "InteractionMatching":
-                    $qtiExport = $this->container->get('ujm.qti_matching_export');
-
-                    return $qtiExport->export($interaction, $qtiRepos);
-
-            }
+            $export = $qtiRepos->export($interaction);
         }
 
-        return new \Symfony\Component\HttpFoundation\Response;
+        return $export;
     }
 }

@@ -199,7 +199,7 @@ abstract class qtiExport
         $tmpFileName = tempnam($this->qtiRepos->getUserDir().'tmp', "xb_");
         $zip = new \ZipArchive();
         $zip->open($tmpFileName, \ZipArchive::CREATE);
-        $zip->addFile($this->qtiRepos->getUserDir().'testfile.xml', 'SchemaQTI.xml');
+        $zip->addFile($this->qtiRepos->getUserDir().$this->question->getId().'_qestion_qti.xml', $this->question->getId().'_qestion_qti.xml');
 
         foreach ($this->resourcesLinked as $file) {
             $zip->addFile($file['url'], $file['name']);
@@ -209,7 +209,7 @@ abstract class qtiExport
         $response = new BinaryFileResponse($tmpFileName);
         //$response->headers->set('Content-Type', $content->getContentType());
         $response->headers->set('Content-Type', 'application/application/zip');
-        $response->headers->set('Content-Disposition', "attachment; filename=QTI-Archive.zip");
+        $response->headers->set('Content-Disposition', 'attachment; filename='.$this->question->getId().'_QTI-Archive.zip');
         $response->headers->set('Cache-Control', 'no-cache, no-store, must-revalidate'); // HTTP 1.1.
         $response->headers->set('Pragma', 'no-cache'); // HTTP 1.0.
         $response->headers->set('Expires', '0'); // Proxies.
