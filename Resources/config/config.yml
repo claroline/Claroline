@@ -4,3 +4,5 @@ plugin:
   admin_tools:
     - name: claroline_cursus_tool
       class: list-alt
+    - name: claroline_cursus_tool_registration
+      class: list-alt
