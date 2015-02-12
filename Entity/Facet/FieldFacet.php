@@ -22,7 +22,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\FieldFacetRepository")
  * @ORM\Table(name="claro_field_facet")
  */
 class FieldFacet
@@ -51,12 +51,12 @@ class FieldFacet
 
     /**
      * @ORM\ManyToOne(
-     *      targetEntity="Claroline\CoreBundle\Entity\Facet\Facet",
+     *      targetEntity="Claroline\CoreBundle\Entity\Facet\PanelFacet",
      *      inversedBy="fieldsFacet"
      * )
      * @ORM\JoinColumn(onDelete="CASCADE", nullable=false)
      */
-    protected $facet;
+    protected $panelFacet;
 
     /**
      * @ORM\OneToMany(
@@ -99,17 +99,17 @@ class FieldFacet
     /**
      * @param Facet $facet
      */
-    public function setFacet(Facet $facet)
+    public function setPanelFacet(PanelFacet $panelFacet)
     {
-        $this->facet = $facet;
+        $this->panelFacet = $panelFacet;
     }
 
     /**
      * @return Facet
      */
-    public function getFacet()
+    public function getPanelFacet()
     {
-        return $this->facet;
+        return $this->panelFacet;
     }
 
     public function getId()

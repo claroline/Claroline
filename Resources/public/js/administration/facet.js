@@ -15,9 +15,30 @@
             var url = Routing.generate('claro_admin_facet_form');
             displayForm(url, 'form_facet_creation', addFacet);
         })
-        .on('click', '.add-field-to-facet', function(event) {
-            var url = Routing.generate('claro_admin_facet_field_form', {'facet': $(event.target).attr('data-facet-id')});
+        .on('click', '.add-panel-to-facet', function(event) {
+            var url = Routing.generate('claro_admin_panel_facet_create_form', {'facet': $(event.target).attr('data-facet-id')});
+            displayForm(url, 'form_panel_creation', addPanel);
+        })
+        .on('click', '.add-field-to-panel', function(event) {
+            event.preventDefault();
+            var url = Routing.generate('claro_admin_facet_field_form', {'panelFacet': $(event.target).attr('data-panel-id')});
             displayForm(url, 'form_field_creation', addField);
+        })
+        .on('click', '.edit-panel-facet-link', function(event) {
+            var url = $(event.currentTarget).attr('data-route');
+            displayForm(url, 'form_facet_panel_edit', editPanel);
+        })
+        .on('click', '.remove-facet-panel', function(event) {
+            var panelId = $(event.currentTarget).attr('data-panel-facet');
+            var panelName = $(event.currentTarget).attr('data-panel-name');
+            var url = Routing.generate('claro_admin_remove_panel_facet', {'panelFacet': panelId});
+            executeRequestConfirm(
+                url,
+                removePanel,
+                panelId,
+                Translator.trans('remove_panel_confirm', {'name': panelName}, 'platform'),
+                Translator.trans('remove_panel', {}, 'platform')
+            )
         })
         .on('click', '.facet-reorder-right-btn', function(event) {
             var facetId = $($(event.currentTarget)[0].parentElement.parentElement.parentElement.parentElement).attr('data-facet-id');
@@ -94,13 +115,25 @@
 
     $('.list-fields').sortable({
         update: function(event, ui) {
-            var facetId = $($(event.target)[0]).attr('data-facet-id');
-            var url = Routing.generate('claro_admin_field_facet_order', {'facet': facetId});
+            var panelId = $($(event.target)[0]).attr('data-panel-id');
+            var url = Routing.generate('claro_admin_field_facet_order', {'panel': panelId});
             $.ajax({
                 url: url,
                 data: {ids: $(event.target).sortable('toArray')},
                 success: function() { }
-            })
+            });
+        }
+    });
+
+    $('.sortable-panel').sortable({
+        update: function(event, ui) {
+            var facetId = $($(event.target)[0]).attr('data-facet-id');
+            var url = Routing.generate('claro_admin_panel_facet_order', {'facet': facetId});
+            $.ajax({
+                url: url,
+                data: {ids: $(event.target).sortable('toArray')},
+                success: function() { }
+            });
         }
     });
 
@@ -175,6 +208,19 @@
         $('#facet-pane').append(Twig.render(FacetPane, {'facet': data}));
     }
 
+    var addPanel = function(data, textStatus, jqXHR) {
+        var html = Twig.render(FacetPanelElement, {'panel': {id: data.id, name: data.name}, 'facet': {'id': data.facet_id}});
+        $('#sortable-panel-' + data.facet_id).append(html);
+    }
+
+    var editPanel = function(data, textStatus, jqXHR) {
+        $('#name-panel-' + data.id).html(data.name);
+    }
+
+    var removePanel = function(event, panelId) {
+        $('#panel-facet-main-' + panelId).remove();
+    }
+
     var removeFacet = function(event, facetId) {
         $('#facet-pane-' + facetId).remove();
         $('#tab-facet-' + facetId).remove();
@@ -194,7 +240,7 @@
     }
 
     var addField = function(data, textStatus, jqXHR) {
-        $('#lu-facet-' + data['facet_id']).append(Twig.render(FieldElement, {'field': data}))
+        $('#lu-panel-' + data['panelId']).append(Twig.render(FieldElement, {'field': data}))
     }
 
     var removeField = function(event, fieldId) {

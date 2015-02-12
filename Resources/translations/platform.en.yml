@@ -1116,3 +1116,8 @@ parameters_save_success: 'Parameters saved with success.'
 parameters_save_error: 'An error occured while saving parameters.'
 import_profile_pics: Import profile pics
 import_profile_pics_explanation: You must upload a zip file. Each file must be structured this way: username.extension
+add_field_to_panel: Add a field
+add_panel_to_facet: Add a panel
+create_pane: Create a pane
+collapse: Collapse
+edit_panel_facet: Edit a panel

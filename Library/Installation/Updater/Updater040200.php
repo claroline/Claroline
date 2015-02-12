@@ -32,6 +32,7 @@ class Updater040200
     public function postUpdate()
     {
         $this->updateBaseRoles();
+        $this->updateFacets();
     }
 
     private function updateBaseRoles()
@@ -48,6 +49,18 @@ class Updater040200
         $this->om->flush();
     }
 
+    private function updateFacets()
+    {
+        $facets = $this->om->getRepository('ClarolineCoreBundle:Facet\Facet')->findAll();
+        $this->om->startFlushSuite();
+
+        foreach ($facets as $facet) {
+            $this->container->get('claroline.manager.facet_manager')
+                ->addPanel($facet, $facet->getName());
+        }
+
+        $this->om->endFlushSuite();
+    }
 
     public function setLogger($logger)
     {
