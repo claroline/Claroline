@@ -6,14 +6,11 @@ use Claroline\CoreBundle\Entity\Activity\ActivityParameters;
 use Claroline\CoreBundle\Entity\Resource\Activity;
 use Doctrine\Common\Persistence\ObjectManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
-
 use Innova\PathBundle\Entity\Step;
 use Innova\PathBundle\Entity\Path\Path;
-use Innova\PathBundle\Entity\Step2ResourceNode;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Translation\TranslatorInterface;
-
 
 class StepManager
 {
@@ -69,7 +66,7 @@ class StepManager
 
     /**
      * Get a step by ID
-     * @param  integer $stepId
+     * @param  integer   $stepId
      * @return null|Step
      */
     public function get($stepId)
@@ -84,7 +81,7 @@ class StepManager
      * @param  \Innova\PathBundle\Entity\Step      $parent        Parent step of the step
      * @param  integer                             $order         Order of the step relative to its siblings
      * @param  \stdClass                           $stepStructure Data about the step
-     * @return \Innova\PathBundle\Entity\Step                     Edited step
+     * @return \Innova\PathBundle\Entity\Step      Edited step
      */
     public function create(Path $path, $level = 0, Step $parent = null, $order = 0, \stdClass $stepStructure)
     {
@@ -101,7 +98,7 @@ class StepManager
      * @param  integer                             $order         Order of the step relative to its siblings
      * @param  \stdClass                           $stepStructure Data about the step
      * @param  \Innova\PathBundle\Entity\Step      $step          Current step to edit
-     * @return \Innova\PathBundle\Entity\Step                     Edited step
+     * @return \Innova\PathBundle\Entity\Step      Edited step
      */
     public function edit(Path $path, $level = 0, Step $parent = null, $order = 0, \stdClass $stepStructure, Step $step)
     {
@@ -116,14 +113,13 @@ class StepManager
 
         // Save modifications
         $this->om->persist($step);
-        $this->om->flush();
 
         return $step;
     }
 
     /**
-     * @param \Innova\PathBundle\Entity\Step $step
-     * @param  \stdClass                     $stepStructure
+     * @param  \Innova\PathBundle\Entity\Step               $step
+     * @param  \stdClass                                    $stepStructure
      * @return \Innova\PathBundle\Manager\PublishingManager
      * @throws \LogicException
      */
@@ -140,8 +136,7 @@ class StepManager
                     $newActivity = true;
                     $activity = new Activity();
                 }
-            }
-            else {
+            } else {
                 // Create new activity
                 $newActivity = true;
                 $activity = new Activity();
@@ -151,10 +146,9 @@ class StepManager
         // Update activity properties
         if (!empty($stepStructure->name)) {
             $name = $stepStructure->name;
-        }
-        else {
+        } else {
             // Create a default name
-            $name = $step->getPath()->getName() . ' - ' . Step::DEFAULT_NAME . ' ' . $step->getOrder();
+            $name = $step->getPath()->getName().' - '.Step::DEFAULT_NAME.' '.$step->getOrder();
         }
         $activity->setName($name);
         $activity->setTitle($name);
@@ -167,13 +161,12 @@ class StepManager
             $resource = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findOneById($stepStructure->primaryResource->resourceId);
             if (!empty($resource)) {
                 $activity->setPrimaryResource($resource);
-            }
-            else {
-                $warning = $this->translator->trans('warning_primary_resource_deleted', array('resourceId'=>$stepStructure->primaryResource->resourceId, 'resourceName'=>$stepStructure->primaryResource->name), "innova_tools");
-                $this->session->getFlashBag()->add('warning',$warning);
+            } else {
+                $warning = $this->translator->trans('warning_primary_resource_deleted', array('resourceId' => $stepStructure->primaryResource->resourceId, 'resourceName' => $stepStructure->primaryResource->name), "innova_tools");
+                $this->session->getFlashBag()->add('warning', $warning);
                 $stepStructure->primaryResource = null;
             }
-        } else if ($activity->getPrimaryResource()) {
+        } elseif ($activity->getPrimaryResource()) {
             // Step had a resource which has been deleted
             $activity->setPrimaryResource(null);
         }
@@ -194,8 +187,7 @@ class StepManager
             }
 
             $activity = $this->resourceManager->create($activity, $activityType, $creator, $workspace, $parent);
-        }
-        else {
+        } else {
             // Activity already exists => update ResourceNode
             $activity->getResourceNode()->setName($activity->getTitle());
         }
@@ -236,7 +228,6 @@ class StepManager
 
         // Persist parameters to generate ID
         $this->om->persist($parameters);
-        $this->om->flush();
 
         // Store parameters in Step
         $step->setParameters($parameters);
@@ -251,19 +242,17 @@ class StepManager
         $existingResources = $existingResources->toArray();
 
         // Publish new resources
-        $publishedResources = array ();
+        $publishedResources = array();
         if (!empty($stepStructure->resources)) {
             $i = 0;
             foreach ($stepStructure->resources as $resource) {
-
                 $resourceNode = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findOneById($resource->resourceId);
                 if (!empty($resourceNode)) {
                     $parameters->addSecondaryResource($resourceNode);
                     $publishedResources[] = $resourceNode;
-                }
-                else {
-                    $warning = $this->translator->trans('warning_compl_resource_deleted', array('resourceId'=>$resource->resourceId, 'resourceName'=>$resource->name), "innova_tools");
-                    $this->session->getFlashBag()->add('warning',$warning);
+                } else {
+                    $warning = $this->translator->trans('warning_compl_resource_deleted', array('resourceId' => $resource->resourceId, 'resourceName' => $resource->name), "innova_tools");
+                    $this->session->getFlashBag()->add('warning', $warning);
                     unset($stepStructure->resources[$i]);
                 }
                 $i++;
@@ -298,12 +287,11 @@ class StepManager
 
     public function findAndUpdateJsonStep($jsonSteps, $step)
     {
-        foreach($jsonSteps as $jsonStep){
+        foreach ($jsonSteps as $jsonStep) {
             echo $jsonStep->resourceId;
-            if ($jsonStep->resourceId == $step->getId()){
+            if ($jsonStep->resourceId == $step->getId()) {
                 $jsonStep->description = $step->getDescription();
-            }
-            else if (!empty($jsonStep->children)) {
+            } elseif (!empty($jsonStep->children)) {
                 $this->findAndUpdateJsonStep($jsonStep->children, $step);
             }
         }
