@@ -51,7 +51,15 @@ class Updater040200
 
     private function updateFacets()
     {
+        $facets = $om->getRepository('ClarolineCoreBundle:Facet\Facet')->findAll();
+        $this->om->startFlushSuite();
 
+        foreach ($facets as $facet) {
+            $this->container->get('claroline.facet.facet_manager')
+                ->addPanel($facet, $facet->getName());
+        }
+
+        $this->om->endFlushSuite();
     }
 
     public function setLogger($logger)
