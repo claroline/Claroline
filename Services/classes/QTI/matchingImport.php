@@ -20,7 +20,7 @@ class matchingImport extends qtiImport {
     * Implements the abstract method
     *
     * @access public
-    * 
+    *
     * @param qtiRepository $qtiRepos
     * @param DOMElement $assessmentItem assessmentItem of the question to imported
     */
@@ -34,13 +34,15 @@ class matchingImport extends qtiImport {
         $this->doctrine->getManager()->persist($this->interaction);
         $this->doctrine->getManager()->flush();
         $this->createInteractionMatching();
+
+        return $this->interactionMatching;
     }
 
     /**
     * Implements the abstract method
     *
     * @access protected
-    * 
+    *
     * @return $text
     */
     protected function getPrompt() {
@@ -143,7 +145,7 @@ class matchingImport extends qtiImport {
 
     /**
      * get all relations of the question
-     * 
+     *
      * @access protected
      *
      * @return $allRelations
@@ -163,9 +165,9 @@ class matchingImport extends qtiImport {
      * Get value of the balise
      *
      * @access protected
-     * 
+     *
      * @param type $balise
-     * 
+     *
      * @return $value
      */
     protected function value($balise) {
@@ -181,9 +183,9 @@ class matchingImport extends qtiImport {
      * Get the score of the relation
      *
      * @access protected
-     * 
+     *
      * @param type $identifiant
-     * 
+     *
      * @return $notation
      */
     protected function notation($identifiant) {

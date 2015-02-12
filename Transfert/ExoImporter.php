@@ -85,7 +85,6 @@ class ExoImporter extends Importer implements ConfigurationInterface
         $rootPath = $this->getRootPath();
 
         $qtiRepos = $this->container->get('ujm.qti_repository');
-        $qtiRepos->createDirQTI();
 
         if ($exercises = opendir($rootPath.'/qti')) {
             while (($exercise = readdir($exercises)) !== false) {
@@ -114,6 +113,7 @@ class ExoImporter extends Importer implements ConfigurationInterface
                     $this->om->flush();
                     $questions = opendir($rootPath.'/qti/'.$exercise);
                     while (($question = readdir($questions)) !== false) {
+                        $qtiRepos->createDirQTI();
                         if ($question != '.' && $question != '..') {
                             $files = opendir($rootPath.'/qti/'.$exercise.'/'.$question);
                             while (($file = readdir($files)) !== false) {

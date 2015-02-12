@@ -147,7 +147,7 @@ class qtiRepository {
                                         break;
                                     case 'matchInteraction': //matching
                                         $qtiImport = $this->container->get('ujm.qti_matching_import');
-                                        $qtiImport->import($this, $ai);
+                                        $interX =  $qtiImport->import($this, $ai);
                                         $imported = true;
                                         break;
                                 }
@@ -172,11 +172,11 @@ class qtiRepository {
             }
             closedir($dh);
         }
-        $this->removeDirectory();
 
         if ($this->exercise != null) {
             $this->addQuestionInExercise($interX);
         }
+        $this->removeDirectory();
 
         return true;
     }
