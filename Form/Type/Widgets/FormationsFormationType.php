@@ -27,6 +27,14 @@ class FormationsFormationType extends AbstractType
                 'class'    => 'ClarolineCoreBundle:Resource\ResourceNode',
                 'property' => 'name',
                 'required' => false
+            ))
+            ->add('uri', 'text', array(
+                'required' => false,
+                'mapped'   => false
+            ))
+            ->add('uriLabel', 'text', array(
+                'required' => false,
+                'mapped'   => false
             ));
     }
 

@@ -38,6 +38,7 @@ class TitleWidget extends AbstractWidget
     {
         $this->column = 0;
         $this->row    = 0;
+        $this->setLabel($this->widgetType);
     }
 
     /**

@@ -63,11 +63,26 @@
     </div>
     {% endif %}
 
-    <div class="btn-toolbar pull-right portfolio_toolbar" role="toolbar" aria-label="...">
-        <div class="btn-group btn-group-sm" role="group" aria-label="Portfolio menu">
+    <div class="btn-toolbar pull-right portfolio_toolbar" role="toolbar" aria-label="portfolio options">
+        <div class="btn-group btn-group-sm" role="group" aria-label="{{ 'add_portfolio'|trans({}, 'icap_portfolio') }}">
             <a href="{{ path('icap_portfolio_add') }}" title="{{ 'add_portfolio'|trans({}, 'icap_portfolio') }}" class="btn btn-default">
                 <span class="fa fa-plus"></span> {{ 'add_portfolio'|trans({}, 'icap_portfolio') }}
             </a>
+        </div>
+        <div class="btn-group btn-group-sm" role="group">
+            <a href="{{ path('icap_portfolio_import') }}" class="btn btn-primary" data-toggle="tooltip"
+               data-container="body" title="{{ 'import_portfolio'|trans({}, 'icap_portfolio') }}" data-placement="top"
+               data-original-title="{{ 'import_portfolio'|trans({}, 'icap_portfolio') }}"><span class="fa fa-download"></span></a>
+            <button id="importButtonDropdown" type="button" class="btn btn-default dropdown-toggle import-dropdown" aria-expanded="false"
+                    data-toggle="dropdown">
+                <span class="caret"></span>
+                <span class="sr-only">{{ 'import_portfolio'|trans({}, 'icap_portfolio') }}</span>
+            </button>
+            <ul class="dropdown-menu" role="menu" aria-labelledby="importButtonDropdown">
+                {% for availableImportFormatKey, availableImportFormat in availableImportFormats %}
+                <li><a href="{{ path('icap_portfolio_import', {'format': availableImportFormatKey}) }}">{{ availableImportFormat }}</a></li>
+                {% endfor %}
+            </ul>
         </div>
     </div>
 
@@ -103,9 +118,9 @@
                             </small>
                         </td>
                         <td>
-                            <div class="btn-group">
+                            <div class="btn-group btn-group-xs">
                                 <a href="{{ path('icap_portfolio_view', {'portfolioSlug': portfolio.titleWidget.slug}) }}" class="btn btn-xs btn-primary">{{ 'update'|trans({}, 'icap_portfolio') }}</a>
-                                <button type="button" class="btn btn-xs btn-primary dropdown-toggle" data-toggle="dropdown">
+                                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
                                     <span class="caret"></span>
                                     <span class="sr-only">Toggle Dropdown</span>
                                 </button>
@@ -156,7 +171,7 @@
             </tbody>
         </table>
     {% else %}
-        <p class="well text-center clearfix">
+        <p class="well text-center clear">
             {{ 'no_portfolios_create_one'|trans({'%newPortfolioUrl%': path('icap_portfolio_add')}, 'icap_portfolio')|raw }}
         </p>
     {% endif %}
@@ -189,6 +204,12 @@
         (function($) {
             $(function() {
                 $('.delete').confirmModal();
+                $('.import-dropdown').dropdown();
+                $('.import-dropdown').tooltip({
+                    container: "body",
+                    placement: "top",
+                    title: "{{ 'choose_import_portfolio_format'|trans({}, 'icap_portfolio')|raw }}"
+                });
             });
         })(jQuery);
     </script>

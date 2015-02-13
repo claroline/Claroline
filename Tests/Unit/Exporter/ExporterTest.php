@@ -2,29 +2,32 @@
 
 namespace Icap\PortfolioBundle\Exporter;
 
+use Claroline\CoreBundle\Entity\Badge\Badge;
 use Claroline\CoreBundle\Entity\Badge\BadgeTranslation;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
-use Claroline\CoreBundle\Rule\Entity\Rule;
-use Claroline\CoreBundle\Entity\Badge\Badge;
-use Claroline\CoreBundle\Entity\Badge\BadgeRule;
-use Claroline\CoreBundle\Entity\Log\Log;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
-use FOS\JsRoutingBundle\Tests\Extractor\ExposedRoutesExtractorTest;
 use Icap\PortfolioBundle\Entity\Portfolio;
 use Icap\PortfolioBundle\Entity\Widget\BadgesWidgetBadge;
-use Icap\PortfolioBundle\Entity\Widget\FormationsWidgetResource;
-use Icap\PortfolioBundle\Entity\Widget\SkillsWidget;
-use Icap\PortfolioBundle\Entity\Widget\SkillsWidgetSkill;
 use Symfony\Bridge\Twig\TwigEngine;
+use Symfony\Component\Routing\Generator\UrlGenerator;
+use Symfony\Component\Routing\RequestContext;
+use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Templating\TemplateNameParser;
 use Twig_Environment;
 use Twig_Loader_Array;
-use Twig_Loader_Filesystem;
 
 class ExporterTest extends MockeryTestCase
 {
+    /**
+     * @var TwigEngine
+     */
     private $twigEngine;
+
+    /**
+     * @var Twig_Environment
+     */
+    private $twigEnvironment;
 
     protected function setUp()
     {
@@ -39,8 +42,26 @@ class ExporterTest extends MockeryTestCase
             'IcapPortfolioBundle:export\leap2a:formations.leap2a.twig' => file_get_contents(__DIR__ . '/../../../Resources/views/export/leap2a/formations.leap2a.twig')
         ));
 
-        $twigEnvironment  = new Twig_Environment($templateLoader);
-        $this->twigEngine = new TwigEngine($twigEnvironment, new TemplateNameParser());
+        $this->twigEnvironment  = new Twig_Environment($templateLoader);
+
+        $this->twigEngine = new TwigEngine($this->twigEnvironment, new TemplateNameParser());
+    }
+
+    /**
+     * @param string $urlToReturn
+     *
+     * @return \Symfony\Bridge\Twig\Extension\RoutingExtension
+     */
+    protected function createRoutingExtension($urlToReturn)
+    {
+        $routeCollection = new RouteCollection();
+        $requestContext  = new RequestContext();
+        $urlGenerator    = new UrlGenerator($routeCollection, $requestContext);
+
+        $routingTwigExtension = $this->mock('Symfony\Bridge\Twig\Extension\RoutingExtension[getUrl]', array($urlGenerator));
+        $routingTwigExtension->shouldReceive('getUrl')->andReturn($urlToReturn);
+
+        return $routingTwigExtension;
     }
 
     /**
@@ -49,7 +70,7 @@ class ExporterTest extends MockeryTestCase
      *
      * @return User
      */
-    public function createUser($firstname, $lastname)
+    protected function createUser($firstname, $lastname)
     {
         $username = uniqid();
 
@@ -72,7 +93,6 @@ class ExporterTest extends MockeryTestCase
     {
         $exporter = new Exporter($this->twigEngine);
 
-        $expected = uniqid();
         $portfolio = new Portfolio();
 
         $this->setExpectedException('InvalidArgumentException');
@@ -178,27 +198,21 @@ EXPORT;
         <name>$firstname $lastname</name>
     </author>
     <updated>$portfolioLastUpdateDate</updated>
-
     <entry>
         <title>$badgesWidgetLabel</title>
         <id>portfolio:badges/$badgesWidgetId</id>
         <updated>$portfolioLastUpdateDate</updated>
         <content></content>
-
         <rdf:type rdf:resource="leap2:selection"/>
         <category term="Grouping" scheme="categories:selection_type#"/>
-
         <link rel="leap2:has_part" href="portfolio:badge/$badgesWidgetBadgeId" leap2:display_order="1"/>
     </entry>
-
     <entry>
         <title>$badgeName</title>
         <id>portfolio:badge/$badgesWidgetBadgeId</id>
         <updated>$portfolioLastUpdateDate</updated>
         <content type="html">$badgeDescription</content>
-
         <rdf:type rdf:resource="leap2:achievement"/>
-
         <link rel="leap2:is_part_of" href="portfolio:badges/$badgesWidgetId" leap2:display_order="1"/>
     </entry>
 </feed>
@@ -272,28 +286,22 @@ EXPORT;
         <name>$firstname $lastname</name>
     </author>
     <updated>$portfolioLastUpdateDate</updated>
-
     <entry>
         <title>$badgesWidgetLabel</title>
         <id>portfolio:badges/$badgesWidgetId</id>
         <updated>$portfolioLastUpdateDate</updated>
         <content></content>
-
         <rdf:type rdf:resource="leap2:selection"/>
         <category term="Grouping" scheme="categories:selection_type#"/>
-
         <link rel="leap2:has_part" href="portfolio:badge/$badgesWidgetBadgeId" leap2:display_order="1"/>
         <link rel="leap2:has_part" href="portfolio:badge/$badgesWidgetBadge2Id" leap2:display_order="2"/>
     </entry>
-
     <entry>
         <title>$badgeName</title>
         <id>portfolio:badge/$badgesWidgetBadgeId</id>
         <updated>$portfolioLastUpdateDate</updated>
         <content type="html">$badgeDescription</content>
-
         <rdf:type rdf:resource="leap2:achievement"/>
-
         <link rel="leap2:is_part_of" href="portfolio:badges/$badgesWidgetId" leap2:display_order="1"/>
     </entry>
     <entry>
@@ -301,9 +309,7 @@ EXPORT;
         <id>portfolio:badge/$badgesWidgetBadge2Id</id>
         <updated>$portfolioLastUpdateDate</updated>
         <content type="html">$badgeDescription</content>
-
         <rdf:type rdf:resource="leap2:achievement"/>
-
         <link rel="leap2:is_part_of" href="portfolio:badges/$badgesWidgetId" leap2:display_order="2"/>
     </entry>
 </feed>
@@ -361,28 +367,22 @@ EXPORT;
         <name>$firstname $lastname</name>
     </author>
     <updated>$portfolioLastUpdateDate</updated>
-
     <entry>
         <title>$skillsWidgetLabel</title>
         <id>portfolio:skills/$skillsWidgetId</id>
         <updated>$portfolioLastUpdateDate</updated>
         <content></content>
-
         <rdf:type rdf:resource="leap2:selection"/>
         <category term="Abilities" scheme="categories:selection_type#"/>
-
         <link rel="leap2:has_part" href="portfolio:skill/$skillsWidgetSkillId" leap2:display_order="1"/>
         <link rel="leap2:has_part" href="portfolio:skill/$skillsWidgetSkillId2" leap2:display_order="2"/>
     </entry>
-
     <entry>
         <title>$skillsWidgetSkillName</title>
         <id>portfolio:skill/$skillsWidgetSkillId</id>
         <updated>$portfolioLastUpdateDate</updated>
         <content></content>
-
         <rdf:type rdf:resource="leap2:ability"/>
-
         <link rel="leap2:is_part_of" href="portfolio:skills/$skillsWidgetId" leap2:display_order="1"/>
     </entry>
     <entry>
@@ -390,9 +390,7 @@ EXPORT;
         <id>portfolio:skill/$skillsWidgetSkillId2</id>
         <updated>$portfolioLastUpdateDate</updated>
         <content></content>
-
         <rdf:type rdf:resource="leap2:ability"/>
-
         <link rel="leap2:is_part_of" href="portfolio:skills/$skillsWidgetId" leap2:display_order="2"/>
     </entry>
 </feed>
@@ -458,50 +456,38 @@ EXPORT;
         <name>$firstname $lastname</name>
     </author>
     <updated>$portfolioLastUpdateDate</updated>
-
     <entry>
         <title>$skillsWidgetLabel</title>
         <id>portfolio:skills/$skillsWidgetId</id>
         <updated>$portfolioLastUpdateDate</updated>
         <content></content>
-
         <rdf:type rdf:resource="leap2:selection"/>
         <category term="Abilities" scheme="categories:selection_type#"/>
-
         <link rel="leap2:has_part" href="portfolio:skill/$skillsWidgetSkillId" leap2:display_order="1"/>
     </entry>
-
     <entry>
         <title>$skillsWidgetSkillName</title>
         <id>portfolio:skill/$skillsWidgetSkillId</id>
         <updated>$portfolioLastUpdateDate</updated>
         <content></content>
-
         <rdf:type rdf:resource="leap2:ability"/>
-
         <link rel="leap2:is_part_of" href="portfolio:skills/$skillsWidgetId" leap2:display_order="1"/>
     </entry>
-
     <entry>
         <title>$skillsWidgetLabel2</title>
         <id>portfolio:skills/$skillsWidgetId2</id>
         <updated>$skillsWidgetUpdatedDate2</updated>
         <content></content>
-
         <rdf:type rdf:resource="leap2:selection"/>
         <category term="Abilities" scheme="categories:selection_type#"/>
-
         <link rel="leap2:has_part" href="portfolio:skill/$skillsWidgetSkillId2" leap2:display_order="1"/>
     </entry>
-
     <entry>
         <title>$skillsWidgetSkillName2</title>
         <id>portfolio:skill/$skillsWidgetSkillId2</id>
         <updated>$skillsWidgetUpdatedDate2</updated>
         <content></content>
-
         <rdf:type rdf:resource="leap2:ability"/>
-
         <link rel="leap2:is_part_of" href="portfolio:skills/$skillsWidgetId2" leap2:display_order="1"/>
     </entry>
 </feed>
@@ -551,12 +537,66 @@ EXPORT;
         <name>$firstname $lastname</name>
     </author>
     <updated>$textWidgetUpdatedAt</updated>
-
     <entry>
         <title>$textWidgetLabel</title>
         <id>portfolio:text/$textWidgetId</id>
         <updated>$textWidgetUpdatedAt</updated>
-        <content type="html">$textWidgetText</content>
+        <content type="html"><![CDATA[$textWidgetText]]></content>
+        <rdf:type rdf:resource="leap2:entry"/>
+    </entry>
+</feed>
+EXPORT;
+
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testLeap2aExportPortfolioWithTextWidgetWithHtmlContent()
+    {
+        $exporter = new Exporter($this->twigEngine);
+
+        /** @var \Icap\PortfolioBundle\Entity\Widget\TitleWidget $titleWidget */
+        $titleWidget = $this->mock('Icap\PortfolioBundle\Entity\Widget\TitleWidget[getUpdatedAt]');
+        $titleWidget->shouldReceive('getUpdatedAt')->andReturn(new \DateTime());
+        $titleWidget
+            ->setTitle($portfolioTitle = uniqid())
+            ->setSlug($portfolioSlug = uniqid());
+
+        /** @var \Icap\PortfolioBundle\Entity\Widget\TextWidget $textWidget */
+        $textWidget = $this->mock('Icap\PortfolioBundle\Entity\Widget\TextWidget[getId, getUpdatedAt]');
+        $textWidget->shouldReceive('getId')->andReturn($textWidgetId = rand(0, PHP_INT_MAX));
+        $textWidget->shouldReceive('getUpdatedAt')->andReturn($textWidgetUpdatedAt = (new \DateTime())->add(new \DateInterval('P2D')));
+        $textWidget
+            ->setText($textWidgetText = '<p>Widget text content</p>')
+            ->setLabel($textWidgetLabel = uniqid());
+
+        $portfolio = new Portfolio();
+        $portfolio
+            ->setUser($this->createUser($firstname = uniqid(), $lastname = uniqid()))
+            ->setWidgets(array($titleWidget, $textWidget));
+
+        $actual = $exporter->export($portfolio, 'leap2a');
+        $portfolioLastUpdateDate = $titleWidget->getUpdatedAt()->format(\DateTime::ATOM);
+        $textWidgetUpdatedAt = $textWidgetUpdatedAt->format(\DateTime::ATOM);
+        $expected = <<<EXPORT
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"
+      xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+      xmlns:leap2="http://terms.leapspecs.org/"
+      xmlns:categories="http://www.leapspecs.org/2A/categories"
+      xmlns:claroline="http://www.leapspecs.org/2A/categories">
+    <leap2:version>http://www.leapspecs.org/2010-07/2A/</leap2:version>
+    <id>$portfolioSlug</id>
+    <title>$portfolioTitle</title>
+    <author>
+        <name>$firstname $lastname</name>
+    </author>
+    <updated>$textWidgetUpdatedAt</updated>
+    <entry>
+        <title>$textWidgetLabel</title>
+        <id>portfolio:text/$textWidgetId</id>
+        <updated>$textWidgetUpdatedAt</updated>
+        <content type="html"><![CDATA[$textWidgetText]]></content>
+        <rdf:type rdf:resource="leap2:entry"/>
     </entry>
 </feed>
 EXPORT;
@@ -607,7 +647,6 @@ EXPORT;
         <name>$firstname $lastname</name>
     </author>
     <updated>$userInformationsWidgetUpdatedAt</updated>
-
     <entry>
         <title>$userInformationsWidgetLabel</title>
         <id>portfolio:text/$userInformationsWidgetId</id>
@@ -623,8 +662,13 @@ EXPORT;
         $this->assertEquals($expected, $actual);
     }
 
-    public function testLeap2aExportPortfolioWithOneFormationWidgetWithOneresource()
+    public function testLeap2aExportPortfolioWithOneFormationWidgetWithOneResource()
     {
+        $formationWidgetResourceResourceNodeId = rand(0, PHP_INT_MAX);
+
+        $this->twigEnvironment->addExtension($this->createRoutingExtension($formationWidgetResourceResourceNodeId));
+        $this->twigEngine = new TwigEngine($this->twigEnvironment, new TemplateNameParser());
+
         $exporter = new Exporter($this->twigEngine);
 
         /** @var \Icap\PortfolioBundle\Entity\Widget\TitleWidget $titleWidget */
@@ -639,7 +683,7 @@ EXPORT;
         $formationWidgetResource->shouldReceive('getId')->andReturn($formationWidgetResourceId = rand(0, PHP_INT_MAX));
 
         $formationWidgetResourceResourceNode = new ResourceNode();
-        $formationWidgetResourceResourceNode->setId($formationWidgetResourceResourceNodeId = rand(0, PHP_INT_MAX));
+        $formationWidgetResourceResourceNode->setId($formationWidgetResourceResourceNodeId);
         $formationWidgetResourceResourceNode->setModificationDate($formationWidgetResourceUpdatedAt = new \DateTime());
         $formationWidgetResourceResourceNode->setName($formationWidgetResourceName = uniqid());
 
@@ -682,31 +726,111 @@ EXPORT;
         <name>$firstname $lastname</name>
     </author>
     <updated>$formationWidgetUpdatedAt</updated>
-
     <entry>
         <title>$userInformationsWidgetLabel</title>
         <id>portfolio:formations/$formationWidgetId</id>
         <updated>$formationWidgetUpdatedAt</updated>
         <content type="text">$formationWidgetName</content>
-
         <leap2:date leap2:point="start">$formationWidgetStartDate</leap2:date>
         <leap2:date leap2:point="end">$formationWidgetEndDate</leap2:date>
-
         <rdf:type rdf:resource="leap2:activity"/>
-
+        <category term="Education" scheme="categories:life_area"/>
         <link rel="leap2:has_part" href="portfolio:resource/$formationWidgetResourceResourceNodeId" leap2:display_order="1"/>
     </entry>
-
     <entry>
         <title>$formationWidgetResourceName</title>
         <id>portfolio:resource/$formationWidgetResourceResourceNodeId</id>
-        <uri>$formationWidgetResourceResourceNodeId</uri>
         <updated>$formationWidgetResourceUpdatedAt</updated>
         <content></content>
-
         <rdf:type rdf:resource="leap2:resource"/>
         <category term="Web" scheme="categories:resource_type#"/>
+        <link rel="self" href="$formationWidgetResourceResourceNodeId" />
+        <link rel="leap2:is_part_of" href="portfolio:formations/$formationWidgetId" leap2:display_order="1"/>
+    </entry>
+</feed>
+EXPORT;
 
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testLeap2aExportPortfolioWithOneFormationWidgetWithOneLinkedResource()
+    {
+        $formationWidgetResourceUri = uniqid();
+
+        $this->twigEnvironment->addExtension($this->createRoutingExtension($formationWidgetResourceUri));
+        $this->twigEngine = new TwigEngine($this->twigEnvironment, new TemplateNameParser());
+
+        $exporter = new Exporter($this->twigEngine);
+
+        /** @var \Icap\PortfolioBundle\Entity\Widget\TitleWidget $titleWidget */
+        $titleWidget = $this->mock('Icap\PortfolioBundle\Entity\Widget\TitleWidget[getUpdatedAt]');
+        $titleWidget->shouldReceive('getUpdatedAt')->andReturn(new \DateTime());
+        $titleWidget
+            ->setTitle($portfolioTitle = uniqid())
+            ->setSlug($portfolioSlug = uniqid());
+
+        /** @var \Icap\PortfolioBundle\Entity\Widget\FormationsWidgetResource $formationWidgetResource */
+        $formationWidgetResource = $this->mock('Icap\PortfolioBundle\Entity\Widget\FormationsWidgetResource[getId]');
+        $formationWidgetResource->shouldReceive('getId')->andReturn($formationWidgetResourceId = rand(0, PHP_INT_MAX));
+
+        $formationWidgetResource
+            ->setUri($formationWidgetResourceUri)
+            ->setUriLabel($formationWidgetResourceUriLabel = uniqid());
+
+        /** @var \Icap\PortfolioBundle\Entity\Widget\FormationsWidget $formationWidget */
+        $formationWidget = $this->mock('Icap\PortfolioBundle\Entity\Widget\FormationsWidget[getId, getUpdatedAt]');
+        $formationWidget->shouldReceive('getId')->andReturn($formationWidgetId = rand(0, PHP_INT_MAX));
+        $formationWidget->shouldReceive('getUpdatedAt')->andReturn($formationWidgetUpdatedAt = (new \DateTime())->add(new \DateInterval('P2D')));
+        $formationWidget
+            ->setName($formationWidgetName = uniqid())
+            ->setStartDate($formationWidgetStartDate = new \DateTime())
+            ->setEndDate($formationWidgetEndDate = (new \DateTime())->add(new \DateInterval('P1Y')))
+            ->setResources(array($formationWidgetResource))
+            ->setLabel($userInformationsWidgetLabel = uniqid());
+
+        $portfolio = new Portfolio();
+        $portfolio
+            ->setUser($this->createUser($firstname = uniqid(), $lastname = uniqid()))
+            ->setWidgets(array($titleWidget, $formationWidget));
+
+        $actual = $exporter->export($portfolio, 'leap2a');
+        $portfolioLastUpdateDate = $titleWidget->getUpdatedAt()->format(\DateTime::ATOM);
+        $formationWidgetUpdatedAt = $formationWidgetUpdatedAt->format(\DateTime::ATOM);
+        $formationWidgetStartDate = $formationWidgetStartDate->format(\DateTime::ATOM);
+        $formationWidgetEndDate = $formationWidgetEndDate->format(\DateTime::ATOM);
+        $expected = <<<EXPORT
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"
+      xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+      xmlns:leap2="http://terms.leapspecs.org/"
+      xmlns:categories="http://www.leapspecs.org/2A/categories"
+      xmlns:claroline="http://www.leapspecs.org/2A/categories">
+    <leap2:version>http://www.leapspecs.org/2010-07/2A/</leap2:version>
+    <id>$portfolioSlug</id>
+    <title>$portfolioTitle</title>
+    <author>
+        <name>$firstname $lastname</name>
+    </author>
+    <updated>$formationWidgetUpdatedAt</updated>
+    <entry>
+        <title>$userInformationsWidgetLabel</title>
+        <id>portfolio:formations/$formationWidgetId</id>
+        <updated>$formationWidgetUpdatedAt</updated>
+        <content type="text">$formationWidgetName</content>
+        <leap2:date leap2:point="start">$formationWidgetStartDate</leap2:date>
+        <leap2:date leap2:point="end">$formationWidgetEndDate</leap2:date>
+        <rdf:type rdf:resource="leap2:activity"/>
+        <category term="Education" scheme="categories:life_area"/>
+        <link rel="leap2:has_part" href="portfolio:resource/$formationWidgetResourceId" leap2:display_order="1"/>
+    </entry>
+    <entry>
+        <title>$formationWidgetResourceUriLabel</title>
+        <id>portfolio:resource/$formationWidgetResourceId</id>
+        <updated>$formationWidgetUpdatedAt</updated>
+        <content></content>
+        <rdf:type rdf:resource="leap2:resource"/>
+        <category term="Web" scheme="categories:resource_type#"/>
+        <link rel="self" href="$formationWidgetResourceUri" />
         <link rel="leap2:is_part_of" href="portfolio:formations/$formationWidgetId" leap2:display_order="1"/>
     </entry>
 </feed>

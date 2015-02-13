@@ -30,10 +30,26 @@ class FormationsWidgetResource implements SubWidgetInterface
     protected $resource;
 
     /**
+     * @var FormationsWidget
+     *
      * @ORM\ManyToOne(targetEntity="Icap\PortfolioBundle\Entity\Widget\FormationsWidget", inversedBy="resources")
      * @ORM\JoinColumn(name="widget_id", referencedColumnName="id", nullable=false)
      */
     private $widget;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $uri;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $uriLabel;
 
     /**
      * @return int
@@ -84,6 +100,46 @@ class FormationsWidgetResource implements SubWidgetInterface
     }
 
     /**
+     * @return string
+     */
+    public function getUri()
+    {
+        return $this->uri;
+    }
+
+    /**
+     * @param string $uri
+     *
+     * @return FormationsWidgetResource
+     */
+    public function setUri($uri)
+    {
+        $this->uri = $uri;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUriLabel()
+    {
+        return $this->uriLabel;
+    }
+
+    /**
+     * @param string $uriLabel
+     *
+     * @return FormationsWidgetResource
+     */
+    public function setUriLabel($uriLabel)
+    {
+        $this->uriLabel = $uriLabel;
+
+        return $this;
+    }
+
+    /**
      * @return array
      */
     public function getData()
@@ -91,9 +147,11 @@ class FormationsWidgetResource implements SubWidgetInterface
         $resource = $this->getResource();
 
         return array(
-            'resource' => $resource->getId(),
-            'id'       => $resource->getId(),
-            'name'     => $resource->getPathForDisplay()
+            'resource' => $resource ? $resource->getId() : null,
+            'id'       => $resource ? $resource->getId() : null,
+            'name'     => $resource ? $resource->getPathForDisplay() : null,
+            'uri'      => $this->getUri(),
+            'uriLabel' => $this->getUriLabel()
         );
     }
 }

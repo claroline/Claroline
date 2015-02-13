@@ -2,8 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom"
       xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
       xmlns:leap2="http://terms.leapspecs.org/"
-      xmlns:categories="http://www.leapspecs.org/2A/categories"
-      xmlns:claroline="http://www.leapspecs.org/2A/categories">
+      xmlns:categories="http://www.leapspecs.org/2A/categories">
     <leap2:version>http://www.leapspecs.org/2010-07/2A/</leap2:version>
     <id>http://www.example.ac.uk/pfs/export_262144/</id>
     <title>A few small related items</title>
@@ -17,7 +16,9 @@
         <id>portfolio:people/1</id>
         <updated>2006-10-16T00:00:00Z</updated>
         <content></content>
+
         <rdf:type rdf:resource="leap2:person"/>
+
         <leap2:persondata leap2:field="dob">1990-09-01</leap2:persondata>
         <leap2:persondata leap2:field="other" leap2:label="city">Lyon</leap2:persondata>
     </entry>

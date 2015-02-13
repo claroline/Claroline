@@ -79,7 +79,7 @@ class Portfolio
     /**
      * @var \Icap\PortfolioBundle\Entity\Widget\WidgetNode[]
      *
-     * @ORM\OneToMany(targetEntity="Icap\PortfolioBundle\Entity\Widget\AbstractWidget", mappedBy="portfolio")
+     * @ORM\OneToMany(targetEntity="Icap\PortfolioBundle\Entity\Widget\AbstractWidget", mappedBy="portfolio", cascade={"persist"})
      */
     protected $widgets;
 
@@ -103,6 +103,7 @@ class Portfolio
     public function __construct()
     {
         $this->commentsViewAt = new \DateTime();
+        $this->widgets        = new ArrayCollection();
     }
 
     /**
@@ -310,6 +311,10 @@ class Portfolio
      */
     public function setWidgets($abstractWidgets)
     {
+        foreach ($abstractWidgets as $abstractWidget) {
+            $abstractWidget->setPortfolio($this);
+        }
+
         $this->widgets = $abstractWidgets;
 
         return $this;
@@ -338,6 +343,24 @@ class Portfolio
         }
 
         return $titleWidget;
+    }
+
+    /**
+     * @param string $widgetType
+     *
+     * @return AbstractWidget[]
+     */
+    public function getWidget($widgetType)
+    {
+        $widgets = array();
+
+        foreach ($this->getWidgets() as $widget) {
+            if ($widgetType === $widget->getWidgetType()) {
+                $widgets[] = $widget;
+            }
+        }
+
+        return $widgets;
     }
 
     /**

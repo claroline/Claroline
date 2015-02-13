@@ -1,0 +1,44 @@
+{% extends 'IcapPortfolioBundle::layout.html.twig' %}
+
+{% block title %}{{ parent() ~ ' - ' ~ 'preview_importing_portfolio' | trans({}, 'icap_portfolio') | striptags | raw }}{% endblock %}
+
+{% block content_title %}{{ 'preview_importing_portfolio'|trans({}, 'icap_portfolio') }}{% endblock %}
+
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'fa fa-list-alt',
+                'name': 'my_portfolios'|trans({}, 'platform'),
+                'href': path('icap_portfolio_list')
+            },
+            {
+                'icon': 'fa fa-list-alt',
+                'name': 'preview_importing_portfolio'|trans({}, 'icap_portfolio'),
+                'href': ''
+            }
+        ])
+    }}
+{% endblock %}
+
+{% block content_body %}
+    <form method="POST">
+        <p>
+            {{ 'check_before_do_import'|trans({}, 'icap_portfolio') }} <button type="submit" class="btn btn-xs btn-primary">{{ 'do_import'|trans({}, 'icap_portfolio') }}</button>
+        </p>
+        <h1>{{ portfolio.titleWidget.title }}</h1>
+        {% for widget in portfolio.widgets %}
+            {% if 'title' != widget.widgetType%}
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">{{ widget.label }}</h3>
+                    </div>
+                    <div class="panel-body">
+                        {% include 'IcapPortfolioBundle:templates:' ~ widget.widgetType ~ '.html.twig' %}
+                    </div>
+                </div>
+            {% endif %}
+        {% endfor %}
+        <button type="submit" class="btn btn-primary">{{ 'do_import'|trans({}, 'icap_portfolio') }}</button>
+    </form>
+{% endblock %}

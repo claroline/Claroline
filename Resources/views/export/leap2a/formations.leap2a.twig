@@ -1,31 +1,30 @@
-
     <entry>
         <title>{{ widget.label }}</title>
         <id>portfolio:formations/{{ widget.id }}</id>
         <updated>{{ widget.updatedAt|date(constant('\DateTime::ATOM')) }}</updated>
         <content type="text">{{ widget.name }}</content>
-
         <leap2:date leap2:point="start">{{ widget.startDate|date(constant('\DateTime::ATOM')) }}</leap2:date>
         <leap2:date leap2:point="end">{{ widget.endDate|date(constant('\DateTime::ATOM')) }}</leap2:date>
-
         <rdf:type rdf:resource="leap2:activity"/>
-
+        <category term="Education" scheme="categories:life_area"/>
 {% for formationWidgetResource in widget.resources %}
-        <link rel="leap2:has_part" href="portfolio:resource/{{ formationWidgetResource.resource.id }}" leap2:display_order="{{ loop.index }}"/>
+    {% set formationWidgetResourceId = (formationWidgetResource.uri is not null) ? formationWidgetResource.id : formationWidgetResource.resource.id %}
+    <link rel="leap2:has_part" href="portfolio:resource/{{ formationWidgetResourceId }}" leap2:display_order="{{ loop.index }}"/>
 {% endfor %}
     </entry>
-
 {% for formationWidgetResource in widget.resources %}
+{% set formationWidgetResourceId = (formationWidgetResource.uri is not null) ? formationWidgetResource.id : formationWidgetResource.resource.id %}
+{% set formationWidgetResourceTitle = (formationWidgetResource.uri is not null) ? formationWidgetResource.uriLabel : formationWidgetResource.resource.name %}
+{% set formationWidgetResourceUri = (formationWidgetResource.uri is not null) ? formationWidgetResource.uri : url("claro_resource_open", {'node': formationWidgetResource.resource.id, 'resourceType': formationWidgetResource.resource.resourceType.name }) %}
+{% set formationWidgetResourceUpdatedAt = (formationWidgetResource.uri is not null) ? widget.updatedAt : formationWidgetResource.resource.modificationDate %}
     <entry>
-        <title>{{ formationWidgetResource.resource.name }}</title>
-        <id>portfolio:resource/{{ formationWidgetResource.resource.id }}</id>
-        <uri>{{ url("claro_resource_open", {'node': formationWidgetResource.resource.id, 'resourceType': formationWidgetResource.resource.resourceType.name }) }}</uri>
-        <updated>{{ formationWidgetResource.resource.modificationDate|date(constant('\DateTime::ATOM')) }}</updated>
+        <title>{{ formationWidgetResourceTitle }}</title>
+        <id>portfolio:resource/{{ formationWidgetResourceId }}</id>
+        <updated>{{ formationWidgetResourceUpdatedAt|date(constant('\DateTime::ATOM')) }}</updated>
         <content></content>
-
         <rdf:type rdf:resource="leap2:resource"/>
         <category term="Web" scheme="categories:resource_type#"/>
-
+        <link rel="self" href="{{ formationWidgetResourceUri }}" />
         <link rel="leap2:is_part_of" href="portfolio:formations/{{ widget.id }}" leap2:display_order="{{ loop.index }}"/>
     </entry>
 {% endfor %}

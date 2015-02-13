@@ -1,4 +1,4 @@
-<div data-collection-form="{'resource': ''}" data-editable="false">
+<div data-collection-form="{'resource': ''}" data-editable="false" data-collection-form-widget="widget">
     <p>
         <label for="formation_name">{{ 'formation_title'|trans({}, 'icap_portfolio') }}</label>
         <input type="text" class="form-control" id="formation_name"
@@ -13,7 +13,9 @@
                class="input-sm form-control" name="endDate" data-ng-model="widget.endDate" required="required" />
     </p>
     <p>
-        <button type="button" class="btn btn-sm btn-success" data-ui-resource-picker="resourcePickerConfig">{{ 'formation_add_resource'|trans({}, 'icap_portfolio') }}</button>
+        <button type="button" class="btn btn-sm btn-success" data-ui-resource-picker="resourcePickerConfig" data-ui-resources="collection">
+            {{ 'formation_add_resource'|trans({}, 'icap_portfolio') }}
+        </button>
     </p>
     <ul class="list-unstyled">
         <li data-ng-repeat="resource in collection">

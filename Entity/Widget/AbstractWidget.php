@@ -17,7 +17,8 @@ use Icap\PortfolioBundle\Entity\Portfolio;
  *      "skills"          = "SkillsWidget",
  *      "text"            = "TextWidget",
  *      "formations"      = "FormationsWidget",
- *      "badges"          = "BadgesWidget"
+ *      "badges"          = "BadgesWidget",
+ *      "experience"      = "ExperienceWidget"
  * })
  */
 abstract class AbstractWidget
@@ -99,7 +100,7 @@ abstract class AbstractWidget
     /**
      * @param string $label
      *
-     * @return AbstractWidget
+     * @return $this
      */
     public function setLabel($label)
     {
@@ -111,7 +112,7 @@ abstract class AbstractWidget
     /**
      * @param int $column
      *
-     * @return AbstractWidget
+     * @return $this
      */
     public function setColumn($column)
     {
@@ -131,7 +132,7 @@ abstract class AbstractWidget
     /**
      * @param int $row
      *
-     * @return AbstractWidget
+     * @return $this
      */
     public function setRow($row)
     {
@@ -175,7 +176,7 @@ abstract class AbstractWidget
     /**
      * @param \Icap\PortfolioBundle\Entity\Portfolio $portfolio
      *
-     * @return AbstractWidget
+     * @return $this
      */
     public function setPortfolio(Portfolio $portfolio)
     {
@@ -195,7 +196,7 @@ abstract class AbstractWidget
     /**
      * @param string $widgetType
      *
-     * @return AbstractWidget
+     * @return $this
      */
     public function setWidgetType($widgetType)
     {

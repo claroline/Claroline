@@ -2,8 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom"
       xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
       xmlns:leap2="http://terms.leapspecs.org/"
-      xmlns:categories="http://www.leapspecs.org/2A/categories"
-      xmlns:claroline="http://www.leapspecs.org/2A/categories">
+      xmlns:categories="http://www.leapspecs.org/2A/categories">
     <leap2:version>http://www.leapspecs.org/2010-07/2A/</leap2:version>
     <id>http://www.example.ac.uk/pfs/export_262144/</id>
     <title>A few small related items</title>
@@ -22,6 +21,7 @@
         <leap2:date leap2:point="end">2011-03-15</leap2:date>
 
         <rdf:type rdf:resource="leap2:activity"/>
+        <category term="Education" scheme="categories:life_area"/>
 
         <link rel="leap2:has_part" href="portfolio:resource/1" leap2:display_order="1"/>
         <link rel="leap2:has_part" href="portfolio:resource/2" leap2:display_order="2"/>
@@ -30,10 +30,10 @@
     <entry>
         <title>resource</title>
         <id>portfolio:resource/1</id>
-        <uri>gsertfhgf</uri>
         <updated>2008-01-08T14:12:12Z</updated>
-        <content type="text">The description of a resource</content>
+        <content></content>
 
+        <link rel="self" href="gsertfhgf" />
         <rdf:type rdf:resource="leap2:resource"/>
         <category term="Web" scheme="categories:resource_type#"/>
 
@@ -43,10 +43,10 @@
     <entry>
         <title>resource 2</title>
         <id>portfolio:resource/2</id>
-        <uri>gsertfhgf</uri>
         <updated>2008-01-08T14:12:12Z</updated>
-        <content type="text">The description of an other resource</content>
+        <content></content>
 
+        <link rel="self" href="gsertfhgf" />
         <rdf:type rdf:resource="leap2:resource"/>
         <category term="Web" scheme="categories:resource_type#"/>
 
@@ -71,10 +71,11 @@
         <title>resource 3</title>
         <id>portfolio:resource/3</id>
         <updated>2008-01-08T14:12:12Z</updated>
-        <content type="text">The description of a resource 3</content>
+        <content></content>
 
+        <link rel="self" href="gsertfhgf" />
         <rdf:type rdf:resource="leap2:resource"/>
-        <category term="Other" scheme="categories:resource_type#"/>
+        <category term="Web" scheme="categories:resource_type#"/>
 
         <link rel="leap2:is_part_of" href="portfolio:formation/2" leap2:display_order="1"/>
     </entry>

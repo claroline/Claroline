@@ -81,6 +81,14 @@ class Controller extends BaseController
     }
 
     /**
+     * @return \Icap\PortfolioBundle\Manager\ImportManager
+     */
+    public function getImportManager()
+    {
+        return $this->get('icap_portfolio.manager.import');
+    }
+
+    /**
      * @return \Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler
      */
     public function getPlatformConfigHandler()

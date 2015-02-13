@@ -1,12 +1,11 @@
 'use strict';
 
 angular.module('ui.resourcePicker', [])
-    .value('uiResourcePickerConfig', {})
-    .directive('uiResourcePicker', ['uiResourcePickerConfig', function (uiResourcePickerConfig) {
-        uiResourcePickerConfig = uiResourcePickerConfig || {};
+    .directive('uiResourcePicker', [function () {
 
         // Set some default options
-        var options = {
+        var defaultOptions = {
+            name:                       null,
             isPickerMultiSelectAllowed: false,
             isPickerOnly:               true,
             isWorkspace:                true,
@@ -20,15 +19,11 @@ angular.module('ui.resourcePicker', [])
         return {
             restrict: "A",
             link: function ($scope, element, attrs) {
-                if (attrs.uiResourcePicker) {
-                    var expression = $scope.$eval(attrs.uiResourcePicker);
-                } else {
-                    var expression = {};
-                }
+                var uiResourcePickerConfiguration = (attrs.uiResourcePicker) ? $scope.$eval(attrs.uiResourcePicker) : {};
 
-                angular.extend(options, uiResourcePickerConfig, expression);
+                var options = angular.extend({}, defaultOptions, uiResourcePickerConfiguration)
 
-                if ( typeof options.name === 'undefined' || options.name === null || options.name.length === 0 ) {
+                if (typeof options.name === 'undefined' || options.name === null || options.name.length === 0 ) {
                     // Generate unique name
                     options.name = 'picker-' + Math.floor(Math.random() * 10000);
                 }
@@ -43,7 +38,7 @@ angular.module('ui.resourcePicker', [])
 
                 // Initialize resource picker object
                 if (!Claroline.ResourceManager.hasPicker(options.name)) {
-                    Claroline.ResourceManager.createPicker(options.name, options);
+                    Claroline.ResourceManager.createPicker(options.name, options, false);
                 }
 
                 $scope.resourcePickerOpen = function (pickerName) {

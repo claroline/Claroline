@@ -19,7 +19,7 @@ class Updater010000
         $this->UpdateWidgetType();
     }
 
-    public function UpdateWidgetType(){
+    public function UpdateWidgetType() {
         /** @var \Icap\PortfolioBundle\Entity\Widget\WidgetType|null $widgetType */
         $widgetType = $this->entityManager->getRepository("IcapPortfolioBundle:Widget\\WidgetType")->findOneBy(array('name' => 'badges'));
 

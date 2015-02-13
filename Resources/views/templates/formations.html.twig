@@ -1,7 +1,16 @@
 <p>{{ widget.name }}</p>
 <p>{{ 'date_range_from'|trans({}, 'icap_portfolio') }} {{ widget.startDate|date('date_format'|trans({}, 'platform')) }} {{ 'date_range_to'|trans({}, 'icap_portfolio') }} {{ widget.endDate|date('date_format'|trans({}, 'platform')) }}</p>
 <ul class="list-group">
-{% for resource in widget.resources %}
-    <li class="list-group-item">{{ resource.resource.name }}</li>
+{% for formationWidgetResource in widget.resources %}
+    {% if formationWidgetResource.uri is null and formationWidgetResource.resource is not null %}
+    <li class="list-group-item">
+        <a href="{{ url('claro_resource_open', {'node': formationWidgetResource.resource.id, 'resourceType': formationWidgetResource.resource.resourceType.name }) }}"
+           title="{{ formationWidgetResource.resource.name }}">{{ formationWidgetResource.resource.name }}</a>
+    </li>
+    {% else %}
+    <li class="list-group-item">
+        <a href="{{ formationWidgetResource.uri }}" title="{{ formationWidgetResource.uriLabel }}">{{ formationWidgetResource.uriLabel }}</a>
+    </li>
+    {% endif %}
 {% endfor %}
 </ul>
