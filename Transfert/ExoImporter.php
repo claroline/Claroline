@@ -84,53 +84,51 @@ class ExoImporter extends Importer implements ConfigurationInterface
     {
         //this is the root of the unzipped archive
         $rootPath = $this->getRootPath();
+        $exoPath = $data['data'][0]['file']['path'];
+        $tabExoPath = explode('/', $exoPath);
 
         $qtiRepos = $this->container->get('ujm.qti_repository');
 
-        if ($exercises = opendir($rootPath.'/qti')) {
-            while (($exercise = readdir($exercises)) !== false) {
-                if ($exercise != '.' && $exercise != '..') {
-                    $newExercise = new Exercise();
-                    $newExercise->setTitle($exercise);
-                    $newExercise->setDateCreate(new \Datetime());
-                    $newExercise->setNbQuestionPage(1);
-                    $newExercise->setNbQuestion(0);
-                    $newExercise->setDuration(0);
-                    $newExercise->setMaxAttempts(0);
-                    $newExercise->setStartDate(new \Datetime());
-                    $newExercise->setEndDate(new \Datetime());
-                    $newExercise->setDateCorrection(new \Datetime());
-                    $newExercise->setCorrectionMode('1');
-                    $newExercise->setMarkMode('1');
-                    $newExercise->setPublished(FALSE);
-                    $this->om->persist($newExercise);
-                    $this->om->flush();
+        $newExercise = new Exercise();
+        $newExercise->setTitle($tabExoPath[1]);
+        $newExercise->setDateCreate(new \Datetime());
+        $newExercise->setNbQuestionPage(1);
+        $newExercise->setNbQuestion(0);
+        $newExercise->setDuration(0);
+        $newExercise->setMaxAttempts(0);
+        $newExercise->setStartDate(new \Datetime());
+        $newExercise->setEndDate(new \Datetime());
+        $newExercise->setDateCorrection(new \Datetime());
+        $newExercise->setCorrectionMode('1');
+        $newExercise->setMarkMode('1');
+        $newExercise->setPublished(FALSE);
+        $this->om->persist($newExercise);
+        $this->om->flush();
 
-                    $subscription = new Subscription($qtiRepos->getQtiUser(), $newExercise);
-                    $subscription->setAdmin(1);
-                    $subscription->setCreator(1);
+        $subscription = new Subscription($qtiRepos->getQtiUser(), $newExercise);
+        $subscription->setAdmin(1);
+        $subscription->setCreator(1);
 
-                    $this->om->persist($subscription);
-                    $this->om->flush();
-                    $questions = opendir($rootPath.'/qti/'.$exercise);
-                    $questionFiles = array();
-                    while (($question = readdir($questions)) !== false) {
-                        if ($question != '.' && $question != '..') {
-                            $questionFiles[] = $rootPath.'/qti/'.$exercise.'/'.$question;
-                        }
-                    }
-                    sort($questionFiles);
-                    foreach ($questionFiles as $question) {
-                        $qtiRepos->createDirQTI();
-                        $files = opendir($question);
-                        while (($file = readdir($files)) !== false) {
-                            if ($file != '.' && $file != '..') {
-                                copy($question.'/'.$file, $qtiRepos->getUserDir().$file);
-                            }
-                        }
-                        $qtiRepos->scanFilesToImport($newExercise);
-                    }
+        $this->om->persist($subscription);
+        $this->om->flush();
+
+        if ($questions = opendir($rootPath.'/'.$exoPath)) {
+            $questionFiles = array();
+            while (($question = readdir($questions)) !== false) {
+                if ($question != '.' && $question != '..') {
+                    $questionFiles[] = $rootPath.'/'.$exoPath.'/'.$question;
                }
+           }
+           sort($questionFiles);
+           foreach ($questionFiles as $question) {
+               $qtiRepos->createDirQTI();
+               $files = opendir($question);
+               while (($file = readdir($files)) !== false) {
+                   if ($file != '.' && $file != '..') {
+                       copy($question.'/'.$file, $qtiRepos->getUserDir().$file);
+                   }
+               }
+               $qtiRepos->scanFilesToImport($newExercise);
            }
         }
 
