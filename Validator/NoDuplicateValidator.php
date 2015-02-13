@@ -7,6 +7,14 @@ use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
+/**
+ * Validator ensuring that an array or any object implementing
+ * the Traversable interface has no duplicates. If the constraint
+ * doesn't specify a property, it will operate on the plain values
+ * of the collection. Otherwise, it will expect elements of the
+ * collection to be objects with this property accessible, and will
+ * compare only the property values.
+ */
 class NoDuplicateValidator extends ConstraintValidator
 {
     public function validate($value, Constraint $constraint)
