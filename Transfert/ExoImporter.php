@@ -113,14 +113,19 @@ class ExoImporter extends Importer implements ConfigurationInterface
                     $this->om->persist($subscription);
                     $this->om->flush();
                     $questions = opendir($rootPath.'/qti/'.$exercise);
+                    $questionFiles = array();
                     while (($question = readdir($questions)) !== false) {
-                        $qtiRepos->createDirQTI();
                         if ($question != '.' && $question != '..') {
-                            $files = opendir($rootPath.'/qti/'.$exercise.'/'.$question);
-                            while (($file = readdir($files)) !== false) {
-                                if ($file != '.' && $file != '..') {
-                                    copy($rootPath.'/qti/'.$exercise.'/'.$question.'/'.$file, $qtiRepos->getUserDir().$file);
-                                }
+                            $questionFiles[] = $rootPath.'/qti/'.$exercise.'/'.$question;
+                        }
+                    }
+                    sort($questionFiles);
+                    foreach ($questionFiles as $question) {
+                        $qtiRepos->createDirQTI();
+                        $files = opendir($question);
+                        while (($file = readdir($files)) !== false) {
+                            if ($file != '.' && $file != '..') {
+                                copy($question.'/'.$file, $qtiRepos->getUserDir().$file);
                             }
                         }
                         $qtiRepos->scanFilesToImport($newExercise);
@@ -143,34 +148,20 @@ class ExoImporter extends Importer implements ConfigurationInterface
                 $this->container->get('doctrine')->getManager(),
                 $object->getId(), FALSE);
 
-        mkdir($qtiRepos->getUserDir().'questions');
-        $i = 1;
-        foreach ($interactions as $interaction) {
-            $qtiRepos->export($interaction);
-            mkdir($qtiRepos->getUserDir().'questions/'.'question_'.$i);
-            $iterator = new \DirectoryIterator($qtiRepos->getUserDir());
-            foreach ($iterator as $element) {
-                if (!$element->isDot() && $element->isFile()) {
-                    rename($qtiRepos->getUserDir().$element->getFilename(), $qtiRepos->getUserDir().'questions/'.'question_'.$i.'/'.$element->getFilename());
-                }
-            }
-            $i++;
-        }
 
-        $pathQtiDir = $qtiRepos->getUserDir().'questions';
-        $questions = new \DirectoryIterator($pathQtiDir);
-        $i = 1;
-        foreach ($questions as $question) {
-            if ($question != '.' && $question != '..') {
-                $iterator = new \DirectoryIterator($pathQtiDir.'/'.$question->getFilename());
+        $this->createQuestionsDirectory($qtiRepos, $interactions);
+        $qdirs = $this->sortPathOfQuestions($qtiRepos);
+
+        $i = 'a';
+        foreach ($qdirs as $dir) {
+            $iterator = new \DirectoryIterator($dir);
                 foreach ($iterator as $element) {
                     if (!$element->isDot() && $element->isFile()) {
                         $localPath = 'qti/'.$object->getTitle().'/question_'.$i.'/'.$element->getFileName();
                         $files[$localPath] = $element->getPathName();
                     }
                 }
-                $i++;
-            }
+                $i .='a';
         }
 
         $version = '1';
@@ -189,5 +180,50 @@ class ExoImporter extends Importer implements ConfigurationInterface
         $ds = DIRECTORY_SEPARATOR;
 
         return !file_exists($rootpath . $ds . $v);;
+    }
+
+    /**
+     * create the directory questions to export an exercise and export the qti files
+     *
+     * @param UJM\ExoBundle\Services\classes\QTI\qtiRepository $qtiRepos
+     * @param collection of  UJM\ExoBundle\Entity\Interaction $interactions
+     */
+    private function createQuestionsDirectory($qtiRepos, $interactions) {
+        mkdir($qtiRepos->getUserDir().'questions');
+        $i = 'a';
+        foreach ($interactions as $interaction) {
+            $qtiRepos->export($interaction);
+            mkdir($qtiRepos->getUserDir().'questions/'.'question_'.$i);
+            $iterator = new \DirectoryIterator($qtiRepos->getUserDir());
+            foreach ($iterator as $element) {
+                if (!$element->isDot() && $element->isFile()) {
+                    rename($qtiRepos->getUserDir().$element->getFilename(), $qtiRepos->getUserDir().'questions/'.'question_'.$i.'/'.$element->getFilename());
+                }
+            }
+            $i .='a';
+        }
+    }
+
+
+    /**
+     * sort the paths of questions
+     *
+     * @param UJM\ExoBundle\Services\classes\QTI\qtiRepository $qtiRepos
+     *
+     * @return array of String array with the paths of questions sorted
+     */
+    private function sortPathOfQuestions($qtiRepos) {
+        $pathQtiDir = $qtiRepos->getUserDir().'questions';
+        $questions = new \DirectoryIterator($pathQtiDir);
+        //create array with sort file
+        $qdirs = array();
+        foreach ($questions as $question) {
+            if ($question != '.' && $question != '..') {
+                $qdirs[] = $pathQtiDir.'/'.$question->getFilename();
+            }
+        }
+        sort($qdirs);
+
+        return $qdirs;
     }
 }
