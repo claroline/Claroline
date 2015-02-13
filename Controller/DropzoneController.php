@@ -353,6 +353,12 @@ class DropzoneController extends DropzoneBaseController
      *      requirements={"resourceId" = "\d+"},
      *      defaults={"page" = 1}
      * )
+     * @Route(
+     *      "/{resourceId}/edit/criteria",
+     *      name="innova_collecticiel_edit_criteria_innova",
+     *      requirements={"resourceId" = "\d+"},
+     *      defaults={"page" = 1}
+     * )
      *
      * @Route(
      *      "/{resourceId}/edit/criteria/{page}",
