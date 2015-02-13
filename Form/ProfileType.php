@@ -26,6 +26,7 @@ class ProfileType extends AbstractType
     private $isGrantedUserAdministration;
     private $langs;
     private $authenticationDrivers;
+    private $accesses;
 
     /**
      * Constructor.
@@ -35,9 +36,15 @@ class ProfileType extends AbstractType
      * @param string[] $langs
      */
     public function __construct(
-        array $platformRoles, $isAdmin, $isGrantedUserAdministration, array $langs, $authenticationDrivers = null
+        array $platformRoles,
+        $isAdmin,
+        $isGrantedUserAdministration,
+        array $langs,
+        $accesses,
+        $authenticationDrivers = null
     )
     {
+        $this->accesses = $accesses;
         $this->platformRoles = new ArrayCollection($platformRoles);
         $this->isAdmin = $isAdmin;
         $this->isGrantedUserAdministration = $isGrantedUserAdministration;
@@ -56,34 +63,60 @@ class ProfileType extends AbstractType
         parent::buildForm($builder, $options);
 
         $builder
-            ->add('firstName', 'text', array('label' => 'First name'))
-            ->add('lastName', 'text', array('label' => 'Last name'))
-            ->add('username', 'text', array('read_only' => true, 'disabled' => true, 'label' => 'User name'))
+            ->add('firstName', 'text', array('label' => 'First name', 'read_only' => !$this->accesses['firstName'], 'disabled' => !$this->accesses['firstName']))
+            ->add('lastName', 'text', array('label' => 'Last name',  'read_only' => !$this->accesses['lastName'], 'disabled' => !$this->accesses['lastName']))
+            ->add('username', 'text', array('read_only' => true, 'disabled' => true, 'label' => 'User name', 'read_only' => !$this->accesses['username'], 'disabled' => !$this->accesses['username']))
             ->add(
                 'administrativeCode',
                 'text',
-                array('required' => false, 'read_only' => true, 'disabled' => true, 'label' => 'administrative_code')
+                array('required' => false, 'read_only' => !$this->accesses['administrativeCode'], 'disabled' => !$this->accesses['administrativeCode'], 'label' => 'administrative_code')
             )
-            ->add('mail', 'email', array('required' => false, 'label' => 'email'))
-            ->add('phone', 'text', array('required' => false, 'label' => 'phone'))
+            ->add('mail', 'email', array('required' => false, 'label' => 'email', 'read_only' => !$this->accesses['email'], 'disabled' => !$this->accesses['email']))
+            ->add('phone', 'text', array('required' => false, 'label' => 'phone', 'read_only' => !$this->accesses['phone'], 'disabled' => !$this->accesses['phone']))
             ->add('locale', 'choice', array('choices' => $this->langs, 'required' => false, 'label' => 'Language'))
             ->add(
-                'authentication',
-                'choice',
+                'pictureFile',
+                'file',
                 array(
-                    'choices' => $this->authenticationDrivers,
                     'required' => false,
-                    'label' => 'authentication'
+                    'constraints' => new Image(
+                        array(
+                            'minWidth'  => 50,
+                            'maxWidth'  => 800,
+                            'minHeight' => 50,
+                            'maxHeight' => 800,
+                        )
+                    ),
+                    'label' => 'picture_profile',
+                    'read_only' => !$this->accesses['picture'],
+                    'disabled' => !$this->accesses['picture']
                 )
+            )
+            ->add(
+                'description',
+                'tinymce',
+                array('required' => false, 'label' => 'description',  'read_only' => !$this->accesses['description'], 'disabled' => !$this->accesses['description'])
             );
 
         if ($this->isAdmin || $this->isGrantedUserAdministration) {
             $isAdmin = $this->isAdmin;
-            $builder->add('username', 'text', array('label' => 'User name'))
+            $builder
+                ->add('firstName', 'text', array('label' => 'First name'))
+                ->add('lastName', 'text', array('label' => 'Last name'))
+                ->add('username', 'text', array('label' => 'User name'))
                 ->add('administrativeCode', 'text', array('required' => false, 'label' => 'administrative_code'))
                 ->add('mail', 'email', array('required' => false, 'label' => 'email'))
                 ->add('phone', 'text', array('required' => false, 'label' => 'phone'))
                 ->add('locale', 'choice', array('choices' => $this->langs, 'required' => false, 'label' => 'Language'))
+                ->add(
+                    'authentication',
+                    'choice',
+                    array(
+                        'choices' => $this->authenticationDrivers,
+                        'required' => false,
+                        'label' => 'authentication'
+                    )
+                )
                 ->add(
                     'platformRoles',
                     'entity',
@@ -107,30 +140,29 @@ class ProfileType extends AbstractType
                         },
                         'label' => 'roles'
                     )
+                )
+                ->add(
+                    'pictureFile',
+                    'file',
+                    array(
+                        'required' => false,
+                        'constraints' => new Image(
+                            array(
+                                'minWidth'  => 50,
+                                'maxWidth'  => 800,
+                                'minHeight' => 50,
+                                'maxHeight' => 800,
+                            )
+                        ),
+                        'label' => 'picture_profile'
+                    )
+                )
+                ->add(
+                    'description',
+                    'tinymce',
+                    array('required' => false, 'label' => 'description')
                 );
         }
-        $builder->add(
-            'pictureFile',
-            'file',
-            array(
-                'required' => false,
-                'constraints' => new Image(
-                    array(
-                        'minWidth'  => 50,
-                        'maxWidth'  => 800,
-                        'minHeight' => 50,
-                        'maxHeight' => 800,
-                    )
-                ),
-                'label' => 'picture_profile'
-            )
-        )
-
-        ->add(
-            'description',
-            'tinymce',
-            array('required' => false, 'label' => 'description')
-        );
     }
 
     public function getName()

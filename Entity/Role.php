@@ -164,15 +164,24 @@ class Role implements RoleInterface
      */
     protected $personalWorkspaceCreationEnabled = false;
 
+    /**
+     * @ORM\OneToMany(
+     *     targetEntity="Claroline\CoreBundle\Entity\ProfileProperty",
+     *     mappedBy="role"
+     * )
+     */
+    protected $profileProperties;
+
     public function __construct()
     {
-        $this->users            = new ArrayCollection();
-        $this->resourceContext  = new ArrayCollection();
-        $this->groups           = new ArrayCollection();
-        $this->facets           = new ArrayCollection();
-        $this->fieldFacetsRoles = new ArrayCollection();
-        $this->toolRights       = new ArrayCollection();
-        $this->pwsToolConfig    = new ArrayCollection();
+        $this->users             = new ArrayCollection();
+        $this->resourceContext   = new ArrayCollection();
+        $this->groups            = new ArrayCollection();
+        $this->facets            = new ArrayCollection();
+        $this->fieldFacetsRoles  = new ArrayCollection();
+        $this->toolRights        = new ArrayCollection();
+        $this->pwsToolConfig     = new ArrayCollection();
+        $this->profileProperties = new ArrayCollection();
     }
 
     public function getId()
@@ -346,5 +355,15 @@ class Role implements RoleInterface
     public function setPersonalWorkspaceCreationEnabled($boolean)
     {
         $this->personalWorkspaceCreationEnabled = $boolean;
+    }
+
+    public function getProfileProperties()
+    {
+        return $this->profileProperties;
+    }
+
+    public function addProfileProperty(ProfileProperty $property)
+    {
+        $this->profileProperties->add($property);
     }
 }

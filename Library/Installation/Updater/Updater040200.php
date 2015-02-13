@@ -33,6 +33,7 @@ class Updater040200
     {
         $this->updateBaseRoles();
         $this->updateFacets();
+        $this->setProfileProperties();
     }
 
     private function updateBaseRoles()
@@ -51,15 +52,27 @@ class Updater040200
 
     private function updateFacets()
     {
+        $this->log('Updating facets...');
         $facets = $this->om->getRepository('ClarolineCoreBundle:Facet\Facet')->findAll();
         $this->om->startFlushSuite();
 
         foreach ($facets as $facet) {
-            $this->container->get('claroline.manager.facet_manager')
-                ->addPanel($facet, $facet->getName());
+            $panel = $this->om->getRepository('ClarolineCoreBundle:Facet\PanelFacet')
+                ->findByName($facet->getName());
+            if (!$panel) {
+                $this->container->get('claroline.manager.facet_manager')
+                    ->addPanel($facet, $facet->getName());
+            }
         }
 
         $this->om->endFlushSuite();
+    }
+
+    private function setProfileProperties()
+    {
+        $this->log('Updating profile properties...');
+        $manager = $this->container->get('claroline.manager.profile_property_manager');
+        $manager->addDefaultProperties();
     }
 
     public function setLogger($logger)
