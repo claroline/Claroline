@@ -20,7 +20,7 @@ class NotEmptyValidatorTest extends UnitTestCase
     /**
      * @expectedException InvalidArgumentException
      */
-    public function testValidateExpectsACollection()
+    public function testValidateExpectsAnArrayOrACountableInstance()
     {
         $this->validator->validate('foo', new NotEmpty());
     }
@@ -31,5 +31,23 @@ class NotEmptyValidatorTest extends UnitTestCase
             ->method('addViolation')
             ->with((new NotEmpty())->message);
         $this->validator->validate(new ArrayCollection(), new NotEmpty());
+    }
+
+    /**
+     * @dataProvider validValueProvider
+     * @param mixed $value
+     */
+    public function testValidate($value)
+    {
+        $this->context->expects($this->never())->method('addViolation');
+        $this->validator->validate($value, new NotEmpty());
+    }
+
+    public function validValueProvider()
+    {
+        return [
+            [['foo', 'bar']],
+            [new ArrayCollection(['foo', 'bar'])]
+        ];
     }
 }
