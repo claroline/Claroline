@@ -6,7 +6,7 @@ use Claroline\CoreBundle\Entity\User;
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 /**
- * @DI\Service("claroline.temporary_access_resource_manager")
+ * @DI\Service("innova.temporary_access_resource_manager")
  */
 class TemporaryAccessResourceManager
 {
@@ -96,7 +96,7 @@ class TemporaryAccessResourceManager
         }
         $this->container->get('request')->getSession()
         ->set(TemporaryAccessResourceManager::RESOURCE_TEMPORARY_ACCESS_KEY, $temporaryAccessArray);
-        
+
 
 
     }

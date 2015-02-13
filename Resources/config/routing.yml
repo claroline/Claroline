@@ -1,4 +1,4 @@
-icap_dropzone:
-    resource: "@IcapDropzoneBundle/Controller/"
+innova_collecticiel:
+    resource: "@InnovaCollecticielBundle/Controller/"
     type:     annotation
     prefix:   /

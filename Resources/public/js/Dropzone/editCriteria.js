@@ -10,10 +10,10 @@ var manualSubmit = false;
 
 $(document).ready(function () {
     setSaveListener();
-    $('#icap_dropzone_criteria_form_goBack').val(0);
+    $('#innova_collecticiel_criteria_form_goBack').val(0);
     $('.back-button').on('click', function (event) {
         event.preventDefault();
-        $('#icap_dropzone_criteria_form_goBack').val(1);
+        $('#innova_collecticiel_criteria_form_goBack').val(1);
         $('.save-submit').trigger('click');
     });
 
@@ -21,7 +21,7 @@ $(document).ready(function () {
     $('.column-input-js').show();
 
 
-    $('#icap_dropzone_criteria_form_allowCommentInCorrection').on('click', function () {
+    $('#innova_collecticiel_criteria_form_allowCommentInCorrection').on('click', function () {
         if (comment == 0) {
             comment = 1;
         } else {
@@ -68,8 +68,8 @@ $(document).ready(function () {
         event.preventDefault();
 
         $('.disabled-during-edition').attr('disabled', 'disabled');
-        tinyMCE.get('icap_dropzone_criteria_form_correctionInstruction').getBody().setAttribute('contenteditable', false);
-        //$('.icap_dropzone_criteria_form_correctionInstruction').attr('disabled','disabled');
+        tinyMCE.get('innova_collecticiel_criteria_form_correctionInstruction').getBody().setAttribute('contenteditable', false);
+        //$('.innova_collecticiel_criteria_form_correctionInstruction').attr('disabled','disabled');
         $('.criteria-form-button').attr('disabled', 'disabled');
 
         var criterionId = $(this).data('criterion');
@@ -182,7 +182,7 @@ $(document).ready(function () {
             $('#recalculateAskPopup').modal('show');
             manualSubmit = true;
             $('#recalculateButton').unbind('click').click(function () {
-                $('#icap_dropzone_criteria_form_recalculateGrades').val(1);
+                $('#innova_collecticiel_criteria_form_recalculateGrades').val(1);
                 $('form').submit();
             });
 
@@ -219,6 +219,6 @@ function setSaveListener() {
 
         $('.disabled-during-edition').attr('disabled', null);
         $('.criteria-form-button').attr('disabled', null);
-        tinyMCE.get('icap_dropzone_criteria_form_correctionInstruction').getBody().setAttribute('contenteditable', true);
+        tinyMCE.get('innova_collecticiel_criteria_form_correctionInstruction').getBody().setAttribute('contenteditable', true);
     });
 }

@@ -27,7 +27,7 @@ class TemporaryAccessResourceVoter implements VoterInterface
 
     /**
      * @DI\InjectParams({
-     *     "manager" = @DI\Inject("claroline.temporary_access_resource_manager")
+     *     "manager" = @DI\Inject("innova.temporary_access_resource_manager")
      * })
      */
     public function __construct(TemporaryAccessResourceManager $manager)
