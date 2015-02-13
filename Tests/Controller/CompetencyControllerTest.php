@@ -63,4 +63,17 @@ class CompetencyControllerTest extends UnitTestCase
             $this->controller->createScaleAction($request)
         );
     }
+
+    public function  testCreateInvalidScaleAction()
+    {
+        $request = new Request();
+        $this->formHandler->expects($this->once())
+            ->method('isValid')
+            ->with('hevinci.form.scale', $request)
+            ->willReturn(false);
+        $this->formHandler->expects($this->once())
+            ->method('getView')
+            ->willReturn('VIEW');
+        $this->assertEquals(['form' => 'VIEW'], $this->controller->createScaleAction($request));
+    }
 }
