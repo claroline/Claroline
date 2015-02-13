@@ -1,0 +1,20 @@
+<div class="form-group">
+    <p>
+        <label for="experience_post">{{ 'experience_post'|trans({}, 'icap_portfolio') }}</label>
+        <input type="text" class="form-control" id="experience_post"
+         name="icap_portfolio_widget_form_experience[post]" data-ng-model="widget.post" required="required" />
+    </p>
+    <p>
+        <label for="experience_company_name">{{ 'experience_company_name'|trans({}, 'icap_portfolio') }}</label>
+        <input type="text" class="form-control" id="experience_company_name"
+         name="icap_portfolio_widget_form_experience[company_name]" data-ng-model="widget.companyName" required="required" />
+    </p>
+    <p class="input-daterange input-group" data-b-datepicker="{{ 'datepicker_date_format'|trans({}, 'icap_portfolio') }}" id="datepicker">
+        <span class="input-group-addon">{{ 'date_range_from'|trans({}, 'icap_portfolio') }}</span>
+        <input type="text" data-date-time-input="{{ 'date_field_format'|trans({}, 'icap_portfolio') }}"
+               class="input-sm form-control" name="startDate" data-ng-model="widget.startDate" />
+        <span class="input-group-addon">{{ 'date_range_to'|trans({}, 'icap_portfolio') }}</span>
+        <input type="text" data-date-time-input="{{ 'date_field_format'|trans({}, 'icap_portfolio') }}"
+               class="input-sm form-control" name="endDate" data-ng-model="widget.endDate" />
+    </p>
+</div>

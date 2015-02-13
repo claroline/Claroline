@@ -5,7 +5,7 @@ use Doctrine\Common\Persistence\Mapping\MappingException;
 use Doctrine\ORM\EntityManager;
 use Icap\PortfolioBundle\Entity\Widget\WidgetType;
 
-class Updater010000
+class Updater020006
 {
     private $entityManager;
 
@@ -26,8 +26,8 @@ class Updater010000
         if (null === $widgetType) {
             $widgetType = new WidgetType();
             $widgetType
-                ->setName('badges')
-                ->setIcon('trophy')
+                ->setName('experience')
+                ->setIcon('briefcase')
                 ->setIsUnique(false)
                 ->setIsDeletable(true);
 

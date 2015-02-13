@@ -48,10 +48,11 @@ class CommentsManager
      * @param PortfolioComment $comment
      * @param User             $user
      * @param array            $parameters
+     * @param string           $env
      *
      * @return array
      */
-    public function handle(PortfolioComment $comment, User $user, array $parameters)
+    public function handle(PortfolioComment $comment, User $user, array $parameters, $env = 'prod')
     {
         $form = $this->formFactory->create('icap_portfolio_portfolio_comment_form', $comment);
         $form->submit($parameters);
@@ -76,6 +77,15 @@ class CommentsManager
             }
 
             return $comment->getData();
+        }
+
+        if ('dev' === $env) {
+            echo "<pre>";
+            foreach ($form->getErrors(true, false) as $formError) {
+                var_dump($formError->getMessage());
+                var_dump($formError->getMessageParameters());
+            }
+            echo "</pre>" . PHP_EOL;
         }
 
         throw new \InvalidArgumentException();

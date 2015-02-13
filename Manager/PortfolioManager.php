@@ -334,7 +334,10 @@ class PortfolioManager
 
         if ('dev' === $env) {
             echo "<pre>";
-            var_dump($form->getErrors());
+            foreach ($form->getErrors(true, false) as $formError) {
+                var_dump($formError->getMessage());
+                var_dump($formError->getMessageParameters());
+            }
             echo "</pre>" . PHP_EOL;
         }
 

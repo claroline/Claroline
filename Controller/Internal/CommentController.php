@@ -45,7 +45,7 @@ class CommentController extends BaseController
         $commentManager = $this->getCommentsManager();
 
         $newComment = $commentManager->getNewComment($portfolio, $loggedUser);
-        $data       = $commentManager->handle($newComment, $loggedUser, $request->request->all());
+        $data       = $commentManager->handle($newComment, $loggedUser, $request->request->all(), $this->get('kernel')->getEnvironment());
 
         $response = new JsonResponse($data, Response::HTTP_CREATED);
 
