@@ -51,8 +51,9 @@ class qtiRepository {
      *
      * @access public
      * @param String $directory directory
+     * @param boolean $clear to clear or no the directory userRootDir
      */
-    public function createDirQTI($directory = 'default')
+    public function createDirQTI($directory = 'default', $clear = TRUE)
     {
         $this->userRootDir = './uploads/ujmexo/qti/'.$this->user->getUsername().'/';
         $this->userDir = $this->userRootDir.$directory.'/';
@@ -66,7 +67,9 @@ class qtiRepository {
         if (!is_dir($this->userRootDir)) {
             mkdir($this->userRootDir);
         } else {
-            $this->removeDirectory();
+            if ($clear === TRUE) {
+                $this->removeDirectory();
+            }
         }
         if (!is_dir($this->userRootDir.$directory)) {
             mkdir($this->userRootDir.$directory);

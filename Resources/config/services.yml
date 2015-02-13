@@ -32,42 +32,52 @@ services:
 
     ujm.qti_qcm_export:
         class: UJM\ExoBundle\Services\classes\QTI\qcmExport
+        scope: prototype
         arguments: [@doctrine, @security.context, @service_container]
 
     ujm.qti_qcm_import:
         class: UJM\ExoBundle\Services\classes\QTI\qcmImport
+        scope: prototype
         arguments: [@doctrine, @security.context, @service_container]
 
     ujm.qti_graphic_export:
         class: UJM\ExoBundle\Services\classes\QTI\graphicExport
+        scope: prototype
         arguments: [@doctrine, @security.context, @service_container]
 
     ujm.qti_graphic_import:
         class: UJM\ExoBundle\Services\classes\QTI\graphicImport
+        scope: prototype
         arguments: [@doctrine, @security.context, @service_container]
 
     ujm.qti_hole_export:
         class: UJM\ExoBundle\Services\classes\QTI\holeExport
+        scope: prototype
         arguments: [@doctrine, @security.context, @service_container]
 
     ujm.qti_hole_import:
         class: UJM\ExoBundle\Services\classes\QTI\holeImport
+        scope: prototype
         arguments: [@doctrine, @security.context, @service_container]
 
     ujm.qti_open_export:
         class: UJM\ExoBundle\Services\classes\QTI\openExport
+        scope: prototype
         arguments: [@doctrine, @security.context, @service_container]
 
     ujm.qti_open_import:
         class: UJM\ExoBundle\Services\classes\QTI\openImport
+        scope: prototype
         arguments: [@doctrine, @security.context, @service_container]
 
     ujm.qti_matching_export:
         class: UJM\ExoBundle\Services\classes\QTI\matchingExport
+        scope: prototype
         arguments: [@doctrine, @security.context, @service_container]
 
     ujm.qti_matching_import:
         class: UJM\ExoBundle\Services\classes\QTI\matchingImport
+        scope: prototype
         arguments: [@doctrine, @security.context, @service_container]
 
     ujm.qti_repository:

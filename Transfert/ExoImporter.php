@@ -30,6 +30,7 @@ class ExoImporter extends Importer implements ConfigurationInterface
 {
     private $container;
     private $om;
+    private $new = TRUE;
 
     /**
      * @DI\InjectParams({
@@ -134,22 +135,23 @@ class ExoImporter extends Importer implements ConfigurationInterface
     public function export(Workspace $workspace, array &$files, $object)
     {
         $qtiRepos = $this->container->get('ujm.qti_repository');
-        $qtiRepos->createDirQTI($object->getTitle());
+        $qtiRepos->createDirQTI($object->getTitle(), $this->new);
+        $this->new = FALSE;
 
         $interRepos = $this->om->getRepository('UJMExoBundle:Interaction');
         $interactions = $interRepos->getExerciseInteraction(
                 $this->container->get('doctrine')->getManager(),
                 $object->getId(), FALSE);
 
-        exec('mkdir '.$qtiRepos->getUserDir().'questions');
+        mkdir($qtiRepos->getUserDir().'questions');
         $i = 1;
         foreach ($interactions as $interaction) {
             $qtiRepos->export($interaction);
-            exec('mkdir '.$qtiRepos->getUserDir().'questions/'.'question_'.$i);
+            mkdir($qtiRepos->getUserDir().'questions/'.'question_'.$i);
             $iterator = new \DirectoryIterator($qtiRepos->getUserDir());
             foreach ($iterator as $element) {
                 if (!$element->isDot() && $element->isFile()) {
-                    exec ('mv '.$qtiRepos->getUserDir().$element->getFilename().' '.$qtiRepos->getUserDir().'questions/'.'question_'.$i);
+                    rename($qtiRepos->getUserDir().$element->getFilename(), $qtiRepos->getUserDir().'questions/'.'question_'.$i.'/'.$element->getFilename());
                 }
             }
             $i++;
