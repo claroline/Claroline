@@ -25,7 +25,8 @@ class LoadRequiredFixturesData extends AbstractFixture
             array('text',            false, true,  'align-left'),
             array('skills',          false, true,  'bookmark'),
             array('formations',      false, true,  'graduation-cap'),
-            array('badges',          false, true,  'trophy')
+            array('badges',          false, true,  'trophy'),
+            array('experience',      false, true,  'briefcase')
         );
 
         foreach ($widgetTypes as $widgetType) {
