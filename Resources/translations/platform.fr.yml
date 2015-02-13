@@ -1128,3 +1128,8 @@ add_panel_to_facet: Ajouter un panel
 create_pane: Créer un panel
 collapse: Replier
 edit_panel_facet: Modifier un panel
+administrativeCode: Code administratif
+property: Propriété
+picture: Photo de profil
+profile_properties_management: Gestion des propriétés du profil
+facet_management: Gestion des facets

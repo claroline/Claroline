@@ -119,6 +119,8 @@ class RoleManager
         $role->setType(Role::PLATFORM_ROLE);
         $this->om->persist($role);
         $this->om->flush();
+        $this->container->get('claroline.manager.profile_property_manager')
+            ->addDefaultProperties();
 
         return $role;
     }

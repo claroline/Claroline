@@ -1121,3 +1121,8 @@ add_panel_to_facet: Add a panel
 create_pane: Create a pane
 collapse: Collapse
 edit_panel_facet: Edit a panel
+administrativeCode: administrativeCode
+property: Property
+picture: User picture
+profile_properties_management: Profile properties management
+facet_management: Facet management
