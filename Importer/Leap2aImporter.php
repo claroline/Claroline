@@ -96,7 +96,16 @@ class Leap2aImporter implements ImporterInterface
 
         $textWidgets = $this->extractTextWidgets($nodes);
 
-        return array_merge($skillsWidgets, $userInformationWidgets, $formationWidgets, $textWidgets);
+        /** @var \Icap\PortfolioBundle\Entity\Widget\AbstractWidget[] $widgets */
+        $widgets = array_merge($skillsWidgets, $userInformationWidgets, $formationWidgets, $textWidgets);
+
+        $widgetRowNumber = 1;
+        foreach ($widgets as $widget) {
+            $widget->setRow($widgetRowNumber);
+            $widgetRowNumber++;
+        }
+
+        return $widgets;
     }
 
     /**

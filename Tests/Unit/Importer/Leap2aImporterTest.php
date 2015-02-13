@@ -747,6 +747,7 @@ CONTENT;
         $this->assertEquals($formationsWidgetLabel, $formationsWidget->getName());
         $this->assertEquals($formationsWidgetStartedAtText, $formationsWidget->getStartDate()->format(\DateTime::ATOM));
         $this->assertEquals($formationsWidgetEndedAtText, $formationsWidget->getEndDate()->format(\DateTime::ATOM));
+        $this->assertEquals(2, $formationsWidget->getRow());
 
         $formationsWidgetResources = $formationsWidget->getResources();
         /** @var \Icap\PortfolioBundle\Entity\Widget\FormationsWidgetResource $formationsWidgetResource */
@@ -765,5 +766,6 @@ CONTENT;
         $this->assertEquals('Icap\PortfolioBundle\Entity\Widget\SkillsWidget', get_class($skillsWidget));
         $this->assertEquals($skillsWidgetLabel, $skillsWidget->getLabel());
         $this->assertEquals(2, count($skillsWidget->getSkills()));
+        $this->assertEquals(1, $skillsWidget->getRow());
     }
 }
