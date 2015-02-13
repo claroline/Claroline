@@ -88,29 +88,7 @@ class ExoImporter extends Importer implements ConfigurationInterface
         $tabExoPath = explode('/', $exoPath);
 
         $qtiRepos = $this->container->get('ujm.qti_repository');
-
-        $newExercise = new Exercise();
-        $newExercise->setTitle($tabExoPath[1]);
-        $newExercise->setDateCreate(new \Datetime());
-        $newExercise->setNbQuestionPage(1);
-        $newExercise->setNbQuestion(0);
-        $newExercise->setDuration(0);
-        $newExercise->setMaxAttempts(0);
-        $newExercise->setStartDate(new \Datetime());
-        $newExercise->setEndDate(new \Datetime());
-        $newExercise->setDateCorrection(new \Datetime());
-        $newExercise->setCorrectionMode('1');
-        $newExercise->setMarkMode('1');
-        $newExercise->setPublished(FALSE);
-        $this->om->persist($newExercise);
-        $this->om->flush();
-
-        $subscription = new Subscription($qtiRepos->getQtiUser(), $newExercise);
-        $subscription->setAdmin(1);
-        $subscription->setCreator(1);
-
-        $this->om->persist($subscription);
-        $this->om->flush();
+        $newExercise = $this->createExo($tabExoPath[1], $qtiRepos->getQtiUser());
 
         if ($questions = opendir($rootPath.'/'.$exoPath)) {
             $questionFiles = array();
@@ -178,6 +156,39 @@ class ExoImporter extends Importer implements ConfigurationInterface
         $ds = DIRECTORY_SEPARATOR;
 
         return !file_exists($rootpath . $ds . $v);;
+    }
+
+    /**
+     * create the exercise
+     *
+     * @param String $title
+     * @param Object User $user
+     */
+    private function createExo($title, $user) {
+        $newExercise = new Exercise();
+        $newExercise->setTitle($title);
+        $newExercise->setDateCreate(new \Datetime());
+        $newExercise->setNbQuestionPage(1);
+        $newExercise->setNbQuestion(0);
+        $newExercise->setDuration(0);
+        $newExercise->setMaxAttempts(0);
+        $newExercise->setStartDate(new \Datetime());
+        $newExercise->setEndDate(new \Datetime());
+        $newExercise->setDateCorrection(new \Datetime());
+        $newExercise->setCorrectionMode('1');
+        $newExercise->setMarkMode('1');
+        $newExercise->setPublished(FALSE);
+        $this->om->persist($newExercise);
+        $this->om->flush();
+
+        $subscription = new Subscription($user, $newExercise);
+        $subscription->setAdmin(1);
+        $subscription->setCreator(1);
+
+        $this->om->persist($subscription);
+        $this->om->flush();
+
+        return $newExercise;
     }
 
     /**
