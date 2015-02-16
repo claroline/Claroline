@@ -239,12 +239,13 @@ class PortfolioController extends Controller
 
             if ($form->isValid()) {
                 try {
-                    $portfolio = $importManager->simulateImport($importData->getContent(), $loggedUser, $importData->getFormat());
+                    /** @var \Symfony\Component\HttpFoundation\File\UploadedFile $file */
+                    $file = $importData->getContent();
+
+                    $portfolio = $importManager->simulateImport(file_get_contents($file->getPathName()), $loggedUser, $importData->getFormat());
                     $previewId = uniqid();
-                    $temporaryImportFilePath = sys_get_temp_dir() . DIRECTORY_SEPARATOR . sprintf("%s-%s-%s.%s", strtolower($loggedUser->getUsername()), date("Y_m_d\TH_i_s\Z"), $previewId, $importData->getFormat()) . '.import';
-                    if (!file_put_contents($temporaryImportFilePath, $importData->getContent())) {
-                        throw new \Exception(sprintf("Unable to create temporary import file '%s'.", $temporaryImportFilePath));
-                    }
+                    $temporaryImportFilePath = sprintf("%s-%s-%s.%s", strtolower($loggedUser->getUsername()), date("Y_m_d\TH_i_s\Z"), $previewId, $importData->getFormat()) . '.import';
+                    $file->move(sys_get_temp_dir(), $temporaryImportFilePath);
 
                     return $this->redirect($this->generateUrl('icap_portfolio_import_preview', ['format' => $importData->getFormat(), 'previewId' => $previewId]));
                 } catch (\Exception $exception) {
