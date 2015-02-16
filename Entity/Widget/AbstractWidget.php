@@ -275,7 +275,6 @@ abstract class AbstractWidget
         return array(
             'label'  => $this->getLabel(),
             'type'   => $this->getWidgetType(),
-            'column' => $this->getColumn(),
             'row'    => $this->getRow(),
             'col'    => $this->getColumn(),
             'sizeX'  => $this->getSizeX(),
