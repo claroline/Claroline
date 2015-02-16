@@ -60,7 +60,7 @@
         "gregwar/captcha-bundle": "1.0.12",
         "knplabs/knp-menu-bundle": "2.0.0",
         "innova/angular-js-bundle": "1.0.2",
-        "require cocur/slugify": "~0.8"
+        "cocur/slugify": "~0.8"
     },
     "require-dev": {
         "mockery/mockery": "dev-master@dev",
