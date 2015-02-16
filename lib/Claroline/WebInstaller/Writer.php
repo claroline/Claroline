@@ -43,7 +43,12 @@ class Writer
             $parameters->getPlatformSettings(),
             $parameters->getMailingSettings()
         );
-        $this->writePlatformParameters($parameters->getPlatformSettings());
+        $this->writePlatformParameters(
+            $parameters->getPlatformSettings(),
+            $parameters->getCountry(),
+            $parameters->getHasConfirmedSendDatas(),
+            $parameters->getToken()
+        );
     }
 
     public function writeInstallFlag()
@@ -80,14 +85,32 @@ class Writer
         $this->doWrite(array('parameters' => $parameters), $this->mainFile);
     }
 
-    private function writePlatformParameters(PlatformSettings $settings)
+    private function writePlatformParameters(
+        PlatformSettings $settings,
+        $country = null,
+        $hasConfirmedSendDatas = false,
+        $token = null
+    )
     {
+        $parameters = array(
+            'name' => $settings->getName(),
+            'support_email' => $settings->getSupportEmail(),
+            'locale_language' => $settings->getLanguage()
+        );
+
+        if (!empty($country)) {
+            $parameters['country'] = $country;
+        }
+
+        if ($hasConfirmedSendDatas) {
+            $parameters['confirm_send_datas'] = 'OK';
+        }
+
+        if (!empty($token)) {
+            $parameters['token'] = $token;
+        }
         $this->doWrite(
-            array(
-                'name' => $settings->getName(),
-                'support_email' => $settings->getSupportEmail(),
-                'locale_language' => $settings->getLanguage()
-            ),
+            $parameters,
             $this->platformFile
         );
     }

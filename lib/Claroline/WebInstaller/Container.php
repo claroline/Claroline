@@ -135,11 +135,12 @@ class Container
 
         foreach ($packages as $package) {
             if ($package instanceof \stdClass AND $package->name === 'claroline/core-bundle') {
+
                 return $package->version;
             }
         }
 
-        return '0.0.0';
+        return '-';
     }
 
     /**

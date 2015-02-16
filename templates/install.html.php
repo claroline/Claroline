@@ -33,7 +33,7 @@
             </small>
             <div class="radio">
                 <label>
-                    <input type="radio" name="sendData" value="true">
+                    <input type="radio" name="sendData" value="true" checked="checked">
                     <?php echo $trans('send'); ?>
                 </label>
             </div>
@@ -50,7 +50,7 @@
             <a id="pre-install" href="<?php echo $path('/mailing') ?>" class="btn btn-default">
                 <?php echo $trans('previous_step') ?>
             </a>
-            <button id="do-install" type="submit" class="btn btn-primary" disabled="disabled">
+            <button id="do-install" type="submit" class="btn btn-primary">
                 <?php echo $trans('do_install') ?>
             </button>
         </div>
@@ -60,7 +60,7 @@
 <script>
     $(function () {
         $('body').on('click', '#do-install', function () {
-            $('#pre-install, #pre-install-msg, .sendData').remove();
+            $('#pre-install, #pre-install-msg, .sendData').hide();
             $('#wait-msg, #show-details').css('display', 'block');
         })
         .on('change', '.sendData .radio input', function () {
