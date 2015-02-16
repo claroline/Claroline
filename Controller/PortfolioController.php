@@ -376,10 +376,6 @@ class PortfolioController extends Controller
                 'resourceTypes' => $resourceTypes
             );
 
-            if (PortfolioManager::PORTFOLIO_OPENING_MODE_VIEW === $openingMode) {
-                $responseParameters['cols'] = $this->getPortfolioDispositionManager()->getColumnsForDisposition($portfolio->getDisposition());
-            }
-
             $response = new Response($this->renderView('IcapPortfolioBundle:Portfolio:view.html.twig', $responseParameters));
         }
 

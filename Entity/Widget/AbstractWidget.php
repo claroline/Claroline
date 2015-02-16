@@ -54,6 +54,20 @@ abstract class AbstractWidget
     protected $row = 1;
 
     /**
+     * @var integer
+     *
+     * @ORM\Column(name="size_x", type="integer", options={"default" = 1})
+     */
+    protected $sizeX = 1;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="size_y", type="integer", options={"default" = 1})
+     */
+    protected $sizeY = 1;
+
+    /**
      * @var \Datetime $createdAt
      *
      * @Gedmo\Timestampable(on="create")
@@ -150,6 +164,46 @@ abstract class AbstractWidget
     }
 
     /**
+     * @return int
+     */
+    public function getSizeX()
+    {
+        return $this->sizeX;
+    }
+
+    /**
+     * @param int $sizeX
+     *
+     * @return AbstractWidget
+     */
+    public function setSizeX($sizeX)
+    {
+        $this->sizeX = $sizeX;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getSizeY()
+    {
+        return $this->sizeY;
+    }
+
+    /**
+     * @param int $sizeY
+     *
+     * @return AbstractWidget
+     */
+    public function setSizeY($sizeY)
+    {
+        $this->sizeY = $sizeY;
+
+        return $this;
+    }
+
+    /**
      * @return \Datetime
      */
     public function getCreatedAt()
@@ -222,7 +276,10 @@ abstract class AbstractWidget
             'label'  => $this->getLabel(),
             'type'   => $this->getWidgetType(),
             'column' => $this->getColumn(),
-            'row'    => $this->getRow()
+            'row'    => $this->getRow(),
+            'col'    => $this->getColumn(),
+            'sizeX'  => $this->getSizeX(),
+            'sizeY'  => $this->getSizeY()
         );
     }
 

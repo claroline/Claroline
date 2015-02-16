@@ -16,7 +16,6 @@ class PortfolioType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('disposition', 'integer')
             ->add('commentsViewAt', 'datetime', array(
                     'widget' => 'single_text'
                 ))

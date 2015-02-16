@@ -140,55 +140,30 @@ body {
         }
     }
 
-    .widget-panel {
-        .widget-actions {
-            display: inline;
-            .btn-danger.btn-loading {
-                padding-left: 7px;
-                padding-right: 6px;
+    .gridster-item {
+        .widget-panel {
+            margin-bottom: 0;
+            height:        100%;
+            .panel-heading {
+                cursor: move;
             }
-        }
-        .list-group {
-            margin-bottom: 0px;
-        }
-        .badge_list {
-            .badge_image {
-                width:  32px;
-                height: 32px;
-            }
-        }
-    }
-
-    .dispositions {
-        padding-left:  15px;
-        padding-right: 15px;
-        .disposition {
-            display:          inline-block;
-            background-color: whitesmoke;
-            height:           100px;
-            margin-bottom:    10px;
-            padding:          10px;
-            &.loading {
-                background-position: center;
-                width:               auto;
-                opacity:             0.5;
-            }
-            &.selected {
-                background-color: orange;
-            }
-            &.idle {
-                cursor:           pointer;
-                &:hover {
-                    background-color: orange;
+            .widget-actions {
+                position: absolute;
+                top:      10px;
+                right:    10px;
+                .btn-danger.btn-loading {
+                    padding-left: 7px;
+                    padding-right: 6px;
                 }
             }
-            .col-md-12 {
-                float: left;
+            .list-group {
+                margin-bottom: 0px;
             }
-            div.border {
-                height:      80px;
-                border:      1px solid grey;
-                padding-top: 30px;
+            .badge_list {
+                .badge_image {
+                    width:  32px;
+                    height: 32px;
+                }
             }
         }
     }
