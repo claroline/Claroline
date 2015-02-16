@@ -41,7 +41,6 @@
         "twbs/bootstrap": "3.0.0",
         "fortawesome/font-awesome": "4.2.0",
         "zenstruck/form-bundle": "1.5.1",
-        "cocur/slugify": "1.0",
         "zendframework/zend-crypt": "2.3.3",
         "besimple/sso-auth-bundle": "*",
         "composer/composer": "dev-master",
