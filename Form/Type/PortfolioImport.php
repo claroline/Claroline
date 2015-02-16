@@ -25,7 +25,7 @@ class PortfolioImport extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('content', 'file', [
-            'theme_options' => array('control_width' => 'col-md-5')
+            'theme_options' => ['control_width' => 'col-md-5']
         ]);
 
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event){
