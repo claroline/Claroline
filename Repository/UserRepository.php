@@ -1208,6 +1208,27 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         return $query->getResult();
     }
 
+    public function findAllWithFacetsByWorkspace(Workspace $workspace)
+    {
+        $dql = "
+            SELECT u, ff
+            FROM Claroline\CoreBundle\Entity\User u
+            JOIN u.roles ur
+            LEFT JOIN u.fieldsFacetValue ff
+            LEFT JOIN u.groups g
+            LEFT JOIN g.roles gr
+            LEFT JOIN gr.workspace grws
+            LEFT JOIN ur.workspace uws
+            WHERE uws.id = :wsId
+            OR grws.id = :wsId
+        ";
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('wsId', $workspace->getId());
+
+        return $query->getResult();
+    }
+
     public function findOneUserByUsername($username, $executeQuery = true)
     {
         $dql = '

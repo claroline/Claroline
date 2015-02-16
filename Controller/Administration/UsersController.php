@@ -18,6 +18,7 @@ use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Form\Administration\UserPropertiesType;
+use Claroline\CoreBundle\Form\Administration\ProfilePicsImportType;
 use Claroline\CoreBundle\Manager\AuthenticationManager;
 use Claroline\CoreBundle\Manager\LocaleManager;
 use Claroline\CoreBundle\Manager\MailManager;
@@ -229,8 +230,7 @@ class UsersController extends Controller
         if ($form->isValid() && count($unavailableRoles) === 0) {
             $user = $form->getData();
             $newRoles = $form->get('platformRoles')->getData();
-            $this->userManager->insertUserWithRoles($user, $newRoles);
-
+            $this->userManager->createUser($user, true, $newRoles);
             $sessionFlashBag->add('success', $translator->trans('user_creation_success', array(), 'platform'));
 
             return $this->redirect($this->generateUrl('claro_admin_user_list'));
@@ -485,52 +485,6 @@ class UsersController extends Controller
     }
 
     /**
-     * @EXT\Route("/user/form/properties", name="claro_admin_user_form_properties")
-     *
-     * @EXT\Template("ClarolineCoreBundle:Administration/Users:userFormProperties.html.twig")
-     */
-    public function userFormPropertiesAction()
-    {
-        $this->checkOpen();
-        $platformConfig = $this->configHandler->getPlatformConfig();
-        $form = $this->createForm(new UserPropertiesType(), $platformConfig, array(
-            'action' => $this->generateUrl('claro_admin_user_form_properties_submit')
-        ));
-
-        return array('form' => $form->createView());
-    }
-
-    /**
-     * @EXT\Route("/user/form/properties/submit", name="claro_admin_user_form_properties_submit"),
-     *
-     * @EXT\Template("ClarolineCoreBundle:Administration/Users:userFormProperties.html.twig")
-     */
-    public function submitUserFormPropertiesAction()
-    {
-        $this->checkOpen();
-        $platformConfig = $this->configHandler->getPlatformConfig();
-
-        $form = $this->createForm(
-            new UserPropertiesType(),
-            $platformConfig
-        );
-
-        $form->handleRequest($this->request);
-
-        if ($form->isValid()) {
-            $this->configHandler->setParameters(
-                array(
-                    'createPersonnalWorkspace' => $form['createPersonnalWorkspace']->getData()
-                )
-            );
-
-            return new RedirectResponse($this->router->generate('claro_admin_users_management'));
-        }
-
-        return array('form' => $form->createView());
-    }
-
-    /**
      * @EXT\Route("/user/workspace/index", name="claro_admin_user_personal_workspace_index"),
      *
      * @EXT\Template("ClarolineCoreBundle:Administration/Users:personnalWorkspaceIndex.html.twig")
@@ -682,6 +636,45 @@ class UsersController extends Controller
         $this->workspaceManager->deleteWorkspace($personalWorkspace);
 
         return new JsonResponse(array(), 200);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "import/profile/pics/form",
+     *     name="import_profile_pics_form",
+     *     options={"expose"=true}
+     * )
+     * @EXT\Template()
+     * )
+     */
+    public function importProfilePicsFormAction()
+    {
+        $this->checkOpen();
+        $form = $this->createForm(new ProfilePicsImportType());
+
+        return array('form' => $form->createView());
+    }
+
+    /**
+     * @EXT\Route(
+     *     "import/profile/pics",
+     *     name="import_profile_pics",
+     *     options={"expose"=true}
+     * )
+     * @EXT\Template("ClarolineCoreBundle:Administration/Users:importProfilePicsForm.html.twig")
+     */
+    public function importProfilePicsAction()
+    {
+        $this->checkOpen();
+        $form = $this->createForm(new ProfilePicsImportType());
+        $form->handleRequest($this->request);
+
+        if ($form->isValid()) {
+            $file = $form->get('file')->getData();
+            $this->userManager->importPictureFiles($file);
+        }
+
+        return array('form' => $form->createView());
     }
 
     private function checkOpen()

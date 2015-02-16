@@ -127,11 +127,9 @@ class UserManager
     public function createUser(User $user, $sendMail = true, $additionnalRoles = array(), $model = null)
     {
         $this->objectManager->startFlushSuite();
-        $createPersonalWorkspace = $this->container
-            ->get('claroline.config.platform_config_handler')
-            ->getParameter('createPersonnalWorkspace');
 
-        if ($createPersonalWorkspace) $this->setPersonalWorkspace($user, $model);
+        if ($this->personalWorkspaceAllowed($additionnalRoles))
+            $this->setPersonalWorkspace($user, $model);
         $user->setPublicUrl($this->generatePublicUrl($user));
         $this->toolManager->addRequiredToolsToUser($user);
         $this->roleManager->setRoleToRoleSubject($user, PlatformRoles::USER);
@@ -140,7 +138,7 @@ class UserManager
         $this->roleManager->createUserRole($user);
 
         foreach ($additionnalRoles as $role) {
-            if ($role) $user->addRole($role);
+            if ($role) $this->roleManager->associateRole($user, $role);
         }
 
         $this->objectManager->endFlushSuite();
@@ -235,6 +233,8 @@ class UserManager
      * This user will have the additional role  $roleName.
      * $roleName must already exists.
      *
+     * @todo remove this and user createUser instead
+     * @deprecated
      * @param \Claroline\CoreBundle\Entity\User $user
      * @param string                            $roleName
      *
@@ -243,36 +243,11 @@ class UserManager
     public function createUserWithRole(User $user, $roleName)
     {
         $this->objectManager->startFlushSuite();
-        $this->createUser($user);
-        $this->roleManager->setRoleToRoleSubject($user, $roleName);
+        $role = $this->roleManager->getRoleByName($roleName);
+        $this->createUser($user, true, array($role));
         $this->objectManager->endFlushSuite();
 
         return $user;
-    }
-
-    /**
-     * Create a user.
-     * Its basic properties (name, username,... ) must already be set.
-     * This user will have the additional roles $roles.
-     * These roles must already exists.
-     *
-     * @param \Claroline\CoreBundle\Entity\User $user
-     * @param \Doctrine\Common\Collections\ArrayCollection $roles
-     */
-    public function insertUserWithRoles(User $user, ArrayCollection $roles)
-    {
-        $this->objectManager->startFlushSuite();
-        $this->createUser($user);
-        foreach ($roles as $role) {
-            $validated = $this->roleManager->validateRoleInsert($user, $role);
-
-            if (!$validated) {
-                throw new Exception\AddRoleException();
-            }
-        }
-
-        $this->roleManager->associateRoles($user, $roles);
-        $this->objectManager->endFlushSuite();
     }
 
     /**
@@ -1120,5 +1095,56 @@ class UserManager
     public function getCountAllEnabledUsers($executeQuery = true)
     {
         return $this->userRepo->countAllEnabledUsers($executeQuery);
+    }
+
+    /**
+     *
+     */
+    public function importPictureFiles($filepath)
+    {
+        $archive = new \ZipArchive();
+        $archive->open($filepath);
+        $tmpDir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . uniqid();
+        //add the tmp dir to the "trash list files"
+        $tmpList = $this->container->getParameter('claroline.param.platform_generated_archive_path');
+        file_put_contents($tmpList, $tmpDir . "\n", FILE_APPEND);
+        $archive->extractTo($tmpDir);
+        $iterator = new \DirectoryIterator($tmpDir);
+
+        foreach ($iterator as $file) {
+            if (!$file->isDot()) {
+                $fileName = basename($file->getPathName());
+                $username = preg_replace("/\.[^.]+$/", "", $fileName);
+                $user = $this->getUserByUsername($username);
+
+                if (!is_writable($pictureDir = $this->uploadsDirectory.'/pictures/')) {
+                    throw new \Exception("{$pictureDir} is not writable");
+                }
+
+                $hash = sha1($user->getUsername()
+                    . '.'
+                    . pathinfo($fileName, PATHINFO_EXTENSION)
+                );
+
+                $user->setPicture($hash);
+                rename($file->getPathName(), $pictureDir . $user->getPicture());
+                $this->objectManager->persist($user);
+            }
+        }
+
+        $this->objectManager->flush();
+    }
+
+    /**
+     * Checks if a user will have a personal workspace at his creation
+     */
+    private function personalWorkspaceAllowed($roles) {
+        $roles[] = $this->roleManager->getRoleByName('ROLE_USER');
+
+        foreach ($roles as $role) {
+            if ($role->isPersonalWorkspaceCreationEnabled()) return true;
+        }
+
+        return false;
     }
 }

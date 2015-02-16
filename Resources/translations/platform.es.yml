@@ -973,3 +973,13 @@ yes: Sí
 yesterday_activity: 'Actividades de ayer'
 your_username: 'Su nombre de usuario es '
 activate_personal_workspace_creation: Activar la creación de espacios personales.
+add_field_to_panel: add_field_to_panel
+add_panel_to_facet: add_panel_to_facet
+create_pane: create_pane
+collapse: collapse
+edit_panel_facet: edit_panel_facet
+administrativeCode: administrativeCode
+property: property
+picture: picture
+profile_properties_management: profile_properties_management
+facet_management: facet_management

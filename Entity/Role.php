@@ -159,15 +159,29 @@ class Role implements RoleInterface
      */
     protected $pwsRightsManagementAccess;
 
+    /**
+     * @ORM\Column(name="personal_workspace_creation_enabled", type="boolean")
+     */
+    protected $personalWorkspaceCreationEnabled = false;
+
+    /**
+     * @ORM\OneToMany(
+     *     targetEntity="Claroline\CoreBundle\Entity\ProfileProperty",
+     *     mappedBy="role"
+     * )
+     */
+    protected $profileProperties;
+
     public function __construct()
     {
-        $this->users            = new ArrayCollection();
-        $this->resourceContext  = new ArrayCollection();
-        $this->groups           = new ArrayCollection();
-        $this->facets           = new ArrayCollection();
-        $this->fieldFacetsRoles = new ArrayCollection();
-        $this->toolRights       = new ArrayCollection();
-        $this->pwsToolConfig    = new ArrayCollection();
+        $this->users             = new ArrayCollection();
+        $this->resourceContext   = new ArrayCollection();
+        $this->groups            = new ArrayCollection();
+        $this->facets            = new ArrayCollection();
+        $this->fieldFacetsRoles  = new ArrayCollection();
+        $this->toolRights        = new ArrayCollection();
+        $this->pwsToolConfig     = new ArrayCollection();
+        $this->profileProperties = new ArrayCollection();
     }
 
     public function getId()
@@ -326,5 +340,30 @@ class Role implements RoleInterface
     public function getPwsToolConfig()
     {
         return $this->pwsToolConfig;
+    }
+
+    public function getPersonalWorkspaceCreationEnabled()
+    {
+        return $this->personalWorkspaceCreationEnabled;
+    }
+
+    public function isPersonalWorkspaceCreationEnabled()
+    {
+        return $this->personalWorkspaceCreationEnabled;
+    }
+
+    public function setPersonalWorkspaceCreationEnabled($boolean)
+    {
+        $this->personalWorkspaceCreationEnabled = $boolean;
+    }
+
+    public function getProfileProperties()
+    {
+        return $this->profileProperties;
+    }
+
+    public function addProfileProperty(ProfileProperty $property)
+    {
+        $this->profileProperties->add($property);
     }
 }

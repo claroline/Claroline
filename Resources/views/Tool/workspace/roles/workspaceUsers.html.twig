@@ -68,7 +68,7 @@
             <li class="active"><a href="{{ path('claro_workspace_registered_user_list', {'workspace': workspace.getId()}) }}"> {{'users'|trans({}, 'platform') }} </a> </li>
             <li> <a href="{{ path('claro_workspace_registered_group_list', {'workspace': workspace.getId() }) }}"> {{'groups'|trans({}, 'platform') }} </a> </li>
             <li> <a href="{{ path('claro_workspace_roles', {'workspace': workspace.getId()} ) }}">{{ 'roles'|trans({}, 'platform') }}</a> </li>
-            <li><a href="{{path('claro_users_pending',{'workspace':workspace.getId()})}}"> {{'pending'|trans({},'platform') }} </a> </li>
+            <li> <a href="{{path('claro_users_pending',{'workspace':workspace.getId()})}}"> {{'pending'|trans({},'platform') }} </a> </li>
         </ul>
         <h3>{{ 'users_list'|trans({}, 'platform') }}</h3>
         {{ macros.flashBox() }}
@@ -83,6 +83,14 @@
                         </a>
                         <a href="{{ path('claro_message_form_for_workspace', {'workspace': workspace.getId()}) }}" class="btn btn-default dropdown-toggle" role="button">
                             <i class="fa fa-envelope"></i> {{ 'send_message_to_workspace'|trans({}, 'platform') }}
+                        </a>
+                        <a class="btn btn-default action-button table-control"
+                            href="{{ path('claro_workspace_export_users', {'format': 'xls', 'workspace': workspace.getId()}) }}">
+                            {{ 'excel_export'|trans({}, 'platform') }}
+                        </a>
+                        <a class="btn btn-default action-button table-control"
+                            href="{{ path('claro_workspace_export_users', {'format': 'csv', 'workspace': workspace.getId()}) }}">
+                            {{ 'csv_export'|trans({}, 'platform') }}
                         </a>
                     </div>
                 </div>

@@ -115,9 +115,12 @@ class RoleManager
         $role->setName($name);
         $role->setTranslationKey($translationKey);
         $role->setReadOnly($isReadOnly);
+        $role->setPersonalWorkspaceCreationEnabled(true);
         $role->setType(Role::PLATFORM_ROLE);
         $this->om->persist($role);
         $this->om->flush();
+        $this->container->get('claroline.manager.profile_property_manager')
+            ->addDefaultProperties();
 
         return $role;
     }
@@ -875,4 +878,12 @@ class RoleManager
             $executeQuery
         );
     }
+
+    public function invertWorkspaceCreation(Role $role)
+    {
+        $role->setPersonalWorkspaceCreationEnabled(!$role->isPersonalWorkspaceCreationEnabled());
+        $this->om->persist($role);
+        $this->om->flush();
+    }
+
 }

@@ -21,6 +21,17 @@
     <td>
         {{ count }}
     </td>
+    <td>
+        <input
+            class="pws-chk"
+            type="checkbox"
+            data-role-id="{{ role.getId() }}"
+            {% if role.isPersonalWorkspaceCreationEnabled() %}
+                checked
+            {% endif %}
+        >
+        </input>
+    </td>
     <td class="td-role-limit">
         {{ role.maxUsers }}
     </td>

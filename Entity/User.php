@@ -1074,4 +1074,18 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     {
         return $this->authentication;
     }
+
+    public static function getEditableProperties()
+    {
+        return array(
+            'username' => false,
+            'firstName' => false,
+            'lastName' => false,
+            'administrativeCode' => false,
+            'email' => false,
+            'phone' => true,
+            'picture' => true,
+            'description' => true
+        );
+    }
 }

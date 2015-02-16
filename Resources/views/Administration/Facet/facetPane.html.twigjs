@@ -3,14 +3,16 @@
 <div class="tab-pane" id="facet-pane-{{ facet.id}}">
     <div class="panel-heading"></div>
     <div class="panel-body">
-        <ul class="list-group list-fields" data-facet-id="{{ facet.id }}" id="lu-facet-{{ facet.id }}">
-            {% for field in facet.fieldsFacet %}
-                {% include "ClarolineCoreBundle:Administration\\Facet:fieldElement.html.twigjs" with {'field': field} %}
-            {% endfor %}
-        </ul>
+        <div class="panel-group" id="facet-panel-group-{{ facet.id }}" role="tablelist" aria-multiselectable="true">
+            <ul class="sortable-panel" id="sortable-panel-{{ facet.id }}" data-facet-id={{ facet.id }}>
+                {% for panel in facet.getPanelFacets() %}
+                    {% include "ClarolineCoreBundle:Administration\\Facet:panelElement.html.twigjs" with {'panel': panel, 'facet': facet} %}
+                {% endfor %}
+            </ul>
+        </div>
     </div>
-    <div data-facet-id="{{ facet.id }}" class="panel-footer pointer-hand text-center add-field-to-facet">
+    <div data-facet-id="{{ facet.id }}" class="panel-footer pointer-hand text-center add-panel-to-facet">
         <i class="fa fa-plus-circle" data-facet-id="{{ facet.id }}"></i>
-        {{ 'add_field_to_facet'|trans({}, 'platform') }}
+        {{ 'add_panel_to_facet'|trans({}, 'platform') }}
     </div>
 </div>

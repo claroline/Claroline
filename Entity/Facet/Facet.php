@@ -44,13 +44,13 @@ class Facet {
 
     /**
      * @ORM\OneToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Facet\FieldFacet",
+     *     targetEntity="Claroline\CoreBundle\Entity\Facet\PanelFacet",
      *     mappedBy="facet",
      *     cascade={"persist"}
      * )
      * @ORM\OrderBy({"position" = "ASC"})
      */
-    protected $fieldsFacet;
+    protected $panelFacets;
 
     /**
      * @var Role[]|ArrayCollection
@@ -70,8 +70,7 @@ class Facet {
 
     public function __construct()
     {
-        $this->fieldsFacet = new ArrayCollection();
-        $this->roles       = new ArrayCollection();
+        $this->roles = new ArrayCollection();
     }
 
     public function getId()
@@ -89,14 +88,14 @@ class Facet {
         return $this->name;
     }
 
-    public function getFieldsFacet()
+    public function addPanelFacet(PanelFacet $panelFacet)
     {
-        return $this->fieldsFacet;
+        $this->panelFacets->add($panelFacet);
     }
 
-    public function addFieldFacet(FieldFacet $fieldFacet)
+    public function getPanelFacets()
     {
-        $this->fieldsFacet->add($fieldFacet);
+        return $this->panelFacets;
     }
 
     public function setPosition($position)
@@ -138,4 +137,4 @@ class Facet {
     {
         return $this->isVisibleByOwner;
     }
-} 
+}

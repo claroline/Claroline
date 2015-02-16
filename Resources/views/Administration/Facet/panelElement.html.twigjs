@@ -1,0 +1,58 @@
+{% twig_js name="FacetPanelElement" %}
+<li id="panel-{{ panel.id }}" style="list-style-type: none;">
+    <div class="panel panel-default" id="panel-facet-main-{{ panel.id }}">
+        <div class="panel-heading" role="tab" id="facet-panel-{{ panel.id }}">
+            <h4 class="panel-title">
+                <div class="dropdown pull-left">
+                    <i class="fa fa-cog pointer-hand" data-toggle="dropdown"></i>
+                    <ul class="dropdown-menu" role="menu">
+                        <li
+                            role="presentation"
+                            data-route="{{ path('claro_admin_panel_facet_edit_form', {panelFacet: panel.id}) }}"
+                            class="edit-panel-facet-link"
+                        >
+                            <a href="#">{{ "edit" | trans({}, 'platform') }}</a>
+                        </li>
+                        <li role="presentation">
+                            <a href="{{ path('claro_admin_facet_field_form', {'panelFacet': panel.id })}}"
+                                data-panel-id={{ panel.id }}
+                                class="add-field-to-panel"
+                            >
+                                {{ 'add_field_to_panel'|trans({}, 'platform') }}
+                            </a>
+                        </li>
+                    </ul>
+                </div>&nbsp
+                <a data-toggle="collapse
+                    href="#panel-{{ panel.id }}"
+                    aria-expanded="true"
+                    aria-controls="panel-{{ panel.id}}"
+                    id="name-panel-{{ panel.id }}"
+                >
+                    {{ panel.name }}
+                </a>
+                <a href='#'
+                    data-panel-facet='{{ panel.id }}'
+                    data-panel-name='{{ panel.name }}'
+                    class="pull-right remove-facet-panel"
+                >
+                    x
+                </a>
+            </h4>
+        </div>
+        <div id="panel-{{ panel.id }}"
+            class="panel-collapse collapse in"
+            role="tabpanel"
+            aria-labelledby="facet-panel-{{ panel.id }}"
+        >
+            <div class="panel-body">
+
+                <ul class="list-group list-fields" data-panel-id="{{ panel.id }}" id="lu-panel-{{ panel.id }}">
+                    {% for field in panel.fieldsFacet %}
+                        {% include "ClarolineCoreBundle:Administration\\Facet:fieldElement.html.twigjs" with {'field': field} %}
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</li>

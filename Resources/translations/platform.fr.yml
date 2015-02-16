@@ -794,11 +794,11 @@ resource_right_form_canView: Voir
 resource_right_form_isRecursive: 'Appliquer au contenu du répertoire et aux sous-répertoires'
 resources: Ressources
 resources_delete: 'Êtes-vous sûr de vouloir supprimer ces ressources ?'
-resources_most_downloaded: 'Ressources les plus téléchargés'
+resources_most_downloaded: 'Ressources les plus téléchargées'
 resources_rights: 'Droits des ressources'
 resources_rights_management: 'Gestion des droits des ressources'
 resources_usage_list: 'Liste d''utilisation des ressources'
-resources_usage_ratio: 'Taux d''utilisation des resources'
+resources_usage_ratio: 'Taux d''utilisation des ressources'
 restore: Restaurer
 restore_messages_confirm_message: 'message(s) restauré(s)'
 results: Résultats
@@ -853,7 +853,7 @@ send_mail: 'Envoyer un mail'
 send_mail_form_content: Message
 send_mail_form_object: Objet
 send_message: 'Envoyer un message'
-send_message_to_workspace: Envoyer un message aux utilisateurs de l'espace
+send_message_to_workspace: Envoyer un message
 send_message_to_workspace_info: Cette liste reprend les espaces d'activités dont vous êtes le gestionnaire.
 server: Serveur
 session: Session
@@ -945,14 +945,14 @@ tools: Outils
 tools_rights_configuration: 'Configuration des droits sur les outils'
 top: Top
 top_extension: 'Top des extensions (Media), par nombre de fichiers'
-top_media_views: 'Top des Medias le plus consultés'
-top_resources_downloads: 'Top des resources les plus téléchargés'
-top_resources_views: 'Top des resources les plus consultés'
-top_users_connections: 'Top des utilisateurs s''étant les plus connectés'
+top_media_views: 'Top des Medias les plus consultés'
+top_resources_downloads: 'Top des ressources les plus téléchargées'
+top_resources_views: 'Top des ressources les plus consultées'
+top_users_connections: 'Top des utilisateurs s''étant le plus connectés'
 top_users_workspaces_enrolled: 'Top des utilisateurs étant inscrits dans le plus de modules'
-top_users_workspaces_owners: 'Top des utilisateurs ayant crée le plus de modules'
+top_users_workspaces_owners: 'Top des utilisateurs ayant créé le plus de modules'
 top_workspaces_connections: 'Top des espaces d''activités les plus consultés'
-top_workspaces_resources: 'Top des espaces d''activités avec le plus des resources'
+top_workspaces_resources: 'Top des espaces d''activités avec le plus de ressources'
 total: Total
 total_time: 'Durée totale'
 traffic: Fréquentation
@@ -1131,3 +1131,15 @@ can_edit_permission: Peut éditer les permissions
 package_update_impossible: 'Mise à jour des paquets impossible sur cette page. Veuillez contacter l''administrateur.'
 parameters_save_success: 'Paramètres sauvegardés avec succès.'
 parameters_save_error: 'Une erreur est survenue pendant la sauvegarde des paramètres.'
+import_profile_pics: Importer des profils d'utilisateurs
+import_profile_pics_explanation: Veuillez sélectionner une archive zip. Cette archive doit contenir une liste d'images dont les noms sont structurés de cette manière: username.extension
+add_field_to_panel: Ajouter un champ
+add_panel_to_facet: Ajouter un panel
+create_pane: Créer un panel
+collapse: Replier
+edit_panel_facet: Modifier un panel
+administrativeCode: Code administratif
+property: Propriété
+picture: Photo de profil
+profile_properties_management: Gestion des propriétés du profil
+facet_management: Gestion des facets

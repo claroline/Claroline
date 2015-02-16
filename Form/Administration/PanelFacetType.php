@@ -11,34 +11,38 @@
 
 namespace Claroline\CoreBundle\Form\Administration;
 
+use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class UserPropertiesType extends AbstractType
+class PanelFacetType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add(
-            'createPersonnalWorkspace',
+            'name',
+            'text',
+            array('constraints' => new NotBlank(), 'label' => 'name')
+        );
+        $builder->add(
+            'isDefaultCollapsed',
             'checkbox',
             array(
-                'required' => false,
-                'label' => 'activate_personal_workspace_creation'
+                'label' => 'collapse',
+                'required' => false
             )
+
         );
-   }
+    }
 
     public function getName()
     {
-        return 'administration_user_properties';
+        return 'panel_facet_form';
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults(array(
-                'translation_domain' => 'platform'
-            )
-        );
+        $resolver->setDefaults(array('translation_domain' => 'platform'));
     }
 }

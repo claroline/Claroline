@@ -1,6 +1,6 @@
 {% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
 
-{% block title %}{{ parent() ~ ' - ' ~ 'properties' | trans({}, 'platform') | striptags | raw }}{% endblock %}
+{% block title %}{{ parent() ~ ' - ' ~ 'import' | trans({}, 'platform') | striptags | raw }}{% endblock %}
 
 {% block breadcrumb %}
     {{
@@ -15,7 +15,7 @@
                 'href': path('claro_admin_users_management')
             },
             {
-                'name': 'properties'|trans({}, 'platform'),
+                'name':'import_profile_pics'|trans({}, 'platform'),
                 'href':''
             }
         ])
@@ -24,20 +24,19 @@
 
 {% block section_content %}
     <div class="panel-heading">
-        <h3 class="panel-title">{{ 'properties'|trans({}, 'platform') }}</h3>
+        <h3 class="panel-title">{{ 'import_profile_pics'|trans({}, 'platform') }}</h3>
     </div>
-    <form role="form"
-        class="form-horizontal"
-        action="{{ path('claro_admin_user_form_properties_submit') }}"
-        method="post" {{ form_enctype(form) }}
-        id="form_settings"
-    >
+    <form role="form" class="form-horizontal" action="{{ path('import_profile_pics') }}" method="post" {{ form_enctype(form) }} >
         <div class="panel-body">
+            <div class="well">
+                {{ 'import_profile_pics_explanation'|trans({}, 'platform')}}
+            </div>
+
             {{ form_widget(form) }}
         </div>
         <div class="panel-footer">
             <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
-            <a href="{{ path('claro_admin_index') }}" class="btn btn-default">
+            <a href="{{ path('claro_admin_user_list') }}" class="btn btn-default" role="button">
                 {{ 'cancel'|trans({}, 'platform') }}
             </a>
         </div>

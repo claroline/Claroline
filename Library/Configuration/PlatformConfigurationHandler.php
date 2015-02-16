@@ -70,7 +70,6 @@ class PlatformConfigurationHandler
         'header_locale' => false,
         'portfolio_url' => null,
         'is_notification_active' => true,
-        'createPersonnalWorkspace' => true,
         'max_storage_size' => Workspace::DEFAULT_MAX_STORAGE_SIZE,
         'max_upload_resources' => Workspace::DEFAULT_MAX_FILE_COUNT,
         'confirm_send_datas' => null,
@@ -175,7 +174,6 @@ class PlatformConfigurationHandler
         $config->setHeaderLocale($this->parameters['header_locale']);
         $config->setPortfolioUrl($this->parameters['portfolio_url']);
         $config->setIsNotificationActive($this->parameters['is_notification_active']);
-        $config->setCreatePersonnalWorkspace($this->parameters['createPersonnalWorkspace']);
         $config->setMaxUploadResources($this->parameters['max_upload_resources']);
         $config->setMaxStorageSize($this->parameters['max_storage_size']);
 

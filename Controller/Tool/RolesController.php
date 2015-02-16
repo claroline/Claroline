@@ -13,6 +13,7 @@ namespace Claroline\CoreBundle\Controller\Tool;
 
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -765,6 +766,46 @@ class RolesController extends Controller
         );
 
         return new RedirectResponse($route);
+    }
+
+    /**
+     * @EXT\Route(
+     *    "/export/users/{format}/workspace/{workspace}",
+     *    name="claro_workspace_export_users"
+     * )
+     *
+     * @return Response
+     */
+    public function exportUsers(Workspace $workspace, $format)
+    {
+        $this->checkWorkspaceManagerAccess($workspace);
+        $exporter = $this->container->get('claroline.exporter.' . $format);
+        $exporterManager = $this->container->get('claroline.manager.exporter_manager');
+        $file = $exporterManager->export(
+            'Claroline\CoreBundle\Entity\User',
+            $exporter,
+            array('workspace' => $workspace)
+        );
+        $response = new StreamedResponse();
+
+        $response->setCallBack(
+            function () use ($file) {
+                readfile($file);
+            }
+        );
+
+        $response->headers->set('Content-Transfer-Encoding', 'octet-stream');
+        $response->headers->set('Content-Type', 'application/force-download');
+        $response->headers->set('Content-Disposition', 'attachment; filename=users.' . $format);
+
+        switch ($format) {
+            case 'csv': $response->headers->set('Content-Type', 'text/csv'); break;
+            case 'xls': $response->headers->set('Content-Type', 'application/vnd.ms-excel'); break;
+        }
+
+        $response->headers->set('Connection', 'close');
+
+        return $response;
     }
 
     private function checkAccess(Workspace $workspace)
