@@ -303,6 +303,15 @@ class CursusManager
      * Access to CursusRepository methods *
      **************************************/
 
+    public function getAllCursus(
+        $orderedBy = 'cursusOrder',
+        $order = 'ASC',
+        $executeQuery = true
+    )
+    {
+        return $this->cursusRepo->findAllCursus($orderedBy, $order, $executeQuery);
+    }
+
     public function getAllRootCursus($executeQuery = true)
     {
         return $this->cursusRepo->findAllRootCursus($executeQuery);
@@ -333,6 +342,21 @@ class CursusManager
         );
     }
 
+    public function getRelatedHierarchyByCursus(
+        Cursus $cursus,
+        $orderedBy = 'cursusOrder',
+        $order = 'ASC',
+        $executeQuery = true
+    )
+    {
+        return $this->cursusRepo->findRelatedHierarchyByCursus(
+            $cursus,
+            $orderedBy,
+            $order,
+            $executeQuery
+        );
+    }
+
     public function getCursusByParentAndCourses(
         Cursus $parent,
         array $courses,
@@ -344,6 +368,34 @@ class CursusManager
             $courses,
             $executeQuery = true
         );
+    }
+
+    public function getSearchedCursus(
+        $search,
+        $orderedBy = 'title',
+        $order = 'ASC',
+        $page = 1,
+        $max = 50,
+        $executeQuery = true
+    )
+    {
+        $cursus = $this->cursusRepo->findSearchedCursus(
+            $search,
+            $orderedBy,
+            $order,
+            $executeQuery
+        );
+
+        return $executeQuery ?
+            $this->pagerFactory->createPagerFromArray($cursus, $page, $max) :
+            $this->pagerFactory->createPager($cursus, $page, $max);
+    }
+    
+    public function getCursusByIds(array $ids, $executeQuery = true)
+    {
+        return count($ids) > 0 ?
+            $this->cursusRepo->findCursusByIds($ids, $executeQuery)
+            : array();
     }
 
 
@@ -396,6 +448,17 @@ class CursusManager
      * Access to CursusUserRepository methods *
      ******************************************/
 
+    public function getCursusUsersByCursus(
+        Cursus $cursus,
+        $executeQuery = true
+    )
+    {
+        return $this->cursusUserRepo->findCursusUsersByCursus(
+            $cursus,
+            $executeQuery
+        );
+    }
+
     public function getOneCursusUserByCursusAndUser(
         Cursus $cursus,
         User $user,
@@ -409,10 +472,65 @@ class CursusManager
         );
     }
 
+    public function getUnregisteredUsersByCursus(
+        Cursus $cursus,
+        $orderedBy = 'username',
+        $order = 'ASC',
+        $page = 1,
+        $max = 50,
+        $executeQuery = true
+    )
+    {
+        $users = $this->cursusUserRepo->findUnregisteredUsersByCursus(
+            $cursus,
+            $orderedBy,
+            $order,
+            $executeQuery
+        );
+
+        return $executeQuery ?
+            $this->pagerFactory->createPagerFromArray($users, $page, $max) :
+            $this->pagerFactory->createPager($users, $page, $max);
+    }
+
+    public function getSearchedUnregisteredUsersByCursus(
+        Cursus $cursus,
+        $search = '',
+        $orderedBy = 'username',
+        $order = 'ASC',
+        $page = 1,
+        $max = 50,
+        $executeQuery = true
+    )
+    {
+        $users = $this->cursusUserRepo->findSearchedUnregisteredUsersByCursus(
+            $cursus,
+            $search,
+            $orderedBy,
+            $order,
+            $executeQuery
+        );
+
+        return $executeQuery ?
+            $this->pagerFactory->createPagerFromArray($users, $page, $max) :
+            $this->pagerFactory->createPager($users, $page, $max);
+    }
+
 
     /*******************************************
      * Access to CursusGroupRepository methods *
      *******************************************/
+
+    public function getCursusGroupsByCursus(
+        Cursus $cursus,
+        $executeQuery = true
+    )
+    {
+        return $this->cursusGroupRepo->findCursusGroupsByCursus(
+            $cursus,
+            $executeQuery
+        );
+    }
 
     public function getOneCursusGroupByCursusAndGroup(
         Cursus $cursus,
@@ -425,6 +543,50 @@ class CursusManager
             $group,
             $executeQuery
         );
+    }
+
+    public function getUnregisteredGroupsByCursus(
+        Cursus $cursus,
+        $orderedBy = 'name',
+        $order = 'ASC',
+        $page = 1,
+        $max = 50,
+        $executeQuery = true
+    )
+    {
+        $groups = $this->cursusGroupRepo->findUnregisteredGroupsByCursus(
+            $cursus,
+            $orderedBy,
+            $order,
+            $executeQuery
+        );
+
+        return $executeQuery ?
+            $this->pagerFactory->createPagerFromArray($groups, $page, $max) :
+            $this->pagerFactory->createPager($groups, $page, $max);
+    }
+
+    public function getSearchedUnregisteredGroupsByCursus(
+        Cursus $cursus,
+        $search = '',
+        $orderedBy = 'name',
+        $order = 'ASC',
+        $page = 1,
+        $max = 50,
+        $executeQuery = true
+    )
+    {
+        $groups = $this->cursusGroupRepo->findSearchedUnregisteredGroupsByCursus(
+            $cursus,
+            $search,
+            $orderedBy,
+            $order,
+            $executeQuery
+        );
+
+        return $executeQuery ?
+            $this->pagerFactory->createPagerFromArray($groups, $page, $max) :
+            $this->pagerFactory->createPager($groups, $page, $max);
     }
 
 

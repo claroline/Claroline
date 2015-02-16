@@ -75,7 +75,7 @@ class CursusController extends Controller
      *     "/tool/index",
      *     name="claro_cursus_tool_index"
      * )
-     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
      * @EXT\Template()
      */
     public function cursusToolIndexAction()
@@ -102,7 +102,7 @@ class CursusController extends Controller
      *     name="claro_cursus_create_form",
      *     options={"expose"=true}
      * )
-     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
      * @EXT\Template("ClarolineCursusBundle:Cursus:cursusCreateModalForm.html.twig")
      */
     public function cursusCreateFormAction()
@@ -119,7 +119,7 @@ class CursusController extends Controller
      *     name="claro_cursus_create",
      *     options={"expose"=true}
      * )
-     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
      * @EXT\Template("ClarolineCursusBundle:Cursus:cursusCreateModalForm.html.twig")
      */
     public function cursusCreateAction()
@@ -160,7 +160,7 @@ class CursusController extends Controller
      *     name="claro_cursus_edit_form",
      *     options={"expose"=true}
      * )
-     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
      * @EXT\Template("ClarolineCursusBundle:Cursus:cursusEditModalForm.html.twig")
      *
      * @param Cursus $cursus
@@ -185,7 +185,7 @@ class CursusController extends Controller
      *     name="claro_cursus_edit",
      *     options={"expose"=true}
      * )
-     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
      * @EXT\Template("ClarolineCursusBundle:Cursus:cursusEditModalForm.html.twig")
      *
      * @param Cursus $cursus
@@ -226,7 +226,7 @@ class CursusController extends Controller
      *     name="claro_cursus_view",
      *     options={"expose"=true}
      * )
-     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
      * @EXT\Template("ClarolineCursusBundle:Cursus:cursusViewModal.html.twig")
      *
      * @param Cursus $cursus
@@ -244,7 +244,7 @@ class CursusController extends Controller
      *     name="claro_cursus_view_hierarchy",
      *     options={"expose"=true}
      * )
-     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
      * @EXT\Template("ClarolineCursusBundle:Cursus:cursusViewHierarchyModal.html.twig")
      *
      * @param Cursus $cursus
@@ -277,7 +277,7 @@ class CursusController extends Controller
      *     name="claro_cursus_delete",
      *     options={"expose"=true}
      * )
-     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
      *
      * @param Cursus $cursus
      */
@@ -299,11 +299,29 @@ class CursusController extends Controller
 
     /**
      * @EXT\Route(
+     *     "/cursus/{cursus}/description/display",
+     *     name="claro_cursus_display_description",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template("ClarolineCursusBundle:Cursus:cursusDescriptionDisplayModal.html.twig")
+     *
+     * @param Cursus $cursus
+     */
+    public function cursusDescriptionDisplayAction(Cursus $cursus)
+    {
+        $this->checkToolAccess();
+
+        return array('description' => $cursus->getDescription());
+    }
+
+    /**
+     * @EXT\Route(
      *     "cursus/{cursus}/management",
      *     name="claro_cursus_management",
      *     options={"expose"=true}
      * )
-     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
      * @EXT\Template()
      *
      * @param Cursus $cursus
@@ -348,7 +366,7 @@ class CursusController extends Controller
      *     name="claro_cursus_child_create_form",
      *     options={"expose"=true}
      * )
-     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
      * @EXT\Template("ClarolineCursusBundle:Cursus:cursusChildCreateModalForm.html.twig")
      */
     public function cursusChildCreateFormAction(Cursus $parent)
@@ -368,7 +386,7 @@ class CursusController extends Controller
      *     name="claro_cursus_child_create",
      *     options={"expose"=true}
      * )
-     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
      * @EXT\Template("ClarolineCursusBundle:Cursus:cursusChildCreateModalForm.html.twig")
      */
     public function cursusChildCreateAction(Cursus $parent)
@@ -406,7 +424,7 @@ class CursusController extends Controller
      *     defaults={"page"=1, "search"="", "max"=50, "orderedBy"="title","order"="ASC"},
      *     options={"expose"=true}
      * )
-     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
      * @EXT\Template()
      *
      * Displays the list of courses.
@@ -451,7 +469,7 @@ class CursusController extends Controller
      *     options={"expose"=true}
      * )
      * @EXT\Method("POST")
-     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
      */
     public function cursusCourseAssociateAction(Cursus $cursus, Course $course)
     {
@@ -469,7 +487,7 @@ class CursusController extends Controller
      *     options={"expose"=true}
      * )
      * @EXT\Method("POST")
-     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
      */
     public function cursusCourseDissociateAction(Cursus $cursus)
     {
@@ -487,7 +505,7 @@ class CursusController extends Controller
      *     options = {"expose"=true}
      * )
      * @EXT\Method("POST")
-     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
      *
      * @param Cursus $cursus
      * @param Course $course
@@ -507,7 +525,7 @@ class CursusController extends Controller
      *     options = {"expose"=true}
      * )
      * @EXT\Method("POST")
-     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
      * @EXT\ParamConverter(
      *     "courses",
      *      class="ClarolineCursusBundle:Course",
@@ -532,7 +550,7 @@ class CursusController extends Controller
      *     options = {"expose"=true}
      * )
      * @EXT\Method("POST")
-     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
      *
      * @param Cursus $cursus
      * @param Course $course
@@ -552,7 +570,7 @@ class CursusController extends Controller
      *     options = {"expose"=true}
      * )
      * @EXT\Method("POST")
-     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
      * @EXT\ParamConverter(
      *     "courses",
      *      class="ClarolineCursusBundle:Course",
@@ -576,7 +594,7 @@ class CursusController extends Controller
      *     name="claro_cursus_update_order",
      *     options={"expose"=true}
      * )
-     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
      */
     public function updateCursusOrderAction(
         Cursus $cursus,
@@ -614,7 +632,7 @@ class CursusController extends Controller
      *     "/displayed/words/configuration",
      *     name="claro_cursus_displayed_words_configuration"
      * )
-     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
      * @EXT\Template()
      */
     public function displayedWordsConfigurationAction()
@@ -639,7 +657,7 @@ class CursusController extends Controller
      *     defaults={"value"=""},
      *     options={"expose"=true}
      * )
-     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
      */
     public function displayedWordChangeAction($key, $value = '')
     {

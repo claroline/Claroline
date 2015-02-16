@@ -1,0 +1,205 @@
+{% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
+
+{% block title %}
+    {{
+        parent() ~
+        ' - ' ~
+        'claroline_cursus_tool_registration' | trans({}, 'tools') | striptags | raw  ~
+        ' - ' ~
+        cursus.getTitle()
+    }}
+{% endblock %}
+
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'fa fa-cog',
+                'name': 'administration'|trans({}, 'platform'),
+                'href': path('claro_admin_index')
+            },
+            {
+                'name': 'claroline_cursus_tool_registration'|trans({}, 'tools'),
+                'href': path('claro_cursus_tool_registration_index')
+            },
+            {
+                'name': cursus.getTitle(),
+                'href': ''
+            }
+        ])
+    }}
+{% endblock %}
+
+{% block section_content %}
+    <div class="panel-heading">
+        <h3 class="panel-title">
+            {{ cursus.getTitle() }}
+        </h3>
+    </div>
+    <div class="panel-body">
+         <div class="panel panel-default">
+            <div class="panel-heading">
+                <a data-toggle="collapse" href="#collapse-groups-list">
+                    {{ 'groups'|trans({}, 'platform') }}
+                </a>
+                <span class="pull-right">
+                    <i id="register-groups-btn"
+                       class="fa fa-sign-in pointer-hand"
+                       data-toggle="tooltip"
+                       data-placement="left"
+                       title="{{ 'register_groups_to_cursus'|trans({}, 'cursus') }}"
+                    >
+                    </i>
+                </span>
+            </div>
+            <div id="collapse-groups-list" class="panel-collapse collapse in">
+                <div class="panel-body">
+
+                    {% if cursusGroups|length > 0 %}
+                        <div id="groups-list" class="table-responsive">
+                            <table id="groups-list-table" class="table">
+                                <tr>
+                                    <th>{{ 'name'|trans({}, 'platform') }}</th>
+                                    <th>{{ 'registration_date'|trans({}, 'cursus') }}</th>
+                                    <th></th>
+                                </tr>
+
+                                {% for cursusGroup in cursusGroups %}
+                                    {% set group = cursusGroup.getGroup() %}
+                                    <tr id="row-group-{{ cursusGroup.getId() }}">
+                                        <td>{{ group.getName() }}</td>
+                                        <td>{{ cursusGroup.getRegistrationDate()|intl_date_format }}</td>
+                                        <td class="text-center">
+                                            <span class="btn btn-danger btn-sm pointer-hand unregister-group-btn"
+                                                  data-cursus-group-id="{{ cursusGroup.getId() }}"
+                                                  data-group-name="{{ group.getName() }}"
+                                            >
+                                                {{ 'unregister'|trans({}, 'cursus') }}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </table>
+                        </div>
+                    {% else %}
+                        <div id="no-group-alert" class="alert alert-warning">
+                            {{ 'no_group'|trans({}, 'platform') }}
+                        </div>
+                        <div id="groups-list" class="table-responsive hidden">
+                            <table id="groups-list-table" class="table">
+                                <tr>
+                                    <th>{{ 'name'|trans({}, 'platform') }}</th>
+                                    <th>{{ 'registration_date'|trans({}, 'platform') }}</th>
+                                    <th></th>
+                                </tr>
+                            </table>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <a data-toggle="collapse" href="#collapse-users-list">
+                    {{ 'users'|trans({}, 'platform') }}
+                </a>
+                <span class="pull-right">
+                    <i id="register-users-btn"
+                       class="fa fa-sign-in pointer-hand"
+                       data-toggle="tooltip"
+                       data-placement="left"
+                       title="{{ 'register_users_to_cursus'|trans({}, 'cursus') }}"
+                    >
+                    </i>
+                </span>
+            </div>
+            <div id="collapse-users-list" class="panel-collapse collapse in">
+                <div class="panel-body">
+
+                    {% if cursusUsers|length > 0 %}
+                        <div id="users-list" class="table-responsive">
+                            <table id="users-list-table" class="table">
+                                <tr>
+                                    <th>{{ 'firstName'|trans({}, 'platform') }}</th>
+                                    <th>{{ 'lastName'|trans({}, 'platform') }}</th>
+                                    <th>{{ 'username'|trans({}, 'platform') }}</th>
+                                    <th>{{ 'registration_date'|trans({}, 'cursus') }}</th>
+                                    <th></th>
+                                </tr>
+
+                                {% for cursusUser in cursusUsers %}
+                                    {% set user = cursusUser.getUser() %}
+                                    <tr id="row-user-{{ cursusUser.getId() }}">
+                                        <td>{{ user.getFirstName() }}</td>
+                                        <td>{{ user.getLastName() }}</td>
+                                        <td>{{ user.getUsername() }}</td>
+                                        <td>{{ cursusUser.getRegistrationDate()|intl_date_format }}</td>
+                                        <td class="text-center">
+                                            <span class="btn btn-danger btn-sm pointer-hand unregister-user-btn"
+                                                  data-cursus-user-id="{{ cursusUser.getId() }}"
+                                                  data-user-first-name="{{ user.getFirstName() }}"
+                                                  data-user-last-name="{{ user.getLastName() }}"
+                                                  data-user-username="{{ user.getUsername() }}"
+                                            >
+                                                {{ 'unregister'|trans({}, 'cursus') }}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </table>
+                        </div>
+                    {% else %}
+                        <div id="no-user-alert" class="alert alert-warning">
+                            {{ 'no_user'|trans({}, 'platform') }}
+                        </div>
+                        <div id="users-list" class="table-responsive hidden">
+                            <table id="users-list-table" class="table">
+                                <tr>
+                                    <th>{{ 'firstName'|trans({}, 'platform') }}</th>
+                                    <th>{{ 'lastName'|trans({}, 'platform') }}</th>
+                                    <th>{{ 'username'|trans({}, 'platform') }}</th>
+                                    <th>{{ 'registration_date'|trans({}, 'platform') }}</th>
+                                    <th></th>
+                                </tr>
+                            </table>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="view-registration-box" class="modal fade" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <h3 id="view-registration-header" class="modal-header">
+                </h3>
+                <div id="view-registration-body" class="modal-body">
+                </div>
+                <div class="modal-footer">
+                    <input type="button"
+                           class="btn btn-default"
+                           data-dismiss="modal"
+                           value="{{ 'close'|trans({}, 'platform') }}"
+                    />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="cursus-datas-box" data-cursus-id="{{ cursus.getId() }}">
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript"
+            src="{{ url('bazinga_jstranslation_js', { 'domain_name': 'cursus' }) }}"
+    >
+    </script>
+    <script src='{{ asset('bundles/clarolinecursus/js/cursusRegistrationManagement.js') }}'
+            type="text/javascript"
+    >
+    </script>
+{% endblock %}

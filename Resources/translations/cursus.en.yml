@@ -13,7 +13,10 @@ cursus_plugin_configuration: 'Cursus plugin configuration'
 default: Default
 displayed_word: 'Displayed word'
 nothing_to_configure: 'Nothing to configure'
+registration_date: 'Registration date'
+register: Register
 session: Session
 the_displayed_word_for: 'The displayed word for'
+unregister: Unregister
 will_be: 'will be'
 word: 'Word'

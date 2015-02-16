@@ -13,7 +13,10 @@ cursus_plugin_configuration: 'Configuration du plugin Cursus'
 default: Défaut
 displayed_word: 'Mot affiché'
 nothing_to_configure: 'Rien à configurer'
+registration_date: 'Date d''inscription'
+register: Inscrire
 session: Session
 the_displayed_word_for: 'Le mot affiché pour'
+unregister: Désinscrire
 will_be: 'sera'
 word: Mot
