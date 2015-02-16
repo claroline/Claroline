@@ -71,7 +71,11 @@ class PlatformConfigurationHandler
         'portfolio_url' => null,
         'is_notification_active' => true,
         'max_storage_size' => Workspace::DEFAULT_MAX_STORAGE_SIZE,
-        'max_upload_resources' => Workspace::DEFAULT_MAX_FILE_COUNT
+        'max_upload_resources' => Workspace::DEFAULT_MAX_FILE_COUNT,
+        'confirm_send_datas' => null,
+        'token' => null,
+        'country' => '-',
+        'datas_sending_url' => 'http://stats.claroline.net/insert.php'
     );
 
     /**

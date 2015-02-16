@@ -331,6 +331,22 @@ class WorkspaceManager
     }
 
     /**
+     * @return integer
+     */
+    public function getNbPersonalWorkspaces()
+    {
+        return $this->workspaceRepo->countPersonalWorkspaces();
+    }
+
+    /**
+     * @return integer
+     */
+    public function getNbNonPersonalWorkspaces()
+    {
+        return $this->workspaceRepo->countNonPersonalWorkspaces();
+    }
+
+    /**
      * @param string[] $roles
      *
      * @return \Claroline\CoreBundle\Entity\Workspace\Workspace[]
