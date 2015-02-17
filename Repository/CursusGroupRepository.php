@@ -104,4 +104,56 @@ class CursusGroupRepository extends EntityRepository
 
         return $executeQuery ? $query->getResult() : $query;
     }
+
+    public function findGroupsByCursus(
+        Cursus $cursus,
+        $orderedBy = 'name',
+        $order = 'ASC',
+        $executeQuery = true
+    )
+    {
+        $dql = "
+            SELECT DISTINCT g
+            FROM Claroline\CoreBundle\Entity\Group g
+            WHERE EXISTS (
+                SELECT cg
+                FROM Claroline\CursusBundle\Entity\CursusGroup cg
+                WHERE cg.cursus = :cursus
+                AND cg.group = g
+            )
+            ORDER BY g.{$orderedBy} {$order}
+        ";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('cursus', $cursus);
+
+        return $executeQuery ? $query->getResult() : $query;
+    }
+
+    public function findSearchedGroupsByCursus(
+        Cursus $cursus,
+        $search = '',
+        $orderedBy = 'name',
+        $order = 'ASC',
+        $executeQuery = true
+    )
+    {
+        $dql = "
+            SELECT DISTINCT g
+            FROM Claroline\CoreBundle\Entity\Group g
+            WHERE UPPER(g.name) LIKE :search
+            AND EXISTS (
+                SELECT cg
+                FROM Claroline\CursusBundle\Entity\CursusGroup cg
+                WHERE cg.cursus = :cursus
+                AND cg.group = g
+            )
+            ORDER BY g.{$orderedBy} {$order}
+        ";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('cursus', $cursus);
+        $upperSearch = strtoupper($search);
+        $query->setParameter('search', "%{$upperSearch}%");
+
+        return $executeQuery ? $query->getResult() : $query;
+    }
 }

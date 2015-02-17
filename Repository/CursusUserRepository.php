@@ -111,4 +111,63 @@ class CursusUserRepository extends EntityRepository
 
         return $executeQuery ? $query->getResult() : $query;
     }
+
+    public function findUsersByCursus(
+        Cursus $cursus,
+        $orderedBy = 'firstName',
+        $order = 'ASC',
+        $executeQuery = true
+    )
+    {
+        $dql = "
+            SELECT DISTINCT u
+            FROM Claroline\CoreBundle\Entity\User u
+            WHERE u.isEnabled = true
+            AND EXISTS (
+                SELECT cu
+                FROM Claroline\CursusBundle\Entity\CursusUser cu
+                WHERE cu.cursus = :cursus
+                AND cu.user = u
+            )
+            ORDER BY u.{$orderedBy} {$order}
+        ";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('cursus', $cursus);
+
+        return $executeQuery ? $query->getResult() : $query;
+    }
+
+    public function findSearchedUsersByCursus(
+        Cursus $cursus,
+        $search = '',
+        $orderedBy = 'firstName',
+        $order = 'ASC',
+        $executeQuery = true
+    )
+    {
+        $dql = "
+            SELECT DISTINCT u
+            FROM Claroline\CoreBundle\Entity\User u
+            WHERE u.isEnabled = true
+            AND
+            (
+                UPPER(u.firstName) LIKE :search
+                OR UPPER(u.lastName) LIKE :search
+                OR UPPER(u.username) LIKE :search
+            )
+            AND EXISTS (
+                SELECT cu
+                FROM Claroline\CursusBundle\Entity\CursusUser cu
+                WHERE cu.cursus = :cursus
+                AND cu.user = u
+            )
+            ORDER BY u.{$orderedBy} {$order}
+        ";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('cursus', $cursus);
+        $upperSearch = strtoupper($search);
+        $query->setParameter('search', "%{$upperSearch}%");
+
+        return $executeQuery ? $query->getResult() : $query;
+    }
 }

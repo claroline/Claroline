@@ -192,6 +192,29 @@ class CursusManager
         }
     }
 
+    public function registerUserToMultipleCursus(array $multipleCursus, User $user)
+    {
+        $registrationDate = new \DateTime();
+
+        $this->om->startFlushSuite();
+
+        foreach ($multipleCursus as $cursus) {
+            $cursusUser = $this->cursusUserRepo->findOneCursusUserByCursusAndUser(
+                $cursus,
+                $user
+            );
+
+            if (is_null($cursusUser)) {
+                $cursusUser = new CursusUser();
+                $cursusUser->setCursus($cursus);
+                $cursusUser->setUser($user);
+                $cursusUser->setRegistrationDate($registrationDate);
+                $this->persistCursusUser($cursusUser);
+            }
+        }
+        $this->om->endFlushSuite();
+    }
+
     public function unregisterUserFromCursus(Cursus $cursus, User $user)
     {
         $cursusUser = $this->cursusUserRepo->findOneCursusUserByCursusAndUser(
@@ -243,6 +266,31 @@ class CursusManager
             $this->registerUsersToCursus($cursus, $users->toArray());
             $this->om->endFlushSuite();
         }
+    }
+
+    public function registerGroupToMultipleCursus(array $multipleCursus, Group $group)
+    {
+        $registrationDate = new \DateTime();
+
+        $this->om->startFlushSuite();
+
+        foreach ($multipleCursus as $cursus) {
+            $cursusGroup = $this->cursusGroupRepo->findOneCursusGroupByCursusAndGroup(
+                $cursus,
+                $group
+            );
+
+            if (is_null($cursusGroup)) {
+                $cursusGroup = new CursusGroup();
+                $cursusGroup->setCursus($cursus);
+                $cursusGroup->setGroup($group);
+                $cursusGroup->setRegistrationDate($registrationDate);
+                $this->persistCursusGroup($cursusGroup);
+                $users = $group->getUsers();
+                $this->registerUsersToCursus($cursus, $users->toArray());
+            }
+        }
+        $this->om->endFlushSuite();
     }
 
     public function unregisterGroupFromCursus(Cursus $cursus, Group $group)
@@ -516,6 +564,38 @@ class CursusManager
             $this->pagerFactory->createPager($users, $page, $max);
     }
 
+    public function getUsersByCursus(
+        Cursus $cursus,
+        $orderedBy = 'firstName',
+        $order = 'ASC',
+        $executeQuery = true
+    )
+    {
+        return $this->cursusUserRepo->findUsersByCursus(
+            $cursus,
+            $orderedBy,
+            $order,
+            $executeQuery
+        );
+    }
+
+    public function getSearchedUsersByCursus(
+        Cursus $cursus,
+        $search = '',
+        $orderedBy = 'firstName',
+        $order = 'ASC',
+        $executeQuery = true
+    )
+    {
+        return $this->cursusUserRepo->findSearchedUsersByCursus(
+            $cursus,
+            $search,
+            $orderedBy,
+            $order,
+            $executeQuery
+        );
+    }
+
 
     /*******************************************
      * Access to CursusGroupRepository methods *
@@ -587,6 +667,38 @@ class CursusManager
         return $executeQuery ?
             $this->pagerFactory->createPagerFromArray($groups, $page, $max) :
             $this->pagerFactory->createPager($groups, $page, $max);
+    }
+
+    public function getGroupsByCursus(
+        Cursus $cursus,
+        $orderedBy = 'name',
+        $order = 'ASC',
+        $executeQuery = true
+    )
+    {
+        return $this->cursusGroupRepo->findGroupsByCursus(
+            $cursus,
+            $orderedBy,
+            $order,
+            $executeQuery
+        );
+    }
+
+    public function getSearchedGroupsByCursus(
+        Cursus $cursus,
+        $search = '',
+        $orderedBy = 'name',
+        $order = 'ASC',
+        $executeQuery = true
+    )
+    {
+        return $this->cursusGroupRepo->findSearchedGroupsByCursus(
+            $cursus,
+            $search,
+            $orderedBy,
+            $order,
+            $executeQuery
+        );
     }
 
 

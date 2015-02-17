@@ -153,33 +153,21 @@
         var firstName = $(this).data('user-first-name');
         var lastName = $(this).data('user-last-name');
         var username = $(this).data('user-username');
-        
+        var cursusIdsTxt = '' + $('#cursus-datas-box').data('unlocked-cursus-ids');
+        var cursusIds = cursusIdsTxt.split(';');
+        var parameters = {};
+        parameters.cursusIds = cursusIds;
+        var route = Routing.generate(
+            'claro_cursus_multiple_register_user',
+            {'user': userId}
+        );
+        route += '?' + $.param(parameters);
+    
         $.ajax({
-            url: Routing.generate(
-                'claro_cursus_register_user',
-                {
-                    'cursus': cursusId,
-                    'user': userId
-                }
-            ),
+            url: route,
             type: 'POST',
             success: function () {
-                window.location.reload();
-            }
-        });
-
-//        $.ajax({
-//            url: Routing.generate(
-//                'claro_team_manager_register_user',
-//                {
-//                    'cursus': cursusId,
-//                    'user': userId
-//                }
-//            ),
-//            type: 'POST',
-//            success: function () {
-//                nbUsers++;
-//                $('#registration-row-user-' + userId).remove();
+                $('#registration-row-user-' + userId).remove();
 //                var userRow = '<tr id="row-user-' + userId + '">' +
 //                    '<td>' + firstName + '</td>' +
 //                    '<td>' + lastName + '</td>' +
@@ -200,22 +188,25 @@
 //                    $('#no-user-alert').addClass('hidden');
 //                    $('#users-list').removeClass('hidden');
 //                }
-//            }
-//        });
+            }
+        });
     });
 
     $('#view-registration-box').on('click', '.register-group-btn', function () {
         var groupId = $(this).data('group-id');
         var groupName = $(this).data('group-name');
-        
+        var cursusIdsTxt = '' + $('#cursus-datas-box').data('unlocked-cursus-ids');
+        var cursusIds = cursusIdsTxt.split(';');
+        var parameters = {};
+        parameters.cursusIds = cursusIds;
+        var route = Routing.generate(
+            'claro_cursus_multiple_register_group',
+            {'group': groupId}
+        );
+        route += '?' + $.param(parameters);
+    
         $.ajax({
-            url: Routing.generate(
-                'claro_cursus_register_group',
-                {
-                    'cursus': cursusId,
-                    'group': groupId
-                }
-            ),
+            url: route,
             type: 'POST',
             success: function () {
                 window.location.reload();
@@ -254,10 +245,6 @@
     var removeUserRow = function (event, cursusUserId) {
         $('#row-user-' + cursusUserId).remove();
     };
-
-//    var removeGroupRow = function (event, cursusGroupId) {
-//        $('#row-group-' + cursusGroupId).remove();
-//    };
 
     var refreshPage = function () {
         window.location.reload();

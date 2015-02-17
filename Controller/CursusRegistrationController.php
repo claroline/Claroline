@@ -179,15 +179,56 @@ class CursusRegistrationController extends Controller
         foreach (CursusDisplayedWord::$defaultKey as $key) {
             $displayedWords[$key] = $this->cursusManager->getDisplayedWord($key);
         }
+
+        $hierarchy = array();
+        $lockedHierarchy = array();
+        $unlockedCursus = array();
+        $allRelatedCursus = $this->cursusManager->getRelatedHierarchyByCursus($cursus);
+
+        foreach ($allRelatedCursus as $oneCursus) {
+            $parent = $oneCursus->getParent();
+            $lockedHierarchy[$oneCursus->getId()] = 'blocked';
+
+            if (is_null($parent)) {
+
+                if (!isset($hierarchy['root'])) {
+                    $hierarchy['root'] = array();
+                }
+                $hierarchy['root'][] = $oneCursus;
+            } else {
+                $parentId = $parent->getId();
+
+                if (!isset($hierarchy[$parentId])) {
+                    $hierarchy[$parentId] = array();
+                }
+                $hierarchy[$parentId][] = $oneCursus;
+            }
+        }
+        $this->unlockedHierarchy($cursus, $hierarchy, $lockedHierarchy, $unlockedCursus);
+        $unlockedIdsTemp = '';
+
+        foreach ($unlockedCursus as $unlocked) {
+            $unlockedIdsTemp .= $unlocked->getId() . ';';
+        }
+        $unlockedIdsTxt = trim($unlockedIdsTemp, ';');
+
         $cursusGroups = $this->cursusManager->getCursusGroupsByCursus($cursus);
         $cursusUsers = $this->cursusManager->getCursusUsersByCursus($cursus);
+
+        // To reduce DB queries only
+        $groups = $this->cursusManager->getGroupsByCursus($cursus);
+        $users = $this->cursusManager->getUsersByCursus($cursus);
 
         return array(
             'defaultWords' => CursusDisplayedWord::$defaultKey,
             'displayedWords' => $displayedWords,
             'cursus' => $cursus,
             'cursusGroups' => $cursusGroups,
-            'cursusUsers' => $cursusUsers
+            'cursusUsers' => $cursusUsers,
+            'hierarchy' => $hierarchy,
+            'lockedHierarchy' => $lockedHierarchy,
+            'unlockedCursus' => $unlockedCursus,
+            'unlockedIdsTxt' => $unlockedIdsTxt
         );
     }
 
@@ -324,6 +365,34 @@ class CursusRegistrationController extends Controller
 
     /**
      * @EXT\Route(
+     *     "multiple/cursus/register/user/{user}",
+     *     name="claro_cursus_multiple_register_user",
+     *    options = {"expose"=true}
+     * )
+     * @EXT\Method("POST")
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\ParamConverter(
+     *     "multipleCursus",
+     *      class="ClarolineCursusBundle:Cursus",
+     *      options={"multipleIds" = true, "name" = "cursusIds"}
+     * )
+     *
+     * @param User $user
+     * @param Cursus[] $multipleCursus
+     */
+    public function cursusUserRegisterToMultipleCursusAction(
+        User $user,
+        array $multipleCursus
+    )
+    {
+        $this->checkToolAccess();
+        $this->cursusManager->registerUserToMultipleCursus($multipleCursus, $user);
+
+        return new JsonResponse('success', 200);
+    }
+
+    /**
+     * @EXT\Route(
      *     "cursus/{cursus}/register/users",
      *     name="claro_cursus_register_users",
      *    options = {"expose"=true}
@@ -402,6 +471,34 @@ class CursusRegistrationController extends Controller
     {
         $this->checkToolAccess();
         $this->cursusManager->registerGroupToCursus($cursus, $group);
+
+        return new JsonResponse('success', 200);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "multiple/cursus/register/group/{group}",
+     *     name="claro_cursus_multiple_register_group",
+     *    options = {"expose"=true}
+     * )
+     * @EXT\Method("POST")
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\ParamConverter(
+     *     "multipleCursus",
+     *      class="ClarolineCursusBundle:Cursus",
+     *      options={"multipleIds" = true, "name" = "cursusIds"}
+     * )
+     *
+     * @param Group $group
+     * @param Cursus[] $multipleCursus
+     */
+    public function cursusGroupRegisterToMultipleCursusAction(
+        Group $group,
+        array $multipleCursus
+    )
+    {
+        $this->checkToolAccess();
+        $this->cursusManager->registerGroupToMultipleCursus($multipleCursus, $group);
 
         return new JsonResponse('success', 200);
     }
@@ -495,6 +592,62 @@ class CursusRegistrationController extends Controller
         }
 
         return array('cursus' => $cursus, 'hierarchy' => $hierarchy);
+    }
+
+    private function unlockedHierarchy(
+        Cursus $cursus,
+        array $hierarchy,
+        array &$lockedHierarchy,
+        array &$unlockedCursus
+    )
+    {
+        $lockedHierarchy[$cursus->getId()] = false;
+        $unlockedCursus[] = $cursus;
+
+        if (!$cursus->isBlocking()) {
+            // Unlock parents
+            $parent = $cursus->getParent();
+
+            while (!is_null($parent) && !$parent->isBlocking()) {
+                $lockedHierarchy[$parent->getId()] = 'up';
+                $unlockedCursus[] = $parent;
+                $parent = $parent->getParent();
+            }
+            // Unlock children
+            $this->unlockedChildrenHierarchy(
+                $cursus,
+                $hierarchy,
+                $lockedHierarchy,
+                $unlockedCursus
+            );
+        }
+    }
+
+    private function unlockedChildrenHierarchy(
+        Cursus $cursus,
+        array $hierarchy,
+        array &$lockedHierarchy,
+        array &$unlockedCursus
+    )
+    {
+        $cursusId = $cursus->getId();
+
+        if (isset($hierarchy[$cursusId])) {
+
+            foreach ($hierarchy[$cursusId] as $child) {
+
+                if (!$child->isBlocking()) {
+                    $lockedHierarchy[$child->getId()] = 'down';
+                    $unlockedCursus[] = $child;
+                    $this->unlockedChildrenHierarchy(
+                        $child,
+                        $hierarchy,
+                        $lockedHierarchy,
+                        $unlockedCursus
+                    );
+                }
+            }
+        }
     }
 
     private function checkToolAccess()

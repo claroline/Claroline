@@ -10,6 +10,12 @@
             >
                 {{ cursusTitle }}
             </span>
+            
+            {% if cursus.isBlocking() %}
+                &nbsp;
+                <i class="fa fa-lock"></i>
+            {% endif %}
+
 
             {% if hierarchy[cursusId] is defined %}
                 &nbsp;
