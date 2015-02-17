@@ -115,24 +115,25 @@
                             >
                                 <b>{{ subject['title'] }}</b>
                             </a>
-                            {% if isModerator or app.user.id == subject['subject_creator_id'] %}
+                            {% if isModerator or (app.user.id is defined and app.user.id == subject['subject_creator_id']) %}
                                 <a class="pull-right" href="{{ path('claro_forum_edit_subject_form', {'subjectId': subject['id'] }) }}">
                                     <i class="fa fa-pencil"></i> {{ 'edit' | trans({}, 'platform') }}
                                 </a>
                            {% endif %}
                             <br>
                             {{ 'started_by' | trans({}, 'forum') }}
-                            {{ subject['subject_creator_firstname'] }}
-                            {{ subject['subject_creator_lastname'] }},
+                            {{ subject['subject_author'] }},
                             {{ subject['subject_created']|intl_date_format() }}
                         </td>
                         <td>
                             {{ subject['count_messages'] }}
                         </td>
                         <td>
-                            {{ subject['last_message_creator_firstname'] }}
-                            {{ subject['last_message_creator_lastname'] }}<br/>
-                            {{ subject['last_message_created'] }}
+                            {% if lastMessages[subject['id']] is defined and lastMessages[subject['id']] is not empty %}
+                                {{ lastMessages[subject['id']].getAuthor() }}
+                                <br>
+                                {{ lastMessages[subject['id']].getModificationDate()|intl_date_format() }}
+                            {% endif %}
                         </td>
                         {% if isModerator %}
                             <td>

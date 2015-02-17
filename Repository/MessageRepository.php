@@ -22,7 +22,7 @@ class MessageRepository extends EntityRepository
         $dql = "
             SELECT m, u, pws FROM Claroline\ForumBundle\Entity\Message m
             JOIN m.creator u
-            JOIN u.personalWorkspace pws
+            LEFT JOIN u.personalWorkspace pws
             JOIN m.subject subject
             WHERE subject.id = {$subject->getId()}";
 
@@ -65,5 +65,18 @@ class MessageRepository extends EntityRepository
         $paginator = new Paginator($query, $fetchJoinCollection = true);
 
         return $paginator;
+    }
+
+    public function findMessagesWithNoAuthor($executeQuery = true)
+    {
+        $dql = '
+            SELECT m
+            FROM Claroline\ForumBundle\Entity\Message m
+            WHERE m.author IS NULL
+        ';
+
+        $query = $this->_em->createQuery($dql);
+
+        return $executeQuery ? $query->getResult() : $query;
     }
 }

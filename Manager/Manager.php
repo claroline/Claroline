@@ -59,6 +59,7 @@ class Manager
     private $subjectRepo;
     private $messageRepo;
     private $forumRepo;
+    private $roleRepo;
     private $userRepo;
     private $messageManager;
     private $translator;
@@ -100,6 +101,7 @@ class Manager
         $this->subjectRepo = $om->getRepository('ClarolineForumBundle:Subject');
         $this->messageRepo = $om->getRepository('ClarolineForumBundle:Message');
         $this->forumRepo = $om->getRepository('ClarolineForumBundle:Forum');
+        $this->roleRepo = $om->getRepository('ClarolineCoreBundle:Role');
         $this->userRepo = $om->getRepository('ClarolineCoreBundle:User');
         $this->dispatcher = $dispatcher;
         $this->messageManager = $messageManager;
@@ -117,12 +119,13 @@ class Manager
      * @param \Claroline\ForumBundle\Entity\Forum $forum
      * @param \Claroline\CoreBundle\Entity\User $user
      */
-    public function subscribe(Forum $forum, User $user)
+    public function subscribe(Forum $forum, User $user, $selfActivation = true)
     {
         $this->om->startFlushSuite();
         $notification = new Notification();
         $notification->setUser($user);
         $notification->setForum($forum);
+        $notification->setSelfActivation($selfActivation);
         $this->om->persist($notification);
         $this->dispatch(new SubscribeForumEvent($forum));
         $this->om->endFlushSuite();
@@ -202,6 +205,7 @@ class Manager
 
      	$user = $this->sc->getToken()->getUser();
         $message->setCreator($user);
+        $message->setAuthor($user->getFirstName() . ' ' . $user->getLastName());
         $message->setSubject($subject);
         $this->om->persist($message);
         $this->om->flush();
@@ -269,31 +273,16 @@ class Manager
     public function sendMessageNotification(Message $message, User $user)
     {
         $forum = $message->getSubject()->getCategory()->getForum();
+        $notifications = $this->notificationRepo->findBy(array('forum' => $forum));
+        $users = array();
 
-        if ($forum->getActivateNotifications()) {
-            $relevantRoles = [];
-            $rights = $forum->getResourceNode()->getRights();
-
-            foreach ($rights as $right) {
-                //can open
-                if ($right->getMask() & 1) {
-                    $relevantRoles[] = $right->getRole();
-                }
-            }
-
-            $users = $this->userRepo->findByRoles($relevantRoles);
-        } else {
-            $notifications = $this->notificationRepo->findBy(array('forum' => $forum));
-            $users = array();
-
-            foreach ($notifications as $notification) {
-                $users[] = $notification->getUser();
-            }
+        foreach ($notifications as $notification) {
+            $users[] = $notification->getUser();
         }
 
         $title = $this->translator->trans(
             'forum_new_message',
-            array('%forum%' => $forum->getResourceNode()->getName(), '%subject%' => $message->getSubject()->getTitle()),
+            array('%forum%' => $forum->getResourceNode()->getName(), '%subject%' => $message->getSubject()->getTitle(), '%author%' => $message->getCreator()->getUsername()),
             'forum'
         );
 
@@ -304,7 +293,6 @@ class Manager
         $body = "<a href='{$url}'>{$title}</a><hr>{$message->getContent()}";
 
         $this->mailManager->send($title, $body, $users);
-
     }
 
     /**
@@ -557,35 +545,86 @@ class Manager
         return $newForum;
     }
 
-    public function quoteMessage(Message $message, Message $oldMessage)
+    public function getMessageQuoteHTML(Message $message)
     {
-        // todo: this should be in a template...
-        $mask = '<div class="well"><div class="original-poster">%s :</div>%s</div>%s';
-        $oldAuthor = $oldMessage->getCreator()->getFirstName()
+        $answer = $this->translator->trans('answer_message', array(), 'forum');
+        $author = $message->getCreator()->getFirstName()
             . ' '
-            . $oldMessage->getCreator()->getLastName();
-        $message->setContent(
-            sprintf(
-                $mask,
-                $oldAuthor,
-                $oldMessage->getContent(),
-                $message->getContent()
-            )
+            . $message->getCreator()->getLastName();
+        $date = $message->getCreationDate()->format($this->translator->trans('date_range.format.with_hours', array(), 'platform'));
+        $by = $this->translator->trans('posted_by', array('%author%' => $author, '%date%' => $date), 'forum');
+        $mask = '<div class="original-poster"><b>' . $by . '</b></div><div class="well">%s</div></div><b>' . $answer . ':</b></div>';
+
+        return sprintf(
+            $mask,
+            $message->getContent()
         );
-        $this->createMessage($message, $oldMessage->getSubject());
+    }
+    
+    public function getReplyHTML(Message $message)
+    {
+        $author = $message->getCreator()->getFirstName()
+            . ' '
+            . $message->getCreator()->getLastName();
+        $date = $message->getCreationDate()->format($this->translator->trans('date_range.format.with_hours', array(), 'platform'));
+        $by = $this->translator->trans('posted_by', array('%author%' => $author, '%date%' => $date), 'forum');
+        
+        return $by;
     }
 
     public function activateGlobalNotifications(Forum $forum)
     {
+        $this->om->startFlushSuite();
         $forum->setActivateNotifications(true);
         $this->om->persist($forum);
-        $this->om->flush();
+        $node = $forum->getResourceNode();
+        $roles = $this->roleRepo->findRolesWithRightsByResourceNode($node);
+        $usersWithRoles = $this->userRepo->findUsersByRolesIncludingGroups($roles);
+        $users = $this->forumRepo
+            ->findUnnotifiedUsersFromListByForum($forum, $usersWithRoles);
+
+        foreach ($users as $user) {
+            $this->subscribe($forum, $user, false);
+        }
+        $this->om->endFlushSuite();
     }
 
     public function disableGlobalNotifications(Forum $forum)
     {
+        $this->om->startFlushSuite();
         $forum->setActivateNotifications(false);
         $this->om->persist($forum);
-        $this->om->flush();
+        $notifications = $this->forumRepo->findNonSelfNotificationsByForum($forum);
+
+        foreach ($notifications as $notification) {
+            $this->removeNotification($forum, $notification);
+        }
+        $this->om->endFlushSuite();
+    }
+
+    public function getLastMessagesBySubjectsIds(array $subjectsIds)
+    {
+        $lastMessages = array();
+
+        if (count($subjectsIds) > 0) {
+            $lastMessages = $this->forumRepo
+                ->findLastMessagesBySubjectsIds($subjectsIds);
+        }
+
+        return $lastMessages;
+    }
+
+    /**
+     * Unsubscribe a user from a forum.
+     *
+     * @param \Claroline\ForumBundle\Entity\Forum $forum
+     * @param \Claroline\ForumBundle\Entity\Notification $notification
+     */
+    private function removeNotification(Forum $forum, Notification $notification)
+    {
+        $this->om->startFlushSuite();
+        $this->om->remove($notification);
+        $this->dispatch(new UnsubscribeForumEvent($forum));
+        $this->om->endFlushSuite();
     }
 }
