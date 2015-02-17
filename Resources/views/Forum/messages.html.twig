@@ -98,8 +98,8 @@
                         <hr>
                         <div class="pull-right clearfix">
                             {% if canAnswer and not subject.isClosed() %}
-                                <a class="btn btn-default" href="{{ path('claro_forum_reply_message_form', {'message': message.getId()}) }}">
-                                    <i class="fa fa-pencil"></i> {{ 'reply'|trans({}, 'forum') }}
+                                <a class="btn btn-default" href="{{ path('claro_forum_quote_message_form', {'message': message.getId()}) }}">
+                                    <i class="fa fa-pencil"></i> {{ 'quote'|trans({}, 'forum') }}
                                 </a>
                             {% endif %}
                             {% if isModerator or app.security.token.user == message.getCreator() %}
