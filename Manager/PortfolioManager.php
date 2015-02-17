@@ -231,7 +231,7 @@ class PortfolioManager
     public function getPortfolioData(Portfolio $portfolio)
     {
         /** @var \Icap\PortfolioBundle\Entity\Widget\AbstractWidget[] $widgets */
-        $widgets  = $portfolio->getWidgets();
+        $widgets  = $this->widgetsManager->getByPortfolioForGridster($portfolio);
         /** @var \Icap\PortfolioBundle\Entity\PortfolioComment[] $comments */
         $comments = $this->entityManager->getRepository('IcapPortfolioBundle:PortfolioComment')->findSome($portfolio);
 

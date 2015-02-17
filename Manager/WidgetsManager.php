@@ -180,5 +180,15 @@ class WidgetsManager
 
         return  $widget->getCommonData() + $widgetViews + ($withView ? $widget->getData() : $widget->getEmpty());
     }
+
+    /**
+     * @param Portfolio $portfolio
+     *
+     * @return \Icap\PortfolioBundle\Entity\Widget\AbstractWidget[]
+     */
+    public function getByPortfolioForGridster(Portfolio $portfolio)
+    {
+        return $this->entityManager->getRepository("IcapPortfolioBundle:Widget\AbstractWidget")->findOrderedByRowAndCol($portfolio);
+    }
 }
  
