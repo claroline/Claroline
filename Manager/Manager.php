@@ -557,7 +557,7 @@ class Manager
         return $newForum;
     }
 
-    public function replyMessage(Message $message, Message $oldMessage)
+    public function quoteMessage(Message $message, Message $oldMessage)
     {
         // todo: this should be in a template...
         $mask = '<div class="well"><div class="original-poster">%s :</div>%s</div>%s';

@@ -919,14 +919,14 @@ class ForumController extends Controller
 
     /**
      * @Route(
-     *     "/reply/message/{message}",
-     *     name="claro_forum_reply_message_form"
+     *     "/quote/message/{message}",
+     *     name="claro_forum_quote_message_form"
      * )
      *
-     * @Template("ClarolineForumBundle:Forum:replyMessageForm.html.twig")
+     * @Template("ClarolineForumBundle:Forum:quoteMessageForm.html.twig")
      * @param Message $message
      */
-    public function replyMessageAction(Message $message)
+    public function quoteMessageAction(Message $message)
     {
         $subject = $message->getSubject();
         $forum = $subject->getCategory()->getForum();
@@ -935,7 +935,7 @@ class ForumController extends Controller
 
         if ($form->isValid()) {
             $newMsg = $form->getData();
-            $this->manager->replyMessage($newMsg, $message);
+            $this->manager->quoteMessage($newMsg, $message);
 
             return new RedirectResponse(
                 $this->generateUrl('claro_forum_messages', array('subject' => $subject->getId()))
