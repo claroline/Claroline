@@ -3,7 +3,7 @@
     "type": "claroline-plugin",
     "require": {
         "php": ">=5.4.1",
-        "claroline/core-bundle": "~4.0"
+        "claroline/core-bundle": "~4.2"
     },
     "autoload": {
         "psr-0": { "HeVinci\\CompetencyBundle": "" }

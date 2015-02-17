@@ -1,0 +1,19 @@
+{% extends 'HeVinciCompetencyBundle:Competency:scaleForm.html.twig' %}
+
+{% block title %}
+    {{ (scale ? 'scale.edit' : 'scale.view')|trans({}, 'competency') }}
+{% endblock %}
+
+{% block action %}
+    {{ scale ? path('hevinci_edit_scale', { id: scale.getId() }) : '#' }}
+{% endblock %}
+
+{% block footer %}
+    {% if scale %}
+        {{ parent() }}
+    {% else %}
+        <span class="btn btn-primary" data-dismiss="modal">
+            {{ 'close'|trans({}, 'platform') }}
+        </span>
+    {% endif %}
+{% endblock %}

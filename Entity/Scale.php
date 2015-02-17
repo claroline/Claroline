@@ -13,7 +13,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Table(name="hevinci_scale")
  * @BR\UniqueEntity("name")
  */
-class Scale
+class Scale implements \JsonSerializable
 {
     /**
      * @ORM\Id
@@ -30,10 +30,16 @@ class Scale
     private $name;
 
     /**
+     * @ORM\Column(name="is_locked", type="boolean")
+     */
+    private $isLocked = false;
+
+    /**
      * @ORM\OneToMany(
      *     targetEntity="Level",
      *     mappedBy="scale",
-     *     cascade={"persist", "remove"}
+     *     cascade={"persist", "remove"},
+     *     orphanRemoval=true
      * )
      * @CustomAssert\NotEmpty
      * @CustomAssert\NoDuplicate(property="name")
@@ -43,6 +49,14 @@ class Scale
     public function __construct()
     {
         $this->levels = new ArrayCollection();
+    }
+
+    /**
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
     }
 
     /**
@@ -59,6 +73,22 @@ class Scale
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isLocked()
+    {
+        return $this->isLocked;
+    }
+
+    /**
+     * @param bool $isLocked
+     */
+    public function setIsLocked($isLocked)
+    {
+        $this->isLocked = $isLocked;
     }
 
     /**
@@ -82,10 +112,20 @@ class Scale
      */
     public function setLevels(ArrayCollection $levels)
     {
+        $this->levels->clear();
+
         foreach ($levels as $level) {
             $level->setScale($this);
+            $this->levels->add($level);
         }
+    }
 
-        $this->levels = $levels;
+    public function jsonSerialize()
+    {
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'isLocked' => $this->isLocked
+        ];
     }
 }

@@ -3,6 +3,7 @@
 namespace HeVinci\CompetencyBundle\Form\DataTransformer;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Persistence\ObjectManager;
 use HeVinci\CompetencyBundle\Entity\Level;
 use Symfony\Component\Form\DataTransformerInterface;
@@ -23,14 +24,15 @@ class LevelTransformer implements DataTransformerInterface
      * Transforms an ArrayCollection of Level entities to a
      * multi-line string showing the level names.
      *
-     * @param ArrayCollection $levels
+     * @param Collection $levels
      * @return string
      */
     public function transform($levels)
     {
         $serialized = '';
 
-        if (!$levels instanceof ArrayCollection || $levels->count() === 0) {
+        if (!$levels instanceof Collection || $levels->count() === 0) {
+
             return $serialized;
         }
 

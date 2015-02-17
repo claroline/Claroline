@@ -1,0 +1,56 @@
+{% extends 'HeVinciCompetencyBundle:Competency:layout.html.twig' %}
+
+{% block title %}
+    {{ parent() ~ ' - ' ~ 'scales'|trans({}, 'competency') }}
+{% endblock %}
+
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs(competencyBreadcrumbs|merge([{
+            'name': 'scales'|trans({}, 'competency')
+        }]))
+    }}
+{% endblock %}
+
+{% block panelTitle %}
+    {{ 'scales'|trans({}, 'competency') }}
+{% endblock %}
+
+{% block panelBody %}
+    <table id="scale-table"
+           class="table table-condensed table-bordered table-striped"
+           {% if scales|length == 0 %}style="display: none"{% endif %}>
+        <thead>
+            <tr>
+                <th>{{ 'name'|trans({}, 'platform') }}</th>
+                <th>{{ 'status'|trans({}, 'platform') }}</th>
+                <th colspan="3" class="multi-col">{{ 'actions'|trans({}, 'platform') }}</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for scale in scales %}
+            {%
+                include 'HeVinciCompetencyBundle:Competency:scaleRow.html.twig'
+                with {
+                    'id': scale.getId(),
+                    'name': scale.getName(),
+                    'isLocked': scale.isLocked()
+                }
+            %}
+        {% endfor %}
+        </tbody>
+    </table>
+
+    {% if scales|length == 0 %}
+        <div id="no-scale-info" class="alert alert-info" role="alert">
+            <i class="fa fa-info-circle"></i>
+            {{ 'info.no_scale'|trans({}, 'competency') }}
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block panelFooter %}
+    <button id="create-scale" class="btn btn-primary">
+        {{ 'scale.create'|trans({}, 'competency') }}
+    </button>
+{% endblock %}

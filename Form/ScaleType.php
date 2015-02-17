@@ -8,7 +8,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 /**
- * @DI\Service("hevinci.form_type.scale")
+ * @DI\Service("hevinci_form_scale")
  * @DI\Tag("form.type")
  */
 class ScaleType extends AbstractType
@@ -22,11 +22,14 @@ class ScaleType extends AbstractType
 
     public function getName()
     {
-        return 'scale_form';
+        return 'hevinci_form_scale';
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults(array('translation_domain' => 'platform'));
+        $resolver->setDefaults([
+            'translation_domain' => 'platform',
+            'data_class' => 'HeVinci\CompetencyBundle\Entity\Scale'
+        ]);
     }
 }

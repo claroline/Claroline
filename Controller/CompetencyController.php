@@ -2,6 +2,7 @@
 
 namespace HeVinci\CompetencyBundle\Controller;
 
+use HeVinci\CompetencyBundle\Entity\Scale;
 use HeVinci\CompetencyBundle\Form\Handler\FormHandler;
 use HeVinci\CompetencyBundle\Manager\CompetencyManager;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -59,13 +60,13 @@ class CompetencyController
      *
      * @EXT\Route("/scales/new", name="hevinci_new_scale", options={"expose"=true})
      * @EXT\Method("GET")
-     * @EXT\Template("HeVinciCompetencyBundle:Competency:scale.html.twig")
+     * @EXT\Template("HeVinciCompetencyBundle:Competency:scaleForm.html.twig")
      *
      * @return array
      */
     public function newScaleAction()
     {
-        return ['form' => $this->formHandler->getView('hevinci.form.scale')];
+        return ['form' => $this->formHandler->getView('hevinci_form_scale')];
     }
 
     /**
@@ -73,19 +74,121 @@ class CompetencyController
      *
      * @EXT\Route("/scales", name="hevinci_create_scale", options={"expose"=true})
      * @EXT\Method("POST")
-     * @EXT\Template("HeVinciCompetencyBundle:Competency:scale.html.twig")
+     * @EXT\Template("HeVinciCompetencyBundle:Competency:scaleForm.html.twig")
      *
      * @param Request $request
      * @return array|JsonResponse
      */
     public function createScaleAction(Request $request)
     {
-        if ($this->formHandler->isValid('hevinci.form.scale', $request)) {
-            $this->competencyManager->createScale($this->formHandler->getData());
-
-            return new JsonResponse('Scale created');
+        if ($this->formHandler->isValid('hevinci_form_scale', $request)) {
+            return new JsonResponse(
+                $this->competencyManager->persistScale($this->formHandler->getData())
+            );
         }
 
         return ['form' => $this->formHandler->getView()];
+    }
+
+    /**
+     * Displays the list of scales.
+     *
+     * @EXT\Route("/scales", name="hevinci_scales")
+     * @EXT\Method("GET")
+     * @EXT\Template
+     *
+     * @return array
+     */
+    public function scalesAction()
+    {
+        return ['scales' => $this->competencyManager->listScales()];
+    }
+
+    /**
+     * Displays a scale, either in read-only or in edit mode.
+     *
+     * @EXT\Route(
+     *     "/scales/{id}/{edit}",
+     *     name="hevinci_scale",
+     *     options={"expose"=true},
+     *     defaults={"edit"=0}
+     * )
+     * @EXT\Method("GET")
+     * @EXT\Template("HeVinciCompetencyBundle:Competency:scaleEdit.html.twig")
+     * @EXT\ParamConverter(
+     *     "scale",
+     *     class="HeVinciCompetencyBundle:Scale",
+     *     options={"id" = "id", "strictId" = true}
+     * )
+     *
+     * @param Scale $scale
+     * @param bool  $edit
+     * @return array
+     */
+    public function scaleAction(Scale $scale, $edit)
+    {
+        return [
+            'form' => $this->formHandler->getView(
+                'hevinci_form_scale',
+                $scale,
+                ['read_only' => $edit == 0]
+            ),
+            'scale' => $edit == 0 ? null : $scale
+        ];
+    }
+
+    /**
+     * Updates a scale.
+     *
+     * @EXT\Route(
+     *     "/scales/{id}",
+     *     name="hevinci_edit_scale",
+     *     options={"expose"=true},
+     *     defaults={"edit"=0}
+     * )
+     * @EXT\Method("POST")
+     * @EXT\Template("HeVinciCompetencyBundle:Competency:scaleEdit.html.twig")
+     * @EXT\ParamConverter(
+     *     "scale",
+     *     class="HeVinciCompetencyBundle:Scale",
+     *     options={"id" = "id", "strictId" = true}
+     * )
+     *
+     * @param Request   $request
+     * @param Scale     $scale
+     * @return array
+     */
+    public function editScaleAction(Request $request, Scale $scale)
+    {
+        if ($this->formHandler->isValid('hevinci_form_scale', $request, $scale)) {
+            return new JsonResponse(
+                $this->competencyManager->persistScale($this->formHandler->getData())
+            );
+        }
+
+        return ['form' => $this->formHandler->getView(), 'scale' => $scale];
+    }
+
+    /**
+     * Deletes a scale.
+     *
+     * @EXT\Route(
+     *     "/scales-delete/{id}",
+     *     name="hevinci_delete_scale",
+     *     options={"expose"=true}
+     * )
+     * @EXT\Method("GET")
+     * @EXT\ParamConverter(
+     *     "scale",
+     *     class="HeVinciCompetencyBundle:Scale",
+     *     options={"id" = "id", "strictId" = true}
+     * )
+     *
+     * @param Scale $scale
+     * @return JsonResponse
+     */
+    public function deleteScaleAction(Scale $scale)
+    {
+        return new JsonResponse($this->competencyManager->deleteScale($scale));
     }
 }

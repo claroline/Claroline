@@ -1,0 +1,47 @@
+{% twig_js name="ScaleRow" %}
+
+<tr data-id="{{ id }}">
+    <td>{{ name }}</td>
+    <td class="icon-cell">
+        <span data-toggle="tooltip"
+              data-placement="left"
+              title="{{ 'editable'|trans({}, 'competency') }}">
+            <i class="fa fa-unlock-alt"></i>
+        </span>
+    </td>
+    <td class="icon-cell">
+        <a href="#"
+           class="scale-view"
+           data-toggle="tooltip"
+           data-placement="left"
+           title="{{ 'see'|trans({}, 'platform') }}">
+            <i class="fa fa-search-plus"></i>
+        </a>
+    </td>
+    <td class="icon-cell">
+        {% if isLocked %}
+            <i class="fa fa-pencil disabled"></i>
+        {% else %}
+            <a href="#"
+               class="scale-edit"
+               data-toggle="tooltip"
+               data-placement="left"
+               title="{{ 'edit'|trans({}, 'platform') }}">
+                <i class="fa fa-pencil"></i>
+            </a>
+        {% endif %}
+    </td>
+    <td class="icon-cell">
+        {% if isLocked %}
+            <i class="fa fa-remove disabled"></i>
+        {% else %}
+            <a href="#"
+               class="scale-delete"
+               data-toggle="tooltip"
+               data-placement="left"
+               title="{{ 'delete'|trans({}, 'platform') }}">
+                <i class="fa fa-remove"></i>
+            </a>
+        {% endif %}
+    </td>
+</tr>

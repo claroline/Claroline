@@ -3,8 +3,7 @@
 namespace HeVinci\CompetencyBundle\Form\Handler;
 
 use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\Form\Form;
+use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -14,39 +13,34 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class FormHandler
 {
-    private $container;
+    private $factory;
     private $currentForm;
 
     /**
      * @DI\InjectParams({
-     *     "container" = @DI\Inject("service_container")
+     *     "factory" = @DI\Inject("form.factory")
      * })
      *
-     * @param ContainerInterface $container
+     * @param FormFactoryInterface $factory
      */
-    public function __construct(ContainerInterface $container)
+    public function __construct(FormFactoryInterface $factory)
     {
-        $this->container = $container;
+        $this->factory = $factory;
         $this->currentForm = null;
     }
 
     /**
      * Returns whether a form is valid and stores it internally for future use.
      *
-     * @param string    $formReference  The service name of a form
-     * @param Request   $request        The request to bind to the form
-     * @param mixed     $data           An optional entity or array to bind the form to
+     * @param string    $formReference  The form type name
+     * @param Request   $request        The request to be bound
+     * @param mixed     $data           An entity or array to be bound
+     * @param array     $options        The options to be passed to the form builder
      * @return bool
-     * @throws \InvalidArgumentException if the service doesn't refer to a form
      */
-    public function isValid($formReference, Request $request, $data = null)
+    public function isValid($formReference, Request $request, $data = null, array $options = [])
     {
-        $form = $this->getForm($formReference);
-
-        if ($data) {
-            $form->setData($data);
-        }
-
+        $form = $this->getForm($formReference, $data, $options);
         $form->handleRequest($request);
 
         return $form->isValid();
@@ -65,35 +59,27 @@ class FormHandler
 
     /**
      * Creates and returns a form view either from the current form
-     * or from a new form service reference passed as argument.
+     * or from a new form type reference passed as argument.
      *
-     * @param string $formReference The service name of a form
+     * @param string $formReference The form type name
+     * @param mixed  $data          An entity or array to be bound
+     * @param array  $options       The options to be passed to the form builder
      * @return mixed
-     * @throws \InvalidArgumentException    if a reference is passed but it
-     *                                      doesn't refer to a form
-     * @throws \LogicException              if no reference is passed and
-     *                                      no form has been handled yet
+     * @throws \LogicException      if no reference is passed and
+     *                              no form has been handled yet
      */
-    public function getView($formReference = null)
+    public function getView($formReference = null, $data = null, array $options = [])
     {
         if ($formReference) {
-            $this->getForm($formReference);
+            $this->getForm($formReference, $data, $options);
         }
 
         return $this->getCurrentForm()->createView();
     }
 
-    private function getForm($reference)
+    private function getForm($reference, $data = null, array $options = [])
     {
-        $form = $this->container->get($reference);
-
-        if (!$form instanceof Form) {
-            throw new \InvalidArgumentException(
-                "The '{$reference}' service is not a form'"
-            );
-        }
-
-        return $this->currentForm = $form;
+        return $this->currentForm = $this->factory->create($reference, $data, $options);
     }
 
     private function getCurrentForm()

@@ -1,0 +1,13 @@
+th.multi-col {
+    text-align: center;
+}
+
+td.icon-cell {
+    width: 60px;
+    text-align: center;
+}
+
+i.fa.disabled {
+    cursor: default;
+    opacity: 0.25;
+}

@@ -13,6 +13,7 @@ class CompetencyManager
 {
     private $om;
     private $competencyRepo;
+    private $scaleRepo;
 
     /**
      * @DI\InjectParams({
@@ -25,6 +26,7 @@ class CompetencyManager
     {
         $this->om = $om;
         $this->competencyRepo = $om->getRepository('HeVinciCompetencyBundle:Competency');
+        $this->scaleRepo = $om->getRepository('HeVinciCompetencyBundle:Scale');
     }
 
     /**
@@ -51,10 +53,38 @@ class CompetencyManager
      * Persists a scale in the database.
      *
      * @param Scale $scale
+     * @return Scale
      */
-    public function createScale(Scale $scale)
+    public function persistScale(Scale $scale)
     {
         $this->om->persist($scale);
+        $this->om->flush();
+
+        return $scale;
+    }
+
+    /**
+     * Returns the list of scales.
+     */
+    public function listScales()
+    {
+        return $this->scaleRepo->findAll();
+    }
+
+    /**
+     * Deletes a scale
+     *
+     * @param Scale $scale
+     */
+    public function deleteScale(Scale $scale)
+    {
+        if ($scale->isLocked()) {
+            throw new \LogicException(
+                "Cannot delete scale '{$scale->getName()}': scale is locked"
+            );
+        }
+
+        $this->om->remove($scale);
         $this->om->flush();
     }
 }

@@ -7,27 +7,13 @@ use Symfony\Component\HttpFoundation\Request;
 
 class FormHandlerTest extends UnitTestCase
 {
-    private $container;
+    private $factory;
     private $handler;
 
     protected function setUp()
     {
-        $this->container = $this->mock('Symfony\Component\DependencyInjection\ContainerInterface');
-        $this->handler = new FormHandler($this->container);
-    }
-
-    /**
-     * @expectedException InvalidArgumentException
-     * @dataProvider formMethodProvider
-     * @param string $method
-     */
-    public function testHandlerRequiresValidFormReference($method)
-    {
-        $this->container->expects($this->once())
-            ->method('get')
-            ->with('form.ref')
-            ->willReturn('NOT A FORM');
-        $this->handler->{$method}('form.ref', new Request());
+        $this->factory = $this->mock('Symfony\Component\Form\FormFactoryInterface');
+        $this->handler = new FormHandler($this->factory);
     }
 
     /**
@@ -43,20 +29,21 @@ class FormHandlerTest extends UnitTestCase
     public function testValidateAndRetrieveDataAndView()
     {
         $form = $this->mock('Symfony\Component\Form\Form');
+        $request = new Request();
 
         // validation
-        $this->container->expects($this->exactly(2))
-            ->method('get')
-            ->with('form.ref')
+        $this->factory->expects($this->exactly(2))
+            ->method('create')
+            ->withConsecutive(
+                ['form.ref'],
+                ['form.ref', 'DATA', ['options']]
+            )
             ->willReturn($form);
         $form->expects($this->exactly(2))
             ->method('isValid')
             ->willReturnOnConsecutiveCalls(true, false);
-        $form->expects($this->once())
-            ->method('setData')
-            ->with('DATA');
-        $this->assertTrue($this->handler->isValid('form.ref', new Request()));
-        $this->assertFalse($this->handler->isValid('form.ref', new Request(), 'DATA'));
+        $this->assertTrue($this->handler->isValid('form.ref', $request));
+        $this->assertFalse($this->handler->isValid('form.ref', $request, 'DATA', ['options']));
 
         // retrieval
         $form->expects($this->once())
@@ -73,8 +60,8 @@ class FormHandlerTest extends UnitTestCase
     public function testGetViewAndRetrieveData()
     {
         $form = $this->mock('Symfony\Component\Form\Form');
-        $this->container->expects($this->once())
-            ->method('get')
+        $this->factory->expects($this->once())
+            ->method('create')
             ->with('form.ref')
             ->willReturn($form);
         $form->expects($this->once())
@@ -86,14 +73,6 @@ class FormHandlerTest extends UnitTestCase
 
         $this->assertEquals('VIEW', $this->handler->getView('form.ref'));
         $this->assertEquals('DATA', $this->handler->getData());
-    }
-
-    public function formMethodProvider()
-    {
-        return [
-            ['isValid'],
-            ['getView']
-        ];
     }
 
     public function currentFormMethodProvider()

@@ -1,23 +1,24 @@
 {% extends 'ClarolineCoreBundle::Administration/layout.html.twig' %}
 
+{% set competencyBreadcrumbs = [
+        {
+            'icon': 'fa fa-cog',
+            'name': 'administration'|trans({}, 'platform'),
+            'href': path('claro_admin_index')
+        },
+        {
+            'name': 'competencies'|trans({}, 'tools'),
+            'href': path('hevinci_frameworks')
+        }
+    ]
+%}
+
 {% block title %}
     {{ parent() ~ ' - ' ~ 'competencies'|trans({}, 'tools')|striptags|raw }}
 {% endblock %}
 
 {% block breadcrumb %}
-    {{
-        macros.breadcrumbs([
-            {
-                'icon': 'fa fa-cog',
-                'name': 'administration'|trans({}, 'platform'),
-                'href': path('claro_admin_index')
-            },
-            {
-                'name': 'competencies'|trans({}, 'tools'),
-                'href': ''
-            }
-        ])
-    }}
+    {{ macros.breadcrumbs(competencyBreadcrumbs) }}
 {% endblock %}
 
 {% block section_content %}
@@ -41,7 +42,17 @@
 
 {% block javascripts %}
     {{ parent() }}
+    {% javascripts debug=false filter='twig_js, jsmin' vars=["locale"]
+        "@HeVinciCompetencyBundle/Resources/views/Competency/scaleRow.html.twig"
+    %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
     <script src="{{ url('bazinga_jstranslation_js', { 'domain': 'competency' }) }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/hevincicompetency/js/flasher.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/hevincicompetency/js/competency.js') }}"></script>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/hevincicompetency/css/style.css') }}"/>
 {% endblock %}

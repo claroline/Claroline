@@ -5,12 +5,14 @@
                 &times;
             </button>
             <h3 class="modal-title">
-                {{ 'create_scale'|trans({}, 'competency') }}
+                {% block title %}
+                    {{ 'scale.create'|trans({}, 'competency') }}
+                {% endblock %}
             </h3>
         </div>
         <div class="modal-body">
             <form id="scale-form"
-                  action="{{ path('hevinci_create_scale') }}"
+                  action="{% block action %}{{ path('hevinci_create_scale') }}{% endblock %}"
                   method="POST"
                   {{ form_enctype(form) }}
             >
@@ -18,12 +20,14 @@
             </form>
         </div>
         <div class="modal-footer">
-            <span class="btn btn-default" data-dismiss="modal">
-                {{ 'cancel'|trans({},'platform') }}
-            </span>
-            <button type="button" id='save' class="btn btn-primary">
-                {{ 'ok'|trans({},'platform') }}
-            </button>
+            {% block footer %}
+                <span class="btn btn-default" data-dismiss="modal">
+                    {{ 'cancel'|trans({}, 'platform') }}
+                </span>
+                <button type="button" id='save' class="btn btn-primary">
+                    {{ 'ok'|trans({}, 'platform') }}
+                </button>
+            {% endblock %}
         </div>
     </div>
 </div>
