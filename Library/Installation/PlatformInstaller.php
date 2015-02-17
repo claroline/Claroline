@@ -17,6 +17,7 @@ use Claroline\InstallationBundle\Bundle\InstallableInterface;
 use Claroline\InstallationBundle\Manager\InstallationManager;
 use Doctrine\Bundle\DoctrineBundle\Command\CreateDatabaseDoctrineCommand;
 use JMS\DiExtraBundle\Annotation as DI;
+use Claroline\CoreBundle\Entity\Bundle;
 use Symfony\Bundle\SecurityBundle\Command\InitAclCommand;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\NullOutput;
@@ -90,6 +91,7 @@ class PlatformInstaller
         }
 
         $this->operationExecutor->execute();
+        $this->setBundleVersion();
     }
 
     public function installFromKernel($withOptionalFixtures = true)
@@ -110,6 +112,8 @@ class PlatformInstaller
                 }
             }
         }
+
+        $this->setBundleVersion();
     }
 
     private function launchPreInstallActions()
@@ -168,6 +172,37 @@ class PlatformInstaller
                 mkdir($directory);
             }
         };
+    }
+
+    private function setBundleVersion()
+    {
+        $this->log('Set the bundle versions...');
+        $vendorDir = $this->container->getParameter('claroline.param.vendor_directory');
+        $ds = DIRECTORY_SEPARATOR;
+        $jsonFile = "{$vendorDir}/composer/installed.json";
+        $data = json_decode(file_get_contents($jsonFile));
+        $om = $this->container->get('claroline.persistence.object_manager');
+        $bundleRepo = $om->getRepository('ClarolineCoreBundle:Bundle');
+        $this->log('Logging bundles versions...');
+
+        foreach ($data as $row) {
+            if ($row->type === 'claroline-plugin' || $row->type === 'claroline-core') {
+                $name = $row->name;
+                $version = $row->version;
+                //let's find if there is something in the database !
+                $bundle = $bundleRepo->findOneByName($name);
+
+                if (!$bundle) {
+                    $bundle = new Bundle();
+                    $bundle->setName($name);
+                }
+
+                $bundle->setVersion($version);
+                $om->persist($bundle);
+            }
+        }
+        $om->flush();
+        $this->log('Done.');
     }
 
     private function log($message)
