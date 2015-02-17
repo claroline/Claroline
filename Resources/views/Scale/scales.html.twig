@@ -30,7 +30,7 @@
         <tbody>
         {% for scale in scales %}
             {%
-                include 'HeVinciCompetencyBundle:Competency:scaleRow.html.twig'
+                include 'HeVinciCompetencyBundle:Scale:row.html.twig'
                 with {
                     'id': scale.getId(),
                     'name': scale.getName(),

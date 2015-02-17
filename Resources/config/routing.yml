@@ -14,6 +14,10 @@ hevinci_my_objectives_tool:
     resource: "@HeVinciCompetencyBundle/Controller/MyLearningObjectiveController.php"
     type: annotation
 
-hevinci_competency_tool:
+hevinci_competency_tool_frameworks:
     resource: "@HeVinciCompetencyBundle/Controller/CompetencyController.php"
+    type: annotation
+
+hevinci_competency_tool_scales:
+    resource: "@HeVinciCompetencyBundle/Controller/ScaleController.php"
     type: annotation
