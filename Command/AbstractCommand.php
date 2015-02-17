@@ -56,7 +56,15 @@ abstract class AbstractCommand extends ContainerAwareCommand
     protected function getTargetBundle(InputInterface $input)
     {
         $bundleName = $input->getArgument('bundle');
+        $bundles = $this->getContainer()->get('kernel')->getBundle(
+            $bundleName,
+            false
+        );
 
-        return  $this->getContainer()->get('kernel')->getBundle($bundleName);
+        foreach ($bundles as $bundle) {
+            if ($bundle->getName() == $bundleName) {
+                return $bundle;
+            }
+        }
     }
 }
