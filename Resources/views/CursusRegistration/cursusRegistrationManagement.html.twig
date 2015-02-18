@@ -41,9 +41,24 @@
         </div>
     {% else %}
         <span>
-            <span class="label label-primary {% if cursusId == selectedCursusId %}claroline-tag-highlight{% endif %}">
+            <a href=""
+               class="label label-primary {% if cursusId == selectedCursusId %}claroline-tag-highlight{% endif %}"
+            >
                 {{ cursusTitle }}
-            </span>
+            </a>
+            {%
+                if (cursusId == selectedCursusId) or
+                (
+                    lockedHierarchy[cursusId] is defined and
+                    (lockedHierarchy[cursusId] == 'up' or lockedHierarchy[cursusId] == 'down')
+                )
+            %}
+                &nbsp;
+                <i class="fa fa-check-circle" style="color: #5CB85C"></i>
+            {% else %}
+                &nbsp;
+                <i class="fa fa-times-circle" style="color: #D9534F"></i>
+            {% endif %}
         </span>
     {% endif %}
 
