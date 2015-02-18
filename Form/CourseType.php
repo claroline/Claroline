@@ -51,6 +51,16 @@ class CourseType extends AbstractType
             array('required' => true)
         );
         $builder->add(
+            'publicUnregistration',
+            'checkbox',
+            array('required' => true)
+        );
+        $builder->add(
+            'registrationValidation',
+            'checkbox',
+            array('required' => true)
+        );
+        $builder->add(
             'workspaceModel',
             'entity',
             array(

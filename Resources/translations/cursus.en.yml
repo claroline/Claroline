@@ -2,6 +2,8 @@ course: Course
 course_form_code: Code
 course_form_description: Description
 course_form_publicRegistration: 'Public registration'
+course_form_publicUnregistration: 'Public unregistration'
+course_form_registrationValidation: 'Registration validation'
 course_form_title: Title
 course_form_workspaceModel: 'Workspace model'
 create_cursus: 'Create "%cursusWord%"'
@@ -13,7 +15,10 @@ cursus_plugin_configuration: 'Cursus plugin configuration'
 default: Default
 displayed_word: 'Displayed word'
 nothing_to_configure: 'Nothing to configure'
+public_registration: 'Public registration'
+public_unregistration: 'Public unregistration'
 registration_date: 'Registration date'
+registration_validation: 'Registration validation'
 register: Register
 session: Session
 the_displayed_word_for: 'The displayed word for'

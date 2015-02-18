@@ -2,6 +2,8 @@ course: Cours
 course_form_code: Code
 course_form_description: Description
 course_form_publicRegistration: 'Inscription publique'
+course_form_publicUnregistration: 'Désinscription publique'
+course_form_registrationValidation: 'Validation de l''inscription'
 course_form_title: Titre
 course_form_workspaceModel: 'Modèle d''espace d''activités'
 create_cursus: 'Créer "%cursusWord%"'
@@ -13,7 +15,10 @@ cursus_plugin_configuration: 'Configuration du plugin Cursus'
 default: Défaut
 displayed_word: 'Mot affiché'
 nothing_to_configure: 'Rien à configurer'
+public_registration: 'Inscription publique'
+public_unregistration: 'Désinscription publique'
 registration_date: 'Date d''inscription'
+registration_validation: 'Validation de l''inscription'
 register: Inscrire
 session: Session
 the_displayed_word_for: 'Le mot affiché pour'

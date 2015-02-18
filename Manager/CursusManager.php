@@ -71,7 +71,7 @@ class CursusManager
         $this->cursusWordRepo =
             $om->getRepository('ClarolineCursusBundle:CursusDisplayedWord');
         $this->registrationQueueRepo =
-            $om->getRepository('ClarolineCursusBundle:courseSessionRegistrationQueue');
+            $om->getRepository('ClarolineCursusBundle:CourseSessionRegistrationQueue');
     }
     
     public function persistCursusDisplayedWord(CursusDisplayedWord $word)

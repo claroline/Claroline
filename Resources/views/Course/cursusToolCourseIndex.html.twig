@@ -140,7 +140,32 @@
                         </th>
                         <th class="text-center">
                             <a href="{{ sortUrl(search, 'publicRegistration', order, max) }}">
-                                {{ 'public_registration'|trans({}, 'platform') }}
+                                <i class="fa fa-sign-in"
+                                   data-toggle="tooltip"
+                                   data-placement="top"
+                                   title="{{ 'public_registration'|trans({}, 'cursus') }}"
+                                >
+                                </i>
+                            </a>
+                        </th>
+                        <th class="text-center">
+                            <a href="{{ sortUrl(search, 'publicUnregistration', order, max) }}">
+                                <i class="fa fa-sign-out"
+                                   data-toggle="tooltip"
+                                   data-placement="top"
+                                   title="{{ 'public_unregistration'|trans({}, 'cursus') }}"
+                                >
+                                </i>
+                            </a>
+                        </th>
+                        <th class="text-center">
+                            <a href="{{ sortUrl(search, 'registrationValidation', order, max) }}">
+                                <i class="fa fa-check-square-o"
+                                   data-toggle="tooltip"
+                                   data-placement="top"
+                                   title="{{ 'registration_validation'|trans({}, 'cursus') }}"
+                                >
+                                </i>
                             </a>
                         </th>
                         <th class="text-center">
@@ -172,6 +197,20 @@
                         </td>
                         <td class="text-center">
                             {% if course.getPublicRegistration() %}
+                                <i class="fa fa-check-circle" style="color: #5CB85C"></i>
+                            {% else %}
+                                <i class="fa fa-times-circle" style="color: #D9534F"></i>
+                            {% endif %}
+                        </td>
+                        <td class="text-center">
+                            {% if course.getPublicUnregistration() %}
+                                <i class="fa fa-check-circle" style="color: #5CB85C"></i>
+                            {% else %}
+                                <i class="fa fa-times-circle" style="color: #D9534F"></i>
+                            {% endif %}
+                        </td>
+                        <td class="text-center">
+                            {% if course.getRegistrationValidation() %}
                                 <i class="fa fa-check-circle" style="color: #5CB85C"></i>
                             {% else %}
                                 <i class="fa fa-times-circle" style="color: #D9534F"></i>
