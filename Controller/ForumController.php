@@ -955,7 +955,7 @@ class ForumController extends Controller
 
         if ($form->isValid()) {
             $newMsg = $form->getData();
-            $this->manager->createMessage($newMsg, $message);
+            $this->manager->createMessage($newMsg, $subject);
 
             return new RedirectResponse(
                 $this->generateUrl('claro_forum_messages', array('subject' => $subject->getId()))
