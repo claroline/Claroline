@@ -53,6 +53,46 @@ class CursusUserRepository extends EntityRepository
         return $executeQuery ? $query->getOneOrNullResult() : $query;
     }
 
+    public function findCursusUsersFromUsersAndCursus(
+        array $cursus,
+        array $users
+    )
+    {
+        $dql = '
+            SELECT cu
+            FROM Claroline\CursusBundle\Entity\CursusUser cu
+            WHERE cu.cursus IN (:cursus)
+            AND cu.user IN (:users)
+        ';
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('cursus', $cursus);
+        $query->setParameter('users', $users);
+
+        return $query->getResult();
+    }
+
+    public function findCursusUsersOfCursusChildren(
+        Cursus $cursus,
+        User $user,
+        $executeQuery = true
+    )
+    {
+        $dql = '
+            SELECT cu
+            FROM Claroline\CursusBundle\Entity\CursusUser cu
+            JOIN cu.cursus c
+            WHERE cu.user = :user
+            AND c.parent = :cursus
+            AND c.root = :root
+        ';
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('user', $user);
+        $query->setParameter('cursus', $cursus);
+        $query->setParameter('root', $cursus->getRoot());
+
+        return $executeQuery ? $query->getResult() : $query;
+    }
+
     public function findUnregisteredUsersByCursus(
         Cursus $cursus,
         $orderedBy = 'firstName',

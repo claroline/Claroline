@@ -531,7 +531,10 @@ class CursusRegistrationController extends Controller
     public function cursusUserDeleteAction(CursusUser $cursusUser)
     {
         $this->checkToolAccess();
-        $this->cursusManager->deleteCursusUser($cursusUser);
+        $this->cursusManager->unregisterUserFromCursus(
+            $cursusUser->getCursus(),
+            $cursusUser->getUser()
+        );
 
         return new JsonResponse('success', 200);
     }

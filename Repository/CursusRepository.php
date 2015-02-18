@@ -142,6 +142,29 @@ class CursusRepository extends NestedTreeRepository
         return $executeQuery ? $query->getResult() : $query;
     }
 
+    public function findDescendantHierarchyByCursus(
+        Cursus $cursus,
+        $orderedBy = 'cursusOrder',
+        $order = 'ASC',
+        $executeQuery = true
+    )
+    {
+        $dql = "
+            SELECT DISTINCT c
+            FROM Claroline\CursusBundle\Entity\Cursus c
+            WHERE c.root = :root
+            AND c.lft >= :left
+            AND c.rgt <= :right
+            ORDER BY c.{$orderedBy} {$order}
+        ";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('root', $cursus->getRoot());
+        $query->setParameter('left', $cursus->getLft());
+        $query->setParameter('right', $cursus->getRgt());
+
+        return $executeQuery ? $query->getResult() : $query;
+    }
+
     public function findCursusByParentAndCourses(
         Cursus $parent,
         array $courses,
