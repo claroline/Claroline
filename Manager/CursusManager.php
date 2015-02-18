@@ -243,44 +243,7 @@ class CursusManager
 
     public function unregisterUserFromCursus(Cursus $cursus, User $user)
     {
-        $cursusUser = $this->cursusUserRepo->findOneCursusUserByCursusAndUser(
-            $cursus,
-            $user
-        );
-        $toDelete = array();
-
-        if (!is_null($cursusUser)) {
-            $toDelete[] = $cursusUser;
-
-            if (!$cursus->isBlocking()) {
-                // Determines from which cursus descendants user has to be removed
-                $unlockedDescendants = $this->getUnlockedDescendants($cursus);
-                $removableDescendants = $this->getCursusUsersFromUsersAndCursus(
-                    $unlockedDescendants,
-                    array($user)
-                );
-
-                // Determines from which cursus ancestors user has to be removed
-                $removableAncestors = $this->searchRemovableCursusUsersFromAncestors(
-                    $cursus,
-                    $user
-                );
-
-                // Merge all removable CursusUser
-                $toDelete = array_merge_recursive(
-                    $toDelete,
-                    $removableAncestors,
-                    $removableDescendants
-                );
-            }
-        }
-
-        $this->om->startFlushSuite();
-
-        foreach ($toDelete as $cu) {
-            $this->deleteCursusUser($cu);
-        }
-        $this->om->endFlushSuite();
+        $this->unregisterUsersFromCursus($cursus, array($user));
     }
 
     public function registerUsersToCursus(Cursus $cursus, array $users)
@@ -295,10 +258,42 @@ class CursusManager
 
     public function unregisterUsersFromCursus(Cursus $cursus, array $users)
     {
+        $toDelete = array();
+
+        if ($cursus->isBlocking()) {
+            $toDelete = $this->getCursusUsersFromCursusAndUsers(
+                array($cursus),
+                $users
+            );
+        } else {
+            // Determines from which cursus descendants user has to be removed.
+            $unlockedDescendants = $this->getUnlockedDescendants($cursus);
+            // Current cursus is included
+            $unlockedDescendants[] = $cursus;
+            $toDelete = $this->getCursusUsersFromCursusAndUsers(
+                $unlockedDescendants,
+                $users
+            );
+
+            foreach ($users as $user) {
+                // Determines from which cursus ancestors user has to be removed
+                $removableAncestors = $this->searchRemovableCursusUsersFromAncestors(
+                    $cursus,
+                    $user
+                );
+
+                // Merge all removable CursusUser
+                $toDelete = array_merge_recursive(
+                    $toDelete,
+                    $removableAncestors
+                );
+            }
+        }
+
         $this->om->startFlushSuite();
 
-        foreach ($users as $user) {
-            $this->unregisterUserFromCursus($cursus, $user);
+        foreach ($toDelete as $cu) {
+            $this->deleteCursusUser($cu);
         }
         $this->om->endFlushSuite();
     }
@@ -351,18 +346,69 @@ class CursusManager
 
     public function unregisterGroupFromCursus(Cursus $cursus, Group $group)
     {
-        $cursusGroup = $this->cursusGroupRepo->findOneCursusGroupByCursusAndGroup(
-            $cursus,
-            $group
-        );
+        $users = $group->getUsers()->toArray();
+        $cursusGroupsToDelete = array();
+        $cursusUsersToDelete = array();
 
-        if (!is_null($cursusGroup)) {
-            $this->om->startFlushSuite();
-            $this->deleteCursusGroup($cursusGroup);
-            $users = $group->getUsers();
-            $this->unregisterUsersFromCursus($cursus, $users->toArray());
-            $this->om->endFlushSuite();
+        if ($cursus->isBlocking()) {
+            $cursusUsersToDelete = $this->getCursusUsersFromCursusAndUsers(
+                array($cursus),
+                $users
+            );
+            $cursusGroupsToDelete = $this->getCursusGroupsFromCursusAndGroups(
+                array($cursus),
+                array($group)
+            );
+        } else {
+            // Determines from which cursus descendants user has to be removed.
+            $unlockedDescendants = $this->getUnlockedDescendants($cursus);
+            // Current cursus is included
+            $unlockedDescendants[] = $cursus;
+            $cursusUsersToDelete = $this->getCursusUsersFromCursusAndUsers(
+                $unlockedDescendants,
+                $users
+            );
+            $removableGroupDescendants = $this->getCursusGroupsFromCursusAndGroups(
+                $unlockedDescendants,
+                array($group)
+            );
+
+            foreach ($users as $user) {
+                // Determines from which cursus ancestors user has to be removed
+                $removableUserAncestors = $this->searchRemovableCursusUsersFromAncestors(
+                    $cursus,
+                    $user
+                );
+
+                // Merge all removable CursusUser
+                $cursusUsersToDelete = array_merge_recursive(
+                    $cursusUsersToDelete,
+                    $removableUserAncestors
+                );
+            }
+
+            $removableGroupAncestors = $this->searchRemovableCursusGroupsFromAncestors(
+                $cursus,
+                $group
+            );
+
+            // Merge all removable CursusGroup
+            $cursusGroupsToDelete = array_merge_recursive(
+                $removableGroupDescendants,
+                $removableGroupAncestors
+            );
         }
+
+        $this->om->startFlushSuite();
+
+        foreach ($cursusUsersToDelete as $cu) {
+            $this->deleteCursusUser($cu);
+        }
+
+        foreach ($cursusGroupsToDelete as $cg) {
+            $this->deleteCursusGroup($cg);
+        }
+        $this->om->endFlushSuite();
     }
 
     public function updateCursusOrder(Cursus $cursus, $cursusOrder)
@@ -471,6 +517,37 @@ class CursusManager
         }
 
         return $removableCursusUsers;
+    }
+
+    private function searchRemovableCursusGroupsFromAncestors(Cursus $cursus, Group $group)
+    {
+        $removableCursusGroups = array();
+        $parent = $cursus->getParent();
+
+        while (!is_null($parent) && !$parent->isBlocking()) {
+            $parentGroup = $this->cursusGroupRepo->findOneCursusGroupByCursusAndGroup(
+                $parent,
+                $group
+            );
+
+            if (is_null($parentGroup)) {
+                break;
+            } else {
+                $childrenGroups = $this->cursusGroupRepo->findCursusGroupsOfCursusChildren(
+                    $parent,
+                    $group
+                );
+
+                if (count($childrenGroups) > 1) {
+                    break;
+                } else {
+                    $removableCursusGroups[] = $parentGroup;
+                    $parent = $parent->getParent();
+                }
+            }
+        }
+
+        return $removableCursusGroups;
     }
     
 
@@ -672,14 +749,14 @@ class CursusManager
         );
     }
 
-    public function getCursusUsersFromUsersAndCursus(
+    public function getCursusUsersFromCursusAndUsers(
         array $cursus,
         array $users
     )
     {
         if (count($cursus) > 0 && count($users) > 0) {
 
-            return $this->cursusUserRepo->findCursusUsersFromUsersAndCursus(
+            return $this->cursusUserRepo->findCursusUsersFromCursusAndUsers(
                 $cursus,
                 $users
             );
@@ -801,6 +878,36 @@ class CursusManager
     )
     {
         return $this->cursusGroupRepo->findOneCursusGroupByCursusAndGroup(
+            $cursus,
+            $group,
+            $executeQuery
+        );
+    }
+
+    public function getCursusGroupsFromCursusAndGroups(
+        array $cursus,
+        array $groups
+    )
+    {
+        if (count($cursus) > 0 && count($groups) > 0) {
+
+            return $this->cursusGroupRepo->findCursusGroupsFromCursusAndGroups(
+                $cursus,
+                $groups
+            );
+        } else {
+
+            return array();
+        }
+    }
+
+    public function getCursusGroupsOfCursusChildren(
+        Cursus $cursus,
+        Group $group,
+        $executeQuery = true
+    )
+    {
+        return $this->cursusGroupRepo->findCursusGroupsOfCursusChildren(
             $cursus,
             $group,
             $executeQuery

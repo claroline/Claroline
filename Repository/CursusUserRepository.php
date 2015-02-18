@@ -53,7 +53,7 @@ class CursusUserRepository extends EntityRepository
         return $executeQuery ? $query->getOneOrNullResult() : $query;
     }
 
-    public function findCursusUsersFromUsersAndCursus(
+    public function findCursusUsersFromCursusAndUsers(
         array $cursus,
         array $users
     )

@@ -53,6 +53,46 @@ class CursusGroupRepository extends EntityRepository
         return $executeQuery ? $query->getOneOrNullResult() : $query;
     }
 
+    public function findCursusGroupsFromCursusAndGroups(
+        array $cursus,
+        array $groups
+    )
+    {
+        $dql = '
+            SELECT cg
+            FROM Claroline\CursusBundle\Entity\CursusGroup cg
+            WHERE cg.cursus IN (:cursus)
+            AND cg.group IN (:groups)
+        ';
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('cursus', $cursus);
+        $query->setParameter('groups', $groups);
+
+        return $query->getResult();
+    }
+
+    public function findCursusGroupsOfCursusChildren(
+        Cursus $cursus,
+        Group $group,
+        $executeQuery = true
+    )
+    {
+        $dql = '
+            SELECT cg
+            FROM Claroline\CursusBundle\Entity\CursusGroup cg
+            JOIN cg.cursus c
+            WHERE cg.group = :group
+            AND c.parent = :cursus
+            AND c.root = :root
+        ';
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('group', $group);
+        $query->setParameter('cursus', $cursus);
+        $query->setParameter('root', $cursus->getRoot());
+
+        return $executeQuery ? $query->getResult() : $query;
+    }
+
     public function findUnregisteredGroupsByCursus(
         Cursus $cursus,
         $orderedBy = 'name',
