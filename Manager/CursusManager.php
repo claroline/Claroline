@@ -38,6 +38,7 @@ class CursusManager
     private $cursusGroupRepo;
     private $cursusUserRepo;
     private $cursusWordRepo;
+    private $registrationQueueRepo;
     
     /**
      * @DI\InjectParams({
@@ -69,6 +70,8 @@ class CursusManager
             $om->getRepository('ClarolineCursusBundle:CursusUser');
         $this->cursusWordRepo =
             $om->getRepository('ClarolineCursusBundle:CursusDisplayedWord');
+        $this->registrationQueueRepo =
+            $om->getRepository('ClarolineCursusBundle:courseSessionRegistrationQueue');
     }
     
     public function persistCursusDisplayedWord(CursusDisplayedWord $word)
@@ -1024,5 +1027,33 @@ class CursusManager
             $group,
             $executeQuery
         );
+    }
+
+
+    /**************************************************************
+     * Access to CourseSessionRegistrationQueueRepository methods *
+     **************************************************************/
+
+    public function getQueuesBySession(CourseSession $session, $executeQuery = true)
+    {
+        return $this->registrationQueueRepo->findQueuesBySession($session, $executeQuery);
+    }
+
+    public function getOneQueueBySessionAndUser(
+        CourseSession $session,
+        User $user,
+        $executeQuery = true
+    )
+    {
+        return $this->registrationQueueRepo->findOneQueueBySessionAndUser(
+            $session,
+            $user,
+            $executeQuery
+        );
+    }
+
+    public function getQueuesByCourse(Course $course, $executeQuery = true)
+    {
+        return $this->registrationQueueRepo->findQueuesByCourse($course, $executeQuery);
     }
 }
