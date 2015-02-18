@@ -1,14 +1,14 @@
-<div {% if constant('Icap\\PortfolioBundle\\Manager\\PortfolioManager::PORTFOLIO_OPENING_MODE_VIEW') != openingMode %}data-widget {% endif %}class="panel panel-default widget-panel ng-cloak">
-    <div class="panel-heading" data-ng-show="!widget.isEditing()" data-ng-mouseover="showAction = true" data-ng-mouseleave="showAction = false">
+<div {% if constant('Icap\\PortfolioBundle\\Manager\\PortfolioManager::PORTFOLIO_OPENING_MODE_VIEW') != openingMode %}data-widget="widget" {% endif %}class="panel panel-default widget-panel ng-cloak">
+    <div class="panel-heading" {% verbatim %}data-ng-class="{draggable: gridsterOptions.draggable.enabled}"{% endverbatim %} data-ng-show="!widget.isEditing()" data-ng-mouseover="showAction = true" data-ng-mouseleave="showAction = false">
         {% if constant('Icap\\PortfolioBundle\\Manager\\PortfolioManager::PORTFOLIO_OPENING_MODE_VIEW') != openingMode %}
             {% verbatim %}{{ widget.label }}{% endverbatim %}
             {% if editMode %}
             <div class="widget-actions" data-ng-if="!widget.isNew() && !widget.isUpdating()" data-ng-show="showAction">
-                <button class="widget-action btn btn-xs btn-danger" data-ng-class="{'btn-loading': widget.isDeleting}" data-confirm-click="delete(widget);" data-ng-if="isDeletable(widget)">
+                <button class="widget-action btn btn-xs btn-danger" data-ng-class="{'btn-loading': widget.isDeleting}" data-confirm-click="delete();" data-ng-if="isDeletable()">
                     <span class="loading" data-ng-if="widget.isDeleting"></span>
                     <span class="fa fa-trash-o" data-ng-if="!widget.isDeleting"></span>
                 </button>
-                <button class="widget-action btn btn-xs btn-primary" data-ng-click="edit(widget);">
+                <button class="widget-action btn btn-xs btn-primary" data-ng-click="edit();">
                     <span class="fa fa-pencil"></span>
                 </button>
             </div>
@@ -34,7 +34,7 @@
         <div class="panel-body" data-bind-html="widget.views.form"></div>
         <div class="panel-footer">
             <button type="submit" class="btn btn-primary">{{ 'save'|trans({}, 'platform') }}</button>
-            <button type="button" class="btn btn-default" data-ng-click="cancelEdition(widget)">{{ 'cancel'|trans({}, 'platform') }}</button>
+            <button type="button" class="btn btn-default" data-ng-click="cancelEdition()">{{ 'cancel'|trans({}, 'platform') }}</button>
         </div>
     </form>
     {% endif %}
