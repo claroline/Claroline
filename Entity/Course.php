@@ -54,12 +54,32 @@ class Course
     protected $publicRegistration = false;
 
     /**
+     * @ORM\Column(name="public_unregistration", type="boolean")
+     */
+    protected $publicUnregistration = false;
+
+    /**
+     * @ORM\Column(name="registration_validation", type="boolean")
+     */
+    protected $registrationValidation = false;
+
+    /**
      * @ORM\ManyToOne(
      *     targetEntity="Claroline\CoreBundle\Entity\Model\WorkspaceModel"
      * )
      * @ORM\JoinColumn(name="workspace_model_id", nullable=true, onDelete="SET NULL")
      */
     protected $workspaceModel;
+
+    /**
+     * @ORM\Column(name="manager_role_prefix", nullable=true)
+     */
+    protected $managerRolePrefix;
+
+     /**
+     * @ORM\Column(name="user_role_prefix", nullable=true)
+     */
+    protected $userRolePrefix;
 
     /**
      * @ORM\OneToMany(
@@ -142,6 +162,26 @@ class Course
         $this->publicRegistration = $publicRegistration;
     }
 
+    public function getPublicUnregistration()
+    {
+        return $this->publicUnregistration;
+    }
+
+    public function setPublicUnregistration($publicUnregistration)
+    {
+        $this->publicUnregistration = $publicUnregistration;
+    }
+
+    public function getRegistrationValidation()
+    {
+        return $this->registrationValidation;
+    }
+
+    public function setRegistrationValidation($registrationValidation)
+    {
+        $this->registrationValidation = $registrationValidation;
+    }
+
     public function getWorkspaceModel()
     {
         return $this->workspaceModel;
@@ -151,6 +191,27 @@ class Course
     {
         $this->workspaceModel = $workspaceModel;
     }
+
+    public function getManagerRolePrefix()
+    {
+        return $this->managerRolePrefix;
+    }
+
+    public function setManagerRolePrefix($managerRolePrefix)
+    {
+        $this->managerRolePrefix = $managerRolePrefix;
+    }
+
+    public function getUserRolePrefix()
+    {
+        return $this->userRolePrefix;
+    }
+
+    public function setUserRolePrefix($userRolePrefix)
+    {
+        $this->userRolePrefix = $userRolePrefix;
+    }
+
 
     public function getSessions()
     {

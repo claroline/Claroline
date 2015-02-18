@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2015/02/12 12:32:20
+ * Generation date: 2015/02/18 03:49:17
  */
-class Version20150212123218 extends AbstractMigration
+class Version20150218154915 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -22,6 +22,10 @@ class Version20150212123218 extends AbstractMigration
                 title VARCHAR2(255) NOT NULL, 
                 description CLOB DEFAULT NULL NULL, 
                 public_registration NUMBER(1) NOT NULL, 
+                public_unregistration NUMBER(1) NOT NULL, 
+                registration_validation NUMBER(1) NOT NULL, 
+                manager_role_prefix VARCHAR2(255) DEFAULT NULL NULL, 
+                user_role_prefix VARCHAR2(255) DEFAULT NULL NULL, 
                 PRIMARY KEY(id)
             )
         ");
@@ -353,6 +357,52 @@ class Version20150212123218 extends AbstractMigration
             CREATE UNIQUE INDEX cursus_group_unique_cursus_group ON claro_cursusbundle_cursus_group (cursus_id, group_id)
         ");
         $this->addSql("
+            CREATE TABLE claro_cursusbundle_course_session_registration_queue (
+                id NUMBER(10) NOT NULL, 
+                user_id NUMBER(10) NOT NULL, 
+                session_id NUMBER(10) NOT NULL, 
+                application_date TIMESTAMP(0) NOT NULL, 
+                PRIMARY KEY(id)
+            )
+        ");
+        $this->addSql("
+            DECLARE constraints_Count NUMBER; BEGIN 
+            SELECT COUNT(CONSTRAINT_NAME) INTO constraints_Count 
+            FROM USER_CONSTRAINTS 
+            WHERE TABLE_NAME = 'CLARO_CURSUSBUNDLE_COURSE_SESSION_REGISTRATION_QUEUE' 
+            AND CONSTRAINT_TYPE = 'P'; IF constraints_Count = 0 
+            OR constraints_Count = '' THEN EXECUTE IMMEDIATE 'ALTER TABLE CLARO_CURSUSBUNDLE_COURSE_SESSION_REGISTRATION_QUEUE ADD CONSTRAINT CLARO_CURSUSBUNDLE_COURSE_SESSION_REGISTRATION_QUEUE_AI_PK PRIMARY KEY (ID)'; END IF; END;
+        ");
+        $this->addSql("
+            CREATE SEQUENCE CLARO_CURSUSBUNDLE_COURSE_SESSION_REGISTRATION_QUEUE_SEQ START WITH 1 MINVALUE 1 INCREMENT BY 1
+        ");
+        $this->addSql("
+            CREATE TRIGGER CLARO_CURSUSBUNDLE_COURSE_SESSION_REGISTRATION_QUEUE_AI_PK BEFORE INSERT ON CLARO_CURSUSBUNDLE_COURSE_SESSION_REGISTRATION_QUEUE FOR EACH ROW DECLARE last_Sequence NUMBER; last_InsertID NUMBER; BEGIN 
+            SELECT CLARO_CURSUSBUNDLE_COURSE_SESSION_REGISTRATION_QUEUE_SEQ.NEXTVAL INTO : NEW.ID 
+            FROM DUAL; IF (
+                : NEW.ID IS NULL 
+                OR : NEW.ID = 0
+            ) THEN 
+            SELECT CLARO_CURSUSBUNDLE_COURSE_SESSION_REGISTRATION_QUEUE_SEQ.NEXTVAL INTO : NEW.ID 
+            FROM DUAL; ELSE 
+            SELECT NVL(Last_Number, 0) INTO last_Sequence 
+            FROM User_Sequences 
+            WHERE Sequence_Name = 'CLARO_CURSUSBUNDLE_COURSE_SESSION_REGISTRATION_QUEUE_SEQ'; 
+            SELECT : NEW.ID INTO last_InsertID 
+            FROM DUAL; WHILE (last_InsertID > last_Sequence) LOOP 
+            SELECT CLARO_CURSUSBUNDLE_COURSE_SESSION_REGISTRATION_QUEUE_SEQ.NEXTVAL INTO last_Sequence 
+            FROM DUAL; END LOOP; END IF; END;
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_334FC296A76ED395 ON claro_cursusbundle_course_session_registration_queue (user_id)
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_334FC296613FECDF ON claro_cursusbundle_course_session_registration_queue (session_id)
+        ");
+        $this->addSql("
+            CREATE UNIQUE INDEX session_queue_unique_session_user ON claro_cursusbundle_course_session_registration_queue (session_id, user_id)
+        ");
+        $this->addSql("
             CREATE TABLE claro_cursusbundle_cursus_user (
                 id NUMBER(10) NOT NULL, 
                 user_id NUMBER(10) NOT NULL, 
@@ -484,6 +534,18 @@ class Version20150212123218 extends AbstractMigration
             ON DELETE CASCADE
         ");
         $this->addSql("
+            ALTER TABLE claro_cursusbundle_course_session_registration_queue 
+            ADD CONSTRAINT FK_334FC296A76ED395 FOREIGN KEY (user_id) 
+            REFERENCES claro_user (id) 
+            ON DELETE CASCADE
+        ");
+        $this->addSql("
+            ALTER TABLE claro_cursusbundle_course_session_registration_queue 
+            ADD CONSTRAINT FK_334FC296613FECDF FOREIGN KEY (session_id) 
+            REFERENCES claro_cursusbundle_course_session (id) 
+            ON DELETE CASCADE
+        ");
+        $this->addSql("
             ALTER TABLE claro_cursusbundle_cursus_user 
             ADD CONSTRAINT FK_8AA52D8A76ED395 FOREIGN KEY (user_id) 
             REFERENCES claro_user (id) 
@@ -532,6 +594,10 @@ class Version20150212123218 extends AbstractMigration
             DROP CONSTRAINT FK_8AA52D840AEF4B9
         ");
         $this->addSql("
+            ALTER TABLE claro_cursusbundle_course_session_registration_queue 
+            DROP CONSTRAINT FK_334FC296613FECDF
+        ");
+        $this->addSql("
             DROP TABLE claro_cursusbundle_course
         ");
         $this->addSql("
@@ -551,6 +617,9 @@ class Version20150212123218 extends AbstractMigration
         ");
         $this->addSql("
             DROP TABLE claro_cursusbundle_cursus_group
+        ");
+        $this->addSql("
+            DROP TABLE claro_cursusbundle_course_session_registration_queue
         ");
         $this->addSql("
             DROP TABLE claro_cursusbundle_cursus_user
