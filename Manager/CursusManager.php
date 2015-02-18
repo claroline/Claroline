@@ -247,64 +247,31 @@ class CursusManager
             $cursus,
             $user
         );
-        $toDeleteFrom = array();
         $toDelete = array();
 
-        // Determines from which cursus descendants user has to be removed
         if (!is_null($cursusUser)) {
-            $descendantsCursus = $this->cursusRepo->findDescendantHierarchyByCursus($cursus);
-            $hierarchy = array();
-
-            foreach ($descendantsCursus as $descendant) {
-                $parent = $descendant->getParent();
-
-                if (!is_null($parent)) {
-                    $parentId = $parent->getId();
-
-                    if (!isset($hierarchy[$parentId])) {
-                        $hierarchy[$parentId] = array();
-                    }
-                    $hierarchy[$parentId][] = $descendant;
-                }
-            }
-            $this->searchUnlockedDescendants(
-                $cursus,
-                $hierarchy,
-                $toDeleteFrom
-            );
-
-            $toDelete = $this->getCursusUsersFromUsersAndCursus(
-                $toDeleteFrom,
-                array($user)
-            );
             $toDelete[] = $cursusUser;
-        }
 
-        // Determines from which cursus ancestors user has to be removed
-        if (!$cursus->isBlocking()) {
-            $parent = $cursus->getParent();
+            if (!$cursus->isBlocking()) {
+                // Determines from which cursus descendants user has to be removed
+                $unlockedDescendants = $this->getUnlockedDescendants($cursus);
+                $removableDescendants = $this->getCursusUsersFromUsersAndCursus(
+                    $unlockedDescendants,
+                    array($user)
+                );
 
-            while (!is_null($parent) && !$parent->isBlocking()) {
-                $parentUser = $this->cursusUserRepo->findOneCursusUserByCursusAndUser(
-                    $parent,
+                // Determines from which cursus ancestors user has to be removed
+                $removableAncestors = $this->searchRemovableCursusUsersFromAncestors(
+                    $cursus,
                     $user
                 );
 
-                if (is_null($parentUser)) {
-                    break;
-                } else {
-                    $childrenUsers = $this->cursusUserRepo->findCursusUsersOfCursusChildren(
-                        $parent,
-                        $user
-                    );
-
-                    if (count($childrenUsers) > 1) {
-                        break;
-                    } else {
-                        $toDelete[] = $parentUser;
-                        $parent = $parent->getParent();
-                    }
-                }
+                // Merge all removable CursusUser
+                $toDelete = array_merge_recursive(
+                    $toDelete,
+                    $removableAncestors,
+                    $removableDescendants
+                );
             }
         }
 
@@ -424,10 +391,37 @@ class CursusManager
             );
     }
 
+    private function getUnlockedDescendants(Cursus $cursus)
+    {
+        $descendantsCursus = $this->cursusRepo->findDescendantHierarchyByCursus($cursus);
+        $hierarchy = array();
+        $unlockedDescendants = array();
+
+        foreach ($descendantsCursus as $descendant) {
+            $parent = $descendant->getParent();
+
+            if (!is_null($parent)) {
+                $parentId = $parent->getId();
+
+                if (!isset($hierarchy[$parentId])) {
+                    $hierarchy[$parentId] = array();
+                }
+                $hierarchy[$parentId][] = $descendant;
+            }
+        }
+        $this->searchUnlockedDescendants(
+            $cursus,
+            $hierarchy,
+            $unlockedDescendants
+        );
+
+        return $unlockedDescendants;
+    }
+
     private function searchUnlockedDescendants(
         Cursus $cursus,
         array $hierarchy,
-        array &$unlockedChildren
+        array &$unlockedDescendants
     )
     {
         $cursusId = $cursus->getId();
@@ -437,15 +431,46 @@ class CursusManager
             foreach ($hierarchy[$cursusId] as $child) {
 
                 if (!$child->isBlocking()) {
-                    $unlockedChildren[] = $child;
+                    $unlockedDescendants[] = $child;
                     $this->searchUnlockedDescendants(
                         $child,
                         $hierarchy,
-                        $unlockedChildren
+                        $unlockedDescendants
                     );
                 }
             }
         }
+    }
+
+    private function searchRemovableCursusUsersFromAncestors(Cursus $cursus, User $user)
+    {
+        $removableCursusUsers = array();
+        $parent = $cursus->getParent();
+
+        while (!is_null($parent) && !$parent->isBlocking()) {
+            $parentUser = $this->cursusUserRepo->findOneCursusUserByCursusAndUser(
+                $parent,
+                $user
+            );
+
+            if (is_null($parentUser)) {
+                break;
+            } else {
+                $childrenUsers = $this->cursusUserRepo->findCursusUsersOfCursusChildren(
+                    $parent,
+                    $user
+                );
+
+                if (count($childrenUsers) > 1) {
+                    break;
+                } else {
+                    $removableCursusUsers[] = $parentUser;
+                    $parent = $parent->getParent();
+                }
+            }
+        }
+
+        return $removableCursusUsers;
     }
     
 
