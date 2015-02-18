@@ -418,6 +418,39 @@ class CursusRegistrationController extends Controller
 
     /**
      * @EXT\Route(
+     *     "multiple/cursus/register/users",
+     *     name="claro_cursus_multiple_register_users",
+     *    options = {"expose"=true}
+     * )
+     * @EXT\Method("POST")
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\ParamConverter(
+     *     "multipleCursus",
+     *      class="ClarolineCursusBundle:Cursus",
+     *      options={"multipleIds" = true, "name" = "cursusIds"}
+     * )
+     * @EXT\ParamConverter(
+     *     "users",
+     *      class="ClarolineCoreBundle:User",
+     *      options={"multipleIds" = true, "name" = "userIds"}
+     * )
+     *
+     * @param Cursus $cursus
+     * @param User[] $users
+     */
+    public function cursusUsersRegisterToMultipleCursusAction(
+        array $multipleCursus,
+        array $users
+    )
+    {
+        $this->checkToolAccess();
+        $this->cursusManager->registerUsersToMultipleCursus($multipleCursus, $users);
+
+        return new JsonResponse('success', 200);
+    }
+
+    /**
+     * @EXT\Route(
      *     "cursus/{cursus}/unregister/user/{user}",
      *     name="claro_cursus_unregister_user",
      *     options={"expose"=true}

@@ -215,6 +215,32 @@ class CursusManager
         $this->om->endFlushSuite();
     }
 
+    public function registerUsersToMultipleCursus(array $multipleCursus, array $users)
+    {
+        $registrationDate = new \DateTime();
+
+        $this->om->startFlushSuite();
+
+        foreach ($users as $user) {
+
+            foreach ($multipleCursus as $cursus) {
+                $cursusUser = $this->cursusUserRepo->findOneCursusUserByCursusAndUser(
+                    $cursus,
+                    $user
+                );
+
+                if (is_null($cursusUser)) {
+                    $cursusUser = new CursusUser();
+                    $cursusUser->setCursus($cursus);
+                    $cursusUser->setUser($user);
+                    $cursusUser->setRegistrationDate($registrationDate);
+                    $this->persistCursusUser($cursusUser);
+                }
+            }
+        }
+        $this->om->endFlushSuite();
+    }
+
     public function unregisterUserFromCursus(Cursus $cursus, User $user)
     {
         $cursusUser = $this->cursusUserRepo->findOneCursusUserByCursusAndUser(
