@@ -149,19 +149,20 @@ class InteractionMatching
 
             foreach ($this->proposals as $proposal) {
                 $newProposal = clone $proposal;
+                $newProposal->removeAssociatedLabel();
                 $newProposal->setInteractionMatching($this);
 
-                if ($proposal->getAssociatedLabel() != null) {
-                    $assocLabel = $proposal->getAssociatedLabel();
-                    $newProposal->setAssociatedLabel(
-                            $newLinkLabelProposal[$assocLabel->getId()]
-                            );
-                }
-
                 $newProposals->add($newProposal);
+                if ($proposal->getAssociatedLabel() != null) {
+                    $assocedLabel = $proposal->getAssociatedLabel();
+                    foreach ($assocedLabel as $assocLabel) {
+                        $newProposal->addAssociatedLabel(
+                            $newLinkLabelProposal[$assocLabel->getId()]
+                        );
+                    }
+                }
             }
             $this->proposals = $newProposals;
-
         }
     }
 }

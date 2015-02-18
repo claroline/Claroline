@@ -63,7 +63,7 @@ class InteractionMatchingHandler extends InteractionHandler
             if ($this->isClone === FALSE) {
                 if(count($this->request->get($indLabel.'_correspondence')) > 0 ) {
                     foreach($this->request->get($indLabel.'_correspondence') as $indProposal) {
-                        $proposals[$indProposal - 1]->setAssociatedLabel($label);
+                        $proposals[$indProposal - 1]->addAssociatedLabel($label);
                     }
                 }
             }
@@ -144,9 +144,9 @@ class InteractionMatchingHandler extends InteractionHandler
 
         //remove all relationships between proposal and label
         foreach ($proposals as $proposal) {
-            $proposal->removeAssociatedLabel();
+            $proposal->removeAssociatedLabel($proposal);
         }
-
+                
         // filter $originalLabels to contain label no longer present
         foreach ($interMatching->getLabels() as $label) {
             foreach ($originalLabels as $key => $toDel) {
@@ -165,13 +165,6 @@ class InteractionMatchingHandler extends InteractionHandler
 
         // remove the relationship between the label and the interactionmatching
         foreach ($originalLabels as $label) {
-            $proposals = $this->em->getRepository('UJMExoBundle:Proposal')
-                     ->findBy(array('associatedLabel' => $label));
-            //remove the relationship between the deleted label and proposal
-            foreach($proposals as $proposal) {
-                $proposal->removeAssociatedLabel();
-                $this->em->persist($proposal);
-            }
             // remove the label from the interactionmatching
             $interMatching->getLabels()->removeElement($label);
 
@@ -201,12 +194,12 @@ class InteractionMatchingHandler extends InteractionHandler
             $proposal->setInteractionMatching($interMatching);
             $this->em->persist($proposal);
         }
-
+        
         $proposals = array_merge($interMatching->getProposals()->toArray());
         foreach ($interMatching->getLabels() as $label) {
             if(count($this->request->get($indLabel.'_correspondence')) > 0 ) {
                 foreach($this->request->get($indLabel.'_correspondence') as $indProposal) {
-                    $proposals[$indProposal - 1]->setAssociatedLabel($label);
+                    $proposals[$indProposal - 1]->addAssociatedLabel($label);
                     $this->em->persist($proposals[$indProposal - 1]);
                 }
             }

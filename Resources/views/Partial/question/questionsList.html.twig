@@ -89,7 +89,7 @@
                     or questionsList == 'exoList' or questionsList == 'importExoList') %}
                 <th class="classic">{{ 'shared by' | trans }}</th>
             {% endif %}
-            {% if (questionsList == 'importMy' or questionsList == 'importShare' 
+            {% if (questionsList == 'importMy' or questionsList == 'importShare'
                     or questionsList == 'importExoList') %}
                 <th class="classic">{{ 'import' | trans }}</th>
             {% endif %}
@@ -160,6 +160,12 @@
                 <a class="btn btn-default" data-toggle="tooltip" title="{{ 'duplicate' | trans }}" href="{{ path('ujm_question_duplicate', { 'interID': interaction.id, 'exoID': exerciseID }) }}">
                     <i class="fa fa-repeat"></i>
                 </a>
+                {# ham : Export Question button  #}
+                <a class="btn btn-default" data-toggle="tooltip" title="{{ 'Export' | trans }}" href="{{ path('ujm_question_export', {
+                'id': interaction.question.id }) }}">
+                    <i class="fa fa-save"></i>
+                </a>
+                {# ham : fin  #}
                 {% else %}
                     {{ 'noRights' | trans }}
                 {% endif %}

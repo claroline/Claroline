@@ -39,7 +39,8 @@ class InteractionGraphicType extends AbstractType
                         if ($this->docID == -1) {
                             return $repository->createQueryBuilder('d')
                                 ->where('d.user = ?1')
-                                ->andwhere('d.type = \'.png\' OR d.type = \'.jpeg\' OR d.type = \'.jpg\' OR d.type = \'.gif\' OR d.type = \'.bmp\'')
+                                ->andwhere('d.type like \'%.png%\' OR d.type like \'%.jpeg%\' '
+                                        . 'OR d.type like \'%.jpg%\' OR d.type like \'%.gif%\' OR d.type like \'%.bmp%\'')
                                 ->setParameter(1, $id);
                         } else {
                             return $repository->createQueryBuilder('d')

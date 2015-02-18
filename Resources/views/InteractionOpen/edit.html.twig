@@ -51,7 +51,11 @@
 
             <div class="panel-footer">
                 <button type="submit" id="button_submit" class="btn btn-primary">{{ 'save' | trans }}</button>
-                <a class="btn btn-default" href="{{ path('ujm_question_index') }}">{{ "cancel" | trans({}, "platform") }}</a>
+                {% if exoID == -1 %}
+                    <a class="btn btn-default" href="{{ path('ujm_question_index') }}">{{ "cancel" | trans({}, "platform") }}</a>
+                {% else %}
+                    <a class="btn btn-default" href="{{ path('ujm_exercise_questions', {'id': exoID}) }}">{{ "cancel" | trans({}, "platform") }}</a>
+                {% endif %}
             </div>
         </form>
     </div>

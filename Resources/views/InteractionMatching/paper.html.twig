@@ -33,6 +33,9 @@
 {% block stylesheets %}
     {{ parent() }}
     <link href="{{ asset('bundles/ujmexo/css/matchingOverview.css') }}" type="text/css" rel="stylesheet"/>
+    {% if interactionToDisplayed.typeMatching.code == 1 %}
+        <link href="{{ asset('bundles/ujmexo/css/matchingBind.css') }}"  type="text/css" rel="stylesheet"/>
+    {% endif %}
 {% endblock %}
 
 {% block title %} {{ 'paper' | trans }} {{ 'question' | trans }} {% endblock %}
@@ -62,30 +65,49 @@
             <form action="{{ path('ujm_interactionmatching_response') }}" method="post" {{ form_enctype(form) }}>
                 {{ form_widget(form) }}
                 <center>
-                    <table>
+                    <table class="all">
                         <tr>
-                            <td>
-                                {% for proposal in interactionToDisplayed.proposals %}
-                                    <div id="div_{{ proposal.id }}" class="origin" >
-                                        <ul>
-                                            <li id="draggable_{{ proposal.id }}" class="draggable"> {{ proposal.value | raw }} </li>
-                                        </ul>
-                                    </div>
-                                {% endfor%}
-                            </td>
-                            <td style='padding: 20px;'>
-                            </td>
-                            <td>
-                                {% for label in interactionToDisplayed.labels %}
-                                    <div id="droppable_{{ label.id }}" class="droppable" style="text-align: right;">
-                                        <ul>
-                                            <li class="lidroppable">{{ label.value | raw }}</li>
-                                        </ul>
-                                        <ul class="dragDropped">
-                                        </ul>
-                                    </div>
-                                {% endfor %}
-                            </td>
+                            {% if interactionToDisplayed.typeMatching.code == 2 %}
+                                <td>
+                                    {% for proposal in interactionToDisplayed.proposals %}
+                                        <div id="div_{{ proposal.id }}" class="origin" >
+                                            <ul>
+                                                <li id="draggable_{{ proposal.id }}" class="draggable"> {{ proposal.value | raw }} </li>
+                                            </ul>
+                                        </div>
+                                    {% endfor%}
+                                </td>
+                                <td style='padding: 20px;'>
+                                </td>
+                                <td>
+                                    {% for label in interactionToDisplayed.labels %}
+                                        <div id="droppable_{{ label.id }}" class="droppable" style="text-align: right;">
+                                            <ul>
+                                                <li class="lidroppable">{{ label.value | raw }}</li>
+                                            </ul>
+                                            <ul class="dragDropped">
+                                            </ul>
+                                        </div>
+                                    {% endfor %}
+                                </td>
+                            {% else %}
+                                <td>
+                                    {% for proposal in interactionToDisplayed.proposals %}
+                                        <div id="draggable_{{ proposal.id }}" class="origin" >
+                                            {{ proposal.value | raw }}
+                                        </div>
+                                    {% endfor%}
+                                </td>
+                                <td style='padding: 50px;'>
+                                </td>
+                                <td>
+                                    {% for label in interactionToDisplayed.labels %}
+                                        <div id="droppable_{{ label.id }}" class="droppable" style="text-align: right;">
+                                            {{ label.value | raw }}
+                                        </div>
+                                    {% endfor %}
+                                </td>
+                            {% endif %}
                         </tr>
                     </table>
                 </center>
@@ -110,9 +132,16 @@
 {% block javascripts %}
     {{ parent() }}
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/paper.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2/jquery-ui-1.9.2.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/ext/jquery-ui-touch-punch.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/matchingdisplay.js') }}"></script>
+
+    {% if interactionToDisplayed.typeMatching.code == 2 %}
+        <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2/jquery-ui-1.9.2.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/ext/jquery-ui-touch-punch.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/matchingdisplaydrag.js') }}"></script>
+    {% else %}
+        <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/matchingdisplaybind.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/ext/jquery.jsplumb-1.6.2-min.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/ext/dom.jsPlumb-1.7.0-min.js') }}"></script>
+    {% endif %}
     <script>
         function deleteImage(){
             return "{{ asset('bundles/ujmexo/images/delete.png') }}";

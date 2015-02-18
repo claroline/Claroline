@@ -7,6 +7,7 @@ var tableLabels = $('#tableLabel'); // div which contain the labels array
 var typeMatching;
 
 var advEditionLang;
+var remAdvEditionLang;
 var correspEmptyLang;
 var correspErrorLang;
 var scoreErrorLang;
@@ -14,29 +15,22 @@ var scoreErrorLang;
 var codeContainerProposal = 1; // to differentiate containers
 var codeContainerLabel = 0;
 
-// Question creation
-function creationMatching(addchoice, addproposal, deletechoice, LabelValue, ScoreRight, ProposalValue, numberProposal, correspondence, deleteLabel, deleteProposal, tMatching, advEdition, correspEmpty, correspondenceError , scoreError){
+var correspondances = [];
 
+// Question creation
+function creationMatching(addchoice, addproposal, deletechoice, LabelValue, ScoreRight, ProposalValue, numberProposal, correspondence, deleteLabel, deleteProposal, tMatching, advEdition, remAdvEdition, correspEmpty, correspondenceError , scoreError) {
 
     //initialisation of variables
     var indexProposal;
     var indexLabel; // number of label
 
     advEditionLang = advEdition;
+    remAdvEditionLang = remAdvEdition;
     correspEmptyLang = correspEmpty;
     correspErrorLang = correspondenceError;
     scoreErrorLang = scoreError;
 
     typeMatching = JSON.parse(tMatching);
-
-    //in the first time
-    $('#ujm_exobundle_interactionmatchingtype_typeMatching').children('option').each(function() {
-         if (typeMatching[$(this).val()] == 2) {
-             $(this).prop('selected', true);
-         } else {
-             $(this).attr('disabled', 'disabled');
-         }
-     });
 
     tableCreationProposal(containerProposal, tableProposals, addproposal, deletechoice, ProposalValue, 0, codeContainerProposal, deleteProposal, numberProposal);
     tableCreationLabel(containerLabel, tableLabels, addchoice, deletechoice, LabelValue, ScoreRight, 0, codeContainerLabel, deleteLabel, correspondence);
@@ -72,7 +66,7 @@ function creationMatching(addchoice, addproposal, deletechoice, LabelValue, Scor
 }
 
 // Question edition
-function creationMatchingEdit(addchoice, addproposal, deletechoice, LabelValue, ScoreRight, ProposalValue, numberProposal, correspondence, deleteLabel, deleteProposal, tMatching, advEdition, correspEmpty, nbResponses, valueCorrespondence, tableLabel, tableProposal, correspondenceError, scoreError) {
+function creationMatchingEdit(addchoice, addproposal, deletechoice, LabelValue, ScoreRight, ProposalValue, numberProposal, correspondence, deleteLabel, deleteProposal, tMatching, advEdition, remAdvEdition, correspEmpty, nbResponses, valueCorrespondence, tableLabel, tableProposal, correspondenceError, scoreError) {
 
     typeMatching = JSON.parse(tMatching);
     var valueCorres = JSON.parse(valueCorrespondence.replace(/&quot;/ig,'"'));
@@ -81,18 +75,10 @@ function creationMatchingEdit(addchoice, addproposal, deletechoice, LabelValue, 
     var ind = 1;
 
     advEditionLang = advEdition;
+    remAdvEditionLang = remAdvEdition;
     correspEmptyLang = correspEmpty;
     correspErrorLang = correspondenceError;
     scoreErrorLang = scoreError;
-
-    //in the first time
-    $('#ujm_exobundle_interactionmatchingtype_typeMatching').children('option').each(function() {
-        if (typeMatching[$(this).val()] == 2) {
-            $(this).prop('selected', true);
-        } else {
-            $(this).attr('disabled', 'disabled');
-        }
-    });
 
     tableCreationProposal(containerProposal, tableProposals, addproposal, deletechoice, ProposalValue, nbResponses, codeContainerProposal, deleteProposal, numberProposal);
     tableCreationLabel(containerLabel, tableLabels, addchoice, deletechoice, LabelValue, ScoreRight, nbResponses, codeContainerLabel, deleteLabel, correspondence);
@@ -100,7 +86,7 @@ function creationMatchingEdit(addchoice, addproposal, deletechoice, LabelValue, 
     containerProposal.children().first().children('div').each(function() {
 
         $(this).find('.row').each(function() {
-            
+
             fillProposalArray($(this));
 
             //uncode chevrons
@@ -119,7 +105,7 @@ function creationMatchingEdit(addchoice, addproposal, deletechoice, LabelValue, 
 
             // Add the delete button
             $('#newTableProposal').find('tr:last').append('<td class="classic"></td>');
-            adddelete($('#newTableProposal').find('td:last'), deletechoice);
+            adddelete($('#newTableProposal').find('td:last'), deletechoice, 1);
         }
 
         $('#newTableProposal').find('tbody').append('<tr><td></td></tr>');
@@ -150,7 +136,7 @@ function creationMatchingEdit(addchoice, addproposal, deletechoice, LabelValue, 
         if (nbResponses == 0) {
             // Add the delete button
             $('#newTableLabel').find('tr:last').append('<td class="classic"></td>');
-            adddelete($('#newTableLabel').find('td:last'), deletechoice);
+            adddelete($('#newTableLabel').find('td:last'), deletechoice, 0);
         }
 
         $('#newTableLabel').find('tbody').append('<tr></tr>');
@@ -158,34 +144,36 @@ function creationMatchingEdit(addchoice, addproposal, deletechoice, LabelValue, 
         if (typeof labels[ind] !== 'undefined') {
             idlabel = labels[ind];
             idproposals = valueCorres[idlabel];
-            $.each( idproposals, function(key, val){//alert(proposals[val]);
+            $.each( idproposals, function(key, val) {//alert(proposals[val]);
                 $('#' + ind + '_correspondence option[value="' + proposals[val] + '"]').prop('selected', true);
             });
         }
 
         ind++;
     });
-    
+
     //for activate tinymce if there is html balise
     $('.classic').find('textarea').each(function() {
-        if($(this).val().match("<p>")) {
+        //if there is at the start an open tag and a close at the end. And at the middle all caracters possible or nothing
+        if($(this).val().match("<.+>.+|\s<\/.+>$")) {
             idProposalVal = $(this).attr("id");
             $("#"+idProposalVal).addClass("claroline-tiny-mce hide");
             $("#"+idProposalVal).data("data-theme","advanced");
         }
     });
-    
+
     $('#newTableLabel').find('tr').last().remove();
     containerLabel.remove();
     tableLabels.next().remove();
 }
 
-function addLabel(container, deletechoice, table, codeContainer){
+function addLabel(container, deletechoice, table, codeContainer) {
+
     var contain;
     var uniqLabelId = false;
     var indexLabel = $('#newTableLabel').find('tr:not(:first)').length;
     while (uniqLabelId == false) {
-        if ($('#ujm_exobundle_interactionmatchingtype_labels_' + indexLabel + '_scoreRightResponse').length){
+        if ($('#ujm_exobundle_interactionmatchingtype_labels_' + indexLabel + '_scoreRightResponse').length) {
                 indexLabel++;
             } else{
                 uniqLabelId = true;
@@ -216,12 +204,15 @@ function addLabel(container, deletechoice, table, codeContainer){
     table.next().remove();
 }
 
-function addProposal(container, deletechoice, table, codeContainer){
+function addProposal(container, deletechoice, table, codeContainer) {
+
+    // for getting correspondances
+    getCorrespondances();
     var contain;
     var uniqProposalId = false;
     var indexProposal = $('#newTableProposal').find('tr:not(:first)').length;
     while (uniqProposalId == false) {
-        if ($('#ujm_exobundle_interactionmatchingtype_proposals_' + indexProposal + '_value').length){
+        if ($('#ujm_exobundle_interactionmatchingtype_proposals_' + indexProposal + '_value').length) {
                 indexProposal++;
             } else{
                 uniqProposalId = true;
@@ -249,6 +240,21 @@ function addProposal(container, deletechoice, table, codeContainer){
     table.next().remove();
 
     addRemoveRowTableProposal();
+
+    // for replace correspondances
+    $("#newTableLabel").find("select").each(function() {
+        var numberId = $(this).attr("id");
+        numberId = numberId.replace("_correspondence", "");
+        for(var i = 1; i < correspondances.length; i++) {
+            if (i == numberId) {
+                var value = correspondances[i] + '';
+                var tableau = value.split(",");
+                for(var u = 0; u < tableau.length; u++) {
+                    $('#'+ i + '_correspondence option[value="' + tableau[u] + '"]').prop('selected',true);
+                }
+            }
+        }
+    });
 }
 
 //check if the form is valid
@@ -257,6 +263,8 @@ function check_form(nbrProposals, nbrLabels) {
     var proposalSelected = [];
     var singleProposal = true;
     var score = true;
+
+    var typeMatching = $('#ujm_exobundle_interactionmatchingtype_typeMatching option:selected').val();
 
     if (($('#newTableProposal').find('tr:not(:first)').length) < 1) {
 
@@ -270,16 +278,22 @@ function check_form(nbrProposals, nbrLabels) {
         return false;
     }
 
+    //for encoding the chevrons
+    $('.classic').find('textarea:visible').each(function() {
+        $(this).val($(this).val().replace("<", "&lt;"));
+        $(this).val($(this).val().replace(">", "&gt;"));
+    });
+
     $("*[id$='scoreRightResponse']").each( function() {
 
-          if(!(parseFloat($(this).val()) == parseInt($(this).val())) && isNaN($(this).val())){
+          if(!(parseFloat($(this).val()) == parseInt($(this).val())) && isNaN($(this).val())) {
 
             alert(scoreErrorLang);
             score = false;
         }
     });
 
-    if(score == false ){
+    if(score == false ) {
 
         return false
     }
@@ -287,16 +301,22 @@ function check_form(nbrProposals, nbrLabels) {
     $("*[id$='_correspondence']").each( function() {
         if ($("option:selected", this).length > 0) {
             correspondence = true;
-            $("option:selected", this).each( function () {
-                //alert($(this).val());
-                //si dans tableau return false + mmsg si non ajout dans tableau
-                if (proposalSelected[$(this).val()]) {
-                    alert(correspErrorLang);
-                    singleProposal = false;
-                } else {
-                    proposalSelected[$(this).val()] = true;
-                }
-            });
+            if (typeMatching == 2) {
+                $("option:selected", this).each( function () {
+                    //alert($(this).val());
+                    //si dans tableau return false + mmsg si non ajout dans tableau
+
+                        if (proposalSelected[$(this).val()]) {
+
+                                alert(correspErrorLang);
+
+                            singleProposal = false;
+                        } else {
+                            proposalSelected[$(this).val()] = true;
+                        }
+
+                });
+            }
         }
     });
 
@@ -309,12 +329,6 @@ function check_form(nbrProposals, nbrLabels) {
 
         return confirm(correspEmptyLang);
     }
-
-    //for encoding the chevrons
-    $('.classic').find('textarea:visible').each(function() {
-        $(this).val($(this).val().replace("<", "&lt;"));
-        $(this).val($(this).val().replace(">", "&gt;"));
-    });
 }
 
 function fillLabelArray(row) {
@@ -344,19 +358,36 @@ function fillLabelArray(row) {
 
 function advLabelVal(idLabelVal) {
     $("#adve_"+idLabelVal).click(function(e) {
-            if ($("#"+idLabelVal).hasClass("claroline-tiny-mce hide")) {
-//                $("#"+idLabelVal).removeClass("claroline-tiny-mce");
-//                $("#"+idLabelVal).removeClass("hide");
-//                $("#"+idLabelVal).removeData("data-theme");
+        if ($("#"+idLabelVal).hasClass("claroline-tiny-mce hide")) {
 
-            } else {
-                $("#"+idLabelVal).addClass("claroline-tiny-mce hide");
-                $("#"+idLabelVal).data("data-theme","advanced");
-            }
+//            $("#"+idLabelVal).removeClass("claroline-tiny-mce");
+//            $("#"+idLabelVal).removeClass("hide");
+//            $("#"+idLabelVal).removeAttr('style');
+//            $("#"+idLabelVal).removeData("data-theme");
+//            $("#"+idLabelVal).parent('td').children('div').addClass("hide");
+//            $("#"+idLabelVal).parent('td').find('a').text(advEditionLang);
 
-            e.preventDefault();
-            return false;
-        });
+        } else {
+
+            $("#"+idLabelVal).addClass("claroline-tiny-mce hide");
+            $("#"+idLabelVal).data("data-theme","advanced");
+//            $("#"+idLabelVal).parent('td').children('div').removeClass("hide");
+//            $("#"+idLabelVal).parent('td').find('a').text(remAdvEditionLang);
+
+        }
+
+        // If the navavigator is chrome
+        var userNavigator = navigator.userAgent;
+        var positionText = userNavigator.indexOf("Chrome");
+        if(positionText !== -1) {
+            $('#newTableLabel').find('tbody').append('<tr></tr>');
+            addLabel(containerLabel, "Suppromer", tableLabels, codeContainerLabel);
+            $('#newTableLabel').find('tr:last').remove();
+        }
+
+        e.preventDefault();
+        return false;
+    });
 }
 
 function fillProposalArray(row) {
@@ -367,7 +398,6 @@ function fillProposalArray(row) {
         $('#newTableProposal').find('tr:last').append('<td class="classic"></td>');
         $('#newTableProposal').find('td:last').append(row.find('textarea'));
         $('#newTableProposal').find('td:last').append('<span><a href="#" id="adve_'+idProposalVal+'">'+advEditionLang+'</a></span>');
-
         advProposalVal(idProposalVal);
     }
 
@@ -375,23 +405,33 @@ function fillProposalArray(row) {
 
 function advProposalVal(idProposalVal) {
     $("#adve_"+idProposalVal).click(function(e) {
-            if ($("#"+idProposalVal).hasClass("claroline-tiny-mce hide")) {
-                //todo
+        if ($("#"+idProposalVal).hasClass("claroline-tiny-mce hide")) {
 
-            } else {
-                $("#"+idProposalVal).addClass("claroline-tiny-mce hide");
-                $("#"+idProposalVal).data("data-theme","advanced");
-            }
+//            $("#"+idProposalVal).removeClass("claroline-tiny-mce");
+//            $("#"+idProposalVal).removeClass("hide");
+//            $("#"+idProposalVal).removeAttr('style');
+//            $("#"+idProposalVal).removeData("data-theme");
+//            $("#"+idProposalVal).parent('td').children('div').addClass("hide");
+//            $("#"+idProposalVal).parent('td').find('a').text(advEditionLang);
 
-            e.preventDefault();
-            return false;
-        });
+        } else {
+
+            $("#"+idProposalVal).addClass("claroline-tiny-mce hide");
+            $("#"+idProposalVal).data("data-theme","advanced");
+//            $("#"+idProposalVal).parent('td').children('div').removeClass("hide");
+//            $("#"+idProposalVal).parent('td').find('a').text(remAdvEditionLang);
+
+        }
+
+        e.preventDefault();
+        return false;
+    });
 }
 
-function adddelete(tr, deletechoice, codeContainer){
+function adddelete(tr, deletechoice, codeContainer) {
     var delLink;
     // Create the button to delete a row
-    if(codeContainer == 0){
+    if(codeContainer == 0) {
         delLink = $('<a href="newTableLabel" class="btn btn-danger">' + deletechoice + '</a>');
     } else {
         delLink = $('<a href="newTableProposal" class="btn btn-danger">' + deletechoice + '</a>');
@@ -402,17 +442,63 @@ function adddelete(tr, deletechoice, codeContainer){
 
     // When click, delete the row in the table
     delLink.click(function(e) {
+        // for getting correspondances
+        getCorrespondances();
+        // for update correspondances
+        var numberId;
+        var typeDelete = delLink.attr("href");
+        if(typeDelete == "newTableLabel") {
+            numberId = $(this).parent('td').parent('tr').find("select").attr("id");
+            numberId = numberId.replace("_correspondence", "");
+            for(var i = 1; i < correspondances.length; i++ ) {
+                if(numberId == i) {
+                    correspondances[i] = 0;
+                }
+                if(i > numberId) {
+                    var w = i - 1;
+                    correspondances[w] = correspondances[i];
+                }
+            }
+        } else {
+            numberId = $(this).parent('td').parent('tr').find("span").text();
+            numberId = numberId.replace("Edition avancée", "");
+            for(var i = 1; i < correspondances.length; i++ ) {
+                var value = correspondances[i] + '';
+                var tableau = value.split(",");
+                for(var u = 0; u < tableau.length; u++ ) {
+                    if(tableau[u] == numberId) {
+                        tableau[u] = 0;
+                    }
+                    if(tableau[u] > numberId) {
+                        tableau[u] = tableau[u] -1;
+                    }
+                }
+                correspondances[i] = tableau;
+            }
+        }
+
         $(this).parent('td').parent('tr').remove();
 
         addRemoveRowTableProposal();
         removeRowTableLabel();
 
+        // for replace correspondances
+        $("#newTableLabel").find("select").each(function() {
+            for(var i = 1; i < correspondances.length; i++ ) {
+                var value = correspondances[i] + '';
+                var tableau = value.split(",");
+                for(var u = 0; u < tableau.length; u++) {
+                    $('#'+ i + '_correspondence option[value="' + tableau[u] + '"]').prop('selected',true);
+                }
+            }
+        });
+        
         e.preventDefault();
         return false;
     });
 }
 
-function tableCreationLabel(container, table, button, deletechoice, LabelValue, ScoreRight, nbResponses, codeContainer, supp, correspondence){
+function tableCreationLabel(container, table, button, deletechoice, LabelValue, ScoreRight, nbResponses, codeContainer, supp, correspondence) {
     if (nbResponses == 0) {
         // Creation of the table
         table.append('<table id="newTableLabel" class="table table-striped table-bordered table-condensed"><thead><tr style="background-color: lightsteelblue;"><th class="classic">'+LabelValue+'</th><th class="classic">'+ScoreRight+'</th><th class="classic">'+correspondence+'</th><th class="classic">'+supp+'</th></tr></thead><tbody><tr></tr></tbody></table>');
@@ -430,11 +516,11 @@ function tableCreationLabel(container, table, button, deletechoice, LabelValue, 
         });
     } else {
         // Add the structure of the table
-            table.append('<table id="newTableLabel" class="table table-striped table-bordered table-condensed"><thead><tr style="background-color: lightsteelblue;"><th class="classic">' + LabelValue + '</th><th class="classic">' + ScoreRight + '</th><th class="classic">' + correspondence + '</th></tr></thead><tbody><tr></tr></tbody></table>');
+        table.append('<table id="newTableLabel" class="table table-striped table-bordered table-condensed"><thead><tr style="background-color: lightsteelblue;"><th class="classic">' + LabelValue + '</th><th class="classic">' + ScoreRight + '</th><th class="classic">' + correspondence + '</th></tr></thead><tbody><tr></tr></tbody></table>');
     }
 }
 
-function tableCreationProposal(container, table, button, deletechoice, ProposalValue, nbResponses, codeContainer, supp, correspondence){
+function tableCreationProposal(container, table, button, deletechoice, ProposalValue, nbResponses, codeContainer, supp, correspondence) {
     if (nbResponses == 0) {
         // Creation of the table
         table.append('<table id="newTableProposal" class="table table-striped table-bordered table-condensed"><thead><tr style="background-color: lightsteelblue;"><th class="classic">'+correspondence+'</th><th class="classic">'+ProposalValue+'</th><th class="classic">'+supp+'</th></tr></thead><tbody><tr><td></td></tr></tbody></table>');
@@ -480,6 +566,7 @@ function addRemoveRowTableProposal () {
 }
 
 function removeRowTableLabel() {
+
     var ind = 1;
     $("*[id$='_correspondence']").each( function() {
          $(this).attr("id", ind + "_correspondence");
@@ -490,7 +577,6 @@ function removeRowTableLabel() {
 
 function addCorrespondence() {
 
-    // Add correspondence
     $('#newTableLabel').find('tr:last').append('<td class="classic"></td>');
     $('#newTableLabel').find('td:last').append('<select id="' + $('#newTableLabel').find('tr:not(:first)').length + '_correspondence" \n\
                                                 name="' + $('#newTableLabel').find('tr:not(:first)').length + '_correspondence[]" \n\
@@ -503,5 +589,14 @@ function addCorrespondence() {
             value: rowInd,
             text: rowInd
         }));
+    });
+}
+
+function getCorrespondances() {
+    $("#newTableLabel").find("select").each(function() {
+        var numberId = $(this).attr("id");
+        numberId = numberId.replace("_correspondence", "");
+        var selected = $(this).val();
+        correspondances[numberId] = selected;
     });
 }
