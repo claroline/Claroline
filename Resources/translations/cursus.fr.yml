@@ -6,6 +6,7 @@ course_form_publicUnregistration: 'Désinscription publique'
 course_form_registrationValidation: 'Validation de l''inscription'
 course_form_title: Titre
 course_form_workspaceModel: 'Modèle d''espace d''activités'
+course_session_form_name: Nom
 create_cursus: 'Créer "%cursusWord%"'
 cursus: Cursus
 cursus_form_code: Code

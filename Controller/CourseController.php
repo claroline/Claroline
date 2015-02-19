@@ -14,8 +14,10 @@ namespace Claroline\CursusBundle\Controller;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CursusBundle\Entity\Course;
+use Claroline\CursusBundle\Entity\CourseSession;
 use Claroline\CursusBundle\Entity\Cursus;
 use Claroline\CursusBundle\Entity\CursusDisplayedWord;
+use Claroline\CursusBundle\Form\CourseSessionType;
 use Claroline\CursusBundle\Form\CourseType;
 use Claroline\CursusBundle\Manager\CursusManager;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -287,13 +289,71 @@ class CourseController extends Controller
         foreach (CursusDisplayedWord::$defaultKey as $key) {
             $displayedWords[$key] = $this->cursusManager->getDisplayedWord($key);
         }
+        $sessions = $this->cursusManager->getSessionsByCourse($course);
+        $sessionsTab = array();
+
+        foreach ($sessions as $session) {
+            $status = $session->getSessionStatus();
+
+            if (!isset($sessionsTab[$status])) {
+                $sessionsTab[$status] = array();
+            }
+            $sessionsTab[$status][] = $session;
+        }
 
         return array(
             'defaultWords' => CursusDisplayedWord::$defaultKey,
             'displayedWords' => $displayedWords,
             'type' => 'course',
-            'course' => $course
+            'course' => $course,
+            'sessionsTab' => $sessionsTab
         );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "cursus/course/{course}/session/create/form",
+     *     name="claro_cursus_course_session_create_form",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template("ClarolineCursusBundle:Course:courseSessionCreateModalForm.html.twig")
+     */
+    public function courseSessionCreateFormAction(Course $course)
+    {
+        $this->checkToolAccess();
+        $form = $this->formFactory->create(new CourseSessionType());
+
+        return array('form' => $form->createView(), 'course' => $course);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "cursus/course/{course}/session/create",
+     *     name="claro_cursus_course_session_create",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template("ClarolineCursusBundle:Course:courseSessionCreateModalForm.html.twig")
+     */
+    public function courseSessionCreateAction(Course $course)
+    {
+        $this->checkToolAccess();
+        $session = new CourseSession();
+        $form = $this->formFactory->create(new CourseSessionType(), $session);
+        $form->handleRequest($this->request);
+
+        if ($form->isValid()) {
+            $creationDate = new \DateTime();
+            $session->setCreationDate($creationDate);
+            $session->setCourse($course);
+            $this->cursusManager->persistCourseSession($session);
+
+            return new JsonResponse('success', 200);
+        } else {
+
+            return array('form' => $form->createView(), 'course' => $course);
+        }
     }
 
     private function checkToolAccess()

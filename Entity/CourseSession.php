@@ -15,7 +15,9 @@ use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CursusBundle\Entity\Course;
 use Claroline\CursusBundle\Entity\Cursus;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CursusBundle\Repository\CourseSessionRepository")
@@ -33,7 +35,13 @@ class CourseSession
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
-    
+
+    /**
+     * @ORM\Column(name="session_name")
+     * @Assert\NotBlank()
+     */
+    protected $name;
+
     /**
      * @ORM\ManyToOne(
      *     targetEntity="Claroline\CursusBundle\Entity\Course",
@@ -47,7 +55,7 @@ class CourseSession
      * @ORM\ManyToOne(
      *     targetEntity="Claroline\CoreBundle\Entity\Workspace\Workspace"
      * )
-     * @ORM\JoinColumn(name="workspace_id", nullable=false, onDelete="CASCADE")
+     * @ORM\JoinColumn(name="workspace_id", nullable=true, onDelete="SET NULL")
      */
     protected $workspace;
 
@@ -90,6 +98,28 @@ class CourseSession
      */
     protected $creationDate;
 
+    /**
+     * @ORM\OneToMany(
+     *     targetEntity="Claroline\CursusBundle\Entity\CourseSessionUser",
+     *     mappedBy="session"
+     * )
+     */
+    protected $sessionUsers;
+
+    /**
+     * @ORM\OneToMany(
+     *     targetEntity="Claroline\CursusBundle\Entity\CourseSessionGroup",
+     *     mappedBy="session"
+     * )
+     */
+    protected $sessionGroups;
+
+    public function __construct()
+    {
+        $this->sessionUsers = new ArrayCollection();
+        $this->sessionGroups = new ArrayCollection();
+    }
+
     public function getId()
     {
         return $this->id;
@@ -98,6 +128,16 @@ class CourseSession
     public function setId($id)
     {
         $this->id = $id;
+    }
+
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    public function setName($name)
+    {
+        $this->name = $name;
     }
 
     public function getCourse()
@@ -178,5 +218,15 @@ class CourseSession
     public function setCreationDate($creationDate)
     {
         $this->creationDate = $creationDate;
+    }
+
+    public function getSessionUsers()
+    {
+        return $this->sessionUsers->toArray();
+    }
+
+    public function getSessionGroups()
+    {
+        return $this->sessionGroups->toArray();
     }
 }

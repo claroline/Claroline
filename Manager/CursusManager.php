@@ -16,6 +16,7 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Pager\PagerFactory;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CursusBundle\Entity\Course;
+use Claroline\CursusBundle\Entity\CourseSession;
 use Claroline\CursusBundle\Entity\Cursus;
 use Claroline\CursusBundle\Entity\CursusGroup;
 use Claroline\CursusBundle\Entity\CursusUser;
@@ -32,14 +33,14 @@ class CursusManager
     private $pagerFactory;
     private $translator;
     private $courseRepo;
-    private $courseGroupRepo;
     private $courseSessionRepo;
-    private $courseUserRepo;
     private $cursusRepo;
     private $cursusGroupRepo;
     private $cursusUserRepo;
     private $cursusWordRepo;
     private $registrationQueueRepo;
+    private $sessionGroupRepo;
+    private $sessionUserRepo;
     
     /**
      * @DI\InjectParams({
@@ -59,12 +60,8 @@ class CursusManager
         $this->translator = $translator;
         $this->courseRepo =
             $om->getRepository('ClarolineCursusBundle:Course');
-        $this->courseGroupRepo =
-            $om->getRepository('ClarolineCursusBundle:CourseGroup');
         $this->courseSessionRepo =
             $om->getRepository('ClarolineCursusBundle:CourseSession');
-        $this->courseUserRepo =
-            $om->getRepository('ClarolineCursusBundle:CourseUser');
         $this->cursusRepo =
             $om->getRepository('ClarolineCursusBundle:Cursus');
         $this->cursusGroupRepo =
@@ -75,6 +72,10 @@ class CursusManager
             $om->getRepository('ClarolineCursusBundle:CursusDisplayedWord');
         $this->registrationQueueRepo =
             $om->getRepository('ClarolineCursusBundle:CourseSessionRegistrationQueue');
+        $this->sessionGroupRepo =
+            $om->getRepository('ClarolineCursusBundle:CourseSessionGroup');
+        $this->sessionUserRepo =
+            $om->getRepository('ClarolineCursusBundle:CourseSessionUser');
     }
     
     public function persistCursusDisplayedWord(CursusDisplayedWord $word)
@@ -144,6 +145,12 @@ class CursusManager
     public function deleteCursusGroup(CursusGroup $cursusGroup)
     {
         $this->om->remove($cursusGroup);
+        $this->om->flush();
+    }
+
+    public function persistCourseSession(CourseSession $session)
+    {
+        $this->om->persist($session);
         $this->om->flush();
     }
 
@@ -997,42 +1004,6 @@ class CursusManager
     }
 
 
-    /******************************************
-     * Access to CourseUserRepository methods *
-     ******************************************/
-
-    public function getOneCourseUserByCourseAndUser(
-        Course $course,
-        User $user,
-        $executeQuery = true
-    )
-    {
-        return $this->courseUserRepo->findOneCourseUserByCourseAndUser(
-            $course,
-            $user,
-            $executeQuery
-        );
-    }
-
-
-    /*******************************************
-     * Access to CourseGroupRepository methods *
-     *******************************************/
-
-    public function getOneCourseGroupByCourseAndGroup(
-        Course $course,
-        Group $group,
-        $executeQuery = true
-    )
-    {
-        return $this->courseGroupRepo->findOneCourseGroupByCourseAndGroup(
-            $course,
-            $group,
-            $executeQuery
-        );
-    }
-
-
     /*********************************************
      * Access to CourseSessionRepository methods *
      *********************************************/
@@ -1080,6 +1051,42 @@ class CursusManager
             $course,
             $orderedBy,
             $order,
+            $executeQuery
+        );
+    }
+
+
+    /*************************************************
+     * Access to CourseSessionUserRepository methods *
+     *************************************************/
+
+    public function getOneSessionUserBySessionAndUser(
+        CourseSession $session,
+        User $user,
+        $executeQuery = true
+    )
+    {
+        return $this->sessionUserRepo->findOneSessionUserBySessionAndUser(
+            $session,
+            $user,
+            $executeQuery
+        );
+    }
+
+
+    /**************************************************
+     * Access to CourseSessionGroupRepository methods *
+     **************************************************/
+
+    public function getOneSessionGroupBySessionAndGroup(
+        CourseSession $session,
+        Group $group,
+        $executeQuery = true
+    )
+    {
+        return $this->sessionGroupRepo->findOneSessionGroupBySessionAndGroup(
+            $session,
+            $group,
             $executeQuery
         );
     }

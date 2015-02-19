@@ -11,22 +11,22 @@
 namespace Claroline\CursusBundle\Entity;
 
 use Claroline\CoreBundle\Entity\Group;
-use Claroline\CursusBundle\Entity\Course;
+use Claroline\CursusBundle\Entity\CourseSession;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="Claroline\CursusBundle\Repository\CourseGroupRepository")
+ * @ORM\Entity(repositoryClass="Claroline\CursusBundle\Repository\CourseSessionGroupRepository")
  * @ORM\Table(
- *     name="claro_cursusbundle_course_group",
+ *     name="claro_cursusbundle_course_session_group",
  *     uniqueConstraints={
  *         @ORM\UniqueConstraint(
- *             name="cursus_group_unique_course_group",
- *             columns={"course_id", "group_id"}
+ *             name="cursus_group_unique_course_session_group",
+ *             columns={"session_id", "group_id"}
  *         )
  *     }
  * )
  */
-class CourseGroup
+class CourseSessionGroup
 {
     /**
      * @ORM\Id
@@ -45,12 +45,12 @@ class CourseGroup
 
     /**
      * @ORM\ManyToOne(
-     *     targetEntity="Claroline\CursusBundle\Entity\Course",
-     *     inversedBy="courseGroups"
+     *     targetEntity="Claroline\CursusBundle\Entity\CourseSession",
+     *     inversedBy="sessionGroups"
      * )
-     * @ORM\JoinColumn(name="course_id", nullable=false, onDelete="CASCADE")
+     * @ORM\JoinColumn(name="session_id", nullable=false, onDelete="CASCADE")
      */
-    protected $course;
+    protected $session;
 
     /**
      * @ORM\Column(name="registration_date", type="datetime", nullable=false)
@@ -82,14 +82,14 @@ class CourseGroup
         $this->group = $group;
     }
 
-    public function getCourse()
+    public function getSession()
     {
-        return $this->course;
+        return $this->session;
     }
 
-    public function setCourse(Course $course)
+    public function setSession(CourseSession $session)
     {
-        $this->course = $course;
+        $this->session = $session;
     }
 
     public function getRegistrationDate()

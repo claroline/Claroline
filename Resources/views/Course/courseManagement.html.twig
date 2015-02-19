@@ -59,6 +59,150 @@
                 </div>
                 <br>
             {% endif %}
+                
+            <div id="sessions-box">
+                <h4>
+                    {{ 'sessions'| trans({}, 'cursus') }}
+                    &nbsp;
+                    <i class="fa fa-chevron-right pointer-hand"
+                       data-toggle="collapse"
+                       data-target="#sessions-tab"
+                    >
+                    </i>
+                </h4>
+                <div class="table-responsive collapse in" id="sessions-tab">
+                    <br>
+                    {% if sessionsTab|length > 0 %}
+                        {% 
+                            if (sessionsTab[0] is defined and sessionsTab[0]|length > 0) or
+                            (sessionsTab[0] is defined and sessionsTab[0]|length > 0)
+                        %}
+                            <table class="table">
+                                <tr>
+                                    <th>
+                                        {{ 'name'| trans({}, 'platform') }}
+                                    </th>
+                                    <th>
+                                        {{ 'creation_date'| trans({}, 'platform') }}
+                                    </th>
+                                    <th class="text-center">
+                                        {{ 'status'| trans({}, 'platform') }}
+                                    </th>
+                                </tr>
+                                
+                                {% if sessionsTab[0] is defined %}
+                                    {% for session in sessionsTab[0] %}
+                                    <tr>
+                                        <td>
+                                            {% if session.isDefaultSession() %}
+                                                <i class="fa fa-flag"
+                                                   data-toggle="tooltip"
+                                                   data-placement="top"
+                                                   title="{{ 'default_session'|trans({}, 'cursus') }}"
+                                                >
+                                                </i>
+                                                &nbsp;
+                                            {% endif %}
+                                            {{ session.getName() }}
+                                        </td>
+                                        <td>
+                                            {{ session.getCreationDate()|intl_date_format }}
+                                        </td>
+                                        <td class="text-center">
+                                            <i class="fa fa-circle pointer-hand"
+                                               style="color: #706c6c"
+                                            >
+                                            </i>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                {% endif %}
+                                
+                                {% if sessionsTab[1] is defined %}
+                                    {% for session in sessionsTab[1] %}
+                                    <tr>
+                                        <td>
+                                            {% if session.isDefaultSession() %}
+                                                <i class="fa fa-flag"
+                                                   data-toggle="tooltip"
+                                                   data-placement="top"
+                                                   title="{{ 'default_session'|trans({}, 'cursus') }}"
+                                                >
+                                                </i>
+                                                &nbsp;
+                                            {% endif %}
+                                            {{ session.getName() }}
+                                        </td>
+                                        <td>
+                                            {{ session.getCreationDate()|intl_date_format }}
+                                        </td>
+                                        <td class="text-center">
+                                            <i class="fa fa-circle pointer-hand"
+                                               style="color: #5CB85C"
+                                            >
+                                            </i>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                {% endif %}
+                            </table>
+                        {% endif %}
+                    
+                        {% if sessionsTab[2] is defined and sessionsTab[2]|length > 0 %}
+                            <a data-toggle="collapse"
+                               data-target="#closed-sessions-tab"
+                               class="pointer-hand pull-right"
+                            >
+                                {{ 'closed_sessions'| trans({}, 'cursus') }}
+                            </a>
+                            <br>
+                            <br>
+                            <div class="table-responsive collapse" id="closed-sessions-tab">
+                                <table class="table">
+                                    <tr>
+                                        <th>
+                                            {{ 'name'| trans({}, 'platform') }}
+                                        </th>
+                                        <th>
+                                            {{ 'creation_date'| trans({}, 'platform') }}
+                                        </th>
+                                        <th class="text-center">
+                                            {{ 'status'| trans({}, 'platform') }}
+                                        </th>
+                                    </tr>
+                                    {% for session in sessionsTab[2] %}
+                                        <tr>
+                                            <td>
+                                                {{ session.getName() }}
+                                            </td>
+                                            <td>
+                                                {{ session.getCreationDate()|intl_date_format }}
+                                            </td>
+                                            <td class="text-center">
+                                                <i class="fa fa-circle pointer-hand"
+                                                   style="color: #D9534F"
+                                                >
+                                                </i>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </table>
+                            </div>
+                        {% endif %}
+                    {% else %}
+                        <div class="alert alert-warning">
+                            {{ 'no_session'| trans({}, 'cursus') }}
+                        </div>
+                    {% endif %}
+                    <span id="course-session-create-btn"
+                          class="btn btn-default pointer-hand"
+                          data-course-id="{{ course.getId() }}"
+                    >
+                        <i class="fa fa-plus-circle"></i>
+                        {{ 'create_session'| trans({}, 'cursus') }}
+                    </span>
+                </div>
+            </div>
         </div>
     </div>
 {% endblock %}

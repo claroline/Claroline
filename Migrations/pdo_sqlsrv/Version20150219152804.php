@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CursusBundle\Migrations\sqlsrv;
+namespace Claroline\CursusBundle\Migrations\pdo_sqlsrv;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2015/02/19 10:49:16
+ * Generation date: 2015/02/19 03:28:05
  */
-class Version20150219104914 extends AbstractMigration
+class Version20150219152804 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -75,46 +75,25 @@ class Version20150219104914 extends AbstractMigration
             details
         ");
         $this->addSql("
-            CREATE TABLE claro_cursusbundle_course_group (
+            CREATE TABLE claro_cursusbundle_course_session_group (
                 id INT IDENTITY NOT NULL, 
                 group_id INT NOT NULL, 
-                course_id INT NOT NULL, 
+                session_id INT NOT NULL, 
                 registration_date DATETIME2(6) NOT NULL, 
                 group_type INT, 
                 PRIMARY KEY (id)
             )
         ");
         $this->addSql("
-            CREATE INDEX IDX_91D2ED95FE54D947 ON claro_cursusbundle_course_group (group_id)
+            CREATE INDEX IDX_F27287A4FE54D947 ON claro_cursusbundle_course_session_group (group_id)
         ");
         $this->addSql("
-            CREATE INDEX IDX_91D2ED95591CC992 ON claro_cursusbundle_course_group (course_id)
+            CREATE INDEX IDX_F27287A4613FECDF ON claro_cursusbundle_course_session_group (session_id)
         ");
         $this->addSql("
-            CREATE UNIQUE INDEX cursus_group_unique_course_group ON claro_cursusbundle_course_group (course_id, group_id) 
-            WHERE course_id IS NOT NULL 
+            CREATE UNIQUE INDEX cursus_group_unique_course_session_group ON claro_cursusbundle_course_session_group (session_id, group_id) 
+            WHERE session_id IS NOT NULL 
             AND group_id IS NOT NULL
-        ");
-        $this->addSql("
-            CREATE TABLE claro_cursusbundle_course_user (
-                id INT IDENTITY NOT NULL, 
-                user_id INT NOT NULL, 
-                course_id INT NOT NULL, 
-                registration_date DATETIME2(6) NOT NULL, 
-                user_type INT, 
-                PRIMARY KEY (id)
-            )
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_26B2FA12A76ED395 ON claro_cursusbundle_course_user (user_id)
-        ");
-        $this->addSql("
-            CREATE INDEX IDX_26B2FA12591CC992 ON claro_cursusbundle_course_user (course_id)
-        ");
-        $this->addSql("
-            CREATE UNIQUE INDEX cursus_user_unique_course_user ON claro_cursusbundle_course_user (course_id, user_id) 
-            WHERE course_id IS NOT NULL 
-            AND user_id IS NOT NULL
         ");
         $this->addSql("
             CREATE TABLE claro_cursusbundle_cursus_displayed_word (
@@ -132,10 +111,11 @@ class Version20150219104914 extends AbstractMigration
             CREATE TABLE claro_cursusbundle_course_session (
                 id INT IDENTITY NOT NULL, 
                 course_id INT NOT NULL, 
-                workspace_id INT NOT NULL, 
+                workspace_id INT, 
                 user_role_id INT, 
                 manager_role_id INT, 
                 cursus_id INT, 
+                session_name NVARCHAR(255) NOT NULL, 
                 session_status INT NOT NULL, 
                 default_session BIT NOT NULL, 
                 creation_date DATETIME2(6) NOT NULL, 
@@ -179,6 +159,27 @@ class Version20150219104914 extends AbstractMigration
             CREATE UNIQUE INDEX cursus_group_unique_cursus_group ON claro_cursusbundle_cursus_group (cursus_id, group_id) 
             WHERE cursus_id IS NOT NULL 
             AND group_id IS NOT NULL
+        ");
+        $this->addSql("
+            CREATE TABLE claro_cursusbundle_course_session_user (
+                id INT IDENTITY NOT NULL, 
+                user_id INT NOT NULL, 
+                session_id INT NOT NULL, 
+                registration_date DATETIME2(6) NOT NULL, 
+                user_type INT, 
+                PRIMARY KEY (id)
+            )
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_80B4120FA76ED395 ON claro_cursusbundle_course_session_user (user_id)
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_80B4120F613FECDF ON claro_cursusbundle_course_session_user (session_id)
+        ");
+        $this->addSql("
+            CREATE UNIQUE INDEX cursus_user_unique_course_session_user ON claro_cursusbundle_course_session_user (session_id, user_id) 
+            WHERE session_id IS NOT NULL 
+            AND user_id IS NOT NULL
         ");
         $this->addSql("
             CREATE TABLE claro_cursusbundle_course_session_registration_queue (
@@ -240,27 +241,15 @@ class Version20150219104914 extends AbstractMigration
             ON DELETE CASCADE
         ");
         $this->addSql("
-            ALTER TABLE claro_cursusbundle_course_group 
-            ADD CONSTRAINT FK_91D2ED95FE54D947 FOREIGN KEY (group_id) 
+            ALTER TABLE claro_cursusbundle_course_session_group 
+            ADD CONSTRAINT FK_F27287A4FE54D947 FOREIGN KEY (group_id) 
             REFERENCES claro_group (id) 
             ON DELETE CASCADE
         ");
         $this->addSql("
-            ALTER TABLE claro_cursusbundle_course_group 
-            ADD CONSTRAINT FK_91D2ED95591CC992 FOREIGN KEY (course_id) 
-            REFERENCES claro_cursusbundle_course (id) 
-            ON DELETE CASCADE
-        ");
-        $this->addSql("
-            ALTER TABLE claro_cursusbundle_course_user 
-            ADD CONSTRAINT FK_26B2FA12A76ED395 FOREIGN KEY (user_id) 
-            REFERENCES claro_user (id) 
-            ON DELETE CASCADE
-        ");
-        $this->addSql("
-            ALTER TABLE claro_cursusbundle_course_user 
-            ADD CONSTRAINT FK_26B2FA12591CC992 FOREIGN KEY (course_id) 
-            REFERENCES claro_cursusbundle_course (id) 
+            ALTER TABLE claro_cursusbundle_course_session_group 
+            ADD CONSTRAINT FK_F27287A4613FECDF FOREIGN KEY (session_id) 
+            REFERENCES claro_cursusbundle_course_session (id) 
             ON DELETE CASCADE
         ");
         $this->addSql("
@@ -273,7 +262,7 @@ class Version20150219104914 extends AbstractMigration
             ALTER TABLE claro_cursusbundle_course_session 
             ADD CONSTRAINT FK_C5F56FDE82D40A1F FOREIGN KEY (workspace_id) 
             REFERENCES claro_workspace (id) 
-            ON DELETE CASCADE
+            ON DELETE SET NULL
         ");
         $this->addSql("
             ALTER TABLE claro_cursusbundle_course_session 
@@ -303,6 +292,18 @@ class Version20150219104914 extends AbstractMigration
             ALTER TABLE claro_cursusbundle_cursus_group 
             ADD CONSTRAINT FK_EA4DDE9340AEF4B9 FOREIGN KEY (cursus_id) 
             REFERENCES claro_cursusbundle_cursus (id) 
+            ON DELETE CASCADE
+        ");
+        $this->addSql("
+            ALTER TABLE claro_cursusbundle_course_session_user 
+            ADD CONSTRAINT FK_80B4120FA76ED395 FOREIGN KEY (user_id) 
+            REFERENCES claro_user (id) 
+            ON DELETE CASCADE
+        ");
+        $this->addSql("
+            ALTER TABLE claro_cursusbundle_course_session_user 
+            ADD CONSTRAINT FK_80B4120F613FECDF FOREIGN KEY (session_id) 
+            REFERENCES claro_cursusbundle_course_session (id) 
             ON DELETE CASCADE
         ");
         $this->addSql("
@@ -338,14 +339,6 @@ class Version20150219104914 extends AbstractMigration
             DROP CONSTRAINT FK_27921C33591CC992
         ");
         $this->addSql("
-            ALTER TABLE claro_cursusbundle_course_group 
-            DROP CONSTRAINT FK_91D2ED95591CC992
-        ");
-        $this->addSql("
-            ALTER TABLE claro_cursusbundle_course_user 
-            DROP CONSTRAINT FK_26B2FA12591CC992
-        ");
-        $this->addSql("
             ALTER TABLE claro_cursusbundle_course_session 
             DROP CONSTRAINT FK_C5F56FDE591CC992
         ");
@@ -366,6 +359,14 @@ class Version20150219104914 extends AbstractMigration
             DROP CONSTRAINT FK_8AA52D840AEF4B9
         ");
         $this->addSql("
+            ALTER TABLE claro_cursusbundle_course_session_group 
+            DROP CONSTRAINT FK_F27287A4613FECDF
+        ");
+        $this->addSql("
+            ALTER TABLE claro_cursusbundle_course_session_user 
+            DROP CONSTRAINT FK_80B4120F613FECDF
+        ");
+        $this->addSql("
             ALTER TABLE claro_cursusbundle_course_session_registration_queue 
             DROP CONSTRAINT FK_334FC296613FECDF
         ");
@@ -376,10 +377,7 @@ class Version20150219104914 extends AbstractMigration
             DROP TABLE claro_cursusbundle_cursus
         ");
         $this->addSql("
-            DROP TABLE claro_cursusbundle_course_group
-        ");
-        $this->addSql("
-            DROP TABLE claro_cursusbundle_course_user
+            DROP TABLE claro_cursusbundle_course_session_group
         ");
         $this->addSql("
             DROP TABLE claro_cursusbundle_cursus_displayed_word
@@ -389,6 +387,9 @@ class Version20150219104914 extends AbstractMigration
         ");
         $this->addSql("
             DROP TABLE claro_cursusbundle_cursus_group
+        ");
+        $this->addSql("
+            DROP TABLE claro_cursusbundle_course_session_user
         ");
         $this->addSql("
             DROP TABLE claro_cursusbundle_course_session_registration_queue

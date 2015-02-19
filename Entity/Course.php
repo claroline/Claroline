@@ -89,27 +89,9 @@ class Course
      */
     protected $sessions;
 
-    /**
-     * @ORM\OneToMany(
-     *     targetEntity="Claroline\CursusBundle\Entity\CourseUser",
-     *     mappedBy="course"
-     * )
-     */
-    protected $courseUsers;
-
-    /**
-     * @ORM\OneToMany(
-     *     targetEntity="Claroline\CursusBundle\Entity\CourseGroup",
-     *     mappedBy="course"
-     * )
-     */
-    protected $courseGroups;
-
     public function __construct()
     {
         $this->sessions = new ArrayCollection();
-        $this->courseUsers = new ArrayCollection();
-        $this->courseGroups = new ArrayCollection();
     }
 
     public function getId()
@@ -212,19 +194,8 @@ class Course
         $this->userRolePrefix = $userRolePrefix;
     }
 
-
     public function getSessions()
     {
         return $this->sessions->toArray();
-    }
-
-    public function getCourseUsers()
-    {
-        return $this->courseUsers->toArray();
-    }
-
-    public function getCourseGroups()
-    {
-        return $this->courseGroups->toArray();
     }
 }

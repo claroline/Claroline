@@ -11,27 +11,27 @@
 
 namespace Claroline\CursusBundle\Repository;
 
-use Claroline\CoreBundle\Entity\User;
-use Claroline\CursusBundle\Entity\Course;
+use Claroline\CoreBundle\Entity\Group;
+use Claroline\CursusBundle\Entity\CourseSession;
 use Doctrine\ORM\EntityRepository;
 
-class CourseUserRepository extends EntityRepository
+class CourseSessionGroupRepository extends EntityRepository
 {
-    public function findOneCourseUserByCourseAndUser(
-        Course $course,
-        User $user,
+    public function findOneSessionGroupBySessionAndGroup(
+        CourseSession $session,
+        Group $group,
         $executeQuery = true
     )
     {
         $dql = '
-            SELECT cu
-            FROM Claroline\CursusBundle\Entity\CourseUser cu
-            WHERE cu.course = :course
-            AND cu.user = :user
+            SELECT csg
+            FROM Claroline\CursusBundle\Entity\CourseSessionGroup csg
+            WHERE csg.session = :session
+            AND csg.group = :group
         ';
         $query = $this->_em->createQuery($dql);
-        $query->setParameter('course', $course);
-        $query->setParameter('user', $user);
+        $query->setParameter('session', $session);
+        $query->setParameter('group', $group);
 
         return $executeQuery ? $query->getOneOrNullResult() : $query;
     }
