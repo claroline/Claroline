@@ -29,6 +29,7 @@ class InteractionHoleHandler extends \UJM\ExoBundle\Form\InteractionHandler{
      */
     public function processAdd()
     {
+        
         if ( $this->request->getMethod() == 'POST' ) {
             $this->form->handleRequest($this->request);
 
@@ -65,6 +66,7 @@ class InteractionHoleHandler extends \UJM\ExoBundle\Form\InteractionHandler{
      */
     protected function onSuccessAdd($interHole)
     {
+        
         // to avoid bug with code tinymce
         $htmlTiny = $interHole->getHtml();
         $interHole->getInteraction()->getQuestion()->setDateCreate(new \Datetime());
