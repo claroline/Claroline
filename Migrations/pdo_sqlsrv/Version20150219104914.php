@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CursusBundle\Migrations\sqlsrv;
+namespace Claroline\CursusBundle\Migrations\pdo_sqlsrv;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2015/02/18 03:49:18
+ * Generation date: 2015/02/19 10:49:15
  */
-class Version20150218154915 extends AbstractMigration
+class Version20150219104914 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -137,6 +137,8 @@ class Version20150218154915 extends AbstractMigration
                 manager_role_id INT, 
                 cursus_id INT, 
                 session_status INT NOT NULL, 
+                default_session BIT NOT NULL, 
+                creation_date DATETIME2(6) NOT NULL, 
                 PRIMARY KEY (id)
             )
         ");

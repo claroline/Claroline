@@ -33,6 +33,7 @@ class CursusManager
     private $translator;
     private $courseRepo;
     private $courseGroupRepo;
+    private $courseSessionRepo;
     private $courseUserRepo;
     private $cursusRepo;
     private $cursusGroupRepo;
@@ -60,6 +61,8 @@ class CursusManager
             $om->getRepository('ClarolineCursusBundle:Course');
         $this->courseGroupRepo =
             $om->getRepository('ClarolineCursusBundle:CourseGroup');
+        $this->courseSessionRepo =
+            $om->getRepository('ClarolineCursusBundle:CourseSession');
         $this->courseUserRepo =
             $om->getRepository('ClarolineCursusBundle:CourseUser');
         $this->cursusRepo =
@@ -1025,6 +1028,58 @@ class CursusManager
         return $this->courseGroupRepo->findOneCourseGroupByCourseAndGroup(
             $course,
             $group,
+            $executeQuery
+        );
+    }
+
+
+    /*********************************************
+     * Access to CourseSessionRepository methods *
+     *********************************************/
+
+    public function getSessionsByCourse(
+        Course $course,
+        $orderedBy = 'creationDate',
+        $order = 'DESC',
+        $executeQuery = true
+    )
+    {
+        return $this->courseSessionRepo->findSessionsByCourse(
+            $course,
+            $orderedBy,
+            $order,
+            $executeQuery
+        );
+    }
+
+    public function getSessionsByCourseAndStatus(
+        Course $course,
+        $status,
+        $orderedBy = 'creationDate',
+        $order = 'DESC',
+        $executeQuery = true
+    )
+    {
+        return $this->courseSessionRepo->findSessionsByCourseAndStatus(
+            $course,
+            $status,
+            $orderedBy,
+            $order,
+            $executeQuery
+        );
+    }
+
+    public function getDefaultSessionsByCourse(
+        Course $course,
+        $orderedBy = 'creationDate',
+        $order = 'DESC',
+        $executeQuery = true
+    )
+    {
+        return $this->courseSessionRepo->findDefaultSessionsByCourse(
+            $course,
+            $orderedBy,
+            $order,
             $executeQuery
         );
     }

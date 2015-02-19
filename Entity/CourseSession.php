@@ -18,11 +18,15 @@ use Claroline\CursusBundle\Entity\Cursus;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Claroline\CursusBundle\Repository\CourseSessionRepository")
  * @ORM\Table(name="claro_cursusbundle_course_session")
  */
 class CourseSession
 {
+    const SESSION_NOT_STARTED = 0;
+    const SESSION_OPEN = 1;
+    const SESSION_CLOSED = 2;
+
     /**
      * @ORM\Column(type="integer")
      * @ORM\Id
@@ -75,6 +79,16 @@ class CourseSession
      * @ORM\Column(name="session_status", type="integer")
      */
     protected $sessionStatus = 0;
+
+    /**
+     * @ORM\Column(name="default_session", type="boolean")
+     */
+    protected $defaultSession = false;
+
+    /**
+     * @ORM\Column(name="creation_date", type="datetime", nullable=false)
+     */
+    protected $creationDate;
 
     public function getId()
     {
@@ -144,5 +158,25 @@ class CourseSession
     public function setManagerRole(Role $managerRole)
     {
         $this->managerRole = $managerRole;
+    }
+
+    public function isDefaultSession()
+    {
+        return $this->defaultSession;
+    }
+
+    public function setDefaultSession($defaultSession)
+    {
+        $this->defaultSession = $defaultSession;
+    }
+
+    public function getCreationDate()
+    {
+        return $this->creationDate;
+    }
+
+    public function setCreationDate($creationDate)
+    {
+        $this->creationDate = $creationDate;
     }
 }
