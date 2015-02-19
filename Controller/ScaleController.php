@@ -69,7 +69,7 @@ class ScaleController
             return new JsonResponse(
                 $this->competencyManager->persistScale($this->formHandler->getData())
             );
-        } else
+        }
 
         return ['form' => $this->formHandler->getView()];
     }
