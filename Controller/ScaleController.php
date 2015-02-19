@@ -14,6 +14,8 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * @DI\Tag("security.secure_service")
  * @SEC\PreAuthorize("canOpenAdminTool('competencies')")
+ * @EXT\Route("/scales", requirements={"id"="\d+"}, options={"expose"=true})
+ * @EXT\Method("GET")
  */
 class ScaleController
 {
@@ -41,8 +43,7 @@ class ScaleController
     /**
      * Displays the scale creation form.
      *
-     * @EXT\Route("/scales/new", name="hevinci_new_scale", options={"expose"=true})
-     * @EXT\Method("GET")
+     * @EXT\Route("/new", name="hevinci_new_scale")
      * @EXT\Template("HeVinciCompetencyBundle:Scale:form.html.twig")
      *
      * @return array
@@ -55,7 +56,7 @@ class ScaleController
     /**
      * Handles the scale creation form submission.
      *
-     * @EXT\Route("/scales", name="hevinci_create_scale", options={"expose"=true})
+     * @EXT\Route("/", name="hevinci_create_scale")
      * @EXT\Method("POST")
      * @EXT\Template("HeVinciCompetencyBundle:Scale:form.html.twig")
      *
@@ -68,7 +69,7 @@ class ScaleController
             return new JsonResponse(
                 $this->competencyManager->persistScale($this->formHandler->getData())
             );
-        }
+        } else
 
         return ['form' => $this->formHandler->getView()];
     }
@@ -76,8 +77,7 @@ class ScaleController
     /**
      * Displays the list of scales.
      *
-     * @EXT\Route("/scales", name="hevinci_scales")
-     * @EXT\Method("GET")
+     * @EXT\Route("/", name="hevinci_scales")
      * @EXT\Template
      *
      * @return array
@@ -90,19 +90,8 @@ class ScaleController
     /**
      * Displays a scale, either in read-only or in edit mode.
      *
-     * @EXT\Route(
-     *     "/scales/{id}/{edit}",
-     *     name="hevinci_scale",
-     *     options={"expose"=true},
-     *     defaults={"edit"=0}
-     * )
-     * @EXT\Method("GET")
+     * @EXT\Route("/{id}/{edit}", name="hevinci_scale", defaults={"edit"=0}))
      * @EXT\Template("HeVinciCompetencyBundle:Scale:editForm.html.twig")
-     * @EXT\ParamConverter(
-     *     "scale",
-     *     class="HeVinciCompetencyBundle:Scale",
-     *     options={"id" = "id", "strictId" = true}
-     * )
      *
      * @param Scale $scale
      * @param bool  $edit
@@ -123,19 +112,9 @@ class ScaleController
     /**
      * Updates a scale.
      *
-     * @EXT\Route(
-     *     "/scales/{id}",
-     *     name="hevinci_edit_scale",
-     *     options={"expose"=true},
-     *     defaults={"edit"=0}
-     * )
+     * @EXT\Route("/{id}", name="hevinci_edit_scale", defaults={"edit"=0})
      * @EXT\Method("POST")
      * @EXT\Template("HeVinciCompetencyBundle:Scale:editForm.html.twig")
-     * @EXT\ParamConverter(
-     *     "scale",
-     *     class="HeVinciCompetencyBundle:Scale",
-     *     options={"id" = "id", "strictId" = true}
-     * )
      *
      * @param Request   $request
      * @param Scale     $scale
@@ -155,17 +134,7 @@ class ScaleController
     /**
      * Deletes a scale.
      *
-     * @EXT\Route(
-     *     "/scales-delete/{id}",
-     *     name="hevinci_delete_scale",
-     *     options={"expose"=true}
-     * )
-     * @EXT\Method("GET")
-     * @EXT\ParamConverter(
-     *     "scale",
-     *     class="HeVinciCompetencyBundle:Scale",
-     *     options={"id" = "id", "strictId" = true}
-     * )
+     * @EXT\Route("/delete/{id}", name="hevinci_delete_scale")
      *
      * @param Scale $scale
      * @return JsonResponse

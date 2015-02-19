@@ -1,9 +1,19 @@
 {% extends 'HeVinciCompetencyBundle:Competency:layout.html.twig' %}
 
 {% block panelBody %}
-    {% if frameworks|length > 0 %}
+    <ul id="framework-list" {% if frameworks|length == 0 %}style="display: none;"{% endif %}>
+        {% for framework in frameworks %}
+            {%
+                include 'HeVinciCompetencyBundle:Competency:frameworkItem.html.twig'
+                with {
+                    id: framework.getId(),
+                    name: framework.getName()
+                }
+            %}
+        {% endfor %}
+    </ul>
 
-    {% else %}
+    {% if frameworks|length == 0 %}
         <div class="alert alert-info" role="alert">
             <i class="fa fa-info-circle"></i>
             <span id="status-info">
@@ -18,9 +28,9 @@
 {% endblock %}
 
 {% block panelFooter %}
-    <a href="#" class="btn btn-primary">
-        {{ 'create_framework'|trans({}, 'competency') }}
-    </a>
+    <button id="create-framework" class="btn btn-primary">
+        {{ 'framework.create'|trans({}, 'competency') }}
+    </button>
     <button id="create-first-scale" class="btn btn-primary" {{ hasScales ? 'style="display: none"' : '' }}>
         {{ 'scale.create'|trans({}, 'competency') }}
     </button>

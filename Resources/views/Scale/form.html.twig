@@ -1,33 +1,11 @@
-<div class="modal-dialog" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
-    <div class="modal-content">
-        <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                &times;
-            </button>
-            <h3 class="modal-title">
-                {% block title %}
-                    {{ 'scale.create'|trans({}, 'competency') }}
-                {% endblock %}
-            </h3>
-        </div>
-        <div class="modal-body">
-            <form id="scale-form"
-                  action="{% block action %}{{ path('hevinci_create_scale') }}{% endblock %}"
-                  method="POST"
-                  {{ form_enctype(form) }}
-            >
-                {{ form_widget(form) }}
-            </form>
-        </div>
-        <div class="modal-footer">
-            {% block footer %}
-                <span class="btn btn-default" data-dismiss="modal">
-                    {{ 'cancel'|trans({}, 'platform') }}
-                </span>
-                <button type="button" id='save' class="btn btn-primary">
-                    {{ 'ok'|trans({}, 'platform') }}
-                </button>
-            {% endblock %}
-        </div>
-    </div>
-</div>
+{% extends 'HeVinciCompetencyBundle::modalForm.html.twig' %}
+
+{% block title %}
+    {{ 'scale.create'|trans({}, 'competency') }}
+{% endblock %}
+
+{% block id %}scale-form{% endblock %}
+
+{% block action %}
+    {{ path('hevinci_create_scale') }}
+{% endblock %}

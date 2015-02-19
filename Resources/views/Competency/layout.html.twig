@@ -2,13 +2,13 @@
 
 {% set competencyBreadcrumbs = [
         {
-            'icon': 'fa fa-cog',
-            'name': 'administration'|trans({}, 'platform'),
-            'href': path('claro_admin_index')
+            icon: 'fa fa-cog',
+            name: 'administration'|trans({}, 'platform'),
+            href: path('claro_admin_index')
         },
         {
-            'name': 'competencies'|trans({}, 'tools'),
-            'href': path('hevinci_frameworks')
+            name: 'competencies'|trans({}, 'tools'),
+            href: path('hevinci_frameworks')
         }
     ]
 %}
@@ -43,7 +43,9 @@
 {% block javascripts %}
     {{ parent() }}
     {% javascripts debug=false filter='twig_js, jsmin' vars=["locale"]
-        "@HeVinciCompetencyBundle/Resources/views/Competency/scaleRow.html.twig"
+        "@HeVinciCompetencyBundle/Resources/views/Competency/frameworkItem.html.twig"
+        "@HeVinciCompetencyBundle/Resources/views/Competency/competencyItem.html.twig"
+        "@HeVinciCompetencyBundle/Resources/views/Scale/row.html.twig"
     %}
         <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}

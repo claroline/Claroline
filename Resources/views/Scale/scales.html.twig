@@ -7,7 +7,7 @@
 {% block breadcrumb %}
     {{
         macros.breadcrumbs(competencyBreadcrumbs|merge([{
-            'name': 'scales'|trans({}, 'competency')
+            name: 'scales'|trans({}, 'competency')
         }]))
     }}
 {% endblock %}
@@ -32,9 +32,9 @@
             {%
                 include 'HeVinciCompetencyBundle:Scale:row.html.twig'
                 with {
-                    'id': scale.getId(),
-                    'name': scale.getName(),
-                    'isLocked': scale.isLocked()
+                    id: scale.getId(),
+                    name: scale.getName(),
+                    isLocked: scale.isLocked()
                 }
             %}
         {% endfor %}

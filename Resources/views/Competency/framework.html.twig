@@ -1,0 +1,39 @@
+{% extends 'HeVinciCompetencyBundle:Competency:layout.html.twig' %}
+
+{#
+    Note: this template is fed with NestedTreeRepository#childrenHierarchy data,
+          i.e. a hierarchical array where nodes themselves are arrays.
+#}
+
+{% block title %}
+    {{ parent() ~ ' - ' ~ framework.name }}
+{% endblock %}
+
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs(competencyBreadcrumbs|merge([{
+            name: framework.name
+        }]))
+    }}
+{% endblock %}
+
+{% block panelTitle %}
+    {{ framework.name }}
+{% endblock %}
+
+{% block panelBody %}
+    <ul class="framework">
+        {%
+            include 'HeVinciCompetencyBundle:Competency:competencyItem.html.twig'
+            with { competency: framework }
+        %}
+    </ul>
+{% endblock %}
+
+{% block panelFooter %}
+    <button id="delete-framework"
+            data-id="{{ framework.id }}"
+            class="btn btn-danger">
+        {{ 'delete'|trans({}, 'platform') }}
+    </button>
+{% endblock %}

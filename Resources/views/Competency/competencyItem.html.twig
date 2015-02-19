@@ -1,0 +1,47 @@
+{% twig_js name = 'CompetencyItem' %}
+
+<li data-id="{{ competency.id }}">
+    <i class="fa fa-plus-square-o expand"></i>
+    <span class="dropdown">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+            {{ competency.name }}
+            <span class="caret"></span>
+        </a>
+        <ul class="dropdown-menu" role="menu">
+            <li role="presentation">
+                <a role="menuitem" href="#" tabindex="-1">
+                    {{ 'edit'|trans({}, 'platform') }}
+                </a>
+            </li>
+            <li role="presentation">
+                <a role="menuitem" href="#" tabindex="-1">
+                    {{ 'delete'|trans({}, 'platform') }}
+                </a>
+            </li>
+            <li role="presentation" class="divider"></li>
+            <li role="presentation">
+                <a class="create-sub-competency" role="menuitem" href="#" tabindex="-1">
+                    {{ 'competency.create_sub'|trans({}, 'competency') }}
+                </a>
+            </li>
+            <li role="presentation">
+                <a role="menuitem" href="#" tabindex="-1">
+                    {{ 'ability.create'|trans({}, 'competency') }}
+                </a>
+            </li>
+            <li role="presentation">
+                <a role="menuitem" href="#" tabindex="-1">
+                    {{ 'ability.add'|trans({}, 'competency') }}
+                </a>
+            </li>
+        </ul>
+    </span>
+    <ul class="children">
+        {# Note: __children is the key created by NestedTreeRepository#childrenHierarchy #}
+        {% if competency.__children is defined %}
+            {% for child in competency.__children %}
+                {% include _self with { competency: child } %}
+            {% endfor %}
+        {% endif %}
+    </ul>
+</li>
