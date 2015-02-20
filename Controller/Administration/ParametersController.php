@@ -989,19 +989,11 @@ class ParametersController extends Controller
 
         if (is_null($this->configHandler->getParameter('token'))) {
             $token = $this->generateToken(20);
-            file_put_contents(
-                $platformOptionsFile,
-                Yaml::dump(array('token' => $token)),
-                FILE_APPEND
-            );
+            $this->configHandler->setParameter('token', $token);
         }
         $this->sendDatas();
 
-        file_put_contents(
-            $platformOptionsFile,
-            Yaml::dump(array('confirm_send_datas' => 'OK')),
-            FILE_APPEND
-        );
+        $this->configHandler->setParameter('confirm_send_datas', 'OK');
 
         return new RedirectResponse(
             $this->router->generate('claro_admin_parameters_index')
