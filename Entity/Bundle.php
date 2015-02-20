@@ -40,6 +40,17 @@ class Bundle
      */
     private $version;
 
+    /**
+     * @var string
+     * @ORM\Column(length=50)
+     */
+    private $type;
+
+    /**
+     * @ORM\Column(type="json_array")
+     */
+    private $authors;
+
     public function getId()
     {
         return $this->id;
@@ -63,5 +74,30 @@ class Bundle
     public function getVersion()
     {
         $this->version = $version;
+    }
+
+    public function setType($type)
+    {
+        $this->type = $type;
+    }
+
+    public function setLicense($license)
+    {
+        $this->license = $license;
+    }
+
+    public function getLicense()
+    {
+        return $this->license;
+    }
+
+    public function setAuthors(array $authors)
+    {
+        $this->authors = $authors;
+    }
+
+    public function getAuthors()
+    {
+        return $this->authors;
     }
 }

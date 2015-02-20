@@ -15,6 +15,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CoreBundle\Manager\DependencyManager;
+use Claroline\CoreBundle\Manager\BundleManager;
 use Claroline\CoreBundle\Manager\IPWhiteListManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -31,6 +32,7 @@ class PackageController extends Controller
     private $adminToolPlugin;
     private $sc;
     private $ipwlm;
+    private $bundleManager;
 
     /**
      * @DI\InjectParams({
@@ -38,7 +40,8 @@ class PackageController extends Controller
      *      "toolManager"     = @DI\Inject("claroline.manager.tool_manager"),
      *      "dm"              = @DI\Inject("claroline.manager.dependency_manager"),
      *      "sc"              = @DI\Inject("security.context"),
-     *      "ipwlm"           = @DI\Inject("claroline.manager.ip_white_list_manager")
+     *      "ipwlm"           = @DI\Inject("claroline.manager.ip_white_list_manager"),
+     *      "bundleManager"   = @DI\Inject("claroline.manager.bundle_manager")
      * })
      */
     public function __construct(
@@ -46,7 +49,8 @@ class PackageController extends Controller
         ToolManager              $toolManager,
         SecurityContextInterface $sc,
         DependencyManager        $dm,
-        IPWhiteListManager       $ipwlm
+        IPWhiteListManager       $ipwlm,
+        BundleManager            $bundleManager
     )
     {
         $this->eventDispatcher = $eventDispatcher;
@@ -55,6 +59,7 @@ class PackageController extends Controller
         $this->sc              = $sc;
         $this->dm              = $dm;
         $this->ipwlm           = $ipwlm;
+        $this->bundleManager   = $bundleManager;
     }
 
     /**
@@ -91,75 +96,24 @@ class PackageController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/update/all",
-     *     name="claro_admin_update_packages",
-     *     options={"expose"=true}
+     *     "/packages/available",
+     *     name="claro_admin_available_packages"
      * )
+     *
+     * @EXT\Template()
      *
      * Display the plugin list
      *
      * @return Response
      */
-    public function updateAllAction()
+    public function availablePackagesAction()
     {
         $this->checkOpen();
-        $packages = $this->dm->updateLastTagCache();
+        $coreBundle = $this->bundleManager->getBundle($coreBundle);
+        $coreVersion = $coreBundle->getVersion();
 
-        return new Response('success', 204);
-    }
+        //ask the server wich are the last available packages now.
 
-    /**
-     * @EXT\Route(
-     *     "/update/package/{ref}",
-     *     name="claro_admin_update_packages",
-     *     options={"expose"=true}
-     * )
-     * @param $ref
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
-     */
-    public function updatePackageAction($ref)
-    {
-        $this->checkOpen();
-        $package = $this->dm->getByDistReference($ref);
-        $tag = $this->dm->updatePackage($package);
-
-        return new JsonResponse(
-            array(
-                'tag' => $tag,
-                'prettyName' => $package->getPrettyName(),
-                'distRef' => $package->getDistReference()
-            )
-        );
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/upgrade/all",
-     *     name="claro_admin_upgrade_packages",
-     *     options={"expose"=true}
-     * )
-     */
-    public function upgradeAllAction()
-    {
-        $this->checkOpen();
-        $res = $this->dm->upgrade();
-
-        return new JsonResponse();
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/remove/logs",
-     *     name="claro_admin_packages_log_remove",
-     *     options={"expose"=true}
-     * )
-     */
-    public function removeLogs()
-    {
-        $this->checkOpen();
-        $this->dm->removeUpdateLog();
-
-        return new JsonResponse();
     }
 
     /**

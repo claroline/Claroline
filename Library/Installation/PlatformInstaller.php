@@ -91,7 +91,7 @@ class PlatformInstaller
         }
 
         $this->operationExecutor->execute();
-        $this->setBundleVersion();
+        //$this->setBundleVersionFromComposerInstalled();
     }
 
     public function installFromKernel($withOptionalFixtures = true)
@@ -113,7 +113,7 @@ class PlatformInstaller
             }
         }
 
-        $this->setBundleVersion();
+        $this->setBundleVersionFromComposerInstalled();
     }
 
     private function launchPreInstallActions()
@@ -174,7 +174,7 @@ class PlatformInstaller
         };
     }
 
-    public function setBundleVersion()
+    public function setBundleVersionFromComposerInstalled()
     {
         $this->log('Set the bundle versions...');
         $vendorDir = $this->container->getParameter('claroline.param.vendor_directory');
