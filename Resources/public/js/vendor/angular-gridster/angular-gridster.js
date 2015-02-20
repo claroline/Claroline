@@ -75,6 +75,7 @@
              * Clean up after yourself
              */
             this.destroy = function() {
+                console.log('GridsterCtrl destroy');
                 if (this.grid) {
                     this.grid.length = 0;
                     this.grid = null;
@@ -1031,7 +1032,7 @@
         }
     ])
 
-    .controller('GridsterItemCtrl', function() {
+    .controller('GridsterItemCtrl', ['$scope', function($scope) {
         this.$element = null;
         this.gridster = null;
         this.row = null;
@@ -1044,6 +1045,9 @@
         this.maxSizeY = null;
 
         this.init = function($element, gridster) {
+            console.log('init');
+            console.log($element[0]);
+            console.log(gridster);
             this.$element = $element;
             this.gridster = gridster;
             this.sizeX = gridster.defaultSizeX;
@@ -1051,6 +1055,7 @@
         };
 
         this.destroy = function() {
+            console.log('GridsterItemCtrl destroy');
             this.gridster = null;
             this.$element = null;
         };
@@ -1078,6 +1083,9 @@
          * @param {number} column
          */
         this.setPosition = function(row, column) {
+            console.log('setPosition');
+            //console.log(this.gridster);
+            //console.log(this);
             this.gridster.putItem(this, row, column);
 
             if (!this.isMoving()) {
@@ -1218,7 +1226,7 @@
             return (this.sizeY * this.gridster.curRowHeight - this.gridster.margins[0]);
         };
 
-    })
+    }])
 
     .factory('GridsterDraggable', ['$document', '$timeout', '$window',
         function($document, $timeout, $window) {
@@ -1977,6 +1985,8 @@
                     });
 
                     return scope.$on('$destroy', function() {
+                        //throw 'merdeeee!!!!';
+                        console.log('gridster item destroy');
                         try {
                             resizable.destroy();
                             draggable.destroy();
@@ -1987,6 +1997,7 @@
                         } catch (e) {}
 
                         try {
+                            console.log(item);
                             item.destroy();
                         } catch (e) {}
                     });
