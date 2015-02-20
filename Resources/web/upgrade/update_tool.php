@@ -69,10 +69,9 @@ $vendorDir = __DIR__ . "/../../vendor";
 								<ul>
 									<li> 1 - <?php Translator::translate('create_backup'); ?> </li>
                                     <li> 2 - <?php Translator::translate('activate_maintenance_mode'); ?>
-									<li> 3 - <?php Translator::translate('bundle_table_initialization'); ?> </li>
-									<li> 4 - <?php Translator::translate('vendor_replacement'); ?></li>
-									<li> 5 - <?php Translator::translate('executing_migrations'); ?> </li>
-                                    <li> 6 - <?php Translator::translate('remove_maintenance_mode'); ?> </li>
+									<li> 3 - <?php Translator::translate('vendor_replacement'); ?></li>
+									<li> 4 - <?php Translator::translate('executing_migrations'); ?> </li>
+                                    <li> 5 - <?php Translator::translate('remove_maintenance_mode'); ?> </li>
 								</ul>
 							</div>
                             <a id="start-btn" class="btn btn-primary" data-toggle="modal" data-target="#upgrade-modal">
@@ -141,14 +140,6 @@ $vendorDir = __DIR__ . "/../../vendor";
                     'successAlert': 'maintenance_enabled',
                     'errorAlert': null
                 },
-				{
-					'title': 'pre_update_title',
-					'content': 'pre_update_content',
-					'action': 'pre_update.php?logId=' + now,
-					'logFile': 'pre_update-' + now,
-                    'successAlert': null,
-                    'errorAlert': 'database_update_error'
-				},
 				{
 					'title': 'replace_vendor_title',
 					'content': 'replace_vendor_content',

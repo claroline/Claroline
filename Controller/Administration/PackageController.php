@@ -78,7 +78,8 @@ class PackageController extends Controller
         $ds = DIRECTORY_SEPARATOR;
 
         //the current ip must be whitelisted so it can access the upgrade.html.php script
-        $allowUpdate = $this->ipwlm->addIP($_SERVER['REMOTE_ADDR']);
+        $this->ipwlm->addIP($_SERVER['REMOTE_ADDR']);
+        $allowUpdate = true;
 
         return array(
             'corePackages'       => $corePackages,
