@@ -1,0 +1,23 @@
+{
+    "name": "icap/badge-bundle",
+    "description": "Claroline badge plugin from ICAP",
+    "keywords": ["Claroline", "Plugin", "Badge", "ICAP"],
+    "homepage": "http://www.claroline.net",
+    "type": "claroline-plugin",
+    "license": "",
+    "authors": [
+        {
+            "name": "ICAP development team",
+            "homepage": "https://github.com/iCAPLyon1"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.1",
+        "claroline/core-bundle": "~4.0",
+        "icap/notification-bundle": "~2.0"
+    },
+    "autoload": {
+        "psr-0": { "Icap\\BadgeBundle": "" }
+    },
+    "target-dir": "Icap/BadgeBundle"
+}
