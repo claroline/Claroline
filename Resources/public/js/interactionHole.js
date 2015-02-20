@@ -299,7 +299,7 @@ function addHole(indexBlank, valHole) {
     disableNotYetReady();
     
     if (($('#newTable').find('td').length) > 1) {
-        $('#newTable').css({"display" : "inline-block"});
+        $('#newTable').css({"display" : "block"});
     } else {
         $('#newTable').css({"display" : "none"});
     }

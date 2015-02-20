@@ -101,15 +101,6 @@ function LoadPic(path, prefx, iddoc) {
 
 $(function () {
 
-/* global BackgroundCheck:false */
-
-document.addEventListener('DOMContentLoaded', function () {
-  BackgroundCheck.init({
-    targets: '.target'
-  });
-});
-
-
 
     // Make the answer zones draggable
     $('#addp').draggable({
@@ -193,7 +184,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 var infos = getImageInformations($(img).attr('src'));
 
-                alreadyPlacedAnswersZone(infos['shape'], infos['color'], infos['pathImg'], score);
+                alreadyPlacedAnswersZone(score);
 
                 grade++;
             }

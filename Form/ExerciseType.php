@@ -32,7 +32,8 @@ class ExerciseType extends AbstractType
             )
             ->add(
                 'nbQuestion', 'text', array(
-                    'label' => 'number of questions to draw'
+                    'label' => 'number of questions to draw',
+                    'required' => false
                 )
             )
             ->add(

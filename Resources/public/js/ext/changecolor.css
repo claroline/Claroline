@@ -6,7 +6,6 @@
   position: absolute;
   z-index: 999;
   padding: 18px 20px;
-  border: 1px solid #E08E79;
   cursor: move;
   top: 25px;
 }

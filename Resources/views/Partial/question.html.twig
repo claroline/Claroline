@@ -1,14 +1,24 @@
 <div class="form-group row">
     <div class="col-md-5">{{ form_widget(form.interaction.question.title) }}</div>
-    <a class="btn btn-default" data-toggle="collapse" data-target="#collepseinteraction">Catégorie</a>
-    <div class="col-md-5">
+    <a class="btn btn-default" data-toggle="collapse" data-target="#categorie">Catégorie</a>
+    <a class="btn btn-default" data-toggle="collapse" data-target="#description">Description</a>
+        <br><br>
+    <div id="categorie" class="list-group collapse">
+        <div class="col-md-5">
             {{ form_widget(form.interaction.question.category) }}
             {{ form_errors(form.interaction.question.category) }}
+        </div> 
+        <a class="btn btn-primary" onclick="openCat('{{ path('ujm_category_new_pop', {'edit': 1} ) }}');"><i class="fa fa-pencil"></i></a>
+        <a class="btn btn-primary" onclick="openCat('{{ path('ujm_category_new_pop') }}');"><i class="fa fa-plus"></i></a>
+    </a></div>
+     <div id="description" class="list-group collapse">
+        <div class="col-md-6"> 
+            {{ form_widget(form.interaction.question.description) }}
         </div>
-    <a class="btn btn-default" href="#" >Description</a> 
-    
-        
+     </div>
+     </a>
 </div>
+
 
 <div class="form-group row">
     <div class="control-label col-md-8"> {{ form_widget(form.interaction.invite) }}</div>

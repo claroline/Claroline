@@ -37,6 +37,7 @@ class QuestionType extends AbstractType
                 'category', 'entity', array(
                     'class' => 'UJM\\ExoBundle\\Entity\\Category',
                     'label' => 'Category.value',
+                    'required' => false,
                     'query_builder' => function (CategoryRepository $cr) use ($uid) {
                         if ($this->catID == -1) {
                             return $cr->getUserCategory($uid);
