@@ -4,6 +4,7 @@ namespace Icap\BlogBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use Icap\BlogBundle\Entity\Blog;
+use Icap\BlogBundle\Entity\Statusable;
 
 class TagRepository extends EntityRepository
 {
@@ -21,10 +22,13 @@ class TagRepository extends EntityRepository
                 FROM IcapBlogBundle:Tag t
                 JOIN t.posts p
                 WHERE p.blog = :blogId
+                AND p.status = :postStatus
+                AND p.publicationDate IS NOT NULL
                 GROUP BY t.id
                 ORDER BY frequency DESC
             ')
             ->setParameter('blogId', $blog->getId())
+            ->setParameter('postStatus', Statusable::STATUS_PUBLISHED)
         ;
 
         if ($max != null) {
