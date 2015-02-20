@@ -79,7 +79,7 @@ class PackageController extends Controller
 
         //the current ip must be whitelisted so it can access the upgrade.html.php script
         $this->ipwlm->addIP($_SERVER['REMOTE_ADDR']);
-        $allowUpdate = true;
+        $allowUpdate = false;
 
         return array(
             'corePackages'       => $corePackages,
