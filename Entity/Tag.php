@@ -37,7 +37,7 @@ class Tag
     /*
      * Variable used in tag to define appearence frequency and calculate tag weight
      */
-    protected  $weight = 1;
+    protected $weight = 1;
 
     /**
      * @ORM\ManyToMany(targetEntity="Post", mappedBy="tags")

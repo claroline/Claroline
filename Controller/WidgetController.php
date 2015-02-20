@@ -6,6 +6,7 @@ use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
+use Icap\BlogBundle\Entity\WidgetBlog;
 use Icap\BlogBundle\Entity\WidgetBlogList;
 use Icap\BlogBundle\Listener\BlogListener;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -19,7 +20,15 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 class WidgetController extends Controller
 {
     /**
-     * @Route("/icap_blog/widget/{id}/config", name="icap_blog_widget_list_configure", requirements={"id" = "\d+"})
+     * @return \Icap\BlogBundle\Manager\WidgetManager
+     */
+    public function getWidgetManager()
+    {
+        return $this->get('icap_blog.manager.widget');
+    }
+
+    /**
+     * @Route("/icap_blog/widget/list/{id}/config", name="icap_blog_widget_list_configure", requirements={"id" = "\d+"})
      * @Method("POST")
      */
     public function updateWidgetBlogList(Request $request, WidgetInstance $widgetInstance)
@@ -28,7 +37,7 @@ class WidgetController extends Controller
             throw new AccessDeniedException();
         }
 
-        $originalWidgetListBlogs = $this->get('icap_blog.manager.widget')->getWidgetListBlogs($widgetInstance);
+        $originalWidgetListBlogs = $this->getWidgetManager()->getWidgetListBlogs($widgetInstance);
         $originalWidgetListBlogs = new ArrayCollection($originalWidgetListBlogs);
 
         $widgetBlogList = new WidgetBlogList();
@@ -62,14 +71,47 @@ class WidgetController extends Controller
             return new Response('', Response::HTTP_NO_CONTENT);
         }
 
-        $widgetItems = $this->get('icap_blog.manager.widget')->getWidgetListBlogs($widgetInstance);
-
         return $this->render(
             'IcapBlogBundle:widget:listConfigure.html.twig',
             array(
                 'form'           => $form->createView(),
-                'widgetInstance' => $widgetInstance,
-                'widgetItems'    => $widgetItems
+                'widgetInstance' => $widgetInstance
+            )
+        );
+    }
+    /**
+     * @Route("/icap_blog/widget/blog/{id}/config", name="icap_blog_widget_blog_configure", requirements={"id" = "\d+"})
+     * @Method("POST")
+     */
+    public function updateWidgetBlog(Request $request, WidgetInstance $widgetInstance)
+    {
+        if (!$this->get('security.context')->isGranted('edit', $widgetInstance)) {
+            throw new AccessDeniedException();
+        }
+
+        $resourceNode = $this->getWidgetManager()->getResourceNode($widgetInstance);
+
+        $widgetBlog = new WidgetBlog();
+        $widgetBlog->setResourceNode($resourceNode);
+
+        /** @var Form $form */
+        $form = $this->get('form.factory')->create($this->get('icap_blog.form.widget_blog'), $widgetBlog);
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $widgetBlog->setWidgetInstance($widgetInstance);
+            $entityManager->persist($widgetBlog);
+            $entityManager->flush();
+
+            return new Response('', Response::HTTP_NO_CONTENT);
+        }
+
+        return $this->render(
+            'IcapBlogBundle:widget:blogConfigure.html.twig',
+            array(
+                'form'           => $form->createView(),
+                'widgetInstance' => $widgetInstance
             )
         );
     }

@@ -54,25 +54,12 @@ class WidgetManager
     /**
      * @param WidgetInstance $widgetInstance
      *
-     * @return \Claroline\CoreBundle\Entity\Resource\ResourceNode[]
-     */
-    public function getResourceNodes(WidgetInstance $widgetInstance)
-    {
-        /** @var \Icap\BlogBundle\Entity\WidgetListBlog[] $widgetListBlogs */
-        return $this->entityManager
-            ->getRepository('IcapBlogBundle:WidgetListBlog')
-            ->findByWidgetInstance($widgetInstance);
-    }
-
-    /**
-     * @param WidgetInstance $widgetInstance
-     *
      * @return int[]
      */
     public function getResourceNodeIds(WidgetInstance $widgetInstance)
     {
         /** @var \Icap\BlogBundle\Entity\WidgetListBlog[] $widgetListBlogs */
-        $widgetListBlogs =  $this->getResourceNodes($widgetInstance);
+        $widgetListBlogs =  $this->getWidgetListBlogs($widgetInstance);
 
         $resourceNodeIds = array();
 
@@ -81,6 +68,41 @@ class WidgetManager
         }
 
         return $resourceNodeIds;
+    }
+
+    /**
+     * @param WidgetInstance $widgetInstance
+     *
+     * @return \Icap\BlogBundle\Entity\Blog
+     */
+    public function getBlog(WidgetInstance $widgetInstance)
+    {
+        $resourceNode = $this->getResourceNode($widgetInstance);
+
+        return $this->entityManager
+            ->getRepository('IcapBlogBundle:Blog')
+            ->findOneByResourceNode($resourceNode);
+    }
+
+    /**
+     * @param WidgetInstance $widgetInstance
+     *
+     * @return \Claroline\CoreBundle\Entity\Resource\ResourceNode|null
+     */
+    public function getResourceNode(WidgetInstance $widgetInstance)
+    {
+        /** @var \Icap\BlogBundle\Entity\WidgetBlog $widgetBlog */
+        $widgetBlog = $this->entityManager
+            ->getRepository('IcapBlogBundle:WidgetBlog')
+            ->findOneByWidgetInstance($widgetInstance);
+
+        $resourceNode = null;
+
+        if (null !== $widgetBlog) {
+            $resourceNode = $widgetBlog->getResourceNode();
+        }
+
+        return $resourceNode;
     }
 }
  

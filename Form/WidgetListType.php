@@ -11,14 +11,14 @@ use JMS\DiExtraBundle\Annotation as DI;
 
 /**
  * @DI\Service("icap_blog.form.widget_list")
- * @DI\FormType(alias = "widgetList")
+ * @DI\FormType(alias = "blog_widget_list_form")
  */
 class WidgetListType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('widgetListBlogs', 'collection', array(
-            'type'          => 'blog_widget_blog_form',
+            'type'          => 'blog_widget_list_blog_form',
             'by_reference'  => false,
             'prototype'     => true,
             'allow_add'     => true,

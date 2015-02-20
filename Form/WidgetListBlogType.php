@@ -10,11 +10,26 @@ use Zenstruck\Bundle\FormBundle\Form\DataTransformer\AjaxEntityTransformer;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
- * @DI\Service("icap_blog.form.widget_blog")
- * @DI\FormType(alias = "blog_widget_blog_form")
+ * @DI\Service("icap_blog.form.widget_list_blog")
+ * @DI\FormType(alias = "blog_widget_list_blog_form")
  */
-class WidgetBlogType extends AbstractType
+class WidgetListBlogType extends AbstractType
 {
+    /**
+     * @var IntToBlogTransformer
+     */
+    private $intToBlogTransformer;
+
+    /**
+     * @DI\InjectParams({
+     *     "intToBlogTransformer" = @DI\Inject("icap_blog.transformer.int_to_blog")
+     * })
+     */
+    public function __construct(IntToBlogTransformer $intToBlogTransformer)
+    {
+        $this->intToBlogTransformer = $intToBlogTransformer;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('resourceNode', 'resourcePicker', array(
@@ -35,14 +50,14 @@ class WidgetBlogType extends AbstractType
 
     public function getName()
     {
-        return 'blog_widget_blog_form';
+        return 'blog_widget_list_blog_form';
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(
             array(
-                'data_class'         => 'Icap\BlogBundle\Entity\WidgetBlog',
+                'data_class'         => 'Icap\BlogBundle\Entity\WidgetListBlog',
                 'translation_domain' => 'icap_blog'
             )
         );
