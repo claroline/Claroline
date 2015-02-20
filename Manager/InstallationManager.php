@@ -13,6 +13,7 @@ namespace Claroline\InstallationBundle\Manager;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Claroline\CoreBundle\Entity\Bundle;
 use Claroline\MigrationBundle\Manager\Manager;
 use Claroline\MigrationBundle\Migrator\Migrator;
 use Claroline\InstallationBundle\Fixtures\FixtureLoader;
@@ -75,6 +76,8 @@ class InstallationManager
             $this->log('Launching post-installation actions...');
             $additionalInstaller->postInstall();
         }
+
+        $this->persistBundleInfo($bundle);
     }
 
     public function update(InstallableInterface $bundle, $currentVersion, $targetVersion)
@@ -142,5 +145,25 @@ class InstallationManager
         if ($log = $this->logger) {
             $log($message);
         }
+    }
+
+    private function persistBundleInfo(InstallableInterface $bundle)
+    {
+        $ds = DIRECTORY_SEPARATOR;
+        $om = $this->container->get('doctrine.orm.entity_manager');
+        $entity = $om->getRepository('ClarolineCoreBundle:Bundle')
+            ->findOneByName($bundle->getName());
+
+        if (!$entity) {
+            $entity = new Bundle();
+        }
+
+        $entity->setName($bundle->getClarolineName());
+        $entity->setVersion($bundle->getVersion());
+        $entity->setAuthors($bundle->getAuthors());
+        $entity->setType($bundle->getType());
+        $om->persist($entity);
+        $this->log("Updating {$bundle->getName()} info...");
+        $om->flush();
     }
 }

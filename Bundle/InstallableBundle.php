@@ -34,4 +34,45 @@ abstract class InstallableBundle extends Bundle implements InstallableInterface
     {
         return null;
     }
+
+    public function getVersion()
+    {
+        $data = $this->getComposer();
+        if (property_exists($data, 'version')) return $data->version;
+
+        return "0.0.0.0";
+    }
+
+    public function getClarolineName()
+    {
+        $data = $this->getComposer();
+        $prop = 'target-dir';
+        $parts = explode('/', $data->$prop);
+
+        return end($parts);
+    }
+
+    public function getType()
+    {
+        $data = $this->getComposer();
+
+        return $data->type;
+    }
+
+    public function getAuthors()
+    {
+        $data = $this->getComposer();
+        if (property_exists($data, 'authors')) return $data->authors;
+
+        return array();
+    }
+
+    public function getComposer()
+    {
+        $ds = DIRECTORY_SEPARATOR;
+        $path = realpath($this->getPath() . $ds . 'composer.json');
+        $data = json_decode(file_get_contents($path));
+
+        return $data;
+    }
 }
