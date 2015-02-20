@@ -174,7 +174,7 @@ class PlatformInstaller
         };
     }
 
-    private function setBundleVersion()
+    public function setBundleVersion()
     {
         $this->log('Set the bundle versions...');
         $vendorDir = $this->container->getParameter('claroline.param.vendor_directory');
