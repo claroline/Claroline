@@ -99,6 +99,8 @@ class InstallationManager
             $this->log('Launching post-update actions...');
             $additionalInstaller->postUpdate($currentVersion, $targetVersion);
         }
+
+        $this->persistBundleInfo($bundle);
     }
 
     public function uninstall(InstallableInterface $bundle)
@@ -162,6 +164,7 @@ class InstallationManager
         $entity->setVersion($bundle->getVersion());
         $entity->setAuthors($bundle->getAuthors());
         $entity->setType($bundle->getType());
+        $entity->setDescription($bundle->getDescription());
         $om->persist($entity);
         $this->log("Updating {$bundle->getName()} info...");
         $om->flush();

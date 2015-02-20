@@ -67,6 +67,14 @@ abstract class InstallableBundle extends Bundle implements InstallableInterface
         return array();
     }
 
+    public function getDescription()
+    {
+        $data = $this->getComposer();
+        if (property_exists($data, 'description')) return $data->description;
+
+        return null;
+    }
+
     public function getComposer()
     {
         $ds = DIRECTORY_SEPARATOR;
