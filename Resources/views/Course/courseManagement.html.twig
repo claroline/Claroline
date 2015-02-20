@@ -50,19 +50,41 @@
         
         <br>
         <div>
-            <h3>{{ courseTitle }}</h3>
+            <h3>
+                {{ courseTitle }}
+                
+                {% if course.getDescription() is not empty %}
+                    &nbsp;
+                    <small>
+                        <i class="fa fa-file-text-o pointer-hand"
+                           data-toggle="collapse"
+                           data-target="#course-description-box"
+                           data-placement="top"
+                           title="{{ 'show_description'|trans({}, 'cursus') }}"
+                        >
+                        </i>
+                    </small>
+                {% endif %}
+            </h3>
             <br>
 
             {% if course.getDescription() is not empty %}
-                <div class="well well-sm">
+                <div id="course-description-box" class="well well-sm collapse">
                     {{ course.getDescription()|raw }}
                 </div>
                 <br>
             {% endif %}
                 
+            <div id="users-box" class="hidden">
+                <div id="users-area" class="well">
+
+                </div>
+                <br>
+            </div>
+                
             <div id="sessions-box">
                 <h4>
-                    {{ 'sessions'| trans({}, 'cursus') }}
+                    {{ 'sessions'|trans({}, 'cursus') }}
                     &nbsp;
                     <i class="fa fa-chevron-right pointer-hand"
                        data-toggle="collapse"
@@ -80,13 +102,13 @@
                             <table class="table">
                                 <tr>
                                     <th>
-                                        {{ 'name'| trans({}, 'platform') }}
+                                        {{ 'name'|trans({}, 'platform') }}
                                     </th>
                                     <th>
-                                        {{ 'creation_date'| trans({}, 'platform') }}
+                                        {{ 'creation_date'|trans({}, 'platform') }}
                                     </th>
                                     <th class="text-center">
-                                        {{ 'status'| trans({}, 'platform') }}
+                                        {{ 'status'|trans({}, 'platform') }}
                                     </th>
                                 </tr>
                                 
@@ -103,7 +125,11 @@
                                                 </i>
                                                 &nbsp;
                                             {% endif %}
-                                            {{ session.getName() }}
+                                            <span class="show-users-btn pointer-hand"
+                                                  data-session-id="{{ session.getId() }}"
+                                            >
+                                                {{ session.getName() }}
+                                            </span>
                                         </td>
                                         <td>
                                             {{ session.getCreationDate()|intl_date_format }}
@@ -131,7 +157,11 @@
                                                 </i>
                                                 &nbsp;
                                             {% endif %}
-                                            {{ session.getName() }}
+                                            <span class="show-users-btn pointer-hand"
+                                                  data-session-id="{{ session.getId() }}"
+                                            >
+                                                {{ session.getName() }}
+                                            </span>
                                         </td>
                                         <td>
                                             {{ session.getCreationDate()|intl_date_format }}
@@ -153,7 +183,7 @@
                                data-target="#closed-sessions-tab"
                                class="pointer-hand pull-right"
                             >
-                                {{ 'closed_sessions'| trans({}, 'cursus') }}
+                                {{ 'closed_sessions'|trans({}, 'cursus') }}
                             </a>
                             <br>
                             <br>
@@ -161,19 +191,23 @@
                                 <table class="table">
                                     <tr>
                                         <th>
-                                            {{ 'name'| trans({}, 'platform') }}
+                                            {{ 'name'|trans({}, 'platform') }}
                                         </th>
                                         <th>
-                                            {{ 'creation_date'| trans({}, 'platform') }}
+                                            {{ 'creation_date'|trans({}, 'platform') }}
                                         </th>
                                         <th class="text-center">
-                                            {{ 'status'| trans({}, 'platform') }}
+                                            {{ 'status'|trans({}, 'platform') }}
                                         </th>
                                     </tr>
                                     {% for session in sessionsTab[2] %}
                                         <tr>
                                             <td>
-                                                {{ session.getName() }}
+                                                <span class="show-users-btn pointer-hand"
+                                                      data-session-id="{{ session.getId() }}"
+                                                >
+                                                    {{ session.getName() }}
+                                                </span>
                                             </td>
                                             <td>
                                                 {{ session.getCreationDate()|intl_date_format }}
@@ -191,7 +225,7 @@
                         {% endif %}
                     {% else %}
                         <div class="alert alert-warning">
-                            {{ 'no_session'| trans({}, 'cursus') }}
+                            {{ 'no_session'|trans({}, 'cursus') }}
                         </div>
                     {% endif %}
                     <span id="course-session-create-btn"
@@ -199,8 +233,26 @@
                           data-course-id="{{ course.getId() }}"
                     >
                         <i class="fa fa-plus-circle"></i>
-                        {{ 'create_session'| trans({}, 'cursus') }}
+                        {{ 'create_session'|trans({}, 'cursus') }}
                     </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="view-registration-box" class="modal fade" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <h3 id="view-registration-header" class="modal-header">
+                </h3>
+                <div id="view-registration-body" class="modal-body">
+                </div>
+                <div class="modal-footer">
+                    <input type="button"
+                           class="btn btn-default"
+                           data-dismiss="modal"
+                           value="{{ 'close'|trans({}, 'platform') }}"
+                    />
                 </div>
             </div>
         </div>

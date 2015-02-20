@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CursusBundle\Migrations\pdo_mysql;
+namespace Claroline\CursusBundle\Migrations\pdo_sqlsrv;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -8,142 +8,219 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2015/02/19 03:28:05
+ * Generation date: 2015/02/20 12:03:41
  */
-class Version20150219152804 extends AbstractMigration
+class Version20150220120338 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
         $this->addSql("
             CREATE TABLE claro_cursusbundle_course (
-                id INT AUTO_INCREMENT NOT NULL, 
-                workspace_model_id INT DEFAULT NULL, 
-                code VARCHAR(255) NOT NULL, 
-                title VARCHAR(255) NOT NULL, 
-                description LONGTEXT DEFAULT NULL, 
-                public_registration TINYINT(1) NOT NULL, 
-                public_unregistration TINYINT(1) NOT NULL, 
-                registration_validation TINYINT(1) NOT NULL, 
-                manager_role_prefix VARCHAR(255) DEFAULT NULL, 
-                user_role_prefix VARCHAR(255) DEFAULT NULL, 
-                UNIQUE INDEX UNIQ_3359D34977153098 (code), 
-                INDEX IDX_3359D349EE7F5384 (workspace_model_id), 
-                PRIMARY KEY(id)
-            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
+                id INT IDENTITY NOT NULL, 
+                workspace_model_id INT, 
+                code NVARCHAR(255) NOT NULL, 
+                title NVARCHAR(255) NOT NULL, 
+                description VARCHAR(MAX), 
+                public_registration BIT NOT NULL, 
+                public_unregistration BIT NOT NULL, 
+                registration_validation BIT NOT NULL, 
+                manager_role_prefix NVARCHAR(255), 
+                user_role_prefix NVARCHAR(255), 
+                PRIMARY KEY (id)
+            )
+        ");
+        $this->addSql("
+            CREATE UNIQUE INDEX UNIQ_3359D34977153098 ON claro_cursusbundle_course (code) 
+            WHERE code IS NOT NULL
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_3359D349EE7F5384 ON claro_cursusbundle_course (workspace_model_id)
         ");
         $this->addSql("
             CREATE TABLE claro_cursusbundle_cursus (
-                id INT AUTO_INCREMENT NOT NULL, 
-                course_id INT DEFAULT NULL, 
-                parent_id INT DEFAULT NULL, 
-                code VARCHAR(255) DEFAULT NULL, 
-                title VARCHAR(255) NOT NULL, 
-                description LONGTEXT DEFAULT NULL, 
-                blocking TINYINT(1) NOT NULL, 
-                details LONGTEXT DEFAULT NULL COMMENT '(DC2Type:json_array)', 
+                id INT IDENTITY NOT NULL, 
+                course_id INT, 
+                parent_id INT, 
+                code NVARCHAR(255), 
+                title NVARCHAR(255) NOT NULL, 
+                description VARCHAR(MAX), 
+                blocking BIT NOT NULL, 
+                details VARCHAR(MAX), 
                 cursus_order INT NOT NULL, 
-                root INT DEFAULT NULL, 
+                root INT, 
                 lvl INT NOT NULL, 
                 lft INT NOT NULL, 
                 rgt INT NOT NULL, 
-                UNIQUE INDEX UNIQ_27921C3377153098 (code), 
-                INDEX IDX_27921C33591CC992 (course_id), 
-                INDEX IDX_27921C33727ACA70 (parent_id), 
-                PRIMARY KEY(id)
-            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
+                PRIMARY KEY (id)
+            )
+        ");
+        $this->addSql("
+            CREATE UNIQUE INDEX UNIQ_27921C3377153098 ON claro_cursusbundle_cursus (code) 
+            WHERE code IS NOT NULL
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_27921C33591CC992 ON claro_cursusbundle_cursus (course_id)
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_27921C33727ACA70 ON claro_cursusbundle_cursus (parent_id)
+        ");
+        $this->addSql("
+            EXEC sp_addextendedproperty N 'MS_Description', 
+            N '(DC2Type:json_array)', 
+            N 'SCHEMA', 
+            dbo, 
+            N 'TABLE', 
+            claro_cursusbundle_cursus, 
+            N 'COLUMN', 
+            details
         ");
         $this->addSql("
             CREATE TABLE claro_cursusbundle_course_session_group (
-                id INT AUTO_INCREMENT NOT NULL, 
+                id INT IDENTITY NOT NULL, 
                 group_id INT NOT NULL, 
                 session_id INT NOT NULL, 
-                registration_date DATETIME NOT NULL, 
-                group_type INT DEFAULT NULL, 
-                INDEX IDX_F27287A4FE54D947 (group_id), 
-                INDEX IDX_F27287A4613FECDF (session_id), 
-                UNIQUE INDEX cursus_group_unique_course_session_group (session_id, group_id), 
-                PRIMARY KEY(id)
-            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
+                registration_date DATETIME2(6) NOT NULL, 
+                group_type INT NOT NULL, 
+                PRIMARY KEY (id)
+            )
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_F27287A4FE54D947 ON claro_cursusbundle_course_session_group (group_id)
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_F27287A4613FECDF ON claro_cursusbundle_course_session_group (session_id)
+        ");
+        $this->addSql("
+            CREATE UNIQUE INDEX cursus_group_unique_course_session_group ON claro_cursusbundle_course_session_group (session_id, group_id) 
+            WHERE session_id IS NOT NULL 
+            AND group_id IS NOT NULL
         ");
         $this->addSql("
             CREATE TABLE claro_cursusbundle_cursus_displayed_word (
-                id INT AUTO_INCREMENT NOT NULL, 
-                word VARCHAR(255) NOT NULL, 
-                displayed_name VARCHAR(255) DEFAULT NULL, 
-                UNIQUE INDEX UNIQ_14E7B098C3F17511 (word), 
-                PRIMARY KEY(id)
-            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
+                id INT IDENTITY NOT NULL, 
+                word NVARCHAR(255) NOT NULL, 
+                displayed_name NVARCHAR(255), 
+                PRIMARY KEY (id)
+            )
+        ");
+        $this->addSql("
+            CREATE UNIQUE INDEX UNIQ_14E7B098C3F17511 ON claro_cursusbundle_cursus_displayed_word (word) 
+            WHERE word IS NOT NULL
         ");
         $this->addSql("
             CREATE TABLE claro_cursusbundle_course_session (
-                id INT AUTO_INCREMENT NOT NULL, 
+                id INT IDENTITY NOT NULL, 
                 course_id INT NOT NULL, 
-                workspace_id INT DEFAULT NULL, 
-                user_role_id INT DEFAULT NULL, 
-                manager_role_id INT DEFAULT NULL, 
-                cursus_id INT DEFAULT NULL, 
-                session_name VARCHAR(255) NOT NULL, 
+                workspace_id INT, 
+                user_role_id INT, 
+                manager_role_id INT, 
+                cursus_id INT, 
+                session_name NVARCHAR(255) NOT NULL, 
                 session_status INT NOT NULL, 
-                default_session TINYINT(1) NOT NULL, 
-                creation_date DATETIME NOT NULL, 
-                INDEX IDX_C5F56FDE591CC992 (course_id), 
-                INDEX IDX_C5F56FDE82D40A1F (workspace_id), 
-                UNIQUE INDEX UNIQ_C5F56FDE8E0E3CA6 (user_role_id), 
-                UNIQUE INDEX UNIQ_C5F56FDE68CE17BA (manager_role_id), 
-                INDEX IDX_C5F56FDE40AEF4B9 (cursus_id), 
-                PRIMARY KEY(id)
-            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
+                default_session BIT NOT NULL, 
+                creation_date DATETIME2(6) NOT NULL, 
+                PRIMARY KEY (id)
+            )
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_C5F56FDE591CC992 ON claro_cursusbundle_course_session (course_id)
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_C5F56FDE82D40A1F ON claro_cursusbundle_course_session (workspace_id)
+        ");
+        $this->addSql("
+            CREATE UNIQUE INDEX UNIQ_C5F56FDE8E0E3CA6 ON claro_cursusbundle_course_session (user_role_id) 
+            WHERE user_role_id IS NOT NULL
+        ");
+        $this->addSql("
+            CREATE UNIQUE INDEX UNIQ_C5F56FDE68CE17BA ON claro_cursusbundle_course_session (manager_role_id) 
+            WHERE manager_role_id IS NOT NULL
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_C5F56FDE40AEF4B9 ON claro_cursusbundle_course_session (cursus_id)
         ");
         $this->addSql("
             CREATE TABLE claro_cursusbundle_cursus_group (
-                id INT AUTO_INCREMENT NOT NULL, 
+                id INT IDENTITY NOT NULL, 
                 group_id INT NOT NULL, 
                 cursus_id INT NOT NULL, 
-                registration_date DATETIME NOT NULL, 
-                group_type INT DEFAULT NULL, 
-                INDEX IDX_EA4DDE93FE54D947 (group_id), 
-                INDEX IDX_EA4DDE9340AEF4B9 (cursus_id), 
-                UNIQUE INDEX cursus_group_unique_cursus_group (cursus_id, group_id), 
-                PRIMARY KEY(id)
-            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
+                registration_date DATETIME2(6) NOT NULL, 
+                group_type INT, 
+                PRIMARY KEY (id)
+            )
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_EA4DDE93FE54D947 ON claro_cursusbundle_cursus_group (group_id)
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_EA4DDE9340AEF4B9 ON claro_cursusbundle_cursus_group (cursus_id)
+        ");
+        $this->addSql("
+            CREATE UNIQUE INDEX cursus_group_unique_cursus_group ON claro_cursusbundle_cursus_group (cursus_id, group_id) 
+            WHERE cursus_id IS NOT NULL 
+            AND group_id IS NOT NULL
         ");
         $this->addSql("
             CREATE TABLE claro_cursusbundle_course_session_user (
-                id INT AUTO_INCREMENT NOT NULL, 
+                id INT IDENTITY NOT NULL, 
                 user_id INT NOT NULL, 
                 session_id INT NOT NULL, 
-                registration_date DATETIME NOT NULL, 
-                user_type INT DEFAULT NULL, 
-                INDEX IDX_80B4120FA76ED395 (user_id), 
-                INDEX IDX_80B4120F613FECDF (session_id), 
-                UNIQUE INDEX cursus_user_unique_course_session_user (session_id, user_id), 
-                PRIMARY KEY(id)
-            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
+                registration_date DATETIME2(6) NOT NULL, 
+                user_type INT NOT NULL, 
+                PRIMARY KEY (id)
+            )
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_80B4120FA76ED395 ON claro_cursusbundle_course_session_user (user_id)
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_80B4120F613FECDF ON claro_cursusbundle_course_session_user (session_id)
+        ");
+        $this->addSql("
+            CREATE UNIQUE INDEX cursus_user_unique_course_session_user ON claro_cursusbundle_course_session_user (session_id, user_id) 
+            WHERE session_id IS NOT NULL 
+            AND user_id IS NOT NULL
         ");
         $this->addSql("
             CREATE TABLE claro_cursusbundle_course_session_registration_queue (
-                id INT AUTO_INCREMENT NOT NULL, 
+                id INT IDENTITY NOT NULL, 
                 user_id INT NOT NULL, 
                 session_id INT NOT NULL, 
-                application_date DATETIME NOT NULL, 
-                INDEX IDX_334FC296A76ED395 (user_id), 
-                INDEX IDX_334FC296613FECDF (session_id), 
-                UNIQUE INDEX session_queue_unique_session_user (session_id, user_id), 
-                PRIMARY KEY(id)
-            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
+                application_date DATETIME2(6) NOT NULL, 
+                PRIMARY KEY (id)
+            )
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_334FC296A76ED395 ON claro_cursusbundle_course_session_registration_queue (user_id)
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_334FC296613FECDF ON claro_cursusbundle_course_session_registration_queue (session_id)
+        ");
+        $this->addSql("
+            CREATE UNIQUE INDEX session_queue_unique_session_user ON claro_cursusbundle_course_session_registration_queue (session_id, user_id) 
+            WHERE session_id IS NOT NULL 
+            AND user_id IS NOT NULL
         ");
         $this->addSql("
             CREATE TABLE claro_cursusbundle_cursus_user (
-                id INT AUTO_INCREMENT NOT NULL, 
+                id INT IDENTITY NOT NULL, 
                 user_id INT NOT NULL, 
                 cursus_id INT NOT NULL, 
-                registration_date DATETIME NOT NULL, 
-                user_type INT DEFAULT NULL, 
-                INDEX IDX_8AA52D8A76ED395 (user_id), 
-                INDEX IDX_8AA52D840AEF4B9 (cursus_id), 
-                UNIQUE INDEX cursus_user_unique_cursus_user (cursus_id, user_id), 
-                PRIMARY KEY(id)
-            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
+                registration_date DATETIME2(6) NOT NULL, 
+                user_type INT, 
+                PRIMARY KEY (id)
+            )
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_8AA52D8A76ED395 ON claro_cursusbundle_cursus_user (user_id)
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_8AA52D840AEF4B9 ON claro_cursusbundle_cursus_user (cursus_id)
+        ");
+        $this->addSql("
+            CREATE UNIQUE INDEX cursus_user_unique_cursus_user ON claro_cursusbundle_cursus_user (cursus_id, user_id) 
+            WHERE cursus_id IS NOT NULL 
+            AND user_id IS NOT NULL
         ");
         $this->addSql("
             ALTER TABLE claro_cursusbundle_course 
@@ -259,39 +336,39 @@ class Version20150219152804 extends AbstractMigration
     {
         $this->addSql("
             ALTER TABLE claro_cursusbundle_cursus 
-            DROP FOREIGN KEY FK_27921C33591CC992
+            DROP CONSTRAINT FK_27921C33591CC992
         ");
         $this->addSql("
             ALTER TABLE claro_cursusbundle_course_session 
-            DROP FOREIGN KEY FK_C5F56FDE591CC992
+            DROP CONSTRAINT FK_C5F56FDE591CC992
         ");
         $this->addSql("
             ALTER TABLE claro_cursusbundle_cursus 
-            DROP FOREIGN KEY FK_27921C33727ACA70
+            DROP CONSTRAINT FK_27921C33727ACA70
         ");
         $this->addSql("
             ALTER TABLE claro_cursusbundle_course_session 
-            DROP FOREIGN KEY FK_C5F56FDE40AEF4B9
+            DROP CONSTRAINT FK_C5F56FDE40AEF4B9
         ");
         $this->addSql("
             ALTER TABLE claro_cursusbundle_cursus_group 
-            DROP FOREIGN KEY FK_EA4DDE9340AEF4B9
+            DROP CONSTRAINT FK_EA4DDE9340AEF4B9
         ");
         $this->addSql("
             ALTER TABLE claro_cursusbundle_cursus_user 
-            DROP FOREIGN KEY FK_8AA52D840AEF4B9
+            DROP CONSTRAINT FK_8AA52D840AEF4B9
         ");
         $this->addSql("
             ALTER TABLE claro_cursusbundle_course_session_group 
-            DROP FOREIGN KEY FK_F27287A4613FECDF
+            DROP CONSTRAINT FK_F27287A4613FECDF
         ");
         $this->addSql("
             ALTER TABLE claro_cursusbundle_course_session_user 
-            DROP FOREIGN KEY FK_80B4120F613FECDF
+            DROP CONSTRAINT FK_80B4120F613FECDF
         ");
         $this->addSql("
             ALTER TABLE claro_cursusbundle_course_session_registration_queue 
-            DROP FOREIGN KEY FK_334FC296613FECDF
+            DROP CONSTRAINT FK_334FC296613FECDF
         ");
         $this->addSql("
             DROP TABLE claro_cursusbundle_course

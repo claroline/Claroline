@@ -58,9 +58,9 @@ class CourseSessionGroup
     protected $registrationDate;
 
     /**
-     * @ORM\Column(name="group_type", type="integer", nullable=true)
+     * @ORM\Column(name="group_type", type="integer", nullable=false)
      */
-    protected $groupType;
+    protected $groupType = 0;
 
     public function getId()
     {

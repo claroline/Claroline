@@ -59,9 +59,9 @@ class CourseSessionUser
     protected $registrationDate;
 
     /**
-     * @ORM\Column(name="user_type", type="integer", nullable=true)
+     * @ORM\Column(name="user_type", type="integer", nullable=false)
      */
-    protected $userType;
+    protected $userType = 0;
 
     public function getId()
     {

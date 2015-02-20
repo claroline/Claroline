@@ -17,6 +17,7 @@ use Claroline\CoreBundle\Pager\PagerFactory;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CursusBundle\Entity\Course;
 use Claroline\CursusBundle\Entity\CourseSession;
+use Claroline\CursusBundle\Entity\CourseSessionUser;
 use Claroline\CursusBundle\Entity\Cursus;
 use Claroline\CursusBundle\Entity\CursusGroup;
 use Claroline\CursusBundle\Entity\CursusUser;
@@ -562,6 +563,35 @@ class CursusManager
 
         return $removableCursusGroups;
     }
+
+    public function registerUsersToSession(
+        CourseSession $session,
+        array $users,
+        $type
+    )
+    {
+        $registrationDate = new \DateTime();
+
+        $this->om->startFlushSuite();
+
+        foreach ($users as $user) {
+            $sessionUser = $this->sessionUserRepo->findOneSessionUserBySessionAndUserAndType(
+                $session,
+                $user,
+                $type
+            );
+
+            if (is_null($sessionUser)) {
+                $sessionUser = new CourseSessionUser();
+                $sessionUser->setSession($session);
+                $sessionUser->setUser($user);
+                $sessionUser->setUserType($type);
+                $sessionUser->setRegistrationDate($registrationDate);
+                $this->om->persist($sessionUser);
+            }
+        }
+        $this->om->endFlushSuite();
+    }
     
 
     /***************************************************
@@ -1060,17 +1090,78 @@ class CursusManager
      * Access to CourseSessionUserRepository methods *
      *************************************************/
 
-    public function getOneSessionUserBySessionAndUser(
+    public function getOneSessionUserBySessionAndUserAndType(
         CourseSession $session,
         User $user,
+        $userType,
         $executeQuery = true
     )
     {
-        return $this->sessionUserRepo->findOneSessionUserBySessionAndUser(
+        return $this->sessionUserRepo->findOneSessionUserBySessionAndUserAndType(
             $session,
             $user,
+            $userType,
             $executeQuery
         );
+    }
+
+    public function getSessionUsersBySession(
+        CourseSession $session,
+        $executeQuery = true
+    )
+    {
+        return $this->sessionUserRepo->findSessionUsersBySession(
+            $session,
+            $executeQuery
+        );
+    }
+
+    public function getUnregisteredUsersBySession(
+        CourseSession $session,
+        $userType,
+        $orderedBy = 'firstName',
+        $order = 'ASC',
+        $page = 1,
+        $max = 50,
+        $executeQuery = true
+    )
+    {
+        $users = $this->sessionUserRepo->findUnregisteredUsersBySession(
+            $session,
+            $userType,
+            $orderedBy,
+            $order,
+            $executeQuery
+        );
+
+        return $executeQuery ?
+            $this->pagerFactory->createPagerFromArray($users, $page, $max) :
+            $this->pagerFactory->createPager($users, $page, $max);
+    }
+
+    public function getSearchedUnregisteredUsersBySession(
+        CourseSession $session,
+        $userType,
+        $search = '',
+        $orderedBy = 'firstName',
+        $order = 'ASC',
+        $page = 1,
+        $max = 50,
+        $executeQuery = true
+    )
+    {
+        $users = $this->sessionUserRepo->findSearchedUnregisteredUsersBySession(
+            $session,
+            $userType,
+            $search,
+            $orderedBy,
+            $order,
+            $executeQuery
+        );
+
+        return $executeQuery ?
+            $this->pagerFactory->createPagerFromArray($users, $page, $max) :
+            $this->pagerFactory->createPager($users, $page, $max);
     }
 
 
@@ -1087,6 +1178,17 @@ class CursusManager
         return $this->sessionGroupRepo->findOneSessionGroupBySessionAndGroup(
             $session,
             $group,
+            $executeQuery
+        );
+    }
+
+    public function getSessionGroupsBySession(
+        CourseSession $session,
+        $executeQuery = true
+    )
+    {
+        return $this->sessionGroupRepo->findSessionGroupsBySession(
+            $session,
             $executeQuery
         );
     }

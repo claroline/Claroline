@@ -356,6 +356,127 @@ class CourseController extends Controller
         }
     }
 
+    /**
+     * @EXT\Route(
+     *     "cursus/course/session/{session}/view/management",
+     *     name="claro_cursus_course_session_view_management",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template()
+     *
+     * @param CourseSession $session
+     */
+    public function courseSessionViewManagementAction(CourseSession $session)
+    {
+        $this->checkToolAccess();
+        $sessionUsers = $this->cursusManager->getSessionUsersBySession($session);
+        $learners = array();
+        $tutors = array();
+
+        foreach ($sessionUsers as $sessionUser) {
+
+            if ($sessionUser->getUserType() === 0) {
+                $learners[] = $sessionUser;
+            } elseif ($sessionUser->getUserType() === 1) {
+                $tutors[] = $sessionUser;
+            }
+        }
+
+        return array(
+            'session' => $session,
+            'learners' => $learners,
+            'tutors' => $tutors
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "cursus/course/session/{session}/registration/unregistered/users/{userType}/list/page/{page}/max/{max}/ordered/by/{orderedBy}/order/{order}/search/{search}",
+     *     name="claro_cursus_course_session_registration_unregistered_users_list",
+     *     defaults={"userType"=0, "page"=1, "search"="", "max"=50, "orderedBy"="firstName","order"="ASC"},
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template()
+     *
+     * Displays the list of users who are not registered to the session.
+     *
+     * @param CourseSession $session
+     * @param integer $userType
+     * @param string  $search
+     * @param integer $page
+     * @param integer $max
+     * @param string  $orderedBy
+     * @param string  $order
+     */
+    public function courseSessionRegistrationUnregisteredUsersListAction(
+        CourseSession $session,
+        $userType = 0,
+        $search = '',
+        $page = 1,
+        $max = 50,
+        $orderedBy = 'firstName',
+        $order = 'ASC'
+    )
+    {
+        $this->checkToolAccess();
+
+        $users = $search === '' ?
+            $this->cursusManager->getUnregisteredUsersBySession(
+                $session,
+                $userType,
+                $orderedBy,
+                $order,
+                $page,
+                $max
+            ) :
+            $this->cursusManager->getSearchedUnregisteredUsersBySession(
+                $session,
+                $userType,
+                $search,
+                $orderedBy,
+                $order,
+                $page,
+                $max
+            );
+
+        return array(
+            'session' => $session,
+            'userType' => $userType,
+            'users' => $users,
+            'search' => $search,
+            'max' => $max,
+            'orderedBy' => $orderedBy,
+            'order' => $order
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "cursus/course/session/{session}/register/user/{user}/type/{userType}",
+     *     name="claro_cursus_course_session_register_user",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\Method("POST")
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     *
+     * @param CourseSession $session
+     * @param User $user
+     * @param int $userType
+     */
+    public function courseSessionUserRegisterAction(
+        CourseSession $session,
+        User $user,
+        $userType
+    )
+    {
+        $this->checkToolAccess();
+        $this->cursusManager->registerUsersToSession($session, array($user), $userType);
+
+        return new JsonResponse('success', 200);
+    }
+
     private function checkToolAccess()
     {
         $cursusTool = $this->toolManager->getAdminToolByName('claroline_cursus_tool');

@@ -1,0 +1,84 @@
+<div id="session-management-box">
+    <h3>
+        <small>
+            <i class="fa fa-circle"
+               {% if session.getSessionStatus() == 0 %}
+                   style="color: #706c6c"
+               {% elseif session.getSessionStatus() == 1 %}
+                   style="color: #5CB85C"
+               {% elseif session.getSessionStatus() == 2 %}
+                   style="color: #D9534F"
+               {% endif %}
+            >
+            </i>
+        </small>
+        &nbsp;
+        {{ session.getName() }}
+        <small>
+            ({{ session.getCreationDate()|intl_date_format }})
+        </small>
+    </h3>
+    <hr>
+
+    <div class="table-responsive col-md-6">
+        <table class="table">
+            <tr>
+                <th class="text-center">
+                    {{ 'users'|trans({}, 'platform') }}
+                    &nbsp;
+                    <i class="fa fa-user pointer-hand"
+                       id="register-learners-btn"
+                       data-toggle="tooltip"
+                       data-placement="top"
+                       data-container="#session-management-box"
+                       title="{{ 'register_learners'|trans({}, 'cursus') }}"
+                       data-session-id="{{ session.getId() }}"
+                    >
+                    </i>
+                </th>
+            </tr>
+
+            {% for sessionUser in learners %}
+                {% set user = sessionUser.getUser() %}
+                <tr>
+                    <td>
+                        {{ user.getFirstName() }}
+                        {{ user.getLastName() }}
+                        <small>({{ user.getUsername() }})</small>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+    <div class="table-responsive">
+        <table class="table col-md-6">
+            <tr>
+                <th class="text-center">
+                    {{ 'tutors'|trans({}, 'cursus') }}
+                    &nbsp;
+                    <i class="fa fa-user pointer-hand"
+                       id="register-tutors-btn"
+                       data-toggle="tooltip"
+                       data-placement="top"
+                       data-container="#session-management-box"
+                       title="{{ 'register_tutors'|trans({}, 'cursus') }}"
+                       data-session-id="{{ session.getId() }}"
+                    >
+                    </i>
+                </th>
+
+            </tr>
+
+            {% for sessionUser in tutors %}
+                {% set user = sessionUser.getUser() %}
+                <tr>
+                    <td>
+                        {{ user.getFirstName() }}
+                        {{ user.getLastName() }}
+                        <small>({{ user.getUsername() }})</small>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+</div>
