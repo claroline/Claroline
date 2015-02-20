@@ -2,6 +2,7 @@
 
 namespace HeVinci\CompetencyBundle\Form;
 
+use HeVinci\CompetencyBundle\Validator\UniqueCompetency;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -13,9 +14,20 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
  */
 class CompetencyType extends AbstractType
 {
+    private $uniqueNameConstraint;
+
+    public function __construct()
+    {
+        $this->uniqueNameConstraint = new UniqueCompetency();
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('name', 'text', ['label' => 'name']);
+        $this->uniqueNameConstraint->parentCompetency = $options['parent_competency'];
+        $builder->add('name', 'textarea', [
+            'label' => 'name',
+            'attr' => ['class' => 'form-control'],
+        ]);
     }
 
     public function getName()
@@ -27,7 +39,9 @@ class CompetencyType extends AbstractType
     {
         $resolver->setDefaults([
             'translation_domain' => 'platform',
-            'data_class' => 'HeVinci\CompetencyBundle\Entity\Competency'
+            'data_class' => 'HeVinci\CompetencyBundle\Entity\Competency',
+            'parent_competency' => null,
+            'constraints' => [$this->uniqueNameConstraint]
         ]);
     }
 }

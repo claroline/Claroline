@@ -5,13 +5,14 @@ namespace HeVinci\CompetencyBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Bridge\Doctrine\Validator\Constraints as BR;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @Gedmo\Tree(type="nested")
  * @ORM\Entity
  * @ORM\Table(name="hevinci_competency")
- * @ORM\Entity(repositoryClass="Gedmo\Tree\Entity\Repository\NestedTreeRepository")
+ * @ORM\Entity(repositoryClass="HeVinci\CompetencyBundle\Repository\CompetencyRepository")
  */
 class Competency implements \JsonSerializable
 {
@@ -156,11 +157,22 @@ class Competency implements \JsonSerializable
         return $this->parent;
     }
 
+    /**
+     * @return integer
+     */
+    public function getRoot()
+    {
+        return $this->root;
+    }
+
     public function jsonSerialize()
     {
         return [
             'id' => $this->id,
-            'name' => $this->name
+            'name' => $this->name,
+            'description' => $this->description,
+            'scale' => $this->scale ? $this->scale->getName() : null,
+            'level' => $this->lvl
         ];
     }
 }

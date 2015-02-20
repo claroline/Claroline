@@ -1,24 +1,39 @@
 {% twig_js name = 'CompetencyItem' %}
 
-<li data-id="{{ competency.id }}">
-    <i class="fa fa-plus-square-o expand"></i>
+{% set level = level is defined ? level : 0 %}
+{% set displayUntil = displayUntil is defined ? displayUntil : 1000 %}
+{% set areChildrenDisplayable = level < displayUntil %}
+{% set hasChildren = competency.__children is defined and competency.__children|length > 0 %}
+
+<li data-id="{{ competency.id }}" data-level="{{ level }}">
+    {% if hasChildren %}
+        {% if areChildrenDisplayable %}
+            <i class="fa fa-minus-square-o collapse"></i>
+        {% else %}
+            <i class="fa fa-plus-square-o expand"></i>
+        {% endif %}
+    {% else %}
+        <i class="fa fa-plus-square-o empty"></i>
+    {% endif %}
     <span class="dropdown">
         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-            {{ competency.name }}
+            <span class="competency-name">{{ competency.name }}</span>
             <span class="caret"></span>
         </a>
         <ul class="dropdown-menu" role="menu">
-            <li role="presentation">
-                <a role="menuitem" href="#" tabindex="-1">
-                    {{ 'edit'|trans({}, 'platform') }}
-                </a>
-            </li>
-            <li role="presentation">
-                <a role="menuitem" href="#" tabindex="-1">
-                    {{ 'delete'|trans({}, 'platform') }}
-                </a>
-            </li>
-            <li role="presentation" class="divider"></li>
+            {% if level > 0 %}
+                <li role="presentation">
+                    <a class="edit-competency" role="menuitem" href="#" tabindex="-1">
+                        {{ 'edit'|trans({}, 'platform') }}
+                    </a>
+                </li>
+                <li role="presentation">
+                    <a class="delete-competency" role="menuitem" href="#" tabindex="-1">
+                        {{ 'delete'|trans({}, 'platform') }}
+                    </a>
+                </li>
+                <li role="presentation" class="divider"></li>
+            {% endif %}
             <li role="presentation">
                 <a class="create-sub-competency" role="menuitem" href="#" tabindex="-1">
                     {{ 'competency.create_sub'|trans({}, 'competency') }}
@@ -36,11 +51,17 @@
             </li>
         </ul>
     </span>
-    <ul class="children">
+    <ul class="children" style="display: {{ areChildrenDisplayable ? 'block' : 'none' }}">
         {# Note: __children is the key created by NestedTreeRepository#childrenHierarchy #}
-        {% if competency.__children is defined %}
+        {% if hasChildren %}
             {% for child in competency.__children %}
-                {% include _self with { competency: child } %}
+                {% include _self
+                    with {
+                        competency: child,
+                        level: level + 1,
+                        displayUntil: displayUntil
+                    }
+                %}
             {% endfor %}
         {% endif %}
     </ul>

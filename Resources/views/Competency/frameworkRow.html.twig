@@ -1,0 +1,29 @@
+{% twig_js name = 'FrameworkRow' %}
+
+<tr data-id="{{ id }}">
+    <td>
+        <a href="{{ path('hevinci_framework', { id: id }) }}">
+            {{ name }}
+        </a>
+    </td>
+    <td>{{ description }}</td>
+    <td>{{ scale }}</td>
+    <td class="icon-cell">
+        <a href="#"
+           class="edit-framework"
+           data-toggle="tooltip"
+           data-placement="left"
+           title="{{ 'edit'|trans({}, 'platform') }}">
+            <i class="fa fa-pencil"></i>
+        </a>
+    </td>
+    <td class="icon-cell">
+        <a href="#"
+           class="delete-framework"
+           data-toggle="tooltip"
+           data-placement="left"
+           title="{{ 'delete'|trans({}, 'platform') }}">
+            <i class="fa fa-remove"></i>
+        </a>
+    </td>
+</tr>

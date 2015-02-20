@@ -25,15 +25,18 @@
     <ul class="framework">
         {%
             include 'HeVinciCompetencyBundle:Competency:competencyItem.html.twig'
-            with { competency: framework }
+            with {
+                competency: framework,
+                displayUntil: 1
+            }
         %}
     </ul>
 {% endblock %}
 
 {% block panelFooter %}
-    <button id="delete-framework"
-            data-id="{{ framework.id }}"
-            class="btn btn-danger">
-        {{ 'delete'|trans({}, 'platform') }}
+    <button id="control-expansion"
+            data-status="collapsed"
+            class="btn btn-default">
+        {{ 'expand_all'|trans({}, 'competency') }}
     </button>
 {% endblock %}

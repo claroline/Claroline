@@ -3,9 +3,11 @@
 namespace HeVinci\CompetencyBundle\Form;
 
 use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
  * @DI\Service("hevinci_form_framework")
@@ -15,11 +17,11 @@ class FrameworkType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder
-            ->add('name', 'text', ['label' => 'name'])
+        $builder->add('name', 'text', ['label' => 'name'])
             ->add('description', 'textarea', [
                 'label' => 'description',
-                'attr' => ['class' => 'form-control']
+                'attr' => ['class' => 'form-control'],
+                'constraints' => [new NotBlank()]
             ])
             ->add('scale', 'entity', [
                 'class' => 'HeVinci\CompetencyBundle\Entity\Scale',
@@ -38,7 +40,14 @@ class FrameworkType extends AbstractType
     {
         $resolver->setDefaults([
             'translation_domain' => 'platform',
-            'data_class' => 'HeVinci\CompetencyBundle\Entity\Competency'
+            'data_class' => 'HeVinci\CompetencyBundle\Entity\Competency',
+            'constraints' => [
+                new UniqueEntity([
+                    'fields' => 'name',
+                    'repositoryMethod' => 'findRootByName',
+                    'em' => 'default'
+                ])
+            ]
         ]);
     }
 }

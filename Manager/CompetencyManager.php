@@ -142,13 +142,13 @@ class CompetencyManager
     }
 
     /**
-     * Deletes a framework
+     * Deletes a competency.
      *
-     * @param Competency $framework
+     * @param Competency $competency
      */
-    public function deleteFramework(Competency $framework)
+    public function deleteCompetency(Competency $competency)
     {
-        $this->om->remove($framework);
+        $this->om->remove($competency);
         $this->om->flush();
     }
 
@@ -166,5 +166,18 @@ class CompetencyManager
         $this->om->flush();
 
         return $child;
+    }
+
+    /**
+     * Updates a competency.
+     *
+     * @param Competency $competency
+     * @return Competency
+     */
+    public function updateCompetency(Competency $competency)
+    {
+        $this->om->flush();
+
+        return $competency;
     }
 }

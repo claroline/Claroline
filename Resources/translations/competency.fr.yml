@@ -2,13 +2,18 @@ ability:
   add: Ajouter une capacité
   create: Créer une capacité
 associated_competencies: Compétences associées
+collapse_all: Tout réduire
 competency:
   create: Créer une compétence
   create_sub: Créer une sous-compétence
+  delete: Supprimer une compétence
+  edit: Modifier une compétence
 editable: Modifiable
+expand_all: Tout développer
 framework:
   create: Créer un référentiel
   delete: Supprimer un référentiel
+framework_: Référentiel
 info:
   no_frame: Il n'y a pas encore de référentiels. Vous pouvez créer un nouveau référentiel ou gérer les échelles de difficultés à l'aide des boutons ci-dessous.
   no_frame_no_scale: Il n'y a pas encore de référentiels ni d'échelles. Si vous choisissez de créer un référentiel maintenant, celui-ci se verra assigner une échelle par défaut d'un seul niveau. Alternativement, vous pouvez créer une échelle directement et l'associer ensuite à votre référentiel.
@@ -16,7 +21,11 @@ info:
   scale_levels: "Les degrés doivent être séparés par des retours à la ligne. Exemple :\n\nFacile\nMoyen\nDifficile"
 levels: Dégrés
 message:
+  competency_edited: Compétence modifiée avec succès.
+  competency_deleted: Compétence supprimée avec succès.
+  competency_deletion_confirm: Voulez-vous vraiment supprimer cette compétence ? Cette action est irréversible.
   framework_created: Nouveau référentiel créé avec succès.
+  framework_deleted: Référentiel supprimé avec succès.
   framework_deletion_confirm: Voulez-vous vraiment supprimer ce référentiel ? Cette action est irréversible.
   scale_created: Nouvelle échelle créée avec succès.
   scale_deleted: Échelle supprimée.

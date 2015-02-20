@@ -12,6 +12,18 @@ i.fa.disabled {
     opacity: 0.25;
 }
 
+ul.framework {
+    padding: 20px;
+}
+
+ul.framework ul {
+    padding-left: 32px;
+}
+
+ul.framework ul.dropdown-menu {
+    padding-left: 0;
+}
+
 ul.framework li {
     list-style: none;
 }
@@ -21,4 +33,8 @@ ul.framework li > i {
     font-size: 0.8em;
     color: rgba(0,0,0,0.7);
     cursor: pointer;
+}
+
+ul.framework i.empty {
+    opacity: 0;
 }

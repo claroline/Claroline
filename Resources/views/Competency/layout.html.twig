@@ -43,7 +43,7 @@
 {% block javascripts %}
     {{ parent() }}
     {% javascripts debug=false filter='twig_js, jsmin' vars=["locale"]
-        "@HeVinciCompetencyBundle/Resources/views/Competency/frameworkItem.html.twig"
+        "@HeVinciCompetencyBundle/Resources/views/Competency/frameworkRow.html.twig"
         "@HeVinciCompetencyBundle/Resources/views/Competency/competencyItem.html.twig"
         "@HeVinciCompetencyBundle/Resources/views/Scale/row.html.twig"
     %}

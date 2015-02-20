@@ -1,17 +1,31 @@
 {% extends 'HeVinciCompetencyBundle:Competency:layout.html.twig' %}
 
 {% block panelBody %}
-    <ul id="framework-list" {% if frameworks|length == 0 %}style="display: none;"{% endif %}>
-        {% for framework in frameworks %}
-            {%
-                include 'HeVinciCompetencyBundle:Competency:frameworkItem.html.twig'
-                with {
-                    id: framework.getId(),
-                    name: framework.getName()
-                }
-            %}
-        {% endfor %}
-    </ul>
+    <table id="framework-table"
+           class="table table-condensed table-bordered"
+           {% if frameworks|length == 0 %}style="display: none;"{% endif %}>
+        <thead>
+            <tr>
+                <th>{{ 'framework_'|trans({}, 'competency') }}</th>
+                <th>{{ 'description'|trans({}, 'platform') }}</th>
+                <th>{{ 'scale_'|trans({}, 'competency') }}</th>
+                <th colspan="2">{{ 'actions'|trans({}, 'platform') }}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for framework in frameworks %}
+                {%
+                    include 'HeVinciCompetencyBundle:Competency:frameworkRow.html.twig'
+                    with {
+                        id: framework.getId(),
+                        name: framework.getName(),
+                        scale: framework.getScale().getName(),
+                        description: framework.getDescription()
+                    }
+                %}
+            {% endfor %}
+        </tbody>
+    </table>
 
     {% if frameworks|length == 0 %}
         <div class="alert alert-info" role="alert">
