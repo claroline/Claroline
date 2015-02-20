@@ -1104,6 +1104,11 @@ class ParametersController extends Controller
 
         $currentUrl = $this->request->getHttpHost() .
             $this->request->getRequestUri();
+        $currentUrl = preg_replace(
+            '/\/admin\/parameters\/send\/datas\/confirm$/',
+            '',
+            $currentUrl
+        );
         $platformUrl = preg_replace(
             array('/app\.php(.)*$/', '/app_dev\.php(.)*$/'),
             'app.php',
