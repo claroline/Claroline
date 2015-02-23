@@ -193,7 +193,7 @@ class CompetencyController
      * @param Competency $parent
      * @return array|JsonResponse
      */
-    public function createSubCompetency(Request $request, Competency $parent)
+    public function createSubCompetencyAction(Request $request, Competency $parent)
     {
         if ($this->formHandler->isValid('hevinci_form_competency', $request, null, ['parent_competency' => $parent])) {
             return new JsonResponse(

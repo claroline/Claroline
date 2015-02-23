@@ -42,11 +42,12 @@ class ScaleControllerTest extends UnitTestCase
             ->willReturn($scale);
         $this->manager->expects($this->once())
             ->method('persistScale')
-            ->with($scale);
+            ->with($scale)
+            ->willReturn($scale);
 
-        $this->assertInstanceOf(
-            'Symfony\Component\HttpFoundation\JsonResponse',
-            $this->controller->createScaleAction($request)
+        $this->assertEquals(
+            json_encode($scale),
+            $this->controller->createScaleAction($request)->getContent()
         );
     }
 
@@ -105,11 +106,12 @@ class ScaleControllerTest extends UnitTestCase
             ->willReturn($scale);
         $this->manager->expects($this->once())
             ->method('persistScale')
-            ->with($scale);
+            ->with($scale)
+            ->willReturn($scale);
 
-        $this->assertInstanceOf(
-            'Symfony\Component\HttpFoundation\JsonResponse',
-            $this->controller->editScaleAction($request, $scale)
+        $this->assertEquals(
+            json_encode($scale),
+            $this->controller->editScaleAction($request, $scale)->getContent()
         );
     }
 

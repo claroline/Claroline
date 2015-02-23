@@ -7,6 +7,7 @@ use HeVinci\CompetencyBundle\Entity\Competency;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
+use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 
 /**
  * @DI\Validator("competency_name_validator")
@@ -32,10 +33,21 @@ class UniqueCompetencyValidator extends ConstraintValidator
 
     public function validate($competency, Constraint $constraint)
     {
+        if (!$constraint instanceof UniqueCompetency) {
+            throw new \InvalidArgumentException(sprintf(
+                'Expected UniqueCompetency constraint, got %s',
+                get_class($constraint)
+            ));
+        }
+
+        if (!$competency instanceof Competency) {
+            throw new UnexpectedTypeException($competency, 'Competency');
+        }
+
         $parent = $constraint->parentCompetency ?: $competency->getParent();
 
         if (!$parent || !$parent instanceof Competency) {
-            throw new \Exception(
+            throw new \LogicException(
                 'Cannot validate competency name without a parent competency reference '
                 . 'the competency hasn\'t a parent yet and no parent was provided '
                 . 'in the constraint (did you forget to pass a reference through the '
