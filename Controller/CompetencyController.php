@@ -70,9 +70,7 @@ class CompetencyController
     {
         $this->competencyManager->ensureHasScale();
 
-        return [
-            'form' => $this->formHandler->getView('hevinci_form_framework')
-        ];
+        return ['form' => $this->formHandler->getView('hevinci_form_framework')];
     }
 
     /**
@@ -111,6 +109,50 @@ class CompetencyController
     }
 
     /**
+     * Displays the framework edition form.
+     *
+     * @EXT\Route("/frameworks/{id}/edit", name="hevinci_edit_framework_form")
+     * @EXT\Template("HeVinciCompetencyBundle:Competency:frameworkEditForm.html.twig")
+     *
+     * @param Competency $framework
+     * @return array
+     */
+    public function frameworkEditionFormAction(Competency $framework)
+    {
+        $this->competencyManager->ensureIsRoot($framework);
+
+        return [
+            'form' => $this->formHandler->getView('hevinci_form_framework', $framework),
+            'framework' => $framework
+        ];
+    }
+
+    /**
+     * Edits a framework.
+     *
+     * @EXT\Route("/frameworks/{id}", name="hevinci_edit_framework")
+     * @EXT\Method("POST")
+     * @EXT\Template("HeVinciCompetencyBundle:Competency:frameworkEditForm.html.twig")
+     *
+     * @param Request       $request
+     * @param Competency    $framework
+     * @return array
+     */
+    public function editFrameworkAction(Request $request, Competency $framework)
+    {
+        $this->competencyManager->ensureIsRoot($framework);
+
+        if ($this->formHandler->isValid('hevinci_form_framework', $request, $framework)) {
+            return new JsonResponse($this->competencyManager->updateCompetency($framework));
+        }
+
+        return [
+            'form' => $this->formHandler->getView(),
+            'framework' => $framework
+        ];
+    }
+
+    /**
      * Deletes a competency.
      *
      * @EXT\Route("/{id}/delete", name="hevinci_delete_competency")
@@ -126,7 +168,7 @@ class CompetencyController
     /**
      * Displays the competency creation form.
      *
-     * @EXT\Route("/{id}/new", name="hevinci_new_competency")
+     * @EXT\Route("/{id}/sub", name="hevinci_new_competency")
      * @EXT\Template("HeVinciCompetencyBundle:Competency:competencyForm.html.twig")
      *
      * @param Competency $parent
@@ -143,7 +185,7 @@ class CompetencyController
     /**
      * Creates a sub-competency.
      *
-     * @EXT\Route("/{id}", name="hevinci_create_competency")
+     * @EXT\Route("/{id}/sub", name="hevinci_create_competency")
      * @EXT\Method("POST")
      * @EXT\Template("HeVinciCompetencyBundle:Competency:competencyForm.html.twig")
      *
@@ -163,7 +205,7 @@ class CompetencyController
     }
 
     /**
-     * Displays the competency edition form.
+     * Displays the competency view/edit form.
      *
      * @EXT\Route("/{id}/edit", name="hevinci_competency")
      * @EXT\Template("HeVinciCompetencyBundle:Competency:competencyEditForm.html.twig")
@@ -182,7 +224,7 @@ class CompetencyController
     /**
      * Edits a competency.
      *
-     * @EXT\Route("/{id}/edit", name="hevinci_edit_competency")
+     * @EXT\Route("/{id}", name="hevinci_edit_competency")
      * @EXT\Method("POST")
      * @EXT\Template("HeVinciCompetencyBundle:Competency:competencyEditForm.html.twig")
      *

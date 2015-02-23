@@ -142,6 +142,19 @@ class CompetencyManager
     }
 
     /**
+     * Ensures a competency is the root of the framework.
+     *
+     * @param Competency $competency
+     * @throws \Exception
+     */
+    public function ensureIsRoot(Competency $competency)
+    {
+        if ($competency->getRoot() !== $competency->getId()) {
+            throw new \Exception('Framework edition must be done on the root competency');
+        }
+    }
+
+    /**
      * Deletes a competency.
      *
      * @param Competency $competency

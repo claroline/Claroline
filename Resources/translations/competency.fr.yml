@@ -13,6 +13,7 @@ expand_all: Tout développer
 framework:
   create: Créer un référentiel
   delete: Supprimer un référentiel
+  edit: Éditer un référentiel
 framework_: Référentiel
 info:
   no_frame: Il n'y a pas encore de référentiels. Vous pouvez créer un nouveau référentiel ou gérer les échelles de difficultés à l'aide des boutons ci-dessous.
@@ -27,8 +28,9 @@ message:
   framework_created: Nouveau référentiel créé avec succès.
   framework_deleted: Référentiel supprimé avec succès.
   framework_deletion_confirm: Voulez-vous vraiment supprimer ce référentiel ? Cette action est irréversible.
+  framework_edited: Référentiel modifié avec succès.
   scale_created: Nouvelle échelle créée avec succès.
-  scale_deleted: Échelle supprimée.
+  scale_deleted: Échelle supprimée avec succès.
   scale_deletion_confirm: Voulez-vous vraiment supprimer cette échelle ?
   scale_edited: Échelle modifiée avec succès.
   sub_competency_created: Sous-compétence créée avec succès.

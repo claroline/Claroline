@@ -17,13 +17,14 @@
 
     // scale details
     $(document).on('click', 'a.view-scale', function () {
-        displayScaleEditionForm(this);
+        displayScaleEditionForm(this.parentNode.parentNode);
     });
 
     // scale edition
     $(document).on('click', 'a.edit-scale', function () {
-        displayScaleEditionForm(this, function (data) {
-            $('table#scale-table td:first').html(data.name);
+        var row = this.parentNode.parentNode;
+        displayScaleEditionForm(row, function (data) {
+            $(row).replaceWith(Twig.render(ScaleRow, data));
             flasher.setMessage(trans('message.scale_edited'));
         });
     });
@@ -63,7 +64,16 @@
 
     // framework edition
     $(document).on('click', 'a.edit-framework', function (event) {
-        alert('TODO');
+        var row = this.parentNode.parentNode;
+        window.Claroline.Modal.displayForm(
+            Routing.generate('hevinci_edit_framework_form', { id: row.dataset.id }),
+            function (data) {
+                $(row).replaceWith(Twig.render(FrameworkRow, data));
+                flasher.setMessage(trans('message.framework_edited'));
+            },
+            function () {},
+            'framework-form'
+        );
     });
 
     // framework deletion
@@ -178,8 +188,8 @@
         );
     }
 
-    function displayScaleEditionForm(node, callback) {
-        var scaleId = node.parentNode.parentNode.dataset.id;
+    function displayScaleEditionForm(scaleRow, callback) {
+        var scaleId = scaleRow.dataset.id;
         window.Claroline.Modal.displayForm(
             Routing.generate('hevinci_scale', { id: scaleId, edit: callback ? 1 : 0 }),
             callback || function () {},

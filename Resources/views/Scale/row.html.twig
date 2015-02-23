@@ -1,22 +1,15 @@
 {% twig_js name="ScaleRow" %}
 
 <tr data-id="{{ id }}">
-    <td>{{ name }}</td>
+    <td>
+        <a href="#" class="view-scale">{{ name }}</a>
+    </td>
     <td class="icon-cell">
         <span data-toggle="tooltip"
               data-placement="left"
               title="{{ 'editable'|trans({}, 'competency') }}">
             <i class="fa fa-unlock-alt"></i>
         </span>
-    </td>
-    <td class="icon-cell">
-        <a href="#"
-           class="view-scale"
-           data-toggle="tooltip"
-           data-placement="left"
-           title="{{ 'see'|trans({}, 'platform') }}">
-            <i class="fa fa-search-plus"></i>
-        </a>
     </td>
     <td class="icon-cell">
         {% if isLocked %}

@@ -8,6 +8,6 @@ class CompetencyRepository extends NestedTreeRepository
 {
     public function findRootByName($name)
     {
-        return $this->findOneBy(['name' => $name, 'parent' => null]);
+        return $this->findBy(['name' => $name, 'parent' => null]);
     }
 }
