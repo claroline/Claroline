@@ -24,6 +24,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 
 class PackageController extends Controller
 {
@@ -33,6 +34,7 @@ class PackageController extends Controller
     private $sc;
     private $ipwlm;
     private $bundleManager;
+    private $platformConfigHandler;
 
     /**
      * @DI\InjectParams({
@@ -41,16 +43,19 @@ class PackageController extends Controller
      *      "dm"              = @DI\Inject("claroline.manager.dependency_manager"),
      *      "sc"              = @DI\Inject("security.context"),
      *      "ipwlm"           = @DI\Inject("claroline.manager.ip_white_list_manager"),
-     *      "bundleManager"   = @DI\Inject("claroline.manager.bundle_manager")
+     *      "bundleManager"   = @DI\Inject("claroline.manager.bundle_manager"),
+     *      "configHandler"   = @DI\Inject("claroline.config.platform_config_handler")
      * })
      */
     public function __construct(
-        StrictDispatcher         $eventDispatcher,
-        ToolManager              $toolManager,
-        SecurityContextInterface $sc,
-        DependencyManager        $dm,
-        IPWhiteListManager       $ipwlm,
-        BundleManager            $bundleManager
+        StrictDispatcher             $eventDispatcher,
+        ToolManager                  $toolManager,
+        SecurityContextInterface     $sc,
+        DependencyManager            $dm,
+        IPWhiteListManager           $ipwlm,
+        BundleManager                $bundleManager,
+        PlatformConfigurationHandler $configHandler
+
     )
     {
         $this->eventDispatcher = $eventDispatcher;
@@ -60,6 +65,7 @@ class PackageController extends Controller
         $this->dm              = $dm;
         $this->ipwlm           = $ipwlm;
         $this->bundleManager   = $bundleManager;
+        $this->configHandler   = $configHandler;
     }
 
     /**
@@ -77,43 +83,25 @@ class PackageController extends Controller
     public function listAction()
     {
         $this->checkOpen();
-        $corePackages = $this->dm->getInstalledByType(DependencyManager::CLAROLINE_CORE_TYPE);
-        $pluginPackages = $this->dm->getPluginList();
-        $upgradablePackages = $this->dm->getUpgradeablePackages();
-        $ds = DIRECTORY_SEPARATOR;
-
-        //the current ip must be whitelisted so it can access the upgrade.html.php script
-        $this->ipwlm->addIP($_SERVER['REMOTE_ADDR']);
-        $allowUpdate = false;
+        $coreBundle = $this->bundleManager->getBundle('CoreBundle');
+        $coreVersion = $coreBundle->getVersion();
+        $api = $this->configHandler->getParameter('repository_api');
+        $url = $api . "/version/$coreVersion/tags/last";
+        //ask the server wich are the last available packages now.
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        $data = curl_exec($ch);
+        curl_close($ch);
+        $fetched = json_decode($data);
+        $installed = $this->bundleManager->getInstalled();
+        $uninstalled = $this->bundleManager->getUninstalledFromServer($fetched);
 
         return array(
-            'corePackages'       => $corePackages,
-            'pluginPackages'     => $pluginPackages,
-            'upgradablePackages' => $upgradablePackages,
-            'allowUpdate'        => $allowUpdate
+            'fetched' => $fetched,
+            'installed' => $installed,
+            'uninstalled' => $uninstalled
         );
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/packages/available",
-     *     name="claro_admin_available_packages"
-     * )
-     *
-     * @EXT\Template()
-     *
-     * Display the plugin list
-     *
-     * @return Response
-     */
-    public function availablePackagesAction()
-    {
-        $this->checkOpen();
-        $coreBundle = $this->bundleManager->getBundle($coreBundle);
-        $coreVersion = $coreBundle->getVersion();
-
-        //ask the server wich are the last available packages now.
-
     }
 
     /**

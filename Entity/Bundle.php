@@ -51,6 +51,21 @@ class Bundle
      */
     private $authors;
 
+    /**
+     * @ORM\Column(type="text", nullable = true)
+     */
+    private $description;
+
+    /**
+     * @ORM\Column(type="json_array")
+     */
+    private $license;
+
+    /**
+     * Unmapped field if "stuff" need to be added to the description
+     */
+    private $extra;
+
     public function getId()
     {
         return $this->id;
@@ -73,7 +88,7 @@ class Bundle
 
     public function getVersion()
     {
-        $this->version = $version;
+        return $this->version;
     }
 
     public function setType($type)
@@ -99,5 +114,25 @@ class Bundle
     public function getAuthors()
     {
         return $this->authors;
+    }
+
+    public function setDescription($description)
+    {
+        $this->description = $description;
+    }
+
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    public function setExtra($extra)
+    {
+        $this->extra = $extra;
+    }
+
+    public function getExtra()
+    {
+        return $this->extra;
     }
 }

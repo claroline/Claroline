@@ -27,31 +27,33 @@
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h4 class="panel-title">
-                        <a data-toggle="collapse" data-parent="#core-accordion" href="#collapseCore">
-                            {{ 'core_packages'|trans({}, 'platform') }}
+                        <a data-toggle="collapse" data-parent="#core-accordion" href="#packages">
+                            {{ 'installed'|trans({}, 'platform') }}
                         </a>
                     </h4>
                 </div>
-                <div id="collapseCore" class="panel-collapse collapse">
+                <div id="packages" class="panel-collapse collapse">
                     <div class="panel-inner">
-                        {% for corePackage in corePackages %}
-                            {{ macros.renderPackageElement(corePackage, upgradablePackages) }}
+                        {% for installedPkg in installed %}
+                            {{ macros.renderPackageElement(installedPkg, fetched, false) }}
                         {% endfor %}
                     </div>
                 </div>
             </div>
+        </div>
+        <div class="panel-group" id="core-accordion">
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h4 class="panel-title">
-                        <a data-toggle="collapse" data-parent="#plugins-accordion" href="#collapsPlugins">
-                            {{ 'plugin_packages'|trans({}, 'platform') }}
+                        <a data-toggle="collapse" data-parent="#core-accordion" href="#new">
+                            {{ 'new'|trans({}, 'platform') }}
                         </a>
                     </h4>
                 </div>
-                <div id="collapsPlugins" class="panel-collapse collapse">
+                <div id="new" class="panel-collapse collapse">
                     <div class="panel-inner">
-                        {% for pluginPackage in pluginPackages %}
-                            {{ macros.renderPackageElement(pluginPackage, upgradablePackages) }}
+                        {% for package in uninstalled %}
+                            {{ macros.renderPackageElement(package, fetched, true)}}
                         {% endfor %}
                     </div>
                 </div>
@@ -59,10 +61,6 @@
         </div>
     </div>
     <div class="panel panel-footer">
-        {% if allowUpdate %}
-            <a class="btn btn-primary" href="{{ asset('upgrade/update_tool.php') }}">{{ 'upgrade'|trans({}, 'platform') }}</a>
-        {% else %}
-            <div class="alert alert-danger" role="alert">{{ 'package_update_impossible'|trans({}, 'platform') }}</div>
-        {% endif %}
+
     </div>
 {% endblock %}

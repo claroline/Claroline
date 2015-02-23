@@ -82,6 +82,9 @@ class PlatformInstaller
         $this->refresher->setOutput($output);
     }
 
+    /**
+     * This is the method fired when an update is fired.
+     */
     public function installFromOperationFile($operationFile = null)
     {
         $this->launchPreInstallActions();
@@ -91,9 +94,12 @@ class PlatformInstaller
         }
 
         $this->operationExecutor->execute();
-        //$this->setBundleVersionFromComposerInstalled();
     }
 
+    /**
+     * This is the method fired at the 1st installation.
+     * Either command line or from the web installer.
+     */
     public function installFromKernel($withOptionalFixtures = true)
     {
         $this->launchPreInstallActions();
@@ -112,8 +118,6 @@ class PlatformInstaller
                 }
             }
         }
-
-        $this->setBundleVersionFromComposerInstalled();
     }
 
     private function launchPreInstallActions()
@@ -172,37 +176,6 @@ class PlatformInstaller
                 mkdir($directory);
             }
         };
-    }
-
-    public function setBundleVersionFromComposerInstalled()
-    {
-        $this->log('Set the bundle versions...');
-        $vendorDir = $this->container->getParameter('claroline.param.vendor_directory');
-        $ds = DIRECTORY_SEPARATOR;
-        $jsonFile = "{$vendorDir}/composer/installed.json";
-        $data = json_decode(file_get_contents($jsonFile));
-        $om = $this->container->get('claroline.persistence.object_manager');
-        $bundleRepo = $om->getRepository('ClarolineCoreBundle:Bundle');
-        $this->log('Logging bundles versions...');
-
-        foreach ($data as $row) {
-            if ($row->type === 'claroline-plugin' || $row->type === 'claroline-core') {
-                $name = $row->name;
-                $version = $row->version;
-                //let's find if there is something in the database !
-                $bundle = $bundleRepo->findOneByName($name);
-
-                if (!$bundle) {
-                    $bundle = new Bundle();
-                    $bundle->setName($name);
-                }
-
-                $bundle->setVersion($version);
-                $om->persist($bundle);
-            }
-        }
-        $om->flush();
-        $this->log('Done.');
     }
 
     private function log($message)

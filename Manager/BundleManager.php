@@ -26,7 +26,7 @@ class BundleManager
 
     /**
      * @InjectParams({
-     *      "om" = @Inject("%claroline.persistence.object_manager%"),
+     *      "om" = @Inject("claroline.persistence.object_manager"),
      * })
      */
     public function __construct(
@@ -40,5 +40,34 @@ class BundleManager
     public function getBundle($bundle)
     {
         return $this->bundleRepository->findOneByName($bundle);
+    }
+
+    public function getInstalled()
+    {
+        return $this->bundleRepository->findAll();
+    }
+
+    /**
+     * Get a list of uninstalled bundle.
+     *
+     * @param $bundles the list of available bundle fetched from the server
+     */
+    public function getUninstalledFromServer($bundles)
+    {
+        $installed = $this->getInstalled();
+        $uninstalled = array();
+
+        foreach ($bundles as $fetchedBundle) {
+            $found = false;
+            foreach ($installed as $bundle) {
+                if ($bundle->getName() === $fetchedBundle->name) {
+                    $found = true;
+                }
+            }
+
+            if (!$found) $uninstalled[] = $fetchedBundle;
+        }
+
+        return $uninstalled;
     }
 }
