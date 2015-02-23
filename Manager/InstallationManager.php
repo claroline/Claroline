@@ -165,6 +165,7 @@ class InstallationManager
         $entity->setAuthors($bundle->getAuthors());
         $entity->setType($bundle->getType());
         $entity->setDescription($bundle->getDescription());
+        $entity->setLicense($bundle->getLicense());
         $om->persist($entity);
         $this->log("Updating {$bundle->getName()} info...");
         $om->flush();

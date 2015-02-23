@@ -75,6 +75,14 @@ abstract class InstallableBundle extends Bundle implements InstallableInterface
         return null;
     }
 
+    public function getLicense()
+    {
+        $data = $this->getComposer();
+        if (property_exists($data, 'license')) return $data->license;
+
+        return array();
+    }
+
     public function getComposer()
     {
         $ds = DIRECTORY_SEPARATOR;
