@@ -12,7 +12,6 @@ Structure
 - [Overview][2]
 - [Core architecture][3]
     - [Event tracking][11]
-    - [Badge system][12]
     - [Third-party application][14]
 - [Plugin development][4]
     - [Resources][5]
@@ -34,6 +33,5 @@ Structure
 [9]: sections/plugins/themes.md
 [10]: sections/dev-tools.md
 [11]: sections/event-tracking.md
-[12]: sections/badges.md
 [13]: sections/plugins/logs.md
 [14]: sections/third-party-application.md

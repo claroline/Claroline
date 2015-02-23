@@ -23,7 +23,6 @@ class LoadAdminToolsData implements RequiredFixture
             array('platform_parameters', 'cog'),
             array('user_management', 'user'),
             array('workspace_management', 'book'),
-            array('badges_management', 'trophy'),
             array('registration_to_workspace', 'book'),
             array('platform_packages', 'wrench'),
             array('home_tabs', 'th-large'),

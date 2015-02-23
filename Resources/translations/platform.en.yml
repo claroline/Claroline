@@ -174,7 +174,6 @@ back: Back
 back_to_activities_list: 'Back to activities list'
 back_to_profile: 'Back to profile'
 bad_request: 'The request is incorrect. If you arrived at this page via an internal link, please report the problem to the platform administrator.'
-badges_management: 'Badges management'
 base_informations: 'Basic information'
 best_score: 'Best score'
 by: by
@@ -585,7 +584,6 @@ move: Move
 my_account: 'My account'
 my_agenda: 'My agenda'
 my_applications: 'My applications'
-my_badges: 'My badges'
 my_contacts: 'My contacts'
 my_favourite_workspaces: 'My favourite workspaces'
 my_notes: 'My notes'

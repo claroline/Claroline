@@ -174,7 +174,6 @@ back: Retour
 back_to_activities_list: 'Retour à la liste des activités'
 back_to_profile: 'Retour au profil'
 bad_request: 'La requête est incorrecte. Si vous êtes arrivé sur cette page via un lien interne, veuillez signaler le problème à l''''administrateur de la plateforme.'
-badges_management: 'Gestion des badges'
 base_informations: 'Informations de base'
 best_score: 'Meilleur score'
 by: par
@@ -587,7 +586,6 @@ move: Déplacer
 my_account: 'Mon compte'
 my_agenda: 'Mon agenda'
 my_applications: 'Mes applications'
-my_badges: 'Mes badges'
 my_contacts: 'Mes contacts'
 my_favourite_workspaces: 'Mes espaces d''activités favoris'
 my_notes: 'Mes notes'

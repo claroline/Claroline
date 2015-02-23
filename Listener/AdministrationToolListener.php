@@ -9,6 +9,7 @@ use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\EventDispatcher\Event;
 
 /**
  *  @DI\Service()
@@ -68,18 +69,6 @@ class AdministrationToolListener
         $params['max'] = 50;
         $params['direction'] = 'ASC';
         $params['order'] = 'id';
-        $this->redirect($params, $event);
-    }
-
-    /**
-     * @DI\Observe("administration_tool_badges_management")
-     *
-     * @param OpenAdministrationToolEvent $event
-     */
-    public function onOpenBadgesManagement(OpenAdministrationToolEvent $event)
-    {
-        $params = array();
-        $params['_controller'] = 'ClarolineCoreBundle:Administration/Badge:list';
         $this->redirect($params, $event);
     }
 
@@ -195,7 +184,12 @@ class AdministrationToolListener
         $params['_controller'] = 'ClarolineCoreBundle:Administration\CompetenceSubscription:menu';
         $this->redirect($params, $event);
     }
-    private function redirect($params, $event)
+
+    /**
+     * @param array $params
+     * @param Event $event
+     */
+    protected function redirect(array $params, Event $event)
     {
         $subRequest = $this->request->duplicate(array(), null, $params);
         $response = $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);

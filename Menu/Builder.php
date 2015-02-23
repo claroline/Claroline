@@ -79,15 +79,6 @@ class Builder extends ContainerAware
             ->setExtra('icon', 'fa fa-folder')
             ->setExtra('uri-add', '#resources/0');
 
-        $menu->addChild(
-            $translator->trans('my_badges', array(), 'platform'),
-            array(
-                'route' => 'claro_profile_view_badges'
-            )
-        )->setAttribute('class', 'dropdown')
-            ->setAttribute('role', 'presentation')
-            ->setExtra('icon', 'fa fa-trophy');
-
         //allowing the menu to be extended
         $this->container->get('event_dispatcher')->dispatch(
             'claroline_top_bar_right_menu_configure',

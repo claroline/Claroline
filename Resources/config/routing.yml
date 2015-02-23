@@ -238,10 +238,6 @@ claro_user:
     type: annotation
     prefix: user
 
-claro_admin_badge:
-    resource: "@ClarolineCoreBundle/Controller/Administration/BadgeController.php"
-    type: annotation
-
 claro_oauth:
     resource: "@ClarolineCoreBundle/Controller/Oauth"
     type: annotation
@@ -308,9 +304,6 @@ claro_admin_facet:
     resource: "@ClarolineCoreBundle/Controller/Administration/FacetController.php"
     prefix: admin/facet
     type: annotation
-
-claro_badge:
-    resource: "@ClarolineCoreBundle/Controller/Badge"
 
 claro_api:
     resource: "@ClarolineCoreBundle/Controller/API"

@@ -65,7 +65,7 @@ class ActivityRuleType extends AbstractType
             'badge',
             'entity',
             array(
-                'class' => 'ClarolineCoreBundle:Badge\Badge',
+                'class' => 'IcapBadgeBundle:Badge',
                 'property' => 'translations[1].name',
                 'required' => false
             )
