@@ -83,6 +83,14 @@ abstract class InstallableBundle extends Bundle implements InstallableInterface
         return array();
     }
 
+    public function getTargetDir()
+    {
+        $data = $this->getComposer();
+        $prop = 'target-dir';
+       
+        return $data->$prop;
+    }
+
     public function getComposer()
     {
         $ds = DIRECTORY_SEPARATOR;

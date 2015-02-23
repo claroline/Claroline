@@ -166,6 +166,7 @@ class InstallationManager
         $entity->setType($bundle->getType());
         $entity->setDescription($bundle->getDescription());
         $entity->setLicense($bundle->getLicense());
+        $entity->setTargetDir($bundle->getTargetDir());
         $om->persist($entity);
         $this->log("Updating {$bundle->getName()} info...");
         $om->flush();
