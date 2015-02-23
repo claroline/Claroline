@@ -1,0 +1,12 @@
+{% extends "ClarolineCoreBundle::layout.html.twig" %}
+
+{% block title %}{{ 'badge' | trans({}, 'badge') | striptags | raw }}{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {% stylesheets debug=false filter="lessphp, cssmin"  output="css/icapbadge/badge.css"
+      "@IcapBadgeBundle/Resources/views/less/badge.less"
+    %}
+        <link rel="stylesheet" href="{{ asset_url }}" screen="media" />
+    {% endstylesheets %}
+{% endblock %}

@@ -21,7 +21,7 @@ class BadgeClaimRepository extends EntityRepository
         $query = $this->getEntityManager()
             ->createQuery(
                 'SELECT bc, b, bt
-                FROM ClarolineCoreBundle:Badge\BadgeClaim bc
+                FROM IcapBadgeBundle:BadgeClaim bc
                 JOIN bc.badge b
                 JOIN b.translations bt
                 WHERE bc.user = :userId'
@@ -32,14 +32,14 @@ class BadgeClaimRepository extends EntityRepository
     }
 
     /**
-     * @return \Claroline\CoreBundle\Entity\Badge\BadgeClaim[]
+     * @return \Icap\BadgeBundle\Entity\BadgeClaim[]
      */
     public function findAll()
     {
         return $this->getEntityManager()
             ->createQuery(
                 'SELECT bc, b, bt
-                FROM ClarolineCoreBundle:Badge\BadgeClaim bc
+                FROM IcapBadgeBundle:BadgeClaim bc
                 JOIN bc.badge b
                 JOIN b.translations bt'
             )
@@ -51,7 +51,7 @@ class BadgeClaimRepository extends EntityRepository
      *
      * @param bool $executedQuery
      *
-     * @return array
+     * @return \Doctrine\ORM\Query|array
      */
     public function findByWorkspace(Workspace $workspace = null, $executedQuery = true)
     {
@@ -64,7 +64,7 @@ class BadgeClaimRepository extends EntityRepository
         $query = $this->getEntityManager()
             ->createQuery(
                 'SELECT bc, b, bt
-                FROM ClarolineCoreBundle:Badge\BadgeClaim bc
+                FROM IcapBadgeBundle:BadgeClaim bc
                 JOIN bc.badge b
                 JOIN b.translations bt
                 WHERE ' . $workspaceConstraint

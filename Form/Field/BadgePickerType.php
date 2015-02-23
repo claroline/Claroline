@@ -3,7 +3,7 @@
 namespace Icap\BadgeBundle\Form\Field;
 
 use Icap\BadgeBundle\Form\DataTransformer\BadgePickerTransformer;
-use Claroline\CoreBundle\Manager\BadgeManager;
+use Icap\BadgeBundle\Manager\BadgeManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -12,7 +12,7 @@ use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 /**
- * @DI\Service("claroline.form.badgepicker")
+ * @DI\Service("icap_badge.form.badgepicker")
  * @DI\FormType(alias = "badgepicker")
  */
 class BadgePickerType extends AbstractType
@@ -24,7 +24,7 @@ class BadgePickerType extends AbstractType
 
     /**
      * @DI\InjectParams({
-     *     "badgePickerTransformer" = @DI\Inject("claroline.transformer.badge_picker")
+     *     "badgePickerTransformer" = @DI\Inject("icap_badge.transformer.badge_picker")
      * })
      */
     public function __construct(BadgePickerTransformer $badgePickerTransformer)

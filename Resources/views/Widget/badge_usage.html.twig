@@ -1,0 +1,43 @@
+{% block stylesheets %}
+    {% stylesheets debug=false filter="lessphp, cssmin"  output="css/icapbadge/badge.css"
+      "@IcapBadgeBundle/Resources/views/less/badge.less"
+    %}
+        <link rel="stylesheet" href="{{ asset_url }}" screen="media" />
+    {% endstylesheets %}
+{% endblock %}
+
+<p>{{ 'last_awarded_badges'|trans({}, 'badge') }} :</p>
+<ul class="media-list list-inline">
+    {% for userBadge in lastAwardedBadges %}
+        <li class="media">
+            <a class="pull-left" href="{{ path('icap_badge_view_badge', {'slug': userBadge.badge.slug}) }}" title="{{ userBadge.badge.name }}">
+                <img class="media-object badge_image" src="{{ asset(userBadge.badge.webPath) }}" alt="{{ userBadge.badge.name }}">
+            </a>
+
+            <div class="media-body">
+                <h4 class="media-heading"><a href="{{ path('icap_badge_view_badge', {'slug': userBadge.badge.slug}) }}" title="{{ userBadge.badge.name }}">{{ userBadge.badge.name }}</a></h4>
+                <p>{{ 'badge_awarded_to_full' | trans({'%userUrl%': path('claro_public_profile_view', {'publicUrl': userBadge.user.publicUrl}), '%user%': userBadge.user.lastName ~ ' ' ~ userBadge.user.firstName, '%issuerUrl%': path('claro_public_profile_view', {'publicUrl': userBadge.issuer.publicUrl}), '%issuer%': userBadge.user.lastName ~ ' ' ~ userBadge.user.firstName}, 'badge') | raw }}</p>
+            </div>
+        </li>
+    {% else %}
+        <li>{{ 'no_badges'|trans({}, 'badge') }}</li>
+    {% endfor %}
+</ul>
+
+<p>{{ 'ladder_awarded_badges'|trans({}, 'badge') }} :</p>
+<ul class="media-list list-inline">
+    {% for userBadge in mostAwardedBadges %}
+    <li class="media">
+        <a class="pull-left" href="#">
+            <img class="media-object badge_image" src="{{ asset(userBadge.0.badge.webPath) }}" alt="{{ userBadge.0.badge.name }}">
+        </a>
+
+        <div class="media-body">
+            <h4 class="media-heading"><a href="{{ path('icap_badge_view_badge', {'slug': userBadge.0.badge.slug}) }}" title="{{ userBadge.0.badge.name }}">{{ userBadge.0.badge.name }}</a></h4>
+            <p>{{ 'badge_awarded_nb_times'|trans({'%nbTimes%': userBadge.awardedNumber}, 'badge') }}</p>
+        </div>
+    </li>
+    {% else %}
+        <li>{{ 'no_badges'|trans({}, 'badge') }}</li>
+    {% endfor %}
+</ul>

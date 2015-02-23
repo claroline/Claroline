@@ -12,6 +12,11 @@ class IcapBadgeBundle extends PluginBundle
     {
         $config = new ConfigurationBuilder();
 
-        return $config->addRoutingResource(__DIR__ . '/Resources/config/routing.yml', null, 'icap_blog');
+        $config
+            ->addRoutingResource($this->getPath() . '/Resources/config/routing.yml')
+            ->addRoutingResource($this->getPath() . '/Resources/config/idci_exporter.yml')
+            ->addRoutingResource($this->getPath() . '/Resources/config/twig.yml');
+
+        return $config;
     }
 }

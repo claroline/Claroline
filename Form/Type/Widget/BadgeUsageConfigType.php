@@ -1,6 +1,6 @@
 <?php
 
-namespace Icap\BadgeBundle\Form\Badge\Type\Widget;
+namespace Icap\BadgeBundle\Form\Type\Widget;
 
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Form\AbstractType;
@@ -32,7 +32,7 @@ class BadgeUsageConfigType extends AbstractType
     {
         $resolver->setDefaults(
             array(
-                'data_class'         => 'Claroline\CoreBundle\Entity\Badge\Widget\BadgeUsageConfig',
+                'data_class'         => 'Icap\BadgeBundle\Entity\Widget\BadgeUsageConfig',
                 'translation_domain' => 'badge',
                 'language'           => 'en'
             )

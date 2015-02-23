@@ -3,7 +3,7 @@
     "description": "Claroline badge plugin from ICAP",
     "keywords": ["Claroline", "Plugin", "Badge", "ICAP"],
     "homepage": "http://www.claroline.net",
-    "type": "claroline-plugin",
+    "type": "claroline-core",
     "license": "",
     "authors": [
         {

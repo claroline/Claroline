@@ -1,6 +1,6 @@
 <?php
 
-namespace Icap\BadgeBundle\Form\Badge\Type;
+namespace Icap\BadgeBundle\Form\Type;
 
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Manager\LocaleManager;
@@ -19,7 +19,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class BadgeType extends AbstractType
 {
-    /** @var \Claroline\CoreBundle\Form\Badge\Type\BadgeRuleType */
+    /** @var \Icap\BadgeBundle\Form\Type\BadgeRuleType */
     private $badgeRuleType;
 
     /** @var \Claroline\CoreBundle\Manager\LocaleManager */
@@ -30,7 +30,7 @@ class BadgeType extends AbstractType
 
     /**
      * @DI\InjectParams({
-     *     "badgeRuleType"         = @DI\Inject("claroline.form.badge.rule"),
+     *     "badgeRuleType"         = @DI\Inject("icap_badge.form.badge.rule"),
      *     "localeManager"         = @DI\Inject("claroline.common.locale_manager"),
      *     "platformConfigHandler" = @DI\Inject("claroline.config.platform_config_handler")
      * })
@@ -86,7 +86,7 @@ class BadgeType extends AbstractType
             );
 
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event){
-            /** @var \Claroline\CoreBundle\Entity\Badge\Badge $badge */
+            /** @var \Icap\BadgeBundle\Entity\Badge $badge */
             $badge = $event->getData();
 
             if ($badge && null !== $badge) {
@@ -121,7 +121,7 @@ class BadgeType extends AbstractType
     {
         $resolver->setDefaults(
             array(
-                'data_class'         => 'Claroline\CoreBundle\Entity\Badge\Badge',
+                'data_class'         => 'Icap\BadgeBundle\Entity\Badge',
                 'translation_domain' => 'badge',
                 'language'           => 'en',
                 'date_format'        => DateType::HTML5_FORMAT,

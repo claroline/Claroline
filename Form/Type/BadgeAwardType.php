@@ -1,6 +1,6 @@
 <?php
 
-namespace Icap\BadgeBundle\Form\Badge\Type;
+namespace Icap\BadgeBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -10,7 +10,7 @@ use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
- * @DI\Service("claroline.form.badge.award")
+ * @DI\Service("icap_badge.form.badge.award")
  */
 class BadgeAwardType extends AbstractType
 {

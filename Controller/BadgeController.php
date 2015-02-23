@@ -4,9 +4,9 @@ namespace Icap\BadgeBundle\Controller;
 
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CoreBundle\Manager\BadgeManager;
+use Icap\BadgeBundle\Manager\BadgeManager;
 use Claroline\CoreBundle\Rule\Validator;
-use Claroline\CoreBundle\Entity\Badge\Badge;
+use Icap\BadgeBundle\Entity\Badge;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -23,8 +23,8 @@ class BadgeController extends Controller
         /** @var \Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler $platformConfigHandler */
         $platformConfigHandler = $this->get('claroline.config.platform_config_handler');
 
-        /** @var \Claroline\CoreBundle\Repository\Badge\BadgeRepository $badgeRepository */
-        $badgeRepository = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Badge\Badge');
+        /** @var \Icap\BadgeBundle\Repository\BadgeRepository $badgeRepository */
+        $badgeRepository = $this->getDoctrine()->getRepository('IcapBadgeBundle:Badge');
         /** @var QueryBuilder $badgeQueryBuilder */
         $badgeQueryBuilder = $badgeRepository->findOrderedByName(
             $platformConfigHandler->getParameter('locale_language'),
@@ -42,16 +42,16 @@ class BadgeController extends Controller
             $badgeClaimsWorkspace = null;
         }
 
-        /** @var \Claroline\CoreBundle\Repository\Badge\BadgeClaimRepository $badgeClaimRepository */
-        $badgeClaimRepository = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Badge\BadgeClaim');
-        /** @var Query $badgeClaimQuery */
+        /** @var \Icap\BadgeBundle\Repository\BadgeClaimRepository $badgeClaimRepository */
+        $badgeClaimRepository = $this->getDoctrine()->getRepository('IcapBadgeBundle:BadgeClaim');
         $badgeClaimQuery      = $badgeClaimRepository->findByWorkspace($badgeClaimsWorkspace, false);
 
-        /** @var \Claroline\CoreBundle\Repository\UserRepository $userRepository */
-        $userRepository = $this->getDoctrine()->getRepository('ClarolineCoreBundle:User');
-        /** @var Query $userQuery */
-        $userQuery = $userRepository->findUsersWithBadgesByWorkspace($badgeClaimsWorkspace, false);
+        /** @var \Icap\BadgeBundle\Manager\BadgeManager $badgeManager */
+        $badgeManager = $this->get('icap_badge.manager.badge');
+        $userQuery = $badgeManager
+            ->getUsersWithBadgesByWorkspaceQuery($this->getDoctrine()->getRepository('ClarolineCoreBundle:User'), $badgeClaimsWorkspace);
 
+        /** @var \Claroline\CoreBundle\Pager\PagerFactory $pagerFactory */
         $pagerFactory       = $this->get('claroline.pager.pager_factory');
         $badgePager         = $pagerFactory->createPager($badgeQueryBuilder->getQuery(), $parameters['badgePage'], 10);
         $claimPager         = $pagerFactory->createPager($badgeClaimQuery, $parameters['claimPage'], 10);
@@ -60,7 +60,7 @@ class BadgeController extends Controller
 
 
         return $this->render(
-            'ClarolineCoreBundle:Badge:Template/list.html.twig',
+            'IcapBadgeBundle::Template/list.html.twig',
             array(
                 'badgePager'       => $badgePager,
                 'claimPager'       => $claimPager,
@@ -72,7 +72,7 @@ class BadgeController extends Controller
     }
 
     /**
-     * @Route("/badges", name="claro_badge_picker", options={"expose": true})
+     * @Route("/badges", name="icap_badge_badge_picker", options={"expose": true})
      * @Method({"POST"})
      * @ParamConverter("user", options={"authenticatedUser" = true})
      * @Template()
@@ -85,8 +85,8 @@ class BadgeController extends Controller
         /** @var \Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler $platformConfigHandler */
         $platformConfigHandler = $this->get('claroline.config.platform_config_handler');
 
-        /** @var \CLaroline\CoreBundle\Manager\BadgeManager $badgeManager */
-        $badgeManager = $this->get('claroline.manager.badge');
+        /** @var \Icap\BadgeBundle\Manager\BadgeManager $badgeManager */
+        $badgeManager = $this->get('icap_badge.manager.badge');
 
         $parameters = array(
             'locale'    => $platformConfigHandler->getParameter('locale_language'),

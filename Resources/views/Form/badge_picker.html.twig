@@ -1,0 +1,138 @@
+{% extends 'ClarolineCoreBundle::form_theme.html.twig' %}
+
+{% form_theme form _self %}
+
+{% block badge_collection_widget %}
+    {% spaceless %}
+        {% if prototype is defined %}
+            {% set attr = attr|merge({'data-prototype': block('collection_prototype') }) %}
+        {% endif %}
+        <div {{ block('widget_container_attributes') }}>
+            {{ form_errors(form) }}
+            <div class="badge-form-collection">
+                {% for rows in form %}
+                    {{ _self.badge_collection_field(rows, allow_delete) }}
+                {% endfor %}
+            </div>
+            {{ form_rest(form) }}
+        </div>
+    {% endspaceless %}
+{% endblock badge_collection_widget %}
+
+{% macro badge_collection_field(rows, allow_delete) %}
+    {% spaceless %}
+        <div class="badge-form-collection-element">
+            {% for row in rows %}
+                {{ form_row(row) }}
+            {% endfor %}
+        </div>
+    {% endspaceless %}
+{% endmacro %}
+
+{% block badgepicker_widget %}
+    {% spaceless %}
+        <div class="badge_picker">
+            {% if multiple %}
+                <div id="{{ id }}" data-prototype="<div class=&quot;form-collection-element&quot;><input type=&quot;hidden&quot; id=&quot;{{ id }}___name___id&quot; name=&quot;{{ full_name }}[__name__][id]&quot;/></div>">
+                    <div class="badge-form-collection">
+                        {% for index, badge in value %}
+                            <div class="badge-form-collection-element">
+                                <input type="hidden" id="{{ id }}_{{ index }}_id" name="{{ full_name }}[{{ index }}][id]" value="{{ badge.id }}">
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <button type="button" class="btn btn-default badges_selector" id="badgepicker_{{ id }}"
+                        data-title="{{ 'browse_badges'|trans({}, 'badge') }}" data-toggle="tooltip">
+                    <i class="fa fa-folder-open"></i>
+                    <small{% if 0 == value|length %} class="hide"{% endif %}>{{ 'count_selected_badge'|transchoice(value|length, {'%nbBadge%': value|length}, 'badge') }}</small>
+                    <small{% if 0 < value|length %} class="hide"{% endif %}>{{ 'select_badges'|trans({}, 'badge') }}</small>
+                </button>
+            {% else %}
+                <input type="hidden" id="{{ id }}" name="{{ full_name }}" {% if value is not empty %}value="{{ value.id }}" {% endif %}class="badge-picker">
+
+                <div class="input-group select-field">
+                    <p class="form-control no_badge_selected{% if value is not empty %} hide{% endif %}" disabled="disabled">
+                        {{ 'select_badge'|trans({}, 'badge') }}
+                    </p>
+                    <p class="form-control badge_selection_field{% if value is empty %} hide{% endif %}" data-title="{% if value is not empty %}{{ value.text }}{% endif %}"
+                        data-container="body" data-toggle="popover" data-placement="top"
+                        data-content="{% if value is not empty %}{{ value.description }}{% endif %}">
+                        <span class="badge_text{% if value is empty %} hide{% endif %}">{% if value is not empty %}{{ value.text }}{% endif %}</span>
+                        <img src="{% if value is not empty %}{{ asset(value.icon) }}{% endif %}" alt="{% if value is not empty %}{{ value.text }}{% endif %}" class="badge_image{% if value is empty %} hide{% endif %}" />
+                    </p>
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-default" id="badgepicker_{{ id }}" data-title="{{ 'browse_badges'|trans({}, 'badge') }}" data-toggle="tooltip"><i class="fa fa-folder-open"></i></button>
+                    </span>
+                </div>
+            {% endif %}
+        </div>
+
+        <script type="text/javascript" src="{{ asset('bundles/icapbadge/js/badge_picker.js') }}"></script>
+        <script type="text/javascript">
+            $(function(){
+                $("#badgepicker_{{ id }}").click(function() {
+                {% if multiple %}
+                    var value = [];
+                    $(".badge-form-collection-element input[type=hidden]").each(function(index, element) {
+                        value.push($(this).val());
+                    });
+                    var badgePrototypeField = $("#{{ id }}").attr('data-prototype');
+                    var badgeFormCollection = $(".badge-form-collection");
+
+                    var callback = function (nodes) {
+                        $(".badge-form-collection-element").remove();
+
+                        nodes.each(function(index, element) {
+                            var newBadge = $(badgePrototypeField.replace(/__name__/g, index));
+                            badgeFormCollection.append(newBadge);
+                            $("input", newBadge).val(element.id);
+                        });
+                    };
+                {% else %}
+                    var hiddenInputField    = $("#{{ id }}");
+                    var badgeSelectionField = $(".badge_selection_field");
+                    var callback = function (nodes) {
+                        if (0 < nodes.length) {
+                            var selectedBadge = nodes[0];
+                            hiddenInputField.val(selectedBadge.id);
+                            $(".badge_text", badgeSelectionField)
+                                .html(selectedBadge.text)
+                                .removeClass('hide');
+                            $(".badge_image", badgeSelectionField)
+                                .attr('src', selectedBadge.icon)
+                                .attr('alt', selectedBadge.text)
+                                .removeClass('hide');
+                            $(".no_badge_selected").addClass('hide');
+                            $(".badge_selection_field").removeClass('hide');
+                        }
+                        else {
+                            hiddenInputField.val(null);
+                            $(".badge_text", badgeSelectionField)
+                                .html("")
+                                .addClass('hide');
+                            $(".badge_image", badgeSelectionField)
+                                .attr('src', "")
+                                .attr('alt', "");
+                            $(".no_badge_selected").removeClass('hide');
+                            $(".badge_selection_field").addClass('hide');
+                        }
+
+                    };
+                    var value = hiddenInputField.val();
+                {% endif %}
+                    var url = "{{ path('icap_badge_badge_picker') }}";
+                    var badgePickerSettings = {
+                        mode: "{{ mode }}",
+                        multiple: {{ multiple|default('false') }},
+                        value: value,
+                        workspace: {{ workspace|default('null') }},
+                        blacklist: {{ blacklist|json_encode }}
+                    };
+                    window.Claroline.BadgePicker.configureBadgePicker(url, badgePickerSettings, callback);
+                    window.Claroline.BadgePicker.openBadgePicker();
+                });
+            });
+        </script>
+    {% endspaceless %}
+{% endblock %}

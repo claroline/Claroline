@@ -2,7 +2,7 @@
 
 namespace Icap\BadgeBundle\Converter;
 
-use Claroline\CoreBundle\Repository\Badge\BadgeRepository;
+use Icap\BadgeBundle\Repository\BadgeRepository;
 use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Translation\Translator;
 use Symfony\Component\HttpFoundation\Request;
@@ -27,12 +27,12 @@ class SlugConverter implements ParamConverterInterface
      */
     protected $entityManager;
 
-    /** @var \Claroline\CoreBundle\Repository\Badge\BadgeRepository */
+    /** @var \Icap\BadgeBundle\Repository\BadgeRepository */
     private $badgeRepository;
 
     /**
      * @DI\InjectParams({
-     *     "badgeRepository" = @DI\Inject("claroline.repository.badge"),
+     *     "badgeRepository" = @DI\Inject("icap_badge.repository.badge"),
      *     "entityManager"   = @DI\Inject("doctrine.orm.entity_manager")
      * })
      */

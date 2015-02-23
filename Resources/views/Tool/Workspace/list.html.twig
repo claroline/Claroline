@@ -1,0 +1,43 @@
+{% extends 'ClarolineCoreBundle:Badge/Tool:Workspace/layout.html.twig' %}
+
+{% trans_default_domain "badge" %}
+
+{% block title %}{{ parent() ~ ' - ' ~ 'badges' | trans | striptags | raw }}{% endblock %}
+
+{% block breadcrumb %}
+    {{
+        macros.workspaceBreadcrumbs(
+            workspace,
+            [
+                {
+                    'name': 'workspace_badges'|trans({}, 'badge'),
+                    'href': ''
+                }
+            ]
+        )
+    }}
+{% endblock %}
+
+{% block section_title %}
+    {{ 'workspace_badges'|trans({}, 'badge') }}
+    <a href="{{ path(parameters.add_link, parameters.route_parameters) }}" title="{{ 'add_badge'|trans({}, 'badge') }}" class="btn btn-default btn-sm">
+        <span class="fa fa-plus"></span> {{ 'add_badge'|trans({}, 'badge') }}
+    </a>
+    <a href="{{ path(parameters.statistics_link, parameters.route_parameters) }}" title="{{ 'badge_statistics'|trans({}, 'badge') }}" class="btn btn-default btn-sm pull-right" data-toggle="tooltip">
+        <span class="fa fa-bar-chart"></span>
+    </a>
+{% endblock %}
+
+{% block section_body %}
+    {{ render(controller('ClarolineCoreBundle:Badge/Badge:list', {'parameters': parameters})) }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src='{{ asset('bundles/frontend/jquery/plugin/confirm-bootstrap/confirm-bootstrap.js') }}'></script>
+    <script type="text/javascript">
+        $(function(){
+            $('.confirm').confirmModal();
+        });
+    </script>
+{% endblock %}

@@ -1,6 +1,6 @@
 <?php
 
-namespace Icap\BadgeBundle\Form\Badge\Handler;
+namespace Icap\BadgeBundle\Form\Handler;
 
 use Icap\BadgeBundle\Entity\Badge;
 use Claroline\CoreBundle\Manager\BadgeManager;

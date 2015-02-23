@@ -1,0 +1,73 @@
+<ul class="list-inline my_badges">
+    {% for workspaceBadge in badgePager %}
+        {% set badgeType = workspaceBadge.type %}
+        <li class="col-md-6">
+            {% if 'owned' == badgeType %}
+                {% set badge     = workspaceBadge.badge.badge %}
+                {% set userBadge = workspaceBadge.badge %}
+                <div class="panel panel-default badge_panel owned_badge">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">{{ badge.name }}<small class="pull-right"><span class="fa fa-check"></span> {{ 'badge_awarded_on'|trans({'%awardingDate%': userBadge.issuedAt|date('date_format'|trans({}, 'platform'))}, 'badge') }}</small></h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="col-md-4">
+                            <img src="{{ asset(badge.webPath) }}" alt="{{ badge.name }}" class="badge_image_informations" />
+                        </div>
+                        <div class="col-md-8">
+                            <p>{{ badge.description }}</p>
+                            <p>
+                                <a href="{{ path('icap_badge_workspace_tool_view_my_badge', {'workspaceId': workspace.id, 'slug': badge.slug}) }}" title="{{ 'consult_my_badge_details'|trans({}, 'badge') }}" class="btn btn-default" role="button">
+                                    {{ 'consult_my_badge_details'|trans({}, 'badge') }}
+                                </a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                {% set badge = workspaceBadge.badge %}
+                <div class="panel panel-default badge_panel available_badges">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">
+                            {{ badge.name }}
+                            {% if 'inprogress' == badgeType %}<small class="pull-right">{{ 'badge_awarding_in_progress'|trans({}, 'badge') }}</small>{% endif %}
+                            {% if 'finished' == badgeType %}
+                                <a href="{{ path('icap_badge_workspace_tool_claim_badge', {'workspaceId': workspace.id, 'badge_id': badge.id}) }}" class="pull-right btn btn-xs btn-primary finished">{{ 'badge_awarding_finished'|trans({}, 'badge') }}</a>
+                            {% elseif 'claimed' == badgeType%}
+                                <small class="pull-right claimed">{{ 'badge_claimed'|trans({}, 'badge') }}</small>
+                            {% endif %}
+                        </h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="col-md-4">
+                            <img src="{{ asset(badge.webPath) }}" alt="{{ badge.name }}" class="badge_image_informations" />
+                        </div>
+                        <div class="col-md-8">
+                            <p>{{ badge.description }}</p>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </li>
+    {% else %}
+        <li class="node-thumbnail node">
+            {{ 'no_badges_in_workspace'|trans({}, 'badge')|raw }}
+        </li>
+    {% endfor %}
+</ul>
+
+{% if badgePager.haveToPaginate %}
+<div>
+    {{
+        pagerfanta(
+            badgePager,
+            'twitter_bootstrap_translated',
+            {
+                'proximity' :    1,
+                'routeName':     'icap_badge_workspace_tool_my_badges',
+                'routeParams':   {'workspaceId': workspace.id},
+                'pageParameter': '[badgePage]'
+            }
+        )
+    }}
+</div>
+{% endif %}

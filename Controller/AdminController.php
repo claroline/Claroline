@@ -2,10 +2,10 @@
 
 namespace Icap\BadgeBundle\Controller;
 
-use Claroline\CoreBundle\Entity\Badge\Badge;
-use Claroline\CoreBundle\Entity\Badge\BadgeClaim;
-use Claroline\CoreBundle\Entity\Badge\BadgeRule;
-use Claroline\CoreBundle\Entity\Badge\BadgeTranslation;
+use Icap\BadgeBundle\Entity\Badge;
+use Icap\BadgeBundle\Entity\BadgeClaim;
+use Icap\BadgeBundle\Entity\BadgeRule;
+use Icap\BadgeBundle\Entity\BadgeTranslation;
 use Claroline\CoreBundle\Entity\User;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Exception\NotValidCurrentPageException;
@@ -26,12 +26,12 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
  *
  * @Route("/admin/badges")
  */
-class AdminController extends Controller
+class AdministrationController extends Controller
 {
     /**
      * @Route(
      *     "/{badgePage}/{claimPage}/{userPage}",
-     *     name="claro_admin_badges",
+     *     name="icap_badge_admin_badges",
      *     requirements={"badgePage" = "\d+", "userPage" = "\d+", "claimPage" = "\d+"},
      *     defaults={"badgePage" = 1, "claimPage" = 1, "userPage" = 1}
      * )
@@ -46,16 +46,16 @@ class AdminController extends Controller
             'badgePage'        => $badgePage,
             'claimPage'        => $claimPage,
             'userPage'         => $userPage,
-            'add_link'         => 'claro_admin_badges_add',
+            'add_link'         => 'icap_badge_admin_badges_add',
             'edit_link'        => array(
-                'url'    => 'claro_admin_badges_edit',
+                'url'    => 'icap_badge_admin_badges_edit',
                 'suffix' => '#!edit'
             ),
-            'delete_link'      => 'claro_admin_badges_delete',
-            'view_link'        => 'claro_admin_badges_edit',
-            'current_link'     => 'claro_admin_badges',
-            'claim_link'       => 'claro_admin_manage_claim',
-            'statistics_link'  => 'claro_admin_badges_statistics',
+            'delete_link'      => 'icap_badge_admin_badges_delete',
+            'view_link'        => 'icap_badge_admin_badges_edit',
+            'current_link'     => 'icap_badge_admin_badges',
+            'claim_link'       => 'icap_badge_admin_manage_claim',
+            'statistics_link'  => 'icap_badge_admin_badges_statistics',
             'route_parameters' => array()
         );
 
@@ -65,7 +65,7 @@ class AdminController extends Controller
     }
 
     /**
-     * @Route("/add", name="claro_admin_badges_add")
+     * @Route("/add", name="icap_badge_admin_badges_add")
      *
      * @Template()
      */
@@ -88,25 +88,25 @@ class AdminController extends Controller
         $translator = $this->get('translator');
 
         try {
-            if ($this->get('claroline.form_handler.badge')->handleAdd($badge)) {
+            if ($this->get('icap_badge.form_handler.badge')->handleAdd($badge)) {
                 $sessionFlashBag->add('success', $translator->trans('badge_add_success_message', array(), 'badge'));
 
-                return $this->redirect($this->generateUrl('claro_admin_badges'));
+                return $this->redirect($this->generateUrl('icap_badge_admin_badges'));
             }
         } catch (\Exception $exception) {
             $sessionFlashBag->add('error', $translator->trans('badge_add_error_message', array(), 'badge'));
 
-            return $this->redirect($this->generateUrl('claro_admin_badges'));
+            return $this->redirect($this->generateUrl('icap_badge_admin_badges'));
         }
 
         return array(
-            'form'  => $this->get('claroline.form.badge')->createView(),
+            'form'  => $this->get('icap_badge.form.badge')->createView(),
             'badge' => $badge
         );
     }
 
     /**
-     * @Route("/edit/{slug}/{page}", name="claro_admin_badges_edit")
+     * @Route("/edit/{slug}/{page}", name="icap_badge_admin_badges_edit")
      * @ParamConverter("badge", converter="badge_converter")
      *
      * @Template()
@@ -114,7 +114,7 @@ class AdminController extends Controller
     public function editAction(Request $request, Badge $badge, $page = 1)
     {
         $this->checkOpen();
-        $query   = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Badge\Badge')->findUsers($badge, false);
+        $query   = $this->getDoctrine()->getRepository('IcapBadgeBundle:Badge')->findUsers($badge, false);
         $adapter = new DoctrineORMAdapter($query);
         $pager   = new Pagerfanta($adapter);
 
@@ -131,26 +131,26 @@ class AdminController extends Controller
         $translator = $this->get('translator');
 
         try {
-            if ($this->get('claroline.form_handler.badge')->handleEdit($badge)) {
+            if ($this->get('icap_badge.form_handler.badge')->handleEdit($badge)) {
                 $sessionFlashBag->add('success', $translator->trans('badge_edit_success_message', array(), 'badge'));
 
-                return $this->redirect($this->generateUrl('claro_admin_badges'));
+                return $this->redirect($this->generateUrl('icap_badge_admin_badges'));
             }
         } catch (\Exception $exception) {
             $sessionFlashBag->add('error', $translator->trans('badge_edit_error_message', array(), 'badge'));
 
-            return $this->redirect($this->generateUrl('claro_admin_badges'));
+            return $this->redirect($this->generateUrl('icap_badge_admin_badges'));
         }
 
         return array(
-            'form'  => $this->get('claroline.form.badge')->createView(),
+            'form'  => $this->get('icap_badge.form.badge')->createView(),
             'badge' => $badge,
             'pager' => $pager
         );
     }
 
     /**
-     * @Route("/delete/{slug}", name="claro_admin_badges_delete")
+     * @Route("/delete/{slug}", name="icap_badge_admin_badges_delete")
      * @ParamConverter("badge", converter="badge_converter")
      *
      * @Template()
@@ -181,11 +181,11 @@ class AdminController extends Controller
                 ->add('error', $translator->trans('badge_delete_error_message', array(), 'badge'));
         }
 
-        return $this->redirect($this->generateUrl('claro_admin_badges'));
+        return $this->redirect($this->generateUrl('icap_badge_admin_badges'));
     }
 
     /**
-     * @Route("/award/{slug}", name="claro_admin_badges_award")
+     * @Route("/award/{slug}", name="icap_badge_admin_badges_award")
      * @ParamConverter("badge", converter="badge_converter")
      * @ParamConverter("loggedUser", options={"authenticatedUser" = true})
      *
@@ -199,7 +199,7 @@ class AdminController extends Controller
             throw $this->createNotFoundException("No badge found.");
         }
 
-        $form = $this->createForm($this->get('claroline.form.badge.award'));
+        $form = $this->createForm($this->get('icap_badge.form.badge.award'));
 
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
@@ -223,7 +223,7 @@ class AdminController extends Controller
                     }
 
                     /** @var \Claroline\CoreBundle\Manager\BadgeManager $badgeManager */
-                    $badgeManager = $this->get('claroline.manager.badge');
+                    $badgeManager = $this->get('icap_badge.manager.badge');
                     $awardedBadge = $badgeManager->addBadgeToUsers($badge, $users, $comment, $loggedUser);
 
                     $flashMessageType = 'error';
@@ -253,7 +253,7 @@ class AdminController extends Controller
                     return new JsonResponse(array('error' => false));
                 }
 
-                return $this->redirect($this->generateUrl('claro_admin_badges_edit', array('slug' => $badge->getSlug())));
+                return $this->redirect($this->generateUrl('icap_badge_admin_badges_edit', array('slug' => $badge->getSlug())));
             }
         }
 
@@ -264,7 +264,7 @@ class AdminController extends Controller
     }
 
     /**
-     * @Route("/unaward/{slug}/{username}", name="claro_admin_badges_unaward")
+     * @Route("/unaward/{slug}/{username}", name="icap_badge_admin_badges_unaward")
      * @ParamConverter("user", options={"mapping": {"username": "username"}})
      * @ParamConverter("badge", converter="badge_converter")
      *
@@ -285,7 +285,7 @@ class AdminController extends Controller
             /** @var \Doctrine\ORM\EntityManager $entityManager */
             $entityManager = $doctrine->getManager();
 
-            $userBadge = $doctrine->getRepository('ClarolineCoreBundle:Badge\UserBadge')
+            $userBadge = $doctrine->getRepository('IcapBadgeBundle:UserBadge')
                 ->findOneByBadgeAndUser($badge, $user);
 
             $entityManager->remove($userBadge);
@@ -308,11 +308,11 @@ class AdminController extends Controller
             return new JsonResponse(array('error' => false));
         }
 
-        return $this->redirect($this->generateUrl('claro_admin_badges_edit', array('slug' => $badge->getSlug())));
+        return $this->redirect($this->generateUrl('icap_badge_admin_badges_edit', array('slug' => $badge->getSlug())));
     }
 
     /**
-     * @Route("/claim/manage/{id}/{validate}", name="claro_admin_manage_claim")
+     * @Route("/claim/manage/{id}/{validate}", name="icap_badge_admin_manage_claim")
      *
      * @Template()
      */
@@ -335,7 +335,7 @@ class AdminController extends Controller
                 $errorMessage   = $translator->trans('badge_validate_award_error_message', array(), 'badge');
 
                 /** @var \Claroline\CoreBundle\Manager\BadgeManager $badgeManager */
-                $badgeManager = $this->get('claroline.manager.badge');
+                $badgeManager = $this->get('icap_badge.manager.badge');
                 $awardedBadge = $badgeManager->addBadgeToUser($badgeClaim->getBadge(), $badgeClaim->getUser());
                 if (!$awardedBadge) {
                     $successMessage = $translator->trans('badge_already_award_info_message', array(), 'badge');
@@ -352,11 +352,11 @@ class AdminController extends Controller
             $this->get('session')->getFlashBag()->add('error', $errorMessage);
         }
 
-        return $this->redirect($this->generateUrl('claro_admin_badges'));
+        return $this->redirect($this->generateUrl('icap_badge_admin_badges'));
     }
 
     /**
-     * @Route("/statistics", name="claro_admin_badges_statistics")
+     * @Route("/statistics", name="icap_badge_admin_badges_statistics")
      * @Template()
      */
     public function statisticsAction(Request $request)

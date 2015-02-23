@@ -2,7 +2,7 @@
 
 namespace Icap\BadgeBundle\Controller;
 
-use Claroline\CoreBundle\Entity\Badge\BadgeCollection;
+use Icap\BadgeBundle\Entity\BadgeCollection;
 use Claroline\CoreBundle\Entity\User;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -15,7 +15,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 class CollectionController extends Controller
 {
     /**
-     * @Route("/{slug}/{locale}", name="claro_badge_collection_share_view", defaults={"locale"= "fr"})
+     * @Route("/{slug}/{locale}", name="icap_badge_badge_collection_share_view", defaults={"locale"= "fr"})
      * @Template
      */
     public function shareViewAction(Request $request, BadgeCollection $collection, $locale)

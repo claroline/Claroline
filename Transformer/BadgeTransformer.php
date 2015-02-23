@@ -7,7 +7,7 @@ use IDCI\Bundle\ExporterBundle\Transformer\TwigTransformer;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
- * @DI\Service("claroline.transformer.badge")
+ * @DI\Service("icap_badge.transformer.badge")
  */
 class BadgeTransformer extends TwigTransformer
 {
@@ -34,8 +34,9 @@ class BadgeTransformer extends TwigTransformer
     /**
      * transform
      *
-     * @param  \CLaroline\CoreBundle\Entity\Badge\Badge $entity
-     * @param  string                                   $format
+     * @param  \Icap\BadgeBundle\Entity\Badge $entity
+     * @param  string                         $format
+     *
      * @return string
      */
     public function transform($entity, $format)

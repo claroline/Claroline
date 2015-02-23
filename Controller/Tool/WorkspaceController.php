@@ -2,10 +2,10 @@
 
 namespace Icap\BadgeBundle\Controller\Tool;
 
-use Claroline\CoreBundle\Entity\Badge\Badge;
-use Claroline\CoreBundle\Entity\Badge\BadgeClaim;
-use Claroline\CoreBundle\Entity\Badge\BadgeRule;
-use Claroline\CoreBundle\Entity\Badge\BadgeTranslation;
+use Icap\BadgeBundle\Entity\Badge;
+use Icap\BadgeBundle\Entity\BadgeClaim;
+use Icap\BadgeBundle\Entity\BadgeRule;
+use Icap\BadgeBundle\Entity\BadgeTranslation;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Pagerfanta\Exception\NotValidCurrentPageException;
@@ -28,7 +28,7 @@ class WorkspaceController extends Controller
     /**
      * @Route(
      *     "/{badgePage}/{claimPage}/{userPage}",
-     *     name="claro_workspace_tool_badges",
+     *     name="icap_badge_workspace_tool_badges",
      *     requirements={"badgePage" = "\d+", "claimPage" = "\d+", "userPage" = "\d+"},
      *     defaults={"badgePage" = 1, "claimPage" = 1, "userPage" = 1}
      * )
@@ -48,16 +48,16 @@ class WorkspaceController extends Controller
             'claimPage'    => $claimPage,
             'userPage'    => $userPage,
             'workspace'    => $workspace,
-            'add_link'     => 'claro_workspace_tool_badges_add',
+            'add_link'     => 'icap_badge_workspace_tool_badges_add',
             'edit_link'    => array(
-                'url'    => 'claro_workspace_tool_badges_edit',
+                'url'    => 'icap_badge_workspace_tool_badges_edit',
                 'suffix' => '#!edit'
             ),
-            'delete_link'      => 'claro_workspace_tool_badges_delete',
-            'view_link'        => 'claro_workspace_tool_badges_edit',
-            'current_link'     => 'claro_workspace_tool_badges',
-            'claim_link'       => 'claro_workspace_tool_manage_claim',
-            'statistics_link'  => 'claro_workspace_tool_badges_statistics',
+            'delete_link'      => 'icap_badge_workspace_tool_badges_delete',
+            'view_link'        => 'icap_badge_workspace_tool_badges_edit',
+            'current_link'     => 'icap_badge_workspace_tool_badges',
+            'claim_link'       => 'icap_badge_workspace_tool_manage_claim',
+            'statistics_link'  => 'icap_badge_workspace_tool_badges_statistics',
             'route_parameters' => array(
                 'workspaceId' => $workspace->getId()
             ),
@@ -70,7 +70,7 @@ class WorkspaceController extends Controller
     }
 
     /**
-     * @Route("/add", name="claro_workspace_tool_badges_add")
+     * @Route("/add", name="icap_badge_workspace_tool_badges_add")
      * @ParamConverter(
      *     "workspace",
      *     class="ClarolineCoreBundle:Workspace\Workspace",
@@ -99,26 +99,26 @@ class WorkspaceController extends Controller
         $translator = $this->get('translator');
 
         try {
-            if ($this->get('claroline.form_handler.badge.workspace')->handleAdd($badge)) {
+            if ($this->get('icap_badge.form_handler.badge.workspace')->handleAdd($badge)) {
                 $sessionFlashBag->add('success', $translator->trans('badge_add_success_message', array(), 'badge'));
 
-                return $this->redirect($this->generateUrl('claro_workspace_tool_badges', array('workspaceId' => $workspace->getId())));
+                return $this->redirect($this->generateUrl('icap_badge_workspace_tool_badges', array('workspaceId' => $workspace->getId())));
             }
         } catch (\Exception $exception) {
             $sessionFlashBag->add('error', $translator->trans('badge_add_error_message', array(), 'badge'));
 
-            return $this->redirect($this->generateUrl('claro_workspace_tool_badges', array('workspaceId' => $workspace->getId())));
+            return $this->redirect($this->generateUrl('icap_badge_workspace_tool_badges', array('workspaceId' => $workspace->getId())));
         }
 
         return array(
             'workspace' => $workspace,
-            'form'  => $this->get('claroline.form.badge.workspace')->createView(),
+            'form'  => $this->get('icap_badge.form.badge.workspace')->createView(),
             'badge' => $badge
         );
     }
 
     /**
-     * @Route("/edit/{slug}/{page}", name="claro_workspace_tool_badges_edit")
+     * @Route("/edit/{slug}/{page}", name="icap_badge_workspace_tool_badges_edit")
      * @ParamConverter(
      *     "workspace",
      *     class="ClarolineCoreBundle:Workspace\Workspace",
@@ -135,7 +135,7 @@ class WorkspaceController extends Controller
 
         $this->checkUserIsAllowed($workspace);
 
-        $query   = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Badge\Badge')->findUsers($badge, false);
+        $query   = $this->getDoctrine()->getRepository('IcapBadgeBundle:Badge')->findUsers($badge, false);
         $adapter = new DoctrineORMAdapter($query);
         $pager   = new Pagerfanta($adapter);
 
@@ -152,27 +152,27 @@ class WorkspaceController extends Controller
         $translator = $this->get('translator');
 
         try {
-            if ($this->get('claroline.form_handler.badge.workspace')->handleEdit($badge)) {
+            if ($this->get('icap_badge.form_handler.badge.workspace')->handleEdit($badge)) {
                 $sessionFlashBag->add('success', $translator->trans('badge_edit_success_message', array(), 'badge'));
 
-                return $this->redirect($this->generateUrl('claro_workspace_tool_badges', array('workspaceId' => $workspace->getId())));
+                return $this->redirect($this->generateUrl('icap_badge_workspace_tool_badges', array('workspaceId' => $workspace->getId())));
             }
         } catch (\Exception $exception) {
             $sessionFlashBag->add('error', $translator->trans('badge_edit_error_message', array(), 'badge'));
 
-            return $this->redirect($this->generateUrl('claro_workspace_tool_badges', array('workspaceId' => $workspace->getId())));
+            return $this->redirect($this->generateUrl('icap_badge_workspace_tool_badges', array('workspaceId' => $workspace->getId())));
         }
 
         return array(
             'workspace' => $workspace,
-            'form'      => $this->get('claroline.form.badge.workspace')->createView(),
+            'form'      => $this->get('icap_badge.form.badge.workspace')->createView(),
             'badge'     => $badge,
             'pager'     => $pager
         );
     }
 
     /**
-     * @Route("/delete/{slug}", name="claro_workspace_tool_badges_delete")
+     * @Route("/delete/{slug}", name="icap_badge_workspace_tool_badges_delete")
      * @ParamConverter(
      *     "workspace",
      *     class="ClarolineCoreBundle:Workspace\Workspace",
@@ -208,12 +208,12 @@ class WorkspaceController extends Controller
         }
 
         return $this->redirect(
-            $this->generateUrl('claro_workspace_tool_badges', array('workspaceId' => $workspace->getId()))
+            $this->generateUrl('icap_badge_workspace_tool_badges', array('workspaceId' => $workspace->getId()))
         );
     }
 
     /**
-     * @Route("/award/{slug}", name="claro_workspace_tool_badges_award")
+     * @Route("/award/{slug}", name="icap_badge_workspace_tool_badges_award")
      * @ParamConverter(
      *     "workspace",
      *     class="ClarolineCoreBundle:Workspace\Workspace",
@@ -231,7 +231,7 @@ class WorkspaceController extends Controller
 
         $this->checkUserIsAllowed($workspace);
 
-        $form = $this->createForm($this->get('claroline.form.badge.award'));
+        $form = $this->createForm($this->get('icap_badge.form.badge.award'));
 
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
@@ -255,7 +255,7 @@ class WorkspaceController extends Controller
                     }
 
                     /** @var \Claroline\CoreBundle\Manager\BadgeManager $badgeManager */
-                    $badgeManager = $this->get('claroline.manager.badge');
+                    $badgeManager = $this->get('icap_badge.manager.badge');
                     $awardedBadge = $badgeManager->addBadgeToUsers($badge, $users, $comment, $loggedUser);
 
                     $flashMessageType = 'error';
@@ -287,7 +287,7 @@ class WorkspaceController extends Controller
 
                 return $this->redirect(
                     $this->generateUrl(
-                        'claro_workspace_tool_badges_edit',
+                        'icap_badge_workspace_tool_badges_edit',
                         array('workspaceId' => $workspace->getId(), 'slug' => $badge->getSlug())
                     )
                 );
@@ -302,7 +302,7 @@ class WorkspaceController extends Controller
     }
 
     /**
-     * @Route("/unaward/{id}/{username}", name="claro_workspace_tool_badges_unaward")
+     * @Route("/unaward/{id}/{username}", name="icap_badge_workspace_tool_badges_unaward")
      * @ParamConverter(
      *     "workspace",
      *     class="ClarolineCoreBundle:Workspace\Workspace",
@@ -326,7 +326,7 @@ class WorkspaceController extends Controller
             /** @var \Doctrine\ORM\EntityManager $entityManager */
             $entityManager = $doctrine->getManager();
 
-            $userBadge = $doctrine->getRepository('ClarolineCoreBundle:Badge\UserBadge')
+            $userBadge = $doctrine->getRepository('IcapBadgeBundle:UserBadge')
                 ->findOneByBadgeAndUser($badge, $user);
 
             $entityManager->remove($userBadge);
@@ -351,7 +351,7 @@ class WorkspaceController extends Controller
 
         return $this->redirect(
             $this->generateUrl(
-                'claro_workspace_tool_badges_edit',
+                'icap_badge_workspace_tool_badges_edit',
                 array('workspaceId' => $workspace->getId(), 'slug' => $badge->getSlug())
             )
         );

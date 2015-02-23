@@ -1,6 +1,6 @@
 <?php
 
-namespace Icap\BadgeBundle\Form\Badge\Type;
+namespace Icap\BadgeBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -26,7 +26,7 @@ class BadgeTranslationType extends AbstractType
     {
         $resolver->setDefaults(
             array(
-                'data_class'         => 'Claroline\CoreBundle\Entity\Badge\BadgeTranslation',
+                'data_class'         => 'Icap\BadgeBundle\Entity\BadgeTranslation',
                 'translation_domain' => 'badge'
             )
         );

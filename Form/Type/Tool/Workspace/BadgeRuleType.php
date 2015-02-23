@@ -1,11 +1,12 @@
 <?php
 
-namespace Icap\BadgeBundle\Form\Badge\Type\Tool\Workspace;
+namespace Icap\BadgeBundle\Form\Type\Tool\Workspace;
 
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Manager\BadgeManager;
 use Claroline\CoreBundle\Manager\EventManager;
-use Claroline\CoreBundle\Repository\Badge\BadgeRepository;
+use Icap\BadgeBundle\Entity\BadgeRule;
+use Icap\BadgeBundle\Repository\BadgeRepository;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -16,7 +17,7 @@ use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
- * @DI\Service("claroline.form.badge.workspace.rule")
+ * @DI\Service("icap_badge.form.badge.workspace.rule")
  */
 class BadgeRuleType extends AbstractType
 {
@@ -146,7 +147,7 @@ class BadgeRuleType extends AbstractType
     {
         $resolver->setDefaults(
             array(
-                'data_class'         => 'Claroline\CoreBundle\Entity\Badge\BadgeRule',
+                'data_class'         => 'Icap\BadgeBundle\Entity\BadgeRule',
                 'translation_domain' => 'badge',
                 'language'           => 'en'
             )

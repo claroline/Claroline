@@ -1,0 +1,44 @@
+{% extends "ClarolineCoreBundle:Badge:layout.html.twig" %}
+
+{% trans_default_domain "badge" %}
+
+{% block title %}{{ 'badges' | trans ~ ' - ' ~ 'claim_badge_form' | trans | striptags | raw }}{% endblock %}
+
+{% block content %}
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h1 class="panel-title">{{ 'claim_badge_form'|trans }}</h1>
+        </div>
+
+        <div class="panel-body">
+            <form role="form" action="{{ path('icap_badge_claim_badge') }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
+            {{ form_widget(form) }}
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">{{ 'claim'|trans }}</button>
+                <a href="{{ path('icap_badge_profile_view_badges') }}" title="{{ 'cancel'|trans({}, 'platform') }}" class="btn btn-danger" role="button">{{ 'cancel'|trans({}, 'platform') }}</a>
+            </div>
+        </form>
+        </div>
+    </div>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('bundles/frontend/jquery/plugin/select2/select2.css') }}" screen="media" />
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script type="text/javascript" src="{{ asset('bundles/zenstruckform/js/helper.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/select2/select2.min.js') }}"></script>
+{% if 'en' != app.request.locale %}
+<script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/select2/select2_locale_' ~ app.request.locale ~ '.js') }}"></script>
+{% endif %}
+<script type="text/javascript">
+    (function () {
+        "use strict";
+        ZenstruckFormHelper.initSelect2Helper();
+    }());
+</script>
+{% endblock %}
+

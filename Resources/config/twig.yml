@@ -1,0 +1,4 @@
+twig:
+    form:
+        resources:
+            - 'ClarolineCoreBundle:Form:badge_picker.html.twig'

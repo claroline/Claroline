@@ -1,0 +1,44 @@
+{% extends 'ClarolineCoreBundle:Badge/Tool:Workspace/layout.html.twig' %}
+
+{% trans_default_domain "badge" %}
+
+{% block title %}{{ parent() ~ ' - ' ~ 'workspace_badges_statistics' | trans | striptags | raw }}{% endblock %}
+
+{% block breadcrumb %}
+    {{
+        macros.workspaceBreadcrumbs(
+            workspace,
+            [
+                {
+                    'name': 'workspace_badges'|trans({}, 'badge'),
+                    'href': path('icap_badge_workspace_tool_badges', {'workspaceId': workspace.id})
+                },
+                {
+                    'name': 'workspace_badges_statistics'|trans({}, 'badge'),
+                    'href': ''
+                }
+            ]
+        )
+    }}
+{% endblock %}
+
+{% block section_title %}
+    {{ 'workspace_badges_statistics'|trans({}, 'badge') }}
+{% endblock %}
+
+{% block section_body %}
+    <ul class="list-inline badge_general_statistics">
+        <li>
+            <p><span>{{ statistics.totalBadges }}</span> badges</p>
+        </li>
+        <li>
+            <p><span>{{ statistics.totalAwarding }}</span> attributions</p>
+        </li>
+        <li>
+            <p><span>{{ statistics.totalBadgeAwarded }}</span> badges attribués</p>
+        </li>
+        <li>
+            <p><span>{{ statistics.totalBadgeNotAwarded }}</span> badges non-attribués</p>
+        </li>
+    </ul>
+{% endblock %}

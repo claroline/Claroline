@@ -20,7 +20,7 @@ class BadgeCollectionRepository extends EntityRepository
         $query = $this->getEntityManager()
             ->createQuery(
                 'SELECT bc, b
-                FROM ClarolineCoreBundle:Badge\BadgeCollection bc
+                FROM IcapBadgeBundle:BadgeCollection bc
                 LEFT JOIN bc.badges b
                 WHERE bc.user = :userId
                 ORDER BY bc.name ASC'

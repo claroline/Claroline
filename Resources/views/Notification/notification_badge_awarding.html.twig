@@ -1,0 +1,4 @@
+{% set path = path('icap_badge_profile_view_badge', {'slug': notification.details.badge.slug}) %}
+{% set badge = '<a href="' ~ path ~ '">' ~ notification.details.badge.name ~ '</a>' %}
+
+{{ notification.actionKey|trans({'%badge%': badge}, 'notification') | raw }}

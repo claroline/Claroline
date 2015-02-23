@@ -1,0 +1,31 @@
+<ul class="nodes badge_list list-unstyled">
+    {% for userBadge in pager.currentPageResults %}
+    {% set badge = userBadge.badge %}
+    <li class="node-thumbnail badge_container">
+        {% if userBadge.isExpired %}
+            <span class="expired fa fa-exclamation-circle" data-title="Badge expiré"
+                   data-toggle="tooltip" data-placement="top" data-container="body"></span>
+        {% endif %}
+        <a href="{{ path(badgeUrl, {'slug': badge.slug}) }}" title="{{ badge.name }}" class="thumbnail">
+            <img class="badge_image" src="{{ asset(badge.webPath) }}" alt="{{ badge.name }}" />
+            <p class="badge_name">{{ badge.name }}</p>
+        </a>
+    </li>
+    {% else %}
+    <li>{{ 'no_badges'|trans({}, 'badge') }}</li>
+    {% endfor %}
+</ul>
+
+{% if pager.haveToPaginate %}
+{{
+    pagerfanta(
+        pager,
+        'twitter_bootstrap_translated',
+        {
+            'proximity' : 1,
+            'routeName': paginationurl,
+            'routeParams': routeParams
+        }
+    )
+}}
+{% endif %}

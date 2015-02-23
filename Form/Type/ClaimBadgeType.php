@@ -1,6 +1,6 @@
 <?php
 
-namespace Icap\BadgeBundle\Form\Badge\Type;
+namespace Icap\BadgeBundle\Form\Type;
 
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Symfony\Component\Form\AbstractType;
@@ -11,7 +11,7 @@ use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
- * @DI\Service("claroline.form.claimBadge")
+ * @DI\Service("icap_badge.form.claimBadge")
  */
 class ClaimBadgeType extends AbstractType
 {
@@ -50,7 +50,7 @@ class ClaimBadgeType extends AbstractType
                 'attr'           => array('class' => 'fullwidth'),
                 'theme_options'  => array('control_width' => 'col-md-3'),
                 'placeholder'    => $this->translator->trans('badge_form_badge_selection', array(), 'badge'),
-                'class'          => 'ClarolineCoreBundle:Badge\Badge',
+                'class'          => 'IcapBadgeBundle:Badge',
                 'use_controller' => true,
                 'property'       => sprintf("%sName", $locale),
                 'repo_method'    => sprintf('findByName%sForAjax', ucfirst($locale))
@@ -66,7 +66,7 @@ class ClaimBadgeType extends AbstractType
     {
         $resolver->setDefaults(
             array(
-                'data_class'         => 'Claroline\CoreBundle\Entity\Badge\BadgeClaim',
+                'data_class'         => 'Icap\BadgeBundle\Entity\BadgeClaim',
                 'translation_domain' => 'badge'
             )
         );

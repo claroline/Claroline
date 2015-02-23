@@ -1,6 +1,6 @@
 <?php
 
-namespace Icap\BadgeBundle\Entity\Badge;
+namespace Icap\BadgeBundle\Entity;
 
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
@@ -13,7 +13,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *      name="claro_badge_claim",
  *      uniqueConstraints={@ORM\UniqueConstraint(name="badge_claim_unique",columns={"user_id", "badge_id"})}
  * )
- * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\Badge\BadgeClaimRepository")
+ * @ORM\Entity(repositoryClass="Icap\BadgeBundle\Repository\BadgeClaimRepository")
  */
 class BadgeClaim
 {

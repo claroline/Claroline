@@ -4,7 +4,7 @@ namespace Icap\BadgeBundle\Controller\Tool;
 
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CoreBundle\Entity\Badge\Badge;
+use Icap\BadgeBundle\Entity\Badge;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class BadgeController extends Controller
@@ -14,8 +14,8 @@ class BadgeController extends Controller
         /** @var \Claroline\CoreBundle\Rule\Validator $badgeRuleValidator */
         $badgeRuleValidator = $this->get("claroline.rule.validator");
 
-        /** @var \Claroline\CoreBundle\Entity\Badge\Badge[] $workspaceBadges */
-        $workspaceBadges = $this->getDoctrine()->getManager()->getRepository('ClarolineCoreBundle:Badge\Badge')->findByWorkspace($workspace);
+        /** @var \Icap\BadgeBundle\Entity\Badge[] $workspaceBadges */
+        $workspaceBadges = $this->getDoctrine()->getManager()->getRepository('IcapBadgeBundle:Badge')->findByWorkspace($workspace);
 
         $ownedBadges      = array();
         $finishedBadges   = array();
@@ -90,7 +90,7 @@ class BadgeController extends Controller
         $badgePager   = $pagerFactory->createPagerFromArray($displayedBadges, $badgePage, 10);
 
         return $this->render(
-            'ClarolineCoreBundle:Badge:Template/Tool/list.html.twig',
+            'IcapBadgeBundle:Template:Tool/list.html.twig',
             array(
                 'badgePager' => $badgePager,
                 'workspace'  => $workspace,

@@ -1,6 +1,6 @@
 <?php
 
-namespace Icap\BadgeBundle\Event\Badge;
+namespace Icap\BadgeBundle\Event;
 
 use Claroline\CoreBundle\Entity\Log\Log;
 use Symfony\Component\EventDispatcher\Event;

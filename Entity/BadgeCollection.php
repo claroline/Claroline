@@ -1,6 +1,6 @@
 <?php
 
-namespace Icap\BadgeBundle\Entity\Badge;
+namespace Icap\BadgeBundle\Entity;
 
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -11,7 +11,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Table(name="claro_badge_collection", uniqueConstraints={@ORM\UniqueConstraint(name="slug_idx", columns={"slug"})})
- * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\Badge\BadgeCollectionRepository")
+ * @ORM\Entity(repositoryClass="Icap\BadgeBundle\Repository\BadgeCollectionRepository")
  */
 class BadgeCollection
 {

@@ -1,0 +1,42 @@
+{% extends "ClarolineCoreBundle:Administration/Badge:layout.html.twig" %}
+
+{% trans_default_domain "badge" %}
+
+{% block title %}{{ parent() ~ ' - ' ~ 'badges_management' | trans({}, 'platform') | striptags | raw }}{% endblock %}
+
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'fa fa-cog',
+                'name': 'administration'|trans({}, 'platform'),
+                'href': path('claro_admin_index')
+            },
+            {
+                'name': 'badges_management'|trans({}, 'platform'),
+                'href': ''
+            }
+        ])
+    }}
+{% endblock %}
+
+{% block section_title %}
+    {{ 'badges_platform_list'|trans({}, 'badge') }}
+    <a href="{{ path(parameters.add_link) }}" title="{{ 'add_badge'|trans({}, 'badge') }}" class="btn btn-default btn-sm" role="button">
+        <span class="fa fa-plus"></span> {{ 'add_badge'|trans({}, 'badge') }}
+    </a>
+{% endblock %}
+
+{% block section_body %}
+    {{ render(controller('ClarolineCoreBundle:Badge/Badge:list', {'parameters': parameters})) }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src='{{ asset('bundles/frontend/jquery/plugin/confirm-bootstrap/confirm-bootstrap.js') }}'></script>
+    <script type="text/javascript">
+        $(function(){
+            $('.confirm').confirmModal();
+        });
+    </script>
+{% endblock %}

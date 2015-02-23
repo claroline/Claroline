@@ -2,11 +2,11 @@
 
 namespace Icap\BadgeBundle\Controller\Tool;
 
-use Claroline\CoreBundle\Entity\Badge\Badge;
-use Claroline\CoreBundle\Entity\Badge\BadgeClaim;
+use Icap\BadgeBundle\Entity\Badge;
+use Icap\BadgeBundle\Entity\BadgeClaim;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CoreBundle\Event\Badge\BadgeCreateValidationLinkEvent;
+use Icap\BadgeBundle\Event\BadgeCreateValidationLinkEvent;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -21,7 +21,7 @@ class MyWorkspaceController extends Controller
     /**
      * @Route(
      *     "/my_badges/{badgePage}",
-     *     name="claro_workspace_tool_my_badges",
+     *     name="icap_badge_workspace_tool_my_badges",
      *     requirements={"badgePage" = "\d+"},
      *     defaults={"badgePage" = 1}
      * )
@@ -45,14 +45,14 @@ class MyWorkspaceController extends Controller
     }
 
     /**
-     * @Route("/my_badges/claim/{badge_id}", name="claro_workspace_tool_claim_badge")
+     * @Route("/my_badges/claim/{badge_id}", name="icap_badge_workspace_tool_claim_badge")
      * @ParamConverter(
      *     "workspace",
      *     class="ClarolineCoreBundle:Workspace\Workspace",
      *     options={"id" = "workspaceId"}
      * )
      * @ParamConverter("user", options={"authenticatedUser" = true})
-     * @ParamConverter("badge", class="ClarolineCoreBundle:Badge\Badge", options={"id" = "badge_id"})
+     * @ParamConverter("badge", class="IcapBadgeBundle:Badge", options={"id" = "badge_id"})
      * @Template()
      */
     public function claimAction(Workspace $workspace, User $user, Badge $badge)
@@ -73,11 +73,11 @@ class MyWorkspaceController extends Controller
             $flashBag->add('error', $translator->trans($exception->getMessage(), array(), 'badge'));
         }
 
-        return $this->redirect($this->generateUrl('claro_workspace_tool_my_badges', array('workspaceId' => $workspace->getId())));
+        return $this->redirect($this->generateUrl('icap_badge_workspace_tool_my_badges', array('workspaceId' => $workspace->getId())));
     }
 
     /**
-     * @Route("/my_badge/{slug}", name="claro_workspace_tool_view_my_badge")
+     * @Route("/my_badge/{slug}", name="icap_badge_workspace_tool_view_my_badge")
      * @ParamConverter(
      *     "workspace",
      *     class="ClarolineCoreBundle:Workspace\Workspace",
@@ -124,7 +124,7 @@ class MyWorkspaceController extends Controller
             }
         }
 
-        $userBadge = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Badge\UserBadge')->findOneBy(array('badge' => $badge, 'user' => $user));
+        $userBadge = $this->getDoctrine()->getRepository('IcapBadgeBundle:UserBadge')->findOneBy(array('badge' => $badge, 'user' => $user));
 
         if (null === $userBadge) {
             throw $this->createNotFoundException("User don't have this badge.");

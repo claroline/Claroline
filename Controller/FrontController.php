@@ -2,7 +2,7 @@
 
 namespace Icap\BadgeBundle\Controller;
 
-use Claroline\CoreBundle\Entity\Badge\Badge;
+use Icap\BadgeBundle\Entity\Badge;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -17,7 +17,7 @@ use JMS\SecurityExtraBundle\Annotation as SEC;
 class FrontController extends Controller
 {
     /**
-     * @Route("/{slug}", name="claro_view_badge")
+     * @Route("/{slug}", name="icap_badge_view_badge")
      * @ParamConverter("badge", converter="badge_converter", options={"check_deleted" = false})
      *
      * @SEC\Secure(roles="ROLE_USER")

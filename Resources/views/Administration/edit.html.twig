@@ -1,0 +1,295 @@
+{% extends "ClarolineCoreBundle:Administration/Badge:layout.html.twig" %}
+
+{% form_theme form 'ClarolineCoreBundle:Badge/Form:rules.html.twig' %}
+
+{% trans_default_domain "badge" %}
+
+{% block title %}{{ parent() ~ ' - ' ~ 'view_badge' | trans({'%badge_name%' : badge.name}) | striptags | raw }}{% endblock %}
+
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'fa fa-cog',
+                'name': 'administration'|trans({}, 'platform'),
+                'href': path('claro_admin_index')
+            },
+            {
+                'name': 'badges_management'|trans({}, 'platform'),
+                'href': path('icap_badge_admin_badges')
+            },
+            {
+                'name': 'view_badge'|trans({'%badge_name%': badge.name}, 'badge'),
+                'href': ''
+            }
+        ])
+    }}
+{% endblock %}
+
+{% block section_title %}{{ 'view_badge'|trans({'%badge_name%': badge.name}, 'badge') }}{% endblock %}
+
+{% block section_body %}
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="#view" data-toggle="tab">{{ 'view'|trans({}, 'platform') }}</a></li>
+        <li><a href="#edit" data-toggle="tab">{{ 'edit'|trans({}, 'platform') }}</a></li>
+    </ul>
+    <div class="tab-content view_badge">
+        <div class="tab-pane active view" id="view">
+            <div class="row">
+                <div class="col-md-2 text-center">
+                    <img src="{{ asset(badge.webPath) }}" alt="{{ badge.name }}" class="badge_image_informations" />
+                </div>
+                <div class="col-md-7">
+                    <div class="table-responsive">
+                        <table class="badge_informations table table-condensed">
+                            <colgroup>
+                                <col class="fieldLabelCol">
+                                <col class="dataCol">
+                            </colgroup>
+                            <tbody>
+                                <tr>
+                                  <td class="section-head text-muted" colspan="2">{{ 'badge_details'|trans }}</td>
+                                </tr>
+                                <tr>
+                                  <td class="fieldlabel">{{ 'badge_form_name'|trans }}</td>
+                                  <td>{{ badge.name }}</td>
+                                </tr>
+                                <tr>
+                                  <td class="fieldlabel">{{ 'badge_version'|trans }}</td>
+                                  <td>{{ badge.version }}</td>
+                                </tr>
+                                {% if badge.isExpiring %}
+                                <tr>
+                                  <td class="fieldlabel">{{ 'badge_validity_period'|trans }}</td>
+                                    <td>{{ badge.expireDuration ~ ' ' ~ badge.expirePeriodLabel|trans }}</td>
+                                </tr>
+                                {% endif %}
+                                <tr>
+                                  <td class="fieldlabel">{{ 'badge_form_description'|trans }}</td>
+                                  <td>{{ badge.description }}</td>
+                                </tr>
+                                <tr>
+                                  <td class="fieldlabel">{{ 'badge_form_criteria'|trans }}</td>
+                                  <td>{{ badge.criteria|raw }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div id="award_users_container" class="award_users_container">
+                {% if 0 < pager.currentPageResults|length %}
+                    <h3>
+                        {{ 'badge_awarded_to'|trans }} :
+                        <a href="{{ path('claro_admin_badges_award', {'slug': badge.slug}) }}" id="awardUser" role="button" class="btn btn-default pull-right" data-toggle="tooltip" data-placement="left" title="{{ 'award_badge'|trans }}"><span class="fa fa-plus-circle"></span></a>
+                    </h3>
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th></th>
+                                <th>{{ 'First name'|trans({}, 'platform') }}</th>
+                                <th>{{ 'Last name'|trans({}, 'platform') }}</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for user in pager.currentPageResults %}
+                                <tr>
+                                    <td>
+                                        <a class="close confirm" href="{{ path('icap_badge_admin_badges_unaward', {'slug': badge.slug, 'username': user.username}) }}"
+                                           data-toggle="tooltip" title="{{ 'badge_unaward_confirm_title'|trans }}"
+                                           data-confirm-title="{{ 'badge_unaward_confirm_title'|trans }}"
+                                           data-confirm-message="{{ 'badge_unaward_confirm_message'|trans({'%badgeName%': badge.name, '%user%': user.firstname ~ ' ' ~ user.lastname}) }}"
+                                           data-confirm-ok="{{ 'unaward'|trans }}" data-confirm-cancel="{{ 'cancel'|trans({}, 'platform') }}"><span class="fa fa-times-circle-o"></span></a>
+                                    </td>
+                                    <td><a href="{{ path('claro_public_profile_view', {'publicUrl': user.getPublicUrl()}) }}" title="{{ user.firstname }} {{ user.lastname }}">{{ user.firstname }}</a></td>
+                                    <td>{{ user.lastname }}</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% if pager.haveToPaginate %}
+                    {{
+                        pagerfanta(
+                            pager,
+                            'twitter_bootstrap_translated',
+                            {
+                                'proximity' : 1,
+                                'routeName': 'icap_badge_admin_badges_edit',
+                                'routeParams': {'slug': badge.slug}
+                            }
+                        )
+                    }}
+                    {% endif %}
+                {% else %}
+                    <p class="badge_not_awarded">
+                        {{ 'start_to_award_this_badge'|trans({'%url%': path('icap_badge_admin_badges_award', {'slug': badge.slug})})|raw }}
+                    </p>
+                {% endif %}
+            </div>
+            <div id="award_form_container">
+                <h3 class="sub-section-header">
+                    {{ 'award_badge'|trans }} :
+                </h3>
+
+                {{ render(controller('ClarolineCoreBundle:Administration/Badge:award', { 'slug': badge.slug })) }}
+            </div>
+        </div>
+        <div class="tab-pane" id="edit">
+            <h3 id='user-list-block' class="sub-section-header">
+                {{ 'edit_badge'|trans({'%badge_name%' : badge.name}) }}
+                <a href="{{ path('icap_badge_admin_badges_delete', {'slug': badge.slug}) }}" title="{{ 'delete'|trans({}, 'platform') }}" class="btn btn-sm btn-danger confirm pull-right"
+                   data-confirm-title="{{ 'badge_delete_confirm_title'|trans }}"
+                   data-confirm-message="{{ 'badge_delete_confirm_message'|trans({'%badgeName%': badge.name}) }}"
+                   data-confirm-ok="{{ 'delete'|trans({}, 'platform') }}" data-confirm-cancel="{{ 'cancel'|trans({}, 'platform') }}"
+                   data-confirm-style="danger"><span class="fa fa-trash-o"></span></a>
+            </h3>
+            {% if 0 < pager.currentPageResults|length %}
+                <div class="alert alert-warning">
+                    {{ 'badge_edit_create_new_version'|trans|raw }}
+                </div>
+            {% endif %}
+            <form role="form" action="{{ path('icap_badge_admin_badges_edit', {'slug': badge.slug}) }}#!edit" method="post" id="editBadgeForm" class="form-horizontal" {{ form_enctype(form) }} novalidate>
+                {{ form_errors(form) }}
+                <div class="row badges_infos">
+                    <div class="col-md-2{% if form.file.vars.errors|length > 0 %} has-error{% endif %} text-center">
+                        <button type="button" id="change_image" class="btn btn-xs btn-default">
+                            <span class="fa fa-pencil-square-o">{{ 'badge_form_change_image'|trans }}</span>
+                        </button>
+                        <a href="#" class="thumbnail upload_image_placeholder">
+                            <img src="{{ asset(badge.webPath) }}" id="current_image" class="badge_image" />
+                        </a>
+                        <div class="help-block badge_help">
+                            <span class="image_help">64px * 64px min., 256kb max.</span>
+                        </div>
+                        {{ form_widget(form.file) }}
+                        {{ form_errors(form.file) }}
+                    </div>
+                    <div class="col-md-10">
+                        <ul class="nav nav-tabs" id="translationFormTabs">
+                            {% for translation in form.translations %}
+                                {% set locale = translation.locale.vars.value %}
+                                <li{% if loop.first %} class="active"{% endif %}>
+                                    <a href="#{{ locale }}" {% if not translation.vars.valid %}class="has-error" {% endif %}data-toggle="tab">
+                                        {{ ('badge_form_' ~ locale ~ 'Translation')|trans }}
+                                        <img src="{{ asset('bundles/clarolinecore/images/lang/' ~ locale ~ '.png') }}" alt="{{ locale }}" class="flag" />
+                                    </a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+
+                        <div class="tab-content well well-sm badge_translations">
+                            {% for translation in form.translations %}
+                                {% set locale = translation.locale.vars.value %}
+                                <div class="tab-pane{% if loop.first %} active{% endif %}" id="{{ locale }}">
+                                    {{ form_errors(translation) }}
+                                    <div class="form-group{% if not translation.name.vars.valid %} has-error{% endif %}">
+                                        <label class="required control-label" for="badge_form_{{ locale }}Translation_name">{{ 'badge_form_name'|trans }} :</label>
+                                        {{ form_errors(translation.name) }}
+                                        {{ form_widget(translation.name) }}
+                                        <div class="help-block badge_help">
+                                            <span class="image_help">128 carac. max</span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group{% if not translation.description.vars.valid %} has-error{% endif %}">
+                                        <label class="required control-label" for="badge_form_{{ locale }}Translation_description">{{ 'badge_form_description'|trans }} :</label>
+                                        {{ form_errors(translation.description) }}
+                                        {{ form_widget(translation.description) }}
+                                        <div class="help-block badge_help">
+                                            <span class="image_help">128 carac. max</span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group{% if not translation.criteria.vars.valid %} has-error{% endif %}">
+                                        <label class="required control-label" for="badge_form_{{ locale }}Translation_criteria">{{ 'badge_form_criteria'|trans }} :</label>
+                                        {{ form_errors(translation.criteria) }}
+                                        {{ form_widget(translation.criteria) }}
+                                    </div>
+                                    {{ form_widget(translation) }}
+                                </div>
+                            {% endfor %}
+                        </div>
+
+                        <div class="form-group is_expiring">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label class="checkbox">
+                                        {{ form_widget(form.is_expiring) }}{{ 'badge_form_is_expiring'|trans }}
+                                    </label>
+                                    <button type="button" class="btn btn-default btn-xs help" data-container="body" data-toggle="popover" data-placement="right" data-content="{{ 'badge_expiration_date_explanation'|trans }}">
+                                        <span class="fa fa-question"></span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group" id="expiring_period_duration"{% if not badge.isExpiring %} style="display: none"{% endif %}>
+                            <div class="row">
+                                <div class="col-md-12{% if not form.expire_duration.vars.valid or not form.expire_period.vars.valid %} has-error{% endif %}">
+                                    {{ form_errors(form.expire_duration) }}
+                                    {{ form_errors(form.expire_period) }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-2 form-group expiration_duration_field{% if not form.expire_duration.vars.valid %} has-error{% endif %}">
+                                    {{ form_widget(form.expire_duration) }}
+                                </div>
+                                <div class="col-md-3 form-group{% if not form.expire_period.vars.valid %} has-error{% endif %}">
+                                    {{ form_widget(form.expire_period) }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label class="checkbox">
+                                        {{ form_widget(form.automatic_award) }}{{ 'badge_form_automatic_award'|trans }}
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {{ form_widget(form.rules) }}
+
+                {{ form_rest(form) }}
+                <div class="form-actions">
+                    {% if 0 < pager.currentPageResults|length %}
+                    <button type="submit" class="btn btn-primary edit-confirm" data-confirm-title="{{ 'badge_edit_confirm_title'|trans }}"
+                        data-confirm-message="{{ '<div class="alert alert-warning">' ~ 'badge_edit_create_new_version'|trans|raw ~ '</div><br>' ~ 'badge_edit_confirm_message'|trans({'%badgeName%': badge.name}) }}"
+                        data-confirm-ok="{{ 'edit'|trans({}, 'platform') }}" data-confirm-cancel="{{ 'cancel'|trans({}, 'platform') }}"
+                        data-confirm-style="primary">{{ 'edit'|trans({}, 'platform') }}</button>
+                    {% else %}
+                    <button type="submit" class="btn btn-primary">{{ 'edit'|trans({}, 'platform') }}</button>
+                    {% endif %}
+                    <a href="{{ path('icap_badge_admin_badges') }}" title="{{ 'cancel'|trans({}, 'platform') }}" class="btn btn-default">{{ 'cancel'|trans({}, 'platform') }}</a>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('bundles/frontend/jquery/plugin/select2/select2.css') }}" screen="media" />
+    {% stylesheets debug=false filter="lessphp, cssmin" output="css/icapbadge/badge_picker.css"
+        "@IcapBadgeBundle/Resources/views/less/badge_picker.less"
+    %}
+        <link rel="stylesheet" href="{{ asset_url }}" screen="media" />
+    {% endstylesheets %}
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script type="text/javascript" src="{{ asset('bundles/zenstruckform/js/helper.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/select2/select2.min.js') }}"></script>
+{% if 'en' != app.request.locale %}
+<script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/select2/select2_locale_' ~ app.request.locale ~ '.js') }}"></script>
+{% endif %}
+<script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jquery.optionTree.js') }}"></script>
+<script type="text/javascript" src='{{ asset('bundles/frontend/jquery/plugin/confirm-bootstrap/confirm-bootstrap.js') }}'></script>
+<script type="text/javascript" src='{{ asset('bundles/icapbadge/js/edit.js') }}'></script>
+<script type="text/javascript" src='{{ asset('bundles/icapbadge/js/rules.js') }}'></script>
+{% endblock %}

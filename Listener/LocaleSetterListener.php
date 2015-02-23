@@ -1,6 +1,6 @@
 <?php
 
-namespace Icap\BadgeBundle\Listener\Badge;
+namespace Icap\BadgeBundle\Listener;
 
 use Icap\BadgeBundle\Entity\Badge;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
@@ -9,7 +9,7 @@ use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\SecurityContext;
 
 /**
- * @DI\Service("claroline.entity_listener.badge")
+ * @DI\Service("icap_badge.entity_listener.badge")
  * @DI\Tag("doctrine.entity_listener")
  */
 class LocaleSetterListener

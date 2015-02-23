@@ -2,8 +2,8 @@
 
 namespace Icap\BadgeBundle\Controller\Api;
 
-use Claroline\CoreBundle\Entity\Badge\Badge;
-use Claroline\CoreBundle\Repository\Badge\BadgeRepository;
+use Icap\BadgeBundle\Entity\Badge;
+use Icap\BadgeBundle\Repository\BadgeRepository;
 use FOS\RestBundle\View\ViewHandler;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -15,8 +15,8 @@ use JMS\DiExtraBundle\Annotation\InjectParams;
 use JMS\DiExtraBundle\Annotation\Service;
 
 /**
- * @Route("/api/badges", service="claroline.api.badge")
- * @Service("claroline.api.badge")
+ * @Route("/api/badges", service="icap_badge.api.badge")
+ * @Service("icap_badge.api.badge")
  */
 class BadgeController
 {
@@ -32,7 +32,7 @@ class BadgeController
 
     /**
      * @InjectParams({
-     *     "badgeRepository" = @Inject("claroline.repository.badge"),
+     *     "badgeRepository" = @Inject("icap_badge.repository.badge"),
      *     "viewHandler"     = @Inject("fos_rest.view_handler")
      * })
      */
@@ -43,7 +43,7 @@ class BadgeController
     }
 
     /**
-     * @Route("/", name="claro_api_badge_all", defaults={"_format" = "json"})
+     * @Route("/", name="icap_badge_api_badge_all", defaults={"_format" = "json"})
      */
     public function allAction()
     {
@@ -57,11 +57,11 @@ class BadgeController
     }
 
     /**
-     * @Route("/{id}", name="claro_api_badge_get", requirements={"id" = "\d+"}, defaults={"_format" = "json"})
+     * @Route("/{id}", name="icap_badge_api_badge_get", requirements={"id" = "\d+"}, defaults={"_format" = "json"})
      */
     public function getAction($id)
     {
-        /** @var \Claroline\CoreBundle\Entity\Badge\Badge $badge */
+        /** @var \Icap\BadgeBundle\Entity\Badge $badge */
         $badge = $this->badgeRepository->find($id);
 
         if (null === $badge) {

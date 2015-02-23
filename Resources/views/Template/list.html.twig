@@ -1,0 +1,25 @@
+<ul class="nav nav-tabs" role="tablist">
+    <li class="active"><a href="#badges" role="tab" data-toggle="tab">Badges</a></li>
+    <li>
+        <a href="#users" role="tab" data-toggle="tab">
+            Utilisateurs{% if 0 < claimPager|length %} <span class="badge badge-info" data-toggle="tooltip" data-container="body"
+            title="{{ 'badge_current_claimed_badges_manage'|transchoice(claimPager|length, {'%claimedBadgeCount%': claimPager|length}, 'badge') }}">
+            {{ claimPager|length }}</span>{% endif %}
+        </a>
+    </li>
+</ul>
+
+<!-- Tab panes -->
+<div class="tab-content badge_tabs">
+    <div class="tab-pane active" id="badges">
+        {% include 'IcapBadgeBundle:Template:list_badges.html.twig'%}
+    </div>
+    <div class="tab-pane" id="users">
+        {% include 'IcapBadgeBundle:Template:list_badges_claim.html.twig'%}
+        {% include 'IcapBadgeBundle:Template:list_users.html.twig'%}
+    </div>
+</div>
+
+{% block javascripts %}
+<script type="text/javascript" src='{{ asset('bundles/icapbadge/js/list.js') }}'></script>
+{% endblock %}

@@ -2,21 +2,14 @@
 
 namespace Icap\BadgeBundle\Manager;
 
-use Icap\BadgeBundle\Entity\Badge;
-use Icap\BadgeBundle\Entity\BadgeRule;
-use Icap\BadgeBundle\Entity\UserBadge;
-use Icap\BadgeBundle\Entity\Widget\BadgeUsageConfig;
-use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 use Claroline\CoreBundle\Event\Log\LogBadgeAwardEvent;
-use Claroline\CoreBundle\Event\Log\LogGenericEvent;
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\UnitOfWork;
+use Icap\BadgeBundle\Entity\Widget\BadgeUsageConfig;
 use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
- * @DI\Service("claroline.manager.badge_widget")
+ * @DI\Service("icap_badge.manager.badge_widget")
  */
 class BadgeWidgetManager
 {
@@ -26,8 +19,6 @@ class BadgeWidgetManager
     protected $entityManager;
 
     /**
-     * Constructor.
-     *
      * @DI\InjectParams({
      *     "entityManager" = @DI\Inject("doctrine.orm.entity_manager")
      * })
@@ -44,7 +35,7 @@ class BadgeWidgetManager
      */
     public function getBadgeUsageConfigForInstance(WidgetInstance $instance)
     {
-        $badgeUsageWidgetConfig = $this->entityManager->getRepository('ClarolineCoreBundle:Badge\Widget\BadgeUsageConfig')->findOneByWidgetInstance($instance);
+        $badgeUsageWidgetConfig = $this->entityManager->getRepository('IcapBadgeBundle:Widget\BadgeUsageConfig')->findOneByWidgetInstance($instance);
 
         if (null === $badgeUsageWidgetConfig) {
             $badgeUsageWidgetConfig = $this->getDefaultBadgeUsageConfig();

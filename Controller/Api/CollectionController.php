@@ -2,9 +2,9 @@
 
 namespace Icap\BadgeBundle\Controller\Api;
 
-use Claroline\CoreBundle\Entity\Badge\BadgeCollection;
+use Icap\BadgeBundle\Entity\BadgeCollection;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Form\Badge\BadgeCollectionType;
+use Icap\BadgeBundle\Form\BadgeCollectionType;
 use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandler;
 use Symfony\Component\Form\FormFactory;
@@ -22,7 +22,7 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 class CollectionController extends Controller
 {
     /**
-     * @Route("/", name="claro_badge_collection_add", defaults={"_format" = "json"})
+     * @Route("/", name="icap_badge_badge_collection_add", defaults={"_format" = "json"})
      * @Method({"POST"})
      * @ParamConverter("user", options={"authenticatedUser" = true})
      */
@@ -35,7 +35,7 @@ class CollectionController extends Controller
     }
 
     /**
-     * @Route("/{id}", name="claro_badge_collection_edit", defaults={"_format" = "json"})
+     * @Route("/{id}", name="icap_badge_badge_collection_edit", defaults={"_format" = "json"})
      * @Method({"PATCH"})
      * @ParamConverter("user", options={"authenticatedUser" = true})
      */
@@ -45,7 +45,7 @@ class CollectionController extends Controller
     }
 
     /**
-     * @Route("/{id}", name="claro_badge_collection_delete", defaults={"_format" = "json"})
+     * @Route("/{id}", name="icap_badge_badge_collection_delete", defaults={"_format" = "json"})
      * @Method({"DELETE"})
      * @ParamConverter("user", options={"authenticatedUser" = true})
      */
@@ -66,7 +66,7 @@ class CollectionController extends Controller
 
     private function processForm(Request $request, BadgeCollection $collection, $method = "PUT")
     {
-        $form = $this->createForm($this->get("claroline.form.badge.collection"), $collection, array("method" => $method));
+        $form = $this->createForm($this->get("icap_badge.form.badge.collection"), $collection, array("method" => $method));
 
         $formParameters = $request->request->get($form->getName());
 
@@ -96,7 +96,7 @@ class CollectionController extends Controller
                     'id'        => $collection->getId(),
                     'name'      => $collection->getName(),
                     'is_shared' => $collection->isIsShared(),
-                    'slug'      => $this->generateUrl("claro_badge_collection_share_view", array("slug" => $collection->getSlug()))
+                    'slug'      => $this->generateUrl("icap_badge_badge_collection_share_view", array("slug" => $collection->getSlug()))
                 )
             );
 

@@ -1,0 +1,504 @@
+.list_badges {
+    .fa-exclamation-triangle {
+        color: orange;
+    }
+    .fa-exclamation-circle {
+        color: red;
+    }
+    .fa-check-circle {
+        color: green;
+    }
+}
+
+.badge_tabs {
+    .tab-pane {
+        padding-top: 20px;
+    }
+}
+.badge_list {
+    .badge_container {
+        margin: 5px 0 0 5px;
+        .dropdown {
+            width: 150px;
+            .badge_menu_link {
+                .badge_name {
+                    display:       inline-block;
+                    width:         100px;
+                    white-space:   nowrap;
+                    overflow:      hidden;
+                    text-overflow: ellipsis;
+                }
+            }
+        }
+        .thumbnail {
+            width:  150px;
+            height: 110px;
+            .badge_name {
+                color:           #333333;
+                white-space:     nowrap;
+                overflow:        hidden;
+                text-overflow:   ellipsis;
+                text-align:      center;
+            }
+            &:hover {
+                color:           #333333;
+                text-decoration: none;
+
+            }
+        }
+        .expired {
+            position:   absolute;
+            right:      5px;
+            color:      red;
+            margin-top: 5px;
+            font-size:  18px;
+        }
+    }
+}
+
+.user_badge_list {
+    .username {
+        width: 150px;
+    }
+    .badge_image {
+        width:  32px;
+        height: 32px;
+    }
+}
+
+.badge-info {
+    background-color: #5bc0de;
+}
+
+.nodes {
+    padding: 0;
+}
+
+.badge_image {
+    width:  64px;
+    height: 64px;
+}
+
+.badge_image_informations {
+    width:  128px;
+    height: 128px;
+}
+
+.badge_management_container {
+    .collections_container {
+        padding-right: 0;
+        padding-left:  0;
+
+        h3 {
+            margin-top:  0;
+            margin-left: 10px;
+        }
+
+        .collections_list {
+            border-right:  1px solid #e3e3e3;
+            height:        400px;
+            overflow:      auto;
+            padding:       10px 10px 0 10px;
+
+            .collection {
+                padding: 0;
+
+                .badge_image_mini {
+                    width:  36px;
+                    height: 36px;
+                }
+                .collection_title {
+                    margin-bottom: 0;
+                    margin-top:    0;
+                    padding-top: 5px;
+                    padding-left: 5px;
+                    white-space:   nowrap;
+                    overflow:      hidden;
+                    text-overflow: ellipsis;
+                }
+                header {
+                    border-bottom: 1px solid #e3e3e3;
+                    height:        28px;
+
+                    .btn-group {
+                        .btn-primary {
+                            border-top-left-radius:    0;
+                            border-bottom-left-radius: 0;
+                        }
+                        .btn-danger {
+                            border-bottom-right-radius: 0;
+                        }
+                        .btn {
+                            padding: 4px 7px;
+                        }
+                    }
+                    .collection_title_input {
+                        width:         auto;
+                        height:        28px;
+                        padding-right: 0;
+                    }
+                }
+                .badges {
+                    margin-top:  10px;
+                    margin-left: 19px;
+
+                    .clarobadge {
+                        padding:       5px;
+                        margin-bottom: 5px;
+                        border-radius: 4px;
+
+                        &:hover {
+                            cursor: pointer;
+                        }
+                    }
+                }
+                footer {
+                    p {
+                        margin-bottom: 0;
+                    }
+                    .publish_collection {
+                        margin-left: 5px;
+                    }
+                    .share_collection {
+                        margin-right: 5px;
+                        font-size:    16px;
+                    }
+                }
+            }
+
+            .no_collection {
+                .collection_title {
+                    margin-bottom: 0;
+                }
+            }
+
+            .deleting_collection {
+                position: absolute;
+                opacity:  0.7;
+                padding:  17px;
+            }
+
+            .deleting_collection_badge {
+                border:         1px dashed grey;
+                color:          grey;
+                font-size:      20px;
+                padding-top:    10px;
+                padding-bottom: 10px;
+
+                p {
+                    margin: 0;
+                }
+
+                &.drag_hover {
+                    box-shadow: 0 0 12px #aaa inset;
+                }
+            }
+
+            .collection_state_drag_start {
+                border: 2px dashed grey;
+            }
+
+            .collection_state_hover {
+                box-shadow: 0 0 12px #aaa inset;
+            }
+        }
+    }
+    .badge_list {
+        height:        500px;
+        overflow:      auto;
+        margin-bottom: 0;
+        padding:       5px;
+    }
+}
+
+div.alert-info {
+    overflow:    auto;
+    line-height: 30px;
+}
+
+table.badge_informations {
+    font-size: 13px;
+    tbody > tr > td {
+        border: 0;
+    }
+    td.section-head {
+        color:         #999;
+        border-bottom: 1px solid #ccc;
+        line-height:   1.5em;
+        padding-left:  0;
+    }
+    .fieldLabelCol {
+        width: 170px;
+    }
+}
+
+.view_badge {
+    .view {
+        padding-top: 25px;
+    }
+
+    .award_users_container {
+        .badge_not_awarded {
+            margin-top: 20px;
+            font-size: 16px;
+        }
+    }
+}
+
+.my_badges {
+    .badge_panel {
+        border-radius: 0px;
+        .panel-heading {
+            background-color: white;
+        }
+
+        &.owned_badge {
+            .panel-heading small {
+                color: green;
+            }
+        }
+        &.available_badges {
+            .panel-heading .finished {
+                color: white;
+            }
+            .panel-heading .claimed {
+                color: #428bca;
+            }
+        }
+    }
+}
+
+/**** Form style ****/
+.badges_infos {
+    .form-group {
+        margin-left:   0;
+        margin-bottom: 5px;
+        .row {
+            margin-bottom: 5px;
+        }
+    }
+    #change_image {
+        position: absolute;
+        top:      95px;
+        left:     0;
+        width:    100%;
+    }
+    #current_image {
+        background-color: #f5f5f5;
+    }
+    .file_upload {
+        position: relative;
+        overflow: hidden;
+
+        input[type=file] {
+            position: absolute;
+            top:      128px;
+            right:    0;
+            cursor:   pointer;
+            opacity:  0;
+            filter:   alpha(opacity=0);
+        }
+
+        .upload_image_placeholder {
+            padding-top: 30px;
+        }
+
+        &.has-error {
+            .upload_image_placeholder {
+                border-color: #953b39;
+            }
+        }
+    }
+    .is_expiring {
+        label {
+            float:       left;
+            padding-top: 0;
+        }
+        .badge_help {
+            margin: 0;
+            .image_help {
+                font-size: 10px;
+            }
+        }
+        button.help {
+            border-radius: 10px;
+        }
+    }
+}
+.thumbnail {
+    height:      128px;
+    padding-top: 15px;
+}
+
+.thumbnail_dropdown {
+    padding-top: 25px;
+}
+
+#translationFormTabs {
+    margin-bottom: 0;
+    border-bottom: 0;
+    &> li > a {
+        &.has-error {
+            background-color: #FDDCDC;
+            &:hover {
+                border-color: #b94a48 #b94a48 transparent;
+                background-color: #FACACA;
+            }
+        }
+    }
+    &> li.active > a {
+        background-color: #f5f5f5;
+        &:hover {
+            background-color: #f5f5f5;
+        }
+        &.has-error {
+            border-color: #b94a48 #b94a48 transparent;
+            background-color: #FDDCDC;
+        }
+    }
+}
+
+.badge_translations {
+    border-top:             0;
+    padding-right:          32px;
+    border-top-left-radius: 0;
+}
+
+#award_user_modal {
+    min-width: 650px;
+
+    .modal-body {
+        max-height: 500px;
+    }
+}
+
+.users_container {
+    max-height: 400px;
+    overflow: auto;
+}
+
+ul.user_badges {
+    & > li {
+        padding: 0;
+
+        a:hover {
+            &> span {
+                background-color: #333333;
+            }
+        }
+
+        &:hover {
+            .close {
+                visibility: visible;
+            }
+        }
+
+        .close {
+            visibility: hidden;
+            margin-top: -10px;
+        }
+    }
+}
+
+#award_form_container {
+    display: none;
+    .award_comment {
+        margin-top: 20px;
+    }
+}
+
+.flag {
+    margin-left: 10px;
+}
+
+.form-actions {
+    clear: both;
+    text-align: center;
+    padding: 19px 20px 20px;
+}
+
+.badge_body.panel-body {
+    padding-left: 10px;
+}
+
+table.no_margin {
+    margin: 0;
+}
+
+form{
+    .row {
+        margin-left:  0;
+        margin-right: 0;
+    }
+}
+
+.badges_rules {
+    .rules {
+        border:           1px solid #ddd;
+        padding-top:      15px;
+        padding-bottom:   15px;
+        background-color: #f5f5f5;
+        select {
+            display: inline-block;
+        }
+    }
+    .nav-tabs {
+        #add_rule a {
+            cursor: pointer;
+        }
+        border-bottom: 0;
+        & > li > a {
+            margin-right:       0;
+            border-radius:      4px 0 0 0;
+            border-bottom:      0;
+        }
+        & > li.active {
+            & > a, & > a:hover, & > a:focus {
+                border-right-color: transparent;
+                border-bottom:      1px solid #dddddd;
+                background-color:   #f5f5f5;
+                margin-right:       -1px;
+                z-index:            1;
+            }
+        }
+    }
+    .nav-stacked {
+        padding-right: 0;
+        & > li + li {
+            margin-top: 0;
+        }
+    }
+    .rules {
+        .row {
+            padding-left:  15px;
+            margin-bottom: 10px;
+        }
+    }
+}
+
+.badge_infos {
+    .alert {
+        margin-top: 20px;
+    }
+}
+
+.fullwidth {
+    width: 100%;
+}
+
+/*** Statistics pages style ***/
+.badge_general_statistics {
+    padding: 40px;
+    li {
+        border:        1px solid #357ebd;
+        border-radius: 4px;
+        padding:       20px;
+        text-align:    center;
+        margin-right:  20px;
+        span {
+            color:       #3071a9;
+            display:     block;
+            font-weight: bold;
+        }
+    }
+}

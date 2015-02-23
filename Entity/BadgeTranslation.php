@@ -1,6 +1,6 @@
 <?php
 
-namespace Icap\BadgeBundle\Entity\Badge;
+namespace Icap\BadgeBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;

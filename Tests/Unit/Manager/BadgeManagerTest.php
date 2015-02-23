@@ -1,6 +1,6 @@
 <?php
 
-namespace Icap\badgeBundle\Manager;
+namespace Icap\BadgeBundle\Manager;
 
 use Icap\BadgeBundle\Entity\BadgeRule;
 use Claroline\CoreBundle\Entity\User;
@@ -27,7 +27,7 @@ class BadgeManagerTest extends MockeryTestCase
     {
         parent::setUp();
 
-        $this->badgeRepository = $this->mock('Claroline\CoreBundle\Repository\Badge\BadgeRepository');
+        $this->badgeRepository = $this->mock('Icap\BadgeBundle\Repository\BadgeRepository');
         $this->unitOfWork      = $this->mock('Doctrine\ORM\UnitOfWork');
         $this->unitOfWork
             ->shouldReceive('computeChangeSets')
@@ -67,7 +67,7 @@ class BadgeManagerTest extends MockeryTestCase
 
         $entityManager = $this->entityManager;
         $entityManager->shouldReceive('getRepository')
-            ->with('ClarolineCoreBundle:Badge\Badge')
+            ->with('IcapBadgeBundle:Badge')
             ->andReturn($badgeRepository);
 
         $eventDispatcher = $this->eventDispatcher;

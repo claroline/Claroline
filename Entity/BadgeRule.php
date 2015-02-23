@@ -1,6 +1,6 @@
 <?php
 
-namespace Icap\BadgeBundle\Entity\Badge;
+namespace Icap\BadgeBundle\Entity;
 
 use Claroline\CoreBundle\Rule\Entity\Rule;
 use Doctrine\ORM\Mapping as ORM;
@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Class BadgeRule
  *
  * @ORM\Table(name="claro_badge_rule")
- * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\Badge\BadgeRuleRepository")
+ * @ORM\Entity(repositoryClass="Icap\BadgeBundle\Repository\BadgeRuleRepository")
  */
 class BadgeRule extends Rule
 {
@@ -22,7 +22,7 @@ class BadgeRule extends Rule
     protected $associatedBadge;
 
     /**
-     * @param \Claroline\CoreBundle\Entity\Badge\Badge $badge
+     * @param \Icap\BadgeBundle\Entity\Badge $badge
      *
      * @return BadgeRule
      */
@@ -34,7 +34,7 @@ class BadgeRule extends Rule
     }
 
     /**
-     * @return \Claroline\CoreBundle\Entity\Badge\Badge|\Doctrine\Common\Collections\ArrayCollection
+     * @return \Icap\BadgeBundle\Entity\Badge|\Doctrine\Common\Collections\ArrayCollection
      */
     public function getAssociatedBadge()
     {

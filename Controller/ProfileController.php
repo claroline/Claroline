@@ -2,13 +2,13 @@
 
 namespace Icap\BadgeBundle\Controller;
 
-use Claroline\CoreBundle\Entity\Badge\BadgeCollection;
-use Claroline\CoreBundle\Event\Badge\BadgeCreateValidationLinkEvent;
-use Claroline\CoreBundle\Form\Badge\BadgeCollectionType;
+use Icap\BadgeBundle\Entity\BadgeCollection;
+use Icap\BadgeBundle\Event\BadgeCreateValidationLinkEvent;
+use Icap\BadgeBundle\Form\Type\BadgeCollectionType;
 use Claroline\CoreBundle\Rule\Validator;
-use Claroline\CoreBundle\Entity\Badge\Badge;
-use Claroline\CoreBundle\Entity\Badge\UserBadge;
-use Claroline\CoreBundle\Entity\Badge\BadgeClaim;
+use Icap\BadgeBundle\Entity\Badge;
+use Icap\BadgeBundle\Entity\UserBadge;
+use Icap\BadgeBundle\Entity\BadgeClaim;
 use Claroline\CoreBundle\Entity\User;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Pagerfanta;
@@ -26,7 +26,7 @@ use Symfony\Component\HttpFoundation\Request;
 class ProfileController extends Controller
 {
     /**
-     * @Route("/claim", name="claro_claim_badge")
+     * @Route("/claim", name="icap_badge_claim_badge")
      * @ParamConverter("user", options={"authenticatedUser" = true})
      * @Template()
      */
@@ -34,7 +34,7 @@ class ProfileController extends Controller
     {
         $badgeClaim = new BadgeClaim();
         $badgeClaim->setUser($user);
-        $form = $this->createForm($this->get('claroline.form.claimBadge'), $badgeClaim);
+        $form = $this->createForm($this->get('icap_badge.form.claimBadge'), $badgeClaim);
 
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
@@ -49,7 +49,7 @@ class ProfileController extends Controller
 
                     if (null !== $badge) {
                         /** @var \Claroline\CoreBundle\Manager\BadgeManager $badgeManager */
-                        $badgeManager = $this->get('claroline.manager.badge');
+                        $badgeManager = $this->get('icap_badge.manager.badge');
                         $badgeManager->makeClaim($badge, $user);
 
                         $flashBag->add('success', $translator->trans('badge_claim_success_message', array(), 'badge'));
@@ -61,7 +61,7 @@ class ProfileController extends Controller
                     $flashBag->add('error', $translator->trans($exception->getMessage(), array(), 'badge'));
                 }
 
-                return $this->redirect($this->generateUrl('claro_profile_view_badges'));
+                return $this->redirect($this->generateUrl('icap_badge_profile_view_badges'));
             }
         }
 
@@ -71,7 +71,7 @@ class ProfileController extends Controller
     }
 
     /**
-     * @Route("/{slug}", name="claro_profile_view_badge")
+     * @Route("/{slug}", name="icap_badge_profile_view_badge")
      * @ParamConverter("user", options={"authenticatedUser" = true})
      * @ParamConverter("badge", converter="badge_converter", options={"check_deleted" = false})
      * @Template()
@@ -111,7 +111,7 @@ class ProfileController extends Controller
             }
         }
 
-        $userBadge = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Badge\UserBadge')->findOneBy(array('badge' => $badge, 'user' => $user));
+        $userBadge = $this->getDoctrine()->getRepository('IcapBadgeBundle:UserBadge')->findOneBy(array('badge' => $badge, 'user' => $user));
 
         if (null === $userBadge) {
             throw $this->createNotFoundException("User don't have this badge.");
@@ -125,7 +125,7 @@ class ProfileController extends Controller
     }
 
     /**
-     * @Route("/", name="claro_profile_view_badges")
+     * @Route("/", name="icap_badge_profile_view_badges")
      * @ParamConverter("user", options={"authenticatedUser" = true})
      * @Template()
      */
@@ -133,9 +133,9 @@ class ProfileController extends Controller
     {
         $doctrine = $this->getDoctrine();
         $doctrine->getManager()->getFilters()->disable('softdeleteable');
-        $userBadges       = $doctrine->getRepository('ClarolineCoreBundle:Badge\UserBadge')->findByUser($user);
-        $badgeClaims      = $doctrine->getRepository('ClarolineCoreBundle:Badge\BadgeClaim')->findByUser($user);
-        $badgeCollections = $doctrine->getRepository('ClarolineCoreBundle:Badge\BadgeCollection')->findByUser($user);
+        $userBadges       = $doctrine->getRepository('IcapBadgeBundle:UserBadge')->findByUser($user);
+        $badgeClaims      = $doctrine->getRepository('IcapBadgeBundle:BadgeClaim')->findByUser($user);
+        $badgeCollections = $doctrine->getRepository('IcapBadgeBundle:BadgeCollection')->findByUser($user);
 
         return array(
             'userBadges'       => $userBadges,

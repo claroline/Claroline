@@ -7,7 +7,7 @@ use Claroline\CoreBundle\Pager\PagerFactory;
 use Claroline\CoreBundle\Rule\Validator;
 use Claroline\CoreBundle\Event\DisplayToolEvent;
 use Claroline\CoreBundle\Event\LogCreateEvent;
-use Claroline\CoreBundle\Manager\BadgeManager;
+use Icap\BadgeBundle\Manager\BadgeManager;
 use Doctrine\ORM\EntityManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bundle\TwigBundle\TwigEngine;
@@ -24,7 +24,7 @@ class BadgeListener
     private $entityManager;
 
     /**
-     * @var \Claroline\CoreBundle\Manager\BadgeManager
+     * @var \Icap\BadgeBundle\Manager\BadgeManager
      */
     private $badgeManager;
 
@@ -51,7 +51,7 @@ class BadgeListener
     /**
      * @DI\InjectParams({
      *     "entityManager"     = @DI\Inject("doctrine.orm.entity_manager"),
-     *     "badgeManager"      = @DI\Inject("claroline.manager.badge"),
+     *     "badgeManager"      = @DI\Inject("icap_badge.manager.badge"),
      *     "templatingEngine"  = @DI\Inject("templating"),
      *     "ruleValidator"     = @DI\Inject("claroline.rule.validator"),
      *     "pagerFactory"      = @DI\Inject("claroline.pager.pager_factory"),
@@ -82,12 +82,10 @@ class BadgeListener
      */
     public function onLog(LogCreateEvent $event)
     {
-        /** @var \Claroline\CoreBundle\Repository\Badge\BadgeRuleRepository $badgeRuleRepository */
-        $badgeRuleRepository = $this->entityManager->getRepository('ClarolineCoreBundle:Badge\BadgeRule');
-        /** @var \Claroline\CoreBundle\Entity\badge\Badge[] $badges */
-
-
-        $badges              = $badgeRuleRepository->findBadgeAutomaticallyAwardedFromAction($event->getLog());
+        /** @var \Icap\BadgeBundle\Repository\BadgeRuleRepository $badgeRuleRepository */
+        $badgeRuleRepository = $this->entityManager->getRepository('IcapBadgeBundle:BadgeRule');
+        /** @var \Icap\BadgeBundle\Entity\Badge[] $badges */
+        $badges = $badgeRuleRepository->findBadgeAutomaticallyAwardedFromAction($event->getLog());
 
         if (0 < count($badges)) {
 
@@ -148,24 +146,24 @@ class BadgeListener
             'claimPage'    => 1,
             'userPage'    => 1,
             'workspace'    => $workspace,
-            'add_link'     => 'claro_workspace_tool_badges_add',
+            'add_link'     => 'icap_badge_workspace_tool_badges_add',
             'edit_link'    => array(
-                'url'    => 'claro_workspace_tool_badges_edit',
+                'url'    => 'icap_badge_workspace_tool_badges_edit',
                 'suffix' => '#!edit'
             ),
-            'delete_link'      => 'claro_workspace_tool_badges_delete',
-            'view_link'        => 'claro_workspace_tool_badges_edit',
-            'current_link'     => 'claro_workspace_tool_badges',
-            'claim_link'       => 'claro_workspace_tool_manage_claim',
-            'claim_link'       => 'claro_workspace_tool_manage_claim',
-            'statistics_link'  => 'claro_workspace_tool_badges_statistics',
+            'delete_link'      => 'icap_badge_workspace_tool_badges_delete',
+            'view_link'        => 'icap_badge_workspace_tool_badges_edit',
+            'current_link'     => 'icap_badge_workspace_tool_badges',
+            'claim_link'       => 'icap_badge_workspace_tool_manage_claim',
+            'claim_link'       => 'icap_badge_workspace_tool_manage_claim',
+            'statistics_link'  => 'icap_badge_workspace_tool_badges_statistics',
             'route_parameters' => array(
                 'workspaceId' => $workspace->getId()
             ),
         );
 
         return $this->templateingEngine->render(
-            'ClarolineCoreBundle:Badge:Tool\Workspace\list.html.twig',
+            'IcapBadgeBundle:Tool:Workspace\list.html.twig',
             array('workspace' => $workspace, 'parameters' => $parameters)
         );
     }
@@ -180,7 +178,7 @@ class BadgeListener
         $user = $this->securityContext->getToken()->getUser();
 
         return $this->templateingEngine->render(
-            'ClarolineCoreBundle:Badge:Tool\MyWorkspace\toolList.html.twig',
+            'IcapBadgeBundle:Tool:MyWorkspace\toolList.html.twig',
             array(
                 'workspace' => $workspace,
                 'user'      => $user

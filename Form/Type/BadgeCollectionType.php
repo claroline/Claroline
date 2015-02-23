@@ -1,9 +1,9 @@
 <?php
 
-namespace Icap\BadgeBundle\Form\Badge\Type;
+namespace Icap\BadgeBundle\Form\Type;
 
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
-use Claroline\CoreBundle\Repository\Badge\BadgeRepository;
+use Icap\BadgeBundle\Repository\BadgeRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
@@ -11,11 +11,11 @@ use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\SecurityContext;
 
 /**
- * @DI\Service("claroline.form.badge.collection")
+ * @DI\Service("icap_badge.form.badge.collection")
  */
 class BadgeCollectionType extends AbstractType
 {
-    /** @var  \Claroline\CoreBundle\Repository\Badge\BadgeRepository */
+    /** @var  \Icap\BadgeBundle\Repository\BadgeRepository */
     private $badgeRepository;
 
     /** @var \Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler */
@@ -26,7 +26,7 @@ class BadgeCollectionType extends AbstractType
 
     /**
      * @DI\InjectParams({
-     *     "badgeRepository"       = @DI\Inject("claroline.repository.badge"),
+     *     "badgeRepository"       = @DI\Inject("icap_badge.repository.badge"),
      *     "platformConfigHandler" = @DI\Inject("claroline.config.platform_config_handler"),
      *     "securityContext"       = @DI\Inject("security.context")
      * })
@@ -43,7 +43,7 @@ class BadgeCollectionType extends AbstractType
         /** @var \Claroline\CoreBundle\Entity\User $user */
         $user = $this->securityContext->getToken()->getUser();
 
-        /** @var \Claroline\CoreBundle\Entity\Badge\Badge[] $badgeChoices */
+        /** @var \Icap\BadgeBundle\Entity\Badge[] $badgeChoices */
         $badgeChoices  = $this->badgeRepository->findByUser($user);
 
         foreach ($badgeChoices as $badgeChoice) {
@@ -54,7 +54,7 @@ class BadgeCollectionType extends AbstractType
             ->add('name', 'text')
             ->add('badges', 'entity',
                 array(
-                     'class'       => 'ClarolineCoreBundle:Badge\Badge',
+                     'class'       => 'IcapBadgeBundle:Badge',
                      'choices'     => $badgeChoices,
                      'empty_value' => '',
                      'property'    => 'name',
@@ -74,7 +74,7 @@ class BadgeCollectionType extends AbstractType
     {
         $resolver->setDefaults(
             array(
-                'data_class'         => 'Claroline\CoreBundle\Entity\Badge\BadgeCollection',
+                'data_class'         => 'Icap\BadgeBundle\Entity\BadgeCollection',
                 'translation_domain' => 'badge',
                 'csrf_protection'    => false
             )

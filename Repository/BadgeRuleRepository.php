@@ -27,7 +27,7 @@ class BadgeRuleRepository extends EntityRepository
         $query = $this->getEntityManager()
             ->createQuery(
                 'SELECT b
-                FROM ClarolineCoreBundle:Badge\Badge b
+                FROM IcapBadgeBundle:Badge b
                 JOIN b.badgeRules br
                 WHERE (br.action = :action
                 OR br.action = :action2)

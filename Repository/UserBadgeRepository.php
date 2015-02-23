@@ -32,7 +32,7 @@ class UserBadgeRepository extends EntityRepository
         $query = $this->getEntityManager()
             ->createQuery(
                 'SELECT ub, b, bt
-                FROM ClarolineCoreBundle:Badge\UserBadge ub
+                FROM IcapBadgeBundle:UserBadge ub
                 JOIN ub.badge b
                 JOIN b.translations bt
                 WHERE ub.user = :userId'
@@ -52,7 +52,7 @@ class UserBadgeRepository extends EntityRepository
         $query = $this->getEntityManager()
             ->createQuery(
                 'SELECT COUNT(ub.id)
-                FROM ClarolineCoreBundle:Badge\UserBadge ub
+                FROM IcapBadgeBundle:UserBadge ub
                 JOIN ub.badge b
                 WHERE b.workspace = :workspaceId'
             )
@@ -71,7 +71,7 @@ class UserBadgeRepository extends EntityRepository
         $query = $this->getEntityManager()
             ->createQuery(
                 'SELECT COUNT(DISTINCT b.id)
-                FROM ClarolineCoreBundle:Badge\UserBadge ub
+                FROM IcapBadgeBundle:UserBadge ub
                 JOIN ub.badge b
                 WHERE b.workspace = :workspaceId'
             )
@@ -91,7 +91,7 @@ class UserBadgeRepository extends EntityRepository
         $query = $this->getEntityManager()
             ->createQuery(
                 'SELECT ub, b
-                FROM ClarolineCoreBundle:Badge\UserBadge ub
+                FROM IcapBadgeBundle:UserBadge ub
                 JOIN ub.badge b
                 WHERE b.workspace = :workspaceId
                 ORDER BY ub.issuedAt DESC'
@@ -114,7 +114,7 @@ class UserBadgeRepository extends EntityRepository
         $query = $this->getEntityManager()
             ->createQuery(
                 'SELECT ub, b, COUNT(ub) AS awardedNumber
-                FROM ClarolineCoreBundle:Badge\UserBadge ub
+                FROM IcapBadgeBundle:UserBadge ub
                 JOIN ub.badge b
                 WHERE b.workspace = :workspaceId
                 GROUP BY ub.badge

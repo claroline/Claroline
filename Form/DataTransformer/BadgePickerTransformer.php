@@ -2,7 +2,7 @@
 
 namespace Icap\BadgeBundle\Form\DataTransformer;
 
-use Icap\BadgeBundle\Entity\Badge\Badge;
+use Icap\BadgeBundle\Entity\Badge;
 use Claroline\CoreBundle\Manager\BadgeManager;
 use Doctrine\Common\Collections\Collection;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -10,18 +10,18 @@ use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
 
 /**
- * @DI\Service("claroline.transformer.badge_picker")
+ * @DI\Service("icap_badge.transformer.badge_picker")
  */
 class BadgePickerTransformer implements DataTransformerInterface
 {
     /**
-     * @var \Claroline\CoreBundle\Manager\BadgeManager
+     * @var \Icap\BadgeBundle\Manager\BadgeManager
      */
     private $badgeManager;
 
     /**
      * @DI\InjectParams({
-     *     "badgeManager" = @DI\Inject("claroline.manager.badge")
+     *     "badgeManager" = @DI\Inject("icap_badge.manager.badge")
      * })
      */
     public function __construct(BadgeManager $badgeManager)

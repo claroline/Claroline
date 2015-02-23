@@ -4,8 +4,8 @@ namespace Icap\BadgeBundle\Listener\Widget;
 
 use Claroline\CoreBundle\Event\ConfigureWidgetEvent;
 use Claroline\CoreBundle\Event\DisplayWidgetEvent;
-use Claroline\CoreBundle\Manager\BadgeManager;
-use Claroline\CoreBundle\Manager\BadgeWidgetManager;
+use Icap\BadgeBundle\Manager\BadgeManager;
+use Icap\BadgeBundle\Manager\BadgeWidgetManager;
 use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Security\Core\SecurityContextInterface;
@@ -27,18 +27,21 @@ class BadgeUsageWidgetListener
     private $badgeUsageForm;
 
     /**
-     * @var \Claroline\CoreBundle\Manager\BadgeManager
+     * @var \Icap\BadgeBundle\Manager\BadgeManager
      */
     private $badgeManager;
 
+    /**
+     * @var \Icap\BadgeBundle\Manager\BadgeWidgetManager
+     */
     private $badgeWidgetManager;
 
     /**
      * @DI\InjectParams({
      *     "templating"         = @DI\Inject("templating"),
-     *     "badgeUsageForm"     = @DI\Inject("claroline.widget.form.badge_usage"),
-     *     "badgeManager"       = @DI\Inject("claroline.manager.badge"),
-     *     "badgeWidgetManager" = @DI\Inject("claroline.manager.badge_widget")
+     *     "badgeUsageForm"     = @DI\Inject("icap_badge.widget.form.badge_usage"),
+     *     "badgeManager"       = @DI\Inject("icap_badge.manager.badge"),
+     *     "badgeWidgetManager" = @DI\Inject("icap_badge.manager.badge_widget")
      * })
      */
     public function __construct(TwigEngine $templating, FormInterface $badgeUsageForm, BadgeManager $badgeManager, BadgeWidgetManager $badgeWidgetManager)
@@ -62,7 +65,7 @@ class BadgeUsageWidgetListener
         $mostAwardedBadges = $this->badgeManager->getWorkspaceMostAwardedBadges($widgetInstance->getWorkspace(), $badgeWidgetConfig->getNumberMostAwardedBadge());
 
         $content = $this->templating->render(
-            'ClarolineCoreBundle:Widget:Badge\badge_usage.html.twig',
+            'IcapBadgeBundle:Widget:badge_usage.html.twig',
             array(
                 'lastAwardedBadges' => $lastAwardedBadges,
                 'mostAwardedBadges' => $mostAwardedBadges
@@ -83,7 +86,7 @@ class BadgeUsageWidgetListener
         $this->badgeUsageForm->setData($badgeWidgetConfig);
 
         $content = $this->templating->render(
-            'ClarolineCoreBundle:Widget:Badge\badge_usage_config.html.twig',
+            'IcapBadgeBundle:Widget:badge_usage_config.html.twig',
             array(
                 'form'     => $this->badgeUsageForm->createView(),
                 'instance' => $event->getInstance()

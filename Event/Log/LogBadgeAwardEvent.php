@@ -2,7 +2,7 @@
 
 namespace Icap\BadgeBundle\Event\Log;
 
-use Claroline\CoreBundle\Entity\Badge\Badge;
+use Icap\BadgeBundle\Entity\Badge;
 use Claroline\CoreBundle\Entity\User;
 
 class LogBadgeAwardEvent extends LogGenericEvent implements NotifiableInterface
@@ -10,7 +10,7 @@ class LogBadgeAwardEvent extends LogGenericEvent implements NotifiableInterface
     const ACTION = 'badge-awarding';
 
     /**
-     * @var \Claroline\CoreBundle\Entity\Badge\Badge
+     * @var \Icap\BadgeBundle\Entity\Badge
      */
     private $badge;
 

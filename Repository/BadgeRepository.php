@@ -70,7 +70,7 @@ class BadgeRepository extends EntityRepository
         $query = $this->getEntityManager()
             ->createQuery(
                 'SELECT b, ub, bt
-                FROM ClarolineCoreBundle:Badge\Badge b
+                FROM IcapBadgeBundle:Badge b
                 JOIN b.userBadges ub
                 JOIN b.translations bt
                 WHERE ub.user = :userId'
@@ -110,7 +110,7 @@ class BadgeRepository extends EntityRepository
         $query = $this->getEntityManager()
             ->createQuery(
                 'SELECT b
-                FROM ClarolineCoreBundle:Badge\Badge b
+                FROM IcapBadgeBundle:Badge b
                 JOIN b.translations t
                 WHERE t.slug = :slug
                 ORDER BY t.name ASC'
@@ -133,7 +133,7 @@ class BadgeRepository extends EntityRepository
         $query = $this->getEntityManager()
             ->createQuery(
                 'SELECT b, t
-                FROM ClarolineCoreBundle:Badge\Badge b
+                FROM IcapBadgeBundle:Badge b
                 JOIN b.translations t
                 WHERE UPPER(t.name) LIKE :name
                 AND t.locale = :locale
@@ -155,7 +155,7 @@ class BadgeRepository extends EntityRepository
         $query = $this->getEntityManager()
             ->createQuery(
                 'SELECT b, t
-                FROM ClarolineCoreBundle:Badge\Badge b
+                FROM IcapBadgeBundle:Badge b
                 JOIN b.translations t
                 WHERE t.name = :name'
             )
@@ -239,7 +239,7 @@ class BadgeRepository extends EntityRepository
         $query = $this->getEntityManager()
             ->createQuery(
                 'SELECT b, ub, bt
-                FROM ClarolineCoreBundle:Badge\Badge b
+                FROM IcapBadgeBundle:Badge b
                 LEFT JOIN b.userBadges ub
                 JOIN b.translations bt
                 WHERE b.workspace = :workspaceId'
@@ -259,7 +259,7 @@ class BadgeRepository extends EntityRepository
         $query = $this->getEntityManager()
             ->createQuery(
                 'SELECT COUNT(b.id)
-                FROM ClarolineCoreBundle:Badge\Badge b
+                FROM IcapBadgeBundle:Badge b
                 WHERE b.workspace = :workspaceId'
             )
             ->setParameter('workspaceId', $workspace->getId());
@@ -271,8 +271,6 @@ class BadgeRepository extends EntityRepository
      * @param QueryBuilder $queryBuilder
      * @param string       $rootAlias
      * @param string       $locale
-     *
-     * @internal param bool $executeQuery
      *
      * @return QueryBuilder|array
      */

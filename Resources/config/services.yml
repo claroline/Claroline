@@ -1,0 +1,56 @@
+# This file contains only services that cannot be defined using annotations.
+
+parameters:
+    icap.form_handler.badge.class: Icap\BadgeBundle\Form\Handler\BadgeHandler
+
+services:
+    # doctrine repositories
+    icap_badge.repository.badge:
+        class:           Icap\BadgeBundle\Repository\BadgeRepository
+        factory_service: doctrine.orm.entity_manager
+        factory_method:  getRepository
+        arguments:
+            - Icap\BadgeBundle\Entity\Badge
+
+    # form
+    icap_badge.form.badge:
+        class: Symfony\Component\Form\Form
+        factory_method: createNamed
+        factory_service: form.factory
+        arguments: ["badge_form", "badge_form"]
+    icap_badge.form.badge.workspace:
+        class: Symfony\Component\Form\Form
+        factory_method: createNamed
+        factory_service: form.factory
+        arguments: ["badge_form", "badge_form_workspace"]
+    icap_badge.widget.form.badge_usage:
+        class: Symfony\Component\Form\Form
+        factory_method: createNamed
+        factory_service: form.factory
+        arguments: ["badge_usage_widget_form", "badge_usage_widget_config"]
+
+    # form handler
+    icap_badge.form_handler.badge:
+        class: %icap.form_handler.badge.class%
+        scope: request
+        arguments:
+            - @icap_badge.form.badge
+            - @request
+            - @doctrine.orm.entity_manager
+            - @icap_badge.manager.badge
+    icap_badge.form_handler.badge.workspace:
+        class: %icap.form_handler.badge.class%
+        scope: request
+        arguments:
+            - @icap_badge.form.badge.workspace
+            - @request
+            - @doctrine.orm.entity_manager
+            - @icap_badge.manager.badge
+
+    #notification listeners
+    icap_badge.listener.core.notification_listener:
+        class: Icap\BadgeBundle\Listener\NotificationListener
+        calls:
+            - [setContainer, ["@service_container"]]
+        tags:
+            - { name: kernel.event_listener, event: create_notification_item_badge-awarding, method: onCreateNotificationItem }

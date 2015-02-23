@@ -12,12 +12,11 @@ use Claroline\CoreBundle\Event\Log\LogBadgeAwardEvent;
 use Claroline\CoreBundle\Event\Log\LogGenericEvent;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\QueryBuilder;
-use Doctrine\ORM\UnitOfWork;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
- * @DI\Service("claroline.manager.badge")
+ * @DI\Service("icap_badge.manager.badge")
  */
 class BadgeManager
 {
@@ -57,8 +56,8 @@ class BadgeManager
      */
     public function getById($id)
     {
-        /** @var \Claroline\CoreBundle\Entity\Badge\Badge $badge */
-        $badge = $this->entityManager->getRepository('ClarolineCoreBundle:Badge\Badge')->find($id);
+        /** @var \Icap\BadgeBundle\Entity\Badge $badge */
+        $badge = $this->entityManager->getRepository('IcapBadgeBundle:Badge')->find($id);
 
         return $badge;
     }
@@ -97,8 +96,8 @@ class BadgeManager
     {
         $badgeAwarded = false;
 
-        /** @var \Claroline\CoreBundle\Repository\Badge\BadgeRepository $badgeRepository */
-        $badgeRepository = $this->entityManager->getRepository('ClarolineCoreBundle:Badge\Badge');
+        /** @var \Icap\BadgeBundle\Repository\BadgeRepository $badgeRepository */
+        $badgeRepository = $this->entityManager->getRepository('IcapBadgeBundle:Badge');
         $userBadge       = $badgeRepository->findUserBadge($badge, $user);
 
         if (null === $userBadge) {
@@ -131,8 +130,8 @@ class BadgeManager
     }
 
     /**
-     * @param \Claroline\CoreBundle\Entity\Badge\Badge $badge
-     * @param \Claroline\CoreBundle\Entity\User        $receiver
+     * @param \Icap\BadgeBundle\Entity\Badge    $badge
+     * @param \Claroline\CoreBundle\Entity\User $receiver
      *
      * @param \Claroline\CoreBundle\Entity\User|null   $doer
      *
@@ -236,8 +235,8 @@ class BadgeManager
      */
     public function getWorkspaceLastAwardedBadges(Workspace $workspace, $limit = 10)
     {
-        /** @var \Claroline\CoreBundle\Repository\Badge\UserBadgeRepository $userBadgeRepository */
-        $userBadgeRepository = $this->entityManager->getRepository('ClarolineCoreBundle:Badge\UserBadge');
+        /** @var \Icap\BadgeBundle\Repository\UserBadgeRepository $userBadgeRepository */
+        $userBadgeRepository = $this->entityManager->getRepository('IcapBadgeBundle:UserBadge');
         $lastAwardedBadges   = $userBadgeRepository->findWorkspaceLastAwardedBadges($workspace, $limit);
 
         return $lastAwardedBadges;
@@ -251,8 +250,8 @@ class BadgeManager
      */
     public function getWorkspaceMostAwardedBadges(Workspace $workspace, $limit = 10)
     {
-        /** @var \Claroline\CoreBundle\Repository\Badge\UserBadgeRepository $userBadgeRepository */
-        $userBadgeRepository = $this->entityManager->getRepository('ClarolineCoreBundle:Badge\UserBadge');
+        /** @var \Icap\BadgeBundle\Repository\UserBadgeRepository $userBadgeRepository */
+        $userBadgeRepository = $this->entityManager->getRepository('IcapBadgeBundle:UserBadge');
         $lastAwardedBadges   = $userBadgeRepository->findWorkspaceMostAwardedBadges($workspace, $limit);
 
         return $lastAwardedBadges;
@@ -265,8 +264,8 @@ class BadgeManager
      */
     public function getForBadgePicker(array $parameters)
     {
-        /** @var \Claroline\CoreBundle\Repository\Badge\BadgeRepository $badgeRepository */
-        $badgeRepository = $this->entityManager->getRepository('ClarolineCoreBundle:Badge\Badge');
+        /** @var \Icap\BadgeBundle\Repository\BadgeRepository $badgeRepository */
+        $badgeRepository = $this->entityManager->getRepository('IcapBadgeBundle:Badge');
 
         /** @var QueryBuilder $badgeQueryBuilder */
         $badgeQueryBuilder = $badgeRepository->createQueryBuilder($rootAlias = 'badge');
@@ -290,5 +289,34 @@ class BadgeManager
         }
 
         return $badgeQueryBuilder->getQuery()->getResult();
+    }
+
+    /**
+     * @param UserRepository $userRepository
+     * @param Workspace      $workspace
+     *
+     * @return \Doctrine\ORM\Query
+     */
+    public function getUsersWithBadgesByWorkspaceQuery(UserRepository $userRepository, Workspace $workspace)
+    {
+        $queryBuilder = $userRepository->createQueryBuilder('u')
+            ->select('DISTINCT u, ub, b')
+            ->join('u.roles', 'r')
+            ->leftJoin('u.userBadges', 'ub')
+            ->leftJoin('ub.badge', 'b')
+            ->andWhere('u.isEnabled = true')
+            ->orderBy('u.id');
+
+        if (null === $workspace) {
+            $queryBuilder->andWhere('r.workspace IS NULL');
+        }
+        else {
+            $queryBuilder
+                ->leftJoin('r.workspace', 'w')
+                ->andWhere('r.workspace = :workspace')
+                ->setParameter('workspace', $workspace);
+        };
+
+        return $queryBuilder->getQuery();
     }
 }

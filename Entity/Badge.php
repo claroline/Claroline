@@ -1,6 +1,6 @@
 <?php
 
-namespace Icap\BadgeBundle\Entity\Badge;
+namespace Icap\BadgeBundle\Entity;
 
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
@@ -12,7 +12,7 @@ use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
-use Claroline\CoreBundle\Form\Badge\Constraints as BadgeAssert;
+use Icap\BadgeBundle\Form\Constraints as BadgeAssert;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Expose;
 use Gedmo\Mapping\Annotation as Gedmo;
@@ -20,8 +20,8 @@ use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
 
 /**
  * @ORM\Table(name="claro_badge")
- * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\Badge\BadgeRepository")
- * @ORM\EntityListeners({"Claroline\CoreBundle\Listener\Badge\LocaleSetterListener"})
+ * @ORM\Entity(repositoryClass="Icap\BadgeBundle\Repository\BadgeRepository")
+ * @ORM\EntityListeners({"Icap\BadgeBundle\Listener\LocaleSetterListener"})
  * @ORM\HasLifecycleCallbacks
  * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false)
  * @BadgeAssert\AutomaticWithRules
@@ -525,7 +525,7 @@ class Badge extends Rulable
     }
 
     /**
-     * @param \Claroline\CoreBundle\Entity\Badge\BadgeRule[] $badgeRules
+     * @param \Icap\BadgeBundle\Entity\BadgeRule[] $badgeRules
      *
      * @return Badge
      */
@@ -541,7 +541,7 @@ class Badge extends Rulable
     }
 
     /**
-     * @return \Claroline\CoreBundle\Entity\Badge\BadgeRule[]|\Doctrine\Common\Collections\ArrayCollection
+     * @return \Icap\BadgeBundle\Entity\BadgeRule[]|\Doctrine\Common\Collections\ArrayCollection
      */
     public function getRules()
     {
@@ -762,9 +762,9 @@ class Badge extends Rulable
     {
         $translations          = $this->getTranslations();
         $hasEmptyTranslation   = 0;
-        /** @var \Claroline\CoreBundle\Entity\Badge\BadgeTranslation[] $emptyTranslations */
+        /** @var \Icap\BadgeBundle\Entity\BadgeTranslation[] $emptyTranslations */
         $emptyTranslations     = array();
-        /** @var \Claroline\CoreBundle\Entity\Badge\BadgeTranslation[] $nonEmptyTranslations */
+        /** @var \Icap\BadgeBundle\Entity\BadgeTranslation[] $nonEmptyTranslations */
         $nonEmptyTranslations  = array();
 
         foreach ($translations as $translation) {
