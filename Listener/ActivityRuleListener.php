@@ -29,7 +29,7 @@ class ActivityRuleListener
     /**
      * @DI\InjectParams({
      *     "activityManager" = @DI\Inject("claroline.manager.activity_manager"),
-     *     "ruleValidator"   = @DI\Inject("icap_badge_.rule.validator")
+     *     "ruleValidator"   = @DI\Inject("claroline.rule.validator")
      * })
      */
     public function __construct(
