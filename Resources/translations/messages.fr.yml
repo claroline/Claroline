@@ -476,6 +476,8 @@ Hint.value: Indice
 Interaction.feedback: Commentaire à afficher avec la correction (facultatif)
 Interaction.invite: Question
 
+Inter_Matching.shuffle: Attribuer les points par réponse
+
 Inter_Open.ScoreMaxLongResp: Points pour la bonne réponse
 
 Inter_QCM.ScoreRightResponse: Points pour la bonne réponse
@@ -490,6 +492,7 @@ Inter_Hole.size: Taille
 
 Label.value : Valeur
 Label.scoreRight: Score de la question
+Label.positionForce: Forcer cette position
 
 LockAttempte.date: Date
 
@@ -502,6 +505,7 @@ Planning.start_time: Date de début
 Points: Points
 
 Proposal.value: Réponse
+Proposal.positionForce: Forcer cette position
 
 Question_creation: Création d'une question
 Question.description: Description de la question (facultatif)

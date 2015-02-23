@@ -12,13 +12,20 @@ class LabelType extends AbstractType
     {
         $builder
             ->add(
+                'ordre', 'text'
+            )
+            ->add(
                 'value', 'textarea', array(
                     'label' => ' ', 'attr' => array('class' => 'labelVal')
                 ))
             ->add(
                 'scoreRightResponse', 'text', array(
                     'label' => ' ', 'attr' => array('style' => 'width:35px; text-align: end;','class' => 'labelScore'
-                  )));
+                  )))
+            ->add(
+                'positionForce', 'checkbox', array(
+                    'required' => false, 'label' => ' '
+                ));
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

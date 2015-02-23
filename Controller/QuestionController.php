@@ -348,6 +348,14 @@ class QuestionController extends Controller
                             ->getManager()
                             ->getRepository('UJMExoBundle:InteractionMatching')
                             ->getInteractionMatching($interaction->getId());
+                    
+                    if ($interactionMatching[0]->getShuffle()) {
+                        $interactionMatching[0]->shuffleProposals();
+                        $interactionMatching[0]->shuffleLabels();
+                    } else {
+                        $interactionMatching[0]->sortProposals();
+                        $interactionMatching[0]->sortLabels();
+                    }
 
                     $form = $this->createForm(new ResponseType(), $response);
 

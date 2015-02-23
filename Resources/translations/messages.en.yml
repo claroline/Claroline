@@ -476,6 +476,8 @@ Hint.value: Hint
 Interaction.feedback: Feedback to display with the correction (optional)
 Interaction.invite: Question
 
+Inter_Matching.shuffle: Order of random selection
+
 Inter_Open.ScoreMaxLongResp: Points for correct answer
 
 Inter_QCM.ScoreRightResponse: Points for correct answer
@@ -490,6 +492,7 @@ Inter_Hole.size: Size
 
 Label.value : Value
 Label.scoreRight: Score of question
+Label.positionForce: Forced position
 
 LockAttempte.date: Date
 
@@ -502,6 +505,7 @@ Planning.start_time: Start date
 Points: Points
 
 Proposal.value: Response
+Proposal.positionForce: Forced position
 
 Question_creation: Question creation
 Question.description: Description of the question (optional)

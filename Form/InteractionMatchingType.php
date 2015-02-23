@@ -29,6 +29,13 @@ class InteractionMatchingType extends AbstractType
             );
         $builder
             ->add(
+                'shuffle', 'checkbox', array(
+                    'label' => 'Inter_Matching.shuffle',
+                    'required' => false
+                )
+            );
+        $builder
+            ->add(
                 'typeMatching', 'entity', array(
                     'class' => 'UJM\\ExoBundle\\Entity\\TypeMatching',
                     'label' => 'TypeMatching.value'
