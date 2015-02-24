@@ -1,4 +1,4 @@
-{% extends 'ClarolineCoreBundle:Badge/Tool:Workspace/layout.html.twig' %}
+{% extends 'IcapBadgeBundle:Tool:Workspace/layout.html.twig' %}
 
 {% trans_default_domain "badge" %}
 
@@ -29,7 +29,7 @@
 {% endblock %}
 
 {% block section_body %}
-    {{ render(controller('ClarolineCoreBundle:Badge/Badge:list', {'parameters': parameters})) }}
+    {{ render(controller('IcapBadgeBundle:Badge:list', {'parameters': parameters})) }}
 {% endblock %}
 
 {% block javascripts %}

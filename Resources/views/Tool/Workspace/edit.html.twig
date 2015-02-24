@@ -1,6 +1,6 @@
-{% extends 'ClarolineCoreBundle:Badge/Tool:Workspace/layout.html.twig' %}
+{% extends 'IcapBadgeBundle:Tool:Workspace/layout.html.twig' %}
 
-{% form_theme form 'ClarolineCoreBundle:Badge/Form:rules.html.twig' %}
+{% form_theme form 'IcapBadgeBundle:Form:rules.html.twig' %}
 
 {% trans_default_domain "badge" %}
 
@@ -132,7 +132,7 @@
                     {{ 'award_badge'|trans }} :
                 </h3>
 
-                {{ render(controller('ClarolineCoreBundle:Badge/Tool/Workspace:award', {'workspaceId': workspace.id, 'slug': badge.slug })) }}
+                {{ render(controller('IcapBadgeBundle:Tool/Workspace:award', {'workspaceId': workspace.id, 'slug': badge.slug })) }}
             </div>
         </div>
         <div class="tab-pane" id="edit">

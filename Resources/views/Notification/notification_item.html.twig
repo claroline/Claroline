@@ -6,7 +6,7 @@
     {% else %}
         <strong>{{ systemName }}</strong>
     {% endif %}
-    {% if constant('Claroline\\CoreBundle\\Event\\Log\\LogBadgeAwardEvent::ACTION') == notification.actionKey %}
-        {% include 'ClarolineCoreBundle:Notification:notification_badge_awarding.html.twig' %}
+    {% if constant('Icap\\BadgeBundle\\Event\\Log\\LogBadgeAwardEvent::ACTION') == notification.actionKey %}
+        {% include 'IcapBadgeBundle:Notification:notification_badge_awarding.html.twig' %}
     {% endif %}
 {% endblock %}

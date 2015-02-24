@@ -2,6 +2,7 @@
 
 namespace Icap\BadgeBundle\Manager;
 
+use Claroline\CoreBundle\Repository\UserRepository;
 use Icap\BadgeBundle\Entity\Badge;
 use Icap\BadgeBundle\Entity\BadgeClaim;
 use Icap\BadgeBundle\Entity\BadgeRule;
@@ -297,7 +298,7 @@ class BadgeManager
      *
      * @return \Doctrine\ORM\Query
      */
-    public function getUsersWithBadgesByWorkspaceQuery(UserRepository $userRepository, Workspace $workspace)
+    public function getUsersWithBadgesByWorkspaceQuery(UserRepository $userRepository, Workspace $workspace = null)
     {
         $queryBuilder = $userRepository->createQueryBuilder('u')
             ->select('DISTINCT u, ub, b')
