@@ -1,6 +1,7 @@
 ability:
   add: Ajouter une capacité
   create: Créer une capacité
+  min_activity_count: Nombre d'activités à réussir
 associated_competencies: Compétences associées
 collapse_all: Tout réduire
 competency:
@@ -20,8 +21,10 @@ info:
   no_frame_no_scale: Il n'y a pas encore de référentiels ni d'échelles. Si vous choisissez de créer un référentiel maintenant, celui-ci se verra assigner une échelle par défaut d'un seul niveau. Alternativement, vous pouvez créer une échelle directement et l'associer ensuite à votre référentiel.
   no_scale: Il n'y a pas encore d'échelles. Vous pouvez créer une nouvelle échelle à l'aide du bouton ci-dessous.
   scale_levels: "Les degrés doivent être séparés par des retours à la ligne. Exemple :\n\nFacile\nMoyen\nDifficile"
+level: Niveau
 levels: Dégrés
 message:
+  ability_created: Capacité créée avec succès.
   competency_edited: Compétence modifiée avec succès.
   competency_deleted: Compétence supprimée avec succès.
   competency_deletion_confirm: Voulez-vous vraiment supprimer cette compétence ? Cette action est irréversible.

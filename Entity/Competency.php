@@ -10,9 +10,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @Gedmo\Tree(type="nested")
- * @ORM\Entity
- * @ORM\Table(name="hevinci_competency")
  * @ORM\Entity(repositoryClass="HeVinci\CompetencyBundle\Repository\CompetencyRepository")
+ * @ORM\Table(name="hevinci_competency")
  */
 class Competency implements \JsonSerializable
 {
@@ -39,6 +38,11 @@ class Competency implements \JsonSerializable
      * @ORM\ManyToOne(targetEntity="Scale")
      */
     private $scale;
+
+    /**
+     * @ORM\OneToMany(targetEntity="CompetencyAbility", mappedBy="competencyAbility")
+     */
+    private $competencyAbilities;
 
     /**
      * @Gedmo\TreeLeft
@@ -163,6 +167,22 @@ class Competency implements \JsonSerializable
     public function getRoot()
     {
         return $this->root;
+    }
+
+    /**
+     * @return integer
+     */
+    public function getLeft()
+    {
+        return $this->lft;
+    }
+
+    /**
+     * @return integer
+     */
+    public function getRight()
+    {
+        return $this->rgt;
     }
 
     public function jsonSerialize()

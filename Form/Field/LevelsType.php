@@ -13,7 +13,7 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
  * @DI\Service
  * @DI\Tag("form.type", attributes={"alias"="scale_levels"})
  */
-class LevelType extends AbstractType
+class LevelsType extends AbstractType
 {
     private $om;
 

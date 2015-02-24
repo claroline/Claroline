@@ -4,7 +4,9 @@ namespace HeVinci\CompetencyBundle\Manager;
 
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Doctrine\Common\Collections\ArrayCollection;
+use HeVinci\CompetencyBundle\Entity\Ability;
 use HeVinci\CompetencyBundle\Entity\Competency;
+use HeVinci\CompetencyBundle\Entity\CompetencyAbility;
 use HeVinci\CompetencyBundle\Entity\Level;
 use HeVinci\CompetencyBundle\Entity\Scale;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -18,6 +20,7 @@ class CompetencyManager
     private $om;
     private $competencyRepo;
     private $scaleRepo;
+    private $abilityRepo;
     private $translator;
 
     /**
@@ -33,6 +36,7 @@ class CompetencyManager
         $this->om = $om;
         $this->competencyRepo = $om->getRepository('HeVinciCompetencyBundle:Competency');
         $this->scaleRepo = $om->getRepository('HeVinciCompetencyBundle:Scale');
+        $this->abilityRepo = $om->getRepository('HeVinciCompetencyBundle:Ability');
         $this->translator = $translator;
     }
 
@@ -138,6 +142,10 @@ class CompetencyManager
      */
     public function loadFramework(Competency $framework)
     {
+        $abilities = $this->abilityRepo->findByFramework($framework);
+
+        var_dump($abilities);die;
+
         return $this->competencyRepo->childrenHierarchy($framework, false, [], true)[0];
     }
 
@@ -192,5 +200,35 @@ class CompetencyManager
         $this->om->flush();
 
         return $competency;
+    }
+
+    /**
+     * Creates an ability and links it to a given competency.
+     *
+     * @param Competency $parent
+     * @param Ability $ability
+     * @param Level $level
+     * @return \HeVinci\CompetencyBundle\Entity\Ability
+     * @throws \LogicException if the parent competency is not a leaf node
+     */
+    public function createAbility(Competency $parent, Ability $ability, Level $level)
+    {
+        if ($parent->getRight() - $parent->getLeft() > 1) {
+            throw new \LogicException(
+                "Cannot associate an ability with competency '{$parent->getName()}'"
+                . ': competency must be a leaf node'
+            );
+        }
+
+        $link = new CompetencyAbility();
+        $link->setCompetency($parent);
+        $link->setAbility($ability);
+        $link->setLevel($level);
+
+        $this->om->persist($ability);
+        $this->om->persist($link);
+        $this->om->flush();
+
+        return $ability;
     }
 }

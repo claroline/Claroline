@@ -46,6 +46,11 @@ class Scale implements \JsonSerializable
      */
     private $levels;
 
+    /**
+     * @ORM\OneToMany(targetEntity="Competency", mappedBy="scale")
+     */
+    private $competencies;
+
     public function __construct()
     {
         $this->levels = new ArrayCollection();

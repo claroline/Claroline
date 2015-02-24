@@ -19,7 +19,7 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class CompetencyController
 {
-    private $competencyManager;
+    private $manager;
     private $formHandler;
 
     /**
@@ -36,7 +36,7 @@ class CompetencyController
         FormHandler $handler
     )
     {
-        $this->competencyManager = $manager;
+        $this->manager = $manager;
         $this->formHandler = $handler;
     }
 
@@ -52,8 +52,8 @@ class CompetencyController
     public function frameworksAction()
     {
         return [
-            'frameworks' => $this->competencyManager->listFrameworks(),
-            'hasScales' => $this->competencyManager->hasScales()
+            'frameworks' => $this->manager->listFrameworks(),
+            'hasScales' => $this->manager->hasScales()
         ];
     }
 
@@ -68,7 +68,7 @@ class CompetencyController
      */
     public function newFrameworkAction()
     {
-        $this->competencyManager->ensureHasScale();
+        $this->manager->ensureHasScale();
 
         return ['form' => $this->formHandler->getView('hevinci_form_framework')];
     }
@@ -87,7 +87,7 @@ class CompetencyController
     {
         if ($this->formHandler->isValid('hevinci_form_framework', $request)) {
             return new JsonResponse(
-                $this->competencyManager->persistFramework($this->formHandler->getData())
+                $this->manager->persistFramework($this->formHandler->getData())
             );
         }
 
@@ -105,7 +105,7 @@ class CompetencyController
      */
     public function frameworkAction(Competency $framework)
     {
-        return ['framework' => $this->competencyManager->loadFramework($framework)];
+        return ['framework' => $this->manager->loadFramework($framework)];
     }
 
     /**
@@ -119,7 +119,7 @@ class CompetencyController
      */
     public function frameworkEditionFormAction(Competency $framework)
     {
-        $this->competencyManager->ensureIsRoot($framework);
+        $this->manager->ensureIsRoot($framework);
 
         return [
             'form' => $this->formHandler->getView('hevinci_form_framework', $framework),
@@ -140,16 +140,13 @@ class CompetencyController
      */
     public function editFrameworkAction(Request $request, Competency $framework)
     {
-        $this->competencyManager->ensureIsRoot($framework);
+        $this->manager->ensureIsRoot($framework);
 
         if ($this->formHandler->isValid('hevinci_form_framework', $request, $framework)) {
-            return new JsonResponse($this->competencyManager->updateCompetency($framework));
+            return new JsonResponse($this->manager->updateCompetency($framework));
         }
 
-        return [
-            'form' => $this->formHandler->getView(),
-            'framework' => $framework
-        ];
+        return ['form' => $this->formHandler->getView(), 'framework' => $framework];
     }
 
     /**
@@ -162,7 +159,7 @@ class CompetencyController
      */
     public function deleteCompetencyAction(Competency $competency)
     {
-        return new JsonResponse($this->competencyManager->deleteCompetency($competency));
+        return new JsonResponse($this->manager->deleteCompetency($competency));
     }
 
     /**
@@ -197,7 +194,7 @@ class CompetencyController
     {
         if ($this->formHandler->isValid('hevinci_form_competency', $request, null, ['parent_competency' => $parent])) {
             return new JsonResponse(
-                $this->competencyManager->createSubCompetency($parent, $this->formHandler->getData())
+                $this->manager->createSubCompetency($parent, $this->formHandler->getData())
             );
         }
 
@@ -235,9 +232,50 @@ class CompetencyController
     public function editCompetencyAction(Request $request, Competency $competency)
     {
         if ($this->formHandler->isValid('hevinci_form_competency', $request, $competency)) {
-            return new JsonResponse($this->competencyManager->updateCompetency($competency));
+            return new JsonResponse($this->manager->updateCompetency($competency));
         }
 
         return ['form' => $this->formHandler->getView(), 'id' => $competency->getId()];
+    }
+
+    /**
+     * Displays the ability creation form.
+     *
+     * @EXT\Route("/{id}/ability/new", name="hevinci_new_ability")
+     * @EXT\Template("HeVinciCompetencyBundle:Competency:abilityForm.html.twig")
+     *
+     * @param Competency $parent
+     * @return array
+     */
+    public function newAbilityAction(Competency $parent)
+    {
+        return [
+            'form' => $this->formHandler->getView('hevinci_form_ability', null, ['competency' => $parent]),
+            'competency' => $parent
+        ];
+    }
+
+    /**
+     * Creates a new ability.
+     *
+     * @EXT\Route("/{id}/ability", name="hevinci_create_ability")
+     * @EXT\Method("POST")
+     * @EXT\Template("HeVinciCompetencyBundle:Competency:abilityForm.html.twig")
+     *
+     * @param Request       $request
+     * @param Competency    $parent
+     * @return array
+     */
+    public function createAbilityAction(Request $request, Competency $parent)
+    {
+        if ($this->formHandler->isValid('hevinci_form_ability', $request, null, ['competency' => $parent])) {
+            return new JsonResponse($this->manager->createAbility(
+                $parent,
+                $this->formHandler->getData(),
+                $this->formHandler->getData()->getLevel()
+            ));
+        }
+
+        return ['form' => $this->formHandler->getView(), 'competency' => $parent];
     }
 }

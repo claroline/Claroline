@@ -176,6 +176,20 @@
         });
     });
 
+    // ability creation
+    $(document).on('click', 'a.create-ability', function (event) {
+        event.preventDefault();
+        var node = this.parentNode.parentNode.parentNode.parentNode;
+        window.Claroline.Modal.displayForm(
+            Routing.generate('hevinci_new_ability', { id: node.dataset.id }),
+            function (data) {
+                flasher.setMessage(trans('message.ability_created'));
+            },
+            function () {},
+            'ability-form'
+        );
+    });
+
     function displayScaleCreationForm(successCallback) {
         window.Claroline.Modal.displayForm(
             Routing.generate('hevinci_new_scale'),
