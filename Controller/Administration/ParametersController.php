@@ -1097,7 +1097,7 @@ class ParametersController extends Controller
         $currentUrl = $this->request->getHttpHost() .
             $this->request->getRequestUri();
         $currentUrl = preg_replace(
-            '/\/admin\/parameters\/send\/datas\/confirm$/',
+            '/\/admin\/parameters\/send\/datas\/(.)*$/',
             '',
             $currentUrl
         );
