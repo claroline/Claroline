@@ -20,4 +20,9 @@ class IcapBadgeBundle extends PluginBundle
 
         return $config;
     }
+
+    public function hasMigrations()
+    {
+        return false;
+    }
 }
