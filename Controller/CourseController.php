@@ -362,6 +362,9 @@ class CourseController extends Controller
             $creationDate = new \DateTime();
             $session->setCreationDate($creationDate);
             $session->setCourse($course);
+            $session->setPublicRegistration($course->getPublicRegistration());
+            $session->setPublicUnregistration($course->getPublicUnregistration());
+            $session->setRegistrationValidation($course->getRegistrationValidation());
             $workspace = $this->generateWorkspace($course, $session, $authenticatedUser);
             $session->setWorkspace($workspace);
             $learnerRole = $this->generateRoleForSession(

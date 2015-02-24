@@ -99,6 +99,21 @@ class CourseSession
     protected $creationDate;
 
     /**
+     * @ORM\Column(name="public_registration", type="boolean")
+     */
+    protected $publicRegistration = false;
+
+    /**
+     * @ORM\Column(name="public_unregistration", type="boolean")
+     */
+    protected $publicUnregistration = false;
+
+    /**
+     * @ORM\Column(name="registration_validation", type="boolean")
+     */
+    protected $registrationValidation = false;
+
+    /**
      * @ORM\OneToMany(
      *     targetEntity="Claroline\CursusBundle\Entity\CourseSessionUser",
      *     mappedBy="session"
@@ -218,6 +233,36 @@ class CourseSession
     public function setCreationDate($creationDate)
     {
         $this->creationDate = $creationDate;
+    }
+
+    public function getPublicRegistration()
+    {
+        return $this->publicRegistration;
+    }
+
+    public function setPublicRegistration($publicRegistration)
+    {
+        $this->publicRegistration = $publicRegistration;
+    }
+
+    public function getPublicUnregistration()
+    {
+        return $this->publicUnregistration;
+    }
+
+    public function setPublicUnregistration($publicUnregistration)
+    {
+        $this->publicUnregistration = $publicUnregistration;
+    }
+
+    public function getRegistrationValidation()
+    {
+        return $this->registrationValidation;
+    }
+
+    public function setRegistrationValidation($registrationValidation)
+    {
+        $this->registrationValidation = $registrationValidation;
     }
 
     public function getSessionUsers()
