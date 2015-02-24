@@ -14,8 +14,9 @@ class IcapBadgeBundle extends PluginBundle
 
         $config
             ->addRoutingResource($this->getPath() . '/Resources/config/routing.yml')
-            ->addRoutingResource($this->getPath() . '/Resources/config/idci_exporter.yml')
-            ->addRoutingResource($this->getPath() . '/Resources/config/twig.yml');
+            ->addContainerResource($this->getPath() . '/Resources/config/idci_exporter.yml')
+            ->addContainerResource($this->getPath() . '/Resources/config/twig.yml')
+        ;
 
         return $config;
     }
