@@ -30,13 +30,7 @@
 
 {% block section_body %}
     <form role="form" action="{{ path('icap_badge_admin_badges_add') }}" method="post" class="form-horizontal" {{ form_enctype(form) }} novalidate>
-        {% if not form.vars.valid %}
-            {% for error in form.vars.errors %}
-            <div class="alert alert-danger">
-                {{ error.message }}.
-            </div>
-            {% endfor %}
-        {% endif %}
+        {{ form_errors(form) }}
         <div class="row badges_infos">
             <div class="col-md-2 file_upload text-center{% if not form.file.vars.valid %} has-error{% endif %}">
                 <p class="text-center">
