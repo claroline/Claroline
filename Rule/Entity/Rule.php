@@ -103,7 +103,7 @@ abstract class Rule
     /**
      * @var Badge
      *
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Badge\Badge")
+     * @ORM\ManyToOne(targetEntity="Icap\BadgeBundle\Entity\Badge")
      * @ORM\JoinColumn(nullable=true)
      */
     protected $badge;
