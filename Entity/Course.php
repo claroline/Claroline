@@ -72,14 +72,14 @@ class Course
     protected $workspaceModel;
 
     /**
-     * @ORM\Column(name="manager_role_prefix", nullable=true)
+     * @ORM\Column(name="tutor_role_name", nullable=true)
      */
-    protected $managerRolePrefix;
+    protected $tutorRoleName;
 
      /**
-     * @ORM\Column(name="user_role_prefix", nullable=true)
+     * @ORM\Column(name="learner_role_name", nullable=true)
      */
-    protected $userRolePrefix;
+    protected $learnerRoleName;
 
     /**
      * @ORM\OneToMany(
@@ -174,24 +174,24 @@ class Course
         $this->workspaceModel = $workspaceModel;
     }
 
-    public function getManagerRolePrefix()
+    public function getTutorRoleName()
     {
-        return $this->managerRolePrefix;
+        return $this->tutorRoleName;
     }
 
-    public function setManagerRolePrefix($managerRolePrefix)
+    public function setTutorRoleName($tutorRoleName)
     {
-        $this->managerRolePrefix = $managerRolePrefix;
+        $this->tutorRoleName = $tutorRoleName;
     }
 
-    public function getUserRolePrefix()
+    public function getLearnerRoleName()
     {
-        return $this->userRolePrefix;
+        return $this->learnerRoleName;
     }
 
-    public function setUserRolePrefix($userRolePrefix)
+    public function setLearnerRoleName($learnerRoleName)
     {
-        $this->userRolePrefix = $userRolePrefix;
+        $this->learnerRoleName = $learnerRoleName;
     }
 
     public function getSessions()

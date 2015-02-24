@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CursusBundle\Migrations\drizzle_pdo_mysql;
+namespace Claroline\CursusBundle\Migrations\mysqli;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2015/02/20 12:03:41
+ * Generation date: 2015/02/23 04:05:28
  */
-class Version20150220120338 extends AbstractMigration
+class Version20150223160525 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -20,16 +20,16 @@ class Version20150220120338 extends AbstractMigration
                 workspace_model_id INT DEFAULT NULL, 
                 code VARCHAR(255) NOT NULL, 
                 title VARCHAR(255) NOT NULL, 
-                description TEXT DEFAULT NULL, 
-                public_registration BOOLEAN NOT NULL, 
-                public_unregistration BOOLEAN NOT NULL, 
-                registration_validation BOOLEAN NOT NULL, 
-                manager_role_prefix VARCHAR(255) DEFAULT NULL, 
-                user_role_prefix VARCHAR(255) DEFAULT NULL, 
+                description LONGTEXT DEFAULT NULL, 
+                public_registration TINYINT(1) NOT NULL, 
+                public_unregistration TINYINT(1) NOT NULL, 
+                registration_validation TINYINT(1) NOT NULL, 
+                tutor_role_name VARCHAR(255) DEFAULT NULL, 
+                learner_role_name VARCHAR(255) DEFAULT NULL, 
                 UNIQUE INDEX UNIQ_3359D34977153098 (code), 
                 INDEX IDX_3359D349EE7F5384 (workspace_model_id), 
                 PRIMARY KEY(id)
-            ) COLLATE utf8_unicode_ci ENGINE = InnoDB
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_cursusbundle_cursus (
@@ -38,9 +38,9 @@ class Version20150220120338 extends AbstractMigration
                 parent_id INT DEFAULT NULL, 
                 code VARCHAR(255) DEFAULT NULL, 
                 title VARCHAR(255) NOT NULL, 
-                description TEXT DEFAULT NULL, 
-                blocking BOOLEAN NOT NULL, 
-                details TEXT DEFAULT NULL COMMENT '(DC2Type:json_array)', 
+                description LONGTEXT DEFAULT NULL, 
+                blocking TINYINT(1) NOT NULL, 
+                details LONGTEXT DEFAULT NULL COMMENT '(DC2Type:json_array)', 
                 cursus_order INT NOT NULL, 
                 root INT DEFAULT NULL, 
                 lvl INT NOT NULL, 
@@ -50,7 +50,7 @@ class Version20150220120338 extends AbstractMigration
                 INDEX IDX_27921C33591CC992 (course_id), 
                 INDEX IDX_27921C33727ACA70 (parent_id), 
                 PRIMARY KEY(id)
-            ) COLLATE utf8_unicode_ci ENGINE = InnoDB
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_cursusbundle_course_session_group (
@@ -63,7 +63,7 @@ class Version20150220120338 extends AbstractMigration
                 INDEX IDX_F27287A4613FECDF (session_id), 
                 UNIQUE INDEX cursus_group_unique_course_session_group (session_id, group_id), 
                 PRIMARY KEY(id)
-            ) COLLATE utf8_unicode_ci ENGINE = InnoDB
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_cursusbundle_cursus_displayed_word (
@@ -72,27 +72,27 @@ class Version20150220120338 extends AbstractMigration
                 displayed_name VARCHAR(255) DEFAULT NULL, 
                 UNIQUE INDEX UNIQ_14E7B098C3F17511 (word), 
                 PRIMARY KEY(id)
-            ) COLLATE utf8_unicode_ci ENGINE = InnoDB
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_cursusbundle_course_session (
                 id INT AUTO_INCREMENT NOT NULL, 
                 course_id INT NOT NULL, 
                 workspace_id INT DEFAULT NULL, 
-                user_role_id INT DEFAULT NULL, 
-                manager_role_id INT DEFAULT NULL, 
+                learner_role_id INT DEFAULT NULL, 
+                tutor_role_id INT DEFAULT NULL, 
                 cursus_id INT DEFAULT NULL, 
                 session_name VARCHAR(255) NOT NULL, 
                 session_status INT NOT NULL, 
-                default_session BOOLEAN NOT NULL, 
+                default_session TINYINT(1) NOT NULL, 
                 creation_date DATETIME NOT NULL, 
                 INDEX IDX_C5F56FDE591CC992 (course_id), 
                 INDEX IDX_C5F56FDE82D40A1F (workspace_id), 
-                UNIQUE INDEX UNIQ_C5F56FDE8E0E3CA6 (user_role_id), 
-                UNIQUE INDEX UNIQ_C5F56FDE68CE17BA (manager_role_id), 
+                UNIQUE INDEX UNIQ_C5F56FDEEF2297F5 (learner_role_id), 
+                UNIQUE INDEX UNIQ_C5F56FDEBEFB2F13 (tutor_role_id), 
                 INDEX IDX_C5F56FDE40AEF4B9 (cursus_id), 
                 PRIMARY KEY(id)
-            ) COLLATE utf8_unicode_ci ENGINE = InnoDB
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_cursusbundle_cursus_group (
@@ -105,7 +105,7 @@ class Version20150220120338 extends AbstractMigration
                 INDEX IDX_EA4DDE9340AEF4B9 (cursus_id), 
                 UNIQUE INDEX cursus_group_unique_cursus_group (cursus_id, group_id), 
                 PRIMARY KEY(id)
-            ) COLLATE utf8_unicode_ci ENGINE = InnoDB
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_cursusbundle_course_session_user (
@@ -118,7 +118,7 @@ class Version20150220120338 extends AbstractMigration
                 INDEX IDX_80B4120F613FECDF (session_id), 
                 UNIQUE INDEX cursus_user_unique_course_session_user (session_id, user_id), 
                 PRIMARY KEY(id)
-            ) COLLATE utf8_unicode_ci ENGINE = InnoDB
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_cursusbundle_course_session_registration_queue (
@@ -130,7 +130,7 @@ class Version20150220120338 extends AbstractMigration
                 INDEX IDX_334FC296613FECDF (session_id), 
                 UNIQUE INDEX session_queue_unique_session_user (session_id, user_id), 
                 PRIMARY KEY(id)
-            ) COLLATE utf8_unicode_ci ENGINE = InnoDB
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             CREATE TABLE claro_cursusbundle_cursus_user (
@@ -143,7 +143,7 @@ class Version20150220120338 extends AbstractMigration
                 INDEX IDX_8AA52D840AEF4B9 (cursus_id), 
                 UNIQUE INDEX cursus_user_unique_cursus_user (cursus_id, user_id), 
                 PRIMARY KEY(id)
-            ) COLLATE utf8_unicode_ci ENGINE = InnoDB
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
             ALTER TABLE claro_cursusbundle_course 
@@ -189,13 +189,13 @@ class Version20150220120338 extends AbstractMigration
         ");
         $this->addSql("
             ALTER TABLE claro_cursusbundle_course_session 
-            ADD CONSTRAINT FK_C5F56FDE8E0E3CA6 FOREIGN KEY (user_role_id) 
+            ADD CONSTRAINT FK_C5F56FDEEF2297F5 FOREIGN KEY (learner_role_id) 
             REFERENCES claro_role (id) 
             ON DELETE SET NULL
         ");
         $this->addSql("
             ALTER TABLE claro_cursusbundle_course_session 
-            ADD CONSTRAINT FK_C5F56FDE68CE17BA FOREIGN KEY (manager_role_id) 
+            ADD CONSTRAINT FK_C5F56FDEBEFB2F13 FOREIGN KEY (tutor_role_id) 
             REFERENCES claro_role (id) 
             ON DELETE SET NULL
         ");

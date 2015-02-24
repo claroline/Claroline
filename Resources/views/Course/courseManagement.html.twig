@@ -108,6 +108,9 @@
                                         {{ 'creation_date'|trans({}, 'platform') }}
                                     </th>
                                     <th class="text-center">
+                                        {{ 'workspace'|trans({}, 'platform') }}
+                                    </th>
+                                    <th class="text-center">
                                         {{ 'status'|trans({}, 'platform') }}
                                     </th>
                                 </tr>
@@ -133,6 +136,18 @@
                                         </td>
                                         <td>
                                             {{ session.getCreationDate()|intl_date_format }}
+                                        </td>
+                                        <td class="text-center">
+                                            {% set workspace = session.getWorkspace() %}
+                                            
+                                            {% if workspace is null %}
+                                                -
+                                            {% else %}
+                                                <a href="{{ path('claro_workspace_open', {'workspaceId': workspace.getId()}) }}"
+                                                   class="fa fa-book"
+                                                >
+                                                </a>
+                                            {% endif %}
                                         </td>
                                         <td class="text-center">
                                             <i class="fa fa-circle pointer-hand"
@@ -165,6 +180,18 @@
                                         </td>
                                         <td>
                                             {{ session.getCreationDate()|intl_date_format }}
+                                        </td>
+                                        <td class="text-center">
+                                            {% set workspace = session.getWorkspace() %}
+                                            
+                                            {% if workspace is null %}
+                                                -
+                                            {% else %}
+                                                <a href="{{ path('claro_workspace_open', {'workspaceId': workspace.getId()}) }}"
+                                                   class="fa fa-book"
+                                                >
+                                                </a>
+                                            {% endif %}
                                         </td>
                                         <td class="text-center">
                                             <i class="fa fa-circle pointer-hand"

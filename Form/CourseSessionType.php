@@ -24,6 +24,34 @@ class CourseSessionType extends AbstractType
             'text',
             array('required' => true)
         );
+        $attr = array();
+        $attr['class'] = 'datepicker input-small';
+        $attr['data-date-format'] = 'dd-mm-yyyy';
+        $attr['autocomplete'] = 'off';
+        $builder->add(
+            'start_date',
+            'date',
+            array(
+                'required' => false,
+                'mapped' => false,
+                'format' => 'dd-MM-yyyy',
+                'widget' => 'single_text',
+                'attr' => $attr,
+                'input' => 'datetime'
+            )
+        );
+        $builder->add(
+            'end_date',
+            'date',
+            array(
+                'required' => false,
+                'mapped' => false,
+                'format' => 'dd-MM-yyyy',
+                'widget' => 'single_text',
+                'attr' => $attr,
+                'input' => 'datetime'
+            )
+        );
     }
 
     public function getName()

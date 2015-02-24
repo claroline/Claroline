@@ -1,12 +1,16 @@
 course: Course
 course_form_code: Code
 course_form_description: Description
+course_form_learnerRoleName: 'Learner role'
 course_form_publicRegistration: 'Public registration'
 course_form_publicUnregistration: 'Public unregistration'
 course_form_registrationValidation: 'Registration validation'
 course_form_title: Title
+course_form_tutorRoleName: 'Tutor role'
 course_form_workspaceModel: 'Workspace model'
+course_session_form_end_date: 'End date'
 course_session_form_name: Name
+course_session_form_start_date: 'Start date'
 create_cursus: 'Create "%cursusWord%"'
 cursus: Cursus
 cursus_form_code: Code

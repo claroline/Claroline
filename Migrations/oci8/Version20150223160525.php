@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2015/02/20 12:03:40
+ * Generation date: 2015/02/23 04:05:28
  */
-class Version20150220120338 extends AbstractMigration
+class Version20150223160525 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -24,8 +24,8 @@ class Version20150220120338 extends AbstractMigration
                 public_registration NUMBER(1) NOT NULL, 
                 public_unregistration NUMBER(1) NOT NULL, 
                 registration_validation NUMBER(1) NOT NULL, 
-                manager_role_prefix VARCHAR2(255) DEFAULT NULL NULL, 
-                user_role_prefix VARCHAR2(255) DEFAULT NULL NULL, 
+                tutor_role_name VARCHAR2(255) DEFAULT NULL NULL, 
+                learner_role_name VARCHAR2(255) DEFAULT NULL NULL, 
                 PRIMARY KEY(id)
             )
         ");
@@ -212,8 +212,8 @@ class Version20150220120338 extends AbstractMigration
                 id NUMBER(10) NOT NULL, 
                 course_id NUMBER(10) NOT NULL, 
                 workspace_id NUMBER(10) DEFAULT NULL NULL, 
-                user_role_id NUMBER(10) DEFAULT NULL NULL, 
-                manager_role_id NUMBER(10) DEFAULT NULL NULL, 
+                learner_role_id NUMBER(10) DEFAULT NULL NULL, 
+                tutor_role_id NUMBER(10) DEFAULT NULL NULL, 
                 cursus_id NUMBER(10) DEFAULT NULL NULL, 
                 session_name VARCHAR2(255) NOT NULL, 
                 session_status NUMBER(10) NOT NULL, 
@@ -257,10 +257,10 @@ class Version20150220120338 extends AbstractMigration
             CREATE INDEX IDX_C5F56FDE82D40A1F ON claro_cursusbundle_course_session (workspace_id)
         ");
         $this->addSql("
-            CREATE UNIQUE INDEX UNIQ_C5F56FDE8E0E3CA6 ON claro_cursusbundle_course_session (user_role_id)
+            CREATE UNIQUE INDEX UNIQ_C5F56FDEEF2297F5 ON claro_cursusbundle_course_session (learner_role_id)
         ");
         $this->addSql("
-            CREATE UNIQUE INDEX UNIQ_C5F56FDE68CE17BA ON claro_cursusbundle_course_session (manager_role_id)
+            CREATE UNIQUE INDEX UNIQ_C5F56FDEBEFB2F13 ON claro_cursusbundle_course_session (tutor_role_id)
         ");
         $this->addSql("
             CREATE INDEX IDX_C5F56FDE40AEF4B9 ON claro_cursusbundle_course_session (cursus_id)
@@ -496,13 +496,13 @@ class Version20150220120338 extends AbstractMigration
         ");
         $this->addSql("
             ALTER TABLE claro_cursusbundle_course_session 
-            ADD CONSTRAINT FK_C5F56FDE8E0E3CA6 FOREIGN KEY (user_role_id) 
+            ADD CONSTRAINT FK_C5F56FDEEF2297F5 FOREIGN KEY (learner_role_id) 
             REFERENCES claro_role (id) 
             ON DELETE SET NULL
         ");
         $this->addSql("
             ALTER TABLE claro_cursusbundle_course_session 
-            ADD CONSTRAINT FK_C5F56FDE68CE17BA FOREIGN KEY (manager_role_id) 
+            ADD CONSTRAINT FK_C5F56FDEBEFB2F13 FOREIGN KEY (tutor_role_id) 
             REFERENCES claro_role (id) 
             ON DELETE SET NULL
         ");

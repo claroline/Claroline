@@ -77,6 +77,22 @@ class CourseType extends AbstractType
                 'required' => false
             )
         );
+        $builder->add(
+            'tutorRoleName',
+            'text',
+            array(
+                'required' => false,
+                'attr' => array('class' => 'role-name-txt')
+            )
+        );
+        $builder->add(
+            'learnerRoleName',
+            'text',
+            array(
+                'required' => false,
+                'attr' => array('class' => 'role-name-txt')
+            )
+        );
     }
 
     public function getName()

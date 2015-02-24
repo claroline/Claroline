@@ -63,17 +63,17 @@ class CourseSession
      * @ORM\OneToOne(
      *     targetEntity="Claroline\CoreBundle\Entity\Role"
      * )
-     * @ORM\JoinColumn(name="user_role_id", nullable=true, onDelete="SET NULL")
+     * @ORM\JoinColumn(name="learner_role_id", nullable=true, onDelete="SET NULL")
      */
-    protected $userRole;
+    protected $learnerRole;
 
     /**
      * @ORM\OneToOne(
      *     targetEntity="Claroline\CoreBundle\Entity\Role"
      * )
-     * @ORM\JoinColumn(name="manager_role_id", nullable=true, onDelete="SET NULL")
+     * @ORM\JoinColumn(name="tutor_role_id", nullable=true, onDelete="SET NULL")
      */
-    protected $managerRole;
+    protected $tutorRole;
 
     /**
      * @ORM\ManyToOne(
@@ -180,24 +180,24 @@ class CourseSession
         $this->sessionStatus = $sessionStatus;
     }
 
-    public function getUserRole()
+    public function getLearnerRole()
     {
-        return $this->userRole;
+        return $this->learnerRole;
     }
 
-    public function setUserRole(Role $userRole)
+    public function setLearnerRole(Role $learnerRole)
     {
-        $this->userRole = $userRole;
+        $this->learnerRole = $learnerRole;
     }
 
-    public function getManagerRole()
+    public function getTutorRole()
     {
-        return $this->managerRole;
+        return $this->tutorRole;
     }
 
-    public function setManagerRole(Role $managerRole)
+    public function setTutorRole(Role $tutorRole)
     {
-        $this->managerRole = $managerRole;
+        $this->tutorRole = $tutorRole;
     }
 
     public function isDefaultSession()
