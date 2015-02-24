@@ -1,7 +1,7 @@
 idci_exporter:
     entities:
         badge:
-            class: 'Claroline\CoreBundle\Entity\Badge\Badge'
+            class: 'Icap\BadgeBundle\Entity\Badge'
             formats:
                 jsonp:
                     transformer:

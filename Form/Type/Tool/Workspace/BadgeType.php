@@ -87,7 +87,7 @@ class BadgeType extends AbstractType
             );
 
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event){
-            /** @var \Claroline\CoreBundle\Entity\Badge\Badge $badge */
+            /** @var \Icap\BadgeBundle\Entity\Badge $badge */
             $badge = $event->getData();
 
             if ($badge && null !== $badge) {

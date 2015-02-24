@@ -16,7 +16,7 @@ class BadgeRule extends Rule
     /**
      * @var Badge
      *
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Badge\Badge", inversedBy="badgeRules")
+     * @ORM\ManyToOne(targetEntity="Icap\BadgeBundle\Entity\Badge", inversedBy="badgeRules")
      * @ORM\JoinColumn(name="associated_badge", referencedColumnName="id", nullable=false, onDelete="CASCADE")
      */
     protected $associatedBadge;

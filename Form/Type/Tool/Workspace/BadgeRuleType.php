@@ -95,7 +95,7 @@ class BadgeRuleType extends AbstractType
     }
 
     public function onPreSetData(FormEvent $event){
-        /** @var \Claroline\CoreBundle\Entity\Badge\Badge $badge */
+        /** @var \Icap\BadgeBundle\Entity\Badge $badge */
         $badge = $event->getData();
         $form  = $event->getForm();
 

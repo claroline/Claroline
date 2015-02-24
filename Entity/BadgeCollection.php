@@ -41,7 +41,7 @@ class BadgeCollection
     protected $slug;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Claroline\CoreBundle\Entity\Badge\Badge")
+     * @ORM\ManyToMany(targetEntity="Icap\BadgeBundle\Entity\Badge")
      * @ORM\JoinTable(name="claro_badge_collection_badges")
      */
     protected $badges;

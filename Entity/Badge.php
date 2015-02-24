@@ -120,21 +120,21 @@ class Badge extends Rulable
     /**
      * @var ArrayCollection|UserBadge[]
      *
-     * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Badge\UserBadge", mappedBy="badge", cascade={"all"})
+     * @ORM\OneToMany(targetEntity="Icap\BadgeBundle\Entity\UserBadge", mappedBy="badge", cascade={"all"})
      */
     protected $userBadges;
 
     /**
      * @var ArrayCollection|BadgeClaim[]
      *
-     * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Badge\BadgeClaim", mappedBy="badge", cascade={"all"})
+     * @ORM\OneToMany(targetEntity="Icap\BadgeBundle\Entity\BadgeClaim", mappedBy="badge", cascade={"all"})
      */
     protected $badgeClaims;
 
     /**
      * @var ArrayCollection|BadgeRule[]
      *
-     * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Badge\BadgeRule", mappedBy="associatedBadge", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="Icap\BadgeBundle\Entity\BadgeRule", mappedBy="associatedBadge", cascade={"persist"})
      * @Expose
      */
     protected $badgeRules;
@@ -151,7 +151,7 @@ class Badge extends Rulable
      * @var ArrayCollection|BadgeTranslation[]
      *
      * @ORM\OneToMany(
-     *   targetEntity="Claroline\CoreBundle\Entity\Badge\BadgeTranslation",
+     *   targetEntity="Icap\BadgeBundle\Entity\BadgeTranslation",
      *   mappedBy="badge",
      *   cascade={"all"}
      * )
