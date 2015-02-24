@@ -100,16 +100,6 @@ class DatabaseWriter
         $pluginEntity->setBundleName($pluginBundle->getBundleName());
         $pluginEntity->setHasOptions($pluginConfiguration['has_options']);
 
-        if (isset($pluginConfiguration['icon'])) {
-            $ds = DIRECTORY_SEPARATOR;
-            $iconWebDir = "bundles{$ds}{$pluginBundle->getAssetsFolder()}{$ds}images{$ds}icons";
-            $pluginEntity->setIcon("{$iconWebDir}{$ds}{$pluginConfiguration['icon']}");
-        } else {
-            $defaultIcon = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceIcon')
-                ->findOneByMimeType('custom/default');
-            $pluginEntity->setIcon($defaultIcon->getRelativeUrl());
-        }
-
         $this->em->persist($pluginEntity);
         $this->persistConfiguration($pluginConfiguration, $pluginEntity, $pluginBundle);
         $this->em->flush();
@@ -136,16 +126,6 @@ class DatabaseWriter
         }
 
         $plugin->setHasOptions($pluginConfiguration['has_options']);
-
-        if (isset($pluginConfiguration['icon'])) {
-            $ds = DIRECTORY_SEPARATOR;
-            $iconWebDir = "bundles{$ds}{$pluginBundle->getAssetsFolder()}{$ds}images{$ds}icons";
-            $plugin->setIcon("{$iconWebDir}{$ds}{$pluginConfiguration['icon']}");
-        } else {
-            $defaultIcon = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceIcon')
-                ->findOneByMimeType('custom/default');
-            $plugin->setIcon($defaultIcon->getRelativeUrl());
-        }
 
         $this->em->persist($plugin);
         $this->updateConfiguration($pluginConfiguration, $plugin, $pluginBundle);
@@ -274,7 +254,6 @@ class DatabaseWriter
             $resourceType = new ResourceType();
             $resourceType->setName($resourceConfiguration['name']);
             $resourceType->setPlugin($plugin);
-
             $isExistResourceType = false;
         }
 
@@ -556,23 +535,10 @@ class DatabaseWriter
      */
     private function persistWidget($widgetConfiguration, Plugin $plugin, PluginBundle $pluginBundle, Widget $widget)
     {
-        $ds = DIRECTORY_SEPARATOR;
-
         $widget->setName($widgetConfiguration['name']);
         $widget->setConfigurable($widgetConfiguration['is_configurable']);
         $widget->setExportable($widgetConfiguration['is_exportable']);
         $widget->setPlugin($plugin);
-
-        if (isset($widgetConfiguration['icon'])) {
-            $widget->setIcon(
-                "bundles{$ds}{$pluginBundle->getAssetsFolder()}{$ds}images{$ds}icons{$ds}{$widgetConfiguration['icon']}"
-            );
-        } else {
-            $widget->setIcon(
-                "bundles{$ds}clarolinecore{$ds}images{$ds}resources{$ds}icons{$ds}res_default.png"
-            );
-        }
-
         $this->em->persist($widget);
     }
 
