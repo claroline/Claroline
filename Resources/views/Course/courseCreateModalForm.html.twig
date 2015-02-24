@@ -71,6 +71,9 @@
                 $('#tutor-role-name-choice').empty();
                 $('#learner-role-name-choice').empty();
             } else {
+                var tutorValue = $('#course_form_tutorRoleName').val();
+                var learnerValue = $('#course_form_learnerRoleName').val();
+                
                 $.ajax({
                     url: Routing.generate(
                         'ws_model_roles_translation_keys_retrieve',
@@ -96,6 +99,8 @@
                             $(this).parents('.form-group').addClass('hidden');
                         });
                         $('#role-name-choice').removeClass('hidden');
+                        $('#tutor-role-name-choice option[value="' + tutorValue + '"]').prop('selected', true);
+                        $('#learner-role-name-choice option[value="' + learnerValue + '"]').prop('selected', true);
                         $('#course_form_tutorRoleName').val($('#tutor-role-name-choice').val());
                         $('#course_form_learnerRoleName').val($('#learner-role-name-choice').val());
                     }
