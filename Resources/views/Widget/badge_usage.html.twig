@@ -6,7 +6,7 @@
     {% endstylesheets %}
 {% endblock %}
 
-<p>{{ 'last_awarded_badges'|trans({}, 'badge') }} :</p>
+<p>{{ 'last_awarded_badges'|trans({}, 'icap_badge') }} :</p>
 <ul class="media-list list-inline">
     {% for userBadge in lastAwardedBadges %}
         <li class="media">
@@ -20,11 +20,11 @@
             </div>
         </li>
     {% else %}
-        <li>{{ 'no_badges'|trans({}, 'badge') }}</li>
+        <li>{{ 'no_badges'|trans({}, 'icap_badge') }}</li>
     {% endfor %}
 </ul>
 
-<p>{{ 'ladder_awarded_badges'|trans({}, 'badge') }} :</p>
+<p>{{ 'ladder_awarded_badges'|trans({}, 'icap_badge') }} :</p>
 <ul class="media-list list-inline">
     {% for userBadge in mostAwardedBadges %}
     <li class="media">
@@ -38,6 +38,6 @@
         </div>
     </li>
     {% else %}
-        <li>{{ 'no_badges'|trans({}, 'badge') }}</li>
+        <li>{{ 'no_badges'|trans({}, 'icap_badge') }}</li>
     {% endfor %}
 </ul>

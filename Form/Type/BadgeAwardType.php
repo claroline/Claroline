@@ -61,6 +61,6 @@ class BadgeAwardType extends AbstractType
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults(array('translation_domain' => 'badge'));
+        $resolver->setDefaults(array('translation_domain' => 'icap_badge'));
     }
 }

@@ -52,13 +52,13 @@ class ProfileController extends Controller
                         $badgeManager = $this->get('icap_badge.manager.badge');
                         $badgeManager->makeClaim($badge, $user);
 
-                        $flashBag->add('success', $translator->trans('badge_claim_success_message', array(), 'badge'));
+                        $flashBag->add('success', $translator->trans('badge_claim_success_message', array(), 'icap_badge'));
                     }
                     else {
-                        $flashBag->add('warning', $translator->trans('badge_claim_nothing_selected_warning_message', array(), 'badge'));
+                        $flashBag->add('warning', $translator->trans('badge_claim_nothing_selected_warning_message', array(), 'icap_badge'));
                     }
                 } catch (\Exception $exception) {
-                    $flashBag->add('error', $translator->trans($exception->getMessage(), array(), 'badge'));
+                    $flashBag->add('error', $translator->trans($exception->getMessage(), array(), 'icap_badge'));
                 }
 
                 return $this->redirect($this->generateUrl('icap_badge_profile_view_badges'));

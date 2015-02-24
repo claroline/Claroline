@@ -10,7 +10,7 @@
             workspace,
             [
                 {
-                    'name': 'workspace_badges'|trans({}, 'badge'),
+                    'name': 'workspace_badges'|trans({}, 'icap_badge'),
                     'href': ''
                 }
             ]
@@ -19,11 +19,11 @@
 {% endblock %}
 
 {% block section_title %}
-    {{ 'workspace_badges'|trans({}, 'badge') }}
-    <a href="{{ path(parameters.add_link, parameters.route_parameters) }}" title="{{ 'add_badge'|trans({}, 'badge') }}" class="btn btn-default btn-sm">
-        <span class="fa fa-plus"></span> {{ 'add_badge'|trans({}, 'badge') }}
+    {{ 'workspace_badges'|trans({}, 'icap_badge') }}
+    <a href="{{ path(parameters.add_link, parameters.route_parameters) }}" title="{{ 'add_badge'|trans({}, 'icap_badge') }}" class="btn btn-default btn-sm">
+        <span class="fa fa-plus"></span> {{ 'add_badge'|trans({}, 'icap_badge') }}
     </a>
-    <a href="{{ path(parameters.statistics_link, parameters.route_parameters) }}" title="{{ 'badge_statistics'|trans({}, 'badge') }}" class="btn btn-default btn-sm pull-right" data-toggle="tooltip">
+    <a href="{{ path(parameters.statistics_link, parameters.route_parameters) }}" title="{{ 'badge_statistics'|trans({}, 'icap_badge') }}" class="btn btn-default btn-sm pull-right" data-toggle="tooltip">
         <span class="fa fa-bar-chart"></span>
     </a>
 {% endblock %}

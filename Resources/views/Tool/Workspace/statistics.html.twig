@@ -10,11 +10,11 @@
             workspace,
             [
                 {
-                    'name': 'workspace_badges'|trans({}, 'badge'),
+                    'name': 'workspace_badges'|trans({}, 'icap_badge'),
                     'href': path('icap_badge_workspace_tool_badges', {'workspaceId': workspace.id})
                 },
                 {
-                    'name': 'workspace_badges_statistics'|trans({}, 'badge'),
+                    'name': 'workspace_badges_statistics'|trans({}, 'icap_badge'),
                     'href': ''
                 }
             ]
@@ -23,7 +23,7 @@
 {% endblock %}
 
 {% block section_title %}
-    {{ 'workspace_badges_statistics'|trans({}, 'badge') }}
+    {{ 'workspace_badges_statistics'|trans({}, 'icap_badge') }}
 {% endblock %}
 
 {% block section_body %}

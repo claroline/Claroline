@@ -9,7 +9,7 @@
     <form novalidate="novalidate" action="" id="resource-rename-form" class="modal-content">
         <div class='modal-header'>
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            <h4 class="modal-title">{{ 'badge_selection' | trans({}, 'badge') }}</h4>
+            <h4 class="modal-title">{{ 'badge_selection' | trans({}, 'icap_badge') }}</h4>
         </div>
         <div class='modal-body'>
             <ul class="list-inline badge_picker_list" data-multiple="{{ multiple }}">
@@ -24,13 +24,13 @@
                     <span>{{ badge.name }}</span>
                 </li>
                 {% else %}
-                <li>{{ 'no_badge_to_select'|trans({}, 'badge') }}.</li>
+                <li>{{ 'no_badge_to_select'|trans({}, 'icap_badge') }}.</li>
                 {% endfor %}
             </ul>
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">{{ 'cancel'|trans({}, 'platform') }}</button>
-            <button type="button" class="btn btn-primary submit">{{ 'select'|trans({}, 'badge') }}</button>
+            <button type="button" class="btn btn-primary submit">{{ 'select'|trans({}, 'icap_badge') }}</button>
         </div>
     </form>
 </div>

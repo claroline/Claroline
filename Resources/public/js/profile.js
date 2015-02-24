@@ -345,7 +345,7 @@
         }
 
         function displayError(messageKey) {
-            $("p", errorContainer).text(Translator.trans(messageKey, {}, 'badge'));
+            $("p", errorContainer).text(Translator.trans(messageKey, {}, 'icap_badge'));
             errorContainer.show();
         }
 

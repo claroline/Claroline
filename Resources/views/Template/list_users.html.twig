@@ -2,7 +2,7 @@
     <table class="table user_badge_list">
         <thead>
             <th class="username">{{ 'username'|trans({}, 'platform') }}</th>
-            <th>{{ 'awarded_badges'|trans({}, 'badge') }}</th>
+            <th>{{ 'awarded_badges'|trans({}, 'icap_badge') }}</th>
         </thead>
         <tbody>
             {% for user in userPager %}
@@ -12,13 +12,13 @@
                     </td>
                     <td>
                        <ul class="list-inline">
-                       {% for badge in user.badges %}
-                           <li>
-                                <a href="{{ path(parameters.edit_link.url, {'slug': badge.slug}|merge(parameters.route_parameters)) }}" title="{{ badge.name }}">
-                                    <img class="badge_image" src="{{ asset(badge.webPath) }}" alt="{{ badge.name }}" />
-                                </a>
-                           </li>
-                       {% endfor %}
+                       {#{% for badge in user.badges %}#}
+                           {#<li>#}
+                                {#<a href="{{ path(parameters.edit_link.url, {'slug': badge.slug}|merge(parameters.route_parameters)) }}" title="{{ badge.name }}">#}
+                                    {#<img class="badge_image" src="{{ asset(badge.webPath) }}" alt="{{ badge.name }}" />#}
+                                {#</a>#}
+                           {#</li>#}
+                       {#{% endfor %}#}
                        </ul>
                     </td>
                 </tr>
@@ -43,5 +43,5 @@
         </div>
     {% endif %}
 {% else %}
-    <p>{{ 'no_user_subscribed_to_workspace'|trans({}, 'badge') }}</p>
+    <p>{{ 'no_user_subscribed_to_workspace'|trans({}, 'icap_badge') }}</p>
 {% endif %}

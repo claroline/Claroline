@@ -43,17 +43,17 @@
                     </div>
                 </div>
                 <button type="button" class="btn btn-default badges_selector" id="badgepicker_{{ id }}"
-                        data-title="{{ 'browse_badges'|trans({}, 'badge') }}" data-toggle="tooltip">
+                        data-title="{{ 'browse_badges'|trans({}, 'icap_badge') }}" data-toggle="tooltip">
                     <i class="fa fa-folder-open"></i>
                     <small{% if 0 == value|length %} class="hide"{% endif %}>{{ 'count_selected_badge'|transchoice(value|length, {'%nbBadge%': value|length}, 'badge') }}</small>
-                    <small{% if 0 < value|length %} class="hide"{% endif %}>{{ 'select_badges'|trans({}, 'badge') }}</small>
+                    <small{% if 0 < value|length %} class="hide"{% endif %}>{{ 'select_badges'|trans({}, 'icap_badge') }}</small>
                 </button>
             {% else %}
                 <input type="hidden" id="{{ id }}" name="{{ full_name }}" {% if value is not empty %}value="{{ value.id }}" {% endif %}class="badge-picker">
 
                 <div class="input-group select-field">
                     <p class="form-control no_badge_selected{% if value is not empty %} hide{% endif %}" disabled="disabled">
-                        {{ 'select_badge'|trans({}, 'badge') }}
+                        {{ 'select_badge'|trans({}, 'icap_badge') }}
                     </p>
                     <p class="form-control badge_selection_field{% if value is empty %} hide{% endif %}" data-title="{% if value is not empty %}{{ value.text }}{% endif %}"
                         data-container="body" data-toggle="popover" data-placement="top"
@@ -62,7 +62,7 @@
                         <img src="{% if value is not empty %}{{ asset(value.icon) }}{% endif %}" alt="{% if value is not empty %}{{ value.text }}{% endif %}" class="badge_image{% if value is empty %} hide{% endif %}" />
                     </p>
                     <span class="input-group-btn">
-                        <button type="button" class="btn btn-default" id="badgepicker_{{ id }}" data-title="{{ 'browse_badges'|trans({}, 'badge') }}" data-toggle="tooltip"><i class="fa fa-folder-open"></i></button>
+                        <button type="button" class="btn btn-default" id="badgepicker_{{ id }}" data-title="{{ 'browse_badges'|trans({}, 'icap_badge') }}" data-toggle="tooltip"><i class="fa fa-folder-open"></i></button>
                     </span>
                 </div>
             {% endif %}

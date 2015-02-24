@@ -61,19 +61,19 @@
             </div>
             {% if '' != userBadge.comment %}
                 <div>
-                    <h3>{{ 'comment'|trans({}, 'badge') }} :</h3>
+                    <h3>{{ 'comment'|trans({}, 'icap_badge') }} :</h3>
                     {{ userBadge.comment|raw }}
                 </div>
             {% endif %}
             {% set nbRules = badge.rules|length %}
             {% if 0 < nbRules %}
                 {% if 0 == validatedRules.validRules %}
-                <div class="alert alert-danger">{{ 'badge_awarding_rules_not_respected'|trans({}, 'badge') }}.</div>
+                <div class="alert alert-danger">{{ 'badge_awarding_rules_not_respected'|trans({}, 'icap_badge') }}.</div>
                 {% elseif validatedRules.validRules < nbRules %}
                 <div class="alert alert-info">{{ 'badge_awarding_some_rules_respected'|trans({'%nbvalidRules%': validatedRules.validRules, '%nbRules%': nbRules}, 'badge') }}.</div>
                 {% else %}
                 <div class="badge_rules_resources">
-                    <h4>{{ 'actions_lead_to_badge_awarding'|trans({}, 'badge') }} :</h4>
+                    <h4>{{ 'actions_lead_to_badge_awarding'|trans({}, 'icap_badge') }} :</h4>
                     <div class="table-responsive">
                         <table class="table table-bordered">
                             <thead>

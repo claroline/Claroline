@@ -100,12 +100,12 @@ class WorkspaceController extends Controller
 
         try {
             if ($this->get('icap_badge.form_handler.badge.workspace')->handleAdd($badge)) {
-                $sessionFlashBag->add('success', $translator->trans('badge_add_success_message', array(), 'badge'));
+                $sessionFlashBag->add('success', $translator->trans('badge_add_success_message', array(), 'icap_badge'));
 
                 return $this->redirect($this->generateUrl('icap_badge_workspace_tool_badges', array('workspaceId' => $workspace->getId())));
             }
         } catch (\Exception $exception) {
-            $sessionFlashBag->add('error', $translator->trans('badge_add_error_message', array(), 'badge'));
+            $sessionFlashBag->add('error', $translator->trans('badge_add_error_message', array(), 'icap_badge'));
 
             return $this->redirect($this->generateUrl('icap_badge_workspace_tool_badges', array('workspaceId' => $workspace->getId())));
         }
@@ -153,12 +153,12 @@ class WorkspaceController extends Controller
 
         try {
             if ($this->get('icap_badge.form_handler.badge.workspace')->handleEdit($badge)) {
-                $sessionFlashBag->add('success', $translator->trans('badge_edit_success_message', array(), 'badge'));
+                $sessionFlashBag->add('success', $translator->trans('badge_edit_success_message', array(), 'icap_badge'));
 
                 return $this->redirect($this->generateUrl('icap_badge_workspace_tool_badges', array('workspaceId' => $workspace->getId())));
             }
         } catch (\Exception $exception) {
-            $sessionFlashBag->add('error', $translator->trans('badge_edit_error_message', array(), 'badge'));
+            $sessionFlashBag->add('error', $translator->trans('badge_edit_error_message', array(), 'icap_badge'));
 
             return $this->redirect($this->generateUrl('icap_badge_workspace_tool_badges', array('workspaceId' => $workspace->getId())));
         }
@@ -200,11 +200,11 @@ class WorkspaceController extends Controller
 
             $this->get('session')
                 ->getFlashBag()
-                ->add('success', $translator->trans('badge_delete_success_message', array(), 'badge'));
+                ->add('success', $translator->trans('badge_delete_success_message', array(), 'icap_badge'));
         } catch (\Exception $exception) {
             $this->get('session')
                 ->getFlashBag()
-                ->add('error', $translator->trans('badge_delete_error_message', array(), 'badge'));
+                ->add('error', $translator->trans('badge_delete_error_message', array(), 'icap_badge'));
         }
 
         return $this->redirect(
@@ -275,7 +275,7 @@ class WorkspaceController extends Controller
                     if (!$request->isXmlHttpRequest()) {
                         $this->get('session')
                             ->getFlashBag()
-                            ->add('error', $translator->trans('badge_award_error_message', array(), 'badge'));
+                            ->add('error', $translator->trans('badge_award_error_message', array(), 'icap_badge'));
                     } else {
                         return new Response($exception->getMessage(), 500);
                     }
@@ -334,12 +334,12 @@ class WorkspaceController extends Controller
 
             $this->get('session')
                 ->getFlashBag()
-                ->add('success', $translator->trans('badge_unaward_success_message', array(), 'badge'));
+                ->add('success', $translator->trans('badge_unaward_success_message', array(), 'icap_badge'));
         } catch (\Exception $exception) {
             if (!$request->isXmlHttpRequest()) {
                 $this->get('session')
                     ->getFlashBag()
-                    ->add('error', $translator->trans('badge_unaward_error_message', array(), 'badge'));
+                    ->add('error', $translator->trans('badge_unaward_error_message', array(), 'icap_badge'));
             } else {
                 return new Response($exception->getMessage(), 500);
             }
@@ -376,13 +376,13 @@ class WorkspaceController extends Controller
 
         /** @var \Symfony\Bundle\FrameworkBundle\Translation\Translator $translator */
         $translator     = $this->get('translator');
-        $successMessage = $translator->trans('badge_reject_award_success_message', array(), 'badge');
-        $errorMessage   = $translator->trans('badge_reject_award_error_message', array(), 'badge');
+        $successMessage = $translator->trans('badge_reject_award_success_message', array(), 'icap_badge');
+        $errorMessage   = $translator->trans('badge_reject_award_error_message', array(), 'icap_badge');
 
         try {
             if ($validate) {
-                $successMessage = $translator->trans('badge_validate_award_success_message', array(), 'badge');
-                $errorMessage   = $translator->trans('badge_validate_award_error_message', array(), 'badge');
+                $successMessage = $translator->trans('badge_validate_award_success_message', array(), 'icap_badge');
+                $errorMessage   = $translator->trans('badge_validate_award_error_message', array(), 'icap_badge');
 
                 /** @var \Claroline\CoreBundle\Manager\BadgeManager $badgeManager */
                 $badgeManager = $this->get('claroline.manager.badge');

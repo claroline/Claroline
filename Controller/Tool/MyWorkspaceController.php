@@ -68,9 +68,9 @@ class MyWorkspaceController extends Controller
             $badgeManager = $this->get('claroline.manager.badge');
             $badgeManager->makeClaim($badge, $user);
 
-            $flashBag->add('success', $translator->trans('badge_claim_success_message', array(), 'badge'));
+            $flashBag->add('success', $translator->trans('badge_claim_success_message', array(), 'icap_badge'));
         } catch (\Exception $exception) {
-            $flashBag->add('error', $translator->trans($exception->getMessage(), array(), 'badge'));
+            $flashBag->add('error', $translator->trans($exception->getMessage(), array(), 'icap_badge'));
         }
 
         return $this->redirect($this->generateUrl('icap_badge_workspace_tool_my_badges', array('workspaceId' => $workspace->getId())));
