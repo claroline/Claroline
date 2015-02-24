@@ -2,7 +2,7 @@
 
 {% trans_default_domain "icap_badge" %}
 
-{% block title %}{{ parent() ~ ' - ' ~ 'badges_management' | trans({}, 'platform') | striptags | raw }}{% endblock %}
+{% block title %}{{ parent() ~ ' - ' ~ 'badges_management' | trans({}, 'icap_badge') | striptags | raw }}{% endblock %}
 
 {% block breadcrumb %}
     {{
@@ -13,7 +13,7 @@
                 'href': path('claro_admin_index')
             },
             {
-                'name': 'badges_management'|trans({}, 'platform'),
+                'name': 'badges_management'|trans({}, 'icap_badge'),
                 'href': ''
             }
         ])
