@@ -23,9 +23,9 @@ class BadgesWidgetBadge implements SubWidgetInterface
     protected $id;
 
     /**
-     * @var \Claroline\CoreBundle\Entity\Badge\Badge
+     * @var \Icap\BadgeBundle\Entity\Badge
      *
-     * @ORM\ManyToOne(targetEntity="\Claroline\CoreBundle\Entity\Badge\Badge")
+     * @ORM\ManyToOne(targetEntity="\Icap\BadgeBundle\Entity\Badge")
      * @ORM\JoinColumn(name="badge_id", referencedColumnName="id", nullable=false)
      */
     private $badge;
