@@ -67,7 +67,7 @@ class ClaimBadgeType extends AbstractType
         $resolver->setDefaults(
             array(
                 'data_class'         => 'Icap\BadgeBundle\Entity\BadgeClaim',
-                'translation_domain' => 'badge'
+                'translation_domain' => 'icap_badge'
             )
         );
     }

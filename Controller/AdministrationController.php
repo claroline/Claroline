@@ -94,6 +94,10 @@ class AdministrationController extends Controller
                 return $this->redirect($this->generateUrl('icap_badge_admin_badges'));
             }
         } catch (\Exception $exception) {
+            echo "<pre>";
+            var_dump($exception->getMessage());
+            echo "</pre>" . PHP_EOL;
+            die("SSSSSTTTTTTOOOOOOPPPPPPP" . PHP_EOL);
             $sessionFlashBag->add('error', $translator->trans('badge_add_error_message', array(), 'icap_badge'));
 
             return $this->redirect($this->generateUrl('icap_badge_admin_badges'));

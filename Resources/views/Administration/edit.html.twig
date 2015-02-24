@@ -2,7 +2,7 @@
 
 {% form_theme form 'IcapBadgeBundle:Form:rules.html.twig' %}
 
-{% trans_default_domain "badge" %}
+{% trans_default_domain "icap_badge" %}
 
 {% block title %}{{ parent() ~ ' - ' ~ 'view_badge' | trans({'%badge_name%' : badge.name}) | striptags | raw }}{% endblock %}
 

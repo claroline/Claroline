@@ -33,7 +33,7 @@ class BadgeUsageConfigType extends AbstractType
         $resolver->setDefaults(
             array(
                 'data_class'         => 'Icap\BadgeBundle\Entity\Widget\BadgeUsageConfig',
-                'translation_domain' => 'badge',
+                'translation_domain' => 'icap_badge',
                 'language'           => 'en'
             )
         );

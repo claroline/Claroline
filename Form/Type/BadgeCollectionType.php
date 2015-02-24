@@ -75,7 +75,7 @@ class BadgeCollectionType extends AbstractType
         $resolver->setDefaults(
             array(
                 'data_class'         => 'Icap\BadgeBundle\Entity\BadgeCollection',
-                'translation_domain' => 'badge',
+                'translation_domain' => 'icap_badge',
                 'csrf_protection'    => false
             )
         );

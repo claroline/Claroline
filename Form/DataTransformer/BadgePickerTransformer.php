@@ -3,7 +3,7 @@
 namespace Icap\BadgeBundle\Form\DataTransformer;
 
 use Icap\BadgeBundle\Entity\Badge;
-use Claroline\CoreBundle\Manager\BadgeManager;
+use Icap\BadgeBundle\Manager\BadgeManager;
 use Doctrine\Common\Collections\Collection;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Form\DataTransformerInterface;

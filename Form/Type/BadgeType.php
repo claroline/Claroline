@@ -123,7 +123,7 @@ class BadgeType extends AbstractType
         $resolver->setDefaults(
             array(
                 'data_class'         => 'Icap\BadgeBundle\Entity\Badge',
-                'translation_domain' => 'badge',
+                'translation_domain' => 'icap_badge',
                 'language'           => 'en',
                 'date_format'        => DateType::HTML5_FORMAT,
                 'cascade_validation' => true

@@ -27,7 +27,7 @@ class BadgeTranslationType extends AbstractType
         $resolver->setDefaults(
             array(
                 'data_class'         => 'Icap\BadgeBundle\Entity\BadgeTranslation',
-                'translation_domain' => 'badge'
+                'translation_domain' => 'icap_badge'
             )
         );
     }

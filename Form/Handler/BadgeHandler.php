@@ -3,7 +3,7 @@
 namespace Icap\BadgeBundle\Form\Handler;
 
 use Icap\BadgeBundle\Entity\Badge;
-use Claroline\CoreBundle\Manager\BadgeManager;
+use Icap\BadgeBundle\Manager\BadgeManager;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
