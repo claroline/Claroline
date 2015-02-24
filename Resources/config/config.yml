@@ -1,6 +1,5 @@
 plugin:
     has_options: false
-    icon: icap_badge_icon.png
 
     widgets:
       - name: badge_usage
