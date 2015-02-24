@@ -51,13 +51,6 @@ class Plugin
      */
     protected $hasOptions;
 
-    /**
-     * @ORM\Column()
-     * @Assert\NotBlank()
-     * @Assert\Length(max=255)
-     */
-    protected $icon;
-
     public function getId()
     {
         return $this->id;
@@ -109,15 +102,5 @@ class Plugin
     public function hasOptions()
     {
         return $this->hasOptions;
-    }
-
-    public function setIcon($icon)
-    {
-        $this->icon = $icon;
-    }
-
-    public function getIcon()
-    {
-        return $this->icon;
     }
 }

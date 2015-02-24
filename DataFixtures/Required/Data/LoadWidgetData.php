@@ -39,7 +39,6 @@ class LoadWidgetData implements RequiredFixture
             $widget = new Widget();
             $widget->setName($item[0]);
             $widget->setConfigurable($item[1]);
-            $widget->setIcon('fake/icon/path');
             $widget->setPlugin(null);
             $widget->setExportable(false);
             $widget->setDisplayableInDesktop($item[2]);

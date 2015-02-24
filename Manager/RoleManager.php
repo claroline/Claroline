@@ -824,6 +824,24 @@ class RoleManager
     }
 
     /**
+     * @param string $workspaceCode
+     * @param string $translationKey
+     * @param bool $executeQuery
+     */
+    public function getRolesByWorkspaceCodeAndTranslationKey(
+        $workspaceCode,
+        $translationKey,
+        $executeQuery = true
+    )
+    {
+        return $this->roleRepo->findRolesByWorkspaceCodeAndTranslationKey(
+            $workspaceCode,
+            $translationKey,
+            $executeQuery
+        );
+    }
+
+    /**
      * Returns all non-platform roles of a user.
      *
      * @param User $user The subject of the role

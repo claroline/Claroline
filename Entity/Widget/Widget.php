@@ -46,11 +46,6 @@ class Widget
     protected $isConfigurable;
 
     /**
-     * @ORM\Column()
-     */
-    protected $icon;
-
-    /**
      * @ORM\Column(name="is_exportable", type="boolean")
      */
     protected $isExportable;
@@ -98,16 +93,6 @@ class Widget
     public function setConfigurable($bool)
     {
         $this->isConfigurable = $bool;
-    }
-
-    public function setIcon($icon)
-    {
-        $this->icon = $icon;
-    }
-
-    public function getIcon()
-    {
-        return $this->icon;
     }
 
     public function setExportable($isExportable)
