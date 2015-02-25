@@ -121,7 +121,7 @@ function creationMatchingEdit(addchoice, addproposal, deletechoice, LabelValue, 
         $(this).find('.row').each(function() {
 
             fillLabelArray($(this));
-
+            
             $('.classic').find('textarea').each(function() {
                 $(this).val($(this).val().replace("&lt;", "<"));
                 $(this).val($(this).val().replace("&gt;", ">"));
@@ -131,8 +131,15 @@ function creationMatchingEdit(addchoice, addproposal, deletechoice, LabelValue, 
             $('#labelError').append($(this).find('.field-error'));
         });
 
-        // add correspondence
-        addCorrespondence();
+        //for replace the correspondance field of the form, by our field
+        $('#newTableLabel').find("select").each(function () {
+            $id = $(this).attr("class");
+            $parent = $(this).parent();
+            if($id == "form-control") {
+                $(this).remove();
+                addCorrespondence($parent);
+            }
+        });
 
         if (nbResponses == 0) {
             // Add the delete button
@@ -195,9 +202,16 @@ function addLabel(container, deletechoice, table, codeContainer) {
     container.find('.row').each(function () {
         fillLabelArray($(this));
     });
-
-    // Add correspondence
-     addCorrespondence();
+    
+    //for replace the correspondance field of the form, by our field
+    $('#newTableLabel').find("select").each(function () {
+        $id = $(this).attr("class");
+        $parent = $(this).parent();
+        if($id == "form-control") {
+            $(this).remove();
+            addCorrespondence($parent);
+        }
+    });
 
     // Add the delete button
     $('#newTableLabel').find('tr:last').append('<td class="classic"></td>');
@@ -394,7 +408,7 @@ function advLabelVal(idLabelVal) {
         var positionText = userNavigator.indexOf("Chrome");
         if(positionText !== -1) {
             $('#newTableLabel').find('tbody').append('<tr></tr>');
-            addLabel(containerLabel, "Suppromer", tableLabels, codeContainerLabel);
+            addLabel(containerLabel, "Supprimer", tableLabels, codeContainerLabel);
             $('#newTableLabel').find('tr:last').remove();
         }
 
@@ -524,7 +538,7 @@ function adddelete(tr, deletechoice, codeContainer) {
 function tableCreationLabel(container, table, button, deletechoice, LabelValue, ScoreRight, nbResponses, codeContainer, supp, correspondence,forcePosition) {
     if (nbResponses == 0) {
         // Creation of the table
-        table.append('<table id="newTableLabel" class="table table-striped table-bordered table-condensed"><thead><tr style="background-color: lightsteelblue;"><th class="classic">'+LabelValue+'</th><th class="classic">'+ScoreRight+'</th><th class="classic">'+forcePosition+'</th><th class="classic">'+correspondence+'</th><th class="classic">'+supp+'</th></tr></thead><tbody><tr></tr></tbody></table>');
+        table.append('<table id="newTableLabel" class="table table-striped table-bordered table-condensed"><thead><tr style="background-color: lightsteelblue;"><th class="classic">'+LabelValue+'</th><th class="classic">'+ScoreRight+'</th><th class="classic">'+correspondence+'</th><th class="classic">'+forcePosition+'</th><th class="classic">'+supp+'</th></tr></thead><tbody><tr></tr></tbody></table>');
 
         // Creation of the button add
         var add = $('<a href="#" id="add_label" class="btn btn-primary"><i class="fa fa-plus"></i>&nbsp;'+button+'</a>');
@@ -539,7 +553,7 @@ function tableCreationLabel(container, table, button, deletechoice, LabelValue, 
         });
     } else {
         // Add the structure of the table
-        table.append('<table id="newTableLabel" class="table table-striped table-bordered table-condensed"><thead><tr style="background-color: lightsteelblue;"><th class="classic">' + LabelValue + '</th><th class="classic">' + ScoreRight + '</th><th class="classic">' + correspondence + '</th></tr></thead><tbody><tr></tr></tbody></table>');
+        table.append('<table id="newTableLabel" class="table table-striped table-bordered table-condensed"><thead><tr style="background-color: lightsteelblue;"><th class="classic">'+LabelValue+'</th><th class="classic">'+ScoreRight+'</th><th class="classic">'+correspondence+'</th><th class="classic">'+forcePosition+'</th></tr></thead><tbody><tr></tr></tbody></table>');
     }
 }
 
@@ -561,7 +575,7 @@ function tableCreationProposal(container, table, button, deletechoice, ProposalV
         });
     } else {
         // Add the structure of the table
-        table.append('<table id="newTableProposal" class="table table-striped table-bordered table-condensed"><thead><tr style="background-color: lightsteelblue;"><th class="classic">' + correspondence + '</th><th class="classic">' + ProposalValue + '</th></tr></thead><tbody><tr><td></td></tr></tbody></table>');
+       table.append('<table id="newTableProposal" class="table table-striped table-bordered table-condensed"><thead><tr style="background-color: lightsteelblue;"><th class="classic">'+correspondence+'</th><th class="classic">'+ProposalValue+'</th><th class="classic">'+forcePosition+'</th></tr></thead><tbody><tr><td></td></tr></tbody></table>');
     }
 }
 
@@ -598,10 +612,8 @@ function removeRowTableLabel() {
     });
 }
 
-function addCorrespondence() {
-
-    $('#newTableLabel').find('tr:last').append('<td class="classic"></td>');
-    $('#newTableLabel').find('td:last').append('<select id="' + $('#newTableLabel').find('tr:not(:first)').length + '_correspondence" \n\
+function addCorrespondence($parent) {
+    $parent.append('<select id="' + $('#newTableLabel').find('tr:not(:first)').length + '_correspondence" \n\
                                                 name="' + $('#newTableLabel').find('tr:not(:first)').length + '_correspondence[]" \n\
                                                 multiple></select>');
 
@@ -628,13 +640,13 @@ function whichChange() {
     $("#ujm_exobundle_interactionmatchingtype_shuffle").change(function() {
         if ($(this).is(':checked')) {
             tableProposals.find('th').eq(2).show();
-            tableLabels.find('th').eq(2).show();
+            tableLabels.find('th').eq(3).show();
             $("*[id$='_positionForce']").each(function () {
                 $(this).parent('td').show();
             });
         } else {
             tableProposals.find('th').eq(2).hide();
-            tableLabels.find('th').eq(2).hide();
+            tableLabels.find('th').eq(3).hide();
             $("*[id$='_positionForce']").each(function () {
                $(this).parent('td').hide();
            });
@@ -646,13 +658,13 @@ function whichChecked() {
      // Show or hide positionForce if shuffle is checked
     if ($('#ujm_exobundle_interactionmatchingtype_shuffle').is(':checked')) {
         tableProposals.find('th').eq(2).show();
-        tableLabels.find('th').eq(2).show();
+        tableLabels.find('th').eq(3).show();
         $("*[id$='_positionForce']").each(function () {
             $(this).parent('td').show();
         });
     } else {
         tableProposals.find('th').eq(2).hide();
-        tableLabels.find('th').eq(2).hide();
+        tableLabels.find('th').eq(3).hide();
         $("*[id$='_positionForce']").each(function () {
            $(this).parent('td').hide();
        });

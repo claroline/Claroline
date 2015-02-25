@@ -22,6 +22,9 @@ class LabelType extends AbstractType
                 'scoreRightResponse', 'text', array(
                     'label' => ' ', 'attr' => array('style' => 'width:35px; text-align: end;','class' => 'labelScore'
                   )))
+                //add a field for correspondance, and will be replace by the our field
+            ->add( "correspondance", "choice", array("mapped"=>false)
+                  )
             ->add(
                 'positionForce', 'checkbox', array(
                     'required' => false, 'label' => ' '
