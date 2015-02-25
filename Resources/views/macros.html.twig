@@ -159,9 +159,11 @@
                             {% endfor %}
                             {% if found == true %}
                                 {% if version_compare(version, foundPkg.version, '<') %}
-                                    <span class="badge alert-warning">
+                                    <a class="badge alert-warning install-pkg"
+                                        data-package-name="{{ package.name }}"
+                                    >
                                         {{ 'update_available'|trans({}, 'platform') }}
-                                    </span>
+                                    </a>
                                 {% endif %}
                                 {% if version_compare(version, foundPkg.version, '=') %}
                                     <span class="badge alert-success">
@@ -177,7 +179,6 @@
                             <a
                                 class="badge install-pkg"
                                 data-package-name="{{ package.name }}"
-                                href="{{ path('claro_admin_plugins_install', {'bundle': package.name}) }}"
                             >
                                 {{ 'install'|trans({}, 'platform') }}
                             </a>

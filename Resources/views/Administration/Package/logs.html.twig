@@ -1,0 +1,10 @@
+{% twig_js name="PackageLog" %}
+
+{{ 'package_install'|trans({}, 'platform') }}
+
+<div id="log-container" class="row">
+  <pre id="log-content" class="executable"
+       style="max-height: 150px; overflow: auto; display: none;"
+  >
+  </pre>
+</div>

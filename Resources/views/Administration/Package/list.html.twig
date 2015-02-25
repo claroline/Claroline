@@ -67,6 +67,11 @@
 {% block javascripts %}
     {{ parent() }}
     <script
+        src="{{ asset('bundles/clarolinecore/js/logDisplayer.js') }}"
+        type="text/javascript"
+    >
+    </script>
+    <script
         src="{{ asset('bundles/clarolinecore/js/administration/packages.js') }}"
         type="text/javascript"
     >

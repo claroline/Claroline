@@ -71,7 +71,8 @@ class PackageController extends Controller
     /**
      * @EXT\Route(
      *     "/",
-     *     name="claro_admin_plugins"
+     *     name="claro_admin_plugins",
+     *     options = {"expose"=true}
      * )
      *
      * @EXT\Template()
@@ -106,35 +107,41 @@ class PackageController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/bundle/{bundle}/install",
-     *     name="claro_admin_plugins_install"
+     *     "/bundle/{bundle}/install/log/{date}",
+     *     name="claro_admin_plugin_install",
+     *     options = {"expose"=true}
      * )
      *
      * Install a plugin.
      *
      * @return Response
      */
-    public function installFromRemoteAction($bundle)
+    public function installFromRemoteAction($bundle, $date)
     {
         $this->checkOpen();
-        $this->bundleManager->installRemoteBundle($bundle);
+        $this->bundleManager->installRemoteBundle($bundle, $date);
+
+        return new Response('Done.');
     }
 
     /**
      * @EXT\Route(
-     *     "/install/log",
-     *     name="claro_admin_plugins_log"
+     *     "/install/log/{date}",
+     *     name="claro_admin_plugins_log",
+     *     options = {"expose"=true}
      * )
      *
      * Install a plugin.
      *
      * @return Response
      */
-    public function displayUpdateLog()
+    public function displayUpdateLog($date)
     {
         $this->checkOpen();
+        $content = @file_get_contents($this->bundleManager->getLogFile() . '-' . $date);
+        if (!$content) $content = '';
 
-        return file_get_contents($this->bundleManager->getLogFile());
+        return new Response($content);
     }
 
     /**

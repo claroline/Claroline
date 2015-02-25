@@ -19,4 +19,4 @@ $kernel->loadClassCache();
 $kernel->boot();
 $container = $kernel->getContainer();
 $bundleManager = $container->get('claroline.manager.bundle_manager');
-$bundleManager->executeOperationFile($logFile);
+$bundleManager->executeOperationFile($argv[1]);

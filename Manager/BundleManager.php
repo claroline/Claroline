@@ -24,6 +24,7 @@ use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Utilities\FileSystem;
 use Claroline\KernelBundle\Kernel\SwitchKernel;
+use Symfony\Component\Console\Output\StreamOutput;
 
 /**
  * @Service("claroline.manager.bundle_manager")
@@ -38,6 +39,7 @@ class BundleManager
     private $iniFileManager;
     private $installer;
     private $refresher;
+    private $kernel;
 
     /**
      * @InjectParams({
@@ -47,7 +49,8 @@ class BundleManager
      *      "vendorDir"      = @Inject("%claroline.param.vendor_directory%"),
      *      "iniFileManager" = @Inject("claroline.manager.ini_file_manager"),
      *      "installer"      = @Inject("claroline.installation.platform_installer"),
-     *      "refresher"      = @Inject("claroline.installation.refresher")
+     *      "refresher"      = @Inject("claroline.installation.refresher"),
+     *      "kernek"         = @Inject("kernel")
      * })
      */
     public function __construct(
@@ -57,7 +60,8 @@ class BundleManager
         $vendorDir,
         IniFileManager $iniFileManager,
         $installer,
-        $refresher
+        $refresher,
+        $kernel
     )
     {
         $this->om               = $om;
@@ -68,6 +72,7 @@ class BundleManager
         $this->iniFileManager   = $iniFileManager;
         $this->installer        = $installer;
         $this->refresher        = $refresher;
+        $this->kernel           = $kernel;
     }
 
     public function getBundle($bundle)
@@ -111,13 +116,19 @@ class BundleManager
         return $core->getVersion();
     }
 
-    public function installRemoteBundle($bundle)
+    public function installRemoteBundle($bundle, $date = null)
     {
         //if the bundle already exists, it should go "boom"
         $entity = $this->getBundle($bundle);
-        if ($entity) throw new \Exception("Bundle $bundle already installed");
-
+        //if ($entity) throw new \Exception("Bundle $bundle already installed");
         //step 1, get the archive from the remote server
+        $zipFile = $this->fetchLastInstallableFromRemote($bundle);
+
+        $this->installBundle($bundle, $zipFile, $date);
+    }
+
+    public function fetchLastInstallableFromRemote($bundle)
+    {
         $api = $this->configHandler->getParameter('repository_api');
         $url = $api . "/bundle/$bundle/coreVersion/{$this->getCoreBundleVersion()}/download";
         $ch = curl_init();
@@ -129,7 +140,7 @@ class BundleManager
         curl_close($ch);
         fclose($file);
 
-        $this->installBundle($bundle, $zipFile);
+        return $zipFile;
     }
 
     public function getBundleLastInstallableVersion($bundle, $coreVersion)
@@ -146,9 +157,11 @@ class BundleManager
         return $o->tag;
     }
 
-    public function installBundle($bundle, $zipFile)
+    public function installBundle($bundle, $zipFile, $date = null)
     {
         $logFile = $this->getLogFile();
+        if ($date) $logFile = $logFile . '-' . $date;
+        @unlink($logFile);
         $logLine = "Downloading archive...\n";
         file_put_contents($logFile, $logLine, FILE_APPEND);
         $version = $this->getBundleLastInstallableVersion($bundle, $this->getCoreBundleVersion());
@@ -208,7 +221,7 @@ class BundleManager
         //TODO: use Sf2 proces library to avoid mistakes
         //sanitize this
         $executor = $this->kernelRootDir . '/../vendor/claroline/core-bundle/Claroline/CoreBundle/Library/Installation/scripts/operation_executor.php';
-        exec("php $executor > $logFile");
+        exec("php $executor $date > $logFile");
     }
 
     public function getLogFile()
@@ -216,20 +229,23 @@ class BundleManager
         return $this->kernelRootDir . "/logs/update.log";
     }
 
-    public function executeOperationFile()
+    public function executeOperationFile($date = null)
     {
         $logFile = $this->getLogFile();
+        if ($date) $logFile = $logFile . '-' . $date;
         $this->installer->setLogger(
             function ($message) use ($logFile) {
                 file_put_contents($logFile, $message . "\n", FILE_APPEND);
             }
         );
         $output = new StreamOutput(fopen($logFile, 'a', false));
-        $this->refresher($output);
+        $this->refresher->setOutput($output);
         $this->installer->installFromOperationFile();
         $this->refresher->installAssets();
         $this->refresher->dumpAssets('prod');
         $this->refresher->compileGeneratedThemes();
+        $logLine = "Done !\n";
+        file_put_contents($logFile, $logLine, FILE_APPEND);
     }
 
     public function updateIniFile($vendor, $bundle)
@@ -273,7 +289,7 @@ class BundleManager
         $isInstalled = false;
 
         if ($entity) {
-            $oldVersion = $bundle->getVersion();
+            $oldVersion = $entity->getVersion();
             $isInstalled = true;
         }
 
@@ -296,6 +312,26 @@ class BundleManager
         $operation->setToVersion($version);
         $operation->setDependencies(array());
         $operationHandler->addOperation($operation, false);
+    }
 
+    public function checkInstallRequirements()
+    {
+        $rootDir = $this->kernelRootDir . '/..';
+
+        $writableElements = array(
+            'vendor' => 'directory',
+            'web' => 'directory',
+            'app/cache' => 'directory',
+            'app/config/bundles.ini' => 'file',
+            'vendor/composer/autoload_namespaces.php' => 'file'
+        );
+
+        $data = array();
+
+        foreach ($writableElements as $el => $type) {
+            $data[$el] = is_writable($rootDir . "/$el");
+        }
+
+        return $data;
     }
 }

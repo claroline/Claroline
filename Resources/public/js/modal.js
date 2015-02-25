@@ -132,16 +132,16 @@
      * @param title The title of the modal.
      * @param content The content of the modal.
      */
-    modal.confirmContainer = function (title, content)
+    modal.confirmContainer = function (title, content, longModal)
     {
+        var btnSuccess = common.createElement('button', 'btn btn-primary').html(translator.trans('Ok', {}, 'home'));
+        if (!longModal) btnSuccess.attr('data-dismiss', 'modal');
+
         var footer = common.createElement('div').append(
             common.createElement('button', 'btn btn-default')
             .html(translator.trans('cancel', {}, 'platform'))
             .attr('data-dismiss', 'modal')
-        ).append(
-            common.createElement('button', 'btn btn-primary').html(translator.trans('Ok', {}, 'home'))
-            .attr('data-dismiss', 'modal')
-        );
+        ).append(btnSuccess);
 
         return modal.simpleContainer(title, content, footer);
     };
@@ -221,21 +221,44 @@
      *      data (the data wich are returned by the ajax request)
      * )
      * @param url the url wich is going to be confirmed
-     * @param successHandler a sucessHandler
-     * @param successParameter a parameter required by the request handler
+     * @param successHandler a sucess handler
+     * @param successParameter a parameter required by the success handler
      * @param content the modal body
      * @param title the modal header
+     * @param waitingHandler a waiting handler
+     * @param waitingHandlerParameters a parameter required by the waiting handler
+     * @param errorHandler an error handler
+     * @param errorParameters an error parameter required by the error handler
+     * @param longModal the modal doesn't close on click
      */
-    modal.confirmRequest = function (url, successHandler, successParameter, content, title) {
-        modal.confirmContainer(title, content).on('click', '.btn-primary', function (event) {
+    modal.confirmRequest = function (
+        url,
+        successHandler,
+        successParameter,
+        content,
+        title,
+        waitingHandler,
+        waitingParameters,
+        errorHandler,
+        errorParameters,
+        longModal
+    ) {
+        var myModal = modal.confirmContainer(title, content, longModal);
+        myModal.on('click', '.btn-primary', function (event) {
+            if (waitingHandler) waitingHandler(waitingParameters);
             $.ajax(url)
             .success(function (data) {
                 successHandler(event, successParameter, data);
             })
             .error(function () {
-                modal.error();
+                if (errorHandler) {
+                    errorHandler(errorParameters)
+                } else {
+                    modal.error();
+                }
             });
         });
+
     };
 
     /**
