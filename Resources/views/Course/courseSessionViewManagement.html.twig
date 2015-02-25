@@ -31,7 +31,7 @@
                        data-toggle="tooltip"
                        data-placement="top"
                        data-container="#session-management-box"
-                       title="{{ 'register_learners'|trans({}, 'cursus') }}"
+                       title="{{ 'register_learners_to_session'|trans({}, 'cursus') }}"
                        data-session-id="{{ session.getId() }}"
                     >
                     </i>
@@ -40,11 +40,21 @@
 
             {% for sessionUser in learners %}
                 {% set user = sessionUser.getUser() %}
-                <tr>
+                <tr id="row-session-user-{{ sessionUser.getId() }}">
                     <td>
                         {{ user.getFirstName() }}
                         {{ user.getLastName() }}
                         <small>({{ user.getUsername() }})</small>
+                        &nbsp;
+                        <i class="fa fa-times-circle unregister-user-from-session pointer-hand"
+                           data-toggle="tooltip"
+                           data-placement="top"
+                           data-container="#session-management-box"
+                           title="{{ 'unregister_learner_from_session'|trans({}, 'cursus') }}"
+                           data-session-user-id="{{ sessionUser.getId() }}"
+                           style="color: #D9534F"
+                        >    
+                        </i>
                     </td>
                 </tr>
             {% endfor %}
@@ -61,7 +71,7 @@
                        data-toggle="tooltip"
                        data-placement="top"
                        data-container="#session-management-box"
-                       title="{{ 'register_tutors'|trans({}, 'cursus') }}"
+                       title="{{ 'register_tutors_to_session'|trans({}, 'cursus') }}"
                        data-session-id="{{ session.getId() }}"
                     >
                     </i>
@@ -71,11 +81,21 @@
 
             {% for sessionUser in tutors %}
                 {% set user = sessionUser.getUser() %}
-                <tr>
+                <tr id="row-session-user-{{ sessionUser.getId() }}">
                     <td>
                         {{ user.getFirstName() }}
                         {{ user.getLastName() }}
                         <small>({{ user.getUsername() }})</small>
+                        &nbsp;
+                        <i class="fa fa-times-circle unregister-user-from-session pointer-hand"
+                           data-toggle="tooltip"
+                           data-placement="top"
+                           data-container="#session-management-box"
+                           title="{{ 'unregister_tutor_from_session'|trans({}, 'cursus') }}"
+                           data-session-user-id="{{ sessionUser.getId() }}"
+                           style="color: #D9534F"
+                        >    
+                        </i>
                     </td>
                 </tr>
             {% endfor %}

@@ -19,6 +19,7 @@ use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Claroline\CursusBundle\Entity\Course;
 use Claroline\CursusBundle\Entity\CourseSession;
+use Claroline\CursusBundle\Entity\CourseSessionUser;
 use Claroline\CursusBundle\Entity\Cursus;
 use Claroline\CursusBundle\Entity\CursusDisplayedWord;
 use Claroline\CursusBundle\Form\CourseSessionType;
@@ -505,6 +506,24 @@ class CourseController extends Controller
     {
         $this->checkToolAccess();
         $this->cursusManager->registerUsersToSession($session, array($user), $userType);
+
+        return new JsonResponse('success', 200);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "cursus/course/session/unregister/user/{sessionUser}",
+     *     name="claro_cursus_course_session_unregister_user",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     *
+     * @param CourseSessionUser $sessionUser
+     */
+    public function courseSessionUserUnregisterAction(CourseSessionUser $sessionUser)
+    {
+        $this->checkToolAccess();
+        $this->cursusManager->unregisterUsersFromSession(array($sessionUser));
 
         return new JsonResponse('success', 200);
     }

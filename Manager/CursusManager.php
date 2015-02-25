@@ -13,6 +13,7 @@ namespace Claroline\CursusBundle\Manager;
 
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Pager\PagerFactory;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CursusBundle\Entity\Course;
@@ -32,6 +33,7 @@ class CursusManager
 {
     private $om;
     private $pagerFactory;
+    private $roleManager;
     private $translator;
     private $courseRepo;
     private $courseSessionRepo;
@@ -47,17 +49,20 @@ class CursusManager
      * @DI\InjectParams({
      *     "om"              = @DI\Inject("claroline.persistence.object_manager"),
      *     "pagerFactory"    = @DI\Inject("claroline.pager.pager_factory"),
+     *     "roleManager"     = @DI\Inject("claroline.manager.role_manager"),
      *     "translator"      = @DI\Inject("translator")
      * })
      */
     public function __construct(
         ObjectManager $om,
         PagerFactory $pagerFactory,
+        RoleManager $roleManager,
         Translator $translator
     )
     {
         $this->om = $om;
         $this->pagerFactory = $pagerFactory;
+        $this->roleManager = $roleManager;
         $this->translator = $translator;
         $this->courseRepo =
             $om->getRepository('ClarolineCursusBundle:Course');
@@ -589,6 +594,41 @@ class CursusManager
                 $sessionUser->setRegistrationDate($registrationDate);
                 $this->om->persist($sessionUser);
             }
+        }
+        $role = null;
+
+        if (intval($type) === 0) {
+            $role = $session->getLearnerRole();
+        } elseif (intval($type) === 1) {
+            $role = $session->getTutorRole();
+        }
+
+        if (!is_null($role)) {
+            $this->roleManager->associateRoleToMultipleSubjects($users, $role);
+        }
+        $this->om->endFlushSuite();
+    }
+
+    public function unregisterUsersFromSession(array $sessionUsers)
+    {
+        $this->om->startFlushSuite();
+
+        foreach ($sessionUsers as $sessionUser) {
+            $session = $sessionUser->getSession();
+            $user = $sessionUser->getUser();
+            $userType = $sessionUser->getUserType();
+            $role = null;
+
+            if ($userType === 0) {
+                $role = $session->getLearnerRole();
+            } elseif ($userType === 1) {
+                $role = $session->getTutorRole();
+            }
+
+            if (!is_null($role)) {
+                $this->roleManager->dissociateRole($user, $role);
+            }
+            $this->om->remove($sessionUser);
         }
         $this->om->endFlushSuite();
     }

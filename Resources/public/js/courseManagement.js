@@ -171,6 +171,25 @@
             }
         });
     });
+    
+    $('#users-box').on('click', '.unregister-user-from-session', function () {
+        var sessionUserId = $(this).data('session-user-id');
+
+        window.Claroline.Modal.confirmRequest(
+            Routing.generate(
+                'claro_cursus_course_session_unregister_user',
+                {'sessionUser': sessionUserId}
+            ),
+            removeUserRow,
+            sessionUserId,
+            Translator.trans('unregister_user_from_session_message', {}, 'cursus'),
+            Translator.trans('unregister_user_from_session', {}, 'cursus')
+        );
+    });
+
+    var removeUserRow = function (event, sessionUserId) {
+        $('#row-session-user-' + sessionUserId).remove();
+    };
 
     var refreshPage = function () {
         window.location.reload();
