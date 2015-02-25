@@ -114,6 +114,16 @@ class CourseSession
     protected $registrationValidation = false;
 
     /**
+     * @ORM\Column(name="start_date", type="datetime", nullable=true)
+     */
+    protected $startDate;
+
+    /**
+     * @ORM\Column(name="end_date", type="datetime", nullable=true)
+     */
+    protected $endDate;
+
+    /**
      * @ORM\OneToMany(
      *     targetEntity="Claroline\CursusBundle\Entity\CourseSessionUser",
      *     mappedBy="session"
@@ -263,6 +273,26 @@ class CourseSession
     public function setRegistrationValidation($registrationValidation)
     {
         $this->registrationValidation = $registrationValidation;
+    }
+
+    public function getStartDate()
+    {
+        return $this->startDate;
+    }
+
+    public function setStartDate($startDate)
+    {
+        $this->startDate = $startDate;
+    }
+
+    public function getEndDate()
+    {
+        return $this->endDate;
+    }
+
+    public function setEndDate($endDate)
+    {
+        $this->endDate = $endDate;
     }
 
     public function getSessionUsers()

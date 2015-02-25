@@ -568,6 +568,8 @@ class CourseController extends Controller
             );
         }
         $workspace->setWorkspaceType(0);
+        $workspace->setStartDate($session->getStartDate());
+        $workspace->setEndDate($session->getEndDate());
         $this->workspaceManager->editWorkspace($workspace);
 
         return $workspace;

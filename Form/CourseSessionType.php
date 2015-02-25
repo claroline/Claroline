@@ -33,7 +33,6 @@ class CourseSessionType extends AbstractType
             'date',
             array(
                 'required' => false,
-                'mapped' => false,
                 'format' => 'dd-MM-yyyy',
                 'widget' => 'single_text',
                 'attr' => $attr,
@@ -45,7 +44,6 @@ class CourseSessionType extends AbstractType
             'date',
             array(
                 'required' => false,
-                'mapped' => false,
                 'format' => 'dd-MM-yyyy',
                 'widget' => 'single_text',
                 'attr' => $attr,
