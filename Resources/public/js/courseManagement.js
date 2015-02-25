@@ -225,7 +225,6 @@
     $('#confirm-session-deletion-btn').on('click', function () {
         var checked = $('#with-workspace-chk').prop('checked');
         var mode = checked ? 1 : 0;
-        console.log(mode);
         
         $.ajax({
             url: Routing.generate(

@@ -144,6 +144,9 @@
                                         {% else %}
                                             <a href="{{ path('claro_workspace_open', {'workspaceId': workspace.getId()}) }}"
                                                class="fa fa-book"
+                                               data-toggle="tooltip"
+                                               data-placement="top"
+                                               title="{{ workspace.getName() }} ({{ workspace.getCode() }})"
                                             >
                                             </a>
                                         {% endif %}
@@ -208,6 +211,9 @@
                                         {% else %}
                                             <a href="{{ path('claro_workspace_open', {'workspaceId': workspace.getId()}) }}"
                                                class="fa fa-book"
+                                               data-toggle="tooltip"
+                                               data-placement="top"
+                                               title="{{ workspace.getName() }} ({{ workspace.getCode() }})"
                                             >
                                             </a>
                                         {% endif %}
@@ -276,6 +282,9 @@
                                             {% else %}
                                                 <a href="{{ path('claro_workspace_open', {'workspaceId': workspace.getId()}) }}"
                                                    class="fa fa-book"
+                                                   data-toggle="tooltip"
+                                                   data-placement="top"
+                                                   title="{{ workspace.getName() }} ({{ workspace.getCode() }})"
                                                 >
                                                 </a>
                                             {% endif %}
