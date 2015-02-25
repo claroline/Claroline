@@ -76,4 +76,23 @@ class CourseSessionRepository extends EntityRepository
 
         return $executeQuery ? $query->getResult() : $query;
     }
+
+    public function findSessionsByCourses(
+        array $courses,
+        $orderedBy = 'creationDate',
+        $order = 'DESC',
+        $executeQuery = true
+    )
+    {
+        $dql = "
+            SELECT cs
+            FROM Claroline\CursusBundle\Entity\CourseSession cs
+            WHERE cs.course IN (:courses)
+            ORDER BY cs.{$orderedBy} {$order}
+        ";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('courses', $courses);
+
+        return $executeQuery ? $query->getResult() : $query;
+    }
 }

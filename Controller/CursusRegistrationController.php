@@ -347,26 +347,9 @@ class CursusRegistrationController extends Controller
 
     /**
      * @EXT\Route(
-     *     "cursus/{cursus}/register/user/{user}",
-     *     name="claro_cursus_register_user",
-     *     options={"expose"=true}
-     * )
-     * @EXT\Method("POST")
-     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
-     */
-    public function cursusUserRegisterAction(Cursus $cursus, User $user)
-    {
-        $this->checkToolAccess();
-        $this->cursusManager->registerUserToCursus($cursus, $user);
-
-        return new JsonResponse('success', 200);
-    }
-
-    /**
-     * @EXT\Route(
      *     "multiple/cursus/register/user/{user}",
      *     name="claro_cursus_multiple_register_user",
-     *    options = {"expose"=true}
+     *     options = {"expose"=true}
      * )
      * @EXT\Method("POST")
      * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
@@ -392,34 +375,9 @@ class CursusRegistrationController extends Controller
 
     /**
      * @EXT\Route(
-     *     "cursus/{cursus}/register/users",
-     *     name="claro_cursus_register_users",
-     *    options = {"expose"=true}
-     * )
-     * @EXT\Method("POST")
-     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
-     * @EXT\ParamConverter(
-     *     "users",
-     *      class="ClarolineCoreBundle:User",
-     *      options={"multipleIds" = true, "name" = "userIds"}
-     * )
-     *
-     * @param Cursus $cursus
-     * @param User[] $users
-     */
-    public function cursusUsersRegisterAction(Cursus $cursus, array $users)
-    {
-        $this->checkToolAccess();
-        $this->cursusManager->registerUsersToCursus($cursus, $users);
-
-        return new JsonResponse('success', 200);
-    }
-
-    /**
-     * @EXT\Route(
      *     "multiple/cursus/register/users",
      *     name="claro_cursus_multiple_register_users",
-     *    options = {"expose"=true}
+     *     options = {"expose"=true}
      * )
      * @EXT\Method("POST")
      * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
@@ -450,68 +408,9 @@ class CursusRegistrationController extends Controller
 
     /**
      * @EXT\Route(
-     *     "cursus/{cursus}/unregister/user/{user}",
-     *     name="claro_cursus_unregister_user",
-     *     options={"expose"=true}
-     * )
-     * @EXT\Method("DELETE")
-     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
-     */
-    public function cursusUserUnregisterAction(Cursus $cursus, User $user)
-    {
-        $this->checkToolAccess();
-        $this->cursusManager->unregisterUserFromCursus($cursus, $user);
-
-        return new JsonResponse('success', 200);
-    }
-
-    /**
-     * @EXT\Route(
-     *     "cursus/{cursus}/unregister/users",
-     *     name="claro_cursus_unregister_users",
-     *    options = {"expose"=true}
-     * )
-     * @EXT\Method("DELETE")
-     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
-     * @EXT\ParamConverter(
-     *     "users",
-     *      class="ClarolineCoreBundle:User",
-     *      options={"multipleIds" = true, "name" = "userIds"}
-     * )
-     *
-     * @param Cursus $cursus
-     * @param User[] $users
-     */
-    public function cursusUsersUnregisterAction(Cursus $cursus, array $users)
-    {
-        $this->checkToolAccess();
-        $this->cursusManager->unregisterUsersFromCursus($cursus, $users);
-
-        return new JsonResponse('success', 200);
-    }
-
-    /**
-     * @EXT\Route(
-     *     "cursus/{cursus}/register/group/{group}",
-     *     name="claro_cursus_register_group",
-     *     options={"expose"=true}
-     * )
-     * @EXT\Method("POST")
-     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
-     */
-    public function cursusGroupRegisterAction(Cursus $cursus, Group $group)
-    {
-        $this->checkToolAccess();
-        $this->cursusManager->registerGroupToCursus($cursus, $group);
-
-        return new JsonResponse('success', 200);
-    }
-
-    /**
-     * @EXT\Route(
      *     "multiple/cursus/register/group/{group}",
      *     name="claro_cursus_multiple_register_group",
-     *    options = {"expose"=true}
+     *     options = {"expose"=true}
      * )
      * @EXT\Method("POST")
      * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
@@ -531,23 +430,6 @@ class CursusRegistrationController extends Controller
     {
         $this->checkToolAccess();
         $this->cursusManager->registerGroupToMultipleCursus($multipleCursus, $group);
-
-        return new JsonResponse('success', 200);
-    }
-
-    /**
-     * @EXT\Route(
-     *     "cursus/{cursus}/unregister/group/{group}",
-     *     name="claro_cursus_unregister_group",
-     *     options={"expose"=true}
-     * )
-     * @EXT\Method("DELETE")
-     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
-     */
-    public function cursusGroupUnregisterAction(Cursus $cursus, Group $group)
-    {
-        $this->checkToolAccess();
-        $this->cursusManager->unregisterGroupFromCursus($cursus, $group);
 
         return new JsonResponse('success', 200);
     }

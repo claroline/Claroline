@@ -322,27 +322,6 @@ class CursusManager
         $this->om->endFlushSuite();
     }
 
-    public function registerGroupToCursus(Cursus $cursus, Group $group)
-    {
-        $cursusGroup = $this->cursusGroupRepo->findOneCursusGroupByCursusAndGroup(
-            $cursus,
-            $group
-        );
-
-        if (is_null($cursusGroup)) {
-            $this->om->startFlushSuite();
-            $registrationDate = new \DateTime();
-            $cursusGroup = new CursusGroup();
-            $cursusGroup->setCursus($cursus);
-            $cursusGroup->setGroup($group);
-            $cursusGroup->setRegistrationDate($registrationDate);
-            $this->persistCursusGroup($cursusGroup);
-            $users = $group->getUsers();
-            $this->registerUsersToCursus($cursus, $users->toArray());
-            $this->om->endFlushSuite();
-        }
-    }
-
     public function registerGroupToMultipleCursus(array $multipleCursus, Group $group)
     {
         $registrationDate = new \DateTime();
@@ -1140,6 +1119,27 @@ class CursusManager
             $order,
             $executeQuery
         );
+    }
+
+    public function getSessionsByCourses(
+        array $courses,
+        $orderedBy = 'creationDate',
+        $order = 'DESC',
+        $executeQuery = true
+    )
+    {
+        if (count($courses) > 0) {
+
+            return $this->courseSessionRepo->findSessionsByCourses(
+                $courses,
+                $orderedBy,
+                $order,
+                $executeQuery
+            );
+        } else {
+
+            return array();
+        }
     }
 
 
