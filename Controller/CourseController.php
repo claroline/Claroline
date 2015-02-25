@@ -22,6 +22,7 @@ use Claroline\CursusBundle\Entity\CourseSession;
 use Claroline\CursusBundle\Entity\CourseSessionUser;
 use Claroline\CursusBundle\Entity\Cursus;
 use Claroline\CursusBundle\Entity\CursusDisplayedWord;
+use Claroline\CursusBundle\Form\CourseSessionEditType;
 use Claroline\CursusBundle\Form\CourseSessionType;
 use Claroline\CursusBundle\Form\CourseType;
 use Claroline\CursusBundle\Manager\CursusManager;
@@ -386,6 +387,48 @@ class CourseController extends Controller
         } else {
 
             return array('form' => $form->createView(), 'course' => $course);
+        }
+    }
+
+    /**
+     * @EXT\Route(
+     *     "cursus/course/session/{session}/edit/form",
+     *     name="claro_cursus_course_session_edit_form",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template("ClarolineCursusBundle:Course:courseSessionEditModalForm.html.twig")
+     */
+    public function courseSessionEditFormAction(CourseSession $session)
+    {
+        $this->checkToolAccess();
+        $form = $this->formFactory->create(new CourseSessionEditType($session), $session);
+
+        return array('form' => $form->createView(), 'session' => $session);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "cursus/course/session/{session}/edit",
+     *     name="claro_cursus_course_session_edit",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template("ClarolineCursusBundle:Course:courseSessionEditModalForm.html.twig")
+     */
+    public function courseSessionEditAction(CourseSession $session)
+    {
+        $this->checkToolAccess();
+        $form = $this->formFactory->create(new CourseSessionEditType($session), $session);
+        $form->handleRequest($this->request);
+
+        if ($form->isValid()) {
+            $this->cursusManager->persistCourseSession($session);
+
+            return new JsonResponse('success', 200);
+        } else {
+
+            return array('form' => $form->createView(), 'session' => $session);
         }
     }
 

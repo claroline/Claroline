@@ -10,6 +10,8 @@
 (function () {
     'use strict';
     
+    var sessionsClosed = true;
+    
     $('#course-session-create-btn').on('click', function () {
         var courseId = $(this).data('course-id');
         
@@ -184,6 +186,29 @@
             sessionUserId,
             Translator.trans('unregister_user_from_session_message', {}, 'cursus'),
             Translator.trans('unregister_user_from_session', {}, 'cursus')
+        );
+    });
+    
+    $('#show-closed-sessions-btn').on('click', function () {
+        sessionsClosed = !sessionsClosed;
+        
+        if (sessionsClosed) {
+            $('.closed-session').addClass('hide');
+        } else {
+            $('.closed-session').removeClass('hide');
+        }
+    });
+    
+    $('.edit-session-btn').on('click', function () {
+        var sessionId = $(this).data('session-id');
+        
+        window.Claroline.Modal.displayForm(
+            Routing.generate(
+                'claro_cursus_course_session_edit_form',
+                {'session': sessionId}
+            ),
+            refreshPage,
+            function() {}
         );
     });
 

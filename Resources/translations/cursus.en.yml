@@ -10,6 +10,7 @@ course_form_tutorRoleName: 'Tutor role'
 course_form_workspaceModel: 'Workspace model'
 course_session_form_end_date: 'End date'
 course_session_form_name: Name
+course_session_form_sessionStatus: 'Status'
 course_session_form_start_date: 'Start date'
 create_cursus: 'Create "%cursusWord%"'
 cursus: Cursus
@@ -26,6 +27,9 @@ registration_date: 'Registration date'
 registration_validation: 'Registration validation'
 register: Register
 session: Session
+session_closed: 'Closed'
+session_not_started: 'Not started'
+session_open: 'Ongoing'
 the_displayed_word_for: 'The displayed word for'
 unregister: Unregister
 will_be: 'will be'

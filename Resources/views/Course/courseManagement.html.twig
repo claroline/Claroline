@@ -97,7 +97,7 @@
                     {% if sessionsTab|length > 0 %}
                         {% 
                             if (sessionsTab[0] is defined and sessionsTab[0]|length > 0) or
-                            (sessionsTab[0] is defined and sessionsTab[0]|length > 0)
+                            (sessionsTab[1] is defined and sessionsTab[1]|length > 0)
                         %}
                             <table class="table">
                                 <tr>
@@ -112,6 +112,9 @@
                                     </th>
                                     <th class="text-center">
                                         {{ 'status'|trans({}, 'platform') }}
+                                    </th>
+                                    <th class="text-center">
+                                        {{ 'actions'|trans({}, 'platform') }}
                                     </th>
                                 </tr>
                                 
@@ -151,7 +154,26 @@
                                         </td>
                                         <td class="text-center">
                                             <i class="fa fa-circle pointer-hand"
+                                               data-toggle="tooltip"
+                                               data-placement="top"
+                                               title="{{ 'session_not_started'|trans({}, 'cursus') }}"
                                                style="color: #706c6c"
+                                            >
+                                            </i>
+                                        </td>
+                                        <td class="text-center">
+                                            <i class="btn btn-default fa fa-edit edit-session-btn"
+                                               data-toggle="tooltip"
+                                               data-placement="top"
+                                               title="{{ 'edit_session'|trans({}, 'cursus') }}"
+                                               data-session-id="{{ session.getId() }}"
+                                            >
+                                            </i>
+                                            <i class="btn btn-danger fa fa-trash delete-session-btn"
+                                               data-toggle="tooltip"
+                                               data-placement="top"
+                                               title="{{ 'delete_session'|trans({}, 'cursus') }}"
+                                               data-session-id="{{ session.getId() }}"
                                             >
                                             </i>
                                         </td>
@@ -195,40 +217,47 @@
                                         </td>
                                         <td class="text-center">
                                             <i class="fa fa-circle pointer-hand"
+                                               data-toggle="tooltip"
+                                               data-placement="top"
+                                               title="{{ 'session_open'|trans({}, 'cursus') }}"
                                                style="color: #5CB85C"
+                                            >
+                                            </i>
+                                        </td>
+                                        <td class="text-center">
+                                            <i class="btn btn-default fa fa-edit edit-session-btn"
+                                               data-toggle="tooltip"
+                                               data-placement="top"
+                                               title="{{ 'edit_session'|trans({}, 'cursus') }}"
+                                               data-session-id="{{ session.getId() }}"
+                                            >
+                                            </i>
+                                            <i class="btn btn-danger fa fa-trash delete-session-btn"
+                                               data-toggle="tooltip"
+                                               data-placement="top"
+                                               title="{{ 'delete_session'|trans({}, 'cursus') }}"
+                                               data-session-id="{{ session.getId() }}"
                                             >
                                             </i>
                                         </td>
                                     </tr>
                                     {% endfor %}
                                 {% endif %}
-                            </table>
-                        {% endif %}
-                    
-                        {% if sessionsTab[2] is defined and sessionsTab[2]|length > 0 %}
-                            <a data-toggle="collapse"
-                               data-target="#closed-sessions-tab"
-                               class="pointer-hand pull-right"
-                            >
-                                {{ 'closed_sessions'|trans({}, 'cursus') }}
-                            </a>
-                            <br>
-                            <br>
-                            <div class="table-responsive collapse" id="closed-sessions-tab">
-                                <table class="table">
+                                    
+                                {% if sessionsTab[2] is defined %}
                                     <tr>
-                                        <th>
-                                            {{ 'name'|trans({}, 'platform') }}
-                                        </th>
-                                        <th>
-                                            {{ 'creation_date'|trans({}, 'platform') }}
-                                        </th>
-                                        <th class="text-center">
-                                            {{ 'status'|trans({}, 'platform') }}
-                                        </th>
+                                        <td colspan="5">
+                                            <span id="show-closed-sessions-btn"
+                                                  class="btn btn-default pull-right"
+                                            >
+                                                <i class="fa fa-eye"></i>
+                                                {{ 'show_hide_closed_sessions'|trans({}, 'cursus') }}
+                                            </span>
+                                        </td>
                                     </tr>
+                                    
                                     {% for session in sessionsTab[2] %}
-                                        <tr>
+                                        <tr class="closed-session hide">
                                             <td>
                                                 <span class="show-users-btn pointer-hand"
                                                       data-session-id="{{ session.getId() }}"
@@ -240,15 +269,46 @@
                                                 {{ session.getCreationDate()|intl_date_format }}
                                             </td>
                                             <td class="text-center">
+                                                {% set workspace = session.getWorkspace() %}
+
+                                                {% if workspace is null %}
+                                                    -
+                                                {% else %}
+                                                    <a href="{{ path('claro_workspace_open', {'workspaceId': workspace.getId()}) }}"
+                                                       class="fa fa-book"
+                                                    >
+                                                    </a>
+                                                {% endif %}
+                                            </td>
+                                            <td class="text-center">
                                                 <i class="fa fa-circle pointer-hand"
+                                                   data-toggle="tooltip"
+                                                   data-placement="top"
+                                                   title="{{ 'session_closed'|trans({}, 'cursus') }}"
                                                    style="color: #D9534F"
+                                                >
+                                                </i>
+                                            </td>
+                                            <td class="text-center">
+                                                <i class="btn btn-default fa fa-edit edit-session-btn"
+                                                   data-toggle="tooltip"
+                                                   data-placement="top"
+                                                   title="{{ 'edit_session'|trans({}, 'cursus') }}"
+                                                   data-session-id="{{ session.getId() }}"
+                                                >
+                                                </i>
+                                                <i class="btn btn-danger fa fa-trash delete-session-btn"
+                                                   data-toggle="tooltip"
+                                                   data-placement="top"
+                                                   title="{{ 'delete_session'|trans({}, 'cursus') }}"
+                                                   data-session-id="{{ session.getId() }}"
                                                 >
                                                 </i>
                                             </td>
                                         </tr>
                                     {% endfor %}
-                                </table>
-                            </div>
+                                {% endif %}
+                            </table>
                         {% endif %}
                     {% else %}
                         <div class="alert alert-warning">
