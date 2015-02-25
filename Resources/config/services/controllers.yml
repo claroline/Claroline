@@ -28,31 +28,18 @@ services:
         calls:
           - [setRequest, [@request]]
         scope: request
-
-    # Contextual Editor controller
-    innova_path.controller.path_contextual_editor:
-        class: %innova_path.controller.contextual_editor.class%
-        calls:
-          - [setContainer, ["@service_container"]]
-        arguments:
-            securityContext: @security.context
-            router:      @router
-            formFactory: @form.factory
-            session:     @session
-            translator:  @translator
-            stepHandler: @innova_path.form.handler.step
-        scope: request
           
     # Editor controller
     innova_path.controller.path_editor:
         class: %innova_path.controller.path_editor.class%
         arguments:
-            objectManager:   @doctrine.orm.entity_manager
-            router:          @router
-            formFactory:     @form.factory
-            session:         @session
-            translator:      @translator
-            pathHandler:     @innova_path.form.handler.path
-            pathManager:     @innova_path.manager.path
-            resourceManager: @claroline.manager.resource_manager
+            objectManager:     @doctrine.orm.entity_manager
+            router:            @router
+            formFactory:       @form.factory
+            session:           @session
+            translator:        @translator
+            pathHandler:       @innova_path.form.handler.path
+            pathManager:       @innova_path.manager.path
+            publishingManager: @innova_path.manager.publishing
+            resourceManager:   @claroline.manager.resource_manager
         scope: request

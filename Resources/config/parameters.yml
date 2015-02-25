@@ -1,10 +1,9 @@
 parameters: 
     # Controllers
-    innova_path.controller.path.class:              Innova\PathBundle\Controller\PathController
-    innova_path.controller.contextual_editor.class: Innova\PathBundle\Controller\ContextualEditorController
-    innova_path.controller.path_template.class:     Innova\PathBundle\Controller\PathTemplateController
-    innova_path.controller.path_player.class:       Innova\PathBundle\Controller\PlayerController
-    innova_path.controller.path_editor.class:       Innova\PathBundle\Controller\EditorController
+    innova_path.controller.path.class:          Innova\PathBundle\Controller\PathController
+    innova_path.controller.path_template.class: Innova\PathBundle\Controller\PathTemplateController
+    innova_path.controller.path_player.class:   Innova\PathBundle\Controller\PlayerController
+    innova_path.controller.path_editor.class:   Innova\PathBundle\Controller\EditorController
 
     # Managers
     innova_path.manager.path.class:          Innova\PathBundle\Manager\PathManager
@@ -16,13 +15,11 @@ parameters:
     innova_path.form.type.abstract_path.class: Innova\PathBundle\Form\Type\AbstractPathType
     innova_path.form.type.path.class:          Innova\PathBundle\Form\Type\PathType
     innova_path.form.type.path_template.class: Innova\PathBundle\Form\Type\PathTemplateType
-    innova_path.form.type.step.class:          Innova\PathBundle\Form\Type\StepType
     
     # Form handlers
     innova_path.form.handler.abstract.class:      Innova\PathBundle\Form\Handler\AbstractPathHandler
     innova_path.form.handler.path.class:          Innova\PathBundle\Form\Handler\PathHandler
     innova_path.form.handler.path_template.class: Innova\PathBundle\Form\Handler\PathTemplateHandler
-    innova_path.form.handler.step.class:          Innova\PathBundle\Form\Handler\StepHandler
 
     # Listeners
     innova_path.listener.path_tool.class:     Innova\PathBundle\Listener\ToolListener
