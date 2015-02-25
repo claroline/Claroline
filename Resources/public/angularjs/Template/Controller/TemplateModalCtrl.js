@@ -96,17 +96,17 @@
                             formTemplate.id = data;
                             TemplateFactory.replaceTemplate(formTemplate);
 
-                            AlertFactory.addAlert('success', Translator.get('path_editor:path_template_save_success'));
+                            AlertFactory.addAlert('success', Translator.trans('path_template_save_success', {}, 'path_editor'));
                         }
                         else {
                             // Server error while saving
-                            AlertFactory.addAlert('error', Translator.get('path_editor:path_template_save_error'));
+                            AlertFactory.addAlert('error', Translator.trans('path_template_save_error', {}, 'path_editor'));
                         }
 
                         $modalInstance.close();
                     })
                     .error(function(data, status) {
-                        AlertFactory.addAlert('error', Translator.get('path_editor:path_template_save_error'));
+                        AlertFactory.addAlert('error', Translator.trans('path_template_save_error', {}, 'path_editor'));
                     });
             }
         }
