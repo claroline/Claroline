@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Migrations\sqlanywhere;
+namespace Claroline\CoreBundle\Migrations\oci8;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -8,18 +8,23 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2015/02/23 10:37:36
+ * Generation date: 2015/02/24 02:25:30
  */
-class Version20150223103734 extends AbstractMigration
+class Version20150224142529 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
         $this->addSql("
             ALTER TABLE claro_bundle 
-            ADD type VARCHAR(50) NOT NULL, 
-            ADD authors TEXT NOT NULL, 
-            ADD description TEXT DEFAULT NULL, 
-            ADD license TEXT NOT NULL
+            ADD (
+                type VARCHAR2(50) NOT NULL, 
+                authors CLOB NOT NULL, 
+                description CLOB DEFAULT NULL NULL, 
+                targetDir CLOB NOT NULL, 
+                basePath CLOB NOT NULL, 
+                license CLOB NOT NULL, 
+                isInstalled NUMBER(1) NOT NULL
+            )
         ");
         $this->addSql("
             COMMENT ON COLUMN claro_bundle.authors IS '(DC2Type:json_array)'
@@ -33,10 +38,10 @@ class Version20150223103734 extends AbstractMigration
     {
         $this->addSql("
             ALTER TABLE claro_bundle 
-            DROP type, 
-            DROP authors, 
-            DROP description, 
-            DROP license
+            DROP (
+                type, authors, description, targetDir, 
+                basePath, license, isInstalled
+            )
         ");
     }
 }

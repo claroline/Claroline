@@ -106,6 +106,39 @@ class PackageController extends Controller
 
     /**
      * @EXT\Route(
+     *     "/bundle/{bundle}/install",
+     *     name="claro_admin_plugins_install"
+     * )
+     *
+     * Install a plugin.
+     *
+     * @return Response
+     */
+    public function installFromRemoteAction($bundle)
+    {
+        $this->checkOpen();
+        $this->bundleManager->installRemoteBundle($bundle);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/install/log",
+     *     name="claro_admin_plugins_log"
+     * )
+     *
+     * Install a plugin.
+     *
+     * @return Response
+     */
+    public function displayUpdateLog()
+    {
+        $this->checkOpen();
+
+        return file_get_contents($this->bundleManager->getLogFile());
+    }
+
+    /**
+     * @EXT\Route(
      *     "/plugin/parameters/{pluginShortName}",
      *     name="claro_admin_plugin_parameters"
      * )

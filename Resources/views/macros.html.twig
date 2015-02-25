@@ -174,9 +174,13 @@
                                 </span>
                             {% endif %}
                         {% else %}
-                            <span class="badge">
+                            <a
+                                class="badge install-pkg"
+                                data-package-name="{{ package.name }}"
+                                href="{{ path('claro_admin_plugins_install', {'bundle': package.name}) }}"
+                            >
                                 {{ 'install'|trans({}, 'platform') }}
-                            </span>
+                            </a>
                         {% endif %}
                     </span>
                 </h5>

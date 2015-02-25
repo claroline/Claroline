@@ -45,12 +45,12 @@
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h4 class="panel-title">
-                        <a data-toggle="collapse" data-parent="#core-accordion" href="#new">
-                            {{ 'new'|trans({}, 'platform') }}
+                        <a data-toggle="collapse" data-parent="#core-accordion" href="#uninstalled">
+                            {{ 'uninstalled'|trans({}, 'platform') }}
                         </a>
                     </h4>
                 </div>
-                <div id="new" class="panel-collapse collapse">
+                <div id="uninstalled" class="panel-collapse collapse">
                     <div class="panel-inner">
                         {% for package in uninstalled %}
                             {{ macros.renderPackageElement(package, fetched, true)}}
@@ -63,4 +63,12 @@
     <div class="panel panel-footer">
 
     </div>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script
+        src="{{ asset('bundles/clarolinecore/js/administration/packages.js') }}"
+        type="text/javascript"
+    >
+    </script>
 {% endblock %}

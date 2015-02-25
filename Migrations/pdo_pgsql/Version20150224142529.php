@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2015/02/23 10:37:35
+ * Generation date: 2015/02/24 02:25:30
  */
-class Version20150223103734 extends AbstractMigration
+class Version20150224142529 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -28,7 +28,19 @@ class Version20150223103734 extends AbstractMigration
         ");
         $this->addSql("
             ALTER TABLE claro_bundle 
+            ADD targetDir TEXT NOT NULL
+        ");
+        $this->addSql("
+            ALTER TABLE claro_bundle 
+            ADD basePath TEXT NOT NULL
+        ");
+        $this->addSql("
+            ALTER TABLE claro_bundle 
             ADD license TEXT NOT NULL
+        ");
+        $this->addSql("
+            ALTER TABLE claro_bundle 
+            ADD isInstalled BOOLEAN NOT NULL
         ");
         $this->addSql("
             COMMENT ON COLUMN claro_bundle.authors IS '(DC2Type:json_array)'
@@ -54,7 +66,19 @@ class Version20150223103734 extends AbstractMigration
         ");
         $this->addSql("
             ALTER TABLE claro_bundle 
+            DROP targetDir
+        ");
+        $this->addSql("
+            ALTER TABLE claro_bundle 
+            DROP basePath
+        ");
+        $this->addSql("
+            ALTER TABLE claro_bundle 
             DROP license
+        ");
+        $this->addSql("
+            ALTER TABLE claro_bundle 
+            DROP isInstalled
         ");
     }
 }

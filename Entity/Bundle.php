@@ -57,9 +57,24 @@ class Bundle
     private $description;
 
     /**
+     * @ORM\Column(type="text")
+     */
+    private $targetDir;
+
+    /**
+     * @ORM\Column(type="text")
+     */
+    private $basePath;
+
+    /**
      * @ORM\Column(type="json_array")
      */
     private $license;
+
+    /**
+     * @ORM\Column(type="boolean", nullable = false)
+     */
+    protected $isInstalled = false;
 
     /**
      * Unmapped field if "stuff" need to be added to the description
@@ -124,6 +139,36 @@ class Bundle
     public function getDescription()
     {
         return $this->description;
+    }
+
+    public function setTargetDir($targetDir)
+    {
+        $this->targetDir = $targetDir;
+    }
+
+    public function getTargetDir()
+    {
+        return $this->targetDir;
+    }
+
+    public function setBasePath($basePath)
+    {
+        $this->basePath = $basePath;
+    }
+
+    public function getBasePath()
+    {
+        return $this->basePath;
+    }
+
+    public function setIsInstalled($boolean)
+    {
+        $this->isInstalled = $boolean;
+    }
+
+    public function isInstalled()
+    {
+        return $this->isInstalled;
     }
 
     public function setExtra($extra)

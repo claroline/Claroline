@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2015/02/23 10:37:35
+ * Generation date: 2015/02/24 02:25:30
  */
-class Version20150223103734 extends AbstractMigration
+class Version20150224142529 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -19,7 +19,10 @@ class Version20150223103734 extends AbstractMigration
             ADD type VARCHAR(50) NOT NULL, 
             ADD authors LONGTEXT NOT NULL COMMENT '(DC2Type:json_array)', 
             ADD description LONGTEXT DEFAULT NULL, 
-            ADD license LONGTEXT NOT NULL COMMENT '(DC2Type:json_array)'
+            ADD targetDir LONGTEXT NOT NULL, 
+            ADD basePath LONGTEXT NOT NULL, 
+            ADD license LONGTEXT NOT NULL COMMENT '(DC2Type:json_array)', 
+            ADD isInstalled TINYINT(1) NOT NULL
         ");
     }
 
@@ -30,7 +33,10 @@ class Version20150223103734 extends AbstractMigration
             DROP type, 
             DROP authors, 
             DROP description, 
-            DROP license
+            DROP targetDir, 
+            DROP basePath, 
+            DROP license, 
+            DROP isInstalled
         ");
     }
 }

@@ -177,7 +177,7 @@ class PlatformConfigurationHandler
         $config->setIsNotificationActive($this->parameters['is_notification_active']);
         $config->setMaxUploadResources($this->parameters['max_upload_resources']);
         $config->setMaxStorageSize($this->parameters['max_storage_size']);
-        $confog->setRepositoryApi($this->parameters['repository_api']);
+        $config->setRepositoryApi($this->parameters['repository_api']);
 
         return $config;
     }
