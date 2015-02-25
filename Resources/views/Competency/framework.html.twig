@@ -1,9 +1,6 @@
 {% extends 'HeVinciCompetencyBundle:Competency:layout.html.twig' %}
 
-{#
-    Note: this template is fed with NestedTreeRepository#childrenHierarchy data,
-          i.e. a hierarchical array where nodes themselves are arrays.
-#}
+{# Note: this template is fed by the hierarchical array built by CompetencyManager#loadFramework #}
 
 {% block title %}
     {{ parent() ~ ' - ' ~ framework.name }}

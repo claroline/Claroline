@@ -1,12 +1,15 @@
 {% twig_js name = 'CompetencyItem' %}
 
+{% trans_default_domain 'competency' %}
+
 {% set level = level is defined ? level : 0 %}
 {% set displayUntil = displayUntil is defined ? displayUntil : 1000 %}
-{% set areChildrenDisplayable = level < displayUntil %}
 {% set hasChildren = competency.__children is defined and competency.__children|length > 0 %}
+{% set hasAbilities = competency.__abilities is defined and competency.__abilities|length > 0 %}
+{% set areChildrenDisplayable = level < displayUntil %}
 
 <li data-id="{{ competency.id }}" data-level="{{ level }}">
-    {% if hasChildren %}
+    {% if hasChildren or hasAbilities %}
         {% if areChildrenDisplayable %}
             <i class="fa fa-minus-square-o collapse"></i>
         {% else %}
@@ -36,26 +39,26 @@
             {% endif %}
             <li role="presentation">
                 <a class="create-sub-competency" role="menuitem" href="#" tabindex="-1">
-                    {{ 'competency.create_sub'|trans({}, 'competency') }}
+                    {{ 'competency.create_sub'|trans }}
                 </a>
             </li>
             <li role="presentation">
                 <a class="create-ability" role="menuitem" href="#" tabindex="-1">
-                    {{ 'ability.create'|trans({}, 'competency') }}
+                    {{ 'ability.create'|trans }}
                 </a>
             </li>
             <li role="presentation">
                 <a role="menuitem" href="#" tabindex="-1">
-                    {{ 'ability.add'|trans({}, 'competency') }}
+                    {{ 'ability.add'|trans }}
                 </a>
             </li>
         </ul>
     </span>
     <ul class="children" style="display: {{ areChildrenDisplayable ? 'block' : 'none' }}">
-        {# Note: __children is the key created by NestedTreeRepository#childrenHierarchy #}
         {% if hasChildren %}
             {% for child in competency.__children %}
-                {% include _self
+                {%
+                    include _self
                     with {
                         competency: child,
                         level: level + 1,
@@ -64,5 +67,27 @@
                 %}
             {% endfor %}
         {% endif %}
+        <li>
+            {% spaceless %} {# needed to target empty tables with css :empty #}
+                <table class="abilities table table-condensed table-bordered" style="display:{{ hasAbilities ? 'table' : 'none' }}">
+                    <thead>
+                        <th>{{ 'level'|trans }}</th>
+                        <th>{{ 'ability_'|trans }}</th>
+                        <th>{{ 'ability.linked_activity_count'|trans }}</th>
+                        <th>{{ 'ability.required_activity_count'|trans }}</th>
+                    </thead>
+                    <tbody>
+                        {% if hasAbilities %}
+                             {% for ability in competency.__abilities %}
+                                {%
+                                    include 'HeVinciCompetencyBundle:Competency:abilityRow.html.twig'
+                                    with ability
+                                %}
+                            {% endfor %}
+                        {% endif %}
+                    </tbody>
+                </table>
+            {% endspaceless %}
+        </li>
     </ul>
 </li>

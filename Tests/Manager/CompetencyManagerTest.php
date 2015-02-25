@@ -12,23 +12,27 @@ class CompetencyManagerTest extends UnitTestCase
     private $translator;
     private $competencyRepo;
     private $scaleRepo;
+    private $abilityRepo;
     private $manager;
 
     protected function setUp()
     {
         $this->om = $this->mock('Claroline\CoreBundle\Persistence\ObjectManager');
         $this->translator = $this->mock('Symfony\Component\Translation\TranslatorInterface');
-        $this->competencyRepo = $this->mock('Gedmo\Tree\Entity\Repository\NestedTreeRepository');
+        $this->competencyRepo = $this->mock('HeVinci\CompetencyBundle\Repository\CompetencyRepository');
         $this->scaleRepo = $this->mock('Doctrine\ORM\EntityRepository');
-        $this->om->expects($this->exactly(2))
+        $this->abilityRepo = $this->mock('HeVinci\CompetencyBundle\Repository\AbilityRepository');
+        $this->om->expects($this->exactly(3))
             ->method('getRepository')
             ->withConsecutive(
                 ['HeVinciCompetencyBundle:Competency'],
-                ['HeVinciCompetencyBundle:Scale']
+                ['HeVinciCompetencyBundle:Scale'],
+                ['HeVinciCompetencyBundle:Ability']
             )
             ->willReturnOnConsecutiveCalls(
                 $this->competencyRepo,
-                $this->scaleRepo
+                $this->scaleRepo,
+                $this->abilityRepo
             );
         $this->manager = new CompetencyManager($this->om, $this->translator);
     }
@@ -121,14 +125,25 @@ class CompetencyManagerTest extends UnitTestCase
         $this->assertEquals($competency, $this->manager->persistFramework($competency));
     }
 
-    public function testLoadFramework()
+    /**
+     * @dataProvider loadFrameworkProvider
+     *
+     * @param array $competencies
+     * @param array $abilities
+     * @param array $expectedResult
+     */
+    public function testLoadFramework(array $competencies, array $abilities, array $expectedResult)
     {
         $framework = new Competency();
         $this->competencyRepo->expects($this->once())
             ->method('childrenHierarchy')
             ->with($framework, false, [], true)
-            ->willReturn(['FRAMEWORK']);
-        $this->assertEquals('FRAMEWORK', $this->manager->loadFramework($framework));
+            ->willReturn($competencies);
+        $this->abilityRepo->expects($this->once())
+            ->method('findByFramework')
+            ->with($framework)
+            ->willReturn($abilities);
+        $this->assertEquals($expectedResult, $this->manager->loadFramework($framework));
     }
 
     /**
@@ -173,5 +188,128 @@ class CompetencyManagerTest extends UnitTestCase
         $competency = new Competency();
         $this->om->expects($this->once())->method('flush');
         $this->assertEquals($competency, $this->manager->updateCompetency($competency));
+    }
+
+    public function loadFrameworkProvider()
+    {
+        return [
+            [[[]], [], []],
+            [
+                [[
+                    'id' => 1,
+                    'name' => 'C1'
+                ]],
+                [],
+                [
+                    'id' => 1,
+                    'name' => 'C1'
+                ]
+            ],
+            [
+                [[
+                    'id' => 1,
+                    'name' => 'C1',
+                    '__children' => [
+                        [
+                            'id' => 2,
+                            'name' => 'C2'
+                        ]
+                    ]
+                ]],
+                [],
+                [
+                    'id' => 1,
+                    'name' => 'C1',
+                    '__children' => [
+                        [
+                            'id' => 2,
+                            'name' => 'C2'
+                        ]
+                    ]
+                ]
+            ],
+            [
+                [[
+                    'id' => 1,
+                    'name' => 'C1',
+                    '__children' => [
+                        [
+                            'id' => 2,
+                            'name' => 'C2'
+                        ]
+                    ]
+                ]],
+                [
+                    [
+                        'id' => 3,
+                        'name' => 'A1',
+                        'competencyId' => 2
+                    ]
+                ],
+                [
+                    'id' => 1,
+                    'name' => 'C1',
+                    '__children' => [
+                        [
+                            'id' => 2,
+                            'name' => 'C2',
+                            '__abilities' => [
+                                [
+                                    'id' => 3,
+                                    'name' => 'A1',
+                                    'competencyId' => 2
+                                ]
+                            ]
+                        ]
+                    ]
+                ]
+            ],
+            [
+                [[
+                    'id' => 1,
+                    'name' => 'C1',
+                    '__children' => [
+                        [
+                            'id' => 2,
+                            'name' => 'C2'
+                        ]
+                    ]
+                ]],
+                [
+                    [
+                        'id' => 3,
+                        'name' => 'A1',
+                        'competencyId' => 2
+                    ],
+                    [
+                        'id' => 4,
+                        'name' => 'A2',
+                        'competencyId' => 2
+                    ]
+                ],
+                [
+                    'id' => 1,
+                    'name' => 'C1',
+                    '__children' => [
+                        [
+                            'id' => 2,
+                            'name' => 'C2',
+                            '__abilities' => [
+                                [
+                                    'id' => 3,
+                                    'name' => 'A1',
+                                    'competencyId' => 2
+                                ],
+                                [
+                                    'id' => 4,
+                                    'name' => 'A2',
+                                    'competencyId' => 2
+                                ]
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ];
     }
 }

@@ -1,14 +1,16 @@
 {% extends 'HeVinciCompetencyBundle:Competency:layout.html.twig' %}
 
+{% trans_default_domain 'competency' %}
+
 {% block panelBody %}
     <table id="framework-table"
            class="table table-condensed table-bordered"
            {% if frameworks|length == 0 %}style="display: none;"{% endif %}>
         <thead>
             <tr>
-                <th>{{ 'framework_'|trans({}, 'competency') }}</th>
+                <th>{{ 'framework_'|trans }}</th>
                 <th>{{ 'description'|trans({}, 'platform') }}</th>
-                <th>{{ 'scale_'|trans({}, 'competency') }}</th>
+                <th>{{ 'scale_'|trans }}</th>
                 <th colspan="2">{{ 'actions'|trans({}, 'platform') }}</th>
             </tr>
         </thead>
@@ -32,9 +34,9 @@
             <i class="fa fa-info-circle"></i>
             <span id="status-info">
                 {% if hasScales %}
-                    {{ 'info.no_frame'|trans({}, 'competency') }}
+                    {{ 'info.no_frame'|trans }}
                 {% else %}
-                    {{ 'info.no_frame_no_scale'|trans({}, 'competency') }}
+                    {{ 'info.no_frame_no_scale'|trans }}
                 {% endif %}
             </span>
         </div>
@@ -43,12 +45,12 @@
 
 {% block panelFooter %}
     <button id="create-framework" class="btn btn-primary">
-        {{ 'framework.create'|trans({}, 'competency') }}
+        {{ 'framework.create'|trans }}
     </button>
     <button id="create-first-scale" class="btn btn-primary" {{ hasScales ? 'style="display: none"' : '' }}>
-        {{ 'scale.create'|trans({}, 'competency') }}
+        {{ 'scale.create'|trans }}
     </button>
     <a id="manage-scales" href="{{ path('hevinci_scales') }}" class="btn btn-primary" {{ not hasScales ? 'style="display: none"' : '' }}>
-        {{ 'manage_scales'|trans({}, 'competency') }}
+        {{ 'manage_scales'|trans }}
     </a>
 {% endblock %}

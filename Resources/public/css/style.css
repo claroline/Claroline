@@ -37,4 +37,9 @@ ul.framework li > i {
 
 ul.framework i.empty {
     opacity: 0;
+    cursor: default;
+}
+
+ul.framework table.abilities {
+    margin: 0.5em auto;
 }

@@ -135,18 +135,45 @@ class CompetencyManager
     }
 
     /**
-     * Returns a full array representation of a framework tree.
+     * Returns a full array representation of a framework tree. Children
+     * competencies and linked abilities are respectively stored under the
+     * "__children" and "__abilities" keys of their corresponding competency
+     * array.
      *
      * @param Competency $framework
      * @return array
      */
     public function loadFramework(Competency $framework)
     {
+        $competencies = $this->competencyRepo->childrenHierarchy($framework, false, [], true)[0];
         $abilities = $this->abilityRepo->findByFramework($framework);
+        $abilitiesByCompetency = [];
 
-        var_dump($abilities);die;
+        foreach ($abilities as $ability) {
+            $abilitiesByCompetency[$ability['competencyId']][] = $ability;
+        }
 
-        return $this->competencyRepo->childrenHierarchy($framework, false, [], true)[0];
+        $augment = function ($collection, \Closure $callback) use (&$augment) {
+            if (is_array($collection)) {
+                $result = [];
+
+                foreach ($collection as $key => $item) {
+                    $result[$key] = $augment($item, $callback);
+                }
+
+                return $callback($result);
+            }
+
+            return $collection;
+        };
+
+        return $augment($competencies, function ($collection) use ($abilitiesByCompetency) {
+            if (isset($collection['id']) && isset($abilitiesByCompetency[$collection['id']])) {
+                $collection['__abilities'] = $abilitiesByCompetency[$collection['id']];
+            }
+
+            return $collection;
+        });
     }
 
     /**
