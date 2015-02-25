@@ -73,6 +73,11 @@ class CourseSessionEditType extends AbstractType
                 )
             )
         );
+        $builder->add(
+            'defaultSession',
+            'checkbox',
+            array('required' => true)
+        );
 
         if (!is_null($workspace)) {
             $builder->add(

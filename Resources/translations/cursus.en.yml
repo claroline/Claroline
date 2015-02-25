@@ -8,6 +8,7 @@ course_form_registrationValidation: 'Registration validation'
 course_form_title: Title
 course_form_tutorRoleName: 'Tutor role'
 course_form_workspaceModel: 'Workspace model'
+course_session_form_defaultSession: 'Mark as default'
 course_session_form_end_date: 'End date'
 course_session_form_name: Name
 course_session_form_sessionStatus: 'Status'
