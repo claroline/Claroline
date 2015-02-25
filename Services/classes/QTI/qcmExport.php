@@ -195,6 +195,12 @@ class qcmExport extends qtiExport
         $simpleChoice->setAttribute("identifier", "Choice".$choiceNumber);
         $this->choiceInteraction->appendChild($simpleChoice);
         $simpleChoicetxt =  $this->document->CreateTextNode($choice->getLabel());
+         if ($choice->getPositionForce() == 1) {
+            $positionForced = 'true';
+        } else {
+            $positionForced = 'false';
+        }
+        $simpleChoice->setAttribute("fixed", $positionForced);
         $simpleChoice->appendChild($simpleChoicetxt);
 
         //comment per line for each choice
