@@ -9,7 +9,6 @@ use Claroline\CoreBundle\Manager\ResourceManager;
 
 use Innova\PathBundle\Entity\Step;
 use Innova\PathBundle\Entity\Path\Path;
-use Innova\PathBundle\Entity\Step2ResourceNode;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -49,9 +48,11 @@ class StepManager
 
     /**
      * Class constructor
-     * @param \Doctrine\Common\Persistence\ObjectManager                $om
-     * @param \Symfony\Component\Security\Core\SecurityContextInterface $security
-     * @param \Claroline\CoreBundle\Manager\ResourceManager             $resourceManager
+     * @param \Doctrine\Common\Persistence\ObjectManager                 $om
+     * @param \Symfony\Component\Security\Core\SecurityContextInterface  $security
+     * @param \Claroline\CoreBundle\Manager\ResourceManager              $resourceManager
+     * @param \Symfony\Component\HttpFoundation\Session\SessionInterface $session
+     * @param \Symfony\Component\Translation\TranslatorInterface         $translator
      */
     public function __construct(
         ObjectManager            $om,
@@ -63,8 +64,8 @@ class StepManager
         $this->om              = $om;
         $this->security        = $security;
         $this->resourceManager = $resourceManager;
-        $this->session           = $session;
-        $this->translator        = $translator;
+        $this->session         = $session;
+        $this->translator      = $translator;
     }
 
     /**
