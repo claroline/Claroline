@@ -60,6 +60,10 @@ form {
     color: #999;
 }
 
+#ng-pageslide {
+    z-index: 1001; /* to prevent bootstrap navbar to pass over the sidebar */
+}
+
 #templates-sidebar {
     margin-top: 50px;
 }
