@@ -19,6 +19,7 @@ cursus_form_description: Description
 cursus_form_title: Title
 cursus_plugin_configuration: 'Cursus plugin configuration'
 default: Default
+delete_course_session_workspace_confirm_msg: 'Also delete associated workspace'
 displayed_word: 'Displayed word'
 nothing_to_configure: 'Nothing to configure'
 public_registration: 'Public registration'

@@ -11,6 +11,7 @@
     'use strict';
     
     var sessionsClosed = true;
+    var currentSessionId = 0;
     
     $('#course-session-create-btn').on('click', function () {
         var courseId = $(this).data('course-id');
@@ -210,6 +211,36 @@
             refreshPage,
             function() {}
         );
+    });
+    
+    $('.delete-session-btn').on('click', function () {
+        var sessionId = $(this).data('session-id');
+        var sessionName = $(this).data('session-name');
+        currentSessionId = sessionId;
+        $('#with-workspace-chk').prop('checked', false);
+        $('#delete-session-name-header').html(sessionName);
+        $('#delete-session-box').modal('show');
+    });
+    
+    $('#confirm-session-deletion-btn').on('click', function () {
+        var checked = $('#with-workspace-chk').prop('checked');
+        var mode = checked ? 1 : 0;
+        console.log(mode);
+        
+        $.ajax({
+            url: Routing.generate(
+                'claro_cursus_course_session_delete',
+                {
+                    'session': currentSessionId,
+                    'mode': mode
+                }
+            ),
+            type: 'DELETE',
+            success: function () {
+                $('#row-session-' + currentSessionId).remove();
+                $('#delete-session-box').modal('hide');
+            }
+        });
     });
 
     var removeUserRow = function (event, sessionUserId) {

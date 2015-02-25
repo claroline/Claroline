@@ -14,6 +14,7 @@ namespace Claroline\CursusBundle\Manager;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Manager\RoleManager;
+use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Claroline\CoreBundle\Pager\PagerFactory;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CursusBundle\Entity\Course;
@@ -35,6 +36,7 @@ class CursusManager
     private $pagerFactory;
     private $roleManager;
     private $translator;
+    private $workspaceManager;
     private $courseRepo;
     private $courseSessionRepo;
     private $cursusRepo;
@@ -47,23 +49,26 @@ class CursusManager
     
     /**
      * @DI\InjectParams({
-     *     "om"              = @DI\Inject("claroline.persistence.object_manager"),
-     *     "pagerFactory"    = @DI\Inject("claroline.pager.pager_factory"),
-     *     "roleManager"     = @DI\Inject("claroline.manager.role_manager"),
-     *     "translator"      = @DI\Inject("translator")
+     *     "om"               = @DI\Inject("claroline.persistence.object_manager"),
+     *     "pagerFactory"     = @DI\Inject("claroline.pager.pager_factory"),
+     *     "roleManager"      = @DI\Inject("claroline.manager.role_manager"),
+     *     "translator"       = @DI\Inject("translator"),
+     *     "workspaceManager" = @DI\Inject("claroline.manager.workspace_manager")
      * })
      */
     public function __construct(
         ObjectManager $om,
         PagerFactory $pagerFactory,
         RoleManager $roleManager,
-        Translator $translator
+        Translator $translator,
+        WorkspaceManager $workspaceManager
     )
     {
         $this->om = $om;
         $this->pagerFactory = $pagerFactory;
         $this->roleManager = $roleManager;
         $this->translator = $translator;
+        $this->workspaceManager = $workspaceManager;
         $this->courseRepo =
             $om->getRepository('ClarolineCursusBundle:Course');
         $this->courseSessionRepo =
@@ -630,6 +635,18 @@ class CursusManager
             }
             $this->om->remove($sessionUser);
         }
+        $this->om->endFlushSuite();
+    }
+
+    public function deleteCourseSession(CourseSession $session, $withWorkspace = false)
+    {
+        $this->om->startFlushSuite();
+        $workspace = $session->getWorkspace();
+
+        if ($withWorkspace && !is_null($workspace)) {
+            $this->workspaceManager->deleteWorkspace($workspace);
+        }
+        $this->om->remove($session);
         $this->om->endFlushSuite();
     }
     

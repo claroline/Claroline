@@ -434,6 +434,24 @@ class CourseController extends Controller
 
     /**
      * @EXT\Route(
+     *     "cursus/course/session/{session}/delete/with/workspace/{mode}",
+     *     name="claro_cursus_course_session_delete",
+     *     options={"expose"=true}
+     * )
+     * @EXT\Method("DELETE")
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     */
+    public function courseSessionDeleteAction(CourseSession $session, $mode)
+    {
+        $this->checkToolAccess();
+        $withWorkspace = (intval($mode) === 1);
+        $this->cursusManager->deleteCourseSession($session, $withWorkspace);
+
+        return new JsonResponse('success', 200);
+    }
+
+    /**
+     * @EXT\Route(
      *     "cursus/course/session/{session}/view/management",
      *     name="claro_cursus_course_session_view_management",
      *     options={"expose"=true}

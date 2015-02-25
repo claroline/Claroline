@@ -19,6 +19,7 @@ cursus_form_description: Description
 cursus_form_title: Titre
 cursus_plugin_configuration: 'Configuration du plugin Cursus'
 default: Défaut
+delete_course_session_workspace_confirm_msg: 'Supprimer également l''espace d''activités associé'
 displayed_word: 'Mot affiché'
 nothing_to_configure: 'Rien à configurer'
 public_registration: 'Inscription publique'

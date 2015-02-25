@@ -95,221 +95,221 @@
                 <div class="table-responsive collapse in" id="sessions-tab">
                     <br>
                     {% if sessionsTab|length > 0 %}
-                        {% 
-                            if (sessionsTab[0] is defined and sessionsTab[0]|length > 0) or
-                            (sessionsTab[1] is defined and sessionsTab[1]|length > 0)
-                        %}
-                            <table class="table">
-                                <tr>
-                                    <th>
-                                        {{ 'name'|trans({}, 'platform') }}
-                                    </th>
-                                    <th>
-                                        {{ 'creation_date'|trans({}, 'platform') }}
-                                    </th>
-                                    <th class="text-center">
-                                        {{ 'workspace'|trans({}, 'platform') }}
-                                    </th>
-                                    <th class="text-center">
-                                        {{ 'status'|trans({}, 'platform') }}
-                                    </th>
-                                    <th class="text-center">
-                                        {{ 'actions'|trans({}, 'platform') }}
-                                    </th>
-                                </tr>
-                                
-                                {% if sessionsTab[0] is defined %}
-                                    {% for session in sessionsTab[0] %}
-                                    <tr>
-                                        <td>
-                                            {% if session.isDefaultSession() %}
-                                                <i class="fa fa-flag"
-                                                   data-toggle="tooltip"
-                                                   data-placement="top"
-                                                   title="{{ 'default_session'|trans({}, 'cursus') }}"
-                                                >
-                                                </i>
-                                                &nbsp;
-                                            {% endif %}
-                                            <span class="show-users-btn pointer-hand"
-                                                  data-session-id="{{ session.getId() }}"
-                                            >
-                                                {{ session.getName() }}
-                                            </span>
-                                        </td>
-                                        <td>
-                                            {{ session.getCreationDate()|intl_date_format }}
-                                        </td>
-                                        <td class="text-center">
-                                            {% set workspace = session.getWorkspace() %}
-                                            
-                                            {% if workspace is null %}
-                                                -
-                                            {% else %}
-                                                <a href="{{ path('claro_workspace_open', {'workspaceId': workspace.getId()}) }}"
-                                                   class="fa fa-book"
-                                                >
-                                                </a>
-                                            {% endif %}
-                                        </td>
-                                        <td class="text-center">
-                                            <i class="fa fa-circle pointer-hand"
-                                               data-toggle="tooltip"
-                                               data-placement="top"
-                                               title="{{ 'session_not_started'|trans({}, 'cursus') }}"
-                                               style="color: #706c6c"
-                                            >
-                                            </i>
-                                        </td>
-                                        <td class="text-center">
-                                            <i class="btn btn-default fa fa-edit edit-session-btn"
-                                               data-toggle="tooltip"
-                                               data-placement="top"
-                                               title="{{ 'edit_session'|trans({}, 'cursus') }}"
-                                               data-session-id="{{ session.getId() }}"
-                                            >
-                                            </i>
-                                            <i class="btn btn-danger fa fa-trash delete-session-btn"
-                                               data-toggle="tooltip"
-                                               data-placement="top"
-                                               title="{{ 'delete_session'|trans({}, 'cursus') }}"
-                                               data-session-id="{{ session.getId() }}"
-                                            >
-                                            </i>
-                                        </td>
-                                    </tr>
-                                    {% endfor %}
-                                {% endif %}
-                                
-                                {% if sessionsTab[1] is defined %}
-                                    {% for session in sessionsTab[1] %}
-                                    <tr>
-                                        <td>
-                                            {% if session.isDefaultSession() %}
-                                                <i class="fa fa-flag"
-                                                   data-toggle="tooltip"
-                                                   data-placement="top"
-                                                   title="{{ 'default_session'|trans({}, 'cursus') }}"
-                                                >
-                                                </i>
-                                                &nbsp;
-                                            {% endif %}
-                                            <span class="show-users-btn pointer-hand"
-                                                  data-session-id="{{ session.getId() }}"
-                                            >
-                                                {{ session.getName() }}
-                                            </span>
-                                        </td>
-                                        <td>
-                                            {{ session.getCreationDate()|intl_date_format }}
-                                        </td>
-                                        <td class="text-center">
-                                            {% set workspace = session.getWorkspace() %}
-                                            
-                                            {% if workspace is null %}
-                                                -
-                                            {% else %}
-                                                <a href="{{ path('claro_workspace_open', {'workspaceId': workspace.getId()}) }}"
-                                                   class="fa fa-book"
-                                                >
-                                                </a>
-                                            {% endif %}
-                                        </td>
-                                        <td class="text-center">
-                                            <i class="fa fa-circle pointer-hand"
-                                               data-toggle="tooltip"
-                                               data-placement="top"
-                                               title="{{ 'session_open'|trans({}, 'cursus') }}"
-                                               style="color: #5CB85C"
-                                            >
-                                            </i>
-                                        </td>
-                                        <td class="text-center">
-                                            <i class="btn btn-default fa fa-edit edit-session-btn"
-                                               data-toggle="tooltip"
-                                               data-placement="top"
-                                               title="{{ 'edit_session'|trans({}, 'cursus') }}"
-                                               data-session-id="{{ session.getId() }}"
-                                            >
-                                            </i>
-                                            <i class="btn btn-danger fa fa-trash delete-session-btn"
-                                               data-toggle="tooltip"
-                                               data-placement="top"
-                                               title="{{ 'delete_session'|trans({}, 'cursus') }}"
-                                               data-session-id="{{ session.getId() }}"
-                                            >
-                                            </i>
-                                        </td>
-                                    </tr>
-                                    {% endfor %}
-                                {% endif %}
-                                    
-                                {% if sessionsTab[2] is defined %}
-                                    <tr>
-                                        <td colspan="5">
-                                            <span id="show-closed-sessions-btn"
-                                                  class="btn btn-default pull-right"
-                                            >
-                                                <i class="fa fa-eye"></i>
-                                                {{ 'show_hide_closed_sessions'|trans({}, 'cursus') }}
-                                            </span>
-                                        </td>
-                                    </tr>
-                                    
-                                    {% for session in sessionsTab[2] %}
-                                        <tr class="closed-session hide">
-                                            <td>
-                                                <span class="show-users-btn pointer-hand"
-                                                      data-session-id="{{ session.getId() }}"
-                                                >
-                                                    {{ session.getName() }}
-                                                </span>
-                                            </td>
-                                            <td>
-                                                {{ session.getCreationDate()|intl_date_format }}
-                                            </td>
-                                            <td class="text-center">
-                                                {% set workspace = session.getWorkspace() %}
+                        <table class="table">
+                            <tr>
+                                <th>
+                                    {{ 'name'|trans({}, 'platform') }}
+                                </th>
+                                <th>
+                                    {{ 'creation_date'|trans({}, 'platform') }}
+                                </th>
+                                <th class="text-center">
+                                    {{ 'workspace'|trans({}, 'platform') }}
+                                </th>
+                                <th class="text-center">
+                                    {{ 'status'|trans({}, 'platform') }}
+                                </th>
+                                <th class="text-center">
+                                    {{ 'actions'|trans({}, 'platform') }}
+                                </th>
+                            </tr>
 
-                                                {% if workspace is null %}
-                                                    -
-                                                {% else %}
-                                                    <a href="{{ path('claro_workspace_open', {'workspaceId': workspace.getId()}) }}"
-                                                       class="fa fa-book"
-                                                    >
-                                                    </a>
-                                                {% endif %}
-                                            </td>
-                                            <td class="text-center">
-                                                <i class="fa fa-circle pointer-hand"
-                                                   data-toggle="tooltip"
-                                                   data-placement="top"
-                                                   title="{{ 'session_closed'|trans({}, 'cursus') }}"
-                                                   style="color: #D9534F"
+                            {% if sessionsTab[0] is defined %}
+                                {% for session in sessionsTab[0] %}
+                                <tr id="row-session-{{ session.getId() }}">
+                                    <td>
+                                        {% if session.isDefaultSession() %}
+                                            <i class="fa fa-flag"
+                                               data-toggle="tooltip"
+                                               data-placement="top"
+                                               title="{{ 'default_session'|trans({}, 'cursus') }}"
+                                            >
+                                            </i>
+                                            &nbsp;
+                                        {% endif %}
+                                        <span class="show-users-btn pointer-hand"
+                                              data-session-id="{{ session.getId() }}"
+                                        >
+                                            {{ session.getName() }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        {{ session.getCreationDate()|intl_date_format }}
+                                    </td>
+                                    <td class="text-center">
+                                        {% set workspace = session.getWorkspace() %}
+
+                                        {% if workspace is null %}
+                                            -
+                                        {% else %}
+                                            <a href="{{ path('claro_workspace_open', {'workspaceId': workspace.getId()}) }}"
+                                               class="fa fa-book"
+                                            >
+                                            </a>
+                                        {% endif %}
+                                    </td>
+                                    <td class="text-center">
+                                        <i class="fa fa-circle pointer-hand"
+                                           data-toggle="tooltip"
+                                           data-placement="top"
+                                           title="{{ 'session_not_started'|trans({}, 'cursus') }}"
+                                           style="color: #706c6c"
+                                        >
+                                        </i>
+                                    </td>
+                                    <td class="text-center">
+                                        <i class="btn btn-default fa fa-edit edit-session-btn"
+                                           data-toggle="tooltip"
+                                           data-placement="top"
+                                           title="{{ 'edit_session'|trans({}, 'cursus') }}"
+                                           data-session-id="{{ session.getId() }}"
+                                        >
+                                        </i>
+                                        <i class="btn btn-danger fa fa-trash delete-session-btn"
+                                           data-toggle="tooltip"
+                                           data-placement="top"
+                                           title="{{ 'delete_session'|trans({}, 'cursus') }}"
+                                           data-session-id="{{ session.getId() }}"
+                                           data-session-name="{{ session.getName() }}"
+                                        >
+                                        </i>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            {% endif %}
+
+                            {% if sessionsTab[1] is defined %}
+                                {% for session in sessionsTab[1] %}
+                                <tr id="row-session-{{ session.getId() }}">
+                                    <td>
+                                        {% if session.isDefaultSession() %}
+                                            <i class="fa fa-flag"
+                                               data-toggle="tooltip"
+                                               data-placement="top"
+                                               title="{{ 'default_session'|trans({}, 'cursus') }}"
+                                            >
+                                            </i>
+                                            &nbsp;
+                                        {% endif %}
+                                        <span class="show-users-btn pointer-hand"
+                                              data-session-id="{{ session.getId() }}"
+                                        >
+                                            {{ session.getName() }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        {{ session.getCreationDate()|intl_date_format }}
+                                    </td>
+                                    <td class="text-center">
+                                        {% set workspace = session.getWorkspace() %}
+
+                                        {% if workspace is null %}
+                                            -
+                                        {% else %}
+                                            <a href="{{ path('claro_workspace_open', {'workspaceId': workspace.getId()}) }}"
+                                               class="fa fa-book"
+                                            >
+                                            </a>
+                                        {% endif %}
+                                    </td>
+                                    <td class="text-center">
+                                        <i class="fa fa-circle pointer-hand"
+                                           data-toggle="tooltip"
+                                           data-placement="top"
+                                           title="{{ 'session_open'|trans({}, 'cursus') }}"
+                                           style="color: #5CB85C"
+                                        >
+                                        </i>
+                                    </td>
+                                    <td class="text-center">
+                                        <i class="btn btn-default fa fa-edit edit-session-btn"
+                                           data-toggle="tooltip"
+                                           data-placement="top"
+                                           title="{{ 'edit_session'|trans({}, 'cursus') }}"
+                                           data-session-id="{{ session.getId() }}"
+                                        >
+                                        </i>
+                                        <i class="btn btn-danger fa fa-trash delete-session-btn"
+                                           data-toggle="tooltip"
+                                           data-placement="top"
+                                           title="{{ 'delete_session'|trans({}, 'cursus') }}"
+                                           data-session-id="{{ session.getId() }}"
+                                           data-session-name="{{ session.getName() }}"
+                                        >
+                                        </i>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            {% endif %}
+
+                            {% if sessionsTab[2] is defined %}
+                                <tr>
+                                    <td colspan="5">
+                                        <span id="show-closed-sessions-btn"
+                                              class="btn btn-default pull-right"
+                                        >
+                                            <i class="fa fa-eye"></i>
+                                            {{ 'show_hide_closed_sessions'|trans({}, 'cursus') }}
+                                        </span>
+                                    </td>
+                                </tr>
+
+                                {% for session in sessionsTab[2] %}
+                                    <tr id="row-session-{{ session.getId() }}"
+                                        class="closed-session hide"
+                                    >
+                                        <td>
+                                            <span class="show-users-btn pointer-hand"
+                                                  data-session-id="{{ session.getId() }}"
+                                            >
+                                                {{ session.getName() }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            {{ session.getCreationDate()|intl_date_format }}
+                                        </td>
+                                        <td class="text-center">
+                                            {% set workspace = session.getWorkspace() %}
+
+                                            {% if workspace is null %}
+                                                -
+                                            {% else %}
+                                                <a href="{{ path('claro_workspace_open', {'workspaceId': workspace.getId()}) }}"
+                                                   class="fa fa-book"
                                                 >
-                                                </i>
-                                            </td>
-                                            <td class="text-center">
-                                                <i class="btn btn-default fa fa-edit edit-session-btn"
-                                                   data-toggle="tooltip"
-                                                   data-placement="top"
-                                                   title="{{ 'edit_session'|trans({}, 'cursus') }}"
-                                                   data-session-id="{{ session.getId() }}"
-                                                >
-                                                </i>
-                                                <i class="btn btn-danger fa fa-trash delete-session-btn"
-                                                   data-toggle="tooltip"
-                                                   data-placement="top"
-                                                   title="{{ 'delete_session'|trans({}, 'cursus') }}"
-                                                   data-session-id="{{ session.getId() }}"
-                                                >
-                                                </i>
-                                            </td>
-                                        </tr>
-                                    {% endfor %}
-                                {% endif %}
-                            </table>
-                        {% endif %}
+                                                </a>
+                                            {% endif %}
+                                        </td>
+                                        <td class="text-center">
+                                            <i class="fa fa-circle pointer-hand"
+                                               data-toggle="tooltip"
+                                               data-placement="top"
+                                               title="{{ 'session_closed'|trans({}, 'cursus') }}"
+                                               style="color: #D9534F"
+                                            >
+                                            </i>
+                                        </td>
+                                        <td class="text-center">
+                                            <i class="btn btn-default fa fa-edit edit-session-btn"
+                                               data-toggle="tooltip"
+                                               data-placement="top"
+                                               title="{{ 'edit_session'|trans({}, 'cursus') }}"
+                                               data-session-id="{{ session.getId() }}"
+                                            >
+                                            </i>
+                                            <i class="btn btn-danger fa fa-trash delete-session-btn"
+                                               data-toggle="tooltip"
+                                               data-placement="top"
+                                               title="{{ 'delete_session'|trans({}, 'cursus') }}"
+                                               data-session-id="{{ session.getId() }}"
+                                               data-session-name="{{ session.getName() }}"
+                                            >
+                                            </i>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            {% endif %}
+                        </table>
                     {% else %}
                         <div class="alert alert-warning">
                             {{ 'no_session'|trans({}, 'cursus') }}
@@ -340,6 +340,51 @@
                            data-dismiss="modal"
                            value="{{ 'close'|trans({}, 'platform') }}"
                     />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="delete-session-box" class="modal fade" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h3>
+                        {{ 'delete_course_session'|trans({}, 'cursus') }}
+                        <small>
+                            [<span id="delete-session-name-header"></span>]
+                        </small>
+                    </h3>
+                </div>
+                <div class="modal-body">
+                    {{ 'delete_course_session_confirm_msg'|trans({}, 'cursus') }}
+                    <br>
+                    <br>
+                    <div class="checkbox">
+                        <label>
+                            <input id="with-workspace-chk" type="checkbox">
+                            <b>
+                                {{ 'delete_course_session_workspace_confirm_msg'|trans({}, 'cursus') }}
+                            </b>
+                        </label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <span class="pull-right">
+                        <span class="btn btn-default pointer-hand"
+                              data-dismiss="modal"
+                        >
+                            {{ 'cancel'|trans({}, 'platform') }}
+                        </span>
+                        <span id="confirm-session-deletion-btn"
+                              class="btn btn-primary pointer-hand"
+                        >
+                            {{ 'ok'|trans({}, 'platform') }}
+                        </span>
+                    </span>
                 </div>
             </div>
         </div>
