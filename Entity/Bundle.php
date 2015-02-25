@@ -40,6 +40,47 @@ class Bundle
      */
     private $version;
 
+    /**
+     * @var string
+     * @ORM\Column(length=50)
+     */
+    private $type;
+
+    /**
+     * @ORM\Column(type="json_array")
+     */
+    private $authors;
+
+    /**
+     * @ORM\Column(type="text", nullable = true)
+     */
+    private $description;
+
+    /**
+     * @ORM\Column(type="text")
+     */
+    private $targetDir;
+
+    /**
+     * @ORM\Column(type="text")
+     */
+    private $basePath;
+
+    /**
+     * @ORM\Column(type="json_array")
+     */
+    private $license;
+
+    /**
+     * @ORM\Column(type="boolean", nullable = false)
+     */
+    protected $isInstalled = false;
+
+    /**
+     * Unmapped field if "stuff" need to be added to the description
+     */
+    private $extra;
+
     public function getId()
     {
         return $this->id;
@@ -62,6 +103,81 @@ class Bundle
 
     public function getVersion()
     {
-        $this->version = $version;
+        return $this->version;
+    }
+
+    public function setType($type)
+    {
+        $this->type = $type;
+    }
+
+    public function setLicense($license)
+    {
+        $this->license = $license;
+    }
+
+    public function getLicense()
+    {
+        return $this->license;
+    }
+
+    public function setAuthors(array $authors)
+    {
+        $this->authors = $authors;
+    }
+
+    public function getAuthors()
+    {
+        return $this->authors;
+    }
+
+    public function setDescription($description)
+    {
+        $this->description = $description;
+    }
+
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    public function setTargetDir($targetDir)
+    {
+        $this->targetDir = $targetDir;
+    }
+
+    public function getTargetDir()
+    {
+        return $this->targetDir;
+    }
+
+    public function setBasePath($basePath)
+    {
+        $this->basePath = $basePath;
+    }
+
+    public function getBasePath()
+    {
+        return $this->basePath;
+    }
+
+    public function setIsInstalled($boolean)
+    {
+        $this->isInstalled = $boolean;
+    }
+
+    public function isInstalled()
+    {
+        return $this->isInstalled;
+    }
+
+    public function setExtra($extra)
+    {
+        $this->extra = $extra;
+    }
+
+    public function getExtra()
+    {
+        return $this->extra;
     }
 }

@@ -58,6 +58,7 @@ class PlatformConfiguration
     private $isNotificationActive;
     private $maxStorageSize;
     private $maxUploadResources;
+    private $repositoryApi;
 
     /**
      * @param mixed $sessionDbDataCol
@@ -595,5 +596,15 @@ class PlatformConfiguration
     public function getMaxUploadResources()
     {
         return $this->maxUploadResources;
+    }
+
+    public function setRepositoryApi($url)
+    {
+        $this->repositoryApi = $url;
+    }
+
+    public function getRepositoryApi()
+    {
+        return $this->repositoryApi;
     }
 }

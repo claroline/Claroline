@@ -126,76 +126,96 @@
     </div>
 {% endmacro %}
 
-{% macro renderPackageElement(package, upgradablePackages) %}
-    <div class="panel-group" id="accordion-{{ package.getDistReference() }}">
+{#
+    I know this is dirty because I use the same structrure for installed package
+    and soon to be installed but I'm very lazy.
+    Feel free to split this method if you want.
+#}
+{% macro renderPackageElement(package, upgradablePackages, fetchNew) %}
+    <div class="panel-group" id="accordion-{{ package.name }}">
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h5 class="panel-title">
-                    {% set extra = package.getExtra() %}
-                    <a class="panel-toggle package-element {% if extra['is_in_repo'] is defined and extra['is_in_repo'] or package.getType() == 'claroline-core' %}composer{% endif %}"
+                    <a class="panel-toggle package-element"
                        data-toggle="collapse"
-                       data-parent="#accordion-{{ package.getDistReference() }}"
-                       href="#collapse-inner-{{ package.getDistReference() }}"
-                       data-package-dist-reference="{{ package.getDistReference() }}"
+                       data-parent="#accordion-{{ package.name }}"
+                       href="#collapse-inner-{{ package.name }}"
+                       data-package-dist-reference="{{ package.name }}"
                     >
-                        {% set version = package.getPrettyVersion() | replace({'v': ''})  %}
-                        {{ package.getPrettyName() }}
+                        {% set version = package.version | replace({'v': ''})  %}
+                        {{ package.name }}
                     </a>
                     <span class="badge alert-info">{{ version }}</span>
 
                     <span class="pull-right">
-                        {% for upgradablePackage in upgradablePackages %}
-                            {% if
-                                upgradablePackage['package'].getPrettyName() == package.getPrettyName()
-                            %}
-                                {% if version_compare(version, upgradablePackage['tag'], '<') %}
-                                    <span class="badge alert-danger badge-new-version">
+                        {% if fetchNew == false %}
+                            {% set found = false %}
+                            {% set foundPkg = null %}
+                            {% for upgradablePackage in upgradablePackages %}
+                                {% if upgradablePackage.name == package.name %}
+                                    {% set found = true %}
+                                    {% set foundPkg = upgradablePackage %}
+                                {% endif %}
+                            {% endfor %}
+                            {% if found == true %}
+                                {% if version_compare(version, foundPkg.version, '<') %}
+                                    <span class="badge alert-warning">
                                         {{ 'update_available'|trans({}, 'platform') }}
                                     </span>
                                 {% endif %}
+                                {% if version_compare(version, foundPkg.version, '=') %}
+                                    <span class="badge alert-success">
+                                        {{ 'updated'|trans({}, 'platform') }}
+                                    </span>
+                                {% endif %}
+                            {% else %}
+                                <span class="badge alert-danger">
+                                    {{ 'outdated'|trans({}, 'platform') }}
+                                </span>
                             {% endif %}
-                        {% endfor %}
-
-                        {% if extra['has_options'] is defined and extra['has_options'] == true %}
-                            <a href="{{ path('claro_admin_plugin_parameters', {'pluginShortName': extra['plugin_short_name']}) }}">
-                                <i class="fa fa-cog"></i>
+                        {% else %}
+                            <a
+                                class="badge install-pkg"
+                                data-package-name="{{ package.name }}"
+                                href="{{ path('claro_admin_plugins_install', {'bundle': package.name}) }}"
+                            >
+                                {{ 'install'|trans({}, 'platform') }}
                             </a>
                         {% endif %}
                     </span>
                 </h5>
             </div>
-            <div id="collapse-inner-{{ package.getDistReference() }}" class="panel panel-body collapse">
+            <div id="collapse-inner-{{ package.name }}" class="panel panel-body collapse">
                 {% if
-                    not package.getDescription()
-                    and not package.getAuthors() | length > 0
-                    and not package.getLicense()
-                    and not package.getHomePage()
+                    not package.description
+                    and not package.authors | length > 0
+                    and not package.license
                 %}
                     {{ 'no_package_description'|trans({}, 'platform') }}
                 {% else %}
-                    {% if package.getDescription() %}
+                    {% if package.description %}
                         <div>
-                            {{ package.getDescription() }}
+                            {{ package.description }}
                         </div>
                     {% endif %}
-                    {% if package.getAuthors() | length > 0 %}
+                    {% if package.authors | length > 0 %}
                         <div>
                             <ul>
-                            {% for author in package.getAuthors() %}
+                            {% for author in package.authors %}
                                 <li>
-                                    {% if author['name'] is defined %}
-                                        {{ author['name'] }}
+                                    {% if author.name is defined %}
+                                        {{ author.name }}
                                     {% endif %}
                                     <ul>
-                                        {% if author['email'] is defined %}
+                                        {% if author.email is defined %}
                                             <li>
-                                                {{ author['email'] }}
+                                                {{ author.email }}
                                             </li>
                                         {% endif %}
-                                        {% if author['homepage'] is defined %}
+                                        {% if author.homepage is defined %}
                                             <li>
-                                                <a href="{{ author['homepage'] }}">
-                                                    {{ author['homepage'] }}
+                                                <a href="{{ author.homepage }}">
+                                                    {{ author.homepage }}
                                                 </a>
                                             </li>
                                         {% endif %}
@@ -205,14 +225,9 @@
                             </ul>
                         </div>
                     {% endif %}
-                    {% if package.getLicense() %}
+                    {% if package.license %}
                         <div>
-                            {{ package.getLicense()[0] }}
-                        </div>
-                    {% endif %}
-                    {% if package.getHomePage() %}
-                        <div>
-                            <a href="{{ package.getHomePage() }}"> {{ package.getHomePage() }}</a>
+                            {#{{ package.license }}#}
                         </div>
                     {% endif %}
                 {% endif %}

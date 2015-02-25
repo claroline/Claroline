@@ -136,7 +136,8 @@ class SettingChecker
             'iconv' => function_exists('iconv'),
             'PHP-XML' => class_exists('DomDocument'),
             'fileinfo' => extension_loaded('fileinfo'),
-            'PDO' => class_exists('PDO')
+            'PDO' => class_exists('PDO'),
+            'curl' => function_exists('curl_exec')
         );
 
         foreach ($requiredExtensions as $extension => $isEnabled) {

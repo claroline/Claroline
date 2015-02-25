@@ -108,8 +108,6 @@ class CreatePluginCommand extends ContainerAwareCommand
         $skel = $this->getContainer()->getParameter('claroline.param.plugin_skel_directory');
         $ivendor = $input->getArgument('vendor');
         $ibundle = $input->getArgument('bundle');
-        $vname = strtolower($ivendor);
-        $bname = strtolower($ibundle) . '-bundle';
 
         //create the directories if they don't exist
         $vendorNameDir = "{$vendorDir}/{$vname}";
@@ -144,33 +142,9 @@ class CreatePluginCommand extends ContainerAwareCommand
         file_put_contents($rootDir . '/Resources/config/config.yml', $yaml);
 
         if ($input->getOption('install')) {
-            $kernelRootDir = $this->getContainer()->getParameter('kernel.root_dir');
-            $iniFile = $kernelRootDir . '/config/bundles.ini';
-
-            //update ini file
-            $this->getContainer()->get('claroline.manager.ini_file_manager')
-                ->updateKey(
-                    $ivendor . '\\' . $ibundle . 'Bundle\\' . $ivendor . $ibundle . 'Bundle',
-                    true,
-                    $iniFile
-                );
-
-            //update namespace file
-            $namespaces = $kernelRootDir . '/../vendor/composer/autoload_namespaces.php';
-            $content = file_get_contents($namespaces);
-
-            $lineToAdd = "\n    '{$ivendor}\\\\{$ibundle}Bundle' => array(\$vendorDir . '/{$vname}/{$bname}'),";
-
-            if (!strpos($content, $lineToAdd)) {
-                //add the correct line after corebundle...
-                $content = str_replace(
-                    "/core-bundle'),",
-                    "/core-bundle'), {$lineToAdd}",
-                    $content
-                );
-
-                file_put_contents($namespaces, $content);
-            }
+            $bundleManager = $this->container->get('claroline.manager.bundle_manager');
+            $bundleManager->updateIniFile($ivendor, $ibundle);
+            $bundleManager->updateAutoload($ivendor, $ibundle, $vname, $bname);
         }
     }
 
