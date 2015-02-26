@@ -64,7 +64,7 @@ Project setup
 - Run the following commands:
     - `$ composer require composer/composer dev-master`
     - `$ composer require claroline/bundle-recorder "~3.0"`
-    - `$ cp composer.json.dist composer.json`
+    - `$ cp composer.json.min composer.json`
     - `$ composer update --prefer-source` <sub>(1)</sub> 
     - `$ php app/console claroline:update`
 
