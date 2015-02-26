@@ -5,6 +5,7 @@
     "homepage": "http://www.claroline.net",
     "license": "GPL-3.0+",
     "type": "claroline-plugin",
+    "version": "4.0.0",
     "authors": [
         {
             "name": "Claroline development team",
