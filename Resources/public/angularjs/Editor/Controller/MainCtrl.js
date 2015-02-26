@@ -7,12 +7,13 @@
     angular.module('EditorModule').controller('MainCtrl', [
         '$scope',
         '$modal',
+        '$timeout',
         'HistoryFactory',
         'ClipboardFactory',
         'PathFactory',
         'AlertFactory',
         'ResourceFactory',
-        function ($scope, $modal, HistoryFactory, ClipboardFactory, PathFactory, AlertFactory, ResourceFactory) {
+        function ($scope, $modal, $timeout, HistoryFactory, ClipboardFactory, PathFactory, AlertFactory, ResourceFactory) {
             $scope.path = EditorApp.currentPath;
             PathFactory.setPath($scope.path);
             if (null === $scope.path.name || $scope.path.name.length === 0) {
@@ -33,7 +34,8 @@
             // Store current previewed step
             $scope.previewStep = null;
 
-            $scope.saveAndClose = false;
+            $scope.toSaveAndClose = false;
+            $scope.toPublishAndPreview = false;
 
             $scope.historyDisabled = HistoryFactory.getDisabled();
 
@@ -131,16 +133,51 @@
                 }
             };
 
+            /**
+             * Submit the Path form
+             * @returns void
+             */
             $scope.save = function () {
                 document[EditorApp.formName].submit();
             };
 
+            /**
+             * Add a flag to the form to redirect user to the list of paths and save the form
+             * @returns void
+             */
+            /*$scope.saveAndClose = function () {
+                $scope.toSaveAndClose = true;
+
+                $scope.$apply();
+
+                // Save the Path
+                $scope.save();
+            };*/
+
+            /**
+             * Add a flag to the form to publish the Path and redirect User to Player and save the form
+             * @returns void
+             */
+            $scope.publishAndPreview = function () {
+                $scope.toPublishAndPreview = true;
+
+                $scope.$apply();
+
+                // Save the Path
+                $scope.save();
+            };
+
+            /**
+             * Close the Path editor
+             * If there are pending modifications, ask to the user what to do : save changes, discard change or abort closing editor
+             * @param {string} returnUrl
+             * @returns void
+             */
             $scope.closeEditor = function (returnUrl) {
                 if (HistoryFactory.isEmpty()) {
                     // Path is not modified => exit without confirm
                     window.location = returnUrl;
-                }
-                else {
+                } else {
                     // There are pending modifications => ask for confirmation to know what to do
                     // Display confirm modal
                     var modalInstance = $modal.open({
@@ -149,11 +186,10 @@
                         scope: $scope
                     });
 
-                    modalInstance.result.then(function(method) {
+                    modalInstance.result.then(function (method) {
                         if ('save' === method) {
                             $scope.$emit('saveAndClose');
-                        }
-                        else if ('discard') {
+                        } else if ('discard' === method) {
                             window.location = returnUrl;
                         }
 
@@ -163,11 +199,15 @@
             };
 
             $scope.$on('saveAndClose', function (event) {
-                $scope.saveAndClose = true;
-                $scope.$apply();
+                $timeout(function() {
+                    $scope.toSaveAndClose = true;
+                }, 0);
+                /*$scope.$apply(function () {*/
 
-                // Force submit the form
-                document[EditorApp.formName].submit();
+                /*});*/
+
+                // Save the Path
+                $scope.save();
             });
         }
     ]);

@@ -3,6 +3,7 @@
 namespace Innova\PathBundle\Controller;
 
 use Innova\PathBundle\Manager\PathManager;
+use Innova\PathBundle\Manager\PublishingManager;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -40,8 +41,8 @@ use Innova\PathBundle\Entity\Path\PathTemplate;
  * )
  * @ParamConverter("workspace", class="ClarolineCoreBundle:Workspace\Workspace", options={"mapping": {"workspaceId": "id"}})
  */
-class EditorController {
-
+class EditorController
+{
     /**
      * Object manager
      * @var \Doctrine\Common\Persistence\ObjectManager
@@ -99,6 +100,7 @@ class EditorController {
      * @param \Symfony\Component\Translation\TranslatorInterface         $translator
      * @param \Innova\PathBundle\Form\Handler\PathHandler                $pathHandler
      * @param \Innova\PathBundle\Manager\PathManager                     $pathManager
+     * @param \Innova\PathBundle\Manager\PublishingManager               $publishingManager
      * @param \Claroline\CoreBundle\Manager\ResourceManager              $resourceManager
      */
     public function __construct(
@@ -109,16 +111,18 @@ class EditorController {
         TranslatorInterface  $translator,
         PathHandler          $pathHandler,
         PathManager          $pathManager,
-        ResourceManager      $resourceManager)
-    {
-        $this->om              = $objectManager;
-        $this->router          = $router;
-        $this->formFactory     = $formFactory;
-        $this->session         = $session;
-        $this->translator      = $translator;
-        $this->pathHandler     = $pathHandler;
-        $this->pathManager     = $pathManager;
-        $this->resourceManager = $resourceManager;
+        PublishingManager    $publishingManager,
+        ResourceManager      $resourceManager
+    ) {
+        $this->om                = $objectManager;
+        $this->router            = $router;
+        $this->formFactory       = $formFactory;
+        $this->session           = $session;
+        $this->translator        = $translator;
+        $this->pathHandler       = $pathHandler;
+        $this->pathManager       = $pathManager;
+        $this->publishingManager = $publishingManager;
+        $this->resourceManager   = $resourceManager;
     }
 
     /**
@@ -201,32 +205,77 @@ class EditorController {
         if (!empty($httpMethod)) {
             $params['method'] = $httpMethod;
         }
+
         // Create form
         $form = $this->formFactory->create('innova_path', $path, $params);
 
         // Add save and close flag to form
-        $form->add('saveAndClose', 'hidden', array('mapped' => false));
+        $form->add('saveAndClose',      'hidden', array ('mapped' => false));
+
+        // Add publish and preview flag to form
+        $form->add('publishAndPreview', 'hidden', array ('mapped' => false));
 
         // Try to process data
         $this->pathHandler->setForm($form);
         if ($this->pathHandler->process()) {
             // Add user message
             $this->session->getFlashBag()->add(
-                'success', $this->translator->trans('path_save_success', array(), 'path_editor')
+                'success', $this->translator->trans('path_save_success', array (), 'path_editor')
             );
 
+            // Grab form flags to know what to do after save
             $saveAndClose = $form->get('saveAndClose')->getData();
             $saveAndClose = filter_var($saveAndClose, FILTER_VALIDATE_BOOLEAN);
 
+            $publishAndPreview = $form->get('publishAndPreview')->getData();
+            $publishAndPreview = filter_var($publishAndPreview, FILTER_VALIDATE_BOOLEAN);
+
+            echo "save and close";
+            var_dump($saveAndClose);
+            echo "publish and preview";
+            var_dump($publishAndPreview);
+            die();
+
             if (!$saveAndClose) {
-                // Redirect to editor
-                $url = $this->router->generate('innova_path_editor_edit', array(
-                    'workspaceId' => $workspace->getId(),
-                    'id' => $path->getId(),
-                ));
+                if (!$publishAndPreview) {
+                    // Redirect to editor
+                    $url = $this->router->generate('innova_path_editor_edit', array (
+                        'workspaceId' => $workspace->getId(),
+                        'id' => $path->getId(),
+                    ));
+                } else {
+                    // Publish path and redirect to preview
+                    try {
+                        $this->publishingManager->publish($path);
+
+                        // Publish success
+                        $this->session->getFlashBag()->add(
+                            'success',
+                            $this->translator->trans('publish_success', array(), 'innova_tools')
+                        );
+
+                        // Redirect to player
+                        $url = $this->router->generate('innova_path_editor_edit', array (
+                            'workspaceId' => $workspace->getId(),
+                            'id' => $path->getId(),
+                        ));
+                    } catch (\Exception $e) {
+                        // Error
+                        $this->session->getFlashBag()->add(
+                            'error',
+                            $e->getMessage()
+                        );
+
+                        // Redirect to editor
+                        $url = $this->router->generate('innova_path_editor_edit', array (
+                            'workspaceId' => $workspace->getId(),
+                            'id' => $path->getId(),
+                        ));
+                    }
+                }
             } else {
                 // Redirect to list of paths
-                $url = $this->router->generate('claro_workspace_open_tool', array(
+                $url = $this->router->generate('claro_workspace_open_tool', array (
                     'workspaceId' => $workspace->getId(),
                     'toolName' => 'innova_path',
                 ));
@@ -242,11 +291,11 @@ class EditorController {
         $resourceIcons = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceIcon')->findByIsShortcut(false);
 
         return array(
-            'workspace' => $workspace,
+            'workspace'     => $workspace,
             'wsDirectoryId' => $wsDirectory->getId(),
             'resourceTypes' => $resourceTypes,
             'resourceIcons' => $resourceIcons,
-            'form' => $form->createView(),
+            'form'          => $form->createView(),
         );
     }
 
@@ -348,7 +397,10 @@ class EditorController {
             throw new NotFoundHttpException('Unable to find Activity referenced by ID : ' . $activityId);
         }
 
-        $route = $this->router->generate('claro_resource_open', array('node' => $activity->getResourceNode()->getId(), 'resourceType' => 'activity'));
+        $route = $this->router->generate('claro_resource_open', array(
+            'node'         => $activity->getResourceNode()->getId(),
+            'resourceType' => 'activity'
+        ));
 
         return new RedirectResponse($route);
     }

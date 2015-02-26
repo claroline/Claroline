@@ -36,6 +36,7 @@ resource_create_form: Creating resource
 path_save_success: The path has been successfully saved.
 path_template_save_success: The template has been successfully saved.
 path_template_save_error: An error occurred while saving template.
+publish_and_preview: Publish & preview
 
 # r
 redo: Redo

@@ -34,6 +34,13 @@
                     <span class="fa fa-floppy-o"></span> {{ 'save'|trans({}, 'path_editor') }}
                 </a>
             </li>
+
+            <li>
+                <a href="#" data-ng-click="publishAndPreview()">
+                    <span class="fa fa-eye"></span> {{ 'publish_and_preview'|trans({}, 'path_editor') }}
+                </a>
+            </li>
+
             <li>
                 <a href="#" data-ng-click="closeEditor('{{ path('claro_workspace_open_tool', { workspaceId: workspace.id, toolName: 'innova_path' }) }}')" >
                     <span class="fa fa-times-circle"></span>
@@ -68,7 +75,13 @@
 
         {{ form_row(form.saveAndClose, {
             'attr': {
-                'value' : '{{ saveAndClose }}'
+                'data-ng-model' : 'toSaveAndClose'
+            }
+        }) }}
+
+        {{ form_row(form.publishAndPreview, {
+            'attr': {
+                'data-ng-model' : 'toPublishAndPreview'
             }
         }) }}
     </div>

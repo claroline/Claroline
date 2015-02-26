@@ -252,7 +252,7 @@ class Path extends AbstractResource implements PathInterface
         if (!empty($steps)) {
             $structure['steps'] = $steps;
         } else {
-             $structure['steps'] = array (
+            $structure['steps'] = array (
                 array (
                     'id'           => 1,
                     'lvl'          => 0,
@@ -260,9 +260,9 @@ class Path extends AbstractResource implements PathInterface
                     'name'         => $this->getName(),
                     'withTutor'    => false,
                     'children'     => $steps,
-                ),
+               ),
             );
-        }          
+        }
     
         $this->setStructure(json_encode($structure));
         
@@ -295,5 +295,32 @@ class Path extends AbstractResource implements PathInterface
         }
 
         return $creator;
+    }
+
+    /**
+     * Rebuild structure of the Path from the published data
+     */
+    public function rebuildStructure()
+    {
+        // To rebuild structure, the path needs to ba published at least once (otherwise there is no data to grab)
+        // and the path must not be modified (otherwise we will override User modifications)
+        if ($this->published && !$this->modified) {
+            // Loop over steps
+            $structure = array (
+                'name'        => $this->name,
+                'description' => $this->description,
+                'steps'       => array (),
+            );
+
+            foreach ($this->steps as $step) {
+                $children = $step->getChildren();
+                if ($children) {
+
+                }
+            }
+
+            // Inject rebuilt structure
+            $this->setStructure(json_encode($structure));
+        }
     }
 }

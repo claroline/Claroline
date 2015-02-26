@@ -36,6 +36,7 @@ resource_create_form: Création d'une ressource
 path_save_success: Le parcours a correctement été sauvegardé.
 path_template_save_success: Le modèle a correctement été sauvegardé.
 path_template_save_error: Une erreur s'est produite lors de la sauvegarde du modèle.
+publish_and_preview: Publier & visualiser
 
 # r
 redo: Rétablir
@@ -84,7 +85,6 @@ step_add_child: Ajouter une étape
 step_copy: Copier
 step_paste: Coller
 step_to_template: Sauvegarder comme modèle
-step_delete_children: Supprimer les enfants
 
 # t
 templates: Modèles
