@@ -17,10 +17,12 @@ class FileSystem extends Fs
 {
     public function rmdir($path, $recursive = false)
     {
-        if (!$recursive) {
-            rmdir($path);
-        } else {
-            $this->recursiveRemoveDirectory($path);
+        if (is_dir($path)) {
+            if (!$recursive) {
+                rmdir($path);
+            } else {
+                $this->recursiveRemoveDirectory($path);
+            }
         }
     }
 

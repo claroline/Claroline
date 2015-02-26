@@ -37,7 +37,7 @@
         this.pollStatus();
         this.refresh = setInterval((function () {
             this.pollStatus();
-        }).bind(this), 10000);
+        }).bind(this), 2000);
     };
 
     Displayer.prototype.stop = function () {

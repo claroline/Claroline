@@ -138,7 +138,7 @@ class PackageController extends Controller
     public function displayUpdateLog($date)
     {
         $this->checkOpen();
-        $content = @file_get_contents($this->bundleManager->getLogFile() . '-' . $date);
+        $content = @file_get_contents($this->bundleManager->getLogFile() . '-' . $date . '.log');
         if (!$content) $content = '';
 
         return new Response($content);

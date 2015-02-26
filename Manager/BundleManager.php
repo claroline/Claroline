@@ -118,9 +118,6 @@ class BundleManager
 
     public function installRemoteBundle($bundle, $date = null)
     {
-        //if the bundle already exists, it should go "boom"
-        $entity = $this->getBundle($bundle);
-        //if ($entity) throw new \Exception("Bundle $bundle already installed");
         //step 1, get the archive from the remote server
         $zipFile = $this->fetchLastInstallableFromRemote($bundle);
 
@@ -161,6 +158,7 @@ class BundleManager
     {
         $logFile = $this->getLogFile();
         if ($date) $logFile = $logFile . '-' . $date;
+        $logFile .= '.log';
         @unlink($logFile);
         $logLine = "Downloading archive...\n";
         file_put_contents($logFile, $logLine, FILE_APPEND);
@@ -196,6 +194,9 @@ class BundleManager
         $vendor = $parts[0];
         $baseParts = explode('Bundle', $parts[1]);
         $baseName = $baseParts[0];
+        $logLine = "Removing old sources...\n";
+        file_put_contents($logFile, $logLine, FILE_APPEND);
+        $fs->rmdir($newPath, true);
         $logLine = "Copying sources from temporary directory...\n";
         file_put_contents($logFile, $logLine, FILE_APPEND);
         $fs->copyDir($extractPath . "/$bundle", $newPath);
@@ -221,18 +222,20 @@ class BundleManager
         //TODO: use Sf2 proces library to avoid mistakes
         //sanitize this
         $executor = $this->kernelRootDir . '/../vendor/claroline/core-bundle/Claroline/CoreBundle/Library/Installation/scripts/operation_executor.php';
-        exec("php $executor $date > $logFile");
+        $phpErrors = $this->kernelRootDir . "/logs/php_errors_{$date}.log";
+        exec("php $executor $date > $phpErrors");
     }
 
     public function getLogFile()
     {
-        return $this->kernelRootDir . "/logs/update.log";
+        return $this->kernelRootDir . "/logs/update";
     }
 
     public function executeOperationFile($date = null)
     {
         $logFile = $this->getLogFile();
         if ($date) $logFile = $logFile . '-' . $date;
+        $logFile .= '.log';
         $this->installer->setLogger(
             function ($message) use ($logFile) {
                 file_put_contents($logFile, $message . "\n", FILE_APPEND);

@@ -1136,3 +1136,10 @@ property: Property
 picture: User picture
 profile_properties_management: Profile properties management
 facet_management: Facet management
+installed: Installed
+available: Availalbe
+install: Install
+up_to_date: Up to date
+update: Update
+package_install: Package install
+package_install_confirm: Do you really want to install %bundle% %version%

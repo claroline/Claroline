@@ -161,13 +161,14 @@
                                 {% if version_compare(version, foundPkg.version, '<') %}
                                     <a class="badge alert-warning install-pkg"
                                         data-package-name="{{ package.name }}"
+                                        data-package-version="{{ foundPkg.version }}"
                                     >
-                                        {{ 'update_available'|trans({}, 'platform') }}
+                                        {{ 'update'|trans({}, 'platform') }}
                                     </a>
                                 {% endif %}
                                 {% if version_compare(version, foundPkg.version, '=') %}
                                     <span class="badge alert-success">
-                                        {{ 'updated'|trans({}, 'platform') }}
+                                        {{ 'up_to_date'|trans({}, 'platform') }}
                                     </span>
                                 {% endif %}
                             {% else %}
@@ -179,6 +180,7 @@
                             <a
                                 class="badge install-pkg"
                                 data-package-name="{{ package.name }}"
+                                data-package-version="{{ package.version }}"
                             >
                                 {{ 'install'|trans({}, 'platform') }}
                             </a>

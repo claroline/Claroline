@@ -217,6 +217,7 @@ class SettingChecker
         $rootDir = __DIR__ . '/../../../../../../../..';
         $writableElements = array(
             'app/cache' => 'directory',
+            'app/sessions' => 'directory',
             'app/config' => 'directory',
             'app/config/bundles.ini' => 'file',
             'app/config/parameters.yml' => 'file',

@@ -983,3 +983,10 @@ property: property
 picture: picture
 profile_properties_management: profile_properties_management
 facet_management: facet_management
+installed: installed
+available: available
+install: install
+up_to_date: up_to_date
+update: update
+package_install: package_install
+package_install_confirm: package_install_confirm
