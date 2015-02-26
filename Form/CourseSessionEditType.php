@@ -78,6 +78,21 @@ class CourseSessionEditType extends AbstractType
             'checkbox',
             array('required' => true)
         );
+        $builder->add(
+            'publicRegistration',
+            'checkbox',
+            array('required' => true)
+        );
+        $builder->add(
+            'publicUnregistration',
+            'checkbox',
+            array('required' => true)
+        );
+        $builder->add(
+            'registrationValidation',
+            'checkbox',
+            array('required' => true)
+        );
 
         if (!is_null($workspace)) {
             $builder->add(
