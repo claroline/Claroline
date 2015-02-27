@@ -3,7 +3,7 @@
     <li>
         <a href="#users" role="tab" data-toggle="tab">
             Utilisateurs{% if 0 < claimPager|length %} <span class="badge badge-info" data-toggle="tooltip" data-container="body"
-            title="{{ 'badge_current_claimed_badges_manage'|transchoice(claimPager|length, {'%claimedBadgeCount%': claimPager|length}, 'badge') }}">
+            title="{{ 'badge_current_claimed_badges_manage'|transchoice(claimPager|length, {'%claimedBadgeCount%': claimPager|length}, 'icap_badge') }}">
             {{ claimPager|length }}</span>{% endif %}
         </a>
     </li>

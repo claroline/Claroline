@@ -222,7 +222,7 @@ class AdministrationController extends Controller
                         $users[] = $user;
                     }
 
-                    /** @var \Claroline\CoreBundle\Manager\BadgeManager $badgeManager */
+                    /** @var \Icap\BadgeBundle\Manager\BadgeManager $badgeManager */
                     $badgeManager = $this->get('icap_badge.manager.badge');
                     $awardedBadge = $badgeManager->addBadgeToUsers($badge, $users, $comment, $loggedUser);
 
@@ -236,7 +236,7 @@ class AdministrationController extends Controller
                         'badge_awarded_count_message',
                         $awardedBadge,
                         array('%awaredBadge%' => $awardedBadge),
-                        'badge'
+                        'icap_badge'
                     );
                     $this->get('session')->getFlashBag()->add($flashMessageType, $message);
                 } catch (\Exception $exception) {

@@ -9,7 +9,7 @@ use Icap\BadgeBundle\Entity\BadgeRule;
 use Icap\BadgeBundle\Entity\UserBadge;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CoreBundle\Event\Log\LogBadgeAwardEvent;
+use Icap\BadgeBundle\Event\Log\LogBadgeAwardEvent;
 use Claroline\CoreBundle\Event\Log\LogGenericEvent;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\QueryBuilder;
@@ -98,9 +98,9 @@ class BadgeManager
     {
         $badgeAwarded = false;
 
-        /** @var \Icap\BadgeBundle\Repository\BadgeRepository $badgeRepository */
-        $badgeRepository = $this->entityManager->getRepository('IcapBadgeBundle:Badge');
-        $userBadge       = $badgeRepository->findUserBadge($badge, $user);
+        /** @var \Icap\BadgeBundle\Repository\UserBadgeRepository $userBadgeRepository */
+        $userBadgeRepository = $this->entityManager->getRepository('IcapBadgeBundle:UserBadge');
+        $userBadge = $userBadgeRepository->findOneByBadgeAndUser($badge, $user);
 
         if (null === $userBadge) {
             try {

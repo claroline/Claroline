@@ -45,7 +45,7 @@
                 <button type="button" class="btn btn-default badges_selector" id="badgepicker_{{ id }}"
                         data-title="{{ 'browse_badges'|trans({}, 'icap_badge') }}" data-toggle="tooltip">
                     <i class="fa fa-folder-open"></i>
-                    <small{% if 0 == value|length %} class="hide"{% endif %}>{{ 'count_selected_badge'|transchoice(value|length, {'%nbBadge%': value|length}, 'badge') }}</small>
+                    <small{% if 0 == value|length %} class="hide"{% endif %}>{{ 'count_selected_badge'|transchoice(value|length, {'%nbBadge%': value|length}, 'icap_badge') }}</small>
                     <small{% if 0 < value|length %} class="hide"{% endif %}>{{ 'select_badges'|trans({}, 'icap_badge') }}</small>
                 </button>
             {% else %}

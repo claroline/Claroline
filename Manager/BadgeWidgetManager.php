@@ -3,7 +3,6 @@
 namespace Icap\BadgeBundle\Manager;
 
 use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
-use Claroline\CoreBundle\Event\Log\LogBadgeAwardEvent;
 use Doctrine\ORM\EntityManager;
 use Icap\BadgeBundle\Entity\Widget\BadgeUsageConfig;
 use JMS\DiExtraBundle\Annotation as DI;

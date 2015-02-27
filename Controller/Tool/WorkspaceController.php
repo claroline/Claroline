@@ -268,7 +268,7 @@ class WorkspaceController extends Controller
                         'badge_awarded_count_message',
                         $awardedBadge,
                         array('%awaredBadge%' => $awardedBadge),
-                        'badge'
+                        'icap_badge'
                     );
                     $this->get('session')->getFlashBag()->add($flashMessageType, $message);
                 } catch (\Exception $exception) {
