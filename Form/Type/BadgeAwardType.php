@@ -36,14 +36,14 @@ class BadgeAwardType extends AbstractType
     {
         $builder
             ->add('group', 'zenstruck_ajax_entity', array(
-                'placeholder'    => $this->translator->trans('badge_award_form_group_choose', array(), 'badge'),
+                'placeholder'    => $this->translator->trans('badge_award_form_group_choose', array(), 'icap_badge'),
                 'class'          => 'ClarolineCoreBundle:Group',
                 'use_controller' => true,
                 'property'       => 'name',
                 'repo_method'    => 'findByNameForAjax'
             ))
             ->add('user', 'zenstruck_ajax_entity', array(
-                'placeholder'    => $this->translator->trans('badge_award_form_user_choose', array(), 'badge'),
+                'placeholder'    => $this->translator->trans('badge_award_form_user_choose', array(), 'icap_badge'),
                 'class'          => 'ClarolineCoreBundle:User',
                 'use_controller' => true,
                 'property'       => 'username',
