@@ -1142,4 +1142,10 @@ install: Install
 up_to_date: Up to date
 update: Update
 package_install: Package install
-package_install_confirm: Do you really want to install %bundle% %version%
+package_install_confirm: Do you really want to install %bundle% %version% ?
+backup_reminder: We recommand you to do a backup before going further.
+tips: Tips
+logs_error_location: The log files are located in app/logs/update-xxx.log.
+package_install_auto_reload: This page will be reload automatically once an operation is done
+activate_maintenance_mode: You should activate the maintenance mode before going further.
+install_update_cant_be_undone: Once an operation is started, it cannot be undone.

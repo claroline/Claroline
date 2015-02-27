@@ -19,8 +19,16 @@
 {% endblock %}
 
 {% block section_content %}
-    <div class="panel-heading">
-        <h3 class="panel-title">{{ 'packages'|trans({}, 'platform') }}</h3>
+<div class="panel">
+    <div class="well">
+        <h4> {{ 'tips'|trans({}, 'platform') }} </h4>
+        <ul>
+            <li>{{ 'backup_reminder'|trans({}, 'platform') }}</li>
+            <li>{{ 'logs_error_location'|trans({}, 'platform') }}</li>
+            <li>{{ 'package_install_auto_reload'|trans({}, 'platform') }}</li>
+            <li>{{ 'activate_maintenance_mode'|trans({}, 'platform') }}</li>
+            <li>{{ 'install_update_cant_be_undone'|trans({}, 'platform') }}</li>
+        </ul>
     </div>
     <div class="panel-body">
         <div class="panel-group" id="core-accordion">
@@ -28,7 +36,7 @@
                 <div class="panel-heading">
                     <h4 class="panel-title">
                         <a data-toggle="collapse" data-parent="#core-accordion" href="#packages">
-                            {{ 'installed'|trans({}, 'platform') }}
+                            <b>{{ 'installed'|trans({}, 'platform') }}</b>
                         </a>
                     </h4>
                 </div>
@@ -46,7 +54,7 @@
                 <div class="panel-heading">
                     <h4 class="panel-title">
                         <a data-toggle="collapse" data-parent="#core-accordion" href="#uninstalled">
-                            {{ 'available'|trans({}, 'platform') }}
+                            <b>{{ 'available'|trans({}, 'platform') }}</b>
                         </a>
                     </h4>
                 </div>
@@ -60,9 +68,7 @@
             </div>
         </div>
     </div>
-    <div class="panel panel-footer">
-
-    </div>
+</div>
 {% endblock %}
 {% block javascripts %}
     {{ parent() }}

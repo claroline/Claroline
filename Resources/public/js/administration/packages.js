@@ -21,11 +21,11 @@ $('.install-pkg').on('click', function(event) {
     };
 
     var errorHandler = function(logDisplayer) {
-        //location.reload();
+        location.reload();
     };
 
     var successHandler = function(logDisplayer) {
-        //window.Claroline.LogDisplayer.endAll();
+        location.reload();
     }
 
     var modal = window.Claroline.Modal.confirmRequest(
@@ -38,11 +38,15 @@ $('.install-pkg').on('click', function(event) {
         undefined,
         errorHandler,
         undefined,
+        true,
         true
     );
-/*
-    $('#logs-btn').on('click', function() {
-        alert('uolo');
-        $('#log-content').show();
-    });*/
+
+    $('.btn-modal-confirm').on('click', function(e) {
+        modal.on('hide.bs.modal', function(e) {
+            e.preventDefault();
+        });
+        $('.modal-footer').hide();
+        $('#package-confirm-msg').hide();
+    });
 });

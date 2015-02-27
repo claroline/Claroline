@@ -1,7 +1,7 @@
 {% twig_js name="PackageLog" %}
-
-{{ 'package_install_confirm'|trans({'%bundle%': bundle, '%version%': version}, 'platform') }}
-
+<div id="package-confirm-msg">
+    {{ 'package_install_confirm'|trans({'%bundle%': bundle, '%version%': version}, 'platform') }}
+</div>
 <div id="log-container" class="row">
   <pre id="log-content" class="executable"
        style="max-height: 150px; overflow: auto; display: none;"

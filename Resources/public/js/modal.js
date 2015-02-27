@@ -134,11 +134,11 @@
      */
     modal.confirmContainer = function (title, content, longModal)
     {
-        var btnSuccess = common.createElement('button', 'btn btn-primary').html(translator.trans('Ok', {}, 'home'));
+        var btnSuccess = common.createElement('button', 'btn btn-primary btn-modal-confirm').html(translator.trans('Ok', {}, 'home'));
         if (!longModal) btnSuccess.attr('data-dismiss', 'modal');
 
         var footer = common.createElement('div').append(
-            common.createElement('button', 'btn btn-default')
+            common.createElement('button', 'btn btn-default btn-modal-cancel')
             .html(translator.trans('cancel', {}, 'platform'))
             .attr('data-dismiss', 'modal')
         ).append(btnSuccess);
@@ -259,6 +259,7 @@
             });
         });
 
+        return myModal;
     };
 
     /**
