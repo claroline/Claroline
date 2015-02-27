@@ -46,18 +46,18 @@ class BadgeController extends Controller
         $badgeClaimRepository = $this->getDoctrine()->getRepository('IcapBadgeBundle:BadgeClaim');
         $badgeClaimQuery      = $badgeClaimRepository->findByWorkspace($badgeClaimsWorkspace, false);
 
-        /** @var \Icap\BadgeBundle\Manager\BadgeManager $badgeManager */
-        $badgeManager = $this->get('icap_badge.manager.badge');
-        $userQuery = $badgeManager
-            ->getUsersWithBadgesByWorkspaceQuery($this->getDoctrine()->getRepository('ClarolineCoreBundle:User'), $badgeClaimsWorkspace);
+        $userQuery = $this->getDoctrine()->getRepository('ClarolineCoreBundle:User')->findUsersByWorkspace($badgeClaimsWorkspace, false);
 
         /** @var \Claroline\CoreBundle\Pager\PagerFactory $pagerFactory */
-        $pagerFactory       = $this->get('claroline.pager.pager_factory');
-        $badgePager         = $pagerFactory->createPager($badgeQueryBuilder->getQuery(), $parameters['badgePage'], 10);
-        $claimPager         = $pagerFactory->createPager($badgeClaimQuery, $parameters['claimPage'], 10);
-        $userPager          = $pagerFactory->createPager($userQuery, $parameters['userPage'], 10);
-        $badgeRuleValidator = $this->get("claroline.rule.validator");
+        $pagerFactory = $this->get('claroline.pager.pager_factory');
 
+        $badgePager   = $pagerFactory->createPager($badgeQueryBuilder->getQuery(), $parameters['badgePage'], 10);
+        $claimPager   = $pagerFactory->createPager($badgeClaimQuery, $parameters['claimPage'], 10);
+        $userPager    = $pagerFactory->createPager($userQuery, $parameters['userPage'], 10);
+
+        /** @var \Icap\BadgeBundle\Manager\BadgeManager $badgeManager */
+        $badgeManager = $this->get('icap_badge.manager.badge');
+        $badges       = $badgeManager->getBadgesByWorkspace($userPager, $badgeClaimsWorkspace, $parameters['userPage'], 10);
 
         return $this->render(
             'IcapBadgeBundle::Template/list.html.twig',
@@ -66,7 +66,8 @@ class BadgeController extends Controller
                 'claimPager'       => $claimPager,
                 'userPager'        => $userPager,
                 'parameters'       => $parameters,
-                'badgeRuleChecker' => $badgeRuleValidator
+                'badges'           => $badges,
+                'badgeRuleChecker' => $this->get("claroline.rule.validator")
             )
         );
     }

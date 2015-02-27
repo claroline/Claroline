@@ -43,6 +43,28 @@ class UserBadgeRepository extends EntityRepository
     }
 
     /**
+     * @param integer[] $userIds
+     *
+     * @param bool $executeQuery
+     *
+     * @return \Doctrine\ORM\Query|\Icap\BadgeBundle\Entity\UserBadge[]
+     */
+    public function findByUserIds(array $userIds, $executeQuery = true)
+    {
+        $query = $this->getEntityManager()
+            ->createQuery(
+                'SELECT userBadge, badge, badgeTranslation
+                FROM IcapBadgeBundle:UserBadge userBadge
+                JOIN userBadge.badge badge
+                JOIN badge.translations badgeTranslation
+                WHERE userBadge.user IN (:userIds)'
+            )
+            ->setParameter('userIds', $userIds);
+
+        return $executeQuery ? $query->getResult(): $query;
+    }
+
+    /**
      * @param Workspace $workspace
      *
      * @return integer

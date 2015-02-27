@@ -14,6 +14,7 @@ use Claroline\CoreBundle\Event\Log\LogGenericEvent;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\QueryBuilder;
 use JMS\DiExtraBundle\Annotation as DI;
+use Pagerfanta\Pagerfanta;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -293,31 +294,30 @@ class BadgeManager
     }
 
     /**
-     * @param UserRepository $userRepository
-     * @param Workspace      $workspace
+     * @param Pagerfanta     $userPager
+     * @param Workspace|null $workspace
+     * @param integer        $page
+     * @param integer        $maxResult
      *
-     * @return \Doctrine\ORM\Query
+     * @return Badge[]
      */
-    public function getUsersWithBadgesByWorkspaceQuery(UserRepository $userRepository, Workspace $workspace = null)
+    public function getBadgesByWorkspace(Pagerfanta $userPager, $workspace, $page, $maxResult)
     {
-        $queryBuilder = $userRepository->createQueryBuilder('u')
-            ->select('DISTINCT u, ub, b')
-            ->join('u.roles', 'r')
-            ->leftJoin('u.userBadges', 'ub')
-            ->leftJoin('ub.badge', 'b')
-            ->andWhere('u.isEnabled = true')
-            ->orderBy('u.id');
-
-        if (null === $workspace) {
-            $queryBuilder->andWhere('r.workspace IS NULL');
+        $userIds = [];
+        foreach ($userPager as $user) {
+            $userIds[] = $user->getId();
         }
-        else {
-            $queryBuilder
-                ->leftJoin('r.workspace', 'w')
-                ->andWhere('r.workspace = :workspace')
-                ->setParameter('workspace', $workspace);
-        };
 
-        return $queryBuilder->getQuery();
+        /** @var \Icap\BadgeBundle\Repository\UserBadgeRepository $userBadgeRepository */
+        $userBadgeRepository = $this->entityManager->getRepository('IcapBadgeBundle:UserBadge');
+        $userBadgeResults = $userBadgeRepository->findByUserIds($userIds);
+
+        $badges = [];
+
+        foreach ($userBadgeResults as $userBadgeResult) {
+            $badges[$userBadgeResult->getUser()->getId()][] = $userBadgeResult->getBadge();
+        }
+
+        return $badges;
     }
 }
