@@ -2,7 +2,7 @@
 
 namespace Icap\DropzoneBundle\Listener;
 
-use Claroline\CoreBundle\Event\Badge\BadgeCreateValidationLinkEvent;
+use Icap\BadgeBundle\Event\BadgeCreateValidationLinkEvent;
 use Doctrine\ORM\EntityManager;
 use Icap\BlogBundle\Event\Log\LogCommentCreateEvent;
 use Icap\BlogBundle\Event\Log\LogCommentDeleteEvent;
