@@ -12,5 +12,5 @@
 include __DIR__ . '/authorize.php';
 
 $logFile = $_GET['logFile'];
-$file = '../../app/logs/' . $logFile . '.log';
+$file = '../../app/logs/' . $logFile;
 echo @file_get_contents($file);

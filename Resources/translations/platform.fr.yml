@@ -1143,3 +1143,16 @@ property: Propriété
 picture: Photo de profil
 profile_properties_management: Gestion des propriétés du profil
 facet_management: Gestion des facets
+installed: Installé
+available: Disponible
+install: Installer
+up_to_date: À jour
+update: Mettre à jour
+package_install: Installation d'un paquet
+package_install_confirm: Êtes-vous sûr de vouloir installer %bundle% %version% ?
+backup_reminder: Pensez à faire un backup de la plateforme avant de faire une mise à jour.
+tips: Astuces
+logs_error_location: En cas d'erreur, les logs se trouvent dans le dossier app/log/update-xxx.log.
+package_install_auto_reload: Cette page est rechargée automatiquement à la fin de l'installaion d'un paquet.
+activate_maintenance_mode: Vous devriez activer le mode de maintenance afin de signaler aux utilisateurs qu'une mise à jour est en cours.
+install_update_cant_be_undone: Les opérations d'installation et de mise à jour ne peuvent pas être annulées.

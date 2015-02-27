@@ -75,7 +75,8 @@ class PlatformConfigurationHandler
         'confirm_send_datas' => null,
         'token' => null,
         'country' => '-',
-        'datas_sending_url' => 'http://stats.claroline.net/insert.php'
+        'datas_sending_url' => 'http://stats.claroline.net/insert.php',
+        'repository_api' => 'http://packages.claroline.net/api.php'
     );
 
     /**
@@ -176,6 +177,7 @@ class PlatformConfigurationHandler
         $config->setIsNotificationActive($this->parameters['is_notification_active']);
         $config->setMaxUploadResources($this->parameters['max_upload_resources']);
         $config->setMaxStorageSize($this->parameters['max_storage_size']);
+        $config->setRepositoryApi($this->parameters['repository_api']);
 
         return $config;
     }
