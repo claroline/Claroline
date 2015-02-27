@@ -421,11 +421,11 @@ class WorkspaceController extends Controller
     {
         $this->checkUserIsAllowed($workspace);
 
-        /** @var \Claroline\CoreBundle\Repository\Badge\BadgeRepository $badgeRepository */
-        $badgeRepository = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Badge\Badge');
+        /** @var \Icap\BadgeBundle\Repository\BadgeRepository $badgeRepository */
+        $badgeRepository = $this->getDoctrine()->getRepository('IcapBadgeBundle:Badge');
 
-        /** @var \Claroline\CoreBundle\Repository\Badge\UserBadgeRepository $userBadgeRepository */
-        $userBadgeRepository = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Badge\UserBadge');
+        /** @var \Icap\BadgeBundle\Repository\UserBadgeRepository $userBadgeRepository */
+        $userBadgeRepository = $this->getDoctrine()->getRepository('IcapBadgeBundle:UserBadge');
 
         $totalBadges       = $badgeRepository->countByWorkspace($workspace);
         $totalBadgeAwarded = $userBadgeRepository->countAwardedBadgeByWorkspace($workspace);
