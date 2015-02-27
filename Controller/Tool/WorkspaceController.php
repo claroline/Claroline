@@ -409,7 +409,7 @@ class WorkspaceController extends Controller
     }
 
     /**
-     * @Route("/statistics", name="claro_workspace_tool_badges_statistics")
+     * @Route("/statistics", name="icap_badge_workspace_tool_badges_statistics")
      * @ParamConverter(
      *     "workspace",
      *     class="ClarolineCoreBundle:Workspace\Workspace",
