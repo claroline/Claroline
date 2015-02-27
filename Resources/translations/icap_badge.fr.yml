@@ -150,34 +150,6 @@ view_badge: 'Badge ''%badge_name%'''
 week: semaine
 workspace_badges: 'Badges de l''espace de travail'
 year: année
-my_collections: "Mes collections"
-organize_badges_the_way_you_want: "Organisez vos badges à votre manière"
-no_collection: "Aucune collection."
-add_collection: "Ajouter une collection"
-collection_name: "Nom de la collection"
-badge_collection_delete_confirm_title: "Suppression d'une collection"
-badge_collection_delete_confirm_message: "Etes-vous sûr de vouloir supprimer cette collection ?"
-add_collection_in_progress: "Ajout d'une collection en cours..."
-add_collection_error: "Une erreur est survenue lors de l'ajout d'une collection."
-add_badge_to_collection_error: "Une erreur est survenue lors de l'ajout du badge à la collection."
-edit_title_collection_error: "Une erreur est survenue lors de la modification du nom de la collection."
-delete_collection_error: "Une erreur est survenue lors de la suppression de la collection."
-remove_badge_from_collection_error: "Une erreur est survenue lors de la suppression du badge de la collection."
-edit_is_shared_collection_error: "Une erreur est survenue lors du partage de la collection."
-edit_is_unshared_collection_error: "Une erreur est survenue lors de la suppression du partage de la collection."
-see_shared_collection: "Voir la collection partagée"
-share: "Partager"
-shared: "Partagée"
-stop_share: "Ne plus partager"
-private: "Privée"
-page_public_look: "Voici comment s'affichera cette page pour les visiteurs."
-no_badge_in_collection: "Il n'y a aucun badge dans cette collection."
-badge_details: "Détails du badge"
-collection_owned_by_user: "De l'utilisateur %user%"
-badge_expiration_date_explanation: "Durée de validité du badge. Après expiration, le badge n'est pas retiré à l'utilisateur, mais un indicateur visuel d'expiration est affiché. Si cette date est omise, le badge n'expirera jamais."
-badge_validity_period: "Durée de validité du badge"
-start_to_award_this_badge: '<a href="%url%" id="awardUser" role="button">Attribuer</a> ce badge.'
-badge_edit_create_new_version: "<strong>Attention!!!</strong> Ce badge a déjà été attribué. Modifier ses règles d'attribution entraînera la création d'une nouvelle version de ce badge."
 consult_my_badge_details: 'Consulter mon badge en détails'
 badge_award_form_comment: 'Commentaire'
 comment: 'Commentaire'
