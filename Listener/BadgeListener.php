@@ -2,11 +2,13 @@
 
 namespace Icap\BadgeBundle\Listener;
 
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Pager\PagerFactory;
 use Claroline\CoreBundle\Rule\Validator;
 use Claroline\CoreBundle\Event\DisplayToolEvent;
 use Claroline\CoreBundle\Event\LogCreateEvent;
+use Icap\BadgeBundle\Entity\Badge;
 use Icap\BadgeBundle\Manager\BadgeManager;
 use Doctrine\ORM\EntityManager;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -95,15 +97,15 @@ class BadgeListener
             foreach ($badges as $badge) {
                 $nbRules = count($badge->getRules());
 
-                if (null !== $doer && !$doer->hasBadge($badge)) {
-                    $resources    = $this->ruleValidator->validate($badge, $doer);
+                if (null !== $doer && !$this->userHasBadge($doer, $badge)) {
+                    $resources = $this->ruleValidator->validate($badge, $doer);
 
                     if(0 < $resources['validRules'] && $resources['validRules'] >= $nbRules) {
                         $this->badgeManager->addBadgeToUser($badge, $doer);
                     }
                 }
 
-                if (null !== $receiver && !$receiver->hasBadge($badge)) {
+                if (null !== $receiver && !$this->userHasBadge($receiver, $badge)) {
                     $resources = $this->ruleValidator->validate($badge, $receiver);
 
                     if(0 < $resources['validRules'] && $resources['validRules'] >= $nbRules) {
@@ -112,6 +114,19 @@ class BadgeListener
                 }
             }
         }
+    }
+
+    /***
+     * @param User  $user
+     * @param Badge $badge
+     *
+     * @return bool
+     */
+    protected function userHasBadge(User $user, Badge $badge)
+    {
+        $userBadge = $this->entityManager->getRepository('IcapBadgeBundle:UserBadge')->findOneByBadgeAndUser($badge, $user);
+
+        return null !== $userBadge;
     }
 
     /**
