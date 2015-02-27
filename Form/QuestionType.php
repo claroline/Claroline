@@ -48,6 +48,7 @@ class QuestionType extends AbstractType
                 )
             )
             ->add('description', 'tinymce', array(
+                    'attr' => array('data-new-tab' => 'yes'),
                     'label' => 'Question.description', 'required' => false
                 )
             )

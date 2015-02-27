@@ -21,6 +21,7 @@ class ChoiceType extends AbstractType
             )
             ->add(
                 'label', 'tinymce', array(
+                     'attr' => array('data-new-tab' => 'yes'),
                     'label' => ' '
                 )
             )
@@ -31,6 +32,7 @@ class ChoiceType extends AbstractType
             )
             ->add(
                 'feedback', 'tinymce', array(
+                    'attr' => array('data-new-tab' => 'yes'),
                     'required' => false, 'label' => ' '
                 )
             )
