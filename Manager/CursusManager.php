@@ -13,12 +13,15 @@ namespace Claroline\CursusBundle\Manager;
 
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Library\Workspace\Configuration;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Claroline\CoreBundle\Pager\PagerFactory;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CursusBundle\Entity\Course;
 use Claroline\CursusBundle\Entity\CourseSession;
+use Claroline\CursusBundle\Entity\CourseSessionGroup;
 use Claroline\CursusBundle\Entity\CourseSessionUser;
 use Claroline\CursusBundle\Entity\Cursus;
 use Claroline\CursusBundle\Entity\CursusGroup;
@@ -35,6 +38,7 @@ class CursusManager
     private $om;
     private $pagerFactory;
     private $roleManager;
+    private $templateDir;
     private $translator;
     private $workspaceManager;
     private $courseRepo;
@@ -52,6 +56,7 @@ class CursusManager
      *     "om"               = @DI\Inject("claroline.persistence.object_manager"),
      *     "pagerFactory"     = @DI\Inject("claroline.pager.pager_factory"),
      *     "roleManager"      = @DI\Inject("claroline.manager.role_manager"),
+     *     "templateDir"      = @DI\Inject("%claroline.param.templates_directory%"),
      *     "translator"       = @DI\Inject("translator"),
      *     "workspaceManager" = @DI\Inject("claroline.manager.workspace_manager")
      * })
@@ -60,6 +65,7 @@ class CursusManager
         ObjectManager $om,
         PagerFactory $pagerFactory,
         RoleManager $roleManager,
+        $templateDir,
         Translator $translator,
         WorkspaceManager $workspaceManager
     )
@@ -67,6 +73,7 @@ class CursusManager
         $this->om = $om;
         $this->pagerFactory = $pagerFactory;
         $this->roleManager = $roleManager;
+        $this->templateDir = $templateDir;
         $this->translator = $translator;
         $this->workspaceManager = $workspaceManager;
         $this->courseRepo =
@@ -283,12 +290,18 @@ class CursusManager
     public function unregisterUsersFromCursus(Cursus $cursus, array $users)
     {
         $toDelete = array();
+        $coursesToUnregister = array();
 
         if ($cursus->isBlocking()) {
             $toDelete = $this->getCursusUsersFromCursusAndUsers(
                 array($cursus),
                 $users
             );
+            $course = $cursus->getCourse();
+                    
+            if (!is_null($course)) {
+                $coursesToUnregister[] = $course;
+            }
         } else {
             // Determines from which cursus descendants user has to be removed.
             $unlockedDescendants = $this->getUnlockedDescendants($cursus);
@@ -312,6 +325,17 @@ class CursusManager
                     $removableAncestors
                 );
             }
+
+            foreach ($toDelete as $cursusUser) {
+                $cursus = $cursusUser->getCursus();
+                $course = $cursus->getCourse();
+
+                if (!is_null($course)) {
+                    $coursesToUnregister[] = $course;
+                }
+            }
+
+            // TODO : find sessions By courses
         }
 
         $this->om->startFlushSuite();
@@ -593,6 +617,49 @@ class CursusManager
         $this->om->endFlushSuite();
     }
 
+    public function registerUsersToSessions(
+        array $sessions,
+        array $users,
+        $type = 0
+    )
+    {
+        $registrationDate = new \DateTime();
+
+        $this->om->startFlushSuite();
+
+        foreach ($sessions as $session) {
+
+            foreach ($users as $user) {
+                $sessionUser = $this->sessionUserRepo->findOneSessionUserBySessionAndUserAndType(
+                    $session,
+                    $user,
+                    $type
+                );
+
+                if (is_null($sessionUser)) {
+                    $sessionUser = new CourseSessionUser();
+                    $sessionUser->setSession($session);
+                    $sessionUser->setUser($user);
+                    $sessionUser->setUserType($type);
+                    $sessionUser->setRegistrationDate($registrationDate);
+                    $this->om->persist($sessionUser);
+                }
+            }
+            $role = null;
+
+            if (intval($type) === 0) {
+                $role = $session->getLearnerRole();
+            } elseif (intval($type) === 1) {
+                $role = $session->getTutorRole();
+            }
+
+            if (!is_null($role)) {
+                $this->roleManager->associateRoleToMultipleSubjects($users, $role);
+            }
+        }
+        $this->om->endFlushSuite();
+    }
+
     public function unregisterUsersFromSession(array $sessionUsers)
     {
         $this->om->startFlushSuite();
@@ -617,6 +684,89 @@ class CursusManager
         $this->om->endFlushSuite();
     }
 
+    public function registerGroupToSessions(
+        array $sessions,
+        Group $group,
+        $type = 0
+    )
+    {
+        $registrationDate = new \DateTime();
+
+        $this->om->startFlushSuite();
+
+        foreach ($sessions as $session) {
+            $users = $group->getUsers()->toArray();
+            $sessionGroup = $this->sessionGroupRepo->findOneSessionGroupBySessionAndGroup(
+                $session,
+                $group,
+                $type
+            );
+
+            if (is_null($sessionGroup)) {
+                $sessionGroup = new CourseSessionGroup();
+                $sessionGroup->setSession($session);
+                $sessionGroup->setGroup($group);
+                $sessionGroup->setGroupType($type);
+                $sessionGroup->setRegistrationDate($registrationDate);
+                $this->om->persist($sessionGroup);
+            }
+
+            foreach ($users as $user) {
+                $sessionUser = $this->sessionUserRepo->findOneSessionUserBySessionAndUserAndType(
+                    $session,
+                    $user,
+                    $type
+                );
+
+                if (is_null($sessionUser)) {
+                    $sessionUser = new CourseSessionUser();
+                    $sessionUser->setSession($session);
+                    $sessionUser->setUser($user);
+                    $sessionUser->setUserType($type);
+                    $sessionUser->setRegistrationDate($registrationDate);
+                    $this->om->persist($sessionUser);
+                }
+            }
+            $role = null;
+
+            if (intval($type) === 0) {
+                $role = $session->getLearnerRole();
+            } elseif (intval($type) === 1) {
+                $role = $session->getTutorRole();
+            }
+
+            if (!is_null($role)) {
+                $this->roleManager->associateRole($group, $role);
+            }
+        }
+        $this->om->endFlushSuite();
+    }
+
+    public function unregisterGroupFromSession(CourseSessionGroup $sessionGroup)
+    {
+        $this->om->startFlushSuite();
+        $session = $sessionGroup->getSession();
+        $group = $sessionGroup->getGroup();
+        $groupType = $sessionGroup->getGroupType();
+        $role = null;
+        $users = $group->getUsers()->toArray();
+
+        if ($groupType === 0) {
+            $role = $session->getLearnerRole();
+        } elseif ($groupType === 1) {
+            $role = $session->getTutorRole();
+        }
+
+        if (!is_null($role)) {
+            $this->roleManager->dissociateRole($group, $role);
+        }
+        $this->om->remove($sessionGroup);
+
+        $sessionUsers = $this->getSessionUsersBySessionAndUsers($session, $users, $groupType);
+        $this->unregisterUsersFromSession($sessionUsers);
+        $this->om->endFlushSuite();
+    }
+
     public function deleteCourseSession(CourseSession $session, $withWorkspace = false)
     {
         $this->om->startFlushSuite();
@@ -627,6 +777,154 @@ class CursusManager
         }
         $this->om->remove($session);
         $this->om->endFlushSuite();
+    }
+
+    public function createCourseSession(
+        Course $course,
+        User $user,
+        $sessionName = null,
+        Cursus $cursus = null,
+        $registrationDate = null
+    )
+    {
+        if (is_null($registrationDate)) {
+            $registrationDate = new \DateTime();
+        }
+        $session = new CourseSession();
+        $session->setName($sessionName);
+        $session->setCourse($course);
+        $session->setCursus($cursus);
+        $session->setCreationDate($registrationDate);
+        $session->setPublicRegistration($course->getPublicRegistration());
+        $session->setPublicUnregistration($course->getPublicUnregistration());
+        $session->setRegistrationValidation($course->getRegistrationValidation());
+
+        $workspace = $this->generateWorkspace(
+            $course,
+            $session,
+            $user
+        );
+        $session->setWorkspace($workspace);
+        $learnerRole = $this->generateRoleForSession(
+            $workspace,
+            $course->getLearnerRoleName(),
+            0
+        );
+        $tutorRole = $this->generateRoleForSession(
+            $workspace,
+            $course->getTutorRoleName(),
+            1
+        );
+        $session->setLearnerRole($learnerRole);
+        $session->setTutorRole($tutorRole);
+        $this->persistCourseSession($session);
+
+        return $session;
+    }
+
+    public function generateWorkspace(Course $course, CourseSession $session, User $user)
+    {
+        $model = $course->getWorkspaceModel();
+        $description = $course->getDescription();
+        $displayable = false;
+        $selfRegistration = false;
+        $selfUnregistration = false;
+        $registrationValidation = false;
+        $name = $course->getTitle() .
+            ' [' .
+            $session->getName() .
+            ']';
+        $code = $this->generateWorkspaceCode($course->getCode());
+
+        if (is_null($model)) {
+            $ds = DIRECTORY_SEPARATOR;
+            $config = Configuration::fromTemplate(
+                $this->templateDir . $ds . 'default.zip'
+            );
+            $config->setWorkspaceName($name);
+            $config->setWorkspaceCode($code);
+            $config->setDisplayable($displayable);
+            $config->setSelfRegistration($selfRegistration);
+            $config->setSelfUnregistration($selfUnregistration);
+            $config->setRegistrationValidation($registrationValidation);
+            $config->setWorkspaceDescription($description);
+            $workspace = $this->workspaceManager->create($config, $user);
+        } else {
+            $workspace = $this->workspaceManager->createWorkspaceFromModel(
+                $model,
+                $user,
+                $name,
+                $code,
+                $description,
+                $displayable,
+                $selfRegistration,
+                $selfUnregistration
+            );
+        }
+        $workspace->setWorkspaceType(0);
+        $workspace->setStartDate($session->getStartDate());
+        $workspace->setEndDate($session->getEndDate());
+        $this->workspaceManager->editWorkspace($workspace);
+
+        return $workspace;
+    }
+
+    public function generateRoleForSession(Workspace $workspace, $roleName, $type)
+    {
+        if (empty($roleName)) {
+
+            if ($type === 1) {
+                $role = $this->roleManager->getManagerRole($workspace);
+            } else {
+                $role = $this->roleManager->getCollaboratorRole($workspace);
+            }
+        } else {
+            $roles = $this->roleManager->getRolesByWorkspaceCodeAndTranslationKey(
+                $workspace->getCode(),
+                $roleName
+            );
+
+            if (count($roles) > 0) {
+                $role = $roles[0];
+            } else {
+                $guid = $workspace->getGuid();
+                $wsRoleName = 'ROLE_WS_' . strtoupper($roleName) . '_' . $guid;
+
+                $role = $this->roleManager->getRoleByName($wsRoleName);
+
+                if (is_null($role)) {
+                    $role = $this->roleManager->createWorkspaceRole(
+                        $wsRoleName,
+                        $roleName,
+                        $workspace
+                    );
+                }
+            }
+        }
+
+        return $role;
+    }
+
+    private function generateWorkspaceCode($code)
+    {
+        $workspaceCodes = $this->workspaceManager->getWorkspaceCodesWithPrefix($code);
+        $existingCodes = array();
+
+        foreach ($workspaceCodes as $wsCode) {
+            $existingCodes[] = $wsCode['code'];
+        }
+
+        $index = count($existingCodes) + 1;
+        $currentCode = $code . '_' . $index;
+        $upperCurrentCode = strtoupper($currentCode);
+
+        while (in_array($upperCurrentCode, $existingCodes)) {
+            $index++;
+            $currentCode = $code . '_' . $index;
+            $upperCurrentCode = strtoupper($currentCode);
+        }
+
+        return $currentCode;
     }
     
 
@@ -752,6 +1050,11 @@ class CursusManager
         return count($ids) > 0 ?
             $this->cursusRepo->findCursusByIds($ids, $executeQuery)
             : array();
+    }
+
+    public function getOneCursusById($cursusId, $executeQuery = true)
+    {
+        return $this->cursusRepo->findOneCursusById($cursusId, $executeQuery);
     }
 
 
@@ -1171,6 +1474,48 @@ class CursusManager
             $session,
             $executeQuery
         );
+    }
+
+    public function getSessionUsersBySessionAndUsers(
+        CourseSession $session,
+        array $users,
+        $userType,
+        $executeQuery = true
+    )
+    {
+        if (count($users) > 0) {
+
+            return $this->sessionUserRepo->findSessionUsersBySessionAndUsers(
+                $session,
+                $users,
+                $userType,
+                $executeQuery
+            );
+        } else {
+
+            return array();
+        }
+    }
+
+    public function getSessionUsersBySessionsAndUsers(
+        array $sessions,
+        array $users,
+        $userType,
+        $executeQuery = true
+    )
+    {
+        if (count($users) > 0 && count($sessions) > 0) {
+
+            return $this->sessionUserRepo->findSessionUsersBySessionsAndUsers(
+                $sessions,
+                $users,
+                $userType,
+                $executeQuery
+            );
+        } else {
+
+            return array();
+        }
     }
 
     public function getUnregisteredUsersBySession(

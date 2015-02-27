@@ -190,6 +190,21 @@
         );
     });
     
+    $('#users-box').on('click', '.unregister-group-from-session', function () {
+        var sessionGroupId = $(this).data('session-group-id');
+
+        window.Claroline.Modal.confirmRequest(
+            Routing.generate(
+                'claro_cursus_course_session_unregister_group',
+                {'sessionGroup': sessionGroupId}
+            ),
+            removeGroupRow,
+            sessionGroupId,
+            Translator.trans('unregister_group_from_session_message', {}, 'cursus'),
+            Translator.trans('unregister_group_from_session', {}, 'cursus')
+        );
+    });
+    
     $('#show-closed-sessions-btn').on('click', function () {
         sessionsClosed = !sessionsClosed;
         
@@ -244,6 +259,10 @@
 
     var removeUserRow = function (event, sessionUserId) {
         $('#row-session-user-' + sessionUserId).remove();
+    };
+
+    var removeGroupRow = function (event, sessionGroupId) {
+        $('#row-session-group-' + sessionGroupId).remove();
     };
 
     var refreshPage = function () {

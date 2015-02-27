@@ -347,6 +347,62 @@ class CursusRegistrationController extends Controller
 
     /**
      * @EXT\Route(
+     *     "multiple/cursus/register/user/{user}/confirm/sessions",
+     *     name="claro_cursus_multiple_register_user_confirm_sessions",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\ParamConverter(
+     *     "multipleCursus",
+     *      class="ClarolineCursusBundle:Cursus",
+     *      options={"multipleIds" = true, "name" = "cursusIds"}
+     * )
+     * @EXT\Template("ClarolineCursusBundle:CursusRegistration:registrationToMultipleCursusConfirmSession.html.twig")
+     *
+     * @param User $user
+     * @param Cursus[] $multipleCursus
+     */
+    public function cursusUserRegisterToMultipleCursusConfirmSessionAction(
+        User $user,
+        array $multipleCursus
+    )
+    {
+        $this->checkToolAccess();
+        $courses = array();
+        $sessionsList = array();
+
+        foreach ($multipleCursus as $cursus) {
+            $course = $cursus->getCourse();
+
+            if (!is_null($course)) {
+                $courses[] = $course;
+            }
+        }
+        $sessions = $this->cursusManager->getSessionsByCourses($courses);
+
+        foreach ($sessions as $session) {
+
+            if ($session->getSessionStatus() !== 2) {
+                $courseId = $session->getCourse()->getId();
+
+                if (!isset($sessionsList[$courseId])) {
+                    $sessionsList[$courseId] = array();
+                }
+                $sessionsList[$courseId][] = $session;
+            }
+        }
+
+        return array(
+            'user' => $user,
+            'multipleCursus' => $multipleCursus,
+            'courses' => $courses,
+            'sessionsList' => $sessionsList,
+            'type' => 'user'
+        );
+    }
+
+    /**
+     * @EXT\Route(
      *     "multiple/cursus/register/user/{user}",
      *     name="claro_cursus_multiple_register_user",
      *     options = {"expose"=true}
@@ -358,17 +414,71 @@ class CursusRegistrationController extends Controller
      *      class="ClarolineCursusBundle:Cursus",
      *      options={"multipleIds" = true, "name" = "cursusIds"}
      * )
+     * @EXT\ParamConverter(
+     *     "sessions",
+     *      class="ClarolineCursusBundle:CourseSession",
+     *      options={"multipleIds" = true, "name" = "sessionIds"}
+     * )
      *
      * @param User $user
      * @param Cursus[] $multipleCursus
+     * @param CourseSession[] $sessions
+     * @param User $authenticatedUser
      */
     public function cursusUserRegisterToMultipleCursusAction(
         User $user,
-        array $multipleCursus
+        array $multipleCursus,
+        array $sessions,
+        User $authenticatedUser
     )
     {
         $this->checkToolAccess();
+        $coursesWithSession = array();
+        $sessionsToCreate = array();
+        $root = 0;
+        $cursusRoot = null;
+        $registrationDate = new \DateTime();
+
+        foreach ($sessions as $session) {
+            $course = $session->getCourse();
+            $coursesWithSession[$course->getId()] = true;
+        }
+
+        foreach ($multipleCursus as $cursus) {
+            $root = $cursus->getRoot();
+            $course = $cursus->getCourse();
+
+            if (!is_null($course) &&
+                !isset($coursesWithSession[$course->getId()]) &&
+                !in_array($course, $sessionsToCreate)) {
+
+                $sessionsToCreate[] = $course;
+            }
+        }
+
+        if ($root > 0) {
+            $cursusRoot = $this->cursusManager->getOneCursusById($root);
+        }
+        // Generate the list of sessions where the user will be register
+        foreach ($sessionsToCreate as $course) {
+
+            if (is_null($cursusRoot)) {
+                $sessionName = 'Session';
+            } else {
+                $sessionName = $cursusRoot->getTitle();
+            }
+            $sessionName .= ' (' . $registrationDate->format('d/m/Y H:i') . ')';
+            $session = $this->cursusManager->createCourseSession(
+                $course,
+                $authenticatedUser,
+                $sessionName,
+                $cursusRoot,
+                $registrationDate
+            );
+            $sessions[] = $session;
+        }
         $this->cursusManager->registerUserToMultipleCursus($multipleCursus, $user);
+        $this->cursusManager->registerUsersToSessions($sessions, array($user));
 
         return new JsonResponse('success', 200);
     }
@@ -408,6 +518,62 @@ class CursusRegistrationController extends Controller
 
     /**
      * @EXT\Route(
+     *     "multiple/cursus/register/group/{group}/confirm/sessions",
+     *     name="claro_cursus_multiple_register_group_confirm_sessions",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\ParamConverter(
+     *     "multipleCursus",
+     *      class="ClarolineCursusBundle:Cursus",
+     *      options={"multipleIds" = true, "name" = "cursusIds"}
+     * )
+     * @EXT\Template("ClarolineCursusBundle:CursusRegistration:registrationToMultipleCursusConfirmSession.html.twig")
+     *
+     * @param Group $group
+     * @param Cursus[] $multipleCursus
+     */
+    public function cursusGroupRegisterToMultipleCursusConfirmSessionAction(
+        Group $group,
+        array $multipleCursus
+    )
+    {
+        $this->checkToolAccess();
+        $courses = array();
+        $sessionsList = array();
+
+        foreach ($multipleCursus as $cursus) {
+            $course = $cursus->getCourse();
+
+            if (!is_null($course)) {
+                $courses[] = $course;
+            }
+        }
+        $sessions = $this->cursusManager->getSessionsByCourses($courses);
+
+        foreach ($sessions as $session) {
+
+            if ($session->getSessionStatus() !== 2) {
+                $courseId = $session->getCourse()->getId();
+
+                if (!isset($sessionsList[$courseId])) {
+                    $sessionsList[$courseId] = array();
+                }
+                $sessionsList[$courseId][] = $session;
+            }
+        }
+
+        return array(
+            'group' => $group,
+            'multipleCursus' => $multipleCursus,
+            'courses' => $courses,
+            'sessionsList' => $sessionsList,
+            'type' => 'group'
+        );
+    }
+
+    /**
+     * @EXT\Route(
      *     "multiple/cursus/register/group/{group}",
      *     name="claro_cursus_multiple_register_group",
      *     options = {"expose"=true}
@@ -419,17 +585,65 @@ class CursusRegistrationController extends Controller
      *      class="ClarolineCursusBundle:Cursus",
      *      options={"multipleIds" = true, "name" = "cursusIds"}
      * )
+     * @EXT\ParamConverter(
+     *     "sessions",
+     *      class="ClarolineCursusBundle:CourseSession",
+     *      options={"multipleIds" = true, "name" = "sessionIds"}
+     * )
      *
      * @param Group $group
      * @param Cursus[] $multipleCursus
+     * @param CourseSession[] $sessions
+     * @param User $authenticatedUser
      */
     public function cursusGroupRegisterToMultipleCursusAction(
         Group $group,
-        array $multipleCursus
+        array $multipleCursus,
+        array $sessions,
+        User $authenticatedUser
     )
     {
         $this->checkToolAccess();
+        $coursesWithSession = array();
+        $sessionsToCreate = array();
+        $root = 0;
+        $cursusRoot = null;
+        $registrationDate = new \DateTime();
+
+        foreach ($sessions as $session) {
+            $course = $session->getCourse();
+            $coursesWithSession[$course->getId()] = true;
+        }
+
+        foreach ($multipleCursus as $cursus) {
+            $root = $cursus->getRoot();
+            $course = $cursus->getCourse();
+
+            if (!is_null($course) &&
+                !isset($coursesWithSession[$course->getId()]) &&
+                !in_array($course, $sessionsToCreate)) {
+
+                $sessionsToCreate[] = $course;
+            }
+        }
+
+        if ($root > 0) {
+            $cursusRoot = $this->cursusManager->getOneCursusById($root);
+        }
+        // Generate the list of sessions where the user will be register
+        foreach ($sessionsToCreate as $course) {
+            $sessionName = $group->getName();
+            $session = $this->cursusManager->createCourseSession(
+                $course,
+                $authenticatedUser,
+                $sessionName,
+                $cursusRoot,
+                $registrationDate
+            );
+            $sessions[] = $session;
+        }
         $this->cursusManager->registerGroupToMultipleCursus($multipleCursus, $group);
+        $this->cursusManager->registerGroupToSessions($sessions, $group);
 
         return new JsonResponse('success', 200);
     }

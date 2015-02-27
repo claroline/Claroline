@@ -20,11 +20,11 @@
     </h3>
     <hr>
 
-    <div class="table-responsive col-md-6">
-        <table class="table">
+    <div class="table-responsive">
+        <table class="table col-md-6">
             <tr>
                 <th class="text-center">
-                    {{ 'users'|trans({}, 'platform') }}
+                    {{ 'learners'|trans({}, 'cursus') }}
                     &nbsp;
                     <i class="fa fa-user pointer-hand"
                        id="register-learners-btn"
@@ -37,6 +37,27 @@
                     </i>
                 </th>
             </tr>
+            
+            {% for sessionGroup in learnersGroups %}
+                {% set group = sessionGroup.getGroup() %}
+                <tr id="row-session-group-{{ sessionGroup.getId() }}">
+                    <td>
+                        <b>
+                            {{ group.getName() }}
+                        </b>
+                        &nbsp;
+                        <i class="fa fa-times-circle unregister-group-from-session pointer-hand"
+                           data-toggle="tooltip"
+                           data-placement="top"
+                           data-container="#session-management-box"
+                           title="{{ 'unregister_group_from_session'|trans({}, 'cursus') }}"
+                           data-session-group-id="{{ sessionGroup.getId() }}"
+                           style="color: #D9534F"
+                        >    
+                        </i>
+                    </td>
+                </tr>
+            {% endfor %}
 
             {% for sessionUser in learners %}
                 {% set user = sessionUser.getUser() %}
@@ -76,8 +97,28 @@
                     >
                     </i>
                 </th>
-
             </tr>
+            
+            {% for sessionGroup in tutorsGroups %}
+                {% set group = sessionGroup.getGroup() %}
+                <tr id="row-session-group-{{ sessionGroup.getId() }}">
+                    <td>
+                        <b>
+                            {{ group.getName() }}
+                        </b>
+                        &nbsp;
+                        <i class="fa fa-times-circle unregister-group-from-session pointer-hand"
+                           data-toggle="tooltip"
+                           data-placement="top"
+                           data-container="#session-management-box"
+                           title="{{ 'unregister_group_from_session'|trans({}, 'cursus') }}"
+                           data-session-group-id="{{ sessionGroup.getId() }}"
+                           style="color: #D9534F"
+                        >    
+                        </i>
+                    </td>
+                </tr>
+            {% endfor %}
 
             {% for sessionUser in tutors %}
                 {% set user = sessionUser.getUser() %}

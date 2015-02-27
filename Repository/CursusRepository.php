@@ -233,4 +233,17 @@ class CursusRepository extends NestedTreeRepository
 
         return $executeQuery ? $query->execute() : $query;
     }
+
+    public function findOneCursusById($cursusId, $executeQuery = true)
+    {
+        $dql = '
+            SELECT c
+            FROM Claroline\CursusBundle\Entity\Cursus c
+            WHERE c.id = :cursusId
+        ';
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('cursusId', $cursusId);
+
+        return $executeQuery ? $query->getOneOrNullResult() : $query;
+    }
 }

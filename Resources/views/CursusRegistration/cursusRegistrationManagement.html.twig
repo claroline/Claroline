@@ -133,7 +133,7 @@
                 </a>
             </div>
             <div id="collapse-hierarchy" class="panel-collapse collapse in">
-                <div class="panel-body">
+                <div class="panel-body table-responsive">
                     {% if hierarchy['root'] is defined %}
                         {% for root in hierarchy['root'] %}
                             {{ showCursus(root, hierarchy, lockedHierarchy, cursus.getId()) }}
@@ -289,6 +289,52 @@
                            data-dismiss="modal"
                            value="{{ 'close'|trans({}, 'platform') }}"
                     />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="course-registration-session-box" class="modal fade" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button"
+                            class="close close-course-registration-session-box-btn"
+                            aria-hidden="true"
+                    >
+                        &times;
+                    </button>
+                    <h3 id="course-registration-session-header">
+                        {{ 'course_sessions_for_registration_selection'|trans({}, 'cursus') }}
+                    </h3>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-danger hidden"
+                         id="course-registration-session-unchecked-warning"
+                    >
+                        <button type="button"
+                                id="close-course-registration-session-unchecked-warning"
+                                class="close"
+                                aria-hidden="true"
+                        >
+                            &times;
+                        </button>
+                        {{ 'empty_choices_msg'|trans({}, 'cursus') }}
+                    </div>
+                    <div id="course-registration-session-content">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <span class="pull-right">
+                        <span class="btn btn-default pointer-hand close-course-registration-session-box-btn">
+                            {{ 'cancel'|trans({}, 'platform') }}
+                        </span>
+                        <span id="confirm-sessions-selection-btn"
+                              class="btn btn-primary pointer-hand"
+                        >
+                            {{ 'ok'|trans({}, 'platform') }}
+                        </span>
+                    </span>
                 </div>
             </div>
         </div>

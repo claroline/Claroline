@@ -150,68 +150,126 @@
 
     $('#view-registration-box').on('click', '.register-user-btn', function () {
         var userId = $(this).data('user-id');
-        var firstName = $(this).data('user-first-name');
-        var lastName = $(this).data('user-last-name');
-        var username = $(this).data('user-username');
         var cursusIdsTxt = '' + $('#cursus-datas-box').data('unlocked-cursus-ids');
         var cursusIds = cursusIdsTxt.split(';');
         var parameters = {};
         parameters.cursusIds = cursusIds;
         var route = Routing.generate(
-            'claro_cursus_multiple_register_user',
+            'claro_cursus_multiple_register_user_confirm_sessions',
             {'user': userId}
         );
         route += '?' + $.param(parameters);
     
         $.ajax({
             url: route,
-            type: 'POST',
-            success: function () {
-                $('#registration-row-user-' + userId).remove();
-//                var userRow = '<tr id="row-user-' + userId + '">' +
-//                    '<td>' + firstName + '</td>' +
-//                    '<td>' + lastName + '</td>' +
-//                    '<td>' + username + '</td>' +
-//                    '<td class="text-center">' +
-//                    '<span class="btn btn-danger btn-sm pointer-hand unregister-btn" data-user-id="' + userId +
-//                    '" data-user-first-name="' + firstName +
-//                    '" data-user-last-name="' + lastName +
-//                    '" data-user-username="' + username +
-//                    '">' +
-//                    Translator.trans('unregister', {}, 'team') +
-//                    '</span>' +
-//                    '</td>' +
-//                    '</tr>';
-//                $('#users-list-table').append(userRow);
-//
-//                if ($('#users-list').hasClass('hidden')) {
-//                    $('#no-user-alert').addClass('hidden');
-//                    $('#users-list').removeClass('hidden');
-//                }
+            type: 'GET',
+            success: function (datas) {
+                $('#course-registration-session-content').html(datas);
             }
         });
+        $('#view-registration-box').modal('hide');
+        $('#course-registration-session-unchecked-warning').addClass('hidden');
+        $('#course-registration-session-box').modal('show');
+    });
+    
+    $('.close-course-registration-session-box-btn').on('click', function () {
+        $('#course-registration-session-box').modal('hide');
+        $('#view-registration-box').modal('show');
+    });
+    
+    $('#confirm-sessions-selection-btn').on('click', function () {
+        var sessions = [];
+        var allChecked = true;
+        
+        $('.sessions-choices-group').each(function () {
+            var name = $(this).data('choices-name');
+            var value = $('input[name="' + name + '"]:checked').val();
+            sessions.push(value);
+            
+            if (value === undefined) {
+                allChecked = false;
+                $('#course-registration-session-unchecked-warning').removeClass('hidden');
+            }
+        });
+        
+        if (allChecked) {
+            var sessionIds = [];
+            
+            for (var i = 0; i < sessions.length; i++) {
+                
+                if (sessions[i] > 0) {
+                    sessionIds.push(sessions[i]);
+                }
+            }
+            var type = $('#multiple-datas-box').data('type');
+            var cursusIdsTxt = '' + $('#cursus-datas-box').data('unlocked-cursus-ids');
+            var cursusIds = cursusIdsTxt.split(';');
+            var parameters = {};
+            parameters.cursusIds = cursusIds;
+            parameters.sessionIds = sessionIds;
+            
+            if (type === 'user') {
+                var userId = $('#multiple-datas-box').data('user-id');
+                var route = Routing.generate(
+                    'claro_cursus_multiple_register_user',
+                    {'user': userId}
+                );
+                route += '?' + $.param(parameters);
+
+                $.ajax({
+                    url: route,
+                    type: 'POST',
+                    success: function () {
+                        $('#registration-row-user-' + userId).remove();
+                        $('#course-registration-session-box').modal('hide');
+                        $('#view-registration-box').modal('show');
+                    }
+                });
+            } else if (type === 'group') {
+                var groupId = $('#multiple-datas-box').data('group-id');
+                var route = Routing.generate(
+                    'claro_cursus_multiple_register_group',
+                    {'group': groupId}
+                );
+                route += '?' + $.param(parameters);
+
+                $.ajax({
+                    url: route,
+                    type: 'POST',
+                    success: function () {
+                        window.location.reload();
+                    }
+                });
+            }
+        }
+    });
+    
+    $('#close-course-registration-session-unchecked-warning').on('click', function () {
+        $('#course-registration-session-unchecked-warning').addClass('hidden');
     });
 
     $('#view-registration-box').on('click', '.register-group-btn', function () {
         var groupId = $(this).data('group-id');
-        var groupName = $(this).data('group-name');
         var cursusIdsTxt = '' + $('#cursus-datas-box').data('unlocked-cursus-ids');
         var cursusIds = cursusIdsTxt.split(';');
         var parameters = {};
         parameters.cursusIds = cursusIds;
         var route = Routing.generate(
-            'claro_cursus_multiple_register_group',
+            'claro_cursus_multiple_register_group_confirm_sessions',
             {'group': groupId}
         );
         route += '?' + $.param(parameters);
     
         $.ajax({
             url: route,
-            type: 'POST',
-            success: function () {
-                window.location.reload();
+            type: 'GET',
+            success: function (datas) {
+                $('#course-registration-session-content').html(datas);
             }
         });
+        $('#view-registration-box').modal('hide');
+        $('#course-registration-session-unchecked-warning').addClass('hidden');
+        $('#course-registration-session-box').modal('show');
     });
 
     $('#users-list').on('click', '.unregister-user-btn', function () {

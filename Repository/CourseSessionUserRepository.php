@@ -56,6 +56,52 @@ class CourseSessionUserRepository extends EntityRepository
         return $executeQuery ? $query->getResult() : $query;
     }
 
+    public function findSessionUsersBySessionAndUsers(
+        CourseSession $session,
+        array $users,
+        $userType,
+        $executeQuery = true
+    )
+    {
+        $dql = '
+            SELECT csu
+            FROM Claroline\CursusBundle\Entity\CourseSessionUser csu
+            WHERE csu.session = :session
+            AND csu.userType = :userType
+            AND csu.user IN (:users)
+            ORDER BY csu.registrationDate DESC
+        ';
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('session', $session);
+        $query->setParameter('users', $users);
+        $query->setParameter('userType', $userType);
+
+        return $executeQuery ? $query->getResult() : $query;
+    }
+
+    public function findSessionUsersBySessionsAndUsers(
+        array $sessions,
+        array $users,
+        $userType,
+        $executeQuery = true
+    )
+    {
+        $dql = '
+            SELECT csu
+            FROM Claroline\CursusBundle\Entity\CourseSessionUser csu
+            WHERE csu.userType = :userType
+            AND csu.session IN (:sessions)
+            AND csu.user IN (:users)
+            ORDER BY csu.registrationDate DESC
+        ';
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('sessions', $sessions);
+        $query->setParameter('users', $users);
+        $query->setParameter('userType', $userType);
+
+        return $executeQuery ? $query->getResult() : $query;
+    }
+
     public function findUnregisteredUsersBySession(
         CourseSession $session,
         $userType,

@@ -12,13 +12,12 @@
 namespace Claroline\CursusBundle\Controller;
 
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CoreBundle\Library\Workspace\Configuration;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Claroline\CursusBundle\Entity\Course;
 use Claroline\CursusBundle\Entity\CourseSession;
+use Claroline\CursusBundle\Entity\CourseSessionGroup;
 use Claroline\CursusBundle\Entity\CourseSessionUser;
 use Claroline\CursusBundle\Entity\Cursus;
 use Claroline\CursusBundle\Entity\CursusDisplayedWord;
@@ -43,7 +42,6 @@ class CourseController extends Controller
     private $request;
     private $roleManager;
     private $securityContext;
-    private $templateDir;
     private $toolManager;
     private $translator;
     private $workspaceManager;
@@ -55,7 +53,6 @@ class CourseController extends Controller
      *     "requestStack"     = @DI\Inject("request_stack"),
      *     "roleManager"      = @DI\Inject("claroline.manager.role_manager"),
      *     "securityContext"  = @DI\Inject("security.context"),
-     *     "templateDir"      = @DI\Inject("%claroline.param.templates_directory%"),
      *     "toolManager"      = @DI\Inject("claroline.manager.tool_manager"),
      *     "translator"       = @DI\Inject("translator"),
      *     "workspaceManager" = @DI\Inject("claroline.manager.workspace_manager")
@@ -67,7 +64,6 @@ class CourseController extends Controller
         RequestStack $requestStack,
         RoleManager $roleManager,
         SecurityContextInterface $securityContext,
-        $templateDir,
         ToolManager $toolManager,
         Translator $translator,
         WorkspaceManager $workspaceManager
@@ -78,7 +74,6 @@ class CourseController extends Controller
         $this->request = $requestStack->getCurrentRequest();
         $this->roleManager = $roleManager;
         $this->securityContext = $securityContext;
-        $this->templateDir = $templateDir;
         $this->toolManager = $toolManager;
         $this->translator = $translator;
         $this->workspaceManager = $workspaceManager;
@@ -367,14 +362,18 @@ class CourseController extends Controller
             $session->setPublicRegistration($course->getPublicRegistration());
             $session->setPublicUnregistration($course->getPublicUnregistration());
             $session->setRegistrationValidation($course->getRegistrationValidation());
-            $workspace = $this->generateWorkspace($course, $session, $authenticatedUser);
+            $workspace = $this->cursusManager->generateWorkspace(
+                $course,
+                $session,
+                $authenticatedUser
+            );
             $session->setWorkspace($workspace);
-            $learnerRole = $this->generateRoleForSession(
+            $learnerRole = $this->cursusManager->generateRoleForSession(
                 $workspace,
                 $course->getLearnerRoleName(),
                 0
             );
-            $tutorRole = $this->generateRoleForSession(
+            $tutorRole = $this->cursusManager->generateRoleForSession(
                 $workspace,
                 $course->getTutorRoleName(),
                 1
@@ -465,8 +464,11 @@ class CourseController extends Controller
     {
         $this->checkToolAccess();
         $sessionUsers = $this->cursusManager->getSessionUsersBySession($session);
+        $sessionGroups = $this->cursusManager->getSessionGroupsBySession($session);
         $learners = array();
         $tutors = array();
+        $learnersGroups = array();
+        $tutorsGroups = array();
 
         foreach ($sessionUsers as $sessionUser) {
 
@@ -477,10 +479,21 @@ class CourseController extends Controller
             }
         }
 
+        foreach ($sessionGroups as $sessionGroup) {
+
+            if ($sessionGroup->getGroupType() === 0) {
+                $learnersGroups[] = $sessionGroup;
+            } elseif ($sessionGroup->getGroupType() === 1) {
+                $tutorsGroups[] = $sessionGroup;
+            }
+        }
+
         return array(
             'session' => $session,
             'learners' => $learners,
-            'tutors' => $tutors
+            'tutors' => $tutors,
+            'learnersGroups' => $learnersGroups,
+            'tutorsGroups' => $tutorsGroups
         );
     }
 
@@ -589,109 +602,22 @@ class CourseController extends Controller
         return new JsonResponse('success', 200);
     }
 
-    private function generateWorkspace(Course $course, CourseSession $session, User $user)
+    /**
+     * @EXT\Route(
+     *     "cursus/course/session/unregister/group/{sessionGroup}",
+     *     name="claro_cursus_course_session_unregister_group",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     *
+     * @param CourseSessionGroup $sessionGroup
+     */
+    public function courseSessionGroupUnregisterAction(CourseSessionGroup $sessionGroup)
     {
-        $model = $course->getWorkspaceModel();
-        $description = $course->getDescription();
-        $displayable = false;
-        $selfRegistration = false;
-        $selfUnregistration = false;
-        $registrationValidation = false;
-        $name = $course->getTitle() .
-            ' [' .
-            $session->getName() .
-            ']';
-        $code = $this->generateWorkspaceCode($course->getCode());
+        $this->checkToolAccess();
+        $this->cursusManager->unregisterGroupFromSession($sessionGroup);
 
-        if (is_null($model)) {
-            $ds = DIRECTORY_SEPARATOR;
-            $config = Configuration::fromTemplate(
-                $this->templateDir . $ds . 'default.zip'
-            );
-            $config->setWorkspaceName($name);
-            $config->setWorkspaceCode($code);
-            $config->setDisplayable($displayable);
-            $config->setSelfRegistration($selfRegistration);
-            $config->setSelfUnregistration($selfUnregistration);
-            $config->setRegistrationValidation($registrationValidation);
-            $config->setWorkspaceDescription($description);
-            $workspace = $this->workspaceManager->create($config, $user);
-        } else {
-            $workspace = $this->workspaceManager->createWorkspaceFromModel(
-                $model,
-                $user,
-                $name,
-                $code,
-                $description,
-                $displayable,
-                $selfRegistration,
-                $selfUnregistration
-            );
-        }
-        $workspace->setWorkspaceType(0);
-        $workspace->setStartDate($session->getStartDate());
-        $workspace->setEndDate($session->getEndDate());
-        $this->workspaceManager->editWorkspace($workspace);
-
-        return $workspace;
-    }
-
-    private function generateRoleForSession(Workspace $workspace, $roleName, $type)
-    {
-        if (empty($roleName)) {
-
-            if ($type === 1) {
-                $role = $this->roleManager->getManagerRole($workspace);
-            } else {
-                $role = $this->roleManager->getCollaboratorRole($workspace);
-            }
-        } else {
-            $roles = $this->roleManager->getRolesByWorkspaceCodeAndTranslationKey(
-                $workspace->getCode(),
-                $roleName
-            );
-
-            if (count($roles) > 0) {
-                $role = $roles[0];
-            } else {
-                $guid = $workspace->getGuid();
-                $wsRoleName = 'ROLE_WS_' . strtoupper($roleName) . '_' . $guid;
-
-                $role = $this->roleManager->getRoleByName($wsRoleName);
-
-                if (is_null($role)) {
-                    $role = $this->roleManager->createWorkspaceRole(
-                        $wsRoleName,
-                        $roleName,
-                        $workspace
-                    );
-                }
-            }
-        }
-
-        return $role;
-    }
-
-    private function generateWorkspaceCode($code)
-    {
-        $workspaceCodes = $this->workspaceManager->getWorkspaceCodesWithPrefix($code);
-        $existingCodes = array();
-
-        foreach ($workspaceCodes as $wsCode) {
-            $existingCodes[] = $wsCode['code'];
-        }
-
-        $index = count($existingCodes) + 1;
-        $currentCode = $code . '_' . $index;
-        $upperCurrentCode = strtoupper($currentCode);
-
-        while (in_array($upperCurrentCode, $existingCodes)) {
-            $index++;
-            $currentCode = $code . '_' . $index;
-            $upperCurrentCode = strtoupper($currentCode);
-        }
-
-        return $currentCode;
+        return new JsonResponse('success', 200);
     }
 
     private function checkToolAccess()
