@@ -114,7 +114,7 @@ class AdministrationController extends Controller
     public function editAction(Request $request, Badge $badge, $page = 1)
     {
         $this->checkOpen();
-        $query   = $this->getDoctrine()->getRepository('IcapBadgeBundle:Badge')->findUsers($badge, false);
+        $query   = $this->getDoctrine()->getRepository('IcapBadgeBundle:UserBadge')->findByBadge($badge, false);
         $adapter = new DoctrineORMAdapter($query);
         $pager   = new Pagerfanta($adapter);
 

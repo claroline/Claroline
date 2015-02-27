@@ -135,7 +135,7 @@ class WorkspaceController extends Controller
 
         $this->checkUserIsAllowed($workspace);
 
-        $query   = $this->getDoctrine()->getRepository('IcapBadgeBundle:Badge')->findUsers($badge, false);
+        $query   = $this->getDoctrine()->getRepository('IcapBadgeBundle:UserBadge')->findByBadge($badge, false);
         $adapter = new DoctrineORMAdapter($query);
         $pager   = new Pagerfanta($adapter);
 

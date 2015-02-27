@@ -93,7 +93,9 @@
                             </tr>
                             </thead>
                             <tbody>
-                            {% for user in pager.currentPageResults %}
+                            {% for userBadge in pager.currentPageResults %}
+                                {% set badge = userBadge.badge %}
+                                {% set user = userBadge.user %}
                                 <tr>
                                     <td>
                                         <a class="close confirm" href="{{ path('icap_badge_workspace_tool_badges_unaward', {'workspaceId': workspace.id, 'id': badge.id, 'username': user.username}) }}" data-toggle="tooltip" title="{{ 'badge_unaward_confirm_title'|trans }}" data-confirm-title="{{ 'badge_unaward_confirm_title'|trans }}" data-confirm-message="{{ 'badge_unaward_confirm_message'|trans({'%badgeName%': badge.name, '%user%': user.firstname ~ ' ' ~ user.lastname}) }}" data-confirm-ok="{{ 'unaward'|trans }}" data-confirm-cancel="{{ 'cancel'|trans({}, 'platform') }}"><span class="fa fa-times-circle-o"></span></a>

@@ -13,28 +13,6 @@ class BadgeRepository extends EntityRepository
 {
     /**
      * @param Badge $badge
-     *
-     * @param bool $executeQuery
-     *
-     * @return Query|array
-     */
-    public function findUsers(Badge $badge, $executeQuery = true)
-    {
-        $query = $this->getEntityManager()
-            ->createQuery(
-                'SELECT ub, u
-                FROM ClarolineCoreBundle:User u
-                JOIN u.userBadges ub
-                WHERE ub.badge = :badgeId
-                ORDER BY u.lastName ASC'
-            )
-            ->setParameter('badgeId', $badge->getId());
-
-        return $executeQuery ? $query->getResult(): $query;
-    }
-
-    /**
-     * @param Badge $badge
      * @param User $user
      *
      * @param bool $executeQuery

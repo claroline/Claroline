@@ -81,7 +81,7 @@
                 {% if 0 < pager.currentPageResults|length %}
                     <h3>
                         {{ 'badge_awarded_to'|trans }} :
-                        <a href="{{ path('claro_admin_badges_award', {'slug': badge.slug}) }}" id="awardUser" role="button" class="btn btn-default pull-right" data-toggle="tooltip" data-placement="left" title="{{ 'award_badge'|trans }}"><span class="fa fa-plus-circle"></span></a>
+                        <a href="{{ path('icap_badge_admin_badges_award', {'slug': badge.slug}) }}" id="awardUser" role="button" class="btn btn-default pull-right" data-toggle="tooltip" data-placement="left" title="{{ 'award_badge'|trans }}"><span class="fa fa-plus-circle"></span></a>
                     </h3>
                     <div class="table-responsive">
                         <table class="table">
@@ -93,7 +93,9 @@
                             </tr>
                             </thead>
                             <tbody>
-                            {% for user in pager.currentPageResults %}
+                            {% for userBadge in pager.currentPageResults %}
+                                {% set badge = userBadge.badge %}
+                                {% set user = userBadge.user %}
                                 <tr>
                                     <td>
                                         <a class="close confirm" href="{{ path('icap_badge_admin_badges_unaward', {'slug': badge.slug, 'username': user.username}) }}"

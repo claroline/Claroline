@@ -148,4 +148,24 @@ class UserBadgeRepository extends EntityRepository
                 ->setMaxResults($limit)
                 ->getResult();
     }
+
+    /**
+     * @param Badge $badge
+     *
+     * @param bool $executeQuery
+     *
+     * @return Query|array
+     */
+    public function findByBadge(Badge $badge, $executeQuery = true)
+    {
+        $query = $this->getEntityManager()
+            ->createQuery(
+                'SELECT userBadge
+                FROM IcapBadgeBundle:UserBadge userBadge
+                WHERE userBadge.badge = :badgeId'
+            )
+            ->setParameter('badgeId', $badge->getId());
+
+        return $executeQuery ? $query->getResult(): $query;
+    }
 }
