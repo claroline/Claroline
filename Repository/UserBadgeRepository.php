@@ -13,7 +13,7 @@ class UserBadgeRepository extends EntityRepository
      * @param Badge $badge
      * @param User  $user
      *
-     * @return \Claroline\CoreBundle\Entity\Badge\UserBadge|null
+     * @return \Icap\badgeBundle\Entity\UserBadge|null
      */
     public function findOneByBadgeAndUser(Badge $badge, User $user)
     {
