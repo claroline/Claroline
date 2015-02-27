@@ -1,0 +1,41 @@
+course: Course
+course_form_code: Code
+course_form_description: Description
+course_form_learnerRoleName: 'Learner role'
+course_form_publicRegistration: 'Public registration'
+course_form_publicUnregistration: 'Public unregistration'
+course_form_registrationValidation: 'Registration validation'
+course_form_title: Title
+course_form_tutorRoleName: 'Tutor role'
+course_form_workspaceModel: 'Workspace model'
+course_session_form_defaultSession: 'Mark as default'
+course_session_form_end_date: 'End date'
+course_session_form_name: Name
+course_session_form_publicRegistration: 'Public registration'
+course_session_form_publicUnregistration: 'Public unregistration'
+course_session_form_registrationValidation: 'Registration validation'
+course_session_form_sessionStatus: 'Status'
+course_session_form_start_date: 'Start date'
+create_cursus: 'Create "%cursusWord%"'
+cursus: Cursus
+cursus_form_code: Code
+cursus_form_description: Description
+cursus_form_title: Title
+cursus_plugin_configuration: 'Cursus plugin configuration'
+default: Default
+delete_course_session_workspace_confirm_msg: 'Also delete associated workspace'
+displayed_word: 'Displayed word'
+nothing_to_configure: 'Nothing to configure'
+public_registration: 'Public registration'
+public_unregistration: 'Public unregistration'
+registration_date: 'Registration date'
+registration_validation: 'Registration validation'
+register: Register
+session: Session
+session_closed: 'Closed'
+session_not_started: 'Not started'
+session_open: 'Ongoing'
+the_displayed_word_for: 'The displayed word for'
+unregister: Unregister
+will_be: 'will be'
+word: 'Word'

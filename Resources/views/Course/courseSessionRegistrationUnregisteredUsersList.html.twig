@@ -1,0 +1,136 @@
+{% macro renderPager(pager, session, userType, search, orderedBy, order, max) %}
+    {{
+        pagerfanta(
+            pager,
+            'twitter_bootstrap_translated',
+            {
+                'proximity' : 1,
+                'routeName': 'claro_cursus_course_session_registration_unregistered_users_list',
+                'routeParams': {
+                    'session': session.getId(),
+                    'userType': userType,
+                    'search': search,
+                    'orderedBy': orderedBy,
+                    'order': order,
+                    'max': max
+                }
+            }
+        )
+    }}
+{% endmacro %}
+
+{% macro sortUrl(session, userType, search, orderedBy, order, max) %}
+    {% if order == 'ASC' %}
+        {% set newOrder = 'DESC' %}
+    {% else %}
+        {% set newOrder = 'ASC' %}
+    {% endif %}
+    {{ 
+        path(
+            'claro_cursus_course_session_registration_unregistered_users_list',
+            {
+                'session': session.getId(), 
+                'userType': userType,
+                'search': search,
+                'orderedBy': orderedBy,
+                'order': newOrder,
+                'max': max
+            }
+        )
+    }}
+{% endmacro %}
+
+{% from _self import renderPager %}
+{% from _self import sortUrl %}
+
+{% if search != '' %}
+    <div class="alert alert-info">
+        {{ 'results_for_search_on'|trans({}, 'platform') }} :
+        "{{ search }}"
+    </div>
+{% endif %}
+
+<div class="input-group col-md-6 pull-right">
+    <input class="form-control search-user"
+           type="text"
+           id="search-user-input"
+           data-session-id="{{ session.getId() }}"
+           data-user-type="{{ userType }}"
+           data-ordered-by="{{ orderedBy }}"
+           data-order="{{ order }}"
+           data-max="{{ max }}"
+           placeholder="{{ 'search'|trans({}, 'platform') }}"
+           value="{{ search }}"
+    >
+    <span class="input-group-btn">
+        <button class="filter btn btn-default"
+                type="button"
+                id="search-user-btn"
+        >
+            <i class="fa fa-search"></i>
+        </button>
+    </span>
+</div>
+<br>
+<br>
+<br>
+
+{% if users|length == 0 %}
+    <div class="alert alert-warning">
+        {{ 'no_user'|trans({}, 'platform') }}
+    </div>
+{% else %}
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered table-condensed">
+            <tr>
+                <th>
+                    <a href="{{ sortUrl(session, userType, search, 'firstName', order, max) }}"
+                       data-ordered-by="firstName"
+                    >
+                        {{ 'firstName'|trans({}, 'platform') }}
+                    </a>
+                </th>
+                <th>
+                    <a href="{{ sortUrl(session, userType, search, 'lastName', order, max) }}"
+                       data-ordered-by="firstName"
+                    >
+                        {{ 'lastName'|trans({}, 'platform') }}
+                    </a>
+                </th>
+                <th>
+                    <a href="{{ sortUrl(session, userType, search, 'username', order, max) }}"
+                       data-ordered-by="username"
+                    >
+                        {{ 'username'|trans({}, 'platform') }}
+                    </a>
+                </th>
+                <th>
+                </th>
+            </tr>
+            
+            {% for user in users %}
+                <tr id="registration-row-user-{{ user.getId() }}">
+                    <td>{{ user.getFirstName() }}</td>
+                    <td>{{ user.getLastName() }}</td>
+                    <td>{{ user.getUsername() }}</td>
+                    <td class="text-center">
+                        <span class="btn btn-success btn-sm pointer-hand register-user-btn"
+                              data-session-id="{{ session.getId() }}"
+                              data-user-type="{{ userType }}"
+                              data-user-id="{{ user.getId() }}"
+                              data-user-username="{{ user.getUsername() }}"
+                              data-user-first-name="{{ user.getFirstName() }}"
+                              data-user-last-name="{{ user.getLastName() }}"
+                        >
+                            {{ 'register'|trans({}, 'cursus') }}
+                        </span>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+        
+    {% if users.getNbPages() > 1 %}
+        {{ renderPager(users, session, userType, search, orderedBy, order, max) }}
+    {% endif %}
+{% endif %}
