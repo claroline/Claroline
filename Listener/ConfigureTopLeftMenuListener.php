@@ -29,28 +29,28 @@ class ConfigureTopLeftMenuListener
         $this->securityContext = $securityContext;
         $this->translator = $translator;
     }
-
-    /**
-     * @DI\Observe("claroline_top_bar_left_menu_configure")
-     *
-     * @param \Acme\DemoBundle\Event\ConfigureMenuEvent $event
-     */
-    public function onMenuConfigure(ConfigureMenuEvent $event)
-    {
-        $user = $this->securityContext->getToken()->getUser();
-
-        if ($user !== 'anon.') {
-            $menu = $event->getMenu();
-            $menu->addChild(
-                $this->translator->trans('courses_list', array(), 'cursus'),
-                array('route' => 'claro_cursus_tool_course_index')
-            )->setExtra('icon', 'fa fa-university')
-            ->setExtra(
-                'title',
-                $this->translator->trans('courses_list', array(), 'cursus')
-            );
 //
-            return $menu;
-        }
-    }
+//    /**
+//     * @DI\Observe("claroline_top_bar_left_menu_configure")
+//     *
+//     * @param \Acme\DemoBundle\Event\ConfigureMenuEvent $event
+//     */
+//    public function onMenuConfigure(ConfigureMenuEvent $event)
+//    {
+//        $user = $this->securityContext->getToken()->getUser();
+//
+//        if ($user !== 'anon.') {
+//            $menu = $event->getMenu();
+//            $menu->addChild(
+//                $this->translator->trans('courses_list', array(), 'cursus'),
+//                array('route' => 'claro_cursus_tool_course_index')
+//            )->setExtra('icon', 'fa fa-university')
+//            ->setExtra(
+//                'title',
+//                $this->translator->trans('courses_list', array(), 'cursus')
+//            );
+//
+//            return $menu;
+//        }
+//    }
 }
