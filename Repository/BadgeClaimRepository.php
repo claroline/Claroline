@@ -6,6 +6,7 @@ use Claroline\CoreBundle\Entity;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\ORM\EntityRepository;
+use Icap\BadgeBundle\Entity\Badge;
 
 class BadgeClaimRepository extends EntityRepository
 {
@@ -29,6 +30,17 @@ class BadgeClaimRepository extends EntityRepository
             ->setParameter('userId', $user->getId());
 
         return ($getQuery) ? $query: $query->getResult();
+    }
+
+    /**
+     * @param Badge $badge
+     * @param User  $user
+     *
+     * @return \Icap\badgeBundle\Entity\BadgeClaim|null
+     */
+    public function findOneByBadgeAndUser(Badge $badge, User $user)
+    {
+        return $this->findOneBy(array('badge' => $badge, 'user' => $user));
     }
 
     /**

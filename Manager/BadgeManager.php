@@ -210,9 +210,15 @@ class BadgeManager
 
     public function makeClaim(Badge $badge, User $user)
     {
-        if ($user->hasBadge($badge)) {
+        $userBadge = $this->entityManager->getRepository('IcapBadgeBundle:UserBadge')->findOneByBadgeAndUser($badge, $user);
+
+        if (null !== $userBadge) {
             throw new \Exception('badge_already_award_message');
-        } elseif ($user->hasClaimedFor($badge)) {
+        }
+
+        $badgeClaim = $this->entityManager->getRepository('IcapBadgeBundle:BadgeClaim')->findOneByBadgeAndUser($badge, $user);
+
+        if (null !== $badgeClaim) {
             throw new \Exception('badge_already_claim_message');
         }
 
