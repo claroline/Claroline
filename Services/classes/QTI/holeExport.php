@@ -209,6 +209,13 @@ class holeExport extends qtiExport
     {
         libxml_use_internal_errors(true);
         $doc = simplexml_load_string($xml);
+        $errors = libxml_get_errors();
+        foreach ($errors as $error) {
+            echo $error->level." - ";
+            echo $error->code."<br>" ;
+        }
+
+        die($xml);
 
         return (count(libxml_get_errors()));
     }
