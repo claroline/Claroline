@@ -2,6 +2,7 @@
 
 namespace Icap\BadgeBundle\Form\Type\Tool\Workspace;
 
+use Icap\BadgeBundle\Entity\Badge;
 use Icap\BadgeBundle\Form\Type\BadgeTranslationType;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Manager\LocaleManager;
@@ -31,8 +32,8 @@ class BadgeType extends AbstractType
 
     /**
      * @DI\InjectParams({
-     *     "badgeRuleType" = @DI\Inject("icap_badge.form.badge.workspace.rule"),
-     *     "localeManager" = @DI\Inject("claroline.common.locale_manager"),
+     *     "badgeRuleType"         = @DI\Inject("icap_badge.form.badge.workspace.rule"),
+     *     "localeManager"         = @DI\Inject("claroline.common.locale_manager"),
      *     "platformConfigHandler" = @DI\Inject("claroline.config.platform_config_handler")
      * })
      */

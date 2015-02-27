@@ -404,7 +404,7 @@ class WorkspaceController extends Controller
         }
 
         return $this->redirect(
-            $this->generateUrl('claro_workspace_tool_badges', array('workspaceId' => $workspace->getId()))
+            $this->generateUrl('icap_badge_workspace_tool_badges', array('workspaceId' => $workspace->getId()))
         );
     }
 

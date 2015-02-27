@@ -27,7 +27,7 @@
 {% block section_title %}{{ 'add_badge'|trans }}{% endblock %}
 
 {% block section_body %}
-    <form role="form" action="{{ path('claro_workspace_tool_badges_add', {'workspaceId': workspace.id}) }}" method="post" class="form-horizontal" {{ form_enctype(form) }} novalidate>
+    <form role="form" action="{{ path('icap_badge_workspace_tool_badges_add', {'workspaceId': workspace.id}) }}" method="post" class="form-horizontal" {{ form_enctype(form) }} novalidate>
         {% if not form.vars.valid %}
             {% for error in form.vars.errors %}
             <div class="alert alert-danger">
@@ -141,7 +141,7 @@
         {{ form_rest(form) }}
         <div class="form-actions">
             <button type="submit" class="btn btn-primary">{{ 'add'|trans({}, 'platform') }}</button>
-            <a href="{{ path('claro_workspace_tool_badges', {'workspaceId': workspace.id}) }}" title="{{ 'cancel'|trans({}, 'platform') }}" class="btn btn-default" role="button">
+            <a href="{{ path('icap_badge_workspace_tool_badges', {'workspaceId': workspace.id}) }}" title="{{ 'cancel'|trans({}, 'platform') }}" class="btn btn-default" role="button">
                 {{ 'cancel'|trans({}, 'platform') }}
             </a>
         </div>
@@ -153,7 +153,7 @@
     {{ parent() }}
     <link rel="stylesheet" href="{{ asset('bundles/frontend/jquery/plugin/select2/select2.css') }}" screen="media" />
     {% stylesheets debug=false filter="lessphp, cssmin" output="css/clarolinecore/badge_picker.css"
-        "@ClarolineCoreBundle/Resources/views/Badge/less/badge_picker.less"
+        "@IcapBadgeBundle/Resources/views/less/badge_picker.less"
     %}
         <link rel="stylesheet" href="{{ asset_url }}" screen="media" />
     {% endstylesheets %}

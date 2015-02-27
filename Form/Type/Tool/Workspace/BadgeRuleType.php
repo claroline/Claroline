@@ -3,7 +3,7 @@
 namespace Icap\BadgeBundle\Form\Type\Tool\Workspace;
 
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
-use Claroline\CoreBundle\Manager\BadgeManager;
+use Icap\BadgeBundle\Manager\BadgeManager;
 use Claroline\CoreBundle\Manager\EventManager;
 use Icap\BadgeBundle\Entity\BadgeRule;
 use Icap\BadgeBundle\Repository\BadgeRepository;
