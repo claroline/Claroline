@@ -1,6 +1,6 @@
 {% extends "IcapBadgeBundle::layout.html.twig" %}
 
-{% block title %}{{ parent() ~ ' - ' ~ 'my_badges' | trans({}, 'platform') | striptags | raw }}{% endblock %}
+{% block title %}{{ parent() ~ ' - ' ~ 'my_badges' | trans({}, 'icap_badge') | striptags | raw }}{% endblock %}
 
 {% trans_default_domain "icap_badge" %}
 
@@ -10,7 +10,7 @@
     <div class="panel panel-default">
         <div class="panel-heading">
             <h1 class="panel-title">
-                {{ 'my_badges'|trans({}, 'platform') }}
+                {{ 'my_badges'|trans({}, 'icap_badge') }}
                 <a href="{{ path('icap_badge_claim_badge') }}" class="btn btn-default btn-xs" role="button">{{ 'claim_badge'|trans }}</a>
             </h1>
         </div>

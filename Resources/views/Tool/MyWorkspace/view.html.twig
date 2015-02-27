@@ -32,9 +32,9 @@
         </div>
         <div class="panel-body badge_infos">
             {% if null == userBadge.issuer %}
-                <p>{{ 'badge_awarded_automatically_on'|trans({'%awardingDate%': userBadge.issuedAt|date('date_format'|trans({}, 'platform'))}, 'badge') }}</p>
+                <p>{{ 'badge_awarded_automatically_on'|trans({'%awardingDate%': userBadge.issuedAt|date('date_format'|trans({}, 'platform'))}, 'icap_badge') }}</p>
             {% else %}
-                <p>{{ 'badge_awarded_on_by'|trans({'%awardingDate%': userBadge.issuedAt|date('date_format'|trans({}, 'platform')), '%awardingIssuer%': '<a href="' ~ path("claro_profile_view", {"userId": userBadge.issuer.id}) ~ '" title="' ~ userBadge.issuer.firstname ~ ' ' ~ userBadge.issuer.lastname ~ '">' ~ userBadge.issuer.firstname ~ ' ' ~ userBadge.issuer.lastname ~ '</a>'}, 'badge')|raw }}</p>
+                <p>{{ 'badge_awarded_on_by'|trans({'%awardingDate%': userBadge.issuedAt|date('date_format'|trans({}, 'platform')), '%awardingIssuer%': '<a href="' ~ path("claro_profile_view", {"userId": userBadge.issuer.id}) ~ '" title="' ~ userBadge.issuer.firstname ~ ' ' ~ userBadge.issuer.lastname ~ '">' ~ userBadge.issuer.firstname ~ ' ' ~ userBadge.issuer.lastname ~ '</a>'}, 'icap_badge')|raw }}</p>
             {% endif %}
             {% if userBadge.isExpiring %}
                 {% if userBadge.isExpired %}
@@ -82,7 +82,7 @@
                 {% if 0 == validatedRules.validRules %}
                 <div class="alert alert-danger">{{ 'badge_awarding_rules_not_respected'|trans({}, 'icap_badge') }}.</div>
                 {% elseif validatedRules.validRules < nbRules %}
-                <div class="alert alert-info">{{ 'badge_awarding_some_rules_respected'|trans({'%nbvalidRules%': validatedRules.validRules, '%nbRules%': nbRules}, 'badge') }}.</div>
+                <div class="alert alert-info">{{ 'badge_awarding_some_rules_respected'|trans({'%nbvalidRules%': validatedRules.validRules, '%nbRules%': nbRules}, 'icap_badge') }}.</div>
                 {% else %}
                 <div class="badge_rules_resources">
                     <h4>{{ 'actions_lead_to_badge_awarding'|trans({}, 'icap_badge') }} :</h4>

@@ -21,7 +21,7 @@
                         </a>
                     </li>
                     <li role="presentation">
-                        <a role="menuitem" href="{{ path(parameters.delete_link, {'slug': badge.slug}|merge(parameters.route_parameters)) }}" class="node-menu-action confirm" data-confirm-title="{{ 'badge_delete_confirm_title'|trans({}, 'icap_badge') }}" data-confirm-message="{{ 'badge_delete_confirm_message'|trans({'%badgeName%': badge.name}, 'badge') }}" data-confirm-ok="{{ 'delete'|trans({}, 'platform') }}" data-confirm-cancel="{{ 'cancel'|trans({}, 'platform') }}" data-confirm-style="danger">
+                        <a role="menuitem" href="{{ path(parameters.delete_link, {'slug': badge.slug}|merge(parameters.route_parameters)) }}" class="node-menu-action confirm" data-confirm-title="{{ 'badge_delete_confirm_title'|trans({}, 'icap_badge') }}" data-confirm-message="{{ 'badge_delete_confirm_message'|trans({'%badgeName%': badge.name}, 'icap_badge') }}" data-confirm-ok="{{ 'delete'|trans({}, 'platform') }}" data-confirm-cancel="{{ 'cancel'|trans({}, 'platform') }}" data-confirm-style="danger">
                             {{ 'delete'|trans({}, 'platform') }}
                         </a>
                     </li>

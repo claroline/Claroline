@@ -16,7 +16,7 @@
 
             <div class="media-body">
                 <h4 class="media-heading"><a href="{{ path('icap_badge_view_badge', {'slug': userBadge.badge.slug}) }}" title="{{ userBadge.badge.name }}">{{ userBadge.badge.name }}</a></h4>
-                <p>{{ 'badge_awarded_to_full' | trans({'%userUrl%': path('claro_public_profile_view', {'publicUrl': userBadge.user.publicUrl}), '%user%': userBadge.user.lastName ~ ' ' ~ userBadge.user.firstName, '%issuerUrl%': path('claro_public_profile_view', {'publicUrl': userBadge.issuer.publicUrl}), '%issuer%': userBadge.user.lastName ~ ' ' ~ userBadge.user.firstName}, 'badge') | raw }}</p>
+                <p>{{ 'badge_awarded_to_full' | trans({'%userUrl%': path('claro_public_profile_view', {'publicUrl': userBadge.user.publicUrl}), '%user%': userBadge.user.lastName ~ ' ' ~ userBadge.user.firstName, '%issuerUrl%': path('claro_public_profile_view', {'publicUrl': userBadge.issuer.publicUrl}), '%issuer%': userBadge.user.lastName ~ ' ' ~ userBadge.user.firstName}, 'icap_badge') | raw }}</p>
             </div>
         </li>
     {% else %}
@@ -34,7 +34,7 @@
 
         <div class="media-body">
             <h4 class="media-heading"><a href="{{ path('icap_badge_view_badge', {'slug': userBadge.0.badge.slug}) }}" title="{{ userBadge.0.badge.name }}">{{ userBadge.0.badge.name }}</a></h4>
-            <p>{{ 'badge_awarded_nb_times'|trans({'%nbTimes%': userBadge.awardedNumber}, 'badge') }}</p>
+            <p>{{ 'badge_awarded_nb_times'|trans({'%nbTimes%': userBadge.awardedNumber}, 'icap_badge') }}</p>
         </div>
     </li>
     {% else %}

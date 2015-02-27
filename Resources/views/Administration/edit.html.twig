@@ -19,14 +19,14 @@
                 'href': path('icap_badge_admin_badges')
             },
             {
-                'name': 'view_badge'|trans({'%badge_name%': badge.name}, 'badge'),
+                'name': 'view_badge'|trans({'%badge_name%': badge.name}, 'icap_badge'),
                 'href': ''
             }
         ])
     }}
 {% endblock %}
 
-{% block section_title %}{{ 'view_badge'|trans({'%badge_name%': badge.name}, 'badge') }}{% endblock %}
+{% block section_title %}{{ 'view_badge'|trans({'%badge_name%': badge.name}, 'icap_badge') }}{% endblock %}
 
 {% block section_body %}
     <ul class="nav nav-tabs">

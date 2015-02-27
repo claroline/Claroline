@@ -7,7 +7,7 @@
                 {% set userBadge = workspaceBadge.badge %}
                 <div class="panel panel-default badge_panel owned_badge">
                     <div class="panel-heading">
-                        <h3 class="panel-title">{{ badge.name }}<small class="pull-right"><span class="fa fa-check"></span> {{ 'badge_awarded_on'|trans({'%awardingDate%': userBadge.issuedAt|date('date_format'|trans({}, 'platform'))}, 'badge') }}</small></h3>
+                        <h3 class="panel-title">{{ badge.name }}<small class="pull-right"><span class="fa fa-check"></span> {{ 'badge_awarded_on'|trans({'%awardingDate%': userBadge.issuedAt|date('date_format'|trans({}, 'platform'))}, 'icap_badge') }}</small></h3>
                     </div>
                     <div class="panel-body">
                         <div class="col-md-4">
