@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2015/02/25 10:08:41
+ * Generation date: 2015/02/27 10:36:06
  */
-class Version20150225100839 extends AbstractMigration
+class Version20150227103604 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -102,7 +102,6 @@ class Version20150225100839 extends AbstractMigration
                 workspace_id INT DEFAULT NULL, 
                 learner_role_id INT DEFAULT NULL, 
                 tutor_role_id INT DEFAULT NULL, 
-                cursus_id INT DEFAULT NULL, 
                 session_name VARCHAR(255) NOT NULL, 
                 session_status INT NOT NULL, 
                 default_session BOOLEAN NOT NULL, 
@@ -128,7 +127,17 @@ class Version20150225100839 extends AbstractMigration
             CREATE UNIQUE INDEX UNIQ_C5F56FDEBEFB2F13 ON claro_cursusbundle_course_session (tutor_role_id)
         ");
         $this->addSql("
-            CREATE INDEX IDX_C5F56FDE40AEF4B9 ON claro_cursusbundle_course_session (cursus_id)
+            CREATE TABLE claro_cursus_sessions (
+                coursesession_id INT NOT NULL, 
+                cursus_id INT NOT NULL, 
+                PRIMARY KEY(coursesession_id, cursus_id)
+            )
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_5256A813AE020D6E ON claro_cursus_sessions (coursesession_id)
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_5256A81340AEF4B9 ON claro_cursus_sessions (cursus_id)
         ");
         $this->addSql("
             CREATE TABLE claro_cursusbundle_cursus_group (
@@ -260,10 +269,16 @@ class Version20150225100839 extends AbstractMigration
             ON DELETE SET NULL NOT DEFERRABLE INITIALLY IMMEDIATE
         ");
         $this->addSql("
-            ALTER TABLE claro_cursusbundle_course_session 
-            ADD CONSTRAINT FK_C5F56FDE40AEF4B9 FOREIGN KEY (cursus_id) 
+            ALTER TABLE claro_cursus_sessions 
+            ADD CONSTRAINT FK_5256A813AE020D6E FOREIGN KEY (coursesession_id) 
+            REFERENCES claro_cursusbundle_course_session (id) 
+            ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE
+        ");
+        $this->addSql("
+            ALTER TABLE claro_cursus_sessions 
+            ADD CONSTRAINT FK_5256A81340AEF4B9 FOREIGN KEY (cursus_id) 
             REFERENCES claro_cursusbundle_cursus (id) 
-            ON DELETE SET NULL NOT DEFERRABLE INITIALLY IMMEDIATE
+            ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE
         ");
         $this->addSql("
             ALTER TABLE claro_cursusbundle_cursus_group 
@@ -330,8 +345,8 @@ class Version20150225100839 extends AbstractMigration
             DROP CONSTRAINT FK_27921C33727ACA70
         ");
         $this->addSql("
-            ALTER TABLE claro_cursusbundle_course_session 
-            DROP CONSTRAINT FK_C5F56FDE40AEF4B9
+            ALTER TABLE claro_cursus_sessions 
+            DROP CONSTRAINT FK_5256A81340AEF4B9
         ");
         $this->addSql("
             ALTER TABLE claro_cursusbundle_cursus_group 
@@ -344,6 +359,10 @@ class Version20150225100839 extends AbstractMigration
         $this->addSql("
             ALTER TABLE claro_cursusbundle_course_session_group 
             DROP CONSTRAINT FK_F27287A4613FECDF
+        ");
+        $this->addSql("
+            ALTER TABLE claro_cursus_sessions 
+            DROP CONSTRAINT FK_5256A813AE020D6E
         ");
         $this->addSql("
             ALTER TABLE claro_cursusbundle_course_session_user 
@@ -367,6 +386,9 @@ class Version20150225100839 extends AbstractMigration
         ");
         $this->addSql("
             DROP TABLE claro_cursusbundle_course_session
+        ");
+        $this->addSql("
+            DROP TABLE claro_cursus_sessions
         ");
         $this->addSql("
             DROP TABLE claro_cursusbundle_cursus_group

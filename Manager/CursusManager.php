@@ -793,7 +793,8 @@ class CursusManager
         $session = new CourseSession();
         $session->setName($sessionName);
         $session->setCourse($course);
-        $session->setCursus($cursus);
+//        $session->addCursus($cursus);
+//        $session->setCursus($cursus);
         $session->setCreationDate($registrationDate);
         $session->setPublicRegistration($course->getPublicRegistration());
         $session->setPublicUnregistration($course->getPublicUnregistration());

@@ -76,10 +76,10 @@ class CourseSession
     protected $tutorRole;
 
     /**
-     * @ORM\ManyToOne(
+     * @ORM\ManyToMany(
      *     targetEntity="Claroline\CursusBundle\Entity\Cursus"
      * )
-     * @ORM\JoinColumn(name="cursus_id", nullable=true, onDelete="SET NULL")
+     * @ORM\JoinTable(name="claro_cursus_sessions")
      */
     protected $cursus;
 
@@ -141,6 +141,7 @@ class CourseSession
 
     public function __construct()
     {
+        $this->cursus = new ArrayCollection();
         $this->sessionUsers = new ArrayCollection();
         $this->sessionGroups = new ArrayCollection();
     }
@@ -187,12 +188,25 @@ class CourseSession
 
     public function getCursus()
     {
-        return $this->cursus;
+        return $this->cursus->toArray();
     }
 
-    public function setCursus(Cursus $cursus)
+    public function addCursus(Cursus $cursus)
     {
-        $this->cursus = $cursus;
+        if (!$this->cursus->contains($cursus)) {
+            $this->cursus->add($cursus);
+        }
+
+        return $this;
+    }
+
+    public function removeCursus(Cursus $cursus)
+    {
+        if ($this->cursus->contains($cursus)) {
+            $this->cursus->removeElement($cursus);
+        }
+
+        return $this;
     }
 
     public function getSessionStatus()
