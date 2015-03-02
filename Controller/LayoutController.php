@@ -24,7 +24,6 @@ use Claroline\CoreBundle\Manager\MessageManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
-use Claroline\CoreBundle\Manager\BundleManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Manager\HomeManager;
@@ -44,7 +43,6 @@ class LayoutController extends Controller
     private $translator;
     private $configHandler;
     private $toolManager;
-    private $bundleManager;
 
     /**
      * @DI\InjectParams({
@@ -57,8 +55,7 @@ class LayoutController extends Controller
      *     "translator"         = @DI\Inject("translator"),
      *     "configHandler"      = @DI\Inject("claroline.config.platform_config_handler"),
      *     "toolManager"        = @DI\Inject("claroline.manager.tool_manager"),
-     *     "homeManager"        = @DI\Inject("claroline.manager.home_manager"),
-     *     "bundleManager"      = @DI\Inject("claroline.manager.bundle_manager")
+     *     "homeManager"        = @DI\Inject("claroline.manager.home_manager")
      * })
      */
     public function __construct(
@@ -71,8 +68,7 @@ class LayoutController extends Controller
         Utilities $utils,
         Translator $translator,
         PlatformConfigurationHandler $configHandler,
-        HomeManager $homeManager,
-        BundleManager $bundleManager
+        HomeManager $homeManager
     )
     {
         $this->messageManager = $messageManager;
@@ -85,7 +81,6 @@ class LayoutController extends Controller
         $this->translator = $translator;
         $this->configHandler = $configHandler;
         $this->homeManager = $homeManager;
-        $this->bundleManager = $bundleManager;
     }
 
     /**
@@ -109,12 +104,19 @@ class LayoutController extends Controller
      */
     public function footerAction()
     {
+        $jsonFile = __DIR__ . '/../composer.json';
+        $data = json_decode(file_get_contents($jsonFile));
+        $coreVersion = $data->version;
+        //for some reason this doesn't work unless we use the cache:warm command. Since it's annoying
+        //and that I can't find why, we retrieve the version the old fashioned way;
+        //$bundleManager = $this->get('claroline.manager.bundle_manager');
+
         return array(
             'footerMessage' => $this->configHandler->getParameter('footer'),
             'footerLogin' => $this->configHandler->getParameter('footer_login'),
             'footerWorkspaces' => $this->configHandler->getParameter('footer_workspaces'),
             'headerLocale' => $this->configHandler->getParameter('header_locale'),
-            'coreVersion' => $this->bundleManager->getCoreBundleVersion()
+            'coreVersion' => $coreVersion
         );
     }
 
