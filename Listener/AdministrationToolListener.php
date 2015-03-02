@@ -195,6 +195,7 @@ class AdministrationToolListener
         $params['_controller'] = 'ClarolineCoreBundle:Administration\CompetenceSubscription:menu';
         $this->redirect($params, $event);
     }
+    
     private function redirect($params, $event)
     {
         $subRequest = $this->request->duplicate(array(), null, $params);
