@@ -23,7 +23,6 @@ use Claroline\CoreBundle\Manager\IniFileManager;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Utilities\FileSystem;
-use Claroline\KernelBundle\Kernel\SwitchKernel;
 use Symfony\Component\Console\Output\StreamOutput;
 
 /**
@@ -39,7 +38,6 @@ class BundleManager
     private $iniFileManager;
     private $installer;
     private $refresher;
-    private $kernel;
 
     /**
      * @InjectParams({
@@ -49,8 +47,7 @@ class BundleManager
      *      "vendorDir"      = @Inject("%claroline.param.vendor_directory%"),
      *      "iniFileManager" = @Inject("claroline.manager.ini_file_manager"),
      *      "installer"      = @Inject("claroline.installation.platform_installer"),
-     *      "refresher"      = @Inject("claroline.installation.refresher"),
-     *      "kernek"         = @Inject("kernel")
+     *      "refresher"      = @Inject("claroline.installation.refresher")
      * })
      */
     public function __construct(
@@ -60,8 +57,7 @@ class BundleManager
         $vendorDir,
         IniFileManager $iniFileManager,
         $installer,
-        $refresher,
-        $kernel
+        $refresher
     )
     {
         $this->om               = $om;
@@ -72,7 +68,6 @@ class BundleManager
         $this->iniFileManager   = $iniFileManager;
         $this->installer        = $installer;
         $this->refresher        = $refresher;
-        $this->kernel           = $kernel;
     }
 
     public function getBundle($bundle)
