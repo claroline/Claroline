@@ -407,7 +407,14 @@ class CursusController extends Controller
             }
             $this->cursusManager->persistCursus($cursus);
 
-            return new JsonResponse('success', 200);
+            return new JsonResponse(
+                array(
+                    'parent_id' => $parent->getId(),
+                    'id' => $cursus->getId(),
+                    'title' => $cursus->getTitle()
+                ),
+                200
+            );
         } else {
 
             return array(
@@ -448,8 +455,21 @@ class CursusController extends Controller
         $this->checkToolAccess();
 
         $courses = $search === '' ?
-            $this->cursusManager->getAllCourses($orderedBy, $order, $page, $max) :
-            $this->cursusManager->getSearchedCourses($search, $orderedBy, $order, $page, $max);
+            $this->cursusManager->getUnmappedCoursesByCursus(
+                $cursus,
+                $orderedBy,
+                $order,
+                $page,
+                $max
+            ) :
+            $this->cursusManager->getUnmappedSearchedCoursesByCursus(
+                $cursus,
+                $search,
+                $orderedBy,
+                $order,
+                $page,
+                $max
+            );
 
         return array(
             'cursus' => $cursus,
@@ -513,9 +533,14 @@ class CursusController extends Controller
     public function cursusCourseAddAction(Cursus $cursus, Course $course)
     {
         $this->checkToolAccess();
-        $this->cursusManager->addCoursesToCursus($cursus, array($course));
+        $createdCursus = $this->cursusManager->addCoursesToCursus($cursus, array($course));
+        $results = array();
 
-        return new JsonResponse('success', 200);
+        foreach ($createdCursus as $created) {
+            $results[] = array('id' => $created->getId(), 'title' => $created->getTitle());
+        }
+
+        return new JsonResponse($results, 200);
     }
 
     /**

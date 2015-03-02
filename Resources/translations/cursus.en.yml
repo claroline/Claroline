@@ -1,41 +1,56 @@
-course: Course
-course_form_code: Code
-course_form_description: Description
+add_course: 'Add course'
+add_course_to_cursus: 'Add a course'
+course: 'Course'
+course_form_code: 'Code'
+course_form_description: 'Description'
 course_form_learnerRoleName: 'Learner role'
 course_form_publicRegistration: 'Public registration'
 course_form_publicUnregistration: 'Public unregistration'
 course_form_registrationValidation: 'Registration validation'
-course_form_title: Title
+course_form_title: 'Title'
 course_form_tutorRoleName: 'Tutor role'
 course_form_workspaceModel: 'Workspace model'
 course_session_form_defaultSession: 'Mark as default'
 course_session_form_end_date: 'End date'
-course_session_form_name: Name
+course_session_form_name: 'Name'
 course_session_form_publicRegistration: 'Public registration'
 course_session_form_publicUnregistration: 'Public unregistration'
 course_session_form_registrationValidation: 'Registration validation'
 course_session_form_sessionStatus: 'Status'
 course_session_form_start_date: 'Start date'
 create_cursus: 'Create "%cursusWord%"'
-cursus: Cursus
-cursus_form_code: Code
-cursus_form_description: Description
-cursus_form_title: Title
+create_cursus_child: 'Create a child'
+cursus: 'Cursus'
+cursus_creation: 'Cursus creation'
+cursus_edition: 'Cursus edition'
+cursus_form_blocking: 'Blocking'
+cursus_form_code: 'Code'
+cursus_form_description: 'Description'
+cursus_form_title: 'Title'
 cursus_plugin_configuration: 'Cursus plugin configuration'
-default: Default
+default: 'Default'
+delete_course: 'Delete course'
+delete_course_confirm_message: 'Are you sure you want to delete this course ?'
 delete_course_session_workspace_confirm_msg: 'Also delete associated workspace'
+delete_cursus: 'Delete cursus'
+delete_cursus_confirm_message: 'Are you sure you want to delete this cursus ?'
 displayed_word: 'Displayed word'
+no_course: 'No course'
+no_cursus: 'No cursus'
 nothing_to_configure: 'Nothing to configure'
 public_registration: 'Public registration'
 public_unregistration: 'Public unregistration'
 registration_date: 'Registration date'
 registration_validation: 'Registration validation'
-register: Register
-session: Session
+register: 'Register'
+remove_course: 'Remove course'
+remove_course_confirm_message: 'Are you sure you want to remove this course ?'
+session: 'Session'
 session_closed: 'Closed'
 session_not_started: 'Not started'
 session_open: 'Ongoing'
 the_displayed_word_for: 'The displayed word for'
-unregister: Unregister
+unregister: 'Unregister'
+view_structure: 'View structure'
 will_be: 'will be'
 word: 'Word'

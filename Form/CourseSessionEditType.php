@@ -93,6 +93,21 @@ class CourseSessionEditType extends AbstractType
             'checkbox',
             array('required' => true)
         );
+        $builder->add(
+            'cursus',
+            'entity',
+            array(
+                'required' => false,
+                'class' => 'ClarolineCursusBundle:Cursus',
+                'query_builder' => function (EntityRepository $er) {
+
+                    return $er->createQueryBuilder('c')
+                        ->where('c.parent IS NULL')
+                        ->orderBy('c.title', 'ASC');
+                },
+                'property' => 'title'
+            )
+        );
 
         if (!is_null($workspace)) {
             $builder->add(
