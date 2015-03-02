@@ -55,6 +55,7 @@ Project setup
 - Make the following directories (and their children) writable from the command
   line and the web server (for further explanation on common permissions issues
   and solutions with Symfony2, read [this][5]):
+    - *app/sessions*
     - *app/cache*
     - *app/logs*
     - *app/config*
@@ -64,7 +65,7 @@ Project setup
 - Run the following commands:
     - `$ composer require composer/composer dev-master`
     - `$ composer require claroline/bundle-recorder "~3.0"`
-    - `$ cp composer.json.dist composer.json`
+    - `$ cp composer.json.min composer.json`
     - `$ composer update --prefer-source` <sub>(1)</sub> 
     - `$ php app/console claroline:update`
 
