@@ -291,6 +291,8 @@ class CursusManager
     {
         $toDelete = array();
         $coursesToUnregister = array();
+        $root = $cursus->getRoot();
+        $cursusRoot = $this->getOneCursusById($root);
 
         if ($cursus->isBlocking()) {
             $toDelete = $this->getCursusUsersFromCursusAndUsers(
@@ -334,11 +336,20 @@ class CursusManager
                     $coursesToUnregister[] = $course;
                 }
             }
-
-            // TODO : find sessions By courses
         }
-
+        $sessionsToUnregister = is_null($cursusRoot) ?
+            array() :
+            $this->getSessionsByCursusAndCourses(
+                $cursusRoot,
+                $coursesToUnregister
+            );
+        $sessionsUsers = $this->getSessionUsersBySessionsAndUsers(
+            $sessionsToUnregister,
+            $users,
+            0
+        );
         $this->om->startFlushSuite();
+        $this->unregisterUsersFromSession($sessionsUsers);
 
         foreach ($toDelete as $cu) {
             $this->deleteCursusUser($cu);
@@ -376,8 +387,16 @@ class CursusManager
         $users = $group->getUsers()->toArray();
         $cursusGroupsToDelete = array();
         $cursusUsersToDelete = array();
+        $coursesToUnregister = array();
+        $root = $cursus->getRoot();
+        $cursusRoot = $this->getOneCursusById($root);
 
         if ($cursus->isBlocking()) {
+            $course = $cursus->getCourse();
+
+            if (!is_null($course)) {
+                $coursesToUnregister[] = $course;
+            }
             $cursusUsersToDelete = $this->getCursusUsersFromCursusAndUsers(
                 array($cursus),
                 $users
@@ -424,9 +443,33 @@ class CursusManager
                 $removableGroupDescendants,
                 $removableGroupAncestors
             );
+
+            foreach ($cursusGroupsToDelete as $cursusGroup) {
+                $cursus = $cursusGroup->getCursus();
+                $course = $cursus->getCourse();
+
+                if (!is_null($course)) {
+                    $coursesToUnregister[] = $course;
+                }
+            }
         }
+        $sessionsToUnregister = is_null($cursusRoot) ?
+            array() :
+            $this->getSessionsByCursusAndCourses(
+                $cursusRoot,
+                $coursesToUnregister
+            );
+        $sessionsGroups = $this->getSessionGroupsBySessionsAndGroup(
+            $sessionsToUnregister,
+            $group,
+            0
+        );
 
         $this->om->startFlushSuite();
+
+        foreach ($sessionsGroups as $sessionGroup) {
+            $this->unregisterGroupFromSession($sessionGroup);
+        }
 
         foreach ($cursusUsersToDelete as $cu) {
             $this->deleteCursusUser($cu);
@@ -793,8 +836,7 @@ class CursusManager
         $session = new CourseSession();
         $session->setName($sessionName);
         $session->setCourse($course);
-//        $session->addCursus($cursus);
-//        $session->setCursus($cursus);
+        $session->addCursus($cursus);
         $session->setCreationDate($registrationDate);
         $session->setPublicRegistration($course->getPublicRegistration());
         $session->setPublicUnregistration($course->getPublicUnregistration());
@@ -904,6 +946,15 @@ class CursusManager
         }
 
         return $role;
+    }
+
+    public function associateCursusToSessions(Cursus $cursus, array $sessions)
+    {
+        foreach ($sessions as $session) {
+            $session->addCursus($cursus);
+            $this->om->persist($session);
+        }
+        $this->om->flush();
     }
 
     private function generateWorkspaceCode($code)
@@ -1446,6 +1497,29 @@ class CursusManager
         }
     }
 
+    public function getSessionsByCursusAndCourses(
+        Cursus $cursus,
+        array $courses,
+        $orderedBy = 'creationDate',
+        $order = 'DESC',
+        $executeQuery = true
+    )
+    {
+        if (count($courses) > 0) {
+
+            return $this->courseSessionRepo->findSessionsByCursusAndCourses(
+                $cursus,
+                $courses,
+                $orderedBy,
+                $order,
+                $executeQuery
+            );
+        } else {
+
+            return array();
+        }
+    }
+
 
     /*************************************************
      * Access to CourseSessionUserRepository methods *
@@ -1592,6 +1666,21 @@ class CursusManager
     {
         return $this->sessionGroupRepo->findSessionGroupsBySession(
             $session,
+            $executeQuery
+        );
+    }
+
+    public function getSessionGroupsBySessionsAndGroup(
+        array $sessions,
+        Group $group,
+        $groupType,
+        $executeQuery = true
+    )
+    {
+        return $this->sessionGroupRepo->findSessionGroupsBySessionsAndGroup(
+            $sessions,
+            $group,
+            $groupType,
             $executeQuery
         );
     }

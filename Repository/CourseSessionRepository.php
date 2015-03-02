@@ -12,6 +12,7 @@
 namespace Claroline\CursusBundle\Repository;
 
 use Claroline\CursusBundle\Entity\Course;
+use Claroline\CursusBundle\Entity\Cursus;
 use Doctrine\ORM\EntityRepository;
 
 class CourseSessionRepository extends EntityRepository
@@ -91,6 +92,29 @@ class CourseSessionRepository extends EntityRepository
             ORDER BY cs.{$orderedBy} {$order}
         ";
         $query = $this->_em->createQuery($dql);
+        $query->setParameter('courses', $courses);
+
+        return $executeQuery ? $query->getResult() : $query;
+    }
+
+    public function findSessionsByCursusAndCourses(
+        Cursus $cursus,
+        array $courses,
+        $orderedBy = 'creationDate',
+        $order = 'DESC',
+        $executeQuery = true
+    )
+    {
+        $dql = "
+            SELECT cs
+            FROM Claroline\CursusBundle\Entity\CourseSession cs
+            JOIN cs.cursus c
+            WHERE c = :cursus
+            AND cs.course IN (:courses)
+            ORDER BY cs.{$orderedBy} {$order}
+        ";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('cursus', $cursus);
         $query->setParameter('courses', $courses);
 
         return $executeQuery ? $query->getResult() : $query;

@@ -458,6 +458,7 @@ class CursusRegistrationController extends Controller
 
         if ($root > 0) {
             $cursusRoot = $this->cursusManager->getOneCursusById($root);
+            $this->cursusManager->associateCursusToSessions($cursusRoot, $sessions);
         }
         // Generate the list of sessions where the user will be register
         foreach ($sessionsToCreate as $course) {
