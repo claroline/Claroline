@@ -12,7 +12,7 @@
 namespace Claroline\BundleRecorder;
 
 use Composer\Script\CommandEvent;
-use Composer\Script\Event;
+use Composer\EventDispatcher\Event;
 use Composer\Script\PackageEvent;
 use Claroline\BundleRecorder\Operation;
 use Claroline\BundleRecorder\Detector\Detector;
