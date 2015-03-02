@@ -62,15 +62,6 @@ class ActivityRuleType extends AbstractType
             )
         );
         $builder->add(
-            'badge',
-            'entity',
-            array(
-                'class' => 'IcapBadgeBundle:Badge',
-                'property' => 'translations[1].name',
-                'required' => false
-            )
-        );
-        $builder->add(
             'result',
             'integer',
             array(
