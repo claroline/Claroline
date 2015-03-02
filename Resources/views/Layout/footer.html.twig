@@ -13,7 +13,7 @@
                     <span class="pull-right locale-select label label-default">{{ app.request.locale | upper }}</span>
                 {% endif %}
 
-                {% if not footerMessage is empty %}{{ footerMessage }}{% endif %}
+                {% if not footerMessage is empty %}{{ footerMessage|raw }}{% endif %}
                 <span{% if ((footerLogin or footerWorkspaces) and not is_granted('ROLE_USER')) or not footerMessage is empty %} class="pull-right"{% endif %}>
                     {{ 'Powered by' | trans({}, 'platform') }} <a href="http://www.claroline.net">Claroline</a>
                 </span>
