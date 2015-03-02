@@ -978,4 +978,19 @@ class WorkspaceRepository extends EntityRepository
 
         return $executeQuery ? $query->getOneOrNullResult() : $query;
     }
+
+    public function findWorkspaceCodesWithPrefix($prefix, $executeQuery = true)
+    {
+        $dql = '
+            SELECT UPPER(w.code) AS code
+            FROM Claroline\CoreBundle\Entity\Workspace\Workspace w
+            WHERE UPPER(w.code) LIKE :search
+        ';
+
+        $query = $this->_em->createQuery($dql);
+        $upperSearch = strtoupper($prefix);
+        $query->setParameter('search', "{$upperSearch}%");
+
+        return $executeQuery ? $query->getResult() : $query;
+    }
 }

@@ -981,3 +981,16 @@ property: property
 picture: picture
 profile_properties_management: profile_properties_management
 facet_management: facet_management
+installed: installed
+available: available
+install: install
+up_to_date: up_to_date
+update: update
+package_install: package_install
+package_install_confirm: package_install_confirm
+backup_reminder: backup_reminder
+tips: tips
+logs_error_location: logs_error_location
+package_install_auto_reload: package_install_auto_reload
+activate_maintenance_mode: activate_maintenance_mode
+install_update_cant_be_undone: install_update_cant_be_undone

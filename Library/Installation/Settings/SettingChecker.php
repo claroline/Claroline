@@ -136,7 +136,8 @@ class SettingChecker
             'iconv' => function_exists('iconv'),
             'PHP-XML' => class_exists('DomDocument'),
             'fileinfo' => extension_loaded('fileinfo'),
-            'PDO' => class_exists('PDO')
+            'PDO' => class_exists('PDO'),
+            'curl' => function_exists('curl_exec')
         );
 
         foreach ($requiredExtensions as $extension => $isEnabled) {
@@ -216,6 +217,7 @@ class SettingChecker
         $rootDir = __DIR__ . '/../../../../../../../..';
         $writableElements = array(
             'app/cache' => 'directory',
+            'app/sessions' => 'directory',
             'app/config' => 'directory',
             'app/config/bundles.ini' => 'file',
             'app/config/parameters.yml' => 'file',

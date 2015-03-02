@@ -1014,5 +1014,13 @@ class WorkspaceManager
             $this->om->persist($workspace);
             $this->om->flush();
         }
-    }    
+    }
+
+    public function getWorkspaceCodesWithPrefix($prefix, $executeQuery = true)
+    {
+        return $this->workspaceRepo->findWorkspaceCodesWithPrefix(
+            $prefix,
+            $executeQuery
+        );
+    }
 }

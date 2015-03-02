@@ -2,6 +2,7 @@
 # in test environment (see app/config/config_test.yml)
 
 parameters:
+    claroline.param.bundle_sources: "%kernel.root_dir%/config/downloaded.json"
     claroline.param.files_directory: "%kernel.root_dir%/../files"
     claroline.param.vendor_directory: "%kernel.root_dir%/../vendor"
     claroline.param.thumbnails_directory: "%claroline.param.web_dir%/thumbnails"
