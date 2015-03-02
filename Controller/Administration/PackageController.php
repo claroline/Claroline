@@ -20,12 +20,17 @@ use Claroline\CoreBundle\Manager\IPWhiteListManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use JMS\SecurityExtraBundle\Annotation as SEC;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 
+/**
+ * @DI\Tag("security.secure_service")
+ * @SEC\PreAuthorize("canOpenAdminTool('platform_packages')")
+ */
 class PackageController extends Controller
 {
     private $toolManager;
@@ -83,7 +88,6 @@ class PackageController extends Controller
      */
     public function listAction()
     {
-        $this->checkOpen();
         $coreBundle = $this->bundleManager->getBundle('CoreBundle');
         $coreVersion = $coreBundle->getVersion();
         $api = $this->configHandler->getParameter('repository_api');
@@ -118,7 +122,6 @@ class PackageController extends Controller
      */
     public function installFromRemoteAction($bundle, $date)
     {
-        $this->checkOpen();
         $this->bundleManager->installRemoteBundle($bundle, $date);
 
         return new Response('Done.');
@@ -137,7 +140,6 @@ class PackageController extends Controller
      */
     public function displayUpdateLog($date)
     {
-        $this->checkOpen();
         $content = @file_get_contents($this->bundleManager->getLogFile() . '-' . $date . '.log');
         if (!$content) $content = '';
 
@@ -152,19 +154,9 @@ class PackageController extends Controller
      */
     public function pluginParametersAction($pluginShortName)
     {
-        $this->checkOpen();
         $eventName = "plugin_options_{$pluginShortName}";
         $event = $this->eventDispatcher->dispatch($eventName, 'PluginOptions', array());
 
         return $event->getResponse();
-    }
-
-    private function checkOpen()
-    {
-        if ($this->sc->isGranted('OPEN', $this->adminToolPlugin)) {
-            return true;
-        }
-
-        throw new AccessDeniedException();
     }
 }
