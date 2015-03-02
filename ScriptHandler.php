@@ -45,7 +45,7 @@ class ScriptHandler
      *
      * @param PackageEvent $event
      */
-    public static function logInstallOperation(PackageEvent $event)
+    public static function logInstallOperation(Event $event)
     {
         static::getRecorder($event)->addInstallOperation($event->getOperation()->getPackage());
     }
@@ -58,7 +58,7 @@ class ScriptHandler
      *
      * @param PackageEvent $event
      */
-    public static function logUpdateOperation(PackageEvent $event)
+    public static function logUpdateOperation(Event $event)
     {
         static::getRecorder($event)->addUpdateOperation(
             $event->getOperation()->getTargetPackage(),
