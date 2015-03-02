@@ -1,3 +1,4 @@
+add_course_to_cursus: 'Ajouter un cours'
 course: Cours
 course_form_code: Code
 course_form_description: Description
@@ -5,37 +6,50 @@ course_form_learnerRoleName: 'Rôle des apprenants'
 course_form_publicRegistration: 'Inscription publique'
 course_form_publicUnregistration: 'Désinscription publique'
 course_form_registrationValidation: 'Validation de l''inscription'
-course_form_title: Titre
+course_form_title: 'Titre'
 course_form_tutorRoleName: 'Rôle des tuteurs'
 course_form_workspaceModel: 'Modèle d''espace d''activités'
 course_session_form_defaultSession: 'Définir comme session par défaut'
 course_session_form_end_date: 'Date de fin'
-course_session_form_name: Nom
+course_session_form_name: 'Nom'
 course_session_form_publicRegistration: 'Inscription publique'
 course_session_form_publicUnregistration: 'Désinscription publique'
 course_session_form_registrationValidation: 'Validation de l''inscription'
 course_session_form_sessionStatus: 'Statut'
 course_session_form_start_date: 'Date de début'
 create_cursus: 'Créer "%cursusWord%"'
-cursus: Cursus
-cursus_form_code: Code
-cursus_form_description: Description
-cursus_form_title: Titre
+create_cursus_child: 'Créer un enfant'
+cursus: 'Cursus'
+cursus_creation: 'Création d''un cursus'
+cursus_edition: 'Modification du cursus'
+cursus_form_blocking: 'Bloquant'
+cursus_form_code: 'Code'
+cursus_form_description: 'Description'
+cursus_form_title: 'Titre'
 cursus_plugin_configuration: 'Configuration du plugin Cursus'
-default: Défaut
+default: 'Défaut'
+delete_course: 'Suppression du cours'
+delete_course_confirm_message: 'Êtes-vous sûr de vouloir supprimer ce cours ?'
 delete_course_session_workspace_confirm_msg: 'Supprimer également l''espace d''activités associé'
+delete_cursus: 'Suppression du cursus'
+delete_cursus_confirm_message: 'Êtes-vous sûr de vouloir supprimer ce cursus ?'
 displayed_word: 'Mot affiché'
+no_course: 'Aucun cours'
+no_cursus: 'Aucun cursus'
 nothing_to_configure: 'Rien à configurer'
 public_registration: 'Inscription publique'
 public_unregistration: 'Désinscription publique'
 registration_date: 'Date d''inscription'
 registration_validation: 'Validation de l''inscription'
-register: Inscrire
-session: Session
+register: 'Inscrire'
+remove_course: 'Retirer le cours'
+remove_course_confirm_message: 'Êtes-vous sûr de vouloir retirer ce cours ?'
+session: 'Session'
 session_closed: 'Terminé'
 session_not_started: 'Non commencé'
 session_open: 'En cours'
 the_displayed_word_for: 'Le mot affiché pour'
-unregister: Désinscrire
+unregister: 'Désinscrire'
+view_structure: 'Voir la structure'
 will_be: 'sera'
 word: Mot
