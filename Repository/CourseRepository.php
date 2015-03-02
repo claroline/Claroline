@@ -11,6 +11,7 @@
 
 namespace Claroline\CursusBundle\Repository;
 
+use Claroline\CursusBundle\Entity\Cursus;
 use Doctrine\ORM\EntityRepository;
 
 class CourseRepository extends EntityRepository
@@ -46,6 +47,61 @@ class CourseRepository extends EntityRepository
             ORDER BY c.{$orderedBy} {$order}
         ";
         $query = $this->_em->createQuery($dql);
+        $upperSearch = strtoupper($search);
+        $query->setParameter('search', "%{$upperSearch}%");
+
+        return $executeQuery ? $query->getResult() : $query;
+    }
+
+    public function findUnmappedCoursesByCursus(
+        Cursus $cursus,
+        $orderedBy = 'title',
+        $order = 'ASC',
+        $executeQuery = true
+    )
+    {
+        $dql = "
+            SELECT c
+            FROM Claroline\CursusBundle\Entity\Course c
+            WHERE NOT EXISTS (
+                SELECT cc
+                FROM Claroline\CursusBundle\Entity\Cursus cc
+                WHERE cc.course = c
+                AND cc.parent = :cursus
+            )
+            ORDER BY c.{$orderedBy} {$order}
+        ";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('cursus', $cursus);
+
+        return $executeQuery ? $query->getResult() : $query;
+    }
+
+    public function findUnmappedSearchedCoursesByCursus(
+        Cursus $cursus,
+        $search = '',
+        $orderedBy = 'title',
+        $order = 'ASC',
+        $executeQuery = true
+    )
+    {
+        $dql = "
+            SELECT c
+            FROM Claroline\CursusBundle\Entity\Course c
+            WHERE (
+                UPPER(c.title) LIKE :search
+                OR UPPER(c.code) LIKE :search
+            )
+            AND NOT EXISTS (
+                SELECT cc
+                FROM Claroline\CursusBundle\Entity\Cursus cc
+                WHERE cc.course = c
+                AND cc.parent = :cursus
+            )
+            ORDER BY c.{$orderedBy} {$order}
+        ";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('cursus', $cursus);
         $upperSearch = strtoupper($search);
         $query->setParameter('search', "%{$upperSearch}%");
 

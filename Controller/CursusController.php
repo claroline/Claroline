@@ -448,8 +448,21 @@ class CursusController extends Controller
         $this->checkToolAccess();
 
         $courses = $search === '' ?
-            $this->cursusManager->getAllCourses($orderedBy, $order, $page, $max) :
-            $this->cursusManager->getSearchedCourses($search, $orderedBy, $order, $page, $max);
+            $this->cursusManager->getUnmappedCoursesByCursus(
+                $cursus,
+                $orderedBy,
+                $order,
+                $page,
+                $max
+            ) :
+            $this->cursusManager->getUnmappedSearchedCoursesByCursus(
+                $cursus,
+                $search,
+                $orderedBy,
+                $order,
+                $page,
+                $max
+            );
 
         return array(
             'cursus' => $cursus,

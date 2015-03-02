@@ -1154,6 +1154,50 @@ class CursusManager
             $this->pagerFactory->createPager($courses, $page, $max);
     }
 
+    public function getUnmappedCoursesByCursus(
+        Cursus $cursus,
+        $orderedBy = 'title',
+        $order = 'ASC',
+        $page = 1,
+        $max = 50,
+        $executeQuery = true
+    )
+    {
+        $courses = $this->courseRepo->findUnmappedCoursesByCursus(
+            $cursus,
+            $orderedBy,
+            $order,
+            $executeQuery
+        );
+
+        return $executeQuery ?
+            $this->pagerFactory->createPagerFromArray($courses, $page, $max) :
+            $this->pagerFactory->createPager($courses, $page, $max);
+    }
+
+    public function getUnmappedSearchedCoursesByCursus(
+        Cursus $cursus,
+        $search = '',
+        $orderedBy = 'title',
+        $order = 'ASC',
+        $page = 1,
+        $max = 50,
+        $executeQuery = true
+    )
+    {
+        $courses = $this->courseRepo->findUnmappedSearchedCoursesByCursus(
+            $cursus,
+            $search,
+            $orderedBy,
+            $order,
+            $executeQuery
+        );
+
+        return $executeQuery ?
+            $this->pagerFactory->createPagerFromArray($courses, $page, $max) :
+            $this->pagerFactory->createPager($courses, $page, $max);
+    }
+
 
     /******************************************
      * Access to CursusUserRepository methods *
