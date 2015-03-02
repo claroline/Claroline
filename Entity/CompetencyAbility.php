@@ -5,7 +5,7 @@ namespace HeVinci\CompetencyBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="HeVinci\CompetencyBundle\Repository\CompetencyAbilityRepository")
  * @ORM\Table(name="hevinci_competency_ability")
  */
 class CompetencyAbility
@@ -44,6 +44,14 @@ class CompetencyAbility
     }
 
     /**
+     * @return Competency
+     */
+    public function getCompetency()
+    {
+        return $this->competency;
+    }
+
+    /**
      * @param Ability $ability
      */
     public function setAbility(Ability $ability)
@@ -52,10 +60,26 @@ class CompetencyAbility
     }
 
     /**
+     * @return Ability
+     */
+    public function getAbility()
+    {
+        return $this->ability;
+    }
+
+    /**
      * @param Level $level
      */
     public function setLevel(Level $level)
     {
         $this->level = $level;
+    }
+
+    /**
+     * @return Level
+     */
+    public function getLevel()
+    {
+        return $this->level;
     }
 }

@@ -40,9 +40,19 @@ class Ability implements \JsonSerializable
     /**
      * @var Level
      *
-     * NOTE: this attribute is not mapped, its only purpose is to hold form data.
+     * NOTE: this attribute is not mapped; its only purpose is to temporarily
+     *       hold data for forms and json responses. Real level must be set
+     *       on a associated CompetencyAbility instance.
      */
-    private $formLevel;
+    private $level;
+
+    /**
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
 
     /**
      * @param string $name
@@ -77,24 +87,21 @@ class Ability implements \JsonSerializable
     }
 
     /**
-     * Unmapped attribute, only used in forms: level must be set
-     * on a associated CompetencyAbility instance.
-     *
+     * @see level
      * @param Level $level
      */
     public function setLevel(Level $level)
     {
-        $this->formLevel = $level;
+        $this->level = $level;
     }
 
     /**
-     * @see setLevel
-     *
+     * @see level
      * @return Level
      */
     public function getLevel()
     {
-        return $this->formLevel;
+        return $this->level;
     }
 
     public function jsonSerialize()
@@ -102,7 +109,9 @@ class Ability implements \JsonSerializable
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'minActivityCount' => $this->minActivityCount
+            'minActivityCount' => $this->minActivityCount,
+            'levelName' => $this->level->getName(),
+            'levelValue' => $this->level->getValue()
         ];
     }
 }

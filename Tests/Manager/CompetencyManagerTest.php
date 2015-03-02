@@ -2,7 +2,9 @@
 
 namespace HeVinci\CompetencyBundle\Manager;
 
+use HeVinci\CompetencyBundle\Entity\Ability;
 use HeVinci\CompetencyBundle\Entity\Competency;
+use HeVinci\CompetencyBundle\Entity\Level;
 use HeVinci\CompetencyBundle\Entity\Scale;
 use HeVinci\CompetencyBundle\Util\UnitTestCase;
 
@@ -13,6 +15,7 @@ class CompetencyManagerTest extends UnitTestCase
     private $competencyRepo;
     private $scaleRepo;
     private $abilityRepo;
+    private $competencyAbilityRepo;
     private $manager;
 
     protected function setUp()
@@ -22,17 +25,20 @@ class CompetencyManagerTest extends UnitTestCase
         $this->competencyRepo = $this->mock('HeVinci\CompetencyBundle\Repository\CompetencyRepository');
         $this->scaleRepo = $this->mock('Doctrine\ORM\EntityRepository');
         $this->abilityRepo = $this->mock('HeVinci\CompetencyBundle\Repository\AbilityRepository');
-        $this->om->expects($this->exactly(3))
+        $this->competencyAbilityRepo = $this->mock('HeVinci\CompetencyBundle\Repository\CompetencyAbilityRepository');
+        $this->om->expects($this->exactly(4))
             ->method('getRepository')
             ->withConsecutive(
                 ['HeVinciCompetencyBundle:Competency'],
                 ['HeVinciCompetencyBundle:Scale'],
-                ['HeVinciCompetencyBundle:Ability']
+                ['HeVinciCompetencyBundle:Ability'],
+                ['HeVinciCompetencyBundle:CompetencyAbility']
             )
             ->willReturnOnConsecutiveCalls(
                 $this->competencyRepo,
                 $this->scaleRepo,
-                $this->abilityRepo
+                $this->abilityRepo,
+                $this->competencyAbilityRepo
             );
         $this->manager = new CompetencyManager($this->om, $this->translator);
     }
@@ -170,7 +176,21 @@ class CompetencyManagerTest extends UnitTestCase
         $competency = new Competency();
         $this->om->expects($this->once())->method('remove')->with($competency);
         $this->om->expects($this->once())->method('flush');
+        $this->abilityRepo->expects($this->once())->method('deleteOrphans');
         $this->manager->deleteCompetency($competency);
+    }
+
+    /**
+     * @expectedException LogicException
+     */
+    public function testCreateSubCompetencyExpectsParentHasNoAbilities()
+    {
+        $parent = new Competency();
+        $this->competencyAbilityRepo->expects($this->once())
+            ->method('countByCompetency')
+            ->with($parent)
+            ->willReturn(3);
+        $this->manager->createSubCompetency($parent, new Competency());
     }
 
     public function testCreateSubCompetency()
@@ -188,6 +208,43 @@ class CompetencyManagerTest extends UnitTestCase
         $competency = new Competency();
         $this->om->expects($this->once())->method('flush');
         $this->assertEquals($competency, $this->manager->updateCompetency($competency));
+    }
+
+    /**
+     * @expectedException LogicException
+     */
+    public function testCreateAbilityExpectsCompetencyToBeALeafNode()
+    {
+        $parent = $this->mock('HeVinci\CompetencyBundle\Entity\Competency');
+        $parent->expects($this->once())->method('getLeft')->willReturn(4);
+        $parent->expects($this->once())->method('getRight')->willReturn(10);
+        $this->manager->createAbility($parent, new Ability(), new Level());
+    }
+
+    public function testCreateAbility()
+    {
+        $parent = $this->mock('HeVinci\CompetencyBundle\Entity\Competency');
+        $ability = new Ability();
+        $level = new Level();
+
+        $parent->expects($this->once())->method('getLeft')->willReturn(4);
+        $parent->expects($this->once())->method('getRight')->willReturn(5);
+        $this->om->expects($this->exactly(2))
+            ->method('persist')
+            ->withConsecutive(
+                [$ability],
+                [
+                    $this->callback(function ($arg) use ($parent, $ability, $level) {
+                        $this->assertInstanceOf('HeVinci\CompetencyBundle\Entity\CompetencyAbility', $arg);
+                        $this->assertEquals($parent, $arg->getCompetency());
+                        $this->assertEquals($ability, $arg->getAbility());
+                        $this->assertEquals($level, $arg->getLevel());
+                        return true;
+                    })
+                ]);
+
+        $this->om->expects($this->once())->method('flush');
+        $this->manager->createAbility($parent, $ability, $level);
     }
 
     public function loadFrameworkProvider()

@@ -21,6 +21,7 @@ class CompetencyManager
     private $competencyRepo;
     private $scaleRepo;
     private $abilityRepo;
+    private $competencyAbilityRepo;
     private $translator;
 
     /**
@@ -37,6 +38,7 @@ class CompetencyManager
         $this->competencyRepo = $om->getRepository('HeVinciCompetencyBundle:Competency');
         $this->scaleRepo = $om->getRepository('HeVinciCompetencyBundle:Scale');
         $this->abilityRepo = $om->getRepository('HeVinciCompetencyBundle:Ability');
+        $this->competencyAbilityRepo = $om->getRepository('HeVinciCompetencyBundle:CompetencyAbility');
         $this->translator = $translator;
     }
 
@@ -198,6 +200,7 @@ class CompetencyManager
     {
         $this->om->remove($competency);
         $this->om->flush();
+        $this->abilityRepo->deleteOrphans();
     }
 
     /**
@@ -206,9 +209,17 @@ class CompetencyManager
      * @param Competency $parent
      * @param Competency $child
      * @return Competency
+     * @throws \LogicException if the competency already has abilities
      */
     public function createSubCompetency(Competency $parent, Competency $child)
     {
+        if ($this->competencyAbilityRepo->countByCompetency($parent) > 0) {
+            throw new \LogicException(
+                "Cannot create sub-competency: competency {$parent->getId()}"
+                . ' is already associated with abilities'
+            );
+        }
+
         $child->setParent($parent);
         $this->om->persist($child);
         $this->om->flush();
@@ -232,9 +243,9 @@ class CompetencyManager
     /**
      * Creates an ability and links it to a given competency.
      *
-     * @param Competency $parent
-     * @param Ability $ability
-     * @param Level $level
+     * @param Competency    $parent
+     * @param Ability       $ability
+     * @param Level         $level
      * @return \HeVinci\CompetencyBundle\Entity\Ability
      * @throws \LogicException if the parent competency is not a leaf node
      */
@@ -257,5 +268,52 @@ class CompetencyManager
         $this->om->flush();
 
         return $ability;
+    }
+
+    /**
+     * Removes the association between a competency and an ability. If
+     * the ability is not linked to any other competency, it is deleted
+     * as well.
+     *
+     * @param Competency    $parent
+     * @param Ability       $ability
+     * @throws \Exception if ability is not linked to competency
+     */
+    public function removeAbility(Competency $parent, Ability $ability)
+    {
+        $linkCount = $this->competencyAbilityRepo->countByAbility($ability);
+        $link = $this->competencyAbilityRepo->findOneByTerms($parent, $ability);
+        $this->om->remove($link);
+
+        if ($linkCount === 1) {
+            $this->om->remove($ability);
+        }
+
+        $this->om->flush();
+    }
+
+    /**
+     * Updates an ability.
+     *
+     * @param Competency    $parent
+     * @param Ability       $ability
+     * @param Level         $level
+     * @return Ability
+     * @throws \Exception if ability is not linked to competency
+     */
+    public function updateAbility(Competency $parent, Ability $ability, Level $level)
+    {
+        $link = $this->competencyAbilityRepo->findOneByTerms($parent, $ability);
+        $link->setLevel($level);
+        $this->om->persist($link);
+        $this->om->flush();
+
+        return $ability;
+    }
+
+    public function loadAbility(Competency $parent, Ability $ability)
+    {
+        $link = $this->competencyAbilityRepo->findOneByTerms($parent, $ability);
+        $ability->setLevel($link->getLevel());
     }
 }

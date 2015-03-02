@@ -2,34 +2,26 @@
 
 namespace HeVinci\CompetencyBundle\Repository;
 
-use Claroline\CoreBundle\Library\Testing\TransactionalTestCase;
-use HeVinci\CompetencyBundle\Entity\Competency;
+use HeVinci\CompetencyBundle\Util\RepositoryTestCase;
 
-class CompetencyRepositoryTest extends TransactionalTestCase
+class CompetencyRepositoryTest extends RepositoryTestCase
 {
+    private $repo;
+
+    protected function setUp()
+    {
+        parent::setUp();
+        $this->repo = $this->om->getRepository('HeVinciCompetencyBundle:Competency');
+    }
+
     public function testFindRootsByName()
     {
-        $container = $this->client->getContainer();
-        $om = $container->get('claroline.persistence.object_manager');
-        $repo = $om->getRepository('HeVinciCompetencyBundle:Competency');
+        $r1 = $this->persistCompetency('FOO');
+        $r2 = $this->persistCompetency('BAR');
+        $this->persistCompetency('BAZ', $r1);
+        $this->persistCompetency('FOO', $r2);
+        $this->om->flush();
 
-        $firstRoot = new Competency();
-        $secondRoot = new Competency();
-        $child = new Competency();
-
-        $firstRoot->setName('FOO');
-        $firstRoot->setDescription('ROOT DESC');
-        $secondRoot->setName('BAR');
-        $child->setName('FOO');
-        $child->setParent($secondRoot);
-
-        $om->persist($firstRoot);
-        $om->persist($secondRoot);
-        $om->persist($child);
-        $om->flush();
-
-        $roots = $repo->findRootsByName('FOO');
-        $this->assertEquals(1, count($roots));
-        $this->assertEquals('ROOT DESC', $roots[0]->getDescription());
+        $this->assertEquals([$r1], $this->repo->findRootsByName('FOO'));
     }
 }

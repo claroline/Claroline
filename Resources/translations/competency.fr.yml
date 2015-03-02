@@ -1,6 +1,8 @@
 ability:
   add: Ajouter une capacité
   create: Créer une capacité
+  delete: Supprimer une capacité
+  edit: Modifier une capacité
   linked_activity_count: Activités liées
   min_activity_count: Nombre d'activités à réussir
   required_activity_count: Nombre exigé
@@ -28,6 +30,9 @@ level: Niveau
 levels: Dégrés
 message:
   ability_created: Capacité créée avec succès.
+  ability_deleted: Capacité supprimée avec succès.
+  ability_deletion_confirm: Voulez-vous vraiment supprimer cette capacité ?
+  ability_edited: Capacité modifiée avec succès.
   competency_edited: Compétence modifiée avec succès.
   competency_deleted: Compétence supprimée avec succès.
   competency_deletion_confirm: Voulez-vous vraiment supprimer cette compétence ? Cette action est irréversible.

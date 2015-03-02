@@ -1,8 +1,23 @@
 {% twig_js name = 'AbilityRow' %}
 
-<tr data-id="{{ id }}">
-    <td>{{ levelName }}</td>
+{# tmp #}
+{% set activityCount = 0 %}
+
+<tr data-id="{{ id }}" data-level="{{ levelValue }}">
+    <td class="center">{{ levelName }}</td>
     <td>{{ name }}</td>
-    <td>0</td>
-    <td>{{ minActivityCount }}</td>
+    <td class="center {{ activityCount < minActivityCount ? 'danger' : '' }}">
+        {{ activityCount }}
+    </td>
+    <td class="center">{{ minActivityCount }}</td>
+    <td class="center">
+        <a href="#" class="edit-ability">
+            <i class="fa fa-pencil"></i>
+        </a>
+    </td>
+    <td class="center">
+        <a href="#" class="delete-ability">
+            <i class="fa fa-remove"></i>
+        </a>
+    </td>
 </tr>

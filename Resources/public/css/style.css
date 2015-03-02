@@ -42,4 +42,14 @@ ul.framework i.empty {
 
 ul.framework table.abilities {
     margin: 0.5em auto;
+    color: rgba(0,0,0,.70);
+}
+
+ul.framework table.abilities th, ul.framework table.abilities td {
+    padding: 2px;
+    font-weight: normal;
+}
+
+ul.framework table.abilities td.center {
+    text-align: center;
 }

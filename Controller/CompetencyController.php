@@ -2,6 +2,7 @@
 
 namespace HeVinci\CompetencyBundle\Controller;
 
+use HeVinci\CompetencyBundle\Entity\Ability;
 use HeVinci\CompetencyBundle\Entity\Competency;
 use HeVinci\CompetencyBundle\Form\Handler\FormHandler;
 use HeVinci\CompetencyBundle\Manager\CompetencyManager;
@@ -277,5 +278,72 @@ class CompetencyController
         }
 
         return ['form' => $this->formHandler->getView(), 'competency' => $parent];
+    }
+
+    /**
+     * Removes an ability or deletes it if it's no longer linked to any competency.
+     *
+     * @EXT\Route("/{id}/ability/{abilityId}/delete", name="hevinci_delete_ability")
+     * @EXT\ParamConverter("ability", options={"id"= "abilityId"})
+     *
+     * @param Competency $parent
+     * @param Ability $ability
+     * @return JsonResponse
+     */
+    public function deleteAbilityAction(Competency $parent, Ability $ability)
+    {
+        return new JsonResponse($this->manager->removeAbility($parent, $ability));
+    }
+
+    /**
+     * Displays the ability view/edit form.
+     *
+     * @EXT\Route("/{id}/ability/{abilityId}", name="hevinci_ability")
+     * @EXT\ParamConverter("ability", options={"id"= "abilityId"})
+     * @EXT\Template("HeVinciCompetencyBundle:Competency:abilityEditForm.html.twig")
+     *
+     * @param Competency    $parent
+     * @param Ability       $ability
+     * @return array
+     */
+    public function abilityAction(Competency $parent, Ability $ability)
+    {
+        $this->manager->loadAbility($parent, $ability);
+
+        return [
+            'form' => $this->formHandler->getView('hevinci_form_ability', $ability, ['competency' => $parent]),
+            'competency' => $parent,
+            'ability' => $ability
+        ];
+    }
+
+    /**
+     * Edits an ability.
+     *
+     * @EXT\Route("/{id}/ability/{abilityId}", name="hevinci_edit_ability")
+     * @EXT\ParamConverter("ability", options={"id"= "abilityId"})
+     * @EXT\Method("POST")
+     * @EXT\Template("HeVinciCompetencyBundle:Competency:abilityEditForm.html.twig")
+     *
+     * @param Request $request
+     * @param Competency $parent
+     * @param Ability $ability
+     * @return array|JsonResponse
+     */
+    public function editAbilityAction(Request $request, Competency $parent, Ability $ability)
+    {
+        if ($this->formHandler->isValid('hevinci_form_ability', $request, $ability, ['competency' => $parent])) {
+            return new JsonResponse($this->manager->updateAbility(
+                $parent,
+                $this->formHandler->getData(),
+                $this->formHandler->getData()->getLevel()
+            ));
+        }
+
+        return [
+            'form' => $this->formHandler->getView(),
+            'competency' => $parent,
+            'ability' => $ability
+        ];
     }
 }

@@ -183,10 +183,62 @@
         window.Claroline.Modal.displayForm(
             Routing.generate('hevinci_new_ability', { id: node.dataset.id }),
             function (data) {
+                var $node = $(node);
+                $node.children('i')
+                    .removeClass('fa-plus-square-o empty')
+                    .addClass('fa-minus-square-o collapse');
+                $node.css('display', 'block')
+                    .find('table.abilities')
+                    .css('display', 'table');
+                sortAbilities($node.find('tbody'), $(Twig.render(AbilityRow, data)));
                 flasher.setMessage(trans('message.ability_created'));
             },
             function () {},
             'ability-form'
+        );
+    });
+
+    // ability edition
+    $(document).on('click', 'a.edit-ability', function (event) {
+        event.preventDefault();
+        var row = this.parentNode.parentNode;
+        var node = row.parentNode.parentNode.parentNode.parentNode.parentNode;
+        window.Claroline.Modal.displayForm(
+            Routing.generate('hevinci_ability', { id: node.dataset.id, abilityId: row.dataset.id }),
+            function (data) {
+                sortAbilities($(row.parentNode), $(Twig.render(AbilityRow, data)));
+                $(row).detach();
+                flasher.setMessage(trans('message.ability_edited'));
+            },
+            function () {},
+            'ability-form'
+        );
+    });
+
+    // ability deletion
+    $(document).on('click', 'a.delete-ability', function (event) {
+        event.preventDefault();
+        var row = this.parentNode.parentNode;
+        var item = row.parentNode.parentNode.parentNode.parentNode.parentNode;
+
+        window.Claroline.Modal.confirmRequest(
+            Routing.generate('hevinci_delete_ability', { id: item.dataset.id, abilityId: row.dataset.id }),
+            function () {
+                var $tableBody = $(row.parentNode);
+                $(row).remove();
+
+                if ($tableBody.children('tr').length === 0) {
+                    $tableBody.parent().css('display', 'none');
+                    $(item).children('i')
+                        .addClass('fa-plus-square-o empty')
+                        .removeClass('fa-minus-square-o collapse');
+                }
+
+                flasher.setMessage(trans('message.ability_deleted'));
+            },
+            null,
+            trans('message.ability_deletion_confirm'),
+            trans('ability.delete')
         );
     });
 
@@ -231,5 +283,21 @@
 
     function trans(message) {
         return Translator.trans(message, {}, 'competency');
+    }
+
+    function sortAbilities($tableBody, $newAbilityRow) {
+        var $rows = $tableBody.children('tr');
+        var newAbilityLevel = $newAbilityRow.get(0).dataset.level;
+        var i = $rows.length - 1;
+
+        while (i >= 0) {
+            if ($rows.get(i).dataset.level <= newAbilityLevel) {
+                $newAbilityRow.insertAfter($rows[i]);
+                return;
+            }
+            --i;
+        }
+
+        $tableBody.prepend($newAbilityRow);
     }
 })();

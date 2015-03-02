@@ -34,4 +34,28 @@ class AbilityRepository extends EntityRepository
             ->getQuery()
             ->getArrayResult();
     }
+
+    /**
+     * Deletes abilities which are no longer associated with a competency.
+     */
+    public function deleteOrphans()
+    {
+        $linkedAbilityIds = $this->_em->createQueryBuilder()
+            ->select('a.id')
+            ->distinct()
+            ->from('HeVinci\CompetencyBundle\Entity\CompetencyAbility', 'ca')
+            ->join('ca.ability', 'a')
+            ->getQuery()
+            ->getScalarResult();
+
+        $linkedAbilityIds = array_map(function ($element) {
+            return $element['id'];
+        }, $linkedAbilityIds);
+
+        $qb = $this->createQueryBuilder('a');
+        $qb->delete()
+            ->where($qb->expr()->notIn('a.id', $linkedAbilityIds))
+            ->getQuery()
+            ->execute();
+    }
 }

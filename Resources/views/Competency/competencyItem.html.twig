@@ -24,30 +24,28 @@
             <span class="caret"></span>
         </a>
         <ul class="dropdown-menu" role="menu">
-            {% if level > 0 %}
-                <li role="presentation">
-                    <a class="edit-competency" role="menuitem" href="#" tabindex="-1">
-                        {{ 'edit'|trans({}, 'platform') }}
-                    </a>
-                </li>
-                <li role="presentation">
-                    <a class="delete-competency" role="menuitem" href="#" tabindex="-1">
-                        {{ 'delete'|trans({}, 'platform') }}
-                    </a>
-                </li>
-                <li role="presentation" class="divider"></li>
-            {% endif %}
-            <li role="presentation">
+            <li role="presentation"{% if level == 0 %} class="disabled"{% endif %}>
+                <a class="edit-competency" role="menuitem" href="#" tabindex="-1">
+                    {{ 'edit'|trans({}, 'platform') }}
+                </a>
+            </li>
+            <li role="presentation"{% if level == 0 %} class="disabled"{% endif %}>
+                <a class="delete-competency" role="menuitem" href="#" tabindex="-1">
+                    {{ 'delete'|trans({}, 'platform') }}
+                </a>
+            </li>
+            <li role="presentation" class="divider"></li>
+            <li role="presentation"{% if hasAbilities %}class="disabled"{% endif %}>
                 <a class="create-sub-competency" role="menuitem" href="#" tabindex="-1">
                     {{ 'competency.create_sub'|trans }}
                 </a>
             </li>
-            <li role="presentation">
+            <li role="presentation"{% if hasChildren %}class="disabled"{% endif %}>
                 <a class="create-ability" role="menuitem" href="#" tabindex="-1">
                     {{ 'ability.create'|trans }}
                 </a>
             </li>
-            <li role="presentation">
+            <li role="presentation"{% if hasChildren %}class="disabled"{% endif %}>
                 <a role="menuitem" href="#" tabindex="-1">
                     {{ 'ability.add'|trans }}
                 </a>
@@ -68,26 +66,27 @@
             {% endfor %}
         {% endif %}
         <li>
-            {% spaceless %} {# needed to target empty tables with css :empty #}
-                <table class="abilities table table-condensed table-bordered" style="display:{{ hasAbilities ? 'table' : 'none' }}">
-                    <thead>
+            <table class="abilities table table-condensed table-bordered" style="display:{{ hasAbilities ? 'table' : 'none' }}">
+                <thead>
+                    <tr>
                         <th>{{ 'level'|trans }}</th>
                         <th>{{ 'ability_'|trans }}</th>
                         <th>{{ 'ability.linked_activity_count'|trans }}</th>
                         <th>{{ 'ability.required_activity_count'|trans }}</th>
-                    </thead>
-                    <tbody>
-                        {% if hasAbilities %}
-                             {% for ability in competency.__abilities %}
-                                {%
-                                    include 'HeVinciCompetencyBundle:Competency:abilityRow.html.twig'
-                                    with ability
-                                %}
-                            {% endfor %}
-                        {% endif %}
-                    </tbody>
-                </table>
-            {% endspaceless %}
+                        <th colspan="2">{{ 'actions'|trans({}, 'platform') }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if hasAbilities %}
+                         {% for ability in competency.__abilities %}
+                            {%
+                                include 'HeVinciCompetencyBundle:Competency:abilityRow.html.twig'
+                                with ability
+                            %}
+                        {% endfor %}
+                    {% endif %}
+                </tbody>
+            </table>
         </li>
     </ul>
 </li>
