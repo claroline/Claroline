@@ -989,6 +989,7 @@ class QuestionController extends Controller
      */
     public function manageDocAction()
     {
+        $allowToDel = array();
         $user = $this->container->get('security.context')->getToken()->getUser();
         $request = $this->get('request');
 
