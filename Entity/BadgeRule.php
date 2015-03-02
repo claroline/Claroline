@@ -16,6 +16,14 @@ class BadgeRule extends Rule
     /**
      * @var Badge
      *
+     * @ORM\ManyToOne(targetEntity="Icap\BadgeBundle\Entity\Badge")
+     * @ORM\JoinColumn(nullable=true)
+     */
+    protected $badge;
+
+    /**
+     * @var Badge
+     *
      * @ORM\ManyToOne(targetEntity="Icap\BadgeBundle\Entity\Badge", inversedBy="badgeRules")
      * @ORM\JoinColumn(name="associated_badge", referencedColumnName="id", nullable=false, onDelete="CASCADE")
      */
@@ -41,10 +49,31 @@ class BadgeRule extends Rule
         return $this->associatedBadge;
     }
 
+    /**
+     * @param \Icap\BadgeBundle\Entity\Badge $badge
+     *
+     * @return Rule
+     */
+    public function setBadge($badge)
+    {
+        $this->badge = $badge;
+
+        return $this;
+    }
+
+    /**
+     * @return \Icap\BadgeBundle\Entity\Badge
+     */
+    public function getBadge()
+    {
+        return $this->badge;
+    }
+
     public function __clone()
     {
         if ($this->id) {
             $this->id              = null;
+            $this->badge           = null;
             $this->associatedBadge = null;
         }
     }
