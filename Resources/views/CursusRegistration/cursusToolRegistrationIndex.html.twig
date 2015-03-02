@@ -105,12 +105,19 @@
         <hr>
         <div>
             <div id="cursus-list">
-                {% for child in hierarchy['root'] %}
-                    <div>
-                        {{ _self.showCursus(child, hierarchy) }}
+                {% if hierarchy['root'] is defined %}
+                
+                    {% for child in hierarchy['root'] %}
+                        <div>
+                            {{ _self.showCursus(child, hierarchy) }}
+                        </div>
+                        <hr>
+                    {% endfor %}
+                {% else %}
+                    <div class="alert alert-warning">
+                        {{ 'no_cursus'|trans({}, 'cursus') }}
                     </div>
-                    <hr>
-                {% endfor %}
+                {% endif %}
             </div>
         </div>
     </div>
