@@ -175,6 +175,7 @@ class CursusManager
     public function addCoursesToCursus(Cursus $parent, array $courses)
     {
         $this->om->startFlushSuite();
+        $createdCursus = array();
         $lastOrder = $this->cursusRepo->findLastCursusOrderByParent($parent);
 
         foreach ($courses as $course) {
@@ -186,8 +187,11 @@ class CursusManager
             $lastOrder++;
             $newCursus->setCursusOrder($lastOrder);
             $this->om->persist($newCursus);
+            $createdCursus[] = $newCursus;
         }
         $this->om->endFlushSuite();
+
+        return $createdCursus;
     }
 
     public function removeCoursesFromCursus(Cursus $parent, array $courses)

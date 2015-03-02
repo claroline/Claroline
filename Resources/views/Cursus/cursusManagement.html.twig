@@ -98,10 +98,16 @@
             class="collapse in cursus-children"
         >
         {% for child in hierarchy[cursusId] %}
-            <li data-cursus-id="{{ child.getId() }}">
+            <li id="cursus-row-{{ child.getId() }}"
+                data-cursus-id="{{ child.getId() }}">
                 {{ _self.showCursus(child, hierarchy) }}
             </li>
         {% endfor %}
+        </ul>
+    {% else %}
+        <ul id="collapse-{{ cursusId }}"
+            class="collapse in cursus-children hidden"
+        >
         </ul>
     {% endif %}
 {% endmacro %}
@@ -142,7 +148,7 @@
             {{ cursusTitle }}
         </h3>
     </div>
-    <div class="panel-body">
+    <div id="cursus-management-body" class="panel-body">
         {{ macros.flashBox() }}
         {% include 'ClarolineCursusBundle:Cursus:toolMenuIndexTabs.html.twig'%}
         <br>

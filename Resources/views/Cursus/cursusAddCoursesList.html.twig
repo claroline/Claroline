@@ -108,7 +108,7 @@
             </tr>
             
             {% for course in courses %}
-                <tr>
+                <tr id="row-course-{{ course.getId() }}">
                     <td>
                         {{ course.getTitle() }}
                     </td>

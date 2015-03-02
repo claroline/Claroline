@@ -9,10 +9,8 @@
 
 (function () {
     'use strict';
-    
-    var hasBeenMofified = false;
 
-    $('.edit-cursus-btn').on('click', function () {
+    $('#cursus-management-body').on('click', '.edit-cursus-btn', function () {
         var cursusId = $(this).data('cursus-id');
         
         window.Claroline.Modal.displayForm(
@@ -22,7 +20,7 @@
         );
     });
     
-    $('.create-cursus-child-btn').on('click', function () {
+    $('#cursus-management-body').on('click', '.create-cursus-child-btn', function () {
         var parentId = $(this).data('cursus-id');
         
         window.Claroline.Modal.displayForm(
@@ -32,25 +30,25 @@
         );
     });
 
-    $('.delete-cursus-btn').on('click', function () {
+    $('#cursus-management-body').on('click', '.delete-cursus-btn', function () {
         var cursusId = $(this).data('cursus-id');
 
         window.Claroline.Modal.confirmRequest(
             Routing.generate('claro_cursus_delete', {'cursus': cursusId}),
-            refreshPage,
-            null,
+            removeCursusRow,
+            cursusId,
             Translator.trans('delete_cursus_confirm_message', {}, 'cursus'),
             Translator.trans('delete_cursus', {}, 'cursus')
         );
     });
 
-    $('.remove-course-btn').on('click', function () {
+    $('#cursus-management-body').on('click', '.remove-course-btn', function () {
         var cursusId = $(this).data('cursus-id');
 
         window.Claroline.Modal.confirmRequest(
             Routing.generate('claro_cursus_delete', {'cursus': cursusId}),
-            refreshPage,
-            null,
+            removeCursusRow,
+            cursusId,
             Translator.trans('remove_course_confirm_message', {}, 'cursus'),
             Translator.trans('remove_course', {}, 'cursus')
         );
@@ -71,7 +69,7 @@
 //        });
 //    });
     
-    $('.add-course-to-cursus-btn').on('click', function () {
+    $('#cursus-management-body').on('click', '.add-course-to-cursus-btn', function () {
         var cursusId = $(this).data('cursus-id');
         var cursusTitle = $(this).data('cursus-title');
 
@@ -168,17 +166,32 @@
                 }
             ),
             type: 'POST',
-            success: function () {
-                hasBeenMofified = true;
+            success: function (datas) {
+                $('#row-course-' + courseId).remove();
+                
+                for (var i = 0; i < datas.length; i++) {
+                    var courseRow =
+                        '<li id="cursus-row-' +
+                        datas[i]['id'] +
+                        '" data-cursus-id="' +
+                        datas[i]['id'] +
+                        '">' +      
+                            '<span>' +
+                                '<span class="label label-primary">' +
+                                    datas[i]['title'] +
+                                '</span>' +
+                                '<span class="label label-danger pointer-hand remove-course-btn" data-cursus-id="' +
+                                datas[i]['id'] +
+                                '">' +
+                                    '<i class="fa fa-trash"></i>' +
+                                '</span>' +
+                            '</span>' +
+                        '</li>';
+                    $('#collapse-' + cursusId).append(courseRow);
+                    $('#collapse-' + cursusId).removeClass('hidden');
+                }
             }
         });
-    });
-    
-    $('#view-courses-modal-close-btn').on('click', function () {
-        
-        if (hasBeenMofified) {
-            window.location.reload();
-        }
     });
     
     $('.cursus-element').hover(
@@ -234,6 +247,93 @@
             }
         }
     });
+    
+    var addCursusRow = function (data) {
+        console.log(data);
+        var cursusRow =
+            '<li id="cursus-row-' + data['id'] + '"' +
+                ' data-cursus-id="' + data['id'] + '">' +
+                '<div class="cursus-element" data-cursus-id="' + data['id'] + '">' +
+                    '<span class="pointer-hand view-cursus-btn"' +
+                          ' data-cursus-id="' + data['id'] + '"' +
+                          ' data-cursus-title="' + data['title'] + '"' +
+                          ' data-toggle="collapse"' +
+                          ' href="#collapse-' + data['id'] + '"' +
+                    '>' +
+                        data['title'] +
+                    '</span>' +
+                    '&nbsp;' +
+                    '<span class="dropdown">' +
+                        '<i class="cursus-option-btn fa fa-cog pointer-hand hidden"' +
+                           'id="option-btn-' + data['id'] + '"' +
+                           ' data-cursus-id="' + data['id'] + '"' +
+                           ' data-toggle="dropdown"' +
+                        '></i>' +
+                        '<ul class="dropdown-menu"' +
+                            ' role="menu"' +
+                            ' aria-labelledby="option-btn-' + data['id'] + '"' +
+                            ' style="white-space: nowrap"' +
+                        '>' +
+                            '<li role="presentation">' +
+                                '<a role="menuitem"' +
+                                   ' tabindex="-1"' +
+                                   ' class="pointer-hand edit-cursus-btn"' +
+                                   ' data-cursus-id="' + data['id'] + '"' +
+                                '>' +
+                                    '<i class="fa fa-edit"></i>' +
+                                    Translator.trans('edit', {}, 'platform') +
+                                '</a>' +
+                            '</li>' +
+                            '<li role="presentation" class="divider"></li>' +
+                            '<li role="presentation">' +
+                                '<a role="menuitem"' +
+                                   ' tabindex="-1"' +
+                                   ' class="pointer-hand create-cursus-child-btn"' +
+                                   ' data-cursus-id="' + data['id'] + '"' +
+                                '>' +
+                                    '<i class="fa fa-sitemap"></i>' +
+                                    Translator.trans('create_cursus_child', {}, 'cursus') +
+                                '</a>' +
+                            '</li>' +
+                            '<li role="presentation" class="divider"></li>' +
+                            '<li role="presentation">' +
+                                '<a role="menuitem"' +
+                                   ' tabindex="-1"' +
+                                   ' class="pointer-hand add-course-to-cursus-btn"' +
+                                   ' data-cursus-id="' + data['id'] + '"' +
+                                   ' data-cursus-title="' + data['title'] +'"' +
+                                '>' +
+                                    '<i class="fa fa-plus-square"></i>' +
+                                    Translator.trans('add_course_to_cursus', {}, 'cursus') +
+                                '</a>' +
+                            '</li>' +
+                            '<li role="presentation" class="divider"></li>' +
+                            '<li role="presentation">' +
+                                '<a role="menuitem"' +
+                                   ' tabindex="-1"' +
+                                   ' class="pointer-hand delete-cursus-btn"' +
+                                   ' data-cursus-id="' + data['id'] + '"' +
+                                '>' +
+                                    '<i class="fa fa-trash"></i>' +
+                                    Translator.trans('delete', {}, 'platform') +
+                                '</a>' +
+                            '</li>' +
+                        '</ul>' +
+                    '</span>' +
+                '</div>' +
+                '<ul id="collapse-' + data['id'] + '"' +
+                    ' class="collapse in cursus-children hidden"' +
+                '>' +
+                '</ul>'
+            '</li>';
+    
+            $('#collapse-' + data['parent_id']).append(cursusRow);
+            $('#collapse-' + data['parent_id']).removeClass('hidden');
+    }
+    
+    var removeCursusRow = function (event, cursusId) {
+        $('#cursus-row-' + cursusId).remove();
+    };
     
     var refreshPage = function () {
         window.tinymce.claroline.disableBeforeUnload = true;
