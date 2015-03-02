@@ -11,7 +11,6 @@
 
 namespace Claroline\CoreBundle\Rule\Entity;
 
-use Claroline\CoreBundle\Entity\Badge\Badge;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Doctrine\ORM\Mapping as ORM;
@@ -99,14 +98,6 @@ abstract class Rule
      * @Expose
      */
     protected $userType = 0;
-
-    /**
-     * @var Badge
-     *
-     * @ORM\ManyToOne(targetEntity="Icap\BadgeBundle\Entity\Badge")
-     * @ORM\JoinColumn(nullable=true)
-     */
-    protected $badge;
 
     /**
      * @var \Claroline\CoreBundle\Entity\User
@@ -373,26 +364,6 @@ abstract class Rule
         }
 
         return $this;
-    }
-
-    /**
-     * @param \Claroline\CoreBundle\Entity\Badge\Badge $badge
-     *
-     * @return Rule
-     */
-    public function setBadge($badge)
-    {
-        $this->badge = $badge;
-
-        return $this;
-    }
-
-    /**
-     * @return \Claroline\CoreBundle\Entity\Badge\Badge
-     */
-    public function getBadge()
-    {
-        return $this->badge;
     }
 
     /**
