@@ -35,6 +35,7 @@ class CriterionController extends DropzoneBaseController
      */
     public function editAddCriterionAction($dropzone, $page, $criterionId)
     {
+
         $this->get('innova.manager.dropzone_voter')->isAllowToOpen($dropzone);
         $this->get('innova.manager.dropzone_voter')->isAllowToEdit($dropzone);
 

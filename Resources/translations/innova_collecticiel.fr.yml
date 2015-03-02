@@ -341,3 +341,8 @@ unlock user: "débloquer"
 unlock_user_tooltip: "Débloquer un utilisateur lui permetra de voir sa copie sans qu'il ait besoin de faire les corrections requises"
 unlock_all: "débloquer tous "
 cancel_unlock: "annuler le déblocage"
+Start evaluation: 'Démarrer le collecticiel'
+Complete evaluation: 'Compléter le collecticiel'
+Type of document: 'Type'
+Name of document: 'Nom'
+Validated document: 'A valider'

@@ -40,12 +40,25 @@ class DropzoneCommonType extends AbstractType
             ->add('peerReview', 'choice', array(
                 'required' => true,
                 'choices' => array(
-                    false => 'Standard evaluation',
-                    true => 'Peer review evaluation'
+                    false => 'Peer review evaluation',
+                    true => 'Standard evaluation'
                 ),
                 'expanded' => true,
                 'multiple' => false
             ))
+
+/*
+            ->add('peerReview', 'choice',
+                array(
+                'required' => true,
+                'choices' => array(
+                    false => 'Standard evaluation',
+                                    ),
+                'expanded' => true
+                     )
+                )
+*/
+
             ->add('expectedTotalCorrection', 'integer', array('required' => true))
 
             ->add('displayNotationToLearners', 'checkbox', array('required' => false))

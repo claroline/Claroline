@@ -28,8 +28,8 @@
                 </a>
             </li>
 
+<!--
             {% block dropzone_edit_navTabs_criteria_block %}
-                <!-- class "peer-review-options" make this tab hidden when peerReview is not activated.  -->
                 <li class="hometab-element peer-review-options {% block dropzone_edit_navTabs_criteria_element_class %} {% endblock %}">
                     <a id="editCriteriaLink" href="
                     {% block dropzone_edit_navTabs_criteria_element_link %}
@@ -39,6 +39,7 @@
                     </a>
                 </li>
             {% endblock %}
+-->
 
             {% block collecticiel_edit_navTabs_criteria_block %}
                 <!-- class "peer-review-options" make this tab hidden when peerReview is not activated.  -->
@@ -47,7 +48,7 @@
                     {% block collecticiel_edit_navTabs_criteria_element_link %}
                         {{ path('innova_collecticiel_edit_criteria_innova',{'resourceId':dropzone.id}) }}
                     {% endblock %}" class="hometab-link">
-                        Critères d'évaluation par les pairs Eric
+                        Critères d'évaluation par l'enseignant
                     </a>
                 </li>
             {% endblock %}

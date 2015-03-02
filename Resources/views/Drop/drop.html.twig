@@ -33,7 +33,11 @@
         {{ macros.flashBox() }}
 
         {# DROP STATUS BAR #}
+        {# Quand on arrive dans un collecticiel (vue étudiant), on appelle dropStatus #}
+        {# pour afficher la barre de progression que l'on ne veut plus #}
+        {#
         {% include 'InnovaCollecticielBundle:Drop:dropStatus.html.twig' %}
+        #}
 
         {# INSTRUCTIONS #}
         {% if dropzone.instruction != null %}
@@ -49,8 +53,6 @@
         {# DOCUMENTS ALLREADY ADDED #}
         <h4>{{ 'Documents added  the copy'|trans({},'innova_collecticiel') }}</h4>
         {{ dropzoneMacros.displayDocumentsList(drop, dropzone, 12, "complete", null) }}
-
-
 
         <br/>
         {# ADD DOCUMENT #}

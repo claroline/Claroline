@@ -4,10 +4,12 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    {% stylesheets debug=false filter='lessphp'  output='css/icapdropzone/style.css'
+    {% stylesheets debug=false filter='lessphp' output='css/innovacollecticiel/style.css'
       "@InnovaCollecticielBundle/Resources/views/less/style.less"
     %}
-        <link rel="stylesheet" href="{{ asset_url }}" screen="media" />
+    <link rel="stylesheet" href="{{ asset_url }}" screen="media" />
+    <link href="{{ asset("bundles/innovacollecticiel/css/player.css") }}" rel="stylesheet" />
+
     {% endstylesheets %}
 {% endblock %}
 

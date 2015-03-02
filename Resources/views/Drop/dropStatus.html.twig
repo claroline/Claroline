@@ -10,16 +10,15 @@
              aria-valuemin="0" aria-valuemax="{{ dropzoneProgress.states|length }}"
              style="width: {{ dropzoneProgress.percent }}%;">
 
-  <span class='progress-bar-label {% if dropzoneProgress.percent <= 25 %} empty-bar {% endif %}'>
-  	    {{ dropzoneProgress.percent }}%
-    -
-      {% set currentLiteralState = dropzoneProgress.states[dropzoneProgress.currentState] %}
-      {{ currentLiteralState|trans({'%nb_correction%':dropzoneProgress.nbCorrection,'%expected_correction%':dropzone.expectedTotalCorrection},'innova_collecticiel') }}
-  </span>
-
-
+            <span class='progress-bar-label {% if dropzoneProgress.percent <= 25 %} empty-bar {% endif %}'>
+            	    {{ dropzoneProgress.percent }}%
+              -
+                {% set currentLiteralState = dropzoneProgress.states[dropzoneProgress.currentState] %}
+                {{ currentLiteralState|trans({'%nb_correction%':dropzoneProgress.nbCorrection,'%expected_correction%':dropzone.expectedTotalCorrection},'innova_collecticiel') }}
+            </span>
         </div>
     </div>
+
     <style>
         .progress-bar-label {
             width: 100%;
@@ -33,5 +32,3 @@
     </style>
 
 {% endif %}
-
-

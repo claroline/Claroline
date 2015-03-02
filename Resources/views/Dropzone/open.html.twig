@@ -127,7 +127,11 @@
         </div>
     {% endif %}
 
+    {# Quand on arrive dans un collecticiel (vue étudiant), on appelle dropStatus #}
+    {# pour afficher la barre de progression que l'on ne veut plus #}
+    {#
     {% include 'InnovaCollecticielBundle:Drop:dropStatus.html.twig' %}
+    #}
 
     {% if dropzone.instruction is not null and not dropzone.isNotStarted %}
         <hr/>
@@ -147,8 +151,7 @@
     {% endif %}
 
 
-
-
+    {# Affichage du bouton en bas à droite avec la nouvelle traduction #}
     {% if dropzone.isAllowDrop %}
         {% if drop is null or drop.finished == false %}
             <hr/>
@@ -156,9 +159,11 @@
                 <div class='col-md-8'>
                 </div>
                 <div class="col-md-4">
+                    {# Modification du nom du bouton et ajout de 2 traductions #}
+                    {# Appel innova_collecticiel_drop dans DropController #}
                     {% if drop is not null and drop.finished == false %}
                         <a href="{{ path('innova_collecticiel_drop', {'resourceId': dropzone.id}) }}"
-                           class="btn btn-primary pull-right">{{ 'Complete my copy'|trans({}, 'innova_collecticiel') }}</a>
+                           class="btn btn-primary pull-right">{{ 'Complete evaluation'|trans({}, 'innova_collecticiel') }}</a>
                     {% else %}
                         <a href="{{ path('innova_collecticiel_drop', {'resourceId': dropzone.id}) }}"
                            class="btn btn-primary pull-right">{{ 'Start evaluation'|trans({}, 'innova_collecticiel') }}</a>

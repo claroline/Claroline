@@ -400,7 +400,7 @@
 
 {% block javascripts %}
     {{ parent() }}
-    <script src="{{ asset('bundles/icapdropzone/js/popup.js') }}"></script>
+    <script src="{{ asset('bundles/innovacollecticiel/js/popup.js') }}"></script>
     {{ tinymce_init() }}
     <script>
         var totalColumn = {{ dropzone.totalCriteriaColumn }};
@@ -409,6 +409,6 @@
         var nbCorrection = {{nbCorrection}};
         var nbResults = {{ pager.nbResults }};
     </script>
-    <script src="{{ asset('bundles/icapdropzone/js/Dropzone/editCriteria.js') }}"></script>
+    <script src="{{ asset('bundles/innovacollecticiel/js/Dropzone/editCriteria.js') }}"></script>
 
 {% endblock %}
