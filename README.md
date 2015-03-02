@@ -55,6 +55,7 @@ Project setup
 - Make the following directories (and their children) writable from the command
   line and the web server (for further explanation on common permissions issues
   and solutions with Symfony2, read [this][5]):
+    - *app/sessions*
     - *app/cache*
     - *app/logs*
     - *app/config*
