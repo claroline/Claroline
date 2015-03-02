@@ -209,7 +209,7 @@ class DatabaseWriter
         }
 
         foreach ($processedConfiguration['admin_tools'] as $adminTool) {
-            $this->persistAdminTool($adminTool, $plugin);
+            $this->createAdminTool($adminTool, $plugin);
         }
     }
 
@@ -234,6 +234,10 @@ class DatabaseWriter
 
         foreach ($processedConfiguration['themes'] as $themeConfiguration) {
             $this->updateTheme($themeConfiguration, $plugin);
+        }
+
+        foreach ($processedConfiguration['admin_tools'] as $adminTool) {
+            $this->updateAdminTool($adminTool, $plugin);
         }
     }
 
@@ -636,13 +640,39 @@ class DatabaseWriter
      * @param array  $adminToolConfiguration
      * @param Plugin $plugin
      */
-    private function persistAdminTool($adminToolConfiguration, Plugin $plugin)
+    private function createAdminTool($adminToolConfiguration, Plugin $plugin)
     {
         $adminTool = new AdminTool();
+        $this->persistAdminTool($adminToolConfiguration, $plugin, $adminTool);
+    }
+
+    /**
+     * @param array     $adminToolConfiguration
+     * @param Plugin    $plugin
+     * @param AdminTool $adminTool
+     */
+    private function persistAdminTool($adminToolConfiguration, Plugin $plugin, AdminTool $adminTool)
+    {
         $adminTool->setName($adminToolConfiguration['name']);
         $adminTool->setClass($adminToolConfiguration['class']);
         $adminTool->setPlugin($plugin);
         $this->em->persist($adminTool);
+    }
+
+    /**
+     * @param array  $adminToolConfiguration
+     * @param Plugin $plugin
+     */
+    private function updateAdminTool($adminToolConfiguration, Plugin $plugin)
+    {
+        $adminTool = $this->em->getRepository('ClarolineCoreBundle:Tool\AdminTool')
+            ->findOneByName($adminToolConfiguration['name']);
+
+        if ($adminTool === null) {
+            $adminTool = new AdminTool();
+        }
+
+        $this->persistAdminTool($adminToolConfiguration, $plugin, $adminTool);
     }
 
     /**
