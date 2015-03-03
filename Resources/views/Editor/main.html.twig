@@ -70,9 +70,7 @@
     {{ parent() }}
     
     {# Load translations #}
-    {% javascripts 'js/translations/path_editor/*.js' %}
-        <script src="{{ asset_url }}"></script>
-    {% endjavascripts %}
+    <script type="text/javascript" src="{{ url('bazinga_jstranslation_js', { 'domain': 'path_editor' }) }}"></script>
 
     {# Angular #}
     {% javascripts debug=false filter='jsmin' output='vendor/angular/angular-js.js'
@@ -82,7 +80,9 @@
     %}
         <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
-    
+
+
+
     {# Angular UI #}
     {% javascripts debug=false filter='jsmin' output='vendor/angular/angular-ui.js'
         '@InnovaAngularUIBootstrapBundle/Resources/public/js/*'
