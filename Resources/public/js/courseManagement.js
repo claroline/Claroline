@@ -169,8 +169,36 @@
                 }
             ),
             type: 'POST',
-            success: function () {
+            success: function (datas) {
                 $('#registration-row-user-' + userId).remove();
+                console.log(datas);
+                
+                for (var i = 0; i < datas.length; i++) {
+                    var sessionUserElement =
+                        '<tr id="row-session-user-' + datas[i]['id'] + '">' +
+                            '<td>' +
+                                datas[i]['user_first_name'] + ' ' +
+                                datas[i]['user_last_name'] +
+                                ' <small>(' + datas[i]['username'] + ')</small>' +
+                                ' &nbsp;' +
+                                '<i class="fa fa-times-circle unregister-user-from-session pointer-hand"' +
+                                   ' data-toggle="tooltip"' +
+                                   ' data-placement="top"' +
+                                   ' data-container="#session-management-box"' +
+                                   ' title="' + Translator.trans('unregister_tutor_from_session', {}, 'cursus') + '"' +
+                                   ' data-session-user-id="' + datas[i]['id'] + '"' +
+                                   ' style="color: #D9534F"' +
+                                '>' +
+                                '</i>' +
+                            '</td>' +
+                        '</tr>';
+                
+                    if (parseInt(datas[i]['user_type']) === 0) {
+                        $('#session-learners-table').append(sessionUserElement);
+                    } else if (parseInt(datas[i]['user_type']) === 1) {
+                        $('#session-tutors-table').append(sessionUserElement);
+                    }
+                }
             }
         });
     });

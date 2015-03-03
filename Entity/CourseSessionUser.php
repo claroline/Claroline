@@ -22,7 +22,7 @@ use Doctrine\ORM\Mapping as ORM;
  *     uniqueConstraints={
  *         @ORM\UniqueConstraint(
  *             name="cursus_user_unique_course_session_user",
- *             columns={"session_id", "user_id"}
+ *             columns={"session_id", "user_id", "user_type"}
  *         )
  *     }
  * )

@@ -154,6 +154,16 @@ class CursusManager
         $this->om->flush();
     }
 
+    public function deleteCursusUsers(array $cursusUsers)
+    {
+        $this->om->startFlushSuite();
+
+        foreach ($cursusUsers as $cursusUser) {
+            $this->om->remove($cursusUser);
+        }
+        $this->om->endFlushSuite();
+    }
+
     public function persistCursusGroup(CursusGroup $cursusGroup)
     {
         $this->om->persist($cursusGroup);
@@ -630,6 +640,7 @@ class CursusManager
         $type
     )
     {
+        $results = array();
         $registrationDate = new \DateTime();
 
         $this->om->startFlushSuite();
@@ -648,6 +659,7 @@ class CursusManager
                 $sessionUser->setUserType($type);
                 $sessionUser->setRegistrationDate($registrationDate);
                 $this->om->persist($sessionUser);
+                $results[] = $sessionUser;
             }
         }
         $role = null;
@@ -662,6 +674,8 @@ class CursusManager
             $this->roleManager->associateRoleToMultipleSubjects($users, $role);
         }
         $this->om->endFlushSuite();
+
+        return $results;
     }
 
     public function registerUsersToSessions(
@@ -867,6 +881,16 @@ class CursusManager
         $this->persistCourseSession($session);
 
         return $session;
+    }
+
+    public function deleteCourseSessionUsers(array $sessionUsers)
+    {
+        $this->om->startFlushSuite();
+
+        foreach ($sessionUsers as $sessionUser) {
+            $this->om->remove($sessionUser);
+        }
+        $this->om->endFlushSuite();
     }
 
     public function generateWorkspace(Course $course, CourseSession $session, User $user)
@@ -1111,6 +1135,11 @@ class CursusManager
     public function getOneCursusById($cursusId, $executeQuery = true)
     {
         return $this->cursusRepo->findOneCursusById($cursusId, $executeQuery);
+    }
+
+    public function getCursusByGroup(Group $group, $executeQuery = true)
+    {
+        return $this->cursusRepo->findCursusByGroup($group, $executeQuery);
     }
 
 
@@ -1729,6 +1758,17 @@ class CursusManager
             $sessions,
             $group,
             $groupType,
+            $executeQuery
+        );
+    }
+
+    public function getSessionGroupsByGroup(
+        Group $group,
+        $executeQuery = true
+    )
+    {
+        return $this->sessionGroupRepo->findSessionGroupsByGroup(
+            $group,
             $executeQuery
         );
     }
