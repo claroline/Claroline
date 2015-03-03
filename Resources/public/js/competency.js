@@ -122,8 +122,13 @@
         }
     });
 
+    // disabled menu actions management
+    $(document).on('click', 'li.disabled > a', function (event) {
+        event.preventDefault();
+    });
+
     // sub-competency creation
-    $(document).on('click', 'a.create-sub-competency', function (event) {
+    $(document).on('click', 'li:not(.disabled) > a.create-sub-competency', function (event) {
         event.preventDefault();
         var parentItem = this.parentNode.parentNode.parentNode.parentNode;
         var parentId = parentItem.dataset.id;
@@ -144,7 +149,7 @@
     });
 
     // competency edition
-    $(document).on('click', 'a.edit-competency', function (event) {
+    $(document).on('click', 'li:not(.disabled) > a.edit-competency', function (event) {
         event.preventDefault();
         var node = this.parentNode.parentNode.parentNode.parentNode;
         var competencyId = node.dataset.id;
@@ -162,7 +167,7 @@
     });
 
     // competency deletion
-    $(document).on('click', 'a.delete-competency', function (event) {
+    $(document).on('click', 'li:not(.disabled) > a.delete-competency', function (event) {
         var node = this.parentNode.parentNode.parentNode.parentNode;
         deleteCompetency(event, 'competency', node.dataset.id, function () {
             if ($(node.parentNode).length === 1) {
@@ -177,7 +182,7 @@
     });
 
     // ability creation
-    $(document).on('click', 'a.create-ability', function (event) {
+    $(document).on('click', 'li:not(.disabled) > a.create-ability', function (event) {
         event.preventDefault();
         var node = this.parentNode.parentNode.parentNode.parentNode;
         window.Claroline.Modal.displayForm(
@@ -187,9 +192,13 @@
                 $node.children('i')
                     .removeClass('fa-plus-square-o empty')
                     .addClass('fa-minus-square-o collapse');
-                $node.css('display', 'block')
+                $node.children('ul.children')
+                    .css('display', 'block')
                     .find('table.abilities')
                     .css('display', 'table');
+                $node.find('a.create-sub-competency')
+                    .parent()
+                    .addClass('disabled');
                 sortAbilities($node.find('tbody'), $(Twig.render(AbilityRow, data)));
                 flasher.setMessage(trans('message.ability_created'));
             },
@@ -225,13 +234,17 @@
             Routing.generate('hevinci_delete_ability', { id: item.dataset.id, abilityId: row.dataset.id }),
             function () {
                 var $tableBody = $(row.parentNode);
+                var $item = $(item);
                 $(row).remove();
 
                 if ($tableBody.children('tr').length === 0) {
                     $tableBody.parent().css('display', 'none');
-                    $(item).children('i')
+                    $item.children('i')
                         .addClass('fa-plus-square-o empty')
                         .removeClass('fa-minus-square-o collapse');
+                    $item.find('a.create-sub-competency')
+                        .parent()
+                        .removeClass('disabled');
                 }
 
                 flasher.setMessage(trans('message.ability_deleted'));
