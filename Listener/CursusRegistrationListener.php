@@ -69,7 +69,6 @@ class CursusRegistrationListener
     public function onLog(LogCreateEvent $event)
     {
         $log = $event->getLog();
-//        $dateLog = $log->getDateLog();
         $action = $log->getAction();
         $user =  $log->getReceiver();
         $group = $log->getReceiverGroup();

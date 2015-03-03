@@ -27,14 +27,20 @@ use Claroline\CursusBundle\Entity\Cursus;
 use Claroline\CursusBundle\Entity\CursusGroup;
 use Claroline\CursusBundle\Entity\CursusUser;
 use Claroline\CursusBundle\Entity\CursusDisplayedWord;
+use Claroline\CursusBundle\Event\Log\LogCourseSessionUserRegistrationEvent;
+use Claroline\CursusBundle\Event\Log\LogCourseSessionUserUnregistrationEvent;
+use Claroline\CursusBundle\Event\Log\LogCursusUserRegistrationEvent;
+use Claroline\CursusBundle\Event\Log\LogCursusUserUnregistrationEvent;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bundle\FrameworkBundle\Translation\Translator;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * @DI\Service("claroline.manager.cursus_manager")
  */
 class CursusManager
 {
+    private $eventDispatcher;
     private $om;
     private $pagerFactory;
     private $roleManager;
@@ -53,6 +59,7 @@ class CursusManager
     
     /**
      * @DI\InjectParams({
+     *     "eventDispatcher"  = @DI\Inject("event_dispatcher"),
      *     "om"               = @DI\Inject("claroline.persistence.object_manager"),
      *     "pagerFactory"     = @DI\Inject("claroline.pager.pager_factory"),
      *     "roleManager"      = @DI\Inject("claroline.manager.role_manager"),
@@ -62,6 +69,7 @@ class CursusManager
      * })
      */
     public function __construct(
+        EventDispatcherInterface $eventDispatcher,
         ObjectManager $om,
         PagerFactory $pagerFactory,
         RoleManager $roleManager,
@@ -70,6 +78,7 @@ class CursusManager
         WorkspaceManager $workspaceManager
     )
     {
+        $this->eventDispatcher = $eventDispatcher;
         $this->om = $om;
         $this->pagerFactory = $pagerFactory;
         $this->roleManager = $roleManager;
@@ -150,6 +159,8 @@ class CursusManager
 
     public function deleteCursusUser(CursusUser $cursusUser)
     {
+        $event = new LogCursusUserUnregistrationEvent($cursusUser);
+        $this->eventDispatcher->dispatch('log', $event);
         $this->om->remove($cursusUser);
         $this->om->flush();
     }
@@ -159,7 +170,7 @@ class CursusManager
         $this->om->startFlushSuite();
 
         foreach ($cursusUsers as $cursusUser) {
-            $this->om->remove($cursusUser);
+            $this->deleteCursusUser($cursusUser);
         }
         $this->om->endFlushSuite();
     }
@@ -255,6 +266,8 @@ class CursusManager
                 $cursusUser->setUser($user);
                 $cursusUser->setRegistrationDate($registrationDate);
                 $this->persistCursusUser($cursusUser);
+                $event = new LogCursusUserRegistrationEvent($cursus, $user);
+                $this->eventDispatcher->dispatch('log', $event);
             }
         }
         $this->om->endFlushSuite();
@@ -280,6 +293,8 @@ class CursusManager
                     $cursusUser->setUser($user);
                     $cursusUser->setRegistrationDate($registrationDate);
                     $this->persistCursusUser($cursusUser);
+                    $event = new LogCursusUserRegistrationEvent($cursus, $user);
+                    $this->eventDispatcher->dispatch('log', $event);
                 }
             }
         }
@@ -660,6 +675,8 @@ class CursusManager
                 $sessionUser->setRegistrationDate($registrationDate);
                 $this->om->persist($sessionUser);
                 $results[] = $sessionUser;
+                $event = new LogCourseSessionUserRegistrationEvent($session, $user);
+                $this->eventDispatcher->dispatch('log', $event);
             }
         }
         $role = null;
@@ -704,6 +721,8 @@ class CursusManager
                     $sessionUser->setUserType($type);
                     $sessionUser->setRegistrationDate($registrationDate);
                     $this->om->persist($sessionUser);
+                    $event = new LogCourseSessionUserRegistrationEvent($session, $user);
+                    $this->eventDispatcher->dispatch('log', $event);
                 }
             }
             $role = null;
@@ -740,6 +759,8 @@ class CursusManager
             if (!is_null($role)) {
                 $this->roleManager->dissociateRole($user, $role);
             }
+            $event = new LogCourseSessionUserUnregistrationEvent($sessionUser);
+            $this->eventDispatcher->dispatch('log', $event);
             $this->om->remove($sessionUser);
         }
         $this->om->endFlushSuite();
@@ -888,6 +909,8 @@ class CursusManager
         $this->om->startFlushSuite();
 
         foreach ($sessionUsers as $sessionUser) {
+            $event = new LogCourseSessionUserUnregistrationEvent($sessionUser);
+            $this->eventDispatcher->dispatch('log', $event);
             $this->om->remove($sessionUser);
         }
         $this->om->endFlushSuite();
