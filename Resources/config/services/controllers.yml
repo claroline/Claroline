@@ -40,6 +40,5 @@ services:
             translator:        @translator
             pathHandler:       @innova_path.form.handler.path
             pathManager:       @innova_path.manager.path
-            publishingManager: @innova_path.manager.publishing
             resourceManager:   @claroline.manager.resource_manager
         scope: request
