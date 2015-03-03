@@ -12,11 +12,12 @@
 namespace Claroline\InstallationBundle\Additional;
 
 use Claroline\InstallationBundle\Bundle\BundleVersion;
+use Psr\Log\LoggerInterface;
 
 interface AdditionalInstallerInterface
 {
     public function setEnvironment($environment);
-    public function setLogger(\Closure $logger);
+    public function setLogger(LoggerInterface $logger);
     public function preInstall();
     public function postInstall();
     public function preUpdate($currentVersion, $targetVersion);
