@@ -11,6 +11,7 @@
 
 namespace Claroline\CursusBundle\Repository;
 
+use Claroline\CoreBundle\Entity\Group;
 use Claroline\CursusBundle\Entity\Cursus;
 use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
 
@@ -245,5 +246,23 @@ class CursusRepository extends NestedTreeRepository
         $query->setParameter('cursusId', $cursusId);
 
         return $executeQuery ? $query->getOneOrNullResult() : $query;
+    }
+
+    public function findCursusByGroup(Group $group, $executeQuery = true)
+    {
+        $dql = '
+            SELECT c
+            FROM Claroline\CursusBundle\Entity\Cursus c
+            WHERE EXISTS (
+                SELECT cg
+                FROM Claroline\CursusBundle\Entity\CursusGroup cg
+                WHERE cg.group = :group
+                AND cg.cursus = c
+            )
+        ';
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('group', $group);
+
+        return $executeQuery ? $query->getResult() : $query;
     }
 }

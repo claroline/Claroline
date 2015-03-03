@@ -154,6 +154,16 @@ class CursusManager
         $this->om->flush();
     }
 
+    public function deleteCursusUsers(array $cursusUsers)
+    {
+        $this->om->startFlushSuite();
+
+        foreach ($cursusUsers as $cursusUser) {
+            $this->om->remove($cursusUser);
+        }
+        $this->om->endFlushSuite();
+    }
+
     public function persistCursusGroup(CursusGroup $cursusGroup)
     {
         $this->om->persist($cursusGroup);
@@ -873,6 +883,16 @@ class CursusManager
         return $session;
     }
 
+    public function deleteCourseSessionUsers(array $sessionUsers)
+    {
+        $this->om->startFlushSuite();
+
+        foreach ($sessionUsers as $sessionUser) {
+            $this->om->remove($sessionUser);
+        }
+        $this->om->endFlushSuite();
+    }
+
     public function generateWorkspace(Course $course, CourseSession $session, User $user)
     {
         $model = $course->getWorkspaceModel();
@@ -1115,6 +1135,11 @@ class CursusManager
     public function getOneCursusById($cursusId, $executeQuery = true)
     {
         return $this->cursusRepo->findOneCursusById($cursusId, $executeQuery);
+    }
+
+    public function getCursusByGroup(Group $group, $executeQuery = true)
+    {
+        return $this->cursusRepo->findCursusByGroup($group, $executeQuery);
     }
 
 
@@ -1733,6 +1758,17 @@ class CursusManager
             $sessions,
             $group,
             $groupType,
+            $executeQuery
+        );
+    }
+
+    public function getSessionGroupsByGroup(
+        Group $group,
+        $executeQuery = true
+    )
+    {
+        return $this->sessionGroupRepo->findSessionGroupsByGroup(
+            $group,
             $executeQuery
         );
     }
