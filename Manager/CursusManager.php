@@ -630,6 +630,7 @@ class CursusManager
         $type
     )
     {
+        $results = array();
         $registrationDate = new \DateTime();
 
         $this->om->startFlushSuite();
@@ -648,6 +649,7 @@ class CursusManager
                 $sessionUser->setUserType($type);
                 $sessionUser->setRegistrationDate($registrationDate);
                 $this->om->persist($sessionUser);
+                $results[] = $sessionUser;
             }
         }
         $role = null;
@@ -662,6 +664,8 @@ class CursusManager
             $this->roleManager->associateRoleToMultipleSubjects($users, $role);
         }
         $this->om->endFlushSuite();
+
+        return $results;
     }
 
     public function registerUsersToSessions(

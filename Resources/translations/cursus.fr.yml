@@ -80,6 +80,8 @@ unregister: 'Désinscrire'
 unregister_group_from_session: 'Désinscrire le groupe de la session'
 unregister_learner_from_session: 'Désinscrire l''apprenant de la session'
 unregister_tutor_from_session: 'Désinscrire le tuteur de la session'
+unregister_user_from_session: 'Désinscrire l''utilisateur de la session'
+unregister_user_from_session_message: 'Êtes-vous sûr de vouloir désinscrire cet utilisateur de cette session ?'
 view_structure: 'Voir la structure'
 will_be: 'sera'
 word: Mot

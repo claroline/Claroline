@@ -579,9 +579,26 @@ class CourseController extends Controller
     )
     {
         $this->checkToolAccess();
-        $this->cursusManager->registerUsersToSession($session, array($user), $userType);
+        $results = array();
+        $sessionUsers = $this->cursusManager->registerUsersToSession(
+            $session,
+            array($user),
+            $userType
+        );
 
-        return new JsonResponse('success', 200);
+        foreach ($sessionUsers as $sessionUser) {
+            $user = $sessionUser->getUser();
+            $results[] = array(
+                'id' => $sessionUser->getId(),
+                'user_type' => $sessionUser->getUserType(),
+                'user_id' => $user->getId(),
+                'username' => $user->getUsername(),
+                'user_first_name' => $user->getFirstName(),
+                'user_last_name' => $user->getLastName()
+            );
+        }
+
+        return new JsonResponse($results, 200);
     }
 
     /**
