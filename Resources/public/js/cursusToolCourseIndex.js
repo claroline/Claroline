@@ -36,7 +36,7 @@
             refreshPage,
             null,
             Translator.trans('delete_course_confirm_message', {}, 'cursus'),
-            Translator.trans('delete_course', {}, 'cursus')
+            Translator.trans('course_deletion', {}, 'cursus')
         );
     });
 
