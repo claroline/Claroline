@@ -269,6 +269,7 @@ noDocFound: Pas de document trouvé
 noFinish: Non terminé
 noHintShow: Indices non vus, pas de pénalité
 noImg: Vous devez télécharger une image
+no label: Pas de labels associés
 noOne: Aucune
 noPaperFound: Aucune copie
 noQuestion: Vous ne posez aucune question
@@ -476,7 +477,7 @@ Hint.value: Indice
 Interaction.feedback: Commentaire à afficher avec la correction (facultatif)
 Interaction.invite: Question
 
-Inter_Matching.shuffle: Attribuer les points par réponse
+Inter_Matching.shuffle: Ordre des propositions et des labels aléatoire
 
 Inter_Open.ScoreMaxLongResp: Points pour la bonne réponse
 

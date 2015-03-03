@@ -70,4 +70,22 @@
                 </td>
             </tr>
         {% endfor%}
+            <tr>
+                <td>
+                </td>
+                <td>
+                    <div class="labelMatch" align="center">
+                        <div class="labels">
+                            {{ 'no label' | trans }}
+                        </div>
+                        {% for proposal in inter.proposals %}
+                            {% if  proposal.associatedLabel is empty %}
+                                    <div class="associatedProposal" align="center">
+                                        {{ proposal.value | raw }}
+                                    </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </td>
+            </tr>
 </table>

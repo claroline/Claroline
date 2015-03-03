@@ -1187,12 +1187,12 @@ class ExerciseController extends Controller
                     ->getRepository('UJMExoBundle:InteractionMatching')
                     ->getInteractionMatching($interactionToDisplay->getId());
                 
-                if ($interactionMatching[0]->getShuffle()) {
-                        $interactionMatching[0]->shuffleProposals();
-                        $interactionMatching[0]->shuffleLabels();
+                if ($interactionToDisplayed[0]->getShuffle()) {
+                        $interactionToDisplayed[0]->shuffleProposals();
+                        $interactionToDisplayed[0]->shuffleLabels();
                     } else {
-                        $interactionMatching[0]->sortProposals();
-                        $interactionMatching[0]->sortLabels();
+                        $interactionToDisplayed[0]->sortProposals();
+                        $interactionToDisplayed[0]->sortLabels();
                     }
 
                 $responseMatch = $this->getDoctrine()
