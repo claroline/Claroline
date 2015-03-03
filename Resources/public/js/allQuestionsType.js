@@ -6,6 +6,7 @@ $('#feebackOptionalShow').css({"display" : "inline-block"});
 $('#descriptionOptionalHide').css({"display" : "none"});
 $('#feebackOptionalHide').css({"display" : "none"});
 
+
 //$("*[id$='_interaction_question_model']").attr("disabled", true);
 
 // Display the textarea
@@ -37,9 +38,25 @@ function HideOptional(type) {
         $('#descriptionOptional').css({"display" : "none"});
     }
 }
-
+/**
+ * Change the icon's link according to its status
+ * 
+ * @param {string} idI : icon's id
+ * @param {string} idDiv : div's id which appears or disappears
+ */  
+function statusButton(idI,idDiv) {  
+    $('#'+idDiv).on('shown.bs.collapse', function () {
+      $('#'+idI).removeClass('fa fa-eye').addClass('fa fa-eye-slash');
+     // $('#'+idI+'Button').removeClass("btn btn-default collapsed").addClass("btn btn-default collapsed active");
+    });
+    $('#'+idDiv).on('hidden.bs.collapse', function () {
+      $('#'+idI).removeClass('fa fa-eye-slash').addClass('fa fa-eye');
+    //  $('#'+idI+'Button').removeClass("btn btn-default collapsed active").addClass("btn btn-default collapsed");
+  });
+        }
 // Delete the name of the category
 function dropCategory() {
+    
     var idCategory = $("*[id$='_interaction_question_category']").val(); // Id of the category to delete
     var path = $('#pathDrop').val(); // Path to the controller
 

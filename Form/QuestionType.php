@@ -36,8 +36,10 @@ class QuestionType extends AbstractType
             ->add(
                 'category', 'entity', array(
                     'class' => 'UJM\\ExoBundle\\Entity\\Category',
+                    'compound' => 'true',
                     'label' => 'Category.value',
                     'required' => false,
+                    'empty_value' => 'choose_category',
                     'query_builder' => function (CategoryRepository $cr) use ($uid) {
                         if ($this->catID == -1) {
                             return $cr->getUserCategory($uid);
@@ -50,7 +52,9 @@ class QuestionType extends AbstractType
                 )
             )
             ->add('description', 'tinymce', array(
-                    'label' => 'Question.description', 'required' => false
+                    'label' => 'Question.description', 
+                    'required' => false,
+                    'attr'  => array( 'placeholder' => 'Question.description')                    
                 )
             )
             ->add(

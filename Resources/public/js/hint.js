@@ -8,7 +8,8 @@ function newHint(label, penalty, addHint, deleteHint) {
     var begin = true;
 
     // create the button to add a hint
-    var add = $('<a href="#" id="add_hint" class="btn btn-primary"><i class="fa fa-plus"></i>&nbsp;'+addHint+'</a>');
+  //  var add = $('<a href="#" id="add_hint" class="btn btn-primary"><i class="fa fa-plus"></i>&nbsp;'+addHint+'</a>');
+  var add = $('<a href="#" id="add_hint" class="btn btn-default" >'+addHint+'</a>');
 
     // Add the button after the table
     tableHints.append(add);
@@ -16,7 +17,8 @@ function newHint(label, penalty, addHint, deleteHint) {
     // When click, add a new hint in the table
     add.click(function (e) {
         if (begin == true) {
-            tableHints.append('<table id="newTable2" class="table table-striped table-bordered table-condensed" style="width:500px;"><thead><tr style="background-color: lightsteelblue;"><th class="classic">'+label+'</th><th class="classic">'+penalty+'</th><th class="classic">-----</th></tr></thead><tbody></tbody></table>');
+            tableHints.append('<table id="newTable2" class="table table-striped table-bordered table-condensed" style="width:500px;"><thead><tr style="background-color: lightsteelblue;"><th class="classic">'+label+'</th><th class="classic">'+penalty+'</th><th class="classic">'+deleteHint+'</th></tr></thead><tbody></tbody></table>');
+           
             begin = false;
         }
         $('#newTable2').find('tbody').append('<tr></tr>');
@@ -30,12 +32,12 @@ function newHint(label, penalty, addHint, deleteHint) {
 function newHintEdit(label, penalty, addHint, deleteHint) {
 
     // create the button to add a hint
-    var add = $('<a href="#" id="add_hint" class="btn btn-primary"><i class="fa fa-plus"></i>&nbsp;'+addHint+'</a><br/><br/>');
-
+   // var add = $('<a href="#" id="add_hint" class="btn btn-primary"><i class="fa fa-plus"></i>&nbsp;'+addHint+'</a><br/><br/>');
+    var add = $('<a href="#" id="add_hint" class="btn btn-default" >'+addHint+'</a>');
     // Add the button after the table
     tableHints.append(add);
 
-    tableHints.append('<table id="newTable2" class="table table-striped table-bordered table-condensed" style="width:500px;"><thead><tr style="background-color: lightsteelblue;"><th class="classic">'+label+'</th><th class="classic">'+penalty+'</th><th class="classic">-----</th></tr></thead><tbody></tbody></table>');
+    tableHints.append('<table id="newTable2" class="table table-striped table-bordered table-condensed" style="width:500px;"><thead><tr style="background-color: lightsteelblue;"><th class="classic">'+label+'</th><th class="classic">'+penalty+'</th><th class="classic">'+deleteHint+'</th></tr></thead><tbody></tbody></table>');
 
     // When click, add a new hint in the table
     add.click(function (e) {
@@ -121,7 +123,7 @@ function addHints(container, deleteHint) {
 
     // Add the delete button
     $('#newTable2').find('tr:last').append('<td class="classic"></td>');
-    $('#newTable2').find('td:last').append(container.find('a:contains("'+deleteHint+'")'));
+    $('#newTable2').find('td:last').append(contain.find('a.btn-danger'));
 
     // Remove the useless fileds form
     container.remove();

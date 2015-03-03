@@ -1,38 +1,42 @@
 <div class="form-group row">
+    <label class="control-label col-md-1">{{ 'title' | trans }}</label>
     <div class="col-md-5">{{ form_widget(form.interaction.question.title) }}</div>
-    <a class="btn btn-default" data-toggle="collapse" data-target="#categorie">Catégorie</a>
-    <a class="btn btn-default" data-toggle="collapse" data-target="#description">Description</a>
-        <br><br>
-    <div id="categorie" class="list-group collapse">
+    <a id="idCategoryButton" class="btn btn-default " data-toggle="collapse" data-target="#categoryDiv" onClick="statusButton('idCategory','categoryDiv');" ><i id="idCategory" class="fa fa-eye"></i>&nbsp;{{'Category.value' | trans}}</a>
+    <a id="idDescriptionButton" class="btn btn-default" data-toggle="collapse" data-target="#descriptionDiv" onClick="statusButton('idDescription','descriptionDiv');" ><i id="idDescription" class="fa fa-eye"></i>&nbsp;{{'Exepertise.description' | trans}}</a>
+    <br><br> 
+    <div id="categoryDiv" class="list-group collapse">
+         <label class="control-label col-md-1">{{ 'category' | trans }}</label>
         <div class="col-md-5">
             {{ form_widget(form.interaction.question.category) }}
             {{ form_errors(form.interaction.question.category) }}
         </div> 
-        <a class="btn btn-primary" onclick="openCat('{{ path('ujm_category_new_pop', {'edit': 1} ) }}');"><i class="fa fa-pencil"></i></a>
-        <a class="btn btn-primary" onclick="openCat('{{ path('ujm_category_new_pop') }}');"><i class="fa fa-plus"></i></a>
-    </a></div>
-     <div id="description" class="list-group collapse">
-        <div class="col-md-6"> 
-            {{ form_widget(form.interaction.question.description) }}
-        </div>
-     </div>
-     </a>
-</div>
-
-
-<div class="form-group row">
-    <div class="control-label col-md-8"> {{ form_widget(form.interaction.invite) }}</div>
-            <a class="btn btn-default" href="#">Indice</a>
-           <!---- <a class="btn btn-default" href="#">Edition avancée</a>--->
-           
-</div>
-    <a class="btn btn-default" data-toggle="collapse" data-target="#collepseinteraction">Feedback général</a>
-        <div id="collepseinteraction" class="list-group collapse">
-        <div class="list-group-item">{{ form_widget(form.interaction.feedBack) }}</div>
-
+        <a title="{{ 'edit a category' | trans }}" class="btn btn-primary" onclick="openCat('{{ path('ujm_category_new_pop', {'edit': 1} ) }}');"><i class="fa fa-pencil"></i></a>
+        <a title="{{ 'create a new category' | trans }}"class="btn btn-primary" onclick="openCat('{{ path('ujm_category_new_pop') }}');"><i class="fa fa-plus"></i></a>
+        <a title="{{ 'drop category' | trans }}" id="linkedCategory" style="display: none;" class="btn btn-primary" id="lien_category_drop" onclick="dropCategory();"><i class="fa fa-trash-o"></i></a>
+   </div>
+   <div id="descriptionDiv" class="list-group collapse">
+        <label class="control-label col-md-1">{{ 'Exepertise.description' | trans }}</label>
+       <div class="col-md-7"> 
+           {{ form_widget(form.interaction.question.description) }}
+            
+       </div> 
+            <br><br><br><br><br><br> 
+   </div> 
+          
+   <label class="control-label col-md-1">{{ 'Interaction.invite' | trans }}</label>
+   <div class="control-label col-md-7"> {{ form_widget(form.interaction.invite) }}</div>   
+       <div id="divHint" >
+           <div id="hintError"></div>
+               <div id="tableHint" class="control-label col-md-4"></div>
+               {{ form_widget(form.interaction.hints) }}
+               {{ form_errors(form.interaction.hints) }}                      
     </div>
+</div>  
+<a id="idFeedbackButton" class="btn btn-default" data-toggle="collapse" data-target="#collepseinteraction" title="{{ 'Interaction.feedback' | trans }}" >{{ 'feedback' | trans }}</a>
+<div id="collepseinteraction" class="list-group collapse">
+    <label class="control-label col-md-1">{{ 'feedback' | trans }}</label>
+    <div class="list-group-item">{{ form_widget(form.interaction.feedBack) }}</div>
+</div>
 <hr>
-
 <input type="hidden" id="pathDrop" value="{{ path('ujm_category_drop') }}"/>
-
 <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/allQuestionsType.js') }}"></script>

@@ -128,7 +128,14 @@ abstract class InteractionHandler
             $this->em->persist($hint);
         }
     }
-
+    
+    /**
+     * Creates or uses the default category
+     */
+    protected function checkCategory()
+    {
+        
+    }
     /**
      * Add the Interaction in the exercise if created since an exercise
      *

@@ -86,7 +86,9 @@ change: Change
 changeName: Change the name of the document
 changeOrder: To change questions order, move it by using drag and drop
 choice: Choice
-choose: Choose
+choose: Choose 
+choose_image : Choose an image
+choose_category : Choose a category
 choose_type: Choose type
 chooseType: Choose type of document to display
 close: Close
@@ -130,7 +132,7 @@ document: Document
 doNothing: Do nothing and go back to my documents management
 drop category: Drop this category
 duplicate: Duplicate
-duplicate this question: Duplicate <input type ="text" name='nbq' value='0' size='2' /> time this question (10 maximum allowed)
+duplicate this question: <input type ="text" name='nbq' value='0' size='2' /> time this question (10 maximum allowed)
 duration: Duration
 
 # E
@@ -156,7 +158,7 @@ explainMeasureDifficulty: The measure of difficulty is equal to the percentage o
 export CSV of results: Export CSV of results
 
 # F
-feedback: Feedback
+feedback: Feedback general
 findBy: Find by
 findIn: Find in
 findLabel: Find a document with a specific label

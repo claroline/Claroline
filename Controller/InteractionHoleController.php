@@ -69,6 +69,7 @@ class InteractionHoleController extends Controller
                         ));
             } else {
                 $form->addError(new FormError($holeHandler));
+                
             }
         }
 
@@ -78,6 +79,7 @@ class InteractionHoleController extends Controller
             'form'   => $form->createView(),
             'error'  => true,
             'exoID'  => $exoID
+              
             )
         );
 

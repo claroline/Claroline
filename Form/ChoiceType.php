@@ -23,7 +23,7 @@ class ChoiceType extends AbstractType
                 'label', 'text', array(
                     'label' => ' ',
                     'attr' => array(
-                        'placeholder' => 'Réponse',               
+                    'placeholder' => 'Response.reponse',               
                     )
                 )
             )
@@ -31,7 +31,7 @@ class ChoiceType extends AbstractType
                 'weight', 'text', array(
                     'required' => false, 
                     'label' => ' ', 
-                    'attr' => array('style' => 'width:50px; text-align: end;', 'placeholder' => 'pts')
+                    'attr' => array('style' => 'width:65px; text-align: end;', 'placeholder' => 'points')
                 )
             )
             ->add(
