@@ -11,12 +11,12 @@
 
 namespace Claroline\ForumBundle\Installation\Updater;
 
+use Claroline\InstallationBundle\Updater\Updater;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-class Updater020210
+class Updater020210 extends Updater
 {
     private $container;
-    private $logger;
     /** @var  Connection */
     private $conn;
 
@@ -39,17 +39,5 @@ class Updater020210
         $plugin->setHasOptions(false);
         $em->persist($forumType);
         $em->flush();
-    }
-
-    public function setLogger($logger)
-    {
-        $this->logger = $logger;
-    }
-
-    private function log($message)
-    {
-        if ($log = $this->logger) {
-            $log('    ' . $message);
-        }
     }
 } 
