@@ -14,6 +14,7 @@ namespace Claroline\WebInstaller;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Installation\Settings\FirstAdminSettings;
 use Claroline\CoreBundle\Library\Security\PlatformRoles;
+use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Output\StreamOutput;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -103,11 +104,11 @@ class Installer
 
     private function launchInstaller(ContainerInterface $container, OutputInterface $output)
     {
+        /** @var \Claroline\CoreBundle\Library\Installation\PlatformInstaller $installer */
         $installer = $container->get('claroline.installation.platform_installer');
         $installer->setOutput($output);
-        $installer->setLogger(function ($message) use ($output) {
-            $output->writeln($message);
-        });
+        $logger = new ConsoleLogger($output);
+        $installer->setLogger($logger);
         $output->writeln('Installing the platform from kernel...');
         $installer->installFromKernel(false);
     }
