@@ -3,11 +3,13 @@
 namespace HeVinci\CompetencyBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints as BR;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="HeVinci\CompetencyBundle\Repository\AbilityRepository")
  * @ORM\Table(name="hevinci_ability")
+ * @BR\UniqueEntity("name")
  */
 class Ability implements \JsonSerializable
 {
@@ -19,7 +21,7 @@ class Ability implements \JsonSerializable
     private $id;
 
     /**
-     * @ORM\Column
+     * @ORM\Column(unique=true)
      * @Assert\NotBlank
      * @Assert\Length(max="255")
      */
@@ -110,8 +112,8 @@ class Ability implements \JsonSerializable
             'id' => $this->id,
             'name' => $this->name,
             'minActivityCount' => $this->minActivityCount,
-            'levelName' => $this->level->getName(),
-            'levelValue' => $this->level->getValue()
+            'levelName' => $this->level ? $this->level->getName() : null,
+            'levelValue' => $this->level ? $this->level->getValue() : null
         ];
     }
 }

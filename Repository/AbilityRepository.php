@@ -3,6 +3,7 @@
 namespace HeVinci\CompetencyBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use HeVinci\CompetencyBundle\Entity\Ability;
 use HeVinci\CompetencyBundle\Entity\Competency;
 
 class AbilityRepository extends EntityRepository
@@ -57,5 +58,33 @@ class AbilityRepository extends EntityRepository
             ->where($qb->expr()->notIn('a.id', $linkedAbilityIds))
             ->getQuery()
             ->execute();
+    }
+
+    /**
+     * Returns the first five abilities whose name begins by a given
+     * string, excluding abilities linked to a particular competency.
+     *
+     * @param string        $name
+     * @param Competency    $excludedParent
+     * @return array
+     */
+    public function findFirstByName($name, Competency $excludedParent)
+    {
+        $qb = $this->createQueryBuilder('a');
+        $qb2 = $this->_em->createQueryBuilder();
+        $qb2->select('a2')
+            ->from('HeVinci\CompetencyBundle\Entity\CompetencyAbility', 'ca')
+            ->join('ca.ability', 'a2')
+            ->where($qb2->expr()->eq('ca.competency', ':parent'));
+
+        return $qb->select('a')
+            ->where($qb->expr()->like('a.name', ':name'))
+            ->andWhere($qb->expr()->notIn('a', $qb2->getDQL()))
+            ->orderBy('a.name')
+            ->setMaxResults(5)
+            ->setParameter(':name', $name . '%')
+            ->setParameter(':parent', $excludedParent)
+            ->getQuery()
+            ->getResult();
     }
 }

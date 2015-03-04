@@ -311,9 +311,63 @@ class CompetencyManager
         return $ability;
     }
 
+    /**
+     * Sets the level temporary attribute of an ability.
+     *
+     * @param Competency $parent
+     * @param Ability $ability
+     */
     public function loadAbility(Competency $parent, Ability $ability)
     {
         $link = $this->competencyAbilityRepo->findOneByTerms($parent, $ability);
         $ability->setLevel($link->getLevel());
+    }
+
+    /**
+     * Returns the first five abilities whose name begins by a given string,
+     * excluding the abilities linked to a particular competency.
+     *
+     * @see HeVinci\CompetencyBundle\Repository\AbilityRepository::findByFirstName
+     *
+     * @param Competency    $parent
+     * @param string        $search
+     * @return Ability[]
+     */
+    public function suggestAbilities(Competency $parent, $search)
+    {
+        return $this->abilityRepo->findFirstByName($search, $parent);
+    }
+
+    /**
+     * Creates a link between a competency and an existing ability.
+     *
+     * @param Competency $parent
+     * @param Ability $ability
+     * @param Level $level
+     * @return Ability
+     * @throws \LogicException if a link already exists
+     */
+    public function linkAbility(Competency $parent, Ability $ability, Level $level)
+    {
+        $link = $this->competencyAbilityRepo->findOneBy([
+            'competency' => $parent,
+            'ability' => $ability
+        ]);
+
+        if ($link) {
+            throw new \LogicException(
+                "Ability {$ability->getId()} is already linked to competency {$parent->getId()}"
+            );
+        }
+
+        $link = new CompetencyAbility();
+        $link->setCompetency($parent);
+        $link->setAbility($ability);
+        $link->setLevel($level);
+
+        $this->om->persist($link);
+        $this->om->flush();
+
+        return $ability;
     }
 }

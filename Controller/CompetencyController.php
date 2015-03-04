@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * @DI\Tag("security.secure_service")
  * @SEC\PreAuthorize("canOpenAdminTool('competencies')")
- * @EXT\Route(requirements={"id"="\d+"}, options={"expose"=true})
+ * @EXT\Route(requirements={"id"="\d+", "abilityId"="\d+"}, options={"expose"=true})
  * @EXT\Method("GET")
  */
 class CompetencyController
@@ -345,5 +345,60 @@ class CompetencyController
             'competency' => $parent,
             'ability' => $ability
         ];
+    }
+
+    /**
+     * Displays the ability add form.
+     *
+     * @EXT\Route("/{id}/ability/add", name="hevinci_add_ability_form")
+     * @EXT\Template("HeVinciCompetencyBundle:Competency:abilityAddForm.html.twig")
+     *
+     * @param Competency $parent
+     * @return array
+     */
+    public function addAbilityFormAction(Competency $parent)
+    {
+        return [
+            'form' => $this->formHandler->getView('hevinci_form_ability_import', null, ['competency' => $parent]),
+            'competency' => $parent
+        ];
+    }
+
+    /**
+     * Adds an existing ability to a competency.
+     *
+     * @EXT\Route("/{id}/ability/add", name="hevinci_add_ability")
+     * @EXT\Method("POST")
+     * @EXT\Template("HeVinciCompetencyBundle:Competency:abilityAddForm.html.twig")
+     *
+     * @param Request $request
+     * @param Competency $parent
+     * @return array|JsonResponse
+     */
+    public function addAbility(Request $request, Competency $parent)
+    {
+        if ($this->formHandler->isValid('hevinci_form_ability_import', $request, null, ['competency' => $parent])) {
+            return new JsonResponse($this->manager->linkAbility(
+                $parent,
+                $this->formHandler->getData(),
+                $this->formHandler->getData()->getLevel()
+            ));
+        }
+
+        return ['form' => $this->formHandler->getView(), 'competency' => $parent];
+    }
+
+    /**
+     * Returns ability suggestions for linking existing abilities to competencies.
+     *
+     * @EXT\Route("/{id}/ability/suggest/{query}", name="hevinci_suggest_ability")
+     *
+     * @param Competency    $parent
+     * @param string        $query
+     * @return JsonResponse
+     */
+    public function suggestAbilityAction(Competency $parent, $query)
+    {
+        return new JsonResponse($this->manager->suggestAbilities($parent, $query));
     }
 }

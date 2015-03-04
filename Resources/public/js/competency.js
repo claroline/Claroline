@@ -122,7 +122,7 @@
         }
     });
 
-    // disabled menu actions management
+    // prevent hash change on disabled menu actions
     $(document).on('click', 'li.disabled > a', function (event) {
         event.preventDefault();
     });
@@ -188,21 +188,25 @@
         window.Claroline.Modal.displayForm(
             Routing.generate('hevinci_new_ability', { id: node.dataset.id }),
             function (data) {
-                var $node = $(node);
-                $node.children('i')
-                    .removeClass('fa-plus-square-o empty')
-                    .addClass('fa-minus-square-o collapse');
-                $node.children('ul.children')
-                    .css('display', 'block')
-                    .find('table.abilities')
-                    .css('display', 'table');
-                $node.find('a.create-sub-competency')
-                    .parent()
-                    .addClass('disabled');
-                sortAbilities($node.find('tbody'), $(Twig.render(AbilityRow, data)));
+                addAbility($(node), data);
                 flasher.setMessage(trans('message.ability_created'));
             },
             function () {},
+            'ability-form'
+        );
+    });
+
+    // ability import
+    $(document).on('click', 'li:not(.disabled) > a.add-ability', function (event) {
+        event.preventDefault();
+        var node = this.parentNode.parentNode.parentNode.parentNode;
+        window.Claroline.Modal.displayForm(
+            Routing.generate('hevinci_add_ability_form', { id: node.dataset.id }),
+            function (data) {
+                addAbility($(node), data);
+                flasher.setMessage(trans('message.ability_added'));
+            },
+            enableAbilityTypeAhead(node.dataset.id),
             'ability-form'
         );
     });
@@ -312,5 +316,53 @@
         }
 
         $tableBody.prepend($newAbilityRow);
+    }
+
+    function addAbility($competency, newAbility) {
+        $competency.children('i')
+            .removeClass('fa-plus-square-o empty')
+            .addClass('fa-minus-square-o collapse');
+        $competency.children('ul.children')
+            .css('display', 'block')
+            .find('table.abilities')
+            .css('display', 'table');
+        $competency.find('a.create-sub-competency')
+            .parent()
+            .addClass('disabled');
+        sortAbilities($competency.find('tbody'), $(Twig.render(AbilityRow, newAbility)));
+    }
+
+    function enableAbilityTypeAhead(competencyId) {
+        return function () {
+            var abilities = new Bloodhound({
+                datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
+                queryTokenizer: Bloodhound.tokenizers.whitespace,
+                remote: {
+                    url: Routing.generate('hevinci_suggest_ability', {id: competencyId, query: 'QUERY'}),
+                    wildcard: 'QUERY'
+                }
+            });
+
+            abilities
+                .initialize(true)
+                .done(function () {
+                    // without this, bloodhound keep suggesting already
+                    // added abilities without making a new http request,
+                    // even if a new instance is created for each form...
+                    abilities.clearRemoteCache();
+
+                    $('textarea.ability-search').typeahead(
+                        {
+                            minLength: 1,
+                            highlight: true
+                        },
+                        {
+                            name: 'abilities',
+                            displayKey: 'name',
+                            source: abilities.ttAdapter()
+                        }
+                    );
+                });
+        }
     }
 })();

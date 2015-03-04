@@ -53,6 +53,42 @@ class AbilityRepositoryTest extends RepositoryTestCase
         $this->assertEquals(3, $this->om->count('HeVinciCompetencyBundle:Ability'));
     }
 
+    public function testFindFirstByName()
+    {
+        $level = $this->persistLevel('l1', $this->persistScale('scale'));
+
+        // framework 1
+        $f1 = $this->persistCompetency('f1');
+        $a1 = $this->persistAbility('FOO');
+        $this->persistLink($f1, $a1, $level);
+
+        // framework 2
+        $f2 = $this->persistCompetency('f2');
+        $c1 = $this->persistCompetency('c1', $f2);
+        $a2 = $this->persistAbility('FOO B');
+        $a3 = $this->persistAbility('BAR');
+        $a4 = $this->persistAbility('FOO AB');
+        $a5 = $this->persistAbility('FOO Z');
+        $a6 = $this->persistAbility('FO');
+        $a7 = $this->persistAbility('FOO D');
+        $a8 = $this->persistAbility('FOO A');
+        $this->persistLink($c1, $a2, $level);
+        $this->persistLink($c1, $a3, $level);
+        $this->persistLink($c1, $a4, $level);
+        $this->persistLink($c1, $a5, $level);
+        $this->persistLink($c1, $a6, $level);
+        $this->persistLink($c1, $a7, $level);
+        $this->persistLink($c1, $a8, $level);
+
+        $this->om->flush();
+
+        $this->assertEquals([], $this->repo->findFirstByName('AR', $f1));
+        $this->assertEquals([$a3], $this->repo->findFirstByName('BA', $f1));
+        $this->assertEquals([$a6, $a8, $a4, $a2, $a7], $this->repo->findFirstByName('FO', $f1));
+        $this->assertEquals([$a8, $a4, $a2, $a7, $a5], $this->repo->findFirstByName('FOO', $f1));
+        $this->assertEquals([$a8, $a4], $this->repo->findFirstByName('FOO A', $f1));
+    }
+
     private function createLink($index)
     {
         $competency = $this->persistCompetency('Competency ' . $index);
