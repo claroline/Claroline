@@ -1,10 +1,11 @@
 <?php
 namespace Icap\BlogBundle\Installation\Updater;
 
+use Claroline\InstallationBundle\Updater\Updater;
 use Doctrine\Common\Persistence\Mapping\MappingException;
 use Doctrine\ORM\EntityManager;
 
-class Updater
+class UpdaterMaster extends Updater
 {
     private $entityManager;
 
