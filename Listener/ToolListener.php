@@ -13,14 +13,17 @@ namespace Claroline\CoreBundle\Listener;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Event\DisplayToolEvent;
-use Claroline\CoreBundle\Entity\Event;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CoreBundle\Manager\RightsManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
+use Claroline\CoreBundle\Menu\ConfigureMenuEvent;
 
 /**
  * @DI\Service()
@@ -34,6 +37,9 @@ class ToolListener
     private $templating;
     private $httpKernel;
     private $rightsManager;
+    private $router;
+    private $securityContext;
+    private $translator;
     const R_U = "ROLE_USER";
     const R_A = "ROLE_ADMIN";
 
@@ -45,7 +51,10 @@ class ToolListener
      *     "workspaceManager" = @DI\Inject("claroline.manager.workspace_manager"),
      *     "formFactory"      = @DI\Inject("claroline.form.factory"),
      *     "templating"       = @DI\Inject("templating"),
-     *     "httpKernel"       = @DI\Inject("http_kernel")
+     *     "httpKernel"       = @DI\Inject("http_kernel"),
+     *     "router"           = @DI\Inject("router"),
+     *     "securityContext"  = @DI\Inject("security.context"),
+     *     "translator"       = @DI\Inject("translator")
      * })
      */
     public function __construct(
@@ -55,7 +64,10 @@ class ToolListener
         WorkspaceManager $workspaceManager,
         FormFactory $formFactory,
         $templating,
-        $httpKernel
+        $httpKernel,
+        RouterInterface $router,
+        SecurityContextInterface $securityContext,
+        TranslatorInterface $translator
     )
     {
         $this->container = $container;
@@ -65,6 +77,9 @@ class ToolListener
         $this->templating = $templating;
         $this->httpKernel = $httpKernel;
         $this->rightsManager = $rightsManager;
+        $this->router = $router;
+        $this->securityContext = $securityContext;
+        $this->translator = $translator;
     }
 
     /**
@@ -287,5 +302,34 @@ class ToolListener
         $response = $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
 
         $event->setContent($response->getContent());
+    }
+
+    /**
+     * @DI\Observe("claroline_top_bar_left_menu_configure_desktop_tool")
+     *
+     * @param \Acme\DemoBundle\Event\ConfigureMenuEvent $event
+     */
+    public function onTopBarLeftMenuConfigureDesktopTool(ConfigureMenuEvent $event)
+    {
+        $user = $this->securityContext->getToken()->getUser();
+        $tool = $event->getTool();
+
+        if ($user !== 'anon.' && !is_null($tool)) {
+            $toolName = $tool->getName();
+            $translatedName = $this->translator->trans($toolName, array(), 'tools');
+            $route = $this->router->generate(
+                'claro_desktop_open_tool',
+                array('toolName' => $toolName)
+            );
+
+            $menu = $event->getMenu();
+            $menu->addChild(
+                $translatedName,
+                array('uri' => $route)
+            )->setExtra('icon', 'fa fa-' . $tool->getClass())
+            ->setExtra('title', $translatedName);
+
+            return $menu;
+        }
     }
 }

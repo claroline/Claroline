@@ -27,7 +27,7 @@
     {% block rightSide %}
         {% import _self as topbar %}
     
-        {% if isAdmin %}
+        {% if adminTools|length > 0 %}
             {{ topbar.item({'name':'administration', 'dropdown':block('dropdownAdministration')}) }}
         {% endif %}
     

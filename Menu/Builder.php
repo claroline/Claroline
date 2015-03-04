@@ -143,15 +143,6 @@ class Builder extends ContainerAware
             ->setExtra('title', $translator->trans('desktop', array(), 'platform'));
 
         $token = $securityContext->getToken();
-        $tools = $this->container->get('claroline.manager.tool_manager')
-            ->getAdminToolsByRoles($token->getRoles());
-        $canAdministrate = count($tools) > 0;
-
-        if ($canAdministrate) {
-            $menu->addChild($translator->trans('administration', array(), 'platform'), array('route' => 'claro_admin_index'))
-                ->setExtra('icon', 'fa fa-cog')
-                ->setExtra('title', $translator->trans('administration', array(), 'platform'));
-        }
 
         if ($token) {
             $user = $token->getUser();
@@ -161,17 +152,41 @@ class Builder extends ContainerAware
         }
 
         if (!in_array('ROLE_ANONYMOUS', $roles)) {
-            $countUnreadMessages = $this->container->get('claroline.manager.message_manager')->getNbUnreadMessages($user);
-            $messageTitle = $translator->trans('new_message_alert', array('%count%' => $countUnreadMessages), 'platform');
+            $desktopTools = $this->container->get('claroline.manager.tool_manager')
+                ->getDisplayedDesktopOrderedTools($user);
+            $dispatcher = $this->container->get('event_dispatcher');
 
-            $messageMenuLink = $menu->addChild($translator->trans('messages', array(), 'platform'), array('route' => 'claro_message_list_received'))
-                ->setExtra('icon', 'fa fa-envelope')
-                ->setExtra('title', $messageTitle);
+            foreach ($desktopTools as $tool) {
+                $toolName = $tool->getName();
 
-            if (0 < $countUnreadMessages) {
-                $messageMenuLink
-                    ->setExtra('badge', $countUnreadMessages);
+                if ($toolName === 'parameters') {
+                    continue;
+                }
+                $event = new ConfigureMenuEvent($factory, $menu, $tool);
+
+                if ($dispatcher->hasListeners('claroline_top_bar_left_menu_configure_desktop_tool_' . $toolName)) {
+                    $dispatcher->dispatch(
+                        'claroline_top_bar_left_menu_configure_desktop_tool_' . $toolName,
+                        $event
+                    );
+                } else {
+                    $dispatcher->dispatch(
+                        'claroline_top_bar_left_menu_configure_desktop_tool',
+                        $event
+                    );
+                }
             }
+//            $countUnreadMessages = $this->container->get('claroline.manager.message_manager')->getNbUnreadMessages($user);
+//            $messageTitle = $translator->trans('new_message_alert', array('%count%' => $countUnreadMessages), 'platform');
+//
+//            $messageMenuLink = $menu->addChild($translator->trans('messages', array(), 'platform'), array('route' => 'claro_message_list_received'))
+//                ->setExtra('icon', 'fa fa-envelope')
+//                ->setExtra('title', $messageTitle);
+//
+//            if (0 < $countUnreadMessages) {
+//                $messageMenuLink
+//                    ->setExtra('badge', $countUnreadMessages);
+//            }
         }
 
         //allowing the menu to be extended
@@ -188,6 +203,5 @@ class Builder extends ContainerAware
         $menu->addChild($name)
             ->setAttribute('class', 'divider')
             ->setAttribute('role', 'presentation');
-
     }
 }
