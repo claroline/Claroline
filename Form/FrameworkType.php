@@ -44,7 +44,7 @@ class FrameworkType extends AbstractType
             'constraints' => [
                 new UniqueEntity([
                     'fields' => 'name',
-                    'repositoryMethod' => 'findRoots+ByName',
+                    'repositoryMethod' => 'findRootsByName',
                     'em' => 'default'
                 ])
             ]
