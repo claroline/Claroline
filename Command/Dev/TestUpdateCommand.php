@@ -81,7 +81,7 @@ class TestUpdateCommand extends ContainerAwareCommand
             LogLevel::INFO   => OutputInterface::VERBOSITY_NORMAL,
             LogLevel::DEBUG  => OutputInterface::VERBOSITY_NORMAL
         );
-        $consoleLogger = new ConsoleLogger($output);
+        $consoleLogger = new ConsoleLogger($output, $verbosityLevelMap);
 
         /** @var \Claroline\InstallationBundle\Manager\InstallationManager|\Claroline\CoreBundle\Library\Installation\Plugin\Installer $installer */
         $installer = $this->getContainer()->get($installerType);
