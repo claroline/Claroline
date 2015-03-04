@@ -11,9 +11,11 @@
 
 namespace Claroline\CoreBundle\Command\Dev;
 
+use Psr\Log\LogLevel;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Component\Console\Output\OutputInterface;
 use Claroline\CoreBundle\DataFixtures\Demo\LoadMessagesData;
 use Doctrine\Common\DataFixtures\ReferenceRepository;
@@ -76,11 +78,14 @@ class SendMessagesCommand extends ContainerAwareCommand
         $action == 's' ? $usernames['from'] = $username : $usernames['to'] = $username;
 
         $fixture = new LoadMessagesData($usernames, $nbMessages);
-        $fixture->setLogger(
-            function ($message) use ($output) {
-                $output->writeln($message);
-            }
+        $verbosityLevelMap = array(
+            LogLevel::NOTICE => OutputInterface::VERBOSITY_NORMAL,
+            LogLevel::INFO   => OutputInterface::VERBOSITY_NORMAL,
+            LogLevel::DEBUG  => OutputInterface::VERBOSITY_NORMAL
         );
+        $consoleLogger = new ConsoleLogger($output, $verbosityLevelMap);
+        $fixture->setLogger($consoleLogger);
+
         $em = $this->getContainer()->get('doctrine.orm.entity_manager');
         $referenceRepo = new ReferenceRepository($em);
         $fixture->setReferenceRepository($referenceRepo);

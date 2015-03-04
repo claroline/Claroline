@@ -12,9 +12,11 @@
 namespace Claroline\CoreBundle\Command\Dev;
 
 use Claroline\MigrationBundle\Migrator\Migrator;
+use Psr\Log\LogLevel;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 use Doctrine\Bundle\DoctrineBundle\Command\CreateDatabaseDoctrineCommand;
@@ -54,12 +56,15 @@ class InitTestSchemaCommand extends ContainerAwareCommand
 
     private function createSchema(OutputInterface $output)
     {
+        /** @var \Claroline\MigrationBundle\Manager\Manager $migrator */
         $migrator = $this->getContainer()->get('claroline.migration.manager');
-        $migrator->setLogger(
-            function ($message) use ($output) {
-                $output->writeln($message);
-            }
+        $verbosityLevelMap = array(
+            LogLevel::NOTICE => OutputInterface::VERBOSITY_NORMAL,
+            LogLevel::INFO   => OutputInterface::VERBOSITY_NORMAL,
+            LogLevel::DEBUG  => OutputInterface::VERBOSITY_NORMAL
         );
+        $consoleLogger = new ConsoleLogger($output, $verbosityLevelMap);
+        $migrator->setLogger($consoleLogger);
 
         foreach ($this->getContainer()->get('kernel')->getBundles() as $bundle) {
             if (count($migrator->getBundleStatus($bundle)[Migrator::STATUS_AVAILABLE]) > 1) {

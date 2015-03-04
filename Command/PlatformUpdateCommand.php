@@ -12,7 +12,9 @@
 namespace Claroline\CoreBundle\Command;
 
 use Claroline\CoreBundle\Library\Maintenance\MaintenanceHandler;
+use Psr\Log\LogLevel;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use JMS\DiExtraBundle\Annotation\Service;
@@ -45,11 +47,13 @@ class PlatformUpdateCommand extends ContainerAwareCommand
         $installer = $this->getContainer()->get('claroline.installation.platform_installer');
         $refresher = $this->getContainer()->get('claroline.installation.refresher');
         $installer->setOutput($output);
-        $installer->setLogger(
-            function ($message) use ($output) {
-                $output->writeln($message);
-            }
+        $verbosityLevelMap = array(
+            LogLevel::NOTICE => OutputInterface::VERBOSITY_NORMAL,
+            LogLevel::INFO   => OutputInterface::VERBOSITY_NORMAL,
+            LogLevel::DEBUG  => OutputInterface::VERBOSITY_NORMAL
         );
+        $consoleLogger = new ConsoleLogger($output, $verbosityLevelMap);
+        $installer->setLogger($consoleLogger);
         $installer->installFromOperationFile();
         $refresher->dumpAssets($this->getContainer()->getParameter('kernel.environment'));
         $refresher->compileGeneratedThemes();
@@ -66,11 +70,6 @@ class PlatformUpdateCommand extends ContainerAwareCommand
      */
     public function setContainer(ContainerInterface $container = null)
     {
-        $this->container = $container;
-    }
-
-    public function getContainer()
-    {
-        return $this->container;
+        parent::setContainer($container);
     }
 }

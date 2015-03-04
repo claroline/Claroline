@@ -11,9 +11,11 @@
 
 namespace Claroline\CoreBundle\Command;
 
+use Psr\Log\LogLevel;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\ArrayInput;
 use Claroline\BundleRecorder\Detector\Detector;
@@ -79,12 +81,15 @@ abstract class AbstractPluginCommand extends ContainerAwareCommand
 
     protected function getPluginInstaller(OutputInterface $output)
     {
+        /** @var \Claroline\CoreBundle\Library\Installation\Plugin\Installer $installer */
         $installer = $this->getContainer()->get('claroline.plugin.installer');
-        $installer->setLogger(
-            function ($message) use ($output) {
-                $output->writeln($message);
-            }
+        $verbosityLevelMap = array(
+            LogLevel::NOTICE => OutputInterface::VERBOSITY_NORMAL,
+            LogLevel::INFO   => OutputInterface::VERBOSITY_NORMAL,
+            LogLevel::DEBUG  => OutputInterface::VERBOSITY_NORMAL
         );
+        $consoleLogger = new ConsoleLogger($output, $verbosityLevelMap);
+        $installer->setLogger($consoleLogger);
 
         return $installer;
     }

@@ -19,6 +19,9 @@ use Claroline\BundleRecorder\Detector\Detector;
 use Claroline\BundleRecorder\Handler\BundleHandler;
 use Claroline\BundleRecorder\Recorder;
 
+use Psr\Log\LogLevel;
+use Symfony\Component\Console\Logger\ConsoleLogger;
+use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Yaml\Yaml;
 use Symfony\Component\Console\Output\StreamOutput;
 use Symfony\Component\HttpFoundation\Request;
@@ -127,17 +130,22 @@ $kernel->boot();
 
 //install from the operation file
 $container = $kernel->getContainer();
+    /** @var \Claroline\CoreBundle\Library\Installation\PlatformInstaller $installer */
 $installer = $container->get('claroline.installation.platform_installer');
-$installer->setLogger(
-    function ($message) use ($logFile) {
-        file_put_contents($logFile, $message . "\n", FILE_APPEND);
-    }
-);
 
 //assets & assetic dump
 $installer->installFromOperationFile();
+    /** @var \Claroline\CoreBundle\Library\Installation\Refresher $refresher */
 $refresher = $container->get('claroline.installation.refresher');
 $output = new StreamOutput(fopen($logFile, 'a', false));
+$verbosityLevelMap = array(
+    LogLevel::NOTICE => OutputInterface::VERBOSITY_NORMAL,
+    LogLevel::INFO   => OutputInterface::VERBOSITY_NORMAL,
+    LogLevel::DEBUG  => OutputInterface::VERBOSITY_NORMAL
+);
+$consoleLogger = new ConsoleLogger($output, $verbosityLevelMap);
+$installer->setLogger($consoleLogger);
+
 $refresher->setOutput($output);
 $refresher->installAssets();
 $refresher->dumpAssets($container->getParameter('kernel.environment'));
