@@ -194,19 +194,19 @@
         });
     });
     
-    $('.cursus-element').hover(
-        function () {
-            var cursusId = $(this).data('cursus-id');
-            $('#option-btn-' + cursusId).removeClass('hidden');
-            $(this).addClass('claroline-tag-highlight');
-        },
-        function () {
-            var cursusId = $(this).data('cursus-id');
-            $('#option-btn-' + cursusId).addClass('hidden');
-            $(this).removeClass('claroline-tag-highlight');
-            $('body').trigger('click');
-        }
-    );
+//    $('.cursus-element').hover(
+//        function () {
+//            var cursusId = $(this).data('cursus-id');
+//            $('#option-btn-' + cursusId).removeClass('hidden');
+//            $(this).addClass('claroline-tag-highlight');
+//        },
+//        function () {
+//            var cursusId = $(this).data('cursus-id');
+//            $('#option-btn-' + cursusId).addClass('hidden');
+//            $(this).removeClass('claroline-tag-highlight');
+//            $('body').trigger('click');
+//        }
+//    );
 
     $('.cursus-children').sortable({
         items: '> li',
