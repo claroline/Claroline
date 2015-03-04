@@ -24,7 +24,7 @@ $(document).ready(function () {
         ;
     });
 
-
+    // InnovaCollecticiel
     // Ajout pour le traitement de la case à cocher lors de la soumission de documents
     $('#validate-modal').on('show.bs.modal', function (event) {
       var button = $(event.relatedTarget); // Button that triggered the modal
@@ -37,29 +37,18 @@ $(document).ready(function () {
       //
     })
 
+    // InnovaCollecticiel
     // Ajout pour le traitement du clic sur le bouton "Oui, valider"
     $('#modal_confirm').on('click', function(event) {
 
         var selector = "#document_id_"+$(this).attr("data-document_id"); // Extract info from data-* attributes
         var row = "row_"+$(this).attr("data-document_id"); // Extract info from data-* attributes
 
-        $(selector).prop('checked', true);
-        $(selector).prop('disabled', true);
+        $(selector).prop('checked', true); // Cocher la case "Valider"
+        $(selector).prop('disabled', true); // Ne pas pouvoir modifier cette ligne
 
-        //$('#row input[name=selector]').val(['0']);
-        // var cases = $("#row_"+selector).find(':checkbox');
-        // cases.attr('checked', true);
-
-        // $("#row_"+attr("data-document_id").find('checkbox').prop('checked, true');
-        // $('input[id=document_id_11]').prop('checked');
-        // $("#row_"+attr("data-document_id")).find("#document_id_"+data-document_id).prop("checked", "checked");
-        // $("#document_id_"+data-document_id).prop("checked", "checked");
-        // $("#row_"+attr("data-document_id")).find(':checkbox').attr('checked', true);
-
-        //$('input[name=selector]').prop('checked');
         // Fermeture de la modal
         $('#validate-modal').modal('hide');
     });
-
 
 });
