@@ -9,25 +9,21 @@
 
 namespace Icap\LessonBundle\Installation\Updater;
 
+use Claroline\InstallationBundle\Updater\Updater;
 use Doctrine\Common\Persistence\Mapping\MappingException;
 use Icap\LessonBundle\Entity\Chapter;
 use Icap\LessonBundle\Entity\Lesson;
 
 
-class Updater13 {
+class Updater13 extends Updater
+{
     private $container;
     private $conn;
-    private $logger;
 
     public function __construct($container)
     {
         $this->container = $container;
         $this->conn = $container->get('doctrine.dbal.default_connection');
-    }
-
-    public function setLogger($logger)
-    {
-        $this->logger = $logger;
     }
 
     public function postUpdate()
