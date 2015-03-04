@@ -169,21 +169,12 @@ class ResourceManager
         $node->setMimeType($mimeType);
         $node->setName($resource->getName());
         $name = $this->getUniqueName($node, $parent);
-
-        $previous = $parent === null ?
-            null:
-            $this->resourceNodeRepo->findOneBy(array('parent' => $parent, 'next' => null));
-
-        if ($previous) {
-            $previous->setNext($node);
-        }
-
         $node->setCreator($creator);
         $node->setWorkspace($workspace);
         $node->setParent($parent);
         $node->setName($name);
-        $node->setPrevious($previous);
         $node->setClass(get_class($resource));
+        if ($parent) $this->setLastIndex($parent, $node);
 
         if (!is_null($parent)) {
             $node->setAccessibleFrom($parent->getAccessibleFrom());
@@ -295,81 +286,6 @@ class ResourceManager
         }
 
         return true;
-    }
-
-    /**
-     * Sort every children of a resource.
-     *
-     * @param ResourceNode $parent
-     *
-     * @return array
-     */
-    public function findAndSortChildren(ResourceNode $parent, User $user)
-    {
-        //a little bit hacky but retrieve all children of the parent
-        $nodes = $this->resourceNodeRepo
-            ->findChildren($parent, array('ROLE_ADMIN'), $user);
-        $sorted = array();
-        //set the 1st item.
-        foreach ($nodes as $node) {
-            if ($node['previous_id'] === null) {
-                $sorted[] = $node;
-            }
-        }
-
-        $resourceCount = count($nodes);
-        $sortedCount = 0;
-
-        for ($i = 0; $sortedCount < $resourceCount; ++$i) {
-            $sortedCount = count($sorted);
-
-            foreach ($nodes as $node) {
-                if ($sorted[$sortedCount - 1]['id'] === $node['previous_id']) {
-                    $sorted[] = $node;
-                }
-            }
-
-            if ($i > 100) {
-                $this->restoreNodeOrder($parent);
-
-                return $nodes;
-            }
-        }
-
-        return $sorted;
-    }
-
-    /**
-     * Sort an array of serialized resources. The chained list can have some "holes".
-     *
-     * @param array $nodes
-     *
-     * @throws \Exception
-     *
-     * @return array
-     */
-    public function sort(array $nodes, User $user)
-    {
-        $sortedResources = array();
-
-        if (count($nodes) > 0) {
-            if ($this->haveSameParents($nodes)) {
-                $parent = $this->resourceNodeRepo->find($nodes[0]['parent_id']);
-                $sortedList = $this->findAndSortChildren($parent, $user);
-
-                foreach ($sortedList as $sortedItem) {
-                    foreach ($nodes as $node) {
-                        if ($node['id'] === $sortedItem['id']) {
-                            $sortedResources[] = $node;
-                        }
-                    }
-                }
-            } else {
-                throw new \Exception("These resources don't share the same parent");
-            }
-        }
-
-        return $sortedResources;
     }
 
     /**
@@ -539,54 +455,72 @@ class ResourceManager
     }
 
     /**
-     * Insert the resource $resource before the target $next.
+     * Insert the resource $resource at the 'index' position
      *
      * @param ResourceNode $node
-     * @param ResourceNode $next
+     * @param integer      $next
      *
      * @return ResourceNode
      */
-    public function insertBefore(ResourceNode $node, ResourceNode $next = null)
+    public function insertAtIndex(ResourceNode $node, $index)
     {
-        $previous = $this->findPreviousOrLastRes($node->getParent(), $next);
-        $oldPrev = $node->getPrevious();
-        $oldNext = $node->getNext();
+        //throw new \Exception($index);
+        $this->om->startFlushSuite();
 
-        if ($next) {
-            $this->removePreviousWherePreviousIs($node);
-            $node->setNext(null);
-            $next->setPrevious($node);
-            $this->om->persist($next);
-        }
-
-        if ($previous) {
-            $this->removeNextWhereNextIs($node);
-            $previous->setNext($node);
-            $this->om->persist($previous);
+        if ($index > $node->getIndex()) {
+            $this->shiftLeftAt($node->getParent(), $index);
         } else {
-            $node->setPrevious(null);
-            $node->setNext(null);
+            $this->shiftRightAt($node->getParent(), $index);
         }
 
-        if ($oldPrev) {
-            $this->removePreviousWherePreviousIs($oldPrev);
-            $oldPrev->setNext($oldNext);
-            $this->om->persist($oldPrev);
-        }
-
-        if ($oldNext) {
-            $this->removePreviousWherePreviousIs($oldPrev);
-            $oldNext->setPrevious($oldPrev);
-            $this->om->persist($oldNext);
-        }
-
-        $node->setNext($next);
-        $node->setPrevious($previous);
+        $node->setIndex($index);
         $this->om->persist($node);
+        $this->om->forceFlush();
+        $this->reorder($node->getParent());
+        $this->om->endFlushSuite();
+    }
+
+    public function shiftRightAt(ResourceNode $parent, $index)
+    {
+        $nodes = $parent->getChildren();
+
+        foreach ($nodes as $node) {
+            if ($node->getIndex() >= $index) {
+                $node->setIndex($node->getIndex() + 1);
+            }
+            $this->om->persist($node);
+        }
 
         $this->om->flush();
+    }
 
-        return $node;
+    public function shiftLeftAt(ResourceNode $parent, $index)
+    {
+        $nodes = $parent->getChildren();
+
+        foreach ($nodes as $node) {
+            if ($node->getIndex() <= $index) {
+                $node->setIndex($node->getIndex() - 1);
+            }
+            $this->om->persist($node);
+        }
+
+        $this->om->flush();
+    }
+
+    public function reorder(ResourceNode $node)
+    {
+        $children = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceNode')
+            ->getChildren($node, true, 'index');
+        $i = 1;
+
+        foreach ($children as $child) {
+            $child->setIndex($i);
+            $i++;
+            $this->om->persist($child);
+        }
+
+        $this->om->flush();
     }
 
     /**
@@ -605,8 +539,7 @@ class ResourceManager
             throw new ResourceMoveException("You cannot move a directory into itself");
         }
         $this->om->startFlushSuite();
-        $this->removePosition($child);
-        $this->setLastPosition($parent, $child);
+        $this->setLastIndex($parent, $child);
         $child->setParent($parent);
         $child->setName($this->getUniqueName($child, $parent));
 
@@ -628,21 +561,12 @@ class ResourceManager
      * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $parent
      * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $node
      */
-    public function setLastPosition(ResourceNode $parent, ResourceNode $node)
+    public function setLastIndex(ResourceNode $parent, ResourceNode $node, $autoflush = true)
     {
-        /** @var \Claroline\CoreBundle\Entity\Resource\ResourceNode $lastChild */
-        $lastChild = $this->resourceNodeRepo->findOneBy(array('parent' => $parent, 'next' => null));
-
-        $node->setPrevious($lastChild);
-        $node->setNext(null);
+        $max = $this->resourceNodeRepo->findLastIndex($parent);
+        $node->setIndex($max + 1);
         $this->om->persist($node);
-
-        if ($lastChild) {
-            $lastChild->setNext($node);
-            $this->om->persist($lastChild);
-        }
-
-        $this->om->flush();
+        if ($autoflush) $this->om->flush();
     }
 
     /**
@@ -650,38 +574,9 @@ class ResourceManager
      *
      * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $node
      */
-    public function removePosition(ResourceNode $node)
+    public function removeIndex(ResourceNode $node)
     {
-        $next = $node->getNext();
-        $previous = $node->getPrevious();
-        $node->setPrevious(null);
-        $node->setNext(null);
-        $this->om->persist($node);
 
-        if ($previous) {
-            $previous->setNext($next);
-            $this->om->persist($previous);
-        }
-
-        if ($next) {
-            $next->setPrevious($previous);
-            $this->om->persist($next);
-        }
-
-        $this->om->forceFlush();
-    }
-
-    /**
-     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $parent
-     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $node
-     *
-     * @return \Claroline\CoreBundle\Entity\Resource\ResourceNode
-     */
-    public function findPreviousOrLastRes(ResourceNode $parent, ResourceNode $node = null)
-    {
-        return ($node !== null) ?
-            $node->getPrevious():
-            $this->resourceNodeRepo->findOneBy(array('parent' => $parent, 'next' => null));
     }
 
     /**
@@ -799,18 +694,18 @@ class ResourceManager
         ResourceNode $node,
         ResourceNode $parent,
         User $user,
+        $index = null,
         $withRights = true,
         $withDirectoryContent = true,
         array $rights = array()
     )
     {
-        $last = $this->resourceNodeRepo->findOneBy(array('parent' => $parent, 'next' => null));
         $resource = $this->getResourceFromNode($node);
 
         if ($resource instanceof ResourceShortcut) {
             $copy = $this->om->factory('Claroline\CoreBundle\Entity\Resource\ResourceShortcut');
             $copy->setTarget($resource->getTarget());
-            $newNode = $this->copyNode($node, $parent, $user, $last, $withRights, $rights);
+            $newNode = $this->copyNode($node, $parent, $user, $withRights, $rights, $index);
             $copy->setResourceNode($newNode);
 
         } else {
@@ -821,25 +716,22 @@ class ResourceManager
             );
 
             $copy = $event->getCopy();
-            $newNode = $this->copyNode($node, $parent, $user, $last, $withRights, $rights);
+            $newNode = $this->copyNode($node, $parent, $user, $withRights, $rights, $index);
             $copy->setResourceNode($newNode);
 
             if ($node->getResourceType()->getName() == 'directory' &&
                 $withDirectoryContent) {
 
+                $i = 1;
+
                 foreach ($node->getChildren() as $child) {
-                    $this->copy($child, $newNode, $user, $withRights, $withDirectoryContent, $rights);
+                    $this->copy($child, $newNode, $user, $i, $withRights, $withDirectoryContent, $rights);
+                    $i++;
                 }
             }
         }
 
         $this->om->persist($copy);
-
-        if ($last) {
-            $last->setNext($newNode);
-            $this->om->persist($last);
-        }
-
         $this->dispatcher->dispatch('log', 'Log\LogResourceCopy', array($newNode, $node));
         $this->om->flush();
 
@@ -866,13 +758,7 @@ class ResourceManager
         $resourceArray['path_for_display'] = $node->getPathForDisplay();
         $resourceArray['mime_type'] = $node->getMimeType();
         $resourceArray['published'] = $node->isPublished();
-
-        if ($node->getPrevious() !== null) {
-            $resourceArray['previous_id'] = $node->getPrevious()->getId();
-        }
-        if ($node->getNext() !== null) {
-            $resourceArray['next_id'] = $node->getNext()->getId();
-        }
+        $resourceArray['index_dir'] = $node->getIndex();
 
         $isAdmin = false;
 
@@ -914,7 +800,6 @@ class ResourceManager
             throw new \LogicException('Root directory cannot be removed');
         }
         $workspace = $node->getWorkspace();
-        $this->removePosition($node);
         $this->om->startFlushSuite();
         $nodes = $this->getDescendants($node);
         $nodes[] = $node;
@@ -974,6 +859,7 @@ class ResourceManager
 
         $this->om->remove($node);
         $this->om->endFlushSuite();
+        $this->reorder($node->getParent());
     }
 
     /**
@@ -1254,13 +1140,10 @@ class ResourceManager
     public function getChildren(
         ResourceNode $node,
         array $roles,
-        User $user,
-        $isSorted = true
+        User $user
     )
     {
-        $children = $this->resourceNodeRepo->findChildren($node, $roles, $user);
-
-        return ($isSorted) ? $this->sort($children, $user): $children;
+        return $this->resourceNodeRepo->findChildren($node, $roles, $user);
     }
 
     /**
@@ -1428,9 +1311,9 @@ class ResourceManager
         ResourceNode $node,
         ResourceNode $newParent,
         User $user,
-        ResourceNode $last = null,
         $withRights = true,
-        array $rights = array()
+        array $rights = array(),
+        $index = null
     )
     {
         $newNode = $this->om->factory('Claroline\CoreBundle\Entity\Resource\ResourceNode');
@@ -1440,14 +1323,13 @@ class ResourceManager
         $newNode->setParent($newParent);
         $newParent->addChild($newNode);
         $newNode->setName($this->getUniqueName($node, $newParent, true));
-        $newNode->setPrevious($last);
-        $newNode->setNext(null);
         $newNode->setIcon($node->getIcon());
         $newNode->setClass($node->getClass());
         $newNode->setMimeType($node->getMimeType());
         $newNode->setAccessibleFrom($node->getAccessibleFrom());
         $newNode->setAccessibleUntil($node->getAccessibleUntil());
         $newNode->setPublished($node->isPublished());
+        $newNode->setIndex($index);
 
         if ($withRights) {
             //if everything happens inside the same workspace and no specific rights have been given,
@@ -1463,85 +1345,6 @@ class ResourceManager
         $this->om->persist($newNode);
 
         return $newNode;
-    }
-
-    /**
-     * Set the previous and the next node of a nodes array to null.
-     *
-     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode[] $nodes
-     */
-    private function resetNodeOrder($nodes)
-    {
-        foreach ($nodes as $node) {
-            if (null !== $node) {
-                $node->setPrevious(null);
-                $node->setNext(null);
-                $this->om->persist($node);
-            }
-        }
-
-        $this->om->flush();
-    }
-
-    /**
-     * required by insertBefore
-     *
-     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $next
-     */
-    public function removeNextWhereNextIs(ResourceNode $next = null)
-    {
-        $node = $this->resourceNodeRepo->findOneBy(array('next' => $next));
-        if ($node) {
-            $node->setNext(null);
-            $this->om->persist($node);
-            $this->om->flush();
-        }
-    }
-
-    /**
-     * required by insertBefore
-     *
-     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $previous
-     */
-    public function removePreviousWherePreviousIs(ResourceNode $previous = null)
-    {
-        $node = $this->resourceNodeRepo->findOneBy(array('previous' => $previous));
-        if ($node) {
-            $node->setPrevious(null);
-            $this->om->persist($node);
-            $this->om->flush();
-        }
-    }
-
-    /**
-     * Restore the order of each children of $parent. This may be usefull if the order is corrupted.
-     *
-     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $parent
-     */
-    public function restoreNodeOrder(ResourceNode $parent)
-    {
-        $children = $parent->getChildren();
-        $countChildren = count($children);
-        $this->resetNodeOrder($children);
-        $this->om->flush();
-
-        for ($i = 0; $i < $countChildren; $i++) {
-            if ($i === 0) {
-                $children[$i]->setPrevious(null);
-                $children[$i]->setNext($children[$i + 1]);
-            } else {
-                if ($i === $countChildren - 1) {
-                    $children[$i]->setNext(null);
-                    $children[$i]->setPrevious($children[$i - 1]);
-                } else {
-                    $children[$i]->setPrevious($children[$i - 1]);
-                    $children[$i]->setNext($children[$i + 1]);
-                }
-            }
-            $this->om->persist($children[$i]);
-        }
-
-        $this->om->flush();
     }
 
     private function getEncoding()

@@ -206,9 +206,9 @@
 
     server.prototype.order = function (event) {
         $.ajax({
-            url: Routing.generate('claro_resource_insert_before', {
+            url: Routing.generate('claro_resource_insert_at', {
                 'node': event.nodeId,
-                'nextId': event.nextId
+                'index': event.index
             })
         });
     };
