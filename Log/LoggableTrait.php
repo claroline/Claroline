@@ -9,7 +9,7 @@ Trait LoggableTrait
 {
     use LoggerAwareTrait;
 
-    private function log($message)
+    public function log($message)
     {
         $this->logger->log(LogLevel::INFO, $message);
     }
