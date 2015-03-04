@@ -17,7 +17,6 @@ use Icap\LessonBundle\Installation\Updater\Updater13;
 
 class AdditionalInstaller extends BaseInstaller
 {
-
     public function postUpdate($currentVersion, $targetVersion)
     {
         if (version_compare($currentVersion, '1.3', '<') && version_compare($targetVersion, '1.3', '>=') ) {
@@ -25,10 +24,5 @@ class AdditionalInstaller extends BaseInstaller
             $updater13->setLogger($this);
             $updater13->postUpdate();
         }
-    }
-
-    public function displayLog($message)
-    {
-        $this->log($message);
     }
 }
