@@ -10,11 +10,11 @@
 
 namespace Claroline\CoreBundle\Library\Installation\Updater;
 
+use Claroline\InstallationBundle\Updater\Updater;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-class Updater030502
+class Updater030502 extends Updater
 {
-    private $logger;
     private $om;
     private $roleManager;
     private $userManager;
@@ -57,17 +57,5 @@ class Updater030502
             $this->roleManager->createUserRole($user);
         }
         $this->om->endFlushSuite();
-    }
-
-    public function setLogger($logger)
-    {
-        $this->logger = $logger;
-    }
-
-    private function log($message)
-    {
-        if ($log = $this->logger) {
-            $log('    ' . $message);
-        }
     }
 }

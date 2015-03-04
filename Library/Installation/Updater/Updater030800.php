@@ -11,10 +11,11 @@
 namespace Claroline\CoreBundle\Library\Installation\Updater;
 
 use Claroline\CoreBundle\Entity\Tool\ToolMaskDecoder;
+use Claroline\InstallationBundle\Updater\Updater;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-class Updater030800
+class Updater030800 extends Updater
 {
     /** @var  Connection */
     private $connection;
@@ -168,18 +169,6 @@ class Updater030800
 
         if (is_null($role)) {
             $this->roleManager->createBaseRole($name, $key);
-        }
-    }
-
-    public function setLogger($logger)
-    {
-        $this->logger = $logger;
-    }
-
-    private function log($message)
-    {
-        if ($log = $this->logger) {
-            $log('    ' . $message);
         }
     }
 }

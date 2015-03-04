@@ -14,11 +14,11 @@ namespace Claroline\CoreBundle\Library\Installation\Updater;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\UserPublicProfilePreferences;
 use Claroline\CoreBundle\Persistence\ObjectManager;
+use Claroline\InstallationBundle\Updater\Updater;
 
-class Updater021200
+class Updater021200 extends Updater
 {
     private $container;
-    private $logger;
 
     /**
      * @var ObjectManager
@@ -127,17 +127,5 @@ class Updater021200
         $this->objectManager->flush();
 
         $this->log('Public profile preferences for users created.');
-    }
-
-    public function setLogger($logger)
-    {
-        $this->logger = $logger;
-    }
-
-    private function log($message)
-    {
-        if ($log = $this->logger) {
-            $log('    ' . $message);
-        }
     }
 }

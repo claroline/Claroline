@@ -16,15 +16,15 @@ use Claroline\CoreBundle\Entity\Home\HomeTabConfig;
 use Claroline\CoreBundle\Entity\Widget\Widget;
 use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 use Claroline\CoreBundle\Entity\Widget\WidgetHomeTabConfig;
+use Claroline\InstallationBundle\Updater\Updater;
 use Doctrine\Common\Persistence\Mapping\MappingException;
 use Symfony\Component\Filesystem\Filesystem;
 
-class Updater020000
+class Updater020000 extends Updater
 {
     private $container;
     private $conn;
     private $translator;
-    private $logger;
 
     public function __construct($container)
     {
@@ -34,11 +34,6 @@ class Updater020000
         $locale = $container->get('claroline.config.platform_config_handler')
             ->getParameter('locale_language');
         $this->translator->setLocale($locale);
-    }
-
-    public function setLogger($logger)
-    {
-        $this->logger = $logger;
     }
 
     public function preUpdate()
@@ -359,12 +354,5 @@ class Updater020000
         $this->conn->query('DROP TABLE claro_log_workspace_widget_config');
         $this->conn->query('DROP TABLE claro_log_desktop_widget_config');
         $this->conn->query('DROP TABLE claro_widget_home_tab_config_temp');
-    }
-
-    private function log($message)
-    {
-        if ($log = $this->logger) {
-            $log('    ' . $message);
-        }
     }
 }
