@@ -32,7 +32,6 @@ class Recorder
     private $operationHandler;
     private $vendorDir;
     private $removableBundles = array();
-    private $logger;
     private $fromRepo;
     private $operations;
 
@@ -47,11 +46,6 @@ class Recorder
         $this->bundleHandler = $bundleHandler;
         $this->operationHandler = $operationHandler;
         $this->vendorDir = $vendorDir;
-    }
-
-    public function setLogger(\Closure $logger)
-    {
-        $this->logger = $logger;
     }
 
     public function checkForPendingOperations()

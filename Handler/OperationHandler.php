@@ -12,6 +12,7 @@
 namespace Claroline\BundleRecorder\Handler;
 
 use Claroline\BundleRecorder\Operation;
+use Psr\Log\LoggerInterface;
 
 class OperationHandler extends BaseHandler
 {
@@ -19,7 +20,11 @@ class OperationHandler extends BaseHandler
     private $rootElement;
     private $isPreviousFileChecked = false;
 
-    public function __construct($operationFile, \Closure $logger = null)
+    /**
+     * @param string          $operationFile
+     * @param LoggerInterface $logger
+     */
+    public function __construct($operationFile, LoggerInterface $logger = null)
     {
         parent::__construct($operationFile, $logger);
         $this->document = new \DOMDocument('1.0', 'UTF-8');
@@ -28,6 +33,12 @@ class OperationHandler extends BaseHandler
         $this->document->appendChild($this->rootElement);
     }
 
+    /**
+     * @param Operation $operation
+     * @param bool      $append
+     *
+     * @throws \Exception
+     */
     public function addOperation(Operation $operation, $append = true)
     {
         $this->log("Logging {$operation->getType()} action in the operation file...");
@@ -50,6 +61,11 @@ class OperationHandler extends BaseHandler
         $this->writeOperations();
     }
 
+    /**
+     * @param Operation $operation
+     *
+     * @return \DOMElement
+     */
     private function findNextNode(Operation $operation)
     {
         $dependencies = $operation->getDependencies();
@@ -80,6 +96,9 @@ class OperationHandler extends BaseHandler
         return $this->rootElement->firstChild;
     }
 
+    /**
+     * @return array
+     */
     public function getOperations()
     {
         if ($this->isFileEmpty()) {
@@ -109,6 +128,9 @@ class OperationHandler extends BaseHandler
         return $operations;
     }
 
+    /**
+     * @throws \Exception
+     */
     private function writeOperations()
     {
         if (!$this->isPreviousFileChecked && !$this->isFileEmpty()) {
