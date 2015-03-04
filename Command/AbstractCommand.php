@@ -11,9 +11,11 @@
 
 namespace Claroline\MigrationBundle\Command;
 
+use Psr\Log\LogLevel;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Component\Console\Output\OutputInterface;
 
 abstract class AbstractCommand extends ContainerAwareCommand
@@ -44,11 +46,13 @@ abstract class AbstractCommand extends ContainerAwareCommand
     protected function getManager(OutputInterface $output)
     {
         $manager = $this->getContainer()->get('claroline.migration.manager');
-        $manager->setLogger(
-            function ($message) use ($output) {
-                $output->writeln($message);
-            }
+        $verbosityLevelMap = array(
+            LogLevel::NOTICE => OutputInterface::VERBOSITY_NORMAL,
+            LogLevel::INFO   => OutputInterface::VERBOSITY_NORMAL,
+            LogLevel::DEBUG  => OutputInterface::VERBOSITY_NORMAL
         );
+        $consoleLogger = new ConsoleLogger($output, $verbosityLevelMap);
+        $manager->setLogger($consoleLogger);
 
         return $manager;
     }
