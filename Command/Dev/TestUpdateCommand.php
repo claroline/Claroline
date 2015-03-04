@@ -12,6 +12,7 @@
 namespace Claroline\CoreBundle\Command\Dev;
 
 use Claroline\CoreBundle\Library\PluginBundle;
+use Psr\Log\LogLevel;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Component\Console\Output\OutputInterface;
