@@ -10,10 +10,11 @@
 
 namespace Claroline\CoreBundle\Library\Installation\Updater;
 
+use Claroline\InstallationBundle\Updater\Updater;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Claroline\CoreBundle\Entity\Resource\MaskDecoder;
 
-class Updater030601
+class Updater030601 extends Updater
 {
     private $container;
     private $om;
@@ -64,17 +65,5 @@ class Updater030601
         //edit the "change-file" menu
 
         $this->om->flush();
-    }
-
-    public function setLogger($logger)
-    {
-        $this->logger = $logger;
-    }
-
-    private function log($message)
-    {
-        if ($log = $this->logger) {
-            $log('    ' . $message);
-        }
     }
 } 

@@ -12,12 +12,12 @@
 namespace Claroline\CoreBundle\Library\Installation\Updater;
 
 use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
+use Claroline\InstallationBundle\Updater\Updater;
 use Doctrine\ORM\EntityManager;
 
-class Updater021600
+class Updater021600 extends Updater
 {
     private $container;
-    private $logger;
     /** @var EntityManager */
     private $em;
 
@@ -31,11 +31,6 @@ class Updater021600
     {
         $this->changeAnonymousToolPermissions();
         $this->repairWorkspaceWidgetInstances();
-    }
-
-    public function setLogger($logger)
-    {
-        $this->logger = $logger;
     }
 
     private function changeAnonymousToolPermissions()
@@ -75,12 +70,5 @@ class Updater021600
         }
 
         $this->em->flush();
-    }
-
-    private function log($message)
-    {
-        if ($log = $this->logger) {
-            $log('    ' . $message);
-        }
     }
 }

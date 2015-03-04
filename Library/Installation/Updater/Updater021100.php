@@ -11,10 +11,11 @@
 
 namespace Claroline\CoreBundle\Library\Installation\Updater;
 
-class Updater021100
+use Claroline\InstallationBundle\Updater\Updater;
+
+class Updater021100 extends Updater
 {
     private $container;
-    private $logger;
     private $om;
     private $conn;
 
@@ -42,17 +43,5 @@ class Updater021100
         $this->om->persist($layout);
 
         $this->om->flush();
-    }
-
-    public function setLogger($logger)
-    {
-        $this->logger = $logger;
-    }
-
-    private function log($message)
-    {
-        if ($log = $this->logger) {
-            $log('    ' . $message);
-        }
     }
 } 
