@@ -11,6 +11,8 @@ Trait LoggableTrait
 
     public function log($message)
     {
-        $this->logger->log(LogLevel::INFO, $message);
+        if (null !== $this->logger) {
+            $this->logger->log(LogLevel::INFO, $message);
+        }
     }
 }
