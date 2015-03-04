@@ -13,7 +13,7 @@ class AdditionalInstaller extends BaseInstaller
     {
         if (version_compare($currentVersion, '2.0', '<') && version_compare($currentVersion, '1.0', '>=') && version_compare($targetVersion, '2.0', '>=') ) {
             $updater020000 = new Updater\Updater020000($this->container);
-            $updater020000->setLogger($this);
+            $updater020000->setLogger($this->logger);
             $updater020000->preUpdate();
         }
     }
@@ -22,7 +22,7 @@ class AdditionalInstaller extends BaseInstaller
     {
         if (version_compare($currentVersion, '2.0', '<') && version_compare($currentVersion, '1.0', '>=') && version_compare($targetVersion, '2.0', '>=') ) {
             $updater020000 = new Updater\Updater020000($this->container);
-            $updater020000->setLogger($this);
+            $updater020000->setLogger($this->logger);
             $updater020000->postUpdate();
         }
     }

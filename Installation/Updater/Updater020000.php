@@ -2,27 +2,22 @@
 
 namespace Icap\WikiBundle\Installation\Updater;
 
+use Claroline\InstallationBundle\Updater\Updater;
 use Icap\WikiBundle\Entity\Wiki;
 use Icap\WikiBundle\Entity\Section;
 use Icap\WikiBundle\Entity\Contribution;
 use Doctrine\Common\Persistence\Mapping\MappingException;
 use Symfony\Component\Filesystem\Filesystem;
 
-class Updater020000
+class Updater020000 extends Updater
 {
     private $container;
     private $conn;
-    private $logger;
 
     public function __construct($container)
     {
         $this->container = $container;
         $this->conn = $container->get('doctrine.dbal.default_connection');
-    }
-
-    public function setLogger($logger)
-    {
-        $this->logger = $logger;
     }
 
     public function preUpdate()
@@ -84,12 +79,5 @@ class Updater020000
     {
         $this->log('Dropping outdated and temporary tables...');
         $this->conn->query('DROP table icap__wiki_section_temp');
-    }
-
-    private function log($message)
-    {
-        if ($this->logger !== null) {
-            $this->logger->displayLog('    ' . $message);
-        }
     }
 }
