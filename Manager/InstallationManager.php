@@ -19,6 +19,7 @@ use Claroline\MigrationBundle\Migrator\Migrator;
 use Claroline\InstallationBundle\Fixtures\FixtureLoader;
 use Claroline\InstallationBundle\Bundle\BundleVersion;
 use Claroline\InstallationBundle\Bundle\InstallableInterface;
+use Claroline\InstallationBundle\Bundle\InstallableBundle;
 use Claroline\InstallationBundle\Additional\AdditionalInstallerInterface;
 
 class InstallationManager
@@ -151,25 +152,27 @@ class InstallationManager
 
     private function persistBundleInfo(InstallableInterface $bundle)
     {
-        $ds = DIRECTORY_SEPARATOR;
-        $om = $this->container->get('doctrine.orm.entity_manager');
-        $entity = $om->getRepository('ClarolineCoreBundle:Bundle')
-            ->findOneByName($bundle->getClarolineName());
-
-        if (!$entity) {
-            $entity = new Bundle();
+        if ($bundle instanceof InstallableBundle) {
+            $ds = DIRECTORY_SEPARATOR;
+            $om = $this->container->get('doctrine.orm.entity_manager');
+            $entity = $om->getRepository('ClarolineCoreBundle:Bundle')
+                ->findOneByName($bundle->getClarolineName());
+    
+            if (!$entity) {
+                $entity = new Bundle();
+            }
+    
+            $entity->setName($bundle->getClarolineName());
+            $entity->setVersion($bundle->getVersion());
+            $entity->setAuthors($bundle->getAuthors());
+            $entity->setType($bundle->getType());
+            $entity->setDescription($bundle->getDescription());
+            $entity->setLicense($bundle->getLicense());
+            $entity->setTargetDir($bundle->getTargetDir());
+            $entity->setBasePath($bundle->getBasePath());
+            $om->persist($entity);
+            $this->log("Updating {$bundle->getName()} info...");
+            $om->flush();
         }
-
-        $entity->setName($bundle->getClarolineName());
-        $entity->setVersion($bundle->getVersion());
-        $entity->setAuthors($bundle->getAuthors());
-        $entity->setType($bundle->getType());
-        $entity->setDescription($bundle->getDescription());
-        $entity->setLicense($bundle->getLicense());
-        $entity->setTargetDir($bundle->getTargetDir());
-        $entity->setBasePath($bundle->getBasePath());
-        $om->persist($entity);
-        $this->log("Updating {$bundle->getName()} info...");
-        $om->flush();
     }
 }
