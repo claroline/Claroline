@@ -50,7 +50,7 @@
         window.Claroline.Modal.displayForm(
             Routing.generate('hevinci_new_framework'),
             function (data) {
-                $('span#status-info').remove();
+                $('div.alert.alert-info').hide();
                 $('table#framework-table')
                     .css('display', 'table')
                     .children('tbody')
