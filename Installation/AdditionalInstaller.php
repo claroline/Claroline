@@ -26,9 +26,4 @@ class AdditionalInstaller extends BaseInstaller
             $updater020000->postUpdate();
         }
     }
-
-    public function displayLog($message)
-    {
-        $this->log($message);
-    }
 }
