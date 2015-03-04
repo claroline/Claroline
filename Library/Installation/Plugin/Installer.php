@@ -11,9 +11,13 @@
 
 namespace Claroline\CoreBundle\Library\Installation\Plugin;
 
+use Claroline\InstallationBundle\Log\LoggableTrait;
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\InstallationBundle\Manager\InstallationManager;
 use Claroline\CoreBundle\Library\PluginBundle;
+use Psr\Log\LoggerAwareTrait;
+use Psr\Log\LoggerInterface;
+use Psr\Log\LogLevel;
 
 /**
  * This class is used to perform the (un-)installation of a plugin.
@@ -22,10 +26,11 @@ use Claroline\CoreBundle\Library\PluginBundle;
  */
 class Installer
 {
+    use LoggableTrait;
+
     private $validator;
     private $recorder;
     private $baseInstaller;
-    private $logger;
 
     /**
      * Constructor.
@@ -35,9 +40,9 @@ class Installer
      * @param InstallationManager $installer
      *
      * @DI\InjectParams({
-     *     "validator"      = @DI\Inject("claroline.plugin.validator"),
-     *     "recorder"       = @DI\Inject("claroline.plugin.recorder"),
-     *     "installer"      = @DI\Inject("claroline.installation.manager")
+     *     "validator" = @DI\Inject("claroline.plugin.validator"),
+     *     "recorder"  = @DI\Inject("claroline.plugin.recorder"),
+     *     "installer" = @DI\Inject("claroline.installation.manager")
      * })
      */
     public function __construct(
@@ -51,7 +56,10 @@ class Installer
         $this->baseInstaller = $installer;
     }
 
-    public function setLogger(\Closure $logger)
+    /**
+     * @param LoggerInterface $logger
+     */
+    public function setLogger(LoggerInterface $logger)
     {
         $this->logger = $logger;
         $this->baseInstaller->setLogger($logger);
@@ -62,7 +70,9 @@ class Installer
      *
      * PluginBundle $plugin
      *
-     * @throws Exception if the plugin doesn't pass the validation
+     * @param PluginBundle $plugin
+     *
+     * @throws \Exception if the plugin doesn't pass the validation
      */
     public function install(PluginBundle $plugin)
     {
@@ -106,7 +116,7 @@ class Installer
 
     private function checkInstallationStatus(PluginBundle $plugin, $shouldBeInstalled = true)
     {
-        $this->log(sprintf('Checking installation status for plugin %s', $plugin->getName()));
+        $this->log(sprintf('<fg=blue>Checking installation status for plugin %s</fg=blue>', $plugin->getName()));
 
         if ($this->recorder->isRegistered($plugin) !== $shouldBeInstalled) {
             $stateDiscr = $shouldBeInstalled ? 'not' : 'already';
@@ -131,13 +141,6 @@ class Installer
             }
 
             throw new \Exception($report);
-        }
-    }
-
-    private function log($message)
-    {
-        if ($log = $this->logger) {
-            $log($message);
         }
     }
 }

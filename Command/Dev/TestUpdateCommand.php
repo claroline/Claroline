@@ -13,6 +13,7 @@ namespace Claroline\CoreBundle\Command\Dev;
 
 use Claroline\CoreBundle\Library\PluginBundle;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
@@ -74,12 +75,17 @@ class TestUpdateCommand extends ContainerAwareCommand
         $installerType = $bundle instanceof PluginBundle ?
             'claroline.plugin.installer' :
             'claroline.installation.manager';
-        $installer = $this->getContainer()->get($installerType);
-        $installer->setLogger(
-            function ($message) use ($output) {
-                $output->writeln($message);
-            }
+
+        $verbosityLevelMap = array(
+            LogLevel::NOTICE => OutputInterface::VERBOSITY_NORMAL,
+            LogLevel::INFO   => OutputInterface::VERBOSITY_NORMAL,
+            LogLevel::DEBUG  => OutputInterface::VERBOSITY_NORMAL
         );
+        $consoleLogger = new ConsoleLogger($output);
+
+        /** @var \Claroline\InstallationBundle\Manager\InstallationManager|\Claroline\CoreBundle\Library\Installation\Plugin\Installer $installer */
+        $installer = $this->getContainer()->get($installerType);
+        $installer->setLogger($consoleLogger);
         $from = $input->getArgument('from_version');
         $to = $input->getArgument('to_version');
         $installer->update($bundle, $from, $to);
