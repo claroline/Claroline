@@ -4,6 +4,7 @@ namespace UJM\ExoBundle\Form;
 
 use UJM\ExoBundle\Entity\InteractionOpen;
 
+
 class InteractionOpenHandler extends \UJM\ExoBundle\Form\InteractionHandler
 {
 
@@ -17,14 +18,27 @@ class InteractionOpenHandler extends \UJM\ExoBundle\Form\InteractionHandler
     {
         if ( $this->request->getMethod() == 'POST' ) {
             $this->form->handleRequest($this->request);
-
+            $verifCat =$this->form->getData()->getInteraction()->getQuestion()->getCategory();
+            $user=$this->form->getData()->getInteraction()->getQuestion()->getUser();
+            if($verifCat== null)
+            {             
+                
+                $categoryList = $repositoryCategory->findAll();
+                foreach ($categoryList as $category) {
+//                    if($category->getUser == $user )
+//                    {
+//                        if()
+//                    }
+                    var_dump($category);
+                }
+//               var_dump($verifCat);
+//               die(); 
+            }
             if($this->validateNbClone() === FALSE) {
                     return 'infoDuplicateQuestion';
             }
-
             if ( $this->form->isValid() ) {
                 $this->onSuccessAdd($this->form->getData());
-
                 return true;
             }
         }

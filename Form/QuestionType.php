@@ -36,7 +36,6 @@ class QuestionType extends AbstractType
             ->add(
                 'category', 'entity', array(
                     'class' => 'UJM\\ExoBundle\\Entity\\Category',
-                    'compound' => 'true',
                     'label' => 'Category.value',
                     'required' => false,
                     'empty_value' => 'choose_category',

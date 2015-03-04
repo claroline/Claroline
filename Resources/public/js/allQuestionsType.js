@@ -54,6 +54,7 @@ function statusButton(idI,idDiv) {
     //  $('#'+idI+'Button').removeClass("btn btn-default collapsed active").addClass("btn btn-default collapsed");
   });
         }
+        
 // Delete the name of the category
 function dropCategory() {
     
