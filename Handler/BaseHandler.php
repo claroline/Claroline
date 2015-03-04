@@ -11,26 +11,39 @@
 
 namespace Claroline\BundleRecorder\Handler;
 
+use Claroline\InstallationBundle\Log\LoggableTrait;
+use Psr\Log\LoggerInterface;
+
 class BaseHandler
 {
-    protected $targetFile;
-    private $logger;
+    use LoggableTrait;
 
-    public function __construct($targetFile, \Closure $logger = null)
+    /**
+     * @var string
+     */
+    protected $targetFile;
+
+    /**
+     * @param                 $targetFile
+     * @param LoggerInterface $logger
+     */
+    public function __construct($targetFile, LoggerInterface $logger = null)
     {
         if (!file_exists($targetFile)) {
             touch($targetFile);
         }
 
         $this->targetFile = $targetFile;
-        $this->logger = $logger;
+        $this->setLogger($logger);
     }
 
+    /**
+     * @param string $message
+     * @param string $indent
+     */
     public function log($message, $indent = '    ')
     {
-        if ($log = $this->logger) {
-            $log($indent . $message);
-        }
+        $this->logger->log(LogLevel::INFO, $indent . $message);
     }
 
     /**
