@@ -4,11 +4,11 @@ namespace Claroline\CoreBundle\Library\Installation\Updater;
 
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Tool\AdminTool;
+use Claroline\InstallationBundle\Updater\Updater;
 
-class Updater021400
+class Updater021400 extends Updater
 {
     private $container;
-    private $logger;
     private $oldCachePath;
     private $newCachePath;
     /**
@@ -65,17 +65,5 @@ class Updater021400
         }
 
         $this->objectManager->flush();
-    }
-
-    public function setLogger($logger)
-    {
-        $this->logger = $logger;
-    }
-
-    private function log($message)
-    {
-        if ($log = $this->logger) {
-            $log('    ' . $message);
-        }
     }
 }

@@ -15,15 +15,22 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CoreBundle\Manager\DependencyManager;
+use Claroline\CoreBundle\Manager\BundleManager;
 use Claroline\CoreBundle\Manager\IPWhiteListManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use JMS\SecurityExtraBundle\Annotation as SEC;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 
+/**
+ * @DI\Tag("security.secure_service")
+ * @SEC\PreAuthorize("canOpenAdminTool('platform_packages')")
+ */
 class PackageController extends Controller
 {
     private $toolManager;
@@ -31,6 +38,8 @@ class PackageController extends Controller
     private $adminToolPlugin;
     private $sc;
     private $ipwlm;
+    private $bundleManager;
+    private $platformConfigHandler;
 
     /**
      * @DI\InjectParams({
@@ -38,15 +47,20 @@ class PackageController extends Controller
      *      "toolManager"     = @DI\Inject("claroline.manager.tool_manager"),
      *      "dm"              = @DI\Inject("claroline.manager.dependency_manager"),
      *      "sc"              = @DI\Inject("security.context"),
-     *      "ipwlm"           = @DI\Inject("claroline.manager.ip_white_list_manager")
+     *      "ipwlm"           = @DI\Inject("claroline.manager.ip_white_list_manager"),
+     *      "bundleManager"   = @DI\Inject("claroline.manager.bundle_manager"),
+     *      "configHandler"   = @DI\Inject("claroline.config.platform_config_handler")
      * })
      */
     public function __construct(
-        StrictDispatcher         $eventDispatcher,
-        ToolManager              $toolManager,
-        SecurityContextInterface $sc,
-        DependencyManager        $dm,
-        IPWhiteListManager       $ipwlm
+        StrictDispatcher             $eventDispatcher,
+        ToolManager                  $toolManager,
+        SecurityContextInterface     $sc,
+        DependencyManager            $dm,
+        IPWhiteListManager           $ipwlm,
+        BundleManager                $bundleManager,
+        PlatformConfigurationHandler $configHandler
+
     )
     {
         $this->eventDispatcher = $eventDispatcher;
@@ -55,12 +69,15 @@ class PackageController extends Controller
         $this->sc              = $sc;
         $this->dm              = $dm;
         $this->ipwlm           = $ipwlm;
+        $this->bundleManager   = $bundleManager;
+        $this->configHandler   = $configHandler;
     }
 
     /**
      * @EXT\Route(
      *     "/",
-     *     name="claro_admin_plugins"
+     *     name="claro_admin_plugins",
+     *     options = {"expose"=true}
      * )
      *
      * @EXT\Template()
@@ -71,94 +88,62 @@ class PackageController extends Controller
      */
     public function listAction()
     {
-        $this->checkOpen();
-        $corePackages = $this->dm->getInstalledByType(DependencyManager::CLAROLINE_CORE_TYPE);
-        $pluginPackages = $this->dm->getPluginList();
-        $upgradablePackages = $this->dm->getUpgradeablePackages();
-        $ds = DIRECTORY_SEPARATOR;
-
-        //the current ip must be whitelisted so it can access the upgrade.html.php script
-        $allowUpdate = $this->ipwlm->addIP($_SERVER['REMOTE_ADDR']);
+        $coreBundle = $this->bundleManager->getBundle('CoreBundle');
+        $coreVersion = $coreBundle->getVersion();
+        $api = $this->configHandler->getParameter('repository_api');
+        $url = $api . "/version/$coreVersion/tags/last";
+        //ask the server wich are the last available packages now.
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        $data = curl_exec($ch);
+        curl_close($ch);
+        $fetched = json_decode($data);
+        $installed = $this->bundleManager->getInstalled();
+        $uninstalled = $this->bundleManager->getUninstalledFromServer($fetched);
 
         return array(
-            'corePackages'       => $corePackages,
-            'pluginPackages'     => $pluginPackages,
-            'upgradablePackages' => $upgradablePackages,
-            'allowUpdate'        => $allowUpdate
+            'fetched' => $fetched,
+            'installed' => $installed,
+            'uninstalled' => $uninstalled
         );
     }
 
     /**
      * @EXT\Route(
-     *     "/update/all",
-     *     name="claro_admin_update_packages",
-     *     options={"expose"=true}
+     *     "/bundle/{bundle}/install/log/{date}",
+     *     name="claro_admin_plugin_install",
+     *     options = {"expose"=true}
      * )
      *
-     * Display the plugin list
+     * Install a plugin.
      *
      * @return Response
      */
-    public function updateAllAction()
+    public function installFromRemoteAction($bundle, $date)
     {
-        $this->checkOpen();
-        $packages = $this->dm->updateLastTagCache();
+        $this->bundleManager->installRemoteBundle($bundle, $date);
 
-        return new Response('success', 204);
+        return new Response('Done.');
     }
 
     /**
      * @EXT\Route(
-     *     "/update/package/{ref}",
-     *     name="claro_admin_update_packages",
-     *     options={"expose"=true}
+     *     "/install/log/{date}",
+     *     name="claro_admin_plugins_log",
+     *     options = {"expose"=true}
      * )
-     * @param $ref
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     *
+     * Install a plugin.
+     *
+     * @return Response
      */
-    public function updatePackageAction($ref)
+    public function displayUpdateLog($date)
     {
-        $this->checkOpen();
-        $package = $this->dm->getByDistReference($ref);
-        $tag = $this->dm->updatePackage($package);
+        $content = @file_get_contents($this->bundleManager->getLogFile() . '-' . $date . '.log');
+        if (!$content) $content = '';
 
-        return new JsonResponse(
-            array(
-                'tag' => $tag,
-                'prettyName' => $package->getPrettyName(),
-                'distRef' => $package->getDistReference()
-            )
-        );
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/upgrade/all",
-     *     name="claro_admin_upgrade_packages",
-     *     options={"expose"=true}
-     * )
-     */
-    public function upgradeAllAction()
-    {
-        $this->checkOpen();
-        $res = $this->dm->upgrade();
-
-        return new JsonResponse();
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/remove/logs",
-     *     name="claro_admin_packages_log_remove",
-     *     options={"expose"=true}
-     * )
-     */
-    public function removeLogs()
-    {
-        $this->checkOpen();
-        $this->dm->removeUpdateLog();
-
-        return new JsonResponse();
+        return new Response($content);
     }
 
     /**
@@ -169,19 +154,9 @@ class PackageController extends Controller
      */
     public function pluginParametersAction($pluginShortName)
     {
-        $this->checkOpen();
         $eventName = "plugin_options_{$pluginShortName}";
         $event = $this->eventDispatcher->dispatch($eventName, 'PluginOptions', array());
 
         return $event->getResponse();
-    }
-
-    private function checkOpen()
-    {
-        if ($this->sc->isGranted('OPEN', $this->adminToolPlugin)) {
-            return true;
-        }
-
-        throw new AccessDeniedException();
     }
 }

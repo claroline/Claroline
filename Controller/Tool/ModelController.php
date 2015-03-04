@@ -23,6 +23,7 @@ use Claroline\CoreBundle\Manager\GroupManager;
 use Claroline\CoreBundle\Manager\HomeTabManager;
 use Claroline\CoreBundle\Manager\WorkspaceModelManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
+use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\UserManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -42,6 +43,7 @@ class ModelController extends Controller
     private $modelManager;
     private $request;
     private $resourceManager;
+    private $roleManager;
     private $router;
     private $security;
     private $userManager;
@@ -54,6 +56,7 @@ class ModelController extends Controller
      *     "modelManager"    = @DI\Inject("claroline.manager.workspace_model_manager"),
      *     "request"         = @DI\Inject("request"),
      *     "resourceManager" = @DI\Inject("claroline.manager.resource_manager"),
+     *     "roleManager"     = @DI\Inject("claroline.manager.role_manager"),
      *     "router"          = @DI\Inject("router"),
      *     "security"        = @DI\Inject("security.context"),
      *     "userManager"     = @DI\Inject("claroline.manager.user_manager")
@@ -66,6 +69,7 @@ class ModelController extends Controller
         WorkspaceModelManager $modelManager,
         Request $request,
         ResourceManager $resourceManager,
+        RoleManager $roleManager,
         RouterInterface $router,
         SecurityContextInterface $security,
         UserManager $userManager
@@ -77,6 +81,7 @@ class ModelController extends Controller
         $this->modelManager    = $modelManager;
         $this->request         = $request;
         $this->resourceManager = $resourceManager;
+        $this->roleManager     = $roleManager;
         $this->router          = $router;
         $this->security        = $security;
         $this->userManager     = $userManager;
@@ -596,6 +601,36 @@ class ModelController extends Controller
         $this->modelManager->removeHomeTab($model, $homeTab);
 
         return new JsonResponse();
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/model/{model}/retrieve/roles/translation/keys",
+     *     name="ws_model_roles_translation_keys_retrieve",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     */
+    public function retrieveRolesTranslationKeysFromWorkspaceModel(
+        WorkspaceModel $model,
+        User $user
+    )
+    {
+        $users = $model->getUsers()->toArray();
+
+        if (!in_array($user, $users)) {
+
+            throw new AccessDeniedException();
+        }
+        $results = array();
+        $workspace = $model->getWorkspace();
+        $roles = $this->roleManager->getRolesByWorkspace($workspace);
+
+        foreach ($roles as $role) {
+            $results[] = $role->getTranslationKey();
+        }
+
+        return new JsonResponse($results);
     }
 
     private function checkAccess(Workspace $workspace)

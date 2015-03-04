@@ -19,8 +19,11 @@ use Symfony\Component\Security\Core\SecurityContextInterface;
 use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\FacetManager;
+use Claroline\CoreBundle\Manager\ProfilePropertyManager;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Form\FormFactoryInterface;
+use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\ProfileProperty;
 use Claroline\CoreBundle\Entity\Facet\Facet;
 use Claroline\CoreBundle\Entity\Facet\FieldFacet;
 use Claroline\CoreBundle\Entity\Facet\PanelFacet;
@@ -38,16 +41,18 @@ class FacetController extends Controller
     private $roleManager;
     private $userAdminTool;
     private $facetManager;
+    private $profilePropertyManager;
 
     /**
      * @DI\InjectParams({
-     *     "router"       = @DI\Inject("router"),
-     *     "sc"           = @DI\Inject("security.context"),
-     *     "toolManager"  = @DI\Inject("claroline.manager.tool_manager"),
-     *     "roleManager"  = @DI\Inject("claroline.manager.role_manager"),
-     *     "facetManager" = @DI\Inject("claroline.manager.facet_manager"),
-     *     "formFactory"  = @DI\Inject("form.factory"),
-     *     "request"      = @DI\Inject("request")
+     *     "router"                 = @DI\Inject("router"),
+     *     "sc"                     = @DI\Inject("security.context"),
+     *     "toolManager"            = @DI\Inject("claroline.manager.tool_manager"),
+     *     "roleManager"            = @DI\Inject("claroline.manager.role_manager"),
+     *     "facetManager"           = @DI\Inject("claroline.manager.facet_manager"),
+     *     "formFactory"            = @DI\Inject("form.factory"),
+     *     "request"                = @DI\Inject("request"),
+     *     "profilePropertyManager" = @DI\Inject("claroline.manager.profile_property_manager")
      * })
      */
     public function __construct(
@@ -57,17 +62,19 @@ class FacetController extends Controller
         FacetManager $facetManager,
         RoleManager $roleManager,
         FormFactoryInterface $formFactory,
-        Request $request
+        Request $request,
+        ProfilePropertyManager $profilePropertyManager
     )
     {
-        $this->sc            = $sc;
-        $this->toolManager   = $toolManager;
-        $this->userAdminTool = $this->toolManager->getAdminToolByName('user_management');
-        $this->facetManager  = $facetManager;
-        $this->formFactory   = $formFactory;
-        $this->request       = $request;
-        $this->roleManager   = $roleManager;
-        $this->router        = $router;
+        $this->sc                     = $sc;
+        $this->toolManager            = $toolManager;
+        $this->userAdminTool          = $this->toolManager->getAdminToolByName('user_management');
+        $this->facetManager           = $facetManager;
+        $this->formFactory            = $formFactory;
+        $this->request                = $request;
+        $this->roleManager            = $roleManager;
+        $this->router                 = $router;
+        $this->profilePropertyManager = $profilePropertyManager;
     }
 
     /**
@@ -81,6 +88,21 @@ class FacetController extends Controller
     public function indexAction()
     {
         $this->checkOpen();
+
+        return array();
+    }
+
+    /**
+     * Returns the facet list.
+     *
+     * @EXT\Route("/facet", name="claro_admin_facet")
+     * @EXT\Template
+     *
+     * @return Response
+     */
+    public function facetsAction()
+    {
+        $this->checkOpen();
         $facets = $this->facetManager->getFacets();
         $platformRoles = $this->roleManager->getPlatformNonAdminRoles(true);
         $profilePreferences = $this->facetManager->getProfilePreferences();
@@ -90,6 +112,43 @@ class FacetController extends Controller
             'platformRoles' => $platformRoles,
             'profilePreferences' => $profilePreferences
         );
+    }
+
+    /**
+     * Returns the facet list.
+     *
+     * @EXT\Route("/properties", name="claro_admin_profile_properties")
+     * @EXT\Template
+     *
+     * @return Response
+     */
+    public function profilePropertiesAction()
+    {
+        $this->checkOpen();
+        $platformRoles = $this->roleManager->getPlatformNonAdminRoles(false);
+        $labels = User::getEditableProperties();
+        $properties = $this->profilePropertyManager->getAllProperties();
+
+        return array(
+            'platformRoles' => $platformRoles,
+            'labels'        => $labels,
+            'properties'     => $properties
+        );
+    }
+
+    /**
+     * @EXT\Route("/property/{property}/invert",
+     *      name="claro_admin_invert_user_properties_edition",
+     *      options = {"expose"=true}
+     * )
+     *
+     */
+    public function invertPropertiesEditableAction(ProfileProperty $property)
+    {
+        $this->checkOpen();
+        $this->profilePropertyManager->invertProperty($property);
+
+        return new JsonResponse(array(), 200);
     }
 
     /**

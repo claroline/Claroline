@@ -23,13 +23,15 @@ use Claroline\CoreBundle\Library\Session\DatabaseSessionValidator;
 use Claroline\CoreBundle\Manager\CacheManager;
 use Claroline\CoreBundle\Manager\ContentManager;
 use Claroline\CoreBundle\Manager\HwiManager;
+use Claroline\CoreBundle\Manager\IPWhiteListManager;
 use Claroline\CoreBundle\Manager\LocaleManager;
 use Claroline\CoreBundle\Manager\MailManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\SecurityTokenManager;
 use Claroline\CoreBundle\Manager\TermsOfServiceManager;
 use Claroline\CoreBundle\Manager\ToolManager;
-use Claroline\CoreBundle\Manager\IPWhiteListManager;
+use Claroline\CoreBundle\Manager\UserManager;
+use Claroline\CoreBundle\Manager\WorkspaceManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use JMS\SecurityExtraBundle\Annotation as SEC;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
@@ -43,6 +45,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Yaml\Yaml;
 
 /**
  * Controller of the platform parameters section.
@@ -67,6 +70,8 @@ class ParametersController extends Controller
     private $router;
     private $tokenManager;
     private $ipwlm;
+    private $userManager;
+    private $workspaceManager;
 
     /**
      * @DI\InjectParams({
@@ -87,7 +92,9 @@ class ParametersController extends Controller
      *     "sc"                 = @DI\Inject("security.context"),
      *     "router"             = @DI\Inject("router"),
      *     "ipwlm"              = @DI\Inject("claroline.manager.ip_white_list_manager"),
-     *     "tokenManager"       = @DI\Inject("claroline.manager.security_token_manager")
+     *     "tokenManager"       = @DI\Inject("claroline.manager.security_token_manager"),
+     *     "userManager"        = @DI\Inject("claroline.manager.user_manager"),
+     *     "workspaceManager"   = @DI\Inject("claroline.manager.workspace_manager")
      * })
      */
     public function __construct(
@@ -108,7 +115,9 @@ class ParametersController extends Controller
         SecurityContextInterface $sc,
         RouterInterface $router,
         IPWhiteListManager $ipwlm,
-        SecurityTokenManager $tokenManager
+        SecurityTokenManager $tokenManager,
+        UserManager $userManager,
+        WorkspaceManager $workspaceManager
     )
     {
         $this->configHandler      = $configHandler;
@@ -130,6 +139,8 @@ class ParametersController extends Controller
         $this->router             = $router;
         $this->ipwlm              = $ipwlm;
         $this->tokenManager       = $tokenManager;
+        $this->userManager        = $userManager;
+        $this->workspaceManager   = $workspaceManager;
     }
 
     /**
@@ -944,6 +955,74 @@ class ParametersController extends Controller
     }
 
     /**
+     * @EXT\Route(
+     *     "/send/datas/confirmation/form",
+     *     name="claro_admin_send_datas_confirm_form"
+     * )
+     * @EXT\Template(
+     *     "ClarolineCoreBundle:Administration\Parameters:sendDatasConfirmationForm.html.twig"
+     * )
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function sendDatasConfirmationFormAction()
+    {
+        $this->checkOpen();
+
+        return array();
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/send/datas/confirm",
+     *     name="claro_admin_send_datas_confirm"
+     * )
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function sendDatasConfirmAction()
+    {
+        $this->checkOpen();
+        $ds = DIRECTORY_SEPARATOR;
+        $platformOptionsFile = $this->container->getParameter('kernel.root_dir') .
+            $ds . 'config' . $ds . 'platform_options.yml';
+
+        if (is_null($this->configHandler->getParameter('token'))) {
+            $token = $this->generateToken(20);
+            $this->configHandler->setParameter('token', $token);
+        }
+        $this->sendDatas();
+
+        $this->configHandler->setParameter('confirm_send_datas', 'OK');
+
+        return new RedirectResponse(
+            $this->router->generate('claro_admin_parameters_index')
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/send/datas/token/{token}",
+     *     name="claro_admin_send_datas"
+     * )
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function sendDatasAction($token)
+    {
+        if ($token === $this->configHandler->getParameter('token') &&
+            $this->configHandler->getParameter('confirm_send_datas') === 'OK') {
+
+            $this->sendDatas(2);
+
+            return new Response('success', 200);
+        } else {
+
+            return new Response('Forbidden', 403);
+        }
+    }
+
+    /**
      *  Returns the list of available themes.
      *
      *  @return array
@@ -998,5 +1077,89 @@ class ParametersController extends Controller
             $type,
             $this->translator->trans($message, array(), 'platform')
         );
+    }
+    
+    private function sendDatas($mode = 1)
+    {
+        $url = $this->configHandler->getParameter('datas_sending_url');
+        $ip = $_SERVER['REMOTE_ADDR'];
+        $name = $this->configHandler->getParameter('name');
+        $lang = $this->configHandler->getParameter('locale_language');
+        $country = $this->configHandler->getParameter('country');
+        $supportEmail = $this->configHandler->getParameter('support_email');
+        $version = $this->getCoreBundleVersion();
+        $nbNonPersonalWorkspaces = $this->workspaceManager->getNbNonPersonalWorkspaces();
+        $nbPersonalWorkspaces = $this->workspaceManager->getNbPersonalWorkspaces();
+        $nbUsers = $this->userManager->getCountAllEnabledUsers();
+        $type = $mode;
+        $token = $this->configHandler->getParameter('token');
+
+        $currentUrl = $this->request->getHttpHost() .
+            $this->request->getRequestUri();
+        $currentUrl = preg_replace(
+            '/\/admin\/parameters\/send\/datas\/(.)*$/',
+            '',
+            $currentUrl
+        );
+        $platformUrl = preg_replace(
+            array('/app\.php(.)*$/', '/app_dev\.php(.)*$/'),
+            'app.php',
+            $currentUrl
+        );
+
+        $postDatas = "ip=$ip" .
+            "&name=$name" .
+            "&url=$platformUrl" .
+            "&lang=$lang" .
+            "&country=$country" .
+            "&email=$supportEmail" .
+            "&version=$version" .
+            "&workspaces=$nbNonPersonalWorkspaces" .
+            "&personal_workspaces=$nbPersonalWorkspaces" .
+            "&users=$nbUsers" .
+            "&stats_type=$type" .
+            "&token=$token";
+
+        $curl = curl_init($url);
+        curl_setopt($curl, CURLOPT_POST, 1);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, $postDatas);
+        curl_setopt($curl, CURLOPT_FOLLOWLOCATION, 1);
+        curl_setopt($curl, CURLOPT_HEADER, 0);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        curl_exec($curl);
+    }
+
+    private function generateToken($length)
+    {
+        $chars = array_merge(range(0,9), range('a', 'z'), range('A', 'Z'));
+        $charsSize = count($chars);
+        $token = uniqid();
+
+        while (strlen($token) < $length) {
+            $index = rand(0, $charsSize - 1);
+            $token .= $chars[$index];
+        }
+
+        return $token;
+    }
+
+    private function getCoreBundleVersion()
+    {
+        $ds = DIRECTORY_SEPARATOR;
+        $version = '-';
+        $installedFile = $this->container->getParameter('kernel.root_dir') .
+            $ds . '..' . $ds . 'vendor' . $ds . 'composer' . $ds . 'installed.json';
+        $jsonString = file_get_contents($installedFile);
+        $bundles = json_decode($jsonString, true);
+
+        foreach ($bundles as $bundle) {
+
+            if (isset($bundle['name']) && $bundle['name'] === 'claroline/core-bundle') {
+                $version = $bundle['version'];
+                break;
+            }
+        }
+
+        return $version;
     }
 }

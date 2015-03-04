@@ -12,11 +12,11 @@
 namespace Claroline\CoreBundle\Library\Installation\Updater;
 
 use Claroline\CoreBundle\Entity\Resource\ResourceIcon;
+use Claroline\InstallationBundle\Updater\Updater;
 
-class Updater020304
+class Updater020304 extends Updater
 {
     private $container;
-    private $logger;
 
     public function __construct($container)
     {
@@ -41,17 +41,5 @@ class Updater020304
         $this->container->get('claroline.manager.icon_manager')
             ->createShortcutIcon($rimg);
 
-    }
-
-    public function setLogger($logger)
-    {
-        $this->logger = $logger;
-    }
-
-    private function log($message)
-    {
-        if ($log = $this->logger) {
-            $log('    ' . $message);
-        }
     }
 }

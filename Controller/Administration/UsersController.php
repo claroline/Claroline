@@ -42,6 +42,10 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 
+/**
+ * @DI\Tag("security.secure_service")
+ * @SEC\PreAuthorize("canOpenAdminTool('user_management')")
+ */
 class UsersController extends Controller
 {
     private $userManager;
@@ -122,7 +126,6 @@ class UsersController extends Controller
      */
     public function indexAction()
     {
-        $this->checkOpen();
         $canUserBeCreated = $this->roleManager->validateRoleInsert(
             new User(),
             $this->roleManager->getRoleByName('ROLE_USER')
@@ -141,7 +144,6 @@ class UsersController extends Controller
      */
     public function userCreationFormAction()
     {
-        $this->checkOpen();
         $roleUser = $this->roleManager->getRoleByName('ROLE_USER');
         $isAdmin = ($this->sc->isGranted('ROLE_ADMIN')) ? true : false;
         $roles = $this->roleManager->getAllPlatformRoles();
@@ -192,7 +194,6 @@ class UsersController extends Controller
      */
     public function createAction(User $currentUser)
     {
-        $this->checkOpen();
         $translator = $this->get('translator');
         $sessionFlashBag = $this->get('session')->getFlashBag();
         $roleUser = $this->roleManager->getRoleByName('ROLE_USER');
@@ -271,8 +272,6 @@ class UsersController extends Controller
      */
     public function deleteAction(array $users)
     {
-        $this->checkOpen();
-
         foreach ($users as $user) {
             if (!$this->sc->isGranted('ROLE_ADMIN') && $user->hasRole('ROLE_ADMIN')) {
                 throw new AccessDeniedException();
@@ -317,7 +316,6 @@ class UsersController extends Controller
      */
     public function listAction($page, $search, $max, $order, $direction)
     {
-        $this->checkOpen();
         $canUserBeCreated = $this->roleManager->validateRoleInsert(new User(),$this->roleManager->getRoleByName('ROLE_USER'));
         $pager = $search === '' ?
             $this->userManager->getAllUsers($page, $max, $order, $direction) :
@@ -357,7 +355,6 @@ class UsersController extends Controller
      */
     public function listPicsAction($page, $search)
     {
-        $this->checkOpen();
         $pager = $search === '' ?
             $this->userManager->getAllUsers($page) :
             $this->userManager->getUsersByName($search, $page);
@@ -373,7 +370,6 @@ class UsersController extends Controller
      */
     public function importFormAction()
     {
-        $this->checkOpen();
         $form = $this->formFactory->create(FormFactory::TYPE_USER_IMPORT, array('showRoles' => true));
 
         return array('form' => $form->createView(), 'error' => null);
@@ -396,7 +392,6 @@ class UsersController extends Controller
      */
     public function userWorkspaceListAction(User $user, $page, $max)
     {
-        $this->checkOpen();
         $pager = $this->workspaceManager->getOpenableWorkspacesByRolesPager($user->getRoles(), $page, $max);
 
         return array('user' => $user, 'pager' => $pager, 'page' => $page, 'max' => $max);
@@ -411,7 +406,6 @@ class UsersController extends Controller
      */
     public function importAction()
     {
-        $this->checkOpen();
         $form = $this->formFactory->create(FormFactory::TYPE_USER_IMPORT, array('showRoles' => true));
         $form->handleRequest($this->request);
 
@@ -458,7 +452,6 @@ class UsersController extends Controller
      */
     public function export($format)
     {
-        $this->checkOpen();
         $exporter = $this->container->get('claroline.exporter.' . $format);
         $exporterManager = $this->container->get('claroline.manager.exporter_manager');
         $file = $exporterManager->export('Claroline\CoreBundle\Entity\User', $exporter);
@@ -491,8 +484,6 @@ class UsersController extends Controller
      */
     public function personalWorkspaceIndexAction()
     {
-        $this->checkOpen();
-
         return array();
     }
 
@@ -549,7 +540,6 @@ class UsersController extends Controller
      */
     public function activatePersonalWorkspaceToolPermAction($perm, Role $role, Tool $tool)
     {
-        $this->checkOpen();
         $this->toolManager->activatePersonalWorkspaceToolPerm($perm, $tool, $role);
 
         return new JsonResponse(array(), 200);
@@ -564,7 +554,6 @@ class UsersController extends Controller
      */
     public function removePersonalWorkspaceToolPermAction($perm, Role $role, Tool $tool)
     {
-        $this->checkOpen();
         $this->toolManager->removePersonalWorkspaceToolPerm($perm, $tool, $role);
 
         return new JsonResponse(array(), 200);
@@ -579,7 +568,6 @@ class UsersController extends Controller
      */
     public function activatePersonalWorkspaceRightsAction(Role $role)
     {
-        $this->checkOpen();
         $this->rightsManager->activatePersonalWorkspaceRightsPerm($role);
 
         return new JsonResponse(array(), 200);
@@ -594,7 +582,6 @@ class UsersController extends Controller
      */
     public function deactivatePersonalWorkspaceRightsAction(Role $role)
     {
-        $this->checkOpen();
         $this->rightsManager->deactivatePersonalWorkspaceRightsPerm($role);
 
         return new JsonResponse(array(), 200);
@@ -609,8 +596,6 @@ class UsersController extends Controller
      */
     public function createPersonalWorkspace(User $user)
     {
-        $this->checkOpen();
-
         if (!$user->getPersonalWorkspace()) {
             $this->userManager->setPersonalWorkspace($user);
         } else {
@@ -630,7 +615,6 @@ class UsersController extends Controller
      */
     public function deletePersonalWorkspace(User $user)
     {
-        $this->checkOpen();
         $personalWorkspace = $user->getPersonalWorkspace();
         $this->eventDispatcher->dispatch('log', 'Log\LogWorkspaceDelete', array($personalWorkspace));
         $this->workspaceManager->deleteWorkspace($personalWorkspace);
@@ -649,7 +633,6 @@ class UsersController extends Controller
      */
     public function importProfilePicsFormAction()
     {
-        $this->checkOpen();
         $form = $this->createForm(new ProfilePicsImportType());
 
         return array('form' => $form->createView());
@@ -665,7 +648,6 @@ class UsersController extends Controller
      */
     public function importProfilePicsAction()
     {
-        $this->checkOpen();
         $form = $this->createForm(new ProfilePicsImportType());
         $form->handleRequest($this->request);
 
@@ -675,14 +657,5 @@ class UsersController extends Controller
         }
 
         return array('form' => $form->createView());
-    }
-
-    private function checkOpen()
-    {
-        if ($this->sc->isGranted('OPEN', $this->userAdminTool)) {
-            return true;
-        }
-
-        throw new AccessDeniedException();
     }
 }

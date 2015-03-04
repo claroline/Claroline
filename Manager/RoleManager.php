@@ -119,6 +119,8 @@ class RoleManager
         $role->setType(Role::PLATFORM_ROLE);
         $this->om->persist($role);
         $this->om->flush();
+        $this->container->get('claroline.manager.profile_property_manager')
+            ->addDefaultProperties();
 
         return $role;
     }
@@ -815,6 +817,24 @@ class RoleManager
     )
     {
         return $this->roleRepo->findRoleByWorkspaceCodeAndTranslationKey(
+            $workspaceCode,
+            $translationKey,
+            $executeQuery
+        );
+    }
+
+    /**
+     * @param string $workspaceCode
+     * @param string $translationKey
+     * @param bool $executeQuery
+     */
+    public function getRolesByWorkspaceCodeAndTranslationKey(
+        $workspaceCode,
+        $translationKey,
+        $executeQuery = true
+    )
+    {
+        return $this->roleRepo->findRolesByWorkspaceCodeAndTranslationKey(
             $workspaceCode,
             $translationKey,
             $executeQuery

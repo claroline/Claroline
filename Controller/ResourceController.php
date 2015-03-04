@@ -830,7 +830,7 @@ class ResourceController
     public function managerParametersAction()
     {
         $response = new Response('', 401, array('Content-Type' => 'application/json'));
-        if ($this->sc->isGranted('USER_ROLE')) {
+        if ($this->sc->isGranted('ROLE_USER')) {
             $json = $this->templating->render(
                 'ClarolineCoreBundle:Resource:managerParameters.json.twig',
                 array('resourceTypes' => $this->resourceManager->getAllResourceTypes())

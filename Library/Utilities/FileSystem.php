@@ -17,10 +17,35 @@ class FileSystem extends Fs
 {
     public function rmdir($path, $recursive = false)
     {
-        if (!$recursive) {
-            rmdir($path);
-        } else {
-            $this->recursiveRemoveDirectory($path);
+        if (is_dir($path)) {
+            if (!$recursive) {
+                rmdir($path);
+            } else {
+                $this->recursiveRemoveDirectory($path);
+            }
+        }
+    }
+
+    //override not supported yet
+    public function copyDir($path, $target, $originalPath = '', $originalTarget = '')
+    {
+        $iterator = new \DirectoryIterator($path);
+        if ($originalPath === '') $originalPath = $path;
+        if ($originalTarget === '') $originalTarget = $target;
+
+        foreach ($iterator as $el) {
+            if (!$el->isDot()) {
+                $parts = explode($originalPath, $el->getRealPath());
+                $basePath = $parts[1];
+                $newPath = $originalTarget . $basePath;
+
+                if ($el->isDir()) {
+                    $this->mkdir($newPath);
+                    $this->copyDir($el->getRealPath(), $newPath, $originalPath, $originalTarget);
+                } else if ($el->isFile()){
+                    $this->copy($el->getRealPath(), $newPath);
+                }
+            }
         }
     }
 

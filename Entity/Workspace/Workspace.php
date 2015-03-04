@@ -161,6 +161,26 @@ class Workspace
      */
     protected $isPersonal = false;
 
+    /**
+     * @ORM\Column(name="start_date", type="datetime", nullable=true)
+     */
+    protected $startDate;
+
+    /**
+     * @ORM\Column(name="end_date", type="datetime", nullable=true)
+     */
+    protected $endDate;
+
+    /**
+     * @ORM\Column(name="is_access_date", type="boolean")
+     */
+    protected $isAccessDate = false;
+
+    /**
+     * @ORM\Column(name="workspace_type", type="integer", nullable=true)
+     */
+    protected $workspaceType;
+
     public function __construct()
     {
         $this->roles = new ArrayCollection();
@@ -338,9 +358,9 @@ class Workspace
         return $this->maxUploadResources;
     }
 
-    public function setIsPersonal($boolean)
+    public function setIsPersonal($isPersonal)
     {
-        $this->isPersonal = true;
+        $this->isPersonal = $isPersonal;
     }
 
     public function isPersonal()
@@ -356,5 +376,45 @@ class Workspace
         );
 
         return $return;
+    }
+
+    public function getStartDate()
+    {
+        return $this->startDate;
+    }
+
+    public function setStartDate($startDate)
+    {
+        $this->startDate = $startDate;
+    }
+
+    public function getEndDate()
+    {
+        return $this->endDate;
+    }
+
+    public function setEndDate($endDate)
+    {
+        $this->endDate = $endDate;
+    }
+
+    public function getIsAccessDate()
+    {
+        return $this->isAccessDate;
+    }
+
+    public function setIsAccessDate($isAccessDate)
+    {
+        $this->isAccessDate = $isAccessDate;
+    }
+
+    public function getWorkspaceType()
+    {
+        return $this->workspaceType;
+    }
+
+    public function setWorkspaceType($workspaceType)
+    {
+        $this->workspaceType = $workspaceType;
     }
 }

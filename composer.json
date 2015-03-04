@@ -4,6 +4,7 @@
     "keywords": ["Claroline", "Core"],
     "homepage": "http://www.claroline.net",
     "type": "claroline-core",
+    "version": "4.4.0",
     "license": "GPL-3.0+",
     "authors": [
         {
@@ -41,7 +42,6 @@
         "twbs/bootstrap": "3.0.0",
         "fortawesome/font-awesome": "4.2.0",
         "zenstruck/form-bundle": "1.5.1",
-        "cocur/slugify": "1.0",
         "zendframework/zend-crypt": "2.3.3",
         "besimple/sso-auth-bundle": "*",
         "composer/composer": "dev-master",
@@ -59,7 +59,8 @@
         "johngrogg/ics-parser": "dev-master",
         "gregwar/captcha-bundle": "1.0.12",
         "knplabs/knp-menu-bundle": "2.0.0",
-        "innova/angular-js-bundle": "1.0.2"
+        "innova/angular-js-bundle": "2.0.0",
+        "cocur/slugify": "~0.8"
     },
     "require-dev": {
         "mockery/mockery": "dev-master@dev",

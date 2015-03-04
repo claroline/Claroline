@@ -95,6 +95,40 @@ class WorkspaceRepository extends EntityRepository
     }
 
     /**
+     * Counts the personal workspaces.
+     *
+     * @return integer
+     */
+    public function countPersonalWorkspaces()
+    {
+        $dql = '
+            SELECT COUNT(w)
+            FROM Claroline\CoreBundle\Entity\Workspace\Workspace w
+            WHERE w.isPersonal = true
+        ';
+        $query = $this->_em->createQuery($dql);
+
+        return $query->getSingleScalarResult();
+    }
+
+    /**
+     * Counts the non personal workspaces.
+     *
+     * @return integer
+     */
+    public function countNonPersonalWorkspaces()
+    {
+        $dql = '
+            SELECT COUNT(w)
+            FROM Claroline\CoreBundle\Entity\Workspace\Workspace w
+            WHERE w.isPersonal = false
+        ';
+        $query = $this->_em->createQuery($dql);
+
+        return $query->getSingleScalarResult();
+    }
+
+    /**
      * Returns the workspaces whose at least one tool is accessible to one of the given roles.
      *
      * @param string[] $roles
@@ -943,5 +977,20 @@ class WorkspaceRepository extends EntityRepository
         $query->setParameter('workspaceCode', $workspaceCode);
 
         return $executeQuery ? $query->getOneOrNullResult() : $query;
+    }
+
+    public function findWorkspaceCodesWithPrefix($prefix, $executeQuery = true)
+    {
+        $dql = '
+            SELECT UPPER(w.code) AS code
+            FROM Claroline\CoreBundle\Entity\Workspace\Workspace w
+            WHERE UPPER(w.code) LIKE :search
+        ';
+
+        $query = $this->_em->createQuery($dql);
+        $upperSearch = strtoupper($prefix);
+        $query->setParameter('search', "{$upperSearch}%");
+
+        return $executeQuery ? $query->getResult() : $query;
     }
 }

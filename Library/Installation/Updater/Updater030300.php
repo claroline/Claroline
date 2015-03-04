@@ -11,14 +11,14 @@
 
 namespace Claroline\CoreBundle\Library\Installation\Updater;
 
+use Claroline\InstallationBundle\Updater\Updater;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\Widget\Widget;
 
-class Updater030300
+class Updater030300 extends Updater
 {
     private $em;
-    private $logger;
     private $configHandler;
 
     public function __construct(ContainerInterface $container)
@@ -115,18 +115,6 @@ class Updater030300
         if (!file_exists($authDir)) {
             $this->log('Creating authentication directory');
             mkdir($authDir);
-        }
-    }
-
-    public function setLogger($logger)
-    {
-        $this->logger = $logger;
-    }
-
-    private function log($message)
-    {
-        if ($log = $this->logger) {
-            $log('    ' . $message);
         }
     }
 

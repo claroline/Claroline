@@ -11,10 +11,11 @@
 
 namespace Claroline\CoreBundle\Library\Installation\Updater;
 
-class Updater020800
+use Claroline\InstallationBundle\Updater\Updater;
+
+class Updater020800 extends Updater
 {
     private $container;
-    private $logger;
 
     public function __construct($container)
     {
@@ -25,18 +26,6 @@ class Updater020800
     {
         $this->dropOldTables();
         $this->copyMailerParameters();
-    }
-
-    public function setLogger($logger)
-    {
-        $this->logger = $logger;
-    }
-
-    private function log($message)
-    {
-        if ($log = $this->logger) {
-            $log('    ' . $message);
-        }
     }
 
     private function dropOldTables()

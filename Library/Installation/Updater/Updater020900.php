@@ -12,11 +12,11 @@
 namespace Claroline\CoreBundle\Library\Installation\Updater;
 
 use Claroline\CoreBundle\Entity\Content;
+use Claroline\InstallationBundle\Updater\Updater;
 
-class Updater020900
+class Updater020900 extends Updater
 {
     private $container;
-    private $logger;
     private $om;
     private $conn;
 
@@ -38,18 +38,6 @@ class Updater020900
         $this->updateUsers();
         $this->insertDefaultMails();
         $this->updateFrontController();
-    }
-
-    public function setLogger($logger)
-    {
-        $this->logger = $logger;
-    }
-
-    private function log($message)
-    {
-        if ($log = $this->logger) {
-            $log('    ' . $message);
-        }
     }
 
     private function backupBadges()
