@@ -136,7 +136,7 @@
 
     <script type='text/javascript'
             src='{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2/jquery-ui-1.9.2.js') }}'></script>
-    <script src="{{ asset('bundles/icapdropzone/js/popup.js') }}"></script>
+    <script src="{{ asset('bundles/innovacollecticiel/js/popup.js') }}"></script>
 
     <script>
         tinymce.claroline.configuration.toolbar1 = 'bold italic strikethrough | alignleft aligncenter alignright alignjustify | ';
@@ -226,6 +226,7 @@
                 var text = $('#innova_collecticiel_document_file_form_text').val();
                 var url = $('#innova_collecticiel_document_file_form_url').val();
                 var file = $('#innova_collecticiel_document_file_form_url').val();
+                var validate = $('#innova_collecticiel_document_file_form_validate').val();
                 if ((text != '' && text != '<p></p>') || (url != '') || (file != '')) {
                     fieldEmpty = false;
                 }

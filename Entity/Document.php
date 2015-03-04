@@ -46,6 +46,11 @@ class Document {
     protected $drop;
 
     /**
+     * @ORM\Column(type="boolean", nullable=false)
+     */
+    protected $validate = false;
+
+    /**
      * @return mixed
      */
     public function getId()
@@ -123,6 +128,22 @@ class Document {
     public function getType()
     {
         return $this->type;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getValidate()
+    {
+        return $this->validate;
+    }
+
+    /**
+     * @param mixed $reported
+     */
+    public function setValidate($validate)
+    {
+        $this->validate = $validate;
     }
 
     /**

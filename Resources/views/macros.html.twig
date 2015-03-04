@@ -21,8 +21,8 @@
                     </thead>
                     <tbody>
                         {% for index, document in drop.documents %}
-                            <tr>
-                                <td>{{ 'Document n°%count%'|trans({'%count%': index + 1}, 'innova_collecticiel') }}</td>
+                            <tr id="row_{{ document.id }}">
+                                <td>{{ document.id }}</td>
                                 <td>{{ (document.type~'_type')|trans({}, 'innova_collecticiel') }}</td>
                                 <td>
                                     {% if document.url is not null %}
@@ -35,16 +35,26 @@
                                 </td>
 
                                 <td>
-                                    <input id="collecticiel-display" value="actif" type="checkbox" class="form-control" name="collecticiel-display" />
+                                    {# Si la document a été validé alors je ne peux pas le faire #}
+                                    {# Cf popup.js #}
+                                    {% if not document.validate %}
+                                        <input id="document_id_{{ document.id }}" value="actif" type="checkbox" class="form-control" name="document_id_{{ document.id }}" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#validate-modal" data-document_id="{{ document.id }}" />
+                                    {% else %}
+                                        <input id="document_id_{{ document.id }}" value="actif" type="checkbox" class="form-control" name="document_id_{{ document.id }}" disabled checked />
+                                    {% endif %}
                                 </td>
 
                                 {% if mode == 'complete' %}
                                     <td>
+                                    {# Si la document a été validé alors je ne peux pas le supprimer #}
+                                    {% if not document.validate %}
                                         <a href="{{ path('innova_collecticiel_delete_document', {'resourceId': dropzone.id, 'dropId': drop.id, 'documentId': document.id}) }}"
                                            class="btn btn-danger btn-sm pull-right launch-modal">
                                             <span class="fa fa-trash-o"></span>
                                             {{ 'Delete'|trans({}, 'innova_collecticiel') }}
                                         </a>
+
+                                    {% endif %}
                                     </td>
                                 {% endif %}
                             </tr>
@@ -54,4 +64,26 @@
             </table>
         </div>
     </div>
+
+    {# Déclaration de la modal pour confirmation de la validation #}
+    <div class="modal fade" id="validate-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="myModalLabel">Confirmation de la validation</h4>
+            </div>
+            <div class="modal-body">
+                Êtes-vous sûr de vouloir valider ce document ?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Non</button>
+                <button data-document_id="titi" id="modal_confirm" data-method="VALIDATE" type="button" class="btn btn-info rest" href="#">Oui, valider</button>
+            </div>
+            </div>
+        </div>
+    </div>
+    {# Fin de la déclaration de la modal pour confirmation de la validation #}
+
+
 {% endmacro %}
