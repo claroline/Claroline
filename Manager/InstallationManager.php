@@ -154,7 +154,7 @@ class InstallationManager
         $ds = DIRECTORY_SEPARATOR;
         $om = $this->container->get('doctrine.orm.entity_manager');
         $entity = $om->getRepository('ClarolineCoreBundle:Bundle')
-            ->findOneByName($bundle->getName());
+            ->findOneByName($bundle->getClarolineName());
 
         if (!$entity) {
             $entity = new Bundle();
