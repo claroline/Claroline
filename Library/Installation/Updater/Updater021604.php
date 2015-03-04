@@ -11,13 +11,13 @@
 
 namespace Claroline\CoreBundle\Library\Installation\Updater;
 
+use Claroline\InstallationBundle\Updater\Updater;
 use Doctrine\ORM\EntityManager;
 use Claroline\CoreBundle\Entity\Resource\MenuAction;
 
-class Updater021604
+class Updater021604 extends Updater
 {
     private $container;
-    private $logger;
     /** @var EntityManager */
     private $em;
 
@@ -48,17 +48,5 @@ class Updater021604
 
         $this->em->persist($action);
         $this->em->flush();
-    }
-
-    public function setLogger($logger)
-    {
-        $this->logger = $logger;
-    }
-
-    private function log($message)
-    {
-        if ($log = $this->logger) {
-            $log('    ' . $message);
-        }
     }
 }

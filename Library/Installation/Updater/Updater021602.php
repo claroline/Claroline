@@ -11,13 +11,13 @@
 
 namespace Claroline\CoreBundle\Library\Installation\Updater;
 
+use Claroline\InstallationBundle\Updater\Updater;
 use Doctrine\ORM\EntityManager;
 
-class Updater021602
+class Updater021602 extends Updater
 {
     /** @var EntityManager */
     private $em;
-    private $logger;
 
     public function __construct($container)
     {
@@ -27,11 +27,6 @@ class Updater021602
     public function postUpdate()
     {
         $this->repairPublicProfileUrls();
-    }
-
-    public function setLogger($logger)
-    {
-        $this->logger = $logger;
     }
 
     private function repairPublicProfileUrls()
@@ -52,12 +47,5 @@ class Updater021602
         }
 
         $this->em->flush();
-    }
-
-    private function log($message)
-    {
-        if ($log = $this->logger) {
-            $log('    ' . $message);
-        }
     }
 }
