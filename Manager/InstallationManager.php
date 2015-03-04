@@ -11,6 +11,7 @@
 
 namespace Claroline\InstallationBundle\Manager;
 
+use Claroline\InstallationBundle\Log\LoggableTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Claroline\CoreBundle\Entity\Bundle;
@@ -24,11 +25,27 @@ use Claroline\InstallationBundle\Additional\AdditionalInstallerInterface;
 
 class InstallationManager
 {
+    use LoggableTrait;
+
+    /**
+     * @var ContainerInterface
+     */
     private $container;
+
+    /**
+     * @var string
+     */
     private $environment;
+
+    /**
+     * @var Manager
+     */
     private $migrationManager;
+
+    /**
+     * @var FixtureLoader
+     */
     private $fixtureLoader;
-    private $logger;
 
     public function __construct(
         ContainerInterface $container,
@@ -41,11 +58,6 @@ class InstallationManager
         $this->migrationManager = $migrationManager;
         $this->fixtureLoader = $fixtureLoader;
         $this->environment = $environment;
-    }
-
-    public function setLogger(\Closure $logger)
-    {
-        $this->logger = $logger;
     }
 
     public function install(InstallableInterface $bundle, $requiredOnly = true)
@@ -125,13 +137,18 @@ class InstallationManager
         }
     }
 
+    /**
+     * @param InstallableInterface $bundle
+     *
+     * @return AdditionalInstallerInterface|bool
+     */
     private function getAdditionalInstaller(InstallableInterface $bundle)
     {
         $installer = $bundle->getAdditionalInstaller();
 
         if ($installer instanceof AdditionalInstallerInterface) {
             $installer->setEnvironment($this->environment);
-            $installer->setLogger($this->logger ?: function () {});
+            $installer->setLogger($this->logger);
 
             if ($installer instanceof ContainerAwareInterface) {
                 $installer->setContainer($this->container);
@@ -141,13 +158,6 @@ class InstallationManager
         }
 
         return false;
-    }
-
-    private function log($message)
-    {
-        if ($log = $this->logger) {
-            $log($message);
-        }
     }
 
     private function persistBundleInfo(InstallableInterface $bundle)

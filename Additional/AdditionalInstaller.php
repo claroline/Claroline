@@ -11,22 +11,22 @@
 
 namespace Claroline\InstallationBundle\Additional;
 
+use Claroline\InstallationBundle\Log\LoggableTrait;
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Claroline\InstallationBundle\Bundle\BundleVersion;
 
 abstract class AdditionalInstaller extends ContainerAware implements AdditionalInstallerInterface
 {
+    use LoggableTrait;
+
+    /**
+     * @var string
+     */
     protected $environment;
-    private $logger;
 
     public function setEnvironment($environment)
     {
         $this->environment = $environment;
-    }
-
-    public function setLogger(\Closure $logger)
-    {
-        $this->logger = $logger;
     }
 
     public function preInstall()
@@ -51,13 +51,5 @@ abstract class AdditionalInstaller extends ContainerAware implements AdditionalI
 
     public function postUninstall()
     {
-    }
-
-    protected function log($message)
-    {
-        if ($this->logger) {
-            $log = $this->logger;
-            $log($message);
-        }
     }
 }
