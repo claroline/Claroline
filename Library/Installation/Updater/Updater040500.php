@@ -15,8 +15,9 @@ use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\Tool\PwsToolConfig;
 use Claroline\CoreBundle\Entity\Tool\ToolMaskDecoder;
 use Claroline\CoreBundle\Entity\Resource\PwsRightsManagementAccess;
+use Claroline\InstallationBundle\Updater\Updater;
 
-class Updater040200
+class Updater040500 extends Updater
 {
     private $container;
     private $om;
@@ -35,18 +36,16 @@ class Updater040200
 
     private function updateOrder()
     {
-        
-    }
+        $em = $this->container->get('doctrine.orm.entity_manager');
+        $dirType = $em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findByName('directory');
+        $nodes = $em->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findBy(array('resourceType' => $dirType));
+        $this->log('Updating resource order, this operation may take a while...');
 
-    public function setLogger($logger)
-    {
-        $this->logger = $logger;
-    }
-
-    private function log($message)
-    {
-        if ($log = $this->logger) {
-            $log('    ' . $message);
+        foreach ($nodes as $node) {
+            if ($node->getResourceType()->getName() === 'directory') {
+                $this->log('Updating ' . $node->getName() . ' resource order...');
+                $this->container->get('claroline.manager.resource_manager')->reorder($node);
+            }
         }
     }
 }
