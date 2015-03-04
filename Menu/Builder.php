@@ -21,6 +21,7 @@ class Builder extends ContainerAware
         $translator = $this->container->get('translator');
         $securityContext = $this->container->get('security.context');
         $hasRoleExtension = $this->container->get('claroline.core_bundle.twig.has_role_extension');
+        $router = $this->container->get('router');
 
         $menu = $factory->createItem('root')
             ->setChildrenAttribute('class', 'dropdown-menu')
@@ -30,6 +31,12 @@ class Builder extends ContainerAware
             ->setAttribute('class', 'dropdown')
             ->setAttribute('role', 'presentation')
             ->setExtra('icon', 'fa fa-user');
+        $menu->addChild(
+            $translator->trans('parameters', array(), 'platform'),
+            array('uri' => $router->generate('claro_desktop_open_tool', array('toolName' => 'parameters')))
+        )->setAttribute('class', 'dropdown')
+        ->setAttribute('role', 'presentation')
+        ->setExtra('icon', 'fa fa-cog');
 
         $this->addDivider($menu, '1');
 
@@ -130,9 +137,9 @@ class Builder extends ContainerAware
                 ->setExtra('icon', 'fa fa-home');
          }
 
-        $menu->addChild($translator->trans('my_profile', array(), 'platform'), array('route' => 'claro_desktop_open'))
+        $menu->addChild($translator->trans('desktop', array(), 'platform'), array('route' => 'claro_desktop_open'))
             ->setAttribute('role', 'presentation')
-            ->setExtra('icon', 'fa fa-briefcase')
+            ->setExtra('icon', 'fa fa-home')
             ->setExtra('title', $translator->trans('desktop', array(), 'platform'));
 
         $token = $securityContext->getToken();

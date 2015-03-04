@@ -2,16 +2,6 @@
 
 {% block title %}{{ parent() ~ ' - ' ~ "parameters" | trans({}, "platform") | striptags | raw }}{% endblock %}
 
-{% block breadcrumb %}
-    {{
-        macros.desktopBreadcrumbs([
-            {
-                'name': 'parameters'|trans({}, 'platform'),
-                'href': ''
-            }
-        ])
-    }}
-{% endblock %}
 {% block section_content %}
     <div class="panel-heading">
         <h3 class="panel-title">{{ 'parameters'|trans({}, 'platform') }}</h3>

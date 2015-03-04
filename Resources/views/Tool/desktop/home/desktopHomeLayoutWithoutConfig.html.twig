@@ -2,17 +2,6 @@
 
 {% block title %}{{ parent() ~ ' - ' ~ "home" | trans({}, "platform") | striptags | raw }}{% endblock %}
 
-{% block breadcrumb %}
-    {{
-        macros.desktopBreadcrumbs([
-            {
-                'name': 'home'|trans({}, 'platform'),
-                'href': ''
-            }
-        ])
-    }}
-{% endblock %}
-
 {% block section_content %}
 
     <div class="panel-heading relative">

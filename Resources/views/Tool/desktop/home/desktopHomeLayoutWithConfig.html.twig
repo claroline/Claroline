@@ -2,17 +2,6 @@
 
 {% block title %}{{ parent() ~ ' - ' ~ "home" | trans({}, "platform") | striptags | raw }}{% endblock %}
 
-{% block breadcrumb %}
-    {{
-        macros.desktopBreadcrumbs([
-            {
-                'name': 'home'|trans({}, 'platform'),
-                'href': ''
-            }
-        ])
-    }}
-{% endblock %}
-
 {% block section_content %}
     <div id="config-value-div" config-value="{% if withConfig is defined and not withConfig is empty %}{{ withConfig }}{% endif %}"></div>
     <div id="hometab-id-div" hometab-id="{{ tabId }}"></div>
