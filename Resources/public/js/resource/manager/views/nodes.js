@@ -143,11 +143,10 @@
         orderNodes: function (event, ui) {
             var ids = this.$el.sortable('toArray');
             var movedNodeId = ui.item.attr('id');
-            var movedNodeIndex = ids.indexOf(movedNodeId);
-            var nextId = movedNodeIndex + 1 < ids.length ? ids[movedNodeIndex + 1] : 0;
+            var index = ids.indexOf(movedNodeId) + 1;
             this.dispatcher.trigger('order-nodes', {
                 'nodeId': movedNodeId,
-                'nextId': nextId
+                'index': index
             });
         },
         prepareResults: function (nodes) {

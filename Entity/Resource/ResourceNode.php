@@ -116,9 +116,9 @@ class ResourceNode
     /**
      * @ORM\OneToMany(
      *     targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode",
-     *     mappedBy="parent"
+     *     mappedBy="parent",
      * )
-     * @ORM\OrderBy({"id" = "ASC"})
+     * @ORM\OrderBy({"index" = "ASC"})
      */
     protected $children;
 
@@ -157,22 +157,9 @@ class ResourceNode
     protected $rights;
 
     /**
-     * @ORM\OneToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode",
-     *     cascade={"persist"}
-     * )
-     * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
+     * @ORM\Column(name="value", nullable=true)
      */
-    protected $next;
-
-    /**
-     * @ORM\OneToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode",
-     *     cascade={"persist"}
-     * )
-     * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
-     */
-    protected $previous;
+    protected $index;
 
     /**
      * @ORM\Column(name="mime_type", nullable=true)
@@ -478,32 +465,6 @@ class ResourceNode
         $this->rights->add($right);
     }
 
-    public function setNext(ResourceNode $next = null, $setPrev = false)
-    {
-        $this->next = $next;
-        if ($next !== null && $setPrev === true) {
-            $next->setPrevious($this);
-        }
-    }
-
-    public function getNext()
-    {
-        return $this->next;
-    }
-
-    public function setPrevious(ResourceNode $previous = null, $setNext = false)
-    {
-        $this->previous = $previous;
-        if ($previous !== null && $setNext == true) {
-            $previous->setNext($this);
-        }
-    }
-
-    public function getPrevious()
-    {
-        return $this->previous;
-    }
-
     public function getMimeType()
     {
         return $this->mimeType;
@@ -580,6 +541,16 @@ class ResourceNode
     public function setPublished($published)
     {
         $this->published = $published;
+    }
+
+    public function setIndex($index)
+    {
+        $this->index = $index;
+    }
+
+    public function getIndex()
+    {
+        return $this->index;
     }
 
     /**
