@@ -4,13 +4,13 @@ namespace Claroline\ForumBundle\Installation\Updater;
 
 use Claroline\ForumBundle\Entity\Category;
 use Claroline\CoreBundle\Entity\Widget\Widget;
+use Claroline\InstallationBundle\Updater\Updater;
 use Doctrine\DBAL\Connection;
 
-class Updater020200
+class Updater020200 extends Updater
 {
 
     private $container;
-    private $logger;
     /** @var  Connection */
     private $conn;
 
@@ -115,19 +115,6 @@ class Updater020200
             $em->flush();
         } else {
             $this->log('forum widget already added');
-        }
-    }
-
-
-    public function setLogger($logger)
-    {
-        $this->logger = $logger;
-    }
-
-    private function log($message)
-    {
-        if ($log = $this->logger) {
-            $log('    ' . $message);
         }
     }
 }
