@@ -49,15 +49,16 @@ class AbilityRepository extends EntityRepository
             ->getQuery()
             ->getScalarResult();
 
-        $linkedAbilityIds = array_map(function ($element) {
-            return $element['id'];
-        }, $linkedAbilityIds);
+        $qb = $this->createQueryBuilder('a')->delete();
 
-        $qb = $this->createQueryBuilder('a');
-        $qb->delete()
-            ->where($qb->expr()->notIn('a.id', $linkedAbilityIds))
-            ->getQuery()
-            ->execute();
+        if (count($linkedAbilityIds) > 0) {
+            $linkedAbilityIds = array_map(function ($element) {
+                return $element['id'];
+            }, $linkedAbilityIds);
+            $qb->where($qb->expr()->notIn('a.id', $linkedAbilityIds));
+        }
+
+        $qb->getQuery()->execute();
     }
 
     /**
