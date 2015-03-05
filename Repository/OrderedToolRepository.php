@@ -179,4 +179,28 @@ class OrderedToolRepository extends EntityRepository
 
         return $query->getResult();
     }
+
+    public function findConfigurableDesktopOrderedToolsByUser(
+        User $user,
+        $executeQuery = true
+    )
+    {
+        $dql = '
+            SELECT ot
+            FROM Claroline\CoreBundle\Entity\Tool\OrderedTool ot
+            JOIN ot.tool t
+            WHERE ot.isVisibleInDesktop = true
+            AND ot.user = :user
+            AND t.name != :home
+            AND t.name != :parameters
+            ORDER BY ot.order
+        ';
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('user', $user);
+        $query->setParameter('home', 'home');
+        $query->setParameter('parameters', 'parameters');
+
+        return $executeQuery ? $query->getResult() : $query;
+    }
 }

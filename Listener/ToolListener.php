@@ -177,9 +177,18 @@ class ToolListener
      */
     public function desktopParameters()
     {
-        $tools = $this->toolManager->getToolByCriterias(
+        $desktopTools = $this->toolManager->getToolByCriterias(
             array('isConfigurableInDesktop' => true, 'isDisplayableInDesktop' => true)
         );
+        $tools = array();
+
+        foreach ($desktopTools as $desktopTool) {
+            $toolName = $desktopTool->getName();
+
+            if ($toolName !== 'home' && $toolName !== 'parameters') {
+                $tools[] = $desktopTool;
+            }
+        }
 
         if (count($tools) > 1) {
             return $this->templating->render(

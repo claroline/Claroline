@@ -31,7 +31,7 @@
                                         class="chk-tool-visible"
                                         value="1"
                                         name="chk-tool-{{ tool.getId() }}"
-                                        {% if tool.isDesktopRequired() or tool.getName() == 'parameters' %} disabled {% endif %}
+                                        {% if tool.isDesktopRequired() or tool.getName() == 'home' or tool.getName() == 'parameters' %} disabled {% endif %}
                                         {% if tool.isVisible() %} checked {% endif %}
                                     />
                                 </td>

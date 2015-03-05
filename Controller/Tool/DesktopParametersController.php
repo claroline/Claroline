@@ -76,7 +76,7 @@ class DesktopParametersController extends Controller
     public function desktopConfigureToolAction(User $user)
     {
         $tools = $this->toolManager->getDesktopToolsConfigurationArray($user);
-        $orderedTools = $this->toolManager->getOrderedToolsByUser($user);
+        $orderedTools = $this->toolManager->getConfigurableDesktopOrderedToolsByUser($user);
 
         return array(
             'tools' => $tools,

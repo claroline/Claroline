@@ -876,4 +876,20 @@ class ToolManager
 
         return $pwstc;
     }
+
+    /**
+     * @param \Claroline\CoreBundle\Entity\User $user
+     *
+     * @return \Claroline\CoreBundle\Entity\Tool\OrderedTool[]
+     */
+    public function getConfigurableDesktopOrderedToolsByUser(
+        User $user,
+        $executeQuery = true
+    )
+    {
+        return $this->orderedToolRepo->findConfigurableDesktopOrderedToolsByUser(
+            $user,
+            $executeQuery
+        );
+    }
 }
