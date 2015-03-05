@@ -3,7 +3,7 @@
     "description": "Portfolio bundle for Claroline Connect. See https://github.com/claroline/Claroline",
     "keywords": ["Claroline", "Portfolio"],
     "homepage": "http://www.claroline.net",
-    "type": "claroline-core",
+    "type": "claroline-plugin",
     "authors": [
         {
             "name": "AILLOUD Maxime",
