@@ -17,5 +17,5 @@ use Psr\Log\LoggerInterface;
 
 abstract class LoggableFixture extends AbstractFixture
 {
-    use LoggableTrait
+    use LoggableTrait;
 }
