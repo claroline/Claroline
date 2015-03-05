@@ -189,7 +189,7 @@ class OrderedToolRepository extends EntityRepository
             SELECT ot
             FROM Claroline\CoreBundle\Entity\Tool\OrderedTool ot
             JOIN ot.tool t
-            WHERE ot.isVisibleInDesktop = true
+            WHERE ot.workspace IS NULL
             AND ot.user = :user
             AND t.name != :home
             AND t.name != :parameters
