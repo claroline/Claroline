@@ -40,7 +40,7 @@ class Competency implements \JsonSerializable
     private $scale;
 
     /**
-     * @ORM\OneToMany(targetEntity="CompetencyAbility", mappedBy="competencyAbility")
+     * @ORM\OneToMany(targetEntity="CompetencyAbility", mappedBy="competency")
      */
     private $competencyAbilities;
 
