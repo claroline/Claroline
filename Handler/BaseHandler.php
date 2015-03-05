@@ -13,6 +13,7 @@ namespace Claroline\BundleRecorder\Handler;
 
 use Claroline\InstallationBundle\Log\LoggableTrait;
 use Psr\Log\LoggerInterface;
+use Psr\Log\LogLevel;
 
 class BaseHandler
 {

@@ -11,11 +11,13 @@
 
 namespace Claroline\BundleRecorder\Handler;
 
+use Psr\Log\LoggerInterface;
+
 class BundleHandler extends BaseHandler
 {
     private $registeredBundles;
 
-    public function __construct($bundleFile, \Closure $logger = null)
+    public function __construct($bundleFile, LoggerInterface $logger = null)
     {
         parent::__construct($bundleFile, $logger);
         $this->registeredBundles = parse_ini_file($this->targetFile);
