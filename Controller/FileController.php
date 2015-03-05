@@ -206,7 +206,7 @@ class FileController extends Controller
     {
         $collection = new ResourceCollection(array($file->getResourceNode()));
         $this->checkAccess('EDIT', $collection);
-        $form = $this->get('form.factory')->create(new FileType(), new File());
+        $form = $this->get('form.factory')->create(new UpdateFileType(), new File());
 
         return array(
             'form' => $form->createView(),
