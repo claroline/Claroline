@@ -321,11 +321,9 @@ class DesktopController extends Controller
      */
     public function openAction(User $user)
     {
-        $openedTool = $this->toolManager->getDisplayedDesktopOrderedTools($user);
-
         $route = $this->router->generate(
             'claro_desktop_open_tool',
-            array('toolName' => $openedTool[0]->getName())
+            array('toolName' => 'home')
         );
 
         return new RedirectResponse($route);
