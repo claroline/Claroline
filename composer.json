@@ -4,6 +4,7 @@
     "keywords": ["Claroline", "Portfolio"],
     "homepage": "http://www.claroline.net",
     "type": "claroline-plugin",
+    "version": "4.0.0",
     "authors": [
         {
             "name": "AILLOUD Maxime",
