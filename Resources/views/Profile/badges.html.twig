@@ -197,7 +197,7 @@
                         {% for userBadge in userBadges %}
                             {% set badge = userBadge.badge %}
                             {% set dataImage = '<img class="badge_image_mini" src="' ~ asset(badge.webPath) ~ '" alt="' ~ badge.name ~ '" />' %}
-                            <li class="node-thumbnail badge_container" data-image="{{ dataImage }}" data-id="{{ badge.id }}">
+                            <li class="node-thumbnail badge_container" data-image="{{ dataImage }}" data-id="{{ userBadge.id }}">
                                 {% if userBadge.isExpired %}
                                     <span class="expired fa fa-exclamation-circle" data-title="Badge expiré"
                                            data-toggle="tooltip" data-placement="top" data-container="body"></span>

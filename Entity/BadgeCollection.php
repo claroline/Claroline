@@ -41,10 +41,10 @@ class BadgeCollection
     protected $slug;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Icap\BadgeBundle\Entity\Badge")
-     * @ORM\JoinTable(name="claro_badge_collection_badges")
+     * @ORM\ManyToMany(targetEntity="Icap\BadgeBundle\Entity\UserBadge")
+     * @ORM\JoinTable(name="claro_badge_collection_user_badges")
      */
-    protected $badges;
+    protected $userBadges;
 
     /**
      * @var \Claroline\CoreBundle\Entity\User
@@ -63,7 +63,7 @@ class BadgeCollection
 
     public function __construct()
     {
-        $this->badges = new ArrayCollection();
+        $this->userBadges = new ArrayCollection();
     }
 
     /**
@@ -127,23 +127,23 @@ class BadgeCollection
     }
 
     /**
-     * @param Badge[] $badges
+     * @param UserBadge[] $userBadges
      *
      * @return BadgeCollection
      */
-    public function setBadges($badges)
+    public function setUserBadges($userBadges)
     {
-        $this->badges = $badges;
+        $this->userBadges = $userBadges;
 
         return $this;
     }
 
     /**
-     * @return Badge[]
+     * @return UserBadge[]
      */
-    public function getBadges()
+    public function getUserBadges()
     {
-        return $this->badges;
+        return $this->userBadges;
     }
 
     /**

@@ -3,6 +3,7 @@
 namespace Icap\BadgeBundle\Form\Type;
 
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
+use Doctrine\ORM\EntityRepository;
 use Icap\BadgeBundle\Repository\BadgeRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -43,19 +44,15 @@ class BadgeCollectionType extends AbstractType
         /** @var \Claroline\CoreBundle\Entity\User $user */
         $user = $this->securityContext->getToken()->getUser();
 
-        /** @var \Icap\BadgeBundle\Entity\Badge[] $badgeChoices */
-        $badgeChoices  = $this->badgeRepository->findByUser($user);
-
-        foreach ($badgeChoices as $badgeChoice) {
-            $badgeChoice->setLocale($this->platformConfigHandler->getParameter('locale_language'));
-        }
-
         $builder
             ->add('name', 'text')
-            ->add('badges', 'entity',
+            ->add('userBadges', 'entity',
                 array(
-                     'class'       => 'IcapBadgeBundle:Badge',
-                     'choices'     => $badgeChoices,
+                     'class'       => 'IcapBadgeBundle:UserBadge',
+                     'query_builder' => function(EntityRepository $entityRepository) use($user) {
+                        return $entityRepository->createQueryBuilder('u')
+                            ->findByUser($user);
+                     },
                      'empty_value' => '',
                      'property'    => 'name',
                      'multiple'    => true,

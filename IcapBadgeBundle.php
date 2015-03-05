@@ -4,7 +4,7 @@ namespace Icap\BadgeBundle;
 
 use Claroline\CoreBundle\Library\PluginBundle;
 use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
-use Icap\BlogBundle\Installation\AdditionalInstaller;
+use Icap\BadgeBundle\Installation\AdditionalInstaller;
 
 class IcapBadgeBundle extends PluginBundle
 {
@@ -21,8 +21,8 @@ class IcapBadgeBundle extends PluginBundle
         return $config;
     }
 
-    public function hasMigrations()
+    public function getAdditionalInstaller()
     {
-        return false;
+        return new AdditionalInstaller();
     }
 }
