@@ -4,7 +4,7 @@ namespace Icap\PortfolioBundle\Installation;
 use Claroline\InstallationBundle\Additional\AdditionalInstaller as BaseInstaller;
 use Icap\PortfolioBundle\Installation\Updater\Updater000103;
 use Icap\PortfolioBundle\Installation\Updater\Updater010000;
-use Icap\PortfolioBundle\Installation\Updater\Updater020006;
+use Icap\PortfolioBundle\Installation\Updater\Updater040000;
 
 class AdditionalInstaller extends BaseInstaller
 {
@@ -18,8 +18,8 @@ class AdditionalInstaller extends BaseInstaller
             $updater = new Updater010000($this->container->get('doctrine.orm.entity_manager'));
             $updater->postUpdate();
         }
-        if (version_compare($currentVersion, '2.0.6', '<=')) {
-            $updater = new Updater020006($this->container->get('doctrine.orm.entity_manager'));
+        if (version_compare($currentVersion, '4.0.0', '<=')) {
+            $updater = new Updater040000($this->container->get('doctrine.orm.entity_manager'));
             $updater->postUpdate();
         }
     }
