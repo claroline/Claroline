@@ -159,7 +159,7 @@ class Builder extends ContainerAware
             foreach ($desktopTools as $tool) {
                 $toolName = $tool->getName();
 
-                if ($toolName === 'parameters') {
+                if ($toolName === 'home' || $toolName === 'parameters') {
                     continue;
                 }
                 $event = new ConfigureMenuEvent($factory, $menu, $tool);
@@ -176,17 +176,6 @@ class Builder extends ContainerAware
                     );
                 }
             }
-//            $countUnreadMessages = $this->container->get('claroline.manager.message_manager')->getNbUnreadMessages($user);
-//            $messageTitle = $translator->trans('new_message_alert', array('%count%' => $countUnreadMessages), 'platform');
-//
-//            $messageMenuLink = $menu->addChild($translator->trans('messages', array(), 'platform'), array('route' => 'claro_message_list_received'))
-//                ->setExtra('icon', 'fa fa-envelope')
-//                ->setExtra('title', $messageTitle);
-//
-//            if (0 < $countUnreadMessages) {
-//                $messageMenuLink
-//                    ->setExtra('badge', $countUnreadMessages);
-//            }
         }
 
         //allowing the menu to be extended

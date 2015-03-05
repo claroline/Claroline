@@ -10,35 +10,38 @@
 
 namespace Claroline\CoreBundle\Library\Installation\Updater;
 
+use Claroline\CoreBundle\Entity\Tool\Tool;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class Updater050000
 {
     private $container;
-    private $conn;
+    private $toolManager;
 
     public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
-        $this->conn = $container->get('doctrine.dbal.default_connection');
+        $this->toolManager = $container->get('claroline.manager.tool_manager');
     }
 
     public function postUpdate()
     {
-        $this->reactivateAllDisableDesktopHomeTools();
+        $this->createMessageDesktopTool();
     }
 
-    private function reactivateAllDisableDesktopHomeTools()
+    private function createMessageDesktopTool()
     {
-        $this->log('Reactivating all disabled desktop home tools...');
-        $updateReq = "
-            UPDATE claro_ordered_tool
-            SET is_visible_in_desktop = true
-            WHERE (name = 'home' OR name = 'parameters')
-            AND workspace_id IS NULL
-            AND is_visible_in_desktop = false
-        ";
-        $this->conn->query($updateReq);
+        $this->log('Creating message tool...');
+        $tool = $this->toolManager->getOneToolByName('message');
+
+        if (is_null($tool)) {
+            $tool = new Tool();
+            $tool->setName('message');
+            $tool->setClass('envelope');
+            $tool->setDisplayableInWorkspace(false);
+            $tool->setDisplayableInDesktop(true);
+            $this->toolManager->create($tool);
+        }
     }
 
     public function setLogger($logger)

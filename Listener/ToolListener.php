@@ -11,19 +11,20 @@
 
 namespace Claroline\CoreBundle\Listener;
 
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Event\DisplayToolEvent;
+use Claroline\CoreBundle\Form\Factory\FormFactory;
+use Claroline\CoreBundle\Manager\MessageManager;
+use Claroline\CoreBundle\Manager\RightsManager;
+use Claroline\CoreBundle\Manager\ToolManager;
+use Claroline\CoreBundle\Manager\WorkspaceManager;
+use Claroline\CoreBundle\Menu\ConfigureMenuEvent;
+use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Translation\TranslatorInterface;
-use JMS\DiExtraBundle\Annotation as DI;
-use Claroline\CoreBundle\Event\DisplayToolEvent;
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CoreBundle\Form\Factory\FormFactory;
-use Claroline\CoreBundle\Manager\ToolManager;
-use Claroline\CoreBundle\Manager\RightsManager;
-use Claroline\CoreBundle\Manager\WorkspaceManager;
-use Claroline\CoreBundle\Menu\ConfigureMenuEvent;
 
 /**
  * @DI\Service()
@@ -31,55 +32,59 @@ use Claroline\CoreBundle\Menu\ConfigureMenuEvent;
 class ToolListener
 {
     private $container;
-    private $toolManager;
-    private $workspaceManager;
     private $formFactory;
-    private $templating;
     private $httpKernel;
+    private $messageManager;
     private $rightsManager;
     private $router;
     private $securityContext;
+    private $templating;
+    private $toolManager;
     private $translator;
+    private $workspaceManager;
     const R_U = "ROLE_USER";
     const R_A = "ROLE_ADMIN";
 
     /**
      * @DI\InjectParams({
      *     "container"        = @DI\Inject("service_container"),
-     *     "toolManager"      = @DI\Inject("claroline.manager.tool_manager"),
-     *     "rightsManager"    = @DI\Inject("claroline.manager.rights_manager"),
-     *     "workspaceManager" = @DI\Inject("claroline.manager.workspace_manager"),
      *     "formFactory"      = @DI\Inject("claroline.form.factory"),
-     *     "templating"       = @DI\Inject("templating"),
      *     "httpKernel"       = @DI\Inject("http_kernel"),
+     *     "messageManager"   = @DI\Inject("claroline.manager.message_manager"),
+     *     "rightsManager"    = @DI\Inject("claroline.manager.rights_manager"),
      *     "router"           = @DI\Inject("router"),
      *     "securityContext"  = @DI\Inject("security.context"),
-     *     "translator"       = @DI\Inject("translator")
+     *     "templating"       = @DI\Inject("templating"),
+     *     "toolManager"      = @DI\Inject("claroline.manager.tool_manager"),
+     *     "translator"       = @DI\Inject("translator"),
+     *     "workspaceManager" = @DI\Inject("claroline.manager.workspace_manager")
      * })
      */
     public function __construct(
         ContainerInterface $container,
-        ToolManager $toolManager,
-        RightsManager $rightsManager,
-        WorkspaceManager $workspaceManager,
         FormFactory $formFactory,
-        $templating,
         $httpKernel,
+        MessageManager $messageManager,
+        RightsManager $rightsManager,
         RouterInterface $router,
         SecurityContextInterface $securityContext,
-        TranslatorInterface $translator
+        $templating,
+        ToolManager $toolManager,
+        TranslatorInterface $translator,
+        WorkspaceManager $workspaceManager
     )
     {
         $this->container = $container;
-        $this->toolManager = $toolManager;
-        $this->workspaceManager = $workspaceManager;
         $this->formFactory = $formFactory;
-        $this->templating = $templating;
         $this->httpKernel = $httpKernel;
+        $this->messageManager = $messageManager;
         $this->rightsManager = $rightsManager;
         $this->router = $router;
         $this->securityContext = $securityContext;
+        $this->templating = $templating;
+        $this->toolManager = $toolManager;
         $this->translator = $translator;
+        $this->workspaceManager = $workspaceManager;
     }
 
     /**
@@ -337,6 +342,38 @@ class ToolListener
                 array('uri' => $route)
             )->setExtra('icon', 'fa fa-' . $tool->getClass())
             ->setExtra('title', $translatedName);
+
+            return $menu;
+        }
+    }
+
+    /**
+     * @DI\Observe("claroline_top_bar_left_menu_configure_desktop_tool_message")
+     *
+     * @param \Acme\DemoBundle\Event\ConfigureMenuEvent $event
+     */
+    public function onTopBarLeftMenuConfigureMessage(ConfigureMenuEvent $event)
+    {
+        $user = $this->securityContext->getToken()->getUser();
+        $tool = $event->getTool();
+
+        if ($user !== 'anon.') {
+            $countUnreadMessages = $this->messageManager->getNbUnreadMessages($user);
+            $messageTitle = $this->translator->trans(
+                'new_message_alert',
+                array('%count%' => $countUnreadMessages),
+                'platform'
+            );
+            $menu = $event->getMenu();
+            $messageMenuLink = $menu->addChild(
+                $this->translator->trans('messages', array(), 'cursus'),
+                array('route' => 'claro_message_list_received')
+            )->setExtra('icon', 'fa fa-' . $tool->getClass())
+            ->setExtra('title', $messageTitle);
+
+            if ($countUnreadMessages > 0) {
+                $messageMenuLink->setExtra('badge', $countUnreadMessages);
+            }
 
             return $menu;
         }
