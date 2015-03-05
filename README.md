@@ -64,7 +64,7 @@ Project setup
     - *web/uploads*
 - Run the following commands:
     - `$ composer require composer/composer dev-master`
-    - `$ composer require claroline/bundle-recorder "~3.0"`
+    - `$ composer require claroline/bundle-recorder "~4.0"`
     - `$ cp composer.json.min composer.json`
     - `$ composer update --prefer-source` <sub>(1)</sub> 
     - `$ php app/console claroline:update`
