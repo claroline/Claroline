@@ -23,7 +23,7 @@ class CompetencyManagerTest extends UnitTestCase
         $this->om = $this->mock('Claroline\CoreBundle\Persistence\ObjectManager');
         $this->translator = $this->mock('Symfony\Component\Translation\TranslatorInterface');
         $this->competencyRepo = $this->mock('HeVinci\CompetencyBundle\Repository\CompetencyRepository');
-        $this->scaleRepo = $this->mock('Doctrine\ORM\EntityRepository');
+        $this->scaleRepo = $this->mock('HeVinci\CompetencyBundle\Repository\ScaleRepository');
         $this->abilityRepo = $this->mock('HeVinci\CompetencyBundle\Repository\AbilityRepository');
         $this->competencyAbilityRepo = $this->mock('HeVinci\CompetencyBundle\Repository\CompetencyAbilityRepository');
         $this->om->expects($this->exactly(4))
@@ -62,18 +62,49 @@ class CompetencyManagerTest extends UnitTestCase
         $this->assertFalse($this->manager->hasScales());
     }
 
-    public function testPersistScale()
+    public function testCreateScale()
     {
         $scale = new Scale();
         $this->om->expects($this->once())->method('persist')->with($scale);
         $this->om->expects($this->once())->method('flush');
-        $this->assertEquals($scale, $this->manager->persistScale($scale));
+        $this->assertEquals($scale, $this->manager->createScale($scale));
+    }
+
+    /**
+     * @expectedException LogicException
+     */
+    public function testUpdateScaleThrowsIfScaleIsBoundToAbilities()
+    {
+        $scale = new Scale();
+        $this->scaleRepo->expects($this->once())
+            ->method('findAbilityCount')
+            ->with($scale)
+            ->willReturn(1);
+        $this->manager->updateScale($scale);
+    }
+
+    public function testUpdateScale()
+    {
+        $scale = new Scale();
+        $this->scaleRepo->expects($this->once())
+            ->method('findAbilityCount')
+            ->with($scale)
+            ->willReturn(0);
+        $this->scaleRepo->expects($this->once())
+            ->method('findCompetencyCount')
+            ->with($scale)
+            ->willReturn(3);
+        $this->om->expects($this->once())->method('flush');
+
+        $scale = $this->manager->updateScale($scale);
+        $this->assertEquals(3, $scale->getFrameworkCount());
+        $this->assertEquals(0, $scale->getAbilityCount());
     }
 
     public function testListScales()
     {
         $this->scaleRepo->expects($this->once())
-            ->method('findAll')
+            ->method('findWithStatus')
             ->willReturn(['foo']);
         $this->assertEquals(['foo'], $this->manager->listScales());
     }
@@ -81,16 +112,23 @@ class CompetencyManagerTest extends UnitTestCase
     /**
      * @expectedException LogicException
      */
-    public function testDeleteScaleExpectsNonLockedScale()
+    public function testDeleteScaleThrowsIfScaleIsBoundToFramework()
     {
         $scale = new Scale();
-        $scale->setIsLocked(true);
+        $this->scaleRepo->expects($this->once())
+            ->method('findCompetencyCount')
+            ->with($scale)
+            ->willReturn(1);
         $this->manager->deleteScale($scale);
     }
 
     public function testDeleteScale()
     {
         $scale = new Scale();
+        $this->scaleRepo->expects($this->once())
+            ->method('findCompetencyCount')
+            ->with($scale)
+            ->willReturn(0);
         $this->om->expects($this->once())
             ->method('remove')
             ->with($scale);

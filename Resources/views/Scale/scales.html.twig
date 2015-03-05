@@ -23,7 +23,6 @@
         <thead>
             <tr>
                 <th>{{ 'name'|trans({}, 'platform') }}</th>
-                <th>{{ 'status'|trans({}, 'platform') }}</th>
                 <th colspan="2" class="multi-col">{{ 'actions'|trans({}, 'platform') }}</th>
             </tr>
         </thead>
@@ -32,9 +31,10 @@
             {%
                 include 'HeVinciCompetencyBundle:Scale:row.html.twig'
                 with {
-                    id: scale.getId(),
-                    name: scale.getName(),
-                    isLocked: scale.isLocked()
+                    id: scale.id,
+                    name: scale.name,
+                    frameworkCount: scale.competencies,
+                    abilityCount: scale.abilities
                 }
             %}
         {% endfor %}

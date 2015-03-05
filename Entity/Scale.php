@@ -9,7 +9,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints as BR;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="HeVinci\CompetencyBundle\Repository\ScaleRepository")
  * @ORM\Table(name="hevinci_scale")
  * @BR\UniqueEntity("name")
  */
@@ -30,11 +30,6 @@ class Scale implements \JsonSerializable
     private $name;
 
     /**
-     * @ORM\Column(name="is_locked", type="boolean")
-     */
-    private $isLocked = false;
-
-    /**
      * @ORM\OneToMany(
      *     targetEntity="Level",
      *     mappedBy="scale",
@@ -50,6 +45,22 @@ class Scale implements \JsonSerializable
      * @ORM\OneToMany(targetEntity="Competency", mappedBy="scale")
      */
     private $competencies;
+
+    /**
+     * @var int
+     *
+     * Note: this attribute is not mapped; it is used only to hold
+     *       data in HTTP responses
+     */
+    private $frameworkCount = 0;
+
+    /**
+     * @var int
+     *
+     * Note: this attribute is not mapped; it is used only to hold
+     *       data in HTTP responses
+     */
+    private $abilityCount = 0;
 
     public function __construct()
     {
@@ -81,22 +92,6 @@ class Scale implements \JsonSerializable
     }
 
     /**
-     * @return bool
-     */
-    public function isLocked()
-    {
-        return $this->isLocked;
-    }
-
-    /**
-     * @param bool $isLocked
-     */
-    public function setIsLocked($isLocked)
-    {
-        $this->isLocked = $isLocked;
-    }
-
-    /**
      * @param Level $level
      */
     public function addLevel(Level $level)
@@ -125,12 +120,49 @@ class Scale implements \JsonSerializable
         }
     }
 
+    /**
+     * @see $frameworkCount
+     * @param int $count
+     */
+    public function setFrameworkCount($count)
+    {
+        $this->frameworkCount = $count;
+    }
+
+    /**
+     * @see $frameworkCount
+     * @return int
+     */
+    public function getFrameworkCount()
+    {
+        return $this->frameworkCount;
+    }
+
+    /**
+     * @see $abilityCount
+     * @param int $count
+     */
+    public function setAbilityCount($count)
+    {
+        $this->abilityCount = $count;
+    }
+
+    /**
+     * @see $abilityCount
+     * @return int
+     */
+    public function getAbilityCount()
+    {
+        return $this->abilityCount;
+    }
+
     public function jsonSerialize()
     {
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'isLocked' => $this->isLocked
+            'frameworkCount' => $this->frameworkCount,
+            'abilityCount' => $this->abilityCount
         ];
     }
 }

@@ -5,15 +5,13 @@
         <a href="#" class="view-scale">{{ name }}</a>
     </td>
     <td class="icon-cell">
-        <span data-toggle="tooltip"
-              data-placement="left"
-              title="{{ 'editable'|trans({}, 'competency') }}">
-            <i class="fa fa-unlock-alt"></i>
-        </span>
-    </td>
-    <td class="icon-cell">
-        {% if isLocked %}
-            <i class="fa fa-pencil disabled"></i>
+        {% if abilityCount > 0 %}
+            {% set tooltip = 'tooltip.uneditable_scale' ~ (abilityCount > 1 ? '_plural': '') %}
+            <span class="fa fa-pencil disabled"
+                  data-toggle="tooltip"
+                  data-placement="left"
+                  title="{{ tooltip|trans({ '%count%': abilityCount }, 'competency') }}">
+            </span>
         {% else %}
             <a href="#"
                class="edit-scale"
@@ -25,8 +23,13 @@
         {% endif %}
     </td>
     <td class="icon-cell">
-        {% if isLocked %}
-            <i class="fa fa-remove disabled"></i>
+        {% if frameworkCount > 0 %}
+            {% set tooltip = 'tooltip.undeletable_scale' ~ (frameworkCount > 1 ? '_plural' : '') %}
+            <span class="fa fa-remove disabled"
+                  data-toggle="tooltip"
+                  data-placement="left"
+                  title="{{ tooltip|trans({ '%count%': frameworkCount }, 'competency') }}">
+            </span>
         {% else %}
             <a href="#"
                class="delete-scale"

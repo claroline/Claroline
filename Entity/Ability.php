@@ -89,7 +89,7 @@ class Ability implements \JsonSerializable
     }
 
     /**
-     * @see level
+     * @see $level
      * @param Level $level
      */
     public function setLevel(Level $level)
@@ -98,7 +98,7 @@ class Ability implements \JsonSerializable
     }
 
     /**
-     * @see level
+     * @see $level
      * @return Level
      */
     public function getLevel()

@@ -7,7 +7,7 @@ td.icon-cell {
     text-align: center;
 }
 
-i.fa.disabled {
+.fa.disabled {
     cursor: default;
     opacity: 0.25;
 }

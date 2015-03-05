@@ -67,7 +67,7 @@ class ScaleController
     {
         if ($this->formHandler->isValid('hevinci_form_scale', $request)) {
             return new JsonResponse(
-                $this->competencyManager->persistScale($this->formHandler->getData())
+                $this->competencyManager->createScale($this->formHandler->getData())
             );
         }
 
@@ -124,7 +124,7 @@ class ScaleController
     {
         if ($this->formHandler->isValid('hevinci_form_scale', $request, $scale)) {
             return new JsonResponse(
-                $this->competencyManager->persistScale($this->formHandler->getData())
+                $this->competencyManager->updateScale($this->formHandler->getData())
             );
         }
 

@@ -41,7 +41,7 @@ class ScaleControllerTest extends UnitTestCase
             ->method('getData')
             ->willReturn($scale);
         $this->manager->expects($this->once())
-            ->method('persistScale')
+            ->method('createScale')
             ->with($scale)
             ->willReturn($scale);
 
@@ -105,7 +105,7 @@ class ScaleControllerTest extends UnitTestCase
             ->method('getData')
             ->willReturn($scale);
         $this->manager->expects($this->once())
-            ->method('persistScale')
+            ->method('updateScale')
             ->with($scale)
             ->willReturn($scale);
 

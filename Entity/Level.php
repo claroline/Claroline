@@ -34,6 +34,11 @@ class Level
     private $scale;
 
     /**
+     * @ORM\OneToMany(targetEntity="CompetencyAbility", mappedBy="level")
+     */
+    private $competencyAbilities;
+
+    /**
      * @param string $name
      */
     public function setName($name)

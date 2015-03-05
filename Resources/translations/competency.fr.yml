@@ -14,7 +14,6 @@ competency:
   create_sub: Créer une sous-compétence
   delete: Supprimer une compétence
   edit: Modifier une compétence
-editable: Modifiable
 expand_all: Tout développer
 framework:
   create: Créer un référentiel
@@ -47,6 +46,12 @@ message:
   scale_deletion_confirm: Voulez-vous vraiment supprimer cette échelle ?
   scale_edited: Échelle modifiée avec succès.
   sub_competency_created: Sous-compétence créée avec succès.
+tooltip:
+  # cannot use pluralization techniques because transchoice filter is missing in twigjs
+  undeletable_scale: Cette échelle ne peut être supprimée car elle est liée à un référentiel.
+  undeletable_scale_plural: Cette échelle ne peut être supprimée car elle est liée à %count% référentiels.
+  uneditable_scale: Cette échelle ne peut être modifiée car une capacité lui est associée.
+  uneditable_scale_plural: Cette échelle ne peut être modifiée car %count% capacités lui sont associées.
 manage_scales: Gérer les échelles
 scale:
   create: Créer une échelle
@@ -57,4 +62,3 @@ scale:
   view: Détails de l'échelle
 scale_: Échelle
 scales: Échelles
-uneditable: Verrouillé

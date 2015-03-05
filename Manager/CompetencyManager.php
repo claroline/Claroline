@@ -68,10 +68,32 @@ class CompetencyManager
      * @param Scale $scale
      * @return Scale
      */
-    public function persistScale(Scale $scale)
+    public function createScale(Scale $scale)
     {
         $this->om->persist($scale);
         $this->om->flush();
+
+        return $scale;
+    }
+
+    /**
+     * Updates an existing scale.
+     *
+     * @param Scale $scale
+     * @return Scale
+     * @throws \LogicException if the scale is already bound to an ability
+     */
+    public function updateScale(Scale $scale)
+    {
+        if ($this->scaleRepo->findAbilityCount($scale) > 0) {
+            throw new \LogicException(
+                "Cannot update scale '{$scale->getName()}': scale is bound to at least one ability"
+            );
+        }
+
+        $this->om->flush();
+        $scale->setAbilityCount(0);
+        $scale->setFrameworkCount($this->scaleRepo->findCompetencyCount($scale));
 
         return $scale;
     }
@@ -81,19 +103,20 @@ class CompetencyManager
      */
     public function listScales()
     {
-        return $this->scaleRepo->findAll();
+        return $this->scaleRepo->findWithStatus();
     }
 
     /**
-     * Deletes a scale
+     * Deletes a scale.
      *
      * @param Scale $scale
+     * @throws \LogicException is the scale is bound to a framework
      */
     public function deleteScale(Scale $scale)
     {
-        if ($scale->isLocked()) {
+        if ($this->scaleRepo->findCompetencyCount($scale) > 0) {
             throw new \LogicException(
-                "Cannot delete scale '{$scale->getName()}': scale is locked"
+                "Cannot delete scale '{$scale->getName()}': scale is bound to at least one framework"
             );
         }
 
