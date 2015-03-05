@@ -51,13 +51,13 @@
         <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
     <script src="{{ url('bazinga_jstranslation_js', { 'domain': 'competency' }) }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/hevincicompetency/js/typeahead.bundle.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/typeahead/js/bundle.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/hevincicompetency/js/flasher.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/hevincicompetency/js/competency.js') }}"></script>
 {% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}
-    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/hevincicompetency/css/typeahead-boostrap.css') }}"/>
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/frontend/jquery/plugin/typeahead/css/boostrap.css') }}"/>
     <link rel="stylesheet" type="text/css" href="{{ asset('bundles/hevincicompetency/css/style.css') }}"/>
 {% endblock %}
