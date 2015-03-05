@@ -204,8 +204,9 @@
 
             modalElement.on('click', 'button.btn', function (event) {
                 event.preventDefault();
-                modal.submitForm(modalElement, successHandler, formId);
+                modal.submitForm(modalElement, successHandler, formId, formRenderHandler);
             });
+
             formRenderHandler(data);
         })
         .error(function () {
@@ -265,8 +266,10 @@
     /**
      * This method is triggered when submit a form inside a modal created with modal.displayForm()
      */
-    modal.submitForm = function (modalElement, callBack, formId)
+    modal.submitForm = function (modalElement, callBack, formId, formRenderHandler)
     {
+        formRenderHandler = formRenderHandler || function () {};
+
         if (formId) {
             //this implementation works
             var form = $(modalElement).find('form');
@@ -287,6 +290,7 @@
                     } else {
                         //how do I find the root element of html ? It would be better to not have to use this class.
                         $('.modal-dialog').replaceWith(data);
+                        formRenderHandler(data);
                     }
                 }
             });
@@ -303,6 +307,7 @@
                     callBack(data, textStatus, jqXHR);
                 } else {
                     $('.modal-dialog', modalElement).replaceWith(data);
+                    formRenderHandler(data);
                 }
             })
             .error(function () {

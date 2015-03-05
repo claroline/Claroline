@@ -13,12 +13,12 @@ namespace Claroline\CoreBundle\Library\Installation\Updater;
 
 use Claroline\CoreBundle\Entity\Activity\ActivityRuleAction;
 use Claroline\CoreBundle\Persistence\ObjectManager;
+use Claroline\InstallationBundle\Updater\Updater;
 
-class Updater030000
+class Updater030000 extends Updater
 {
     private $container;
     private $icons;
-    private $logger;
     private $om;
 
     public function __construct($container)
@@ -40,18 +40,6 @@ class Updater030000
         $this->removePublicProfilePreference();
         $this->updateAdminPluginTool();
         $this->cleanWeb();
-    }
-
-    public function setLogger($logger)
-    {
-        $this->logger = $logger;
-    }
-
-    private function log($message)
-    {
-        if ($log = $this->logger) {
-            $log('    ' . $message);
-        }
     }
 
     private function removeActivities()

@@ -11,14 +11,14 @@
 
 namespace Claroline\CoreBundle\Library\Installation\Updater;
 
+use Claroline\InstallationBundle\Updater\Updater;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Claroline\CoreBundle\Entity\Tool\AdminTool;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 
-class Updater030200
+class Updater030200 extends Updater
 {
     private $configHandler;
-    private $logger;
 
     public function __construct(ContainerInterface $container)
     {
@@ -72,18 +72,6 @@ class Updater030200
 
         $this->om->flush();
         $this->log('competence tools created ...');
-    }
-
-    public function setLogger($logger)
-    {
-        $this->logger = $logger;
-    }
-
-    private function log($message)
-    {
-        if ($log = $this->logger) {
-            $log('    ' . $message);
-        }
     }
 
     private function usernameRegexUpdate()

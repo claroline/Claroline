@@ -14,10 +14,12 @@ namespace Claroline\CoreBundle\Library\Installation;
 use Claroline\CoreBundle\Library\Installation\Plugin\Installer;
 use Claroline\CoreBundle\Library\PluginBundle;
 use Claroline\InstallationBundle\Bundle\InstallableInterface;
+use Claroline\InstallationBundle\Log\LoggableTrait;
 use Claroline\InstallationBundle\Manager\InstallationManager;
 use Doctrine\Bundle\DoctrineBundle\Command\CreateDatabaseDoctrineCommand;
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Entity\Bundle;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\SecurityBundle\Command\InitAclCommand;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\NullOutput;
@@ -33,13 +35,14 @@ use Symfony\Component\HttpKernel\KernelInterface;
  */
 class PlatformInstaller
 {
+    use LoggableTrait;
+
     private $operationExecutor;
     private $baseInstaller;
     private $pluginInstaller;
     private $refresher;
     private $kernel;
     private $container;
-    private $logger;
     private $output;
 
     /**
@@ -68,7 +71,10 @@ class PlatformInstaller
         $this->container = $container;
     }
 
-    public function setLogger(\Closure $logger)
+    /**
+     * @param LoggerInterface $logger
+     */
+    public function setLogger(LoggerInterface $logger)
     {
         $this->logger = $logger;
         $this->operationExecutor->setLogger($logger);
@@ -76,6 +82,9 @@ class PlatformInstaller
         $this->pluginInstaller->setLogger($logger);
     }
 
+    /**
+     * @param OutputInterface $output
+     */
     public function setOutput(OutputInterface $output)
     {
         $this->output = $output;
@@ -99,6 +108,8 @@ class PlatformInstaller
     /**
      * This is the method fired at the 1st installation.
      * Either command line or from the web installer.
+     *
+     * @param bool $withOptionalFixtures
      */
     public function installFromKernel($withOptionalFixtures = true)
     {
@@ -123,7 +134,6 @@ class PlatformInstaller
     private function launchPreInstallActions()
     {
         $this->createDatabaseIfNotExists();
-        $this->createAclTablesIfNotExist();
         $this->createPublicSubDirectories();
     }
 
@@ -152,14 +162,6 @@ class PlatformInstaller
         }
     }
 
-    private function createAclTablesIfNotExist()
-    {
-        $this->log('Checking acl tables are initialized...');
-        $command = new InitAclCommand();
-        $command->setContainer($this->container);
-        $command->run(new ArrayInput(array()), $this->output ?: new NullOutput());
-    }
-
     private function createPublicSubDirectories()
     {
         $this->log('Creating public sub-directories...');
@@ -176,12 +178,5 @@ class PlatformInstaller
                 mkdir($directory);
             }
         };
-    }
-
-    private function log($message)
-    {
-        if ($log = $this->logger) {
-            $log($message);
-        }
     }
 }

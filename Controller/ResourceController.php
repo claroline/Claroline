@@ -614,11 +614,13 @@ class ResourceController
             return $response;
             }
 
+        $i = 1;
         foreach ($nodes as $node) {
             $newNodes[] = $this->resourceManager->toArray(
-                $this->resourceManager->copy($node, $parent, $user)->getResourceNode(),
+                $this->resourceManager->copy($node, $parent, $user, $i)->getResourceNode(),
                 $this->sc->getToken()
             );
+            $i++;
         }
 
         return new JsonResponse($newNodes);
@@ -700,33 +702,6 @@ class ResourceController
     }
 
     /**
-     * @EXT\Route(
-     *     "restore/{parent}",
-     *     name="claro_resource_restore",
-     *     options={"expose"=true}
-     * )
-     *
-     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
-     *
-     * @param ResourceNode $parent
-     * @param User         $user
-     *
-     * @return Response
-     *
-     * @throws AccessDeniedException
-     */
-    public function restoreNodeOrderAction(ResourceNode $parent, User $user)
-    {
-        if ($user !== $parent->getCreator() && !$this->sc->isGranted('ROLE_ADMIN')) {
-            throw new AccessDeniedException();
-        }
-
-        $this->resourceManager->restoreNodeOrder($parent);
-
-        return new Response('success');
-    }
-
-    /**
      * @EXT\Template("ClarolineCoreBundle:Resource:breadcrumbs.html.twig")
      *
      * @param ResourceNode $node
@@ -754,16 +729,11 @@ class ResourceController
 
     /**
      * @EXT\Route(
-     *     "/sort/{node}/next/{nextId}",
-     *     name="claro_resource_insert_before",
+     *     "/sort/{node}/at/{index}",
+     *     name="claro_resource_insert_at",
      *     options={"expose"=true}
      * )
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
-     * @EXT\ParamConverter(
-     *      "next",
-     *      class="ClarolineCoreBundle:Resource\ResourceNode",
-     *      options={"id" = "nextId", "strictId" = true}
-     * )
      *
      * @param ResourceNode $node
      * @param ResourceNode $next
@@ -772,13 +742,13 @@ class ResourceController
      * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function insertBefore(ResourceNode $node, User $user, ResourceNode $next = null)
+    public function insertAt(ResourceNode $node, User $user, $index)
     {
         if ($user !== $node->getParent()->getCreator() && !$this->sc->isGranted('ROLE_ADMIN')) {
             throw new AccessDeniedException();
         }
 
-        $this->resourceManager->insertBefore($node, $next);
+        $this->resourceManager->insertAtIndex($node, $index);
 
         return new Response('success', 204);
     }

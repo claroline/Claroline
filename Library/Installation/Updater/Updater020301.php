@@ -11,10 +11,11 @@
 
 namespace Claroline\CoreBundle\Library\Installation\Updater;
 
-class Updater020301
+use Claroline\InstallationBundle\Updater\Updater;
+
+class Updater020301 extends Updater
 {
     private $container;
-    private $logger;
 
     public function __construct($container)
     {
@@ -29,17 +30,5 @@ class Updater020301
         $agenda->setIsConfigurableInWorkspace(false);
         $agenda->setIsConfigurableInDesktop(false);
         $em->flush();
-    }
-
-    public function setLogger($logger)
-    {
-        $this->logger = $logger;
-    }
-
-    private function log($message)
-    {
-        if ($log = $this->logger) {
-            $log('    ' . $message);
-        }
     }
 }

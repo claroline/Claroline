@@ -23,6 +23,8 @@ use Claroline\CoreBundle\Manager\IniFileManager;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Utilities\FileSystem;
+use Psr\Log\LogLevel;
+use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Component\Console\Output\StreamOutput;
 
 /**
@@ -231,12 +233,16 @@ class BundleManager
         $logFile = $this->getLogFile();
         if ($date) $logFile = $logFile . '-' . $date;
         $logFile .= '.log';
-        $this->installer->setLogger(
-            function ($message) use ($logFile) {
-                file_put_contents($logFile, $message . "\n", FILE_APPEND);
-            }
-        );
         $output = new StreamOutput(fopen($logFile, 'a', false));
+
+        $verbosityLevelMap = array(
+            LogLevel::NOTICE => OutputInterface::VERBOSITY_NORMAL,
+            LogLevel::INFO   => OutputInterface::VERBOSITY_NORMAL,
+            LogLevel::DEBUG  => OutputInterface::VERBOSITY_NORMAL
+        );
+        $consoleLogger = new ConsoleLogger($output, $verbosityLevelMap);
+
+        $this->installer->setLogger($consoleLogger);
         $this->refresher->setOutput($output);
         $this->installer->installFromOperationFile();
         $this->refresher->installAssets();

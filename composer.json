@@ -4,7 +4,7 @@
     "keywords": ["Claroline", "Core"],
     "homepage": "http://www.claroline.net",
     "type": "claroline-core",
-    "version": "4.4.0",
+    "version": "4.5.0",
     "license": "GPL-3.0+",
     "authors": [
         {
@@ -59,7 +59,7 @@
         "johngrogg/ics-parser": "dev-master",
         "gregwar/captcha-bundle": "1.0.12",
         "knplabs/knp-menu-bundle": "2.0.0",
-        "innova/angular-js-bundle": "1.0.2",
+        "innova/angular-js-bundle": "2.0.0",
         "cocur/slugify": "~0.8"
     },
     "require-dev": {

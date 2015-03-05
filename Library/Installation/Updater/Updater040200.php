@@ -10,13 +10,14 @@
 
 namespace Claroline\CoreBundle\Library\Installation\Updater;
 
+use Claroline\InstallationBundle\Updater\Updater;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\Tool\PwsToolConfig;
 use Claroline\CoreBundle\Entity\Tool\ToolMaskDecoder;
 use Claroline\CoreBundle\Entity\Resource\PwsRightsManagementAccess;
 
-class Updater040200
+class Updater040200 extends Updater
 {
     private $container;
     private $om;
@@ -73,17 +74,5 @@ class Updater040200
         $this->log('Updating profile properties...');
         $manager = $this->container->get('claroline.manager.profile_property_manager');
         $manager->addDefaultProperties();
-    }
-
-    public function setLogger($logger)
-    {
-        $this->logger = $logger;
-    }
-
-    private function log($message)
-    {
-        if ($log = $this->logger) {
-            $log('    ' . $message);
-        }
     }
 }

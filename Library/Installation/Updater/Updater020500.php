@@ -13,11 +13,11 @@ namespace Claroline\CoreBundle\Library\Installation\Updater;
 
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\Widget\Widget;
+use Claroline\InstallationBundle\Updater\Updater;
 
-class Updater020500
+class Updater020500 extends Updater
 {
     private $container;
-    private $logger;
     private $om;
 
     public function __construct($container)
@@ -32,18 +32,6 @@ class Updater020500
         $this->updateMimeTypes();
         $this->addAgendaWidget();
         $this->addAnalyticsWorkspaceTool();
-    }
-
-    public function setLogger($logger)
-    {
-        $this->logger = $logger;
-    }
-
-    private function log($message)
-    {
-        if ($log = $this->logger) {
-            $log('    ' . $message);
-        }
     }
 
     private function updateWorkspaceNames()
