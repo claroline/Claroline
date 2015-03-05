@@ -2,18 +2,13 @@
 
 namespace Icap\PortfolioBundle;
 
-use Claroline\KernelBundle\Bundle\AutoConfigurableInterface;
 use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
 use Claroline\InstallationBundle\Bundle\InstallableBundle;
 use Icap\PortfolioBundle\Installation\AdditionalInstaller;
+use Claroline\CoreBundle\Library\PluginBundle;
 
-class IcapPortfolioBundle extends InstallableBundle implements AutoConfigurableInterface
+class IcapPortfolioBundle extends PluginBundle
 {
-    public function supports($environment)
-    {
-        return true;
-    }
-
     public function getConfiguration($environment)
     {
         $config = new ConfigurationBuilder();
