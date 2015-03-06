@@ -64,7 +64,7 @@ class WorkspaceRepository extends EntityRepository
      *
      * @return array[Workspace]
      */
-    public function findByAnonymous()
+    public function findByAnonymous($orderedToolType = 0)
     {
         $dql = "
             SELECT DISTINCT w
@@ -73,10 +73,12 @@ class WorkspaceRepository extends EntityRepository
             JOIN ot.rights otr
             JOIN otr.role r
             WHERE r.name = 'ROLE_ANONYMOUS'
+            AND ot.type = :type
             AND BIT_AND(otr.mask, :openValue) = :openValue
         ";
         $query = $this->_em->createQuery($dql);
         $query->setParameter('openValue', ToolMaskDecoder::$defaultValues['open']);
+        $query->setParameter('type', $orderedToolType);
 
         return $query->getResult();
     }
@@ -166,7 +168,8 @@ class WorkspaceRepository extends EntityRepository
         array $roleNames,
         array $workspaces,
         $toolName = null,
-        $action = 'open'
+        $action = 'open',
+        $orderedToolType = 0
     )
     {
         if (count($roleNames) === 0 || count($workspaces) === 0) {
@@ -182,6 +185,7 @@ class WorkspaceRepository extends EntityRepository
                 JOIN r.role rr
                 WHERE w IN (:workspaces)
                 AND rr.name IN (:roleNames)
+                AND ot.type = :type
                 AND EXISTS (
                     SELECT d
                     FROM Claroline\CoreBundle\Entity\Tool\ToolMaskDecoder d
@@ -199,6 +203,7 @@ class WorkspaceRepository extends EntityRepository
             $query->setParameter('workspaces', $workspaces);
             $query->setParameter('roleNames', $roleNames);
             $query->setParameter('action', $action);
+            $query->setParameter('type', $orderedToolType);
 
             if ($toolName) {
                 $query->setParameter('toolName', $toolName);
@@ -215,7 +220,7 @@ class WorkspaceRepository extends EntityRepository
      *
      * @return array[Workspace]
      */
-    public function findByRoleNames(array $roleNames)
+    public function findByRoleNames(array $roleNames, $orderedToolType = 0)
     {
         $dql = '
             SELECT DISTINCT w
@@ -224,6 +229,7 @@ class WorkspaceRepository extends EntityRepository
             JOIN ot.rights otr
             JOIN otr.role r
             WHERE r.name IN (:roleNames)
+            AND ot.type = :type
             AND BIT_AND(otr.mask, :openValue) = :openValue
             ORDER BY w.name
         ';
@@ -231,6 +237,7 @@ class WorkspaceRepository extends EntityRepository
         $query = $this->_em->createQuery($dql);
         $query->setParameter('roleNames', $roleNames);
         $query->setParameter('openValue', ToolMaskDecoder::$defaultValues['open']);
+        $query->setParameter('type', $orderedToolType);
 
         return $query->getResult();
     }
@@ -244,7 +251,7 @@ class WorkspaceRepository extends EntityRepository
      *
      * @return array[Workspace]
      */
-    public function findByRoleNamesBySearch(array $roleNames, $search)
+    public function findByRoleNamesBySearch(array $roleNames, $search, $orderedToolType = 0)
     {
         $dql = '
             SELECT DISTINCT w
@@ -253,6 +260,7 @@ class WorkspaceRepository extends EntityRepository
             JOIN ot.rights otr
             JOIN otr.role r
             WHERE r.name IN (:roleNames)
+            AND ot.type = :type
             AND BIT_AND(otr.mask, :openValue) = :openValue
             AND (
                 UPPER(w.name) LIKE :search
@@ -266,6 +274,7 @@ class WorkspaceRepository extends EntityRepository
         $query->setParameter('roleNames', $roleNames);
         $query->setParameter('openValue', ToolMaskDecoder::$defaultValues['open']);
         $query->setParameter('search', "%{$upperSearch}%");
+        $query->setParameter('type', $orderedToolType);
 
         return $query->getResult();
     }
@@ -607,7 +616,8 @@ class WorkspaceRepository extends EntityRepository
 
     public function findWorkspaceByWorkspaceAndRoles(
         Workspace $workspace,
-        array $roles
+        array $roles,
+        $orderedToolType = 0
     )
     {
         if (count($roles > 0)) {
@@ -618,6 +628,7 @@ class WorkspaceRepository extends EntityRepository
                 JOIN ot.rights otr
                 JOIN otr.role r
                 WHERE w = :workspace
+                AND ot.type = :type
                 AND r.name IN (:roles)
                 AND BIT_AND(otr.mask, :openValue) = :openValue
             ";
@@ -626,6 +637,7 @@ class WorkspaceRepository extends EntityRepository
             $query->setParameter('workspace', $workspace);
             $query->setParameter('roles', $roles);
             $query->setParameter('openValue', ToolMaskDecoder::$defaultValues['open']);
+            $query->setParameter('type', $orderedToolType);
 
             return $query->getOneOrNullResult();
         }
