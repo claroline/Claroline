@@ -19,11 +19,11 @@ class BadgeCollectionRepository extends EntityRepository
     {
         $query = $this->getEntityManager()
             ->createQuery(
-                'SELECT bc, b
-                FROM IcapBadgeBundle:BadgeCollection bc
-                LEFT JOIN bc.badges b
-                WHERE bc.user = :userId
-                ORDER BY bc.name ASC'
+                'SELECT badgeCollection, userBadges
+                FROM IcapBadgeBundle:BadgeCollection badgeCollection
+                LEFT JOIN badgeCollection.userBadges userBadges
+                WHERE badgeCollection.user = :userId
+                ORDER BY badgeCollection.name ASC'
             )
             ->setParameter('userId', $user->getId());
 

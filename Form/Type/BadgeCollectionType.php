@@ -51,10 +51,11 @@ class BadgeCollectionType extends AbstractType
                      'class'       => 'IcapBadgeBundle:UserBadge',
                      'query_builder' => function(EntityRepository $entityRepository) use($user) {
                         return $entityRepository->createQueryBuilder('u')
-                            ->findByUser($user);
+                            ->where('u.user = :user')
+                            ->setParameter('user', $user);
                      },
                      'empty_value' => '',
-                     'property'    => 'name',
+                     'property'    => 'badge.name',
                      'multiple'    => true,
                      'expanded'    => true
                 )

@@ -142,11 +142,12 @@
                                     <input type="text" class="form-control collection_title_input" style="display: none" name="badge_collection_form[name]" value="{{ collection.name }}"/>
                                 </header>
                                 <ul class="list-inline badges">
-                                    {% for badge in collection.badges %}
+                                    {% for userBadge in collection.userBadges %}
+                                        {% set badge = userBadge.badge %}
                                         <li class="clarobadge" data-id="{{ badge.id }}" data-collection-id="{{ collection.id }}"><img class="badge_image_mini" src="{{ asset(badge.webPath) }}" alt="{{ badge.name }}" /></li>
                                     {% endfor %}
                                     <li class="loading_badge" style="display: none"><img src="{{ asset('bundles/clarolinecore/images/loading.gif') }}" alt="Loading" /></li>
-                                    <li class="no_badge"{% if 0 < collection.badges|length %} style="display: none"{% endif %}>{{ 'no_badges'|trans }}</li>
+                                    <li class="no_badge"{% if 0 < collection.userBadges|length %} style="display: none"{% endif %}>{{ 'no_badges'|trans }}</li>
                                 </ul>
                                 <footer>
                                     <div class="dropdown">
