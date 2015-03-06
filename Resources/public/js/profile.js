@@ -63,17 +63,17 @@
             $("img", droppingZone).show();
             var collectionContainer = $(".collection[data-id=" + draggable.attr("data-collection-id") + "]");
 
-            var badges = {};
+            var userBadges = {};
             $(".badges .clarobadge", collectionContainer).each(function(index, element) {
-                badges[index + 1] = $(element).attr("data-id");
+                userBadges[index + 1] = $(element).attr("data-id");
             });
-            delete badges[draggable.attr("data-id")];
+            delete userBadges[draggable.attr("data-id")];
 
             var collectionUpdateRequest = $.ajax({
                 url: apiUrl + collectionContainer.attr("data-id"),
                 type: 'PATCH',
                 data: {
-                    'badge_collection_form[badges]': badges
+                    'badge_collection_form[userBadges]': userBadges
                 }
             });
 
@@ -142,16 +142,16 @@
             var loadingBadge = $(".loading_badge", collectionContainer);
             loadingBadge.appendTo(collectionContainer.find(".badges")).show("fast");
 
-            var badges = {0: badgeElement.attr("data-id")};
+            var userBadges = {0: badgeElement.attr("data-id")};
             $(".badges .clarobadge", collectionContainer).each(function(index, element) {
-                badges[index + 1] = $(element).attr("data-id");
+                userBadges[index + 1] = $(element).attr("data-id");
             });
 
             var collectionUpdateRequest = $.ajax({
                 url: apiUrl + collectionContainer.attr("data-id"),
                 type: 'PATCH',
                 data: {
-                    'badge_collection_form[badges]': badges
+                    'badge_collection_form[userBadges]': userBadges
                 }
             });
 
