@@ -26,7 +26,11 @@ class OrderedToolRepository extends EntityRepository
      *
      * @return array[OrderedTool]
      */
-    public function findByWorkspaceAndRoles(Workspace $workspace, array $roles)
+    public function findByWorkspaceAndRoles(
+        Workspace $workspace,
+        array $roles,
+        $type = 0
+    )
     {
         if (count($roles) === 0) {
             return array();
@@ -37,6 +41,7 @@ class OrderedToolRepository extends EntityRepository
                 JOIN ot.rights r
                 JOIN r.role rr
                 WHERE ot.workspace = :workspace
+                AND ot.type = :type
                 AND rr.name IN (:roleNames)
                 AND BIT_AND(r.mask, 1) = 1
                 ORDER BY ot.order
@@ -44,6 +49,7 @@ class OrderedToolRepository extends EntityRepository
             $query = $this->_em->createQuery($dql);
             $query->setParameter('workspace', $workspace);
             $query->setParameter('roleNames', $roles);
+            $query->setParameter('type', $type);
 
             return $query->getResult();
         }
@@ -53,13 +59,15 @@ class OrderedToolRepository extends EntityRepository
         Workspace $workspace,
         $fromOrder,
         $toOrder,
-        $executeQuery = true
+        $executeQuery = true,
+        $type = 0
     )
     {
         $dql = '
             UPDATE Claroline\CoreBundle\Entity\Tool\OrderedTool ot
             SET ot.order = ot.order + 1
             WHERE ot.workspace = :workspace
+            AND ot.type = :type
             AND ot.order >= :fromOrder
             AND ot.order < :toOrder
         ';
@@ -67,6 +75,7 @@ class OrderedToolRepository extends EntityRepository
         $query->setParameter('workspace', $workspace);
         $query->setParameter('fromOrder', $fromOrder);
         $query->setParameter('toOrder', $toOrder);
+        $query->setParameter('type', $type);
 
         return $executeQuery ? $query->execute() : $query;
     }
@@ -75,13 +84,15 @@ class OrderedToolRepository extends EntityRepository
         Workspace $workspace,
         $fromOrder,
         $toOrder,
-        $executeQuery = true
+        $executeQuery = true,
+        $type = 0
     )
     {
         $dql = '
             UPDATE Claroline\CoreBundle\Entity\Tool\OrderedTool ot
             SET ot.order = ot.order - 1
             WHERE ot.workspace = :workspace
+            AND ot.type = :type
             AND ot.order > :fromOrder
             AND ot.order <= :toOrder
         ';
@@ -89,6 +100,7 @@ class OrderedToolRepository extends EntityRepository
         $query->setParameter('workspace', $workspace);
         $query->setParameter('fromOrder', $fromOrder);
         $query->setParameter('toOrder', $toOrder);
+        $query->setParameter('type', $type);
 
         return $executeQuery ? $query->execute() : $query;
     }
@@ -97,13 +109,15 @@ class OrderedToolRepository extends EntityRepository
         User $user,
         $fromOrder,
         $toOrder,
-        $executeQuery = true
+        $executeQuery = true,
+        $type = 0
     )
     {
         $dql = '
             UPDATE Claroline\CoreBundle\Entity\Tool\OrderedTool ot
             SET ot.order = ot.order + 1
             WHERE ot.user = :user
+            AND ot.type = :type
             AND ot.order >= :fromOrder
             AND ot.order < :toOrder
         ';
@@ -111,6 +125,7 @@ class OrderedToolRepository extends EntityRepository
         $query->setParameter('user', $user);
         $query->setParameter('fromOrder', $fromOrder);
         $query->setParameter('toOrder', $toOrder);
+        $query->setParameter('type', $type);
 
         return $executeQuery ? $query->execute() : $query;
     }
@@ -119,13 +134,15 @@ class OrderedToolRepository extends EntityRepository
         User $user,
         $fromOrder,
         $toOrder,
-        $executeQuery = true
+        $executeQuery = true,
+        $type = 0
     )
     {
         $dql = '
             UPDATE Claroline\CoreBundle\Entity\Tool\OrderedTool ot
             SET ot.order = ot.order - 1
             WHERE ot.user = :user
+            AND ot.type = :type
             AND ot.order > :fromOrder
             AND ot.order <= :toOrder
         ';
@@ -133,13 +150,15 @@ class OrderedToolRepository extends EntityRepository
         $query->setParameter('user', $user);
         $query->setParameter('fromOrder', $fromOrder);
         $query->setParameter('toOrder', $toOrder);
+        $query->setParameter('type', $type);
 
         return $executeQuery ? $query->execute() : $query;
     }
 
     public function findPersonalDisplayableByWorkspaceAndRoles(
         Workspace $workspace,
-        array $roles
+        array $roles,
+        $type = 0
     )
     {
         $dql = 'SELECT ot
@@ -149,6 +168,7 @@ class OrderedToolRepository extends EntityRepository
             JOIN r.role rr
             JOIN t.pwsToolConfig ptc
             WHERE ot.workspace = :workspace
+            AND ot.type = :type
             AND rr.name IN (:roleNames)
             AND BIT_AND(r.mask, 1) = 1
             AND BIT_AND(ptc.mask, 1) = 1
@@ -158,12 +178,12 @@ class OrderedToolRepository extends EntityRepository
         $query = $this->_em->createQuery($dql);
         $query->setParameter('roleNames', $roles);
         $query->setParameter('workspace', $workspace);
-
+        $query->setParameter('type', $type);
 
         return $query->getResult();
     }
 
-    public function findPersonalDisplayable(Workspace $workspace)
+    public function findPersonalDisplayable(Workspace $workspace, $type = 0)
     {
         $dql = 'SELECT ot
             FROM Claroline\CoreBundle\Entity\Tool\OrderedTool ot
@@ -172,18 +192,21 @@ class OrderedToolRepository extends EntityRepository
             JOIN ot.workspace workspace
             WHERE BIT_AND(ptc.mask, 1) = 1
             AND workspace.id = :workspaceId
+            AND ot.type = :type
             ORDER BY ot.order
         ';
 
         $query = $this->_em->createQuery($dql);
         $query->setParameter('workspaceId', $workspace->getId());
+        $query->setParameter('type', $type);
 
         return $query->getResult();
     }
 
     public function findConfigurableDesktopOrderedToolsByUser(
         User $user,
-        $executeQuery = true
+        $executeQuery = true,
+        $type = 0
     )
     {
         $dql = '
@@ -191,6 +214,7 @@ class OrderedToolRepository extends EntityRepository
             FROM Claroline\CoreBundle\Entity\Tool\OrderedTool ot
             JOIN ot.tool t
             WHERE ot.workspace IS NULL
+            AND ot.type = :type
             AND ot.user = :user
             AND t.name != :home
             AND t.name != :parameters
@@ -201,6 +225,7 @@ class OrderedToolRepository extends EntityRepository
         $query->setParameter('user', $user);
         $query->setParameter('home', 'home');
         $query->setParameter('parameters', 'parameters');
+        $query->setParameter('type', $type);
 
         return $executeQuery ? $query->getResult() : $query;
     }
@@ -208,7 +233,8 @@ class OrderedToolRepository extends EntityRepository
     public function findOrderedToolsByToolAndUser(
         Tool $tool,
         User $user,
-        $executeQuery = true
+        $executeQuery = true,
+        $type = 0
     )
     {
         $dql = '
@@ -217,11 +243,13 @@ class OrderedToolRepository extends EntityRepository
             WHERE ot.tool = :tool
             AND ot.user = :user
             AND ot.workspace IS NULL
+            AND ot.type = :type
         ';
 
         $query = $this->_em->createQuery($dql);
         $query->setParameter('tool', $tool);
         $query->setParameter('user', $user);
+        $query->setParameter('type', $type);
 
         return $executeQuery ? $query->getResult() : $query;
     }
