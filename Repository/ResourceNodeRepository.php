@@ -99,7 +99,7 @@ class ResourceNodeRepository extends MaterializedPathRepository
         if ($this->isWorkspaceManager($parent, $roles)) {
             $builder->selectAsArray()
                 ->whereParentIs($parent)
-                ->orderByName();
+                ->orderByIndex();
             $query = $this->_em->createQuery($builder->getDql());
             $query->setParameters($builder->getParameters());
             $items = $query->iterate(null, AbstractQuery::HYDRATE_ARRAY);
@@ -277,6 +277,19 @@ class ResourceNodeRepository extends MaterializedPathRepository
         }
 
         return $qb->getQuery()->getResult();
+    }
+
+    public function findLastIndex(ResourceNode $node)
+    {
+        $dql = '
+            SELECT MAX(node.index)
+            FROM Claroline\CoreBundle\Entity\Resource\ResourceNode node
+            where node.parent = :node';
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('node', $node->getId());
+
+        return $query->getSingleScalarResult();
     }
 
     /**

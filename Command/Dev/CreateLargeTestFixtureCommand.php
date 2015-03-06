@@ -11,9 +11,11 @@
 
 namespace Claroline\CoreBundle\Command\Dev;
 
+use Psr\Log\LogLevel;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Component\Console\Output\OutputInterface;
 use Claroline\CoreBundle\DataFixtures\BatchInsert\LoadUsersData;
 use Claroline\CoreBundle\DataFixtures\BatchInsert\LoadWorkspacesData;
@@ -104,12 +106,20 @@ class CreateLargeTestFixtureCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $verbosityLevelMap = array(
+            LogLevel::NOTICE => OutputInterface::VERBOSITY_NORMAL,
+            LogLevel::INFO   => OutputInterface::VERBOSITY_NORMAL,
+            LogLevel::DEBUG  => OutputInterface::VERBOSITY_NORMAL
+        );
+        $consoleLogger = new ConsoleLogger($output, $verbosityLevelMap);
+
         $numberUser = $input->getArgument('number_user');
         $numberWorkspace = $input->getArgument('number_workspace');
         $numberDirectory = $input->getArgument('number_directory');
         $numberFile = $input->getArgument('number_file');
         $numberRoots = $input->getArgument('number_roots');
         $depth = $input->getArgument('depth');
+
         $output->writeln('Loading fixtures...');
         $output->writeln('Loading users...');
         $fixture = new LoadUsersData($numberUser);
@@ -117,32 +127,23 @@ class CreateLargeTestFixtureCommand extends ContainerAwareCommand
         $referenceRepo = new ReferenceRepository($em);
         $fixture->setReferenceRepository($referenceRepo);
         $fixture->setContainer($this->getContainer());
-        $fixture->setLogger(
-            function ($message) use ($output) {
-                $output->writeln($message);
-            }
-        );
+        $fixture->setLogger($consoleLogger);
         $durationUser = $fixture->load($em);
+
         $output->writeln('Loading workspaces...');
         $fixture = new LoadWorkspacesData($numberWorkspace);
         $fixture->setReferenceRepository($referenceRepo);
         $fixture->setContainer($this->getContainer());
-        $fixture->setLogger(
-            function ($message) use ($output) {
-                $output->writeln($message);
-            }
-        );
+        $fixture->setLogger($consoleLogger);
         $durationWorkspace = $fixture->load($em);
+
         $output->writeln('Loading resources...');
         $fixture = new LoadResourcesData($depth, $numberFile, $numberDirectory, $numberRoots);
         $fixture->setReferenceRepository($referenceRepo);
         $fixture->setContainer($this->getContainer());
-        $fixture->setLogger(
-            function ($message) use ($output) {
-                $output->writeln($message);
-            }
-        );
+        $fixture->setLogger($consoleLogger);
         $durationResource = $fixture->load($em);
+
         $output->writeLn('********************************************************');
         $output->writeLn("Time elapsed for the user creation: " . $durationUser);
         $output->writeLn("Time elapsed for the workspace creation: " . $durationWorkspace);

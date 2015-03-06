@@ -42,8 +42,6 @@ class ResourceQueryBuilder
 
         $this->joinRelativesClause = "JOIN node.creator creator{$eol}" .
             "JOIN node.resourceType resourceType{$eol}" .
-            "LEFT JOIN node.next next{$eol}" .
-            "LEFT JOIN node.previous previous{$eol}" .
             "LEFT JOIN node.parent parent{$eol}" .
             "LEFT JOIN node.icon icon{$eol}";
     }
@@ -91,10 +89,9 @@ class ResourceQueryBuilder
             "    parent.id as parent_id,{$eol}" .
             "    creator.username as creator_username,{$eol}" .
             "    resourceType.name as type,{$eol}" .
-            "    previous.id as previous_id,{$eol}" .
-            "    next.id as next_id,{$eol}" .
             "    icon.relativeUrl as large_icon,{$eol}" .
             "    node.mimeType as mime_type,{$eol}" .
+            "    node.index as index_dir,{$eol}" .
             "    node.published as published";
 
         if ($withMaxPermissions) {
@@ -420,6 +417,18 @@ class ResourceQueryBuilder
     public function orderByName()
     {
         $this->orderClause = 'ORDER BY node.name' . PHP_EOL;
+
+        return $this;
+    }
+
+    /**
+     * Orders nodes by index.
+     *
+     * @return Claroline\CoreBundle\Repository\ResourceQueryBuilder
+     */
+    public function orderByIndex()
+    {
+        $this->orderClause = 'ORDER BY node.index' . PHP_EOL;
 
         return $this;
     }

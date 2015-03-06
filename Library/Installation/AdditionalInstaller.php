@@ -20,16 +20,6 @@ use Symfony\Component\Console\Output\NullOutput;
 
 class AdditionalInstaller extends BaseInstaller
 {
-    private $logger;
-
-    public function __construct()
-    {
-        $self = $this;
-        $this->logger = function ($message) use ($self) {
-            $self->log($message);
-        };
-    }
-
     public function preInstall()
     {
         $this->setLocale();
@@ -182,6 +172,10 @@ class AdditionalInstaller extends BaseInstaller
                 $updater->postUpdate();
             case version_compare($currentVersion, '4.2.0', '<'):
                 $updater = new Updater\Updater040200($this->container);
+                $updater->setLogger($this->logger);
+                $updater->postUpdate();
+            case version_compare($currentVersion, '4.5.0', '<'):
+                $updater = new Updater\Updater040500($this->container);
                 $updater->setLogger($this->logger);
                 $updater->postUpdate();
             case version_compare($currentVersion, '5.0.0', '<'):

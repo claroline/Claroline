@@ -13,11 +13,11 @@ namespace Claroline\CoreBundle\Library\Installation\Updater;
 
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\ResourceIcon;
+use Claroline\InstallationBundle\Updater\Updater;
 
-class Updater021401
+class Updater021401 extends Updater
 {
     private $container;
-    private $logger;
     /** @var ObjectManager */
     private $om;
 
@@ -46,18 +46,6 @@ class Updater021401
             $this->om->persist($icon);
 
             $this->container->get('claroline.manager.icon_manager')->createShortcutIcon($icon);
-        }
-    }
-
-    public function setLogger($logger)
-    {
-        $this->logger = $logger;
-    }
-
-    private function log($message)
-    {
-        if ($log = $this->logger) {
-            $log('    ' . $message);
         }
     }
 }

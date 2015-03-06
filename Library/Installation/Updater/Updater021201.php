@@ -4,11 +4,11 @@ namespace Claroline\CoreBundle\Library\Installation\Updater;
 
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\ResourceIcon;
+use Claroline\InstallationBundle\Updater\Updater;
 
-class Updater021201
+class Updater021201 extends Updater
 {
     private $container;
-    private $logger;
 
     /**
      * @var ObjectManager
@@ -43,17 +43,5 @@ class Updater021201
         }
 
         $this->objectManager->flush();
-    }
-
-    public function setLogger($logger)
-    {
-        $this->logger = $logger;
-    }
-
-    private function log($message)
-    {
-        if ($log = $this->logger) {
-            $log('    ' . $message);
-        }
     }
 } 
