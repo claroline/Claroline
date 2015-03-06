@@ -4,7 +4,6 @@
     "keywords": ["Claroline", "Plugin", "Badge", "ICAP"],
     "homepage": "http://www.claroline.net",
     "type": "claroline-core",
-    "version": "4.0.0",
     "license": "GPL-3.0+",
     "authors": [
         {
