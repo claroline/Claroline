@@ -35,14 +35,6 @@
     text-decoration: none;
 }
 
-#templates-sidebar {
-    margin-left: 40px;
-}
-
-.action-bar {
-    margin-bottom: 20px;
-}
-
 .modal-backdrop {
     z-index: 1;
 }
@@ -58,21 +50,6 @@ form {
 .excluded-resource {
     text-decoration: line-through;
     color: #999;
-}
-
-#ng-pageslide {
-    z-index: 1001; /* to prevent bootstrap navbar to pass over the sidebar */
-}
-
-#templates-sidebar {
-    margin-top: 50px;
-}
-
-#templates-sidebar h2 {
-    font-size: 18px;
-    margin: 4px 0;
-    line-height: 22px;
-    font-weight: normal;
 }
 
 input.form-control.ng-invalid {
@@ -101,12 +78,4 @@ input.form-control.ng-valid:focus {
 
 .tooltip {
     white-space: nowrap;
-}
-
-.clickable-area {
-    cursor: pointer;
-}
-
-.clickable-area:hover {
-    border-color: #999;
 }

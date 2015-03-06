@@ -9,11 +9,10 @@
         '$modal',
         '$timeout',
         'HistoryFactory',
-        'ClipboardFactory',
+        'ClipboardService',
         'PathFactory',
-        'AlertFactory',
         'ResourceFactory',
-        function ($scope, $modal, $timeout, HistoryFactory, ClipboardFactory, PathFactory, AlertFactory, ResourceFactory) {
+        function ($scope, $modal, $timeout, HistoryFactory, ClipboardService, PathFactory, ResourceFactory) {
             $scope.path = EditorApp.currentPath;
             PathFactory.setPath($scope.path);
             if (null === $scope.path.name || $scope.path.name.length === 0) {
@@ -95,7 +94,7 @@
              * @returns void
              */
             $scope.copy = function(data) {
-                ClipboardFactory.copy(data);
+                ClipboardService.copy(data);
             };
 
             /**
@@ -103,7 +102,7 @@
              * @returns void
              */
             $scope.paste = function(step) {
-                ClipboardFactory.paste(step);
+                ClipboardService.paste(step);
                 HistoryFactory.update($scope.path);
             };
 
@@ -145,14 +144,12 @@
              * Add a flag to the form to redirect user to the list of paths and save the form
              * @returns void
              */
-            /*$scope.saveAndClose = function () {
+            $scope.saveAndClose = function () {
                 $scope.toSaveAndClose = true;
-
-                $scope.$apply();
 
                 // Save the Path
                 $scope.save();
-            };*/
+            };
 
             /**
              * Add a flag to the form to publish the Path and redirect User to Player and save the form
@@ -160,8 +157,6 @@
              */
             $scope.publishAndPreview = function () {
                 $scope.toPublishAndPreview = true;
-
-                $scope.$apply();
 
                 // Save the Path
                 $scope.save();
@@ -202,9 +197,6 @@
                 $timeout(function() {
                     $scope.toSaveAndClose = true;
                 }, 0);
-                /*$scope.$apply(function () {*/
-
-                /*});*/
 
                 // Save the Path
                 $scope.save();

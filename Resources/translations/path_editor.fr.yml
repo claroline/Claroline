@@ -88,7 +88,7 @@ step_to_template: Sauvegarder comme modèle
 
 # t
 templates: Modèles
-templates_sidebar_close: Fermer
+sidebar_close: Fermer
 template_copy: Copier
 template_edit: Modifier
 template_delete: Supprimer
@@ -121,3 +121,5 @@ save_path_changes: Voulez-vous sauvegarder vos changements ?
 select_activity: Sélectionner une activité existante
 see_activity: Voir l'activité
 delete_activity: Supprimer le lien avec l'activité
+
+no_templates: Il n'y a aucun modèle disponible.

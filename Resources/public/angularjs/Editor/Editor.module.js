@@ -8,7 +8,7 @@
     angular.module('EditorModule', [
         'ngSanitize',
         'ui.bootstrap',
-        'ui.pageslide',
+        'pageslide-directive',
         'ui.tinymce',
         'ui.translation',
         'ui.resourcePicker',
@@ -25,8 +25,8 @@
         'TemplateModule'
     ])
     .run([
-        'AlertFactory',
-        function (AlertFactory) {
+        'AlertService',
+        function (AlertService) {
             // Get some data from symfony
             var alertTypes = [ 'info', 'success', 'warning', 'danger', 'alert' ];
             if (EditorApp.alerts) {
@@ -35,7 +35,7 @@
                         var alerts = EditorApp.alerts[alertTypes[i]];
 
                         for (var j = 0; j < alerts.length; j++) {
-                            AlertFactory.addAlert(alertTypes[i], alerts[j]);
+                            AlertService.addAlert(alertTypes[i], alerts[j]);
                         }
                     }
                 }

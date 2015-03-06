@@ -4,15 +4,12 @@
 (function () {
     'use strict';
 
-    angular.module('ClipboardModule').factory('ClipboardFactory', [
+    angular.module('ClipboardModule').factory('ClipboardService', [
         '$rootScope',
         'PathFactory',
         function ($rootScope, PathFactory) {
             // Clipboard content
             var clipboard = null;
-
-            // Current clipboard content comes from Templates ?
-            var clipboardFromTemplates = false;
 
             // Enable paste buttons when clipboard is not empty
             $rootScope.pasteDisabled = true;
@@ -21,11 +18,10 @@
                 /**
                  * Empty clipboard
                  *
-                 * @returns ClipboardFactory
+                 * @returns ClipboardService
                  */
                 clear: function() {
                     clipboard = null;
-                    clipboardFromTemplates = false;
                     this.setPasteDisabled(true);
 
                     return this;
@@ -35,12 +31,10 @@
                  * Copy selected steps into clipboard
                  *
                  * @param steps
-                 * @param fromTemplates
-                 * @returns ClipboardFactory
+                 * @returns ClipboardService
                  */
-                copy: function(steps, fromTemplates) {
+                copy: function(steps) {
                     clipboard = steps;
-                    clipboardFromTemplates = fromTemplates || false;
                     this.setPasteDisabled(false);
 
                     return this;
@@ -50,7 +44,7 @@
                  * Paste steps form clipboards into current Path tree
                  *
                  * @param step
-                 * @returns ClipboardFactory
+                 * @returns ClipboardService
                  */
                 paste: function(step) {
                     if (null !== clipboard) {
@@ -60,10 +54,6 @@
                         // Replace IDs before inject steps in path
                         this.replaceStepsId(stepCopy);
                         this.replaceResourcesId(stepCopy);
-
-                        if (!clipboardFromTemplates) {
-                            stepCopy.name = stepCopy.name + '_copy';
-                        }
 
                         step.children.push(stepCopy);
 
@@ -76,7 +66,7 @@
                 /**
                  *
                  * @param step
-                 * @returns ClipboardFactory
+                 * @returns ClipboardService
                  */
                 replaceResourcesId: function(step, replacedIds) {
                     if (typeof replacedIds === 'undefined' || null === replacedIds) {
@@ -115,7 +105,7 @@
                 /**
                  *
                  * @param step
-                 * @returns ClipboardFactory
+                 * @returns ClipboardService
                  */
                 replaceStepsId: function(step) {
                     step.id = PathFactory.getNextStepId();
@@ -140,7 +130,7 @@
                 /**
                  *
                  * @param data
-                 * @returns ClipboardFactory
+                 * @returns ClipboardService
                  */
                 setPasteDisabled: function(data) {
                     $rootScope.pasteDisabled = data;

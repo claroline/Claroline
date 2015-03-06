@@ -112,8 +112,8 @@ class EditorController
         PathHandler          $pathHandler,
         PathManager          $pathManager,
         PublishingManager    $publishingManager,
-        ResourceManager      $resourceManager
-    ) {
+        ResourceManager      $resourceManager)
+    {
         $this->om                = $objectManager;
         $this->router            = $router;
         $this->formFactory       = $formFactory;

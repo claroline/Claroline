@@ -10,8 +10,8 @@
         '$modalInstance',
         'StepFactory',
         'TemplateFactory',
-        'AlertFactory',
-        function ($scope, $http, $modalInstance, StepFactory, TemplateFactory, AlertFactory) {
+        'AlertService',
+        function ($scope, $http, $modalInstance, StepFactory, TemplateFactory, AlertService) {
             // Store symfony base partials route
             $scope.webDir = EditorApp.webDir;
 
@@ -96,17 +96,17 @@
                             formTemplate.id = data;
                             TemplateFactory.replaceTemplate(formTemplate);
 
-                            AlertFactory.addAlert('success', Translator.trans('path_template_save_success', {}, 'path_editor'));
+                            AlertService.addAlert('success', Translator.trans('path_template_save_success', {}, 'path_editor'));
                         }
                         else {
                             // Server error while saving
-                            AlertFactory.addAlert('error', Translator.trans('path_template_save_error', {}, 'path_editor'));
+                            AlertService.addAlert('error', Translator.trans('path_template_save_error', {}, 'path_editor'));
                         }
 
                         $modalInstance.close();
                     })
                     .error(function(data, status) {
-                        AlertFactory.addAlert('error', Translator.trans('path_template_save_error', {}, 'path_editor'));
+                        AlertService.addAlert('error', Translator.trans('path_template_save_error', {}, 'path_editor'));
                     });
             }
         }

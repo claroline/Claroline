@@ -4,7 +4,7 @@
 (function () {
     'use strict';
 
-    angular.module('StepModule').controller('StepCtrl', [
+    angular.module('StepModule').controller('StepFormCtrl', [
         '$scope',
         '$http',
         'HistoryFactory',

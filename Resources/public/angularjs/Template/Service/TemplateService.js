@@ -4,12 +4,48 @@
 (function () {
     'use strict';
 
-    angular.module('TemplateModule').factory('TemplateFactory', [
-        function () {
+    angular.module('TemplateModule').factory('TemplateService', [
+        '$http',
+        '$q',
+        function ($http, $q) {
             var templates = [];
             var currentTemplate = null;
 
             return {
+                /**
+                 * Get all available templates
+                 */
+                all: function () {
+                    var deferred = $q.defer();
+                    $http.get(Routing.generate('innova_path_template_list'))
+                        .success(function (response) {
+                            deferred.resolve(response);
+                        })
+                        .error(function (response) {
+                            deferred.reject(response);
+                        });
+
+                    return deferred.promise;
+                },
+
+                /**
+                 * Delete a Template
+                 * @param template
+                 */
+                delete: function (template) {
+                    var deferred = $q.defer();
+
+                    $http.delete(Routing.generate('innova_path_template_delete', {id: template.id}))
+                        .success(function (response) {
+                            deferred.resolve(response);
+                        })
+                        .error(function (response) {
+                            deferred.reject(response);
+                        });
+
+                    return deferred.promise;
+                },
+
                 /**
                  *
                  * @param template

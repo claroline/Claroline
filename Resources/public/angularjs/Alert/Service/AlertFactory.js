@@ -5,7 +5,7 @@
 (function () {
     'use strict';
 
-    angular.module('AlertModule').factory('AlertFactory', [
+    angular.module('AlertModule').factory('AlertService', [
         '$timeout',
         function ($timeout) {
             var alerts = {};
@@ -24,7 +24,7 @@
                  * Add a new alert
                  * @param msg
                  * @param type
-                 * @returns AlertFactory
+                 * @returns AlertService
                  */
                 addAlert: function (type, msg) {
                     currentIndex++;
@@ -43,7 +43,7 @@
                 /**
                  * Close an alert
                  * @param index
-                 * @returns AlertFactory
+                 * @returns AlertService
                  */
                 closeAlert: function (alert) {
                     if (alerts[alert.id]) {

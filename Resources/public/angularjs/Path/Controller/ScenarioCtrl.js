@@ -4,7 +4,7 @@
 (function () {
     'use strict';
 
-    angular.module('EditorModule').controller('ScenarioCtrl', [
+    angular.module('PathModule').controller('ScenarioCtrl', [
         '$scope',
         '$modal',
         'HistoryFactory',
@@ -71,8 +71,8 @@
                     templateUrl: EditorApp.webDir + 'bundles/innovapath/angularjs/Confirm/Partial/confirm.html',
                     controller: 'ConfirmModalCtrl',
                     resolve: {
-                        title: function () { return Translator.trans('step_delete_title', { stepName: step.name }, 'path_editor') },
-                        message: function () { return Translator.trans('step_delete_confirm', {}, 'path_editor') },
+                        title:         function () { return Translator.trans('step_delete_title', { stepName: step.name }, 'path_editor') },
+                        message:       function () { return Translator.trans('step_delete_confirm', {}, 'path_editor') },
                         confirmButton: function () { return Translator.trans('step_delete', {}, 'path_editor') }
                     }
                 });
@@ -95,8 +95,8 @@
                     templateUrl: EditorApp.webDir + 'bundles/innovapath/angularjs/Confirm/Partial/confirm.html',
                     controller: 'ConfirmModalCtrl',
                     resolve: {
-                        title: function () { return Translator.trans('step_delete_children_title', { stepName: step.name }, 'path_editor') },
-                        message: function () { return Translator.trans('step_delete_children_confirm', {}, 'path_editor') },
+                        title:         function () { return Translator.trans('step_delete_children_title', { stepName: step.name }, 'path_editor') },
+                        message:       function () { return Translator.trans('step_delete_children_confirm', {}, 'path_editor') },
                         confirmButton: function () { return Translator.trans('step_delete_children', {}, 'path_editor') }
                     }
                 });

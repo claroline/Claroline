@@ -87,7 +87,7 @@ step_delete_children: Delete children
 
 # t
 templates: Templates
-templates_sidebar_close: Close
+sidebar_close: Close
 template_copy: Copy
 template_edit: Edit
 template_delete: Delete
@@ -119,3 +119,5 @@ save_path_changes: Do you want to save your changes ?
 select_activity: Select existing activity
 see_activity: See activity
 delete_activity: Delete activity link
+
+no_templates: There is not template available.

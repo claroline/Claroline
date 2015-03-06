@@ -41,8 +41,14 @@
     {{ form_start(form, {'attr': {'class': 'form-horizontal', 'novalidate': true}}) }}
         <div data-ng-cloak="" data-ng-app="EditorModule" class="path-editor">
             <div data-ng-controller="MainCtrl">
-                <div data-ng-controller="TemplateCtrl" id="templates-sidebar" style="display:none;" >
-                    {% include 'InnovaPathBundle:Editor:Template/sidebar.html.twig' %}
+                {# Sidebar #}
+                <div id="sidebar-left">
+                    <a id="sidebar-left-close" href="#" class="btn btn-default btn-xs pull-right">
+                        <span class="fa fa-times"></span>
+                        <span class="sr-only">{{ 'sidebar_close'|trans({}, 'path_editor') }}</span>
+                    </a>
+
+                    <template-list></template-list>
                 </div>
 
                 <div class="row">
@@ -56,7 +62,7 @@
                         {% include 'InnovaPathBundle:Editor:Path/scenario.html.twig' %}
                     </div>
 
-                    <div data-ng-controller="StepCtrl" class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                    <div data-ng-controller="StepFormCtrl" class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                         {% include 'InnovaPathBundle:Editor:Step/edit.html.twig' %}
                     </div>
                 </div>
@@ -81,8 +87,6 @@
         <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
 
-
-
     {# Angular UI #}
     {% javascripts debug=false filter='jsmin' output='vendor/angular/angular-ui.js'
         '@InnovaAngularUIBootstrapBundle/Resources/public/js/*'
@@ -100,11 +104,11 @@
         '@InnovaPathBundle/Resources/public/angularjs/Truncate/Filter/*'
 
         '@InnovaPathBundle/Resources/public/angularjs/Alert/*'
-        '@InnovaPathBundle/Resources/public/angularjs/Alert/Factory/*'
+        '@InnovaPathBundle/Resources/public/angularjs/Alert/Service/*'
         '@InnovaPathBundle/Resources/public/angularjs/Alert/Directive/*'
 
         '@InnovaPathBundle/Resources/public/angularjs/Clipboard/*'
-        '@InnovaPathBundle/Resources/public/angularjs/Clipboard/Factory/*'
+        '@InnovaPathBundle/Resources/public/angularjs/Clipboard/Service/*'
 
         '@InnovaPathBundle/Resources/public/angularjs/Confirm/*'
         '@InnovaPathBundle/Resources/public/angularjs/Confirm/Controller/*'
@@ -113,6 +117,7 @@
         '@InnovaPathBundle/Resources/public/angularjs/History/Factory/*'
 
         '@InnovaPathBundle/Resources/public/angularjs/Path/*'
+        '@InnovaPathBundle/Resources/public/angularjs/Path/Controller/*'
         '@InnovaPathBundle/Resources/public/angularjs/Path/Factory/*'
         '@InnovaPathBundle/Resources/public/angularjs/Path/Filter/*'
 
@@ -121,11 +126,13 @@
 
         '@InnovaPathBundle/Resources/public/angularjs/Step/*'
         '@InnovaPathBundle/Resources/public/angularjs/Step/Controller/*'
+        '@InnovaPathBundle/Resources/public/angularjs/Step/Directive/*'
         '@InnovaPathBundle/Resources/public/angularjs/Step/Factory/*'
 
         '@InnovaPathBundle/Resources/public/angularjs/Template/*'
         '@InnovaPathBundle/Resources/public/angularjs/Template/Controller/*'
-        '@InnovaPathBundle/Resources/public/angularjs/Template/Factory/*'
+        '@InnovaPathBundle/Resources/public/angularjs/Template/Directive/*'
+        '@InnovaPathBundle/Resources/public/angularjs/Template/Service/*'
 
 
         '@InnovaPathBundle/Resources/public/angularjs/Editor/*'
