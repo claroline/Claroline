@@ -60,6 +60,11 @@
                 <li role="presentation" {% if zoom == 'zoom200' %} class="active"{% endif %}><a role="menuitem" id='zoom200'>200%</a></li>
             </ul>
         </li>
+        {% if isMultiSelectAllowed %}
+            <li>
+                <a><input type="checkbox" class="select-all-nodes" data-view="{{ viewName }}"></input> {{ 'select_all'|trans({}, 'platform') }}</a>
+            </li>
+        {% endif %}
     </ul>
 {% else %}
     <ul class='nav navbar-nav' role="toolbar">

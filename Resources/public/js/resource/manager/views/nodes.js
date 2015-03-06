@@ -39,6 +39,7 @@
             this.parameters = parameters;
             this.dispatcher = dispatcher;
             this.directoryId = '0';
+            this.nodes = [];
             this.zoomValue = this.parameters.zoom;
             this.dispatcher.on('change-zoom', this.zoom, this);
             _.each(this.outerEvents, function (method, event) {
@@ -52,6 +53,14 @@
                 var isWhiteListed = this.parameters.resourceTypes[node.type] !== undefined;
 
                 if (isWhiteListed || node.type === 'directory') {
+                    this.nodes[node.id] = [
+                        node.name,
+                        node.type,
+                        node.mimeType,
+                        node.path,
+                        node.id
+                    ];
+                    this.parameters.node
                     //1023 is the "I can do everything" mask.
                     if (this.parameters.restrictForOwner == 1 && node.mask != 1023 && node.type !== 'directory') {
                         return;
@@ -94,6 +103,7 @@
 
             for (var i = 0; i < ids.length; ++i) {
                 this.$('#' + ids[i]).remove();
+                delete this.nodes[ids[i]];
             }
         },
         zoom: function (event) {
@@ -108,6 +118,7 @@
             var eventName = 'open-' + (type === 'directory' ? 'directory' : 'node');
 
             if (!this.parameters.isPickerMode || type === 'directory') {
+                this.nodes = [];
                 this.dispatcher.trigger(eventName , {
                     nodeId: event.currentTarget.getAttribute('data-id'),
                     resourceType: type,
@@ -116,6 +127,7 @@
                 });
             }
         },
+        //almost the same as select all in action.js
         checkNode: function (event) {
             if (this.parameters.isPickerMode
                 && !this.parameters.isPickerMultiSelectAllowed

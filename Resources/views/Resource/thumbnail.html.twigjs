@@ -2,6 +2,7 @@
 
 <div class='checkbox'>
     <input type="checkbox"
+        class="node-chk-{{ viewName }}"
         value="{{ node.id }}"
         data-node-name="{{ node.name }}"
         data-type="{{ node.type }}"

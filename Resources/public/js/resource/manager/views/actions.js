@@ -33,7 +33,8 @@
             'keypress input.name': 'filter',
             'click ul.zoom li a': 'zoom',
             'click a.open-picker': 'openPicker',
-            'click a.add': 'add'
+            'click a.add': 'add',
+            'click .select-all-nodes': 'selectAll'
         },
         initialize: function (parameters, dispatcher) {
             this.parameters = parameters;
@@ -191,6 +192,7 @@
             }
         },
         setTargetDirectory: function (event) {
+            this.checkedNodes.nodes = [];
             if (event.view === 'main' && this.parameters.isPickerMode) {
                 this.targetDirectoryId = event.nodeId;
             }
@@ -297,8 +299,41 @@
                 isPasteAllowed: isPasteAllowed,
                 isCreateAllowed: isCreateAllowed,
                 creatableTypes: creatableTypes,
-                zoom: this.zoomValue
+                zoom: this.zoomValue,
+                viewName: this.parameters.viewName,
+                isMultiSelectAllowed: this.parameters.isPickerMultiSelectAllowed
             }));
+        },
+        selectAll: function (event) {
+            //see nodes.js
+            //remove it if multiselect is not allowed ~ !
+            var chk = $(event.target);
+            var isChecked = chk.is(':checked');
+            //remove all the nodes from the selection;
+            this.checkedNodes.nodes = {};
+            this.setPasteBinState(false, false);
+            this.setActionsEnabledState(event.isPickerMode);
+            var that = this;
+            if (isChecked) {
+                $('.node-chk-' + this.parameters.viewName).prop('checked', true);
+
+                $.each($('.node-chk-' + this.parameters.viewName), (function (index, el) {
+                    this.dispatcher.trigger('node-check-status-' + this.parameters.viewName, {
+                        node: {
+                            id: $(el).attr('value'),
+                            name: $(el).attr('data-node-name'),
+                            type: $(el).attr('data-type'),
+                            mimeType: $(el).attr('data-mime-type'),
+                            path: $(el).attr('data-path')
+
+                        },
+                        isChecked: true,
+                        isPickerMode: this.parameters.isPickerMode
+                    });
+                }).bind(this));
+            } else {
+                $('.node-chk-' + this.parameters.viewName).prop('checked', false);
+            }
         }
     });
 })();
