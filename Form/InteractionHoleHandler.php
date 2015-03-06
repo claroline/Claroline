@@ -32,13 +32,13 @@ class InteractionHoleHandler extends \UJM\ExoBundle\Form\InteractionHandler{
         
         if ( $this->request->getMethod() == 'POST' ) {
             $this->form->handleRequest($this->request);
-
+            $data=$this->form->getData();
+            //Uses the default category if no category selected
+            $this->checkCategory($data);
             if ( $this->form->isValid() ) {
-
                 if($this->validateNbClone() === FALSE) {
                     return 'infoDuplicateQuestion';
                 }
-
                 foreach ($this->form->getData()->getHoles() as $h) {
                     foreach ($h->getWordResponses() as $wr) {
                         $errorList = $this->validator->validate($wr);
@@ -48,7 +48,7 @@ class InteractionHoleHandler extends \UJM\ExoBundle\Form\InteractionHandler{
                         }
                     }
                 }
-                $this->onSuccessAdd($this->form->getData());
+                $this->onSuccessAdd($data);
 
                 return true;
             }

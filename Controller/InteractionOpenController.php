@@ -41,7 +41,6 @@ class InteractionOpenController extends Controller
             $this->container->get('ujm.exercise_services'),
             $this->container->get('security.context')->getToken()->getUser(), $exoID
         );
-
         $openHandler = $formHandler->processAdd();
         if ($openHandler === TRUE) {
             $categoryToFind = $interOpen->getInteraction()->getQuestion()->getCategory();

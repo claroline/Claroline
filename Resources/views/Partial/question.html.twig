@@ -3,12 +3,13 @@
     <div class="col-md-5">{{ form_widget(form.interaction.question.title) }}</div>
     <a id="idCategoryButton" class="btn btn-default " data-toggle="collapse" data-target="#categoryDiv" onClick="statusButton('idCategory','categoryDiv');" ><i id="idCategory" class="fa fa-eye"></i>&nbsp;{{'Category.value' | trans}}</a>
     <a id="idDescriptionButton" class="btn btn-default" data-toggle="collapse" data-target="#descriptionDiv" onClick="statusButton('idDescription','descriptionDiv');" ><i id="idDescription" class="fa fa-eye"></i>&nbsp;{{'Exepertise.description' | trans}}</a>
-    <br><br> 
+    <br>{{ form_errors(form.interaction.question.category) }}
+    <br> 
     <div id="categoryDiv" class="list-group collapse">
          <label class="control-label col-md-1">{{ 'category' | trans }}</label>
         <div class="col-md-5">
             {{ form_widget(form.interaction.question.category) }}
-            {{ form_errors(form.interaction.question.category) }}
+            
         </div> 
         <a title="{{ 'edit a category' | trans }}" class="btn btn-primary" onclick="openCat('{{ path('ujm_category_new_pop', {'edit': 1} ) }}');"><i class="fa fa-pencil"></i></a>
         <a title="{{ 'create a new category' | trans }}"class="btn btn-primary" onclick="openCat('{{ path('ujm_category_new_pop') }}');"><i class="fa fa-plus"></i></a>

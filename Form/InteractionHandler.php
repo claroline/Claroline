@@ -5,6 +5,7 @@ namespace UJM\ExoBundle\Form;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\ORM\EntityManager;
+use UJM\ExoBundle\Entity\Category;
 
 use Claroline\CoreBundle\Entity\User;
 
@@ -132,9 +133,32 @@ abstract class InteractionHandler
     /**
      * Creates or uses the default category
      */
-    protected function checkCategory()
-    {
-        
+    protected function checkCategory($data)
+    {   
+        $checkCategory = False;
+            if($data->getInteraction()->getQuestion()->getCategory()== null)
+            {   
+                $uid=$this->user->getId();
+                $ListeCategroy=$this->em->getRepository('UJMExoBundle:Category')->getListCategory($uid); 
+                foreach($ListeCategroy as $category)
+                {
+                     if($category->getValue()== 'Défaut')
+                     {
+                        $data->getInteraction()->getQuestion()->setCategory($category);
+                        $checkCategory = true;
+                     }
+                }
+                if($checkCategory==false)
+                { 
+                    $newCategory= new Category();
+                    $newCategory->setValue("Défaut");
+                    $newCategory->setLocker(1);
+                    $newCategory->setUser($this->user);
+                    $this->em->persist($newCategory);
+                    $this->em->flush();
+                    $data->getInteraction()->getQuestion()->setCategory($newCategory);
+                }
+            }
     }
     /**
      * Add the Interaction in the exercise if created since an exercise
