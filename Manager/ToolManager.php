@@ -42,6 +42,8 @@ class ToolManager
     private $roleRepo;
     /** @var ToolRepository */
     private $toolRepo;
+    /** @var UserRepository */
+    private $userRepo;
 
     private $adminToolRepo;
     /** @var EventDispatcher */
@@ -87,6 +89,7 @@ class ToolManager
         $this->roleRepo          = $om->getRepository('ClarolineCoreBundle:Role');
         $this->adminToolRepo     = $om->getRepository('ClarolineCoreBundle:Tool\AdminTool');
         $this->pwsToolConfigRepo = $om->getRepository('ClarolineCoreBundle:Tool\PwsToolConfig');
+        $this->userRepo          = $om->getRepository('ClarolineCoreBundle:User');
         $this->ed                = $ed;
         $this->utilities         = $utilities;
         $this->om                = $om;
@@ -891,5 +894,36 @@ class ToolManager
             $user,
             $executeQuery
         );
+    }
+
+    public function createOrderedToolByToolForAllUsers(Tool $tool)
+    {
+        $toolName = $tool->getName();
+        $users = $this->userRepo->findAllEnabledUsers();
+        $this->om->startFlushSuite();
+        $i = 0;
+
+        foreach ($users as $user) {
+            $orderedTools = $this->orderedToolRepo->findOrderedToolsByToolAndUser(
+                $tool,
+                $user
+            );
+
+            if (count($orderedTools) === 0) {
+                $orderedTool = new OrderedTool();
+                $orderedTool->setName($toolName);
+                $orderedTool->setTool($tool);
+                $orderedTool->setUser($user);
+                $orderedTool->setVisibleInDesktop(true);
+                $orderedTool->setOrder(1);
+                $this->om->persist($orderedTool);
+                $i++;
+
+                if ($i % 100 === 0) {
+                    $this->om->forceFlush();
+                }
+            }
+        }
+        $this->om->endFlushSuite();
     }
 }

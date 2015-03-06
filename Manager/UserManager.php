@@ -898,6 +898,14 @@ class UserManager
     }
 
     /**
+     * @return User[]
+     */
+    public function getAllEnabledUsers($executeQuery = true)
+    {
+        return $this->userRepo->findAllEnabledUsers($executeQuery);
+    }
+
+    /**
      * @param \Claroline\CoreBundle\Entity\User $user
      */
     public function uploadAvatar(User $user)

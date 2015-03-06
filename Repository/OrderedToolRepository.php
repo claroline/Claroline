@@ -12,6 +12,7 @@
 namespace Claroline\CoreBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 
@@ -200,6 +201,27 @@ class OrderedToolRepository extends EntityRepository
         $query->setParameter('user', $user);
         $query->setParameter('home', 'home');
         $query->setParameter('parameters', 'parameters');
+
+        return $executeQuery ? $query->getResult() : $query;
+    }
+
+    public function findOrderedToolsByToolAndUser(
+        Tool $tool,
+        User $user,
+        $executeQuery = true
+    )
+    {
+        $dql = '
+            SELECT ot
+            FROM Claroline\CoreBundle\Entity\Tool\OrderedTool ot
+            WHERE ot.tool = :tool
+            AND ot.user = :user
+            AND ot.workspace IS NULL
+        ';
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('tool', $tool);
+        $query->setParameter('user', $user);
 
         return $executeQuery ? $query->getResult() : $query;
     }

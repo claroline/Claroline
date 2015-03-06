@@ -41,7 +41,14 @@ class Updater050000
             $tool->setDisplayableInWorkspace(false);
             $tool->setDisplayableInDesktop(true);
             $this->toolManager->create($tool);
+            $this->createMessageDesktopOrderedTools($tool);
         }
+    }
+
+    private function createMessageDesktopOrderedTools(Tool $tool)
+    {
+        $this->log('Creating message ordered tools for all users...');
+        $this->toolManager->createOrderedToolByToolForAllUsers($tool);
     }
 
     public function setLogger($logger)

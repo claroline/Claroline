@@ -964,6 +964,19 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         return $query->getOneOrNullResult();
     }
 
+    public function findAllEnabledUsers($executeQuery = true)
+    {
+        $dql = '
+            SELECT u
+            FROM Claroline\CoreBundle\Entity\User u
+            WHERE u.isEnabled = TRUE
+        ';
+
+        $query = $this->_em->createQuery($dql);
+
+        return $executeQuery ? $query->getResult() : $query;
+    }
+
     /**
      * Returns the users who are members of one of the given workspaces
      *
