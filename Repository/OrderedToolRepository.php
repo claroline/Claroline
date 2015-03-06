@@ -59,8 +59,8 @@ class OrderedToolRepository extends EntityRepository
         Workspace $workspace,
         $fromOrder,
         $toOrder,
-        $executeQuery = true,
-        $type = 0
+        $type = 0,
+        $executeQuery = true
     )
     {
         $dql = '
@@ -84,8 +84,8 @@ class OrderedToolRepository extends EntityRepository
         Workspace $workspace,
         $fromOrder,
         $toOrder,
-        $executeQuery = true,
-        $type = 0
+        $type = 0,
+        $executeQuery = true
     )
     {
         $dql = '
@@ -109,8 +109,8 @@ class OrderedToolRepository extends EntityRepository
         User $user,
         $fromOrder,
         $toOrder,
-        $executeQuery = true,
-        $type = 0
+        $type = 0,
+        $executeQuery = true
     )
     {
         $dql = '
@@ -134,8 +134,8 @@ class OrderedToolRepository extends EntityRepository
         User $user,
         $fromOrder,
         $toOrder,
-        $executeQuery = true,
-        $type = 0
+        $type = 0,
+        $executeQuery = true
     )
     {
         $dql = '
@@ -205,8 +205,8 @@ class OrderedToolRepository extends EntityRepository
 
     public function findConfigurableDesktopOrderedToolsByUser(
         User $user,
-        $executeQuery = true,
-        $type = 0
+        $type = 0,
+        $executeQuery = true
     )
     {
         $dql = '
@@ -233,8 +233,8 @@ class OrderedToolRepository extends EntityRepository
     public function findOrderedToolsByToolAndUser(
         Tool $tool,
         User $user,
-        $executeQuery = true,
-        $type = 0
+        $type = 0,
+        $executeQuery = true
     )
     {
         $dql = '

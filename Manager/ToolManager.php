@@ -584,13 +584,21 @@ class ToolManager
      *
      * @return \Claroline\CoreBundle\Entity\Tool\OrderedTool[]
      */
-    public function getOrderedToolsByWorkspaceAndRoles(Workspace $workspace, array $roles)
+    public function getOrderedToolsByWorkspaceAndRoles(
+        Workspace $workspace,
+        array $roles,
+        $type = 0
+    )
     {
         if ($workspace->isPersonal()) {
-            return $this->orderedToolRepo->findPersonalDisplayableByWorkspaceAndRoles($workspace, $roles);
+            return $this->orderedToolRepo->findPersonalDisplayableByWorkspaceAndRoles(
+                $workspace,
+                $roles,
+                $type
+            );
         }
 
-        return $this->orderedToolRepo->findByWorkspaceAndRoles($workspace, $roles);
+        return $this->orderedToolRepo->findByWorkspaceAndRoles($workspace, $roles, $type);
     }
 
 
@@ -599,13 +607,13 @@ class ToolManager
      *
      * @return \Claroline\CoreBundle\Entity\Tool\OrderedTool[]
      */
-    public function getOrderedToolsByWorkspace(Workspace $workspace)
+    public function getOrderedToolsByWorkspace(Workspace $workspace, $type = 0)
     {
         // pre-load associated tools to save some requests
         $this->toolRepo->findDisplayedToolsByWorkspace($workspace);
 
         if ($workspace->isPersonal()) {
-            return $this->orderedToolRepo->findPersonalDisplayable($workspace);
+            return $this->orderedToolRepo->findPersonalDisplayable($workspace, $type);
         }
 
         return $this->orderedToolRepo->findBy(array('workspace' => $workspace), array('order' => 'ASC'));
@@ -693,7 +701,9 @@ class ToolManager
 
     public function updateWorkspaceOrderedToolOrder(
         OrderedTool $orderedTool,
-        $newOrder
+        $newOrder,
+        $type = 0,
+        $executeQuery = true
     )
     {
         $order = $orderedTool->getOrder();
@@ -702,13 +712,17 @@ class ToolManager
             $this->orderedToolRepo->incWorkspaceOrderedToolOrderForRange(
                 $orderedTool->getWorkspace(),
                 $newOrder,
-                $order
+                $order,
+                $type,
+                $executeQuery
             );
         } else {
             $this->orderedToolRepo->decWorkspaceOrderedToolOrderForRange(
                 $orderedTool->getWorkspace(),
                 $order,
-                $newOrder
+                $newOrder,
+                $type,
+                $executeQuery
             );
         }
         $orderedTool->setOrder($newOrder);
@@ -718,7 +732,9 @@ class ToolManager
 
     public function updateDesktopOrderedToolOrder(
         OrderedTool $orderedTool,
-        $newOrder
+        $newOrder,
+        $type = 0,
+        $executeQuery = true
     )
     {
         $order = $orderedTool->getOrder();
@@ -727,13 +743,17 @@ class ToolManager
             $this->orderedToolRepo->incDesktopOrderedToolOrderForRange(
                 $orderedTool->getUser(),
                 $newOrder,
-                $order
+                $order,
+                $type,
+                $executeQuery
             );
         } else {
             $this->orderedToolRepo->decDesktopOrderedToolOrderForRange(
                 $orderedTool->getUser(),
                 $order,
-                $newOrder
+                $newOrder,
+                $type,
+                $executeQuery
             );
         }
         $orderedTool->setOrder($newOrder);
@@ -887,16 +907,18 @@ class ToolManager
      */
     public function getConfigurableDesktopOrderedToolsByUser(
         User $user,
+        $type = 0,
         $executeQuery = true
     )
     {
         return $this->orderedToolRepo->findConfigurableDesktopOrderedToolsByUser(
             $user,
+            $type,
             $executeQuery
         );
     }
 
-    public function createOrderedToolByToolForAllUsers(Tool $tool)
+    public function createOrderedToolByToolForAllUsers(Tool $tool, $type = 0)
     {
         $toolName = $tool->getName();
         $users = $this->userRepo->findAllEnabledUsers();
@@ -906,7 +928,8 @@ class ToolManager
         foreach ($users as $user) {
             $orderedTools = $this->orderedToolRepo->findOrderedToolsByToolAndUser(
                 $tool,
-                $user
+                $user,
+                $type
             );
 
             if (count($orderedTools) === 0) {
