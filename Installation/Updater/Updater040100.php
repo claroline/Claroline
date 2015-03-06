@@ -40,28 +40,25 @@ class Updater040100 extends Updater
                 /** @var \Icap\BadgeBundle\Entity\BadgeCollection $badgeCollection */
                 $badgeCollection = $this->entityManager->getRepository('IcapBadgeBundle:BadgeCollection')->find($rowBadgeCollection['badgecollection_id']);
 
-                /** @var \Icap\BadgeBundle\Repository\UserBadgeRepository $userBadgeRepository */
-                $userBadgeRepository = $this->entityManager->getRepository('IcapBadgeBundle:UserBadge');
-                /** @var \Icap\BadgeBundle\Entity\UserBadge $userBadge */
-                $userBadge = $userBadgeRepository->findOneBy([
-                    'user' => $badgeCollection->getUser(),
-                    'badge' => $this->entityManager->getReference('IcapBadgeBundle:Badge', $rowBadgeCollection['badge_id'])
-                ]);
+                if (null !== $badgeCollection) {
+                    /** @var \Icap\BadgeBundle\Repository\UserBadgeRepository $userBadgeRepository */
+                    $userBadgeRepository = $this->entityManager->getRepository('IcapBadgeBundle:UserBadge');
+                    /** @var \Icap\BadgeBundle\Entity\UserBadge $userBadge */
+                    $userBadge = $userBadgeRepository->findOneBy([
+                        'user' => $badgeCollection->getUser(),
+                        'badge' => $this->entityManager->getReference('IcapBadgeBundle:Badge', $rowBadgeCollection['badge_id'])
+                    ]);
 
-                $this->connection->insert("claro_badge_collection_user_badges", [
-                    'badgecollection_id' => $rowBadgeCollection['badgecollection_id'],
-                    'userbadge_id' => $userBadge->getId()
-                ]);
+                    if (null !== $userBadge) {
+                        $this->connection->insert("claro_badge_collection_user_badges", [
+                            'badgecollection_id' => $rowBadgeCollection['badgecollection_id'],
+                            'userbadge_id' => $userBadge->getId()
+                        ]);
+                    }
+                }
             }
 
-            $countBadgeCollectionQuery = $this->connection->executeQuery('SELECT COUNT(*) as count FROM claro_badge_collection_badges');
-            $countBadgeCollection = $countBadgeCollectionQuery->fetch();
-            $countUserBadgeCollectionQuery = $this->connection->executeQuery('SELECT COUNT(*) as count FROM claro_badge_collection_user_badges');
-            $countUserBadgeCollection = $countUserBadgeCollectionQuery->fetch();
-
-            if ($countBadgeCollection['count'] === $countUserBadgeCollection['count']) {
-                $this->connection->getSchemaManager()->dropTable('claro_badge_collection_badges');
-            }
+            $this->connection->getSchemaManager()->dropTable('claro_badge_collection_badges');
         }
     }
 }
