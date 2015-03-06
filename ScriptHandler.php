@@ -12,9 +12,9 @@
 namespace Claroline\BundleRecorder;
 
 use Claroline\BundleRecorder\Logger\ConsoleIoLogger;
-use Composer\Script\CommandEvent;
+use Composer\Script\Event as ScriptEvent;
 use Composer\EventDispatcher\Event;
-use Composer\Script\PackageEvent;
+use Composer\Installer\PackageEvent;
 use Claroline\BundleRecorder\Operation;
 use Claroline\BundleRecorder\Detector\Detector;
 use Claroline\BundleRecorder\Handler\BundleHandler;
@@ -34,9 +34,9 @@ class ScriptHandler
      *
      * Should occur on "pre-install-cmd" and "pre-update-cmd" events.
      *
-     * @param CommandEvent $event
+     * @param ScriptEvent $event
      */
-    public static function checkForPendingOperations(CommandEvent $event)
+    public static function checkForPendingOperations(ScriptEvent $event)
     {
         static::getRecorder($event)->checkForPendingOperations();
     }
@@ -101,9 +101,9 @@ class ScriptHandler
      *
      * Should occur on "post-install-cmd" and "post-update-cmd" events.
      *
-     * @param CommandEvent $event
+     * @param ScriptEvent $event
      */
-    public static function buildBundleFile(CommandEvent $event)
+    public static function buildBundleFile(ScriptEvent $event)
     {
         static::getRecorder($event)->buildBundleFile();
     }
