@@ -10,6 +10,7 @@
 /* global Twig */
 /* global Translator */
 /* global ResourceManagerActions */
+/* global ResourceDeleteConfirmMessage */
 
 (function () {
     'use strict';
@@ -78,12 +79,14 @@
         },
         'delete': function (event) {
             if (!this.$(event.currentTarget).hasClass('disabled')) {
-                var trans = _.keys(this.checkedNodes.nodes).length > 1 ?
-                    'resources_delete' :
-                    'resource_delete';
+                console.debug(this.checkedNodes.nodes);
+                var body = Twig.render(
+                    ResourceDeleteConfirmMessage,
+                    {'nodes': this.checkedNodes.nodes}
+                );
                 this.dispatcher.trigger('confirm', {
                     header: Translator.trans('delete', {}, 'platform'),
-                    body: Translator.trans(trans, {}, 'platform'),
+                    body: body,
                     callback: _.bind(function () {
                         this.dispatcher.trigger('delete', {
                             ids: _.keys(this.checkedNodes.nodes),
@@ -111,7 +114,6 @@
             }
         },
         'paste': function (event) {
-            console.debug(this.cutCpyNodes);
             if (!this.$(event.currentTarget).hasClass('disabled')) {
                 var event = this.isCutMode ? 'move-nodes' : 'copy-nodes';
                 this.dispatcher.trigger(event, {
