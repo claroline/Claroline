@@ -50,10 +50,12 @@
             this.targetDirectoryId = this.currentDirectoryId;
             // selection of nodes checked by the user
             this.checkedNodes = {
+                //the "nodes" list is reinitialized each time we change directory
                 nodes: {},
                 directoryId: this.currentDirectoryId,
                 isSearchMode: this.isSearchMode
             };
+            this.cutCpyNodes = [];
             this.setPasteBinState(false, false);
             this.dispatcher.on('open-directory', this.setTargetDirectory, this);
             this.dispatcher.on('directory-data-' + this.parameters.viewName, this.render, this);
@@ -99,20 +101,21 @@
             }
         },
         'copy': function (event) {
-            if (!this.$(event.currentTarget).hasClass('disabled') && _.size(this.checkedNodes.nodes) > 0) {
+            if (!this.$(event.currentTarget).hasClass('disabled')) {
                 this.setPasteBinState(true, false);
             }
         },
         'cut': function (event) {
-            if (!this.$(event.currentTarget).hasClass('disabled') && _.size(this.checkedNodes.nodes) > 0) {
+            if (!this.$(event.currentTarget).hasClass('disabled')) {
                 this.setPasteBinState(true, true);
             }
         },
         'paste': function (event) {
+            console.debug(this.cutCpyNodes);
             if (!this.$(event.currentTarget).hasClass('disabled')) {
                 var event = this.isCutMode ? 'move-nodes' : 'copy-nodes';
                 this.dispatcher.trigger(event, {
-                    ids:  _.keys(this.checkedNodes.nodes),
+                    ids:  _.keys(this.cutCpyNodes),
                     directoryId: this.currentDirectoryId,
                     sourceDirectoryId: this.checkedNodes.directoryId,
                     view: this.parameters.viewName
@@ -234,13 +237,17 @@
         setPasteBinState: function (isReadyToPaste, isCutMode) {
             this.isReadyToPaste = isReadyToPaste;
             this.isCutMode = isCutMode;
+            this.cutCpyNodes = this.checkedNodes.nodes;
             this.setButtonEnabledState(
                 this.$('a.paste'),
                 isReadyToPaste && (!this.isCutMode || this.checkedNodes.directoryId !== this.currentDirectoryId)
             );
         },
         setInitialState: function () {
+            //initialized each time we changed directory
             this.checkedNodes.nodes = {};
+            //initialized each time we click on Cut/Copy
+            this.cutCpyNodes = [];
             this.isReadyToPaste = false;
             this.isCutMode = false;
             this.setButtonEnabledState(this.$('a.cut'), false);
