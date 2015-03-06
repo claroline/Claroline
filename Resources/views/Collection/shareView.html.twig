@@ -14,7 +14,8 @@
     {% endif %}
     <h1>{{ collection.name }} <small>{{ 'collection_owned_by_user'|trans({'%user%': user.firstname ~ ' ' ~ user.lastName}) }}</small></h1>
     <p></p>
-    {% for badge in collection.badges %}
+    {% for userBadge in collection.userBadges %}
+        {% set badge = userBadge.badge %}
     <div class="panel panel-default">
         <div class="panel-heading">
             <h3 class="panel-title">{{ badge.name }}</h3>
@@ -38,6 +39,10 @@
                                 <tr>
                                   <td class="fieldlabel">{{ 'badge_form_name'|trans }}</td>
                                   <td>{{ badge.name }}</td>
+                                </tr>
+                                <tr>
+                                  <td class="fieldlabel">{{ 'badge_awarding_date'|trans }}</td>
+                                  <td>{{ userBadge.issuedAt|date('date_format'|trans({}, 'platform')) }}</td>
                                 </tr>
                                 <tr>
                                   <td class="fieldlabel">{{ 'badge_form_description'|trans }}</td>
