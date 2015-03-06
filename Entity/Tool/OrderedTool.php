@@ -98,6 +98,11 @@ class OrderedTool
      */
     protected $rights;
 
+    /**
+     * @ORM\Column(name="ordered_tool_type", type="integer")
+     */
+    protected $type = 0;
+
     public function __construct()
     {
         $this->rights = new ArrayCollection();
@@ -176,5 +181,15 @@ class OrderedTool
     public function addRight(ToolRights $right)
     {
         $this->rights->add($right);
+    }
+
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    public function setType($type)
+    {
+        $this->type = $type;
     }
 }
