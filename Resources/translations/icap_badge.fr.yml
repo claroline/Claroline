@@ -174,3 +174,6 @@ count_selected_badge: '%nbBadge% badge sélectionné|%nbBadge% badges sélection
 badges_management: 'Gestion des badges'
 my_badges: 'Mes badges'
 badge_awarding_date: 'Date d''attribution'
+total_awarding: 'attribution|attributions'
+total_awarded_badge: 'badge attribué|badges attribués'
+total_not_awarded_badge: 'badge non-attribué|badges non-attribués'

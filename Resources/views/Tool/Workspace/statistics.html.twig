@@ -29,16 +29,16 @@
 {% block section_body %}
     <ul class="list-inline badge_general_statistics">
         <li>
-            <p><span>{{ statistics.totalBadges }}</span> badges</p>
+            <p><span>{{ statistics.totalBadges }}</span> {{ 'badge'|trans() }}</p>
         </li>
         <li>
-            <p><span>{{ statistics.totalAwarding }}</span> attributions</p>
+            <p><span>{{ statistics.totalAwarding }}</span> {{ 'total_awarding'|transchoice(statistics.totalAwarding) }}</p>
         </li>
         <li>
-            <p><span>{{ statistics.totalBadgeAwarded }}</span> badges attribués</p>
+            <p><span>{{ statistics.totalBadgeAwarded }}</span> {{ 'total_awarded_badge'|transchoice(statistics.totalBadgeAwarded) }}</p>
         </li>
         <li>
-            <p><span>{{ statistics.totalBadgeNotAwarded }}</span> badges non-attribués</p>
+            <p><span>{{ statistics.totalBadgeNotAwarded }}</span> {{ 'total_not_awarded_badge'|transchoice(statistics.totalBadgeNotAwarded) }}</p>
         </li>
     </ul>
 {% endblock %}
