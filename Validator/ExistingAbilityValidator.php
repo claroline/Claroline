@@ -32,7 +32,7 @@ class ExistingAbilityValidator extends ConstraintValidator
     public function validate($value, Constraint $constraint)
     {
         if ($value && !$value instanceof Ability) {
-            $ability = $this->om->getRepository('HeVinci\CompetencyBundle\Entity\Ability')
+            $ability = $this->om->getRepository('HeVinciCompetencyBundle:Ability')
                 ->findOneBy(['name' => $value]);
 
             if (!$ability) {

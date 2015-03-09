@@ -4,6 +4,7 @@ namespace HeVinci\CompetencyBundle\Manager;
 
 use HeVinci\CompetencyBundle\Entity\Ability;
 use HeVinci\CompetencyBundle\Entity\Competency;
+use HeVinci\CompetencyBundle\Entity\CompetencyAbility;
 use HeVinci\CompetencyBundle\Entity\Level;
 use HeVinci\CompetencyBundle\Entity\Scale;
 use HeVinci\CompetencyBundle\Util\UnitTestCase;
@@ -283,6 +284,121 @@ class CompetencyManagerTest extends UnitTestCase
 
         $this->om->expects($this->once())->method('flush');
         $this->manager->createAbility($parent, $ability, $level);
+    }
+
+    public function testRemoveAbilityRemovesLink()
+    {
+        $ability = new Ability();
+        $parent = new Competency();
+        $link = new CompetencyAbility();
+        $this->competencyAbilityRepo->expects($this->once())
+            ->method('countByAbility')
+            ->with($ability)
+            ->willReturn(2);
+        $this->competencyAbilityRepo->expects($this->once())
+            ->method('findOneByTerms')
+            ->with($parent, $ability)
+            ->willReturn($link);
+        $this->om->expects($this->once())
+            ->method('remove')
+            ->with($link);
+        $this->manager->removeAbility($parent, $ability);
+    }
+
+    public function testRemoveAbilityRemovesAbilityIfLastLink()
+    {
+        $ability = new Ability();
+        $parent = new Competency();
+        $link = new CompetencyAbility();
+        $this->competencyAbilityRepo->expects($this->once())
+            ->method('countByAbility')
+            ->with($ability)
+            ->willReturn(1);
+        $this->competencyAbilityRepo->expects($this->once())
+            ->method('findOneByTerms')
+            ->with($parent, $ability)
+            ->willReturn($link);
+        $this->om->expects($this->exactly(2))
+            ->method('remove')
+            ->withConsecutive($link, $ability);
+        $this->manager->removeAbility($parent, $ability);
+    }
+
+    public function testUpdateAbility()
+    {
+        $ability = new Ability();
+        $parent = new Competency();
+        $level = new Level();
+        $link = $this->mock('HeVinci\CompetencyBundle\Entity\CompetencyAbility');
+        $this->competencyAbilityRepo->expects($this->once())
+            ->method('findOneByTerms')
+            ->with($parent, $ability)
+            ->willReturn($link);
+        $link->expects($this->once())
+            ->method('setLevel')
+            ->with($level);
+        $this->om->expects($this->once())->method('flush');
+        $this->manager->updateAbility($parent, $ability, $level);
+    }
+
+    public function testLoadAbility()
+    {
+        $ability = new Ability();
+        $level = new Level();
+        $parent = new Competency();
+        $link = new CompetencyAbility();
+        $link->setLevel($level);
+        $this->competencyAbilityRepo->expects($this->once())
+            ->method('findOneByTerms')
+            ->with($parent, $ability)
+            ->willReturn($link);
+        $this->manager->loadAbility($parent, $ability);
+        $this->assertEquals($level, $ability->getLevel());
+    }
+
+    public function testSuggestAbilities()
+    {
+        $parent = new Competency();
+        $this->abilityRepo->expects($this->once())
+            ->method('findFirstByName')
+            ->with('foo', $parent)
+            ->willReturn('RESULT');
+        $this->assertEquals('RESULT', $this->manager->suggestAbilities($parent, 'foo'));
+    }
+
+    /**
+     * @expectedException LogicException
+     */
+    public function testLinkAbilityThrowsIfLinkAlreadyExists()
+    {
+        $parent = new Competency();
+        $ability = new Ability();
+        $this->competencyAbilityRepo->expects($this->once())
+            ->method('findOneBy')
+            ->with(['competency' => $parent, 'ability' => $ability])
+            ->willReturn(new CompetencyAbility());
+        $this->manager->linkAbility($parent, $ability, new Level());
+    }
+
+    public function testAbility()
+    {
+        $parent = new Competency();
+        $ability = new Ability();
+        $level = new Level();
+        $this->competencyAbilityRepo->expects($this->once())
+            ->method('findOneBy')
+            ->with(['competency' => $parent, 'ability' => $ability])
+            ->willReturn(null);
+        $this->om->expects($this->once())
+            ->method('persist')
+            ->with($this->callback(function ($arg) use ($parent, $ability, $level) {
+                $this->assertEquals($parent, $arg->getCompetency());
+                $this->assertEquals($ability, $arg->getAbility());
+                $this->assertEquals($level, $arg->getLevel());
+                return true;
+            }));
+        $this->om->expects($this->once())->method('flush');
+        $this->manager->linkAbility($parent, $ability, $level);
     }
 
     public function loadFrameworkProvider()

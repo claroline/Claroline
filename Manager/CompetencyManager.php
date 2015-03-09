@@ -328,7 +328,6 @@ class CompetencyManager
     {
         $link = $this->competencyAbilityRepo->findOneByTerms($parent, $ability);
         $link->setLevel($level);
-        $this->om->persist($link);
         $this->om->flush();
 
         return $ability;

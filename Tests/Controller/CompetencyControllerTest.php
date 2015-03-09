@@ -2,7 +2,9 @@
 
 namespace HeVinci\CompetencyBundle\Controller;
 
+use HeVinci\CompetencyBundle\Entity\Ability;
 use HeVinci\CompetencyBundle\Entity\Competency;
+use HeVinci\CompetencyBundle\Entity\Level;
 use HeVinci\CompetencyBundle\Util\UnitTestCase;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -273,6 +275,143 @@ class CompetencyControllerTest extends UnitTestCase
         $this->assertEquals(
             ['form' => 'FORM', 'id' => 1],
             $this->controller->editCompetencyAction($request, $competency)
+        );
+    }
+
+    public function testNewAbilityAction()
+    {
+        $parent = new Competency();
+        $this->formHandler->expects($this->once())
+            ->method('getView')
+            ->with('hevinci_form_ability', null, ['competency' => $parent])
+            ->willReturn('FORM');
+        $this->assertEquals(['form' => 'FORM', 'competency' => $parent], $this->controller->newAbilityAction($parent));
+    }
+
+    public function testInvalidCreateAbilityAction()
+    {
+        $parent = new Competency();
+        $request = new Request();
+        $this->formHandler->expects($this->once())
+            ->method('isValid')
+            ->with('hevinci_form_ability', $request, null, ['competency' => $parent])
+            ->willReturn(false);
+        $this->formHandler->expects($this->once())
+            ->method('getView')
+            ->willReturn('FORM');
+        $this->assertEquals(
+            ['form' => 'FORM', 'competency' => $parent],
+            $this->controller->createAbilityAction($request, $parent)
+        );
+    }
+
+    public function testValidCreateAbilityAction()
+    {
+        $parent = new Competency();
+        $request = new Request();
+        $ability = new Ability();
+        $level = new Level();
+        $ability->setLevel($level);
+        $this->formHandler->expects($this->once())
+            ->method('isValid')
+            ->with('hevinci_form_ability', $request, null, ['competency' => $parent])
+            ->willReturn(true);
+        $this->formHandler->expects($this->exactly(2))
+            ->method('getData')
+            ->willReturn($ability);
+        $this->manager->expects($this->once())
+            ->method('createAbility')
+            ->with($parent, $ability, $level)
+            ->willReturn($ability);
+        $this->assertEquals(
+            json_encode($ability),
+            $this->controller->createAbilityAction($request, $parent)->getContent()
+        );
+    }
+
+    public function testDeleteAbilityAction()
+    {
+        $parent = new Competency();
+        $ability = new Ability();
+        $this->manager->expects($this->once())
+            ->method('removeAbility')
+            ->with($parent, $ability)
+            ->willReturn(true);
+        $this->assertEquals(
+            json_encode(true),
+            $this->controller->deleteAbilityAction($parent, $ability)->getContent()
+        );
+    }
+
+    public function testAbilityAction()
+    {
+        $parent = new Competency();
+        $ability = new Ability();
+        $this->manager->expects($this->once())
+            ->method('loadAbility')
+            ->with($parent, $ability);
+        $this->formHandler->expects($this->once())
+            ->method('getView')
+            ->with('hevinci_form_ability', $ability, ['competency' => $parent])
+            ->willReturn('FORM');
+        $this->assertEquals(
+            ['form' => 'FORM', 'competency' => $parent, 'ability' => $ability],
+            $this->controller->abilityAction($parent, $ability)
+        );
+    }
+
+    public function testInvalidEditAbilityAction()
+    {
+        $request = new Request();
+        $parent = new Competency();
+        $ability = new Ability();
+        $this->formHandler->expects($this->once())
+            ->method('isValid')
+            ->with('hevinci_form_ability', $request, $ability, ['competency' => $parent])
+            ->willReturn(false);
+        $this->formHandler->expects($this->once())
+            ->method('getView')
+            ->willReturn('FORM');
+        $this->assertEquals(
+            ['form' => 'FORM', 'competency' => $parent, 'ability' => $ability],
+            $this->controller->editAbilityAction($request, $parent, $ability)
+        );
+    }
+
+    public function testValidEditAbilityAction()
+    {
+        $request = new Request();
+        $parent = new Competency();
+        $ability = new Ability();
+        $level = new Level();
+        $ability->setLevel($level);
+        $this->formHandler->expects($this->once())
+            ->method('isValid')
+            ->with('hevinci_form_ability', $request, $ability, ['competency' => $parent])
+            ->willReturn(true);
+        $this->formHandler->expects($this->exactly(2))
+            ->method('getData')
+            ->willReturn($ability);
+        $this->manager->expects($this->once())
+            ->method('updateAbility')
+            ->with($parent, $ability, $level)
+            ->willReturn($ability);
+        $this->assertEquals(
+            json_encode($ability),
+            $this->controller->editAbilityAction($request, $parent, $ability)->getContent()
+        );
+    }
+
+    public function testAddAbilityFormAction()
+    {
+        $parent = new Competency();
+        $this->formHandler->expects($this->once())
+            ->method('getView')
+            ->with('hevinci_form_ability_import', null, ['competency' => $parent])
+            ->willReturn('FORM');
+        $this->assertEquals(
+            ['form' => 'FORM', 'competency' => $parent],
+            $this->controller->addAbilityFormAction($parent)
         );
     }
 }

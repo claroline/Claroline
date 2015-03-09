@@ -31,6 +31,7 @@ class AbilityRepository extends EntityRepository
             ->join('ca.competency', 'c')
             ->join('ca.level', 'l')
             ->where('c.root = :root')
+            ->orderBy('l.value')
             ->setParameter(':root', $framework->getId())
             ->getQuery()
             ->getArrayResult();
