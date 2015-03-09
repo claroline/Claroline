@@ -103,6 +103,11 @@ class OrderedTool
      */
     protected $type = 0;
 
+    /**
+     * @ORM\Column(name="is_locked", type="boolean")
+     */
+    protected $locked = false;
+
     public function __construct()
     {
         $this->rights = new ArrayCollection();
@@ -191,5 +196,15 @@ class OrderedTool
     public function setType($type)
     {
         $this->type = $type;
+    }
+
+    public function isLocked()
+    {
+        return $this->locked;
+    }
+
+    public function setLocked($locked)
+    {
+        $this->locked = $locked;
     }
 }

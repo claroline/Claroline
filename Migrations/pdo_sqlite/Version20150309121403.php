@@ -8,15 +8,19 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2015/03/06 11:24:56
+ * Generation date: 2015/03/09 12:14:05
  */
-class Version20150306112455 extends AbstractMigration
+class Version20150309121403 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
         $this->addSql("
             ALTER TABLE claro_ordered_tool 
             ADD COLUMN ordered_tool_type INTEGER NOT NULL
+        ");
+        $this->addSql("
+            ALTER TABLE claro_ordered_tool 
+            ADD COLUMN is_locked BOOLEAN NOT NULL
         ");
     }
 
