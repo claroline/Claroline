@@ -120,7 +120,6 @@ class DropController extends DropzoneBaseController
                     $this->get('translator')->trans('Your copy has been saved', array(), 'innova_collecticiel')
                 );
 
-
                 return $this->redirect(
                     $this->generateUrl(
                         'innova_collecticiel_open',

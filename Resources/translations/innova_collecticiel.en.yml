@@ -344,3 +344,8 @@ unlock_all: "unlock all"
 cancel_unlock: "cancel unlock for all"
 Start collecticiel: 'Démarrer le collecticiel'
 Complete collecticiel: 'Compléter le collecticiel'
+See personal view: 'See personal view'
+Study: 'Study'
+No read comments: 'No read comments'
+To be corrected documents: 'To be corrected documents'
+See document: 'See document'

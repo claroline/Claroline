@@ -1,18 +1,34 @@
+<!-- Vue donnant la liste des copies. Exemple d'URL : innovacollecticielbundle/2/drops/awaiting -->
 <div class="table-responsive">
-    <table class="table   table-striped table-hover  ">
+    <table class="table table-striped table-hover">
         <thead>
-        <th>{{ 'Established on'|trans({}, 'innova_collecticiel') }}</th>
-        <th>{{ 'Made by'|trans({},'innova_collecticiel') }}</th>
-        <th>{{ 'Last correction'|trans({}, 'innova_collecticiel') }}</th>
-        <th>{{ 'Grade'|trans({}, 'innova_collecticiel') }}</th>
-        {% if AwaitingMode is defined and  AwaitingMode == true %}
+        <!-- Colonne supprimée : 'Copie rendue le' -->
+        <!-- <th>{{ 'Established on'|trans({}, 'innova_collecticiel') }}</th> -->
+        <!-- Colonne modifiée de "Rendue par" par "Etudiant" -->
+        <th>{{ 'Study'|trans({},'innova_collecticiel') }}</th>
+        <!-- Colonnes supprimées : -->
+        <!-- 'Dernière correction le' -->
+        <!-- 'Note' -->
+        <!-- 'Corr.' -->
+        <!-- <th>{{ 'Last correction'|trans({}, 'innova_collecticiel') }}</th> -->
+        <!-- <th>{{ 'Grade'|trans({}, 'innova_collecticiel') }}</th> -->
+        <!-- {% if AwaitingMode is defined and  AwaitingMode == true %}
             <th> {{ 'Corr.'|trans({}, 'innova_collecticiel') }} </th>
-        {% endif %}
-        <th>{{ 'tools'|trans({},'innova_collecticiel') }}</th>
+        {% endif %} -->
+        <!-- Colonne supprimée : 'Outils' -->
+        <!-- <th>{{ 'tools'|trans({},'innova_collecticiel') }}</th> -->
+        <!-- Colonne ajoutée "Commentaires non lus" -->
+        <th>{{ 'No read comments'|trans({},'innova_collecticiel') }}</th>
+        <!-- Colonne ajoutée "Devoirs à corriger" -->
+        <th>{{ 'To be corrected documents'|trans({},'innova_collecticiel') }}</th>
+        <!-- Colonne ajoutée "Voir" -->
+        <th>{{ 'See document'|trans({},'innova_collecticiel') }}</th>
         </thead>
         <tbody>
         {% for drop in pager.currentPageResults %}
             <tr>
+                <!-- Colonne supprimée : 'Copie rendue le' -->
+                <!--
                 <td>
                     <a href="{{ path('innova_collecticiel_drops_detail', {'resourceId': dropzone.id, 'dropId': drop.id}) }}"
                        title="{{ 'See copy'|trans({}, 'innova_collecticiel') }}">
@@ -27,9 +43,28 @@
                         {% endif %}
                     </a>
                 </td>
+                -->
                 <td>
                     {{ drop.user.firstName|capitalize }} {{ drop.user.lastName|upper }}
                 </td>
+                <td>
+                    0
+                </td>
+                <td>
+                    0
+                </td>
+                <td>
+                    <div class="btn-group ">
+                        <a href="{{ path('innova_collecticiel_drops_detail_add_correction', {'resourceId': dropzone.id, 'dropId': drop.id}) }}" type="button" class="btn btn-default btn-xs">
+                            {{ 'See document'|trans({}, 'innova_collecticiel') }}
+                        </a>
+                    </div>
+                </td>
+                <!-- Colonnes supprimées : -->
+                <!-- 'Dernière correction le' -->
+                <!-- 'Note' -->
+                <!-- 'Corr.' -->
+                <!--
                 <td>
                     {% include 'InnovaCollecticielBundle:Drop:dropsLastCorrectionDate.html.twig' %}
                     {% if drop.getHasDeniedCorrection %}
@@ -45,6 +80,8 @@
                         {% include 'InnovaCollecticielBundle:Drop:dropsNbCorrections.html.twig' %}
                     </td>
                 {% endif %}
+                -->
+                <!-- Colonne supprimée : 'Outils'
                 <td>
                     <div class="btn-group ">
 
@@ -79,8 +116,8 @@
                                     class="fa fa-trash-o"></span> {{ 'Delete copy'|trans({}, 'innova_collecticiel') }}
                         </a>
                     </div>
-
                 </td>
+                -->
             </tr>
         {% endfor %}
         </tbody>
