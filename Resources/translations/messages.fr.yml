@@ -112,6 +112,7 @@ create hole : Créer un blanc
 
 # D
 date: Date
+default : Défaut
 delDocQuestion: Supprimer ce document ainsi que toutes les questions qui y sont liées
 delete: Supprimer
 delete document: Suppression de document

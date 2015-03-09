@@ -32,9 +32,8 @@ class InteractionHoleHandler extends \UJM\ExoBundle\Form\InteractionHandler{
         
         if ( $this->request->getMethod() == 'POST' ) {
             $this->form->handleRequest($this->request);
-            $data=$this->form->getData();
             //Uses the default category if no category selected
-            $this->checkCategory($data);
+            $this->checkCategory();
             if ( $this->form->isValid() ) {
                 if($this->validateNbClone() === FALSE) {
                     return 'infoDuplicateQuestion';
@@ -48,7 +47,7 @@ class InteractionHoleHandler extends \UJM\ExoBundle\Form\InteractionHandler{
                         }
                     }
                 }
-                $this->onSuccessAdd($data);
+                $this->onSuccessAdd($this->form->getData());
 
                 return true;
             }

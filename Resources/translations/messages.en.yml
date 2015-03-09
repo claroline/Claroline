@@ -112,6 +112,7 @@ create hole : Create hole
 
 # D
 date: Date
+default : Default
 delDocQuestion: Delete this document and all the linked questions
 delete: Delete
 delete document: Deletion of document

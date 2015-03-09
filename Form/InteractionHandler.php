@@ -133,30 +133,34 @@ abstract class InteractionHandler
     /**
      * Creates or uses the default category
      */
-    protected function checkCategory($data)
+    protected function checkCategory()
     {   
+        $data = $this->form->getData()->getInteraction()->getQuestion();
         $checkCategory = False;
-            if($data->getInteraction()->getQuestion()->getCategory()== null)
+        //$default = $this->get('translator')->trans('default');
+        $default='Défaut';
+            if($data->getCategory()== null)
             {   
                 $uid=$this->user->getId();
                 $ListeCategroy=$this->em->getRepository('UJMExoBundle:Category')->getListCategory($uid); 
                 foreach($ListeCategroy as $category)
                 {
-                     if($category->getValue()== 'Défaut')
+                     if($category->getValue()== $default)
                      {
-                        $data->getInteraction()->getQuestion()->setCategory($category);
+                        $data->setCategory($category);
+                        $data->getCategory()->setLocker('1');
                         $checkCategory = true;
                      }
                 }
                 if($checkCategory==false)
                 { 
                     $newCategory= new Category();
-                    $newCategory->setValue("Défaut");
+                    $newCategory->setValue($default);
                     $newCategory->setLocker(1);
                     $newCategory->setUser($this->user);
                     $this->em->persist($newCategory);
                     $this->em->flush();
-                    $data->getInteraction()->getQuestion()->setCategory($newCategory);
+                    $data->setCategory($newCategory);
                 }
             }
     }
