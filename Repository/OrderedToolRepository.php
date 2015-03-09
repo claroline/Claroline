@@ -354,4 +354,26 @@ class OrderedToolRepository extends EntityRepository
 
         return $executeQuery ? $query->getResult() : $query;
     }
+
+    /**
+     * Returns the ordered tools locked by admin.
+     *
+     * @return array[OrderedTool]
+     */
+    public function findOrderedToolsLockedByAdmin($orderedToolType = 0)
+    {
+        $dql = "
+            SELECT ot
+            FROM Claroline\CoreBundle\Entity\Tool\OrderedTool ot
+            WHERE ot.user IS NULL
+            AND ot.workspace IS NULL
+            AND ot.type = :type
+            AND ot.locked = true
+            ORDER BY ot.order
+        ";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('type', $orderedToolType);
+
+        return $query->getResult();
+    }
 }

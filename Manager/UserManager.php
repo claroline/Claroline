@@ -128,17 +128,21 @@ class UserManager
     {
         $this->objectManager->startFlushSuite();
 
-        if ($this->personalWorkspaceAllowed($additionnalRoles))
+        if ($this->personalWorkspaceAllowed($additionnalRoles)) {
             $this->setPersonalWorkspace($user, $model);
+        }
         $user->setPublicUrl($this->generatePublicUrl($user));
-        $this->toolManager->addRequiredToolsToUser($user);
+        $this->toolManager->addRequiredToolsToUser($user, 0);
+        $this->toolManager->addRequiredToolsToUser($user, 1);
         $this->roleManager->setRoleToRoleSubject($user, PlatformRoles::USER);
         $this->objectManager->persist($user);
         $this->strictEventDispatcher->dispatch('log', 'Log\LogUserCreate', array($user));
         $this->roleManager->createUserRole($user);
 
         foreach ($additionnalRoles as $role) {
-            if ($role) $this->roleManager->associateRole($user, $role);
+            if ($role) {
+                $this->roleManager->associateRole($user, $role);
+            }
         }
 
         $this->objectManager->endFlushSuite();

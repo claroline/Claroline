@@ -181,7 +181,7 @@ class ToolManager
      */
     public function getOrderedToolsLockedByAdmin($type = 0)
     {
-         return $this->toolRepo->findOrderedToolsLockedByAdmin($type);
+         return $this->orderedToolRepo->findOrderedToolsLockedByAdmin($type);
     }
 
     /**
@@ -623,9 +623,16 @@ class ToolManager
      */
     public function addRequiredToolsToUser(User $user, $type = 0)
     {
-        $requiredTools[] = $this->toolRepo->findOneBy(array('name' => 'home'));
-        $requiredTools[] = $this->toolRepo->findOneBy(array('name' => 'resource_manager'));
-        $requiredTools[] = $this->toolRepo->findOneBy(array('name' => 'parameters'));
+        $requiredTools = array();
+        $adminOrderedTools = $this->orderedToolRepo
+            ->findConfigurableDesktopOrderedToolsByTypeForAdmin($type);
+
+        foreach ($adminOrderedTools as $orderedTool) {
+
+            if ($orderedTool->isVisibleInDesktop()) {
+                $requiredTools[] = $orderedTool->getTool();
+            }
+        }
 
         $position = 1;
         $this->om->startFlushSuite();
