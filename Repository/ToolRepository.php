@@ -86,12 +86,66 @@ class ToolRepository extends EntityRepository
     public function findDesktopDisplayedToolsByUser(User $user, $orderedToolType = 0)
     {
         $dql = "
-            SELECT tool FROM Claroline\CoreBundle\Entity\Tool\Tool tool
+            SELECT tool
+            FROM Claroline\CoreBundle\Entity\Tool\Tool tool
             JOIN tool.orderedTools ot
             JOIN ot.user user
             WHERE user.id = {$user->getId()}
             AND ot.type = :type
             AND ot.isVisibleInDesktop = true
+            ORDER BY ot.order
+        ";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('type', $orderedToolType);
+
+        return $query->getResult();
+    }
+
+    /**
+     * Returns the visible tools in a user's desktop.
+     *
+     * @param User $user
+     *
+     * @return array[Tool]
+     */
+    public function findDesktopDisplayedToolsWithExclusionByUser(
+        User $user,
+        array $excludedTools,
+        $orderedToolType = 0
+    )
+    {
+        $dql = "
+            SELECT tool
+            FROM Claroline\CoreBundle\Entity\Tool\Tool tool
+            JOIN tool.orderedTools ot
+            JOIN ot.user user
+            WHERE user.id = {$user->getId()}
+            AND ot.type = :type
+            AND ot.isVisibleInDesktop = true
+            AND tool NOT IN (:excludedTools)
+            ORDER BY ot.order
+        ";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('type', $orderedToolType);
+        $query->setParameter('excludedTools', $excludedTools);
+
+        return $query->getResult();
+    }
+
+    /**
+     * Returns the ordered tools locked by admin.
+     *
+     * @return array[Tool]
+     */
+    public function findOrderedToolsLockedByAdmin($orderedToolType = 0)
+    {
+        $dql = "
+            SELECT ot
+            FROM Claroline\CoreBundle\Entity\Tool\OrderedTool ot
+            WHERE ot.user IS NULL
+            AND ot.workspace IS NULL
+            AND ot.type = :type
+            AND ot.locked = true
             ORDER BY ot.order
         ";
         $query = $this->_em->createQuery($dql);

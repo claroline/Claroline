@@ -159,9 +159,29 @@ class ToolManager
      *
      * @return \Claroline\CoreBundle\Entity\Tool\Tool
      */
-    public function getDisplayedDesktopOrderedTools(User $user, $type = 0)
+    public function getDisplayedDesktopOrderedTools(
+        User $user,
+        $type = 0,
+        array $excludedTools = array()
+    )
     {
-         return $this->toolRepo->findDesktopDisplayedToolsByUser($user, $type);
+        return count($excludedTools) === 0 ?
+            $this->toolRepo->findDesktopDisplayedToolsByUser($user, $type) :
+            $this->toolRepo->findDesktopDisplayedToolsWithExclusionByUser(
+                $user,
+                $excludedTools,
+                $type
+            );
+    }
+
+    /**
+     * @param \Claroline\CoreBundle\Entity\User $user
+     *
+     * @return \Claroline\CoreBundle\Entity\Tool\Tool
+     */
+    public function getOrderedToolsLockedByAdmin($type = 0)
+    {
+         return $this->toolRepo->findOrderedToolsLockedByAdmin($type);
     }
 
     /**

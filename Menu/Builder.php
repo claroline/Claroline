@@ -43,9 +43,26 @@ class Builder extends ContainerAware
         $this->addDivider($menu, '1');
 
         $user = $securityContext->getToken()->getUser();
-        $desktopTools = $toolManager->getDisplayedDesktopOrderedTools($user, 1);
+        $lockedOrderedTools = $toolManager->getOrderedToolsLockedByAdmin(1);
+        $adminTools = array();
+        $excludedTools = array();
 
-        foreach ($desktopTools as $tool) {
+        foreach ($lockedOrderedTools as $lockedOrderedTool) {
+            $lockedTool = $lockedOrderedTool->getTool();
+
+            if ($lockedOrderedTool->isVisibleInDesktop()) {
+                $adminTools[] = $lockedTool;
+            }
+            $excludedTools[] = $lockedTool;
+        }
+        $desktopTools = $toolManager->getDisplayedDesktopOrderedTools(
+            $user,
+            1,
+            $excludedTools
+        );
+        $tools = array_merge($adminTools, $desktopTools);
+
+        foreach ($tools as $tool) {
             $toolName = $tool->getName();
 
             if ($toolName === 'home' || $toolName === 'parameters') {
@@ -123,11 +140,29 @@ class Builder extends ContainerAware
         }
 
         if (!in_array('ROLE_ANONYMOUS', $roles)) {
-            $desktopTools = $this->container->get('claroline.manager.tool_manager')
-                ->getDisplayedDesktopOrderedTools($user);
             $dispatcher = $this->container->get('event_dispatcher');
+            $toolManager = $this->container->get('claroline.manager.tool_manager');
+            $lockedOrderedTools = $toolManager->getOrderedToolsLockedByAdmin();
+            $adminTools = array();
+            $excludedTools = array();
 
-            foreach ($desktopTools as $tool) {
+            foreach ($lockedOrderedTools as $lockedOrderedTool) {
+                $lockedTool = $lockedOrderedTool->getTool();
+
+                if ($lockedOrderedTool->isVisibleInDesktop()) {
+                    $adminTools[] = $lockedTool;
+                }
+                $excludedTools[] = $lockedTool;
+            }
+
+            $desktopTools = $toolManager->getDisplayedDesktopOrderedTools(
+                $user,
+                0,
+                $excludedTools
+            );
+            $tools = array_merge($adminTools, $desktopTools);
+
+            foreach ($tools as $tool) {
                 $toolName = $tool->getName();
 
                 if ($toolName === 'home' || $toolName === 'parameters') {
