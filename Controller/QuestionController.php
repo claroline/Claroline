@@ -2088,7 +2088,8 @@ class QuestionController extends Controller
                     $interXHandler = new \UJM\ExoBundle\Form\InteractionQCMHandler(
                         NULL , NULL, $this->getDoctrine()->getManager(),
                         $this->container->get('ujm.exercise_services'),
-                        $this->container->get('security.context')->getToken()->getUser(), $exoID
+                        $this->container->get('security.context')->getToken()->getUser(), $exoID,
+                        $this->get('translator') 
                     );
 
                     break;
@@ -2103,7 +2104,8 @@ class QuestionController extends Controller
                     $interXHandler = new \UJM\ExoBundle\Form\InteractionGraphicHandler(
                         NULL , NULL, $this->getDoctrine()->getManager(),
                         $this->container->get('ujm.exercise_services'),
-                        $this->container->get('security.context')->getToken()->getUser(), $exoID
+                        $this->container->get('security.context')->getToken()->getUser(), $exoID,
+                        $this->get('translator') 
                     );
 
                     break;
@@ -2118,7 +2120,8 @@ class QuestionController extends Controller
                     $interXHandler = new \UJM\ExoBundle\Form\InteractionHoleHandler(
                         NULL , NULL, $this->getDoctrine()->getManager(),
                         $this->container->get('ujm.exercise_services'),
-                        $this->container->get('security.context')->getToken()->getUser(), $exoID
+                        $this->container->get('security.context')->getToken()->getUser(), $exoID,
+                        $this->get('translator') 
                     );
 
                     break;
@@ -2133,7 +2136,8 @@ class QuestionController extends Controller
                     $interXHandler = new \UJM\ExoBundle\Form\InteractionOpenHandler(
                         NULL , NULL, $this->getDoctrine()->getManager(),
                         $this->container->get('ujm.exercise_services'),
-                        $this->container->get('security.context')->getToken()->getUser(), $exoID
+                        $this->container->get('security.context')->getToken()->getUser(), $exoID,
+                        $this->get('translator') 
                     );
 
                     break;
@@ -2147,7 +2151,8 @@ class QuestionController extends Controller
                     $interXHandler = new \UJM\ExoBundle\Form\InteractionMatchingHandler(
                         NULL , NULL, $this->getDoctrine()->getManager(),
                         $this->container->get('ujm.exercise_services'),
-                        $this->container->get('security.context')->getToken()->getUser(), $exoID
+                        $this->container->get('security.context')->getToken()->getUser(), $exoID,
+                        $this->get('translator') 
                     );
 
                     break;

@@ -34,7 +34,7 @@ class InteractionGraphicController extends Controller
         $formHandler = new InteractionGraphicHandler(
             $form, $this->get('request'), $this->getDoctrine()->getManager(),
             $this->container->get('ujm.exercise_services'),
-            $user, $exoID
+            $user, $exoID, $this->get('translator')
         );
 
          $graphicHandler = $formHandler->processAdd();
@@ -131,7 +131,8 @@ class InteractionGraphicController extends Controller
         $formHandler = new InteractionGraphicHandler(
             $editForm, $this->get('request'), $this->getDoctrine()->getManager(),
             $this->container->get('ujm.exercise_services'),
-            $this->container->get('security.context')->getToken()->getUser()
+            $this->container->get('security.context')->getToken()->getUser(),
+            $this->get('translator')
         );
 
         if ($formHandler->processUpdate($entity)) {

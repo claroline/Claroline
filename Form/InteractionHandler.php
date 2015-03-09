@@ -6,7 +6,7 @@ use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\ORM\EntityManager;
 use UJM\ExoBundle\Entity\Category;
-
+use Symfony\Component\Translation\Translator;
 use Claroline\CoreBundle\Entity\User;
 
 use UJM\ExoBundle\Entity\Exercise;
@@ -20,6 +20,7 @@ abstract class InteractionHandler
     protected $user;
     protected $exercise;
     protected $isClone = FALSE;
+    protected $translator;
 
     /**
      * Constructor
@@ -32,9 +33,10 @@ abstract class InteractionHandler
      * @param \UJM\ExoBundle\Services\classes\exerciseServices $exoServ
      * @param \Claroline\CoreBundle\Entity\User $user
      * @param integer $exercise $exercise id Exercise if the Interaction is created or modified since an exercise if since the bank $exercise=-1
-     *
+     * @param Translation $translator
+     * 
      */
-    public function __construct(Form $form = NULL, Request $request = NULL, EntityManager $em, $exoServ, User $user, $exercise=-1)
+    public function __construct(Form $form = NULL, Request $request = NULL, EntityManager $em, $exoServ, User $user, $exercise=-1, Translator $translator=NULL)
     {
         $this->form     = $form;
         $this->request  = $request;
@@ -42,6 +44,7 @@ abstract class InteractionHandler
         $this->exoServ  = $exoServ;
         $this->user     = $user;
         $this->exercise = $exercise;
+        $this->translator = $translator;
     }
 
     /**
@@ -137,8 +140,8 @@ abstract class InteractionHandler
     {   
         $data = $this->form->getData()->getInteraction()->getQuestion();
         $checkCategory = False;
-        //$default = $this->get('translator')->trans('default');
-        $default='Défaut';
+        $default = $this->translator->trans('default');
+       // $default='Défaut';
             if($data->getCategory()== null)
             {   
                 $uid=$this->user->getId();

@@ -37,7 +37,8 @@ class InteractionHoleController extends Controller
         $formHandler = new InteractionHoleHandler(
             $form, $this->get('request'), $this->getDoctrine()->getManager(),
             $this->container->get('ujm.exercise_services'),
-            $this->container->get('security.context')->getToken()->getUser(), $exoID
+            $this->container->get('security.context')->getToken()->getUser(), $exoID,
+            $this->get('translator') 
         );
 
         $formHandler->setValidator($this->get('validator'));
@@ -130,7 +131,8 @@ class InteractionHoleController extends Controller
         $formHandler = new InteractionHoleHandler(
             $editForm, $this->get('request'), $this->getDoctrine()->getManager(),
             $this->container->get('ujm.exercise_services'),
-            $this->container->get('security.context')->getToken()->getUser(), $exoID
+            $this->container->get('security.context')->getToken()->getUser(), $exoID,
+            $this->get('translator') 
         );
 
         $formHandler->setValidator($this->get('validator'));

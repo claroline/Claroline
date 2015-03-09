@@ -38,7 +38,8 @@ class InteractionQCMController extends Controller
         $formHandler = new InteractionQCMHandler(
             $form, $this->get('request'), $this->getDoctrine()->getManager(),
             $this->container->get('ujm.exercise_services'),
-            $this->container->get('security.context')->getToken()->getUser(), $exoID
+            $this->container->get('security.context')->getToken()->getUser(), $exoID,
+            $this->get('translator') 
         );
 
         $qcmHandler = $formHandler->processAdd();
@@ -125,7 +126,8 @@ class InteractionQCMController extends Controller
         $formHandler = new InteractionQCMHandler(
             $editForm, $this->get('request'), $this->getDoctrine()->getManager(),
             $this->container->get('ujm.exercise_services'),
-            $this->container->get('security.context')->getToken()->getUser()
+            $this->container->get('security.context')->getToken()->getUser(),
+            $this->get('translator') 
         );
 
         if ($formHandler->processUpdate($interQCM)) {

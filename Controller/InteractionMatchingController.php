@@ -38,7 +38,8 @@ class InteractionMatchingController extends Controller
         $formHandler = new InteractionMatchingHandler(
                 $form, $this->get('request'), $this->getDoctrine()->getManager(),
                 $this->container->get('ujm.exercise_services'),
-                $this->container->get('security.context')->getToken()->getUser(), $exoID
+                $this->container->get('security.context')->getToken()->getUser(), $exoID,
+                $this->get('translator') 
          );
         $matchingHandler = $formHandler->processAdd();
         if ( $matchingHandler === TRUE ) {
@@ -125,7 +126,8 @@ class InteractionMatchingController extends Controller
         $formHandler = new InteractionMatchingHandler(
             $editForm, $this->get('request'), $this->getDoctrine()->getManager(),
             $this->container->get('ujm.exercise_services'),
-            $this->container->get('security.context')->getToken()->getUser()
+            $this->container->get('security.context')->getToken()->getUser(),
+            $this->get('translator') 
         );
 
         if ( $formHandler->processUpdate($interMatching) ) {

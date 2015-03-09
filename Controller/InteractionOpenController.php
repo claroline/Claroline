@@ -39,7 +39,8 @@ class InteractionOpenController extends Controller
         $formHandler = new InteractionOpenHandler(
             $form, $this->get('request'), $this->getDoctrine()->getManager(),
             $this->container->get('ujm.exercise_services'),
-            $this->container->get('security.context')->getToken()->getUser(), $exoID
+            $this->container->get('security.context')->getToken()->getUser(), $exoID,
+            $this->get('translator')   
         );
         $openHandler = $formHandler->processAdd();
         if ($openHandler === TRUE) {
@@ -126,7 +127,8 @@ class InteractionOpenController extends Controller
         $formHandler = new InteractionOpenHandler(
             $editForm, $this->get('request'), $this->getDoctrine()->getManager(),
             $this->container->get('ujm.exercise_services'),
-            $this->container->get('security.context')->getToken()->getUser()
+            $this->container->get('security.context')->getToken()->getUser(),
+            $this->get('translator') 
         );
 
         if ($formHandler->processUpdate($interOpen)) {
