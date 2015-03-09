@@ -253,10 +253,14 @@ class OrderedToolRepository extends EntityRepository
 
     public function findConfigurableDesktopOrderedToolsByUser(
         User $user,
+        array $excludedToolNames,
         $type = 0,
         $executeQuery = true
     )
     {
+        $excludedToolNames[] = 'home';
+        $excludedToolNames[] = 'parameters';
+
         $dql = '
             SELECT ot
             FROM Claroline\CoreBundle\Entity\Tool\OrderedTool ot
@@ -264,15 +268,13 @@ class OrderedToolRepository extends EntityRepository
             WHERE ot.workspace IS NULL
             AND ot.type = :type
             AND ot.user = :user
-            AND t.name != :home
-            AND t.name != :parameters
+            AND t.name NOT IN (:excludedToolNames)
             ORDER BY ot.order
         ';
 
         $query = $this->_em->createQuery($dql);
         $query->setParameter('user', $user);
-        $query->setParameter('home', 'home');
-        $query->setParameter('parameters', 'parameters');
+        $query->setParameter('excludedToolNames', $excludedToolNames);
         $query->setParameter('type', $type);
 
         return $executeQuery ? $query->getResult() : $query;
@@ -290,6 +292,32 @@ class OrderedToolRepository extends EntityRepository
             WHERE ot.workspace IS NULL
             AND ot.user IS NULL
             AND ot.type = :type
+            AND t.name != :home
+            AND t.name != :parameters
+            ORDER BY ot.order
+        ';
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('home', 'home');
+        $query->setParameter('parameters', 'parameters');
+        $query->setParameter('type', $type);
+
+        return $executeQuery ? $query->getResult() : $query;
+    }
+
+    public function findLockedConfigurableDesktopOrderedToolsByTypeForAdmin(
+        $type = 0,
+        $executeQuery = true
+    )
+    {
+        $dql = '
+            SELECT ot
+            FROM Claroline\CoreBundle\Entity\Tool\OrderedTool ot
+            JOIN ot.tool t
+            WHERE ot.workspace IS NULL
+            AND ot.user IS NULL
+            AND ot.type = :type
+            AND ot.locked = true
             AND t.name != :home
             AND t.name != :parameters
             ORDER BY ot.order

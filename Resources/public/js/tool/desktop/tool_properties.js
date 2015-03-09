@@ -38,7 +38,7 @@
     });
     
     $('#tools-table-body').sortable({
-        items: 'tr',
+        items: '.row-tool-config',
         cursor: 'move'
     });
     

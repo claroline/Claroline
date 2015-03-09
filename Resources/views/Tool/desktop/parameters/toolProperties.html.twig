@@ -26,11 +26,27 @@
                         </tr>
                     </thead>
                     <tbody id="tools-table-body">
+                        {% for adminOrderedTool in adminOrderedTools %}
+                            {% set tool = adminOrderedTool.getTool() %}
+                            <tr class="row-locked-tool text-muted">
+                                <td>{{ tool.getName()|lower|trans({}, 'tools') }} </td>
+                                <td>
+                                    <input
+                                        type="checkbox"
+                                        class="chk-tool-visible"
+                                        value="1"
+                                        disabled
+                                        {% if adminOrderedTool.isVisibleInDesktop() %} checked {% endif %}
+                                    />
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        
                         {% for orderedTool in orderedTools %}
                             {% set tool = orderedTool.getTool() %}
-                            <tr class='row-tool-config'
-                                data-tool-id={{ tool.getId () }}
-                                data-ordered-tool-id={{ orderedTool.getId () }}
+                            <tr class="row-tool-config"
+                                data-tool-id="{{ tool.getId () }}"
+                                data-ordered-tool-id="{{ orderedTool.getId () }}"
                             >
                                 <td>{{ tool.getName()|lower|trans({}, 'tools') }} </td>
                                 <td>

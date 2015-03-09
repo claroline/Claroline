@@ -48,9 +48,9 @@
                 <tbody id="tools-table-body">
                     {% for orderedTool in orderedTools %}
                         {% set tool = orderedTool.getTool() %}
-                        <tr class='row-tool-config'
-                            data-tool-id={{ tool.getId () }}
-                            data-ordered-tool-id={{ orderedTool.getId () }}
+                        <tr class="row-tool-config"
+                            data-tool-id="{{ tool.getId () }}"
+                            data-ordered-tool-id="{{ orderedTool.getId () }}"
                         >
                             <td>{{ tool.getName()|lower|trans({}, 'tools') }} </td>
                             <td class="text-center">

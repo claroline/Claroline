@@ -1076,12 +1076,14 @@ class ToolManager
      */
     public function getConfigurableDesktopOrderedToolsByUser(
         User $user,
+        array $excludedToolNames,
         $type = 0,
         $executeQuery = true
     )
     {
         return $this->orderedToolRepo->findConfigurableDesktopOrderedToolsByUser(
             $user,
+            $excludedToolNames,
             $type,
             $executeQuery
         );
@@ -1093,6 +1095,17 @@ class ToolManager
     )
     {
         return $this->orderedToolRepo->findConfigurableDesktopOrderedToolsByTypeForAdmin(
+            $type,
+            $executeQuery
+        );
+    }
+
+    public function getLockedConfigurableDesktopOrderedToolsByTypeForAdmin(
+        $type = 0,
+        $executeQuery = true
+    )
+    {
+        return $this->orderedToolRepo->findLockedConfigurableDesktopOrderedToolsByTypeForAdmin(
             $type,
             $executeQuery
         );
