@@ -22,6 +22,8 @@ class Builder extends ContainerAware
         $securityContext = $this->container->get('security.context');
         $hasRoleExtension = $this->container->get('claroline.core_bundle.twig.has_role_extension');
         $router = $this->container->get('router');
+        $dispatcher = $this->container->get('event_dispatcher');
+        $toolManager = $this->container->get('claroline.manager.tool_manager');
 
         $menu = $factory->createItem('root')
             ->setChildrenAttribute('class', 'dropdown-menu')
@@ -41,59 +43,28 @@ class Builder extends ContainerAware
         $this->addDivider($menu, '1');
 
         $user = $securityContext->getToken()->getUser();
+        $desktopTools = $toolManager->getDisplayedDesktopOrderedTools($user, 1);
 
-        if ($user instanceof \Claroline\CoreBundle\Entity\User) {
-            $pws = $user->getPersonalWorkspace();
-        } else {
-            $pws = null;
+        foreach ($desktopTools as $tool) {
+            $toolName = $tool->getName();
+
+            if ($toolName === 'home' || $toolName === 'parameters') {
+                continue;
+            }
+            $event = new ConfigureMenuEvent($factory, $menu, $tool);
+
+            if ($dispatcher->hasListeners('claroline_top_bar_right_menu_configure_desktop_tool_' . $toolName)) {
+                $dispatcher->dispatch(
+                    'claroline_top_bar_right_menu_configure_desktop_tool_' . $toolName,
+                    $event
+                );
+            } else {
+                $dispatcher->dispatch(
+                    'claroline_top_bar_right_menu_configure_desktop_tool',
+                    $event
+                );
+            }
         }
-
-        if ($pws) {
-            $menu->addChild(
-                $translator->trans('my_workspace', array(), 'platform'),
-                array(
-                    'route' => 'claro_workspace_open_tool',
-                    'routeParameters' => array(
-                        'workspaceId' => $pws->getId(),
-                        'toolName' => 'home'
-                        )
-                    )
-                )
-            ->setAttribute('class', 'dropdown')
-            ->setAttribute('role', 'presentation')
-            ->setExtra('icon', 'fa fa-book');
-        }
-
-        $menu->addChild(
-            $translator->trans('my_agenda', array(), 'platform'),
-            array(
-                'route' => 'claro_desktop_open_tool',
-                'routeParameters' => array('toolName' => 'agenda')
-            )
-        )->setAttribute('class', 'dropdown')
-            ->setAttribute('role', 'presentation')
-            ->setExtra('icon', 'fa fa-calendar');
-
-        $menu->addChild(
-            $translator->trans('my_resources', array(), 'platform'),
-            array(
-                'route' => 'claro_desktop_open_tool',
-                'routeParameters' => array('toolName' => 'resource_manager')
-            )
-        )
-            ->setAttribute('class', 'dropdown')
-            ->setAttribute('role', 'presentation')
-            ->setExtra('icon', 'fa fa-folder')
-            ->setExtra('uri-add', '#resources/0');
-
-        $menu->addChild(
-            $translator->trans('my_badges', array(), 'platform'),
-            array(
-                'route' => 'claro_profile_view_badges'
-            )
-        )->setAttribute('class', 'dropdown')
-            ->setAttribute('role', 'presentation')
-            ->setExtra('icon', 'fa fa-trophy');
 
         //allowing the menu to be extended
         $this->container->get('event_dispatcher')->dispatch(
