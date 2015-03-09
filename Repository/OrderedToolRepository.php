@@ -155,6 +155,54 @@ class OrderedToolRepository extends EntityRepository
         return $executeQuery ? $query->execute() : $query;
     }
 
+    public function incOrderedToolOrderForRangeForAdmin(
+        $fromOrder,
+        $toOrder,
+        $type = 0,
+        $executeQuery = true
+    )
+    {
+        $dql = '
+            UPDATE Claroline\CoreBundle\Entity\Tool\OrderedTool ot
+            SET ot.order = ot.order + 1
+            WHERE ot.user IS NULL
+            AND ot.workspace IS NULL
+            AND ot.type = :type
+            AND ot.order >= :fromOrder
+            AND ot.order < :toOrder
+        ';
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('fromOrder', $fromOrder);
+        $query->setParameter('toOrder', $toOrder);
+        $query->setParameter('type', $type);
+
+        return $executeQuery ? $query->execute() : $query;
+    }
+
+    public function decOrderedToolOrderForRangeForAdmin(
+        $fromOrder,
+        $toOrder,
+        $type = 0,
+        $executeQuery = true
+    )
+    {
+        $dql = '
+            UPDATE Claroline\CoreBundle\Entity\Tool\OrderedTool ot
+            SET ot.order = ot.order - 1
+            WHERE ot.user IS NULL
+            AND ot.workspace IS NULL
+            AND ot.type = :type
+            AND ot.order > :fromOrder
+            AND ot.order <= :toOrder
+        ';
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('fromOrder', $fromOrder);
+        $query->setParameter('toOrder', $toOrder);
+        $query->setParameter('type', $type);
+
+        return $executeQuery ? $query->execute() : $query;
+    }
+
     public function findPersonalDisplayableByWorkspaceAndRoles(
         Workspace $workspace,
         array $roles,
@@ -223,6 +271,31 @@ class OrderedToolRepository extends EntityRepository
 
         $query = $this->_em->createQuery($dql);
         $query->setParameter('user', $user);
+        $query->setParameter('home', 'home');
+        $query->setParameter('parameters', 'parameters');
+        $query->setParameter('type', $type);
+
+        return $executeQuery ? $query->getResult() : $query;
+    }
+
+    public function findConfigurableDesktopOrderedToolsByTypeForAdmin(
+        $type = 0,
+        $executeQuery = true
+    )
+    {
+        $dql = '
+            SELECT ot
+            FROM Claroline\CoreBundle\Entity\Tool\OrderedTool ot
+            JOIN ot.tool t
+            WHERE ot.workspace IS NULL
+            AND ot.user IS NULL
+            AND ot.type = :type
+            AND t.name != :home
+            AND t.name != :parameters
+            ORDER BY ot.order
+        ';
+
+        $query = $this->_em->createQuery($dql);
         $query->setParameter('home', 'home');
         $query->setParameter('parameters', 'parameters');
         $query->setParameter('type', $type);

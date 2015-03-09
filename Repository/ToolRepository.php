@@ -129,6 +129,32 @@ class ToolRepository extends EntityRepository
     }
 
     /**
+     * Returns the non-visible tools in a user's desktop in admin configuration.
+     *
+     * @return array[Tool]
+     */
+    public function findDesktopUndisplayedToolsByTypeForAdmin($orderedToolType = 0)
+    {
+        $dql = "
+            SELECT tool
+            FROM Claroline\CoreBundle\Entity\Tool\Tool tool
+            WHERE tool NOT IN (
+                SELECT tool_2
+                FROM Claroline\CoreBundle\Entity\Tool\Tool tool_2
+                JOIN tool_2.orderedTools ot_2
+                WHERE ot_2.user IS NULL
+                AND ot_2.workspace IS NULL
+                AND ot_2.type = :type
+            )
+            AND tool.isDisplayableInDesktop = true
+        ";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('type', $orderedToolType);
+
+        return $query->getResult();
+    }
+
+    /**
      * Returns the non-visible tools in a workspace.
      *
      * @param Workspace $workspace

@@ -8,12 +8,15 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2015/03/09 12:14:05
+ * Generation date: 2015/03/09 02:04:29
  */
-class Version20150309121403 extends AbstractMigration
+class Version20150309140427 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
+        $this->addSql("
+            DROP INDEX ordered_tool_unique_tool_ws_usr
+        ");
         $this->addSql("
             ALTER TABLE claro_ordered_tool 
             ADD ordered_tool_type INT NOT NULL
@@ -22,10 +25,18 @@ class Version20150309121403 extends AbstractMigration
             ALTER TABLE claro_ordered_tool 
             ADD is_locked BOOLEAN NOT NULL
         ");
+        $this->addSql("
+            CREATE UNIQUE INDEX ordered_tool_unique_tool_ws_usr_type ON claro_ordered_tool (
+                tool_id, workspace_id, user_id, ordered_tool_type
+            )
+        ");
     }
 
     public function down(Schema $schema)
     {
+        $this->addSql("
+            DROP INDEX ordered_tool_unique_tool_ws_usr_type
+        ");
         $this->addSql("
             ALTER TABLE claro_ordered_tool 
             DROP ordered_tool_type
@@ -33,6 +44,9 @@ class Version20150309121403 extends AbstractMigration
         $this->addSql("
             ALTER TABLE claro_ordered_tool 
             DROP is_locked
+        ");
+        $this->addSql("
+            CREATE UNIQUE INDEX ordered_tool_unique_tool_ws_usr ON claro_ordered_tool (tool_id, workspace_id, user_id)
         ");
     }
 }

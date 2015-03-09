@@ -202,6 +202,40 @@ class ToolManager
     }
 
     /**
+     * Returns the sorted list of OrderedTools for configuration in admin.
+     *
+     * @return \Claroline\CoreBundle\Entity\Tool\OrderedTool
+     */
+    public function getDesktopToolsConfigurationArrayForAdmin($type = 0)
+    {
+        $orderedToolList = array();
+        $desktopTools = $this->orderedToolRepo->findBy(
+            array('user' => null, 'workspace' => null, 'type' => $type)
+        );
+
+        foreach ($desktopTools as $desktopTool) {
+            //this field isn't mapped
+            $desktopTool->getTool()->setVisible($desktopTool->isVisibleInDesktop());
+            $orderedToolList[$desktopTool->getOrder()] = $desktopTool->getTool();
+        }
+
+        $undisplayedTools = $this->toolRepo->findDesktopUndisplayedToolsByTypeForAdmin($type);
+
+        foreach ($undisplayedTools as $tool) {
+            //this field isn't mapped
+            $tool->setVisible(false);
+        }
+
+        $this->addMissingDesktopToolsForAdmin(
+            $undisplayedTools,
+            count($desktopTools) + 1,
+            $type
+        );
+
+        return $this->utilities->arrayFill($orderedToolList, $undisplayedTools);
+    }
+
+    /**
      * Returns the sorted list of OrderedTools for a user.
      *
      * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
@@ -778,6 +812,33 @@ class ToolManager
         $this->om->flush();
     }
 
+    private function addMissingDesktopToolsForAdmin(
+        array $missingTools,
+        $startPosition,
+        $type = 0
+    )
+    {
+        foreach ($missingTools as $tool) {
+            $wot = $this->orderedToolRepo->findOneBy(
+                array('user' => null, 'workspace' => null, 'tool' => $tool, 'type' => $type)
+            );
+
+            if (!$wot) {
+                $orderedTool = new OrderedTool();
+                $orderedTool->setName($tool->getName());
+                $orderedTool->setOrder($startPosition);
+                $orderedTool->setTool($tool);
+                $orderedTool->setVisibleInDesktop(false);
+                $orderedTool->setType($type);
+                $this->om->persist($orderedTool);
+            }
+
+            $startPosition++;
+        }
+
+        $this->om->flush();
+    }
+
     public function updateWorkspaceOrderedToolOrder(
         OrderedTool $orderedTool,
         $newOrder,
@@ -829,6 +890,35 @@ class ToolManager
         } else {
             $this->orderedToolRepo->decDesktopOrderedToolOrderForRange(
                 $orderedTool->getUser(),
+                $order,
+                $newOrder,
+                $type,
+                $executeQuery
+            );
+        }
+        $orderedTool->setOrder($newOrder);
+        $this->om->persist($orderedTool);
+        $this->om->flush();
+    }
+
+    public function updateOrderedToolOrderForAdmin(
+        OrderedTool $orderedTool,
+        $newOrder,
+        $type = 0,
+        $executeQuery = true
+    )
+    {
+        $order = $orderedTool->getOrder();
+
+        if ($newOrder < $order) {
+            $this->orderedToolRepo->incOrderedToolOrderForRangeForAdmin(
+                $newOrder,
+                $order,
+                $type,
+                $executeQuery
+            );
+        } else {
+            $this->orderedToolRepo->decOrderedToolOrderForRangeForAdmin(
                 $order,
                 $newOrder,
                 $type,
@@ -992,6 +1082,17 @@ class ToolManager
     {
         return $this->orderedToolRepo->findConfigurableDesktopOrderedToolsByUser(
             $user,
+            $type,
+            $executeQuery
+        );
+    }
+
+    public function getConfigurableDesktopOrderedToolsByTypeForAdmin(
+        $type = 0,
+        $executeQuery = true
+    )
+    {
+        return $this->orderedToolRepo->findConfigurableDesktopOrderedToolsByTypeForAdmin(
             $type,
             $executeQuery
         );

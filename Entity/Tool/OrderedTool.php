@@ -12,7 +12,6 @@
 namespace Claroline\CoreBundle\Entity\Tool;
 
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Tool\ToolRights;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -25,8 +24,8 @@ use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
  *     name="claro_ordered_tool",
  *     uniqueConstraints={
  *         @ORM\UniqueConstraint(
- *             name="ordered_tool_unique_tool_ws_usr",
- *             columns={"tool_id", "workspace_id", "user_id"}
+ *             name="ordered_tool_unique_tool_ws_usr_type",
+ *             columns={"tool_id", "workspace_id", "user_id", "ordered_tool_type"}
  *         ),
  *         @ORM\UniqueConstraint(
  *             name="ordered_tool_unique_name_by_workspace",
