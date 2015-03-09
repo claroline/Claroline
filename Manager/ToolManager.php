@@ -1029,4 +1029,10 @@ class ToolManager
         }
         $this->om->endFlushSuite();
     }
+
+    public function persistAdminTool(AdminTool $adminTool)
+    {
+        $this->om->persist($adminTool);
+        $this->om->flush();
+    }
 }

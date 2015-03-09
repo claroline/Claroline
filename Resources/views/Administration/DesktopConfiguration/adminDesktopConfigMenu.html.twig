@@ -1,6 +1,8 @@
 {% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
 
-{% block title %}{{ parent() ~ ' - ' ~ 'home_tabs' | trans({}, 'platform') | striptags | raw }}{% endblock %}
+{% block title %}
+    {{ parent() ~ ' - ' ~ 'desktop_and_home' | trans({}, 'tools') | striptags | raw }}
+{% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
@@ -19,7 +21,7 @@
                 'href': path('claro_admin_index')
             },
             {
-                'name': 'home_tabs'|trans({}, 'platform'),
+                'name': 'desktop_and_home'|trans({}, 'tools'),
                 'href': ''
             }
         ])
@@ -30,11 +32,21 @@
 
     <div class="panel-heading">
         <h3 class="panel-title">
-            {{ 'admin_home_tabs_configuration'|trans({}, 'platform') }}
+            {{ 'admin_desktop_and_home_tabs_configuration'|trans({}, 'platform') }}
         </h3>
     </div>
 
     <div class="list-group menu">
+        <a class="list-group-item"
+           href=""
+        >
+            <span>{{ 'menu_bar'|trans({}, 'platform') }}</span>
+        </a>
+        <a class="list-group-item"
+           href=""
+        >
+            <span>{{ 'user_menu'|trans({}, 'platform') }}</span>
+        </a>
         <a class="list-group-item" href="{{ path('claro_admin_desktop_home_tabs_configuration') }}">
             <span>{{ 'desktop_home_tabs'|trans({}, 'platform') }}</span>
         </a>

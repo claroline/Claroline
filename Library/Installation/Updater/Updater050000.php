@@ -11,9 +11,10 @@
 namespace Claroline\CoreBundle\Library\Installation\Updater;
 
 use Claroline\CoreBundle\Entity\Tool\Tool;
+use Claroline\InstallationBundle\Updater\Updater;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-class Updater050000
+class Updater050000 extends Updater
 {
     private $container;
     private $toolManager;
@@ -27,6 +28,7 @@ class Updater050000
     public function postUpdate()
     {
         $this->createMessageDesktopTool();
+        $this->updateHomeTabsAdminTool();
     }
 
     private function createMessageDesktopTool()
@@ -51,15 +53,17 @@ class Updater050000
         $this->toolManager->createOrderedToolByToolForAllUsers($tool);
     }
 
-    public function setLogger($logger)
+    private function updateHomeTabsAdminTool()
     {
-        $this->logger = $logger;
-    }
+        $this->log('Updating home tabs admin tool...');
+        $homeTabAdminTool = $this->toolManager->getAdminToolByName('home_tabs');
+        $desktopAdminTool = $this->toolManager
+            ->getAdminToolByName('desktop_and_home');
 
-    private function log($message)
-    {
-        if ($log = $this->logger) {
-            $log('    ' . $message);
+        if (!is_null($homeTabAdminTool) && is_null($desktopAdminTool)) {
+            $homeTabAdminTool->setName('desktop_and_home');
+            $homeTabAdminTool->setClass('home');
+            $this->toolManager->persistAdminTool($homeTabAdminTool);
         }
     }
 }
