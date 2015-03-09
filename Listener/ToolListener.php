@@ -203,7 +203,7 @@ class ToolListener
         }
 
         //otherwise only parameters exists so we return the parameters page.
-        $params['_controller'] = 'ClarolineCoreBundle:Tool\DesktopParameters:desktopConfigureTool';
+        $params['_controller'] = 'ClarolineCoreBundle:Tool\DesktopParameters:desktopParametersMenu';
 
         $subRequest = $this->container->get('request')->duplicate(
             array(),

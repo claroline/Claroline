@@ -61,8 +61,28 @@ class DesktopParametersController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/tools",
-     *     name="claro_tool_properties"
+     *     "/tools/parameters/menu",
+     *     name="claro_desktop_parameters_menu"
+     * )
+     *
+     * @EXT\Template("ClarolineCoreBundle:Tool\desktop\parameters:desktopParametersMenu.html.twig")
+     * @EXT\ParamConverter("user", options={"authenticatedUser"=true})
+     *
+     * Displays the desktop tools configuration menu page.
+     *
+     * @param \Claroline\CoreBundle\Entity\User $user
+     * @return Response
+     */
+    public function desktopParametersMenuAction(User $user)
+    {
+        return array();
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/tools/type/{type}",
+     *     name="claro_tool_properties",
+     *     defaults={"type"=0}
      * )
      *
      * @EXT\Template("ClarolineCoreBundle:Tool\desktop\parameters:toolProperties.html.twig")
@@ -73,21 +93,24 @@ class DesktopParametersController extends Controller
      * @param \Claroline\CoreBundle\Entity\User $user
      * @return Response
      */
-    public function desktopConfigureToolAction(User $user)
+    public function desktopConfigureToolAction(User $user, $type = 0)
     {
-        $tools = $this->toolManager->getDesktopToolsConfigurationArray($user);
-        $orderedTools = $this->toolManager->getConfigurableDesktopOrderedToolsByUser($user);
+        $tools = $this->toolManager->getDesktopToolsConfigurationArray($user, $type);
+        $orderedTools = $this->toolManager
+            ->getConfigurableDesktopOrderedToolsByUser($user, $type);
 
         return array(
             'tools' => $tools,
-            'orderedTools' => $orderedTools
+            'orderedTools' => $orderedTools,
+            'type' => $type
         );
     }
 
     /**
      * @EXT\Route(
-     *     "/tools/edit",
+     *     "/tools/edit/type/{type}",
      *     name="claro_desktop_tools_roles_edit",
+     *     defaults={"type"=0},
      *     options={"expose"=true}
      * )
      * @EXT\ParamConverter("user", options={"authenticatedUser"=true})
@@ -96,7 +119,7 @@ class DesktopParametersController extends Controller
      * @param \Claroline\CoreBundle\Entity\User $user
      * @return Response
      */
-    public function editToolsRolesAction(User $user)
+    public function editToolsRolesAction(User $user, $type = 0)
     {
         $parameters = $this->request->request->all();
         $this->om->startFlushSuite();
@@ -105,12 +128,12 @@ class DesktopParametersController extends Controller
             if (strpos($parameter, 'tool-') === 0) {
                 $toolId = (int) str_replace('tool-', '', $parameter);
                 $tool = $this->toolManager->getToolById($toolId);
-                $this->toolManager->setToolPosition($tool, $value, $user);
+                $this->toolManager->setToolPosition($tool, $value, $user, null, $type);
             }
         }
 
         //reset the visiblity for every tool
-        $this->toolManager->resetToolsVisiblity($user, null);
+        $this->toolManager->resetToolsVisiblity($user, null, $type);
 
         //set tool visibility
         foreach ($parameters as $parameter => $value) {
@@ -119,7 +142,7 @@ class DesktopParametersController extends Controller
                 $matches = array();
                 preg_match('/tool-(.*)/', $parameter, $matches);
                 $tool = $this->toolManager->getToolById((int) $matches[1]);
-                $this->toolManager->setDesktopToolVisible($tool, $user);
+                $this->toolManager->setDesktopToolVisible($tool, $user, $type);
             }
         }
 
@@ -150,8 +173,9 @@ class DesktopParametersController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/tools/order/update/tool/{orderedTool}/with/{otherOrderedTool}/mode/{mode}",
+     *     "/tools/order/update/tool/{orderedTool}/with/{otherOrderedTool}/mode/{mode}/type/{type}",
      *     name="claro_desktop_update_ordered_tool_order",
+     *     defaults={"type"=0},
      *     options={"expose"=true}
      * )
      * @EXT\ParamConverter("user", options={"authenticatedUser"=true})
@@ -159,14 +183,16 @@ class DesktopParametersController extends Controller
      * @param OrderedTool $orderedTool
      * @param OrderedTool $otherOrderedTool
      * @param string $mode
+     * @param int type
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function updateWorkspaceOrderedToolOrderAction(
+    public function updateDesktopOrderedToolOrderAction(
         User $user,
         OrderedTool $orderedTool,
         OrderedTool $otherOrderedTool,
-        $mode
+        $mode,
+        $type = 0
     )
     {
         if ($orderedTool->getUser() === $user &&
@@ -196,7 +222,8 @@ class DesktopParametersController extends Controller
 
             $this->toolManager->updateDesktopOrderedToolOrder(
                 $orderedTool,
-                $newOrder
+                $newOrder,
+                $type
             );
 
             return new Response('success', 204);

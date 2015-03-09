@@ -318,6 +318,7 @@ desktop: Desktop
 desktop_home_tab_creation: 'Desktop Home tab creation'
 desktop_home_tab_edition: 'Desktop Home tab edition'
 desktop_home_tabs: 'Desktop Home tabs'
+desktop_parameters: 'Desktop parameters'
 desktop_tools: 'Desktop tools'
 directory: Directory
 directory_form_name: Name
@@ -550,6 +551,8 @@ manual: Manual
 manual_evaluation_explanation: 'Manual evaluation by a workspace manager'
 max_size_is: 'The maximum size is %size%'
 media_most_viewed: 'Most viewed media'
+menu_bar: 'Menu bar'
+menu_bar_configuration: 'Menu bar configuration'
 message_form_content: Content
 message_form_object: Object
 message_form_to: To
@@ -994,6 +997,8 @@ user_creation_success: The user account has been successfully created.
 user_limit_reached: The user limit has been reached.
 user_limit_success_update: The user limit by role has been successfully updated.
 user_limit_too_low: There is already %total% %role%(s). The limit %newMax% is too low.
+user_menu: 'User menu'
+user_menu_configuration: 'User menu configuration'
 user_parameters: 'User parameters'
 user_picker: 'User picker'
 user_profile: 'User profile'

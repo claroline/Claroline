@@ -318,6 +318,7 @@ desktop: Bureau
 desktop_home_tab_creation: 'Création d''un onglet pour le bureau'
 desktop_home_tab_edition: 'Edition de l''onglet pour le bureau'
 desktop_home_tabs: 'Onglets pour le bureau'
+desktop_parameters: 'Paramètres du bureau'
 desktop_tools: 'Outils du bureau'
 directory: Répertoire
 directory_form_name: Nom
@@ -552,6 +553,8 @@ manual: Manuelle
 manual_evaluation_explanation: 'Evaluation manuelle par un gestionnaire de l''espace d''activités'
 max_size_is: 'La taille maximale est %size%'
 media_most_viewed: 'Media les plus consultés'
+menu_bar: 'Barre de menu'
+menu_bar_configuration: 'Configuration de la barre de menu'
 message_form_content: Contenu
 message_form_object: Objet
 message_form_to: A
@@ -1000,6 +1003,8 @@ user_limit_reached: La limite de création d'utilisateur a été atteinte.
 user_limit_reached: La limite de création d'utilisateurs a été atteinte.
 user_limit_success_update: La limite d'utilisateur par rôle a été mise à jour avec succès.
 user_limit_too_low: Il y a déjà %total% %role%(s). La limite %newMax% est trop faible.
+user_menu: 'Menu utilisateur'
+user_menu_configuration: 'Configuration du menu utilisateur'
 user_parameters: 'Paramètres de l''utilisateur'
 user_picker: 'Outil pour choisir un utilisateur'
 user_profile: 'Profil utilisateur'

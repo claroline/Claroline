@@ -1,14 +1,22 @@
 {% extends "ClarolineCoreBundle:Desktop:layout.html.twig" %}
 
-{% block title %}{{ parent() ~ ' - ' ~ "tool_parameters" | trans({}, "platform") | striptags | raw }}{% endblock %}
+{% if type == 0 %}
+    {% set title = 'menu_bar_configuration'|trans({}, 'platform') %}
+{% elseif type == 1 %}
+    {% set title = 'user_menu_configuration'|trans({}, 'platform') %}
+{% else %}
+    {% set title = 'tool_parameters'|trans({}, 'platform') %}
+{% endif %}
+
+{% block title %}{{ parent() ~ ' - ' ~ title | striptags | raw }}{% endblock %}
 
 {% block section_content %}
 
     <div class="panel-heading">
-        <h3 class="panel-title">{{ 'tool_parameters'|trans({}, 'platform') }}</h3>
+        <h3 class="panel-title">{{ title }}</h3>
     </div>
     <div class="panel-body">
-        <form id="desktop-tool-form" action="{{ path('claro_desktop_tools_roles_edit') }}">
+        <form id="desktop-tool-form" action="{{ path('claro_desktop_tools_roles_edit', {'type': type}) }}">
             <div class="table-responsive">
                 <table id="tool-table"  class="table table-striped table-bordered table-condensed">
                     <thead>
@@ -40,13 +48,15 @@
                     </tbody>
                 </table>
             </div>
-            <button id="edit-tools-btn" href="{{ path('claro_desktop_open') }}" class="btn btn-primary">
+            <button id="edit-tools-btn" href="{{ path('claro_desktop_parameters_menu') }}" class="btn btn-primary">
                 {{ 'edit'|trans({}, 'platform') }}
             </button>
-            <a class="btn btn-default" href="{{ path('claro_desktop_open') }}">
+            <a class="btn btn-default" href="{{ path('claro_desktop_parameters_menu') }}">
                 {{ 'cancel'|trans({}, 'platform') }}
             </a>
         </form>
+    </div>
+    <div id="datas-box" data-type="{{ type }}">
     </div>
 {% endblock %}
 {% block javascripts %}

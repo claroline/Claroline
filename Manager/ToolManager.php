@@ -191,7 +191,12 @@ class ToolManager
             $tool->setVisible(false);
         }
 
-        $this->addMissingDesktopTools($user, $undisplayedTools, count($desktopTools) + 1);
+        $this->addMissingDesktopTools(
+            $user,
+            $undisplayedTools,
+            count($desktopTools) + 1,
+            $type
+        );
 
         return $this->utilities->arrayFill($orderedToolList, $undisplayedTools);
     }
