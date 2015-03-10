@@ -35,7 +35,8 @@
             'click ul.zoom li a': 'zoom',
             'click a.open-picker': 'openPicker',
             'click a.add': 'add',
-            'click .select-all-nodes': 'selectAll'
+            'click .select-all-nodes': 'selectAll',
+            'click .list-view': 'listMode'
         },
         initialize: function (parameters, dispatcher) {
             this.parameters = parameters;
@@ -79,7 +80,6 @@
         },
         'delete': function (event) {
             if (!this.$(event.currentTarget).hasClass('disabled')) {
-                console.debug(this.checkedNodes.nodes);
                 var body = Twig.render(
                     ResourceDeleteConfirmMessage,
                     {'nodes': this.checkedNodes.nodes}
@@ -222,6 +222,16 @@
             // add the node to the selection or remove it if already present
             if (this.checkedNodes.nodes.hasOwnProperty(event.node.id) && !event.isChecked) {
                 delete this.checkedNodes.nodes[event.node.id];
+                //the .length method doesn't return the right result with the delete method.
+                //the splice one doesn't seem to be better
+                var length = 0;
+                for (var i in this.checkedNodes.nodes) {
+                    length++;
+                }
+
+                if (length === 0) {
+                    this.setInitialState();
+                }
             } else {
                 this.checkedNodes.nodes[event.node.id] = [
                     event.node.name,
@@ -343,6 +353,11 @@
             } else {
                 $('.node-chk-' + this.parameters.viewName).prop('checked', false);
             }
+        },
+        listMode: function (event) {
+            var chk = $(event.target);
+            var mode = chk.is(':checked') ? 'list': 'default';
+            this.dispatcher.trigger('list-mode', {'viewName': this.parameters.viewName, 'mode': mode});
         }
     });
 })();

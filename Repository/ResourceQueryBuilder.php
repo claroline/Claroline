@@ -92,6 +92,8 @@ class ResourceQueryBuilder
             "    icon.relativeUrl as large_icon,{$eol}" .
             "    node.mimeType as mime_type,{$eol}" .
             "    node.index as index_dir,{$eol}" .
+            "    node.creationDate as creation_date,{$eol}" .
+            "    node.modificationDate as modification_date,{$eol}" .
             "    node.published as published";
 
         if ($withMaxPermissions) {

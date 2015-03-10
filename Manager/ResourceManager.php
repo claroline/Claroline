@@ -31,6 +31,7 @@ use Claroline\CoreBundle\Manager\Exception\RightsException;
 use Claroline\CoreBundle\Manager\Exception\ExportResourceException;
 use Claroline\CoreBundle\Manager\Exception\WrongClassException;
 use Claroline\CoreBundle\Manager\Exception\ResourceMoveException;
+use Claroline\CoreBundle\Manager\Exception\ResourceNotFoundExcetion;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Claroline\CoreBundle\Persistence\ObjectManager;
@@ -469,11 +470,12 @@ class ResourceManager
 
         if ($index > $node->getIndex()) {
             $this->shiftLeftAt($node->getParent(), $index);
+            $node->setIndex($index);
         } else {
             $this->shiftRightAt($node->getParent(), $index);
+            $node->setIndex($index);
         }
 
-        $node->setIndex($index);
         $this->om->persist($node);
         $this->om->forceFlush();
         $this->reorder($node->getParent());
@@ -500,7 +502,7 @@ class ResourceManager
 
         foreach ($nodes as $node) {
             if ($node->getIndex() <= $index) {
-                $node->setIndex($node->getIndex() - 1);
+                $node->setIndex($node->getIndex());
             }
             $this->om->persist($node);
         }
@@ -709,6 +711,14 @@ class ResourceManager
             $copy->setResourceNode($newNode);
 
         } else {
+            if (!$resource) {
+                $message = 'The resource ' . $node->getName() . ' was not found';
+                $this->container
+                    ->get('logger')
+                    ->error($message);
+                throw new \ResourceNotFoundException($message);
+            }
+
             $event = $this->dispatcher->dispatch(
                 'copy_' . $node->getResourceType()->getName(),
                 'CopyResource',
@@ -759,6 +769,8 @@ class ResourceManager
         $resourceArray['mime_type'] = $node->getMimeType();
         $resourceArray['published'] = $node->isPublished();
         $resourceArray['index_dir'] = $node->getIndex();
+        $resourceArray['creation_date'] = $node->getCreationDate();
+        $resourceArray['modification_date'] = $node->getModificationDate();
 
         $isAdmin = false;
 
@@ -1290,7 +1302,7 @@ class ResourceManager
      */
     public function getResourceFromNode(ResourceNode $node)
     {
-        return $this->om->getRepository($node->getClass())->findOneByResourceNode($node->getId());
+        return $this->om->getRepository($node->getClass())->findOneByResourceNode($node);
     }
 
     /**

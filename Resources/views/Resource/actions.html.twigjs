@@ -65,6 +65,9 @@
                 <a><input type="checkbox" class="select-all-nodes" data-view="{{ viewName }}"></input> {{ 'select_all'|trans({}, 'platform') }}</a>
             </li>
         {% endif %}
+        <li>
+            <a><input type="checkbox" class="list-view" data-view="{{ viewName }}"></input> {{ 'list_view'|trans({}, 'platform') }}</a>
+        </li>
     </ul>
 {% else %}
     <ul class='nav navbar-nav' role="toolbar">
@@ -73,6 +76,14 @@
                 <i class="fa fa-plus"></i>
                 {{ 'add'|trans({}, 'platform') }}
             </a>
+        </li>
+        {% if isMultiSelectAllowed %}
+            <li>
+                <a><input type="checkbox" class="select-all-nodes" data-view="{{ viewName }}"></input> {{ 'select_all'|trans({}, 'platform') }}</a>
+            </li>
+        {% endif %}
+        <li>
+            <a><input type="checkbox" class="list-view" data-view="{{ viewName }}"></input> {{ 'list_view'|trans({}, 'platform') }}</a>
         </li>
     </ul>
 {% endif %}

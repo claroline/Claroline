@@ -1,0 +1,36 @@
+{% twig_js name="ResourceManagerListElement" %}
+
+<div class="row">
+    <div class='checkbox col-md-1'>
+        <input type="checkbox"
+            class="node-chk-{{ viewName }}"
+            value="{{ node.id }}"
+            data-node-name="{{ node.name }}"
+            data-type="{{ node.type }}"
+            data-mime-type="{{ node.mime_type }}"
+            data-path="{{ node.path_for_display }}"
+            {% if isSelectionAllowed == false %}style="visibility: collapse;"{% endif %}
+        />
+    </div>
+
+    <div class="col-md-1 node-element"
+        style="background-image: url('{{ webRoot }}{{ node.large_icon }}');"
+    >
+    </div>
+
+    <div class="col-md-2">
+        {{ node.name }}
+    </div>
+
+    <div class="col-md-2">
+        {{ node.creator_username }}
+    </div>
+
+    <div class="col-md-2">
+        {{ node.creation_date.date }}
+    </div>
+
+    <div class="col-md-2">
+        {{ node.modification_date.date }}
+    </div>
+</div>

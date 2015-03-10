@@ -23,9 +23,9 @@
         tagName: 'ul',
         attributes: {'id': 'sortable'},
         events: {
-            'click .node-thumbnail .node-element': 'openNode',
+            'click .node .clickable-node': 'openNode',
             'click .results table a.result-path': 'openNode',
-            'click .node-thumbnail input[type=checkbox]': 'checkNode',
+            'click .node input[type=checkbox]': 'checkNode',
             'click .results table input[type=checkbox]': 'checkNode'
         },
         outerEvents: {
@@ -40,6 +40,7 @@
             this.dispatcher = dispatcher;
             this.directoryId = '0';
             this.nodes = [];
+            this.listMode = 'default';
             this.zoomValue = this.parameters.zoom;
             this.dispatcher.on('change-zoom', this.zoom, this);
             _.each(this.outerEvents, function (method, event) {
@@ -47,28 +48,15 @@
                     event + '-' + this.parameters.viewName, this[method], this
                 );
             }, this);
+            this.dispatcher.on('list-mode-' + parameters.viewName, this.setListMode, this)
         },
         addNodes: function (event) {
             _.each(event, function (node) {
                 var isWhiteListed = this.parameters.resourceTypes[node.type] !== undefined;
 
                 if (isWhiteListed || node.type === 'directory') {
-                    this.nodes[node.id] = [
-                        node.name,
-                        node.type,
-                        node.mimeType,
-                        node.path,
-                        node.id
-                    ];
-                    this.parameters.node
-                    //1023 is the "I can do everything" mask.
-                    if (this.parameters.restrictForOwner == 1 && node.mask != 1023 && node.type !== 'directory') {
-                        return;
-                    }
-
-                    var thumbnail = new views.Thumbnail(this.parameters, this.dispatcher, this.zoomValue);
-                    thumbnail.render(node, isWhiteListed && this.directoryId !== '0');
-                    this.$el.append(thumbnail.$el);
+                    this.nodes[node.id] = node;
+                    this.renderNode(node);
                 }
             }, this);
         },
@@ -204,6 +192,28 @@
                     'resourceTypes': this.parameters.resourceTypes
                 }));
             }
+        },
+        setListMode: function (event) {
+            this.listMode = event.mode;
+            //remove everything from the View
+            this.$el.empty();
+
+            for (var i in this.nodes) {
+                this.renderNode(this.nodes[i]);
+            }
+        },
+        renderNode: function(node) {
+            //1023 is the "I can do everything" mask.
+            if (this.parameters.restrictForOwner == 1 && node.mask != 1023 && node.type !== 'directory') {
+                return;
+            }
+
+            var view = (this.listMode === 'default') ?
+                new views.Thumbnail(this.parameters, this.dispatcher, this.zoomValue):
+                new views.ListViewElement(this.parameters, this.dispatcher, this.zoomValue);
+
+            view.render(node, true && this.directoryId !== '0');
+            this.$el.append(view.$el);
         }
     });
 })();

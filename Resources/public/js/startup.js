@@ -83,6 +83,10 @@
         return translator.trans(name, parameters, domain);
     });
 
+    Twig.setFilter('format', function(string, formatString) {
+        var timestamp = Date.parse(string);
+    });
+
     //Required for the resource manager, when we want to open a directory after a search
     Twig.setFunction('getCurrentUrl', function() {
         location = window.location.href;
