@@ -16,6 +16,7 @@
     var stackedRequests = 0;
     var modal = window.Claroline.Modal;
     var translator = window.Translator;
+    var claroDate = window.Claroline.ClaroDate;
 
     var ajaxServerErrorHandler = function (statusCode, responseText) {
         if (env !== 'prod') {
@@ -83,10 +84,6 @@
         return translator.trans(name, parameters, domain);
     });
 
-    Twig.setFilter('format', function(string, formatString) {
-        var timestamp = Date.parse(string);
-    });
-
     //Required for the resource manager, when we want to open a directory after a search
     Twig.setFunction('getCurrentUrl', function() {
         location = window.location.href;
@@ -109,4 +106,7 @@
         }
     });
     $(window).on('hashchange', shiftWindow);
+
+
+
 })();

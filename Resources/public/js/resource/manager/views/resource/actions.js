@@ -44,6 +44,7 @@
             this.filters = null;
             this.isReadyToPaste = false;
             this.isCutMode = false;
+            this.displayMode = 'default';
             this.isSearchMode = false;
             this.lastSearchedName = null;
             this.zoomValue = parameters.zoom;
@@ -309,6 +310,8 @@
                 && this.isReadyToPaste
                 && (!this.isCutMode || this.checkedNodes.directoryId !== event.id);
 
+            var listViewActivated = this.displayMode === 'default' ? false: true;
+
             $(this.el).html(Twig.render(ResourceManagerActions, {
                 resourceTypes: this.parameters.resourceTypes,
                 searchedName: this.lastSearchedName,
@@ -320,7 +323,8 @@
                 creatableTypes: creatableTypes,
                 zoom: this.zoomValue,
                 viewName: this.parameters.viewName,
-                isMultiSelectAllowed: this.parameters.isPickerMultiSelectAllowed
+                isMultiSelectAllowed: this.parameters.isPickerMultiSelectAllowed,
+                listViewActivated: listViewActivated
             }));
         },
         selectAll: function (event) {
@@ -357,6 +361,7 @@
         listMode: function (event) {
             var chk = $(event.target);
             var mode = chk.is(':checked') ? 'list': 'default';
+            this.displayMode = mode;
             this.dispatcher.trigger('list-mode', {'viewName': this.parameters.viewName, 'mode': mode});
         }
     });

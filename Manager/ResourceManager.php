@@ -769,8 +769,8 @@ class ResourceManager
         $resourceArray['mime_type'] = $node->getMimeType();
         $resourceArray['published'] = $node->isPublished();
         $resourceArray['index_dir'] = $node->getIndex();
-        $resourceArray['creation_date'] = $node->getCreationDate();
-        $resourceArray['modification_date'] = $node->getModificationDate();
+        $resourceArray['creation_date'] = $node->getCreationDate()->format($this->translator->trans('date_range.format.with_hours', array(), 'platform'));
+        $resourceArray['modification_date'] = $node->getModificationDate()->format($this->translator->trans('date_range.format.with_hours', array(), 'platform'));
 
         $isAdmin = false;
 

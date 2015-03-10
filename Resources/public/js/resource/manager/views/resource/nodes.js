@@ -197,9 +197,15 @@
             this.listMode = event.mode;
             //remove everything from the View
             this.$el.empty();
+            var orderedNodes = [];
 
+            //first we need to order the nodes !
             for (var i in this.nodes) {
-                this.renderNode(this.nodes[i]);
+                orderedNodes[this.nodes[i].index_dir] = this.nodes[i];
+            }
+
+            for (var i = 1; i < orderedNodes.length; i++) {
+                this.renderNode(orderedNodes[i]);
             }
         },
         renderNode: function(node) {

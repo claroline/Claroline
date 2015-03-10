@@ -527,7 +527,8 @@ class ResourceController
                 $enableRightsEdition = false;
             }
 
-            foreach ($nodes as $item) {
+            foreach ($nodes as $el) {
+                $item = $el;
                 if ($user !== 'anon.') {
                     if ($item['creator_username'] === $user->getUsername()
                         && !$this->isUsurpatingWorkspaceRole($this->sc->getToken()) ) {
@@ -536,6 +537,10 @@ class ResourceController
                 }
 
                 $item['enableRightsEdition'] = $enableRightsEdition;
+                $dateModification = $el['modification_date'];
+                $item['modification_date'] = $dateModification->format($this->translator->trans('date_range.format.with_hours', array(), 'platform'));;
+                $dateCreation = $el['creation_date'];
+                $item['creation_date'] = $dateCreation->format($this->translator->trans('date_range.format.with_hours', array(), 'platform'));;
                 $nodesWithCreatorPerms[] = $item;
             }
 
