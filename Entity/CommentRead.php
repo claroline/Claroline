@@ -1,9 +1,8 @@
 <?php
 /**
- * Created by : Vincent SAISSET
- * Date: 21/08/13
- * Time: 15:58
- */
+ * Created by : VINCENT Eric
+ * Date: 10/05/2015
+*/
 
 namespace Innova\CollecticielBundle\Entity;
 
@@ -11,46 +10,37 @@ use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="Innova\CollecticielBundle\Repository\DocumentRepository")
- * @ORM\Table(name="innova_collecticielbundle_document")
+ * @ORM\Entity(repositoryClass="Innova\CollecticielBundle\Repository\CommentReadRepository")
+ * @ORM\Table(name="innova_collecticielbundle_comment_read")
  */
-class Document {
+class CommentRead {
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
+
     /**
-     * @ORM\Column(type="string", nullable=false)
-     */
-    protected $type;
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    protected $url;
+     * Lien avec la table Comment
+    */
     /**
      * @ORM\ManyToOne(
-     *      targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode"
+     *      targetEntity="Innova\CollecticielBundle\Entity\Comment",
+     *      inversedBy="comments"
      * )
-     * @ORM\JoinColumn(name="resource_node_id", referencedColumnName="id", onDelete="SET NULL")
+     * @ORM\JoinColumn(name="comment_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")
      */
-    protected $resourceNode;
+    protected $comment;
 
     /**
-     * @ORM\OneToMany(
-     *     targetEntity="Innova\CollecticielBundle\Entity\Comment",
-     *     mappedBy="document",
-     *     cascade={"all"},
-     *     orphanRemoval=true
+     * @ORM\ManyToOne(
+     *      targetEntity="Claroline\CoreBundle\Entity\User"
      * )
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=false)
      */
-    protected $documents;
+    protected $user;
 
-    /**
-     * @ORM\Column(type="boolean", nullable=false)
-     */
-    protected $validate = false;
 
     /**
      * @return mixed

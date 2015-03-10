@@ -1,9 +1,8 @@
 <?php
 /**
- * Created by : Vincent SAISSET
- * Date: 21/08/13
- * Time: 15:58
- */
+ * Created by : VINCENT Eric
+ * Date: 10/05/2015
+*/
 
 namespace Innova\CollecticielBundle\Entity;
 
@@ -11,46 +10,57 @@ use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="Innova\CollecticielBundle\Repository\DocumentRepository")
- * @ORM\Table(name="innova_collecticielbundle_document")
+ * @ORM\Entity(repositoryClass="Innova\CollecticielBundle\Repository\CommentRepository")
+ * @ORM\Table(name="innova_collecticielbundle_comment")
  */
-class Document {
+class Comment {
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
-    /**
-     * @ORM\Column(type="string", nullable=false)
-     */
-    protected $type;
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
-    protected $url;
-    /**
-     * @ORM\ManyToOne(
-     *      targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode"
-     * )
-     * @ORM\JoinColumn(name="resource_node_id", referencedColumnName="id", onDelete="SET NULL")
-     */
-    protected $resourceNode;
 
     /**
+     * @ORM\ManyToOne(
+     *      targetEntity="Innova\CollecticielBundle\Entity\Document",
+     *      inversedBy="documents"
+     * )
+     * @ORM\JoinColumn(name="document_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")
+     */
+    protected $document;
+
+    /**
+     * @ORM\ManyToOne(
+     *      targetEntity="Claroline\CoreBundle\Entity\User"
+     * )
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=false)
+     */
+    protected $user;
+
+    /**
+     * @ORM\Column(name="commentText",type="text", nullable=true)
+     */
+    protected $commentText = null;
+
+    /**
+     * @ORM\Column(name="comment_date", type="datetime", nullable=false)
+     * @Gedmo\Timestampable(on="create")
+     */
+    protected $commentDate;
+
+    /**
+     * Lien avec la table CommentRead
+    */
+    /**
      * @ORM\OneToMany(
-     *     targetEntity="Innova\CollecticielBundle\Entity\Comment",
-     *     mappedBy="document",
+     *     targetEntity="Innova\CollecticielBundle\Entity\CommentRead",
+     *     mappedBy="comment",
      *     cascade={"all"},
      *     orphanRemoval=true
      * )
      */
-    protected $documents;
-
-    /**
-     * @ORM\Column(type="boolean", nullable=false)
-     */
-    protected $validate = false;
+    protected $comments;
 
     /**
      * @return mixed
