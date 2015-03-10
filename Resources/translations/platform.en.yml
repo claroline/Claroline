@@ -1149,3 +1149,6 @@ logs_error_location: The log files are located in app/logs/update-xxx.log.
 package_install_auto_reload: This page will be reload automatically once an operation is done
 activate_maintenance_mode: You should activate the maintenance mode before going further.
 install_update_cant_be_undone: Once an operation is started, it cannot be undone.
+list_view: List view (beta)
+last_modification: Last modification
+created_by: Created by %creator% the %creationDate%

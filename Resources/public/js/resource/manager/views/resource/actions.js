@@ -10,6 +10,7 @@
 /* global Twig */
 /* global Translator */
 /* global ResourceManagerActions */
+/* global ResourceDeleteConfirmMessage */
 
 (function () {
     'use strict';
@@ -33,7 +34,9 @@
             'keypress input.name': 'filter',
             'click ul.zoom li a': 'zoom',
             'click a.open-picker': 'openPicker',
-            'click a.add': 'add'
+            'click a.add': 'add',
+            'click .select-all-nodes': 'selectAll',
+            'click .list-view': 'listMode'
         },
         initialize: function (parameters, dispatcher) {
             this.parameters = parameters;
@@ -41,6 +44,7 @@
             this.filters = null;
             this.isReadyToPaste = false;
             this.isCutMode = false;
+            this.displayMode = 'default';
             this.isSearchMode = false;
             this.lastSearchedName = null;
             this.zoomValue = parameters.zoom;
@@ -49,10 +53,12 @@
             this.targetDirectoryId = this.currentDirectoryId;
             // selection of nodes checked by the user
             this.checkedNodes = {
+                //the "nodes" list is reinitialized each time we change directory
                 nodes: {},
                 directoryId: this.currentDirectoryId,
                 isSearchMode: this.isSearchMode
             };
+            this.cutCpyNodes = [];
             this.setPasteBinState(false, false);
             this.dispatcher.on('open-directory', this.setTargetDirectory, this);
             this.dispatcher.on('directory-data-' + this.parameters.viewName, this.render, this);
@@ -75,12 +81,13 @@
         },
         'delete': function (event) {
             if (!this.$(event.currentTarget).hasClass('disabled')) {
-                var trans = _.keys(this.checkedNodes.nodes).length > 1 ?
-                    'resources_delete' :
-                    'resource_delete';
+                var body = Twig.render(
+                    ResourceDeleteConfirmMessage,
+                    {'nodes': this.checkedNodes.nodes}
+                );
                 this.dispatcher.trigger('confirm', {
                     header: Translator.trans('delete', {}, 'platform'),
-                    body: Translator.trans(trans, {}, 'platform'),
+                    body: body,
                     callback: _.bind(function () {
                         this.dispatcher.trigger('delete', {
                             ids: _.keys(this.checkedNodes.nodes),
@@ -98,12 +105,12 @@
             }
         },
         'copy': function (event) {
-            if (!this.$(event.currentTarget).hasClass('disabled') && _.size(this.checkedNodes.nodes) > 0) {
+            if (!this.$(event.currentTarget).hasClass('disabled')) {
                 this.setPasteBinState(true, false);
             }
         },
         'cut': function (event) {
-            if (!this.$(event.currentTarget).hasClass('disabled') && _.size(this.checkedNodes.nodes) > 0) {
+            if (!this.$(event.currentTarget).hasClass('disabled')) {
                 this.setPasteBinState(true, true);
             }
         },
@@ -111,7 +118,7 @@
             if (!this.$(event.currentTarget).hasClass('disabled')) {
                 var event = this.isCutMode ? 'move-nodes' : 'copy-nodes';
                 this.dispatcher.trigger(event, {
-                    ids:  _.keys(this.checkedNodes.nodes),
+                    ids:  _.keys(this.cutCpyNodes),
                     directoryId: this.currentDirectoryId,
                     sourceDirectoryId: this.checkedNodes.directoryId,
                     view: this.parameters.viewName
@@ -191,6 +198,7 @@
             }
         },
         setTargetDirectory: function (event) {
+            this.checkedNodes.nodes = [];
             if (event.view === 'main' && this.parameters.isPickerMode) {
                 this.targetDirectoryId = event.nodeId;
             }
@@ -215,6 +223,16 @@
             // add the node to the selection or remove it if already present
             if (this.checkedNodes.nodes.hasOwnProperty(event.node.id) && !event.isChecked) {
                 delete this.checkedNodes.nodes[event.node.id];
+                //the .length method doesn't return the right result with the delete method.
+                //the splice one doesn't seem to be better
+                var length = 0;
+                for (var i in this.checkedNodes.nodes) {
+                    length++;
+                }
+
+                if (length === 0) {
+                    this.setInitialState();
+                }
             } else {
                 this.checkedNodes.nodes[event.node.id] = [
                     event.node.name,
@@ -232,13 +250,17 @@
         setPasteBinState: function (isReadyToPaste, isCutMode) {
             this.isReadyToPaste = isReadyToPaste;
             this.isCutMode = isCutMode;
+            this.cutCpyNodes = this.checkedNodes.nodes;
             this.setButtonEnabledState(
                 this.$('a.paste'),
                 isReadyToPaste && (!this.isCutMode || this.checkedNodes.directoryId !== this.currentDirectoryId)
             );
         },
         setInitialState: function () {
+            //initialized each time we changed directory
             this.checkedNodes.nodes = {};
+            //initialized each time we click on Cut/Copy
+            this.cutCpyNodes = [];
             this.isReadyToPaste = false;
             this.isCutMode = false;
             this.setButtonEnabledState(this.$('a.cut'), false);
@@ -288,6 +310,8 @@
                 && this.isReadyToPaste
                 && (!this.isCutMode || this.checkedNodes.directoryId !== event.id);
 
+            var listViewActivated = this.displayMode === 'default' ? false: true;
+
             $(this.el).html(Twig.render(ResourceManagerActions, {
                 resourceTypes: this.parameters.resourceTypes,
                 searchedName: this.lastSearchedName,
@@ -297,8 +321,48 @@
                 isPasteAllowed: isPasteAllowed,
                 isCreateAllowed: isCreateAllowed,
                 creatableTypes: creatableTypes,
-                zoom: this.zoomValue
+                zoom: this.zoomValue,
+                viewName: this.parameters.viewName,
+                isMultiSelectAllowed: this.parameters.isPickerMultiSelectAllowed,
+                listViewActivated: listViewActivated
             }));
+        },
+        selectAll: function (event) {
+            //see nodes.js
+            //remove it if multiselect is not allowed ~ !
+            var chk = $(event.target);
+            var isChecked = chk.is(':checked');
+            //remove all the nodes from the selection;
+            this.checkedNodes.nodes = {};
+            this.setPasteBinState(false, false);
+            this.setActionsEnabledState(event.isPickerMode);
+            var that = this;
+            if (isChecked) {
+                $('.node-chk-' + this.parameters.viewName).prop('checked', true);
+
+                $.each($('.node-chk-' + this.parameters.viewName), (function (index, el) {
+                    this.dispatcher.trigger('node-check-status-' + this.parameters.viewName, {
+                        node: {
+                            id: $(el).attr('value'),
+                            name: $(el).attr('data-node-name'),
+                            type: $(el).attr('data-type'),
+                            mimeType: $(el).attr('data-mime-type'),
+                            path: $(el).attr('data-path')
+
+                        },
+                        isChecked: true,
+                        isPickerMode: this.parameters.isPickerMode
+                    });
+                }).bind(this));
+            } else {
+                $('.node-chk-' + this.parameters.viewName).prop('checked', false);
+            }
+        },
+        listMode: function (event) {
+            var chk = $(event.target);
+            var mode = chk.is(':checked') ? 'list': 'default';
+            this.displayMode = mode;
+            this.dispatcher.trigger('list-mode', {'viewName': this.parameters.viewName, 'mode': mode});
         }
     });
 })();

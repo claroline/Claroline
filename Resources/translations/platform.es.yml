@@ -996,3 +996,6 @@ logs_error_location: logs_error_location
 package_install_auto_reload: package_install_auto_reload
 activate_maintenance_mode: activate_maintenance_mode
 install_update_cant_be_undone: install_update_cant_be_undone
+list_view: list_view
+last_modification: last_modification
+created_by: created_by

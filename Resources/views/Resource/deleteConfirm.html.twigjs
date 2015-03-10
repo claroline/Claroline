@@ -1,0 +1,12 @@
+{% twig_js name="ResourceDeleteConfirmMessage" %}
+
+<div>
+
+    {{ 'resources_delete'|trans({}, 'platform') }}
+
+    <ul>
+        {% for key, node in nodes %}
+            <li>  {{ nodes[key][3] }} </li>
+        {% endfor %}
+    </ul>
+</div>

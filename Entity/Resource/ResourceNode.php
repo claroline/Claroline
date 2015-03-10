@@ -157,7 +157,7 @@ class ResourceNode
     protected $rights;
 
     /**
-     * @ORM\Column(name="value", nullable=true)
+     * @ORM\Column(name="value", nullable=true, type="integer")
      */
     protected $index;
 

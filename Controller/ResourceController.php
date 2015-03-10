@@ -26,6 +26,7 @@ use Claroline\CoreBundle\Entity\Resource\ResourceShortcut;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use Claroline\CoreBundle\Manager\Exception\ResourceMoveException;
+use Claroline\CoreBundle\Manager\Exception\ResourceNotFoundExcetion;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Manager\MaskManager;
 use Claroline\CoreBundle\Manager\RightsManager;
@@ -526,7 +527,8 @@ class ResourceController
                 $enableRightsEdition = false;
             }
 
-            foreach ($nodes as $item) {
+            foreach ($nodes as $el) {
+                $item = $el;
                 if ($user !== 'anon.') {
                     if ($item['creator_username'] === $user->getUsername()
                         && !$this->isUsurpatingWorkspaceRole($this->sc->getToken()) ) {
@@ -535,6 +537,10 @@ class ResourceController
                 }
 
                 $item['enableRightsEdition'] = $enableRightsEdition;
+                $dateModification = $el['modification_date'];
+                $item['modification_date'] = $dateModification->format($this->translator->trans('date_range.format.with_hours', array(), 'platform'));;
+                $dateCreation = $el['creation_date'];
+                $item['creation_date'] = $dateCreation->format($this->translator->trans('date_range.format.with_hours', array(), 'platform'));;
                 $nodesWithCreatorPerms[] = $item;
             }
 
@@ -615,12 +621,25 @@ class ResourceController
             }
 
         $i = 1;
-        foreach ($nodes as $node) {
-            $newNodes[] = $this->resourceManager->toArray(
-                $this->resourceManager->copy($node, $parent, $user, $i)->getResourceNode(),
-                $this->sc->getToken()
+
+        try {
+            foreach ($nodes as $node) {
+                $newNodes[] = $this->resourceManager->toArray(
+                    $this->resourceManager->copy($node, $parent, $user, $i)->getResourceNode(),
+                    $this->sc->getToken()
+                );
+                $i++;
+            }
+        } catch (ResourceNotFoundExcetion $e) {
+            $errors = array($e->getMessage());
+            $content = $this->templating->render(
+                'ClarolineCoreBundle:Resource:errors.html.twig',
+                array('errors' => $errors)
             );
-            $i++;
+            $response = new Response($content, 403);
+            $response->headers->add(array('XXX-Claroline' => 'resource-error'));
+
+            return $response;
         }
 
         return new JsonResponse($newNodes);
