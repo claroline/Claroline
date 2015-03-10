@@ -108,6 +108,8 @@ class CreatePluginCommand extends ContainerAwareCommand
         $skel = $this->getContainer()->getParameter('claroline.param.plugin_skel_directory');
         $ivendor = $input->getArgument('vendor');
         $ibundle = $input->getArgument('bundle');
+        $vname = strtolower($ivendor);
+        $bname = strtolower($ibundle) . '-bundle';
 
         //create the directories if they don't exist
         $vendorNameDir = "{$vendorDir}/{$vname}";
