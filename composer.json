@@ -13,7 +13,8 @@
     ],
     "require": {
         "php": ">=5.3.3",
-        "composer/composer": "*"
+        "composer/composer": "*",
+        "psr/log": "1.0.*@dev"
     },
     "autoload": {
         "psr-0": { "Claroline\\BundleRecorder": "" }
