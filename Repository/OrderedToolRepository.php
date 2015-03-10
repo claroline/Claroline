@@ -376,4 +376,42 @@ class OrderedToolRepository extends EntityRepository
 
         return $query->getResult();
     }
+
+    public function findDuplicatedOldOrderedToolsByUsers()
+    {
+        $dql = "
+            SELECT ot1
+            FROM Claroline\CoreBundle\Entity\Tool\OrderedTool ot1
+            WHERE ot1.user IS NOT NULL
+            AND EXISTS (
+                SELECT ot2
+                FROM Claroline\CoreBundle\Entity\Tool\OrderedTool ot2
+                WHERE ot1.tool = ot2.tool
+                AND ot1.user = ot2.user
+            )
+            ORDER BY ot1.id
+        ";
+        $query = $this->_em->createQuery($dql);
+
+        return $query->getResult();
+    }
+
+    public function findDuplicatedOldOrderedToolsByWorkspaces()
+    {
+        $dql = "
+            SELECT ot1
+            FROM Claroline\CoreBundle\Entity\Tool\OrderedTool ot1
+            WHERE ot1.workspace IS NOT NULL
+            AND EXISTS (
+                SELECT ot2
+                FROM Claroline\CoreBundle\Entity\Tool\OrderedTool ot2
+                WHERE ot1.tool = ot2.tool
+                AND ot1.workspace = ot2.workspace
+            )
+            ORDER BY ot1.id
+        ";
+        $query = $this->_em->createQuery($dql);
+
+        return $query->getResult();
+    }
 }

@@ -1138,7 +1138,11 @@ class ToolManager
         );
     }
 
-    public function createOrderedToolByToolForAllUsers(Tool $tool, $type = 0)
+    public function createOrderedToolByToolForAllUsers(
+        Tool $tool,
+        $type = 0,
+        $isVisible = true
+    )
     {
         $toolName = $tool->getName();
         $users = $this->userRepo->findAllEnabledUsers();
@@ -1157,7 +1161,7 @@ class ToolManager
                 $orderedTool->setName($toolName);
                 $orderedTool->setTool($tool);
                 $orderedTool->setUser($user);
-                $orderedTool->setVisibleInDesktop(true);
+                $orderedTool->setVisibleInDesktop($isVisible);
                 $orderedTool->setOrder(1);
                 $orderedTool->setType($type);
                 $this->om->persist($orderedTool);
@@ -1174,6 +1178,50 @@ class ToolManager
     public function persistAdminTool(AdminTool $adminTool)
     {
         $this->om->persist($adminTool);
+        $this->om->flush();
+    }
+
+    public function deleteDuplicatedOldOrderedTools()
+    {
+        $usersOts = $this->orderedToolRepo->findDuplicatedOldOrderedToolsByUsers();
+        $wsOts = $this->orderedToolRepo->findDuplicatedOldOrderedToolsByWorkspaces();
+        $exitingUsers = array();
+
+        foreach ($usersOts as $ot) {
+            $toolId = $ot->getTool()->getId();
+            $userId = $ot->getUser()->getId();
+
+            if (isset($exitingUsers[$toolId])) {
+
+                if (isset($exitingUsers[$toolId][$userId])) {
+                    $this->om->remove($ot);
+                } else {
+                    $exitingUsers[$toolId][$userId] = true;
+                }
+            } else {
+                $exitingUsers[$toolId] = array();
+                $exitingUsers[$toolId][$userId] = true;
+            }
+        }
+        $this->om->flush();
+        $exitingWorkspaces = array();
+
+        foreach ($wsOts as $ot) {
+            $toolId = $ot->getTool()->getId();
+            $workspaceId = $ot->getWorkspace()->getId();
+
+            if (isset($exitingWorkspaces[$toolId])) {
+
+                if (isset($exitingWorkspaces[$toolId][$workspaceId])) {
+                    $this->om->remove($ot);
+                } else {
+                    $exitingWorkspaces[$toolId][$workspaceId] = true;
+                }
+            } else {
+                $exitingWorkspaces[$toolId] = array();
+                $exitingWorkspaces[$toolId][$workspaceId] = true;
+            }
+        }
         $this->om->flush();
     }
 }

@@ -31,6 +31,11 @@ class Updater050000 extends Updater
         $this->updateHomeTabsAdminTool();
     }
 
+    public function preUpdate()
+    {
+        $this->deleteDuplicatedOrderedTools();
+    }
+
     private function createMessageDesktopTool()
     {
         $this->log('Creating message tool...');
@@ -65,5 +70,11 @@ class Updater050000 extends Updater
             $homeTabAdminTool->setClass('home');
             $this->toolManager->persistAdminTool($homeTabAdminTool);
         }
+    }
+
+    private function deleteDuplicatedOrderedTools()
+    {
+        $this->log('Deleting duplicated ordered tools...');
+        $this->toolManager->deleteDuplicatedOldOrderedTools();
     }
 }

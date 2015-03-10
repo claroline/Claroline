@@ -24,8 +24,12 @@ use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
  *     name="claro_ordered_tool",
  *     uniqueConstraints={
  *         @ORM\UniqueConstraint(
- *             name="ordered_tool_unique_tool_ws_usr_type",
- *             columns={"tool_id", "workspace_id", "user_id", "ordered_tool_type"}
+ *             name="ordered_tool_unique_tool_user_type",
+ *             columns={"tool_id", "user_id", "ordered_tool_type"}
+ *         ),
+ *         @ORM\UniqueConstraint(
+ *             name="ordered_tool_unique_tool_ws_type",
+ *             columns={"tool_id", "workspace_id", "ordered_tool_type"}
  *         ),
  *         @ORM\UniqueConstraint(
  *             name="ordered_tool_unique_name_by_workspace",
@@ -34,6 +38,8 @@ use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
  *     }
  * )
  * @DoctrineAssert\UniqueEntity({"name", "workspace"})
+ * @DoctrineAssert\UniqueEntity({"tool", "workspace", "type"})
+ * @DoctrineAssert\UniqueEntity({"tool", "user", "type"})
  */
 class OrderedTool
 {
