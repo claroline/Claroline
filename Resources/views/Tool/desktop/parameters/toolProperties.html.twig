@@ -48,7 +48,11 @@
                                 data-tool-id="{{ tool.getId () }}"
                                 data-ordered-tool-id="{{ orderedTool.getId () }}"
                             >
-                                <td>{{ tool.getName()|lower|trans({}, 'tools') }} </td>
+                                <td>
+                                    <span class="fa fa-sort text-muted"></span>
+                                    &nbsp;
+                                    {{ tool.getName()|lower|trans({}, 'tools') }}
+                                </td>
                                 <td>
                                     <input
                                         type="checkbox"
