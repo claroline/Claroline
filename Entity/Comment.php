@@ -8,6 +8,9 @@ namespace Innova\CollecticielBundle\Entity;
 
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Doctrine\ORM\Mapping as ORM;
+use Claroline\CoreBundle\Entity\User;
+use Doctrine\Common\Collections\ArrayCollection;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Entity(repositoryClass="Innova\CollecticielBundle\Repository\CommentRepository")
@@ -39,7 +42,7 @@ class Comment {
     protected $user;
 
     /**
-     * @ORM\Column(name="commentText",type="text", nullable=true)
+     * @ORM\Column(name="comment_text",type="text", nullable=true)
      */
     protected $commentText = null;
 
