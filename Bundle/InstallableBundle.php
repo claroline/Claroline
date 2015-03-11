@@ -37,8 +37,9 @@ abstract class InstallableBundle extends Bundle implements InstallableInterface
 
     public function getVersion()
     {
+        $ds = DIRECTORY_SEPARATOR;
         $path = realpath($this->getPath() . $ds . 'VERSION.txt');
-        if ($path) return file_gets_content($path)
+        if ($path) return trim(file_get_contents($path));
 
         return "0.0.0.0";
     }
