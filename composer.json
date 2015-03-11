@@ -18,7 +18,7 @@
         "doctrine/doctrine-bundle": "~1.0",
         "doctrine/data-fixtures": "dev-master",
         "claroline/kernel-bundle": "~1.0",
-        "claroline/migration-bundle": "~1.0",
+        "claroline/migration-bundle": "~2.0",
         "claroline/core-bundle": ">=4.4.0"
     },
     "autoload": {

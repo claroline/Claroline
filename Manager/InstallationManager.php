@@ -11,7 +11,7 @@
 
 namespace Claroline\InstallationBundle\Manager;
 
-use Claroline\InstallationBundle\Log\LoggableTrait;
+use Claroline\BundleRecorder\Log\LoggableTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Claroline\CoreBundle\Entity\Bundle;

@@ -2,7 +2,7 @@
 
 namespace Claroline\InstallationBundle\Updater;
 
-use Claroline\InstallationBundle\Log\LoggableTrait;
+use Claroline\BundleRecorder\Log\LoggableTrait;
 
 abstract class Updater
 {
