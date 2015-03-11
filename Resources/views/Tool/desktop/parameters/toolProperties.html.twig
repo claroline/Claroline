@@ -10,6 +10,21 @@
 
 {% block title %}{{ parent() ~ ' - ' ~ title | striptags | raw }}{% endblock %}
 
+{% block breadcrumb %}
+    {{
+        macros.desktopBreadcrumbs([
+            {
+                'name': 'desktop_parameters'|trans({}, 'platform'),
+                'href': path('claro_desktop_parameters_menu')
+            },
+            {
+                'name': title|trans({}, 'platform'),
+                'href': ''
+            }
+        ])
+    }}
+{% endblock %}
+
 {% block section_content %}
 
     <div class="panel-heading">

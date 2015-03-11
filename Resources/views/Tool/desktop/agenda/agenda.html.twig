@@ -13,6 +13,17 @@
     >
 {% endblock %}
 
+{% block breadcrumb %}
+    {{
+        macros.desktopBreadcrumbs([
+            {
+                'name': 'agenda'|trans({}, 'platform'),
+                'href': ''
+            }
+        ])
+    }}
+{% endblock %}
+
 {% block section_content %}
     <div class="panel-heading">
         <h3 class="panel-title">{{ 'agenda'|trans({}, 'platform') }}</h3>
