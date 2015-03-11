@@ -131,11 +131,6 @@ abstract class Importer
     abstract function validate(array $data);
 
     /**
-     * @param array $data
-     */
-     abstract function import(array $data);
-
-    /**
      * @param Workspace $workspace
      * @param array $files
      * @param mixed $object
