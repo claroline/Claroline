@@ -45,12 +45,22 @@ class Document {
      *     orphanRemoval=true
      * )
      */
-    protected $documents;
+    protected $comments;
 
     /**
      * @ORM\Column(type="boolean", nullable=false)
      */
     protected $validate = false;
+
+
+    /**
+     * @ORM\ManyToOne(
+     *     targetEntity="Innova\CollecticielBundle\Entity\Drop",
+     *     inversedBy="documents",
+     * )
+     */
+    protected $drop;
+
 
     /**
      * @return mixed
@@ -166,5 +176,45 @@ class Document {
         }
 
         return $json;
+    }
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->comments = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Add comments
+     *
+     * @param \Innova\CollecticielBundle\Entity\Comment $comments
+     * @return Document
+     */
+    public function addComment(\Innova\CollecticielBundle\Entity\Comment $comments)
+    {
+        $this->comments[] = $comments;
+
+        return $this;
+    }
+
+    /**
+     * Remove comments
+     *
+     * @param \Innova\CollecticielBundle\Entity\Comment $comments
+     */
+    public function removeComment(\Innova\CollecticielBundle\Entity\Comment $comments)
+    {
+        $this->comments->removeElement($comments);
+    }
+
+    /**
+     * Get comments
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getComments()
+    {
+        return $this->comments;
     }
 }

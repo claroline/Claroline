@@ -39,7 +39,7 @@
     {% block dropzone_content_drops_by_Listing %}
         {% include 'InnovaCollecticielBundle:Drop:Listing/dropsListing.html.twig' %}
     {% endblock %}
-    
+
     <div class="container row">
     {% block dropzone_content_drops_by_pager %}
         {% block dropzone_content_drops_by_paginate_part %}
@@ -57,6 +57,7 @@
                 }}
             {% endif %}
         {% endblock %}
+    {% endblock %}
     </div>
 
     {% if pager.nbResults == 0 %}
@@ -70,7 +71,6 @@
         <br/>
     {% endif %}
 
-    {% endblock %}
 {% endblock %}
 
 {% block javascripts %}

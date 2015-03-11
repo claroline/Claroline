@@ -27,7 +27,7 @@ class Comment {
     /**
      * @ORM\ManyToOne(
      *      targetEntity="Innova\CollecticielBundle\Entity\Document",
-     *      inversedBy="documents"
+     *      inversedBy="comments"
      * )
      * @ORM\JoinColumn(name="document_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")
      */
@@ -179,5 +179,137 @@ class Comment {
         }
 
         return $json;
+    }
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->comments = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Set commentText
+     *
+     * @param string $commentText
+     * @return Comment
+     */
+    public function setCommentText($commentText)
+    {
+        $this->commentText = $commentText;
+
+        return $this;
+    }
+
+    /**
+     * Get commentText
+     *
+     * @return string 
+     */
+    public function getCommentText()
+    {
+        return $this->commentText;
+    }
+
+    /**
+     * Set commentDate
+     *
+     * @param \DateTime $commentDate
+     * @return Comment
+     */
+    public function setCommentDate($commentDate)
+    {
+        $this->commentDate = $commentDate;
+
+        return $this;
+    }
+
+    /**
+     * Get commentDate
+     *
+     * @return \DateTime 
+     */
+    public function getCommentDate()
+    {
+        return $this->commentDate;
+    }
+
+    /**
+     * Set document
+     *
+     * @param \Innova\CollecticielBundle\Entity\Document $document
+     * @return Comment
+     */
+    public function setDocument(\Innova\CollecticielBundle\Entity\Document $document)
+    {
+        $this->document = $document;
+
+        return $this;
+    }
+
+    /**
+     * Get document
+     *
+     * @return \Innova\CollecticielBundle\Entity\Document 
+     */
+    public function getDocument()
+    {
+        return $this->document;
+    }
+
+    /**
+     * Set user
+     *
+     * @param \Claroline\CoreBundle\Entity\User $user
+     * @return Comment
+     */
+    public function setUser(\Claroline\CoreBundle\Entity\User $user)
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * Get user
+     *
+     * @return \Claroline\CoreBundle\Entity\User 
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    /**
+     * Add comments
+     *
+     * @param \Innova\CollecticielBundle\Entity\CommentRead $comments
+     * @return Comment
+     */
+    public function addComment(\Innova\CollecticielBundle\Entity\CommentRead $comments)
+    {
+        $this->comments[] = $comments;
+
+        return $this;
+    }
+
+    /**
+     * Remove comments
+     *
+     * @param \Innova\CollecticielBundle\Entity\CommentRead $comments
+     */
+    public function removeComment(\Innova\CollecticielBundle\Entity\CommentRead $comments)
+    {
+        $this->comments->removeElement($comments);
+    }
+
+    /**
+     * Get comments
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getComments()
+    {
+        return $this->comments;
     }
 }

@@ -451,4 +451,27 @@ class Correction {
 
         return $json;
     }
+
+    /**
+     * Add grades
+     *
+     * @param \Innova\CollecticielBundle\Entity\Grade $grades
+     * @return Correction
+     */
+    public function addGrade(\Innova\CollecticielBundle\Entity\Grade $grades)
+    {
+        $this->grades[] = $grades;
+
+        return $this;
+    }
+
+    /**
+     * Remove grades
+     *
+     * @param \Innova\CollecticielBundle\Entity\Grade $grades
+     */
+    public function removeGrade(\Innova\CollecticielBundle\Entity\Grade $grades)
+    {
+        $this->grades->removeElement($grades);
+    }
 }

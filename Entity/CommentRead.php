@@ -157,4 +157,50 @@ class CommentRead {
 
         return $json;
     }
+
+    /**
+     * Set comment
+     *
+     * @param \Innova\CollecticielBundle\Entity\Comment $comment
+     * @return CommentRead
+     */
+    public function setComment(\Innova\CollecticielBundle\Entity\Comment $comment)
+    {
+        $this->comment = $comment;
+
+        return $this;
+    }
+
+    /**
+     * Get comment
+     *
+     * @return \Innova\CollecticielBundle\Entity\Comment 
+     */
+    public function getComment()
+    {
+        return $this->comment;
+    }
+
+    /**
+     * Set user
+     *
+     * @param \Claroline\CoreBundle\Entity\User $user
+     * @return CommentRead
+     */
+    public function setUser(\Claroline\CoreBundle\Entity\User $user)
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * Get user
+     *
+     * @return \Claroline\CoreBundle\Entity\User 
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
 }

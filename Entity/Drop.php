@@ -52,6 +52,7 @@ class Drop
      * @ORM\JoinColumn(name="drop_zone_id", referencedColumnName="id", nullable=false)
      */
     protected $dropzone;
+
     /**
      * @ORM\OneToMany(
      *     targetEntity="Innova\CollecticielBundle\Entity\Document",
@@ -416,5 +417,60 @@ class Drop
     {
         return $this->unlockedUser;
     }
-}
 
+    /**
+     * Get unlockedDrop
+     *
+     * @return boolean 
+     */
+    public function getUnlockedDrop()
+    {
+        return $this->unlockedDrop;
+    }
+
+    /**
+     * Add documents
+     *
+     * @param \Innova\CollecticielBundle\Entity\Document $documents
+     * @return Drop
+     */
+    public function addDocument(\Innova\CollecticielBundle\Entity\Document $documents)
+    {
+        $this->documents[] = $documents;
+
+        return $this;
+    }
+
+    /**
+     * Remove documents
+     *
+     * @param \Innova\CollecticielBundle\Entity\Document $documents
+     */
+    public function removeDocument(\Innova\CollecticielBundle\Entity\Document $documents)
+    {
+        $this->documents->removeElement($documents);
+    }
+
+    /**
+     * Add corrections
+     *
+     * @param \Innova\CollecticielBundle\Entity\Correction $corrections
+     * @return Drop
+     */
+    public function addCorrection(\Innova\CollecticielBundle\Entity\Correction $corrections)
+    {
+        $this->corrections[] = $corrections;
+
+        return $this;
+    }
+
+    /**
+     * Remove corrections
+     *
+     * @param \Innova\CollecticielBundle\Entity\Correction $corrections
+     */
+    public function removeCorrection(\Innova\CollecticielBundle\Entity\Correction $corrections)
+    {
+        $this->corrections->removeElement($corrections);
+    }
+}

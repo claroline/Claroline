@@ -937,5 +937,82 @@ class Dropzone extends AbstractResource
         return $this->notifyOnDrop;
     }
 
+    /**
+     * Get id
+     *
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
 
+    /**
+     * Add drops
+     *
+     * @param \Innova\CollecticielBundle\Entity\Drop $drops
+     * @return Dropzone
+     */
+    public function addDrop(\Innova\CollecticielBundle\Entity\Drop $drops)
+    {
+        $this->drops[] = $drops;
+
+        return $this;
+    }
+
+    /**
+     * Remove drops
+     *
+     * @param \Innova\CollecticielBundle\Entity\Drop $drops
+     */
+    public function removeDrop(\Innova\CollecticielBundle\Entity\Drop $drops)
+    {
+        $this->drops->removeElement($drops);
+    }
+
+    /**
+     * Add peerReviewCriteria
+     *
+     * @param \Innova\CollecticielBundle\Entity\Criterion $peerReviewCriteria
+     * @return Dropzone
+     */
+    public function addPeerReviewCriterium(\Innova\CollecticielBundle\Entity\Criterion $peerReviewCriteria)
+    {
+        $this->peerReviewCriteria[] = $peerReviewCriteria;
+
+        return $this;
+    }
+
+    /**
+     * Remove peerReviewCriteria
+     *
+     * @param \Innova\CollecticielBundle\Entity\Criterion $peerReviewCriteria
+     */
+    public function removePeerReviewCriterium(\Innova\CollecticielBundle\Entity\Criterion $peerReviewCriteria)
+    {
+        $this->peerReviewCriteria->removeElement($peerReviewCriteria);
+    }
+
+    /**
+     * Set resourceNode
+     *
+     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $resourceNode
+     * @return Dropzone
+     */
+    public function setResourceNode(\Claroline\CoreBundle\Entity\Resource\ResourceNode $resourceNode = null)
+    {
+        $this->resourceNode = $resourceNode;
+
+        return $this;
+    }
+
+    /**
+     * Get resourceNode
+     *
+     * @return \Claroline\CoreBundle\Entity\Resource\ResourceNode
+     */
+    public function getResourceNode()
+    {
+        return $this->resourceNode;
+    }
 }
