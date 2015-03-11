@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2015/03/11 11:01:53
+ * Generation date: 2015/03/11 12:09:40
  */
-class Version20150311110152 extends AbstractMigration
+class Version20150311120938 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -18,10 +18,77 @@ class Version20150311110152 extends AbstractMigration
             ALTER TABLE claro_widget_home_tab_config 
             ADD COLUMN details CLOB DEFAULT NULL
         ");
+        $this->addSql("
+            ALTER TABLE claro_widget 
+            ADD COLUMN default_width INTEGER DEFAULT 4 NOT NULL
+        ");
+        $this->addSql("
+            ALTER TABLE claro_widget 
+            ADD COLUMN default_height INTEGER DEFAULT 3 NOT NULL
+        ");
     }
 
     public function down(Schema $schema)
     {
+        $this->addSql("
+            DROP INDEX UNIQ_76CA6C4F5E237E06
+        ");
+        $this->addSql("
+            DROP INDEX IDX_76CA6C4FEC942BCF
+        ");
+        $this->addSql("
+            CREATE TEMPORARY TABLE __temp__claro_widget AS 
+            SELECT id, 
+            plugin_id, 
+            name, 
+            is_configurable, 
+            is_exportable, 
+            is_displayable_in_workspace, 
+            is_displayable_in_desktop 
+            FROM claro_widget
+        ");
+        $this->addSql("
+            DROP TABLE claro_widget
+        ");
+        $this->addSql("
+            CREATE TABLE claro_widget (
+                id INTEGER NOT NULL, 
+                plugin_id INTEGER DEFAULT NULL, 
+                name VARCHAR(255) NOT NULL, 
+                is_configurable BOOLEAN NOT NULL, 
+                is_exportable BOOLEAN NOT NULL, 
+                is_displayable_in_workspace BOOLEAN NOT NULL, 
+                is_displayable_in_desktop BOOLEAN NOT NULL, 
+                PRIMARY KEY(id), 
+                CONSTRAINT FK_76CA6C4FEC942BCF FOREIGN KEY (plugin_id) 
+                REFERENCES claro_plugin (id) 
+                ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE
+            )
+        ");
+        $this->addSql("
+            INSERT INTO claro_widget (
+                id, plugin_id, name, is_configurable, 
+                is_exportable, is_displayable_in_workspace, 
+                is_displayable_in_desktop
+            ) 
+            SELECT id, 
+            plugin_id, 
+            name, 
+            is_configurable, 
+            is_exportable, 
+            is_displayable_in_workspace, 
+            is_displayable_in_desktop 
+            FROM __temp__claro_widget
+        ");
+        $this->addSql("
+            DROP TABLE __temp__claro_widget
+        ");
+        $this->addSql("
+            CREATE UNIQUE INDEX UNIQ_76CA6C4F5E237E06 ON claro_widget (name)
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_76CA6C4FEC942BCF ON claro_widget (plugin_id)
+        ");
         $this->addSql("
             DROP INDEX IDX_D48CC23E44BF891
         ");
