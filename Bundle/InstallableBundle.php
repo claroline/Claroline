@@ -37,8 +37,8 @@ abstract class InstallableBundle extends Bundle implements InstallableInterface
 
     public function getVersion()
     {
-        $data = $this->getComposer();
-        if (property_exists($data, 'version')) return $data->version;
+        $path = realpath($this->getPath() . $ds . 'VERSION.txt');
+        if ($path) return file_gets_content($path)
 
         return "0.0.0.0";
     }
@@ -87,7 +87,7 @@ abstract class InstallableBundle extends Bundle implements InstallableInterface
     {
         $data = $this->getComposer();
         $prop = 'target-dir';
-       
+
         return $data->$prop;
     }
 
