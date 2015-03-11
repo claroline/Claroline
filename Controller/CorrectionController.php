@@ -1283,7 +1283,7 @@ class CorrectionController extends DropzoneBaseController
         $drop = $correction->getDrop();
         $dropId = $correction->getDrop()->getId();
         $dropzoneId = $dropzone->getId();
-        // dropZone not in peerReview or corrections are not displayed to users or correction deny is not allowed 
+        // dropZone not in peerReview or corrections are not displayed to users or correction deny is not allowed
         if (!$dropzone->getPeerReview() || !$dropzone->getAllowCorrectionDeny() || !$dropzone->getDiplayCorrectionsToLearners()) {
 
             throw new AccessDeniedException();
@@ -1678,4 +1678,260 @@ class CorrectionController extends DropzoneBaseController
             }
         }
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /**
+     * @Route(
+     *      "/{resourceId}/drops/detail/{dropId}/add/correction",
+     *      name="innova_collecticiel_drops_detail_add_correction_comment",
+     *      requirements={"resourceId" = "\d+", "dropId" = "\d+"}
+     * )
+     * @ParamConverter("dropzone", class="InnovaCollecticielBundle:Dropzone", options={"id" = "resourceId"})
+     * @ParamConverter("user", options={
+     *      "authenticatedUser" = true,
+     *      "messageEnabled" = true,
+     *      "messageTranslationKey" = "Correct an evaluation requires authentication. Please login.",
+     *      "messageTranslationDomain" = "innova_collecticiel"
+     * })
+     * @ParamConverter("drop", class="InnovaCollecticielBundle:Drop", options={"id" = "dropId"})
+     * @Template()
+     */
+    public function dropsDetailAddCorrectionInnovaCommentAction($dropzone, $user, $drop)
+    {
+        $this->get('innova.manager.dropzone_voter')->isAllowToOpen($dropzone);
+        $this->get('innova.manager.dropzone_voter')->isAllowToEdit($dropzone);
+
+        $em = $this->getDoctrine()->getManager();
+        $correction = new Correction();
+        $correction->setUser($user);
+        $correction->setDropzone($dropzone);
+        $correction->setDrop($drop);
+        //Allow admins to edit this correction
+        $correction->setEditable(true);;
+        $em->persist($correction);
+        $em->flush();
+
+        $event = new LogCorrectionStartEvent($dropzone, $drop, $correction);
+        $this->dispatch($event);
+
+
+        return $this->redirect(
+            $this->generateUrl(
+                'innova_collecticiel_drops_detail_correction_comment',
+                array(
+                    'resourceId' => $dropzone->getId(),
+                    'state' => 'edit',
+                    'correctionId' => $correction->getId(),
+                )
+            )
+        );
+    }
+
+    /**
+     * @Route(
+     *      "/{resourceId}/drops/detail/correction/{state}/{correctionId}",
+     *      name="innova_collecticiel_drops_detail_correction_comment",
+     *      requirements={"resourceId" = "\d+", "correctionId" = "\d+", "state" = "show|edit|preview"},
+     *      defaults={"page" = 1}
+     * )
+     * @Route(
+     *      "/{resourceId}/drops/detail/correction/{state}/{correctionId}/{page}",
+     *      name="innova_collecticiel_drops_detail_correction_paginated_comment",
+     *      requirements={"resourceId" = "\d+", "correctionId" = "\d+", "page" = "\d+", "state" = "show|edit|preview"}
+     * )
+     * @ParamConverter("dropzone", class="InnovaCollecticielBundle:Dropzone", options={"id" = "resourceId"})
+     * @ParamConverter("user", options={
+     *      "authenticatedUser" = true,
+     *      "messageEnabled" = true,
+     *      "messageTranslationKey" = "Correct an evaluation requires authentication. Please login.",
+     *      "messageTranslationDomain" = "innova_collecticiel"
+     * })
+     * @Template()
+     */
+    public function dropsDetailCorrectionInnovaCommentAction(Dropzone $dropzone, $state, $correctionId, $page, $user)
+    {
+        $this->get('innova.manager.dropzone_voter')->isAllowToOpen($dropzone);
+        $correction = $this
+            ->getDoctrine()
+            ->getRepository('InnovaCollecticielBundle:Correction')
+            ->getCorrectionAndDropAndUserAndDocuments($dropzone, $correctionId);
+        $userId = $this->get('security.context')->getToken()->getUser()->getId();
+        if ($state == 'preview') {
+            if ($correction->getDrop()->getUser()->getId() != $userId) {
+                throw new AccessDeniedException();
+            }
+        } else {
+            $this->get('innova.manager.dropzone_voter')->isAllowToEdit($dropzone);
+        }
+        //$this->checkUserGradeAvailable($dropzone);
+
+
+        if (!$dropzone->getPeerReview()) {
+            return $this->redirect(
+                $this->generateUrl(
+                    'innova_collecticiel_drops_detail_correction_standard',
+                    array(
+                        'resourceId' => $dropzone->getId(),
+                        'state' => $state,
+                        'correctionId' => $correctionId
+                    )
+                )
+            );
+        }
+
+        /** @var Correction $correction */
+
+
+        $edit = $state == 'edit';
+
+        if ($correction == null) {
+            throw new NotFoundHttpException();
+        }
+
+        if ($edit === true and $correction->getEditable() === false) {
+            throw new AccessDeniedException();
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        $pager = $this->getCriteriaPager($dropzone);
+        try {
+            $pager->setCurrentPage($page);
+        } catch (NotValidCurrentPageException $e) {
+            throw new NotFoundHttpException();
+        }
+
+        $oldData = array();
+        $grades = array();
+        if ($correction !== null) {
+            $grades = $em
+                ->getRepository('InnovaCollecticielBundle:Grade')
+                ->findByCriteriaAndCorrection($pager->getCurrentPageResults(), $correction);
+            foreach ($grades as $grade) {
+                $oldData[$grade->getCriterion()->getId()] = ($grade->getValue() >= $dropzone->getTotalCriteriaColumn())
+                    ? ($dropzone->getTotalCriteriaColumn() - 1) : $grade->getValue();
+            }
+        }
+
+        $form = $this->createForm(
+            new CorrectionCriteriaPageType(),
+            $oldData,
+            array(
+                'edit' => $edit,
+                'criteria' => $pager->getCurrentPageResults(),
+                'totalChoice' => $dropzone->getTotalCriteriaColumn()
+            )
+        );
+        if ($edit) {
+            if ($this->getRequest()->isMethod('POST') and $correction !== null) {
+                $form->handleRequest($this->getRequest());
+                if ($form->isValid()) {
+                    $data = $form->getData();
+
+                    foreach ($data as $criterionId => $value) {
+                        $this->persistGrade($grades, $criterionId, $value, $correction);
+                    }
+
+                    if ($correction->getFinished()) {
+                        $totalGrade = $this->get('innova.manager.correction_manager')->calculateCorrectionTotalGrade($dropzone, $correction);
+                        $correction->setTotalGrade($totalGrade);
+
+                        $em->persist($correction);
+                        $em->flush();
+                    }
+                    $goBack = $form->get('goBack')->getData();
+                    if ($goBack == 1) {
+                        $pageNumber = max(($page - 1), 0);
+
+                        return $this->redirect(
+                            $this->generateUrl(
+                                'innova_collecticiel_drops_detail_correction_paginated',
+                                array(
+                                    'resourceId' => $dropzone->getId(),
+                                    'state' => 'edit',
+                                    'correctionId' => $correction->getId(),
+                                    'page' => $pageNumber,
+                                )
+                            )
+                        );
+                    } else {
+                        if ($pager->getCurrentPage() < $pager->getNbPages()) {
+                            return $this->redirect(
+                                $this->generateUrl(
+                                    'innova_collecticiel_drops_detail_correction_paginated',
+                                    array(
+                                        'resourceId' => $dropzone->getId(),
+                                        'state' => 'edit',
+                                        'correctionId' => $correction->getId(),
+                                        'page' => ($page + 1)
+                                    )
+                                )
+                            );
+                        } else {
+                            return $this->redirect(
+                                $this->generateUrl(
+                                    'innova_collecticiel_drops_detail_correction_comment',
+                                    array(
+                                        'resourceId' => $dropzone->getId(),
+                                        'state' => 'edit',
+                                        'correctionId' => $correction->getId()
+                                    )
+                                )
+                            );
+                        }
+                    }
+                }
+            }
+        }
+
+        $view = 'InnovaCollecticielBundle:Correction:correctCriteria.html.twig';
+
+        if ($state == 'show' || $state == 'edit') {
+            return $this->render(
+                $view,
+                array(
+                    'workspace' => $dropzone->getResourceNode()->getWorkspace(),
+                    '_resource' => $dropzone,
+                    'dropzone' => $dropzone,
+                    'correction' => $correction,
+                    'pager' => $pager,
+                    'form' => $form->createView(),
+                    'admin' => true,
+                    'edit' => $edit,
+                    'state' => $state
+                )
+            );
+        } else if ($state == 'preview') {
+            return $this->render(
+                $view,
+                array(
+                    'workspace' => $dropzone->getResourceNode()->getWorkspace(),
+                    '_resource' => $dropzone,
+                    'dropzone' => $dropzone,
+                    'correction' => $correction,
+                    'pager' => $pager,
+                    'form' => $form->createView(),
+                    'admin' => false,
+                    'edit' => false,
+                    'state' => $state
+                )
+            );
+        }
+
+    }
+
 }
