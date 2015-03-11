@@ -11,7 +11,6 @@
 
 namespace Claroline\BundleRecorder\Logger;
 
-use Claroline\InstallationBundle\Log\LoggableTrait;
 use Composer\IO\ConsoleIO;
 use Psr\Log\AbstractLogger;
 
