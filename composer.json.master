@@ -20,10 +20,12 @@
             "Claroline\\CoreBundle\\Library\\Maintenance\\MaintenanceHandler::enableMaintenance"
         ],
         "post-package-install": [
-            "Claroline\\BundleRecorder\\ScriptHandler::logInstallOperation"
+            "Claroline\\BundleRecorder\\ScriptHandler::logInstallOperation",
+            "Claroline\\BundleRecorder\\ScriptHandler::addVersion"
         ],
         "post-package-update": [
-            "Claroline\\BundleRecorder\\ScriptHandler::logUpdateOperation"
+            "Claroline\\BundleRecorder\\ScriptHandler::logUpdateOperation",
+            "Claroline\\BundleRecorder\\ScriptHandler::addVersion"
         ],
         "pre-package-uninstall": [
             "Claroline\\BundleRecorder\\ScriptHandler::prepareUninstallOperation"
