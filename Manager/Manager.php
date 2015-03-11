@@ -11,7 +11,7 @@
 
 namespace Claroline\MigrationBundle\Manager;
 
-use Claroline\InstallationBundle\Log\LoggableTrait;
+use Claroline\BundleRecorder\Log\LoggableTrait;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Claroline\MigrationBundle\Generator\Generator;
 use Claroline\MigrationBundle\Generator\Writer;
