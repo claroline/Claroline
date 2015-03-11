@@ -17,8 +17,6 @@ use Claroline\CoreBundle\Library\Transfert\Importer;
 use Icap\LessonBundle\Manager\LessonManager;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\Processor;
-use Icap\LessonBundle\Entity\Chapter;
-use Icap\LessonBundle\Entity\Lesson;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use JMS\DiExtraBundle\Annotation as DI;
 
