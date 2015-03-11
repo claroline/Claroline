@@ -11,10 +11,10 @@
 
 namespace Claroline\CoreBundle\Library\Installation;
 
+use Claroline\BundleRecorder\Log\LoggableTrait;
 use Claroline\CoreBundle\Library\Installation\Plugin\Installer;
 use Claroline\CoreBundle\Library\PluginBundle;
 use Claroline\InstallationBundle\Bundle\InstallableInterface;
-use Claroline\InstallationBundle\Log\LoggableTrait;
 use Claroline\InstallationBundle\Manager\InstallationManager;
 use Doctrine\Bundle\DoctrineBundle\Command\CreateDatabaseDoctrineCommand;
 use JMS\DiExtraBundle\Annotation as DI;

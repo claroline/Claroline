@@ -28,6 +28,7 @@
             'copy-nodes': 'copy',
             'move-nodes': 'move',
             'order-nodes': 'order',
+            'list-mode': 'listMode',
             'filter': 'filter',
             'change-zoom': 'zoom',
             'custom-action': 'customAction',
@@ -276,4 +277,8 @@
             node: event.nodeId
         });
     };
+
+    server.prototype.listMode = function (event) {
+        this.dispatcher.trigger('list-mode-' + event.viewName, {mode: event.mode});
+    }
 })();

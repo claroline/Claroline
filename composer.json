@@ -55,7 +55,7 @@
         "claroline/kernel-bundle": "~1.0",
         "claroline/installation-bundle": "~4.0",
         "claroline/front-end-bundle": "~2.0",
-        "claroline/migration-bundle": "~1.0",
+        "claroline/migration-bundle": "~2.0",
         "johngrogg/ics-parser": "dev-master",
         "gregwar/captcha-bundle": "1.0.12",
         "knplabs/knp-menu-bundle": "2.0.0",

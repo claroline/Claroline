@@ -9,13 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Library\Fixtures;
+namespace Claroline\CoreBundle\Manager\Exception;
 
-use Claroline\BundleRecorder\Log\LoggableTrait;
-use Doctrine\Common\DataFixtures\AbstractFixture;
-use Psr\Log\LoggerInterface;
-
-abstract class LoggableFixture extends AbstractFixture
+class ResourceNotFoundException extends \Exception
 {
-    use LoggableTrait;
+
 }

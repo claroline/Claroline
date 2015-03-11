@@ -23,9 +23,9 @@
         tagName: 'ul',
         attributes: {'id': 'sortable'},
         events: {
-            'click .node-thumbnail .node-element': 'openNode',
+            'click .node .clickable-node': 'openNode',
             'click .results table a.result-path': 'openNode',
-            'click .node-thumbnail input[type=checkbox]': 'checkNode',
+            'click .node input[type=checkbox]': 'checkNode',
             'click .results table input[type=checkbox]': 'checkNode'
         },
         outerEvents: {
@@ -39,6 +39,8 @@
             this.parameters = parameters;
             this.dispatcher = dispatcher;
             this.directoryId = '0';
+            this.nodes = [];
+            this.listMode = 'default';
             this.zoomValue = this.parameters.zoom;
             this.dispatcher.on('change-zoom', this.zoom, this);
             _.each(this.outerEvents, function (method, event) {
@@ -46,20 +48,15 @@
                     event + '-' + this.parameters.viewName, this[method], this
                 );
             }, this);
+            this.dispatcher.on('list-mode-' + parameters.viewName, this.setListMode, this)
         },
         addNodes: function (event) {
             _.each(event, function (node) {
                 var isWhiteListed = this.parameters.resourceTypes[node.type] !== undefined;
 
                 if (isWhiteListed || node.type === 'directory') {
-                    //1023 is the "I can do everything" mask.
-                    if (this.parameters.restrictForOwner == 1 && node.mask != 1023 && node.type !== 'directory') {
-                        return;
-                    }
-
-                    var thumbnail = new views.Thumbnail(this.parameters, this.dispatcher, this.zoomValue);
-                    thumbnail.render(node, isWhiteListed && this.directoryId !== '0');
-                    this.$el.append(thumbnail.$el);
+                    this.nodes[node.id] = node;
+                    this.renderNode(node);
                 }
             }, this);
         },
@@ -94,6 +91,7 @@
 
             for (var i = 0; i < ids.length; ++i) {
                 this.$('#' + ids[i]).remove();
+                delete this.nodes[ids[i]];
             }
         },
         zoom: function (event) {
@@ -108,6 +106,7 @@
             var eventName = 'open-' + (type === 'directory' ? 'directory' : 'node');
 
             if (!this.parameters.isPickerMode || type === 'directory') {
+                this.nodes = [];
                 this.dispatcher.trigger(eventName , {
                     nodeId: event.currentTarget.getAttribute('data-id'),
                     resourceType: type,
@@ -116,6 +115,7 @@
                 });
             }
         },
+        //almost the same as select all in action.js
         checkNode: function (event) {
             if (this.parameters.isPickerMode
                 && !this.parameters.isPickerMultiSelectAllowed
@@ -192,6 +192,34 @@
                     'resourceTypes': this.parameters.resourceTypes
                 }));
             }
+        },
+        setListMode: function (event) {
+            this.listMode = event.mode;
+            //remove everything from the View
+            this.$el.empty();
+            var orderedNodes = [];
+
+            //first we need to order the nodes !
+            for (var i in this.nodes) {
+                orderedNodes[this.nodes[i].index_dir] = this.nodes[i];
+            }
+
+            for (var i = 1; i < orderedNodes.length; i++) {
+                this.renderNode(orderedNodes[i]);
+            }
+        },
+        renderNode: function(node) {
+            //1023 is the "I can do everything" mask.
+            if (this.parameters.restrictForOwner == 1 && node.mask != 1023 && node.type !== 'directory') {
+                return;
+            }
+
+            var view = (this.listMode === 'default') ?
+                new views.Thumbnail(this.parameters, this.dispatcher, this.zoomValue):
+                new views.ListViewElement(this.parameters, this.dispatcher, this.zoomValue);
+
+            view.render(node, true && this.directoryId !== '0');
+            this.$el.append(view.$el);
         }
     });
 })();

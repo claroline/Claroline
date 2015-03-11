@@ -1154,3 +1154,5 @@ logs_error_location: En cas d'erreur, les logs se trouvent dans le dossier app/l
 package_install_auto_reload: Cette page est rechargée automatiquement à la fin de l'installaion d'un paquet.
 activate_maintenance_mode: Vous devriez activer le mode de maintenance afin de signaler aux utilisateurs qu'une mise à jour est en cours.
 install_update_cant_be_undone: Les opérations d'installation et de mise à jour ne peuvent pas être annulées.
+list_view: Vue en liste (beta)
+created_by: Créé par %creator% le %creationDate%
