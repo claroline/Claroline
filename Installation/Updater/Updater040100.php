@@ -1,7 +1,6 @@
 <?php
 namespace Icap\BadgeBundle\Installation\Updater;
 
-use Claroline\InstallationBundle\Log\LoggableTrait;
 use Claroline\InstallationBundle\Updater\Updater;
 use Doctrine\Common\Persistence\Mapping\MappingException;
 use Doctrine\DBAL\Connection;
