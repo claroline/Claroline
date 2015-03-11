@@ -82,6 +82,11 @@ class WidgetHomeTabConfig
      */
     protected $locked = false;
 
+    /**
+     * @ORM\Column(type="json_array", nullable=true)
+     */
+    protected $details;
+
     public function getId()
     {
         return $this->id;
@@ -170,5 +175,15 @@ class WidgetHomeTabConfig
     public function setLocked($locked)
     {
         $this->locked = $locked;
+    }
+
+    public function getDetails()
+    {
+        return $this->details;
+    }
+
+    public function setDetails($details)
+    {
+        $this->details = $details;
     }
 }
