@@ -80,7 +80,7 @@ class Recorder
     public function addVersion(PackageInterface $package) {
         if ($this->isClarolinePackage($package)) {
             $ds = DIRECTORY_SEPARATOR;
-            $vpath = $this->vendorDir . $ds . $package->getTargetDir() . $ds . 'VERSION.txt';
+            $vpath = $this->vendorDir . $ds . $package.getName() . $ds . $package->getTargetDir() . $ds . 'VERSION.txt';
             file_put_contents($vpath, $package->getPrettyVersion());
         }
     }
