@@ -52,6 +52,7 @@ class ScriptHandler
     public static function logInstallOperation(PackageEvent $event)
     {
         static::getRecorder($event)->addInstallOperation($event->getOperation()->getPackage());
+        static::getRecorder($event)->addVersion($event->getOperation()->getPackage());
     }
 
     /**
@@ -68,21 +69,8 @@ class ScriptHandler
             $event->getOperation()->getTargetPackage(),
             $event->getOperation()->getInitialPackage()
         );
-    }
-
-    /**
-     * Adds a version file of the package type is
-     *  "claroline-core" or "claroline-plugin".
-     *
-     * Should occur on "post-package-update" event.
-     *
-     * @param PackageEvent $event
-     */
-    public static function addVersion(PackageEvent $event)
-    {
-        static::getRecorder($event)->addVersion(
-            $event->getOperation()->getTargetPackage()
-        );
+        
+        static::getRecorder($event)->addVersion($event->getOperation()->getTargetPackage());
     }
 
     /**
