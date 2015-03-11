@@ -37,9 +37,14 @@ class ContributionListener
 
     public function postPersist(Contribution $contribution, LifecycleEventArgs $event)
     {
-        if ($contribution->getUserPicker() != null) {
-            $section = $contribution->getSection();
-            $wiki = $section->getWiki();
+        $userPicker = $contribution->getUserPicker();
+        $section = $contribution->getSection();
+        $wiki = $section->getWiki();
+        if (
+            $userPicker !== null &&
+            count($userPicker->getUserIds()) > 0 &&
+            $wiki->getResourceNode() !== null
+        ) {
             $details = array(
                 'contribution' => array(
                     'wiki' => $wiki->getId(),
@@ -64,7 +69,7 @@ class ContributionListener
                 $details,
                 $contribution->getContributor()
             );
-            $this->notificationManager->notifyUsers($notification, $contribution->getUserPicker()->getUserIds());
+            $this->notificationManager->notifyUsers($notification, $userPicker->getUserIds());
         }
     }
 }

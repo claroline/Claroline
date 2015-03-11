@@ -23,6 +23,22 @@ class ContributionRepository extends EntityRepository
 
     /**
      * @param Section $section
+     * @return array $contributions
+     */
+    public function findAllButActiveForSection(Section $section)
+    {
+        $queryBuilder = $this->createQueryBuilder('contribution')
+            ->orderBy('contribution.creationDate', 'DESC')
+            ->andWhere('contribution.section = :section')
+            ->andWhere('contribution.id != :activeId')
+            ->setParameter('section', $section)
+            ->setParameter('activeId', $section->getActiveContribution()->getId());
+
+        return $queryBuilder->getQuery()->getResult();
+    }
+
+    /**
+     * @param Section $section
      * @param array $ids
      * @return array $contributions
      */

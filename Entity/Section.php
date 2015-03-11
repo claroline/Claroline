@@ -134,6 +134,8 @@ class Section
 
     /**
      * @param mixed $visible
+     *
+     * @return mixed
      */
     public function setVisible($visible)
     {
@@ -151,13 +153,15 @@ class Section
     }
 
     /**
-     * Returns the resource modification date.
+     * @param $creationDate
      *
-     * @return \DateTime
+     * @return $this
      */
-    public function getModificationDate()
+    public function setCreationDate($creationDate)
     {
-        return $this->modificationDate;
+        $this->creationDate = $creationDate;
+
+        return $this;
     }
 
     /**
@@ -471,7 +475,7 @@ class Section
 
     /**
      * Creates a new non persisted contribution and sets it as section's active contribution
-     * @param Claroline\CoreBundle\Entity\User $user
+     * @param \Claroline\CoreBundle\Entity\User $user
      */
     public function setNewActiveContributionToSection(User $user=null) {
         $oldActiveContribution = $this->getActiveContribution();
@@ -499,7 +503,7 @@ class Section
     /**
      * Returns the changeSet data when a section has been moved
      * @param Section $oldParent
-     * @param integer $oldPosition
+     * @param integer $oldLeft
      * @param Section $newParent
      *
      * @return array $changeSet
