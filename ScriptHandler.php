@@ -71,6 +71,21 @@ class ScriptHandler
     }
 
     /**
+     * Adds a version file of the package type is
+     *  "claroline-core" or "claroline-plugin".
+     *
+     * Should occur on "post-package-update" event.
+     *
+     * @param PackageEvent $event
+     */
+    public static function addVersion(PackageEvent $event)
+    {
+        static::getRecorder($event)->addVersion(
+            $event->getOperation()->getTargetPackage()
+        );
+    }
+
+    /**
      * Keeps track of a package before composer removes it, if the package
      * type is "claroline-core" or "claroline-plugin".
      *

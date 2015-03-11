@@ -61,8 +61,6 @@ class Recorder
             $bundle = $this->detector->detectBundle($package->getPrettyName());
             $type = $this->getOperationBundleType($package);
             $operation = new Operation(Operation::INSTALL, $bundle, $type);
-            //do not reorder because installed.json is not done yet
-            //$operation->setDependencies($this->getDependencies($package));
             $this->operationHandler->addOperation($operation);
         }
     }
@@ -75,9 +73,15 @@ class Recorder
             $operation = new Operation(Operation::UPDATE, $bundle, $type);
             $operation->setFromVersion($initial->getVersion());
             $operation->setToVersion($target->getVersion());
-            //do not reorder because installed.json is not done yet
-            //$operation->setDependencies($this->getDependencies($target));
             $this->operationHandler->addOperation($operation);
+        }
+    }
+
+    public function addVersion(PackageInterface $package) {
+        if ($this->isClarolinePackage($package)) {
+            $ds = DIRECTORY_SEPARATOR;
+            $vpath = $this->vendorDir . $ds . $package->getTargetDir() . $ds . 'VERSION.txt';
+            file_put_contents($vpath, $package->getPrettyVersion());
         }
     }
 
@@ -124,10 +128,6 @@ class Recorder
             }
         }
 
-        //The next line not be necessary. Some problems were caused by some recursive dependencies...
-        //we may comment this line. However, since it's working properly now, I'm not touching anything
-        //because it doesn't do anything wrong.
-        //$orderedBundles = $this->orderClaroBundlesForInstall($orderedBundles);
         $this->bundleHandler->writeBundleFile(array_unique($orderedBundles));
     }
 
@@ -147,7 +147,7 @@ class Recorder
 
         foreach ($operations as $operation) {
             $package = $operation->getPackage();
-            
+
             if ($element == $package->getPrettyName()) {
                 return $this->isClarolinePackage($package);
             }
@@ -159,91 +159,6 @@ class Recorder
         return $package->getType() === 'claroline-core' ?
             Operation::BUNDLE_CORE :
             Operation::BUNDLE_PLUGIN;
-    }
-
-    /**
-     * This is a simplistic sort but it's enough for now
-     * (it won't handle recursive/multiple dependencies but it's enough for now)
-     */
-    public function orderClaroBundlesForInstall(array $bundles)
-    {
-        $claroBundles = array();
-        $operations = $this->getOperations();
-
-        foreach ($operations as $operation) {
-            $package = $operation->getPackage();
-            if ($package->getType() === 'claroline-core'
-                || $package->getType() === 'claroline-plugin') {
-                $claroBundles[$this->getNameSpace($package->getName())] =
-                    $this->getDependencies($package);
-            }
-        }
-
-        $bundleCopies = $bundles;
-
-        foreach ($claroBundles as $claroBundle => $dependencies) {
-            foreach ($dependencies as $dependency) {
-                if (!$this->isDependencySetBefore($bundles, $claroBundle, $dependency)) {
-                    //we have to place the bundle properly
-                    $key = array_search($claroBundle, $bundleCopies);
-                    $newKey = $this->arrayRightShift($dependency, $bundleCopies);
-                    $bundleCopies[$newKey] = $claroBundle;
-                    unset($bundleCopies[$key]);
-                    $bundleCopies = array_values($bundleCopies);
-                }
-            }
-        }
-
-        return $bundleCopies;
-    }
-
-    /**
-     * Shift an array to the right.
-     * Example: $array = array([0] => 'a', [1] => 'b', [2] => 'c');
-     * $return = arrayRightShift('a', $array);
-     * $array = array([0] => 'a', [1] => 'b', [2] => 'b', [3] => c)
-     */
-    private function arrayRightShift($search, &$array) {
-        $key = array_search($search, $array);
-
-        for ($i = count($array); $i > $key; $i--) {
-            $array[$i] = $array[$i - 1];
-        }
-
-        return $key + 1;
-    }
-
-    private function isDependencySetBefore(array $bundles, $bundle, $dependency) {
-        $foundDep = false;
-
-        foreach ($bundles as $initBundle) {
-            if ($bundle === $dependency) $foundDep = true;
-            if ($bundle === $initBundle) {
-                return $foundDep;
-            }
-        }
-    }
-
-    /**
-     * Returns the dependencies of a Claroline package.
-     *
-     * @param The require class wich was parsed from the installed.json with json_decode
-     * @return array
-     */
-    public function getDependencies(PackageInterface $package)
-    {
-        $dependencies = [];
-        $requires = $package->getRequires();
-
-        if ($requires) {
-            foreach($requires as $name => $el) {
-                if ($this->isClarolinePackage($name)) {
-                    $dependencies[] = $this->getNameSpace($name);
-                }
-            }
-        }
-
-        return $dependencies;
     }
 
     public function getOperations()
@@ -261,7 +176,7 @@ class Recorder
         }
 
         $solver = new Solver(new DefaultPolicy(), $pool, $toRepo);
-        
+
         return $solver->solve($request);
     }
 
