@@ -14,6 +14,7 @@ namespace Icap\LessonBundle\Transfert;
 
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Transfert\Importer;
+use Icap\LessonBundle\Manager\LessonManager;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\Processor;
 use Icap\LessonBundle\Entity\Chapter;
@@ -27,19 +28,19 @@ use JMS\DiExtraBundle\Annotation as DI;
  */
 class LessonImporter extends Importer implements ConfigurationInterface{
 
-    private $container;
-    private $om;
+    /**
+     * @var \Icap\LessonBundle\Manager\LessonManager
+     */
+    private $lessonManager;
 
     /**
      * @DI\InjectParams({
-     *      "om"        = @DI\Inject("claroline.persistence.object_manager"),
-     *      "container" = @DI\Inject("service_container")
+     *      "lessonManager"        = @DI\Inject("icap.lesson.manager")
      * })
      */
-    public function __construct($om, $container)
+    public function __construct(LessonManager $lessonManager)
     {
-        $this->container = $container;
-        $this->om = $om;
+        $this->lessonManager = $lessonManager;
     }
 
     public function getConfigTreeBuilder()
@@ -82,37 +83,7 @@ class LessonImporter extends Importer implements ConfigurationInterface{
 
     public function import(array $data)
     {
-        $lesson = new Lesson();
-        if (isset($data['data'])) {
-            $lessonData = $data['data'];
-            $chapterRepository = $this->om->getRepository("IcapLessonBundle:Chapter");
-
-            $chaptersMap = array();
-            foreach ($lessonData as $chapter) {
-                $chapterData = $chapter['chapter'];
-                $entityChapter = new Chapter();
-                $entityChapter->setLesson($lesson);
-                $entityChapter->setTitle($chapterData['title']);
-                $text = file_get_contents(
-                    $this->getRootPath() . DIRECTORY_SEPARATOR . $chapterData['path']
-                );
-                $entityChapter->setText($text);
-                if ($chapterData['is_root']) {
-                    $lesson->setRoot($entityChapter);
-                }
-                $parentChapter = null;
-                if ($chapterData['parent_id'] !== null) {
-                    $parentChapter = $chaptersMap[$chapterData['parent_id']];
-                    $entityChapter->setParent($parentChapter);
-                    $chapterRepository->persistAsLastChildOf($entityChapter, $parentChapter);
-                } else {
-                    $chapterRepository->persistAsFirstChild($entityChapter);
-                }
-                $chaptersMap[$chapterData['id']] = $entityChapter;
-            }
-        }
-
-        return $lesson;
+        return $this->lessonManager->importLesson($data, $this->getRootPath());
     }
 
     /**
@@ -124,32 +95,6 @@ class LessonImporter extends Importer implements ConfigurationInterface{
      */
     public function export(Workspace $workspace, array &$files, $object)
     {
-        $chapterRepository = $this->om->getRepository('IcapLessonBundle:Chapter');
-        $data = array();
-
-        // Getting all sections and building array
-        $rootChapter = $object->getRoot();
-        $chapters = $chapterRepository->children($rootChapter);
-        array_unshift($chapters, $rootChapter);
-        foreach ($chapters as $chapter) {
-            $uid = uniqid() . '.txt';
-            $tmpPath = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $uid;
-            file_put_contents($tmpPath, $chapter->getText());
-            $files[$uid] = $tmpPath;
-
-            $chapterArray = array(
-                'id'                => $chapter->getId(),
-                'parent_id'         => ($chapter->getParent() !== null)?$chapter->getParent()->getId():null,
-                'is_root'           => $chapter->getId() == $rootChapter->getId(),
-                'title'             => $chapter->getTitle(),
-                'path'              => $uid
-            );
-
-            $data[] = array(
-                'chapter' => $chapterArray
-            );
-        }
-
-        return $data;
+        return $this->lessonManager->exportLesson($workspace, $files, $object);
     }
 }

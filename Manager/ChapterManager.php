@@ -33,7 +33,6 @@ class ChapterManager
      * Copy full lesson chapters, from original root to copy root
      * @param Chapter $root_original
      * @param Chapter $root_copy
-     * @param Lesson $newlesson
      */
     public function copyRoot(Chapter $root_original, Chapter $root_copy){
         $this->copyChildren($root_original, $root_copy, true);
@@ -41,10 +40,12 @@ class ChapterManager
 
     /**
      * Copy chapter_org subchapters into provided chapter_copy
-     * @param Chapter $root_original
-     * @param Chapter $root_copy
-     * @param Lesson $newlesson
-     * @param Lesson $copyname
+     * @param Chapter $chapter_org
+     * @param Chapter $parent
+     * @param boolean $copy_children
+     * @param Lesson $copyName
+     *
+     * @return Chapter $chapter_copy
      */
     public function copyChapter(Chapter $chapter_org, Chapter $parent, $copy_children, $copyName = null){
         $chapter_copy = new Chapter();
@@ -59,6 +60,7 @@ class ChapterManager
         if($copy_children){
             $this->copyChildren($chapter_org, $chapter_copy, $copy_children);
         }
+
         return $chapter_copy;
     }
 
