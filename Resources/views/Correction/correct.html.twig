@@ -1,4 +1,5 @@
 {% extends "InnovaCollecticielBundle::layout.html.twig" %}
+
 {% block resourceBreadcrumb %}
     {% if admin == true %}
         <li><a href="{{ path('innova_collecticiel_edit_common', {'resourceId': dropzone.id}) }}"><span
