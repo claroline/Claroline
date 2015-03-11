@@ -11,7 +11,7 @@
 
 namespace Claroline\BundleRecorder\Handler;
 
-use Claroline\InstallationBundle\Log\LoggableTrait;
+use Claroline\BundleRecorder\Log\LoggableTrait;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 
