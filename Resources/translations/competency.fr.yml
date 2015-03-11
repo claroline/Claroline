@@ -10,20 +10,27 @@ ability_: Capacité
 associated_competencies: Compétences associées
 collapse_all: Tout réduire
 competency:
+  associate: Associer une compétence
   create: Créer une compétence
   create_sub: Créer une sous-compétence
+  do_select: 'Selectionnez une compétence '
   delete: Supprimer une compétence
   edit: Modifier une compétence
+competency_: Compétence
 expand_all: Tout développer
 framework:
   create: Créer un référentiel
   delete: Supprimer un référentiel
+  do_select: 'Sélectionnez un référentiel '
   edit: Éditer un référentiel
 framework_: Référentiel
 info:
   ability_search: Entrez ici la description de la capacité
+  add_competency_association: Cliquez sur le bouton ci-dessous pour sélectionner une compétence.
+  no_competency_association: Il n'y a encore aucune compétence associée.
   no_frame: Il n'y a pas encore de référentiels. Vous pouvez créer un nouveau référentiel ou gérer les échelles de difficultés à l'aide des boutons ci-dessous.
   no_frame_no_scale: Il n'y a pas encore de référentiels ni d'échelles. Si vous choisissez de créer un référentiel maintenant, celui-ci se verra assigner une échelle par défaut d'un seul niveau. Alternativement, vous pouvez créer une échelle directement et l'associer ensuite à votre référentiel.
+  no_frame_to_select: Aucun référentiel de compétences n'a encore été défini.
   no_scale: Il n'y a pas encore d'échelles. Vous pouvez créer une nouvelle échelle à l'aide du bouton ci-dessous.
   scale_levels: "Les degrés doivent être séparés par des retours à la ligne. Exemple :\n\nFacile\nMoyen\nDifficile"
 level: Niveau
@@ -46,6 +53,7 @@ message:
   scale_deletion_confirm: Voulez-vous vraiment supprimer cette échelle ?
   scale_edited: Échelle modifiée avec succès.
   sub_competency_created: Sous-compétence créée avec succès.
+origin: Origine
 tooltip:
   # cannot use pluralization techniques because transchoice filter is missing in twigjs
   undeletable_scale: Cette échelle ne peut être supprimée car elle est liée à un référentiel.

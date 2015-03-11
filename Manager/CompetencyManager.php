@@ -369,7 +369,7 @@ class CompetencyManager
      * @return Ability
      * @throws \LogicException if a link already exists
      */
-    public function linkAbility(Competency $parent, Ability $ability, Level $level)
+    public function linkAbilityToCompetency(Competency $parent, Ability $ability, Level $level)
     {
         $link = $this->competencyAbilityRepo->findOneBy([
             'competency' => $parent,

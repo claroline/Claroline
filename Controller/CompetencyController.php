@@ -378,7 +378,7 @@ class CompetencyController
     public function addAbility(Request $request, Competency $parent)
     {
         if ($this->formHandler->isValid('hevinci_form_ability_import', $request, null, ['competency' => $parent])) {
-            return new JsonResponse($this->manager->linkAbility(
+            return new JsonResponse($this->manager->linkAbilityToCompetency(
                 $parent,
                 $this->formHandler->getData(),
                 $this->formHandler->getData()->getLevel()

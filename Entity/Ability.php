@@ -2,6 +2,8 @@
 
 namespace HeVinci\CompetencyBundle\Entity;
 
+use Claroline\CoreBundle\Entity\Resource\Activity;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints as BR;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -40,6 +42,12 @@ class Ability implements \JsonSerializable
     private $competencyAbilities;
 
     /**
+     * @ORM\ManyToMany(targetEntity="Claroline\CoreBundle\Entity\Resource\Activity")
+     * @ORM\JoinTable(name="hevinci_ability_activity")
+     */
+    private $activities;
+
+    /**
      * @var Level
      *
      * NOTE: this attribute is not mapped; its only purpose is to temporarily
@@ -47,6 +55,11 @@ class Ability implements \JsonSerializable
      *       on a associated CompetencyAbility instance.
      */
     private $level;
+
+    public function __construct()
+    {
+        $this->activities = new ArrayCollection();
+    }
 
     /**
      * @return integer
@@ -89,6 +102,14 @@ class Ability implements \JsonSerializable
     }
 
     /**
+     * @return CompetencyAbility[]
+     */
+    public function getCompetencyAbilities()
+    {
+        return $this->competencyAbilities;
+    }
+
+    /**
      * @see $level
      * @param Level $level
      */
@@ -104,6 +125,18 @@ class Ability implements \JsonSerializable
     public function getLevel()
     {
         return $this->level;
+    }
+
+    /**
+     * Associates the ability with an activity.
+     *
+     * @param Activity $activity
+     */
+    public function linkActivity(Activity $activity)
+    {
+        if (!$this->activities->contains($activity)) {
+            $this->activities->add($activity);
+        }
     }
 
     public function jsonSerialize()

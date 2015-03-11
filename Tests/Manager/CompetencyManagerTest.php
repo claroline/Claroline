@@ -377,7 +377,7 @@ class CompetencyManagerTest extends UnitTestCase
             ->method('findOneBy')
             ->with(['competency' => $parent, 'ability' => $ability])
             ->willReturn(new CompetencyAbility());
-        $this->manager->linkAbility($parent, $ability, new Level());
+        $this->manager->linkAbilityToCompetency($parent, $ability, new Level());
     }
 
     public function testAbility()
@@ -398,7 +398,7 @@ class CompetencyManagerTest extends UnitTestCase
                 return true;
             }));
         $this->om->expects($this->once())->method('flush');
-        $this->manager->linkAbility($parent, $ability, $level);
+        $this->manager->linkAbilityToCompetency($parent, $ability, $level);
     }
 
     public function loadFrameworkProvider()

@@ -35,7 +35,7 @@ class Competency implements \JsonSerializable
     private $description;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Scale")
+     * @ORM\ManyToOne(targetEntity="Scale", inversedBy="competencies")
      */
     private $scale;
 

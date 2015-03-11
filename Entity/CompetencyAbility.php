@@ -30,7 +30,7 @@ class CompetencyAbility
     private $ability;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Level")
+     * @ORM\ManyToOne(targetEntity="Level", inversedBy="competencyAbilities")
      * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      */
     private $level;

@@ -2,8 +2,8 @@
 
 namespace HeVinci\CompetencyBundle\Repository;
 
+use Claroline\CoreBundle\Entity\Resource\Activity;
 use Doctrine\ORM\EntityRepository;
-use HeVinci\CompetencyBundle\Entity\Ability;
 use HeVinci\CompetencyBundle\Entity\Competency;
 
 class AbilityRepository extends EntityRepository
@@ -86,6 +86,27 @@ class AbilityRepository extends EntityRepository
             ->setMaxResults(5)
             ->setParameter(':name', $name . '%')
             ->setParameter(':parent', $excludedParent)
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * Returns the abilities associated with an activity, pre-loading
+     * level information.
+     * 
+     * @param Activity $activity
+     * @return array
+     */
+    public function findByActivity(Activity $activity)
+    {
+        return $this->createQueryBuilder('a')
+            ->select('a', 'ca', 'c', 'l')
+            ->join('a.activities', 'ac')
+            ->join('a.competencyAbilities', 'ca')
+            ->join('ca.competency', 'c')
+            ->join('ca.level', 'l')
+            ->where('ac = :activity')
+            ->setParameter(':activity', $activity)
             ->getQuery()
             ->getResult();
     }

@@ -1,0 +1,39 @@
+{% extends 'HeVinciCompetencyBundle::modal.html.twig' %}
+
+{% trans_default_domain 'competency' %}
+
+{% block title %}{{ 'competency.associate'|trans }}{% endblock %}
+
+{% block body %}
+    {% if frameworks|length == 0 %}
+        <div class="alert alert-warning">
+            <i class="fa fa-warning"></i>
+            {{ 'info.no_frame_to_select'|trans }}
+        </div>
+    {% else %}
+        <div>
+            {{ 'framework.do_select'|trans }}:
+        </div>
+        <br/>
+        <ul>
+            {% for framework in frameworks %}
+                <li>
+                    <a href="#"
+                       class="framework"
+                       data-id="{{ framework.getId() }}">
+                        {{ framework.getName() }}
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endblock %}
+
+{% block footer %}
+    <span class="btn btn-default" data-dismiss="modal">
+        {{ 'cancel'|trans({}, 'platform') }}
+    </span>
+    <button type="button" id='save' class="btn btn-primary disabled">
+        {{ 'ok'|trans({}, 'platform') }}
+    </button>
+{% endblock %}

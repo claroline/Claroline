@@ -6,20 +6,101 @@
 
 {% extends layout %}
 
+{% trans_default_domain 'competency' %}
+
+{% set resourceName = _resource.getResourceNode().getName() %}
+{% set isEditMode = is_granted('ROLE_COMPETENCY_MANAGER') %}
+
 {% block title %}
-    {{ _resource.resourceNode.name ~ ' - ' ~ 'associated_competencies'|trans({}, 'competency')|striptags|raw }}
+    {{ resourceName ~ ' - ' ~ 'associated_competencies'|trans({}, 'competency')|striptags|raw }}
 {% endblock %}
 
 {% block resourceBreadcrumb %}
-    <li class="active">{{ _resource.getResourceNode().getName() }}</li>
+    <li class="active">{{ resourceName }}</li>
 {% endblock %}
 
 {% block section_content %}
     <div class="panel-heading">
-        <div class="panel-title">{{ 'associated_competencies'|trans({}, 'competency') }}</div>
+        <div class="panel-title">{{ resourceName ~ ' - ' ~ 'associated_competencies'|trans }}</div>
     </div>
     <div class="panel-body">
-        TODO
-        ({{ is_granted('ROLE_COMPETENCY_MANAGER') ? 'edit mode' : 'read-only' }})
+        {% if competencies|length == 0 %}
+            <br/>
+            <div class="alert alert-info">
+                <i class="fa fa-info-circle"></i>
+                {{ 'info.no_competency_association'|trans }}
+                {% if isEditMode %}
+                    {{ 'info.add_competency_association'|trans }}
+                {% endif %}
+            </div>
+        {% else %}
+            <table class="table table-condensed table-bordered">
+                <thead>
+                    <th>{{ 'competency_'|trans }}</th>
+                    <th>{{ 'type'|trans({}, 'platform') }}</th>
+                    <th>{{ 'level'|trans }}</th>
+                    <th>{{ 'origin'|trans }}</th>
+                    <th>{{ 'delete'|trans({}, 'platform') }}</th>
+                </thead>
+                <tbody>
+                    {% for competency in competencies %}
+                        {% set pathCount = competency.paths|length %}
+                        <tr>
+                            <td rowspan="{{ pathCount }}">{{ competency.name }}</td>
+                            <td rowspan="{{ pathCount }}">{{ competency.type|trans }}</td>
+                            <td>{{ competency.paths[0].level }}</td>
+
+                            {# use macro here #}
+
+                            <td>
+                                {% for step in competency.paths[0].steps %}
+                                    - {{ step }} <br>
+                                {% endfor %}
+                            </td>
+                            <td>
+                                <a href="#">
+                                    <i class="fa fa-remove"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        {% if pathCount > 1 %}
+                            {% for i in 1..pathCount - 1 %}
+                                <td>{{ competency.paths[i].level }}</td>
+                                <td>
+                                {% for step in competency.paths[0].steps %}
+                                    - {{ step }} <br>
+                                {% endfor %}
+                            </td>
+                                <td>
+                                    <a href="#">
+                                        <i class="fa fa-remove"></i>
+                                    </a>
+                                </td>
+                            {% endfor %}
+                        {% endif %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
     </div>
+    <div class="panel-footer">
+        {% if isEditMode %}
+            <button class="btn btn-primary associate-competency">{{ 'competency.associate'|trans }}</button>
+        {% endif %}
+    </div>
+    {# stores the activity id for script uses #}
+    <span id="activity-id"
+          class="hidden"
+          data-id="{{ _resource.getId() }}">
+    </span>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('bundles/hevincicompetency/js/activity.js') }}"></script>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/hevincicompetency/css/style.css') }}"/>
 {% endblock %}

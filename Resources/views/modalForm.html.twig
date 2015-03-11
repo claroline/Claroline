@@ -1,32 +1,11 @@
-<div class="modal-dialog" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
-    <div class="modal-content">
-        <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                &times;
-            </button>
-            <h3 class="modal-title">
-                {% block title %}TITLE{% endblock %}
-            </h3>
-        </div>
-        <div class="modal-body">
-            <form id="{% block id %}#{% endblock %}"
-                  action="{% block action %}#{% endblock %}"
-                  method="POST"
-                  onsubmit="return false;"
-                  {{ form_enctype(form) }}
-            >
-                {{ form_widget(form) }}
-            </form>
-        </div>
-        <div class="modal-footer">
-            {% block footer %}
-                <span class="btn btn-default" data-dismiss="modal">
-                    {{ 'cancel'|trans({}, 'platform') }}
-                </span>
-                <button type="button" id='save' class="btn btn-primary">
-                    {{ 'ok'|trans({}, 'platform') }}
-                </button>
-            {% endblock %}
-        </div>
-    </div>
-</div>
+{% extends 'HeVinciCompetencyBundle::modal.html.twig' %}
+
+{% block body %}
+    <form id="{% block id %}#{% endblock %}"
+          action="{% block action %}#{% endblock %}"
+          method="POST"
+          onsubmit="return false;"
+          {{ form_enctype(form) }}>
+        {{ form_widget(form) }}
+    </form>
+{% endblock %}

@@ -28,6 +28,25 @@ ul.framework li {
     list-style: none;
 }
 
+ul.framework li span.node-name {
+    cursor: pointer;
+}
+
+ul.framework li span.node-name.selected {
+    padding: 3px;
+    border-radius: 2px;
+    color: white;
+    background-color: #428bca;
+}
+
+ul.framework li[data-type=ability] span.node-name {
+    font-style: italic;
+}
+
+ul.framework li[data-type=ability] span.node-level {
+    font-weight: bold;
+}
+
 ul.framework li > i {
     margin-right: 0.3em;
     font-size: 0.8em;
