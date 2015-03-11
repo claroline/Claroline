@@ -80,18 +80,24 @@ class BlogManager
                 $files[$commentUid] = $commentTemporaryPath;
 
                 $comments[] = [
-                    'message' => $commentUid,
-                    'author'  => $comment->getAuthor()->getMail()
+                    'message'           => $commentUid,
+                    'author'            => $comment->getAuthor()->getMail(),
+                    'creation_date'     => $comment->getCreationDate()->format(\DateTime::ATOM),
+                    'modification_date' => (null !== $comment->getUpdateDate()) ? $comment->getUpdateDate()->format(\DateTime::ATOM) : null,
+                    'publication_date'  => (null !== $comment->getPublicationDate()) ? $comment->getPublicationDate()->format(\DateTime::ATOM) : null
                 ];
             }
 
             $postArray = [
-                'title'    => $post->getTitle(),
-                'content'  => $postUid,
-                'author'   => $post->getAuthor()->getMail(),
-                'status'   => $post->getStatus(),
-                'tags'     => $tags,
-                'comments' => $comments
+                'title'             => $post->getTitle(),
+                'content'           => $postUid,
+                'author'            => $post->getAuthor()->getMail(),
+                'status'            => $post->getStatus(),
+                'creation_date'     => $post->getCreationDate()->format(\DateTime::ATOM),
+                'modification_date' => (null !== $post->getModificationDate()) ? $post->getModificationDate()->format(\DateTime::ATOM) : null,
+                'publication_date'  => (null !== $post->getPublicationDate()) ? $post->getPublicationDate()->format(\DateTime::ATOM) : null,
+                'tags'              => $tags,
+                'comments'          => $comments
             ];
 
             $data['posts'][] = $postArray;
