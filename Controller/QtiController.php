@@ -16,6 +16,9 @@ class QtiController extends Controller {
      */
     public function importAction()
     {
+        $request = $this->container->get('request');
+        $exoID = $request->get('exerciceID');
+        
         if (strstr($_FILES["qtifile"]["type"], 'application/zip') === false) {
 
             return $this->importError('qti format warning');
@@ -32,8 +35,12 @@ class QtiController extends Controller {
 
             return $this->importError($scanFile);
         }
-
-        return $this->forward('UJMExoBundle:Question:index', array());
+        
+        if ($exoID == -1) {
+            return $this->forward('UJMExoBundle:Question:index', array());
+        } else {
+            return $this->forward('UJMExoBundle:Exercise:importQuestion', array('exoID' => $exoID,'pageGoNow'=> 1, 'maxPage'=> 10, 'nbItem' => 1, 'displayAll' => 0, 'idExo'=> -1, 'QuestionsExo' => false ));
+        }
     }
 
     /**
@@ -45,7 +52,13 @@ class QtiController extends Controller {
      */
     public function importFormAction()
     {
-        return $this->render('UJMExoBundle:QTI:import.html.twig');
+        $request = $this->container->get('request');
+
+        if ($request->isXmlHttpRequest()) {
+            $exoID = $request->request->get('exoID');
+        }
+        
+        return $this->render('UJMExoBundle:QTI:import.html.twig', array('exoID' => $exoID));
     }
 
     /**

@@ -1,7 +1,9 @@
+#you must pass the id of the exercice for this route, it's for import in exercice
 ujm_qti_import:
     pattern:  /import
     defaults: { _controller: UJMExoBundle:Qti:import }
 
+#you must pass the id of the exercice for this route, it's for import in exercice
 ujm_qti_import_form:
     pattern:  /import/form
     defaults: { _controller: UJMExoBundle:Qti:importForm }

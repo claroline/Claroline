@@ -5,11 +5,14 @@
  */
 
 
-function importQTI(url) {
+function importQTI(url, exoID) {
     $.ajax({
             type: "POST",
             url: url,
             cache: false,
+            data: {
+                exoID : exoID,
+            },
             success: function (data) {
                 displayImportForm(data);
             }
