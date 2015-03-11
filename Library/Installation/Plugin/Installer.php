@@ -11,7 +11,7 @@
 
 namespace Claroline\CoreBundle\Library\Installation\Plugin;
 
-use Claroline\InstallationBundle\Log\LoggableTrait;
+use Claroline\BundleRecorder\Log\LoggableTrait;
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\InstallationBundle\Manager\InstallationManager;
 use Claroline\CoreBundle\Library\PluginBundle;
