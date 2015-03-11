@@ -11,7 +11,7 @@
 
 namespace Claroline\CoreBundle\Library\Fixtures;
 
-use Claroline\InstallationBundle\Log\LoggableTrait;
+use Claroline\BundleRecorder\Log\LoggableTrait;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Psr\Log\LoggerInterface;
 
