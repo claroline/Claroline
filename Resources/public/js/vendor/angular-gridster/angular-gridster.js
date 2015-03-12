@@ -1032,7 +1032,7 @@
         }
     ])
 
-    .controller('GridsterItemCtrl', ['$scope', function($scope) {
+    .controller('GridsterItemCtrl', function() {
         this.$element = null;
         this.gridster = null;
         this.row = null;
@@ -1226,7 +1226,7 @@
             return (this.sizeY * this.gridster.curRowHeight - this.gridster.margins[0]);
         };
 
-    }])
+    })
 
     .factory('GridsterDraggable', ['$document', '$timeout', '$window',
         function($document, $timeout, $window) {
