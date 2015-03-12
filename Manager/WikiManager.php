@@ -111,9 +111,9 @@ class WikiManager {
     {
         $wiki = new Wiki();
         if (isset($data['data'])) {
-            $wikiData = $data['data'][0]['wiki'];
+            $wikiData = $data['data'];
 
-            $wiki->setMode($wikiData['mode']);
+            $wiki->setMode($wikiData['options']['mode']);
             $sectionsMap = array();
             foreach ($wikiData['sections'] as $section) {
                 $sectionData = $section['section'];
@@ -233,11 +233,11 @@ class WikiManager {
             );
         }
 
-        $data[] = array(
-            'wiki'  => array(
-                'mode'      => $object->getMode(),
-                'sections'  => $sectionsArray
-            )
+        $data = array(
+            'options'   => array(
+                'mode'  => $object->getMode()
+            ),
+            'sections'  => $sectionsArray
         );
 
         return $data;
