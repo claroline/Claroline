@@ -35,7 +35,7 @@ class BaseHandler
         }
 
         $this->targetFile = $targetFile;
-        $this->setLogger($logger);
+        if ($logger) $this->setLogger($logger);
     }
 
     /**
@@ -44,7 +44,7 @@ class BaseHandler
      */
     public function log($message, $indent = '    ')
     {
-        $this->logger->log(LogLevel::INFO, $indent . $message);
+        if ($this->logger) $this->logger->log(LogLevel::INFO, $indent . $message);
     }
 
     /**
