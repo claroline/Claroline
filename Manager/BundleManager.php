@@ -26,6 +26,7 @@ use Claroline\CoreBundle\Library\Utilities\FileSystem;
 use Psr\Log\LogLevel;
 use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Component\Console\Output\StreamOutput;
+use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * @Service("claroline.manager.bundle_manager")
