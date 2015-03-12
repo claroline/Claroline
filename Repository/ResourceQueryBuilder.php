@@ -26,6 +26,7 @@ class ResourceQueryBuilder
     private $joinSingleRelatives = true;
     private $resultAsArray = false;
     private $leftJoinRights = false;
+    private $leftJoinLogs = false;
     private $selectClause;
     private $whereClause;
     private $orderClause;
@@ -76,7 +77,7 @@ class ResourceQueryBuilder
      *
      * @return ResourceQueryBuilder
      */
-    public function selectAsArray($withMaxPermissions = false)
+    public function selectAsArray($withMaxPermissions = false, $withLastOpenDate = false)
     {
         $this->resultAsArray = true;
         $this->joinSingleRelatives = true;
@@ -98,8 +99,12 @@ class ResourceQueryBuilder
 
         if ($withMaxPermissions) {
             $this->leftJoinRights = true;
-            $this->selectClause .=
-                    ",{$eol}rights.mask";
+            $this->selectClause .= ",{$eol}rights.mask";
+        }
+
+        if ($withLastOpenDate) {
+            $this->leftJoinLogs = true;
+            $this->selectClause .= ",{$eol}log.dateLog as last_opened";
         }
 
         $this->selectClause .= $eol;
@@ -118,6 +123,15 @@ class ResourceQueryBuilder
     {
         $this->addWhereClause('node.workspace = :workspace_id');
         $this->parameters[':workspace_id'] = $workspace->getId();
+
+        return $this;
+    }
+
+    public function addLastOpenDate(User $user)
+    {
+        $this->addWhereClause('log.doer = :doer_id');
+        $this->addWhereClause('log_node.id = node.id');
+        $this->parameters[':doer_id'] = $user->getId();
 
         return $this;
     }
@@ -485,15 +499,20 @@ class ResourceQueryBuilder
             "LEFT JOIN node.rights rights{$eol}" .
             "JOIN rights.role rightRole{$eol}" :
             '';
+        $joinLogs = $this->leftJoinLogs ?
+            "JOIN node.logs log{$eol}" .
+            "JOIN log.resourceNode log_node{$eol}":
+            '';
         $dql =
             $this->selectClause .
             $this->fromClause.
             $joinRelatives .
             $joinRoles .
             $joinRights .
+            $joinLogs .
             $this->whereClause .
-            $this->orderClause .
-            $this->groupByClause;
+            $this->groupByClause .
+            $this->orderClause;
 
         return $dql;
     }

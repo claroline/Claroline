@@ -753,10 +753,12 @@ class ResourceManager
      * a json response)
      *
      * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $node
-     * @param \Symfony\Component\Security\Core\Authentication\Token\TokenInterface $token
+     * @param \Symfony\Component\Security\Core\Authentication\Token\TokenInterface $toke
+     * @param boolean $new: set the 'new' flag to display warning in the resource manager
+     * @todo check "new" from log
      * @return array
      */
-    public function toArray(ResourceNode $node, TokenInterface $token)
+    public function toArray(ResourceNode $node, TokenInterface $token, $new = false)
     {
         $resourceArray = array();
         $resourceArray['id'] = $node->getId();
@@ -771,6 +773,7 @@ class ResourceManager
         $resourceArray['index_dir'] = $node->getIndex();
         $resourceArray['creation_date'] = $node->getCreationDate()->format($this->translator->trans('date_range.format.with_hours', array(), 'platform'));
         $resourceArray['modification_date'] = $node->getModificationDate()->format($this->translator->trans('date_range.format.with_hours', array(), 'platform'));
+        $resourceArray['new'] = $new;
 
         $isAdmin = false;
 
@@ -795,6 +798,11 @@ class ResourceManager
             $resourceArray['enableRightsEdition'] = false;
         } else {
             $resourceArray['enableRightsEdition'] = true;
+        }
+
+        if ($node->getResourceType()->getName() === 'file') {
+            $file = $this->getResourceFromNode($node);
+            $resourceArray['size'] = $file->getFormattedSize();
         }
 
         return $resourceArray;
@@ -1152,10 +1160,11 @@ class ResourceManager
     public function getChildren(
         ResourceNode $node,
         array $roles,
-        User $user
+        User $user,
+        $withLastOpenDate = false
     )
     {
-        return $this->resourceNodeRepo->findChildren($node, $roles, $user);
+        return $this->resourceNodeRepo->findChildren($node, $roles, $user, $withLastOpenDate);
     }
 
     /**
