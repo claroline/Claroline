@@ -40,13 +40,12 @@ class Comment extends Statusable
      * @var \Datetime $publicationDate
      *
      * @ORM\Column(type="datetime", name="publication_date", nullable=true)
-     * @Gedmo\Timestampable(on="create")
      * @Gedmo\Timestampable(on="change", field="status", value="1")
      */
     protected $publicationDate;
 
     /**
-     * @var \Datetime $publicationDate
+     * @var \Datetime $updateDate
      *
      * @ORM\Column(type="datetime", name="update_date", nullable=true)
      * @Gedmo\Timestampable(on="change", field="message")

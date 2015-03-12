@@ -63,7 +63,6 @@ class Post extends Statusable
      * @var \Datetime $publicationDate
      *
      * @ORM\Column(type="datetime", name="publication_date", nullable=true)
-     * @Gedmo\Timestampable(on="create")
      * @Gedmo\Timestampable(on="change", field="status", value="1")
      */
     protected $publicationDate;
@@ -78,7 +77,7 @@ class Post extends Statusable
     /**
      * @var Comment
      *
-     * @ORM\OneToMany(targetEntity="Comment", mappedBy="post", cascade={"remove"})
+     * @ORM\OneToMany(targetEntity="Comment", mappedBy="post", cascade={"all"})
      */
     protected $comments;
 
