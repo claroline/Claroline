@@ -53,7 +53,7 @@ class InteractionOpenHandler extends \UJM\ExoBundle\Form\InteractionHandler
 
         $this->em->flush();
 
-        $this->addAnExericse($interOpen);
+        $this->addAnExercise($interOpen);
 
         $this->duplicateInter($interOpen);
 

@@ -137,14 +137,9 @@ abstract class InteractionHandler
      * @param object type of InteractionQCM or InteractionGraphic or .... $inter
      *
      */
-    protected function addAnExericse($inter) {
-        if ($this->exercise != -1) {
-            $exercise = $this->em->getRepository('UJMExoBundle:Exercise')->find($this->exercise);
+    protected function addAnExercise($inter) {
 
-            if ($this->exoServ->isExerciseAdmin($exercise)) {
-                $this->exoServ->setExerciseQuestion($this->exercise, $inter);
-            }
-        }
+        $this->exoServ->addQuestionInExercise($inter, $this->exercise, $this->em->getRepository('UJMExoBundle:Exercise'));
     }
 
     /**

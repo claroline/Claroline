@@ -71,7 +71,7 @@ class InteractionQCMHandler extends \UJM\ExoBundle\Form\InteractionHandler
 
         $this->em->flush();
 
-        $this->addAnExericse($interQCM);
+        $this->addAnExercise($interQCM);
 
         $this->duplicateInter($interQCM);
 

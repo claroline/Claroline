@@ -667,7 +667,7 @@ class exerciseServices
                 }
             }
         }
-        
+
         return $tabResponseIndex;
     }
 
@@ -1634,5 +1634,24 @@ class exerciseServices
         }
 
         return $resp;
+    }
+
+    /**
+     * Add an Interaction in an exercise if created since an exercise
+     *
+     * @access public
+     *
+     * @param type $inter
+     * @param type $exerciceID
+     * @param Doctrine EntityManager $em
+     */
+    public function addQuestionInExercise($inter, $exerciceID, $em) {
+        if ($exerciceID != -1) {
+            $exercise = $em->find($exerciceID);
+
+            if ($this->isExerciseAdmin($exercise)) {
+                $this->setExerciseQuestion($exerciceID, $inter);
+            }
+        }
     }
 }

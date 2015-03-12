@@ -3,6 +3,7 @@
 namespace UJM\ExoBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Doctrine\ORM\EntityManager;
 
 class QtiController extends Controller {
 
@@ -18,7 +19,7 @@ class QtiController extends Controller {
     {
         $request = $this->container->get('request');
         $exoID = $request->get('exerciceID');
-        
+
         if (strstr($_FILES["qtifile"]["type"], 'application/zip') === false) {
 
             return $this->importError('qti format warning');
@@ -30,16 +31,23 @@ class QtiController extends Controller {
             return $this->importError('qti can\'t open zip');
         }
 
-        $scanFile = $qtiRepos->scanFiles();
+        if($exoID == -1) {
+            $scanFile = $qtiRepos->scanFiles();
+
+        } else {
+            $scanFile = $qtiRepos->scanFilesToImport($exoID);
+
+        }
+
         if ($scanFile !== true) {
 
-            return $this->importError($scanFile);
-        }
-        
+                return $this->importError($scanFile);
+            }
+
         if ($exoID == -1) {
             return $this->forward('UJMExoBundle:Question:index', array());
         } else {
-            return $this->forward('UJMExoBundle:Exercise:importQuestion', array('exoID' => $exoID,'pageGoNow'=> 1, 'maxPage'=> 10, 'nbItem' => 1, 'displayAll' => 0, 'idExo'=> -1, 'QuestionsExo' => false ));
+            return $this->redirect($this->generateUrl( 'ujm_exercise_questions', array( 'id' => $exoID, )));
         }
     }
 
@@ -57,7 +65,7 @@ class QtiController extends Controller {
         if ($request->isXmlHttpRequest()) {
             $exoID = $request->request->get('exoID');
         }
-        
+
         return $this->render('UJMExoBundle:QTI:import.html.twig', array('exoID' => $exoID));
     }
 
