@@ -32,22 +32,22 @@
             {{ macros.flashBox() }}
 
             {# Bloc "Retour aux corrections ..." #}
-            <div class="row">
-                <div class="col-md-12">
-                    {% if backUserId is defined  and backUserId != -1 %}
-                        {# back from correction By user ( admin tool ) #}
-                        <a class="btn btn-default btn-sm"
-                           href="{{ path('innova_collecticiel_examiner_corrections', {'resourceId': dropzone.id, 'userId': backUserId}) }}"><span
-                                    class="fa fa-angle-left"></span> {{ 'Return to corrections'|trans({}, 'innova_collecticiel') }}
-                        </a>
-                    {% else %}
-                        <a class="btn btn-default btn-sm"
-                           href="{{ path('innova_collecticiel_drops_detail', {'resourceId': dropzone.id, 'dropId': correction.drop.id}) }}"><span
-                                    class="fa fa-angle-left"></span> {{ 'Return to corrections'|trans({}, 'innova_collecticiel') }}
-                        </a>
-                    {% endif %}
-                </div>
-            </div>
+{#            <div class="row">  #}
+{#                <div class="col-md-12">  #}
+{#                    {% if backUserId is defined  and backUserId != -1 %}  #}
+{#    #}                     {# back from correction By user ( admin tool ) #}
+{#                       <a class="btn btn-default btn-sm"  #}
+{#                           href="{{ path('innova_collecticiel_examiner_corrections', {'resourceId': dropzone.id, 'userId': backUserId}) }}"><span  #}
+{#                                    class="fa fa-angle-left"></span> {{ 'Return to corrections'|trans({}, 'innova_collecticiel') }}
+{#                        </a>  #}
+{#                    {% else %}  #}
+{#                        <a class="btn btn-default btn-sm"  #}
+{#                           href="{{ path('innova_collecticiel_drops_detail', {'resourceId': dropzone.id, 'dropId': correction.drop.id}) }}"><span #}
+{#                                    class="fa fa-angle-left"></span> {{ 'Return to corrections'|trans({}, 'innova_collecticiel') }}
+{#                        </a> #}
+{#                   {% endif %} #}
+{#                </div> #}
+{#           </div> #}
             <br/>
 
             {# Bloc "Rappel des instructions ..." #}
@@ -57,7 +57,9 @@
             {% endif %}
 
             {# Bloc "Instructions aux correcteurs ..." #}
-            {% if dropzone.correctionInstruction|default and dropzone.correctionInstruction != ''  and dropzone.correctionInstruction != '<p></p>' %}
+            {% if dropzone.correctionInstruction|default
+              and dropzone.correctionInstruction != ''
+              and dropzone.correctionInstruction != '<p></p>' %}
                 {% include 'InnovaCollecticielBundle:Correction:correctionInstructions.html.twig' %}
                 <br/>
             {% endif %}
