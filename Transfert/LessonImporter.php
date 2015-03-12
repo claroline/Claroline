@@ -60,13 +60,15 @@ class LessonImporter extends Importer implements ConfigurationInterface{
         $rootPath = $this->getRootPath();
         $rootNode
             ->children()
-                ->arrayNode('chapter')
-                    ->children()
-                        ->scalarNode('id')->end()
-                        ->scalarNode('parent_id')->end()
-                        ->booleanNode('is_root')->defaultFalse()->end()
-                        ->scalarNode('title')->end()
-                        ->scalarNode('path')->end()
+                ->arrayNode('chapters')
+                    ->prototype('array')
+                        ->children()
+                            ->scalarNode('id')->end()
+                            ->scalarNode('parent_id')->end()
+                            ->booleanNode('is_root')->defaultFalse()->end()
+                            ->scalarNode('title')->end()
+                            ->scalarNode('path')->end()
+                        ->end()
                     ->end()
                 ->end()
             ->end()
@@ -76,7 +78,7 @@ class LessonImporter extends Importer implements ConfigurationInterface{
     public function validate(array $data)
     {
         $processor = new Processor();
-        $result = $processor->processConfiguration($this, $data);
+        $result = $processor->processConfiguration($this, ['data' => $data]);
     }
 
     public function import(array $data)

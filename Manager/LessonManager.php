@@ -55,27 +55,26 @@ class LessonManager
             $lessonData = $data['data'];
 
             $chaptersMap = array();
-            foreach ($lessonData as $chapter) {
-                $chapterData = $chapter['chapter'];
+            foreach ($lessonData['chapters'] as $chapter) {
                 $entityChapter = new Chapter();
                 $entityChapter->setLesson($lesson);
-                $entityChapter->setTitle($chapterData['title']);
+                $entityChapter->setTitle($chapter['title']);
                 $text = file_get_contents(
-                    $rootPath . DIRECTORY_SEPARATOR . $chapterData['path']
+                    $rootPath . DIRECTORY_SEPARATOR . $chapter['path']
                 );
                 $entityChapter->setText($text);
-                if ($chapterData['is_root']) {
+                if ($chapter['is_root']) {
                     $lesson->setRoot($entityChapter);
                 }
                 $parentChapter = null;
-                if ($chapterData['parent_id'] !== null) {
-                    $parentChapter = $chaptersMap[$chapterData['parent_id']];
+                if ($chapter['parent_id'] !== null) {
+                    $parentChapter = $chaptersMap[$chapter['parent_id']];
                     $entityChapter->setParent($parentChapter);
                     $this->chapterRepository->persistAsLastChildOf($entityChapter, $parentChapter);
                 } else {
                     $this->chapterRepository->persistAsFirstChild($entityChapter);
                 }
-                $chaptersMap[$chapterData['id']] = $entityChapter;
+                $chaptersMap[$chapter['id']] = $entityChapter;
             }
         }
 
@@ -93,7 +92,7 @@ class LessonManager
      */
     public function exportLesson(Workspace $workspace, array &$files, Lesson $object)
     {
-        $data = array();
+        $data = array('chapters' => array());
 
         // Getting all sections and building array
         $rootChapter = $object->getRoot();
@@ -113,9 +112,7 @@ class LessonManager
                 'path'              => $uid
             );
 
-            $data[] = array(
-                'chapter' => $chapterArray
-            );
+            $data['chapters'][] = $chapterArray;
         }
 
         return $data;
