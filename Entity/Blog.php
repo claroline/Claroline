@@ -90,6 +90,8 @@ class Blog extends AbstractResource
      */
     public function setOptions(BlogOptions $options)
     {
+        $options->setBlog($this);
+
         $this->options = $options;
 
         return $this;
@@ -183,12 +185,14 @@ class Blog extends AbstractResource
      */
     public function postPersist(LifecycleEventArgs $args)
     {
-        $entityManager = $args->getEntityManager();
+        if (null === $this->getOptions()) {
+            $entityManager = $args->getEntityManager();
 
-        $blogOptions = new BlogOptions();
-        $blogOptions->setBlog($this);
+            $blogOptions = new BlogOptions();
+            $blogOptions->setBlog($this);
 
-        $entityManager->persist($blogOptions);
-        $entityManager->flush($blogOptions);
+            $entityManager->persist($blogOptions);
+            $entityManager->flush($blogOptions);
+        }
     }
 }
