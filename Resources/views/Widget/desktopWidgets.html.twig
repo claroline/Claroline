@@ -20,6 +20,10 @@
                  data-gs-width="{{ widgetDisplayConfig.getWidth() }}"
                  data-gs-height="{{ widgetDisplayConfig.getHeight() }}"
                  data-widget-display-config-id="{{ widgetDisplayConfig.getId() }}"
+                 {% if isLockedHomeTab %}
+                     data-gs-no-resize="true"
+                     data-gs-no-move="true"
+                 {% endif %}
             >
                 <div class="grid-stack-item-content panel panel-default">
                     <div class="panel-heading"
@@ -28,15 +32,18 @@
                         {% endif %}
                     >
                         <h3 class="panel-title">
-                            <span class="pull-right">
-                                <i class="fa fa-times close close-widget-btn"
-                                   data-widget-hometab-config-id="{{ widgetHomeTabConfig.getId() }}"
-                                ></i>
-                                <span class="close">&nbsp;</span>
-                                <i class="fa fa-cog close edit-widget-btn"
-                                   data-widget-hometab-config-id="{{ widgetHomeTabConfig.getId() }}"
-                                ></i>
-                            </span>
+                            
+                            {% if not widgetHomeTabConfig.isLocked() and not isLockedHomeTab %}
+                                <span class="pull-right">
+                                    <i class="fa fa-times close {% if widgetHomeTabConfig.getType() == 'desktop' %}close-widget-btn{% else %}hide-widget-btn{% endif %}"
+                                       data-widget-hometab-config-id="{{ widgetHomeTabConfig.getId() }}"
+                                    ></i>
+                                    <span class="close">&nbsp;</span>
+                                    <i class="fa fa-cog close edit-widget-btn"
+                                       data-widget-hometab-config-id="{{ widgetHomeTabConfig.getId() }}"
+                                    ></i>
+                                </span>
+                            {% endif %}
                            {{ widgetInstance.getName() }}
                         </h3>
                     </div>

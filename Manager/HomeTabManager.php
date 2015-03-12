@@ -273,11 +273,9 @@ class HomeTabManager
             )
         );
 
-        if (!is_null($adminHomeTabConfig)) {
-            return $adminHomeTabConfig->isLocked();
-        }
-
-        return false;
+        return !is_null($adminHomeTabConfig) ?
+            $adminHomeTabConfig->isLocked() :
+            false;
     }
 
     public function checkHomeTabVisibilityForConfigByUser(
