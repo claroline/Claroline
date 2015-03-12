@@ -167,7 +167,7 @@
                 </a>
                 <span class="pull-right">
                     <i id="register-users-btn"
-                       class="fa fa-sign-in pointer-hand"
+                       class="fa fa-user pointer-hand"
                        data-toggle="tooltip"
                        data-placement="left"
                        title="{{ 'register_users_to_team'|trans({}, 'team') }}"
@@ -276,7 +276,7 @@
 {% block javascripts %}
     {{ parent() }}
     <script type="text/javascript"
-            src="{{ url('bazinga_jstranslation_js', { 'domain_name': 'team' }) }}"
+            src="{{ url('bazinga_jstranslation_js', { 'domain': 'team' }) }}"
     >
     </script>
     <script src='{{ asset('bundles/clarolineteam/js/managerTeamIndex.js') }}'
