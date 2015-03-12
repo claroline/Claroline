@@ -1158,3 +1158,4 @@ activate_maintenance_mode: Vous devriez activer le mode de maintenance afin de s
 install_update_cant_be_undone: Les opérations d'installation et de mise à jour ne peuvent pas être annulées.
 list_view: Vue en liste (beta)
 created_by: Créé par %creator% le %creationDate%
+updated_by: Dernière màj: %modificationDate%

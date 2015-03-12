@@ -16,8 +16,4 @@ use Claroline\CoreBundle\Entity\Facet\FieldFacet;
 
 class FieldFacetRepository extends EntityRepository
 {
-    public function findFieldsAfter(FieldFacet $field)
-    {
-        
-    }
 }

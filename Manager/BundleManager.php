@@ -301,6 +301,8 @@ class BundleManager
         $operationFilePath = $this->kernelRootDir . "/config/operations.xml";
         //remove the old operation file if it exists (maybe it would be better to do a backup).
         @unlink($operationFilePath);
+        //$fileLogger = new \Monolog\Logger('claroline.logger.file');
+        //$fileLogger->pushHandler(new \Monolog\Handler\StreamHandler($logPath));
         $operationHandler = new OperationHandler($operationFilePath);
 
         //generating the operations.xml file
