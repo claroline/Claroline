@@ -1,3 +1,5 @@
+portfolio: 'Portfolio'
+
 portfolio-add_guide: 'added %guide% in the guides list of the portfolio %portfolio%'
 portfolio-remove_guide: 'removed %guide% from the guides list of the portfolio %portfolio%'
 portfolio-add_viewer: 'removed access to %guide% on the portfolio %portfolio%'
