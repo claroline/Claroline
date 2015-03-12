@@ -73,14 +73,19 @@ class WidgetDisplayConfig
     protected $column = 0;
 
     /**
-     * @ORM\Column(name="widget_width", type="integer", options={"default":4})
+     * @ORM\Column(name="width", type="integer", options={"default":4})
      */
     protected $width = 4;
 
     /**
-     * @ORM\Column(name="widget_height", type="integer", options={"default":3})
+     * @ORM\Column(name="height", type="integer", options={"default":3})
      */
     protected $height = 3;
+
+    /**
+     * @ORM\Column(name="color", nullable=true)
+     */
+    protected $color;
 
     public function getId()
     {
@@ -160,5 +165,15 @@ class WidgetDisplayConfig
     public function setHeight($height)
     {
         $this->height = $height;
+    }
+
+    public function getColor()
+    {
+        return $this->color;
+    }
+
+    public function setColor($color)
+    {
+        $this->color = $color;
     }
 }

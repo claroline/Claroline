@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2015/03/11 02:40:12
+ * Generation date: 2015/03/12 08:57:16
  */
-class Version20150311144010 extends AbstractMigration
+class Version20150312085714 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -22,8 +22,9 @@ class Version20150311144010 extends AbstractMigration
                 widget_instance_id INT NOT NULL, 
                 row_position INT NOT NULL, 
                 column_position INT NOT NULL, 
-                widget_width INT NOT NULL, 
-                widget_height INT NOT NULL, 
+                width INT NOT NULL, 
+                height INT NOT NULL, 
+                color NVARCHAR(255), 
                 PRIMARY KEY (id)
             )
         ");
@@ -50,11 +51,11 @@ class Version20150311144010 extends AbstractMigration
         ");
         $this->addSql("
             ALTER TABLE claro_widget_display_config 
-            ADD CONSTRAINT DF_EBBE4972_D75C1C39 DEFAULT 4 FOR widget_width
+            ADD CONSTRAINT DF_EBBE4972_8C1A452F DEFAULT 4 FOR width
         ");
         $this->addSql("
             ALTER TABLE claro_widget_display_config 
-            ADD CONSTRAINT DF_EBBE4972_1C21607 DEFAULT 3 FOR widget_height
+            ADD CONSTRAINT DF_EBBE4972_F54DE50F DEFAULT 3 FOR height
         ");
         $this->addSql("
             ALTER TABLE claro_widget_display_config 

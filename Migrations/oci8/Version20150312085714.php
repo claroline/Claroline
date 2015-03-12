@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Migrations\pdo_oci;
+namespace Claroline\CoreBundle\Migrations\oci8;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2015/03/11 02:40:12
+ * Generation date: 2015/03/12 08:57:16
  */
-class Version20150311144010 extends AbstractMigration
+class Version20150312085714 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -22,8 +22,9 @@ class Version20150311144010 extends AbstractMigration
                 widget_instance_id NUMBER(10) NOT NULL, 
                 row_position NUMBER(10) NOT NULL, 
                 column_position NUMBER(10) NOT NULL, 
-                widget_width NUMBER(10) DEFAULT 4 NOT NULL, 
-                widget_height NUMBER(10) DEFAULT 3 NOT NULL, 
+                width NUMBER(10) DEFAULT 4 NOT NULL, 
+                height NUMBER(10) DEFAULT 3 NOT NULL, 
+                color VARCHAR2(255) DEFAULT NULL NULL, 
                 PRIMARY KEY(id)
             )
         ");

@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2015/03/11 02:40:11
+ * Generation date: 2015/03/12 08:57:15
  */
-class Version20150311144010 extends AbstractMigration
+class Version20150312085714 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -22,8 +22,9 @@ class Version20150311144010 extends AbstractMigration
                 widget_instance_id INT NOT NULL, 
                 row_position INT NOT NULL, 
                 column_position INT NOT NULL, 
-                widget_width INT DEFAULT 4 NOT NULL, 
-                widget_height INT DEFAULT 3 NOT NULL, 
+                width INT DEFAULT 4 NOT NULL, 
+                height INT DEFAULT 3 NOT NULL, 
+                color VARCHAR(255) DEFAULT NULL, 
                 INDEX IDX_EBBE497282D40A1F (workspace_id), 
                 INDEX IDX_EBBE4972A76ED395 (user_id), 
                 INDEX IDX_EBBE497244BF891 (widget_instance_id), 
