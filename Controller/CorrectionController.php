@@ -436,6 +436,7 @@ class CorrectionController extends DropzoneBaseController
         $dropzoneManager = $this->get('innova.manager.dropzone_manager');
         $dropzoneProgress = $dropzoneManager->getDropzoneProgressByUser($dropzone, $user);
 
+echo "state1 : " . $state;die();
         $view = 'InnovaCollecticielBundle:Correction:correctCriteria.html.twig';
 
         return $this->render(
@@ -674,7 +675,7 @@ class CorrectionController extends DropzoneBaseController
     /**
      * @Route(
      *      "/{resourceId}/drops/detail/correction/{state}/{correctionId}",
-     *      name="innova_collecticiel_drops_detail_correction",
+     *      name="innova_collecticiel_drops_detail_comment",
      *      requirements={"resourceId" = "\d+", "correctionId" = "\d+", "state" = "show|edit|preview"},
      *      defaults={"page" = 1}
      * )
@@ -692,7 +693,7 @@ class CorrectionController extends DropzoneBaseController
      * })
      * @Template()
      */
-    public function dropsDetailCorrectionAction(Dropzone $dropzone, $state, $correctionId, $page, $user)
+    public function dropsDetailCommentAction(Dropzone $dropzone, $state, $correctionId, $page, $user)
     {
         $this->get('innova.manager.dropzone_voter')->isAllowToOpen($dropzone);
         $correction = $this
@@ -828,9 +829,12 @@ class CorrectionController extends DropzoneBaseController
             }
         }
 
+        // Appel de la vue qui va gérer l'ajout des commentaires. InnovaERV.
         $view = 'InnovaCollecticielBundle:Correction:correctCriteria.html.twig';
 
         if ($state == 'show' || $state == 'edit') {
+            //Test passage d'une donnée
+            $test = "Eric";
             return $this->render(
                 $view,
                 array(
@@ -842,7 +846,8 @@ class CorrectionController extends DropzoneBaseController
                     'form' => $form->createView(),
                     'admin' => true,
                     'edit' => $edit,
-                    'state' => $state
+                    'state' => $state,
+                    'test' => $test,
                 )
             );
         } else if ($state == 'preview') {
@@ -992,8 +997,8 @@ class CorrectionController extends DropzoneBaseController
 
     /**
      * @Route(
-     *      "/{resourceId}/drops/detail/{dropId}/add/correction",
-     *      name="innova_collecticiel_drops_detail_add_correction",
+     *      "/{resourceId}/drops/detail/{dropId}/add/comments",
+     *      name="innova_collecticiel_drops_detail_add_comments_innova",
      *      requirements={"resourceId" = "\d+", "dropId" = "\d+"}
      * )
      * @ParamConverter("dropzone", class="InnovaCollecticielBundle:Dropzone", options={"id" = "resourceId"})
@@ -1006,7 +1011,7 @@ class CorrectionController extends DropzoneBaseController
      * @ParamConverter("drop", class="InnovaCollecticielBundle:Drop", options={"id" = "dropId"})
      * @Template()
      */
-    public function dropsDetailAddCorrectionAction($dropzone, $user, $drop)
+    public function dropsDetailAddCommentsInnovaAction($dropzone, $user, $drop)
     {
         $this->get('innova.manager.dropzone_voter')->isAllowToOpen($dropzone);
         $this->get('innova.manager.dropzone_voter')->isAllowToEdit($dropzone);
@@ -1024,10 +1029,9 @@ class CorrectionController extends DropzoneBaseController
         $event = new LogCorrectionStartEvent($dropzone, $drop, $correction);
         $this->dispatch($event);
 
-
         return $this->redirect(
             $this->generateUrl(
-                'innova_collecticiel_drops_detail_correction',
+                'innova_collecticiel_drops_detail_comment',
                 array(
                     'resourceId' => $dropzone->getId(),
                     'state' => 'edit',
@@ -1697,7 +1701,7 @@ class CorrectionController extends DropzoneBaseController
     /**
      * @Route(
      *      "/{resourceId}/drops/detail/{dropId}/add/correction",
-     *      name="innova_collecticiel_drops_detail_add_correction_comment",
+     *      name="innova_collecticiel_drops_detail_add_correction",
      *      requirements={"resourceId" = "\d+", "dropId" = "\d+"}
      * )
      * @ParamConverter("dropzone", class="InnovaCollecticielBundle:Dropzone", options={"id" = "resourceId"})
@@ -1710,7 +1714,7 @@ class CorrectionController extends DropzoneBaseController
      * @ParamConverter("drop", class="InnovaCollecticielBundle:Drop", options={"id" = "dropId"})
      * @Template()
      */
-    public function dropsDetailAddCorrectionInnovaCommentAction($dropzone, $user, $drop)
+    public function dropsDetailAddCorrectionAction($dropzone, $user, $drop)
     {
         $this->get('innova.manager.dropzone_voter')->isAllowToOpen($dropzone);
         $this->get('innova.manager.dropzone_voter')->isAllowToEdit($dropzone);
@@ -1731,7 +1735,7 @@ class CorrectionController extends DropzoneBaseController
 
         return $this->redirect(
             $this->generateUrl(
-                'innova_collecticiel_drops_detail_correction_comment',
+                'innova_collecticiel_drops_detail_correction',
                 array(
                     'resourceId' => $dropzone->getId(),
                     'state' => 'edit',
@@ -1741,16 +1745,19 @@ class CorrectionController extends DropzoneBaseController
         );
     }
 
+
+
+
     /**
      * @Route(
      *      "/{resourceId}/drops/detail/correction/{state}/{correctionId}",
-     *      name="innova_collecticiel_drops_detail_correction_comment",
+     *      name="innova_collecticiel_drops_detail_add_comments",
      *      requirements={"resourceId" = "\d+", "correctionId" = "\d+", "state" = "show|edit|preview"},
      *      defaults={"page" = 1}
      * )
      * @Route(
      *      "/{resourceId}/drops/detail/correction/{state}/{correctionId}/{page}",
-     *      name="innova_collecticiel_drops_detail_correction_paginated_comment",
+     *      name="innova_collecticiel_drops_detail_correction_paginated_comments",
      *      requirements={"resourceId" = "\d+", "correctionId" = "\d+", "page" = "\d+", "state" = "show|edit|preview"}
      * )
      * @ParamConverter("dropzone", class="InnovaCollecticielBundle:Dropzone", options={"id" = "resourceId"})
@@ -1762,7 +1769,7 @@ class CorrectionController extends DropzoneBaseController
      * })
      * @Template()
      */
-    public function dropsDetailCorrectionInnovaCommentAction(Dropzone $dropzone, $state, $correctionId, $page, $user)
+    public function dropsDetailAddCommentsAction(Dropzone $dropzone, $state, $correctionId, $page, $user)
     {
         $this->get('innova.manager.dropzone_voter')->isAllowToOpen($dropzone);
         $correction = $this
@@ -1779,6 +1786,7 @@ class CorrectionController extends DropzoneBaseController
         }
         //$this->checkUserGradeAvailable($dropzone);
 
+echo "ici : ";die();
 
         if (!$dropzone->getPeerReview()) {
             return $this->redirect(
@@ -1898,6 +1906,7 @@ class CorrectionController extends DropzoneBaseController
             }
         }
 
+echo "state3 : " . $state;die();
         $view = 'InnovaCollecticielBundle:Correction:correctCriteria.html.twig';
 
         if ($state == 'show' || $state == 'edit') {

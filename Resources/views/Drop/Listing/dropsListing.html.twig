@@ -28,22 +28,7 @@
         {% for drop in pager.currentPageResults %}
             <tr>
                 <!-- Colonne supprimée : 'Copie rendue le' -->
-                <!--
-                <td>
-                    <a href="{{ path('innova_collecticiel_drops_detail', {'resourceId': dropzone.id, 'dropId': drop.id}) }}"
-                       title="{{ 'See copy'|trans({}, 'innova_collecticiel') }}">
-                        {{ drop.dropDate|date('formatDatetime'|trans({}, 'innova_collecticiel')) }}
-                        {% if drop.reported %}
-                            <span class="text-danger fa fa-exclamation-triangle" data-toggle="tooltip" title=""
-                                  data-original-title="{{ 'This copy has been reported'|trans({}, 'innova_collecticiel') }}"></span>
-                        {% endif %}
-                        {% if drop.unlockedDrop %}
-                            <span class="text-warning fa fa-info-circle" data-toggle="tooltip" title=""
-                                  data-original-title="{{ 'This copy has been unlocked by admin.(it did not received the expected number of correction)'|trans({}, 'innova_collecticiel') }}"></span>
-                        {% endif %}
-                    </a>
-                </td>
-                -->
+                <!-- -->
                 <td>
                     {{ drop.user.firstName|capitalize }} {{ drop.user.lastName|upper }}
                 </td>
@@ -55,7 +40,7 @@
                 </td>
                 <td> <!-- Appel de la vue "Vue d'un fichier" où seront affichés les différents commentaires. -->
                     <div class="btn-group ">
-                        <a href="{{ path('innova_collecticiel_drops_detail_add_correction_comment', {'resourceId': dropzone.id, 'dropId': drop.id}) }}" type="button" class="btn btn-default btn-xs">
+                        <a href="{{ path('innova_collecticiel_drops_detail_add_comments_innova', {'resourceId': dropzone.id, 'dropId': drop.id}) }}" type="button" class="btn btn-default btn-xs">
                             {{ 'See document'|trans({}, 'innova_collecticiel') }}
                         </a>
                     </div>
