@@ -552,7 +552,7 @@ class ResourceController
                 $item['timestamp_last_modification'] = $dateModification->getTimeStamp();
                 if (isset ($el['last_opened'])) {
                     $item['last_opened'] = $el['last_opened']->getTimeStamp();
-                    if ($item['last_opened'] > $item['timestamp_last_modification']) $item['new'] = false;
+                    if ($item['last_opened'] >= $item['timestamp_last_modification']) $item['new'] = false;
                 }
                 $item['creation_date'] = $dateCreation->format($this->translator->trans('date_range.format.with_hours', array(), 'platform'));;
 

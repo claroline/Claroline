@@ -96,9 +96,10 @@ class ResourceNodeRepository extends MaterializedPathRepository
         $builder = new ResourceQueryBuilder();
         $returnedArray = array();
 
+        $isWorkspaceManager = $this->isWorkspaceManager($parent, $roles);
         //check if manager of the workspace.
         //if it's true, show every children
-        if ($this->isWorkspaceManager($parent, $roles)) {
+        if ($isWorkspaceManager) {
             $builder->selectAsArray()
                 ->whereParentIs($parent)
                 ->orderByIndex();
@@ -110,9 +111,6 @@ class ResourceNodeRepository extends MaterializedPathRepository
                 $item[$key]['mask'] = 65535;
                 $returnedArray[] = $item[$key];
             }
-
-            return $returnedArray;
-
         //otherwise only show visible children
         } else {
             $builder->selectAsArray(true)
@@ -149,12 +147,14 @@ class ResourceNodeRepository extends MaterializedPathRepository
         //We can't do one request because of the left join + max combination
 
         if ($withLastOpenDate) {
-            $builder->selectAsArray(true, true)
+            $builder->selectAsArray(false, true)
                 ->whereParentIs($parent)
-                ->whereHasRoleIn($roles)
-                ->whereIsAccessible($user)
                 ->addLastOpenDate($user)
                 ->groupById();
+
+            if (!$isWorkspaceManager) {
+                $builder->whereHasRoleIn($roles)->whereIsAccessible($user);
+            }
 
             $query = $this->_em->createQuery($builder->getDql());
             $query->setParameters($builder->getParameters());

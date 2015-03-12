@@ -500,8 +500,8 @@ class ResourceQueryBuilder
             "JOIN rights.role rightRole{$eol}" :
             '';
         $joinLogs = $this->leftJoinLogs ?
-            "LEFT JOIN node.logs log{$eol}" .
-            "LEFT JOIN log.resourceNode log_node{$eol}":
+            "JOIN node.logs log{$eol}" .
+            "JOIN log.resourceNode log_node{$eol}":
             '';
         $dql =
             $this->selectClause .
