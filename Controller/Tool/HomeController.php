@@ -25,6 +25,7 @@ use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CoreBundle\Manager\WidgetManager;
 use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -337,7 +338,7 @@ class HomeController extends Controller
      *     name="claro_desktop_home_tab_create_form",
      *     options = {"expose"=true}
      * )
-     * @EXT\Template("ClarolineCoreBundle:Tool\desktop\home:desktopHomeTabCreateForm.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:Tool\desktop\home:desktopHomeTabCreateModalForm.html.twig")
      *
      * Displays the homeTab form.
      *
@@ -350,9 +351,7 @@ class HomeController extends Controller
         $homeTab = new HomeTab();
         $form = $this->formFactory->create(FormFactory::TYPE_HOME_TAB, array(), $homeTab);
 
-        return array(
-            'form' => $form->createView()
-        );
+        return array('form' => $form->createView());
     }
 
     /**
@@ -362,7 +361,7 @@ class HomeController extends Controller
      *     options = {"expose"=true}
      * )
      * @EXT\Method("POST")
-     * @EXT\Template("ClarolineCoreBundle:Tool\desktop\home:desktopHomeTabCreateForm.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:Tool\desktop\home:desktopHomeTabCreateModalForm.html.twig")
      *
      * Create a new homeTab.
      *
@@ -399,10 +398,11 @@ class HomeController extends Controller
             }
             $this->homeTabManager->insertHomeTabConfig($homeTabConfig);
 
-            return new Response('success', 201);
-        }
+            return new JsonResponse($homeTab->getId(), 200);
+        } else {
 
-        return array('form' => $form->createView());
+            return array('form' => $form->createView());
+        }
     }
 
     /**
@@ -416,7 +416,7 @@ class HomeController extends Controller
      *     class="ClarolineCoreBundle:Home\HomeTab",
      *     options={"id" = "homeTabId", "strictId" = true}
      * )
-     * @EXT\Template("ClarolineCoreBundle:Tool\desktop\home:desktopHomeTabEditForm.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:Tool\desktop\home:desktopHomeTabEditModalForm.html.twig")
      *
      * Displays the homeTab edition form.
      *
@@ -450,7 +450,7 @@ class HomeController extends Controller
      *     class="ClarolineCoreBundle:Home\HomeTab",
      *     options={"id" = "homeTabId", "strictId" = true}
      * )
-     * @EXT\Template("ClarolineCoreBundle:Tool\desktop\home:desktopHomeTabEditForm.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:Tool\desktop\home:desktopHomeTabEditModalForm.html.twig")
      *
      * Edit the homeTab.
      *
@@ -470,13 +470,14 @@ class HomeController extends Controller
         if ($form->isValid()) {
             $this->homeTabManager->insertHomeTab($homeTab);
 
-            return new Response('success', 204);
-        }
+            return new JsonResponse($homeTab->getId(), 200);
+        } else {
 
-        return array(
-            'form' => $form->createView(),
-            'homeTab' => $homeTab
-        );
+            return array(
+                'form' => $form->createView(),
+                'homeTab' => $homeTab
+            );
+        }
     }
 
     /**
@@ -485,7 +486,6 @@ class HomeController extends Controller
      *     name="claro_desktop_home_tab_delete",
      *     options = {"expose"=true}
      * )
-     * @EXT\Method("DELETE")
      * @EXT\ParamConverter(
      *     "homeTab",
      *     class="ClarolineCoreBundle:Home\HomeTab",
@@ -508,6 +508,71 @@ class HomeController extends Controller
         $this->homeTabManager->deleteHomeTab($homeTab, 'desktop', $tabOrder);
 
         return new Response('success', 204);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/desktop/tab/{tabId}",
+     *     name="claro_display_desktop_home_tab",
+     *     options = {"expose"=true}
+     * )
+     *
+     * @EXT\Template("ClarolineCoreBundle:Tool\desktop\home:desktopHomeTab.html.twig")
+     *
+     * Displays the desktop home tab.
+     *
+     * @param integer $tabId
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function displayDesktopHomeTabAction($tabId)
+    {
+        $user = $this->securityContext->getToken()->getUser();
+        $adminHomeTabConfigs = $this->homeTabManager
+            ->generateAdminHomeTabConfigsByUser($user);
+        $visibleAdminHomeTabConfigs = $this->homeTabManager
+            ->filterVisibleHomeTabConfigs($adminHomeTabConfigs);
+        $userHomeTabConfigs = $this->homeTabManager
+            ->getVisibleDesktopHomeTabConfigsByUser($user);
+        $homeTabId = intval($tabId);
+        $firstElement = true;
+
+        if ($homeTabId !== -1) {
+            foreach ($visibleAdminHomeTabConfigs as $adminHomeTabConfig) {
+                if ($homeTabId === $adminHomeTabConfig->getHomeTab()->getId()) {
+                    $firstElement = false;
+                    break;
+                }
+            }
+            if ($firstElement) {
+                foreach ($userHomeTabConfigs as $userHomeTabConfig) {
+                    if ($homeTabId === $userHomeTabConfig->getHomeTab()->getId()) {
+                        $firstElement = false;
+                        break;
+                    }
+                }
+            }
+        }
+
+        if ($firstElement) {
+            $firstAdminHomeTabConfig = reset($visibleAdminHomeTabConfigs);
+
+            if ($firstAdminHomeTabConfig) {
+                $homeTabId = $firstAdminHomeTabConfig->getHomeTab()->getId();
+            } else {
+                $firstHomeTabConfig = reset($userHomeTabConfigs);
+
+                if ($firstHomeTabConfig) {
+                    $homeTabId = $firstHomeTabConfig->getHomeTab()->getId();
+                }
+            }
+        }
+
+        return array(
+            'adminHomeTabConfigs' => $visibleAdminHomeTabConfigs,
+            'userHomeTabConfigs' => $userHomeTabConfigs,
+            'tabId' => $homeTabId
+        );
     }
 
     /**

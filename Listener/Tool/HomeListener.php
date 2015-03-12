@@ -13,11 +13,12 @@ namespace Claroline\CoreBundle\Listener\Tool;
 
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Event\DisplayToolEvent;
-use Claroline\CoreBundle\Event\ExportToolEvent;
-use Claroline\CoreBundle\Event\ImportToolEvent;
 use Claroline\CoreBundle\Manager\HomeTabManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
+use Symfony\Bundle\TwigBundle\TwigEngine;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 
 /**
@@ -25,35 +26,38 @@ use Symfony\Component\Security\Core\SecurityContextInterface;
  */
 class HomeListener
 {
-    private $workspaceManager;
+    private $container;
+    private $httpKernel;
     private $homeTabManager;
     private $securityContext;
+    private $templating;
+    private $workspaceManager;
 
     /**
      * @DI\InjectParams({
-     *     "em"                 = @DI\Inject("doctrine.orm.entity_manager"),
-     *     "ed"                 = @DI\Inject("claroline.event.event_dispatcher"),
-     *     "templating"         = @DI\Inject("templating"),
-     *     "workspaceManager"   = @DI\Inject("claroline.manager.workspace_manager"),
+     *     "container"          = @DI\Inject("service_container"),
+     *     "httpKernel"         = @DI\Inject("http_kernel"),
      *     "homeTabManager"     = @DI\Inject("claroline.manager.home_tab_manager"),
-     *     "securityContext"    = @DI\Inject("security.context")
+     *     "securityContext"    = @DI\Inject("security.context"),
+     *     "templating"         = @DI\Inject("templating"),
+     *     "workspaceManager"   = @DI\Inject("claroline.manager.workspace_manager")
      * })
      */
     public function __construct(
-        $em,
-        $ed,
-        $templating,
-        WorkspaceManager $workspaceManager,
+        ContainerInterface $container,
+        HttpKernelInterface $httpKernel,
         HomeTabManager $homeTabManager,
-        SecurityContextInterface $securityContext
+        SecurityContextInterface $securityContext,
+        TwigEngine $templating,
+        WorkspaceManager $workspaceManager
     )
     {
-        $this->em = $em;
-        $this->ed = $ed;
-        $this->templating = $templating;
-        $this->workspaceManager = $workspaceManager;
+        $this->container = $container;
+        $this->httpKernel = $httpKernel;
         $this->homeTabManager = $homeTabManager;
         $this->securityContext = $securityContext;
+        $this->templating = $templating;
+        $this->workspaceManager = $workspaceManager;
     }
 
     /**
@@ -63,7 +67,14 @@ class HomeListener
      */
     public function onDisplayDesktopHome(DisplayToolEvent $event)
     {
-        $event->setContent($this->desktopHome());
+        $params = array(
+            '_controller' => 'ClarolineCoreBundle:Tool\Home:displayDesktopHomeTab',
+            'tabId' => -1
+        );
+        $subRequest = $this->container->get('request')->duplicate(array(), null, $params);
+        $response = $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
+
+        $event->setContent($response->getContent());
     }
 
     /**

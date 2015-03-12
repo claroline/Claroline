@@ -15,6 +15,7 @@ use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\Widget\Widget;
+use Claroline\CoreBundle\Entity\Widget\WidgetDisplayConfig;
 use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Translation\Translator;
@@ -26,6 +27,7 @@ use JMS\DiExtraBundle\Annotation as DI;
 class WidgetManager
 {
     private $om;
+    private $widgetDisplayConfigRepo;
     private $widgetInstanceRepo;
     private $widgetRepo;
     private $router;
@@ -43,6 +45,7 @@ class WidgetManager
     public function __construct(ObjectManager $om, RouterInterface $router, Translator $translator)
     {
         $this->om = $om;
+        $this->widgetDisplayConfigRepo = $om->getRepository('ClarolineCoreBundle:Widget\WidgetDisplayConfig');
         $this->widgetInstanceRepo = $om->getRepository('ClarolineCoreBundle:Widget\WidgetInstance');
         $this->widgetRepo = $om->getRepository('ClarolineCoreBundle:Widget\Widget');
         $this->router = $router;
@@ -259,5 +262,111 @@ class WidgetManager
 
         return $this->widgetInstanceRepo
             ->findWorkspaceWidgetInstance($workspace, $excludedWidgetInstances);
+    }
+
+    public function generateWidgetDisplayConfigsForUser(User $user, array $widgetHTCs)
+    {
+        $results = array();
+        $widgetInstances = array();
+        $adminWDCs = array();
+        $userTab = array();
+        $adminTab = array();
+
+        foreach ($widgetHTCs as $htc) {
+            $widgetInstances[] = $htc->getWidgetInstance();
+        }
+        $usersWDCs = $this->getWidgetDisplayConfigsByUserAndWidgets($user, $widgetInstances);
+
+        if (count($usersWDCs) < count($widgetInstances)) {
+            $adminWDCs = $this->getAdminWidgetDisplayConfigsByWidgets($widgetInstances);
+        }
+
+        foreach ($usersWDCs as $userWDC) {
+            $widgetInstanceId = $userWDC->getWidgetInstance()->getId();
+
+            $userTab[$widgetInstanceId] = $userWDC;
+        }
+
+        foreach ($adminWDCs as $adminWDC) {
+            $widgetInstanceId = $adminWDC->getWidgetInstance()->getId();
+
+            $adminTab[$widgetInstanceId] = $adminWDC;
+        }
+
+        $this->om->startFlushSuite();
+
+        foreach ($widgetInstances as $widgetInstance) {
+            $id = $widgetInstance->getId();
+
+            if (isset($userTab[$id])) {
+                $results[$id] = $userTab[$id];
+            } elseif (isset($adminTab[$id])) {
+                $wdc = new WidgetDisplayConfig();
+                $wdc->setWidgetInstance($widgetInstance);
+                $wdc->setUser($user);
+                $wdc->setRow($adminTab[$id]->getRow());
+                $wdc->setColumn($adminTab[$id]->getColumn());
+                $wdc->setWidth($adminTab[$id]->getWidth());
+                $wdc->setHeight($adminTab[$id]->getHeight());
+                $this->om->persist($wdc);
+                $results[$id] = $wdc;
+            } else {
+                $widget = $widgetInstance->getWidget();
+                $wdc = new WidgetDisplayConfig();
+                $wdc->setWidgetInstance($widgetInstance);
+                $wdc->setUser($user);
+                $wdc->setRow(0);
+                $wdc->setColumn(0);
+                $wdc->setWidth($widget->getDefaultWidth());
+                $wdc->setHeight($widget->getDefaultHeight());
+                $this->om->persist($wdc);
+                $results[$id] = $wdc;
+            }
+        }
+        $this->om->endFlushSuite();
+
+        return $results;
+    }
+
+    public function persistWidgetDisplayConfigs(array $configs)
+    {
+        $this->om->startFlushSuite();
+
+        foreach ($configs as $config) {
+            $this->om->persist($config);
+        }
+        $this->om->endFlushSuite();
+    }
+
+    /************************************
+     * Access to TeamRepository methods *
+     ************************************/
+
+    public function getWidgetDisplayConfigsByUserAndWidgets(
+        User $user,
+        array $widgetInstances,
+        $executeQuery = true
+    )
+    {
+        return count($widgetInstances) > 0 ?
+            $this->widgetDisplayConfigRepo->findWidgetDisplayConfigsByUserAndWidgets(
+                $user,
+                $widgetInstances,
+                $executeQuery
+            ) :
+            array();
+    }
+
+    public function getAdminWidgetDisplayConfigsByWidgets(
+        array $widgetInstances,
+        $executeQuery = true
+    )
+    {
+        return count($widgetInstances) > 0 ?
+            $this->widgetDisplayConfigRepo->findAdminWidgetDisplayConfigsByWidgets(
+                $widgetInstances,
+                $executeQuery
+            ) :
+            array();
     }
 }

@@ -1,0 +1,133 @@
+{% extends 'ClarolineCoreBundle:Desktop:layout.html.twig' %}
+
+{% block title %}{{ parent() ~ ' - ' ~ "home" | trans({}, "platform") | striptags | raw }}{% endblock %}
+
+{% block section_content %}
+    <div id="config-value-div" config-value="{% if withConfig is defined and not withConfig is empty %}{{ withConfig }}{% endif %}"></div>
+    <div id="hometab-id-div" hometab-id="{{ tabId }}"></div>
+
+    {#<div class="panel-heading relative">
+        <h3 class="panel-title">
+            {{ 'home' | trans({}, 'tools') }}
+        </h3>
+    </div>#}
+
+    <div id="desktop-home-content" class="panel-body">
+        <ul class="nav nav-tabs margin-bottom-md">
+            
+            {% for adminHomeTabConfig in adminHomeTabConfigs %}
+                {% set adminHomeTab = adminHomeTabConfig.getHomeTab() %}
+                <li class="hometab-element {% if adminHomeTab.getId() == tabId %} active {% endif %}"
+                    hometab-config-id="{{ adminHomeTabConfig.getId() }}"
+                    hometab-id="{{ adminHomeTabConfig.getId() }}"
+                >
+                    <a href="{{ path('claro_display_desktop_home_tab', {'tabId': adminHomeTab.getId()})}}" class="hometab-link{% if not adminHomeTabConfig.isVisible() %} strike{% endif %}">
+                        {{ adminHomeTab.getName() }}
+                        {% if adminHomeTabConfig.isLocked() %}
+                            <i class="fa fa-lock"></i>
+                        {% else %}
+                            <div class="dropdown">
+                                <i class="fa fa-chevron-down pointer-hand" data-toggle="dropdown"></i>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li role="presentation">
+                                        {% if adminHomeTabConfig.isVisible() %}
+                                            <i role="menuitem" class="hometab-visibility-btn fa fa-eye-slash" visiblility-value="visible"
+                                                id="visible-hometab-id-{{ adminHomeTab.getId() }}"> {{ "hide" | trans({}, 'platform') }}</i>
+                                        {% else %}
+                                            <i role="menuitem" class="hometab-visibility-btn fa fa-eye" visiblility-value="invisible"
+                                            id="visible-hometab-id-{{ adminHomeTab.getId() }}"> {{ "display" | trans({}, 'platform') }}</i>
+                                        {% endif %}
+                                    </li>
+                                </ul>
+                            </div>
+                        {% endif %}
+                    </a>
+                </li>
+            {% endfor %}
+                
+            {% for userHomeTabConfig in userHomeTabConfigs %}
+                {% set userHomeTab = userHomeTabConfig.getHomeTab() %}
+                <li id="hometab-element-{{ userHomeTab.getId() }}"
+                    class="hometab-element {% if userHomeTab.getId() == tabId %} active {% endif %}"
+                    hometab-config-id="{{ userHomeTabConfig.getId() }}"
+                    hometab-id="{{ userHomeTab.getId() }}"
+                    hometab-order="{{ userHomeTabConfig.getTabOrder() }}"
+                >
+                    <a href="{{ path('claro_display_desktop_home_tab', {'tabId': userHomeTab.getId()})}}" class="hometab-link{% if not userHomeTabConfig.isVisible() %} strike{% endif %}">
+                        {{ userHomeTab.getName() }}
+                        <div class="dropdown">
+                          <i class="fa fa-chevron-down pointer-hand" data-toggle="dropdown"></i>
+                          <ul class="dropdown-menu" role="menu">
+                                <li role="presentation"><i role="menuitem" class="hometab-reorder-left-btn fa fa-arrow-left"> {{ "left" | trans({}, 'platform') }}</i></li>
+                                <li role="presentation"><i role="menuitem" class="hometab-reorder-right-btn fa fa-arrow-right"> {{ "right" | trans({}, 'platform') }}</i></li>
+                                <li role="presentation" class="divider"></li>
+                                <li role="presentation"><i role="menuitem" class="edit-hometab-btn fa fa-pencil"> {{ "rename" | trans({}, 'platform') }}</i></li>
+                                <li role="presentation">
+                                    {% if userHomeTabConfig.isVisible() %}
+                                        <i role="menuitem" class="hometab-visibility-btn fa fa-eye-slash" visiblility-value="visible"
+                                        id="visible-hometab-id-{{ userHomeTab.getId() }}"> {{ "hide" | trans({}, 'platform') }}</i>
+                                     {% else %}
+                                        <i role="menuitem" class="hometab-visibility-btn fa fa-eye" visiblility-value="invisible"
+                                        id="visible-hometab-id-{{ userHomeTab.getId() }}"> {{ "display" | trans({}, 'platform') }}</i>
+                                     {% endif %}
+                                </li>
+                                <li role="presentation"><i role="menuitem" class="delete-hometab-btn fa fa-trash-o"> {{ "delete" | trans({}, 'platform') }}</i></li>
+                          </ul>
+                        </div>
+                    </a>
+                </li>
+            {% endfor %}
+            <li id="add-hometab-btn">
+                <a class="pointer-hand">
+                    <span class="text-muted">
+                        <i id="add-hometab-button" class="fa fa-plus"></i>
+                        {% if adminHomeTabConfigs|length == 0 and userHomeTabConfigs|length == 0 %}
+                            {{ 'create_new_home_tab' | trans({}, 'platform') }}
+                        {% endif %}
+                    </span>
+                </a>
+            </li>
+        </ul>
+        <br>
+        
+        {% block homeTab %}{% endblock %}
+    </div>
+    
+    <div id="hometab-datas-box" data-hometab-id="{{ tabId }}"></div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src='{{ asset('bundles/clarolinecore/js/tool/tabs.js') }}' 
+            type="text/javascript"
+    >
+    </script>
+    <script src='{{ asset('bundles/frontend/jquery/jquery-ui-1.11.3/jquery-ui.js') }}'
+            type="text/javascript"
+    >
+    </script>
+    <script src='{{ asset('bundles/frontend/gridstack/gridstack.js-0.2.2/dist/gridstack.min.js') }}'
+            type="text/javascript"
+    >
+    </script>
+    <script src='{{ asset('bundles/frontend/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.js') }}'
+            type="text/javascript"
+    >
+    </script>
+    <script src='{{ asset('bundles/clarolinecore/js/tool/desktop/home/desktopHomeLayout.js') }}'
+            type="text/javascript"
+    >
+    </script>
+{% endblock %}
+    
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel='stylesheet'
+          type='text/css'
+          href='{{ asset('bundles/frontend/gridstack/gridstack.js-0.2.2/dist/gridstack.min.css')}}'
+    >
+    <link rel='stylesheet'
+          type='text/css'
+          href='{{ asset('bundles/frontend/bootstrap-colorpicker/dist/css/bootstrap-colorpicker.css')}}'
+    >
+{% endblock %}

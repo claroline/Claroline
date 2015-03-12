@@ -207,6 +207,13 @@
                 modal.submitForm(modalElement, successHandler, formId, formRenderHandler);
             });
 
+            modalElement.on('keypress', function (e) {
+                if (e.keyCode === 13) {
+                    event.preventDefault();
+                    modal.submitForm(modalElement, successHandler, formId, formRenderHandler);
+                }
+            });
+
             formRenderHandler(data);
         })
         .error(function () {
