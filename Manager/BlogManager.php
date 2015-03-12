@@ -154,8 +154,7 @@ class BlogManager
             $tagsDatas = $postsData['tags'];
             $tags = new ArrayCollection();
             foreach ($tagsDatas as $tagsData) {
-                $tag = new Tag();
-                $tag->setName($tagsData['name']);
+                $tag = $this->retrieveTag($tagsData['name']);
                 $tags->add($tag);
             }
 
@@ -212,5 +211,22 @@ class BlogManager
         }
 
         return $user;
+    }
+
+    /**
+     * @param string $name
+     *
+     * @return Tag
+     */
+    protected function retrieveTag($name)
+    {
+        $tag = $this->objectManager->getRepository('IcapBlogBundle:Tag')->findOneByName($name);
+
+        if (null === $tag) {
+            $tag = new Tag();
+            $tag->setName($name);
+        }
+
+        return $tag;
     }
 }
