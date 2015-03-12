@@ -26,7 +26,7 @@ class ConfigureTopRightMenuListener
     /**
      * @DI\Observe("claroline_top_bar_right_menu_configure")
      *
-     * @param \Acme\DemoBundle\Event\ConfigureMenuEvent $event
+     * @param \Claroline\CoreBundle\Menu\ConfigureMenuEvent $event
      */
     public function onMenuConfigure(ConfigureMenuEvent $event)
     {
