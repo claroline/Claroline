@@ -2,9 +2,15 @@
 
 namespace Icap\BlogBundle\Manager;
 
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Persistence\ObjectManager;
+use Doctrine\Common\Collections\ArrayCollection;
 use Icap\BlogBundle\Entity\Blog;
+use Icap\BlogBundle\Entity\BlogOptions;
+use Icap\BlogBundle\Entity\Comment;
+use Icap\BlogBundle\Entity\Post;
+use Icap\BlogBundle\Entity\Tag;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -19,7 +25,7 @@ class BlogManager
 
     /**
      * @DI\InjectParams({
-     *      "objectManager" = @DI\Inject("claroline.persistence.object_manager"),
+     *      "objectManager" = @DI\Inject("claroline.persistence.object_manager")
      * })
      */
     public function __construct(ObjectManager $objectManager)
@@ -52,7 +58,7 @@ class BlogManager
             'banner_background_image'           => $object->getOptions()->getBannerBackgroundImage(),
             'banner_background_image_position'  => $object->getOptions()->getBannerBackgroundImagePosition(),
             'banner_background_image_repeat'    => $object->getOptions()->getBannerBackgroundImageRepeat(),
-            'tag_cloud'                         => $object->getOptions()->getTagCloud()
+            'tag_cloud'                         => (null === $object->getOptions()->getTagCloud()) ? 0 : $object->getOptions()->getTagCloud()
         ];
 
         $data['posts'] = [];
@@ -83,8 +89,9 @@ class BlogManager
                     'message'           => $commentUid,
                     'author'            => $comment->getAuthor()->getMail(),
                     'creation_date'     => $comment->getCreationDate()->format(\DateTime::ATOM),
-                    'modification_date' => (null !== $comment->getUpdateDate()) ? $comment->getUpdateDate()->format(\DateTime::ATOM) : null,
-                    'publication_date'  => (null !== $comment->getPublicationDate()) ? $comment->getPublicationDate()->format(\DateTime::ATOM) : null
+                    'update_date'       => (null !== $comment->getUpdateDate()) ? $comment->getUpdateDate()->format(\DateTime::ATOM) : null,
+                    'publication_date'  => (null !== $comment->getPublicationDate()) ? $comment->getPublicationDate()->format(\DateTime::ATOM) : null,
+                    'status'            => $comment->getStatus(),
                 ];
             }
 
@@ -107,14 +114,103 @@ class BlogManager
     }
 
     /**
-     * @param array $data
+     * @param array  $data
+     * @param string $rootPath
+     * @param User   $owner
      *
      * @return Blog
      */
-    public function importBlog(array $data)
+    public function importBlog(array $data, $rootPath, User $owner)
     {
+        $blogDatas   = $data['data'];
+        $optionsData = $blogDatas['options'];
+
+        $blogOptions = new BlogOptions();
+        $blogOptions
+            ->setAuthorizeComment($optionsData['authorize_comment'])
+            ->setAuthorizeAnonymousComment($optionsData['authorize_anonymous_comment'])
+            ->setPostPerPage($optionsData['post_per_page'])
+            ->setAutoPublishPost($optionsData['auto_publish_post'])
+            ->setAutoPublishComment($optionsData['auto_publish_comment'])
+            ->setDisplayTitle($optionsData['display_title'])
+            ->setBannerActivate($optionsData['banner_activate'])
+            ->setDisplayPostViewCounter($optionsData['display_post_view_counter'])
+            ->setBannerBackgroundColor($optionsData['banner_background_color'])
+            ->setBannerHeight($optionsData['banner_height'])
+            ->setBannerBackgroundImage($optionsData['banner_background_image'])
+            ->setBannerBackgroundImagePosition($optionsData['banner_background_image_position'])
+            ->setBannerBackgroundImageRepeat($optionsData['banner_background_image_repeat'])
+            ->setTagCloud($optionsData['tag_cloud']);
+
         $blog = new Blog();
+        $blog->setOptions($blogOptions);
+
+        $postsDatas = $blogDatas['posts'];
+        $posts = new ArrayCollection();
+
+        foreach ($postsDatas as $postsData) {
+            $post = new Post();
+
+            $tagsDatas = $postsData['tags'];
+            $tags = new ArrayCollection();
+            foreach ($tagsDatas as $tagsData) {
+                $tag = new Tag();
+                $tag->setName($tagsData['name']);
+                $tags->add($tag);
+            }
+
+            $commentsDatas = $postsData['comments'];
+            $comments = new ArrayCollection();
+            foreach ($commentsDatas as $commentsData) {
+                $comment = new Comment();
+                $commentMessage = file_get_contents($rootPath . DIRECTORY_SEPARATOR . $commentsData['message']);
+                $comment
+                    ->setMessage($commentMessage)
+                    ->setAuthor($this->retrieveUser($commentsData['author'], $owner))
+                    ->setCreationDate(new \DateTime($commentsData['creation_date']))
+                    ->setUpdateDate(new \DateTime($commentsData['update_date']))
+                    ->setPublicationDate(new \DateTime($commentsData['publication_date']))
+                    ->setStatus($commentsData['status'])
+                ;
+                $comments->add($comment);
+            }
+
+            $postContent = file_get_contents($rootPath . DIRECTORY_SEPARATOR . $postsData['content']);
+
+            $post
+                ->setTitle($postsData['title'])
+                ->setContent($postContent)
+                ->setAuthor($this->retrieveUser($postsData['author'], $owner))
+                ->setCreationDate(new \DateTime($postsData['creation_date']))
+                ->setModificationDate(new \DateTime($postsData['modification_date']))
+                ->setPublicationDate(new \DateTime($postsData['publication_date']))
+                ->setTags($tags)
+                ->setComments($comments)
+                ->setStatus($postsData['status'])
+            ;
+
+            $posts->add($post);
+        }
+
+        $blog->setPosts($posts);
 
         return $blog;
+    }
+
+    /**
+     * @param string $mail
+     * @param User   $owner
+     *
+     * @return User|null
+     */
+    protected function retrieveUser($mail, User $owner)
+    {
+        $user = $this->objectManager->getRepository('ClarolineCoreBundle:User')->findOneByMail($mail);
+
+        if (null === $user) {
+            $user = $owner;
+        }
+
+        return $user;
     }
 }

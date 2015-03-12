@@ -57,30 +57,37 @@ class BlogImporter extends Importer implements ConfigurationInterface
                         ->scalarNode('banner_background_image')->defaultNull()->end()
                         ->scalarNode('banner_background_image_position')->defaultValue('left top')->end()
                         ->scalarNode('banner_background_image_repeat')->defaultValue('no-repeat')->end()
-                        ->integerNode('tag_cloud')->defaultNull()->min(0)->max(1)->end()
+                        ->integerNode('tag_cloud')->defaultValue(0)->min(0)->max(1)->end()
                     ->end()
                 ->end()
                 ->arrayNode('posts')
-                    ->children()
-                        ->scalarNode('title')->isRequired()->end()
-                        ->scalarNode('content')->isRequired()->end()
-                        ->scalarNode('author')->isRequired()->end()
-                        ->integerNode('status')->defaultValue(0)->min(0)->max(1)->end()
-                        ->scalarNode('creation_date')->isRequired()->end()
-                        ->scalarNode('modification_date')->defaultNull()->end()
-                        ->scalarNode('publication_date')->defaultNull()->end()
-                        ->arrayNode('tags')
-                            ->children()
-                                ->scalarNode('name')->isRequired()->end()
+                    ->prototype('array')
+                        ->children()
+                            ->scalarNode('title')->isRequired()->end()
+                            ->scalarNode('content')->isRequired()->end()
+                            ->scalarNode('author')->isRequired()->end()
+                            ->integerNode('status')->defaultValue(0)->min(0)->max(1)->end()
+                            ->scalarNode('creation_date')->isRequired()->end()
+                            ->scalarNode('modification_date')->defaultNull()->end()
+                            ->scalarNode('publication_date')->defaultNull()->end()
+                            ->arrayNode('tags')
+                                ->prototype('array')
+                                    ->children()
+                                        ->scalarNode('name')->isRequired()->end()
+                                    ->end()
+                                ->end()
                             ->end()
-                        ->end()
-                        ->arrayNode('comments')
-                            ->children()
-                                ->scalarNode('message')->isRequired()->end()
-                                ->scalarNode('author')->isRequired()->end()
-                                ->scalarNode('creation_date')->isRequired()->end()
-                                ->scalarNode('creation_date')->defaultNull()->end()
-                                ->scalarNode('publication_date')->defaultNull()->end()
+                            ->arrayNode('comments')
+                                ->prototype('array')
+                                    ->children()
+                                        ->scalarNode('message')->isRequired()->end()
+                                        ->scalarNode('author')->isRequired()->end()
+                                        ->scalarNode('creation_date')->isRequired()->end()
+                                        ->scalarNode('update_date')->defaultNull()->end()
+                                        ->scalarNode('publication_date')->defaultNull()->end()
+                                        ->integerNode('status')->defaultValue(0)->min(0)->max(1)->end()
+                                    ->end()
+                                ->end()
                             ->end()
                         ->end()
                     ->end()
@@ -102,17 +109,18 @@ class BlogImporter extends Importer implements ConfigurationInterface
     function validate(array $data)
     {
         $processor = new Processor();
-        $result = $processor->processConfiguration($this, $data);
+        $result = $processor->processConfiguration($this, ['data' => $data]);
     }
 
     /**
-     * @param array $data
+     * @param array  $data
+     * @param string $name
      *
      * @return \Icap\BlogBundle\Entity\Blog
      */
-    function import(array $data)
+    function import(array $data, $name)
     {
-        return $this->blogManager->importBlog($data);
+        return $this->blogManager->importBlog($data, $this->getRootPath(), $this->getOwner());
     }
 
     /**

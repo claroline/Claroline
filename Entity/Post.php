@@ -77,7 +77,7 @@ class Post extends Statusable
     /**
      * @var Comment
      *
-     * @ORM\OneToMany(targetEntity="Comment", mappedBy="post", cascade={"remove"})
+     * @ORM\OneToMany(targetEntity="Comment", mappedBy="post", cascade={"all"})
      */
     protected $comments;
 
