@@ -116,31 +116,30 @@ class WikiManager {
             $wiki->setMode($wikiData['options']['mode']);
             $sectionsMap = array();
             foreach ($wikiData['sections'] as $section) {
-                $sectionData = $section['section'];
                 $entitySection = new Section();
                 $entitySection->setWiki($wiki);
-                $entitySection->setDeleted($sectionData['deleted']);
-                $entitySection->setDeletionDate($sectionData['deletion_date']);
-                $entitySection->setCreationDate($sectionData['creation_date']);
+                $entitySection->setDeleted($section['deleted']);
+                $entitySection->setDeletionDate($section['deletion_date']);
+                $entitySection->setCreationDate($section['creation_date']);
                 $author = null;
-                if ($sectionData['author'] !== null) {
-                    $author = $this->userRepository->findOneByUsername($sectionData['author']);
+                if ($section['author'] !== null) {
+                    $author = $this->userRepository->findOneByUsername($section['author']);
                 }
                 if ($author === null) {
                     $author = $loggedUser;
                 }
                 $entitySection->setAuthor($author);
                 $parentSection = null;
-                if ($sectionData['parent_id'] !== null) {
-                    $parentSection = $sectionsMap[$sectionData['parent_id']];
+                if ($section['parent_id'] !== null) {
+                    $parentSection = $sectionsMap[$section['parent_id']];
                     $entitySection->setParent($parentSection);
                 }
-                if ($sectionData['is_root']) {
+                if ($section['is_root']) {
                     $wiki->setRoot($entitySection);
                     $this->om->persist($wiki);
                 }
 
-                foreach ($sectionData['contributions'] as $contribution) {
+                foreach ($section['contributions'] as $contribution) {
                     $contributionData = $contribution['contribution'];
                     $entityContribution = new Contribution();
                     $entityContribution->setSection($entitySection);
@@ -168,7 +167,7 @@ class WikiManager {
                     }
                     $this->om->persist($entityContribution);
                 }
-                $sectionsMap[$sectionData['id']] = $entitySection;
+                $sectionsMap[$section['id']] = $entitySection;
             }
         }
 
@@ -228,9 +227,7 @@ class WikiManager {
                 'contributions'     => $contributionsArray
             );
 
-            $sectionsArray[] = array(
-                'section' => $sectionArray
-            );
+            $sectionsArray[] = $sectionArray;
         }
 
         $data = array(
