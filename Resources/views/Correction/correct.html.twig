@@ -22,16 +22,16 @@
     {% endif %}
 {% endblock %}
 
+{# Bloc "Correction par ..." #}
 {% block dropzone_content %}
-
     <div class="container container-dropzone">
-
         {% if admin %}
             <h2 class="{% if correction.reporter %}text-danger{% endif %}">
                 {{ 'Correction by %firstName% %lastName%'|trans({'%firstName%': correction.user.firstName, '%lastName%': correction.user.lastName}, 'innova_collecticiel') }}
             </h2>
             {{ macros.flashBox() }}
 
+            {# Bloc "Retour aux corrections ..." #}
             <div class="row">
                 <div class="col-md-12">
                     {% if backUserId is defined  and backUserId != -1 %}
@@ -50,16 +50,19 @@
             </div>
             <br/>
 
+            {# Bloc "Rappel des instructions ..." #}
             {% if dropzone.instruction != null %}
                 {% include 'InnovaCollecticielBundle:Dropzone:recallInstruction.html.twig' %}
                 <br/>
             {% endif %}
 
+            {# Bloc "Instructions aux correcteurs ..." #}
             {% if dropzone.correctionInstruction|default and dropzone.correctionInstruction != ''  and dropzone.correctionInstruction != '<p></p>' %}
                 {% include 'InnovaCollecticielBundle:Correction:correctionInstructions.html.twig' %}
                 <br/>
             {% endif %}
 
+            {# Bloc ??? #}
             {% if correction.reporter %}
                 <div class="col-md-12">
                     <span class="text-danger"><span
@@ -96,9 +99,11 @@
                 </div>
             {% endif %}
 
+            {# Bloc Documents. C'est la liste des documents #}
             {% set documentListText = 'Documents'|trans({}, 'innova_collecticiel') %}
             {{ dropzoneMacros.displayDocumentsList(correction.drop, dropzone, 6, "condensed", documentListText) }}
 
+            {# Bloc Apprenants #}
             <div class="row">
                 <div class="text-muted col-md-4">{{ 'Learner'|trans({}, 'innova_collecticiel') }}</div>
                 <div class="col-md-8">{{ correction.drop.user.firstName }} {{ correction.drop.user.lastName }}</div>
@@ -106,11 +111,13 @@
 
             <br/>
 
+            {# Bloc Correcteur #}
             <div class="row">
                 <div class="text-muted col-md-4">{{ 'Corrector'|trans({}, 'innova_collecticiel') }}</div>
                 <div class="col-md-8">{{ correction.user.firstName }} {{ correction.user.lastName }}</div>
             </div>
 
+            {# Bloc Note attribuée #}
             <div class="row">
                 <div class="text-muted col-md-4">{{ 'Grade attribuated'|trans({}, 'innova_collecticiel') }}</div>
                 <div class="col-md-8">{% if correction.totalGrade != null %}{{ correction.totalGrade|number_format(2) }}{% else %}--{% endif %}
@@ -118,6 +125,7 @@
                 </div>
             </div>
         {% else %}
+            {# TODO InnovaERV : partie "Non admin" qui n'a pas été analysée #}
             {# NO ADMIN #}
             <div class="row">
                 <div class="col-md-12">
@@ -174,8 +182,9 @@
                 {% endif %}
             {% endif %}
         {% endif %}
-        {% if  state is defined and state == 'preview' and dropzone.getAllowCorrectionDeny %}
 
+        {# Contrôle #}
+        {% if state is defined and state == 'preview' and dropzone.getAllowCorrectionDeny %}
             <div class="row">
                 <div class='col-md-12'>
                     {% if correction.correctionDenied %}
@@ -191,6 +200,8 @@
                 </div>
             </div>
         {% endif %}
+
+        {# Critères d'évaluation #}
         {% if correction.reporter %}
             <h3>{{ 'Reason of reporting'|trans({}, 'innova_collecticiel') }}</h3>
             <div class="well">
@@ -218,6 +229,7 @@
             {% block dropzone_correct_content %}
             {% endblock %}
         {% endif %}
+
     </div>
 {% endblock %}
 
