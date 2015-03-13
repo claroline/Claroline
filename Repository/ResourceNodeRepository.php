@@ -79,24 +79,27 @@ class ResourceNodeRepository extends MaterializedPathRepository
      *
      * @param ResourceNode $parent The id of the parent of the requested children
      * @param array $roles [string] $roles  An array of roles
+     * @param User $user the user opening
+     * @param withLastOpenDate with the last openend node (with the last opened date)
      *
      * @throws \RuntimeException
      * @throw InvalidArgumentException if the array of roles is empty
      *
      * @return array[array] An array of resources represented as arrays
      */
-    public function findChildren(ResourceNode $parent, array $roles, User $user)
+    public function findChildren(ResourceNode $parent, array $roles, User $user, $withLastOpenDate = false)
     {
         if (count($roles) === 0) {
             throw new \RuntimeException('Roles cannot be empty');
         }
 
         $builder = new ResourceQueryBuilder();
-        $children = array();
+        $returnedArray = array();
 
+        $isWorkspaceManager = $this->isWorkspaceManager($parent, $roles);
         //check if manager of the workspace.
         //if it's true, show every children
-        if ($this->isWorkspaceManager($parent, $roles)) {
+        if ($isWorkspaceManager) {
             $builder->selectAsArray()
                 ->whereParentIs($parent)
                 ->orderByIndex();
@@ -106,11 +109,8 @@ class ResourceNodeRepository extends MaterializedPathRepository
 
             foreach ($items as $key => $item) {
                 $item[$key]['mask'] = 65535;
-                $children[] = $item[$key];
+                $returnedArray[] = $item[$key];
             }
-
-            return $children;
-
         //otherwise only show visible children
         } else {
             $builder->selectAsArray(true)
@@ -141,9 +141,36 @@ class ResourceNodeRepository extends MaterializedPathRepository
             foreach ($childrenWithMaxRights as $childMaxRights) {
                 $returnedArray[] = $childMaxRights;
             }
-
-            return $returnedArray;
         }
+
+        //now we get the last open date for nodes.
+        //We can't do one request because of the left join + max combination
+
+        if ($withLastOpenDate) {
+            $builder->selectAsArray(false, true)
+                ->whereParentIs($parent)
+                ->addLastOpenDate($user)
+                ->groupById();
+
+            if (!$isWorkspaceManager) {
+                $builder->whereHasRoleIn($roles)->whereIsAccessible($user);
+            }
+
+            $query = $this->_em->createQuery($builder->getDql());
+            $query->setParameters($builder->getParameters());
+            $items = $this->executeQuery($query);
+
+            foreach ($returnedArray as $key => $returnedElement) {
+                foreach ($items as $item) {
+                    if ($item['id'] === $returnedElement['id']) {
+                        $returnedArray[$key]['last_opened'] = $item['last_opened'];
+                    }
+                }
+            }
+
+        }
+
+        return $returnedArray;
    }
 
     /**

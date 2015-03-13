@@ -26,6 +26,7 @@ use Claroline\CoreBundle\Library\Utilities\FileSystem;
 use Psr\Log\LogLevel;
 use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Component\Console\Output\StreamOutput;
+use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * @Service("claroline.manager.bundle_manager")
@@ -157,8 +158,9 @@ class BundleManager
         if ($date) $logFile = $logFile . '-' . $date;
         $logFile .= '.log';
         @unlink($logFile);
-        $logLine = "Downloading archive...\n";
-        file_put_contents($logFile, $logLine, FILE_APPEND);
+        $fileLogger = new \Monolog\Logger('package.update');
+        $fileLogger->pushHandler(new \Monolog\Handler\StreamHandler($logFile));
+        $fileLogger->addInfo('Downloading archive...');
         $version = $this->getBundleLastInstallableVersion($bundle, $this->getCoreBundleVersion());
         $fs = new FileSystem();
 
@@ -166,8 +168,7 @@ class BundleManager
         $extractPath = sys_get_temp_dir() . '/' . uniqid();
         $zip = new \ZipArchive();
         $zip->open($zipFile);
-        $logLine = "Extraction...\n";
-        file_put_contents($logFile, $logLine, FILE_APPEND);
+        $fileLogger->addInfo("Extraction...");
         $zip->extractTo($extractPath);
 
         //rename the $extractPath root (it currently has -version at the end)
@@ -191,11 +192,9 @@ class BundleManager
         $vendor = $parts[0];
         $baseParts = explode('Bundle', $parts[1]);
         $baseName = $baseParts[0];
-        $logLine = "Removing old sources...\n";
-        file_put_contents($logFile, $logLine, FILE_APPEND);
+        $fileLogger->addInfo("Removing old sources...");
         $fs->rmdir($newPath, true);
-        $logLine = "Copying sources from temporary directory...\n";
-        file_put_contents($logFile, $logLine, FILE_APPEND);
+        $fileLogger->addInfo("Copying sources from temporary directory...");
         $fs->copyDir($extractPath . "/$bundle", $newPath);
         //then we update the autoloader
         $parts = explode('/', $data->name);
@@ -204,15 +203,12 @@ class BundleManager
         $bundleType = $data->type;
         $updatedTarget = str_replace('/', '\\', $data->$targetDir);
         $fqcn = $updatedTarget . '\\' . str_replace('\\', '', $updatedTarget);
-        $logLine = "Updating vendor/composer/autoload_namespace.php...\n";
-        file_put_contents($logFile, $logLine, FILE_APPEND);
+        $fileLogger->addInfo("Updating vendor/composer/autoload_namespace.php...");
         $this->updateAutoload($vendor, $baseName, $vname, $bname);
-        $logLine = "Updating app/config/bundle.ini...\n";
-        file_put_contents($logFile, $logLine, FILE_APPEND);
+        $fileLogger->addInfo("Updating app/config/bundle.ini...");
         $this->updateIniFile($vendor, $baseName);
-        $logLine = "Generating app/config/operations.xml...\n";
-        file_put_contents($logFile, $logLine, FILE_APPEND);
-        $this->generateUniqueOperationFile($bundle, $version, $bundleType, $fqcn);
+        $fileLogger->addInfo("Generating app/config/operations.xml...");
+        $this->generateUniqueOperationFile($bundle, $version, $bundleType, $fqcn, $logFile);
         //We need a different process to execute the update as the new sources were
         //not loaded by php yet.
         //It's much easier than trying to load/refresh everything.
@@ -287,7 +283,7 @@ class BundleManager
     /**
      * Here we generate a new operation.xml file.
      */
-    public function generateUniqueOperationFile($bundle, $version, $bundleType, $fqcn)
+    public function generateUniqueOperationFile($bundle, $version, $bundleType, $fqcn, $logFile = null)
     {
         $entity = $this->getBundle($bundle);
         $isInstalled = false;
@@ -300,7 +296,13 @@ class BundleManager
         $operationFilePath = $this->kernelRootDir . "/config/operations.xml";
         //remove the old operation file if it exists (maybe it would be better to do a backup).
         @unlink($operationFilePath);
-        $operationHandler = new OperationHandler($operationFilePath);
+
+        if ($logFile) {
+            $fileLogger = new \Monolog\Logger('package.update');
+            $fileLogger->pushHandler(new \Monolog\Handler\StreamHandler($logPath));
+        }
+
+        $operationHandler = new OperationHandler($operationFilePath, $fileLogger);
 
         //generating the operations.xml file
         $operation = new Operation(

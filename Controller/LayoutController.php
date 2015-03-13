@@ -104,9 +104,7 @@ class LayoutController extends Controller
      */
     public function footerAction()
     {
-        $jsonFile = __DIR__ . '/../composer.json';
-        $data = json_decode(file_get_contents($jsonFile));
-        $coreVersion = $data->version;
+        $coreVersion = $this->get('claroline.manager.bundle_manager')->getCoreBundleVersion();
         //for some reason this doesn't work unless we use the cache:warm command. Since it's annoying
         //and that I can't find why, we retrieve the version the old fashioned way;
         //$bundleManager = $this->get('claroline.manager.bundle_manager');

@@ -14,6 +14,7 @@ namespace Claroline\CoreBundle\Manager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\File;
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -94,5 +95,11 @@ class FileManager
         $this->om->persist($file);
         $this->om->persist($node);
         $this->om->flush();
+    }
+
+    public function getDirectoryChildren(ResourceNode $parent)
+    {
+        return $this->om->getRepository('Claroline\CoreBundle\Entity\Resource\File')
+            ->findDirectoryChildren($parent);
     }
 }

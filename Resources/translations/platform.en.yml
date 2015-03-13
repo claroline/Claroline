@@ -1150,3 +1150,4 @@ install_update_cant_be_undone: Once an operation is started, it cannot be undone
 list_view: List view (beta)
 last_modification: Last modification
 created_by: Created by %creator% the %creationDate%
+updated_by: Last update: %modificationDate%

@@ -997,3 +997,4 @@ install_update_cant_be_undone: install_update_cant_be_undone
 list_view: list_view
 last_modification: last_modification
 created_by: created_by
+updated_by: updated_by

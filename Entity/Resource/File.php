@@ -14,7 +14,7 @@ namespace Claroline\CoreBundle\Entity\Resource;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\FileRepository")
  * @ORM\Table(name="claro_file")
  */
 class File extends AbstractResource
