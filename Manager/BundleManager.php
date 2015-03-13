@@ -283,7 +283,7 @@ class BundleManager
     /**
      * Here we generate a new operation.xml file.
      */
-    public function generateUniqueOperationFile($bundle, $version, $bundleType, $fqcn, $logFile = null)
+    public function generateUniqueOperationFile($bundle, $version, $bundleType, $fqcn, $logFile)
     {
         $entity = $this->getBundle($bundle);
         $isInstalled = false;
@@ -297,11 +297,8 @@ class BundleManager
         //remove the old operation file if it exists (maybe it would be better to do a backup).
         @unlink($operationFilePath);
 
-        if ($logFile) {
-            $fileLogger = new \Monolog\Logger('package.update');
-            $fileLogger->pushHandler(new \Monolog\Handler\StreamHandler($logPath));
-        }
-
+        $fileLogger = new \Monolog\Logger('package.update');
+        $fileLogger->pushHandler(new \Monolog\Handler\StreamHandler($logFile));
         $operationHandler = new OperationHandler($operationFilePath, $fileLogger);
 
         //generating the operations.xml file
