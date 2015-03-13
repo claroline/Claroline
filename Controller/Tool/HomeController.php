@@ -90,6 +90,7 @@ class HomeController extends Controller
      *     name="claro_desktop_widget_configuration",
      *     options={"expose"=true}
      * )
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      *
      * Asks a widget to render its configuration page for desktop.
      *
@@ -98,11 +99,10 @@ class HomeController extends Controller
      * @return Response
      */
     public function getDesktopWidgetFormConfigurationAction(
+        User $user,
         WidgetInstance $widgetInstance
     )
     {
-        $this->checkUserAccess();
-        $user = $this->securityContext->getToken()->getUser();
         $this->checkUserAccessForWidgetInstance($widgetInstance, $user);
 
         $event = $this->get('claroline.event.event_dispatcher')->dispatch(
@@ -185,6 +185,7 @@ class HomeController extends Controller
      *     name="claro_desktop_widget_instance_create_form",
      *     options = {"expose"=true}
      * )
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      * @EXT\Template("ClarolineCoreBundle:Tool\desktop\home:desktopWidgetInstanceCreateModalForm.html.twig")
      *
      * Displays the widget instance form.
@@ -193,8 +194,6 @@ class HomeController extends Controller
      */
     public function desktopWidgetInstanceCreateFormAction()
     {
-        $this->checkUserAccess();
-
         $widgetInstance = new WidgetInstance();
         $form = $this->formFactory->create(
             FormFactory::TYPE_WIDGET_INSTANCE,
@@ -212,17 +211,15 @@ class HomeController extends Controller
      *     options = {"expose"=true}
      * )
      * @EXT\Method("POST")
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      * @EXT\Template("ClarolineCoreBundle:Tool\desktop\home:desktopWidgetInstanceCreateForm.html.twig")
      *
      * Creates a widget instance.
      *
      * @return Response
      */
-    public function desktopWidgetInstanceCreateAction()
+    public function desktopWidgetInstanceCreateAction(User $user)
     {
-        $this->checkUserAccess();
-
-        $user = $this->securityContext->getToken()->getUser();
         $widgetInstance = new WidgetInstance();
 
         $form = $this->formFactory->create(
@@ -337,6 +334,7 @@ class HomeController extends Controller
      *     name="claro_desktop_home_tab_create_form",
      *     options = {"expose"=true}
      * )
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      * @EXT\Template("ClarolineCoreBundle:Tool\desktop\home:desktopHomeTabCreateModalForm.html.twig")
      *
      * Displays the homeTab form.
@@ -345,8 +343,6 @@ class HomeController extends Controller
      */
     public function desktopHomeTabCreateFormAction()
     {
-        $this->checkUserAccess();
-
         $homeTab = new HomeTab();
         $form = $this->formFactory->create(FormFactory::TYPE_HOME_TAB, array(), $homeTab);
 
@@ -360,17 +356,15 @@ class HomeController extends Controller
      *     options = {"expose"=true}
      * )
      * @EXT\Method("POST")
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      * @EXT\Template("ClarolineCoreBundle:Tool\desktop\home:desktopHomeTabCreateModalForm.html.twig")
      *
      * Create a new homeTab.
      *
      * @return Response
      */
-    public function desktopHomeTabCreateAction()
+    public function desktopHomeTabCreateAction(User $user)
     {
-        $this->checkUserAccess();
-
-        $user = $this->securityContext->getToken()->getUser();
         $homeTab = new HomeTab();
 
         $form = $this->formFactory->create(FormFactory::TYPE_HOME_TAB, array(), $homeTab);
@@ -410,6 +404,7 @@ class HomeController extends Controller
      *     name="claro_desktop_home_tab_edit_form",
      *     options = {"expose"=true}
      * )
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      * @EXT\ParamConverter(
      *     "homeTab",
      *     class="ClarolineCoreBundle:Home\HomeTab",
@@ -423,10 +418,8 @@ class HomeController extends Controller
      *
      * @return Response
      */
-    public function desktopHomeTabEditFormAction(HomeTab $homeTab)
+    public function desktopHomeTabEditFormAction(User $user, HomeTab $homeTab)
     {
-        $this->checkUserAccess();
-        $user = $this->securityContext->getToken()->getUser();
         $this->checkUserAccessForHomeTab($homeTab, $user);
 
         $form = $this->formFactory->create(FormFactory::TYPE_HOME_TAB, array(), $homeTab);
@@ -444,6 +437,7 @@ class HomeController extends Controller
      *     options = {"expose"=true}
      * )
      * @EXT\Method("POST")
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      * @EXT\ParamConverter(
      *     "homeTab",
      *     class="ClarolineCoreBundle:Home\HomeTab",
@@ -457,10 +451,8 @@ class HomeController extends Controller
      *
      * @return Response
      */
-    public function desktopHomeTabEditAction(HomeTab $homeTab)
+    public function desktopHomeTabEditAction(User $user, HomeTab $homeTab)
     {
-        $this->checkUserAccess();
-        $user = $this->securityContext->getToken()->getUser();
         $this->checkUserAccessForHomeTab($homeTab, $user);
 
         $form = $this->formFactory->create(FormFactory::TYPE_HOME_TAB, array(), $homeTab);
@@ -469,7 +461,10 @@ class HomeController extends Controller
         if ($form->isValid()) {
             $this->homeTabManager->insertHomeTab($homeTab);
 
-            return new JsonResponse($homeTab->getId(), 200);
+            return new JsonResponse(
+                array('id' => $homeTab->getId(), 'name' => $homeTab->getName()),
+                200
+            );
         } else {
 
             return array(
@@ -485,6 +480,7 @@ class HomeController extends Controller
      *     name="claro_desktop_home_tab_delete",
      *     options = {"expose"=true}
      * )
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      * @EXT\ParamConverter(
      *     "homeTab",
      *     class="ClarolineCoreBundle:Home\HomeTab",
@@ -498,10 +494,8 @@ class HomeController extends Controller
      *
      * @return Response
      */
-    public function desktopHomeTabDeleteAction(HomeTab $homeTab, $tabOrder)
+    public function desktopHomeTabDeleteAction(User $user, HomeTab $homeTab, $tabOrder)
     {
-        $this->checkUserAccess();
-        $user = $this->securityContext->getToken()->getUser();
         $this->checkUserAccessForHomeTab($homeTab, $user);
 
         $this->homeTabManager->deleteHomeTab($homeTab, 'desktop', $tabOrder);
@@ -511,11 +505,54 @@ class HomeController extends Controller
 
     /**
      * @EXT\Route(
+     *     "/home_tab_config/{homeTabConfig}/reorder/next/{nextHomeTabConfigId}",
+     *     name="claro_home_tab_config_reorder",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\Method("POST")
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     * @EXT\ParamConverter(
+     *     "homeTabConfig",
+     *     class="ClarolineCoreBundle:Home\HomeTabConfig",
+     *     options={"id" = "homeTabConfig", "strictId" = true}
+     * )
+     *
+     * Update HomeTabConfig order
+     *
+     * @return Response
+     */
+    public function homeTabConfigReorderAction(
+        User $user,
+        HomeTabConfig $homeTabConfig,
+        $nextHomeTabConfigId
+    )
+    {
+        $workspace = $homeTabConfig->getWorkspace();
+        $homeTab = $homeTabConfig->getHomeTab();
+
+        if (!is_null($workspace)) {
+            $this->checkWorkspaceAccess($workspace);
+            $this->checkWorkspaceAccessForAdminHomeTab($homeTab, $workspace);
+        } else {
+            $this->checkUserAccessForHomeTab($homeTab, $user);
+
+            $this->homeTabManager->reorderDesktopHomeTabConfigs(
+                $user,
+                $homeTabConfig,
+                $nextHomeTabConfigId
+            );
+        }
+
+        return new Response('success', 200);
+    }
+
+    /**
+     * @EXT\Route(
      *     "/desktop/tab/{tabId}",
      *     name="claro_display_desktop_home_tab",
      *     options = {"expose"=true}
      * )
-     *
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      * @EXT\Template("ClarolineCoreBundle:Tool\desktop\home:desktopHomeTab.html.twig")
      *
      * Displays the desktop home tab.
@@ -524,9 +561,8 @@ class HomeController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function displayDesktopHomeTabAction($tabId)
+    public function displayDesktopHomeTabAction(User $user, $tabId)
     {
-        $user = $this->securityContext->getToken()->getUser();
         $adminHomeTabConfigs = $this->homeTabManager
             ->generateAdminHomeTabConfigsByUser($user);
         $visibleAdminHomeTabConfigs = $this->homeTabManager
@@ -580,7 +616,7 @@ class HomeController extends Controller
      *     name="claro_display_desktop_home_tabs_without_config",
      *     options = {"expose"=true}
      * )
-     *
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      * @EXT\Template("ClarolineCoreBundle:Tool\desktop\home:desktopHomeTabsWithoutConfig.html.twig")
      *
      * Displays the Info desktop tab.
@@ -589,9 +625,8 @@ class HomeController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function displayDesktopHomeTabsWithoutConfigAction($tabId)
+    public function displayDesktopHomeTabsWithoutConfigAction(User $user, $tabId)
     {
-        $user = $this->securityContext->getToken()->getUser();
         $adminHomeTabConfigs = $this->homeTabManager
             ->generateAdminHomeTabConfigsByUser($user);
         $visibleAdminHomeTabConfigs = $this->homeTabManager
@@ -645,7 +680,7 @@ class HomeController extends Controller
      *     name="claro_display_desktop_home_tabs_with_config",
      *     options = {"expose"=true}
      * )
-     *
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      * @EXT\Template("ClarolineCoreBundle:Tool\desktop\home:desktopHomeTabsWithConfig.html.twig")
      *
      * Displays the Info desktop tab.
@@ -654,11 +689,8 @@ class HomeController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function displayDesktopHomeTabsWithConfigAction($tabId)
+    public function displayDesktopHomeTabsWithConfigAction(User $user, $tabId)
     {
-        $this->checkUserAccess();
-
-        $user = $this->securityContext->getToken()->getUser();
         $adminHomeTabConfigs = $this->homeTabManager
             ->generateAdminHomeTabConfigsByUser($user);
         $userHomeTabConfigs = $this->homeTabManager
@@ -927,6 +959,7 @@ class HomeController extends Controller
      *     options = {"expose"=true}
      * )
      * @EXT\Method("POST")
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      * @EXT\ParamConverter(
      *     "homeTabConfig",
      *     class="ClarolineCoreBundle:Home\HomeTabConfig",
@@ -937,7 +970,11 @@ class HomeController extends Controller
      *
      * @return Response
      */
-    public function homeTabUpdateVisibilityAction(HomeTabConfig $homeTabConfig, $visible)
+    public function homeTabUpdateVisibilityAction(
+        User $user,
+        HomeTabConfig $homeTabConfig,
+        $visible
+    )
     {
         $workspace = $homeTabConfig->getWorkspace();
         $homeTab = $homeTabConfig->getHomeTab();
@@ -946,8 +983,6 @@ class HomeController extends Controller
             $this->checkWorkspaceAccess($workspace);
             $this->checkWorkspaceAccessForHomeTab($homeTab, $workspace);
         } else {
-            $user = $this->securityContext->getToken()->getUser();
-            $this->checkUserAccess();
             $this->checkUserAccessForAdminHomeTab($homeTab, $user);
         }
 
@@ -964,6 +999,7 @@ class HomeController extends Controller
      *     options = {"expose"=true}
      * )
      * @EXT\Method("POST")
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      * @EXT\ParamConverter(
      *     "homeTabConfig",
      *     class="ClarolineCoreBundle:Home\HomeTabConfig",
@@ -975,6 +1011,7 @@ class HomeController extends Controller
      * @return Response
      */
     public function homeTabConfigChangeOrderAction(
+        User $user,
         HomeTabConfig $homeTabConfig,
         $direction
     )
@@ -986,8 +1023,6 @@ class HomeController extends Controller
             $this->checkWorkspaceAccess($workspace);
             $this->checkWorkspaceAccessForAdminHomeTab($homeTab, $workspace);
         } else {
-            $this->checkUserAccess();
-            $user = $this->securityContext->getToken()->getUser();
             $this->checkUserAccessForHomeTab($homeTab, $user);
         }
 
@@ -1006,6 +1041,7 @@ class HomeController extends Controller
      *     options = {"expose"=true}
      * )
      * @EXT\Method("POST")
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      * @EXT\ParamConverter(
      *     "homeTab",
      *     class="ClarolineCoreBundle:Home\HomeTab",
@@ -1022,13 +1058,11 @@ class HomeController extends Controller
      * @return Response
      */
     public function associateDesktopWidgetToHomeTabAction(
+        User $user,
         HomeTab $homeTab,
         WidgetInstance $widgetInstance
     )
     {
-        $this->checkUserAccess();
-        $user = $this->securityContext->getToken()->getUser();
-
         $widgetHomeTabConfig = new WidgetHomeTabConfig();
         $widgetHomeTabConfig->setHomeTab($homeTab);
         $widgetHomeTabConfig->setWidgetInstance($widgetInstance);
@@ -1115,6 +1149,7 @@ class HomeController extends Controller
      *     options = {"expose"=true}
      * )
      * @EXT\Method("POST")
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      * @EXT\ParamConverter(
      *     "widgetHomeTabConfig",
      *     class="ClarolineCoreBundle:Widget\WidgetHomeTabConfig",
@@ -1126,11 +1161,10 @@ class HomeController extends Controller
      * @return Response
      */
     public function desktopWidgetHomeTabConfigChangeVisibilityAction(
+        User $user,
         WidgetHomeTabConfig $widgetHomeTabConfig
     )
     {
-        $this->checkUserAccess();
-        $user = $this->securityContext->getToken()->getUser();
         $this->checkUserAccessForWidgetHomeTabConfig($widgetHomeTabConfig, $user);
 
         $this->homeTabManager->changeVisibilityWidgetHomeTabConfig(
@@ -1186,6 +1220,7 @@ class HomeController extends Controller
      *     name="claro_desktop_widget_home_tab_config_delete",
      *     options = {"expose"=true}
      * )
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      * @EXT\ParamConverter(
      *     "widgetHomeTabConfig",
      *     class="ClarolineCoreBundle:Widget\WidgetHomeTabConfig",
@@ -1197,11 +1232,10 @@ class HomeController extends Controller
      * @return Response
      */
     public function desktopWidgetHomeTabConfigDeleteAction(
+        User $user,
         WidgetHomeTabConfig $widgetHomeTabConfig
     )
     {
-        $this->checkUserAccess();
-        $user = $this->securityContext->getToken()->getUser();
         $this->checkUserAccessForWidgetHomeTabConfig($widgetHomeTabConfig, $user);
         $widgetInstance = $widgetHomeTabConfig->getWidgetInstance();
 
@@ -1268,6 +1302,7 @@ class HomeController extends Controller
      *     options = {"expose"=true}
      * )
      * @EXT\Method("POST")
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      * @EXT\ParamConverter(
      *     "widgetHomeTabConfig",
      *     class="ClarolineCoreBundle:Widget\WidgetHomeTabConfig",
@@ -1279,12 +1314,11 @@ class HomeController extends Controller
      * @return Response
      */
     public function desktopWidgetHomeTabConfigChangeOrderAction(
+        User $user,
         WidgetHomeTabConfig $widgetHomeTabConfig,
         $direction
     )
     {
-        $this->checkUserAccess();
-        $user = $this->securityContext->getToken()->getUser();
         $this->checkUserAccessForWidgetHomeTabConfig($widgetHomeTabConfig, $user);
 
         $status = $this->homeTabManager->changeOrderWidgetHomeTabConfig(
@@ -1343,6 +1377,7 @@ class HomeController extends Controller
      *     name = "claro_desktop_widget_name_edit_form",
      *     options={"expose"=true}
      * )
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      * @EXT\ParamConverter(
      *     "widgetInstance",
      *     class="ClarolineCoreBundle:Widget\WidgetInstance",
@@ -1354,10 +1389,8 @@ class HomeController extends Controller
      *
      * @return array
      */
-    public function editDesktopWidgetNameFormAction(WidgetInstance $widgetInstance)
+    public function editDesktopWidgetNameFormAction(User $user, WidgetInstance $widgetInstance)
     {
-        $this->checkUserAccess();
-        $user = $this->securityContext->getToken()->getUser();
         $this->checkUserAccessForWidgetInstance($widgetInstance, $user);
 
         $form = $this->formFactory->create(
@@ -1378,6 +1411,7 @@ class HomeController extends Controller
      *     name = "claro_desktop_widget_name_edit",
      *     options={"expose"=true}
      * )
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      * @EXT\ParamConverter(
      *     "widgetInstance",
      *     class="ClarolineCoreBundle:Widget\WidgetInstance",
@@ -1393,8 +1427,6 @@ class HomeController extends Controller
         User $user
     )
     {
-        $this->checkUserAccess();
-        $user = $this->securityContext->getToken()->getUser();
         $this->checkUserAccessForWidgetInstance($widgetInstance, $user);
 
         $form = $this->formFactory->create(
@@ -1503,13 +1535,6 @@ class HomeController extends Controller
             'widgetInstance' => $widgetInstance,
             'workspace' => $workspace
         );
-    }
-
-    private function checkUserAccess()
-    {
-        if (!$this->securityContext->isGranted('ROLE_USER')) {
-            throw new AccessDeniedException();
-        }
     }
 
     private function checkWorkspaceAccess(Workspace $workspace)

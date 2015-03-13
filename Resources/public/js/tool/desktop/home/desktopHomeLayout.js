@@ -20,14 +20,14 @@
     
     $('#desktop-home-content').on('click', '.edit-hometab-btn', function (e) {
         e.preventDefault();
-        var homeTabId = $(this).parents('.hometab-element').attr('hometab-id');
+        var homeTabId = $(this).parents('.hometab-element').data('hometab-id');
         
         window.Claroline.Modal.displayForm(
             Routing.generate(
                 'claro_desktop_home_tab_edit_form',
                 {'homeTabId': homeTabId}
             ),
-            openHomeTab,
+            renameHomeTab,
             function() {}
         );
     });
@@ -35,8 +35,8 @@
     $('#desktop-home-content').on('click', '.delete-hometab-btn', function (e) {
         e.preventDefault();
         var homeTabElement = $(this).parents('.hometab-element');
-        var homeTabId = homeTabElement.attr('hometab-id');
-        var order = homeTabElement.attr('hometab-order');
+        var homeTabId = homeTabElement.data('hometab-id');
+        var order = homeTabElement.data('hometab-order');
 
         window.Claroline.Modal.confirmRequest(
             Routing.generate(
@@ -48,6 +48,66 @@
             Translator.trans('home_tab_delete_confirm_message', {}, 'platform'),
             Translator.trans('home_tab_delete_confirm_title', {}, 'platform')
         );
+    });
+    
+    $('#desktop-hometabs-list').sortable({
+        items: '.movable-hometab',
+        cursor: 'move'
+    });
+
+    $('#desktop-hometabs-list').on('sortupdate', function (event, ui) {
+
+        if (this === ui.item.parents('#desktop-hometabs-list')[0]) {
+            var hcId = $(ui.item).data('hometab-config-id');
+            var nextHcId = -1;
+            var nextElement = $(ui.item).next();
+            
+            if (nextElement !== undefined && nextElement.hasClass('movable-hometab')) {
+                nextHcId = nextElement.data('hometab-config-id');
+            }
+            
+            $.ajax({
+                url: Routing.generate(
+                    'claro_home_tab_config_reorder',
+                    {
+                        'homeTabConfig': hcId,
+                        'nextHomeTabConfigId': nextHcId
+                    }
+                ),
+                type: 'POST'
+            });
+        }
+//        if (this === ui.item.parents('.cursus-children')[0]) {
+//            var cursusId = $(ui.item).data('cursus-id');
+//            var otherCursusId = $(ui.item).next().data('cursus-id');
+//            var mode = 'previous';
+//            var execute = false;
+//
+//            if (otherCursusId !== undefined) {
+//                mode = 'next';
+//                execute = true;
+//            } else {
+//                otherCursusId = $(ui.item).prev().data('cursus-id');
+//
+//                if (otherCursusId !== undefined) {
+//                    execute = true;
+//                }
+//            }
+//
+//            if (execute) {
+//                $.ajax({
+//                    url: Routing.generate(
+//                        'claro_cursus_update_order',
+//                        {
+//                            'cursus': cursusId,
+//                            'otherCursus': otherCursusId,
+//                            'mode': mode
+//                        }
+//                    ),
+//                    type: 'POST'
+//                });
+//            }
+//        }
     });
     
     $('.grid-stack').gridstack({
@@ -118,6 +178,13 @@
             'claro_display_desktop_home_tab',
             {'tabId': homeTabId}
         );
+    };
+
+    var renameHomeTab = function (datas) {
+        var id = datas['id'];
+        var name = datas['name'];
+        
+        $('#hometab-name-' + id).html(name);
     };
     
     var removeHomeTab = function (event, homeTabId) {
