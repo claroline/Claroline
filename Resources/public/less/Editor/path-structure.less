@@ -1,0 +1,75 @@
+.tree-item {
+  box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.1);
+  border-radius: 3px;
+}
+
+.placeholder {
+  background: #CCCCCC;
+  min-height: 12px;
+  border: 1px dashed #010101;
+  margin-bottom: 15px;
+}
+
+.step-drag-handler {
+  z-index: 2;
+  display: table;
+  text-align: center;
+  margin: 0 !important;
+  width: 100%;
+  height: 100%;
+  cursor: move !important;
+
+  &:hover,
+  &:focus {
+    opacity: 1;
+  }
+
+  .fa {
+    display: table-cell;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    vertical-align: middle;
+    color: white !important;
+    opacity: 0.8;
+  }
+}
+
+.step-toggle {
+  display: inline-block;
+  position: relative;
+  vertical-align: middle;
+  color: #333333 !important;
+  opacity: 0.8;
+
+  &:hover,
+  &:focus {
+    opacity: 1;
+  }
+}
+
+.step-children {
+  margin-left: 9px;
+  padding-left: 10px;
+  border-left: 1px dotted;
+}
+
+.step-actions {
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 100%;
+
+  .btn {
+    height: 100%;
+
+    &:first-child {
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+    }
+
+    > .fa {
+      vertical-align: bottom;
+    }
+  }
+}

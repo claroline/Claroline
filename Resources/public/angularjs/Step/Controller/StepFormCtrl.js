@@ -7,11 +7,11 @@
     angular.module('StepModule').controller('StepFormCtrl', [
         '$scope',
         '$http',
-        'HistoryFactory',
-        'PathFactory',
-        'StepFactory',
-        'ResourceFactory',
-        function ($scope, $http, HistoryFactory, PathFactory, StepFactory, ResourceFactory) {
+        'HistoryService',
+        'PathService',
+        'StepService',
+        'ResourceService',
+        function ($scope, $http, HistoryService, PathService, StepService, ResourceService) {
             // Store resource icons
             $scope.resourceIcons = EditorApp.resourceIcons;
             $scope.resourceZoom = 75;
@@ -53,10 +53,10 @@
                                     if (null !== data['resources']) {
                                         for (var i = 0; i < data['resources'].length; i++) {
                                             var resource = data['resources'][i];
-                                            var resourceExists = StepFactory.hasResource($scope.previewStep, resource.resourceId);
+                                            var resourceExists = StepService.hasResource($scope.previewStep, resource.resourceId);
                                             if (!resourceExists) {
                                                 // Generate new local ID
-                                                resource['id'] = PathFactory.getNextResourceId();
+                                                resource['id'] = PathService.getNextResourceId();
 
                                                 // Add to secondary resources
                                                 $scope.previewStep.resources.push(resource);
@@ -77,7 +77,7 @@
                     $scope.$apply();
 
                     // Update history
-                    HistoryFactory.update($scope.path);
+                    HistoryService.update($scope.path);
                 }
             };
 
@@ -104,7 +104,7 @@
                     $scope.$apply();
 
                     // Update history
-                    HistoryFactory.update($scope.path);
+                    HistoryService.update($scope.path);
 
                 }
             };
@@ -127,10 +127,10 @@
                         var node = nodes[nodeId];
 
                         // Check if resource has already been linked to the the step
-                        var resourceExists = StepFactory.hasResource($scope.previewStep, nodeId);
+                        var resourceExists = StepService.hasResource($scope.previewStep, nodeId);
                         if (!resourceExists) {
                             // Resource need to be linked
-                            var resource = ResourceFactory.generateNewResource();
+                            var resource = ResourceService.generateNewResource();
                             resource.name = node[0];
                             resource.type = node[2];
                             resource.resourceId = nodeId;
@@ -141,7 +141,7 @@
                     }
 
                     // Update history
-                    HistoryFactory.update($scope.path);
+                    HistoryService.update($scope.path);
                 }
 
                 // Remove checked nodes for next time
@@ -196,7 +196,7 @@
                 }
 
                 // Update history
-                HistoryFactory.update($scope.path);
+                HistoryService.update($scope.path);
             };
 
             $scope.decrementDuration = function (type) {
@@ -220,7 +220,7 @@
                 }
 
                 // Update history
-                HistoryFactory.update($scope.path);
+                HistoryService.update($scope.path);
             };
 
             $scope.correctDuration = function (type) {
@@ -252,34 +252,31 @@
                 }
 
                 // Update history
-                HistoryFactory.update($scope.path);
+                HistoryService.update($scope.path);
             };
 
             /**
              * Delete selected resource from path
              */
             $scope.removeResource = function (resource) {
-                StepFactory.removeResource($scope.previewStep, resource.id);
-
-                // Loop through path to remove reference to resource
-                PathFactory.removeResource(resource.id);
+                StepService.removeResource($scope.previewStep, resource.id);
 
                 // Update history
-                HistoryFactory.update($scope.path);
+                HistoryService.update($scope.path);
             };
 
             $scope.enableResourcePropagation = function (resource) {
                 resource.propagateToChildren = true;
 
                 // Update history
-                HistoryFactory.update($scope.path);
+                HistoryService.update($scope.path);
             };
 
             $scope.disableResourcePropagation = function (resource) {
                 resource.propagateToChildren = false;
 
                 // Update history
-                HistoryFactory.update($scope.path);
+                HistoryService.update($scope.path);
             };
 
             /**
@@ -290,7 +287,7 @@
                 $scope.previewStep.excludedResources.push(resource.id);
 
                 // Update history
-                HistoryFactory.update($scope.path);
+                HistoryService.update($scope.path);
             };
 
             /**
@@ -308,14 +305,14 @@
                 }
 
                 // Update history
-                HistoryFactory.update($scope.path);
+                HistoryService.update($scope.path);
             };
 
             $scope.removePrimaryResource = function () {
                 $scope.previewStep.primaryResource = null;
 
                 // Update history
-                HistoryFactory.update($scope.path);
+                HistoryService.update($scope.path);
             };
 
             $scope.showActivity = function () {
@@ -331,7 +328,7 @@
                 $scope.previewStep.activityId = null;
 
                 // Update history
-                HistoryFactory.update($scope.path);
+                HistoryService.update($scope.path);
             };
         }
     ]);

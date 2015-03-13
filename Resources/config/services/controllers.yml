@@ -6,9 +6,12 @@ services:
             session:            @session
             router:             @router
             translator:         @translator
+            formFactory:        @form.factory
             pathManager:        @innova_path.manager.path
+            pathHandler:        @innova_path.form.handler.path
             publishingManager:  @innova_path.manager.publishing
-        
+        scope: request
+
     # Path template controller
     innova_path.controller.path_template:
         class: %innova_path.controller.path_template.class%
@@ -35,11 +38,5 @@ services:
         arguments:
             objectManager:     @doctrine.orm.entity_manager
             router:            @router
-            formFactory:       @form.factory
-            session:           @session
-            translator:        @translator
-            pathHandler:       @innova_path.form.handler.path
             pathManager:       @innova_path.manager.path
-            publishingManager: @innova_path.manager.publishing
             resourceManager:   @claroline.manager.resource_manager
-        scope: request

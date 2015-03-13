@@ -36,6 +36,9 @@
  */
 namespace Innova\PathBundle\Controller;
 
+use Innova\PathBundle\Form\Handler\PathHandler;
+use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -92,37 +95,55 @@ class PathController
     protected $translator;
 
     /**
+     * Form factory
+     * @var \Symfony\Component\Form\FormFactoryInterface
+     */
+    protected $formFactory;
+
+    /**
      * Current path manager
      * @var \Innova\PathBundle\Manager\PathManager
      */
     protected $pathManager;
-    
+
+    /**
+     * Path form handler
+     * @var \Innova\PathBundle\Form\Handler\PathHandler
+     */
+    protected $pathHandler;
+
     /**
      * Publishing manager
      * @var \Innova\PathBundle\Manager\PublishingManager
      */
     protected $publishingManager;
-    
+
     /**
      * Class constructor
-     * Inject needed dependencies
-     * @param SessionInterface         $session
-     * @param RouterInterface          $router
-     * @param TranslatorInterface      $translator
-     * @param PathManager              $pathManager
-     * @param PublishingManager        $publishingManager
+     *
+     * @param \Symfony\Component\HttpFoundation\Session\SessionInterface $session
+     * @param \Symfony\Component\Routing\RouterInterface                 $router
+     * @param \Symfony\Component\Translation\TranslatorInterface         $translator
+     * @param \Symfony\Component\Form\FormFactoryInterface               $formFactory
+     * @param \Innova\PathBundle\Manager\PathManager                     $pathManager
+     * @param \Innova\PathBundle\Form\Handler\PathHandler                $pathHandler
+     * @param \Innova\PathBundle\Manager\PublishingManager               $publishingManager
      */
     public function __construct(
         SessionInterface         $session,
         RouterInterface          $router,
         TranslatorInterface      $translator,
+        FormFactoryInterface     $formFactory,
         PathManager              $pathManager,
+        PathHandler              $pathHandler,
         PublishingManager        $publishingManager)
     {
         $this->session           = $session;
         $this->router            = $router;
         $this->translator        = $translator;
+        $this->formFactory       = $formFactory;
         $this->pathManager       = $pathManager;
+        $this->pathHandler       = $pathHandler;
         $this->publishingManager = $publishingManager;
     }
 
@@ -137,7 +158,7 @@ class PathController
      *     options = {"expose"=true}
      * )
      * @Method("GET")
-     * @Template("InnovaPathBundle::index.html.twig")
+     * @Template("InnovaPathBundle:Tool:index.html.twig")
      */
     public function listAction(Workspace $workspace)
     {
@@ -149,6 +170,60 @@ class PathController
             'workspace' => $workspace,
             'paths'     => $paths,
         );
+    }
+
+    /**
+     * @Route(
+     *     "/",
+     *     name    = "innova_path_create",
+     *     options = { "expose" = true }
+     * )
+     * @Method("POST")
+     */
+    public function createAction(Workspace $workspace)
+    {
+        $path = new Path();
+
+        $this->pathManager->checkAccess('CREATE', $path, $workspace);
+
+        // Create form
+        $form = $this->formFactory->create('innova_path', $path);
+
+        // Try to process data
+        $this->pathHandler->setForm($form);
+        if ($this->pathHandler->process()) {
+            // Validation OK
+        } else {
+            // Validation Error
+        }
+
+        return new JsonResponse(array ());
+    }
+
+    /**
+     * @Route(
+     *     "/{id}",
+     *     name    = "innova_path_update",
+     *     options = { "expose" = true }
+     * )
+     * @Method("PUT")
+     */
+    public function updateAction(Workspace $workspace, Path $path)
+    {
+        $this->pathManager->checkAccess('EDIT', $path);
+
+        // Create form
+        $form = $this->formFactory->create('innova_path', $path);
+
+        // Try to process data
+        $this->pathHandler->setForm($form);
+        if ($this->pathHandler->process()) {
+            // Validation OK
+        } else {
+            // Validation Error
+        }
+
+        return new JsonResponse(array ());
     }
 
     /**
@@ -175,7 +250,7 @@ class PathController
             // Delete success
             $this->session->getFlashBag()->add(
                 'success',
-                $this->translator->trans("path_delete_success", array(), "innova_tools")
+                $this->translator->trans('path_delete_success', array(), 'innova_tools')
             );
         } catch (\Exception $e) {
             // Error
@@ -216,7 +291,7 @@ class PathController
             // Publish success
             $this->session->getFlashBag()->add(
                 'success',
-                $this->translator->trans('publish_success', array(), "innova_tools")
+                $this->translator->trans('publish_success', array(), 'innova_tools')
             );
         } catch (\Exception $e) {
             // Error

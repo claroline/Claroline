@@ -6,8 +6,8 @@
 
     angular.module('ClipboardModule').factory('ClipboardService', [
         '$rootScope',
-        'PathFactory',
-        function ($rootScope, PathFactory) {
+        'PathService',
+        function ($rootScope, PathService) {
             // Clipboard content
             var clipboard = null;
 
@@ -57,7 +57,7 @@
 
                         step.children.push(stepCopy);
 
-                        PathFactory.recalculateStepsLevel();
+                        PathService.recalculateStepsLevel();
                     }
 
                     return this;
@@ -75,13 +75,13 @@
 
                     if (typeof step.resources !== 'undefined' && step.resources !== null && step.resources.length !== 0) {
                         for (var i = 0; i < step.resources.length; i++) {
-                            var newId = PathFactory.getNextResourceId();
+                            var newId = PathService.getNextResourceId();
 
                             // Store ID to update excluded resources
                             replacedIds[step.resources[i].id] = newId;
 
                             // Update resource ID
-                            step.resources[i].id = PathFactory.getNextResourceId();
+                            step.resources[i].id = PathService.getNextResourceId();
 
                             // Check excluded resources
                             for (var oldId in replacedIds) {
@@ -107,8 +107,7 @@
                  * @param step
                  * @returns ClipboardService
                  */
-                replaceStepsId: function(step) {
-                    step.id = PathFactory.getNextStepId();
+                replaceStepsId: function (step) {
                     step.resourceId = null;
 
                     if (step.children.length != 0) {

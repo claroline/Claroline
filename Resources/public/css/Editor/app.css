@@ -6,17 +6,6 @@
     position: relative;
 }
 
-.path-editor .alert {
-    position: absolute;
-    top: 2px;
-    right: 2px;
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: 0;
-    padding: 5px 15px;
-    z-index: 10;
-    cursor: pointer;
-}
-
 /* app css stylesheet */
 .path-editor .panel-heading + .collapse {
     border-width: 0;
@@ -35,18 +24,6 @@
     text-decoration: none;
 }
 
-.modal-backdrop {
-    z-index: 1;
-}
-
-.path-editor .navbar {
-    margin-bottom: 0;
-}
-
-form {
-    margin: 0 0 5px;
-}
-
 .excluded-resource {
     text-decoration: line-through;
     color: #999;
@@ -55,25 +32,25 @@ form {
 input.form-control.ng-invalid {
     border-color: #b94a48;
     -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
-            box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
 }
 
 input.form-control.ng-invalid:focus {
     border-color: #953b39;
     -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #d59392;
-            box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #d59392;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #d59392;
 }
 
 input.form-control.ng-valid {
     border-color: #468847;
     -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
-            box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
 }
 
 input.form-control.ng-valid:focus {
     border-color: #356635;
     -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #7aba7b;
-            box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #7aba7b;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #7aba7b;
 }
 
 .tooltip {

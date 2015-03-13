@@ -11,7 +11,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @ORM\Table("innova_step")
  * @ORM\Entity
  */
-class Step
+class Step implements \JsonSerializable
 {
     /**
      * Unique identifier of the step
@@ -437,5 +437,19 @@ class Step
         }
 
         return $result;
+    }
+
+    public function jsonSerialize()
+    {
+        // TODO : add missing Activity Properties (duration, withTutor, etc.)
+
+        return array (
+            'id'          => $this->id,                  // A local id for the step in the path (reuse step ID)
+            'lvl'         => $this->lvl,                 // The depth of the step in the path structure
+            'activityId'  => $this->activity->getId(),   // The ID of the linked Activity
+            'name'        => $this->getName(),           // The name of the linked Activity (used as Step name)
+            'description' => $this->getDescription(),    // The description of the linked Activity (used as Step description)
+            'children'    => $this->children->toArray(), // The children of the step
+        );
     }
 }

@@ -8,19 +8,19 @@
         <div style="margin-left: 10px;" class="input-group">
             <input type="text" class="form-control" name="step-name" data-ng-model="previewStep.name" />
             <div class="input-group-btn">
-                <button data-ng-click="showActivity()" class="btn btn-default" type="button" data-ng-if="previewStep.activityId" data-toggle="tooltip" data-container="body" title="{{ 'see_activity'|trans:{}:'path_editor') }}">
+                <button data-ng-click="showActivity()" class="btn btn-default" type="button" data-ng-if="previewStep.activityId" data-toggle="tooltip" data-container="body" title="{{ 'see_activity'|trans:{}:'path_editor' }}">
                     <span class="fa fa-eye"></span>
-                    <span class="sr-only">{{ 'see_activity'|trans:{}:'path_editor') }}</span>
+                    <span class="sr-only">{{ 'see_activity'|trans:{}:'path_editor' }}</span>
                 </button>
 
-                <button class="btn btn-default" type="button" data-ui-resource-picker="activityResourcePicker" data-toggle="tooltip" data-container="body" title="{{ 'select_activity'|trans:{}:'path_editor') }}">
+                <button class="btn btn-default" type="button" data-ui-resource-picker="activityResourcePicker" data-toggle="tooltip" data-container="body" title="{{ 'select_activity'|trans:{}:'path_editor' }}">
                     <span class="fa fa-folder-open"></span>
-                    <span class="sr-only">{{ 'select_activity'|trans:{}:'path_editor') }}</span>
+                    <span class="sr-only">{{ 'select_activity'|trans:{}:'path_editor' }}</span>
                 </button>
 
-                <button data-ng-click="deleteActivity()" class="btn btn-danger" type="button" data-ng-if="previewStep.activityId" data-toggle="tooltip" data-container="body" title="{{ 'delete_activity'|trans:{}:'path_editor') }}">
+                <button data-ng-click="deleteActivity()" class="btn btn-danger" type="button" data-ng-if="previewStep.activityId" data-toggle="tooltip" data-container="body" title="{{ 'delete_activity'|trans:{}:'path_editor' }}">
                     <span class="fa fa-trash-o"></span>
-                    <span class="sr-only">{{ 'delete_activity'|trans:{}:'path_editor') }}</span>
+                    <span class="sr-only">{{ 'delete_activity'|trans:{}:'path_editor' }}</span>
                 </button>
             </div>
         </div>

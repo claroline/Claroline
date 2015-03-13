@@ -15,7 +15,7 @@ use Innova\PathBundle\Entity\Step;
  * @ORM\Table(name="innova_path")
  * @ORM\Entity(repositoryClass="Innova\PathBundle\Repository\PathRepository")
  */
-class Path extends AbstractResource implements PathInterface
+class Path extends AbstractResource implements PathInterface, \JsonSerializable
 {   
     /**
      * Name of the path (only for forms)
@@ -239,31 +239,16 @@ class Path extends AbstractResource implements PathInterface
 
     /**
      * Initialize JSON structure
-     * @param array $steps
      * @return \Innova\PathBundle\Entity\Path\Path
      */
-    public function initializeStructure(array $steps = array())
+    public function initializeStructure()
     {
         $structure = array (
-            'name' => $this->getName(),
-            'description' => $this->getDescription()
+            'name'        => $this->getName(),
+            'description' => $this->getDescription(),
+            'steps'       => array (),
         );
-        
-        if (!empty($steps)) {
-            $structure['steps'] = $steps;
-        } else {
-            $structure['steps'] = array (
-                array (
-                    'id'           => 1,
-                    'lvl'          => 0,
-                    'resourceId'   => null,
-                    'name'         => $this->getName(),
-                    'withTutor'    => false,
-                    'children'     => $steps,
-               ),
-            );
-        }
-    
+
         $this->setStructure(json_encode($structure));
         
         return $this;
@@ -322,5 +307,14 @@ class Path extends AbstractResource implements PathInterface
             // Inject rebuilt structure
             $this->setStructure(json_encode($structure));
         }
+    }
+
+    public function jsonSerialize()
+    {
+        return array (
+            'name'        => $this->getResourceNode()->getName(),
+            'description' => $this->description,
+            'steps'       => $this->steps->toArray(),
+        );
     }
 }

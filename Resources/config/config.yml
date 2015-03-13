@@ -13,6 +13,9 @@ plugin:
       name: innova_path
       is_exportable: false
       icon: res_file.png
+      actions:
+        - name: administrate
+          menu_name: administrate
 
   widgets:
      - name: innova_path_widget

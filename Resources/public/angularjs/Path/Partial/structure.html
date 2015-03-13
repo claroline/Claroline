@@ -1,0 +1,42 @@
+<div class="row path-structure">
+    <!-- Path structure -->
+    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+        <!-- Block to display where there is no structure -->
+        <div data-ng-if="pathStructureCtrl.structure.length === 0" class="text-center">
+            <em>There is no structure for this path.</em>
+            <br/><br/>
+            <div class="alert alert-info text-left">
+                <span class="fa fa-info-circle"></span>
+                To create a new one you can :
+                <br/><br/>
+                <ul>
+                    <li><strong>Initialize a new structure</strong> : this will create an empty structure.</li>
+                    <li><strong>Create from template</strong> : this will use selected template data to fill your new path.</li>
+                </ul>
+            </div>
+
+            <div class="text-center">
+                <button class="btn btn-primary" role="button" data-ng-click="pathStructureCtrl.createNew()">
+                    <span class="fa fa-pencil"></span>
+                    Initialize a new structure
+                </button>
+                <button class="btn btn-default" role="button" data-ng-click="pathStructureCtrl.createFromTemplate()">
+                    <span class="fa fa-download"></span>
+                    Create from template
+                </button>
+            </div>
+        </div>
+
+        <!-- Block to display when a structure is set -->
+        <div data-ng-if="pathStructureCtrl.structure.length !== 0" data-ui-tree="treeOptions">
+            <ol class="tree" data-ui-tree-nodes="" data-ng-model="pathStructureCtrl.structure" data-nodrop>
+                <li data-ui-tree-node="" data-ng-repeat="step in pathStructureCtrl.structure" data-ng-include="pathStructureCtrl.webDir + 'bundles/innovapath/angularjs/Path/Partial/structure-item.html'"></li>
+            </ol>
+        </div>
+    </div>
+
+    <!-- Step form -->
+    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+        <step-form data-step="pathStructureCtrl.previewStep"></step-form>
+    </div>
+</div>

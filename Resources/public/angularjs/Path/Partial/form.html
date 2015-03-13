@@ -1,0 +1,77 @@
+<form action="#" role="form" class="form-horizontal path-form" method="post">
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        {{ 'editor'|trans:{}:'path_editor' }} <small data-ng-bind="pathFormCtrl.path.name"></small>
+                    </h3>
+
+                    <alert-box></alert-box>
+                </div>
+
+                <nav class="navbar navbar-default navbar-static-top" role="navigation">
+                    <ul class="nav navbar-nav navbar-left">
+                        <li data-ng-class="{ 'disabled': pathFormCtrl.historyDisabled.undo }">
+                            <a href="#" data-ng-click="pathFormCtrl.undo()" data-placement="bottom" data-toggle="tooltip" data-original-title="{{ 'undo'|trans:{}:'path_editor' }}">
+                                <span class="fa fa-reply"></span>
+                                <span class="sr-only"> {{ 'undo'|trans:{}:'path_editor' }}</span>
+                            </a>
+                        </li>
+                        <li data-ng-class="{ 'disabled': pathFormCtrl.historyDisabled.redo }">
+                            <a href="#" data-ng-click="pathFormCtrl.redo()" data-placement="bottom" data-toggle="tooltip" data-original-title="{{ 'redo'|trans:{}:'path_editor' }}">
+                                <span class="fa fa-share"></span>
+                                <span class="sr-only">{{ 'redo'|trans:{}:'path_editor' }}</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a data-pageslide="left" data-ps-size="320px" href="#sidebar-left" role="button">
+                                <span class="fa fa-download"></span> {{ 'open_templates'|trans:{}:'path_editor' }}
+                            </a>
+                        </li>
+                    </ul>
+
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            <a href="#" data-ng-click="pathFormCtrl.save()">
+                                <span class="fa fa-floppy-o"></span> {{ 'save'|trans:{}:'path_editor' }}
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="#" data-ng-click="pathFormCtrl.publishAndPreview()">
+                                <span class="fa fa-eye"></span> {{ 'publish_and_preview'|trans:{}:'path_editor' }}
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="#" data-ng-click="pathFormCtrl.closeEditor()" >
+                                <span class="fa fa-times-circle"></span>
+                                {{ 'back'|trans:{}:'path_editor' }}
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+
+                <div class="panel-body">
+                    <div class="row form-group">
+                        <label class="control-label col-md-3 required" for="innova_path_name">{{ 'innova_path_name'|trans:{}:'path_editor' }}</label>
+                        <div class="col-md-9">
+                            <input type="text" class="form-control" id="innova_path_name" name="innova_path[name]" placeholder="{{ 'name_help'|trans:{}:'path_editor' }}" data-ng-model="pathFormCtrl.path.name" />
+                        </div>
+                    </div>
+
+                    <div class="row form-group">
+                        <label class="control-label col-md-3" for="innova_path_description">{{ 'innova_path_description'|trans:{}:'path_editor' }}</label>
+                        <div class="col-md-9">
+                            <input type="text" class="form-control" id="innova_path_description" name="innova_path[description]" placeholder="{{ 'description_help'|trans:{}:'path_editor' }}" data-ng-model="pathFormCtrl.path.description" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Path structure editor -->
+    <path-structure data-structure="pathFormCtrl.path.steps"></path-structure>
+</form>

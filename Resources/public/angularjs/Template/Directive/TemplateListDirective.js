@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    angular.module('TemplateModule').directive('templateList', [
+    angular.module('TemplateModule').directive('pathTemplateList', [
         'TemplateService',
         function (TemplateService) {
             return {

@@ -121,3 +121,6 @@ see_activity: See activity
 delete_activity: Delete activity link
 
 no_templates: There is not template available.
+
+innova_path_name: Name
+innova_path_description: Description
