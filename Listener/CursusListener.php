@@ -57,7 +57,7 @@ class CursusListener
     }
     
     /**
-     * @DI\Observe("plugin_options_clarolinecursus")
+     * @DI\Observe("plugin_options_cursusbundle")
      *
      * @param DisplayToolEvent $event
      */
