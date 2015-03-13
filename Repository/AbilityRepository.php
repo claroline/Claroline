@@ -23,6 +23,7 @@ class AbilityRepository extends EntityRepository
                 'a.id',
                 'a.name',
                 'a.minActivityCount',
+                'COUNT(act) as activityCount',
                 'c.id AS competencyId',
                 'l.name AS levelName',
                 'l.value AS levelValue'
@@ -30,8 +31,10 @@ class AbilityRepository extends EntityRepository
             ->join('a.competencyAbilities', 'ca')
             ->join('ca.competency', 'c')
             ->join('ca.level', 'l')
+            ->leftJoin('a.activities', 'act')
             ->where('c.root = :root')
             ->orderBy('l.value')
+            ->groupBy('a.id')
             ->setParameter(':root', $framework->getId())
             ->getQuery()
             ->getArrayResult();
@@ -93,7 +96,7 @@ class AbilityRepository extends EntityRepository
     /**
      * Returns the abilities associated with an activity, pre-loading
      * level information.
-     * 
+     *
      * @param Activity $activity
      * @return array
      */

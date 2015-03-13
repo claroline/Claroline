@@ -99,6 +99,26 @@ class ActivityController
      */
     public function linkAbilityAction(Activity $activity, Ability $ability)
     {
-        return new JsonResponse($this->activityManager->linkActivityToAbility($activity, $ability));
+        return new JsonResponse(
+            $result = $this->activityManager->linkActivityToAbility($activity, $ability),
+            $result ? 200 : 204
+        );
+    }
+
+    /**
+     * Removes an association between an activity and an ability.
+     *
+     * @EXT\Route("/activity/{id}/ability/{abilityId}/remove", name="hevinci_activity_remove_ability")
+     * @EXT\ParamConverter("ability", options={"id"= "abilityId"})
+     * @SEC\SecureParam(name="activity", permissions="OPEN")
+     * @SEC\PreAuthorize("hasRole('ROLE_COMPETENCY_MANAGER')")
+     *
+     * @param Activity $activity
+     * @param Ability $ability
+     * @return JsonResponse
+     */
+    public function removeAbilityLinkAction(Activity $activity, Ability $ability)
+    {
+        return new JsonResponse($this->activityManager->removeAbilityLink($activity, $ability));
     }
 }

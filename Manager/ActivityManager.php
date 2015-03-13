@@ -30,45 +30,81 @@ class ActivityManager
         $this->competencyRepo = $om->getRepository('HeVinciCompetencyBundle:Competency');
     }
 
+    /**
+     * Returns an array representation of all the competencies and abilities
+     * linked to a given activity, along with their path in their competency
+     * framework. Competencies and abilities are distinguished from each other
+     * by the "type" key.
+     *
+     * @param Activity $activity
+     * @return array
+     */
     public function loadLinkedCompetencies(Activity $activity)
     {
         $abilities = $this->abilityRepo->findByActivity($activity);
         $result = [];
 
         foreach ($abilities as $ability) {
-            $properties = [
-                'name' => $ability->getName(),
-                'type' => 'ability_',
-                'paths' => []
-            ];
-
-            foreach ($ability->getCompetencyAbilities() as $link) {
-                $path = $this->competencyRepo->getPath($link->getCompetency());
-                $steps = [];
-
-                // use array_map instead...
-
-                foreach ($path as $step) {
-                    $steps[] = $step->getName();
-                }
-
-                $properties['paths'][] = [
-                    'level' => $link->getLevel()->getName(),
-                    'steps' => $steps,
-                ];
-            }
-
-            $result[] = $properties;
+            $result[] = $this->loadAbility($ability);
         }
 
         return $result;
     }
 
+    /**
+     * Creates a link between an activity and an ability. If the link already
+     * exists, the method returns false. Otherwise, it returns an array
+     * representation of the ability.
+     *
+     * @param Activity $activity
+     * @param Ability $ability
+     * @return array|bool
+     */
     public function linkActivityToAbility(Activity $activity, Ability $ability)
     {
+        if ($ability->isLinkedToActivity($activity)) {
+            return false;
+        }
+
         $ability->linkActivity($activity);
         $this->om->flush();
 
-        // return ability + path
+        return $this->loadAbility($ability);
+    }
+
+    /**
+     * Removes a link between an activity and an ability.
+     *
+     * @param Activity $activity
+     * @param Ability $ability
+     * @throws \LogicException if the link doesn't exists
+     */
+    public function removeAbilityLink(Activity $activity, Ability $ability)
+    {
+        if (!$ability->isLinkedToActivity($activity)) {
+            throw new \LogicException(
+                "There's no link between activity {$activity->getId()} and ability {$ability->getId()}"
+            );
+        }
+
+        $ability->removeActivity($activity);
+        $this->om->flush();
+    }
+
+    private function loadAbility(Ability $ability)
+    {
+        return [
+            'id' => $ability->getId(),
+            'name' => $ability->getName(),
+            'type' => 'ability_',
+            'paths' => array_map(function ($link) {
+                return [
+                    'level' => $link->getLevel()->getName(),
+                    'steps' => array_map(function ($step) {
+                        return $step->getName();
+                    }, $this->competencyRepo->getPath($link->getCompetency())),
+                ];
+            }, $ability->getCompetencyAbilities()->toArray())
+        ];
     }
 }

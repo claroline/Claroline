@@ -128,15 +128,34 @@ class Ability implements \JsonSerializable
     }
 
     /**
+     * @param Activity $activity
+     * @return bool
+     */
+    public function isLinkedToActivity(Activity $activity)
+    {
+        return $this->activities->contains($activity);
+    }
+
+    /**
      * Associates the ability with an activity.
      *
      * @param Activity $activity
      */
     public function linkActivity(Activity $activity)
     {
-        if (!$this->activities->contains($activity)) {
+        if (!$this->isLinkedToActivity($activity)) {
             $this->activities->add($activity);
         }
+    }
+
+    /**
+     * Removes an association with an activity.
+     *
+     * @param Activity $activity
+     */
+    public function removeActivity(Activity $activity)
+    {
+        $this->activities->removeElement($activity);
     }
 
     public function jsonSerialize()
@@ -144,6 +163,7 @@ class Ability implements \JsonSerializable
         return [
             'id' => $this->id,
             'name' => $this->name,
+            'activityCount' => $this->activities->count(),
             'minActivityCount' => $this->minActivityCount,
             'levelName' => $this->level ? $this->level->getName() : null,
             'levelValue' => $this->level ? $this->level->getValue() : null

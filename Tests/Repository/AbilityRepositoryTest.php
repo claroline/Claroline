@@ -2,6 +2,12 @@
 
 namespace HeVinci\CompetencyBundle\Tests\Repository;
 
+use Claroline\CoreBundle\Entity\Resource\Activity;
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Claroline\CoreBundle\Entity\Resource\ResourceType;
+use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use HeVinci\CompetencyBundle\Entity\Ability;
 use HeVinci\CompetencyBundle\Util\RepositoryTestCase;
 
 class AbilityRepositoryTest extends RepositoryTestCase
@@ -89,6 +95,31 @@ class AbilityRepositoryTest extends RepositoryTestCase
         $this->assertEquals([$a8, $a4], $this->repo->findFirstByName('FOO A', $f1));
     }
 
+    public function testFindByActivity()
+    {
+        $level = $this->persistLevel('l1', $this->persistScale('scale'));
+
+        // framework 1
+        $f1 = $this->persistCompetency('f1');
+        $a1 = $this->persistAbility('a1');
+        $this->persistLink($f1, $a1, $level);
+
+        // framework 2
+        $f2 = $this->persistCompetency('f2');
+        $a2 = $this->persistAbility('a2');
+        $a3 = $this->persistAbility('a3');
+        $this->persistLink($f2, $a2, $level);
+        $this->persistLink($f2, $a3, $level);
+
+        $activity = $this->createActivity('FOO');
+        $a1->linkActivity($activity);
+        $a3->linkActivity($activity);
+
+        $this->om->flush();
+
+        $this->assertEquals([$a1, $a3], $this->repo->findByActivity($activity));
+    }
+
     private function createLink($index)
     {
         $competency = $this->persistCompetency('Competency ' . $index);
@@ -96,5 +127,43 @@ class AbilityRepositoryTest extends RepositoryTestCase
         $scale = $this->persistScale('Scale ' . $index);
         $level = $this->persistLevel('Level ' . $index, $scale, $index);
         $this->persistLink($competency, $ability, $level);
+    }
+
+    private function createActivity($name)
+    {
+        $user = new User();
+        $user->setFirstName('John');
+        $user->setLastName('Doe');
+        $user->setUsername('jdoe');
+        $user->setMail('jd@mail.com');
+        $user->setPassword('123');
+
+        $workspace = new Workspace();
+        $workspace->setName('w1');
+        $workspace->setCode('abc');
+        $workspace->setGuid('abc123');
+        $workspace->setCreator($user);
+
+        $type = new ResourceType();
+        $type->setName('activity');
+
+        $node = new ResourceNode();
+        $node->setName($name);
+        $node->setClass('FooClass');
+        $node->setCreator($user);
+        $node->setResourceType($type);
+        $node->setWorkspace($workspace);
+
+        $activity = new Activity();
+        $activity->setResourceNode($node);
+        $activity->setDescription('activity...');
+
+        $this->om->persist($user);
+        $this->om->persist($workspace);
+        $this->om->persist($type);
+        $this->om->persist($node);
+        $this->om->persist($activity);
+
+        return $activity;
     }
 }

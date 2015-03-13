@@ -24,6 +24,29 @@
         <div class="panel-title">{{ resourceName ~ ' - ' ~ 'associated_competencies'|trans }}</div>
     </div>
     <div class="panel-body">
+        <table class="table table-condensed table-bordered associated-competencies"
+               {% if competencies|length == 0 %}style="display: none;"{% endif %}>
+            <thead>
+                <th>{{ 'competency_'|trans }}</th>
+                <th>{{ 'type'|trans({}, 'platform') }}</th>
+                <th>{{ 'level'|trans }}</th>
+                <th>{{ 'origin'|trans }}</th>
+                {% if isEditMode %}
+                    <th></th>
+                {% endif %}
+            </thead>
+            <tbody>
+                {% for competency in competencies %}
+                    {%
+                        include 'HeVinciCompetencyBundle:Activity:competencyRow.html.twig'
+                        with {
+                            target: competency,
+                            isEditMode: isEditMode
+                        }
+                    %}
+                {% endfor %}
+            </tbody>
+        </table>
         {% if competencies|length == 0 %}
             <br/>
             <div class="alert alert-info">
@@ -33,54 +56,6 @@
                     {{ 'info.add_competency_association'|trans }}
                 {% endif %}
             </div>
-        {% else %}
-            <table class="table table-condensed table-bordered">
-                <thead>
-                    <th>{{ 'competency_'|trans }}</th>
-                    <th>{{ 'type'|trans({}, 'platform') }}</th>
-                    <th>{{ 'level'|trans }}</th>
-                    <th>{{ 'origin'|trans }}</th>
-                    <th>{{ 'delete'|trans({}, 'platform') }}</th>
-                </thead>
-                <tbody>
-                    {% for competency in competencies %}
-                        {% set pathCount = competency.paths|length %}
-                        <tr>
-                            <td rowspan="{{ pathCount }}">{{ competency.name }}</td>
-                            <td rowspan="{{ pathCount }}">{{ competency.type|trans }}</td>
-                            <td>{{ competency.paths[0].level }}</td>
-
-                            {# use macro here #}
-
-                            <td>
-                                {% for step in competency.paths[0].steps %}
-                                    - {{ step }} <br>
-                                {% endfor %}
-                            </td>
-                            <td>
-                                <a href="#">
-                                    <i class="fa fa-remove"></i>
-                                </a>
-                            </td>
-                        </tr>
-                        {% if pathCount > 1 %}
-                            {% for i in 1..pathCount - 1 %}
-                                <td>{{ competency.paths[i].level }}</td>
-                                <td>
-                                {% for step in competency.paths[0].steps %}
-                                    - {{ step }} <br>
-                                {% endfor %}
-                            </td>
-                                <td>
-                                    <a href="#">
-                                        <i class="fa fa-remove"></i>
-                                    </a>
-                                </td>
-                            {% endfor %}
-                        {% endif %}
-                    {% endfor %}
-                </tbody>
-            </table>
         {% endif %}
     </div>
     <div class="panel-footer">
@@ -97,6 +72,13 @@
 
 {% block javascripts %}
     {{ parent() }}
+    {% javascripts debug=false filter='twig_js, jsmin' vars=["locale"]
+        "@HeVinciCompetencyBundle/Resources/views/Activity/competencyRow.html.twig"
+    %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+    <script src="{{ url('bazinga_jstranslation_js', { 'domain': 'competency' }) }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/hevincicompetency/js/flasher.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/hevincicompetency/js/activity.js') }}"></script>
 {% endblock %}
 

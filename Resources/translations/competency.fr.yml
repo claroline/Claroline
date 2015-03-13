@@ -15,6 +15,7 @@ competency:
   create_sub: Créer une sous-compétence
   do_select: 'Selectionnez une compétence '
   delete: Supprimer une compétence
+  delete_association: Supprimer une association
   edit: Modifier une compétence
 competency_: Compétence
 expand_all: Tout développer
@@ -37,10 +38,14 @@ level: Niveau
 levels: Dégrés
 message:
   ability_added: Capacité ajoutée avec succès.
+  ability_association_deletion_confirm: Voulez-vous vraiment supprimer l'association avec cette capacité ?
   ability_created: Capacité créée avec succès.
   ability_deleted: Capacité supprimée avec succès.
   ability_deletion_confirm: Voulez-vous vraiment supprimer cette capacité ?
   ability_edited: Capacité modifiée avec succès.
+  competency_already_associated: Cette compétence est déjà associée à l'activité.
+  competency_associated: Compétence associée avec succès.
+  competency_association_removed: Association supprimée avec succès.
   competency_edited: Compétence modifiée avec succès.
   competency_deleted: Compétence supprimée avec succès.
   competency_deletion_confirm: Voulez-vous vraiment supprimer cette compétence ? Cette action est irréversible.

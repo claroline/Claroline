@@ -414,4 +414,58 @@ class CompetencyControllerTest extends UnitTestCase
             $this->controller->addAbilityFormAction($parent)
         );
     }
+
+    public function testInvalidAddAbilityAction()
+    {
+        $request = new Request();
+        $parent = new Competency();
+        $this->formHandler->expects($this->once())
+            ->method('isValid')
+            ->with('hevinci_form_ability_import', $request, null, ['competency' => $parent])
+            ->willReturn(false);
+        $this->formHandler->expects($this->once())
+            ->method('getView')
+            ->willReturn('FORM');
+        $this->assertEquals(
+            ['form' => 'FORM', 'competency' => $parent],
+            $this->controller->addAbilityAction($request, $parent)
+        );
+    }
+
+    public function testValidAddAbilityAction()
+    {
+        $request = new Request();
+        $parent = new Competency();
+        $ability = new Ability();
+        $level = new Level();
+        $ability->setLevel($level);
+        $this->formHandler->expects($this->once())
+            ->method('isValid')
+            ->with('hevinci_form_ability_import', $request, null, ['competency' => $parent])
+            ->willReturn(true);
+        $this->formHandler->expects($this->exactly(2))
+            ->method('getData')
+            ->willReturn($ability);
+        $this->manager->expects($this->once())
+            ->method('linkAbilityToCompetency')
+            ->with($parent, $ability, $level)
+            ->willReturn($ability);
+        $this->assertEquals(
+            json_encode($ability),
+            $this->controller->addAbilityAction($request, $parent)->getContent()
+        );
+    }
+
+    public function testSuggestAbilityAction()
+    {
+        $parent = new Competency();
+        $this->manager->expects($this->once())
+            ->method('suggestAbilities')
+            ->with($parent, 'SEARCH')
+            ->willReturn('RESULT');
+        $this->assertEquals(
+            json_encode('RESULT'),
+            $this->controller->suggestAbilityAction($parent, 'SEARCH')->getContent()
+        );
+    }
 }
