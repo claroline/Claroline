@@ -4,22 +4,11 @@ namespace HeVinci\CompetencyBundle\Form\DataTransformer;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\Common\Persistence\ObjectManager;
 use HeVinci\CompetencyBundle\Entity\Level;
 use Symfony\Component\Form\DataTransformerInterface;
 
 class LevelTransformer implements DataTransformerInterface
 {
-    private $om;
-
-    /**
-     * @param ObjectManager $om
-     */
-    public function __construct(ObjectManager $om)
-    {
-        $this->om = $om;
-    }
-
     /**
      * Transforms an ArrayCollection of Level entities to a
      * multi-line string showing the level names.

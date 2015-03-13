@@ -12,9 +12,7 @@ class LevelTransformerTest extends UnitTestCase
 
     protected function setUp()
     {
-        $this->transformer = new LevelTransformer(
-            $this->mock('Doctrine\Common\Persistence\ObjectManager')
-        );
+        $this->transformer = new LevelTransformer();
     }
 
     /**

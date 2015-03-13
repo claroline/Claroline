@@ -2,7 +2,7 @@
 
 namespace HeVinci\CompetencyBundle\Util;
 
-class UnitTestCase extends \PHPUnit_Framework_TestCase
+abstract class UnitTestCase extends \PHPUnit_Framework_TestCase
 {
     protected function mock($class)
     {

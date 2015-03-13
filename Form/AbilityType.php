@@ -21,7 +21,7 @@ class AbilityType extends AbstractType
         $options['data'] = isset($options['data']) ? $options['data'] : new Ability();
 
         if (!$options['competency'] instanceof Competency) {
-            throw new \Exception(
+            throw new \LogicException(
                 'Missing "competency" option: unable to determine a scale in ability form'
             );
         }

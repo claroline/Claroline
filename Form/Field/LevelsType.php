@@ -2,7 +2,6 @@
 
 namespace HeVinci\CompetencyBundle\Form\Field;
 
-use Doctrine\Common\Persistence\ObjectManager;
 use HeVinci\CompetencyBundle\Form\DataTransformer\LevelTransformer;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Form\AbstractType;
@@ -15,23 +14,9 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
  */
 class LevelsType extends AbstractType
 {
-    private $om;
-
-    /**
-     * @DI\InjectParams({
-     *     "om" = @DI\Inject("claroline.persistence.object_manager")
-     * })
-     *
-     * @param ObjectManager $om
-     */
-    public function __construct(ObjectManager $om)
-    {
-        $this->om = $om;
-    }
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->addModelTransformer(new LevelTransformer($this->om));
+        $builder->addModelTransformer(new LevelTransformer());
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

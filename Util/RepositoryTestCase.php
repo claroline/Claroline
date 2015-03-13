@@ -9,7 +9,7 @@ use HeVinci\CompetencyBundle\Entity\CompetencyAbility;
 use HeVinci\CompetencyBundle\Entity\Level;
 use HeVinci\CompetencyBundle\Entity\Scale;
 
-class RepositoryTestCase extends TransactionalTestCase
+abstract class RepositoryTestCase extends TransactionalTestCase
 {
     protected $om;
 
