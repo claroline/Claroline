@@ -14,8 +14,8 @@
             {% set widgetDisplayConfig = widgetDatas['widgetDisplayConfig'] %}
             {% set widgetColor = widgetDisplayConfig.getColor() %}
             {% set widgetInstance = widgetHomeTabConfig.getWidgetInstance() %}
-            {% set widget = widgetInstance.getWidget() %}
             <div class="grid-stack-item"
+                 id="widget-element-{{ widgetHomeTabConfig.getId() }}"
                  data-gs-x="{{ widgetDisplayConfig.getColumn() }}"
                  data-gs-y="{{ widgetDisplayConfig.getRow() }}"
                  data-gs-width="{{ widgetDisplayConfig.getWidth() }}"
@@ -54,95 +54,6 @@
                 </div>
             </div>
         {% endfor %}
-        
-        {#{% for widgetDatas in widgetsDatas %}
-            {% set widgetHomeTabConfig = widgetDatas.config %}
-            {% set widgetInstance = widgetHomeTabConfig.getWidgetInstance() %}
-            {% set widget = widgetInstance.getWidget() %}
-            <div class="relative widget-instance-panel"
-                widget-instance-id="{{ widgetInstance.getId() }}"
-                widget-hometab-config-id="{{ widgetHomeTabConfig.getId() }}">
-                <div class="panel panel-default margin-top-md">
-                    <div class="panel-heading">
-                        <div class="panel-title{% if not widgetHomeTabConfig.isVisible() %} strike{% endif %}">
-                            <a class="accordion-toggle widget-instance-name"
-                                data-toggle="collapse"
-                                href="#collapse{{ widgetInstance.getId() }}"
-                            >
-                                {{ widgetInstance.getName() }}
-                            </a>
-                        </div>
-                    </div>
-                    <div id="collapse{{ widgetInstance.getId() }}" class="collapse-widget collapse in">
-                        <div class="panel-body widget-instance-view" {% if not widgetHomeTabConfig.isVisible() %} style="display: none;" {% endif %}>                           
-                            {{ widgetDatas.content|raw }}
-                       </div>
-                       <div class="panel-body widget-instance-edition hide"></div>
-                    </div>
-                </div>
-                <div class="float-right-top">
-                    <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
-                        <i class='fa fa-cog'></i> <i class='fa fa-caret-down'></i>
-                    </button>
-                    <ul class="widget-instance-menu dropdown-menu pull-right" role="menu">
-                        {% if not widgetInstance.isAdmin() %}
-                            {% if widgetDatas.configurable %}
-                                <li>
-                                    <a class="widget-instance-config pointer-hand">
-                                        <i class="fa fa-pencil"></i> {{ "edit" | trans({}, 'platform') }}
-                                    </a>
-                                </li>
-                            {% endif %}
-                            <li>
-                                <a class='widget-instance-rename pointer-hand'>
-                                    <i class="fa fa-pencil"></i> {{ "rename" | trans({}, 'platform') }}
-                                </a>
-                            </li>
-                        {% endif %}
-                        {% if widgetHomeTabConfig.isLocked() or isLockedHomeTab %}
-                            <li class='disabled'><a class="pointer-hand"><i class="fa fa-eye-slash"></i> {{ "hide" | trans({}, 'platform') }}</a></li>
-                            <li class='disabled'><a class="pointer-hand"><i class="fa fa-trash-o"></i> {{ "delete" | trans({}, 'platform') }}</a></li>
-                        {% else %}
-                            <li>
-                                {% if widgetHomeTabConfig.isVisible() %}
-                                    <a class="widget-visibility-btn pointer-hand"  visiblility-value="visible" id="visible-widget-id-{{ widgetHomeTabConfig.getId() }}">
-                                        <i class="fa fa-eye-slash"></i> <span>{{ "hide" | trans({}, 'platform') }}</span>
-                                    </a>
-                                {% else %}
-                                    <a class="widget-visibility-btn pointer-hand" visiblility-value="invisible" id="visible-widget-id-{{ widgetHomeTabConfig.getId() }}">
-                                        <i class="fa fa-eye"></i> <span>{{ "display" | trans({}, 'platform') }}</span>
-                                    </a>
-                                {% endif %}
-                            </li>
-                            {% if widgetHomeTabConfig.getType() == 'desktop' or widgetHomeTabConfig.getType() == 'workspace' %}
-                                <li>
-                                    <a class="widget-delete-btn pointer-hand">
-                                        <i class="fa fa-trash-o"></i> {{ "delete" | trans({}, 'platform') }}
-                                    </a>
-                                </li>
-                                {% if widgetHomeTabConfig.getWidgetOrder() > 1 or widgetHomeTabConfig.getWidgetOrder() < lastWidgetOrder %}
-                                    <li class="divider"></li>
-                                {% endif %}
-                                {% if widgetHomeTabConfig.getWidgetOrder() > 1 %}
-                                    <li>
-                                        <a class="widget-order-up pointer-hand">
-                                            <i class="fa fa-arrow-up"></i> {{ "up" | trans({}, 'platform') }}
-                                        </a>
-                                    </li>
-                                {% endif %}
-                                {% if widgetHomeTabConfig.getWidgetOrder() < lastWidgetOrder %}
-                                    <li>
-                                        <a class="widget-order-down pointer-hand">
-                                            <i class="fa fa-arrow-down"></i> {{ "down" | trans({}, 'platform') }}
-                                        </a>
-                                    </li>
-                                {% endif %}
-                            {% endif %}
-                        {% endif %}
-                    </ul>
-                </div>
-            </div>
-        {% endfor %}#}
     </div>
 
     {% if isVisibleHomeTab and not isLockedHomeTab %}
@@ -155,39 +66,6 @@
             </div>
         </div>
     {% endif %}
-</div>
-
-<div id="delete-widget-hometab-validation-box" class="modal fade" role="dialog" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h3>{{ 'widget_home_tab_delete_confirm_title'|trans({}, 'platform') }}</h3>
-            </div>
-            <div class="modal-body">
-                <p>{{ 'widget_home_tab_delete_confirm_message'|trans({}, 'platform') }}</p>
-            </div>
-            <div class="modal-footer">
-                <input type="button" id="delete-widget-hometab-confirm-ok" class="btn btn-primary" value="{{ 'ok'|trans({}, 'platform') }}"/>
-                <input type="button" class="btn btn-default" data-dismiss="modal" value="{{ 'cancel'|trans({}, 'platform') }}"/>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div id="widget-modal-box" class="modal fade" role="dialog" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h3 id="widget-modal-title">
-                    {{ 'rename_widget_instance'|trans({}, 'platform') }}
-                </h3>
-            </div>
-            <div id="widget-modal-body" class="modal-body">
-            </div>
-        </div>
-    </div>
 </div>
 
 {% block javascripts %}

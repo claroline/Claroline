@@ -1186,7 +1186,6 @@ class HomeController extends Controller
      *     name="claro_desktop_widget_home_tab_config_delete",
      *     options = {"expose"=true}
      * )
-     * @EXT\Method("DELETE")
      * @EXT\ParamConverter(
      *     "widgetHomeTabConfig",
      *     class="ClarolineCoreBundle:Widget\WidgetHomeTabConfig",

@@ -57,8 +57,16 @@
     
     $('#widgets-list-panel').on('click', '.close-widget-btn', function () {
         var whcId = $(this).data('widget-hometab-config-id');
-        
-        console.log(whcId);
+        window.Claroline.Modal.confirmRequest(
+            Routing.generate(
+                'claro_desktop_widget_home_tab_config_delete',
+                {'widgetHomeTabConfigId': whcId}
+            ),
+            removeWidget,
+            whcId,
+            Translator.trans('widget_home_tab_delete_confirm_message', {}, 'platform'),
+            Translator.trans('widget_home_tab_delete_confirm_title', {}, 'platform')
+        );
     });
     
     $('#widgets-list-panel').on('click', '.edit-widget-btn', function () {
@@ -121,4 +129,10 @@
             $('#hometab-element-' + homeTabId).remove();
         }
     };
+    
+    var removeWidget = function (event, widgetHomeTabConfigId) {
+        var widgetElement = $('#widget-element-' + widgetHomeTabConfigId);
+        var grid = $('.grid-stack').data('gridstack');
+        grid.remove_widget(widgetElement);
+    }
 })();
