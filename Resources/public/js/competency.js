@@ -1,4 +1,6 @@
 (function () {
+    'use strict';
+
     var flasher = new HeVinci.Flasher({ element: $('.panel-body')[0], animate: false });
 
     // scale creation from the framework management page

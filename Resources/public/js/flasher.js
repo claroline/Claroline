@@ -1,4 +1,6 @@
 (function () {
+    'use strict';
+
     window.HeVinci = window.HeVinci || {};
     window.HeVinci.Flasher = Flasher;
 

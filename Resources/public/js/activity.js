@@ -1,4 +1,6 @@
 (function () {
+    'use strict';
+
     var flasher = new HeVinci.Flasher({ element: $('.panel-body')[0], animate: false });
     var activityId = $(document).find('span#activity-id').data('id');
     var $tableBody = $(document).find('table.associated-competencies tbody');
