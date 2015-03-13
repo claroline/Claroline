@@ -81,6 +81,7 @@ class QtiController extends Controller {
     private function extractFiles($qtiRepos)
     {
         $qtiRepos->createDirQTI();
+        $root = array();
 
         $rst = 'its a zip file';
         move_uploaded_file($_FILES["qtifile"]["tmp_name"],
@@ -92,16 +93,23 @@ class QtiController extends Controller {
         }
         $res = zip_open($qtiRepos->getUserDir() . $_FILES["qtifile"]["name"]);
         $zip->extractTo($qtiRepos->getUserDir());
-        $tab_liste_fichiers = array();
+
         while ($zip_entry = zip_read($res)) {
             if(zip_entry_filesize($zip_entry) > 0) {
                 $nom_fichier = zip_entry_name($zip_entry);
-                $rst =$rst . '-_-_-_'.$nom_fichier;
-                array_push($tab_liste_fichiers, $nom_fichier);
-
+                if (substr($nom_fichier, -4, 4) == '.xml') {
+                    $root = explode('/', $nom_fichier);
+                }
             }
         }
+
         $zip->close();
+
+        if (count($root) > 1) {
+            unset($root[count($root) - 1]);
+            $comma_separated = implode('/', $root);
+            exec('mv '.$qtiRepos->getUserDir().$comma_separated.'/* '.$qtiRepos->getUserDir());
+        }
 
         return true;
     }
