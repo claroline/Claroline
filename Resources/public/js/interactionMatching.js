@@ -358,24 +358,7 @@ function fillLabelArray(row) {
 
 function advLabelVal(idLabelVal) {
     $("#adve_"+idLabelVal).click(function(e) {
-        if ($("#"+idLabelVal).hasClass("claroline-tiny-mce hide")) {
-
-//            $("#"+idLabelVal).removeClass("claroline-tiny-mce");
-//            $("#"+idLabelVal).removeClass("hide");
-//            $("#"+idLabelVal).removeAttr('style');
-//            $("#"+idLabelVal).removeData("data-theme");
-//            $("#"+idLabelVal).parent('td').children('div').addClass("hide");
-//            $("#"+idLabelVal).parent('td').find('a').text(advEditionLang);
-
-        } else {
-
-            $("#"+idLabelVal).addClass("claroline-tiny-mce hide");
-            $("#"+idLabelVal).data("data-theme","advanced");
-//            $("#"+idLabelVal).parent('td').children('div').removeClass("hide");
-//            $("#"+idLabelVal).parent('td').find('a').text(remAdvEditionLang);
-
-        }
-
+       
         // If the navavigator is chrome
         var userNavigator = navigator.userAgent;
         var positionText = userNavigator.indexOf("Chrome");
@@ -384,9 +367,8 @@ function advLabelVal(idLabelVal) {
             addLabel(containerLabel, "Suppromer", tableLabels, codeContainerLabel);
             $('#newTableLabel').find('tr:last').remove();
         }
-
-        e.preventDefault();
-        return false;
+        advancedEdition(idLabelVal,e);
+        
     });
 }
 
@@ -405,28 +387,10 @@ function fillProposalArray(row) {
 
 function advProposalVal(idProposalVal) {
     $("#adve_"+idProposalVal).click(function(e) {
-        if ($("#"+idProposalVal).hasClass("claroline-tiny-mce hide")) {
-
-//            $("#"+idProposalVal).removeClass("claroline-tiny-mce");
-//            $("#"+idProposalVal).removeClass("hide");
-//            $("#"+idProposalVal).removeAttr('style');
-//            $("#"+idProposalVal).removeData("data-theme");
-//            $("#"+idProposalVal).parent('td').children('div').addClass("hide");
-//            $("#"+idProposalVal).parent('td').find('a').text(advEditionLang);
-
-        } else {
-
-            $("#"+idProposalVal).addClass("claroline-tiny-mce hide");
-            $("#"+idProposalVal).data("data-theme","advanced");
-//            $("#"+idProposalVal).parent('td').children('div').removeClass("hide");
-//            $("#"+idProposalVal).parent('td').find('a').text(remAdvEditionLang);
-
-        }
-
-        e.preventDefault();
-        return false;
-    });
+        advancedEdition(idProposalVal,e);
+    }); 
 }
+
 
 function adddelete(tr, deletechoice, codeContainer) {
     var delLink;

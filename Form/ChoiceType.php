@@ -20,9 +20,10 @@ class ChoiceType extends AbstractType
                 )
             )
             ->add(
-                'label', 'text', array(
+                'label', 'textarea', array(
                     'label' => ' ',
-                    'attr' => array(
+                    'attr' => array('style' => 'height:34px; ',
+                    'class'=>'form-control',
                     'placeholder' => 'Response.reponse',               
                     )
                 )

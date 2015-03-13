@@ -134,24 +134,54 @@ abstract class InteractionHandler
     }
     
     /**
-     * Creates or uses the default category
+     * Check the category
      */
     protected function checkCategory()
     {   
-        $data = $this->form->getData()->getInteraction()->getQuestion();
-        $checkCategory = False;
+        $data = $this->form->getData()->getInteraction()->getQuestion();       
         $default = $this->translator->trans('default');
-       // $default='Défaut';
+        $uid=$this->user->getId();    
+        $ListeCategroy=$this->em->getRepository('UJMExoBundle:Category')->getListCategory($uid);
+
+        $this->lockCategoryDefault($default,$ListeCategroy,$data);
+        
             if($data->getCategory()== null)
-            {   
-                $uid=$this->user->getId();
-                $ListeCategroy=$this->em->getRepository('UJMExoBundle:Category')->getListCategory($uid); 
-                foreach($ListeCategroy as $category)
+            {                         
+                $this->categoryDefault($default,$ListeCategroy,$data);
+            }
+    }
+    
+    /**
+     * Lock the category default
+     * @param string $default
+     * @param array $ListeCategroy
+     */
+    protected function lockCategoryDefault($default,$ListeCategroy)
+    { 
+        
+        foreach($ListeCategroy as $category)
+        {
+             if($category->getValue()== $default)
+             {
+                $category->setLocker('1');
+             }
+        }
+    }
+    
+    /**
+     * Creates or uses the default category
+     * @param type $default
+     * @param type $ListeCategroy
+     * @param type $data
+     */
+    protected function categoryDefault($default,$ListeCategroy,$data)
+    {
+        $checkCategory = False;
+        foreach($ListeCategroy as $category)
                 {
-                     if($category->getValue()== $default)
+                     if($category->getlocker()== '1')
                      {
                         $data->setCategory($category);
-                        $data->getCategory()->setLocker('1');
                         $checkCategory = true;
                      }
                 }
@@ -165,7 +195,6 @@ abstract class InteractionHandler
                     $this->em->flush();
                     $data->setCategory($newCategory);
                 }
-            }
     }
     /**
      * Add the Interaction in the exercise if created since an exercise

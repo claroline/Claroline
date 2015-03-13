@@ -4,7 +4,7 @@ var tableChoices = $('#tableChoice'); // div which contain the choices array
 var typeQCM;
 
 // QCM Creation
-function creationQCM(expectedAnswer, response, point, comment, positionForce, addchoice, deleteChoice, tQCM) {
+function creationQCM(expectedAnswer, response, point, comment, positionForce, addchoice, deleteChoice,edition, tQCM) {
     
     $("#ujm_exobundle_interactionqcmtype_typeQCM_2").prop("checked", true);
     $("#ujm_exobundle_interactionqcmtype_weightResponse").prop("checked", true);
@@ -15,16 +15,16 @@ function creationQCM(expectedAnswer, response, point, comment, positionForce, ad
     
     typeQCM = JSON.parse(tQCM);
 
-    tableChoicesCreation(expectedAnswer, response, point, comment, positionForce, addchoice, deleteChoice, 0);
+    tableChoicesCreation(expectedAnswer, response, point, comment, positionForce, addchoice, deleteChoice,edition, 0);
 
     // Number of choice initially
     index = container.find(':input').length;
 
     // If no choice exist, add two choices by default
     if (index == 0) {
-        addChoice(container, deleteChoice);
+        addChoice(container, deleteChoice,comment,edition);
         $('#newTable').find('tbody').append('<tr></tr>');
-        addChoice(container, deleteChoice);
+        addChoice(container, deleteChoice,comment,edition);
     // If choice already exist, add button to delete it
     } else {
         tableChoices.children('tr').each(function() {
@@ -45,10 +45,11 @@ function creationQCM(expectedAnswer, response, point, comment, positionForce, ad
            });
        }
     });
-    $('#newTable').find("tr:not(:first)").each(function () {
-                $(this).find("td").eq(2).addClass("input-group");
-                $(this).find("td").eq(2).append('<span class="input-group-addon"><i class="fa fa-font"><i></span>');
-    });
+//     $('#newTable').find("tr:not(:first)").each(function () {
+//                $(this).find("td").eq(2).addClass("input-group");
+//                $(this).find("td").eq(2).append("<a title='' id='QCMavancedEdition' class='btn input-group-addon' '><i class='fa fa-font'><i></a>");
+//    });
+   
     // Make the choices' table sortable with jquery ui plugin
     //$('tbody').sortable();
 
@@ -59,7 +60,6 @@ function creationQCM(expectedAnswer, response, point, comment, positionForce, ad
         });
         return ui;
     };
-
     /*$('tbody').sortable({
         helper: fixHelper,
         cancel: 'contenteditable',
@@ -75,24 +75,24 @@ function creationQCM(expectedAnswer, response, point, comment, positionForce, ad
 }
 
 // QCM Edition
-function creationQCMEdit(expectedAnswer, response, point, comment, positionForce, addchoice, deleteChoice, tQCM, nbResponses) {
+function creationQCMEdit(expectedAnswer, response, point, comment, positionForce, addchoice, deleteChoice, tQCM,edition, nbResponses) {
 
     var index = 0;
     
     typeQCM = JSON.parse(tQCM);
 
-    tableChoicesCreation(expectedAnswer, response, point, comment, positionForce, addchoice, deleteChoice, nbResponses);
+    tableChoicesCreation(expectedAnswer, response, point, comment, positionForce, addchoice, deleteChoice,edition, nbResponses);
 
     // Get the form field to fill rows of the choices' table
     container.children().first().children('div').each(function () {
-
+     
         // Add a row to the table
         $('#newTable').find('tbody').append('<tr></tr>');
-
+           
          $(this).find('.row').each(function () {
 
             fillChoicesArray($(this));
-
+              
             // Add the form errors
             $('#choiceError').append($(this).find('.field-error'));
         });
@@ -100,7 +100,7 @@ function creationQCMEdit(expectedAnswer, response, point, comment, positionForce
         if (nbResponses == 0) {
             // Add the delete button
             $('#newTable').find('tr:last').append('<td class="classic"></td>');
-            addDelete($('#newTable').find('td:last'), deleteChoice);
+            addDelete($('#newTable').find('td:last'), deleteChoice);           
         }
         
         $('#ujm_exobundle_interactionqcmtype_choices_'+index+'_weight').click(function() {
@@ -154,13 +154,13 @@ function creationQCMEdit(expectedAnswer, response, point, comment, positionForce
 }
 
 // Add a choice
-function addChoice(container, deleteChoice) {
+function addChoice(container, deleteChoice, comment, edition) {
     var uniqChoiceID = false;
 
     var index = $('#newTable').find('tr:not(:first)').length;
 
     while (uniqChoiceID == false) {
-        if ($('#ujm_exobundle_interactionqcmtype_choices_' + index + '_label').length) {
+        if ($('#ujm_exobundle_interactionqcmtype_choices_' + index+'_label').length) {
             index++;
         } else {
             uniqChoiceID = true;
@@ -176,14 +176,15 @@ function addChoice(container, deleteChoice) {
     addDelete(contain, deleteChoice);
     // Add the modified dataprototype to the page
     container.append(contain);
-
+     
     // Get the form field to fill rows of the choices' table
     container.find('.row').each(function () {
         fillChoicesArray($(this));
     });
-    
+     //add the edition button
+    addEdition($('#newTable').find('tr:last').append('<td></td>'),edition,index);  
     //add the feedback button
-    addFeedback($('#newTable').find('tr:last').append('<td></td>'));
+    addFeedback($('#newTable').find('tr:last').append('<td></td>'),comment,index,edition);
 
     // Add the delete button
     $('#newTable').find('tr:last').append('<td class="classic"></td>');
@@ -357,35 +358,37 @@ function fillChoicesArray(row) {
         if (row.find('input').attr('id').indexOf('ordre') == -1) {
             $('#newTable').find('tr:last').append('<td class="classic"></td>');//.addClass("input-group");
             $('#newTable').find('td:last').append(row.find('input'));//.append('<span class="input-group-addon"><i class="fa fa-font"><i></span>');
+        
         } else {
             // Add the field positionForced as hidden td
             $('#newTable').find('tr:last').append('<td class="classic" style="display:none;"></td>');
             $('#newTable').find('td:last').append(row.find('input'));
+      
         }
     }
     // Add the field of type textarea
     if (row.find('textarea').length) {
-        $('#newTable').find('tr:last').append('<td class="classic"></td>');
+        $('#newTable').find('tr:last').append('<td class="classic col-md-6"></td>');
         $('#newTable').find('td:last').append(row.find('textarea'));
     }
+         
 }
 
-function tableChoicesCreation(expectedAnswer, response, point, comment, positionForce, addchoice, deleteChoice, nbResponses) {
+function tableChoicesCreation(expectedAnswer, response, point, comment, positionForce, addchoice, deleteChoice, edition, nbResponses) {
 
     if (nbResponses == 0) {
         // Add the structure od the table
         tableChoices.append('<table id="newTable" class="table table-striped table-condensed"><thead><tr style="background-color: lightsteelblue;"></tr></thead><tbody><tr></tr></tbody></table>');
-
         // create the button to add a choice
-        var add = $('<a href="#" id="add_choice" class="btn btn-default"><i class="fa fa-plus"></i></a>');
+        var add = $('<a title="'+addchoice+'" href="#" id="add_choice" class="btn btn-default"><i class="fa fa-plus"></i></a>');
 
         // Add the button after the table
         tableChoices.append(add);
-
+        
         // When click, add a new choice in the table
         add.click(function (e) {
-            $('#newTable').find('tbody').append('<tr></tr>');
-            addChoice(container, deleteChoice);
+            $('#newTable').find('tbody').append("<tr></tr>");
+            addChoice(container, deleteChoice, comment, edition);      
             e.preventDefault(); // prevent add # in the url
             return false;
         });
@@ -395,11 +398,33 @@ function tableChoicesCreation(expectedAnswer, response, point, comment, position
     }
 }
 
-function addFeedback(tr) {
+function addFeedback(tr,comment,index,edition) {
 
     // Create the button feedback
-    var addFeedbacks = $('<td class="classic"><a href="#" class="btn btn-default" <a=""><i class="fa fa-comments-o"></i></td>');
+    var addFeedbacks = $('<td class="classic" id="TDfeedback" ><a title="'+comment+'" id="QCMfeedback'+index+'" class="btn btn-default" ><i class="fa fa-comments-o"></i></td>');
     
     tr.append(addFeedbacks);
-    
+    $("*[id^='QCMfeedback']").click(function() {
+       tr.append('<div class="input-group"><td class="classic col-md-4"><textarea class="form-control" placeholder="'+comment+'" style="height:34px;" ></textarea>\n\
+           <span class="input-group-btn"><a title="'+edition+'" id="QCMavancedEdition"'+index+'" class="btn btn-default"><i class="fa fa-font"><i></a></span></div>'); 
+    });
+       
+}
+function addEdition(tr,edition,index){
+ //Create the button edition
+ 
+ var addEdition =  $("<td class='classic'><a title='"+edition+"' id='QCMavancedEdition"+index+"' class='btn btn-default'><i class='fa fa-font'><i></a></td>");
+ 
+  //      $('#newTable').find("tr:not(:first)").each(function () {
+//                $(this).find("td").eq(2).addClass("input-group");
+//                $(this).find("td").eq(2).append("<a title='' id='QCMavancedEdition' class='btn input-group-addon' '><i class='fa fa-font'><i></a>");
+//    });
+//    //    $('#newTable').find("tr:not(:first)").eq(2).addClass("input-group");
+//    $('#newTable').find("tr:not(:first)").eq(2).append("<a title='' id='QCMavancedEdition' class='btn input-group-addon' '><i class='fa fa-font'><i></a>");
+// 
+    tr.append(addEdition);
+     //Advanced edition of answers
+    $("*[id^='QCMavancedEdition']").click(function(e) {
+            advancedEdition('_label',e);
+        });
 }

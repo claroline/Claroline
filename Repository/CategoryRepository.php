@@ -44,4 +44,5 @@ class CategoryRepository extends EntityRepository
         $listCategory = $qb->getQuery()->getResult();
         return  $listCategory;
     }
+     
 }

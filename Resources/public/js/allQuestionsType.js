@@ -46,18 +46,17 @@ function HideOptional(type) {
  */  
 function statusButton(idI,idDiv) {  
     $('#'+idDiv).on('shown.bs.collapse', function () {
-      $('#'+idI).removeClass('fa fa-eye').addClass('fa fa-eye-slash');
+      $('#'+idI).removeClass('').addClass('fa fa-eye-slash');
      // $('#'+idI+'Button').removeClass("btn btn-default collapsed").addClass("btn btn-default collapsed active");
     });
     $('#'+idDiv).on('hidden.bs.collapse', function () {
-      $('#'+idI).removeClass('fa fa-eye-slash').addClass('fa fa-eye');
+      $('#'+idI).removeClass('fa fa-eye-slash').addClass('');
     //  $('#'+idI+'Button').removeClass("btn btn-default collapsed active").addClass("btn btn-default collapsed");
   });
         }
         
 // Delete the name of the category
 function dropCategory() {
-    
     var idCategory = $("*[id$='_interaction_question_category']").val(); // Id of the category to delete
     var path = $('#pathDrop').val(); // Path to the controller
 
@@ -76,17 +75,56 @@ function dropCategory() {
     });
 }
 
+/**
+ * Recover all value of the menu category
+ */
 var allCategory = $('#categoryArray').val();
 var categoryArray = allCategory.split(';');
 
+/**
+ * For the view : question.html.twig
+ * Action on the button (edition and deleted)
+ */
 $("*[id$='_interaction_question_category']").change(function () {
-    displayDeleteCategory();
+    var idCat = $("*[id$='_interaction_question_category']").val();
+    var valueCat = $("*[id$='_interaction_question_category'] option:selected").text();
+    displayDeleteCategory(idCat,valueCat);
+    displayEditCategory(idCat,valueCat);
 });
 
-function displayDeleteCategory() {
-    var idCat = $("*[id$='_interaction_question_category']").val();
+/**
+ * Display or no the edition category button
+ * @param {int} idCat
+ * @param {string} valueCat
+ */
+function displayEditCategory(idCat,valueCat)
+{    
+     for(var i = 0 ; i < categoryArray.length - 1 ; i++) {
+        if (idCat == "") {
+                $('#editCategory').css({"display" : "none"});
+                 break;
+             } else {
+                 if(valueCat == "Default" ||valueCat =="Défaut" )
+                 {
+                     $('#editCategory').css({"display" : "none"});
+                      break;
+                 }else
+                 {
+                     $('#editCategory').css({"display" : "inline-block"});
+                 }
+            
+        }
+        
+    }
+}
 
-
+/**
+ * Display or no the button edition category
+ * @param {int} idCat
+ * @param {string} valueCat
+ */
+function displayDeleteCategory(idCat,valueCat) {
+    
     for(var i = 0 ; i < categoryArray.length - 1 ; i++) {
         var index = categoryArray[i].substring(0, categoryArray[i].indexOf('/'));
         var contain = categoryArray[i].substring(categoryArray[i].indexOf('/') + 1);
@@ -102,16 +140,25 @@ function displayDeleteCategory() {
         } else {
             $('#linkedCategory').css({"display" : "inline-block"});
         }
+         if (idCat == "") {
+                $('#linkedCategory').css({"display" : "none"});
+                 break;
+             }
+       if (valueCat == "Default" ||valueCat =="Défaut")
+       {
+           $('#linkedCategory').css({"display" : "none"});
+                 break;
+       }
     }
 }
 
-displayDeleteCategory();
+
 
 // Delete button
 function addDelete(tr, deleteTrans) {
 
     // Create the button to delete
-    var delLink = $('<a href="#" class="btn btn-danger"><i class="fa fa-close"></i></a>');
+    var delLink = $('<a title="'+deleteTrans+'" href="#" class="btn btn-danger"><i class="fa fa-close"></i></a>');
 
     // Add the button to the row
     tr.append(delLink);
@@ -127,3 +174,43 @@ function addDelete(tr, deleteTrans) {
 $(document).ready(function() {
     $('#ujm_exobundle_interactionqcmtype_interaction_invite_ifr').height(50);
 });
+
+/**
+ * Enters edit advance
+ * @param {String} idTextarea
+ * @param {Event} e
+ * @returns {Boolean}
+ */
+function advancedEdition(idTextarea,e){
+    var textarea;
+    if(idTextarea === 'interaction_question_description'|| idTextarea ==='_label'){
+        textarea =$("*[id$='"+idTextarea+"']");
+    }
+    else{
+       
+            textarea=$("#"+idTextarea);
+        
+    }
+        
+    //if (textarea.hasClass("claroline-tiny-mce hide")) {
+//            $("#"+idProposalVal).removeClass("claroline-tiny-mce");
+//            $("#"+idProposalVal).removeClass("hide");
+//            $("#"+idProposalVal).removeAttr('style');
+//            $("#"+idProposalVal).removeData("data-theme");
+//            $("#"+idProposalVal).parent('td').children('div').addClass("hide");
+//            $("#"+idProposalVal).parent('td').find('a').text(advEditionLang);
+
+ //       } else {
+
+           textarea.addClass("claroline-tiny-mce hide");
+           textarea.data("data-theme","advanced");
+//            $("#"+idProposalVal).parent('td').children('div').removeClass("hide");
+//            $("#"+idProposalVal).parent('td').find('a').text(remAdvEditionLang);
+
+ //       }
+
+        e.preventDefault();
+        return false;
+}
+
+
