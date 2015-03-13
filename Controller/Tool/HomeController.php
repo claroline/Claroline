@@ -185,7 +185,7 @@ class HomeController extends Controller
      *     name="claro_desktop_widget_instance_create_form",
      *     options = {"expose"=true}
      * )
-     * @EXT\Template("ClarolineCoreBundle:Tool\desktop\home:desktopWidgetInstanceCreateForm.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:Tool\desktop\home:desktopWidgetInstanceCreateModalForm.html.twig")
      *
      * Displays the widget instance form.
      *
@@ -202,9 +202,7 @@ class HomeController extends Controller
             $widgetInstance
         );
 
-        return array(
-            'form' => $form->createView()
-        );
+        return array('form' => $form->createView());
     }
 
     /**
@@ -241,10 +239,11 @@ class HomeController extends Controller
 
             $this->widgetManager->insertWidgetInstance($widgetInstance);
 
-            return new Response($widgetInstance->getId(), 201);
-        }
+            return new JsonResponse($widgetInstance->getId(), 200);
+        } else {
 
-        return array('form' => $form->createView());
+            return array('form' => $form->createView());
+        }
     }
 
     /**

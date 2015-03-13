@@ -13,8 +13,8 @@
     var currentElement;
     var currentWidgetHomeTabConfigId;
     var currentWidgetInstanceId;
-    var displayedHomeTabId = $('#hometab-id-div').attr('hometab-id');
-    var homeTabType = $('#hometab-type-div').attr('hometab-type-value');
+    var homeTabId = $('#widgets-hometab-datas-box').data('hometab-id');
+    var homeTabType = $('#widgets-hometab-datas-box').data('hometab-type');
 
     function inverseBtns(current, previous)
     {
@@ -54,18 +54,6 @@
     {
         $('#widget-modal-box').modal('hide');
         $('#widget-modal-body').empty();
-    }
-
-    function openWidgetCreationModal(content)
-    {
-        $('#create-widget-instance-modal-body').html(content);
-        $('#create-widget-instance-modal-box').modal('show');
-    }
-
-    function closeWidgetCreationModal()
-    {
-        $('#create-widget-instance-modal-box').modal('hide');
-        $('#create-widget-instance-modal-body').empty();
     }
 
     $('.widget-delete-btn').click(function () {
@@ -393,86 +381,32 @@
             configButton.removeClass('hide');
         }
     );
-
-    $('.add-widget-instance').on('click', function () {
-        var route;
-
+    
+    $('#widgets-section').on('click', '#create-widget-instance', function () {
+        window.Claroline.Modal.displayForm(
+            Routing.generate('claro_desktop_widget_instance_create_form'),
+            associateWidgetToHomeTab,
+            function() {}
+        );
+    });
+    
+    var associateWidgetToHomeTab = function (widgetInstanceId) {
+        
         if (homeTabType === 'desktop') {
-            route = Routing.generate('claro_desktop_widget_instance_create_form');
-        } else {
-            route = Routing.generate(
-                'claro_workspace_widget_instance_create_form',
-                {'workspaceId': workspaceId}
-            );
-        }
 
-        $.ajax({
-            url: route,
-            type: 'GET',
-            success: function (datas) {
-                openWidgetCreationModal(datas);
-            }
-        });
-    });
-
-    // Click on CANCEL button of the Create Widget instance form modal
-    $('body').on('click', '#form-widget-instance-cancel-btn', function () {
-        closeWidgetCreationModal();
-    });
-
-    // Click on OK button of the Create Widget instance form modal
-    $('body').on('click', '#form-widget-instance-ok-btn', function (e) {
-        e.stopImmediatePropagation();
-        e.preventDefault();
-
-        var form = document.getElementById('widget-instance-form');
-        var action = form.getAttribute('action');
-        var formData = new FormData(form);
-
-        $.ajax({
-            url: action,
-            data: formData,
-            type: 'POST',
-            processData: false,
-            contentType: false,
-            success: function (datas, textStatus, jqXHR) {
-                switch (jqXHR.status) {
-                    case 201:
-                        var route;
-                        var widgetInstanceId = parseInt(datas);
-
-                        if (homeTabType === 'desktop') {
-                            route = Routing.generate(
-                                'claro_desktop_associate_widget_to_home_tab',
-                                {
-                                    'homeTabId': displayedHomeTabId,
-                                    'widgetInstanceId': widgetInstanceId
-                                }
-                            );
-                        } else {
-                            route = Routing.generate(
-                                'claro_workspace_associate_widget_to_home_tab',
-                                {
-                                    'homeTabId': displayedHomeTabId,
-                                    'widgetInstanceId': widgetInstanceId,
-                                    'workspaceId': workspaceId
-                                }
-                            );
-                        }
-
-                        $.ajax({
-                            url: route,
-                            type: 'POST',
-                            success: function () {
-                                closeWidgetCreationModal();
-                                window.location.reload();
-                            }
-                        });
-                        break;
-                    default:
-                        $('#create-widget-instance-modal-body').html(jqXHR.responseText);
+            $.ajax({
+                url: Routing.generate(
+                    'claro_desktop_associate_widget_to_home_tab',
+                    {
+                        'homeTabId': homeTabId,
+                        'widgetInstanceId': widgetInstanceId
+                    }
+                ),
+                type: 'POST',
+                success: function () {
+                    window.location.reload();
                 }
-            }
-        });
-    });
+            });
+        }
+    }
 })();

@@ -384,7 +384,8 @@ class DesktopController extends Controller
             'isDesktop' => true,
             'isVisibleHomeTab' => $isVisibleHomeTab,
             'isLockedHomeTab' => $isLockedHomeTab,
-            'lastWidgetOrder' => $lastWidgetOrder
+            'lastWidgetOrder' => $lastWidgetOrder,
+            'homeTabId' => $homeTabId
         );
     }
 

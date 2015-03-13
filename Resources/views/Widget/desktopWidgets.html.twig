@@ -1,11 +1,12 @@
 {% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
 {{ macros.flashBox() }}
 
-<div id="hometab-type-div"
-    hometab-type-value="{% if isDesktop %}desktop{% else %}workspace{% endif %}"
+<div id="widgets-hometab-datas-box"
+    data-hometab-id="{{ homeTabId }}"
+    data-hometab-type="{% if isDesktop %}desktop{% else %}workspace{% endif %}"
 ></div>
 
-<div class="panel-group">
+<div id="widgets-section" class="panel-group">
     <div id="widgets-list-panel" class="grid-stack">
         
         {% for widgetDatas in widgetsDatas %}
@@ -146,7 +147,7 @@
 
     {% if isVisibleHomeTab and not isLockedHomeTab %}
         <br>
-        <div class="panel panel-default add-widget-instance">
+        <div id="create-widget-instance" class="panel panel-default">
             <div class="panel-heading pointer-hand text-center">
                 <i class="fa fa-plus-circle">
                     {{ 'add_widget_to_home_tab'|trans({}, 'platform') }}
@@ -184,21 +185,6 @@
                 </h3>
             </div>
             <div id="widget-modal-body" class="modal-body">
-            </div>
-        </div>
-    </div>
-</div>
-
-<div id="create-widget-instance-modal-box" class="modal fade" role="dialog" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h3 id="create-widget-instance-modal-title">
-                    {{ 'create_widget_instance'|trans({}, 'platform') }}
-                </h3>
-            </div>
-            <div id="create-widget-instance-modal-body" class="modal-body">
             </div>
         </div>
     </div>
