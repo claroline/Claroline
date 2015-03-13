@@ -203,7 +203,7 @@ abstract class qtiImport
         $filesDirectory = $this->container->getParameter('claroline.param.files_directory');
         $this->getDirQTIImport($ws);
         foreach ($objects as $ob) {
-            $fileName = $ob->getAttribute('data');
+            $fileName = $this->getFileName($ob);
             $tmpFile = $this->qtiRepos->getUserDir().'/'.$fileName;
             $extension = pathinfo($fileName, PATHINFO_EXTENSION);
             $hashName = $this->container->get('claroline.utilities.misc')->generateGuid() . '.' . $extension;
@@ -229,6 +229,29 @@ abstract class qtiImport
             }
         }
         $this->callReplaceNode($elements);
+    }
+
+    /**
+     *
+     * @access private
+     *
+     * @param DomElement <object> $ob
+     *
+     * @return String
+     */
+    private function getFileName($ob)
+    {
+        $fileName = $ob->getAttribute('data');
+        $pattern = '(http://|https://)';
+        if (preg_match($pattern, $fileName)) {
+            $fileURL = $ob->getAttribute('data');
+            $fileURLExplode = explode('/', $fileURL);
+            $fileName = $fileURLExplode[count($fileURLExplode) - 1];
+            $ob->setAttribute('data', $fileName);
+            copy($fileURL, $this->qtiRepos->getUserDir().'/'.$fileName);
+        }
+
+        return $fileName;
     }
 
     /**

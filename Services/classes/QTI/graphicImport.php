@@ -143,11 +143,11 @@ class graphicImport extends qtiImport {
             }
         }
 
-        $picName = $picture;
+        $picName = $this->getPictureName($picture);
         $dest = $userDir.'/images/'.$picName;
         $i = 1;
         while (file_exists($dest)) {
-            $picName = $i.'_'.$picture;
+            $picName = $i.'_'.$this->getPictureName($picture);
             $dest = $userDir.'/images/'.$picName;
             $i++;
         }
@@ -155,6 +155,21 @@ class graphicImport extends qtiImport {
         copy($src, $dest);
 
         return $picName;
+    }
+
+    /**
+     *
+     * @access private
+     *
+     * @param String $picture
+     *
+     * @return String
+     */
+    private function getPictureName($picture)
+    {
+        $dirs = explode('/', $picture);
+
+        return $dirs[count($dirs) - 1];
     }
 
 
