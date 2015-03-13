@@ -7,6 +7,15 @@ td.icon-cell {
     text-align: center;
 }
 
+td.medium-cell, th.medium-cell {
+    width: 100px;
+    text-align: center;
+}
+
+th.center, td.center {
+    text-align: center;
+}
+
 .fa.disabled {
     cursor: default;
     opacity: 0.25;
@@ -67,10 +76,6 @@ ul.framework table.abilities {
 ul.framework table.abilities th, ul.framework table.abilities td {
     padding: 2px;
     font-weight: normal;
-}
-
-ul.framework table.abilities td.center {
-    text-align: center;
 }
 
 td.competency-path ul {

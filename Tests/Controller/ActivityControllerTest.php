@@ -59,7 +59,7 @@ class ActivityControllerTest extends UnitTestCase
         $activity = new Activity();
         $ability = new Ability();
         $this->activityManager->expects($this->once())
-            ->method('linkActivityToAbility')
+            ->method('createLink')
             ->with($activity, $ability)
             ->willReturn(false);
         $response = $this->controller->linkAbilityAction($activity, $ability);
@@ -71,7 +71,7 @@ class ActivityControllerTest extends UnitTestCase
         $activity = new Activity();
         $ability = new Ability();
         $this->activityManager->expects($this->once())
-            ->method('linkActivityToAbility')
+            ->method('createLink')
             ->with($activity, $ability)
             ->willReturn('ABILITY');
         $response = $this->controller->linkAbilityAction($activity, $ability);
@@ -84,7 +84,7 @@ class ActivityControllerTest extends UnitTestCase
         $activity = new Activity();
         $ability = new Ability();
         $this->activityManager->expects($this->once())
-            ->method('removeAbilityLink')
+            ->method('removeLink')
             ->with($activity, $ability)
             ->willReturn('ABILITY');
         $this->assertEquals(

@@ -49,8 +49,7 @@
         var targetId = $item.data('id');
         var url = $item.data('type') === 'ability' ?
             Routing.generate('hevinci_activity_link_ability', { id: activityId, abilityId: targetId }) :
-            'FALSE URL';
-            //Routing.generate('hevinci_activity_link_competency', { id: activityId, competencyId: targetId });
+            Routing.generate('hevinci_activity_link_competency', { id: activityId, competencyId: targetId });
         $.post(url)
             .done(function (data, text, xhr) {
                 var message = 'message.competency_associated';
@@ -79,7 +78,7 @@
         var targetType = row.dataset.type;
         var url = row.dataset.type === 'ability_' ?
             Routing.generate('hevinci_activity_remove_ability', { id: activityId, abilityId: targetId }) :
-            'FAKE URL';
+            Routing.generate('hevinci_activity_remove_competency', { id: activityId, competencyId: targetId });
         Claroline.Modal.confirmRequest(
             url,
             function () {

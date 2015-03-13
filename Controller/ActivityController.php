@@ -93,14 +93,35 @@ class ActivityController
      * @SEC\SecureParam(name="activity", permissions="OPEN")
      * @SEC\PreAuthorize("hasRole('ROLE_COMPETENCY_MANAGER')")
      *
-     * @param Activity $activity
-     * @param Ability $ability
+     * @param Activity  $activity
+     * @param Ability   $ability
      * @return JsonResponse
      */
     public function linkAbilityAction(Activity $activity, Ability $ability)
     {
         return new JsonResponse(
-            $result = $this->activityManager->linkActivityToAbility($activity, $ability),
+            $result = $this->activityManager->createLink($activity, $ability),
+            $result ? 200 : 204
+        );
+    }
+
+    /**
+     * Creates an association between an activity and an ability.
+     *
+     * @EXT\Route("/activity/{id}/competency/{competencyId}/link", name="hevinci_activity_link_competency")
+     * @EXT\Method("POST")
+     * @EXT\ParamConverter("competency", options={"id"= "competencyId"})
+     * @SEC\SecureParam(name="competency", permissions="OPEN")
+     * @SEC\PreAuthorize("hasRole('ROLE_COMPETENCY_MANAGER')")
+     *
+     * @param Activity      $activity
+     * @param Competency    $competency
+     * @return JsonResponse
+     */
+    public function linkCompetencyAction(Activity $activity, Competency $competency)
+    {
+        return new JsonResponse(
+            $result = $this->activityManager->createLink($activity, $competency),
             $result ? 200 : 204
         );
     }
@@ -113,12 +134,29 @@ class ActivityController
      * @SEC\SecureParam(name="activity", permissions="OPEN")
      * @SEC\PreAuthorize("hasRole('ROLE_COMPETENCY_MANAGER')")
      *
-     * @param Activity $activity
-     * @param Ability $ability
+     * @param Activity  $activity
+     * @param Ability   $ability
      * @return JsonResponse
      */
     public function removeAbilityLinkAction(Activity $activity, Ability $ability)
     {
-        return new JsonResponse($this->activityManager->removeAbilityLink($activity, $ability));
+        return new JsonResponse($this->activityManager->removeLink($activity, $ability));
+    }
+
+    /**
+     * Removes an association between an activity and a competency.
+     *
+     * @EXT\Route("/activity/{id}/competency/{competencyId}/remove", name="hevinci_activity_remove_competency")
+     * @EXT\ParamConverter("competency", options={"id"= "competencyId"})
+     * @SEC\SecureParam(name="competency", permissions="OPEN")
+     * @SEC\PreAuthorize("hasRole('ROLE_COMPETENCY_MANAGER')")
+     *
+     * @param Activity      $activity
+     * @param Competency    $competency
+     * @return JsonResponse
+     */
+    public function removeCompetencyLinkAction(Activity $activity, Competency $competency)
+    {
+        return new JsonResponse($this->activityManager->removeLink($activity, $competency));
     }
 }

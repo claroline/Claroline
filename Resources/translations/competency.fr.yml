@@ -45,6 +45,7 @@ message:
   ability_edited: Capacité modifiée avec succès.
   competency_already_associated: Cette compétence est déjà associée à l'activité.
   competency_associated: Compétence associée avec succès.
+  competency_association_deletion_confirm: Voulez-vous vraiment supprimer l'association avec cette compétence ?
   competency_association_removed: Association supprimée avec succès.
   competency_edited: Compétence modifiée avec succès.
   competency_deleted: Compétence supprimée avec succès.

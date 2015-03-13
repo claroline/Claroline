@@ -69,11 +69,11 @@
             <table class="abilities table table-condensed table-bordered" style="display:{{ hasAbilities ? 'table' : 'none' }}">
                 <thead>
                     <tr>
-                        <th>{{ 'level'|trans }}</th>
+                        <th class="medium-cell">{{ 'level'|trans }}</th>
                         <th>{{ 'ability_'|trans }}</th>
-                        <th>{{ 'ability.linked_activity_count'|trans }}</th>
-                        <th>{{ 'ability.required_activity_count'|trans }}</th>
-                        <th colspan="2">{{ 'actions'|trans({}, 'platform') }}</th>
+                        <th class="medium-cell">{{ 'ability.linked_activity_count'|trans }}</th>
+                        <th class="medium-cell">{{ 'ability.required_activity_count'|trans }}</th>
+                        <th colspan="2" class="center">{{ 'actions'|trans({}, 'platform') }}</th>
                     </tr>
                 </thead>
                 <tbody>

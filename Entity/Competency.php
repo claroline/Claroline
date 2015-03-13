@@ -2,6 +2,7 @@
 
 namespace HeVinci\CompetencyBundle\Entity;
 
+use Claroline\CoreBundle\Entity\Resource\Activity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
@@ -43,6 +44,12 @@ class Competency implements \JsonSerializable
      * @ORM\OneToMany(targetEntity="CompetencyAbility", mappedBy="competency")
      */
     private $competencyAbilities;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="Claroline\CoreBundle\Entity\Resource\Activity")
+     * @ORM\JoinTable(name="hevinci_competency_activity")
+     */
+    private $activities;
 
     /**
      * @Gedmo\TreeLeft
@@ -87,6 +94,7 @@ class Competency implements \JsonSerializable
     public function __construct()
     {
         $this->levels = new ArrayCollection();
+        $this->activities = new ArrayCollection();
     }
 
     /**
@@ -185,6 +193,37 @@ class Competency implements \JsonSerializable
         return $this->rgt;
     }
 
+    /**
+     * @param Activity $activity
+     * @return bool
+     */
+    public function isLinkedToActivity(Activity $activity)
+    {
+        return $this->activities->contains($activity);
+    }
+
+    /**
+     * Associates the ability with an activity.
+     *
+     * @param Activity $activity
+     */
+    public function linkActivity(Activity $activity)
+    {
+        if (!$this->isLinkedToActivity($activity)) {
+            $this->activities->add($activity);
+        }
+    }
+
+    /**
+     * Removes an association with an activity.
+     *
+     * @param Activity $activity
+     */
+    public function removeActivity(Activity $activity)
+    {
+        $this->activities->removeElement($activity);
+    }
+
     public function jsonSerialize()
     {
         return [
@@ -192,7 +231,8 @@ class Competency implements \JsonSerializable
             'name' => $this->name,
             'description' => $this->description,
             'scale' => $this->scale ? $this->scale->getName() : null,
-            'level' => $this->lvl
+            'level' => $this->lvl,
+            'activityCount' => $this->activities->count()
         ];
     }
 }

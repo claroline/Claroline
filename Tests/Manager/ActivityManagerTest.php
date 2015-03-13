@@ -4,6 +4,7 @@ namespace HeVinci\CompetencyBundle\Manager;
 
 use Claroline\CoreBundle\Entity\Resource\Activity;
 use HeVinci\CompetencyBundle\Entity\Ability;
+use HeVinci\CompetencyBundle\Entity\Competency;
 use HeVinci\CompetencyBundle\Util\UnitTestCase;
 
 class ActivityManagerTest extends UnitTestCase
@@ -32,20 +33,40 @@ class ActivityManagerTest extends UnitTestCase
     }
 
     /**
-     * @expectedException \LogicException
+     * @expectedException \InvalidArgumentException
      */
-    public function testRemoveAbilityLinkThrowsIfNoLink()
+    public function testRemoveLinkThrowsOnWrongTargetType()
     {
-        $this->manager->removeAbilityLink(new Activity(), new Ability());
+        $this->manager->removeLink(new Activity(), 'Bad type');
     }
 
-    public function testRemoveAbilityLink()
+    /**
+     * @expectedException \LogicException
+     */
+    public function testRemoveLinkThrowsIfNoLink()
+    {
+        $this->manager->removeLink(new Activity(), new Ability());
+    }
+
+    /**
+     * @dataProvider targetClassProvider
+     * @param string $targetClass
+     */
+    public function testRemoveLink($targetClass)
     {
         $activity = new Activity();
-        $ability = $this->mock('HeVinci\CompetencyBundle\Entity\Ability');
+        $ability = $this->mock($targetClass);
         $ability->expects($this->once())->method('isLinkedToActivity')->with($activity)->willReturn(true);
         $ability->expects($this->once())->method('removeActivity')->with($activity);
         $this->om->expects($this->once())->method('flush');
-        $this->manager->removeAbilityLink($activity, $ability);
+        $this->manager->removeLink($activity, $ability);
+    }
+
+    public function targetClassProvider()
+    {
+        return [
+            ['HeVinci\CompetencyBundle\Entity\Ability'],
+            ['HeVinci\CompetencyBundle\Entity\Competency']
+        ];
     }
 }
