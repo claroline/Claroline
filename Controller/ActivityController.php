@@ -21,7 +21,7 @@ class ActivityController
 
     /**
      * @DI\InjectParams({
-     *     "competencyManager"  = @DI\Inject("hevinci.competency.competency_manager")
+     *     "activityManager" = @DI\Inject("hevinci.competency.activity_manager")
      * })
      *
      * @param ActivityManager   $activityManager
