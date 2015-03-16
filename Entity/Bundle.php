@@ -81,6 +81,12 @@ class Bundle
      */
     private $extra;
 
+    /**
+     * Unmapped field. Is the plugin configurable ? Fetched from claro_plugin table
+     * @todo remove claro_plugin table. It's useless now. claro_bundle can replace it and contains more datas
+     */
+    private $isConfigurable = false;
+
     public function getId()
     {
         return $this->id;
@@ -179,5 +185,15 @@ class Bundle
     public function getExtra()
     {
         return $this->extra;
+    }
+
+    public function isConfigurable()
+    {
+        return $this->isConfigurable;
+    }
+
+    public function setIsConfigurable($boolean)
+    {
+        $this->isConfigurable = true;
     }
 }

@@ -35,6 +35,7 @@ class BundleManager
 {
     private $om;
     private $bundleRepository;
+    private $pluginRepository;
     private $kernelRootDir;
     private $configHandler;
     private $vendorDir;
@@ -65,6 +66,7 @@ class BundleManager
     {
         $this->om               = $om;
         $this->bundleRepository = $om->getRepository('ClarolineCoreBundle:Bundle');
+        $this->pluginRepository = $om->getRepository('ClarolineCoreBundle:Plugin');
         $this->kernelRootDir    = $kernelRootDir;
         $this->configHandler    = $configHandler;
         $this->vendorDir        = $vendorDir;
@@ -336,5 +338,10 @@ class BundleManager
         }
 
         return $data;
+    }
+
+    public function getConfigurablePlugins()
+    {
+        return $this->pluginRepository->findBy(array('hasOptions' => true));
     }
 }
