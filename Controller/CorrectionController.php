@@ -707,6 +707,7 @@ echo "state1 : " . $state;die();
         $countCorrection = count($correction);
         echo "Count = " . $countCorrection . " - ";
 
+        // Parcours des documents sélectionnés
         foreach ($correction->getDrop()->getDocuments() as $document) {
             $documentId = $document->getId();
             echo "dans boucle " . $documentId . "<br />";
@@ -717,9 +718,11 @@ echo "state1 : " . $state;die();
                     ->getDoctrine()
                     ->getRepository('InnovaCollecticielBundle:Comment')->findBy(array('document' => $documentId));
 
+            // Parcours des commentaires des documents sélectionnés
             foreach ($comments as $comment) {
                 $commentId = $comment->getId();
                  echo "Comment = " . $commentId . " - " . $correction->getUser()->getId();
+
                 $comments_read = $this
                         ->getDoctrine()
                         ->getRepository('InnovaCollecticielBundle:CommentRead')
@@ -730,6 +733,24 @@ echo "state1 : " . $state;die();
                                 )
                             );
 
+                $countCommentRead = count($comments_read);
+                $countCommentRead = 0; // Pour les tests, à enlever
+                echo "Nb : " . $countCommentRead;
+
+                if (($countCommentRead) == 0)
+                {
+                    // Ce commentaire n'avait pas été lu.
+                    // Donc, maintenant, il va l'être,
+                    // je dois donc insérer une occurrence dans la table CommentRead";
+                    echo "aucun commentaire non lu donc ajout dans la table CommentRead";
+                    $comments_read_add = new CommentRead();
+                    $comments_read_add->setComment($comment);
+                    $comments_read_add->setUser($user);
+
+                    $em->persist($correction);
+                    $em->flush();
+                }
+                // Parcours des commentaires LUS des documents sélectionnés
                 foreach ($comments_read as $comment_read) {
                     $commentreadId = $comment_read->getId();
                     echo "CommentRead = " . $commentreadId . " ";
