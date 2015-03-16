@@ -15,6 +15,7 @@
             {% set widgetDisplayConfig = widgetDatas['widgetDisplayConfig'] %}
             {% set widgetColor = widgetDisplayConfig.getColor() %}
             {% set widgetInstance = widgetHomeTabConfig.getWidgetInstance() %}
+            {% set widget = widgetInstance.getWidget() %}
             <div class="grid-stack-item"
                  id="widget-element-{{ whtcId }}"
                  data-gs-x="{{ widgetDisplayConfig.getColumn() }}"
@@ -52,6 +53,13 @@
                                        data-widget-instance-id="{{ widgetInstance.getId() }}"
                                        data-widget-display-config-id="{{ widgetDisplayConfig.getId() }}"
                                     ></i>
+                                    
+                                    {% if not widgetInstance.isAdmin() and widget.isConfigurable() %}
+                                        <span class="close">&nbsp;</span>
+                                        <i class="fa fa-pencil close edit-widget-content-btn"
+                                           data-widget-instance-id="{{ widgetInstance.getId() }}"
+                                        ></i>
+                                    {% endif %}
                                 </span>
                             {% endif %}
                             <span id="widget-element-title-{{ whtcId }}">
@@ -59,7 +67,7 @@
                             </span>
                         </h3>
                     </div>
-                    <div class="panel-body">
+                    <div id="widget-instance-content-{{ widgetInstance.getId() }}" class="panel-body">
                         {{ widgetDatas.content|raw }}
                     </div>
                 </div>
@@ -79,9 +87,11 @@
     {% endif %}
 </div>
 
-{% block javascripts %}
-    <script src='{{ asset('bundles/clarolinecore/js/widget/desktopWidgets.js') }}'
-            type="text/javascript"
-    >
-    </script>
-{% endblock %}
+<div id="widget-content-config-modal-box" class="modal fade" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div id="widget-content-config-modal-body" class="modal-body">
+            </div>
+        </div>
+    </div>
+</div>
