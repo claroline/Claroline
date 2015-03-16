@@ -44,5 +44,16 @@ class CategoryRepository extends EntityRepository
         $listCategory = $qb->getQuery()->getResult();
         return  $listCategory;
     }
+    
+    public function getCategoryLocker($uid)
+    {
+        $qb = $this->createQueryBuilder('c');
+        $qb->join('c.user', 'u')
+            ->where($qb->expr()->in('u.id', $uid))
+            ->andWhere('c.locker = 1')
+            ->orderBy('c.value', 'ASC');
+        $locker=$qb->getQuery()->getResult();
+        return $locker;
+    }
      
 }

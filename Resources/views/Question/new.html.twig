@@ -78,6 +78,9 @@
                 </div>
             </form>
         </div>
+            {% if locker != "" %}        
+         <input type="hidden" id="locker" value="{{locker.value}}"> 
+         {% endif %}
     </div>
     </div>{# end div of extend panel #}
     <div id="formulaire_interactions">
@@ -90,4 +93,5 @@
 {% block javascripts %}
     {{ parent() }}
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/question.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/allQuestionsType.js') }}"></script> 
 {% endblock %}

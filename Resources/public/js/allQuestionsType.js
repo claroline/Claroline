@@ -83,28 +83,35 @@ var categoryArray = allCategory.split(';');
 
 /**
  * For the view : question.html.twig
- * Action on the button (edition and deleted)
+ * Action on the button edition and deleted of category
+ * 
+ * @var {int} idCat Id of the category
+ * @var {string} valueCat Category select
+ * @var {string} locker  Locked category for this user
  */
 $("*[id$='_interaction_question_category']").change(function () {
     var idCat = $("*[id$='_interaction_question_category']").val();
     var valueCat = $("*[id$='_interaction_question_category'] option:selected").text();
-    displayDeleteCategory(idCat,valueCat);
-    displayEditCategory(idCat,valueCat);
+    var locker=$('#locker').val();
+    displayDeleteCategory(idCat,valueCat,locker);
+    displayEditCategory(idCat,valueCat,locker);
 });
 
 /**
  * Display or no the edition category button
- * @param {int} idCat
- * @param {string} valueCat
+ * @param {int} idCat Id of the category
+ * @param {string} valueCat Category select
+ * @param {string} locker Locked category for this user
  */
-function displayEditCategory(idCat,valueCat)
+function displayEditCategory(idCat,valueCat,locker)
 {    
+    alert(locker);
      for(var i = 0 ; i < categoryArray.length - 1 ; i++) {
         if (idCat == "") {
                 $('#editCategory').css({"display" : "none"});
                  break;
              } else {
-                 if(valueCat == "Default" ||valueCat =="Défaut" )
+                 if(valueCat == locker )
                  {
                      $('#editCategory').css({"display" : "none"});
                       break;
@@ -120,10 +127,11 @@ function displayEditCategory(idCat,valueCat)
 
 /**
  * Display or no the button edition category
- * @param {int} idCat
- * @param {string} valueCat
+ * @param {int} idCat Id of the category
+ * @param {string} valueCat Category select
+ * @param {string} locker Locked category for this user
  */
-function displayDeleteCategory(idCat,valueCat) {
+function displayDeleteCategory(idCat,valueCat,locker) {
     
     for(var i = 0 ; i < categoryArray.length - 1 ; i++) {
         var index = categoryArray[i].substring(0, categoryArray[i].indexOf('/'));
@@ -144,7 +152,7 @@ function displayDeleteCategory(idCat,valueCat) {
                 $('#linkedCategory').css({"display" : "none"});
                  break;
              }
-       if (valueCat == "Default" ||valueCat =="Défaut")
+       if (valueCat == locker)
        {
            $('#linkedCategory').css({"display" : "none"});
                  break;

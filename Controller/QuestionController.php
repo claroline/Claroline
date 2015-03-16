@@ -15,6 +15,7 @@ use UJM\ExoBundle\Entity\InteractionQCM;
 use UJM\ExoBundle\Entity\Question;
 use UJM\ExoBundle\Entity\Response;
 use UJM\ExoBundle\Entity\Share;
+use \UJM\ExoBundle\Entity\Category;
 
 use UJM\ExoBundle\Form\InteractionGraphicType;
 use UJM\ExoBundle\Form\InteractionHoleType;
@@ -373,9 +374,20 @@ class QuestionController extends Controller
      */
     public function newAction($exoID)
     {
+        //Get the lock category
+        $user= $this->container->get('security.context')->getToken()->getUser()->getId();
+        $Locker = $this->getDoctrine()->getManager()->getRepository('UJMExoBundle:Category')->getCategoryLocker($user);
+        if (empty($Locker)){
+            $catLocker="";
+        }
+        else{ 
+            $catLocker=$Locker[0]; 
+        }
+        
         $variables = array(
             'exoID' => $exoID,
-            'linkedCategory' =>  $this->container->get('ujm.exercise_services')->getLinkedCategories()
+            'linkedCategory' =>  $this->container->get('ujm.exercise_services')->getLinkedCategories(),
+            'locker' => $catLocker
         );
 
         $em = $this->getDoctrine()->getManager();
