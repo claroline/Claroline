@@ -106,6 +106,10 @@ class CorrectionRepository extends EntityRepository {
             ->getResult();
     }
 
+    //
+    // Méthode pour avoir les documents
+    // qui correspondent à UN collecticiel et à UNE correction. InnovaERV.
+    //
     public function getCorrectionAndDropAndUserAndDocuments($dropzone, $correctionId)
     {
         $qb = $this->createQueryBuilder('correction')

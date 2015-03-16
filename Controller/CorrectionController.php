@@ -710,7 +710,6 @@ echo "state1 : " . $state;die();
         }
         //$this->checkUserGradeAvailable($dropzone);
 
-
         if (!$dropzone->getPeerReview()) {
             return $this->redirect(
                 $this->generateUrl(
@@ -831,6 +830,32 @@ echo "state1 : " . $state;die();
 
         // Appel de la vue qui va gérer l'ajout des commentaires. InnovaERV.
         $view = 'InnovaCollecticielBundle:Correction:correctCriteria.html.twig';
+
+        echo "userId = " . $userId;
+        echo " correctionId = " . $correction->getUser()->getId() . " / " . $correction->getDrop()->getId() . " / " . $dropzone->getId();
+        echo " correctionUserName = " . $correction->getUser()->getUserName();
+//        echo " correction = " . $correction->getDocument()->getUrl();
+//        var_dump($correction);
+
+        $documents = $em
+            ->getRepository('InnovaCollecticielBundle:Document')
+            ->findByDrop($typo);
+        foreach ($documents as $document) {
+            $oldData[$grade->getCriterion()->getId()] = ($grade->getValue() >= $dropzone->getTotalCriteriaColumn())
+                ? ($dropzone->getTotalCriteriaColumn() - 1) : $grade->getValue();
+        }
+
+
+        foreach ($correction->getDrop()->getDocuments() as $documents) {
+            echo "dans boucle";
+        }
+
+
+//        echo " correction = " . $correction[0]->lastOpenDate;
+        die();
+
+        // Ajout pour avoir les commentaires et qui les a lu.
+        // Fin ajout.
 
         if ($state == 'show' || $state == 'edit') {
             //Test passage d'une donnée
