@@ -144,7 +144,7 @@ class CreatePluginCommand extends ContainerAwareCommand
         file_put_contents($rootDir . '/Resources/config/config.yml', $yaml);
 
         if ($input->getOption('install')) {
-            $bundleManager = $this->container->get('claroline.manager.bundle_manager');
+            $bundleManager = $this->getContainer()->get('claroline.manager.bundle_manager');
             $bundleManager->updateIniFile($ivendor, $ibundle);
             $bundleManager->updateAutoload($ivendor, $ibundle, $vname, $bname);
         }
