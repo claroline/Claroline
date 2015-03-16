@@ -14,6 +14,8 @@ use Innova\CollecticielBundle\Entity\Correction;
 use Innova\CollecticielBundle\Entity\Dropzone;
 use Innova\CollecticielBundle\Entity\Drop;
 use Innova\CollecticielBundle\Entity\Grade;
+use Innova\CollecticielBundle\Entity\Comment;
+use Innova\CollecticielBundle\Entity\CommentRead;
 use Innova\CollecticielBundle\Event\Log\LogCorrectionDeleteEvent;
 use Innova\CollecticielBundle\Event\Log\LogCorrectionEndEvent;
 use Innova\CollecticielBundle\Event\Log\LogCorrectionStartEvent;
@@ -695,22 +697,24 @@ echo "state1 : " . $state;die();
      */
     public function dropsDetailCommentAction(Dropzone $dropzone, $state, $correctionId, $page, $user)
     {
+        $em = $this->getDoctrine()->getManager();
+
         $this->get('innova.manager.dropzone_voter')->isAllowToOpen($dropzone);
         $correction = $this
             ->getDoctrine()
             ->getRepository('InnovaCollecticielBundle:Correction')
             ->getCorrectionAndDropAndUserAndDocuments($dropzone, $correctionId);
 
-        echo "dropzone = " . $dropzone->getId();
-        echo "correction = " . $correctionId;
+//        echo "dropzone = " . $dropzone->getId();
+//        echo "correction = " . $correctionId;
 
         $countCorrection = count($correction);
-        echo "Count = " . $countCorrection . " - ";
+//        echo "Count = " . $countCorrection . " - ";
 
         // Parcours des documents sélectionnés
         foreach ($correction->getDrop()->getDocuments() as $document) {
             $documentId = $document->getId();
-            echo "dans boucle " . $documentId . "<br />";
+//            echo "dans boucle " . $documentId . "<br />";
 
             // Ajout pour avoir les commentaires et qui les a lu.
             // Lire les commentaires et les passer à la vue
@@ -721,7 +725,7 @@ echo "state1 : " . $state;die();
             // Parcours des commentaires des documents sélectionnés
             foreach ($comments as $comment) {
                 $commentId = $comment->getId();
-                 echo "Comment = " . $commentId . " - " . $correction->getUser()->getId();
+//                echo "Comment = " . $commentId . " - " . $correction->getUser()->getId();
 
                 $comments_read = $this
                         ->getDoctrine()
@@ -733,40 +737,26 @@ echo "state1 : " . $state;die();
                                 )
                             );
 
+                // Nombre de lectures du commentaire pour cet utilisateur pour ce commentaire du document
                 $countCommentRead = count($comments_read);
-                $countCommentRead = 0; // Pour les tests, à enlever
-                echo "Nb : " . $countCommentRead;
 
+                // Ce commentaire n'avait pas été lu.
+                // Donc, maintenant, il va l'être,
+                // je dois donc insérer une occurrence dans la table CommentRead";
                 if (($countCommentRead) == 0)
                 {
-                    // Ce commentaire n'avait pas été lu.
-                    // Donc, maintenant, il va l'être,
-                    // je dois donc insérer une occurrence dans la table CommentRead";
-                    echo "aucun commentaire non lu donc ajout dans la table CommentRead";
-                    $comments_read_add = new CommentRead();
-                    $comments_read_add->setComment($comment);
-                    $comments_read_add->setUser($user);
+                    $comment_read_add = new CommentRead();
+                    $comment_read_add->setComment($comment);
+                    $comment_read_add->setUser($user);
 
-                    $em->persist($correction);
+                    $em->persist($comment_read_add);
                     $em->flush();
                 }
-                // Parcours des commentaires LUS des documents sélectionnés
-                foreach ($comments_read as $comment_read) {
-                    $commentreadId = $comment_read->getId();
-                    echo "CommentRead = " . $commentreadId . " ";
-                }
+
             }
             // Fin ajout.
-
-
-
-
         }
 
-
-        var_dump($correction->getDrop());
-
-die();
         $userId = $this->get('security.context')->getToken()->getUser()->getId();
         if ($state == 'preview') {
             if ($correction->getDrop()->getUser()->getId() != $userId) {
@@ -898,25 +888,9 @@ die();
         // Appel de la vue qui va gérer l'ajout des commentaires. InnovaERV.
         $view = 'InnovaCollecticielBundle:Correction:correctCriteria.html.twig';
 
-        echo "userId = " . $userId;
-        echo " correctionId = " . $correction->getUser()->getId() . " / " . $correction->getDrop()->getId() . " / " . $dropzone->getId();
-        echo " correctionUserName = " . $correction->getUser()->getUserName();
-//        echo " correction = " . $correction->getDocument()->getUrl();
-
-/*
-        $documents = $em
-            ->getRepository('InnovaCollecticielBundle:Document')
-            ->findByDrop($typo);
-        foreach ($documents as $document) {
-            $oldData[$grade->getCriterion()->getId()] = ($grade->getValue() >= $dropzone->getTotalCriteriaColumn())
-                ? ($dropzone->getTotalCriteriaColumn() - 1) : $grade->getValue();
-        }
-*/
-
-
-//        echo " correction = " . $correction[0]->lastOpenDate;
-        die();
-
+//        echo "userId = " . $userId;
+//        echo " correctionId = " . $correction->getUser()->getId() . " / " . $correction->getDrop()->getId() . " / " . $dropzone->getId();
+//        echo " correctionUserName = " . $correction->getUser()->getUserName();
 
         if ($state == 'show' || $state == 'edit') {
             //Test passage d'une donnée
