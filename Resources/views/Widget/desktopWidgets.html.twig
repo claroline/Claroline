@@ -47,12 +47,15 @@
                                     <i class="fa fa-times close {% if widgetHomeTabConfig.getType() == 'desktop' %}close-widget-btn{% else %}hide-widget-btn{% endif %}"
                                        data-widget-hometab-config-id="{{ whtcId }}"
                                     ></i>
-                                    <span class="close">&nbsp;</span>
-                                    <i class="fa fa-cog close edit-widget-btn"
-                                       data-widget-hometab-config-id="{{ whtcId }}"
-                                       data-widget-instance-id="{{ widgetInstance.getId() }}"
-                                       data-widget-display-config-id="{{ widgetDisplayConfig.getId() }}"
-                                    ></i>
+                                    
+                                    {% if widgetHomeTabConfig.getType() == 'desktop' %}
+                                        <span class="close">&nbsp;</span>
+                                        <i class="fa fa-cog close edit-widget-btn"
+                                           data-widget-hometab-config-id="{{ whtcId }}"
+                                           data-widget-instance-id="{{ widgetInstance.getId() }}"
+                                           data-widget-display-config-id="{{ widgetDisplayConfig.getId() }}"
+                                        ></i>
+                                    {% endif %}
                                     
                                     {% if not widgetInstance.isAdmin() and widget.isConfigurable() %}
                                         <span class="close">&nbsp;</span>
