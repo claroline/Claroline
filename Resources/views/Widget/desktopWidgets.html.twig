@@ -16,65 +16,68 @@
             {% set widgetColor = widgetDisplayConfig.getColor() %}
             {% set widgetInstance = widgetHomeTabConfig.getWidgetInstance() %}
             {% set widget = widgetInstance.getWidget() %}
-            <div class="grid-stack-item"
-                 id="widget-element-{{ whtcId }}"
-                 data-gs-x="{{ widgetDisplayConfig.getColumn() }}"
-                 data-gs-y="{{ widgetDisplayConfig.getRow() }}"
-                 data-gs-width="{{ widgetDisplayConfig.getWidth() }}"
-                 data-gs-height="{{ widgetDisplayConfig.getHeight() }}"
-                 data-widget-display-config-id="{{ widgetDisplayConfig.getId() }}"
-                 {% if isLockedHomeTab %}
-                     data-gs-no-resize="true"
-                     data-gs-no-move="true"
-                 {% endif %}
-            >
-                <div class="grid-stack-item-content panel panel-default"
-                     id="widget-element-content-{{ whtcId }}"
-                    {% if widgetColor is not empty %}
-                         style="border-color: {{ widgetColor }};"
-                    {% endif %}
+        
+            {% if widgetHomeTabConfig.isVisible() %}
+                <div class="grid-stack-item"
+                     id="widget-element-{{ whtcId }}"
+                     data-gs-x="{{ widgetDisplayConfig.getColumn() }}"
+                     data-gs-y="{{ widgetDisplayConfig.getRow() }}"
+                     data-gs-width="{{ widgetDisplayConfig.getWidth() }}"
+                     data-gs-height="{{ widgetDisplayConfig.getHeight() }}"
+                     data-widget-display-config-id="{{ widgetDisplayConfig.getId() }}"
+                     {% if isLockedHomeTab %}
+                         data-gs-no-resize="true"
+                         data-gs-no-move="true"
+                     {% endif %}
                 >
-                    <div class="panel-heading"
-                     id="widget-element-header-{{ whtcId }}"
+                    <div class="grid-stack-item-content panel panel-default"
+                         id="widget-element-content-{{ whtcId }}"
                         {% if widgetColor is not empty %}
-                             style="background-color: {{ widgetColor }};"
+                             style="border-color: {{ widgetColor }};"
                         {% endif %}
                     >
-                        <h3 class="panel-title">
-                            
-                            {% if not widgetHomeTabConfig.isLocked() and not isLockedHomeTab %}
-                                <span class="pull-right">
-                                    <i class="fa fa-times close {% if widgetHomeTabConfig.getType() == 'desktop' %}close-widget-btn{% else %}hide-widget-btn{% endif %}"
-                                       data-widget-hometab-config-id="{{ whtcId }}"
-                                    ></i>
-                                    
-                                    {% if widgetHomeTabConfig.getType() == 'desktop' %}
-                                        <span class="close">&nbsp;</span>
-                                        <i class="fa fa-cog close edit-widget-btn"
-                                           data-widget-hometab-config-id="{{ whtcId }}"
-                                           data-widget-instance-id="{{ widgetInstance.getId() }}"
-                                           data-widget-display-config-id="{{ widgetDisplayConfig.getId() }}"
-                                        ></i>
-                                    {% endif %}
-                                    
-                                    {% if not widgetInstance.isAdmin() and widget.isConfigurable() %}
-                                        <span class="close">&nbsp;</span>
-                                        <i class="fa fa-pencil close edit-widget-content-btn"
-                                           data-widget-instance-id="{{ widgetInstance.getId() }}"
-                                        ></i>
-                                    {% endif %}
-                                </span>
+                        <div class="panel-heading"
+                         id="widget-element-header-{{ whtcId }}"
+                            {% if widgetColor is not empty %}
+                                 style="background-color: {{ widgetColor }};"
                             {% endif %}
-                            <span id="widget-element-title-{{ whtcId }}">
-                               {{ widgetInstance.getName() }}
-                            </span>
-                        </h3>
-                    </div>
-                    <div id="widget-instance-content-{{ widgetInstance.getId() }}" class="panel-body">
-                        {{ widgetDatas.content|raw }}
+                        >
+                            <h3 class="panel-title">
+
+                                {% if not widgetHomeTabConfig.isLocked() and not isLockedHomeTab %}
+                                    <span class="pull-right">
+                                        <i class="fa fa-times close {% if widgetHomeTabConfig.getType() == 'desktop' %}close-widget-btn{% else %}hide-widget-btn{% endif %}"
+                                           data-widget-hometab-config-id="{{ whtcId }}"
+                                        ></i>
+
+                                        {% if widgetHomeTabConfig.getType() == 'desktop' %}
+                                            <span class="close">&nbsp;</span>
+                                            <i class="fa fa-cog close edit-widget-btn"
+                                               data-widget-hometab-config-id="{{ whtcId }}"
+                                               data-widget-instance-id="{{ widgetInstance.getId() }}"
+                                               data-widget-display-config-id="{{ widgetDisplayConfig.getId() }}"
+                                            ></i>
+                                        {% endif %}
+
+                                        {% if not widgetInstance.isAdmin() and widget.isConfigurable() %}
+                                            <span class="close">&nbsp;</span>
+                                            <i class="fa fa-pencil close edit-widget-content-btn"
+                                               data-widget-instance-id="{{ widgetInstance.getId() }}"
+                                            ></i>
+                                        {% endif %}
+                                    </span>
+                                {% endif %}
+                                <span id="widget-element-title-{{ whtcId }}">
+                                   {{ widgetInstance.getName() }}
+                                </span>
+                            </h3>
+                        </div>
+                        <div id="widget-instance-content-{{ widgetInstance.getId() }}" class="panel-body">
+                            {{ widgetDatas.content|raw }}
+                        </div>
                     </div>
                 </div>
-            </div>
+            {% endif %}
         {% endfor %}
     </div>
 

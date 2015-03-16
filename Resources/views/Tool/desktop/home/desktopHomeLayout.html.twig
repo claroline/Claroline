@@ -14,29 +14,18 @@
             
             {% for adminHomeTabConfig in adminHomeTabConfigs %}
                 {% set adminHomeTab = adminHomeTabConfig.getHomeTab() %}
-                <li class="hometab-element {% if adminHomeTab.getId() == tabId %} active {% endif %}"
+                <li id="hometab-element-{{ adminHomeTab.getId() }}"
+                    class="hometab-element {% if adminHomeTab.getId() == tabId %} active {% endif %}"
                     data-hometab-config-id="{{ adminHomeTabConfig.getId() }}"
-                    data-hometab-id="{{ adminHomeTabConfig.getId() }}"
+                    data-hometab-id="{{ adminHomeTab.getId() }}"
                 >
                     <a href="{{ path('claro_display_desktop_home_tab', {'tabId': adminHomeTab.getId()})}}" class="hometab-link{% if not adminHomeTabConfig.isVisible() %} strike{% endif %}">
                         {{ adminHomeTab.getName() }}
                         {% if adminHomeTabConfig.isLocked() %}
                             <i class="fa fa-lock"></i>
                         {% else %}
-                            <div class="dropdown">
-                                <i class="fa fa-chevron-down pointer-hand" data-toggle="dropdown"></i>
-                                <ul class="dropdown-menu" role="menu">
-                                    <li role="presentation">
-                                        {% if adminHomeTabConfig.isVisible() %}
-                                            <i role="menuitem" class="hometab-visibility-btn fa fa-eye-slash" visiblility-value="visible"
-                                                id="visible-hometab-id-{{ adminHomeTab.getId() }}"> {{ "hide" | trans({}, 'platform') }}</i>
-                                        {% else %}
-                                            <i role="menuitem" class="hometab-visibility-btn fa fa-eye" visiblility-value="invisible"
-                                            id="visible-hometab-id-{{ adminHomeTab.getId() }}"> {{ "display" | trans({}, 'platform') }}</i>
-                                        {% endif %}
-                                    </li>
-                                </ul>
-                            </div>
+                            &nbsp;
+                            <i class="fa fa-times hide-hometab-btn pointer-hand text-muted"></i>
                         {% endif %}
                     </a>
                 </li>

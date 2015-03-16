@@ -1071,7 +1071,6 @@ class HomeController extends Controller
      *     name="claro_home_tab_update_visibility",
      *     options = {"expose"=true}
      * )
-     * @EXT\Method("POST")
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      * @EXT\ParamConverter(
      *     "homeTabConfig",
@@ -1261,7 +1260,6 @@ class HomeController extends Controller
      *     name="claro_desktop_widget_home_tab_config_change_visibility",
      *     options = {"expose"=true}
      * )
-     * @EXT\Method("POST")
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      * @EXT\ParamConverter(
      *     "widgetHomeTabConfig",

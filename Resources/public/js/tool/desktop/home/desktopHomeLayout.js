@@ -52,6 +52,24 @@
             Translator.trans('home_tab_delete_confirm_title', {}, 'platform')
         );
     });
+
+    $('#desktop-home-content').on('click', '.hide-hometab-btn', function (e) {
+        e.preventDefault();
+        var homeTabElement = $(this).parents('.hometab-element');
+        var homeTabConfigId = homeTabElement.data('hometab-config-id');
+        var homeTabId = homeTabElement.data('hometab-id');
+
+        window.Claroline.Modal.confirmRequest(
+            Routing.generate(
+                'claro_home_tab_update_visibility',
+                {'homeTabConfigId': homeTabConfigId, 'visible': 'invisible'}
+            ),
+            removeHomeTab,
+            homeTabId,
+            Translator.trans('home_tab_delete_confirm_message', {}, 'platform'),
+            Translator.trans('home_tab_delete_confirm_title', {}, 'platform')
+        );
+    });
     
     $('#desktop-hometabs-list').sortable({
         items: '.movable-hometab',
@@ -182,6 +200,20 @@
         window.Claroline.Modal.confirmRequest(
             Routing.generate(
                 'claro_desktop_widget_home_tab_config_delete',
+                {'widgetHomeTabConfigId': whcId}
+            ),
+            removeWidget,
+            whcId,
+            Translator.trans('widget_home_tab_delete_confirm_message', {}, 'platform'),
+            Translator.trans('widget_home_tab_delete_confirm_title', {}, 'platform')
+        );
+    });
+    
+    $('#widgets-list-panel').on('click', '.hide-widget-btn', function () {
+        var whcId = $(this).data('widget-hometab-config-id');
+        window.Claroline.Modal.confirmRequest(
+            Routing.generate(
+                'claro_desktop_widget_home_tab_config_change_visibility',
                 {'widgetHomeTabConfigId': whcId}
             ),
             removeWidget,
