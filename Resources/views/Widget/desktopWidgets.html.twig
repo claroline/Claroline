@@ -11,11 +11,12 @@
         
         {% for widgetDatas in widgetsDatas %}
             {% set widgetHomeTabConfig = widgetDatas['config'] %}
+            {% set whtcId = widgetHomeTabConfig.getId() %}
             {% set widgetDisplayConfig = widgetDatas['widgetDisplayConfig'] %}
             {% set widgetColor = widgetDisplayConfig.getColor() %}
             {% set widgetInstance = widgetHomeTabConfig.getWidgetInstance() %}
             <div class="grid-stack-item"
-                 id="widget-element-{{ widgetHomeTabConfig.getId() }}"
+                 id="widget-element-{{ whtcId }}"
                  data-gs-x="{{ widgetDisplayConfig.getColumn() }}"
                  data-gs-y="{{ widgetDisplayConfig.getRow() }}"
                  data-gs-width="{{ widgetDisplayConfig.getWidth() }}"
@@ -26,8 +27,14 @@
                      data-gs-no-move="true"
                  {% endif %}
             >
-                <div class="grid-stack-item-content panel panel-default">
+                <div class="grid-stack-item-content panel panel-default"
+                     id="widget-element-content-{{ whtcId }}"
+                    {% if widgetColor is not empty %}
+                         style="border-color: {{ widgetColor }};"
+                    {% endif %}
+                >
                     <div class="panel-heading"
+                     id="widget-element-header-{{ whtcId }}"
                         {% if widgetColor is not empty %}
                              style="background-color: {{ widgetColor }};"
                         {% endif %}
@@ -37,15 +44,19 @@
                             {% if not widgetHomeTabConfig.isLocked() and not isLockedHomeTab %}
                                 <span class="pull-right">
                                     <i class="fa fa-times close {% if widgetHomeTabConfig.getType() == 'desktop' %}close-widget-btn{% else %}hide-widget-btn{% endif %}"
-                                       data-widget-hometab-config-id="{{ widgetHomeTabConfig.getId() }}"
+                                       data-widget-hometab-config-id="{{ whtcId }}"
                                     ></i>
                                     <span class="close">&nbsp;</span>
                                     <i class="fa fa-cog close edit-widget-btn"
-                                       data-widget-hometab-config-id="{{ widgetHomeTabConfig.getId() }}"
+                                       data-widget-hometab-config-id="{{ whtcId }}"
+                                       data-widget-instance-id="{{ widgetInstance.getId() }}"
+                                       data-widget-display-config-id="{{ widgetDisplayConfig.getId() }}"
                                     ></i>
                                 </span>
                             {% endif %}
-                           {{ widgetInstance.getName() }}
+                            <span id="widget-element-title-{{ whtcId }}">
+                               {{ widgetInstance.getName() }}
+                            </span>
                         </h3>
                     </div>
                     <div class="panel-body">

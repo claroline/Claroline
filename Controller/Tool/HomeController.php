@@ -14,17 +14,20 @@ namespace Claroline\CoreBundle\Controller\Tool;
 use Claroline\CoreBundle\Entity\Home\HomeTab;
 use Claroline\CoreBundle\Entity\Home\HomeTabConfig;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Widget\WidgetDisplayConfig;
 use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 use Claroline\CoreBundle\Entity\Widget\WidgetHomeTabConfig;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
+use Claroline\CoreBundle\Form\WidgetDisplayConfigType;
 use Claroline\CoreBundle\Manager\HomeTabManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CoreBundle\Manager\WidgetManager;
 use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\FormFactory as SymfonyFormFactory;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -45,6 +48,7 @@ class HomeController extends Controller
     private $request;
     private $roleManager;
     private $securityContext;
+    private $symfonyFormFactory;
     private $toolManager;
     private $widgetManager;
 
@@ -57,6 +61,7 @@ class HomeController extends Controller
      *     "request"            = @DI\Inject("request"),
      *     "roleManager"        = @DI\Inject("claroline.manager.role_manager"),
      *     "securityContext"    = @DI\Inject("security.context"),
+     *     "symfonyFormFactory" = @DI\Inject("form.factory"),
      *     "toolManager"        = @DI\Inject("claroline.manager.tool_manager"),
      *     "widgetManager"      = @DI\Inject("claroline.manager.widget_manager")
      * })
@@ -69,6 +74,7 @@ class HomeController extends Controller
         Request $request,
         RoleManager $roleManager,
         SecurityContextInterface $securityContext,
+        SymfonyFormFactory $symfonyFormFactory,
         ToolManager $toolManager,
         WidgetManager $widgetManager
     )
@@ -80,6 +86,7 @@ class HomeController extends Controller
         $this->request = $request;
         $this->roleManager = $roleManager;
         $this->securityContext = $securityContext;
+        $this->symfonyFormFactory = $symfonyFormFactory;
         $this->toolManager = $toolManager;
         $this->widgetManager = $widgetManager;
     }
@@ -240,6 +247,112 @@ class HomeController extends Controller
         } else {
 
             return array('form' => $form->createView());
+        }
+    }
+
+    /**
+     * @EXT\Route(
+     *     "desktop/widget/instance/{widgetInstance}/config/{widgetHomeTabConfig}/display/{widgetDisplayConfig}/edit/form",
+     *     name="claro_desktop_widget_config_edit_form",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     * @EXT\Template("ClarolineCoreBundle:Tool\desktop\home:desktopWidgetEditModalForm.html.twig")
+     *
+     * Displays the widget config form.
+     *
+     * @return Response
+     */
+    public function desktopWidgetConfigEditFormAction(
+        WidgetInstance $widgetInstance,
+        WidgetHomeTabConfig $widgetHomeTabConfig,
+        WidgetDisplayConfig $widgetDisplayConfig,
+        User $user
+    )
+    {
+        $this->checkUserAccessForWidgetInstance($widgetInstance, $user);
+        $this->checkUserAccessForWidgetHomeTabConfig($widgetHomeTabConfig, $user);
+        $this->checkUserAccessForWidgetDisplayConfig($widgetDisplayConfig, $user);
+
+        $instanceForm = $this->formFactory->create(
+            FormFactory::TYPE_WIDGET_CONFIG,
+            array(),
+            $widgetInstance
+        );
+
+        $displayConfigForm = $this->symfonyFormFactory->create(
+            new WidgetDisplayConfigType(),
+            $widgetDisplayConfig
+        );
+
+        return array(
+            'instanceForm' => $instanceForm->createView(),
+            'displayConfigForm' => $displayConfigForm->createView(),
+            'widgetInstance' => $widgetInstance,
+            'widgetHomeTabConfig' => $widgetHomeTabConfig,
+            'widgetDisplayConfig' => $widgetDisplayConfig
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "desktop/widget/instance/{widgetInstance}/config/{widgetHomeTabConfig}/display/{widgetDisplayConfig}/edit",
+     *     name="claro_desktop_widget_config_edit",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\Method("POST")
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     * @EXT\Template("ClarolineCoreBundle:Tool\desktop\home:desktopWidgetEditModalForm.html.twig")
+     *
+     * Edit the widget config.
+     *
+     * @return Response
+     */
+    public function desktopWidgetConfigEditAction(
+        WidgetInstance $widgetInstance,
+        WidgetHomeTabConfig $widgetHomeTabConfig,
+        WidgetDisplayConfig $widgetDisplayConfig,
+        User $user
+    )
+    {
+        $this->checkUserAccessForWidgetInstance($widgetInstance, $user);
+        $this->checkUserAccessForWidgetHomeTabConfig($widgetHomeTabConfig, $user);
+        $this->checkUserAccessForWidgetDisplayConfig($widgetDisplayConfig, $user);
+
+        $instanceForm = $this->formFactory->create(
+            FormFactory::TYPE_WIDGET_CONFIG,
+            array(),
+            $widgetInstance
+        );
+        $instanceForm->handleRequest($this->request);
+
+        $displayConfigForm = $this->symfonyFormFactory->create(
+            new WidgetDisplayConfigType(),
+            $widgetDisplayConfig
+        );
+        $displayConfigForm->handleRequest($this->request);
+
+        if ($instanceForm->isValid() && $displayConfigForm->isValid()) {
+            $this->widgetManager->insertWidgetInstance($widgetInstance);
+            $this->widgetManager->persistWidgetDisplayConfigs(array($widgetDisplayConfig));
+
+            return new JsonResponse(
+                array(
+                    'id' => $widgetHomeTabConfig->getId(),
+                    'color' => $widgetDisplayConfig->getColor(),
+                    'title' => $widgetInstance->getName()
+                ),
+                200
+            );
+        } else {
+
+            return array(
+                'instanceForm' => $instanceForm->createView(),
+                'displayConfigForm' => $displayConfigForm->createView(),
+                'widgetInstance' => $widgetInstance,
+                'widgetHomeTabConfig' => $widgetHomeTabConfig,
+                'widgetDisplayConfig' => $widgetDisplayConfig
+            );
         }
     }
 
@@ -1617,6 +1730,20 @@ class HomeController extends Controller
             && $widgetHomeTabConfig->getType() !== 'admin_desktop') ||
             is_null($widgetHomeTabConfigUser) ||
             ($widgetHomeTabConfigUser->getId() !== $user->getId())) {
+
+            throw new AccessDeniedException();
+        }
+    }
+
+    private function checkUserAccessForWidgetDisplayConfig(
+        WidgetDisplayConfig $widgetDisplayConfig,
+        User $user
+    )
+    {
+        $widgetDisplayConfigUser = $widgetDisplayConfig->getUser();
+
+        if (is_null($widgetDisplayConfigUser) ||
+            ($widgetDisplayConfigUser->getId() !== $user->getId())) {
 
             throw new AccessDeniedException();
         }

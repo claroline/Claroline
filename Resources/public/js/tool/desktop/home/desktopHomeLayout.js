@@ -130,9 +130,26 @@
     });
     
     $('#widgets-list-panel').on('click', '.edit-widget-btn', function () {
-        var whcId = $(this).data('widget-hometab-config-id');
+        var widgetHomeTabId = $(this).data('widget-hometab-config-id');
+        var widgetDisplayConfigId = $(this).data('widget-display-config-id');
+        var widgetInstanceId = $(this).data('widget-instance-id');
         
-        console.log(whcId);
+        window.Claroline.Modal.displayForm(
+            Routing.generate(
+                'claro_desktop_widget_config_edit_form',
+                {
+                    'widgetInstance': widgetInstanceId,
+                    'widgetHomeTabConfig': widgetHomeTabId,
+                    'widgetDisplayConfig': widgetDisplayConfigId
+                }
+            ),
+            updateWidget,
+            function() {}
+        );
+    });
+    
+    $('body').on('focus', '#widget_display_config_form_color', function () {
+        $(this).colorpicker();
     });
     
     $('#widgets-list-panel').on('change', function (e, items) {
@@ -202,4 +219,12 @@
         var grid = $('.grid-stack').data('gridstack');
         grid.remove_widget(widgetElement);
     }
+    
+    var updateWidget = function (datas) {
+        var id = datas['id'];
+        var color = (datas['color'] === null) ? '' : datas['color'];
+        $('#widget-element-title-' + id).html(datas['title']);
+        $('#widget-element-header-' + id).css('background-color', color);
+        $('#widget-element-content-' + id).css('border-color', color);
+    };
 })();
