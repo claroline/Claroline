@@ -10,6 +10,7 @@ ability_: Capacité
 associated_competencies: Compétences associées
 collapse_all: Tout réduire
 competency:
+  activities: Activités associées
   associate: Associer une compétence
   create: Créer une compétence
   create_sub: Créer une sous-compétence
@@ -28,6 +29,8 @@ framework_: Référentiel
 info:
   ability_search: Entrez ici la description de la capacité
   add_competency_association: Cliquez sur le bouton ci-dessous pour sélectionner une compétence.
+  no_ability_activities: Aucune activité n'est associée à cette capacité.
+  no_competency_activities: Aucune activité n'est associée à cette compétence.
   no_competency_association: Il n'y a encore aucune compétence associée.
   no_frame: Il n'y a pas encore de référentiels. Vous pouvez créer un nouveau référentiel ou gérer les échelles de difficultés à l'aide des boutons ci-dessous.
   no_frame_no_scale: Il n'y a pas encore de référentiels ni d'échelles. Si vous choisissez de créer un référentiel maintenant, celui-ci se verra assigner une échelle par défaut d'un seul niveau. Alternativement, vous pouvez créer une échelle directement et l'associer ensuite à votre référentiel.

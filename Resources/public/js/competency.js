@@ -114,7 +114,7 @@
     // sub-competency creation
     $(document).on('click', 'li:not(.disabled) > a.create-sub-competency', function (event) {
         event.preventDefault();
-        var parentItem = this.parentNode.parentNode.parentNode.parentNode;
+        var parentItem = getCompetencyNode(this);
         var parentId = parentItem.dataset.id;
         window.Claroline.Modal.displayForm(
             Routing.generate('hevinci_new_competency', { id: parentId }),
@@ -135,7 +135,7 @@
     // competency edition
     $(document).on('click', 'li:not(.disabled) > a.edit-competency', function (event) {
         event.preventDefault();
-        var node = this.parentNode.parentNode.parentNode.parentNode;
+        var node = getCompetencyNode(this);
         var competencyId = node.dataset.id;
         window.Claroline.Modal.displayForm(
             Routing.generate('hevinci_competency', { id: competencyId }),
@@ -152,7 +152,7 @@
 
     // competency deletion
     $(document).on('click', 'li:not(.disabled) > a.delete-competency', function (event) {
-        var node = this.parentNode.parentNode.parentNode.parentNode;
+        var node = getCompetencyNode(this);
         deleteCompetency(event, 'competency', node.dataset.id, function () {
             if ($(node.parentNode).length === 1) {
                 $(node.parentNode.parentNode).children('i')
@@ -168,7 +168,7 @@
     // ability creation
     $(document).on('click', 'li:not(.disabled) > a.create-ability', function (event) {
         event.preventDefault();
-        var node = this.parentNode.parentNode.parentNode.parentNode;
+        var node = getCompetencyNode(this);
         window.Claroline.Modal.displayForm(
             Routing.generate('hevinci_new_ability', { id: node.dataset.id }),
             function (data) {
@@ -183,7 +183,7 @@
     // ability import
     $(document).on('click', 'li:not(.disabled) > a.add-ability', function (event) {
         event.preventDefault();
-        var node = this.parentNode.parentNode.parentNode.parentNode;
+        var node = getCompetencyNode(this);
         window.Claroline.Modal.displayForm(
             Routing.generate('hevinci_add_ability_form', { id: node.dataset.id }),
             function (data) {
@@ -243,6 +243,24 @@
         );
     });
 
+    // activities linked to competencies display
+    $(document).on('click', 'ul.framework .dropdown-menu a.show-activities ', function (event) {
+        event.preventDefault();
+        Claroline.Modal.fromUrl(
+            Routing.generate('hevinci_activity_competencies',
+            { id: getCompetencyNode(this).dataset.id })
+        );
+    });
+
+    // activities linked to abilities display
+    $(document).on('click', 'table.abilities a.show-activities ', function (event) {
+        event.preventDefault();
+        Claroline.Modal.fromUrl(
+            Routing.generate('hevinci_activity_abilities',
+            { id: this.parentNode.parentNode.dataset.id })
+        );
+    });
+
     function displayScaleCreationForm(successCallback) {
         window.Claroline.Modal.displayForm(
             Routing.generate('hevinci_new_scale'),
@@ -284,6 +302,10 @@
 
     function trans(message) {
         return Translator.trans(message, {}, 'competency');
+    }
+
+    function getCompetencyNode(dropdownItem) {
+        return dropdownItem.parentNode.parentNode.parentNode.parentNode;
     }
 
     function sortAbilities($tableBody, $newAbilityRow) {

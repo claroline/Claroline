@@ -12,7 +12,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
- * @EXT\Route(requirements={"id"="\d+"}, options={"expose"=true})
+ * @EXT\Route("/activities", requirements={"id"="\d+"}, options={"expose"=true})
  * @EXT\Method("GET")
  */
 class ActivityController
@@ -34,7 +34,7 @@ class ActivityController
     /**
      * Displays the list of competencies associated with an activity.
      *
-     * @EXT\Route("/activity/{id}", name="hevinci_activity_competencies")
+     * @EXT\Route("/{id}", name="hevinci_activity_competencies")
      * @SEC\SecureParam(name="activity", permissions="OPEN")
      * @EXT\Template
      *
@@ -52,7 +52,7 @@ class ActivityController
     /**
      * Creates an association between an activity and an ability.
      *
-     * @EXT\Route("/activity/{id}/ability/{abilityId}/link", name="hevinci_activity_link_ability")
+     * @EXT\Route("/{id}/abilities/{abilityId}/link", name="hevinci_activity_link_ability")
      * @EXT\Method("POST")
      * @EXT\ParamConverter("ability", options={"id"= "abilityId"})
      * @SEC\SecureParam(name="activity", permissions="OPEN")
@@ -73,7 +73,7 @@ class ActivityController
     /**
      * Creates an association between an activity and an ability.
      *
-     * @EXT\Route("/activity/{id}/competency/{competencyId}/link", name="hevinci_activity_link_competency")
+     * @EXT\Route("/{id}/competencies/{competencyId}/link", name="hevinci_activity_link_competency")
      * @EXT\Method("POST")
      * @EXT\ParamConverter("competency", options={"id"= "competencyId"})
      * @SEC\SecureParam(name="competency", permissions="OPEN")
@@ -94,7 +94,7 @@ class ActivityController
     /**
      * Removes an association between an activity and an ability.
      *
-     * @EXT\Route("/activity/{id}/ability/{abilityId}/remove", name="hevinci_activity_remove_ability")
+     * @EXT\Route("/{id}/abilities/{abilityId}/remove", name="hevinci_activity_remove_ability")
      * @EXT\ParamConverter("ability", options={"id"= "abilityId"})
      * @SEC\SecureParam(name="activity", permissions="OPEN")
      * @SEC\PreAuthorize("hasRole('ROLE_COMPETENCY_MANAGER')")
@@ -111,7 +111,7 @@ class ActivityController
     /**
      * Removes an association between an activity and a competency.
      *
-     * @EXT\Route("/activity/{id}/competency/{competencyId}/remove", name="hevinci_activity_remove_competency")
+     * @EXT\Route("/{id}/competencies/{competencyId}/remove", name="hevinci_activity_remove_competency")
      * @EXT\ParamConverter("competency", options={"id"= "competencyId"})
      * @SEC\SecureParam(name="competency", permissions="OPEN")
      * @SEC\PreAuthorize("hasRole('ROLE_COMPETENCY_MANAGER')")
@@ -123,5 +123,35 @@ class ActivityController
     public function removeCompetencyLinkAction(Activity $activity, Competency $competency)
     {
         return new JsonResponse($this->activityManager->removeLink($activity, $competency));
+    }
+
+    /**
+     * Displays the activities linked to a competency.
+     *
+     * @EXT\Route("/competencies/{id}", name="hevinci_activity_competencies")
+     * @SEC\PreAuthorize("hasRole('ROLE_USER')")
+     * @EXT\Template
+     *
+     * @param Competency $competency
+     * @return array
+     */
+    public function competencyActivitiesAction(Competency $competency)
+    {
+        return ['competency' => $competency];
+    }
+
+    /**
+     * Displays the activities linked to an ability.
+     *
+     * @EXT\Route("/abilities/{id}", name="hevinci_activity_abilities")
+     * @SEC\PreAuthorize("hasRole('ROLE_USER')")
+     * @EXT\Template
+     *
+     * @param Ability $ability
+     * @return array
+     */
+    public function abilityActivitiesAction(Ability $ability)
+    {
+        return ['ability' => $ability];
     }
 }

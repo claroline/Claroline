@@ -224,6 +224,14 @@ class Competency implements \JsonSerializable
         $this->activities->removeElement($activity);
     }
 
+    /**
+     * @return ArrayCollection
+     */
+    public function getActivities()
+    {
+        return $this->activities;
+    }
+
     public function jsonSerialize()
     {
         return [

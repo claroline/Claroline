@@ -4,6 +4,7 @@ namespace HeVinci\CompetencyBundle\Controller;
 
 use Claroline\CoreBundle\Entity\Resource\Activity;
 use HeVinci\CompetencyBundle\Entity\Ability;
+use HeVinci\CompetencyBundle\Entity\Competency;
 use HeVinci\CompetencyBundle\Util\UnitTestCase;
 
 class ActivityControllerTest extends UnitTestCase
@@ -66,6 +67,24 @@ class ActivityControllerTest extends UnitTestCase
         $this->assertEquals(
             json_encode('ABILITY'),
             $this->controller->removeAbilityLinkAction($activity, $ability)->getContent()
+        );
+    }
+
+    public function testCompetencyActivitiesAction()
+    {
+        $competency = new Competency();
+        $this->assertEquals(
+            ['competency' => $competency],
+            $this->controller->competencyActivitiesAction($competency)
+        );
+    }
+
+    public function testAbilityActivitiesAction()
+    {
+        $ability = new Ability();
+        $this->assertEquals(
+            ['ability' => $ability],
+            $this->controller->abilityActivitiesAction($ability)
         );
     }
 }
