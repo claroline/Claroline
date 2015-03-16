@@ -15,6 +15,7 @@ use JMS\Serializer\Annotation as JMS;
 /**
  * @ORM\Entity
  * @ORM\Table(name="icap__website_options")
+ * @ORM\HasLifecycleCallbacks()
  * @JMS\ExclusionPolicy("none")
  */
 class WebsiteOptions{
@@ -1014,8 +1015,10 @@ class WebsiteOptions{
             '%s%s..%s..%s..%s..%s..%s..%sweb%s%s',
             __DIR__, $ds, $ds, $ds, $ds, $ds, $ds, $ds, $ds, $this->getUploadDir()
         );
+        if (!file_exists($uploadRootDir)) {
+            mkdir($uploadRootDir, 0777, true);
+        }
         $realpathUploadRootDir = realpath($uploadRootDir);
-
         if (false === $realpathUploadRootDir) {
             throw new \Exception(
                 sprintf(
@@ -1034,5 +1037,204 @@ class WebsiteOptions{
     public function getUploadDir()
     {
         return sprintf("uploads%swebsites%s".$this->getWebsite()->getId(), DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR);
+    }
+
+    /**
+     * @ORM\PreRemove
+     */
+    public function removeFilesAndFolder()
+    {
+        $uploadRootDir = $this->getUploadRootDir();
+        try{
+            foreach (glob($uploadRootDir.DIRECTORY_SEPARATOR."*.*") as $filename) {
+               unlink($filename);
+            }
+            rmdir($uploadRootDir);
+        }catch (\Exception $e) {
+            echo "Exception: ".$e->getMessage();
+        }
+
+    }
+
+    public function exportToArray(&$files = null)
+    {
+        $tmpFilePath = sys_get_temp_dir(). DIRECTORY_SEPARATOR;
+        $bgImageUid = $this->bgImage;
+        $bannerBgImageUid = $this->bannerBgImage;
+        $footerBgImageUid = $this->footerBgImage;
+
+        $optionsArray = array(
+            'copyright_enabled'     => $this->copyrightEnabled,
+            'copyright_text'        => $this->copyrightText,
+            'analytics_provider'    => $this->analyticsProvider,
+            'analytics_account_id'  => $this->analyticsAccountId,
+            'bg_color'              => $this->bgColor,
+            'bg_image'              => $bgImageUid,
+            'bg_repeat'             => $this->bgRepeat,
+            'bg_position'           => $this->bgPosition,
+            'total_width'           => $this->totalWidth,
+            'banner_bg_color'       => $this->bannerBgColor,
+            'banner_bg_image'       => $bannerBgImageUid,
+            'banner_bg_repeat'      => $this->bannerBgRepeat,
+            'banner_bg_position'    => $this->bannerBgPosition,
+            'banner_height'         => $this->bannerHeight,
+            'banner_enabled'        => $this->bannerEnabled,
+            'footer_bg_color'       => $this->footerBgColor,
+            'footer_bg_image'       => $footerBgImageUid,
+            'footer_bg_repeat'      => $this->footerBgRepeat,
+            'footer_bg_position'    => $this->footerBgPosition,
+            'footer_height'         => $this->footerHeight,
+            'footer_enabled'        => $this->footerEnabled,
+            'menu_bg_color'         => $this->menuBgColor,
+            'section_bg_color'      => $this->sectionBgColor,
+            'menu_border_color'     => $this->menuBorderColor,
+            'menu_font_color'       => $this->menuFontColor,
+            'section_font_color'    => $this->sectionFontColor,
+            'menu_hover_color'      => $this->menuHoverColor,
+            'menu_font_family'      => $this->menuFontFamily,
+            'menu_font_style'       => $this->menuFontStyle,
+            'menu_font_size'        => $this->menuFontSize,
+            'menu_font_weight'      => $this->menuFontWeight,
+            'menu_width'            => $this->menuWidth,
+            'menu_orientation'      => $this->menuOrientation
+        );
+
+        if (isset($files) && $files !== null) {
+            //Create bgImage file
+            if ($bgImageUid !== null && !filter_var($bgImageUid, FILTER_VALIDATE_URL)) {
+                copy($this->getAbsolutePath('bgImage'), $tmpFilePath . $bgImageUid);
+                $files[$bgImageUid] = $tmpFilePath . $bgImageUid;
+            }
+            //Create bannerBgImage file
+            if ($bannerBgImageUid !== null && !filter_var($bannerBgImageUid, FILTER_VALIDATE_URL)) {
+                copy($this->getAbsolutePath('bannerBgImage'), $tmpFilePath . $bannerBgImageUid);
+                $files[$bannerBgImageUid] = $tmpFilePath . $bannerBgImageUid;
+            }
+            //Create footerBgImage file
+            if ($footerBgImageUid !== null && !filter_var($footerBgImageUid, FILTER_VALIDATE_URL)) {
+                copy($this->getAbsolutePath('footerBgImage'), $tmpFilePath . $footerBgImageUid);
+                $files[$footerBgImageUid] = $tmpFilePath . $footerBgImageUid;
+            }
+
+            //Create file for csscode
+            $cssCodeUid = null;
+            if ($this->cssCode !== null && !empty($this->cssCode)) {
+                $cssCodeUid = uniqid('ws_css_') . '.txt';
+                file_put_contents($tmpFilePath . $cssCodeUid, $this->cssCode);
+                $files[$cssCodeUid] = $tmpFilePath . $cssCodeUid;
+            }
+            //Create file for banner text
+            $bannerTextUid = null;
+            if ($this->bannerText !== null && !empty($this->bannerText)) {
+                $bannerTextUid = uniqid('ws_banner_') . '.txt';
+                file_put_contents($tmpFilePath . $bannerTextUid, $this->bannerText);
+                $files[$bannerTextUid] = $tmpFilePath . $bannerTextUid;
+            }
+            //Create file for footer text
+            $footerTextUid = null;
+            if ($this->footerText !== null && !empty($this->footerText)) {
+                $footerTextUid = uniqid('ws_footer_') . '.txt';
+                file_put_contents($tmpFilePath . $footerTextUid, $this->footerText);
+                $files[$footerTextUid] = $tmpFilePath . $footerTextUid;
+            }
+            $optionsArray['css_code_path'] = $cssCodeUid;
+            $optionsArray['banner_text_path'] = $bannerTextUid;
+            $optionsArray['footer_text_path'] = $footerTextUid;
+        } else {
+            $optionsArray['css_code'] = $this->cssCode;
+            $optionsArray['banner_text'] = $this->bannerText;
+            $optionsArray['footer_text'] = $this->footerText;
+        }
+
+        return $optionsArray;
+    }
+
+    public function importFromArray(array $optionsArray, $rootPath = null)
+    {
+        $uploadedDir = $this->getUploadRootDir();
+        $this->copyrightEnabled     = $optionsArray['copyright_enabled'];
+        $this->copyrightText        = $optionsArray['copyright_text'];
+        $this->analyticsProvider    = $optionsArray['analytics_provider'];
+        $this->analyticsAccountId   = $optionsArray['analytics_account_id'];
+        //Get content for css code
+        $cssCode = null;
+        if (isset($optionsArray['css_code_path']) && $optionsArray['css_code_path'] !== null) {
+            $cssCode = file_get_contents(
+                $rootPath . DIRECTORY_SEPARATOR . $optionsArray['css_code_path']
+            );
+        } else if (isset($optionsArray['css_code'])) {
+            $cssCode = $optionsArray['css_code'];
+        }
+        $this->cssCode              = $cssCode;
+        $this->bgColor              = $optionsArray['bg_color'];
+        $this->bgImage              = $optionsArray['bg_image'];
+        //Copy bg image to web folder
+        if ($this->bgImage !== null && !filter_var($this->bgImage, FILTER_VALIDATE_URL)) {
+            copy(
+                $rootPath . DIRECTORY_SEPARATOR . $this->bgImage,
+                $uploadedDir . DIRECTORY_SEPARATOR . $this->bgImage
+            );
+        }
+        $this->bgRepeat             = $optionsArray['bg_repeat'];
+        $this->bgPosition           = $optionsArray['bg_position'];
+        $this->totalWidth           = $optionsArray['total_width'];
+        $this->bannerBgColor        = $optionsArray['banner_bg_color'];
+        $this->bannerBgImage        = $optionsArray['banner_bg_image'];
+        //Copy banner bg image to web folder
+        if ($this->bannerBgImage !== null && !filter_var($this->bannerBgImage, FILTER_VALIDATE_URL)) {
+            copy(
+                $rootPath . DIRECTORY_SEPARATOR . $this->bannerBgImage,
+                $uploadedDir . DIRECTORY_SEPARATOR . $this->bannerBgImage
+            );
+        }
+        $this->bannerBgRepeat       = $optionsArray['banner_bg_repeat'];
+        $this->bannerBgPosition     = $optionsArray['banner_bg_position'];
+        $this->bannerHeight         = $optionsArray['banner_height'];
+        $this->bannerEnabled        = $optionsArray['banner_enabled'];
+        //Get content for banner text
+        $bannerText = null;
+        if (isset($optionsArray['banner_text_path']) && $optionsArray['banner_text_path'] !== null) {
+            $bannerText = file_get_contents(
+                $rootPath . DIRECTORY_SEPARATOR . $optionsArray['banner_text_path']
+            );
+        } else if (isset($optionsArray['banner_text'])) {
+            $bannerText = $optionsArray['banner_text'];
+        }
+        $this->bannerText           = $bannerText;
+        $this->footerBgColor        = $optionsArray['footer_bg_color'];
+        $this->footerBgImage        = $optionsArray['footer_bg_image'];
+        //Copy footer bg image to web folder
+        if ($this->footerBgImage !== null && !filter_var($this->footerBgImage, FILTER_VALIDATE_URL)) {
+            copy(
+                $rootPath . DIRECTORY_SEPARATOR . $this->footerBgImage,
+                $uploadedDir . DIRECTORY_SEPARATOR . $this->footerBgImage
+            );
+        }
+        $this->footerBgRepeat       = $optionsArray['footer_bg_repeat'];
+        $this->footerBgPosition     = $optionsArray['footer_bg_position'];
+        $this->footerHeight         = $optionsArray['footer_height'];
+        $this->footerEnabled        = $optionsArray['footer_enabled'];
+        //Get content for footer text
+        $footerText = null;
+        if (isset($optionsArray['footer_text_path']) && $optionsArray['footer_text_path'] !== null) {
+            $footerText = file_get_contents(
+                $rootPath . DIRECTORY_SEPARATOR . $optionsArray['footer_text_path']
+            );
+        } else if (isset($optionsArray['footer_text'])) {
+            $footerText = $optionsArray['footer_text'];
+        }
+        $this->footerText           = $footerText;
+        $this->menuBgColor          = $optionsArray['menu_bg_color'];
+        $this->sectionBgColor       = $optionsArray['section_bg_color'];
+        $this->menuBorderColor      = $optionsArray['menu_border_color'];
+        $this->menuFontColor        = $optionsArray['menu_font_color'];
+        $this->sectionFontColor     = $optionsArray['section_font_color'];
+        $this->menuHoverColor       = $optionsArray['menu_hover_color'];
+        $this->menuFontFamily       = $optionsArray['menu_font_family'];
+        $this->menuFontStyle        = $optionsArray['menu_font_style'];
+        $this->menuFontSize         = $optionsArray['menu_font_size'];
+        $this->menuFontWeight       = $optionsArray['menu_font_weight'];
+        $this->menuWidth            = $optionsArray['menu_width'];
+        $this->menuOrientation      = $optionsArray['menu_orientation'];
     }
 }

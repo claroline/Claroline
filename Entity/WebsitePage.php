@@ -11,6 +11,7 @@ namespace Icap\WebsiteBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use JMS\Serializer\Annotation as JMS;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -101,7 +102,7 @@ class WebsitePage{
     protected $resourceNodeType;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Icap\WebsiteBundle\Entity\Website")
+     * @ORM\ManyToOne(targetEntity="Icap\WebsiteBundle\Entity\Website", cascade={"remove"})
      * @ORM\JoinColumn(name="website_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")
      * @JMS\Exclude
      */
@@ -449,5 +450,76 @@ class WebsitePage{
     public function setIsHomepage($isHomepage)
     {
         $this->isHomepage = $isHomepage;
+    }
+
+    public function isRoot()
+    {
+        return $this->level == 0;
+    }
+
+    public function exportToArray(RouterInterface $router = null, &$files = null)
+    {
+        $tmpFilePath = sys_get_temp_dir(). DIRECTORY_SEPARATOR;
+
+        $pageArray = array(
+            'id'                    => $this->id,
+            'parent_id'             => ($this->parent !== null)?$this->parent->getId():null,
+            'is_root'               => $this->level == 0,
+            'visible'               => $this->visible,
+            'creation_date'         => $this->creationDate,
+            'title'                 => $this->title,
+            'is_section'            => $this->isSection,
+            'description'           => $this->description,
+            'type'                  => $this->type,
+            'is_homepage'           => $this->getIsHomepage(),
+            'url'                   => $this->url
+        );
+
+        if (isset($files) && $files !== null) {
+            if ($this->type == WebsitePageTypeEnum::RESOURCE_PAGE) {
+                $pageArray['type'] = WebsitePageTypeEnum::URL_PAGE;
+                $pageArray['url'] = $router->generate('claro_resource_open', array(
+                    'resourceType' => $this->resourceNodeType,
+                    'node' => $this->resourceNode->getId()
+                ), true);
+            } else if ($this->type == WebsitePageTypeEnum::BLANK_PAGE) {
+                $richTextUid = uniqid('ws_page_content_') . '.txt';
+                file_put_contents($tmpFilePath . $richTextUid, $this->richText);
+                $files[$richTextUid] = $tmpFilePath . $richTextUid;
+                $pageArray['rich_text_path'] = $richTextUid;
+            }
+        } else {
+            $pageArray['resource_node'] = $this->resourceNode;
+            $pageArray['resource_node_type'] = $this->resourceNodeType;
+            $pageArray['rich_text'] = $this->richText;
+        }
+
+        return $pageArray;
+    }
+
+    public function importFromArray(array $optionsArray, $rootPath = null)
+    {
+        $this->visible = $optionsArray['visible'];
+        $this->type = $optionsArray['type'];
+        $this->creationDate = $optionsArray['creation_date'];
+        $this->title = $optionsArray['title'];
+        $this->isSection = $optionsArray['is_section'];
+        $this->description = $optionsArray['description'];
+        $this->isHomepage = $optionsArray['is_homepage'];
+        $this->url = $optionsArray['url'];
+        if ($this->type == WebsitePageTypeEnum::BLANK_PAGE) {
+            if (isset($optionsArray['rich_text'])) {
+                $this->richText = $optionsArray['rich_text'];
+            } else if (isset($optionsArray['rich_text_path'])) {
+                $this->richText = file_get_contents(
+                    $rootPath . DIRECTORY_SEPARATOR . $optionsArray['rich_text_path']
+                );
+            }
+        } else if ($this->type == WebsitePageTypeEnum::RESOURCE_PAGE) {
+            if (isset($pageArray['resource_node']) && isset($pageArray['resource_node_type'])) {
+                $this->resourceNode = $pageArray['resource_node'];
+                $this->resourceNodeType = $pageArray['resource_node_type'];
+            }
+        }
     }
 }

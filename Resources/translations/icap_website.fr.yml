@@ -86,3 +86,4 @@ save_all_options: Sauvegarder toutes les options
 'display_banner': Affichage de la bannière
 'display_footer': Affichage du pied de page
 'change_bg_image_attention_text': Attention! Si vous changez cette option, l'image en cours sera supprimée.
+'view_website': Visualiser

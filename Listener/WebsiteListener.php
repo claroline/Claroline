@@ -76,37 +76,11 @@ class WebsiteListener extends ContainerAware{
     }
     public function onCopy(CopyResourceEvent $event)
     {
-        $em = $this->container->get('doctrine.orm.entity_manager');
-        /*$wiki = $event->getResource();
-        $oldRoot = $wiki->getRoot();
-        $user = $this->container->get('security.context')->getToken()->getUser();
-        $sectionRepository = $em->getRepository('IcapWikiBundle:Section');
-        $sections = $sectionRepository->children($oldRoot);
-        $newSectionsMap = array();
-        $newWiki = new Wiki();
-        $newWiki->setWikiCreator($user);
-        $em->persist($newWiki);
-        $em->flush($newWiki);
-        $newRoot = $newWiki->getRoot();
-        $newRoot->getActiveContribution()->setText($oldRoot->getActiveContribution()->getText());
-        $newSectionsMap[$oldRoot->getId()] = $newRoot;
-        foreach ($sections as $section) {
-            $newSection = new Section();
-            $newSection->setWiki($newWiki);
-            $newSection->setVisible($section->getVisible());
-            $newSectionParent = $newSectionsMap[$section->getParent()->getId()];
-            $newSection->setParent($newSectionParent);
-            $newSection->setAuthor($user);
-            $activeContribution = new Contribution();
-            $activeContribution->setTitle($section->getActiveContribution()->getTitle());
-            $activeContribution->setText($section->getActiveContribution()->getText());
-            $activeContribution->setSection($newSection);
-            $activeContribution->setContributor($user);
-            $newSection->setActiveContribution($activeContribution);
-            $newSectionsMap[$section->getId()] = $newSection;
-            $sectionRepository->persistAsLastChildOf($newSection, $newSectionParent);
-        }
-        $event->setCopy($newWiki);*/
+        $website = $event->getResource();
+
+        $newWebsite = $this->container->get('icap.website.manager')->copyWebsite($website);
+
+        $event->setCopy($newWebsite);
         $event->stopPropagation();
     }
 } 

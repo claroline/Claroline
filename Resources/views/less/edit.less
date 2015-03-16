@@ -59,7 +59,7 @@ div.admin-bar {
       transition:all 0.2s ease-in-out;
       background-color:#ffffff;
     }
-    &>li a {
+    &>li a:not(.btn) {
       margin-right: -1px !important;
       border-top: 0px !important;
       border-radius: 0;
@@ -88,7 +88,7 @@ div.admin-bar {
       .icon-bg{
         height:100%;
       }
-      a {
+      a:not(.btn) {
         color: #ffffff;
       }
     }
@@ -128,9 +128,10 @@ div.admin-bar {
       }
     }
 
-    .save-options-btn {
+    .save-options-btn, .view-website-btn {
       margin-top: 5px;
       margin-right: 10px;
+      border-radius: 4px;
     }
   }
   div.admin-tabs {

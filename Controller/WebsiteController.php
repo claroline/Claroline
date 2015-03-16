@@ -24,15 +24,24 @@ class WebsiteController extends Controller{
      * @Route(
      *      "/{websiteId}",
      *      requirements={"websiteId" = "\d+"},
+     *      defaults={"view" = false},
      *      name="icap_website_view",
+     *      options={"expose"=true}
+     * )
+     * @Route(
+     *      "/view/{websiteId}",
+     *      requirements={"websiteId" = "\d+"},
+     *      defaults={"view" = true},
+     *      name="icap_website_force_view",
      *      options={"expose"=true}
      * )
      * @ParamConverter("website", class="IcapWebsiteBundle:Website", options={"id" = "websiteId"})
      */
-    public function viewAction(Website $website)
+    public function viewAction(Website $website, $view)
     {
         $this->checkAccess("OPEN", $website);
-        $isAdmin = $this->isUserGranted("ADMINISTRATE", $website);
+        if (!$view) $isAdmin = $this->isUserGranted("ADMINISTRATE", $website);
+        else $isAdmin = false;
         $user = $this->getLoggedUser();
         $pageManager = $this->getWebsitePageManager();
 

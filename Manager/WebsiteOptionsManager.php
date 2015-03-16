@@ -17,6 +17,7 @@ use Icap\WebsiteBundle\Entity\Website;
 use Icap\WebsiteBundle\Entity\WebsiteOptions;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\Form\Form;
 
 /**
  * Class WebsiteOptionsManager
@@ -68,10 +69,10 @@ class WebsiteOptionsManager {
             $serializationContext->setSerializeNull(true);
 
             return json_decode($this->serializer->serialize(
-                $options,
-                'json',
-                $serializationContext
-            ));
+                    $options,
+                    'json',
+                    $serializationContext
+                ));
         } /*else {
             return $this->getErrorMessages($form);
         }*/
@@ -100,6 +101,7 @@ class WebsiteOptionsManager {
                     $options->$setImageValue($oldFileName);
                     throw new \InvalidArgumentException();
                 }
+
                 if (null !== $oldFileName && !filter_var($oldFileName, FILTER_VALIDATE_URL) && file_exists($options->getUploadRootDir() . DIRECTORY_SEPARATOR . $oldFileName)) {
                     unlink($options->getUploadRootDir() . DIRECTORY_SEPARATOR . $oldFileName);
                 }
@@ -131,7 +133,7 @@ class WebsiteOptionsManager {
         return array($imageStr => $options->getWebPath($imageStr));
     }
 
-    private function getErrorMessages(\Symfony\Component\Form\Form $form) {
+    private function getErrorMessages(Form $form) {
         $errors = array();
         foreach ($form->getErrors() as $key => $error) {
             $template = $error->getMessageTemplate();

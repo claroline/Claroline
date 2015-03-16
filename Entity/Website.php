@@ -20,7 +20,7 @@ use Doctrine\ORM\Event\LifecycleEventArgs;
 class Website extends AbstractResource{
 
     /**
-     * @ORM\OneToOne(targetEntity="Icap\WebsiteBundle\Entity\WebsitePage", cascade={"all"})
+     * @ORM\OneToOne(targetEntity="Icap\WebsiteBundle\Entity\WebsitePage")
      * @ORM\JoinColumn(name="root_id", referencedColumnName="id", onDelete="CASCADE")
      */
     protected $root;
@@ -34,8 +34,8 @@ class Website extends AbstractResource{
     protected $pages;
 
     /**
-     * @ORM\OneToOne(targetEntity="Icap\WebsiteBundle\Entity\WebsitePage", mappedBy="website", cascade={"all"})
-     * @ORM\JoinColumn(name="homepage_id", referencedColumnName="id")
+     * @ORM\OneToOne(targetEntity="Icap\WebsiteBundle\Entity\WebsitePage")
+     * @ORM\JoinColumn(name="homepage_id", referencedColumnName="id", onDelete="SET NULL")
      */
     protected $homePage;
 
@@ -49,7 +49,8 @@ class Website extends AbstractResource{
     }
 
     /**
-     * @param WebsiteOption $options
+     * @param WebsiteOptions $options
+     * @return $this
      */
     public function setOptions($options)
     {
@@ -110,32 +111,30 @@ class Website extends AbstractResource{
      * @ORM\PostPersist
      */
     public function createOptionsAndRoot(LifecycleEventArgs $event){
-        if ($this->getRoot() == null) {
-            $em = $event->getEntityManager();
-            $rootPage = $this->getRoot();
-            $options = $this->getOptions();
-            if ($rootPage == null) {
-                $rootPage = new WebsitePage();
-                $rootPage->setWebsite($this);
-                $rootPage->setIsSection(true);
-                $rootPage->setTitle($this->getResourceNode()->getName());
-                $rootPage->setType(WebsitePageTypeEnum::ROOT_PAGE);
-                $this->setRoot($rootPage);
+        $em = $event->getEntityManager();
+        $rootPage = $this->getRoot();
+        $options = $this->getOptions();
+        if ($rootPage == null) {
+            $rootPage = new WebsitePage();
+            $rootPage->setWebsite($this);
+            $rootPage->setIsSection(true);
+            $rootPage->setTitle($this->getResourceNode()->getName());
+            $rootPage->setType(WebsitePageTypeEnum::ROOT_PAGE);
+            $this->setRoot($rootPage);
 
-                $em->getRepository('IcapWebsiteBundle:WebsitePage')->persistAsFirstChild($rootPage);
-            }
+            $em->getRepository('IcapWebsiteBundle:WebsitePage')->persistAsFirstChild($rootPage);
+        }
 
-            if ($options == null) {
-                $options = new WebsiteOptions();
-                $options->setWebsite($this);
-                $this->setOptions($options);
+        if ($options == null) {
+            $options = new WebsiteOptions();
+            $options->setWebsite($this);
+            $this->setOptions($options);
 
-                $em->persist($options);
-            }
+            $em->persist($options);
+        }
 
-            if ($rootPage != null || $options != null) {
-                $em->flush();
-            }
+        if ($rootPage != null || $options != null) {
+            $em->flush();
         }
     }
 }
