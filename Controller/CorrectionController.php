@@ -700,6 +700,52 @@ echo "state1 : " . $state;die();
             ->getDoctrine()
             ->getRepository('InnovaCollecticielBundle:Correction')
             ->getCorrectionAndDropAndUserAndDocuments($dropzone, $correctionId);
+
+        echo "dropzone = " . $dropzone->getId();
+        echo "correction = " . $correctionId;
+
+        $countCorrection = count($correction);
+        echo "Count = " . $countCorrection . " - ";
+
+        foreach ($correction->getDrop()->getDocuments() as $document) {
+            $documentId = $document->getId();
+            echo "dans boucle " . $documentId . "<br />";
+
+            // Ajout pour avoir les commentaires et qui les a lu.
+            // Lire les commentaires et les passer à la vue
+            $comments = $this
+                    ->getDoctrine()
+                    ->getRepository('InnovaCollecticielBundle:Comment')->findBy(array('document' => $documentId));
+
+            foreach ($comments as $comment) {
+                $commentId = $comment->getId();
+                 echo "Comment = " . $commentId . " - " . $correction->getUser()->getId();
+                $comments_read = $this
+                        ->getDoctrine()
+                        ->getRepository('InnovaCollecticielBundle:CommentRead')
+                        ->findBy(
+                            array(
+                                'comment' =>$commentId,
+                                'user' =>$correction->getUser()->getId()
+                                )
+                            );
+
+                foreach ($comments_read as $comment_read) {
+                    $commentreadId = $comment_read->getId();
+                    echo "CommentRead = " . $commentreadId . " ";
+                }
+            }
+            // Fin ajout.
+
+
+
+
+        }
+
+
+        var_dump($correction->getDrop());
+
+die();
         $userId = $this->get('security.context')->getToken()->getUser()->getId();
         if ($state == 'preview') {
             if ($correction->getDrop()->getUser()->getId() != $userId) {
@@ -835,8 +881,8 @@ echo "state1 : " . $state;die();
         echo " correctionId = " . $correction->getUser()->getId() . " / " . $correction->getDrop()->getId() . " / " . $dropzone->getId();
         echo " correctionUserName = " . $correction->getUser()->getUserName();
 //        echo " correction = " . $correction->getDocument()->getUrl();
-//        var_dump($correction);
 
+/*
         $documents = $em
             ->getRepository('InnovaCollecticielBundle:Document')
             ->findByDrop($typo);
@@ -844,18 +890,12 @@ echo "state1 : " . $state;die();
             $oldData[$grade->getCriterion()->getId()] = ($grade->getValue() >= $dropzone->getTotalCriteriaColumn())
                 ? ($dropzone->getTotalCriteriaColumn() - 1) : $grade->getValue();
         }
-
-
-        foreach ($correction->getDrop()->getDocuments() as $documents) {
-            echo "dans boucle";
-        }
+*/
 
 
 //        echo " correction = " . $correction[0]->lastOpenDate;
         die();
 
-        // Ajout pour avoir les commentaires et qui les a lu.
-        // Fin ajout.
 
         if ($state == 'show' || $state == 'edit') {
             //Test passage d'une donnée
@@ -872,6 +912,8 @@ echo "state1 : " . $state;die();
                     'admin' => true,
                     'edit' => $edit,
                     'state' => $state,
+                    'comments' => $comments,
+                    'comments_read' => $comments_read,
                     'test' => $test,
                 )
             );
