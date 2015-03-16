@@ -22,5 +22,4 @@ parameters:
     innova_path.form.handler.path_template.class: Innova\PathBundle\Form\Handler\PathTemplateHandler
 
     # Listeners
-    innova_path.listener.path_tool.class:         Innova\PathBundle\EventListener\ToolListener
     innova_path.listener.path.class:              Innova\PathBundle\EventListener\Resource\PathListener

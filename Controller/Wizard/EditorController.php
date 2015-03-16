@@ -10,8 +10,6 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Innova\PathBundle\Entity\Path\Path;
 use Doctrine\Common\Persistence\ObjectManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
@@ -24,7 +22,6 @@ use Claroline\CoreBundle\Manager\ResourceManager;
  *      name    = "innova_path_editor",
  *      service = "innova_path.controller.path_editor"
  * )
- * @ParamConverter("workspace", class="ClarolineCoreBundle:Workspace\Workspace", options={"mapping": {"workspaceId": "id"}})
  */
 class EditorController
 {
@@ -55,10 +52,10 @@ class EditorController
 
     /**
      * Class constructor
-     * @param \Doctrine\Common\Persistence\ObjectManager                 $objectManager
-     * @param \Symfony\Component\Routing\RouterInterface                 $router
-     * @param \Innova\PathBundle\Manager\PathManager                     $pathManager
-     * @param \Claroline\CoreBundle\Manager\ResourceManager              $resourceManager
+     * @param \Doctrine\Common\Persistence\ObjectManager    $objectManager
+     * @param \Symfony\Component\Routing\RouterInterface    $router
+     * @param \Innova\PathBundle\Manager\PathManager        $pathManager
+     * @param \Claroline\CoreBundle\Manager\ResourceManager $resourceManager
      */
     public function __construct(
         ObjectManager        $objectManager,
@@ -75,79 +72,20 @@ class EditorController
     /**
      * Display Path Editor
      * @Route(
-     *      "/editor",
+     *      "/edit/{id}",
      *      name    = "innova_path_editor_wizard",
      *      options = {"expose" = true}
      * )
      * @Method("GET")
      * @Template("InnovaPathBundle:Wizard:editor.html.twig")
      */
-    public function displayAction(Workspace $workspace, Path $path = null)
+    public function displayAction(Path $path)
     {
+        $workspace = $path->getWorkspace();
+
         // Check User credentials
-
-        if (empty($path)) {
-            $path = new Path();
-        }
-
-        // Get workspace root directory
-        $wsDirectory = $this->resourceManager->getWorkspaceRoot($workspace);
-        $resourceTypes = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findAll();
-        $resourceIcons = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceIcon')->findByIsShortcut(false);
-
-        return array (
-            '_resource'     => $path,
-            'workspace'     => $workspace,
-            'wsDirectoryId' => $wsDirectory->getId(),
-            'resourceTypes' => $resourceTypes,
-            'resourceIcons' => $resourceIcons,
-        );
-    }
-
-    /**
-     * Create a new path
-     * @Route(
-     *      "/new",
-     *      name    = "innova_path_editor_new",
-     *      options = {"expose" = true}
-     * )
-     * @Method({"GET", "POST"})
-     * @Template("InnovaPathBundle:Editor:main.html.twig")
-     */
-    public function newAction(Workspace $workspace)
-    {
-        $path = Path::initialize();
-        $this->pathManager->checkAccess('CREATE', $path, $workspace);
-
-        return $this->renderEditor($workspace, $path);
-    }
-
-    /**
-     * Edit an existing path
-     * @Route(
-     *      "/edit/{id}",
-     *      name         = "innova_path_editor_edit",
-     *      requirements = {"id" = "\d+"},
-     *      options      = {"expose" = true}
-     * )
-     * @Method({"GET", "PUT"})
-     * @Template("InnovaPathBundle:Editor:main.html.twig")
-     */
-    public function editAction(Workspace $workspace, Path $path)
-    {
         $this->pathManager->checkAccess('EDIT', $path);
 
-        return $this->renderEditor($workspace, $path);
-    }
-
-    /**
-     * Render Editor UI
-     * @param  \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
-     * @param  \Innova\PathBundle\Entity\Path\Path              $path
-     * @return array
-     */
-    protected function renderEditor(Workspace $workspace, Path $path)
-    {
         // Get workspace root directory
         $wsDirectory = $this->resourceManager->getWorkspaceRoot($workspace);
         $resourceTypes = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findAll();
@@ -160,6 +98,11 @@ class EditorController
             'resourceTypes' => $resourceTypes,
             'resourceIcons' => $resourceIcons,
         );
+    }
+
+    public function publishAndPreviewAction(Path $path)
+    {
+
     }
 
     /**

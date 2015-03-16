@@ -10,6 +10,7 @@ use Claroline\CoreBundle\Event\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\CreateFormResourceEvent;
 use Claroline\CoreBundle\Event\CreateResourceEvent;
 use Claroline\CoreBundle\Event\CopyResourceEvent;
+use Claroline\CoreBundle\Event\CustomActionResourceEvent;
 
 use Innova\PathBundle\Entity\Path\Path;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
@@ -21,11 +22,11 @@ use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 class PathListener extends ContainerAware
 {
     /**
-     * Fired when a new ResourceNode of type Path is opened
+     * Fired when a ResourceNode of type Path is opened
      * @param  \Claroline\CoreBundle\Event\OpenResourceEvent $event
      * @throws \Exception
      */
-    public function onPathOpen(OpenResourceEvent $event)
+    public function onOpen(OpenResourceEvent $event)
     {
         $path = $event->getResource();
         if ($path->isPublished()) {
@@ -33,24 +34,13 @@ class PathListener extends ContainerAware
                 'innova_path_player_index',
                 array (
                     'workspaceId' => $path->getWorkspace()->getId(),
-                    'pathId' => $path->getId(),
-                    'stepId' => $path->getRootStep()->getId()
+                    'pathId'      => $path->getId(),
+                    'stepId'      => $path->getRootStep()->getId()
                 )
             );
         }
         else {
-            $route = $this->container->get('router')->generate(
-                'claro_workspace_open_tool',
-                array(
-                    'workspaceId' => $path->getWorkspace()->getId(),
-                    'toolName' => 'innova_path'
-                )
-            );
-
-            $this->container->get('session')->getFlashBag()->add(
-                'warning',
-                $this->container->get('translator')->trans("path_open_not_published_error", array(), "innova_tools")
-            );
+            // TODO : if path not published redirect to editor
         }
         
         $event->setResponse(new RedirectResponse($route));
@@ -58,10 +48,31 @@ class PathListener extends ContainerAware
     }
 
     /**
+     * Fired when the form to create a new ResourceNode is displayed
+     * @param \Claroline\CoreBundle\Event\CreateFormResourceEvent $event
+     */
+    public function onCreateForm(CreateFormResourceEvent $event)
+    {
+        // Create form
+        $form = $this->container->get('form.factory')->create('innova_path', new Path());
+
+        $content = $this->container->get('templating')->render(
+            'ClarolineCoreBundle:Resource:createForm.html.twig',
+            array(
+                'form' => $form->createView(),
+                'resourceType' => 'innova_path'
+            )
+        );
+
+        $event->setResponseContent($content);
+        $event->stopPropagation();
+    }
+
+    /**
      * Fired when a new ResourceNode of type Path is opened
      * @param \Claroline\CoreBundle\Event\CreateResourceEvent $event
      */
-    public function onPathCreate(CreateResourceEvent $event)
+    public function onCreate(CreateResourceEvent $event)
     {
         // Create form
         $form = $this->container->get('form.factory')->create('innova_path', new Path());
@@ -93,24 +104,18 @@ class PathListener extends ContainerAware
         $event->stopPropagation();
     }
 
-    /**
-     * Fired when the form to create a new ResourceNode is displayed
-     * @param \Claroline\CoreBundle\Event\CreateFormResourceEvent $event
-     */
-    public function onPathCreateForm(CreateFormResourceEvent $event)
+    public function onAdministrate(CustomActionResourceEvent $event)
     {
-        // Create form
-        $form = $this->container->get('form.factory')->create('innova_path', new Path());
-        
-        $content = $this->container->get('templating')->render(
-            'ClarolineCoreBundle:Resource:createForm.html.twig',
-            array(
-                'form' => $form->createView(),
-                'resourceType' => 'innova_path'
+        $path = $event->getResource();
+
+        $route = $this->container->get('router')->generate(
+            'innova_path_editor_wizard',
+            array (
+                'id' => $path->getId(),
             )
         );
 
-        $event->setResponseContent($content);
+        $event->setResponse(new RedirectResponse($route));
         $event->stopPropagation();
     }
 
@@ -118,7 +123,7 @@ class PathListener extends ContainerAware
      * Fired when a ResourceNode of type Path is deleted
      * @param \Claroline\CoreBundle\Event\DeleteResourceEvent $event
      */
-    public function onPathDelete(DeleteResourceEvent $event)
+    public function onDelete(DeleteResourceEvent $event)
     {
 
         $event->stopPropagation();
@@ -129,7 +134,7 @@ class PathListener extends ContainerAware
      * @param \Claroline\CoreBundle\Event\CopyResourceEvent $event
      * @throws \Exception
      */
-    public function onPathCopy(CopyResourceEvent $event)
+    public function onCopy(CopyResourceEvent $event)
     {
         // Get Path to duplicate
         $pathToCopy = $file = $event->getResource();
@@ -175,6 +180,8 @@ class PathListener extends ContainerAware
 
     private function copyResource($resource, ResourceNode $newParent, array $processedNodes = array ())
     {
+        // TODO : move into a manager
+
         // Get current User
         $user = $this->container->get('security.context')->getToken()->getUser();
 

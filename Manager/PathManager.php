@@ -92,18 +92,10 @@ class PathManager
     }
 
     /**
-     * Get path resource type entity
-     * @return \Claroline\CoreBundle\Entity\Resource\ResourceType
-     */
-    public function getResourceType()
-    {
-        return $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneByName('innova_path');
-    }
-
-    /**
      * Get a workspace from id
      * @param  integer $workspaceId
      * @return \Claroline\CoreBundle\Entity\Workspace\Workspace
+     * @deprecated used in PathHandler when creating a new path. But now the only to create a new path is the claroline way. S
      */
     public function getWorkspace($workspaceId)
     {
@@ -180,8 +172,9 @@ class PathManager
         $this->om->flush();
 
         // Create a new resource node
-        $parent = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findWorkspaceRoot($workspace);
-        $path = $this->resourceManager->create($path, $this->getResourceType(), $this->security->getToken()->getUser(), $workspace, $parent, null);
+        $parent =       $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findWorkspaceRoot($workspace);
+        $resourceType = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneByName('innova_path');
+        $path = $this->resourceManager->create($path, $resourceType, $this->security->getToken()->getUser(), $workspace, $parent, null);
 
         return $path;
     }
