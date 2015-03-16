@@ -4,7 +4,7 @@
     <td>
         <a href="#" class="view-scale">{{ name }}</a>
     </td>
-    <td class="icon-cell">
+    <td class="small-cell">
         {% if abilityCount > 0 %}
             {% set tooltip = 'tooltip.uneditable_scale' ~ (abilityCount > 1 ? '_plural': '') %}
             <span class="fa fa-pencil disabled"
@@ -22,7 +22,7 @@
             </a>
         {% endif %}
     </td>
-    <td class="icon-cell">
+    <td class="small-cell">
         {% if frameworkCount > 0 %}
             {% set tooltip = 'tooltip.undeletable_scale' ~ (frameworkCount > 1 ? '_plural' : '') %}
             <span class="fa fa-remove disabled"

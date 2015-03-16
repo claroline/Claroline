@@ -4,20 +4,17 @@ namespace HeVinci\CompetencyBundle\Controller;
 
 use Claroline\CoreBundle\Entity\Resource\Activity;
 use HeVinci\CompetencyBundle\Entity\Ability;
-use HeVinci\CompetencyBundle\Entity\Competency;
 use HeVinci\CompetencyBundle\Util\UnitTestCase;
 
 class ActivityControllerTest extends UnitTestCase
 {
-    private $competencyManager;
     private $activityManager;
     private $controller;
 
     protected function setUp()
     {
-        $this->competencyManager = $this->mock('HeVinci\CompetencyBundle\Manager\CompetencyManager');
         $this->activityManager = $this->mock('HeVinci\CompetencyBundle\Manager\ActivityManager');
-        $this->controller = new ActivityController($this->competencyManager, $this->activityManager);
+        $this->controller = new ActivityController($this->activityManager);
     }
 
     public function testCompetenciesAction()
@@ -30,27 +27,6 @@ class ActivityControllerTest extends UnitTestCase
         $this->assertEquals(
             ['_resource' => $activity, 'competencies' => 'COMPETENCIES'],
             $this->controller->competenciesAction($activity)
-        );
-    }
-
-    public function testFrameworksAction()
-    {
-        $this->competencyManager->expects($this->once())
-            ->method('listFrameworks')
-            ->willReturn('FRAMEWORKS');
-        $this->assertEquals(['frameworks' => 'FRAMEWORKS'], $this->controller->frameworksAction());
-    }
-
-    public function testFrameworkCompetenciesAction()
-    {
-        $framework = new Competency();
-        $this->competencyManager->expects($this->once())
-            ->method('loadFramework')
-            ->with($framework)
-            ->willReturn('FRAMEWORK');
-        $this->assertEquals(
-            ['framework' => 'FRAMEWORK'],
-            $this->controller->frameworkCompetenciesAction($framework)
         );
     }
 

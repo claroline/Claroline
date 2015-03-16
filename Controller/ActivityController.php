@@ -6,7 +6,6 @@ use Claroline\CoreBundle\Entity\Resource\Activity;
 use HeVinci\CompetencyBundle\Entity\Ability;
 use HeVinci\CompetencyBundle\Entity\Competency;
 use HeVinci\CompetencyBundle\Manager\ActivityManager;
-use HeVinci\CompetencyBundle\Manager\CompetencyManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use JMS\SecurityExtraBundle\Annotation as SEC;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
@@ -18,24 +17,17 @@ use Symfony\Component\HttpFoundation\JsonResponse;
  */
 class ActivityController
 {
-    private $competencyManager;
     private $activityManager;
 
     /**
      * @DI\InjectParams({
-     *     "competencyManager"  = @DI\Inject("hevinci.competency.competency_manager"),
-     *     "activityManager"    = @DI\Inject("hevinci.competency.activity_manager")
+     *     "competencyManager"  = @DI\Inject("hevinci.competency.competency_manager")
      * })
      *
-     * @param CompetencyManager $competencyManager
      * @param ActivityManager   $activityManager
      */
-    public function __construct(
-        CompetencyManager $competencyManager,
-        ActivityManager $activityManager
-    )
+    public function __construct(ActivityManager $activityManager)
     {
-        $this->competencyManager = $competencyManager;
         $this->activityManager = $activityManager;
     }
 
@@ -55,33 +47,6 @@ class ActivityController
             '_resource' => $activity,
             'competencies' => $this->activityManager->loadLinkedCompetencies($activity)
         ];
-    }
-
-    /**
-     * Displays a list of competency frameworks to be selected.
-     *
-     * @EXT\Route("/activity/frameworks", name="hevinci_activity_frameworks")
-     * @EXT\Template
-     *
-     * @return array
-     */
-    public function frameworksAction()
-    {
-        return ['frameworks' => $this->competencyManager->listFrameworks()];
-    }
-
-    /**
-     * Displays a list of competencies to be selected.
-     *
-     * @EXT\Route("/activity/frameworks/{id}", name="hevinci_activity_framework_competencies")
-     * @EXT\Template
-     *
-     * @param $framework Competency
-     * @return array
-     */
-    public function frameworkCompetenciesAction(Competency $framework)
-    {
-        return ['framework' => $this->competencyManager->loadFramework($framework)];
     }
 
     /**

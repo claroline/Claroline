@@ -14,7 +14,7 @@
 
 {# renders a competency/ability path along with its level #}
 {% macro renderPath(path) %}
-    <td class="icon-cell">{{ path.level }}</td>
+    <td class="small-cell">{{ path.level }}</td>
     <td class="competency-path">
         {{ _self.renderSteps(path.steps, 0, path.steps|length) }}
     </td>
@@ -37,7 +37,7 @@
     </td>
     {{ util.renderPath(target.paths[0]) }}
     {% if isEditMode is defined and isEditMode %}
-        <td rowspan="{{ pathCount }}" class="icon-cell">
+        <td rowspan="{{ pathCount }}" class="small-cell">
             <a href="#" class="delete-association">
                 <i class="fa fa-remove"></i>
             </a>

@@ -4,15 +4,15 @@
     <td class="center">{{ levelName }}</td>
     <td>{{ name }}</td>
     <td class="center {{ activityCount < minActivityCount ? 'danger' : '' }}">
-        {{ activityCount }}
+        <a href="#">{{ activityCount }}</a>
     </td>
     <td class="center">{{ minActivityCount }}</td>
-    <td class="icon-cell">
+    <td class="small-cell">
         <a href="#" class="edit-ability">
             <i class="fa fa-pencil"></i>
         </a>
     </td>
-    <td class="icon-cell">
+    <td class="small-cell">
         <a href="#" class="delete-ability">
             <i class="fa fa-remove"></i>
         </a>
