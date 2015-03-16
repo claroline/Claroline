@@ -185,8 +185,6 @@ class WikiManager {
      */
     public function exportWiki(Workspace $workspace, array &$files, Wiki $object)
     {
-        $data = array();
-
         // Getting all sections and building array
         $rootSection = $object->getRoot();
         $sections = $this->sectionRepository->children($rootSection);

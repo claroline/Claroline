@@ -31,18 +31,15 @@ class WikiImporter extends Importer implements ConfigurationInterface{
      */
     private $wikiManager;
 
-    private $container;
 
     /**
      * @DI\InjectParams({
      *      "wikiManager"        = @DI\Inject("icap.wiki.manager"),
-     *      "container"          = @DI\Inject("service_container")
      * })
      */
-    public function __construct(WikiManager $wikiManager, $container)
+    public function __construct(WikiManager $wikiManager)
     {
         $this->wikiManager = $wikiManager;
-        $this->container = $container;
     }
 
     public function getConfigTreeBuilder()
@@ -111,7 +108,7 @@ class WikiImporter extends Importer implements ConfigurationInterface{
     public function import(array $data)
     {
         $rootPath = $this->getRootPath();
-        $loggedUser = $this->container->get("security.context")->getToken()->getUser();
+        $loggedUser = $this->getOwner();
 
         return $this->wikiManager->importWiki($data, $rootPath, $loggedUser);
     }
