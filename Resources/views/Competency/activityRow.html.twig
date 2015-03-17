@@ -1,0 +1,41 @@
+{% set level = level is defined ? level : 0 %}
+
+{%
+    set colorClass = isAbility and target.activityCount < target.minActivityCount ?
+        'danger' :
+        target.activityCount == 0 ? 'warning' : 'success'
+%}
+
+<tr data-id="{{ target.id }}" data-type="{{ isAbility ? 'ability' : 'competency' }}">
+    <td class="{{ isAbility ? 'ability' : 'competency' }}-name level-{{ level }}">
+        {{ target.name }}
+    </td>
+    <td class="small-cell {{ colorClass }}">
+        {% if target.activityCount > 0 %}
+            <a href="#" class="show-activities ">{{ target.activityCount }}</a>
+        {% else %}
+            {{ target.activityCount }}
+        {% endif %}
+    </td>
+    <td class="small-cell">
+        {{ isAbility ? target.minActivityCount : '-' }}
+    </td>
+</tr>
+
+{% set childCount = target.__children is defined ? target.__children|length : 0 %}
+{% set abilityCount = target.__abilities is defined ? target.__abilities|length : 0 %}
+
+{% if childCount > 0 or abilityCount > 0 %}
+    {% set children = childCount > 0 ? target.__children : target.__abilities %}
+    {% set isAbility = abilityCount > 0 %}
+    {% for child in children %}
+        {%
+            include 'HeVinciCompetencyBundle:Competency:activityRow.html.twig'
+            with {
+                target: child,
+                isAbility: isAbility,
+                level: level + 1
+            }
+        %}
+    {% endfor %}
+{% endif %}

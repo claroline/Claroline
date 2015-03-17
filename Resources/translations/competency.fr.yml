@@ -5,7 +5,7 @@ ability:
   edit: Modifier une capacité
   linked_activity_count: Activités liées
   min_activity_count: Nombre d'activités à réussir
-  required_activity_count: Nombre exigé
+  required_activity_count: Requis
 ability_: Capacité
 associated_competencies: Compétences associées
 collapse_all: Tout réduire

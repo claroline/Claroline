@@ -128,7 +128,7 @@ class ActivityController
     /**
      * Displays the activities linked to a competency.
      *
-     * @EXT\Route("/competencies/{id}", name="hevinci_activity_competencies")
+     * @EXT\Route("/competencies/{id}", name="hevinci_competency_activities")
      * @SEC\PreAuthorize("hasRole('ROLE_USER')")
      * @EXT\Template
      *
@@ -143,7 +143,7 @@ class ActivityController
     /**
      * Displays the activities linked to an ability.
      *
-     * @EXT\Route("/abilities/{id}", name="hevinci_activity_abilities")
+     * @EXT\Route("/abilities/{id}", name="hevinci_ability_activities")
      * @SEC\PreAuthorize("hasRole('ROLE_USER')")
      * @EXT\Template
      *

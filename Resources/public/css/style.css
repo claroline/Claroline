@@ -68,22 +68,74 @@ ul.framework i.empty {
     cursor: default;
 }
 
-ul.framework table.abilities {
+ul.framework table.abilities, table.framework-activities {
     margin: 0.5em auto;
     color: rgba(0,0,0,.70);
 }
 
-ul.framework table.abilities th, ul.framework table.abilities td {
-    padding: 2px;
+ul.framework table.abilities th,
+ul.framework table.abilities td,
+table.framework-activities > thead > tr > th,
+table.framework-activities > tbody > tr > td {
+    padding: 2px 4px;
     font-weight: normal;
+}
+
+table.framework-activities td.level-0 {
+    font-weight: bold;
+}
+
+table.framework-activities td.level-1 {
+    padding-left: 30px;
+}
+
+table.framework-activities td.level-2 {
+    padding-left: 60px;
+}
+
+table.framework-activities td.level-3 {
+    padding-left: 90px;
+}
+
+table.framework-activities td.level-4 {
+    padding-left: 120px;
+}
+
+table.framework-activities td.level-5 {
+    padding-left: 150px;
+}
+
+table.framework-activities td.level-6 {
+    padding-left: 180px;
+}
+
+table.framework-activities td.level-7 {
+    padding-left: 210px;
+}
+
+table.framework-activities td.level-8 {
+    padding-left: 240px;
+}
+
+table.framework-activities td.level-9 {
+    padding-left: 270px;
+}
+
+table.framework-activities td.level-10 {
+    padding-left: 300px;
+}
+
+table.framework-activities td.competency-name:not(.level-0):before,
+table.framework-activities td.ability-name:before {
+    content: "- ";
+}
+
+table.framework-activities td.ability-name {
+    font-style: italic;
 }
 
 td.competency-path ul {
     list-style: none;
     margin: 0;
     padding-left: 16px;
-}
-
-div.tab-content {
-    margin-top: 2em;
 }

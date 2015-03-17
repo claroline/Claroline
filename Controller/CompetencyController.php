@@ -110,6 +110,20 @@ class CompetencyController
     }
 
     /**
+     * Displays information about the activities linked to a given framework.
+     *
+     * @EXT\Route("/frameworks/{id}/activities", name="hevinci_framework_activities")
+     * @EXT\Template
+     *
+     * @param Competency $framework
+     * @return array
+     */
+    public function activitiesAction(Competency $framework)
+    {
+        return ['framework' => $this->manager->loadFramework($framework)];
+    }
+
+    /**
      * Displays the framework edition form.
      *
      * @EXT\Route("/frameworks/{id}/edit", name="hevinci_edit_framework_form")

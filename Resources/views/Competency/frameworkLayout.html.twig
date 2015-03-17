@@ -1,0 +1,41 @@
+{% extends 'HeVinciCompetencyBundle:Competency:layout.html.twig' %}
+
+{# Note: children templates are fed by the hierarchical array built by CompetencyManager#loadFramework #}
+
+{% block title %}
+    {{ parent() ~ ' - ' ~ framework.name }}
+{% endblock %}
+
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs(competencyBreadcrumbs|merge([{
+            name: framework.name
+        }]))
+    }}
+{% endblock %}
+
+{% block panelTitle %}
+    {{ framework.name }}
+{% endblock %}
+
+{% set activeTab = activeTab is defined ? activeTab : 'framework' %}
+
+{% block panelBody %}
+    <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation"{% if activeTab == 'framework' %} class="active"{% endif %}>
+            <a href="{{ activeTab == 'framework' ? '#' : path('hevinci_framework', { id: framework.id }) }}" aria-controls="framework" role="tab">
+                {{ 'framework_'|trans({}, 'competency') }}
+            </a>
+        </li>
+        <li role="presentation"{% if activeTab == 'activities' %} class="active"{% endif %}>
+            <a href="{{ activeTab == 'activities' ? '#' : path('hevinci_framework_activities', { id: framework.id }) }}" aria-controls="activities" role="tab">
+                {{ 'activities'|trans({}, 'platform') }}
+            </a>
+        </li>
+    </ul>
+    <div class="tab-content">
+        <div role="tabpanel" class="tab-pane active">
+            {% block tabContent %}{% endblock %}
+        </div>
+    </div>
+{% endblock %}

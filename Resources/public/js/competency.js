@@ -243,21 +243,17 @@
         );
     });
 
-    // activities linked to competencies display
-    $(document).on('click', 'ul.framework .dropdown-menu a.show-activities ', function (event) {
+    // activities linked to ability/competency display
+    $(document).on('click', 'table.framework-activities a.show-activities ', function (event) {
         event.preventDefault();
+        var target = this.parentNode.parentNode;
         Claroline.Modal.fromUrl(
-            Routing.generate('hevinci_activity_competencies',
-            { id: getCompetencyNode(this).dataset.id })
-        );
-    });
-
-    // activities linked to abilities display
-    $(document).on('click', 'table.abilities a.show-activities ', function (event) {
-        event.preventDefault();
-        Claroline.Modal.fromUrl(
-            Routing.generate('hevinci_activity_abilities',
-            { id: this.parentNode.parentNode.dataset.id })
+            Routing.generate(
+                target.dataset.type === 'ability' ?
+                    'hevinci_ability_activities' :
+                    'hevinci_competency_activities',
+                { id: target.dataset.id }
+            )
         );
     });
 

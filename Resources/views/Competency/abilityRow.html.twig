@@ -3,14 +3,6 @@
 <tr data-id="{{ id }}" data-level="{{ levelValue }}">
     <td class="center">{{ levelName }}</td>
     <td>{{ name }}</td>
-    <td class="center {{ activityCount < minActivityCount ? 'danger' : '' }}">
-        {% if activityCount > 0 %}
-            <a href="#" class="show-activities ">{{ activityCount }}</a>
-        {% else %}
-            {{ activityCount }}
-        {% endif %}
-    </td>
-    <td class="center">{{ minActivityCount }}</td>
     <td class="small-cell">
         <a href="#" class="edit-ability">
             <i class="fa fa-pencil"></i>

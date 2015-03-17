@@ -1,24 +1,8 @@
-{% extends 'HeVinciCompetencyBundle:Competency:layout.html.twig' %}
+{% extends 'HeVinciCompetencyBundle:Competency:frameworkLayout.html.twig' %}
 
-{# Note: this template is fed by the hierarchical array built by CompetencyManager#loadFramework #}
+{% set activeTab = 'framework' %}
 
-{% block title %}
-    {{ parent() ~ ' - ' ~ framework.name }}
-{% endblock %}
-
-{% block breadcrumb %}
-    {{
-        macros.breadcrumbs(competencyBreadcrumbs|merge([{
-            name: framework.name
-        }]))
-    }}
-{% endblock %}
-
-{% block panelTitle %}
-    {{ framework.name }}
-{% endblock %}
-
-{% block panelBody %}
+{% block tabContent %}
     <ul class="framework">
         {%
             include 'HeVinciCompetencyBundle:Competency:competencyItem.html.twig'

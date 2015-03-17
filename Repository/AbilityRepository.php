@@ -22,8 +22,8 @@ class AbilityRepository extends EntityRepository
             ->select(
                 'a.id',
                 'a.name',
+                'a.activityCount',
                 'a.minActivityCount',
-                'COUNT(act) as activityCount',
                 'c.id AS competencyId',
                 'l.name AS levelName',
                 'l.value AS levelValue'

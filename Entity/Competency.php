@@ -52,6 +52,14 @@ class Competency implements \JsonSerializable
     private $activities;
 
     /**
+     * @ORM\Column(type="integer")
+     *
+     * Note: this field denormalizes $activities data
+     *       in order to decrease query complexity.
+     */
+    private $activityCount = 0;
+
+    /**
      * @Gedmo\TreeLeft
      * @ORM\Column(name="lft", type="integer")
      */
@@ -211,6 +219,7 @@ class Competency implements \JsonSerializable
     {
         if (!$this->isLinkedToActivity($activity)) {
             $this->activities->add($activity);
+            $this->activityCount++;
         }
     }
 
@@ -221,7 +230,10 @@ class Competency implements \JsonSerializable
      */
     public function removeActivity(Activity $activity)
     {
-        $this->activities->removeElement($activity);
+        if ($this->isLinkedToActivity($activity)) {
+            $this->activities->removeElement($activity);
+            $this->activityCount--;
+        }
     }
 
     /**
@@ -240,7 +252,7 @@ class Competency implements \JsonSerializable
             'description' => $this->description,
             'scale' => $this->scale ? $this->scale->getName() : null,
             'level' => $this->lvl,
-            'activityCount' => $this->activities->count()
+            'activityCount' => $this->activityCount
         ];
     }
 }

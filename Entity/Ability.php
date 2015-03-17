@@ -48,6 +48,14 @@ class Ability implements \JsonSerializable
     private $activities;
 
     /**
+     * @ORM\Column(type="integer")
+     *
+     * Note: this field denormalizes $activities data
+     *       in order to decrease query complexity.
+     */
+    private $activityCount = 0;
+
+    /**
      * @var Level
      *
      * NOTE: this attribute is not mapped; its only purpose is to temporarily
@@ -145,6 +153,7 @@ class Ability implements \JsonSerializable
     {
         if (!$this->isLinkedToActivity($activity)) {
             $this->activities->add($activity);
+            $this->activityCount++;
         }
     }
 
@@ -155,7 +164,10 @@ class Ability implements \JsonSerializable
      */
     public function removeActivity(Activity $activity)
     {
-        $this->activities->removeElement($activity);
+        if (!$this->isLinkedToActivity($activity)) {
+            $this->activities->removeElement($activity);
+            $this->activityCount--;
+        }
     }
 
     /**
@@ -171,7 +183,7 @@ class Ability implements \JsonSerializable
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'activityCount' => $this->activities->count(),
+            'activityCount' => $this->activityCount,
             'minActivityCount' => $this->minActivityCount,
             'levelName' => $this->level ? $this->level->getName() : null,
             'levelValue' => $this->level ? $this->level->getValue() : null
