@@ -26,13 +26,13 @@
     ],
     "require" : {
         "claroline/core-bundle" : "~4.0",
-        "innova/angular-js-bundle" : "~2.0",
-        "innova/angular-ui-bootstrap-bundle" : "~1.0",
-        "innova/angular-ui-tinymce-bundle" : "~1.0",
-        "innova/angular-ui-pageslide-bundle" : "~1.0",
-        "innova/angular-ui-tree-bundle" : "~1.0",
-        "innova/angular-ui-translation-bundle" : "~3.0.1",
-        "innova/angular-ui-resource-picker-bundle" : "~3.0"
+        "innova/angular-js-bundle" : "^2.0",
+        "innova/angular-ui-bootstrap-bundle" : "^1.0",
+        "innova/angular-ui-tinymce-bundle" : "^1.0",
+        "innova/angular-ui-pageslide-bundle" : "^1.0",
+        "innova/angular-ui-tree-bundle" : "^1.0",
+        "innova/angular-ui-translation-bundle" : "^3.0.1",
+        "innova/angular-ui-resource-picker-bundle" : "^3.0"
     },
     "autoload" : {
         "psr-0" : {
