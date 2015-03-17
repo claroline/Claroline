@@ -9,8 +9,7 @@ use Claroline\InstallationBundle\Additional\AdditionalInstaller as BaseInstaller
  */
 class AdditionalInstaller extends BaseInstaller
 {
-    
-    private $logger;
+    protected $logger;
 
     public function __construct()
     {
