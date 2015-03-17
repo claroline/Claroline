@@ -47,6 +47,11 @@ Project setup
 
 ### Development installation
 
+#### Quick install
+- curl -sS https://raw.githubusercontent.com/claroline/repository-scripts/master/install.sh | sh
+
+#### Full (and complicated) install
+
 - git clone https://github.com/claroline/Claroline.git
 - Create an *app/config/parameters.yml* file based on
   *app/config/parameters.yml.dist*
