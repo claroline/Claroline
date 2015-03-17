@@ -130,23 +130,28 @@
             {# Ajout du bloc des commentaires: InnovaERV #}
             <div class="row">
                 <div class="text-muted col-md-4">{{ 'Comments list'|trans({}, 'innova_collecticiel') }}</div>
-                <div class="col-md-8">{% if correction.totalGrade != null %}{{ correction.totalGrade|number_format(2) }}{% else %}--{% endif %}
-                    /20
-                </div>
             </div>
 
-            {% block dropzone_correct_comment %}
-            <h3>
-                {{ 'Comments list'|trans({}, 'innova_collecticiel') }}
-            </h3>
+            {# Bloc "Liste des commentaires" #}
+            {% block dropzone_list_comment %}
+                <h3>
+                    {{ 'Comments list'|trans({}, 'innova_collecticiel') }}
+                </h3>
 
-            {% for comments in comments %}
-                {# Bloc Apprenants #}
-                <div class="row">
-                    <div class="text-muted col-md-4">{{ comments.commentText  }}</div>
+                {# Partie Affichage des commentaires #}
+                {% for comments in comments %}
+                    <div class="row">
+                        <div class="text-muted col-md-4">{{ comments.commentText  }}</div>
+                    </div>
+                {% endfor %}
+
+                {# Partie "Ajout d'un commentaire" #}
+                <h3>
+                    {{ 'Comments add'|trans({}, 'innova_collecticiel') }}
+                </h3>
+                <div class="form-group">
+                {% include 'InnovaCollecticielBundle:Comment:addComment.html.twig' %}
                 </div>
-            {% endfor %}
-
 
             {% endblock %}
 
