@@ -20,7 +20,7 @@ class CorrectionCommentType extends AbstractType
 
     public function getName()
     {
-        return 'innova_collecticiel_correct_comment_form';
+        return 'innova_collecticiel_add_comment_form';
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

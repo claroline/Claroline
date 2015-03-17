@@ -1981,7 +1981,6 @@ echo "ici : ";die();
             }
         }
 
-echo "state3 : " . $state;die();
         $view = 'InnovaCollecticielBundle:Correction:correctCriteria.html.twig';
 
         if ($state == 'show' || $state == 'edit') {
@@ -2017,5 +2016,55 @@ echo "state3 : " . $state;die();
         }
 
     }
+
+
+
+
+
+    /**
+     * @Route(
+     *      "/{resourceId}/drops/detail/{dropId}/add/comments",
+     *      name="innova_collecticiel_add_comment",
+     *      requirements={"resourceId" = "\d+", "dropId" = "\d+"}
+     * )
+     * @ParamConverter("document", class="InnovaCollecticielBundle:Document", options={"id" = "documentId"})
+     * @ParamConverter("user", options={
+     *      "authenticatedUser" = true,
+     *      "messageEnabled" = true,
+     *      "messageTranslationKey" = "Correct an evaluation requires authentication. Please login.",
+     *      "messageTranslationDomain" = "innova_collecticiel"
+     * })
+     * @Template()
+     */
+    public function AddCommentsInnovaAction($document, $user)
+    {
+
+        echo "suis ici ajout d'un commentaire";die();
+        $this->get('innova.manager.dropzone_voter')->isAllowToOpen($dropzone);
+        $this->get('innova.manager.dropzone_voter')->isAllowToEdit($dropzone);
+
+        $em = $this->getDoctrine()->getManager();
+        $comment = new Correction();
+        $comment->setDocument($document);
+        $comment->setUser($user);
+        $em->persist($comment);
+        $em->flush();
+
+//        $event = new LogCorrectionStartEvent($dropzone, $drop, $correction);
+//        $this->dispatch($event);
+
+        return $this->redirect(
+            $this->generateUrl(
+                'innova_collecticiel_drops_detail_comment',
+                array(
+                    'resourceId' => $dropzone->getId(),
+                    'state' => 'edit',
+                    'correctionId' => $correction->getId(),
+                )
+            )
+        );
+    }
+
+
 
 }

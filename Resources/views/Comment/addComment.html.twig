@@ -1,4 +1,17 @@
 {% block dropzone_add_comment %}
+
+    <form class="form-horizontal" role="form" method="POST" {{ form_enctype(form) }}>
+
+        {{ form_errors(form) }}
+
+        <div class="form-group">
+            <label for="comment-name">{{ 'Comments add'|trans({}, 'innova_collecticiel') }}</label>
+            <input id="comment-name" type="text" class="form-control" name="comment-name" required />
+        </div>
+
+        {{ form_rest(form) }}
+    </form>
+
 {% endblock %}
 
 {% block stylesheets %}
