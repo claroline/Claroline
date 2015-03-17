@@ -105,7 +105,6 @@ $("*[id$='_interaction_question_category']").change(function () {
  */
 function displayEditCategory(idCat,valueCat,locker)
 {    
-    alert(locker);
      for(var i = 0 ; i < categoryArray.length - 1 ; i++) {
         if (idCat == "") {
                 $('#editCategory').css({"display" : "none"});

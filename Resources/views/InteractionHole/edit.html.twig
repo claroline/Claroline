@@ -59,6 +59,9 @@
                     <a class="btn btn-default" href="{{ path('ujm_exercise_questions', {'id': exoID}) }}">{{ "cancel" | trans({}, "platform") }}</a>
                 {% endif %}
             </div>
+            {% if locker != "" %}        
+        <input type="hidden" id="locker" value="{{locker.value}}"> 
+    {% endif %}
         </form>
         <div id="prototypes" style="display:none"></div>
     </div>
@@ -74,6 +77,7 @@
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/interactionHole.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/hint.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/category_pop.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/allQuestionsType.js') }}"></script>
 
     {# add form choice #}
     <script type="text/javascript">

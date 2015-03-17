@@ -450,6 +450,16 @@ class QuestionController extends Controller
         $user     = $this->container->get('security.context')->getToken()->getUser();
         $catID    = -1;
 
+         //Get the lock category
+        $idUser=  $user->getId();
+        $Locker = $this->getDoctrine()->getManager()->getRepository('UJMExoBundle:Category')->getCategoryLocker($idUser);
+        if (empty($Locker)){
+            $catLocker="";
+        }
+        else{ 
+            $catLocker=$Locker[0]; 
+        }
+        
         if(count($share) > 0) {
             $shareAllowEdit = $share[0]->getAllowToModify();
         }
@@ -503,6 +513,7 @@ class QuestionController extends Controller
                     $variables['linkedCategory'] = $linkedCategory;
                     $variables['typeQCM'       ] = json_encode($typeQCM);
                     $variables['exoID']          = $exoID;
+                    $variables['locker']          = $catLocker;
 
                     if ($exoID != -1) {
                         $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($exoID);
@@ -540,6 +551,7 @@ class QuestionController extends Controller
                     $variables['linkedCategory'] = $linkedCategory;
                     $variables['position']       = $position;
                     $variables['exoID']          = $exoID;
+                    $variables['locker']          = $catLocker;
 
                     if ($exoID != -1) {
                         $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($exoID);
@@ -567,7 +579,8 @@ class QuestionController extends Controller
                         'edit_form'   => $editForm->createView(),
                         'nbResponses' => $nbResponses,
                         'linkedCategory' => $linkedCategory,
-                        'exoID' => $exoID
+                        'exoID' => $exoID,
+                        'locker' => $catLocker
                         )
                     );
 
@@ -598,6 +611,7 @@ class QuestionController extends Controller
                     $variables['linkedCategory'] = $linkedCategory;
                     $variables['typeOpen']       = json_encode($typeOpen);
                     $variables['exoID']          = $exoID;
+                    $variables['locker']          = $catLocker;
 
                     if ($exoID != -1) {
                         $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($exoID);
@@ -656,6 +670,7 @@ class QuestionController extends Controller
                     $variables['correspondence']  = json_encode($correspondence);
                     $variables['tableLabel']     = json_encode($tableLabel);
                     $variables['tableProposal']  = json_encode($tableProposal);
+                    $variables['locker']          = $catLocker;
 
                     if ($exoID != -1) {
                         $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($exoID);
