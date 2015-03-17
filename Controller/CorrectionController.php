@@ -439,7 +439,6 @@ class CorrectionController extends DropzoneBaseController
         $dropzoneManager = $this->get('innova.manager.dropzone_manager');
         $dropzoneProgress = $dropzoneManager->getDropzoneProgressByUser($dropzone, $user);
 
-echo "state1 : " . $state;die();
         $view = 'InnovaCollecticielBundle:Correction:correctCriteria.html.twig';
 
         return $this->render(
@@ -715,13 +714,18 @@ echo "state1 : " . $state;die();
         // Parcours des documents sélectionnés
         foreach ($correction->getDrop()->getDocuments() as $document) {
             $documentId = $document->getId();
-//            echo "dans boucle " . $documentId . "<br />";
 
             // Ajout pour avoir les commentaires et qui les a lu.
             // Lire les commentaires et les passer à la vue
             $comments = $this
                     ->getDoctrine()
-                    ->getRepository('InnovaCollecticielBundle:Comment')->findBy(array('document' => $documentId));
+                    ->getRepository('InnovaCollecticielBundle:Comment')
+                    ->findBy(
+                        array(
+                            'document' => $documentId,
+                            'user' =>$correction->getUser()->getId()
+                             )
+                        );
 
             // Parcours des commentaires des documents sélectionnés
             foreach ($comments as $comment) {
@@ -761,7 +765,6 @@ echo "state1 : " . $state;die();
                     $event = new LogCommentReadCreateEvent($dropzone, $dropzoneChangeSet, $comment_read_add);
 
                     $this->dispatch($event);
-                    echo "ici";
                 }
 
             }
@@ -919,7 +922,6 @@ echo "state1 : " . $state;die();
                     'edit' => $edit,
                     'state' => $state,
                     'comments' => $comments,
-                    'comments_read' => $comments_read,
                     'test' => $test,
                 )
             );

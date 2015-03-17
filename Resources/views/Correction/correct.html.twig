@@ -139,6 +139,15 @@
             <h3>
                 {{ 'Comments list'|trans({}, 'innova_collecticiel') }}
             </h3>
+
+            {% for comments in comments %}
+                {# Bloc Apprenants #}
+                <div class="row">
+                    <div class="text-muted col-md-4">{{ comments.commentText  }}</div>
+                </div>
+            {% endfor %}
+
+
             {% endblock %}
 
         {% else %}
