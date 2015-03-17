@@ -1,0 +1,64 @@
+{% extends 'ClarolineCoreBundle::Administration/layout.html.twig' %}
+
+{% set objectiveBreadcrumbs = [
+        {
+            icon: 'fa fa-cog',
+            name: 'administration'|trans({}, 'platform'),
+            href: path('claro_admin_index')
+        },
+        {
+            name: 'learning-objectives'|trans({}, 'tools'),
+            href: path('hevinci_frameworks')
+        }
+    ]
+%}
+
+{% set activeTab = activeTab is defined ? activeTab : 'objectives' %}
+
+{% block title %}
+    {% autoescape false %}
+        {{ parent() ~ ' - ' ~ 'learning-objectives'|trans({}, 'tools') }}
+    {% endautoescape %}
+{% endblock %}
+
+{% block breadcrumb %}
+    {{ macros.breadcrumbs(objectiveBreadcrumbs) }}
+{% endblock %}
+
+{% block section_content %}
+    <div class="panel-heading">
+        <div class="panel-title">{{ 'learning-objectives'|trans({}, 'tools') }}</div>
+    </div>
+    <div class="panel-body">
+        <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation"{% if activeTab == 'objectives' %} class="active"{% endif %}>
+                <a href="{{ activeTab == 'objectives' ? '#' : path('hevinci_objectives_index') }}">
+                    {{ 'objectives'|trans({}, 'competency') }}
+                </a>
+            </li>
+            <li role="presentation"{% if activeTab == 'users' %} class="active"{% endif %}>
+                <a href="{{ activeTab == 'users' ? '#' : path('hevinci_objectives_users') }}">
+                    {{ 'users'|trans({}, 'platform') }}
+                </a>
+            </li>
+            <li role="presentation"{% if activeTab == 'groups' %} class="active"{% endif %}>
+                <a href="{{ activeTab == 'groups' ? '#' : path('hevinci_objectives_groups') }}">
+                    {{ 'groups'|trans({}, 'platform') }}
+                </a>
+            </li>
+        </ul>
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active">
+                {% block tabContent %}{% endblock %}
+            </div>
+        </div>
+    </div>
+    <div class="panel-footer">
+        {% block tabFooter %}{% endblock %}
+    </div>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/hevincicompetency/css/style.css') }}"/>
+{% endblock %}

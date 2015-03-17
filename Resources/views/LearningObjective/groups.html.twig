@@ -1,0 +1,20 @@
+{% extends 'HeVinciCompetencyBundle:LearningObjective:layout.html.twig' %}
+
+{% set activeTab = 'groups' %}
+
+{% block title %}
+    {{ parent() ~ ' - ' ~ 'groups'|trans({}, 'platform') }}
+{% endblock %}
+
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs(objectiveBreadcrumbs|merge([{
+            name: 'groups'|trans({}, 'platform'),
+            href: path('hevinci_objectives_groups')
+        }]))
+    }}
+{% endblock %}
+
+{% block tabContent %}
+    GROUPS
+{% endblock %}

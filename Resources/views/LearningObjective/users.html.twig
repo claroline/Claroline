@@ -1,0 +1,20 @@
+{% extends 'HeVinciCompetencyBundle:LearningObjective:layout.html.twig' %}
+
+{% set activeTab = 'users' %}
+
+{% block title %}
+    {{ parent() ~ ' - ' ~ 'users'|trans({}, 'platform') }}
+{% endblock %}
+
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs(objectiveBreadcrumbs|merge([{
+            name: 'users'|trans({}, 'platform'),
+            href: path('hevinci_objectives_users')
+        }]))
+    }}
+{% endblock %}
+
+{% block tabContent %}
+    USERS
+{% endblock %}

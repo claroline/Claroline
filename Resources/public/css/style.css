@@ -83,3 +83,7 @@ td.competency-path ul {
     margin: 0;
     padding-left: 16px;
 }
+
+div.tab-content {
+    margin-top: 2em;
+}
