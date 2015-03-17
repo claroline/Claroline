@@ -26,6 +26,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Translation\TranslatorInterface;
+use Claroline\CoreBundle\Entity\Home\HomeTab;
 use Claroline\CoreBundle\Entity\Model\WorkspaceModel;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
@@ -718,6 +719,72 @@ class WorkspaceController extends Controller
     }
 
     /**
+     * @EXT\Route(
+     *     "/{workspace}/tab/{homeTabId}/valid/{valid}/display/workspace/widgets",
+     *     name="claro_workspace_display_widgets"
+     * )
+     * @EXT\Template("ClarolineCoreBundle:Widget:workspaceWidgets.html.twig")
+     *
+     * Displays visible widgets.
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function displayWorkspaceWidgetsAction(
+        Workspace $workspace,
+        $homeTabId,
+        $valid
+    )
+    {
+        $canEdit = $this->security->isGranted('parameters', $workspace);
+        $widgets = array();
+        $homeTab = $this->homeTabManager->getHomeTabByIdAndWorkspace($homeTabId, $workspace);
+        $isHomeTab = (intval($valid) === 1);
+
+        if ($canEdit) {
+            $widgetHomeTabConfigs = is_null($homeTab) ?
+                array() :
+                $this->homeTabManager->getWidgetConfigsByWorkspace(
+                    $homeTab,
+                    $workspace
+                );
+        } else {
+            $widgetHomeTabConfigs = is_null($homeTab) ?
+                array() :
+                $this->homeTabManager->getVisibleWidgetConfigsByTabIdAndWorkspace(
+                    $homeTabId,
+                    $workspace
+                );
+        }
+        $wdcs = $this->widgetManager->generateWidgetDisplayConfigsForWorkspace(
+            $workspace,
+            $widgetHomeTabConfigs
+        );
+
+        foreach ($widgetHomeTabConfigs as $widgetHomeTabConfig) {
+            $widgetInstance = $widgetHomeTabConfig->getWidgetInstance();
+
+            $event = $this->eventDispatcher->dispatch(
+                "widget_{$widgetInstance->getWidget()->getName()}",
+                'DisplayWidget',
+                array($widgetInstance)
+            );
+
+            $widget['config'] = $widgetHomeTabConfig;
+            $widget['content'] = $event->getContent();
+            $widgetInstanceId = $widgetHomeTabConfig->getWidgetInstance()->getId();
+            $widget['widgetDisplayConfig'] = $wdcs[$widgetInstanceId];
+            $widgets[] = $widget;
+        }
+
+        return array(
+            'widgetsDatas' => $widgets,
+            'homeTabId' => $homeTabId,
+            'canEdit' => $canEdit,
+            'isHomeTab' => $isHomeTab
+        );
+    }
+
+    /**
      * Routing is not needed.
      *
      * @EXT\ParamConverter(
@@ -1288,6 +1355,61 @@ class WorkspaceController extends Controller
         $pager = $this->workspaceManager->getDisplayableWorkspacesBySearchPager($search, $page);
 
         return array('workspaces' => $pager, 'search' => $search);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/{workspace}/open/tool/home/tab/{tabId}",
+     *     name="claro_display_workspace_home_tab",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\home:workspaceHomeTab.html.twig")
+     *
+     * Displays the workspace home tab.
+     *
+     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
+     * @param integer $tabId
+     *
+     * @return array
+     */
+    public function displayWorkspaceHomeTabAction(Workspace $workspace, $tabId)
+    {
+        $canEdit = $this->security->isGranted('parameters', $workspace);
+        $workspaceHomeTabConfigs = $canEdit ?
+            $this->homeTabManager->getWorkspaceHomeTabConfigsByWorkspace($workspace):
+            $this->homeTabManager->getVisibleWorkspaceHomeTabConfigsByWorkspace($workspace);
+        $homeTabId = intval($tabId);
+        $isHomeTab = false;
+        $firstElement = true;
+
+        if ($homeTabId !== -1) {
+
+            foreach ($workspaceHomeTabConfigs as $workspaceHomeTabConfig) {
+
+                if ($homeTabId === $workspaceHomeTabConfig->getHomeTab()->getId()) {
+                    $firstElement = false;
+                    $isHomeTab = true;
+                    break;
+                }
+            }
+        }
+
+        if ($firstElement) {
+            $firstHomeTabConfig = reset($workspaceHomeTabConfigs);
+
+            if ($firstHomeTabConfig) {
+                $homeTabId = $firstHomeTabConfig->getHomeTab()->getId();
+                $isHomeTab = true;
+            }
+        }
+
+        return array(
+            'workspace' => $workspace,
+            'workspaceHomeTabConfigs' => $workspaceHomeTabConfigs,
+            'tabId' => $homeTabId,
+            'canEdit' => $canEdit,
+            'isHomeTab' => $isHomeTab
+        );
     }
 
     /**

@@ -39,13 +39,9 @@
         e.preventDefault();
         var homeTabElement = $(this).parents('.hometab-element');
         var homeTabId = homeTabElement.data('hometab-id');
-        var order = homeTabElement.data('hometab-order');
 
         window.Claroline.Modal.confirmRequest(
-            Routing.generate(
-                'claro_desktop_home_tab_delete',
-                {'homeTabId': homeTabId, 'tabOrder': order}
-            ),
+            Routing.generate('claro_desktop_home_tab_delete', {'homeTab': homeTabId}),
             removeHomeTab,
             homeTabId,
             Translator.trans('home_tab_delete_confirm_message', {}, 'platform'),
@@ -89,7 +85,7 @@
             
             $.ajax({
                 url: Routing.generate(
-                    'claro_home_tab_config_reorder',
+                    'claro_desktop_home_tab_config_reorder',
                     {
                         'homeTabConfig': hcId,
                         'nextHomeTabConfigId': nextHcId

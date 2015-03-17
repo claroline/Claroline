@@ -404,9 +404,7 @@ class HomeTabController extends Controller
             throw new AccessDeniedException();
         }
         $homeTab = $homeTabConfig->getHomeTab();
-        $type = $homeTab->getType();
-        $tabOrder = $homeTabConfig->getTabOrder();
-        $this->homeTabManager->deleteHomeTab($homeTab, $type, $tabOrder);
+        $this->homeTabManager->deleteHomeTab($homeTab);
 
         return new Response('success', 204);
     }

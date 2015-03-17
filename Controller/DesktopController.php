@@ -272,7 +272,6 @@ class DesktopController extends Controller
 
         return array(
             'widgetsDatas' => $widgets,
-            'isDesktop' => true,
             'isVisibleHomeTab' => $isVisibleHomeTab,
             'isLockedHomeTab' => $isLockedHomeTab,
             'lastWidgetOrder' => $lastWidgetOrder,

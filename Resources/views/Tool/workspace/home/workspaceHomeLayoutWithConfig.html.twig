@@ -39,7 +39,6 @@
             <li class="hometab-element {% if workspaceHomeTab.getId() == tabId %} active {% endif %}"
                 hometab-config-id="{{ workspaceHomeTabConfig.getId() }}"
                 hometab-id="{{ workspaceHomeTab.getId() }}"
-                hometab-order="{{ workspaceHomeTabConfig.getTabOrder() }}"
             >
                 <a href="{{ path('claro_display_workspace_home_tabs_with_config', { 'tabId': workspaceHomeTab.getId(), 'workspaceId': workspace.getId()}) }}" class="hometab-link{% if not workspaceHomeTabConfig.isVisible() %} strike{% endif %}">
                     {{ workspaceHomeTab.getName() }}

@@ -60,26 +60,8 @@ class HomeTabManager
         $this->om->flush();
     }
 
-    public function deleteHomeTab(HomeTab $homeTab, $type, $tabOrder)
+    public function deleteHomeTab(HomeTab $homeTab)
     {
-        switch ($type) {
-            case 'admin_desktop':
-                $this->homeTabConfigRepo
-                    ->updateAdminDesktopOrder($tabOrder);
-                break;
-            case 'admin_workspace':
-                $this->homeTabConfigRepo
-                    ->updateAdminWorkspaceOrder($tabOrder);
-                break;
-            case 'desktop':
-                $this->homeTabConfigRepo
-                    ->updateDesktopOrder($homeTab->getUser(), $tabOrder);
-                break;
-            case 'workspace':
-                $this->homeTabConfigRepo
-                    ->updateWorkspaceOrder($homeTab->getWorkspace(), $tabOrder);
-                break;
-        }
         $this->om->remove($homeTab);
         $this->om->flush();
     }
@@ -109,6 +91,45 @@ class HomeTabManager
     )
     {
         $htcs = $this->homeTabConfigRepo->findDesktopHomeTabConfigsByUser($user);
+        $nextId = intval($nextHTCId);
+        $order = 1;
+        $updated = false;
+
+        foreach ($htcs as $htc) {
+
+            if ($htc === $homeTabConfig) {
+                continue;
+            } elseif ($htc->getId() === $nextId) {
+                $homeTabConfig->setTabOrder($order);
+                $updated = true;
+                $this->om->persist($homeTabConfig);
+                $order++;
+                $htc->setTabOrder($order);
+                $this->om->persist($htc);
+                $order++;
+
+            } else {
+                $htc->setTabOrder($order);
+                $this->om->persist($htc);
+                $order++;
+            }
+        }
+
+        if (!$updated) {
+            $homeTabConfig->setTabOrder($order);
+            $this->om->persist($homeTabConfig);
+        }
+        $this->om->flush();
+    }
+
+    public function reorderWorkspaceHomeTabConfigs(
+        Workspace $workspace,
+        HomeTabConfig $homeTabConfig,
+        $nextHTCId
+    )
+    {
+        $htcs = $this->homeTabConfigRepo
+            ->findWorkspaceHomeTabConfigsByWorkspace($workspace);
         $nextId = intval($nextHTCId);
         $order = 1;
         $updated = false;

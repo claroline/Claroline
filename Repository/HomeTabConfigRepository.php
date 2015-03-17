@@ -289,68 +289,6 @@ class HomeTabConfigRepository extends EntityRepository
         return $query->execute();
     }
 
-    public function updateAdminDesktopOrder($tabOrder)
-    {
-        $dql = "
-            UPDATE Claroline\CoreBundle\Entity\Home\HomeTabConfig htc
-            SET htc.tabOrder = htc.tabOrder - 1
-            WHERE htc.type = 'admin_desktop'
-            AND htc.user IS NULL
-            AND htc.tabOrder > :tabOrder
-        ";
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('tabOrder', $tabOrder);
-
-        return $query->execute();
-    }
-
-    public function updateAdminWorkspaceOrder($tabOrder)
-    {
-        $dql = "
-            UPDATE Claroline\CoreBundle\Entity\Home\HomeTabConfig htc
-            SET htc.tabOrder = htc.tabOrder - 1
-            WHERE htc.type = 'admin_workspace'
-            AND htc.workspace IS NULL
-            AND htc.tabOrder > :tabOrder
-        ";
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('tabOrder', $tabOrder);
-
-        return $query->execute();
-    }
-
-    public function updateDesktopOrder(User $user, $tabOrder)
-    {
-        $dql = "
-            UPDATE Claroline\CoreBundle\Entity\Home\HomeTabConfig htc
-            SET htc.tabOrder = htc.tabOrder - 1
-            WHERE htc.type = 'desktop'
-            AND htc.user = :user
-            AND htc.tabOrder > :tabOrder
-        ";
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('tabOrder', $tabOrder);
-        $query->setParameter('user', $user);
-
-        return $query->execute();
-    }
-
-    public function updateWorkspaceOrder(Workspace $workspace, $tabOrder)
-    {
-        $dql = "
-            UPDATE Claroline\CoreBundle\Entity\Home\HomeTabConfig htc
-            SET htc.tabOrder = htc.tabOrder - 1
-            WHERE htc.type = 'workspace'
-            AND htc.workspace = :workspace
-            AND htc.tabOrder > :tabOrder
-        ";
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('tabOrder', $tabOrder);
-        $query->setParameter('workspace', $workspace);
-
-        return $query->execute();
-    }
-
     public function findHomeTabConfigsByWorkspaceAndHomeTabs(
         Workspace $workspace,
         array $homeTabs

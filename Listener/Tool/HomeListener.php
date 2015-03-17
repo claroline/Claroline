@@ -84,74 +84,14 @@ class HomeListener
      */
     public function onDisplayWorkspaceHome(DisplayToolEvent $event)
     {
-        $event->setContent($this->workspaceHome($event->getWorkspace()->getId()));
-        $event->stopPropagation();
-    }
-
-    /**
-     * Renders the home page with its layout.
-     *
-     * @param integer $workspaceId
-     *
-     * @return Response
-     */
-    public function workspaceHome($workspaceId)
-    {
-        $workspace = $this->workspaceManager->getWorkspaceById($workspaceId);
-        $workspaceHomeTabConfigs = $this->homeTabManager
-            ->getVisibleWorkspaceHomeTabConfigsByWorkspace($workspace);
-        $tabId = 0;
-        $firstHomeTab = reset($workspaceHomeTabConfigs);
-
-        if ($firstHomeTab) {
-            $tabId = $firstHomeTab->getHomeTab()->getId();
-        }
-
-        return $this->templating->render(
-            'ClarolineCoreBundle:Tool\workspace\home:workspaceHomeTabsWithoutConfig.html.twig',
-            array(
-                'workspace' => $workspace,
-                'workspaceHomeTabConfigs' => $workspaceHomeTabConfigs,
-                'tabId' => $tabId
-            )
+        $params = array(
+            '_controller' => 'ClarolineCoreBundle:Workspace:displayWorkspaceHomeTab',
+            'workspace' => $event->getWorkspace()->getId(),
+            'tabId' => -1
         );
-    }
+        $subRequest = $this->container->get('request')->duplicate(array(), null, $params);
+        $response = $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
 
-    /**
-     * Displays the first desktop tab.
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function desktopHome()
-    {
-        $user = $this->securityContext->getToken()->getUser();
-        $adminHomeTabConfigs = $this->homeTabManager
-            ->generateAdminHomeTabConfigsByUser($user);
-        $visibleAdminHomeTabConfigs = $this->homeTabManager
-            ->filterVisibleHomeTabConfigs($adminHomeTabConfigs);
-        $userHomeTabConfigs = $this->homeTabManager
-            ->getVisibleDesktopHomeTabConfigsByUser($user);
-        $tabId = 0;
-
-        $firstAdminHomeTab = reset($visibleAdminHomeTabConfigs);
-
-        if ($firstAdminHomeTab) {
-            $tabId = $firstAdminHomeTab->getHomeTab()->getId();
-        } else {
-            $firstHomeTab = reset($userHomeTabConfigs);
-
-            if ($firstHomeTab) {
-                $tabId = $firstHomeTab->getHomeTab()->getId();
-            }
-        }
-
-        return $this->templating->render(
-            'ClarolineCoreBundle:Tool\desktop\home:desktopHomeTabsWithoutConfig.html.twig',
-            array(
-                'adminHomeTabConfigs' => $visibleAdminHomeTabConfigs,
-                'userHomeTabConfigs' => $userHomeTabConfigs,
-                'tabId' => $tabId
-            )
-        );
+        $event->setContent($response->getContent());
     }
 }

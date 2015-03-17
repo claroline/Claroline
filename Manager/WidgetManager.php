@@ -328,6 +328,54 @@ class WidgetManager
         return $results;
     }
 
+    public function generateWidgetDisplayConfigsForWorkspace(
+        Workspace $workspace,
+        array $widgetHTCs
+    )
+    {
+        $results = array();
+        $widgetInstances = array();
+        $workspaceTab = array();
+
+        foreach ($widgetHTCs as $htc) {
+            $widgetInstances[] = $htc->getWidgetInstance();
+        }
+        $workspaceWDCs = $this->getWidgetDisplayConfigsByWorkspaceAndWidgets(
+            $workspace,
+            $widgetInstances
+        );
+
+        foreach ($workspaceWDCs as $wdc) {
+            $widgetInstanceId = $wdc->getWidgetInstance()->getId();
+
+            $workspaceTab[$widgetInstanceId] = $wdc;
+        }
+
+        $this->om->startFlushSuite();
+
+        foreach ($widgetInstances as $widgetInstance) {
+            $id = $widgetInstance->getId();
+
+            if (isset($workspaceTab[$id])) {
+                $results[$id] = $workspaceTab[$id];
+            } else {
+                $widget = $widgetInstance->getWidget();
+                $wdc = new WidgetDisplayConfig();
+                $wdc->setWidgetInstance($widgetInstance);
+                $wdc->setWorkspace($workspace);
+                $wdc->setRow(0);
+                $wdc->setColumn(0);
+                $wdc->setWidth($widget->getDefaultWidth());
+                $wdc->setHeight($widget->getDefaultHeight());
+                $this->om->persist($wdc);
+                $results[$id] = $wdc;
+            }
+        }
+        $this->om->endFlushSuite();
+
+        return $results;
+    }
+
     public function persistWidgetDisplayConfigs(array $configs)
     {
         $this->om->startFlushSuite();
@@ -364,6 +412,21 @@ class WidgetManager
     {
         return count($widgetInstances) > 0 ?
             $this->widgetDisplayConfigRepo->findAdminWidgetDisplayConfigsByWidgets(
+                $widgetInstances,
+                $executeQuery
+            ) :
+            array();
+    }
+
+    public function getWidgetDisplayConfigsByWorkspaceAndWidgets(
+        Workspace $workspace,
+        array $widgetInstances,
+        $executeQuery = true
+    )
+    {
+        return count($widgetInstances) > 0 ?
+            $this->widgetDisplayConfigRepo->findWidgetDisplayConfigsByWorkspaceAndWidgets(
+                $workspace,
                 $widgetInstances,
                 $executeQuery
             ) :

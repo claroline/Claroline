@@ -37,7 +37,6 @@
                     class="hometab-element movable-hometab {% if userHomeTab.getId() == tabId %} active {% endif %}"
                     data-hometab-config-id="{{ userHomeTabConfig.getId() }}"
                     data-hometab-id="{{ userHomeTab.getId() }}"
-                    data-hometab-order="{{ userHomeTabConfig.getTabOrder() }}"
                 >
                     <a href="{{ path('claro_display_desktop_home_tab', {'tabId': userHomeTab.getId()})}}"
                        class="hometab-link{% if not userHomeTabConfig.isVisible() %} strike{% endif %}"
