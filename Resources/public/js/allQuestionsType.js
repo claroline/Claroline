@@ -190,6 +190,7 @@ $(document).ready(function() {
  */
 function advancedEdition(idTextarea,e){
     var textarea;
+    
     if(idTextarea === 'interaction_question_description'|| idTextarea ==='_label'){
         textarea =$("*[id$='"+idTextarea+"']");
     }
@@ -198,7 +199,6 @@ function advancedEdition(idTextarea,e){
             textarea=$("#"+idTextarea);
         
     }
-        
     //if (textarea.hasClass("claroline-tiny-mce hide")) {
 //            $("#"+idProposalVal).removeClass("claroline-tiny-mce");
 //            $("#"+idProposalVal).removeClass("hide");

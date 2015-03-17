@@ -91,7 +91,7 @@ function creationQCMEdit(expectedAnswer, response, point, comment, positionForce
            
          $(this).find('.row').each(function () {
 
-            fillChoicesArray($(this));
+            fillChoicesArray($(this),edition);
               
             // Add the form errors
             $('#choiceError').append($(this).find('.field-error'));
@@ -179,10 +179,8 @@ function addChoice(container, deleteChoice, comment, edition) {
      
     // Get the form field to fill rows of the choices' table
     container.find('.row').each(function () {
-        fillChoicesArray($(this));
+        fillChoicesArray($(this),edition);
     });
-     //add the edition button
-    addEdition($('#newTable').find('tr:last').append('<td></td>'),edition,index);  
     //add the feedback button
     addFeedback($('#newTable').find('tr:last').append('<td></td>'),comment,index,edition);
 
@@ -352,11 +350,11 @@ function whichChange() {
     });
 }
 
-function fillChoicesArray(row) {
+function fillChoicesArray(row,edition) {   
     // Add the field of type input
     if (row.find('input').length) {
         if (row.find('input').attr('id').indexOf('ordre') == -1) {
-            $('#newTable').find('tr:last').append('<td class="classic"></td>');//.addClass("input-group");
+            $('#newTable').find('tr:last').append('<td class="classic col-md-1"></td>');//.addClass("input-group");
             $('#newTable').find('td:last').append(row.find('input'));//.append('<span class="input-group-addon"><i class="fa fa-font"><i></span>');
         
         } else {
@@ -367,11 +365,13 @@ function fillChoicesArray(row) {
         }
     }
     // Add the field of type textarea
-    if (row.find('textarea').length) {
-        $('#newTable').find('tr:last').append('<td class="classic col-md-6"></td>');
+    if (row.find('textarea').length) { 
+        idLabelVal = row.find('textarea').attr("id");     
+        $('#newTable').find('tr:last').append('<td class="input-group"></td>');       
         $('#newTable').find('td:last').append(row.find('textarea'));
+        $('#newTable').find('td:last').append('<span class="input-group-btn"><a class="btn btn-default" id="adve_'+idLabelVal+'" onClick="advancedEdition(\''+idLabelVal+'\',event);" title="'+edition+'"><i class="fa fa-font"></i></a></span>');
     }
-         
+             
 }
 
 function tableChoicesCreation(expectedAnswer, response, point, comment, positionForce, addchoice, deleteChoice, edition, nbResponses) {
@@ -398,33 +398,14 @@ function tableChoicesCreation(expectedAnswer, response, point, comment, position
     }
 }
 
-function addFeedback(tr,comment,index,edition) {
+function addFeedback(tr,comment,edition) {
 
     // Create the button feedback
-    var addFeedbacks = $('<td class="classic" id="TDfeedback" ><a title="'+comment+'" id="QCMfeedback'+index+'" class="btn btn-default" ><i class="fa fa-comments-o"></i></td>');
+    var addFeedbacks = $('<td class="classic col-md-4" id="TDfeedback" ><a title="'+comment+'" id="QCMfeedback" class="btn btn-default" ><i class="fa fa-comments-o"></i></td>');
     
     tr.append(addFeedbacks);
     $("*[id^='QCMfeedback']").click(function() {
-       tr.append('<div class="input-group"><td class="classic col-md-4"><textarea class="form-control" placeholder="'+comment+'" style="height:34px;" ></textarea>\n\
-           <span class="input-group-btn"><a title="'+edition+'" id="QCMavancedEdition"'+index+'" class="btn btn-default"><i class="fa fa-font"><i></a></span></div>'); 
-    });
-       
-}
-function addEdition(tr,edition,index){
- //Create the button edition
- 
- var addEdition =  $("<td class='classic'><a title='"+edition+"' id='QCMavancedEdition"+index+"' class='btn btn-default'><i class='fa fa-font'><i></a></td>");
- 
-  //      $('#newTable').find("tr:not(:first)").each(function () {
-//                $(this).find("td").eq(2).addClass("input-group");
-//                $(this).find("td").eq(2).append("<a title='' id='QCMavancedEdition' class='btn input-group-addon' '><i class='fa fa-font'><i></a>");
-//    });
-//    //    $('#newTable').find("tr:not(:first)").eq(2).addClass("input-group");
-//    $('#newTable').find("tr:not(:first)").eq(2).append("<a title='' id='QCMavancedEdition' class='btn input-group-addon' '><i class='fa fa-font'><i></a>");
-// 
-    tr.append(addEdition);
-     //Advanced edition of answers
-    $("*[id^='QCMavancedEdition']").click(function(e) {
-            advancedEdition('_label',e);
-        });
+       addFeedbacks.replaceWith('<td class="classic col-md-4"><div class="input-group"><textarea id="feedback_label" class="form-control" placeholder="'+comment+'" style="height:34px;" ></textarea>\n\
+           <span class="input-group-btn"><a id="QCMavancedEdition" class="btn btn-default" onClick="advancedEdition(\'_label\',event);" title="'+edition+'"><i class="fa fa-font"></i></a></span></div></td>'); 
+    });    
 }
