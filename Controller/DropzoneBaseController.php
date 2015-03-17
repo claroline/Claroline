@@ -15,6 +15,7 @@ use Innova\CollecticielBundle\Event\Log\LogCorrectionEndEvent;
 use Innova\CollecticielBundle\Event\Log\LogCorrectionStartEvent;
 use Innova\CollecticielBundle\Event\Log\LogCorrectionUpdateEvent;
 use Innova\CollecticielBundle\Event\Log\LogCorrectionValidationChangeEvent;
+use Innova\CollecticielBundle\Event\Log\LogCommentReadCreateEvent;
 use Innova\CollecticielBundle\Event\Log\LogCriterionCreateEvent;
 use Innova\CollecticielBundle\Event\Log\LogCriterionDeleteEvent;
 use Innova\CollecticielBundle\Event\Log\LogCriterionUpdateEvent;
@@ -35,12 +36,13 @@ class DropzoneBaseController extends Controller
     const DROP_PER_PAGE = 10;
     const CORRECTION_PER_PAGE = 10;
 
-
     protected function dispatch($event)
     {
+
         if (
             $event instanceof LogResourceReadEvent or
             $event instanceof LogDropzoneConfigureEvent or
+            $event instanceof LogCommentReadCreateEvent or
             $event instanceof LogCriterionCreateEvent or
             $event instanceof LogCriterionUpdateEvent or
             $event instanceof LogCriterionDeleteEvent or

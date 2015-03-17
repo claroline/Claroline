@@ -116,9 +116,12 @@ class CorrectionRepository extends EntityRepository {
             ->select('correction, drop, document, user')
             ->join('correction.drop', 'drop')
             ->join('drop.user', 'user')
+
             ->leftJoin('drop.documents', 'document')
+
             ->andWhere('drop.dropzone = :dropzone')
-                ->andWhere('correction.id = :correctionId')
+            ->andWhere('correction.id = :correctionId')
+
             ->setParameter('dropzone', $dropzone)
             ->setParameter('correctionId', $correctionId);
 

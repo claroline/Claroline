@@ -23,6 +23,7 @@ use Innova\CollecticielBundle\Event\Log\LogCorrectionUpdateEvent;
 use Innova\CollecticielBundle\Event\Log\LogCorrectionValidationChangeEvent;
 use Innova\CollecticielBundle\Event\Log\LogCorrectionReportEvent;
 use Innova\CollecticielBundle\Event\Log\LogDropGradeAvailableEvent;
+use Innova\CollecticielBundle\Event\Log\LogCommentReadCreateEvent;
 use Innova\CollecticielBundle\Form\CorrectionCommentType;
 use Innova\CollecticielBundle\Form\CorrectionCriteriaPageType;
 use Innova\CollecticielBundle\Form\CorrectionStandardType;
@@ -740,6 +741,7 @@ echo "state1 : " . $state;die();
                 // Nombre de lectures du commentaire pour cet utilisateur pour ce commentaire du document
                 $countCommentRead = count($comments_read);
 
+                $countCommentRead = 0; // Pour les tests, à enlever
                 // Ce commentaire n'avait pas été lu.
                 // Donc, maintenant, il va l'être,
                 // je dois donc insérer une occurrence dans la table CommentRead";
@@ -751,6 +753,15 @@ echo "state1 : " . $state;die();
 
                     $em->persist($comment_read_add);
                     $em->flush();
+
+                    $unitOfWork = $em->getUnitOfWork();
+                    $unitOfWork->computeChangeSets();
+                    $dropzoneChangeSet = $unitOfWork->getEntityChangeSet($dropzone);
+
+                    $event = new LogCommentReadCreateEvent($dropzone, $dropzoneChangeSet, $comment_read_add);
+
+                    $this->dispatch($event);
+                    echo "ici";
                 }
 
             }
