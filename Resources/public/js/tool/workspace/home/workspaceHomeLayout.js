@@ -96,9 +96,9 @@
         window.Claroline.Modal.displayForm(
             Routing.generate(
                 'claro_workspace_widget_instance_create_form',
-                {'workspace': workspaceId}
+                {'workspace': workspaceId, 'homeTab': currentHomeTabId}
             ),
-            associateWidgetToHomeTab,
+            reloadPage,
             function() {}
         );
     });
@@ -290,24 +290,10 @@
         var grid = $('.grid-stack').data('gridstack');
         grid.remove_widget(widgetElement);
     };
-    
-    var associateWidgetToHomeTab = function (widgetInstanceId) {
 
-        $.ajax({
-            url: Routing.generate(
-                'claro_workspace_associate_widget_to_home_tab',
-                {
-                    'workspace': workspaceId,
-                    'homeTab': currentHomeTabId,
-                    'widgetInstance': widgetInstanceId
-                }
-            ),
-            type: 'POST',
-            success: function () {
-                window.location.reload();
-            }
-        });
-    };
+    var reloadPage = function () {
+        window.location.reload();
+    }
     
     var updateWidget = function (datas) {
         var id = datas['id'];

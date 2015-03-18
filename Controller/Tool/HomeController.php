@@ -362,7 +362,7 @@ class HomeController extends Controller
 
     /**
      * @EXT\Route(
-     *     "workspace/{workspace}/widget/instance/create/form",
+     *     "workspace/{workspace}/hometab/{homeTab}/widget/instance/create/form",
      *     name="claro_workspace_widget_instance_create_form",
      *     options = {"expose"=true}
      * )
@@ -374,23 +374,38 @@ class HomeController extends Controller
      *
      * @return Response
      */
-    public function workspaceWidgetInstanceCreateFormAction(Workspace $workspace)
+    public function workspaceWidgetInstanceCreateFormAction(
+        Workspace $workspace,
+        HomeTab $homeTab
+    )
     {
         $this->checkWorkspaceEditionAccess($workspace);
 
-        $widgetInstance = new WidgetInstance();
-        $form = $this->formFactory->create(
-            FormFactory::TYPE_WIDGET_INSTANCE,
-            array('desktop_widget' => false),
-            $widgetInstance
+        $instanceForm = $this->symfonyFormFactory->create(
+            new WidgetInstanceType(false),
+            new WidgetInstance()
+        );
+        $widgetHomeTabConfigForm = $this->symfonyFormFactory->create(
+            new WidgetHomeTabConfigType(),
+            new WidgetHomeTabConfig()
+        );
+        $displayConfigForm = $this->symfonyFormFactory->create(
+            new WidgetDisplayConfigType(),
+            new WidgetDisplayConfig()
         );
 
-        return array('workspace' => $workspace, 'form' => $form->createView());
+        return array(
+            'workspace' => $workspace,
+            'homeTab' => $homeTab,
+            'instanceForm' => $instanceForm->createView(),
+            'widgetHomeTabConfigForm' => $widgetHomeTabConfigForm->createView(),
+            'displayConfigForm' => $displayConfigForm->createView()
+        );
     }
 
     /**
      * @EXT\Route(
-     *     "workspace/{workspace}/widget/instance/create",
+     *     "workspace/{workspace}/hometab/{homeTab}/widget/instance/create",
      *     name="claro_workspace_widget_instance_create",
      *     options = {"expose"=true}
      * )
@@ -403,29 +418,68 @@ class HomeController extends Controller
      *
      * @return Response
      */
-    public function workspaceWidgetInstanceCreateAction(Workspace $workspace)
+    public function workspaceWidgetInstanceCreateAction(
+        Workspace $workspace,
+        HomeTab $homeTab
+    )
     {
         $this->checkWorkspaceEditionAccess($workspace);
 
         $widgetInstance = new WidgetInstance();
-        $form = $this->formFactory->create(
-            FormFactory::TYPE_WIDGET_INSTANCE,
-            array('desktop_widget' => false),
+        $widgetHomeTabConfig = new WidgetHomeTabConfig();
+        $widgetDisplayConfig = new WidgetDisplayConfig();
+
+        $instanceForm = $this->symfonyFormFactory->create(
+            new WidgetInstanceType(false),
             $widgetInstance
         );
-        $form->handleRequest($this->request);
+        $widgetHomeTabConfigForm = $this->symfonyFormFactory->create(
+            new WidgetHomeTabConfigType(),
+            $widgetHomeTabConfig
+        );
+        $displayConfigForm = $this->symfonyFormFactory->create(
+            new WidgetDisplayConfigType(),
+            $widgetDisplayConfig
+        );
+        $instanceForm->handleRequest($this->request);
+        $widgetHomeTabConfigForm->handleRequest($this->request);
+        $displayConfigForm->handleRequest($this->request);
 
-        if ($form->isValid()) {
+        if ($instanceForm->isValid() &&
+            $widgetHomeTabConfigForm->isValid() &&
+            $displayConfigForm->isValid()) {
+
             $widgetInstance->setWorkspace($workspace);
             $widgetInstance->setIsAdmin(false);
             $widgetInstance->setIsDesktop(false);
+            $widgetHomeTabConfig->setHomeTab($homeTab);
+            $widgetHomeTabConfig->setWidgetInstance($widgetInstance);
+            $widgetHomeTabConfig->setWorkspace($workspace);
+            $widgetHomeTabConfig->setLocked(false);
+            $widgetHomeTabConfig->setWidgetOrder(1);
+            $widgetHomeTabConfig->setType('workspace');
+            $widget = $widgetInstance->getWidget();
+            $widgetDisplayConfig->setWidgetInstance($widgetInstance);
+            $widgetDisplayConfig->setWorkspace($workspace);
+            $widgetDisplayConfig->setWidth($widget->getDefaultWidth());
+            $widgetDisplayConfig->setHeight($widget->getDefaultHeight());
 
-            $this->widgetManager->insertWidgetInstance($widgetInstance);
+            $this->widgetManager->persistWidgetConfigs(
+                $widgetInstance,
+                $widgetHomeTabConfig,
+                $widgetDisplayConfig
+            );
 
             return new JsonResponse($widgetInstance->getId(), 200);
         } else {
 
-            return array('workspace' => $workspace, 'form' => $form->createView());
+            return array(
+                'workspace' => $workspace,
+                'homeTab' => $homeTab,
+                'instanceForm' => $instanceForm->createView(),
+                'widgetHomeTabConfigForm' => $widgetHomeTabConfigForm->createView(),
+                'displayConfigForm' => $displayConfigForm->createView()
+            );
         }
     }
 
@@ -461,7 +515,6 @@ class HomeController extends Controller
             new WidgetHomeTabConfigType(),
             $widgetHomeTabConfig
         );
-
         $displayConfigForm = $this->symfonyFormFactory->create(
             new WidgetDisplayConfigType(),
             $widgetDisplayConfig
@@ -519,7 +572,10 @@ class HomeController extends Controller
         $widgetHomeTabConfigForm->handleRequest($this->request);
         $displayConfigForm->handleRequest($this->request);
 
-        if ($instanceForm->isValid() && $displayConfigForm->isValid()) {
+        if ($instanceForm->isValid() &&
+            $widgetHomeTabConfigForm->isValid() &&
+            $displayConfigForm->isValid()) {
+
             $this->widgetManager->persistWidgetConfigs(
                 $widgetInstance,
                 $widgetHomeTabConfig,
@@ -1125,47 +1181,6 @@ class HomeController extends Controller
 
         $lastOrder = $this->homeTabManager
             ->getOrderOfLastWidgetInHomeTabByUser($homeTab, $user);
-
-        if (is_null($lastOrder['order_max'])) {
-            $widgetHomeTabConfig->setWidgetOrder(1);
-        } else {
-            $widgetHomeTabConfig->setWidgetOrder($lastOrder['order_max'] + 1);
-        }
-        $this->homeTabManager->insertWidgetHomeTabConfig($widgetHomeTabConfig);
-
-        return new Response('success', 204);
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/workspace/{workspace}/home_tab/{homeTab}/associate/widget/{widgetInstance}",
-     *     name="claro_workspace_associate_widget_to_home_tab",
-     *     options = {"expose"=true}
-     * )
-     * @EXT\Method("POST")
-     *
-     * Associate given WidgetInstance to given Home tab.
-     *
-     * @return Response
-     */
-    public function associateWorkspaceWidgetToHomeTabAction(
-        Workspace $workspace,
-        HomeTab $homeTab,
-        WidgetInstance $widgetInstance
-    )
-    {
-        $this->checkWorkspaceEditionAccess($workspace);
-
-        $widgetHomeTabConfig = new WidgetHomeTabConfig();
-        $widgetHomeTabConfig->setHomeTab($homeTab);
-        $widgetHomeTabConfig->setWidgetInstance($widgetInstance);
-        $widgetHomeTabConfig->setWorkspace($workspace);
-        $widgetHomeTabConfig->setVisible(true);
-        $widgetHomeTabConfig->setLocked(false);
-        $widgetHomeTabConfig->setType('workspace');
-
-        $lastOrder = $this->homeTabManager
-            ->getOrderOfLastWidgetInHomeTabByWorkspace($homeTab, $workspace);
 
         if (is_null($lastOrder['order_max'])) {
             $widgetHomeTabConfig->setWidgetOrder(1);
