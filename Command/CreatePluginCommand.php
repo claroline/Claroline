@@ -187,7 +187,7 @@ class CreatePluginCommand extends ContainerAwareCommand
         $content = file_get_contents($filepath);
         $content = str_replace('[[name]]', strtolower($vendor) . '/' . strtolower($bundle) . '-bundle', $content);
         $content = str_replace('[[psr]]', $vendor . '\\\\' . $bundle, $content);
-        $content = str_replace('[[target_dir]]', $vendor . '/' . $bundle, $content);
+        $content = str_replace('[[target_dir]]', $vendor . '/' . $bundle . 'Bundle', $content);
         file_put_contents($filepath, $content);
     }
 
