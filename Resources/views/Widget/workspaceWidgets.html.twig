@@ -60,6 +60,7 @@
                                         <span class="close">&nbsp;</span>
                                         <i class="fa fa-pencil close edit-widget-content-btn"
                                            data-widget-instance-id="{{ widgetInstance.getId() }}"
+                                           data-widget-instance-name="{{ widgetInstance.getName() }}"
                                         ></i>
                                     {% endif %}
                                 </span>
@@ -103,6 +104,13 @@
     <div id="widget-content-config-modal-box" class="modal fade" role="dialog" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h3 id="widget-content-config-modal-title">
+                    </h3>
+                </div>
                 <div id="widget-content-config-modal-body" class="modal-body">
                 </div>
             </div>

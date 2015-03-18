@@ -125,6 +125,7 @@
     
     $('#widgets-list-panel').on('click', '.edit-widget-content-btn', function () {
         currentWidgetInstanceId = $(this).data('widget-instance-id');
+        var widgetInstanceName = $(this).data('widget-instance-name');
         
         $.ajax({
             url: Routing.generate(
@@ -133,6 +134,7 @@
             ),
             type: 'GET',
             success: function (datas) {
+                $('#widget-content-config-modal-title').html(widgetInstanceName);
                 $('#widget-content-config-modal-body').html(datas);
                 $('#widget-content-config-modal-box').modal('show');
             }
@@ -171,8 +173,6 @@
                         break;
                     default:
                         $('#widget-instance-content-' + currentWidgetInstanceId).html(jqXHR.responseText);
-                        $('#widget-content-config-modal-body').empty();
-                        $('#widget-content-config-modal-box').modal('hide');
                 }
             }
         });
