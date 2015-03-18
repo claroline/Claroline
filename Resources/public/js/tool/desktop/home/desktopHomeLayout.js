@@ -296,8 +296,8 @@
             url: Routing.generate(
                 'claro_desktop_associate_widget_to_home_tab',
                 {
-                    'homeTabId': currentHomeTabId,
-                    'widgetInstanceId': widgetInstanceId
+                    'homeTab': currentHomeTabId,
+                    'widgetInstance': widgetInstanceId
                 }
             ),
             type: 'POST',

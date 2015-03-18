@@ -96,6 +96,12 @@
             type="text/javascript"
     >
     </script>
+    <script type="text/javascript">
+        $('.grid-stack').gridstack({
+            width: 12,
+            animate: true
+        });
+    </script>
     
     {% if canEdit %}
         <script src='{{ asset('bundles/frontend/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.js') }}'

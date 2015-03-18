@@ -92,19 +92,17 @@
         }
     });
     
-    $('.grid-stack').gridstack({
-        width: 12,
-        animate: true
+    $('#widgets-section').on('click', '#create-widget-instance', function () {
+        window.Claroline.Modal.displayForm(
+            Routing.generate(
+                'claro_workspace_widget_instance_create_form',
+                {'workspace': workspaceId}
+            ),
+            associateWidgetToHomeTab,
+            function() {}
+        );
     });
     
-//    $('#widgets-section').on('click', '#create-widget-instance', function () {
-//        window.Claroline.Modal.displayForm(
-//            Routing.generate('claro_desktop_widget_instance_create_form'),
-//            associateWidgetToHomeTab,
-//            function() {}
-//        );
-//    });
-//    
 //    $('#widgets-list-panel').on('click', '.edit-widget-btn', function () {
 //        var widgetHomeTabId = $(this).data('widget-hometab-config-id');
 //        var widgetDisplayConfigId = $(this).data('widget-display-config-id');
@@ -291,24 +289,25 @@
 //        var grid = $('.grid-stack').data('gridstack');
 //        grid.remove_widget(widgetElement);
 //    };
-//    
-//    var associateWidgetToHomeTab = function (widgetInstanceId) {
-//
-//        $.ajax({
-//            url: Routing.generate(
-//                'claro_desktop_associate_widget_to_home_tab',
-//                {
-//                    'homeTabId': currentHomeTabId,
-//                    'widgetInstanceId': widgetInstanceId
-//                }
-//            ),
-//            type: 'POST',
-//            success: function () {
-//                window.location.reload();
-//            }
-//        });
-//    };
-//    
+    
+    var associateWidgetToHomeTab = function (widgetInstanceId) {
+
+        $.ajax({
+            url: Routing.generate(
+                'claro_workspace_associate_widget_to_home_tab',
+                {
+                    'workspace': workspaceId,
+                    'homeTab': currentHomeTabId,
+                    'widgetInstance': widgetInstanceId
+                }
+            ),
+            type: 'POST',
+            success: function () {
+                window.location.reload();
+            }
+        });
+    };
+    
 //    var updateWidget = function (datas) {
 //        var id = datas['id'];
 //        var color = (datas['color'] === null) ? '' : datas['color'];

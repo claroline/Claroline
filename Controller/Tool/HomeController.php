@@ -220,7 +220,7 @@ class HomeController extends Controller
      * )
      * @EXT\Method("POST")
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
-     * @EXT\Template("ClarolineCoreBundle:Tool\desktop\home:desktopWidgetInstanceCreateForm.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:Tool\desktop\home:desktopWidgetInstanceCreateModalForm.html.twig")
      *
      * Creates a widget instance.
      *
@@ -359,16 +359,11 @@ class HomeController extends Controller
 
     /**
      * @EXT\Route(
-     *     "workspace/{workspaceId}/widget/instance/create/form",
+     *     "workspace/{workspace}/widget/instance/create/form",
      *     name="claro_workspace_widget_instance_create_form",
      *     options = {"expose"=true}
      * )
-     * @EXT\ParamConverter(
-     *      "workspace",
-     *      class="ClarolineCoreBundle:Workspace\Workspace",
-     *      options={"id" = "workspaceId", "strictId" = true}
-     * )
-     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\home:workspaceWidgetInstanceCreateForm.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\home:workspaceWidgetInstanceCreateModalForm.html.twig")
      *
      * Displays the widget instance form.
      *
@@ -378,7 +373,7 @@ class HomeController extends Controller
      */
     public function workspaceWidgetInstanceCreateFormAction(Workspace $workspace)
     {
-        $this->checkWorkspaceAccess($workspace);
+        $this->checkWorkspaceEditionAccess($workspace);
 
         $widgetInstance = new WidgetInstance();
         $form = $this->formFactory->create(
@@ -387,24 +382,16 @@ class HomeController extends Controller
             $widgetInstance
         );
 
-        return array(
-            'workspace' => $workspace,
-            'form' => $form->createView()
-        );
+        return array('workspace' => $workspace, 'form' => $form->createView());
     }
 
     /**
      * @EXT\Route(
-     *     "workspace/{workspaceId}/widget/instance/create",
+     *     "workspace/{workspace}/widget/instance/create",
      *     name="claro_workspace_widget_instance_create",
      *     options = {"expose"=true}
      * )
      * @EXT\Method("POST")
-     * @EXT\ParamConverter(
-     *      "workspace",
-     *      class="ClarolineCoreBundle:Workspace\Workspace",
-     *      options={"id" = "workspaceId", "strictId" = true}
-     * )
      * @EXT\Template("ClarolineCoreBundle:Tool\workspace\home:workspaceWidgetInstanceCreateForm.html.twig")
      *
      * Creates a widget instance.
@@ -415,10 +402,9 @@ class HomeController extends Controller
      */
     public function workspaceWidgetInstanceCreateAction(Workspace $workspace)
     {
-        $this->checkWorkspaceAccess($workspace);
+        $this->checkWorkspaceEditionAccess($workspace);
 
         $widgetInstance = new WidgetInstance();
-
         $form = $this->formFactory->create(
             FormFactory::TYPE_WIDGET_INSTANCE,
             array('desktop_widget' => false),
@@ -433,13 +419,11 @@ class HomeController extends Controller
 
             $this->widgetManager->insertWidgetInstance($widgetInstance);
 
-            return new Response($widgetInstance->getId(), 201);
-        }
+            return new JsonResponse($widgetInstance->getId(), 200);
+        } else {
 
-        return array(
-            'workspace' => $workspace,
-            'form' => $form->createView()
-        );
+            return array('workspace' => $workspace, 'form' => $form->createView());
+        }
     }
 
     /**
@@ -988,22 +972,12 @@ class HomeController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/desktop/home_tab/{homeTabId}/associate/widget/{widgetInstanceId}",
+     *     "/desktop/home_tab/{homeTab}/associate/widget/{widgetInstance}",
      *     name="claro_desktop_associate_widget_to_home_tab",
      *     options = {"expose"=true}
      * )
      * @EXT\Method("POST")
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
-     * @EXT\ParamConverter(
-     *     "homeTab",
-     *     class="ClarolineCoreBundle:Home\HomeTab",
-     *     options={"id" = "homeTabId", "strictId" = true}
-     * )
-     * @EXT\ParamConverter(
-     *     "widgetInstance",
-     *     class="ClarolineCoreBundle:Widget\WidgetInstance",
-     *     options={"id" = "widgetInstanceId", "strictId" = true}
-     * )
      *
      * Associate given WidgetInstance to given Home tab.
      *
@@ -1031,7 +1005,6 @@ class HomeController extends Controller
         } else {
             $widgetHomeTabConfig->setWidgetOrder($lastOrder['order_max'] + 1);
         }
-
         $this->homeTabManager->insertWidgetHomeTabConfig($widgetHomeTabConfig);
 
         return new Response('success', 204);
@@ -1039,38 +1012,23 @@ class HomeController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/workspace/{workspaceId}/home_tab/{homeTabId}/associate/widget/{widgetInstanceId}",
+     *     "/workspace/{workspace}/home_tab/{homeTab}/associate/widget/{widgetInstance}",
      *     name="claro_workspace_associate_widget_to_home_tab",
      *     options = {"expose"=true}
      * )
      * @EXT\Method("POST")
-     * @EXT\ParamConverter(
-     *     "homeTab",
-     *     class="ClarolineCoreBundle:Home\HomeTab",
-     *     options={"id" = "homeTabId", "strictId" = true}
-     * )
-     * @EXT\ParamConverter(
-     *     "widgetInstance",
-     *     class="ClarolineCoreBundle:Widget\WidgetInstance",
-     *     options={"id" = "widgetInstanceId", "strictId" = true}
-     * )
-     * @EXT\ParamConverter(
-     *      "workspace",
-     *      class="ClarolineCoreBundle:Workspace\Workspace",
-     *      options={"id" = "workspaceId", "strictId" = true}
-     * )
      *
      * Associate given WidgetInstance to given Home tab.
      *
      * @return Response
      */
     public function associateWorkspaceWidgetToHomeTabAction(
+        Workspace $workspace,
         HomeTab $homeTab,
-        WidgetInstance $widgetInstance,
-        Workspace $workspace
+        WidgetInstance $widgetInstance
     )
     {
-        $this->checkWorkspaceAccess($workspace);
+        $this->checkWorkspaceEditionAccess($workspace);
 
         $widgetHomeTabConfig = new WidgetHomeTabConfig();
         $widgetHomeTabConfig->setHomeTab($homeTab);
@@ -1088,7 +1046,6 @@ class HomeController extends Controller
         } else {
             $widgetHomeTabConfig->setWidgetOrder($lastOrder['order_max'] + 1);
         }
-
         $this->homeTabManager->insertWidgetHomeTabConfig($widgetHomeTabConfig);
 
         return new Response('success', 204);
