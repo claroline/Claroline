@@ -103,8 +103,11 @@
     
     $('#widgets-section').on('click', '#create-widget-instance', function () {
         window.Claroline.Modal.displayForm(
-            Routing.generate('claro_desktop_widget_instance_create_form'),
-            associateWidgetToHomeTab,
+            Routing.generate(
+                'claro_desktop_widget_instance_create_form',
+                {'homeTab': currentHomeTabId}
+            ),
+            reloadPage,
             function() {}
         );
     });
@@ -290,22 +293,26 @@
         grid.remove_widget(widgetElement);
     };
     
-    var associateWidgetToHomeTab = function (widgetInstanceId) {
+//    var associateWidgetToHomeTab = function (widgetInstanceId) {
+//
+//        $.ajax({
+//            url: Routing.generate(
+//                'claro_desktop_associate_widget_to_home_tab',
+//                {
+//                    'homeTab': currentHomeTabId,
+//                    'widgetInstance': widgetInstanceId
+//                }
+//            ),
+//            type: 'POST',
+//            success: function () {
+//                window.location.reload();
+//            }
+//        });
+//    };
 
-        $.ajax({
-            url: Routing.generate(
-                'claro_desktop_associate_widget_to_home_tab',
-                {
-                    'homeTab': currentHomeTabId,
-                    'widgetInstance': widgetInstanceId
-                }
-            ),
-            type: 'POST',
-            success: function () {
-                window.location.reload();
-            }
-        });
-    };
+    var reloadPage = function () {
+        window.location.reload();
+    }
     
     var updateWidget = function (datas) {
         var id = datas['id'];

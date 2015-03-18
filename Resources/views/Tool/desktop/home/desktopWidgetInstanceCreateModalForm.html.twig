@@ -15,11 +15,11 @@
         </div>
         <div class="modal-body">
             <form id="desktop-widget-instance-create-form"
-                  action="{{ path('claro_desktop_widget_instance_create') }}"
+                  action="{{ path('claro_desktop_widget_instance_create', {'homeTab': homeTab.getId()}) }}"
                   method="POST"
-                  {{ form_enctype(form) }}
             > 
-                {{ form_widget(form) }}
+                {{ form_widget(instanceForm) }}
+                {{ form_widget(displayConfigForm) }}
             </form>
         </div>
         <div class="modal-footer">

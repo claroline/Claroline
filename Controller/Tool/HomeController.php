@@ -246,7 +246,7 @@ class HomeController extends Controller
 
     /**
      * @EXT\Route(
-     *     "desktop/widget/instance/create/form",
+     *     "desktop/hometab/{homeTab}/widget/instance/create/form",
      *     name="claro_desktop_widget_instance_create_form",
      *     options = {"expose"=true}
      * )
@@ -257,21 +257,27 @@ class HomeController extends Controller
      *
      * @return Response
      */
-    public function desktopWidgetInstanceCreateFormAction()
+    public function desktopWidgetInstanceCreateFormAction(HomeTab $homeTab)
     {
-        $widgetInstance = new WidgetInstance();
-        $form = $this->formFactory->create(
-            FormFactory::TYPE_WIDGET_INSTANCE,
-            array('desktop_widget' => true),
-            $widgetInstance
+        $instanceForm = $this->symfonyFormFactory->create(
+            new WidgetInstanceType(true),
+            new WidgetInstance()
+        );
+        $displayConfigForm = $this->symfonyFormFactory->create(
+            new WidgetDisplayConfigType(),
+            new WidgetDisplayConfig()
         );
 
-        return array('form' => $form->createView());
+        return array(
+            'homeTab' => $homeTab,
+            'instanceForm' => $instanceForm->createView(),
+            'displayConfigForm' => $displayConfigForm->createView()
+        );
     }
 
     /**
      * @EXT\Route(
-     *     "desktop/widget/instance/create",
+     *     "desktop/hometab/{homeTab}/widget/instance/create",
      *     name="claro_desktop_widget_instance_create",
      *     options = {"expose"=true}
      * )
@@ -283,28 +289,54 @@ class HomeController extends Controller
      *
      * @return Response
      */
-    public function desktopWidgetInstanceCreateAction(User $user)
+    public function desktopWidgetInstanceCreateAction(User $user, HomeTab $homeTab)
     {
         $widgetInstance = new WidgetInstance();
+        $widgetDisplayConfig = new WidgetDisplayConfig();
 
-        $form = $this->formFactory->create(
-            FormFactory::TYPE_WIDGET_INSTANCE,
-            array('desktop_widget' => true),
+        $instanceForm = $this->symfonyFormFactory->create(
+            new WidgetInstanceType(true),
             $widgetInstance
         );
-        $form->handleRequest($this->request);
+        $displayConfigForm = $this->symfonyFormFactory->create(
+            new WidgetDisplayConfigType(),
+            $widgetDisplayConfig
+        );
+        $instanceForm->handleRequest($this->request);
+        $displayConfigForm->handleRequest($this->request);
 
-        if ($form->isValid()) {
+        if ($instanceForm->isValid() && $displayConfigForm->isValid()) {
             $widgetInstance->setUser($user);
             $widgetInstance->setIsAdmin(false);
             $widgetInstance->setIsDesktop(true);
+            $widgetHomeTabConfig = new WidgetHomeTabConfig();
+            $widgetHomeTabConfig->setHomeTab($homeTab);
+            $widgetHomeTabConfig->setWidgetInstance($widgetInstance);
+            $widgetHomeTabConfig->setUser($user);
+            $widgetHomeTabConfig->setVisible(true);
+            $widgetHomeTabConfig->setLocked(false);
+            $widgetHomeTabConfig->setWidgetOrder(1);
+            $widgetHomeTabConfig->setType('desktop');
+            $widget = $widgetInstance->getWidget();
+            $widgetDisplayConfig->setWidgetInstance($widgetInstance);
+            $widgetDisplayConfig->setUser($user);
+            $widgetDisplayConfig->setWidth($widget->getDefaultWidth());
+            $widgetDisplayConfig->setHeight($widget->getDefaultHeight());
 
-            $this->widgetManager->insertWidgetInstance($widgetInstance);
+            $this->widgetManager->persistWidgetConfigs(
+                $widgetInstance,
+                $widgetHomeTabConfig,
+                $widgetDisplayConfig
+            );
 
             return new JsonResponse($widgetInstance->getId(), 200);
         } else {
 
-            return array('form' => $form->createView());
+            return array(
+                'homeTab' => $homeTab,
+                'instanceForm' => $instanceForm->createView(),
+                'displayConfigForm' => $displayConfigForm->createView()
+            );
         }
     }
 
@@ -1222,46 +1254,6 @@ class HomeController extends Controller
 
         $isVisible = ($visible === 'visible') ? true : false;
         $this->homeTabManager->updateVisibility($homeTabConfig, $isVisible);
-
-        return new Response('success', 204);
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/desktop/home_tab/{homeTab}/associate/widget/{widgetInstance}",
-     *     name="claro_desktop_associate_widget_to_home_tab",
-     *     options = {"expose"=true}
-     * )
-     * @EXT\Method("POST")
-     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
-     *
-     * Associate given WidgetInstance to given Home tab.
-     *
-     * @return Response
-     */
-    public function associateDesktopWidgetToHomeTabAction(
-        User $user,
-        HomeTab $homeTab,
-        WidgetInstance $widgetInstance
-    )
-    {
-        $widgetHomeTabConfig = new WidgetHomeTabConfig();
-        $widgetHomeTabConfig->setHomeTab($homeTab);
-        $widgetHomeTabConfig->setWidgetInstance($widgetInstance);
-        $widgetHomeTabConfig->setUser($user);
-        $widgetHomeTabConfig->setVisible(true);
-        $widgetHomeTabConfig->setLocked(false);
-        $widgetHomeTabConfig->setType('desktop');
-
-        $lastOrder = $this->homeTabManager
-            ->getOrderOfLastWidgetInHomeTabByUser($homeTab, $user);
-
-        if (is_null($lastOrder['order_max'])) {
-            $widgetHomeTabConfig->setWidgetOrder(1);
-        } else {
-            $widgetHomeTabConfig->setWidgetOrder($lastOrder['order_max'] + 1);
-        }
-        $this->homeTabManager->insertWidgetHomeTabConfig($widgetHomeTabConfig);
 
         return new Response('success', 204);
     }
