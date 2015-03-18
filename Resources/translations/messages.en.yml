@@ -154,6 +154,7 @@ explainCoeffDis2: The questions with a discrimination coefficient between 0.35 a
 explainCoeffDis3: Questions which have a negative index signal a discrepancy, the best students fail these questions, the lowest pass these questions.
 explainMeasureDifficulty: The measure of difficulty is equal to the percentage of success to the question
 export CSV of results: Export CSV of results
+exportQTIExercise : Export questions of exercise in QTI format
 
 # F
 feedback: Feedback

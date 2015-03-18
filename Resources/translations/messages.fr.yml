@@ -154,6 +154,7 @@ explainCoeffDis2: Les questions dont le coefficient de discrimination se situe e
 explainCoeffDis3: Les questions ayant un indice négatif signalent une incohérence, les meilleurs candidats échouent à ces questions tandis que les plus faibles réussissent.
 explainMeasureDifficulty: L'indice de difficulté équivaut à un pourcentage de réussite à la question
 export CSV of results: Export CSV des résultats
+exportQTIExercise : Exporter les questions de l'exercice au format QTI
 
 # F
 feedback: Commentaire
@@ -201,7 +202,7 @@ import: Importer
 import QTI : Importer des questions au format QTI
 import questions: Importer des questions
 infoSearchType: Si vous voulez faire une recherche par type, vous devez utiliser les mots clés suivants
-instruction add hole : Pour créer un trou, selectionnez le texte à trouer dans l'éditeur "Texte à trous", puis cliquer sur le bouton "Créer un blanc".
+instruction add hole : Pour créer un trou, sélectionnez le texte à trouer dans l'éditeur "Texte à trous", puis cliquez sur le bouton "Créer un blanc".
 instruction matching: Pour définir vos correspondances, choisissez dans la colonne "Correspondance" le numéro d'une ou plusieurs propositions à associer.
 interactionGraphic creation: Création d'une question Graphique
 interactionGraphic Edition: Edition d'une question Graphique
