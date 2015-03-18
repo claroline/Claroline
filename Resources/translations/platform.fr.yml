@@ -1159,3 +1159,4 @@ install_update_cant_be_undone: Les opérations d'installation et de mise à jour
 list_view: Vue en liste (beta)
 created_by: Créé par %creator% le %creationDate%
 updated_by: Dernière màj: %modificationDate%
+display_at_registration: Afficher à la création du compte

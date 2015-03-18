@@ -48,64 +48,63 @@ class ProfileCreationType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         parent::buildForm($builder, $options);
-
         $isAdmin = $this->isAdmin;
 
-            $builder->add('firstName', 'text', array('label' => 'First name'))
-                ->add('lastName', 'text', array('label' => 'Last name'))
-                ->add('username', 'text', array('label' => 'User name'))
-                ->add(
-                    'plainPassword',
-                    'repeated',
-                    array(
-                        'type' => 'password',
-                        'first_options' => array('label' => 'password'),
-                        'second_options' => array('label' => 'verification')
-                    )
+        $builder->add('firstName', 'text', array('label' => 'First name'))
+            ->add('lastName', 'text', array('label' => 'Last name'))
+            ->add('username', 'text', array('label' => 'User name'))
+            ->add(
+                'plainPassword',
+                'repeated',
+                array(
+                    'type' => 'password',
+                    'first_options' => array('label' => 'password'),
+                    'second_options' => array('label' => 'verification')
                 )
-                ->add(
-                    'administrativeCode',
-                    'text',
-                    array(
-                        'required' => false, 'label' => 'administrative_code'
-                    )
+            )
+            ->add(
+                'administrativeCode',
+                'text',
+                array(
+                    'required' => false, 'label' => 'administrative_code'
                 )
-                ->add('mail', 'email', array('required' => true, 'label' => 'email'))
-                ->add('phone', 'text', array('required' => false, 'label' => 'phone'))
-                ->add('locale', 'choice', array('choices' => $this->langs, 'required' => false, 'label' => 'Language'))
-                ->add(
-                    'authentication',
-                    'choice',
-                    array(
-                        'choices' => $this->authenticationDrivers,
-                        'required' => false,
-                        'label' => 'authentication'
-                    )
+            )
+            ->add('mail', 'email', array('required' => true, 'label' => 'email'))
+            ->add('phone', 'text', array('required' => false, 'label' => 'phone'))
+            ->add('locale', 'choice', array('choices' => $this->langs, 'required' => false, 'label' => 'Language'))
+            ->add(
+                'authentication',
+                'choice',
+                array(
+                    'choices' => $this->authenticationDrivers,
+                    'required' => false,
+                    'label' => 'authentication'
                 )
-                ->add(
-                    'platformRoles',
-                    'entity',
-                    array(
-                        'label' => 'roles',
-                        'mapped' => false,
-                        'data' => $this->platformRoles,
-                        'class' => 'Claroline\CoreBundle\Entity\Role',
-                        'expanded' => true,
-                        'multiple' => true,
-                        'property' => 'translationKey',
-                        'query_builder' => function (\Doctrine\ORM\EntityRepository $er) use ($isAdmin) {
-                            $query = $er->createQueryBuilder('r')
-                                    ->where("r.type = " . Role::PLATFORM_ROLE)
-                                    ->andWhere("r.name != 'ROLE_USER'")
-                                    ->andWhere("r.name != 'ROLE_ANONYMOUS'");
-                            if (!$isAdmin) {
-                                $query->andWhere("r.name != 'ROLE_ADMIN'");
-                            }
-
-                            return $query;
+            )
+            ->add(
+                'platformRoles',
+                'entity',
+                array(
+                    'label' => 'roles',
+                    'mapped' => false,
+                    'data' => $this->platformRoles,
+                    'class' => 'Claroline\CoreBundle\Entity\Role',
+                    'expanded' => true,
+                    'multiple' => true,
+                    'property' => 'translationKey',
+                    'query_builder' => function (\Doctrine\ORM\EntityRepository $er) use ($isAdmin) {
+                        $query = $er->createQueryBuilder('r')
+                                ->where("r.type = " . Role::PLATFORM_ROLE)
+                                ->andWhere("r.name != 'ROLE_USER'")
+                                ->andWhere("r.name != 'ROLE_ANONYMOUS'");
+                        if (!$isAdmin) {
+                            $query->andWhere("r.name != 'ROLE_ADMIN'");
                         }
-                    )
-                );
+
+                        return $query;
+                    }
+                )
+            );
     }
 
     public function getName()

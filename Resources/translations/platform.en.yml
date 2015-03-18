@@ -1153,3 +1153,4 @@ list_view: List view (beta)
 last_modification: Last modification
 created_by: Created by %creator% the %creationDate%
 updated_by: Last update: %modificationDate%
+display_at_registration: Display at registration
