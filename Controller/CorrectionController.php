@@ -902,13 +902,12 @@ class CorrectionController extends DropzoneBaseController
         // Appel de la vue qui va gérer l'ajout des commentaires. InnovaERV.
         $view = 'InnovaCollecticielBundle:Correction:correctCriteria.html.twig';
 
+//var_dump($document);die();
 //        echo "userId = " . $userId;
 //        echo " correctionId = " . $correction->getUser()->getId() . " / " . $correction->getDrop()->getId() . " / " . $dropzone->getId();
 //        echo " correctionUserName = " . $correction->getUser()->getUserName();
 
         if ($state == 'show' || $state == 'edit') {
-            //Test passage d'une donnée
-            $test = "Eric";
             return $this->render(
                 $view,
                 array(
@@ -921,8 +920,9 @@ class CorrectionController extends DropzoneBaseController
                     'admin' => true,
                     'edit' => $edit,
                     'state' => $state,
+                    'document' => $document,
                     'comments' => $comments,
-                    'test' => $test,
+                    'user' => $userId,
                 )
             );
         } else if ($state == 'preview') {
@@ -2053,6 +2053,7 @@ echo "ici : ";die();
 //        $event = new LogCorrectionStartEvent($dropzone, $drop, $correction);
 //        $this->dispatch($event);
 
+// Modifier la redirection. InnovaERV.
         return $this->redirect(
             $this->generateUrl(
                 'innova_collecticiel_drops_detail_comment',
