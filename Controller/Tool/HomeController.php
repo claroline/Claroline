@@ -19,7 +19,7 @@ use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 use Claroline\CoreBundle\Entity\Widget\WidgetHomeTabConfig;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\StrictDispatcher;
-use Claroline\CoreBundle\Form\Factory\FormFactory;
+use Claroline\CoreBundle\Form\HomeTabType;
 use Claroline\CoreBundle\Form\HomeTabConfigType;
 use Claroline\CoreBundle\Form\WidgetDisplayType;
 use Claroline\CoreBundle\Form\WidgetDisplayConfigType;
@@ -31,7 +31,7 @@ use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CoreBundle\Manager\WidgetManager;
 use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\Form\FormFactory as SymfonyFormFactory;
+use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -52,7 +52,6 @@ class HomeController extends Controller
     private $request;
     private $roleManager;
     private $securityContext;
-    private $symfonyFormFactory;
     private $toolManager;
     private $widgetManager;
 
@@ -60,12 +59,11 @@ class HomeController extends Controller
      * @DI\InjectParams({
      *     "em"                 = @DI\Inject("doctrine.orm.entity_manager"),
      *     "eventDispatcher"    = @DI\Inject("claroline.event.event_dispatcher"),
-     *     "formFactory"        = @DI\Inject("claroline.form.factory"),
+     *     "formFactory"        = @DI\Inject("form.factory"),
      *     "homeTabManager"     = @DI\Inject("claroline.manager.home_tab_manager"),
      *     "request"            = @DI\Inject("request"),
      *     "roleManager"        = @DI\Inject("claroline.manager.role_manager"),
      *     "securityContext"    = @DI\Inject("security.context"),
-     *     "symfonyFormFactory" = @DI\Inject("form.factory"),
      *     "toolManager"        = @DI\Inject("claroline.manager.tool_manager"),
      *     "widgetManager"      = @DI\Inject("claroline.manager.widget_manager")
      * })
@@ -78,7 +76,6 @@ class HomeController extends Controller
         Request $request,
         RoleManager $roleManager,
         SecurityContextInterface $securityContext,
-        SymfonyFormFactory $symfonyFormFactory,
         ToolManager $toolManager,
         WidgetManager $widgetManager
     )
@@ -90,7 +87,6 @@ class HomeController extends Controller
         $this->request = $request;
         $this->roleManager = $roleManager;
         $this->securityContext = $securityContext;
-        $this->symfonyFormFactory = $symfonyFormFactory;
         $this->toolManager = $toolManager;
         $this->widgetManager = $widgetManager;
     }
@@ -259,11 +255,11 @@ class HomeController extends Controller
      */
     public function desktopWidgetInstanceCreateFormAction(HomeTab $homeTab)
     {
-        $instanceForm = $this->symfonyFormFactory->create(
+        $instanceForm = $this->formFactory->create(
             new WidgetInstanceType(true),
             new WidgetInstance()
         );
-        $displayConfigForm = $this->symfonyFormFactory->create(
+        $displayConfigForm = $this->formFactory->create(
             new WidgetDisplayConfigType(),
             new WidgetDisplayConfig()
         );
@@ -294,11 +290,11 @@ class HomeController extends Controller
         $widgetInstance = new WidgetInstance();
         $widgetDisplayConfig = new WidgetDisplayConfig();
 
-        $instanceForm = $this->symfonyFormFactory->create(
+        $instanceForm = $this->formFactory->create(
             new WidgetInstanceType(true),
             $widgetInstance
         );
-        $displayConfigForm = $this->symfonyFormFactory->create(
+        $displayConfigForm = $this->formFactory->create(
             new WidgetDisplayConfigType(),
             $widgetDisplayConfig
         );
@@ -365,12 +361,10 @@ class HomeController extends Controller
         $this->checkUserAccessForWidgetDisplayConfig($widgetDisplayConfig, $user);
 
         $instanceForm = $this->formFactory->create(
-            FormFactory::TYPE_WIDGET_CONFIG,
-            array(),
+            new WidgetDisplayType(),
             $widgetInstance
         );
-
-        $displayConfigForm = $this->symfonyFormFactory->create(
+        $displayConfigForm = $this->formFactory->create(
             new WidgetDisplayConfigType(),
             $widgetDisplayConfig
         );
@@ -410,16 +404,14 @@ class HomeController extends Controller
         $this->checkUserAccessForWidgetDisplayConfig($widgetDisplayConfig, $user);
 
         $instanceForm = $this->formFactory->create(
-            FormFactory::TYPE_WIDGET_CONFIG,
-            array(),
+            new WidgetDisplayType(),
             $widgetInstance
         );
-        $instanceForm->handleRequest($this->request);
-
-        $displayConfigForm = $this->symfonyFormFactory->create(
+        $displayConfigForm = $this->formFactory->create(
             new WidgetDisplayConfigType(),
             $widgetDisplayConfig
         );
+        $instanceForm->handleRequest($this->request);
         $displayConfigForm->handleRequest($this->request);
 
         if ($instanceForm->isValid() && $displayConfigForm->isValid()) {
@@ -467,15 +459,15 @@ class HomeController extends Controller
     {
         $this->checkWorkspaceEditionAccess($workspace);
 
-        $instanceForm = $this->symfonyFormFactory->create(
+        $instanceForm = $this->formFactory->create(
             new WidgetInstanceType(false),
             new WidgetInstance()
         );
-        $widgetHomeTabConfigForm = $this->symfonyFormFactory->create(
+        $widgetHomeTabConfigForm = $this->formFactory->create(
             new WidgetHomeTabConfigType(),
             new WidgetHomeTabConfig()
         );
-        $displayConfigForm = $this->symfonyFormFactory->create(
+        $displayConfigForm = $this->formFactory->create(
             new WidgetDisplayConfigType(),
             new WidgetDisplayConfig()
         );
@@ -515,15 +507,15 @@ class HomeController extends Controller
         $widgetHomeTabConfig = new WidgetHomeTabConfig();
         $widgetDisplayConfig = new WidgetDisplayConfig();
 
-        $instanceForm = $this->symfonyFormFactory->create(
+        $instanceForm = $this->formFactory->create(
             new WidgetInstanceType(false),
             $widgetInstance
         );
-        $widgetHomeTabConfigForm = $this->symfonyFormFactory->create(
+        $widgetHomeTabConfigForm = $this->formFactory->create(
             new WidgetHomeTabConfigType(),
             $widgetHomeTabConfig
         );
-        $displayConfigForm = $this->symfonyFormFactory->create(
+        $displayConfigForm = $this->formFactory->create(
             new WidgetDisplayConfigType(),
             $widgetDisplayConfig
         );
@@ -593,15 +585,15 @@ class HomeController extends Controller
         $this->checkWorkspaceAccessForWidgetHomeTabConfig($widgetHomeTabConfig, $workspace);
         $this->checkWorkspaceAccessForWidgetDisplayConfig($widgetDisplayConfig, $workspace);
 
-        $instanceForm = $this->symfonyFormFactory->create(
+        $instanceForm = $this->formFactory->create(
             new WidgetDisplayType(),
             $widgetInstance
         );
-        $widgetHomeTabConfigForm = $this->symfonyFormFactory->create(
+        $widgetHomeTabConfigForm = $this->formFactory->create(
             new WidgetHomeTabConfigType(),
             $widgetHomeTabConfig
         );
-        $displayConfigForm = $this->symfonyFormFactory->create(
+        $displayConfigForm = $this->formFactory->create(
             new WidgetDisplayConfigType(),
             $widgetDisplayConfig
         );
@@ -642,15 +634,15 @@ class HomeController extends Controller
         $this->checkWorkspaceAccessForWidgetHomeTabConfig($widgetHomeTabConfig, $workspace);
         $this->checkWorkspaceAccessForWidgetDisplayConfig($widgetDisplayConfig, $workspace);
 
-        $instanceForm = $this->symfonyFormFactory->create(
+        $instanceForm = $this->formFactory->create(
             new WidgetDisplayType(),
             $widgetInstance
         );
-        $widgetHomeTabConfigForm = $this->symfonyFormFactory->create(
+        $widgetHomeTabConfigForm = $this->formFactory->create(
             new WidgetHomeTabConfigType(),
             $widgetHomeTabConfig
         );
-        $displayConfigForm = $this->symfonyFormFactory->create(
+        $displayConfigForm = $this->formFactory->create(
             new WidgetDisplayConfigType(),
             $widgetDisplayConfig
         );
@@ -800,8 +792,7 @@ class HomeController extends Controller
      */
     public function desktopHomeTabCreateFormAction()
     {
-        $homeTab = new HomeTab();
-        $form = $this->formFactory->create(FormFactory::TYPE_HOME_TAB, array(), $homeTab);
+        $form = $this->formFactory->create(new HomeTabType, new HomeTab());
 
         return array('form' => $form->createView());
     }
@@ -823,7 +814,7 @@ class HomeController extends Controller
     public function desktopHomeTabCreateAction(User $user)
     {
         $homeTab = new HomeTab();
-        $form = $this->formFactory->create(FormFactory::TYPE_HOME_TAB, array(), $homeTab);
+        $form = $this->formFactory->create(new HomeTabType, $homeTab);
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
@@ -856,16 +847,11 @@ class HomeController extends Controller
 
     /**
      * @EXT\Route(
-     *     "desktop/home_tab/{homeTabId}/edit/form",
+     *     "desktop/home_tab/{homeTab}/edit/form",
      *     name="claro_desktop_home_tab_edit_form",
      *     options = {"expose"=true}
      * )
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
-     * @EXT\ParamConverter(
-     *     "homeTab",
-     *     class="ClarolineCoreBundle:Home\HomeTab",
-     *     options={"id" = "homeTabId", "strictId" = true}
-     * )
      * @EXT\Template("ClarolineCoreBundle:Tool\desktop\home:desktopHomeTabEditModalForm.html.twig")
      *
      * Displays the homeTab edition form.
@@ -878,7 +864,7 @@ class HomeController extends Controller
     {
         $this->checkUserAccessForHomeTab($homeTab, $user);
 
-        $form = $this->formFactory->create(FormFactory::TYPE_HOME_TAB, array(), $homeTab);
+        $form = $this->formFactory->create(new HomeTabType, $homeTab);
 
         return array(
             'form' => $form->createView(),
@@ -888,17 +874,12 @@ class HomeController extends Controller
 
     /**
      * @EXT\Route(
-     *     "desktop/home_tab/{homeTabId}/edit",
+     *     "desktop/home_tab/{homeTab}/edit",
      *     name="claro_desktop_home_tab_edit",
      *     options = {"expose"=true}
      * )
      * @EXT\Method("POST")
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
-     * @EXT\ParamConverter(
-     *     "homeTab",
-     *     class="ClarolineCoreBundle:Home\HomeTab",
-     *     options={"id" = "homeTabId", "strictId" = true}
-     * )
      * @EXT\Template("ClarolineCoreBundle:Tool\desktop\home:desktopHomeTabEditModalForm.html.twig")
      *
      * Edit the homeTab.
@@ -911,7 +892,7 @@ class HomeController extends Controller
     {
         $this->checkUserAccessForHomeTab($homeTab, $user);
 
-        $form = $this->formFactory->create(FormFactory::TYPE_HOME_TAB, array(), $homeTab);
+        $form = $this->formFactory->create(new HomeTabType, $homeTab);
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
@@ -1000,16 +981,13 @@ class HomeController extends Controller
     {
         $this->checkWorkspaceEditionAccess($workspace);
 
-        $homeTab = new HomeTab();
-        $homeTabConfig = new HomeTabConfig();
         $homeTabForm = $this->formFactory->create(
-            FormFactory::TYPE_HOME_TAB,
-            array(),
-            $homeTab
+            new HomeTabType(),
+            new HomeTab()
         );
-        $homeTabConfigForm = $this->symfonyFormFactory->create(
+        $homeTabConfigForm = $this->formFactory->create(
             new HomeTabConfigType(),
-            $homeTabConfig
+            new HomeTabConfig()
         );
 
         return array(
@@ -1039,11 +1017,10 @@ class HomeController extends Controller
         $homeTab = new HomeTab();
         $homeTabConfig = new HomeTabConfig();
         $homeTabForm = $this->formFactory->create(
-            FormFactory::TYPE_HOME_TAB,
-            array(),
+            new HomeTabType(),
             $homeTab
         );
-        $homeTabConfigForm = $this->symfonyFormFactory->create(
+        $homeTabConfigForm = $this->formFactory->create(
             new HomeTabConfigType(),
             $homeTabConfig
         );
@@ -1102,8 +1079,11 @@ class HomeController extends Controller
         $this->checkWorkspaceEditionAccess($workspace);
         $this->checkWorkspaceAccessForHomeTab($homeTab, $workspace);
 
-        $homeTabForm = $this->formFactory->create(FormFactory::TYPE_HOME_TAB, array(), $homeTab);
-        $homeTabConfigForm = $this->symfonyFormFactory->create(
+        $homeTabForm = $this->formFactory->create(
+            new HomeTabType(),
+            $homeTab
+        );
+        $homeTabConfigForm = $this->formFactory->create(
             new HomeTabConfigType(),
             $homeTabConfig
         );
@@ -1137,12 +1117,15 @@ class HomeController extends Controller
         $this->checkWorkspaceEditionAccess($workspace);
         $this->checkWorkspaceAccessForHomeTab($homeTab, $workspace);
 
-        $homeTabForm = $this->formFactory->create(FormFactory::TYPE_HOME_TAB, array(), $homeTab);
-        $homeTabForm->handleRequest($this->request);
-        $homeTabConfigForm = $this->symfonyFormFactory->create(
+        $homeTabForm = $this->formFactory->create(
+            new HomeTabType(),
+            $homeTab
+        );
+        $homeTabConfigForm = $this->formFactory->create(
             new HomeTabConfigType(),
             $homeTabConfig
         );
+        $homeTabForm->handleRequest($this->request);
         $homeTabConfigForm->handleRequest($this->request);
 
         if ($homeTabForm->isValid() && $homeTabConfigForm->isValid()) {

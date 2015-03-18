@@ -15,7 +15,7 @@
         </div>
         <div class="modal-body">
             <form id="desktop-home-tab-edit-form"
-                  action="{{ path('claro_desktop_home_tab_edit', {'homeTabId': homeTab.getId()}) }}"
+                  action="{{ path('claro_desktop_home_tab_edit', {'homeTab': homeTab.getId()}) }}"
                   method="POST"
                   {{ form_enctype(form) }}
             > 

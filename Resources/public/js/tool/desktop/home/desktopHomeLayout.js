@@ -28,7 +28,7 @@
         window.Claroline.Modal.displayForm(
             Routing.generate(
                 'claro_desktop_home_tab_edit_form',
-                {'homeTabId': homeTabId}
+                {'homeTab': homeTabId}
             ),
             renameHomeTab,
             function() {}
