@@ -29,10 +29,12 @@ portfolioApp
                         remove: { method: "DELETE"}
                     }
                 );
-                widget.prototype.editing  = false;
-                widget.prototype.new      = true;
-                widget.prototype.type     = type;
-                widget.prototype.updating = false;
+                widget.prototype.editing   = false;
+                widget.prototype.new       = true;
+                widget.prototype.type      = type;
+                widget.prototype.updating  = false;
+                widget.prototype.isDragged = false;
+                widget.prototype.isResized = false;
 
                 widget.prototype.generateUrl = function(parameters) {
                     parameters.portfolioId = portfolioId;

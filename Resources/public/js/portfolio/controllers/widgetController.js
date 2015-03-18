@@ -21,4 +21,10 @@ portfolioApp
         $scope.delete = function() {
             widgetsManager.delete($scope.widget);
         };
+
+        $scope.$watchGroup(['widget.row','widget.col','widget.sizeX','widget.sizeY'], function(newValue, oldValue) {
+            if (newValue !== oldValue && !$scope.widget.isDragged && !$scope.widget.isResized) {
+                $scope.save();
+            }
+        });
     }]);
