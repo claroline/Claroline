@@ -43,30 +43,54 @@ class ActivityControllerTest extends UnitTestCase
         $this->assertEquals(204, $response->getStatusCode());
     }
 
-    public function testLinkAbilityAction()
+    /**
+     * @dataProvider linkActionProvider
+     * @param string $method
+     * @param string $target
+     */
+    public function testLinkActionsForAlreadyLinkedTargets($method, $target)
     {
         $activity = new Activity();
-        $ability = new Ability();
         $this->activityManager->expects($this->once())
             ->method('createLink')
-            ->with($activity, $ability)
-            ->willReturn('ABILITY');
-        $response = $this->controller->linkAbilityAction($activity, $ability);
-        $this->assertEquals(200, $response->getStatusCode());
-        $this->assertEquals(json_encode('ABILITY'), $response->getContent());
+            ->with($activity, $target)
+            ->willReturn(false);
+        $response = $this->controller->{$method}($activity, $target);
+        $this->assertEquals(204, $response->getStatusCode());
     }
 
-    public function testRemoveAbilityLinkAction()
+    /**
+     * @dataProvider linkActionProvider
+     * @param string $method
+     * @param string $target
+     */
+    public function testLinkActions($method, $target)
     {
         $activity = new Activity();
-        $ability = new Ability();
+        $this->activityManager->expects($this->once())
+            ->method('createLink')
+            ->with($activity, $target)
+            ->willReturn('TARGET');
+        $response = $this->controller->{$method}($activity, $target);
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals(json_encode('TARGET'), $response->getContent());
+    }
+
+    /**
+     * @dataProvider removeLinkActionProvider
+     * @param string $method
+     * @param string $target
+     */
+    public function testRemoveLinkActions($method, $target)
+    {
+        $activity = new Activity();
         $this->activityManager->expects($this->once())
             ->method('removeLink')
-            ->with($activity, $ability)
-            ->willReturn('ABILITY');
+            ->with($activity, $target)
+            ->willReturn('TARGET');
         $this->assertEquals(
-            json_encode('ABILITY'),
-            $this->controller->removeAbilityLinkAction($activity, $ability)->getContent()
+            json_encode('TARGET'),
+            $this->controller->{$method}($activity, $target)->getContent()
         );
     }
 
@@ -86,5 +110,21 @@ class ActivityControllerTest extends UnitTestCase
             ['ability' => $ability],
             $this->controller->abilityActivitiesAction($ability)
         );
+    }
+
+    public function linkActionProvider()
+    {
+        return [
+            ['linkAbilityAction', new Ability()],
+            ['linkCompetencyAction', new Competency()]
+        ];
+    }
+
+    public function removeLinkActionProvider()
+    {
+        return [
+            ['removeAbilityLinkAction', new Ability()],
+            ['removeCompetencyLinkAction', new Competency()]
+        ];
     }
 }

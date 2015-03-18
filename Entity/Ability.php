@@ -67,6 +67,7 @@ class Ability implements \JsonSerializable
     public function __construct()
     {
         $this->activities = new ArrayCollection();
+        $this->competencyAbilities = new ArrayCollection();
     }
 
     /**
@@ -164,7 +165,7 @@ class Ability implements \JsonSerializable
      */
     public function removeActivity(Activity $activity)
     {
-        if (!$this->isLinkedToActivity($activity)) {
+        if ($this->isLinkedToActivity($activity)) {
             $this->activities->removeElement($activity);
             $this->activityCount--;
         }

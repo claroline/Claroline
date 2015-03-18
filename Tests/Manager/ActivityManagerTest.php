@@ -32,6 +32,41 @@ class ActivityManagerTest extends UnitTestCase
         $this->manager = new ActivityManager($this->om);
     }
 
+    public function testLoadLinkedCompetencies()
+    {
+        $activity = new Activity();
+        $ability = new Ability();
+        $competency = new Competency();
+        $this->abilityRepo->expects($this->once())
+            ->method('findByActivity')
+            ->with($activity)
+            ->willReturn([$ability]);
+        $this->competencyRepo->expects($this->once())
+            ->method('findByActivity')
+            ->with($activity)
+            ->willReturn([$competency]);
+        $this->competencyRepo->expects($this->any())
+            ->method('getPath')
+            ->willReturn([]);
+        $this->manager->loadLinkedCompetencies($activity);
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testCreateLinkThrowsOnWrongTargetType()
+    {
+        $this->manager->createLink(new Activity(), 'Bad type');
+    }
+
+    public function testCreateLinkReturnsFalseIfLinkExists()
+    {
+        $activity = new Activity();
+        $ability = new Ability();
+        $ability->linkActivity($activity);
+        $this->assertFalse($this->manager->createLink($activity, $ability));
+    }
+
     /**
      * @expectedException \InvalidArgumentException
      */
@@ -49,24 +84,24 @@ class ActivityManagerTest extends UnitTestCase
     }
 
     /**
-     * @dataProvider targetClassProvider
-     * @param string $targetClass
+     * @dataProvider targetProvider
+     * @param mixed $target
      */
-    public function testRemoveLink($targetClass)
+    public function testRemoveLink($target)
     {
         $activity = new Activity();
-        $ability = $this->mock($targetClass);
-        $ability->expects($this->once())->method('isLinkedToActivity')->with($activity)->willReturn(true);
-        $ability->expects($this->once())->method('removeActivity')->with($activity);
+        $target->linkActivity($activity);
         $this->om->expects($this->once())->method('flush');
-        $this->manager->removeLink($activity, $ability);
+        $this->manager->removeLink($activity, $target);
+        $this->assertFalse($target->isLinkedToActivity($activity));
     }
 
-    public function targetClassProvider()
+
+    public function targetProvider()
     {
         return [
-            ['HeVinci\CompetencyBundle\Entity\Ability'],
-            ['HeVinci\CompetencyBundle\Entity\Competency']
+            [new Ability()],
+            [new Competency()]
         ];
     }
 }

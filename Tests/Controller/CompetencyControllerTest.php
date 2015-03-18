@@ -468,4 +468,17 @@ class CompetencyControllerTest extends UnitTestCase
             $this->controller->suggestAbilityAction($parent, 'SEARCH')->getContent()
         );
     }
+
+    public function testActivitiesAction()
+    {
+        $framework = new Competency();
+        $this->manager->expects($this->once())
+            ->method('loadFramework')
+            ->with($framework)
+            ->willReturn('FRAMEWORK');
+        $this->assertEquals(
+            ['framework' => 'FRAMEWORK'],
+            $this->controller->activitiesAction($framework)
+        );
+    }
 }
