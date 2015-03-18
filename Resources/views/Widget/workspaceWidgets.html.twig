@@ -64,7 +64,13 @@
                                     {% endif %}
                                 </span>
                             {% endif %}
-                            <span {% if canEdit %}id="widget-element-title-{{ whtcId }}"{% endif %}>
+                            <span {% if canEdit %}
+                                      id="widget-element-title-{{ whtcId }}"
+                                      {% if not widgetHomeTabConfig.isVisible() %}
+                                          class="strike"
+                                      {% endif %}
+                                  {% endif %}
+                            >
                                {{ widgetInstance.getName() }}
                             </span>
                         </h3>

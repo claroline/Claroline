@@ -21,7 +21,10 @@ use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Form\HomeTabConfigType;
+use Claroline\CoreBundle\Form\WidgetDisplayType;
 use Claroline\CoreBundle\Form\WidgetDisplayConfigType;
+use Claroline\CoreBundle\Form\WidgetHomeTabConfigType;
+use Claroline\CoreBundle\Form\WidgetInstanceType;
 use Claroline\CoreBundle\Manager\HomeTabManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\ToolManager;
@@ -423,6 +426,129 @@ class HomeController extends Controller
         } else {
 
             return array('workspace' => $workspace, 'form' => $form->createView());
+        }
+    }
+
+    /**
+     * @EXT\Route(
+     *     "workspace/{workspace}/widget/instance/{widgetInstance}/config/{widgetHomeTabConfig}/display/{widgetDisplayConfig}/edit/form",
+     *     name="claro_workspace_widget_config_edit_form",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\home:workspaceWidgetEditModalForm.html.twig")
+     *
+     * Displays the widget config form.
+     *
+     * @return Response
+     */
+    public function workspaceWidgetConfigEditFormAction(
+        Workspace $workspace,
+        WidgetInstance $widgetInstance,
+        WidgetHomeTabConfig $widgetHomeTabConfig,
+        WidgetDisplayConfig $widgetDisplayConfig
+    )
+    {
+        $this->checkWorkspaceEditionAccess($workspace);
+        $this->checkWorkspaceAccessForWidgetInstance($widgetInstance, $workspace);
+        $this->checkWorkspaceAccessForWidgetHomeTabConfig($widgetHomeTabConfig, $workspace);
+        $this->checkWorkspaceAccessForWidgetDisplayConfig($widgetDisplayConfig, $workspace);
+
+        $instanceForm = $this->symfonyFormFactory->create(
+            new WidgetDisplayType(),
+            $widgetInstance
+        );
+        $widgetHomeTabConfigForm = $this->symfonyFormFactory->create(
+            new WidgetHomeTabConfigType(),
+            $widgetHomeTabConfig
+        );
+
+        $displayConfigForm = $this->symfonyFormFactory->create(
+            new WidgetDisplayConfigType(),
+            $widgetDisplayConfig
+        );
+
+        return array(
+            'workspace' => $workspace,
+            'instanceForm' => $instanceForm->createView(),
+            'widgetHomeTabConfigForm' => $widgetHomeTabConfigForm->createView(),
+            'displayConfigForm' => $displayConfigForm->createView(),
+            'widgetInstance' => $widgetInstance,
+            'widgetHomeTabConfig' => $widgetHomeTabConfig,
+            'widgetDisplayConfig' => $widgetDisplayConfig
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "workspace/{workspace}/widget/instance/{widgetInstance}/config/{widgetHomeTabConfig}/display/{widgetDisplayConfig}/edit",
+     *     name="claro_workspace_widget_config_edit",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\Method("POST")
+     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\home:workspaceWidgetEditModalForm.html.twig")
+     *
+     * Edit the widget config.
+     *
+     * @return Response
+     */
+    public function workspaceWidgetConfigEditAction(
+        Workspace $workspace,
+        WidgetInstance $widgetInstance,
+        WidgetHomeTabConfig $widgetHomeTabConfig,
+        WidgetDisplayConfig $widgetDisplayConfig
+    )
+    {
+        $this->checkWorkspaceEditionAccess($workspace);
+        $this->checkWorkspaceAccessForWidgetInstance($widgetInstance, $workspace);
+        $this->checkWorkspaceAccessForWidgetHomeTabConfig($widgetHomeTabConfig, $workspace);
+        $this->checkWorkspaceAccessForWidgetDisplayConfig($widgetDisplayConfig, $workspace);
+
+        $instanceForm = $this->symfonyFormFactory->create(
+            new WidgetDisplayType(),
+            $widgetInstance
+        );
+        $widgetHomeTabConfigForm = $this->symfonyFormFactory->create(
+            new WidgetHomeTabConfigType(),
+            $widgetHomeTabConfig
+        );
+        $displayConfigForm = $this->symfonyFormFactory->create(
+            new WidgetDisplayConfigType(),
+            $widgetDisplayConfig
+        );
+        $instanceForm->handleRequest($this->request);
+        $widgetHomeTabConfigForm->handleRequest($this->request);
+        $displayConfigForm->handleRequest($this->request);
+
+        if ($instanceForm->isValid() && $displayConfigForm->isValid()) {
+            $this->widgetManager->persistWidgetConfigs(
+                $widgetInstance,
+                $widgetHomeTabConfig,
+                $widgetDisplayConfig
+            );
+            $visibility = $widgetHomeTabConfig->isVisible() ?
+                'visible' :
+                'hidden';
+
+            return new JsonResponse(
+                array(
+                    'id' => $widgetHomeTabConfig->getId(),
+                    'color' => $widgetDisplayConfig->getColor(),
+                    'title' => $widgetInstance->getName(),
+                    'visibility' => $visibility
+                ),
+                200
+            );
+        } else {
+
+            return array(
+                'workspace' => $workspace,
+                'instanceForm' => $instanceForm->createView(),
+                'widgetHomeTabConfigForm' => $widgetHomeTabConfigForm->createView(),
+                'displayConfigForm' => $displayConfigForm->createView(),
+                'widgetInstance' => $widgetInstance,
+                'widgetHomeTabConfig' => $widgetHomeTabConfig,
+                'widgetDisplayConfig' => $widgetDisplayConfig
+            );
         }
     }
 
@@ -1441,6 +1567,20 @@ class HomeController extends Controller
 
         if (is_null($widgetDisplayConfigUser) ||
             ($widgetDisplayConfigUser->getId() !== $user->getId())) {
+
+            throw new AccessDeniedException();
+        }
+    }
+
+    private function checkWorkspaceAccessForWidgetDisplayConfig(
+        WidgetDisplayConfig $widgetDisplayConfig,
+        Workspace $workspace
+    )
+    {
+        $widgetDisplayConfigWorkspace = $widgetDisplayConfig->getWorkspace();
+
+        if (is_null($widgetDisplayConfigWorkspace) ||
+            ($widgetDisplayConfigWorkspace->getId() !== $workspace->getId())) {
 
             throw new AccessDeniedException();
         }

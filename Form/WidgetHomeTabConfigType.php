@@ -15,7 +15,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class HomeTabConfigType extends AbstractType
+class WidgetHomeTabConfigType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -24,7 +24,7 @@ class HomeTabConfigType extends AbstractType
 
     public function getName()
     {
-        return 'home_tab_config_form';
+        return 'widget_home_tab_config_form';
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

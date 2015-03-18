@@ -1038,6 +1038,7 @@ widget: Widget
 widget_configuration: 'Widget configuration'
 widget_display_config_form_color: 'Color'
 widget_display_form_name: Name
+widget_home_tab_config_form_visible: 'Visible'
 widget_home_tab_delete_confirm_message: 'Do you really want to remove this widget from this Home tab?'
 widget_home_tab_delete_confirm_title: 'Remove widget from Home tab'
 widget_settings: 'Widget settings'

@@ -16,6 +16,7 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\Widget\Widget;
 use Claroline\CoreBundle\Entity\Widget\WidgetDisplayConfig;
+use Claroline\CoreBundle\Entity\Widget\WidgetHomeTabConfig;
 use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Translation\Translator;
@@ -384,6 +385,27 @@ class WidgetManager
             $this->om->persist($config);
         }
         $this->om->endFlushSuite();
+    }
+
+    public function persistWidgetConfigs(
+        WidgetInstance $widgetInstance = null,
+        WidgetHomeTabConfig $widgetHomeTabConfig = null,
+        WidgetDisplayConfig $widgetDisplayConfig = null
+    )
+    {
+        
+        if (!is_null($widgetInstance)) {
+            $this->om->persist($widgetInstance);
+        }
+
+        if (!is_null($widgetHomeTabConfig)) {
+            $this->om->persist($widgetHomeTabConfig);
+        }
+
+        if (!is_null($widgetDisplayConfig)) {
+            $this->om->persist($widgetDisplayConfig);
+        }
+        $this->om->flush();
     }
 
     /************************************
