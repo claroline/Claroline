@@ -415,8 +415,11 @@ class HomeController extends Controller
         $displayConfigForm->handleRequest($this->request);
 
         if ($instanceForm->isValid() && $displayConfigForm->isValid()) {
-            $this->widgetManager->insertWidgetInstance($widgetInstance);
-            $this->widgetManager->persistWidgetDisplayConfigs(array($widgetDisplayConfig));
+            $this->widgetManager->persistWidgetConfigs(
+                $widgetInstance,
+                null,
+                $widgetDisplayConfig
+            );
 
             return new JsonResponse(
                 array(
@@ -820,7 +823,6 @@ class HomeController extends Controller
         if ($form->isValid()) {
             $homeTab->setType('desktop');
             $homeTab->setUser($user);
-            $this->homeTabManager->insertHomeTab($homeTab);
 
             $homeTabConfig = new HomeTabConfig();
             $homeTabConfig->setHomeTab($homeTab);
@@ -836,7 +838,7 @@ class HomeController extends Controller
             } else {
                 $homeTabConfig->setTabOrder($lastOrder['order_max'] + 1);
             }
-            $this->homeTabManager->insertHomeTabConfig($homeTabConfig);
+            $this->homeTabManager->persistHomeTabConfigs($homeTab, $homeTabConfig);
 
             return new JsonResponse($homeTab->getId(), 200);
         } else {
@@ -1030,7 +1032,6 @@ class HomeController extends Controller
         if ($homeTabForm->isValid() && $homeTabConfigForm->isValid()) {
             $homeTab->setType('workspace');
             $homeTab->setWorkspace($workspace);
-            $this->homeTabManager->insertHomeTab($homeTab);
 
             $homeTabConfig->setHomeTab($homeTab);
             $homeTabConfig->setType('workspace');
@@ -1045,7 +1046,7 @@ class HomeController extends Controller
             } else {
                 $homeTabConfig->setTabOrder($lastOrder['order_max'] + 1);
             }
-            $this->homeTabManager->insertHomeTabConfig($homeTabConfig);
+            $this->homeTabManager->persistHomeTabConfigs($homeTab, $homeTabConfig);
 
             return new JsonResponse($homeTab->getId(), 200);
         } else {
@@ -1129,8 +1130,7 @@ class HomeController extends Controller
         $homeTabConfigForm->handleRequest($this->request);
 
         if ($homeTabForm->isValid() && $homeTabConfigForm->isValid()) {
-            $this->homeTabManager->insertHomeTab($homeTab);
-            $this->homeTabManager->insertHomeTabConfig($homeTabConfig);
+            $this->homeTabManager->persistHomeTabConfigs($homeTab, $homeTabConfig);
             $visibility = $homeTabConfig->isVisible() ?
                 'visible' :
                 'hidden';

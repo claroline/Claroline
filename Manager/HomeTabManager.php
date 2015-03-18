@@ -54,6 +54,21 @@ class HomeTabManager
         $this->om = $om;
     }
 
+    public function persistHomeTabConfigs(
+        HomeTab $homeTab = null,
+        HomeTabConfig $homeTabConfig = null
+    )
+    {
+        if (!is_null($homeTab)) {
+            $this->om->persist($homeTab);
+        }
+
+        if (!is_null($homeTabConfig)) {
+            $this->om->persist($homeTabConfig);
+        }
+        $this->om->flush();
+    }
+
     public function insertHomeTab(HomeTab $homeTab)
     {
         $this->om->persist($homeTab);
