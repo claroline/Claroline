@@ -97,6 +97,70 @@ class HomeController extends Controller
 
     /**
      * @EXT\Route(
+     *     "/desktop/tab/{tabId}",
+     *     name="claro_display_desktop_home_tab",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     * @EXT\Template("ClarolineCoreBundle:Tool\desktop\home:desktopHomeTab.html.twig")
+     *
+     * Displays the desktop home tab.
+     *
+     * @param integer $tabId
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function displayDesktopHomeTabAction(User $user, $tabId)
+    {
+        $adminHomeTabConfigs = $this->homeTabManager
+            ->generateAdminHomeTabConfigsByUser($user);
+        $visibleAdminHomeTabConfigs = $this->homeTabManager
+            ->filterVisibleHomeTabConfigs($adminHomeTabConfigs);
+        $userHomeTabConfigs = $this->homeTabManager
+            ->getVisibleDesktopHomeTabConfigsByUser($user);
+        $homeTabId = intval($tabId);
+        $firstElement = true;
+
+        if ($homeTabId !== -1) {
+            foreach ($visibleAdminHomeTabConfigs as $adminHomeTabConfig) {
+                if ($homeTabId === $adminHomeTabConfig->getHomeTab()->getId()) {
+                    $firstElement = false;
+                    break;
+                }
+            }
+            if ($firstElement) {
+                foreach ($userHomeTabConfigs as $userHomeTabConfig) {
+                    if ($homeTabId === $userHomeTabConfig->getHomeTab()->getId()) {
+                        $firstElement = false;
+                        break;
+                    }
+                }
+            }
+        }
+
+        if ($firstElement) {
+            $firstAdminHomeTabConfig = reset($visibleAdminHomeTabConfigs);
+
+            if ($firstAdminHomeTabConfig) {
+                $homeTabId = $firstAdminHomeTabConfig->getHomeTab()->getId();
+            } else {
+                $firstHomeTabConfig = reset($userHomeTabConfigs);
+
+                if ($firstHomeTabConfig) {
+                    $homeTabId = $firstHomeTabConfig->getHomeTab()->getId();
+                }
+            }
+        }
+
+        return array(
+            'adminHomeTabConfigs' => $visibleAdminHomeTabConfigs,
+            'userHomeTabConfigs' => $userHomeTabConfigs,
+            'tabId' => $homeTabId
+        );
+    }
+
+    /**
+     * @EXT\Route(
      *     "/desktop/widget/form/{widgetInstance}",
      *     name="claro_desktop_widget_configuration",
      *     options={"expose"=true}
@@ -886,70 +950,6 @@ class HomeController extends Controller
         );
 
         return new Response('success', 200);
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/desktop/tab/{tabId}",
-     *     name="claro_display_desktop_home_tab",
-     *     options = {"expose"=true}
-     * )
-     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
-     * @EXT\Template("ClarolineCoreBundle:Tool\desktop\home:desktopHomeTab.html.twig")
-     *
-     * Displays the desktop home tab.
-     *
-     * @param integer $tabId
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function displayDesktopHomeTabAction(User $user, $tabId)
-    {
-        $adminHomeTabConfigs = $this->homeTabManager
-            ->generateAdminHomeTabConfigsByUser($user);
-        $visibleAdminHomeTabConfigs = $this->homeTabManager
-            ->filterVisibleHomeTabConfigs($adminHomeTabConfigs);
-        $userHomeTabConfigs = $this->homeTabManager
-            ->getVisibleDesktopHomeTabConfigsByUser($user);
-        $homeTabId = intval($tabId);
-        $firstElement = true;
-
-        if ($homeTabId !== -1) {
-            foreach ($visibleAdminHomeTabConfigs as $adminHomeTabConfig) {
-                if ($homeTabId === $adminHomeTabConfig->getHomeTab()->getId()) {
-                    $firstElement = false;
-                    break;
-                }
-            }
-            if ($firstElement) {
-                foreach ($userHomeTabConfigs as $userHomeTabConfig) {
-                    if ($homeTabId === $userHomeTabConfig->getHomeTab()->getId()) {
-                        $firstElement = false;
-                        break;
-                    }
-                }
-            }
-        }
-
-        if ($firstElement) {
-            $firstAdminHomeTabConfig = reset($visibleAdminHomeTabConfigs);
-
-            if ($firstAdminHomeTabConfig) {
-                $homeTabId = $firstAdminHomeTabConfig->getHomeTab()->getId();
-            } else {
-                $firstHomeTabConfig = reset($userHomeTabConfigs);
-
-                if ($firstHomeTabConfig) {
-                    $homeTabId = $firstHomeTabConfig->getHomeTab()->getId();
-                }
-            }
-        }
-
-        return array(
-            'adminHomeTabConfigs' => $visibleAdminHomeTabConfigs,
-            'userHomeTabConfigs' => $userHomeTabConfigs,
-            'tabId' => $homeTabId
-        );
     }
 
     /**
