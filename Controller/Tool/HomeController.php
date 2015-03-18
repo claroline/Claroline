@@ -722,12 +722,21 @@ class HomeController extends Controller
         $this->checkWorkspaceEditionAccess($workspace);
 
         $homeTab = new HomeTab();
-        $form = $this->formFactory
-            ->create(FormFactory::TYPE_HOME_TAB, array(), $homeTab);
+        $homeTabConfig = new HomeTabConfig();
+        $homeTabForm = $this->formFactory->create(
+            FormFactory::TYPE_HOME_TAB,
+            array(),
+            $homeTab
+        );
+        $homeTabConfigForm = $this->symfonyFormFactory->create(
+            new HomeTabConfigType(),
+            $homeTabConfig
+        );
 
         return array(
             'workspace' => $workspace,
-            'form' => $form->createView()
+            'homeTabForm' => $homeTabForm->createView(),
+            'homeTabConfigForm' => $homeTabConfigForm->createView()
         );
     }
 
@@ -749,20 +758,28 @@ class HomeController extends Controller
         $this->checkWorkspaceEditionAccess($workspace);
 
         $homeTab = new HomeTab();
-        $form = $this->formFactory->create(FormFactory::TYPE_HOME_TAB, array(), $homeTab);
-        $form->handleRequest($this->request);
+        $homeTabConfig = new HomeTabConfig();
+        $homeTabForm = $this->formFactory->create(
+            FormFactory::TYPE_HOME_TAB,
+            array(),
+            $homeTab
+        );
+        $homeTabConfigForm = $this->symfonyFormFactory->create(
+            new HomeTabConfigType(),
+            $homeTabConfig
+        );
+        $homeTabForm->handleRequest($this->request);
+        $homeTabConfigForm->handleRequest($this->request);
 
-        if ($form->isValid()) {
+        if ($homeTabForm->isValid() && $homeTabConfigForm->isValid()) {
             $homeTab->setType('workspace');
             $homeTab->setWorkspace($workspace);
             $this->homeTabManager->insertHomeTab($homeTab);
 
-            $homeTabConfig = new HomeTabConfig();
             $homeTabConfig->setHomeTab($homeTab);
             $homeTabConfig->setType('workspace');
             $homeTabConfig->setWorkspace($workspace);
             $homeTabConfig->setLocked(false);
-            $homeTabConfig->setVisible(true);
 
             $lastOrder = $this->homeTabManager
                 ->getOrderOfLastWorkspaceHomeTabConfigByWorkspace($workspace);
@@ -779,7 +796,8 @@ class HomeController extends Controller
 
             return array(
                 'workspace' => $workspace,
-                'form' => $form->createView()
+                'homeTabForm' => $homeTabForm->createView(),
+                'homeTabConfigForm' => $homeTabConfigForm->createView()
             );
         }
     }
