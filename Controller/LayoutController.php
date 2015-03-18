@@ -113,7 +113,7 @@ class LayoutController extends Controller
             'footerLogin' => $this->configHandler->getParameter('footer_login'),
             'footerWorkspaces' => $this->configHandler->getParameter('footer_workspaces'),
             'headerLocale' => $this->configHandler->getParameter('header_locale'),
-            'coreVersion' => '4.6.2'
+            'coreVersion' => '4.7.0'
         );
     }
 
