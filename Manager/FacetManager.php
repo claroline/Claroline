@@ -240,9 +240,9 @@ class FacetManager
      *
      * @throws \Exception
      */
-    public function setFieldValue(User $user, FieldFacet $field, $value)
+    public function setFieldValue(User $user, FieldFacet $field, $value, $force = false)
     {
-        if (!$this->sc->isGranted('edit', $field)) {
+        if (!$this->sc->isGranted('edit', $field) && !$force) {
             throw new AccessDeniedException();
         }
 
@@ -257,11 +257,12 @@ class FacetManager
 
         switch ($field->getType()) {
             case FieldFacet::DATE_TYPE:
-                $date = \DateTime::createFromFormat(
-                    $this->translator->trans('date_form_datepicker_php', array(), 'platform'),
-                    $value
-                );
-
+                $date = is_string($value) ?
+                    \DateTime::createFromFormat(
+                        $this->translator->trans('date_form_datepicker_php', array(), 'platform'),
+                        $value
+                    ):
+                    $value;
                 $fieldFacetValue->setDateValue($date);
                 break;
             case FieldFacet::FLOAT_TYPE:

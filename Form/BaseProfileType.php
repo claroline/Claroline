@@ -86,22 +86,12 @@ class BaseProfileType extends AbstractType
                                 $field->getName(),
                                 'text',
                                 array(
-                                    'label'  = $this->translator->trans($field->getName(), array(), 'platform'),
-                                    'mapped' => false
-                                )
-                            );
-                            break;
-                        case FieldFacet::DATE_TYPE:
-                            $builder->add(
-                                $field->getName(),
-                                'number',
-                                array(
                                     'label'  => $this->translator->trans($field->getName(), array(), 'platform'),
                                     'mapped' => false
                                 )
                             );
                             break;
-                        case FieldFacet::FLOAT_TYPE:
+                        case FieldFacet::DATE_TYPE:
                             $builder->add(
                                 $field->getName(),
                                 'datepicker',
@@ -116,6 +106,17 @@ class BaseProfileType extends AbstractType
                                 )
                             );
                             break;
+                        case FieldFacet::FLOAT_TYPE:
+                            $builder->add(
+                                $field->getName(),
+                                'number',
+                                array(
+                                    'label'  => $this->translator->trans($field->getName(), array(), 'platform'),
+                                    'mapped' => false
+                                )
+                            );
+                            break;
+
                     }
 
                 }

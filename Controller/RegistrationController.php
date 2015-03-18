@@ -120,17 +120,26 @@ class RegistrationController extends Controller
         $user = new User();
         $localeManager = $this->get('claroline.common.locale_manager');
         $termsOfService = $this->get('claroline.common.terms_of_service_manager');
+        $facets = $this->facetManager->findForcedRegistrationFacet();
         $form = $this->get('form.factory')->create(new BaseProfileType($localeManager, $termsOfService, $this->translator, $facets), $user);
-
         $form->handleRequest($this->get('request'));
-
+        
         if ($form->isValid()) {
-            $facets = $this->facetManager->findForcedRegistrationFacet();
+                        
             $this->roleManager->setRoleToRoleSubject($user, $this->configHandler->getParameter('default_role'));
             $this->get('claroline.manager.user_manager')->createUserWithRole(
                 $user,
                 PlatformRoles::USER
             );
+            //then we adds the differents value for facets.
+            foreach ($facets as $facet) {
+                foreach ($facet->getPanelFacets() as $panel) {
+                    foreach ($panel->getFieldsFacet() as $field) {
+                        $this->facetManager->setFieldValue($user, $field, $form->get($field->getName())->getData(), true);
+                    }
+                }
+            }
+            
             $msg = $this->get('translator')->trans('account_created', array(), 'platform');
             $this->get('request')->getSession()->getFlashBag()->add('success', $msg);
 
