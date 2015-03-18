@@ -16,6 +16,7 @@
         "php": ">=5.4.1",
         "ext-mcrypt": "*",
         "symfony/symfony": "2.5.7",
+        "doctrine/dbal": "2.4.4",
         "symfony/assetic-bundle": "2.5.0",
         "symfony/swiftmailer-bundle": "2.3.8",
         "symfony/monolog-bundle": "2.6.1",
