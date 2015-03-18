@@ -12,7 +12,7 @@
                 <div class="container">
                     <h1 id="username">{{ portfolio.user.firstName ~ ' ' ~ portfolio.user.lastName }}</h1>
 
-                    <div data-ng-repeat="widget in widgets | filter:{type: 'title'}" data-ng-show="widgets.length > 0">
+                    <div data-ng-repeat="widget in widgets | filter:{type: 'title'} track by widget.id" data-ng-show="widgets.length > 0">
                         <div class="portfolio-title-container{% if not editMode %} margin{% endif %}" data-widget>
                             {% if constant('Icap\\PortfolioBundle\\Manager\\PortfolioManager::PORTFOLIO_OPENING_MODE_VIEW') != openingMode %}
                                 <div class="portfolio-title" data-ng-bind-html="widget.views.view" data-ng-show="!widget.editing && !widget.views.form"></div>
