@@ -74,4 +74,22 @@ class WidgetDisplayConfigRepository extends EntityRepository
 
         return $executeQuery ? $query->getResult() : $query;
     }
+
+    public function findWidgetDisplayConfigsByWidgetsForAdmin(
+        array $widgetInstances,
+        $executeQuery = true
+    )
+    {
+        $dql = '
+            SELECT wdc
+            FROM Claroline\CoreBundle\Entity\Widget\WidgetDisplayConfig wdc
+            WHERE wdc.workspace IS NULL
+            AND wdc.user IS NULL
+            AND wdc.widgetInstance IN (:widgetInstances)
+        ';
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('widgetInstances', $widgetInstances);
+
+        return $executeQuery ? $query->getResult() : $query;
+    }
 }

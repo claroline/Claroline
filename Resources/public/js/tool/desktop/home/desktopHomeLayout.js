@@ -292,27 +292,10 @@
         var grid = $('.grid-stack').data('gridstack');
         grid.remove_widget(widgetElement);
     };
-    
-//    var associateWidgetToHomeTab = function (widgetInstanceId) {
-//
-//        $.ajax({
-//            url: Routing.generate(
-//                'claro_desktop_associate_widget_to_home_tab',
-//                {
-//                    'homeTab': currentHomeTabId,
-//                    'widgetInstance': widgetInstanceId
-//                }
-//            ),
-//            type: 'POST',
-//            success: function () {
-//                window.location.reload();
-//            }
-//        });
-//    };
 
     var reloadPage = function () {
         window.location.reload();
-    }
+    };
     
     var updateWidget = function (datas) {
         var id = datas['id'];

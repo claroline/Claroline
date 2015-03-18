@@ -452,6 +452,7 @@ home: Home
 home_manager: 'Home manager'
 home_parameters: 'Home parameters'
 home_tab: 'Home tab'
+home_tab_config_form_locked: 'Lock'
 home_tab_config_form_visible: 'Visible'
 home_tab_creation: 'Home tab creation'
 home_tab_delete_confirm_message: 'Do you really want to delete this Home tab?'

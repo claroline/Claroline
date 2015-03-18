@@ -282,7 +282,7 @@
 
     var reloadPage = function () {
         window.location.reload();
-    }
+    };
     
     var updateWidget = function (datas) {
         var id = datas['id'];

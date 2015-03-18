@@ -4,14 +4,6 @@
     {{ parent() ~ ' - ' ~ 'desktop_and_home' | trans({}, 'tools') | striptags | raw }}
 {% endblock %}
 
-{% block javascripts %}
-    {{ parent() }}
-    <script
-        src='{{ asset('bundles/clarolinecore/js/administration/adminHomeTabsConfig.js') }}'
-        type="text/javascript">
-    </script>
-{% endblock %}
-
 {% block breadcrumb %}
     {{
         macros.breadcrumbs([
@@ -47,10 +39,10 @@
         >
             <span>{{ 'user_menu'|trans({}, 'platform') }}</span>
         </a>
-        <a class="list-group-item" href="{{ path('claro_admin_desktop_home_tabs_configuration') }}">
+        <a class="list-group-item" href="{{ path('claro_admin_home_tabs_configuration', {'homeTabType': 'desktop'}) }}">
             <span>{{ 'desktop_home_tabs'|trans({}, 'platform') }}</span>
         </a>
-        <a class="list-group-item" href="{{ path('claro_admin_workspace_home_tabs_configuration') }}">
+        <a class="list-group-item" href="{{ path('claro_admin_home_tabs_configuration', {'homeTabType': 'workspace'}) }}">
             <span>
                 {{ 'workspace_home_tabs'|trans({}, 'platform') }}
                 <div>

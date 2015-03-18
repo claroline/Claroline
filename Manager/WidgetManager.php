@@ -377,6 +377,47 @@ class WidgetManager
         return $results;
     }
 
+    public function generateWidgetDisplayConfigsForAdmin(array $widgetHTCs)
+    {
+        $results = array();
+        $widgetInstances = array();
+        $adminTab = array();
+
+        foreach ($widgetHTCs as $htc) {
+            $widgetInstances[] = $htc->getWidgetInstance();
+        }
+        $adminWDCs = $this->getWidgetDisplayConfigsByWidgetsForAdmin($widgetInstances);
+
+        foreach ($adminWDCs as $wdc) {
+            $widgetInstanceId = $wdc->getWidgetInstance()->getId();
+
+            $adminTab[$widgetInstanceId] = $wdc;
+        }
+
+        $this->om->startFlushSuite();
+
+        foreach ($widgetInstances as $widgetInstance) {
+            $id = $widgetInstance->getId();
+
+            if (isset($adminTab[$id])) {
+                $results[$id] = $adminTab[$id];
+            } else {
+                $widget = $widgetInstance->getWidget();
+                $wdc = new WidgetDisplayConfig();
+                $wdc->setWidgetInstance($widgetInstance);
+                $wdc->setRow(0);
+                $wdc->setColumn(0);
+                $wdc->setWidth($widget->getDefaultWidth());
+                $wdc->setHeight($widget->getDefaultHeight());
+                $this->om->persist($wdc);
+                $results[$id] = $wdc;
+            }
+        }
+        $this->om->endFlushSuite();
+
+        return $results;
+    }
+
     public function persistWidgetDisplayConfigs(array $configs)
     {
         $this->om->startFlushSuite();
@@ -449,6 +490,19 @@ class WidgetManager
         return count($widgetInstances) > 0 ?
             $this->widgetDisplayConfigRepo->findWidgetDisplayConfigsByWorkspaceAndWidgets(
                 $workspace,
+                $widgetInstances,
+                $executeQuery
+            ) :
+            array();
+    }
+
+    public function getWidgetDisplayConfigsByWidgetsForAdmin(
+        array $widgetInstances,
+        $executeQuery = true
+    )
+    {
+        return count($widgetInstances) > 0 ?
+            $this->widgetDisplayConfigRepo->findWidgetDisplayConfigsByWidgetsForAdmin(
                 $widgetInstances,
                 $executeQuery
             ) :

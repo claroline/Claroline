@@ -184,61 +184,6 @@ class WidgetHomeTabConfigRepository extends EntityRepository
         return $query->getOneOrNullResult();
     }
 
-    public function findOrderOfLastWidgetInAdminHomeTab(HomeTab $homeTab)
-    {
-        $dql = "
-            SELECT MAX(whtc.widgetOrder) AS order_max
-            FROM Claroline\CoreBundle\Entity\Widget\WidgetHomeTabConfig whtc
-            WHERE whtc.homeTab = :homeTab
-            AND whtc.user IS NULL
-            AND whtc.workspace IS NULL
-        ";
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('homeTab', $homeTab);
-
-        return $query->getSingleResult();
-    }
-
-    public function findOrderOfLastWidgetInHomeTabByUser(
-        HomeTab $homeTab,
-        User $user
-    )
-    {
-        $dql = "
-            SELECT MAX(whtc.widgetOrder) AS order_max
-            FROM Claroline\CoreBundle\Entity\Widget\WidgetHomeTabConfig whtc
-            WHERE whtc.homeTab = :homeTab
-            AND whtc.user = :user
-            AND whtc.workspace IS NULL
-            AND whtc.type = 'desktop'
-        ";
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('homeTab', $homeTab);
-        $query->setParameter('user', $user);
-
-        return $query->getSingleResult();
-    }
-
-    public function findOrderOfLastWidgetInHomeTabByWorkspace(
-        HomeTab $homeTab,
-        Workspace $workspace
-    )
-    {
-        $dql = "
-            SELECT MAX(whtc.widgetOrder) AS order_max
-            FROM Claroline\CoreBundle\Entity\Widget\WidgetHomeTabConfig whtc
-            WHERE whtc.homeTab = :homeTab
-            AND whtc.workspace = :workspace
-            AND whtc.user IS NULL
-            AND whtc.type = 'workspace'
-        ";
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('homeTab', $homeTab);
-        $query->setParameter('workspace', $workspace);
-
-        return $query->getSingleResult();
-    }
-
     public function updateAdminWidgetHomeTabConfig(HomeTab $homeTab, $widgetOrder)
     {
         $dql = "

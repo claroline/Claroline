@@ -1131,9 +1131,7 @@ class HomeController extends Controller
 
         if ($homeTabForm->isValid() && $homeTabConfigForm->isValid()) {
             $this->homeTabManager->persistHomeTabConfigs($homeTab, $homeTabConfig);
-            $visibility = $homeTabConfig->isVisible() ?
-                'visible' :
-                'hidden';
+            $visibility = $homeTabConfig->isVisible() ? 'visible' : 'hidden';
 
             return new JsonResponse(
                 array(

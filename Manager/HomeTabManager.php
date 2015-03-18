@@ -176,79 +176,44 @@ class HomeTabManager
         $this->om->flush();
     }
 
-    public function changeOrderHomeTabConfig(
+    public function reorderAdminHomeTabConfigs(
+        $homeTabType,
         HomeTabConfig $homeTabConfig,
-        $direction
+        $nextHTCId
     )
     {
-        $homeTabOrder = $homeTabConfig->getTabOrder();
-        $type = $homeTabConfig->getType();
-        $user = $homeTabConfig->getUser();
-        $workspace = $homeTabConfig->getWorkspace();
-        $newHomeTabOrder = ($direction < 0) ? ($homeTabOrder - 1) : ($homeTabOrder + 1);
+        $htcs = ($homeTabType === 'desktop') ?
+            $this->homeTabConfigRepo->findAdminDesktopHomeTabConfigs() :
+            $this->homeTabConfigRepo->findAdminWorkspaceHomeTabConfigs();
+        $nextId = intval($nextHTCId);
+        $order = 1;
+        $updated = false;
 
-        if (is_null($user) && is_null($workspace)) {
-            if ($homeTabConfig->getType() === 'admin_desktop') {
-                $lastHomeTabOrder = $this->homeTabConfigRepo
-                    ->findOrderOfLastAdminDesktopHomeTab();
+        foreach ($htcs as $htc) {
+
+            if ($htc === $homeTabConfig) {
+                continue;
+            } elseif ($htc->getId() === $nextId) {
+                $homeTabConfig->setTabOrder($order);
+                $updated = true;
+                $this->om->persist($homeTabConfig);
+                $order++;
+                $htc->setTabOrder($order);
+                $this->om->persist($htc);
+                $order++;
+
             } else {
-                $lastHomeTabOrder = $this->homeTabConfigRepo
-                    ->findOrderOfLastAdminWorkspaceHomeTab();
-            }
-            $lastOrder = (count($lastHomeTabOrder) > 0) ?
-                $lastHomeTabOrder['order_max'] :
-                1;
-
-            if ($newHomeTabOrder > 0 && $newHomeTabOrder <= $lastOrder) {
-                $this->homeTabConfigRepo->updateAdminHomeTabOrder(
-                    $type,
-                    $newHomeTabOrder,
-                    $homeTabOrder
-                );
-                $homeTabConfig->setTabOrder($newHomeTabOrder);
-                $this->om->flush();
-
-                return $direction;
-            }
-        } elseif (is_null($workspace)) {
-            $lastHomeTabOrder = $this->homeTabConfigRepo
-                ->findOrderOfLastDesktopHomeTabByUser($user);
-            $lastOrder = (count($lastHomeTabOrder) > 0) ?
-                $lastHomeTabOrder['order_max'] :
-                1;
-
-            if ($newHomeTabOrder > 0 && $newHomeTabOrder <= $lastOrder) {
-                $this->homeTabConfigRepo->updateHomeTabOrderByUser(
-                    $user,
-                    $newHomeTabOrder,
-                    $homeTabOrder
-                );
-                $homeTabConfig->setTabOrder($newHomeTabOrder);
-                $this->om->flush();
-
-                return $direction;
-            }
-        } else {
-            $lastHomeTabOrder = $this->homeTabConfigRepo
-                ->findOrderOfLastWorkspaceHomeTabByWorkspace($workspace);
-            $lastOrder = (count($lastHomeTabOrder) > 0) ?
-                $lastHomeTabOrder['order_max'] :
-                1;
-
-            if ($newHomeTabOrder > 0 && $newHomeTabOrder <= $lastOrder) {
-                $this->homeTabConfigRepo->updateHomeTabOrderByWorkspace(
-                    $workspace,
-                    $newHomeTabOrder,
-                    $homeTabOrder
-                );
-                $homeTabConfig->setTabOrder($newHomeTabOrder);
-                $this->om->flush();
-
-                return $direction;
+                $htc->setTabOrder($order);
+                $this->om->persist($htc);
+                $order++;
             }
         }
 
-        return 0;
+        if (!$updated) {
+            $homeTabConfig->setTabOrder($order);
+            $this->om->persist($homeTabConfig);
+        }
+        $this->om->flush();
     }
 
     public function createWorkspaceVersion(
@@ -496,78 +461,6 @@ class HomeTabManager
         $this->om->flush();
     }
 
-    public function changeOrderWidgetHomeTabConfig(
-        WidgetHomeTabConfig $widgetHomeTabConfig,
-        $direction
-    )
-    {
-        $widgetOrder = $widgetHomeTabConfig->getWidgetOrder();
-        $homeTab = $widgetHomeTabConfig->getHomeTab();
-        $user = $widgetHomeTabConfig->getUser();
-        $workspace = $widgetHomeTabConfig->getWorkspace();
-        $newWidgetOrder = ($direction < 0) ? ($widgetOrder - 1) : ($widgetOrder + 1);
-
-        if (is_null($user) && is_null($workspace)) {
-            $lastWidgetOrder = $this->widgetHomeTabConfigRepo
-                ->findOrderOfLastWidgetInAdminHomeTab($homeTab);
-            $lastOrder = (count($lastWidgetOrder) > 0) ?
-                $lastWidgetOrder['order_max'] :
-                1;
-
-            if ($newWidgetOrder > 0 && $newWidgetOrder <= $lastOrder) {
-                $this->widgetHomeTabConfigRepo->updateAdminWidgetOrder(
-                    $homeTab,
-                    $newWidgetOrder,
-                    $widgetOrder
-                );
-                $widgetHomeTabConfig->setWidgetOrder($newWidgetOrder);
-                $this->om->flush();
-
-                return $direction;
-            }
-        } elseif (is_null($workspace)) {
-            $lastWidgetOrder = $this->widgetHomeTabConfigRepo
-                ->findOrderOfLastWidgetInHomeTabByUser($homeTab, $user);
-            $lastOrder = (count($lastWidgetOrder) > 0) ?
-                $lastWidgetOrder['order_max'] :
-                1;
-
-            if ($newWidgetOrder > 0 && $newWidgetOrder <= $lastOrder) {
-                $this->widgetHomeTabConfigRepo->updateWidgetOrderByUser(
-                    $homeTab,
-                    $newWidgetOrder,
-                    $widgetOrder,
-                    $user
-                );
-                $widgetHomeTabConfig->setWidgetOrder($newWidgetOrder);
-                $this->om->flush();
-
-                return $direction;
-            }
-        } else {
-            $lastWidgetOrder = $this->widgetHomeTabConfigRepo
-                ->findOrderOfLastWidgetInHomeTabByWorkspace($homeTab, $workspace);
-            $lastOrder = (count($lastWidgetOrder) > 0) ?
-                $lastWidgetOrder['order_max'] :
-                1;
-
-            if ($newWidgetOrder > 0 && $newWidgetOrder <= $lastOrder) {
-                $this->widgetHomeTabConfigRepo->updateWidgetOrderByWorkspace(
-                    $homeTab,
-                    $newWidgetOrder,
-                    $widgetOrder,
-                    $workspace
-                );
-                $widgetHomeTabConfig->setWidgetOrder($newWidgetOrder);
-                $this->om->flush();
-
-                return $direction;
-            }
-        }
-
-        return 0;
-    }
-
     public function changeVisibilityWidgetHomeTabConfig(
         WidgetHomeTabConfig $widgetHomeTabConfig
     )
@@ -655,6 +548,18 @@ class HomeTabManager
     public function getHomeTabById($homeTabId)
     {
         return $this->homeTabRepo->findOneById($homeTabId);
+    }
+
+    public function getAdminHomeTabByIdAndType($homeTabId, $homeTabType)
+    {
+        $criterias = array(
+            'id' => $homeTabId,
+            'user' => null,
+            'workspace' => null,
+            'type' => 'admin_' . $homeTabType
+        );
+
+        return $this->homeTabRepo->findOneBy($criterias);
     }
 
     public function getHomeTabByIdAndWorkspace(
@@ -851,30 +756,6 @@ class HomeTabManager
     {
         return $this->widgetHomeTabConfigRepo
             ->findVisibleWidgetConfigByWidgetIdAndTabIdAndWorkspace($widgetId, $homeTabId, $workspace);
-    }
-
-    public function getOrderOfLastWidgetInAdminHomeTab(HomeTab $homeTab)
-    {
-        return $this->widgetHomeTabConfigRepo
-            ->findOrderOfLastWidgetInAdminHomeTab($homeTab);
-    }
-
-    public function getOrderOfLastWidgetInHomeTabByUser(
-        HomeTab $homeTab,
-        User $user
-    )
-    {
-        return $this->widgetHomeTabConfigRepo
-            ->findOrderOfLastWidgetInHomeTabByUser($homeTab, $user);
-    }
-
-    public function getOrderOfLastWidgetInHomeTabByWorkspace(
-        HomeTab $homeTab,
-        Workspace $workspace
-    )
-    {
-        return $this->widgetHomeTabConfigRepo
-            ->findOrderOfLastWidgetInHomeTabByWorkspace($homeTab, $workspace);
     }
 
     public function getUserAdminWidgetHomeTabConfig(

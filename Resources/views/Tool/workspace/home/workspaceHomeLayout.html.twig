@@ -34,7 +34,6 @@
                         id="hometab-element-{{ workspaceHomeTab.getId() }}"
                         data-hometab-config-id="{{ workspaceHomeTabConfig.getId() }}"
                         data-hometab-id="{{ workspaceHomeTab.getId() }}"
-                        data-hometab-order="{{ workspaceHomeTabConfig.getTabOrder() }}"
                     {% endif %}
                 >
                     <a href="{{ path('claro_display_workspace_home_tab', { 'tabId': workspaceHomeTab.getId(), 'workspace': workspace.getId()}) }}"
