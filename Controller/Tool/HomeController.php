@@ -600,6 +600,97 @@ class HomeController extends Controller
 
     /**
      * @EXT\Route(
+     *     "/update/widgets/display/config",
+     *     name="claro_desktop_update_widgets_display_config",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\Method("POST")
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     * @EXT\ParamConverter(
+     *     "widgetDisplayConfigs",
+     *      class="ClarolineCoreBundle:Widget\WidgetDisplayConfig",
+     *      options={"multipleIds" = true, "name" = "wdcIds"}
+     * )
+     */
+    public function updateDesktopWidgetsDisplayConfigAction(
+        User $user,
+        array $widgetDisplayConfigs
+    )
+    {
+        $toPersist = array();
+
+        foreach ($widgetDisplayConfigs as $config) {
+
+            $this->checkUserAccessForWidgetDisplayConfig($config, $user);
+        }
+        $datas = $this->request->request->all();
+
+        foreach ($widgetDisplayConfigs as $config) {
+            $id = $config->getId();
+
+            if (isset($datas[$id]) && !empty($datas[$id])) {
+                $config->setRow($datas[$id]['row']);
+                $config->setColumn($datas[$id]['column']);
+                $config->setWidth($datas[$id]['width']);
+                $config->setHeight($datas[$id]['height']);
+                $toPersist[] = $config;
+            }
+        }
+
+        if (count($toPersist) > 0) {
+            $this->widgetManager->persistWidgetDisplayConfigs($toPersist);
+        }
+
+        return new Response('success', 200);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "workspace/{workspace}/update/widgets/display/config",
+     *     name="claro_workspace_update_widgets_display_config",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\Method("POST")
+     * @EXT\ParamConverter(
+     *     "widgetDisplayConfigs",
+     *      class="ClarolineCoreBundle:Widget\WidgetDisplayConfig",
+     *      options={"multipleIds" = true, "name" = "wdcIds"}
+     * )
+     */
+    public function updateWorkspaceWidgetsDisplayConfigAction(
+        Workspace $workspace,
+        array $widgetDisplayConfigs
+    )
+    {
+        $toPersist = array();
+
+        foreach ($widgetDisplayConfigs as $config) {
+
+            $this->checkWorkspaceAccessForWidgetDisplayConfig($config, $workspace);
+        }
+        $datas = $this->request->request->all();
+
+        foreach ($widgetDisplayConfigs as $config) {
+            $id = $config->getId();
+
+            if (isset($datas[$id]) && !empty($datas[$id])) {
+                $config->setRow($datas[$id]['row']);
+                $config->setColumn($datas[$id]['column']);
+                $config->setWidth($datas[$id]['width']);
+                $config->setHeight($datas[$id]['height']);
+                $toPersist[] = $config;
+            }
+        }
+
+        if (count($toPersist) > 0) {
+            $this->widgetManager->persistWidgetDisplayConfigs($toPersist);
+        }
+
+        return new Response('success', 200);
+    }
+
+    /**
+     * @EXT\Route(
      *     "desktop/home_tab/create/form",
      *     name="claro_desktop_home_tab_create_form",
      *     options = {"expose"=true}

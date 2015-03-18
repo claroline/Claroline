@@ -204,43 +204,46 @@
         $(this).colorpicker();
     });
     
-//    $('#widgets-list-panel').on('change', function (e, items) {
-//        var wdcIds = [];
-//        var datas = {};
-//        
-//        for (var i = 0; i < items.length; i++) {
-//            
-//            if (items[i]['el'] !== undefined) {
-//                var wdcId = items[i]['el'].data('widget-display-config-id');
-//                var column = items[i]['el'].attr('data-gs-x');
-//                var row = items[i]['el'].attr('data-gs-y');
-//                var width = items[i]['el'].attr('data-gs-width');
-//                var height = items[i]['el'].attr('data-gs-height');
-//                wdcIds[i] = wdcId;
-//                
-//                if (datas[wdcId] === undefined) {
-//                    datas[wdcId] = {};
-//                }
-//                datas[wdcId]['row'] = row;
-//                datas[wdcId]['column'] = column;
-//                datas[wdcId]['width'] = width;
-//                datas[wdcId]['height'] = height;
-//            }
-//        }
-//        
-//        if (wdcIds.length > 0) {
-//            var parameters = {};
-//            parameters.wdcIds = wdcIds;
-//            var route = Routing.generate('claro_desktop_update_widgets_display_config');
-//            route += '?' + $.param(parameters);
-//
-//            $.ajax({
-//                url: route,
-//                type: 'POST',
-//                data: datas
-//            });
-//        }
-//    });
+    $('#widgets-list-panel').on('change', function (e, items) {
+        var wdcIds = [];
+        var datas = {};
+        
+        for (var i = 0; i < items.length; i++) {
+            
+            if (items[i]['el'] !== undefined) {
+                var wdcId = items[i]['el'].data('widget-display-config-id');
+                var column = items[i]['el'].attr('data-gs-x');
+                var row = items[i]['el'].attr('data-gs-y');
+                var width = items[i]['el'].attr('data-gs-width');
+                var height = items[i]['el'].attr('data-gs-height');
+                wdcIds[i] = wdcId;
+                
+                if (datas[wdcId] === undefined) {
+                    datas[wdcId] = {};
+                }
+                datas[wdcId]['row'] = row;
+                datas[wdcId]['column'] = column;
+                datas[wdcId]['width'] = width;
+                datas[wdcId]['height'] = height;
+            }
+        }
+        
+        if (wdcIds.length > 0) {
+            var parameters = {};
+            parameters.wdcIds = wdcIds;
+            var route = Routing.generate(
+                'claro_workspace_update_widgets_display_config',
+                {'workspace': workspaceId}
+            );
+            route += '?' + $.param(parameters);
+
+            $.ajax({
+                url: route,
+                type: 'POST',
+                data: datas
+            });
+        }
+    });
 
     var openHomeTab = function (homeTabId) {
         window.location = Routing.generate(
