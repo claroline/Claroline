@@ -123,68 +123,68 @@
         );
     });
     
-//    $('#widgets-list-panel').on('click', '.edit-widget-content-btn', function () {
-//        currentWidgetInstanceId = $(this).data('widget-instance-id');
-//        
-//        $.ajax({
-//            url: Routing.generate(
-//                'claro_desktop_widget_configuration',
-//                {'widgetInstance': currentWidgetInstanceId}
-//            ),
-//            type: 'GET',
-//            success: function (datas) {
-//                $('#widget-content-config-modal-body').html(datas);
-//                $('#widget-content-config-modal-box').modal('show');
-//            }
-//        });
-//    });
-//
-//    // Click on OK button of the configuration Widget form
-//    $('#widget-content-config-modal-box').on('submit', 'form', function (e) {
-//        e.stopImmediatePropagation();
-//        e.preventDefault();
-//        var form = e.currentTarget;
-//        var action = $(e.currentTarget).attr('action');
-//        var formData = new FormData(form);
-//        
-//        $.ajax({
-//            url: action,
-//            data: formData,
-//            type: 'POST',
-//            processData: false,
-//            contentType: false,
-//            complete: function (jqXHR) {
-//                switch (jqXHR.status) {
-//                    case 204:
-//                        $.ajax({
-//                            url: Routing.generate(
-//                                'claro_widget_content',
-//                                {'widgetInstanceId': currentWidgetInstanceId}
-//                            ),
-//                            type: 'GET',
-//                            success: function (datas) {
-//                                $('#widget-instance-content-' + currentWidgetInstanceId).html(datas);
-//                                $('#widget-content-config-modal-body').empty();
-//                                $('#widget-content-config-modal-box').modal('hide');
-//                            }
-//                        });
-//                        break;
-//                    default:
-//                        $('#widget-instance-content-' + currentWidgetInstanceId).html(jqXHR.responseText);
-//                        $('#widget-content-config-modal-body').empty();
-//                        $('#widget-content-config-modal-box').modal('hide');
-//                }
-//            }
-//        });
-//    });
-//
-//    // Click on CANCEL button of the configuration Widget form
-//    $('#widget-content-config-modal-box').on('click', '.claro-widget-form-cancel', function (e) {
-//        e.stopImmediatePropagation();
-//        e.preventDefault();
-//        $('#widget-content-config-modal-body').empty();
-//        $('#widget-content-config-modal-box').modal('hide');
-//    });
+    $('#widgets-list-panel').on('click', '.edit-widget-content-btn', function () {
+        currentWidgetInstanceId = $(this).data('widget-instance-id');
+        
+        $.ajax({
+            url: Routing.generate(
+                'claro_workspace_widget_configuration',
+                {'workspace': workspaceId, 'widgetInstance': currentWidgetInstanceId}
+            ),
+            type: 'GET',
+            success: function (datas) {
+                $('#widget-content-config-modal-body').html(datas);
+                $('#widget-content-config-modal-box').modal('show');
+            }
+        });
+    });
+
+    // Click on OK button of the configuration Widget form
+    $('#widget-content-config-modal-box').on('submit', 'form', function (e) {
+        e.stopImmediatePropagation();
+        e.preventDefault();
+        var form = e.currentTarget;
+        var action = $(e.currentTarget).attr('action');
+        var formData = new FormData(form);
+        
+        $.ajax({
+            url: action,
+            data: formData,
+            type: 'POST',
+            processData: false,
+            contentType: false,
+            complete: function (jqXHR) {
+                switch (jqXHR.status) {
+                    case 204:
+                        $.ajax({
+                            url: Routing.generate(
+                                'claro_widget_content',
+                                {'widgetInstance': currentWidgetInstanceId}
+                            ),
+                            type: 'GET',
+                            success: function (datas) {
+                                $('#widget-instance-content-' + currentWidgetInstanceId).html(datas);
+                                $('#widget-content-config-modal-body').empty();
+                                $('#widget-content-config-modal-box').modal('hide');
+                            }
+                        });
+                        break;
+                    default:
+                        $('#widget-instance-content-' + currentWidgetInstanceId).html(jqXHR.responseText);
+                        $('#widget-content-config-modal-body').empty();
+                        $('#widget-content-config-modal-box').modal('hide');
+                }
+            }
+        });
+    });
+
+    // Click on CANCEL button of the configuration Widget form
+    $('#widget-content-config-modal-box').on('click', '.claro-widget-form-cancel', function (e) {
+        e.stopImmediatePropagation();
+        e.preventDefault();
+        $('#widget-content-config-modal-body').empty();
+        $('#widget-content-config-modal-box').modal('hide');
+    });
     
     $('#widgets-list-panel').on('click', '.close-widget-btn', function () {
         var whcId = $(this).data('widget-hometab-config-id');
@@ -199,20 +199,6 @@
             Translator.trans('widget_home_tab_delete_confirm_title', {}, 'platform')
         );
     });
-    
-//    $('#widgets-list-panel').on('click', '.hide-widget-btn', function () {
-//        var whcId = $(this).data('widget-hometab-config-id');
-//        window.Claroline.Modal.confirmRequest(
-//            Routing.generate(
-//                'claro_desktop_widget_home_tab_config_change_visibility',
-//                {'widgetHomeTabConfigId': whcId}
-//            ),
-//            removeWidget,
-//            whcId,
-//            Translator.trans('widget_home_tab_delete_confirm_message', {}, 'platform'),
-//            Translator.trans('widget_home_tab_delete_confirm_title', {}, 'platform')
-//        );
-//    });
     
     $('body').on('focus', '#widget_display_config_form_color', function () {
         $(this).colorpicker();

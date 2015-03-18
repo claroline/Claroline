@@ -127,14 +127,9 @@ class HomeController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/workspace/{workspaceId}/widget/form/{widgetInstance}",
+     *     "/workspace/{workspace}/widget/form/{widgetInstance}",
      *     name="claro_workspace_widget_configuration",
      *     options={"expose"=true}
-     * )
-     * @EXT\ParamConverter(
-     *      "workspace",
-     *      class="ClarolineCoreBundle:Workspace\Workspace",
-     *      options={"id" = "workspaceId", "strictId" = true}
      * )
      *
      * Asks a widget to render its configuration page for a workspace.
@@ -145,11 +140,11 @@ class HomeController extends Controller
      * @return Response
      */
     public function getWorkspaceWidgetFormConfigurationAction(
-        WidgetInstance $widgetInstance,
-        Workspace $workspace
+        Workspace $workspace,
+        WidgetInstance $widgetInstance
     )
     {
-        $this->checkWorkspaceAccess($workspace);
+        $this->checkWorkspaceEditionAccess($workspace);
         $this->checkWorkspaceAccessForWidgetInstance($widgetInstance, $workspace);
 
         $event = $this->get('claroline.event.event_dispatcher')->dispatch(
@@ -163,14 +158,9 @@ class HomeController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/widget/content/{widgetInstanceId}",
+     *     "/widget/content/{widgetInstance}",
      *     name="claro_widget_content",
      *     options={"expose"=true}
-     * )
-     * @EXT\ParamConverter(
-     *     "widgetInstance",
-     *     class="ClarolineCoreBundle:Widget\WidgetInstance",
-     *     options={"id" = "widgetInstanceId", "strictId" = true}
      * )
      *
      * Asks a widget to render its content.
@@ -1274,15 +1264,6 @@ class HomeController extends Controller
         }
 
         return new Response('success', 204);
-    }
-
-    private function checkWorkspaceAccess(Workspace $workspace)
-    {
-        $role = $this->roleManager->getManagerRole($workspace);
-
-        if (is_null($role) || !$this->securityContext->isGranted($role->getName())) {
-            throw new AccessDeniedException();
-        }
     }
 
     private function checkUserAccessForHomeTab(HomeTab $homeTab, User $user)

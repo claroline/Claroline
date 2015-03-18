@@ -164,7 +164,7 @@
                         $.ajax({
                             url: Routing.generate(
                                 'claro_widget_content',
-                                {'widgetInstanceId': currentWidgetInstanceId}
+                                {'widgetInstance': currentWidgetInstanceId}
                             ),
                             type: 'GET',
                             success: function (datas) {
