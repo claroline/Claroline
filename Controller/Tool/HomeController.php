@@ -1136,15 +1136,8 @@ class HomeController extends Controller
         $visible
     )
     {
-        $workspace = $homeTabConfig->getWorkspace();
         $homeTab = $homeTabConfig->getHomeTab();
-
-        if (!is_null($workspace)) {
-            $this->checkWorkspaceAccess($workspace);
-            $this->checkWorkspaceAccessForHomeTab($homeTab, $workspace);
-        } else {
-            $this->checkUserAccessForAdminHomeTab($homeTab, $user);
-        }
+        $this->checkUserAccessForAdminHomeTab($homeTab, $user);
 
         $isVisible = ($visible === 'visible') ? true : false;
         $this->homeTabManager->updateVisibility($homeTabConfig, $isVisible);
@@ -1220,46 +1213,6 @@ class HomeController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/workspace/{workspaceId}/widget_home_tab_config/{widgetHomeTabConfigId}/change/visibility",
-     *     name="claro_workspace_widget_home_tab_config_change_visibility",
-     *     options = {"expose"=true}
-     * )
-     * @EXT\Method("POST")
-     * @EXT\ParamConverter(
-     *     "widgetHomeTabConfig",
-     *     class="ClarolineCoreBundle:Widget\WidgetHomeTabConfig",
-     *     options={"id" = "widgetHomeTabConfigId", "strictId" = true}
-     * )
-     * @EXT\ParamConverter(
-     *      "workspace",
-     *      class="ClarolineCoreBundle:Workspace\Workspace",
-     *      options={"id" = "workspaceId", "strictId" = true}
-     * )
-     *
-     * Change visibility of the given widgetHomeTabConfig.
-     *
-     * @return Response
-     */
-    public function workspaceWidgetHomeTabConfigChangeVisibilityAction(
-        WidgetHomeTabConfig $widgetHomeTabConfig,
-        Workspace $workspace
-    )
-    {
-        $this->checkWorkspaceAccess($workspace);
-        $this->checkWorkspaceAccessForWidgetHomeTabConfig(
-            $widgetHomeTabConfig,
-            $workspace
-        );
-
-        $this->homeTabManager->changeVisibilityWidgetHomeTabConfig(
-            $widgetHomeTabConfig
-        );
-
-        return new Response('success', 204);
-    }
-
-    /**
-     * @EXT\Route(
      *     "/desktop/widget_home_tab_config/{widgetHomeTabConfig}/delete",
      *     name="claro_desktop_widget_home_tab_config_delete",
      *     options = {"expose"=true}
@@ -1323,171 +1276,6 @@ class HomeController extends Controller
         return new Response('success', 204);
     }
 
-    /**
-     * @EXT\Route(
-     *     "/desktop/widget_home_tab_config/{widgetHomeTabConfigId}/change/order/{direction}",
-     *     name="claro_desktop_widget_home_tab_config_change_order",
-     *     options = {"expose"=true}
-     * )
-     * @EXT\Method("POST")
-     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
-     * @EXT\ParamConverter(
-     *     "widgetHomeTabConfig",
-     *     class="ClarolineCoreBundle:Widget\WidgetHomeTabConfig",
-     *     options={"id" = "widgetHomeTabConfigId", "strictId" = true}
-     * )
-     *
-     * Change order of the given widgetHomeTabConfig in the given direction.
-     *
-     * @return Response
-     */
-    public function desktopWidgetHomeTabConfigChangeOrderAction(
-        User $user,
-        WidgetHomeTabConfig $widgetHomeTabConfig,
-        $direction
-    )
-    {
-        $this->checkUserAccessForWidgetHomeTabConfig($widgetHomeTabConfig, $user);
-
-        $status = $this->homeTabManager->changeOrderWidgetHomeTabConfig(
-            $widgetHomeTabConfig,
-            $direction
-        );
-
-        return new Response($status, 200);
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/workspace/{workspaceId}/widget_home_tab_config/{widgetHomeTabConfigId}/change/order/{direction}",
-     *     name="claro_workspace_widget_home_tab_config_change_order",
-     *     options = {"expose"=true}
-     * )
-     * @EXT\Method("POST")
-     * @EXT\ParamConverter(
-     *     "widgetHomeTabConfig",
-     *     class="ClarolineCoreBundle:Widget\WidgetHomeTabConfig",
-     *     options={"id" = "widgetHomeTabConfigId", "strictId" = true}
-     * )
-     * @EXT\ParamConverter(
-     *      "workspace",
-     *      class="ClarolineCoreBundle:Workspace\Workspace",
-     *      options={"id" = "workspaceId", "strictId" = true}
-     * )
-     *
-     * Change order of the given widgetHomeTabConfig in the given direction.
-     *
-     * @return Response
-     */
-    public function workspaceWidgetHomeTabConfigChangeOrderAction(
-        WidgetHomeTabConfig $widgetHomeTabConfig,
-        Workspace $workspace,
-        $direction
-    )
-    {
-        $this->checkWorkspaceAccess($workspace);
-        $this->checkWorkspaceAccessForWidgetHomeTabConfig(
-            $widgetHomeTabConfig,
-            $workspace
-        );
-
-        $status = $this->homeTabManager->changeOrderWidgetHomeTabConfig(
-            $widgetHomeTabConfig,
-            $direction
-        );
-
-        return new Response($status, 200);
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/workspace/{workspaceId}/widget/{widgetInstanceId}/name/edit/form",
-     *     name = "claro_workspace_widget_name_edit_form",
-     *     options={"expose"=true}
-     * )
-     * @EXT\ParamConverter(
-     *     "widgetInstance",
-     *     class="ClarolineCoreBundle:Widget\WidgetInstance",
-     *     options={"id" = "widgetInstanceId", "strictId" = true}
-     * )
-     * @EXT\ParamConverter(
-     *      "workspace",
-     *      class="ClarolineCoreBundle:Workspace\Workspace",
-     *      options={"id" = "workspaceId", "strictId" = true}
-     * )
-     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\home:workspaceWidgetNameEditForm.html.twig")
-     *
-     * @return array
-     */
-    public function editWorkspaceWidgetNameFormAction(
-        WidgetInstance $widgetInstance,
-        Workspace $workspace
-    )
-    {
-        $this->checkWorkspaceAccess($workspace);
-        $this->checkWorkspaceAccessForWidgetInstance($widgetInstance, $workspace);
-
-        $form = $this->formFactory->create(
-            FormFactory::TYPE_WIDGET_CONFIG,
-            array(),
-            $widgetInstance
-        );
-
-        return array(
-            'form' => $form->createView(),
-            'widgetInstance' => $widgetInstance,
-            'workspace' => $workspace
-        );
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/workspace/{workspaceId}/widget/{widgetInstanceId}/name/edit",
-     *     name = "claro_workspace_widget_name_edit",
-     *     options={"expose"=true}
-     * )
-     * @EXT\ParamConverter(
-     *     "widgetInstance",
-     *     class="ClarolineCoreBundle:Widget\WidgetInstance",
-     *     options={"id" = "widgetInstanceId", "strictId" = true}
-     * )
-     * @EXT\ParamConverter(
-     *      "workspace",
-     *      class="ClarolineCoreBundle:Workspace\Workspace",
-     *      options={"id" = "workspaceId", "strictId" = true}
-     * )
-     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\home:workspaceWidgetNameEditForm.html.twig")
-     *
-     * @return array
-     */
-    public function editWorkspaceWidgetNameAction(
-        WidgetInstance $widgetInstance,
-        Workspace $workspace
-    )
-    {
-        $this->checkWorkspaceAccess($workspace);
-        $this->checkWorkspaceAccessForWidgetInstance($widgetInstance, $workspace);
-
-        $form = $this->formFactory->create(
-            FormFactory::TYPE_WIDGET_CONFIG,
-            array(),
-            $widgetInstance
-        );
-        $form->handleRequest($this->request);
-
-        if ($form->isValid()) {
-            $this->widgetManager->insertWidgetInstance($widgetInstance);
-
-            return new Response('success', 204);
-        }
-
-        return array(
-            'form' => $form->createView(),
-            'widgetInstance' => $widgetInstance,
-            'workspace' => $workspace
-        );
-    }
-
     private function checkWorkspaceAccess(Workspace $workspace)
     {
         $role = $this->roleManager->getManagerRole($workspace);
@@ -1536,23 +1324,6 @@ class HomeController extends Controller
         $homeTabWorkspace = $homeTab->getWorkspace();
 
         if (is_null($homeTabWorkspace) || ($homeTabWorkspace->getId() !== $workspace->getId())) {
-            throw new AccessDeniedException();
-        }
-    }
-
-    private function checkWorkspaceAccessForAdminHomeTab(
-        HomeTab $homeTab,
-        Workspace $workspace
-    )
-    {
-        $homeTabWorkspace = $homeTab->getWorkspace();
-
-        $isAdminWorkspace =
-            is_null($homeTabWorkspace) && ($homeTab->getType() === 'admin_workspace');
-        $isWorkspace = !is_null($homeTabWorkspace) &&
-            ($homeTabWorkspace->getId() === $workspace->getId());
-
-        if (!($isAdminWorkspace || $isWorkspace)) {
             throw new AccessDeniedException();
         }
     }

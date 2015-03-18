@@ -735,6 +735,7 @@ class WorkspaceController extends Controller
         $valid
     )
     {
+        $this->assertIsGranted('home', $workspace);
         $canEdit = $this->security->isGranted('parameters', $workspace);
         $widgets = array();
         $homeTab = $this->homeTabManager->getHomeTabByIdAndWorkspace($homeTabId, $workspace);
@@ -1374,6 +1375,7 @@ class WorkspaceController extends Controller
      */
     public function displayWorkspaceHomeTabAction(Workspace $workspace, $tabId)
     {
+        $this->assertIsGranted('home', $workspace);
         $canEdit = $this->security->isGranted('parameters', $workspace);
         $workspaceHomeTabConfigs = $canEdit ?
             $this->homeTabManager->getWorkspaceHomeTabConfigsByWorkspace($workspace):
