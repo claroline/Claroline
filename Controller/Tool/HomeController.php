@@ -392,7 +392,7 @@ class HomeController extends Controller
      *     options = {"expose"=true}
      * )
      * @EXT\Method("POST")
-     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\home:workspaceWidgetInstanceCreateForm.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\home:workspaceWidgetInstanceCreateModalForm.html.twig")
      *
      * Creates a widget instance.
      *
@@ -1053,16 +1053,11 @@ class HomeController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/desktop/widget_home_tab_config/{widgetHomeTabConfigId}/change/visibility",
+     *     "/desktop/widget_home_tab_config/{widgetHomeTabConfig}/change/visibility",
      *     name="claro_desktop_widget_home_tab_config_change_visibility",
      *     options = {"expose"=true}
      * )
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
-     * @EXT\ParamConverter(
-     *     "widgetHomeTabConfig",
-     *     class="ClarolineCoreBundle:Widget\WidgetHomeTabConfig",
-     *     options={"id" = "widgetHomeTabConfigId", "strictId" = true}
-     * )
      *
      * Change visibility of the given widgetHomeTabConfig.
      *
@@ -1124,16 +1119,11 @@ class HomeController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/desktop/widget_home_tab_config/{widgetHomeTabConfigId}/delete",
+     *     "/desktop/widget_home_tab_config/{widgetHomeTabConfig}/delete",
      *     name="claro_desktop_widget_home_tab_config_delete",
      *     options = {"expose"=true}
      * )
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
-     * @EXT\ParamConverter(
-     *     "widgetHomeTabConfig",
-     *     class="ClarolineCoreBundle:Widget\WidgetHomeTabConfig",
-     *     options={"id" = "widgetHomeTabConfigId", "strictId" = true}
-     * )
      *
      * Delete the given widgetHomeTabConfig.
      *
@@ -1160,20 +1150,9 @@ class HomeController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/workspace/{workspaceId}/widget_home_tab_config/{widgetHomeTabConfigId}/delete",
+     *     "/workspace/{workspace}/widget_home_tab_config/{widgetHomeTabConfig}/delete",
      *     name="claro_workspace_widget_home_tab_config_delete",
      *     options = {"expose"=true}
-     * )
-     * @EXT\Method("DELETE")
-     * @EXT\ParamConverter(
-     *     "widgetHomeTabConfig",
-     *     class="ClarolineCoreBundle:Widget\WidgetHomeTabConfig",
-     *     options={"id" = "widgetHomeTabConfigId", "strictId" = true}
-     * )
-     * @EXT\ParamConverter(
-     *      "workspace",
-     *      class="ClarolineCoreBundle:Workspace\Workspace",
-     *      options={"id" = "workspaceId", "strictId" = true}
      * )
      *
      * Delete the given widgetHomeTabConfig.
@@ -1181,11 +1160,11 @@ class HomeController extends Controller
      * @return Response
      */
     public function workspaceWidgetHomeTabConfigDeleteAction(
-        WidgetHomeTabConfig $widgetHomeTabConfig,
-        Workspace $workspace
+        Workspace $workspace,
+        WidgetHomeTabConfig $widgetHomeTabConfig
     )
     {
-        $this->checkWorkspaceAccess($workspace);
+        $this->checkWorkspaceEditionAccess($workspace);
         $this->checkWorkspaceAccessForWidgetHomeTabConfig(
             $widgetHomeTabConfig,
             $workspace

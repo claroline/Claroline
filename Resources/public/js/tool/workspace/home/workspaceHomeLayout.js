@@ -184,21 +184,21 @@
 //        $('#widget-content-config-modal-body').empty();
 //        $('#widget-content-config-modal-box').modal('hide');
 //    });
-//    
-//    $('#widgets-list-panel').on('click', '.close-widget-btn', function () {
-//        var whcId = $(this).data('widget-hometab-config-id');
-//        window.Claroline.Modal.confirmRequest(
-//            Routing.generate(
-//                'claro_desktop_widget_home_tab_config_delete',
-//                {'widgetHomeTabConfigId': whcId}
-//            ),
-//            removeWidget,
-//            whcId,
-//            Translator.trans('widget_home_tab_delete_confirm_message', {}, 'platform'),
-//            Translator.trans('widget_home_tab_delete_confirm_title', {}, 'platform')
-//        );
-//    });
-//    
+    
+    $('#widgets-list-panel').on('click', '.close-widget-btn', function () {
+        var whcId = $(this).data('widget-hometab-config-id');
+        window.Claroline.Modal.confirmRequest(
+            Routing.generate(
+                'claro_workspace_widget_home_tab_config_delete',
+                {'workspace': workspaceId, 'widgetHomeTabConfig': whcId}
+            ),
+            removeWidget,
+            whcId,
+            Translator.trans('widget_home_tab_delete_confirm_message', {}, 'platform'),
+            Translator.trans('widget_home_tab_delete_confirm_title', {}, 'platform')
+        );
+    });
+    
 //    $('#widgets-list-panel').on('click', '.hide-widget-btn', function () {
 //        var whcId = $(this).data('widget-hometab-config-id');
 //        window.Claroline.Modal.confirmRequest(
@@ -284,11 +284,11 @@
         }
     };
     
-//    var removeWidget = function (event, widgetHomeTabConfigId) {
-//        var widgetElement = $('#widget-element-' + widgetHomeTabConfigId);
-//        var grid = $('.grid-stack').data('gridstack');
-//        grid.remove_widget(widgetElement);
-//    };
+    var removeWidget = function (event, widgetHomeTabConfigId) {
+        var widgetElement = $('#widget-element-' + widgetHomeTabConfigId);
+        var grid = $('.grid-stack').data('gridstack');
+        grid.remove_widget(widgetElement);
+    };
     
     var associateWidgetToHomeTab = function (widgetInstanceId) {
 
@@ -314,9 +314,5 @@
 //        $('#widget-element-title-' + id).html(datas['title']);
 //        $('#widget-element-header-' + id).css('background-color', color);
 //        $('#widget-element-content-' + id).css('border-color', color);
-//    };
-//    
-//    var updateWidgetContent = function () {
-//        console.log('updated');
 //    };
 })();

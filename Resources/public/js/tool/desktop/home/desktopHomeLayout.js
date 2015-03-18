@@ -196,7 +196,7 @@
         window.Claroline.Modal.confirmRequest(
             Routing.generate(
                 'claro_desktop_widget_home_tab_config_delete',
-                {'widgetHomeTabConfigId': whcId}
+                {'widgetHomeTabConfig': whcId}
             ),
             removeWidget,
             whcId,
@@ -210,7 +210,7 @@
         window.Claroline.Modal.confirmRequest(
             Routing.generate(
                 'claro_desktop_widget_home_tab_config_change_visibility',
-                {'widgetHomeTabConfigId': whcId}
+                {'widgetHomeTabConfig': whcId}
             ),
             removeWidget,
             whcId,
@@ -313,9 +313,5 @@
         $('#widget-element-title-' + id).html(datas['title']);
         $('#widget-element-header-' + id).css('background-color', color);
         $('#widget-element-content-' + id).css('border-color', color);
-    };
-    
-    var updateWidgetContent = function () {
-        console.log('updated');
     };
 })();
