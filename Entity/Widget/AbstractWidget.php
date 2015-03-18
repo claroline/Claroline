@@ -273,6 +273,7 @@ abstract class AbstractWidget
     public function getCommonData()
     {
         return array(
+            'id'     => $this->getId(),
             'label'  => $this->getLabel(),
             'type'   => $this->getWidgetType(),
             'row'    => $this->getRow(),

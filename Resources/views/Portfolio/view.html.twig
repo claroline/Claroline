@@ -96,7 +96,7 @@
                         </div>
                         {% endif %}
                         <ul class="list-unstyled" data-gridster="gridsterOptions">
-                            <li data-gridster-item="widget" data-ng-repeat="widget in widgets | filter:{type: '!title'} | orderBy:'+row +col'">
+                            <li data-gridster-item="widget" data-ng-repeat="widget in widgets | filter:{type: '!title'} | orderBy:'+row +col' track by widget.id">
                                 {% include 'IcapPortfolioBundle:templates:widget.html.twig' %}
                             </li>
                         </ul>

@@ -129,7 +129,6 @@ class ExperienceWidget extends AbstractWidget
     public function getData()
     {
         $data = array(
-            'id'          => $this->getId(),
             'post'        => $this->getPost(),
             'companyName' => $this->getCompanyName(),
             'startDate'   => $this->getStartDate() ? $this->getStartDate()->format('Y/m/d') : null,

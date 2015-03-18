@@ -57,7 +57,6 @@ class SkillsWidget extends AbstractWidget
     public function getData()
     {
         $data = array(
-            'id'       => $this->getId(),
             'children' => array()
         );
 
