@@ -68,6 +68,11 @@ class Facet {
      */
     protected $isVisibleByOwner = true;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    protected $forceCreationForm = false;
+
     public function __construct()
     {
         $this->roles = new ArrayCollection();
@@ -136,5 +141,15 @@ class Facet {
     public function getIsVisibleByOwner()
     {
         return $this->isVisibleByOwner;
+    }
+
+    public function setForceCreationForm($boolean)
+    {
+        $this->forceCreationForm = $boolean;
+    }
+
+    public function getForceCreationForm()
+    {
+        return $this->forceCreationForm;
     }
 }

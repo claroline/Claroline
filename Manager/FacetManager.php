@@ -65,11 +65,12 @@ class FacetManager
      *
      * @param $name
      */
-    public function createFacet($name)
+    public function createFacet($name, $forceCreationForm = false)
     {
         $this->om->startFlushSuite();
         $facet = new Facet();
         $facet->setName($name);
+        $facet->setForceCreationForm($forceCreationForm);
         $facet->setPosition($this->om->count('Claroline\CoreBundle\Entity\Facet\Facet'));
         $this->initFacetPermissions($facet);
         $this->om->persist($facet);
@@ -90,9 +91,10 @@ class FacetManager
         $this->reorderFacets();
     }
 
-    public function editFacet(Facet $facet, $name)
+    public function editFacet(Facet $facet, $name, $forceCreationForm = false)
     {
         $facet->setName($name);
+        $facet->setForceCreationForm($forceCreationForm);
         $this->om->persist($facet);
         $this->om->flush();
 
@@ -691,5 +693,11 @@ class FacetManager
     function getAdminPublicPreference()
     {
         return $this->om->getRepository('ClarolineCoreBundle:Facet\GeneralFacetPreference')->findAll();
+    }
+
+    public function findForcedRegistrationFacet()
+    {
+        return $this->om->getRepository('ClarolineCoreBundle:Facet\Facet')
+            ->findBy(array('forceCreationForm' => true));
     }
 }
