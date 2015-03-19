@@ -6,7 +6,7 @@
 {#  La partie située en dessus est gérée par le twig Correction:correct.html.twig #}
 {% block dropzone_correct_content %}
     <h3>
-        {#  Test de passage de la variable test #}
+        {{ user.id }} {{ "correctCriteria" }}
         {{ 'Evaluation criteria'|trans({}, 'innova_collecticiel') }}
     </h3>
 

@@ -13,6 +13,7 @@ use Claroline\CoreBundle\Event\Log\LogResourceUpdateEvent;
 use Innova\CollecticielBundle\Entity\Correction;
 use Innova\CollecticielBundle\Entity\Dropzone;
 use Innova\CollecticielBundle\Entity\Drop;
+use Innova\CollecticielBundle\Entity\Document;
 use Innova\CollecticielBundle\Entity\Grade;
 use Innova\CollecticielBundle\Entity\Comment;
 use Innova\CollecticielBundle\Entity\CommentRead;
@@ -922,7 +923,7 @@ class CorrectionController extends DropzoneBaseController
                     'state' => $state,
                     'document' => $document,
                     'comments' => $comments,
-                    'user' => $userId,
+                    'user' => $user,
                 )
             );
         } else if ($state == 'preview') {
@@ -2023,20 +2024,15 @@ echo "ici : ";die();
 
     /**
      * @Route(
-     *      "/{resourceId}/drops/detail/{dropId}/add/comments",
+     *      "/{documentId}/add/comments/{userId}",
      *      name="innova_collecticiel_add_comment",
-     *      requirements={"resourceId" = "\d+", "dropId" = "\d+"}
+     *      requirements={"documentId" = "\d+", "userId" = "\d+"}
      * )
      * @ParamConverter("document", class="InnovaCollecticielBundle:Document", options={"id" = "documentId"})
-     * @ParamConverter("user", options={
-     *      "authenticatedUser" = true,
-     *      "messageEnabled" = true,
-     *      "messageTranslationKey" = "Correct an evaluation requires authentication. Please login.",
-     *      "messageTranslationDomain" = "innova_collecticiel"
-     * })
+     * @ParamConverter("user",class="ClarolineCoreBundle:User",options={"id" = "userId"})
      * @Template()
      */
-    public function AddCommentsInnovaAction($document, $user)
+    public function AddCommentsInnovaAction(Document $document, User $user)
     {
 
         echo "suis ici ajout d'un commentaire";die();
@@ -2059,7 +2055,7 @@ echo "ici : ";die();
                 'innova_collecticiel_drops_detail_comment',
                 array(
                     'resourceId' => $dropzone->getId(),
-                    'state' => 'edit',
+                    'state' => 'comment',
                     'correctionId' => $correction->getId(),
                 )
             )
