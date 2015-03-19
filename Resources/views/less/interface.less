@@ -146,14 +146,16 @@ body {
     .gridster-preview-holder {
         background-color: #428bca;
     }
-    
+
     .gridster-item {
         .widget-panel {
             margin-bottom: 0;
             height:        100%;
             .panel-heading {
                 &.draggable {
-                    cursor: move;
+                    .draggable-handle {
+                        cursor: move;
+                    }
                 }
             }
             .widget-actions {

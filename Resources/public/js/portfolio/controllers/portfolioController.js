@@ -36,7 +36,7 @@ portfolioApp
             },
             draggable: {
                 enabled: true, // whether dragging items is supported
-                handle: '.panel-heading', // optional selector for resize handle
+                handle: '.panel-heading .draggable-handle', // optional selector for resize handle
                 start: function(event, $element, widget) {
                     widget.isDragged = true;
                 }, // optional callback fired when drag is started,

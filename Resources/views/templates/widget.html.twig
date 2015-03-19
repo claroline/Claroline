@@ -3,7 +3,10 @@
         {% if constant('Icap\\PortfolioBundle\\Manager\\PortfolioManager::PORTFOLIO_OPENING_MODE_VIEW') != openingMode %}
             {% verbatim %}{{ widget.label }}{% endverbatim %}
             {% if editMode %}
-            <div class="widget-actions" data-ng-if="!widget.isNew() && !widget.isUpdating()" data-ng-show="showAction">
+            <div class="widget-actions" data-ng-show="!widget.isNew() && !widget.isUpdating() && showAction">
+                <button class="widget-action btn btn-xs btn-default draggable-handle">
+                    <span class="fa fa-arrows"></span>
+                </button>
                 <button class="widget-action btn btn-xs btn-danger" data-ng-class="{'btn-loading': widget.isDeleting}" data-confirm-click="delete();" data-ng-if="isDeletable()">
                     <span class="loading" data-ng-if="widget.isDeleting"></span>
                     <span class="fa fa-trash-o" data-ng-if="!widget.isDeleting"></span>
