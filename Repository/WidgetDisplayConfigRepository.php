@@ -92,4 +92,41 @@ class WidgetDisplayConfigRepository extends EntityRepository
 
         return $executeQuery ? $query->getResult() : $query;
     }
+
+    public function findWidgetDisplayConfigsByWorkspaceAndWidgetHTCs(
+        Workspace $workspace,
+        array $widgetHomeTabConfigs,
+        $executeQuery = true
+    )
+    {
+        $dql = '
+            SELECT wdc
+            FROM Claroline\CoreBundle\Entity\Widget\WidgetDisplayConfig wdc
+            WHERE wdc.workspace = :workspace
+            AND wdc.user IS NULL
+            AND wdc.widgetInstance IN (
+                SELECT wi
+                FROM Claroline\CoreBundle\Entity\Widget\WidgetInstance wi
+                WHERE wi.isAdmin = false
+                AND wi.isDesktop = false
+                AND wi.workspace = :workspace
+                AND wi.user IS NULL
+                AND EXISTS (
+                    SELECT whtc
+                    FROM Claroline\CoreBundle\Entity\Widget\WidgetHomeTabConfig whtc
+                    WHERE whtc IN (:widgetHomeTabConfigs)
+                    AND whtc.widgetInstance = wi
+                    AND whtc.workspace = :workspace
+                    AND whtc.user IS NULL
+                    AND whtc.type = :type
+                )
+            )
+        ';
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('workspace', $workspace);
+        $query->setParameter('type', 'workspace');
+        $query->setParameter('widgetHomeTabConfigs', $widgetHomeTabConfigs);
+
+        return $executeQuery ? $query->getResult() : $query;
+    }
 }

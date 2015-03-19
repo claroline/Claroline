@@ -530,4 +530,19 @@ class WidgetManager
             ) :
             array();
     }
+
+    public function getWidgetDisplayConfigsByWorkspaceAndWidgetHTCs(
+        Workspace $workspace,
+        array $widgetHomeTabConfigs,
+        $executeQuery = true
+    )
+    {
+        return count($widgetHomeTabConfigs) > 0 ?
+            $this->widgetDisplayConfigRepo->findWidgetDisplayConfigsByWorkspaceAndWidgetHTCs(
+                $workspace,
+                $widgetHomeTabConfigs,
+                $executeQuery
+            ) :
+            array();
+    }
 }
