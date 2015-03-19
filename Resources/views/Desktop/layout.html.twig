@@ -50,3 +50,17 @@
         {% endif %}
     </script>
 {% endblock %}
+    
+{% block stylesheets %}
+    {{ parent() }}
+    <style type="text/css">
+        {% if app.user and
+              app.user.getOptions() is not empty and
+              app.user.getOptions().getDesktopBackgroundColor() is not empty
+        %}
+            body {
+                background-color: {{ app.user.getOptions().getDesktopBackgroundColor() }};
+            }
+        {% endif %}
+    </style>
+{% endblock %}

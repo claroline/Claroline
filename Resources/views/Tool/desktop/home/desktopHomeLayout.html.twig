@@ -3,12 +3,6 @@
 {% block title %}{{ parent() ~ ' - ' ~ "home" | trans({}, "platform") | striptags | raw }}{% endblock %}
 
 {% block section_content %}
-    {#<div class="panel-heading relative">
-        <h3 class="panel-title">
-            {{ 'home' | trans({}, 'tools') }}
-        </h3>
-    </div>#}
-
     <div id="desktop-home-content" class="panel-body">
         <ul id="desktop-hometabs-list" class="nav nav-tabs margin-bottom-md">
             
@@ -19,7 +13,9 @@
                     data-hometab-config-id="{{ adminHomeTabConfig.getId() }}"
                     data-hometab-id="{{ adminHomeTab.getId() }}"
                 >
-                    <a href="{{ path('claro_display_desktop_home_tab', {'tabId': adminHomeTab.getId()})}}" class="hometab-link{% if not adminHomeTabConfig.isVisible() %} strike{% endif %}">
+                    <a href="{{ path('claro_display_desktop_home_tab', {'tabId': adminHomeTab.getId()})}}"
+                       class="hometab-link{% if not adminHomeTabConfig.isVisible() %} strike{% endif %}"
+                   >
                         {{ adminHomeTab.getName() }}
                         {% if adminHomeTabConfig.isLocked() %}
                             <i class="fa fa-lock"></i>

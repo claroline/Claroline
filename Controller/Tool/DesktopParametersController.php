@@ -14,12 +14,16 @@ namespace Claroline\CoreBundle\Controller\Tool;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\UserOptions;
 use Claroline\CoreBundle\Event\StrictDispatcher;
+use Claroline\CoreBundle\Form\UserOptionsType;
 use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -30,6 +34,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
  */
 class DesktopParametersController extends Controller
 {
+    private $formFactory;
     private $request;
     private $router;
     private $toolManager;
@@ -37,6 +42,7 @@ class DesktopParametersController extends Controller
 
     /**
      * @DI\InjectParams({
+     *     "formFactory"  = @DI\Inject("form.factory"),
      *     "request"      = @DI\Inject("request"),
      *     "urlGenerator" = @DI\Inject("router"),
      *     "toolManager"  = @DI\Inject("claroline.manager.tool_manager"),
@@ -45,6 +51,7 @@ class DesktopParametersController extends Controller
      * })
      */
     public function __construct(
+        FormFactoryInterface $formFactory,
         Request $request,
         UrlGeneratorInterface $router,
         ToolManager $toolManager,
@@ -52,6 +59,7 @@ class DesktopParametersController extends Controller
         ObjectManager $om
     )
     {
+        $this->formFactory = $formFactory;
         $this->request = $request;
         $this->router = $router;
         $this->toolManager = $toolManager;
@@ -73,7 +81,7 @@ class DesktopParametersController extends Controller
      * @param \Claroline\CoreBundle\Entity\User $user
      * @return Response
      */
-    public function desktopParametersMenuAction(User $user)
+    public function desktopParametersMenuAction()
     {
         return array();
     }
@@ -239,6 +247,76 @@ class DesktopParametersController extends Controller
         } else {
 
             throw new AccessDeniedException();
+        }
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/user/options/edit/form",
+     *     name="claro_user_options_edit_form"
+     * )
+     *
+     * @EXT\Template("ClarolineCoreBundle:Tool\desktop\parameters:userOptionsEditForm.html.twig")
+     * @EXT\ParamConverter("user", options={"authenticatedUser"=true})
+     *
+     * Displays the user options form page.
+     *
+     * @param \Claroline\CoreBundle\Entity\User $user
+     * @return Response
+     */
+    public function desktopParametersUserOptionsEditFormAction(User $user)
+    {
+        $options = $user->getOptions();
+
+        if (is_null($options)) {
+            $options = new UserOptions();
+            $options->setUser($user);
+            $user->setOptions($options);
+            $this->om->persist($options);
+            $this->om->persist($user);
+            $this->om->flush();
+        }
+
+        $form = $this->formFactory->create(
+            new UserOptionsType(),
+            $options
+        );
+
+        return array('form' => $form->createView(), 'options' => $options);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/user/options/{options}/edit",
+     *     name="claro_user_options_edit"
+     * )
+     *
+     * @EXT\Template("ClarolineCoreBundle:Tool\desktop\parameters:userOptionsEditForm.html.twig")
+     * @EXT\ParamConverter("user", options={"authenticatedUser"=true})
+     *
+     * Edit user options.
+     *
+     * @param \Claroline\CoreBundle\Entity\User $user
+     * @return Response
+     */
+    public function desktopParametersUserOptionsEditAction(UserOptions $options)
+    {
+        $form = $this->formFactory->create(
+            new UserOptionsType(),
+            $options
+        );
+        $form->handleRequest($this->request);
+
+        if ($form->isValid()) {
+            $this->om->persist($options);
+            $this->om->flush();
+
+            return new RedirectResponse(
+                $this->router->generate('claro_desktop_parameters_menu')
+            );
+        } else {
+
+            return array('form' => $form->createView(), 'options' => $options);
         }
     }
 }
