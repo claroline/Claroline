@@ -2030,19 +2030,25 @@ echo "ici : ";die();
      * )
      * @ParamConverter("document", class="InnovaCollecticielBundle:Document", options={"id" = "documentId"})
      * @ParamConverter("user",class="ClarolineCoreBundle:User",options={"id" = "userId"})
+     * @Method("POST")
      * @Template()
      */
     public function AddCommentsInnovaAction(Document $document, User $user)
     {
 
-        echo "suis ici ajout d'un commentaire";die();
-        $this->get('innova.manager.dropzone_voter')->isAllowToOpen($dropzone);
-        $this->get('innova.manager.dropzone_voter')->isAllowToEdit($dropzone);
+//        $this->get('innova.manager.dropzone_voter')->isAllowToOpen($dropzone);
+//        $this->get('innova.manager.dropzone_voter')->isAllowToEdit($dropzone);
+
 
         $em = $this->getDoctrine()->getManager();
-        $comment = new Correction();
+
+        $request = $this->get('request');
+        $commentText = $request->request->get('comment-name');
+
+        $comment = new Comment();
         $comment->setDocument($document);
         $comment->setUser($user);
+        $comment->setCommentText($commentText);
         $em->persist($comment);
         $em->flush();
 
@@ -2055,7 +2061,7 @@ echo "ici : ";die();
                 'innova_collecticiel_drops_detail_comment',
                 array(
                     'resourceId' => $dropzone->getId(),
-                    'state' => 'comment',
+                    'state' => 'edit',
                     'correctionId' => $correction->getId(),
                 )
             )
