@@ -42,16 +42,6 @@
         <a class="list-group-item" href="{{ path('claro_admin_home_tabs_configuration', {'homeTabType': 'desktop'}) }}">
             <span>{{ 'desktop_home_tabs'|trans({}, 'platform') }}</span>
         </a>
-        <a class="list-group-item" href="{{ path('claro_admin_home_tabs_configuration', {'homeTabType': 'workspace'}) }}">
-            <span>
-                {{ 'workspace_home_tabs'|trans({}, 'platform') }}
-                <div>
-                    <small>
-                        {{ 'only_for_workspace_creation'|trans({}, 'platform') }}
-                    </small>
-                </div>
-            </span>
-        </a>
     </div>
 
 {% endblock %}
