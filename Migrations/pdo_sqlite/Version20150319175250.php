@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2015/03/19 04:33:40
+ * Generation date: 2015/03/19 05:52:52
  */
-class Version20150319163338 extends AbstractMigration
+class Version20150319175250 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -24,6 +24,37 @@ class Version20150319163338 extends AbstractMigration
         ");
         $this->addSql("
             CREATE UNIQUE INDEX UNIQ_B2066972A76ED395 ON claro_user_options (user_id)
+        ");
+        $this->addSql("
+            CREATE TABLE claro_widget_display_config (
+                id INTEGER NOT NULL, 
+                workspace_id INTEGER DEFAULT NULL, 
+                user_id INTEGER DEFAULT NULL, 
+                widget_instance_id INTEGER NOT NULL, 
+                row_position INTEGER NOT NULL, 
+                column_position INTEGER NOT NULL, 
+                width INTEGER DEFAULT 4 NOT NULL, 
+                height INTEGER DEFAULT 3 NOT NULL, 
+                color VARCHAR(255) DEFAULT NULL, 
+                PRIMARY KEY(id)
+            )
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_EBBE497282D40A1F ON claro_widget_display_config (workspace_id)
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_EBBE4972A76ED395 ON claro_widget_display_config (user_id)
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_EBBE497244BF891 ON claro_widget_display_config (widget_instance_id)
+        ");
+        $this->addSql("
+            CREATE UNIQUE INDEX widget_display_config_unique_user ON claro_widget_display_config (widget_instance_id, user_id)
+        ");
+        $this->addSql("
+            CREATE UNIQUE INDEX widget_display_config_unique_workspace ON claro_widget_display_config (
+                widget_instance_id, workspace_id
+            )
         ");
         $this->addSql("
             DROP INDEX UNIQ_EB8D2852F85E0677
@@ -163,12 +194,205 @@ class Version20150319163338 extends AbstractMigration
         $this->addSql("
             CREATE UNIQUE INDEX UNIQ_EB8D28523ADB05F1 ON claro_user (options_id)
         ");
+        $this->addSql("
+            DROP INDEX ordered_tool_unique_name_by_workspace
+        ");
+        $this->addSql("
+            DROP INDEX IDX_6CF1320E82D40A1F
+        ");
+        $this->addSql("
+            DROP INDEX IDX_6CF1320E8F7B22CC
+        ");
+        $this->addSql("
+            DROP INDEX IDX_6CF1320EA76ED395
+        ");
+        $this->addSql("
+            CREATE TEMPORARY TABLE __temp__claro_ordered_tool AS 
+            SELECT id, 
+            workspace_id, 
+            tool_id, 
+            user_id, 
+            display_order, 
+            name, 
+            is_visible_in_desktop, 
+            ordered_tool_type, 
+            is_locked 
+            FROM claro_ordered_tool
+        ");
+        $this->addSql("
+            DROP TABLE claro_ordered_tool
+        ");
+        $this->addSql("
+            CREATE TABLE claro_ordered_tool (
+                id INTEGER NOT NULL, 
+                workspace_id INTEGER DEFAULT NULL, 
+                tool_id INTEGER NOT NULL, 
+                user_id INTEGER DEFAULT NULL, 
+                display_order INTEGER NOT NULL, 
+                name VARCHAR(255) NOT NULL COLLATE utf8_unicode_ci, 
+                is_visible_in_desktop BOOLEAN NOT NULL, 
+                ordered_tool_type INTEGER NOT NULL, 
+                is_locked BOOLEAN NOT NULL, 
+                PRIMARY KEY(id), 
+                CONSTRAINT FK_6CF1320E82D40A1F FOREIGN KEY (workspace_id) 
+                REFERENCES claro_workspace (id) 
+                ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE, 
+                CONSTRAINT FK_6CF1320E8F7B22CC FOREIGN KEY (tool_id) 
+                REFERENCES claro_tools (id) 
+                ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE, 
+                CONSTRAINT FK_6CF1320EA76ED395 FOREIGN KEY (user_id) 
+                REFERENCES claro_user (id) 
+                ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE
+            )
+        ");
+        $this->addSql("
+            INSERT INTO claro_ordered_tool (
+                id, workspace_id, tool_id, user_id, 
+                display_order, name, is_visible_in_desktop, 
+                ordered_tool_type, is_locked
+            ) 
+            SELECT id, 
+            workspace_id, 
+            tool_id, 
+            user_id, 
+            display_order, 
+            name, 
+            is_visible_in_desktop, 
+            ordered_tool_type, 
+            is_locked 
+            FROM __temp__claro_ordered_tool
+        ");
+        $this->addSql("
+            DROP TABLE __temp__claro_ordered_tool
+        ");
+        $this->addSql("
+            CREATE UNIQUE INDEX ordered_tool_unique_name_by_workspace ON claro_ordered_tool (workspace_id, name)
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_6CF1320E82D40A1F ON claro_ordered_tool (workspace_id)
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_6CF1320E8F7B22CC ON claro_ordered_tool (tool_id)
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_6CF1320EA76ED395 ON claro_ordered_tool (user_id)
+        ");
+        $this->addSql("
+            CREATE UNIQUE INDEX ordered_tool_unique_tool_user_type ON claro_ordered_tool (
+                tool_id, user_id, ordered_tool_type
+            )
+        ");
+        $this->addSql("
+            CREATE UNIQUE INDEX ordered_tool_unique_tool_ws_type ON claro_ordered_tool (
+                tool_id, workspace_id, ordered_tool_type
+            )
+        ");
+        $this->addSql("
+            ALTER TABLE claro_widget 
+            ADD COLUMN default_width INTEGER DEFAULT 4 NOT NULL
+        ");
+        $this->addSql("
+            ALTER TABLE claro_widget 
+            ADD COLUMN default_height INTEGER DEFAULT 3 NOT NULL
+        ");
     }
 
     public function down(Schema $schema)
     {
         $this->addSql("
             DROP TABLE claro_user_options
+        ");
+        $this->addSql("
+            DROP TABLE claro_widget_display_config
+        ");
+        $this->addSql("
+            DROP INDEX IDX_6CF1320E82D40A1F
+        ");
+        $this->addSql("
+            DROP INDEX IDX_6CF1320E8F7B22CC
+        ");
+        $this->addSql("
+            DROP INDEX IDX_6CF1320EA76ED395
+        ");
+        $this->addSql("
+            DROP INDEX ordered_tool_unique_tool_user_type
+        ");
+        $this->addSql("
+            DROP INDEX ordered_tool_unique_tool_ws_type
+        ");
+        $this->addSql("
+            DROP INDEX ordered_tool_unique_name_by_workspace
+        ");
+        $this->addSql("
+            CREATE TEMPORARY TABLE __temp__claro_ordered_tool AS 
+            SELECT id, 
+            workspace_id, 
+            tool_id, 
+            user_id, 
+            display_order, 
+            name, 
+            is_visible_in_desktop, 
+            ordered_tool_type, 
+            is_locked 
+            FROM claro_ordered_tool
+        ");
+        $this->addSql("
+            DROP TABLE claro_ordered_tool
+        ");
+        $this->addSql("
+            CREATE TABLE claro_ordered_tool (
+                id INTEGER NOT NULL, 
+                workspace_id INTEGER DEFAULT NULL, 
+                tool_id INTEGER NOT NULL, 
+                user_id INTEGER DEFAULT NULL, 
+                display_order INTEGER NOT NULL, 
+                name VARCHAR(255) NOT NULL, 
+                is_visible_in_desktop BOOLEAN NOT NULL, 
+                ordered_tool_type INTEGER NOT NULL, 
+                is_locked BOOLEAN NOT NULL, 
+                PRIMARY KEY(id), 
+                CONSTRAINT FK_6CF1320E82D40A1F FOREIGN KEY (workspace_id) 
+                REFERENCES claro_workspace (id) 
+                ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE, 
+                CONSTRAINT FK_6CF1320E8F7B22CC FOREIGN KEY (tool_id) 
+                REFERENCES claro_tools (id) 
+                ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE, 
+                CONSTRAINT FK_6CF1320EA76ED395 FOREIGN KEY (user_id) 
+                REFERENCES claro_user (id) 
+                ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE
+            )
+        ");
+        $this->addSql("
+            INSERT INTO claro_ordered_tool (
+                id, workspace_id, tool_id, user_id, 
+                display_order, name, is_visible_in_desktop, 
+                ordered_tool_type, is_locked
+            ) 
+            SELECT id, 
+            workspace_id, 
+            tool_id, 
+            user_id, 
+            display_order, 
+            name, 
+            is_visible_in_desktop, 
+            ordered_tool_type, 
+            is_locked 
+            FROM __temp__claro_ordered_tool
+        ");
+        $this->addSql("
+            DROP TABLE __temp__claro_ordered_tool
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_6CF1320E82D40A1F ON claro_ordered_tool (workspace_id)
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_6CF1320E8F7B22CC ON claro_ordered_tool (tool_id)
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_6CF1320EA76ED395 ON claro_ordered_tool (user_id)
+        ");
+        $this->addSql("
+            CREATE UNIQUE INDEX ordered_tool_unique_name_by_workspace ON claro_ordered_tool (workspace_id, name)
         ");
         $this->addSql("
             DROP INDEX UNIQ_EB8D2852F85E0677
@@ -303,6 +527,65 @@ class Version20150319163338 extends AbstractMigration
         ");
         $this->addSql("
             CREATE UNIQUE INDEX UNIQ_EB8D285282D40A1F ON claro_user (workspace_id)
+        ");
+        $this->addSql("
+            DROP INDEX UNIQ_76CA6C4F5E237E06
+        ");
+        $this->addSql("
+            DROP INDEX IDX_76CA6C4FEC942BCF
+        ");
+        $this->addSql("
+            CREATE TEMPORARY TABLE __temp__claro_widget AS 
+            SELECT id, 
+            plugin_id, 
+            name, 
+            is_configurable, 
+            is_exportable, 
+            is_displayable_in_workspace, 
+            is_displayable_in_desktop 
+            FROM claro_widget
+        ");
+        $this->addSql("
+            DROP TABLE claro_widget
+        ");
+        $this->addSql("
+            CREATE TABLE claro_widget (
+                id INTEGER NOT NULL, 
+                plugin_id INTEGER DEFAULT NULL, 
+                name VARCHAR(255) NOT NULL, 
+                is_configurable BOOLEAN NOT NULL, 
+                is_exportable BOOLEAN NOT NULL, 
+                is_displayable_in_workspace BOOLEAN NOT NULL, 
+                is_displayable_in_desktop BOOLEAN NOT NULL, 
+                PRIMARY KEY(id), 
+                CONSTRAINT FK_76CA6C4FEC942BCF FOREIGN KEY (plugin_id) 
+                REFERENCES claro_plugin (id) 
+                ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE
+            )
+        ");
+        $this->addSql("
+            INSERT INTO claro_widget (
+                id, plugin_id, name, is_configurable, 
+                is_exportable, is_displayable_in_workspace, 
+                is_displayable_in_desktop
+            ) 
+            SELECT id, 
+            plugin_id, 
+            name, 
+            is_configurable, 
+            is_exportable, 
+            is_displayable_in_workspace, 
+            is_displayable_in_desktop 
+            FROM __temp__claro_widget
+        ");
+        $this->addSql("
+            DROP TABLE __temp__claro_widget
+        ");
+        $this->addSql("
+            CREATE UNIQUE INDEX UNIQ_76CA6C4F5E237E06 ON claro_widget (name)
+        ");
+        $this->addSql("
+            CREATE INDEX IDX_76CA6C4FEC942BCF ON claro_widget (plugin_id)
         ");
     }
 }
