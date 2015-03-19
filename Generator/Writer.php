@@ -25,6 +25,7 @@ class Writer
     private $fileSystem;
     private $twigEnvironment;
     private $twigEngine;
+    private $hasSqlExtension = false;
 
     /**
      * Constructor.
@@ -42,7 +43,6 @@ class Writer
         $this->fileSystem = $fileSystem;
         $this->twigEnvironment = $environment;
         $this->twigEngine = $engine;
-        $this->twigEnvironment->addExtension(new SqlFormatterExtension());
     }
 
     /**
@@ -55,6 +55,11 @@ class Writer
      */
     public function writeMigrationClass(Bundle $bundle, $driverName, $version, array $queries)
     {
+        if (!$this->hasSqlExtension) {
+            $this->twigEnvironment->addExtension(new SqlFormatterExtension());
+            $this->hasSqlExtension = true;
+        }
+
         $targetDir = "{$bundle->getPath()}/Migrations/{$driverName}";
         $class = "Version{$version}";
         $namespace = "{$bundle->getNamespace()}\\Migrations\\{$driverName}";
