@@ -24,7 +24,7 @@
                      data-gs-width="{{ widgetDisplayConfig.getWidth() }}"
                      data-gs-height="{{ widgetDisplayConfig.getHeight() }}"
                      data-widget-display-config-id="{{ widgetDisplayConfig.getId() }}"
-                     {% if isLockedHomeTab %}
+                     {% if widgetHomeTabConfig.isLocked() %}
                          data-gs-no-resize="true"
                          data-gs-no-move="true"
                      {% endif %}

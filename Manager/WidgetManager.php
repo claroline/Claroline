@@ -269,28 +269,28 @@ class WidgetManager
     {
         $results = array();
         $widgetInstances = array();
-        $adminWDCs = array();
+        $mappedWHTCs = array();
         $userTab = array();
         $adminTab = array();
 
-        foreach ($widgetHTCs as $htc) {
-            $widgetInstances[] = $htc->getWidgetInstance();
+        foreach ($widgetHTCs as $whtc) {
+            $widgetInstance = $whtc->getWidgetInstance();
+            $widgetInstances[] = $widgetInstance;
+
+            if ($whtc->getType() === 'admin') {
+                $mappedWHTCs[$widgetInstance->getId()] = $whtc;
+            }
         }
         $usersWDCs = $this->getWidgetDisplayConfigsByUserAndWidgets($user, $widgetInstances);
-
-        if (count($usersWDCs) < count($widgetInstances)) {
-            $adminWDCs = $this->getAdminWidgetDisplayConfigsByWidgets($widgetInstances);
-        }
+        $adminWDCs = $this->getAdminWidgetDisplayConfigsByWidgets($widgetInstances);
 
         foreach ($usersWDCs as $userWDC) {
             $widgetInstanceId = $userWDC->getWidgetInstance()->getId();
-
             $userTab[$widgetInstanceId] = $userWDC;
         }
 
         foreach ($adminWDCs as $adminWDC) {
             $widgetInstanceId = $adminWDC->getWidgetInstance()->getId();
-
             $adminTab[$widgetInstanceId] = $adminWDC;
         }
 
@@ -300,6 +300,27 @@ class WidgetManager
             $id = $widgetInstance->getId();
 
             if (isset($userTab[$id])) {
+
+                if (isset($mappedWHTCs[$id]) && isset($adminTab[$id])) {
+                    $changed = false;
+
+                    if ($userTab[$id]->getColor() !== $adminTab[$id]->getColor()) {
+                        $userTab[$id]->setColor($adminTab[$id]->getColor());
+                        $changed = true;
+                    }
+
+                    if ($mappedWHTCs[$id]->isLocked()) {
+                        $userTab[$id]->setRow($adminTab[$id]->getRow());
+                        $userTab[$id]->setColumn($adminTab[$id]->getColumn());
+                        $userTab[$id]->setWidth($adminTab[$id]->getWidth());
+                        $userTab[$id]->setHeight($adminTab[$id]->getHeight());
+                        $changed = true;
+                    }
+
+                    if ($changed) {
+                        $this->om->persist($userTab[$id]);
+                    }
+                }
                 $results[$id] = $userTab[$id];
             } elseif (isset($adminTab[$id])) {
                 $wdc = new WidgetDisplayConfig();
@@ -309,6 +330,7 @@ class WidgetManager
                 $wdc->setColumn($adminTab[$id]->getColumn());
                 $wdc->setWidth($adminTab[$id]->getWidth());
                 $wdc->setHeight($adminTab[$id]->getHeight());
+                $wdc->setColor($adminTab[$id]->getColor());
                 $this->om->persist($wdc);
                 $results[$id] = $wdc;
             } else {
