@@ -71,4 +71,22 @@ abstract class AbstractCommand extends ContainerAwareCommand
             }
         }
     }
+
+    protected function getOutputBundle(InputInterface $input)
+    {
+        $bundleName = $input->getOption('output');
+
+        if ($bundleName) {
+            $bundles = $this->getContainer()->get('kernel')->getBundle(
+                $bundleName,
+                false
+            );
+
+            foreach ($bundles as $bundle) {
+                if ($bundle->getName() == $bundleName) {
+                    return $bundle;
+                }
+            }
+        }
+    }
 }

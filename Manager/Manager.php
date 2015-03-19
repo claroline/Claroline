@@ -50,19 +50,21 @@ class Manager
      * Generates bundle migrations classes for all the available driver platforms.
      *
      * @param \Symfony\Component\HttpKernel\Bundle\Bundle $bundle
+     * @param \Symfony\Component\HttpKernel\Bundle\Bundle $output
      */
-    public function generateBundleMigration(Bundle $bundle)
+    public function generateBundleMigration(Bundle $bundle, $output = null)
     {
         $platforms = $this->getAvailablePlatforms();
         $version = date('YmdHis');
         $this->log("Generating migrations classes for '{$bundle->getName()}'...");
+        if (!$output) $output = $bundle;
 
         foreach ($platforms as $driverName => $platform) {
             $queries = $this->generator->generateMigrationQueries($bundle, $platform);
 
             if (count($queries[Generator::QUERIES_UP]) > 0 || count($queries[Generator::QUERIES_DOWN]) > 0) {
                 $this->log(" - Generating migration class for {$driverName} driver...");
-                $this->writer->writeMigrationClass($bundle, $driverName, $version, $queries);
+                $this->writer->writeMigrationClass($output, $driverName, $version, $queries);
             } else {
                 $this->log('Nothing to generate: database and mapping are synced');
                 break;
