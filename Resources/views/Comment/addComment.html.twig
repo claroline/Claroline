@@ -1,7 +1,9 @@
 {% block dropzone_add_comment %}
 
+    {{ "titi" }}{{ dropzone.id }}{{ "/" }}{{ correction.id }}{{ "tata"}}
     <form class="form-horizontal" role="form" method="POST" {{ form_enctype(form) }}
-    action="{{ path('innova_collecticiel_add_comment', {'documentId': document.id, 'userId': user.id}) }}">
+    action="{{ path('innova_collecticiel_add_comment',
+    {'documentId': document.id, 'userId': user.id, 'dropzoneId': dropzone.id, 'correctionId': correction.id}) }}">
 
         {{ form_errors(form) }}
 

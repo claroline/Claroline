@@ -2022,18 +2022,22 @@ echo "ici : ";die();
 
 
 
+
     /**
      * @Route(
-     *      "/{documentId}/add/comments/{userId}",
+     *      "/{documentId}/add/comments/{userId}/{dropzoneId}/{correctionId}",
      *      name="innova_collecticiel_add_comment",
-     *      requirements={"documentId" = "\d+", "userId" = "\d+"}
+     *      requirements={"documentId" = "\d+", "userId" = "\d+", "dropzoneId" = "\d+", "correctionId" = "\d+"}
      * )
      * @ParamConverter("document", class="InnovaCollecticielBundle:Document", options={"id" = "documentId"})
      * @ParamConverter("user",class="ClarolineCoreBundle:User",options={"id" = "userId"})
+     * @ParamConverter("dropzone", class="InnovaCollecticielBundle:Dropzone", options={"id" = "dropzoneId"})
+     * @ParamConverter("correction", class="InnovaCollecticielBundle:Correction", options={"id" = "correctionId"})
      * @Method("POST")
      * @Template()
      */
-    public function AddCommentsInnovaAction(Document $document, User $user)
+//    public function AddCommentsInnovaAction(Document $document, User $user)
+    public function AddCommentsInnovaAction(Document $document, User $user, Dropzone $dropzone, Correction $correction)
     {
 
 //        $this->get('innova.manager.dropzone_voter')->isAllowToOpen($dropzone);
@@ -2052,6 +2056,9 @@ echo "ici : ";die();
         $em->persist($comment);
         $em->flush();
 
+        echo "ressource = " . $dropzone->getId();
+        echo "correction = " . $correction->getId();
+
 //        $event = new LogCorrectionStartEvent($dropzone, $drop, $correction);
 //        $this->dispatch($event);
 
@@ -2067,7 +2074,5 @@ echo "ici : ";die();
             )
         );
     }
-
-
 
 }
