@@ -454,7 +454,7 @@ home: Accueil
 home_manager: 'Gestionnaire de l''accueil'
 home_parameters: 'Paramètres de l''accueil'
 home_tab: Onglet
-home_tab_config_form_locked: 'Verrouiller'
+home_tab_config_form_locked: 'Verrouillé'
 home_tab_config_form_visible: 'Visible'
 home_tab_creation: 'Création d''un onglet'
 home_tab_delete_confirm_message: 'Voulez-vous vraiment supprimer cet onglet ?'
@@ -1045,6 +1045,7 @@ widget: Widget
 widget_configuration: 'Configuration du widget'
 widget_display_config_form_color: 'Couleur'
 widget_display_form_name: Nom
+widget_home_tab_config_form_locked: 'Verrouillé'
 widget_home_tab_config_form_visible: 'Visible'
 widget_home_tab_delete_confirm_message: 'Voulez-vous vraiment retirer ce widget de cet onglet ?'
 widget_home_tab_delete_confirm_title: 'Suppression du widget de l''onglet'

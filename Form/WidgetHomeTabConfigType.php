@@ -17,9 +17,20 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class WidgetHomeTabConfigType extends AbstractType
 {
+    private $withLock = false;
+
+    public function __construct($withLock = false)
+    {
+        $this->withLock = $withLock;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('visible', 'checkbox');
+
+        if ($this->withLock) {
+            $builder->add('locked', 'checkbox');
+        }
     }
 
     public function getName()

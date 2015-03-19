@@ -1318,10 +1318,7 @@ class HomeController extends Controller
             $workspace
         );
         $widgetInstance = $widgetHomeTabConfig->getWidgetInstance();
-
-        $this->homeTabManager->deleteWidgetHomeTabConfig(
-            $widgetHomeTabConfig
-        );
+        $this->homeTabManager->deleteWidgetHomeTabConfig($widgetHomeTabConfig);
 
         if ($this->hasWorkspaceAccessToWidgetInstance($widgetInstance, $workspace)) {
             $this->widgetManager->removeInstance($widgetInstance);

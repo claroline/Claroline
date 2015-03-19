@@ -452,7 +452,7 @@ home: Home
 home_manager: 'Home manager'
 home_parameters: 'Home parameters'
 home_tab: 'Home tab'
-home_tab_config_form_locked: 'Lock'
+home_tab_config_form_locked: 'Locked'
 home_tab_config_form_visible: 'Visible'
 home_tab_creation: 'Home tab creation'
 home_tab_delete_confirm_message: 'Do you really want to delete this Home tab?'
@@ -1039,6 +1039,7 @@ widget: Widget
 widget_configuration: 'Widget configuration'
 widget_display_config_form_color: 'Color'
 widget_display_form_name: Name
+widget_home_tab_config_form_locked: 'Locked'
 widget_home_tab_config_form_visible: 'Visible'
 widget_home_tab_delete_confirm_message: 'Do you really want to remove this widget from this Home tab?'
 widget_home_tab_delete_confirm_title: 'Remove widget from Home tab'
