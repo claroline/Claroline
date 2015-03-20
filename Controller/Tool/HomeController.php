@@ -325,7 +325,17 @@ class HomeController extends Controller
                 $widgetDisplayConfig
             );
 
-            return new JsonResponse($widgetInstance->getId(), 200);
+            return new JsonResponse(
+                array(
+                    'widgetInstanceId' => $widgetInstance->getId(),
+                    'widgetHomeTabConfigId' => $widgetHomeTabConfig->getId(),
+                    'widgetDisplayConfigId' => $widgetDisplayConfig->getId(),
+                    'color' => $widgetDisplayConfig->getColor(),
+                    'name' => $widgetInstance->getName(),
+                    'configurable' => $widgetInstance->getWidget()->isConfigurable() ? 1 : 0
+                ),
+                200
+            );
         } else {
 
             return array(
@@ -551,7 +561,18 @@ class HomeController extends Controller
                 $widgetDisplayConfig
             );
 
-            return new JsonResponse($widgetInstance->getId(), 200);
+            return new JsonResponse(
+                array(
+                    'widgetInstanceId' => $widgetInstance->getId(),
+                    'widgetHomeTabConfigId' => $widgetHomeTabConfig->getId(),
+                    'widgetDisplayConfigId' => $widgetDisplayConfig->getId(),
+                    'color' => $widgetDisplayConfig->getColor(),
+                    'name' => $widgetInstance->getName(),
+                    'configurable' => $widgetInstance->getWidget()->isConfigurable() ? 1 : 0,
+                    'visibility' => $widgetHomeTabConfig->isVisible() ? 1 : 0
+                ),
+                200
+            );
         } else {
 
             return array(
@@ -1298,6 +1319,34 @@ class HomeController extends Controller
 
     /**
      * @EXT\Route(
+     *     "/desktop/widget/diplay/config/{widgetDisplayConfig}/position/row/{row}/column/{column}/update",
+     *     name="claro_desktop_widget_display_config_position_update",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\Method("POST")
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     *
+     * Update widget position.
+     *
+     * @return Response
+     */
+    public function desktopWidgetDisplayConfigPositionUpdateAction(
+        User $user,
+        WidgetDisplayConfig $widgetDisplayConfig,
+        $row,
+        $column
+    )
+    {
+        $this->checkUserAccessForWidgetDisplayConfig($widgetDisplayConfig, $user);
+        $widgetDisplayConfig->setRow($row);
+        $widgetDisplayConfig->setColumn($column);
+        $this->widgetManager->persistWidgetDisplayConfigs(array($widgetDisplayConfig));
+
+        return new Response('success', 204);
+    }
+
+    /**
+     * @EXT\Route(
      *     "/workspace/{workspace}/widget_home_tab_config/{widgetHomeTabConfig}/delete",
      *     name="claro_workspace_widget_home_tab_config_delete",
      *     options = {"expose"=true}
@@ -1323,6 +1372,34 @@ class HomeController extends Controller
         if ($this->hasWorkspaceAccessToWidgetInstance($widgetInstance, $workspace)) {
             $this->widgetManager->removeInstance($widgetInstance);
         }
+
+        return new Response('success', 204);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/workspace/{workspace}/widget/diplay/config/{widgetDisplayConfig}/position/row/{row}/column/{column}/update",
+     *     name="claro_workspace_widget_display_config_position_update",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\Method("POST")
+     *
+     * Update widget position.
+     *
+     * @return Response
+     */
+    public function workspaceWidgetDisplayConfigPositionUpdateAction(
+        Workspace $workspace,
+        WidgetDisplayConfig $widgetDisplayConfig,
+        $row,
+        $column
+    )
+    {
+        $this->checkWorkspaceEditionAccess($workspace);
+        $this->checkWorkspaceAccessForWidgetDisplayConfig($widgetDisplayConfig, $workspace);
+        $widgetDisplayConfig->setRow($row);
+        $widgetDisplayConfig->setColumn($column);
+        $this->widgetManager->persistWidgetDisplayConfigs(array($widgetDisplayConfig));
 
         return new Response('success', 204);
     }

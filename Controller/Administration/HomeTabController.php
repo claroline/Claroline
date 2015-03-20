@@ -463,6 +463,33 @@ class HomeTabController extends Controller
 
     /**
      * @EXT\Route(
+     *     "/widget/diplay/config/{widgetDisplayConfig}/position/row/{row}/column/{column}/update",
+     *     name="claro_admin_widget_display_config_position_update",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\Method("POST")
+     *
+     * Update widget position.
+     *
+     * @return Response
+     */
+    public function adminWidgetDisplayConfigPositionUpdateAction(
+        WidgetDisplayConfig $widgetDisplayConfig,
+        $row,
+        $column
+    )
+    {
+        $this->checkOpen();
+        $this->checkAdminAccessForWidgetDisplayConfig($widgetDisplayConfig);
+        $widgetDisplayConfig->setRow($row);
+        $widgetDisplayConfig->setColumn($column);
+        $this->widgetManager->persistWidgetDisplayConfigs(array($widgetDisplayConfig));
+
+        return new Response('success', 204);
+    }
+
+    /**
+     * @EXT\Route(
      *     "hometab/{homeTab}/type/{homeTabType}/widget/instance/create/form",
      *     name="claro_admin_widget_instance_create_form",
      *     options = {"expose"=true}
@@ -565,7 +592,19 @@ class HomeTabController extends Controller
                 $widgetDisplayConfig
             );
 
-            return new JsonResponse($widgetInstance->getId(), 200);
+            return new JsonResponse(
+                array(
+                    'widgetInstanceId' => $widgetInstance->getId(),
+                    'widgetHomeTabConfigId' => $widgetHomeTabConfig->getId(),
+                    'widgetDisplayConfigId' => $widgetDisplayConfig->getId(),
+                    'color' => $widgetDisplayConfig->getColor(),
+                    'name' => $widgetInstance->getName(),
+                    'configurable' => $widgetInstance->getWidget()->isConfigurable() ? 1 : 0,
+                    'visibility' => $widgetHomeTabConfig->isVisible() ? 1 : 0,
+                    'lock' => $widgetHomeTabConfig->isLocked() ? 1 : 0
+                ),
+                200
+            );
         } else {
 
             return array(
