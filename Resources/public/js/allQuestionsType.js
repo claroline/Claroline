@@ -178,6 +178,7 @@ function addDelete(tr, deleteTrans) {
 
 $(document).ready(function() {
     $('#ujm_exobundle_interactionqcmtype_interaction_invite_ifr').height(50);
+    displayOptionalFields();
 });
 
 /**
@@ -231,4 +232,37 @@ function advancedEdition(idTextarea,e){
         return false;
 }
 
+/**
+ * Layout of the edition
+ */
+function displayOptionalFields(){
+  //Value select the category
+  var idCatSelect=$("*[id$='_interaction_question_category']").val();
+  //Value of the description
+  var valDescription =$("*[id$='_interaction_question_description']").text();
+  //Id QCM response
+  var valReplyQCM =$("*[id$='_label']").text();
 
+  //Test category
+  if(idCatSelect !== "" )
+  {
+      $("#categoryDiv").collapse('show');            
+  }
+  //Test description
+  if(valDescription !== "")
+  {
+      $("#descriptionDiv").collapse('show');
+      //Enables advanced edition
+      if(valDescription.substring(0,3) === '<p>')
+      {
+          $("*[id$='_interaction_question_description']").addClass("claroline-tiny-mce hide");
+          $("*[id$='_interaction_question_description']").data("data-theme","advanced");
+      }
+  }
+  //Enables advanced edition QCM
+  if(valReplyQCM.substring(0,3) === '<p>')
+  {
+      $("*[id$='_label']").addClass("claroline-tiny-mce hide");
+      $("*[id$='_label']").data("data-theme","advanced");
+  }
+}
