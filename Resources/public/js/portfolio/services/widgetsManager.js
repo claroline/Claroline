@@ -33,9 +33,9 @@ portfolioApp
             },
             cancelEditing: function(widget, rollback) {
                 if (rollback) {
+                    widget.copy.rollbacking = true;
                     angular.copy(widget.copy, widget);
                 }
-
                 widget.setEditMode(false);
 
                 if (widget.isNew()) {

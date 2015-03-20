@@ -31,7 +31,10 @@ portfolioApp
                     widget.isResized = true;
                 }, // optional callback fired when resize is started,
                 stop: function(event, $element, widget) {
-                    widgetsManager.save(widget);
+                    if (!widget.isEditing()) {
+                        widgetsManager.save(widget);
+                    }
+                    widget.isResized = false;
                 } // optional callback fired when item is finished resizing
             },
             draggable: {
@@ -41,7 +44,10 @@ portfolioApp
                     widget.isDragged = true;
                 }, // optional callback fired when drag is started,
                 stop: function(event, $element, widget) {
-                    widgetsManager.save(widget);
+                    if (!widget.isEditing()) {
+                        widgetsManager.save(widget);
+                    }
+                    widget.isDragged = false;
                 } // optional callback fired when item is finished dragging
             }
         };
