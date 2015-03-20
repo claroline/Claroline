@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Migrations\sqlsrv;
+namespace Claroline\CoreBundle\Migrations\pdo_sqlsrv;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2015/03/19 05:52:53
+ * Generation date: 2015/03/20 11:11:55
  */
-class Version20150319175250 extends AbstractMigration
+class Version20150320111153 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -108,6 +108,24 @@ class Version20150319175250 extends AbstractMigration
             WHERE options_id IS NOT NULL
         ");
         $this->addSql("
+            IF EXISTS (
+                SELECT * 
+                FROM sysobjects 
+                WHERE name = 'ordered_tool_unique_tool_ws_usr'
+            ) 
+            ALTER TABLE claro_ordered_tool 
+            DROP CONSTRAINT ordered_tool_unique_tool_ws_usr ELSE 
+            DROP INDEX ordered_tool_unique_tool_ws_usr ON claro_ordered_tool
+        ");
+        $this->addSql("
+            ALTER TABLE claro_ordered_tool 
+            ADD ordered_tool_type INT NOT NULL
+        ");
+        $this->addSql("
+            ALTER TABLE claro_ordered_tool 
+            ADD is_locked BIT NOT NULL
+        ");
+        $this->addSql("
             CREATE UNIQUE INDEX ordered_tool_unique_tool_user_type ON claro_ordered_tool (
                 tool_id, user_id, ordered_tool_type
             ) 
@@ -172,6 +190,20 @@ class Version20150319175250 extends AbstractMigration
             ALTER TABLE claro_ordered_tool 
             DROP CONSTRAINT ordered_tool_unique_tool_ws_type ELSE 
             DROP INDEX ordered_tool_unique_tool_ws_type ON claro_ordered_tool
+        ");
+        $this->addSql("
+            ALTER TABLE claro_ordered_tool 
+            DROP COLUMN ordered_tool_type
+        ");
+        $this->addSql("
+            ALTER TABLE claro_ordered_tool 
+            DROP COLUMN is_locked
+        ");
+        $this->addSql("
+            CREATE UNIQUE INDEX ordered_tool_unique_tool_ws_usr ON claro_ordered_tool (tool_id, workspace_id, user_id) 
+            WHERE tool_id IS NOT NULL 
+            AND workspace_id IS NOT NULL 
+            AND user_id IS NOT NULL
         ");
         $this->addSql("
             IF EXISTS (

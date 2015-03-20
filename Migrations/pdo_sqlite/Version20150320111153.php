@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2015/03/19 05:52:52
+ * Generation date: 2015/03/20 11:11:55
  */
-class Version20150319175250 extends AbstractMigration
+class Version20150320111153 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -195,6 +195,9 @@ class Version20150319175250 extends AbstractMigration
             CREATE UNIQUE INDEX UNIQ_EB8D28523ADB05F1 ON claro_user (options_id)
         ");
         $this->addSql("
+            DROP INDEX ordered_tool_unique_tool_ws_usr
+        ");
+        $this->addSql("
             DROP INDEX ordered_tool_unique_name_by_workspace
         ");
         $this->addSql("
@@ -214,9 +217,7 @@ class Version20150319175250 extends AbstractMigration
             user_id, 
             display_order, 
             name, 
-            is_visible_in_desktop, 
-            ordered_tool_type, 
-            is_locked 
+            is_visible_in_desktop 
             FROM claro_ordered_tool
         ");
         $this->addSql("
@@ -248,8 +249,7 @@ class Version20150319175250 extends AbstractMigration
         $this->addSql("
             INSERT INTO claro_ordered_tool (
                 id, workspace_id, tool_id, user_id, 
-                display_order, name, is_visible_in_desktop, 
-                ordered_tool_type, is_locked
+                display_order, name, is_visible_in_desktop
             ) 
             SELECT id, 
             workspace_id, 
@@ -257,9 +257,7 @@ class Version20150319175250 extends AbstractMigration
             user_id, 
             display_order, 
             name, 
-            is_visible_in_desktop, 
-            ordered_tool_type, 
-            is_locked 
+            is_visible_in_desktop 
             FROM __temp__claro_ordered_tool
         ");
         $this->addSql("
@@ -331,9 +329,7 @@ class Version20150319175250 extends AbstractMigration
             user_id, 
             display_order, 
             name, 
-            is_visible_in_desktop, 
-            ordered_tool_type, 
-            is_locked 
+            is_visible_in_desktop 
             FROM claro_ordered_tool
         ");
         $this->addSql("
@@ -348,8 +344,6 @@ class Version20150319175250 extends AbstractMigration
                 display_order INTEGER NOT NULL, 
                 name VARCHAR(255) NOT NULL, 
                 is_visible_in_desktop BOOLEAN NOT NULL, 
-                ordered_tool_type INTEGER NOT NULL, 
-                is_locked BOOLEAN NOT NULL, 
                 PRIMARY KEY(id), 
                 CONSTRAINT FK_6CF1320E82D40A1F FOREIGN KEY (workspace_id) 
                 REFERENCES claro_workspace (id) 
@@ -365,8 +359,7 @@ class Version20150319175250 extends AbstractMigration
         $this->addSql("
             INSERT INTO claro_ordered_tool (
                 id, workspace_id, tool_id, user_id, 
-                display_order, name, is_visible_in_desktop, 
-                ordered_tool_type, is_locked
+                display_order, name, is_visible_in_desktop
             ) 
             SELECT id, 
             workspace_id, 
@@ -374,9 +367,7 @@ class Version20150319175250 extends AbstractMigration
             user_id, 
             display_order, 
             name, 
-            is_visible_in_desktop, 
-            ordered_tool_type, 
-            is_locked 
+            is_visible_in_desktop 
             FROM __temp__claro_ordered_tool
         ");
         $this->addSql("
@@ -393,6 +384,9 @@ class Version20150319175250 extends AbstractMigration
         ");
         $this->addSql("
             CREATE UNIQUE INDEX ordered_tool_unique_name_by_workspace ON claro_ordered_tool (workspace_id, name)
+        ");
+        $this->addSql("
+            CREATE UNIQUE INDEX ordered_tool_unique_tool_ws_usr ON claro_ordered_tool (tool_id, workspace_id, user_id)
         ");
         $this->addSql("
             DROP INDEX UNIQ_EB8D2852F85E0677
