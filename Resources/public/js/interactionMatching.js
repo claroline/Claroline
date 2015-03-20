@@ -359,14 +359,7 @@ function fillLabelArray(row) {
 function advLabelVal(idLabelVal) {
     $("#adve_"+idLabelVal).click(function(e) {
        
-        // If the navavigator is chrome
-        var userNavigator = navigator.userAgent;
-        var positionText = userNavigator.indexOf("Chrome");
-        if(positionText !== -1) {
-            $('#newTableLabel').find('tbody').append('<tr></tr>');
-            addLabel(containerLabel, "Suppromer", tableLabels, codeContainerLabel);
-            $('#newTableLabel').find('tr:last').remove();
-        }
+ 
         advancedEdition(idLabelVal,e);
         
     });
@@ -384,7 +377,6 @@ function fillProposalArray(row) {
     }
 
 }
-
 function advProposalVal(idProposalVal) {
     $("#adve_"+idProposalVal).click(function(e) {
         advancedEdition(idProposalVal,e);

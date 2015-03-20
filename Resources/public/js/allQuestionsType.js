@@ -47,11 +47,9 @@ function HideOptional(type) {
 function statusButton(idI,idDiv) {  
     $('#'+idDiv).on('shown.bs.collapse', function () {
       $('#'+idI).removeClass('').addClass('fa fa-eye-slash');
-     // $('#'+idI+'Button').removeClass("btn btn-default collapsed").addClass("btn btn-default collapsed active");
     });
     $('#'+idDiv).on('hidden.bs.collapse', function () {
       $('#'+idI).removeClass('fa fa-eye-slash').addClass('');
-    //  $('#'+idI+'Button').removeClass("btn btn-default collapsed active").addClass("btn btn-default collapsed");
   });
         }
         
@@ -190,7 +188,15 @@ $(document).ready(function() {
  */
 function advancedEdition(idTextarea,e){
     var textarea;
-    
+   
+     // If the navavigator is chrome
+        var userNavigator = navigator.userAgent;
+        var positionText = userNavigator.indexOf("Chrome");
+        if(positionText !== -1) {
+            //the edition that after running action
+          $('body').append($('<input type="hidden" id="chrome"> '));
+          $('#chrome').remove();
+        }
     if(idTextarea === 'interaction_question_description'|| idTextarea ==='_label'){
         textarea =$("*[id$='"+idTextarea+"']");
     }
@@ -199,22 +205,27 @@ function advancedEdition(idTextarea,e){
             textarea=$("#"+idTextarea);
         
     }
-    //if (textarea.hasClass("claroline-tiny-mce hide")) {
-//            $("#"+idProposalVal).removeClass("claroline-tiny-mce");
+    if (textarea.hasClass("claroline-tiny-mce hide")) {
+
+         //$(".mce-tinymce mce-container mce-panel").remove();
+   
+       
+ //       textarea.removeClass("mce-tinymce mce-container mce-panel");
+//           $("#"+idProposalVal).removeClass("claroline-tiny-mce");
 //            $("#"+idProposalVal).removeClass("hide");
 //            $("#"+idProposalVal).removeAttr('style');
 //            $("#"+idProposalVal).removeData("data-theme");
 //            $("#"+idProposalVal).parent('td').children('div').addClass("hide");
 //            $("#"+idProposalVal).parent('td').find('a').text(advEditionLang);
 
- //       } else {
-
+        } else {
+            
            textarea.addClass("claroline-tiny-mce hide");
            textarea.data("data-theme","advanced");
 //            $("#"+idProposalVal).parent('td').children('div').removeClass("hide");
 //            $("#"+idProposalVal).parent('td').find('a').text(remAdvEditionLang);
 
- //       }
+       }
 
         e.preventDefault();
         return false;
