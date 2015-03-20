@@ -1,6 +1,7 @@
 agenda: Calendar
 analytics: Dashboard
 badges: Badges
+message: Mailbox
 my_badges: My badges
 home: Home
 logs: Logs
@@ -23,3 +24,4 @@ learning_outcomes: 'Learning outcomes'
 learning_profil: Learning profile
 competence_referencial: Competency referential
 competence_subscription: Competency subscription
+desktop_and_home: Desktop and home

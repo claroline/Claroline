@@ -9,6 +9,8 @@
 
 (function () {
     'use strict';
+    
+    var type = $('#datas-box').data('type');
 
     $('#edit-tools-btn').on('click', function (e) {
         e.preventDefault();
@@ -36,7 +38,7 @@
     });
     
     $('#tools-table-body').sortable({
-        items: 'tr',
+        items: '.row-tool-config',
         cursor: 'move'
     });
     
@@ -67,7 +69,8 @@
                         {
                             'orderedTool': orderedToolId,
                             'otherOrderedTool': otherOrderedToolId,
-                            'mode': mode
+                            'mode': mode,
+                            'type': type
                         }
                     ),
                     type: 'POST'

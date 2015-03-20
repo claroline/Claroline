@@ -543,6 +543,8 @@ class DatabaseWriter
         $widget->setConfigurable($widgetConfiguration['is_configurable']);
         $widget->setExportable($widgetConfiguration['is_exportable']);
         $widget->setPlugin($plugin);
+        $widget->setDefaultWidth($widgetConfiguration['default_width']);
+        $widget->setDefaultHeight($widgetConfiguration['default_height']);
         $this->em->persist($widget);
     }
 

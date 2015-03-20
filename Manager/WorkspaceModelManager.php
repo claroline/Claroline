@@ -18,6 +18,7 @@ use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceRights;
 use Claroline\CoreBundle\Entity\Resource\ResourceShortcut;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Widget\WidgetDisplayConfig;
 use Claroline\CoreBundle\Entity\Widget\WidgetHomeTabConfig;
 use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
@@ -31,6 +32,7 @@ use Claroline\CoreBundle\Manager\RightsManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CoreBundle\Manager\ToolRightsManager;
+use Claroline\CoreBundle\Manager\WidgetManager;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -49,6 +51,7 @@ class WorkspaceModelManager
     private $toolManager;
     private $toolRightsManager;
     private $sc;
+    private $widgetManager;
 
     /**
      * Constructor.
@@ -62,7 +65,8 @@ class WorkspaceModelManager
      *     "roleManager"       = @DI\Inject("claroline.manager.role_manager"),
      *     "toolManager"       = @DI\Inject("claroline.manager.tool_manager"),
      *     "toolRightsManager" = @DI\Inject("claroline.manager.tool_rights_manager"),
-     *     "sc"                = @DI\Inject("security.context")
+     *     "sc"                = @DI\Inject("security.context"),
+     *     "widgetManager"     = @DI\Inject("claroline.manager.widget_manager")
      * })
      */
     public function __construct(
@@ -74,7 +78,8 @@ class WorkspaceModelManager
         RoleManager              $roleManager,
         ToolManager              $toolManager,
         ToolRightsManager        $toolRightsManager,
-        SecurityContextInterface $sc
+        SecurityContextInterface $sc,
+        WidgetManager            $widgetManager
     )
     {
         $this->dispatcher        = $dispatcher;
@@ -87,6 +92,7 @@ class WorkspaceModelManager
         $this->toolRightsManager = $toolRightsManager;
         $this->modelRepository   = $this->om->getRepository('ClarolineCoreBundle:Model\WorkspaceModel');
         $this->sc                = $sc;
+        $this->widgetManager     = $widgetManager;
     }
 
     /**
@@ -488,10 +494,20 @@ class WorkspaceModelManager
             ->getHomeTabConfigsByWorkspaceAndHomeTabs($source, $homeTabs);
         $order = 1;
         $widgetCongigErrors = array();
+        $widgetDisplayConfigs = array();
 
         foreach ($homeTabConfigs as $homeTabConfig) {
             $homeTab = $homeTabConfig->getHomeTab();
             $widgetHomeTabConfigs = $homeTab->getWidgetHomeTabConfigs();
+            $wdcs = $this->widgetManager->getWidgetDisplayConfigsByWorkspaceAndWidgetHTCs(
+                $source,
+                $widgetHomeTabConfigs->toArray()
+            );
+
+            foreach ($wdcs as $wdc) {
+                $widgetInstanceId = $wdc->getWidgetInstance()->getId();
+                $widgetDisplayConfigs[$widgetInstanceId] = $wdc;
+            }
 
             $newHomeTab = new HomeTab();
             $newHomeTab->setType('workspace');
@@ -503,7 +519,7 @@ class WorkspaceModelManager
             $newHomeTabConfig->setHomeTab($newHomeTab);
             $newHomeTabConfig->setWorkspace($workspace);
             $newHomeTabConfig->setType('workspace');
-            $newHomeTabConfig->setLocked($homeTabConfig->isVisible());
+            $newHomeTabConfig->setVisible($homeTabConfig->isVisible());
             $newHomeTabConfig->setLocked($homeTabConfig->isLocked());
             $newHomeTabConfig->setTabOrder($order);
             $this->om->persist($newHomeTabConfig);
@@ -511,6 +527,7 @@ class WorkspaceModelManager
 
             foreach ($widgetHomeTabConfigs as $widgetConfig) {
                 $widgetInstance = $widgetConfig->getWidgetInstance();
+                $widgetInstanceId = $widgetInstance->getId();
                 $widget = $widgetInstance->getWidget();
 
                 $newWidgetInstance = new WidgetInstance();
@@ -530,6 +547,32 @@ class WorkspaceModelManager
                 $newWidgetConfig->setLocked($widgetConfig->isLocked());
                 $newWidgetConfig->setWidgetOrder($widgetConfig->getWidgetOrder());
                 $this->om->persist($newWidgetConfig);
+
+                $newWidgetDisplayConfig = new WidgetDisplayConfig();
+                $newWidgetDisplayConfig->setWorkspace($workspace);
+                $newWidgetDisplayConfig->setWidgetInstance($newWidgetInstance);
+
+                if (isset($widgetDisplayConfigs[$widgetInstanceId])) {
+                    $newWidgetDisplayConfig->setColor(
+                        $widgetDisplayConfigs[$widgetInstanceId]->getColor()
+                    );
+                    $newWidgetDisplayConfig->setRow(
+                        $widgetDisplayConfigs[$widgetInstanceId]->getRow()
+                    );
+                    $newWidgetDisplayConfig->setColumn(
+                        $widgetDisplayConfigs[$widgetInstanceId]->getColumn()
+                    );
+                    $newWidgetDisplayConfig->setWidth(
+                        $widgetDisplayConfigs[$widgetInstanceId]->getWidth()
+                    );
+                    $newWidgetDisplayConfig->setHeight(
+                        $widgetDisplayConfigs[$widgetInstanceId]->getHeight()
+                    );
+                } else {
+                    $newWidgetDisplayConfig->setWidth($widget->getDefaultWidth());
+                    $newWidgetDisplayConfig->setHeight($widget->getDefaultHeight());
+                }
+                $this->om->persist($newWidgetDisplayConfig);
 
                 if ($widget->isConfigurable()) {
 

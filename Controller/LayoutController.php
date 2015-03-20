@@ -142,12 +142,10 @@ class LayoutController extends Controller
 
         $canAdministrate = count($tools) > 0;
         $isLogged = false;
-        $countUnreadMessages = 0;
         $registerTarget = null;
         $loginTarget = null;
         $workspaces = null;
         $personalWs = null;
-        $countUnviewedNotifications = 0;
         $homeMenu = $this->configHandler->getParameter('home_menu');
 
         if (is_numeric($homeMenu)) {
@@ -160,6 +158,10 @@ class LayoutController extends Controller
         } else {
             $roles = array('ROLE_ANONYMOUS');
         }
+
+        $adminTools = $this->toolManager->getAdminToolsByRoles(
+            $this->security->getToken()->getRoles()
+        );
 
         if ($isLogged = !in_array('ROLE_ANONYMOUS', $roles)) {
             $tools = $this->toolManager->getAdminToolsByRoles($token->getRoles());
@@ -192,7 +194,8 @@ class LayoutController extends Controller
             'currentWorkspace' => $workspace,
             'canAdministrate' => $canAdministrate,
             'headerLocale' => $this->configHandler->getParameter('header_locale'),
-            'homeMenu' => $homeMenu
+            'homeMenu' => $homeMenu,
+            'adminTools' => $adminTools
         );
     }
 

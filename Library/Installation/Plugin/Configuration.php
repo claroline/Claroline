@@ -186,6 +186,8 @@ class Configuration implements ConfigurationInterface
                         ->isRequired()->end()
                         ->booleanNode('is_configurable')->isRequired()->end()
                         ->scalarNode('is_exportable')->defaultValue(false)->end()
+                        ->scalarNode('default_width')->defaultValue(4)->end()
+                        ->scalarNode('default_height')->defaultValue(3)->end()
                         ->scalarNode('icon')
                             ->validate()
                             ->ifTrue(

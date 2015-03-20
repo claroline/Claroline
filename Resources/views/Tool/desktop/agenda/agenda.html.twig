@@ -12,6 +12,7 @@
     <link rel='stylesheet' type='text/css' href='{{ asset('bundles/frontend/jquery/plugin/datepicker/css/datepicker.css') }}'
     >
 {% endblock %}
+
 {% block breadcrumb %}
     {{
         macros.desktopBreadcrumbs([
@@ -22,6 +23,7 @@
         ])
     }}
 {% endblock %}
+
 {% block section_content %}
     <div class="panel-heading">
         <h3 class="panel-title">{{ 'agenda'|trans({}, 'platform') }}</h3>

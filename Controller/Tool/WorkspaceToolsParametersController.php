@@ -165,14 +165,16 @@ class WorkspaceToolsParametersController extends AbstractParametersController
 
     /**
      * @EXT\Route(
-     *     "/{workspace}/tools/order/update/tool/{orderedTool}/with/{otherOrderedTool}/mode/{mode}",
+     *     "/{workspace}/tools/order/update/tool/{orderedTool}/with/{otherOrderedTool}/mode/{mode}/type/{type}",
      *     name="claro_workspace_update_ordered_tool_order",
+     *     defaults={"type"=0},
      *     options={"expose"=true}
      * )
      * @param Workspace $workspace
      * @param OrderedTool $orderedTool
      * @param OrderedTool $otherOrderedTool
      * @param string $mode
+     * @param int type
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -180,7 +182,8 @@ class WorkspaceToolsParametersController extends AbstractParametersController
         Workspace $workspace,
         OrderedTool $orderedTool,
         OrderedTool $otherOrderedTool,
-        $mode
+        $mode,
+        $type = 0
     )
     {
         $this->checkAccess($workspace);
@@ -212,7 +215,8 @@ class WorkspaceToolsParametersController extends AbstractParametersController
 
             $this->toolManager->updateWorkspaceOrderedToolOrder(
                 $orderedTool,
-                $newOrder
+                $newOrder,
+                $type
             );
 
             return new Response('success', 204);
