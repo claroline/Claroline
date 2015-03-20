@@ -14,7 +14,7 @@ use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\InstallationBundle\Updater\Updater;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-class Updater050000 extends Updater
+class Updater040800 extends Updater
 {
     private $container;
     private $toolManager;
