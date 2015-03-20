@@ -11,7 +11,56 @@
     'use strict';
     
     var currentHomeTabId = parseInt($('#hometab-datas-box').data('hometab-id'));
+    var initWidgetsPosition =
+        parseInt($('#widgets-hometab-datas-box').data('init-widgets-position')) === 1;
     var currentWidgetInstanceId;
+    
+    function persistWidgetsPosition()
+    {
+        var wdcIds = [];
+        var datas = {};
+        var i = 0;
+        
+        $('.grid-stack-item').each(function () {
+                var wdcId = $(this).data('widget-display-config-id');
+            if (wdcId !== undefined) {
+                var column = $(this).attr('data-gs-x');
+                var row = $(this).attr('data-gs-y');
+                var width = $(this).attr('data-gs-width');
+                var height = $(this).attr('data-gs-height');
+                wdcIds[i] = wdcId;
+
+                if (datas[wdcId] === undefined) {
+                    datas[wdcId] = {};
+                }
+                datas[wdcId]['row'] = row;
+                datas[wdcId]['column'] = column;
+                datas[wdcId]['width'] = width;
+                datas[wdcId]['height'] = height;
+                i++;
+            }
+        });
+        
+        if (wdcIds.length > 0) {
+            var parameters = {};
+            parameters.wdcIds = wdcIds;
+            var route = Routing.generate('claro_desktop_update_widgets_display_config');
+            route += '?' + $.param(parameters);
+
+            $.ajax({
+                url: route,
+                type: 'POST',
+                data: datas
+            });
+        }
+    }
+    
+    $(document).ready(function () {
+        
+        if (initWidgetsPosition) {
+            persistWidgetsPosition();
+        }
+    });
     
     $('#desktop-home-content').on('click', '#add-hometab-btn', function () {
         window.Claroline.Modal.displayForm(

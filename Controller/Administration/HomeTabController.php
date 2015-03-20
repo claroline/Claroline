@@ -119,6 +119,7 @@ class HomeTabController extends Controller
         $tabId = intval($homeTabId);
         $widgets = array();
         $firstElement = true;
+        $initWidgetsPosition = false;
 
         if ($tabId !== -1) {
             foreach ($homeTabConfigs as $homeTabConfig) {
@@ -142,6 +143,14 @@ class HomeTabController extends Controller
             $this->homeTabManager->getAdminWidgetConfigs($homeTab);
         $wdcs = $this->widgetManager->generateWidgetDisplayConfigsForAdmin($widgetHomeTabConfigs);
 
+        foreach ($wdcs as $wdc) {
+
+            if ($wdc->getRow() === -1 || $wdc->getColumn() === -1) {
+                $initWidgetsPosition = true;
+                break;
+            }
+        }
+
         foreach ($widgetHomeTabConfigs as $widgetHomeTabConfig) {
             $widgetInstance = $widgetHomeTabConfig->getWidgetInstance();
 
@@ -162,7 +171,8 @@ class HomeTabController extends Controller
             'curentHomeTabId' => $tabId,
             'homeTabType' => $homeTabType,
             'homeTabConfigs' => $homeTabConfigs,
-            'widgetsDatas' => $widgets
+            'widgetsDatas' => $widgets,
+            'initWidgetsPosition' => $initWidgetsPosition
         );
     }
 
