@@ -1,7 +1,8 @@
 {% twig_js name="ResourceManagerThumbnail" %}
 
-<div class='checkbox'>
+<div class='checkbox checkbox-left'>
     <input type="checkbox"
+        class="node-chk-{{ viewName }}"
         value="{{ node.id }}"
         data-node-name="{{ node.name }}"
         data-type="{{ node.type }}"
@@ -11,7 +12,7 @@
         />
 </div>
 
-<div class="node-element{% if not node.published %} unpublished{% endif %}" id="node-element-{{ node.id }}"
+<div class="clickable-node node-element{% if not node.published %} unpublished{% endif %}" id="node-element-{{ node.id }}"
     style="background-image: url('{{ webRoot }}{{ node.large_icon }}');"
     data-id="{{ node.id }}"
     data-type="{{ node.type }}"
@@ -21,7 +22,11 @@
 {% if hasMenu == true %}
     <div class="dropdown" rel="tooltip" title="{{ node.name }}">
         <a class="dropdown-toggle name dropdown-thumbnail" role="button" data-toggle="dropdown" href="#">
-            <div class="node-name{% if not node.published %} text-muted{% endif %}">{{ node.displayableName|raw }} <i class="fa fa-caret-down"></i></div>
+            <div class="node-name{% if not node.published %} text-muted{% endif %}">
+                {% if node.new == true %} <b> {% endif %}
+                {{ node.displayableName|raw }}
+                {% if node.new == true %} </b> {% endif %}
+            <i class="fa fa-caret-down"></i></div>
         </a>
         <ul class="dropdown-menu" role="menu">
             {% for action, attributes in actions %}

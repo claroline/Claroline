@@ -430,7 +430,9 @@ class WorkspaceManager
 
                 foreach ($pwc as $conf) {
                     if (!$toolName) $toolName = 'home';
-                    if ($conf->getTool()->getName() === $toolName && $conf->getMask() & 1) {
+                    if ($conf->getTool()->getName() === $toolName &&
+                        in_array($conf->getRole()->getName(), $userRoleNames) &&
+                        ($conf->getMask() & 1)) {
                         $canOpen = true;
                     }
                 }

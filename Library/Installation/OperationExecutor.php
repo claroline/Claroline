@@ -11,7 +11,7 @@
 
 namespace Claroline\CoreBundle\Library\Installation;
 
-use Claroline\InstallationBundle\Log\LoggableTrait;
+use Claroline\BundleRecorder\Log\LoggableTrait;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Claroline\CoreBundle\Library\Installation\Plugin\Installer;

@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Controller\Administration;;
+namespace Claroline\CoreBundle\Controller\Administration;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
@@ -200,7 +200,7 @@ class FacetController extends Controller
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
-            $facet = $this->facetManager->createFacet($form->get('name')->getData());
+            $facet = $this->facetManager->createFacet($form->get('name')->getData(), $form->get('forceCreationForm')->getData());
 
             return new JsonResponse(
                 array('name' => $facet->getName(), 'position' => $facet->getPosition(), 'id' => $facet->getId())
@@ -300,7 +300,7 @@ class FacetController extends Controller
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
-            $facet = $this->facetManager->editFacet($facet, $form->get('name')->getData());
+            $facet = $this->facetManager->editFacet($facet, $form->get('name')->getData(), $form->get('forceCreationForm')->getData());
 
             return new JsonResponse(
                 array(

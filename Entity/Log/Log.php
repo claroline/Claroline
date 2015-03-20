@@ -123,7 +123,7 @@ class Log
     protected $toolName;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode")
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode", inversedBy="logs")
      * @ORM\JoinColumn(onDelete="SET NULL")
      */
     protected $resourceNode;

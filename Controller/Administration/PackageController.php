@@ -100,6 +100,16 @@ class PackageController extends Controller
         curl_close($ch);
         $fetched = json_decode($data);
         $installed = $this->bundleManager->getInstalled();
+        $plugins = $this->bundleManager->getConfigurablePlugins();
+
+        foreach ($installed as $install) {
+            foreach ($plugins as $plugin) {
+                if ($plugin->getBundleName() === $install->getName()) {
+                    $install->setIsConfigurable(true);
+                }
+            }
+        }
+
         $uninstalled = $this->bundleManager->getUninstalledFromServer($fetched);
 
         return array(
@@ -154,7 +164,7 @@ class PackageController extends Controller
      */
     public function pluginParametersAction($pluginShortName)
     {
-        $eventName = "plugin_options_{$pluginShortName}";
+        $eventName = strtolower("plugin_options_{$pluginShortName}");
         $event = $this->eventDispatcher->dispatch($eventName, 'PluginOptions', array());
 
         return $event->getResponse();

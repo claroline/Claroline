@@ -26,7 +26,9 @@ use Claroline\CoreBundle\Entity\Resource\ResourceShortcut;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use Claroline\CoreBundle\Manager\Exception\ResourceMoveException;
+use Claroline\CoreBundle\Manager\Exception\ResourceNotFoundExcetion;
 use Claroline\CoreBundle\Manager\ResourceManager;
+use Claroline\CoreBundle\Manager\FileManager;
 use Claroline\CoreBundle\Manager\MaskManager;
 use Claroline\CoreBundle\Manager\RightsManager;
 use Claroline\CoreBundle\Manager\RoleManager;
@@ -47,6 +49,7 @@ class ResourceController
     private $maskManager;
     private $templating;
     private $logManager;
+    private $fileManager;
 
     /**
      * @DI\InjectParams({
@@ -59,7 +62,8 @@ class ResourceController
      *     "request"         = @DI\Inject("request"),
      *     "dispatcher"      = @DI\Inject("claroline.event.event_dispatcher"),
      *     "templating"      = @DI\Inject("templating"),
-     *     "logManager"      = @DI\Inject("claroline.log.manager")
+     *     "logManager"      = @DI\Inject("claroline.log.manager"),
+    *      "fileManager"     = @DI\Inject("claroline.manager.file_manager")
      * })
      */
     public function __construct
@@ -73,7 +77,8 @@ class ResourceController
         StrictDispatcher $dispatcher,
         MaskManager $maskManager,
         TwigEngine $templating,
-        LogManager $logManager
+        LogManager $logManager,
+        FileManager $fileManager
     )
     {
         $this->sc = $sc;
@@ -86,6 +91,7 @@ class ResourceController
         $this->maskManager = $maskManager;
         $this->templating = $templating;
         $this->logManager = $logManager;
+        $this->fileManager = $fileManager;
     }
 
     /**
@@ -504,7 +510,7 @@ class ResourceController
             }
 
             $path = $this->resourceManager->getAncestors($node);
-            $nodes = $this->resourceManager->getChildren($node, $currentRoles, $user);
+            $nodes = $this->resourceManager->getChildren($node, $currentRoles, $user, true);
 
             //set "admin" mask if someone is the creator of a resource or the resource workspace owner.
             //if someone needs admin rights, the resource type list will go in this array
@@ -526,7 +532,11 @@ class ResourceController
                 $enableRightsEdition = false;
             }
 
-            foreach ($nodes as $item) {
+            //get the file list in that directory to know their size.
+            $files = $this->fileManager->getDirectoryChildren($node);
+
+            foreach ($nodes as $el) {
+                $item = $el;
                 if ($user !== 'anon.') {
                     if ($item['creator_username'] === $user->getUsername()
                         && !$this->isUsurpatingWorkspaceRole($this->sc->getToken()) ) {
@@ -534,7 +544,24 @@ class ResourceController
                     }
                 }
 
+                $item['new'] = true;
                 $item['enableRightsEdition'] = $enableRightsEdition;
+                $dateModification = $el['modification_date'];
+                $item['modification_date'] = $dateModification->format($this->translator->trans('date_range.format.with_hours', array(), 'platform'));;
+                $dateCreation = $el['creation_date'];
+                $item['timestamp_last_modification'] = $dateModification->getTimeStamp();
+                if (isset ($el['last_opened'])) {
+                    $item['last_opened'] = $el['last_opened']->getTimeStamp();
+                    if ($item['last_opened'] >= $item['timestamp_last_modification']) $item['new'] = false;
+                }
+                $item['creation_date'] = $dateCreation->format($this->translator->trans('date_range.format.with_hours', array(), 'platform'));;
+
+                foreach ($files as $file) {
+                    if ($file->getResourceNode()->getId() === $el['id']) {
+                        $item['size'] = $file->getFormattedSize();
+                    }
+                }
+
                 $nodesWithCreatorPerms[] = $item;
             }
 
@@ -615,12 +642,25 @@ class ResourceController
             }
 
         $i = 1;
-        foreach ($nodes as $node) {
-            $newNodes[] = $this->resourceManager->toArray(
-                $this->resourceManager->copy($node, $parent, $user, $i)->getResourceNode(),
-                $this->sc->getToken()
+
+        try {
+            foreach ($nodes as $node) {
+                $newNodes[] = $this->resourceManager->toArray(
+                    $this->resourceManager->copy($node, $parent, $user, $i)->getResourceNode(),
+                    $this->sc->getToken()
+                );
+                $i++;
+            }
+        } catch (ResourceNotFoundExcetion $e) {
+            $errors = array($e->getMessage());
+            $content = $this->templating->render(
+                'ClarolineCoreBundle:Resource:errors.html.twig',
+                array('errors' => $errors)
             );
-            $i++;
+            $response = new Response($content, 403);
+            $response->headers->add(array('XXX-Claroline' => 'resource-error'));
+
+            return $response;
         }
 
         return new JsonResponse($newNodes);

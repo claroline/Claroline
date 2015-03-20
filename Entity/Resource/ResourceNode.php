@@ -157,7 +157,7 @@ class ResourceNode
     protected $rights;
 
     /**
-     * @ORM\Column(name="value", nullable=true)
+     * @ORM\Column(name="value", nullable=true, type="integer")
      */
     protected $index;
 
@@ -188,10 +188,20 @@ class ResourceNode
      */
     protected $published = true;
 
+    /**
+     * @ORM\OneToMany(
+     *  targetEntity="Claroline\CoreBundle\Entity\Log\Log",
+     *  fetch="EXTRA_LAZY",
+     *  mappedBy="resourceNode"
+     * )
+     */
+    protected $logs;
+
     public function __construct()
     {
         $this->rights = new ArrayCollection();
         $this->children = new ArrayCollection();
+        $this->logs = new ArrayCollection();
     }
 
     /**

@@ -1152,7 +1152,7 @@ picture: User picture
 profile_properties_management: Profile properties management
 facet_management: Facet management
 installed: Installed
-available: Availalbe
+available: Available
 install: Install
 up_to_date: Up to date
 update: Update
@@ -1164,3 +1164,8 @@ logs_error_location: The log files are located in app/logs/update-xxx.log.
 package_install_auto_reload: This page will be reload automatically once an operation is done
 activate_maintenance_mode: You should activate the maintenance mode before going further.
 install_update_cant_be_undone: Once an operation is started, it cannot be undone.
+list_view: List view (beta)
+last_modification: Last modification
+created_by: Created by %creator% the %creationDate%
+updated_by: Last update: %modificationDate%
+display_at_registration: Display at registration
