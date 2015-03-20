@@ -303,12 +303,12 @@ function whichChange() {
     // When "choices shuffle" change, show position force possibility
     $('#ujm_exobundle_interactionqcmtype_shuffle').change(function () {
         if ($(this).is(':checked')) {
-            tableChoices.find('th').eq(4).show();
+            tableChoices.find('th').eq(3).show();
             $("*[id$='_positionForce']").each(function () {
                 $(this).parent('td').show();
             });
         } else {
-            tableChoices.find('th').eq(4).hide();
+            tableChoices.find('th').eq(3).hide();
             $("*[id$='_positionForce']").each(function () {
                $(this).parent('td').hide();
            });
@@ -377,7 +377,7 @@ function tableChoicesCreation(expectedAnswer, response, point, comment, position
 
     if (nbResponses == 0) {
         // Add the structure od the table
-        tableChoices.append('<table id="newTable" class="table table-striped table-condensed"><thead><tr style="background-color: lightsteelblue;"></tr></thead><tbody><tr></tr></tbody></table>');
+        tableChoices.append('<table id="newTable" class="table table-striped table-condensed"><thead><tr style="background-color: lightsteelblue;"><th class="classic">'+expectedAnswer+'</th><th class="classic">'+response+'</th><th class="classic">'+point+'</th><th class="classic">'+positionForce+'</th><th class="classic">'+comment+'</th><th class="classic">'+deleteChoice+'</th></tr></thead><tbody><tr></tr></tbody></table>');
         // create the button to add a choice
         var add = $('<a title="'+addchoice+'" href="#" id="add_choice" class="btn btn-default"><i class="fa fa-plus"></i></a>');
 
