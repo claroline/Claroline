@@ -25,7 +25,7 @@ class LogCommentCreateEvent extends AbstractLogResourceEvent {
                 'changeSet' => $dropzoneChangeSet
             ),
             'comment' => array(
-                'id' => $comment_read->getId(),
+                'id' => $comment->getId(),
                 'document' => $comment->getDocument()->getId(),
                 'user' => $comment->getUser(),
             )

@@ -2050,18 +2050,14 @@ echo "ici : ";die();
         $em->persist($comment);
         $em->flush();
 
-        // Ajouter la création du log. InnovaERV.
-//        $event = new LogCorrectionStartEvent($dropzone, $drop, $correction);
-//        $this->dispatch($event);
+        // Ajouter la création du log de la création du commentaire. InnovaERV.
+        $unitOfWork = $em->getUnitOfWork();
+        $unitOfWork->computeChangeSets();
+        $dropzoneChangeSet = $unitOfWork->getEntityChangeSet($dropzone);
 
-                    $unitOfWork = $em->getUnitOfWork();
-                    $unitOfWork->computeChangeSets();
-                    $dropzoneChangeSet = $unitOfWork->getEntityChangeSet($dropzone);
+        $event = new LogCommentCreateEvent($dropzone, $dropzoneChangeSet, $comment);
 
-                    $event = new LogCommentCreateEvent($dropzone, $dropzoneChangeSet, $comment);
-
-                    $this->dispatch($event);
-
+        $this->dispatch($event);
 
         // Redirection vers la page des commentaires. InnovaERV.
         return $this->redirect(

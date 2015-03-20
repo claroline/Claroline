@@ -1,6 +1,7 @@
 <?php
 /**
  * Created by : Vincent SAISSET
+ * Modified by : Eric VINCENT (mars 2015)
  * Date: 22/08/13
  * Time: 09:30
  */
@@ -10,12 +11,15 @@ namespace Innova\CollecticielBundle\Controller;
 use Claroline\CoreBundle\Event\Log\LogResourceReadEvent;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use Innova\CollecticielBundle\Entity\Dropzone;
+/** Partie log créé pour Innova */
+use Innova\CollecticielBundle\Event\Log\LogCommentCreateEvent;
+use Innova\CollecticielBundle\Event\Log\LogCommentReadCreateEvent;
+/** Fin partie log créé pour Innova */
 use Innova\CollecticielBundle\Event\Log\LogCorrectionDeleteEvent;
 use Innova\CollecticielBundle\Event\Log\LogCorrectionEndEvent;
 use Innova\CollecticielBundle\Event\Log\LogCorrectionStartEvent;
 use Innova\CollecticielBundle\Event\Log\LogCorrectionUpdateEvent;
 use Innova\CollecticielBundle\Event\Log\LogCorrectionValidationChangeEvent;
-use Innova\CollecticielBundle\Event\Log\LogCommentReadCreateEvent;
 use Innova\CollecticielBundle\Event\Log\LogCriterionCreateEvent;
 use Innova\CollecticielBundle\Event\Log\LogCriterionDeleteEvent;
 use Innova\CollecticielBundle\Event\Log\LogCriterionUpdateEvent;
@@ -42,7 +46,10 @@ class DropzoneBaseController extends Controller
         if (
             $event instanceof LogResourceReadEvent or
             $event instanceof LogDropzoneConfigureEvent or
+/** Partie log créé pour Innova */
             $event instanceof LogCommentReadCreateEvent or
+            $event instanceof LogCommentCreateEvent or
+/** Fin partie log créé pour Innova */
             $event instanceof LogCriterionCreateEvent or
             $event instanceof LogCriterionUpdateEvent or
             $event instanceof LogCriterionDeleteEvent or
