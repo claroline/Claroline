@@ -338,8 +338,6 @@ class WidgetManager
                 $wdc = new WidgetDisplayConfig();
                 $wdc->setWidgetInstance($widgetInstance);
                 $wdc->setUser($user);
-                $wdc->setRow(0);
-                $wdc->setColumn(0);
                 $wdc->setWidth($widget->getDefaultWidth());
                 $wdc->setHeight($widget->getDefaultHeight());
                 $this->om->persist($wdc);
@@ -386,8 +384,6 @@ class WidgetManager
                 $wdc = new WidgetDisplayConfig();
                 $wdc->setWidgetInstance($widgetInstance);
                 $wdc->setWorkspace($workspace);
-                $wdc->setRow(0);
-                $wdc->setColumn(0);
                 $wdc->setWidth($widget->getDefaultWidth());
                 $wdc->setHeight($widget->getDefaultHeight());
                 $this->om->persist($wdc);
@@ -427,8 +423,6 @@ class WidgetManager
                 $widget = $widgetInstance->getWidget();
                 $wdc = new WidgetDisplayConfig();
                 $wdc->setWidgetInstance($widgetInstance);
-                $wdc->setRow(0);
-                $wdc->setColumn(0);
                 $wdc->setWidth($widget->getDefaultWidth());
                 $wdc->setHeight($widget->getDefaultHeight());
                 $this->om->persist($wdc);

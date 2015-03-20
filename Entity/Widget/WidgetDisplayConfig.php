@@ -65,12 +65,12 @@ class WidgetDisplayConfig
     /**
      * @ORM\Column(name="row_position", type="integer")
      */
-    protected $row = 0;
+    protected $row = -1;
 
     /**
      * @ORM\Column(name="column_position", type="integer")
      */
-    protected $column = 0;
+    protected $column = -1;
 
     /**
      * @ORM\Column(name="width", type="integer", options={"default":4})

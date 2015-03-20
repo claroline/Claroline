@@ -3,6 +3,7 @@
 
 <div id="widgets-hometab-datas-box"
     data-hometab-id="{{ homeTabId }}"
+    data-init-widgets-position="{% if initWidgetsPosition %}1{% else %}0{% endif %}"
 ></div>
 
 <div id="widgets-section" class="panel-group">
@@ -17,8 +18,12 @@
             {% set widget = widgetInstance.getWidget() %}
         
             <div class="grid-stack-item"
-                 data-gs-x="{{ widgetDisplayConfig.getColumn() }}"
-                 data-gs-y="{{ widgetDisplayConfig.getRow() }}"
+                 {% if widgetDisplayConfig.getRow() != -1 and widgetDisplayConfig.getColumn() != -1 %}
+                     data-gs-x="{{ widgetDisplayConfig.getColumn() }}"
+                     data-gs-y="{{ widgetDisplayConfig.getRow() }}"
+                 {% else %}
+                     data-gs-auto-position="true"
+                 {% endif %}
                  data-gs-width="{{ widgetDisplayConfig.getWidth() }}"
                  data-gs-height="{{ widgetDisplayConfig.getHeight() }}"
                  {% if canEdit %}
