@@ -138,12 +138,54 @@
                     {{ 'Comments list'|trans({}, 'innova_collecticiel') }}
                 </h3>
 
-                {# Partie Affichage des commentaires #}
+                {# Partie Affichage de la liste des commentaires #}
                 {% for comments in comments %}
                     <div class="row">
                         <div class="text-muted col-md-4">{{ comments.commentText  }}</div>
                     </div>
                 {% endfor %}
+
+                <div class="box-body">
+                    <!-- Conversations are loaded here -->
+                    <div class="direct-chat-messages">
+                {% for comments in comments %}
+
+                        {% if admin %}
+                            <!-- Message. Default to the left -->
+                            <div class="direct-chat-msg">
+                                <div class="direct-chat-info clearfix">
+                                    <span class="direct-chat-name pull-left">Vous</span>
+                                    <span class="direct-chat-timestamp pull-right">23 Jan 2:00 pm</span>
+                                </div><!-- /.direct-chat-info -->
+                                <!-- <img class="direct-chat-img" src="dist/img/user1-128x128.jpg" alt="message user image"> -->
+                                <!-- /.direct-chat-img -->
+                                <div class="direct-chat-text">
+                                {{ comments.commentText  }}
+                                </div><!-- /.direct-chat-text -->
+                            </div><!-- /.direct-chat-msg -->
+                        {% else %}
+                            <!-- Message to the right -->
+                            <div class="direct-chat-msg right">
+                                  <div class="direct-chat-info clearfix">
+                                    <span class="direct-chat-name pull-right">Lui/elle</span>
+                                    <span class="direct-chat-timestamp pull-left">23 Jan 2:05 pm</span>
+                                  </div><!-- /.direct-chat-info -->
+                                  <!-- <img class="direct-chat-img" src="dist/img/user3-128x128.jpg" alt="message user image"> -->
+                                  <!-- /.direct-chat-img -->
+                                  <div class="direct-chat-text">
+                                    You better believe it!
+                                  </div><!-- /.direct-chat-text -->
+                            </div><!-- /.direct-chat-msg -->
+                        {% endif %}
+                {% endfor %}
+
+                    </div><!-- /.direct-chat-msg -->
+
+                </div><!-- /.box-footer-->
+
+            </div>
+
+
 
                 {# Partie "Ajout d'un commentaire" #}
                 <div class="form-group">

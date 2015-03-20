@@ -725,7 +725,7 @@ class CorrectionController extends DropzoneBaseController
                     ->findBy(
                         array(
                             'document' => $documentId,
-                            'user' =>$correction->getUser()->getId()
+//                            'user' =>$correction->getUser()->getId()
                              )
                         );
 
@@ -904,6 +904,8 @@ class CorrectionController extends DropzoneBaseController
         // Appel de la vue qui va gérer l'ajout des commentaires. InnovaERV.
         $view = 'InnovaCollecticielBundle:Correction:correctCriteria.html.twig';
 
+//        $role = $user->getRole();
+//        echo "ROLE : " . $role;die();
 //        echo "userId = " . $userId;
 //        echo " correctionId = " . $correction->getUser()->getId() . " / " . $correction->getDrop()->getId() . " / " . $dropzone->getId();
 //        echo " correctionUserName = " . $correction->getUser()->getUserName();
@@ -1862,8 +1864,6 @@ class CorrectionController extends DropzoneBaseController
         }
         //$this->checkUserGradeAvailable($dropzone);
 
-echo "ici : ";die();
-
         if (!$dropzone->getPeerReview()) {
             return $this->redirect(
                 $this->generateUrl(
@@ -1878,7 +1878,6 @@ echo "ici : ";die();
         }
 
         /** @var Correction $correction */
-
 
         $edit = $state == 'edit';
 
