@@ -30,18 +30,6 @@ class WriterTest extends MockeryTestCase
         $this->fileSystem = m::mock('Symfony\Component\Filesystem\Filesystem');
     }
 
-    public function testWriterAddsTheSqlFormatterExtension()
-    {
-        $this->twigEnvironment->shouldReceive('addExtension')->once()->with(
-            m::on(
-                function ($argument) {
-                    return $argument instanceof SqlFormatterExtension;
-                }
-            )
-        );
-        $writer = new Writer($this->fileSystem, $this->twigEnvironment, $this->twigEngine);
-    }
-
     public function testWriteMigrationClasses()
     {
         vfsStream::setup(
@@ -59,7 +47,13 @@ class WriterTest extends MockeryTestCase
                 )
             )
         );
-        $this->twigEnvironment->shouldReceive('addExtension');
+        $this->twigEnvironment->shouldReceive('addExtension')->once()->with(
+            m::on(
+                function ($argument) {
+                    return $argument instanceof SqlFormatterExtension;
+                }
+            )
+        );
         $bundle = m::mock('Symfony\Component\HttpKernel\Bundle\Bundle');
         $bundle->shouldReceive('getPath')->once()->andReturn(vfsStream::url('root') . '/bundle/path');
         $bundle->shouldReceive('getNamespace')->once()->andReturn('Bundle\Namespace');
