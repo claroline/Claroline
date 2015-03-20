@@ -30,6 +30,7 @@ class QuestionType extends AbstractType
             ->add(
                 'title', 'text', array(
                     'label' => 'Question.title',
+                    'required' => false,
                     'attr'  => array( 'placeholder' => 'Question.title')
                 )
             )

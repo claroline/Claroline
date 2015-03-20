@@ -132,7 +132,21 @@ abstract class InteractionHandler
             $this->em->persist($hint);
         }
     }
-    
+    /**
+     * retrieve the first 50 characters of the issue if no title
+     */
+    protected function checkTitle()
+    {    
+        $title = $this->form->getData()->getInteraction()->getQuestion();
+        $invite =  $this->form->getData()->getInteraction()->getInvite();
+        if($title->getTitle() == "")
+        {
+            $provTitle=substr($invite,0,50);
+            //removes html tags
+            $newTitle=strip_tags($provTitle);
+            $title->setTitle($newTitle);
+        }
+    }
     /**
      * Check the category
      */
