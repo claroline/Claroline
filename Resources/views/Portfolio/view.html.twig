@@ -93,16 +93,18 @@
                         <div data-ng-include="'templates/menu_widget-type.tpl.html'">
                         </div>
                         {% endif %}
+                        <p class="no-data well" data-ng-show="widgets.length <= 1">
+                        {% if editMode %}
+                            {{ 'no_widget'|trans({}, 'icap_portfolio')|raw }}
+                        {% else %}
+                            {{ 'portfolio_empty'|trans({}, 'icap_portfolio')|raw }}
+                        {% endif %}
+                        </p>
                         <ul class="list-unstyled" data-gridster="gridsterOptions">
                             <li data-gridster-item="widget" data-ng-repeat="widget in widgets | filter:{type: '!title'} | orderBy:'+row +col' track by widget.id">
                                 {% include 'IcapPortfolioBundle:templates:widget.html.twig' %}
                             </li>
                         </ul>
-                        {% if editMode %}
-                        <p class="no-data well" data-ng-show="widgets.length <= 1">{{ 'no_widget'|trans({}, 'icap_portfolio')|raw }}</p>
-                        {% else %}
-                        <p class="no-data well" data-ng-show="widgets.length <= 1">{{ 'portfolio_empty'|trans({}, 'icap_portfolio')|raw }}</p>
-                        {% endif %}
                     {% else %}
                         {% set widgets = portfolio.widgets %}
                         {% if 1 < widgets.count %}
