@@ -26,7 +26,6 @@
 {% block dropzone_content %}
     <div class="container container-dropzone">
         {% if admin %}
-        {{ user.id }} {{ "korrect" }}
             <h2 class="{% if correction.reporter %}text-danger{% endif %}">
                 {{ 'Correction by %firstName% %lastName%'|trans({'%firstName%': correction.user.firstName, '%lastName%': correction.user.lastName}, 'innova_collecticiel') }}
             </h2>

@@ -24,6 +24,7 @@ use Innova\CollecticielBundle\Event\Log\LogCorrectionUpdateEvent;
 use Innova\CollecticielBundle\Event\Log\LogCorrectionValidationChangeEvent;
 use Innova\CollecticielBundle\Event\Log\LogCorrectionReportEvent;
 use Innova\CollecticielBundle\Event\Log\LogDropGradeAvailableEvent;
+use Innova\CollecticielBundle\Event\Log\LogCommentCreateEvent;
 use Innova\CollecticielBundle\Event\Log\LogCommentReadCreateEvent;
 use Innova\CollecticielBundle\Form\CorrectionCommentType;
 use Innova\CollecticielBundle\Form\CorrectionCriteriaPageType;
@@ -903,7 +904,6 @@ class CorrectionController extends DropzoneBaseController
         // Appel de la vue qui va gérer l'ajout des commentaires. InnovaERV.
         $view = 'InnovaCollecticielBundle:Correction:correctCriteria.html.twig';
 
-//var_dump($document);die();
 //        echo "userId = " . $userId;
 //        echo " correctionId = " . $correction->getUser()->getId() . " / " . $correction->getDrop()->getId() . " / " . $dropzone->getId();
 //        echo " correctionUserName = " . $correction->getUser()->getUserName();
@@ -2018,11 +2018,6 @@ echo "ici : ";die();
 
     }
 
-
-
-
-
-
     /**
      * @Route(
      *      "/{documentId}/add/comments/{userId}/{dropzoneId}/{correctionId}",
@@ -2036,33 +2031,39 @@ echo "ici : ";die();
      * @Method("POST")
      * @Template()
      */
-//    public function AddCommentsInnovaAction(Document $document, User $user)
     public function AddCommentsInnovaAction(Document $document, User $user, Dropzone $dropzone, Correction $correction)
     {
 
-//        $this->get('innova.manager.dropzone_voter')->isAllowToOpen($dropzone);
-//        $this->get('innova.manager.dropzone_voter')->isAllowToEdit($dropzone);
-
-
         $em = $this->getDoctrine()->getManager();
 
+        // Récupération de la saisie du commentaire
         $request = $this->get('request');
         $commentText = $request->request->get('comment-name');
 
+        // Valorisation du commentaire
         $comment = new Comment();
         $comment->setDocument($document);
         $comment->setUser($user);
         $comment->setCommentText($commentText);
+
+        // Insertion en base du commentaire
         $em->persist($comment);
         $em->flush();
 
-        echo "ressource = " . $dropzone->getId();
-        echo "correction = " . $correction->getId();
-
+        // Ajouter la création du log. InnovaERV.
 //        $event = new LogCorrectionStartEvent($dropzone, $drop, $correction);
 //        $this->dispatch($event);
 
-// Modifier la redirection. InnovaERV.
+                    $unitOfWork = $em->getUnitOfWork();
+                    $unitOfWork->computeChangeSets();
+                    $dropzoneChangeSet = $unitOfWork->getEntityChangeSet($dropzone);
+
+                    $event = new LogCommentCreateEvent($dropzone, $dropzoneChangeSet, $comment);
+
+                    $this->dispatch($event);
+
+
+        // Redirection vers la page des commentaires. InnovaERV.
         return $this->redirect(
             $this->generateUrl(
                 'innova_collecticiel_drops_detail_comment',
