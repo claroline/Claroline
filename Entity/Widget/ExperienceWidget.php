@@ -43,6 +43,12 @@ class ExperienceWidget extends AbstractWidget
      */
     protected $endDate;
 
+    public function __construct()
+    {
+        $this->sizeX = 2;
+        $this->sizeY = 2;
+    }
+
     /**
      * @return string
      */

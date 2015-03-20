@@ -25,6 +25,8 @@ class SkillsWidget extends AbstractWidget
     public function __construct()
     {
         $this->skills = new ArrayCollection();
+        $this->sizeX  = 2;
+        $this->sizeY  = 2;
     }
 
     /**

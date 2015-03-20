@@ -17,7 +17,7 @@ portfolioApp
         };
 
         $scope.gridsterOptions = {
-            columns:    6, // the width of the grid, in columns
+            columns:    8, // the width of the grid, in columns
             swapping:   true, // whether or not to have items of the same size switch places instead of pushing down if they are the same size
             floating:   false, // whether to automatically float items up so they stack (you can temporarily disable if you are adding unsorted items with ng-repeat)
             margins:    [10, 10], // the pixel distance between each widget

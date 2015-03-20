@@ -19,6 +19,12 @@ class TextWidget extends AbstractWidget
      */
     protected $text;
 
+    public function __construct()
+    {
+        $this->sizeX = 2;
+        $this->sizeY = 2;
+    }
+
     /**
      * @param string $text
      *

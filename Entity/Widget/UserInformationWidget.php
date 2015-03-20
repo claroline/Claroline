@@ -26,6 +26,12 @@ class UserInformationWidget extends AbstractWidget
      */
     protected $birthDate;
 
+    public function __construct()
+    {
+        $this->sizeX = 2;
+        $this->sizeY = 2;
+    }
+
     /**
      * @param string $city
      *
