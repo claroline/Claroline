@@ -193,7 +193,6 @@ class WorkspaceParametersController extends Controller
             //I need to do this to run the replaceCode methods.
             $newCode = $workspace->getCode();
             $workspace->setCode($wsRegisteredCode);
-            $this->workspaceManager->replaceCode($workspace, $newCode);
             $this->workspaceManager->editWorkspace($workspace);
             $this->workspaceManager->rename($workspace, $workspace->getName());
             $displayable = $workspace->isDisplayable();

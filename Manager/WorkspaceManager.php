@@ -990,7 +990,7 @@ class WorkspaceManager
     {
         $ds = DIRECTORY_SEPARATOR;
 
-        return $this->container->getParameter('claroline.param.files_directory') . $ds . $workspace->getCode();
+        return $this->container->getParameter('claroline.param.files_directory') . $ds . 'WORKSPACE_' . $workspace->getId();
     }
 
     /**
@@ -1012,20 +1012,6 @@ class WorkspaceManager
         }
 
         return $size;
-    }
-
-    public function replaceCode(Workspace $workspace, $code)
-    {
-        if ($workspace->getCode() !== $code) {
-            $oldStorageDir =  $this->getStorageDirectory($workspace);
-            $workspace->setCode($code);
-            $newStorageDir = $this->getStorageDirectory($workspace);
-            //move directory~
-            $fs = new FileSystem();
-            $fs->rename($oldStorageDir, $newStorageDir);
-            $this->om->persist($workspace);
-            $this->om->flush();
-        }
     }
 
     public function getWorkspaceCodesWithPrefix($prefix, $executeQuery = true)
