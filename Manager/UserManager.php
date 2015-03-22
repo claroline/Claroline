@@ -1159,4 +1159,9 @@ class UserManager
 
         return false;
     }
+    
+    public function countByRoles(array $roles, $includeGrps = true)
+    {
+        return $this->userRepo->countByRoles($roles, $includeGrps);
+    }
 }

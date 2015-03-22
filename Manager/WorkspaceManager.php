@@ -178,6 +178,7 @@ class WorkspaceManager
         $ch = $this->container->get('claroline.config.platform_config_handler');
         $workspace->setMaxUploadResources($ch->getParameter('max_upload_resources'));
         $workspace->setMaxStorageSize($ch->getParameter('max_storage_size'));
+        $workspace->setMaxUsers($ch->getParameter('max_workspace_users'));
         @mkdir($this->getStorageDirectory($workspace));
         $this->editWorkspace($workspace);
     }
@@ -778,9 +779,15 @@ class WorkspaceManager
         return $this->pagerFactory->createPager($query, $page, $max);
     }
 
-    public function countUsers($workspaceId)
+    public function countUsers(Workspace $workspace, $includeGrps = false)
     {
-        return $this->workspaceRepo->countUsers($workspaceId);
+        if ($includeGrps) {
+            $wsRoles = $this->roleManager->getRolesByWorkspace($workspace);
+            
+            return $this->container->get('claroline.manager.user_manager')->countByRoles($wsRoles, true);
+        }
+        
+        return $this->workspaceRepo->countUsers($workspace->getId());
     }
 
     /**
@@ -990,7 +997,7 @@ class WorkspaceManager
     {
         $ds = DIRECTORY_SEPARATOR;
 
-        return $this->container->getParameter('claroline.param.files_directory') . $ds . $workspace->getCode();
+        return $this->container->getParameter('claroline.param.files_directory') . $ds . 'WORKSPACE_' . $workspace->getId();
     }
 
     /**
@@ -1012,20 +1019,6 @@ class WorkspaceManager
         }
 
         return $size;
-    }
-
-    public function replaceCode(Workspace $workspace, $code)
-    {
-        if ($workspace->getCode() !== $code) {
-            $oldStorageDir =  $this->getStorageDirectory($workspace);
-            $workspace->setCode($code);
-            $newStorageDir = $this->getStorageDirectory($workspace);
-            //move directory~
-            $fs = new FileSystem();
-            $fs->rename($oldStorageDir, $newStorageDir);
-            $this->om->persist($workspace);
-            $this->om->flush();
-        }
     }
 
     public function getWorkspaceCodesWithPrefix($prefix, $executeQuery = true)
