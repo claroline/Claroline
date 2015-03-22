@@ -78,8 +78,7 @@ class WorkspaceEditType extends AbstractType
         $builder->add('selfRegistration', 'checkbox', array('required' => false));
         $builder->add('registrationValidation', 'checkbox', array('required' => false));
         $builder->add('selfUnregistration', 'checkbox', array('required' => false));
-        $builder->add('number', 'text', array('disabled' => 'disabled', 'data' => $this->number, 'mapped' => false));
-
+   
         if (!$this->isAdmin) {
             $builder->add('maxStorageSize', 'text', array('disabled' => 'disabled', 'label' => 'max_storage_size'));
         } else {
@@ -95,6 +94,15 @@ class WorkspaceEditType extends AbstractType
         }
 
         $builder->add('countResources', 'text', array('mapped' => false, 'disabled' => 'disabled', 'label' => 'count_resources', 'data' => $this->countResources));
+        
+        if (!$this->isAdmin) {
+            $builder->add('maxUsers', 'text', array('disabled' => 'disabled', 'label' => 'workspace_max_users'));
+        } else {
+            $builder->add('maxUsers', 'text', array('label' => 'workspace_max_users'));
+        }
+        
+        $builder->add('number', 'text', array('disabled' => 'disabled', 'data' => $this->number, 'mapped' => false));
+
     }
 
     public function getName()

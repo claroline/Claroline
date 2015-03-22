@@ -119,7 +119,7 @@ class WorkspaceParametersController extends Controller
         $creationDate = is_null($workspace->getCreationDate()) ? null : $this->utilities->intlDateFormat(
             $workspace->getCreationDate()
         );
-        $count = $this->workspaceManager->countUsers($workspace->getId());
+        $count = $this->workspaceManager->countUsers($workspace, true);
         $storageUsed = $this->workspaceManager->getUsedStorage($workspace);
         $storageUsed = $this->utilities->formatFileSize($storageUsed);
         $countResources = $this->workspaceManager->countResources($workspace);

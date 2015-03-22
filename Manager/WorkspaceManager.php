@@ -178,6 +178,7 @@ class WorkspaceManager
         $ch = $this->container->get('claroline.config.platform_config_handler');
         $workspace->setMaxUploadResources($ch->getParameter('max_upload_resources'));
         $workspace->setMaxStorageSize($ch->getParameter('max_storage_size'));
+        $workspace->setMaxUsers($ch->getParameter('max_workspace_users'));
         @mkdir($this->getStorageDirectory($workspace));
         $this->editWorkspace($workspace);
     }
@@ -778,9 +779,15 @@ class WorkspaceManager
         return $this->pagerFactory->createPager($query, $page, $max);
     }
 
-    public function countUsers($workspaceId)
+    public function countUsers(Workspace $workspace, $includeGrps = false)
     {
-        return $this->workspaceRepo->countUsers($workspaceId);
+        if ($includeGrps) {
+            $wsRoles = $this->roleManager->getRolesByWorkspace($workspace);
+            
+            return $this->container->get('claroline.manager.user_manager')->countByRoles($wsRoles, true);
+        }
+        
+        return $this->workspaceRepo->countUsers($workspace->getId());
     }
 
     /**
