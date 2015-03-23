@@ -1175,3 +1175,4 @@ list_view: Vue en liste (beta)
 created_by: Créé par %creator% le %creationDate%
 updated_by: Dernière màj: %modificationDate%
 display_at_registration: Afficher à la création du compte
+workspace_max_users: Nombre maximal d'utilisateur par espace d'activité

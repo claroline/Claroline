@@ -32,6 +32,7 @@ class Updater040800 extends Updater
     {
         $this->createMessageDesktopTool();
         $this->updateHomeTabsAdminTool();
+        $this->updateWorkspaceMaxUsers();
     }
 
     public function preUpdate()
@@ -161,6 +162,27 @@ class Updater040800 extends Updater
             }
             $deleteReq .= ')';
             $this->connection->query($deleteReq);
+        }
+    }
+    
+    private function updateWorkspaceMaxUsers()
+    {
+        $this->log('Updating workspace users limit...');
+        $em = $this->container->get('doctrine.orm.entity_manager');
+        $wsRepo = $em->getRepository('ClarolineCoreBundle:Workspace');
+        $workspaces = $wsRepo->findAll();
+        $i = 0;
+        
+        foreach ($worspaces as $workspace) {
+            $workspace->setMaxUsers(10000);
+            $em->persist($workspace);
+            
+            if ($i % 200 === 0) {
+                $i = 0;
+                $em->flush();
+            }
+            
+            $i++;
         }
     }
 }
