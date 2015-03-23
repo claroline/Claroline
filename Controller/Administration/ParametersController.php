@@ -197,7 +197,8 @@ class ParametersController extends Controller
                             'portfolio_url' => $portfolioUrlOptions ? $form['portfolio_url']->getData() : null,
                             'is_notification_active' => $form['isNotificationActive']->getData(),
                             'max_storage_size' => $form['maxStorageSize']->getData(),
-                            'max_upload_resources' => $form['maxUploadResources']->getData()
+                            'max_upload_resources' => $form['maxUploadResources']->getData(),
+                            'max_workspace_users' => $form['workspaceMaxUsers']->getData()
                         )
                     );
 

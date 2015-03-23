@@ -91,6 +91,7 @@ class DesktopController extends Controller
         $lastWidgetOrder = 1;
         $isLockedHomeTab = false;
         $homeTab = $this->homeTabManager->getHomeTabById($homeTabId);
+        $initWidgetsPosition = false;
 
         if (is_null($homeTab)) {
             $isVisibleHomeTab = false;
@@ -158,6 +159,14 @@ class DesktopController extends Controller
             }
             $userWDCs = $this->widgetManager->generateWidgetDisplayConfigsForUser($user, $configs);
 
+            foreach ($userWDCs as $userWDC) {
+
+                if ($userWDC->getRow() === -1 || $userWDC->getColumn() === -1) {
+                    $initWidgetsPosition = true;
+                    break;
+                }
+            }
+
             foreach ($configs as $config) {
                 $event = $this->eventDispatcher->dispatch(
                     "widget_{$config->getWidgetInstance()->getWidget()->getName()}",
@@ -180,7 +189,8 @@ class DesktopController extends Controller
             'isVisibleHomeTab' => $isVisibleHomeTab,
             'isLockedHomeTab' => $isLockedHomeTab,
             'lastWidgetOrder' => $lastWidgetOrder,
-            'homeTabId' => $homeTabId
+            'homeTabId' => $homeTabId,
+            'initWidgetsPosition' => $initWidgetsPosition
         );
     }
 

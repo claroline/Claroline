@@ -59,6 +59,7 @@ class PlatformConfiguration
     private $maxStorageSize;
     private $maxUploadResources;
     private $repositoryApi;
+    private $workspaceMaxUsers;
 
     /**
      * @param mixed $sessionDbDataCol
@@ -606,5 +607,15 @@ class PlatformConfiguration
     public function getRepositoryApi()
     {
         return $this->repositoryApi;
+    }
+    
+    public function setWorkspaceMaxUsers($wsMaxUsers)
+    {
+        $this->workspaceMaxUsers = $wsMaxUsers;
+    }
+    
+    public function getWorkspaceMaxUsers()
+    {
+        return $this->workspaceMaxUsers;
     }
 }

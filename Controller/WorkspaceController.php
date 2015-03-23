@@ -693,6 +693,7 @@ class WorkspaceController extends Controller
         $widgets = array();
         $homeTab = $this->homeTabManager->getHomeTabByIdAndWorkspace($homeTabId, $workspace);
         $isHomeTab = (intval($valid) === 1);
+        $initWidgetsPosition = false;
 
         if ($canEdit) {
             $widgetHomeTabConfigs = is_null($homeTab) ?
@@ -714,6 +715,14 @@ class WorkspaceController extends Controller
             $widgetHomeTabConfigs
         );
 
+        foreach ($wdcs as $wdc) {
+
+            if ($wdc->getRow() === -1 || $wdc->getColumn() === -1) {
+                $initWidgetsPosition = true;
+                break;
+            }
+        }
+
         foreach ($widgetHomeTabConfigs as $widgetHomeTabConfig) {
             $widgetInstance = $widgetHomeTabConfig->getWidgetInstance();
 
@@ -734,7 +743,8 @@ class WorkspaceController extends Controller
             'widgetsDatas' => $widgets,
             'homeTabId' => $homeTabId,
             'canEdit' => $canEdit,
-            'isHomeTab' => $isHomeTab
+            'isHomeTab' => $isHomeTab,
+            'initWidgetsPosition' => $initWidgetsPosition
         );
     }
 

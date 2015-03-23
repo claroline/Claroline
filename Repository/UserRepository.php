@@ -579,7 +579,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
      *
      * @return Query|User[]
      */
-    public function findByRolesIncludingGroups(array $roles, $getQuery = false, $orderedBy = 'id', $order)
+    public function findByRolesIncludingGroups(array $roles, $getQuery = false, $orderedBy = 'id', $order = '')
     {
         $dql = "
             SELECT u, r1, g, r2, ws From Claroline\CoreBundle\Entity\User u
@@ -1283,5 +1283,25 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         $query = $this->_em->createQuery($dql);
 
         return $executeQuery ? $query->getSingleScalarResult() : $query;
+    }
+    
+    public function countByRoles(array $roles, $includeGrps)
+    {
+        if ($includeGrps) {
+            $dql = 'SELECT count (DISTINCT u)
+                From Claroline\CoreBundle\Entity\User u
+                LEFT JOIN u.roles r1
+                LEFT JOIN u.personalWorkspace ws
+                LEFT JOIN u.groups g
+                LEFT JOIN g.roles r2
+                WHERE r1 in (:roles)
+                AND u.isEnabled = true
+                OR r2 in (:roles)';
+                
+                $query = $this->_em->createQuery($dql);
+                $query->setParameter('roles', $roles);
+                
+                return $query->getSingleScalarResult();
+        }
     }
 }

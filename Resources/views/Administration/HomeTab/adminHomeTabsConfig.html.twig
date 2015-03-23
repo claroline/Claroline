@@ -32,6 +32,7 @@
     <div id="hometab-datas-box"
          data-hometab-id="{{ curentHomeTabId }}"
          data-hometab-type="{{ homeTabType }}"
+         data-init-widgets-position="{% if initWidgetsPosition %}1{% else %}0{% endif %}"
     >
     </div>
 
@@ -98,8 +99,12 @@
                     {% set widget = widgetInstance.getWidget() %}
 
                     <div class="grid-stack-item"
-                         data-gs-x="{{ widgetDisplayConfig.getColumn() }}"
-                         data-gs-y="{{ widgetDisplayConfig.getRow() }}"
+                         {% if widgetDisplayConfig.getRow() != -1 and widgetDisplayConfig.getColumn() != -1 %}
+                             data-gs-x="{{ widgetDisplayConfig.getColumn() }}"
+                             data-gs-y="{{ widgetDisplayConfig.getRow() }}"
+                         {% else %}
+                             data-gs-auto-position="true"
+                         {% endif %}
                          data-gs-width="{{ widgetDisplayConfig.getWidth() }}"
                          data-gs-height="{{ widgetDisplayConfig.getHeight() }}"
                          id="widget-element-{{ whtcId }}"

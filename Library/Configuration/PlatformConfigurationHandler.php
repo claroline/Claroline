@@ -72,6 +72,7 @@ class PlatformConfigurationHandler
         'is_notification_active' => true,
         'max_storage_size' => Workspace::DEFAULT_MAX_STORAGE_SIZE,
         'max_upload_resources' => Workspace::DEFAULT_MAX_FILE_COUNT,
+        'max_workspace_users' => Workspace::DEFAULT_MAX_USERS,
         'confirm_send_datas' => null,
         'token' => null,
         'country' => '-',
@@ -178,6 +179,7 @@ class PlatformConfigurationHandler
         $config->setMaxUploadResources($this->parameters['max_upload_resources']);
         $config->setMaxStorageSize($this->parameters['max_storage_size']);
         $config->setRepositoryApi($this->parameters['repository_api']);
+        $config->setWorkspaceMaxUsers($this->parameters['max_workspace_users']);
 
         return $config;
     }
