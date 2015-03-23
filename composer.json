@@ -3,7 +3,7 @@
     "description": "Portfolio bundle for Claroline Connect. See https://github.com/claroline/Claroline",
     "keywords": ["Claroline", "Portfolio"],
     "homepage": "http://www.claroline.net",
-    "type": "claroline-core",
+    "type": "claroline-plugin",
     "authors": [
         {
             "name": "AILLOUD Maxime",
@@ -13,7 +13,7 @@
     "require": {
         "php": ">=5.4.1",
         "claroline/core-bundle": "~4.0",
-        "claroline/team-bundle": "~2.0",
+        "claroline/team-bundle": "~4.0",
         "icap/badge-bundle": "~4.0"
     },
     "autoload": {
