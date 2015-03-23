@@ -59,13 +59,15 @@ message:
   framework_deleted: Référentiel supprimé avec succès.
   framework_deletion_confirm: Voulez-vous vraiment supprimer ce référentiel ? Cette action est irréversible.
   framework_edited: Référentiel modifié avec succès.
+  objective_created: Nouvel objectif créé avec succès.
   scale_created: Nouvelle échelle créée avec succès.
   scale_deleted: Échelle supprimée avec succès.
   scale_deletion_confirm: Voulez-vous vraiment supprimer cette échelle ?
   scale_edited: Échelle modifiée avec succès.
   sub_competency_created: Sous-compétence créée avec succès.
 objective:
-  create: Créer un objectif
+  create: Créer un objectif d'apprentissage
+  create_short: Créer un objectif
 objectives: Objectifs
 origin: Origine
 tooltip:

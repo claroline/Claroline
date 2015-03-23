@@ -53,7 +53,7 @@ class PluginListener
      */
     public function onOpenLearningObjectivesTool(OpenAdministrationToolEvent $event)
     {
-        $this->forward('HeVinciCompetencyBundle:LearningObjective:objectives', $event);
+        $this->forward('HeVinciCompetencyBundle:Objective:objectives', $event);
     }
 
     /**
@@ -63,7 +63,7 @@ class PluginListener
      */
     public function onOpenMyLearningObjectivesTool(DisplayToolEvent $event)
     {
-        $this->forward('HeVinciCompetencyBundle:MyLearningObjective:objectives', $event);
+        $this->forward('HeVinciCompetencyBundle:MyObjective:objectives', $event);
     }
 
     /**

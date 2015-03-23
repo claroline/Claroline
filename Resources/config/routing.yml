@@ -11,11 +11,11 @@ hevinci_objectives_widget:
     type: annotation
 
 hevinci_objectives_tool:
-    resource: "@HeVinciCompetencyBundle/Controller/LearningObjectiveController.php"
+    resource: "@HeVinciCompetencyBundle/Controller/ObjectiveController.php"
     type: annotation
 
 hevinci_my_objectives_tool:
-    resource: "@HeVinciCompetencyBundle/Controller/MyLearningObjectiveController.php"
+    resource: "@HeVinciCompetencyBundle/Controller/MyObjectiveController.php"
     type: annotation
 
 hevinci_competency_tool_frameworks:

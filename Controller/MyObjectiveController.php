@@ -10,7 +10,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
  * @DI\Tag("security.secure_service")
  * @SEC\PreAuthorize("hasRole('ROLE_USER')")
  */
-class MyLearningObjectiveController
+class MyObjectiveController
 {
     /**
      * Displays the index of the learner version of the learning

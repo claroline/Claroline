@@ -38,7 +38,7 @@ class PluginListenerTest extends UnitTestCase
 
     public function testOpenLearningObjectivesTool()
     {
-        $this->expectSubRequest(['_controller' => 'HeVinciCompetencyBundle:LearningObjective:objectives']);
+        $this->expectSubRequest(['_controller' => 'HeVinciCompetencyBundle:Objective:objectives']);
         $event = new OpenAdministrationToolEvent('learning-objectives');
         $this->listener->onOpenLearningObjectivesTool($event);
         $this->assertEquals($this->response, $event->getResponse());
@@ -46,7 +46,7 @@ class PluginListenerTest extends UnitTestCase
 
     public function testOpenMyLearningObjectivesTool()
     {
-        $this->expectSubRequest(['_controller' => 'HeVinciCompetencyBundle:MyLearningObjective:objectives']);
+        $this->expectSubRequest(['_controller' => 'HeVinciCompetencyBundle:MyObjective:objectives']);
         $event = new DisplayToolEvent();
         $this->listener->onOpenMyLearningObjectivesTool($event);
         $this->assertEquals('Test response', $event->getContent());

@@ -1,4 +1,4 @@
-{% extends 'HeVinciCompetencyBundle:LearningObjective:layout.html.twig' %}
+{% extends 'HeVinciCompetencyBundle:Objective:layout.html.twig' %}
 
 {% trans_default_domain 'competency' %}
 
@@ -14,7 +14,7 @@
 {% endblock %}
 
 {% block tabFooter %}
-    <button id="show-add-form" class="btn btn-primary">
-        {{ 'objective.create'|trans }}
+    <button id="create-objective" class="btn btn-primary">
+        {{ 'objective.create_short'|trans }}
     </button>
 {% endblock %}
