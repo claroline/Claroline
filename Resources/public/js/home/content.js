@@ -250,7 +250,7 @@
                 });
             });
         });
-    }).on('click', '.collapse-content', function () {
+    }).on('click', '.collapse-content', function (event) {
         var element = $(event.target).parents('.content-element').get(0);
         var id = $(element).data('id');
         var type = $(element).data('type');
