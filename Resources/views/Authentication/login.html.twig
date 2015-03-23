@@ -46,6 +46,9 @@ same message when authentication has failed (no precise validation errors).
                 </div>
                 <div class="panel-footer">
                     <button type="submit" class="btn btn-primary" tabindex="3">{{ 'login'|trans({}, 'platform') }}</button>
+                    {% if selfRegistrationAllowed == true %}
+                        <a href="{{ path('claro_registration_user_registration_form', {}) }}" class="btn btn-default" tabindex="3">{{ 'register'|trans({}, 'platform') }}</a>
+                    {% endif %}
                     {% if is_facebook_available() %}
                         <button class='btn btn-primary facebook-connect hide'>
                         <i class="fa fa-facebook-square"></i> {{ 'login'|trans({}, 'platform') }}
