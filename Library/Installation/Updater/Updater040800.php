@@ -173,16 +173,16 @@ class Updater040800 extends Updater
         $workspaces = $wsRepo->findAll();
         $i = 0;
         
-        foreach ($worspaces as $workspace) {
+        foreach ($workspaces as $workspace) {
             $workspace->setMaxUsers(10000);
             $em->persist($workspace);
             
             if ($i % 200 === 0) {
-                $i = 0;
                 $em->flush();
             }
             
             $i++;
         }
+        $em->flush();
     }
 }
