@@ -106,14 +106,15 @@ class LayoutController extends Controller
     {
         //for some reason this doesn't work unless we use the cache:warm command. Since it's annoying
         //and that I can't find why, we retrieve the version the old fashioned way;
-        //$bundleManager = $this->get('claroline.manager.bundle_manager');
+        $bundleManager = $this->get('claroline.manager.bundle_manager');
+        $version = $bundleManager->getCoreBundleVersion();
 
         return array(
             'footerMessage' => $this->configHandler->getParameter('footer'),
             'footerLogin' => $this->configHandler->getParameter('footer_login'),
             'footerWorkspaces' => $this->configHandler->getParameter('footer_workspaces'),
             'headerLocale' => $this->configHandler->getParameter('header_locale'),
-            'coreVersion' => '4.7.0'
+            'coreVersion' => $version
         );
     }
 
