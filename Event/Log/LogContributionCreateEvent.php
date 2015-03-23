@@ -4,7 +4,7 @@ namespace Icap\WikiBundle\Event\Log;
 
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Event\Log\AbstractLogResourceEvent;
-use Icap\NotificationBundle\Entity\NotifiableInterface;
+use Claroline\CoreBundle\Event\Log\NotifiableInterface;
 use Icap\WikiBundle\Entity\Wiki;
 use Icap\WikiBundle\Entity\Section;
 use Icap\WikiBundle\Entity\Contribution;
