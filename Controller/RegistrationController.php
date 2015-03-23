@@ -30,6 +30,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\Validator\ValidatorInterface;
 use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 /**
  * Controller for user self-registration. Access to this functionality requires
@@ -123,11 +124,11 @@ class RegistrationController extends Controller
         $facets = $this->facetManager->findForcedRegistrationFacet();
         $form = $this->get('form.factory')->create(new BaseProfileType($localeManager, $termsOfService, $this->translator, $facets), $user);
         $form->handleRequest($this->get('request'));
-        
+
         if ($form->isValid()) {
-                        
+
             $this->roleManager->setRoleToRoleSubject($user, $this->configHandler->getParameter('default_role'));
-            $this->get('claroline.manager.user_manager')->createUserWithRole(
+            $user = $this->get('claroline.manager.user_manager')->createUserWithRole(
                 $user,
                 PlatformRoles::USER
             );
@@ -139,9 +140,19 @@ class RegistrationController extends Controller
                     }
                 }
             }
-            
+
             $msg = $this->get('translator')->trans('account_created', array(), 'platform');
             $this->get('request')->getSession()->getFlashBag()->add('success', $msg);
+
+            if ($this->get('claroline.config.platform_config_handler')->getParameter('auto_logging_after_registration')) {
+                //this is bad but I don't know any other way (yet)
+                $securityContext = $this->get('security.context');
+                $providerKey = 'main';
+                $token = new UsernamePasswordToken($user, $user->getPassword(), $providerKey, $user->getRoles());
+                $securityContext->setToken($token);
+                //a bit hacky I know ~
+                return $this->get('claroline.authentication_handler')->onAuthenticationSuccess($this->request, $token);
+            }
 
             return $this->redirect($this->generateUrl('claro_security_login'));
         }
