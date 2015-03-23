@@ -169,7 +169,7 @@ class Updater040800 extends Updater
     {
         $this->log('Updating workspace users limit...');
         $em = $this->container->get('doctrine.orm.entity_manager');
-        $wsRepo = $em->getRepository('ClarolineCoreBundle:Workspace');
+        $wsRepo = $em->getRepository('ClarolineCoreBundle:Workspace\Workspace');
         $workspaces = $wsRepo->findAll();
         $i = 0;
         
