@@ -12,15 +12,18 @@ namespace Claroline\CoreBundle\Library\Installation\Updater;
 
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\InstallationBundle\Updater\Updater;
+use Doctrine\DBAL\Connection;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class Updater040800 extends Updater
 {
+    private $connection;
     private $container;
     private $toolManager;
 
     public function __construct(ContainerInterface $container)
     {
+        $this->connection = $container->get('doctrine.dbal.default_connection');
         $this->container = $container;
         $this->toolManager = $container->get('claroline.manager.tool_manager');
     }
@@ -75,6 +78,89 @@ class Updater040800 extends Updater
     private function deleteDuplicatedOrderedTools()
     {
         $this->log('Deleting duplicated ordered tools...');
-        $this->toolManager->deleteDuplicatedOldOrderedTools();
+        $idsToRemove = array();
+        $exitingUsers = array();
+        $exitingWorkspaces = array();
+        $desktopSelect = "
+            SELECT ot1.*
+            FROM claro_ordered_tool ot1
+            WHERE ot1.user_id IS NOT NULL
+            AND EXISTS (
+                SELECT ot2.*
+                FROM claro_ordered_tool ot2
+                WHERE ot1.tool_id = ot2.tool_id
+                AND ot1.user_id = ot2.user_id
+            )
+            ORDER BY ot1.id ASC
+        ";
+        $desktopRows = $this->connection->query($desktopSelect);
+
+        foreach ($desktopRows as $ot) {
+            $toolId = $ot['tool_id'];
+            $userId = $ot['user_id'];
+
+            if (isset($exitingUsers[$toolId])) {
+
+                if (isset($exitingUsers[$toolId][$userId])) {
+
+                    $idsToRemove[] = $ot['id'];
+                } else {
+                    $exitingUsers[$toolId][$userId] = true;
+                }
+            } else {
+                $exitingUsers[$toolId] = array();
+                $exitingUsers[$toolId][$userId] = true;
+            }
+        }
+
+        $workspaceSelect = "
+            SELECT ot1.*
+            FROM claro_ordered_tool ot1
+            WHERE ot1.workspace_id IS NOT NULL
+            AND EXISTS (
+                SELECT ot2.*
+                FROM claro_ordered_tool ot2
+                WHERE ot1.tool_id = ot2.tool_id
+                AND ot1.workspace_id = ot2.workspace_id
+            )
+            ORDER BY ot1.id
+        ";
+        $workspaceRows = $this->connection->query($workspaceSelect);
+
+        foreach ($workspaceRows as $ot) {
+            $toolId = $ot['tool_id'];
+            $workspaceId = $ot['workspace_id'];
+
+            if (isset($exitingWorkspaces[$toolId])) {
+
+                if (isset($exitingWorkspaces[$toolId][$workspaceId])) {
+
+                    $idsToRemove[] = $ot['id'];
+                } else {
+                    $exitingWorkspaces[$toolId][$workspaceId] = true;
+                }
+            } else {
+                $exitingWorkspaces[$toolId] = array();
+                $exitingWorkspaces[$toolId][$workspaceId] = true;
+            }
+        }
+
+        if (count($idsToRemove) > 0) {
+
+            $deleteReq = "
+                DELETE FROM claro_ordered_tool
+                WHERE id IN (";
+
+            for ($i = 0; $i < count($idsToRemove); $i++) {
+
+                if ($i < count($idsToRemove) - 1) {
+                    $deleteReq .= $idsToRemove[$i] . ',';
+                } else {
+                    $deleteReq .= $idsToRemove[$i];
+                }
+            }
+            $deleteReq .= ')';
+            $this->connection->query($deleteReq);
+        }
     }
 }
