@@ -23,8 +23,8 @@ portfolioApp
         };
 
         $scope.$watchGroup(['widget.row','widget.col','widget.sizeX','widget.sizeY'], function(newValue, oldValue) {
-            if (newValue !== oldValue && !$scope.widget.isDragged && !$scope.widget.isResized && !$scope.widget.isEditing() && !$scope.widget.rollbacking) {
-                $scope.save();
+            if (newValue !== oldValue) {
+                $scope.widget.toSave = true;
             }
         });
     }]);

@@ -33,9 +33,7 @@ portfolioApp
                 widget.prototype.new         = true;
                 widget.prototype.type        = type;
                 widget.prototype.updating    = false;
-                widget.prototype.rollbacking = false;
-                widget.prototype.isDragged   = false;
-                widget.prototype.isResized   = false;
+                widget.prototype.toSave       = false;
 
                 widget.prototype.generateUrl = function(parameters) {
                     parameters.portfolioId = portfolioId;
