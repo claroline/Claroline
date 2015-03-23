@@ -77,7 +77,8 @@ class PlatformConfigurationHandler
         'token' => null,
         'country' => '-',
         'datas_sending_url' => 'http://stats.claroline.net/insert.php',
-        'repository_api' => 'http://packages.claroline.net/api.php'
+        'repository_api' => 'http://packages.claroline.net/api.php',
+        'auto_logging_after_registration' => false
     );
 
     /**
@@ -180,6 +181,7 @@ class PlatformConfigurationHandler
         $config->setMaxStorageSize($this->parameters['max_storage_size']);
         $config->setRepositoryApi($this->parameters['repository_api']);
         $config->setWorkspaceMaxUsers($this->parameters['max_workspace_users']);
+        $config->setAutoLogginAfterRegister($this->parameters['auto_logging_after_registration']);
 
         return $config;
     }
