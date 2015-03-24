@@ -107,6 +107,12 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
     {
         $user = $this->securityContext->getToken()->getUser();
 
+        if ($uri = $request->getSession()->get('redirect_route')) {
+            $request->getSession()->remove('redirect_route');
+            
+            return new RedirectResponse($uri);
+        }
+
         if ($uri = $request->getSession()->get('_security.main.target_path')) {
             return new RedirectResponse($uri);
         }
