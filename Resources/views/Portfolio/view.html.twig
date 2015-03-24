@@ -14,7 +14,7 @@
 
                     <div data-ng-repeat="widget in widgets | filter:{type: 'title'} track by widget.id" data-ng-show="widgets.length > 0">
                         <div class="portfolio-title-container{% if not editMode %} margin{% endif %}" data-widget>
-                            {% if constant('Icap\\PortfolioBundle\\Manager\\PortfolioManager::PORTFOLIO_OPENING_MODE_VIEW') != openingMode %}
+                            {% if not viewMode %}
                                 <div class="portfolio-title" data-ng-bind-html="widget.views.view" data-ng-show="!widget.editing && !widget.views.form"></div>
                                 <div class="widget-actions">
                                 {% if editMode %}
@@ -108,7 +108,7 @@
                     {% else %}
                         {% set widgets = portfolio.widgets %}
                         {% if 1 < widgets.count %}
-                            <ul>
+                            <ul class="list-unstyled">
                                 {% for widget in widgets if 'title' != widget.widgetType %}
                                     <li>
                                         {% include 'IcapPortfolioBundle:templates:widget.html.twig' %}
@@ -123,7 +123,7 @@
             </section>
         </div>
 
-        {% if constant('Icap\\PortfolioBundle\\Manager\\PortfolioManager::PORTFOLIO_OPENING_MODE_VIEW') != openingMode %}
+        {% if not viewMode %}
             <div data-ng-show="!portfolio.$resolved" id="portfolio-loading"></div>
         {% endif %}
     </div>
@@ -145,7 +145,7 @@
 {% block javascripts %}
     {{ parent() }}
 
-    {% if constant('Icap\\PortfolioBundle\\Manager\\PortfolioManager::PORTFOLIO_OPENING_MODE_VIEW') != openingMode %}
+    {% if not viewMode %}
         <script type="text/javascript">
             'use strict';
             (function() {
