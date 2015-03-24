@@ -80,14 +80,15 @@ class DesktopConfigurationController extends Controller
     {
         $this->checkOpen();
 
-        $tools = $this->toolManager->getDesktopToolsConfigurationArrayForAdmin($type);
+        $menuType = intval($type);
+        $tools = $this->toolManager->getDesktopToolsConfigurationArrayForAdmin($menuType);
         $orderedTools = $this->toolManager
-            ->getConfigurableDesktopOrderedToolsByTypeForAdmin($type);
+            ->getConfigurableDesktopOrderedToolsByTypeForAdmin($menuType);
 
         return array(
             'tools' => $tools,
             'orderedTools' => $orderedTools,
-            'type' => $type
+            'type' => $menuType
         );
     }
 

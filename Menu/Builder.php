@@ -165,7 +165,7 @@ class Builder extends ContainerAware
             foreach ($tools as $tool) {
                 $toolName = $tool->getName();
 
-                if ($toolName === 'home' || $toolName === 'parameters') {
+                if ($toolName === 'home') {
                     continue;
                 }
                 $event = new ConfigureMenuEvent($factory, $menu, $tool);
