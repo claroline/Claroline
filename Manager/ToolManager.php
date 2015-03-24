@@ -1159,6 +1159,13 @@ class ToolManager
         );
     }
 
+    public function getOneAdminOrderedToolByToolAndType(Tool $tool, $type = 0)
+    {
+        return $this->orderedToolRepo->findOneBy(
+            array('user' => null, 'workspace' => null, 'tool' => $tool, 'type' => $type)
+        );
+    }
+
     public function createOrderedToolByToolForAllUsers(
         Tool $tool,
         $type = 0,
@@ -1190,6 +1197,18 @@ class ToolManager
 
                 if ($i % 100 === 0) {
                     $this->om->forceFlush();
+                }
+            } else {
+                $orderedTool = $orderedTools[0];
+
+                if ($orderedTool->isVisibleInDesktop() !== $isVisible) {
+                    $orderedTool->setVisibleInDesktop($isVisible);
+                    $this->om->persist($orderedTool);
+                    $i++;
+
+                    if ($i % 100 === 0) {
+                        $this->om->forceFlush();
+                    }
                 }
             }
         }
