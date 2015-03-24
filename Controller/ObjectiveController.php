@@ -47,7 +47,7 @@ class ObjectiveController
      */
     public function objectivesAction()
     {
-        return [];
+        return ['objectives' => $this->manager->listObjectives()];
     }
 
     /**
@@ -64,7 +64,7 @@ class ObjectiveController
     }
 
     /**
-     * Displays the objective creation form.
+     * Handles the submission of the objective creation form.
      *
      * @EXT\Route("/", name="hevinci_create_objective")
      * @EXT\Method("POST")

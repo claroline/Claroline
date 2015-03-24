@@ -12,6 +12,7 @@ use JMS\DiExtraBundle\Annotation as DI;
 class ObjectiveManager
 {
     private $om;
+    private $repo;
 
     /**
      * @DI\InjectParams({
@@ -23,6 +24,7 @@ class ObjectiveManager
     public function __construct(ObjectManager $om)
     {
         $this->om = $om;
+        $this->repo = $om->getRepository('HeVinciCompetencyBundle:Objective');
     }
 
     /**
@@ -37,6 +39,14 @@ class ObjectiveManager
         $this->om->flush();
 
         return $objective;
+    }
+
+    /**
+     * Returns the list of existing objectives.
+     */
+    public function listObjectives()
+    {
+        return $this->repo->findAll();
     }
 }
 

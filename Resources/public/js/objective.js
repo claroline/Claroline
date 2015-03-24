@@ -8,8 +8,12 @@
         window.Claroline.Modal.displayForm(
             Routing.generate('hevinci_new_objective'),
             function (data) {
+                $('table#objective-table')
+                    .css('display', 'table')
+                    .children('tbody')
+                    .append(Twig.render(ObjectiveRow, data));
+                $('div.alert-info').css('display', 'none');
                 flasher.setMessage(trans('message.objective_created'));
-                console.log(data)
             },
             function () {},
             'objective-form'

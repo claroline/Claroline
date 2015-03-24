@@ -5,12 +5,33 @@
 {% set activeTab = 'objectives' %}
 
 {% block tabContent %}
+    {% set length = objectives|length %}
     <br>
-    <div class="alert alert-info" role="alert">
+    <div class="alert alert-info" role="alert"{% if length > 0 %} style="display: none"{% endif %}>
         <i class="fa fa-info-circle"></i>
         {{ 'info.no_learning_objectives'|trans }}
         {{ 'info.create_learning_objective'|trans }}
     </div>
+    <table id="objective-table"
+           class="table table-condensed table-bordered"
+           {% if length == 0 %} style="display: none"{% endif %}>
+        <thead>
+            <tr>
+                <th>{{ 'name'|trans({}, 'platform') }}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for objective in objectives %}
+                {%
+                    include 'HeVinciCompetencyBundle:Objective:objectiveRow.html.twig'
+                    with {
+                        id: objective.getId(),
+                        name: objective.getName()
+                    }
+                %}
+            {% endfor %}
+        </tbody>
+    </table>
 {% endblock %}
 
 {% block tabFooter %}
