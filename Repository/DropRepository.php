@@ -19,7 +19,7 @@ class DropRepository extends EntityRepository
     {
         $query = $this->getEntityManager()->createQuery(
             "SELECT d.id AS did, c.valid as valid, count(c.id) AS nb_corrections \n" .
-            "FROM Icap\\DropzoneBundle\\Entity\\Drop AS d \n" .
+            "FROM Innova\\DropzoneBundle\\Entity\\Drop AS d \n" .
             "LEFT OUTER JOIN d.corrections AS c \n" .
             "WHERE d.dropzone = :dropzone and d.unlockedDrop = false \n" .
             "GROUP BY d.id, c.valid")
@@ -70,7 +70,7 @@ class DropRepository extends EntityRepository
     {
         $query = $this->getEntityManager()->createQuery(
             "SELECT d.id AS did, count(c.id) AS nb_corrections \n" .
-            "FROM Icap\\DropzoneBundle\\Entity\\Drop AS d \n" .
+            "FROM Innova\\DropzoneBundle\\Entity\\Drop AS d \n" .
             "LEFT OUTER JOIN d.corrections AS c \n" .
             "WHERE d.dropzone = :dropzone \n" .
             "AND c.finished = true \n" .
@@ -161,7 +161,7 @@ class DropRepository extends EntityRepository
     {
         $query = $this->getEntityManager()->createQuery(
             "SELECT cd.id AS did, cd.unlockedDrop as unlcoked, count(cd.id) AS nb_corrections, cdd.expectedTotalCorrection \n" .
-            "FROM Icap\\DropzoneBundle\\Entity\\Correction AS c \n" .
+            "FROM Innova\\DropzoneBundle\\Entity\\Correction AS c \n" .
             "JOIN c.drop AS cd \n" .
             "JOIN cd.dropzone AS cdd \n" .
             "WHERE cdd.id = :dropzoneId \n" .
@@ -184,7 +184,7 @@ class DropRepository extends EntityRepository
     {
         $query = $this->getEntityManager()->createQuery(
             "SELECT count(d.id) \n" .
-            "FROM Icap\\DropzoneBundle\\Entity\\Drop AS d \n" .
+            "FROM Innova\\DropzoneBundle\\Entity\\Drop AS d \n" .
             "WHERE d.finished = true \n" .
             "AND d.dropzone = :dropzone \n")
             ->setParameter('dropzone', $dropzone);
@@ -287,8 +287,12 @@ class DropRepository extends EntityRepository
     }
 
 
+    //
+    // Appel dans dropsAwaitingAction du controller DropController. InnovaERV.
+    //
     public function getDropsAwaitingCorrectionQuery($dropzone)
     {
+        // getDropIdsFullyCorrectedQuery : fonction définie dans ce repository
         $lines = $this->getDropIdsFullyCorrectedQuery($dropzone)->getResult();
 
         $dropIds = array();
@@ -314,6 +318,7 @@ class DropRepository extends EntityRepository
                 ->setParameter('dropIds', $dropIds);
         }
 
+        var_dump($qb->getQuery());die();
         return $qb->getQuery();
     }
 
@@ -380,7 +385,7 @@ class DropRepository extends EntityRepository
     {
         $query = $this->getEntityManager()->createQuery(
             "SELECT max(drop.number) \n" .
-            "FROM Icap\\DropzoneBundle\\Entity\\Drop AS drop \n" .
+            "FROM Innova\\DropzoneBundle\\Entity\\Drop AS drop \n" .
             "WHERE drop.dropzone = :dropzone")
             ->setParameter('dropzone', $dropzone);
 
@@ -417,7 +422,7 @@ class DropRepository extends EntityRepository
     public function closeUnTerminatedDropsByDropzone($dropzoneId)
     {
         $qb = $this->createQueryBuilder('drop')
-            ->update('Icap\\DropzoneBundle\\Entity\\Drop', 'd')
+            ->update('Innova\\DropzoneBundle\\Entity\\Drop', 'd')
             ->set('d.autoClosedDrop', 1)
             ->set('d.finished', 1)
             ->andWhere('d.dropzone = :dropzoneId')

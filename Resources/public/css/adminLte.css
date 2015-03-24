@@ -1829,7 +1829,7 @@ table.text-center, table.text-center td, table.text-center th {
     transform: translate(0px, 0px);
 }
 .direct-chat-messages {
-    height: 250px;
+    height: 500px;
     overflow: auto;
     padding: 10px;
     transform: translate(0px, 0px);

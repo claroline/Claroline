@@ -525,6 +525,7 @@ class DropController extends DropzoneBaseController
      */
     public function dropsAwaitingAction($dropzone, $page)
     {
+
         $this->get('innova.manager.dropzone_voter')->isAllowToOpen($dropzone);
         $this->get('innova.manager.dropzone_voter')->isAllowToEdit($dropzone);
 
@@ -553,6 +554,10 @@ class DropController extends DropzoneBaseController
                 throw new NotFoundHttpException();
             }
         }
+
+        /** InnovaERV **/
+        //var_dump($pager);die();
+        /** Fin InnovaERV **/
 
         return $this->addDropsStats($dropzone, array(
             'workspace' => $dropzone->getResourceNode()->getWorkspace(),
