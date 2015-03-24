@@ -629,3 +629,4 @@ class PlatformConfiguration
     {
         return $this->autoLogginAfterRegistration;
     }
+}
