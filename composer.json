@@ -1,0 +1,17 @@
+{
+  "name": "hevinci/url-bundle",
+  "description": "Url Plugin for Claroline Connect",
+  "homepage": "http://www.claroline.net",
+  "type": "claroline-plugin",
+  "autoload": {
+    "psr-0": { "HeVinci\\UrlBundle": "" }
+  },
+  "require": {
+    "php": ">=5.4.1",
+    "claroline/core-bundle": "~4.0"
+  },
+  "autoload": {
+    "psr-0": { "HeVinci\\UrlBundle": "" }
+  },
+  "target-dir": "HeVinci/UrlBundle"
+}
