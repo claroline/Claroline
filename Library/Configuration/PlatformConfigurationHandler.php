@@ -181,7 +181,7 @@ class PlatformConfigurationHandler
         $config->setMaxStorageSize($this->parameters['max_storage_size']);
         $config->setRepositoryApi($this->parameters['repository_api']);
         $config->setWorkspaceMaxUsers($this->parameters['max_workspace_users']);
-        $config->setAutoLogginAfterRegister($this->parameters['auto_logging_after_registration']);
+        $config->setAutoLogginAfterRegistration($this->parameters['auto_logging_after_registration']);
 
         return $config;
     }
