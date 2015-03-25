@@ -214,7 +214,8 @@ class RolesController extends Controller
     /**
      * @EXT\Route(
      *     "/{workspace}/role/{role}/remove",
-     *     name="claro_workspace_role_remove"
+     *     name="claro_workspace_role_remove",
+     *     options={"expose"=true}
      * )
      */
     public function removeRoleAction(Workspace $workspace, Role $role)
