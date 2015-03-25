@@ -29,15 +29,45 @@ class RoleRepository extends EntityRepository
      *
      * @return array[Workspace]
      */
-    public function findByWorkspace(Workspace $workspace)
+    public function findByWorkspace(Workspace $workspace, $orderedBy = '', $order = 'ASC')
     {
         $dql = "
             SELECT r FROM Claroline\CoreBundle\Entity\Role r
             JOIN r.workspace ws
             WHERE ws.id = :workspaceId
+            ORDER BY r.{$orderedBy} {$order}
         ";
         $query = $this->_em->createQuery($dql);
         $query->setParameter('workspaceId', $workspace->getId());
+
+        return $query->getResult();
+    }
+
+    /**
+     * Returns the searched roles associated to a workspace.
+     *
+     * @param Workspace $workspace
+     *
+     * @return array[Workspace]
+     */
+    public function findByWorkspaceAndSearch(
+        Workspace $workspace,
+        $search = '',
+        $orderedBy = '',
+        $order = 'ASC'
+    )
+    {
+        $dql = "
+            SELECT r FROM Claroline\CoreBundle\Entity\Role r
+            JOIN r.workspace ws
+            WHERE ws.id = :workspaceId
+            AND UPPER(r.translationKey) LIKE :search
+            ORDER BY r.{$orderedBy} {$order}
+        ";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('workspaceId', $workspace->getId());
+        $upperSearch = strtoupper($search);
+        $query->setParameter('search', "%{$upperSearch}%");
 
         return $query->getResult();
     }
