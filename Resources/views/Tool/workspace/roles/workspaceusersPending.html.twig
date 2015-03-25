@@ -15,7 +15,9 @@
 {% from _self import renderPager %}
 
 {% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
-{% block title %}{{ parent() ~ ' - ' ~ "users_list" | trans({}, "platform") | striptags | raw }}{% endblock %}
+{% block title %}
+    {{ parent() ~ ' - ' ~ "pending_users_list" | trans({}, "platform") | striptags | raw }}
+{% endblock %}
 
 {% block breadcrumb %}
     {{
@@ -23,8 +25,8 @@
             workspace,
             [
                 {
-                    'name': 'users'|trans({}, 'platform'),
-                    'href': path('claro_users_pending',{'workspace':workspace.getId()})
+                    'name': 'pending_users_list'|trans({}, 'platform'),
+                    'href': ''
                 }
             ]
         )
@@ -39,7 +41,7 @@
         <li> <a href="{{ path('claro_workspace_roles', {'workspace': workspace.getId()} ) }}">{{ 'roles'|trans({}, 'platform') }}</a> </li>
         <li class="active"><a href="{{path('claro_users_pending',{'workspace':workspace.getId()})}}"> {{'pending'|trans({},'platform') }} </a> </li>
     </ul>
-    <h3>{{ 'users_list'|trans({}, 'platform') }}</h3>
+    <h3>{{ 'pending_users_list'|trans({}, 'platform') }}</h3>
     {{ macros.flashBox() }}
     <br>
 
