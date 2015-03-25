@@ -7,7 +7,7 @@
 
 {% block content_container %}
     <div id="portfolio-section" data-portfolio-container="{{ portfolio.id }}">
-        <div id="portfolio-container" data-ng-if="portfolio.$resolved">
+        <div id="portfolio-container"{% if not viewMode %} data-ng-if="portfolio.$resolved"{% endif %}>
             <header>
                 <div class="container">
                     <h1 id="username">{{ portfolio.user.firstName ~ ' ' ~ portfolio.user.lastName }}</h1>
@@ -87,7 +87,7 @@
                 </div>
                 {% endif %}
 
-                <div class="main-content col-md-10 col-md-offset-1">
+                <div class="main-content col-md-10 col-md-offset-1"{% if viewMode %} data-ng-controller="viewCtrl"{% endif %}>
                     {% if not viewMode %}
                         {% if editMode %}
                         <div data-ng-include="'templates/menu_widget-type.tpl.html'">
@@ -106,14 +106,11 @@
                             </li>
                         </ul>
                     {% else %}
-                        {% set widgets = portfolio.widgets %}
-                        {% if 1 < widgets.count %}
-                            <ul class="list-unstyled">
-                                {% for widget in widgets if 'title' != widget.widgetType %}
-                                    <li>
-                                        {% include 'IcapPortfolioBundle:templates:widget.html.twig' %}
-                                    </li>
-                                {% endfor %}
+                        {% if 1 < widgets|length %}
+                            <ul class="list-unstyled" data-gridster="gridsterOptions">
+                                <li data-gridster-item="widget" data-ng-repeat="widget in widgets | filter:{type: '!title'} | orderBy:'+row +col' track by widget.id">
+                                    {% include 'IcapPortfolioBundle:templates:widget.html.twig' %}
+                                </li>
                             </ul>
                         {% else %}
                             <p class="no-data well">{{ 'portfolio_empty'|trans({}, 'icap_portfolio') }}</p>
@@ -187,10 +184,10 @@
             '@IcapPortfolioBundle/Resources/public/js/vendor/angular-strap/popover.min.js'
             '@IcapPortfolioBundle/Resources/public/js/vendor/angular-strap/popover.tpl.min.js'
             '@IcapPortfolioBundle/Resources/public/js/vendor/javascript-detect-element-resize/jquery.resize.js'
+            '@IcapPortfolioBundle/Resources/public/js/vendor/angular-gridster/angular-gridster.js'
         %}
             <script type="text/javascript" src="{{ asset_url }}"></script>
         {% endjavascripts %}
-        <script type="text/javascript" src="{{ asset('bundles/icapportfolio/js/vendor/angular-gridster/angular-gridster.js') }}"></script>
 
         {% javascripts debug=true filter='jsmin' output='js/portfolio/portfolio/script.js'
             '@IcapPortfolioBundle/Resources/public/js/utils/Array.js'
@@ -223,5 +220,44 @@
         %}
             <script type="text/javascript" src="{{ asset_url }}"></script>
         {% endjavascripts %}
+    {% else %}
+        {% javascripts debug=true output='js/portfolio/portfolio/vendor_view.js'
+            '@InnovaAngularJSBundle/Resources/public/js/angular.min.js'
+            '@InnovaAngularJSBundle/Resources/public/js/angular-sanitize.min.js'
+            '@IcapPortfolioBundle/Resources/public/js/vendor/angular-gridster/angular-gridster.js'
+        %}
+            <script type="text/javascript" src="{{ asset_url }}"></script>
+        {% endjavascripts %}
+        <script type="text/javascript">
+            'use strict';
+            (function() {
+                var viewApp = angular.module('viewApp', ['ngSanitize', 'gridster']);
+
+                // Bootstrap portfolio application
+                angular.element(document).ready(function() {
+                    angular.bootstrap(document, ['viewApp'], {strictDi: true});
+                });
+
+                viewApp.controller('viewCtrl', ['$scope', function ($scope) {
+                    $scope.gridsterOptions = {
+                        columns:    8, // the width of the grid, in columns
+                        swapping:   true, // whether or not to have items of the same size switch places instead of pushing down if they are the same size
+                        floating:   true, // whether to automatically float items up so they stack (you can temporarily disable if you are adding unsorted items with ng-repeat)
+                        margins:    [10, 10], // the pixel distance between each widget
+                        minColumns: 1, // the minimum columns the grid must have
+                        minRows:    1, // the minimum height of the grid, in rows
+                        maxRows:    100,
+                        resizable: {
+                            enabled: false
+                        },
+                        draggable: {
+                            enabled: false
+                        }
+                    };
+
+                    $scope.widgets = {{ widgets|json_encode()|raw }};
+                }]);
+            })();
+        </script>
     {% endif %}
 {% endblock %}

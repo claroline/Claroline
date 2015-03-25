@@ -183,12 +183,24 @@ class WidgetsManager
 
     /**
      * @param Portfolio $portfolio
+     * @param bool      $inArray
      *
-     * @return \Icap\PortfolioBundle\Entity\Widget\AbstractWidget[]
+     * @return \Icap\PortfolioBundle\Entity\Widget\AbstractWidget[]|array
      */
-    public function getByPortfolioForGridster(Portfolio $portfolio)
+    public function getByPortfolioForGridster(Portfolio $portfolio, $inArray = false)
     {
-        return $this->entityManager->getRepository("IcapPortfolioBundle:Widget\AbstractWidget")->findOrderedByRowAndCol($portfolio);
+        $widgets = $this->entityManager->getRepository("IcapPortfolioBundle:Widget\AbstractWidget")->findOrderedByRowAndCol($portfolio);
+
+        if ($inArray) {
+            $widgetsInArray = [];
+            foreach ($widgets as $widget) {
+                $widgetsInArray[] = $this->getWidgetData($widget);
+            }
+
+            $widgets = $widgetsInArray;
+        }
+
+        return $widgets;
     }
 }
  

@@ -1,32 +1,24 @@
 <div {% if not viewMode %}data-widget="widget" {% endif %} class="panel panel-default widget-panel{% if not viewMode %} ng-cloak{% endif %}">
-    <div class="panel-heading" {% verbatim %}data-ng-class="{draggable: gridsterOptions.draggable.enabled}"{% endverbatim %} data-ng-show="!widget.isEditing()" data-ng-mouseover="showAction = true" data-ng-mouseleave="showAction = false">
-        {% if not viewMode %}
-            {% verbatim %}{{ widget.label }}{% endverbatim %}
-            {% if editMode %}
-            <div class="widget-actions" data-ng-show="!widget.isNew() && !widget.isUpdating() && showAction">
-                <button class="widget-action btn btn-xs btn-default draggable-handle">
-                    <span class="fa fa-arrows"></span>
-                </button>
-                <button class="widget-action btn btn-xs btn-danger" data-ng-class="{'btn-loading': widget.isDeleting}" data-confirm-click="delete();" data-ng-if="isDeletable()">
-                    <span class="loading" data-ng-if="widget.isDeleting"></span>
-                    <span class="fa fa-trash-o" data-ng-if="!widget.isDeleting"></span>
-                </button>
-                <button class="widget-action btn btn-xs btn-primary" data-ng-click="edit();">
-                    <span class="fa fa-pencil"></span>
-                </button>
-            </div>
-            <span class="pull-right loading" data-ng-if="widget.isUpdating()"></span>
-            {% endif %}
-        {% else %}
-            {{ widget.label }}
+    <div class="panel-heading"{% if not viewMode %} {% verbatim %}data-ng-class="{draggable: gridsterOptions.draggable.enabled}"{% endverbatim %} data-ng-show="!widget.isEditing()" data-ng-mouseover="showAction = true" data-ng-mouseleave="showAction = false"{% endif %}>
+        {% verbatim %}{{ widget.label }}{% endverbatim %}
+        {% if editMode %}
+        <div class="widget-actions" data-ng-show="!widget.isNew() && !widget.isUpdating() && showAction">
+            <button class="widget-action btn btn-xs btn-default draggable-handle">
+                <span class="fa fa-arrows"></span>
+            </button>
+            <button class="widget-action btn btn-xs btn-danger" data-ng-class="{'btn-loading': widget.isDeleting}" data-confirm-click="delete();" data-ng-if="isDeletable()">
+                <span class="loading" data-ng-if="widget.isDeleting"></span>
+                <span class="fa fa-trash-o" data-ng-if="!widget.isDeleting"></span>
+            </button>
+            <button class="widget-action btn btn-xs btn-primary" data-ng-click="edit();">
+                <span class="fa fa-pencil"></span>
+            </button>
+        </div>
+        <span class="pull-right loading" data-ng-if="widget.isUpdating()"></span>
         {% endif %}
     </div>
     <div class="panel-body" data-ng-show="!widget.editing && !widget.views.form">
-        {% if not viewMode %}
-            <div data-ng-bind-html="widget.views.view"></div>
-        {% else %}
-            {% include 'IcapPortfolioBundle:templates:' ~ widget.widgetType ~ '.html.twig' with {'widget': widget} %}
-        {% endif %}
+        <div data-ng-bind-html="widget.views.view"></div>
     </div>
     {% if editMode %}
     <div class="panel-heading" data-ng-show="widget.editing && widget.views.form">

@@ -366,14 +366,16 @@ class PortfolioController extends Controller
             $this->get('event_dispatcher')->dispatch('log', $event);
 
             $resourceTypes = $this->get('claroline.manager.resource_manager')->getAllResourceTypes();
+            $widgetsConfig = $this->getWidgetsManager()->getWidgetsConfig();
+            $widgets = $this->getWidgetsManager()->getByPortfolioForGridster($portfolio, true);
 
-            $widgetsConfig       = $this->getWidgetsManager()->getWidgetsConfig();
             $responseParameters  = array(
                 'titleWidget'   => $titleWidget,
                 'portfolio'     => $portfolio,
                 'openingMode'   => $openingMode,
                 'widgetsConfig' => $widgetsConfig,
-                'resourceTypes' => $resourceTypes
+                'resourceTypes' => $resourceTypes,
+                'widgets'       => $widgets
             );
 
             $response = new Response($this->renderView('IcapPortfolioBundle:Portfolio:view.html.twig', $responseParameters));
