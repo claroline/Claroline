@@ -103,9 +103,10 @@ class DesktopParametersController extends Controller
      */
     public function desktopConfigureToolAction(User $user, $type = 0)
     {
-        $tools = $this->toolManager->getDesktopToolsConfigurationArray($user, $type);
+        $menuType = intval($type);
+        $tools = $this->toolManager->getDesktopToolsConfigurationArray($user, $menuType);
         $adminOrderedTools = $this->toolManager
-            ->getLockedConfigurableDesktopOrderedToolsByTypeForAdmin($type);
+            ->getLockedConfigurableDesktopOrderedToolsByTypeForAdmin($menuType);
 
         $toolNames = array();
 
@@ -113,13 +114,13 @@ class DesktopParametersController extends Controller
             $toolNames[] = $adminOrderedTool->getTool()->getName();
         }
         $orderedTools = $this->toolManager
-            ->getConfigurableDesktopOrderedToolsByUser($user, $toolNames, $type);
+            ->getConfigurableDesktopOrderedToolsByUser($user, $toolNames, $menuType);
 
         return array(
             'tools' => $tools,
             'adminOrderedTools' => $adminOrderedTools,
             'orderedTools' => $orderedTools,
-            'type' => $type
+            'type' => $menuType
         );
     }
 

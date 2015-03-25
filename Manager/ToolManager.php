@@ -545,7 +545,7 @@ class ToolManager
 
         foreach ($orderedTools as $orderedTool) {
 
-            if ($user && $orderedTool->getTool()->getName() !== 'parameters') {
+            if ($user) {
                 $orderedTool->setVisibleInDesktop(false);
             }
 
@@ -624,8 +624,7 @@ class ToolManager
     public function addRequiredToolsToUser(User $user, $type = 0)
     {
         $requiredTools = array();
-        $adminOrderedTools = $this->orderedToolRepo
-            ->findConfigurableDesktopOrderedToolsByTypeForAdmin($type);
+        $adminOrderedTools = $this->getConfigurableDesktopOrderedToolsByTypeForAdmin($type);
 
         foreach ($adminOrderedTools as $orderedTool) {
 
@@ -1108,6 +1107,12 @@ class ToolManager
         $executeQuery = true
     )
     {
+        $excludedToolNames[] = 'home';
+
+        if ($type === 1) {
+            $excludedToolNames[] = 'parameters';
+        }
+
         return $this->orderedToolRepo->findConfigurableDesktopOrderedToolsByUser(
             $user,
             $excludedToolNames,
@@ -1118,10 +1123,18 @@ class ToolManager
 
     public function getConfigurableDesktopOrderedToolsByTypeForAdmin(
         $type = 0,
+        array $excludedToolNames = array(),
         $executeQuery = true
     )
     {
+        $excludedToolNames[] = 'home';
+
+        if ($type === 1) {
+            $excludedToolNames[] = 'parameters';
+        }
+
         return $this->orderedToolRepo->findConfigurableDesktopOrderedToolsByTypeForAdmin(
+            $excludedToolNames,
             $type,
             $executeQuery
         );
@@ -1129,12 +1142,27 @@ class ToolManager
 
     public function getLockedConfigurableDesktopOrderedToolsByTypeForAdmin(
         $type = 0,
+        array $excludedToolNames = array(),
         $executeQuery = true
     )
     {
+        $excludedToolNames[] = 'home';
+
+        if ($type === 1) {
+            $excludedToolNames[] = 'parameters';
+        }
+
         return $this->orderedToolRepo->findLockedConfigurableDesktopOrderedToolsByTypeForAdmin(
+            $excludedToolNames,
             $type,
             $executeQuery
+        );
+    }
+
+    public function getOneAdminOrderedToolByToolAndType(Tool $tool, $type = 0)
+    {
+        return $this->orderedToolRepo->findOneBy(
+            array('user' => null, 'workspace' => null, 'tool' => $tool, 'type' => $type)
         );
     }
 
@@ -1169,6 +1197,18 @@ class ToolManager
 
                 if ($i % 100 === 0) {
                     $this->om->forceFlush();
+                }
+            } else {
+                $orderedTool = $orderedTools[0];
+
+                if ($orderedTool->isVisibleInDesktop() !== $isVisible) {
+                    $orderedTool->setVisibleInDesktop($isVisible);
+                    $this->om->persist($orderedTool);
+                    $i++;
+
+                    if ($i % 100 === 0) {
+                        $this->om->forceFlush();
+                    }
                 }
             }
         }
