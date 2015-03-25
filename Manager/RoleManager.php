@@ -487,9 +487,25 @@ class RoleManager
      *
      * @return \Claroline\CoreBundle\Entity\Role[]
      */
-    public function getRolesByWorkspace(Workspace $workspace)
+    public function getRolesByWorkspace(
+        Workspace $workspace,
+        $search = '',
+        $orderedBy = 'id',
+        $order = 'ASC'
+    )
     {
-        return $this->roleRepo->findByWorkspace($workspace);
+        if (empty($search)) {
+
+            return $this->roleRepo->findByWorkspace($workspace, $orderedBy, $order);
+        } else {
+
+            return $this->roleRepo->findByWorkspaceAndSearch(
+                $workspace,
+                $search,
+                $orderedBy,
+                $order
+            );
+        }
     }
 
     /**
