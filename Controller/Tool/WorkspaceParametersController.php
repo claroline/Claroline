@@ -212,7 +212,6 @@ class WorkspaceParametersController extends Controller
             );
         } else {
             $workspace->setName($wsRegisteredName);
-            $this->workspaceManager->replaceCode($workspace, $wsRegisteredCode);
         }
 
         $user = $this->security->getToken()->getUser();
