@@ -167,6 +167,25 @@ class DropController extends DropzoneBaseController
         return $array;
     }
 
+
+    /**
+     * InnovaERV
+     * Méthode de calculs des données pour affichage dans la "liste des vues personnels"
+    */
+    private function addDropsStatsView($dropzone, $array)
+    {
+        $dropRepo = $this->getDoctrine()->getManager()->getRepository('InnovaCollecticielBundle:Drop');
+        $array['nbDropCorrected'] = $dropRepo->countDropsFullyCorrected($dropzone);
+        $array['nbDrop'] = $dropRepo->countDrops($dropzone);
+
+        /** InnovaERV : ajout pour calculer les 2 zones **/
+//        $documents = $dropRepo->getDocuments();
+//        $array['nbCommentNotRead'] = $dropRepo->countCommentNotRead($dropRepo->getUser()->getId());
+//        $array['nbTextToRead'] = $dropRepo->countTextToRead($dropRepo->getUser()->getId();
+
+        return $array;
+    }
+
     /**
      *
      * @Route(
@@ -556,16 +575,19 @@ class DropController extends DropzoneBaseController
         }
 
         /** InnovaERV **/
-        //var_dump($pager);die();
+        // var_dump($pager);die();
         /** Fin InnovaERV **/
-
-        return $this->addDropsStats($dropzone, array(
+        $dataToView = $this->addDropsStatsView($dropzone, array(
             'workspace' => $dropzone->getResourceNode()->getWorkspace(),
             '_resource' => $dropzone,
             'dropzone' => $dropzone,
             'unterminated_drops' => $countUnterminatedDrops,
             'pager' => $pager,
         ));
+
+        //var_dump($dataToView);die();
+
+        return $dataToView;
     }
 
     /**

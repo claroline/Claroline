@@ -318,7 +318,7 @@ class DropRepository extends EntityRepository
                 ->setParameter('dropIds', $dropIds);
         }
 
-        var_dump($qb->getQuery());die();
+        //var_dump($qb->getQuery());die();
         return $qb->getQuery();
     }
 
@@ -429,5 +429,51 @@ class DropRepository extends EntityRepository
             ->andWhere('d.finished = 0')
             ->setParameter('dropzoneId', $dropzoneId);
         $qb->getQuery()->execute();
+    }
+
+
+    /**
+     *
+     *  Fonctions créées pour InnovaCollecticielBundle.
+     *  InnovaERV.
+     *
+    */
+
+    /**
+     *  Pour compter les commentaires non lus
+     * @param $userId
+    */
+    public function countCommentNotRead($userId)
+    {
+
+         $query = $this->getEntityManager()->createQuery(
+            "SELECT count(d.id) \n" .
+            "FROM Innova\\CollecticielBundle\\Entity\\Drop AS d \n" .
+            "WHERE d.finished = true \n" .
+            "AND d.dropzone = :dropzone \n")
+            ->setParameter('dropzone', $dropzone);
+        $result = $query->getSingleScalarResult();
+
+        return $result;
+
+   }
+
+    /**
+     *  Pour compter les devoirs à corriger
+     * @param $userId
+    */
+    public function countTextToRead($userId)
+    {
+
+        $query = $this->getEntityManager()->createQuery(
+            "SELECT count(d.id) \n" .
+            "FROM Innova\\CollecticielBundle\\Entity\\Drop AS d \n" .
+            "WHERE d.finished = true \n" .
+            "AND d.dropzone = :dropzone \n")
+            ->setParameter('dropzone', $dropzone);
+        $result = $query->getSingleScalarResult();
+
+        return $result;
+
     }
 }
