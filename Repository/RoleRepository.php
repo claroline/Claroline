@@ -29,7 +29,7 @@ class RoleRepository extends EntityRepository
      *
      * @return array[Workspace]
      */
-    public function findByWorkspace(Workspace $workspace, $orderedBy = '', $order = 'ASC')
+    public function findByWorkspace(Workspace $workspace, $orderedBy = 'id', $order = 'ASC')
     {
         $dql = "
             SELECT r FROM Claroline\CoreBundle\Entity\Role r
@@ -53,7 +53,7 @@ class RoleRepository extends EntityRepository
     public function findByWorkspaceAndSearch(
         Workspace $workspace,
         $search = '',
-        $orderedBy = '',
+        $orderedBy = 'id',
         $order = 'ASC'
     )
     {
