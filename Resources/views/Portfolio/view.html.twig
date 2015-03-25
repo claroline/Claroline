@@ -11,10 +11,9 @@
             <header>
                 <div class="container">
                     <h1 id="username">{{ portfolio.user.firstName ~ ' ' ~ portfolio.user.lastName }}</h1>
-
-                    <div data-ng-repeat="widget in widgets | filter:{type: 'title'} track by widget.id" data-ng-show="widgets.length > 0">
-                        <div class="portfolio-title-container{% if not editMode %} margin{% endif %}" data-widget>
-                            {% if not viewMode %}
+                    {% if not viewMode %}
+                        <div data-ng-repeat="widget in widgets | filter:{type: 'title'} track by widget.id" data-ng-show="widgets.length > 0">
+                            <div class="portfolio-title-container{% if not editMode %} margin{% endif %}" data-widget>
                                 <div class="portfolio-title" data-ng-bind-html="widget.views.view" data-ng-show="!widget.editing && !widget.views.form"></div>
                                 <div class="widget-actions">
                                 {% if editMode %}
@@ -30,11 +29,15 @@
                                     <button type="submit" class="btn btn-md btn-primary">{{ 'save'|trans({}, 'platform') }}</button>
                                     <button type="button" class="btn btn-md btn-default" data-ng-click="cancelEdition(widget)">{{ 'cancel'|trans({}, 'platform') }}</button>
                                 </form>
-                            {% else %}
-                                {% include 'IcapPortfolioBundle:templates:title.html.twig' with {'widget': titleWidget} only %}
-                            {% endif %}
+                            </div>
                         </div>
-                    </div>
+                    {% else %}
+                        <div class="portfolio-title-container margin">
+                            <div class="portfolio-title">
+                                {% include 'IcapPortfolioBundle:templates:title.html.twig' with {'widget': titleWidget} only %}
+                            </div>
+                        </div>
+                    {% endif %}
                 </div>
             </header>
             <section class="col-md-12">
@@ -106,15 +109,20 @@
                             </li>
                         </ul>
                     {% else %}
-                        {% if 1 < widgets|length %}
-                            <ul class="list-unstyled" data-gridster="gridsterOptions">
+                            <ul class="list-unstyled ng-cloak" data-gridster="gridsterOptions" data-ng-show="widgets.length">
                                 <li data-gridster-item="widget" data-ng-repeat="widget in widgets | filter:{type: '!title'} | orderBy:'+row +col' track by widget.id">
-                                    {% include 'IcapPortfolioBundle:templates:widget.html.twig' %}
+                                    <div class="panel panel-default widget-panel">
+                                        <div class="panel-heading">
+                                            {% verbatim %}{{ widget.label }}{% endverbatim %}
+                                        </div>
+                                        <div class="panel-body">
+                                            <div data-ng-bind-html="widget.views.view"></div>
+                                        </div>
+                                    </div>
                                 </li>
                             </ul>
-                        {% else %}
-                            <p class="no-data well">{{ 'portfolio_empty'|trans({}, 'icap_portfolio') }}</p>
-                        {% endif %}
+                            <p class="no-data well ng-cloak" data-ng-show="!widgets.length">{{ 'portfolio_empty'|trans({}, 'icap_portfolio') }}</p>
+                            <div class="well" data-ng-show="widgets"><p class="loading loading_view"></p></div>
                     {% endif %}
                 </div>
             </section>
