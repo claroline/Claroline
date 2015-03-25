@@ -1,29 +1,15 @@
-{% macro renderPager(search, workspaceId, pager, max, order, direction) %}
-    {% if search == '' %}
-        {{
-            pagerfanta(
-                pager,
-                'twitter_bootstrap_translated',
-                {
-                    'proximity' : 1,
-                    'routeName': 'claro_workspace_registered_user_list',
-                    'routeParams': {'workspace': workspaceId, 'max': max, 'order': order, 'direction': direction}
-                }
-            )
-        }}
-    {% else %}
-        {{
-            pagerfanta(
-                pager,
-                'twitter_bootstrap_translated',
-                {
-                    'proximity' : 1,
-                    'routeName': 'claro_workspace_registered_user_list_search',
-                    'routeParams': {'search': search, 'workspace': workspaceId, 'max': max, 'order': order, 'direction': direction }
-                }
-            )
-        }}
-    {% endif %}
+{% macro renderPager(search, workspaceId, pager, max) %}
+    {{
+        pagerfanta(
+            pager,
+            'twitter_bootstrap_translated',
+            {
+                'proximity' : 1,
+                'routeName': 'claro_users_pending',
+                'routeParams': {'workspace': workspaceId, 'max': max, 'search': search}
+            }
+        )
+    }}
 {% endmacro %}
 
 {% from _self import renderPager %}
@@ -110,7 +96,7 @@
         </div>
     
         {% if pager.getNbPages() > 1 %}
-            {{ renderPager(search, workspace.getId(), pager, max, order, direction) }}
+            {{ renderPager(search, workspace.getId(), pager, max) }}
         {% endif %}
     {% else %}
         <div class="alert alert-warning">{{ 'no_user'|trans({}, 'platform') }}</div>
