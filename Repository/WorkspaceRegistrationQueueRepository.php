@@ -56,4 +56,26 @@ class WorkspaceRegistrationQueueRepository extends EntityRepository
 
         return $query->getOneOrNullResult();
     }
+
+    public function findByWorkspaceAndSearch(Workspace $workspace, $search = '')
+    {
+        $dql = "
+            SELECT w
+            FROM Claroline\CoreBundle\Entity\Workspace\WorkspaceRegistrationQueue w
+            FROM w.user u
+            WHERE w.workspace = :workspace
+            AND (
+                UPPER(u.username) LIKE :search
+                OR UPPER(u.firstName) LIKE :search
+                OR UPPER(u.lastName) LIKE :search
+                OR UPPER(u.mail) LIKE :search
+            )
+        ";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('workspace', $workspace);
+        $upperSearch = strtoupper($search);
+        $query->setParameter('search', "%{$upperSearch}%");
+
+        return $query->getResult();
+    }
 }
