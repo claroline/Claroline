@@ -46,14 +46,44 @@ class PickerController
     /**
      * Displays the list of competencies of a framework for selection.
      *
-     * @EXT\Route("/framework/{id}", name="hevinci_pick_competency")
+     * @EXT\Route(
+     *     "/framework/{id}/{loadAbilities}",
+     *     name="hevinci_pick_competency",
+     *     requirements={"loadAbilities" = "[01]"},
+     *     defaults={"loadAbilities" = 1}
+     * )
      * @EXT\Template
      *
-     * @param $framework Competency
+     * @param Competency    $framework      The framework to load
+     * @param bool          $loadAbilities  Whether linked abilities should be included
      * @return array
      */
-    public function competenciesAction(Competency $framework)
+    public function competenciesAction(Competency $framework, $loadAbilities)
     {
-        return ['framework' => $this->competencyManager->loadFramework($framework)];
+        return [
+            'framework' => $this->competencyManager->loadFramework(
+                $framework,
+                (bool) $loadAbilities
+            )
+        ];
+    }
+
+    /**
+     * Displays the scale levels of a given competency framework for selection.
+     *
+     * @EXT\Route("/framework/{id}/levels", name="hevinci_pick_level")
+     * @EXT\Template
+     *
+     * @param Competency $framework
+     * @return array
+     * @throws \LogicException if the competency is not a framework root
+     */
+    public function levelsAction(Competency $framework)
+    {
+        if ($framework->getRoot() !== $framework->getId()) {
+            throw new \LogicException('Scales are only linked to root competencies');
+        }
+
+        return ['scale' => $framework->getScale()];
     }
 }

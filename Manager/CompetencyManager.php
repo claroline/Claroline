@@ -165,12 +165,18 @@ class CompetencyManager
      * "__children" and "__abilities" keys of their corresponding competency
      * array.
      *
-     * @param Competency $framework
+     * @param Competency    $framework      The framework to load
+     * @param bool          $loadAbilities  Whether linked abilities should be included
      * @return array
      */
-    public function loadFramework(Competency $framework)
+    public function loadFramework(Competency $framework, $loadAbilities = true)
     {
         $competencies = $this->competencyRepo->childrenHierarchy($framework, false, [], true)[0];
+
+        if (!$loadAbilities) {
+            return $competencies;
+        }
+
         $abilities = $this->abilityRepo->findByFramework($framework);
         $abilitiesByCompetency = [];
 

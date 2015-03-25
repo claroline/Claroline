@@ -1,0 +1,17 @@
+<div>
+    {{ 'objective.pick_level'|trans({}, 'competency') }}:
+</div>
+<br>
+<div class="form-group">
+    <label class="control-label col-md-3 required">
+        {{ 'expected_level'|trans({}, 'competency') }}
+    </label>
+    <div class="col-md-9">
+        <select class="form-control scale-levels">
+            {% for level in scale.getLevels() %}
+                <option data-id="{{ level.getId() }}">{{ level.getName() }}</option>
+            {% endfor %}
+        </select>
+    </div>
+</div>
+<br>

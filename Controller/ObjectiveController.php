@@ -2,6 +2,9 @@
 
 namespace HeVinci\CompetencyBundle\Controller;
 
+use HeVinci\CompetencyBundle\Entity\Competency;
+use HeVinci\CompetencyBundle\Entity\Level;
+use HeVinci\CompetencyBundle\Entity\Objective;
 use HeVinci\CompetencyBundle\Form\Handler\FormHandler;
 use HeVinci\CompetencyBundle\Manager\ObjectiveManager;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -71,7 +74,7 @@ class ObjectiveController
      * @EXT\Template("HeVinciCompetencyBundle:Objective:objectiveForm.html.twig")
      *
      * @param Request $request
-     * @return array
+     * @return JsonResponse|array
      */
     public function createObjectiveAction(Request $request)
     {
@@ -82,6 +85,80 @@ class ObjectiveController
         }
 
         return ['form' => $this->formHandler->getView()];
+    }
+
+    /**
+     * Deletes an objective.
+     *
+     * @EXT\Route("/{id}/delete", name="hevinci_delete_objective")
+     *
+     * @param Objective $objective
+     * @return JsonResponse
+     */
+    public function deleteObjectiveAction(Objective $objective)
+    {
+        return new JsonResponse($this->manager->deleteObjective($objective));
+    }
+
+    /**
+     * Displays the edition form of an objective.
+     *
+     * @EXT\Route("/{id}/edit", name="hevinci_objective_edit_form")
+     * @EXT\Template("HeVinciCompetencyBundle:Objective:objectiveEditForm.html.twig")
+     *
+     * @param Objective $objective
+     * @return array
+     */
+    public function objectiveEditionFormAction(Objective $objective)
+    {
+        return [
+            'form' => $this->formHandler->getView('hevinci_form_objective', $objective),
+            'objective' => $objective
+        ];
+    }
+
+    /**
+     * Edits an objective.
+     *
+     * @EXT\Route("/{id}/edit", name="hevinci_edit_objective")
+     * @EXT\Method("POST")
+     * @EXT\Template("HeVinciCompetencyBundle:Objective:objectiveEditForm.html.twig")
+     *
+     * @param Request   $request
+     * @param Objective $objective
+     * @return array
+     */
+    public function editObjectiveAction(Request $request, Objective $objective)
+    {
+        if ($this->formHandler->isValid('hevinci_form_objective', $request, $objective)) {
+            return new JsonResponse(
+                $this->manager->persistObjective($this->formHandler->getData())
+            );
+        }
+
+        return ['form' => $this->formHandler->getView(), 'objective' => $objective];
+    }
+
+    /**
+     * Links a competency to an objective with a given expected level.
+     *
+     * @EXT\Route(
+     *     "/{id}/competencies/{competencyId}/levels/{levelId}",
+     *     name="hevinci_objective_link_competency",
+     *     requirements={"competencyId"="\d+", "levelId"="\d+"}
+     * )
+     * @EXT\Method("POST")
+     * @EXT\ParamConverter("competency", options={"id"= "competencyId"})
+     * @EXT\ParamConverter("level", options={"id"= "levelId"})
+     *
+     * @param Objective     $objective
+     * @param Competency    $competency
+     * @param Level         $level
+     * @return JsonResponse
+     */
+    public function linkCompetencyAction(Objective $objective, Competency $competency, Level $level)
+    {
+        return new JsonResponse($this->manager->linkCompetency($objective, $competency, $level));
     }
 
     /**

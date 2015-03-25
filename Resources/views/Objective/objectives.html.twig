@@ -12,12 +12,15 @@
         {{ 'info.no_learning_objectives'|trans }}
         {{ 'info.create_learning_objective'|trans }}
     </div>
-    <table id="objective-table"
-           class="table table-condensed table-bordered"
-           {% if length == 0 %} style="display: none"{% endif %}>
+    <table class="table table-condensed table-bordered objectives"
+           {% if length == 0 %}style="display: none"{% endif %}>
         <thead>
             <tr>
-                <th>{{ 'name'|trans({}, 'platform') }}</th>
+                <th>{{ 'objective_'|trans }}</th>
+                <th>{{ 'framework_'|trans }}</th>
+                <th>{{ 'level'|trans }}</th>
+                <th>{{ 'status'|trans({}, 'platform') }}</th>
+                <th colspan="5">{{ 'actions'|trans({}, 'platform') }}</th>
             </tr>
         </thead>
         <tbody>

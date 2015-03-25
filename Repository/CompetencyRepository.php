@@ -4,6 +4,7 @@ namespace HeVinci\CompetencyBundle\Repository;
 
 use Claroline\CoreBundle\Entity\Resource\Activity;
 use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
+use HeVinci\CompetencyBundle\Entity\Competency;
 
 class CompetencyRepository extends NestedTreeRepository
 {

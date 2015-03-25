@@ -29,6 +29,11 @@ class Objective implements \JsonSerializable
     private $name;
 
     /**
+     * @ORM\OneToMany(targetEntity="ObjectiveCompetency", mappedBy="objective")
+     */
+    private $objectiveCompetencies;
+
+    /**
      * @return integer
      */
     public function getId()

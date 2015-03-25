@@ -1,5 +1,46 @@
 {% twig_js name = 'ObjectiveRow' %}
 
-<tr data-id="{{ id }}">
+<tr data-id="{{ id }}" data-type="objective">
     <td>{{ name }}</td>
+    <td>-</td>
+    <td>-</td>
+    <td>-</td>
+    <td class="x-small-cell">
+        <a href="#"><i class="fa fa-search-plus"></i></a>
+    </td>
+    <td class="x-small-cell">
+        <a href="#"
+           data-toggle="tooltip"
+           data-placement="left"
+           title="{{ 'learners'|trans({}, 'competency') }}">
+            <i class="fa fa-user"></i>
+        </a>
+    </td>
+    <td class="x-small-cell">
+        <a href="#"
+           class="associate"
+           data-toggle="tooltip"
+           data-placement="left"
+           title="{{ 'competency.associate'|trans({}, 'competency') }}">
+            <i class="fa fa-plus"></i>
+        </a>
+    </td>
+    <td class="x-small-cell">
+        <a href="#"
+           class="edit"
+           data-toggle="tooltip"
+           data-placement="left"
+           title="{{ 'edit'|trans({}, 'platform') }}">
+            <i class="fa fa-pencil"></i>
+        </a>
+    </td>
+    <td class="x-small-cell">
+        <a href="#"
+           class="remove"
+           data-toggle="tooltip"
+           data-placement="left"
+           title="{{ 'delete'|trans({}, 'platform') }}">
+            <i class="fa fa-remove"></i>
+        </a>
+    </td>
 </tr>

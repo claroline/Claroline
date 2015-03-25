@@ -9,10 +9,10 @@
     $('button.associate-competency').on('click', picker.open.bind(picker));
     $(document).on('click', 'a.delete-association', onAssociationDeletion);
 
-    function onCompetencySelection(target) {
-        var url = target.type === 'ability' ?
-            Routing.generate('hevinci_activity_link_ability', { id: activityId, abilityId: target.id }) :
-            Routing.generate('hevinci_activity_link_competency', { id: activityId, competencyId: target.id });
+    function onCompetencySelection(selection) {
+        var url = selection.targetType === 'ability' ?
+            Routing.generate('hevinci_activity_link_ability', { id: activityId, abilityId: selection.targetId }) :
+            Routing.generate('hevinci_activity_link_competency', { id: activityId, competencyId: selection.targetId });
         $.post(url)
             .done(function (data, text, xhr) {
                 var message = 'message.competency_associated';

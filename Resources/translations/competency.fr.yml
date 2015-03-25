@@ -20,6 +20,7 @@ competency:
   edit: Modifier une compétence
 competency_: Compétence
 expand_all: Tout développer
+expected_level: Niveau attendu
 framework:
   create: Créer un référentiel
   delete: Supprimer un référentiel
@@ -39,6 +40,7 @@ info:
   no_frame_to_select: Aucun référentiel de compétences n'a encore été défini.
   no_scale: Il n'y a pas encore d'échelles. Vous pouvez créer une nouvelle échelle à l'aide du bouton ci-dessous.
   scale_levels: "Les degrés doivent être séparés par des retours à la ligne. Exemple :\n\nFacile\nMoyen\nDifficile"
+learners: Apprenants
 level: Niveau
 levels: Dégrés
 message:
@@ -59,7 +61,11 @@ message:
   framework_deleted: Référentiel supprimé avec succès.
   framework_deletion_confirm: Voulez-vous vraiment supprimer ce référentiel ? Cette action est irréversible.
   framework_edited: Référentiel modifié avec succès.
+  objective_competency_associated: Compétence associée avec succès.
   objective_created: Nouvel objectif créé avec succès.
+  objective_deleted: Objectif supprimé avec succès.
+  objective_deletion_confirm: Voulez-vous vraiment supprimer cet objectif ? Cette action est irréversible.
+  objective_edited: Objectif modifié avec succès.
   scale_created: Nouvelle échelle créée avec succès.
   scale_deleted: Échelle supprimée avec succès.
   scale_deletion_confirm: Voulez-vous vraiment supprimer cette échelle ?
@@ -68,6 +74,10 @@ message:
 objective:
   create: Créer un objectif d'apprentissage
   create_short: Créer un objectif
+  delete: Supprimer un objectif
+  edit: Éditer un objectif d'apprentissage
+  pick_level: 'Sélectionner le niveau de compétence à atteindre '
+objective_: Objectif
 objectives: Objectifs
 origin: Origine
 tooltip:

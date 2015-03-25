@@ -2,6 +2,11 @@ th.multi-col {
     text-align: center;
 }
 
+td.x-small-cell {
+    width: 34px;
+    text-align: center;
+}
+
 td.small-cell {
     width: 60px;
     text-align: center;
@@ -81,7 +86,13 @@ table.framework-activities > tbody > tr > td {
     font-weight: normal;
 }
 
-table.framework-activities td.level-0 {
+table.framework-activities td.competency-name,
+table.framework-activities td.ability-name {
+    border-style: dashed;
+}
+
+table.framework-activities td.level-0,
+table.objectives tr[data-type=objective] td:first-of-type {
     font-weight: bold;
 }
 
