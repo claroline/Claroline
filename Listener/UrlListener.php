@@ -105,13 +105,11 @@ class UrlListener
         );
         $form->handleRequest($this->request);
 
-        if($form->isValid())
-        {
-
+        if ($form->isValid()) {
             $url = $form->getData();
-
             $event->setResources(array($url));
             $event->stopPropagation();
+
             return;
         }
 
@@ -132,8 +130,9 @@ class UrlListener
      */
     public function onOpen(OpenResourceEvent $event)
     {
-        if(!$this->request)
+        if (!$this->request) {
             throw new NoHttpRequestException();
+        }
 
         $url = $event->getResource();
 
