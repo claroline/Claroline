@@ -62,7 +62,7 @@ class WorkspaceRegistrationQueueRepository extends EntityRepository
         $dql = "
             SELECT w
             FROM Claroline\CoreBundle\Entity\Workspace\WorkspaceRegistrationQueue w
-            FROM w.user u
+            JOIN w.user u
             WHERE w.workspace = :workspace
             AND (
                 UPPER(u.username) LIKE :search
