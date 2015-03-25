@@ -31,8 +31,11 @@
     </div>
 
     <div id='divPublish' class="alert alert-info" style='display:none'>
+        {% if qtiError is defined %}
+                <div class="alert alert-warning">{{ qtiError }}</div>
+            {% endif %}
         {% if is_granted('ADMINISTRATE', _resource) %}
-            {{ 'infoExerciseNoPuplished'|trans }} : 
+            {{ 'infoExerciseNoPuplished'|trans }} :
             <a id="btPublish" class="btn btn-primary" onclick="publish('{{ path('ujm_exercise_publish') }}', {{ entity.id }})">
                 <i class="fa fa-check"></i> {{ 'publish' | trans }}
             </a>
@@ -237,13 +240,13 @@
     {{ parent() }}
 
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/exercise.js') }}"></script>
-    
+
         {% if published == false %}
             <script language="JavaScript">displayBtPublish();</script>
         {% else %}
             <script language="JavaScript">hideBtPublish();</script>
         {% endif %}
-    
+
         {% if nbPapers == 0 and published == true %}
              <script language="JavaScript">displayBtUnpublish();</script>
         {% else %}

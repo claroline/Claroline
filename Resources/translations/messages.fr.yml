@@ -200,6 +200,7 @@ isInterupt: Interrompu
 image: Image
 import: Importer
 import QTI : Importer des questions au format QTI
+importQTIExercise: Importer les questions de l'exercice au format QTI
 import questions: Importer des questions
 infoSearchType: Si vous voulez faire une recherche par type, vous devez utiliser les mots clés suivants
 instruction add hole : Pour créer un trou, sélectionnez le texte à trouer dans l'éditeur "Texte à trous", puis cliquez sur le bouton "Créer un blanc".

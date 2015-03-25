@@ -387,19 +387,38 @@ class ExerciseController extends Controller
             $interactionsPager = $pagination[0];
             $pagerQuestion = $pagination[1];
 
-            return $this->render(
-                'UJMExoBundle:Question:exerciseQuestion.html.twig',
-                array(
-                    'workspace'            => $workspace,
-                    'interactions'         => $interactionsPager,
-                    'exerciseID'           => $id,
-                    'questionWithResponse' => $questionWithResponse,
-                    'pagerQuestion'        => $pagerQuestion,
-                    'displayAll'           => $displayAll,
-                    'allowEdit'            => $allowEdit,
-                    '_resource'            => $exercise
-                )
-            );
+            // if upload a none qti file
+            if ( $request->get('qtiError') ) {
+                return $this->render(
+                    'UJMExoBundle:Question:exerciseQuestion.html.twig',
+                    array(
+                        'workspace'            => $workspace,
+                        'interactions'         => $interactionsPager,
+                        'exerciseID'           => $id,
+                        'questionWithResponse' => $questionWithResponse,
+                        'pagerQuestion'        => $pagerQuestion,
+                        'displayAll'           => $displayAll,
+                        'allowEdit'            => $allowEdit,
+                        '_resource'            => $exercise,
+                        'qtiError'              => $request->get('qtiError')
+                    )
+                );
+            } else {
+                return $this->render(
+                    'UJMExoBundle:Question:exerciseQuestion.html.twig',
+                    array(
+                        'workspace'            => $workspace,
+                        'interactions'         => $interactionsPager,
+                        'exerciseID'           => $id,
+                        'questionWithResponse' => $questionWithResponse,
+                        'pagerQuestion'        => $pagerQuestion,
+                        'displayAll'           => $displayAll,
+                        'allowEdit'            => $allowEdit,
+                        '_resource'            => $exercise
+                    )
+                );
+            }
+
         } else {
             return $this->redirect($this->generateUrl('ujm_exercise_open', array('exerciseId' => $id)));
         }
@@ -1797,15 +1816,15 @@ class ExerciseController extends Controller
 
     /**
      * For export all questions of an exercise
-     * 
+     *
      * @return $response
      */
     public function exportQuestionsExerciseAction() {
         $request = $this->container->get('request');
         $exoID = $request->get('exoID');
         $title  = $request->get('exoName');
-        
-        
+
+
         $qtiRepos = $this->container->get('ujm.qti_repository');
         $qtiRepos->createDirQTI($title, TRUE);
 
@@ -1814,22 +1833,22 @@ class ExerciseController extends Controller
         $interactions = $interRepos->getExerciseInteraction(
                 $this->container->get('doctrine')->getManager(),
                 $exoID, FALSE);
-        
+
         $this->createQuestionsDirectory($qtiRepos, $interactions);
         $qdirs = $this->sortPathOfQuestions($qtiRepos);
 
         $tmpFileName = $qtiRepos->getUserDir().'zip/'.$title.'_qestion_qti.zip';
-        
+
         $zip = new \ZipArchive();
         $zip->open($tmpFileName, \ZipArchive::CREATE);
-        
+
         foreach ($qdirs as $dir) {
             $iterator = new \DirectoryIterator($dir);
                 foreach ($iterator as $element) {
                     if (!$element->isDot() && $element->isFile() && $element->getExtension() != "xml") {
                         $path = $element->getPath();
                         $partDirectory = str_replace('./uploads/ujmexo/qti/admin/'.$title.'/questions/questionDoc_','', $path);
-                        
+
                         $zip->addFile($element->getPathname(), $title.'/question_'.$partDirectory.'/'.$element->getFilename());
                     }
                     if (!$element->isDot() && $element->isFile() && $element->getExtension() == "xml") {
@@ -1840,7 +1859,7 @@ class ExerciseController extends Controller
                 }
         }
         $zip->close();
-        
+
         $exerciseSer = $this->container->get('ujm.exercise_services');
         $response = $exerciseSer->createZip($tmpFileName,$title);
 
@@ -1849,9 +1868,9 @@ class ExerciseController extends Controller
 
     /**
      * create the directory questions to export an exercise and export the qti files
-     * 
+     *
      * @param type $qtiRepos
-     * 
+     *
      * @param type $interactions
      */
     private function createQuestionsDirectory($qtiRepos, $interactions) {
@@ -1878,9 +1897,9 @@ class ExerciseController extends Controller
 
     /**
      * sort the paths of questions
-     * 
+     *
      * @param type $qtiRepos
-     * 
+     *
      * @return string
      */
     private function sortPathOfQuestions($qtiRepos) {

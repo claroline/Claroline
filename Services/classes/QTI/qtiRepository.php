@@ -166,6 +166,9 @@ class qtiRepository {
                                 return 'qti unsupported format';
                             }
                         }
+                        if ($this->exercise != null) {
+                            $this->addQuestionInExercise($interX);
+                        }
                     }
                 }
             }
@@ -176,9 +179,6 @@ class qtiRepository {
             closedir($dh);
         }
 
-        if ($this->exercise != null) {
-            $this->addQuestionInExercise($interX);
-        }
         $this->removeDirectory();
 
         return true;
@@ -236,9 +236,10 @@ class qtiRepository {
         $this->exercise = $exercise;
         $scanFile = $this->scanFiles();
         $this->exercise = null;
-
-        if ($scanFile ==true ) {
+        if ($scanFile === true ) {
             return true;
+        } else {
+            return $scanFile;
         }
     }
 
@@ -252,7 +253,7 @@ class qtiRepository {
     {
         $exoServ = $this->container->get('ujm.exercise_services');
 
-//        for differenciate import one question in an exercice or if import a workspace
+        // for differenciate import one question in an exercice or if import a workspace
         if (is_numeric($this->exercise)) {
             $exoServ->setExerciseQuestion($this->exercise, $interX);
         } else {
