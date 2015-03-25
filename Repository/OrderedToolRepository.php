@@ -258,9 +258,6 @@ class OrderedToolRepository extends EntityRepository
         $executeQuery = true
     )
     {
-        $excludedToolNames[] = 'home';
-        $excludedToolNames[] = 'parameters';
-
         $dql = '
             SELECT ot
             FROM Claroline\CoreBundle\Entity\Tool\OrderedTool ot
@@ -281,6 +278,7 @@ class OrderedToolRepository extends EntityRepository
     }
 
     public function findConfigurableDesktopOrderedToolsByTypeForAdmin(
+        array $excludedToolNames,
         $type = 0,
         $executeQuery = true
     )
@@ -292,20 +290,19 @@ class OrderedToolRepository extends EntityRepository
             WHERE ot.workspace IS NULL
             AND ot.user IS NULL
             AND ot.type = :type
-            AND t.name != :home
-            AND t.name != :parameters
+            AND t.name NOT IN (:excludedToolNames)
             ORDER BY ot.order
         ';
 
         $query = $this->_em->createQuery($dql);
-        $query->setParameter('home', 'home');
-        $query->setParameter('parameters', 'parameters');
         $query->setParameter('type', $type);
+        $query->setParameter('excludedToolNames', $excludedToolNames);
 
         return $executeQuery ? $query->getResult() : $query;
     }
 
     public function findLockedConfigurableDesktopOrderedToolsByTypeForAdmin(
+        array $excludedToolNames,
         $type = 0,
         $executeQuery = true
     )
@@ -318,14 +315,12 @@ class OrderedToolRepository extends EntityRepository
             AND ot.user IS NULL
             AND ot.type = :type
             AND ot.locked = true
-            AND t.name != :home
-            AND t.name != :parameters
+            AND t.name NOT IN (:excludedToolNames)
             ORDER BY ot.order
         ';
 
         $query = $this->_em->createQuery($dql);
-        $query->setParameter('home', 'home');
-        $query->setParameter('parameters', 'parameters');
+        $query->setParameter('excludedToolNames', $excludedToolNames);
         $query->setParameter('type', $type);
 
         return $executeQuery ? $query->getResult() : $query;
