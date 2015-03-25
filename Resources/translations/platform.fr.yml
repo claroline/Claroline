@@ -671,6 +671,7 @@ password_ok: 'Votre mot de passe a été modifié. Vous pouvez maintenant vous c
 paste: Coller
 path: Emplacement
 pending: En attente
+pending_users_list: 'Liste des utilisateurs en attente'
 permissions: Permissions
 personal_data: 'Aucune donnée personnelle ne sera récupérée. Les données techniques et statistiques récupérées seront exclusivement utilisées en relation avec le projet Claroline Connect et ne seront pas autrement diffusées.'
 personal_workspace: 'Espace personnel'
@@ -1173,6 +1174,6 @@ activate_maintenance_mode: Vous devriez activer le mode de maintenance afin de s
 install_update_cant_be_undone: Les opérations d'installation et de mise à jour ne peuvent pas être annulées.
 list_view: Vue en liste (beta)
 created_by: Créé par %creator% le %creationDate%
-updated_by: Dernière màj: %modificationDate%
+updated_by: 'Dernière màj: %modificationDate%'
 display_at_registration: Afficher à la création du compte
 workspace_max_users: Nombre maximal d'utilisateur par espace d'activité

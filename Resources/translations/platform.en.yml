@@ -668,6 +668,7 @@ password_ok: 'Your password has been changed, you can login now'
 paste: Paste
 path: Path
 pending: 'Pending'
+pending_users_list: 'Pending users list'
 permissions: Permissions
 personal_data: 'No personal data will be retrieved. The technical and statistical data collected will be used only in relation to the Claroline Connect project and will not be otherwise broadcast.'
 personal_workspace: 'Personal workspace'
@@ -1167,6 +1168,6 @@ install_update_cant_be_undone: Once an operation is started, it cannot be undone
 list_view: List view (beta)
 last_modification: Last modification
 created_by: Created by %creator% the %creationDate%
-updated_by: Last update: %modificationDate%
+updated_by: 'Last update: %modificationDate%'
 display_at_registration: Display at registration
 workspace_max_users: Maximum number of user per workspace
