@@ -2,23 +2,29 @@
 
 portfolioApp
     .controller("widgetController", ["$scope", "widgetsManager", function($scope, widgetsManager) {
-        $scope.edit = function(widget) {
-            widgetsManager.edit(widget);
+        $scope.edit = function() {
+            widgetsManager.edit($scope.widget);
         };
 
-        $scope.cancelEdition = function(widget) {
-            widgetsManager.cancelEditing(widget, true);
+        $scope.cancelEdition = function() {
+            widgetsManager.cancelEditing($scope.widget, true);
         };
 
-        $scope.save = function(widget) {
-            return widgetsManager.save(widget);
+        $scope.save = function() {
+            return widgetsManager.save($scope.widget);
         };
 
-        $scope.isDeletable = function(widget) {
-            return widgetsManager.isDeletable(widget);
+        $scope.isDeletable = function() {
+            return widgetsManager.isDeletable($scope.widget);
         };
 
-        $scope.delete = function(widget) {
-            widgetsManager.delete(widget);
-        }
+        $scope.delete = function() {
+            widgetsManager.delete($scope.widget);
+        };
+
+        $scope.$watchGroup(['widget.row','widget.col','widget.sizeX','widget.sizeY'], function(newValue, oldValue) {
+            if (newValue !== oldValue) {
+                $scope.widget.toSave = true;
+            }
+        });
     }]);

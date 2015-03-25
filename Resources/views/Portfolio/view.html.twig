@@ -7,14 +7,13 @@
 
 {% block content_container %}
     <div id="portfolio-section" data-portfolio-container="{{ portfolio.id }}">
-        <div id="portfolio-container" data-ng-if="portfolio.$resolved">
+        <div id="portfolio-container"{% if not viewMode %} data-ng-if="portfolio.$resolved"{% endif %}>
             <header>
                 <div class="container">
                     <h1 id="username">{{ portfolio.user.firstName ~ ' ' ~ portfolio.user.lastName }}</h1>
-
-                    <div data-ng-repeat="widget in widgets | filter:{type: 'title'}" data-ng-show="widgets.length > 0">
-                        <div class="portfolio-title-container{% if not editMode %} margin{% endif %}" data-widget>
-                            {% if constant('Icap\\PortfolioBundle\\Manager\\PortfolioManager::PORTFOLIO_OPENING_MODE_VIEW') != openingMode %}
+                    {% if not viewMode %}
+                        <div data-ng-repeat="widget in widgets | filter:{type: 'title'} track by widget.id" data-ng-show="widgets.length > 0">
+                            <div class="portfolio-title-container{% if not editMode %} margin{% endif %}" data-widget>
                                 <div class="portfolio-title" data-ng-bind-html="widget.views.view" data-ng-show="!widget.editing && !widget.views.form"></div>
                                 <div class="widget-actions">
                                 {% if editMode %}
@@ -30,50 +29,14 @@
                                     <button type="submit" class="btn btn-md btn-primary">{{ 'save'|trans({}, 'platform') }}</button>
                                     <button type="button" class="btn btn-md btn-default" data-ng-click="cancelEdition(widget)">{{ 'cancel'|trans({}, 'platform') }}</button>
                                 </form>
-                            {% else %}
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="portfolio-title-container margin">
+                            <div class="portfolio-title">
                                 {% include 'IcapPortfolioBundle:templates:title.html.twig' with {'widget': titleWidget} only %}
-                            {% endif %}
+                            </div>
                         </div>
-                    </div>
-                    {% if editMode %}
-                    <div class="configuration_panel">
-                        <div class="row">
-                            <p class="configuration_panel_button col-md-2 col-md-offset-5" data-ng-click="configurationPanelOpen = !configurationPanelOpen" role="button">
-                                <span class="fa fa-cog"></span> {{ 'configuration' | trans({}, 'icap_portfolio') }}
-                            </p>
-                        </div>
-                        <div class="row configuration_panel_container" data-ng-show="configurationPanelOpen">
-                            <h3>{{ 'disposition' | trans({}, 'icap_portfolio') }}</h3>
-                            <ul class="dispositions">
-                                <li class="disposition" data-ng-class="{'selected': portfolio.disposition == 0, 'idle': !changing, 'loading': changing}" data-ng-click="changeDisposition(0)">
-                                    <div>
-                                        <div class="col-md-12 border">1</div>
-                                    </div>
-                                </li>
-                                <li class="disposition" data-ng-class="{'selected': portfolio.disposition == 1, 'idle': !changing, 'loading': changing}" data-ng-click="changeDisposition(1)">
-                                    <div>
-                                        <div class="col-md-6 border">1</div>
-                                        <div class="col-md-6 border">2</div>
-                                    </div>
-                                </li>
-                                <li class="disposition" data-ng-class="{'selected': portfolio.disposition == 2, 'idle': !changing, 'loading': changing}" data-ng-click="changeDisposition(2)">
-                                    <div>
-                                        <div class="col-md-4 border">1</div>
-                                        <div class="col-md-4 border">2</div>
-                                        <div class="col-md-4 border">3</div>
-                                    </div>
-                                </li>
-                                <li class="disposition" data-ng-class="{'selected': portfolio.disposition == 3, 'idle': !changing, 'loading': changing}" data-ng-click="changeDisposition(3)">
-                                    <div>
-                                        <div class="col-md-3 border">1</div>
-                                        <div class="col-md-3 border">2</div>
-                                        <div class="col-md-3 border">3</div>
-                                        <div class="col-md-3 border">4</div>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
                     {% endif %}
                 </div>
             </header>
@@ -127,100 +90,45 @@
                 </div>
                 {% endif %}
 
-                <div class="main-content col-md-10 col-md-offset-1"{% if not viewMode %} data-design-container{% endif %}>
+                <div class="main-content col-md-10 col-md-offset-1"{% if viewMode %} data-ng-controller="viewCtrl"{% endif %}>
                     {% if not viewMode %}
-                        <div data-ng-repeat="widget in widgets | filter:{type: '!title'} | orderBy:'+row'" data-ng-if="0 == portfolio.disposition">
-                            {% include 'IcapPortfolioBundle:templates:widget.html.twig' %}
-                        </div>
                         {% if editMode %}
-                        <div data-ng-include="'templates/menu_widget-type.tpl.html'" data-ng-if="0 == portfolio.disposition">
+                        <div data-ng-include="'templates/menu_widget-type.tpl.html'">
                         </div>
                         {% endif %}
-                        <div data-ng-if="1 == portfolio.disposition">
-                            <ul class="col-md-6 list-unstyled" data-ng-repeat="col in cols">
-                                <li data-ng-repeat="widget in widgets | filter:{type: '!title', column: col} | orderBy:'+row'">
-                                    {% include 'IcapPortfolioBundle:templates:widget.html.twig' %}
-                                </li>
-                                {% if editMode %}
-                                <li data-ng-include="'templates/menu_widget-type.tpl.html'">
-                                </li>
-                                {% endif %}
-                            </ul>
-                        </div>
-                        <div data-ng-if="2 == portfolio.disposition">
-                            <ul class="col-md-4 list-unstyled" data-ng-repeat="col in cols">
-                                <li data-ng-repeat="widget in widgets | filter:{type: '!title', column: col} | orderBy:'+row'">
-                                    {% include 'IcapPortfolioBundle:templates:widget.html.twig' %}
-                                </li>
-                                {% if editMode %}
-                                <li data-ng-include="'templates/menu_widget-type.tpl.html'">
-                                </li>
-                                {% endif %}
-                            </ul>
-                        </div>
-                        <div data-ng-if="3 == portfolio.disposition">
-                            <ul class="col-md-3 list-unstyled" data-ng-repeat="col in cols">
-                                <li data-ng-repeat="widget in widgets | filter:{type: '!title', column: col} | orderBy:'+row'">
-                                    {% include 'IcapPortfolioBundle:templates:widget.html.twig' %}
-                                </li>
-                                {% if editMode %}
-                                <li data-ng-include="'templates/menu_widget-type.tpl.html'">
-                                </li>
-                                {% endif %}
-                            </ul>
-                        </div>
+                        <p class="no-data well" data-ng-show="widgets.length <= 1">
                         {% if editMode %}
-                        <p class="no-data well" data-ng-show="widgets.length <= 1">{{ 'no_widget'|trans({}, 'icap_portfolio')|raw }}</p>
+                            {{ 'no_widget'|trans({}, 'icap_portfolio')|raw }}
                         {% else %}
-                        <p class="no-data well" data-ng-show="widgets.length <= 1">{{ 'portfolio_empty'|trans({}, 'icap_portfolio')|raw }}</p>
+                            {{ 'portfolio_empty'|trans({}, 'icap_portfolio')|raw }}
                         {% endif %}
+                        </p>
+                        <ul class="list-unstyled" data-gridster="gridsterOptions">
+                            <li data-gridster-item="widget" data-ng-repeat="widget in widgets | filter:{type: '!title'} | orderBy:'+row +col' track by widget.id">
+                                {% include 'IcapPortfolioBundle:templates:widget.html.twig' %}
+                            </li>
+                        </ul>
                     {% else %}
-                        {% set widgets = portfolio.widgets %}
-                        {% if 1 < widgets.count %}
-                            {% if 0 == portfolio.disposition %}
-                                {% for widget in widgets | orderByRow if 'title' != widget.widgetType %}
-                                    {% include 'IcapPortfolioBundle:templates:widget.html.twig' %}
-                                {% endfor %}
-                            {% elseif 1 == portfolio.disposition %}
-                                {% for col in cols %}
-                                    <ul class="col-md-6 list-unstyled">
-                                        {% for widget in widgets | orderByRow if 'title' != widget.widgetType and col == widget.column  %}
-                                            <li>
-                                                {% include 'IcapPortfolioBundle:templates:widget.html.twig' %}
-                                            </li>
-                                        {% endfor %}
-                                    </ul>
-                                {% endfor %}
-                            {% elseif 2 == portfolio.disposition %}
-                                {% for col in cols %}
-                                    <ul class="col-md-4 list-unstyled">
-                                        {% for widget in widgets | orderByRow if 'title' != widget.widgetType and col == widget.column %}
-                                            <li>
-                                                {% include 'IcapPortfolioBundle:templates:widget.html.twig' %}
-                                            </li>
-                                        {% endfor %}
-                                    </ul>
-                                {% endfor %}
-                            {% elseif 3 == portfolio.disposition %}
-                                {% for col in cols %}
-                                    <ul class="col-md-3 list-unstyled">
-                                        {% for widget in widgets | orderByRow if 'title' != widget.widgetType and col == widget.column %}
-                                            <li>
-                                                {% include 'IcapPortfolioBundle:templates:widget.html.twig' %}
-                                            </li>
-                                        {% endfor %}
-                                    </ul>
-                                {% endfor %}
-                            {% endif %}
-                        {% else %}
-                            <p class="no-data well">{{ 'portfolio_empty'|trans({}, 'icap_portfolio') }}</p>
-                        {% endif %}
+                            <ul class="list-unstyled ng-cloak" data-gridster="gridsterOptions" data-ng-show="widgets.length">
+                                <li data-gridster-item="widget" data-ng-repeat="widget in widgets | filter:{type: '!title'} | orderBy:'+row +col' track by widget.id">
+                                    <div class="panel panel-default widget-panel">
+                                        <div class="panel-heading">
+                                            {% verbatim %}{{ widget.label }}{% endverbatim %}
+                                        </div>
+                                        <div class="panel-body">
+                                            <div data-ng-bind-html="widget.views.view"></div>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                            <p class="no-data well ng-cloak" data-ng-show="!widgets.length">{{ 'portfolio_empty'|trans({}, 'icap_portfolio') }}</p>
+                            <div class="well" data-ng-show="widgets"><p class="loading loading_view"></p></div>
                     {% endif %}
                 </div>
             </section>
         </div>
 
-        {% if constant('Icap\\PortfolioBundle\\Manager\\PortfolioManager::PORTFOLIO_OPENING_MODE_VIEW') != openingMode %}
+        {% if not viewMode %}
             <div data-ng-show="!portfolio.$resolved" id="portfolio-loading"></div>
         {% endif %}
     </div>
@@ -233,6 +141,7 @@
       "@IcapPortfolioBundle/Resources/views/less/interface.less"
       "bundles/frontend/jquery/plugin/datepicker/css/datepicker.css"
       "bundles/icapportfolio/css/angular-motion/angular-motion.min.css"
+      "bundles/icapportfolio/css/angular-gridster/angular-gridster.less"
     %}
         <link rel="stylesheet" href="{{ asset_url }}" screen="media" />
     {% endstylesheets %}
@@ -241,7 +150,7 @@
 {% block javascripts %}
     {{ parent() }}
 
-    {% if constant('Icap\\PortfolioBundle\\Manager\\PortfolioManager::PORTFOLIO_OPENING_MODE_VIEW') != openingMode %}
+    {% if not viewMode %}
         <script type="text/javascript">
             'use strict';
             (function() {
@@ -263,9 +172,9 @@
             <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/datepicker/js/locales/bootstrap-datepicker.' ~ app.request.locale ~ '.js') }}"></script>
         {% endif %}
 
-        {% javascripts debug=true filter='jsmin' output='js/portfolio/portfolio/vendor.js'
+        {% javascripts debug=true output='js/portfolio/portfolio/vendor.js'
             '@ClarolineCoreBundle/Resources/public/js/tinymce/tinymce.js'
-            '@ClarolineCoreBundle/Resources/public/js/badge/badge_picker.js'
+            '@IcapBadgeBundle/Resources/public/js/badge_picker.js'
             '@StfalconTinymceBundle/Resources/public/vendor/tinymce/tinymce.jquery.min.js'
             '@StfalconTinymceBundle/Resources/public/vendor/tinymce/jquery.tinymce.min.js'
             '@FrontEndBundle/Resources/public/jquery/plugin/confirm-bootstrap/confirm-bootstrap.js'
@@ -282,6 +191,8 @@
             '@IcapPortfolioBundle/Resources/public/js/vendor/angular-strap/tooltip.tpl.min.js'
             '@IcapPortfolioBundle/Resources/public/js/vendor/angular-strap/popover.min.js'
             '@IcapPortfolioBundle/Resources/public/js/vendor/angular-strap/popover.tpl.min.js'
+            '@IcapPortfolioBundle/Resources/public/js/vendor/javascript-detect-element-resize/jquery.resize.js'
+            '@IcapPortfolioBundle/Resources/public/js/vendor/angular-gridster/angular-gridster.js'
         %}
             <script type="text/javascript" src="{{ asset_url }}"></script>
         {% endjavascripts %}
@@ -291,7 +202,6 @@
             '@IcapPortfolioBundle/Resources/public/js/portfolio/portfolioApp.js'
             '@IcapPortfolioBundle/Resources/public/js/portfolio/controllers/portfolioController.js'
             '@IcapPortfolioBundle/Resources/public/js/portfolio/controllers/widgetController.js'
-            '@IcapPortfolioBundle/Resources/public/js/portfolio/controllers/designController.js'
             '@IcapPortfolioBundle/Resources/public/js/portfolio/controllers/collectionFormController.js'
             '@IcapPortfolioBundle/Resources/public/js/portfolio/controllers/commentController.js'
             '@IcapPortfolioBundle/Resources/public/js/portfolio/services/portfolioFactory.js'
@@ -307,7 +217,6 @@
             '@IcapPortfolioBundle/Resources/public/js/portfolio/directives/loadingFormDirective.js'
             '@IcapPortfolioBundle/Resources/public/js/portfolio/directives/confirmClickDirective.js'
             '@IcapPortfolioBundle/Resources/public/js/portfolio/directives/collectionFormDirective.js'
-            '@IcapPortfolioBundle/Resources/public/js/portfolio/directives/designDirective.js'
             '@IcapPortfolioBundle/Resources/public/js/portfolio/directives/resourcePickerDirective.js'
             '@IcapPortfolioBundle/Resources/public/js/portfolio/directives/datepickerDirective.js'
             '@IcapPortfolioBundle/Resources/public/js/portfolio/directives/badgePickerDirective.js'
@@ -319,5 +228,44 @@
         %}
             <script type="text/javascript" src="{{ asset_url }}"></script>
         {% endjavascripts %}
+    {% else %}
+        {% javascripts debug=true output='js/portfolio/portfolio/vendor_view.js'
+            '@InnovaAngularJSBundle/Resources/public/js/angular.min.js'
+            '@InnovaAngularJSBundle/Resources/public/js/angular-sanitize.min.js'
+            '@IcapPortfolioBundle/Resources/public/js/vendor/angular-gridster/angular-gridster.js'
+        %}
+            <script type="text/javascript" src="{{ asset_url }}"></script>
+        {% endjavascripts %}
+        <script type="text/javascript">
+            'use strict';
+            (function() {
+                var viewApp = angular.module('viewApp', ['ngSanitize', 'gridster']);
+
+                // Bootstrap portfolio application
+                angular.element(document).ready(function() {
+                    angular.bootstrap(document, ['viewApp'], {strictDi: true});
+                });
+
+                viewApp.controller('viewCtrl', ['$scope', function ($scope) {
+                    $scope.gridsterOptions = {
+                        columns:    8, // the width of the grid, in columns
+                        swapping:   true, // whether or not to have items of the same size switch places instead of pushing down if they are the same size
+                        floating:   true, // whether to automatically float items up so they stack (you can temporarily disable if you are adding unsorted items with ng-repeat)
+                        margins:    [10, 10], // the pixel distance between each widget
+                        minColumns: 1, // the minimum columns the grid must have
+                        minRows:    1, // the minimum height of the grid, in rows
+                        maxRows:    100,
+                        resizable: {
+                            enabled: false
+                        },
+                        draggable: {
+                            enabled: false
+                        }
+                    };
+
+                    $scope.widgets = {{ widgets|json_encode()|raw }};
+                }]);
+            })();
+        </script>
     {% endif %}
 {% endblock %}
