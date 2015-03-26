@@ -209,15 +209,15 @@ function advancedEdition(idTextarea,e){
     if (textarea.hasClass("claroline-tiny-mce hide")) {
 
          //$(".mce-tinymce mce-container mce-panel").remove();
-   
+   // tinyMCE.activeEditor.remove();
        
  //       textarea.removeClass("mce-tinymce mce-container mce-panel");
-//           $("#"+idProposalVal).removeClass("claroline-tiny-mce");
-//            $("#"+idProposalVal).removeClass("hide");
-//            $("#"+idProposalVal).removeAttr('style');
-//            $("#"+idProposalVal).removeData("data-theme");
-//            $("#"+idProposalVal).parent('td').children('div').addClass("hide");
-//            $("#"+idProposalVal).parent('td').find('a').text(advEditionLang);
+//           $(textarea).removeClass("claroline-tiny-mce");
+//            $(textarea).removeClass("hide");
+//            $(textarea).removeAttr('style');
+//            $(textarea).removeData("data-theme");
+//            $(textarea).parent('td').children('div').addClass("hide");
+//            $(textarea).parent('td').find('a').text(advEditionLang);
 
         } else {
             
@@ -242,6 +242,8 @@ function displayOptionalFields(){
   var valDescription =$("*[id$='_interaction_question_description']").text();
   //Id QCM response
   var valReplyQCM =$("*[id$='_label']").text();
+  //Value of feelback
+  var valFeedback = $("*[id$='_interaction_feedBack']").text();
 
   //Test category
   if(idCatSelect !== "" )
@@ -264,5 +266,10 @@ function displayOptionalFields(){
   {
       $("*[id$='_label']").addClass("claroline-tiny-mce hide");
       $("*[id$='_label']").data("data-theme","advanced");
+  }
+  //Test feedback
+  if(valFeedback !== "")
+  {
+      $("#collepseinteraction").collapse('show'); 
   }
 }
