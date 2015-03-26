@@ -1,9 +1,7 @@
 <?php
 namespace Innova\CollecticielBundle\Manager;
 
-use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Manager\MaskManager;
-use Claroline\CoreBundle\Entity\User;
 use Innova\CollecticielBundle\Entity\Dropzone;
 use Innova\CollecticielBundle\Entity\Drop;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -188,7 +186,7 @@ class DropzoneManager
                 if ($drop->getFinished()) {
                     $currentState++;
                 }
-                // @TODO manage invalidated corrections. 
+                // @TODO manage invalidated corrections.
                 //  update the state with the correction number.
                 if ($nbCorrection > $expectedCorrections) {
                     $nbCorrection = $expectedCorrections;

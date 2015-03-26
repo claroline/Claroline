@@ -7,10 +7,7 @@
 
 namespace Innova\CollecticielBundle\Repository;
 
-
 use Doctrine\ORM\EntityRepository;
-use Innova\CollecticielBundle\Entity\Dropzone;
-use Claroline\CoreBundle\Entity\User;
 
 class CorrectionRepository extends EntityRepository {
 

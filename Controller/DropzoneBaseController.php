@@ -9,8 +9,6 @@
 namespace Innova\CollecticielBundle\Controller;
 
 use Claroline\CoreBundle\Event\Log\LogResourceReadEvent;
-use Claroline\CoreBundle\Library\Resource\ResourceCollection;
-use Innova\CollecticielBundle\Entity\Dropzone;
 /** Partie log créé pour Innova */
 use Innova\CollecticielBundle\Event\Log\LogCommentCreateEvent;
 use Innova\CollecticielBundle\Event\Log\LogCommentReadCreateEvent;
@@ -32,7 +30,6 @@ use Innova\CollecticielBundle\Event\Log\LogDropStartEvent;
 use Innova\CollecticielBundle\Event\Log\LogDropzoneConfigureEvent;
 use Innova\CollecticielBundle\Event\Log\LogDropzoneManualStateChangedEvent;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class DropzoneBaseController extends Controller
 {

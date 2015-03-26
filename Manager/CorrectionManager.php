@@ -1,9 +1,7 @@
 <?php
 namespace Innova\CollecticielBundle\Manager;
 
-use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Manager\MaskManager;
-use Claroline\CoreBundle\Entity\User;
 use Innova\CollecticielBundle\Entity\Correction;
 use Innova\CollecticielBundle\Entity\Dropzone;
 use Innova\CollecticielBundle\Event\Log\LogCorrectionUpdateEvent;
