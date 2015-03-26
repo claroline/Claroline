@@ -141,9 +141,10 @@ abstract class InteractionHandler
         $invite =  $this->form->getData()->getInteraction()->getInvite();
         if($title->getTitle() == "")
         {
-            $provTitle=substr($invite,0,50);
-            //removes html tags
-            $newTitle=strip_tags($provTitle);
+            //removes html tags and entity code html
+            $provTitle=html_entity_decode(strip_tags($invite));
+                       
+            $newTitle=substr($provTitle,0,50);  
             $title->setTitle($newTitle);
         }
     }

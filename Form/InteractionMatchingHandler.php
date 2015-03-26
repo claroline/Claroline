@@ -20,6 +20,7 @@ class InteractionMatchingHandler extends InteractionHandler
             $this->form->handleRequest($this->request);
              //Uses the default category if no category selected
             $this->checkCategory();
+            $this->checkTitle();
             if ( $this->validateNbClone() === FALSE ) {
                 
                 return 'infoDuplicateQuestion';
