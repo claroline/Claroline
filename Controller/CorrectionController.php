@@ -758,7 +758,6 @@ class CorrectionController extends DropzoneBaseController
                     $comment_read_add->setUser($user);
 
                     $em->persist($comment_read_add);
-                    $em->flush();
 
                     $unitOfWork = $em->getUnitOfWork();
                     $unitOfWork->computeChangeSets();
@@ -768,6 +767,8 @@ class CorrectionController extends DropzoneBaseController
 
                     $this->dispatch($event);
                 }
+
+                $em->flush();
 
             }
             // Fin ajout.
@@ -1760,21 +1761,6 @@ class CorrectionController extends DropzoneBaseController
             }
         }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     /**
      * @Route(

@@ -440,40 +440,54 @@ class DropRepository extends EntityRepository
     */
 
     /**
-     *  Pour compter les commentaires non lus
+     *  Pour compter les commentaires non lus pour l'utilisateur indiqué
      * @param $userId
     */
     public function countCommentNotRead($userId)
     {
 
-         $query = $this->getEntityManager()->createQuery(
-            "SELECT count(d.id) \n" .
-            "FROM Innova\\CollecticielBundle\\Entity\\Drop AS d \n" .
-            "WHERE d.finished = true \n" .
-            "AND d.dropzone = :dropzone \n")
-            ->setParameter('dropzone', $dropzone);
-        $result = $query->getSingleScalarResult();
+        $dql = "
+        SELECT count(id) FROM Innova\CollecticielBundle\Entity\Comment c
+        WHERE id NOT IN (
+            SELECT DISTINCT comment FROM InnovaCollecticielBundle:CommentRead cr
+            )
+        AND c.user = :userId
+        ";
 
-        return $result;
+        $query = $this->_em->createQuery($dql);
 
-   }
+        $query->setParameter('userId', $userId());
+
+        return $query;
+    }
 
     /**
-     *  Pour compter les devoirs à corriger
+     *  Pour compter les devoirs à corriger pour l'utilisateur indiqué
      * @param $userId
     */
     public function countTextToRead($userId)
     {
 
-        $query = $this->getEntityManager()->createQuery(
-            "SELECT count(d.id) \n" .
-            "FROM Innova\\CollecticielBundle\\Entity\\Drop AS d \n" .
-            "WHERE d.finished = true \n" .
-            "AND d.dropzone = :dropzone \n")
-            ->setParameter('dropzone', $dropzone);
-        $result = $query->getSingleScalarResult();
 
-        return $result;
+        // $dql = "
+        //     select count(*)
+        //     from innova\collecticielbundle\entity\document doc
+        //     left join innova_collecticielbundle_drop
+        //     on innova_collecticielbundle_document.drop_id = innova_collecticielbundle_drop.id
+        //     where doc.validate = true
+        //     and user_id = 2
+        // ";
+
+       $qb = $this->createQueryBuilder('document')
+            ->select('drop, document')
+            ->andWhere('document.validate = true')
+            ->andWhere('drop.user_id = :userId')
+            ->leftJoin('drop.documents', 'document')
+            ->setParameter('userId', $userId);
+
+        $numberDocuments = count($qb->getQuery()->getResult());
+
+        return $numberDocuments;
 
     }
 }

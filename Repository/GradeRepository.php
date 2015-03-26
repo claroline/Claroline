@@ -7,7 +7,6 @@
 
 namespace Innova\CollecticielBundle\Repository;
 
-
 use Doctrine\ORM\EntityRepository;
 
 class GradeRepository extends EntityRepository {

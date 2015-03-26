@@ -178,6 +178,7 @@ class DropController extends DropzoneBaseController
         $array['nbDropCorrected'] = $dropRepo->countDropsFullyCorrected($dropzone);
         $array['nbDrop'] = $dropRepo->countDrops($dropzone);
 
+//var_dump($dropRepo->getUser()->getId());die();
         /** InnovaERV : ajout pour calculer les 2 zones **/
 //        $documents = $dropRepo->getDocuments();
 //        $array['nbCommentNotRead'] = $dropRepo->countCommentNotRead($dropRepo->getUser()->getId());
@@ -986,6 +987,5 @@ class DropController extends DropzoneBaseController
             )
         );
     }
-
 
 }
