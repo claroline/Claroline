@@ -482,6 +482,10 @@ class ResourceManager
         $this->om->endFlushSuite();
     }
 
+    /**
+     * @param ResourceNode $parent
+     * @param integer      $index
+     */
     public function shiftRightAt(ResourceNode $parent, $index)
     {
         $nodes = $parent->getChildren();
@@ -496,6 +500,10 @@ class ResourceManager
         $this->om->flush();
     }
 
+    /**
+     * @param ResourceNode $parent
+     * @param integer      $index
+     */
     public function shiftLeftAt(ResourceNode $parent, $index)
     {
         $nodes = $parent->getChildren();
@@ -510,19 +518,32 @@ class ResourceManager
         $this->om->flush();
     }
 
-    public function reorder(ResourceNode $node)
+    /**
+     * @param ResourceNode|integer $node
+     */
+    public function reorder($node)
     {
-        $children = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceNode')
-            ->getChildren($node, true, 'index');
-        $i = 1;
-
-        foreach ($children as $child) {
-            $child->setIndex($i);
-            $i++;
-            $this->om->persist($child);
+        if (!($node instanceof ResourceNode)) {
+            $node = $this->container->get('doctrine.orm.entity_manager')->getReference('\Claroline\CoreBundle\Entity\Resource\ResourceNode',$node);
         }
 
+        /** @var \Claroline\CoreBundle\Repository\ResourceNodeRepository $resourceNodeRepository */
+        $resourceNodeRepository = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceNode');
+        $children = $resourceNodeRepository->getChildren($node, true, 'index');
+        $index = 1;
+
+        foreach ($children as $child) {
+            $child->setIndex($index);
+            $index++;
+            $this->om->persist($child);
+        }
         $this->om->flush();
+
+        foreach ($children as $child) {
+            $this->om->detach($child);
+        }
+
+        $this->om->detach($node);
     }
 
     /**

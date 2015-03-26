@@ -10,6 +10,7 @@
 
 namespace Claroline\CoreBundle\Library\Installation\Updater;
 
+use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\Tool\PwsToolConfig;
@@ -36,16 +37,47 @@ class Updater040500 extends Updater
 
     private function updateOrder()
     {
-        $em = $this->container->get('doctrine.orm.entity_manager');
-        $dirType = $em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findByName('directory');
-        $nodes = $em->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findBy(array('resourceType' => $dirType));
-        $this->log('Updating resource order, this operation may take a while...');
+        /** @var \Doctrine\ORM\EntityManager $entityManager */
+        $entityManager = $this->container->get('doctrine.orm.entity_manager');
+        $dirType = $entityManager->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findByName('directory');
+        $nodes = $entityManager->getRepository('ClarolineCoreBundle:Resource\ResourceNode')
+            ->createQueryBuilder('node')
+            ->select('node.id')
+            ->where('node.resourceType = :directorytype')
+            ->setParameter('directorytype', $dirType)
+            ->getQuery()->getResult();
+
+        /** @var \Claroline\CoreBundle\Manager\ResourceManager $resourceManager */
+        $resourceManager = $this->container->get('claroline.manager.resource_manager');
+
+
+        $nbNodes = 0;
+        $currentBatchNodes = 0;
+        $totalNodes = count($nodes);
+        $refreshOutputInterval = (int)round($totalNodes / 50);
+        if (0 === $refreshOutputInterval) {
+            $refreshOutputInterval = 1;
+        }
+
+        $this->log(sprintf('Updating %d resource order - %s', $totalNodes, date('Y/m/d H:i:s')));
+        $this->log('It may take a while to process, go grab a coffee.');
 
         foreach ($nodes as $node) {
-            if ($node->getResourceType()->getName() === 'directory') {
-                $this->log('Updating ' . $node->getName() . ' resource order...');
-                $this->container->get('claroline.manager.resource_manager')->reorder($node);
+            $resourceManager->reorder($node['id']);
+            $nbNodes++;
+            $currentBatchNodes++;
+
+            if ($refreshOutputInterval === $currentBatchNodes) {
+                $this->log('    ' . $nbNodes . ' resource ordered - ' . date('Y/m/d H:i:s') . ' - ' . $this->convert(memory_get_usage(true)));
+                $currentBatchNodes = 0;
             }
         }
+        $this->log('Resource order updated.');
+    }
+
+    public function convert($size)
+    {
+        $unit=array('b','kb','mb','gb','tb','pb');
+        return @round($size/pow(1024,($i=floor(log($size,1024)))),2).' '.$unit[$i];
     }
 }
