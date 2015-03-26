@@ -767,10 +767,8 @@ class CorrectionController extends DropzoneBaseController
 
                     $this->dispatch($event);
                 }
-
-                $em->flush();
-
             }
+            $em->flush();
             // Fin ajout.
         }
 
@@ -1752,7 +1750,6 @@ class CorrectionController extends DropzoneBaseController
             $em = $this->getDoctrine()->getManager();
 
             $em->persist($correction);
-            $em->flush();
 
             $currentDrop = $correction->getDrop();
             if ($currentDrop != null && $oldTotalGrade != $totalGrade) {
@@ -1760,6 +1757,7 @@ class CorrectionController extends DropzoneBaseController
                 $this->dispatch($event);
             }
         }
+        $em->flush();
     }
 
     /**

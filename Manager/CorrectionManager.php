@@ -71,7 +71,6 @@ class CorrectionManager
             $em = $this->em;
 
             $em->persist($correction);
-            $em->flush();
 
             $currentDrop = $correction->getDrop();
             if ($currentDrop != null && $oldTotalGrade != $totalGrade) {
@@ -79,6 +78,7 @@ class CorrectionManager
                 $this->container->get('event_dispatcher')->dispatch('log', $event);
             }
         }
+        $em->flush();
     }
 
 }
