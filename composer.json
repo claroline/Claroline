@@ -1,5 +1,6 @@
 {
     "name": "innova/collecticiel-bundle",
+    "description": "Innova Collecticiel",
     "type": "claroline-plugin",
     "require": {
         "php": ">=5.4.1",
