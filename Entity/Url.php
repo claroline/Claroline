@@ -4,12 +4,11 @@ namespace HeVinci\UrlBundle\Entity;
 
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
 use HeVinci\UrlBundle\Validator\Constraints as UrlAssert;
 
 /**
  * @ORM\Entity()
- * @ORM\Table(name="claro_url")
+ * @ORM\Table(name="hevinci_url")
  */
 class Url extends AbstractResource
 {
@@ -19,6 +18,11 @@ class Url extends AbstractResource
      */
     protected $url;
 
+    /**
+     * @ORM\Column(type="boolean", name="internal_url")
+     */
+    protected $internalUrl = false;
+
     public function setUrl($url)
     {
         $this->url = $url;
@@ -27,5 +31,15 @@ class Url extends AbstractResource
     public function getUrl()
     {
         return $this->url;
+    }
+
+    public function setInternalUrl($internalUrl)
+    {
+        $this->internalUrl = $internalUrl;
+    }
+
+    public function getInternalUrl()
+    {
+        return $this->internalUrl;
     }
 }
