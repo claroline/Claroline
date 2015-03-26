@@ -44,6 +44,7 @@ addLabel: Add a label
 addProposal: Add a proposal
 add hint: Add hint
 add user: Add user
+addZoneAnswer: Add answer zone
 administration: Administration
 advanced edition: Advenced edition
 after the last attempt: After the last attempt
@@ -272,6 +273,7 @@ noFinish: No finished
 noDocFound: No document found
 noHintShow: Hints not seen, no penalty
 noImg: You must upload a picture
+noImgSelect: You must select an image
 noOne: None
 noPaperFound: No paper found
 noQuestion: You ask for nothing

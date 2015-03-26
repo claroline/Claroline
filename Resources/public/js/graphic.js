@@ -99,26 +99,14 @@ function LoadPic(path, prefx, iddoc) {
     point = {};
 }
 
-$(function () {
-
-
-    // Make the answer zones draggable
-    $('#addp').draggable({
-        containment : '#AnswerImage',
-        cursor : 'move',
-
-        // When stop drag
-        stop: function(event, ui) {
-        }        
-    });
-   
-    
-       $('#addp').click(function() {
-        if ($('#AnswerImage').find('#dragContainer0').length > 1) {
-            $('#AlreadyPlacedArray').css({"display" : "none"});
-        } else {
-           $('#AlreadyPlacedArray').css({"display" : "inline"});
-        }
+/**
+ * Add an answer zone
+ * 
+ * @param {String} noImage Information no image selected
+ * @returns array
+ */
+ function addAnswerZone(noImage)
+ {  
     if($('#AnswerImage').length){
 
                 $('#Answer').append('<div id="dragContainer' + grade +
@@ -184,23 +172,20 @@ $(function () {
 
                 var infos = getImageInformations($(img).attr('src'));
 
-                alreadyPlacedAnswersZone(score);
+                alreadyPlacedAnswersZone(infos['shape'], infos['color'], infos['pathImg'], score);
 
                 grade++;
+                //Creation head of the table
+                if ($('#AnswerImage').find('#dragContainer0').length > 1) {
+                 $('#AlreadyPlacedArray').css({"display" : "none"});
+         
+                } else {
+                 $('#AlreadyPlacedArray').css({"display" : "inline"}); 
+                }
+            }else{
+                alert(noImage);
             }
-//            // If add a new answer zone, the reference image go back to its initial place
-//            if (event.target.id == 'addp') {
-//                el.css({
-//                    "left" : "0px",
-//                    "top"  : "0px"
-//                });
-//            }
-        });
-        
-    
-
-
-});
+        }
 
 // Check if the score is a correct number
 function CheckScore(message, valueOfPoint) {
@@ -224,7 +209,7 @@ function CheckScore(message, valueOfPoint) {
 }
 
 // Submit form without an empty field
-function Check(noTitle, noQuestion, noImg, noAnswerZone, questiontitle, invite) {
+function Check( noQuestion, noImg, noAnswerZone, invite) {
 
     /*if ($("*[id$='_penalty']").length > 0) {
         $("*[id$='_penalty']").val($("*[id$='_penalty']").val().replace(/[-]/, ''));
@@ -240,12 +225,6 @@ function Check(noTitle, noQuestion, noImg, noAnswerZone, questiontitle, invite) 
             break;
         }
     }
-
-    // No title
-    if ($('#' + questiontitle).val() == '') {
-        alert(noTitle);
-        return false;
-    } else {
 
         // No question asked
         if (tinyMCE.get(invite).getContent() == '') {
@@ -295,7 +274,7 @@ function Check(noTitle, noQuestion, noImg, noAnswerZone, questiontitle, invite) 
                             // And send it to the controller
                             $('#coordsZone').val($('#coordsZone').val() + val + ',');
                         }
-                    }
+                    
                 }
             }
         }

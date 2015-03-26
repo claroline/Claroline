@@ -8,8 +8,8 @@
         <h3 class="panel-title">{{ 'interactionGraphic creation' | trans }}</h3>
     </div>
 
-    <form name="InterGraphForm" id="InterGraphForm" onsubmit="return Check('{{ 'noTitle' | trans }}', '{{ 'noQuestion' | trans }} ...',
-        '{{ 'noImg' | trans }} !', '{{ 'noAnswerZone' | trans }} ...', '{{ form.interaction.question.title.vars.id }}',
+    <form name="InterGraphForm" id="InterGraphForm" onsubmit="return Check('{{ 'noQuestion' | trans }} ...',
+        '{{ 'noImg' | trans }} !', '{{ 'noAnswerZone' | trans }} ...',
         '{{ form.interaction.invite.vars.id }}');" action="{{ path('ujm_interactiongraphic_create') }}" method="post" {{ form_enctype(form) }}>
 
         <div class="panel-body">

@@ -44,6 +44,7 @@ addDoc: Ajouter un document
 addProposal: Ajouter une proposition
 add hint: Ajouter un indice
 add user: Ajouter un utilisateur
+addZoneAnswer: Ajouter une zone de réponse
 administration: Administration
 advanced edition: Edition avancée
 after the last attempt: Après le dernier essai
@@ -272,6 +273,7 @@ noDocFound: Pas de document trouvé
 noFinish: Non terminé
 noHintShow: Indices non vus, pas de pénalité
 noImg: Vous devez télécharger une image
+noImgSelect: Vous devez sélectionner une image
 noOne: Aucune
 noPaperFound: Aucune copie
 noQuestion: Vous ne posez aucune question
