@@ -5,9 +5,8 @@ namespace HeVinci\UrlBundle\Validator\Constraints;
 use Guzzle\Http\Exception\ClientErrorResponseException;
 use Guzzle\Http\Exception\CurlException;
 use Guzzle\Http\Exception\ServerErrorResponseException;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Validator\Constraint;
-use Symfony\Component\Validator\ConstraintValidator;
+use Symfony\Component\Validator\Constraints\UrlValidator;
 use Guzzle\Http\Client;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -15,10 +14,21 @@ use JMS\DiExtraBundle\Annotation as DI;
 /**
  * @DI\Validator("url_validator")
  */
-class ReachableUrlValidator extends ConstraintValidator
+class ReachableUrlValidator extends UrlValidator
 {
     public function validate($value, Constraint $constraint)
     {
+        if (empty($value)) {
+            return;
+        }
+
+        $previousViolationsCount = $this->context->getViolations()->count();
+        parent::validate($value, $constraint);
+
+        if ($previousViolationsCount < $this->context->getViolations()->count()) {
+            return;
+        }
+
         $client = new Client();
         try {
             $request = $client->head($value);
