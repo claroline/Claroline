@@ -541,6 +541,8 @@ class DatabaseWriter
     {
         $widget->setName($widgetConfiguration['name']);
         $widget->setConfigurable($widgetConfiguration['is_configurable']);
+        $widget->setDisplayableInDesktop($widgetConfiguration['is_displayable_in_desktop']);
+        $widget->setDisplayableInWorkspace($widgetConfiguration['is_displayable_in_workspace']);
         $widget->setExportable($widgetConfiguration['is_exportable']);
         $widget->setPlugin($plugin);
         $widget->setDefaultWidth($widgetConfiguration['default_width']);
