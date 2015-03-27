@@ -87,7 +87,8 @@ class BaseProfileType extends AbstractType
                                 'text',
                                 array(
                                     'label'  => $this->translator->trans($field->getName(), array(), 'platform'),
-                                    'mapped' => false
+                                    'mapped' => false,
+                                    'required' => false
                                 )
                             );
                             break;
@@ -112,13 +113,13 @@ class BaseProfileType extends AbstractType
                                 'number',
                                 array(
                                     'label'  => $this->translator->trans($field->getName(), array(), 'platform'),
-                                    'mapped' => false
+                                    'mapped' => false,
+                                    'required' => false
                                 )
                             );
                             break;
 
                     }
-
                 }
             }
         }

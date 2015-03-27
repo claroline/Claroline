@@ -1035,6 +1035,7 @@ class WorkspaceManager
         $data['id'] = $workspace->getId();
         $data['name'] = $workspace->getName();
         $data['code'] = $workspace->getCode();
+        $data['expiration_date'] = $workspace->getEndDate()->getTimeStamp();
 
         return $data;
     }
