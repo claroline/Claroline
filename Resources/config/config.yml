@@ -5,6 +5,8 @@ plugin:
       - name: badge_usage
         is_configurable: true
         is_exportable: false
+        is_displayable_in_workspace: true
+        is_displayable_in_desktop: false
 
     tools:
       - name: badges
@@ -15,6 +17,10 @@ plugin:
         class: trophy
         is_displayable_in_workspace: true
         is_displayable_in_desktop: false
+      - name: all_my_badges
+        class: trophy
+        is_displayable_in_workspace: false
+        is_displayable_in_desktop: true
 
     admin_tools:
       - name: badges_management
