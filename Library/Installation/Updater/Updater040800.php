@@ -19,6 +19,10 @@ class Updater040800 extends Updater
 {
     private $connection;
     private $container;
+
+    /**
+     * @var \Claroline\CoreBundle\Manager\ToolManager
+     */
     private $toolManager;
 
     public function __construct(ContainerInterface $container)
@@ -59,7 +63,7 @@ class Updater040800 extends Updater
     private function createMessageDesktopOrderedTools(Tool $tool)
     {
         $this->log('Creating message ordered tools for all users...');
-        $this->toolManager->createOrderedToolByToolForAllUsers($tool);
+        $this->toolManager->createOrderedToolByToolForAllUsers($this->logger, $tool);
     }
 
     private function updateHomeTabsAdminTool()
@@ -169,15 +173,18 @@ class Updater040800 extends Updater
     {
         $this->log('Updating workspace users limit...');
         $em = $this->container->get('doctrine.orm.entity_manager');
+        /** @var \Claroline\CoreBundle\Repository\WorkspaceRepository $wsRepo */
         $wsRepo = $em->getRepository('ClarolineCoreBundle:Workspace\Workspace');
-        $workspaces = $wsRepo->findAll();
+        $workspacesQuery = $wsRepo->createQueryBuilder("workspace")->getQuery();
         $i = 0;
-        
-        foreach ($workspaces as $workspace) {
+        $workspaces = $workspacesQuery->iterate();
+        foreach ($workspaces as $row) {
+            $workspace = $row[0];
             $workspace->setMaxUsers(10000);
             $em->persist($workspace);
             
             if ($i % 200 === 0) {
+                $this->log('    200 workspace updated...');
                 $em->flush();
             }
             
