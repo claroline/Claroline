@@ -178,6 +178,7 @@ class WorkspaceManager
         $ch = $this->container->get('claroline.config.platform_config_handler');
         $workspace->setMaxUploadResources($ch->getParameter('max_upload_resources'));
         $workspace->setMaxStorageSize($ch->getParameter('max_storage_size'));
+        $workspace->setMaxUsers($ch->getParameter('max_workspace_users'));
         @mkdir($this->getStorageDirectory($workspace));
         $this->editWorkspace($workspace);
     }
@@ -312,9 +313,9 @@ class WorkspaceManager
     /**
      * @return \Claroline\CoreBundle\Entity\Workspace\Workspace[]
      */
-    public function getWorkspacesByAnonymous()
+    public function getWorkspacesByAnonymous($orderedToolType = 0)
     {
-        return $this->workspaceRepo->findByAnonymous();
+        return $this->workspaceRepo->findByAnonymous($orderedToolType);
     }
 
     public function getWorkspacesByManager(User $user)
@@ -377,7 +378,8 @@ class WorkspaceManager
         TokenInterface $token,
         array $workspaces,
         $toolName = null,
-        $action = 'open'
+        $action = 'open',
+        $orderedToolType = 0
     )
     {
         $userRoleNames = $this->sut->getRoles($token);
@@ -406,7 +408,13 @@ class WorkspaceManager
         if (!$hasAllAccesses) {
             $em = $this->container->get('doctrine.orm.entity_manager');
             $openWsIds = $em->getRepository('ClarolineCoreBundle:Workspace\Workspace')
-                ->findOpenWorkspaceIds($userRoleNames, $workspacesWithoutManagerRole, $toolName, $action);
+                ->findOpenWorkspaceIds(
+                    $userRoleNames,
+                    $workspacesWithoutManagerRole,
+                    $toolName,
+                    $action,
+                    $orderedToolType
+                );
 
             foreach ($openWsIds as $idRow) {
                 $accesses[$idRow['id']] = true;
@@ -478,12 +486,13 @@ class WorkspaceManager
     public function getWorkspacesByRoleNamesBySearchPager(
         array $roleNames,
         $search,
-        $page
+        $page,
+        $orderedToolType = 0
     )
     {
         if (count($roleNames) > 0) {
             $workspaces = $this->workspaceRepo
-                ->findByRoleNamesBySearch($roleNames, $search);
+                ->findByRoleNamesBySearch($roleNames, $search, $orderedToolType);
         } else {
             $workspaces = array();
         }
@@ -641,12 +650,14 @@ class WorkspaceManager
      */
     public function getWorkspaceByWorkspaceAndRoles(
         Workspace $workspace,
-        array $roles
+        array $roles,
+        $orderedToolType = 0
     )
     {
         return $this->workspaceRepo->findWorkspaceByWorkspaceAndRoles(
             $workspace,
-            $roles
+            $roles,
+            $orderedToolType
         );
     }
 
@@ -768,9 +779,15 @@ class WorkspaceManager
         return $this->pagerFactory->createPager($query, $page, $max);
     }
 
-    public function countUsers($workspaceId)
+    public function countUsers(Workspace $workspace, $includeGrps = false)
     {
-        return $this->workspaceRepo->countUsers($workspaceId);
+        if ($includeGrps) {
+            $wsRoles = $this->roleManager->getRolesByWorkspace($workspace);
+
+            return $this->container->get('claroline.manager.user_manager')->countByRoles($wsRoles, true);
+        }
+
+        return $this->workspaceRepo->countUsers($workspace->getId());
     }
 
     /**
@@ -980,7 +997,7 @@ class WorkspaceManager
     {
         $ds = DIRECTORY_SEPARATOR;
 
-        return $this->container->getParameter('claroline.param.files_directory') . $ds . $workspace->getCode();
+        return $this->container->getParameter('claroline.param.files_directory') . $ds . 'WORKSPACE_' . $workspace->getId();
     }
 
     /**
@@ -1004,25 +1021,21 @@ class WorkspaceManager
         return $size;
     }
 
-    public function replaceCode(Workspace $workspace, $code)
-    {
-        if ($workspace->getCode() !== $code) {
-            $oldStorageDir =  $this->getStorageDirectory($workspace);
-            $workspace->setCode($code);
-            $newStorageDir = $this->getStorageDirectory($workspace);
-            //move directory~
-            $fs = new FileSystem();
-            $fs->rename($oldStorageDir, $newStorageDir);
-            $this->om->persist($workspace);
-            $this->om->flush();
-        }
-    }
-
     public function getWorkspaceCodesWithPrefix($prefix, $executeQuery = true)
     {
         return $this->workspaceRepo->findWorkspaceCodesWithPrefix(
             $prefix,
             $executeQuery
         );
+    }
+
+    public function toArray(Workspace $workspace)
+    {
+        $data = array();
+        $data['id'] = $workspace->getId();
+        $data['name'] = $workspace->getName();
+        $data['code'] = $workspace->getCode();
+
+        return $data;
     }
 }

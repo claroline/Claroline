@@ -133,6 +133,7 @@ add_workspace: 'Ajouter un espace d''activités'
 admin: Administrateur
 admin_analytics: 'Statistiques plateforme'
 admin_analytics_no_data: 'Aucune donnée.'
+admin_desktop_and_home_tabs_configuration: 'Configuration du bureau et des onglets'
 admin_home_tabs_configuration: 'Configuration des onglets pour les pages d''accueil'
 admin_logs: 'Suivi plateforme'
 admin_third_party_application: 'Applications tierces'
@@ -314,9 +315,11 @@ delete_learning_outcomes: 'Suppression d''un référentiel de compétences'
 delete_learning_outcomes_confirm_message: 'Voulez-vous vraiment supprimer ce référentiel de compétences?'
 description: 'Description'
 desktop: Bureau
+desktop_and_home: 'Bureau et accueil'
 desktop_home_tab_creation: 'Création d''un onglet pour le bureau'
 desktop_home_tab_edition: 'Edition de l''onglet pour le bureau'
 desktop_home_tabs: 'Onglets pour le bureau'
+desktop_parameters: 'Paramètres du bureau'
 desktop_tools: 'Outils du bureau'
 directory: Répertoire
 directory_form_name: Nom
@@ -450,8 +453,10 @@ home: Accueil
 home_manager: 'Gestionnaire de l''accueil'
 home_parameters: 'Paramètres de l''accueil'
 home_tab: Onglet
+home_tab_config_form_locked: 'Verrouillé'
+home_tab_config_form_visible: 'Visible'
 home_tab_creation: 'Création d''un onglet'
-home_tab_delete_confirm_message: 'Voulez-vous vraiment supprimer cet onglet de la page d''accueil ?'
+home_tab_delete_confirm_message: 'Voulez-vous vraiment supprimer cet onglet ?'
 home_tab_delete_confirm_title: 'Suppression de l''onglet'
 home_tab_edition: 'Edition de l''onglet'
 home_tab_form_name: Nom
@@ -551,6 +556,8 @@ manual: Manuelle
 manual_evaluation_explanation: 'Evaluation manuelle par un gestionnaire de l''espace d''activités'
 max_size_is: 'La taille maximale est %size%'
 media_most_viewed: 'Media les plus consultés'
+menu_bar: 'Barre de menu'
+menu_bar_configuration: 'Configuration de la barre de menu'
 message_form_content: Contenu
 message_form_object: Objet
 message_form_to: A
@@ -662,6 +669,7 @@ password_ok: 'Votre mot de passe a été modifié. Vous pouvez maintenant vous c
 paste: Coller
 path: Emplacement
 pending: En attente
+pending_users_list: 'Liste des utilisateurs en attente'
 permissions: Permissions
 personal_data: 'Aucune donnée personnelle ne sera récupérée. Les données techniques et statistiques récupérées seront exclusivement utilisées en relation avec le projet Claroline Connect et ne seront pas autrement diffusées.'
 personal_workspace: 'Espace personnel'
@@ -998,6 +1006,10 @@ user_limit_reached: La limite de création d'utilisateur a été atteinte.
 user_limit_reached: La limite de création d'utilisateurs a été atteinte.
 user_limit_success_update: La limite d'utilisateur par rôle a été mise à jour avec succès.
 user_limit_too_low: Il y a déjà %total% %role%(s). La limite %newMax% est trop faible.
+user_menu: 'Menu utilisateur'
+user_menu_configuration: 'Configuration du menu utilisateur'
+user_options: 'Préférences'
+user_options_form_desktopBackgroundColor: 'Couleur de fond du bureau'
 user_parameters: 'Paramètres de l''utilisateur'
 user_picker: 'Outil pour choisir un utilisateur'
 user_profile: 'Profil utilisateur'
@@ -1031,7 +1043,11 @@ visitor: Visiteur
 warning_user_impersonation: 'Vous êtes connecté en tant que %user%.'
 warning_workspace_impersonation: 'Vous êtes connecté en tant que %role% du workspace %workspace%.'
 widget: Widget
+widget_configuration: 'Configuration du widget'
+widget_display_config_form_color: 'Couleur'
 widget_display_form_name: Nom
+widget_home_tab_config_form_locked: 'Verrouillé'
+widget_home_tab_config_form_visible: 'Visible'
 widget_home_tab_delete_confirm_message: 'Voulez-vous vraiment retirer ce widget de cet onglet ?'
 widget_home_tab_delete_confirm_title: 'Suppression du widget de l''onglet'
 widget_settings: 'Paramètres des widgets'
@@ -1130,7 +1146,7 @@ package_update_impossible: 'Mise à jour des paquets impossible sur cette page. 
 parameters_save_success: 'Paramètres sauvegardés avec succès.'
 parameters_save_error: 'Une erreur est survenue pendant la sauvegarde des paramètres.'
 import_profile_pics: Importer des profils d'utilisateurs
-import_profile_pics_explanation: Veuillez sélectionner une archive zip. Cette archive doit contenir une liste d'images dont les noms sont structurés de cette manière: username.extension
+import_profile_pics_explanation: 'Veuillez sélectionner une archive zip. Cette archive doit contenir une liste d''images dont les noms sont structurés de cette manière: username.extension'
 add_field_to_panel: Ajouter un champ
 add_panel_to_facet: Ajouter un panel
 create_pane: Créer un panel
@@ -1156,4 +1172,7 @@ activate_maintenance_mode: Vous devriez activer le mode de maintenance afin de s
 install_update_cant_be_undone: Les opérations d'installation et de mise à jour ne peuvent pas être annulées.
 list_view: Vue en liste (beta)
 created_by: Créé par %creator% le %creationDate%
-updated_by: Dernière màj: %modificationDate%
+updated_by: 'Dernière màj: %modificationDate%'
+display_at_registration: Afficher à la création du compte
+workspace_max_users: Nombre maximal d'utilisateur par espace d'activité
+workspace_edit_form_endDate : Date d'expiration

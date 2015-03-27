@@ -106,14 +106,15 @@ class LayoutController extends Controller
     {
         //for some reason this doesn't work unless we use the cache:warm command. Since it's annoying
         //and that I can't find why, we retrieve the version the old fashioned way;
-        //$bundleManager = $this->get('claroline.manager.bundle_manager');
+        $bundleManager = $this->get('claroline.manager.bundle_manager');
+        $version = $bundleManager->getCoreBundleVersion();
 
         return array(
             'footerMessage' => $this->configHandler->getParameter('footer'),
             'footerLogin' => $this->configHandler->getParameter('footer_login'),
             'footerWorkspaces' => $this->configHandler->getParameter('footer_workspaces'),
             'headerLocale' => $this->configHandler->getParameter('header_locale'),
-            'coreVersion' => '4.6.2'
+            'coreVersion' => $version
         );
     }
 
@@ -142,12 +143,10 @@ class LayoutController extends Controller
 
         $canAdministrate = count($tools) > 0;
         $isLogged = false;
-        $countUnreadMessages = 0;
         $registerTarget = null;
         $loginTarget = null;
         $workspaces = null;
         $personalWs = null;
-        $countUnviewedNotifications = 0;
         $homeMenu = $this->configHandler->getParameter('home_menu');
 
         if (is_numeric($homeMenu)) {
@@ -160,6 +159,10 @@ class LayoutController extends Controller
         } else {
             $roles = array('ROLE_ANONYMOUS');
         }
+
+        $adminTools = $this->toolManager->getAdminToolsByRoles(
+            $this->security->getToken()->getRoles()
+        );
 
         if ($isLogged = !in_array('ROLE_ANONYMOUS', $roles)) {
             $tools = $this->toolManager->getAdminToolsByRoles($token->getRoles());
@@ -192,7 +195,8 @@ class LayoutController extends Controller
             'currentWorkspace' => $workspace,
             'canAdministrate' => $canAdministrate,
             'headerLocale' => $this->configHandler->getParameter('header_locale'),
-            'homeMenu' => $homeMenu
+            'homeMenu' => $homeMenu,
+            'adminTools' => $adminTools
         );
     }
 

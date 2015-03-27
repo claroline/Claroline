@@ -21,6 +21,9 @@ class Builder extends ContainerAware
         $translator = $this->container->get('translator');
         $securityContext = $this->container->get('security.context');
         $hasRoleExtension = $this->container->get('claroline.core_bundle.twig.has_role_extension');
+        $router = $this->container->get('router');
+        $dispatcher = $this->container->get('event_dispatcher');
+        $toolManager = $this->container->get('claroline.manager.tool_manager');
 
         $menu = $factory->createItem('root')
             ->setChildrenAttribute('class', 'dropdown-menu')
@@ -30,54 +33,55 @@ class Builder extends ContainerAware
             ->setAttribute('class', 'dropdown')
             ->setAttribute('role', 'presentation')
             ->setExtra('icon', 'fa fa-user');
+        $menu->addChild(
+            $translator->trans('parameters', array(), 'platform'),
+            array('uri' => $router->generate('claro_desktop_open_tool', array('toolName' => 'parameters')))
+        )->setAttribute('class', 'dropdown')
+        ->setAttribute('role', 'presentation')
+        ->setExtra('icon', 'fa fa-cog');
 
         $this->addDivider($menu, '1');
 
         $user = $securityContext->getToken()->getUser();
+        $lockedOrderedTools = $toolManager->getOrderedToolsLockedByAdmin(1);
+        $adminTools = array();
+        $excludedTools = array();
 
-        if ($user instanceof \Claroline\CoreBundle\Entity\User) {
-            $pws = $user->getPersonalWorkspace();
-        } else {
-            $pws = null;
+        foreach ($lockedOrderedTools as $lockedOrderedTool) {
+            $lockedTool = $lockedOrderedTool->getTool();
+
+            if ($lockedOrderedTool->isVisibleInDesktop()) {
+                $adminTools[] = $lockedTool;
+            }
+            $excludedTools[] = $lockedTool;
         }
+        $desktopTools = $toolManager->getDisplayedDesktopOrderedTools(
+            $user,
+            1,
+            $excludedTools
+        );
+        $tools = array_merge($adminTools, $desktopTools);
 
-        if ($pws) {
-            $menu->addChild(
-                $translator->trans('my_workspace', array(), 'platform'),
-                array(
-                    'route' => 'claro_workspace_open_tool',
-                    'routeParameters' => array(
-                        'workspaceId' => $pws->getId(),
-                        'toolName' => 'home'
-                        )
-                    )
-                )
-            ->setAttribute('class', 'dropdown')
-            ->setAttribute('role', 'presentation')
-            ->setExtra('icon', 'fa fa-book');
+        foreach ($tools as $tool) {
+            $toolName = $tool->getName();
+
+            if ($toolName === 'home' || $toolName === 'parameters') {
+                continue;
+            }
+            $event = new ConfigureMenuEvent($factory, $menu, $tool);
+
+            if ($dispatcher->hasListeners('claroline_top_bar_right_menu_configure_desktop_tool_' . $toolName)) {
+                $dispatcher->dispatch(
+                    'claroline_top_bar_right_menu_configure_desktop_tool_' . $toolName,
+                    $event
+                );
+            } else {
+                $dispatcher->dispatch(
+                    'claroline_top_bar_right_menu_configure_desktop_tool',
+                    $event
+                );
+            }
         }
-
-        $menu->addChild(
-            $translator->trans('my_agenda', array(), 'platform'),
-            array(
-                'route' => 'claro_desktop_open_tool',
-                'routeParameters' => array('toolName' => 'agenda')
-            )
-        )->setAttribute('class', 'dropdown')
-            ->setAttribute('role', 'presentation')
-            ->setExtra('icon', 'fa fa-calendar');
-
-        $menu->addChild(
-            $translator->trans('my_resources', array(), 'platform'),
-            array(
-                'route' => 'claro_desktop_open_tool',
-                'routeParameters' => array('toolName' => 'resource_manager')
-            )
-        )
-            ->setAttribute('class', 'dropdown')
-            ->setAttribute('role', 'presentation')
-            ->setExtra('icon', 'fa fa-folder')
-            ->setExtra('uri-add', '#resources/0');
 
         //allowing the menu to be extended
         $this->container->get('event_dispatcher')->dispatch(
@@ -121,21 +125,12 @@ class Builder extends ContainerAware
                 ->setExtra('icon', 'fa fa-home');
          }
 
-        $menu->addChild($translator->trans('my_profile', array(), 'platform'), array('route' => 'claro_desktop_open'))
+        $menu->addChild($translator->trans('desktop', array(), 'platform'), array('route' => 'claro_desktop_open'))
             ->setAttribute('role', 'presentation')
-            ->setExtra('icon', 'fa fa-briefcase')
+            ->setExtra('icon', 'fa fa-home')
             ->setExtra('title', $translator->trans('desktop', array(), 'platform'));
 
         $token = $securityContext->getToken();
-        $tools = $this->container->get('claroline.manager.tool_manager')
-            ->getAdminToolsByRoles($token->getRoles());
-        $canAdministrate = count($tools) > 0;
-
-        if ($canAdministrate) {
-            $menu->addChild($translator->trans('administration', array(), 'platform'), array('route' => 'claro_admin_index'))
-                ->setExtra('icon', 'fa fa-cog')
-                ->setExtra('title', $translator->trans('administration', array(), 'platform'));
-        }
 
         if ($token) {
             $user = $token->getUser();
@@ -145,16 +140,47 @@ class Builder extends ContainerAware
         }
 
         if (!in_array('ROLE_ANONYMOUS', $roles)) {
-            $countUnreadMessages = $this->container->get('claroline.manager.message_manager')->getNbUnreadMessages($user);
-            $messageTitle = $translator->trans('new_message_alert', array('%count%' => $countUnreadMessages), 'platform');
+            $dispatcher = $this->container->get('event_dispatcher');
+            $toolManager = $this->container->get('claroline.manager.tool_manager');
+            $lockedOrderedTools = $toolManager->getOrderedToolsLockedByAdmin();
+            $adminTools = array();
+            $excludedTools = array();
 
-            $messageMenuLink = $menu->addChild($translator->trans('messages', array(), 'platform'), array('route' => 'claro_message_list_received'))
-                ->setExtra('icon', 'fa fa-envelope')
-                ->setExtra('title', $messageTitle);
+            foreach ($lockedOrderedTools as $lockedOrderedTool) {
+                $lockedTool = $lockedOrderedTool->getTool();
 
-            if (0 < $countUnreadMessages) {
-                $messageMenuLink
-                    ->setExtra('badge', $countUnreadMessages);
+                if ($lockedOrderedTool->isVisibleInDesktop()) {
+                    $adminTools[] = $lockedTool;
+                }
+                $excludedTools[] = $lockedTool;
+            }
+
+            $desktopTools = $toolManager->getDisplayedDesktopOrderedTools(
+                $user,
+                0,
+                $excludedTools
+            );
+            $tools = array_merge($adminTools, $desktopTools);
+
+            foreach ($tools as $tool) {
+                $toolName = $tool->getName();
+
+                if ($toolName === 'home') {
+                    continue;
+                }
+                $event = new ConfigureMenuEvent($factory, $menu, $tool);
+
+                if ($dispatcher->hasListeners('claroline_top_bar_left_menu_configure_desktop_tool_' . $toolName)) {
+                    $dispatcher->dispatch(
+                        'claroline_top_bar_left_menu_configure_desktop_tool_' . $toolName,
+                        $event
+                    );
+                } else {
+                    $dispatcher->dispatch(
+                        'claroline_top_bar_left_menu_configure_desktop_tool',
+                        $event
+                    );
+                }
             }
         }
 
@@ -172,6 +198,5 @@ class Builder extends ContainerAware
         $menu->addChild($name)
             ->setAttribute('class', 'divider')
             ->setAttribute('role', 'presentation');
-
     }
 }

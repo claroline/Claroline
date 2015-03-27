@@ -99,14 +99,14 @@ class AdministrationToolListener
 
 
     /**
-     * @DI\Observe("administration_tool_home_tabs")
+     * @DI\Observe("administration_tool_desktop_and_home")
      *
      * @param OpenAdministrationToolEvent $event
      */
-    public function onOpenHomeTabs(OpenAdministrationToolEvent $event)
+    public function opDesktopAndHome(OpenAdministrationToolEvent $event)
     {
         $params = array();
-        $params['_controller'] = 'ClarolineCoreBundle:Administration\HomeTab:adminHomeTabsConfigMenu';
+        $params['_controller'] = 'ClarolineCoreBundle:Administration\DesktopConfiguration:adminDesktopConfigMenu';
         $this->redirect($params, $event);
     }
 

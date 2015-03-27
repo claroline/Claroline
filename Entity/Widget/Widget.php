@@ -60,6 +60,16 @@ class Widget
      */
     protected $isDisplayableInDesktop = true;
 
+    /**
+     * @ORM\Column(name="default_width", type="integer", options={"default":4})
+     */
+    protected $defaultWidth = 4;
+
+    /**
+     * @ORM\Column(name="default_height", type="integer", options={"default":3})
+     */
+    protected $defaultHeight = 3;
+
     public function getId()
     {
         return $this->id;
@@ -123,6 +133,26 @@ class Widget
     public function setDisplayableInDesktop($bool)
     {
         $this->isDisplayableInDesktop = $bool;
+    }
+
+    public function getDefaultWidth()
+    {
+        return $this->defaultWidth;
+    }
+
+    public function setDefaultWidth($defaultWidth)
+    {
+        $this->defaultWidth = $defaultWidth;
+    }
+
+    public function getDefaultHeight()
+    {
+        return $this->defaultHeight;
+    }
+
+    public function setDefaultHeight($defaultHeight)
+    {
+        $this->defaultHeight = $defaultHeight;
     }
 
     public function __toString()

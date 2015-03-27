@@ -29,6 +29,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\ExecutionContextInterface;
 use Symfony\Component\Validator\Mapping\ClassMetadata;
 use Claroline\CoreBundle\Entity\Facet\FieldFacetValue;
+use Claroline\CoreBundle\Entity\UserOptions;
 
 /**
  * @ORM\Table(name="claro_user")
@@ -305,6 +306,15 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
      * @ORM\Column(nullable=true)
      */
     protected $authentication;
+
+    /**
+     * @ORM\OneToOne(
+     *     targetEntity="Claroline\CoreBundle\Entity\UserOptions",
+     *     inversedBy="user"
+     * )
+     * @ORM\JoinColumn(name="options_id", onDelete="SET NULL", nullable=true)
+     */
+    protected $options;
 
     public function __construct()
     {
@@ -978,5 +988,15 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
             'picture' => true,
             'description' => true
         );
+    }
+
+    public function getOptions()
+    {
+        return $this->options;
+    }
+
+    public function setOptions(UserOptions $options)
+    {
+        $this->options = $options;
     }
 }

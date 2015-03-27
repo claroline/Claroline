@@ -609,7 +609,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
      *
      * @return Query|User[]
      */
-    public function findByRolesIncludingGroups(array $roles, $getQuery = false, $orderedBy = 'id', $order)
+    public function findByRolesIncludingGroups(array $roles, $getQuery = false, $orderedBy = 'id', $order = '')
     {
         $dql = "
             SELECT u, r1, g, r2, ws From Claroline\CoreBundle\Entity\User u
@@ -994,6 +994,51 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         return $query->getOneOrNullResult();
     }
 
+    public function findAllEnabledUsers($executeQuery = true)
+    {
+        $dql = '
+            SELECT u
+            FROM Claroline\CoreBundle\Entity\User u
+            WHERE u.isEnabled = TRUE
+        ';
+
+        $query = $this->_em->createQuery($dql);
+
+        return $executeQuery ? $query->getResult() : $query;
+    }
+
+    /**
+     * Returns the users who are members of one of the given workspaces
+     *
+     * @param Workspace $workspace
+     * @param boolean $executeQuery
+     *
+     * @internal param array $workspaces
+     * @return User[]|Query
+     */
+    public function findUsersWithBadgesByWorkspace($workspace, $executeQuery = true)
+    {
+        $queryBuilder = $this->createQueryBuilder('u')
+            ->select('DISTINCT u, ub, b')
+            ->join('u.roles', 'r')
+            ->leftJoin('u.userBadges', 'ub')
+            ->leftJoin('ub.badge', 'b')
+            ->andWhere('u.isEnabled = true')
+            ->orderBy('u.id');
+
+        if (null === $workspace) {
+            $queryBuilder->andWhere('r.workspace IS NULL');
+        }
+        else {
+            $queryBuilder
+                ->leftJoin('r.workspace', 'w')
+                ->andWhere('r.workspace = :workspace')
+                ->setParameter('workspace', $workspace);
+        }
+
+        return $executeQuery ? $queryBuilder->getQuery()->getResult(): $queryBuilder->getQuery();
+    }
+
     public function findUsersWithoutUserRole($executeQuery = true)
     {
         $dql = '
@@ -1268,5 +1313,25 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         $query = $this->_em->createQuery($dql);
 
         return $executeQuery ? $query->getSingleScalarResult() : $query;
+    }
+    
+    public function countByRoles(array $roles, $includeGrps)
+    {
+        if ($includeGrps) {
+            $dql = 'SELECT count (DISTINCT u)
+                From Claroline\CoreBundle\Entity\User u
+                LEFT JOIN u.roles r1
+                LEFT JOIN u.personalWorkspace ws
+                LEFT JOIN u.groups g
+                LEFT JOIN g.roles r2
+                WHERE r1 in (:roles)
+                AND u.isEnabled = true
+                OR r2 in (:roles)';
+                
+                $query = $this->_em->createQuery($dql);
+                $query->setParameter('roles', $roles);
+                
+                return $query->getSingleScalarResult();
+        }
     }
 }

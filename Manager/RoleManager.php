@@ -487,9 +487,25 @@ class RoleManager
      *
      * @return \Claroline\CoreBundle\Entity\Role[]
      */
-    public function getRolesByWorkspace(Workspace $workspace)
+    public function getRolesByWorkspace(
+        Workspace $workspace,
+        $search = '',
+        $orderedBy = 'id',
+        $order = 'ASC'
+    )
     {
-        return $this->roleRepo->findByWorkspace($workspace);
+        if (empty($search)) {
+
+            return $this->roleRepo->findByWorkspace($workspace, $orderedBy, $order);
+        } else {
+
+            return $this->roleRepo->findByWorkspaceAndSearch(
+                $workspace,
+                $search,
+                $orderedBy,
+                $order
+            );
+        }
     }
 
     /**
@@ -745,8 +761,16 @@ class RoleManager
             return false;
         }
 
+        //if we already have the role, then it's ok
         if ($ars->hasRole($role->getName())) {
             return true;
+        }
+        
+        if ($role->getWorkspace()) {
+            $maxUsers = $role->getWorkspace()->getMaxUsers();
+            $countByWorkspace = $this->container->get('claroline.manager.workspace_manager')->countUsers($role->getWorkspace(), true);
+            
+            if ($maxUsers <= $countByWorkspace) return false;
         }
 
         if ($ars instanceof User) {

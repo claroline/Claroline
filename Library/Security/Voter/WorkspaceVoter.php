@@ -43,6 +43,16 @@ class WorkspaceVoter implements VoterInterface
     public function vote(TokenInterface $token, $object, array $attributes)
     {
         if ($object instanceof Workspace) {
+            //check the expiration date first
+            $now = new \DateTime();
+
+            if ($object->getEndDate()) {
+                if ($now->getTimeStamp() > $object->getEndDate()->getTimeStamp()) {
+                    return VoterInterface::ACCESS_DENIED;
+                }
+            }
+
+            //then we do all the rest
             $toolName = isset($attributes[0]) && $attributes[0] !== 'OPEN' ?
                 $attributes[0] :
                 null;

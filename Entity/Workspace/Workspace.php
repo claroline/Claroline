@@ -26,6 +26,7 @@ class Workspace
 {
     const DEFAULT_MAX_STORAGE_SIZE = "1 TB";
     const DEFAULT_MAX_FILE_COUNT = 10000;
+    const DEFAULT_MAX_USERS = 10000;
 
     protected static $visitorPrefix = 'ROLE_WS_VISITOR';
     protected static $collaboratorPrefix = 'ROLE_WS_COLLABORATOR';
@@ -65,6 +66,11 @@ class Workspace
      * @ORM\Column(type="integer", nullable=false)
      */
     protected $maxUploadResources = 10000;
+
+    /**
+     * @ORM\Column(type="integer", nullable=false)
+     */
+    protected $maxUsers = 10000;
 
     /**
      * @ORM\Column(type="boolean")
@@ -393,7 +399,7 @@ class Workspace
         return $this->endDate;
     }
 
-    public function setEndDate($endDate)
+    public function setEndDate(\DateTime $endDate)
     {
         $this->endDate = $endDate;
     }
@@ -416,5 +422,15 @@ class Workspace
     public function setWorkspaceType($workspaceType)
     {
         $this->workspaceType = $workspaceType;
+    }
+
+    public function setMaxUsers($maxUsers)
+    {
+        $this->maxUsers = $maxUsers;
+    }
+
+    public function getMaxUsers()
+    {
+        return $this->maxUsers;
     }
 }

@@ -59,6 +59,7 @@ class WidgetHomeTabConfigRepository extends EntityRepository
             FROM Claroline\CoreBundle\Entity\Widget\WidgetHomeTabConfig whtc
             WHERE whtc.homeTab = :homeTab
             AND whtc.user = :user
+            AND whtc.workspace IS NULL
             AND whtc.type = 'desktop'
             ORDER BY whtc.widgetOrder ASC
         ";
@@ -76,6 +77,7 @@ class WidgetHomeTabConfigRepository extends EntityRepository
             FROM Claroline\CoreBundle\Entity\Widget\WidgetHomeTabConfig whtc
             WHERE whtc.homeTab = :homeTab
             AND whtc.user = :user
+            AND whtc.workspace IS NULL
             AND whtc.type = 'desktop'
             AND whtc.visible = true
             ORDER BY whtc.widgetOrder ASC
@@ -97,6 +99,7 @@ class WidgetHomeTabConfigRepository extends EntityRepository
             FROM Claroline\CoreBundle\Entity\Widget\WidgetHomeTabConfig whtc
             WHERE whtc.homeTab = :homeTab
             AND whtc.workspace = :workspace
+            AND whtc.user IS NULL
             AND whtc.type = 'workspace'
             ORDER BY whtc.widgetOrder ASC
         ";
@@ -117,6 +120,7 @@ class WidgetHomeTabConfigRepository extends EntityRepository
             FROM Claroline\CoreBundle\Entity\Widget\WidgetHomeTabConfig whtc
             WHERE whtc.homeTab = :homeTab
             AND whtc.workspace = :workspace
+            AND whtc.user IS NULL
             AND whtc.type = 'workspace'
             AND whtc.visible = true
             ORDER BY whtc.widgetOrder ASC
@@ -141,6 +145,7 @@ class WidgetHomeTabConfigRepository extends EntityRepository
             WHERE whtc.homeTab = :homeTabId
             AND htc.visible = true
             AND whtc.workspace = :workspace
+            AND whtc.user IS NULL
             AND whtc.type = 'workspace'
             AND whtc.visible = true
             ORDER BY whtc.widgetOrder ASC
@@ -166,6 +171,7 @@ class WidgetHomeTabConfigRepository extends EntityRepository
             WHERE whtc.homeTab = :homeTabId
             AND htc.visible = true
             AND whtc.workspace = :workspace
+            AND whtc.user IS NULL
             AND whtc.type = 'workspace'
             AND whtc.visible = true
             AND whtc.widgetInstance = :widgetId
@@ -176,59 +182,6 @@ class WidgetHomeTabConfigRepository extends EntityRepository
         $query->setParameter('workspace', $workspace);
 
         return $query->getOneOrNullResult();
-    }
-
-    public function findOrderOfLastWidgetInAdminHomeTab(HomeTab $homeTab)
-    {
-        $dql = "
-            SELECT MAX(whtc.widgetOrder) AS order_max
-            FROM Claroline\CoreBundle\Entity\Widget\WidgetHomeTabConfig whtc
-            WHERE whtc.homeTab = :homeTab
-            AND whtc.user IS NULL
-            AND whtc.workspace IS NULL
-        ";
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('homeTab', $homeTab);
-
-        return $query->getSingleResult();
-    }
-
-    public function findOrderOfLastWidgetInHomeTabByUser(
-        HomeTab $homeTab,
-        User $user
-    )
-    {
-        $dql = "
-            SELECT MAX(whtc.widgetOrder) AS order_max
-            FROM Claroline\CoreBundle\Entity\Widget\WidgetHomeTabConfig whtc
-            WHERE whtc.homeTab = :homeTab
-            AND whtc.user = :user
-            AND whtc.type = 'desktop'
-        ";
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('homeTab', $homeTab);
-        $query->setParameter('user', $user);
-
-        return $query->getSingleResult();
-    }
-
-    public function findOrderOfLastWidgetInHomeTabByWorkspace(
-        HomeTab $homeTab,
-        Workspace $workspace
-    )
-    {
-        $dql = "
-            SELECT MAX(whtc.widgetOrder) AS order_max
-            FROM Claroline\CoreBundle\Entity\Widget\WidgetHomeTabConfig whtc
-            WHERE whtc.homeTab = :homeTab
-            AND whtc.workspace = :workspace
-            AND whtc.type = 'workspace'
-        ";
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('homeTab', $homeTab);
-        $query->setParameter('workspace', $workspace);
-
-        return $query->getSingleResult();
     }
 
     public function updateAdminWidgetHomeTabConfig(HomeTab $homeTab, $widgetOrder)
@@ -259,6 +212,7 @@ class WidgetHomeTabConfigRepository extends EntityRepository
             SET whtc.widgetOrder = whtc.widgetOrder - 1
             WHERE whtc.homeTab = :homeTab
             AND whtc.user = :user
+            AND whtc.workspace IS NULL
             AND whtc.widgetOrder > :widgetOrder
         ";
         $query = $this->_em->createQuery($dql);
@@ -280,6 +234,7 @@ class WidgetHomeTabConfigRepository extends EntityRepository
             SET whtc.widgetOrder = whtc.widgetOrder - 1
             WHERE whtc.homeTab = :homeTab
             AND whtc.workspace = :workspace
+            AND whtc.user IS NULL
             AND whtc.widgetOrder > :widgetOrder
         ";
         $query = $this->_em->createQuery($dql);
@@ -324,6 +279,7 @@ class WidgetHomeTabConfigRepository extends EntityRepository
             SET whtc.widgetOrder = :newWidgetOrder
             WHERE whtc.homeTab = :homeTab
             AND whtc.user = :user
+            AND whtc.workspace IS NULL
             AND whtc.widgetOrder = :widgetOrder
         ";
         $query = $this->_em->createQuery($dql);
@@ -347,6 +303,7 @@ class WidgetHomeTabConfigRepository extends EntityRepository
             SET whtc.widgetOrder = :newWidgetOrder
             WHERE whtc.homeTab = :homeTab
             AND whtc.workspace = :workspace
+            AND whtc.user IS NULL
             AND whtc.widgetOrder = :widgetOrder
         ";
         $query = $this->_em->createQuery($dql);
@@ -370,6 +327,7 @@ class WidgetHomeTabConfigRepository extends EntityRepository
             WHERE whtc.homeTab = :homeTab
             AND whtc.widgetInstance = :widgetInstance
             AND whtc.user = :user
+            AND whtc.workspace IS NULL
             AND whtc.type = 'admin_desktop'
         ";
         $query = $this->_em->createQuery($dql);

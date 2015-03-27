@@ -214,7 +214,8 @@ class RolesController extends Controller
     /**
      * @EXT\Route(
      *     "/{workspace}/role/{role}/remove",
-     *     name="claro_workspace_role_remove"
+     *     name="claro_workspace_role_remove",
+     *     options={"expose"=true}
      * )
      */
     public function removeRoleAction(Workspace $workspace, Role $role)
@@ -713,18 +714,26 @@ class RolesController extends Controller
     }
 
     /**
-     * @EXT\Route("/users/pending/{workspace}",
-     *     name="claro_users_pending"
+     * @EXT\Route("/users/pending/{workspace}/page/{page}/max/{max}/search/{search}",
+     *     name="claro_users_pending",
+     *     defaults={"page"=1, "search"="", "max"=50}
      * )
      * @EXT\Template("ClarolineCoreBundle:Tool\workspace\roles:workspaceusersPending.html.twig")
      */
-    public function pendingUsersAction(Workspace $workspace)
+    public function pendingUsersAction(
+        Workspace $workspace,
+        $search = '',
+        $page = 1,
+        $max = 50
+    )
     {
         $this->checkAccess($workspace);
 
         return array(
             'workspace' => $workspace,
-            'pager' => $this->wksUqmanager->getAll($workspace)
+            'pager' => $this->wksUqmanager->getAll($workspace, $page, $max, $search),
+            'max' => $max,
+            'search' => $search
         );
     }
 

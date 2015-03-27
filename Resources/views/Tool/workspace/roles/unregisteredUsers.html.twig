@@ -138,7 +138,11 @@
                             <tr id="row-{{ user.id }}" class="row-user" data-user-id="{{ user.getId() }}">
                                 <td> <input class="chk-user chk-item" type="checkbox" value="{{ user.getId() }}"></td>
                                 <td>
-                                    <a href="{{ path('claro_public_profile_view', {'publicUrl': user.getPublicUrl()}) }}"> {{user.getUsername()}}</a>
+                                    {% if user.getPublicUrl() != '' %}
+                                        <a href="{{ path('claro_public_profile_view', {'publicUrl':user.getPublicUrl()}) }}">{{ user.getUsername() }}</a>
+                                    {% else %}
+                                        {{ user.getUsername() }}
+                                    {% endif %}
                                 </td>
                                 <td>{{ user.getLastName() }}</td>
                                 <td>{{ user.getFirstName() }}</td>

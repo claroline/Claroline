@@ -16,11 +16,14 @@ use Claroline\CoreBundle\Entity\Widget\WidgetHomeTabConfig;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Manager\HomeTabManager;
 use Claroline\CoreBundle\Manager\ToolManager;
+use Claroline\CoreBundle\Manager\WidgetManager;
 use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\SecurityExtraBundle\Annotation as SEC;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -34,147 +37,61 @@ class DesktopController extends Controller
     private $em;
     private $eventDispatcher;
     private $homeTabManager;
+    private $request;
     private $router;
     private $toolManager;
+    private $widgetManager;
 
     /**
      * @DI\InjectParams({
      *     "em"                 = @DI\Inject("doctrine.orm.entity_manager"),
      *     "eventDispatcher"    = @DI\Inject("claroline.event.event_dispatcher"),
      *     "homeTabManager"     = @DI\Inject("claroline.manager.home_tab_manager"),
+     *     "requestStack"       = @DI\Inject("request_stack"),
      *     "router"             = @DI\Inject("router"),
      *     "toolManager"        = @DI\Inject("claroline.manager.tool_manager"),
+     *     "widgetManager"      = @DI\Inject("claroline.manager.widget_manager")
      * })
      */
     public function __construct(
         EntityManager $em,
         StrictDispatcher $eventDispatcher,
         HomeTabManager $homeTabManager,
+        RequestStack $requestStack,
         UrlGeneratorInterface $router,
-        ToolManager $toolManager
+        ToolManager $toolManager,
+        WidgetManager $widgetManager
     )
     {
         $this->em = $em;
         $this->eventDispatcher = $eventDispatcher;
         $this->homeTabManager = $homeTabManager;
+        $this->request = $requestStack->getCurrentRequest();
         $this->router = $router;
         $this->toolManager = $toolManager;
+        $this->widgetManager = $widgetManager;
     }
 
     /**
      * @EXT\Route(
-     *     "/home_tab/{homeTabId}/no_config/widgets",
-     *     name="claro_desktop_widgets_without_config"
+     *     "/home_tab/{homeTabId}/display/desktop/widgets",
+     *     name="claro_desktop_display_widgets"
      * )
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
-     * @EXT\Template("ClarolineCoreBundle:Widget:widgetsWithoutConfig.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:Widget:desktopWidgets.html.twig")
      *
-     * Displays registered widgets.
+     * Displays visible widgets.
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function widgetsWithoutConfigAction($homeTabId, User $user)
-    {
-        $widgets = array();
-        $configs = array();
-
-        $homeTab = $this->homeTabManager->getHomeTabById($homeTabId);
-
-        if (is_null($homeTab)) {
-            $isVisibleHomeTab = false;
-        } else {
-            $isVisibleHomeTab = $this->homeTabManager
-                ->checkHomeTabVisibilityByUser($homeTab, $user);
-            $isLockedHomeTab = $this->homeTabManager->checkHomeTabLock($homeTab);
-        }
-
-        if ($isVisibleHomeTab) {
-
-            if ($homeTab->getType() === 'admin_desktop') {
-                $adminConfigs = $this->homeTabManager->getAdminWidgetConfigs($homeTab);
-
-                if (!$isLockedHomeTab) {
-                    $userWidgetsConfigs = $this->homeTabManager
-                        ->getVisibleWidgetConfigsByUser($homeTab, $user);
-                } else {
-                    $userWidgetsConfigs = array();
-                }
-
-                foreach ($adminConfigs as $adminConfig) {
-
-                    if ($adminConfig->isLocked()) {
-                        if ($adminConfig->isVisible()) {
-                            $configs[] = $adminConfig;
-                        }
-                    } else {
-                        $existingWidgetConfig = $this->homeTabManager
-                            ->getUserAdminWidgetHomeTabConfig(
-                                $homeTab,
-                                $adminConfig->getWidgetInstance(),
-                                $user
-                            );
-                        if (count($existingWidgetConfig) === 0) {
-                            $newWHTC = new WidgetHomeTabConfig();
-                            $newWHTC->setHomeTab($homeTab);
-                            $newWHTC->setWidgetInstance($adminConfig->getWidgetInstance());
-                            $newWHTC->setUser($user);
-                            $newWHTC->setWidgetOrder($adminConfig->getWidgetOrder());
-                            $newWHTC->setVisible($adminConfig->isVisible());
-                            $newWHTC->setLocked(false);
-                            $newWHTC->setType('admin_desktop');
-                            $this->homeTabManager->insertWidgetHomeTabConfig($newWHTC);
-
-                            if ($adminConfig->isVisible()) {
-                                $configs[] = $newWHTC;
-                            }
-                        } elseif ($existingWidgetConfig[0]->isVisible()) {
-                            $configs[] = $existingWidgetConfig[0];
-                        }
-                    }
-                }
-
-                foreach ($userWidgetsConfigs as $userWidgetsConfig) {
-                    $configs[] = $userWidgetsConfig;
-                }
-            } else {
-                $configs = $this->homeTabManager->getVisibleWidgetConfigsByUser($homeTab, $user);
-            }
-
-            foreach ($configs as $config) {
-                $event = $this->eventDispatcher->dispatch(
-                    "widget_{$config->getWidgetInstance()->getWidget()->getName()}",
-                    'DisplayWidget',
-                    array($config->getWidgetInstance())
-                );
-
-                $widget['config'] = $config;
-                $widget['content'] = $event->getContent();
-                $widgets[] = $widget;
-            }
-        }
-
-        return array('widgetsDatas' => $widgets);
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/home_tab/{homeTabId}/config/widgets",
-     *     name="claro_desktop_widgets_with_config"
-     * )
-     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
-     * @EXT\Template("ClarolineCoreBundle:Widget:widgetsWithConfig.html.twig")
-     *
-     * Displays registered widgets.
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function widgetsWithConfigAction($homeTabId, User $user)
+    public function displayDesktopWidgetsAction($homeTabId, User $user)
     {
         $widgets = array();
         $configs = array();
         $lastWidgetOrder = 1;
         $isLockedHomeTab = false;
         $homeTab = $this->homeTabManager->getHomeTabById($homeTabId);
+        $initWidgetsPosition = false;
 
         if (is_null($homeTab)) {
             $isVisibleHomeTab = false;
@@ -240,6 +157,15 @@ class DesktopController extends Controller
                     $lastWidgetOrder = count($configs);
                 }
             }
+            $userWDCs = $this->widgetManager->generateWidgetDisplayConfigsForUser($user, $configs);
+
+            foreach ($userWDCs as $userWDC) {
+
+                if ($userWDC->getRow() === -1 || $userWDC->getColumn() === -1) {
+                    $initWidgetsPosition = true;
+                    break;
+                }
+            }
 
             foreach ($configs as $config) {
                 $event = $this->eventDispatcher->dispatch(
@@ -252,16 +178,19 @@ class DesktopController extends Controller
                 $widget['content'] = $event->getContent();
                 $widget['configurable'] = $config->isLocked() !== true
                     && $config->getWidgetInstance()->getWidget()->isConfigurable();
+                $widgetInstanceId = $config->getWidgetInstance()->getId();
+                $widget['widgetDisplayConfig'] = $userWDCs[$widgetInstanceId];
                 $widgets[] = $widget;
             }
         }
 
         return array(
             'widgetsDatas' => $widgets,
-            'isDesktop' => true,
             'isVisibleHomeTab' => $isVisibleHomeTab,
             'isLockedHomeTab' => $isLockedHomeTab,
-            'lastWidgetOrder' => $lastWidgetOrder
+            'lastWidgetOrder' => $lastWidgetOrder,
+            'homeTabId' => $homeTabId,
+            'initWidgetsPosition' => $initWidgetsPosition
         );
     }
 
@@ -321,11 +250,9 @@ class DesktopController extends Controller
      */
     public function openAction(User $user)
     {
-        $openedTool = $this->toolManager->getDisplayedDesktopOrderedTools($user);
-
         $route = $this->router->generate(
             'claro_desktop_open_tool',
-            array('toolName' => $openedTool[0]->getName())
+            array('toolName' => 'home')
         );
 
         return new RedirectResponse($route);

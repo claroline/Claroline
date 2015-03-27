@@ -1,35 +1,23 @@
-{% macro renderPager(search, workspaceId, pager, max, order, direction) %}
-    {% if search == '' %}
-        {{
-            pagerfanta(
-                pager,
-                'twitter_bootstrap_translated',
-                {
-                    'proximity' : 1,
-                    'routeName': 'claro_workspace_registered_user_list',
-                    'routeParams': {'workspace': workspaceId, 'max': max, 'order': order, 'direction': direction}
-                }
-            )
-        }}
-    {% else %}
-        {{
-            pagerfanta(
-                pager,
-                'twitter_bootstrap_translated',
-                {
-                    'proximity' : 1,
-                    'routeName': 'claro_workspace_registered_user_list_search',
-                    'routeParams': {'search': search, 'workspace': workspaceId, 'max': max, 'order': order, 'direction': direction }
-                }
-            )
-        }}
-    {% endif %}
+{% macro renderPager(search, workspaceId, pager, max) %}
+    {{
+        pagerfanta(
+            pager,
+            'twitter_bootstrap_translated',
+            {
+                'proximity' : 1,
+                'routeName': 'claro_users_pending',
+                'routeParams': {'workspace': workspaceId, 'max': max, 'search': search}
+            }
+        )
+    }}
 {% endmacro %}
 
 {% from _self import renderPager %}
 
 {% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
-{% block title %}{{ parent() ~ ' - ' ~ "users_list" | trans({}, "platform") | striptags | raw }}{% endblock %}
+{% block title %}
+    {{ parent() ~ ' - ' ~ "pending_users_list" | trans({}, "platform") | striptags | raw }}
+{% endblock %}
 
 {% block breadcrumb %}
     {{
@@ -37,8 +25,8 @@
             workspace,
             [
                 {
-                    'name': 'users'|trans({}, 'platform'),
-                    'href': path('claro_users_pending',{'workspace':workspace.getId()})
+                    'name': 'pending_users_list'|trans({}, 'platform'),
+                    'href': ''
                 }
             ]
         )
@@ -53,7 +41,7 @@
         <li> <a href="{{ path('claro_workspace_roles', {'workspace': workspace.getId()} ) }}">{{ 'roles'|trans({}, 'platform') }}</a> </li>
         <li class="active"><a href="{{path('claro_users_pending',{'workspace':workspace.getId()})}}"> {{'pending'|trans({},'platform') }} </a> </li>
     </ul>
-    <h3>{{ 'users_list'|trans({}, 'platform') }}</h3>
+    <h3>{{ 'pending_users_list'|trans({}, 'platform') }}</h3>
     {{ macros.flashBox() }}
     <br>
 
@@ -110,7 +98,7 @@
         </div>
     
         {% if pager.getNbPages() > 1 %}
-            {{ renderPager(search, workspace.getId(), pager, max, order, direction) }}
+            {{ renderPager(search, workspace.getId(), pager, max) }}
         {% endif %}
     {% else %}
         <div class="alert alert-warning">{{ 'no_user'|trans({}, 'platform') }}</div>

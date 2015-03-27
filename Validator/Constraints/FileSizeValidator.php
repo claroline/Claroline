@@ -22,7 +22,7 @@ class FileSizeValidator extends ConstraintValidator
 {
     public function validate($value, Constraint $constraint)
     {
-        $validUnits = array('KB', 'MB', 'GB', 'TB');
+        $validUnits = array('B', 'KB', 'MB', 'GB', 'TB');
         $value = str_replace(' ', '', $value);
 
         $replacements = array('');

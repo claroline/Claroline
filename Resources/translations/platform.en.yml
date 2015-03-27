@@ -133,6 +133,7 @@ add_workspace: 'Add workspace'
 admin: Administrator
 admin_analytics: 'Platform analytics'
 admin_analytics_no_data: 'No data.'
+admin_desktop_and_home_tabs_configuration: 'Desktop and home tabs configuration'
 admin_home_tabs_configuration: 'Home tabs configuration'
 admin_logs: 'Platform logs'
 admin_third_party_application: 'Third-party applications'
@@ -314,9 +315,11 @@ delete_learning_outcomes: 'Delete learning outcomes'
 delete_learning_outcomes_confirm_message: 'Do you really want to delete this learning outcomes ?'
 description: 'Description'
 desktop: Desktop
+desktop_and_home: 'Desktop and home'
 desktop_home_tab_creation: 'Desktop Home tab creation'
 desktop_home_tab_edition: 'Desktop Home tab edition'
 desktop_home_tabs: 'Desktop Home tabs'
+desktop_parameters: 'Desktop parameters'
 desktop_tools: 'Desktop tools'
 directory: Directory
 directory_form_name: Name
@@ -448,6 +451,8 @@ home: Home
 home_manager: 'Home manager'
 home_parameters: 'Home parameters'
 home_tab: 'Home tab'
+home_tab_config_form_locked: 'Locked'
+home_tab_config_form_visible: 'Visible'
 home_tab_creation: 'Home tab creation'
 home_tab_delete_confirm_message: 'Do you really want to delete this Home tab?'
 home_tab_delete_confirm_title: 'Delete Home tab'
@@ -549,6 +554,8 @@ manual: Manual
 manual_evaluation_explanation: 'Manual evaluation by a workspace manager'
 max_size_is: 'The maximum size is %size%'
 media_most_viewed: 'Most viewed media'
+menu_bar: 'Menu bar'
+menu_bar_configuration: 'Menu bar configuration'
 message_form_content: Content
 message_form_object: Object
 message_form_to: To
@@ -659,6 +666,7 @@ password_ok: 'Your password has been changed, you can login now'
 paste: Paste
 path: Path
 pending: 'Pending'
+pending_users_list: 'Pending users list'
 permissions: Permissions
 personal_data: 'No personal data will be retrieved. The technical and statistical data collected will be used only in relation to the Claroline Connect project and will not be otherwise broadcast.'
 personal_workspace: 'Personal workspace'
@@ -992,6 +1000,10 @@ user_creation_success: The user account has been successfully created.
 user_limit_reached: The user limit has been reached.
 user_limit_success_update: The user limit by role has been successfully updated.
 user_limit_too_low: There is already %total% %role%(s). The limit %newMax% is too low.
+user_menu: 'User menu'
+user_menu_configuration: 'User menu configuration'
+user_options: 'Preferences'
+user_options_form_desktopBackgroundColor: 'Desktop background color'
 user_parameters: 'User parameters'
 user_picker: 'User picker'
 user_profile: 'User profile'
@@ -1025,7 +1037,11 @@ visitor: Visitor
 warning_user_impersonation: 'You are connected as %user%.'
 warning_workspace_impersonation: 'You are connected as %role% from the workspace %workspace%.'
 widget: Widget
+widget_configuration: 'Widget configuration'
+widget_display_config_form_color: 'Color'
 widget_display_form_name: Name
+widget_home_tab_config_form_locked: 'Locked'
+widget_home_tab_config_form_visible: 'Visible'
 widget_home_tab_delete_confirm_message: 'Do you really want to remove this widget from this Home tab?'
 widget_home_tab_delete_confirm_title: 'Remove widget from Home tab'
 widget_settings: 'Widget settings'
@@ -1123,7 +1139,7 @@ package_update_impossible: 'Package update impossible on this page. please conta
 parameters_save_success: 'Parameters saved with success.'
 parameters_save_error: 'An error occured while saving parameters.'
 import_profile_pics: Import profile pics
-import_profile_pics_explanation: You must upload a zip file. Each file must be structured this way: username.extension
+import_profile_pics_explanation: 'You must upload a zip file. Each file must be structured this way: username.extension'
 add_field_to_panel: Add a field
 add_panel_to_facet: Add a panel
 create_pane: Create a pane
@@ -1150,4 +1166,7 @@ install_update_cant_be_undone: Once an operation is started, it cannot be undone
 list_view: List view (beta)
 last_modification: Last modification
 created_by: Created by %creator% the %creationDate%
-updated_by: Last update: %modificationDate%
+updated_by: 'Last update: %modificationDate%'
+display_at_registration: Display at registration
+workspace_max_users: Maximum number of user per workspace
+workspace_edit_form_endDate : Expiration date
