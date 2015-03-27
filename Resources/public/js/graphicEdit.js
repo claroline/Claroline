@@ -10,6 +10,7 @@ window.onload = function () {
         var content = info[x].split(';');
         position(content[0], content[1], x, content[2], content[3], content[4], content[5]);
     }
+    
 };
 
 function position(shape, color, i, prefix, value, size, points) {
@@ -135,10 +136,12 @@ function position(shape, color, i, prefix, value, size, points) {
     alreadyPlacedAnswersZoneEdit(shape, color, prefix, points);
 
     grade++;
+    $('#Answer').children('div').css({'margin': 'auto'});
 }
 
 function alreadyPlacedAnswersZoneEdit(shape, color, pathImg, point) {
 
+     
     var contenu = '<tr><td class="classic">' + (parseInt(grade) + 1) + '</td><td class="classic">';
 
     if (shape == 'square') {
@@ -188,7 +191,20 @@ function alreadyPlacedAnswersZoneEdit(shape, color, pathImg, point) {
             </select></td>';
 
     contenu += '<td class="classic"><input class="form-control" type="TEXT" id="points' + grade + '" value="'
-                    + point + '" onblur="changePoints(\'' + translations['tradWrongPoint'] + '\', this);"></td></tr>';
-
-    $('#AlreadyPlacedArray').find('tbody').append(contenu);
+                    + point + '" onblur="changePoints(\'' + translations['tradWrongPoint'] + '\', this);"></td><td class="classic"><a class="btn btn-danger" id="delete'+m+'"><i class="fa fa-close"></i></a></td></tr>';
+            $('#AlreadyPlacedArray').find('tbody').append(contenu);
+    //Button delete
+           $('#delete'+m).click(function() {
+               $(this).parent().parent().remove();
+               var chiffre = $(this).attr('id').replace('delete', '');
+               if ($('#dragContainer'+chiffre).hasClass('ui-draggable')) {
+                       $('#dragContainer'+chiffre).remove();
+               }
+               $('#AlreadyPlacedArray').find('td:contains("' + numToDel + '")').parent('tr').remove();
+               setOrderAfterDel();
+           });
+    m++;
+   
+    //Displays the array anwser
+    $('#AlreadyPlacedArray').css({"display" : "inline"});
 }

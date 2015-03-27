@@ -10,9 +10,9 @@ use UJM\ExoBundle\Form\InteractionHoleType;
 use UJM\ExoBundle\Form\InteractionHoleHandler;
 
 /**
-* InteractionHole controller.
-*
-*/
+ * InteractionHole controller.
+ * 
+ */
 class InteractionHoleController extends Controller
 {
 

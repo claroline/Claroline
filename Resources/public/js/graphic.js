@@ -34,7 +34,7 @@ function sendData(select, path, prefx) {
             // Set its new attributes
             $(answerImg).attr("id", "AnswerImage");
             $(answerImg).attr('src', data);
-            
+
             // Add it to the page
             $('#Answer').append(answerImg);
 
@@ -68,7 +68,7 @@ function sendData(select, path, prefx) {
                     minWidth: 70,
                     maxWidth: maxSize
                 });
-                
+                //Image center
                 $('#Answer').children('div').css({'margin': 'auto'});
             });
         }
@@ -101,12 +101,12 @@ function LoadPic(path, prefx, iddoc) {
 
 /**
  * Add an answer zone
- * 
+ *
  * @param {String} noImage Information no image selected
  * @returns array
  */
  function addAnswerZone(noImage)
- {  
+ {
     if($('#AnswerImage').length){
 
                 $('#Answer').append('<div id="dragContainer' + grade +
@@ -178,9 +178,9 @@ function LoadPic(path, prefx, iddoc) {
                 //Creation head of the table
                 if ($('#AnswerImage').find('#dragContainer0').length > 1) {
                  $('#AlreadyPlacedArray').css({"display" : "none"});
-         
+
                 } else {
-                 $('#AlreadyPlacedArray').css({"display" : "inline"}); 
+                 $('#AlreadyPlacedArray').css({"display" : "inline"});
                 }
             }else{
                 alert(noImage);
@@ -274,7 +274,7 @@ function Check( noQuestion, noImg, noAnswerZone, invite) {
                             // And send it to the controller
                             $('#coordsZone').val($('#coordsZone').val() + val + ',');
                         }
-                    
+
                 }
             }
         }
@@ -483,11 +483,11 @@ function alreadyPlacedAnswersZone(shape, color, pathImg, point) {
                 <option value="orange" style="background-color:#FF7A00;"> &nbsp;&nbsp;&nbsp; </option>\n\
                 <option value="yellow" style="background-color:#FFFF09;"> &nbsp;&nbsp;&nbsp; </option>\n\
             </select></td>';
-    
+
     contenu += '<td class="classic"><input class="form-control" type="TEXT" id="points' + grade + '" value="'
                     + point + '" onblur="changePoints(\'' + translations['tradWrongPoint'] + '\', this);"></td><td class="classic"><a class="btn btn-danger" id="delete'+m+'"><i class="fa fa-close"></i></a></td></tr>';
     $('#AlreadyPlacedArray').find('tbody').append(contenu);
-    
+
           $('#delete'+m).click(function() {
            $(this).parent().parent().remove();
            var chiffre = $(this).attr('id').replace('delete', '');
@@ -495,7 +495,7 @@ function alreadyPlacedAnswersZone(shape, color, pathImg, point) {
               if ($('#dragContainer'+chiffre).hasClass('ui-draggable')) {
                 $('#dragContainer'+chiffre).remove();
             }
-                
+
                 $('#AlreadyPlacedArray').find('td:contains("' + numToDel + '")').parent('tr').remove();
 //
              setOrderAfterDel();
@@ -599,4 +599,3 @@ function setOrderAfterDel() {
     });
 }
 
- 
