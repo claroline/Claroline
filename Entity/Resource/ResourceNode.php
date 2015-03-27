@@ -327,7 +327,7 @@ class ResourceNode
     /**
      * Returns the children resource instances.
      *
-     * @return \Doctrine\Common\ArrayCollection
+     * @return \Doctrine\Common\ArrayCollection|ResourceNode[]
      */
     public function getChildren()
     {

@@ -18,6 +18,10 @@ class Updater040801 extends Updater
 {
     private $container;
     private $om;
+
+    /**
+     * @var \Claroline\CoreBundle\Manager\ToolManager
+     */
     private $toolManager;
 
     public function __construct(ContainerInterface $container)
@@ -96,7 +100,7 @@ class Updater040801 extends Updater
         $tool = $this->toolManager->getOneToolByName('parameters');
 
         if (!is_null($tool)) {
-            $this->toolManager->createOrderedToolByToolForAllUsers($tool);
+            $this->toolManager->createOrderedToolByToolForAllUsers($this->logger, $tool);
         }
     }
 
@@ -106,7 +110,7 @@ class Updater040801 extends Updater
         $tool = $this->toolManager->getOneToolByName('resource_manager');
 
         if (!is_null($tool)) {
-            $this->toolManager->createOrderedToolByToolForAllUsers($tool);
+            $this->toolManager->createOrderedToolByToolForAllUsers($this->logger, $tool);
         }
     }
 }
