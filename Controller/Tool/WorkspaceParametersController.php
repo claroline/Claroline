@@ -119,7 +119,7 @@ class WorkspaceParametersController extends Controller
         $creationDate = is_null($workspace->getCreationDate()) ? null : $this->utilities->intlDateFormat(
             $workspace->getCreationDate()
         );
-        $expDate = is_null($workspace->getCreationDate()) ? null : $this->utilities->intlDateFormat(
+        $expDate = is_null($workspace->getEndDate()) ? null : $this->utilities->intlDateFormat(
             $workspace->getEndDate()
         );
         $count = $this->workspaceManager->countUsers($workspace, true);

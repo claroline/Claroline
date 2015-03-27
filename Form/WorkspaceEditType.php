@@ -73,7 +73,7 @@ class WorkspaceEditType extends AbstractType
                     'text',
                     array(
                         'disabled' => 'disabled',
-                        'data' => $this->creationDate
+                        'data' => $this->expirationDate
                     )
                 );
         }
