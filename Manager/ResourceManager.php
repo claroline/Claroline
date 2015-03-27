@@ -519,14 +519,10 @@ class ResourceManager
     }
 
     /**
-     * @param ResourceNode|integer $node
+     * @param ResourceNode $node
      */
-    public function reorder($node)
+    public function reorder(ResourceNode $node)
     {
-        if (!($node instanceof ResourceNode)) {
-            $node = $this->container->get('doctrine.orm.entity_manager')->getReference('\Claroline\CoreBundle\Entity\Resource\ResourceNode',$node);
-        }
-
         /** @var \Claroline\CoreBundle\Repository\ResourceNodeRepository $resourceNodeRepository */
         $resourceNodeRepository = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceNode');
         $children = $resourceNodeRepository->getChildren($node, true, 'index');
@@ -537,13 +533,12 @@ class ResourceManager
             $index++;
             $this->om->persist($child);
         }
+
         $this->om->flush();
 
         foreach ($children as $child) {
             $this->om->detach($child);
         }
-
-        $this->om->detach($node);
     }
 
     /**
