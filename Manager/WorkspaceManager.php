@@ -783,10 +783,10 @@ class WorkspaceManager
     {
         if ($includeGrps) {
             $wsRoles = $this->roleManager->getRolesByWorkspace($workspace);
-            
+
             return $this->container->get('claroline.manager.user_manager')->countByRoles($wsRoles, true);
         }
-        
+
         return $this->workspaceRepo->countUsers($workspace->getId());
     }
 
@@ -1027,5 +1027,15 @@ class WorkspaceManager
             $prefix,
             $executeQuery
         );
+    }
+
+    public function toArray(Workspace $workspace)
+    {
+        $data = array();
+        $data['id'] = $workspace->getId();
+        $data['name'] = $workspace->getName();
+        $data['code'] = $workspace->getCode();
+
+        return $data;
     }
 }

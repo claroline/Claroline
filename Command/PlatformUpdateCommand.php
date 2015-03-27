@@ -44,17 +44,22 @@ class PlatformUpdateCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $output->writeln('<comment>Updating the platform...</comment>');
-        $installer = $this->getContainer()->get('claroline.installation.platform_installer');
-        $refresher = $this->getContainer()->get('claroline.installation.refresher');
-        $installer->setOutput($output);
         $verbosityLevelMap = array(
             LogLevel::NOTICE => OutputInterface::VERBOSITY_NORMAL,
             LogLevel::INFO   => OutputInterface::VERBOSITY_NORMAL,
             LogLevel::DEBUG  => OutputInterface::VERBOSITY_NORMAL
         );
         $consoleLogger = new ConsoleLogger($output, $verbosityLevelMap);
+
+        /** @var \Claroline\CoreBundle\Library\Installation\PlatformInstaller $installer */
+        $installer = $this->getContainer()->get('claroline.installation.platform_installer');
+        $installer->setOutput($output);
         $installer->setLogger($consoleLogger);
         $installer->installFromOperationFile();
+
+        /** @var \Claroline\CoreBundle\Library\Installation\Refresher $refresher */
+        $refresher = $this->getContainer()->get('claroline.installation.refresher');
+
         $refresher->dumpAssets($this->getContainer()->getParameter('kernel.environment'));
         $refresher->compileGeneratedThemes();
 
