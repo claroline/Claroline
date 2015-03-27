@@ -8,8 +8,6 @@
 namespace Innova\CollecticielBundle\Controller;
 
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Event\Log\LogResourceReadEvent;
-use Claroline\CoreBundle\Event\Log\LogResourceUpdateEvent;
 use Innova\CollecticielBundle\Entity\Correction;
 use Innova\CollecticielBundle\Entity\Dropzone;
 use Innova\CollecticielBundle\Entity\Drop;
@@ -30,14 +28,12 @@ use Innova\CollecticielBundle\Form\CorrectionCommentType;
 use Innova\CollecticielBundle\Form\CorrectionCriteriaPageType;
 use Innova\CollecticielBundle\Form\CorrectionStandardType;
 use Innova\CollecticielBundle\Form\CorrectionDenyType;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
-use Doctrine\DBAL\Query\QueryBuilder;
-use Pagerfanta\Adapter\DoctrineDbalSingleTableAdapter;
 use Pagerfanta\Exception\NotValidCurrentPageException;
 use Pagerfanta\Pagerfanta;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;

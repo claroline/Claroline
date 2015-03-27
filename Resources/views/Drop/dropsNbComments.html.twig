@@ -1,0 +1,17 @@
+{#
+{% set nbFinishedCorrections = 11 %}
+
+{%  for correction in drop.corrections %}
+    {% if correction.finished == true and correction.valid %}
+        {% set nbFinishedCorrections = nbFinishedCorrections + 1 %}
+    {% endif %}
+{%  endfor %}
+
+{{ nbCommentNotRead }}
+
+
+
+ #}
+
+ {{ dump(nbCommentNotRead) }}
+

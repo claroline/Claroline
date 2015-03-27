@@ -7,8 +7,8 @@
 
 namespace Innova\CollecticielBundle\Repository;
 
-
 use Doctrine\ORM\EntityRepository;
+use Claroline\CoreBundle\Entity\User;
 use Innova\CollecticielBundle\Entity\Drop;
 use Innova\CollecticielBundle\Entity\Dropzone;
 
@@ -440,34 +440,11 @@ class DropRepository extends EntityRepository
     */
 
     /**
-     *  Pour compter les commentaires non lus pour l'utilisateur indiqué
-     * @param $userId
-    */
-    public function countCommentNotRead($userId)
-    {
-
-        $dql = "
-        SELECT count(id) FROM Innova\CollecticielBundle\Entity\Comment c
-        WHERE id NOT IN (
-            SELECT DISTINCT comment FROM InnovaCollecticielBundle:CommentRead cr
-            )
-        AND c.user = :userId
-        ";
-
-        $query = $this->_em->createQuery($dql);
-
-        $query->setParameter('userId', $userId());
-
-        return $query;
-    }
-
-    /**
      *  Pour compter les devoirs à corriger pour l'utilisateur indiqué
      * @param $userId
     */
-    public function countTextToRead($userId)
+    public function countTextToRead(User $user)
     {
-
 
         // $dql = "
         //     select count(*)
@@ -478,14 +455,15 @@ class DropRepository extends EntityRepository
         //     and user_id = 2
         // ";
 
-       $qb = $this->createQueryBuilder('document')
+       $qb = $this->createQueryBuilder('drop')
             ->select('drop, document')
-            ->andWhere('document.validate = true')
-            ->andWhere('drop.user_id = :userId')
             ->leftJoin('drop.documents', 'document')
-            ->setParameter('userId', $userId);
+            ->andWhere('document.validate = true')
+            ->andWhere('drop.user = :user')
+            ->setParameter('user', $user);
 
         $numberDocuments = count($qb->getQuery()->getResult());
+echo "Utilisateur numéro " . $user->getId() . " a " . $numberDocuments . " document(s)";die();
 
         return $numberDocuments;
 

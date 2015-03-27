@@ -166,25 +166,6 @@ class DropController extends DropzoneBaseController
 
 
     /**
-     * InnovaERV
-     * Méthode de calculs des données pour affichage dans la "liste des vues personnels"
-    */
-    private function addDropsStatsView($dropzone, $array)
-    {
-        $dropRepo = $this->getDoctrine()->getManager()->getRepository('InnovaCollecticielBundle:Drop');
-        $array['nbDropCorrected'] = $dropRepo->countDropsFullyCorrected($dropzone);
-        $array['nbDrop'] = $dropRepo->countDrops($dropzone);
-
-//var_dump($dropRepo->getUser()->getId());die();
-        /** InnovaERV : ajout pour calculer les 2 zones **/
-//        $documents = $dropRepo->getDocuments();
-//        $array['nbCommentNotRead'] = $dropRepo->countCommentNotRead($dropRepo->getUser()->getId());
-//        $array['nbTextToRead'] = $dropRepo->countTextToRead($dropRepo->getUser()->getId();
-
-        return $array;
-    }
-
-    /**
      *
      * @Route(
      *      "/{resourceId}/drops/by/user",
@@ -551,6 +532,23 @@ class DropController extends DropzoneBaseController
 
         $countUnterminatedDrops = $dropRepo->countUnterminatedDropsByDropzone($dropzone->getId());
 
+        $userToCommentCount = array();
+
+        foreach ($dropzone->getDrops() as $drop) {
+            //var_dump($dropRepo->getId());die();
+            /** InnovaERV : ajout pour calculer les 2 zones **/
+
+            $nbCommentsPerUser = $this->getDoctrine()
+                                ->getRepository('InnovaCollecticielBundle:Comment')
+                                ->countCommentNotRead($drop->getUser());
+//                                ->countTextToRead($drop->getUser());
+
+            $userToCommentCount[$drop->getUser()->getId()] = $nbCommentsPerUser;
+            //$array['nbTextToRead'] = $dropRepo->countTextToRead($dropRepo->getUser()->getId();
+            //$drop->countCommentNotRead = $dropRepo->countCommentNotRead($dropRepo->getUser()->getId());
+            //$drop->countnbTextToRead = $dropRepo->countTextToRead($dropRepo->getUser()->getId());
+        }
+
         $adapter = new DoctrineORMAdapter($dropsQuery);
         $pager = new Pagerfanta($adapter);
         $pager->setMaxPerPage(DropzoneBaseController::DROP_PER_PAGE);
@@ -572,18 +570,14 @@ class DropController extends DropzoneBaseController
             }
         }
 
-        /** InnovaERV **/
-        // var_dump($pager);die();
-        /** Fin InnovaERV **/
-        $dataToView = $this->addDropsStatsView($dropzone, array(
+        $dataToView = $this->addDropsStats($dropzone, array(
             'workspace' => $dropzone->getResourceNode()->getWorkspace(),
             '_resource' => $dropzone,
             'dropzone' => $dropzone,
             'unterminated_drops' => $countUnterminatedDrops,
             'pager' => $pager,
+            'nbCommentNotRead' => $userToCommentCount
         ));
-
-        //var_dump($dataToView);die();
 
         return $dataToView;
     }

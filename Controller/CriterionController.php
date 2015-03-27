@@ -7,8 +7,6 @@
 
 namespace Innova\CollecticielBundle\Controller;
 
-use Claroline\CoreBundle\Event\Log\LogResourceReadEvent;
-use Claroline\CoreBundle\Event\Log\LogResourceUpdateEvent;
 use Innova\CollecticielBundle\Entity\Criterion;
 use Innova\CollecticielBundle\Entity\Dropzone;
 use Innova\CollecticielBundle\Event\Log\LogCriterionCreateEvent;
@@ -18,7 +16,6 @@ use Innova\CollecticielBundle\Form\CriterionDeleteType;
 use Innova\CollecticielBundle\Form\CriterionType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 class CriterionController extends DropzoneBaseController

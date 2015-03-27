@@ -7,7 +7,25 @@
 namespace Innova\CollecticielBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use Claroline\CoreBundle\Entity\User;
 
 class CommentRepository extends EntityRepository {
+
+    /**
+     *  Pour compter les commentaires non lus pour l'utilisateur indiqué
+     * @param $user
+    */
+    public function countCommentNotRead(User $user)
+    {
+
+       $qb = $this->createQueryBuilder('comment')
+            ->select('comment')
+            ->leftJoin('comment.comments', 'comment_read')
+            ->andWhere('comment_read.id is null')
+            ->andWhere('comment.user = :user')
+            ->setParameter('user', $user);
+
+        return count($qb->getQuery()->getResult());
+    }
 
 }

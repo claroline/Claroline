@@ -33,7 +33,8 @@
                     {{ drop.user.firstName|capitalize }} {{ drop.user.lastName|upper }}
                 </td>
                 <td>
-                    0 <!-- nbCommentNotRead  Afficher ici la valeur "Commentaires non lus" -->
+                    <!-- Afficher ici la valeur "Commentaires non lus" -->
+                    {% include 'InnovaCollecticielBundle:Drop:dropsNbComments.html.twig' %}
                 </td>
                 <td>
                     0 <!--Afficher ici la valeur "Devoirs à corriger" -->
