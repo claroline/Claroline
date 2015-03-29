@@ -26,7 +26,9 @@
         "icap/lesson-bundle": "~4.0",
         "icap/portfolio-bundle": "~4.0",
         "icap/website-bundle": "~2.0",
-        "icap/dropzone-bundle": "~0.9"
+        "icap/dropzone-bundle": "~0.9",
+        "ujm/exo-bundle": "~1.0",
+        "innova/path-bundle: "~4.0"
     },
     "require-dev": {
         "mockery/mockery": "dev-master@dev",
