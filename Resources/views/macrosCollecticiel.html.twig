@@ -1,4 +1,4 @@
-{% macro displayDocumentsList(drop, dropzone, width, mode, documentListText ) %}
+{% macro innovaDisplayDocumentsList(drop, dropzone, width, mode, documentListText ) %}
     <div class="row">
         <div class="col-md-{{ width }}">
             {% if documentListText is not null %}
@@ -15,7 +15,6 @@
                             <th></th>
                             <th>{{ 'Type of document'|trans({}, 'innova_collecticiel') }}</th>
                             <th>{{ 'Name of document'|trans({}, 'innova_collecticiel') }}</th>
-                            <th>{{ 'Validated document'|trans({}, 'innova_collecticiel') }}<th>
                             <th></th>
                         </tr>
                     </thead>
@@ -31,16 +30,6 @@
                                     {% else %}
                                         <a target="_blank"
                                            href="{{ path('innova_collecticiel_open_resource', {'resourceId': dropzone.id, 'documentId': document.id}) }}">{{ document.resourceNode.name }}</a>
-                                    {% endif %}
-                                </td>
-
-                                <td>
-                                    {# Si la document a été validé alors je ne peux pas le faire #}
-                                    {# Cf popup.js #}
-                                    {% if not document.validate %}
-                                        <input id="document_id_{{ document.id }}" value="actif" type="checkbox" class="form-control" name="document_id_{{ document.id }}" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#validate-modal" data-document_id="{{ document.id }}" />
-                                    {% else %}
-                                        <input id="document_id_{{ document.id }}" value="actif" type="checkbox" class="form-control" name="document_id_{{ document.id }}" disabled checked />
                                     {% endif %}
                                 </td>
 
@@ -84,5 +73,4 @@
         </div>
     </div>
     {# Fin de la déclaration de la modal pour confirmation de la validation #}
-
 {% endmacro %}

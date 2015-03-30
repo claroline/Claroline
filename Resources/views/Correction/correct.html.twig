@@ -103,7 +103,9 @@
 
             {# Bloc Documents. C'est la liste des documents #}
             {% set documentListText = 'Documents'|trans({}, 'innova_collecticiel') %}
-            {{ dropzoneMacros.displayDocumentsList(correction.drop, dropzone, 6, "condensed", documentListText) }}
+            {# {{ dropzoneMacros.displayDocumentsList(correction.drop, dropzone, 6, "condensed", documentListText) }} #}
+            {#  Ajout de l'appel aux macros Collecticiel InnovaERV #}
+            {{ collecticielMacros.innovaDisplayDocumentsList(correction.drop, dropzone, 6, "condensed", documentListText) }}
 
             {# Bloc Apprenants #}
             <div class="row">
