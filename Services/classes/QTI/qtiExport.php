@@ -207,8 +207,8 @@ abstract class qtiExport
 
         $zip->close();
 
-        $exoServ = $this->container->get('ujm.exercise_services');
-        $response = $exoServ->createZip($tmpFileName, $this->question->getId());
+        $qtiServ = $this->container->get('ujm.qti_services');
+        $response = $qtiServ->createZip($tmpFileName, $this->question->getId());
 
         return $response;
     }

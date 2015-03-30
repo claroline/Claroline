@@ -190,6 +190,7 @@ class QtiController extends Controller {
        $request = $this->container->get('request');
        $exoID = $request->get('exoID');
        $title  = $request->get('exoName');
+       $qtiServ = $this->container->get('ujm.qti_services');
 
        $qtiRepos = $this->container->get('ujm.qti_repository');
        $qtiRepos->createDirQTI($title, TRUE);
@@ -201,7 +202,7 @@ class QtiController extends Controller {
                $exoID, FALSE);
 
        $this->createQuestionsDirectory($qtiRepos, $interactions);
-       $qdirs = $this->sortPathOfQuestions($qtiRepos);
+       $qdirs = $qtiServ->sortPathOfQuestions($qtiRepos);
 
        if ($qdirs == null) {
            $mssg = 'qti no questions';
@@ -239,10 +240,35 @@ class QtiController extends Controller {
        }
        $zip->close();
 
-       $exerciseSer = $this->container->get('ujm.exercise_services');
-       $response = $exerciseSer->createZip($tmpFileName,$title);
+       $qtiSer = $this->container->get('ujm.qti_services');
+       $response = $qtiSer->createZip($tmpFileName,$title);
 
        return $response;
+    }
+    
+    /**
+     * Export an existing Question in QTI.
+     *
+     * @access public
+     *
+     * @param integer $id : id of question
+     *
+     */
+    public function ExportAction($id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $question = $this->container->get('ujm.exercise_services')->controlUserQuestion($id, $this->container, $em);
+
+        $qtiRepos = $this->container->get('ujm.qti_repository');
+        $qtiRepos->createDirQTI();
+
+        if (count($question) > 0) {
+            $interaction = $em->getRepository('UJMExoBundle:Interaction')
+                              ->getInteraction($id);
+            $export = $qtiRepos->export($interaction);
+        }
+
+        return $export;
     }
 
     /**
@@ -272,52 +298,5 @@ class QtiController extends Controller {
             }
             $i .='a';
         }
-    }
-
-    /**
-    * sort the paths of questions
-    *
-    * @param type $qtiRepos
-    *
-    * @return string
-    */
-    private function sortPathOfQuestions($qtiRepos) {
-        $pathQtiDir = $qtiRepos->getUserDir().'questions';
-        $questions = new \DirectoryIterator($pathQtiDir);
-        //create array with sort file
-        $qdirs = array();
-        foreach ($questions as $question) {
-            if ($question != '.' && $question != '..' && $question->getExtension() == "") {
-                $qdirs[] = $pathQtiDir.'/'.$question->getFilename();
-            }
-        }
-        sort($qdirs);
-
-        return $qdirs;
-    }
-
-    /**
-     * Export an existing Question in QTI.
-     *
-     * @access public
-     *
-     * @param integer $id : id of question
-     *
-     */
-    public function ExportAction($id)
-    {
-        $em = $this->getDoctrine()->getManager();
-        $question = $this->container->get('ujm.exercise_services')->controlUserQuestion($id, $this->container, $em);
-
-        $qtiRepos = $this->container->get('ujm.qti_repository');
-        $qtiRepos->createDirQTI();
-
-        if (count($question) > 0) {
-            $interaction = $em->getRepository('UJMExoBundle:Interaction')
-                              ->getInteraction($id);
-            $export = $qtiRepos->export($interaction);
-        }
-
-        return $export;
     }
 }

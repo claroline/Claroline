@@ -118,6 +118,7 @@ class ExoImporter extends Importer implements ConfigurationInterface
         $qtiRepos = $this->container->get('ujm.qti_repository');
         $qtiRepos->createDirQTI($object->getTitle(), $this->new);
         $this->new = FALSE;
+        $qtiServ = $this->container->get('ujm.qti_services');
 
         $interRepos = $this->om->getRepository('UJMExoBundle:Interaction');
         $interactions = $interRepos->getExerciseInteraction(
@@ -126,7 +127,7 @@ class ExoImporter extends Importer implements ConfigurationInterface
 
 
         $this->createQuestionsDirectory($qtiRepos, $interactions);
-        $qdirs = $this->sortPathOfQuestions($qtiRepos);
+        $qdirs = $qtiServ->sortPathOfQuestions($qtiRepos);
 
         $i = 'a';
         foreach ($qdirs as $dir) {
@@ -211,28 +212,5 @@ class ExoImporter extends Importer implements ConfigurationInterface
             }
             $i .='a';
         }
-    }
-
-
-    /**
-     * sort the paths of questions
-     *
-     * @param UJM\ExoBundle\Services\classes\QTI\qtiRepository $qtiRepos
-     *
-     * @return array of String array with the paths of questions sorted
-     */
-    private function sortPathOfQuestions($qtiRepos) {
-        $pathQtiDir = $qtiRepos->getUserDir().'questions';
-        $questions = new \DirectoryIterator($pathQtiDir);
-        //create array with sort file
-        $qdirs = array();
-        foreach ($questions as $question) {
-            if ($question != '.' && $question != '..') {
-                $qdirs[] = $pathQtiDir.'/'.$question->getFilename();
-            }
-        }
-        sort($qdirs);
-
-        return $qdirs;
     }
 }
