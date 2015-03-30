@@ -1,5 +1,7 @@
 (function () {
     'use strict';
 
-    angular.module('UtilsModule', []);
+    angular.module('UtilsModule', [
+        'ngResource'
+    ]);
 })();

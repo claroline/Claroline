@@ -14,6 +14,7 @@ use Claroline\CoreBundle\Event\CustomActionResourceEvent;
 
 use Innova\PathBundle\Entity\Path\Path;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
  * Path Event Listener
@@ -40,7 +41,13 @@ class PathListener extends ContainerAware
             );
         }
         else {
-            // TODO : if path not published redirect to editor
+            // if path is not published redirect to editor
+            $route = $this->container->get('router')->generate(
+                'innova_path_editor_wizard',
+                array (
+                    'id' => $path->getId(),
+                )
+            );
         }
         
         $event->setResponse(new RedirectResponse($route));

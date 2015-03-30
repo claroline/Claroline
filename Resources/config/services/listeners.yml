@@ -9,4 +9,4 @@ services:
             - { name: kernel.event_listener, event: create_innova_path,       method: onCreate }
             - { name: kernel.event_listener, event: delete_innova_path,       method: onDelete }
             - { name: kernel.event_listener, event: copy_innova_path,         method: onCopy }
-            - { name: kernel.event_listener, event: administrate_innova_path, method: onCopy }
+            - { name: kernel.event_listener, event: administrate_innova_path, method: onAdministrate }

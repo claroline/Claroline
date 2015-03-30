@@ -18,7 +18,7 @@ use Claroline\CoreBundle\Manager\ResourceManager;
  * Class EditorController
  *
  * @Route(
- *      "workspaces/{workspaceId}/tool/path",
+ *      "/editor",
  *      name    = "innova_path_editor",
  *      service = "innova_path.controller.path_editor"
  * )
@@ -72,7 +72,7 @@ class EditorController
     /**
      * Display Path Editor
      * @Route(
-     *      "/edit/{id}",
+     *      "/{id}",
      *      name    = "innova_path_editor_wizard",
      *      options = {"expose" = true}
      * )
@@ -81,28 +81,39 @@ class EditorController
      */
     public function displayAction(Path $path)
     {
-        $workspace = $path->getWorkspace();
-
         // Check User credentials
         $this->pathManager->checkAccess('EDIT', $path);
 
         // Get workspace root directory
-        $wsDirectory = $this->resourceManager->getWorkspaceRoot($workspace);
+        $wsDirectory = $this->resourceManager->getWorkspaceRoot($path->getWorkspace());
         $resourceTypes = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findAll();
         $resourceIcons = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceIcon')->findByIsShortcut(false);
 
         return array (
             '_resource'     => $path,
-            'workspace'     => $workspace,
+            'workspace'     => $path->getWorkspace(),
             'wsDirectoryId' => $wsDirectory->getId(),
             'resourceTypes' => $resourceTypes,
             'resourceIcons' => $resourceIcons,
         );
     }
 
-    public function publishAndPreviewAction(Path $path)
+    public function saveAction(Path $path)
     {
+        /*$this->pathManager->checkAccess('EDIT', $path);
 
+        // Create form
+        $form = $this->formFactory->create('innova_path', $path);
+
+        // Try to process data
+        $this->pathHandler->setForm($form);
+        if ($this->pathHandler->process()) {
+            // Validation OK
+        } else {
+            // Validation Error
+        }
+
+        return new JsonResponse(array ());*/
     }
 
     /**

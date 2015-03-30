@@ -5,6 +5,7 @@
     'use strict';
 
     angular.module('TemplateModule', [
+        'UtilsModule',
         'AlertModule',
         'StepModule'
     ]);

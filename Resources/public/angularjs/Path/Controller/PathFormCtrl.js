@@ -3,8 +3,7 @@
 
     angular.module('PathModule').controller('PathFormCtrl', [
         'HistoryService',
-        'PathService',
-        function PathFormCtrl(HistoryService, PathService) {
+        function PathFormCtrl(HistoryService) {
             /**
              * Path to edit
              * @type {object}
@@ -35,10 +34,6 @@
 
             this.publishAndPreview = function () {
 
-            };
-
-            this.close = function () {
-                /*{{ path('claro_workspace_open_tool', { workspaceId: workspace.id, toolName: 'innova_path' }) }}*/
             };
         }
     ]);

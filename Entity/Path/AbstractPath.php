@@ -22,14 +22,6 @@ class AbstractPath
     protected $name;
     
     /**
-     * Description of the path
-     * @var string
-     *
-     * @ORM\Column(name="description", type="text", nullable=true)
-     */
-    protected $description;
-    
-    /**
      * JSON structure of the path
      * @var string
      *
@@ -56,27 +48,6 @@ class AbstractPath
     public function getName()
     {
         return $this->name;
-    }
-    
-    /**
-     * Set description
-     * @param  string $description
-     * @return \Innova\PathBundle\Entity\Path\AbstractPath
-     */
-    public function setDescription($description)
-    {
-        $this->description = $description;
-    
-        return $this;
-    }
-    
-    /**
-     * Get description
-     * @return string
-     */
-    public function getDescription()
-    {
-        return $this->description;
     }
     
     /**

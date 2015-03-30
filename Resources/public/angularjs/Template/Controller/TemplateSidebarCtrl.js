@@ -5,37 +5,40 @@
 (function () {
     'use strict';
 
-    angular.module('TemplateModule').controller('TemplateListCtrl', [
+    angular.module('TemplateModule').controller('TemplateSidebarCtrl', [
+        '$modal',
         'ClipboardService',
         'AlertService',
         'TemplateService',
-        function TemplateListCtrl(ClipboardService, AlertService, TemplateService) {
+        function TemplateSidebarCtrl($modal, ClipboardService, AlertService, TemplateService) {
             this.templates = [];
 
             /**
              * Copy a Template into clipboard
-             * @param   {*} template - the Template to copu
-             * @returns {TemplateListCtrl}
              */
             this.copy = function(template) {
                 ClipboardService.copy(template);
-
-                return this;
             };
 
             /**
              * Edit a Template
              * @param   {*} template - the Template to edit
-             * @returns {TemplateListCtrl}
              */
             this.edit = function (template) {
-                return this;
+                var modalInstance = $modal.open({
+                    templateUrl: EditorApp.webDir + 'bundles/innovapath/angularjs/Template/Partial/modal-form.html',
+                    controller: 'TemplateFormModalCtrl as templateFormModalCtrl',
+                    resolve: {
+                        template: function () {
+                            return template;
+                        }
+                    }
+                });
             };
 
             /**
              * Delete a Template
              * @param   {*} template - the Template to delete
-             * @returns {TemplateListCtrl}
              */
             this.delete = function (template) {
                 TemplateService.delete(template).then(
@@ -54,8 +57,6 @@
                         AlertService.addAlert('error', 'Error while removing Path template.');
                     }
                 );
-
-                return this;
             };
         }
     ]);

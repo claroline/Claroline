@@ -68,11 +68,11 @@ use Innova\PathBundle\Entity\Path\Path;
  * @link       http://innovalangues.net
  * 
  * @Route(
- *      "workspaces/{workspaceId}/tool/path",
+ *      "/",
  *      name    = "innova_path",
  *      service = "innova_path.controller.path"
  * )
- * @ParamConverter("workspace", class="ClarolineCoreBundle:Workspace\Workspace", options={"mapping": {"workspaceId": "id"}})
+ * @ParamConverter("workspace", class="ClarolineCoreBundle:Workspace\Workspace", options = { "mapping": { "workspaceId" : "id" } })
  */
 class PathController
 {
@@ -145,128 +145,6 @@ class PathController
         $this->pathManager       = $pathManager;
         $this->pathHandler       = $pathHandler;
         $this->publishingManager = $publishingManager;
-    }
-
-    /**
-     * List all Paths for Workspace
-     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
-     * @return array
-     *
-     * @Route(
-     *     "/",
-     *     name    = "innova_path_list",
-     *     options = {"expose"=true}
-     * )
-     * @Method("GET")
-     * @Template("InnovaPathBundle:Tool:index.html.twig")
-     */
-    public function listAction(Workspace $workspace)
-    {
-        // Retrieve data
-        $paths = $this->pathManager->findAccessibleByUser($workspace);
-
-        return array (
-            'canCreate' => $this->pathManager->isAllow('CREATE', new Path(), $workspace),
-            'workspace' => $workspace,
-            'paths'     => $paths,
-        );
-    }
-
-    /**
-     * @Route(
-     *     "/",
-     *     name    = "innova_path_create",
-     *     options = { "expose" = true }
-     * )
-     * @Method("POST")
-     */
-    public function createAction(Workspace $workspace)
-    {
-        $path = new Path();
-
-        $this->pathManager->checkAccess('CREATE', $path, $workspace);
-
-        // Create form
-        $form = $this->formFactory->create('innova_path', $path);
-
-        // Try to process data
-        $this->pathHandler->setForm($form);
-        if ($this->pathHandler->process()) {
-            // Validation OK
-        } else {
-            // Validation Error
-        }
-
-        return new JsonResponse(array ());
-    }
-
-    /**
-     * @Route(
-     *     "/{id}",
-     *     name    = "innova_path_update",
-     *     options = { "expose" = true }
-     * )
-     * @Method("PUT")
-     */
-    public function updateAction(Workspace $workspace, Path $path)
-    {
-        $this->pathManager->checkAccess('EDIT', $path);
-
-        // Create form
-        $form = $this->formFactory->create('innova_path', $path);
-
-        // Try to process data
-        $this->pathHandler->setForm($form);
-        if ($this->pathHandler->process()) {
-            // Validation OK
-        } else {
-            // Validation Error
-        }
-
-        return new JsonResponse(array ());
-    }
-
-    /**
-     * Delete path from database
-     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
-     * @param \Innova\PathBundle\Entity\Path\Path $path
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
-     *
-     * @Route(
-     *     "/delete/{id}",
-     *     name         = "innova_path_delete",
-     *     requirements = {"id" = "\d+"},
-     *     options      = {"expose"=true}
-     * )
-     * @Method("DELETE")
-     */
-    public function deleteAction(Workspace $workspace, Path $path)
-    {
-        $this->pathManager->checkAccess('DELETE', $path);
-
-        try {
-            $this->pathManager->delete($path);
-
-            // Delete success
-            $this->session->getFlashBag()->add(
-                'success',
-                $this->translator->trans('path_delete_success', array(), 'innova_tools')
-            );
-        } catch (\Exception $e) {
-            // Error
-            $this->session->getFlashBag()->add(
-                'error',
-                $e->getMessage()
-            );
-        }
-
-        // Redirect to path list
-        $url = $this->router->generate('claro_workspace_open_tool', array (
-            'workspaceId' => $workspace->getId(), 
-            'toolName' => 'innova_path'
-        ));
-    
-        return new RedirectResponse($url, 302);
     }
     
     /**

@@ -1,26 +1,38 @@
 /**
  * Styles for left sidebar
  */
-
 .ng-pageslide {
-  box-shadow: 0 0 2px 1px rgba(0, 0, 0, 0.25);
-}
+  overflow-y: hidden;
+  z-index: (@zindex-navbar + 1); /* To prevent bootstrap navbar to pass over the sidebar */
+  margin-top: @navbar-height + 3px; /* Avoid sidebar to be under the header menu */
+  margin-bottom: @navbar-height; /* Avoid sidebar to be under the footer */
 
-#sidebar-left {
-  z-index: (@zindex-navbar + 1);       /* To prevent bootstrap navbar to pass over the sidebar */
-  margin-top: (@navbar-height + 20px); /* Same value as body padding-top */
+  &.ps-shown {
+    padding: 0 !important;
+  }
 
-  /* Sidebar title */
-  h2 {
-    font-size: 20px;
-    margin-top: 0;
-    padding: 0 10px;
-    margin-bottom: 15px;
+  /* Add a margin to the sidebar when the left menu is displayed */
+  @media (min-width: @screen-sm) {
+    &.ps-left {
+      margin-left: 40px;
+    }
+  }
+
+  /* No margin on the sidebar when the left bar is not displayed */
+  @media (max-width: (@screen-sm - 1)) {
+    &.ps-left {
+      margin-left: 0;
+    }
   }
 
   /* Sidebar close button */
-  #sidebar-left-close {
-    margin: 0 10px;
+  .ps-close {
+    position: absolute;
+    z-index: 2;
+    right: 0;
+    display: inline-block;
+    line-height: @navbar-height;
+    padding: 0 floor(@grid-gutter-width / 2);
     color: @text-color;
     opacity: 0.6;
 
@@ -31,16 +43,47 @@
   }
 }
 
-/* Add a margin to the sidebar when the left menu is displayed */
-@media (min-width: @screen-sm) {
-    #sidebar-left {
-        margin-left: 40px;
-    }
+#sidebar-left {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  overflow-y: hidden;
 }
 
-/* No margin on the sidebar when the left bar is not displayed */
-@media (max-width: (@screen-sm - 1)) {
-    #sidebar-left {
-        margin-left: 0;
+.template-list {
+  position: relative;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  padding-top: @navbar-height;
+  overflow-y: hidden;
+
+  /* Sidebar title */
+  h2 {
+    font-size: 20px;
+    margin: 0;
+    padding: 0 floor(@grid-gutter-width / 2);
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: @navbar-height;
+    line-height: @navbar-height;
+    z-index: 1;
+  }
+
+  div {
+    overflow-y: auto;
+    height: 100%;
+    position: relative;
+
+    .table {
+      margin: 0;
+
+      td {
+        vertical-align: middle;
+      }
     }
+  }
 }

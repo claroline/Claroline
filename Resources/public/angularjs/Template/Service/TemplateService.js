@@ -28,6 +28,64 @@
                     return deferred.promise;
                 },
 
+                save: function (template) {
+                    var method = null;
+                    var route = null;
+
+                    if (template.id) {
+                        // Update existing path
+                        method = 'PUT';
+                        route = Routing.generate('innova_path_template_update', { id: template.id });
+                    }
+                    else {
+                        // Create new path
+                        method = 'POST';
+                        route = Routing.generate('innova_path_template_create');
+                    }
+
+                    $http({
+                        method: method,
+                        url: route,
+                        data: template
+                    })
+                        .success(function (data) {
+                            if ('error' != data) {
+                                // No error
+                                formTemplate.id = data;
+                                TemplateFactory.replaceTemplate(formTemplate);
+
+                                AlertService.addAlert('success', Translator.trans('path_template_save_success', {}, 'path_editor'));
+                            }
+                            else {
+                                // Server error while saving
+                                AlertService.addAlert('error', Translator.trans('path_template_save_error', {}, 'path_editor'));
+                            }
+
+                            $modalInstance.close();
+                        })
+                        .error(function (data, status) {
+                            AlertService.addAlert('error', Translator.trans('path_template_save_error', {}, 'path_editor'));
+                        });
+                },
+
+                create: function (template) {
+                    var deferred = $q.defer();
+
+                    $http.post(Routing.generate('innova_path_template_create'), template)
+                        .success(function (response) {
+                            deferred.resolve(response);
+                        })
+                        .error(function (response) {
+                            deferred.reject(response);
+                        });
+
+                    return deferred.promise;
+                },
+
+                update: function (template) {
+
+                },
+
                 /**
                  * Delete a Template
                  * @param template
@@ -35,7 +93,7 @@
                 delete: function (template) {
                     var deferred = $q.defer();
 
-                    $http.delete(Routing.generate('innova_path_template_delete', {id: template.id}))
+                    $http.delete(Routing.generate('innova_path_template_delete', { id: template.id }))
                         .success(function (response) {
                             deferred.resolve(response);
                         })

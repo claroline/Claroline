@@ -61,7 +61,7 @@ use Innova\PathBundle\Form\Handler\PathTemplateHandler;
  * @link       http://innovalangues.net
  * 
  * @Route(
- *      "/templates",
+ *      "/template",
  *      name    = "innova_path_template",
  *      service = "innova_path.controller.path_template"
  * )
@@ -104,7 +104,7 @@ class PathTemplateController
      * @Route(
      *     "",
      *     name    = "innova_path_template_list",
-     *     options = {"expose"=true}
+     *     options = { "expose" = true }
      * )
      * @Method("GET")
      */
@@ -120,9 +120,9 @@ class PathTemplateController
      * @return \Symfony\Component\HttpFoundation\Response
      * 
      * @Route(
-     *     "/add",
-     *     name    = "innova_path_template_add",
-     *     options = {"expose"=true}
+     *     "/",
+     *     name    = "innova_path_template_create",
+     *     options = { "expose" = true }
      * )
      * @Method("POST")
      */
@@ -154,9 +154,9 @@ class PathTemplateController
      * @return \Symfony\Component\HttpFoundation\Response
      *
      * @Route(
-     *     "/edit/{id}",
-     *     name    = "innova_path_template_edit",
-     *     options = {"expose"=true}
+     *     "/{id}",
+     *     name    = "innova_path_template_update",
+     *     options = { "expose" = true }
      * )
      * @Method("PUT")
      */
@@ -189,7 +189,7 @@ class PathTemplateController
      * @Route(
      *     "/delete/{id}",
      *     name    = "innova_path_template_delete",
-     *     options = {"expose"=true}
+     *     options = { "expose" = true }
      * )
      * @Method("DELETE")
      */

@@ -12,9 +12,19 @@
              * @constructor
              */
             var Step = function Step(parent) {
+                var name, lvl;
+
+                if (parent) {
+                    lvl  = parent.lvl + 1;
+                    name = 'Step ' + lvl + '.' + (parent.children.length + 1);
+                } else {
+                    lvl = 0;
+                    name = Translator.trans('root_default_name', {}, 'path_editor');
+                }
+
                 this.id                = IdentifierService.generateUUID();
-                this.lvl               = parent.lvl + 1;
-                this.name              = 'Step ' + this.lvl + '.' + (parent.children.length + 1);
+                this.lvl               = lvl;
+                this.name              = name;
                 this.children          = [];
                 this.resources         = [];
                 this.excludedResources = [];
@@ -24,17 +34,19 @@
                 /**
                  * Generate a new empty step
                  *
-                 * @param   {object} parentStep
+                 * @param   {object} [parentStep]
                  * @returns {Step}
                  */
-                addNewChild: function (parentStep) {
+                new: function (parentStep) {
                     var newStep = new Step(parentStep);
 
-                    // Append new child to his parent
-                    if (!parentStep.children instanceof Array) {
-                        parentStep.children = [];
+                    if (parentStep) {
+                        // Append new child to his parent
+                        if (!parentStep.children instanceof Array) {
+                            parentStep.children = [];
+                        }
+                        parentStep.children.push(newStep);
                     }
-                    parentStep.children.push(newStep);
 
                     return newStep;
                 },

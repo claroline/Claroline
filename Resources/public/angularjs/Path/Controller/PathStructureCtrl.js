@@ -8,9 +8,10 @@
         '$modal',
         'HistoryService',
         'ClipboardService',
+        'ConfirmService',
         'PathService',
         'StepService',
-        function PathStructureCtrl($modal, HistoryService, ClipboardService, PathService, StepService) {
+        function PathStructureCtrl($modal, HistoryService, ClipboardService, ConfirmService, PathService, StepService) {
             this.webDir = EditorApp.webDir;
 
             this.structure = [];
@@ -24,7 +25,13 @@
              * Initialize an empty structure for path
              */
             this.createNew = function () {
-                Translator.trans('root_default_name', {}, 'path_editor');
+                console.log('coucou');
+
+                // Create a generic root step
+                var rootStep = StepService.new();
+
+                this.structure = [];
+                this.structure.push(rootStep);
             };
 
             /**
@@ -99,31 +106,30 @@
                     }
                 }
 
-                // Display confirm modal
-                var modalInstance = $modal.open({
-                    templateUrl: this.webDir + 'bundles/innovapath/angularjs/Confirm/Partial/confirm.html',
-                    controller: 'ConfirmModalCtrl',
-                    resolve: {
-                        title:         function () { return Translator.trans('step_delete_title', { stepName: step.name }, 'path_editor') },
-                        message:       function () { return Translator.trans('step_delete_confirm', {}, 'path_editor') },
-                        confirmButton: function () { return Translator.trans('step_delete', {}, 'path_editor') }
-                    }
-                });
+                ConfirmService.open(
+                    // Confirm options
+                    {
+                        title:         Translator.trans('step_delete_title',   { stepName: step.name }, 'path_editor'),
+                        message:       Translator.trans('step_delete_confirm', {}                     , 'path_editor'),
+                        confirmButton: Translator.trans('step_delete',         {}                     , 'path_editor')
+                    },
 
-                modalInstance.result.then(function() {
-                    // Confirm
-                    walk(this.structure);
+                    // Confirm success callback
+                    function() {
+                        // Confirm
+                        walk(this.structure);
 
-                    /*HistoryService.update(this.path);*/
-                    /*this.updatePreviewStep();*/
-                }.bind(this));
+                        /*HistoryService.update(this.path);*/
+                        /*this.updatePreviewStep();*/
+                    }.bind(this)
+                );
             };
 
             /**
              * Add a new step child to specified step
              */
-            this.addChild = function (step) {
-                StepService.addNewChild(step);
+            this.addChild = function (parentStep) {
+                StepService.new(parentStep);
 
                 /*HistoryService.update(this.path);*/
             };
@@ -132,11 +138,15 @@
              * Open modal to create a new template from specified step(s)
              */
             this.saveAsTemplate = function (step) {
-                StepService.setStep(step);
                 var modalInstance = $modal.open({
                     templateUrl: EditorApp.webDir + 'bundles/innovapath/angularjs/Template/Partial/modal-form.html',
                     controller: 'TemplateFormModalCtrl',
-                    controllerAs: 'templateFormModalCtrl'
+                    controllerAs: 'templateFormModalCtrl',
+                    resolve: {
+                        step: function () {
+                            return step;
+                        }
+                    }
                 });
             };
         }

@@ -1,3 +1,6 @@
+/**
+ * Identifier Service
+ */
 (function () {
     'use strict';
 

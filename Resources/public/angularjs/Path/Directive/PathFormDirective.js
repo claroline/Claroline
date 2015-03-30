@@ -5,7 +5,9 @@
     'use strict';
 
     angular.module('PathModule').directive('pathForm', [
-        function () {
+        '$window',
+        'HistoryService',
+        function ($window, HistoryService) {
             return {
                 restrict: 'E',
                 replace: true,
@@ -24,6 +26,26 @@
                         } else {
                             pathFormCtrl.path = newValue;
                         }
+                    });
+
+                    // Display a confirm on page close with pending modifications
+                    function closeEditor(event) {
+                        if (!HistoryService.isEmpty()) {
+                            var confirmMessage = Translator.trans('save_path_changes', {}, 'path_editor');
+
+                            if (event) {
+                                event.returnValue = confirmMessage;
+                            }
+
+                            return confirmMessage;
+                        }
+                    }
+
+                    window.addEventListener('beforeunload', closeEditor);
+
+                    // Unbind event on directive destroy
+                    scope.$on('$destroy', function handleDestroyEvent() {
+                        window.removeEventListener('beforeunload', closeEditor);
                     });
                 }
             };

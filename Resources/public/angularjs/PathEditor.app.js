@@ -8,13 +8,12 @@
     angular.module('PathEditorApp', [
         'ngSanitize',
         'ui.bootstrap',
-        'pageslide-directive',
+        'ui.pageslide',
         'ui.tinymce',
         'ui.translation',
         'ui.resourcePicker',
         'ui.tree',
 
-        'UtilsModule',
         'AlertModule',
         'ClipboardModule',
         'ConfirmModule',

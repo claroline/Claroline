@@ -57,6 +57,7 @@ class Path extends AbstractResource implements PathInterface, \JsonSerializable
     protected $modified;
 
     /**
+     * Description of the path
      * @var string
      *
      * @ORM\Column(name="description", type="text", nullable=true)
@@ -282,38 +283,13 @@ class Path extends AbstractResource implements PathInterface, \JsonSerializable
         return $creator;
     }
 
-    /**
-     * Rebuild structure of the Path from the published data
-     */
-    public function rebuildStructure()
-    {
-        // To rebuild structure, the path needs to ba published at least once (otherwise there is no data to grab)
-        // and the path must not be modified (otherwise we will override User modifications)
-        if ($this->published && !$this->modified) {
-            // Loop over steps
-            $structure = array (
-                'name'        => $this->name,
-                'description' => $this->description,
-                'steps'       => array (),
-            );
-
-            foreach ($this->steps as $step) {
-                $children = $step->getChildren();
-                if ($children) {
-
-                }
-            }
-
-            // Inject rebuilt structure
-            $this->setStructure(json_encode($structure));
-        }
-    }
-
     public function jsonSerialize()
     {
         return array (
             'name'        => $this->getResourceNode()->getName(),
             'description' => $this->description,
+            'published'   => $this->published,
+            'modified'    => $this->modified,
             'steps'       => $this->steps->toArray(),
         );
     }
