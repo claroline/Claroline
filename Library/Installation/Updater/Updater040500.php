@@ -47,12 +47,15 @@ class Updater040500 extends Updater
         /** @var \Claroline\CoreBundle\Entity\Resource\ResourceType $dirType */
         $dirType = $entityManager->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findByName('directory');
 
-        $totalNodes = $resourceNodeRepository
-            ->createQueryBuilder('node')
-            ->select('COUNT(node.id)')
-            ->where('node.resourceType = :directorytype')
-            ->andWhere('node.index IS NULL')
-            ->setParameter('directorytype', $dirType)
+        $baseResourceNodeQuery = $resourceNodeRepository
+            ->createQueryBuilder('resourceNode')
+            ->where('resourceNode.resourceType = :resourceNodeType')
+            ->setParameter('resourceNodeType', $dirType);
+
+        $countResourceNodeQuery = clone $baseResourceNodeQuery;
+
+        $totalNodes = $countResourceNodeQuery
+            ->select('COUNT(resourceNode.id)')
             ->getQuery()->getSingleScalarResult();
 
         $nbNodes = 0;
@@ -65,16 +68,12 @@ class Updater040500 extends Updater
         $this->log(sprintf('Updating %d resource order - %s', $totalNodes, date('Y/m/d H:i:s')));
         $this->log('It may take a while to process, go grab a coffee.');
 
-        /** @var \Claroline\CoreBundle\Entity\Resource\ResourceNode $node */
-        $node = $resourceNodeRepository->findOneBy(['resourceType' => $dirType, 'index' => null]);
-        while(null !== $node) {
+        $nodesQuery = $baseResourceNodeQuery->getQuery();
+
+        $iterableResult = $nodesQuery->iterate();
+        foreach ($iterableResult as $row) {
+            $node = $row[0];
             $resourceManager->reorder($node);
-
-            $node->setIndex(0);
-
-            $this->objectManager->persist($node);
-            $this->objectManager->flush();
-            $this->objectManager->detach($node);
 
             $nbNodes++;
             $currentBatchNodes++;
@@ -82,9 +81,12 @@ class Updater040500 extends Updater
             if ($refreshOutputInterval === $currentBatchNodes) {
                 $this->log('    ' . $nbNodes . ' resource ordered - ' . date('Y/m/d H:i:s') . ' - ' . $this->convert(memory_get_usage(true)));
                 $currentBatchNodes = 0;
+                $this->objectManager->clear();
             }
+        }
 
-            $node = $resourceNodeRepository->findOneBy(['resourceType' => $dirType, 'index' => null]);
+        if (0 < $currentBatchNodes) {
+            $this->log('    ' . $nbNodes . ' resource ordered - ' . date('Y/m/d H:i:s') . ' - ' . $this->convert(memory_get_usage(true)));
         }
 
         $this->log('Resource order updated.');
