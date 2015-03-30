@@ -172,6 +172,7 @@ class Updater040800 extends Updater
     private function updateWorkspaceMaxUsers()
     {
         $this->log('Updating workspace users limit...');
+        /** @var \Doctrine\ORM\EntityManager $em */
         $em = $this->container->get('doctrine.orm.entity_manager');
         /** @var \Claroline\CoreBundle\Repository\WorkspaceRepository $wsRepo */
         $wsRepo = $em->getRepository('ClarolineCoreBundle:Workspace\Workspace');
@@ -186,6 +187,7 @@ class Updater040800 extends Updater
             if ($i % 200 === 0) {
                 $this->log('    200 workspace updated...');
                 $em->flush();
+                $em->clear();
             }
             
             $i++;

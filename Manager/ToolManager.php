@@ -1207,8 +1207,8 @@ class ToolManager
 
                 if ($index % 100 === 0) {
                     $this->om->forceFlush();
-                    $this->om->clear();
-                    $logger->info(sprintf("%d users to check tools on.", 100));
+                    $this->om->clear($orderedTool);
+                    $logger->info(sprintf("    %d users checked.", 100));
                 }
             } else {
                 $orderedTool = $orderedTools[0];
@@ -1220,11 +1220,14 @@ class ToolManager
 
                     if ($index % 100 === 0) {
                         $this->om->forceFlush();
-                        $this->om->clear();
-                        $logger->info(sprintf("%d users to check tools on.", 100));
+                        $this->om->clear($orderedTool);
+                        $logger->info(sprintf("    %d users checked.", 100));
                     }
                 }
             }
+        }
+        if ($index % 100 !== 0) {
+            $logger->info(sprintf("    %d users checked.", (100 - $index)));
         }
         $this->om->endFlushSuite();
     }
