@@ -260,12 +260,12 @@ function setOrder() {
 function whichChecked() {
      // Show or hide positionForce if shuffle is checked
     if ($('#ujm_exobundle_interactionqcmtype_shuffle').is(':checked')) {
-        tableChoices.find('th').eq(4).show();
+        tableChoices.find('th').eq(3).show();
         $("*[id$='_positionForce']").each(function () {
             $(this).parent('td').show();
         });
     } else {
-        tableChoices.find('th').eq(4).hide();
+        tableChoices.find('th').eq(3).hide();
         $("*[id$='_positionForce']").each(function () {
            $(this).parent('td').hide();
        });
@@ -274,16 +274,18 @@ function whichChecked() {
     if ($('#ujm_exobundle_interactionqcmtype_weightResponse').is(':checked')) {
         $('#ujm_exobundle_interactionqcmtype_scoreRightResponse').css({"display" : "none"});
         $('#ujm_exobundle_interactionqcmtype_scoreFalseResponse').css({"display" : "none"});
-
+         tableChoices.find('th').eq(2).show();
         $("*[id$='_weight']").each(function() {
-            $(this).css({"display" : "inline-block"});
+           // $(this).css({"display" : "inline-block"});    
+             $(this).parent('td').show();
         });
     } else {
         $('#ujm_exobundle_interactionqcmtype_scoreRightResponse').css({"display" : "inline-block"});
         $('#ujm_exobundle_interactionqcmtype_scoreFalseResponse').css({"display" : "inline-block"});
-
+        tableChoices.find('th').eq(2).hide();
         $("*[id$='_weight']").each(function() {
-            $(this).css({"display" : "none"});
+           // $(this).css({"display" : "none"});
+             $(this).parent('td').hide();
         });
     }
 
@@ -320,16 +322,18 @@ function whichChange() {
         if ($(this).is(':checked')) {
             $('#ujm_exobundle_interactionqcmtype_scoreRightResponse').css({"display" : "none"});
             $('#ujm_exobundle_interactionqcmtype_scoreFalseResponse').css({"display" : "none"});
-
+            tableChoices.find('th').eq(2).show();
             $("*[id$='_weight']").each(function() {
-                $(this).css({"display" : "inline-block"});
+               // $(this).css({"display" : "inline-block"});
+                $(this).parent('td').show();
             });
         } else {
             $('#ujm_exobundle_interactionqcmtype_scoreRightResponse').css({"display" : "inline-block"});
             $('#ujm_exobundle_interactionqcmtype_scoreFalseResponse').css({"display" : "inline-block"});
-
+            tableChoices.find('th').eq(2).hide();
             $("*[id$='_weight']").each(function() {
-                $(this).css({"display" : "none"});
+              //  $(this).css({"display" : "none"});
+                $(this).parent('td').hide();
             });
         }
     });
