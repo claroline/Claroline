@@ -173,7 +173,7 @@ class QtiController extends Controller {
 
         $scanFile = $qtiRepos->scanFilesToImport($exoID);
 
-        
+
         if ($scanFile !== true) {
             return $this->importError($scanFile, $exoID);
         }
@@ -181,4 +181,143 @@ class QtiController extends Controller {
         return $this->redirect($this->generateUrl( 'ujm_exercise_questions', array( 'id' => $exoID, )));
     }
 
+    /**
+    * For export all questions of an exercise
+    *
+    * @return $response
+    */
+    public function exportQuestionsExerciseAction() {
+       $request = $this->container->get('request');
+       $exoID = $request->get('exoID');
+       $title  = $request->get('exoName');
+
+       $qtiRepos = $this->container->get('ujm.qti_repository');
+       $qtiRepos->createDirQTI($title, TRUE);
+
+       $em = $this->getDoctrine()->getManager();
+       $interRepos = $em->getRepository('UJMExoBundle:Interaction');
+       $interactions = $interRepos->getExerciseInteraction(
+               $this->container->get('doctrine')->getManager(),
+               $exoID, FALSE);
+
+       $this->createQuestionsDirectory($qtiRepos, $interactions);
+       $qdirs = $this->sortPathOfQuestions($qtiRepos);
+
+       if ($qdirs == null) {
+           $mssg = 'qti no questions';
+            return $this->forward('UJMExoBundle:Exercise:showQuestions',
+                   array(
+                       'id' => $exoID,
+                       'qtiError' => $this->get('translator')->trans($mssg),
+                       'pageNow'=> 0,
+                       'categoryToFind'=> 'z',
+                       'titleToFind'=> 'z',
+                       'displayAll'=> 0 )
+                   );
+       }
+
+       $tmpFileName = $qtiRepos->getUserDir().'zip/'.$title.'_qestion_qti.zip';
+
+       $zip = new \ZipArchive();
+       $zip->open($tmpFileName, \ZipArchive::CREATE);
+
+       foreach ($qdirs as $dir) {
+           $iterator = new \DirectoryIterator($dir);
+               foreach ($iterator as $element) {
+                   if (!$element->isDot() && $element->isFile() && $element->getExtension() != "xml") {
+                       $path = $element->getPath();
+                       $partDirectory = str_replace('./uploads/ujmexo/qti/admin/'.$title.'/questions/questionDoc_','', $path);
+
+                       $zip->addFile($element->getPathname(), $title.'/question_'.$partDirectory.'/'.$element->getFilename());
+                   }
+                   if (!$element->isDot() && $element->isFile() && $element->getExtension() == "xml") {
+                       $path = $element->getPath();
+                       $partDirectory = str_replace('./uploads/ujmexo/qti/admin/'.$title.'/questions/question_','', $path);
+                       $zip->addFile($element->getPathname(), $title.'/question_'.$partDirectory.'/question_'.$partDirectory.'.'.$element->getExtension());
+                   }
+               }
+       }
+       $zip->close();
+
+       $exerciseSer = $this->container->get('ujm.exercise_services');
+       $response = $exerciseSer->createZip($tmpFileName,$title);
+
+       return $response;
+    }
+
+    /**
+    * create the directory questions to export an exercise and export the qti files
+    *
+    * @param type $qtiRepos
+    *
+    * @param type $interactions
+    */
+    private function createQuestionsDirectory($qtiRepos, $interactions) {
+        mkdir($qtiRepos->getUserDir().'questions');
+        $i = 'a';
+        foreach ($interactions as $interaction) {
+            $qtiRepos->export($interaction);
+            mkdir($qtiRepos->getUserDir().'questions/'.'question_'.$i);
+            $iterator = new \DirectoryIterator($qtiRepos->getUserDir());
+            foreach ($iterator as $element) {
+                // for xml file (question files)
+                if (!$element->isDot() && $element->isFile() && $element->getExtension() == "xml") {
+                    rename($qtiRepos->getUserDir().$element->getFilename(), $qtiRepos->getUserDir().'questions/question_'.$i.'/'.$element->getFilename());
+                }
+                // for bind documents
+                if (!$element->isDot() && $element->isFile() && $element->getExtension() != "xml") {
+                    mkdir($qtiRepos->getUserDir().'questions/'.'questionDoc_'.$i);
+                    rename($qtiRepos->getUserDir().$element->getFilename(), $qtiRepos->getUserDir().'questions/questionDoc_'.$i.'/'.$element->getFilename());
+                }
+            }
+            $i .='a';
+        }
+    }
+
+    /**
+    * sort the paths of questions
+    *
+    * @param type $qtiRepos
+    *
+    * @return string
+    */
+    private function sortPathOfQuestions($qtiRepos) {
+        $pathQtiDir = $qtiRepos->getUserDir().'questions';
+        $questions = new \DirectoryIterator($pathQtiDir);
+        //create array with sort file
+        $qdirs = array();
+        foreach ($questions as $question) {
+            if ($question != '.' && $question != '..' && $question->getExtension() == "") {
+                $qdirs[] = $pathQtiDir.'/'.$question->getFilename();
+            }
+        }
+        sort($qdirs);
+
+        return $qdirs;
+    }
+
+    /**
+     * Export an existing Question in QTI.
+     *
+     * @access public
+     *
+     * @param integer $id : id of question
+     *
+     */
+    public function ExportAction($id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $question = $this->container->get('ujm.exercise_services')->controlUserQuestion($id, $this->container, $em);
+
+        $qtiRepos = $this->container->get('ujm.qti_repository');
+        $qtiRepos->createDirQTI();
+
+        if (count($question) > 0) {
+            $interaction = $em->getRepository('UJMExoBundle:Interaction')
+                              ->getInteraction($id);
+            $export = $qtiRepos->export($interaction);
+        }
+
+        return $export;
+    }
 }

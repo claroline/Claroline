@@ -33,7 +33,7 @@
         <a class="btn btn-primary" href="{{ path('ujm_question_new', { 'exoID': exerciseID }) }}">
             <i class="fa fa-plus"></i> {{ 'create a new entry' | trans }}
         </a>
-        <a class="btn btn-primary" href="{{ path('ujm_exercice_export_exercise_questions', { 'exoID': exerciseID, 'exoName': _resource.getResourceNode().getName()  }) }}">
+        <a class="btn btn-primary" href="{{ path('ujm_qti_export_exercise_questions', { 'exoID': exerciseID, 'exoName': _resource.getResourceNode().getName()  }) }}">
             <i class="fa fa-save"></i> {{ 'exportQTIExercise' | trans }}
         </a>
         <a class="btn btn-primary" title="{{ 'qti format warning' | trans }}" onClick="importQTI('{{ path('ujm_qti_import_form') }}', '{{ exerciseID }}', 'exercise' );">

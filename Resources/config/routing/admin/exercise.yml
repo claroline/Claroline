@@ -50,7 +50,3 @@ ujm_exercise_question_order:
     pattern:  /ExerciseQuestion/changeOrder
     defaults: { _controller: "UJMExoBundle:Exercise:changeQuestionOrder" }
     requirements: { _method: post }
-    
-ujm_exercice_export_exercise_questions:
-    pattern: /ExportQuestionExercise
-    defaults: { _controller: "UJMExoBundle:Exercise:exportQuestionsExercise" }

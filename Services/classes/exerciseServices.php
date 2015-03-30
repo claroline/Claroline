@@ -1656,7 +1656,7 @@ class exerciseServices
             }
         }
     }
-    
+
     public function createZip($tmpFileName, $title) {
         $response = new BinaryFileResponse($tmpFileName);
         //$response->headers->set('Content-Type', $content->getContentType());
@@ -1665,7 +1665,27 @@ class exerciseServices
         $response->headers->set('Cache-Control', 'no-cache, no-store, must-revalidate'); // HTTP 1.1.
         $response->headers->set('Pragma', 'no-cache'); // HTTP 1.0.
         $response->headers->set('Expires', '0'); // Proxies.
-        
+
         return $response;
+    }
+
+    /**
+     * To control the User's rights to this question
+     *
+     * @access private
+     *
+     * @param integer $questionID id Question
+     *
+     * @return Doctrine Query Result
+     */
+    public function controlUserQuestion($questionID, $container, $em)
+    {
+        $user = $container->get('security.context')->getToken()->getUser();
+
+        $question = $em
+            ->getRepository('UJMExoBundle:Question')
+            ->getControlOwnerQuestion($user->getId(), $questionID);
+
+        return $question;
     }
 }

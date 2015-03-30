@@ -200,7 +200,7 @@ isInterupt: Interrompu
 image: Image
 import: Importer
 import QTI : Importer des questions au format QTI
-importQTIExercise: Importer les questions de l'exercice au format QTI
+importQTIExercise: Importer un exercice au format QTI
 import questions: Importer des questions
 infoSearchType: Si vous voulez faire une recherche par type, vous devez utiliser les mots clés suivants
 instruction add hole : Pour créer un trou, sélectionnez le texte à trouer dans l'éditeur "Texte à trous", puis cliquez sur le bouton "Créer un blanc".
@@ -334,6 +334,7 @@ qti can't open zip: Impossible d'ouvrir l'archive
 qti format warning: Vous devez importer une archiver zip contenant un fichier compatible IMS_QTI
 qti_import_title: Pas d'attribut "title" pour l'élément "assessmentItem"
 qti_import_qcm_prompt: Pas d'élément "prompt" dans l'élément "choiceInteraction"
+qti no questions: Attention, pour pouvoir exporter l'exercice, il faut qu'il ait au moins une question dans votre exercice
 qti unsupported format: Format non compatible QTI ou non supporté
 qti xml not found: Schéma XML non trouvé
 question: Question
