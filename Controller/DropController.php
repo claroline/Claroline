@@ -539,12 +539,12 @@ class DropController extends DropzoneBaseController
         foreach ($dropzone->getDrops() as $drop) {
             /** InnovaERV : ajout pour calculer les 2 zones **/
 
-            // Nombre de commentaires non lus
+            // Nombre de commentaires non lus/ Repo : Comment
             $nbCommentsPerUser = $this->getDoctrine()
                                 ->getRepository('InnovaCollecticielBundle:Comment')
                                 ->countCommentNotRead($drop->getUser());
 
-            // Nombre de devoirs à corriger
+            // Nombre de devoirs à corriger/ Repo : Document
             $nbTextToRead = $this->getDoctrine()
                                 ->getRepository('InnovaCollecticielBundle:Document')
                                 ->countTextToRead($drop->getUser());
