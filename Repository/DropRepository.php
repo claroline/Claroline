@@ -431,41 +431,4 @@ class DropRepository extends EntityRepository
         $qb->getQuery()->execute();
     }
 
-
-    /**
-     *
-     *  Fonctions créées pour InnovaCollecticielBundle.
-     *  InnovaERV.
-     *
-    */
-
-    /**
-     *  Pour compter les devoirs à corriger pour l'utilisateur indiqué
-     * @param $userId
-    */
-    public function countTextToRead(User $user)
-    {
-
-        // $dql = "
-        //     select count(*)
-        //     from innova\collecticielbundle\entity\document doc
-        //     left join innova_collecticielbundle_drop
-        //     on innova_collecticielbundle_document.drop_id = innova_collecticielbundle_drop.id
-        //     where doc.validate = true
-        //     and user_id = 2
-        // ";
-
-       $qb = $this->createQueryBuilder('drop')
-            ->select('drop, document')
-            ->leftJoin('drop.documents', 'document')
-            ->andWhere('document.validate = true')
-            ->andWhere('drop.user = :user')
-            ->setParameter('user', $user);
-
-        $numberDocuments = count($qb->getQuery()->getResult());
-echo "Utilisateur numéro " . $user->getId() . " a " . $numberDocuments . " document(s)";die();
-
-        return $numberDocuments;
-
-    }
 }

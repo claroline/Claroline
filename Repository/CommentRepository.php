@@ -12,6 +12,13 @@ use Claroline\CoreBundle\Entity\User;
 class CommentRepository extends EntityRepository {
 
     /**
+     *
+     *  Fonctions créées pour InnovaCollecticielBundle.
+     *  InnovaERV.
+     *
+    */
+
+    /**
      *  Pour compter les commentaires non lus pour l'utilisateur indiqué
      * @param $user
     */

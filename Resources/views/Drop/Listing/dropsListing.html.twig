@@ -37,7 +37,8 @@
                     {% include 'InnovaCollecticielBundle:Drop:dropsNbComments.html.twig' %}
                 </td>
                 <td>
-                    0 <!--Afficher ici la valeur "Devoirs à corriger" -->
+                    <!-- Afficher ici la valeur "Devoirs à corriger" -->
+                    {% include 'InnovaCollecticielBundle:Document:documentsNbTextToRead.html.twig' %}
                 </td>
                 <td> <!-- Appel de la vue "Vue d'un fichier" où seront affichés les différents commentaires. -->
                     <div class="btn-group ">

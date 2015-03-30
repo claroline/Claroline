@@ -532,21 +532,26 @@ class DropController extends DropzoneBaseController
 
         $countUnterminatedDrops = $dropRepo->countUnterminatedDropsByDropzone($dropzone->getId());
 
+        // Déclarations des nouveaux tableaux, qui seront passés à la vue
         $userToCommentCount = array();
+        $userNbTextToRead = array();
 
         foreach ($dropzone->getDrops() as $drop) {
-            //var_dump($dropRepo->getId());die();
             /** InnovaERV : ajout pour calculer les 2 zones **/
 
+            // Nombre de commentaires non lus
             $nbCommentsPerUser = $this->getDoctrine()
                                 ->getRepository('InnovaCollecticielBundle:Comment')
                                 ->countCommentNotRead($drop->getUser());
-//                                ->countTextToRead($drop->getUser());
 
+            // Nombre de devoirs à corriger
+            $nbTextToRead = $this->getDoctrine()
+                                ->getRepository('InnovaCollecticielBundle:Document')
+                                ->countTextToRead($drop->getUser());
+
+            // Affectations des résultats dans les tableaux
             $userToCommentCount[$drop->getUser()->getId()] = $nbCommentsPerUser;
-            //$array['nbTextToRead'] = $dropRepo->countTextToRead($dropRepo->getUser()->getId();
-            //$drop->countCommentNotRead = $dropRepo->countCommentNotRead($dropRepo->getUser()->getId());
-            //$drop->countnbTextToRead = $dropRepo->countTextToRead($dropRepo->getUser()->getId());
+            $userNbTextToRead[$drop->getUser()->getId()] = $nbTextToRead;
         }
 
         $adapter = new DoctrineORMAdapter($dropsQuery);
@@ -576,7 +581,8 @@ class DropController extends DropzoneBaseController
             'dropzone' => $dropzone,
             'unterminated_drops' => $countUnterminatedDrops,
             'pager' => $pager,
-            'nbCommentNotRead' => $userToCommentCount
+            'nbCommentNotRead' => $userToCommentCount,
+            'userNbTextToRead' => $userNbTextToRead
         ));
 
         return $dataToView;
