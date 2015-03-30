@@ -141,16 +141,6 @@ class CsvUserValidator extends ConstraintValidator
             }
         }
 
-        foreach ($usernames as $username => $lines) {
-            if (count($lines) > 1) {
-                $msg = $this->translator->trans(
-                    'username_found_at',
-                    array('%username%' => $username, '%lines%' => $this->getLines($lines)),
-                    'platform'
-                ) . ' ';
-            }
-        }
-
         if ($modelName) {
             $model = $this->om->getRepository('ClarolineCoreBundle:Model\WorkspaceModel')->findOneByName($modelName);
 
@@ -165,14 +155,8 @@ class CsvUserValidator extends ConstraintValidator
             }
         }
 
-        foreach ($errors as $error) {
-            $this->context->addViolation(
-                $this->translator->trans('line_number', array('%line%' => $i + 1), 'platform') . ' ' .
-                $error->getInvalidValue() . ' : ' . $error->getMessage()
-            );
-        }
-
         foreach ($usernames as $username => $lines) {
+
             if (count($lines) > 1) {
                 $msg = $this->translator->trans(
                     'username_found_at',
@@ -182,16 +166,17 @@ class CsvUserValidator extends ConstraintValidator
 
                 $this->context->addViolation($msg);
             }
+        }
 
-            foreach ($mails as $mail => $lines) {
-                if (count($lines) > 1) {
-                    $msg = $this->translator->trans(
-                        'email_found_at',
-                        array('%email%' => $mail, '%lines%' => $this->getLines($lines)),
-                        'platform'
-                    ) . ' ';
-                    $this->context->addViolation($msg);
-                }
+        foreach ($mails as $mail => $lines) {
+
+            if (count($lines) > 1) {
+                $msg = $this->translator->trans(
+                    'email_found_at',
+                    array('%email%' => $mail, '%lines%' => $this->getLines($lines)),
+                    'platform'
+                ) . ' ';
+                $this->context->addViolation($msg);
             }
         }
     }

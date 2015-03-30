@@ -155,17 +155,20 @@ class RoleManager
     {
         $username = $user->getUsername();
         $roleName = 'ROLE_USER_' . strtoupper($username);
+        $role = $this->getRoleByName($roleName);
 
         $this->om->startFlushSuite();
 
-        $role = $this->om->factory('Claroline\CoreBundle\Entity\Role');
-        $role->setName($roleName);
-        $role->setTranslationKey($username);
-        $role->setReadOnly(true);
-        $role->setType(Role::USER_ROLE);
-        $this->om->persist($role);
-        $this->associateRole($user, $role);
+        if (is_null($role)) {
 
+            $role = $this->om->factory('Claroline\CoreBundle\Entity\Role');
+            $role->setName($roleName);
+            $role->setTranslationKey($username);
+            $role->setReadOnly(true);
+            $role->setType(Role::USER_ROLE);
+            $this->om->persist($role);
+        }
+        $this->associateRole($user, $role);
         $this->om->endFlushSuite();
 
         return $role;
