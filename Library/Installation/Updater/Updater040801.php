@@ -67,7 +67,7 @@ class Updater040801 extends Updater
 
             if (is_null($resourceOt)) {
                 $resourceOt = new OrderedTool();
-                $resourceOt->setTool($parametersTool);
+                $resourceOt->setTool($resourcesTool);
                 $resourceOt->setType(0);
                 $resourceOt->setOrder(2);
                 $resourceOt->setLocked(false);
@@ -86,7 +86,7 @@ class Updater040801 extends Updater
                 $messageOt->setType(0);
                 $messageOt->setOrder(3);
                 $messageOt->setLocked(false);
-                $messageOt->setName($parametersTool->getName());
+                $messageOt->setName($messageTool->getName());
             }
             $messageOt->setVisibleInDesktop(true);
             $this->om->persist($messageOt);
