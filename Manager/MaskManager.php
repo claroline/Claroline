@@ -141,9 +141,9 @@ class MaskManager
     {
         if ($this->menuRepo->findOneBy(array('name' => $name, 'resourceType' => $type))) {
             return $this->menuRepo->findOneBy(array('name' => $name, 'resourceType' => $type));
-        } else {
-            return $this->menuRepo->findOneBy(array('name' => $name));
         }
+
+        return $this->menuRepo->findOneBy(array('name' => $name));
     }
 
     /**

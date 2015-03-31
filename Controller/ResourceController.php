@@ -330,6 +330,8 @@ class ResourceController
      * Handles any custom action (i.e. not defined in this controller) on a
      * resource of a given type.
      *
+     * If the ResourceType is null, it's an action (resource action) valides for all type of resources.
+     *
      * @param string       $action       the action
      * @param ResourceNode $node         the resource
      *
@@ -348,16 +350,14 @@ class ResourceController
 
         $collection = new ResourceCollection(array($node));
         if ($menuAction->getResourceType() === null) {
-            if(!$this->sc->isGranted('ROLE_USER')) {
+            if (!$this->sc->isGranted('ROLE_USER')) {
                 throw new AccessDeniedException('You must be log in to execute this action !');
             }
             $this->checkAccess('open', $collection);
-
             $eventName = 'resource_action_' . $action;
         } else {
             $permToCheck = $this->maskManager->getByValue($type, $menuAction->getValue());
             $this->checkAccess($permToCheck->getName(), $collection);
-
             $eventName = $action . '_' . $type->getName();
         }
 

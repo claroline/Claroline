@@ -399,8 +399,7 @@ class DatabaseWriter
      */
     public function persistResourceAction(array $actions)
     {
-        foreach ($actions as $action)
-        {
+        foreach ($actions as $action) {
             $resourceAction = new MenuAction();
 
             $resourceAction->setName($action);
@@ -419,8 +418,7 @@ class DatabaseWriter
      */
     public function updateResourceAction(array $actions)
     {
-        foreach ($actions as $action)
-        {
+        foreach ($actions as $action) {
             $resourceAction = $this->em->getRepository('ClarolineCoreBundle:Resource\MenuAction')
                 ->findOneBy(array('name' => $action, 'resourceType' => null, 'isCustom' => true));
 

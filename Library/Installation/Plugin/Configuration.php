@@ -194,7 +194,7 @@ class Configuration implements ConfigurationInterface
                                         return !$updateMode && in_array($v, $listResourceActions);
                                     }
                                 )
-                                ->thenInvalid($pluginFqcn . " : the ressource action name already exists")
+                                ->thenInvalid($pluginFqcn . ' : the resource action name already exists')
                             ->end()
                         ->end()
                     ->end()
