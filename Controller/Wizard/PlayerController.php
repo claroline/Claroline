@@ -154,8 +154,7 @@ class PlayerController
     private function isSummaryAutoDisplayed(Path $path, Step $currentStep)
     {
         $showSummary = false;
-
-        if (null == $currentStep->getParent()) {
+        if (null === $currentStep->getParent()) {
             // We are on the root step of the path
             // Check if User has disabled auto display of the summary
             if ($this->isAutoDisplayEnabled($path)) {
