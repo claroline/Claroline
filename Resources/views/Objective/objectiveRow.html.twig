@@ -6,7 +6,9 @@
     <td>-</td>
     <td>-</td>
     <td class="x-small-cell">
-        <a href="#"><i class="fa fa-search-plus"></i></a>
+        <a href="#">
+            <i class="fa fa-search-plus{{ objectiveCompetencies|length == 0 ? ' disabled': '' }}"></i>
+        </a>
     </td>
     <td class="x-small-cell">
         <a href="#"
@@ -44,3 +46,16 @@
         </a>
     </td>
 </tr>
+
+{% if objectiveCompetencies|length > 0 %}
+    {% for link in objectiveCompetencies %}
+        {% include
+            'HeVinciCompetencyBundle:Objective:objectiveRow.html.twig'
+            with {
+                id: link.getId(),
+                name: link.getCompetency().getName(),
+                objectiveCompetencies: []
+            }
+        %}
+    {% endfor %}
+{% endif %}

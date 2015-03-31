@@ -29,7 +29,8 @@
                     include 'HeVinciCompetencyBundle:Objective:objectiveRow.html.twig'
                     with {
                         id: objective.getId(),
-                        name: objective.getName()
+                        name: objective.getName(),
+                        objectiveCompetencies: objective.getObjectiveCompetencies()
                     }
                 %}
             {% endfor %}

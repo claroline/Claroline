@@ -2,13 +2,14 @@
 
 namespace HeVinci\CompetencyBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use HeVinci\CompetencyBundle\Validator as CustomAssert;
 use Symfony\Bridge\Doctrine\Validator\Constraints as BR;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="HeVinci\CompetencyBundle\Repository\ObjectiveRepository")
  * @ORM\Table(name="hevinci_learning_objective")
  * @BR\UniqueEntity("name")
  */
@@ -32,6 +33,11 @@ class Objective implements \JsonSerializable
      * @ORM\OneToMany(targetEntity="ObjectiveCompetency", mappedBy="objective")
      */
     private $objectiveCompetencies;
+
+    public function __construct()
+    {
+        $this->objectiveCompetencies = new ArrayCollection();
+    }
 
     /**
      * @return integer
@@ -57,11 +63,20 @@ class Objective implements \JsonSerializable
         return $this->name;
     }
 
+    /**
+     * @return ObjectiveCompetency[]
+     */
+    public function getObjectiveCompetencies()
+    {
+        return $this->objectiveCompetencies;
+    }
+
     public function jsonSerialize()
     {
         return [
             'id' => $this->id,
-            'name' => $this->name
+            'name' => $this->name,
+            'objectiveCompetencies' => $this->objectiveCompetencies
         ];
     }
 }

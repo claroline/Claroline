@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(name="hevinci_objective_competency")
  */
-class ObjectiveCompetency
+class ObjectiveCompetency implements \JsonSerializable
 {
     /**
      * @ORM\Id
@@ -35,6 +35,14 @@ class ObjectiveCompetency
      * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      */
     private $level;
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
 
     /**
      * @param Objective $objective
@@ -82,5 +90,12 @@ class ObjectiveCompetency
     public function getLevel()
     {
         return $this->level;
+    }
+
+    public function jsonSerialize()
+    {
+        return [
+            'id' => $this->id
+        ];
     }
 }

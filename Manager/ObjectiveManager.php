@@ -49,7 +49,7 @@ class ObjectiveManager
      */
     public function listObjectives()
     {
-        return $this->repo->findAll();
+        return $this->repo->findWithObjectives();
     }
 
     /**
@@ -74,6 +74,8 @@ class ObjectiveManager
     public function linkCompetency(Objective $objective, Competency $competency, Level $level)
     {
         // check level scale == competency root scale
+
+        // check competency is not already linked
 
         $link = new ObjectiveCompetency();
         $link->setObjective($objective);
