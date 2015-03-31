@@ -12,7 +12,6 @@ create all your declared resources types in the database.
 ```yml
 plugin:
     # Properties of resources managed by your plugin
-    # You can define as many resource types as you want in this file.
     resources:
         # "class" is the entity of your resource. This may be the entity of a existing
         # resource of the platform. This entity defines how the resource is stocked.

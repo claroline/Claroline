@@ -45,12 +45,12 @@
                                         "mask": {{ action.getValue() }},
                                         "isCustom": {% if action.isCustom() %} "yes" {% else %} "no" {% endif %},
                                         "isForm": {% if action.isForm() %} true {% else %} false {% endif %}
-                                    } {% if commonActions|length >= 0 or loop.last != true %},{% endif %}
+                                    } {% if resourceActions|length >= 0 or loop.last != true %},{% endif %}
                                 {% endif %}
                             {% endfor %}
 
-                            {% for action in commonActions %}
-                                {% if isMenuActionImplemented(resourceType, action.getName()) %}
+                            {% for action in resourceActions %}
+                                {% if isMenuActionImplemented(null, action.getName()) %}
                                     "{{ action.getName() }}": {
                                         "name": "{{ action.getName() }}",
                                         "route": "{{ path('claro_resource_action', {'resourceType': resourceType.getName(), 'action': 'test', 'node': '_nodeId' }) }}",

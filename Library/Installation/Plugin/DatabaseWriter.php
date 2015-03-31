@@ -407,7 +407,6 @@ class DatabaseWriter
             $resourceAction->setAsync(1);
             $resourceAction->setIsCustom(1);
             $resourceAction->setValue(1);
-            $resourceAction->setResourceType(null);
 
             $this->em->persist($resourceAction);
         }

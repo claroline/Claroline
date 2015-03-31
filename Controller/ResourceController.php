@@ -349,15 +349,17 @@ class ResourceController
         $collection = new ResourceCollection(array($node));
         if ($menuAction->getResourceType() === null) {
             if(!$this->sc->isGranted('ROLE_USER')) {
-                throw new \Exception('You must be log in to execute this action !');
+                throw new AccessDeniedException('You must be log in to execute this action !');
             }
             $this->checkAccess('open', $collection);
+
+            $eventName = 'resource_action_' . $action;
         } else {
             $permToCheck = $this->maskManager->getByValue($type, $menuAction->getValue());
             $this->checkAccess($permToCheck->getName(), $collection);
-        }
 
-        $eventName = $action . '_' . $type->getName();
+            $eventName = $action . '_' . $type->getName();
+        }
 
         $event = $this->dispatcher->dispatch(
             $eventName,
