@@ -3,13 +3,11 @@ services:
     innova_path.controller.path:
         class: %innova_path.controller.path.class%
         arguments:
-            session:            @session
-            router:             @router
-            translator:         @translator
-            formFactory:        @form.factory
-            pathManager:        @innova_path.manager.path
-            pathHandler:        @innova_path.form.handler.path
-            publishingManager:  @innova_path.manager.publishing
+            session:           @session
+            router:            @router
+            translator:        @translator
+            pathManager:       @innova_path.manager.path
+            publishingManager: @innova_path.manager.publishing
         scope: request
 
     # Path template controller
@@ -36,7 +34,7 @@ services:
     innova_path.controller.path_editor:
         class: %innova_path.controller.path_editor.class%
         arguments:
-            objectManager:     @doctrine.orm.entity_manager
-            router:            @router
-            pathManager:       @innova_path.manager.path
-            resourceManager:   @claroline.manager.resource_manager
+            objectManager:   @doctrine.orm.entity_manager
+            router:          @router
+            pathManager:     @innova_path.manager.path
+            resourceManager: @claroline.manager.resource_manager

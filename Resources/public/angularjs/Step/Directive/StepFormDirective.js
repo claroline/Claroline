@@ -8,12 +8,14 @@
                 replace: true,
                 controller: 'StepFormCtrl',
                 controllerAs: 'stepFormCtrl',
-                templateUrl: EditorApp.webDir + 'bundles/innovapath/angularjs/Step/Partial/form.html',
+                templateUrl: EditorApp.webDir + 'bundles/innovapath/angularjs/Step/Partial/step-form.html',
                 scope: {
                     step: '='
                 },
-                link: function (scope, element, attrs) {
-
+                link: function (scope, element, attrs, stepFormCtrl) {
+                    scope.$watch('step', function (newValue) {
+                        stepFormCtrl.step = newValue;
+                    });
                 }
             }
         }

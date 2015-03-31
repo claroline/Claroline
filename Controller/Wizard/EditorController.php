@@ -32,7 +32,6 @@ class EditorController
     protected $om;
 
     /**
-     *
      * Router
      * @var \Symfony\Component\Routing\RouterInterface $router
      */
@@ -74,7 +73,7 @@ class EditorController
      * @Route(
      *      "/{id}",
      *      name    = "innova_path_editor_wizard",
-     *      options = {"expose" = true}
+     *      options = { "expose" = true }
      * )
      * @Method("GET")
      * @Template("InnovaPathBundle:Wizard:editor.html.twig")
@@ -124,8 +123,8 @@ class EditorController
      * @Route(
      *      "/load_activity/{nodeId}",
      *      name         = "innova_path_load_activity",
-     *      requirements = {"id" = "\d+"},
-     *      options      = {"expose" = true}
+     *      requirements = { "id"     = "\d+" },
+     *      options      = { "expose" = true }
      * )
      * @Method("GET")
      */
@@ -201,8 +200,8 @@ class EditorController
      * @Route(
      *      "/show_activity/{activityId}",
      *      name         = "innova_path_show_activity",
-     *      requirements = {"id" = "\d+"},
-     *      options      = {"expose" = true}
+     *      requirements = { "id"     = "\d+" },
+     *      options      = { "expose" = true }
      * )
      * @Method("GET")
      */

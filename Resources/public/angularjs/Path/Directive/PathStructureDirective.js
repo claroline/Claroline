@@ -8,7 +8,7 @@
                 replace: true,
                 controller: 'PathStructureCtrl',
                 controllerAs: 'pathStructureCtrl',
-                templateUrl: EditorApp.webDir + 'bundles/innovapath/angularjs/Path/Partial/structure.html',
+                templateUrl: EditorApp.webDir + 'bundles/innovapath/angularjs/Path/Partial/path-structure.html',
                 scope: {
                     structure: '='
                 },

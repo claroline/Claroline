@@ -1,6 +1,6 @@
 <!-- Item row -->
-<div data-ui-tree-handle="" class="tree-item" data-ng-class="{'active-step': previewStep.id == step.id}"
-     data-ng-click="setPreviewStep(step)"
+<div data-ui-tree-handle="" class="tree-item" data-ng-class="{ 'active-step': pathStructureCtrl.currentStep.id == step.id }"
+     data-ng-click="pathStructureCtrl.setCurrentStep(step)"
      data-ng-mouseenter="showButtons = step.id"
      data-ng-mouseleave="showButtons = null">
 
@@ -24,7 +24,7 @@
     </div>
 
     <!-- Actions available -->
-    <span data-ng-show="showButtons == step.id || previewStep == step" class="step-actions btn-group" data-nodrag="">
+    <span data-ng-show="showButtons == step.id || pathStructureCtrl.currentStep == step" class="step-actions btn-group" data-nodrag="">
         <a href="#" class="btn btn-default btn-sm" data-ng-click="pathStructureCtrl.addChild(step)" data-toggle="tooltip" data-container="body" title="{{ 'step_add_child' | trans:{}:'path_editor' }}">
             <span class="fa fa-plus"></span>
             <span class="sr-only">{{ 'step_add_child' | trans:{}:'path_editor' }}</span>
@@ -52,5 +52,5 @@
     </span>
 </div>
 <ol class="step-children border-lvl-{{ step.lvl }}" data-ui-tree-nodes="" data-ng-model="step.children" data-ng-hide="collapsed">
-    <li data-ui-tree-node="" data-ng-repeat="step in step.children" data-ng-include="pathStructureCtrl.webDir + 'bundles/innovapath/angularjs/Path/Partial/structure-item.html'"></li>
+    <li data-ui-tree-node="" data-ng-repeat="step in step.children" data-ng-include="pathStructureCtrl.webDir + 'bundles/innovapath/angularjs/Path/Partial/path-structure-step.html'"></li>
 </ol>

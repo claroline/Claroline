@@ -36,9 +36,6 @@
  */
 namespace Innova\PathBundle\Controller;
 
-use Innova\PathBundle\Form\Handler\PathHandler;
-use Symfony\Component\Form\FormFactoryInterface;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -95,22 +92,10 @@ class PathController
     protected $translator;
 
     /**
-     * Form factory
-     * @var \Symfony\Component\Form\FormFactoryInterface
-     */
-    protected $formFactory;
-
-    /**
      * Current path manager
      * @var \Innova\PathBundle\Manager\PathManager
      */
     protected $pathManager;
-
-    /**
-     * Path form handler
-     * @var \Innova\PathBundle\Form\Handler\PathHandler
-     */
-    protected $pathHandler;
 
     /**
      * Publishing manager
@@ -124,26 +109,20 @@ class PathController
      * @param \Symfony\Component\HttpFoundation\Session\SessionInterface $session
      * @param \Symfony\Component\Routing\RouterInterface                 $router
      * @param \Symfony\Component\Translation\TranslatorInterface         $translator
-     * @param \Symfony\Component\Form\FormFactoryInterface               $formFactory
      * @param \Innova\PathBundle\Manager\PathManager                     $pathManager
-     * @param \Innova\PathBundle\Form\Handler\PathHandler                $pathHandler
      * @param \Innova\PathBundle\Manager\PublishingManager               $publishingManager
      */
     public function __construct(
         SessionInterface         $session,
         RouterInterface          $router,
         TranslatorInterface      $translator,
-        FormFactoryInterface     $formFactory,
         PathManager              $pathManager,
-        PathHandler              $pathHandler,
         PublishingManager        $publishingManager)
     {
         $this->session           = $session;
         $this->router            = $router;
         $this->translator        = $translator;
-        $this->formFactory       = $formFactory;
         $this->pathManager       = $pathManager;
-        $this->pathHandler       = $pathHandler;
         $this->publishingManager = $publishingManager;
     }
     

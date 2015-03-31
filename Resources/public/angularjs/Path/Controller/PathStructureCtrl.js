@@ -1,5 +1,6 @@
 /**
  * Structure Controller
+ * Manages the tree of steps into the Path
  */
 (function () {
     'use strict';
@@ -25,13 +26,14 @@
              * Initialize an empty structure for path
              */
             this.createNew = function () {
-                console.log('coucou');
-
                 // Create a generic root step
                 var rootStep = StepService.new();
 
                 this.structure = [];
                 this.structure.push(rootStep);
+
+                // Set root step as current step
+                this.setCurrentStep(rootStep);
             };
 
             /**
@@ -39,6 +41,12 @@
              */
             this.createFromTemplate = function () {
                 // Open select modal
+
+                // Get the root of the template as current step
+            };
+
+            this.setCurrentStep = function (step) {
+                this.currentStep = step;
             };
 
             /**

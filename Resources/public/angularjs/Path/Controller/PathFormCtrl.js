@@ -1,3 +1,7 @@
+/**
+ * Path Controller
+ * Manages Path form
+ */
 (function () {
     'use strict';
 

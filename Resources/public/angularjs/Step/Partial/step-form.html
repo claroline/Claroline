@@ -1,0 +1,55 @@
+<div class="panel panel-default step-form">
+    <!-- Step level -->
+    <div class="lvl lvl-{{ stepFormCtrl.step.lvl }}"></div>
+
+    <div class="panel-body">
+        <div class="form-group">
+            <label class="control-label sr-only" for="step-name">Step name</label>
+            <!-- Edit step name -->
+            <div class="input-group col-md-12">
+                <input type="text" class="form-control" name="step-name" id="step-name" data-ng-model="stepFormCtrl.step.name" />
+                <div class="input-group-btn">
+                    <button data-ng-click="showActivity()" class="btn btn-default" type="button" data-ng-if="stepFormCtrl.step.activityId" data-toggle="tooltip" data-container="body" title="{{ 'see_activity'|trans:{}:'path_editor' }}">
+                        <span class="fa fa-eye"></span>
+                        <span class="sr-only">{{ 'see_activity'|trans:{}:'path_editor' }}</span>
+                    </button>
+
+                    <button class="btn btn-default" type="button" data-ui-resource-picker="activityResourcePicker" data-toggle="tooltip" data-container="body" title="{{ 'select_activity'|trans:{}:'path_editor' }}">
+                        <span class="fa fa-folder-open"></span>
+                        <span class="sr-only">{{ 'select_activity'|trans:{}:'path_editor' }}</span>
+                    </button>
+
+                    <button data-ng-click="deleteActivity()" class="btn btn-danger" type="button" data-ng-if="stepFormCtrl.step.activityId" data-toggle="tooltip" data-container="body" title="{{ 'delete_activity'|trans:{}:'path_editor' }}">
+                        <span class="fa fa-trash-o"></span>
+                        <span class="sr-only">{{ 'delete_activity'|trans:{}:'path_editor' }}</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel-group" id="accordion">
+            <!-- Description -->
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" href="#panel-description">Description</a>
+                    </h4>
+                </div>
+                <div id="panel-description" class="panel-collapse collapse in">
+                    <div class="panel-body">
+                        <textarea data-ui-tinymce="tinymceOptions" class="form-control" name="step-description" data-ng-change="updateHistory()" data-ng-model="stepFormCtrl.step.description"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Primary resource -->
+            <div class="panel panel-default" data-ng-include="stepFormCtrl.webDir + 'bundles/innovapath/angularjs/Step/Partial/resources-primary.html'"></div>
+
+            <!-- Secondary resources -->
+            <div class="panel panel-default" data-ng-include="stepFormCtrl.webDir + 'bundles/innovapath/angularjs/Step/Partial/resources-secondary.html'"></div>
+
+            <!-- Properties -->
+            <div class="panel panel-default" data-ng-include="stepFormCtrl.webDir + 'bundles/innovapath/angularjs/Step/Partial/properties.html'"></div>
+        </div>
+    </div>
+</div>

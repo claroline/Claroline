@@ -287,14 +287,14 @@ class Step implements \JsonSerializable
         $parent = $this->getParent();
         if (!empty($parent)) {
             // Current step has a parent
-            $siblings = clone $parent->getChildren();
+            $siblings = $parent->getChildren();
         
             // Remove current step from parent children
             $siblings->removeElement($this);
             $siblings = $siblings->toArray();
             
             // Order siblings by stepOrder
-            $sortSiblings = function ($a, $b) {
+            $sortSiblings = function (Step $a, Step $b) {
                 if ($a->getOrder() === $b->getOrder()) {
                     return 0;
                 }
@@ -321,7 +321,7 @@ class Step implements \JsonSerializable
             $parents = array_merge($parents, $parent->getParents());
             
             // Sort parents
-            $sortParents = function ($a, $b) {
+            $sortParents = function (Step $a, Step $b) {
                 if ($a->getLvl() === $b->getLvl()) {
                     return 0;
                 }

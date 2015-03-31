@@ -12,6 +12,10 @@
         'StepService',
         'ResourceService',
         function ($scope, $http, HistoryService, PathService, StepService, ResourceService) {
+            this.webDir = EditorApp.webDir;
+
+            this.step = {};
+
             // Store resource icons
             $scope.resourceIcons = EditorApp.resourceIcons;
             $scope.resourceZoom = 75;
@@ -38,7 +42,7 @@
                     // We need only one node, so only the last one will be kept
                     for (var nodeId in nodes) {
                         // Load activity properties to populate step
-                        $http.get(Routing.generate('innova_path_load_activity', { workspaceId: EditorApp.workspaceId, nodeId: nodeId}))
+                        $http.get(Routing.generate('innova_path_load_activity', { workspaceId: EditorApp.workspaceId, nodeId: nodeId }))
                             .success(function (data) {
                                 if (typeof data !== 'undefined' && data !== null && data.length !== 0) {
                                     // Populate step

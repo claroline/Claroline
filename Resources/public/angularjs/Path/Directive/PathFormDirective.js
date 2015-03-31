@@ -13,7 +13,7 @@
                 replace: true,
                 controller: 'PathFormCtrl',
                 controllerAs: 'pathFormCtrl',
-                templateUrl: EditorApp.webDir + 'bundles/innovapath/angularjs/Path/Partial/form.html',
+                templateUrl: EditorApp.webDir + 'bundles/innovapath/angularjs/Path/Partial/path-form.html',
                 scope: {
                     path: '='
                 },
