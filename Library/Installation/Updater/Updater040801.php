@@ -18,6 +18,10 @@ class Updater040801 extends Updater
 {
     private $container;
     private $om;
+
+    /**
+     * @var \Claroline\CoreBundle\Manager\ToolManager
+     */
     private $toolManager;
 
     public function __construct(ContainerInterface $container)
@@ -63,7 +67,7 @@ class Updater040801 extends Updater
 
             if (is_null($resourceOt)) {
                 $resourceOt = new OrderedTool();
-                $resourceOt->setTool($parametersTool);
+                $resourceOt->setTool($resourcesTool);
                 $resourceOt->setType(0);
                 $resourceOt->setOrder(2);
                 $resourceOt->setLocked(false);
@@ -82,7 +86,7 @@ class Updater040801 extends Updater
                 $messageOt->setType(0);
                 $messageOt->setOrder(3);
                 $messageOt->setLocked(false);
-                $messageOt->setName($parametersTool->getName());
+                $messageOt->setName($messageTool->getName());
             }
             $messageOt->setVisibleInDesktop(true);
             $this->om->persist($messageOt);
@@ -96,7 +100,7 @@ class Updater040801 extends Updater
         $tool = $this->toolManager->getOneToolByName('parameters');
 
         if (!is_null($tool)) {
-            $this->toolManager->createOrderedToolByToolForAllUsers($tool);
+            $this->toolManager->createOrderedToolByToolForAllUsers($this->logger, $tool);
         }
     }
 
@@ -106,7 +110,7 @@ class Updater040801 extends Updater
         $tool = $this->toolManager->getOneToolByName('resource_manager');
 
         if (!is_null($tool)) {
-            $this->toolManager->createOrderedToolByToolForAllUsers($tool);
+            $this->toolManager->createOrderedToolByToolForAllUsers($this->logger, $tool);
         }
     }
 }

@@ -28,7 +28,9 @@ use Claroline\CoreBundle\Manager\Exception\UnremovableToolException;
 use Claroline\CoreBundle\Manager\ToolMaskDecoderManager;
 use Claroline\CoreBundle\Manager\ToolRightsManager;
 use Claroline\CoreBundle\Event\StrictDispatcher;
+use Claroline\CoreBundle\Repository\UserRepository;
 use JMS\DiExtraBundle\Annotation as DI;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -1167,17 +1169,25 @@ class ToolManager
     }
 
     public function createOrderedToolByToolForAllUsers(
+        LoggerInterface $logger,
         Tool $tool,
         $type = 0,
         $isVisible = true
     )
     {
         $toolName = $tool->getName();
-        $users = $this->userRepo->findAllEnabledUsers();
+        $usersQuery = $this->userRepo->findAllEnabledUsers(false);
+        $users = $usersQuery->iterate();
         $this->om->startFlushSuite();
-        $i = 0;
+        $index = 0;
 
-        foreach ($users as $user) {
+        $countUser = $this->userRepo->countAllEnabledUsers();
+
+        $logger->info(sprintf("%d users to check tools on.", $countUser));
+
+        foreach ($users as $row) {
+            $user = $row[0];
+            /** @var \Claroline\CoreBundle\Entity\Tool\OrderedTool[] $orderedTools */
             $orderedTools = $this->orderedToolRepo->findOrderedToolsByToolAndUser(
                 $tool,
                 $user,
@@ -1193,10 +1203,12 @@ class ToolManager
                 $orderedTool->setOrder(1);
                 $orderedTool->setType($type);
                 $this->om->persist($orderedTool);
-                $i++;
+                $index++;
 
-                if ($i % 100 === 0) {
+                if ($index % 100 === 0) {
                     $this->om->forceFlush();
+                    $this->om->clear($orderedTool);
+                    $logger->info(sprintf("    %d users checked.", 100));
                 }
             } else {
                 $orderedTool = $orderedTools[0];
@@ -1204,13 +1216,18 @@ class ToolManager
                 if ($orderedTool->isVisibleInDesktop() !== $isVisible) {
                     $orderedTool->setVisibleInDesktop($isVisible);
                     $this->om->persist($orderedTool);
-                    $i++;
+                    $index++;
 
-                    if ($i % 100 === 0) {
+                    if ($index % 100 === 0) {
                         $this->om->forceFlush();
+                        $this->om->clear($orderedTool);
+                        $logger->info(sprintf("    %d users checked.", 100));
                     }
                 }
             }
+        }
+        if ($index % 100 !== 0) {
+            $logger->info(sprintf("    %d users checked.", (100 - $index)));
         }
         $this->om->endFlushSuite();
     }

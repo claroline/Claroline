@@ -482,6 +482,10 @@ class ResourceManager
         $this->om->endFlushSuite();
     }
 
+    /**
+     * @param ResourceNode $parent
+     * @param integer      $index
+     */
     public function shiftRightAt(ResourceNode $parent, $index)
     {
         $nodes = $parent->getChildren();
@@ -496,6 +500,10 @@ class ResourceManager
         $this->om->flush();
     }
 
+    /**
+     * @param ResourceNode $parent
+     * @param integer      $index
+     */
     public function shiftLeftAt(ResourceNode $parent, $index)
     {
         $nodes = $parent->getChildren();
@@ -510,19 +518,27 @@ class ResourceManager
         $this->om->flush();
     }
 
+    /**
+     * @param ResourceNode $node
+     */
     public function reorder(ResourceNode $node)
     {
-        $children = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceNode')
-            ->getChildren($node, true, 'index');
-        $i = 1;
+        /** @var \Claroline\CoreBundle\Repository\ResourceNodeRepository $resourceNodeRepository */
+        $resourceNodeRepository = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceNode');
+        $children = $resourceNodeRepository->getChildren($node, true, 'index');
+        $index = 1;
 
         foreach ($children as $child) {
-            $child->setIndex($i);
-            $i++;
+            $child->setIndex($index);
+            $index++;
             $this->om->persist($child);
         }
 
         $this->om->flush();
+
+        foreach ($children as $child) {
+            $this->om->detach($child);
+        }
     }
 
     /**

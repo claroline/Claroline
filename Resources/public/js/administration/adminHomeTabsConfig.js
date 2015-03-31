@@ -23,7 +23,8 @@
         var i = 0;
         
         $('.grid-stack-item').each(function () {
-                var wdcId = $(this).data('widget-display-config-id');
+            var wdcId = $(this).data('widget-display-config-id');
+            
             if (wdcId !== undefined) {
                 var column = $(this).attr('data-gs-x');
                 var row = $(this).attr('data-gs-y');

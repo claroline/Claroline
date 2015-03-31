@@ -1104,6 +1104,15 @@ class UserManager
         );
     }
 
+    public function getUserByUsernameAndMail($username, $mail, $executeQuery = true)
+    {
+        return $this->userRepo->findUserByUsernameAndMail(
+            $username,
+            $mail,
+            $executeQuery
+        );
+    }
+
     public function getCountAllEnabledUsers($executeQuery = true)
     {
         return $this->userRepo->countAllEnabledUsers($executeQuery);
