@@ -179,9 +179,8 @@ class Configuration implements ConfigurationInterface
         $plugin = $this->plugin;
         $pluginFqcn = get_class($plugin);
         $listResourceActions = $this->listResourceActions;
-        var_dump($listResourceActions);
-        die;
         $updateMode   = $this->isInUpdateMode();
+
         $pluginSection
             ->arrayNode('resource_actions')
                 ->prototype('array')
@@ -192,7 +191,7 @@ class Configuration implements ConfigurationInterface
                             ->validate()
                                 ->ifTrue(
                                     function ($v) use ($listResourceActions, $updateMode) {
-                                        return /*!$updateMode &&*/ in_array($v, $listResourceActions);
+                                        return !$updateMode && in_array($v, $listResourceActions);
                                     }
                                 )
                                 ->thenInvalid($pluginFqcn . " : the ressource action name already exists")
