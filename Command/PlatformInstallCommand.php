@@ -40,7 +40,7 @@ class PlatformInstallCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $output->writeln('<comment>Installing the platform...</comment>');
+        $output->writeln(sprintf('<comment>%s - Installing the platform...</comment>', date('H:i:s')));
 
         $verbosityLevelMap = array(
             LogLevel::NOTICE => OutputInterface::VERBOSITY_NORMAL,
@@ -54,5 +54,7 @@ class PlatformInstallCommand extends ContainerAwareCommand
         $installer->setOutput($output);
         $installer->setLogger($consoleLogger);
         $installer->installFromKernel($input->getOption('with-optional-fixtures'));
+
+        $output->writeln(sprintf('<comment>%s - Platform installed.</comment>', date('H:i:s')));
     }
 }
