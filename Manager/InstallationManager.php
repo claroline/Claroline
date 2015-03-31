@@ -181,7 +181,7 @@ class InstallationManager
             $entity->setTargetDir($bundle->getTargetDir());
             $entity->setBasePath($bundle->getBasePath());
             $om->persist($entity);
-            $this->log("Updating {$bundle->getName()} info...");
+            $this->log(sprintf("Updating %s info...", $bundle->getName()));
             $om->flush();
         }
     }
