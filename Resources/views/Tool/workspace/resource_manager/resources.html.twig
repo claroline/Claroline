@@ -49,13 +49,11 @@
                                             "mask": {{ action.getValue() }},
                                             "isCustom": {% if action.isCustom() %} "yes" {% else %} "no" {% endif %},
                                             "isForm": {% if action.isForm() %} true {% else %} false {% endif %}
-                                        }
-                                        {% if loop.last != true %},{% endif %}
+                                        } {% if loop.last != true %},{% endif %}
                                     {% endif %}
                                 {% endfor %}
                             }
-                        }
-                        {% if loop.last != true %},{% endif %}
+                        } {% if loop.last != true %},{% endif %}
                     {% endfor %}
                 }
             });

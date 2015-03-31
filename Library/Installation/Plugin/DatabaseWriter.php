@@ -196,6 +196,10 @@ class DatabaseWriter
             $this->persistResourceTypes($resource, $plugin, $pluginBundle);
         }
 
+        foreach ($processedConfiguration['resource_actions'] as $resourceAction) {
+            $this->persistResourceAction($resourceAction);
+        }
+
         foreach ($processedConfiguration['widgets'] as $widget) {
             $this->createWidget($widget, $plugin, $pluginBundle);
         }
@@ -222,6 +226,10 @@ class DatabaseWriter
     {
         foreach ($processedConfiguration['resources'] as $resourceConfiguration) {
             $this->updateResourceTypes($resourceConfiguration, $plugin, $pluginBundle);
+        }
+
+        foreach ($processedConfiguration['resource_actions'] as $resourceAction) {
+            $this->updateResourceAction($resourceAction);
         }
 
         foreach ($processedConfiguration['widgets'] as $widgetConfiguration) {
@@ -384,6 +392,43 @@ class DatabaseWriter
         $resourceIcon->setShortcut(false);
         $this->em->persist($resourceIcon);
         $this->im->createShortcutIcon($resourceIcon);
+    }
+
+    /**
+     * @param array $actions
+     */
+    public function persistResourceAction(array $actions)
+    {
+        foreach ($actions as $action)
+        {
+            $resourceAction = new MenuAction();
+
+            $resourceAction->setName($action);
+            $resourceAction->setAsync(1);
+            $resourceAction->setIsCustom(1);
+            $resourceAction->setValue(1);
+            $resourceAction->setResourceType(null);
+
+            $this->em->persist($resourceAction);
+        }
+
+        $this->em->flush();
+    }
+
+    /**
+     * @param array $actions
+     */
+    public function updateResourceAction(array $actions)
+    {
+        foreach ($actions as $action)
+        {
+            $resourceAction = $this->em->getRepository('ClarolineCoreBundle:Resource\MenuAction')
+                ->findOneBy(array('name' => $action, 'resourceType' => null, 'isCustom' => true));
+
+            if ($resourceAction === null) {
+                $this->persistResourceAction(array($action));
+            }
+        }
     }
 
     /**

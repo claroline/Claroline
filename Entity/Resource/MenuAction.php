@@ -57,7 +57,7 @@ class MenuAction
      *     inversedBy="actions",
      *     cascade={"persist"}
      * )
-     * @ORM\JoinColumn(name="resource_type_id", onDelete="SET NULL")
+     * @ORM\JoinColumn(name="resource_type_id", onDelete="SET NULL", nullable=true)
      */
     protected $resourceType;
 
@@ -110,7 +110,7 @@ class MenuAction
      *
      * @return MenuAction
      */
-    public function setResourceType(ResourceType $resourceType)
+    public function setResourceType(ResourceType $resourceType = null)
     {
         $this->resourceType = $resourceType;
 

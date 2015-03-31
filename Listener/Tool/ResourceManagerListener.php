@@ -176,11 +176,14 @@ class ResourceManagerListener
     public function resourceDesktop()
     {
         $resourceTypes = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findAll();
+        $commonActions = $this->em->getRepository('ClarolineCoreBundle:Resource\MenuAction')
+            ->findByResourceType(null);
 
         return $this->templating->render(
             'ClarolineCoreBundle:Tool\desktop\resource_manager:resources.html.twig',
             array(
                 'resourceTypes' => $resourceTypes,
+                'commonActions' => $commonActions,
                 'maxPostSize' => ini_get('post_max_size'),
                 'resourceZoom' => $this->getZoom()
             )

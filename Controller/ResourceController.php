@@ -346,10 +346,18 @@ class ResourceController
             throw new \Exception("The menu {$action} doesn't exists");
         }
 
-        $permToCheck = $this->maskManager->getByValue($type, $menuAction->getValue());
-        $eventName = $action . '_' . $type->getName();
         $collection = new ResourceCollection(array($node));
-        $this->checkAccess($permToCheck->getName(), $collection);
+        if ($menuAction->getResourceType() === null) {
+            if(!$this->sc->isGranted('ROLE_USER')) {
+                throw new \Exception('You must be log in to execute this action !');
+            }
+            $this->checkAccess('open', $collection);
+        } else {
+            $permToCheck = $this->maskManager->getByValue($type, $menuAction->getValue());
+            $this->checkAccess($permToCheck->getName(), $collection);
+        }
+
+        $eventName = $action . '_' . $type->getName();
 
         $event = $this->dispatcher->dispatch(
             $eventName,
