@@ -1,12 +1,7 @@
-<div id="Instructions" class="alert alert-info col-md-11">
+<div id="Instructions" class="alert alert-info col-md-12">
     <a class="close" onclick="HideInstruction();">&times;</a>
     <p>{{ 'resizeZone' | trans }}.</p>
-    <hr>
-    <p>{{ 'erase' | trans }}.</p>
 </div>
-
-<br><br>
-
 <div class="form-group row">
     <label class="control-label col-md-2">{{ 'choose_image' | trans }}</label>
     <div class="col-md-10">
@@ -37,11 +32,6 @@
 
     </div>
 </div>
-
-
-
-<br><br>
-
 <div id="Answer" style="position: relative;">
 
     {% if src == 'edit' %}
@@ -62,7 +52,6 @@
         {% endfor %}
     {% endif %}
 </div>
-<br><br>
 <div id="AnswerArray">
 
     <table class="table table-striped table-condensed" style="display:none;">
@@ -100,9 +89,8 @@
         </tr>
     </table>
 </div>
-                <a class="btn btn-default" id="addp" onClick="addAnswerZone('{{'noImgSelect' | trans}}');"><i class="fa fa-plus"></i>{{ 'addZoneAnswer' | trans }}</a>
-<br><br>
-
+            <br>
+<div class="form-group"><a class="btn btn-default" id="addp" onClick="addAnswerZone('{{'noImgSelect' | trans}}');"><i class="fa fa-plus"></i>{{ 'addZoneAnswer' | trans }}</a></div>
 <div id="AlreadyPlacedArray" style="display:none;">
 
     <table id="replace" class="table table-striped table-condensed">
