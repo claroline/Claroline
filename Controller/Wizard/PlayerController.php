@@ -137,7 +137,7 @@ class PlayerController
                 if (in_array($currentStep, $lastStepParents)) {
                     foreach ($lastStepParents as $lastStepParent) {
                         if ($lastStepParent->getLvl() > $currentStepLevel) {
-                            $ghost[] = $lastStepParent;
+                            $roadBack[] = $lastStepParent;
                         }
                     }
                     $roadBack[] = $lastStep;

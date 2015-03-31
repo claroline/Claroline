@@ -14,7 +14,6 @@ use Claroline\CoreBundle\Event\CustomActionResourceEvent;
 
 use Innova\PathBundle\Entity\Path\Path;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
-use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
  * Path Event Listener
@@ -144,7 +143,7 @@ class PathListener extends ContainerAware
     public function onCopy(CopyResourceEvent $event)
     {
         // Get Path to duplicate
-        $pathToCopy = $file = $event->getResource();
+        $pathToCopy = $event->getResource();
 
         // Create new Path
         $path = new Path();

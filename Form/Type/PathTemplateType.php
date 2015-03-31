@@ -15,4 +15,4 @@ class PathTemplateType extends AbstractPathType
             'data_class' => 'Innova\PathBundle\Entity\Path\PathTemplate',
         );
     }
-} 
+}
