@@ -43,7 +43,7 @@ class PlatformUpdateCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $output->writeln('<comment>Updating the platform...</comment>');
+        $output->writeln(sprintf('<comment>%s - Updating the platform...</comment>', date('H:i:s')));
         $verbosityLevelMap = array(
             LogLevel::NOTICE => OutputInterface::VERBOSITY_NORMAL,
             LogLevel::INFO   => OutputInterface::VERBOSITY_NORMAL,
@@ -64,6 +64,8 @@ class PlatformUpdateCommand extends ContainerAwareCommand
         $refresher->compileGeneratedThemes();
 
         MaintenanceHandler::disableMaintenance();
+
+        $output->writeln(sprintf('<comment>%s - Platform updated.</comment>', date('H:i:s')));
     }
 
     /**
