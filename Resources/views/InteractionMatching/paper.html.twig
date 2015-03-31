@@ -35,6 +35,8 @@
     <link href="{{ asset('bundles/ujmexo/css/matchingOverview.css') }}" type="text/css" rel="stylesheet"/>
     {% if interactionToDisplayed.typeMatching.code == 1 %}
         <link href="{{ asset('bundles/ujmexo/css/matchingBind.css') }}"  type="text/css" rel="stylesheet"/>
+        {% else %}
+        <link href="{{ asset('bundles/ujmexo/css/matchingDrag.css') }}"  type="text/css" rel="stylesheet"/>
     {% endif %}
 {% endblock %}
 
@@ -142,9 +144,4 @@
         <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/ext/jquery.jsplumb-1.6.2-min.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/ext/dom.jsPlumb-1.7.0-min.js') }}"></script>
     {% endif %}
-    <script>
-        function deleteImage(){
-            return "{{ asset('bundles/ujmexo/images/delete.png') }}";
-        }
-    </script>
 {% endblock %}

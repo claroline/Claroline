@@ -177,6 +177,7 @@
             {% elseif interactionType == 'InteractionMatching' %}
                     {% if interactionToDisplayed.typeMatching.code == 2 %}
                         <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/matchingdisplaydrag.js') }}"></script>
+                        <link href="{{ asset('bundles/ujmexo/css/matchingDrag.css') }}"  type="text/css" rel="stylesheet"/>
                     {% else %}
                         <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/matchingdisplaybind.js') }}"></script>
                         <link href="{{ asset('bundles/ujmexo/css/matchingBind.css') }}"  type="text/css" rel="stylesheet"/>
@@ -419,11 +420,6 @@
             <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/ext/jquery.jsplumb-1.6.2-min.js') }}"></script>
             <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/ext/dom.jsPlumb-1.7.0-min.js') }}"></script>
         {% endif %}
-        <script>
-            function deleteImage(){
-                return "{{ asset('bundles/ujmexo/images/delete.png') }}";
-            }
-        </script>
     {% endif %}
 
     {% include "UJMExoBundle:Partial:modal/confirmFinishExercise.html.twig" %}
