@@ -62,7 +62,7 @@ class InstallationManager
 
     public function install(InstallableInterface $bundle, $requiredOnly = true)
     {
-        $this->log("<comment>Installing {$bundle->getName()}...</comment>");
+        $this->log(sprintf("<comment>Installing %s...</comment>", $bundle->getName()));
         $additionalInstaller = $this->getAdditionalInstaller($bundle);
 
         if ($additionalInstaller) {
@@ -95,7 +95,7 @@ class InstallationManager
 
     public function update(InstallableInterface $bundle, $currentVersion, $targetVersion)
     {
-        $this->log("<comment>Updating {$bundle->getName()}...</comment>");
+        $this->log(sprintf("<comment>Updating %s...</comment>", $bundle->getName()));
         $additionalInstaller = $this->getAdditionalInstaller($bundle);
 
         if ($additionalInstaller) {
@@ -118,7 +118,7 @@ class InstallationManager
 
     public function uninstall(InstallableInterface $bundle)
     {
-        $this->log("<comment>Uninstalling {$bundle->getName()}...</comment>");
+        $this->log(sprintf("<comment>Uninstalling %s...</comment>", $bundle->getName()));
         $additionalInstaller = $this->getAdditionalInstaller($bundle);
 
         if ($additionalInstaller) {
@@ -181,7 +181,7 @@ class InstallationManager
             $entity->setTargetDir($bundle->getTargetDir());
             $entity->setBasePath($bundle->getBasePath());
             $om->persist($entity);
-            $this->log("Updating {$bundle->getName()} info...");
+            $this->log(sprintf("Updating %s info...", $bundle->getName()));
             $om->flush();
         }
     }
