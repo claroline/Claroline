@@ -159,7 +159,10 @@ class ToolManager
     /**
      * @param \Claroline\CoreBundle\Entity\User $user
      *
-     * @return \Claroline\CoreBundle\Entity\Tool\Tool
+     * @param int                               $type
+     * @param array                             $excludedTools
+     *
+     * @return \Claroline\CoreBundle\Entity\Tool\Tool[]
      */
     public function getDisplayedDesktopOrderedTools(
         User $user,
@@ -177,9 +180,9 @@ class ToolManager
     }
 
     /**
-     * @param \Claroline\CoreBundle\Entity\User $user
+     * @param integer $type
      *
-     * @return \Claroline\CoreBundle\Entity\Tool\Tool
+     * @return \Claroline\CoreBundle\Entity\Tool\OrderedTool[]
      */
     public function getOrderedToolsLockedByAdmin($type = 0)
     {
