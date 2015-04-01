@@ -1,2 +1,8 @@
 plugin:
     has_options: false
+
+    tools:
+      - name: my_portfolios
+        class: list-alt
+        is_displayable_in_workspace: false
+        is_displayable_in_desktop: true

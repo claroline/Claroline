@@ -35,7 +35,7 @@ class ConfigureTopRightMenuListener
     }
 
     /**
-     * @DI\Observe("claroline_top_bar_right_menu_configure")
+     * @DI\Observe("claroline_top_bar_right_menu_configure_desktop_tool_my_portfolios")
      *
      * @param \Claroline\CoreBundle\Menu\ConfigureMenuEvent $event
      */
