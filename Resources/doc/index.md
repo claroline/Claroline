@@ -16,6 +16,7 @@ Structure
     - [Third-party application][14]
 - [Plugin development][4]
     - [Resources][5]
+    - [Resource actions] [15]
     - [Tools][6]
     - [Widgets][7]
     - [Players][8]
@@ -37,3 +38,4 @@ Structure
 [12]: sections/badges.md
 [13]: sections/plugins/logs.md
 [14]: sections/third-party-application.md
+[15]: sections/plugins/resource-actions.md

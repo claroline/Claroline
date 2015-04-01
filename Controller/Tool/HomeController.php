@@ -33,8 +33,10 @@ use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
@@ -51,6 +53,7 @@ class HomeController extends Controller
     private $homeTabManager;
     private $request;
     private $roleManager;
+    private $router;
     private $securityContext;
     private $toolManager;
     private $widgetManager;
@@ -63,6 +66,7 @@ class HomeController extends Controller
      *     "homeTabManager"     = @DI\Inject("claroline.manager.home_tab_manager"),
      *     "request"            = @DI\Inject("request"),
      *     "roleManager"        = @DI\Inject("claroline.manager.role_manager"),
+     *     "router"             = @DI\Inject("router"),
      *     "securityContext"    = @DI\Inject("security.context"),
      *     "toolManager"        = @DI\Inject("claroline.manager.tool_manager"),
      *     "widgetManager"      = @DI\Inject("claroline.manager.widget_manager")
@@ -75,6 +79,7 @@ class HomeController extends Controller
         HomeTabManager $homeTabManager,
         Request $request,
         RoleManager $roleManager,
+        RouterInterface $router,
         SecurityContextInterface $securityContext,
         ToolManager $toolManager,
         WidgetManager $widgetManager
@@ -86,6 +91,7 @@ class HomeController extends Controller
         $this->homeTabManager = $homeTabManager;
         $this->request = $request;
         $this->roleManager = $roleManager;
+        $this->router = $router;
         $this->securityContext = $securityContext;
         $this->toolManager = $toolManager;
         $this->widgetManager = $widgetManager;
@@ -114,16 +120,21 @@ class HomeController extends Controller
             ->filterVisibleHomeTabConfigs($adminHomeTabConfigs);
         $userHomeTabConfigs = $this->homeTabManager
             ->getVisibleDesktopHomeTabConfigsByUser($user);
+        $workspaceUserHTCs = $this->homeTabManager
+            ->getVisibleWorkspaceUserHTCsByUser($user);
         $homeTabId = intval($tabId);
+        $workspaceHomeTab = null;
         $firstElement = true;
 
         if ($homeTabId !== -1) {
+
             foreach ($visibleAdminHomeTabConfigs as $adminHomeTabConfig) {
                 if ($homeTabId === $adminHomeTabConfig->getHomeTab()->getId()) {
                     $firstElement = false;
                     break;
                 }
             }
+
             if ($firstElement) {
                 foreach ($userHomeTabConfigs as $userHomeTabConfig) {
                     if ($homeTabId === $userHomeTabConfig->getHomeTab()->getId()) {
@@ -132,25 +143,60 @@ class HomeController extends Controller
                     }
                 }
             }
+
+            if ($firstElement) {
+                foreach ($workspaceUserHTCs as $workspaceUserHTC) {
+                    $homeTab = $workspaceUserHTC->getHomeTab();
+
+                    if ($homeTabId === $homeTab->getId()) {
+                        $firstElement = false;
+                        $workspaceHomeTab = $homeTab;
+                        $workspaceHTC = $workspaceUserHTC;
+                        break;
+                    }
+                }
+            }
         }
 
         if ($firstElement) {
             $firstAdminHomeTabConfig = reset($visibleAdminHomeTabConfigs);
+            $firstDesktopHomeTabConfig = reset($userHomeTabConfigs);
+            $firstWorkspaceUserHTC = reset($workspaceUserHTCs);
 
             if ($firstAdminHomeTabConfig) {
-                $homeTabId = $firstAdminHomeTabConfig->getHomeTab()->getId();
-            } else {
-                $firstHomeTabConfig = reset($userHomeTabConfigs);
+                $displayedHomeTab = $firstAdminHomeTabConfig->getHomeTab();
+                $homeTabId = $displayedHomeTab->getId();
+            } elseif ($firstDesktopHomeTabConfig) {
+                $displayedHomeTab = $firstDesktopHomeTabConfig->getHomeTab();
+                $homeTabId = $displayedHomeTab->getId();
+            } elseif ($firstWorkspaceUserHTC) {
+                $displayedHomeTab = $firstWorkspaceUserHTC->getHomeTab();
+                $homeTabId = $displayedHomeTab->getId();
+                $workspaceHomeTab = $displayedHomeTab;
+                $workspaceHTC = $firstWorkspaceUserHTC;
+            }
+        }
 
-                if ($firstHomeTabConfig) {
-                    $homeTabId = $firstHomeTabConfig->getHomeTab()->getId();
-                }
+        if (!is_null($workspaceHomeTab)) {
+            $workspace = $workspaceHomeTab->getWorkspace();
+            $workspaceAccess = $this->hasWorkspaceHomeToolAccess($workspace);
+
+            if (!$workspaceAccess) {
+                $this->homeTabManager->deleteHomeTabConfig($workspaceHTC);
+
+                return new RedirectResponse(
+                    $this->router->generate(
+                        'claro_display_desktop_home_tab',
+                        array('tabId' => -1)
+                    )
+                );
             }
         }
 
         return array(
             'adminHomeTabConfigs' => $visibleAdminHomeTabConfigs,
             'userHomeTabConfigs' => $userHomeTabConfigs,
+            'workspaceUserHTCs' => $workspaceUserHTCs,
             'tabId' => $homeTabId
         );
     }
@@ -1199,6 +1245,72 @@ class HomeController extends Controller
 
     /**
      * @EXT\Route(
+     *     "workspace/{workspace}/home_tab/{homeTab}/bookmark",
+     *     name="claro_workspace_home_tab_bookmark",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     *
+     * Bookmark the given workspace homeTab.
+     *
+     * @return Response
+     */
+    public function workspaceHomeTabBookmarkAction(
+        Workspace $workspace,
+        HomeTab $homeTab,
+        User $user
+    )
+    {
+        $this->checkWorkspaceAccessForHomeTab($homeTab, $workspace);
+        $homeTabConfig = $this->homeTabManager->getOneVisibleWorkspaceUserHTC(
+            $homeTab,
+            $user
+        );
+
+        if (is_null($homeTabConfig)) {
+            $homeTabConfig = new HomeTabConfig();
+            $homeTabConfig->setHomeTab($homeTab);
+            $homeTabConfig->setUser($user);
+            $homeTabConfig->setWorkspace($workspace);
+            $homeTabConfig->setType('workspace_user');
+            $lastOrder = $this->homeTabManager->getOrderOfLastWorkspaceUserHomeTabByUser($user);
+
+            if (is_null($lastOrder['order_max'])) {
+                $homeTabConfig->setTabOrder(1);
+            } else {
+                $homeTabConfig->setTabOrder($lastOrder['order_max'] + 1);
+            }
+            $this->homeTabManager->insertHomeTabConfig($homeTabConfig);
+        }
+
+        return new Response('success', 200);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "workspace/home_tab/config/{homeTabConfig}/bookmark/delete",
+     *     name="claro_workspace_home_tab_bookmark_delete",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     *
+     * Delete the given workspace homeTab bookmark.
+     *
+     * @return Response
+     */
+    public function workspaceHomeTabBookmarkDeleteAction(
+        HomeTabConfig $homeTabConfig,
+        User $user
+    )
+    {
+        $this->checkUserAccessForWorkspaceUserHomeTabConfig($homeTabConfig, $user);
+        $this->homeTabManager->deleteHomeTabConfig($homeTabConfig);
+
+        return new Response('success', 200);
+    }
+
+    /**
+     * @EXT\Route(
      *     "workspace/{workspace}/home_tab_config/{homeTabConfig}/reorder/next/{nextHomeTabConfigId}",
      *     name="claro_workspace_home_tab_config_reorder",
      *     options = {"expose"=true}
@@ -1435,6 +1547,26 @@ class HomeController extends Controller
         }
     }
 
+    private function checkUserAccessForWorkspaceUserHomeTabConfig(
+        HomeTabConfig $homeTabConfig,
+        User $user
+    )
+    {
+        $homeTabConfigUser = $homeTabConfig->getUser();
+
+        if ($homeTabConfig->getType() !== 'workspace_user' ||
+            is_null($homeTabConfigUser) ||
+            $homeTabConfigUser->getId() !== $user->getId()) {
+
+            throw new AccessDeniedException();
+        }
+    }
+
+    private function hasWorkspaceHomeToolAccess(Workspace $workspace)
+    {
+        return $this->securityContext->isGranted('home', $workspace);
+    }
+
     private function checkWorkspaceAccessForHomeTab(
         HomeTab $homeTab,
         Workspace $workspace
@@ -1443,6 +1575,7 @@ class HomeController extends Controller
         $homeTabWorkspace = $homeTab->getWorkspace();
 
         if (is_null($homeTabWorkspace) || ($homeTabWorkspace->getId() !== $workspace->getId())) {
+
             throw new AccessDeniedException();
         }
     }
@@ -1514,6 +1647,7 @@ class HomeController extends Controller
         $widgetUser = $widgetInstance->getUser();
 
         if (is_null($widgetUser) || ($widgetUser->getId() !== $user->getId())) {
+
             throw new AccessDeniedException();
         }
     }
@@ -1526,6 +1660,7 @@ class HomeController extends Controller
         $widgetWorkspace = $widgetInstance->getWorkspace();
 
         if (is_null($widgetWorkspace) || ($widgetWorkspace->getId() !== $workspace->getId())) {
+
             throw new AccessDeniedException();
         }
     }
@@ -1546,6 +1681,7 @@ class HomeController extends Controller
         $widgetUser = $widgetInstance->getUser();
 
         if (is_null($widgetUser) || ($widgetUser->getId() !== $user->getId())) {
+
             return false;
         }
 
@@ -1560,6 +1696,7 @@ class HomeController extends Controller
         $widgetWorkspace = $widgetInstance->getWorkspace();
 
         if (is_null($widgetWorkspace) || ($widgetWorkspace->getId() !== $workspace->getId())) {
+
             return false;
         }
 

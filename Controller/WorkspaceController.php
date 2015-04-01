@@ -1295,13 +1295,15 @@ class WorkspaceController extends Controller
                 $isHomeTab = true;
             }
         }
+        $isAnonymous = ($this->security->getToken()->getUser() === 'anon.');
 
         return array(
             'workspace' => $workspace,
             'workspaceHomeTabConfigs' => $workspaceHomeTabConfigs,
             'tabId' => $homeTabId,
             'canEdit' => $canEdit,
-            'isHomeTab' => $isHomeTab
+            'isHomeTab' => $isHomeTab,
+            'isAnonymous' => $isAnonymous
         );
     }
 

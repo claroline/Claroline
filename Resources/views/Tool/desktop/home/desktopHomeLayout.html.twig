@@ -48,6 +48,23 @@
                     </a>
                 </li>
             {% endfor %}
+                
+            {% for workspaceUserHTC in workspaceUserHTCs %}
+                {% set workspaceUserHomeTab = workspaceUserHTC.getHomeTab() %}
+                <li id="hometab-element-{{ workspaceUserHomeTab.getId() }}"
+                    class="hometab-element {% if workspaceUserHomeTab.getId() == tabId %} active {% endif %}"
+                    data-hometab-config-id="{{ workspaceUserHTC.getId() }}"
+                    data-hometab-id="{{ workspaceUserHomeTab.getId() }}"
+                >
+                    <a href="{{ path('claro_display_desktop_home_tab', {'tabId': workspaceUserHomeTab.getId()})}}">
+                        <span id="hometab-name-{{ workspaceUserHomeTab.getId() }}">
+                            {{ workspaceUserHomeTab.getName() }}
+                        </span>
+                        &nbsp;
+                        <i class="fa fa-bookmark delete-bookmark-hometab-btn pointer-hand text-muted"></i>
+                    </a>
+                </li>
+            {% endfor %}
             <li id="add-hometab-btn">
                 <a class="pointer-hand">
                     <span class="text-muted">

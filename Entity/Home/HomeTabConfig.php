@@ -20,17 +20,12 @@ use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
  *     name="claro_home_tab_config",
  *     uniqueConstraints={
  *         @ORM\UniqueConstraint(
- *             name="home_tab_config_unique_home_tab_user",
- *             columns={"home_tab_id", "user_id"}
- *         ),
- *         @ORM\UniqueConstraint(
- *             name="home_tab_config_unique_home_tab_workspace",
- *             columns={"home_tab_id", "workspace_id"}
+ *             name="home_tab_config_unique_home_tab_user_workspace_type",
+ *             columns={"home_tab_id", "user_id", "workspace_id", "type"}
  *         )
  *     }
  * )
- * @DoctrineAssert\UniqueEntity({"homeTab", "user"})
- * @DoctrineAssert\UniqueEntity({"homeTab", "workspace"})
+ * @DoctrineAssert\UniqueEntity({"homeTab", "user", "workspace", "type"})
  */
 class HomeTabConfig
 {
