@@ -24,7 +24,7 @@ class BadgesBadgeType extends AbstractType
                 'mapped'   => false
             ))
             ->add('badge', 'entity', array(
-                'class'    => 'IcapBadgeBundle:Badge',
+                'class'    => 'ClarolineCoreBundle:Badge\Badge',
                 'property' => 'name',
                 'required' => false
             ));

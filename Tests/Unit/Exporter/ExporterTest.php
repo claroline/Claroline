@@ -2,8 +2,8 @@
 
 namespace Icap\PortfolioBundle\Exporter;
 
-use Icap\BadgeBundle\Entity\Badge;
-use Icap\BadgeBundle\Entity\BadgeTranslation;
+use Claroline\CoreBundle\Entity\Badge\Badge;
+use Claroline\CoreBundle\Entity\Badge\BadgeTranslation;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Testing\MockeryTestCase;

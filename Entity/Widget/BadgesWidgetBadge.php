@@ -2,7 +2,7 @@
 
 namespace Icap\PortfolioBundle\Entity\Widget;
 
-use Icap\BadgeBundle\Entity\Badge;
+use Claroline\CoreBundle\Entity\Badge\Badge;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -23,9 +23,9 @@ class BadgesWidgetBadge implements SubWidgetInterface
     protected $id;
 
     /**
-     * @var \Icap\BadgeBundle\Entity\Badge
+     * @var \Claroline\CoreBundle\Entity\Badge\Badge
      *
-     * @ORM\ManyToOne(targetEntity="Icap\BadgeBundle\Entity\Badge")
+     * @ORM\ManyToOne(targetEntity="\Claroline\CoreBundle\Entity\Badge\Badge")
      * @ORM\JoinColumn(name="badge_id", referencedColumnName="id", nullable=false)
      */
     private $badge;
