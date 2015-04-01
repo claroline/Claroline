@@ -266,6 +266,7 @@ class OrderedToolRepository extends EntityRepository
             AND ot.type = :type
             AND ot.user = :user
             AND t.name NOT IN (:excludedToolNames)
+            AND t.isDisplayableInDesktop = true
             ORDER BY ot.order
         ';
 
@@ -291,6 +292,7 @@ class OrderedToolRepository extends EntityRepository
             AND ot.user IS NULL
             AND ot.type = :type
             AND t.name NOT IN (:excludedToolNames)
+            AND t.isDisplayableInDesktop = true
             ORDER BY ot.order
         ';
 
@@ -316,6 +318,7 @@ class OrderedToolRepository extends EntityRepository
             AND ot.type = :type
             AND ot.locked = true
             AND t.name NOT IN (:excludedToolNames)
+            AND t.isDisplayableInDesktop = true
             ORDER BY ot.order
         ';
 
@@ -360,10 +363,12 @@ class OrderedToolRepository extends EntityRepository
         $dql = "
             SELECT ot
             FROM Claroline\CoreBundle\Entity\Tool\OrderedTool ot
+            JOIN ot.tool t
             WHERE ot.user IS NULL
             AND ot.workspace IS NULL
             AND ot.type = :type
             AND ot.locked = true
+            AND t.isDisplayableInDesktop = true
             ORDER BY ot.order
         ";
         $query = $this->_em->createQuery($dql);
