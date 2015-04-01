@@ -56,8 +56,7 @@ class QuestionType extends AbstractType
                     'label' => 'Question.description', 
                     'required' => false,
                     'attr'  => array( 'placeholder' => 'Question.description',
-                                      'class'=> 'form-control',
-                                      'style' => 'height:100px;'
+                                      'class'=> 'form-control'
                                     )                    
                 )
             )
