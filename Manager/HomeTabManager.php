@@ -258,11 +258,11 @@ class HomeTabManager
         return $newHomeTabConfig;
     }
 
-    public function generateAdminHomeTabConfigsByUser(User $user)
+    public function generateAdminHomeTabConfigsByUser(User $user, array $roleNames = array())
     {
         $adminHTC = array();
         $adminHomeTabConfigs = $this->homeTabConfigRepo
-            ->findAdminDesktopHomeTabConfigs();
+            ->findAdminDesktopHomeTabConfigsByRoles($roleNames);
 
         foreach ($adminHomeTabConfigs as $adminHomeTabConfig) {
 

@@ -301,7 +301,7 @@ class HomeTabController extends Controller
         $this->checkAdminHomeTabConfig($homeTabConfig, $homeTabType);
 
         $homeTabForm = $this->formFactory->create(
-            new HomeTabType(),
+            new HomeTabType(null, true),
             $homeTab
         );
         $homeTabConfigForm = $this->formFactory->create(
@@ -348,7 +348,7 @@ class HomeTabController extends Controller
         $this->checkAdminHomeTabConfig($homeTabConfig, $homeTabType);
 
         $homeTabForm = $this->formFactory->create(
-            new HomeTabType(),
+            new HomeTabType(null, true),
             $homeTab
         );
         $homeTabConfigForm = $this->formFactory->create(

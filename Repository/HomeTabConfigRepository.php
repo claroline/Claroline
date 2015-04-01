@@ -33,6 +33,28 @@ class HomeTabConfigRepository extends EntityRepository
         return $query->getResult();
     }
 
+    public function findAdminDesktopHomeTabConfigsByRoles(array $roleNames)
+    {
+        $dql = "
+            SELECT htc
+            FROM Claroline\CoreBundle\Entity\Home\HomeTabConfig htc
+            JOIN htc.homeTab ht
+            LEFT JOIN ht.roles r
+            WHERE htc.type = 'admin_desktop'
+            AND htc.user IS NULL
+            AND htc.workspace IS NULL
+            AND (
+                r IS NULL
+                OR r.name IN (:roleNames)
+            )
+            ORDER BY htc.tabOrder ASC
+        ";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('roleNames', $roleNames);
+
+        return $query->getResult();
+    }
+
     public function findAdminWorkspaceHomeTabConfigs()
     {
         $dql = "

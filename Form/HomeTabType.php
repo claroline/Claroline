@@ -20,10 +20,12 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 
 class HomeTabType extends AbstractType
 {
+    private $isAdmin;
     private $workspace;
 
-    public function __construct(Workspace $workspace = null)
+    public function __construct(Workspace $workspace = null, $isAdmin = false)
     {
+        $this->isAdmin = $isAdmin;
         $this->workspace = $workspace;
     }
 
@@ -44,6 +46,26 @@ class HomeTabType extends AbstractType
                         return $er->createQueryBuilder('r')
                             ->where('r.workspace = :workspace')
                             ->setParameter('workspace', $workspace)
+                            ->orderBy('r.translationKey', 'ASC');
+                    },
+                    'property' => 'translationKey',
+                    'expanded' => true,
+                    'multiple' => true,
+                    'required' => false
+                )
+            );
+        } elseif ($this->isAdmin) {
+            $builder->add(
+                'roles',
+                'entity',
+                array(
+                    'label' => 'roles',
+                    'class' => 'ClarolineCoreBundle:Role',
+                    'query_builder' => function (EntityRepository $er) {
+
+                        return $er->createQueryBuilder('r')
+                            ->where('r.workspace IS NULL')
+                            ->andWhere('r.type = 1')
                             ->orderBy('r.translationKey', 'ASC');
                     },
                     'property' => 'translationKey',
