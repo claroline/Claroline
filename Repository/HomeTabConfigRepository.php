@@ -345,4 +345,57 @@ class HomeTabConfigRepository extends EntityRepository
 
         return $query->getResult();
     }
+
+    public function findOneVisibleWorkspaceUserHTC(HomeTab $homeTab, User $user)
+    {
+        $dql = "
+            SELECT htc
+            FROM Claroline\CoreBundle\Entity\Home\HomeTabConfig htc
+            WHERE htc.homeTab = :homeTab
+            AND htc.workspace = :workspace
+            AND htc.user = :user
+            AND htc.type = 'workspace_user'
+            AND htc.visible = true
+            ORDER BY htc.tabOrder ASC
+        ";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('homeTab', $homeTab);
+        $query->setParameter('workspace', $homeTab->getWorkspace());
+        $query->setParameter('user', $user);
+
+        return $query->getOneOrNullResult();
+    }
+
+    public function findVisibleWorkspaceUserHTCsByUser(User $user)
+    {
+        $dql = "
+            SELECT htc, ht
+            FROM Claroline\CoreBundle\Entity\Home\HomeTabConfig htc
+            JOIN htc.homeTab ht
+            WHERE htc.workspace IS NOT NULL
+            AND htc.user = :user
+            AND htc.type = 'workspace_user'
+            AND htc.visible = true
+            ORDER BY htc.tabOrder ASC
+        ";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('user', $user);
+
+        return $query->getResult();
+    }
+
+    public function findOrderOfLastWorkspaceUserHomeTabByUser(User $user)
+    {
+        $dql = "
+            SELECT MAX(htc.tabOrder) AS order_max
+            FROM Claroline\CoreBundle\Entity\Home\HomeTabConfig htc
+            WHERE htc.workspace IS NOT NULL
+            AND htc.user = :user
+            AND htc.type = 'workspace_user'
+        ";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('user', $user);
+
+        return $query->getSingleResult();
+    }
 }
