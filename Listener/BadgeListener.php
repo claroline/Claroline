@@ -8,6 +8,7 @@ use Claroline\CoreBundle\Pager\PagerFactory;
 use Claroline\CoreBundle\Rule\Validator;
 use Claroline\CoreBundle\Event\DisplayToolEvent;
 use Claroline\CoreBundle\Event\LogCreateEvent;
+use Doctrine\Bundle\DoctrineBundle\Registry;
 use Icap\BadgeBundle\Entity\Badge;
 use Icap\BadgeBundle\Manager\BadgeManager;
 use Doctrine\ORM\EntityManager;
@@ -51,13 +52,19 @@ class BadgeListener
     private $securityContext;
 
     /**
+     * @var Registry
+     */
+    private $doctrine;
+
+    /**
      * @DI\InjectParams({
      *     "entityManager"     = @DI\Inject("doctrine.orm.entity_manager"),
      *     "badgeManager"      = @DI\Inject("icap_badge.manager.badge"),
      *     "templatingEngine"  = @DI\Inject("templating"),
      *     "ruleValidator"     = @DI\Inject("claroline.rule.validator"),
      *     "pagerFactory"      = @DI\Inject("claroline.pager.pager_factory"),
-     *     "securityContext"   = @DI\Inject("security.context")
+     *     "securityContext"   = @DI\Inject("security.context"),
+     *     "doctrine" = @DI\Inject("doctrine"),
      * })
      */
     public function __construct(
@@ -66,7 +73,8 @@ class BadgeListener
         TwigEngine $templatingEngine,
         Validator $ruleValidator,
         PagerFactory $pagerFactory,
-        SecurityContext $securityContext
+        SecurityContext $securityContext,
+        Registry $doctrine
     )
     {
         $this->entityManager     = $entityManager;
@@ -75,6 +83,7 @@ class BadgeListener
         $this->ruleValidator     = $ruleValidator;
         $this->pagerFactory      = $pagerFactory;
         $this->securityContext   = $securityContext;
+        $this->doctrine = $doctrine;
     }
 
     /**
@@ -146,6 +155,16 @@ class BadgeListener
      */
     public function onWorkspaceOpenMybadges(DisplayToolEvent $event)
     {
+        $event->setContent($this->myWorkspaceBadges($event->getWorkspace()));
+    }
+
+    /**
+     * @DI\Observe("open_tool_desktop_all_my_badges")
+     *
+     * @param DisplayToolEvent $event
+     */
+    public function onDesktopToolMenuConfigure(DisplayToolEvent $event)
+    {
         $event->setContent($this->myBadges($event->getWorkspace()));
     }
 
@@ -188,7 +207,7 @@ class BadgeListener
      *
      * @return string
      */
-    private function myBadges(Workspace $workspace)
+    private function myWorkspaceBadges(Workspace $workspace)
     {
         $user = $this->securityContext->getToken()->getUser();
 
@@ -197,6 +216,28 @@ class BadgeListener
             array(
                 'workspace' => $workspace,
                 'user'      => $user
+            )
+        );
+    }
+
+    /**
+     * @return string
+     */
+    private function myBadges()
+    {
+        $user = $this->securityContext->getToken()->getUser();
+
+        $this->doctrine->getManager()->getFilters()->disable('softdeleteable');
+        $userBadges = $this->doctrine->getRepository('IcapBadgeBundle:UserBadge')->findByUser($user);
+        $badgeClaims = $this->doctrine->getRepository('IcapBadgeBundle:BadgeClaim')->findByUser($user);
+        $badgeCollections = $this->doctrine->getRepository('IcapBadgeBundle:BadgeCollection')->findByUser($user);
+
+        return $this->templateingEngine->render(
+            'IcapBadgeBundle:Profile:badges.html.twig',
+            array(
+                'userBadges' => $userBadges,
+                'badgeClaims' => $badgeClaims,
+                'badgeCollections' => $badgeCollections
             )
         );
     }
