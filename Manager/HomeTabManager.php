@@ -641,6 +641,17 @@ class HomeTabManager
             ->findVisibleWorkspaceHomeTabConfigsByWorkspace($workspace);
     }
 
+    public function getVisibleWorkspaceHomeTabConfigsByWorkspaceAndRoles(
+        Workspace $workspace,
+        array $roleNames
+    )
+    {
+        return $this->homeTabConfigRepo->findVisibleWorkspaceHomeTabConfigsByWorkspaceAndRoles(
+            $workspace,
+            $roleNames
+        );
+    }
+
     public function getOrderOfLastDesktopHomeTabConfigByUser(User $user)
     {
         return $this->homeTabConfigRepo

@@ -1268,9 +1268,13 @@ class WorkspaceController extends Controller
     {
         $this->assertIsGranted('home', $workspace);
         $canEdit = $this->security->isGranted('parameters', $workspace);
+        $roleNames = $this->utils->getRoles($this->security->getToken());
         $workspaceHomeTabConfigs = $canEdit ?
             $this->homeTabManager->getWorkspaceHomeTabConfigsByWorkspace($workspace):
-            $this->homeTabManager->getVisibleWorkspaceHomeTabConfigsByWorkspace($workspace);
+            $this->homeTabManager->getVisibleWorkspaceHomeTabConfigsByWorkspaceAndRoles(
+                $workspace,
+                $roleNames
+            );
         $homeTabId = intval($tabId);
         $isHomeTab = false;
         $firstElement = true;

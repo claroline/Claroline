@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Entity\Home;
 
+use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -143,5 +144,17 @@ class HomeTab
     public function getRoles()
     {
         return $this->roles->toArray();
+    }
+    
+    public function addRole(Role $role)
+    {
+        if (!$this->roles->contains($role)) {
+            $this->roles->add($role);
+        }
+    }
+
+    public function removeRole(Role $role)
+    {
+        $this->roles->removeElement($role);
     }
 }

@@ -1148,7 +1148,7 @@ class HomeController extends Controller
         $this->checkWorkspaceAccessForHomeTab($homeTab, $workspace);
 
         $homeTabForm = $this->formFactory->create(
-            new HomeTabType(),
+            new HomeTabType($workspace),
             $homeTab
         );
         $homeTabConfigForm = $this->formFactory->create(
@@ -1186,7 +1186,7 @@ class HomeController extends Controller
         $this->checkWorkspaceAccessForHomeTab($homeTab, $workspace);
 
         $homeTabForm = $this->formFactory->create(
-            new HomeTabType(),
+            new HomeTabType($workspace),
             $homeTab
         );
         $homeTabConfigForm = $this->formFactory->create(

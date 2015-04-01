@@ -166,6 +166,33 @@ class HomeTabConfigRepository extends EntityRepository
         return $query->getResult();
     }
 
+    public function findVisibleWorkspaceHomeTabConfigsByWorkspaceAndRoles(
+        Workspace $workspace,
+        array $roleNames
+    )
+    {
+        $dql = "
+            SELECT htc, ht
+            FROM Claroline\CoreBundle\Entity\Home\HomeTabConfig htc
+            JOIN htc.homeTab ht
+            LEFT JOIN ht.roles r
+            WHERE htc.workspace = :workspace
+            AND htc.user IS NULL
+            AND htc.type = 'workspace'
+            AND htc.visible = true
+            AND (
+                r IS NULL
+                OR r.name IN (:roleNames)
+            )
+            ORDER BY htc.tabOrder ASC
+        ";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('workspace', $workspace);
+        $query->setParameter('roleNames', $roleNames);
+
+        return $query->getResult();
+    }
+
     public function findWorkspaceHomeTabConfigsByAdmin()
     {
         $dql = "
