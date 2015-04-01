@@ -341,7 +341,7 @@ function addWR(indexHole, idTabWR) {
     if (indexWR > 0) {
         $('#tabWR_' + idTabWR).find('tr:last').append('<td class="classic"></td>');
         $('#tabWR_' + idTabWR).find('td:last').append(
-            '<a id="wr_' + indexHole + '_' + indexWR + '" href="#" class="btn btn-danger">' + langDel + '</a>'
+            '<a id="wr_' + indexHole + '_' + indexWR + '" href="#" class="btn btn-default"><i style="color : red" class="fa fa-trash-o"></i></a>'
         );
 
         // When click, delete the matching keyword's row in the table
