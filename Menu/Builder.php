@@ -42,15 +42,6 @@ class Builder extends ContainerAware
 
         $this->addDivider($menu, '1');
 
-        $menu->addChild(
-            $translator->trans('my_badges', array(), 'platform'),
-            array(
-                'route' => 'claro_profile_view_badges'
-            )
-        )->setAttribute('class', 'dropdown')
-            ->setAttribute('role', 'presentation')
-            ->setExtra('icon', 'fa fa-trophy');
-
         $user = $securityContext->getToken()->getUser();
         $lockedOrderedTools = $toolManager->getOrderedToolsLockedByAdmin(1);
         $adminTools = array();
