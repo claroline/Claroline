@@ -24,7 +24,7 @@ class ChoiceType extends AbstractType
                     'label' => ' ',
                     'attr' => array('style' => 'height:34px; ',
                     'class'=>'form-control',
-                    'placeholder' => 'Response.reponse',               
+                    'placeholder' => 'expected answer',               
                     )
                 )
             )
@@ -32,7 +32,7 @@ class ChoiceType extends AbstractType
                 'weight', 'text', array(
                     'required' => false, 
                     'label' => ' ', 
-                    'attr' => array('style' => 'width:65px; text-align: end;', 'placeholder' => 'points')
+                    'attr' => array('class' => 'col-md-1', 'placeholder' => 'points')
                 )
             )
             ->add(
