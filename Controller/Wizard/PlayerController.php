@@ -215,7 +215,7 @@ class PlayerController
      * )
      * @Method("PUT")
      */
-    public function toggleSummaryAutoDisplay(Workspace $workspace, Path $path, $disabled)
+    public function toggleSummaryAutoDisplayAction(Workspace $workspace, Path $path, $disabled)
     {
         $disabled = filter_var($disabled, FILTER_VALIDATE_BOOLEAN);
 
