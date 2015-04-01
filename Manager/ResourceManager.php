@@ -1448,15 +1448,20 @@ class ResourceManager
      * @param ResourceType $resourceType
      * @param string       $actionName
      */
-    public function isResourceActionImplemented(ResourceType $resourceType, $actionName)
+    public function isResourceActionImplemented(ResourceType $resourceType = null, $actionName)
     {
-        $alwaysTrue = array('rename', 'edit-properties', 'edit-rights', 'open-tracking');
-        //first, directories can be downloaded even if there is no listener attached to it
-        if ($resourceType->getName() === 'directory' && $actionName == 'download') return true;
-        if (in_array($actionName, $alwaysTrue)) return true;
+        if ($resourceType) {
+            $alwaysTrue = array('rename', 'edit-properties', 'edit-rights', 'open-tracking');
+            //first, directories can be downloaded even if there is no listener attached to it
+            if ($resourceType->getName() === 'directory' && $actionName == 'download') return true;
+            if (in_array($actionName, $alwaysTrue)) return true;
 
+            $eventName = $actionName . '_' . $resourceType->getName();
+        } else {
+            $eventName = 'resource_action_' . $actionName;
+        }
 
-        return $this->dispatcher->hasListeners($actionName . '_' . $resourceType->getName());
+        return $this->dispatcher->hasListeners($eventName);
     }
 
     private function isDirectoryEmpty($dirName)

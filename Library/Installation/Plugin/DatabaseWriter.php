@@ -196,6 +196,10 @@ class DatabaseWriter
             $this->persistResourceTypes($resource, $plugin, $pluginBundle);
         }
 
+        foreach ($processedConfiguration['resource_actions'] as $resourceAction) {
+            $this->persistResourceAction($resourceAction);
+        }
+
         foreach ($processedConfiguration['widgets'] as $widget) {
             $this->createWidget($widget, $plugin, $pluginBundle);
         }
@@ -222,6 +226,10 @@ class DatabaseWriter
     {
         foreach ($processedConfiguration['resources'] as $resourceConfiguration) {
             $this->updateResourceTypes($resourceConfiguration, $plugin, $pluginBundle);
+        }
+
+        foreach ($processedConfiguration['resource_actions'] as $resourceAction) {
+            $this->updateResourceAction($resourceAction);
         }
 
         foreach ($processedConfiguration['widgets'] as $widgetConfiguration) {
@@ -388,6 +396,40 @@ class DatabaseWriter
 
     /**
      * @param array $actions
+     */
+    public function persistResourceAction(array $actions)
+    {
+        foreach ($actions as $action) {
+            $resourceAction = new MenuAction();
+
+            $resourceAction->setName($action);
+            $resourceAction->setAsync(1);
+            $resourceAction->setIsCustom(1);
+            $resourceAction->setValue(1);
+
+            $this->em->persist($resourceAction);
+        }
+
+        $this->em->flush();
+    }
+
+    /**
+     * @param array $actions
+     */
+    public function updateResourceAction(array $actions)
+    {
+        foreach ($actions as $action) {
+            $resourceAction = $this->em->getRepository('ClarolineCoreBundle:Resource\MenuAction')
+                ->findOneBy(array('name' => $action, 'resourceType' => null, 'isCustom' => true));
+
+            if ($resourceAction === null) {
+                $this->persistResourceAction(array($action));
+            }
+        }
+    }
+
+    /**
+     * @param array $actions
      * @param ResourceType $resourceType
      */
     private function persistCustomAction($actions, ResourceType $resourceType)
@@ -541,6 +583,8 @@ class DatabaseWriter
     {
         $widget->setName($widgetConfiguration['name']);
         $widget->setConfigurable($widgetConfiguration['is_configurable']);
+        $widget->setDisplayableInDesktop($widgetConfiguration['is_displayable_in_desktop']);
+        $widget->setDisplayableInWorkspace($widgetConfiguration['is_displayable_in_workspace']);
         $widget->setExportable($widgetConfiguration['is_exportable']);
         $widget->setPlugin($plugin);
         $widget->setDefaultWidth($widgetConfiguration['default_width']);

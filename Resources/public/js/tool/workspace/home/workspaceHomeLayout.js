@@ -113,6 +113,23 @@
             Translator.trans('home_tab_delete_confirm_title', {}, 'platform')
         );
     });
+
+    $('#workspace-home-content').on('click', '.bookmark-hometab-btn', function (e) {
+        e.preventDefault();
+        var homeTabElement = $(this).parents('.hometab-element');
+        var homeTabId = homeTabElement.data('hometab-id');
+
+        window.Claroline.Modal.confirmRequest(
+            Routing.generate(
+                'claro_workspace_home_tab_bookmark',
+                {'workspace': workspaceId, 'homeTab': homeTabId}
+            ),
+            doNothing,
+            null,
+            Translator.trans('home_tab_bookmark_confirm_message', {}, 'platform'),
+            Translator.trans('home_tab_bookmark_confirm_title', {}, 'platform')
+        );
+    });
     
     $('#workspace-hometabs-list').sortable({
         items: '.movable-hometab',
@@ -438,4 +455,6 @@
             $('#widget-element-title-' + id).removeClass('strike');
         }
     };
+    
+    var doNothing = function () {};
 })();

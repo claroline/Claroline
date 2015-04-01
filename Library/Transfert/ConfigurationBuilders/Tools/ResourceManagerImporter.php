@@ -103,8 +103,7 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
                 }
 
                 if ($importer && isset($item['item']['data'])) {
-                    $forum['data'] = $item['item']['data'];
-                    $importer->validate($forum['data']);
+                    $importer->validate(['data' => $item['item']['data']]);
                 }
             }
         }

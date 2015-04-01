@@ -98,6 +98,24 @@
         );
     });
 
+    $('#desktop-home-content').on('click', '.delete-bookmark-hometab-btn', function (e) {
+        e.preventDefault();
+        var homeTabElement = $(this).parents('.hometab-element');
+        var homeTabId = homeTabElement.data('hometab-id');
+        var homeTabConfigId = homeTabElement.data('hometab-config-id');
+
+        window.Claroline.Modal.confirmRequest(
+            Routing.generate(
+                'claro_workspace_home_tab_bookmark_delete',
+                {'homeTabConfig': homeTabConfigId}
+            ),
+            removeHomeTab,
+            homeTabId,
+            Translator.trans('home_tab_bookmark_delete_confirm_message', {}, 'platform'),
+            Translator.trans('home_tab_bookmark_delete_confirm_title', {}, 'platform')
+        );
+    });
+
     $('#desktop-home-content').on('click', '.hide-hometab-btn', function (e) {
         e.preventDefault();
         var homeTabElement = $(this).parents('.hometab-element');
@@ -120,7 +138,7 @@
         items: '.movable-hometab',
         cursor: 'move'
     });
-
+    
     $('#desktop-hometabs-list').on('sortupdate', function (event, ui) {
 
         if (this === ui.item.parents('#desktop-hometabs-list')[0]) {

@@ -6,8 +6,12 @@
     data-init-widgets-position="{% if initWidgetsPosition %}1{% else %}0{% endif %}"
 ></div>
 
-<div id="widgets-section" class="panel-group">
-    <div id="widgets-list-panel" class="grid-stack">
+<div class="panel-group"
+     {% if not isWorkspace %}id="widgets-section"{% endif %}
+>
+    <div class="grid-stack"
+         {% if not isWorkspace %}id="widgets-list-panel"{% endif %}
+    >
         
         {% for widgetDatas in widgetsDatas %}
             {% set widgetHomeTabConfig = widgetDatas['config'] %}

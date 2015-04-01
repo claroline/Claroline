@@ -392,6 +392,18 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     {
         return $this->salt;
     }
+    
+    /**
+     * @param string $salt
+     *
+     * @return User
+     */
+    public function setSalt($salt)
+    {
+        $this->salt = $salt;
+        
+        return $this;
+    }
 
     /**
      * @param string $firstName

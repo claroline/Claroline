@@ -51,7 +51,7 @@ class ResourceExtension extends \Twig_Extension
         return 'resource_extension';
     }
 
-    public function isMenuActionImplemented(ResourceType $resourceType, $menuName)
+    public function isMenuActionImplemented(ResourceType $resourceType = null, $menuName)
     {
         return $this->resourceManager->isResourceActionImplemented($resourceType, $menuName);
     }

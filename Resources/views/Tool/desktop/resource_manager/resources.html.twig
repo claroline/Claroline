@@ -33,25 +33,36 @@
                 "preFetchedDirectory": {{ render(controller('ClarolineCoreBundle:Resource:openDirectory'))|raw }},
                 "resourceTypes": {
                     {% for resourceType in resourceTypes %}
-                        "{{ resourceType.getName() }}": {
-                            "name": "{{ resourceType.getName()|trans({}, 'resource') }}",
-                            "actions": {
-                                {% for action in resourceType.getActions() %}
-                                    {% if isMenuActionImplemented(resourceType, action.getName()) %}
-                                        "{{ action.getName() }}": {
-                                            "name": "{{ action.getName() }}",
-                                            "route": "{{ path('claro_resource_action', {'resourceType': resourceType.getName(), 'action': action.getName(), 'node': '_nodeId' }) }}",
-                                            "async": {% if action.isAsync() %} 1 {% else %} 0 {% endif %},
-                                            "mask": {{ action.getValue() }},
-                                            "isCustom": {% if action.isCustom() %} "yes" {% else %} "no" {% endif %},
-                                            "isForm": {% if action.isForm() %} true {% else %} false {% endif %}
-                                        }
-                                        {% if loop.last != true %},{% endif %}
-                                    {% endif %}
-                                {% endfor %}
-                            }
+                    "{{ resourceType.getName() }}": {
+                        "name": "{{ resourceType.getName()|trans({}, 'resource') }}",
+                        "actions": {
+                            {% for action in resourceType.getActions() %}
+                                {% if isMenuActionImplemented(resourceType, action.getName()) %}
+                                    "{{ action.getName() }}": {
+                                        "name": "{{ action.getName() }}",
+                                        "route": "{{ path('claro_resource_action', {'resourceType': resourceType.getName(), 'action': action.getName(), 'node': '_nodeId' }) }}",
+                                        "async": {% if action.isAsync() %} 1 {% else %} 0 {% endif %},
+                                        "mask": {{ action.getValue() }},
+                                        "isCustom": {% if action.isCustom() %} "yes" {% else %} "no" {% endif %},
+                                        "isForm": {% if action.isForm() %} true {% else %} false {% endif %}
+                                    } {% if resourceActions|length >= 0 or loop.last != true %},{% endif %}
+                                {% endif %}
+                            {% endfor %}
+
+                            {% for action in resourceActions %}
+                                {% if isMenuActionImplemented(null, action.getName()) %}
+                                    "{{ action.getName() }}": {
+                                        "name": "{{ action.getName() }}",
+                                        "route": "{{ path('claro_resource_action', {'resourceType': resourceType.getName(), 'action': 'test', 'node': '_nodeId' }) }}",
+                                        "async": {% if action.isAsync() %} 1 {% else %} 0 {% endif %},
+                                        "mask": {{ action.getValue() }},
+                                        "isCustom": {% if action.isCustom() %} "yes" {% else %} "no" {% endif %},
+                                        "isForm": {% if action.isForm() %} true {% else %} false {% endif %}
+                                    } {% if loop.last != true %},{% endif %}
+                                {% endif %}
+                            {% endfor %}
                         }
-                        {% if loop.last != true %},{% endif %}
+                    } {% if loop.last != true %}, {% endif %}
                     {% endfor %}
                 }
             });

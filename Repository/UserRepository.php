@@ -1302,6 +1302,22 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         return $executeQuery ? $query->getOneOrNullResult() : $query;
     }
 
+    public function findUserByUsernameAndMail($username, $mail, $executeQuery = true)
+    {
+        $dql = '
+            SELECT u
+            FROM Claroline\CoreBundle\Entity\User u
+            WHERE u.username = :username
+            AND u.mail = :mail
+        ';
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('username', $username);
+        $query->setParameter('mail', $mail);
+
+        return $executeQuery ? $query->getOneOrNullResult() : $query;
+    }
+
     public function countAllEnabledUsers($executeQuery = true)
     {
         $dql = '

@@ -117,8 +117,8 @@ add_group_s_confirm_message: 'groupe(s) ajouté(s)'
 add_groups: 'Ajouter des groupes'
 add_resource: 'Ajouter une ressource'
 add_role: 'Ajouter un role'
-add_role_to_groups: Ajouter un rôle a %count% groupe(s)
-add_role_to_users: Ajouter un rôle a %count% utilisateur(s)
+add_role_to_groups: Ajouter un rôle à %count% groupe(s)
+add_role_to_users: Ajouter un rôle à %count% utilisateur(s)
 add_roles_confirm_message: 'Voulez vous ajouter le(s) role(s) suivant(s) aux %count% élément(s) sélectionné(s): '
 add_sub_competence: 'Ajouter une sous-compétence'
 add_subcategory: 'Ajouter une sous-catégorie'
@@ -453,6 +453,10 @@ home: Accueil
 home_manager: 'Gestionnaire de l''accueil'
 home_parameters: 'Paramètres de l''accueil'
 home_tab: Onglet
+home_tab_bookmark_confirm_message: 'Cet onglet sera disponible dans votre bureau'
+home_tab_bookmark_confirm_title: 'Ajouter cet onglet à vos favoris'
+home_tab_bookmark_delete_confirm_message: 'Voulez-vous vraiment retirer cet onglet de vos favoris ?'
+home_tab_bookmark_delete_confirm_title: 'Retrait de l''onglet'
 home_tab_config_form_locked: 'Verrouillé'
 home_tab_config_form_visible: 'Visible'
 home_tab_creation: 'Création d''un onglet'
