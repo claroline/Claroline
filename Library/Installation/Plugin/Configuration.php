@@ -220,6 +220,8 @@ class Configuration implements ConfigurationInterface
                         ->scalarNode('is_exportable')->defaultValue(false)->end()
                         ->scalarNode('default_width')->defaultValue(4)->end()
                         ->scalarNode('default_height')->defaultValue(3)->end()
+                        ->scalarNode('is_displayable_in_workspace')->defaultValue(true)->end()
+                        ->scalarNode('is_displayable_in_desktop')->defaultValue(true)->end()
                         ->scalarNode('icon')
                             ->validate()
                             ->ifTrue(
