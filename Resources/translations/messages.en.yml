@@ -483,8 +483,8 @@ Interaction.invite: Question
 
 Inter_Open.ScoreMaxLongResp: Points for correct answer
 
-Inter_QCM.ScoreRightResponse: Points for correct answer
-Inter_QCM.ScoreFalseResponse: Points for wrong answer
+Inter_QCM.ScoreRightResponse: Correct result
+Inter_QCM.ScoreFalseResponse: Wrong result
 Inter_QCM.shuffle: Order of random selection
 Inter_QCM.weightChoice: Assign points by response
 
