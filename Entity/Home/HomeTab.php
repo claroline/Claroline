@@ -13,6 +13,7 @@ namespace Claroline\CoreBundle\Entity\Home;
 
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -61,6 +62,19 @@ class HomeTab
      * )
      */
     protected $widgetHomeTabConfigs;
+
+    /**
+     * @ORM\ManyToMany(
+     *     targetEntity="Claroline\CoreBundle\Entity\Role"
+     * )
+     * @ORM\JoinTable(name="claro_home_tab_roles")
+     */
+    protected $roles;
+
+    public function __construct()
+    {
+        $this->roles = new ArrayCollection();
+    }
 
     public function getId()
     {
@@ -124,5 +138,10 @@ class HomeTab
         );
 
         return $return;
+    }
+
+    public function getRoles()
+    {
+        return $this->roles->toArray();
     }
 }
