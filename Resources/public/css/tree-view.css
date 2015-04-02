@@ -14,8 +14,8 @@
     color: #333333;
 }
 
-.tree .tree-item:first-child {
-    margin-top: 0;
+.tree li:first-child .tree-item {
+    margin-top: 0 !important;
 }
 
 .tree-item {
