@@ -171,19 +171,9 @@ class EditorController
 
                     // Global Parameters
                     $activity['withTutor'] = $parameters->isWithTutor();
-                    $activity['who'] = $parameters->getWho();
-                    $activity['where'] = $parameters->getWhere();
-
-                    $activity['durationHours'] = null;
-                    $activity['durationMinutes'] = null;
-
-                    $duration = $parameters->getMaxDuration(); // Duration in seconds
-                    if (!empty($duration)) {
-                        $duration = $duration / 60; // Duration in minutes
-
-                        $activity['durationHours'] = (int) ($duration / 60);
-                        $activity['durationMinutes'] = $duration % 60;
-                    }
+                    $activity['who']       = $parameters->getWho();
+                    $activity['where']     = $parameters->getWhere();
+                    $activity['duration']  = $parameters->getMaxDuration(); // Duration in seconds
                 }
             }
         }
