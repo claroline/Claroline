@@ -211,13 +211,11 @@ class StepManager
         }
 
         // Update parameters properties
+        $duration = !empty($stepStructure->duration) ? $stepStructure->duration : null;
+        $parameters->setMaxDuration($duration);
+
         $withTutor = !empty($stepStructure->withTutor) ? $stepStructure->withTutor : false;
         $parameters->setWithTutor($withTutor);
-
-        $durationHours = !empty($stepStructure->durationHours) ? intval($stepStructure->durationHours) : 0;
-        $durationMinutes = !empty($stepStructure->durationMinutes) ? intval($stepStructure->durationMinutes) : 0;
-        $seconds = $durationHours * 3600 + $durationMinutes * 60;
-        $parameters->setMaxDuration($seconds);
 
         $who = !empty($stepStructure->who) ? $stepStructure->who : null;
         $parameters->setWho($who);
