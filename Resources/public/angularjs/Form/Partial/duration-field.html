@@ -1,13 +1,18 @@
-<div class="row">
+<div class="duration-field">
     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
         <div class="input-group">
+            <!-- Label -->
             <span class="input-group-addon">h</span>
-            <input class="form-control text-right" type="text" data-ng-model="hours" data-ng-change="correctDuration('hour')" size="1" />
-            <div class="btn-group-vertical" style="display: table-cell;">
-                <button data-ng-click="incrementDuration('hour')" type="button" class="btn btn-xs btn-default" style="font-size: 9px; border-top-left-radius: 0;">
+
+            <!-- Input -->
+            <input type="text" class="form-control text-right" data-ng-model="hours" data-ng-change="correctDuration('hour')" size="1" />
+
+            <!-- Increment / Decrement buttons -->
+            <div class="btn-group-vertical">
+                <button type="button" data-ng-click="incrementDuration('hour')" class="btn btn-xs btn-default">
                     <span class="fa fa-chevron-up"></span>
                 </button>
-                <button data-ng-click="decrementDuration('hour')" type="button" class="btn btn-xs btn-default" style="font-size: 9px; border-bottom-left-radius: 0;">
+                <button type="button" data-ng-click="decrementDuration('hour')" class="btn btn-xs btn-default">
                     <span class="fa fa-chevron-down"></span>
                 </button>
             </div>
@@ -16,13 +21,18 @@
 
     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
         <div class="input-group">
+            <!-- Label -->
             <span class="input-group-addon">min</span>
-            <input class="form-control text-right" type="text" data-ng-model="minutes" data-ng-change="correctDuration('minute')" size="1" />
-            <div class="btn-group-vertical" style="display: table-cell">
-                <button data-ng-click="incrementDuration('minute')" type="button" class="btn btn-xs btn-default" style="font-size: 9px; border-top-left-radius: 0;">
+
+            <!-- Input -->
+            <input type="text" class="form-control text-right" data-ng-model="minutes" data-ng-change="correctDuration('minute')" size="1" />
+
+            <!-- Increment / Decrement buttons -->
+            <div class="btn-group-vertical">
+                <button type="button" data-ng-click="incrementDuration('minute')" class="btn btn-xs btn-default">
                     <span class="fa fa-chevron-up"></span>
                 </button>
-                <button data-ng-click="decrementDuration('minute')" type="button" class="btn btn-xs btn-default" style="font-size: 9px; border-bottom-left-radius: 0;">
+                <button type="button" data-ng-click="decrementDuration('minute')" class="btn btn-xs btn-default">
                     <span class="fa fa-chevron-down"></span>
                 </button>
             </div>
