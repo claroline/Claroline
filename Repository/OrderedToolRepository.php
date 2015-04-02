@@ -251,6 +251,30 @@ class OrderedToolRepository extends EntityRepository
         return $query->getResult();
     }
 
+    public function findDisplayableDesktopOrderedToolsByUser(
+        User $user,
+        $type = 0,
+        $executeQuery = true
+    )
+    {
+        $dql = '
+            SELECT ot
+            FROM Claroline\CoreBundle\Entity\Tool\OrderedTool ot
+            JOIN ot.tool t
+            WHERE ot.workspace IS NULL
+            AND ot.type = :type
+            AND ot.user = :user
+            AND t.isDisplayableInDesktop = true
+            ORDER BY ot.order
+        ';
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('user', $user);
+        $query->setParameter('type', $type);
+
+        return $executeQuery ? $query->getResult() : $query;
+    }
+
     public function findConfigurableDesktopOrderedToolsByUser(
         User $user,
         array $excludedToolNames,
@@ -273,6 +297,28 @@ class OrderedToolRepository extends EntityRepository
         $query = $this->_em->createQuery($dql);
         $query->setParameter('user', $user);
         $query->setParameter('excludedToolNames', $excludedToolNames);
+        $query->setParameter('type', $type);
+
+        return $executeQuery ? $query->getResult() : $query;
+    }
+
+    public function findDisplayableDesktopOrderedToolsByTypeForAdmin(
+        $type = 0,
+        $executeQuery = true
+    )
+    {
+        $dql = '
+            SELECT ot
+            FROM Claroline\CoreBundle\Entity\Tool\OrderedTool ot
+            JOIN ot.tool t
+            WHERE ot.workspace IS NULL
+            AND ot.user IS NULL
+            AND ot.type = :type
+            AND t.isDisplayableInDesktop = true
+            ORDER BY ot.order
+        ';
+
+        $query = $this->_em->createQuery($dql);
         $query->setParameter('type', $type);
 
         return $executeQuery ? $query->getResult() : $query;
