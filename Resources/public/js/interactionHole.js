@@ -16,9 +16,9 @@ var langKeyWord;
 var langPoint;
 var langDel;
 
-function addFormHole(add, response, point, size, orthography, del, selector, source_image_add, wlangKeyWord, wlangPoint) {
+function addFormHole( response, size, orthography, del, selector, source_image_add, wlangKeyWord, wlangPoint) {
     langKeyWord = wlangKeyWord;
-    langPoint   = "pts";
+    langPoint   = wlangPoint;
     langDel     = '<i class="fa fa-close"></i>';
 
     tableHoles.append('<table id="newTable" class="table table-striped table table-condensed"><thead id="Entete"><tr><th >' + size + '</th><th >' + orthography + '</th><th >' + selector + '</th><th >' + response + '</th><th >' + del + '</th></tr></thead><tbody></tbody></table>');
@@ -29,10 +29,10 @@ function addFormHole(add, response, point, size, orthography, del, selector, sou
 
 }
 
-function addFormHoleEdit(add, response, point, size, orthography, del, selector, source_image_add, wlangKeyWord, wlangPoint, nbResponses) {
+function addFormHoleEdit(response, size, orthography, del, selector, source_image_add, wlangKeyWord, wlangPoint, nbResponses) {
     langKeyWord = wlangKeyWord;
     langPoint   = wlangPoint;
-    langDel     = "del";
+    langDel     = '<i class="fa fa-close"></i>';
     var index;
     var i = 0;
 
