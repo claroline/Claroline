@@ -87,7 +87,7 @@ function creationQCMEdit(expectedAnswer, response, point, comment, positionForce
            
          $(this).find('.row').each(function () {
 
-            fillChoicesArray($(this),edition);    
+            fillChoicesArray($(this),edition,index);    
            
             // Add the form errors
             $('#choiceError').append($(this).find('.field-error'));
@@ -178,7 +178,7 @@ function addChoice(container, deleteChoice, comment, edition) {
      
     // Get the form field to fill rows of the choices' table
     container.find('.row').each(function () {
-        fillChoicesArray($(this),edition);
+        fillChoicesArray($(this),edition,index);
     });
     //add the feedback button
     addFeedback(comment,index,edition);
@@ -272,16 +272,16 @@ function whichChecked() {
     }
     // Disable or not the score by response if weightResponse is checked
     if ($('#ujm_exobundle_interactionqcmtype_weightResponse').is(':checked')) {
-        $('#ujm_exobundle_interactionqcmtype_scoreRightResponse').css({"display" : "none"});
-        $('#ujm_exobundle_interactionqcmtype_scoreFalseResponse').css({"display" : "none"});
+//        $('#ujm_exobundle_interactionqcmtype_scoreRightResponse').css({"display" : "none"});
+//        $('#ujm_exobundle_interactionqcmtype_scoreFalseResponse').css({"display" : "none"});
          tableChoices.find('th').eq(2).show();
         $("*[id$='_weight']").each(function() {
            // $(this).css({"display" : "inline-block"});    
              $(this).parent('td').show();
         });
     } else {
-        $('#ujm_exobundle_interactionqcmtype_scoreRightResponse').css({"display" : "inline-block"});
-        $('#ujm_exobundle_interactionqcmtype_scoreFalseResponse').css({"display" : "inline-block"});
+//        $('#ujm_exobundle_interactionqcmtype_scoreRightResponse').css({"display" : "inline-block"});
+//        $('#ujm_exobundle_interactionqcmtype_scoreFalseResponse').css({"display" : "inline-block"});
         tableChoices.find('th').eq(2).hide();
         $("*[id$='_weight']").each(function() {
            // $(this).css({"display" : "none"});
@@ -320,16 +320,16 @@ function whichChange() {
     // When "set points by response" change, disable or not single choice point
     $('#ujm_exobundle_interactionqcmtype_weightResponse').change(function () {
         if ($(this).is(':checked')) {
-            $('#ujm_exobundle_interactionqcmtype_scoreRightResponse').css({"display" : "none"});
-            $('#ujm_exobundle_interactionqcmtype_scoreFalseResponse').css({"display" : "none"});
+//            $('#ujm_exobundle_interactionqcmtype_scoreRightResponse').css({"display" : "none"});
+//            $('#ujm_exobundle_interactionqcmtype_scoreFalseResponse').css({"display" : "none"});
             tableChoices.find('th').eq(2).show();
             $("*[id$='_weight']").each(function() {
                // $(this).css({"display" : "inline-block"});
                 $(this).parent('td').show();
             });
         } else {
-            $('#ujm_exobundle_interactionqcmtype_scoreRightResponse').css({"display" : "inline-block"});
-            $('#ujm_exobundle_interactionqcmtype_scoreFalseResponse').css({"display" : "inline-block"});
+//            $('#ujm_exobundle_interactionqcmtype_scoreRightResponse').css({"display" : "inline-block"});
+//            $('#ujm_exobundle_interactionqcmtype_scoreFalseResponse').css({"display" : "inline-block"});
             tableChoices.find('th').eq(2).hide();
             $("*[id$='_weight']").each(function() {
               //  $(this).css({"display" : "none"});
@@ -353,7 +353,7 @@ function whichChange() {
     });
 }
 
-function fillChoicesArray(row,edition) {   
+function fillChoicesArray(row,edition,index) {   
     // Add the field of type input
     if (row.find('input').length) {
         if (row.find('input').attr('id').indexOf('ordre') == -1) {
@@ -370,9 +370,11 @@ function fillChoicesArray(row,edition) {
     // Add the field of type textarea
     if (row.find('textarea').length) { 
         idLabelVal = row.find('textarea').attr("id");     
-        $('#newTable').find('tr:last').append('<td class="input-group"></td>');       
-        $('#newTable').find('td:last').append(row.find('textarea'));
-        $('#newTable').find('td:last').append('<span class="input-group-btn"><a class="btn btn-default" id="adve_'+idLabelVal+'" onClick="advancedEdition(\''+idLabelVal+'\',event);" title="'+edition+'"><i class="fa fa-font"></i></a></span>');
+        $('#newTable').find('tr:last').append('<td class="classic"><span id="span'+index+'" class="input-group"></span></td>');
+        $('#span'+index).append(row.find('textarea'));
+        $('#span'+index).append('<span class="input-group-btn"><a class="btn btn-default" id="adve_'+idLabelVal+'" onClick="advancedEdition(\''+idLabelVal+'\',event);" title="'+edition+'"><i class="fa fa-font"></i></a></span>');
+        //$('#newTable').find('td:last').append(row.find('textarea'));
+        //$('#newTable').find('td:last').append('<span class="input-group-btn"><a class="btn btn-default" id="adve_'+idLabelVal+'" onClick="advancedEdition(\''+idLabelVal+'\',event);" title="'+edition+'"><i class="fa fa-font"></i></a></span>');
     }
     
 }
@@ -409,8 +411,12 @@ function addFeedback(comment,index,edition) {
     $('#newTable').find('td:last').append(addFeedbacks);
     
     $("#QCMfeedback_"+index).click(function() {
-      $('#td_'+index).addClass('input-group');
-       addFeedbacks.replaceWith('<textarea id="feedback_label_'+index+'" class="form-control" placeholder="'+comment+'" style="height:34px;" ></textarea>\n\
-           <span class="input-group-btn"><a id="QCMavancedEdition" class="btn btn-default" onClick="advancedEdition(\'feedback_label_'+index+'\',event);" title="'+edition+'"><i class="fa fa-font"></i></a></span>'); 
+    //  $('#td_'+index).addClass('input-group');
+       addFeedbacks.replaceWith('<span id=tabFeedback'+index+' class="input-group"><textarea id="feedback_label_'+index+'" class="form-control" placeholder="'+comment+'" style="height:34px;" ></textarea>\n\
+           <span class="input-group-btn"><a id="QCMavancedEdition" class="btn btn-default" onClick="advancedEdition(\'feedback_label_'+index+'\',event);" title="'+edition+'"><i class="fa fa-font"></i></a></span></span>'); 
+      // $('#tabFeedback'+index).css({});
+//       addFeedbacks.replaceWith('<table id=tabFeedback'+index+' class="table borderless"><td class="input-group"><textarea id="feedback_label_'+index+'" class="form-control" placeholder="'+comment+'" style="height:34px;" ></textarea>\n\
+//           <span class="input-group-btn"><a id="QCMavancedEdition" class="btn btn-default" onClick="advancedEdition(\'feedback_label_'+index+'\',event);" title="'+edition+'"><i class="fa fa-font"></i></a></span></td></table>'); 
+//      // $('#tabFeedback'+index).css({});
     });    
 }
