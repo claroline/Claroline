@@ -199,14 +199,10 @@ class ToolManager
     public function getDesktopToolsConfigurationArray(User $user, $type = 0)
     {
         $orderedToolList = array();
-        $desktopTools = $this->orderedToolRepo->findConfigurableDesktopOrderedToolsByUser(
+        $desktopTools = $this->orderedToolRepo->findDisplayableDesktopOrderedToolsByUser(
             $user,
-            array(),
             $type
         );
-//        $desktopTools = $this->orderedToolRepo->findBy(
-//            array('user' => $user, 'type' => $type)
-//        );
 
         foreach ($desktopTools as $desktopTool) {
             //this field isn't mapped
@@ -239,13 +235,8 @@ class ToolManager
     public function getDesktopToolsConfigurationArrayForAdmin($type = 0)
     {
         $orderedToolList = array();
-        $desktopTools = $this->orderedToolRepo->findConfigurableDesktopOrderedToolsByTypeForAdmin(
-            array(),
-            $type
-        );
-//        $desktopTools = $this->orderedToolRepo->findBy(
-//            array('user' => null, 'workspace' => null, 'type' => $type)
-//        );
+        $desktopTools = $this->orderedToolRepo
+            ->findDisplayableDesktopOrderedToolsByTypeForAdmin($type);
 
         foreach ($desktopTools as $desktopTool) {
             //this field isn't mapped

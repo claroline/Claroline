@@ -141,6 +141,7 @@ admin_workspace_tag_form_name: Nom
 administration: Administration
 administrative_code: 'Code administratif'
 advanced: Avancé
+advanced_parameters: 'Paramètres avancés'
 agenda: Agenda
 agreeing: 'En acceptant l''envoi de ces données, vous bénéficierez d''un meilleur service et vous contribuerez à l''amélioration de la plateforme Claroline Connect que vous allez installer.'
 all: Tous
@@ -464,6 +465,7 @@ home_tab_delete_confirm_message: 'Voulez-vous vraiment supprimer cet onglet ?'
 home_tab_delete_confirm_title: 'Suppression de l''onglet'
 home_tab_edition: 'Edition de l''onglet'
 home_tab_form_name: Nom
+home_tab_roles_explanation: 'Si aucun rôle n''est coché, l''onglet sera disponible à tous les utilisateurs.<br>Sinon, il sera uniquement disponible aux utilisateurs ayant un des rôles sélectionnés.'
 home_tab_widgets: 'Widgets de l''onglet'
 home_tab_widgets_configuration: 'Configuration des widgets de l''onglet'
 home_tabs: 'Onglets de la page d''accueil'

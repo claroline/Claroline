@@ -25,6 +25,7 @@ use Claroline\CoreBundle\Form\WidgetDisplayType;
 use Claroline\CoreBundle\Form\WidgetDisplayConfigType;
 use Claroline\CoreBundle\Form\WidgetHomeTabConfigType;
 use Claroline\CoreBundle\Form\WidgetInstanceType;
+use Claroline\CoreBundle\Library\Security\Utilities;
 use Claroline\CoreBundle\Manager\HomeTabManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\ToolManager;
@@ -56,6 +57,7 @@ class HomeController extends Controller
     private $router;
     private $securityContext;
     private $toolManager;
+    private $utils;
     private $widgetManager;
 
     /**
@@ -69,6 +71,7 @@ class HomeController extends Controller
      *     "router"             = @DI\Inject("router"),
      *     "securityContext"    = @DI\Inject("security.context"),
      *     "toolManager"        = @DI\Inject("claroline.manager.tool_manager"),
+     *     "utils"              = @DI\Inject("claroline.security.utilities"),
      *     "widgetManager"      = @DI\Inject("claroline.manager.widget_manager")
      * })
      */
@@ -82,6 +85,7 @@ class HomeController extends Controller
         RouterInterface $router,
         SecurityContextInterface $securityContext,
         ToolManager $toolManager,
+        Utilities $utils,
         WidgetManager $widgetManager
     )
     {
@@ -94,6 +98,7 @@ class HomeController extends Controller
         $this->router = $router;
         $this->securityContext = $securityContext;
         $this->toolManager = $toolManager;
+        $this->utils = $utils;
         $this->widgetManager = $widgetManager;
     }
 
@@ -114,8 +119,9 @@ class HomeController extends Controller
      */
     public function displayDesktopHomeTabAction(User $user, $tabId)
     {
+        $roleNames = $this->utils->getRoles($this->securityContext->getToken());
         $adminHomeTabConfigs = $this->homeTabManager
-            ->generateAdminHomeTabConfigsByUser($user);
+            ->generateAdminHomeTabConfigsByUser($user, $roleNames);
         $visibleAdminHomeTabConfigs = $this->homeTabManager
             ->filterVisibleHomeTabConfigs($adminHomeTabConfigs);
         $userHomeTabConfigs = $this->homeTabManager
@@ -1051,7 +1057,7 @@ class HomeController extends Controller
         $this->checkWorkspaceEditionAccess($workspace);
 
         $homeTabForm = $this->formFactory->create(
-            new HomeTabType(),
+            new HomeTabType($workspace),
             new HomeTab()
         );
         $homeTabConfigForm = $this->formFactory->create(
@@ -1086,7 +1092,7 @@ class HomeController extends Controller
         $homeTab = new HomeTab();
         $homeTabConfig = new HomeTabConfig();
         $homeTabForm = $this->formFactory->create(
-            new HomeTabType(),
+            new HomeTabType($workspace),
             $homeTab
         );
         $homeTabConfigForm = $this->formFactory->create(
@@ -1148,7 +1154,7 @@ class HomeController extends Controller
         $this->checkWorkspaceAccessForHomeTab($homeTab, $workspace);
 
         $homeTabForm = $this->formFactory->create(
-            new HomeTabType(),
+            new HomeTabType($workspace),
             $homeTab
         );
         $homeTabConfigForm = $this->formFactory->create(
@@ -1186,7 +1192,7 @@ class HomeController extends Controller
         $this->checkWorkspaceAccessForHomeTab($homeTab, $workspace);
 
         $homeTabForm = $this->formFactory->create(
-            new HomeTabType(),
+            new HomeTabType($workspace),
             $homeTab
         );
         $homeTabConfigForm = $this->formFactory->create(
