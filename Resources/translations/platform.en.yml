@@ -141,6 +141,7 @@ admin_workspace_tag_form_name: Name
 administration: Administration
 administrative_code: 'Administrative code'
 advanced: Advanced
+advanced_parameters: 'Advanced parameters'
 agenda: Agenda
 agreeing: 'By agreeing to send the data, you will enjoy a better service and you will contribute to improving the Claroline Connect platform that you are installing.'
 all: All
@@ -463,6 +464,7 @@ home_tab_delete_confirm_message: 'Do you really want to delete this Home tab ?'
 home_tab_delete_confirm_title: 'Delete Home tab'
 home_tab_edition: 'Home tab edition'
 home_tab_form_name: Name
+home_tab_roles_explanation: 'If no role is checked the home tab will be available for all users.<br>Otherwise it will be available for users with one of the checked roles only.'
 home_tab_widgets: 'Home tab widgets'
 home_tab_widgets_configuration: 'Home tab widgets configuration'
 home_tabs: 'Home tabs'

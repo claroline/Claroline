@@ -258,11 +258,11 @@ class HomeTabManager
         return $newHomeTabConfig;
     }
 
-    public function generateAdminHomeTabConfigsByUser(User $user)
+    public function generateAdminHomeTabConfigsByUser(User $user, array $roleNames = array())
     {
         $adminHTC = array();
         $adminHomeTabConfigs = $this->homeTabConfigRepo
-            ->findAdminDesktopHomeTabConfigs();
+            ->findAdminDesktopHomeTabConfigsByRoles($roleNames);
 
         foreach ($adminHomeTabConfigs as $adminHomeTabConfig) {
 
@@ -639,6 +639,17 @@ class HomeTabManager
     {
         return $this->homeTabConfigRepo
             ->findVisibleWorkspaceHomeTabConfigsByWorkspace($workspace);
+    }
+
+    public function getVisibleWorkspaceHomeTabConfigsByWorkspaceAndRoles(
+        Workspace $workspace,
+        array $roleNames
+    )
+    {
+        return $this->homeTabConfigRepo->findVisibleWorkspaceHomeTabConfigsByWorkspaceAndRoles(
+            $workspace,
+            $roleNames
+        );
     }
 
     public function getOrderOfLastDesktopHomeTabConfigByUser(User $user)
