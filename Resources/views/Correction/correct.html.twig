@@ -3,7 +3,8 @@
 {% block resourceBreadcrumb %}
     {% if admin == true %}
         <li><a href="{{ path('innova_collecticiel_edit_common', {'resourceId': dropzone.id}) }}"><span
-                        class="fa fa-list"></span> {{ dropzone.resourceNode.name }}</a></li>
+                        class="fa fa-list"></span> {{ dropzone.resourceNode.name }}</a>
+        </li>
         <li>
             <a href="{{ path('innova_collecticiel_drops', {'resourceId': dropzone.id}) }}"> {{ 'List of copies'|trans({}, 'innova_collecticiel') }}</a>
         </li>

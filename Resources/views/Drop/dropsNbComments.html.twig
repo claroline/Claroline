@@ -2,6 +2,8 @@
 {# Parcours du tableau pour afficher le nombre de commentaires de l'utilisateur en train d'être traité #}
 {% for key,value in nbCommentNotRead %}
     {% if drop.user.id == key %}
+        <span class="badge">
         {{ value }}
+        </span>
     {% endif %}
 {% endfor %}

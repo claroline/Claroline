@@ -9,9 +9,11 @@
     <div class="container container-dropzone">
         <h2>
             <!-- ERV/liste des copies, page modifiée en "Liste des vues personnelles" -->
-            {{ 'List of copies'|trans({}, 'innova_collecticiel') }}
+<!--
+             {{ 'List of copies'|trans({}, 'innova_collecticiel') }}
             <a class=" btn btn-default pull-right" href="{{ path('innova_collecticiel_edit', {'resourceId': dropzone.id}) }}"><span
                         class="fa fa-pencil-square-o"></span> {{ 'Edit evaluation'|trans({}, 'innova_collecticiel') }}</a>
+-->
         </h2>
 
         {% if unterminated_drops is defined %}
@@ -29,25 +31,29 @@
 
         <ul class="nav nav-tabs  margin-bottom-md margin-top-md">
             <!-- ERV/Onglet "Copies évaluation terminée" -->
+<!--
             <li class="hometab-element {% block drops_completed_active %}{% endblock %}">
                 <a href="{% block drops_completed_link %}{{ path('innova_collecticiel_drops_by_default', {'resourceId': dropzone.id}) }} {% endblock %}">
                     {{ 'Copies evaluation finished'|trans({}, 'innova_collecticiel') }} <span
                             class="badge">{{ nbDropCorrected }}</span>
                 </a>
             </li>
+-->
             <!-- ERV/Onglet "Copies en cours d'évaluation" -->
             <li class="hometab-element {% block drops_awaiting_active %}{% endblock %}">
                 <a href="{% block drops_awaiting_link %}{{ path('innova_collecticiel_drops_awaiting', {'resourceId': dropzone.id}) }} {% endblock %}">
-                    {{ 'Copies being evaluated'|trans({}, 'innova_collecticiel') }} <span
-                            class="badge">{{ nbDrop - nbDropCorrected }}</span>
+                    {{ 'Copies being evaluated'|trans({}, 'innova_collecticiel') }}
+                    <span class="badge">{{ nbDrop - nbDropCorrected }}</span>
                 </a>
             </li>
             <!-- ERV/Onglet "Correcteurs" -->
+<!--
             <li class="hometab-element {% block drops_examiners_active %}{% endblock %}">
                 <a href="{% block drops_examiners_link %}{{ path('innova_collecticiel_examiners', {'resourceId': dropzone.id}) }} {% endblock %}">
                     {{ 'Examiners'|trans({}, 'innova_collecticiel') }}
                 </a>
             </li>
+-->
         </ul>
 
         {% block dropzone_content_drops %}
