@@ -64,10 +64,9 @@ class QtiController extends Controller {
 
         if ($request->isXmlHttpRequest()) {
             $exoID = $request->request->get('exoID');
-            $typeImport = $request->request->get('typeImport');
         }
 
-        return $this->render('UJMExoBundle:QTI:import.html.twig', array('exoID' => $exoID, 'typeImport' => $typeImport));
+        return $this->render('UJMExoBundle:QTI:import.html.twig', array('exoID' => $exoID));
     }
 
     /**
@@ -147,38 +146,6 @@ class QtiController extends Controller {
                     );
         }
 
-    }
-
-    /**
-     * Import questions of exercise in QTI
-     *
-     * @access public
-     *
-     * @return type
-     */
-    public function importQuestionsExerciseAction() {
-        $request = $this->container->get('request');
-        $exoID = $request->get('exerciceID');
-
-        if (strstr($_FILES["qtifile"]["type"], 'application/zip') === false) {
-
-            return $this->importError('qti format warning', $exoID);
-        }
-
-        $qtiRepos = $this->container->get('ujm.qti_repository');
-        if ($this->extractFiles($qtiRepos) === false) {
-
-            return $this->importError('qti can\'t open zip', $exoID);
-        }
-
-        $scanFile = $qtiRepos->scanFilesToImport($exoID);
-
-
-        if ($scanFile !== true) {
-            return $this->importError($scanFile, $exoID);
-        }
-
-        return $this->redirect($this->generateUrl( 'ujm_exercise_questions', array( 'id' => $exoID, )));
     }
 
     /**

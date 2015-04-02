@@ -7,7 +7,6 @@
                 </br>
             </div>
             <div class="modal-body">
-                {% if typeImport  == 'question' %}
                     <form id="qtiImportForm" enctype="multipart/form-data" method="post"
                           action="{{ path('ujm_qti_import_question', { 'exerciceID': exoID }) }}">
                         <input id="qtifile" class="form-control" name="qtifile" type="file" required="true" />
@@ -18,18 +17,6 @@
                             </button>
                         </div>
                     </form>
-                {% else %}
-                    <form id="qtiImportForm" enctype="multipart/form-data" method="post"
-                          action="{{ path('ujm_qti_import_exercise_questions', { 'exerciceID': exoID }) }}">
-                        <input id="qtifile" class="form-control" name="qtifile" type="file" required="true" />
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">{{ 'cancel'|trans({}, 'platform') }}</button>
-                            <button type="submit" class="btn btn-primary" id="submit_picture">
-                                {{ 'ok'|trans({}, 'platform') }}
-                            </button>
-                        </div>
-                    </form>
-                {% endif %}
            </div>
         </div>
     </div>

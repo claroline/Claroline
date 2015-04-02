@@ -9,10 +9,6 @@ ujm_qti_import_form:
     defaults: { _controller: UJMExoBundle:Qti:importForm }
 
 #you must pass the id of the exercice for this route, it's for import in exercice
-ujm_qti_import_exercise_questions:
-    pattern:  /importExerciceQuestions
-    defaults: { _controller: UJMExoBundle:Qti:importQuestionsExercise }
-
 ujm_qti_export_exercise_questions:
     pattern: /ExportQuestionExercise
     defaults: { _controller: "UJMExoBundle:Qti:exportQuestionsExercise" }

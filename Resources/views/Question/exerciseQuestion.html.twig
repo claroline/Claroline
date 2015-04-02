@@ -28,16 +28,13 @@
         </a>
         <a class="btn btn-primary" href="{{ path('ujm_exercise_import_question', { 'exoID':  exerciseID, 'pageGoNow': pagerQuestion.getNbPages,
             'maxPage': pagerQuestion.maxPerPage, 'nbItem': pagerQuestion.getNbResults }) }}">
-            <i class="fa-icon-download"></i> {{ 'import questions' | trans }}
+            <i class="fa fa-download"></i> {{ 'import questions' | trans }}
         </a>
         <a class="btn btn-primary" href="{{ path('ujm_question_new', { 'exoID': exerciseID }) }}">
             <i class="fa fa-plus"></i> {{ 'create a new entry' | trans }}
         </a>
         <a class="btn btn-primary" href="{{ path('ujm_qti_export_exercise_questions', { 'exoID': exerciseID, 'exoName': _resource.getResourceNode().getName()  }) }}">
             <i class="fa fa-save"></i> {{ 'exportQTIExercise' | trans }}
-        </a>
-        <a class="btn btn-primary" title="{{ 'qti format warning' | trans }}" onClick="importQTI('{{ path('ujm_qti_import_form') }}', '{{ exerciseID }}', 'exercise' );">
-            <i class="fa fa-download"></i> {{ 'importQTIExercise' | trans }}
         </a>
     </div>
 
