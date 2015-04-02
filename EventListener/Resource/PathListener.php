@@ -90,6 +90,9 @@ class PathListener extends ContainerAware
         if ($form->isValid()) {
             $path = $form->getData();
 
+            $published = $form->get('published')->getData();
+            $event->setPublished($published);
+
             $path->initializeStructure();
             
             // Send new path to dispatcher through event object

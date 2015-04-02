@@ -45,13 +45,6 @@ class Path extends AbstractResource implements PathInterface, \JsonSerializable
     /**
      * @var boolean
      *
-     * @ORM\Column(name="published", type="boolean")
-     */
-    protected $published;
-
-    /**
-     * @var boolean
-     *
      * @ORM\Column(name="modified", type="boolean")
      */
     protected $modified;
@@ -69,8 +62,7 @@ class Path extends AbstractResource implements PathInterface, \JsonSerializable
      */
     public function __construct()
     {
-        $this->steps = new ArrayCollection();
-        $this->published = false;
+        $this->steps    = new ArrayCollection();
         $this->modified = false;
     }
     
@@ -96,24 +88,12 @@ class Path extends AbstractResource implements PathInterface, \JsonSerializable
     }
 
     /**
-     * Set published
-     * @param  boolean $published
-     * @return \Innova\PathBundle\Entity\Path\Path
-     */
-    public function setPublished($published)
-    {
-        $this->published = $published;
-
-        return $this;
-    }
-
-    /**
      * Is path already published
      * @return boolean
      */
     public function isPublished()
     {
-        return $this->published;
+        return $this->resourceNode->isPublished();
     }
 
     /**
@@ -288,7 +268,7 @@ class Path extends AbstractResource implements PathInterface, \JsonSerializable
         return array (
             'name'        => $this->getResourceNode()->getName(),
             'description' => $this->description,
-            'published'   => $this->published,
+            'published'   => $this->getResourceNode()->isPublished(),
             'modified'    => $this->modified,
             'steps'       => $this->steps->toArray(),
         );
