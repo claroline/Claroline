@@ -182,7 +182,7 @@
 
                 {# Partie "Ajout d'un commentaire" #}
                 <div class="form-group">
-                {% include 'InnovaCollecticielBundle:Comment:addComment.html.twig' %}
+                    {% include 'InnovaCollecticielBundle:Comment:addComment.html.twig' %}
                 </div>
 
             {% endblock %}
@@ -264,6 +264,7 @@
             </div>
         {% endif %}
 
+
         {# Critères d'évaluation #}
         {% if correction.reporter %}
             <h3>{{ 'Reason of reporting'|trans({}, 'innova_collecticiel') }}</h3>
@@ -292,7 +293,6 @@
             {% block dropzone_correct_content %}
             {% endblock %}
         {% endif %}
-
     </div>
 {% endblock %}
 

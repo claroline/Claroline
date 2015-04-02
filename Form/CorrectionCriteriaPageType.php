@@ -23,7 +23,8 @@ class CorrectionCriteriaPageType extends AbstractType
                 'choices' => $choices,
                 'expanded' => true,
                 'multiple' => false,
-                'required' => true,
+// En commentaire car cette zone n'est plus obligatoire. InnovaERV, avril 2015.
+//                'required' => true,
                 'label' => $criterion->getInstruction(),
                 'label_attr' => array('style' => 'font-weight: normal;')
             );

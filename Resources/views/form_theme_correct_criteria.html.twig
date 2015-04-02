@@ -1,6 +1,7 @@
 {% extends "InnovaCollecticielBundle::form_theme_bootstrap3.html.twig" %}
 
 {% block form_row %}
+<!-- InnovaERV : première ligne avec affichage libellé + "pas du tout" et "Tout à fait" -->
     {% spaceless %}
         {% set input_col_size = input_col_size|default('col-md-4') %}
         {% set label_col_size = label_col_size|default('col-md-8') %}
@@ -36,6 +37,7 @@
 {% endblock form_row %}
 
 {% block choice_widget_expanded %}
+<!-- InnovaERV : deuxième ligne avec affichage des "radio button" -->
     {% spaceless %}
         <span {{ block('widget_container_attributes') }}>
             {% for child in form %}
