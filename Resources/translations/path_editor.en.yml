@@ -2,7 +2,6 @@
 back: Close editor
 
 # c
-create: Create
 cancel: Cancel
 
 # d
@@ -11,10 +10,7 @@ description_help: Enter a short description of the path
 discard_changes: Discard changes
 
 # e
-edit: Edit
 editor: Path editor
-edit_step: Edit step
-edit_description: Edit description
 
 # f
 from: from
@@ -30,9 +26,6 @@ open_templates: Open templates
 
 # p
 path_name: Name of the path
-path_description: Description of the path
-resource_edit_form: Editing resource
-resource_create_form: Creating resource
 path_save_success: The path has been successfully saved.
 path_template_save_success: The template has been successfully saved.
 path_template_save_error: An error occurred while saving template.
@@ -40,15 +33,9 @@ publish_and_preview: Publish & preview
 
 # r
 redo: Redo
-resources: Resources
 resource_delete: Delete
-resource_edit: Edit
-resource_add: Create
 root_default_name: <untitled>
-resource_edit_title: Resource
-resource_save: Save resource
 resources_browse: Add
-resource_propagate_to_children: Make this resource visible in children
 resource_hide_parent: Hide in this step
 resource_show_parent: Display in this step
 resource_propagate : Make available in children
@@ -56,19 +43,11 @@ resource_no_propagate : Make unavailable in children
 
 # s
 save: Save
-save_and_close: Save and Close editor
-step1: General properties
-step2: Path
-step3: Defining step properties
-selected_step: Selected step
 step_drag: Move item
 step_duration: Expected duration
 step_who: Working mode
 step_where: Learning place
-step_computer: With Computer ?
-step_tutor: With tutor ?
 step_no_resource: There is no resource linked to this step.
-step_no_description: There is no description for this step.
 select_image: Select image
 step_has_duration: step has a duration
 step_delete_confirm: Are you sure you want to delete this step ?
@@ -89,7 +68,6 @@ template_copy: Copy
 template_edit: Edit
 template_delete: Delete
 template_name: Name
-template_description: Description
 template_save: Save template
 template_edit_title: Template
 
@@ -117,5 +95,6 @@ delete_activity: Delete activity link
 
 no_templates: There is not template available.
 
-innova_path_name: Name
-innova_path_description: Description
+path_name: Name
+path_description: Description
+step_description: Description

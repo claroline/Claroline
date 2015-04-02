@@ -2,7 +2,6 @@
 back: Quitter
 
 # c
-create: Création
 cancel: Annuler
 
 # d
@@ -11,10 +10,7 @@ description_help: Saisir une courte description du parcours
 discard_changes: Annuler les modifications
 
 # e
-edit_step: Modifier l'étape
-edit: Modification
 editor: Editeur de Parcours
-edit_description: Modifier la description
 
 # f
 from: de
@@ -29,10 +25,6 @@ name_help: Saisir le nom du parcours
 open_templates: Ouvrir les modèles
 
 # p
-path_name: Nom du parcours
-path_description: Description du parcours
-resource_edit_form: Edition d'une ressource
-resource_create_form: Création d'une ressource
 path_save_success: Le parcours a correctement été sauvegardé.
 path_template_save_success: Le modèle a correctement été sauvegardé.
 path_template_save_error: Une erreur s'est produite lors de la sauvegarde du modèle.
@@ -40,17 +32,9 @@ publish_and_preview: Publier & visualiser
 
 # r
 redo: Rétablir
-resources: Ressources
 resource_delete: Supprimer
-resource_edit: Modifier
-resource_add: Créer
 root_default_name: <sans nom>
-resource_edit_title: Ressource
-resource_save: Sauvegarder la ressource
-resource_name: Nom
-resource_description: Description
 resources_browse: Ajouter
-resource_propagate_to_children: Rendre cette ressource disponible dans les étapes enfants
 resource_hide_parent: Masquer dans cette étape
 resource_show_parent: Afficher dans cette étape
 resource_propagate : Rendre disponible dans les étapes enfants
@@ -58,20 +42,11 @@ resource_no_propagate : Rendre indisponible dans les étapes enfants
 
 # s
 save: Sauvegarder
-save_and_close: Sauvegarder et quitter l'éditeur
-step1: Informations globales
-step2: Parcours
-step3: Définition des informations de l'étape
-selected_step: Etape sélectionnée
 step_drag: Déplacer l'élément
 step_duration: Durée prévue
 step_who: Modalité de travail
 step_where: Lieu d'apprentissage
-step_computer: Avec ordinateur ?
-step_tutor: Avec tuteur ?
 step_no_resource: Il n'y a aucune ressource rattachée à cette étape.
-step_no_description: Il n'y a aucune description pour cette étape.
-select_image: Choisir une image
 step_has_duration: l'étape a une durée
 step_delete_confirm: Êtes-vous sur de vouloir supprimer cette étape ?
 step_delete: Supprimer l'étape
@@ -90,7 +65,6 @@ template_copy: Copier
 template_edit: Modifier
 template_delete: Supprimer
 template_name: Nom
-template_description: Description
 template_save: Sauvegarder le modèle
 template_edit_title: Modèle
 
@@ -119,5 +93,6 @@ delete_activity: Supprimer le lien avec l'activité
 
 no_templates: Il n'y a aucun modèle disponible.
 
-innova_path_name: Nom
-innova_path_description: Description
+path_name: Nom
+path_description: Description
+step_description: Description
