@@ -155,7 +155,7 @@ class StepManager
         $activity->setName($name);
         $activity->setTitle($name);
 
-        $description = $stepStructure->description ?: ' ';
+        $description = !empty($stepStructure->description) ? $stepStructure->description : ' ';
         $activity->setDescription($description);
 
         // Link resource if needed
