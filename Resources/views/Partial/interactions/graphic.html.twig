@@ -32,7 +32,7 @@
 
     </div>
 </div>
-<div id="Answer" style="position: relative;">
+<div id="Answer" class="form-group row" style="position: relative;">
 
     {% if src == 'edit' %}
         <img src="{{ asset(entity.document.url) }}" width="{{entity.width}}" height="{{entity.height}}" id="AnswerImage"/>
@@ -89,7 +89,7 @@
         </tr>
     </table>
 </div>
-            <br>
+            
 <div class="form-group"><a class="btn btn-default" id="addp" onClick="addAnswerZone('{{'noImgSelect' | trans}}');"><i class="fa fa-plus"></i>{{ 'addZoneAnswer' | trans }}</a></div>
 <div id="AlreadyPlacedArray" style="display:none;">
 
