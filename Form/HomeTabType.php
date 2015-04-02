@@ -66,6 +66,8 @@ class HomeTabType extends AbstractType
                         return $er->createQueryBuilder('r')
                             ->where('r.workspace IS NULL')
                             ->andWhere('r.type = 1')
+                            ->andWhere('r.name != :anonymousRole')
+                            ->setParameter('anonymousRole', 'ROLE_ANONYMOUS')
                             ->orderBy('r.translationKey', 'ASC');
                     },
                     'property' => 'translationKey',

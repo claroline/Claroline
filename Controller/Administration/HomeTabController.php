@@ -193,7 +193,7 @@ class HomeTabController extends Controller
         $this->checkOpen();
 
         $homeTabForm = $this->formFactory->create(
-            new HomeTabType(),
+            new HomeTabType(null, true),
             new HomeTab()
         );
         $homeTabConfigForm = $this->formFactory->create(
@@ -233,7 +233,7 @@ class HomeTabController extends Controller
         $homeTab = new HomeTab();
         $homeTabConfig = new HomeTabConfig();
         $homeTabForm = $this->formFactory->create(
-            new HomeTabType(),
+            new HomeTabType(null, true),
             $homeTab
         );
         $homeTabConfigForm = $this->formFactory->create(
