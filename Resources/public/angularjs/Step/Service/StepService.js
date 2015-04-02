@@ -41,7 +41,7 @@
                     var newStep = new Step(parentStep);
 
                     if (parentStep) {
-                        // Append new child to his parent
+                        // Append new child to its parent
                         if (!parentStep.children instanceof Array) {
                             parentStep.children = [];
                         }
@@ -49,40 +49,6 @@
                     }
 
                     return newStep;
-                },
-
-                /**
-                 * Search resource in path and replace it by a new one
-                 *
-                 * @param   {object} newResource
-                 * @returns {StepService}
-                 */
-                replaceResource: function (newResource) {
-                    if (null !== step && typeof step.resources !== 'undefined' && null !== step.resources) {
-                        for (var i = 0; i < step.resources.length; i++) {
-                            if (newResource.id === step.resources[i].id) {
-                                this.updateResource(oldResource, newResource);
-                                break;
-                            }
-                        }
-                    }
-
-                    return this;
-                },
-
-                /**
-                 * Update resource properties
-                 *
-                 * @param   {object} oldResource
-                 * @param   {object} newResource
-                 * @returns {StepService}
-                 */
-                updateResource: function (oldResource, newResource) {
-                    for (var prop in newResource) {
-                        oldResource[prop] = newResource[prop];
-                    }
-
-                    return this;
                 },
 
                 /**

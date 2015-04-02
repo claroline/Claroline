@@ -27,29 +27,16 @@
             </div>
         </div>
 
-        <div class="panel-group" id="accordion">
-            <!-- Description -->
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h4 class="panel-title">
-                        <a data-toggle="collapse" href="#panel-description">Description</a>
-                    </h4>
-                </div>
-                <div id="panel-description" class="panel-collapse collapse in">
-                    <div class="panel-body">
-                        <textarea data-ui-tinymce="tinymceOptions" class="form-control" name="step-description" data-ng-change="updateHistory()" data-ng-model="stepFormCtrl.step.description"></textarea>
-                    </div>
-                </div>
-            </div>
+        <!-- Description -->
+        <div class="panel panel-default" data-ng-include="stepFormCtrl.webDir + 'bundles/innovapath/angularjs/Step/Partial/step-description.html'"></div>
 
-            <!-- Primary resource -->
-            <div class="panel panel-default" data-ng-include="stepFormCtrl.webDir + 'bundles/innovapath/angularjs/Step/Partial/resources-primary.html'"></div>
+        <!-- Primary resource -->
+        <div class="panel panel-default" data-ng-include="stepFormCtrl.webDir + 'bundles/innovapath/angularjs/Step/Partial/step-resources-primary.html'"></div>
 
-            <!-- Secondary resources -->
-            <div class="panel panel-default" data-ng-include="stepFormCtrl.webDir + 'bundles/innovapath/angularjs/Step/Partial/resources-secondary.html'"></div>
+        <!-- Secondary resources -->
+        <div class="panel panel-default" data-ng-include="stepFormCtrl.webDir + 'bundles/innovapath/angularjs/Step/Partial/step-resources-secondary.html'"></div>
 
-            <!-- Properties -->
-            <div class="panel panel-default" data-ng-include="stepFormCtrl.webDir + 'bundles/innovapath/angularjs/Step/Partial/properties.html'"></div>
-        </div>
+        <!-- Properties -->
+        <div class="panel panel-default" data-ng-include="stepFormCtrl.webDir + 'bundles/innovapath/angularjs/Step/Partial/step-properties.html'"></div>
     </div>
 </div>

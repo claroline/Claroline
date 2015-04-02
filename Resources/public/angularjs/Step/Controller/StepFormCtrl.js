@@ -14,7 +14,15 @@
         function ($scope, $http, HistoryService, PathService, StepService, ResourceService) {
             this.webDir = EditorApp.webDir;
 
-            this.step = {};
+            this.step = null;
+
+            // Defines which panels of the form are collapsed or not
+            this.collapsedPanels = {
+                description       : false,
+                resourcePrimary   : false,
+                resourceSecondary : true,
+                properties        : true
+            };
 
             // Store resource icons
             $scope.resourceIcons = EditorApp.resourceIcons;
