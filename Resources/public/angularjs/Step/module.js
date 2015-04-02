@@ -6,6 +6,7 @@
 
     angular.module('StepModule', [
         'UtilsModule',
+        'FormModule',
         'HistoryModule',
         'PathModule',
         'ResourceModule'

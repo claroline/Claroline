@@ -1,0 +1,31 @@
+<div class="row">
+    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+        <div class="input-group">
+            <span class="input-group-addon">h</span>
+            <input class="form-control text-right" type="text" data-ng-model="hours" data-ng-change="correctDuration('hour')" size="1" />
+            <div class="btn-group-vertical" style="display: table-cell;">
+                <button data-ng-click="incrementDuration('hour')" type="button" class="btn btn-xs btn-default" style="font-size: 9px; border-top-left-radius: 0;">
+                    <span class="fa fa-chevron-up"></span>
+                </button>
+                <button data-ng-click="decrementDuration('hour')" type="button" class="btn btn-xs btn-default" style="font-size: 9px; border-bottom-left-radius: 0;">
+                    <span class="fa fa-chevron-down"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+        <div class="input-group">
+            <span class="input-group-addon">min</span>
+            <input class="form-control text-right" type="text" data-ng-model="minutes" data-ng-change="correctDuration('minute')" size="1" />
+            <div class="btn-group-vertical" style="display: table-cell">
+                <button data-ng-click="incrementDuration('minute')" type="button" class="btn btn-xs btn-default" style="font-size: 9px; border-top-left-radius: 0;">
+                    <span class="fa fa-chevron-up"></span>
+                </button>
+                <button data-ng-click="decrementDuration('minute')" type="button" class="btn btn-xs btn-default" style="font-size: 9px; border-bottom-left-radius: 0;">
+                    <span class="fa fa-chevron-down"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

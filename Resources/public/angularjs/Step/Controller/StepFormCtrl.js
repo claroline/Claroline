@@ -77,11 +77,10 @@
                                     }
 
                                     // Parameters
-                                    $scope.previewStep.withTutor       = data['withTutor'];
-                                    $scope.previewStep.who             = data['who'];
-                                    $scope.previewStep.where           = data['where'];
-                                    $scope.previewStep.durationHours   = data['durationHours'];
-                                    $scope.previewStep.durationMinutes = data['durationMinutes'];
+                                    $scope.previewStep.withTutor = data['withTutor'];
+                                    $scope.previewStep.who       = data['who'];
+                                    $scope.previewStep.where     = data['where'];
+                                    $scope.previewStep.duration  = data['duration'];
                                 }
                             });
                     }
@@ -161,7 +160,7 @@
             };
 
             // Tiny MCE options
-            $scope.tinymceOptions = {
+            this.tinymceOptions = {
                 relative_urls: false,
                 theme: 'modern',
                 language: EditorApp.locale,
@@ -187,84 +186,6 @@
                         }, false);
                     }
                 }
-            };
-
-            $scope.incrementDuration = function (type) {
-                if ('hour' === type) {
-                    if (typeof $scope.previewStep.durationHours === 'undefined' || null === $scope.previewStep.durationHours || $scope.previewStep.durationHours.length === 0) {
-                        $scope.previewStep.durationHours = 0;
-                    }
-
-                    $scope.previewStep.durationHours += 1;
-                }
-                else if ('minute' === type) {
-                    if (typeof $scope.previewStep.durationMinutes === 'undefined' || null === $scope.previewStep.durationMinutes || $scope.previewStep.durationMinutes.length === 0) {
-                        $scope.previewStep.durationMinutes = 0;
-                    }
-
-                    if ($scope.previewStep.durationMinutes + 5 < 60) {
-                        $scope.previewStep.durationMinutes += 5;
-                    }
-                }
-
-                // Update history
-                HistoryService.update($scope.path);
-            };
-
-            $scope.decrementDuration = function (type) {
-                if ('hour' === type) {
-                    if (typeof $scope.previewStep.durationHours === 'undefined' || null === $scope.previewStep.durationHours || $scope.previewStep.durationHours.length === 0) {
-                        $scope.previewStep.durationHours = 0;
-                    }
-
-                    if ($scope.previewStep.durationHours - 1 >= 0) { // Negative values are not allowed
-                        $scope.previewStep.durationHours -= 1;
-                    }
-                }
-                else if ('minute' === type) {
-                    if (typeof $scope.previewStep.durationMinutes === 'undefined' || null === $scope.previewStep.durationMinutes || $scope.previewStep.durationMinutes.length === 0) {
-                        $scope.previewStep.durationMinutes = 0;
-                    }
-
-                    if ($scope.previewStep.durationMinutes - 5 >= 0) { // Negative values are not allowed
-                        $scope.previewStep.durationMinutes -= 5;
-                    }
-                }
-
-                // Update history
-                HistoryService.update($scope.path);
-            };
-
-            $scope.correctDuration = function (type) {
-                // Don't allow negative value, so always return absolute value
-                if ('hour' === type) {
-                    if (typeof $scope.previewStep.durationHours === 'undefined' || null === $scope.previewStep.durationHours || $scope.previewStep.durationHours.length === 0) {
-                        $scope.previewStep.durationHours = 0;
-                    }
-
-                    $scope.previewStep.durationHours = Math.abs($scope.previewStep.durationHours);
-                }
-                else if ('minute' === type) {
-                    if (typeof $scope.previewStep.durationMinutes === 'undefined' || null === $scope.previewStep.durationMinutes || $scope.previewStep.durationMinutes.length === 0) {
-                        $scope.previewStep.durationMinutes = 0;
-                    }
-
-                    $scope.previewStep.durationMinutes = Math.abs($scope.previewStep.durationMinutes);
-
-                    // Don't allow more than 60 minutes
-                    var minutesToHours = Math.floor($scope.previewStep.durationMinutes / 60);
-                    if (minutesToHours > 0) {
-                        if (typeof $scope.previewStep.durationHours === 'undefined' || null === $scope.previewStep.durationHours || $scope.previewStep.durationHours.length === 0) {
-                            $scope.previewStep.durationHours = 0;
-                        }
-
-                        $scope.previewStep.durationHours += minutesToHours;
-                        $scope.previewStep.durationMinutes = $scope.previewStep.durationMinutes % 60;
-                    }
-                }
-
-                // Update history
-                HistoryService.update($scope.path);
             };
 
             /**
@@ -321,26 +242,26 @@
             };
 
             $scope.removePrimaryResource = function () {
-                $scope.previewStep.primaryResource = null;
+                this.step.primaryResource = null;
 
                 // Update history
-                HistoryService.update($scope.path);
+                /*HistoryService.update($scope.path);*/
             };
 
             $scope.showActivity = function () {
                 var activityRoute = Routing.generate('innova_path_show_activity', {
                     workspaceId: EditorApp.workspaceId,
-                    activityId: $scope.previewStep.activityId
+                    activityId:  this.step.activityId
                 });
 
                 window.open(activityRoute, '_blank');
             };
 
             $scope.deleteActivity = function () {
-                $scope.previewStep.activityId = null;
+                this.step.activityId = null;
 
                 // Update history
-                HistoryService.update($scope.path);
+                /*HistoryService.update($scope.path);*/
             };
         }
     ]);

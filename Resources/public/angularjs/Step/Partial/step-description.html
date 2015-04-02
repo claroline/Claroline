@@ -6,5 +6,5 @@
 </div>
 
 <div id="panel-description" data-ng-show="!stepFormCtrl.collapsedPanels.description">
-    <textarea data-ui-tinymce="tinymceOptions" class="form-control" name="step-description" data-ng-change="updateHistory()" data-ng-model="stepFormCtrl.step.description"></textarea>
+    <textarea data-ui-tinymce="stepFormCtrl.tinymceOptions" class="form-control" name="step-description" data-ng-change="updateHistory()" data-ng-model="stepFormCtrl.step.description"></textarea>
 </div>
