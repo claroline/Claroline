@@ -25,6 +25,8 @@ class InteractionQCMHandler extends \UJM\ExoBundle\Form\InteractionHandler
             }
 
             if ( $this->form->isValid() ) {
+//                var_dump($this->form->getData()->getInteraction()->getInteractionQCM());
+//                die();
                 $this->onSuccessAdd($this->form->getData());
 
                 return true;
