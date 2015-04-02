@@ -109,7 +109,7 @@ class BlogImporter extends Importer implements ConfigurationInterface
     function validate(array $data)
     {
         $processor = new Processor();
-        $result = $processor->processConfiguration($this, ['data' => $data]);
+        $result = $processor->processConfiguration($this, $data);
     }
 
     /**
