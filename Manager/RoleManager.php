@@ -931,4 +931,30 @@ class RoleManager
         $this->om->flush();
     }
 
+    public function associateWorkspaceRolesByImport(Workspace $workspace, array $datas)
+    {
+        $this->om->startFlushSuite();
+        $i = 1;
+
+        foreach ($datas as $data) {
+            $username = $data[0];
+            $roleName = $data[1];
+
+            $user = $this->userRepo->findOneUserByUsername($username);
+            $roles = $this->roleRepo->findRolesByWorkspaceCodeAndTranslationKey(
+                $workspace->getCode(),
+                $roleName
+            );
+
+            if (!is_null($user) && count ($roles) > 0) {
+                $this->associateRoles($user, $roles);
+            }
+
+            if ($i % 100 === 0) {
+                $this->om->forceFlush();
+            }
+            $i++;
+        }
+        $this->om->endFlushSuite();
+    }
 }
