@@ -131,7 +131,7 @@ class MailManager
      *
      * @return boolean
      */
-    public function send($subject, $body, array $users, $from = null)
+    public function send($subject, $body, array $users, $from = null, array $extra = array())
     {
         if ($this->isMailerAvailable()) {
             $to = [];
@@ -158,11 +158,18 @@ class MailManager
             }
 
             foreach ($users as $user) {
-
                 $mail = $user->getMail();
 
                 if (filter_var($mail, FILTER_VALIDATE_EMAIL)) {
                     $to[] = $mail;
+                }
+            }
+
+            if (isset($extra['to'])) {
+                foreach ($extra['to'] as $mail) {
+                    if (filter_var($mail, FILTER_VALIDATE_EMAIL)) {
+                        $to[] = $mail;
+                    }
                 }
             }
 

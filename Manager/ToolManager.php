@@ -901,63 +901,84 @@ class ToolManager
         $this->om->flush();
     }
 
-    public function updateDesktopOrderedToolOrder(
+    public function reorderDesktopOrderedTool(
+        User $user,
         OrderedTool $orderedTool,
-        $newOrder,
-        $type = 0,
-        $executeQuery = true
+        $nextOrderedToolId,
+        $type = 0
     )
     {
-        $order = $orderedTool->getOrder();
+        $orderedTools = $this->getConfigurableDesktopOrderedToolsByUser(
+            $user,
+            array(),
+            $type
+        );
+        $nextId = intval($nextOrderedToolId);
+        $order = 1;
+        $updated = false;
 
-        if ($newOrder < $order) {
-            $this->orderedToolRepo->incDesktopOrderedToolOrderForRange(
-                $orderedTool->getUser(),
-                $newOrder,
-                $order,
-                $type,
-                $executeQuery
-            );
-        } else {
-            $this->orderedToolRepo->decDesktopOrderedToolOrderForRange(
-                $orderedTool->getUser(),
-                $order,
-                $newOrder,
-                $type,
-                $executeQuery
-            );
+        foreach ($orderedTools as $ot) {
+
+            if ($ot === $orderedTool) {
+                continue;
+            } elseif ($ot->getId() === $nextId) {
+                $orderedTool->setOrder($order);
+                $updated = true;
+                $this->om->persist($orderedTool);
+                $order++;
+                $ot->setOrder($order);
+                $this->om->persist($ot);
+                $order++;
+
+            } else {
+                $ot->setOrder($order);
+                $this->om->persist($ot);
+                $order++;
+            }
         }
-        $orderedTool->setOrder($newOrder);
-        $this->om->persist($orderedTool);
+
+        if (!$updated) {
+            $orderedTool->setOrder($order);
+            $this->om->persist($orderedTool);
+        }
         $this->om->flush();
     }
 
-    public function updateOrderedToolOrderForAdmin(
+    public function reorderAdminOrderedTool(
         OrderedTool $orderedTool,
-        $newOrder,
-        $type = 0,
-        $executeQuery = true
+        $nextOrderedToolId,
+        $type = 0
     )
     {
-        $order = $orderedTool->getOrder();
+        $orderedTools = $this->getConfigurableDesktopOrderedToolsByTypeForAdmin($type);
+        $nextId = intval($nextOrderedToolId);
+        $order = 1;
+        $updated = false;
 
-        if ($newOrder < $order) {
-            $this->orderedToolRepo->incOrderedToolOrderForRangeForAdmin(
-                $newOrder,
-                $order,
-                $type,
-                $executeQuery
-            );
-        } else {
-            $this->orderedToolRepo->decOrderedToolOrderForRangeForAdmin(
-                $order,
-                $newOrder,
-                $type,
-                $executeQuery
-            );
+        foreach ($orderedTools as $ot) {
+
+            if ($ot === $orderedTool) {
+                continue;
+            } elseif ($ot->getId() === $nextId) {
+                $orderedTool->setOrder($order);
+                $updated = true;
+                $this->om->persist($orderedTool);
+                $order++;
+                $ot->setOrder($order);
+                $this->om->persist($ot);
+                $order++;
+
+            } else {
+                $ot->setOrder($order);
+                $this->om->persist($ot);
+                $order++;
+            }
         }
-        $orderedTool->setOrder($newOrder);
-        $this->om->persist($orderedTool);
+
+        if (!$updated) {
+            $orderedTool->setOrder($order);
+            $this->om->persist($orderedTool);
+        }
         $this->om->flush();
     }
 

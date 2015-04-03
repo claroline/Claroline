@@ -25,7 +25,7 @@ class LoadToolsData implements RequiredFixture
     {
         $tools = array(
             array('home', 'home', false, false, true, true, true, false, false, false, false),
-            array('parameters', 'cog', false, false, true, true, false, false, false, true, true),
+            array('parameters', 'cogs', false, false, true, true, false, false, false, true, true),
             array('resource_manager', 'folder-open', false, false, true, true, true, true, false, false, false),
             array('agenda', 'calendar', false, false, true, true, false, false, false, false, false),
             array('logs', 'list', false, false, true, false, false, false, false, false, true),
