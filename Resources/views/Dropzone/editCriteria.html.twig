@@ -38,7 +38,7 @@
             {{ form_errors(form.correctionInstruction) }}
         </div>
     </div>
-    <h3>{{ 'Evaluation Criteria'|trans({}, 'innova_collecticiel') }}</h3>
+    <h3>{{ 'Evaluation Criteria Innova'|trans({}, 'innova_collecticiel') }}</h3>
     {% if nbCorrection > 0 %}
         <div class="alert alert-warning">
             <h4> {{ 'Warning'|trans({}, 'innova_collecticiel') }}</h4>
@@ -53,7 +53,7 @@
         <div class="col-md-8">
             <a href="{{ path('innova_collecticiel_edit_add_criterion', {'resourceId': dropzone.id, 'page': pager.currentPage}) }}"
                class="btn btn-primary add-criterion-button disabled-during-edition"><span
-                        class="fa fa-plus "> {{ 'Add a criterion'|trans({}, 'innova_collecticiel') }}</span></a>
+                        class="fa fa-plus "> {{ 'Add a criterion Innova'|trans({}, 'innova_collecticiel') }}</span></a>
             {# <a href="{{ path('innova_collecticiel_recalculate_dropzone_grades', {'dropzone': dropzone.id}) }}"
                 class="btn btn-default disabled-during-edition" data-toggle="tooltip" data-placement="left"
                 data-container="body"
