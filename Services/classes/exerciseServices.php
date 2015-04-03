@@ -3,12 +3,12 @@
 namespace UJM\ExoBundle\Services\classes;
 
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
-use Icap\BadgeBundle\Entity\Badge;
-use Icap\BadgeBundle\Entity\BadgeClaim;
-use Icap\BadgeBundle\Entity\BadgeCollection;
-use Icap\BadgeBundle\Entity\BadgeRule;
-use Icap\BadgeBundle\Entity\BadgeTranslation;
-use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
+use Claroline\CoreBundle\Entity\Badge\Badge;
+use Claroline\CoreBundle\Entity\Badge\BadgeClaim;
+use Claroline\CoreBundle\Entity\Badge\BadgeCollection;
+use Claroline\CoreBundle\Entity\Badge\BadgeRule;
+use Claroline\CoreBundle\Entity\Badge\BadgeTranslation;
+use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity\SoftDeleteableEntity;
 
 use Doctrine\Bundle\DoctrineBundle\Registry;
 
@@ -51,7 +51,7 @@ class exerciseServices
      *
      * @access public
      *
-     * @return IP Client
+     * Return IP Client
      */
     public function getIP()
     {
@@ -75,7 +75,7 @@ class exerciseServices
      * @param \Symfony\Component\HttpFoundation\Request $request
      * @param integer $paperID id Paper or 0 if it's just a question test and not a paper
      *
-     * @return array
+     * Return array
      */
     public function responseQCM($request, $paperID = 0)
     {
@@ -138,11 +138,11 @@ class exerciseServices
      * @access public
      *
      * @param \UJM\ExoBundle\Entity\InteractionQCM $interQCM
-     * @param integer[] $response array of id Choice selected
-     * @param Choice[] $allChoices choices linked at the QCM
+     * @param array[integer] $response array of id Choice selected
+     * @param array[Choice] $allChoices choices linked at the QCM
      * @param float $penality penalty if the user showed hints
      *
-     * @return string userScore/scoreMax
+     * Return string userScore/scoreMax
      */
     public function qcmMark(\UJM\ExoBundle\Entity\InteractionQCM $interQCM, array $response, $allChoices, $penality)
     {
@@ -198,7 +198,7 @@ class exerciseServices
     }
 
     /**
-     * @return the number of papers for an exercise and for an user
+     * Return the number of papers for an exercise and for an user
      *
      * @access public
      *
@@ -206,7 +206,7 @@ class exerciseServices
      * @param integer $exoId id Exercise
      * @param boolean $finished to count or no paper n o finished
      *
-     * @return integer
+     * Return integer
      */
     public function getNbPaper($uid, $exoID, $finished = false)
     {
@@ -226,7 +226,7 @@ class exerciseServices
      * @param \Symfony\Component\HttpFoundation\Request $request
      * @param integer $paperID id Paper or 0 if it's just a question test and not a paper
      *
-     * @return array
+     * Return array
      */
     public function responseGraphic($request, $paperID = 0)
     {
@@ -331,7 +331,7 @@ class exerciseServices
      * @param \Symfony\Component\HttpFoundation\Request $request
      * @param integer $paperID id Paper or 0 if it's just a question test and not a paper
      *
-     * @return array
+     * Return array
      */
     public function responseOpen($request, $paperID = 0)
     {
@@ -394,7 +394,7 @@ class exerciseServices
      * @param \Symfony\Component\HttpFoundation\Request $request
      * @param integer $paperID id Paper or 0 if it's just a question test and not a paper
      *
-     * @return array
+     * Return array
      */
     public function responseHole($request, $paperID = 0)
     {
@@ -468,7 +468,7 @@ class exerciseServices
      * @param \Symfony\Component\HttpFoundation\Request $request
      * @param float $penality penalty if the user showed hints
      *
-     * @return string userScore/scoreMax
+     * Return string userScore/scoreMax
      */
     public function holeMark($interHole, $request, $penalty)
     {
@@ -512,7 +512,7 @@ class exerciseServices
      *
      * @param \UJM\ExoBundle\Entity\Paper\InteractionHole $interHole
      *
-     * @return float
+     * Return float
      */
     public function holeMaxScore($interHole) {
         $scoreMax = 0;
@@ -538,7 +538,7 @@ class exerciseServices
      * @param \Symfony\Component\HttpFoundation\Request $request
      * @param integer $paperID id Paper or 0 if it's just a question test and not a paper
      *
-     * @return array
+     * Return array
      */
     public function responseMatching($request, $paperID = 0)
     {
@@ -591,7 +591,7 @@ class exerciseServices
      * @param String $response
      * @param \UJM\ExoBundle\Entity\Paper\InteractionMatching $interMatching
      *
-     * @return array of arrays
+     * Return array of arrays
      */
     function initTabResponseMatching($response, $interMatching) {
 
@@ -622,7 +622,7 @@ class exerciseServices
      *
      * @param \UJM\ExoBundle\Entity\Paper\InteractionMatching $interMatching
      *
-     * @return array
+     * Return array
      */
     function initTabRightResponse($interMatching) {
         $tabRightResponse = array();
@@ -682,7 +682,7 @@ class exerciseServices
      * @param array $tabRightResponse
      * @param array $tabResponseIndex
      *
-     * @return string userScore/scoreMax
+     * Return string userScore/scoreMax
      */
     public function matchingMark(\UJM\ExoBundle\Entity\InteractionMatching $interMatching, $penalty, $tabRightResponse, $tabResponseIndex)
     {
@@ -726,7 +726,7 @@ class exerciseServices
      * @param array $verif list of the student's placed answers zone
      * @param integer $z number of rights placed answers by the user
      *
-     * @return boolean
+     * Return boolean
      */
     public function alreadyDone($coor, $verif, $z)
     {
@@ -752,7 +752,7 @@ class exerciseServices
      *
      * @param integer $exoID id Exercise
      *
-     * @return float
+     * Return float
      */
     public function getExerciseTotalScore($exoID)
     {
@@ -820,7 +820,7 @@ class exerciseServices
      *
      * @param integer $paperID id Paper
      *
-     * @return float
+     * Return float
      */
     public function getExercisePaperTotalScore($paperID)
     {
@@ -889,7 +889,7 @@ class exerciseServices
      *
      * @param \UJM\ExoBundle\Entity\Paper\InteractionQCM $interQCM
      *
-     * @return float
+     * Return float
      */
     public function qcmMaxScore($interQCM)
     {
@@ -920,7 +920,7 @@ class exerciseServices
      *
      * @param \UJM\ExoBundle\Entity\Paper\InteractionGraphic $interGraphic
      *
-     * @return float
+     * Return float
      */
     public function graphicMaxScore($interGraphic)
     {
@@ -950,7 +950,7 @@ class exerciseServices
      *
      * @param \UJM\ExoBundle\Entity\Paper\InteractionOpen $interOpen
      *
-     * @return float
+     * Return float
      */
     public function openMaxScore($interOpen)
     {
@@ -975,7 +975,7 @@ class exerciseServices
      *
      * @param \UJM\ExoBundle\Entity\Paper\InteractionMatching $interMatching
      *
-     * @return float
+     * Return float
      */
     public function matchingMaxScore($interMatching)
     {
@@ -1019,7 +1019,7 @@ class exerciseServices
      *
      * @param float $toBeAdjusted
      *
-     * @return float
+     * Return float
      */
     public function roundUpDown($toBeAdjusted)
     {
@@ -1033,7 +1033,7 @@ class exerciseServices
      *
      * @param \UJM\ExoBundle\Entity\Paper\Exercise $exercise
      *
-     * @return boolean
+     * Return boolean
      */
     public function isExerciseAdmin($exercise)
     {
@@ -1052,7 +1052,7 @@ class exerciseServices
      *
      * @param \UJM\ExoBundle\Entity\Paper\paper $paper
      *
-     * @return array
+     * Return array
      */
     public function getInfosPaper($paper)
     {
@@ -1104,7 +1104,7 @@ class exerciseServices
      * @param integer $userId id User
      * @param integer $exoId id Exercise
      *
-     * @return array
+     * Return array
      */
     public function getScoresUser($userId, $exoId)
     {
@@ -1135,7 +1135,7 @@ class exerciseServices
      *
      * @param integer $questionID id Question
      *
-     * @return array
+     * Return array
      */
     public function controlUserSharedQuestion($questionID)
     {
@@ -1154,7 +1154,7 @@ class exerciseServices
      *
      * @access public
      *
-     * @param \UJM\ExoBundle\Entity\Paper $paper
+     * @param \UJM\ExoBundle\Entity\Paper\paper $paper
      *
      */
     public function manageEndOfExercise(Paper $paper)
@@ -1172,7 +1172,7 @@ class exerciseServices
      *
      * @access public
      *
-     * @return integer[]
+     * Return array[boolean]
      */
     public function getLinkedCategories()
     {
@@ -1209,7 +1209,7 @@ class exerciseServices
      * @param \UJM\ExoBundle\Entity\User $user
      * @param boolean $exoAdmin
      *
-     * @return boolean
+     * Return boolean
      */
     public function controlMaxAttemps($exercise, $user, $exoAdmin)
     {
@@ -1231,7 +1231,7 @@ class exerciseServices
      * @param boolean $exoAdmin
      * @param \UJM\ExoBundle\Entity\Exercise $exercise
      *
-     * @return boolean
+     * Return boolean
      */
     public function controlDate($exoAdmin, $exercise)
     {
@@ -1255,18 +1255,18 @@ class exerciseServices
      *
      * @param integer $resourceId id Claroline Resource
      *
-     * @return \Icap\BadgeBundle\Entity\Badge[]
+     * Return array[\Claroline\CoreBundle\Entity\Badge\Badge]
      */
     public function getBadgeLinked($resourceId)
     {
         /*$badges = array();
         $em = $this->doctrine->getManager();
-        $badgesRules = $em->getRepository('IcapBadgeBundle:BadgeRule')
+        $badgesRules = $em->getRepository('ClarolineCoreBundle:Badge\BadgeRule')
                           ->findBy(array('resource' => $resourceId));
 
         foreach ($badgesRules as $br) {
 
-            $badgesSearch = $em->getRepository('IcapBadgeBundle:Badge')
+            $badgesSearch = $em->getRepository('ClarolineCoreBundle:Badge\Badge')
                                ->findByNameAndLocale('BadgeExercice2', 'fr');
 
             foreach($badgesSearch as $badge) {
@@ -1279,11 +1279,11 @@ class exerciseServices
 
         $badges = array();
         $em = $this->doctrine->getManager();
-        $badgesRules = $em->getRepository('IcapBadgeBundle:BadgeRule')
+        $badgesRules = $em->getRepository('ClarolineCoreBundle:Badge\BadgeRule')
                           ->findBy(array('resource' => $resourceId));
 
         foreach ($badgesRules as $br) {
-            $badge = $em->getRepository('IcapBadgeBundle:Badge')
+            $badge = $em->getRepository('ClarolineCoreBundle:Badge\Badge')
                           ->findBy(array('id' => $br->getAssociatedBadge(), 'deletedAt' => null));
             if($badge) {
                 $badges[] = $br->getAssociatedBadge();
@@ -1303,7 +1303,7 @@ class exerciseServices
      * @param integer $resourceId id Claroline Resource
      * @param String $locale given by container->getParameter('locale') FR, EN ....
      *
-     * @return \Icap\BadgeBundle\Entity\Badge[]
+     * Return array[\Claroline\CoreBundle\Entity\Badge\Badge]
      */
     public function badgesInfoUser($userId, $resourceId, $locale)
     {
@@ -1314,19 +1314,19 @@ class exerciseServices
         $exoBadges = $this->getBadgeLinked($resourceId);
         foreach($exoBadges as $badge) {
             //if ($badge->getDeletedAt() == '') {
-                $brs = $em->getRepository('IcapBadgeBundle:BadgeRule')
+                $brs = $em->getRepository('ClarolineCoreBundle:Badge\BadgeRule')
                           ->findBy(array(
                               'associatedBadge' => $badge->getId()
                        ));
                 if (count($brs) == 1) {
-                    $trans = $em->getRepository('IcapBadgeBundle:BadgeTranslation')
+                    $trans = $em->getRepository('ClarolineCoreBundle:Badge\BadgeTranslation')
                                 ->findOneBy(array(
                                     'badge'  => $badge->getId(),
                                     'locale' => $locale
                              ));
                     $badgesInfoUser[$i]['badgeName'] = $trans->getName();
 
-                    $userBadge = $em->getRepository('IcapBadgeBundle:UserBadge')
+                    $userBadge = $em->getRepository('ClarolineCoreBundle:Badge\UserBadge')
                                     ->findOneBy(array(
                                         'user'  => $userId,
                                         'badge' => $badge->getId()
@@ -1355,7 +1355,7 @@ class exerciseServices
      * @param integer $userID id User
      * @param Doctrine EntityManager $em
      *
-     * @return array
+     * Return array
      */
     public function getActionsAllQuestions($listInteractions, $userID, $em)
     {
@@ -1407,7 +1407,7 @@ class exerciseServices
      * @param Doctrine EntityManager $em
      * @param \UJM\ExoBundle\Entity\Interaction $interaction
      *
-     * @return array
+     * Return array
      */
     public function getActionInteraction($em, $interaction)
     {
@@ -1441,7 +1441,7 @@ class exerciseServices
      * @param Doctrine EntityManager $em
      * @param \UJM\ExoBundle\Entity\Share $shared
      *
-     * @return array
+     * Return array
      */
     public function getActionShared($em, $shared)
     {
@@ -1472,7 +1472,7 @@ class exerciseServices
      *
      * @access public
      *
-     * @return array
+     * Return array
      */
     public function getTypeQCM()
     {
@@ -1494,7 +1494,7 @@ class exerciseServices
      *
      * @access public
      *
-     * @return array
+     * Return array
      */
     public function getTypeOpen()
     {
@@ -1516,7 +1516,7 @@ class exerciseServices
      *
      * @access public
      *
-     * @return array
+     * Return array
      */
     public function getTypeMatching()
     {
@@ -1541,7 +1541,7 @@ class exerciseServices
      * @param \UJM\ExoBundle\Entity\Interaction $interaction
      * @param integer $paperID id Paper
      *
-     * @return array
+     * Return array
      */
     private function getPenalty($interaction, $paperID)
     {
@@ -1577,7 +1577,7 @@ class exerciseServices
      * @param Collection of \UJM\ExoBundle\Entity\Interaction $interactions
      * @param String $order
      *
-     * @return Interaction[]
+     * Return array[Interaction]
      */
     private function orderInteractions($interactions, $order)
     {
@@ -1606,7 +1606,7 @@ class exerciseServices
      * @param Collection of \UJM\ExoBundle\Entity\Response $responses
      * @param String $order
      *
-     * @return Interaction[]
+     * Return array[Interaction]
      */
     private function orderResponses($responses, $order)
     {
