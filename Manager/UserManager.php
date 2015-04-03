@@ -886,7 +886,7 @@ class UserManager
      *
      * @return User
      */
-    public function getResetPasswordHash($resetPassword)
+    public function getByResetPasswordHash($resetPassword)
     {
         return $this->userRepo->findOneByResetPasswordHash($resetPassword);
     }
@@ -1168,7 +1168,7 @@ class UserManager
 
         return false;
     }
-    
+
     public function countByRoles(array $roles, $includeGrps = true)
     {
         return $this->userRepo->countByRoles($roles, $includeGrps);

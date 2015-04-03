@@ -134,7 +134,7 @@ class DesktopConfigurationController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/tools/order/update/ordered/tool/{orderedTool}/with/{otherOrderedTool}/mode/{mode}/type/{type}",
+     *     "/tools/order/update/admin/ordered/tool/{orderedTool}/type/{type}/next/{nextOrderedToolId}",
      *     name="claro_admin_desktop_update_ordered_tool_order",
      *     defaults={"type"=0},
      *     options={"expose"=true}
@@ -142,55 +142,28 @@ class DesktopConfigurationController extends Controller
      * @EXT\ParamConverter("user", options={"authenticatedUser"=true})
      *
      * @param OrderedTool $orderedTool
-     * @param OrderedTool $otherOrderedTool
-     * @param string $mode
      * @param int type
+     * @param int nextOrderedToolId
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function updateOrderedToolOrderAction(
         OrderedTool $orderedTool,
-        OrderedTool $otherOrderedTool,
-        $mode,
+        $nextOrderedToolId,
         $type = 0
     )
     {
         $this->checkOpen();
 
-        if (is_null($orderedTool->getUser()) &&
-            is_null($otherOrderedTool->getWorkspace()) &&
-            $orderedTool->getType() === intval($type) &&
-            $otherOrderedTool->getType() === intval($type)) {
+        if (is_null($orderedTool->getUser()) && $orderedTool->getType() === intval($type)) {
 
-            $order = $orderedTool->getOrder();
-            $otherOrder = $otherOrderedTool->getOrder();
-
-            if ($mode === 'previous') {
-
-                if ($otherOrder > $order) {
-                    $newOrder = $otherOrder;
-                } else {
-                    $newOrder = $otherOrder + 1;
-                }
-            } elseif ($mode === 'next') {
-
-                if ($otherOrder > $order) {
-                    $newOrder = $otherOrder - 1;
-                } else {
-                    $newOrder = $otherOrder;
-                }
-            } else {
-
-                return new Response('Bad Request', 400);
-            }
-
-            $this->toolManager->updateOrderedToolOrderForAdmin(
+            $this->toolManager->reorderAdminOrderedTool(
                 $orderedTool,
-                $newOrder,
+                $nextOrderedToolId,
                 $type
             );
 
-            return new Response('success', 204);
+            return new Response('success', 200);
         } else {
 
             throw new AccessDeniedException();
