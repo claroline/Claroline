@@ -241,7 +241,7 @@ class AuthenticationController
      */
     public function resetPasswordAction($hash)
     {
-        $user = $this->userManager->getResetPasswordHash($hash);
+        $user = $this->userManager->getByResetPasswordHash($hash);
 
         if (empty($user)) {
             return array(
