@@ -80,10 +80,14 @@ class matchingExport extends qtiExport
         } else {
             $maxAssociation = $i;
         }
+        if($this->interactionmatching->getShuffle() == 1 ) {
+            $shuffle = "true";
+        } else {
+            $shuffle = "false";
+        }
         $this->matchInteraction = $this->document->CreateElement('matchInteraction');
         $this->matchInteraction->setAttribute("directedPair", "RESPONSE");
-        //shuffle always false because no implements
-        $this->matchInteraction->setAttribute("shuffle", "false");
+        $this->matchInteraction->setAttribute("shuffle", $shuffle);
         $this->matchInteraction->setAttribute("maxAssociation", $maxAssociation);
         $this->itemBody->appendChild($this->matchInteraction);
 
@@ -147,10 +151,17 @@ class matchingExport extends qtiExport
         } else {
             $maxAssociation = 1;
         }
+        
+        if ($proposal->getPositionForce() == 1) {
+            $positionForced = 'true';
+        } else {
+            $positionForced = 'false';
+        }
 
         $simpleProposal = $this->document->CreateElement('simpleAssociableChoice');
 
         $simpleProposal->setAttribute("identifier", "left".$numberProposal);
+        $simpleProposal->setAttribute("fixed", $positionForced);
         $simpleProposal->setAttribute("matchMax", $maxAssociation);
 
         $this->matchInteraction->appendChild($simpleProposal);
@@ -197,10 +208,17 @@ class matchingExport extends qtiExport
         } else {
             $maxAssociation = 1;
         }
+        
+        if ($label->getPositionForce() == 1) {
+            $positionForced = 'true';
+        } else {
+            $positionForced = 'false';
+        }
 
         $simpleLabel = $this->document->CreateElement('simpleAssociableChoice');
 
         $simpleLabel->setAttribute("identifier", "right".$numberLabel);
+        $simpleLabel->setAttribute("fixed", $positionForced);
         $simpleLabel->setAttribute("matchMax", $maxAssociation);
 
         $this->matchInteraction->appendChild($simpleLabel);

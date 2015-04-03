@@ -23,6 +23,13 @@ class InteractionMatching
     private $id;
 
     /**
+     * @var boolean $shuffle
+     *
+     * @ORM\Column(name="shuffle", type="boolean", nullable=true)
+     */
+    private $shuffle;
+
+    /**
      * @ORM\OneToMany(targetEntity="UJM\ExoBundle\Entity\Label", mappedBy="interactionMatching", cascade={"remove"})
      */
     private $labels;
@@ -60,6 +67,24 @@ class InteractionMatching
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Set shuffle
+     *
+     * @param boolean $shuffle
+     */
+    public function setShuffle($shuffle)
+    {
+        $this->shuffle = $shuffle;
+    }
+
+    /**
+     * Get shuffle
+     */
+    public function getShuffle()
+    {
+        return $this->shuffle;
     }
 
     public function getInteraction()
@@ -164,5 +189,119 @@ class InteractionMatching
             }
             $this->proposals = $newProposals;
         }
+    }
+
+    public function shuffleProposals ()
+    {
+        $this->sortProposals();
+        $i = 0;
+        $tabShuffle = array();
+        $tabFixed   = array();
+        $proposals = new \Doctrine\Common\Collections\ArrayCollection;
+        $proposalCount = count($this->proposals);
+
+        while ( $i < $proposalCount ) {
+            if ( $this->proposals[$i]->getPositionForce() === false ) {
+                $tabShuffle[$i] = $i;
+                $tabFixed[] = -1;
+            } else {
+                $tabFixed[] = $i;
+            }
+            $i++;
+        }
+
+        shuffle($tabShuffle);
+
+        $i = 0;
+        $proposalCount = count($this->proposals);
+
+        while ( $i < $proposalCount ) {
+            if ( $tabFixed[$i] != -1 ) {
+                $proposals [] = $this->proposals[$i];
+            } else {
+                $index = $tabShuffle[0];
+                $proposals[] = $this->proposals[$index];
+                unset($tabShuffle[0]);
+                $tabShuffle = array_merge($tabShuffle);
+            }
+            $i++;
+        }
+        $this->proposals = $proposals;
+    }
+
+    public function sortProposals()
+    {
+        $tab = array();
+        $proposals = new \Doctrine\Common\Collections\ArrayCollection;
+
+        foreach ($this->proposals as $proposal) {
+            $tab[] = $proposal->getOrdre();
+        }
+
+        asort($tab);
+
+        foreach (array_keys($tab) as $indice) {
+            $proposals[] = $this->proposals[$indice];
+        }
+
+        $this->proposals = $proposals;
+    }
+
+    public function shuffleLabels ()
+    {
+        $this->sortLabels();
+
+        $i = 0;
+        $tabShuffle = array();
+        $tabFixed   = array();
+        $labels = new \Doctrine\Common\Collections\ArrayCollection;
+        $labelCount = count($this->labels);
+
+        while ( $i < $labelCount ) {
+            if ( $this->labels[$i]->getPositionForce() === false ) {
+                $tabShuffle[$i] = $i;
+                $tabFixed[] = -1;
+            } else {
+                $tabFixed[] = $i;
+            }
+            $i++;
+        }
+
+        $i = 0;
+        $labelCount = count($this->labels);
+
+        shuffle($tabShuffle);
+
+        while ( $i < $labelCount ) {
+          if ($tabFixed[$i] != -1) {
+                $labels [] = $this->labels[$i];
+            } else {
+                $index = $tabShuffle[0];
+                $labels[] = $this->labels[$index];
+                unset($tabShuffle[0]);
+                $tabShuffle = array_merge($tabShuffle);
+            }
+            $i++;
+        }
+
+        $this->labels = $labels;
+    }
+
+    public function sortLabels ()
+    {
+        $tab = array();
+        $labels = new \Doctrine\Common\Collections\ArrayCollection;
+
+        foreach ($this->labels as $label ) {
+            $tab[] = $label->getOrdre();
+        }
+
+        asort($tab);
+
+        foreach (array_keys($tab) as $indice) {
+            $labels[] = $this->labels[$indice];
+        }
+
+        $this->labels = $labels;
     }
 }

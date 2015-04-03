@@ -27,6 +27,20 @@ class Proposal
      * @ORM\Column(name="value", type="text")
      */
     private $value;
+    
+    /**
+     * @var boolean $positionForce
+     *
+     * @ORM\Column(name="position_force", type="boolean", nullable=true)
+     */
+    private $positionForce;
+    
+     /**
+     * @var integer $ordre
+     *
+     * @ORM\Column(name="ordre", type="integer")
+     */
+    private $ordre;
 
     /**
      * @ORM\ManyToOne(targetEntity="UJM\ExoBundle\Entity\InteractionMatching", inversedBy="proposals")
@@ -116,6 +130,44 @@ class Proposal
     public function removeAssociatedLabel()
     {
         $this->associatedLabel = NULL;
+    }
+    
+    /**
+     * Set positionForce
+     *
+     * @param boolean $positionForce
+     */
+    public function setPositionForce($positionForce)
+    {
+        $this->positionForce = $positionForce;
+    }
+
+    /**
+     * Get positionForce
+     */
+    public function getPositionForce()
+    {
+        return $this->positionForce;
+    }
+    
+    /**
+     * Set ordre
+     *
+     * @param integer $ordre
+     */
+    public function setOrdre($ordre)
+    {
+        $this->ordre = $ordre;
+    }
+
+    /**
+     * Get ordre
+     *
+     * @return integer
+     */
+    public function getOrdre()
+    {
+        return $this->ordre;
     }
 
 }

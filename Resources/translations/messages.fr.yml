@@ -113,12 +113,10 @@ date: Date
 delDocQuestion: Supprimer ce document ainsi que toutes les questions qui y sont liées
 delete: Supprimer
 delete document: Suppression de document
-deleteLabel: Supprimer le label
 delete hole: Supprimer le blanc
 delete of my bank: Supprimer de ma banque
 delete of my exercise: Supprimer de mon exercice
 delete papers: Supprimer les copies
-deleteProposal: Supprimer la proposition
 description: Description
 displayAllList: Afficher la liste complète
 display all on this page: Tout afficher sur cette page
@@ -271,6 +269,7 @@ noDocFound: Pas de document trouvé
 noFinish: Non terminé
 noHintShow: Indices non vus, pas de pénalité
 noImg: Vous devez télécharger une image
+no label: Pas de labels associés
 noOne: Aucune
 noPaperFound: Aucune copie
 noQuestion: Vous ne posez aucune question
@@ -479,6 +478,8 @@ Hint.value: Indice
 Interaction.feedback: Commentaire à afficher avec la correction (facultatif)
 Interaction.invite: Question
 
+Inter_Matching.shuffle: Ordre des propositions et des labels aléatoire
+
 Inter_Open.ScoreMaxLongResp: Points pour la bonne réponse
 
 Inter_QCM.ScoreRightResponse: Points pour la bonne réponse
@@ -493,6 +494,7 @@ Inter_Hole.size: Taille
 
 Label.value : Valeur
 Label.scoreRight: Score de la question
+Label.positionForce: Forcer cette position
 
 LockAttempte.date: Date
 
@@ -505,6 +507,7 @@ Planning.start_time: Date de début
 Points: Points
 
 Proposal.value: Réponse
+Proposal.positionForce: Forcer cette position
 
 Question_creation: Création d'une question
 Question.description: Description de la question (facultatif)

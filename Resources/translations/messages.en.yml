@@ -113,12 +113,10 @@ date: Date
 delDocQuestion: Delete this document and all the linked questions
 delete: Delete
 delete document: Deletion of document
-deleteLabel: Delete the label
 delete hole: Delete the hole
 delete of my bank: Delete of my bank
 delete of my exercise: Delete of my exercise
 delete papers: Delete the papers
-deleteProposal: Supprimer la proposition
 description: Description
 displayAllList: Display the whole list
 display all on this page: Display all on this page
@@ -271,6 +269,7 @@ noFinish: No finished
 noDocFound: No document found
 noHintShow: Hints not seen, no penalty
 noImg: You must upload a picture
+no label: No labels associated
 noOne: None
 noPaperFound: No paper found
 noQuestion: You ask for nothing
@@ -479,6 +478,8 @@ Hint.value: Hint
 Interaction.feedback: Feedback to display with the correction (optional)
 Interaction.invite: Question
 
+Inter_Matching.shuffle: Order of random selection
+
 Inter_Open.ScoreMaxLongResp: Points for correct answer
 
 Inter_QCM.ScoreRightResponse: Points for correct answer
@@ -493,6 +494,7 @@ Inter_Hole.size: Size
 
 Label.value : Value
 Label.scoreRight: Score of question
+Label.positionForce: Forced position
 
 LockAttempte.date: Date
 
@@ -505,6 +507,7 @@ Planning.start_time: Start date
 Points: Points
 
 Proposal.value: Response
+Proposal.positionForce: Forced position
 
 Question_creation: Question creation
 Question.description: Description of the question (optional)
