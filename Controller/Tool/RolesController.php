@@ -110,7 +110,7 @@ class RolesController extends Controller
      */
     public function configureRolePageAction(Workspace $workspace)
     {
-        $this->checkAccess($workspace);
+        $this->checkEditionAccess($workspace);
         $roles = $this->roleManager->getRolesByWorkspace($workspace);
 
         return array('workspace' => $workspace, 'roles' => $roles);
@@ -125,7 +125,7 @@ class RolesController extends Controller
      */
     public function createRoleFormAction(Workspace $workspace)
     {
-        $this->checkAccess($workspace);
+        $this->checkEditionAccess($workspace);
         $form = $this->formFactory->create(FormFactory::TYPE_WORKSPACE_ROLE);
 
         return array('workspace' => $workspace, 'form' => $form->createView());
@@ -142,7 +142,7 @@ class RolesController extends Controller
      */
     public function createRoleAction(Workspace $workspace, User $user)
     {
-        $this->checkAccess($workspace);
+        $this->checkEditionAccess($workspace);
         $form = $this->formFactory->create(FormFactory::TYPE_WORKSPACE_ROLE);
         $form->handleRequest($this->request);
 
@@ -220,7 +220,7 @@ class RolesController extends Controller
      */
     public function removeRoleAction(Workspace $workspace, Role $role)
     {
-        $this->checkAccess($workspace);
+        $this->checkEditionAccess($workspace);
         $this->roleManager->remove($role);
 
         return new Response('success', 204);
@@ -235,7 +235,7 @@ class RolesController extends Controller
      */
     public function editRoleFormAction(Role $role, Workspace $workspace)
     {
-        $this->checkAccess($workspace);
+        $this->checkEditionAccess($workspace);
         $form = $this->formFactory->create(FormFactory::TYPE_ROLE_TRANSLATION, array(), $role);
 
         return array('workspace' => $workspace, 'form' => $form->createView(), 'role' => $role);
@@ -251,7 +251,7 @@ class RolesController extends Controller
      */
     public function editRoleAction(Role $role, Workspace $workspace)
     {
-        $this->checkAccess($workspace);
+        $this->checkEditionAccess($workspace);
         $form = $this->formFactory->create(
             FormFactory::TYPE_ROLE_TRANSLATION,
             array('wsGuid' => $workspace->getGuid()),
@@ -282,7 +282,7 @@ class RolesController extends Controller
      */
     public function removeUserFromRoleAction(User $user, Role $role, Workspace $workspace)
     {
-        $this->checkAccess($workspace);
+        $this->checkEditionAccess($workspace);
 
         try {
             $this->roleManager->dissociateWorkspaceRole($user, $workspace, $role);
@@ -320,7 +320,7 @@ class RolesController extends Controller
      */
     public function unregisteredUserListAction($page, $search, Workspace $workspace, $max, $order, $direction)
     {
-        $this->checkAccess($workspace);
+        $this->checkEditionAccess($workspace);
         $wsRoles = $this->roleManager->getRolesByWorkspace($workspace);
         $preferences = $this->facetManager->getVisiblePublicPreference();
 
@@ -362,7 +362,7 @@ class RolesController extends Controller
      */
     public function unregisteredGroupListAction($page, $search, Workspace $workspace, $max, $order, $direction)
     {
-        $this->checkAccess($workspace);
+        $this->checkEditionAccess($workspace);
         $wsRoles = $this->roleManager->getRolesByWorkspace($workspace);
 
         $pager = ($search === '') ?
@@ -399,7 +399,7 @@ class RolesController extends Controller
         $search = ''
     )
     {
-        $this->checkAccess($workspace);
+        $this->checkEditionAccess($workspace);
         $wsRoles = $this->roleManager->getRolesByWorkspace($workspace);
         $preferences = $this->facetManager->getVisiblePublicPreference();
 
@@ -447,7 +447,7 @@ class RolesController extends Controller
      */
     public function addUsersToRolesAction(array $users, array $roles, Workspace $workspace)
     {
-        $this->checkAccess($workspace);
+        $this->checkEditionAccess($workspace);
         $this->roleManager->associateRolesToSubjects($users, $roles, true);
         //$listCptNodes = $this->cptManager->getCompetenceByWorkspace($workspace);
         //$this->cptManager->subscribeUserToCompetences($users, $listCptNodes);
@@ -465,7 +465,7 @@ class RolesController extends Controller
      */
     public function removeGroupFromRoleAction(Group $group, Role $role, Workspace $workspace)
     {
-        $this->checkAccess($workspace);
+        $this->checkEditionAccess($workspace);
 
         try {
             $this->roleManager->dissociateWorkspaceRole($group, $workspace, $role);
@@ -500,7 +500,7 @@ class RolesController extends Controller
      */
     public function addGroupsToRolesAction(array $groups, array $roles, Workspace $workspace)
     {
-        $this->checkAccess($workspace);
+        $this->checkEditionAccess($workspace);
         $this->roleManager->associateRolesToSubjects($groups, $roles, true);
 
         return new Response('success');
@@ -529,6 +529,7 @@ class RolesController extends Controller
     public function usersListAction(Workspace $workspace, $page, $search, $max, $order, $direction = 'ASC')
     {
         $this->checkAccess($workspace);
+        $canEdit = $this->hasEditionAccess($workspace);
         $wsRoles = $this->roleManager->getRolesByWorkspace($workspace);
         $currentUser = $this->security->getToken()->getUser();
         $preferences = $this->facetManager->getVisiblePublicPreference();
@@ -546,7 +547,8 @@ class RolesController extends Controller
             'order' => $order,
             'direction' => $direction,
             'currentUser' => $currentUser,
-            'showMail' => $preferences['mail']
+            'showMail' => $preferences['mail'],
+            'canEdit' => $canEdit
         );
     }
 
@@ -578,6 +580,7 @@ class RolesController extends Controller
     public function groupsListAction(Workspace $workspace, $page, $search, $max, $order, $direction)
     {
         $this->checkAccess($workspace);
+        $canEdit = $this->hasEditionAccess($workspace);
         $wsRoles = $this->roleManager->getRolesByWorkspace($workspace);
 
         $pager = ($search === '') ?
@@ -591,7 +594,8 @@ class RolesController extends Controller
             'wsRoles' => $wsRoles,
             'max' => $max,
             'order' => $order,
-            'direction' => $direction
+            'direction' => $direction,
+            'canEdit' => $canEdit
         );
     }
 
@@ -627,6 +631,7 @@ class RolesController extends Controller
     {
         $this->checkAccess($workspace);
 
+        $canEdit = $this->hasEditionAccess($workspace);
         $preferences = $this->facetManager->getVisiblePublicPreference();
         $pager = ($search === '') ?
             $this->userManager->getUsersByGroup($group, $page, $max, $order, $direction) :
@@ -640,7 +645,8 @@ class RolesController extends Controller
             'max' => $max,
             'order' => $order,
             'direction' => $direction,
-            'showMail' => $preferences['mail']
+            'showMail' => $preferences['mail'],
+            'canEdit' => $canEdit
         );
     }
 
@@ -727,7 +733,7 @@ class RolesController extends Controller
         $max = 50
     )
     {
-        $this->checkAccess($workspace);
+        $this->checkEditionAccess($workspace);
 
         return array(
             'workspace' => $workspace,
@@ -747,7 +753,7 @@ class RolesController extends Controller
         Workspace $workspace
     )
     {
-        $this->checkWorkspaceManagerAccess($workspace);
+        $this->checkEditionAccess($workspace);
         $this->wksUqmanager->validateRegistration($wksqueue, $workspace);
         $route = $this->router->generate(
             'claro_users_pending',
@@ -767,7 +773,7 @@ class RolesController extends Controller
         Workspace $workspace
     )
     {
-        $this->checkWorkspaceManagerAccess($workspace);
+        $this->checkEditionAccess($workspace);
         $this->wksUqmanager->removeRegistrationQueue($wksqueue);
         $route = $this->router->generate(
             'claro_users_pending',
@@ -787,7 +793,7 @@ class RolesController extends Controller
      */
     public function exportUsers(Workspace $workspace, $format)
     {
-        $this->checkWorkspaceManagerAccess($workspace);
+        $this->checkEditionAccess($workspace);
         $exporter = $this->container->get('claroline.exporter.' . $format);
         $exporterManager = $this->container->get('claroline.manager.exporter_manager');
         $file = $exporterManager->export(
@@ -824,12 +830,16 @@ class RolesController extends Controller
         }
     }
 
-    private function checkWorkspaceManagerAccess(Workspace $workspace)
+    private function checkEditionAccess(Workspace $workspace)
     {
-        $role = $this->roleManager->getManagerRole($workspace);
+        if (!$this->security->isGranted(array('users', 'edit'), $workspace)) {
 
-        if (is_null($role) || !$this->security->isGranted($role->getName())) {
             throw new AccessDeniedException();
         }
+    }
+
+    private function hasEditionAccess(Workspace $workspace)
+    {
+        return $this->security->isGranted(array('users', 'edit'), $workspace);
     }
 }
