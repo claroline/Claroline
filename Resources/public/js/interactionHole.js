@@ -69,7 +69,7 @@ function addFormHoleEdit(response, size, orthography, del, selector, source_imag
         }
 
         $('#newTable').find('.trHole:last').find('td:last')
-            .append('<table id="tabWR_' + index + '"><tbody></tbody></table>' + addwr);
+            .append('<table id="tabWR_' + index + '" class="table"><tbody></tbody></table>' + addwr);
 
         $('#add_keyword_' + index).click(function (e) {
             //var ind = $(this).parents(".trHole").index();
@@ -100,7 +100,7 @@ function addFormHoleEdit(response, size, orthography, del, selector, source_imag
             if ( (nbResponses == 0) && (i>1) && ($('#tabWR_' + index).find('.trWR').length > 1)) {
                 $('#tabWR_' + index).find('tr:last').append('<td class="classic"></td>');
                 $('#tabWR_' + index).find('td:last').append(
-                    '<a id="wr_' + index + '_' + $('#tabWR_' + index).find('.trWR').length + '" href="#" class="btn btn-danger">' + langDel + '</a>'
+                    '<a id="wr_' + index + '_' + $('#tabWR_' + index).find('.trWR').length + '" href="#" class="btn btn-default"><i style="color : red" class="fa fa-trash-o"></i></a>'
                 );
 
                 // When click, delete the matching keyword's row in the table
