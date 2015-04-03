@@ -51,23 +51,25 @@ class FileImporter extends Importer implements ConfigurationInterface
         $rootPath = $this->getRootPath();
 
         $rootNode
-            ->children()
-                ->arrayNode('file')
-                    ->children()
-                        ->scalarNode('path')->isRequired()
-                            ->validate()
-                                ->ifTrue(
-                                    function ($v) use ($rootPath) {
-                                        return call_user_func_array(
-                                            __CLASS__ . '::fileNotExists',
-                                            array($v, $rootPath)
-                                        );
-                                    }
-                                )
-                                ->thenInvalid("The file %s doesn't exists")
+            ->prototype('array')
+                ->children()
+                    ->arrayNode('file')
+                        ->children()
+                            ->scalarNode('path')->isRequired()
+                                ->validate()
+                                    ->ifTrue(
+                                        function ($v) use ($rootPath) {
+                                            return call_user_func_array(
+                                                __CLASS__ . '::fileNotExists',
+                                                array($v, $rootPath)
+                                            );
+                                        }
+                                    )
+                                    ->thenInvalid("The file %s doesn't exists")
+                                ->end()
                             ->end()
+                            ->scalarNode('mime_type')->end()
                         ->end()
-                        ->scalarNode('mime_type')->end()
                     ->end()
                 ->end()
             ->end()
