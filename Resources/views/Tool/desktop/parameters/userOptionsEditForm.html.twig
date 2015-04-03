@@ -6,11 +6,11 @@
     {{
         macros.desktopBreadcrumbs([
             {
-                'name': 'desktop_parameters'|trans({}, 'platform'),
+                'name': 'preferences'|trans({}, 'platform'),
                 'href': path('claro_desktop_parameters_menu')
             },
             {
-                'name': 'user_options'|trans({}, 'platform'),
+                'name': 'desktop_parameters'|trans({}, 'platform'),
                 'href': ''
             }
         ])
@@ -20,7 +20,7 @@
 {% block section_content %}
     <div class="panel-heading">
         <h3 class="panel-title">
-            {{ 'user_options'|trans({}, 'platform') }}
+            {{ 'desktop_parameters'|trans({}, 'platform') }}
         </h3>
     </div>
     <form role="form"

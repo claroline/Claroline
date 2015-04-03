@@ -1,12 +1,14 @@
 {% extends "ClarolineCoreBundle:Desktop:layout.html.twig" %}
 
-{% block title %}{{ parent() ~ ' - ' ~ "desktop_parameters" | trans({}, "platform") | striptags | raw }}{% endblock %}
+{% block title %}
+    {{ parent() ~ ' - ' ~ "preferences" | trans({}, "platform") | striptags | raw }}
+{% endblock %}
 
 {% block breadcrumb %}
     {{
         macros.desktopBreadcrumbs([
             {
-                'name': 'desktop_parameters'|trans({}, 'platform'),
+                'name': 'preferences'|trans({}, 'platform'),
                 'href': ''
             }
         ])
@@ -16,7 +18,7 @@
 {% block section_content %}
     <div class="panel-heading">
         <h3 class="panel-title">
-            {{ 'desktop_parameters'|trans({}, 'platform') }}
+            {{ 'preferences'|trans({}, 'platform') }}
         </h3>
     </div>
 
@@ -28,7 +30,7 @@
             <span>{{ 'user_menu'|trans({}, 'platform') }}</span>
         </a>
         <a class="list-group-item" href="{{ path('claro_user_options_edit_form') }}">
-            <span>{{ 'user_options'|trans({}, 'platform') }}</span>
+            <span>{{ 'desktop_parameters'|trans({}, 'platform') }}</span>
         </a>
     </div>
 {% endblock %}

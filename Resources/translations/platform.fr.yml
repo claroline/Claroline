@@ -717,6 +717,7 @@ plugin_packages: Paquets des plugins
 portfolio_url: 'Url d''accès à l''outil de portfolio'
 position: Position
 positive_number_expected: 'Cette valeur doit être un nombre positif'
+preferences: 'Préférences'
 private: Privée
 profil_edition: 'Modification du profil utilisateur'
 profile_management: Gestion du profil
@@ -1016,7 +1017,6 @@ user_limit_success_update: La limite d'utilisateur par rôle a été mise à jou
 user_limit_too_low: Il y a déjà %total% %role%(s). La limite %newMax% est trop faible.
 user_menu: 'Menu utilisateur'
 user_menu_configuration: 'Configuration du menu utilisateur'
-user_options: 'Préférences'
 user_options_form_desktopBackgroundColor: 'Couleur de fond du bureau'
 user_parameters: 'Paramètres de l''utilisateur'
 user_picker: 'Outil pour choisir un utilisateur'

@@ -714,6 +714,7 @@ plugin_packages: Plugin packages
 portfolio_url: 'Portfolio tool''s access url'
 position: Position
 positive_number_expected: 'This value should be a positive number'
+preferences: 'Preferences'
 private: Private
 profil_edition: 'User profile edition'
 profile_management: Profile Management
@@ -1010,7 +1011,6 @@ user_limit_success_update: The user limit by role has been successfully updated.
 user_limit_too_low: There is already %total% %role%(s). The limit %newMax% is too low.
 user_menu: 'User menu'
 user_menu_configuration: 'User menu configuration'
-user_options: 'Preferences'
 user_options_form_desktopBackgroundColor: 'Desktop background color'
 user_parameters: 'User parameters'
 user_picker: 'User picker'
