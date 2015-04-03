@@ -29,6 +29,7 @@ class InteractionType extends AbstractType
                 )
             )
             ->add('invite', 'tinymce', array(
+                    'attr' => array('data-new-tab' => 'yes'),
                     'label' => 'Interaction.invite',
                     'required' => true
                 )
@@ -39,7 +40,6 @@ class InteractionType extends AbstractType
                 )
             )
             ->add('feedBack', 'tinymce', array(
-                    //for automatically open documents in a new tab for all tinymce field
                     'attr' => array('data-new-tab' => 'yes'),
                     'label' => 'Interaction.feedback', 'required' => false
                 )
