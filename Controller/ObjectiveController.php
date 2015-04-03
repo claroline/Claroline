@@ -5,6 +5,7 @@ namespace HeVinci\CompetencyBundle\Controller;
 use HeVinci\CompetencyBundle\Entity\Competency;
 use HeVinci\CompetencyBundle\Entity\Level;
 use HeVinci\CompetencyBundle\Entity\Objective;
+use HeVinci\CompetencyBundle\Entity\ObjectiveCompetency;
 use HeVinci\CompetencyBundle\Form\Handler\FormHandler;
 use HeVinci\CompetencyBundle\Manager\ObjectiveManager;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -158,7 +159,36 @@ class ObjectiveController
      */
     public function linkCompetencyAction(Objective $objective, Competency $competency, Level $level)
     {
-        return new JsonResponse($this->manager->linkCompetency($objective, $competency, $level));
+        return new JsonResponse(
+            $result = $this->manager->linkCompetency($objective, $competency, $level),
+            $result ? 200 : 204
+        );
+    }
+
+    /**
+     * Deletes an objective.
+     *
+     * @EXT\Route("/link/{id}/delete", name="hevinci_delete_objective_association")
+     *
+     * @param ObjectiveCompetency $link
+     * @return JsonResponse
+     */
+    public function deleteCompetencyLinkAction(ObjectiveCompetency $link)
+    {
+        return new JsonResponse($this->manager->deleteCompetencyLink($link));
+    }
+
+    /**
+     * Returns the competencies associated to an objective.
+     *
+     * @EXT\Route("/{id}/competencies", name="hevinci_load_objective_competencies")
+     *
+     * @param Objective $objective
+     * @return JsonResponse
+     */
+    public function objectiveCompetenciesAction(Objective $objective)
+    {
+        return new JsonResponse($this->manager->loadObjectiveCompetencies($objective));
     }
 
     /**

@@ -17,9 +17,8 @@
         <thead>
             <tr>
                 <th>{{ 'objective_'|trans }}</th>
-                <th>{{ 'framework_'|trans }}</th>
-                <th>{{ 'level'|trans }}</th>
-                <th>{{ 'status'|trans({}, 'platform') }}</th>
+                <th class="medium-cell">{{ 'framework_'|trans }}</th>
+                <th class="medium-cell">{{ 'level'|trans }}</th>
                 <th colspan="5">{{ 'actions'|trans({}, 'platform') }}</th>
             </tr>
         </thead>
@@ -28,9 +27,10 @@
                 {%
                     include 'HeVinciCompetencyBundle:Objective:objectiveRow.html.twig'
                     with {
-                        id: objective.getId(),
-                        name: objective.getName(),
-                        objectiveCompetencies: objective.getObjectiveCompetencies()
+                        id: objective.id,
+                        name: objective.name,
+                        hasChildren: objective.competencyCount > 0,
+                        isLoaded: false,
                     }
                 %}
             {% endfor %}

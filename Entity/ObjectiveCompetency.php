@@ -29,12 +29,17 @@ class ObjectiveCompetency implements \JsonSerializable
      */
     private $competency;
 
-
     /**
      * @ORM\ManyToOne(targetEntity="Level")
      * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      */
     private $level;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Competency")
+     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
+     */
+    private $framework;
 
     /**
      * @return int
@@ -90,6 +95,22 @@ class ObjectiveCompetency implements \JsonSerializable
     public function getLevel()
     {
         return $this->level;
+    }
+
+    /**
+     * @param Competency $framework
+     */
+    public function setFramework(Competency $framework)
+    {
+        $this->framework = $framework;
+    }
+
+    /**
+     * @return Competency
+     */
+    public function getFramework()
+    {
+        return $this->framework;
     }
 
     public function jsonSerialize()

@@ -15,19 +15,27 @@ use JMS\DiExtraBundle\Annotation as DI;
 class ObjectiveManager
 {
     private $om;
-    private $repo;
+    private $competencyManager;
+    private $objectiveRepo;
+    private $competencyRepo;
+    private $objectiveCompetencyRepo;
 
     /**
      * @DI\InjectParams({
-     *     "om" = @DI\Inject("claroline.persistence.object_manager")
+     *     "om"         = @DI\Inject("claroline.persistence.object_manager"),
+     *     "manager"    = @DI\Inject("hevinci.competency.competency_manager")
      * })
      *
-     * @param ObjectManager $om
+     * @param ObjectManager     $om
+     * @param CompetencyManager $manager
      */
-    public function __construct(ObjectManager $om)
+    public function __construct(ObjectManager $om, CompetencyManager $manager)
     {
         $this->om = $om;
-        $this->repo = $om->getRepository('HeVinciCompetencyBundle:Objective');
+        $this->competencyManager = $manager;
+        $this->objectiveRepo = $om->getRepository('HeVinciCompetencyBundle:Objective');
+        $this->competencyRepo = $om->getRepository('HeVinciCompetencyBundle:Competency');
+        $this->objectiveCompetencyRepo = $om->getRepository('HeVinciCompetencyBundle:ObjectiveCompetency');
     }
 
     /**
@@ -49,7 +57,31 @@ class ObjectiveManager
      */
     public function listObjectives()
     {
-        return $this->repo->findWithObjectives();
+        return $this->objectiveRepo->findWithCompetencyCount();
+    }
+
+    /**
+     * Returns an array representation of all the competencies
+     * associated with an objective, including sub-competencies
+     * and abilities, if any.
+     *
+     * @param Objective $objective
+     * @return array
+     */
+    public function loadObjectiveCompetencies(Objective $objective)
+    {
+        $links = $objective->getObjectiveCompetencies();
+        $result = [];
+
+        foreach ($links as $link) {
+            $loaded = $this->competencyManager->loadCompetency($link->getCompetency());
+            $loaded['id'] = $link->getId(); // link is treated as the competency itself on client-side
+            $loaded['framework'] = $link->getFramework()->getName();
+            $loaded['level'] = $link->getLevel()->getName();
+            $result[] = $loaded;
+        }
+
+        return $result;
     }
 
     /**
@@ -65,24 +97,54 @@ class ObjectiveManager
 
     /**
      * Creates an association between an objective and a competency,
-     * with an expected level.
+     * with an expected level. Returns a full array representation of
+     * the newly associated competency if the link doesn't already exist.
+     * Otherwise, returns false.
      *
      * @param Objective     $objective
      * @param Competency    $competency
      * @param Level         $level
+     * @return mixed array|bool
+     * @throws \LogicException if the level doesn't belong to the root competency scale
      */
     public function linkCompetency(Objective $objective, Competency $competency, Level $level)
     {
-        // check level scale == competency root scale
+        $link = $this->objectiveCompetencyRepo->findOneBy([
+            'competency' => $competency,
+            'objective' => $objective
+        ]);
 
-        // check competency is not already linked
+        if ($link) {
+            return false;
+        }
+
+        $framework = $this->competencyRepo->findOneBy(['root' => $competency->getRoot()]);
+
+        if ($level->getScale() !== $framework->getScale()) {
+            throw new \LogicException(
+                'Objective level must belong to the root competency scale'
+            );
+        }
 
         $link = new ObjectiveCompetency();
         $link->setObjective($objective);
         $link->setCompetency($competency);
         $link->setLevel($level);
+        $link->setFramework($framework);
 
         $this->om->persist($link);
+        $this->om->flush();
+
+        $competency = $this->competencyManager->loadCompetency($competency);
+        $competency['framework'] = $framework->getName();
+        $competency['level'] = $level->getName();
+
+        return $competency;
+    }
+
+    public function deleteCompetencyLink(ObjectiveCompetency $link)
+    {
+        $this->om->remove($link);
         $this->om->flush();
     }
 }

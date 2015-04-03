@@ -85,7 +85,7 @@ class CompetencyControllerTest extends UnitTestCase
     {
         $framework = new Competency();
         $this->manager->expects($this->once())
-            ->method('loadFramework')
+            ->method('loadCompetency')
             ->with($framework)
             ->willReturn('FRAMEWORK');
         $this->assertEquals(
@@ -473,7 +473,7 @@ class CompetencyControllerTest extends UnitTestCase
     {
         $framework = new Competency();
         $this->manager->expects($this->once())
-            ->method('loadFramework')
+            ->method('loadCompetency')
             ->with($framework)
             ->willReturn('FRAMEWORK');
         $this->assertEquals(

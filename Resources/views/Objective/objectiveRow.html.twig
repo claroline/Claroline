@@ -1,60 +1,123 @@
 {% twig_js name = 'ObjectiveRow' %}
 
-<tr data-id="{{ id }}" data-type="objective">
-    <td>{{ name }}</td>
-    <td>-</td>
-    <td>-</td>
-    <td>-</td>
+{% set type = type is defined ? type : 'objective' %}
+{% set framework = framework is defined ? framework : '-' %}
+{% set level = level is defined ? level : '-' %}
+{% set indent = indent is defined ? indent : 0 %}
+{% set collapsed = collapsed is defined ? collapsed : false %}
+{% set isLoaded = isLoaded is defined ? isLoaded : true %}
+{% set
+    hasChildren = hasChildren is defined ?
+        hasChildren :
+        __children is defined
+        and __children|length > 0
+        or __abilities.length is defined
+        and __abilities.length > 0
+%}
+
+<tr data-id="{{ id }}"
+    data-type="{{ type }}"
+    {% if hasChildren %}data-has-children{% endif %}
+    {% if isLoaded %}data-is-loaded="true"{% endif %}
+    {% if collapsed %} style="display: none;"{% endif %}>
+    <td class="{{ type }}-name level-{{ indent }}">{{ name }}</td>
+    <td class="center">{{ framework }}</td>
+    <td class="center{% if type == 'ability' %} level-small{% endif %}">{{ level }}</td>
     <td class="x-small-cell">
-        <a href="#">
-            <i class="fa fa-search-plus{{ objectiveCompetencies|length == 0 ? ' disabled': '' }}"></i>
+        <a href="#" class="{{ hasChildren ? 'expand' : '' }}">
+            <i class="fa fa-search-plus{{ hasChildren ? '' : ' disabled' }}"></i>
         </a>
     </td>
     <td class="x-small-cell">
-        <a href="#"
-           data-toggle="tooltip"
-           data-placement="left"
-           title="{{ 'learners'|trans({}, 'competency') }}">
-            <i class="fa fa-user"></i>
-        </a>
+        {% if type == 'objective' %}
+            <a href="#"
+               data-toggle="tooltip"
+               data-placement="left"
+               title="{{ 'learners'|trans({}, 'competency') }}">
+                <i class="fa fa-user"></i>
+            </a>
+        {% else %}
+            -
+        {% endif %}
     </td>
     <td class="x-small-cell">
-        <a href="#"
-           class="associate"
-           data-toggle="tooltip"
-           data-placement="left"
-           title="{{ 'competency.associate'|trans({}, 'competency') }}">
-            <i class="fa fa-plus"></i>
-        </a>
+        {% if type == 'objective' %}
+            <a href="#"
+               class="associate"
+               data-toggle="tooltip"
+               data-placement="left"
+               title="{{ 'competency.associate'|trans({}, 'competency') }}">
+                <i class="fa fa-plus"></i>
+            </a>
+        {% else %}
+            -
+        {% endif %}
     </td>
     <td class="x-small-cell">
-        <a href="#"
-           class="edit"
-           data-toggle="tooltip"
-           data-placement="left"
-           title="{{ 'edit'|trans({}, 'platform') }}">
-            <i class="fa fa-pencil"></i>
-        </a>
+        {% if type == 'objective' %}
+            <a href="#"
+               class="edit"
+               data-toggle="tooltip"
+               data-placement="left"
+               title="{{ 'edit'|trans({}, 'platform') }}">
+                <i class="fa fa-pencil"></i>
+            </a>
+        {% else %}
+            -
+        {% endif %}
     </td>
     <td class="x-small-cell">
-        <a href="#"
-           class="remove"
-           data-toggle="tooltip"
-           data-placement="left"
-           title="{{ 'delete'|trans({}, 'platform') }}">
-            <i class="fa fa-remove"></i>
-        </a>
+        {% if type == 'objective' or type == 'competency' and indent == 1 %}
+            <a href="#"
+               class="remove"
+               data-toggle="tooltip"
+               data-placement="left"
+               title="{{ 'delete'|trans({}, 'platform') }}">
+                <i class="fa fa-remove"></i>
+            </a>
+        {% else %}
+            -
+        {% endif %}
     </td>
 </tr>
 
-{% if objectiveCompetencies|length > 0 %}
-    {% for link in objectiveCompetencies %}
+{% if __children is defined and  __children|length > 0 %}
+    {% for child in __children %}
         {% include
             'HeVinciCompetencyBundle:Objective:objectiveRow.html.twig'
             with {
-                id: link.getId(),
-                name: link.getCompetency().getName(),
-                objectiveCompetencies: []
+                id: child.id,
+                name: child.name,
+                framework: '-',
+                level: '-',
+                type: 'competency',
+                indent: indent + 1,
+                collapsed: true,
+                hasChildren: child.__children is defined
+                    and child.__children|length > 0
+                    or child.__abilities.length is defined
+                    and child.__abilities.length > 0,
+                __children: child.__children is defined ? child.__children : []
+            }
+        %}
+    {% endfor %}
+{% endif %}
+
+{% if __abilities is defined and  __abilities|length > 0 %}
+    {% for ability in __abilities %}
+        {% include
+            'HeVinciCompetencyBundle:Objective:objectiveRow.html.twig'
+            with {
+                id: ability.id,
+                name: ability.name,
+                framework: '-',
+                level: ability.levelName,
+                type: 'ability',
+                indent: indent + 1,
+                collapsed: true,
+                hasChildren: false,
+                __children: [],
+                __abilities: []
             }
         %}
     {% endfor %}

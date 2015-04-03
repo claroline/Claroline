@@ -61,6 +61,9 @@ message:
   framework_deleted: Référentiel supprimé avec succès.
   framework_deletion_confirm: Voulez-vous vraiment supprimer ce référentiel ? Cette action est irréversible.
   framework_edited: Référentiel modifié avec succès.
+  objective_association_deleted: Compétence retirée avec succès.
+  objective_association_deletion_confirm: Voulez-vous vraiment retirer cette compétence de l'objectif ?
+  objective_competency_already_associated: Cette compétence est déjà associée à cet objectif.
   objective_competency_associated: Compétence associée avec succès.
   objective_created: Nouvel objectif créé avec succès.
   objective_deleted: Objectif supprimé avec succès.

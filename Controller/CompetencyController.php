@@ -106,7 +106,7 @@ class CompetencyController
      */
     public function frameworkAction(Competency $framework)
     {
-        return ['framework' => $this->manager->loadFramework($framework)];
+        return ['framework' => $this->manager->loadCompetency($framework)];
     }
 
     /**
@@ -120,7 +120,7 @@ class CompetencyController
      */
     public function activitiesAction(Competency $framework)
     {
-        return ['framework' => $this->manager->loadFramework($framework)];
+        return ['framework' => $this->manager->loadCompetency($framework)];
     }
 
     /**

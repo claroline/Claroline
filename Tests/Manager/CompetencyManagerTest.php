@@ -171,13 +171,13 @@ class CompetencyManagerTest extends UnitTestCase
     }
 
     /**
-     * @dataProvider loadFrameworkProvider
+     * @dataProvider loadCompetencyProvider
      *
      * @param array $competencies
      * @param array $abilities
      * @param array $expectedResult
      */
-    public function testLoadFramework(array $competencies, array $abilities, array $expectedResult)
+    public function testLoadCompetency(array $competencies, array $abilities, array $expectedResult)
     {
         $framework = new Competency();
         $this->competencyRepo->expects($this->once())
@@ -185,10 +185,10 @@ class CompetencyManagerTest extends UnitTestCase
             ->with($framework, false, [], true)
             ->willReturn($competencies);
         $this->abilityRepo->expects($this->once())
-            ->method('findByFramework')
+            ->method('findByCompetency')
             ->with($framework)
             ->willReturn($abilities);
-        $this->assertEquals($expectedResult, $this->manager->loadFramework($framework));
+        $this->assertEquals($expectedResult, $this->manager->loadCompetency($framework));
     }
 
     /**
@@ -401,7 +401,7 @@ class CompetencyManagerTest extends UnitTestCase
         $this->manager->linkAbilityToCompetency($parent, $ability, $level);
     }
 
-    public function loadFrameworkProvider()
+    public function loadCompetencyProvider()
     {
         return [
             [[[]], [], []],

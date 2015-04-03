@@ -86,9 +86,13 @@ table.framework-activities > tbody > tr > td {
     font-weight: normal;
 }
 
-table.framework-activities td.competency-name,
-table.framework-activities td.ability-name {
+table > tbody > tr > td.competency-name,
+table > tbody > tr > td.ability-name {
     border-style: dashed;
+}
+
+table > tbody > tr > td.objective-name {
+    border-bottom-style: dashed;
 }
 
 table.framework-activities td.level-0,
@@ -96,53 +100,60 @@ table.objectives tr[data-type=objective] td:first-of-type {
     font-weight: bold;
 }
 
-table.framework-activities td.level-1 {
+table > tbody > tr > td.level-1 {
     padding-left: 30px;
 }
 
-table.framework-activities td.level-2 {
+table > tbody > tr > td.level-2 {
     padding-left: 60px;
 }
 
-table.framework-activities td.level-3 {
+table > tbody > tr > td.level-3 {
     padding-left: 90px;
 }
 
-table.framework-activities td.level-4 {
+table > tbody > tr > td.level-4 {
     padding-left: 120px;
 }
 
-table.framework-activities td.level-5 {
+table > tbody > tr > td.level-5 {
     padding-left: 150px;
 }
 
-table.framework-activities td.level-6 {
+table > tbody > tr > td.level-6 {
     padding-left: 180px;
 }
 
-table.framework-activities td.level-7 {
+table > tbody > tr > td.level-7 {
     padding-left: 210px;
 }
 
-table.framework-activities td.level-8 {
+table > tbody > tr > td.level-8 {
     padding-left: 240px;
 }
 
-table.framework-activities td.level-9 {
+table > tbody > tr > td.level-9 {
     padding-left: 270px;
 }
 
-table.framework-activities td.level-10 {
+table > tbody > tr > td.level-10 {
     padding-left: 300px;
 }
 
-table.framework-activities td.competency-name:not(.level-0):before,
-table.framework-activities td.ability-name:before {
+table > tbody > tr > td.competency-name:not(.level-0):before,
+table > tbody > tr > td.ability-name:before {
     content: "- ";
 }
 
-table.framework-activities td.ability-name {
+table > tbody > tr > td.ability-name {
     font-style: italic;
+}
+
+table > tbody > tr > td.level-small {
+    font-size: .8em;
+    font-style: italic;
+    line-height: inherit;
+    vertical-align: middle;
 }
 
 td.competency-path ul {

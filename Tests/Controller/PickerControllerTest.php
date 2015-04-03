@@ -28,12 +28,12 @@ class PickerControllerTest extends UnitTestCase
     {
         $framework = new Competency();
         $this->competencyManager->expects($this->once())
-            ->method('loadFramework')
-            ->with($framework)
+            ->method('loadCompetency')
+            ->with($framework, true)
             ->willReturn('FRAMEWORK');
         $this->assertEquals(
             ['framework' => 'FRAMEWORK'],
-            $this->controller->competenciesAction($framework)
+            $this->controller->competenciesAction($framework, 1)
         );
     }
 }

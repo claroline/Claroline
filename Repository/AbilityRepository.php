@@ -10,13 +10,13 @@ class AbilityRepository extends EntityRepository
 {
     /**
      * Returns an array representation of all the abilities linked
-     * to a given competency framework. Result includes information
+     * to a given competency tree. Result includes information
      * about ability level as well.
      *
-     * @param Competency $framework
+     * @param Competency $competency
      * @return array
      */
-    public function findByFramework(Competency $framework)
+    public function findByCompetency(Competency $competency)
     {
         return $this->createQueryBuilder('a')
             ->select(
@@ -31,11 +31,15 @@ class AbilityRepository extends EntityRepository
             ->join('a.competencyAbilities', 'ca')
             ->join('ca.competency', 'c')
             ->join('ca.level', 'l')
-            ->leftJoin('a.activities', 'act')
             ->where('c.root = :root')
+            ->andWhere('c.lft >= :lft')
+            ->andWhere('c.rgt <= :rgt')
             ->orderBy('l.value')
-            ->groupBy('a.id')
-            ->setParameter(':root', $framework->getId())
+            ->setParameters([
+                ':root' => $competency->getRoot(),
+                ':lft' => $competency->getLeft(),
+                ':rgt' => $competency->getRight()
+            ])
             ->getQuery()
             ->getArrayResult();
     }

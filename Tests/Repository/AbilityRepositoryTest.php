@@ -20,7 +20,7 @@ class AbilityRepositoryTest extends RepositoryTestCase
         $this->repo = $this->om->getRepository('HeVinciCompetencyBundle:Ability');
     }
 
-    public function testFindByFramework()
+    public function testFindByCompetency()
     {
         $scale = $this->persistScale('scale');
         $level = $this->persistLevel('l1', $scale);
@@ -42,8 +42,8 @@ class AbilityRepositoryTest extends RepositoryTestCase
 
         $this->om->flush();
 
-        $this->assertEquals(2, count($this->repo->findByFramework($f1)));
-        $this->assertEquals(1, count($this->repo->findByFramework($f2)));
+        $this->assertEquals(2, count($this->repo->findByCompetency($f1)));
+        $this->assertEquals(1, count($this->repo->findByCompetency($f2)));
     }
 
     public function testDeleteOrphans()

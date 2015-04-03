@@ -61,7 +61,7 @@ class PickerController
     public function competenciesAction(Competency $framework, $loadAbilities)
     {
         return [
-            'framework' => $this->competencyManager->loadFramework(
+            'framework' => $this->competencyManager->loadCompetency(
                 $framework,
                 (bool) $loadAbilities
             )

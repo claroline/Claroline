@@ -160,24 +160,24 @@ class CompetencyManager
     }
 
     /**
-     * Returns a full array representation of a framework tree. Children
+     * Returns a full array representation of a competency tree. Children
      * competencies and linked abilities are respectively stored under the
      * "__children" and "__abilities" keys of their corresponding competency
      * array.
      *
-     * @param Competency    $framework      The framework to load
+     * @param Competency    $competency     The competency to be loaded
      * @param bool          $loadAbilities  Whether linked abilities should be included
      * @return array
      */
-    public function loadFramework(Competency $framework, $loadAbilities = true)
+    public function loadCompetency(Competency $competency, $loadAbilities = true)
     {
-        $competencies = $this->competencyRepo->childrenHierarchy($framework, false, [], true)[0];
+        $competencies = $this->competencyRepo->childrenHierarchy($competency, false, [], true)[0];
 
         if (!$loadAbilities) {
             return $competencies;
         }
 
-        $abilities = $this->abilityRepo->findByFramework($framework);
+        $abilities = $this->abilityRepo->findByCompetency($competency);
         $abilitiesByCompetency = [];
 
         foreach ($abilities as $ability) {

@@ -64,7 +64,7 @@ class Objective implements \JsonSerializable
     }
 
     /**
-     * @return ObjectiveCompetency[]
+     * @return ArrayCollection
      */
     public function getObjectiveCompetencies()
     {
@@ -76,7 +76,7 @@ class Objective implements \JsonSerializable
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'objectiveCompetencies' => $this->objectiveCompetencies
+            'hasChildren' => $this->objectiveCompetencies->count() > 0
         ];
     }
 }
