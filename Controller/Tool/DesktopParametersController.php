@@ -191,7 +191,7 @@ class DesktopParametersController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/tools/order/update/tool/{orderedTool}/with/{otherOrderedTool}/mode/{mode}/type/{type}",
+     *     "/tools/order/update/tool/{orderedTool}/type/{type}/next/{nextOrderedToolId}",
      *     name="claro_desktop_update_ordered_tool_order",
      *     defaults={"type"=0},
      *     options={"expose"=true}
@@ -199,52 +199,29 @@ class DesktopParametersController extends Controller
      * @EXT\ParamConverter("user", options={"authenticatedUser"=true})
      *
      * @param OrderedTool $orderedTool
-     * @param OrderedTool $otherOrderedTool
-     * @param string $mode
      * @param int type
+     * @param int nextOrderedToolId
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function updateDesktopOrderedToolOrderAction(
         User $user,
         OrderedTool $orderedTool,
-        OrderedTool $otherOrderedTool,
-        $mode,
+        $nextOrderedToolId,
         $type = 0
     )
     {
         if ($orderedTool->getUser() === $user &&
-            $otherOrderedTool->getUser() === $user) {
+            $orderedTool->getType() === intval($type)) {
 
-            $order = $orderedTool->getOrder();
-            $otherOrder = $otherOrderedTool->getOrder();
-
-            if ($mode === 'previous') {
-
-                if ($otherOrder > $order) {
-                    $newOrder = $otherOrder;
-                } else {
-                    $newOrder = $otherOrder + 1;
-                }
-            } elseif ($mode === 'next') {
-
-                if ($otherOrder > $order) {
-                    $newOrder = $otherOrder - 1;
-                } else {
-                    $newOrder = $otherOrder;
-                }
-            } else {
-
-                return new Response('Bad Request', 400);
-            }
-
-            $this->toolManager->updateDesktopOrderedToolOrder(
+            $this->toolManager->reorderDesktopOrderedTool(
+                $user,
                 $orderedTool,
-                $newOrder,
+                $nextOrderedToolId,
                 $type
             );
 
-            return new Response('success', 204);
+            return new Response('success', 200);
         } else {
 
             throw new AccessDeniedException();
