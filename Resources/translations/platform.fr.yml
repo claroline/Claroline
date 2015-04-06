@@ -117,8 +117,8 @@ add_group_s_confirm_message: 'groupe(s) ajouté(s)'
 add_groups: 'Ajouter des groupes'
 add_resource: 'Ajouter une ressource'
 add_role: 'Ajouter un role'
-add_role_to_groups: Ajouter un rôle a %count% groupe(s)
-add_role_to_users: Ajouter un rôle a %count% utilisateur(s)
+add_role_to_groups: Ajouter un rôle à %count% groupe(s)
+add_role_to_users: Ajouter un rôle à %count% utilisateur(s)
 add_roles_confirm_message: 'Voulez vous ajouter le(s) role(s) suivant(s) aux %count% élément(s) sélectionné(s): '
 add_sub_competence: 'Ajouter une sous-compétence'
 add_subcategory: 'Ajouter une sous-catégorie'
@@ -141,6 +141,7 @@ admin_workspace_tag_form_name: Nom
 administration: Administration
 administrative_code: 'Code administratif'
 advanced: Avancé
+advanced_parameters: 'Paramètres avancés'
 agenda: Agenda
 agreeing: 'En acceptant l''envoi de ces données, vous bénéficierez d''un meilleur service et vous contribuerez à l''amélioration de la plateforme Claroline Connect que vous allez installer.'
 all: Tous
@@ -454,6 +455,10 @@ home: Accueil
 home_manager: 'Gestionnaire de l''accueil'
 home_parameters: 'Paramètres de l''accueil'
 home_tab: Onglet
+home_tab_bookmark_confirm_message: 'Cet onglet sera disponible dans votre bureau'
+home_tab_bookmark_confirm_title: 'Ajouter cet onglet à vos favoris'
+home_tab_bookmark_delete_confirm_message: 'Voulez-vous vraiment retirer cet onglet de vos favoris ?'
+home_tab_bookmark_delete_confirm_title: 'Retrait de l''onglet'
 home_tab_config_form_locked: 'Verrouillé'
 home_tab_config_form_visible: 'Visible'
 home_tab_creation: 'Création d''un onglet'
@@ -461,6 +466,7 @@ home_tab_delete_confirm_message: 'Voulez-vous vraiment supprimer cet onglet ?'
 home_tab_delete_confirm_title: 'Suppression de l''onglet'
 home_tab_edition: 'Edition de l''onglet'
 home_tab_form_name: Nom
+home_tab_roles_explanation: 'Si aucun rôle n''est coché, l''onglet sera disponible à tous les utilisateurs.<br>Sinon, il sera uniquement disponible aux utilisateurs ayant un des rôles sélectionnés.'
 home_tab_widgets: 'Widgets de l''onglet'
 home_tab_widgets_configuration: 'Configuration des widgets de l''onglet'
 home_tabs: 'Onglets de la page d''accueil'
@@ -671,6 +677,7 @@ password_ok: 'Votre mot de passe a été modifié. Vous pouvez maintenant vous c
 paste: Coller
 path: Emplacement
 pending: En attente
+pending_users_list: 'Liste des utilisateurs en attente'
 permissions: Permissions
 personal_data: 'Aucune donnée personnelle ne sera récupérée. Les données techniques et statistiques récupérées seront exclusivement utilisées en relation avec le projet Claroline Connect et ne seront pas autrement diffusées.'
 personal_workspace: 'Espace personnel'
@@ -710,6 +717,7 @@ plugin_packages: Paquets des plugins
 portfolio_url: 'Url d''accès à l''outil de portfolio'
 position: Position
 positive_number_expected: 'Cette valeur doit être un nombre positif'
+preferences: 'Préférences'
 private: Privée
 profil_edition: 'Modification du profil utilisateur'
 profile_management: Gestion du profil
@@ -1009,7 +1017,6 @@ user_limit_success_update: La limite d'utilisateur par rôle a été mise à jou
 user_limit_too_low: Il y a déjà %total% %role%(s). La limite %newMax% est trop faible.
 user_menu: 'Menu utilisateur'
 user_menu_configuration: 'Configuration du menu utilisateur'
-user_options: 'Préférences'
 user_options_form_desktopBackgroundColor: 'Couleur de fond du bureau'
 user_parameters: 'Paramètres de l''utilisateur'
 user_picker: 'Outil pour choisir un utilisateur'
@@ -1173,6 +1180,7 @@ activate_maintenance_mode: Vous devriez activer le mode de maintenance afin de s
 install_update_cant_be_undone: Les opérations d'installation et de mise à jour ne peuvent pas être annulées.
 list_view: Vue en liste (beta)
 created_by: Créé par %creator% le %creationDate%
-updated_by: Dernière màj: %modificationDate%
+updated_by: 'Dernière màj: %modificationDate%'
 display_at_registration: Afficher à la création du compte
 workspace_max_users: Nombre maximal d'utilisateur par espace d'activité
+workspace_edit_form_endDate : Date d'expiration

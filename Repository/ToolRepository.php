@@ -93,6 +93,7 @@ class ToolRepository extends EntityRepository
             WHERE user.id = {$user->getId()}
             AND ot.type = :type
             AND ot.isVisibleInDesktop = true
+            AND tool.isDisplayableInDesktop = true
             ORDER BY ot.order
         ";
         $query = $this->_em->createQuery($dql);
@@ -122,6 +123,7 @@ class ToolRepository extends EntityRepository
             WHERE user.id = {$user->getId()}
             AND ot.type = :type
             AND ot.isVisibleInDesktop = true
+            AND tool.isDisplayableInDesktop = true
             AND tool NOT IN (:excludedTools)
             ORDER BY ot.order
         ";

@@ -87,6 +87,12 @@ class HomeTabManager
         $this->om->flush();
     }
 
+    public function deleteHomeTabConfig(HomeTabConfig $homeTabConfig)
+    {
+        $this->om->remove($homeTabConfig);
+        $this->om->flush();
+    }
+
     public function updateVisibility(HomeTabConfig $homeTabConfig, $visible)
     {
         $homeTabConfig->setVisible($visible);
@@ -252,11 +258,11 @@ class HomeTabManager
         return $newHomeTabConfig;
     }
 
-    public function generateAdminHomeTabConfigsByUser(User $user)
+    public function generateAdminHomeTabConfigsByUser(User $user, array $roleNames = array())
     {
         $adminHTC = array();
         $adminHomeTabConfigs = $this->homeTabConfigRepo
-            ->findAdminDesktopHomeTabConfigs();
+            ->findAdminDesktopHomeTabConfigsByRoles($roleNames);
 
         foreach ($adminHomeTabConfigs as $adminHomeTabConfig) {
 
@@ -635,6 +641,17 @@ class HomeTabManager
             ->findVisibleWorkspaceHomeTabConfigsByWorkspace($workspace);
     }
 
+    public function getVisibleWorkspaceHomeTabConfigsByWorkspaceAndRoles(
+        Workspace $workspace,
+        array $roleNames
+    )
+    {
+        return $this->homeTabConfigRepo->findVisibleWorkspaceHomeTabConfigsByWorkspaceAndRoles(
+            $workspace,
+            $roleNames
+        );
+    }
+
     public function getOrderOfLastDesktopHomeTabConfigByUser(User $user)
     {
         return $this->homeTabConfigRepo
@@ -692,6 +709,24 @@ class HomeTabManager
         }
 
         return $homeTabConfigs;
+    }
+
+    public function getOneVisibleWorkspaceUserHTC(HomeTab $homeTab, User $user)
+    {
+        return $this->homeTabConfigRepo->findOneVisibleWorkspaceUserHTC(
+            $homeTab,
+            $user
+        );
+    }
+
+    public function getVisibleWorkspaceUserHTCsByUser(User $user)
+    {
+        return $this->homeTabConfigRepo->findVisibleWorkspaceUserHTCsByUser($user);
+    }
+
+    public function getOrderOfLastWorkspaceUserHomeTabByUser(User $user)
+    {
+        return $this->homeTabConfigRepo->findOrderOfLastWorkspaceUserHomeTabByUser($user);
     }
 
 

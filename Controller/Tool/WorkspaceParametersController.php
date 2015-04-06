@@ -119,6 +119,9 @@ class WorkspaceParametersController extends Controller
         $creationDate = is_null($workspace->getCreationDate()) ? null : $this->utilities->intlDateFormat(
             $workspace->getCreationDate()
         );
+        $expDate = is_null($workspace->getEndDate()) ? null : $this->utilities->intlDateFormat(
+            $workspace->getEndDate()
+        );
         $count = $this->workspaceManager->countUsers($workspace, true);
         $storageUsed = $this->workspaceManager->getUsedStorage($workspace);
         $storageUsed = $this->utilities->formatFileSize($storageUsed);
@@ -134,7 +137,8 @@ class WorkspaceParametersController extends Controller
                 $count,
                 $storageUsed,
                 $countResources,
-                $isAdmin
+                $isAdmin,
+                $expDate
             ),
             $workspace
         );
@@ -182,6 +186,9 @@ class WorkspaceParametersController extends Controller
         $wsRegisteredDisplayable = $workspace->isDisplayable();
         $workspaceAdminTool = $this->toolManager->getAdminToolByName('workspace_management');
         $isAdmin = $this->security->isGranted('OPEN', $workspaceAdminTool);
+        $expDate = is_null($workspace->getCreationDate()) ? null : $this->utilities->intlDateFormat(
+            $workspace->getEndDate()
+        );
         $form = $this->formFactory->create(
             FormFactory::TYPE_WORKSPACE_EDIT,
             array(null, null, null, null, null, $isAdmin),
@@ -212,7 +219,6 @@ class WorkspaceParametersController extends Controller
             );
         } else {
             $workspace->setName($wsRegisteredName);
-            $this->workspaceManager->replaceCode($workspace, $wsRegisteredCode);
         }
 
         $user = $this->security->getToken()->getUser();

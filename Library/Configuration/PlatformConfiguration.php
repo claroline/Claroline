@@ -60,6 +60,7 @@ class PlatformConfiguration
     private $maxUploadResources;
     private $repositoryApi;
     private $workspaceMaxUsers;
+    private $autoLogginAfterRegistration;
 
     /**
      * @param mixed $sessionDbDataCol
@@ -608,14 +609,24 @@ class PlatformConfiguration
     {
         return $this->repositoryApi;
     }
-    
+
     public function setWorkspaceMaxUsers($wsMaxUsers)
     {
         $this->workspaceMaxUsers = $wsMaxUsers;
     }
-    
+
     public function getWorkspaceMaxUsers()
     {
         return $this->workspaceMaxUsers;
+    }
+
+    public function setAutoLogginAfterRegistration($boolean)
+    {
+        $this->autoLogginAfterRegistration = $boolean;
+    }
+
+    public function getAutoLogginAfterRegistration()
+    {
+        return $this->autoLogginAfterRegistration;
     }
 }

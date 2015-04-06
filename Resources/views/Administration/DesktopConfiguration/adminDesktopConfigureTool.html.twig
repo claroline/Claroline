@@ -48,6 +48,7 @@
                 <tbody id="tools-table-body">
                     {% for orderedTool in orderedTools %}
                         {% set tool = orderedTool.getTool() %}
+                        {% set toolName = tool.getName() %}
                         <tr class="row-tool-config"
                             data-tool-id="{{ tool.getId () }}"
                             data-ordered-tool-id="{{ orderedTool.getId () }}"
@@ -55,7 +56,11 @@
                             <td>
                                 <span class="fa fa-sort text-muted"></span>
                                 &nbsp;
-                                {{ tool.getName()|lower|trans({}, 'tools') }}
+                                {% if toolName == 'parameters' %}
+                                    {{ 'preferences'|trans({}, 'platform') }}
+                                {% else %}
+                                    {{ toolName|lower|trans({}, 'tools') }}
+                                {% endif %}
                             </td>
                             <td class="text-center">
                                 {% if orderedTool.isVisibleInDesktop() %}

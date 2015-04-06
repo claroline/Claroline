@@ -886,7 +886,7 @@ class UserManager
      *
      * @return User
      */
-    public function getResetPasswordHash($resetPassword)
+    public function getByResetPasswordHash($resetPassword)
     {
         return $this->userRepo->findOneByResetPasswordHash($resetPassword);
     }
@@ -1104,6 +1104,15 @@ class UserManager
         );
     }
 
+    public function getUserByUsernameAndMail($username, $mail, $executeQuery = true)
+    {
+        return $this->userRepo->findUserByUsernameAndMail(
+            $username,
+            $mail,
+            $executeQuery
+        );
+    }
+
     public function getCountAllEnabledUsers($executeQuery = true)
     {
         return $this->userRepo->countAllEnabledUsers($executeQuery);
@@ -1159,7 +1168,7 @@ class UserManager
 
         return false;
     }
-    
+
     public function countByRoles(array $roles, $includeGrps = true)
     {
         return $this->userRepo->countByRoles($roles, $includeGrps);

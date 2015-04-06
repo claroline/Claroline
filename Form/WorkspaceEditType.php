@@ -24,6 +24,7 @@ class WorkspaceEditType extends AbstractType
     private $storageSpaceUsed;
     private $countResources;
     private $isAdmin;
+    private $expirationDate;
 
     /**
      * Constructor.
@@ -36,7 +37,8 @@ class WorkspaceEditType extends AbstractType
         $number = null,
         $storageSpaceUsed = null,
         $countResources = null,
-        $isAdmin = false
+        $isAdmin = false,
+        $expirationDate = null
     )
     {
         $this->username = $username;
@@ -45,6 +47,7 @@ class WorkspaceEditType extends AbstractType
         $this->storageSpaceUsed = $storageSpaceUsed;
         $this->countResources = $countResources;
         $this->isAdmin = $isAdmin;
+        $this->expirationDate = $expirationDate;
     }
 
 
@@ -64,6 +67,16 @@ class WorkspaceEditType extends AbstractType
                     'data' => $this->creationDate
                 )
             );
+        if ($this->expirationDate) {
+            $builder->add(
+                    'endDate',
+                    'text',
+                    array(
+                        'disabled' => 'disabled',
+                        'data' => $this->expirationDate
+                    )
+                );
+        }
         $builder->add('creator', 'text', array('disabled' => 'disabled', 'data' => $this->username));
         if (isset($options['theme_options']['tinymce']) and !$options['theme_options']['tinymce']) {
             $builder->add(
@@ -78,7 +91,7 @@ class WorkspaceEditType extends AbstractType
         $builder->add('selfRegistration', 'checkbox', array('required' => false));
         $builder->add('registrationValidation', 'checkbox', array('required' => false));
         $builder->add('selfUnregistration', 'checkbox', array('required' => false));
-   
+
         if (!$this->isAdmin) {
             $builder->add('maxStorageSize', 'text', array('disabled' => 'disabled', 'label' => 'max_storage_size'));
         } else {
@@ -94,13 +107,13 @@ class WorkspaceEditType extends AbstractType
         }
 
         $builder->add('countResources', 'text', array('mapped' => false, 'disabled' => 'disabled', 'label' => 'count_resources', 'data' => $this->countResources));
-        
+
         if (!$this->isAdmin) {
             $builder->add('maxUsers', 'text', array('disabled' => 'disabled', 'label' => 'workspace_max_users'));
         } else {
             $builder->add('maxUsers', 'text', array('label' => 'workspace_max_users'));
         }
-        
+
         $builder->add('number', 'text', array('disabled' => 'disabled', 'data' => $this->number, 'mapped' => false));
 
     }

@@ -4,7 +4,7 @@
  * This file is part of the Claroline Connect package.
  *
  * (c) Claroline Consortium <consortium@claroline.net>
- *
+ *A
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -77,7 +77,8 @@ class PlatformConfigurationHandler
         'token' => null,
         'country' => '-',
         'datas_sending_url' => 'http://stats.claroline.net/insert.php',
-        'repository_api' => 'http://packages.claroline.net/api.php'
+        'repository_api' => 'http://packages.claroline.net/api.php',
+        'auto_logging_after_registration' => false
     );
 
     /**
@@ -114,17 +115,12 @@ class PlatformConfigurationHandler
             throw $exception;
         }
 
-        $this->checkParameter($parameter);
         $this->parameters[$parameter] = $value;
         $this->saveParameters();
     }
 
     public function setParameters(array $parameters)
     {
-        foreach (array_keys($parameters) as $parameter) {
-            $this->checkParameter($parameter);
-        }
-
         $this->parameters = array_merge($this->parameters, $parameters);
         $this->saveParameters();
     }
@@ -178,6 +174,7 @@ class PlatformConfigurationHandler
         $config->setMaxStorageSize($this->parameters['max_storage_size']);
         $config->setRepositoryApi($this->parameters['repository_api']);
         $config->setWorkspaceMaxUsers($this->parameters['max_workspace_users']);
+        $config->setAutoLogginAfterRegistration($this->parameters['auto_logging_after_registration']);
 
         return $config;
     }
@@ -194,9 +191,7 @@ class PlatformConfigurationHandler
         $parameters = $this->defaultParameters;
 
         foreach ($configParameters as $parameter => $value) {
-            if (array_key_exists($parameter, $parameters)) {
-                $parameters[$parameter] = $value;
-            }
+            $parameters[$parameter] = $value;
         }
 
         return $parameters;

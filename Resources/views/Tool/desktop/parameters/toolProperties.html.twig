@@ -14,7 +14,7 @@
     {{
         macros.desktopBreadcrumbs([
             {
-                'name': 'desktop_parameters'|trans({}, 'platform'),
+                'name': 'preferences'|trans({}, 'platform'),
                 'href': path('claro_desktop_parameters_menu')
             },
             {
@@ -43,8 +43,15 @@
                     <tbody id="tools-table-body">
                         {% for adminOrderedTool in adminOrderedTools %}
                             {% set tool = adminOrderedTool.getTool() %}
+                            {% set toolName = tool.getName() %}
                             <tr class="row-locked-tool text-muted">
-                                <td>{{ tool.getName()|lower|trans({}, 'tools') }} </td>
+                                <td>
+                                    {% if toolName == 'parameters' %}
+                                        {{ 'preferences'|trans({}, 'platform') }}
+                                    {% else %}
+                                        {{ toolName|lower|trans({}, 'tools') }}
+                                    {% endif %}
+                                </td>
                                 <td>
                                     <input
                                         type="checkbox"
@@ -59,6 +66,7 @@
                         
                         {% for orderedTool in orderedTools %}
                             {% set tool = orderedTool.getTool() %}
+                            {% set toolName = tool.getName() %}
                             <tr class="row-tool-config"
                                 data-tool-id="{{ tool.getId () }}"
                                 data-ordered-tool-id="{{ orderedTool.getId () }}"
@@ -66,7 +74,11 @@
                                 <td>
                                     <span class="fa fa-sort text-muted"></span>
                                     &nbsp;
-                                    {{ tool.getName()|lower|trans({}, 'tools') }}
+                                    {% if toolName == 'parameters' %}
+                                        {{ 'preferences'|trans({}, 'platform') }}
+                                    {% else %}
+                                        {{ toolName|lower|trans({}, 'tools') }}
+                                    {% endif %}
                                 </td>
                                 <td>
                                     <input
@@ -74,7 +86,7 @@
                                         class="chk-tool-visible"
                                         value="1"
                                         name="chk-tool-{{ tool.getId() }}"
-                                        {% if tool.isDesktopRequired() or tool.getName() == 'home' or tool.getName() == 'parameters' %} disabled {% endif %}
+                                        {% if tool.isDesktopRequired() or tool.getName() == 'home' %} disabled {% endif %}
                                         {% if tool.isVisible() %} checked {% endif %}
                                     />
                                 </td>

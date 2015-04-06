@@ -623,6 +623,7 @@ please_wait: 'Por favor espere...'
 plugin_packages: Plugin packages
 position: 'posición'
 positive_number_expected: 'Este valor debería ser un número positivo'
+preferences: 'Preferencias'
 private: 'Privado'
 profile_management: Gestión de perfiles
 properties: 'propiedades'
@@ -884,7 +885,6 @@ user_limit_success_update: El número máximo de usuarios por rol ha sido actual
 user_limit_too_low: Ya hay %total% %role%(s). El limite %newMax% es muy bajo.
 user_menu: 'Menú usuario'
 user_menu_configuration: 'Configuración del menú usuario'
-user_options: 'Preferencias'
 user_options_form_desktopBackgroundColor: 'Color de fondo del escritorio'
 user_parameters: 'Parámetros del usuario'
 user_removed: 'Usuario suprimido'
@@ -1017,3 +1017,4 @@ created_by: created_by
 updated_by: updated_by
 display_at_registration: display_at_registration
 workspace_max_users: workspace_max_users
+workspace_edit_form_endDate : workspace_edit_form_endDate

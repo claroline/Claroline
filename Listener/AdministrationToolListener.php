@@ -196,7 +196,7 @@ class AdministrationToolListener
         $this->redirect($params, $event);
     }
     
-    private function redirect($params, $event)
+    protected function redirect($params, $event)
     {
         $subRequest = $this->request->duplicate(array(), null, $params);
         $response = $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);

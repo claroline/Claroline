@@ -66,7 +66,7 @@ class Workspace
      * @ORM\Column(type="integer", nullable=false)
      */
     protected $maxUploadResources = 10000;
-    
+
     /**
      * @ORM\Column(type="integer", nullable=false)
      */
@@ -399,7 +399,7 @@ class Workspace
         return $this->endDate;
     }
 
-    public function setEndDate($endDate)
+    public function setEndDate(\DateTime $endDate)
     {
         $this->endDate = $endDate;
     }
@@ -423,12 +423,12 @@ class Workspace
     {
         $this->workspaceType = $workspaceType;
     }
-    
+
     public function setMaxUsers($maxUsers)
     {
         $this->maxUsers = $maxUsers;
     }
-    
+
     public function getMaxUsers()
     {
         return $this->maxUsers;

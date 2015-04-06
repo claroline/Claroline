@@ -28,7 +28,9 @@ use Claroline\CoreBundle\Manager\Exception\UnremovableToolException;
 use Claroline\CoreBundle\Manager\ToolMaskDecoderManager;
 use Claroline\CoreBundle\Manager\ToolRightsManager;
 use Claroline\CoreBundle\Event\StrictDispatcher;
+use Claroline\CoreBundle\Repository\UserRepository;
 use JMS\DiExtraBundle\Annotation as DI;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -157,7 +159,10 @@ class ToolManager
     /**
      * @param \Claroline\CoreBundle\Entity\User $user
      *
-     * @return \Claroline\CoreBundle\Entity\Tool\Tool
+     * @param int                               $type
+     * @param array                             $excludedTools
+     *
+     * @return \Claroline\CoreBundle\Entity\Tool\Tool[]
      */
     public function getDisplayedDesktopOrderedTools(
         User $user,
@@ -175,9 +180,9 @@ class ToolManager
     }
 
     /**
-     * @param \Claroline\CoreBundle\Entity\User $user
+     * @param integer $type
      *
-     * @return \Claroline\CoreBundle\Entity\Tool\Tool
+     * @return \Claroline\CoreBundle\Entity\Tool\OrderedTool[]
      */
     public function getOrderedToolsLockedByAdmin($type = 0)
     {
@@ -194,8 +199,9 @@ class ToolManager
     public function getDesktopToolsConfigurationArray(User $user, $type = 0)
     {
         $orderedToolList = array();
-        $desktopTools = $this->orderedToolRepo->findBy(
-            array('user' => $user, 'type' => $type)
+        $desktopTools = $this->orderedToolRepo->findDisplayableDesktopOrderedToolsByUser(
+            $user,
+            $type
         );
 
         foreach ($desktopTools as $desktopTool) {
@@ -229,9 +235,8 @@ class ToolManager
     public function getDesktopToolsConfigurationArrayForAdmin($type = 0)
     {
         $orderedToolList = array();
-        $desktopTools = $this->orderedToolRepo->findBy(
-            array('user' => null, 'workspace' => null, 'type' => $type)
-        );
+        $desktopTools = $this->orderedToolRepo
+            ->findDisplayableDesktopOrderedToolsByTypeForAdmin($type);
 
         foreach ($desktopTools as $desktopTool) {
             //this field isn't mapped
@@ -545,7 +550,7 @@ class ToolManager
 
         foreach ($orderedTools as $orderedTool) {
 
-            if ($user && $orderedTool->getTool()->getName() !== 'parameters') {
+            if ($user) {
                 $orderedTool->setVisibleInDesktop(false);
             }
 
@@ -624,8 +629,7 @@ class ToolManager
     public function addRequiredToolsToUser(User $user, $type = 0)
     {
         $requiredTools = array();
-        $adminOrderedTools = $this->orderedToolRepo
-            ->findConfigurableDesktopOrderedToolsByTypeForAdmin($type);
+        $adminOrderedTools = $this->getConfigurableDesktopOrderedToolsByTypeForAdmin($type);
 
         foreach ($adminOrderedTools as $orderedTool) {
 
@@ -897,63 +901,84 @@ class ToolManager
         $this->om->flush();
     }
 
-    public function updateDesktopOrderedToolOrder(
+    public function reorderDesktopOrderedTool(
+        User $user,
         OrderedTool $orderedTool,
-        $newOrder,
-        $type = 0,
-        $executeQuery = true
+        $nextOrderedToolId,
+        $type = 0
     )
     {
-        $order = $orderedTool->getOrder();
+        $orderedTools = $this->getConfigurableDesktopOrderedToolsByUser(
+            $user,
+            array(),
+            $type
+        );
+        $nextId = intval($nextOrderedToolId);
+        $order = 1;
+        $updated = false;
 
-        if ($newOrder < $order) {
-            $this->orderedToolRepo->incDesktopOrderedToolOrderForRange(
-                $orderedTool->getUser(),
-                $newOrder,
-                $order,
-                $type,
-                $executeQuery
-            );
-        } else {
-            $this->orderedToolRepo->decDesktopOrderedToolOrderForRange(
-                $orderedTool->getUser(),
-                $order,
-                $newOrder,
-                $type,
-                $executeQuery
-            );
+        foreach ($orderedTools as $ot) {
+
+            if ($ot === $orderedTool) {
+                continue;
+            } elseif ($ot->getId() === $nextId) {
+                $orderedTool->setOrder($order);
+                $updated = true;
+                $this->om->persist($orderedTool);
+                $order++;
+                $ot->setOrder($order);
+                $this->om->persist($ot);
+                $order++;
+
+            } else {
+                $ot->setOrder($order);
+                $this->om->persist($ot);
+                $order++;
+            }
         }
-        $orderedTool->setOrder($newOrder);
-        $this->om->persist($orderedTool);
+
+        if (!$updated) {
+            $orderedTool->setOrder($order);
+            $this->om->persist($orderedTool);
+        }
         $this->om->flush();
     }
 
-    public function updateOrderedToolOrderForAdmin(
+    public function reorderAdminOrderedTool(
         OrderedTool $orderedTool,
-        $newOrder,
-        $type = 0,
-        $executeQuery = true
+        $nextOrderedToolId,
+        $type = 0
     )
     {
-        $order = $orderedTool->getOrder();
+        $orderedTools = $this->getConfigurableDesktopOrderedToolsByTypeForAdmin($type);
+        $nextId = intval($nextOrderedToolId);
+        $order = 1;
+        $updated = false;
 
-        if ($newOrder < $order) {
-            $this->orderedToolRepo->incOrderedToolOrderForRangeForAdmin(
-                $newOrder,
-                $order,
-                $type,
-                $executeQuery
-            );
-        } else {
-            $this->orderedToolRepo->decOrderedToolOrderForRangeForAdmin(
-                $order,
-                $newOrder,
-                $type,
-                $executeQuery
-            );
+        foreach ($orderedTools as $ot) {
+
+            if ($ot === $orderedTool) {
+                continue;
+            } elseif ($ot->getId() === $nextId) {
+                $orderedTool->setOrder($order);
+                $updated = true;
+                $this->om->persist($orderedTool);
+                $order++;
+                $ot->setOrder($order);
+                $this->om->persist($ot);
+                $order++;
+
+            } else {
+                $ot->setOrder($order);
+                $this->om->persist($ot);
+                $order++;
+            }
         }
-        $orderedTool->setOrder($newOrder);
-        $this->om->persist($orderedTool);
+
+        if (!$updated) {
+            $orderedTool->setOrder($order);
+            $this->om->persist($orderedTool);
+        }
         $this->om->flush();
     }
 
@@ -1108,6 +1133,12 @@ class ToolManager
         $executeQuery = true
     )
     {
+        $excludedToolNames[] = 'home';
+
+        if ($type === 1) {
+            $excludedToolNames[] = 'parameters';
+        }
+
         return $this->orderedToolRepo->findConfigurableDesktopOrderedToolsByUser(
             $user,
             $excludedToolNames,
@@ -1118,10 +1149,18 @@ class ToolManager
 
     public function getConfigurableDesktopOrderedToolsByTypeForAdmin(
         $type = 0,
+        array $excludedToolNames = array(),
         $executeQuery = true
     )
     {
+        $excludedToolNames[] = 'home';
+
+        if ($type === 1) {
+            $excludedToolNames[] = 'parameters';
+        }
+
         return $this->orderedToolRepo->findConfigurableDesktopOrderedToolsByTypeForAdmin(
+            $excludedToolNames,
             $type,
             $executeQuery
         );
@@ -1129,27 +1168,50 @@ class ToolManager
 
     public function getLockedConfigurableDesktopOrderedToolsByTypeForAdmin(
         $type = 0,
+        array $excludedToolNames = array(),
         $executeQuery = true
     )
     {
+        $excludedToolNames[] = 'home';
+
+        if ($type === 1) {
+            $excludedToolNames[] = 'parameters';
+        }
+
         return $this->orderedToolRepo->findLockedConfigurableDesktopOrderedToolsByTypeForAdmin(
+            $excludedToolNames,
             $type,
             $executeQuery
         );
     }
 
+    public function getOneAdminOrderedToolByToolAndType(Tool $tool, $type = 0)
+    {
+        return $this->orderedToolRepo->findOneBy(
+            array('user' => null, 'workspace' => null, 'tool' => $tool, 'type' => $type)
+        );
+    }
+
     public function createOrderedToolByToolForAllUsers(
+        LoggerInterface $logger,
         Tool $tool,
         $type = 0,
         $isVisible = true
     )
     {
         $toolName = $tool->getName();
-        $users = $this->userRepo->findAllEnabledUsers();
+        $usersQuery = $this->userRepo->findAllEnabledUsers(false);
+        $users = $usersQuery->iterate();
         $this->om->startFlushSuite();
-        $i = 0;
+        $index = 0;
 
-        foreach ($users as $user) {
+        $countUser = $this->userRepo->countAllEnabledUsers();
+
+        $logger->info(sprintf("%d users to check tools on.", $countUser));
+
+        foreach ($users as $row) {
+            $user = $row[0];
+            /** @var \Claroline\CoreBundle\Entity\Tool\OrderedTool[] $orderedTools */
             $orderedTools = $this->orderedToolRepo->findOrderedToolsByToolAndUser(
                 $tool,
                 $user,
@@ -1165,12 +1227,31 @@ class ToolManager
                 $orderedTool->setOrder(1);
                 $orderedTool->setType($type);
                 $this->om->persist($orderedTool);
-                $i++;
+                $index++;
 
-                if ($i % 100 === 0) {
+                if ($index % 100 === 0) {
                     $this->om->forceFlush();
+                    $this->om->clear($orderedTool);
+                    $logger->info(sprintf("    %d users checked.", 100));
+                }
+            } else {
+                $orderedTool = $orderedTools[0];
+
+                if ($orderedTool->isVisibleInDesktop() !== $isVisible) {
+                    $orderedTool->setVisibleInDesktop($isVisible);
+                    $this->om->persist($orderedTool);
+                    $index++;
+
+                    if ($index % 100 === 0) {
+                        $this->om->forceFlush();
+                        $this->om->clear($orderedTool);
+                        $logger->info(sprintf("    %d users checked.", 100));
+                    }
                 }
             }
+        }
+        if ($index % 100 !== 0) {
+            $logger->info(sprintf("    %d users checked.", (100 - $index)));
         }
         $this->om->endFlushSuite();
     }

@@ -88,10 +88,10 @@ class DesktopController extends Controller
     {
         $widgets = array();
         $configs = array();
-        $lastWidgetOrder = 1;
         $isLockedHomeTab = false;
         $homeTab = $this->homeTabManager->getHomeTabById($homeTabId);
         $initWidgetsPosition = false;
+        $isWorkspace = false;
 
         if (is_null($homeTab)) {
             $isVisibleHomeTab = false;
@@ -111,10 +111,6 @@ class DesktopController extends Controller
                         ->getWidgetConfigsByUser($homeTab, $user);
                 } else {
                     $userWidgetsConfigs = array();
-                }
-
-                if (count($userWidgetsConfigs) > 0) {
-                    $lastWidgetOrder = count($userWidgetsConfigs);
                 }
 
                 foreach ($adminConfigs as $adminConfig) {
@@ -150,18 +146,31 @@ class DesktopController extends Controller
                 foreach ($userWidgetsConfigs as $userWidgetsConfig) {
                     $configs[] = $userWidgetsConfig;
                 }
-            } else {
+            } elseif ($homeTab->getType() === 'desktop') {
                 $configs = $this->homeTabManager->getWidgetConfigsByUser($homeTab, $user);
-
-                if (count($configs) > 0) {
-                    $lastWidgetOrder = count($configs);
-                }
+            } elseif ($homeTab->getType() === 'workspace') {
+                $workspace = $homeTab->getWorkspace();
+                $isLockedHomeTab = true;
+                $isWorkspace = true;
+                $configs = $this->homeTabManager->getWidgetConfigsByWorkspace(
+                    $homeTab,
+                    $workspace
+                );
             }
-            $userWDCs = $this->widgetManager->generateWidgetDisplayConfigsForUser($user, $configs);
 
-            foreach ($userWDCs as $userWDC) {
+            $wdcs = $isWorkspace ?
+                $this->widgetManager->generateWidgetDisplayConfigsForWorkspace(
+                    $workspace,
+                    $configs
+                ) :
+                $this->widgetManager->generateWidgetDisplayConfigsForUser(
+                    $user,
+                    $configs
+                );
 
-                if ($userWDC->getRow() === -1 || $userWDC->getColumn() === -1) {
+            foreach ($wdcs as $wdc) {
+
+                if ($wdc->getRow() === -1 || $wdc->getColumn() === -1) {
                     $initWidgetsPosition = true;
                     break;
                 }
@@ -179,7 +188,7 @@ class DesktopController extends Controller
                 $widget['configurable'] = $config->isLocked() !== true
                     && $config->getWidgetInstance()->getWidget()->isConfigurable();
                 $widgetInstanceId = $config->getWidgetInstance()->getId();
-                $widget['widgetDisplayConfig'] = $userWDCs[$widgetInstanceId];
+                $widget['widgetDisplayConfig'] = $wdcs[$widgetInstanceId];
                 $widgets[] = $widget;
             }
         }
@@ -188,9 +197,9 @@ class DesktopController extends Controller
             'widgetsDatas' => $widgets,
             'isVisibleHomeTab' => $isVisibleHomeTab,
             'isLockedHomeTab' => $isLockedHomeTab,
-            'lastWidgetOrder' => $lastWidgetOrder,
             'homeTabId' => $homeTabId,
-            'initWidgetsPosition' => $initWidgetsPosition
+            'initWidgetsPosition' => $initWidgetsPosition,
+            'isWorkspace' => $isWorkspace
         );
     }
 

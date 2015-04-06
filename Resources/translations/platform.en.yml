@@ -141,6 +141,7 @@ admin_workspace_tag_form_name: Name
 administration: Administration
 administrative_code: 'Administrative code'
 advanced: Advanced
+advanced_parameters: 'Advanced parameters'
 agenda: Agenda
 agreeing: 'By agreeing to send the data, you will enjoy a better service and you will contribute to improving the Claroline Connect platform that you are installing.'
 all: All
@@ -452,13 +453,18 @@ home: Home
 home_manager: 'Home manager'
 home_parameters: 'Home parameters'
 home_tab: 'Home tab'
+home_tab_bookmark_confirm_message: 'This Home tab will be available in your desktop'
+home_tab_bookmark_confirm_title: 'Home tab bookmark'
+home_tab_bookmark_delete_confirm_message: 'Do you really want to delete this Home tab bookmark ?'
+home_tab_bookmark_delete_confirm_title: 'Remove home tab bookmark'
 home_tab_config_form_locked: 'Locked'
 home_tab_config_form_visible: 'Visible'
 home_tab_creation: 'Home tab creation'
-home_tab_delete_confirm_message: 'Do you really want to delete this Home tab?'
+home_tab_delete_confirm_message: 'Do you really want to delete this Home tab ?'
 home_tab_delete_confirm_title: 'Delete Home tab'
 home_tab_edition: 'Home tab edition'
 home_tab_form_name: Name
+home_tab_roles_explanation: 'If no role is checked the home tab will be available for all users.<br>Otherwise it will be available for users with one of the checked roles only.'
 home_tab_widgets: 'Home tab widgets'
 home_tab_widgets_configuration: 'Home tab widgets configuration'
 home_tabs: 'Home tabs'
@@ -668,6 +674,7 @@ password_ok: 'Your password has been changed, you can login now'
 paste: Paste
 path: Path
 pending: 'Pending'
+pending_users_list: 'Pending users list'
 permissions: Permissions
 personal_data: 'No personal data will be retrieved. The technical and statistical data collected will be used only in relation to the Claroline Connect project and will not be otherwise broadcast.'
 personal_workspace: 'Personal workspace'
@@ -707,6 +714,7 @@ plugin_packages: Plugin packages
 portfolio_url: 'Portfolio tool''s access url'
 position: Position
 positive_number_expected: 'This value should be a positive number'
+preferences: 'Preferences'
 private: Private
 profil_edition: 'User profile edition'
 profile_management: Profile Management
@@ -1003,7 +1011,6 @@ user_limit_success_update: The user limit by role has been successfully updated.
 user_limit_too_low: There is already %total% %role%(s). The limit %newMax% is too low.
 user_menu: 'User menu'
 user_menu_configuration: 'User menu configuration'
-user_options: 'Preferences'
 user_options_form_desktopBackgroundColor: 'Desktop background color'
 user_parameters: 'User parameters'
 user_picker: 'User picker'
@@ -1167,6 +1174,7 @@ install_update_cant_be_undone: Once an operation is started, it cannot be undone
 list_view: List view (beta)
 last_modification: Last modification
 created_by: Created by %creator% the %creationDate%
-updated_by: Last update: %modificationDate%
+updated_by: 'Last update: %modificationDate%'
 display_at_registration: Display at registration
 workspace_max_users: Maximum number of user per workspace
+workspace_edit_form_endDate : Expiration date

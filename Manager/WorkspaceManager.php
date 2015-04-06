@@ -424,13 +424,18 @@ class WorkspaceManager
         //remove accessess if workspace is personal and right was not given
 
         foreach ($workspaces as $workspace) {
+
             if ($workspace->isPersonal() && $toolName) {
                 $pwc = $this->container->get('claroline.manager.tool_manager')
                     ->getPersonalWorkspaceToolConfigs();
                 $canOpen = false;
 
                 foreach ($pwc as $conf) {
-                    if (!$toolName) $toolName = 'home';
+
+                    if (!$toolName) {
+                        $toolName = 'home';
+                    }
+
                     if ($conf->getTool()->getName() === $toolName &&
                         in_array($conf->getRole()->getName(), $userRoleNames) &&
                         ($conf->getMask() & 1)) {
@@ -438,7 +443,9 @@ class WorkspaceManager
                     }
                 }
 
-                $accesses[$workspace->getId()] = $canOpen;
+                if (!$canOpen) {
+                    $accesses[$workspace->getId()] = false;
+                }
             }
         }
 
@@ -736,6 +743,11 @@ class WorkspaceManager
                 'Log\LogRoleSubscribe',
                 array($role, $user)
             );
+            $this->dispatcher->dispatch(
+                'claroline_workspace_register_user',
+                'WorkspaceAddUser',
+                array($role, $user)
+            );
         }
 
         $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
@@ -783,10 +795,10 @@ class WorkspaceManager
     {
         if ($includeGrps) {
             $wsRoles = $this->roleManager->getRolesByWorkspace($workspace);
-            
+
             return $this->container->get('claroline.manager.user_manager')->countByRoles($wsRoles, true);
         }
-        
+
         return $this->workspaceRepo->countUsers($workspace->getId());
     }
 
@@ -1027,5 +1039,16 @@ class WorkspaceManager
             $prefix,
             $executeQuery
         );
+    }
+
+    public function toArray(Workspace $workspace)
+    {
+        $data = array();
+        $data['id'] = $workspace->getId();
+        $data['name'] = $workspace->getName();
+        $data['code'] = $workspace->getCode();
+        $data['expiration_date'] = $workspace->getEndDate()->getTimeStamp();
+
+        return $data;
     }
 }

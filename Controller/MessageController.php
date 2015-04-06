@@ -281,13 +281,14 @@ class MessageController
      * @EXT\Route(
      *     "/show/{message}",
      *     name="claro_message_show",
-     *     defaults={"message"=0}
+     *     defaults={"message"=0},
+     *     options={"expose"=true}
      * )
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      * @EXT\ParamConverter(
      *      "receivers",
      *      class="ClarolineCoreBundle:User",
-     *      options={"multipleIds" = true}
+     *      options={"multipleIds" = true, "name" = "userIds"}
      * )
      * @EXT\ParamConverter(
      *      "workspaces",

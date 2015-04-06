@@ -30,6 +30,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Claroline\CoreBundle\Manager\MailManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\DiExtraBundle\Annotation as DI;
+use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 
 /**
  * Authentication/login controller.
@@ -45,6 +46,7 @@ class AuthenticationController
     private $formFactory;
     private $authenticator;
     private $router;
+    private $ch;
 
     /**
      * @DI\InjectParams({
@@ -56,7 +58,8 @@ class AuthenticationController
      *     "formFactory"    = @DI\Inject("claroline.form.factory"),
      *     "authenticator"  = @DI\Inject("claroline.authenticator"),
      *     "mailManager"    = @DI\Inject("claroline.manager.mail_manager"),
-     *     "router"         = @DI\Inject("router")
+     *     "router"         = @DI\Inject("router"),
+     *     "ch"             = @DI\Inject("claroline.config.platform_config_handler")
      * })
      */
     public function __construct(
@@ -68,7 +71,8 @@ class AuthenticationController
         FormFactory $formFactory,
         Authenticator $authenticator,
         MailManager $mailManager,
-        RouterInterface $router
+        RouterInterface $router,
+        PlatformConfigurationHandler $ch
     )
     {
         $this->request = $request;
@@ -80,6 +84,7 @@ class AuthenticationController
         $this->authenticator = $authenticator;
         $this->mailManager = $mailManager;
         $this->router = $router;
+        $this->ch = $ch;
     }
 
     /**
@@ -100,12 +105,14 @@ class AuthenticationController
     {
         $lastUsername = $this->request->getSession()->get(SecurityContext::LAST_USERNAME);
         $user = $this->userManager->getUserByUsername($lastUsername);
+        $selfRegistrationAllowed = $this->ch->getParameter('allow_self_registration');
 
         if ($user && !$user->isAccountNonExpired()) {
             return array(
                 'last_username' => $lastUsername,
                 'error' => false,
-                'is_expired' => true
+                'is_expired' => true,
+                'selfRegistrationAllowed' => $selfRegistrationAllowed
             );
         }
 
@@ -118,7 +125,8 @@ class AuthenticationController
         return array(
             'last_username' => $lastUsername,
             'error' => $error,
-            'is_expired' => false
+            'is_expired' => false,
+            'selfRegistrationAllowed' => $selfRegistrationAllowed
         );
     }
 
@@ -233,7 +241,7 @@ class AuthenticationController
      */
     public function resetPasswordAction($hash)
     {
-        $user = $this->userManager->getResetPasswordHash($hash);
+        $user = $this->userManager->getByResetPasswordHash($hash);
 
         if (empty($user)) {
             return array(

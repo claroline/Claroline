@@ -23,6 +23,7 @@ class Builder extends ContainerAware
         $hasRoleExtension = $this->container->get('claroline.core_bundle.twig.has_role_extension');
         $router = $this->container->get('router');
         $dispatcher = $this->container->get('event_dispatcher');
+        /** @var \Claroline\CoreBundle\Manager\ToolManager $toolManager */
         $toolManager = $this->container->get('claroline.manager.tool_manager');
 
         $menu = $factory->createItem('root')
@@ -34,13 +35,28 @@ class Builder extends ContainerAware
             ->setAttribute('role', 'presentation')
             ->setExtra('icon', 'fa fa-user');
         $menu->addChild(
-            $translator->trans('parameters', array(), 'platform'),
+            $translator->trans('preferences', array(), 'platform'),
             array('uri' => $router->generate('claro_desktop_open_tool', array('toolName' => 'parameters')))
         )->setAttribute('class', 'dropdown')
         ->setAttribute('role', 'presentation')
-        ->setExtra('icon', 'fa fa-cog');
+        ->setExtra('icon', 'fa fa-cogs');
+
+        //allowing the menu to be extended
+        $this->container->get('event_dispatcher')->dispatch(
+            'claroline_top_bar_right_menu_configure',
+            new ConfigureMenuEvent($factory, $menu)
+        );
 
         $this->addDivider($menu, '1');
+
+        $menu->addChild(
+            $translator->trans('my_badges', array(), 'platform'),
+            array(
+                'route' => 'claro_profile_view_badges'
+            )
+        )->setAttribute('class', 'dropdown')
+            ->setAttribute('role', 'presentation')
+            ->setExtra('icon', 'fa fa-trophy');
 
         $user = $securityContext->getToken()->getUser();
         $lockedOrderedTools = $toolManager->getOrderedToolsLockedByAdmin(1);
@@ -60,7 +76,10 @@ class Builder extends ContainerAware
             1,
             $excludedTools
         );
+        /** @var \Claroline\CoreBundle\Entity\Tool\Tool[] $tools */
         $tools = array_merge($adminTools, $desktopTools);
+
+        $countPermanentMenuLinks = $menu->count();
 
         foreach ($tools as $tool) {
             $toolName = $tool->getName();
@@ -83,13 +102,11 @@ class Builder extends ContainerAware
             }
         }
 
-        //allowing the menu to be extended
-        $this->container->get('event_dispatcher')->dispatch(
-            'claroline_top_bar_right_menu_configure',
-            new ConfigureMenuEvent($factory, $menu)
-        );
+        $countAddedToolMenuLinks = $menu->count();
 
-        $this->addDivider($menu, '2');
+        if ($countPermanentMenuLinks < $countAddedToolMenuLinks) {
+            $this->addDivider($menu, '2');
+        }
 
         //logout
         if ($hasRoleExtension->isImpersonated()) {
@@ -165,7 +182,7 @@ class Builder extends ContainerAware
             foreach ($tools as $tool) {
                 $toolName = $tool->getName();
 
-                if ($toolName === 'home' || $toolName === 'parameters') {
+                if ($toolName === 'home') {
                     continue;
                 }
                 $event = new ConfigureMenuEvent($factory, $menu, $tool);
