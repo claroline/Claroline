@@ -102,9 +102,7 @@ class PlatformConfigurationHandler
 
     public function getParameter($parameter)
     {
-        $this->checkParameter($parameter);
-
-        return $this->parameters[$parameter];
+        if ($this->hasParameter($parameter)) return $this->parameters[$parameter];
     }
 
     public function setParameter($parameter, $value)
