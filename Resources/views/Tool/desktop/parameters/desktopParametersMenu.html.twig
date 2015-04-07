@@ -22,15 +22,6 @@
         </h3>
     </div>
 
-    <div class="list-group menu">
-        <a class="list-group-item" href="{{ path('claro_tool_properties', {'type': 0}) }}">
-            <span>{{ 'menu_bar'|trans({}, 'platform') }}</span>
-        </a>
-        <a class="list-group-item" href="{{ path('claro_tool_properties', {'type': 1}) }}">
-            <span>{{ 'user_menu'|trans({}, 'platform') }}</span>
-        </a>
-        <a class="list-group-item" href="{{ path('claro_user_options_edit_form') }}">
-            <span>{{ 'desktop_parameters'|trans({}, 'platform') }}</span>
-        </a>
-    </div>
+    {{ knp_menu_render('ClarolineCoreBundle:Builder:desktopParametersMenu', {}, 'desktop_parameters') }}
+
 {% endblock %}
