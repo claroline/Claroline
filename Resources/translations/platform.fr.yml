@@ -447,6 +447,7 @@ has_been_suscribed_with_role: 'a été inscrit(e) avec le rôle'
 has_been_suscribed_with_role_group: 'a été inscrit avec le rôle'
 has_been_unregistered_from_group: 'a été désincrit du groupe'
 has_been_unregistered_from_role: 'a été désincrit du rôle'
+has_been_unregistered_from_workspace: 'a été désincrit de l''espace d''activités'
 has_not_been_imported: 'n''a pas été importé(e)'
 has_not_been_imported_into_the_group: 'n''a pas été importé(e) dans le groupe'
 hide: Cacher
@@ -995,6 +996,10 @@ unpublish: Depublier
 unpublished: Non publié
 unregister: Désinscription
 unregister_from_a_workspace: 'Me désinscrire d''un espace d''activités'
+unregister_group_confirm_message: 'Êtes-vous sûr de vouloir désinscrire ce groupe ?'
+unregister_group_s_confirm_message: 'Êtes-vous sûr de vouloir désinscrire ces %count% groupes?'
+unregister_user_confirm_message: 'Êtes-vous sûr de vouloir désinscrire cet utilisateur ?'
+unregister_user_s_confirm_message: 'Êtes-vous sûr de vouloir désinscrire ces %count% utilisateurs ?'
 unregistered: 'Non inscrit'
 unregistered_groups: 'Groupes non enregistrés'
 unregistered_users: 'Utilisateurs non enregistrés'

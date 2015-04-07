@@ -865,6 +865,10 @@ unpublish: Despublicar
 unpublished: No publicado
 unregister: 'Desinscribir'
 unregister_from_a_workspace: 'Desinscribir de un espacio de trabajo'
+unregister_group_confirm_message: '¿Está seguro que desea desinscribir este grupo?'
+unregister_group_s_confirm_message: '¿Está seguro que desea desinscribir estos %count% grupos?'
+unregister_user_confirm_message: '¿Está seguro que desea desinscribir este usuario?'
+unregister_user_s_confirm_message: '¿Está seguro que desea desinscribir estos %count% usuarios?'
 unregistered: 'No inscritos'
 unregistered_groups: 'Grupos no inscritos'
 unregistered_users: 'Usuarios no inscritos'
