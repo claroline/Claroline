@@ -205,7 +205,7 @@ import QTI : Importer des questions au format QTI
 importQTIExercise: Importer un exercice au format QTI
 import questions: Importer des questions
 infoSearchType: Si vous voulez faire une recherche par type, vous devez utiliser les mots clés suivants
-instruction add hole : Pour créer un trou, selectionnez le texte à trouer dans l'éditeur "Texte à trous", puis cliquer sur le bouton "Créer un trou".
+instruction add hole : Pour créer un trou, sélectionnez le texte à trouer dans l'éditeur "Texte à trous", puis cliquez sur le bouton "Créer un trou".
 instruction matching: Pour définir vos correspondances, choisissez dans la colonne "Correspondance" le numéro d'une ou plusieurs propositions à associer.
 interactionGraphic creation: Création d'une question Graphique
 interactionGraphic Edition: Edition d'une question Graphique
@@ -274,6 +274,7 @@ noFinish: Non terminé
 noHintShow: Indices non vus, pas de pénalité
 noImg: Vous devez télécharger une image
 noImgSelect: Vous devez sélectionner une image
+no label: Pas de labels associés
 noOne: Aucune
 noPaperFound: Aucune copie
 noQuestion: Vous ne posez aucune question

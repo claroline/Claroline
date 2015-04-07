@@ -37,8 +37,10 @@ class ChoiceType extends AbstractType
             )
             ->add(
                    'feedback', 'textarea', array(
-                   'required' => false, 'label' => ' ','attr' => array('class'=>'form-control',
-                   'placeholder' => 'Choice.feedback')
+                   'required' => false, 'label' => ' ',
+                   'attr' => array('class'=>'form-control',
+                                   'data-new-tab' => 'yes',
+                                   'placeholder' => 'Choice.feedback')
                   )
             )
             ->add(
