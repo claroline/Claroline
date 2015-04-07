@@ -96,4 +96,16 @@
             $('.subscribe-user-button, .subscribe-group-button').attr('disabled', 'disabled');
         }
     });
+    
+    $('.workspace-field').on('click', function () {
+        var workspaceId = $(this).data('workspace-id');
+        var route = Routing.generate(
+            'claro_admin_workspace_users_unregistration_management', 
+            {'workspace': workspaceId}
+        );
+
+        window.location.href = route;
+    });
+    
+    $('.workspace-field').addClass('pointer-hand');
 })();

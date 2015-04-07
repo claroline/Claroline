@@ -990,6 +990,10 @@ unpublish: Unpublish
 unpublished: Unpublished
 unregister: Unregister
 unregister_from_a_workspace: 'Unregister from a workspace'
+unregister_group_confirm_message: 'Are you sure you want to unregister this group?'
+unregister_group_s_confirm_message: 'Are you sure you want to unregister these %count% groups?'
+unregister_user_confirm_message: 'Are you sure you want to unregister this user ?'
+unregister_user_s_confirm_message: 'Are you sure you want to unregister these %count% users ?'
 unregistered: Unregistered
 unregistered_groups: 'Unregistered groups'
 unregistered_users: 'Unregistered users'
