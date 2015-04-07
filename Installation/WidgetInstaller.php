@@ -39,7 +39,6 @@ class WidgetInstaller extends Updater
             $widget->setDisplayableInWorkspace($workspace);
             $widget->setConfigurable(false);
             $widget->setExportable(false);
-            $widget->setIcon('none');
             $widget->setPlugin($plugin);
             $em->persist($widget);
             $plugin->setHasOptions(true);
