@@ -179,7 +179,6 @@ class WorkspaceManager
         $workspace->setMaxUploadResources($ch->getParameter('max_upload_resources'));
         $workspace->setMaxStorageSize($ch->getParameter('max_storage_size'));
         $workspace->setMaxUsers($ch->getParameter('max_workspace_users'));
-        @mkdir($this->getStorageDirectory($workspace));
         $this->editWorkspace($workspace);
     }
 

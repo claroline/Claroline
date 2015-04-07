@@ -69,19 +69,19 @@ class FileManager
     {
         $ds = DIRECTORY_SEPARATOR;
         $node = $file->getResourceNode();
-        $workspaceCode = $node->getWorkspace()->getCode();
+        $workspaceId = $node->getWorkspace()->getId();
 
         //edit file
         $fileName = $upload->getClientOriginalName();
         $size = @filesize($upload);
         $extension = pathinfo($fileName, PATHINFO_EXTENSION);
         $mimeType = $upload->getClientMimeType();
-        $hashName = $workspaceCode .
+        $hashName = 'WORKSPACE_' . $workspaceId .
             $ds .
             $this->ut->generateGuid() .
             "." .
             $extension;
-        $upload->move($this->fileDir . $ds . $workspaceCode, $hashName);
+        $upload->move($this->fileDir . $ds .  'WORKSPACE_' . $workspaceId, $hashName);
         $file->setSize($size);
         $file->setHashName($hashName);
         $file->setMimeType($mimeType);
