@@ -321,7 +321,7 @@ class WorkspaceParametersController extends Controller
         }
 
         $form = $this->formFactory->create(
-            FormFactory::TYPE_USER_BASE_PROFILE, array($this->localeManager, $this->tosManager)
+            FormFactory::TYPE_USER_BASE_PROFILE, array($this->localeManager, $this->tosManager, $this->get('translator'))
         );
         $form->handleRequest($this->request);
 
