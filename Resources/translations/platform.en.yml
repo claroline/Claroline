@@ -445,6 +445,7 @@ has_been_suscribed_with_role: 'has been suscribed with role'
 has_been_suscribed_with_role_group: 'has been suscribed with role'
 has_been_unregistered_from_group: 'has been unregistered from group'
 has_been_unregistered_from_role: 'has been unregistered from group'
+has_been_unregistered_from_workspace: 'has been unregistered from workspace'
 has_not_been_imported: 'has not been imported'
 has_not_been_imported_into_the_group: 'has not been imported into the group'
 hide: Hide

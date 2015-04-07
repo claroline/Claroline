@@ -17,18 +17,19 @@ use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Manager\GroupManager;
 use Claroline\CoreBundle\Manager\RoleManager;
+use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Claroline\CoreBundle\Manager\WorkspaceTagManager;
-use Claroline\CoreBundle\Manager\ToolManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use JMS\SecurityExtraBundle\Annotation as SEC;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Translation\Translator;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class WorkspaceRegistrationController extends Controller
 {
@@ -37,6 +38,7 @@ class WorkspaceRegistrationController extends Controller
     private $groupManager;
     private $roleManager;
     private $sc;
+    private $session;
     private $toolManager;
     private $translator;
     private $userManager;
@@ -49,6 +51,7 @@ class WorkspaceRegistrationController extends Controller
      *     "groupManager"        = @DI\Inject("claroline.manager.group_manager"),
      *     "roleManager"         = @DI\Inject("claroline.manager.role_manager"),
      *     "sc"                  = @DI\Inject("security.context"),
+     *     "session"             = @DI\Inject("session"),
      *     "toolManager"         = @DI\Inject("claroline.manager.tool_manager"),
      *     "translator"          = @DI\Inject("translator"),
      *     "userManager"         = @DI\Inject("claroline.manager.user_manager"),
@@ -61,6 +64,7 @@ class WorkspaceRegistrationController extends Controller
         GroupManager $groupManager,
         RoleManager $roleManager,
         SecurityContextInterface $sc,
+        SessionInterface $session,
         ToolManager $toolManager,
         Translator $translator,
         UserManager $userManager,
@@ -71,14 +75,15 @@ class WorkspaceRegistrationController extends Controller
         $this->adminWorkspaceRegistrationTool = $toolManager->getAdminToolByName(
             'registration_to_workspace'
         );
-        $this->formFactory         = $formFactory;
-        $this->groupManager        = $groupManager;
-        $this->roleManager         = $roleManager;
-        $this->sc                  = $sc;
-        $this->toolManager         = $toolManager;
-        $this->translator          = $translator;
-        $this->userManager         = $userManager;
-        $this->workspaceManager    = $workspaceManager;
+        $this->formFactory = $formFactory;
+        $this->groupManager = $groupManager;
+        $this->roleManager = $roleManager;
+        $this->sc = $sc;
+        $this->session = $session;
+        $this->toolManager = $toolManager;
+        $this->translator = $translator;
+        $this->userManager = $userManager;
+        $this->workspaceManager = $workspaceManager;
         $this->workspaceTagManager = $workspaceTagManager;
     }
 
@@ -609,6 +614,17 @@ class WorkspaceRegistrationController extends Controller
     {
         $this->checkOpen();
         $this->roleManager->resetWorkspaceRoleForSubjects($users, $workspace);
+        $sessionFlashBag = $this->session->getFlashBag();
+
+        foreach ($users as $user) {
+            $msg = $user->getFirstName() . ' ' . $user->getLastName() . ' ';
+            $msg .= $this->translator->trans(
+                'has_been_unregistered_from_workspace',
+                array(),
+                'platform'
+            );
+            $sessionFlashBag->add('success', $msg);
+        }
 
         return new Response('success', 200);
     }
@@ -637,6 +653,17 @@ class WorkspaceRegistrationController extends Controller
     {
         $this->checkOpen();
         $this->roleManager->resetWorkspaceRoleForSubjects($groups, $workspace);
+        $sessionFlashBag = $this->session->getFlashBag();
+
+        foreach ($groups as $group) {
+            $msg = $group->getName() . ' ';
+            $msg .= $this->translator->trans(
+                'has_been_unregistered_from_workspace',
+                array(),
+                'platform'
+            );
+            $sessionFlashBag->add('success', $msg);
+        }
 
         return new Response('success', 200);
     }
