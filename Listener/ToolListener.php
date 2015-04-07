@@ -406,4 +406,31 @@ class ToolListener
             return $menu;
         }
     }
+
+    /**
+     * @DI\Observe("claroline_top_bar_left_menu_configure_desktop_tool_parameters")
+     *
+     * @param \Acme\DemoBundle\Event\ConfigureMenuEvent $event
+     */
+    public function onTopBarLeftMenuConfigureParameters(ConfigureMenuEvent $event)
+    {
+        $user = $this->securityContext->getToken()->getUser();
+        $tool = $event->getTool();
+
+        if ($user !== 'anon.') {
+            $parametersTitle = $this->translator->trans(
+                'preferences',
+                array(),
+                'platform'
+            );
+            $menu = $event->getMenu();
+            $menu->addChild(
+                $this->translator->trans('preferences', array(), 'platform'),
+                array('route' => 'claro_desktop_parameters_menu')
+            )->setExtra('icon', 'fa fa-' . $tool->getClass())
+            ->setExtra('title', $parametersTitle);
+
+            return $menu;
+        }
+    }
 }

@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Controller\Tool;
 
+use Symfony\Component\Form\FormFactory as SymfonyFormFactory;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -28,6 +29,7 @@ use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceRegistrationQueue;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
+use Claroline\CoreBundle\Form\WorkspaceUsersImportType;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Manager\GroupManager;
@@ -53,22 +55,24 @@ class RolesController extends Controller
     private $translator;
     private $cptManager;
     private $wksUqmanager;
+    private $symfonyFormFactory;
 
     /**
      * @DI\InjectParams({
-     *     "roleManager"      = @DI\Inject("claroline.manager.role_manager"),
-     *     "userManager"      = @DI\Inject("claroline.manager.user_manager"),
-     *     "groupManager"     = @DI\Inject("claroline.manager.group_manager"),
-     *     "resourceManager"  = @DI\Inject("claroline.manager.resource_manager"),
-     *     "rightsManager"    = @DI\Inject("claroline.manager.rights_manager"),
-     *     "facetManager"     = @DI\Inject("claroline.manager.facet_manager"),
-     *     "security"         = @DI\Inject("security.context"),
-     *     "formFactory"      = @DI\Inject("claroline.form.factory"),
-     *     "router"           = @DI\Inject("router"),
-     *     "request"          = @DI\Inject("request"),
-     *     "translator"       = @DI\Inject("translator"),
-     *     "cptManager"       = @DI\Inject("claroline.manager.competence_manager"),
-     *     "wksUqmanager"     = @DI\Inject("claroline.manager.workspace_user_queue_manager"),
+     *     "roleManager"        = @DI\Inject("claroline.manager.role_manager"),
+     *     "userManager"        = @DI\Inject("claroline.manager.user_manager"),
+     *     "groupManager"       = @DI\Inject("claroline.manager.group_manager"),
+     *     "resourceManager"    = @DI\Inject("claroline.manager.resource_manager"),
+     *     "rightsManager"      = @DI\Inject("claroline.manager.rights_manager"),
+     *     "facetManager"       = @DI\Inject("claroline.manager.facet_manager"),
+     *     "security"           = @DI\Inject("security.context"),
+     *     "formFactory"        = @DI\Inject("claroline.form.factory"),
+     *     "router"             = @DI\Inject("router"),
+     *     "request"            = @DI\Inject("request"),
+     *     "translator"         = @DI\Inject("translator"),
+     *     "cptManager"         = @DI\Inject("claroline.manager.competence_manager"),
+     *     "wksUqmanager"       = @DI\Inject("claroline.manager.workspace_user_queue_manager"),
+     *     "symfonyFormFactory" = @DI\Inject("form.factory")
      * })
      */
     public function __construct(
@@ -84,7 +88,8 @@ class RolesController extends Controller
         Request $request,
         TranslatorInterface $translator,
         CompetenceManager $cptManager,
-        workspaceUserQueueManager $wksUqmanager
+        workspaceUserQueueManager $wksUqmanager,
+        SymfonyFormFactory $symfonyFormFactory
     )
     {
         $this->roleManager = $roleManager;
@@ -100,6 +105,7 @@ class RolesController extends Controller
         $this->translator = $translator;
         $this->cptManager = $cptManager;
         $this->wksUqmanager = $wksUqmanager;
+        $this->symfonyFormFactory = $symfonyFormFactory;
     }
     /**
      * @EXT\Route(
@@ -110,7 +116,7 @@ class RolesController extends Controller
      */
     public function configureRolePageAction(Workspace $workspace)
     {
-        $this->checkAccess($workspace);
+        $this->checkEditionAccess($workspace);
         $roles = $this->roleManager->getRolesByWorkspace($workspace);
 
         return array('workspace' => $workspace, 'roles' => $roles);
@@ -125,7 +131,7 @@ class RolesController extends Controller
      */
     public function createRoleFormAction(Workspace $workspace)
     {
-        $this->checkAccess($workspace);
+        $this->checkEditionAccess($workspace);
         $form = $this->formFactory->create(FormFactory::TYPE_WORKSPACE_ROLE);
 
         return array('workspace' => $workspace, 'form' => $form->createView());
@@ -142,7 +148,7 @@ class RolesController extends Controller
      */
     public function createRoleAction(Workspace $workspace, User $user)
     {
-        $this->checkAccess($workspace);
+        $this->checkEditionAccess($workspace);
         $form = $this->formFactory->create(FormFactory::TYPE_WORKSPACE_ROLE);
         $form->handleRequest($this->request);
 
@@ -220,7 +226,7 @@ class RolesController extends Controller
      */
     public function removeRoleAction(Workspace $workspace, Role $role)
     {
-        $this->checkAccess($workspace);
+        $this->checkEditionAccess($workspace);
         $this->roleManager->remove($role);
 
         return new Response('success', 204);
@@ -235,7 +241,7 @@ class RolesController extends Controller
      */
     public function editRoleFormAction(Role $role, Workspace $workspace)
     {
-        $this->checkAccess($workspace);
+        $this->checkEditionAccess($workspace);
         $form = $this->formFactory->create(FormFactory::TYPE_ROLE_TRANSLATION, array(), $role);
 
         return array('workspace' => $workspace, 'form' => $form->createView(), 'role' => $role);
@@ -251,7 +257,7 @@ class RolesController extends Controller
      */
     public function editRoleAction(Role $role, Workspace $workspace)
     {
-        $this->checkAccess($workspace);
+        $this->checkEditionAccess($workspace);
         $form = $this->formFactory->create(
             FormFactory::TYPE_ROLE_TRANSLATION,
             array('wsGuid' => $workspace->getGuid()),
@@ -282,7 +288,7 @@ class RolesController extends Controller
      */
     public function removeUserFromRoleAction(User $user, Role $role, Workspace $workspace)
     {
-        $this->checkAccess($workspace);
+        $this->checkEditionAccess($workspace);
 
         try {
             $this->roleManager->dissociateWorkspaceRole($user, $workspace, $role);
@@ -320,7 +326,7 @@ class RolesController extends Controller
      */
     public function unregisteredUserListAction($page, $search, Workspace $workspace, $max, $order, $direction)
     {
-        $this->checkAccess($workspace);
+        $this->checkEditionAccess($workspace);
         $wsRoles = $this->roleManager->getRolesByWorkspace($workspace);
         $preferences = $this->facetManager->getVisiblePublicPreference();
 
@@ -362,7 +368,7 @@ class RolesController extends Controller
      */
     public function unregisteredGroupListAction($page, $search, Workspace $workspace, $max, $order, $direction)
     {
-        $this->checkAccess($workspace);
+        $this->checkEditionAccess($workspace);
         $wsRoles = $this->roleManager->getRolesByWorkspace($workspace);
 
         $pager = ($search === '') ?
@@ -399,7 +405,7 @@ class RolesController extends Controller
         $search = ''
     )
     {
-        $this->checkAccess($workspace);
+        $this->checkEditionAccess($workspace);
         $wsRoles = $this->roleManager->getRolesByWorkspace($workspace);
         $preferences = $this->facetManager->getVisiblePublicPreference();
 
@@ -447,7 +453,7 @@ class RolesController extends Controller
      */
     public function addUsersToRolesAction(array $users, array $roles, Workspace $workspace)
     {
-        $this->checkAccess($workspace);
+        $this->checkEditionAccess($workspace);
         $this->roleManager->associateRolesToSubjects($users, $roles, true);
         //$listCptNodes = $this->cptManager->getCompetenceByWorkspace($workspace);
         //$this->cptManager->subscribeUserToCompetences($users, $listCptNodes);
@@ -465,7 +471,7 @@ class RolesController extends Controller
      */
     public function removeGroupFromRoleAction(Group $group, Role $role, Workspace $workspace)
     {
-        $this->checkAccess($workspace);
+        $this->checkEditionAccess($workspace);
 
         try {
             $this->roleManager->dissociateWorkspaceRole($group, $workspace, $role);
@@ -500,7 +506,7 @@ class RolesController extends Controller
      */
     public function addGroupsToRolesAction(array $groups, array $roles, Workspace $workspace)
     {
-        $this->checkAccess($workspace);
+        $this->checkEditionAccess($workspace);
         $this->roleManager->associateRolesToSubjects($groups, $roles, true);
 
         return new Response('success');
@@ -529,6 +535,7 @@ class RolesController extends Controller
     public function usersListAction(Workspace $workspace, $page, $search, $max, $order, $direction = 'ASC')
     {
         $this->checkAccess($workspace);
+        $canEdit = $this->hasEditionAccess($workspace);
         $wsRoles = $this->roleManager->getRolesByWorkspace($workspace);
         $currentUser = $this->security->getToken()->getUser();
         $preferences = $this->facetManager->getVisiblePublicPreference();
@@ -546,7 +553,8 @@ class RolesController extends Controller
             'order' => $order,
             'direction' => $direction,
             'currentUser' => $currentUser,
-            'showMail' => $preferences['mail']
+            'showMail' => $preferences['mail'],
+            'canEdit' => $canEdit
         );
     }
 
@@ -578,6 +586,7 @@ class RolesController extends Controller
     public function groupsListAction(Workspace $workspace, $page, $search, $max, $order, $direction)
     {
         $this->checkAccess($workspace);
+        $canEdit = $this->hasEditionAccess($workspace);
         $wsRoles = $this->roleManager->getRolesByWorkspace($workspace);
 
         $pager = ($search === '') ?
@@ -591,7 +600,8 @@ class RolesController extends Controller
             'wsRoles' => $wsRoles,
             'max' => $max,
             'order' => $order,
-            'direction' => $direction
+            'direction' => $direction,
+            'canEdit' => $canEdit
         );
     }
 
@@ -627,6 +637,7 @@ class RolesController extends Controller
     {
         $this->checkAccess($workspace);
 
+        $canEdit = $this->hasEditionAccess($workspace);
         $preferences = $this->facetManager->getVisiblePublicPreference();
         $pager = ($search === '') ?
             $this->userManager->getUsersByGroup($group, $page, $max, $order, $direction) :
@@ -640,7 +651,8 @@ class RolesController extends Controller
             'max' => $max,
             'order' => $order,
             'direction' => $direction,
-            'showMail' => $preferences['mail']
+            'showMail' => $preferences['mail'],
+            'canEdit' => $canEdit
         );
     }
 
@@ -727,7 +739,7 @@ class RolesController extends Controller
         $max = 50
     )
     {
-        $this->checkAccess($workspace);
+        $this->checkEditionAccess($workspace);
 
         return array(
             'workspace' => $workspace,
@@ -747,7 +759,7 @@ class RolesController extends Controller
         Workspace $workspace
     )
     {
-        $this->checkWorkspaceManagerAccess($workspace);
+        $this->checkEditionAccess($workspace);
         $this->wksUqmanager->validateRegistration($wksqueue, $workspace);
         $route = $this->router->generate(
             'claro_users_pending',
@@ -767,7 +779,7 @@ class RolesController extends Controller
         Workspace $workspace
     )
     {
-        $this->checkWorkspaceManagerAccess($workspace);
+        $this->checkEditionAccess($workspace);
         $this->wksUqmanager->removeRegistrationQueue($wksqueue);
         $route = $this->router->generate(
             'claro_users_pending',
@@ -787,7 +799,7 @@ class RolesController extends Controller
      */
     public function exportUsers(Workspace $workspace, $format)
     {
-        $this->checkWorkspaceManagerAccess($workspace);
+        $this->checkEditionAccess($workspace);
         $exporter = $this->container->get('claroline.exporter.' . $format);
         $exporterManager = $this->container->get('claroline.manager.exporter_manager');
         $file = $exporterManager->export(
@@ -817,6 +829,65 @@ class RolesController extends Controller
         return $response;
     }
 
+    /**
+     * @EXT\Route(
+     *     "workspace/{workspace}/users/import/form",
+     *     name="claro_workspace_users_tool_import_form",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\roles:workspaceUsersToolImportForm.html.twig")
+     */
+    public function workspaceUsersToolImportFormAction(Workspace $workspace)
+    {
+        $this->checkEditionAccess($workspace);
+        $form = $this->symfonyFormFactory->create(new WorkspaceUsersImportType($workspace));
+
+        return array('workspace' => $workspace, 'form' => $form->createView());
+    }
+
+    /**
+     * @EXT\Route(
+     *     "workspace/{workspace}/users/import",
+     *     name="claro_workspace_users_tool_import",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\roles:workspaceUsersToolImportForm.html.twig")
+     */
+    public function workspaceUsersToolImportAction(Workspace $workspace)
+    {
+        $this->checkEditionAccess($workspace);
+        $form = $this->symfonyFormFactory->create(new WorkspaceUsersImportType($workspace));
+        $form->handleRequest($this->request);
+
+        if ($form->isValid()) {
+            $datas = array();
+            $file = $form->get('file')->getData();
+            $lines = str_getcsv(file_get_contents($file), PHP_EOL);
+
+            foreach ($lines as $line) {
+                $datasLine = str_getcsv($line, ';');
+
+                if (count($datasLine) === 2) {
+                    $datas[] = $datasLine;
+                }
+            }
+
+            $this->roleManager->associateWorkspaceRolesByImport($workspace, $datas);
+
+            return new RedirectResponse(
+                $this->router->generate(
+                    'claro_workspace_registered_user_list',
+                    array('workspace' => $workspace->getId())
+                )
+            );
+        } else {
+
+            return array('workspace' => $workspace, 'form' => $form->createView());
+        }
+    }
+
     private function checkAccess(Workspace $workspace)
     {
         if (!$this->security->isGranted('users', $workspace)) {
@@ -824,12 +895,16 @@ class RolesController extends Controller
         }
     }
 
-    private function checkWorkspaceManagerAccess(Workspace $workspace)
+    private function checkEditionAccess(Workspace $workspace)
     {
-        $role = $this->roleManager->getManagerRole($workspace);
+        if (!$this->security->isGranted(array('users', 'edit'), $workspace)) {
 
-        if (is_null($role) || !$this->security->isGranted($role->getName())) {
             throw new AccessDeniedException();
         }
+    }
+
+    private function hasEditionAccess(Workspace $workspace)
+    {
+        return $this->security->isGranted(array('users', 'edit'), $workspace);
     }
 }

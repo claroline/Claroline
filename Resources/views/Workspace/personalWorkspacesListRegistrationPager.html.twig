@@ -27,7 +27,9 @@
         <tbody id="personal-workspace-table-body">
             {% for workspace in personalWs %}
                 <tr id="{{ workspace.getId() }}" class="row-workspace">
-                    <td>
+                    <td class="workspace-field"
+                        data-workspace-id="{{ workspace.getId() }}"
+                    >
                         {{ workspace.getName() }}
                         <span class="workspace-code">({{ workspace.getCode() }})</span>
                     </td>

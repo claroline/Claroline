@@ -16,18 +16,14 @@ use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\AbstractRoleSubject;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
-use Claroline\CoreBundle\Entity\Facet\FieldFacet;
 use Claroline\CoreBundle\Manager\Exception\LastManagerDeleteException;
 use Claroline\CoreBundle\Manager\Exception\RoleReadOnlyException;
 use Claroline\CoreBundle\Repository\RoleRepository;
 use Claroline\CoreBundle\Repository\UserRepository;
 use Claroline\CoreBundle\Repository\GroupRepository;
 use Claroline\CoreBundle\Event\StrictDispatcher;
-use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Translation\Translator;
 use Symfony\Component\DependencyInjection\Container;
 use Claroline\CoreBundle\Persistence\ObjectManager;
@@ -552,7 +548,7 @@ class RoleManager
     }
 
     /**
-     * @param \Claroline\CoreBundle\Entity\User                        $user
+     * @param \Claroline\CoreBundle\Entity\User $user
      * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
      *
      * @return \Claroline\CoreBundle\Entity\Role[]
@@ -931,4 +927,30 @@ class RoleManager
         $this->om->flush();
     }
 
+    public function associateWorkspaceRolesByImport(Workspace $workspace, array $datas)
+    {
+        $this->om->startFlushSuite();
+        $i = 1;
+
+        foreach ($datas as $data) {
+            $username = $data[0];
+            $roleName = $data[1];
+
+            $user = $this->userRepo->findOneUserByUsername($username);
+            $roles = $this->roleRepo->findRolesByWorkspaceCodeAndTranslationKey(
+                $workspace->getCode(),
+                $roleName
+            );
+
+            if (!is_null($user) && count ($roles) > 0) {
+                $this->associateRoles($user, $roles);
+            }
+
+            if ($i % 100 === 0) {
+                $this->om->forceFlush();
+            }
+            $i++;
+        }
+        $this->om->endFlushSuite();
+    }
 }

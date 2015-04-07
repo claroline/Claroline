@@ -179,7 +179,6 @@ class WorkspaceManager
         $workspace->setMaxUploadResources($ch->getParameter('max_upload_resources'));
         $workspace->setMaxStorageSize($ch->getParameter('max_storage_size'));
         $workspace->setMaxUsers($ch->getParameter('max_workspace_users'));
-        @mkdir($this->getStorageDirectory($workspace));
         $this->editWorkspace($workspace);
     }
 
@@ -743,6 +742,11 @@ class WorkspaceManager
                 'Log\LogRoleSubscribe',
                 array($role, $user)
             );
+            $this->dispatcher->dispatch(
+                'claroline_workspace_register_user',
+                'WorkspaceAddUser',
+                array($role, $user)
+            );
         }
 
         $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
@@ -1042,6 +1046,7 @@ class WorkspaceManager
         $data['id'] = $workspace->getId();
         $data['name'] = $workspace->getName();
         $data['code'] = $workspace->getCode();
+        $data['expiration_date'] = $workspace->getEndDate()->getTimeStamp();
 
         return $data;
     }

@@ -35,11 +35,11 @@ class Builder extends ContainerAware
             ->setAttribute('role', 'presentation')
             ->setExtra('icon', 'fa fa-user');
         $menu->addChild(
-            $translator->trans('parameters', array(), 'platform'),
+            $translator->trans('preferences', array(), 'platform'),
             array('uri' => $router->generate('claro_desktop_open_tool', array('toolName' => 'parameters')))
         )->setAttribute('class', 'dropdown')
         ->setAttribute('role', 'presentation')
-        ->setExtra('icon', 'fa fa-cog');
+        ->setExtra('icon', 'fa fa-cogs');
 
         //allowing the menu to be extended
         $this->container->get('event_dispatcher')->dispatch(

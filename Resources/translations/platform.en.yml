@@ -444,6 +444,7 @@ has_been_suscribed_with_role: 'has been suscribed with role'
 has_been_suscribed_with_role_group: 'has been suscribed with role'
 has_been_unregistered_from_group: 'has been unregistered from group'
 has_been_unregistered_from_role: 'has been unregistered from group'
+has_been_unregistered_from_workspace: 'has been unregistered from workspace'
 has_not_been_imported: 'has not been imported'
 has_not_been_imported_into_the_group: 'has not been imported into the group'
 hide: Hide
@@ -712,6 +713,7 @@ plugin_packages: Plugin packages
 portfolio_url: 'Portfolio tool''s access url'
 position: Position
 positive_number_expected: 'This value should be a positive number'
+preferences: 'Preferences'
 private: Private
 profil_edition: 'User profile edition'
 profile_management: Profile Management
@@ -987,6 +989,10 @@ unpublish: Unpublish
 unpublished: Unpublished
 unregister: Unregister
 unregister_from_a_workspace: 'Unregister from a workspace'
+unregister_group_confirm_message: 'Are you sure you want to unregister this group?'
+unregister_group_s_confirm_message: 'Are you sure you want to unregister these %count% groups?'
+unregister_user_confirm_message: 'Are you sure you want to unregister this user ?'
+unregister_user_s_confirm_message: 'Are you sure you want to unregister these %count% users ?'
 unregistered: Unregistered
 unregistered_groups: 'Unregistered groups'
 unregistered_users: 'Unregistered users'
@@ -1008,7 +1014,6 @@ user_limit_success_update: The user limit by role has been successfully updated.
 user_limit_too_low: There is already %total% %role%(s). The limit %newMax% is too low.
 user_menu: 'User menu'
 user_menu_configuration: 'User menu configuration'
-user_options: 'Preferences'
 user_options_form_desktopBackgroundColor: 'Desktop background color'
 user_parameters: 'User parameters'
 user_picker: 'User picker'
