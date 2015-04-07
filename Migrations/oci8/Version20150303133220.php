@@ -20,9 +20,6 @@ class Version20150303133220 extends AbstractMigration
                 locker NUMBER(1) NOT NULL
             )
         ");
-        $this->addSql("
-            ALTER INDEX idx_b797c100fab79c10 RENAME TO IDX_2672B44BFAB79C10
-        ");
     }
 
     public function down(Schema $schema)
@@ -30,9 +27,6 @@ class Version20150303133220 extends AbstractMigration
         $this->addSql("
             ALTER TABLE ujm_category 
             DROP (locker)
-        ");
-        $this->addSql("
-            ALTER INDEX idx_2672b44bfab79c10 RENAME TO IDX_B797C100FAB79C10
         ");
     }
 }

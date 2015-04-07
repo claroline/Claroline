@@ -18,9 +18,6 @@ class Version20150303133220 extends AbstractMigration
             ALTER TABLE ujm_category 
             ADD COLUMN locker SMALLINT NOT NULL WITH DEFAULT
         ");
-        $this->addSql("
-            RENAME INDEX idx_b797c100fab79c10 TO IDX_2672B44BFAB79C10
-        ");
     }
 
     public function down(Schema $schema)
@@ -28,12 +25,6 @@ class Version20150303133220 extends AbstractMigration
         $this->addSql("
             ALTER TABLE ujm_category 
             DROP COLUMN locker
-        ");
-        $this->addSql("
-            CALL SYSPROC.ADMIN_CMD ('REORG TABLE ujm_category')
-        ");
-        $this->addSql("
-            RENAME INDEX idx_2672b44bfab79c10 TO IDX_B797C100FAB79C10
         ");
     }
 }

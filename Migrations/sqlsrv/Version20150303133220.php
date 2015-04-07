@@ -18,11 +18,6 @@ class Version20150303133220 extends AbstractMigration
             ALTER TABLE ujm_category 
             ADD locker BIT NOT NULL
         ");
-        $this->addSql("
-            EXEC sp_RENAME N 'ujm_proposal.idx_b797c100fab79c10', 
-            N 'IDX_2672B44BFAB79C10', 
-            N 'INDEX'
-        ");
     }
 
     public function down(Schema $schema)
@@ -30,11 +25,6 @@ class Version20150303133220 extends AbstractMigration
         $this->addSql("
             ALTER TABLE ujm_category 
             DROP COLUMN locker
-        ");
-        $this->addSql("
-            EXEC sp_RENAME N 'ujm_proposal.idx_2672b44bfab79c10', 
-            N 'IDX_B797C100FAB79C10', 
-            N 'INDEX'
         ");
     }
 }
