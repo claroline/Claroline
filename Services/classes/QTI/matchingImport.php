@@ -119,7 +119,10 @@ class matchingImport extends qtiImport {
             
            if ($simpleLabel->hasAttribute("fixed") && $simpleLabel->getAttribute("fixed") == 'true') {
                 $label->setPositionForce(true);
+            } else {
+                $label->setPositionForce(false);
             }
+            
             //recording in the DBB
             $this->doctrine->getManager()->persist($label);
             $this->doctrine->getManager()->flush();
@@ -149,6 +152,8 @@ class matchingImport extends qtiImport {
             
             if ($simpleProposal->hasAttribute("fixed") && $simpleProposal->getAttribute("fixed") == 'true') {
                 $proposal->setPositionForce(true);
+            } else {
+                $proposal->setPositionForce(false);
             }
             
             $identifiant = $simpleProposal->getAttribute("identifier");
