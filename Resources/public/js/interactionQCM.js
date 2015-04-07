@@ -88,12 +88,12 @@ function creationQCMEdit(expectedAnswer, response, point, comment, positionForce
          $(this).find('.row').each(function () {
 
             fillChoicesArray($(this),edition,index);    
-           
+           alert($(this));
             // Add the form errors
             $('#choiceError').append($(this).find('.field-error'));
         });
         //add feedback to edition array
-        addFeedback(comment,index,edition);
+        addFeedback($(this),comment,index,edition);
 
         if (nbResponses == 0) {
             // Add the delete button
@@ -138,7 +138,7 @@ function creationQCMEdit(expectedAnswer, response, point, comment, positionForce
         });
         return ui;
     };
-
+    
 //    $('tbody').sortable({
 //        helper: fixHelper,
 ////     cancel: 'contenteditable',
@@ -181,7 +181,7 @@ function addChoice(container, deleteChoice, comment, edition) {
         fillChoicesArray($(this),edition,index);
     });
     //add the feedback button
-    addFeedback(comment,index,edition);
+    addFeedback($(this),comment,index,edition);
 
     // Add the delete button
     $('#newTable').find('tr:last').append('<td class="classic"></td>');
@@ -364,6 +364,7 @@ function whichChange() {
 function fillChoicesArray(row,edition,index) {   
     // Add the field of type input
     if (row.find('input').length) {
+        alert(row.find('input').attr('id').indexOf('ordre') == -1);
         if (row.find('input').attr('id').indexOf('ordre') == -1) {
             $('#newTable').find('tr:last').append('<td class="classic"></td>');
             $('#newTable').find('td:last').append(row.find('input'));
@@ -376,12 +377,33 @@ function fillChoicesArray(row,edition,index) {
         }
     }
     // Add the field of type textarea
-    if (row.find('textarea').length) { 
-        idLabelVal = row.find('textarea').attr("id");     
-        $('#newTable').find('tr:last').append('<td class="classic"><span id="span'+index+'" class="input-group"></span></td>');
-        $('#span'+index).append(row.find('textarea'));
-        $('#span'+index).append('<span class="input-group-btn"><a class="btn btn-default" id="adve_'+idLabelVal+'" onClick="advancedEdition(\''+idLabelVal+'\',event);" title="'+edition+'"><i class="fa fa-font"></i></a></span>');
+//    if (row.find('textarea').length) {
+//        $('#newTable').find('tr:last').append('<td class="classic"></td>');
+//        $('#newTable').find('td:last').append(row.find('textarea'));
+//    }
+  
+  if (row.find('*[id$="_label"]').length) {
+        $('#newTable').find('tr:last').append('<td class="classic"></td>');
+        $('#newTable').find('td:last').append(row.find('*[id$="_label"]'));
     }
+  
+   if (row.find('*[id$="_feedback"]').length) {
+        $('#newTable').find('tr:last').append('<td class="classic"></td>');
+        $('#newTable').find('td:last').append(row.find('*[id$="_feedback"]'));
+    }
+    
+//    if (row.find('*[id$="_label"]').length) { 
+//        var  idLabelVal = row.find('*[id$="_label"]').attr("id");
+//        $('#newTable').find('tr:last').append('<td class="classic"><span id="span'+index+'" class="input-group"></span></td>');
+//        $('#span'+index).append(row.find('*[id$="_label"]'));
+//        $('#span'+index).append('<span class="input-group-btn"><a class="btn btn-default" id="adve_'+idLabelVal+'" onClick="advancedEdition(\''+idLabelVal+'\',event);" title="'+edition+'"><i class="fa fa-font"></i></a></span>');
+//   }
+//    
+//    if (row.find('*[id$="_feedback"]').length) { 
+//       $('#newTable').find('tr:last').append('<td class="classic"><span id="span'+index+'" class="input-group"></span></td>');
+//        $('#span'+index).append(row.find('*[id$="_feedback"]'));
+//       $('#span'+index).append('<span class="input-group-btn"><a class="btn btn-default" id="QCMavancedEdition" onClick="advancedEdition(\'ujm_exobundle_interactionqcmtype_choices_'+index+'_feedback\',event);" title="'+edition+'"><i class="fa fa-font"></i></a></span>');
+//    }
     
 }
 
@@ -409,16 +431,15 @@ function tableChoicesCreation(expectedAnswer, response, point, comment, position
     }
 }
 
-function addFeedback(comment,index,edition) {
+function addFeedback(row,comment,index,edition) {
 
     // Create the button feedback
-    var addFeedbacks = $('<a title="'+comment+'" id="QCMfeedback_'+index+'" class="btn btn-default" ><i class="fa fa-comments-o"></i></a>');
-    $('#newTable').find('tr:last').append('<td id="td_'+index+'" class="classic"></td>');
-    $('#newTable').find('td:last').append(addFeedbacks);
+  
     
-    $("#QCMfeedback_"+index).click(function() {
-    //  $('#td_'+index).addClass('input-group');
-       addFeedbacks.replaceWith('<span id=tabFeedback'+index+' class="input-group"><textarea id="feedback_label_'+index+'" class="form-control" placeholder="'+comment+'" style="height:34px;" ></textarea>\n\
-           <span class="input-group-btn"><a id="QCMavancedEdition" class="btn btn-default" onClick="advancedEdition(\'feedback_label_'+index+'\',event);" title="'+edition+'"><i class="fa fa-font"></i></a></span></span>'); 
-    });    
+   
+//    
+//    $("#QCMfeedback_"+index).click(function() {               
+//        addFeedbacks.replaceWith('<span id=tabFeedback'+index+' class="input-group"><textarea id="ujm_exobundle_interactionqcmtype_choices_'+index+'_feedback" class="form-control" placeholder="'+comment+'" style="height:34px;" ></textarea>\n\
+//       <span class="input-group-btn"><a id="QCMavancedEdition" class="btn btn-default" onClick="advancedEdition(\'ujm_exobundle_interactionqcmtype_choices_'+index+'_feedback\',event);" title="'+edition+'"><i class="fa fa-font"></i></a></span></span>'); 
+//    });    
 }

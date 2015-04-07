@@ -24,7 +24,7 @@ class ChoiceType extends AbstractType
                     'label' => ' ',
                     'attr' => array('style' => 'height:34px; ',
                     'class'=>'form-control',
-                    'placeholder' => 'expected answer',               
+                    'placeholder' => 'expected answer'               
                     )
                 )
             )
@@ -34,6 +34,12 @@ class ChoiceType extends AbstractType
                     'label' => ' ', 
                     'attr' => array('class' => 'col-md-1', 'placeholder' => 'points')
                 )
+            )
+            ->add(
+                   'feedback', 'textarea', array(
+                   'required' => false, 'label' => ' ','attr' => array('class'=>'form-control',
+                   'placeholder' => 'Choice.feedback')
+                  )
             )
             ->add(
                 'positionForce', 'checkbox', array(

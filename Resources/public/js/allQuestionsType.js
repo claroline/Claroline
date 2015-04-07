@@ -241,7 +241,12 @@ function displayOptionalFields(){
   //Value of the description
   var valDescription =$("*[id$='_interaction_question_description']").text();
   //Id QCM response
-  var valReplyQCM =$("*[id$='_label']").text();
+  $('#tableChoice').children('tr').each(function(){
+     var valAnswerQCM=$(this).find('td').eq(1).text();
+      alert('test'+valAnswerQCM);
+  });
+  
+
   //Value of feelback
   var valFeedback = $("*[id$='_interaction_feedBack']").text();
 
@@ -262,11 +267,11 @@ function displayOptionalFields(){
       }
   }
   //Enables advanced edition QCM
-  if(valReplyQCM.substring(0,3) === '<p>')
-  {
-      $("*[id$='_label']").addClass("claroline-tiny-mce hide");
-      $("*[id$='_label']").data("data-theme","advanced");
-  }
+//  if(valAnswerQCM.substring(0,3) === '<p>')
+//  {
+//      $("*[id$='_label']").addClass("claroline-tiny-mce hide");
+//      $("*[id$='_label']").data("data-theme","advanced");
+//  }
   //Test feedback
   if(valFeedback !== "")
   {
