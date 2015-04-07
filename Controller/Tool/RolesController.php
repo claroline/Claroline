@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Controller\Tool;
 
+use Symfony\Component\Form\FormFactory as SymfonyFormFactory;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -28,6 +29,7 @@ use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceRegistrationQueue;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
+use Claroline\CoreBundle\Form\WorkspaceUsersImportType;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Manager\GroupManager;
@@ -53,22 +55,24 @@ class RolesController extends Controller
     private $translator;
     private $cptManager;
     private $wksUqmanager;
+    private $symfonyFormFactory;
 
     /**
      * @DI\InjectParams({
-     *     "roleManager"      = @DI\Inject("claroline.manager.role_manager"),
-     *     "userManager"      = @DI\Inject("claroline.manager.user_manager"),
-     *     "groupManager"     = @DI\Inject("claroline.manager.group_manager"),
-     *     "resourceManager"  = @DI\Inject("claroline.manager.resource_manager"),
-     *     "rightsManager"    = @DI\Inject("claroline.manager.rights_manager"),
-     *     "facetManager"     = @DI\Inject("claroline.manager.facet_manager"),
-     *     "security"         = @DI\Inject("security.context"),
-     *     "formFactory"      = @DI\Inject("claroline.form.factory"),
-     *     "router"           = @DI\Inject("router"),
-     *     "request"          = @DI\Inject("request"),
-     *     "translator"       = @DI\Inject("translator"),
-     *     "cptManager"       = @DI\Inject("claroline.manager.competence_manager"),
-     *     "wksUqmanager"     = @DI\Inject("claroline.manager.workspace_user_queue_manager"),
+     *     "roleManager"        = @DI\Inject("claroline.manager.role_manager"),
+     *     "userManager"        = @DI\Inject("claroline.manager.user_manager"),
+     *     "groupManager"       = @DI\Inject("claroline.manager.group_manager"),
+     *     "resourceManager"    = @DI\Inject("claroline.manager.resource_manager"),
+     *     "rightsManager"      = @DI\Inject("claroline.manager.rights_manager"),
+     *     "facetManager"       = @DI\Inject("claroline.manager.facet_manager"),
+     *     "security"           = @DI\Inject("security.context"),
+     *     "formFactory"        = @DI\Inject("claroline.form.factory"),
+     *     "router"             = @DI\Inject("router"),
+     *     "request"            = @DI\Inject("request"),
+     *     "translator"         = @DI\Inject("translator"),
+     *     "cptManager"         = @DI\Inject("claroline.manager.competence_manager"),
+     *     "wksUqmanager"       = @DI\Inject("claroline.manager.workspace_user_queue_manager"),
+     *     "symfonyFormFactory" = @DI\Inject("form.factory")
      * })
      */
     public function __construct(
@@ -84,7 +88,8 @@ class RolesController extends Controller
         Request $request,
         TranslatorInterface $translator,
         CompetenceManager $cptManager,
-        workspaceUserQueueManager $wksUqmanager
+        workspaceUserQueueManager $wksUqmanager,
+        SymfonyFormFactory $symfonyFormFactory
     )
     {
         $this->roleManager = $roleManager;
@@ -100,6 +105,7 @@ class RolesController extends Controller
         $this->translator = $translator;
         $this->cptManager = $cptManager;
         $this->wksUqmanager = $wksUqmanager;
+        $this->symfonyFormFactory = $symfonyFormFactory;
     }
     /**
      * @EXT\Route(
@@ -821,6 +827,65 @@ class RolesController extends Controller
         $response->headers->set('Connection', 'close');
 
         return $response;
+    }
+
+    /**
+     * @EXT\Route(
+     *     "workspace/{workspace}/users/import/form",
+     *     name="claro_workspace_users_tool_import_form",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\roles:workspaceUsersToolImportForm.html.twig")
+     */
+    public function workspaceUsersToolImportFormAction(Workspace $workspace)
+    {
+        $this->checkEditionAccess($workspace);
+        $form = $this->symfonyFormFactory->create(new WorkspaceUsersImportType($workspace));
+
+        return array('workspace' => $workspace, 'form' => $form->createView());
+    }
+
+    /**
+     * @EXT\Route(
+     *     "workspace/{workspace}/users/import",
+     *     name="claro_workspace_users_tool_import",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\roles:workspaceUsersToolImportForm.html.twig")
+     */
+    public function workspaceUsersToolImportAction(Workspace $workspace)
+    {
+        $this->checkEditionAccess($workspace);
+        $form = $this->symfonyFormFactory->create(new WorkspaceUsersImportType($workspace));
+        $form->handleRequest($this->request);
+
+        if ($form->isValid()) {
+            $datas = array();
+            $file = $form->get('file')->getData();
+            $lines = str_getcsv(file_get_contents($file), PHP_EOL);
+
+            foreach ($lines as $line) {
+                $datasLine = str_getcsv($line, ';');
+
+                if (count($datasLine) === 2) {
+                    $datas[] = $datasLine;
+                }
+            }
+
+            $this->roleManager->associateWorkspaceRolesByImport($workspace, $datas);
+
+            return new RedirectResponse(
+                $this->router->generate(
+                    'claro_workspace_registered_user_list',
+                    array('workspace' => $workspace->getId())
+                )
+            );
+        } else {
+
+            return array('workspace' => $workspace, 'form' => $form->createView());
+        }
     }
 
     private function checkAccess(Workspace $workspace)
