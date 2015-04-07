@@ -94,7 +94,7 @@ class InteractionHoleHandler extends \UJM\ExoBundle\Form\InteractionHandler{
 
         $this->htmlWithoutValue($interHole);
 
-        $this->addAnExericse($interHole);
+        $this->addAnExercise($interHole);
 
         $this->duplicateInter($interHole);
     }

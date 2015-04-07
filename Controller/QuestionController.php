@@ -248,9 +248,11 @@ class QuestionController extends Controller
     {
         $vars = array();
         $allowToAccess = 0;
+        $exerciseSer = $this->container->get('ujm.exercise_services');
+        $em = $this->getDoctrine()->getManager();
 
         if ($exoID != -1) {
-            $exercise = $this->getDoctrine()->getManager()->getRepository('UJMExoBundle:Exercise')->find($exoID);
+            $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($exoID);
             $vars['_resource'] = $exercise;
 
             if ($this->container->get('ujm.exercise_services')
@@ -259,8 +261,8 @@ class QuestionController extends Controller
             }
         }
 
-        $question = $this->controlUserQuestion($id);
-        $sharedQuestion = $this->container->get('ujm.exercise_services')->controlUserSharedQuestion($id);
+        $question = $exerciseSer->controlUserQuestion($id, $this->container, $em);
+        $sharedQuestion = $exerciseSer->controlUserSharedQuestion($id);
 
         if (count($question) > 0 || count($sharedQuestion) > 0 || $allowToAccess == 1) {
             $interaction = $this->getDoctrine()
@@ -349,6 +351,14 @@ class QuestionController extends Controller
                             ->getManager()
                             ->getRepository('UJMExoBundle:InteractionMatching')
                             ->getInteractionMatching($interaction->getId());
+                    
+                    if ($interactionMatching[0]->getShuffle()) {
+                        $interactionMatching[0]->shuffleProposals();
+                        $interactionMatching[0]->shuffleLabels();
+                    } else {
+                        $interactionMatching[0]->sortProposals();
+                        $interactionMatching[0]->sortLabels();
+                    }
 
                     $form = $this->createForm(new ResponseType(), $response);
 
@@ -445,7 +455,8 @@ class QuestionController extends Controller
     public function editAction($id, $exoID, $form = null)
     {
         $services = $this->container->get('ujm.exercise_services');
-        $question = $this->controlUserQuestion($id);
+        $em = $this->getDoctrine()->getManager();
+        $question = $services->controlUserQuestion($id, $this->container, $em);
         $share    = $this->container->get('ujm.exercise_services')->controlUserSharedQuestion($id);
         $user     = $this->container->get('security.context')->getToken()->getUser();
         $catID    = -1;
@@ -473,7 +484,6 @@ class QuestionController extends Controller
             $typeInter = $interaction->getType();
 
             $nbResponses = 0;
-            $em = $this->getDoctrine()->getManager();
             $response = $em->getRepository('UJMExoBundle:Response')
                 ->findBy(array('interaction' => $interaction->getId()));
             $nbResponses = count($response);
@@ -701,10 +711,10 @@ class QuestionController extends Controller
      */
     public function deleteAction($id, $pageNow, $maxPage, $nbItem, $lastPage)
     {
-        $question = $this->controlUserQuestion($id);
+        $em = $this->getDoctrine()->getManager();
+        $question = $this->container->get('ujm.exercise_services')->controlUserQuestion($id, $this->container, $em);
 
         if (count($question) > 0) {
-            $em = $this->getDoctrine()->getManager();
 
             $eq = $this->getDoctrine()
                 ->getManager()
@@ -1016,6 +1026,7 @@ class QuestionController extends Controller
      */
     public function manageDocAction()
     {
+        $allowToDel = array();
         $user = $this->container->get('security.context')->getToken()->getUser();
         $request = $this->get('request');
 
@@ -2087,9 +2098,11 @@ class QuestionController extends Controller
                             ->getManager()
                             ->getRepository('UJMExoBundle:Interaction')
                             ->find($interID);
+        $service = $this->container->get('ujm.exercise_services');
 
-        $question = $this->controlUserQuestion($interaction->getQuestion()->getId());
-        $sharedQuestion = $this->container->get('ujm.exercise_services')->controlUserSharedQuestion($interID);
+        $em = $this->getDoctrine()->getManager();
+        $question = $service->controlUserQuestion($interaction->getQuestion()->getId(), $this->container, $em);
+        $sharedQuestion = $service->controlUserSharedQuestion($interID);
 
         $allowToAccess = FALSE;
 
@@ -2210,27 +2223,6 @@ class QuestionController extends Controller
     }
 
     /**
-     * To control the User's rights to this question
-     *
-     * @access private
-     *
-     * @param integer $questionID id Question
-     *
-     * @return Doctrine Query Result
-     */
-    private function controlUserQuestion($questionID)
-    {
-        $user = $this->container->get('security.context')->getToken()->getUser();
-
-        $question = $this->getDoctrine()
-            ->getManager()
-            ->getRepository('UJMExoBundle:Question')
-            ->getControlOwnerQuestion($user->getId(), $questionID);
-
-        return $question;
-    }
-
-    /**
      * To paginate table
      *
      * @access private
@@ -2321,28 +2313,5 @@ class QuestionController extends Controller
         return $doublePagination;
     }
 
-    /**
-     * Export an existing Question in QTI.
-     *
-     * @access public
-     *
-     * @param integer $id : id of question
-     *
-     */
-    public function ExportAction($id)
-    {
-        $em = $this->getDoctrine()->getManager();
-        $question = $this->controlUserQuestion($id);
 
-        $qtiRepos = $this->container->get('ujm.qti_repository');
-        $qtiRepos->createDirQTI();
-
-        if (count($question) > 0) {
-            $interaction = $em->getRepository('UJMExoBundle:Interaction')
-                              ->getInteraction($id);
-            $export = $qtiRepos->export($interaction);
-        }
-
-        return $export;
-    }
 }

@@ -84,7 +84,7 @@ class InteractionGraphicHandler extends \UJM\ExoBundle\Form\InteractionHandler
 
         $this->em->flush();
 
-        $this->addAnExericse($interGraph);
+        $this->addAnExercise($interGraph);
 
         $this->duplicateInter($interGraph);
     }

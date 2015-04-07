@@ -387,19 +387,38 @@ class ExerciseController extends Controller
             $interactionsPager = $pagination[0];
             $pagerQuestion = $pagination[1];
 
-            return $this->render(
-                'UJMExoBundle:Question:exerciseQuestion.html.twig',
-                array(
-                    'workspace'            => $workspace,
-                    'interactions'         => $interactionsPager,
-                    'exerciseID'           => $id,
-                    'questionWithResponse' => $questionWithResponse,
-                    'pagerQuestion'        => $pagerQuestion,
-                    'displayAll'           => $displayAll,
-                    'allowEdit'            => $allowEdit,
-                    '_resource'            => $exercise
-                )
-            );
+            // if upload a none qti file
+            if ( $request->get('qtiError') ) {
+                return $this->render(
+                    'UJMExoBundle:Question:exerciseQuestion.html.twig',
+                    array(
+                        'workspace'            => $workspace,
+                        'interactions'         => $interactionsPager,
+                        'exerciseID'           => $id,
+                        'questionWithResponse' => $questionWithResponse,
+                        'pagerQuestion'        => $pagerQuestion,
+                        'displayAll'           => $displayAll,
+                        'allowEdit'            => $allowEdit,
+                        '_resource'            => $exercise,
+                        'qtiError'              => $request->get('qtiError')
+                    )
+                );
+            } else {
+                return $this->render(
+                    'UJMExoBundle:Question:exerciseQuestion.html.twig',
+                    array(
+                        'workspace'            => $workspace,
+                        'interactions'         => $interactionsPager,
+                        'exerciseID'           => $id,
+                        'questionWithResponse' => $questionWithResponse,
+                        'pagerQuestion'        => $pagerQuestion,
+                        'displayAll'           => $displayAll,
+                        'allowEdit'            => $allowEdit,
+                        '_resource'            => $exercise
+                    )
+                );
+            }
+
         } else {
             return $this->redirect($this->generateUrl('ujm_exercise_open', array('exerciseId' => $id)));
         }
@@ -1186,6 +1205,14 @@ class ExerciseController extends Controller
                     ->getManager()
                     ->getRepository('UJMExoBundle:InteractionMatching')
                     ->getInteractionMatching($interactionToDisplay->getId());
+                
+                if ($interactionToDisplayed[0]->getShuffle()) {
+                        $interactionToDisplayed[0]->shuffleProposals();
+                        $interactionToDisplayed[0]->shuffleLabels();
+                    } else {
+                        $interactionToDisplayed[0]->sortProposals();
+                        $interactionToDisplayed[0]->sortLabels();
+                    }
 
                 $responseMatch = $this->getDoctrine()
                                       ->getManager()

@@ -161,7 +161,7 @@
                     <i class="fa fa-repeat"></i>
                 </a>
                 {# ham : Export Question button  #}
-                <a class="btn btn-default" data-toggle="tooltip" title="{{ 'Export' | trans }}" href="{{ path('ujm_question_export', {
+                <a class="btn btn-default" data-toggle="tooltip" title="{{ 'Export' | trans }}" href="{{ path('ujm_qti_export', {
                 'id': interaction.question.id }) }}">
                     <i class="fa fa-save"></i>
                 </a>
@@ -237,7 +237,7 @@
             {% endif %}
             <td style="display: none;">
                 {{ interaction.question.id }}
-            </td> 
+            </td>
         </tr>
     {% endfor %}
     </tbody>

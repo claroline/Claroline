@@ -117,12 +117,10 @@ default : Default
 delDocQuestion: Delete this document and all the linked questions
 delete: Delete
 delete document: Deletion of document
-deleteLabel: Delete the label
 delete hole: Delete the hole
 delete of my bank: Delete of my bank
 delete of my exercise: Delete of my exercise
 delete papers: Delete the papers
-deleteProposal: Supprimer la proposition
 description: Description
 displayAllList: Display the whole list
 display all on this page: Display all on this page
@@ -158,6 +156,7 @@ explainCoeffDis2: The questions with a discrimination coefficient between 0.35 a
 explainCoeffDis3: Questions which have a negative index signal a discrepancy, the best students fail these questions, the lowest pass these questions.
 explainMeasureDifficulty: The measure of difficulty is equal to the percentage of success to the question
 export CSV of results: Export CSV of results
+exportQTIExercise : Export questions of exercise in QTI format
 
 # F
 feedback: Feedback general
@@ -203,6 +202,7 @@ isInterupt: Interupted
 image: Image
 import: Import
 import QTI : Import questions in QTI format
+importQTIExercise: Import exercise in QTI format
 import questions: Import questions
 infoSearchType: If you want to do a search by type, you must used the following key words
 instruction add hole : To add a blank, you must select the text in the editor "Text with hole", then click on the button "Create hole".
@@ -336,7 +336,8 @@ qcm edition: Edition of a question of type QCM
 qti can't open zip: Unable to open archive
 qti format warning: You must import a zip archive with an IMS_QTI file
 qti_import_title: No title attribut in the element assessmentItem
-qti_import_qcm_prompt: No prompt element in the choiceInteraction element
+qti_import_qcm_prompt: No prompt element in the choiceInteraction element.
+qti no questions: Becarefull, for export an exercise, you must have at least one question in your exercise
 qti unsupported format: Non-compliant QTI format or unsupported
 qti xml not found: XML schema not found
 question: Question
@@ -481,6 +482,8 @@ Hint.value: Hint
 Interaction.feedback: Feedback to display with the correction (optional)
 Interaction.invite: Question
 
+Inter_Matching.shuffle: Order of random selection
+
 Inter_Open.ScoreMaxLongResp: Points for correct answer
 
 Inter_QCM.ScoreRightResponse: Correct result
@@ -495,6 +498,7 @@ Inter_Hole.size: Size
 
 Label.value : Value
 Label.scoreRight: Score of question
+Label.positionForce: Forced position
 
 LockAttempte.date: Date
 
@@ -507,6 +511,7 @@ Planning.start_time: Start date
 Points: Points
 
 Proposal.value: Response
+Proposal.positionForce: Forced position
 
 Question_creation: Question creation
 Question.description: Description of the question (optional)

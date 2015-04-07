@@ -83,7 +83,7 @@ class InteractionMatchingHandler extends InteractionHandler
 
         $this->em->flush();
 
-        $this->addAnExericse($interMatching);
+        $this->addAnExercise($interMatching);
 
         $this->duplicateInter($interMatching);
 
@@ -149,7 +149,7 @@ class InteractionMatchingHandler extends InteractionHandler
         foreach ($proposals as $proposal) {
             $proposal->removeAssociatedLabel($proposal);
         }
-                
+
         // filter $originalLabels to contain label no longer present
         foreach ($interMatching->getLabels() as $label) {
             foreach ($originalLabels as $key => $toDel) {
@@ -197,7 +197,7 @@ class InteractionMatchingHandler extends InteractionHandler
             $proposal->setInteractionMatching($interMatching);
             $this->em->persist($proposal);
         }
-        
+
         $proposals = array_merge($interMatching->getProposals()->toArray());
         foreach ($interMatching->getLabels() as $label) {
             if(count($this->request->get($indLabel.'_correspondence')) > 0 ) {

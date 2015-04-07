@@ -32,6 +32,9 @@
         <a class="btn btn-primary" href="{{ path('ujm_question_new', { 'exoID': exoID }) }}">
             <i class="fa fa-plus"></i> {{ 'create a new entry' | trans }}
         </a>
+        <a class="btn btn-primary" title="{{ 'qti format warning' | trans }}" onClick="importQTI('{{ path('ujm_qti_import_form') }}', '{{ exoID }}');">
+            <i class="fa fa-download"></i> {{ 'import QTI' | trans }}
+        </a>
         <a class="btn btn-primary" href="{{ path('ujm_question_search_question', { 'exoID': exoID }) }}">
             <i class="fa fa-question"></i> {{ 'searchQuestion' | trans }}
         </a>
@@ -93,6 +96,9 @@
             </div>
         </div>
     </div>
+    {% if qtiError is defined %}
+        <div class="alert alert-warning">{{ qtiError }}</div>
+    {% endif %}
     <div class="list-group">
         <div class="list-group-item">
             {% if QuestionsExo == 'false' %}
@@ -159,6 +165,7 @@
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/sortAndSearch.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/resize.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/exerciseImportQuestion.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/qti.js') }}"></script>
     <script type="text/javascript">
         $(document).ready(function () {
             ready();

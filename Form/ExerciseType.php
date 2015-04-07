@@ -22,6 +22,7 @@ class ExerciseType extends AbstractType
                 )
             )
             ->add('description', 'tinymce', array(
+                    'attr' => array('data-new-tab' => 'yes'),
                     'label' => 'Description', 'required' => false
                 )
             )

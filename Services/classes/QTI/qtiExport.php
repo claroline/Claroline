@@ -9,7 +9,6 @@ namespace UJM\ExoBundle\Services\classes\QTI;
 
 
 use Doctrine\Bundle\DoctrineBundle\Registry;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 
 
@@ -207,13 +206,9 @@ abstract class qtiExport
         }
 
         $zip->close();
-        $response = new BinaryFileResponse($tmpFileName);
-        //$response->headers->set('Content-Type', $content->getContentType());
-        $response->headers->set('Content-Type', 'application/application/zip');
-        $response->headers->set('Content-Disposition', 'attachment; filename='.$this->question->getId().'_QTI-Archive.zip');
-        $response->headers->set('Cache-Control', 'no-cache, no-store, must-revalidate'); // HTTP 1.1.
-        $response->headers->set('Pragma', 'no-cache'); // HTTP 1.0.
-        $response->headers->set('Expires', '0'); // Proxies.
+
+        $qtiServ = $this->container->get('ujm.qti_services');
+        $response = $qtiServ->createZip($tmpFileName, $this->question->getId());
 
         return $response;
     }

@@ -34,6 +34,20 @@ class Label
      * @ORM\Column(name="score_right_response", type="float", nullable=true)
      */
     private $scoreRightResponse;
+    
+    /**
+     * @var boolean $positionForce
+     *
+     * @ORM\Column(name="position_force", type="boolean", nullable=true)
+     */
+    private $positionForce;
+    
+     /**
+     * @var integer $ordre
+     *
+     * @ORM\Column(name="ordre", type="integer")
+     */
+    private $ordre;
 
     /**
      * @ORM\ManyToOne(targetEntity="UJM\ExoBundle\Entity\InteractionMatching", inversedBy="labels")
@@ -108,5 +122,43 @@ class Label
     public function setInteractionMatching(\UJM\ExoBundle\Entity\InteractionMatching $interactionMatching)
     {
         $this->interactionMatching = $interactionMatching;
+    }
+    
+    /**
+     * Set positionForce
+     *
+     * @param boolean $positionForce
+     */
+    public function setPositionForce($positionForce)
+    {
+        $this->positionForce = $positionForce;
+    }
+
+    /**
+     * Get positionForce
+     */
+    public function getPositionForce()
+    {
+        return $this->positionForce;
+    }
+    
+    /**
+     * Set ordre
+     *
+     * @param integer $ordre
+     */
+    public function setOrdre($ordre)
+    {
+        $this->ordre = $ordre;
+    }
+
+    /**
+     * Get ordre
+     *
+     * @return integer
+     */
+    public function getOrdre()
+    {
+        return $this->ordre;
     }
 }

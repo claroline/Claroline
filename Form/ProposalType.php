@@ -12,9 +12,18 @@ class ProposalType extends AbstractType
     {
         $builder
             ->add(
+                'ordre', 'text'
+            )
+            ->add(
                 'value', 'textarea', array(
                     'label' => ' '
-                ));
+                 )
+            )
+            ->add(
+                'positionForce', 'checkbox', array(
+                    'required' => false, 'label' => ' '
+                )
+            );
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

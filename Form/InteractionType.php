@@ -29,6 +29,7 @@ class InteractionType extends AbstractType
                 )
             )
             ->add('invite', 'tinymce', array(
+                    'attr' => array('data-new-tab' => 'yes'),
                     'label' => 'Interaction.invite',
                     'attr'  => array('placeholder' => 'Interaction.invite'),
                     'required' => true

@@ -72,10 +72,29 @@ class matchingImport extends qtiImport {
         $this->interactionMatching->setInteraction($this->interaction);
         //for recording the type of the question
         $this->matchingType();
+        $this->getShuffle();
         $this->doctrine->getManager()->persist($this->interactionMatching);
         $this->doctrine->getManager()->flush();
         $this->createLabels();
         $this->createProposals();
+    }
+    
+    /**
+     * Get shuffle
+     * 
+     * @access protected
+     */
+    protected function getShuffle() {
+        $ib = $this->assessmentItem->getElementsByTagName("itemBody")->item(0);
+        $mi = $ib->getElementsBYTagName("matchInteraction")->item(0);
+        $shuffle = $mi->getAttribute("shuffle");
+        if ($shuffle == true ) {
+            $this->interactionMatching->setShuffle(true);
+        } else {
+            $this->interactionMatching->setShuffle(false);
+        }
+        $this->doctrine->getManager()->persist($this->interactionMatching);
+        $this->doctrine->getManager()->flush();
     }
 
     /**
@@ -84,6 +103,7 @@ class matchingImport extends qtiImport {
      * @access protected
      */
     protected function createLabels() {
+        $ordre = 0;
         $ib = $this->assessmentItem->getElementsByTagName("itemBody")->item(0);
         $mi = $ib->getElementsByTagName("matchInteraction")->item(0);
         $sms = $mi->getElementsByTagName("simpleMatchSet")->item(1);
@@ -95,10 +115,19 @@ class matchingImport extends qtiImport {
             $identifiant = $simpleLabel->getAttribute("identifier");
             $label->setScoreRightResponse($this->notation($identifiant));
             $label->setInteractionMatching($this->interactionMatching);
+            $label->setOrdre($ordre);
+            
+           if ($simpleLabel->hasAttribute("fixed") && $simpleLabel->getAttribute("fixed") == 'true') {
+                $label->setPositionForce(true);
+            } else {
+                $label->setPositionForce(false);
+            }
+            
             //recording in the DBB
             $this->doctrine->getManager()->persist($label);
             $this->doctrine->getManager()->flush();
             $this->associatedLabels[$identifiant] = $label;
+            $ordre++;
         }
     }
 
@@ -108,6 +137,7 @@ class matchingImport extends qtiImport {
      * @access protected
      */
     protected function createProposals() {
+        $ordre = 0;
         $ib = $this->assessmentItem->getElementsByTagName("itemBody")->item(0);
         $mi = $ib->getElementsByTagName("matchInteraction")->item(0);
         $sms = $mi->getElementsByTagName("simpleMatchSet")->item(0);
@@ -118,6 +148,14 @@ class matchingImport extends qtiImport {
         foreach ($sms->getElementsByTagName("simpleAssociableChoice") as $simpleProposal) {
             $proposal = new Proposal();
             $proposal->setValue($this->value($simpleProposal));
+            $proposal->setOrdre($ordre);
+            
+            if ($simpleProposal->hasAttribute("fixed") && $simpleProposal->getAttribute("fixed") == 'true') {
+                $proposal->setPositionForce(true);
+            } else {
+                $proposal->setPositionForce(false);
+            }
+            
             $identifiant = $simpleProposal->getAttribute("identifier");
             $proposal->setInteractionMatching($this->interactionMatching);
             $this->doctrine->getManager()->persist($proposal);
@@ -140,6 +178,7 @@ class matchingImport extends qtiImport {
                     $this->doctrine->getManager()->flush();
                 }
             }
+            $ordre++;
         }
     }
 

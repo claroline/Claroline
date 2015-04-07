@@ -33,6 +33,9 @@
         <a class="btn btn-primary" href="{{ path('ujm_question_new', { 'exoID': exerciseID }) }}">
             <i class="fa fa-plus"></i> {{ 'create a new entry' | trans }}
         </a>
+        <a class="btn btn-primary" href="{{ path('ujm_qti_export_exercise_questions', { 'exoID': exerciseID, 'exoName': _resource.getResourceNode().getName()  }) }}">
+            <i class="fa fa-save"></i> {{ 'exportQTIExercise' | trans }}
+        </a>
     </div>
 
     <div class="list-group">
@@ -58,6 +61,9 @@
                 </button>
             </div>
             <br/><br/>
+            {% if qtiError is defined %}
+                <div class="alert alert-warning">{{ qtiError }}</div>
+            {% endif %}
 
             {% if interactions is not empty %}
 
@@ -84,6 +90,7 @@
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/ext/jquery-ui-touch-punch.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/exerciceQuestion.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/resize.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/qti.js') }}"></script>
     <script type="text/javascript">
         $(document).ready(function () {
             ready();
