@@ -88,7 +88,8 @@ class BaseProfileType extends AbstractType
                                 array(
                                     'label'  => $this->translator->trans($field->getName(), array(), 'platform'),
                                     'mapped' => false,
-                                    'required' => false
+                                    'required' => false,
+                                    'attr' => array('facet' => $facet->getName())
                                 )
                             );
                             break;
@@ -103,7 +104,8 @@ class BaseProfileType extends AbstractType
                                     'format'    => $this->translator->trans('date_agenda_display_format_for_form', array(), 'platform'),
                                     'attr'      => $attr,
                                     'autoclose' => true,
-                                    'mapped'    => false
+                                    'mapped'    => false,
+                                    'attr' => $facet->getName()
                                 )
                             );
                             break;
@@ -114,7 +116,8 @@ class BaseProfileType extends AbstractType
                                 array(
                                     'label'  => $this->translator->trans($field->getName(), array(), 'platform'),
                                     'mapped' => false,
-                                    'required' => false
+                                    'required' => false,
+                                    'attr' => $facet->getName()
                                 )
                             );
                             break;
