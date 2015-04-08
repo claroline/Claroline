@@ -274,6 +274,7 @@ class UserManager
      */
     public function importUsers(array $users, $sendMail = true, $logger = null, $additionalRoles = array())
     {
+        $returnValues = array();
         //keep these roles before the clear() will mess everything up. It's not what we want.
         $tmpRoles = $additionalRoles;
         $additionalRoles = [];
@@ -348,6 +349,7 @@ class UserManager
             $newUser->setAuthentication($authentication);
             $this->createUser($newUser, $sendMail, $additionalRoles, $model);
             $this->objectManager->persist($newUser);
+            $returnValues[] = $firstName . ' ' . $lastName;
 
             if ($logger) $logger(" [UOW size: " . $this->objectManager->getUnitOfWork()->size() . "]");
             if ($logger) $logger(" User $j ($username) being created");
@@ -375,6 +377,8 @@ class UserManager
         }
 
         $this->objectManager->endFlushSuite();
+
+        return $returnValues;
     }
 
     /**
@@ -1172,5 +1176,83 @@ class UserManager
     public function countByRoles(array $roles, $includeGrps = true)
     {
         return $this->userRepo->countByRoles($roles, $includeGrps);
+    }
+
+    /**
+     * Update users imported from an array.
+     * There is the array format:
+     * @todo some batch processing
+     *
+     * array(
+     *     array(firstname, lastname, username, pwd, email, code, phone),
+     *     array(firstname2, lastname2, username2, pwd2, email2, code2, phone2),
+     *     array(firstname3, lastname3, username3, pwd3, email3, code3, phone3),
+     * )
+     *
+     * @param array $users
+     *
+     * @return array
+     */
+    public function updateImportedUsers(array $users, $additionalRoles = array())
+    {
+        $returnValues = array();
+        $lg = $this->platformConfigHandler->getParameter('locale_language');
+        $this->objectManager->startFlushSuite();
+        $updatedUsers = array();
+        $i = 1;
+
+        foreach ($users as $user) {
+            $firstName = $user[0];
+            $lastName = $user[1];
+            $username = $user[2];
+            $pwd = $user[3];
+            $email = $user[4];
+
+            if (isset($user[5])) {
+                $code = trim($user[5]) === '' ? null: $user[5];
+            } else {
+                $code = null;
+            }
+
+            if (isset($user[6])) {
+                $phone = trim($user[6]) === '' ? null: $user[6];
+            } else {
+                $phone = null;
+            }
+
+            if (isset($user[7])) {
+                $authentication = trim($user[7]) === '' ? null: $user[7];
+            } else {
+                $authentication = null;
+            }
+            $existingUser = $this->getUserByUsernameOrMail($username, $email);
+
+            if (!is_null($existingUser)) {
+                $existingUser->setFirstName($firstName);
+                $existingUser->setLastName($lastName);
+                $existingUser->setUsername($username);
+                $existingUser->setPlainPassword($pwd);
+                $existingUser->setMail($email);
+                $existingUser->setAdministrativeCode($code);
+                $existingUser->setPhone($phone);
+                $existingUser->setLocale($lg);
+                $existingUser->setAuthentication($authentication);
+                $this->objectManager->persist($existingUser);
+                $updatedUsers[] = $existingUser;
+                $returnValues[] = $firstName . ' ' . $lastName;
+
+                if ($i % 100 === 0) {
+                    $this->objectManager->forceFlush();
+                }
+                $i++;
+            }
+        }
+        $this->objectManager->endFlushSuite();
+
+        if (count($updatedUsers) > 0 && count($additionalRoles) > 0) {
+            $this->roleManager->associateRolesToSubjects($updatedUsers, $additionalRoles);
+        }
+
+        return $returnValues;
     }
 }

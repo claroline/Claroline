@@ -11,20 +11,22 @@
 
 namespace Claroline\CoreBundle\Form;
 
+use Claroline\CoreBundle\Entity\Role;
+use Claroline\CoreBundle\Validator\Constraints\CsvUser;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Validator\Constraints\NotBlank;
-use Claroline\CoreBundle\Validator\Constraints\CsvUser;
-use Claroline\CoreBundle\Entity\Role;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class ImportUserType extends AbstractType
 {
+    private $mode;
     private $showRoles;
 
-    public function __construct($showRoles = false)
+    public function __construct($showRoles = false, $mode = 0)
     {
+        $this->mode = $mode;
         $this->showRoles = $showRoles;
     }
 
@@ -39,11 +41,18 @@ class ImportUserType extends AbstractType
                 'constraints' => array(
                     new NotBlank(),
                     new File(),
-                    new CsvUser()
+                    new CsvUser($this->mode)
                 )
             )
-        )
-        ->add(
+        )->add(
+            'mode',
+            'choice',
+            array(
+                'label' => 'mode',
+                'choices' => array('create' => 'create_only', 'update' => 'create_and_update'),
+                'required' => true
+            )
+        )->add(
             'sendMail',
             'checkbox',
             array(

@@ -11,36 +11,38 @@
 
 namespace Claroline\CoreBundle\Controller\Administration;
 
-use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Tool\PwsToolConfig;
-use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\Role;
+use Claroline\CoreBundle\Entity\Tool\Tool;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\StrictDispatcher;
-use Claroline\CoreBundle\Form\Factory\FormFactory;
-use Claroline\CoreBundle\Form\Administration\UserPropertiesType;
 use Claroline\CoreBundle\Form\Administration\ProfilePicsImportType;
+use Claroline\CoreBundle\Form\ImportUserType;
+use Claroline\CoreBundle\Form\ProfileCreationType;
+use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Manager\AuthenticationManager;
 use Claroline\CoreBundle\Manager\LocaleManager;
 use Claroline\CoreBundle\Manager\MailManager;
+use Claroline\CoreBundle\Manager\RightsManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\ToolManager;
-use Claroline\CoreBundle\Manager\UserManager;
-use Claroline\CoreBundle\Manager\RightsManager;
 use Claroline\CoreBundle\Manager\ToolMaskDecoderManager;
+use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
-use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use JMS\DiExtraBundle\Annotation as DI;
 use JMS\SecurityExtraBundle\Annotation as SEC;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Security\Core\SecurityContextInterface;;
+use Symfony\Component\Translation\Translator;
 
 /**
  * @DI\Tag("security.secure_service")
@@ -48,74 +50,82 @@ use Symfony\Component\Security\Core\SecurityContextInterface;
  */
 class UsersController extends Controller
 {
-    private $userManager;
-    private $roleManager;
+    private $configHandler;
     private $eventDispatcher;
     private $formFactory;
-    private $request;
-    private $mailManager;
-    private $workspaceManager;
     private $localeManager;
-    private $router;
-    private $toolManager;
+    private $mailManager;
+    private $request;
     private $rightsManager;
-    private $userAdminTool;
-    private $configHandler;
+    private $roleManager;
+    private $router;
+    private $session;
+    private $toolManager;
     private $toolMaskDecoderManager;
+    private $translator;
+    private $userAdminTool;
+    private $userManager;
+    private $workspaceManager;
 
     /**
      * @DI\InjectParams({
-     *     "userManager"            = @DI\Inject("claroline.manager.user_manager"),
-     *     "workspaceManager"       = @DI\Inject("claroline.manager.workspace_manager"),
-     *     "roleManager"            = @DI\Inject("claroline.manager.role_manager"),
-     *     "rightsManager"          = @DI\Inject("claroline.manager.rights_manager"),
-     *     "toolMaskDecoderManager" = @DI\Inject("claroline.manager.tool_mask_decoder_manager"),
+     *     "authenticationManager"  = @DI\Inject("claroline.common.authentication_manager"),
+     *     "configHandler"          = @DI\Inject("claroline.config.platform_config_handler"),
      *     "eventDispatcher"        = @DI\Inject("claroline.event.event_dispatcher"),
-     *     "formFactory"            = @DI\Inject("claroline.form.factory"),
-     *     "request"                = @DI\Inject("request"),
-     *     "mailManager"            = @DI\Inject("claroline.manager.mail_manager"),
+     *     "formFactory"            = @DI\Inject("form.factory"),
      *     "localeManager"          = @DI\Inject("claroline.common.locale_manager"),
+     *     "mailManager"            = @DI\Inject("claroline.manager.mail_manager"),
+     *     "request"                = @DI\Inject("request"),
+     *     "rightsManager"          = @DI\Inject("claroline.manager.rights_manager"),
+     *     "roleManager"            = @DI\Inject("claroline.manager.role_manager"),
      *     "router"                 = @DI\Inject("router"),
      *     "sc"                     = @DI\Inject("security.context"),
+     *     "session"                = @DI\Inject("session"),
      *     "toolManager"            = @DI\Inject("claroline.manager.tool_manager"),
-     *     "authenticationManager"  = @DI\Inject("claroline.common.authentication_manager"),
-     *     "configHandler"          = @DI\Inject("claroline.config.platform_config_handler")
+     *     "toolMaskDecoderManager" = @DI\Inject("claroline.manager.tool_mask_decoder_manager"),
+     *     "translator"             = @DI\Inject("translator"),
+     *     "userManager"            = @DI\Inject("claroline.manager.user_manager"),
+     *     "workspaceManager"       = @DI\Inject("claroline.manager.workspace_manager")
      * })
      */
     public function __construct(
-        UserManager $userManager,
-        RoleManager $roleManager,
-        WorkspaceManager $workspaceManager,
-        StrictDispatcher $eventDispatcher,
+        AuthenticationManager $authenticationManager,
         FormFactory $formFactory,
-        Request $request,
-        MailManager $mailManager,
         LocaleManager $localeManager,
+        MailManager $mailManager,
+        PlatformConfigurationHandler $configHandler,
+        Request $request,
+        RightsManager $rightsManager,
+        RoleManager $roleManager,
         RouterInterface $router,
         SecurityContextInterface $sc,
+        SessionInterface $session,
+        StrictDispatcher $eventDispatcher,
         ToolManager $toolManager,
-        RightsManager $rightsManager,
         ToolMaskDecoderManager $toolMaskDecoderManager,
-        AuthenticationManager $authenticationManager,
-        PlatformConfigurationHandler $configHandler
+        Translator $translator,
+        UserManager $userManager,
+        WorkspaceManager $workspaceManager
     )
     {
-        $this->userManager            = $userManager;
-        $this->roleManager            = $roleManager;
-        $this->rightsManager          = $rightsManager;
-        $this->eventDispatcher        = $eventDispatcher;
-        $this->formFactory            = $formFactory;
-        $this->request                = $request;
-        $this->mailManager            = $mailManager;
-        $this->localeManager          = $localeManager;
-        $this->router                 = $router;
-        $this->workspaceManager       = $workspaceManager;
-        $this->sc                     = $sc;
-        $this->toolManager            = $toolManager;
-        $this->userAdminTool          = $this->toolManager->getAdminToolByName('user_management');
-        $this->authenticationManager  = $authenticationManager;
-        $this->configHandler          = $configHandler;
+        $this->authenticationManager = $authenticationManager;
+        $this->configHandler = $configHandler;
+        $this->eventDispatcher = $eventDispatcher;
+        $this->formFactory = $formFactory;
+        $this->localeManager = $localeManager;
+        $this->mailManager = $mailManager;
+        $this->request = $request;
+        $this->rightsManager = $rightsManager;
+        $this->roleManager = $roleManager;
+        $this->router = $router;
+        $this->sc = $sc;
+        $this->session = $session;
+        $this->toolManager = $toolManager;
         $this->toolMaskDecoderManager = $toolMaskDecoderManager;
+        $this->translator = $translator;
+        $this->userAdminTool = $this->toolManager->getAdminToolByName('user_management');
+        $this->userManager = $userManager;
+        $this->workspaceManager = $workspaceManager;
     }
 
     /**
@@ -156,16 +166,13 @@ class UsersController extends Controller
                 $unavailableRoles[] = $role;
             }
         }
-
-        $form = $this->formFactory->create(
-            FormFactory::TYPE_USER_FULL,
-            array(
-                array($roleUser),
-                $this->localeManager->getAvailableLocales(),
-                $isAdmin,
-                $this->authenticationManager->getDrivers()
-            )
+        $profileType = new ProfileCreationType(
+            array($roleUser),
+            $this->localeManager->getAvailableLocales(),
+            $isAdmin,
+            $this->authenticationManager->getDrivers()
         );
+        $form = $this->formFactory->create($profileType);
 
         $error = null;
 
@@ -194,20 +201,17 @@ class UsersController extends Controller
      */
     public function createAction(User $currentUser)
     {
-        $translator = $this->get('translator');
-        $sessionFlashBag = $this->get('session')->getFlashBag();
+        $sessionFlashBag = $this->session->getFlashBag();
         $roleUser = $this->roleManager->getRoleByName('ROLE_USER');
         $isAdmin = ($this->sc->isGranted('ROLE_ADMIN')) ? true : false;
 
-        $form = $this->formFactory->create(
-            FormFactory::TYPE_USER_FULL,
-            array(
-                array($roleUser),
-                $this->localeManager->getAvailableLocales(),
-                $isAdmin,
-                $this->authenticationManager->getDrivers()
-            )
+        $profileType = new ProfileCreationType(
+            array($roleUser),
+            $this->localeManager->getAvailableLocales(),
+            $isAdmin,
+            $this->authenticationManager->getDrivers()
         );
+        $form = $this->formFactory->create($profileType);
         $form->handleRequest($this->request);
 
         $unavailableRoles = [];
@@ -232,7 +236,10 @@ class UsersController extends Controller
             $user = $form->getData();
             $newRoles = $form->get('platformRoles')->getData();
             $this->userManager->createUser($user, true, $newRoles);
-            $sessionFlashBag->add('success', $translator->trans('user_creation_success', array(), 'platform'));
+            $sessionFlashBag->add(
+                'success',
+                $this->translator->trans('user_creation_success', array(), 'platform')
+            );
 
             return $this->redirect($this->generateUrl('claro_admin_user_list'));
         }
@@ -370,7 +377,7 @@ class UsersController extends Controller
      */
     public function importFormAction()
     {
-        $form = $this->formFactory->create(FormFactory::TYPE_USER_IMPORT, array('showRoles' => true));
+        $form = $this->formFactory->create(new ImportUserType(true));
 
         return array('form' => $form->createView(), 'error' => null);
     }
@@ -406,16 +413,42 @@ class UsersController extends Controller
      */
     public function importAction()
     {
-        $form = $this->formFactory->create(FormFactory::TYPE_USER_IMPORT, array('showRoles' => true));
+        $form = $this->formFactory->create(new ImportUserType(true));
         $form->handleRequest($this->request);
+        $mode = $form->get('mode')->getData();
+
+        if ($mode === 'update') {
+            $form = $this->formFactory->create(new ImportUserType(true, 1));
+            $form->handleRequest($this->request);
+        }
 
         if ($form->isValid()) {
             $file = $form->get('file')->getData();
             $sendMail = $form->get('sendMail')->getData();
             $lines = str_getcsv(file_get_contents($file), PHP_EOL);
+            $users = array();
+            $toUpdate = array();
+            $sessionFlashBag = $this->session->getFlashBag();
 
             foreach ($lines as $line) {
-                $users[] = str_getcsv($line, ';');
+
+                if ($mode === 'update') {
+                    $datas = str_getcsv($line, ';');
+                    $username = $datas[2];
+                    $email = $datas[4];
+                    $existingUser = $this->userManager->getUserByUsernameOrMail(
+                        $username,
+                        $email
+                    );
+
+                    if (is_null($existingUser)) {
+                        $users[] = $datas;
+                    } else {
+                        $toUpdate[] = $datas;
+                    }
+                } else {
+                    $users[] = str_getcsv($line, ';');
+                }
             }
 
             $roleUser = $this->roleManager->getRoleByName('ROLE_USER');
@@ -423,6 +456,7 @@ class UsersController extends Controller
             $total = $this->userManager->countUsersByRoleIncludingGroup($roleUser);
 
             if ($total + count($users) > $max) {
+
                 return array('form' => $form->createView(), 'error' => 'role_user unavailable');
             }
 
@@ -433,11 +467,49 @@ class UsersController extends Controller
                 $total = $this->userManager->countUsersByRoleIncludingGroup($additionalRole);
 
                 if ($total + count($users) > $max) {
-                    return array('form' => $form->createView(), 'error' => $additionalRole->getName() . ' unavailable');
+
+                    return array(
+                        'form' => $form->createView(),
+                        'error' => $additionalRole->getName() . ' unavailable'
+                    );
                 }
             }
 
-            $this->userManager->importUsers($users, $sendMail, null, array($additionalRole));
+            if (count($toUpdate) > 0) {
+                $additionalRoles = is_null($additionalRole) ? 
+                    array() :
+                    array($additionalRole);
+                $updatedNames = $this->userManager->updateImportedUsers(
+                    $toUpdate,
+                    $additionalRoles
+                );
+                
+                foreach ($updatedNames as $name) {
+                    $msg =  '<' . $name . '> ';
+                    $msg .= $this->translator->trans(
+                        'has_been_updated',
+                        array(),
+                        'platform'
+                    );
+                    $sessionFlashBag->add('success', $msg);
+                }
+            }
+            $createdNames = $this->userManager->importUsers(
+                $users,
+                $sendMail,
+                null,
+                array($additionalRole)
+            );
+
+            foreach ($createdNames as $name) {
+                $msg =  '<' . $name . '> ';
+                $msg .= $this->translator->trans(
+                    'has_been_created',
+                    array(),
+                    'platform'
+                );
+                $sessionFlashBag->add('success', $msg);
+            }
 
             return new RedirectResponse($this->router->generate('claro_admin_user_list'));
         }
