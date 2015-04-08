@@ -33,7 +33,7 @@
 
                 {% if div|length > 0 %}
                     <div class="panel panel-default">
-                        <div class="panel-heading"> {{ 'main'|trans({}, 'platform') }}</div>
+                        <div class="panel-heading"> {{ 'user_info'|trans({}, 'platform') }}</div>
                         <div class="panel-body">
                             {% for key, el in form %}
                                 {% if el.vars.attr.facet is not defined %}
