@@ -776,6 +776,7 @@ class ResourceController
         );
     }
 
+
     /**
      * @EXT\Route(
      *     "/sort/{node}/at/{index}",
@@ -788,7 +789,8 @@ class ResourceController
      * @param User         $user
      * @param integer      $index
      *
-     * @return Response
+     * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function insertAt(ResourceNode $node, User $user, $index)
     {
