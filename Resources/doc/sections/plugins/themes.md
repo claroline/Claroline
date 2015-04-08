@@ -136,7 +136,7 @@ themes will be compiled.
 Overwriting Claroline twig files
 --------------------------------
 
-In order to overwrite **Claroline** twig files from your plugin, you need first
+In order to overwrite twig files from your plugin, you need first
 to [create a theme](#newtheme) and then create a theme folder in your plugin.
 
     Resources/views/theme/{bundleToOverride}/path/to/file.html.twig
