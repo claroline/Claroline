@@ -63,11 +63,7 @@ class TemplateLocator extends baseTemplateLocator
         $name = ucwords(str_replace('-', ' ', $this->configHandler->getParameter('theme')));
         $theme = $this->themeService->findTheme(array('name' => $name));
         $bundle = $this->getBundle($theme);
-
-        if ($this->isOverwritable($theme, $bundle, $template)) {
-            $template = $this->locateTemplate($template, $bundle, $theme, $currentPath);
-        }
-
+        $template = $this->locateTemplate($template, $bundle, $theme, $currentPath);
         $key = $this->getCacheKey($template);
 
         if (isset($this->cache[$key])) {
@@ -116,20 +112,6 @@ class TemplateLocator extends baseTemplateLocator
     }
 
     /**
-     * Check if $theme, $bundle and $template are correct in order to Overwrite a template.
-     *
-     * @return boolean
-     */
-    private function isOverwritable($theme, $bundle, $template)
-    {
-        return (
-            $theme instanceof Theme &&
-            $bundle !== '' &&
-            $bundle !== $template->get('bundle')
-        );
-    }
-
-    /**
      * Get the th of a theme
      */
     private function getPath($theme)
@@ -139,6 +121,8 @@ class TemplateLocator extends baseTemplateLocator
 
     private function getBundle($theme)
     {
+        if (!$theme) return 'ClarolineCoreBundle';
+
         if ($theme instanceof Theme) {
             $plugin = $theme->getPlugin();
         }
