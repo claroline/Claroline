@@ -1188,3 +1188,4 @@ updated_by: 'Last update: %modificationDate%'
 display_at_registration: Display at registration
 workspace_max_users: Maximum number of user per workspace
 workspace_edit_form_endDate : Expiration date
+user_info: User informations
