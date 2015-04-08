@@ -19,9 +19,21 @@ use Symfony\Component\Validator\Constraint;
 class CsvUser extends Constraint
 {
     public $message = 'Each row requires at least 5 parameters.';
+    private $mode = 0;
+
+    public function __construct($mode = 0)
+    {
+        parent::__construct();
+        $this->mode = $mode;
+    }
 
     public function validatedBy()
     {
         return 'csv_user_validator';
+    }
+
+    public function getDefaultOption()
+    {
+        return $this->mode;
     }
 }
