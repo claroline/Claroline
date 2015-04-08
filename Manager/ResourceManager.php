@@ -520,8 +520,9 @@ class ResourceManager
 
     /**
      * @param ResourceNode $node
+     * @param bool         $detach
      */
-    public function reorder(ResourceNode $node)
+    public function reorder(ResourceNode $node, $detach = false)
     {
         /** @var \Claroline\CoreBundle\Repository\ResourceNodeRepository $resourceNodeRepository */
         $resourceNodeRepository = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceNode');
@@ -536,8 +537,10 @@ class ResourceManager
 
         $this->om->flush();
 
-        foreach ($children as $child) {
-            $this->om->detach($child);
+        if ($detach) {
+            foreach ($children as $child) {
+                $this->om->detach($child);
+            }
         }
     }
 
