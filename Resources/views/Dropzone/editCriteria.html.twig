@@ -33,11 +33,15 @@
 
     <div class='container col-md-12'>
         <div class='row '>
+    {# fix #252 https://github.com/InnovaLangues/ENPA/issues/252 #}
+<!--
             <h4> {{ 'Instructions for examiners'|trans({},'innova_collecticiel') }}</h4>
             {{ form_widget(form.correctionInstruction) }}
             {{ form_errors(form.correctionInstruction) }}
+-->
         </div>
     </div>
+
     <h3>{{ 'Evaluation Criteria Innova'|trans({}, 'innova_collecticiel') }}</h3>
     {% if nbCorrection > 0 %}
         <div class="alert alert-warning">
