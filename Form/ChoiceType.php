@@ -40,7 +40,9 @@ class ChoiceType extends AbstractType
                    'required' => false, 'label' => ' ',
                    'attr' => array('class'=>'form-control',
                                    'data-new-tab' => 'yes',
-                                   'placeholder' => 'Choice.feedback')
+                                   'placeholder' => 'Choice.feedback',
+                                   'style' => 'height:34px;'
+                       )
                   )
             )
             ->add(

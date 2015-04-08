@@ -92,8 +92,6 @@ function creationQCMEdit(expectedAnswer, response, point, comment, positionForce
             // Add the form errors
             $('#choiceError').append($(this).find('.field-error'));
         });
-        //add feedback to edition array
-        addFeedback($(this),comment,index,edition);
 
         if (nbResponses == 0) {
             // Add the delete button
@@ -180,8 +178,6 @@ function addChoice(container, deleteChoice, comment, edition) {
     container.find('.row').each(function () {
         fillChoicesArray($(this),edition,index);
     });
-    //add the feedback button
-    addFeedback($(this),comment,index,edition);
 
     // Add the delete button
     $('#newTable').find('tr:last').append('<td class="classic"></td>');
@@ -230,7 +226,7 @@ function check_form(nbrChoices, answerCoched, labelEmpty, pointAnswers, pointAns
                 if ($('#ujm_exobundle_interactionqcmtype_weightResponse').is(':checked')) {
                     var checked = true;
                     $('#newTable').find('tr:not(:first)').each(function (index) {
-                        if ($(this).find('td').eq(3).find('input').val() == '') {
+                        if ($(this).find('td').eq(4).find('input').val() == '') {
                             checked = false;
                             return false;
                         }
@@ -260,12 +256,12 @@ function setOrder() {
 function whichChecked() {
      // Show or hide positionForce if shuffle is checked
     if ($('#ujm_exobundle_interactionqcmtype_shuffle').is(':checked')) {
-        tableChoices.find('th').eq(3).show();
+        tableChoices.find('th').eq(4).show();
         $("*[id$='_positionForce']").each(function () {
             $(this).parent('td').show();
         });
     } else {
-        tableChoices.find('th').eq(3).hide();
+        tableChoices.find('th').eq(4).hide();
         $("*[id$='_positionForce']").each(function () {
            $(this).parent('td').hide();
        });
@@ -309,12 +305,12 @@ function whichChange() {
     // When "choices shuffle" change, show position force possibility
     $('#ujm_exobundle_interactionqcmtype_shuffle').change(function () {
         if ($(this).is(':checked')) {
-            tableChoices.find('th').eq(3).show();
+            tableChoices.find('th').eq(4).show();
             $("*[id$='_positionForce']").each(function () {
                 $(this).parent('td').show();
             });
         } else {
-            tableChoices.find('th').eq(3).hide();
+            tableChoices.find('th').eq(4).hide();
             $("*[id$='_positionForce']").each(function () {
                $(this).parent('td').hide();
            });
@@ -364,7 +360,6 @@ function whichChange() {
 function fillChoicesArray(row,edition,index) {   
     // Add the field of type input
     if (row.find('input').length) {
-        alert(row.find('input').attr('id').indexOf('ordre') == -1);
         if (row.find('input').attr('id').indexOf('ordre') == -1) {
             $('#newTable').find('tr:last').append('<td class="classic"></td>');
             $('#newTable').find('td:last').append(row.find('input'));
@@ -382,36 +377,38 @@ function fillChoicesArray(row,edition,index) {
 //        $('#newTable').find('td:last').append(row.find('textarea'));
 //    }
   
-  if (row.find('*[id$="_label"]').length) {
-        $('#newTable').find('tr:last').append('<td class="classic"></td>');
-        $('#newTable').find('td:last').append(row.find('*[id$="_label"]'));
-    }
-  
-   if (row.find('*[id$="_feedback"]').length) {
-        $('#newTable').find('tr:last').append('<td class="classic"></td>');
-        $('#newTable').find('td:last').append(row.find('*[id$="_feedback"]'));
-    }
-    
-//    if (row.find('*[id$="_label"]').length) { 
-//        var  idLabelVal = row.find('*[id$="_label"]').attr("id");
-//        $('#newTable').find('tr:last').append('<td class="classic"><span id="span'+index+'" class="input-group"></span></td>');
-//        $('#span'+index).append(row.find('*[id$="_label"]'));
-//        $('#span'+index).append('<span class="input-group-btn"><a class="btn btn-default" id="adve_'+idLabelVal+'" onClick="advancedEdition(\''+idLabelVal+'\',event);" title="'+edition+'"><i class="fa fa-font"></i></a></span>');
-//   }
-//    
-//    if (row.find('*[id$="_feedback"]').length) { 
-//       $('#newTable').find('tr:last').append('<td class="classic"><span id="span'+index+'" class="input-group"></span></td>');
-//        $('#span'+index).append(row.find('*[id$="_feedback"]'));
-//       $('#span'+index).append('<span class="input-group-btn"><a class="btn btn-default" id="QCMavancedEdition" onClick="advancedEdition(\'ujm_exobundle_interactionqcmtype_choices_'+index+'_feedback\',event);" title="'+edition+'"><i class="fa fa-font"></i></a></span>');
+//  if (row.find('*[id$="_label"]').length) {
+//       $('#newTable').find('tr:last').append('<td class="classic"></td>');
+//       $('#newTable').find('td:last').append(row.find('*[id$="_label"]'));
+//    }
+//  
+//   if (row.find('*[id$="_feedback"]').length) {
+//        $('#newTable').find('tr:last').append('<td class="classic"></td>');
+//        $('#newTable').find('td:last').append(row.find('*[id$="_feedback"]'));
 //    }
     
+    //Add the field of type textarea answer 
+    if (row.find('*[id$="_label"]').length) { 
+        $('#newTable').find('tr:last').append('<td class="classic"><span id="spanLabel_'+index+'" class="input-group"></span></td>');
+        $('#spanLabel_'+index).append(row.find('*[id$="_label"]'));
+        $('#spanLabel_'+index).append('<span class="input-group-btn"><a class="btn btn-default" id="btnEditionLabel_'+index+'" onClick="advancedEdition(\'ujm_exobundle_interactionqcmtype_choices_'+index+'_label\',event);" title="'+edition+'"><i class="fa fa-font"></i></a></span>');
+   }
+    
+    //Add the field of type textarea feedback
+    if (row.find('*[id$="_feedback"]').length) { 
+       //Ajoute une cellule au tableau avec un bouton commentaire
+       $('#newTable').find('tr:last').append('<td class="classic"><a class="btn btn-default" id="btnHiddenFeedback_'+index+'" onClick="addTextareaFeedback(\'spanFeedback_'+index+'\',\'btnHiddenFeedback_'+index+'\')" ><i class="fa fa-comments-o"></i></a><span id="spanFeedback_'+index+'" class="input-group" style="display:none;"></span></td>');
+       //Ajoute en cacher le textarea et son bouton d'edition avancée
+       $('#spanFeedback_'+index).append(row.find('*[id$="_feedback"]'));
+       $('#spanFeedback_'+index).append('<span class="input-group-btn"><a class="btn btn-default" id="btnEditionFeedback_'+index+'" onClick="advancedEdition(\'ujm_exobundle_interactionqcmtype_choices_'+index+'_feedback\',event);" title="'+edition+'"><i class="fa fa-font"></i></a></span>');
+    }   
 }
 
 function tableChoicesCreation(expectedAnswer, response, point, comment, positionForce, addchoice, deleteChoice, edition, nbResponses) {
 
     if (nbResponses == 0) {
         // Add the structure od the table
-        tableChoices.append('<table id="newTable" class="table table-striped table-condensed"><thead><tr style="background-color: lightsteelblue;"><th class="classic">'+expectedAnswer+'</th><th class="classic">'+response+'</th><th class="classic">'+point+'</th><th class="classic">'+positionForce+'</th><th class="classic">'+comment+'</th><th class="classic">'+deleteChoice+'</th></tr></thead><tbody><tr></tr></tbody></table>');
+        tableChoices.append('<table id="newTable" class="table table-striped table-condensed"><thead><tr style="background-color: lightsteelblue;"><th class="classic">'+expectedAnswer+'</th><th class="classic">'+response+'</th><th class="classic">'+point+'</th><th class="classic">'+comment+'</th><th class="classic">'+positionForce+'</th><th class="classic">'+deleteChoice+'</th></tr></thead><tbody><tr></tr></tbody></table>');
         // create the button to add a choice
         var add = $('<a title="'+addchoice+'" href="#" id="add_choice" class="btn btn-default"><i class="fa fa-plus"></i></a>');
 
@@ -430,16 +427,7 @@ function tableChoicesCreation(expectedAnswer, response, point, comment, position
         tableChoices.append('<table id="newTable" class="table table-striped table-bordered table-condensed"><thead><tr style="background-color: lightsteelblue;"><th class="classic">'+expectedAnswer+'</th><th class="classic">'+response+'</th><th class="classic">'+point+'</th><th class="classic">'+comment+'</th><th class="classic">'+positionForce+'</th></tr></thead><tbody><tr></tr></tbody></table>');
     }
 }
-
-function addFeedback(row,comment,index,edition) {
-
-    // Create the button feedback
-  
-    
-   
-//    
-//    $("#QCMfeedback_"+index).click(function() {               
-//        addFeedbacks.replaceWith('<span id=tabFeedback'+index+' class="input-group"><textarea id="ujm_exobundle_interactionqcmtype_choices_'+index+'_feedback" class="form-control" placeholder="'+comment+'" style="height:34px;" ></textarea>\n\
-//       <span class="input-group-btn"><a id="QCMavancedEdition" class="btn btn-default" onClick="advancedEdition(\'ujm_exobundle_interactionqcmtype_choices_'+index+'_feedback\',event);" title="'+edition+'"><i class="fa fa-font"></i></a></span></span>'); 
-//    });    
+function addTextareaFeedback(spanFeedback,btnHiddenFeedback){
+     $('#'+btnHiddenFeedback+'').remove();
+     $('#'+spanFeedback+'').css({"display" : "inline-block"});    
 }
