@@ -107,17 +107,19 @@ function creationQCMEdit(expectedAnswer, response, point, comment, positionForce
         index++;
         
     });
-
-        //Enables advanced edition QCM - Matching
+    var i=0; //index of  button
+    //Enables advanced edition QCM - Matching
     $('.classic').find('textarea').each(function() {
         //if there is at the start an open tag and a close at the end. And at the middle all caracters possible or nothing
         if($(this).val().match("<.+>.+|\s<\/.+>$")) {
             idProposalVal = $(this).attr("id");
             $("#"+idProposalVal).addClass("claroline-tiny-mce hide");
             $("#"+idProposalVal).data("data-theme","advanced");
+            $("#btnEditionLabel_"+i).remove();
         }
+        i++;
     });
-    
+
     // Remove the useless fields form
     container.remove();
     tableChoices.next().remove();

@@ -235,13 +235,7 @@ function displayOptionalFields(){
   var idCatSelect=$("*[id$='_interaction_question_category']").val();
   //Value of the description
   var valDescription =$("*[id$='_interaction_question_description']").text();
-  //Id QCM response
-  $('#tableChoice').children('tr').each(function(){
-     var valAnswerQCM=$(this).find('td').eq(1).text();
-      alert('test'+valAnswerQCM);
-  });
-  
-
+ 
   //Value of feelback
   var valFeedback = $("*[id$='_interaction_feedBack']").text();
 
@@ -255,7 +249,7 @@ function displayOptionalFields(){
   {
       $("#descriptionDiv").collapse('show');
       //Enables advanced edition
-      if(valDescription.substring(0,3) === '<p>')
+      if(valDescription.match("<.+>.+|\s<\/.+>$"))
       {
           $("*[id$='_interaction_question_description']").addClass("claroline-tiny-mce hide");
           $("*[id$='_interaction_question_description']").data("data-theme","advanced");
