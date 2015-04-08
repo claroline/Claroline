@@ -10,7 +10,7 @@
         <div id="portfolio-container"{% if not viewMode %} data-ng-if="portfolio.$resolved"{% endif %}>
             <header>
                 <div class="row container">
-                    <div class="col-md-offset-1">
+                    <div class="col-md-offset-2">
                         <h1 id="username">{{ portfolio.user.firstName ~ ' ' ~ portfolio.user.lastName }}</h1>
                         {% if not viewMode %}
                             <div data-ng-repeat="widget in widgets | filter:{type: 'title'} track by widget.id" data-ng-show="widgets.length > 0">
