@@ -184,33 +184,29 @@ $(document).ready(function() {
 /**
  * Enters edit advance
  * @param {String} idTextarea
+ * @param {String}  btnEdition : the id button edition
  * @param {Event} e
  * @returns {Boolean}
  */
-function advancedEdition(idTextarea,e){
-    var textarea;
-   
+function advancedEdition(idTextarea,btnEdition,e){
+    var textarea; 
      // If the navavigator is chrome
-        var userNavigator = navigator.userAgent;
-        var positionText = userNavigator.indexOf("Chrome");
-        if(positionText !== -1) {
-            //the edition that after running action
-          $('body').append($('<input type="hidden" id="chrome"> '));
-          $('#chrome').remove();
-        }
-    if(idTextarea === 'interaction_question_description'|| idTextarea ==='_label'){
+    var userNavigator = navigator.userAgent;
+    var positionText = userNavigator.indexOf("Chrome");
+    if(positionText !== -1) {
+        //the edition that after running action
+        $('body').append($('<input type="hidden" id="chrome"> '));
+        $('#chrome').remove();
+    }
+    if(idTextarea === 'interaction_question_description'){
         textarea =$("*[id$='"+idTextarea+"']");
     }
-    else{
-       
-            textarea=$("#"+idTextarea);
-        
+    else{       
+            textarea=$("#"+idTextarea);      
     }
     if (textarea.hasClass("claroline-tiny-mce hide")) {
-
          //$(".mce-tinymce mce-container mce-panel").remove();
-   // tinyMCE.activeEditor.remove();
-       
+        // tinyMCE.activeEditor.remove();       
  //       textarea.removeClass("mce-tinymce mce-container mce-panel");
 //           $(textarea).removeClass("claroline-tiny-mce");
 //            $(textarea).removeClass("hide");
@@ -218,11 +214,10 @@ function advancedEdition(idTextarea,e){
 //            $(textarea).removeData("data-theme");
 //            $(textarea).parent('td').children('div').addClass("hide");
 //            $(textarea).parent('td').find('a').text(advEditionLang);
-
-        } else {
-            
+        } else {           
            textarea.addClass("claroline-tiny-mce hide");
            textarea.data("data-theme","advanced");
+           $('#'+btnEdition).remove();
 //            $("#"+idProposalVal).parent('td').children('div').removeClass("hide");
 //            $("#"+idProposalVal).parent('td').find('a').text(remAdvEditionLang);
 
@@ -266,12 +261,6 @@ function displayOptionalFields(){
           $("*[id$='_interaction_question_description']").data("data-theme","advanced");
       }
   }
-  //Enables advanced edition QCM
-//  if(valAnswerQCM.substring(0,3) === '<p>')
-//  {
-//      $("*[id$='_label']").addClass("claroline-tiny-mce hide");
-//      $("*[id$='_label']").data("data-theme","advanced");
-//  }
   //Test feedback
   if(valFeedback !== "")
   {

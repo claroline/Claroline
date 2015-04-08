@@ -88,7 +88,7 @@ function creationQCMEdit(expectedAnswer, response, point, comment, positionForce
          $(this).find('.row').each(function () {
 
             fillChoicesArray($(this),edition,index);    
-           alert($(this));
+          
             // Add the form errors
             $('#choiceError').append($(this).find('.field-error'));
         });
@@ -108,6 +108,16 @@ function creationQCMEdit(expectedAnswer, response, point, comment, positionForce
         
     });
 
+        //Enables advanced edition QCM - Matching
+    $('.classic').find('textarea').each(function() {
+        //if there is at the start an open tag and a close at the end. And at the middle all caracters possible or nothing
+        if($(this).val().match("<.+>.+|\s<\/.+>$")) {
+            idProposalVal = $(this).attr("id");
+            $("#"+idProposalVal).addClass("claroline-tiny-mce hide");
+            $("#"+idProposalVal).data("data-theme","advanced");
+        }
+    });
+    
     // Remove the useless fields form
     container.remove();
     tableChoices.next().remove();
@@ -371,27 +381,12 @@ function fillChoicesArray(row,edition,index) {
       
         }
     }
-    // Add the field of type textarea
-//    if (row.find('textarea').length) {
-//        $('#newTable').find('tr:last').append('<td class="classic"></td>');
-//        $('#newTable').find('td:last').append(row.find('textarea'));
-//    }
-  
-//  if (row.find('*[id$="_label"]').length) {
-//       $('#newTable').find('tr:last').append('<td class="classic"></td>');
-//       $('#newTable').find('td:last').append(row.find('*[id$="_label"]'));
-//    }
-//  
-//   if (row.find('*[id$="_feedback"]').length) {
-//        $('#newTable').find('tr:last').append('<td class="classic"></td>');
-//        $('#newTable').find('td:last').append(row.find('*[id$="_feedback"]'));
-//    }
     
     //Add the field of type textarea answer 
     if (row.find('*[id$="_label"]').length) { 
         $('#newTable').find('tr:last').append('<td class="classic"><span id="spanLabel_'+index+'" class="input-group"></span></td>');
         $('#spanLabel_'+index).append(row.find('*[id$="_label"]'));
-        $('#spanLabel_'+index).append('<span class="input-group-btn"><a class="btn btn-default" id="btnEditionLabel_'+index+'" onClick="advancedEdition(\'ujm_exobundle_interactionqcmtype_choices_'+index+'_label\',event);" title="'+edition+'"><i class="fa fa-font"></i></a></span>');
+        $('#spanLabel_'+index).append('<span class="input-group-btn"><a class="btn btn-default" id="btnEditionLabel_'+index+'" onClick="advancedEdition(\'ujm_exobundle_interactionqcmtype_choices_'+index+'_label\',\'btnEditionLabel_'+index+'\',event);" title="'+edition+'"><i class="fa fa-font"></i></a></span>');
    }
     
     //Add the field of type textarea feedback
@@ -400,7 +395,7 @@ function fillChoicesArray(row,edition,index) {
        $('#newTable').find('tr:last').append('<td class="classic"><a class="btn btn-default" id="btnHiddenFeedback_'+index+'" onClick="addTextareaFeedback(\'spanFeedback_'+index+'\',\'btnHiddenFeedback_'+index+'\')" ><i class="fa fa-comments-o"></i></a><span id="spanFeedback_'+index+'" class="input-group" style="display:none;"></span></td>');
        //Ajoute en cacher le textarea et son bouton d'edition avancée
        $('#spanFeedback_'+index).append(row.find('*[id$="_feedback"]'));
-       $('#spanFeedback_'+index).append('<span class="input-group-btn"><a class="btn btn-default" id="btnEditionFeedback_'+index+'" onClick="advancedEdition(\'ujm_exobundle_interactionqcmtype_choices_'+index+'_feedback\',event);" title="'+edition+'"><i class="fa fa-font"></i></a></span>');
+       $('#spanFeedback_'+index).append('<span class="input-group-btn"><a class="btn btn-default" id="btnEditionFeedback_'+index+'" onClick="advancedEdition(\'ujm_exobundle_interactionqcmtype_choices_'+index+'_feedback\',\'btnEditionFeedback_'+index+'\',event);" title="'+edition+'"><i class="fa fa-font"></i></a></span>');
     }   
 }
 
@@ -429,5 +424,5 @@ function tableChoicesCreation(expectedAnswer, response, point, comment, position
 }
 function addTextareaFeedback(spanFeedback,btnHiddenFeedback){
      $('#'+btnHiddenFeedback+'').remove();
-     $('#'+spanFeedback+'').css({"display" : "inline-block"});    
+     $('#'+spanFeedback+'').removeAttr( 'style' );    
 }
