@@ -19,8 +19,7 @@
             <div class="panel-heading">
                 <h4 class="panel-title">
                     <a data-toggle="collapse" data-parent="#guidedPortfoliosAccordion" href="#guidedPortfolios">
-                        {{ 'portfolio_i_guide'|trans({}, 'icap_portfolio') }} <span class="badge">{{ guidedPortfoliosPager.nbResults }}</span>
-                    </a>
+                        {{ 'portfolio_i_guide'|trans({}, 'icap_portfolio') }}</a> <span class="badge">{{ guidedPortfoliosPager.nbResults }}</span>
                 </h4>
             </div>
             <div id="guidedPortfolios" class="panel-collapse collapse">
@@ -37,7 +36,7 @@
                                         <a href="{{ path('icap_portfolio_view', {'portfolioSlug': portfolio.titleWidget.slug}) }}" title="{{ portfolio.titleWidget.title }}">{{ portfolio.titleWidget.title }}</a><small> de {{ portfolio.user.lastName }} {{ portfolio.user.firstName }}</small>
                                     </td>
                                     <td>
-                                        <a href="{{ path('icap_portfolio_view', {'portfolioSlug': portfolio.titleWidget.slug}) }}" class="btn btn-md btn-primary" title="">{{ 'see'|trans({}, 'icap_portfolio') }} <span class="fa fa-arrow-right"></span></a>
+                                        <a href="{{ path('icap_portfolio_view', {'portfolioSlug': portfolio.titleWidget.slug}) }}" class="btn btn-sm btn-primary" title="">{{ 'see'|trans({}, 'icap_portfolio') }} <span class="fa fa-arrow-right"></span></a>
                                     </td>
                                 </tr>
                             {% endfor %}
@@ -104,9 +103,12 @@
                 {% for portfolio in portfoliosPager %}
                     <tr class="portfolio">
                         <td>
-                            <a href="{{ path('icap_portfolio_view', {'portfolioSlug': portfolio.titleWidget.slug}) }}" title="{{ portfolio.titleWidget.title }}">{{ portfolio.titleWidget.title }}</a>
                             {% set portfolioUrl = path('icap_portfolio_view', {'portfolioSlug': portfolio.titleWidget.slug}) %}
-                            <a href="{{ path('icap_portfolio_view', {'portfolioSlug': portfolio.titleWidget.slug}) }}" title="{{ portfolioUrl }}" class="block text-muted">{{ portfolioUrl }}</a>
+                            <a href="{{ portfolioUrl }}"
+                               title="{{ portfolio.titleWidget.title }}">{{ portfolio.titleWidget.title }}</a>
+
+                            <a href="{{ portfolioUrl }}"
+                               title="{{ portfolioUrl }}" class="block text-muted">{{ url('icap_portfolio_view', {'portfolioSlug': portfolio.titleWidget.slug}) }}</a>
                         </td>
                         <td>
                             <span class="block visibility">
@@ -119,24 +121,28 @@
                         </td>
                         <td>
                             <div class="btn-group btn-group-xs">
-                                <a href="{{ path('icap_portfolio_view', {'portfolioSlug': portfolio.titleWidget.slug}) }}" class="btn btn-xs btn-primary">{{ 'update'|trans({}, 'icap_portfolio') }}</a>
+                                <a href="{{ path('icap_portfolio_view', {'portfolioSlug': portfolio.titleWidget.slug}) }}"
+                                   class="btn btn-xs btn-primary">{{ 'update'|trans({}, 'icap_portfolio') }}</a>
                                 <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
                                     <span class="caret"></span>
                                     <span class="sr-only">Toggle Dropdown</span>
                                 </button>
                                 <ul class="dropdown-menu" role="menu">
                                     <li>
-                                        <a href="{{ path('icap_portfolio_rename', {'id': portfolio.id}) }}" title="{{ 'rename'|trans({}, 'icap_portfolio') }}">
+                                        <a href="{{ path('icap_portfolio_rename', {'id': portfolio.id}) }}"
+                                           title="{{ 'rename'|trans({}, 'icap_portfolio') }}">
                                             <span class="fa fa-pencil"></span> {{ 'rename'|trans({}, 'icap_portfolio') }}
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="{{ path('icap_portfolio_update_visibility', {'id': portfolio.id}) }}" title="{{ 'update_visibility'|trans({}, 'icap_portfolio') }}">
+                                        <a href="{{ path('icap_portfolio_update_visibility', {'id': portfolio.id}) }}"
+                                           title="{{ 'update_visibility'|trans({}, 'icap_portfolio') }}">
                                             <span class="fa fa-cogs"></span> {{ 'update_visibility'|trans({}, 'icap_portfolio') }}
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="{{ path('icap_portfolio_update_guides', {'id': portfolio.id}) }}" title="{{ 'manage_guides'|trans({}, 'icap_portfolio') }}">
+                                        <a href="{{ path('icap_portfolio_update_guides', {'id': portfolio.id}) }}"
+                                           title="{{ 'manage_guides'|trans({}, 'icap_portfolio') }}">
                                             <span class="fa fa-users"></span> {{ 'manage_guides'|trans({}, 'icap_portfolio') }}
                                         </a>
                                     </li>
