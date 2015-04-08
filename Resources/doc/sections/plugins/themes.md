@@ -137,24 +137,15 @@ Overwriting Claroline twig files
 --------------------------------
 
 In order to overwrite **Claroline** twig files from your plugin, you need first
-to [create a theme](#newtheme) and then create a folder with the same name than
-your theme (without spaces and lowercase) in *views*.
+to [create a theme](#newtheme) and then create a theme folder in your plugin.
+
+    Resources/views/theme/{bundleToOverride}/path/to/file.html.twig
 
 The location of the template in this directory must match the location of the
-original template in the ClarolineCoreBundle views folder. The twig file that
-lives inside the *ClarolineCoreBundle* will be entirely ignored, and your file
-will be used instead.
+original template in the views folder.
+For instance, if you want to override the default layout, you must do it in the
 
-You can find an example of that in our [ExampleBundle][examplebundle].
-
-`src/plugin/Claroline/ExampleBundle/Resources/views/examplebundletheme/Layout/top_bar.html.twig`
-
-*overwrites*
-
-`src/core/Claroline/CoreBundle/Resources/views/Layout/top_bar.html.twig`
-
-That only works if your theme is chosen in platform parameters in the
-administration section.
+    Resources/views/theme/ClarolineCoreBundle/layout.html.twig
 
 Generating themes
 -----------------

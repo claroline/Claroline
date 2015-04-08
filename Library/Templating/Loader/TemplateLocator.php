@@ -95,16 +95,13 @@ class TemplateLocator extends baseTemplateLocator
     {
         $newTemplate = clone $template;
         $controller  = $template->get('controller');
-        var_dump($controller);
-        var_dump($bundle);
 
         if (null !== $theme) {
             $controller = sprintf(
-                '%s/%s',
-                'theme/' . $theme->getPlugin()->getSfName(),
+                'theme/%s/%s',
+                $template->get('bundle'),
                 $template->get('controller')
             );
-            var_dump($controller);
         }
 
         $newTemplate->set('bundle', $bundle)->set('controller', $controller);
